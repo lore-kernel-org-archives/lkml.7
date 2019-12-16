@@ -2,122 +2,106 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E177C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BECC0C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1296B20717
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:38:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GXW8Sv5x"
+	by mail.kernel.org (Postfix) with ESMTP id 96792206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:38:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576510716;
+	bh=w1nPHY4EkFH6XLAUEC1GUi7qMBgUxC4YSp380miDCqg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1mzGpA+CoVx/w8tjVsjkYZsmcuNVu5l0LOsu1O8n5eXlY4uokMGef2WRnqLLgEKJs
+	 qPV7U78rI5cTPfURZ7gF2QM26n8EQUzwNfWzQFlGvNjbR7lRcvgQ3JO8QgLOsmupxc
+	 5dpqUdNitiaHYG1g/oRUwC0z05JFdGbDXS6bO7oo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728425AbfLPPiK (ORCPT
+        id S1728451AbfLPPif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 10:38:10 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39726 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728350AbfLPPiJ (ORCPT
+        Mon, 16 Dec 2019 10:38:35 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43219 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728322AbfLPPif (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 10:38:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576510689;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6V3aaKb/JtoHXO6naY0LgTStsR+aTHJ1FNLMM1N/s3I=;
-        b=GXW8Sv5xwnBa+V2IB+c0JLN/94qlCzmn+pNfzG5+DO8Cbgv2oVRy7XnSgLqInfFpLjeNSg
-        3fQGZGDGLMcCR5MNQ5MxSF78I67GcKMsPXbbm5SkdzKjlRqPXt1TOAAD/qnQrvpTtUyIdQ
-        cWWfKGuLNyqkSEdmgY7CyNL29IPBZbg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-313-C8zNkNi7M92ebMemOhNyug-1; Mon, 16 Dec 2019 10:38:07 -0500
-X-MC-Unique: C8zNkNi7M92ebMemOhNyug-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D04BC800D50;
-        Mon, 16 Dec 2019 15:38:05 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E9CAD5C1B0;
-        Mon, 16 Dec 2019 15:38:02 +0000 (UTC)
-Subject: Re: [PATCH v2] mm/hugetlb: defer free_huge_page() to a workqueue
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        aneesh.kumar@linux.ibm.com, Jarod Wilson <jarod@redhat.com>
-References: <20191211194615.18502-1-longman@redhat.com>
- <4fbc39a9-2c9c-4c2c-2b13-a548afe6083c@oracle.com>
- <32d2d4f2-83b9-2e40-05e2-71cd07e01b80@redhat.com>
- <0fcce71f-bc20-0ea3-b075-46592c8d533d@oracle.com>
- <20191212060650.ftqq27ftutxpc5hq@linux-p48b>
- <20191212063050.ufrpij6s6jkv7g7j@linux-p48b>
- <20191212190427.ouyohviijf5inhur@linux-p48b>
- <d6b9743c-776c-d740-73af-a600f15b910a@oracle.com>
- <79d3a7e1-384b-b759-cd84-56253fb9ed40@redhat.com>
- <20191216132658.GG30281@dhcp22.suse.cz>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <98ac628d-f8be-270d-80bc-bf2373299caf@redhat.com>
-Date:   Mon, 16 Dec 2019 10:38:02 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 16 Dec 2019 10:38:35 -0500
+Received: by mail-ot1-f67.google.com with SMTP id p8so9651396oth.10;
+        Mon, 16 Dec 2019 07:38:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wnkOsuCyZ6LgZA6WK8OXgo4HhYM+KMZyOo083tpZJdo=;
+        b=DHWXi3B2EuQPj2acgSTCsKNdEERZM6dWeMROsadeuqeymcjaVl0cjfk42U7Tq191dx
+         qbSrD1RCDGjEwuANHB4IvGXnuL8sMTt0ZMsHAoN05V8AQgAnehk+xYN4VnB1L17333QM
+         i1mAJL2vsQn/0ff5yBt/cGyf3acsz1pfcP8HIR2QAM8u6DfNq6NA9tegY/jD98KUI+7v
+         /4b/z/z2ui+iL4CTpBXzP0vD6AWhCdtSXmK69z3Q+GZFX8gQnsxAnT0P8N6OkSH9bTmZ
+         NDd4OnXfkfXWXNVdjVCKsmi4QUIqAMYpIcgVN7E3RGJj8InXe/kJVSc4yYeOdkrL3wEt
+         QyBQ==
+X-Gm-Message-State: APjAAAXAQbGakSz8by6TUqoYtlZwp1enXcbO9ZHghjv9pevonyOEPftx
+        e/ORijXYZwqRi7pcR4hf8g==
+X-Google-Smtp-Source: APXvYqya7T3obFF+cjuSfK72FvIz81CcveEAuSaKiMd+yY6Eg9+cGk/LensHd5maeRqxLJRZ1Bd7pg==
+X-Received: by 2002:a05:6830:2110:: with SMTP id i16mr31523282otc.337.1576510714277;
+        Mon, 16 Dec 2019 07:38:34 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t3sm6863170otq.32.2019.12.16.07.38.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 07:38:33 -0800 (PST)
+Date:   Mon, 16 Dec 2019 09:38:33 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Ikjoon Jang <ikjn@chromium.org>
+Cc:     devicetree@vger.kernel.org,
+        GregKroah-Hartman <gregkh@linuxfoundation.org>,
+        MarkRutland <mark.rutland@arm.com>,
+        AlanStern <stern@rowland.harvard.edu>,
+        SuwanKim <suwan.kim027@gmail.com>,
+        "GustavoA . R . Silva" <gustavo@embeddedor.com>,
+        JohanHovold <johan@kernel.org>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, drinkcat@chromium.org
+Subject: Re: [PATCH v4 1/2] dt-bindings: usb: add "hub,interval" property
+Message-ID: <20191216153833.GA18715@bogus>
+References: <20191203101536.199222-1-ikjn@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20191216132658.GG30281@dhcp22.suse.cz>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191203101536.199222-1-ikjn@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/16/19 8:26 AM, Michal Hocko wrote:
-> On Thu 12-12-19 15:52:20, Waiman Long wrote:
->> On 12/12/19 2:22 PM, Mike Kravetz wrote:
->>> On 12/12/19 11:04 AM, Davidlohr Bueso wrote:
->>>> There have been deadlock reports[1, 2] where put_page is called
->>>> from softirq context and this causes trouble with the hugetlb_lock,
->>>> as well as potentially the subpool lock.
->>>>
->>>> For such an unlikely scenario, lets not add irq dancing overhead
->>>> to the lock+unlock operations, which could incur in expensive
->>>> instruction dependencies, particularly when considering hard-irq
->>>> safety. For example PUSHF+POPF on x86.
->>>>
->>>> Instead, just use a workqueue and do the free_huge_page() in regular
->>>> task context.
->>>>
->>>> [1] https://lore.kernel.org/lkml/20191211194615.18502-1-longman@redhat.com/
->>>> [2] https://lore.kernel.org/lkml/20180905112341.21355-1-aneesh.kumar@linux.ibm.com/
->>>>
->>>> Reported-by: Waiman Long <longman@redhat.com>
->>>> Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
->>>> Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
->>> Thank you Davidlohr.
->>>
->>> The patch does seem fairly simple and straight forward.  I need to brush up
->>> on my workqueue knowledge to provide a full review.
->>>
->>> Longman,
->>> Do you have a test to reproduce the issue?  If so, can you try running with
->>> this patch.
->> Yes, I do have a test that can reproduce the issue. I will run it with
->> the patch and report the status tomorrow.
-> Can you extract guts of the testcase and integrate them into hugetlb
-> test suite?
+On Tue, Dec 03, 2019 at 06:15:36PM +0800, Ikjoon Jang wrote:
+> Add "hub,interval" property to usb-device, so hub device can override
+> endpoint descriptor's bInterval.
+> 
+> When we know reducing autosuspend delay for built-in HIDs is better for
+> power saving, we can reduce it to the optimal value. But if a parent hub
+> has a long bInterval, mouse lags a lot from more frequent autosuspend.
+> So this enables overriding bInterval for a hard wired hub device only
+> when we know that reduces the power consumption.
+> 
+> Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+> ---
+>  Documentation/devicetree/bindings/usb/usb-device.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
+> index 036be172b1ae..44bef2ff2704 100644
+> --- a/Documentation/devicetree/bindings/usb/usb-device.txt
+> +++ b/Documentation/devicetree/bindings/usb/usb-device.txt
+> @@ -66,6 +66,9 @@ Required properties for host-controller nodes with device nodes:
+>  - #size-cells: shall be 0
+>  
+>  
+> +Optional properties for hub nodes
+> +- hub,interval: bInterval of status change endpoint. The range is 1-255.
 
-The test case that I used is the Red Hat internal "Fork vs. fast GUP
-race test" written by Jarod Wilson. I would have to ask him if he is OK
-with that.
+'hub' is not a vendor.
 
-Cheers,
-Longman
+'b-interval' instead.
 
+Rob
