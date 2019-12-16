@@ -2,54 +2,50 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E3CDC43603
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD3D8C2D0C3
 	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72F6E20CC7
+	by mail.kernel.org (Postfix) with ESMTP id A5E242166E
 	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:13:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1576520024;
-	bh=xM3l1nyEPHhbbcxD8IHwnFt40y0AFFRwzfxMpW0VxSY=;
+	bh=pDM9YgV4ACQyf4D8/DQYrmhcjDCqeiLjgwAC5zEHwIw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h3Sx6geDgk+iV7F6xzhBsfpyhuszjBhEgLmjyH7U5tj7mIfp/OPXfPfAFgf6Il737
-	 FF4MOVx5BSgSXZ7l3ys6IVBUvRXTfWF7dYTW0oM+TkCipMk1pJTlw0QhHCvAH+2UeO
-	 zj1HBoSwpsFC9V8ON4yf/1gWKY88SJEqWx4kvMLY=
+	b=h4w6DR1hoNFM4Xc5hPWqMUJq9Tkq4y051PJ+Tqo2EjIns0IGOePoAETchq5bOJ0Vo
+	 zW7+HBTm3Zq/Dcz9Ue19o6O2s9xzhEeS+xGaTTbDSUcme4ZxNxdYPRVnhZ3kY1VFWs
+	 J3zqlmXPHwoOcC9/rx/PXsEwnDwIbE56X599Hzqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730433AbfLPSNh (ORCPT
+        id S1730917AbfLPSNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:13:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59592 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:13:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730741AbfLPSNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:13:24 -0500
+        id S1731109AbfLPSNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:13:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AEDC20CC7;
-        Mon, 16 Dec 2019 18:13:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73E9D20CC7;
+        Mon, 16 Dec 2019 18:13:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520003;
-        bh=xM3l1nyEPHhbbcxD8IHwnFt40y0AFFRwzfxMpW0VxSY=;
+        s=default; t=1576520010;
+        bh=pDM9YgV4ACQyf4D8/DQYrmhcjDCqeiLjgwAC5zEHwIw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EpbqIvHL0qQ8AwZOY/291iZd3tBV1MFkJX+2/TfQnCM5+Yf7t1qXC6ky9Mp9Awdz0
-         meZ/lZIvCxSDSrIyRcQdzEgZl6KV0zdm2r4JBV133BqLZ7MW2zQgP8gERkNs2WRbWL
-         PCadzWnxuLTEBV8i3FY/urfTvX+QrOGVL/ugWC9M=
+        b=RbHy3TSnvJL/B/CN6nk36TF1v8ZXw0ssCthZmQyRlNAJ/U2z7uBnogG5MyQX0/g0k
+         alHh5XAyiCVukj6VrleaGYzhEzGXQ8XkwZ7+L6hlbSVg8lRMKulAUQzhOn+4j4moFa
+         AXHOz9R6xQuTjRA+bhGF6plpSa6lt0vfTCIZAcmU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Quinn Tran <qutran@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Ewan D. Milne" <emilne@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 155/180] scsi: qla2xxx: Fix stale session
-Date:   Mon, 16 Dec 2019 18:49:55 +0100
-Message-Id: <20191216174844.675793574@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 5.3 121/180] ppdev: fix PPGETTIME/PPSETTIME ioctls
+Date:   Mon, 16 Dec 2019 18:49:21 +0100
+Message-Id: <20191216174840.925017381@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -62,53 +58,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <qutran@marvell.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 2037ce49d30a0d07348df406ef78f6664f4bc899 ]
+commit 998174042da229e2cf5841f574aba4a743e69650 upstream.
 
-On fast cable pull, where driver is unable to detect device has disappeared
-and came back based on switch info, qla2xxx would not re-login while remote
-port has already invalidated the session.  This causes IO timeout.  This
-patch would relogin to remote device for RSCN affected port.
+Going through the uses of timeval in the user space API,
+I noticed two bugs in ppdev that were introduced in the y2038
+conversion:
 
-Signed-off-by: Quinn Tran <qutran@marvell.com>
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Reviewed-by: Ewan D. Milne <emilne@redhat.com>
-Link: https://lore.kernel.org/r/20190830222402.23688-6-hmadhani@marvell.com
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+* The range check was accidentally moved from ppsettime to
+  ppgettime
+
+* On sparc64, the microseconds are in the other half of the
+  64-bit word.
+
+Fix both, and mark the fix for stable backports.
+
+Cc: stable@vger.kernel.org
+Fixes: 3b9ab374a1e6 ("ppdev: convert to y2038 safe")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20191108203435.112759-8-arnd@arndb.de
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/scsi/qla2xxx/qla_gs.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/char/ppdev.c |   16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_gs.c b/drivers/scsi/qla2xxx/qla_gs.c
-index ebf223cfebbc5..dec521d726d91 100644
---- a/drivers/scsi/qla2xxx/qla_gs.c
-+++ b/drivers/scsi/qla2xxx/qla_gs.c
-@@ -3674,7 +3674,6 @@ void qla24xx_async_gnnft_done(scsi_qla_host_t *vha, srb_t *sp)
- 		list_for_each_entry(fcport, &vha->vp_fcports, list) {
- 			if (memcmp(rp->port_name, fcport->port_name, WWN_SIZE))
- 				continue;
--			fcport->scan_needed = 0;
- 			fcport->scan_state = QLA_FCPORT_FOUND;
- 			found = true;
- 			/*
-@@ -3683,10 +3682,12 @@ void qla24xx_async_gnnft_done(scsi_qla_host_t *vha, srb_t *sp)
- 			if ((fcport->flags & FCF_FABRIC_DEVICE) == 0) {
- 				qla2x00_clear_loop_id(fcport);
- 				fcport->flags |= FCF_FABRIC_DEVICE;
--			} else if (fcport->d_id.b24 != rp->id.b24) {
-+			} else if (fcport->d_id.b24 != rp->id.b24 ||
-+				fcport->scan_needed) {
- 				qlt_schedule_sess_for_deletion(fcport);
- 			}
- 			fcport->d_id.b24 = rp->id.b24;
-+			fcport->scan_needed = 0;
- 			break;
- 		}
+--- a/drivers/char/ppdev.c
++++ b/drivers/char/ppdev.c
+@@ -619,20 +619,27 @@ static int pp_do_ioctl(struct file *file
+ 		if (copy_from_user(time32, argp, sizeof(time32)))
+ 			return -EFAULT;
  
--- 
-2.20.1
-
++		if ((time32[0] < 0) || (time32[1] < 0))
++			return -EINVAL;
++
+ 		return pp_set_timeout(pp->pdev, time32[0], time32[1]);
+ 
+ 	case PPSETTIME64:
+ 		if (copy_from_user(time64, argp, sizeof(time64)))
+ 			return -EFAULT;
+ 
++		if ((time64[0] < 0) || (time64[1] < 0))
++			return -EINVAL;
++
++		if (IS_ENABLED(CONFIG_SPARC64) && !in_compat_syscall())
++			time64[1] >>= 32;
++
+ 		return pp_set_timeout(pp->pdev, time64[0], time64[1]);
+ 
+ 	case PPGETTIME32:
+ 		jiffies_to_timespec64(pp->pdev->timeout, &ts);
+ 		time32[0] = ts.tv_sec;
+ 		time32[1] = ts.tv_nsec / NSEC_PER_USEC;
+-		if ((time32[0] < 0) || (time32[1] < 0))
+-			return -EINVAL;
+ 
+ 		if (copy_to_user(argp, time32, sizeof(time32)))
+ 			return -EFAULT;
+@@ -643,8 +650,9 @@ static int pp_do_ioctl(struct file *file
+ 		jiffies_to_timespec64(pp->pdev->timeout, &ts);
+ 		time64[0] = ts.tv_sec;
+ 		time64[1] = ts.tv_nsec / NSEC_PER_USEC;
+-		if ((time64[0] < 0) || (time64[1] < 0))
+-			return -EINVAL;
++
++		if (IS_ENABLED(CONFIG_SPARC64) && !in_compat_syscall())
++			time64[1] <<= 32;
+ 
+ 		if (copy_to_user(argp, time64, sizeof(time64)))
+ 			return -EFAULT;
 
 
