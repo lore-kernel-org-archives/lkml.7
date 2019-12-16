@@ -2,126 +2,175 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4159C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CECF4C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D239206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:31:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oHAUq9CJ"
+	by mail.kernel.org (Postfix) with ESMTP id A8184206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:31:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576521119;
+	bh=JfdLsctLNhC0Q+bmhltptJfEYXoQ8ljEj1jkUODPDik=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=M5+Ur+j+DZe11m+A2PSLWFGx+gTdHVl5B06907QtVNUHy3TCcG+0lVWUACbwFOx9v
+	 HKYSDQnNZSAr/a+XP15E4CR59l8joq1CQXJNOprqS6Zlsy0+4JfsvVFQ8PKutT28go
+	 w7MJ+HBNyeujcRxZvPY95oWQU15bffHaZWQnFO0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730696AbfLPSbs (ORCPT
+        id S1730667AbfLPSKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:31:48 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:46505 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730365AbfLPSbo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:31:44 -0500
-Received: by mail-pg1-f196.google.com with SMTP id z124so4169492pgb.13;
-        Mon, 16 Dec 2019 10:31:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=q6wgY7fQy1m4FBOYKfnwYqVpu2I96z7LmDo1JYpVKmA=;
-        b=oHAUq9CJWPu2x9rms0fDdTAm6ul0RPmQhldrsN5OLylWRT0QAkNMoiBg+qldjqhuVE
-         pC01WYcRZcqbql2Xk1TZeLGh/t9abXxANyNKi6ScykT5hqJ6VQHqIoyeOhIiNsnNxpmS
-         gYVIr9ogXexsFc5vP2kdujTRDAnuhVX8OcC9sEQ3WCLX2/0G6DBgAMnxj4EZpxH1fsiJ
-         h8Ue9p1vYopiP2M3k2mG90lwVZbF4bPwEoIWprXHXcRoHTevhwMdiHw/kN99BtaNLFV9
-         8WPiL2i0bskE5hz4kpEgdKG2o9zplIG0/a6L5jR8VjF6CCUgEF6hvVUUVjElXwucWa7n
-         fatg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=q6wgY7fQy1m4FBOYKfnwYqVpu2I96z7LmDo1JYpVKmA=;
-        b=jbi2ICbbxcMiGyE7fkzeyiNIjORZHo/VI8XIHIng9mAUg6Gbs2BFM3SGOa7KuQZ66n
-         uONJKdr2nrtvNaB2gmvhycPov+CvcjqURAsuVM4imhTI61nMV2/1u2stXP1YBQQjofU2
-         IeMWvMTnQuNusiPhkwY6BYBbrp/oQX2InswApC0nywEQup63/54gFmJDG5nt79NC+1ac
-         b7eC+tKE7Z5CfCwqM4uP8RnTs/ZirrurmyCNOpHp9Jt25FHa0n1nEf57lnpdm3YG0v2l
-         YM4o4tu+JG0j+9LhyABlVQqWNorV639P7XL7YXRvWicdrJFwP8x+5HVudTwxuQldRG/y
-         DuZg==
-X-Gm-Message-State: APjAAAVUY3efypcKyRyhbFhzhd+bt10liHxrIqrNp/PX/AI0mN5L+bdB
-        DG8PzjCvvgufWtJZy05brEbBe6jh0dvBXqTAWUBNnQ==
-X-Google-Smtp-Source: APXvYqxsNamYDluy4MU6SGf4xgUn04QcfrEm+7mgsyXt1Aa1RCnnLKK8DURIStGo/unIqvJuRCAO2zGEMOPD6Nn2h30=
-X-Received: by 2002:a63:364d:: with SMTP id d74mr19952282pga.408.1576521103641;
- Mon, 16 Dec 2019 10:31:43 -0800 (PST)
-MIME-Version: 1.0
-References: <20191216174747.111154704@linuxfoundation.org> <20191216174815.749524432@linuxfoundation.org>
-In-Reply-To: <20191216174815.749524432@linuxfoundation.org>
-Reply-To: andrea.merello@gmail.com
-From:   Andrea Merello <andrea.merello@gmail.com>
-Date:   Mon, 16 Dec 2019 19:31:31 +0100
-Message-ID: <CAN8YU5NrEbJx3yxBNoRWnwUiAYWffDp6gEcCcGUK+g4zjbHwEg@mail.gmail.com>
-Subject: Re: [PATCH 4.19 106/140] iio: ad7949: kill pointless
- "readback"-handling code
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Mon, 16 Dec 2019 13:10:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54124 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730448AbfLPSKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:10:45 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B5A22467E;
+        Mon, 16 Dec 2019 18:10:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576519845;
+        bh=JfdLsctLNhC0Q+bmhltptJfEYXoQ8ljEj1jkUODPDik=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pAKI+yYWcOKAyJdwUzcDrI3fSm9wjXXbKD3vdvpCSEP8xd2R9Q4teucbcbwMEsxMj
+         EbMYAPpZe8P7MVAp7KAoeKyp68ZusqmjZPYvJidMJzNjFUzHzserVHtdUbxmY6XVxR
+         UIKcASn7q+3QHeI3Sr+3ROL6rKqAjqeZbwkWqWnM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.3 092/180] cpuidle: teo: Consider hits and misses metrics of disabled states
+Date:   Mon, 16 Dec 2019 18:48:52 +0100
+Message-Id: <20191216174834.801861382@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
+References: <20191216174806.018988360@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Something nasty seems happening here: it looks like the commit message
-and the actual diff have nothing to do one wrt the other; the commit
-message is from one of my patches, the diff is against some unrelated
-file.
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Il giorno lun 16 dic 2019 alle ore 19:05 Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> ha scritto:
->
-> From: Meng Li <Meng.Li@windriver.com>
->
-> [ Upstream commit c270bbf7bb9ddc4e2a51b3c56557c377c9ac79bc ]
->
-> The device could be configured to spit out also the configuration word
-> while reading the AD result value (in the same SPI xfer) - this is called
-> "readback" in the device datasheet.
->
-> The driver checks if readback is enabled and it eventually adjusts the SPI
-> xfer length and it applies proper shifts to still get the data, discarding
-> the configuration word.
->
-> The readback option is actually never enabled (the driver disables it), so
-> the said checks do not serve for any purpose.
->
-> Since enabling the readback option seems not to provide any advantage (the
-> driver entirely sets the configuration word without relying on any default
-> value), just kill the said, unused, code.
->
-> Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
-> Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/edac/altera_edac.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
-> index 56de378ad13dc..c9108906bcdc0 100644
-> --- a/drivers/edac/altera_edac.c
-> +++ b/drivers/edac/altera_edac.c
-> @@ -600,6 +600,7 @@ static const struct regmap_config s10_sdram_regmap_cfg = {
->         .reg_read = s10_protected_reg_read,
->         .reg_write = s10_protected_reg_write,
->         .use_single_rw = true,
-> +       .fast_io = true,
->  };
->
->  static int altr_s10_sdram_probe(struct platform_device *pdev)
-> --
-> 2.20.1
->
->
->
+commit e43dcf20215f0287ea113102617ca04daa76b70e upstream.
+
+The TEO governor uses idle duration "bins" defined in accordance with
+the CPU idle states table provided by the driver, so that each "bin"
+covers the idle duration range between the target residency of the
+idle state corresponding to it and the target residency of the closest
+deeper idle state.  The governor collects statistics for each bin
+regardless of whether or not the idle state corresponding to it is
+currently enabled.
+
+In particular, the "hits" and "misses" metrics measure the likelihood
+of a situation in which both the time till the next timer (sleep
+length) and the idle duration measured after wakeup fall into the
+given bin.  Namely, if the "hits" value is greater than the "misses"
+one, that situation is more likely than the one in which the sleep
+length falls into the given bin, but the idle duration measured after
+wakeup falls into a bin corresponding to one of the shallower idle
+states.
+
+If the idle state corresponding to the given bin is disabled, it
+cannot be selected and if it turns out to be the one that should be
+selected, a shallower idle state needs to be used instead of it.
+Nevertheless, the metrics collected for the bin corresponding to it
+are still valid and need to be taken into account as though that
+state had not been disabled.
+
+For this reason, make teo_select() always use the "hits" and "misses"
+values of the idle duration range that the sleep length falls into
+even if the specific idle state corresponding to it is disabled and
+if the "hits" values is greater than the "misses" one, select the
+closest enabled shallower idle state in that case.
+
+Fixes: b26bf6ab716f ("cpuidle: New timer events oriented governor for tickless systems")
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: 5.1+ <stable@vger.kernel.org> # 5.1+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/cpuidle/governors/teo.c |   25 +++++++++++++++++++++----
+ 1 file changed, 21 insertions(+), 4 deletions(-)
+
+--- a/drivers/cpuidle/governors/teo.c
++++ b/drivers/cpuidle/governors/teo.c
+@@ -241,7 +241,7 @@ static int teo_select(struct cpuidle_dri
+ {
+ 	struct teo_cpu *cpu_data = per_cpu_ptr(&teo_cpus, dev->cpu);
+ 	int latency_req = cpuidle_governor_latency_req(dev->cpu);
+-	unsigned int duration_us, early_hits;
++	unsigned int duration_us, hits, misses, early_hits;
+ 	int max_early_idx, constraint_idx, idx, i;
+ 	ktime_t delta_tick;
+ 
+@@ -255,6 +255,8 @@ static int teo_select(struct cpuidle_dri
+ 	cpu_data->sleep_length_ns = tick_nohz_get_sleep_length(&delta_tick);
+ 	duration_us = ktime_to_us(cpu_data->sleep_length_ns);
+ 
++	hits = 0;
++	misses = 0;
+ 	early_hits = 0;
+ 	max_early_idx = -1;
+ 	constraint_idx = drv->state_count;
+@@ -273,6 +275,17 @@ static int teo_select(struct cpuidle_dri
+ 				continue;
+ 
+ 			/*
++			 * This state is disabled, so the range of idle duration
++			 * values corresponding to it is covered by the current
++			 * candidate state, but still the "hits" and "misses"
++			 * metrics of the disabled state need to be used to
++			 * decide whether or not the state covering the range in
++			 * question is good enough.
++			 */
++			hits = cpu_data->states[i].hits;
++			misses = cpu_data->states[i].misses;
++
++			/*
+ 			 * If the "early hits" metric of a disabled state is
+ 			 * greater than the current maximum, it should be taken
+ 			 * into account, because it would be a mistake to select
+@@ -288,8 +301,11 @@ static int teo_select(struct cpuidle_dri
+ 			continue;
+ 		}
+ 
+-		if (idx < 0)
++		if (idx < 0) {
+ 			idx = i; /* first enabled state */
++			hits = cpu_data->states[i].hits;
++			misses = cpu_data->states[i].misses;
++		}
+ 
+ 		if (s->target_residency > duration_us)
+ 			break;
+@@ -298,6 +314,8 @@ static int teo_select(struct cpuidle_dri
+ 			constraint_idx = i;
+ 
+ 		idx = i;
++		hits = cpu_data->states[i].hits;
++		misses = cpu_data->states[i].misses;
+ 
+ 		if (early_hits < cpu_data->states[i].early_hits &&
+ 		    !(tick_nohz_tick_stopped() &&
+@@ -315,8 +333,7 @@ static int teo_select(struct cpuidle_dri
+ 	 * "early hits" metric, but if that cannot be determined, just use the
+ 	 * state selected so far.
+ 	 */
+-	if (cpu_data->states[idx].hits <= cpu_data->states[idx].misses &&
+-	    max_early_idx >= 0) {
++	if (hits <= misses && max_early_idx >= 0) {
+ 		idx = max_early_idx;
+ 		duration_us = drv->states[idx].target_residency;
+ 	}
+
+
