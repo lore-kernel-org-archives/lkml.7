@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FA8C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD629C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:27:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CCE5206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7757420717
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:27:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520834;
-	bh=4FAopnWEW4sAmErItMkZw9/jbKecniXpe7hWz5Qlsvo=;
+	s=default; t=1576520840;
+	bh=54g1RQWe0ZQcTMSuQP2WxVHfbj0WlZ+Smeh/tvKqMiM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EXF7cmLqNdyJFt0jUt5fdnrql1NPeyN1B/YWinPLfBS9G45Hw9rr9TZveLQKRcvSo
-	 xpedyrVL82PWETfVOHTkRi6U5aS/S5IGsDV8CpKLN2OV8EiIh/3X1jrZF7y6DIhcTa
-	 WPwYQcKJT9s0tPo4uU77pY4KTz/mJBEcNn39mDoM=
+	b=iCvUSVJ1wlG7ejlf6PeZgO6pYAtdcj8wQH+36Bf77ikUjblRpKs7DHmjdV1X/VyVa
+	 V4o6V3uDVQy0QlVYBFmInfbVdGo1YpGsl+Kiv20bbPS3Jm1BkncU4SWlJNljISY9rD
+	 Tf8QZjb1bpy7qbf5cE9MZ74lEv+zfNpFzmxd54gg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731472AbfLPSQI (ORCPT
+        id S1731290AbfLPSQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:16:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38036 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:16:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731462AbfLPSQF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:16:05 -0500
+        id S1728525AbfLPSP5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:15:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5FD0207FF;
-        Mon, 16 Dec 2019 18:16:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A286206E0;
+        Mon, 16 Dec 2019 18:15:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520164;
-        bh=4FAopnWEW4sAmErItMkZw9/jbKecniXpe7hWz5Qlsvo=;
+        s=default; t=1576520156;
+        bh=54g1RQWe0ZQcTMSuQP2WxVHfbj0WlZ+Smeh/tvKqMiM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UpepH9kPKmYINUPXrTH+Hk07pZQ9wBjgyCrVMcCNaL0CmmUQE8EeUUC1MW4+e+gni
-         UQbonI8Q4PftkcxXVZ+1ZYsW7qjDrC57CskW/JwOL1AUzewKlz9K37UrszlypCkZ4k
-         PifqfnwnnXtHU+o/o48sTUTcUjii/aIQWH+C4AGo=
+        b=A1Ppr9LzIwWA0CFqE7m1o63ypXfgG2nFoh/pte+Za9EOHUtbIDk+hEOjRqbpraWmV
+         sk40J0WRithHSLCfcymjdpIyfmuX/spmnewmpsqz/sQ0va/L9DozqvgG2xUg6ILiec
+         pxFSJmx/zIlyLdD7cMYl91E22OfpSPCnZX+N8OfM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Lesiak <chris.lesiak@licor.com>,
-        Matt Ranostay <matt.ranostay@konsulko.com>,
+        stable@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>,
         Stable@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.4 040/177] iio: humidity: hdc100x: fix IIO_HUMIDITYRELATIVE channel reporting
-Date:   Mon, 16 Dec 2019 18:48:16 +0100
-Message-Id: <20191216174829.438472092@linuxfoundation.org>
+Subject: [PATCH 5.4 038/177] iio: imu: st_lsm6dsx: fix ODR check in st_lsm6dsx_write_raw
+Date:   Mon, 16 Dec 2019 18:48:14 +0100
+Message-Id: <20191216174828.973318534@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -61,34 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Lesiak <chris.lesiak@licor.com>
+From: Lorenzo Bianconi <lorenzo@kernel.org>
 
-commit 342a6928bd5017edbdae376042d8ad6af3d3b943 upstream.
+commit fc3f6ad7f5dc6c899fbda0255865737bac88c2e0 upstream.
 
-The IIO_HUMIDITYRELATIVE channel was being incorrectly reported back
-as percent when it should have been milli percent. This is via an
-incorrect scale value being returned to userspace.
+Since st_lsm6dsx i2c master controller relies on accel device as trigger
+and slave devices can run at different ODRs we must select an accel_odr >=
+slave_odr. Report real accel ODR in st_lsm6dsx_check_odr() in order to
+properly set sensor frequency in st_lsm6dsx_write_raw and avoid to
+report unsupported frequency
 
-Signed-off-by: Chris Lesiak <chris.lesiak@licor.com>
-Acked-by: Matt Ranostay <matt.ranostay@konsulko.com>
+Fixes: 6ffb55e5009ff ("iio: imu: st_lsm6dsx: introduce ST_LSM6DSX_ID_EXT sensor ids")
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 Cc: <Stable@vger.kernel.org>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/humidity/hdc100x.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/drivers/iio/humidity/hdc100x.c
-+++ b/drivers/iio/humidity/hdc100x.c
-@@ -229,7 +229,7 @@ static int hdc100x_read_raw(struct iio_d
- 			*val2 = 65536;
- 			return IIO_VAL_FRACTIONAL;
- 		} else {
--			*val = 100;
-+			*val = 100000;
- 			*val2 = 65536;
- 			return IIO_VAL_FRACTIONAL;
- 		}
+--- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
++++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+@@ -985,8 +985,7 @@ int st_lsm6dsx_check_odr(struct st_lsm6d
+ 		return -EINVAL;
+ 
+ 	*val = odr_table->odr_avl[i].val;
+-
+-	return 0;
++	return odr_table->odr_avl[i].hz;
+ }
+ 
+ static u16 st_lsm6dsx_check_odr_dependency(struct st_lsm6dsx_hw *hw, u16 odr,
+@@ -1149,8 +1148,10 @@ static int st_lsm6dsx_write_raw(struct i
+ 	case IIO_CHAN_INFO_SAMP_FREQ: {
+ 		u8 data;
+ 
+-		err = st_lsm6dsx_check_odr(sensor, val, &data);
+-		if (!err)
++		val = st_lsm6dsx_check_odr(sensor, val, &data);
++		if (val < 0)
++			err = val;
++		else
+ 			sensor->odr = val;
+ 		break;
+ 	}
 
 
