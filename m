@@ -2,53 +2,53 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F543C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 755E0C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3139120733
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47D9C207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:00:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519231;
-	bh=yaa4SHHOBkTTvgTcLZDmSrDp6QN8JfylKS8nlKJd8ts=;
+	s=default; t=1576519234;
+	bh=jCcds+R4TRriDObhC7+3/nn/Q7KoNi9RwFqQibwtl3U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AH4Y+upxQH7eTXF6KY2rNxH935jd7eScr8+nwplHl4m8eg/yFGwa8C1+lyf9d3BZ8
-	 Usz0seIUqZHz4Kh4NHXstH9E/yEoO/RsT5CfDMn4SK9BBd516EnSA5MvgEUV8AZV0z
-	 hAwrHRDOYfeNHHk85dL68j+gESJQifwNgmOSvaKg=
+	b=rsFox8r/8vFn+0+uR4KxSVCoe8ICwfzI5wYkIxL8mvhiox6xZJnP9wnTcTHzA5Oyb
+	 InT/QRwBdKm0RK7Tv4RPtIAgjn8KNxIuFoGOrvjIQP5Cxyl2bAbpVt937y56G8OzRt
+	 IR0NVVkIQ0GloLXLs3LPNZLwWv0MJ3l73/lS8i3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728768AbfLPSAa (ORCPT
+        id S1728731AbfLPSAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:00:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34486 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:00:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728947AbfLPSA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:00:27 -0500
+        id S1728949AbfLPSA3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:00:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 237972072D;
-        Mon, 16 Dec 2019 18:00:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D12520717;
+        Mon, 16 Dec 2019 18:00:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519226;
-        bh=yaa4SHHOBkTTvgTcLZDmSrDp6QN8JfylKS8nlKJd8ts=;
+        s=default; t=1576519229;
+        bh=jCcds+R4TRriDObhC7+3/nn/Q7KoNi9RwFqQibwtl3U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BHuckGxwOxKgQi9zopgcfpTCImHj9ijG+ATU9onAPLPnV0qfs6PPEKRj4+h1mRyzY
-         KLNTrMBjLyBludadK1asmXSsNy5+KYHVvGHNC/tNHFPmpxL/8M06OgzJWLE5UaK38w
-         PLlBfmVYM2b7NcfhmUvHlDFX6I3agMg+iuwB5zYo=
+        b=I/td3XiSK1g05GDL+wyhlKB+2Kjxx68euDMPorGbJUNc/GloYu0u0dcz076txJund
+         D6B7ZD25Nw8dejX6u2JNGWUmM3U70iUeOKuPT6HXAklgs98yuTottK339IyBrLdkDl
+         yVCBxZOBPi1C1pVW/A2OlBTHRrCNnYg78gaKSWRg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.14 230/267] powerpc/xive: Skip ioremap() of ESB pages for LSI interrupts
-Date:   Mon, 16 Dec 2019 18:49:16 +0100
-Message-Id: <20191216174915.156963322@linuxfoundation.org>
+        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 248/267] omap: pdata-quirks: remove openpandora quirks for mmc3 and wl1251
+Date:   Mon, 16 Dec 2019 18:49:34 +0100
+Message-Id: <20191216174916.176895952@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -61,97 +61,142 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cédric Le Goater <clg@kaod.org>
+From: H. Nikolaus Schaller <hns@goldelico.com>
 
-commit b67a95f2abff0c34e5667c15ab8900de73d8d087 upstream.
+[ Upstream commit 2398c41d64321e62af54424fd399964f3d48cdc2 ]
 
-The PCI INTx interrupts and other LSI interrupts are handled differently
-under a sPAPR platform. When the interrupt source characteristics are
-queried, the hypervisor returns an H_INT_ESB flag to inform the OS
-that it should be using the H_INT_ESB hcall for interrupt management
-and not loads and stores on the interrupt ESB pages.
+With a wl1251 child node of mmc3 in the device tree decoded
+in omap_hsmmc.c to handle special wl1251 initialization, we do
+no longer need to instantiate the mmc3 through pdata quirks.
 
-A default -1 value is returned for the addresses of the ESB pages. The
-driver ignores this condition today and performs a bogus IO mapping.
-Recent changes and the DEBUG_VM configuration option make the bug
-visible with :
+We also can remove the wlan regulator and reset/interrupt definitions
+and do them through device tree.
 
-  kernel BUG at arch/powerpc/include/asm/book3s/64/pgtable.h:612!
-  Oops: Exception in kernel mode, sig: 5 [#1]
-  LE PAGE_SIZE=64K MMU=Radix MMU=Hash SMP NR_CPUS=1024 NUMA pSeries
-  Modules linked in:
-  CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.4.0-0.rc6.git0.1.fc32.ppc64le #1
-  NIP:  c000000000f63294 LR: c000000000f62e44 CTR: 0000000000000000
-  REGS: c0000000fa45f0d0 TRAP: 0700   Not tainted  (5.4.0-0.rc6.git0.1.fc32.ppc64le)
-  ...
-  NIP ioremap_page_range+0x4c4/0x6e0
-  LR  ioremap_page_range+0x74/0x6e0
-  Call Trace:
-    ioremap_page_range+0x74/0x6e0 (unreliable)
-    do_ioremap+0x8c/0x120
-    __ioremap_caller+0x128/0x140
-    ioremap+0x30/0x50
-    xive_spapr_populate_irq_data+0x170/0x260
-    xive_irq_domain_map+0x8c/0x170
-    irq_domain_associate+0xb4/0x2d0
-    irq_create_mapping+0x1e0/0x3b0
-    irq_create_fwspec_mapping+0x27c/0x3e0
-    irq_create_of_mapping+0x98/0xb0
-    of_irq_parse_and_map_pci+0x168/0x230
-    pcibios_setup_device+0x88/0x250
-    pcibios_setup_bus_devices+0x54/0x100
-    __of_scan_bus+0x160/0x310
-    pcibios_scan_phb+0x330/0x390
-    pcibios_init+0x8c/0x128
-    do_one_initcall+0x60/0x2c0
-    kernel_init_freeable+0x290/0x378
-    kernel_init+0x2c/0x148
-    ret_from_kernel_thread+0x5c/0x80
-
-Fixes: bed81ee181dd ("powerpc/xive: introduce H_INT_ESB hcall")
-Cc: stable@vger.kernel.org # v4.14+
-Signed-off-by: Cédric Le Goater <clg@kaod.org>
-Tested-by: Daniel Axtens <dja@axtens.net>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191203163642.2428-1-clg@kaod.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for requesting DMA channel")
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Cc: <stable@vger.kernel.org> # v4.7+
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/sysdev/xive/spapr.c |   12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ arch/arm/mach-omap2/pdata-quirks.c | 93 ------------------------------
+ 1 file changed, 93 deletions(-)
 
---- a/arch/powerpc/sysdev/xive/spapr.c
-+++ b/arch/powerpc/sysdev/xive/spapr.c
-@@ -293,20 +293,28 @@ static int xive_spapr_populate_irq_data(
- 	data->esb_shift = esb_shift;
- 	data->trig_page = trig_page;
+diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
+index 6b433fce65a5b..2477f6086de4b 100644
+--- a/arch/arm/mach-omap2/pdata-quirks.c
++++ b/arch/arm/mach-omap2/pdata-quirks.c
+@@ -307,108 +307,15 @@ static void __init omap3_logicpd_torpedo_init(void)
+ }
  
-+	data->hw_irq = hw_irq;
-+
- 	/*
- 	 * No chip-id for the sPAPR backend. This has an impact how we
- 	 * pick a target. See xive_pick_irq_target().
- 	 */
- 	data->src_chip = XIVE_INVALID_CHIP_ID;
+ /* omap3pandora legacy devices */
+-#define PANDORA_WIFI_IRQ_GPIO		21
+-#define PANDORA_WIFI_NRESET_GPIO	23
  
-+	/*
-+	 * When the H_INT_ESB flag is set, the H_INT_ESB hcall should
-+	 * be used for interrupt management. Skip the remapping of the
-+	 * ESB pages which are not available.
-+	 */
-+	if (data->flags & XIVE_IRQ_FLAG_H_INT_ESB)
-+		return 0;
-+
- 	data->eoi_mmio = ioremap(data->eoi_page, 1u << data->esb_shift);
- 	if (!data->eoi_mmio) {
- 		pr_err("Failed to map EOI page for irq 0x%x\n", hw_irq);
- 		return -ENOMEM;
- 	}
+ static struct platform_device pandora_backlight = {
+ 	.name	= "pandora-backlight",
+ 	.id	= -1,
+ };
  
--	data->hw_irq = hw_irq;
+-static struct regulator_consumer_supply pandora_vmmc3_supply[] = {
+-	REGULATOR_SUPPLY("vmmc", "omap_hsmmc.2"),
+-};
 -
- 	/* Full function page supports trigger */
- 	if (flags & XIVE_SRC_TRIGGER) {
- 		data->trig_mmio = data->eoi_mmio;
+-static struct regulator_init_data pandora_vmmc3 = {
+-	.constraints = {
+-		.valid_ops_mask		= REGULATOR_CHANGE_STATUS,
+-	},
+-	.num_consumer_supplies	= ARRAY_SIZE(pandora_vmmc3_supply),
+-	.consumer_supplies	= pandora_vmmc3_supply,
+-};
+-
+-static struct fixed_voltage_config pandora_vwlan = {
+-	.supply_name		= "vwlan",
+-	.microvolts		= 1800000, /* 1.8V */
+-	.gpio			= PANDORA_WIFI_NRESET_GPIO,
+-	.startup_delay		= 50000, /* 50ms */
+-	.enable_high		= 1,
+-	.init_data		= &pandora_vmmc3,
+-};
+-
+-static struct platform_device pandora_vwlan_device = {
+-	.name		= "reg-fixed-voltage",
+-	.id		= 1,
+-	.dev = {
+-		.platform_data = &pandora_vwlan,
+-	},
+-};
+-
+-static void pandora_wl1251_init_card(struct mmc_card *card)
+-{
+-	/*
+-	 * We have TI wl1251 attached to MMC3. Pass this information to
+-	 * SDIO core because it can't be probed by normal methods.
+-	 */
+-	if (card->type == MMC_TYPE_SDIO || card->type == MMC_TYPE_SD_COMBO) {
+-		card->quirks |= MMC_QUIRK_NONSTD_SDIO;
+-		card->cccr.wide_bus = 1;
+-		card->cis.vendor = 0x104c;
+-		card->cis.device = 0x9066;
+-		card->cis.blksize = 512;
+-		card->cis.max_dtr = 24000000;
+-		card->ocr = 0x80;
+-	}
+-}
+-
+-static struct omap2_hsmmc_info pandora_mmc3[] = {
+-	{
+-		.mmc		= 3,
+-		.caps		= MMC_CAP_4_BIT_DATA | MMC_CAP_POWER_OFF_CARD,
+-		.gpio_cd	= -EINVAL,
+-		.gpio_wp	= -EINVAL,
+-		.init_card	= pandora_wl1251_init_card,
+-	},
+-	{}	/* Terminator */
+-};
+-
+-static void __init pandora_wl1251_init(void)
+-{
+-	struct wl1251_platform_data pandora_wl1251_pdata;
+-	int ret;
+-
+-	memset(&pandora_wl1251_pdata, 0, sizeof(pandora_wl1251_pdata));
+-
+-	pandora_wl1251_pdata.power_gpio = -1;
+-
+-	ret = gpio_request_one(PANDORA_WIFI_IRQ_GPIO, GPIOF_IN, "wl1251 irq");
+-	if (ret < 0)
+-		goto fail;
+-
+-	pandora_wl1251_pdata.irq = gpio_to_irq(PANDORA_WIFI_IRQ_GPIO);
+-	if (pandora_wl1251_pdata.irq < 0)
+-		goto fail_irq;
+-
+-	pandora_wl1251_pdata.use_eeprom = true;
+-	ret = wl1251_set_platform_data(&pandora_wl1251_pdata);
+-	if (ret < 0)
+-		goto fail_irq;
+-
+-	return;
+-
+-fail_irq:
+-	gpio_free(PANDORA_WIFI_IRQ_GPIO);
+-fail:
+-	pr_err("wl1251 board initialisation failed\n");
+-}
+-
+ static void __init omap3_pandora_legacy_init(void)
+ {
+ 	platform_device_register(&pandora_backlight);
+-	platform_device_register(&pandora_vwlan_device);
+-	omap_hsmmc_init(pandora_mmc3);
+-	omap_hsmmc_late_init(pandora_mmc3);
+-	pandora_wl1251_init();
+ }
+ #endif /* CONFIG_ARCH_OMAP3 */
+ 
+-- 
+2.20.1
+
 
 
