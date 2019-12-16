@@ -2,177 +2,143 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4FCC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 01:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E369C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 01:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90A56206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 01:24:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E780D206D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 01:34:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="aMfTO5H7"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jLZZ4zcF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbfLPBYl (ORCPT
+        id S1726530AbfLPBei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 20:24:41 -0500
-Received: from mail-eopbgr70081.outbound.protection.outlook.com ([40.107.7.81]:35386
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726299AbfLPBYk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 20:24:40 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bIxVA1J4UKpcpH8yZlw7/zrYbl0kk2E35RBcqcLqqo/ll4TwlfxPejRYymHM0DlH1Ft0/pqlv3ar7Crhtlo6/ozVil6jYHUvECMj9Dbqrdq86Ww5zdI2UJjjQsUvO6XrZ8vffRsIrQrgUR72bPqAu1ub2j4HTXF84tb7DEJsMtqqx5PsZrFyNW7+A//d/3yj6c45vVaskuryhgVQO9imCBhhjjNZUdi3U70FPErX9dexlr/0boMGLwCMM6Zowlp8LwzfDgFl+u21+nGOVg/f3+Iu0suqyerSm7gPRcU1Yebmw501PQkBDyP8JWqjc0LVeQ+B3frhNqBQi+5LUfXqnA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RWcz42ePjnkuxrDXmlXo+w8oHCACf/paQLTWyda5P7M=;
- b=aLMxnA2q0IQdF/WP24MujUcl4xAiFZOuOihYVGn5JmtD6IPsCDSbJsylhtnble2eRz4XYCBWj1XqWhJYK34EFA7fGiIq6STb/nWpGQk40g4dUTTKYcWUwPRGegM1twsF/Riek7Om2uhJhrvWtcd9jtqheL1uSzj+JDgCpFUlPdzKJ4s2KTKbw+JqwHdtmvg+9j5U/Px4jFWQadOm3T6KdjjXlefZiCcem+1cO/rlgHJjyV3N8fYJRJ0ahWZjwxc5DwF7H2jFpNhApWPXvMDOQnPZFAox7+H1MVuvXNsra1QarGP44fRcp3Df3JTmsRzins7nAMZcbkPASarnUzMkTw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RWcz42ePjnkuxrDXmlXo+w8oHCACf/paQLTWyda5P7M=;
- b=aMfTO5H70W4SE10xSDJjGQkP9/MKA1NpVwBZNZDWeUCvNk35AadQLgC4cb5FO+fkGuIqYRGEBvaITUezmMY2QRva8he07GUVa5a+aDGK381my+njj11qufO9QLBC8PTvYf4MCsFQr1LBUYw7gVX8xSKZCkD+JJOIXJ6I/0x1CG0=
-Received: from VI1PR04MB5327.eurprd04.prod.outlook.com (20.177.51.23) by
- VI1PR04MB3229.eurprd04.prod.outlook.com (10.170.231.30) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.17; Mon, 16 Dec 2019 01:24:35 +0000
-Received: from VI1PR04MB5327.eurprd04.prod.outlook.com
- ([fe80::cd33:501f:b25:51a9]) by VI1PR04MB5327.eurprd04.prod.outlook.com
- ([fe80::cd33:501f:b25:51a9%7]) with mapi id 15.20.2538.019; Mon, 16 Dec 2019
- 01:24:35 +0000
-From:   Peter Chen <peter.chen@nxp.com>
-To:     Paul Cercueil <paul@crapouillou.net>
-CC:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "od@zcrc.me" <od@zcrc.me>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-Subject: RE: [PATCH v2 3/3] power/supply: Add generic USB charger driver
-Thread-Topic: [PATCH v2 3/3] power/supply: Add generic USB charger driver
-Thread-Index: AQHVsDrKPWSbvY6T+0OJ94dLsbCA8qe2ObMAgAJTXYCAA3BKkA==
-Date:   Mon, 16 Dec 2019 01:24:35 +0000
-Message-ID: <VI1PR04MB5327401FFD2D32E937548DD48B510@VI1PR04MB5327.eurprd04.prod.outlook.com>
-References: <20191211155032.167032-1-paul@crapouillou.net>
-        <20191211155032.167032-3-paul@crapouillou.net>
-        <20191212091814.GA7035@b29397-desktop> <1576270147.3.0@crapouillou.net>
-In-Reply-To: <1576270147.3.0@crapouillou.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peter.chen@nxp.com; 
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 35b637ed-a5e1-4c42-4b53-08d781c6b631
-x-ms-traffictypediagnostic: VI1PR04MB3229:
-x-microsoft-antispam-prvs: <VI1PR04MB3229D387431E7EF62D46BC518B510@VI1PR04MB3229.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 02530BD3AA
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(376002)(346002)(39860400002)(366004)(189003)(199004)(7696005)(478600001)(4326008)(5660300002)(33656002)(26005)(52536014)(6506007)(6916009)(66556008)(86362001)(66946007)(316002)(54906003)(64756008)(76116006)(186003)(44832011)(9686003)(7416002)(8676002)(71200400001)(55016002)(8936002)(66476007)(66446008)(81166006)(81156014)(2906002)(41533002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB3229;H:VI1PR04MB5327.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3Yl6s7ezAOyhIYkO9aQAEbwLzL9dZWre+IfcSs9QoOZXbWuEvIkCdU30lBef8T7CmCJAVS8xhRTLzDg7MRJ8ao+0Yh3WuSZu8oIMWspfpPj+YZIiO1SOqstzBOBR+q8b/6T7xYTLKlybrhmE4V75Gs87Shcbrczrzr2Pa1Xv541Sukl0wd+fnJvPC/IFcvMSKcmh62YOXcceR2cV2N3pJiDqcntqZFrghGBb1KDeAM3Dlu9r6zKsrONuI7emimIOM3quw+lAO41bQYCaYbHmrJySrLlhNdUKcrlJACgVMXF7cYeCwJymebF1E1+TwY0V4tTDholEZhkaoJRQ4beANtFRgoKO0zI/aJ/Lv6KOz52IAN0xM0Yb/1c+QdMbigt2bzr/G5DQsFbLSsfCzZBo1EhnJ5BbVl6hEGbVMqfR1w7B6zoqjNTJE6aRq+yk3Wd+Fu7wnUrf1iQc5b45ti/Fd2EoobXY/a6yyqe8jmxT+OsY8EbGKdWvDvSmldIWU68p
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sun, 15 Dec 2019 20:34:38 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:62388 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726437AbfLPBei (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 20:34:38 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576460077; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=hXp5Pym+ifAP29LPG9ZfYu5ZCPAzDqcCF4V7G9r94xg=;
+ b=jLZZ4zcFJ0HlWd3i+423XlMDl7WdwH70quOt0TJo0BK7YrDuKShVc2I5Se/qL0p9nUvz6brc
+ UZKBxNAjNuT7tm04bsWh6QUXYR+3EzX3UG9z23QXChALMHGxbJ0XSjZ9duLMgY87lpa4PIfJ
+ OAMIYJRlpT48Jt1rqkz0dVyQiOk=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5df6df26.7fe751a7c650-smtp-out-n01;
+ Mon, 16 Dec 2019 01:34:30 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A5C21C447A9; Mon, 16 Dec 2019 01:34:28 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 979EFC43383;
+        Mon, 16 Dec 2019 01:34:27 +0000 (UTC)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 35b637ed-a5e1-4c42-4b53-08d781c6b631
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Dec 2019 01:24:35.4737
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 4wEwjRdPxSS3hdbP9zP6/Kl1zt7l/1aF8fcGEMAsDFs19CzoEUj179+mz+2/GTfyvSlL2MT0UNzhZVFMBxKenQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3229
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Mon, 16 Dec 2019 09:34:27 +0800
+From:   cang@codeaurora.org
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] scsi: ufs: Put SCSI host after remove it
+In-Reply-To: <2956b9c7-b019-e2b3-7a1b-7b796b724add@acm.org>
+References: <1576328616-30404-1-git-send-email-cang@codeaurora.org>
+ <1576328616-30404-2-git-send-email-cang@codeaurora.org>
+ <85475247-efd5-732e-ae74-6d9a11e1bdf2@acm.org>
+ <5aa3a266e3db3403e663b36ddfdc4d60@codeaurora.org>
+ <2956b9c7-b019-e2b3-7a1b-7b796b724add@acm.org>
+Message-ID: <3afbe71cc9f0626edf66f7bc13b331f4@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=20
-> >>  +
-> >>  +	desc =3D &charger->desc;
-> >>  +	desc->name =3D "usb-charger";
-> >>  +	desc->properties =3D usb_charger_properties;
-> >>  +	desc->num_properties =3D ARRAY_SIZE(usb_charger_properties);
-> >>  +	desc->get_property =3D usb_charger_get_property;
-> >>  +	desc->type =3D POWER_SUPPLY_TYPE_USB;
-> >
-> > What's your further plan for this generic USB charger?
-> > To support BC1.2, we need to know charger type, and how we could get
-> > it?
-> >
-> > Peter
->=20
-> Well I don't really know. The USB role framework does not give any info a=
-bout
-> what's plugged.
->=20
+On 2019-12-16 05:55, Bart Van Assche wrote:
+> On 2019-12-14 14:24, cang@codeaurora.org wrote:
+>> How do you think if I replace my patch with below one?
+>> In this way, you can also move blk_cleanup_queue() behind
+>> cancel_work_sync(eh_work).
+>> 
+>> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+>> index b5966fa..bd4ae75 100644
+>> --- a/drivers/scsi/ufs/ufshcd.c
+>> +++ b/drivers/scsi/ufs/ufshcd.c
+>> @@ -8251,15 +8251,17 @@ void ufshcd_remove(struct ufs_hba *hba)
+>>         ufs_bsg_remove(hba);
+>>         ufs_sysfs_remove_nodes(hba->dev);
+>>         scsi_remove_host(hba->host);
+>> -       /* disable interrupts */
+>> -       ufshcd_disable_intr(hba, hba->intr_mask);
+>> -       ufshcd_hba_stop(hba, true);
+>> -
+>>         ufshcd_exit_clk_scaling(hba);
+>>         ufshcd_exit_clk_gating(hba);
+>>         if (ufshcd_is_clkscaling_supported(hba))
+>>                 device_remove_file(hba->dev,
+>> &hba->clk_scaling.enable_attr);
+>> +       cancel_work_sync(&hba->eeh_work);
+>> +       cancel_work_sync(&hba->eh_work);
+>> +       /* disable interrupts */
+>> +       ufshcd_disable_intr(hba, hba->intr_mask);
+>> +       ufshcd_hba_stop(hba, true);
+>>         ufshcd_hba_exit(hba);
+>> +       ufshcd_dealloc_host(hba);
+>>  }
+>>  EXPORT_SYMBOL_GPL(ufshcd_remove);
+> 
+> Hi Can,
+> 
+> To which kernel tree does the above patch apply? I'm asking this 
+> because
+> I don't see the recently added blk_cleanup_queue() calls in the above
+> patch. Please start from Martin's latest scsi-queue branch when
+> preparing SCSI patches.
+> 
+> Additionally, is it on purpose that there is no scsi_host_put() call in
+> the above code? I'd like to keep that call because without that call a
+> memory leak will occur when unloading the ufshcd-core kernel driver.
+> 
+> Thanks,
+> 
+> Bart.
 
-What's the use case for this patch set? How it be used?
+
+Hi Bart,
+
+This is applied to 5.5/scsi-queue. The two changes I patsed from you are
+not merged yet, I am still doing code review to them, so there is no
+blk_cleanup_queue() calls in my code base. I am just saying you may move
+your blk_cleanup_queue() calls below cancel_work_sync(&hba->eh_work) if
+my change applies. How do you think?
+
+scsi_host_put() was there before but explicitly removed by
+afa3dfd42d205b106787476647735aa1de1a5d02. I agree with you, without this
+change, there is memory leak.
 
 Thanks,
-Peter
 
-> -Paul
->=20
->=20
-> >
-> >>  +
-> >>  +	charger->charger =3D devm_power_supply_register(dev, desc, &cfg);
-> >>  +	if (IS_ERR(charger->charger)) {
-> >>  +		dev_err(dev, "Unable to register charger");
-> >>  +		return PTR_ERR(charger->charger);
-> >>  +	}
-> >>  +
-> >>  +	err =3D usb_role_switch_register_notifier(charger->role,
-> >> &charger->nb);
-> >>  +	if (err) {
-> >>  +		dev_err(dev, "Unable to register USB role switch notifier");
-> >>  +		return err;
-> >>  +	}
-> >>  +
-> >>  +	return devm_add_action_or_reset(dev, usb_charger_unregister,
-> >> charger);
-> >>  +}
-> >>  +
-> >>  +static const struct of_device_id usb_charger_of_match[] =3D {
-> >>  +	{ .compatible =3D "usb-charger" },
-> >>  +	{ /* sentinel */ },
-> >>  +};
-> >>  +MODULE_DEVICE_TABLE(of, usb_charger_of_match);  +  +static struct
-> >> platform_driver usb_charger_driver =3D {
-> >>  +	.driver =3D {
-> >>  +		.name =3D "usb-charger",
-> >>  +		.of_match_table =3D of_match_ptr(usb_charger_of_match),
-> >>  +	},
-> >>  +	.probe =3D usb_charger_probe,
-> >>  +};
-> >>  +module_platform_driver(usb_charger_driver);
-> >>  +
-> >>  +MODULE_DESCRIPTION("Simple USB charger driver");
-> >> +MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
-> >> +MODULE_LICENSE("GPL");
-> >>  --
-> >>  2.24.0
-> >>
-> >
-> > --
-> >
-> > Thanks,
-> > Peter Chen
->=20
-
+Can Guo.
