@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0B3C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65215C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64B48206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:22:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BB9C2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:22:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520569;
-	bh=iHZnIBUH+TeJAH7aD9BvRdytgdXXyUOXxjUqRAcvn90=;
+	s=default; t=1576520572;
+	bh=zQsRkJZxKcpgLNkQ8MW/9AuyZxtH9dFpG8g9kXIahAY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kgR1gaBqrN+IHvJw/96HkYyXVum1St/n5OP9/lS0cU2Yc9LiV4p1LI8yo/wUzKICu
-	 h9ldn96WM1uD+qreE8dWV4evhZcGwRk+yhlgmWyF6R+PSBYh1U5qStDUhY/q/knBfz
-	 91GH4RLFgDXmKVVAw36GHbPsAMg3gPJ1Ah0s21dM=
+	b=Mo5reNY4hZ8OOAVeaP2EV/vW6dJs7TA33k3Jrz1AegPaeuVaQ/y06lnwnySU8cNXP
+	 RFuSm4NYwQhroz8IBi72MOStGHNLkPobDq0GI4/zWLri+vDQpFxg5WzCjET03zkCyg
+	 +cDEGmLTJlvqODnGcBmCY9rIW8FIzQt6xPFpetj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732191AbfLPSVE (ORCPT
+        id S1731834AbfLPSVD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:21:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53014 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:21:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732149AbfLPSU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:20:59 -0500
+        id S1732164AbfLPSU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:20:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1E042166E;
-        Mon, 16 Dec 2019 18:20:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EEB1206EC;
+        Mon, 16 Dec 2019 18:20:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520458;
-        bh=iHZnIBUH+TeJAH7aD9BvRdytgdXXyUOXxjUqRAcvn90=;
+        s=default; t=1576520455;
+        bh=zQsRkJZxKcpgLNkQ8MW/9AuyZxtH9dFpG8g9kXIahAY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HpVel1a3pB9lnQjn82zNt0oAEFqecIKt6EfdmbOTaLGf77oCEooSUXeS9eIKBqqa5
-         7F2qwLtSHa7DVDvfKgbEjsFdVUYhbiFc5R4J3x04PCqIOhRagQUFIY61eMN1kb4BV7
-         FXyLVSi4PXEORhzVRUnaQOeybE4Uemov050KYAnk=
+        b=mIQPfmjCeZ5Nc17XkXbd/n78ov5ZDk1KJt1MtkAXPc0g2n71icm4lbnBIFL2SpodM
+         FmevVoSSIJZ6EDM9YmQAYjqQp4YDmqnRUDrkes7+BIZpBt/dO4fOMenHf0fAMta6SC
+         EoUT5LSbIRr835ow2FHJNEWG3mG9dgXQ3XdFW1JU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 162/177] powerpc: Avoid clang warnings around setjmp and longjmp
-Date:   Mon, 16 Dec 2019 18:50:18 +0100
-Message-Id: <20191216174849.319583062@linuxfoundation.org>
+Subject: [PATCH 5.4 161/177] omap: pdata-quirks: remove openpandora quirks for mmc3 and wl1251
+Date:   Mon, 16 Dec 2019 18:50:17 +0100
+Message-Id: <20191216174849.178814504@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -63,78 +61,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: H. Nikolaus Schaller <hns@goldelico.com>
 
-[ Upstream commit c9029ef9c95765e7b63c4d9aa780674447db1ec0 ]
+[ Upstream commit 2398c41d64321e62af54424fd399964f3d48cdc2 ]
 
-Commit aea447141c7e ("powerpc: Disable -Wbuiltin-requires-header when
-setjmp is used") disabled -Wbuiltin-requires-header because of a
-warning about the setjmp and longjmp declarations.
+With a wl1251 child node of mmc3 in the device tree decoded
+in omap_hsmmc.c to handle special wl1251 initialization, we do
+no longer need to instantiate the mmc3 through pdata quirks.
 
-r367387 in clang added another diagnostic around this, complaining
-that there is no jmp_buf declaration.
+We also can remove the wlan regulator and reset/interrupt definitions
+and do them through device tree.
 
-  In file included from ../arch/powerpc/xmon/xmon.c:47:
-  ../arch/powerpc/include/asm/setjmp.h:10:13: error: declaration of
-  built-in function 'setjmp' requires the declaration of the 'jmp_buf'
-  type, commonly provided in the header <setjmp.h>.
-  [-Werror,-Wincomplete-setjmp-declaration]
-  extern long setjmp(long *);
-              ^
-  ../arch/powerpc/include/asm/setjmp.h:11:13: error: declaration of
-  built-in function 'longjmp' requires the declaration of the 'jmp_buf'
-  type, commonly provided in the header <setjmp.h>.
-  [-Werror,-Wincomplete-setjmp-declaration]
-  extern void longjmp(long *, long);
-              ^
-  2 errors generated.
-
-We are not using the standard library's longjmp/setjmp implementations
-for obvious reasons; make this clear to clang by using -ffreestanding
-on these files.
-
-Cc: stable@vger.kernel.org # 4.14+
-Suggested-by: Segher Boessenkool <segher@kernel.crashing.org>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191119045712.39633-3-natechancellor@gmail.com
+Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for requesting DMA channel")
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Cc: <stable@vger.kernel.org> # v4.7+
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/Makefile | 4 ++--
- arch/powerpc/xmon/Makefile   | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/mach-omap2/pdata-quirks.c | 93 ------------------------------
+ 1 file changed, 93 deletions(-)
 
-diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
-index a7ca8fe623686..3c02445cf0865 100644
---- a/arch/powerpc/kernel/Makefile
-+++ b/arch/powerpc/kernel/Makefile
-@@ -5,8 +5,8 @@
+diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
+index 800a602c06ecc..1b7cf81ff0356 100644
+--- a/arch/arm/mach-omap2/pdata-quirks.c
++++ b/arch/arm/mach-omap2/pdata-quirks.c
+@@ -310,108 +310,15 @@ static void __init omap3_logicpd_torpedo_init(void)
+ }
  
- CFLAGS_ptrace.o		+= -DUTS_MACHINE='"$(UTS_MACHINE)"'
+ /* omap3pandora legacy devices */
+-#define PANDORA_WIFI_IRQ_GPIO		21
+-#define PANDORA_WIFI_NRESET_GPIO	23
  
--# Disable clang warning for using setjmp without setjmp.h header
--CFLAGS_crash.o		+= $(call cc-disable-warning, builtin-requires-header)
-+# Avoid clang warnings around longjmp/setjmp declarations
-+CFLAGS_crash.o += -ffreestanding
+ static struct platform_device pandora_backlight = {
+ 	.name	= "pandora-backlight",
+ 	.id	= -1,
+ };
  
- ifdef CONFIG_PPC64
- CFLAGS_prom_init.o	+= $(NO_MINIMAL_TOC)
-diff --git a/arch/powerpc/xmon/Makefile b/arch/powerpc/xmon/Makefile
-index f142570ad8606..c3842dbeb1b75 100644
---- a/arch/powerpc/xmon/Makefile
-+++ b/arch/powerpc/xmon/Makefile
-@@ -1,8 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0
- # Makefile for xmon
+-static struct regulator_consumer_supply pandora_vmmc3_supply[] = {
+-	REGULATOR_SUPPLY("vmmc", "omap_hsmmc.2"),
+-};
+-
+-static struct regulator_init_data pandora_vmmc3 = {
+-	.constraints = {
+-		.valid_ops_mask		= REGULATOR_CHANGE_STATUS,
+-	},
+-	.num_consumer_supplies	= ARRAY_SIZE(pandora_vmmc3_supply),
+-	.consumer_supplies	= pandora_vmmc3_supply,
+-};
+-
+-static struct fixed_voltage_config pandora_vwlan = {
+-	.supply_name		= "vwlan",
+-	.microvolts		= 1800000, /* 1.8V */
+-	.gpio			= PANDORA_WIFI_NRESET_GPIO,
+-	.startup_delay		= 50000, /* 50ms */
+-	.enable_high		= 1,
+-	.init_data		= &pandora_vmmc3,
+-};
+-
+-static struct platform_device pandora_vwlan_device = {
+-	.name		= "reg-fixed-voltage",
+-	.id		= 1,
+-	.dev = {
+-		.platform_data = &pandora_vwlan,
+-	},
+-};
+-
+-static void pandora_wl1251_init_card(struct mmc_card *card)
+-{
+-	/*
+-	 * We have TI wl1251 attached to MMC3. Pass this information to
+-	 * SDIO core because it can't be probed by normal methods.
+-	 */
+-	if (card->type == MMC_TYPE_SDIO || card->type == MMC_TYPE_SD_COMBO) {
+-		card->quirks |= MMC_QUIRK_NONSTD_SDIO;
+-		card->cccr.wide_bus = 1;
+-		card->cis.vendor = 0x104c;
+-		card->cis.device = 0x9066;
+-		card->cis.blksize = 512;
+-		card->cis.max_dtr = 24000000;
+-		card->ocr = 0x80;
+-	}
+-}
+-
+-static struct omap2_hsmmc_info pandora_mmc3[] = {
+-	{
+-		.mmc		= 3,
+-		.caps		= MMC_CAP_4_BIT_DATA | MMC_CAP_POWER_OFF_CARD,
+-		.gpio_cd	= -EINVAL,
+-		.gpio_wp	= -EINVAL,
+-		.init_card	= pandora_wl1251_init_card,
+-	},
+-	{}	/* Terminator */
+-};
+-
+-static void __init pandora_wl1251_init(void)
+-{
+-	struct wl1251_platform_data pandora_wl1251_pdata;
+-	int ret;
+-
+-	memset(&pandora_wl1251_pdata, 0, sizeof(pandora_wl1251_pdata));
+-
+-	pandora_wl1251_pdata.power_gpio = -1;
+-
+-	ret = gpio_request_one(PANDORA_WIFI_IRQ_GPIO, GPIOF_IN, "wl1251 irq");
+-	if (ret < 0)
+-		goto fail;
+-
+-	pandora_wl1251_pdata.irq = gpio_to_irq(PANDORA_WIFI_IRQ_GPIO);
+-	if (pandora_wl1251_pdata.irq < 0)
+-		goto fail_irq;
+-
+-	pandora_wl1251_pdata.use_eeprom = true;
+-	ret = wl1251_set_platform_data(&pandora_wl1251_pdata);
+-	if (ret < 0)
+-		goto fail_irq;
+-
+-	return;
+-
+-fail_irq:
+-	gpio_free(PANDORA_WIFI_IRQ_GPIO);
+-fail:
+-	pr_err("wl1251 board initialisation failed\n");
+-}
+-
+ static void __init omap3_pandora_legacy_init(void)
+ {
+ 	platform_device_register(&pandora_backlight);
+-	platform_device_register(&pandora_vwlan_device);
+-	omap_hsmmc_init(pandora_mmc3);
+-	omap_hsmmc_late_init(pandora_mmc3);
+-	pandora_wl1251_init();
+ }
+ #endif /* CONFIG_ARCH_OMAP3 */
  
--# Disable clang warning for using setjmp without setjmp.h header
--subdir-ccflags-y := $(call cc-disable-warning, builtin-requires-header)
-+# Avoid clang warnings around longjmp/setjmp declarations
-+subdir-ccflags-y := -ffreestanding
- 
- GCOV_PROFILE := n
- KCOV_INSTRUMENT := n
 -- 
 2.20.1
 
