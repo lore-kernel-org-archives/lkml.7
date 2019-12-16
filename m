@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7563C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA30C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACBA8206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96EBB2072B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:09:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519783;
-	bh=ciHsi6S8mBqBG9SPX5rUDlzx23pZaiJaiyXTm83PUwQ=;
+	s=default; t=1576519788;
+	bh=vT09+Y2atmoIbCV7QqkXaUqPrSgl4UOEZ/3qeExbu4w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ywvZ64aOxq9QBt8yPMNph2W2QMkoGD2APGDprQyLQpXaCh9zZeGKDZrO8NxOdyOPB
-	 jtAJPKjhpTTjvWpH6GotwlZwTI9gSEMGonp5otzG6B07KZwapNj1yPYCD5fURdE4bu
-	 yvycF1p9czdXbH4dPJe29psF9dkeAbA2TDmiNseY=
+	b=CRXF585fjM2BpcX/9x29LqtwsOUy8g2wbaI2b9WRtMAiKPPUJfmqKCyHsu/6pxstB
+	 4E5Lh34W8n6zlQuZyD9JPVOVIllX5UFh/6ocHw7OOlx07DeWKSOKGm0yybZiJls9oT
+	 kdSGzinHEOn8JqpBs8pgGC5R2d8Kpu3XFXSgMR4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730489AbfLPSJm (ORCPT
+        id S1730495AbfLPSJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:09:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52208 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:09:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730063AbfLPSJk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:09:40 -0500
+        id S1730126AbfLPSJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:09:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D461A206EC;
-        Mon, 16 Dec 2019 18:09:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A99DF206B7;
+        Mon, 16 Dec 2019 18:09:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519779;
-        bh=ciHsi6S8mBqBG9SPX5rUDlzx23pZaiJaiyXTm83PUwQ=;
+        s=default; t=1576519784;
+        bh=vT09+Y2atmoIbCV7QqkXaUqPrSgl4UOEZ/3qeExbu4w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cfXDO0Lr3eYpBQ/4QvNhoNsmIcRM6fXXDKXtmx2xaIK43oXV40KzMC1mkU/oY0SpA
-         Ct74aTTjkhuEKHhdtSI8GK2y8OMpAy4pz5Ez54TEFVRTvkBOu2z6y0c9n6IZw5M3nZ
-         yf6h3e/s3jifQaBFLJ7CQ2P0XzpGnmwoiBqawio8=
+        b=OJNmDjFZ+glGnqhimh7fkMBT4WjLtQqdgDrmyHAN6EQFYE6GLHji8cavuaGVtTZjv
+         5smYLqsiG78Sur6OcAErVWmc+jsD4hrJBiTy/i/hbluYB+ETgdx/wt6Vp2oQtrp3qp
+         GO5Oem3YJ9yGyLhOEMh7OoLZMWW1aLqGYaK2FAvI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Larry Finger <Larry.Finger@lwfinger.net>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.3 064/180] rtlwifi: rtl8192de: Fix missing callback that tests for hw release of buffer
-Date:   Mon, 16 Dec 2019 18:48:24 +0100
-Message-Id: <20191216174829.695516960@linuxfoundation.org>
+        stable@vger.kernel.org
+Subject: [PATCH 5.3 066/180] lib: raid6: fix awk build warnings
+Date:   Mon, 16 Dec 2019 18:48:26 +0100
+Message-Id: <20191216174829.872645949@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -59,72 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Larry Finger <Larry.Finger@lwfinger.net>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-commit 3155db7613edea8fb943624062baf1e4f9cfbfd6 upstream.
+commit 702600eef73033ddd4eafcefcbb6560f3e3a90f7 upstream.
 
-In commit 38506ecefab9 ("rtlwifi: rtl_pci: Start modification for
-new drivers"), a callback needed to check if the hardware has released
-a buffer indicating that a DMA operation is completed was not added.
+Newer versions of awk spit out these fun warnings:
+	awk: ../lib/raid6/unroll.awk:16: warning: regexp escape sequence `\#' is not a known regexp operator
 
-Fixes: 38506ecefab9 ("rtlwifi: rtl_pci: Start modification for new drivers")
-Cc: Stable <stable@vger.kernel.org>	# v3.18+
-Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+As commit 700c1018b86d ("x86/insn: Fix awk regexp warnings") showed, it
+turns out that there are a number of awk strings that do not need to be
+escaped and newer versions of awk now warn about this.
+
+Fix the string up so that no warning is produced.  The exact same kernel
+module gets created before and after this patch, showing that it wasn't
+needed.
+
+Link: https://lore.kernel.org/r/20191206152600.GA75093@kroah.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/realtek/rtlwifi/rtl8192de/sw.c  |    1 +
- drivers/net/wireless/realtek/rtlwifi/rtl8192de/trx.c |   17 +++++++++++++++++
- drivers/net/wireless/realtek/rtlwifi/rtl8192de/trx.h |    2 ++
- 3 files changed, 20 insertions(+)
+ lib/raid6/unroll.awk |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/sw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/sw.c
-@@ -216,6 +216,7 @@ static struct rtl_hal_ops rtl8192de_hal_
- 	.led_control = rtl92de_led_control,
- 	.set_desc = rtl92de_set_desc,
- 	.get_desc = rtl92de_get_desc,
-+	.is_tx_desc_closed = rtl92de_is_tx_desc_closed,
- 	.tx_polling = rtl92de_tx_polling,
- 	.enable_hw_sec = rtl92de_enable_hw_security_config,
- 	.set_key = rtl92de_set_key,
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/trx.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/trx.c
-@@ -837,6 +837,23 @@ u64 rtl92de_get_desc(struct ieee80211_hw
- 	return ret;
- }
- 
-+bool rtl92de_is_tx_desc_closed(struct ieee80211_hw *hw,
-+			       u8 hw_queue, u16 index)
-+{
-+	struct rtl_pci *rtlpci = rtl_pcidev(rtl_pcipriv(hw));
-+	struct rtl8192_tx_ring *ring = &rtlpci->tx_ring[hw_queue];
-+	u8 *entry = (u8 *)(&ring->desc[ring->idx]);
-+	u8 own = (u8)rtl92de_get_desc(hw, entry, true, HW_DESC_OWN);
-+
-+	/* a beacon packet will only use the first
-+	 * descriptor by defaut, and the own bit may not
-+	 * be cleared by the hardware
-+	 */
-+	if (own)
-+		return false;
-+	return true;
-+}
-+
- void rtl92de_tx_polling(struct ieee80211_hw *hw, u8 hw_queue)
- {
- 	struct rtl_priv *rtlpriv = rtl_priv(hw);
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192de/trx.h
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192de/trx.h
-@@ -715,6 +715,8 @@ void rtl92de_set_desc(struct ieee80211_h
- 		      u8 desc_name, u8 *val);
- u64 rtl92de_get_desc(struct ieee80211_hw *hw,
- 		     u8 *p_desc, bool istx, u8 desc_name);
-+bool rtl92de_is_tx_desc_closed(struct ieee80211_hw *hw,
-+			       u8 hw_queue, u16 index);
- void rtl92de_tx_polling(struct ieee80211_hw *hw, u8 hw_queue);
- void rtl92de_tx_fill_cmddesc(struct ieee80211_hw *hw, u8 *pdesc,
- 			     bool b_firstseg, bool b_lastseg,
+--- a/lib/raid6/unroll.awk
++++ b/lib/raid6/unroll.awk
+@@ -13,7 +13,7 @@ BEGIN {
+ 	for (i = 0; i < rep; ++i) {
+ 		tmp = $0
+ 		gsub(/\$\$/, i, tmp)
+-		gsub(/\$\#/, n, tmp)
++		gsub(/\$#/, n, tmp)
+ 		gsub(/\$\*/, "$", tmp)
+ 		print tmp
+ 	}
 
 
