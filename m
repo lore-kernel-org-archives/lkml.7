@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE18C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5264C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7D2520733
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EE432146E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:52:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576518766;
-	bh=JMtLdH5N/pRayjeq4ysU3riAaYpsmdHp8ifQ324osZ0=;
+	s=default; t=1576518769;
+	bh=QSdhKLOCJdi1nDRDrfplSOxXx5/mnCvmw6p4a8jvB24=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jekbhSN0vnoyV8CQnrLELFWV64CJj3pio9SBcT4HXGnzxXhUlfJgACeO+smrYsurP
-	 qV21Ms2PvzhrxNW5QFZPf5jdfS+6YuO4IkTjgv9KiYN4hdimlLQp5vcUOZi3+GrGVo
-	 s1ORnOjAkicceFVNW8Tgnau9kWl7rGJTxCLD/r00=
+	b=fbh0PipRzZkvie7bPxPwVYDeeOtE+XOVODjQY9mAnvOQLFbPhStBvxQhHiOXQQX27
+	 fDsognsE0hDKg2xj7f9JXg8uU1WU9vhzTlxSPinj9Zwnnk147bBLWQupU/0Ac0FzeS
+	 Aprdo7OWrxCHLL9GA4RoDK9Lr8mppBgTISHTG1LU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbfLPRwp (ORCPT
+        id S1727605AbfLPRws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:52:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45046 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:52:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727577AbfLPRwn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:52:43 -0500
+        id S1727577AbfLPRwq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:52:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8523521D7D;
-        Mon, 16 Dec 2019 17:52:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05B9221775;
+        Mon, 16 Dec 2019 17:52:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518763;
-        bh=JMtLdH5N/pRayjeq4ysU3riAaYpsmdHp8ifQ324osZ0=;
+        s=default; t=1576518765;
+        bh=QSdhKLOCJdi1nDRDrfplSOxXx5/mnCvmw6p4a8jvB24=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PHfwUtnkHnL6gVQNmgjBszls6pb/DPkjQKEIIyZHpEnN+RnPLX9KeXvyLuPT7nUA1
-         kYUZAlUxNMS4qiz0QdK+e//BjUUvkFYvkt1BtsYFT9jxJFmq2TxoejYR4FnAaDilE/
-         fKfSUWCa/PNBl1blGtp/zc44oI21Hhad/BQkBvF0=
+        b=h4hAJ9Kiupev5khp+gNXXvDybt/I358vgU85N6QRp5Jt8Y+M0AIsV+PTtwNGQb39F
+         tG6q0mzHZk6hdn9KbD95KBhE+kBtFzcN4hdubt8Ybad7RFiJ8N2oC0DAbklO30+gwX
+         Bc1GBwn957MrgcAO4CEqVV0cjQEapZPdhA3tuwW0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        stable@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 055/267] rtc: dt-binding: abx80x: fix resistance scale
-Date:   Mon, 16 Dec 2019 18:46:21 +0100
-Message-Id: <20191216174854.516719537@linuxfoundation.org>
+Subject: [PATCH 4.14 056/267] ARM: dts: exynos: Use Samsung SoC specific compatible for DWC2 module
+Date:   Mon, 16 Dec 2019 18:46:22 +0100
+Message-Id: <20191216174854.609482572@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -60,29 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Baruch Siach <baruch@tkos.co.il>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 73852e56827f5cb5db9d6e8dd8191fc2f2e8f424 ]
+[ Upstream commit 6035cbcceb069f87296b3cd0bc4736ad5618bf47 ]
 
-The abracon,tc-resistor property value is in kOhm.
+DWC2 hardware module integrated in Samsung SoCs requires some quirks to
+operate properly, so use Samsung SoC specific compatible to notify driver
+to apply respective fixes.
 
-Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/devicetree/bindings/rtc/abracon,abx80x.txt | 2 +-
+ arch/arm/boot/dts/exynos3250.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/rtc/abracon,abx80x.txt b/Documentation/devicetree/bindings/rtc/abracon,abx80x.txt
-index be789685a1c24..18b892d010d87 100644
---- a/Documentation/devicetree/bindings/rtc/abracon,abx80x.txt
-+++ b/Documentation/devicetree/bindings/rtc/abracon,abx80x.txt
-@@ -27,4 +27,4 @@ and valid to enable charging:
+diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
+index aa06a02c3ff59..5ba6622549097 100644
+--- a/arch/arm/boot/dts/exynos3250.dtsi
++++ b/arch/arm/boot/dts/exynos3250.dtsi
+@@ -359,7 +359,7 @@
+ 		};
  
-  - "abracon,tc-diode": should be "standard" (0.6V) or "schottky" (0.3V)
-  - "abracon,tc-resistor": should be <0>, <3>, <6> or <11>. 0 disables the output
--                          resistor, the other values are in ohm.
-+                          resistor, the other values are in kOhm.
+ 		hsotg: hsotg@12480000 {
+-			compatible = "snps,dwc2";
++			compatible = "samsung,s3c6400-hsotg", "snps,dwc2";
+ 			reg = <0x12480000 0x20000>;
+ 			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cmu CLK_USBOTG>;
 -- 
 2.20.1
 
