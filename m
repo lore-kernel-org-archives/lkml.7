@@ -2,112 +2,126 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE69C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC02C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26315206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:30:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 955B6206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:30:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WU2LMml9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbfLPNaB (ORCPT
+        id S1727939AbfLPNaM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:30:01 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:52817 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727601AbfLPNaA (ORCPT
+        Mon, 16 Dec 2019 08:30:12 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:35324 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727763AbfLPNaM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:30:00 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1igqRZ-0001o6-A1; Mon, 16 Dec 2019 14:29:49 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E2A461C0480;
-        Mon, 16 Dec 2019 14:29:48 +0100 (CET)
-Date:   Mon, 16 Dec 2019 13:29:48 -0000
-From:   "tip-bot2 for Sean Christopherson" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cleanups] x86/boot: Fix a comment's incorrect file reference
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "x86-ml" <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191126195911.3429-1-sean.j.christopherson@intel.com>
-References: <20191126195911.3429-1-sean.j.christopherson@intel.com>
+        Mon, 16 Dec 2019 08:30:12 -0500
+Received: by mail-pj1-f65.google.com with SMTP id w23so2992713pjd.2;
+        Mon, 16 Dec 2019 05:30:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=c6k2uM/4KQBTBeEC+JGE88itWoiZaxFzfzDFaOUPwN4=;
+        b=WU2LMml9ybURvvoAkKn84Ls2pu5xuXxxs5xMy9YIAIuH+QpEBES7Fx3AEg2Awx0eZC
+         eOP9lj+obKAHaeQTG8x7AKkZRmJVsKhTCrmDoU+lTu4fD7hbjbbB0TDh8anWmiR4NE8Q
+         0vRnJFCI88IlQ/i2lgF5OkFvvmdA4xSVQw46d82pfn1UYopKvLJdYUDFZEOie4D29ofs
+         jhr83+VsoL5WyjrRsBkdTtIISTH1IF0nFzXfQYAZkctwUem7bQamJ24XBDBIj+xvPmhA
+         AGv5C2QbcM9PBGJxMstdHAuE0iPKFOisBpolMprqccxSmygVz+ynNZOFYWIQiWOsIKW0
+         X9QQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=c6k2uM/4KQBTBeEC+JGE88itWoiZaxFzfzDFaOUPwN4=;
+        b=elD5O4Z7FQ4hGHLyDNuTWJH3MA1bZd96RVOwgDO9dL2L6UuzsZ6mjGZJuICjGl/Loy
+         GyUPcmwBIr8uW0shDph5qvfanTHKh8/lOmslXzZx1ZU6bGPziq3y/m21TCHMhdoPuYmP
+         t7n6T9CHf9JuEfwhtrnhzLoulwcMoirdzI1x0bFdtlaLYLRDtrfKh38b/Sqn2Yu8noRX
+         UwgFbwKCfX8Xv/8K9nBXwyyFLATgXCJs33IwQjD2sXnH6LSpP7mLJDSVHB/k6MPWX5Pk
+         B1DlgtDGJtRjFDHFaiR5xQufLvFaKnrmLM/3733ECMxDOSYFjTqn7JT5QAHhlsKpJk6x
+         /C2w==
+X-Gm-Message-State: APjAAAVbaOrV3ZStzPTmW/8n4PvLr5AnYsA4l9v6vlYUlffrNcQnXsUi
+        ZkbJkCmAiIu7iejuU8o2+bE=
+X-Google-Smtp-Source: APXvYqyJ6TZHpyv2Kz7CGI3OHria7rp9vvxislgxfsCZuO3kdTuBGJfZKrdme0Kw7m9+Qlmwh7TBjw==
+X-Received: by 2002:a17:902:d915:: with SMTP id c21mr15807890plz.295.1576503011717;
+        Mon, 16 Dec 2019 05:30:11 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 13sm5365907pfi.78.2019.12.16.05.30.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Dec 2019 05:30:10 -0800 (PST)
+Subject: Re: [PATCH v5 2/4] dt-bindings: watchdog: add new binding for meson
+ secure watchdog
+To:     Xingyu Chen <xingyu.chen@amlogic.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Qianggui Song <qianggui.song@amlogic.com>,
+        devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        linux-kernel@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        Jerome Brunet <jbrunet@baylibre.com>
+References: <1576153187-28378-1-git-send-email-xingyu.chen@amlogic.com>
+ <1576153187-28378-3-git-send-email-xingyu.chen@amlogic.com>
+ <CAFBinCBHLqgPExPsVaSWdSOr0Oj-jeYa4Z82U-pJ=fS+D1wGnA@mail.gmail.com>
+ <f7b0afe7-e317-2422-de7e-878837f9f238@amlogic.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <a8f5ab1d-264c-5b2c-e72b-3774b9f44c22@roeck-us.net>
+Date:   Mon, 16 Dec 2019 05:30:08 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Message-ID: <157650298869.30329.17330469299720257853.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <f7b0afe7-e317-2422-de7e-878837f9f238@amlogic.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/cleanups branch of tip:
+On 12/15/19 10:03 PM, Xingyu Chen wrote:
+> Hi, Martin
+> 
+> Sorry for the late reply.
+> 
+> On 2019/12/13 4:05, Martin Blumenstingl wrote:
+>> Hi Xingyu and Rob,
+>>
+>> On Thu, Dec 12, 2019 at 1:20 PM Xingyu Chen <xingyu.chen@amlogic.com> wrote:
+>> [...]
+>>> +examples:
+>>> +  - |
+>>> +    watchdog {
+>>> +          compatible = "amlogic,meson-sec-wdt";
+>>> +          timeout-sec = <60>;
+>>> +    };
+>> in v3 of this patch Rob commented that there shouldn't be an OF node
+>> if there are no additional properties
+>> with timeout-sec there's now an additional property so my
+>> understanding is that it's fine to have an OF node
+> Your understanding is correct.
+>>
+>> what I don't understand yet is where this node should be placed.
+>> is it supposed to be a child node of the secure monitor node (for
+>> which we already have a binding here:
+>> Documentation/devicetree/bindings/firmware/meson/meson_sm.txt) or
+>> where else would we place it inside the .dts?
+> IMO,  Although the watchdog node need to reference the meson_sm node, there is no
+> bus-like dependencies between the devices which the two nodes corresponding to.
+> so i think that the watchdog node as child node of meson_sm maybe not appropriate.
 
-Commit-ID:     957a227d413b06130b7d57d1954d821edf6991c1
-Gitweb:        https://git.kernel.org/tip/957a227d413b06130b7d57d1954d821edf6991c1
-Author:        Sean Christopherson <sean.j.christopherson@intel.com>
-AuthorDate:    Tue, 26 Nov 2019 11:59:11 -08:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Mon, 16 Dec 2019 14:09:33 +01:00
+The watchdog driver needs the meson SM's dt node, and it depends on the existence
+of that node. That seems enough of a relationship to warrant having it as child note.
 
-x86/boot: Fix a comment's incorrect file reference
-
-Fix the comment for 'struct real_mode_header' to reference the correct
-assembly file, realmode/rm/header.S.  The comment has always incorrectly
-referenced realmode.S, which doesn't exist, as defining the associated
-asm blob.
-
-Specify the file's path relative to arch/x86 to avoid confusion with
-boot/header.S.  Update the comment for 'struct trampoline_header' to
-also include the relative path to keep things consistent, and tweak the
-dual 64/32 reference so that it doesn't appear to be an extension of the
-relative path, i.e. avoid "realmode/rm/trampoline_32/64.S".
-
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20191126195911.3429-1-sean.j.christopherson@intel.com
----
- arch/x86/include/asm/realmode.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/include/asm/realmode.h b/arch/x86/include/asm/realmode.h
-index 09ecc32..b35030e 100644
---- a/arch/x86/include/asm/realmode.h
-+++ b/arch/x86/include/asm/realmode.h
-@@ -14,7 +14,7 @@
- #include <linux/types.h>
- #include <asm/io.h>
- 
--/* This must match data at realmode.S */
-+/* This must match data at realmode/rm/header.S */
- struct real_mode_header {
- 	u32	text_start;
- 	u32	ro_end;
-@@ -36,7 +36,7 @@ struct real_mode_header {
- #endif
- };
- 
--/* This must match data at trampoline_32/64.S */
-+/* This must match data at realmode/rm/trampoline_{32,64}.S */
- struct trampoline_header {
- #ifdef CONFIG_X86_32
- 	u32 start;
+Guenter
