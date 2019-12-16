@@ -2,241 +2,122 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31ECEC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E177C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00C21206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1296B20717
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:38:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GXW8Sv5x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728376AbfLPPgG (ORCPT
+        id S1728425AbfLPPiK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 10:36:06 -0500
-Received: from www262.sakura.ne.jp ([202.181.97.72]:62130 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728234AbfLPPgF (ORCPT
+        Mon, 16 Dec 2019 10:38:10 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39726 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728350AbfLPPiJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 10:36:05 -0500
-Received: from fsav404.sakura.ne.jp (fsav404.sakura.ne.jp [133.242.250.103])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id xBGFZ10r004944;
-        Tue, 17 Dec 2019 00:35:01 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav404.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav404.sakura.ne.jp);
- Tue, 17 Dec 2019 00:35:01 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav404.sakura.ne.jp)
-Received: from [192.168.1.9] (softbank126040062084.bbtec.net [126.40.62.84])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id xBGFZ17Y004938
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Tue, 17 Dec 2019 00:35:01 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH] kconfig: Add kernel config option for fuzz testing.
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jiri Slaby <jslaby@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>
-References: <20191216095955.9886-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <20191216114636.GB1515069@kroah.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <ce36371b-0ca6-5819-2604-65627ce58fc8@i-love.sakura.ne.jp>
-Date:   Tue, 17 Dec 2019 00:35:00 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Mon, 16 Dec 2019 10:38:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576510689;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6V3aaKb/JtoHXO6naY0LgTStsR+aTHJ1FNLMM1N/s3I=;
+        b=GXW8Sv5xwnBa+V2IB+c0JLN/94qlCzmn+pNfzG5+DO8Cbgv2oVRy7XnSgLqInfFpLjeNSg
+        3fQGZGDGLMcCR5MNQ5MxSF78I67GcKMsPXbbm5SkdzKjlRqPXt1TOAAD/qnQrvpTtUyIdQ
+        cWWfKGuLNyqkSEdmgY7CyNL29IPBZbg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-313-C8zNkNi7M92ebMemOhNyug-1; Mon, 16 Dec 2019 10:38:07 -0500
+X-MC-Unique: C8zNkNi7M92ebMemOhNyug-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D04BC800D50;
+        Mon, 16 Dec 2019 15:38:05 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E9CAD5C1B0;
+        Mon, 16 Dec 2019 15:38:02 +0000 (UTC)
+Subject: Re: [PATCH v2] mm/hugetlb: defer free_huge_page() to a workqueue
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        aneesh.kumar@linux.ibm.com, Jarod Wilson <jarod@redhat.com>
+References: <20191211194615.18502-1-longman@redhat.com>
+ <4fbc39a9-2c9c-4c2c-2b13-a548afe6083c@oracle.com>
+ <32d2d4f2-83b9-2e40-05e2-71cd07e01b80@redhat.com>
+ <0fcce71f-bc20-0ea3-b075-46592c8d533d@oracle.com>
+ <20191212060650.ftqq27ftutxpc5hq@linux-p48b>
+ <20191212063050.ufrpij6s6jkv7g7j@linux-p48b>
+ <20191212190427.ouyohviijf5inhur@linux-p48b>
+ <d6b9743c-776c-d740-73af-a600f15b910a@oracle.com>
+ <79d3a7e1-384b-b759-cd84-56253fb9ed40@redhat.com>
+ <20191216132658.GG30281@dhcp22.suse.cz>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <98ac628d-f8be-270d-80bc-bf2373299caf@redhat.com>
+Date:   Mon, 16 Dec 2019 10:38:02 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20191216114636.GB1515069@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20191216132658.GG30281@dhcp22.suse.cz>
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/12/16 20:46, Greg Kroah-Hartman wrote:
-> Why isn't it the job of the fuzzers to keep a blacklist of things they
-> should not do without expecting the system to crash?  Why is it up to
-> the kernel to do that work for them?
+On 12/16/19 8:26 AM, Michal Hocko wrote:
+> On Thu 12-12-19 15:52:20, Waiman Long wrote:
+>> On 12/12/19 2:22 PM, Mike Kravetz wrote:
+>>> On 12/12/19 11:04 AM, Davidlohr Bueso wrote:
+>>>> There have been deadlock reports[1, 2] where put_page is called
+>>>> from softirq context and this causes trouble with the hugetlb_lock,
+>>>> as well as potentially the subpool lock.
+>>>>
+>>>> For such an unlikely scenario, lets not add irq dancing overhead
+>>>> to the lock+unlock operations, which could incur in expensive
+>>>> instruction dependencies, particularly when considering hard-irq
+>>>> safety. For example PUSHF+POPF on x86.
+>>>>
+>>>> Instead, just use a workqueue and do the free_huge_page() in regular
+>>>> task context.
+>>>>
+>>>> [1] https://lore.kernel.org/lkml/20191211194615.18502-1-longman@redhat.com/
+>>>> [2] https://lore.kernel.org/lkml/20180905112341.21355-1-aneesh.kumar@linux.ibm.com/
+>>>>
+>>>> Reported-by: Waiman Long <longman@redhat.com>
+>>>> Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+>>>> Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
+>>> Thank you Davidlohr.
+>>>
+>>> The patch does seem fairly simple and straight forward.  I need to brush up
+>>> on my workqueue knowledge to provide a full review.
+>>>
+>>> Longman,
+>>> Do you have a test to reproduce the issue?  If so, can you try running with
+>>> this patch.
+>> Yes, I do have a test that can reproduce the issue. I will run it with
+>> the patch and report the status tomorrow.
+> Can you extract guts of the testcase and integrate them into hugetlb
+> test suite?
 
-Details will be explained by Dmitry Vyukov.
-In short, fuzzer wants cooperation with the kernel.
+The test case that I used is the Red Hat internal "Fork vs. fast GUP
+race test" written by Jarod Wilson. I would have to ask him if he is OK
+with that.
 
->> @@ -633,6 +633,9 @@ static void k_spec(struct vc_data *vc, unsigned char value, char up_flag)
->>  	     kbd->kbdmode == VC_OFF) &&
->>  	     value != KVAL(K_SAK))
->>  		return;		/* SAK is allowed even in raw mode */
->> +	/* Repeating SysRq-t forever causes RCU stalls. */
->> +	if (IS_ENABLED(CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING))
->> +		return;
-> 
-> That does not make sense.  What does this comment mean?
-
-https://syzkaller.appspot.com/text?tag=CrashLog&x=12eb1e67600000 (already gone)
-reported that a USB fuzz test is triggering SysRq-t until RCU stall happens. We don't
-need to disable whole module only for avoiding RCU stall due to crazy SysRq-t requests.
-
-[  563.439044][    C1] ksoftirqd/1     R  running task    28264    16      2 0x80004008
-[  563.447037][    C1] Call Trace:
-[  563.450321][    C1]  sched_show_task.cold+0x2e0/0x359
-[  563.455502][    C1]  show_state_filter+0x164/0x209
-[  563.460421][    C1]  ? fn_caps_on+0x90/0x90
-[  563.464730][    C1]  k_spec+0xdc/0x120
-[  563.468605][    C1]  kbd_event+0x927/0x3790
-[  563.472914][    C1]  ? k_pad+0x720/0x720
-[  563.476964][    C1]  ? mark_held_locks+0xe0/0xe0
-[  563.481791][    C1]  ? sysrq_filter+0xdf/0xeb0
-[  563.486359][    C1]  ? k_pad+0x720/0x720
-[  563.490419][    C1]  input_to_handler+0x3b6/0x4c0
-[  563.495247][    C1]  input_pass_values.part.0+0x2e3/0x720
-[  563.500770][    C1]  input_repeat_key+0x1ee/0x2c0
-[  563.505622][    C1]  ? input_dev_suspend+0x80/0x80
-[  563.510535][    C1]  ? rcu_read_lock_bh_held+0xb0/0xb0
-[  563.515805][    C1]  call_timer_fn+0x179/0x650
-[  563.520385][    C1]  ? input_dev_suspend+0x80/0x80
-[  563.525389][    C1]  ? msleep_interruptible+0x130/0x130
-[  563.531528][    C1]  ? rcu_read_lock_sched_held+0x9c/0xd0
-[  563.537058][    C1]  ? rcu_read_lock_bh_held+0xb0/0xb0
-[  563.542334][    C1]  ? _raw_spin_unlock_irq+0x24/0x30
-[  563.547519][    C1]  ? input_dev_suspend+0x80/0x80
-[  563.552443][    C1]  run_timer_softirq+0x5e3/0x1490
-[  563.557454][    C1]  ? add_timer+0x7a0/0x7a0
-[  563.561853][    C1]  ? rcu_read_lock_sched_held+0x9c/0xd0
-[  563.567377][    C1]  ? rcu_read_lock_bh_held+0xb0/0xb0
-[  563.572644][    C1]  __do_softirq+0x221/0x912
-[  563.577147][    C1]  ? takeover_tasklets+0x720/0x720
-[  563.582246][    C1]  run_ksoftirqd+0x1f/0x40
-[  563.586638][    C1]  smpboot_thread_fn+0x3e8/0x850
-[  563.591640][    C1]  ? smpboot_unregister_percpu_thread+0x190/0x190
-[  563.598031][    C1]  ? __kthread_parkme+0x10a/0x1c0
-[  563.603031][    C1]  ? smpboot_unregister_percpu_thread+0x190/0x190
-[  563.609440][    C1]  kthread+0x318/0x420
-[  563.613746][    C1]  ? kthread_create_on_node+0xf0/0xf0
-[  563.619092][    C1]  ret_from_fork+0x24/0x30
-
-
-
->> diff --git a/fs/ioctl.c b/fs/ioctl.c
->> index 2f5e4e5b97e1..f879aa94b118 100644
->> --- a/fs/ioctl.c
->> +++ b/fs/ioctl.c
->> @@ -601,6 +601,11 @@ static int ioctl_fsfreeze(struct file *filp)
->>  	if (sb->s_op->freeze_fs == NULL && sb->s_op->freeze_super == NULL)
->>  		return -EOPNOTSUPP;
->>  
->> +#ifdef CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING
->> +	/* Freezing filesystems causes hung tasks. */
->> +	return -EBUSY;
->> +#endif
-> 
-> ick ick ick.
-
-syzbot was failing to blacklist ioctl(FIFREEZE) due to a bug fixed at
-https://lore.kernel.org/linux-fsdevel/03633af8-fab8-a985-c215-f619ea4ded08@I-love.SAKURA.ne.jp/ .
-
-Then, syzbot was not blacklisting ioctl(EXT4_IOC_SHUTDOWN) which was fixed at
-https://github.com/google/syzkaller/commit/61ed43a86a3721708aeeee72b23bfa1eacd921b2 .
-
-These bugs could be fixed (in a whack-a-mole manner) but
-
->> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
->> index 1ef6f75d92f1..9a2f95a78fef 100644
->> --- a/kernel/printk/printk.c
->> +++ b/kernel/printk/printk.c
->> @@ -1198,6 +1198,14 @@ MODULE_PARM_DESC(ignore_loglevel,
->>  
->>  static bool suppress_message_printing(int level)
->>  {
->> +#ifdef CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING
->> +	/*
->> +	 * Changing console_loglevel causes "no output". But ignoring
->> +	 * console_loglevel is easier than preventing change of
->> +	 * console_loglevel.
->> +	 */
->> +	return (level >= CONSOLE_LOGLEVEL_DEFAULT && !ignore_loglevel);
->> +#endif
-> 
-> I don't understand the need for this change at all.
-
-this case was too hard to blacklist, as explained at
-https://lore.kernel.org/lkml/4d1a4b51-999b-63c6-5ce3-a704013cecb6@i-love.sakura.ne.jp/ .
-syz_execute_func() can find deeper bug by executing arbitrary binary code, but
-we cannot blacklist specific syscalls/arguments for syz_execute_func() testcases.
-Unless we guard on the kernel side, we won't be able to re-enable syz_execute_func()
-testcases.
-
-> 
->>  	return (level >= console_loglevel && !ignore_loglevel);
->>  }
->>  
-
-Also, although ability to interpret kernel messages was improved by CONFIG_PRINTK_CALLER
-config option, we still cannot tell whether some string such as "BUG:" "WARNING:" came from
-BUG(), BUG_ON(), WARN(), WARN_ON() etc. Therefore, modules emitting such string causes
-syzbot to report as crash. For example, TOMOYO security module introduced
-CONFIG_SECURITY_TOMOYO_INSECURE_BUILTIN_SETTING in order to allow syzbot to fuzz TOMOYO
-security module, and then extended CONFIG_SECURITY_TOMOYO_INSECURE_BUILTIN_SETTING to
-prevent TOMOYO from emitting "WARNING:" string so that syzbot will not detect it as crash.
-
-
-commit e80b18599a39a625bc8b2e39ba3004a62f78805a
-Author: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Date:   Fri Apr 12 20:04:54 2019 +0900
-
-    tomoyo: Add a kernel config option for fuzzing testing.
-
-    syzbot is reporting kernel panic triggered by memory allocation fault
-    injection before loading TOMOYO's policy [1]. To make the fuzzing tests
-    useful, we need to assign a profile other than "disabled" (no-op) mode.
-    Therefore, let's allow syzbot to load TOMOYO's built-in policy for
-    "learning" mode using a kernel config option. This option must not be
-    enabled for kernels built for production system, for this option also
-    disables domain/program checks when modifying policy configuration via
-    /sys/kernel/security/tomoyo/ interface.
-
-    [1] https://syzkaller.appspot.com/bug?extid=29569ed06425fcf67a95
-
-    Reported-by: syzbot <syzbot+e1b8084e532b6ee7afab@syzkaller.appspotmail.com>
-    Reported-by: syzbot <syzbot+29569ed06425fcf67a95@syzkaller.appspotmail.com>
-    Reported-by: syzbot <syzbot+2ee3f8974c2e7dc69feb@syzkaller.appspotmail.com>
-    Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-    Signed-off-by: James Morris <jamorris@linux.microsoft.com>
-
-commit 4ad98ac46490d5f8441025930070eaf028cfd0f2
-Author: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Date:   Tue May 7 20:34:22 2019 +0900
-
-    tomoyo: Don't emit WARNING: string while fuzzing testing.
-
-    Commit cff0e6c3ec3e6230 ("tomoyo: Add a kernel config option for fuzzing
-    testing.") enabled the learning mode, but syzkaller is detecting any
-    "WARNING:" string as a crash. Thus, disable TOMOYO's quota warning if
-    built for fuzzing testing.
-
-    Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-    Cc: Dmitry Vyukov <dvyukov@google.com>
-    Signed-off-by: James Morris <jamorris@linux.microsoft.com>
-
-
-As a result of these two patches, TOMOYO is now fuzzed by syzbot. But there are
-other modules emitting these strings. We need to somehow make it possible to
-distinguish whether these string came from BUG(), BUG_ON(), WARN(), WARN_ON() etc.
-in a generically applicable way.
-
-
-
-To summarize, syzbot wants a kernel config option for two purposes:
-
-  (1) Allow syzkaller run testcases as far/deep as possible.
-
-  (2) Prevent syzkaller from generating false alarms.
-
-This is beyond merely maintaining blacklist on the fuzzer side.
+Cheers,
+Longman
 
