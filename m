@@ -2,117 +2,86 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB58CC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BEEC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABFC3206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:37:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D6D3207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:38:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r186Ngrd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbfLPIh5 (ORCPT
+        id S1726967AbfLPIiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 03:37:57 -0500
-Received: from mx2.suse.de ([195.135.220.15]:37312 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726722AbfLPIh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 03:37:57 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3D940ADAD;
-        Mon, 16 Dec 2019 08:37:55 +0000 (UTC)
-Date:   Mon, 16 Dec 2019 09:37:54 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     jpoimboe@redhat.com, jikos@kernel.org, mbenes@suse.cz,
-        joe.lawrence@redhat.com, shuah@kernel.org,
-        live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] selftests: livepatch: Fix it to do root uid check and
- skip
-Message-ID: <20191216083754.hsmdd6jt2zzjmksz@pathway.suse.cz>
-References: <20191213015617.23110-1-skhan@linuxfoundation.org>
- <20191213083411.delrxditrpcdm7az@pathway.suse.cz>
- <bda9819d-a054-232b-e973-41d41dfffc5a@linuxfoundation.org>
+        Mon, 16 Dec 2019 03:38:18 -0500
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:46431 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726856AbfLPIiS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 03:38:18 -0500
+Received: by mail-ua1-f66.google.com with SMTP id l6so1304604uap.13
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 00:38:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OP2XiHV+z9XRmOc6CVIQd7a0qzdvr1/Q3scZZYxr1/c=;
+        b=r186NgrdfTPHE2tpoPDJa7x9tQuQ/QFHgodakc61Ob+nFNnXNgovHI3f1/7CUBT/1v
+         4wcw0kUA9wCRMKc6fuAe+RcZzpp3T5EIzlUrObzeRWgYp5L0/dyQfTt8+/apH0TPJ7Oc
+         2gVCCjJ9L61hrUgACxE7Gx2t7WFaRzRM7IpiJWo+wTfIg292hispYmrOsZzsBvoLMNfF
+         Ir+O1OpLqiEbXITQT6ito6EowgfIVcrr5s8cMA7qBowJYvBKBKvicFeL2es39Dvv6J+2
+         aYXnn6xwZg35oIC5h21qC/j/dgwQFtPSlC2JSprHr5rDSXU9LNIuIsQCUbktM0XaS5j7
+         bo9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OP2XiHV+z9XRmOc6CVIQd7a0qzdvr1/Q3scZZYxr1/c=;
+        b=IKa4ngQMcp5ahcoFaucAnSrdTy6RX2xmmXLRrTGl+0WU753ksa4YsCefax0LrXe2Y0
+         eGg56pCn+E+YCKR9Vcums3FegBaarqJdlhg9GIuN9sQeHtGMw8OUekFWEOxX8w0yoNzG
+         /S68F6HmDwkTC2eW6pdi/R8nV25wcMalTOQ7TrX0gZIW7FKKFEYV1vxL7rE5gamw1Qbk
+         8d5w84TKC3LeQbunOaPwru2YA9+hXNT+plHR22UqBg/mDu8hPPUDEprNy/El68jXqOfZ
+         Azi4/lvr54BVBRgSLLBMnrzTaCESaeXlMHGk2X4S6BBhY9CM42M2X31WFadI4BwSoQgE
+         UsWQ==
+X-Gm-Message-State: APjAAAVucLKPSc2PJK4NmjlEJTPC0YFFXCSOMsZZ7C6YTr5pmDGT6Q2G
+        RAceaB+cUHGmaVMRPVRY8BX8GQLAqKYVNkLYcZ07qA==
+X-Google-Smtp-Source: APXvYqxWyOGptlYcgZ8GG7DRjA0eoZhkshCQNRcbI8e/5CoIydNXg1zYY8yTVFSvvZjiGUSUFzsofLus8fU624q0t2I=
+X-Received: by 2002:ab0:5512:: with SMTP id t18mr22644336uaa.128.1576485497137;
+ Mon, 16 Dec 2019 00:38:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bda9819d-a054-232b-e973-41d41dfffc5a@linuxfoundation.org>
-User-Agent: NeoMutt/20170912 (1.9.0)
+References: <0101016ef36a5c54-2907cf32-2269-4a8c-9447-b086e7c86d98-000000@us-west-2.amazonses.com>
+In-Reply-To: <0101016ef36a5c54-2907cf32-2269-4a8c-9447-b086e7c86d98-000000@us-west-2.amazonses.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 16 Dec 2019 09:38:06 +0100
+Message-ID: <CACRpkdY9ETQRHn7x2D2XVLZ810Uo1cPQxMBqTy5LnrORRNjTVw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: qcom: Add new qup functions
+ for sc7180
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 2019-12-13 10:52:32, Shuah Khan wrote:
-> On 12/13/19 1:34 AM, Petr Mladek wrote:
-> > On Thu 2019-12-12 18:56:17, Shuah Khan wrote:
-> > > livepatch test configures the system and debug environment to run
-> > > tests. Some of these actions fail without root access and test
-> > > dumps several permission denied messages before it exits.
-> > > 
-> > > Fix it to check root uid and exit with skip code instead.
-> > 
-> > It works when I run the tests directly, e.g.
-> > 
-> > $> cd tools/testing/selftests/livepatch
-> > $> ./test-livepatch.sh
-> > 
-> > But I still get an error from the selftest framework when running
-> > make run_tests:
-> > 
-> > $> make run_tests
-> > TAP version 13
-> > 1..5
-> > # selftests: livepatch: test-livepatch.sh
-> > /mnt/kernel/linux/tools/testing/selftests/kselftest/runner.sh: line 43: /dev/stdout: Permission denied
-> > not ok 1 selftests: livepatch: test-livepatch.sh # exit=1
-> > # selftests: livepatch: test-callbacks.sh
-> > /mnt/kernel/linux/tools/testing/selftests/kselftest/runner.sh: line 43: /dev/stdout: Permission denied
-> > not ok 2 selftests: livepatch: test-callbacks.sh # exit=1
-> > # selftests: livepatch: test-shadow-vars.sh
-> > /mnt/kernel/linux/tools/testing/selftests/kselftest/runner.sh: line 43: /dev/stdout: Permission denied
-> > not ok 3 selftests: livepatch: test-shadow-vars.sh # exit=1
-> > # selftests: livepatch: test-state.sh
-> > /mnt/kernel/linux/tools/testing/selftests/kselftest/runner.sh: line 43: /dev/stdout: Permission denied
-> > not ok 4 selftests: livepatch: test-state.sh # exit=1
-> > # selftests: livepatch: test-ftrace.sh
-> > /mnt/kernel/linux/tools/testing/selftests/kselftest/runner.sh: line 43: /dev/stdout: Permission denied
-> > not ok 5 selftests: livepatch: test-ftrace.sh # exit=1
-> > 
-> > The same problem is also in linux-next. Is this a know problem, please?
-> > 
-> > 
-> 
-> This isn't a known issue.
-> 
-> I am not seeing this problem on 5.5-rc1 and on linux-next with top
-> commit 32b8acf85223448973ca0bf0ee8149a01410f3a0 (HEAD -> master, tag:
-> next-20191213
-> 
-> I am curious what could be diffent in your env. that is causing it.
+On Wed, Dec 11, 2019 at 6:24 AM Rajendra Nayak <rnayak@codeaurora.org> wrote:
 
-I did the test in kvm. I was connected there via ssh as "root".
-I tested the normal user with "su - user".
+> Add new qup functions for qup02/04/11 and qup13 wherein multiple
+> functions (for i2c and uart) share the same pin. This allows users
+> to identify which specific qup function for the instance one needs
+> to use for the pin.
+>
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
 
-It seems that in this case /dev/stdout still points to a
-pseudo-terminal that is accessible only by root:
+Patch applied for v5.6 with the ACKs.
 
-#> su - user
-$> echo hello >/dev/stdout
--bash: /dev/stdout: Permission denied
-$> ls -l /dev/stdout
-lrwxrwxrwx 1 root root 15 Dec 13 16:08 /dev/stdout -> /proc/self/fd/1
-$> ls -l /proc/self/fd/1
-lrwx------. 1 user users 64 Dec 16 09:27 /proc/self/fd/1 -> /dev/pts/1
-$> ls -l /dev/pts/1
-crw--w---- 1 root tty 136, 1 Dec 16 09:27 /dev/pts/1
-
-I do not see this problem when I ssh to the machine as
-the normal "user".
-
-
-Best Regards,
-Petr
+Yours,
+Linus Walleij
