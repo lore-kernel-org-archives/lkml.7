@@ -2,105 +2,89 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8EABC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 22:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4962AC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 22:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE0D124673
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 22:07:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bGU/TMzH"
+	by mail.kernel.org (Postfix) with ESMTP id 069F32176D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 22:10:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727735AbfLPWG7 (ORCPT
+        id S1727587AbfLPWKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 17:06:59 -0500
-Received: from mail-pj1-f74.google.com ([209.85.216.74]:37019 "EHLO
-        mail-pj1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727640AbfLPWGz (ORCPT
+        Mon, 16 Dec 2019 17:10:07 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:35470 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbfLPWKG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 17:06:55 -0500
-Received: by mail-pj1-f74.google.com with SMTP id a31so5279493pje.4
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 14:06:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=YrbllExGb6NsWygYEF2barQHzhEld5JNWw7UJUUR3A8=;
-        b=bGU/TMzHT8t1jHkPRMHorm6ZH+kS5NyIJFKxyLm+Jkb2Pge5M7rd+zZgm2+XK7IggH
-         58+fAHsLstoRBKR4oSp0awoxKcmZn/vdwak7Ok6hW/9zQp6qjTGTCjvSYQM4QWyPYFXU
-         bZLt/DOJBPHWPkNBHlfbB17DP8F1Yi138OSSXfwuqRMnlbFDqGiKO4aiFX16zURzXZjm
-         y2QdB3uD5FFiZra6BzFKDqLLdSu7s0YZlLGs48ZPu1EBHyVhiWQlbtBIWUT5ZpBNetkL
-         8p0derp2Urlgej5DMKZQwSV7gXlDYUJvoMtyGKZo7sLadNMXYzCVWfNvyQ+QRF6yoA+P
-         MtwA==
+        Mon, 16 Dec 2019 17:10:06 -0500
+Received: by mail-qv1-f66.google.com with SMTP id d17so3402710qvs.2
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 14:10:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=YrbllExGb6NsWygYEF2barQHzhEld5JNWw7UJUUR3A8=;
-        b=TfMld/wPCjL2dKbwdEVweFYEnzct1PmEk2Kdop7Jqi+1h/Fozc+s1cYKs4md5ZX9SP
-         Klo8rxuiQ0fojMxbDFxPb/9Wy3ATapuy+j1osYBhng3T55YYvA8r7TYkXNDushSb+mQI
-         /FacbEVvorE7IE51ZJ3JT2sr57FBP5m6YyrfpMun6GH8A5L4Ft8K7Lz5xUmX5MZooWp9
-         Gx/RUGQesATen0z/IaOlGDxCUOBZ7u7MFW/CLLfb6fJGRjZOcDJ6xY39hk5Cc3x9Cirl
-         1SP9/G5oDSdFlpfJpw3WLbKODG7ZxSMbkz7V8lxruOGx3BNw5JUrW8eJz2eFdPhAtnVI
-         kXIQ==
-X-Gm-Message-State: APjAAAWVam5ysvOZw6y+JEgPTQPO9/XoqsODG/U8dRKVd0WH1W8q6d9H
-        o4t7gMpNMlPXLloC3Xo0WwwLpPkJQDYicn4Fe2+rtw==
-X-Google-Smtp-Source: APXvYqxrelSmb8kJZfwAxsqH/X93e7hDs660BOk608W2qWxwl/pKbx/L56EOVl3cXeaGEHwoy1HG/gK9hYm+dvGXKNnr0A==
-X-Received: by 2002:a63:d249:: with SMTP id t9mr21497292pgi.263.1576534014906;
- Mon, 16 Dec 2019 14:06:54 -0800 (PST)
-Date:   Mon, 16 Dec 2019 14:05:51 -0800
-In-Reply-To: <20191216220555.245089-1-brendanhiggins@google.com>
-Message-Id: <20191216220555.245089-3-brendanhiggins@google.com>
-Mime-Version: 1.0
-References: <20191216220555.245089-1-brendanhiggins@google.com>
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
-Subject: [RFC v1 2/6] arch: um: add linker section for KUnit test suites
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
-        arnd@arndb.de, keescook@chromium.org, skhan@linuxfoundation.org,
-        alan.maguire@oracle.com, yzaikin@google.com, davidgow@google.com,
-        akpm@linux-foundation.org, rppt@linux.ibm.com
-Cc:     gregkh@linuxfoundation.org, sboyd@kernel.org, logang@deltatee.com,
-        mcgrof@kernel.org, knut.omang@oracle.com,
-        linux-um@lists.infradead.org, linux-arch@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org,
-        Brendan Higgins <brendanhiggins@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=46QQbf/7xY0XXnmz2tYswXMRkkq1sq4i40/0AAKflts=;
+        b=QSiOU+pfI4f+UJm2z1CzpcpKmqj26ZlNgOcYQ3KjSysXN5CKNkxQKs+xvlMtWz0/Zj
+         EOGJjNfKii+RJriaqUvQDf78DcuafWd6FalNHrGquX6O9t9+5bca5QP2Zq1Cpg81Ck82
+         f+rTn0mjzALJ5BW7X46ErHxIH/T0c6GR9uczHBXgiLcpWHO9iNqZIJ/jnxg7p4R4ChTZ
+         vB2/WeFFKlCvZXX0a/OuhtRlAC1bMskckFz/sSMlE9xpkajek+LEZPIStFBX2/H6pJNG
+         hcfMZjiylbyM5ouODaL4s1gi9ZU1EUlROChG71/Dihl5tAXElKon2Vi2KbQczi6GDq1m
+         Cb9A==
+X-Gm-Message-State: APjAAAUwesKtwV6JUv4aEzAM5VAafAH+sl8Rl/LYDSyD3PE2cFUWliMW
+        zB1XzkXIAjPHOi/VcHuAhxzrWN6S
+X-Google-Smtp-Source: APXvYqytMlnnar7QuVPkVRQVszjjwk6cMDWOgFJ3w/bKs4JskQxoBNFifPVjqkR3vqHWOoJXI0o/0g==
+X-Received: by 2002:a05:6214:1348:: with SMTP id b8mr1671598qvw.137.1576534205387;
+        Mon, 16 Dec 2019 14:10:05 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id o17sm7125900qtq.93.2019.12.16.14.10.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 14:10:04 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+To:     "David S . Miller" <davem@davemloft.net>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] sparc/console: kill off obsolete declarations
+Date:   Mon, 16 Dec 2019 17:10:04 -0500
+Message-Id: <20191216221004.3476562-1-nivedita@alum.mit.edu>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a linker section to UML where KUnit can put references to its test
-suites. This patch is an early step in transitioning to dispatching all
-KUnit tests from a centralized executor rather than having each as its
-own separate late_initcall.
+commit 09d3f3f0e02c ("sparc: Kill PROM console driver.") missed removing
+the declarations of the deleted prom_con structure and prom_con_init
+function from console.h. Kill them off now.
 
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 ---
- arch/um/include/asm/common.lds.S | 4 ++++
- 1 file changed, 4 insertions(+)
+ include/linux/console.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/arch/um/include/asm/common.lds.S b/arch/um/include/asm/common.lds.S
-index 7145ce6999822..eab9ceb450efd 100644
---- a/arch/um/include/asm/common.lds.S
-+++ b/arch/um/include/asm/common.lds.S
-@@ -52,6 +52,10 @@
- 	CON_INITCALL
-   }
+diff --git a/include/linux/console.h b/include/linux/console.h
+index d09951d5a94e..f33016b3a401 100644
+--- a/include/linux/console.h
++++ b/include/linux/console.h
+@@ -101,7 +101,6 @@ extern const struct consw *conswitchp;
+ extern const struct consw dummy_con;	/* dummy console buffer */
+ extern const struct consw vga_con;	/* VGA text console */
+ extern const struct consw newport_con;	/* SGI Newport console  */
+-extern const struct consw prom_con;	/* SPARC PROM console */
  
-+  .kunit_test_suites : {
-+	KUNIT_TEST_SUITES
-+  }
-+
-   .exitcall : {
- 	__exitcall_begin = .;
- 	*(.exitcall.exit)
+ int con_is_bound(const struct consw *csw);
+ int do_unregister_con_driver(const struct consw *csw);
+@@ -201,7 +200,6 @@ extern void suspend_console(void);
+ extern void resume_console(void);
+ 
+ int mda_console_init(void);
+-void prom_con_init(void);
+ 
+ void vcs_make_sysfs(int index);
+ void vcs_remove_sysfs(int index);
 -- 
-2.24.1.735.g03f4e72817-goog
+2.24.1
 
