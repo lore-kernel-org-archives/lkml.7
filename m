@@ -2,73 +2,53 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E08ADC3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 333E0C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B29EC20725
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE259206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:56:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576508134;
-	bh=G5qmjCDdT1w/WFe2hlox5kS/aHkrbDR0OUGRD1SamhA=;
+	s=default; t=1576508189;
+	bh=vciKTE255vapQBp95xy+DJ/uu5p9pwikFwfp5i++bRg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D8fepjgJxMbcLi6mheODkU6J2Qz7C4KO2tsMfk6j32w7cCLBO1eGxkHtDA3wvAqlh
-	 fE/BiF8oWWYmQ9G2Vf0UPpnGCZeVNGqoySlLUf3f56MFUVcHhHk6G4nYJtFIJSv6fI
-	 xRD+OddxK6NYDFEaHyRrXA3sI08iWJlMC8iBBI1A=
+	b=nKpv9yICpWxaIXq4XKdUGRLAJ2Zfj2qByuY8/xrR2PQaRPU1LmBJuxnMKqNrdHLYD
+	 sOUXM0uVoOrRCX0aDpFyyOoQGDjly6ol9s16wOsGN3KNydsnlfO+lwyo6naswCSKNQ
+	 4YLfp5Glgc3QDwtPoiSEUFDGFvUGpCa9oxtlmdys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728218AbfLPOze (ORCPT
+        id S1728230AbfLPO42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 09:55:34 -0500
-Received: from foss.arm.com ([217.140.110.172]:57962 "EHLO foss.arm.com"
+        Mon, 16 Dec 2019 09:56:28 -0500
+Received: from foss.arm.com ([217.140.110.172]:58014 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728008AbfLPOzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 09:55:33 -0500
+        id S1728063AbfLPO42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 09:56:28 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6664A1FB;
-        Mon, 16 Dec 2019 06:55:32 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 42CAE1FB;
+        Mon, 16 Dec 2019 06:56:27 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D91B93F718;
-        Mon, 16 Dec 2019 06:55:31 -0800 (PST)
-Date:   Mon, 16 Dec 2019 14:55:28 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B689F3F718;
+        Mon, 16 Dec 2019 06:56:26 -0800 (PST)
+Date:   Mon, 16 Dec 2019 14:56:25 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v6 09/15] regulator: bd71828: Basic support for ROHM
- bd71828 PMIC regulators
-Message-ID: <20191216145528.GE4161@sirena.org.uk>
-References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
- <5b1c4a22c7945e97ff2a7924abfeb3239043f8eb.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+To:     John Garry <john.garry@huawei.com>
+Cc:     marek.vasut@gmail.com, tudor.ambarus@microchip.com,
+        linuxarm@huawei.com, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
+        xuejiancheng@hisilicon.com, fengsheng5@huawei.com,
+        chenxiang66@hisilicon.com
+Subject: Re: [PATCH v2 0/3] HiSilicon v3xx SFC driver
+Message-ID: <20191216145625.GF4161@sirena.org.uk>
+References: <1575900490-74467-1-git-send-email-john.garry@huawei.com>
+ <65a6d94b-95b7-b11b-2234-c091ba3f671e@huawei.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="vv4Sf/kQfcwinyKX"
+        protocol="application/pgp-signature"; boundary="yH1ZJFh+qWm+VodA"
 Content-Disposition: inline
-In-Reply-To: <5b1c4a22c7945e97ff2a7924abfeb3239043f8eb.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <65a6d94b-95b7-b11b-2234-c091ba3f671e@huawei.com>
 X-Cookie: Backed up the system lately?
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,39 +57,46 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---vv4Sf/kQfcwinyKX
+--yH1ZJFh+qWm+VodA
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 11, 2019 at 11:46:11AM +0200, Matti Vaittinen wrote:
+On Mon, Dec 16, 2019 at 02:52:23PM +0000, John Garry wrote:
+> On 09/12/2019 14:08, John Garry wrote:
+> > This patchset introduces support for the HiSilicon SFC V3XX driver.
+> >=20
+>=20
+> Hi guys,
+>=20
+> Just a friendly reminder on this series.
 
-> +static int bd71828_ldo6_get_voltage(struct regulator_dev *rdev)
-> +{
-> +	return BD71828_LDO_6_VOLTAGE;
-> +}
-> +
-> +static const struct regulator_ops bd71828_ldo6_ops = {
-> +	.enable = regulator_enable_regmap,
-> +	.disable = regulator_disable_regmap,
-> +	.get_voltage = bd71828_ldo6_get_voltage,
+Please don't send content free pings and please allow a reasonable time
+for review.  People get busy, go on holiday, attend conferences and so=20
+on so unless there is some reason for urgency (like critical bug fixes)
+please allow at least a couple of weeks for review.  If there have been
+review comments then people may be waiting for those to be addressed.
 
-You can just set fixed_uV in the regulator_desc, you don't need a
-get_voltage() operation here.  Otherwise this looks good, I'll apply it
-and please send an incremental fix for this.
+Sending content free pings adds to the mail volume (if they are seen at
+all) which is often the problem and since they can't be reviewed
+directly if something has gone wrong you'll have to resend the patches
+anyway, so sending again is generally a better approach though there are
+some other maintainers who like them - if in doubt look at how patches
+for the subsystem are normally handled.
 
---vv4Sf/kQfcwinyKX
+--yH1ZJFh+qWm+VodA
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl33mt8ACgkQJNaLcl1U
-h9DPqggAhcsF1ZeRBaP6Lzz9ZA0lX48wnM91c45AzpXxhBPVmVU8EJrJFkmUT+zI
-VYHCWzrWqZoUwoxRDUntTg0W7omOi4CoU10/2SGjxkdxHiAmutKvaV8e155DaKRj
-hhZGeaSRdWgD3uYUZGBB1W9OYmzuHx6NtlL76FfabMt6TTPQCq7X3VjSuI4wi4oN
-7JLtu6Gzf2WNSmP1uqZLMSqk1RvgZa2K1rgRwf+SYhTD21VWliTuq/qGtg0zmijW
-BA398k1yTl123ecTnS9Fnk+IsqPSTd/mBJT4TmFkdakxVm3JSYIqpqIiJYZtGOBs
-aUVTHrBVlYfYIk4raTP8w2l2xYiNdg==
-=0wbA
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl33mxgACgkQJNaLcl1U
+h9BkyAf9ERzOEHkj4pm1zcqytpYhQyLc/XjXH3fGYXrtycjyRGjH0+FOGFxRKFKz
+fSKqN7QBU2dWuPvKqvB43G/eIMrD0FR7Dg+SkbzW1761xgy0r3TWVF8Fgt+WtMki
+MpZisGQmpcWjVkYkwsd7FqMPhSxSNkpSQjYDGvuvJfJ+DALzTjwawoDDVECeNuRj
+P4gZscc2m79ff/24eTtmktjjzIIwT+Zv6qrjSx2e0LCqueLNzudNgL6ToP5QppU7
+zRgzI6MefT64/ffpcGa6yr7kBBWX9I33uuOAcgmY3NIQrFvDc8cxCfZZ9346e1wK
+Nrp6zKYgFjmfO3gYYW1cP8XJqd3OgQ==
+=JPvu
 -----END PGP SIGNATURE-----
 
---vv4Sf/kQfcwinyKX--
+--yH1ZJFh+qWm+VodA--
