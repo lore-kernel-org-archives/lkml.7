@@ -2,63 +2,88 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B69C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA86C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94178207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:18:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DB4920700
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:20:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576495240;
+	bh=B3yCkMC25+D0W9E+M0a02buS7ZF8/tzZgPHP+PFghK8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iwkRB5815gL/3gnIcZYwjn73hVDjv6dRry2+dxUTnbpRXAciKxBp3w2EwLZajuX/t
+	 kG26Zdt7+wdZyuL/pjb1I+b0VdyWaHvljl0MjjeiRnrWi1nH4WkfJzhTozycszhWJB
+	 2gpc8RLu8TzUZuMeLuzESZu9d5FgsbrSC/DRSGrA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727458AbfLPLSz (ORCPT
+        id S1727211AbfLPLUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 06:18:55 -0500
-Received: from mail.sysgo.com ([176.9.12.79]:57480 "EHLO mail.sysgo.com"
+        Mon, 16 Dec 2019 06:20:39 -0500
+Received: from foss.arm.com ([217.140.110.172]:50650 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727059AbfLPLSz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 06:18:55 -0500
-From:   David Engraf <david.engraf@sysgo.com>
-To:     thierry.reding@gmail.com, lorenzo.pieralisi@arm.com,
-        andrew.murray@arm.com, bhelgaas@google.com, jonathanh@nvidia.com
-Cc:     linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, David Engraf <david.engraf@sysgo.com>
-Subject: [PATCH v2] PCI: tegra: Fix return value check of pm_runtime_get_sync
-Date:   Mon, 16 Dec 2019 12:18:25 +0100
-Message-Id: <20191216111825.28136-1-david.engraf@sysgo.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191216102208.GO24359@e119886-lin.cambridge.arm.com>
-References: <20191216102208.GO24359@e119886-lin.cambridge.arm.com>
+        id S1727086AbfLPLUj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 06:20:39 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CA0091FB;
+        Mon, 16 Dec 2019 03:20:38 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 493DF3F6CF;
+        Mon, 16 Dec 2019 03:20:38 -0800 (PST)
+Date:   Mon, 16 Dec 2019 11:20:36 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     linux-spi@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <ray.jui@broadcom.com>,
+        Scott Branden <scott.branden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] spi: bcm2835: don't print error on clk_get() DEFER
+Message-ID: <20191216112036.GA4161@sirena.org.uk>
+References: <20191212231213.29061-1-jquinlan@broadcom.com>
+ <20191213114138.GB4644@sirena.org.uk>
+ <CA+-6iNz4WVJzfntJ5CUXBYvqQG4kEj8g8g_HOxZN5rFWTUvv3g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="TB36FDmn/VVEgNH/"
+Content-Disposition: inline
+In-Reply-To: <CA+-6iNz4WVJzfntJ5CUXBYvqQG4kEj8g8g_HOxZN5rFWTUvv3g@mail.gmail.com>
+X-Cookie: Backed up the system lately?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pm_runtime_get_sync() returns the device's usage counter. This might
-be >0 if the device is already powered up or CONFIG_PM is disabled.
 
-Abort probe function on real error only.
+--TB36FDmn/VVEgNH/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Fixes: da76ba50963b ("PCI: tegra: Add power management support")
-Signed-off-by: David Engraf <david.engraf@sysgo.com>
----
- drivers/pci/controller/pci-tegra.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Fri, Dec 13, 2019 at 10:33:41AM -0500, Jim Quinlan wrote:
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 673a1725ef38..090b632965e2 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -2798,7 +2798,7 @@ static int tegra_pcie_probe(struct platform_device *pdev)
- 
- 	pm_runtime_enable(pcie->dev);
- 	err = pm_runtime_get_sync(pcie->dev);
--	if (err) {
-+	if (err < 0) {
- 		dev_err(dev, "fail to enable pcie controller: %d\n", err);
- 		goto teardown_msi;
- 	}
--- 
-2.17.1
+> Understood; I could do a dev_dbg() on -EPROBE_DEFER and dev_err() on
+> all other errors -- would that work for you?
 
+Yes, that sounds good.
+
+--TB36FDmn/VVEgNH/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl33aIEACgkQJNaLcl1U
+h9AC6wf/R5j2jqumwfRVO/ylQSKn8tJJydGHwHAhVQa0OkQU0O+BqOeMBYdKfgJO
+bN4q07uuvPEXt/IAhHh3RGvlQmVjCjmsh4fi+cErbP94Vq4RQKk0C8Oz43mYDAdd
+N0L0RT3ZaL3Lx8VB9zpBOcoVIlnvxp5NsadklXFomNw0jPODBmZigQ2JozKGrQJg
+JNPxPpJZbSm2CIiX+mov8XYMYY65n5RGj2VN2EfN2vlkoLyCG5KG81OwC+dfj0UN
++5pC/lfxyOh7mLgdPOpbN8JyGBp+ZmZQCMVMI9VXohBg3O38xiKoc/VX3kmhxGER
+diLze8h6JB5EC49xjFrPPHxauD0IQw==
+=rvrz
+-----END PGP SIGNATURE-----
+
+--TB36FDmn/VVEgNH/--
