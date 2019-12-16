@@ -2,51 +2,55 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD1EC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45AD4C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C3C0206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:41:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12BC7206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:41:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521684;
-	bh=tQnQ7eGrRB4decAAN2WbhDaaCkvZX5ZKgulZVP1wGHQ=;
+	s=default; t=1576521694;
+	bh=lFMA8F5IsifbE13LGxhgzKLWUnJu7KQspWTXFnixgM8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XLaAJZgHZxfp9feYf+Cn8v4wU63yTIYFaX8B/CO562mbV0Lpp2JX3xT5f7SDFBAVe
-	 bwM1uGEnT+gpYU5lYM8Ks0EvDr52b1ghVGHqjiPwWfLrVADqEbREh5YYL0QHQQAK+9
-	 VK6FY4mE6scHOkcFGEFLaEzoYE2q2BqYSZwRs+Kg=
+	b=Tg8zuz9+3AyC2Vn3DSYwsU8qu0IM4IzpJaSwC9UxV6cg4PhLfGySMSPxjh5a76SaH
+	 +a1ypJVvB+oMOdTbzMrT/5g+4pwI2HI1Y3rCcRsfYPz8huAaEUurua1EB4nIuFkYm8
+	 UsvRr4VJ+2c0y8xRkygdaYqi28UGPOXYLQgjgig4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729150AbfLPSB1 (ORCPT
+        id S1729342AbfLPSlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:01:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36318 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:41:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726861AbfLPSBW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:01:22 -0500
+        id S1728774AbfLPSBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:01:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F2062072D;
-        Mon, 16 Dec 2019 18:01:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C68C206B7;
+        Mon, 16 Dec 2019 18:01:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519282;
-        bh=tQnQ7eGrRB4decAAN2WbhDaaCkvZX5ZKgulZVP1wGHQ=;
+        s=default; t=1576519272;
+        bh=lFMA8F5IsifbE13LGxhgzKLWUnJu7KQspWTXFnixgM8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aGzv/7T9hqONQyLYaa9tQesdmmdZu8Z0koiPA9Lh6Qxl12eZs8FiKhcZozl9Ptw+E
-         Xgur/ep+VtKmVniwreguL9mnT8/ZQG2PrmbJIdmULm0xTgI9zU0EN3NkHtc+ktkbxX
-         GXkcZS3DaqSHfXqbJ2qsOytoikXgruRoDr5QPYtw=
+        b=Rh9zQ51koYjp//NJtVDYf3QM9wq5xsFoR0MeMK8vHayAjRW8r77mTd60wIf0ZwfLN
+         QSbwzaGBMgfTVeRU83iF1eYlrTN9mI2EIak7X3LmLjYJd3Y8UGxT6ji50OsY/9YAaD
+         IDb44slbKfOFRgBPW1jlywZc37vgdfw+jZYOoC3g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chengguang Xu <cgxu519@mykernel.net>,
-        Jan Kara <jack@suse.cz>
-Subject: [PATCH 4.14 233/267] ext2: check err when partial != NULL
-Date:   Mon, 16 Dec 2019 18:49:19 +0100
-Message-Id: <20191216174915.322920804@linuxfoundation.org>
+        stable@vger.kernel.org, Elaine Zhang <zhangqing@rock-chips.com>,
+        Joseph Chen <chenjh@rock-chips.com>,
+        Daniel Schultz <d.schultz@phytec.de>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 265/267] mfd: rk808: Fix RK818 ID template
+Date:   Mon, 16 Dec 2019 18:49:51 +0100
+Message-Id: <20191216174917.360319399@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -59,41 +63,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chengguang Xu <cgxu519@mykernel.net>
+From: Daniel Schultz <d.schultz@phytec.de>
 
-commit e705f4b8aa27a59f8933e8f384e9752f052c469c upstream.
+[ Upstream commit 37ef8c2c15bdc1322b160e38986c187de2b877b2 ]
 
-Check err when partial == NULL is meaningless because
-partial == NULL means getting branch successfully without
-error.
+The Rockchip PMIC driver can automatically detect connected component
+versions by reading the ID_MSB and ID_LSB registers. The probe function
+will always fail with RK818 PMICs because the ID_MSK is 0xFFF0 and the
+RK818 template ID is 0x8181.
 
-CC: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20191105045100.7104-1-cgxu519@mykernel.net
-Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This patch changes this value to 0x8180.
 
+Fixes: 9d6105e19f61 ("mfd: rk808: Fix up the chip id get failed")
+Cc: stable@vger.kernel.org
+Cc: Elaine Zhang <zhangqing@rock-chips.com>
+Cc: Joseph Chen <chenjh@rock-chips.com>
+Signed-off-by: Daniel Schultz <d.schultz@phytec.de>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext2/inode.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ include/linux/mfd/rk808.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/ext2/inode.c
-+++ b/fs/ext2/inode.c
-@@ -699,10 +699,13 @@ static int ext2_get_blocks(struct inode
- 		if (!partial) {
- 			count++;
- 			mutex_unlock(&ei->truncate_mutex);
--			if (err)
--				goto cleanup;
- 			goto got_it;
- 		}
-+
-+		if (err) {
-+			mutex_unlock(&ei->truncate_mutex);
-+			goto cleanup;
-+		}
- 	}
+diff --git a/include/linux/mfd/rk808.h b/include/linux/mfd/rk808.h
+index d3156594674c2..338e0f6e2226b 100644
+--- a/include/linux/mfd/rk808.h
++++ b/include/linux/mfd/rk808.h
+@@ -443,7 +443,7 @@ enum {
+ enum {
+ 	RK805_ID = 0x8050,
+ 	RK808_ID = 0x0000,
+-	RK818_ID = 0x8181,
++	RK818_ID = 0x8180,
+ };
  
- 	/*
+ struct rk808 {
+-- 
+2.20.1
+
 
 
