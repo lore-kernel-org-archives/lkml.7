@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DA1C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F09C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:10:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A2F420700
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C15F207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:10:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519844;
-	bh=JQCZJhCVcLu+i7SlAEtiB0+LaoT3S/NLbdjXaVDs1bI=;
+	s=default; t=1576519848;
+	bh=iI/RkI3HDLfJrV5Yf7UTlFLrZGwH/B1OA9pA1U9tTXA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jn5hbq5TqQJsXtOxA5Xfm3RoHB5e+OIjdNaSZjBge9nk7SWYIRxxusYGK2KEcyYDD
-	 Iw/z6NXwA0zeFK7e13Fo5mOBPYupXbumyJAdsk6QjKyDT/rQ5Ee3WgLvXPvQueLYU0
-	 8CkN/slWnLLmKBBMcND9sh/0aP4BHt7XAoAim7aY=
+	b=vprCRKSrnKnmMO5jqlalzawx5c0oY7TqOUN9IeawzGlB/TU8xBI6iJtzBjvy0TvoC
+	 paNaYHM7m7vyX1f/3H9+iYZU63oViIB+/zTZEY3CnkNWoY/GGZxQXl1JQwkGGrD0B8
+	 tYtq4WBFpaNqggFVw7WJ7GypyyTXSJlNpIvgl458=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730656AbfLPSKn (ORCPT
+        id S1730485AbfLPSKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:10:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53964 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:10:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730645AbfLPSKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:10:40 -0500
+        id S1730451AbfLPSKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:10:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC996206B7;
-        Mon, 16 Dec 2019 18:10:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E5E7206B7;
+        Mon, 16 Dec 2019 18:10:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519840;
-        bh=JQCZJhCVcLu+i7SlAEtiB0+LaoT3S/NLbdjXaVDs1bI=;
+        s=default; t=1576519842;
+        bh=iI/RkI3HDLfJrV5Yf7UTlFLrZGwH/B1OA9pA1U9tTXA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QyA5S+ratEGgo6HMuXVGui2ayDRAYHIRNS9ZsKbEOY64cvwNy54hhfzrg3tOna54M
-         UzJw565ZXPKocsMyHGFMpJtpC/94Qt/OZtSgxpgfM5Mo9Ry5ja4yVjTyeNJ4s/XQMV
-         Hg6S392QQ428/Ml3uHpCO6M9trdMZr2RJlv7NBOQ=
+        b=MHUt8+oYShuaspTfb9dLbBpokdRgNNfRShMrAxWC1f8WddnkYC5EPcpWvQCl//rDZ
+         oMHVyrSdgJydSUefrIw0WE9wvRjIIGTvFjtCLBTi5uG37pJSGtCO7MkPv/ApJiv+0I
+         Yr1Xf5Fwlf3iLuHcsPAFfbTvzGQ6q0OIU5hrG3S8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.3 091/180] cpuidle: teo: Rename local variable in teo_select()
-Date:   Mon, 16 Dec 2019 18:48:51 +0100
-Message-Id: <20191216174834.667664935@linuxfoundation.org>
+        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        "Williams, Gerald S" <gerald.s.williams@intel.com>,
+        NeilBrown <neilb@suse.de>
+Subject: [PATCH 5.3 074/180] workqueue: Fix pwq ref leak in rescuer_thread()
+Date:   Mon, 16 Dec 2019 18:48:34 +0100
+Message-Id: <20191216174830.534635482@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -59,82 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Tejun Heo <tj@kernel.org>
 
-commit 4f690bb8ce4cc5d3fabe3a8e9c2401de1554cdc1 upstream.
+commit e66b39af00f426b3356b96433d620cb3367ba1ff upstream.
 
-Rename a local variable in teo_select() in preparation for subsequent
-code modifications, no intentional impact.
+008847f66c3 ("workqueue: allow rescuer thread to do more work.") made
+the rescuer worker requeue the pwq immediately if there may be more
+work items which need rescuing instead of waiting for the next mayday
+timer expiration.  Unfortunately, it doesn't check whether the pwq is
+already on the mayday list and unconditionally gets the ref and moves
+it onto the list.  This doesn't corrupt the list but creates an
+additional reference to the pwq.  It got queued twice but will only be
+removed once.
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: 5.1+ <stable@vger.kernel.org> # 5.1+
+This leak later can trigger pwq refcnt warning on workqueue
+destruction and prevent freeing of the workqueue.
+
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Cc: "Williams, Gerald S" <gerald.s.williams@intel.com>
+Cc: NeilBrown <neilb@suse.de>
+Cc: stable@vger.kernel.org # v3.19+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/cpuidle/governors/teo.c |   19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+ kernel/workqueue.c |   13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
---- a/drivers/cpuidle/governors/teo.c
-+++ b/drivers/cpuidle/governors/teo.c
-@@ -241,7 +241,7 @@ static int teo_select(struct cpuidle_dri
- {
- 	struct teo_cpu *cpu_data = per_cpu_ptr(&teo_cpus, dev->cpu);
- 	int latency_req = cpuidle_governor_latency_req(dev->cpu);
--	unsigned int duration_us, count;
-+	unsigned int duration_us, early_hits;
- 	int max_early_idx, constraint_idx, idx, i;
- 	ktime_t delta_tick;
- 
-@@ -255,7 +255,7 @@ static int teo_select(struct cpuidle_dri
- 	cpu_data->sleep_length_ns = tick_nohz_get_sleep_length(&delta_tick);
- 	duration_us = ktime_to_us(cpu_data->sleep_length_ns);
- 
--	count = 0;
-+	early_hits = 0;
- 	max_early_idx = -1;
- 	constraint_idx = drv->state_count;
- 	idx = -1;
-@@ -278,12 +278,12 @@ static int teo_select(struct cpuidle_dri
- 			 * into account, because it would be a mistake to select
- 			 * a deeper state with lower "early hits" metric.  The
- 			 * index cannot be changed to point to it, however, so
--			 * just increase the max count alone and let the index
--			 * still point to a shallower idle state.
-+			 * just increase the "early hits" count alone and let
-+			 * the index still point to a shallower idle state.
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -2532,8 +2532,14 @@ repeat:
  			 */
- 			if (max_early_idx >= 0 &&
--			    count < cpu_data->states[i].early_hits)
--				count = cpu_data->states[i].early_hits;
-+			    early_hits < cpu_data->states[i].early_hits)
-+				early_hits = cpu_data->states[i].early_hits;
- 
- 			continue;
+ 			if (need_to_create_worker(pool)) {
+ 				spin_lock(&wq_mayday_lock);
+-				get_pwq(pwq);
+-				list_move_tail(&pwq->mayday_node, &wq->maydays);
++				/*
++				 * Queue iff we aren't racing destruction
++				 * and somebody else hasn't queued it already.
++				 */
++				if (wq->rescuer && list_empty(&pwq->mayday_node)) {
++					get_pwq(pwq);
++					list_add_tail(&pwq->mayday_node, &wq->maydays);
++				}
+ 				spin_unlock(&wq_mayday_lock);
+ 			}
  		}
-@@ -299,10 +299,10 @@ static int teo_select(struct cpuidle_dri
+@@ -4643,7 +4649,8 @@ static void show_pwq(struct pool_workque
+ 	pr_info("  pwq %d:", pool->id);
+ 	pr_cont_pool_info(pool);
  
- 		idx = i;
+-	pr_cont(" active=%d/%d%s\n", pwq->nr_active, pwq->max_active,
++	pr_cont(" active=%d/%d refcnt=%d%s\n",
++		pwq->nr_active, pwq->max_active, pwq->refcnt,
+ 		!list_empty(&pwq->mayday_node) ? " MAYDAY" : "");
  
--		if (count < cpu_data->states[i].early_hits &&
-+		if (early_hits < cpu_data->states[i].early_hits &&
- 		    !(tick_nohz_tick_stopped() &&
- 		      drv->states[i].target_residency < TICK_USEC)) {
--			count = cpu_data->states[i].early_hits;
-+			early_hits = cpu_data->states[i].early_hits;
- 			max_early_idx = i;
- 		}
- 	}
-@@ -331,10 +331,9 @@ static int teo_select(struct cpuidle_dri
- 	if (idx < 0) {
- 		idx = 0; /* No states enabled. Must use 0. */
- 	} else if (idx > 0) {
-+		unsigned int count = 0;
- 		u64 sum = 0;
- 
--		count = 0;
--
- 		/*
- 		 * Count and sum the most recent idle duration values less than
- 		 * the current expected idle duration value.
+ 	hash_for_each(pool->busy_hash, bkt, worker, hentry) {
 
 
