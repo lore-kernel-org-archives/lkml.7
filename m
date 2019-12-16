@@ -2,413 +2,160 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5550EC2D0CF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E3DCC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13E862072B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:22:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="duCNJEib"
+	by mail.kernel.org (Postfix) with ESMTP id 58D2720700
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:25:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbfLPIWB (ORCPT
+        id S1726808AbfLPIZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 03:22:01 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46623 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726712AbfLPIWA (ORCPT
+        Mon, 16 Dec 2019 03:25:09 -0500
+Received: from mail-il1-f197.google.com ([209.85.166.197]:57336 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726712AbfLPIZJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 03:22:00 -0500
-Received: by mail-ot1-f65.google.com with SMTP id g18so8079509otj.13;
-        Mon, 16 Dec 2019 00:21:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=B2zr+SxGgQJRKPjCI0ZlCNLHKl8Hq+JbhUCM9tDaYbk=;
-        b=duCNJEibi83CQtLO3lJy8ZeTakoP8uvN3rYY/wkMtOGdcEAoS3hikmezHKWm0CA5Pm
-         9dL0Oz8Qoh2fSfXuethC2UUonF9dhfVvzIhos/7OF5APUXaGD+ozKlWRvy5oN71OKV97
-         O9chmuVrwmzS6M/f8BQsn6RDt+beAkjXHGQHMEqlTRiRl7F4YpovwtXu3z01fBv9t/JU
-         m1RwuykieOwvhYNmnGjevq6+CmQSVn9QW96K+HLJbb3UkIfaKwPx/jivTNNGnMj89B0I
-         oZ7BHnvjJJS4ZrWzDkrsyxIX+gEODf8o+n/a9w5+NEi4szuQ5RjtJHNummuyoNBNNIDb
-         /spw==
+        Mon, 16 Dec 2019 03:25:09 -0500
+Received: by mail-il1-f197.google.com with SMTP id 12so5850056iln.23
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 00:25:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B2zr+SxGgQJRKPjCI0ZlCNLHKl8Hq+JbhUCM9tDaYbk=;
-        b=KGnonN9UZE3RiRnYo67kXkumhqBtpQ2tOElH3qEcFYfHIy09sRoTtQJbZlk76Ponor
-         78DavZiQ1uk12M/siczGyySH/V9LXSsV+2MGMeWHjHVX5mMzeYK+77JGGWXifzZObD3o
-         ZaTYA1mFh2d+g3ds2nOY3ebH0AADElBKoV2b+QHzHAjru0tkZkXyJ3krtBTfhUQHd/5k
-         CmJZNFJLyUJcKLMuv5C8mEb5Gi2RR4JUVXE8UUmIFV2/K5K1EbwPmWxMYBQHvV6ky7l+
-         mjUOpwmJciJkHEpG0yhpX1cb23dSOkSHKvwCTSU07pqzQZJ0ZKspLeLj2Ev/khA4Y9zx
-         gHxQ==
-X-Gm-Message-State: APjAAAXJHXQNc4kNfis/AjL5nNYNYRe1NdoYKeMuoSRSnnit8REyJib4
-        WZmU8QkGQnwX6ilb4aGLJskcMCIQQo25s87TC20=
-X-Google-Smtp-Source: APXvYqxQ2QA/IJOqMGi2skPvLoXCAHWfqvnNsrhuIWnq8ZJXE69aNr5mcARZx/rneXf34MbVxtEMNdjkpDEu0iV67GE=
-X-Received: by 2002:a05:6830:147:: with SMTP id j7mr14990640otp.44.1576484518648;
- Mon, 16 Dec 2019 00:21:58 -0800 (PST)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=VB+SUGuC0Cxur0Zbj+ZX0/RbFVdQs4vKPprMrLUqHHw=;
+        b=NiorNmGxCazp+EMEyeh/UgDL8c8hazTpzrPesjQWYDx5MSBVh5zscJcPr3Ep+Z9yDJ
+         s75F3S9vJEe9HI3Sp7lUi9mu9/YCJUMUYnBLRq8PLfHA9AbKutI7LLETSr9+bPkEtmLF
+         JZ4Q6GVuHK2Au05g94V7qCLlGbXhIJPamFvkMhdfrVEVWX0QbV/3NYOhAJoSmIgXU9uZ
+         32QUFKpNChLmPZbGWUl2X2EkLarnmSvohFClpppyNA5zAYMYLXvQLYtgTyespZx6EAdc
+         NB8kYMBigi34LhbRwmMArvEhsWXvQbUbhwUUXNQeLTgLw01PXGAKHF09stdQuCh/idCv
+         tj5w==
+X-Gm-Message-State: APjAAAVLzXkNdj5+cW7KHF/+9dyZ7K2LQj8QNdpLCr1sBmRJ+WUCIjwH
+        FyXiivtdfF9CUmUIRcmz2MJm9GYg7F6LqRxEp33Fi7IQQdWo
+X-Google-Smtp-Source: APXvYqy1n7xSzv4gIh6uIxRJReBP3P2yMVXvElVrNazRNMA5VJbfAmWHkpDIDiNKG2f/us0i5Hd9wR9X3MohfeMASfHQHT2O7mhi
 MIME-Version: 1.0
-References: <20191213084748.11210-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <20191213195727.GA170874@google.com>
-In-Reply-To: <20191213195727.GA170874@google.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Mon, 16 Dec 2019 08:21:31 +0000
-Message-ID: <CA+V-a8saLrvuTiQWaSGK9j6BA=waOSAwNdm_2Ae-EpMKOq-73A@mail.gmail.com>
-Subject: Re: [v2 2/6] pci: endpoint: add support to handle features of
- outbound memory
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Simon Horman <horms@verge.net.au>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org,
-        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a92:1f16:: with SMTP id i22mr11467433ile.206.1576484708100;
+ Mon, 16 Dec 2019 00:25:08 -0800 (PST)
+Date:   Mon, 16 Dec 2019 00:25:08 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000005324a0599cdf320@google.com>
+Subject: WARNING in azx_rirb_get_response
+From:   syzbot <syzbot+b3028ac3933f5c466389@syzkaller.appspotmail.com>
+To:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        perex@perex.cz, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, tiwai@suse.com, yung-chuan.liao@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+Hello,
 
-thank you for the review.
+syzbot found the following crash on:
 
-On Fri, Dec 13, 2019 at 9:06 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Fri, Dec 13, 2019 at 08:47:44AM +0000, Lad Prabhakar wrote:
-> > From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > rcar pcie controller has support to map multiple memory regions
-> > for mapping the outbound memory in local system, this feature
-> > inspires to add support for handling such features in endpoint
-> > framework. similar features exists on other controllers where
-> > outbound regions can be specifically used for low/high priority
-> > transactions, and regions can be flagged and used for allocation
-> > of large/small memory allocations.
-> > This patch adds support to handle such features, where the
-> > properties described for outbound regions are used whenever a
-> > request to memory is made.
->
-> For this and the other patches, please:
->
->   - start sentences with a capital letter
->   - leave a blank line between paragraphs
->   - wrap commit log text to use the whole 80 character line (I wrap to
->     75 characters to account for "git log" indenting by 4 spaces)
->   - check your signed-off-by: it shows your name as "Lad, Prabhakar",
->     while your email From: line shows "Lad Prabhakar".  Choose one :)
->
-sure will fix it next version.
+HEAD commit:    37d4e84f Merge tag 'ceph-for-5.5-rc2' of git://github.com/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10bbc9a6e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=79f79de2a27d3e3d
+dashboard link: https://syzkaller.appspot.com/bug?extid=b3028ac3933f5c466389
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+userspace arch: i386
 
-> > diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
-> > index 2bf8bd1..4b610cd 100644
-> > --- a/drivers/pci/endpoint/pci-epc-mem.c
-> > +++ b/drivers/pci/endpoint/pci-epc-mem.c
->
-> > -int __pci_epc_mem_init(struct pci_epc *epc, phys_addr_t phys_base, size_t size,
-> > -                    size_t page_size)
-> > +int __pci_epc_mem_init(struct pci_epc *epc, struct pci_epc_mem_window *windows,
-> > +                    int num_windows, size_t page_size)
-> >  {
-> > -     int ret;
-> > -     struct pci_epc_mem *mem;
-> > -     unsigned long *bitmap;
-> > +     struct pci_epc_mem *mem = NULL;
-> > +     unsigned long *bitmap = NULL;
-> >       unsigned int page_shift;
-> > -     int pages;
-> >       int bitmap_size;
-> > +     int pages;
-> > +     int ret;
-> > +     int i;
-> > +
-> > +     epc->mem_windows = 0;
-> > +
-> > +     if (!windows)
-> > +             return -EINVAL;
-> > +
-> > +     if (num_windows <= 0)
-> > +             return -EINVAL;
->
-> Why is num_windows signed?
->
-> >  void pci_epc_mem_exit(struct pci_epc *epc)
-> >  {
-> > -     struct pci_epc_mem *mem = epc->mem;
-> > +     struct pci_epc_mem *mem;
-> > +     int i;
-> > +
-> > +     if (!epc->mem_windows)
-> > +             return;
->
-> If you fix the loop below, why do you even need to test this?
->
-yes makes sense will drop this check.
+Unfortunately, I don't have any reproducer for this crash yet.
 
-> > +     for (i = 0; i <= epc->mem_windows; i--) {
->
-> Huh?  "<="?  "i--"?  Surely you mean
->
->         for (i = 0; i < epc->mem_windows; i++) {
->
-oops my bad, will fix it.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+b3028ac3933f5c466389@syzkaller.appspotmail.com
 
-> > +             mem = epc->mem[i];
-> > +             kfree(mem->bitmap);
-> > +             kfree(epc->mem[i]);
-> > +     }
-> > +     kfree(epc->mem);
-> >
-> >       epc->mem = NULL;
-> > -     kfree(mem->bitmap);
-> > -     kfree(mem);
-> > +     epc->mem_windows = 0;
-> >  }
-> >  EXPORT_SYMBOL_GPL(pci_epc_mem_exit);
-> >
-> > +static int pci_epc_find_best_fit_window(struct pci_epc *epc, size_t size,
-> > +                                     u32 flags)
->
-> Can this just return a struct pci_epc_mem *, so the caller doesn't
-> have to lookup epc->mem[i] again?
->
-yes makes sense will change it to return struct pci_epc_mem *
+snd_hda_intel 0000:00:06.0: No response from codec, disabling MSI: last  
+cmd=0x004a0000
+------------[ cut here ]------------
+snd_hda_intel 0000:00:06.0: azx_get_response timeout, switching to  
+single_cmd mode: last cmd=0x004a0000
+WARNING: CPU: 2 PID: 8020 at sound/pci/hda/hda_controller.c:886  
+azx_rirb_get_response+0x5d6/0x720 sound/pci/hda/hda_controller.c:886
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 2 PID: 8020 Comm: syz-executor.1 Not tainted 5.5.0-rc1-syzkaller #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS  
+rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  panic+0x2e3/0x75c kernel/panic.c:221
+  __warn.cold+0x2f/0x3e kernel/panic.c:582
+  report_bug+0x289/0x300 lib/bug.c:195
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  fixup_bug arch/x86/kernel/traps.c:169 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:azx_rirb_get_response+0x5d6/0x720  
+sound/pci/hda/hda_controller.c:886
+Code: f6 00 00 00 49 8b 5d 00 e8 27 75 7a fb 4c 89 ef e8 ef 21 5a fe 44 89  
+f9 48 89 da 48 c7 c7 80 07 ce 88 48 89 c6 e8 d9 1e 4b fb <0f> 0b 48 b8 00  
+00 00 00 00 fc ff df 48 8b 4d 88 48 89 ca 48 c1 ea
+RSP: 0018:ffffc9000236f708 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: ffff888078f64240 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815e88f6 RDI: fffff5200046ded3
+RBP: ffffc9000236f780 R08: ffff8880673d0140 R09: ffffed1005a46621
+R10: ffffed1005a46620 R11: ffff88802d233107 R12: ffff888029ef0000
+R13: ffff88802759a0b0 R14: dffffc0000000000 R15: 00000000004a0000
+  azx_get_response sound/pci/hda/hda_controller.c:994 [inline]
+  azx_get_response+0x14c/0x180 sound/pci/hda/hda_controller.c:984
+  snd_hdac_bus_exec_verb_unlocked+0x4b5/0x950 sound/hda/hdac_bus.c:115
+  codec_exec_verb+0x13d/0x340 sound/pci/hda/hda_codec.c:52
+  snd_hdac_exec_verb+0x65/0x110 sound/hda/hdac_device.c:257
+  codec_read+0xa2/0x100 sound/hda/hdac_device.c:986
+  snd_hdac_codec_read+0x34/0x40 sound/hda/hdac_device.c:1015
+  snd_hda_codec_read include/sound/hda_codec.h:318 [inline]
+  update_pcm_format.part.0+0x36/0xc0 sound/pci/hda/hda_codec.c:1057
+  update_pcm_format sound/pci/hda/hda_codec.c:1056 [inline]
+  snd_hda_codec_setup_stream.part.0+0x355/0xa40  
+sound/pci/hda/hda_codec.c:1102
+  snd_hda_codec_setup_stream+0x47/0x60 sound/pci/hda/hda_codec.c:1086
+  capture_pcm_prepare+0x63/0x100 sound/pci/hda/hda_generic.c:5376
+  snd_hda_codec_prepare+0xa5/0x420 sound/pci/hda/hda_codec.c:3160
+  azx_pcm_prepare+0x53f/0x950 sound/pci/hda/hda_controller.c:195
+  snd_pcm_do_prepare+0x61/0xa0 sound/core/pcm_native.c:1729
+  snd_pcm_action_single+0x7a/0x130 sound/core/pcm_native.c:1111
+  snd_pcm_action_nonatomic+0x9c/0xb0 sound/core/pcm_native.c:1227
+  snd_pcm_prepare+0x121/0x1b0 sound/core/pcm_native.c:1776
+  snd_pcm_kernel_ioctl+0x117/0x1f0 sound/core/pcm_native.c:3068
+  snd_pcm_oss_prepare+0x49/0x150 sound/core/oss/pcm_oss.c:1125
+  snd_pcm_oss_make_ready+0x12b/0x170 sound/core/oss/pcm_oss.c:1153
+  snd_pcm_oss_sync.isra.0+0x1c4/0x7e0 sound/core/oss/pcm_oss.c:1707
+  snd_pcm_oss_release+0x214/0x290 sound/core/oss/pcm_oss.c:2545
+  __fput+0x2ff/0x890 fs/file_table.c:280
+  ____fput+0x16/0x20 fs/file_table.c:313
+  task_work_run+0x145/0x1c0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:164
+  prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
+  do_syscall_32_irqs_on arch/x86/entry/common.c:352 [inline]
+  do_fast_syscall_32+0xbbd/0xe16 arch/x86/entry/common.c:408
+  entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+RIP: 0023:0xf7faea39
+Code: 00 00 00 89 d3 5b 5e 5f 5d c3 b8 80 96 98 00 eb c4 8b 04 24 c3 8b 1c  
+24 c3 8b 34 24 c3 8b 3c 24 c3 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90  
+90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 002b:00000000ffadef9c EFLAGS: 00000293 ORIG_RAX: 0000000000000006
+RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000000000
+RDX: 000000000812b000 RSI: 0000000000000005 RDI: 000000000815b660
+RBP: 000000000815b660 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
-> > +{
-> > +     size_t window_least_size = 0;
-> > +     int best_fit_window = -1;
-> > +     struct pci_epc_mem *mem;
-> > +     size_t actual_size;
-> > +     size_t avail_size;
-> > +     u32 win_flags;
-> > +     int i;
-> > +
-> > +     for (i = 0; i < epc->mem_windows; i++) {
-> > +             mem = epc->mem[i];
-> > +             win_flags = mem->window.flags;
-> > +
-> > +             actual_size = ALIGN(size, mem->page_size);
-> > +             avail_size = mem->window.size - mem->window.map_size;
-> > +
-> > +             if (win_flags == 0x0) {
-> > +                     if (best_fit_window == -1) {
-> > +                             if (actual_size <= avail_size) {
-> > +                                     best_fit_window = i;
-> > +                                     window_least_size = mem->window.size;
-> > +                             }
-> > +                     } else {
-> > +                             if (actual_size <= avail_size &&
-> > +                                 mem->window.size < window_least_size) {
-> > +                                     best_fit_window = i;
-> > +                                     window_least_size = mem->window.size;
-> > +                             }
-> > +                     }
-> > +             } else {
-> > +                     if (mem->window.map_size &&
-> > +                         (win_flags | PCI_EPC_WINDOW_FLAG_NON_MULTI_ALLOC))
-> > +                             continue;
-> > +
-> > +                     if (!(win_flags | flags))
-> > +                             continue;
-> > +
-> > +                     if (best_fit_window == -1) {
-> > +                             if (actual_size <= avail_size) {
-> > +                                     best_fit_window = i;
-> > +                                     window_least_size = mem->window.size;
-> > +                             }
-> > +                     } else {
-> > +                             if (actual_size <= avail_size &&
-> > +                                 mem->window.size < window_least_size) {
-> > +                                     best_fit_window = i;
-> > +                                     window_least_size = mem->window.size;
-> > +                             }
-> > +                     }
-> > +             }
-> > +     }
-> > +
-> > +     return best_fit_window;
-> > +}
-> > +
-> >  /**
-> >   * pci_epc_mem_alloc_addr() - allocate memory address from EPC addr space
-> >   * @epc: the EPC device on which memory has to be allocated
-> >   * @phys_addr: populate the allocated physical address here
-> > + * @window: populate the window here which will be used to map PCI address
-> >   * @size: the size of the address space that has to be allocated
-> > + * @flags: look for window as requested in flags
-> >   *
-> >   * Invoke to allocate memory address from the EPC address space. This
-> >   * is usually done to map the remote RC address into the local system.
-> >   */
-> >  void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
-> > -                                  phys_addr_t *phys_addr, size_t size)
-> > +                                  phys_addr_t *phys_addr,
-> > +                                  int *window, size_t size, uint32_t flags)
-> >  {
-> > +     int best_fit = PCI_EPC_DEFAULT_WINDOW;
-> > +     void __iomem *virt_addr = NULL;
-> > +     struct pci_epc_mem *mem;
-> > +     unsigned int page_shift;
-> >       int pageno;
-> > -     void __iomem *virt_addr;
-> > -     struct pci_epc_mem *mem = epc->mem;
-> > -     unsigned int page_shift = ilog2(mem->page_size);
-> >       int order;
-> >
-> > +     if (epc->mem_windows <= 0)
-> > +             return NULL;
-> > +
-> > +     if (epc->mem_windows > 1) {
->
-> Why bother testing epc->mem_windows here?  Just make sure
-> pci_epc_find_best_fit_window() returns the correct thing for
-> "mem_windows == 0" and "mem_windows == 1", and remove both the tests
-> above.
->
-will fix that.
 
-> > +             best_fit = pci_epc_find_best_fit_window(epc, size, flags);
-> > +             if (best_fit < 0)
-> > +                     return NULL;
-> > +     }
-> > +
-> > +     mem = epc->mem[best_fit];
-> >       size = ALIGN(size, mem->page_size);
-> > +     if (size > (mem->window.size - mem->window.map_size))
-> > +             return NULL;
-> > +     page_shift = ilog2(mem->page_size);
-> >       order = pci_epc_mem_get_order(mem, size);
-> >
-> >       pageno = bitmap_find_free_region(mem->bitmap, mem->pages, order);
-> >       if (pageno < 0)
-> >               return NULL;
-> >
-> > -     *phys_addr = mem->phys_base + (pageno << page_shift);
-> > +     *phys_addr = mem->window.phys_base + (pageno << page_shift);
-> >       virt_addr = ioremap(*phys_addr, size);
-> > -     if (!virt_addr)
-> > +     if (!virt_addr) {
-> >               bitmap_release_region(mem->bitmap, pageno, order);
-> > +     } else {
-> > +             mem->window.map_size += size;
-> > +             *window = best_fit;
-> > +     }
-> >
-> >       return virt_addr;
-> >  }
-> >  EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
-> >
-> > +static int pci_epc_get_matching_window(struct pci_epc *epc,
-> > +                                    phys_addr_t phys_addr)
->
-> Return struct pci_epc_mem * again?
->
-yes makes sense.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-> > +{
-> > +     struct pci_epc_mem *mem;
-> > +     int i;
-> > +
-> > +     for (i = 0; i < epc->mem_windows; i++) {
-> > +             mem = epc->mem[i];
-> > +
-> > +             if (mem->window.phys_base == phys_addr)
-> > +                     return i;
-> > +     }
-> > +
-> > +     return -EINVAL;
-> > +}
-> > +
-> >  /**
-> >   * pci_epc_mem_free_addr() - free the allocated memory address
-> >   * @epc: the EPC device on which memory was allocated
-> > @@ -155,16 +281,26 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
-> >  void pci_epc_mem_free_addr(struct pci_epc *epc, phys_addr_t phys_addr,
-> >                          void __iomem *virt_addr, size_t size)
-> >  {
-> > +     struct pci_epc_mem *mem;
-> > +     unsigned int page_shift;
-> > +     int window = 0;
-> >       int pageno;
-> > -     struct pci_epc_mem *mem = epc->mem;
-> > -     unsigned int page_shift = ilog2(mem->page_size);
-> >       int order;
-> >
-> > +     if (epc->mem_windows > 1) {
->
-> Same here (unnecessary test).
->
-will drop it.
-
-> > +             window = pci_epc_get_matching_window(epc, phys_addr);
-> > +             if (window < 0)
-> > +                     return;
-> > +     }
-> > +
-> > +     mem = epc->mem[window];
-> > +     page_shift = ilog2(mem->page_size);
-> >       iounmap(virt_addr);
-> > -     pageno = (phys_addr - mem->phys_base) >> page_shift;
-> > +     pageno = (phys_addr - mem->window.phys_base) >> page_shift;
-> >       size = ALIGN(size, mem->page_size);
-> >       order = pci_epc_mem_get_order(mem, size);
-> >       bitmap_release_region(mem->bitmap, pageno, order);
-> > +     mem->window.map_size -= size;
-> >  }
-> >  EXPORT_SYMBOL_GPL(pci_epc_mem_free_addr);
->
-> > @@ -85,7 +126,8 @@ struct pci_epc_mem {
-> >   * @dev: PCI EPC device
-> >   * @pci_epf: list of endpoint functions present in this EPC device
-> >   * @ops: function pointers for performing endpoint operations
-> > - * @mem: address space of the endpoint controller
-> > + * @mem: array of address space of the endpoint controller
-> > + * @mem_windows: number of windows supported by device
-> >   * @max_functions: max number of functions that can be configured in this EPC
-> >   * @group: configfs group representing the PCI EPC device
-> >   * @lock: spinlock to protect pci_epc ops
-> > @@ -94,7 +136,8 @@ struct pci_epc {
-> >       struct device                   dev;
-> >       struct list_head                pci_epf;
-> >       const struct pci_epc_ops        *ops;
-> > -     struct pci_epc_mem              *mem;
-> > +     struct pci_epc_mem              **mem;
-> > +     int                             mem_windows;
->
-> Can't this be unsigned int and then there's no need to check
-> "mem_windows < 0"?
->
-yes will change it unsigned int.
-
-Cheers,
---Prabhakar
-
-> >       u8                              max_functions;
-> >       struct config_group             *group;
-> >       /* spinlock to protect against concurrent access of EP controller */
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
