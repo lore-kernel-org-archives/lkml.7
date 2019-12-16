@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7535C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB02C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:15:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A63AA206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:15:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F38121D7D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:15:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520153;
-	bh=cMLkqMqK+Gd4sTCmmglswR0S3qcdjkuJPxkvMp7nKAs=;
+	s=default; t=1576520157;
+	bh=5fLDD5kXfqmNfszHj/dxVtJZScXrkLT2oIRKa31FBy8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gT0BaP5LXZo6dDHBbAaiPqsOOOcmeKGGG4UcI7iQhf1ugyX3m0sWkDe1zlmbm1LUl
-	 JdJmnm7DXxgd4mPs9B1ukR7TNOULC2uKR6FmK+bzxpAknr0bfNww4LIAor5IqXORmh
-	 hQPACF6/IhOrzIsyfoSiZW9VP5Pr4NsyAGsW4VmU=
+	b=QTGLPyK0zeRbCSCOaq/SivAe7vy+Q36iAnK9DprLR03jbbUcHhQlnPeiDatKmOinq
+	 U9CrvuInvLOgiSHsq4Mz2fnSHf89AkU54sZG8+Tdr8GQb6FzCY5LequBw7kjrSlpRF
+	 CMRtY3i+3eJLj64IBkWjIbnLVlWb0nfBfSVKDRrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731275AbfLPSPw (ORCPT
+        id S1731446AbfLPSPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:15:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37438 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:15:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731246AbfLPSPu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:15:50 -0500
+        id S1731203AbfLPSPw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:15:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 120F5206E0;
-        Mon, 16 Dec 2019 18:15:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F6C220CC7;
+        Mon, 16 Dec 2019 18:15:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520149;
-        bh=cMLkqMqK+Gd4sTCmmglswR0S3qcdjkuJPxkvMp7nKAs=;
+        s=default; t=1576520152;
+        bh=5fLDD5kXfqmNfszHj/dxVtJZScXrkLT2oIRKa31FBy8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ke3O/pJu31RCt55oNfkcrDhor6nPp7OADwpDQmK6gLfjxzl8tzXS1q4oUA8aJH5wI
-         u/10IjgWH1mLlH6UaCRaT5vVuGMWE/L2PatSGBKkP0teRQ3sNwaMPljzAfzSx9gRvE
-         rfWmBDgNR6yAgod+KwONj1Eun21RyQixD13Ncp9M=
+        b=b+7ljy9mTkGKiCyfVlt+kgvFPA6VNog0Hfm2EOW+tpvSbGUsJFxLJ6y7qvBj2q4Y6
+         p7y08qfGIPJ5zNvXXBoIB6z7iC05tmrWOtBTSp8r+FM/JsOiGC/iwc/48pBeHtkJBA
+         1VmaRjuR5t6Cl2EASQqBt0uSnq0OoSQTiJN2D7DI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Nagarjuna Kristam <nkristam@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-usb@vger.kernel.org,
-        Bryan ODonoghue <bryan.odonoghue@linaro.org>
-Subject: [PATCH 5.4 035/177] usb: common: usb-conn-gpio: Dont log an error on probe deferral
-Date:   Mon, 16 Dec 2019 18:48:11 +0100
-Message-Id: <20191216174828.552457581@linuxfoundation.org>
+        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.4 036/177] ARM: dts: pandora-common: define wl1251 as child node of mmc3
+Date:   Mon, 16 Dec 2019 18:48:12 +0100
+Message-Id: <20191216174828.678820673@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -62,41 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+From: H. Nikolaus Schaller <hns@goldelico.com>
 
-commit 59120962e4be4f72be537adb17da6881c4b3797c upstream.
+commit 4f9007d692017cef38baf2a9b82b7879d5b2407b upstream.
 
-This patch makes the printout of the error message for failing to get a
-VBUS regulator handle conditional on the error code being something other
-than -EPROBE_DEFER.
+Since v4.7 the dma initialization requires that there is a
+device tree property for "rx" and "tx" channels which is
+not provided by the pdata-quirks initialization.
 
-Deferral is a normal thing, we don't need an error message for this.
+By conversion of the mmc3 setup to device tree this will
+finally allows to remove the OpenPandora wlan specific omap3
+data-quirks.
 
-Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Nagarjuna Kristam <nkristam@nvidia.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-usb@vger.kernel.org
-Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191128134358.3880498-2-bryan.odonoghue@linaro.org
+Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for requesting DMA channel")
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Cc: <stable@vger.kernel.org> # v4.7+
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/common/usb-conn-gpio.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/omap3-pandora-common.dtsi |   36 ++++++++++++++++++++++++++--
+ 1 file changed, 34 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/common/usb-conn-gpio.c
-+++ b/drivers/usb/common/usb-conn-gpio.c
-@@ -156,7 +156,8 @@ static int usb_conn_probe(struct platfor
+--- a/arch/arm/boot/dts/omap3-pandora-common.dtsi
++++ b/arch/arm/boot/dts/omap3-pandora-common.dtsi
+@@ -226,6 +226,17 @@
+ 		gpio = <&gpio6 4 GPIO_ACTIVE_HIGH>;	/* GPIO_164 */
+ 	};
  
- 	info->vbus = devm_regulator_get(dev, "vbus");
- 	if (IS_ERR(info->vbus)) {
--		dev_err(dev, "failed to get vbus\n");
-+		if (PTR_ERR(info->vbus) != -EPROBE_DEFER)
-+			dev_err(dev, "failed to get vbus\n");
- 		return PTR_ERR(info->vbus);
- 	}
++	/* wl1251 wifi+bt module */
++	wlan_en: fixed-regulator-wg7210_en {
++		compatible = "regulator-fixed";
++		regulator-name = "vwlan";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		startup-delay-us = <50000>;
++		enable-active-high;
++		gpio = <&gpio1 23 GPIO_ACTIVE_HIGH>;
++	};
++
+ 	/* wg7210 (wifi+bt module) 32k clock buffer */
+ 	wg7210_32k: fixed-regulator-wg7210_32k {
+ 		compatible = "regulator-fixed";
+@@ -522,9 +533,30 @@
+ 	/*wp-gpios = <&gpio4 31 GPIO_ACTIVE_HIGH>;*/	/* GPIO_127 */
+ };
  
+-/* mmc3 is probed using pdata-quirks to pass wl1251 card data */
+ &mmc3 {
+-	status = "disabled";
++	vmmc-supply = <&wlan_en>;
++
++	bus-width = <4>;
++	non-removable;
++	ti,non-removable;
++	cap-power-off-card;
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc3_pins>;
++
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	wlan: wifi@1 {
++		compatible = "ti,wl1251";
++
++		reg = <1>;
++
++		interrupt-parent = <&gpio1>;
++		interrupts = <21 IRQ_TYPE_LEVEL_HIGH>;	/* GPIO_21 */
++
++		ti,wl1251-has-eeprom;
++	};
+ };
+ 
+ /* bluetooth*/
 
 
