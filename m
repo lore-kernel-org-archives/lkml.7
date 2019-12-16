@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A090DC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2995C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74BC020665
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B78FA20665
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:39:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521581;
-	bh=qz4e+jMLzi0AUc7pzJTJEPsDGMBbCsc1pllEvhhsMdc=;
+	s=default; t=1576521592;
+	bh=ofpkPgRD64aKZDqtCzJoHyY0Y2m1YOfn+kBsA8178j8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U08EEEVWKxTuS0TGdnHxP/9LONItTz3bDBaqJRZUKMgseUj4SQBU/SeN/cNDcVANR
-	 M/7PSQlXvwlU7vfaZMIHX/gRANpKgb+NxMFhUnediSluZup+5Rg/9UtbLHQ5KncNRa
-	 XXeuRPGCne9FAqNWJdmUk1FzxBcOEVWEfYlJpwMg=
+	b=qgHD9gho7z4QAQCrZJuiKXPTrt1Nl5bUa5hxbFc6An7M78wmX1ts+0Fb8qA2yUW+/
+	 zOMilpkBhoOwii9IMtAXtnVea1youo4DcbNT1W6SfMoJUM3+bXzrb4WzSAUpFoBkCY
+	 EiuGg51ltOkQVmbsOoMxX9GtqGNzPkqAQbrT7t/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729361AbfLPSjk (ORCPT
+        id S1729419AbfLPSC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:39:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40308 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:02:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728463AbfLPSD3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:03:29 -0500
+        id S1729411AbfLPSCx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:02:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D36292072D;
-        Mon, 16 Dec 2019 18:03:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 126642072D;
+        Mon, 16 Dec 2019 18:02:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519409;
-        bh=qz4e+jMLzi0AUc7pzJTJEPsDGMBbCsc1pllEvhhsMdc=;
+        s=default; t=1576519372;
+        bh=ofpkPgRD64aKZDqtCzJoHyY0Y2m1YOfn+kBsA8178j8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qG+JryCIzOpU+O/FcVg4tfiLWHreDY4YzeMm8fHLFIz3czjpRyI0RpzYZjl6YZkWZ
-         uvsNcfh+txcTSkw7mr6jYtdQz3HXvbnl4QRcolCLKWcHr2ZxFTtLvRTDWXIwZJ3TsC
-         kGqOh+EmXlCuTpNtEb+dttDL6fw2moaSLBkZ0Kac=
+        b=hbnOfwJQ5ish1Rz/hEQmQ6g3FLN9q2p1hiUdW0YDsFAA0RSdaGbw5W84uuEtUfNn2
+         BUIyI8kdgnUCo1XiI3kaJhLSySkJ4cIc5gkhzhDbfBh5x26YJCk9j9aIpsW2QcZhIj
+         GsNKbe/vQVRMtQORpO5KOjo6Vguf9iW30FscGBRA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>
-Subject: [PATCH 4.19 007/140] USB: documentation: flags on usb-storage versus UAS
-Date:   Mon, 16 Dec 2019 18:47:55 +0100
-Message-Id: <20191216174750.251932194@linuxfoundation.org>
+        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 038/140] Btrfs: fix metadata space leak on fixup worker failure to set range as delalloc
+Date:   Mon, 16 Dec 2019 18:48:26 +0100
+Message-Id: <20191216174759.397266886@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -58,74 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit 65cc8bf99349f651a0a2cee69333525fe581f306 upstream.
+commit 536870071dbc4278264f59c9a2f5f447e584d139 upstream.
 
-Document which flags work storage, UAS or both
+In the fixup worker, if we fail to mark the range as delalloc in the io
+tree, we must release the previously reserved metadata, as well as update
+the outstanding extents counter for the inode, otherwise we leak metadata
+space.
 
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191114112758.32747-4-oneukum@suse.com
+In pratice we can't return an error from btrfs_set_extent_delalloc(),
+which is just a wrapper around __set_extent_bit(), as for most errors
+__set_extent_bit() does a BUG_ON() (or panics which hits a BUG_ON() as
+well) and returning an -EEXIST error doesn't happen in this case since
+the exclusive bits parameter always has a value of 0 through this code
+path. Nevertheless, just fix the error handling in the fixup worker,
+in case one day __set_extent_bit() can return an error to this code
+path.
+
+Fixes: f3038ee3a3f101 ("btrfs: Handle btrfs_set_extent_delalloc failure in fixup worker")
+CC: stable@vger.kernel.org # 4.19+
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Documentation/admin-guide/kernel-parameters.txt |   22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+ fs/btrfs/inode.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4941,13 +4941,13 @@
- 			Flags is a set of characters, each corresponding
- 			to a common usb-storage quirk flag as follows:
- 				a = SANE_SENSE (collect more than 18 bytes
--					of sense data);
-+					of sense data, not on uas);
- 				b = BAD_SENSE (don't collect more than 18
--					bytes of sense data);
-+					bytes of sense data, not on uas);
- 				c = FIX_CAPACITY (decrease the reported
- 					device capacity by one sector);
- 				d = NO_READ_DISC_INFO (don't use
--					READ_DISC_INFO command);
-+					READ_DISC_INFO command, not on uas);
- 				e = NO_READ_CAPACITY_16 (don't use
- 					READ_CAPACITY_16 command);
- 				f = NO_REPORT_OPCODES (don't use report opcodes
-@@ -4962,17 +4962,18 @@
- 				j = NO_REPORT_LUNS (don't use report luns
- 					command, uas only);
- 				l = NOT_LOCKABLE (don't try to lock and
--					unlock ejectable media);
-+					unlock ejectable media, not on uas);
- 				m = MAX_SECTORS_64 (don't transfer more
--					than 64 sectors = 32 KB at a time);
-+					than 64 sectors = 32 KB at a time,
-+					not on uas);
- 				n = INITIAL_READ10 (force a retry of the
--					initial READ(10) command);
-+					initial READ(10) command, not on uas);
- 				o = CAPACITY_OK (accept the capacity
--					reported by the device);
-+					reported by the device, not on uas);
- 				p = WRITE_CACHE (the device cache is ON
--					by default);
-+					by default, not on uas);
- 				r = IGNORE_RESIDUE (the device reports
--					bogus residue values);
-+					bogus residue values, not on uas);
- 				s = SINGLE_LUN (the device has only one
- 					Logical Unit);
- 				t = NO_ATA_1X (don't allow ATA(12) and ATA(16)
-@@ -4981,7 +4982,8 @@
- 				w = NO_WP_DETECT (don't test whether the
- 					medium is write-protected).
- 				y = ALWAYS_SYNC (issue a SYNCHRONIZE_CACHE
--					even if the device claims no cache)
-+					even if the device claims no cache,
-+					not on uas)
- 			Example: quirks=0419:aaf5:rl,0421:0433:rc
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -2161,12 +2161,16 @@ again:
+ 		mapping_set_error(page->mapping, ret);
+ 		end_extent_writepage(page, ret, page_start, page_end);
+ 		ClearPageChecked(page);
+-		goto out;
++		goto out_reserved;
+ 	}
  
- 	user_debug=	[KNL,ARM]
+ 	ClearPageChecked(page);
+ 	set_page_dirty(page);
++out_reserved:
+ 	btrfs_delalloc_release_extents(BTRFS_I(inode), PAGE_SIZE);
++	if (ret)
++		btrfs_delalloc_release_space(inode, data_reserved, page_start,
++					     PAGE_SIZE, true);
+ out:
+ 	unlock_extent_cached(&BTRFS_I(inode)->io_tree, page_start, page_end,
+ 			     &cached_state);
 
 
