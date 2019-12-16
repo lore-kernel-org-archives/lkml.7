@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A092EC3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E1CC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 796DD206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB19D20700
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:59:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519185;
-	bh=F4vKAhEQ4KlxcVKJdkavRAZ3Pz5qXOCTJJxmKXUdaDQ=;
+	s=default; t=1576519188;
+	bh=Z8anMrWmTZjHIUgn0N7JaWIaabcZ42ch5MZ7XopHJD4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BAc/TDJsW6wezlgX6FdEf5+sbmKKll0MEt5PPaDD84y/nNjHg+Tkh58fhy00wICXL
-	 NbwexgsJqJPH07dth2cwXw+UVGa5X9TMg0+Hk4BJi5+kzOgqsv6q6dCMgNGC8jsNpD
-	 hQNH6AWbLRqGXPhSTLSZagNBe+SRaRfYr/Sc7heA=
+	b=nkBhupeOxiZqI52cRLXf82zKxZzK0R+kKqTuOMMWO6/oFywwr+AssyJum5kH9s9Ck
+	 I7c5roHNtGm1aG6UDuh6Jza7/P+ygo9dvyUgpFZG07C4EriXjCmXS9cc9hhjWhfLWE
+	 UpzpWZ8Zf/JYs7nH2rRaNLjcoc10/tFg0ywVlv5o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727862AbfLPR7o (ORCPT
+        id S1728827AbfLPR7r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:59:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32798 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:59:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728806AbfLPR7l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:59:41 -0500
+        id S1728812AbfLPR7n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:59:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3BD020700;
-        Mon, 16 Dec 2019 17:59:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 326FA206EC;
+        Mon, 16 Dec 2019 17:59:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519180;
-        bh=F4vKAhEQ4KlxcVKJdkavRAZ3Pz5qXOCTJJxmKXUdaDQ=;
+        s=default; t=1576519182;
+        bh=Z8anMrWmTZjHIUgn0N7JaWIaabcZ42ch5MZ7XopHJD4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mr2INVhi34wZlob0IneQyr1bZIgHntvrdEUAyfbix+rq/737TA6sSe/n3tebFJCnO
-         C/uttmr1Wg7IeTHTOL58ziUGnIW8v3ft2V2MWJsjcXHcs17Yj+wGwOvmOV6m8VVskB
-         XNO97sEaT3G7vbV7xWiEg+hxWegKPmaPUCst59ho=
+        b=LqzvU3gf2/Mrsor7HsbD2+XxnxqHvSFQNQv65C6U3vj5B8Wp/vLcyf+CAXUoLq7np
+         7kETh5nZNFnxLxs5yrbGLHklJznDXI4A+Mn+sBd/5Cwb9cHVvhbgYSlnPyXi7yH9xj
+         0tHgWo8lQlztnanYo/QTDhLyw8v/Rg3+E5C8E2L4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 4.14 226/267] ppdev: fix PPGETTIME/PPSETTIME ioctls
-Date:   Mon, 16 Dec 2019 18:49:12 +0100
-Message-Id: <20191216174914.938862823@linuxfoundation.org>
+        stable@vger.kernel.org, Alastair DSilva <alastair@d-silva.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.14 227/267] powerpc: Allow 64bit VDSO __kernel_sync_dicache to work across ranges >4GB
+Date:   Mon, 16 Dec 2019 18:49:13 +0100
+Message-Id: <20191216174914.994592683@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -58,76 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Alastair D'Silva <alastair@d-silva.org>
 
-commit 998174042da229e2cf5841f574aba4a743e69650 upstream.
+commit f9ec11165301982585e5e5f606739b5bae5331f3 upstream.
 
-Going through the uses of timeval in the user space API,
-I noticed two bugs in ppdev that were introduced in the y2038
-conversion:
+When calling __kernel_sync_dicache with a size >4GB, we were masking
+off the upper 32 bits, so we would incorrectly flush a range smaller
+than intended.
 
-* The range check was accidentally moved from ppsettime to
-  ppgettime
+This patch replaces the 32 bit shifts with 64 bit ones, so that
+the full size is accounted for.
 
-* On sparc64, the microseconds are in the other half of the
-  64-bit word.
-
-Fix both, and mark the fix for stable backports.
-
+Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
 Cc: stable@vger.kernel.org
-Fixes: 3b9ab374a1e6 ("ppdev: convert to y2038 safe")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20191108203435.112759-8-arnd@arndb.de
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191104023305.9581-3-alastair@au1.ibm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/ppdev.c |   16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ arch/powerpc/kernel/vdso64/cacheflush.S |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/char/ppdev.c
-+++ b/drivers/char/ppdev.c
-@@ -623,20 +623,27 @@ static int pp_do_ioctl(struct file *file
- 		if (copy_from_user(time32, argp, sizeof(time32)))
- 			return -EFAULT;
- 
-+		if ((time32[0] < 0) || (time32[1] < 0))
-+			return -EINVAL;
-+
- 		return pp_set_timeout(pp->pdev, time32[0], time32[1]);
- 
- 	case PPSETTIME64:
- 		if (copy_from_user(time64, argp, sizeof(time64)))
- 			return -EFAULT;
- 
-+		if ((time64[0] < 0) || (time64[1] < 0))
-+			return -EINVAL;
-+
-+		if (IS_ENABLED(CONFIG_SPARC64) && !in_compat_syscall())
-+			time64[1] >>= 32;
-+
- 		return pp_set_timeout(pp->pdev, time64[0], time64[1]);
- 
- 	case PPGETTIME32:
- 		jiffies_to_timespec64(pp->pdev->timeout, &ts);
- 		time32[0] = ts.tv_sec;
- 		time32[1] = ts.tv_nsec / NSEC_PER_USEC;
--		if ((time32[0] < 0) || (time32[1] < 0))
--			return -EINVAL;
- 
- 		if (copy_to_user(argp, time32, sizeof(time32)))
- 			return -EFAULT;
-@@ -647,8 +654,9 @@ static int pp_do_ioctl(struct file *file
- 		jiffies_to_timespec64(pp->pdev->timeout, &ts);
- 		time64[0] = ts.tv_sec;
- 		time64[1] = ts.tv_nsec / NSEC_PER_USEC;
--		if ((time64[0] < 0) || (time64[1] < 0))
--			return -EINVAL;
-+
-+		if (IS_ENABLED(CONFIG_SPARC64) && !in_compat_syscall())
-+			time64[1] <<= 32;
- 
- 		if (copy_to_user(argp, time64, sizeof(time64)))
- 			return -EFAULT;
+--- a/arch/powerpc/kernel/vdso64/cacheflush.S
++++ b/arch/powerpc/kernel/vdso64/cacheflush.S
+@@ -39,7 +39,7 @@ V_FUNCTION_BEGIN(__kernel_sync_dicache)
+ 	subf	r8,r6,r4		/* compute length */
+ 	add	r8,r8,r5		/* ensure we get enough */
+ 	lwz	r9,CFG_DCACHE_LOGBLOCKSZ(r10)
+-	srw.	r8,r8,r9		/* compute line count */
++	srd.	r8,r8,r9		/* compute line count */
+ 	crclr	cr0*4+so
+ 	beqlr				/* nothing to do? */
+ 	mtctr	r8
+@@ -56,7 +56,7 @@ V_FUNCTION_BEGIN(__kernel_sync_dicache)
+ 	subf	r8,r6,r4		/* compute length */
+ 	add	r8,r8,r5
+ 	lwz	r9,CFG_ICACHE_LOGBLOCKSZ(r10)
+-	srw.	r8,r8,r9		/* compute line count */
++	srd.	r8,r8,r9		/* compute line count */
+ 	crclr	cr0*4+so
+ 	beqlr				/* nothing to do? */
+ 	mtctr	r8
 
 
