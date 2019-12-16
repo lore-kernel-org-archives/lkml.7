@@ -2,72 +2,122 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 128FDC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78053C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CED5820733
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:31:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B8032075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:32:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QHtdUBuO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YoxUQn0M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbfLPIbt (ORCPT
+        id S1726949AbfLPIce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 03:31:49 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:37168 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726756AbfLPIbt (ORCPT
+        Mon, 16 Dec 2019 03:32:34 -0500
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:46053 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726861AbfLPIcc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 03:31:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=7nL0ywYvvzT3nVoIZ+avpVZJdPqWoTy/wgaWFoJjuU4=; b=QHtdUBuO9fnNKxryNSzv4Q5Sr
-        TEOCqYXwt1R9kxsxXiTna4r3EVzw8UNjBK5YgqwJg0jVLEP1v39mevYUNg2GQodQds1XiTo2sGMMK
-        HJH+J5jv7mxM2Apu4GtT+tcOCVG2TR256CECZYg4CYhUmtwCxaEjwRIyDnKILE5Eks9R8KLIYtVKz
-        mHPWmldwsXMMToZ1CVje4MRirs57ul4TJ0SFWJbXhqF56/nBy5TeSwXtrUu2yUwVdDWFnpZ3y3/Um
-        byKOs/Q2/Ps9cKklHc1ZOffyLvofogRfTCnw+pb3SpGANa3uiapB7SLfnTV/4PeI9A02WTAtPz9s5
-        ClGkmSl4g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iglmu-0001yK-Np; Mon, 16 Dec 2019 08:31:33 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E838F3035D4;
-        Mon, 16 Dec 2019 09:30:06 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id AB23629D73DC1; Mon, 16 Dec 2019 09:31:28 +0100 (CET)
-Date:   Mon, 16 Dec 2019 09:31:28 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Jules Irenge <jbi.octave@gmail.com>
-Cc:     bokun.feng@gmail.com, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kernel: events: add releases() notation
-Message-ID: <20191216083128.GI2844@hirez.programming.kicks-ass.net>
-References: <20191216002400.89985-1-jbi.octave@gmail.com>
+        Mon, 16 Dec 2019 03:32:32 -0500
+Received: by mail-vs1-f66.google.com with SMTP id l24so3571936vsr.12
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 00:32:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JkgTe7RiiAq5QhSu2PZNU7m2RnEe6PES0VorJPFQMuI=;
+        b=YoxUQn0M3SuXi8l42WvhOcaLVs9FtT4yYaFQt1JnF7fyLfINtK8IH7LjURdGPX5cQ1
+         R8URrTHR/tj+puo4KBNXX1HKPhXcrqFlXy1ed8ZAsrUqVCXYWsnWJV0l7kex0g1yZoXR
+         ri9Oi04z+9x1kjq1esub91N9X6+vdJ8E7w/+ezYVaY537kG05SnQU8+6Xy8y7GSwZuMx
+         UEn5PjruDsQcgqx6ab95Q8EB3LntrQNSNE2lq25zQg8eSVkdAhtnJpNcOC53TKRZYFvy
+         YxYi/hR2QW9Fsb0DW3Xi9SGjCXGwlS7mHg66lIyjG/P95hwzr5KnTr73Eh/SyycJOIqa
+         3sDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JkgTe7RiiAq5QhSu2PZNU7m2RnEe6PES0VorJPFQMuI=;
+        b=U4iBhySWAuAwjL/ix4xWCp+cZbaoLLpSFLra1x4HcFTvfgt8O4Wc6Yy1YdpmKu5SbI
+         C9ehtoYW4cVJdtgKAOGUgeaM1dRsgl5Zr9twny3Fl+9RNdLM5FNcXvBxEOtawkIaijBG
+         fpJ22v6Xr8IFMbPZfXdb2w25X7LItN1THtkdomdrl8kFOUA9HYVOUL7CAQyN2Z/qQkaS
+         hzDo8RwhrEMTAIIED0RduLqZ1TR3DlnGfUOGeE9+QUf7YosT/vL9L1KjJ1dAq1tEDPfg
+         0vOdLql1nukrLSO/RzsBhdd2RzigGq0lVoGz5x3tO42krEVty6X7uZPvYhpg1eUJMRjv
+         IUow==
+X-Gm-Message-State: APjAAAWhdmhZXfhgviEGwb+FPzJH/A1Ea/EdZXoQH5aMdcd2/GKbcirM
+        TNGrEVdvspaBHzverDbNKXGSuJyJIbQOffdER0glWg==
+X-Google-Smtp-Source: APXvYqy6s+VOmPyj3eK02h1e4bwZVh9q2OoyCiemRBTtBkO775i3aGAeU2EoW0Amob5gIdaXOUj0ObPrX0yIOlsfXQ0=
+X-Received: by 2002:a67:d592:: with SMTP id m18mr20661597vsj.85.1576485151530;
+ Mon, 16 Dec 2019 00:32:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191216002400.89985-1-jbi.octave@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com> <e20e9a86677bdbd7f9ac889004a34731396d7a28.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <e20e9a86677bdbd7f9ac889004a34731396d7a28.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 16 Dec 2019 09:32:20 +0100
+Message-ID: <CACRpkdaVMS-1V+mRGzEeq-WcxWHjuHzj=5a09Egcxj_fHZhDmg@mail.gmail.com>
+Subject: Re: [PATCH v6 13/15] gpio: bd71828: Initial support for ROHM BD71828
+ PMIC GPIOs
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-rtc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 12:24:00AM +0000, Jules Irenge wrote:
-> Add releases() notation to remove issue detected by sparse
-> context imbalance in perf_output_end() - unexpected unlock
+On Wed, Dec 11, 2019 at 10:49 AM Matti Vaittinen
+<matti.vaittinen@fi.rohmeurope.com> wrote:
 
-None of the perf code uses the __acquire / __release annotations crud.
-Also, your annotation is broken, I think it should be __releases(RCU) or
-something like that.
+> ROHM BD71828 PMIC contains 4 pins which can be configured by OTP
+> to be used for general purposes. First 3 can be used as outputs
+> and 4.th pin can be used as input. Allow them to be controlled
+> via GPIO framework.
+>
+> The driver assumes all of the pins are configured as GPIOs and
+> trusts that the reserved pins in other OTP configurations are
+> excluded from control using "gpio-reserved-ranges" device tree
+> property (or left untouched by GPIO users).
+>
+> Typical use for 4.th pin (input) is to use it as HALL sensor
+> input so that this pin state is toggled when HALL sensor detects
+> LID position change (from close to open or open to close). PMIC
+> HW implements some extra logic which allows PMIC to power-up the
+> system when this pin is toggled. Please see the data sheet for
+> details of GPIO options which can be selected by OTP settings.
+>
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
