@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93ADCC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C423C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 612C321582
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC24A2146E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:54:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576518856;
-	bh=URVkprWfAJWhyxcjKilsS7zegySLeavygfZpeHY4j3s=;
+	s=default; t=1576518859;
+	bh=ekAR3ck2KgdUuuz1Bg+Oor3rUFJl91n6bzTEKuQ3JEw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HTFhXNEmBDyQdLMPWniMltc+B5vRtta+hb7DdyV2j2o3PndBI3JVrOgWy8TAk6Qdp
-	 uifhSZ7XUZEiKT/ma0DrnQcXuvgFOPWfMTRwiodnreRF6LMnclhipX9ngq1Oyu06A/
-	 BkBSwr3T0XPThV70tBmyvrnDUBAA78hBvwro567w=
+	b=yQqDCUsMYHZUxHzhIQijcjmevtVqhJGxZ8D05AlF9psiWew92qTwckbNlFi8l/12A
+	 sBLNEP+L9ihuwiLK2yScaiKSWlefdjfuJJwNoth7zZG6xp6itT8x21jwrK409mpmRs
+	 qAc5vICxnxI8LX5NDgL30W0nw5O20S4ItbJnOKbw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbfLPRyN (ORCPT
+        id S1727882AbfLPRyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:54:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49348 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:54:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727486AbfLPRyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:54:05 -0500
+        id S1727875AbfLPRyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:54:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A7C8206D3;
-        Mon, 16 Dec 2019 17:54:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D200621582;
+        Mon, 16 Dec 2019 17:54:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518845;
-        bh=URVkprWfAJWhyxcjKilsS7zegySLeavygfZpeHY4j3s=;
+        s=default; t=1576518852;
+        bh=ekAR3ck2KgdUuuz1Bg+Oor3rUFJl91n6bzTEKuQ3JEw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jJWtfuUuGJxZRBiaXlsL8elQkEBxJYg0hceXrDARLSb0EUYjoSs4//vZQa4anmRH0
-         zs85zgdNiPsjRN8kPWdYhOOLaq/6XWk227Zw6Eh0hRfqEGKU7Y1d2UdEhAwy5bJ6l9
-         ZbCpywNUw+bMQFTAOX3FrPtqXOu+fZxtzyLFmvwo=
+        b=x37TIW1j7FXcw9gNq6AQ7LKskVGh0J5WTyk6sfgqTQv4wHc8u1U/j8/hsxdNxlYBD
+         a07Ahf96CNGclyT2pVHJgJ2ajeUlowcwr9iIPTb2Nn2X+d/GXW+EM1JdoV1HlcWA2r
+         yLPI+rA1bIDAAzuox0R6XtTxVUwZBqy1QNm6Ie4E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Norris <briannorris@chromium.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        stable@vger.kernel.org, Yuchung Cheng <ycheng@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 063/267] usb: dwc3: dont log probe deferrals; but do log other error codes
-Date:   Mon, 16 Dec 2019 18:46:29 +0100
-Message-Id: <20191216174855.820358372@linuxfoundation.org>
+Subject: [PATCH 4.14 092/267] tcp: fix off-by-one bug on aborting window-probing socket
+Date:   Mon, 16 Dec 2019 18:46:58 +0100
+Message-Id: <20191216174858.352109816@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -60,35 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Norris <briannorris@chromium.org>
+From: Yuchung Cheng <ycheng@google.com>
 
-[ Upstream commit 408d3ba006af57380fa48858b39f72fde6405031 ]
+[ Upstream commit 3976535af0cb9fe34a55f2ffb8d7e6b39a2f8188 ]
 
-It's not very useful to repeat a bunch of probe deferral errors. And
-it's also not very useful to log "failed" without telling the error
-code.
+Previously there is an off-by-one bug on determining when to abort
+a stalled window-probing socket. This patch fixes that so it is
+consistent with tcp_write_timeout().
 
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Yuchung Cheng <ycheng@google.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Neal Cardwell <ncardwell@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/ipv4/tcp_timer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index 48755c501201d..a497b878c3e2b 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -1261,7 +1261,8 @@ static int dwc3_probe(struct platform_device *pdev)
- 
- 	ret = dwc3_core_init(dwc);
- 	if (ret) {
--		dev_err(dev, "failed to initialize core\n");
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "failed to initialize core: %d\n", ret);
- 		goto err4;
+diff --git a/net/ipv4/tcp_timer.c b/net/ipv4/tcp_timer.c
+index 592d6e9967a91..04e2c43a43a5a 100644
+--- a/net/ipv4/tcp_timer.c
++++ b/net/ipv4/tcp_timer.c
+@@ -358,7 +358,7 @@ static void tcp_probe_timer(struct sock *sk)
+ 			return;
  	}
  
+-	if (icsk->icsk_probes_out > max_probes) {
++	if (icsk->icsk_probes_out >= max_probes) {
+ abort:		tcp_write_err(sk);
+ 	} else {
+ 		/* Only send another probe if we didn't close things up. */
 -- 
 2.20.1
 
