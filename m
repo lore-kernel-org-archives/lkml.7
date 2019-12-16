@@ -2,130 +2,208 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49155C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BFD2C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B2AF206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F686206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:14:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576494898;
+	bh=yMH41pwxrLS46vC3Of9H5d5oFAJSZhhRAOasMVnJRmQ=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=qzrbqnXTYd71p+wLUNodxIvaiILfgcSEHa6VtLfF0kwzYrmGrZTlbO1UciZK2U+rX
+	 cIFC1MxxkueFNJN6JKmF2bWxlNYxK8Bvg5X+LYleelDk0GqWDlQNVqINa9qmrC3r5W
+	 orCmQ1IxxHCFyM48In/B+sgAdZMVH4CVKJsNvyxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727241AbfLPLOm (ORCPT
+        id S1727322AbfLPLO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 06:14:42 -0500
-Received: from mx24.baidu.com ([111.206.215.185]:43474 "EHLO baidu.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727086AbfLPLOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 06:14:39 -0500
-X-Greylist: delayed 990 seconds by postgrey-1.27 at vger.kernel.org; Mon, 16 Dec 2019 06:14:35 EST
-Received: from BC-Mail-Ex14.internal.baidu.com (unknown [172.31.51.54])
-        by Forcepoint Email with ESMTPS id 564AF822F6FF138C1EBE;
-        Mon, 16 Dec 2019 18:57:56 +0800 (CST)
-Received: from BJHW-Mail-Ex13.internal.baidu.com (10.127.64.36) by
- BC-Mail-Ex14.internal.baidu.com (172.31.51.54) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1531.3; Mon, 16 Dec 2019 18:57:56 +0800
-Received: from BJHW-Mail-Ex13.internal.baidu.com ([100.100.100.36]) by
- BJHW-Mail-Ex13.internal.baidu.com ([100.100.100.36]) with mapi id
- 15.01.1713.004; Mon, 16 Dec 2019 18:57:56 +0800
-From:   "Li,Rongqing" <lirongqing@baidu.com>
-To:     Ilias Apalodimas <ilias.apalodimas@linaro.org>
-CC:     Yunsheng Lin <linyunsheng@huawei.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        "jonathan.lemon@gmail.com" <jonathan.lemon@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>
-Subject: =?utf-8?B?562U5aSNOiDnrZTlpI06IFtQQVRDSF1bdjJdIHBhZ2VfcG9vbDogaGFuZGxl?=
- =?utf-8?B?IHBhZ2UgcmVjeWNsZSBmb3IgTlVNQV9OT19OT0RFIGNvbmRpdGlvbg==?=
-Thread-Topic: =?utf-8?B?562U5aSNOiBbUEFUQ0hdW3YyXSBwYWdlX3Bvb2w6IGhhbmRsZSBwYWdlIHJl?=
- =?utf-8?B?Y3ljbGUgZm9yIE5VTUFfTk9fTk9ERSBjb25kaXRpb24=?=
-Thread-Index: AQHVsZIrr0J3dgd4XE+VTzKxYVWGCKe7fWqAgACmZRD//+X1AIAAAL8AgACP7CA=
-Date:   Mon, 16 Dec 2019 10:57:56 +0000
-Message-ID: <718ac129c8584066ba12f4538c5bad41@baidu.com>
-References: <831ed886842c894f7b2ffe83fe34705180a86b3b.camel@mellanox.com>
- <0a252066-fdc3-a81d-7a36-8f49d2babc01@huawei.com>
- <20191212111831.2a9f05d3@carbon>
- <7c555cb1-6beb-240d-08f8-7044b9087fe4@huawei.com>
- <1d4f10f4c0f1433bae658df8972a904f@baidu.com>
- <079a0315-efea-9221-8538-47decf263684@huawei.com>
- <20191213094845.56fb42a4@carbon>
- <15be326d-1811-329c-424c-6dd22b0604a8@huawei.com>
- <a5dea60221d84886991168781361b591@baidu.com>
- <20191216101350.GA6939@apalos.home> <20191216101630.GA7102@apalos.home>
-In-Reply-To: <20191216101630.GA7102@apalos.home>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.22.198.6]
-x-baidu-bdmsfe-datecheck: 1_BC-Mail-Ex14_2019-12-16 18:57:56:366
-x-baidu-bdmsfe-viruscheck: BC-Mail-Ex14_GRAY_Inside_WithoutAtta_2019-12-16
- 18:57:56:335
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 16 Dec 2019 06:14:57 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:50853 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727059AbfLPLO5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 06:14:57 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1igoL0-0004mc-FG; Mon, 16 Dec 2019 12:14:54 +0100
+To:     Heyi Guo <guoheyi@huawei.com>
+Subject: Re: [PATCH] irq-gic-v3: fix NULL dereference of disabled  =?UTF-8?Q?redist=5Fbase?=
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 16 Dec 2019 11:14:54 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     <linux-kernel@vger.kernel.org>, <wanghaibin.wang@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>
+In-Reply-To: <20191216062745.63397-1-guoheyi@huawei.com>
+References: <20191216062745.63397-1-guoheyi@huawei.com>
+Message-ID: <36a042f6bcea5b5d5bfd9f6e6f01d6f5@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: guoheyi@huawei.com, linux-kernel@vger.kernel.org, wanghaibin.wang@huawei.com, tglx@linutronix.de, jason@lakedaemon.net
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS3pgq7ku7bljp/ku7YtLS0tLQ0KPiDlj5Hku7bkuro6IElsaWFzIEFwYWxvZGlt
-YXMgW21haWx0bzppbGlhcy5hcGFsb2RpbWFzQGxpbmFyby5vcmddDQo+IOWPkemAgeaXtumXtDog
-MjAxOeW5tDEy5pyIMTbml6UgMTg6MTcNCj4g5pS25Lu25Lq6OiBMaSxSb25ncWluZyA8bGlyb25n
-cWluZ0BiYWlkdS5jb20+DQo+IOaKhOmAgTogWXVuc2hlbmcgTGluIDxsaW55dW5zaGVuZ0BodWF3
-ZWkuY29tPjsgSmVzcGVyIERhbmdhYXJkIEJyb3Vlcg0KPiA8YnJvdWVyQHJlZGhhdC5jb20+OyBT
-YWVlZCBNYWhhbWVlZCA8c2FlZWRtQG1lbGxhbm94LmNvbT47DQo+IGpvbmF0aGFuLmxlbW9uQGdt
-YWlsLmNvbTsgbmV0ZGV2QHZnZXIua2VybmVsLm9yZzsgbWhvY2tvQGtlcm5lbC5vcmc7DQo+IHBl
-dGVyekBpbmZyYWRlYWQub3JnOyBHcmVnIEtyb2FoLUhhcnRtYW4gPGdyZWdraEBsaW51eGZvdW5k
-YXRpb24ub3JnPjsNCj4gYmhlbGdhYXNAZ29vZ2xlLmNvbTsgbGludXgta2VybmVsQHZnZXIua2Vy
-bmVsLm9yZzsgQmrDtnJuIFTDtnBlbA0KPiA8Ympvcm4udG9wZWxAaW50ZWwuY29tPg0KPiDkuLvp
-opg6IFJlOiDnrZTlpI06IFtQQVRDSF1bdjJdIHBhZ2VfcG9vbDogaGFuZGxlIHBhZ2UgcmVjeWNs
-ZSBmb3INCj4gTlVNQV9OT19OT0RFIGNvbmRpdGlvbg0KPiANCj4gPiA+ID4NCj4gPiA+ID4gU2lt
-cGx5IGNsZWFyaW5nIHRoZSBwb29sLT5hbGxvYy5jYWNoZSB3aGVuIGNhbGxpbmcNCj4gPiA+ID4g
-cGFnZV9wb29sX3VwZGF0ZV9uaWQoKSBzZWVtcyBiZXR0ZXIuDQo+ID4gPiA+DQo+ID4gPg0KPiA+
-ID4gSG93IGFib3V0IHRoZSBiZWxvdyBjb2RlcywgdGhlIGRyaXZlciBjYW4gY29uZmlndXJlIHAu
-bmlkIHRvIGFueSwgd2hpY2ggd2lsbA0KPiBiZSBhZGp1c3RlZCBpbiBOQVBJIHBvbGxpbmcsIGly
-cSBtaWdyYXRpb24gd2lsbCBub3QgYmUgcHJvYmxlbSwgYnV0IGl0IHdpbGwgYWRkIGENCj4gY2hl
-Y2sgaW50byBob3QgcGF0aC4NCj4gPg0KPiA+IFdlJ2xsIGhhdmUgdG8gY2hlY2sgdGhlIGltcGFj
-dCBvbiBzb21lIGhpZ2ggc3BlZWQgKGkuZSAxMDBnYml0KQ0KPiA+IGludGVyZmFjZSBiZXR3ZWVu
-IGRvaW5nIGFueXRoaW5nIGxpa2UgdGhhdC4gU2FlZWQncyBjdXJyZW50IHBhdGNoIHJ1bnMNCj4g
-PiBvbmNlIHBlciBOQVBJLiBUaGlzIHJ1bnMgb25jZSBwZXIgcGFja2V0LiBUaGUgbG9hZCBtaWdo
-dCBiZSBtZWFzdXJhYmxlLg0KPiA+IFRoZSBSRUFEX09OQ0UgaXMgbmVlZGVkIGluIGNhc2UgYWxs
-IHByb2R1Y2Vycy9jb25zdW1lcnMgcnVuIG9uIHRoZQ0KPiA+IHNhbWUgQ1BVDQo+IA0KPiBJIG1l
-YW50IGRpZmZlcmVudCBjcHVzIQ0KPiANCg0KSWYgbm8gUkVBRF9PTkNFLCBwb29sLT5wLm5pZCB3
-aWxsIGJlIGFsd2F5cyB3cml0dGVuIGFuZCBiZWNvbWUgZGlydHkgYWx0aG91Z2ggaXQgaXMgdW5z
-aGFyZWQgYnkgbXVsdGlwbGUgY3B1cw0KDQpTZWUgRXJpYycgcGF0Y2g6DQoNCmh0dHBzOi8vZ2l0
-Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3RvcnZhbGRzL2xpbnV4LmdpdC9j
-b21taXQvP2lkPTUwMzk3OGFjYTQ2MTI0Y2Q3MTQ3MDNlMTgwYjljODI5MmJhNTBiYTcNCg0KLUxp
-IA0KPiA+IHJpZ2h0Pw0KPiA+DQo+ID4NCj4gPiBUaGFua3MNCj4gPiAvSWxpYXMNCj4gPiA+DQo+
-ID4gPiBkaWZmIC0tZ2l0IGEvbmV0L2NvcmUvcGFnZV9wb29sLmMgYi9uZXQvY29yZS9wYWdlX3Bv
-b2wuYyBpbmRleA0KPiA+ID4gYTZhZWZlOTg5MDQzLi40Mzc0YTYyMzlkMTcgMTAwNjQ0DQo+ID4g
-PiAtLS0gYS9uZXQvY29yZS9wYWdlX3Bvb2wuYw0KPiA+ID4gKysrIGIvbmV0L2NvcmUvcGFnZV9w
-b29sLmMNCj4gPiA+IEBAIC0xMDgsNiArMTA4LDEwIEBAIHN0YXRpYyBzdHJ1Y3QgcGFnZQ0KPiAq
-X19wYWdlX3Bvb2xfZ2V0X2NhY2hlZChzdHJ1Y3QgcGFnZV9wb29sICpwb29sKQ0KPiA+ID4gICAg
-ICAgICAgICAgICAgIGlmIChsaWtlbHkocG9vbC0+YWxsb2MuY291bnQpKSB7DQo+ID4gPiAgICAg
-ICAgICAgICAgICAgICAgICAgICAvKiBGYXN0LXBhdGggKi8NCj4gPiA+ICAgICAgICAgICAgICAg
-ICAgICAgICAgIHBhZ2UgPQ0KPiA+ID4gcG9vbC0+YWxsb2MuY2FjaGVbLS1wb29sLT5hbGxvYy5j
-b3VudF07DQo+ID4gPiArDQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICBpZiAodW5saWtl
-bHkoUkVBRF9PTkNFKHBvb2wtPnAubmlkKSAhPQ0KPiBudW1hX21lbV9pZCgpKSkNCj4gPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgV1JJVEVfT05DRShwb29sLT5wLm5pZCwNCj4g
-PiA+ICsgbnVtYV9tZW1faWQoKSk7DQo+ID4gPiArDQo+ID4gPiAgICAgICAgICAgICAgICAgICAg
-ICAgICByZXR1cm4gcGFnZTsNCj4gPiA+ICAgICAgICAgICAgICAgICB9DQo+ID4gPiAgICAgICAg
-ICAgICAgICAgcmVmaWxsID0gdHJ1ZTsNCj4gPiA+IEBAIC0xNTUsNiArMTU5LDEwIEBAIHN0YXRp
-YyBzdHJ1Y3QgcGFnZQ0KPiAqX19wYWdlX3Bvb2xfYWxsb2NfcGFnZXNfc2xvdyhzdHJ1Y3QgcGFn
-ZV9wb29sICpwb29sLA0KPiA+ID4gICAgICAgICBpZiAocG9vbC0+cC5vcmRlcikNCj4gPiA+ICAg
-ICAgICAgICAgICAgICBnZnAgfD0gX19HRlBfQ09NUDsNCj4gPiA+DQo+ID4gPiArDQo+ID4gPiAr
-ICAgICAgIGlmICh1bmxpa2VseShSRUFEX09OQ0UocG9vbC0+cC5uaWQpICE9IG51bWFfbWVtX2lk
-KCkpKQ0KPiA+ID4gKyAgICAgICAgICAgICAgIFdSSVRFX09OQ0UocG9vbC0+cC5uaWQsIG51bWFf
-bWVtX2lkKCkpOw0KPiA+ID4gKw0KPiA+ID4gICAgICAgICAvKiBGVVRVUkUgZGV2ZWxvcG1lbnQ6
-DQo+ID4gPiAgICAgICAgICAqDQo+ID4gPiAgICAgICAgICAqIEN1cnJlbnQgc2xvdy1wYXRoIGVz
-c2VudGlhbGx5IGZhbGxzIGJhY2sgdG8gc2luZ2xlIHBhZ2UNCj4gPiA+IFRoYW5rcw0KPiA+ID4N
-Cj4gPiA+IC1MaQ0KPiA+ID4gPiA+DQo+ID4gPg0K
+Hi Heyi,
+
+On 2019-12-16 06:27, Heyi Guo wrote:
+> If we use ACPI MADT GICC structure to pass single redistributor base,
+> and mark some GICC as disabled, we'll get below call trace during
+> boot:
+>
+> [    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
+> [    0.000000] GICv3: 256 SPIs implemented
+> [    0.000000] GICv3: 0 Extended SPIs implemented
+> [    0.000000] GICv3: Distributor has no Range Selector support
+> [    0.000000] Unable to handle kernel paging request at virtual
+> address 000000000000ffe8
+> [    0.000000] Mem abort info:
+> [    0.000000]   ESR = 0x96000004
+> [    0.000000]   EC = 0x25: DABT (current EL), IL = 32 bits
+> [    0.000000]   SET = 0, FnV = 0
+> [    0.000000]   EA = 0, S1PTW = 0
+> [    0.000000] Data abort info:
+> [    0.000000]   ISV = 0, ISS = 0x00000004
+> [    0.000000]   CM = 0, WnR = 0
+> [    0.000000] [000000000000ffe8] user address but active_mm is 
+> swapper
+> [    0.000000] Internal error: Oops: 96000004 [#1] SMP
+> [    0.000000] Modules linked in:
+> [    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.5.0-rc1 #5
+> [    0.000000] pstate: 20000085 (nzCv daIf -PAN -UAO)
+> [    0.000000] pc : gic_iterate_rdists+0x58/0x130
+> [    0.000000] lr : gic_iterate_rdists+0x80/0x130
+> [    0.000000] sp : ffff8000113d3cb0
+> [    0.000000] x29: ffff8000113d3cb0 x28: 0000000000000000
+> [    0.000000] x27: 0000000000000000 x26: 0000000000000018
+> [    0.000000] x25: 000000000000ffe8 x24: 000000000000003f
+> [    0.000000] x23: ffff800010588040 x22: 00000000000005e8
+> [    0.000000] x21: ffff8000113df7d0 x20: 0000030f00003f11
+> [    0.000000] x19: 0000000000000000 x18: ffffffffffffffff
+> [    0.000000] x17: 0000000014aeb8dc x16: 00000000c3ba0ccf
+> [    0.000000] x15: ffff8000113d9908 x14: ffff8000913d3a37
+> [    0.000000] x13: ffff8000113d3a45 x12: ffff800011402000
+> [    0.000000] x11: ffff8000113d39d0 x10: ffff8000113db980
+> [    0.000000] x9 : 00000000ffffffd0 x8 : ffff8000106dca98
+> [    0.000000] x7 : 000000000000005b x6 : 0000000000000000
+> [    0.000000] x5 : 0000000000000000 x4 : ffff8000128c0000
+> [    0.000000] x3 : ffff8000128a0000 x2 : ffff0003fc3c7000
+> [    0.000000] x1 : 0000000000000001 x0 : 000000000000ffe8
+> [    0.000000] Call trace:
+> [    0.000000]  gic_iterate_rdists+0x58/0x130
+> [    0.000000]  gic_init_bases+0x200/0x4b4
+> [    0.000000]  gic_acpi_init+0x148/0x284
+> [    0.000000]  acpi_match_madt+0x4c/0x84
+> [    0.000000]  acpi_table_parse_entries_array+0x188/0x278
+> [    0.000000]  acpi_table_parse_entries+0x70/0x98
+> [    0.000000]  acpi_table_parse_madt+0x40/0x50
+> [    0.000000]  __acpi_probe_device_table+0x88/0xe4
+> [    0.000000]  irqchip_init+0x38/0x40
+> [    0.000000]  init_IRQ+0x168/0x19c
+> [    0.000000]  start_kernel+0x328/0x508
+> [    0.000000] Code: f90017b6 9b3a7f16 f8766853 8b190260 (b9400000)
+> [    0.000000] ---[ end trace ae5cf232d924bfc1 ]---
+> [    0.000000] Kernel panic - not syncing: Fatal exception
+> [    0.000000] Rebooting in 3 seconds..
+>
+> In this case, nr_redist_regions counts all GICC structures but only
+> enabled ones have redistributor mapped. So add check to avoid NULL
+> deference of redist_base.
+>
+> Signed-off-by: Heyi Guo <guoheyi@huawei.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Jason Cooper <jason@lakedaemon.net>
+> Cc: Marc Zyngier <maz@kernel.org>
+> ---
+>  drivers/irqchip/irq-gic-v3.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/drivers/irqchip/irq-gic-v3.c 
+> b/drivers/irqchip/irq-gic-v3.c
+> index d6218012097b..bd9d55cadef9 100644
+> --- a/drivers/irqchip/irq-gic-v3.c
+> +++ b/drivers/irqchip/irq-gic-v3.c
+> @@ -781,6 +781,13 @@ static int gic_iterate_rdists(int (*fn)(struct
+> redist_region *, void __iomem *))
+>  		u64 typer;
+>  		u32 reg;
+>
+> +		/*
+> +		 * redist_base may be NULL if we use single_redist and some GICC
+> +		 * structure is disabled.
+> +		 */
+> +		if (!ptr)
+> +			continue;
+> +
+>  		reg = readl_relaxed(ptr + GICR_PIDR2) & GIC_PIDR2_ARCH_MASK;
+>  		if (reg != GIC_PIDR2_ARCH_GICv3 &&
+>  		    reg != GIC_PIDR2_ARCH_GICv4) { /* We're in trouble... */
+
+This feels like the wrong fix. The redistributor region array should
+be completely populated, and there is an assumption all over this 
+driver
+that there is no junk in these structures.
+
+You're seeing this because we don't track the number of *enabled* 
+rdists,
+and allocate the number of regions based on the number of overall GICC
+entries instead of the number of enabled redistributors.
+
+How about this instead?
+
+         M.
+
+diff --git a/drivers/irqchip/irq-gic-v3.c 
+b/drivers/irqchip/irq-gic-v3.c
+index 3a1866682dd0..9b26a860340b 100644
+--- a/drivers/irqchip/irq-gic-v3.c
++++ b/drivers/irqchip/irq-gic-v3.c
+@@ -1861,6 +1861,7 @@ static struct
+  	struct redist_region *redist_regs;
+  	u32 nr_redist_regions;
+  	bool single_redist;
++	int enabled_rdists;
+  	u32 maint_irq;
+  	int maint_irq_mode;
+  	phys_addr_t vcpu_base;
+@@ -1955,8 +1956,10 @@ static int __init gic_acpi_match_gicc(union 
+acpi_subtable_headers *header,
+  	 * If GICC is enabled and has valid gicr base address, then it means
+  	 * GICR base is presented via GICC
+  	 */
+-	if ((gicc->flags & ACPI_MADT_ENABLED) && gicc->gicr_base_address)
++	if ((gicc->flags & ACPI_MADT_ENABLED) && gicc->gicr_base_address) {
++		acpi_data.enabled_rdists++;
+  		return 0;
++	}
+
+  	/*
+  	 * It's perfectly valid firmware can pass disabled GICC entry, driver
+@@ -1986,8 +1989,10 @@ static int __init 
+gic_acpi_count_gicr_regions(void)
+
+  	count = acpi_table_parse_madt(ACPI_MADT_TYPE_GENERIC_INTERRUPT,
+  				      gic_acpi_match_gicc, 0);
+-	if (count > 0)
++	if (count > 0) {
+  		acpi_data.single_redist = true;
++		count = acpi_data.enabled_rdists;
++	}
+
+  	return count;
+  }
+
+-- 
+Jazz is not dead. It just smells funny...
