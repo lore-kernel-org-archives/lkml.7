@@ -2,140 +2,103 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C094EC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 00:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22ED6C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 01:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94A3524681
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 00:51:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MpW1QRXK"
+	by mail.kernel.org (Postfix) with ESMTP id DF16C206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 01:03:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbfLPAvt (ORCPT
+        id S1726526AbfLPBDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 19:51:49 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:40257 "EHLO ozlabs.org"
+        Sun, 15 Dec 2019 20:03:18 -0500
+Received: from mga09.intel.com ([134.134.136.24]:38868 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726299AbfLPAvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 19:51:48 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47bjQT4Mwwz9sNH;
-        Mon, 16 Dec 2019 11:51:45 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1576457505;
-        bh=barIgZhfjdNaSR9zBtj2KFrVq4xY0e5qWMY9AxtpYqY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=MpW1QRXKX9RFkxvglPSI06kUY0h7nF2FWLtfVi+zJRuT59YycQjQMDeDVqRqirLxx
-         bM3mlmsh7UzanCbbuptc6EW+cth9WbS1NvNVYtQkfrbhaAjL1RE4qveSiuFqEQnhMe
-         rLbs5byUaRmdIgJWpHOnsdtryYahmNIYoAR5LMnT3bttY/PTqdxHybnXrdsQDSz7QN
-         06wER/JDj8sthx2goX1f3vg6UXxmz100jNT26hfQkTEW6VJtfEGGllEjk5xvhkJaR+
-         NDd31o4Qcj1flI/zZOtwtI2akvvKb7dChFVPCJkl30VJAWkUAE1prO5xc4agnenNZg
-         QLF/ZT8KKtTcQ==
-Date:   Mon, 16 Dec 2019 11:51:45 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Lyude Paul <lyude@redhat.com>
-Subject: linux-next: manual merge of the drm-misc tree with Linus' tree
-Message-ID: <20191216115145.4f5cc123@canb.auug.org.au>
+        id S1726373AbfLPBDR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 20:03:17 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Dec 2019 17:03:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,319,1571727600"; 
+   d="scan'208";a="297536793"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
+  by orsmga001.jf.intel.com with ESMTP; 15 Dec 2019 17:03:14 -0800
+Date:   Mon, 16 Dec 2019 09:01:04 +0800
+From:   Xu Yilum <yilun.xu@intel.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     Wu Hao <hao.wu@intel.com>, mdf@kernel.org, mark.rutland@arm.com,
+        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, atull@kernel.org,
+        gregkh@linuxfoundation.org
+Subject: Re: [PATCH v6 0/2] add performance reporting support to FPGA DFL
+  drivers
+Message-ID: <20191216010104.GA32154@yilunxu-OptiPlex-7050>
+References: <1573622695-25607-1-git-send-email-hao.wu@intel.com>
+ <20191125033412.GB890@hao-dev>
+ <20191125080127.GC1809@willie-the-truck>
+ <20191125080839.GA6227@hao-dev>
+ <20191209024527.GA22625@hao-dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/frIcPPG8WbhjeYa/mWDsggn";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191209024527.GA22625@hao-dev>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/frIcPPG8WbhjeYa/mWDsggn
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Dec 09, 2019 at 10:45:27AM +0800, Wu Hao wrote:
+> On Mon, Nov 25, 2019 at 04:08:39PM +0800, Wu Hao wrote:
+> > On Mon, Nov 25, 2019 at 08:01:28AM +0000, Will Deacon wrote:
+> > > On Mon, Nov 25, 2019 at 11:34:12AM +0800, Wu Hao wrote:
+> > > > Hi Will and Mark,
+> > > > 
+> > > > Could you please help us on review this patchset? as this patchset mainly 
+> > > > introduced a new perf driver following the similar way as drivers/perf/*.
+> > > 
+> > > Why is it not under drivers/perf/, then?
+> > 
+> > Hi Will
+> > 
+> > Thanks for the quick response. This is one sub feature for DFL based FPGAs,
+> > and we plan to put this sub feature together with others, including related
+> > documentation. It only registers a standard perf pmu for its userspace
+> > interfaces.
+> > 
+> > > 
+> > > > This patchset has been submitted for a long time but didn't receive any
+> > > > comment after v4. we appreciate any review comments! thanks in advance. :)
+> > > 
+> > > Hmm, not sure I saw the previous versions. Guessing I wasn't on cc?
+> > 
+> > We switched to perf API from v4, and started ccing you and Mark from v5. :)
+> 
+> Hi Will
+> 
+> Did you get a chance to look into this patchset?
+> 
+> Thanks
+> Hao
 
-Hi all,
+Hi Will
 
-Today's linux-next merge of the drm-misc tree got a conflict in:
+Did you have time to look into this patchset? We have done review work
+for FPGA part. And as a perf driver, we appreciate your comments.
 
-  include/drm/drm_dp_mst_helper.h
+Thanks
+Yilun
 
-between commit:
-
-  14692a3637d4 ("drm/dp_mst: Add probe_lock")
-
-from the Linus' tree and commit:
-
-  f79489074c59 ("drm/dp_mst: Clear all payload id tables downstream when in=
-itializing")
-
-from the drm-misc tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc include/drm/drm_dp_mst_helper.h
-index d5fc90b30487,a448d701dc7e..000000000000
---- a/include/drm/drm_dp_mst_helper.h
-+++ b/include/drm/drm_dp_mst_helper.h
-@@@ -565,18 -495,18 +566,25 @@@ struct drm_dp_mst_topology_mgr=20
-  	 */
-  	struct mutex lock;
- =20
- +	/**
- +	 * @probe_lock: Prevents @work and @up_req_work, the only writers of
- +	 * &drm_dp_mst_port.mstb and &drm_dp_mst_branch.ports, from racing
- +	 * while they update the topology.
- +	 */
- +	struct mutex probe_lock;
- +
-  	/**
-- 	 * @mst_state: If this manager is enabled for an MST capable port. False
-- 	 * if no MST sink/branch devices is connected.
-+ 	 * @mst_state: If this manager is enabled for an MST capable port.
-+ 	 * False if no MST sink/branch devices is connected.
-  	 */
-- 	bool mst_state;
-+ 	bool mst_state : 1;
-+=20
-+ 	/**
-+ 	 * @payload_id_table_cleared: Whether or not we've cleared the payload
-+ 	 * ID table for @mst_primary. Protected by @lock.
-+ 	 */
-+ 	bool payload_id_table_cleared : 1;
-+=20
-  	/**
-  	 * @mst_primary: Pointer to the primary/first branch device.
-  	 */
-
---Sig_/frIcPPG8WbhjeYa/mWDsggn
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl321SEACgkQAVBC80lX
-0GxkGggAlbCXpG7jCrvVDB2pJnRYmmHYGa9snqllJr3avUva39HJgOEHVcZKjNou
-zbOWU2JW9iWxm7n5ar3bFomH+r3/tE1T1/KmxTKF+PmFSKAzptMyeJ4MM8D+iZb7
-cyu3+jG0bOouRrwNrdGV5UD4WHig9KR67geBY6a6iIheMk9J3j+ngR0obs9D89iZ
-9A08yTnaYEdqjwnBgQLF85N3PCdygZ01FGjXypM98yxGtDQhCbVV78ybJBJGJR97
-eZB3CNimqXjU5ExSnd6/sEifeF+6jxnzv5B+S2nChf6nUdMSvSegXGFhktIKg18W
-TC4XZ+bFPFiCQj+tEgpqk/WsqCybOA==
-=3+Ni
------END PGP SIGNATURE-----
-
---Sig_/frIcPPG8WbhjeYa/mWDsggn--
+> 
+> > 
+> > Thanks
+> > Hao
+> > 
+> > > 
+> > > Will
