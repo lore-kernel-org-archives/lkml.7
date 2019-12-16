@@ -2,160 +2,110 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81090C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0BF0C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53F1B2082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:31:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cfn+VITY"
+	by mail.kernel.org (Postfix) with ESMTP id B422A24650
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:36:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727641AbfLPUbS (ORCPT
+        id S1726897AbfLPUg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 15:31:18 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51228 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726530AbfLPUbR (ORCPT
+        Mon, 16 Dec 2019 15:36:28 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46718 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbfLPUg1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 15:31:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576528276;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jlu9ktr7H31RWs1DVUPIInRRweo4N+0rLFR6yADAtyc=;
-        b=cfn+VITY/4PfhRYPV/ahwBu1O/lBEC76NmuIR8yNtMeA94JOFgA9x/Hp7ENPPbiRFrB+S6
-        rywldTAQP8hiwMboZjGS787LKItBUnb2YWI/GFDzNfpAC9HCJX8mdJl/QRg8RyS6G5sZPl
-        9FFd6KE9q2JmGg9iI64bnOvoAhR4KJ8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-429-xE5eE4utO72SBaIrmz8lJw-1; Mon, 16 Dec 2019 15:29:14 -0500
-X-MC-Unique: xE5eE4utO72SBaIrmz8lJw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C8716800D48;
-        Mon, 16 Dec 2019 20:29:12 +0000 (UTC)
-Received: from shalem.localdomain.com (ovpn-116-96.ams2.redhat.com [10.36.116.96])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 523555C1D6;
-        Mon, 16 Dec 2019 20:29:10 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Lee Jones <lee.jones@linaro.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        dri-devel@lists.freedesktop.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jani Nikula <jani.nikula@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [CI 1/3] ACPI / LPSS: Rename pwm_backlight pwm-lookup to pwm_soc_backlight
-Date:   Mon, 16 Dec 2019 21:29:04 +0100
-Message-Id: <20191216202906.1662893-2-hdegoede@redhat.com>
-In-Reply-To: <20191216202906.1662893-1-hdegoede@redhat.com>
-References: <20191216202906.1662893-1-hdegoede@redhat.com>
+        Mon, 16 Dec 2019 15:36:27 -0500
+Received: by mail-wr1-f65.google.com with SMTP id z7so8856621wrl.13
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 12:36:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JF5j2QhBPiKVEsszO1fwNIEf5ztIBBW8hIVMIyB6TX8=;
+        b=bT5EI8xjAl1zI9LOqE1cUECcoz/mB2+w9BRUZfvhOU4DFz/05VW3Xs/1L6p9KKonfh
+         yXvOrsrzmycDu7dQMYSZZaTSqEv+yMEtzX/x3hI01pUCt7GMuYaBlkQrqG9cYrDtKGxQ
+         Rf7mXpWANR19BzUwF9YKIqEAKB9r446EJMFBbcSpfVgiO8K8WyeXF7cSGAawVFZRR9US
+         w5vEuglSBXdqsRO9ZKq9YStwahtyOpsfdGfU8LLPTMr+j9M9CzcnjTqE+sg2Bb1uM6bW
+         g7rTIt917fqxymLmfk/lnVBjxX+SC1R2bS5K5rLdZFjV9jc3nZM6TDlP2vZFFO9/rnqM
+         C9GA==
+X-Gm-Message-State: APjAAAVrlayhPz1C4jR0bUX6W4/5C1ErkZVwjYKzX2K+ZwOX3OzwjV0c
+        g94FzO3u74s9zCzNPgSLJbI=
+X-Google-Smtp-Source: APXvYqz9kOCrk7TdGWR+j99RWSQ6+KDeJJaAl/3DJBRD938fSrWXpjD853kqh1J0TmYUVY6y872K+A==
+X-Received: by 2002:a5d:6305:: with SMTP id i5mr33173920wru.119.1576528585567;
+        Mon, 16 Dec 2019 12:36:25 -0800 (PST)
+Received: from a483e7b01a66.ant.amazon.com (cpc91200-cmbg18-2-0-cust94.5-4.cable.virginm.net. [81.100.41.95])
+        by smtp.gmail.com with ESMTPSA id v8sm22540503wrw.2.2019.12.16.12.36.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Dec 2019 12:36:24 -0800 (PST)
+Subject: Re: [PATCH v4 1/6] arm/arm64/xen: hypercall.h add includes guards
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>, jmorris@namei.org,
+        sashal@kernel.org, linux-kernel@vger.kernel.org,
+        catalin.marinas@arm.com, will@kernel.org, steve.capper@arm.com,
+        linux-arm-kernel@lists.infradead.org, maz@kernel.org,
+        james.morse@arm.com, vladimir.murzin@arm.com, mark.rutland@arm.com,
+        tglx@linutronix.de, gregkh@linuxfoundation.org,
+        allison@lohutok.net, info@metux.net, alexios.zavras@intel.com,
+        sstabellini@kernel.org, boris.ostrovsky@oracle.com,
+        jgross@suse.com, stefan@agner.ch, yamada.masahiro@socionext.com,
+        xen-devel@lists.xenproject.org, linux@armlinux.org.uk,
+        andrew.cooper3@citrix.com
+References: <20191204232058.2500117-1-pasha.tatashin@soleen.com>
+ <20191204232058.2500117-2-pasha.tatashin@soleen.com>
+From:   Julien Grall <julien@xen.org>
+Message-ID: <c5dcf342-90f4-beb5-d2b1-4a37ccedfe42@xen.org>
+Date:   Mon, 16 Dec 2019 20:36:23 +0000
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.3.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191204232058.2500117-2-pasha.tatashin@soleen.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At least Bay Trail (BYT) and Cherry Trail (CHT) devices can use 1 of 2
-different PWM controllers for controlling the LCD's backlight brightness.
-Either the one integrated into the PMIC or the one integrated into the
-SoC (the 1st LPSS PWM controller).
+Hi,
 
-So far in the LPSS code on BYT we have skipped registering the LPSS PWM
-controller "pwm_backlight" lookup entry when a Crystal Cove PMIC is
-present, assuming that in this case the PMIC PWM controller will be used.
+On 04/12/2019 23:20, Pavel Tatashin wrote:
+> The arm and arm64 versions of hypercall.h are missing the include
+> guards. This is needed because C inlines for privcmd_call are going to
+> be added to the files.
+> 
+> Also fix a comment.
+> 
+> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> ---
+>   arch/arm/include/asm/assembler.h       | 2 +-
+>   arch/arm/include/asm/xen/hypercall.h   | 4 ++++
+>   arch/arm64/include/asm/xen/hypercall.h | 4 ++++
+>   include/xen/arm/hypercall.h            | 6 +++---
+>   4 files changed, 12 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm/include/asm/assembler.h b/arch/arm/include/asm/assembler.h
+> index 99929122dad7..8e9262a0f016 100644
+> --- a/arch/arm/include/asm/assembler.h
+> +++ b/arch/arm/include/asm/assembler.h
+> @@ -480,7 +480,7 @@ THUMB(	orr	\reg , \reg , #PSR_T_BIT	)
+>   	.macro	uaccess_disable, tmp, isb=1
+>   #ifdef CONFIG_CPU_SW_DOMAIN_PAN
+>   	/*
+> -	 * Whenever we re-enter userspace, the domains should always be
+> +	 * Whenever we re-enter kernel, the domains should always be
 
-On CHT we have been relying on only 1 of the 2 PWM controllers being
-enabled in the DSDT at the same time; and always registered the lookup.
+This feels unrelated from the rest of the patch and probably want an 
+explanation. So I think this want to be in a separate patch.
 
-So far this has been working, but the correct way to determine which PWM
-controller needs to be used is by checking a bit in the VBT table and
-recently I've learned about 2 different BYT devices:
-Point of View MOBII TAB-P800W
-Acer Switch 10 SW5-012
+The rest of the patch looks good to me.
 
-Which use a Crystal Cove PMIC, yet the LCD is connected to the SoC/LPSS
-PWM controller (and the VBT correctly indicates this), so here our old
-heuristics fail.
+Cheers,
 
-Since only the i915 driver has access to the VBT, this commit renames
-the "pwm_backlight" lookup entries for the 1st BYT/CHT LPSS PWM controlle=
-r
-to "pwm_soc_backlight" so that the i915 driver can do a pwm_get() for
-the right controller depending on the VBT bit, instead of the i915 driver
-relying on a "pwm_backlight" lookup getting registered which magically
-points to the right controller.
-
-Acked-by: Jani Nikula <jani.nikula@intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/acpi/acpi_lpss.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/acpi/acpi_lpss.c b/drivers/acpi/acpi_lpss.c
-index 70f740b09684..db18df6cb330 100644
---- a/drivers/acpi/acpi_lpss.c
-+++ b/drivers/acpi/acpi_lpss.c
-@@ -69,10 +69,6 @@ ACPI_MODULE_NAME("acpi_lpss");
- #define LPSS_SAVE_CTX			BIT(4)
- #define LPSS_NO_D3_DELAY		BIT(5)
-=20
--/* Crystal Cove PMIC shares same ACPI ID between different platforms */
--#define BYT_CRC_HRV			2
--#define CHT_CRC_HRV			3
--
- struct lpss_private_data;
-=20
- struct lpss_device_desc {
-@@ -158,7 +154,7 @@ static void lpss_deassert_reset(struct lpss_private_d=
-ata *pdata)
-  */
- static struct pwm_lookup byt_pwm_lookup[] =3D {
- 	PWM_LOOKUP_WITH_MODULE("80860F09:00", 0, "0000:00:02.0",
--			       "pwm_backlight", 0, PWM_POLARITY_NORMAL,
-+			       "pwm_soc_backlight", 0, PWM_POLARITY_NORMAL,
- 			       "pwm-lpss-platform"),
- };
-=20
-@@ -170,8 +166,7 @@ static void byt_pwm_setup(struct lpss_private_data *p=
-data)
- 	if (!adev->pnp.unique_id || strcmp(adev->pnp.unique_id, "1"))
- 		return;
-=20
--	if (!acpi_dev_present("INT33FD", NULL, BYT_CRC_HRV))
--		pwm_add_table(byt_pwm_lookup, ARRAY_SIZE(byt_pwm_lookup));
-+	pwm_add_table(byt_pwm_lookup, ARRAY_SIZE(byt_pwm_lookup));
- }
-=20
- #define LPSS_I2C_ENABLE			0x6c
-@@ -204,7 +199,7 @@ static void byt_i2c_setup(struct lpss_private_data *p=
-data)
- /* BSW PWM used for backlight control by the i915 driver */
- static struct pwm_lookup bsw_pwm_lookup[] =3D {
- 	PWM_LOOKUP_WITH_MODULE("80862288:00", 0, "0000:00:02.0",
--			       "pwm_backlight", 0, PWM_POLARITY_NORMAL,
-+			       "pwm_soc_backlight", 0, PWM_POLARITY_NORMAL,
- 			       "pwm-lpss-platform"),
- };
-=20
---=20
-2.23.0
-
+-- 
+Julien Grall
