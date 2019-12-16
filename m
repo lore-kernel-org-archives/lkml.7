@@ -2,288 +2,149 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12875C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B565C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8A4A206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:10:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576516233;
-	bh=aUrdrOF8RVSAn+yHDF3btdZ2PsHXQPB4WZvqmB6jT8E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=htWyclIcZK7xlTuprGYgO/LjuOd4J3+aiZ8xhUakBqRJAxYuKlU1CMg8jpE2PEnsm
-	 kJoqGn/Ahi/qNGnLArc24VZ63LqwqIwhUUO8VmKhzX0ePQHWqrt9vnaA5CZPGIGQag
-	 YdplkfGyWNU9RnNBlnY4Jkih0JWXV7eVnYyvjn/c=
+	by mail.kernel.org (Postfix) with ESMTP id 6C349206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:12:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbfLPRKc (ORCPT
+        id S1726784AbfLPRMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:10:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51456 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:12:14 -0500
+Received: from mga17.intel.com ([192.55.52.151]:35213 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727758AbfLPRK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:10:28 -0500
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDAD7206EC;
-        Mon, 16 Dec 2019 17:10:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576516228;
-        bh=aUrdrOF8RVSAn+yHDF3btdZ2PsHXQPB4WZvqmB6jT8E=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Y6tSxMVL/XSZEra+SXXcuvQBkOLqI4FXRDeN0DGcByWAadeDp+10N8YFhQu4ZPTeZ
-         rw2St3qYQi9bCiosAMR5zNZSwwLbLbhwsxMmqLBbYHIqeo9e3NmgmkvHyrKSLNRN6M
-         ECjETUebqrgZeJS7NSgEUFNBMjWYLM6cCY7xRsY4=
-Received: by mail-qv1-f51.google.com with SMTP id m14so2463613qvl.3;
-        Mon, 16 Dec 2019 09:10:27 -0800 (PST)
-X-Gm-Message-State: APjAAAWLjtV1m/vvRjsQGYQ+2p59/sHM8Zi4Zi83JqvRlo2dMqHdYalt
-        VDF1IX5FP612yfuZ+m0E3wIxO8ZVeZL5DTrUyQ==
-X-Google-Smtp-Source: APXvYqz1/8z5BbGYKxOHLX+RjTlBOF3diYL38YPIekXqt/2ChkEPgLihEvHxXbgXzbHA5XMi6Krc1r0YFDIZHXejRwc=
-X-Received: by 2002:a05:6214:11ac:: with SMTP id u12mr244552qvv.85.1576516226960;
- Mon, 16 Dec 2019 09:10:26 -0800 (PST)
+        id S1726368AbfLPRMO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:12:14 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 09:12:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,322,1571727600"; 
+   d="scan'208";a="415144339"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga005.fm.intel.com with ESMTP; 16 Dec 2019 09:12:12 -0800
+Received: from [10.251.95.214] (abudanko-mobl.ccr.corp.intel.com [10.251.95.214])
+        by linux.intel.com (Postfix) with ESMTP id 30029580342;
+        Mon, 16 Dec 2019 09:12:03 -0800 (PST)
+Subject: Re: [PATCH v2 2/7] perf/core: open access for CAP_SYS_PERFMON
+ privileged process
+To:     "Lubashev, Igor" <ilubashe@akamai.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "james.bottomley@hansenpartnership.com" 
+        <james.bottomley@hansenpartnership.com>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        "serge@hallyn.com" <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "bgregg@netflix.com" <bgregg@netflix.com>,
+        Song Liu <songliubraving@fb.com>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+References: <26101427-c0a3-db9f-39e9-9e5f4ddd009c@linux.intel.com>
+ <fd6ffb43-ed43-14cd-b286-6ab4b199155b@linux.intel.com>
+ <9316a1ab21f6441eb2b421acb818a2a1@ustx2ex-dag1mb6.msg.corp.akamai.com>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <c471a28b-6620-9b0a-4b6e-43f4956202cd@linux.intel.com>
+Date:   Mon, 16 Dec 2019 20:12:02 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-References: <20191128154603.6911-1-arnaud.pouliquen@st.com>
- <20191213213916.GA1292@bogus> <7ac83aa6-0ec6-db4f-556d-a17c28d2bcab@st.com>
-In-Reply-To: <7ac83aa6-0ec6-db4f-556d-a17c28d2bcab@st.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 16 Dec 2019 11:10:15 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKnbkO2rXKz376GZLdM4C9zA2zcM1ETGLFaABaxpBu7vA@mail.gmail.com>
-Message-ID: <CAL_JsqKnbkO2rXKz376GZLdM4C9zA2zcM1ETGLFaABaxpBu7vA@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: stm32: convert mlahb to json-schema
-To:     Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Fabien Dessenne <fabien.dessenne@st.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <9316a1ab21f6441eb2b421acb818a2a1@ustx2ex-dag1mb6.msg.corp.akamai.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 2:44 AM Arnaud POULIQUEN
-<arnaud.pouliquen@st.com> wrote:
->
-> Hello Rob,
->
-> On 12/13/19 10:39 PM, Rob Herring wrote:
-> > On Thu, Nov 28, 2019 at 04:46:03PM +0100, Arnaud Pouliquen wrote:
-> >> Convert the ML-AHB bus bindings to DT schema format using json-schema
-> >>
-> >> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-> >> ---
-> >> Notice that this patch requests an update of the simple-bus schema to add
-> >> the support of the "dma-ranges" property.
-> >> A Pull request has been sent in parallel to the dt-schema github repo:
-> >> https://github.com/devicetree-org/dt-schema/pull/30
-> >>
-> >> To remind the topic around the use of "dma-ranges" please
-> >> refer to following discussion: https://lkml.org/lkml/2019/4/3/1261
-> >> ---
-> >>  .../devicetree/bindings/arm/stm32/mlahb.txt   | 37 ----------
-> >>  .../bindings/arm/stm32/st,mlahb.yaml          | 69 +++++++++++++++++++
-> >>  2 files changed, 69 insertions(+), 37 deletions(-)
-> >>  delete mode 100644 Documentation/devicetree/bindings/arm/stm32/mlahb.txt
-> >>  create mode 100644 Documentation/devicetree/bindings/arm/stm32/st,mlahb.yaml
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/arm/stm32/mlahb.txt b/Documentation/devicetree/bindings/arm/stm32/mlahb.txt
-> >> deleted file mode 100644
-> >> index 25307aa1eb9b..000000000000
-> >> --- a/Documentation/devicetree/bindings/arm/stm32/mlahb.txt
-> >> +++ /dev/null
-> >> @@ -1,37 +0,0 @@
-> >> -ML-AHB interconnect bindings
-> >> -
-> >> -These bindings describe the STM32 SoCs ML-AHB interconnect bus which connects
-> >> -a Cortex-M subsystem with dedicated memories.
-> >> -The MCU SRAM and RETRAM memory parts can be accessed through different addresses
-> >> -(see "RAM aliases" in [1]) using different buses (see [2]) : balancing the
-> >> -Cortex-M firmware accesses among those ports allows to tune the system
-> >> -performance.
-> >> -
-> >> -[1]: https://www.st.com/resource/en/reference_manual/dm00327659.pdf
-> >> -[2]: https://wiki.st.com/stm32mpu/wiki/STM32MP15_RAM_mapping
-> >> -
-> >> -Required properties:
-> >> -- compatible: should be "simple-bus"
-> >> -- dma-ranges: describes memory addresses translation between the local CPU and
-> >> -       the remote Cortex-M processor. Each memory region, is declared with
-> >> -       3 parameters:
-> >> -             - param 1: device base address (Cortex-M processor address)
-> >> -             - param 2: physical base address (local CPU address)
-> >> -             - param 3: size of the memory region.
-> >> -
-> >> -The Cortex-M remote processor accessed via the mlahb interconnect is described
-> >> -by a child node.
-> >> -
-> >> -Example:
-> >> -mlahb {
-> >> -    compatible = "simple-bus";
-> >> -    #address-cells = <1>;
-> >> -    #size-cells = <1>;
-> >> -    dma-ranges = <0x00000000 0x38000000 0x10000>,
-> >> -                 <0x10000000 0x10000000 0x60000>,
-> >> -                 <0x30000000 0x30000000 0x60000>;
-> >> -
-> >> -    m4_rproc: m4@10000000 {
-> >> -            ...
-> >> -    };
-> >> -};
-> >> diff --git a/Documentation/devicetree/bindings/arm/stm32/st,mlahb.yaml b/Documentation/devicetree/bindings/arm/stm32/st,mlahb.yaml
-> >> new file mode 100644
-> >> index 000000000000..8ad3f7c7f9ab
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/arm/stm32/st,mlahb.yaml
-> >> @@ -0,0 +1,69 @@
-> >> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: "http://devicetree.org/schemas/arm/stm32/st,mlahb.yaml#"
-> >> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> >> +
-> >> +title: STMicroelectronics STM32 ML-AHB interconnect bindings
-> >> +
-> >> +maintainers:
-> >> +  - Fabien Dessenne <fabien.dessenne@st.com>
-> >> +  - Arnaud Pouliquen <arnaud.pouliquen@st.com>
-> >> +
-> >> +description: |
-> >> +  These bindings describe the STM32 SoCs ML-AHB interconnect bus which connects
-> >> +  a Cortex-M subsystem with dedicated memories. The MCU SRAM and RETRAM memory
-> >> +  parts can be accessed through different addresses (see "RAM aliases" in [1])
-> >> +  using different buses (see [2]): balancing the Cortex-M firmware accesses
-> >> +  among those ports allows to tune the system performance.
-> >> +  [1]: https://www.st.com/resource/en/reference_manual/dm00327659.pdf
-> >> +  [2]: https://wiki.st.com/stm32mpu/wiki/STM32MP15_RAM_mapping
-> >> +
-> >> +allOf:
-> >> + - $ref: /schemas/simple-bus.yaml#
-> >> +
-> >> +properties:
-> >> +  compatible:
-> >> +    contains:
-> >> +      enum:
-> >> +        - st,mlahb
-> >> +
-> >> +  dma-ranges:
-> >> +    description: |
-> >> +      Describe memory addresses translation between the local CPU and the
-> >> +      remote Cortex-M processor. Each memory region, is declared with
-> >> +      3 parameters:
-> >> +      - param 1: device base address (Cortex-M processor address)
-> >> +      - param 2: physical base address (local CPU address)
-> >> +      - param 3: size of the memory region.
-> >> +    maxItems: 3
-> >> +
-> >> +  '#address-cells':
-> >> +    const: 1
-> >> +
-> >> +  '#size-cells':
-> >> +    const: 1
-> >> +
-> >> +required:
-> >> +  - compatible
-> >> +  - '#address-cells'
-> >> +  - '#size-cells'
-> >> +  - dma-ranges
-> >> +
-> >> +examples:
-> >> +  - |
-> >> +    mlahb: ahb {
-> >> +      compatible = "st,mlahb", "simple-bus";
-> >> +      #address-cells = <1>;
-> >> +      #size-cells = <1>;
-> >> +      reg = <0x10000000 0x40000>;
-> >> +      dma-ranges = <0x00000000 0x38000000 0x10000>,
-> >> +                   <0x10000000 0x10000000 0x60000>,
-> >> +                   <0x30000000 0x30000000 0x60000>;
-> >> +
-> >
-> > Fails to build:
-> >
-> > builds/robherring/linux-dt-review/Documentation/devicetree/bindings/arm/stm32/st,mlahb.example.dt.yaml:
-> > ahb: 'ranges' is a required property
-> >
-> > Run 'make dt_binding_check'
->
-> Yes, that why i posted in parallel the PR on the tool:
-> https://github.com/devicetree-org/dt-schema/pull/30.
->
-> I don't know if you saw my answer on this post so i copy/paste  it here:
->
-> How to describe the stm32mp1 coprocessor mapping and translations based on this "ranges" requirement?
 
-Minimally, you just need to add an empty ranges. Otherwise, the
-0x10000000 in reg in the child node is not considered a MMIO address.
+On 16.12.2019 19:12, Lubashev, Igor wrote:
+> On Mon, Dec 16, 2019 at 2:15 AM, Alexey Budankov <alexey.budankov@linux.intel.com> wrote:
+>>
+>> Open access to perf_events monitoring for CAP_SYS_PERFMON privileged
+>> processes.
+>> For backward compatibility reasons access to perf_events subsystem remains
+>> open for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage
+>> for secure perf_events monitoring is discouraged with respect to
+>> CAP_SYS_PERFMON capability.
+>>
+>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+>> ---
+>>  include/linux/perf_event.h | 9 ++++++---
+>>  1 file changed, 6 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h index
+>> 34c7c6910026..52313d2cc343 100644
+>> --- a/include/linux/perf_event.h
+>> +++ b/include/linux/perf_event.h
+>> @@ -1285,7 +1285,8 @@ static inline int perf_is_paranoid(void)
+>>
+>>  static inline int perf_allow_kernel(struct perf_event_attr *attr)  {
+>> -	if (sysctl_perf_event_paranoid > 1 && !capable(CAP_SYS_ADMIN))
+>> +	if (sysctl_perf_event_paranoid > 1 &&
+>> +	   !(capable(CAP_SYS_PERFMON) || capable(CAP_SYS_ADMIN)))
+>>  		return -EACCES;
+>>
+>>  	return security_perf_event_open(attr, PERF_SECURITY_KERNEL); @@
+>> -1293,7 +1294,8 @@ static inline int perf_allow_kernel(struct
+>> perf_event_attr *attr)
+>>
+>>  static inline int perf_allow_cpu(struct perf_event_attr *attr)  {
+>> -	if (sysctl_perf_event_paranoid > 0 && !capable(CAP_SYS_ADMIN))
+>> +	if (sysctl_perf_event_paranoid > 0 &&
+>> +	    !(capable(CAP_SYS_PERFMON) || capable(CAP_SYS_ADMIN)))
+>>  		return -EACCES;
+>>
+>>  	return security_perf_event_open(attr, PERF_SECURITY_CPU); @@ -
+>> 1301,7 +1303,8 @@ static inline int perf_allow_cpu(struct perf_event_attr
+>> *attr)
+>>
+>>  static inline int perf_allow_tracepoint(struct perf_event_attr *attr)  {
+>> -	if (sysctl_perf_event_paranoid > -1 && !capable(CAP_SYS_ADMIN))
+>> +	if (sysctl_perf_event_paranoid > -1 &&
+>> +	    !(capable(CAP_SYS_PERFMON) || capable(CAP_SYS_ADMIN)))
+>>  		return -EPERM;
+>>
+>>  	return security_perf_event_open(attr, PERF_SECURITY_TRACEPOINT);
+>> --
+>> 2.20.1
+> 
+> Thanks.  I like the idea of CAP_SYS_PERFMON that does not require CAP_SYS_ADMIN.  It makes granting users ability to run perf a bit safer.
+> 
+> I see a lot of "(capable(CAP_SYS_PERFMON) || capable(CAP_SYS_ADMIN)" constructs now.  Maybe wrapping it in an " inline bool perfmon_capable()" defined somewhere (like in /include/linux/capability.h)?
 
-> On stm32mp1 we have 2 RAM memories accessible by the Cortex-A7 running Linux and used by the Cortex-M4 coprocessor to run its code. Each Cortex has a specific mapping of the memories. Some memory translations are needed by:
->
-> - rproc driver to load the Cortex-M4 firmware in RAMs
-> - rpmsg & virtio frameworks for shared memory
->
-> Here is the memory mapping:
->
-> - RETRAM (64 kB);
->   - Cortex-A7 @ : 0x38000000
->   - Cortex-M4 @: 0x00000000
-> - MCUSRAM (up to 384 kB)
->   - Cortex-A7 @ : 0x30000000 or 0x10000000 ( 2 addresses for the same memory)
->   - Cortex-M4 @: 0x30000000 or 0x10000000 ( 2 addresses for the same memory)
->   =>addresses used on both side depend on the MCURAM access optimization
->
-> Today our upstreamed solution is based on dma-range only (https://lkml.org/lkml/2019/4/3/1261)
->
-> What about adding an "unused" ranges property in DT to match the requirement?
->
->         mlahb {
->                 compatible = "simple-bus";
->                 #address-cells = <1>;
->                 #size-cells = <1>;
->                 ranges = <0 0x38000000 0x10000>,
->                                <1 0x10000000 0x60000>,
->                                <2 0x30000000 0x60000>;
+Sounds reasonable, thanks!
 
-This is not valid with child addresses of 0, 1, and 2. 'ranges' is
-purely about the view from the A7 to the M4. If you want to point 2
-parent addresses to the same child region, you could do:
+~Alexey
 
-                ranges = <0x38000000 0x38000000 0x10000>,
-                         <0x10000000 0x10000000 0x60000>,
-                         <0x10000000 0x30000000 0x60000>;
-
-Though I'm not sure what the OS address translation code will do in
-this case. Probably just ignore the last entry.
-
->                 dma-ranges = <0x00000000 0x38000000 0x10000>,
->                              <0x10000000 0x10000000 0x60000>,
->                              <0x30000000 0x30000000 0x60000>;
->
->                 m4_rproc: m4@10000000 {
->                         ---
->                 };
->         };
->
-> Thanks in advance for your feedback.
-> Regards,
-> Arnaud
->
-> >
-> >> +      m4_rproc: m4@10000000 {
-> >> +       reg = <0x10000000 0x40000>;
-> >> +      };
-> >> +    };
-> >> +
-> >> +...
-> >> --
-> >> 2.17.1
-> >>
+> 
+> - Igor
+> 
