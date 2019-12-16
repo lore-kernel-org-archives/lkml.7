@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DFDC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4CDC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2A3A205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:57:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFF1D205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:57:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519057;
-	bh=OqlRxJ+gCG0jNsJDOzcwV1OoSPzgSFE98BB7xYlWdpM=;
+	s=default; t=1576519065;
+	bh=Sb3cXim8V9f/HDxtsW8XIz0e8W+QepaRNYmlAa+mlxk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ugOSWUzih3AGPlnp9sEd21BUy+BIr6O7UoVLfhKyTW9aHyFe1Ud5dmdlU8LP1JDXP
-	 xmrcRHKW0P0xV6/HG8UO8dwZKa2FH3uZciZ6l9bRXCv7zNc4VJEo3icFXhiW+zZ6Yo
-	 6wGgzRFDgopwom+OQsTCHviwJH6UPpf9Cc1jcEH8=
+	b=KGggV6Gb/BFZxlbBn2azTOjrHof/AZhVmprHLfgArw1scL7WYH5kgWFZEqSewORrQ
+	 XDYtzw7kbtXZG36ncy/3KV9qbrj+riABEslkhRJOSa28Hep8hECCBz5s44t+vmRy0k
+	 jU2ofbSYczpaNSf6hjHzAs/K3+q0Ail034obdTXw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728501AbfLPR5h (ORCPT
+        id S1728521AbfLPR5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:57:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56510 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:57:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727684AbfLPR5e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:57:34 -0500
+        id S1728243AbfLPR5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:57:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A1302176D;
-        Mon, 16 Dec 2019 17:57:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75AD6205ED;
+        Mon, 16 Dec 2019 17:57:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519054;
-        bh=OqlRxJ+gCG0jNsJDOzcwV1OoSPzgSFE98BB7xYlWdpM=;
+        s=default; t=1576519058;
+        bh=Sb3cXim8V9f/HDxtsW8XIz0e8W+QepaRNYmlAa+mlxk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QS6UXKsLEhC9hES5IDOGfKRnsMkYu8Xem/AqLvaihiVNnkAnjZZtG2bORlunRz1yA
-         bIHqrELj8tOJLdxdmZvF6ylKhlanFic21DmxNIgsDNNlUlAipVThp6iM/nOZ/JXQFJ
-         uXfGXjsxdZJjAnRyg0a1oHFCcAl9CpEimqY/Xhuo=
+        b=ujENoU6L8HulOyrzcFmlLz746ud6npYmMir/k/+LaYtuiindOZ6U7ueSd4Su6hXX1
+         2HDq3RkXdeA2KOtny0fOFt7U2ztYmcgZeTtlb1f5gPbwKbl6aNuI3YVnc3GiNPRSh6
+         fcs1Bt6AHirRVS6yBYL3MVmMSMS9NOXgrXzL0NLs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 175/267] USB: atm: ueagle-atm: add missing endpoint check
-Date:   Mon, 16 Dec 2019 18:48:21 +0100
-Message-Id: <20191216174912.090812754@linuxfoundation.org>
+Subject: [PATCH 4.14 177/267] USB: serial: io_edgeport: fix epic endpoint lookup
+Date:   Mon, 16 Dec 2019 18:48:23 +0100
+Message-Id: <20191216174912.199120347@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -60,88 +60,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Hovold <johan@kernel.org>
 
-commit 09068c1ad53fb077bdac288869dec2435420bdc4 upstream.
+commit 7c5a2df3367a2c4984f1300261345817d95b71f8 upstream.
 
-Make sure that the interrupt interface has an endpoint before trying to
-access its endpoint descriptors to avoid dereferencing a NULL pointer.
+Make sure to use the current alternate setting when looking up the
+endpoints on epic devices to avoid binding to an invalid interface.
 
-The driver binds to the interrupt interface with interface number 0, but
-must not assume that this interface or its current alternate setting are
-the first entries in the corresponding configuration arrays.
+Failing to do so could cause the driver to misbehave or trigger a WARN()
+in usb_submit_urb() that kernels with panic_on_warn set would choke on.
 
-Fixes: b72458a80c75 ("[PATCH] USB: Eagle and ADI 930 usb adsl modem driver")
-Cc: stable <stable@vger.kernel.org>     # 2.6.16
+Fixes: 6e8cf7751f9f ("USB: add EPIC support to the io_edgeport driver")
+Cc: stable <stable@vger.kernel.org>     # 2.6.21
 Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191210112601.3561-2-johan@kernel.org
+Link: https://lore.kernel.org/r/20191210112601.3561-5-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/atm/ueagle-atm.c |   18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ drivers/usb/serial/io_edgeport.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/drivers/usb/atm/ueagle-atm.c
-+++ b/drivers/usb/atm/ueagle-atm.c
-@@ -2167,10 +2167,11 @@ resubmit:
- /*
-  * Start the modem : init the data and start kernel thread
-  */
--static int uea_boot(struct uea_softc *sc)
-+static int uea_boot(struct uea_softc *sc, struct usb_interface *intf)
- {
--	int ret, size;
- 	struct intr_pkt *intr;
-+	int ret = -ENOMEM;
-+	int size;
+--- a/drivers/usb/serial/io_edgeport.c
++++ b/drivers/usb/serial/io_edgeport.c
+@@ -2918,16 +2918,18 @@ static int edge_startup(struct usb_seria
+ 	response = 0;
  
- 	uea_enters(INS_TO_USBDEV(sc));
- 
-@@ -2195,6 +2196,11 @@ static int uea_boot(struct uea_softc *sc
- 	if (UEA_CHIP_VERSION(sc) == ADI930)
- 		load_XILINX_firmware(sc);
- 
-+	if (intf->cur_altsetting->desc.bNumEndpoints < 1) {
-+		ret = -ENODEV;
-+		goto err0;
-+	}
+ 	if (edge_serial->is_epic) {
++		struct usb_host_interface *alt;
 +
- 	intr = kmalloc(size, GFP_KERNEL);
- 	if (!intr)
- 		goto err0;
-@@ -2206,8 +2212,7 @@ static int uea_boot(struct uea_softc *sc
- 	usb_fill_int_urb(sc->urb_int, sc->usb_dev,
- 			 usb_rcvintpipe(sc->usb_dev, UEA_INTR_PIPE),
- 			 intr, size, uea_intr, sc,
--			 sc->usb_dev->actconfig->interface[0]->altsetting[0].
--			 endpoint[0].desc.bInterval);
-+			 intf->cur_altsetting->endpoint[0].desc.bInterval);
++		alt = serial->interface->cur_altsetting;
++
+ 		/* EPIC thing, set up our interrupt polling now and our read
+ 		 * urb, so that the device knows it really is connected. */
+ 		interrupt_in_found = bulk_in_found = bulk_out_found = false;
+-		for (i = 0; i < serial->interface->altsetting[0]
+-						.desc.bNumEndpoints; ++i) {
++		for (i = 0; i < alt->desc.bNumEndpoints; ++i) {
+ 			struct usb_endpoint_descriptor *endpoint;
+ 			int buffer_size;
  
- 	ret = usb_submit_urb(sc->urb_int, GFP_KERNEL);
- 	if (ret < 0) {
-@@ -2222,6 +2227,7 @@ static int uea_boot(struct uea_softc *sc
- 	sc->kthread = kthread_create(uea_kthread, sc, "ueagle-atm");
- 	if (IS_ERR(sc->kthread)) {
- 		uea_err(INS_TO_USBDEV(sc), "failed to create thread\n");
-+		ret = PTR_ERR(sc->kthread);
- 		goto err2;
- 	}
- 
-@@ -2236,7 +2242,7 @@ err1:
- 	kfree(intr);
- err0:
- 	uea_leaves(INS_TO_USBDEV(sc));
--	return -ENOMEM;
-+	return ret;
- }
- 
- /*
-@@ -2597,7 +2603,7 @@ static int uea_bind(struct usbatm_data *
- 	if (ret < 0)
- 		goto error;
- 
--	ret = uea_boot(sc);
-+	ret = uea_boot(sc, intf);
- 	if (ret < 0)
- 		goto error_rm_grp;
- 
+-			endpoint = &serial->interface->altsetting[0].
+-							endpoint[i].desc;
++			endpoint = &alt->endpoint[i].desc;
+ 			buffer_size = usb_endpoint_maxp(endpoint);
+ 			if (!interrupt_in_found &&
+ 			    (usb_endpoint_is_int_in(endpoint))) {
 
 
