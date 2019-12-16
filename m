@@ -2,93 +2,107 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4594FC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A198C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:40:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14D0F206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C50FC206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:40:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gvMSEBB0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rglDr0Zg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727500AbfLPKjv (ORCPT
+        id S1727510AbfLPKkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 05:39:51 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:42825 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727319AbfLPKjv (ORCPT
+        Mon, 16 Dec 2019 05:40:49 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54283 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727319AbfLPKkt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 05:39:51 -0500
-Received: by mail-lf1-f65.google.com with SMTP id y19so3826041lfl.9
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 02:39:49 -0800 (PST)
+        Mon, 16 Dec 2019 05:40:49 -0500
+Received: by mail-wm1-f68.google.com with SMTP id b19so6156174wmj.4
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 02:40:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eASUinPkaGZJHOgTIA6SaLKdBIe8ndKbRshIZuG4fiA=;
-        b=gvMSEBB0eZnELFRmfIx+0Ef0369plyPv8mYJq1s4eaHxkEkW5VnmgwqeNz355t5TWl
-         Sn+cFXB4DxEcHvFWI7u/LfZeMLEGqNlsyCnYcJp8bUraj4vhcVxezg0Dn86FM5UNxnmh
-         FSOaLsLlCJHiE9/5Ins+lr6SDTlu88BPlvJwAG5AP7SlSiidb78l00dSDAhzJgtSnvX5
-         lTut3TUCJ+O23llKsTL/fihV3fyGQQi4mkfQGkB5hadELN9w1ha3rPKL11fECr8lzCP9
-         QhiWKUdJmBL98fMhEP1w1sU2at2NGKzQISN0OMgUzUCqFicb2X5kh7CXV543rRcmPfHq
-         xygw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=0cOoGQDuF/leHeXuVHIG0bZx/FGWnrkDzH4GLJ+Xmks=;
+        b=rglDr0ZgAqwDbidXmZemfp0sTHE+rLRQktXE++mmU05D/hZEV0n33gZOLBn2P+d3j3
+         7w9JqaceUfQSm9s8EUkB3V0qugmYa9VR4CXzjdsCeoiV7Qmvr2Ghxk3Gjmwd3V9pALst
+         3PTk7GKBvlmZMfUNbNxkWkjXPbPwY3k/wNRKB20GIF6ihp5FHIXT1xRgHx0VKENX+De9
+         FS3WcQENBYBLdc//BPm+dGEigNSzLLHqC1hddATytoVugn7TfKavSrEis8FpMG9HBTir
+         ile9lmEaf3MYPF1rUAk2SwaJcTISDViFsoAMa9eGoSm+Ea/3mY7Il3QGa5de2OvWaV+a
+         IH0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eASUinPkaGZJHOgTIA6SaLKdBIe8ndKbRshIZuG4fiA=;
-        b=FclZCrBCQeQ5QqZZGJxCAFcmNj7gN8Sl7p2P5AtkafRBT0ffaOtrEZVURLU7Ibivgn
-         TFrmosXiBxrSjnuxVEOeUgovh1Sp1jVZRmjCCw1j8JNp0590XqqqEQbNCuMt7+/nRnc2
-         hu9dMNngY8clIxY1OJjL8cpSPDNzFrP9nJAXYLt52GysBvC+WMP7Eah71cseXsYj++fC
-         hDYRARZApnKiSPTwT4wOf59IX24AsPFVs0oZXbZvBiCfDrGoeGx4T9hmzih/F74aeac0
-         Jh8dIFNtUsOeiys01gE6toatS5z9tEJMC4/4L2o7v5w2qZVZ018qDFsqyyZnCgUejWjl
-         lXfQ==
-X-Gm-Message-State: APjAAAXlOfuk1RXu45WNtHeOPP4TfppQYZNa2eCp50D+c0b4FlG1mq+Y
-        ExvT8THJGJUjGJ/n9vIAs2yHxmx8ghvGEmHU4tLDhw==
-X-Google-Smtp-Source: APXvYqxzt8KKeZI8wgfcQPj0YZ9QX8xthNB6bqmMjGdR0Pj43hONYwxcydmJ2yGX9OFyPLBM5DVYrwUa2gH8n7yfSjI=
-X-Received: by 2002:ac2:5c4b:: with SMTP id s11mr15930092lfp.133.1576492788774;
- Mon, 16 Dec 2019 02:39:48 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=0cOoGQDuF/leHeXuVHIG0bZx/FGWnrkDzH4GLJ+Xmks=;
+        b=YW5kl6LAqfkowshz/E53UXWJsdGtX0VAZ4/coN/Ax68hmFmzJHT0M8H03p2mWxqnhB
+         oDD/2+5ibZme/Lx+pNPh90OkNUNLwLzJ6HdirvPdrCAs7SSiti+XakAkxbXjU7JFIJo/
+         m2L382jnkwYiUzFdwa72PVHBS3JzKbMykc0QJUA1JhgsfSH8IaAyskNdVctO81HBRvrM
+         1tP0GfkElpuiXLiZY/StnTPTmDBxS3a8Tagi3KSfTGX6PLC1GpV0tp1THk6ZQn9MekC+
+         BRLBTq9lcJ0ClciV7WnCQSLPDKKHbrAShhCVJAHIw9KKQfeE6K+7/cXfwklqYokfsmPn
+         rCDA==
+X-Gm-Message-State: APjAAAVyaAuu3t5HQ1mf2+ej5bOhvjVGorgKO99Nzp8KtJr+wIWnd8vq
+        zg1AFjh76L12wv/DObQCIR44Ig==
+X-Google-Smtp-Source: APXvYqwEW+frht1CgarnNf3wI38Y+hg/Ob6gWBcEWROUsJKOZnZAYDi9jLdbazMLQArW6shJjosFtA==
+X-Received: by 2002:a05:600c:21c5:: with SMTP id x5mr28517225wmj.72.1576492847164;
+        Mon, 16 Dec 2019 02:40:47 -0800 (PST)
+Received: from dell ([2.27.35.132])
+        by smtp.gmail.com with ESMTPSA id b17sm21288906wrx.15.2019.12.16.02.40.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 02:40:46 -0800 (PST)
+Date:   Mon, 16 Dec 2019 10:40:46 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Yicheng Li <yichengli@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, bleung@chromium.org,
+        gwendal@chromium.org, enric.balletbo@collabora.com
+Subject: Re: [PATCH v4] mfd / platform: cros_ec: Query EC protocol version if
+ EC transitions between RO/RW
+Message-ID: <20191216104046.GD3601@dell>
+References: <0f223903-ec93-a5ec-e858-fa0e2e282cf3@collabora.com>
+ <20191125221517.91611-1-yichengli@chromium.org>
 MIME-Version: 1.0
-References: <20191211192742.95699-1-brendanhiggins@google.com> <20191211192742.95699-2-brendanhiggins@google.com>
-In-Reply-To: <20191211192742.95699-2-brendanhiggins@google.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 16 Dec 2019 11:39:37 +0100
-Message-ID: <CACRpkdaTJej2zFX0y7mAYymBdGNvHpp3VyU0kOd=ScA_gMAf-A@mail.gmail.com>
-Subject: Re: [PATCH v1 1/7] pinctrl: equilibrium: add unspecified HAS_IOMEM dependency
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     jdike@addtoit.com, Richard Weinberger <richard@nod.at>,
-        anton.ivanov@cambridgegreys.com, linux-um@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        David Gow <davidgow@google.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191125221517.91611-1-yichengli@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 8:28 PM Brendan Higgins
-<brendanhiggins@google.com> wrote:
+On Mon, 25 Nov 2019, Yicheng Li wrote:
 
-> Currently CONFIG_PINCTRL_EQUILIBRIUM=y implicitly depends on
-> CONFIG_HAS_IOMEM=y; consequently, on architectures without IOMEM we get
-> the following build error:
->
-> ld: drivers/pinctrl/pinctrl-equilibrium.o: in function `eqbr_pinctrl_probe':
-> drivers/pinctrl/pinctrl-equilibrium.c:908: undefined reference to `devm_platform_ioremap_resource'
-> ld: drivers/pinctrl/pinctrl-equilibrium.c:223: undefined reference to `devm_ioremap_resource'
->
-> Fix the build error by adding the CONFIG_HAS_IOMEM=y dependency.
->
-> Reported-by: Brendan Higgins <brendanhiggins@google.com>
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> RO and RW of EC may have different EC protocol version. If EC transitions
+> between RO and RW, but AP does not reboot (this is true for fingerprint
+> microcontroller / cros_fp, but not true for main ec / cros_ec), the AP
+> still uses the protocol version queried before transition, which can
+> cause problems. In the case of fingerprint microcontroller, this causes
+> AP to send the wrong version of EC_CMD_GET_NEXT_EVENT to RO in the
+> interrupt handler, which in turn prevents RO to clear the interrupt
+> line to AP, in an infinite loop.
+> 
+> Once an EC_HOST_EVENT_INTERFACE_READY is received, we know that there
+> might have been a transition between RO and RW, so re-query the protocol.
+> 
+> Signed-off-by: Yicheng Li <yichengli@chromium.org>
+> ---
+>  drivers/platform/chrome/cros_ec.c           | 24 +++++++++++++++++++++
+>  include/linux/platform_data/cros_ec_proto.h |  3 +++
+>  2 files changed, 27 insertions(+)
 
-Patch applied but I augmented it with the recently added
-OF dependency so it now says:
-depends on OF && HAS_IOMEM
+This is not an MFD patch.  Please drop it from the subject line.
 
-Yours,
-Linus Walleij
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
