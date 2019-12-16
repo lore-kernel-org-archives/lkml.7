@@ -2,132 +2,94 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB11C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 05:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1955C2D0CF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 05:14:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E49CA20726
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 05:13:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576473184;
-	bh=u30hsvfmxLLRZKaKVXVEyyCEtFrlbAUIga1Wrb+EjNk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MOCTX/Va86IVrw4Rok8CpVN9BDNM7xEOWIKdWMyhcrOIbgk5QlCxUhUpbPnbpYLso
-	 EcKCUZNj/KVWVhdOwnnCTp3MO7rzIlMuCayXt+PjOEcTms2IQICNlcVbU/yrFIMAAX
-	 xevbP2aS0vKIX9l1Wi0ANXdNl0ln504hhYHpqsoc=
+	by mail.kernel.org (Postfix) with ESMTP id 8820A20726
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 05:14:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vU2NvP/+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbfLPFND (ORCPT
+        id S1726587AbfLPFOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 00:13:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52562 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbfLPFNC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 00:13:02 -0500
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C59FF20717;
-        Mon, 16 Dec 2019 05:13:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576473182;
-        bh=u30hsvfmxLLRZKaKVXVEyyCEtFrlbAUIga1Wrb+EjNk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NgvgAuBH81IrY45jaSX7FK7WFtbFgk5w3B05coowZlvCvLn76QsPAa0voTiDqSy1b
-         F79OMWGXiq4z0kdOLrSy507lFA50pi6vEVG1WlM0Opk9jQudIerDpvgN4nQY7CKvX5
-         db/ioZDMHhJk7etTUA4w2XKuXQ+RZDKvNbHgvrsE=
-Date:   Sun, 15 Dec 2019 21:13:00 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Dominik Brodowski <linux@dominikbrodowski.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] init: use do_mount() instead of ksys_mount()
-Message-ID: <20191216051300.GB908@sol.localdomain>
-References: <20191212135724.331342-1-linux@dominikbrodowski.net>
- <20191212135724.331342-4-linux@dominikbrodowski.net>
- <20191216013536.5wyvq4vjv5efd35n@core.my.home>
- <CAHk-=wh8VLe3AEKhz=1bzSO=1fv4EM71EhufxuC=Gp=+bLhXoA@mail.gmail.com>
+        Mon, 16 Dec 2019 00:14:31 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40774 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbfLPFOb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 00:14:31 -0500
+Received: by mail-pg1-f196.google.com with SMTP id k25so2968422pgt.7
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 21:14:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4tAJsQUYEH96QRekobXV8hZQE4YeKw/mZfBdVHuGi8Y=;
+        b=vU2NvP/+ImU/+phWf6dm2B4B+y40+UqBMir5Sh0FtMyYKIrsC+cfe71kjekqouYf+Y
+         EWFRtOadzJU4nj1tuIs84faGk80kJVpc67RvKb85hIRKc3RjsKzQIwMu/inAvJ3GIDKv
+         Vlaavj9NwPX3PVEb9oO6axB4WGpzkYljw6SHFGTN5lOZ+cJWHnPNGzb+E0AQ2A9dfsFL
+         97/vs13xxmYL0jzX2g8P4D4zSHvjH/M+FbPUQyGXEYix0mLUMPI2wVZ05qT92BI/xDir
+         E5V0NHekfgqZ3Vo1Ak2FLhMo8moE0OkiZB08l5RHuPE3AH9GwvBbBWrlNcQovONqP6Q8
+         WjPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4tAJsQUYEH96QRekobXV8hZQE4YeKw/mZfBdVHuGi8Y=;
+        b=nJNHAhKO2C/hWzyZhEtMgkA4W4u9WQq3/5UdkaBtFOfYPBE9emb6uCaZiw3otBN2ap
+         0a0v9lzmG+H2qDEpSgRs300sb1d11T/0ndwE4C6wdl9EXkw7Q1cPaNN3FemWZTj5ksg7
+         bznpepGH9e25neP+GrdpBYWJ79pW3VIL6YaIYTfTBwk4HTjOrdMrfV79Fa1nzZLu634V
+         lD/PPya7xH+Hj6yZlpuPEJIWk2qtlfvWEvlJS9LdiLZdUXmDJnk7wy/9+2DSYlRjQj/j
+         YKEPnVPa+SdLtu8hZn1rTrIhwdrkFaMqWI6rcbnpbsy2ATEpTX/KdNUZSXtDzUCvcG7U
+         dD4A==
+X-Gm-Message-State: APjAAAUnZOrR3G+ASTlckJO4NMPLqJSPK5wsHjPogfzGfw7AcR76h8iB
+        SyE6+XZfG/n2u9zLkdINTJY4zQ==
+X-Google-Smtp-Source: APXvYqzC5De4BPX/MiHF9SP05W5ga/3NbLK9xx+Hd08yHPq3qnxcx6z19dLTZJYraPd/Ky7SSiEDCA==
+X-Received: by 2002:a62:3784:: with SMTP id e126mr14101294pfa.228.1576473270160;
+        Sun, 15 Dec 2019 21:14:30 -0800 (PST)
+Received: from localhost ([122.171.234.168])
+        by smtp.gmail.com with ESMTPSA id m3sm19486667pgp.32.2019.12.15.21.14.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 15 Dec 2019 21:14:28 -0800 (PST)
+Date:   Mon, 16 Dec 2019 10:44:26 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] opp: Free static OPPs on errors while adding them
+Message-ID: <20191216051426.pizsckvvgx7qxmpc@vireshk-i7>
+References: <befccaf76d647f30e03c115ed7a096ebd5384ecd.1574074666.git.viresh.kumar@linaro.org>
+ <20191129022706.rargieilar3dq3pg@vireshk-i7>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHk-=wh8VLe3AEKhz=1bzSO=1fv4EM71EhufxuC=Gp=+bLhXoA@mail.gmail.com>
+In-Reply-To: <20191129022706.rargieilar3dq3pg@vireshk-i7>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 15, 2019 at 07:50:23PM -0800, Linus Torvalds wrote:
-> On Sun, Dec 15, 2019 at 5:35 PM Ondřej Jirman <megi@xff.cz> wrote:
-> >
-> > Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+On 29-11-19, 07:57, Viresh Kumar wrote:
+> On 18-11-19, 16:32, Viresh Kumar wrote:
+> > The static OPPs aren't getting freed properly, if errors occur while
+> > adding them. Fix that by calling _put_opp_list_kref() and putting their
+> > reference on failures.
+> > 
+> > Fixes: 11e1a1648298 ("opp: Don't decrement uninitialized list_kref")
+> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 > 
-> Duh. So much for the trivial obvious conversion.
-> 
-> It didn't take "data might be NULL" into account.
-> 
-> A patch like this, perhaps? Untested..
-> 
->                Linus
+> @Stephen: Any inputs here on this series ?
 
->  init/do_mounts.c | 23 +++++++++++++----------
->  1 file changed, 13 insertions(+), 10 deletions(-)
-> 
-> diff --git a/init/do_mounts.c b/init/do_mounts.c
-> index f55cbd9cb818..d204f605dbce 100644
-> --- a/init/do_mounts.c
-> +++ b/init/do_mounts.c
-> @@ -391,17 +391,19 @@ static int __init do_mount_root(const char *name, const char *fs,
->  				 const int flags, const void *data)
->  {
->  	struct super_block *s;
-> -	char *data_page;
-> -	struct page *p;
-> +	struct page *p = NULL;
-> +	char *data_page = NULL;
->  	int ret;
->  
-> -	/* do_mount() requires a full page as fifth argument */
-> -	p = alloc_page(GFP_KERNEL);
-> -	if (!p)
-> -		return -ENOMEM;
-> -
-> -	data_page = page_address(p);
-> -	strncpy(data_page, data, PAGE_SIZE - 1);
-> +	if (data) {
-> +		/* do_mount() requires a full page as fifth argument */
-> +		p = alloc_page(GFP_KERNEL);
-> +		if (!p)
-> +			return -ENOMEM;
-> +		data_page = page_address(p);
-> +		strncpy(data_page, data, PAGE_SIZE - 1);
-> +		data_page[PAGE_SIZE - 1] = '\0';
-> +	}
->  
->  	ret = do_mount(name, "/root", fs, flags, data_page);
->  	if (ret)
-> @@ -417,7 +419,8 @@ static int __init do_mount_root(const char *name, const char *fs,
->  	       MAJOR(ROOT_DEV), MINOR(ROOT_DEV));
->  
->  out:
-> -	put_page(p);
-> +	if (p)
-> +		put_page(p);
->  	return ret;
+Last ping before I queue them up :)
 
-I'm seeing the boot crash too, and Linus' patch fixes it.
-
-Note that adding the line
-
-		data_page[PAGE_SIZE - 1] = '\0';
-
-is not necessary since do_mount() already does it.
-
-- Eric
+-- 
+viresh
