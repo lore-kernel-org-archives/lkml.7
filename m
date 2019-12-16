@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66BCAC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A52C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AA2D20684
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:37:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD24C206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:37:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521447;
-	bh=Tgt3hYhn2Vbxqxu5CwkS5iRqCOUt0A3BTITnlSbICao=;
+	s=default; t=1576521455;
+	bh=KiyNRWnPGiJF+WXmZXgXlZosUasZ2NlvW0XqNFnF0p0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ef0mK1JrgCIxticfawKb2RQj+ZttvyfFYTSVKNB5FQUX17hg2Eg84ep+tbY5ezGbd
-	 1iW0zXYB+KsEGx6DH/jMZJc52vu/a1ybOPUludvTxfvcLXvvWfqvpMVR35/4k5qTdX
-	 6+Yv13HtAX3lFSKGicv0dzRvVEDUvNzm4SMzdh8I=
+	b=qpVNtqjNerKYkGcfjNuaWDCkMPX5mUu3NSvYK+hrr6Uovx3aHeJJO/sgri+7jMDj1
+	 hq0JtXG3cS1jujZE2c4lg89G6Ns8IRYrot0Nn1rik11KRVerZqsgZaM7gyj4vnkFk1
+	 fAHUOzd+QlfBntDevGFv9Q/eOEi1Qc3XO0710yL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730225AbfLPShZ (ORCPT
+        id S1730069AbfLPShf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:37:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46202 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:37:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729953AbfLPSGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:06:18 -0500
+        id S1729927AbfLPSGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:06:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1A782072B;
-        Mon, 16 Dec 2019 18:06:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D81D02072D;
+        Mon, 16 Dec 2019 18:06:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519577;
-        bh=Tgt3hYhn2Vbxqxu5CwkS5iRqCOUt0A3BTITnlSbICao=;
+        s=default; t=1576519565;
+        bh=KiyNRWnPGiJF+WXmZXgXlZosUasZ2NlvW0XqNFnF0p0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YVcZ2C67IKL3HChYGwD86I/MpQnddJVxfeRIP2LVUgtnBpNat93CCsItJaDScaeUF
-         mnwvRcv/2MwcfK10nng+M7BFdGiKKQ8p/XM0Psz44h+Yp5iF58uJrKcD2S9ASx508p
-         SutISMlXeCgjqktFvr43LqY8XCB4nemfLDRa6u/w=
+        b=0ZZd4q720VcAOlaCVh6loIb8BrgT5DxMgEHEcbbm7xEXdznkF3DonfDCZlfSwQ1fN
+         KXebLk9yXE/0LBzrUJLvFXhBhSvUKu2hP0Qc6DrJA3CUXaL0nhsILtEyYeUrrNjE4/
+         a0h7N7/xWufur3NxAsfYV0yyLPbVRelMoxW8Z7R8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shirish S <shirish.s@amd.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 122/140] x86/MCE/AMD: Turn off MC4_MISC thresholding on all family 0x15 models
-Date:   Mon, 16 Dec 2019 18:49:50 +0100
-Message-Id: <20191216174822.819543339@linuxfoundation.org>
+        stable@vger.kernel.org, Huazhong Tan <tanhuazhong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 118/140] net: hns3: change hnae3_register_ae_dev() to int
+Date:   Mon, 16 Dec 2019 18:49:46 +0100
+Message-Id: <20191216174820.078472441@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -64,47 +61,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shirish S <Shirish.S@amd.com>
+From: Huazhong Tan <tanhuazhong@huawei.com>
 
-[ Upstream commit c95b323dcd3598dd7ef5005d6723c1ba3b801093 ]
+[ Upstream commit 74354140a579008fd164241e3697d9c37e5b8989 ]
 
-MC4_MISC thresholding is not supported on all family 0x15 processors,
-hence skip the x86_model check when applying the quirk.
+hnae3_register_ae_dev() may fail, and it should return a error code
+to its caller, so change hnae3_register_ae_dev() return type to int.
 
- [ bp: massage commit message. ]
+Also, when hnae3_register_ae_dev() return error, hns3_probe() should
+do some error handling and return the error code.
 
-Signed-off-by: Shirish S <shirish.s@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/1547106849-3476-2-git-send-email-shirish.s@amd.com
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/mcheck/mce.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hnae3.c     | 10 +++++++++-
+ drivers/net/ethernet/hisilicon/hns3/hnae3.h     |  2 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c |  8 ++++++--
+ 3 files changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/mcheck/mce.c b/arch/x86/kernel/cpu/mcheck/mce.c
-index fee118b3b69fd..a0bc7f7570814 100644
---- a/arch/x86/kernel/cpu/mcheck/mce.c
-+++ b/arch/x86/kernel/cpu/mcheck/mce.c
-@@ -1632,11 +1632,10 @@ static int __mcheck_cpu_apply_quirks(struct cpuinfo_x86 *c)
- 			mce_flags.overflow_recov = 1;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.c b/drivers/net/ethernet/hisilicon/hns3/hnae3.c
+index 2097f92e14c5c..f98bff60bec37 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hnae3.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.c
+@@ -239,7 +239,7 @@ EXPORT_SYMBOL(hnae3_unregister_ae_algo);
+  * @ae_dev: the AE device
+  * NOTE: the duplicated name will not be checked
+  */
+-void hnae3_register_ae_dev(struct hnae3_ae_dev *ae_dev)
++int hnae3_register_ae_dev(struct hnae3_ae_dev *ae_dev)
+ {
+ 	const struct pci_device_id *id;
+ 	struct hnae3_ae_algo *ae_algo;
+@@ -260,6 +260,7 @@ void hnae3_register_ae_dev(struct hnae3_ae_dev *ae_dev)
  
- 		/*
--		 * Turn off MC4_MISC thresholding banks on those models since
-+		 * Turn off MC4_MISC thresholding banks on all models since
- 		 * they're not supported there.
- 		 */
--		if (c->x86 == 0x15 &&
--		    (c->x86_model >= 0x10 && c->x86_model <= 0x1f)) {
-+		if (c->x86 == 0x15) {
- 			int i;
- 			u64 hwcr;
- 			bool need_toggle;
+ 		if (!ae_dev->ops) {
+ 			dev_err(&ae_dev->pdev->dev, "ae_dev ops are null\n");
++			ret = -EOPNOTSUPP;
+ 			goto out_err;
+ 		}
+ 
+@@ -286,8 +287,15 @@ void hnae3_register_ae_dev(struct hnae3_ae_dev *ae_dev)
+ 				ret);
+ 	}
+ 
++	mutex_unlock(&hnae3_common_lock);
++
++	return 0;
++
+ out_err:
++	list_del(&ae_dev->node);
+ 	mutex_unlock(&hnae3_common_lock);
++
++	return ret;
+ }
+ EXPORT_SYMBOL(hnae3_register_ae_dev);
+ 
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
+index f5c7fc9c5e5cc..5e1a7ab06c63b 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
+@@ -513,7 +513,7 @@ struct hnae3_handle {
+ #define hnae3_get_bit(origin, shift) \
+ 	hnae3_get_field((origin), (0x1 << (shift)), (shift))
+ 
+-void hnae3_register_ae_dev(struct hnae3_ae_dev *ae_dev);
++int hnae3_register_ae_dev(struct hnae3_ae_dev *ae_dev);
+ void hnae3_unregister_ae_dev(struct hnae3_ae_dev *ae_dev);
+ 
+ void hnae3_unregister_ae_algo(struct hnae3_ae_algo *ae_algo);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index 4b4d9de0a6bb5..0788e78747d94 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -1604,9 +1604,13 @@ static int hns3_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	ae_dev->dev_type = HNAE3_DEV_KNIC;
+ 	pci_set_drvdata(pdev, ae_dev);
+ 
+-	hnae3_register_ae_dev(ae_dev);
++	ret = hnae3_register_ae_dev(ae_dev);
++	if (ret) {
++		devm_kfree(&pdev->dev, ae_dev);
++		pci_set_drvdata(pdev, NULL);
++	}
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ /* hns3_remove - Device removal routine
 -- 
 2.20.1
 
