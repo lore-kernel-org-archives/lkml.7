@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DF6C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C1AC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BE5724650
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:48:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 237DF2467E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:48:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576529298;
-	bh=jfxuM7EDEBwTryE1SB6k15JHMWELbwmkEP+82fa02Zk=;
+	s=default; t=1576529302;
+	bh=30BeyDbJp+PUY3TJbi0EEvOIRwxjMQruO5n6kCSaXDA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tihRGPthA98nQOzDNbBsLwVm9hKof6Nk3HvZsoSJQy3Z0PinD1s0IftAqxbCWl4tS
-	 FXhYxxLMOPctgh2BWTPABaUkYiMxZVwEDZbueJ905EDqbxkb4iQIbirBnKo5l/Yi22
-	 OhiIo0OVa8c5JJsV2+t8dWI7VF8wRtJ8EM4pTcOQ=
+	b=Y6nK5SgONg21Mw/qyz4gMg58ODCdbxv11/yRZRiL+QAA2T3ajVdkCTmFFxxnbMHV/
+	 wjnmPuhEGuSv8vVTNJkAStZObec9LeJ7VYrAjwjxpbcTe7HjGTH05sywAEKSEL7gDp
+	 mVafveKrrWAy4peznQT1d6CYYS3jX6y3+wEgNfaw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727469AbfLPUsR (ORCPT
+        id S1727536AbfLPUsV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 15:48:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56702 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 15:48:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727420AbfLPUsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 15:48:15 -0500
+        id S1727501AbfLPUsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 15:48:19 -0500
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF389218AC;
-        Mon, 16 Dec 2019 20:48:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5360621D7D;
+        Mon, 16 Dec 2019 20:48:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576529294;
-        bh=jfxuM7EDEBwTryE1SB6k15JHMWELbwmkEP+82fa02Zk=;
+        s=default; t=1576529299;
+        bh=30BeyDbJp+PUY3TJbi0EEvOIRwxjMQruO5n6kCSaXDA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lxg4PmH5TckN4DloCMTBPdLJhz1W0nof7YHTqZeSTVUb73SJd/vxvg7yalCzcRr9n
-         mf1zAG7XNmdnoSm6W1EVBDQnWaVIqN0G26lRCzwsNMhhzGLVf6AlCr6+e3P+UT3V8X
-         zS5SwmiAmDWUboNbOr8QnXiA+Tf08bpPz8t8d5ww=
+        b=Es0rhX3tIYvAGJxuAyVJkcUMlIfsQ9bmtOdgiAaj/o0l6VosoRgFBcaybjM0U6Dj3
+         Ru6jUcTHwye6C/y88gQYBmdko6+ZeDp6Y3MxRiMPbpt5b2MSmMx/r/EVO2Og9rduET
+         x6hAR5y7vAcuq0NAvEa7gG1bM69xn8VRcd4pSmP4=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -55,9 +55,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Thomas Richter <tmricht@linux.ibm.com>,
         Vincent Chen <deanbo422@gmail.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 8/9] perf vendor events s390: Fix counter long description for DTLB1_GPAGE_WRITES
-Date:   Mon, 16 Dec 2019 17:47:37 -0300
-Message-Id: <20191216204738.12107-9-acme@kernel.org>
+Subject: [PATCH 9/9] perf vendor events s390: Remove name from L1D_RO_EXCL_WRITES description
+Date:   Mon, 16 Dec 2019 17:47:38 -0300
+Message-Id: <20191216204738.12107-10-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191216204738.12107-1-acme@kernel.org>
 References: <20191216204738.12107-1-acme@kernel.org>
@@ -70,11 +70,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ed Maste <emaste@freebsd.org>
 
-The cf_z13 counter DTLB1_GPAGE_WRITES included a prefix
-'Counter:132\tName:'.
+In 7fcfa9a2d9 an unintended prefix "Counter:18 Name:" was removed from
+the description for L1D_RO_EXCL_WRITES, but the extra name remained in
+the description.  Remove it too.
 
-This is incorrect; remove the prefix as with 7fcfa9a2d9 for cf_z14.
-
+Fixes: 7fcfa9a2d9a7 ("perf list: Fix s390 counter long description for L1D_RO_EXCL_WRITES")
 Signed-off-by: Ed Maste <emaste@freebsd.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Greentime Hu <green.hu@gmail.com>
@@ -85,22 +85,22 @@ Cc: Nick Hu <nickhu@andestech.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Richter <tmricht@linux.ibm.com>
 Cc: Vincent Chen <deanbo422@gmail.com>
-Link: http://lore.kernel.org/lkml/20191212143446.88582-1-emaste@freefall.freebsd.org
+Link: http://lore.kernel.org/lkml/20191212145346.5026-1-emaste@freefall.freebsd.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/pmu-events/arch/s390/cf_z13/extended.json | 2 +-
+ tools/perf/pmu-events/arch/s390/cf_z14/extended.json | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/pmu-events/arch/s390/cf_z13/extended.json b/tools/perf/pmu-events/arch/s390/cf_z13/extended.json
-index 436ce33f1182..5da8296b667e 100644
---- a/tools/perf/pmu-events/arch/s390/cf_z13/extended.json
-+++ b/tools/perf/pmu-events/arch/s390/cf_z13/extended.json
-@@ -32,7 +32,7 @@
- 		"EventCode": "132",
- 		"EventName": "DTLB1_GPAGE_WRITES",
- 		"BriefDescription": "DTLB1 Two-Gigabyte Page Writes",
--		"PublicDescription": "Counter:132	Name:DTLB1_GPAGE_WRITES A translation entry has been written to the Level-1 Data Translation Lookaside Buffer for a two-gigabyte page."
-+		"PublicDescription": "A translation entry has been written to the Level-1 Data Translation Lookaside Buffer for a two-gigabyte page."
+diff --git a/tools/perf/pmu-events/arch/s390/cf_z14/extended.json b/tools/perf/pmu-events/arch/s390/cf_z14/extended.json
+index 68618152ea2c..89e070727e1b 100644
+--- a/tools/perf/pmu-events/arch/s390/cf_z14/extended.json
++++ b/tools/perf/pmu-events/arch/s390/cf_z14/extended.json
+@@ -4,7 +4,7 @@
+ 		"EventCode": "128",
+ 		"EventName": "L1D_RO_EXCL_WRITES",
+ 		"BriefDescription": "L1D Read-only Exclusive Writes",
+-		"PublicDescription": "L1D_RO_EXCL_WRITES A directory write to the Level-1 Data cache where the line was originally in a Read-Only state in the cache but has been updated to be in the Exclusive state that allows stores to the cache line"
++		"PublicDescription": "A directory write to the Level-1 Data cache where the line was originally in a Read-Only state in the cache but has been updated to be in the Exclusive state that allows stores to the cache line"
  	},
  	{
  		"Unit": "CPU-M-CF",
