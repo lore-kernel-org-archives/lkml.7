@@ -2,85 +2,90 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B816FC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF88C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84E38206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:33:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67EF720725
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:35:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RDOSNMLe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qBC68jjJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727497AbfLPKdf (ORCPT
+        id S1727431AbfLPKfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 05:33:35 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:39641 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727330AbfLPKdf (ORCPT
+        Mon, 16 Dec 2019 05:35:34 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:43244 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727099AbfLPKfe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 05:33:35 -0500
-Received: by mail-lf1-f68.google.com with SMTP id y1so3830597lfb.6
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 02:33:34 -0800 (PST)
+        Mon, 16 Dec 2019 05:35:34 -0500
+Received: by mail-ed1-f68.google.com with SMTP id dc19so4542047edb.10;
+        Mon, 16 Dec 2019 02:35:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Kf4GwMcKEyP7E4ADJPoI/Ppjsvr0zxu955LKFceYGDw=;
-        b=RDOSNMLefpSQpETal85Bim9dPhogcTCS67hhUNMY+1TEzPu40+B8/Ri9cpSlWYEzEr
-         X0vgBsDyYL2PXIC/0V8fl10D9tSbnPiZia3+s+/eCCTadthyMr6NucS5B/3O9mHT/Txd
-         fT68R1/ja79MMnNvWrrDwVtb1c3M0R0dnE7pGC65XQPv62Zun2qZMLG2tLswiZ0c/mLi
-         8M57mVlVCQbwQ95NMX5/Mzz31bsQBbwwx6cK2VRiRzIyMVMkt411kY9yfNq9a7SDQfXB
-         A2aTBqHcTVtIfNymGpOn2uThr3BELb8O+zSDS14EJFP0G1CQlffGF9hZ+fxv6jj2/Q1J
-         fk8w==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TeIkQ7z7qybAupiPPl64fND/maLNJXlkx+NsGT115tg=;
+        b=qBC68jjJrXzlLPmkC9BdLk5QDfErJAbpx9TWjTJegzGtit754Odn4gUmB5tXyXQ9MV
+         NWM4pfGT6mtA3TDGIhwh1tsiCcpJtYj7pvWxLEmjT/8Lxr1M6IWabHLDetm49zeJGtab
+         zrflNPs9/+YQCAJrmyMONUB9+MXjprlOfA7MChG6vJ4jWhnUtmNEz8NC5zri3z+BztzC
+         5OHigzlXXO6B0loCN0Qy0/4YYCWlyJ6zbZ3e2qIFO0B1xkEgt/XzbFqpw7Y2mZQb9rgc
+         mK2YTqNGGv4UfhjYaaQVpp7ua7gsTxxRknMJGHYivTRYz48j4kx01IhNNgVPu76Ztvoj
+         lWqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Kf4GwMcKEyP7E4ADJPoI/Ppjsvr0zxu955LKFceYGDw=;
-        b=mNQbSK1e3wlGrpPT1VPxpdYm/HuztpffHNU5eG41uWEdYrnnoDBke0q5xQx/2Rcubw
-         wPTHzQTk+mrkkpigWnBNfcJ4Ixp0wY77Etm7xDzSAx3zkyjq0j2XQZgfN4ub7KYyHw03
-         Kktvh1LZa0cjqTYIUIvTS8xGcvJLiwGKno95ZHkmdbZ9XVDQfHufvN3O8z/YhQR9CUwW
-         cfzQJc/K4fs16CZt1o0EGW9IORInh/FVUG90HJyRKfgYwtT9H5TRkvnvqpJDvQIZkamP
-         AF/xsKfaSOtTcDa/yec9hIOQDB8KLuqyNdbPMcqyG6aTdOzIEz20cBMgebHQV33ouV2Q
-         Zw5A==
-X-Gm-Message-State: APjAAAWBCZxLxjdmHaihBdeaxzIQa4KNaGlwygiDp1r8e3kfSkxMve8B
-        oxgQA8OSSMa3t+Uv2cWHHzyt9LqaxXuxFu/fP6f1gw==
-X-Google-Smtp-Source: APXvYqymHPUmY8/CzNHdDAD6AwTm1kirH1H2wRv3LEavU5/vztz8RFIuac9dcS+gpU/Uw8IJghQSICFKXObovOuodQw=
-X-Received: by 2002:ac2:4945:: with SMTP id o5mr15747213lfi.93.1576492413336;
- Mon, 16 Dec 2019 02:33:33 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TeIkQ7z7qybAupiPPl64fND/maLNJXlkx+NsGT115tg=;
+        b=fUc9BLCJFl6yXRlMoQvDRpcCUx8bZXX1oDi+QVoBiGgl71nDY2//4zVjN9YCdixL7l
+         duZL3jk4kUw/Dn4kvHWwtytNVPNH+VsGGxIFs6+tUVRFVOPT1rKITlXIAuWEri3DhjlW
+         ZA7l3ZDmEaCPIGeDopOnYvl82wk5qWwMNzSjkaSx6J5lEE1Cv0W0nbBEJm+V8+9/yLBm
+         +VZ8vuAXl7oynoCUWKbtP5TJHW93GSZCF4OaDWbVXRBPHgkE1AxwWU4cIomi60mqgK8O
+         ywd9Y1U+wyihmlf2kcx2CFoeqqkUW6fVsqxU1wwVNOliuOSkXv9cF6JhBnml7bFyFalb
+         c4qA==
+X-Gm-Message-State: APjAAAWU2VP90jmh4M2q/dlkm4IiDVoTfMXvOuOEVHJh1AgL6K5y3RrY
+        Diwq/csaWOF8bvnK8LCxBYk=
+X-Google-Smtp-Source: APXvYqx0LwqMVlZ6eOiMsX6InbuTzF7YtcARL8JZbcrOPsRj4NMnesm1YwHKAVIphyvOkS7P7xQc1g==
+X-Received: by 2002:a17:906:3486:: with SMTP id g6mr32428778ejb.50.1576492532038;
+        Mon, 16 Dec 2019 02:35:32 -0800 (PST)
+Received: from localhost.localdomain ([46.114.39.109])
+        by smtp.googlemail.com with ESMTPSA id n24sm504191edr.30.2019.12.16.02.35.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 02:35:30 -0800 (PST)
+From:   Gon Solo <gonsolo@gmail.com>
+To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Gon Solo <gonsolo@gmail.com>, linux-sh@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/1] Fix SH config error.
+Date:   Mon, 16 Dec 2019 11:35:21 +0100
+Message-Id: <20191216103522.32215-1-gonsolo@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20191212160413.15232-1-m.felsch@pengutronix.de>
- <20191212160413.15232-4-m.felsch@pengutronix.de> <AM5PR1001MB0994E2D72A95E4AC4796F80A80550@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
- <20191216074734.ctjxx6rqtj6mt2dw@pengutronix.de>
-In-Reply-To: <20191216074734.ctjxx6rqtj6mt2dw@pengutronix.de>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 16 Dec 2019 11:33:21 +0100
-Message-ID: <CACRpkdbZ67jp64oMS0Q=aDuo18i_fT22grST0qSVjk_9EV=4hw@mail.gmail.com>
-Subject: Re: [RESEND PATCH v3 3/3] pinctrl: da9062: add driver support
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 8:47 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
+This fixes an error reported at 
+http://kisskb.ellerman.id.au/kisskb/buildresult/14067948.
 
-> Nice catch, Linus is it okay to add this as follow up patch? The current
-> patch isn't wrong without the 'PIN_CONFIG_BIAS_DISABLE' case.
+On SH4 it was possible to configure NUMA without SMP.
 
-No strong opinion on that as long as the result is running code.
+Gon Solo (1):
+  Fix undefined reference to 'node_reclaim_distance'.
 
-Yours,
-Linus Walleij
+ arch/sh/mm/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+-- 
+2.20.1
+
