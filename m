@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83641C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6BDC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53E41206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:47:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85B422082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:47:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576522033;
-	bh=BQ+UarkZnY/9e1W3RwRUZE+Dnq+bf/y+cbKkp4BNUMc=;
+	s=default; t=1576522035;
+	bh=TtcWSKnRs5jJmTfRltWPXQ/eCifLbm2JfGqcP6Kw5xM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tt5gSvDKOJKezIiL4ZnlMZzG/FnNOgJN4uveTOOmmzH3qGx/ikyHMafkiE76LJEIF
-	 WkoiBTV1rC1lcxQKriGqtvZTLdNXCprWt6ZUkP/IcYuNoY1mgCxBvbYDSzd+7mJPWb
-	 atVr/7qvpOOW27mWLopUGFcRgEpNpdZNshOWr6fc=
+	b=wTXBLrCgirXp47ff1ebyuxgwsKi3VuZpS3zE6f4oOVF4sA++vw1ZkXLgnR/4qvC88
+	 r6sOC83C/9Ws5qLMz+35xFH6jxRf5iUtRVM6OsV/sZTrGBE3oJCXnFl2zEBRr+5iZN
+	 Pu530QZzi4Hw3Da+AHJMt9uoeVDEYPswTS9XNb6U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727632AbfLPRzd (ORCPT
+        id S1728319AbfLPSrO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:55:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52742 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:47:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727727AbfLPRza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:55:30 -0500
+        id S1728040AbfLPRzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:55:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC7CE20663;
-        Mon, 16 Dec 2019 17:55:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2756421582;
+        Mon, 16 Dec 2019 17:55:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518930;
-        bh=BQ+UarkZnY/9e1W3RwRUZE+Dnq+bf/y+cbKkp4BNUMc=;
+        s=default; t=1576518932;
+        bh=TtcWSKnRs5jJmTfRltWPXQ/eCifLbm2JfGqcP6Kw5xM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q0KpKmO2csAnJ3m7KPsdRg/NhIMeWXYMM22EKJgNsTRAKUW0mgzfE5CeWeAEFZDrH
-         sIk+ma2YlHfPUfrZxm/3W2A5Esde5f104rVgsPWDvAEWH3hmdl/tYL15Io5c7AfU/+
-         KuzUNgxaXDwtPhaPpypgRW2RFvGhcGnyw26mISCc=
+        b=B/wD8qOgtJWBOlbjTeFFode4c3EXH5pL0rk2QV27Vs6b2e1EZ/LeP7wBZu9D5HGmD
+         ip/XR5UzdXsqeq6WIdvtVS9jrjJZNLAgp3X69DszvL0m0RsseaQY+pBNYcgbMAyuwF
+         Bbl2K8i4aUzVDRpkUKUTdPwb1dD3AQIb8sJJ8Trk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 125/267] ALSA: hda - Add mute led support for HP ProBook 645 G4
-Date:   Mon, 16 Dec 2019 18:47:31 +0100
-Message-Id: <20191216174903.563751541@linuxfoundation.org>
+        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.14 126/267] Input: synaptics - switch another X1 Carbon 6 to RMI/SMbus
+Date:   Mon, 16 Dec 2019 18:47:32 +0100
+Message-Id: <20191216174903.620762215@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -60,32 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-commit e190de6941db14813032af87873f5550ad5764fe upstream.
+commit fc1156f373e3927e0dcf06678906c367588bfdd6 upstream.
 
-Mic mute led does not work on HP ProBook 645 G4.
-We can use CXT_FIXUP_MUTE_LED_GPIO fixup to support it.
+Some Lenovo X1 Carbon Gen 6 laptops report LEN0091. Add this
+to the smbus_pnp_ids list.
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191120082035.18937-1-kai.heng.feng@canonical.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20191119105118.54285-2-hverkuil-cisco@xs4all.nl
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_conexant.c |    1 +
+ drivers/input/mouse/synaptics.c |    1 +
  1 file changed, 1 insertion(+)
 
---- a/sound/pci/hda/patch_conexant.c
-+++ b/sound/pci/hda/patch_conexant.c
-@@ -960,6 +960,7 @@ static const struct snd_pci_quirk cxt506
- 	SND_PCI_QUIRK(0x103c, 0x837f, "HP ProBook 470 G5", CXT_FIXUP_MUTE_LED_GPIO),
- 	SND_PCI_QUIRK(0x103c, 0x8299, "HP 800 G3 SFF", CXT_FIXUP_HP_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x103c, 0x829a, "HP 800 G3 DM", CXT_FIXUP_HP_MIC_NO_PRESENCE),
-+	SND_PCI_QUIRK(0x103c, 0x8402, "HP ProBook 645 G4", CXT_FIXUP_MUTE_LED_GPIO),
- 	SND_PCI_QUIRK(0x103c, 0x8455, "HP Z2 G4", CXT_FIXUP_HP_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1043, 0x138d, "Asus", CXT_FIXUP_HEADPHONE_MIC_PIN),
- 	SND_PCI_QUIRK(0x152d, 0x0833, "OLPC XO-1.5", CXT_FIXUP_OLPC_XO),
+--- a/drivers/input/mouse/synaptics.c
++++ b/drivers/input/mouse/synaptics.c
+@@ -175,6 +175,7 @@ static const char * const smbus_pnp_ids[
+ 	"LEN0071", /* T480 */
+ 	"LEN0072", /* X1 Carbon Gen 5 (2017) - Elan/ALPS trackpoint */
+ 	"LEN0073", /* X1 Carbon G5 (Elantech) */
++	"LEN0091", /* X1 Carbon 6 */
+ 	"LEN0092", /* X1 Carbon 6 */
+ 	"LEN0093", /* T480 */
+ 	"LEN0096", /* X280 */
 
 
