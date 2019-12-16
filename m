@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40488C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE52EC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 168DE206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 827FC2072B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:08:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519690;
-	bh=zlK8phi/sh4xEBUruI/ErgInYWuipq1OWubLY7IOSrQ=;
+	s=default; t=1576519696;
+	bh=+q9FKvFQoZFCxvd06S8IKHLdtMHXGu5GHZv/pfTJ+Ys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c/rsX4S+KFzkcGwUjvhmK0bvPSSIQ/RSm0l+hlsihR7m1w7dwJXmLcL3M87uXuhMQ
-	 2aDW5u6mR/8xj8eugd35HLQy1DYKYHrumk+IdEaONUZwyEgnwoPJb4l7JFLkaUOCO4
-	 cJ0LBBWpjf9FgJP/HAdLhJim6zeu5U2wAxoGrYTk=
+	b=aZbvFplIC2GZLgnOPG9wX4QdFDyR/TYLuvhFn/1NncQ3rSTc1GxsUaJbP3y9L/Qgr
+	 SzrsrwI+ksNKswNEL+m3KDM6je22W9aQnYM0AUwk85qoacSQz2DWJlVQN8TNi+Iyz3
+	 CDDpjsI2G4/iFwzptPm57mQ6JtQLbW6Ghci8dcJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730092AbfLPSIJ (ORCPT
+        id S1730243AbfLPSIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:08:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49396 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:08:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730219AbfLPSIE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:08:04 -0500
+        id S1730086AbfLPSIM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:08:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 998A6206E0;
-        Mon, 16 Dec 2019 18:08:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A532206E0;
+        Mon, 16 Dec 2019 18:08:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519684;
-        bh=zlK8phi/sh4xEBUruI/ErgInYWuipq1OWubLY7IOSrQ=;
+        s=default; t=1576519691;
+        bh=+q9FKvFQoZFCxvd06S8IKHLdtMHXGu5GHZv/pfTJ+Ys=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G3LoYbvuzQQx2huoThAwzmBK0rx+aFEElIO5OFy7ybvKYECwJeyl+k+kYVbgsolO6
-         LctwF3PpmQSzIw/Fr7m/y096Xra+JUK7wK61XyWk9dzxZ4vWq7uNRx96UTmsmVoLXA
-         aFyhlBnb1vk+B9ZqKebw3Oizr6qVl9Cs+LpCMp84=
+        b=RMLZQ7hpfaqKzLD49otnBRAvU2AsA8lHF7JiXDtWMH/GCniLtz+uSHt8VLXWkuEUs
+         8gYPJudqUz41Qme82rYfO9wJpbVorthdT1jesyzMT91YiAmjSqZoOalHEF+NPZmFgk
+         AXbHlU416lEYP7Wlu+pZ33PM0eZyoMupEeeyzEnw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>
-Subject: [PATCH 5.3 026/180] interconnect: qcom: sdm845: Walk the list safely on node removal
-Date:   Mon, 16 Dec 2019 18:47:46 +0100
-Message-Id: <20191216174811.685771041@linuxfoundation.org>
+        stable@vger.kernel.org, Benjamin Block <bblock@linux.ibm.com>,
+        Steffen Maier <maier@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.3 004/180] scsi: zfcp: trace channel log even for FCP command responses
+Date:   Mon, 16 Dec 2019 18:47:24 +0100
+Message-Id: <20191216174806.792338095@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -60,38 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Georgi Djakov <georgi.djakov@linaro.org>
+From: Steffen Maier <maier@linux.ibm.com>
 
-commit b29b8113bb41285eb7ed55ce0c65017b5c0240f7 upstream.
+commit 100843f176109af94600e500da0428e21030ca7f upstream.
 
-As we will remove items off the list using list_del(), we need to use the
-safe version of list_for_each_entry().
+While v2.6.26 commit b75db73159cc ("[SCSI] zfcp: Add qtcb dump to hba debug
+trace") is right that we don't want to flood the (payload) trace ring
+buffer, we don't trace successful FCP command responses by default.  So we
+can include the channel log for problem determination with failed responses
+of any FSF request type.
 
-Fixes: b5d2f741077a ("interconnect: qcom: Add sdm845 interconnect provider driver")
-Reported-by: Dmitry Osipenko <digetx@gmail.com>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-Cc: <stable@vger.kernel.org> # v5.3+
-Link: https://lore.kernel.org/r/20191212075332.16202-3-georgi.djakov@linaro.org
+Fixes: b75db73159cc ("[SCSI] zfcp: Add qtcb dump to hba debug trace")
+Fixes: a54ca0f62f95 ("[SCSI] zfcp: Redesign of the debug tracing for HBA records.")
+Cc: <stable@vger.kernel.org> #2.6.38+
+Link: https://lore.kernel.org/r/e37597b5c4ae123aaa85fd86c23a9f71e994e4a9.1572018132.git.bblock@linux.ibm.com
+Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
+Signed-off-by: Steffen Maier <maier@linux.ibm.com>
+Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/interconnect/qcom/sdm845.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/s390/scsi/zfcp_dbf.c |    8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
---- a/drivers/interconnect/qcom/sdm845.c
-+++ b/drivers/interconnect/qcom/sdm845.c
-@@ -807,9 +807,9 @@ static int qnoc_remove(struct platform_d
- {
- 	struct qcom_icc_provider *qp = platform_get_drvdata(pdev);
- 	struct icc_provider *provider = &qp->provider;
--	struct icc_node *n;
-+	struct icc_node *n, *tmp;
+--- a/drivers/s390/scsi/zfcp_dbf.c
++++ b/drivers/s390/scsi/zfcp_dbf.c
+@@ -95,11 +95,9 @@ void zfcp_dbf_hba_fsf_res(char *tag, int
+ 	memcpy(rec->u.res.fsf_status_qual, &q_head->fsf_status_qual,
+ 	       FSF_STATUS_QUALIFIER_SIZE);
  
--	list_for_each_entry(n, &provider->nodes, node_list) {
-+	list_for_each_entry_safe(n, tmp, &provider->nodes, node_list) {
- 		icc_node_del(n);
- 		icc_node_destroy(n->id);
- 	}
+-	if (q_head->fsf_command != FSF_QTCB_FCP_CMND) {
+-		rec->pl_len = q_head->log_length;
+-		zfcp_dbf_pl_write(dbf, (char *)q_pref + q_head->log_start,
+-				  rec->pl_len, "fsf_res", req->req_id);
+-	}
++	rec->pl_len = q_head->log_length;
++	zfcp_dbf_pl_write(dbf, (char *)q_pref + q_head->log_start,
++			  rec->pl_len, "fsf_res", req->req_id);
+ 
+ 	debug_event(dbf->hba, level, rec, sizeof(*rec));
+ 	spin_unlock_irqrestore(&dbf->hba_lock, flags);
 
 
