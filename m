@@ -2,52 +2,53 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25037C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9969DC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:27:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF82320717
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:27:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 682D3206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:27:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520823;
-	bh=l3oBwYvLz9ls60wuoWgre1Z4dfrdBGfWK45ZGV2kUcA=;
+	s=default; t=1576520826;
+	bh=nbAfZKHrZcSSt+GsVE2E1uxrIj9hr8EtpdPfmMdnG9I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vYt4JxXBQlKrmFgCQn5LinRYdXXRcMoVJltZ8BrHsvaDt1HISBdCJYvRqF9fpdpQk
-	 mMX2tJRbBF21bqv3uXi+Qr8IYIpn0FkDiSTiQSXg0aiQwRRO1fiYWdH9mm1gLQu7oJ
-	 Olcbv0rE9SWNXSQdaUyzB1ZN/u2ykYuVc1ZwyNAg=
+	b=t+1PNyqn8ZkghkKBv1DBFn5N/Yeyu4kkYLD3KjzcHOPLvc8921+j9OexOgSXhNRzp
+	 n1kMNZjJbAIF399bnYt4IcY7f3WsGg6NwIZKNnk7pM3SvWyh7oiVQJaEXwM8B+bKmp
+	 ZaZTOvHbi6q6eLcbenbjbjWXDx3t/qd6aZT0W3gA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731576AbfLPS1C (ORCPT
+        id S1731193AbfLPSQS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:27:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38822 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:16:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731344AbfLPSQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:16:24 -0500
+        id S1731491AbfLPSQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:16:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EC9520717;
-        Mon, 16 Dec 2019 18:16:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77471206E0;
+        Mon, 16 Dec 2019 18:16:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520183;
-        bh=l3oBwYvLz9ls60wuoWgre1Z4dfrdBGfWK45ZGV2kUcA=;
+        s=default; t=1576520173;
+        bh=nbAfZKHrZcSSt+GsVE2E1uxrIj9hr8EtpdPfmMdnG9I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ehT1LuQWwT0+dDlweg0lo+Rw73O+NTDboExmV5g7Bw6uEPvILkAioV6U9EsER/LBg
-         S0gW2WgQrN+zuqpvO8EXYDbUj3gAlT3SHP8zZlWJ25qR9nc77/VHF6Rb1dlGmieD7j
-         EEoT1m5OAWPrwEmJZ9rvHYxzu0HH8nqNn5KVmA9w=
+        b=O9YKspUlIkFXCbuoQaWw4OVGp5aJy4ua24FFo3G4vd1Vx9sTYGklIIaSIG0uAbnI0
+         nfPTTQKrSYjgFkbv0YQ4po0tmy5ObZxIQEl1v6W6GHdwOND4IGIRNn+OciZ05X8r01
+         aYhNzFFFpNicicRMae0QqKydoR4T0KkCujAo+jrc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tadeusz Struk <tadeusz.struk@intel.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH 5.4 051/177] tpm: add check after commands attribs tab allocation
-Date:   Mon, 16 Dec 2019 18:48:27 +0100
-Message-Id: <20191216174830.435609534@linuxfoundation.org>
+        stable@vger.kernel.org, "Ewan D. Milne" <emilne@redhat.com>,
+        Quinn Tran <qutran@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.4 008/177] scsi: qla2xxx: Fix driver unload hang
+Date:   Mon, 16 Dec 2019 18:47:44 +0100
+Message-Id: <20191216174812.731377005@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -60,37 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tadeusz Struk <tadeusz.struk@intel.com>
+From: Quinn Tran <qutran@marvell.com>
 
-commit f1689114acc5e89a196fec6d732dae3e48edb6ad upstream.
+commit dd322b7f3efc8cda085bb60eadc4aee6324eadd8 upstream.
 
-devm_kcalloc() can fail and return NULL so we need to check for that.
+This patch fixes driver unload hang by removing msleep()
 
+Fixes: d74595278f4ab ("scsi: qla2xxx: Add multiple queue pair functionality.")
 Cc: stable@vger.kernel.org
-Fixes: 58472f5cd4f6f ("tpm: validate TPM 2.0 commands")
-Signed-off-by: Tadeusz Struk <tadeusz.struk@intel.com>
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Tested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Link: https://lore.kernel.org/r/20191105150657.8092-5-hmadhani@marvell.com
+Reviewed-by: Ewan D. Milne <emilne@redhat.com>
+Signed-off-by: Quinn Tran <qutran@marvell.com>
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/char/tpm/tpm2-cmd.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/scsi/qla2xxx/qla_init.c |    2 --
+ 1 file changed, 2 deletions(-)
 
---- a/drivers/char/tpm/tpm2-cmd.c
-+++ b/drivers/char/tpm/tpm2-cmd.c
-@@ -939,6 +939,10 @@ static int tpm2_get_cc_attrs_tbl(struct
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -9021,8 +9021,6 @@ int qla2xxx_delete_qpair(struct scsi_qla
+ 	struct qla_hw_data *ha = qpair->hw;
  
- 	chip->cc_attrs_tbl = devm_kcalloc(&chip->dev, 4, nr_commands,
- 					  GFP_KERNEL);
-+	if (!chip->cc_attrs_tbl) {
-+		rc = -ENOMEM;
-+		goto out;
-+	}
+ 	qpair->delete_in_progress = 1;
+-	while (atomic_read(&qpair->ref_count))
+-		msleep(500);
  
- 	rc = tpm_buf_init(&buf, TPM2_ST_NO_SESSIONS, TPM2_CC_GET_CAPABILITY);
- 	if (rc)
+ 	ret = qla25xx_delete_req_que(vha, qpair->req);
+ 	if (ret != QLA_SUCCESS)
 
 
