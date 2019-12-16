@@ -2,55 +2,51 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45AD4C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D391C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12BC7206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2F55206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:41:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521694;
-	bh=lFMA8F5IsifbE13LGxhgzKLWUnJu7KQspWTXFnixgM8=;
+	s=default; t=1576521701;
+	bh=pJvThVF7UxbRq3U3yLReQeuAsAk3XpB2WnkGmm/W5n4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tg8zuz9+3AyC2Vn3DSYwsU8qu0IM4IzpJaSwC9UxV6cg4PhLfGySMSPxjh5a76SaH
-	 +a1ypJVvB+oMOdTbzMrT/5g+4pwI2HI1Y3rCcRsfYPz8huAaEUurua1EB4nIuFkYm8
-	 UsvRr4VJ+2c0y8xRkygdaYqi28UGPOXYLQgjgig4=
+	b=2tcFzR0/3y0T5UsCBov4kE9rqDatJzHqbBL1f/hdfvExcetIt+qwQNO3C4G7tz0XJ
+	 +R92LCgipRzWZ0ArZ9LEAw6KD8Mx1xqtlmAgT88SDzc2yOWb/4FoY9vYLukf2hyftD
+	 kXFu2Zdn2WuwAqoWklzW2cCrq/d8IB+PUcA3pVvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729342AbfLPSlc (ORCPT
+        id S1729303AbfLPSll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:41:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36010 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:41:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728774AbfLPSBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:01:13 -0500
+        id S1729078AbfLPSBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:01:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C68C206B7;
-        Mon, 16 Dec 2019 18:01:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D752206B7;
+        Mon, 16 Dec 2019 18:01:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519272;
-        bh=lFMA8F5IsifbE13LGxhgzKLWUnJu7KQspWTXFnixgM8=;
+        s=default; t=1576519263;
+        bh=pJvThVF7UxbRq3U3yLReQeuAsAk3XpB2WnkGmm/W5n4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rh9zQ51koYjp//NJtVDYf3QM9wq5xsFoR0MeMK8vHayAjRW8r77mTd60wIf0ZwfLN
-         QSbwzaGBMgfTVeRU83iF1eYlrTN9mI2EIak7X3LmLjYJd3Y8UGxT6ji50OsY/9YAaD
-         IDb44slbKfOFRgBPW1jlywZc37vgdfw+jZYOoC3g=
+        b=hJDbWJWQYSadn1HwSjt608cngyV+jT6YrL+Q9rYfYj53mqq0gXUqgZLda6kvYCPR2
+         kkENLHMMRKbI/GdF3EOa+uxPI8GgPJzovZ1f6nJ2d56v0aq7QKRIBVCo2pBq9x0QOx
+         TQMxjYjS/7CHD7pv9ZqTBZJWmiIOSfC10mpGSPBY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Elaine Zhang <zhangqing@rock-chips.com>,
-        Joseph Chen <chenjh@rock-chips.com>,
-        Daniel Schultz <d.schultz@phytec.de>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 265/267] mfd: rk808: Fix RK818 ID template
-Date:   Mon, 16 Dec 2019 18:49:51 +0100
-Message-Id: <20191216174917.360319399@linuxfoundation.org>
+        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
+        stable@kernel.org, Andreas Dilger <adilger@dilger.ca>
+Subject: [PATCH 4.14 261/267] ext4: work around deleting a file with i_nlink == 0 safely
+Date:   Mon, 16 Dec 2019 18:49:47 +0100
+Message-Id: <20191216174917.073910129@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -63,44 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Schultz <d.schultz@phytec.de>
+From: Theodore Ts'o <tytso@mit.edu>
 
-[ Upstream commit 37ef8c2c15bdc1322b160e38986c187de2b877b2 ]
+commit c7df4a1ecb8579838ec8c56b2bb6a6716e974f37 upstream.
 
-The Rockchip PMIC driver can automatically detect connected component
-versions by reading the ID_MSB and ID_LSB registers. The probe function
-will always fail with RK818 PMICs because the ID_MSK is 0xFFF0 and the
-RK818 template ID is 0x8181.
+If the file system is corrupted such that a file's i_links_count is
+too small, then it's possible that when unlinking that file, i_nlink
+will already be zero.  Previously we were working around this kind of
+corruption by forcing i_nlink to one; but we were doing this before
+trying to delete the directory entry --- and if the file system is
+corrupted enough that ext4_delete_entry() fails, then we exit with
+i_nlink elevated, and this causes the orphan inode list handling to be
+FUBAR'ed, such that when we unmount the file system, the orphan inode
+list can get corrupted.
 
-This patch changes this value to 0x8180.
+A better way to fix this is to simply skip trying to call drop_nlink()
+if i_nlink is already zero, thus moving the check to the place where
+it makes the most sense.
 
-Fixes: 9d6105e19f61 ("mfd: rk808: Fix up the chip id get failed")
-Cc: stable@vger.kernel.org
-Cc: Elaine Zhang <zhangqing@rock-chips.com>
-Cc: Joseph Chen <chenjh@rock-chips.com>
-Signed-off-by: Daniel Schultz <d.schultz@phytec.de>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+https://bugzilla.kernel.org/show_bug.cgi?id=205433
+
+Link: https://lore.kernel.org/r/20191112032903.8828-1-tytso@mit.edu
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- include/linux/mfd/rk808.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ext4/namei.c |   11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/mfd/rk808.h b/include/linux/mfd/rk808.h
-index d3156594674c2..338e0f6e2226b 100644
---- a/include/linux/mfd/rk808.h
-+++ b/include/linux/mfd/rk808.h
-@@ -443,7 +443,7 @@ enum {
- enum {
- 	RK805_ID = 0x8050,
- 	RK808_ID = 0x0000,
--	RK818_ID = 0x8181,
-+	RK818_ID = 0x8180,
- };
+--- a/fs/ext4/namei.c
++++ b/fs/ext4/namei.c
+@@ -3065,18 +3065,17 @@ static int ext4_unlink(struct inode *dir
+ 	if (IS_DIRSYNC(dir))
+ 		ext4_handle_sync(handle);
  
- struct rk808 {
--- 
-2.20.1
-
+-	if (inode->i_nlink == 0) {
+-		ext4_warning_inode(inode, "Deleting file '%.*s' with no links",
+-				   dentry->d_name.len, dentry->d_name.name);
+-		set_nlink(inode, 1);
+-	}
+ 	retval = ext4_delete_entry(handle, dir, de, bh);
+ 	if (retval)
+ 		goto end_unlink;
+ 	dir->i_ctime = dir->i_mtime = current_time(dir);
+ 	ext4_update_dx_flag(dir);
+ 	ext4_mark_inode_dirty(handle, dir);
+-	drop_nlink(inode);
++	if (inode->i_nlink == 0)
++		ext4_warning_inode(inode, "Deleting file '%.*s' with no links",
++				   dentry->d_name.len, dentry->d_name.name);
++	else
++		drop_nlink(inode);
+ 	if (!inode->i_nlink)
+ 		ext4_orphan_add(handle, inode);
+ 	inode->i_ctime = current_time(inode);
 
 
