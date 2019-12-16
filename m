@@ -2,107 +2,136 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3650AC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 03:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E674EC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 03:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 054F020717
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 03:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B74FC20717
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 03:19:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r+VR4/td"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfLPDQl (ORCPT
+        id S1726718AbfLPDTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 22:16:41 -0500
-Received: from muru.com ([72.249.23.125]:48414 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726528AbfLPDQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 22:16:41 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 9F7B380C5;
-        Mon, 16 Dec 2019 03:17:19 +0000 (UTC)
-Date:   Sun, 15 Dec 2019 19:16:37 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     Evgeniy Polyakov <zbr@ioremap.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        Adam Ford <aford173@gmail.com>,
-        "Andrew F . Davis" <afd@ti.com>,
-        "H . Nikolaus Schaller" <hns@goldelico.com>,
-        Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH] w1: omap-hdq: Simplify driver with PM runtime autosuspend
-Message-ID: <20191216031637.GM35479@atomide.com>
-References: <20191215173817.47918-1-tony@atomide.com>
- <20191215230331.645b9064@aktux>
- <20191216030948.GL35479@atomide.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191216030948.GL35479@atomide.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Sun, 15 Dec 2019 22:19:04 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46861 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726528AbfLPDTE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Dec 2019 22:19:04 -0500
+Received: by mail-pl1-f193.google.com with SMTP id k20so3809996pll.13
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 19:19:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=0uEDsgHMv4cULjo4F/xF85KkS+R390ZRONMVXKwnCXM=;
+        b=r+VR4/tdbWcRiCEf6dJp3Dj+xHgvbG8fG/rzgSWVZQ8eiOFxMwVcQ/D9JsTyEhLYRw
+         mzwPE0+y4RyvO3NOlVrhh5P6TEGCQ29CNCYjjMzDVjJ/zQS82+k4UFD7qgByYHBI6n91
+         MCeM1J0p+7JA3ut9neePic9BfkiBspY2AyXpLj55xtS/wQQ7sWLgFKjvkou4NsnSOL1y
+         THzCNxAGClUdZ1Z35ImW2Srqv40VoRoL+eT6Us8j32hvy+cYt26hrJ6FuIf6sFk0Fw/t
+         JoklsYYDRnNSNfWBs5gQWkLJzYgtvC77zqOwkRKV0K5+2cwmGspAWCG3vTiMB4lxn9dm
+         lDWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=0uEDsgHMv4cULjo4F/xF85KkS+R390ZRONMVXKwnCXM=;
+        b=Ewz/vn49abyho9wZdnZ8nj5iQTSVFDYTjbJGTHIqlOgmskgmLOFDXy/jQaNMNY5ndL
+         MNmynx/FMkLPSR3jPizNaCEatYVrF41znKkbaj4jJ2of2o82olpWhE9/tC/qlCAJT6jD
+         Vg15vy2UGSLfwCogEwlHjEQe8tNNxuvsDoQ9yKlc0G0ygoMMAuQfHDV4D9UXuaB+pdeR
+         9E89U8yjL4UNdLK9o7Y7ztYO2KYv04U03LKKOVQ7pFBsPdCVqaZKy47LIKSzLjRW01Xf
+         f8C53WT1+qu0jLWUErIAqxOLvbUpfhClReHy98sdqtzktQFVUCBJVHz2QG/C0GmMCW7G
+         U8pw==
+X-Gm-Message-State: APjAAAXW+RVUs646mfJcb9q9aqAVuURvuE/nHZRuaMaDaB+KXjzfaL/s
+        XGu8Gt9ymYVYDdfDg1cBs5M=
+X-Google-Smtp-Source: APXvYqyZsejWK8jAP1ashdFJ4pbcGuHs1CBQn+M9278Iwp8tK9mWWOvG0ZXYXYiaZvo7kW+dvnOtgg==
+X-Received: by 2002:a17:90a:1b6b:: with SMTP id q98mr15523879pjq.106.1576466344020;
+        Sun, 15 Dec 2019 19:19:04 -0800 (PST)
+Received: from localhost ([43.224.245.179])
+        by smtp.gmail.com with ESMTPSA id k16sm20175468pfh.97.2019.12.15.19.19.02
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Sun, 15 Dec 2019 19:19:03 -0800 (PST)
+From:   qiwuchen55@gmail.com
+To:     christian.brauner@ubuntu.com, peterz@infradead.org,
+        mingo@kernel.org, oleg@redhat.com
+Cc:     kernel-team@android.com, linux-kernel@vger.kernel.org,
+        chenqiwu@xiaomi.com
+Subject: [PATCH v2] kernel/exit: do panic earlier to get coredump if global init task exit
+Date:   Mon, 16 Dec 2019 11:18:44 +0800
+Message-Id: <1576466324-6067-1-git-send-email-qiwuchen55@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [191216 03:10]:
-> Hi,
-> 
-> * Andreas Kemnade <andreas@kemnade.info> [191215 22:04]:
-> > On Sun, 15 Dec 2019 09:38:17 -0800
-> > If I remember correctly this thing is critical to get the hwmod out of
-> > reset but I need to examine that again:
-> 
-> Thanks for testing, yes that's what I thought might cause it
-> too, but nope :)
-> 
-> We currently disable interrupts for some reason after
-> the first read. That won't play with runtime PM autosuspend
-> at all as we never enable them again until the device has
-> idled. Can you try the following additional patch on top?
+From: chenqiwu <chenqiwu@xiaomi.com>
 
-And we should probably do the following too to make sure
-the mode is initialized before we call runtime PM.
+When global init task get a chance to be killed, panic will happen in
+later calling steps by do_exit()->exit_notify()->forget_original_parent()
+->find_child_reaper() if all init threads have exited.
 
-Regards,
+However, it's hard to extract the coredump of init task from a kernel
+crashdump, since exit_mm() has released its mm before panic. In order
+to get the backtrace of init task in userspace, it's better to do panic
+earlier at the beginning of exitting route.
 
-Tony
+It's worth noting that we must take case of a multi-threaded init exitting
+issue. We need the test for is_global_init() && group_dead to ensure that
+it is all of init threads exiting and not just the current thread.
 
-8< -------------------
-diff --git a/drivers/w1/masters/omap_hdq.c b/drivers/w1/masters/omap_hdq.c
---- a/drivers/w1/masters/omap_hdq.c
-+++ b/drivers/w1/masters/omap_hdq.c
-@@ -565,6 +565,15 @@ static int omap_hdq_probe(struct platform_device *pdev)
+Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
+---
+changes in v2:
+ - using is_global_init() && group_dead as panic condition.
+ - move up group_dead = atomic_dec_and_test(&tsk->signal->live).
+ - add comment for this change in do_exit().
+---
+ kernel/exit.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/kernel/exit.c b/kernel/exit.c
+index bcbd598..33364c8 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -517,10 +517,6 @@ static struct task_struct *find_child_reaper(struct task_struct *father,
+ 	}
  
- 	mutex_init(&hdq_data->hdq_mutex);
- 
-+	ret = of_property_read_string(pdev->dev.of_node, "ti,mode", &mode);
-+	if (ret < 0 || !strcmp(mode, "hdq")) {
-+		hdq_data->mode = 0;
-+		omap_w1_master.search = omap_w1_search_bus;
-+	} else {
-+		hdq_data->mode = 1;
-+		omap_w1_master.triplet = omap_w1_triplet;
-+	}
-+
- 	pm_runtime_enable(&pdev->dev);
- 	pm_runtime_use_autosuspend(&pdev->dev);
- 	pm_runtime_set_autosuspend_delay(&pdev->dev, 300);
-@@ -599,15 +608,6 @@ static int omap_hdq_probe(struct platform_device *pdev)
- 	pm_runtime_mark_last_busy(&pdev->dev);
- 	pm_runtime_put_autosuspend(&pdev->dev);
- 
--	ret = of_property_read_string(pdev->dev.of_node, "ti,mode", &mode);
--	if (ret < 0 || !strcmp(mode, "hdq")) {
--		hdq_data->mode = 0;
--		omap_w1_master.search = omap_w1_search_bus;
--	} else {
--		hdq_data->mode = 1;
--		omap_w1_master.triplet = omap_w1_triplet;
+ 	write_unlock_irq(&tasklist_lock);
+-	if (unlikely(pid_ns == &init_pid_ns)) {
+-		panic("Attempted to kill init! exitcode=0x%08x\n",
+-			father->signal->group_exit_code ?: father->exit_code);
 -	}
--
- 	omap_w1_master.data = hdq_data;
  
- 	ret = w1_add_master_device(&omap_w1_master);
+ 	list_for_each_entry_safe(p, n, dead, ptrace_entry) {
+ 		list_del_init(&p->ptrace_entry);
+@@ -728,6 +724,14 @@ void __noreturn do_exit(long code)
+ 		panic("Attempted to kill the idle task!");
+ 
+ 	/*
++	 * If all threads of global init have exited, do panic imeddiately
++	 * to get the coredump to find any clue for init task in userspace.
++	 */
++	group_dead = atomic_dec_and_test(&tsk->signal->live);
++	if (unlikely(is_global_init(tsk) && group_dead))
++		panic("Attempted to kill init! exitcode=0x%08lx\n", code);
++
++	/*
+ 	 * If do_exit is called because this processes oopsed, it's possible
+ 	 * that get_fs() was left as KERNEL_DS, so reset it to USER_DS before
+ 	 * continuing. Amongst other possible reasons, this is to prevent
+@@ -764,7 +768,6 @@ void __noreturn do_exit(long code)
+ 	if (tsk->mm)
+ 		sync_mm_rss(tsk->mm);
+ 	acct_update_integrals(tsk);
+-	group_dead = atomic_dec_and_test(&tsk->signal->live);
+ 	if (group_dead) {
+ #ifdef CONFIG_POSIX_TIMERS
+ 		hrtimer_cancel(&tsk->signal->real_timer);
+-- 
+1.9.1
+
