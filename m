@@ -2,268 +2,113 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60374C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C80E4C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 208F6206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A08522067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:58:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QNe7q2ni"
+	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="DzkTH8w3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbfLPS5i (ORCPT
+        id S1726742AbfLPS6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:57:38 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:46678 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726141AbfLPS5h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:57:37 -0500
-Received: by mail-il1-f196.google.com with SMTP id t17so6239039ilm.13;
-        Mon, 16 Dec 2019 10:57:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fRErO3p6DkzrKjGHgI+x7pKPjZQkWFKWkX/ri5ylyrc=;
-        b=QNe7q2ni/0HbANj4xw7ZJWlzvRh6yVfNlgdg8Zk0iAZRDSdUId4MRtHuF2rxWM8Thv
-         ImFjjwLDpyVRFLfOjpBx42Wfp5TMXew8VfcBzM+AGa2DLiHD9cCyl8BGARXaG4d9w9VE
-         Kfmohs4N2J003JXOBbydKQ8RoeZa5xuR93hSAlU1uctdCxBbTyYrP/X7kQoDAX9Ui+bQ
-         PdNaSZA8AcThzurom2HFulFWHXxlq8TD4D48FE9Hc5+niaa4OArUz7tz+han43KzVyU5
-         qos5U6MeFiKgoPty2zBZRiLFO3f7WoJfxHzq803eT9vPgteiYOyXBUN/Hr7jcpJ0nU/7
-         WdwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fRErO3p6DkzrKjGHgI+x7pKPjZQkWFKWkX/ri5ylyrc=;
-        b=eckbDc3IZLp9IqjeyKnJz0jcW/PQjt0E4vhsojepfnccDmxFasClFF8X7GPhLxGNz/
-         fWWdamZ5W8x02Ecg7AKISRwyMBVYWPr1xo7l9LO0cqInG68Rc8be8xhOXBt40GnotYUh
-         LEVhWSWzBfa4DmnSeD9JS54lsJJNJxVpsSFyYKe9ApibShhvZxCkvJqbYwEQ2w6CXbeI
-         9/tsJQhvnrtb9hmTAHEBlbVzg6fZ0Byxt/8M6cuotD555EUnPhhRMKznQNqb2uOKtySb
-         0kJvvKV1qFplRfZ1ewQEatWsChFnPj5Sq5Pzo/NUi77jHkBMGoytJKn7LiWfi9EsuuOD
-         jZGw==
-X-Gm-Message-State: APjAAAWvLAk2D6KXkw4WqhDLrRix5A13dk4YUQIEugfLZh+fqse60QUd
-        kzOruR3sxQmtvY9nST8PF8OyMiAqa7J8Q9hKLDE=
-X-Google-Smtp-Source: APXvYqxaoCR3QZIQJUHBFbypBRT5pC0Du6V+0URCSBapyjSPUoxEmqYoKvzzx3VBu7ZRAjqM9PGmSPu9pHd1XKFy37s=
-X-Received: by 2002:a92:465c:: with SMTP id t89mr14007894ila.263.1576522656793;
- Mon, 16 Dec 2019 10:57:36 -0800 (PST)
+        Mon, 16 Dec 2019 13:58:22 -0500
+Received: from mail-dm6nam12on2123.outbound.protection.outlook.com ([40.107.243.123]:15584
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726390AbfLPS6W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:58:22 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PxD1FLZqUjVHICJg9jZDAnnQH2k8JdB4PIo0IUnFBNF15T6c9vnZVbXiht+5yOK9g1NxVn6eZBkTSP7VZqOu0AMgwQcCJ91OaJILHfx0o/SAo0GCVjdk+Sd3KCf8LrWfgHZvd2S8LWB2tVBHVe6gHS5jftKCtQvL5c02rSb5nuDLgKQPQucgjLHuxI6eexdzkQlwOuFZw80oT5eq6fBu04eeuMc1Hz85F7gqo1WY+kMQwDizSkRjyZiUkwHtdVDTfKMaR9e+MYDCaBCWy9F/78or74424kG9IYU7kHDdZ1zvGGXAgqyZsnAYEFodik2mKHMiz5yHryYGE5/HvpehQQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9EJ5bwbuzPzNBR8xkJ1Mh2d+VX76z8Elc4YlDKRu/2M=;
+ b=Cx6sqaRlGl7+UgrzzoqAOWrvX5470xxlwtLQ6GtIaEe00fGyJ+MeUJO3cIHOyx0N6yd38mqMMfLjMijBbGnsBsf37KRjk3OVIauQlT/ZzAIYWjdNfTG7ewJbnIEBpJP9Q4/lXVL+ELV6xDtDI+zg3CciAMY9LEzygOPWEFrGG7xJ4yqKlIR/7FckTT0NXeJKEISsQKqWTh0KSw7wxEd/VImW5TwYEBJUZSWaGfRNOvugZVeW8Sb8aXMVq6T59H4NP5AFZ2FvViK906hdTqNHGj/oyx3QSv7KggRbp3wTaCwxDa3OFTZOO4KjbxOemMGmAcbLHM+9sDZQyx4eOnHdFA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9EJ5bwbuzPzNBR8xkJ1Mh2d+VX76z8Elc4YlDKRu/2M=;
+ b=DzkTH8w3Ood2Te9RlGSVlpKSmL+0sg8o17U3yAbO2hUqbG7nA4ue+xdi8dUeQjZxwfdP8g+RS8aEaOfuo75W9JakoE8/nb4Sgh80RbBT8P+AK/kaT77nLQK2iladQbxHsC6WIKiGtYZ/rHUGLZyrVvvEGftxQ7db9go/WB9497w=
+Received: from DM5PR1301MB2108.namprd13.prod.outlook.com (10.174.186.34) by
+ DM5PR1301MB1900.namprd13.prod.outlook.com (10.174.184.146) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2559.12; Mon, 16 Dec 2019 18:58:19 +0000
+Received: from DM5PR1301MB2108.namprd13.prod.outlook.com
+ ([fe80::2d23:b456:d67:f230]) by DM5PR1301MB2108.namprd13.prod.outlook.com
+ ([fe80::2d23:b456:d67:f230%6]) with mapi id 15.20.2559.012; Mon, 16 Dec 2019
+ 18:58:19 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "rmilkowski@gmail.com" <rmilkowski@gmail.com>
+CC:     "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] NFSv4: nfs4_do_fsinfo() should not do implicit lease
+ renewals
+Thread-Topic: [PATCH] NFSv4: nfs4_do_fsinfo() should not do implicit lease
+ renewals
+Thread-Index: AdW0MytZJzbanD9yTZ+e0zLvCdtxJAACuc6AAACqnwAAAIJigA==
+Date:   Mon, 16 Dec 2019 18:58:19 +0000
+Message-ID: <2d94fa3e9632c638f9e47999fd8e26cb3b34b4dc.camel@hammerspace.com>
+References: <056501d5b437$91f1c6c0$b5d55440$@gmail.com>
+         <dea30ea3f0fc31e40b311c4d110c26cf40658dca.camel@hammerspace.com>
+         <05ea01d5b440$bd9d58d0$38d80a70$@gmail.com>
+In-Reply-To: <05ea01d5b440$bd9d58d0$38d80a70$@gmail.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=trondmy@hammerspace.com; 
+x-originating-ip: [68.40.189.247]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: db03ab79-4836-451c-502a-08d78259ea63
+x-ms-traffictypediagnostic: DM5PR1301MB1900:
+x-microsoft-antispam-prvs: <DM5PR1301MB190077CC7EDD93DDF01B89D5B8510@DM5PR1301MB1900.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 02530BD3AA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(376002)(346002)(39840400004)(396003)(199004)(189003)(64756008)(110136005)(54906003)(66556008)(66446008)(186003)(316002)(86362001)(8936002)(81166006)(8676002)(4001150100001)(81156014)(4326008)(6506007)(6486002)(26005)(66946007)(5660300002)(2906002)(66476007)(36756003)(6512007)(508600001)(4744005)(2616005)(71200400001)(76116006)(91956017);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR1301MB1900;H:DM5PR1301MB2108.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: hammerspace.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 9p45gKNF0TDreVVp7TGVHYJ0BfG7KbJ8gh/3DhAzO/nPXXPOM8QkY4a9HHxP7rekftW8c6E8lbzcpHGGnlptCsRoMFknzSYAYeFZDYF4M5xQj0XxAru6a/DvKrxg5y6RQPtMk/ah74TEUqq67d5+Z33T3QyNRtxqmv0PxTJWHJTLtZNoC0vy5pdlrGgJ3VIwX7cwrCq/C0n9UGYAuQ3NFnzBwZQJURSVQNWC0SYXvPWqMzqvGbGTEgI9pPRUMf+TecmA6qwa6GHU0CGlre1tnsAXsMRYN1wRPGH4bOAYuRWhQppkY2M5aWYqd/ZjQoViCpz8onYmSLfkgNjOPDg4vOs17gU4dg12W4SXeJbf2P6l/FER5AVQTx2M+OXOaydHkX2XT9kI5m7X/i0uX5NkqiC7NGpcagPR9my4Q80wLlBhx87FGJ8lVbG6wcpRe7E4
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F2C7A3AC455ACB4AA9029C65D9099BF3@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20191112104854.20850-1-masneyb@onstation.org> <CAOCk7NosRhRp3vZxg2Nx8106PQ0ryo5b68cUv605XUzCm6gYPA@mail.gmail.com>
- <20191113112334.GA18702@onstation.org> <20191203014006.GA7756@onstation.org>
- <CAOCk7NpHE7kPX5tc=qUJo9qM-7Qzg2E+zmmmhBdnnVwJ+i5XLg@mail.gmail.com> <20191213024007.GA23636@onstation.org>
-In-Reply-To: <20191213024007.GA23636@onstation.org>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Mon, 16 Dec 2019 11:57:25 -0700
-Message-ID: <CAOCk7Np7VkuzFTN_CEqwPFwgu9thcPBMpuQpa3=KMdyahfE8uw@mail.gmail.com>
-Subject: Re: [PATCH] drm/msm/mdp5: enable autocommit
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        MSM <linux-arm-msm@vger.kernel.org>, Sean Paul <sean@poorly.run>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: db03ab79-4836-451c-502a-08d78259ea63
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Dec 2019 18:58:19.1182
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ekqefYbafsGkIg/thB2pDGRYODXTYQnydAtblhHOuwT/k3JY86NaSjgdH9jhe0A6hCTtVIGVq2fZlJ/faNActw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1301MB1900
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 7:40 PM Brian Masney <masneyb@onstation.org> wrote:
->
-> Hi Jeffrey,
->
-> On Tue, Dec 03, 2019 at 07:18:31AM -0700, Jeffrey Hugo wrote:
-> > On Mon, Dec 2, 2019 at 6:40 PM Brian Masney <masneyb@onstation.org> wrote:
-> > > On Wed, Nov 13, 2019 at 06:23:34AM -0500, Brian Masney wrote:
-> > > > On Tue, Nov 12, 2019 at 08:38:27AM -0700, Jeffrey Hugo wrote:
-> > > > > On Tue, Nov 12, 2019 at 3:49 AM Brian Masney <masneyb@onstation.org> wrote:
-> > > > > >
-> > > > > > Since the introduction of commit 2d99ced787e3 ("drm/msm: async commit
-> > > > > > support"), command-mode panels began throwing the following errors:
-> > > > > >
-> > > > > >     msm fd900000.mdss: pp done time out, lm=0
-> > > > > >
-> > > > > > Let's fix this by enabling the autorefresh feature that's available in
-> > > > > > the MDP starting at version 1.0. This will cause the MDP to
-> > > > > > automatically send a frame to the panel every time the panel invokes
-> > > > > > the TE signal, which will trigger the PP_DONE IRQ. This requires not
-> > > > > > sending a START signal for command-mode panels.
-> > > > > >
-> > > > > > This fixes the error and gives us a counter for command-mode panels that
-> > > > > > we can use to implement async commit support for the MDP5 in a follow up
-> > > > > > patch.
-> > > > > >
-> > > > > > Signed-off-by: Brian Masney <masneyb@onstation.org>
-> > > > > > Suggested-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> > > > > > ---
-> > > > > >  drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c | 15 ++++++++++++++-
-> > > > > >  drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c  |  9 +--------
-> > > > > >  2 files changed, 15 insertions(+), 9 deletions(-)
-> > > > > >
-> > > > > > diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-> > > > > > index 05cc04f729d6..539348cb6331 100644
-> > > > > > --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-> > > > > > +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-> > > > > > @@ -456,6 +456,7 @@ static void mdp5_crtc_atomic_enable(struct drm_crtc *crtc,
-> > > > > >  {
-> > > > > >         struct mdp5_crtc *mdp5_crtc = to_mdp5_crtc(crtc);
-> > > > > >         struct mdp5_crtc_state *mdp5_cstate = to_mdp5_crtc_state(crtc->state);
-> > > > > > +       struct mdp5_pipeline *pipeline = &mdp5_cstate->pipeline;
-> > > > > >         struct mdp5_kms *mdp5_kms = get_kms(crtc);
-> > > > > >         struct device *dev = &mdp5_kms->pdev->dev;
-> > > > > >
-> > > > > > @@ -493,9 +494,21 @@ static void mdp5_crtc_atomic_enable(struct drm_crtc *crtc,
-> > > > > >
-> > > > > >         mdp_irq_register(&mdp5_kms->base, &mdp5_crtc->err);
-> > > > > >
-> > > > > > -       if (mdp5_cstate->cmd_mode)
-> > > > > > +       if (mdp5_cstate->cmd_mode) {
-> > > > > >                 mdp_irq_register(&mdp5_kms->base, &mdp5_crtc->pp_done);
-> > > > > >
-> > > > > > +               /*
-> > > > > > +                * Enable autorefresh so we get regular ping/pong IRQs.
-> > > > > > +                * - Bit 31 is the enable bit
-> > > > > > +                * - Bits 0-15 represent the frame count, specifically how many
-> > > > > > +                *   TE events before the MDP sends a frame.
-> > > > > > +                */
-> > > > > > +               mdp5_write(mdp5_kms,
-> > > > > > +                          REG_MDP5_PP_AUTOREFRESH_CONFIG(pipeline->mixer->pp),
-> > > > > > +                          BIT(31) | BIT(0));
-> > > > > > +               crtc_flush_all(crtc);
-> > > > > > +       }
-> > > > > > +
-> > > > > >         mdp5_crtc->enabled = true;
-> > > > > >  }
-> > > > > >
-> > > > > > diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c
-> > > > > > index 030279d7b64b..aee295abada3 100644
-> > > > > > --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c
-> > > > > > +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c
-> > > > > > @@ -187,14 +187,7 @@ static bool start_signal_needed(struct mdp5_ctl *ctl,
-> > > > > >         if (!ctl->encoder_enabled)
-> > > > > >                 return false;
-> > > > > >
-> > > > > > -       switch (intf->type) {
-> > > > > > -       case INTF_WB:
-> > > > > > -               return true;
-> > > > > > -       case INTF_DSI:
-> > > > > > -               return intf->mode == MDP5_INTF_DSI_MODE_COMMAND;
-> > > > > > -       default:
-> > > > > > -               return false;
-> > > > > > -       }
-> > > > > > +       return intf->type == INTF_WB;
-> > > > > >  }
-> > > > >
-> > > > > I don't think this fully works.
-> > > > >
-> > > > > The whole "flush" thing exists because the configuration is double
-> > > > > buffered.  You write to the flush register to tell the hardware to
-> > > > > pickup the new configuration, but it doesn't do that automatically.
-> > > > > It only picks up the new config on the next "vsync".  When you have a
-> > > > > video mode panel, you have the timing engine running, which drives
-> > > > > that.  With a command mode panel, you have either the start signal, or
-> > > > > the auto refresh to do the same, but you have a bit of a chicken and
-> > > > > egg situation where if you are programming the hardware from scratch,
-> > > > > autorefresh isn't already enabled to then pickup the config to enable
-> > > > > autorefresh. In this case, you'll need a single start to kick
-> > > > > everything off.  However, if say the bootloader already configured
-> > > > > things and has autorefresh running, then you need to not do that start
-> > > > > because you'll overload the DSI like you saw.
-> > > >
-> > > > As part of my testing for this work, I added a log statement to
-> > > > mdp5_crtc_pp_done_irq() and it shows that a PP_IRQ comes in consistently
-> > > > every ~0.0166 seconds, which is about 60 HZ. Without this change, plus
-> > > > the 3 commits I mentioned in an earlier email related to the async
-> > > > commit support, the PP IRQs come in at a variety of times: between every
-> > > > ~0.0140 and ~0.2224 seconds. That's why I assumed that this was working.
-> > > >
-> > > > If I call send_start_signal() inside mdp5_crtc_atomic_enable(), then the
-> > > > display does not work properly.
-> > >
-> > > I'd like to get the 'pp done time out' errors that are now occurring
-> > > upstream for command-mode panels fixed. As I mentioned above, this patch
-> > > fixes the problem on the Nexus 5 and the pp done interrupts are
-> > > delivered at approximately 60 HZ. I don't have any other command-mode
-> > > panels to test.
-> > >
-> > > I'm not sure how to proceed here since sending the start command breaks
-> > > the display. I'm likely putting that command in the wrong spot.
-> >
-> > Sorry, I didn't realize you were waiting on me,
-> >
-> > I'm traveling currently, so this is more off the top of my head than
-> > looking at the code/docs.  What I'm thinking is that we want to get
-> > autorefresh enabled, which would be simple except that the bootloader
-> > may have already enabled it for us.  Perhaps we have a state flag that
-> > indicates if autorefresh is enabled, and if so, it skips the start
-> > command (where the start command is normally in the code).  When we
-> > boot up, we check the hardware and set the flag if its already enabled
-> > (note I just realized the flag is per ping pong, so we need multiple
-> > flags I guess).  If the flag is not enabled when we go to use the
-> > start command, we issue the start, then set the flag.  The only catch
-> > is I don't know recall the exact sequence of when we configure the
-> > ping pong in the entire initialization sequence.  We may configure a
-> > bunch of stuff, but not the ping pong, flush the config (which issues
-> > a start) and then get stuck because we didn't set the autorefresh.
->
-> I finally had a chance look into this tonight. This makes sense to me:
-> the double buffering of the configuration, the start signal, and a
-> separate flag for each of the 4 ping pongs on the MDP5.
->
-> The part that I'm still unsure about is querying the initial state from
-> the boot loader to see if autorefresh is already enabled and whether or
-> not a single START command is needed. Here's a slightly modified snippet
-> from mdp5_crtc_atomic_enable() in my patch above:
->
->   if (mdp5_cstate->cmd_mode) {
->      /* mdp5_read() returns 0 */
->      val = mdp5_read(mdp5_kms,
->                      REG_MDP5_PP_AUTOREFRESH_CONFIG(pipeline->mixer->pp));
->
->      mdp5_write(mdp5_kms,
->                 REG_MDP5_PP_AUTOREFRESH_CONFIG(pipeline->mixer->pp),
->                 BIT(31) | BIT(0));
->
->      crtc_flush_all(crtc);
->
->      /* mdp5_read() now returns 0x80000001 */
->      val = mdp5_read(mdp5_kms,
->                      REG_MDP5_PP_AUTOREFRESH_CONFIG(pipeline->mixer->pp));
->   }
->
-> So I assume that the boot loader is not enabling autorefresh on this
-> board since the value from the first read is zero? Or more likely, that
-> since this is double buffered that the first mdp5_read() is reading from
-> the configuration buffer that's not active yet and it defaults to 0? Is
-> there a way to query the other configuration buffer that's currently
-> active?
-
-Sorry, catching up now that I'm back from travel
-
-Its not possible to read the "shadow" registers that have the active
-config.  However, if we can trust that the bootloader is doing the
-right thing, then the configuration register you can read should match
-the shadow registers.  The only way the bootloader could screw up is
-if it didn't flush the config, but then we wouldn't have boot splash
-which would be very easy to catch.
-
-In short, if your first read is 0, then bootloader didn't enable autorefresh.
-
->
-> Why do I see the ping pong IRQs delivered consistently around 60 HZ once
-> I enable autorefresh with the patch that started this thread?
-
-Hmm.  Good question.  I would expect everything to be fine once
-autorefresh is enabled, but your initial patch leaves questions about
-how that config is taking effect in the first place.
-
->
-> Sorry if I'm being dense here.
->
-> Brian
+LU9uIE1vbiwgMjAxOS0xMi0xNiBhdCAxODo0MyArMDAwMCwgUm9iZXJ0IE1pbGtvd3NraSB3cm90
+ZToNCj4gPiBGcm9tOiBUcm9uZCBNeWtsZWJ1c3QgPHRyb25kbXlAaGFtbWVyc3BhY2UuY29tPiAN
+Cj4gLi4uDQo+ID4gTkFDSy4gVGhlIGFib3ZlIGFyZ3VtZW50IG9ubHkgYXBwbGllcyB0byBsZWdh
+Y3kgbWlub3IgdmVyc2lvbiAwDQo+ID4gc2V0dXBzLCBhbmQgZG9lcyBub3QgYXBwbHkgdG8gTkZT
+djQuMSBvciBuZXdlci4NCj4gDQo+IENvcnJlY3QuIEhvd2V2ZXIgbWFueSBzaXRlcyBzdGlsbCB1
+c2UgdjQuMC4NCj4gDQoNClRoYXQncyBub3QgYSBnb29kIHJlYXNvbiB0byBicmVhayBjb2RlIHRo
+YXQgd29ya3MganVzdCBmaW5lIGZvcg0KTkZTdjQuMS4NCg0KSXQgd291bGQgYmUgYmV0dGVyIHRv
+IG1vdmUgdGhlIGluaXRpYWxpc2F0aW9uIG9mIGNscC0+Y2xfbGFzdF9yZW5ld2FsDQppbnRvIG5m
+czRfaW5pdF9jbGllbnRpZCgpIGFuZCBuZnM0MV9pbml0X2NsaWVudGlkKCkgKGFmdGVyIHRoZSBj
+YWxscyB0bw0KbmZzNF9wcm9jX3NldGNsaWVudGlkX2NvbmZpcm0oKSBhbmQgbmZzNF9wcm9jX2Ny
+ZWF0ZV9zZXNzaW9uKCkNCnJlc3BlY3RpdmVseSkuDQoNCi0tIA0KVHJvbmQgTXlrbGVidXN0DQpM
+aW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5teWtsZWJ1c3RA
+aGFtbWVyc3BhY2UuY29tDQoNCg0K
