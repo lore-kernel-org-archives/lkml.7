@@ -2,90 +2,196 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 531F4C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B48CBC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 339BE206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A8FE20725
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:26:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XBw5mkBv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727632AbfLPLYn (ORCPT
+        id S1727412AbfLPL0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 06:24:43 -0500
-Received: from isilmar-4.linta.de ([136.243.71.142]:49676 "EHLO
-        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727138AbfLPLYA (ORCPT
+        Mon, 16 Dec 2019 06:26:08 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33834 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727138AbfLPL0I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 06:24:00 -0500
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
-        by isilmar-4.linta.de (Postfix) with ESMTPSA id 165DF200A62;
-        Mon, 16 Dec 2019 11:23:58 +0000 (UTC)
-Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
-        id 7AEA020BC9; Mon, 16 Dec 2019 11:53:38 +0100 (CET)
-Date:   Mon, 16 Dec 2019 11:53:38 +0100
-From:   Dominik Brodowski <linux@dominikbrodowski.net>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        kvm list <kvm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        lkft-triage@lists.linaro.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: mainline-5.5.0-rc1: do_mount_root+0x6c/0x10d - kernel crash
- while mounting rootfs
-Message-ID: <20191216105338.GA163642@light.dominikbrodowski.net>
-References: <CA+G9fYuO7vMjsqkyXHZSU-pKEk0L0t9kQTfnd5xopVADyGwprw@mail.gmail.com>
- <CAK8P3a38ZhQcA0Vj-EtNzmH7+iuoOhPrQUzN-avxJn9iU2K5=Q@mail.gmail.com>
+        Mon, 16 Dec 2019 06:26:08 -0500
+Received: by mail-io1-f66.google.com with SMTP id z193so2950303iof.1;
+        Mon, 16 Dec 2019 03:26:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ELdUONa2ckCb0g92cQe783L5naGON8kZrHYJoYPRMio=;
+        b=XBw5mkBv5ooaIsqGbE/cYqaQZopWtsnyWp6M617AWWh5EAZRLDoGG7nM31k9DZxZr+
+         64gNmCWVlfSEpNVqKyVBxZxhTcuyeP3UW87f8jFHFY6k0mBGKUZ4u+kk10mWnx2Qd7c6
+         xgE3CV7k/tuBGO5qu8fWnKevQpN646HSqPYYfIaPQAVdzmCNA0oBBvMMMfixRqoZf0AN
+         cJilQ7FxTREx4MO73wx1hOMnnRffWlZeMRo5h/kcwbAMx4IrhuxK5HS/eyb6XtiQUfe+
+         uBCeo9VO8HdqE11wzfbLab9U9AQct9YErpfo6OyKRS/OWSs5F3xuOsOYI8zKyfIZLNaq
+         e/qQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ELdUONa2ckCb0g92cQe783L5naGON8kZrHYJoYPRMio=;
+        b=qw6ogCaTDf22q/iQX/T+kFMmkJ0XpaYTf6akgwEfIRn7gAwclqXXRDPXdo4o21aRnX
+         6v/4vsNezkl2D24gt81NUX3BVFo2JKkx//KdGBd/WeHiRwzVGENnXi+ddNjteRJOIPO6
+         C5fjHqnKm1HnJRCqzqrMgcySRANW54noiif7ksdyR2GXoK+8kN8JUuKKBIS5kJIcS3U9
+         wjV3N26gUL9OwEp6CslwFuygI/E/6JCPhcVFcb2lUyo5APEDrHuBUpdFxd90UBWoaLY8
+         R3YZEF25Xmn55hpfriBDXPif9V8atgEsSqhUbeJd0ilj6KjUCP4of76g5I47ryu8pb2v
+         B5Dg==
+X-Gm-Message-State: APjAAAVUmW40BdT284IjR8Z2GU4TMEVXj5Izh/u6DUgK4M8A/Ra81koi
+        orzwAdAkaUvBDiO79u2gWgrrI1yXPXrbfwFHsUg=
+X-Google-Smtp-Source: APXvYqyA11cuClnOLO4oeV+SgFJThguY0x2zlrGH9RqOy9cyEprbnVIl37fc0V3tC5HMMwCWqY47vjyKEZER/AJjSDQ=
+X-Received: by 2002:a5e:8505:: with SMTP id i5mr17060768ioj.158.1576495567012;
+ Mon, 16 Dec 2019 03:26:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a38ZhQcA0Vj-EtNzmH7+iuoOhPrQUzN-avxJn9iU2K5=Q@mail.gmail.com>
+References: <20191025190723.21105-1-aford173@gmail.com>
+In-Reply-To: <20191025190723.21105-1-aford173@gmail.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Mon, 16 Dec 2019 05:25:55 -0600
+Message-ID: <CAHCN7xJZ2oF-vV87RVygLrcDU5tAee5M+btn+m3gHOewHjmv0Q@mail.gmail.com>
+Subject: Re: [PATCH] media: ov5640: Put max framerate into table and simplify check
+To:     Steve Longerbeam <slongerbeam@gmail.com>
+Cc:     linux-media <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 11:22:04AM +0100, Arnd Bergmann wrote:
-> On Mon, Dec 16, 2019 at 10:15 AM Naresh Kamboju
-> <naresh.kamboju@linaro.org> wrote:
-> >
-> > The following kernel crash reported on qemu_x86_64 boot running
-> > 5.5.0-rc1 mainline kernel.
-> 
-> I looked for too long at v5.5-rc1 completely puzzled by how you got to this
-> object code before realizing that this is a git snapshot between -rc1 and -rc2.
-> 
-> The code in question was changed by a recent series from Dominik Brodowski,
-> the main difference being commit cccaa5e33525 ("init: use do_mount() instead
-> of ksys_mount()").
-> 
-> It looks like the NULL-check in ksys_mount()/copy_mount_options() is missing
-> from the new mount_block_root, so it passes a NULL pointer into strncpy().
-> 
-> Something like this should fix it (not tested):
+On Fri, Oct 25, 2019 at 2:07 PM Adam Ford <aford173@gmail.com> wrote:
+>
+> Currently the various modes are placed into a table, but when
+> ov5640_find_mode is called, it has to double check whether
+> or not the requested framerate is tolerated by the mode.
+> The determination is based on checking hact, vact, and frame rate.
+>
+> Only 640x480 is allowed at 60fps and QSXGA is limited to 15fps, but
+> as the number of permitted frame rates change, this will begin to
+> add more and more complexity to the check.
+>
+> This patch simplifies the check by adding the max framerate
+> allowed for each mode into the table of modes.  It then compares
+> the requested framerate to the max permitted in the mode's table.
+> This reduces the number of comparisions to one down from three
+> at run-time.
 
-This equivalent patch by Linus already got some testing:
+Gentle nudge on this patch.  It's been nearly two months without any feedback.
+There were some fixes backported to stable kernels which will get ugly
+as this drivers gets more mature and as framerates start to increase.
 
-https://lore.kernel.org/lkml/CAHk-=wh8VLe3AEKhz=1bzSO=1fv4EM71EhufxuC=Gp=+bLhXoA@mail.gmail.com/
+This patch should simplify the check by adding the max frame rate to
+the table and then only having to do to one check later.
 
-Thanks,
-	Dominik
+adam
+>
+> Signed-off-by: Adam Ford <aford173@gmail.com>
+>
+> diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+> index 5e495c833d32..19e10c59860b 100644
+> --- a/drivers/media/i2c/ov5640.c
+> +++ b/drivers/media/i2c/ov5640.c
+> @@ -189,6 +189,7 @@ struct ov5640_mode_info {
+>         u32 vtot;
+>         const struct reg_value *reg_data;
+>         u32 reg_data_size;
+> +       u32 max_fps;
+>  };
+>
+>  struct ov5640_ctrls {
+> @@ -544,6 +545,7 @@ static const struct ov5640_mode_info ov5640_mode_init_data = {
+>         0, SUBSAMPLING, 640, 1896, 480, 984,
+>         ov5640_init_setting_30fps_VGA,
+>         ARRAY_SIZE(ov5640_init_setting_30fps_VGA),
+> +       OV5640_30_FPS,
+>  };
+>
+>  static const struct ov5640_mode_info
+> @@ -551,39 +553,48 @@ ov5640_mode_data[OV5640_NUM_MODES] = {
+>         {OV5640_MODE_QCIF_176_144, SUBSAMPLING,
+>          176, 1896, 144, 984,
+>          ov5640_setting_QCIF_176_144,
+> -        ARRAY_SIZE(ov5640_setting_QCIF_176_144)},
+> +        ARRAY_SIZE(ov5640_setting_QCIF_176_144),
+> +        OV5640_30_FPS},
+>         {OV5640_MODE_QVGA_320_240, SUBSAMPLING,
+>          320, 1896, 240, 984,
+>          ov5640_setting_QVGA_320_240,
+> -        ARRAY_SIZE(ov5640_setting_QVGA_320_240)},
+> +        ARRAY_SIZE(ov5640_setting_QVGA_320_240),
+> +        OV5640_30_FPS},
+>         {OV5640_MODE_VGA_640_480, SUBSAMPLING,
+>          640, 1896, 480, 1080,
+>          ov5640_setting_VGA_640_480,
+> -        ARRAY_SIZE(ov5640_setting_VGA_640_480)},
+> +        ARRAY_SIZE(ov5640_setting_VGA_640_480),
+> +        OV5640_60_FPS},
+>         {OV5640_MODE_NTSC_720_480, SUBSAMPLING,
+>          720, 1896, 480, 984,
+>          ov5640_setting_NTSC_720_480,
+> -        ARRAY_SIZE(ov5640_setting_NTSC_720_480)},
+> +        ARRAY_SIZE(ov5640_setting_NTSC_720_480),
+> +       OV5640_30_FPS},
+>         {OV5640_MODE_PAL_720_576, SUBSAMPLING,
+>          720, 1896, 576, 984,
+>          ov5640_setting_PAL_720_576,
+> -        ARRAY_SIZE(ov5640_setting_PAL_720_576)},
+> +        ARRAY_SIZE(ov5640_setting_PAL_720_576),
+> +        OV5640_30_FPS},
+>         {OV5640_MODE_XGA_1024_768, SUBSAMPLING,
+>          1024, 1896, 768, 1080,
+>          ov5640_setting_XGA_1024_768,
+> -        ARRAY_SIZE(ov5640_setting_XGA_1024_768)},
+> +        ARRAY_SIZE(ov5640_setting_XGA_1024_768),
+> +        OV5640_30_FPS},
+>         {OV5640_MODE_720P_1280_720, SUBSAMPLING,
+>          1280, 1892, 720, 740,
+>          ov5640_setting_720P_1280_720,
+> -        ARRAY_SIZE(ov5640_setting_720P_1280_720)},
+> +        ARRAY_SIZE(ov5640_setting_720P_1280_720),
+> +        OV5640_30_FPS},
+>         {OV5640_MODE_1080P_1920_1080, SCALING,
+>          1920, 2500, 1080, 1120,
+>          ov5640_setting_1080P_1920_1080,
+> -        ARRAY_SIZE(ov5640_setting_1080P_1920_1080)},
+> +        ARRAY_SIZE(ov5640_setting_1080P_1920_1080),
+> +        OV5640_30_FPS},
+>         {OV5640_MODE_QSXGA_2592_1944, SCALING,
+>          2592, 2844, 1944, 1968,
+>          ov5640_setting_QSXGA_2592_1944,
+> -        ARRAY_SIZE(ov5640_setting_QSXGA_2592_1944)},
+> +        ARRAY_SIZE(ov5640_setting_QSXGA_2592_1944),
+> +        OV5640_15_FPS},
+>  };
+>
+>  static int ov5640_init_slave_id(struct ov5640_dev *sensor)
+> @@ -1606,14 +1617,8 @@ ov5640_find_mode(struct ov5640_dev *sensor, enum ov5640_frame_rate fr,
+>             (!nearest && (mode->hact != width || mode->vact != height)))
+>                 return NULL;
+>
+> -       /* Only 640x480 can operate at 60fps (for now) */
+> -       if (fr == OV5640_60_FPS &&
+> -           !(mode->hact == 640 && mode->vact == 480))
+> -               return NULL;
+> -
+> -       /* 2592x1944 only works at 15fps max */
+> -       if ((mode->hact == 2592 && mode->vact == 1944) &&
+> -           fr > OV5640_15_FPS)
+> +       /* Check to see if the current mode exceeds the max frame rate */
+> +       if (ov5640_framerates[fr] > ov5640_framerates[mode->max_fps])
+>                 return NULL;
+>
+>         return mode;
+> --
+> 2.17.1
+>
