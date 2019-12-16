@@ -3,177 +3,131 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C33E3C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2428CC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B82E2176D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:21:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED990206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:22:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520518;
-	bh=8u+kKloouRp+fZXOBHVFwKcMa6g72kyl4ur9MdRpgTE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=If+f61NlJFjwcyblAEbGJ8jZiM//i95qxwSYggiSonllpDxM03biBTdNSgxWcb1TI
-	 Q2rXvT+pCLs5zEjuafR8gBwKi/e3Mf4oxLucPeKGb0knW842crG8rz1i9N3Cl3+h4W
-	 +UOfFQE8/+/+NvfiXknpUYuQcgYl3IoMjFiIGtZ0=
+	s=default; t=1576520526;
+	bh=xQzuAvHqF81ZrpOZLPBMiu7ImwxVFZWyQDejleoc3Ls=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EWDmp0kYtRIbZtL58VHcY9pcsvh4xx7TpQZ/5Po3el13BSSPXE5ydUQevGYwwvj2R
+	 rUJ/L5TlUFkhJ2bOz16+RmOeev66cpmSyqvdcdPqTs99qiRrsUCjoEfNxVklEU/9AA
+	 2qCwUmARJ5V2rjYtduHwM9LMR3VHzzhN+zhHnp68=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732317AbfLPSV5 (ORCPT
+        id S1732335AbfLPSWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:21:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57052 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:22:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732297AbfLPSVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:21:47 -0500
+        id S1732153AbfLPSVy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:21:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6650B2176D;
-        Mon, 16 Dec 2019 18:21:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5619206EC;
+        Mon, 16 Dec 2019 18:21:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520506;
-        bh=8u+kKloouRp+fZXOBHVFwKcMa6g72kyl4ur9MdRpgTE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vxQGdeXO88CZoAjiviBq7Sfl+iu3N77AD1VPhQCfY2oUoTiEEtXK/muimhmBpr1ol
-         uBLvk4S5XN0ZdUvJffbqJK4WiPIWMCZxKodBSZ3ay77NKJYV6iQUCHJs5po1kY77Q4
-         AQH/zRHhtm8j6+1NhBgdME9LaXEdBJ22uZ9IjhUw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        yangerkun <yangerkun@huawei.com>, Jan Kara <jack@suse.cz>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 5.4 176/177] ext4: fix a bug in ext4_wait_for_tail_page_commit
-Date:   Mon, 16 Dec 2019 18:50:32 +0100
-Message-Id: <20191216174851.118372183@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
-References: <20191216174811.158424118@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1576520514;
+        bh=xQzuAvHqF81ZrpOZLPBMiu7ImwxVFZWyQDejleoc3Ls=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gwEIDApfZaMAlUG1g/t+VDDlL1gLqUSxCofBdyeR3Nc/y+pJw2/yXDA/YSKru86KG
+         O7/jK3JqilSdrreqY+IWFaXQHdInExRczu5l9e8i0uhIXqseI3dObWtgda6GmuacDF
+         iVd6EjYl470l7Z2N6mqnkH6GCLdWKOC+xYfARg9U=
+Date:   Mon, 16 Dec 2019 19:05:02 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     cang@codeaurora.org
+Cc:     Bart Van Assche <bvanassche@acm.org>, asutoshd@codeaurora.org,
+        nguyenb@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] scsi: ufs: Put SCSI host after remove it
+Message-ID: <20191216180502.GA2404915@kroah.com>
+References: <1576328616-30404-1-git-send-email-cang@codeaurora.org>
+ <1576328616-30404-2-git-send-email-cang@codeaurora.org>
+ <85475247-efd5-732e-ae74-6d9a11e1bdf2@acm.org>
+ <cd6dc7c90d43b8ca8254a43da48334fc@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cd6dc7c90d43b8ca8254a43da48334fc@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yangerkun <yangerkun@huawei.com>
+On Mon, Dec 16, 2019 at 10:31:29PM +0800, cang@codeaurora.org wrote:
+> On 2019-12-15 02:32, Bart Van Assche wrote:
+> > On 12/14/19 8:03 AM, Can Guo wrote:
+> > > In ufshcd_remove(), after SCSI host is removed, put it once so that
+> > > its
+> > > resources can be released.
+> > > 
+> > > Signed-off-by: Can Guo <cang@codeaurora.org>
+> > > 
+> > > diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> > > index b5966fa..a86b0fd 100644
+> > > --- a/drivers/scsi/ufs/ufshcd.c
+> > > +++ b/drivers/scsi/ufs/ufshcd.c
+> > > @@ -8251,6 +8251,7 @@ void ufshcd_remove(struct ufs_hba *hba)
+> > >   	ufs_bsg_remove(hba);
+> > >   	ufs_sysfs_remove_nodes(hba->dev);
+> > >   	scsi_remove_host(hba->host);
+> > > +	scsi_host_put(hba->host);
+> > >   	/* disable interrupts */
+> > >   	ufshcd_disable_intr(hba, hba->intr_mask);
+> > >   	ufshcd_hba_stop(hba, true);
+> > 
+> > Hi Can,
+> > 
+> > The UFS driver may queue work asynchronously and that asynchronous
+> > work may refer to the SCSI host, e.g. ufshcd_err_handler(). Is it
+> > guaranteed that all that asynchronous work has finished before
+> > scsi_host_put() is called?
+> > 
+> > Thanks,
+> > 
+> > Bart.
+> 
+> Hi Bart,
+> 
+> As SCSI host is allocated in ufshcd_platform_init() during platform
+> drive probe, it is much more appropriate if platform driver calls
+> ufshcd_dealloc_host() in their own drv->remove() path. How do you
+> think if I change it as below? If it is OK to you, please ignore my
+> previous mails.
+> 
+> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+> index 3d4582e..ea45756 100644
+> --- a/drivers/scsi/ufs/ufs-qcom.c
+> +++ b/drivers/scsi/ufs/ufs-qcom.c
+> @@ -3239,6 +3239,7 @@ static int ufs_qcom_remove(struct platform_device
+> *pdev)
+> 
+>         pm_runtime_get_sync(&(pdev)->dev);
+>         ufshcd_remove(hba);
+> +       ufshcd_dealloc_host(hba);
+>         return 0;
+>  }
 
-commit 565333a1554d704789e74205989305c811fd9c7a upstream.
+Wait, why is this a platform device?  Don't you hang off of a pci
+device?  Or am I missing something earlier in this patchset?
 
-No need to wait for any commit once the page is fully truncated.
-Besides, it may confuse e.g. concurrent ext4_writepage() with the page
-still be dirty (will be cleared by truncate_pagecache() in
-ext4_setattr()) but buffers has been freed; and then trigger a bug
-show as below:
+thanks,
 
-[   26.057508] ------------[ cut here ]------------
-[   26.058531] kernel BUG at fs/ext4/inode.c:2134!
-...
-[   26.088130] Call trace:
-[   26.088695]  ext4_writepage+0x914/0xb28
-[   26.089541]  writeout.isra.4+0x1b4/0x2b8
-[   26.090409]  move_to_new_page+0x3b0/0x568
-[   26.091338]  __unmap_and_move+0x648/0x988
-[   26.092241]  unmap_and_move+0x48c/0xbb8
-[   26.093096]  migrate_pages+0x220/0xb28
-[   26.093945]  kernel_mbind+0x828/0xa18
-[   26.094791]  __arm64_sys_mbind+0xc8/0x138
-[   26.095716]  el0_svc_common+0x190/0x490
-[   26.096571]  el0_svc_handler+0x60/0xd0
-[   26.097423]  el0_svc+0x8/0xc
-
-Run the procedure (generate by syzkaller) parallel with ext3.
-
-void main()
-{
-	int fd, fd1, ret;
-	void *addr;
-	size_t length = 4096;
-	int flags;
-	off_t offset = 0;
-	char *str = "12345";
-
-	fd = open("a", O_RDWR | O_CREAT);
-	assert(fd >= 0);
-
-	/* Truncate to 4k */
-	ret = ftruncate(fd, length);
-	assert(ret == 0);
-
-	/* Journal data mode */
-	flags = 0xc00f;
-	ret = ioctl(fd, _IOW('f', 2, long), &flags);
-	assert(ret == 0);
-
-	/* Truncate to 0 */
-	fd1 = open("a", O_TRUNC | O_NOATIME);
-	assert(fd1 >= 0);
-
-	addr = mmap(NULL, length, PROT_WRITE | PROT_READ,
-					MAP_SHARED, fd, offset);
-	assert(addr != (void *)-1);
-
-	memcpy(addr, str, 5);
-	mbind(addr, length, 0, 0, 0, MPOL_MF_MOVE);
-}
-
-And the bug will be triggered once we seen the below order.
-
-reproduce1                         reproduce2
-
-...                            |   ...
-truncate to 4k                 |
-change to journal data mode    |
-                               |   memcpy(set page dirty)
-truncate to 0:                 |
-ext4_setattr:                  |
-...                            |
-ext4_wait_for_tail_page_commit |
-                               |   mbind(trigger bug)
-truncate_pagecache(clean dirty)|   ...
-...                            |
-
-mbind will call ext4_writepage() since the page still be dirty, and then
-report the bug since the buffers has been free. Fix it by return
-directly once offset equals to 0 which means the page has been fully
-truncated.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: yangerkun <yangerkun@huawei.com>
-Link: https://lore.kernel.org/r/20190919063508.1045-1-yangerkun@huawei.com
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- fs/ext4/inode.c |   12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
-
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -5459,11 +5459,15 @@ static void ext4_wait_for_tail_page_comm
- 
- 	offset = inode->i_size & (PAGE_SIZE - 1);
- 	/*
--	 * All buffers in the last page remain valid? Then there's nothing to
--	 * do. We do the check mainly to optimize the common PAGE_SIZE ==
--	 * blocksize case
-+	 * If the page is fully truncated, we don't need to wait for any commit
-+	 * (and we even should not as __ext4_journalled_invalidatepage() may
-+	 * strip all buffers from the page but keep the page dirty which can then
-+	 * confuse e.g. concurrent ext4_writepage() seeing dirty page without
-+	 * buffers). Also we don't need to wait for any commit if all buffers in
-+	 * the page remain valid. This is most beneficial for the common case of
-+	 * blocksize == PAGESIZE.
- 	 */
--	if (offset > PAGE_SIZE - i_blocksize(inode))
-+	if (!offset || offset > (PAGE_SIZE - i_blocksize(inode)))
- 		return;
- 	while (1) {
- 		page = find_lock_page(inode->i_mapping,
-
-
+greg k-h
