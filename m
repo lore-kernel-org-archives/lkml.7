@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D0BC3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF05C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E3AC20717
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 645C121835
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:51:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576518705;
-	bh=92m9MD0g2AXDPwD4TjpCVW3W2UQi4LGyYLnHE06iveM=;
+	s=default; t=1576518709;
+	bh=erO8LhwmHYx3npdBVv16b3/mLdZ9ho5gPtx775lkmY0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xQh98qspfiRfPx1n6G5dxHp/l9zxLimx4zMz3+Uhgy7HkEUqen6DTKJs3FHZYdXAc
-	 05v7tACVPQuPwwJYoNOX3IIp+5gYQ2ElDmlFTtkHVRlGd/JPs7tX/9fEouXzQS6gV5
-	 znyJYMUFahfigIz9OYq5BrQRpkUg4pBVE9OzAzqs=
+	b=tMrsqCLRZLtx1MYkHWla6DqZTXDKCpteHa3weEP7xxgMWSRm7hHaPnZQRIAkRmr4x
+	 egHlLRvTNrW8xP1p4totkEwKtv9E4/Nf7AfkO4q0mz5JM+c5cpS/YCuqFGhJ86vG6/
+	 X2g1OrWklhCdmaVnoAorK9WOCi+itiiv7bl4FtnE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727145AbfLPRvo (ORCPT
+        id S1727177AbfLPRvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:51:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42136 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:51:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727035AbfLPRvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:51:42 -0500
+        id S1727148AbfLPRvp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:51:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 023C322464;
-        Mon, 16 Dec 2019 17:51:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EFEB206EC;
+        Mon, 16 Dec 2019 17:51:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518702;
-        bh=92m9MD0g2AXDPwD4TjpCVW3W2UQi4LGyYLnHE06iveM=;
+        s=default; t=1576518704;
+        bh=erO8LhwmHYx3npdBVv16b3/mLdZ9ho5gPtx775lkmY0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XS7JHondk4saeFPUjezqVtzzXtrAJjp9PjLxC4SEUMFu3WdFQ4Ecl4+4EmoZynSyG
-         WuJXheGI3dUcmypCxxuHvkjL7bxqvbqwTEdfMOaRbAAOD77KvBmBqeeIvkq8lgAxTu
-         OBVbJLu4X1h2RvIimeBxB/Fu4MyscvsRyvLn/Bzk=
+        b=lS4M5ik+OdDWHmVeIfKG4S71MmGf1YzEEyw2rXsV0jK4zJZHai581QUkhg56AZMJ6
+         lYhTkqy0jGMsGvlm5qY83Ez3jlDMqRNOllb9tNEVHl5rEwz0AZFc+L8gZ9MWmL8wc/
+         6mfIHlWcKwmczlHQhKU/fb33BSo6fMf6U0wYR2ws=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mitch Williams <mitch.a.williams@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 032/267] rtc: s3c-rtc: Avoid using broken ALMYEAR register
-Date:   Mon, 16 Dec 2019 18:45:58 +0100
-Message-Id: <20191216174852.488895969@linuxfoundation.org>
+Subject: [PATCH 4.14 033/267] i40e: dont restart nway if autoneg not supported
+Date:   Mon, 16 Dec 2019 18:45:59 +0100
+Message-Id: <20191216174852.666955803@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -61,58 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Mitch Williams <mitch.a.williams@intel.com>
 
-[ Upstream commit 50c8aec4212a966817e868056efc9bfbb73337c0 ]
+[ Upstream commit 7c3758f7839377ab67529cc50264a640636c47af ]
 
-(RTC,ALM)YEAR registers of Exynos built-in RTC device contains 3 BCD
-characters. s3c-rtc driver uses only 2 lower of them and supports years
-from 2000..2099 range. The third BCD value is typically set to 0, but it
-looks that handling of it is broken in the hardware. It sometimes
-defaults to a random (even non-BCD) value. This is not an issue
-for handling RTCYEAR register, because bcd2bin() properly handles only
-8bit values (2 BCD characters, the third one is skipped). The problem
-is however with ALMYEAR register and proper RTC alarm operation. When
-YEAREN bit is set for the configured alarm, RTC hardware triggers alarm
-only when ALMYEAR and RTCYEAR matches. This usually doesn't happen
-because of the random noise on the third BCD character.
+On link types that do not support autoneg, we cannot attempt to restart
+nway negotiation. This results in a dead link that requires a power
+cycle to remedy.
 
-Fix this by simply skipping setting ALMYEAR register in alarm
-configuration. This workaround fixes broken alarm operation on Exynos
-built-in rtc device. My tests revealed that the issue happens on the
-following Exynos series: 3250, 4210, 4412, 5250 and 5410.
+Fix this by saving off the autoneg state and checking this value before
+we try to restart nway.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Mitch Williams <mitch.a.williams@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-s3c.c | 6 ------
- 1 file changed, 6 deletions(-)
+ drivers/net/ethernet/intel/i40e/i40e_ethtool.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/rtc/rtc-s3c.c b/drivers/rtc/rtc-s3c.c
-index a8992c227f611..4120a305954af 100644
---- a/drivers/rtc/rtc-s3c.c
-+++ b/drivers/rtc/rtc-s3c.c
-@@ -327,7 +327,6 @@ static int s3c_rtc_setalarm(struct device *dev, struct rtc_wkalrm *alrm)
- 	struct rtc_time *tm = &alrm->time;
- 	unsigned int alrm_en;
- 	int ret;
--	int year = tm->tm_year - 100;
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_ethtool.c b/drivers/net/ethernet/intel/i40e/i40e_ethtool.c
+index ef22793d6a032..751ac56168843 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_ethtool.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_ethtool.c
+@@ -969,6 +969,7 @@ static int i40e_set_pauseparam(struct net_device *netdev,
+ 	i40e_status status;
+ 	u8 aq_failures;
+ 	int err = 0;
++	u32 is_an;
  
- 	dev_dbg(dev, "s3c_rtc_setalarm: %d, %04d.%02d.%02d %02d:%02d:%02d\n",
- 		alrm->enabled,
-@@ -356,11 +355,6 @@ static int s3c_rtc_setalarm(struct device *dev, struct rtc_wkalrm *alrm)
- 		writeb(bin2bcd(tm->tm_hour), info->base + S3C2410_ALMHOUR);
+ 	/* Changing the port's flow control is not supported if this isn't the
+ 	 * port's controlling PF
+@@ -981,15 +982,14 @@ static int i40e_set_pauseparam(struct net_device *netdev,
+ 	if (vsi != pf->vsi[pf->lan_vsi])
+ 		return -EOPNOTSUPP;
+ 
+-	if (pause->autoneg != ((hw_link_info->an_info & I40E_AQ_AN_COMPLETED) ?
+-	    AUTONEG_ENABLE : AUTONEG_DISABLE)) {
++	is_an = hw_link_info->an_info & I40E_AQ_AN_COMPLETED;
++	if (pause->autoneg != is_an) {
+ 		netdev_info(netdev, "To change autoneg please use: ethtool -s <dev> autoneg <on|off>\n");
+ 		return -EOPNOTSUPP;
  	}
  
--	if (year < 100 && year >= 0) {
--		alrm_en |= S3C2410_RTCALM_YEAREN;
--		writeb(bin2bcd(year), info->base + S3C2410_ALMYEAR);
--	}
--
- 	if (tm->tm_mon < 12 && tm->tm_mon >= 0) {
- 		alrm_en |= S3C2410_RTCALM_MONEN;
- 		writeb(bin2bcd(tm->tm_mon + 1), info->base + S3C2410_ALMMON);
+ 	/* If we have link and don't have autoneg */
+-	if (!test_bit(__I40E_DOWN, pf->state) &&
+-	    !(hw_link_info->an_info & I40E_AQ_AN_COMPLETED)) {
++	if (!test_bit(__I40E_DOWN, pf->state) && !is_an) {
+ 		/* Send message that it might not necessarily work*/
+ 		netdev_info(netdev, "Autoneg did not complete so changing settings may not result in an actual change.\n");
+ 	}
+@@ -1040,7 +1040,7 @@ static int i40e_set_pauseparam(struct net_device *netdev,
+ 		err = -EAGAIN;
+ 	}
+ 
+-	if (!test_bit(__I40E_DOWN, pf->state)) {
++	if (!test_bit(__I40E_DOWN, pf->state) && is_an) {
+ 		/* Give it a little more time to try to come back */
+ 		msleep(75);
+ 		if (!test_bit(__I40E_DOWN, pf->state))
 -- 
 2.20.1
 
