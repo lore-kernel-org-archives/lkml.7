@@ -2,111 +2,167 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9A5C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D80C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 667EB206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 207AE206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:06:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="dPpfLEEG";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rd57ec0g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbfLPNF3 (ORCPT
+        id S1727790AbfLPNGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:05:29 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:21020 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727758AbfLPNF0 (ORCPT
+        Mon, 16 Dec 2019 08:06:20 -0500
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:37373 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727720AbfLPNGT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:05:26 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBGD2LfD050181
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 08:05:25 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wwdvma3ru-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 08:05:25 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Mon, 16 Dec 2019 13:05:22 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 16 Dec 2019 13:05:18 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBGD5Hg754984824
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 16 Dec 2019 13:05:17 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 34F6A11C052;
-        Mon, 16 Dec 2019 13:05:17 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EFCB511C054;
-        Mon, 16 Dec 2019 13:05:15 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.187.190])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 16 Dec 2019 13:05:15 +0000 (GMT)
-Subject: Re: [PATCH v4 2/2] IMA: Call workqueue functions to measure queued
- keys
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
-        sashal@kernel.org, jamorris@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-Date:   Mon, 16 Dec 2019 08:05:15 -0500
-In-Reply-To: <1576479187.3784.1.camel@HansenPartnership.com>
-References: <20191213171827.28657-1-nramas@linux.microsoft.com>
-         <20191213171827.28657-3-nramas@linux.microsoft.com>
-         <1576257955.8504.20.camel@HansenPartnership.com>
-         <39624b97-245c-ed05-27c5-588787aacc00@linux.microsoft.com>
-         <1576423353.3343.3.camel@HansenPartnership.com>
-         <1568ff14-316f-f2c4-84d4-7ca4c0a1936a@linux.microsoft.com>
-         <1576479187.3784.1.camel@HansenPartnership.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19121613-0012-0000-0000-0000037564B5
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19121613-0013-0000-0000-000021B14ACA
-Message-Id: <1576501515.4579.332.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-16_04:2019-12-16,2019-12-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- mlxlogscore=999 lowpriorityscore=0 malwarescore=0 spamscore=0 bulkscore=0
- suspectscore=0 clxscore=1015 phishscore=0 impostorscore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912160117
+        Mon, 16 Dec 2019 08:06:19 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 6A61222095;
+        Mon, 16 Dec 2019 08:06:18 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Mon, 16 Dec 2019 08:06:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=NMZStGRZCjWyP0MeSjpsZhM7eSL
+        tD64n+DEF5CJ+3aw=; b=dPpfLEEGwA17HQY8X+c9n83+gnAbLdMCvWpM08ltrzz
+        85QV53+G8MkSKdj+UyjeJLLdlBDhXWgBdnxfYmI5L0gPsZhvJVAG91ZoDAbpToHU
+        Bx+tSfE4Rs0F+rsyEgG2HcowkSYIC1T00r8yqD6lEEEDcuc9/R5s25oeF4luMFqq
+        qBWuSZsMoGYt46JwmUFseOR2djDu45G9Zq+lWsZ4UGKL5kz7kqls16fdaCDAPa1Y
+        /xqF+KTOhKYPgNGrf7x3crrjv7OCUPFsI+2MfjDMd8MnpIjuwA9/fPYasuWAYv6C
+        kiVaDjiGk2O/nJ5Wp077yrrCCvTLa+6J0f2Ra0i9tkw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=NMZStG
+        RZCjWyP0MeSjpsZhM7eSLtD64n+DEF5CJ+3aw=; b=rd57ec0gOjvMgdT5C4B7zT
+        62TtKAGgb1ycHMlVwr2m7u6yyYPo5P7JLAAdwS/EiNG0LxnijtVUvzPqi3s/Eob0
+        o3r+dS9ayL+V1hoz1a98BmlR7ab38o9mNR64Ck3V5Cq/fDV8zvT52PfDZUvBO+91
+        ypyVCoHwzNlomSSyoCiVeQcyTy1HtVbNG6nFmCAzLth/mWRBqije8dsnwjdt+qG2
+        LE/YVNZZy+ekWtlwux0/Quir8iTLp8k1IVcsd4bHe/HwI5iv7V+VV/QF0ZmUQTRQ
+        r0nuN44X7ashISQeRVpbtCw1t1Qiyc3sxrGb4H6jd7s/8yFhD+9VI+w6TNdxWhcg
+        ==
+X-ME-Sender: <xms:SYH3XZrs_iVzqQJrZlD4Pha_NOgaychwvHZ0bNK6UTS9IHDgdvc6WA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddthedggeekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggv
+    rhhnohdrthgvtghhnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:SYH3XaxUoKh7Lc9S1rjZOcf7MtTGjRzA6cOvEjP7ye19g19ZYRP0_g>
+    <xmx:SYH3XbOnZAnGSnEnKTA1GgOTR5YABwHAY4fha0N5Ne6S6AwnKhUBVg>
+    <xmx:SYH3XUdMjtu5h0URY60q-mrV5ngfIJ1tXDPxp4-qK-JRJFSu7zb51w>
+    <xmx:SoH3XXX-3nbVZErRu8qcs-qIJOTFh_My3nclPWKa-HdHsBgHL6Futw>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 9205480064;
+        Mon, 16 Dec 2019 08:06:16 -0500 (EST)
+Date:   Mon, 16 Dec 2019 14:06:15 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH] drm/panel: simple: Support reset GPIOs
+Message-ID: <20191216130615.qs6ub7bwqofwvhr7@gilmour.lan>
+References: <20191213181325.26228-1-miquel.raynal@bootlin.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ldeuyceeyd3l6v6w"
+Content-Disposition: inline
+In-Reply-To: <20191213181325.26228-1-miquel.raynal@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-12-16 at 15:53 +0900, James Bottomley wrote:
-> That doesn't matter ... the question is, is the input assumption that
-> both pre/post have to be called or neither must correct?  If so, the
-> code is wrong, if not, explain why.
 
-Thanks, James, for looking at the locking.
+--ldeuyceeyd3l6v6w
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-"ima_process_keys" is set once.  Once it is set, the keys are measured
-immediately.  For performance to avoid taking the mutex, both the
-reader and writer check "ima_process_keys" twice, once without taking
-the lock and, again, after taking the lock.  Based on the second test,
-the reader queues the "key" or not.  Refer to ima_queue_key().
+Hi,
 
-The latest patch version sets "ima_process_keys" after taking the
-lock.  With this change, the comment in ima_process_queued_keys() is
-now correct.  We're now guaranteed to process the queued "keys" just
-once and not drop any "key" measurements.
+On Fri, Dec 13, 2019 at 07:13:25PM +0100, Miquel Raynal wrote:
+> The panel common bindings provide a gpios-reset property which is
+> active low by default. Let's support it in the simple driver.
+>
+> De-asserting the reset pin implies a physical high, which in turns is
+> a logic low.
+>
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
-I hope this answers your question.
+The GPIOd API asks for a logical state, so it doesn't really matter
+what the polarity of the GPIO, OUT_LOW will always mean that the reset
+is deasserted (and thus, it will work even if the reset pin is active
+high).
 
-Mimi
+> ---
+>  drivers/gpu/drm/panel/panel-simple.c | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> index 5d487686d25c..15dd495c347d 100644
+> --- a/drivers/gpu/drm/panel/panel-simple.c
+> +++ b/drivers/gpu/drm/panel/panel-simple.c
+> @@ -110,6 +110,7 @@ struct panel_simple {
+>  	struct i2c_adapter *ddc;
+>
+>  	struct gpio_desc *enable_gpio;
+> +	struct gpio_desc *reset_gpio;
+>
+>  	struct drm_display_mode override_mode;
+>  };
+> @@ -433,12 +434,21 @@ static int panel_simple_probe(struct device *dev, const struct panel_desc *desc)
+>  	if (IS_ERR(panel->supply))
+>  		return PTR_ERR(panel->supply);
+>
+> +	panel->reset_gpio = devm_gpiod_get_optional(dev, "reset",
+> +						    GPIOD_OUT_LOW);
+> +	if (IS_ERR(panel->reset_gpio)) {
+> +		err = PTR_ERR(panel->reset_gpio);
+> +		if (err != -EPROBE_DEFER)
+> +			dev_err(dev, "failed to request reset pin: %d\n", err);
+> +		return err;
+> +	}
+> +
 
+However, I'm wondering if it wouldn't be better to just have the
+device maintained in reset at probe (so OUT_HIGH) and moved out of
+reset during either the prepare or enable callbacks.
+
+This is pretty much what is happening with the enable-gpios already.
+
+Also, panels usually need to wait for a minimum time after you
+deassert the reset line. How is that dealt with?
+
+I guess a good way to do that would be to add that duration to the
+panel description, since this is pretty much device specific.
+
+Thanks!
+Maxime
+
+--ldeuyceeyd3l6v6w
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfeBRwAKCRDj7w1vZxhR
+xUyrAQCxDBISeuwG0Hd9mE8A6cHdq7RlzWA4XYPeebic7OuEsAD9FPpgs1cdb8Sj
+vpa5jfHamjvrKF2+oxkeD52MZj+4CAk=
+=Risq
+-----END PGP SIGNATURE-----
+
+--ldeuyceeyd3l6v6w--
