@@ -2,54 +2,53 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8820C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F543C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B49EF20726
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3139120733
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:00:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519227;
-	bh=5IJM1pJA7ozEvkK9jLRtuFXCKoILH1YQJYX/K1ljbcQ=;
+	s=default; t=1576519231;
+	bh=yaa4SHHOBkTTvgTcLZDmSrDp6QN8JfylKS8nlKJd8ts=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R2C1oRWT3NnNiyP2BrBEV8dhMKC9Nm0mVND1wgiUmaXWfr7TZ/3JM+JkyRf/jihgc
-	 ZBYOWZPa98cXlcNrT8zW6PpaHcoHqVn8MV1Yd1yuNjDX2VV3ribfuU02E/9Owr6TS8
-	 Ii9sxPusQ/vWZzDg+UhgFYRnre2ud2YkN2vrAAWY=
+	b=AH4Y+upxQH7eTXF6KY2rNxH935jd7eScr8+nwplHl4m8eg/yFGwa8C1+lyf9d3BZ8
+	 Usz0seIUqZHz4Kh4NHXstH9E/yEoO/RsT5CfDMn4SK9BBd516EnSA5MvgEUV8AZV0z
+	 hAwrHRDOYfeNHHk85dL68j+gESJQifwNgmOSvaKg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728946AbfLPSA0 (ORCPT
+        id S1728768AbfLPSAa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:00:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34432 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:00:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728886AbfLPSAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:00:24 -0500
+        id S1728947AbfLPSA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:00:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7D2D20717;
-        Mon, 16 Dec 2019 18:00:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 237972072D;
+        Mon, 16 Dec 2019 18:00:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519224;
-        bh=5IJM1pJA7ozEvkK9jLRtuFXCKoILH1YQJYX/K1ljbcQ=;
+        s=default; t=1576519226;
+        bh=yaa4SHHOBkTTvgTcLZDmSrDp6QN8JfylKS8nlKJd8ts=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tcU20dkGPbe7ne/JQne/VJMQx35yHXYmfgpuARvSnOjY5nShTevHDI2u2FAbKkqJL
-         aC0ubaRkdc+A8cr3wB8oNU14+PdwInn8wDgMhimSWCzUwv28WkMxqY1It7cnMBCUs0
-         MvTpkhsc6RMV/GyKmHn4gh5BxlhfpgYMww5TRWXM=
+        b=BHuckGxwOxKgQi9zopgcfpTCImHj9ijG+ATU9onAPLPnV0qfs6PPEKRj4+h1mRyzY
+         KLNTrMBjLyBludadK1asmXSsNy5+KYHVvGHNC/tNHFPmpxL/8M06OgzJWLE5UaK38w
+         PLlBfmVYM2b7NcfhmUvHlDFX6I3agMg+iuwB5zYo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Machek <pavel@denx.de>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 247/267] phy: renesas: rcar-gen3-usb2: Fix sysfs interface of "role"
-Date:   Mon, 16 Dec 2019 18:49:33 +0100
-Message-Id: <20191216174916.111718482@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.14 230/267] powerpc/xive: Skip ioremap() of ESB pages for LSI interrupts
+Date:   Mon, 16 Dec 2019 18:49:16 +0100
+Message-Id: <20191216174915.156963322@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -62,52 +61,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+From: Cédric Le Goater <clg@kaod.org>
 
-[ Upstream commit 4bd5ead82d4b877ebe41daf95f28cda53205b039 ]
+commit b67a95f2abff0c34e5667c15ab8900de73d8d087 upstream.
 
-Since the role_store() uses strncmp(), it's possible to refer
-out-of-memory if the sysfs data size is smaller than strlen("host").
-This patch fixes it by using sysfs_streq() instead of strncmp().
+The PCI INTx interrupts and other LSI interrupts are handled differently
+under a sPAPR platform. When the interrupt source characteristics are
+queried, the hypervisor returns an H_INT_ESB flag to inform the OS
+that it should be using the H_INT_ESB hcall for interrupt management
+and not loads and stores on the interrupt ESB pages.
 
-Reported-by: Pavel Machek <pavel@denx.de>
-Fixes: 9bb86777fb71 ("phy: rcar-gen3-usb2: add sysfs for usb role swap")
-Cc: <stable@vger.kernel.org> # v4.10+
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Pavel Machek <pavel@denx.de>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+A default -1 value is returned for the addresses of the ESB pages. The
+driver ignores this condition today and performs a bogus IO mapping.
+Recent changes and the DEBUG_VM configuration option make the bug
+visible with :
+
+  kernel BUG at arch/powerpc/include/asm/book3s/64/pgtable.h:612!
+  Oops: Exception in kernel mode, sig: 5 [#1]
+  LE PAGE_SIZE=64K MMU=Radix MMU=Hash SMP NR_CPUS=1024 NUMA pSeries
+  Modules linked in:
+  CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.4.0-0.rc6.git0.1.fc32.ppc64le #1
+  NIP:  c000000000f63294 LR: c000000000f62e44 CTR: 0000000000000000
+  REGS: c0000000fa45f0d0 TRAP: 0700   Not tainted  (5.4.0-0.rc6.git0.1.fc32.ppc64le)
+  ...
+  NIP ioremap_page_range+0x4c4/0x6e0
+  LR  ioremap_page_range+0x74/0x6e0
+  Call Trace:
+    ioremap_page_range+0x74/0x6e0 (unreliable)
+    do_ioremap+0x8c/0x120
+    __ioremap_caller+0x128/0x140
+    ioremap+0x30/0x50
+    xive_spapr_populate_irq_data+0x170/0x260
+    xive_irq_domain_map+0x8c/0x170
+    irq_domain_associate+0xb4/0x2d0
+    irq_create_mapping+0x1e0/0x3b0
+    irq_create_fwspec_mapping+0x27c/0x3e0
+    irq_create_of_mapping+0x98/0xb0
+    of_irq_parse_and_map_pci+0x168/0x230
+    pcibios_setup_device+0x88/0x250
+    pcibios_setup_bus_devices+0x54/0x100
+    __of_scan_bus+0x160/0x310
+    pcibios_scan_phb+0x330/0x390
+    pcibios_init+0x8c/0x128
+    do_one_initcall+0x60/0x2c0
+    kernel_init_freeable+0x290/0x378
+    kernel_init+0x2c/0x148
+    ret_from_kernel_thread+0x5c/0x80
+
+Fixes: bed81ee181dd ("powerpc/xive: introduce H_INT_ESB hcall")
+Cc: stable@vger.kernel.org # v4.14+
+Signed-off-by: Cédric Le Goater <clg@kaod.org>
+Tested-by: Daniel Axtens <dja@axtens.net>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191203163642.2428-1-clg@kaod.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/phy/renesas/phy-rcar-gen3-usb2.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/powerpc/sysdev/xive/spapr.c |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-index 7f5e36bfeee8d..f8c7ce89d8d73 100644
---- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-+++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-@@ -22,6 +22,7 @@
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
- #include <linux/regulator/consumer.h>
-+#include <linux/string.h>
- #include <linux/workqueue.h>
+--- a/arch/powerpc/sysdev/xive/spapr.c
++++ b/arch/powerpc/sysdev/xive/spapr.c
+@@ -293,20 +293,28 @@ static int xive_spapr_populate_irq_data(
+ 	data->esb_shift = esb_shift;
+ 	data->trig_page = trig_page;
  
- /******* USB2.0 Host registers (original offset is +0x200) *******/
-@@ -234,9 +235,9 @@ static ssize_t role_store(struct device *dev, struct device_attribute *attr,
++	data->hw_irq = hw_irq;
++
+ 	/*
+ 	 * No chip-id for the sPAPR backend. This has an impact how we
+ 	 * pick a target. See xive_pick_irq_target().
  	 */
- 	is_b_device = rcar_gen3_check_id(ch);
- 	is_host = rcar_gen3_is_host(ch);
--	if (!strncmp(buf, "host", strlen("host")))
-+	if (sysfs_streq(buf, "host"))
- 		new_mode_is_host = true;
--	else if (!strncmp(buf, "peripheral", strlen("peripheral")))
-+	else if (sysfs_streq(buf, "peripheral"))
- 		new_mode_is_host = false;
- 	else
- 		return -EINVAL;
--- 
-2.20.1
-
+ 	data->src_chip = XIVE_INVALID_CHIP_ID;
+ 
++	/*
++	 * When the H_INT_ESB flag is set, the H_INT_ESB hcall should
++	 * be used for interrupt management. Skip the remapping of the
++	 * ESB pages which are not available.
++	 */
++	if (data->flags & XIVE_IRQ_FLAG_H_INT_ESB)
++		return 0;
++
+ 	data->eoi_mmio = ioremap(data->eoi_page, 1u << data->esb_shift);
+ 	if (!data->eoi_mmio) {
+ 		pr_err("Failed to map EOI page for irq 0x%x\n", hw_irq);
+ 		return -ENOMEM;
+ 	}
+ 
+-	data->hw_irq = hw_irq;
+-
+ 	/* Full function page supports trigger */
+ 	if (flags & XIVE_SRC_TRIGGER) {
+ 		data->trig_mmio = data->eoi_mmio;
 
 
