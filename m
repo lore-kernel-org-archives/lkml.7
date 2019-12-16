@@ -2,145 +2,102 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69807C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE9FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C69220684
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:00:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="N/+wLlRF"
+	by mail.kernel.org (Postfix) with ESMTP id ACF052146E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:02:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576504944;
+	bh=G46n2AygM5uYKLs8bWkcQ2/z7dSSMw9mmC7b4Fdxmx0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WK4JMi5OLUdh/zxTSEsDy0wKdvjzts/2Bdvn3H5CuFgtMw9z/UdyIqc+GvcdI7aQZ
+	 dxTPYSN9fx6VmBTjAW5HYkUm3DzpaPmw7XYSgZ8OM6P7QSoeQoo6/3X50BiC12ztFl
+	 1YiMGpfCVdZlnw3FHiqp1WMJ8FA7gigyBags4KC4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbfLPOAq (ORCPT
+        id S1727995AbfLPOCX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 09:00:46 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:44580 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727895AbfLPOAp (ORCPT
+        Mon, 16 Dec 2019 09:02:23 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40646 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727807AbfLPOCX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 09:00:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=s54BERw2fpNV/hAfXK6/L7r6aYOnHlfMZty4DDidJZU=; b=N/+wLlRFtWeb0dRIfQxHTqs9S
-        JxPUPv9IcCx5VM/r8on0VzQ06MmfYsipd+yvTi07w+SgN4KvJQQURi/95PxAN9dtnkXyJ7C6sCFhc
-        vqHd7ci8UqxfleA3GzMgebj8vpPcVSgwDnxJO0AdElZqvEnC3ICsk0WQ2OHT422xr/N+kRzll85dA
-        CW/f0fLoGvcLnsi/kBBVUZicfl7bebPeFLEz7Q0QjAGZ94QMHTZnKrlvjw4rZ1+D5SzYaWQL7hUhU
-        j7U009QLh2JvBz2Ry7TjaBry6Bk/1fywM4dTqSlDKcwsrCVGiBZLmHwVv8zPc0PUZ+nE55HWSJOtj
-        qa78h1r2w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1igqv5-0007cS-Tp; Mon, 16 Dec 2019 14:00:20 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5A0EB3007F2;
-        Mon, 16 Dec 2019 14:58:54 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2044C29D747A1; Mon, 16 Dec 2019 15:00:17 +0100 (CET)
-Date:   Mon, 16 Dec 2019 15:00:17 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Will Deacon <will@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nick Piggin <npiggin@gmail.com>, linux-arch@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Helge Deller <deller@gmx.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Nick Hu <nickhu@andestech.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH 05/17] asm-generic/tlb: Rename
- HAVE_RCU_TABLE_NO_INVALIDATE
-Message-ID: <20191216140017.GF2827@hirez.programming.kicks-ass.net>
-References: <20191211120713.360281197@infradead.org>
- <20191211122955.940455408@infradead.org>
- <87woawzc1t.fsf@linux.ibm.com>
- <20191216123752.GM2844@hirez.programming.kicks-ass.net>
- <d52ea890-c2ea-88f3-9d62-b86e60ee77ae@linux.ibm.com>
- <20191216132004.GO2844@hirez.programming.kicks-ass.net>
- <a9ae27c8-aa84-cda3-355c-7abb3b450d38@linux.ibm.com>
+        Mon, 16 Dec 2019 09:02:23 -0500
+Received: by mail-wm1-f67.google.com with SMTP id t14so6803691wmi.5
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 06:02:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PPVkKUPHdQuhDbyrhJPZArVtxKIO++dpqLMyX5OYaQg=;
+        b=I7oQ9HXSdnGWNLNtUHMqSL3eMhHW3n4yFEm5bbZiQRw/+xf+bdqlk2WRtCkpcumJOg
+         +1AVSnw3fgx7LEIxcKi0u3Zk7UdrjQH3clVHvrm0aW4R0sWkosutS8COAESUlZ/380JJ
+         43FEhCJ8io1SNvy7TZCUwebAd9SKerw7nh5aP3pmLVMmH1CM4xXnqkgOBqQshINoEC1N
+         0puoGvw6KjJQyXLStjVRMJJxExSTXfWHQ5E5BA9GgenPXzqGTx+tIrgaruWt9wvQ8/0G
+         J6bmsfmasodsqk9yYGuReF5y+SrRMAtZWbvSubCfeG9RzmNUEBasyj297SJRWmOCGmB1
+         7IHw==
+X-Gm-Message-State: APjAAAVJZXeoJzhHjwCf9dm+8vihnlY+OAjmTMWEGdQKQ2MqyJLzEdZd
+        M7IgtlDKHFTQqofgbRkOYSg=
+X-Google-Smtp-Source: APXvYqxqJLUTD5JRPD7XF6g976GK7Ro9fMcZnkhdiXEiTCJLlmII8WZQf57vEbIG+6XkGYWb9IuhkA==
+X-Received: by 2002:a7b:cb54:: with SMTP id v20mr28849561wmj.11.1576504940945;
+        Mon, 16 Dec 2019 06:02:20 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id w17sm21668962wrt.89.2019.12.16.06.02.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 06:02:20 -0800 (PST)
+Date:   Mon, 16 Dec 2019 15:02:19 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Tejun Heo <tj@kernel.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: Re: [RFC] workqueue: fix detecting reentrance
+Message-ID: <20191216140219.GD6444@dhcp22.suse.cz>
+References: <20191212091548.21668-1-hdanton@sina.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a9ae27c8-aa84-cda3-355c-7abb3b450d38@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191212091548.21668-1-hdanton@sina.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 07:10:30PM +0530, Aneesh Kumar K.V wrote:
-> On 12/16/19 6:50 PM, Peter Zijlstra wrote:
-> > On Mon, Dec 16, 2019 at 06:43:53PM +0530, Aneesh Kumar K.V wrote:
-> > > On 12/16/19 6:07 PM, Peter Zijlstra wrote:
-> > 
-> > > > I'm confused, are you saing you're happy to have PowerPC eat the extra
-> > > > TLB invalidates? I thought you cared about PPC performance :-)
-> > > > 
-> > > > 
-> > > 
-> > > Instead can we do
-> > > 
-> > > static inline void tlb_table_invalidate(struct mmu_gather *tlb)
-> > > {
-> > > #ifndef CONFIG_MMU_GATHER_RCU_TABLE_FREE
-> > > 	 * Invalidate page-table caches used by hardware walkers. Then we still
-> > > 	 * need to RCU-sched wait while freeing the pages because software
-> > > 	 * walkers can still be in-flight.
-> > > 	 */
-> > > 	tlb_flush_mmu_tlbonly(tlb);
-> > > #endif
-> > > }
-> > 
-> > How does that not break ARM/ARM64/s390 and x86 ?
-> > 
+Cc maintainers.
+
+On Thu 12-12-19 17:15:48, Hillf Danton wrote:
 > 
-> Hmm I missed that usage of RCU_TABLE_NO_INVALIDATE.
+> If we can find a valid worker that is serving the specified work at
+> the moment then the worker itself is enough to ensure reentrance and
+> workqueue doesn't matter here because it is permitted for a work to
+> requeue itself either on different cpu or numa node or even on another
+> workqueue.
 
-What use? Only PPC and SPARC64 use that option. The reason they can use
-it is because they don't have a hardware walker (with exception of
-PPC-Radix, which I suppose your below patch fudges ?!).
+I do not follow what is the actual problem you are trying to fix here.
 
-So HAVE_RCU_TABLE_FREE will provide tlb_remove_table() for the use of
-freeing page-tables/directories. This is required for all architectures
-that have software walkers and !IPI TLBI.
-
-Arm, Arm64, Power, Sparc64, s390 and x86 use this option. While x86
-natively has IPI based TLBI, a bunch of the virtualization solutions got
-rid of the IPI for performance.
-
-Of those, Arm, Arm64, s390, x86 (and PPC-Radix) also have hardware
-walkers on those page-tables, and thus _must_ TLBI in between unhooking
-and freeing these pages.
-
-PPC-Hash and Sparc64 OTOH only ever access the linux page-tables through
-the software walker and thus can forgo this TLBI, and _THAT_ is what
-TABLE_NO_INVALIDATE is about (there actually is a comment that clearly
-states this).
-
-> Ok I guess we need to revert this change that went upstream this merge
-> window then
+> Fixes: c9178087acd7 ("workqueue: perform non-reentrancy test when queueing to unbound workqueues too")
+> Fixes: 18aa9effad4a ("workqueue: implement WQ_NON_REENTRANT")
+> Signed-off-by: Hillf Danton <hdanton@sina.com>
+> ---
 > 
-> commit 52162ec784fa05f3a4b1d8e84421279998be3773
-> Author: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-> Date:   Thu Oct 24 13:28:00 2019 +0530
-> 
->     powerpc/mm/book3s64/radix: Use freed_tables instead of need_flush_all
+> --- f/kernel/workqueue.c
+> +++ g/kernel/workqueue.c
+> @@ -1433,7 +1433,7 @@ retry:
+>  
+>  		worker = find_worker_executing_work(last_pool, work);
+>  
+> -		if (worker && worker->current_pwq->wq == wq) {
+> +		if (worker) {
+>  			pwq = worker->current_pwq;
+>  		} else {
+>  			/* meh... not running there, queue here */
 > 
 
-This really looks like you've got PPC-Radix wrong. As soon as you got
-hardware walkers on the linux page-tables, you must not use
-TABLE_NO_INVALIDATE.
+-- 
+Michal Hocko
+SUSE Labs
