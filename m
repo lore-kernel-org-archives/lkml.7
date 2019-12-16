@@ -2,103 +2,153 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA9C0C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C34A1C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2D1A20725
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:01:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IUjovb1v"
+	by mail.kernel.org (Postfix) with ESMTP id 9F5AC20725
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:01:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbfLPNBg (ORCPT
+        id S1727826AbfLPNBv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:01:36 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:49268 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727553AbfLPNBg (ORCPT
+        Mon, 16 Dec 2019 08:01:51 -0500
+Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:42531 "EHLO
+        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727639AbfLPNBv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:01:36 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBGD1GEB035729;
-        Mon, 16 Dec 2019 07:01:16 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576501276;
-        bh=qu4CX1xmsIJKNsiSCd4Q7cKnvTPwSjXkFWKSo8iJ+4U=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=IUjovb1voNOw0bGSYt1NM92Pnj8HaGhWHOB/Uf6pgKUahW5o8SeeoMDpJIK5mvJW5
-         SAFt0dkaf5/hQWLjucnoz03cLLQqhlFXLcYDtaJR7Tc8c/NLZNmX8D5s0jHg2AmD/U
-         zLgnkN/DPxAibbOMwYSdxreD4egLXB9aJgPSWWCM=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBGD1Gsn098541
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 16 Dec 2019 07:01:16 -0600
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 16
- Dec 2019 07:01:16 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 16 Dec 2019 07:01:16 -0600
-Received: from [10.250.79.55] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBGD1EGl118008;
-        Mon, 16 Dec 2019 07:01:14 -0600
-Subject: Re: [PATCH] dma-heap: Make the symbol 'dma_heap_ioctl_cmds' static
-To:     zhong jiang <zhongjiang@huawei.com>, <sumit.semwal@linaro.org>,
-        <benjamin.gaignard@linaro.org>
-CC:     <lmark@codeaurora.org>, <labbott@redhat.com>,
-        <Brian.Starkey@arm.com>, <john.stultz@linaro.org>,
-        <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1576490904-18069-1-git-send-email-zhongjiang@huawei.com>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <c1244a5f-b82a-baee-262a-7241531036ad@ti.com>
-Date:   Mon, 16 Dec 2019 08:01:14 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 16 Dec 2019 08:01:51 -0500
+Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
+ EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
+ 15.0.1156.6; Mon, 16 Dec 2019 04:46:34 -0800
+Received: from akaher-lnx-dev.eng.vmware.com (unknown [10.110.19.203])
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 30E75402B8;
+        Mon, 16 Dec 2019 04:46:27 -0800 (PST)
+From:   Ajay Kaher <akaher@vmware.com>
+To:     <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <punit.agrawal@arm.com>,
+        <akpm@linux-foundation.org>, <kirill.shutemov@linux.intel.com>,
+        <willy@infradead.org>, <will.deacon@arm.com>,
+        <mszeredi@redhat.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <srivatsab@vmware.com>,
+        <srivatsa@csail.mit.edu>, <amakhalov@vmware.com>,
+        <srinidhir@vmware.com>, <bvikas@vmware.com>, <anishs@vmware.com>,
+        <vsirnapalli@vmware.com>, <srostedt@vmware.com>,
+        <akaher@vmware.com>, Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juergen Gross <jgross@suse.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: [PATCH v3 8/8] x86, mm, gup: prevent get_page() race with munmap in paravirt guest
+Date:   Tue, 17 Dec 2019 02:15:48 +0530
+Message-ID: <1576529149-14269-9-git-send-email-akaher@vmware.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1576529149-14269-1-git-send-email-akaher@vmware.com>
+References: <1576529149-14269-1-git-send-email-akaher@vmware.com>
 MIME-Version: 1.0
-In-Reply-To: <1576490904-18069-1-git-send-email-zhongjiang@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
+Received-SPF: None (EX13-EDG-OU-002.vmware.com: akaher@vmware.com does not
+ designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/16/19 5:08 AM, zhong jiang wrote:
-> Fix the following sparse warning.
-> 
-> drivers/gpu/drm/ast/ast_main.c:391:22: warning: symbol 'ast_mode_config_mode_valid' was not declared. Should it be static?
-> 
+From: Vlastimil Babka <vbabka@suse.cz>
 
+The x86 version of get_user_pages_fast() relies on disabled interrupts to
+synchronize gup_pte_range() between gup_get_pte(ptep); and get_page() against
+a parallel munmap. The munmap side nulls the pte, then flushes TLBs, then
+releases the page. As TLB flush is done synchronously via IPI disabling
+interrupts blocks the page release, and get_page(), which assumes existing
+reference on page, is thus safe.
+However when TLB flush is done by a hypercall, e.g. in a Xen PV guest, there is
+no blocking thanks to disabled interrupts, and get_page() can succeed on a page
+that was already freed or even reused.
 
-The patch looks valid, but this commit message does not seem to match..
+We have recently seen this happen with our 4.4 and 4.12 based kernels, with
+userspace (java) that exits a thread, where mm_release() performs a futex_wake()
+on tsk->clear_child_tid, and another thread in parallel unmaps the page where
+tsk->clear_child_tid points to. The spurious get_page() succeeds, but futex code
+immediately releases the page again, while it's already on a freelist. Symptoms
+include a bad page state warning, general protection faults acessing a poisoned
+list prev/next pointer in the freelist, or free page pcplists of two cpus joined
+together in a single list. Oscar has also reproduced this scenario, with a
+patch inserting delays before the get_page() to make the race window larger.
 
-Andrew
+Fix this by removing the dependency on TLB flush interrupts the same way as the
+generic get_user_pages_fast() code by using page_cache_add_speculative() and
+revalidating the PTE contents after pinning the page. Mainline is safe since
+4.13 where the x86 gup code was removed in favor of the common code. Accessing
+the page table itself safely also relies on disabled interrupts and TLB flush
+IPIs that don't happen with hypercalls, which was acknowledged in commit
+9e52fc2b50de ("x86/mm: Enable RCU based page table freeing
+(CONFIG_HAVE_RCU_TABLE_FREE=y)"). That commit with follups should also be
+backported for full safety, although our reproducer didn't hit a problem
+without that backport.
 
+Reproduced-by: Oscar Salvador <osalvador@suse.de>
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
 
-> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
-> ---
->  drivers/dma-buf/dma-heap.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma-buf/dma-heap.c b/drivers/dma-buf/dma-heap.c
-> index 4f04d10..da2090e 100644
-> --- a/drivers/dma-buf/dma-heap.c
-> +++ b/drivers/dma-buf/dma-heap.c
-> @@ -106,7 +106,7 @@ static long dma_heap_ioctl_allocate(struct file *file, void *data)
->  	return 0;
->  }
->  
-> -unsigned int dma_heap_ioctl_cmds[] = {
-> +static unsigned int dma_heap_ioctl_cmds[] = {
->  	DMA_HEAP_IOC_ALLOC,
->  };
->  
-> 
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+---
+ arch/x86/mm/gup.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/mm/gup.c b/arch/x86/mm/gup.c
+index 6612d532e42e..6379a4883c0a 100644
+--- a/arch/x86/mm/gup.c
++++ b/arch/x86/mm/gup.c
+@@ -9,6 +9,7 @@
+ #include <linux/vmstat.h>
+ #include <linux/highmem.h>
+ #include <linux/swap.h>
++#include <linux/pagemap.h>
+ 
+ #include <asm/pgtable.h>
+ 
+@@ -95,10 +96,23 @@ static noinline int gup_pte_range(pmd_t pmd, unsigned long addr,
+ 		}
+ 		VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
+ 		page = pte_page(pte);
+-		if (unlikely(!try_get_page(page))) {
++
++		if (WARN_ON_ONCE(page_ref_count(page) < 0)) {
++			pte_unmap(ptep);
++			return 0;
++		}
++
++		if (!page_cache_get_speculative(page)) {
+ 			pte_unmap(ptep);
+ 			return 0;
+ 		}
++
++		if (unlikely(pte_val(pte) != pte_val(*ptep))) {
++			put_page(page);
++			pte_unmap(ptep);
++			return 0;
++		}
++
+ 		SetPageReferenced(page);
+ 		pages[*nr] = page;
+ 		(*nr)++;
+-- 
+2.23.0
