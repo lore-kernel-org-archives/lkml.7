@@ -2,134 +2,128 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A24C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D7BC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED3C20725
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD16D20725
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:28:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576492095;
+	bh=aJNODjNlV3v54INi4VXe5H6gmqwl3DaOFDNd3U6oYJs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0h5vjij90jGSWqtjK4IQZgrlrwe9R8NoMyflqBMlWCFS8RTjrqshHpLzjq/aEmDRq
+	 Eo0AXHZWRWLh2tlFAwsjcMjpRf8aXzQg29x0CdeqZqILWM93Bi2hT+/tsfNkyCu80s
+	 IDUgWUhDhNxrDxotwJaVmrpgUQ2c5FXhpY2Di878=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727465AbfLPK2L (ORCPT
+        id S1727483AbfLPK2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 05:28:11 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:47034 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727099AbfLPK2L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 05:28:11 -0500
-Received: from [79.140.120.2] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1ignbc-0006mW-DJ; Mon, 16 Dec 2019 10:28:00 +0000
-Date:   Mon, 16 Dec 2019 11:27:59 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     qiwuchen55@gmail.com
-Cc:     peterz@infradead.org, mingo@kernel.org, oleg@redhat.com,
-        kernel-team@android.com, linux-kernel@vger.kernel.org,
-        chenqiwu@xiaomi.com
-Subject: Re: [PATCH v2] kernel/exit: do panic earlier to get coredump if
- global init task exit
-Message-ID: <20191216102758.4aasl4pzoz5rm4vx@wittgenstein>
-References: <1576466324-6067-1-git-send-email-qiwuchen55@gmail.com>
+        Mon, 16 Dec 2019 05:28:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47144 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727099AbfLPK2M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 05:28:12 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7CFD206CB;
+        Mon, 16 Dec 2019 10:28:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576492091;
+        bh=aJNODjNlV3v54INi4VXe5H6gmqwl3DaOFDNd3U6oYJs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PQl9UUy06Hwnhc+WgyHD0YW0DQzVIQ3siJt9h2AJUf2ItnavgPY6wHx2lPr17QIQn
+         pWJIbXf9wTMoC3M3VQX7GFymirkp4wWHUq5YB2bZkO1uOlk9b2v98++N2Cjd8ShJBl
+         a4tkOdQpyWd0Yqop+KfyrtBhCC5RfjzevBWWVcHs=
+Date:   Mon, 16 Dec 2019 10:28:06 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Daniel Axtens <dja@axtens.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: Re: READ_ONCE() + STACKPROTECTOR_STRONG == :/ (was Re: [GIT PULL]
+ Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops))
+Message-ID: <20191213144359.GA3826@willie-the-truck>
+References: <875zimp0ay.fsf@mpe.ellerman.id.au>
+ <20191212080105.GV2844@hirez.programming.kicks-ass.net>
+ <20191212100756.GA11317@willie-the-truck>
+ <20191212104610.GW2827@hirez.programming.kicks-ass.net>
+ <CAHk-=wjUBsH0BYDBv=q36482G-U7c=9bC89L_BViSciTfb8fhA@mail.gmail.com>
+ <20191212180634.GA19020@willie-the-truck>
+ <CAHk-=whRxB0adkz+V7SQC8Ac_rr_YfaPY8M2mFDfJP2FFBNz8A@mail.gmail.com>
+ <20191212193401.GB19020@willie-the-truck>
+ <CAHk-=wiMuHmWzQ7-CRQB6o+SHtA-u-Rp6VZwPcqDbjAaug80rQ@mail.gmail.com>
+ <CAK8P3a2QYpT_u3D7c_w+hoyeO-Stkj5MWyU_LgGOqnMtKLEudg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1576466324-6067-1-git-send-email-qiwuchen55@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAK8P3a2QYpT_u3D7c_w+hoyeO-Stkj5MWyU_LgGOqnMtKLEudg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 11:18:44AM +0800, qiwuchen55@gmail.com wrote:
-> From: chenqiwu <chenqiwu@xiaomi.com>
+On Fri, Dec 13, 2019 at 02:17:08PM +0100, Arnd Bergmann wrote:
+> On Thu, Dec 12, 2019 at 9:50 PM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> > On Thu, Dec 12, 2019 at 11:34 AM Will Deacon <will@kernel.org> wrote:
+> > > The root of my concern in all of this, and what started me looking at it in
+> > > the first place, is the interaction with 'typeof()'. Inheriting 'volatile'
+> > > for a pointer means that local variables in macros declared using typeof()
+> > > suddenly start generating *hideous* code, particularly when pointless stack
+> > > spills get stackprotector all excited.
+> >
+> > Yeah, removing volatile can be a bit annoying.
+> >
+> > For the particular case of the bitops, though, it's not an issue.
+> > Since you know the type there, you can just cast it.
+> >
+> > And if we had the rule that READ_ONCE() was an arithmetic type, you could do
+> >
+> >     typeof(0+(*p)) __var;
+> >
+> > since you might as well get the integer promotion anyway (on the
+> > non-volatile result).
+> >
+> > But that doesn't work with structures or unions, of course.
+> >
+> > I'm not entirely sure we have READ_ONCE() with a struct. I do know we
+> > have it with 64-bit entities on 32-bit machines, but that's ok with
+> > the "0+" trick.
 > 
-> When global init task get a chance to be killed, panic will happen in
-> later calling steps by do_exit()->exit_notify()->forget_original_parent()
-> ->find_child_reaper() if all init threads have exited.
-> 
-> However, it's hard to extract the coredump of init task from a kernel
-> crashdump, since exit_mm() has released its mm before panic. In order
-> to get the backtrace of init task in userspace, it's better to do panic
-> earlier at the beginning of exitting route.
-> 
-> It's worth noting that we must take case of a multi-threaded init exitting
-> issue. We need the test for is_global_init() && group_dead to ensure that
-> it is all of init threads exiting and not just the current thread.
-> 
-> Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
+> I'll have my randconfig builder look for instances, so far I found one,
+> see below. My feeling is that it would be better to enforce at least
+> the size being a 1/2/4/8, to avoid cases where someone thinks
+> the access is atomic, but it falls back on a memcpy.
 
-Just a comment and a nit I can fixup myself.
+I've been using something similar built on compiletime_assert_atomic_type()
+and I spotted another instance in the xdp code (xskq_validate_desc()) which
+tries to READ_ONCE() on a 128-bit descriptor, although a /very/ quick read
+of the code suggests that this probably can't be concurrently modified if
+the ring indexes are synchronised properly.
 
-Reviewed-by: Christian Brauner <christian.brauner@ubuntu.com>
+However, enabling this for 32-bit ARM is total carnage; as Linus mentioned,
+a whole bunch of code appears to be relying on atomic 64-bit access of
+READ_ONCE(); the perf ring buffer, io_uring, the scheduler, pm_runtime,
+cpuidle, ... :(
 
-Oleg, wdyt?
+Unfortunately, at least some of these *do* look like bugs, but I can't see
+how we can fix them, not least because the first two are user ABI afaict. It
+may also be that in practice we get 2x32-bit stores, and that works out fine
+when storing a 32-bit virtual address. I'm not sure what (if anything) the
+compiler guarantees in these cases.
 
-> ---
-> changes in v2:
->  - using is_global_init() && group_dead as panic condition.
->  - move up group_dead = atomic_dec_and_test(&tsk->signal->live).
->  - add comment for this change in do_exit().
-> ---
->  kernel/exit.c | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/kernel/exit.c b/kernel/exit.c
-> index bcbd598..33364c8 100644
-> --- a/kernel/exit.c
-> +++ b/kernel/exit.c
-> @@ -517,10 +517,6 @@ static struct task_struct *find_child_reaper(struct task_struct *father,
->  	}
->  
->  	write_unlock_irq(&tasklist_lock);
-> -	if (unlikely(pid_ns == &init_pid_ns)) {
-> -		panic("Attempted to kill init! exitcode=0x%08x\n",
-> -			father->signal->group_exit_code ?: father->exit_code);
-> -	}
-
-This made me queasy at first but from what I can see this is safe to remove.
-We could've only gotten here if:
-task == child_reaper && !find_alive_thread() && pid_ns == init_pid_ns
-that should be equivalent to the new
-is_global_init(tsk) && group_dead
-check, i.e. I think there's no condition we might loose by removing this
-check.
-
->  
->  	list_for_each_entry_safe(p, n, dead, ptrace_entry) {
->  		list_del_init(&p->ptrace_entry);
-> @@ -728,6 +724,14 @@ void __noreturn do_exit(long code)
->  		panic("Attempted to kill the idle task!");
->  
->  	/*
-> +	 * If all threads of global init have exited, do panic imeddiately
-
-Nit: s/imeddiately/immediately/
-
-but I can fix this up when applying.
-
-> +	 * to get the coredump to find any clue for init task in userspace.
-> +	 */
-> +	group_dead = atomic_dec_and_test(&tsk->signal->live);
-> +	if (unlikely(is_global_init(tsk) && group_dead))
-> +		panic("Attempted to kill init! exitcode=0x%08lx\n", code);
-> +
-> +	/*
->  	 * If do_exit is called because this processes oopsed, it's possible
->  	 * that get_fs() was left as KERNEL_DS, so reset it to USER_DS before
->  	 * continuing. Amongst other possible reasons, this is to prevent
-> @@ -764,7 +768,6 @@ void __noreturn do_exit(long code)
->  	if (tsk->mm)
->  		sync_mm_rss(tsk->mm);
->  	acct_update_integrals(tsk);
-> -	group_dead = atomic_dec_and_test(&tsk->signal->live);
->  	if (group_dead) {
->  #ifdef CONFIG_POSIX_TIMERS
->  		hrtimer_cancel(&tsk->signal->real_timer);
-> -- 
-> 1.9.1
-> 
+Will
