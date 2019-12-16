@@ -2,143 +2,153 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE3E5C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0638AC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78B8C20665
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:45:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E9q0H6hy"
+	by mail.kernel.org (Postfix) with ESMTP id CD5C420725
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:45:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576489531;
+	bh=ID6AxVJaN/XZPaFJDNB6plYUfGK4flJOFGIZw/PCpfI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0zjAJwofPaDgXFyFL6GE0tEQWU7PxAgWmmFozM3chgZFhNJUJNP15Gmbg5mnbrSUo
+	 ERTG7VAX85V8oo96Totj4SxwSEW6QVacKE2cqTmAAaiUTtf7Rbq/7Bmg/jf2zaTzCQ
+	 Pm5tRrWjQtE+rpcyePUqUgT9UjiSYDkyeADim03g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbfLPJpB (ORCPT
+        id S1727105AbfLPJpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 04:45:01 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51566 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726937AbfLPJpA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 04:45:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576489499;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cnDdBf82KhVXnWr+anktiJJjISUtDVrUWwe+tyMdfr0=;
-        b=E9q0H6hyzIBad2lTqen6qLRZBqu33YTq0CrqZZ/PJXAh1uewhrpUN+sNzN2oaw9xTKtmQe
-        SKtruJxM6JqIYS92jhu9Ucl22JkWd1gEKGbjlCDbFgtEfBwK/FSBgpgU0LMjSzgzET98q1
-        BdThgwqSmro7w2XCf2FcYrehiQQNVE8=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-37-HiMkFhcfOQK-d35e0RvnsA-1; Mon, 16 Dec 2019 04:44:58 -0500
-X-MC-Unique: HiMkFhcfOQK-d35e0RvnsA-1
-Received: by mail-wr1-f69.google.com with SMTP id h30so3471009wrh.5
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 01:44:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cnDdBf82KhVXnWr+anktiJJjISUtDVrUWwe+tyMdfr0=;
-        b=Bp6mfmIHUgqiBhBRgx31/bsclf/dPrCQznR/wn7L9EptE6hvVM7ineZBHfEtNgm0jZ
-         iy2Ne3C3KNbO6qy7LlbFKLP6Ls2Fyc57mWPLn+l2MwwMP8RXk6Obq7SWYND0OhHLZc0Z
-         YtSRJTBky6gpWZGnJeZAaYDwWjJiSv4KwOQih2UQt9t9HqnqMvfEYbiLYJZeNF1aYy5i
-         l/XadOT/h0+s/7X2hbgIsmAFyCs899Mazjek4sg9O8mjrXo8gUnFoZVUje5/EqnfF3yx
-         TFd5qdSBVh8wmVFG+2W69HrpP1M/MdqYyP4MTugK6kUwMVlyF0qxb79MadWXr2DfbI3E
-         xsDA==
-X-Gm-Message-State: APjAAAUIWea9xEu6++pDxLBRHQpUP8+g1wAj4jm0FJhu//YG9mPnbNh5
-        U6y7iaUMsnvjwjN/MNNV6MDwKPP7CKXzUefHMpQHPai1x3tVeoG1hO7hVi1Kwp5PrQ5yuup44In
-        BjZAB8p7sFspIjzjjsZS5Msul
-X-Received: by 2002:adf:f411:: with SMTP id g17mr28460639wro.89.1576489497497;
-        Mon, 16 Dec 2019 01:44:57 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwEyH6eiYWhPGokZxLoLnl2FBBKcXENk0ZwrWubb27++SVbpEDDa7w6koqgCE+ASXk2WC7KVg==
-X-Received: by 2002:adf:f411:: with SMTP id g17mr28460620wro.89.1576489497258;
-        Mon, 16 Dec 2019 01:44:57 -0800 (PST)
-Received: from [192.168.1.14] ([90.168.169.92])
-        by smtp.gmail.com with ESMTPSA id b17sm20890045wrp.49.2019.12.16.01.44.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Dec 2019 01:44:56 -0800 (PST)
-Subject: Re: [PATCH v2] efi: Only print errors about failing to get certs if
- EFI vars are found
-To:     Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     Peter Jones <pjones@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        Josh Boyer <jwboyer@fedoraproject.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-security-module@vger.kernel.org
-References: <20191119115043.21585-1-javierm@redhat.com>
- <bb68bacf-4982-0d86-d2cb-7799e47200f5@redhat.com>
-From:   Javier Martinez Canillas <javierm@redhat.com>
-Message-ID: <4c90fae4-422e-c805-e2f3-d3b921cc614d@redhat.com>
-Date:   Mon, 16 Dec 2019 10:44:53 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 16 Dec 2019 04:45:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49274 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726937AbfLPJpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 04:45:30 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D319320665;
+        Mon, 16 Dec 2019 09:45:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576489529;
+        bh=ID6AxVJaN/XZPaFJDNB6plYUfGK4flJOFGIZw/PCpfI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=usiK59CUF4wvbn/67RYEOn0Dl40MAPAvz11JWIwlYU8+v1B/eA6RgcQdph0DQoTse
+         Uj9p2alU1Ex+bT22CAN1SPQ55yltS4CATkUF8CVhrxuLPw1v+4YAB2nPL5OmW/dDkm
+         qn0CPviLJpyHQ7NqWfK4Ff2LapqUV9TjUR1xFzkk=
+Date:   Mon, 16 Dec 2019 09:45:24 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Sasha Levin <sashal@kernel.org>,
+        "kernelci.org bot" <bot@kernelci.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH AUTOSEL 4.19 031/219] arm64: preempt: Fix big-endian when
+ checking preempt count in assembly
+Message-ID: <20191216094523.GA9938@willie-the-truck>
+References: <20191122054911.1750-1-sashal@kernel.org>
+ <20191122054911.1750-24-sashal@kernel.org>
+ <20191214021403.GA1357@home.goodmis.org>
 MIME-Version: 1.0
-In-Reply-To: <bb68bacf-4982-0d86-d2cb-7799e47200f5@redhat.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191214021403.GA1357@home.goodmis.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/19/19 4:40 PM, Hans de Goede wrote:
-> Hi,
+On Fri, Dec 13, 2019 at 09:14:03PM -0500, Steven Rostedt wrote:
+> On Fri, Nov 22, 2019 at 12:46:03AM -0500, Sasha Levin wrote:
+> > From: Will Deacon <will.deacon@arm.com>
+> > 
+> > [ Upstream commit 7faa313f05cad184e8b17750f0cbe5216ac6debb ]
+> > 
+> > Commit 396244692232 ("arm64: preempt: Provide our own implementation of
+> > asm/preempt.h") extended the preempt count field in struct thread_info
+> > to 64 bits, so that it consists of a 32-bit count plus a 32-bit flag
+> > indicating whether or not the current task needs rescheduling.
+> > 
+> > Whilst the asm-offsets definition of TSK_TI_PREEMPT was updated to point
+> > to this new field, the assembly usage was left untouched meaning that a
+> > 32-bit load from TSK_TI_PREEMPT on a big-endian machine actually returns
+> > the reschedule flag instead of the count.
+> > 
+> > Whilst we could fix this by pointing TSK_TI_PREEMPT at the count field,
+> > we're actually better off reworking the two assembly users so that they
+> > operate on the whole 64-bit value in favour of inspecting the thread
+> > flags separately in order to determine whether a reschedule is needed.
+> > 
+> > Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > Reported-by: "kernelci.org bot" <bot@kernelci.org>
+> > Tested-by: Kevin Hilman <khilman@baylibre.com>
+> > Signed-off-by: Will Deacon <will.deacon@arm.com>
+> > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > ---
+> >  arch/arm64/include/asm/assembler.h | 8 +++-----
+> >  arch/arm64/kernel/entry.S          | 6 ++----
+> >  2 files changed, 5 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
+> > index 5a97ac8531682..0c100506a29aa 100644
+> > --- a/arch/arm64/include/asm/assembler.h
+> > +++ b/arch/arm64/include/asm/assembler.h
+> > @@ -683,11 +683,9 @@ USER(\label, ic	ivau, \tmp2)			// invalidate I line PoU
+> >  	.macro		if_will_cond_yield_neon
+> >  #ifdef CONFIG_PREEMPT
+> >  	get_thread_info	x0
+> > -	ldr		w1, [x0, #TSK_TI_PREEMPT]
+> > -	ldr		x0, [x0, #TSK_TI_FLAGS]
+> > -	cmp		w1, #PREEMPT_DISABLE_OFFSET
+> > -	csel		x0, x0, xzr, eq
+> > -	tbnz		x0, #TIF_NEED_RESCHED, .Lyield_\@	// needs rescheduling?
+> > +	ldr		x0, [x0, #TSK_TI_PREEMPT]
+> > +	sub		x0, x0, #PREEMPT_DISABLE_OFFSET
+> > +	cbz		x0, .Lyield_\@
+> >  	/* fall through to endif_yield_neon */
+> >  	.subsection	1
+> >  .Lyield_\@ :
+> > diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
+> > index 5f800384cb9a8..bb68323530458 100644
+> > --- a/arch/arm64/kernel/entry.S
+> > +++ b/arch/arm64/kernel/entry.S
+> > @@ -622,10 +622,8 @@ el1_irq:
+> >  	irq_handler
+> >  
+> >  #ifdef CONFIG_PREEMPT
+> > -	ldr	w24, [tsk, #TSK_TI_PREEMPT]	// get preempt count
+> > -	cbnz	w24, 1f				// preempt count != 0
+> > -	ldr	x0, [tsk, #TSK_TI_FLAGS]	// get flags
+> > -	tbz	x0, #TIF_NEED_RESCHED, 1f	// needs rescheduling?
+> > +	ldr	x24, [tsk, #TSK_TI_PREEMPT]	// get preempt count
+> > +	cbnz	x24, 1f				// preempt count != 0
+> >  	bl	el1_preempt
 > 
-> On 19-11-2019 12:50, Javier Martinez Canillas wrote:
->> If CONFIG_LOAD_UEFI_KEYS is enabled, the kernel attempts to load the certs
->> from the db, dbx and MokListRT EFI variables into the appropriate keyrings.
->>
->> But it just assumes that the variables will be present and prints an error
->> if the certs can't be loaded, even when is possible that the variables may
->> not exist. For example the MokListRT variable will only be present if shim
->> is used.
->>
->> So only print an error message about failing to get the certs list from an
->> EFI variable if this is found. Otherwise these printed errors just pollute
->> the kernel ring buffer with confusing messages like the following:
->>
->> [    5.427251] Couldn't get size: 0x800000000000000e
->> [    5.427261] MODSIGN: Couldn't get UEFI db list
->> [    5.428012] Couldn't get size: 0x800000000000000e
->> [    5.428023] Couldn't get UEFI MokListRT
->>
->> Reported-by: Hans de Goede <hdegoede@redhat.com>
->> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
->>
->> ---
->> Hans,
->>
->> I'll really appreciate if you can test this patch. I just built tested it
->> because I don't have access to a machine to reproduce the issue right now.
+> While updating 4.19-rt, I stumbled on this change to arm64 backport. And was
+> confused by it, but looking deeper, this is something that breaks without
+> having 396244692232f ("arm64: preempt: Provide our own implementation of
+> asm/preempt.h").
 > 
-> Ok, I've given this a test-run just now, works as advertised for me:
-> 
-> Tested-by: Hans de Goede <hdegoede@redhat.com>
->
+> That commit inverts the TIF_NEED_RESCHED meaning where set means we don't need
+> to resched, and clear means we need to resched. This way we can combine the
+> preempt count with the need resched flag test as they share the same 64bit
+> word. A 0 means we need to preempt (as NEED_RESCHED being zero means we need
+> to resched, and this also means preempt_count is zero). If the
+> TIF_NEED_RESCHED bit is set, that means we don't need to resched, and if
+> preempt count is something other than zero, we don't need to resched, and
+> since those two are together by commit 396244692232f, we can just test
+> #TSK_TI_PREEMPT. But because that commit does not exist in 4.19, we can't
+> remove the TIF_NEED_RESCHED check, that this backport does, and then breaks
+> the kernel!
 
-Thanks a lot for testing Hans.
+Yup, without 396244692232 this commit makes no sense. That's why I didn't CC
+stable or add a Fixes tag :(
 
-James and Mimi,
-
-Anything else that's needed for this patch to be picked?
- 
-> Regards,
-> 
-> Hans
-> 
-Best regards,
--- 
-Javier Martinez Canillas
-Software Engineer - Desktop Hardware Enablement
-Red Hat
-
+Will
