@@ -2,119 +2,95 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5160EC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 715E7C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31BFB206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5216D2067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:31:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbfLPQ2K (ORCPT
+        id S1726296AbfLPQbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 11:28:10 -0500
-Received: from mga11.intel.com ([192.55.52.93]:7994 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725805AbfLPQ2K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 11:28:10 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 08:28:09 -0800
-X-IronPort-AV: E=Sophos;i="5.69,322,1571727600"; 
-   d="scan'208";a="297748698"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 08:28:09 -0800
-Message-ID: <537e970f062e0c7f89723f63fc1f3ec6e53614a5.camel@linux.intel.com>
-Subject: Re: [PATCH v15 4/7] mm: Introduce Reported pages
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, mgorman@techsingularity.net,
-        vbabka@suse.cz
-Cc:     yang.zhang.wz@gmail.com, konrad.wilk@oracle.com, david@redhat.com,
-        pagupta@redhat.com, riel@surriel.com, lcapitulino@redhat.com,
-        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com, osalvador@suse.de
-Date:   Mon, 16 Dec 2019 08:28:09 -0800
-In-Reply-To: <0bb29ec2-9dcb-653c-dda5-0825aea7d4b0@redhat.com>
-References: <20191205161928.19548.41654.stgit@localhost.localdomain>
-         <20191205162238.19548.68238.stgit@localhost.localdomain>
-         <0bb29ec2-9dcb-653c-dda5-0825aea7d4b0@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Mon, 16 Dec 2019 11:31:22 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:47097 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbfLPQbW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 11:31:22 -0500
+Received: from mail-qt1-f179.google.com ([209.85.160.179]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1N33AR-1hi1pd1iLl-013NI2; Mon, 16 Dec 2019 17:31:20 +0100
+Received: by mail-qt1-f179.google.com with SMTP id j5so6222442qtq.9;
+        Mon, 16 Dec 2019 08:31:20 -0800 (PST)
+X-Gm-Message-State: APjAAAX8r4JFFfDb+URF2+0dv9wpxYsfc6tPwgTB3pNYceSUqK5U8lM1
+        mEzo1YaW1xqu1O1Nuwo+LboE3ILCP3ehXEgiyv0=
+X-Google-Smtp-Source: APXvYqyDdl4YObPLYJ8R0MeObOKirvavLeNWBoY3j+5T4cY33rojfyImnRl+bBhsXB9ZfA7RUwOnAcwR4yfhS80V0kU=
+X-Received: by 2002:ac8:47d3:: with SMTP id d19mr82497qtr.142.1576513879287;
+ Mon, 16 Dec 2019 08:31:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20191213204936.3643476-1-arnd@arndb.de> <20191213205417.3871055-10-arnd@arndb.de>
+ <20191213211840.GM99875@magnolia>
+In-Reply-To: <20191213211840.GM99875@magnolia>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 16 Dec 2019 17:31:02 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0x6E7PjtFVi9UW9_61c_AQbRVSyU=+YGaVTn2W0PgtzQ@mail.gmail.com>
+Message-ID: <CAK8P3a0x6E7PjtFVi9UW9_61c_AQbRVSyU=+YGaVTn2W0PgtzQ@mail.gmail.com>
+Subject: Re: [PATCH v2 19/24] xfs: rename compat_time_t to old_time32_t
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Brian Foster <bfoster@redhat.com>,
+        Eric Sandeen <sandeen@sandeen.net>,
+        Nick Bowler <nbowler@draconx.ca>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:H7fMeyzbYOCqjgAcpR4WxQVcP/KjmTWIG1zY7p7sRuMOpcB6XxH
+ TloYBnCEJ4TYVnRd5j1tco6aDGOFgBSI8S1G3mK6bAVgwWG5ZzwhsMM3xzQb0ESbiqGWufH
+ SsoVynB9iLdphoRpUicOQtoquSvwK/z/bpmGjnlb2Rqh5WRvMoTyo+P0mzT06gmvmd9biw1
+ MyqRHBTf6U759Bu7njsYw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ioG57M6zXYo=:ZK4QKZDKnhV4rm+cisNDRP
+ RuNCYDi5icTgReDFx9cXUQTiBj2PhBNeCFh72HwoGcvVbbFF5HQqDChnPlKH7WMH5taEcFiyl
+ t4639rW00EptkkwTjEEVvnxc8A49qoWagofrI0PFsIfEabJ9WROpulxKba6Tq6QJc1FjEjwX9
+ mJ/ZAhkFlxm89YXCkFzxHDjh4sAQITGmAq0ViSHo3OWI+jY/0r/s3+7t/y6PuoLrBB8hoMSpr
+ 6zN5gxYVTS+LVIqtJ7OsHq2g0u7nUoDYvaLZInXzb5kUYRrqaCuN2xedrmwy6HHZBOP+Tm55O
+ Z/r5AiYPXq+qVeNLB6lcmsT/49v2cNnKBkGQvJ2+xiXzIFzUlfAGR25Vz/M/8PBLBV9o2rRJH
+ nogbJLyp8EOULb1RuQ1bSs9UQFalu9HwnE5zSDznaVSKbrkzZTjobs4gD4A48Td9dcvllfZiI
+ IpKc8rtPUcnEzqmpKk402Nmw7p/rnn1Ek2l3ekglAhNwga+1nJ+4sqGTCx6Z15xkgHJmDyApN
+ znAVVSmEeVH8TcdQihpcVeWuGcDFsvHqHJZ9DZx87cKEJMptojjWij2T59VcujDyiBAHs4bdg
+ v1AYOBTa9DBSl1bx6iiqoI8LbFLYFZ+G7vVhRE69vLFfZRi7w4npE/IFFhfjKcYrr56qiwsqw
+ iwdShckXCCqFiLWUlIN9bmxTN+wTuz+SdXVTe2Nr7TDMHTa6CRUffI6Jbh2QUpOBTffyMGLYJ
+ AGjs7foTcjJfc4MyUFTuJXKur3R3LKcoO5HPF4oFy3XDpNpD58aEsZ4IGlkzyuYQpMgsdBCvx
+ eAZylywPDUJOrjIIfD3uRNjDhH7NfIecab6a1FwGWPLLqeb8icbDEgztlATGrbCrSOkThIGuI
+ h+pjUe627bXK47Ds9tjQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-12-16 at 05:17 -0500, Nitesh Narayan Lal wrote:
-> On 12/5/19 11:22 AM, Alexander Duyck wrote:
-> > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > 
-> > In order to pave the way for free page reporting in virtualized
-> > environments we will need a way to get pages out of the free lists and
-> > identify those pages after they have been returned. To accomplish this,
-> > this patch adds the concept of a Reported Buddy, which is essentially
-> > meant to just be the Uptodate flag used in conjunction with the Buddy
-> > page type.
-> 
-> [...]
-> 
-> > +enum {
-> > +	PAGE_REPORTING_IDLE = 0,
-> > +	PAGE_REPORTING_REQUESTED,
-> > +	PAGE_REPORTING_ACTIVE
-> > +};
-> > +
-> > +/* request page reporting */
-> > +static void
-> > +__page_reporting_request(struct page_reporting_dev_info *prdev)
-> > +{
-> > +	unsigned int state;
-> > +
-> > +	/* Check to see if we are in desired state */
-> > +	state = atomic_read(&prdev->state);
-> > +	if (state == PAGE_REPORTING_REQUESTED)
-> > +		return;
-> > +
-> > +	/*
-> > +	 *  If reporting is already active there is nothing we need to do.
-> > +	 *  Test against 0 as that represents PAGE_REPORTING_IDLE.
-> > +	 */
-> > +	state = atomic_xchg(&prdev->state, PAGE_REPORTING_REQUESTED);
-> > +	if (state != PAGE_REPORTING_IDLE)
-> > +		return;
-> > +
-> > +	/*
-> > +	 * Delay the start of work to allow a sizable queue to build. For
-> > +	 * now we are limiting this to running no more than once every
-> > +	 * couple of seconds.
-> > +	 */
-> > +	schedule_delayed_work(&prdev->work, PAGE_REPORTING_DELAY);
-> > +}
-> > +
-> 
-> I think you recently switched to using an atomic variable for maintaining page
-> reporting status as I was doing in v12.
-> Which is good, as we will not have a disagreement on it now.
+On Fri, Dec 13, 2019 at 10:18 PM Darrick J. Wong
+<darrick.wong@oracle.com> wrote:
+>
+> On Fri, Dec 13, 2019 at 09:53:47PM +0100, Arnd Bergmann wrote:
+> > The compat_time_t type has been removed everywhere else,
+> > as most users rely on old_time32_t for both native and
+> > compat mode handling of 32-bit time_t.
+> >
+> > Remove the last one in xfs.
+> >
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>
+> Looks fine to me, assuming that compat_time_t -> old_time32_t.
 
-There is still some differences between our approaches if I am not
-mistaken. Specifically I have code in place so that any requests to report
-while we are actively working on reporting will trigger another pass being
-scheduled after we completed. I still believe you were lacking any logic
-like that as I recall.
+Yes, that's the idea. Christoph asked for the global change last year
+as a cleanup,
+but I left out xfs and a few others at the time when I was missing
+other patches.
 
-> On a side note, apologies for not getting involved actively in the
-> discussions/reviews as I am on PTO.
+> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-No problem. I've been mostly looking for input from the core MM
-maintainers anyway as we sorted most of the virtualization pieces some
-time ago.
+Thanks,
 
+     Arnd
