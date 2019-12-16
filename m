@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C941EC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7505EC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 914062082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 451D52082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:35:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521345;
-	bh=fpAEy/YlMC1GNufn/ZFQUk52cY7rvvFsflZbfotl9z0=;
+	s=default; t=1576521350;
+	bh=NrwJ/T0J+hwOEUD8tFTp6mb6eQcRRMoPmExsk3iDw3U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ETcdqarZruYdK+su3DmfnHwQuqM0aqO0GixexnIgWsazHLryhpHcJv9ucbl8P7tA7
-	 mXcC3z8yo0MrCUT7oXDsunXijRSp0SiNrnKNjhFnpNAUGV3rhIOg9blBCMq5ZHYRKU
-	 0S+Qychii0ghGazl/zQzpUNJmX99WEUxWLxvolVE=
+	b=RJ+8bL5hB+rNT5vuDwTz4DVwZNMFWLSHjX+wtJNbG3Ybip9tZ5fxKevLRffMVL+Ye
+	 CKs86YkbirfkntaD/ep2m3IPbgFXh07ACdcmpOZyo0BOk7+qdjrnEViH1qDTmNDDUC
+	 Z+RdN530WXn4FQhCj3f2TYY/nck614k0+E8ehTkM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730421AbfLPSfo (ORCPT
+        id S1730163AbfLPSHf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:35:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48886 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:07:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730160AbfLPSHm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:07:42 -0500
+        id S1729776AbfLPSHa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:07:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2F8C206E0;
-        Mon, 16 Dec 2019 18:07:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C23A20CC7;
+        Mon, 16 Dec 2019 18:07:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519662;
-        bh=fpAEy/YlMC1GNufn/ZFQUk52cY7rvvFsflZbfotl9z0=;
+        s=default; t=1576519650;
+        bh=NrwJ/T0J+hwOEUD8tFTp6mb6eQcRRMoPmExsk3iDw3U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ViUom/UUPSIkx5tjd8SRVtA9p2vQnPpX2B/M75++WN0mO06S9ETWXLXHdyWhUcXoa
-         kOKj2TuRlK+lxMDzXVKsL0VHXZ9sAjnPPQJJ18KkPq0uHVhGckWJWxHiXReTC1cPNL
-         v7Lg51sVJKiq3XTTV9T8G7Uk6Fv8Fn4wn/vZnTBw=
+        b=bYSDKm54YJsuSf42Uw4RSSm4xIHUcu+RRktA+CxLn5RPHrZvSzfFnW53KNHGAMEsA
+         G3hG6N1Kd9sFYFKv6l66xG+YFlCbe9aA0SYAgYnIFqCU00r1oZJF9WrWOzuCMILWrf
+         BOyF9C+Zmj77m11N2C/X3olJnYdEhDpHoN9e5ojk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tilman Schmidt <tilman@imap.cc>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.3 018/180] staging: gigaset: fix illegal free on probe errors
-Date:   Mon, 16 Dec 2019 18:47:38 +0100
-Message-Id: <20191216174810.064538604@linuxfoundation.org>
+        stable@vger.kernel.org, Todd Kjos <tkjos@google.com>
+Subject: [PATCH 5.3 013/180] binder: fix incorrect calculation for num_valid
+Date:   Mon, 16 Dec 2019 18:47:33 +0100
+Message-Id: <20191216174808.729939627@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -59,47 +58,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Todd Kjos <tkjos@android.com>
 
-commit 84f60ca7b326ed8c08582417493982fe2573a9ad upstream.
+commit 16981742717b04644a41052570fb502682a315d2 upstream.
 
-The driver failed to initialise its receive-buffer pointer, something
-which could lead to an illegal free on late probe errors.
+For BINDER_TYPE_PTR and BINDER_TYPE_FDA transactions, the
+num_valid local was calculated incorrectly causing the
+range check in binder_validate_ptr() to miss out-of-bounds
+offsets.
 
-Fix this by making sure to clear all driver data at allocation.
-
-Fixes: 2032e2c2309d ("usb_gigaset: code cleanup")
-Cc: stable <stable@vger.kernel.org>     # 2.6.33
-Cc: Tilman Schmidt <tilman@imap.cc>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191202085610.12719-3-johan@kernel.org
+Fixes: bde4a19fc04f ("binder: use userspace pointer as base of buffer space")
+Signed-off-by: Todd Kjos <tkjos@google.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191213202531.55010-1-tkjos@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/isdn/gigaset/usb-gigaset.c |    6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ drivers/android/binder.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/staging/isdn/gigaset/usb-gigaset.c
-+++ b/drivers/staging/isdn/gigaset/usb-gigaset.c
-@@ -571,8 +571,7 @@ static int gigaset_initcshw(struct cards
- {
- 	struct usb_cardstate *ucs;
+--- a/drivers/android/binder.c
++++ b/drivers/android/binder.c
+@@ -3332,7 +3332,7 @@ static void binder_transaction(struct bi
+ 			binder_size_t parent_offset;
+ 			struct binder_fd_array_object *fda =
+ 				to_binder_fd_array_object(hdr);
+-			size_t num_valid = (buffer_offset - off_start_offset) *
++			size_t num_valid = (buffer_offset - off_start_offset) /
+ 						sizeof(binder_size_t);
+ 			struct binder_buffer_object *parent =
+ 				binder_validate_ptr(target_proc, t->buffer,
+@@ -3406,7 +3406,7 @@ static void binder_transaction(struct bi
+ 				t->buffer->user_data + sg_buf_offset;
+ 			sg_buf_offset += ALIGN(bp->length, sizeof(u64));
  
--	cs->hw.usb = ucs =
--		kmalloc(sizeof(struct usb_cardstate), GFP_KERNEL);
-+	cs->hw.usb = ucs = kzalloc(sizeof(struct usb_cardstate), GFP_KERNEL);
- 	if (!ucs) {
- 		pr_err("out of memory\n");
- 		return -ENOMEM;
-@@ -584,9 +583,6 @@ static int gigaset_initcshw(struct cards
- 	ucs->bchars[3] = 0;
- 	ucs->bchars[4] = 0x11;
- 	ucs->bchars[5] = 0x13;
--	ucs->bulk_out_buffer = NULL;
--	ucs->bulk_out_urb = NULL;
--	ucs->read_urb = NULL;
- 	tasklet_init(&cs->write_tasklet,
- 		     gigaset_modem_fill, (unsigned long) cs);
- 
+-			num_valid = (buffer_offset - off_start_offset) *
++			num_valid = (buffer_offset - off_start_offset) /
+ 					sizeof(binder_size_t);
+ 			ret = binder_fixup_parent(t, thread, bp,
+ 						  off_start_offset,
 
 
