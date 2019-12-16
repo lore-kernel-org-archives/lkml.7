@@ -4,48 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC331C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 346A3C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 909D120CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:02:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 010ED20726
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:02:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519340;
-	bh=e2UyM+TXay0wzQ4sGvv+pApzuAUzU5AJTyWnsr4Udis=;
+	s=default; t=1576519346;
+	bh=a8gQC8OZYPAqcL31XGpixU+cG46ZxnAzjXI3yfM5cqo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ypEsR06NHJvxe1itJPPSwJw4ncgmz9ETnTS2nywEv3vdvfZInYfUajUjHX1ReOFc9
-	 P3XJKOtwTBqDyxVJlP1mK6zgxVWSlfBawo6HMxqBbUL8uHnz6QNeYMQ8HkUFkuWRvE
-	 cMhW05D9Xq4UnKPnZk6K/FZ03SIHjrhjSIuQyNQU=
+	b=WgbnObwaC/2nX7n4VvKsV0x3K9iES6kZ8ACdn138GGEDqI3rQgfpzaQaKwGQ4+8z2
+	 xgyxSAW5gWmpFIxOXSIOUFYRh+679MP7yA0IR6B5C6K02AmQCzQdZ+w3zXUbmqzz3j
+	 Lxv53YOp2jd4nRry5t3qXL59Pu+nmLTdNPvKHoOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729317AbfLPSCT (ORCPT
+        id S1729336AbfLPSCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:02:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37972 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:02:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729300AbfLPSCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:02:14 -0500
+        id S1729309AbfLPSCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:02:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E506E207FF;
-        Mon, 16 Dec 2019 18:02:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F83820726;
+        Mon, 16 Dec 2019 18:02:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519333;
-        bh=e2UyM+TXay0wzQ4sGvv+pApzuAUzU5AJTyWnsr4Udis=;
+        s=default; t=1576519335;
+        bh=a8gQC8OZYPAqcL31XGpixU+cG46ZxnAzjXI3yfM5cqo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vVDDyBjPjS3Wkgu2dGWEp/F5zboq6DOg8WuFz6f6+1QRU5YzlhI17fEee2QYgJ8A0
-         tb0jCp2vYtQovJpNPZKS1HfEjGsKOxWkRRdQ8y4K1MRHkyOWNjQrjRBb/ud0Ma3Y5a
-         W8KjewWTx1c2PbVC/dSjbAawj95oT2sSLi6zNH4o=
+        b=0Dm7uuuoMkiVvKCbVuPIycPkRfC012zg1k4nztjDEUt6pAgUI4mMObFpsld5C40WP
+         Wqr/DEbj8Cts2WrB0j0US54kjl0gfN7Nx6PfXadusyX+cgpabmINPw4vfRCutzZW+b
+         GaIvjdxUdy/SGlmIQkxxOJM6A4rTovqAO3h0ARwI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.19 024/140] USB: serial: io_edgeport: fix epic endpoint lookup
-Date:   Mon, 16 Dec 2019 18:48:12 +0100
-Message-Id: <20191216174756.811284228@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Yang <wenyang@linux.alibaba.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Peter Chen <peter.chen@nxp.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-usb@vger.kernel.org
+Subject: [PATCH 4.19 025/140] usb: roles: fix a potential use after free
+Date:   Mon, 16 Dec 2019 18:48:13 +0100
+Message-Id: <20191216174757.050729358@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -58,50 +64,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Wen Yang <wenyang@linux.alibaba.com>
 
-commit 7c5a2df3367a2c4984f1300261345817d95b71f8 upstream.
+commit 1848a543191ae32e558bb0a5974ae7c38ebd86fc upstream.
 
-Make sure to use the current alternate setting when looking up the
-endpoints on epic devices to avoid binding to an invalid interface.
+Free the sw structure only after we are done using it.
+This patch just moves the put_device() down a bit to avoid the
+use after free.
 
-Failing to do so could cause the driver to misbehave or trigger a WARN()
-in usb_submit_urb() that kernels with panic_on_warn set would choke on.
-
-Fixes: 6e8cf7751f9f ("USB: add EPIC support to the io_edgeport driver")
-Cc: stable <stable@vger.kernel.org>     # 2.6.21
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191210112601.3561-5-johan@kernel.org
+Fixes: 5c54fcac9a9d ("usb: roles: Take care of driver module reference counting")
+Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Reviewed-by: Peter Chen <peter.chen@nxp.com>
+Cc: stable <stable@vger.kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: linux-usb@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Link: https://lore.kernel.org/r/20191124142236.25671-1-wenyang@linux.alibaba.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/io_edgeport.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/usb/roles/class.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/serial/io_edgeport.c
-+++ b/drivers/usb/serial/io_edgeport.c
-@@ -2919,16 +2919,18 @@ static int edge_startup(struct usb_seria
- 	response = 0;
- 
- 	if (edge_serial->is_epic) {
-+		struct usb_host_interface *alt;
-+
-+		alt = serial->interface->cur_altsetting;
-+
- 		/* EPIC thing, set up our interrupt polling now and our read
- 		 * urb, so that the device knows it really is connected. */
- 		interrupt_in_found = bulk_in_found = bulk_out_found = false;
--		for (i = 0; i < serial->interface->altsetting[0]
--						.desc.bNumEndpoints; ++i) {
-+		for (i = 0; i < alt->desc.bNumEndpoints; ++i) {
- 			struct usb_endpoint_descriptor *endpoint;
- 			int buffer_size;
- 
--			endpoint = &serial->interface->altsetting[0].
--							endpoint[i].desc;
-+			endpoint = &alt->endpoint[i].desc;
- 			buffer_size = usb_endpoint_maxp(endpoint);
- 			if (!interrupt_in_found &&
- 			    (usb_endpoint_is_int_in(endpoint))) {
+--- a/drivers/usb/roles/class.c
++++ b/drivers/usb/roles/class.c
+@@ -130,8 +130,8 @@ EXPORT_SYMBOL_GPL(usb_role_switch_get);
+ void usb_role_switch_put(struct usb_role_switch *sw)
+ {
+ 	if (!IS_ERR_OR_NULL(sw)) {
+-		put_device(&sw->dev);
+ 		module_put(sw->dev.parent->driver->owner);
++		put_device(&sw->dev);
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(usb_role_switch_put);
 
 
