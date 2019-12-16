@@ -2,127 +2,157 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E08C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 04:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 044B6C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 04:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E06142465E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 04:08:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TEjIG57/"
+	by mail.kernel.org (Postfix) with ESMTP id D59682465E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 04:09:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbfLPEIL (ORCPT
+        id S1726795AbfLPEJP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 23:08:11 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41236 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbfLPEIL (ORCPT
+        Sun, 15 Dec 2019 23:09:15 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:43516 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726528AbfLPEJP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 23:08:11 -0500
-Received: by mail-pf1-f194.google.com with SMTP id s18so4848030pfd.8
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 20:08:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wbgkQqezR8N6zK1NxAmtxoUZIE9QlaMc+PiyGq2r8lE=;
-        b=TEjIG57/5hRxBRlaIU6s/Q1HgzaSt/twdXhbjgBoH7h5H4BMDsI+TuphUfDLk/xK9Q
-         52ZbWfzx2TdmfWHsmxqo6WZpprJgv82SjY7Y/S651ii2BFuc5t2Pb6YjtIJxNHpEjC+D
-         PhRufMFN45KROjk7+qrBNxX4GEaUURodO0oDcHhHHo743/1QNRS7MXIlXsxczyG5eFb4
-         DiJ+inSReLlrKt9/u2PA/s5wReInxvoIYTllPEyZeN2YzbvDlKHo3IpQiE3QyMlbsJ0V
-         CRq4xXIUj6teqe+2HwBWH/pvktsLhlK/S0j3wRZTBMbRqKgcGA05kNUJ3rJBT8SZdRSl
-         +pew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wbgkQqezR8N6zK1NxAmtxoUZIE9QlaMc+PiyGq2r8lE=;
-        b=gmjLuYVIGKwvgGRmwNFKWsZxCAtcSYHdn6kQFAkcBSnWP+DxLfpIaLcywEZVRumLlY
-         QMgegTBXobFAQMfu85HTXPnCA7FqHnEsmdRHmPYmEmcdeQiF7Gy6E7+aqonO48cEetud
-         C/I5fdeaMto0rdvuljYFgzuaimRRnDhK+FPFyzTRAYnXz+EhJP72JCzqsrYPEceauXA6
-         CfrlYJG0sKF90oigsYTC5nvhIazVw8UJ5UHClwlUTGjUTE1sNJfz6jd4RT+1hWPiAsOE
-         si5/ioyv7/jtBmowwf97oXmHkbgShtp3gPuaf//X5qooUnsp4C39ztQ5n9osI2o3ReET
-         0HMg==
-X-Gm-Message-State: APjAAAWl+UPxK1yALoC2bFdbOyWGOj8+gC8TBAqyJPARUChPPHpAqEi5
-        d37JnLT2W5l0mdYIvBIX/TrUAg==
-X-Google-Smtp-Source: APXvYqwCJ4AhFHObrnA/fbRW0LZUa1YD8casinAzvz15hQR21yibms9/hcOl1D9V0rsOa2dPjAv9hQ==
-X-Received: by 2002:a63:774a:: with SMTP id s71mr15807335pgc.57.1576469290920;
-        Sun, 15 Dec 2019 20:08:10 -0800 (PST)
-Received: from localhost ([122.171.234.168])
-        by smtp.gmail.com with ESMTPSA id f9sm19793220pfd.141.2019.12.15.20.08.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 15 Dec 2019 20:08:10 -0800 (PST)
-Date:   Mon, 16 Dec 2019 09:38:08 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 07/11] cpufreq: dt-platdev: Blacklist NVIDIA Tegra20
- and Tegra30 SoCs
-Message-ID: <20191216040808.w67jxu7oapxgm7yh@vireshk-i7>
-References: <20191118164512.8676-1-digetx@gmail.com>
- <20191118164512.8676-8-digetx@gmail.com>
- <20191216040532.mzdovqoub5rdztwb@vireshk-i7>
+        Sun, 15 Dec 2019 23:09:15 -0500
+Received: from dread.disaster.area (pa49-195-139-249.pa.nsw.optusnet.com.au [49.195.139.249])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 2AC147E941C;
+        Mon, 16 Dec 2019 15:09:10 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1ighgz-0007Uv-AQ; Mon, 16 Dec 2019 15:09:09 +1100
+Date:   Mon, 16 Dec 2019 15:09:09 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Junxiao Bi <junxiao.bi@oracle.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        viro@zeniv.linux.org.uk
+Subject: Re: [PATCH] vfs: stop shrinker while fs is freezed
+Message-ID: <20191216040909.GJ19213@dread.disaster.area>
+References: <20191213222440.11519-1-junxiao.bi@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191216040532.mzdovqoub5rdztwb@vireshk-i7>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20191213222440.11519-1-junxiao.bi@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
+        a=KoypXv6BqLCQNZUs2nCMWg==:117 a=KoypXv6BqLCQNZUs2nCMWg==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pxVhFHJ0LMsA:10
+        a=yPCof4ZbAAAA:8 a=7-415B0cAAAA:8 a=71tRPUrxQiDM1EGBlgAA:9
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16-12-19, 09:35, Viresh Kumar wrote:
-> On 18-11-19, 19:45, Dmitry Osipenko wrote:
-> > Both NVIDIA Tegra20 and Tegra30 SoCs should be blacklisted because CPU
-> > OPPs use supported_hw and thus platdev isn't suitable for these SoCs.
-> > Currently cpufreq-dt driver produces a bit annoying warning splats
-> > during boot because valid OPPs are not found, this will be fixed once
-> > tegra20-cpufreq driver will be update to support cpufreq-dt. The warnings
-> > will also happen on older stable kernels using newer device-trees, thus
-> > this patch should be backported to stable kernels as well.
-> > 
-> > Cc: <stable@vger.kernel.org>
-> > Reported-by: Jon Hunter <jonathanh@nvidia.com>
-> > Fixes: 4053aa65c517 ("ARM: tegra: cardhu-a04: Add CPU Operating Performance Points")
-> > Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> > ---
-> >  drivers/cpufreq/cpufreq-dt-platdev.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
-> > index f1d170dcf4d3..aba591d57c67 100644
-> > --- a/drivers/cpufreq/cpufreq-dt-platdev.c
-> > +++ b/drivers/cpufreq/cpufreq-dt-platdev.c
-> > @@ -121,6 +121,8 @@ static const struct of_device_id blacklist[] __initconst = {
-> >  	{ .compatible = "mediatek,mt8176", },
-> >  	{ .compatible = "mediatek,mt8183", },
-> >  
-> > +	{ .compatible = "nvidia,tegra20", },
-> > +	{ .compatible = "nvidia,tegra30", },
-> >  	{ .compatible = "nvidia,tegra124", },
-> >  	{ .compatible = "nvidia,tegra210", },
+On Fri, Dec 13, 2019 at 02:24:40PM -0800, Junxiao Bi wrote:
+> Shrinker could be blocked by freeze while dropping the last reference of
+> some inode that had been removed. As "s_umount" lock was acquired by the
+> Shrinker before blocked, the thaw will hung by this lock. This caused a
+> deadlock.
 > 
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+>  crash7latest> set 132
+>      PID: 132
+>  COMMAND: "kswapd0:0"
+>     TASK: ffff9cdc9dfb5f00  [THREAD_INFO: ffff9cdc9dfb5f00]
+>      CPU: 6
+>    STATE: TASK_UNINTERRUPTIBLE
+>  crash7latest> bt
+>  PID: 132    TASK: ffff9cdc9dfb5f00  CPU: 6   COMMAND: "kswapd0:0"
+>   #0 [ffffaa5d075bf900] __schedule at ffffffff8186487c
+>   #1 [ffffaa5d075bf998] schedule at ffffffff81864e96
+>   #2 [ffffaa5d075bf9b0] rwsem_down_read_failed at ffffffff818689ee
+>   #3 [ffffaa5d075bfa40] call_rwsem_down_read_failed at ffffffff81859308
+>   #4 [ffffaa5d075bfa90] __percpu_down_read at ffffffff810ebd38
+>   #5 [ffffaa5d075bfab0] __sb_start_write at ffffffff812859ef
+>   #6 [ffffaa5d075bfad0] xfs_trans_alloc at ffffffffc07ebe9c [xfs]
+>   #7 [ffffaa5d075bfb18] xfs_free_eofblocks at ffffffffc07c39d1 [xfs]
+>   #8 [ffffaa5d075bfb80] xfs_inactive at ffffffffc07de878 [xfs]
+>   #9 [ffffaa5d075bfba0] __dta_xfs_fs_destroy_inode_3543 at ffffffffc07e885e [xfs]
+>  #10 [ffffaa5d075bfbd0] destroy_inode at ffffffff812a25de
+>  #11 [ffffaa5d075bfbe8] evict at ffffffff812a2b73
+>  #12 [ffffaa5d075bfc10] dispose_list at ffffffff812a2c1d
+>  #13 [ffffaa5d075bfc38] prune_icache_sb at ffffffff812a421a
+>  #14 [ffffaa5d075bfc70] super_cache_scan at ffffffff812870a1
+>  #15 [ffffaa5d075bfcc8] shrink_slab at ffffffff811eebb3
+>  #16 [ffffaa5d075bfdb0] shrink_node at ffffffff811f4788
+>  #17 [ffffaa5d075bfe38] kswapd at ffffffff811f58c3
+>  #18 [ffffaa5d075bff08] kthread at ffffffff810b75d5
+>  #19 [ffffaa5d075bff50] ret_from_fork at ffffffff81a0035e
 
-Oops, pasted the wrong register here :(
+How did you get a file that needed EOF block trimming to be disposed
+of when the filesystem is frozen?
 
-Applied. Thanks.
+Part of freezing the filesystem is tossing all the reclaimable
+inodes out of the cache, which means all the inodes that might
+require EOF block trimming should have already been removed from the
+cache before the freeze goes into effect....
 
+>  crash7latest> set 31060
+>      PID: 31060
+>  COMMAND: "safefreeze"
+>     TASK: ffff9cd292868000  [THREAD_INFO: ffff9cd292868000]
+>      CPU: 2
+>    STATE: TASK_UNINTERRUPTIBLE
+>  crash7latest> bt
+>  PID: 31060  TASK: ffff9cd292868000  CPU: 2   COMMAND: "safefreeze"
+>   #0 [ffffaa5d10047c90] __schedule at ffffffff8186487c
+>   #1 [ffffaa5d10047d28] schedule at ffffffff81864e96
+>   #2 [ffffaa5d10047d40] rwsem_down_write_failed at ffffffff81868f18
+>   #3 [ffffaa5d10047dd8] call_rwsem_down_write_failed at ffffffff81859367
+>   #4 [ffffaa5d10047e20] down_write at ffffffff81867cfd
+>   #5 [ffffaa5d10047e38] thaw_super at ffffffff81285d2d
+>   #6 [ffffaa5d10047e60] do_vfs_ioctl at ffffffff81299566
+>   #7 [ffffaa5d10047ee8] sys_ioctl at ffffffff81299709
+>   #8 [ffffaa5d10047f28] do_syscall_64 at ffffffff81003949
+>   #9 [ffffaa5d10047f50] entry_SYSCALL_64_after_hwframe at ffffffff81a001ad
+>      RIP: 0000000000453d67  RSP: 00007ffff9c1ce78  RFLAGS: 00000206
+>      RAX: ffffffffffffffda  RBX: 0000000001cbe92c  RCX: 0000000000453d67
+>      RDX: 0000000000000000  RSI: 00000000c0045878  RDI: 0000000000000014
+>      RBP: 00007ffff9c1cf80   R8: 0000000000000000   R9: 0000000000000012
+>      R10: 0000000000000008  R11: 0000000000000206  R12: 0000000000401fb0
+>      R13: 0000000000402040  R14: 0000000000000000  R15: 0000000000000000
+>      ORIG_RAX: 0000000000000010  CS: 0033  SS: 002b
+> 
+> Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
+> ---
+>  fs/super.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/fs/super.c b/fs/super.c
+> index cfadab2cbf35..adc18652302b 100644
+> --- a/fs/super.c
+> +++ b/fs/super.c
+> @@ -80,6 +80,11 @@ static unsigned long super_cache_scan(struct shrinker *shrink,
+>  	if (!trylock_super(sb))
+>  		return SHRINK_STOP;
+>  
+> +	if (sb->s_writers.frozen != SB_UNFROZEN) {
+> +		up_read(&sb->s_umount);
+> +		return SHRINK_STOP;
+> +	}
+
+Ah, no. Now go run a filesystem traversal over a filesystem with a
+few tens of million files in it while the filesystem is frozen, and
+what the dentry and inode cache grow and grow until you run out of
+memory....
+
+THe shrinker *needs* to run while the filesystem is frozen, but it
+should not be tripping over files that need modification on
+eviction. Working out how we got a file that required truncation
+during eviction is the first thing to do here so we can then
+determine if a) we should have caught it at freeze time, b) whether
+it can be caught at freeze time, c) whether it can safely be skipped
+during a freeze, or d) something else....
+
+Cheers,
+
+Dave.
 -- 
-viresh
+Dave Chinner
+david@fromorbit.com
