@@ -2,151 +2,471 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E3E5C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4182DC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AEDF20717
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:07:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="ZtbjFfNJ"
+	by mail.kernel.org (Postfix) with ESMTP id 16DB8206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:07:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbfLPRHQ (ORCPT
+        id S1728068AbfLPRHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:07:16 -0500
-Received: from mail-dm6nam11on2044.outbound.protection.outlook.com ([40.107.223.44]:54496
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727892AbfLPRHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:07:03 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=K83cQ6/lA+of2mwcLZJfGmk1wsQ2lPiNkSQSZdGQglmazk9fTAgcqj7UyooXqi5may9GlU5WVJT6wfaKidcS45YR4e49yblWobelTJcGByUb79Vm8/FkQXQCu1rSHVOPqsY47wBRqtNKa/x7cHue08axiYKwI03lt0vH4XzTdvslxSYRgUa9E7XtQ0NdE9l1hFwNH9XXXIGYwf2BQAVxPwww5FJhp+vgSi9ryFPYXyoBeuKTO15t7D6Xb/kt8Sps9mJIzYL4LJFNmZvQm6OonBx/w149ptSgtENs1RoYz4TYoYblJgxGyrVE2CtPj/tYWkEO6RI8hVWboyQsW8Dh8Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gkGnHMPxxQOvCIZqPts/mg8NVFaCglqnElqOvrGQRwI=;
- b=mw5yEBEx5Ys4m3fwrtOg1EM8Q0bZWmYrmT85/xOAD0lrer6inQpFTFqJaZuCOnJJu2myJXcm4jyK+TCA80lbGBsKNGNrOOAQE7JOYyVbO7SfBs76AW014wyjOSc8eZI/5mgAHnEzlNUx3PaTMB8Wp2KFBOoSYz5k+7pS9LGZ2LeJ5T70tiLl/OaUXRc/S6AuhoFuGlAFXAIeHMuvcJc/f3W8nh6wP0oMhPSb1p8qRd/+24b86LCgKLMlRHXAKkczgQlWW91g6MIoH4fAmJWTQJdDWxs9Nq2d+FcOspMH+QEPZhs9YQa+HsxKFB4tysCwgTDu71Hgajj3C7cuGzo9Rw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gkGnHMPxxQOvCIZqPts/mg8NVFaCglqnElqOvrGQRwI=;
- b=ZtbjFfNJ2wFEY5a7mINpyOeI8vd2oX40+8uxur+xkv3qz409+kwUEXb5/Q+vQj44llfqPdF5Qbj+Klk05WPgqy970GFUBQhafo4PR5G6GaBlznwEjKDeEG32p2NOOQ14V7+OStPASPBZhund/aTviExHaQ9zAHCe5sPczFUhmz4=
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com (10.255.180.22) by
- MN2PR11MB4445.namprd11.prod.outlook.com (52.135.37.87) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.18; Mon, 16 Dec 2019 17:06:50 +0000
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::f46c:e5b4:2a85:f0bf]) by MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::f46c:e5b4:2a85:f0bf%4]) with mapi id 15.20.2538.019; Mon, 16 Dec 2019
- 17:06:50 +0000
-From:   =?utf-8?B?SsOpcsO0bWUgUG91aWxsZXI=?= <Jerome.Pouiller@silabs.com>
-To:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        =?utf-8?B?SsOpcsO0bWUgUG91aWxsZXI=?= <Jerome.Pouiller@silabs.com>
-Subject: [PATCH 53/55] staging: wfx: delayed_link_loss cannot happen
-Thread-Topic: [PATCH 53/55] staging: wfx: delayed_link_loss cannot happen
-Thread-Index: AQHVtDLPhPRwXHXHJkeCH8JEWbw2sw==
-Date:   Mon, 16 Dec 2019 17:04:00 +0000
-Message-ID: <20191216170302.29543-54-Jerome.Pouiller@silabs.com>
-References: <20191216170302.29543-1-Jerome.Pouiller@silabs.com>
-In-Reply-To: <20191216170302.29543-1-Jerome.Pouiller@silabs.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Jerome.Pouiller@silabs.com; 
-x-originating-ip: [37.71.187.125]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c3ed8e86-79f4-43fd-6789-08d7824a57a5
-x-ms-traffictypediagnostic: MN2PR11MB4445:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR11MB44459EAFD8E1E0EE8E650A2A93510@MN2PR11MB4445.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
-x-forefront-prvs: 02530BD3AA
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(366004)(39850400004)(396003)(136003)(189003)(199004)(110136005)(6486002)(107886003)(36756003)(186003)(316002)(66946007)(54906003)(5660300002)(66574012)(66446008)(66556008)(85182001)(66476007)(76116006)(91956017)(64756008)(2616005)(6506007)(85202003)(2906002)(26005)(71200400001)(6512007)(4326008)(8936002)(81166006)(1076003)(478600001)(86362001)(81156014)(6666004)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4445;H:MN2PR11MB4063.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: silabs.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: eNYqO2OSm19WHao1iJufk5vF1mi7640SwxOZSDGilIntvtJR3YQF1F9vIXd33stTR8tN19+lAiUrcatGR9DEQIjmGzJ9wA6RlFJ93on3SqpvAmKY6mqL8aRbDCwR82bib/hx9LVTvlMsvmxb0O+wepo0C+hsluThdbDmHaSJvfQKi8aq1aTpivDvIKIzcWu8R5KsNpqtiIiZZGwT6dkHcygnk8KxCvCEOQyB3VpZfZNuSdD80d8i+Q/dJeYat9tqWSuFb2qKbnBcWNjJkGpt7xCjoCFDO0VHZzkJdCHFbAu4dwL59ocmWPm006CI9wzWwZfck+G5K+pDQbi+jErVNuhP4+wuPYSfGCVta4CqlasZFqO8x8Eu4l5eAkwxORIDi1IIBWJU8wTPB4/mZ3a7Z2q5BqPBMhsGmbpNnjWDuVyBO4gBB6DYaBTBCTl6dBwq
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4925DEB1411DCF4EAD724E4579B61797@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 16 Dec 2019 12:07:23 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:34466 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726772AbfLPRHT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:07:19 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 62C98291731
+Message-ID: <bb97505cfadae364afa14605793affe4a7d69ffa.camel@collabora.com>
+Subject: Re: [PATCH v21 2/2] drm/bridge: Add I2C based driver for ps8640
+ bridge
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-kernel@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>
+Cc:     Collabora Kernel ML <kernel@collabora.com>, matthias.bgg@gmail.com,
+        drinkcat@chromium.org, hsinyi@chromium.org,
+        Jitao Shi <jitao.shi@mediatek.com>,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        Ulrich Hecht <uli@fpond.eu>,
+        linux-arm-kernel@lists.infradead.org,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        dri-devel@lists.freedesktop.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        linux-mediatek@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Date:   Mon, 16 Dec 2019 14:07:05 -0300
+In-Reply-To: <20191216135834.27775-3-enric.balletbo@collabora.com>
+References: <20191216135834.27775-1-enric.balletbo@collabora.com>
+         <20191216135834.27775-3-enric.balletbo@collabora.com>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c3ed8e86-79f4-43fd-6789-08d7824a57a5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Dec 2019 17:04:00.2648
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: XxAmANw+vzlbfriWaXd+o/t/z6Gc69CRvb/jPTxAT5rNDgfalTmPm3bA1FXvW3iCjt34WxhRNBD21JXfOqErrw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4445
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSsOpcsO0bWUgUG91aWxsZXIgPGplcm9tZS5wb3VpbGxlckBzaWxhYnMuY29tPg0KDQpP
-cmlnaW5hbCBjb2RlIGFsbG93cyB0byBkZXRlY3QgYW4gQlNTIGxvc3MgZHVyaW5nIGEgc2NhbiBh
-bmQgZGVsYXlpbmcNCnRoZSBoYW5kbGluZyBvZiBCU1MgbG9zcy4gSG93ZXZlciwgdGhlcmUgaXQg
-aXMgbm8gcmVhbCBwcm9ibGVtIHRvIGp1c3QNCm1ha2UgdGhlc2UgdHdvIGV2ZW50cyBtdXR1YWxs
-eSBleGNsdXNpdmUgKHRoZXJlIGlzIGp1c3QgYSBwZXJmb3JtYW5jZQ0KcGVuYWx0eSkuDQoNClNp
-Z25lZC1vZmYtYnk6IErDqXLDtG1lIFBvdWlsbGVyIDxqZXJvbWUucG91aWxsZXJAc2lsYWJzLmNv
-bT4NCi0tLQ0KIGRyaXZlcnMvc3RhZ2luZy93Zngvc2Nhbi5jIHwgIDQgLS0tLQ0KIGRyaXZlcnMv
-c3RhZ2luZy93Zngvc3RhLmMgIHwgMTggKysrLS0tLS0tLS0tLS0tLS0tDQogZHJpdmVycy9zdGFn
-aW5nL3dmeC93ZnguaCAgfCAgMSAtDQogMyBmaWxlcyBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyks
-IDIwIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9zdGFnaW5nL3dmeC9zY2Fu
-LmMgYi9kcml2ZXJzL3N0YWdpbmcvd2Z4L3NjYW4uYw0KaW5kZXggYmRiY2U2OTI2ZTkxLi5kZGUy
-Zjg4NjgxNDcgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3N0YWdpbmcvd2Z4L3NjYW4uYw0KKysrIGIv
-ZHJpdmVycy9zdGFnaW5nL3dmeC9zY2FuLmMNCkBAIC05NSwxMCArOTUsNiBAQCB2b2lkIHdmeF9o
-d19zY2FuX3dvcmsoc3RydWN0IHdvcmtfc3RydWN0ICp3b3JrKQ0KIAltdXRleF91bmxvY2soJnd2
-aWYtPndkZXYtPmNvbmZfbXV0ZXgpOw0KIAltdXRleF91bmxvY2soJnd2aWYtPnNjYW5fbG9jayk7
-DQogCV9faWVlZTgwMjExX3NjYW5fY29tcGxldGVkX2NvbXBhdCh3dmlmLT53ZGV2LT5odywgcmV0
-IDwgMCk7DQotCWlmICh3dmlmLT5kZWxheWVkX2xpbmtfbG9zcykgew0KLQkJd3ZpZi0+ZGVsYXll
-ZF9saW5rX2xvc3MgPSBmYWxzZTsNCi0JCXdmeF9jcW1fYnNzbG9zc19zbSh3dmlmLCAxLCAwLCAw
-KTsNCi0JfQ0KIH0NCiANCiBpbnQgd2Z4X2h3X3NjYW4oc3RydWN0IGllZWU4MDIxMV9odyAqaHcs
-IHN0cnVjdCBpZWVlODAyMTFfdmlmICp2aWYsDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9zdGFnaW5n
-L3dmeC9zdGEuYyBiL2RyaXZlcnMvc3RhZ2luZy93Zngvc3RhLmMNCmluZGV4IDdhZTc2M2U5NjQ1
-NS4uMzI5NmJjMzUyMWQ1IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9zdGFnaW5nL3dmeC9zdGEuYw0K
-KysrIGIvZHJpdmVycy9zdGFnaW5nL3dmeC9zdGEuYw0KQEAgLTYzLDcgKzYzLDYgQEAgdm9pZCB3
-ZnhfY3FtX2Jzc2xvc3Nfc20oc3RydWN0IHdmeF92aWYgKnd2aWYsIGludCBpbml0LCBpbnQgZ29v
-ZCwgaW50IGJhZCkNCiAJaW50IHR4ID0gMDsNCiANCiAJbXV0ZXhfbG9jaygmd3ZpZi0+YnNzX2xv
-c3NfbG9jayk7DQotCXd2aWYtPmRlbGF5ZWRfbGlua19sb3NzID0gMDsNCiAJY2FuY2VsX3dvcmtf
-c3luYygmd3ZpZi0+YnNzX3BhcmFtc193b3JrKTsNCiANCiAJaWYgKGluaXQpIHsNCkBAIC00Mjks
-MTggKzQyOCw5IEBAIHN0YXRpYyB2b2lkIHdmeF9ldmVudF9oYW5kbGVyX3dvcmsoc3RydWN0IHdv
-cmtfc3RydWN0ICp3b3JrKQ0KIAkJc3dpdGNoIChldmVudC0+ZXZ0LmV2ZW50X2lkKSB7DQogCQlj
-YXNlIEhJRl9FVkVOVF9JTkRfQlNTTE9TVDoNCiAJCQljYW5jZWxfd29ya19zeW5jKCZ3dmlmLT51
-bmpvaW5fd29yayk7DQotCQkJaWYgKG11dGV4X3RyeWxvY2soJnd2aWYtPnNjYW5fbG9jaykpIHsN
-Ci0JCQkJd2Z4X2NxbV9ic3Nsb3NzX3NtKHd2aWYsIDEsIDAsIDApOw0KLQkJCQltdXRleF91bmxv
-Y2soJnd2aWYtPnNjYW5fbG9jayk7DQotCQkJfSBlbHNlIHsNCi0JCQkJLyogU2NhbiBpcyBpbiBw
-cm9ncmVzcy4gRGVsYXkgcmVwb3J0aW5nLg0KLQkJCQkgKiBTY2FuIGNvbXBsZXRlIHdpbGwgdHJp
-Z2dlciBic3NfbG9zc193b3JrDQotCQkJCSAqLw0KLQkJCQl3dmlmLT5kZWxheWVkX2xpbmtfbG9z
-cyA9IDE7DQotCQkJCS8qIEFsc28gc3RhcnQgYSB3YXRjaGRvZy4gKi8NCi0JCQkJc2NoZWR1bGVf
-ZGVsYXllZF93b3JrKCZ3dmlmLT5ic3NfbG9zc193b3JrLA0KLQkJCQkJCSAgICAgIDUgKiBIWik7
-DQotCQkJfQ0KKwkJCW11dGV4X2xvY2soJnd2aWYtPnNjYW5fbG9jayk7DQorCQkJd2Z4X2NxbV9i
-c3Nsb3NzX3NtKHd2aWYsIDEsIDAsIDApOw0KKwkJCW11dGV4X3VubG9jaygmd3ZpZi0+c2Nhbl9s
-b2NrKTsNCiAJCQlicmVhazsNCiAJCWNhc2UgSElGX0VWRU5UX0lORF9CU1NSRUdBSU5FRDoNCiAJ
-CQl3ZnhfY3FtX2Jzc2xvc3Nfc20od3ZpZiwgMCwgMCwgMCk7DQpAQCAtNDk3LDggKzQ4Nyw2IEBA
-IHN0YXRpYyB2b2lkIHdmeF9kb191bmpvaW4oc3RydWN0IHdmeF92aWYgKnd2aWYpDQogew0KIAlt
-dXRleF9sb2NrKCZ3dmlmLT53ZGV2LT5jb25mX211dGV4KTsNCiANCi0Jd3ZpZi0+ZGVsYXllZF9s
-aW5rX2xvc3MgPSBmYWxzZTsNCi0NCiAJaWYgKCF3dmlmLT5zdGF0ZSkNCiAJCWdvdG8gZG9uZTsN
-CiANCmRpZmYgLS1naXQgYS9kcml2ZXJzL3N0YWdpbmcvd2Z4L3dmeC5oIGIvZHJpdmVycy9zdGFn
-aW5nL3dmeC93ZnguaA0KaW5kZXggNWU3YzkxMWRiMDI0Li5kYjQzM2JlZTg3YWYgMTAwNjQ0DQot
-LS0gYS9kcml2ZXJzL3N0YWdpbmcvd2Z4L3dmeC5oDQorKysgYi9kcml2ZXJzL3N0YWdpbmcvd2Z4
-L3dmeC5oDQpAQCAtNzAsNyArNzAsNiBAQCBzdHJ1Y3Qgd2Z4X3ZpZiB7DQogCWludAkJCWlkOw0K
-IAllbnVtIHdmeF9zdGF0ZQkJc3RhdGU7DQogDQotCWludAkJCWRlbGF5ZWRfbGlua19sb3NzOw0K
-IAlpbnQJCQlic3NfbG9zc19zdGF0ZTsNCiAJdTMyCQkJYnNzX2xvc3NfY29uZmlybV9pZDsNCiAJ
-c3RydWN0IG11dGV4CQlic3NfbG9zc19sb2NrOw0KLS0gDQoyLjIwLjENCg==
+On Mon, 2019-12-16 at 14:58 +0100, Enric Balletbo i Serra wrote:
+> From: Jitao Shi <jitao.shi@mediatek.com>
+> 
+> This patch adds drm_bridge driver for parade DSI to eDP bridge chip.
+> 
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> Reviewed-by: Daniel Kurtz <djkurtz@chromium.org>
+> Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> [uli: followed API changes, removed FW update feature]
+> Signed-off-by: Ulrich Hecht <uli@fpond.eu>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> ---
+> 
+> Changes in v21:
+>  - Use devm_i2c_new_dummy_device and fix build issue using deprecated i2c_new_dummy
+>  - Fix build issue due missing drm_bridge.h
+>  - Do not remove in ps8640_remove device managed resources
+> 
+> Changes in v19:
+>  - fixed return value of ps8640_probe() when no panel is found
+> 
+> Changes in v18:
+>  - followed DRM API changes
+>  - use DEVICE_ATTR_RO()
+>  - remove firmware update code
+>  - add SPDX identifier
+> 
+> Changes in v17:
+>  - remove some unused head files.
+>  - add macros for ps8640 pages.
+>  - remove ddc_i2c client
+>  - add mipi_dsi_device_register_full
+>  - remove the manufacturer from the name and i2c_device_id
+> 
+> Changes in v16:
+>  - Disable ps8640 DSI MCS Function.
+>  - Rename gpios name more clearly.
+>  - Tune the ps8640 power on sequence.
+> 
+> Changes in v15:
+>  - Drop drm_connector_(un)register calls from parade ps8640.
+>    The main DRM driver mtk_drm_drv now calls
+>    drm_connector_register_all() after drm_dev_register() in the
+>    mtk_drm_bind() function. That function should iterate over all
+>    connectors and call drm_connector_register() for each of them.
+>    So, remove drm_connector_(un)register calls from parade ps8640.
+> 
+> Changes in v14:
+>  - update copyright info.
+>  - change bridge_to_ps8640 and connector_to_ps8640 to inline function.
+>  - fix some coding style.
+>  - use sizeof as array counter.
+>  - use drm_get_edid when read edid.
+>  - add mutex when firmware updating.
+> 
+> Changes in v13:
+>  - add const on data, ps8640_write_bytes(struct i2c_client *client, const u8 *data, u16 data_len)
+>  - fix PAGE2_SW_REST tyro.
+>  - move the buf[3] init to entrance of the function.
+> 
+> Changes in v12:
+>  - fix hw_chip_id build warning
+> 
+> Changes in v11:
+>  - Remove depends on I2C, add DRM depends
+>  - Reuse ps8640_write_bytes() in ps8640_write_byte()
+>  - Use timer check for polling like the routines in <linux/iopoll.h>
+>  - Fix no drm_connector_unregister/drm_connector_cleanup when ps8640_bridge_attach fail
+>  - Check the ps8640 hardware id in ps8640_validate_firmware
+>  - Remove fw_version check
+>  - Move ps8640_validate_firmware before ps8640_enter_bl
+>  - Add ddc_i2c unregister when probe fail and ps8640_remove
+> 
+>  drivers/gpu/drm/bridge/Kconfig         |  11 +
+>  drivers/gpu/drm/bridge/Makefile        |   1 +
+>  drivers/gpu/drm/bridge/parade-ps8640.c | 655 +++++++++++++++++++++++++
+>  3 files changed, 667 insertions(+)
+>  create mode 100644 drivers/gpu/drm/bridge/parade-ps8640.c
+> 
+> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+> index 4734f6993858..3e0a63011723 100644
+> --- a/drivers/gpu/drm/bridge/Kconfig
+> +++ b/drivers/gpu/drm/bridge/Kconfig
+> @@ -101,6 +101,17 @@ config DRM_PARADE_PS8622
+>  	---help---
+>  	  Parade eDP-LVDS bridge chip driver.
+>  
+> +config DRM_PARADE_PS8640
+> +	tristate "Parade PS8640 MIPI DSI to eDP Converter"
+> +	depends on OF
+> +	select DRM_KMS_HELPER
+> +	select DRM_MIPI_DSI
+> +	select DRM_PANEL
+> +	help
+> +	  Choose this option if you have PS8640 for display
+> +	  The PS8640 is a high-performance and low-power
+> +	  MIPI DSI to eDP converter
+> +
+>  config DRM_SIL_SII8620
+>  	tristate "Silicon Image SII8620 HDMI/MHL bridge"
+>  	depends on OF
+> diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
+> index 1c0c92667ac4..91490c595b38 100644
+> --- a/drivers/gpu/drm/bridge/Makefile
+> +++ b/drivers/gpu/drm/bridge/Makefile
+> @@ -8,6 +8,7 @@ obj-$(CONFIG_DRM_LVDS_ENCODER) += lvds-encoder.o
+>  obj-$(CONFIG_DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW) += megachips-stdpxxxx-ge-b850v3-fw.o
+>  obj-$(CONFIG_DRM_NXP_PTN3460) += nxp-ptn3460.o
+>  obj-$(CONFIG_DRM_PARADE_PS8622) += parade-ps8622.o
+> +obj-$(CONFIG_DRM_PARADE_PS8640) += parade-ps8640.o
+>  obj-$(CONFIG_DRM_SIL_SII8620) += sil-sii8620.o
+>  obj-$(CONFIG_DRM_SII902X) += sii902x.o
+>  obj-$(CONFIG_DRM_SII9234) += sii9234.o
+> diff --git a/drivers/gpu/drm/bridge/parade-ps8640.c b/drivers/gpu/drm/bridge/parade-ps8640.c
+> new file mode 100644
+> index 000000000000..ab896ceb1a42
+> --- /dev/null
+> +++ b/drivers/gpu/drm/bridge/parade-ps8640.c
+> @@ -0,0 +1,655 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2016 MediaTek Inc.
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +//#include <linux/firmware.h>
+
+Commented stuff should gone.
+
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+> +#include <linux/of_graph.h>
+> +#include <linux/regulator/consumer.h>
+> +//#include <asm/unaligned.h>
+
+Ditto.
+
+> +#include <drm/drm_atomic_helper.h>
+> +#include <drm/drm_bridge.h>
+> +#include <drm/drm_crtc_helper.h>
+> +#include <drm/drm_edid.h>
+> +#include <drm/drm_mipi_dsi.h>
+> +#include <drm/drm_panel.h>
+> +#include <drm/drm_print.h>
+> +#include <drm/drm_probe_helper.h>
+> +
+> +#define PAGE1_VSTART		0x6b
+> +#define PAGE2_SPI_CFG3		0x82
+> +#define I2C_TO_SPI_RESET	0x20
+> +#define PAGE2_ROMADD_BYTE1	0x8e
+> +#define PAGE2_ROMADD_BYTE2	0x8f
+> +#define PAGE2_SWSPI_WDATA	0x90
+> +#define PAGE2_SWSPI_RDATA	0x91
+> +#define PAGE2_SWSPI_LEN		0x92
+> +#define PAGE2_SWSPI_CTL		0x93
+> +#define TRIGGER_NO_READBACK	0x05
+> +#define TRIGGER_READBACK	0x01
+> +#define PAGE2_SPI_STATUS	0x9e
+> +#define SPI_READY		0x0c
+> +#define PAGE2_GPIO_L		0xa6
+> +#define PAGE2_GPIO_H		0xa7
+> +#define PS_GPIO9		BIT(1)
+> +#define PAGE2_IROM_CTRL		0xb0
+> +#define IROM_ENABLE		0xc0
+> +#define IROM_DISABLE		0x80
+> +#define PAGE2_SW_RESET		0xbc
+> +#define SPI_SW_RESET		BIT(7)
+> +#define MPU_SW_RESET		BIT(6)
+> +#define PAGE2_ENCTLSPI_WR	0xda
+> +#define PAGE2_I2C_BYPASS	0xea
+> +#define I2C_BYPASS_EN		0xd0
+> +#define PAGE2_MCS_EN		0xf3
+> +#define MCS_EN			BIT(0)
+> +#define PAGE3_SET_ADD		0xfe
+> +#define PAGE3_SET_VAL		0xff
+> +#define VDO_CTL_ADD		0x13
+> +#define VDO_DIS			0x18
+> +#define VDO_EN			0x1c
+> +#define PAGE4_REV_L		0xf0
+> +#define PAGE4_REV_H		0xf1
+> +#define PAGE4_CHIP_L		0xf2
+> +#define PAGE4_CHIP_H		0xf3
+> +
+> +#define PAGE0_DP_CNTL		0
+
+Unused macro.
+
+> +#define PAGE1_VDO_BDG		1
+> +#define PAGE2_TOP_CNTL		2
+> +#define PAGE3_DSI_CNTL1		3
+> +#define PAGE4_MIPI_PHY		4
+
+Ditto... maybe others as well?
+
+> +#define PAGE5_VPLL		5
+> +#define PAGE6_DSI_CNTL2		6
+> +#define PAGE7_SPI_CNTL		7
+> +#define MAX_DEVS		0x8
+> +
+> +struct ps8640_info {
+> +	u8 family_id;
+> +	u8 variant_id;
+> +	u16 version;
+> +};
+> +
+> +struct ps8640 {
+> +	struct drm_connector connector;
+> +	struct drm_bridge bridge;
+> +	struct edid *edid;
+> +	struct mipi_dsi_device *dsi;
+> +	struct i2c_client *page[MAX_DEVS];
+> +	struct regulator_bulk_data supplies[2];
+> +	struct drm_panel *panel;
+> +	struct gpio_desc *gpio_reset;
+> +	struct gpio_desc *gpio_power_down;
+> +	struct gpio_desc *gpio_mode_sel;
+> +	bool enabled;
+> +
+> +	/* firmware file info */
+> +	struct ps8640_info info;
+> +	bool in_fw_update;
+> +	/* for firmware update protect */
+> +	struct mutex fw_mutex;
+> +};
+> +
+> +static const u8 enc_ctrl_code[6] = { 0xaa, 0x55, 0x50, 0x41, 0x52, 0x44 };
+> +static const u8 hw_chip_id[4] = { 0x00, 0x0a, 0x00, 0x30 };
+> +
+
+More unused stuff. Left-overs?
+
+> +static inline struct ps8640 *bridge_to_ps8640(struct drm_bridge *e)
+> +{
+> +	return container_of(e, struct ps8640, bridge);
+> +}
+> +
+> +static inline struct ps8640 *connector_to_ps8640(struct drm_connector *e)
+> +{
+> +	return container_of(e, struct ps8640, connector);
+> +}
+> +
+> +static int ps8640_read(struct i2c_client *client, u8 reg, u8 *data,
+> +		       u16 data_len)
+> +{
+> +	int ret;
+> +	struct i2c_msg msgs[] = {
+> +		{
+> +		 .addr = client->addr,
+> +		 .flags = 0,
+> +		 .len = 1,
+> +		 .buf = &reg,
+> +		},
+> +		{
+> +		 .addr = client->addr,
+> +		 .flags = I2C_M_RD,
+> +		 .len = data_len,
+> +		 .buf = data,
+> +		}
+> +	};
+> +
+> +	ret = i2c_transfer(client->adapter, msgs, 2);
+> +
+> +	if (ret == 2)
+> +		return 0;
+> +	if (ret < 0)
+> +		return ret;
+> +	else
+> +		return -EIO;
+> +}
+> +
+> +static int ps8640_write_bytes(struct i2c_client *client, const u8 *data,
+> +			      u16 data_len)
+> +{
+> +	int ret;
+> +	struct i2c_msg msg;
+> +
+> +	msg.addr = client->addr;
+> +	msg.flags = 0;
+> +	msg.len = data_len;
+> +	msg.buf = (u8 *)data;
+> +
+> +	ret = i2c_transfer(client->adapter, &msg, 1);
+> +	if (ret == 1)
+> +		return 0;
+> +	if (ret < 0)
+> +		return ret;
+> +	else
+> +		return -EIO;
+> +}
+> +
+> +static int ps8640_write_byte(struct i2c_client *client, u8 reg, u8 data)
+> +{
+> +	u8 buf[] = { reg, data };
+> +
+
+I was gonna say you should avoid transmitting data
+in the stack, but then I noticed the I2C core doesn't
+complaint about it (doesn't use object_is_on_stack).
+
+Wolfram, does the I2C accept stacked (possibly non-DMA-able) objects?
+
+> +	return ps8640_write_bytes(client, buf, sizeof(buf));
+> +}
+> +
+> +static void ps8640_get_mcu_fw_version(struct ps8640 *ps_bridge)
+> +{
+> +	struct i2c_client *client = ps_bridge->page[PAGE5_VPLL];
+> +	u8 fw_ver[2];
+> +
+> +	ps8640_read(client, 0x4, fw_ver, sizeof(fw_ver));
+> +	ps_bridge->info.version = (fw_ver[0] << 8) | fw_ver[1];
+> +
+> +	DRM_INFO_ONCE("ps8640 rom fw version %d.%d\n", fw_ver[0], fw_ver[1]);
+
+Hm, isn't this too verbose?
+
+> +}
+> +
+> +static int ps8640_bridge_unmute(struct ps8640 *ps_bridge)
+> +{
+> +	struct i2c_client *client = ps_bridge->page[PAGE3_DSI_CNTL1];
+> +	u8 vdo_ctrl_buf[3] = { PAGE3_SET_ADD, VDO_CTL_ADD, VDO_EN };
+> +
+> +	return ps8640_write_bytes(client, vdo_ctrl_buf, sizeof(vdo_ctrl_buf));
+> +}
+> +
+> +static int ps8640_bridge_mute(struct ps8640 *ps_bridge)
+> +{
+> +	struct i2c_client *client = ps_bridge->page[PAGE3_DSI_CNTL1];
+> +	u8 vdo_ctrl_buf[3] = { PAGE3_SET_ADD, VDO_CTL_ADD, VDO_DIS };
+> +
+> +	return ps8640_write_bytes(client, vdo_ctrl_buf, sizeof(vdo_ctrl_buf));
+> +}
+> +
+> +static void ps8640_pre_enable(struct drm_bridge *bridge)
+> +{
+> +	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
+> +	struct i2c_client *client = ps_bridge->page[PAGE2_TOP_CNTL];
+> +	struct i2c_client *page1 = ps_bridge->page[PAGE1_VDO_BDG];
+> +	int err;
+> +	u8 set_vdo_done, mcs_en, vstart;
+> +	ktime_t timeout;
+> +
+> +	if (ps_bridge->in_fw_update)
+> +		return;
+> +
+> +	if (ps_bridge->enabled)
+> +		return;
+> +
+> +	err = drm_panel_prepare(ps_bridge->panel);
+> +	if (err < 0) {
+> +		DRM_ERROR("failed to prepare panel: %d\n", err);
+> +		return;
+> +	}
+> +
+> +	err = regulator_bulk_enable(ARRAY_SIZE(ps_bridge->supplies),
+> +				    ps_bridge->supplies);
+> +	if (err < 0) {
+> +		DRM_ERROR("cannot enable regulators %d\n", err);
+> +		goto err_panel_unprepare;
+> +	}
+> +
+> +	gpiod_set_value(ps_bridge->gpio_power_down, 1);
+> +	gpiod_set_value(ps_bridge->gpio_reset, 0);
+> +	usleep_range(2000, 2500);
+> +	gpiod_set_value(ps_bridge->gpio_reset, 1);
+> +
+> +	/*
+> +	 * Wait for the ps8640 embed mcu ready
+> +	 * First wait 200ms and then check the mcu ready flag every 20ms
+> +	 */
+> +	msleep(200);
+> +
+> +	timeout = ktime_add_ms(ktime_get(), 200);
+> +	for (;;) {
+> +		err = ps8640_read(client, PAGE2_GPIO_H, &set_vdo_done, 1);
+> +		if (err < 0) {
+> +			DRM_ERROR("failed read PAGE2_GPIO_H: %d\n", err);
+> +			goto err_regulators_disable;
+> +		}
+> +		if ((set_vdo_done & PS_GPIO9) == PS_GPIO9)
+> +			break;
+> +		if (ktime_compare(ktime_get(), timeout) > 0)
+> +			break;
+> +		msleep(20);
+> +	}
+
+I believe it's cleaner to use this idiom:
+
+        unsigned long timeout = jiffies + msecs_to_jiffies(YOUR_DRIVER_TIMEOUT);
+        
+        while (time_is_after_jiffies(timeout)) {
+                ....
+        }
+
+> +
+> +	msleep(50);
+> +
+> +	ps8640_read(page1, PAGE1_VSTART, &vstart, 1);
+> +	DRM_INFO("PS8640 PAGE1.0x6B = 0x%x\n", vstart);
+> +
+
+Ditto, isn't this too verbose?
+
+I stopped reviewing at this point. It sounds like this driver
+could use some love. (Not sure how this driver stood twenty reviews :-))
+
+Thanks,
+Ezequiel
+
