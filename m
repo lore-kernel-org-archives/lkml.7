@@ -2,146 +2,86 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C944C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BE1C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60ED7206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:22:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YV/3iOsR"
+	by mail.kernel.org (Postfix) with ESMTP id 76200206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:23:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576498982;
+	bh=iqMqtQQV0SVYXKLuUzzUIl4DJZ0CDKW1xjZhpNX9mQI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=c9r7PtLp3Hx/8Vmqo+A0zGZAO2McOX+SNLhPf3AIUGn1pZuZzORRQ9h2MxHt2QfZ4
+	 oS9ud4P1l9U7bQ0cHhmnKKOZdDZV+HUrgW4ZVOJlSVlw6pcQkJ867un1OOa6QndS06
+	 RER6LBRv6nysV901UkcT8vQhBOJKu0VdR27KqAlw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbfLPMWM (ORCPT
+        id S1727632AbfLPMXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 07:22:12 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28949 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727508AbfLPMWM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 07:22:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576498930;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=GGxfdO7Jko3HPsDQSTuFAxObQgfZU4Nt9ND2ruCmjRM=;
-        b=YV/3iOsRqkDVwgsfeMk26VX4Tejsg0ylEc1KOIZky90EaXND/M0b5Lku9UFNbVz+h3FaBx
-        lPYAgG111v+FAsaRRSRDQD/wbNnT0bjolwjVNQW0Cy/2QwBefMp7vNjFCgl136K9IB990g
-        WtGI7IG2Lk/w8GcxGhTEpKP7OtoBF/U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-252-SlZgeAs_ObGjv75nMygmfQ-1; Mon, 16 Dec 2019 07:22:09 -0500
-X-MC-Unique: SlZgeAs_ObGjv75nMygmfQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 004741800D7B;
-        Mon, 16 Dec 2019 12:22:07 +0000 (UTC)
-Received: from [10.36.118.132] (unknown [10.36.118.132])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9E0925C1D6;
-        Mon, 16 Dec 2019 12:21:55 +0000 (UTC)
-Subject: Re: [PATCH v15 0/7] mm / virtio: Provide support for free page
- reporting
-To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, mgorman@techsingularity.net,
-        vbabka@suse.cz
-Cc:     yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
-        pagupta@redhat.com, riel@surriel.com, lcapitulino@redhat.com,
-        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com, osalvador@suse.de
-References: <20191205161928.19548.41654.stgit@localhost.localdomain>
- <ead08075-c886-dc7d-2c7b-47b20e00b515@redhat.com>
- <4d67ffe7a334d283d2641dbcae53bbc5123e70ad.camel@linux.intel.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <d105f489-5c37-c60b-7464-801b36b976eb@redhat.com>
-Date:   Mon, 16 Dec 2019 13:21:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 16 Dec 2019 07:23:01 -0500
+Received: from foss.arm.com ([217.140.110.172]:53358 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727486AbfLPMXA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 07:23:00 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4DB851FB;
+        Mon, 16 Dec 2019 04:23:00 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BE57D3F719;
+        Mon, 16 Dec 2019 04:22:59 -0800 (PST)
+Date:   Mon, 16 Dec 2019 12:22:58 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
+Cc:     kernel@puri.sm, Liam Girdwood <lgirdwood@gmail.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] Add the broadmobi BM818
+Message-ID: <20191216122258.GC4161@sirena.org.uk>
+References: <20191214235550.31257-1-angus@akkea.ca>
 MIME-Version: 1.0
-In-Reply-To: <4d67ffe7a334d283d2641dbcae53bbc5123e70ad.camel@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ghzN8eJ9Qlbqn3iT"
+Content-Disposition: inline
+In-Reply-To: <20191214235550.31257-1-angus@akkea.ca>
+X-Cookie: Backed up the system lately?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> I found alternative approaches and did away with most of them. What I had
-> done is replaced the REPORTING_REQUESTED and reference count logic with
-> the state in order to guarantee that we will make our way through the list
-> and rearm the reporting thread if the work isn't completed.
-> 
-> One thing I still think I need to split out based on Mel's comments is the
-> list rotation and probably the new budget value I added.
 
-Yeah, both probably make sense.
+--ghzN8eJ9Qlbqn3iT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> 
-> As far as performance this new patch set performs better than the old one
-> did. Most of that is due to the fact that I increased the delay between
-> passes and dropped any optimizations for the shuffling code.
+On Sat, Dec 14, 2019 at 03:55:48PM -0800, Angus Ainslie (Purism) wrote:
 
-That's interesting - and good :)
+> Angus Ainslie (Purism) (2):
+>   sound: codecs: gtm601: add Broadmobi bm818 sound profile
+>   dt-bindings: sound: gtm601: add the broadmobi interface
 
-I probably won't have enough time to look into #4 before Christmas - so
-I might wait for your resend and review after Christmas.
+As I said in reply to v1:
 
--- 
-Thanks,
+| These subject styles don't even agree with each other :( - please
+| try to be consistent with the style for the subsystem (the latter
+| one matches, the first one doesn't).
 
-David / dhildenb
+--ghzN8eJ9Qlbqn3iT
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl33dyEACgkQJNaLcl1U
+h9CPKwf/Yi58Hf8HxHeOBIXk0Y27oK1tnQS/WvB4x3RVFfqXyikECz5ERE6pdUzc
+5fpXeRbxwO7kTznK/2YE6aP0S332ZVMhxt3nG/BqJLSjn/a6EzSFGQ6jiHSQ1Kvj
+YqGNOyPONPfN37I4h5j6oviotmeLr2QhhL7wySQsifL9L21S/xVVyy3lj6H8HgS/
+e6AqlPkavFIEW3OaGI3Tj9x1iO4TG8tadg+2IlggE46MZunxvlXhrQuLwPxeZSQ5
+65revyyoOPDRbDHMIOVaK/v2598LDohjgKyxRXD2IXiiz2X48IHcT71f6vSk+Bo2
+YcUYhAEeMUrSq5ZwzcvtJl2vV2clFA==
+=B/1w
+-----END PGP SIGNATURE-----
+
+--ghzN8eJ9Qlbqn3iT--
