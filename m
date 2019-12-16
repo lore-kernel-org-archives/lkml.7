@@ -2,202 +2,147 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC37C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F987C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74E26206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 16:59:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="mvCGoG39"
+	by mail.kernel.org (Postfix) with ESMTP id 5B8712072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:01:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbfLPQ7W (ORCPT
+        id S1726551AbfLPRBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 11:59:22 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45845 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbfLPQ7V (ORCPT
+        Mon, 16 Dec 2019 12:01:01 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43450 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725805AbfLPRBB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 11:59:21 -0500
-Received: by mail-io1-f67.google.com with SMTP id i11so4570338ioi.12
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 08:59:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wT7SZ+OLO630PVI5NYrvDjy+jNlP7/vPSuqmUxImjRI=;
-        b=mvCGoG390lkQhIGt10C5uJOnQlDLqM7ckcj5+vO5/E5UBpBhaLT0+k2/e7I4DLcEeY
-         2ifgfrg+zjpexA6m1T2Ge1sRCpRRTyvEIhEZTAMP9J664HhTWziOuDAb1+iyH7srY7PA
-         ozqRWgCYhHDvJDJ5yuT6pDwnFshn+bjNE7YmA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wT7SZ+OLO630PVI5NYrvDjy+jNlP7/vPSuqmUxImjRI=;
-        b=B41oQut99KneaL0QIwK1b9AhDBU3T4zZR8il6+iRhzF3O2oP8gzWvbQ4lIJFt0ab5r
-         jzhp0ERUjIOFZUDVdIU6TEUvKdYJZ8ikebah/LYq/9bYqjkbEeq7gcQcNKCtY7yayQ1p
-         3TSg1B6p+6axj+oZwq6GPsjIBV+Y4FMK33K/Yr3Nh67un+mBAXHbysr1LUgWOIJEjqWJ
-         qtl6G5/JXAiyUFvL0jBwofOvAZg8TfiUBgzDL1eEclIXQ8vIEHB0E38rllgY3TYTDcwf
-         lg6uf3aiQoA7lfDM/S+WUM2A/1QFsbqIH4b+Qa0svuA28tEgBvnVpMw4+PPE9+idMEWd
-         zgTQ==
-X-Gm-Message-State: APjAAAXzamcOaTWYLWmSKUsBTmTMnJWNCTYr13iYoBCVp8WAPdI216r4
-        T21SeRllOyefxTE0qIFRLr8azovV1RG9l+WULOquzA==
-X-Google-Smtp-Source: APXvYqxdRoeWD1Tywgum5/3SAGtinVvAq8t3n49rScn14Yz2lW3axKTMURLW3omvXjZ5mdfPRnnhCaLiPDyJLxS1qSY=
-X-Received: by 2002:a05:6602:2504:: with SMTP id i4mr19060859ioe.173.1576515559642;
- Mon, 16 Dec 2019 08:59:19 -0800 (PST)
+        Mon, 16 Dec 2019 12:01:01 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBGGvZEl093370;
+        Mon, 16 Dec 2019 12:00:14 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wwe3nkqm7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 16 Dec 2019 12:00:14 -0500
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xBGGwAin095696;
+        Mon, 16 Dec 2019 12:00:13 -0500
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wwe3nkqk2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 16 Dec 2019 12:00:13 -0500
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xBGGssAc028256;
+        Mon, 16 Dec 2019 17:00:11 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma05wdc.us.ibm.com with ESMTP id 2wvqc5vskm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 16 Dec 2019 17:00:11 +0000
+Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBGH0Bpp38469964
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 16 Dec 2019 17:00:11 GMT
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 366EA124052;
+        Mon, 16 Dec 2019 17:00:11 +0000 (GMT)
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A973A124060;
+        Mon, 16 Dec 2019 17:00:05 +0000 (GMT)
+Received: from [9.199.36.169] (unknown [9.199.36.169])
+        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 16 Dec 2019 17:00:05 +0000 (GMT)
+Subject: Re: [PATCH 05/17] asm-generic/tlb: Rename
+ HAVE_RCU_TABLE_NO_INVALIDATE
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nick Piggin <npiggin@gmail.com>, linux-arch@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Helge Deller <deller@gmx.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Nick Hu <nickhu@andestech.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+References: <20191211120713.360281197@infradead.org>
+ <20191211122955.940455408@infradead.org> <87woawzc1t.fsf@linux.ibm.com>
+ <20191216123752.GM2844@hirez.programming.kicks-ass.net>
+ <d52ea890-c2ea-88f3-9d62-b86e60ee77ae@linux.ibm.com>
+ <20191216132004.GO2844@hirez.programming.kicks-ass.net>
+ <a9ae27c8-aa84-cda3-355c-7abb3b450d38@linux.ibm.com>
+ <33ed03aa-a34c-3a81-0f83-20c3e8d4eff7@linux.ibm.com>
+ <20191216145041.GG2827@hirez.programming.kicks-ass.net>
+ <20191216151419.GL2871@hirez.programming.kicks-ass.net>
+ <20191216153047.GM2871@hirez.programming.kicks-ass.net>
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Message-ID: <c4edc550-b510-2521-d703-be324de68436@linux.ibm.com>
+Date:   Mon, 16 Dec 2019 22:30:03 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20191203134816.5319-1-jagan@amarulasolutions.com>
- <20191203134816.5319-2-jagan@amarulasolutions.com> <20191204133600.gnv6dnhk6upe7xod@gilmour.lan>
- <CAMty3ZDU57Hj3ZSBC6sSMFWN9-HQadA03hmXUNUVS1W0UQQ3DA@mail.gmail.com> <20191216112042.f4xvlgnbm4dk6wkq@gilmour.lan>
-In-Reply-To: <20191216112042.f4xvlgnbm4dk6wkq@gilmour.lan>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Mon, 16 Dec 2019 22:29:08 +0530
-Message-ID: <CAMty3ZBU-XaxR_vM5L2yVbhR5ftfbtDn3jP00qCxBF+owVyqDQ@mail.gmail.com>
-Subject: Re: [PATCH v12 1/7] dt-bindings: sun6i-dsi: Document A64 MIPI-DSI controller
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-amarula <linux-amarula@amarulasolutions.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191216153047.GM2871@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-16_06:2019-12-16,2019-12-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 mlxscore=0 mlxlogscore=999 impostorscore=0 phishscore=0
+ adultscore=0 bulkscore=0 clxscore=1015 suspectscore=2 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912160147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 4:50 PM Maxime Ripard <mripard@kernel.org> wrote:
->
-> On Mon, Dec 16, 2019 at 04:37:20PM +0530, Jagan Teki wrote:
-> > On Wed, Dec 4, 2019 at 7:06 PM Maxime Ripard <mripard@kernel.org> wrote:
-> > >
-> > > On Tue, Dec 03, 2019 at 07:18:10PM +0530, Jagan Teki wrote:
-> > > > The MIPI DSI controller in Allwinner A64 is similar to A33.
-> > > >
-> > > > But unlike A33, A64 doesn't have DSI_SCLK gating so it is valid
-> > > > to have separate compatible for A64 on the same driver.
-> > > >
-> > > > DSI_SCLK uses mod clock-names on dt-bindings, so the same
-> > > > is not required for A64.
-> > > >
-> > > > On that note
-> > > > - A64 require minimum of 1 clock like the bus clock
-> > > > - A33 require minimum of 2 clocks like both bus, mod clocks
-> > > >
-> > > > So, update dt-bindings so-that it can document both A33,
-> > > > A64 bindings requirements.
-> > > >
-> > > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > > > ---
-> > > > Changes for v12:
-> > > > - Use 'enum' instead of oneOf+const
-> > > >
-> > > >  .../display/allwinner,sun6i-a31-mipi-dsi.yaml | 20 +++++++++++++++++--
-> > > >  1 file changed, 18 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml b/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
-> > > > index dafc0980c4fa..b91446475f35 100644
-> > > > --- a/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
-> > > > +++ b/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
-> > > > @@ -15,7 +15,9 @@ properties:
-> > > >    "#size-cells": true
-> > > >
-> > > >    compatible:
-> > > > -    const: allwinner,sun6i-a31-mipi-dsi
-> > > > +    enum:
-> > > > +      - allwinner,sun6i-a31-mipi-dsi
-> > > > +      - allwinner,sun50i-a64-mipi-dsi
-> > > >
-> > > >    reg:
-> > > >      maxItems: 1
-> > > > @@ -24,6 +26,8 @@ properties:
-> > > >      maxItems: 1
-> > > >
-> > > >    clocks:
-> > > > +    minItems: 1
-> > > > +    maxItems: 2
-> > > >      items:
-> > > >        - description: Bus Clock
-> > > >        - description: Module Clock
-> > > > @@ -63,13 +67,25 @@ required:
-> > > >    - reg
-> > > >    - interrupts
-> > > >    - clocks
-> > > > -  - clock-names
-> > > >    - phys
-> > > >    - phy-names
-> > > >    - resets
-> > > >    - vcc-dsi-supply
-> > > >    - port
-> > > >
-> > > > +allOf:
-> > > > +  - if:
-> > > > +      properties:
-> > > > +         compatible:
-> > > > +           contains:
-> > > > +             const: allwinner,sun6i-a31-mipi-dsi
-> > > > +      then:
-> > > > +        properties:
-> > > > +          clocks:
-> > > > +            minItems: 2
-> > > > +        required:
-> > > > +          - clock-names
-> > > > +
-> > >
-> > > Your else condition should check that the number of clocks items is 1
-> > > on the A64
-> >
-> > But the minItems mentioned as 1 in clocks, which is unchanged number
-> > by default. doesn't it sufficient?
->
-> In the main schema, it's said that the clocks property can have one or
-> two elements (to cover the A31 case that has one, and the A64 case
-> that has 2).
->
-> This is fine.
->
-> Later on, you enforce that the A64 has two elements, and this is fine
-> too.
+On 12/16/19 9:00 PM, Peter Zijlstra wrote:
+> On Mon, Dec 16, 2019 at 04:14:19PM +0100, Peter Zijlstra wrote:
+>> On Mon, Dec 16, 2019 at 03:50:41PM +0100, Peter Zijlstra wrote:
+>>> On Mon, Dec 16, 2019 at 07:24:24PM +0530, Aneesh Kumar K.V wrote:
+>>>
+>>>> So __p*_free_tlb() routines on ppc64 just mark that we need a page walk
+>>>> cache flush and the actual flush in done in tlb_flush_mmu.
+>>>
+>>> Not quite, your __p*_free_tlb() goes to pgtable_free_tlb() which call
+>>> tlb_remove_table().
+>>>
+>>>> As per
+>>>>
+>>>> d86564a2f085b79ec046a5cba90188e61235280 (mm/tlb, x86/mm: Support
+>>>> invalidating TLB caches for RCU_TABLE_FREE ) that is not sufficient?
+>>>
+>>> 96bc9567cbe1 ("asm-generic/tlb, arch: Invert CONFIG_HAVE_RCU_TABLE_INVALIDATE")
+>>>
+>>> And no. Since you have TABLE_NO_INVALIDATE set, tlb_remove_table() will
+>>> not TLBI when it fails to allocate a batch page, which is an error for
+>>> PPC-Radix.
+>>>
+>>> There is also no TLBI when the batch page is full and the RCU callback
+>>> happens, which is also a bug on PPC-Radix.
+>>
+>> It seems to me you need something like this here patch, all you need to
+>> add is a suitable definition of tlb_needs_table_invalidate() for Power.
+> 
+> I'm thinking this:
+> 
+> #define tlb_needs_table_invalidate()	radix_enabled()
+> 
+> should work for you. When you have Radix you need that TLBI, if you have
+> Hash you don't.
+> 
 
-Actually A31 case has 2 and A64 case has 1.
+yes. I was doing something similar with #ifdef around 
+tlb_table_invalidate(). I will take your approach rather than an arch 
+override of tlb_table_invalidate()
 
->
-> However, you never check that on the A31 you only have one clock, and
-> you could very well have two and no one would notice.
-
-I did check A31 case for 2 but not in A64. this is what you mean? so
-adding A64 check like below would fine?
-
-allOf:
-  - if:
-      properties:
-         compatible:
-           contains:
-             const: allwinner,sun6i-a31-mipi-dsi
-      then:
-        properties:
-          clocks:
-            minItems: 2
-        required:
-          - clock-names
-  - if:
-      properties:
-         compatible:
-           contains:
-             const: allwinner,sun50i-a64-mipi-dsi
-      then:
-        properties:
-          clocks:
-            minItems: 1
+-aneesh
