@@ -2,132 +2,123 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5537C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4CDC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80B2D2064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:53:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9F49206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:53:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728482AbfLPPvv (ORCPT
+        id S1728504AbfLPPxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 10:51:51 -0500
-Received: from sauhun.de ([88.99.104.3]:41906 "EHLO pokefinder.org"
+        Mon, 16 Dec 2019 10:53:36 -0500
+Received: from honk.sigxcpu.org ([24.134.29.49]:42470 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728328AbfLPPvu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 10:51:50 -0500
-Received: from localhost (p54B33297.dip0.t-ipconnect.de [84.179.50.151])
-        by pokefinder.org (Postfix) with ESMTPSA id C22C32C04DF;
-        Mon, 16 Dec 2019 16:51:47 +0100 (CET)
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     linux-media@vger.kernel.org
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND 00/16] media: use new API for creating client devices
-Date:   Mon, 16 Dec 2019 16:51:27 +0100
-Message-Id: <20191216155146.8803-1-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.20.1
+        id S1726916AbfLPPxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 10:53:36 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 6B78BFB03;
+        Mon, 16 Dec 2019 16:53:34 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id yYpcNGzE6ASE; Mon, 16 Dec 2019 16:53:33 +0100 (CET)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id A743E498AE; Mon, 16 Dec 2019 16:53:32 +0100 (CET)
+Date:   Mon, 16 Dec 2019 16:53:32 +0100
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Dominik Brodowski <linux@dominikbrodowski.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] init: use do_mount() instead of ksys_mount()
+Message-ID: <20191216155332.GA29065@bogon.m.sigxcpu.org>
+References: <20191212135724.331342-1-linux@dominikbrodowski.net>
+ <20191212135724.331342-4-linux@dominikbrodowski.net>
+ <20191216013536.5wyvq4vjv5efd35n@core.my.home>
+ <CAHk-=wh8VLe3AEKhz=1bzSO=1fv4EM71EhufxuC=Gp=+bLhXoA@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHk-=wh8VLe3AEKhz=1bzSO=1fv4EM71EhufxuC=Gp=+bLhXoA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These media drivers create a new I2C client device with the deprecated
-i2c_new_device() and check afterwards if the client exists and if a
-driver is bound to it.
+Hi,
+On Sun, Dec 15, 2019 at 07:50:23PM -0800, Linus Torvalds wrote:
+> On Sun, Dec 15, 2019 at 5:35 PM Ondřej Jirman <megi@xff.cz> wrote:
+> >
+> > Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+> 
+> Duh. So much for the trivial obvious conversion.
+> 
+> It didn't take "data might be NULL" into account.
+> 
+> A patch like this, perhaps? Untested..
+> 
+>                Linus
 
-This series changes the drivers to use the now suggested
-i2c_new_client_device() call and a new helper to check if the driver is
-bound. This helper supports (for now) the old and the new API and is
-also more readable.
+>  init/do_mounts.c | 23 +++++++++++++----------
+>  1 file changed, 13 insertions(+), 10 deletions(-)
+> 
+> diff --git a/init/do_mounts.c b/init/do_mounts.c
+> index f55cbd9cb818..d204f605dbce 100644
+> --- a/init/do_mounts.c
+> +++ b/init/do_mounts.c
+> @@ -391,17 +391,19 @@ static int __init do_mount_root(const char *name, const char *fs,
+>  				 const int flags, const void *data)
+>  {
+>  	struct super_block *s;
+> -	char *data_page;
+> -	struct page *p;
+> +	struct page *p = NULL;
+> +	char *data_page = NULL;
+n>  	int ret;
+>  
+> -	/* do_mount() requires a full page as fifth argument */
+> -	p = alloc_page(GFP_KERNEL);
+> -	if (!p)
+> -		return -ENOMEM;
+> -
+> -	data_page = page_address(p);
+> -	strncpy(data_page, data, PAGE_SIZE - 1);
+> +	if (data) {
+> +		/* do_mount() requires a full page as fifth argument */
+> +		p = alloc_page(GFP_KERNEL);
+> +		if (!p)
+> +			return -ENOMEM;
+> +		data_page = page_address(p);
+> +		strncpy(data_page, data, PAGE_SIZE - 1);
+> +		data_page[PAGE_SIZE - 1] = '\0';
+> +	}
+>  
+>  	ret = do_mount(name, "/root", fs, flags, data_page);
+>  	if (ret)
+> @@ -417,7 +419,8 @@ static int __init do_mount_root(const char *name, const char *fs,
+>  	       MAJOR(ROOT_DEV), MINOR(ROOT_DEV));
+>  
+>  out:
+> -	put_page(p);
+> +	if (p)
+> +		put_page(p);
+>  	return ret;
+>  }
+>  
 
-The drivers were converted with the following coccinelle script:
+This unbroke tftpboot on arm64 on next-20191216 for me as well:
 
-@@
-expression client;
-statement S;
-@@
-        client =
--               i2c_new_device
-+               i2c_new_client_device
-                        (...);
-        ... when != client
-        if (
--               \( !client \| client == NULL \) || \( !client->dev.driver \| client->dev.driver == NULL \)
-+               !i2c_client_has_driver(client)
-                        ) {
-                        S
-                }
+Tested-by: Guido Günther <agx@sigxcpu.org>
 
-The helper has been tested on a Renesas Salvator-XS board (R-Car M3-N).
-The rest was build tested by me and buildbot.
-
-This series is based on v5.5-rc2 where the new helper was added. A
-branch can be found here:
-
-git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git renesas/i2c/new_device_with_driver
-
-This series is largely the same as the last one sent out in November. It
-was rebased to v5.5-rc2 and one Rev-tag added. The patch for v4l2-core
-has been extended to use more new API. This series can be applied as is.
-I think it should go via the media-tree.
-
-Looking forward to comments.
-
-Thanks and happy hacking,
-
-   Wolfram
-
-
-Wolfram Sang (16):
-  media: dvb-core: dvbdev: convert to use i2c_new_client_device()
-  media: dvb-frontends: cxd2820r_core: convert to use
-    i2c_new_client_device()
-  media: dvb-frontends: lgdt330x: convert to use i2c_new_client_device()
-  media: dvb-frontends: m88ds3103: convert to use
-    i2c_new_client_device()
-  media: dvb-frontends: ts2020: convert to use i2c_new_client_device()
-  media: pci: cx23885: cx23885-dvb: convert to use
-    i2c_new_client_device()
-  media: pci: saa7164: saa7164-dvb: convert to use
-    i2c_new_client_device()
-  media: pci: smipcie: smipcie-main: convert to use
-    i2c_new_client_device()
-  media: platform: sti: c8sectpfe: c8sectpfe-dvb: convert to use
-    i2c_new_client_device()
-  media: usb: dvb-usb-v2: af9035: convert to use i2c_new_client_device()
-  media: usb: dvb-usb-v2: anysee: convert to use i2c_new_client_device()
-  media: usb: dvb-usb-v2: rtl28xxu: convert to use
-    i2c_new_client_device()
-  media: usb: dvb-usb-v2: zd1301: convert to use i2c_new_client_device()
-  media: usb: dvb-usb: dib0700_devices: convert to use
-    i2c_new_client_device()
-  media: usb: dvb-usb: dw2102: convert to use i2c_new_client_device()
-  media: v4l2-core: v4l2-i2c: convert to new API with ERRPTR
-
- drivers/media/dvb-core/dvbdev.c               |   4 +-
- drivers/media/dvb-frontends/cxd2820r_core.c   |   4 +-
- drivers/media/dvb-frontends/lgdt330x.c        |   4 +-
- drivers/media/dvb-frontends/m88ds3103.c       |   4 +-
- drivers/media/dvb-frontends/ts2020.c          |   4 +-
- drivers/media/pci/cx23885/cx23885-dvb.c       | 114 +++++++++---------
- drivers/media/pci/saa7164/saa7164-dvb.c       |  20 +--
- drivers/media/pci/smipcie/smipcie-main.c      |   4 +-
- .../platform/sti/c8sectpfe/c8sectpfe-dvb.c    |   4 +-
- drivers/media/usb/dvb-usb-v2/af9035.c         |   4 +-
- drivers/media/usb/dvb-usb-v2/anysee.c         |   4 +-
- drivers/media/usb/dvb-usb-v2/rtl28xxu.c       |  36 +++---
- drivers/media/usb/dvb-usb-v2/zd1301.c         |   4 +-
- drivers/media/usb/dvb-usb/dib0700_devices.c   |   8 +-
- drivers/media/usb/dvb-usb/dw2102.c            |   8 +-
- drivers/media/v4l2-core/v4l2-i2c.c            |  10 +-
- 16 files changed, 115 insertions(+), 121 deletions(-)
-
--- 
-2.20.1
-
+Cheers,
+ -- Guido
