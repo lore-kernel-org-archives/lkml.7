@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9771C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 423C8C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9A5420717
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:27:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1773F20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:27:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520850;
-	bh=tHbKCpPiGecCPTCgk3V5tn9r2fHfaJe0rvIkRctlIjc=;
+	s=default; t=1576520858;
+	bh=XUGfC575xhIEqwMyg/cNDeOdlkQbMN1PMFYBybe8duE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sCpM8Qrc1Uz7LFY9Q0HgYqePngxBbhCKYnQMXiY9zWm3rfQNuvdGL7+IxfKlE4i7r
-	 WdJqRxNxpt+ojgL8dboSYXKqlSzu8OmmnIsnFA7iSMrPZ2C8pH4XUmGz/xOu21Ks/d
-	 OjzOQub9dq6MBZOADbmqy4hlG6AsIHPWf4mD0i+Y=
+	b=cUzC0tXZs2caSrc79eIxA/I2q8e9mvqXSzf4Rz1XWYNLe6PaAqcOuD8snp4gQtnth
+	 My/fR+RkST5sLns9grQV2Jw/ejvXCNBAAPmUDOeF1mKAGMbofdmx5053YOY36lSc7T
+	 4fYj87HInacAWlJKJSrm72Nm57/vugGbjTFfwCBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727604AbfLPS13 (ORCPT
+        id S1731677AbfLPS1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:27:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37356 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:27:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731227AbfLPSPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:15:47 -0500
+        id S1731419AbfLPSPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:15:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB25E21739;
-        Mon, 16 Dec 2019 18:15:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D149F206EC;
+        Mon, 16 Dec 2019 18:15:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520147;
-        bh=tHbKCpPiGecCPTCgk3V5tn9r2fHfaJe0rvIkRctlIjc=;
+        s=default; t=1576520142;
+        bh=XUGfC575xhIEqwMyg/cNDeOdlkQbMN1PMFYBybe8duE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OgtUP2OYOC6AJcdiuVCAg1NiRGRcvcJw34yQP2Ai3aukBvdeDTS9EhhWxugA9Nq6I
-         5YOn4s82p+yUUwJN2Fp6RF/5OBIK4Si6UDYuDfvf1fEaSv/OFBVM2pgKJ/NZUvlOUG
-         M9YNHyrcpEDLdldYf02ivVhd0RNWaRtTWndr90iU=
+        b=GQz/uq1loxjRsrvplRnDeSU4ic63y2oZVOI1DJqvzJ5nW3ce0rfCoJIovLTfFQw7x
+         mtsNjsCtcOzZGM/nFCk5/YKtHhft+e7QvomZkCV7/E2eTkRkHUN2idc24JQi70Xf44
+         Crtu3/G0AS2D8RTH9RqvQ24aRN1oDoeeRivXtDiY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>
-Subject: [PATCH 5.4 034/177] interconnect: qcom: qcs404: Walk the list safely on node removal
-Date:   Mon, 16 Dec 2019 18:48:10 +0100
-Message-Id: <20191216174828.234103663@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 5.4 032/177] xhci: make sure interrupts are restored to correct state
+Date:   Mon, 16 Dec 2019 18:48:08 +0100
+Message-Id: <20191216174825.035309617@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -60,56 +59,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Georgi Djakov <georgi.djakov@linaro.org>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
-commit f39488ea2a75c49634c8611090f58734f61eee7c upstream.
+commit bd82873f23c9a6ad834348f8b83f3b6a5bca2c65 upstream.
 
-As we will remove items off the list using list_del(), we need to use the
-safe version of list_for_each_entry().
+spin_unlock_irqrestore() might be called with stale flags after
+reading port status, possibly restoring interrupts to a incorrect
+state.
 
-Fixes: 5e4e6c4d3ae0 ("interconnect: qcom: Add QCS404 interconnect provider driver")
-Reported-by: Dmitry Osipenko <digetx@gmail.com>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-Cc: <stable@vger.kernel.org> # v5.4
-Link: https://lore.kernel.org/r/20191212075332.16202-4-georgi.djakov@linaro.org
+If a usb2 port just finished resuming while the port status is read
+the spin lock will be temporary released and re-acquired in a separate
+function. The flags parameter is passed as value instead of a pointer,
+not updating flags properly before the final spin_unlock_irqrestore()
+is called.
+
+Cc: <stable@vger.kernel.org> # v3.12+
+Fixes: 8b3d45705e54 ("usb: Fix xHCI host issues on remote wakeup.")
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20191211142007.8847-7-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/interconnect/qcom/qcs404.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/usb/host/xhci-hub.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/drivers/interconnect/qcom/qcs404.c
-+++ b/drivers/interconnect/qcom/qcs404.c
-@@ -414,7 +414,7 @@ static int qnoc_probe(struct platform_de
- 	struct icc_provider *provider;
- 	struct qcom_icc_node **qnodes;
- 	struct qcom_icc_provider *qp;
--	struct icc_node *node;
-+	struct icc_node *node, *tmp;
- 	size_t num_nodes, i;
- 	int ret;
+--- a/drivers/usb/host/xhci-hub.c
++++ b/drivers/usb/host/xhci-hub.c
+@@ -806,7 +806,7 @@ static void xhci_del_comp_mod_timer(stru
  
-@@ -494,7 +494,7 @@ static int qnoc_probe(struct platform_de
- 
- 	return 0;
- err:
--	list_for_each_entry(node, &provider->nodes, node_list) {
-+	list_for_each_entry_safe(node, tmp, &provider->nodes, node_list) {
- 		icc_node_del(node);
- 		icc_node_destroy(node->id);
- 	}
-@@ -508,9 +508,9 @@ static int qnoc_remove(struct platform_d
+ static int xhci_handle_usb2_port_link_resume(struct xhci_port *port,
+ 					     u32 *status, u32 portsc,
+-					     unsigned long flags)
++					     unsigned long *flags)
  {
- 	struct qcom_icc_provider *qp = platform_get_drvdata(pdev);
- 	struct icc_provider *provider = &qp->provider;
--	struct icc_node *n;
-+	struct icc_node *n, *tmp;
+ 	struct xhci_bus_state *bus_state;
+ 	struct xhci_hcd	*xhci;
+@@ -860,11 +860,11 @@ static int xhci_handle_usb2_port_link_re
+ 		xhci_test_and_clear_bit(xhci, port, PORT_PLC);
+ 		xhci_set_link_state(xhci, port, XDEV_U0);
  
--	list_for_each_entry(n, &provider->nodes, node_list) {
-+	list_for_each_entry_safe(n, tmp, &provider->nodes, node_list) {
- 		icc_node_del(n);
- 		icc_node_destroy(n->id);
- 	}
+-		spin_unlock_irqrestore(&xhci->lock, flags);
++		spin_unlock_irqrestore(&xhci->lock, *flags);
+ 		time_left = wait_for_completion_timeout(
+ 			&bus_state->rexit_done[wIndex],
+ 			msecs_to_jiffies(XHCI_MAX_REXIT_TIMEOUT_MS));
+-		spin_lock_irqsave(&xhci->lock, flags);
++		spin_lock_irqsave(&xhci->lock, *flags);
+ 
+ 		if (time_left) {
+ 			slot_id = xhci_find_slot_id_by_port(hcd, xhci,
+@@ -967,7 +967,7 @@ static void xhci_get_usb3_port_status(st
+ }
+ 
+ static void xhci_get_usb2_port_status(struct xhci_port *port, u32 *status,
+-				      u32 portsc, unsigned long flags)
++				      u32 portsc, unsigned long *flags)
+ {
+ 	struct xhci_bus_state *bus_state;
+ 	u32 link_state;
+@@ -1017,7 +1017,7 @@ static void xhci_get_usb2_port_status(st
+ static u32 xhci_get_port_status(struct usb_hcd *hcd,
+ 		struct xhci_bus_state *bus_state,
+ 	u16 wIndex, u32 raw_port_status,
+-		unsigned long flags)
++		unsigned long *flags)
+ 	__releases(&xhci->lock)
+ 	__acquires(&xhci->lock)
+ {
+@@ -1140,7 +1140,7 @@ int xhci_hub_control(struct usb_hcd *hcd
+ 		}
+ 		trace_xhci_get_port_status(wIndex, temp);
+ 		status = xhci_get_port_status(hcd, bus_state, wIndex, temp,
+-					      flags);
++					      &flags);
+ 		if (status == 0xffffffff)
+ 			goto error;
+ 
 
 
