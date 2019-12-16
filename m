@@ -4,52 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80FC6C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F31C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4972F20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:28:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0BCC206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:28:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520908;
-	bh=1AUrRWkuKd93Vu4XM2xAppPLl4YptojGjXIUS81Acr0=;
+	s=default; t=1576520914;
+	bh=eSh5pE4Q3RAtck0PQkjrW+PH3c7RITGsXb2IGj4X9eo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K0eMid44H5AI/v2afOXNVc3LT2J/n/pOUYIgR09Dpp01DLQ4bCARxGSmqfxFKMpiH
-	 9UijUSveVcaEXtA5DA5c13g6aW1QerFVv9ECW8v1P9nuWtlG7woW9AaJV47JXQqWyZ
-	 vFRDY5w4TQR/8AthAP3KNVCVZ3CHirTM6fCXWUR8=
+	b=19jzWTFuVMOKo8CQaYbn2NSwwq05AGzYQt8j1MDpkHj3OXYJUK2sevAB2Wqb0QEj1
+	 yKUp+5M+4BkBabLrI3OQiU7EEcNbOxgKvaDHEk36KuR76wU+yIR/aXgY+yLEgPGoMW
+	 K4g+2fAzUo4VX3Nk/NrGdJihM9Syfgq7zQIpmTTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731438AbfLPS21 (ORCPT
+        id S1731268AbfLPSOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:28:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34988 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:14:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731297AbfLPSOy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:14:54 -0500
+        id S1731256AbfLPSOm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:14:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4154320717;
-        Mon, 16 Dec 2019 18:14:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13150206B7;
+        Mon, 16 Dec 2019 18:14:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520093;
-        bh=1AUrRWkuKd93Vu4XM2xAppPLl4YptojGjXIUS81Acr0=;
+        s=default; t=1576520081;
+        bh=eSh5pE4Q3RAtck0PQkjrW+PH3c7RITGsXb2IGj4X9eo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m4brXdh4lE5uaLIcIDOA2ErdjbCNkfzuFrIM7B43pDGPJFXralEOrhblIp1tp1aZf
-         6YNKfNozkiuKsBuSiYJYb3UWG5ctfJgVgzE9jJbre4b+A3Qq02nqA9fLPHJnWarRsZ
-         JapF7/bmDRVq8LhlQUOG7B8hzgti5r4DeuTYzl3c=
+        b=2NVtae+4gVHfKSMoyDF/wLT63ZhMI0K6GB17X5inm9Xs618vBbprrpgR1JjHiSd6z
+         QWAefh0Aj0exlA6TcC0hkzvrsDCQ5suEcrrziVdmh6dwth0EBhryoqz662ixJVzM+7
+         9bS3g6R3c2g8kFlpCVBCbucxlBaFoY7USY6mmRSg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>
-Subject: [PATCH 5.4 014/177] USB: uas: honor flag to avoid CAPACITY16
-Date:   Mon, 16 Dec 2019 18:47:50 +0100
-Message-Id: <20191216174815.678668214@linuxfoundation.org>
+        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH 5.4 001/177] usb: gadget: configfs: Fix missing spin_lock_init()
+Date:   Mon, 16 Dec 2019 18:47:37 +0100
+Message-Id: <20191216174811.412153826@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -58,33 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-commit bff000cae1eec750d62e265c4ba2db9af57b17e1 upstream.
+commit 093edc2baad2c258b1f55d1ab9c63c2b5ae67e42 upstream.
 
-Copy the support over from usb-storage to get feature parity
+The driver allocates the spinlock but not initialize it.
+Use spin_lock_init() on it to initialize it correctly.
 
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
+This is detected by Coccinelle semantic patch.
+
+Fixes: 1a1c851bbd70 ("usb: gadget: configfs: fix concurrent issue between composite APIs")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191114112758.32747-2-oneukum@suse.com
+Reviewed-by: Peter Chen <peter.chen@nxp.com>
+Link: https://lore.kernel.org/r/20191030034046.188808-1-weiyongjun1@huawei.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/storage/uas.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/usb/gadget/configfs.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/usb/storage/uas.c
-+++ b/drivers/usb/storage/uas.c
-@@ -825,6 +825,10 @@ static int uas_slave_configure(struct sc
- 		sdev->wce_default_on = 1;
- 	}
+--- a/drivers/usb/gadget/configfs.c
++++ b/drivers/usb/gadget/configfs.c
+@@ -1544,6 +1544,7 @@ static struct config_group *gadgets_make
+ 	gi->composite.resume = NULL;
+ 	gi->composite.max_speed = USB_SPEED_SUPER;
  
-+	/* Some disks cannot handle READ_CAPACITY_16 */
-+	if (devinfo->flags & US_FL_NO_READ_CAPACITY_16)
-+		sdev->no_read_capacity_16 = 1;
-+
- 	/*
- 	 * Some disks return the total number of blocks in response
- 	 * to READ CAPACITY rather than the highest block number.
++	spin_lock_init(&gi->spinlock);
+ 	mutex_init(&gi->lock);
+ 	INIT_LIST_HEAD(&gi->string_list);
+ 	INIT_LIST_HEAD(&gi->available_func);
 
 
