@@ -2,298 +2,371 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D08B2C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 02:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86BE0C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 02:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BC2524676
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 02:52:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="p4xhlFqF"
+	by mail.kernel.org (Postfix) with ESMTP id 5AE8724676
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 02:54:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbfLPCwv (ORCPT
+        id S1726683AbfLPCyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Dec 2019 21:52:51 -0500
-Received: from mailout4.samsung.com ([203.254.224.34]:55514 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726548AbfLPCwv (ORCPT
+        Sun, 15 Dec 2019 21:54:07 -0500
+Received: from lucky1.263xmail.com ([211.157.147.132]:37376 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726488AbfLPCyH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Dec 2019 21:52:51 -0500
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20191216025246epoutp04a3be93b62e29d66a9f5f02ecc54c0304~gulpSPrpT1936619366epoutp04E
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 02:52:46 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20191216025246epoutp04a3be93b62e29d66a9f5f02ecc54c0304~gulpSPrpT1936619366epoutp04E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1576464766;
-        bh=/PWYmeUhh3ou+AZOp2VAT0jkte7v9srIXdaSGzR3udg=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=p4xhlFqFTdkJYKSnAHwZxP4JU3aaRY33TG4wrQ8DRF/npI3l34PtV3cTl0SKuUmlX
-         UUg+SriHTpvY5BP/tEW89C2Rk4vE+zV4gV3t/YZ32nKlz5EdHvZtocZxvChXgCxzia
-         ma6SwbgGVYNwGedbUb1TexDvZLBAsJNJ1vc+Horo=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20191216025246epcas1p3eff9b42f49bcd6e27e8c91891e9f4c31~gulotuucC2925429254epcas1p3I;
-        Mon, 16 Dec 2019 02:52:46 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.153]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 47bm626JyYzMqYkV; Mon, 16 Dec
-        2019 02:52:42 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        42.10.48019.A71F6FD5; Mon, 16 Dec 2019 11:52:42 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20191216025242epcas1p4af6a46c4d50f5e41a44d50b0fdfc1825~gullMawfQ1584215842epcas1p4B;
-        Mon, 16 Dec 2019 02:52:42 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191216025242epsmtrp182ab11862d87b6219cde22d349bbaad6~gullKire_1347813478epsmtrp1F;
-        Mon, 16 Dec 2019 02:52:42 +0000 (GMT)
-X-AuditID: b6c32a38-23fff7000001bb93-0c-5df6f17a2b32
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        F0.A6.06569.A71F6FD5; Mon, 16 Dec 2019 11:52:42 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191216025242epsmtip2ef8a4df971d610f9c2658d0b080c8238~gulk84ytd2221022210epsmtip22;
-        Mon, 16 Dec 2019 02:52:42 +0000 (GMT)
-Subject: Re: [RFC PATCH v2 08/11] arm: dts: exynos: Add parents and
- #interconnect-cells to Exynos4412
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-To:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
+        Sun, 15 Dec 2019 21:54:07 -0500
+X-Greylist: delayed 390 seconds by postgrey-1.27 at vger.kernel.org; Sun, 15 Dec 2019 21:54:02 EST
+Received: from localhost (unknown [192.168.167.209])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 2FE5D84C50;
+        Mon, 16 Dec 2019 10:47:27 +0800 (CST)
+X-MAIL-GRAY: 1
+X-MAIL-DELIVERY: 0
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-SKE-CHECKED: 1
+X-ABS-CHECKED: 1
+Received: from [172.16.12.170] (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P24116T140398768936704S1576464445264821_;
+        Mon, 16 Dec 2019 10:47:26 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <3817e914a77aac289a66aebb2ed1ce78>
+X-RL-SENDER: andy.yan@rock-chips.com
+X-SENDER: yxj@rock-chips.com
+X-LOGIN-NAME: andy.yan@rock-chips.com
+X-FST-TO: linux-kernel@vger.kernel.org
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+Subject: Re: [PATCH] arm64: dts: rockchip: add ROCK Pi S DTS support
+To:     Akash Gajjar <akash@openedev.com>, heiko@sntech.de
+Cc:     jagan@openedev.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Nick Xie <nick@khadas.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Kever Yang <kever.yang@rock-chips.com>,
+        Markus Reichl <m.reichl@fivetechno.de>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Vivek Unune <npcomplete13@gmail.com>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc:     myungjoo.ham@samsung.com, inki.dae@samsung.com,
-        sw0312.kim@samsung.com, georgi.djakov@linaro.org,
-        leonard.crestez@nxp.com, m.szyprowski@samsung.com,
-        b.zolnierkie@samsung.com, krzk@kernel.org
-Organization: Samsung Electronics
-Message-ID: <eecc5d38-f6ab-b1ea-1a08-0afb2dcddbef@samsung.com>
-Date:   Mon, 16 Dec 2019 11:59:17 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20191215173318.16385-1-akash@openedev.com>
+From:   Andy Yan <andy.yan@rock-chips.com>
+Message-ID: <ad08cf78-b1e0-debc-e21d-92657b0f9723@rock-chips.com>
+Date:   Mon, 16 Dec 2019 10:47:25 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <693e250d-9656-df67-9685-188020b43542@samsung.com>
-Content-Language: en-US
+In-Reply-To: <20191215173318.16385-1-akash@openedev.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGJsWRmVeSWpSXmKPExsWy7bCmgW7Vx2+xBjuXmFjcn9fKaLFxxnpW
-        i/lHzrFaXPn6ns1i+t5NbBaT7k9gsTh/fgO7xYq7H1ktNj2+xmpxedccNovPvUcYLWac38dk
-        sfbIXXaL240r2CxmTH7J5sDvsWlVJ5vHnWt72Dzudx9n8ti8pN5j47sdTB59W1YxenzeJBfA
-        HpVtk5GamJJapJCal5yfkpmXbqvkHRzvHG9qZmCoa2hpYa6kkJeYm2qr5OIToOuWmQN0t5JC
-        WWJOKVAoILG4WEnfzqYov7QkVSEjv7jEVim1ICWnwLJArzgxt7g0L10vOT/XytDAwMgUqDAh
-        O+Nv3yWmgitaFT233zE3MC5Q7GLk5JAQMJG4sOYscxcjF4eQwA5GiZl7T0A5nxglFp5vY4Fw
-        vjFKbL+6lRWm5eLJ71BVexkl/l1+yAaSEBJ4zyix54I/iC0skC5xvfMTE4jNJqAlsf/FDTaQ
-        BhGB/4wSp5etZAVxmAWOMUrsvfOTBaSKX0BR4uqPx4wgNq+AncTMc7vBprIIqEosXHsAbJKo
-        QJjEyW0tUDWCEidnPgHr5RSwl/g2axoziM0sIC5x68l8JghbXqJ562xmiLMPsUvcWm7RxcgB
-        ZLtIHNiWDhEWlnh1fAs7hC0l8bK/Dcqullh58gjY0RICHYwSW/ZfgHrfWGL/0slMIHOYBTQl
-        1u/ShwgrSuz8PZcRYi2fxLuvPawQq3glOtqEIEqUJS4/uMsEYUtKLG7vZJvAqDQLyTOzkDww
-        C8kDsxCWLWBkWcUollpQnJueWmxYYIIc25sYwWlay2IH455zPocYBTgYlXh4X2R8ixViTSwr
-        rsw9xCjBwawkwpuq/TlWiDclsbIqtSg/vqg0J7X4EKMpMKwnMkuJJucDc0heSbyhqZGxsbGF
-        iaGZqaGhkjgvx4+LsUIC6YklqdmpqQWpRTB9TBycUg2MWkdTU5UD35r9mTk3s0CapziH/4rd
-        xyYfi89eMmnXN+w3Or1NIplB41bI+zdvJt4+czxqodS68/8L36hd7+lfvPHEhosm2unxYZ+W
-        tapqC1ixXZmywOZ6/fOJnnc4p1+aOIl3Bcuk2yvy5JdIvt06q76s9ted9k2dXFHWRSWtT8w9
-        O1xm6HBrKbEUZyQaajEXFScCAMLL5vvpAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrMIsWRmVeSWpSXmKPExsWy7bCSvG7Vx2+xBhvO81jcn9fKaLFxxnpW
-        i/lHzrFaXPn6ns1i+t5NbBaT7k9gsTh/fgO7xYq7H1ktNj2+xmpxedccNovPvUcYLWac38dk
-        sfbIXXaL240r2CxmTH7J5sDvsWlVJ5vHnWt72Dzudx9n8ti8pN5j47sdTB59W1YxenzeJBfA
-        HsVlk5Kak1mWWqRvl8CV8bfvElPBFa2KntvvmBsYFyh2MXJySAiYSFw8+Z25i5GLQ0hgN6NE
-        97a/LBAJSYlpF48CJTiAbGGJw4eLIWreMkqs3tfNCFIjLJAucb3zExOIzSagJbH/xQ02kCIR
-        gf+MEg/bjjGCOMwCxxglPq5YzwrR/oFRYvLz36wgLfwCihJXfzwGG8UrYCcx89xuNhCbRUBV
-        YuHaA2BjRQXCJHYuecwEUSMocXLmE7DzOAXsJb7NmsYMYjMLqEv8mXcJyhaXuPVkPhOELS/R
-        vHU28wRG4VlI2mchaZmFpGUWkpYFjCyrGCVTC4pz03OLDQuM8lLL9YoTc4tL89L1kvNzNzGC
-        o1ZLawfjiRPxhxgFOBiVeHgdsr/FCrEmlhVX5h5ilOBgVhLhTdX+HCvEm5JYWZValB9fVJqT
-        WnyIUZqDRUmcVz7/WKSQQHpiSWp2ampBahFMlomDU6qBUUPjxK3mjDfvVZKe+dXzbP/113KJ
-        34lbYRLqM86rrfg2+9juqfv+buT880pySfiEaJtd//9FLyj6oqUbOuX4FI2nPfOFuc7wRmxw
-        O8TELxituFHy0POzoenpK8t9go/e3CF4eP0Xw+nKBzI9uU3M9RgOPDuyv27rkpm6Z+vmPrHW
-        4TE9FXFvs4QSS3FGoqEWc1FxIgA03wJD1gIAAA==
-X-CMS-MailID: 20191216025242epcas1p4af6a46c4d50f5e41a44d50b0fdfc1825
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190919142329eucas1p299762f99dd55a5d625633ceec84219f9
-References: <20190919142236.4071-1-a.swigon@samsung.com>
-        <CGME20190919142329eucas1p299762f99dd55a5d625633ceec84219f9@eucas1p2.samsung.com>
-        <20190919142236.4071-9-a.swigon@samsung.com>
-        <693e250d-9656-df67-9685-188020b43542@samsung.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Akash:
 
-On 12/16/19 9:51 AM, Chanwoo Choi wrote:
-> On 9/19/19 11:22 PM, Artur Świgoń wrote:
->> From: Artur Świgoń <a.swigon@partner.samsung.com>
->>
->> This patch adds two fields to the Exynos4412 DTS:
->>   - parent: to declare connections between nodes that are not in a
->>     parent-child relation in devfreq;
->>   - #interconnect-cells: required by the interconnect framework.
->>
->> Please note that #interconnect-cells is always zero and node IDs are not
->> hardcoded anywhere. The above-mentioned parent-child relation in devfreq
->> means that there is a shared power line ('devfreq' property). The 'parent'
->> property only signifies an interconnect connection.
->>
->> Signed-off-by: Artur Świgoń <a.swigon@partner.samsung.com>
->> ---
->>  arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 1 +
->>  arch/arm/boot/dts/exynos4412.dtsi               | 9 +++++++++
->>  2 files changed, 10 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
->> index ea55f377d17c..bdd61ae86103 100644
->> --- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
->> +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
->> @@ -106,6 +106,7 @@
->>  &bus_leftbus {
->>  	devfreq-events = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
->>  	vdd-supply = <&buck3_reg>;
->> +	parent = <&bus_dmc>;
-> 
-> As I mentioned on other reply,
-> I'm not sure to use the specific 'parent' property to make
-> the connection between buses. If possible, you better to
-> use the standard way like OF graph. Except for making
-> the connection between buses by 'parent' property,
-> looks good to me.
-
-I tried to think it continuously. I withdraw the my opinion
-using OF graph. If you make the property name like the following
-example, it is possible for exynos.
-- exynos,interconnect-parent-node = <&bus_dmc>; or other proper name.
-
-Regardless of existing 'devfreq' property, I think you better to
-make the connection between buses for only interconnect as following
-example: This make it possible user can draw the correct tree by tracking
-the 'exynos,interconnect-parent-node' value.
-
-diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-index ea55f377d17c..53f87f46e161 100644
---- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-+++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-@@ -90,6 +90,7 @@
- &bus_dmc {
-        devfreq-events = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
-        vdd-supply = <&buck1_reg>;
-+       #interconnect-cells = <0>;
-        status = "okay";
- };
- 
-@@ -106,6 +107,8 @@
- &bus_leftbus {
-        devfreq-events = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
-        vdd-supply = <&buck3_reg>;
-+       exynos,interconnect-parent-node = <&bus_dmc>;
-+       #interconnect-cells = <0>;
-        status = "okay";
- };
- 
-@@ -116,6 +119,8 @@
- 
- &bus_display {
-        devfreq = <&bus_leftbus>;
-+       exynos,interconnect-parent-node = <&bus_leftbus>;
-+       #interconnect-cells = <0>;
-        status = "okay";
- };
-
-
-> 
-> 
->>  	status = "okay";
->>  };
->>  
->> diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
->> index d20db2dfe8e2..a70a671acacd 100644
->> --- a/arch/arm/boot/dts/exynos4412.dtsi
->> +++ b/arch/arm/boot/dts/exynos4412.dtsi
->> @@ -390,6 +390,7 @@
->>  			clocks = <&clock CLK_DIV_DMC>;
->>  			clock-names = "bus";
->>  			operating-points-v2 = <&bus_dmc_opp_table>;
->> +			#interconnect-cells = <0>;
->>  			status = "disabled";
->>  		};
->>  
->> @@ -398,6 +399,7 @@
->>  			clocks = <&clock CLK_DIV_ACP>;
->>  			clock-names = "bus";
->>  			operating-points-v2 = <&bus_acp_opp_table>;
->> +			#interconnect-cells = <0>;
->>  			status = "disabled";
->>  		};
->>  
->> @@ -406,6 +408,7 @@
->>  			clocks = <&clock CLK_DIV_C2C>;
->>  			clock-names = "bus";
->>  			operating-points-v2 = <&bus_dmc_opp_table>;
->> +			#interconnect-cells = <0>;
->>  			status = "disabled";
->>  		};
->>  
->> @@ -459,6 +462,7 @@
->>  			clocks = <&clock CLK_DIV_GDL>;
->>  			clock-names = "bus";
->>  			operating-points-v2 = <&bus_leftbus_opp_table>;
->> +			#interconnect-cells = <0>;
->>  			status = "disabled";
->>  		};
->>  
->> @@ -467,6 +471,7 @@
->>  			clocks = <&clock CLK_DIV_GDR>;
->>  			clock-names = "bus";
->>  			operating-points-v2 = <&bus_leftbus_opp_table>;
->> +			#interconnect-cells = <0>;
->>  			status = "disabled";
->>  		};
->>  
->> @@ -475,6 +480,7 @@
->>  			clocks = <&clock CLK_ACLK160>;
->>  			clock-names = "bus";
->>  			operating-points-v2 = <&bus_display_opp_table>;
->> +			#interconnect-cells = <0>;
->>  			status = "disabled";
->>  		};
->>  
->> @@ -483,6 +489,7 @@
->>  			clocks = <&clock CLK_ACLK133>;
->>  			clock-names = "bus";
->>  			operating-points-v2 = <&bus_fsys_opp_table>;
->> +			#interconnect-cells = <0>;
->>  			status = "disabled";
->>  		};
->>  
->> @@ -491,6 +498,7 @@
->>  			clocks = <&clock CLK_ACLK100>;
->>  			clock-names = "bus";
->>  			operating-points-v2 = <&bus_peri_opp_table>;
->> +			#interconnect-cells = <0>;
->>  			status = "disabled";
->>  		};
->>  
->> @@ -499,6 +507,7 @@
->>  			clocks = <&clock CLK_SCLK_MFC>;
->>  			clock-names = "bus";
->>  			operating-points-v2 = <&bus_leftbus_opp_table>;
->> +			#interconnect-cells = <0>;
->>  			status = "disabled";
->>  		};
->>  
->>
-> 
-> 
+On 12/16/19 1:33 AM, Akash Gajjar wrote:
+> ROCK Pi S is RK3308 based SBC from radxa.com. ROCK Pi S has a,
+> - 256MB/512MB DDR3 RAM
+> - SD, NAND flash (optional on board 1/2/4/8Gb)
+> - 100MB ethernet, PoE (optional)
+> - Onboard 802.11 b/g/n wifi + Bluetooth 4.0 Module
+> - USB2.0 Type-A HOST x1
+> - USB3.0 Type-C OTG x1
+> - 26-pin expansion header
+> - USB Type-C DC 5V Power Supply
+>
+> This patch enables
+> - Console
+> - NAND Flash
+> - SD Card
+>
+> Signed-off-by: Akash Gajjar <akash@openedev.com>
+> ---
+>   .../devicetree/bindings/arm/rockchip.yaml     |   5 +
+>   arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+>   .../boot/dts/rockchip/rk3308-rock-pi-S.dts    | 221 ++++++++++++++++++
+>   3 files changed, 227 insertions(+)
+>   create mode 100644 arch/arm64/boot/dts/rockchip/rk3308-rock-pi-S.dts
+>
+> diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+> index d9847b306b83..48d40c928d45 100644
+> --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
+> +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+> @@ -422,6 +422,11 @@ properties:
+>             - const: radxa,rockpi4
+>             - const: rockchip,rk3399
+>   
+> +      - description: Radxa ROCK Pi S
+> +        items:
+> +          - const: radxa,rockpis
+> +          - const: rockchip,rk3308
+> +
+>         - description: Radxa Rock2 Square
+>           items:
+>             - const: radxa,rock2-square
+> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+> index 48fb631d5451..cc9e8c824980 100644
+> --- a/arch/arm64/boot/dts/rockchip/Makefile
+> +++ b/arch/arm64/boot/dts/rockchip/Makefile
+> @@ -2,6 +2,7 @@
+>   dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-evb.dtb
+>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3308-evb.dtb
+>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3308-roc-cc.dtb
+> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3308-rock-pi-S.dtb
+>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-a1.dtb
+>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-evb.dtb
+>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-rock64.dtb
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3308-rock-pi-S.dts b/arch/arm64/boot/dts/rockchip/rk3308-rock-pi-S.dts
+> new file mode 100644
+> index 000000000000..e5fae451c631
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/rockchip/rk3308-rock-pi-S.dts
+> @@ -0,0 +1,221 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (c) 2019 Akash Gajjar <akash@openedev.com>
+> + * Copyright (c) 2019 Jagan Teki <jagan@openedev.com>
+> + */
+> +
+> +/dts-v1/;
+> +#include "rk3308.dtsi"
+> +
+> +/ {
+> +	model = "Radxa ROCK Pi S";
+> +	compatible = "radxa,rockpis", "rockchip,rk3308";
+> +
+> +	chosen {
+> +		stdout-path = "serial0:1500000n8";
+> +	};
+> +
+> +	leds {
+> +		compatible = "gpio-leds";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&green_led_gio>, <&heartbeat_led_gpio>;
+> +
+> +		green-led {
+> +			label = "rockpis:green:power";
+> +			gpios = <&gpio0 RK_PA6 GPIO_ACTIVE_HIGH>;
+> +			linux,default-trigger = "default-on";
+> +			default-state = "on";
+> +		};
+> +
+> +		blue-led {
+> +			label = "rockpis:blue:user";
+> +			gpios = <&gpio0 RK_PA5 GPIO_ACTIVE_HIGH>;
+> +			default-state = "on";
+> +			linux,default-trigger = "heartbeat";
+> +		};
+> +	};
+> +
+> +	sdio_pwrseq: sdio-pwrseq {
+> +		compatible = "mmc-pwrseq-simple";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&wifi_enable_h>;
+> +		reset-gpios = <&gpio0 RK_PA2 GPIO_ACTIVE_LOW>;
+> +	};
+> +
+> +	vcc5v0_sys: vcc5v0-sys {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc5v0_sys";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +	};
+> +
+> +	vdd_core: vdd-core {
+> +		compatible = "pwm-regulator";
+> +		pwms = <&pwm0 0 5000 1>;
+> +		regulator-name = "vdd_core";
+> +		regulator-min-microvolt = <827000>;
+> +		regulator-max-microvolt = <1340000>;
+> +		regulator-init-microvolt = <1015000>;
+> +		regulator-settling-time-up-us = <250>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		vin-supply = <&vcc5v0_sys>;
 
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+I think this should be pwm-supply = <&vcc5v0_sys>
+
+see:
+
+drivers/regulator/pwm-regulator.c
+
+static const struct regulator_desc pwm_regulator_desc = {
+         .name           = "pwm-regulator",
+         .type           = REGULATOR_VOLTAGE,
+         .owner          = THIS_MODULE,
+         .supply_name    = "pwm",
+};
+
+> +	};
+> +
+> +	vdd_log: vdd-log {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vdd_log";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <1050000>;
+> +		regulator-max-microvolt = <1050000>;
+> +		vin-supply = <&vcc5v0_sys>;
+> +	};
+> +
+> +	vcc_ddr: vcc-ddr {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc_ddr";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <1500000>;
+> +		regulator-max-microvolt = <1500000>;
+> +		vin-supply = <&vcc5v0_sys>;
+> +	};
+> +
+> +	vcc_1v8: vcc-1v8 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc_1v8";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +		vin-supply = <&vcc_io>;
+> +	};
+> +
+> +	vcc_io: vcc-io {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc_io";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		vin-supply = <&vcc5v0_sys>;
+> +	};
+> +
+> +	vcc5v0_otg: vcc5v0-otg {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc5v0_otg";
+> +		regulator-always-on;
+> +		gpio = <&gpio0 RK_PC5 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&otg_vbus_drv>;
+> +		vin-supply = <&vcc5v0_sys>;
+> +	};
+> +};
+> +
+> +&cpu0 {
+> +	cpu-supply = <&vdd_core>;
+> +};
+> +
+> +&emmc {
+> +	bus-width = <4>;
+> +	cap-mmc-highspeed;
+> +	mmc-hs200-1_8v;
+> +	supports-sd;
+> +	disable-wp;
+> +	non-removable;
+> +	num-slots = <1>;
+> +	vin-supply = <&vcc_io>;
+> +	status = "okay";
+> +};
+> +
+> +&i2c1 {
+> +	status = "okay";
+> +};
+> +
+> +&sdmmc {
+> +	bus-width = <4>;
+> +	cap-mmc-highspeed;
+> +	cap-sd-highspeed;
+> +	max-frequeency = <150000000>;
+> +	supports-sd;
+> +	disable-wp;
+> +	num-slots = <1>;
+> +	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_det &sdmmc_bus4>;
+> +	card-detect-delay = <800>;
+> +	status = "okay";
+> +};
+> +
+> +&spi2 {
+> +	status = "okay";
+> +	max-freq = <10000000>;
+> +};
+> +
+> +&pinctrl {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&rtc_32k>;
+> +
+> +	leds {
+> +		green_led_gio: green-led-gpio {
+> +			rockchip,pins = <0 RK_PA6 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +
+> +		heartbeat_led_gpio: heartbeat-led-gpio {
+> +			rockchip,pins = <0 RK_PA5 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +	};
+> +
+> +	usb {
+> +		otg_vbus_drv: otg-vbus-drv {
+> +			rockchip,pins = <0 RK_PC5 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +	};
+> +
+> +	sdio-pwrseq {
+> +		wifi_enable_h: wifi-enable-h {
+> +			rockchip,pins = <0 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +
+> +		wifi_host_wake: wifi-host-wake {
+> +			rockchip,pins = <0 RK_PA0 RK_FUNC_GPIO &pcfg_pull_down>;
+> +		};
+> +	};
+> +};
+> +
+> +&pwm0 {
+> +	status = "okay";
+> +	pinctrl-0 = <&pwm0_pin_pull_down>;
+> +};
+> +
+> +&saradc {
+> +	vref-supply = <&vcc_1v8>;
+> +	status = "okay";
+> +};
+> +
+> +&sdio {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	bus-width = <4>;
+> +	max-frequency = <1000000>;
+> +	cap-sd-highspeed;
+> +	cap-sdio-irq;
+> +	supports-sdio;
+> +	keep-power-in-suspend;
+> +	mmc-pwrseq = <&sdio_pwrseq>;
+> +	non-removable;
+> +	sd-uhs-sdr104;
+> +	status = "okay";
+> +};
+> +
+> +&uart0 {
+> +	status = "okay";
+> +};
+> +
+> +&uart4 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart4_xfer &uart4_rts &uart4_cts>;
+> +	status = "okay";
+> +};
+
+
