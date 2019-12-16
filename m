@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9907C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6BAC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91D72206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:11:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15EAD2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:11:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519885;
-	bh=ftSUF9rQfpuhuW0x47/BZ8HPE4U+C48zwwL/o4E7juw=;
+	s=default; t=1576519889;
+	bh=vWpec5VhB3CUngkYh6UIiOcmKJ4jFbjxAXQH3GFI/AE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZVzj6emaJ18B+BWxmiXv15nE97P5gSck1WvUalyGiu6jjDWxqdqtA7ycDekmY2WGL
-	 4cuaKEWlvSZyVRbNGDoiEfAPXpEeEe6mZzfCD58GdiOsjw9rnTJHIKv/STTRU7m+ez
-	 BPfgMhEYJ97NgeJDR2Gp5afFA7zSS1pRCDkd9zRw=
+	b=wDbv1HZdWjrQD+4XCsYxYrP60s8OslNR/vrqa8z6cgqfl31UiU6eEFk66HFxNAJsH
+	 zUU4BkQa2dcfv/zeDUejFEeN5IEOJfBoMVvsOMQVtMeqZT6Z1Aw+Z9eERAd94nDS+I
+	 WH4dPBKYMHFyV9QJ7sGehDFwdbuHDvPxrJJf/zb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730284AbfLPSLY (ORCPT
+        id S1730786AbfLPSL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:11:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55238 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:11:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730776AbfLPSLW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:11:22 -0500
+        id S1730782AbfLPSLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:11:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 266B1206E0;
-        Mon, 16 Dec 2019 18:11:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9276820700;
+        Mon, 16 Dec 2019 18:11:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519881;
-        bh=ftSUF9rQfpuhuW0x47/BZ8HPE4U+C48zwwL/o4E7juw=;
+        s=default; t=1576519884;
+        bh=vWpec5VhB3CUngkYh6UIiOcmKJ4jFbjxAXQH3GFI/AE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NKliEucnlTP7amgVp0Ai1yTNrLc2/yL++gvDomnF4LyQqcQTz58zfwqMGndX6Cj+4
-         MjkdSPc7lNX7t2PDAD89jGJnqv9OxF2YQWxRzMBoRzKMi4ra4QsmSsWEeFPtAPvhAW
-         82vf7L/Us8rU326FqwVoieOcarz3K7uwUXwK3cvo=
+        b=vfOTC2OmNsK+sdKIJVl9Rm1f5/YhN78L6WdaC5569KRPJ9KzmXlTtIvRwkQuG94Fr
+         LqDo+WeJ+dc5BIfhkO0/rffk84EWngXYvN6rsp4/5n5P1mk0MH/2ctyzJtAlvC9fo1
+         pM3X4sQPdeeEXNnuV7PUD9bwTVz/Xb4NmHfZcXd8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Valerio Passini <passini.valerio@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.3 106/180] ACPI: LPSS: Add dmi quirk for skipping _DEP check for some device-links
-Date:   Mon, 16 Dec 2019 18:49:06 +0100
-Message-Id: <20191216174837.828612295@linuxfoundation.org>
+Subject: [PATCH 5.3 107/180] ACPI / hotplug / PCI: Allocate resources directly under the non-hotplug bridge
+Date:   Mon, 16 Dec 2019 18:49:07 +0100
+Message-Id: <20191216174838.070778396@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -62,93 +62,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-commit 6025e2fae3dde3c3d789d08f8ceacbdd9f90d471 upstream.
+commit 77adf9355304f8dcf09054280af5e23fc451ab3d upstream.
 
-The iGPU / GFX0 device's _PS0 method on the ASUS T200TA depends on the
-I2C1 controller (which is connected to the embedded controller). But unlike
-in the T100TA/T100CHI this dependency is not listed in the _DEP of the GFX0
-device.
+Valerio and others reported that commit 84c8b58ed3ad ("ACPI / hotplug /
+PCI: Don't scan bridges managed by native hotplug") prevents some recent
+LG and HP laptops from booting with endless loop of:
 
-This results in the dev_WARN_ONCE(..., "Transfer while suspended\n") call
-in i2c-designware-master.c triggering and the AML code not working as it
-should.
+  ACPI Error: No handler or method for GPE 08, disabling event (20190215/evgpe-835)
+  ACPI Error: No handler or method for GPE 09, disabling event (20190215/evgpe-835)
+  ACPI Error: No handler or method for GPE 0A, disabling event (20190215/evgpe-835)
+  ...
 
-This commit fixes this by adding a dmi based quirk mechanism for devices
-which miss a _DEP, and adding a quirk for the LNXVIDEO depending on the
-I2C1 device on the Asus T200TA.
+What seems to happen is that during boot, after the initial PCI enumeration
+when EC is enabled the platform triggers ACPI Notify() to one of the root
+ports. The root port itself looks like this:
 
-Fixes: 2d71ee0ce72f ("ACPI / LPSS: Add a device link from the GPU to the BYT I2C5 controller")
-Tested-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: 4.20+ <stable@vger.kernel.org> # 4.20+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+  pci 0000:00:1b.0: PCI bridge to [bus 02-3a]
+  pci 0000:00:1b.0:   bridge window [mem 0xc4000000-0xda0fffff]
+  pci 0000:00:1b.0:   bridge window [mem 0x80000000-0xa1ffffff 64bit pref]
+
+The BIOS has configured the root port so that it does not have I/O bridge
+window.
+
+Now when the ACPI Notify() is triggered ACPI hotplug handler calls
+acpiphp_native_scan_bridge() for each non-hotplug bridge (as this system is
+using native PCIe hotplug) and pci_assign_unassigned_bridge_resources() to
+allocate resources.
+
+The device connected to the root port is a PCIe switch (Thunderbolt
+controller) with two hotplug downstream ports. Because of the hotplug ports
+__pci_bus_size_bridges() tries to add "additional I/O" of 256 bytes to each
+(DEFAULT_HOTPLUG_IO_SIZE). This gets further aligned to 4k as that's the
+minimum I/O window size so each hotplug port gets 4k I/O window and the
+same happens for the root port (which is also hotplug port). This means
+3 * 4k = 12k I/O window.
+
+Because of this pci_assign_unassigned_bridge_resources() ends up opening a
+I/O bridge window for the root port at first available I/O address which
+seems to be in range 0x1000 - 0x3fff. Normally this range is used for ACPI
+stuff such as GPE bits (below is part of /proc/ioports):
+
+    1800-1803 : ACPI PM1a_EVT_BLK
+    1804-1805 : ACPI PM1a_CNT_BLK
+    1808-180b : ACPI PM_TMR
+    1810-1815 : ACPI CPU throttle
+    1850-1850 : ACPI PM2_CNT_BLK
+    1854-1857 : pnp 00:05
+    1860-187f : ACPI GPE0_BLK
+
+However, when the ACPI Notify() happened this range was not yet reserved
+for ACPI/PNP (that happens later) so PCI gets it. It then starts writing to
+this range and accidentally stomps over GPE bits among other things causing
+the endless stream of messages about missing GPE handler.
+
+This problem does not happen if "pci=hpiosize=0" is passed in the kernel
+command line. The reason is that then the kernel does not try to allocate
+the additional 256 bytes for each hotplug port.
+
+Fix this by allocating resources directly below the non-hotplug bridges
+where a new device may appear as a result of ACPI Notify(). This avoids the
+hotplug bridges and prevents opening the additional I/O window.
+
+Fixes: 84c8b58ed3ad ("ACPI / hotplug / PCI: Don't scan bridges managed by native hotplug")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=203617
+Link: https://lore.kernel.org/r/20191030150545.19885-1-mika.westerberg@linux.intel.com
+Reported-by: Valerio Passini <passini.valerio@gmail.com>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/acpi_lpss.c |   22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+ drivers/pci/hotplug/acpiphp_glue.c |   12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
---- a/drivers/acpi/acpi_lpss.c
-+++ b/drivers/acpi/acpi_lpss.c
-@@ -10,6 +10,7 @@
- #include <linux/acpi.h>
- #include <linux/clkdev.h>
- #include <linux/clk-provider.h>
-+#include <linux/dmi.h>
- #include <linux/err.h>
- #include <linux/io.h>
- #include <linux/mutex.h>
-@@ -463,6 +464,18 @@ struct lpss_device_links {
- 	const char *consumer_hid;
- 	const char *consumer_uid;
- 	u32 flags;
-+	const struct dmi_system_id *dep_missing_ids;
-+};
+--- a/drivers/pci/hotplug/acpiphp_glue.c
++++ b/drivers/pci/hotplug/acpiphp_glue.c
+@@ -449,8 +449,15 @@ static void acpiphp_native_scan_bridge(s
+ 
+ 	/* Scan non-hotplug bridges that need to be reconfigured */
+ 	for_each_pci_bridge(dev, bus) {
+-		if (!hotplug_is_native(dev))
+-			max = pci_scan_bridge(bus, dev, max, 1);
++		if (hotplug_is_native(dev))
++			continue;
 +
-+/* Please keep this list sorted alphabetically by vendor and model */
-+static const struct dmi_system_id i2c1_dep_missing_dmi_ids[] = {
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "T200TA"),
-+		},
-+	},
-+	{}
- };
++		max = pci_scan_bridge(bus, dev, max, 1);
++		if (dev->subordinate) {
++			pcibios_resource_survey_bus(dev->subordinate);
++			pci_bus_size_bridges(dev->subordinate);
++			pci_bus_assign_resources(dev->subordinate);
++		}
+ 	}
+ }
  
- /*
-@@ -478,7 +491,8 @@ static const struct lpss_device_links lp
- 	/* CHT iGPU depends on PMIC I2C controller */
- 	{"808622C1", "7", "LNXVIDEO", NULL, DL_FLAG_PM_RUNTIME},
- 	/* BYT iGPU depends on the Embedded Controller I2C controller (UID 1) */
--	{"80860F41", "1", "LNXVIDEO", NULL, DL_FLAG_PM_RUNTIME},
-+	{"80860F41", "1", "LNXVIDEO", NULL, DL_FLAG_PM_RUNTIME,
-+	 i2c1_dep_missing_dmi_ids},
- 	/* BYT CR iGPU depends on PMIC I2C controller (UID 5 on CR) */
- 	{"80860F41", "5", "LNXVIDEO", NULL, DL_FLAG_PM_RUNTIME},
- 	/* BYT iGPU depends on PMIC I2C controller (UID 7 on non CR) */
-@@ -577,7 +591,8 @@ static void acpi_lpss_link_consumer(stru
- 	if (!dev2)
- 		return;
- 
--	if (acpi_lpss_dep(ACPI_COMPANION(dev2), ACPI_HANDLE(dev1)))
-+	if ((link->dep_missing_ids && dmi_check_system(link->dep_missing_ids))
-+	    || acpi_lpss_dep(ACPI_COMPANION(dev2), ACPI_HANDLE(dev1)))
- 		device_link_add(dev2, dev1, link->flags);
- 
- 	put_device(dev2);
-@@ -592,7 +607,8 @@ static void acpi_lpss_link_supplier(stru
- 	if (!dev2)
- 		return;
- 
--	if (acpi_lpss_dep(ACPI_COMPANION(dev1), ACPI_HANDLE(dev2)))
-+	if ((link->dep_missing_ids && dmi_check_system(link->dep_missing_ids))
-+	    || acpi_lpss_dep(ACPI_COMPANION(dev1), ACPI_HANDLE(dev2)))
- 		device_link_add(dev1, dev2, link->flags);
- 
- 	put_device(dev2);
+@@ -480,7 +487,6 @@ static void enable_slot(struct acpiphp_s
+ 			if (PCI_SLOT(dev->devfn) == slot->device)
+ 				acpiphp_native_scan_bridge(dev);
+ 		}
+-		pci_assign_unassigned_bridge_resources(bus->self);
+ 	} else {
+ 		LIST_HEAD(add_list);
+ 		int max, pass;
 
 
