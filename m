@@ -2,240 +2,157 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6A0C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC60C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17B6D20409
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:14:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82E81206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 15:15:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tVhRtrRs"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="qjZW5/0s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbfLPPOt (ORCPT
+        id S1728309AbfLPPPX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 10:14:49 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:39690 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728008AbfLPPOt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 10:14:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=OKHXrTNATjlZPXKhcr313DE+lD5SFuoyRf5oQQ183G4=; b=tVhRtrRsKOrNTCSxwvYLUoNIS
-        +ggKDfrOswfQ1JsLUBvEainE8YPI83zMh27ejNyuSPo6qXKMS2ju9Wm45e884AZO4e0Km7rJ1oArt
-        uvhWwGx30LMavadamqPi1MMRV0F/riLtYSTpm2D+Ir2Hg5lv+Mf8tkxylguGpzSZHaOwka85GeUA4
-        VgmuvehS0vALlk9Z8TQwe9CMPVk0ulrjGTpIzCOceNEfxlGpa2rJC7Yn0tluC4pKEcIx/nQVSredi
-        hRovz6Cub9Hff0rtVbpqfFcwKsMyn1D9Hz0PS7pNnKXrrCmTiRNw3MrmI4Q4I/hUdZndiP58KS13u
-        Bn7hb69pA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1igs4k-000204-Bl; Mon, 16 Dec 2019 15:14:22 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9A46E300F29;
-        Mon, 16 Dec 2019 16:12:57 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7E7EB2B2A00EB; Mon, 16 Dec 2019 16:14:19 +0100 (CET)
-Date:   Mon, 16 Dec 2019 16:14:19 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Mon, 16 Dec 2019 10:15:23 -0500
+Received: from mail-eopbgr50080.outbound.protection.outlook.com ([40.107.5.80]:48998
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728008AbfLPPPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 10:15:23 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ivb153RFAgzIYrqZBO1s+zGgvrJIjwaLt0L64QJfi7IC9yv9Uban4N5rSqrgr6AJHaGehAJcqM4CO/4IQPmowpZLSp/dXfXIv6aq7m2hW3SKeS/1aSMgGwejfQiGiEDX+U2rUHDJ9LnWH8yt/Yqew5DKPVhRDqnL1cMeiM4bAJQqKEW+PuXP381o3+8/T5MwafHF6fVyvEB3ffrPl93ySD+YwgY5QmDxQJ1EMZic5dQItUGTHGZPEuY9yaGBAn+53Z1qXz0IyfYu/twigJTKHpYWFrxe4tQ3lOPf2AktIZ0vbq9X7kxfRKiE4/+5QfzvRxt7lnJ8c+rsyVAf4Aijvg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=C6MbaWIFwA+Otf0jXkJMmU3vBcJKD8H03ALxUVCXqu4=;
+ b=Xe3+aO3vgoYWiV3rGusVV3ISD9hP9fVzSEKT651Wp0h0GmUGOTN7yHLcghnwnQix9pj4FKdrziMC9ovGFWFBUK/ke2hOv9GcWw+8T3SCuWizZAyJn2xnyvSXKty9UQ1OGZP2PrbBZUdS1TFvsrXxaDy3CDc6ClV9SRsrxLOsEQAgnTk5k4kNCIQV4PYROiJYYpLHipD0+S4irMtwxE4ONiim8oIXopd8FXLjUnYtgP3IM6CQXpywvtYE4vvy3JCdvMOWttmwowaC19R8q/Z6VuoMNplQoMHeNe5VjtCENE8khxg8xOdecApZ1IbG640PF0sUhV5i+pO0Vs4n9p+EFQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=C6MbaWIFwA+Otf0jXkJMmU3vBcJKD8H03ALxUVCXqu4=;
+ b=qjZW5/0szZdjoUejXFJFOizdL/vQTC2hX35/MUKrRdqq0f5goAF3WLThXOHI5Xa+EovUOyhM3sl8q/JP9pYncAoy6wLr7KFSI8ToIVmdgJF+fxNlct/tHSXZftAH31nJ395xjKjg6Dn1Wx1unf3+RdES8p0y7FAFwRmA1+8CyTw=
+Received: from VI1PR04MB4445.eurprd04.prod.outlook.com (20.177.55.161) by
+ VI1PR04MB6317.eurprd04.prod.outlook.com (20.179.28.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.18; Mon, 16 Dec 2019 15:15:19 +0000
+Received: from VI1PR04MB4445.eurprd04.prod.outlook.com
+ ([fe80::304d:b7d8:1233:2ae0]) by VI1PR04MB4445.eurprd04.prod.outlook.com
+ ([fe80::304d:b7d8:1233:2ae0%6]) with mapi id 15.20.2538.019; Mon, 16 Dec 2019
+ 15:15:19 +0000
+From:   Iuliana Prodan <iuliana.prodan@nxp.com>
+To:     Adam Ford <aford173@gmail.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     Horia Geanta <horia.geanta@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nick Piggin <npiggin@gmail.com>, linux-arch@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         "David S. Miller" <davem@davemloft.net>,
-        Helge Deller <deller@gmx.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Nick Hu <nickhu@andestech.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH 05/17] asm-generic/tlb: Rename
- HAVE_RCU_TABLE_NO_INVALIDATE
-Message-ID: <20191216151419.GL2871@hirez.programming.kicks-ass.net>
-References: <20191211120713.360281197@infradead.org>
- <20191211122955.940455408@infradead.org>
- <87woawzc1t.fsf@linux.ibm.com>
- <20191216123752.GM2844@hirez.programming.kicks-ass.net>
- <d52ea890-c2ea-88f3-9d62-b86e60ee77ae@linux.ibm.com>
- <20191216132004.GO2844@hirez.programming.kicks-ass.net>
- <a9ae27c8-aa84-cda3-355c-7abb3b450d38@linux.ibm.com>
- <33ed03aa-a34c-3a81-0f83-20c3e8d4eff7@linux.ibm.com>
- <20191216145041.GG2827@hirez.programming.kicks-ass.net>
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
+Subject: Re: [PATCH V2 1/3] crypto: caam: Add support for i.MX8M Mini
+Thread-Topic: [PATCH V2 1/3] crypto: caam: Add support for i.MX8M Mini
+Thread-Index: AQHVsct+SXIDv4fpXk+kA2HSOm06vg==
+Date:   Mon, 16 Dec 2019 15:15:19 +0000
+Message-ID: <VI1PR04MB444575F41B9C8A5E58E666258C510@VI1PR04MB4445.eurprd04.prod.outlook.com>
+References: <20191213153910.11235-1-aford173@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=iuliana.prodan@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: ad63df01-e72a-4b80-62fc-08d7823ac35d
+x-ms-traffictypediagnostic: VI1PR04MB6317:|VI1PR04MB6317:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB6317F787EF456ACBF78BBCC68C510@VI1PR04MB6317.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 02530BD3AA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(376002)(396003)(39860400002)(136003)(189003)(199004)(8936002)(2906002)(478600001)(9686003)(55016002)(26005)(81166006)(316002)(4326008)(33656002)(7416002)(71200400001)(110136005)(54906003)(81156014)(86362001)(186003)(66446008)(64756008)(66556008)(66476007)(66946007)(76116006)(91956017)(44832011)(6506007)(52536014)(53546011)(5660300002)(7696005)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB6317;H:VI1PR04MB4445.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: nOT6DQAZgT62Yfc1cJUbVVtRfP7Rtl3OOYQ1/Z6t7Pgrd86snXlMSBZtVku53Nqcqq41xba6PKfIe5wp5/eJZlIQIj65AKVi93H9joMUm5MpQVICljY4RCUgXwtodTYY5sTGig5OTEx1Q1QwngsKplUxsrFEbLxv5aw/vtE10Xu8XshwUcTRCTJdKyhqNvHES7Ci8ew5Br3qdtGqiCiO25JHo2Pdo9nZyX2Gmr1MjnFkxjUEvgVfRErCSLD7B3y5RkaXLShKSTWD/MtDldyAqtAucbNqp5+Mi4vRtfIRuGicpO4qZETC2iUTVQO1z+LzOgmu5miJ6JJYA4pP2jmaFcGPansorjASz1eZtcZaQmTvgnP9MoyDI8bjv0RHIWtOYndTlDIpK21UkBxDbyKjAybmUg1RXrBu0JOgg8kEq2h8mbt59N2b/Tl+p1GaOW8d
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191216145041.GG2827@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ad63df01-e72a-4b80-62fc-08d7823ac35d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Dec 2019 15:15:19.0127
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: LlMhYztTcZyFtr3qlKG6f5spHYh5CW1OBDfRKpUT69x6NI7ocIyFqfIcPlK4ujpuX3EszcDY4GDo5CCSXcrvfg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6317
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 03:50:41PM +0100, Peter Zijlstra wrote:
-> On Mon, Dec 16, 2019 at 07:24:24PM +0530, Aneesh Kumar K.V wrote:
-> 
-> > So __p*_free_tlb() routines on ppc64 just mark that we need a page walk
-> > cache flush and the actual flush in done in tlb_flush_mmu.
-> 
-> Not quite, your __p*_free_tlb() goes to pgtable_free_tlb() which call
-> tlb_remove_table().
-> 
-> > As per
-> > 
-> > d86564a2f085b79ec046a5cba90188e61235280 (mm/tlb, x86/mm: Support
-> > invalidating TLB caches for RCU_TABLE_FREE ) that is not sufficient?
-> 
-> 96bc9567cbe1 ("asm-generic/tlb, arch: Invert CONFIG_HAVE_RCU_TABLE_INVALIDATE")
-> 
-> And no. Since you have TABLE_NO_INVALIDATE set, tlb_remove_table() will
-> not TLBI when it fails to allocate a batch page, which is an error for
-> PPC-Radix.
-> 
-> There is also no TLBI when the batch page is full and the RCU callback
-> happens, which is also a bug on PPC-Radix.
-
-It seems to me you need something like this here patch, all you need to
-add is a suitable definition of tlb_needs_table_invalidate() for Power.
-
----
-
-diff --git a/arch/Kconfig b/arch/Kconfig
-index c44ef15866a3..98de654b79b3 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -400,10 +400,6 @@ config MMU_GATHER_RCU_TABLE_FREE
- 	bool
- 	select MMU_GATHER_TABLE_FREE
- 
--config MMU_GATHER_NO_TABLE_INVALIDATE
--	bool
--	depends on MMU_GATHER_RCU_TABLE_FREE
--
- config MMU_GATHER_PAGE_SIZE
- 	bool
- 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 3dea4c8d39f2..2ddf24822d5b 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -223,7 +223,6 @@ config PPC
- 	select HAVE_PERF_REGS
- 	select HAVE_PERF_USER_STACK_DUMP
- 	select MMU_GATHER_RCU_TABLE_FREE		if SMP
--	select MMU_GATHER_NO_TABLE_INVALIDATE	if MMU_GATHER_RCU_TABLE_FREE
- 	select MMU_GATHER_PAGE_SIZE
- 	select HAVE_REGS_AND_STACK_ACCESS_API
- 	select HAVE_RELIABLE_STACKTRACE		if PPC_BOOK3S_64 && CPU_LITTLE_ENDIAN
-diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
-index a76e915ab207..acf20b6c0a54 100644
---- a/arch/sparc/Kconfig
-+++ b/arch/sparc/Kconfig
-@@ -66,7 +66,6 @@ config SPARC64
- 	select HAVE_KRETPROBES
- 	select HAVE_KPROBES
- 	select MMU_GATHER_RCU_TABLE_FREE if SMP
--	select MMU_GATHER_NO_TABLE_INVALIDATE if MMU_GATHER_RCU_TABLE_FREE
- 	select HAVE_MEMBLOCK_NODE_MAP
- 	select HAVE_ARCH_TRANSPARENT_HUGEPAGE
- 	select HAVE_DYNAMIC_FTRACE
-diff --git a/arch/sparc/include/asm/tlb_64.h b/arch/sparc/include/asm/tlb_64.h
-index a2f3fa61ee36..ac8e74a96122 100644
---- a/arch/sparc/include/asm/tlb_64.h
-+++ b/arch/sparc/include/asm/tlb_64.h
-@@ -28,6 +28,12 @@ void flush_tlb_pending(void);
- #define __tlb_remove_tlb_entry(tlb, ptep, address) do { } while (0)
- #define tlb_flush(tlb)	flush_tlb_pending()
- 
-+/*
-+ * SPARC64's hardware TLB fill does not use the Linux page-tables
-+ * and therefore we don't need a TLBI when freeing page-table pages.
-+ */
-+#define tlb_needs_table_invalidate()	(false)
-+
- #include <asm-generic/tlb.h>
- 
- #endif /* _SPARC64_TLB_H */
-diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
-index fe0ea6ff3636..4108d6d18ca5 100644
---- a/include/asm-generic/tlb.h
-+++ b/include/asm-generic/tlb.h
-@@ -156,13 +156,6 @@
-  *  Useful if your architecture doesn't use IPIs for remote TLB invalidates
-  *  and therefore doesn't naturally serialize with software page-table walkers.
-  *
-- *  MMU_GATHER_NO_TABLE_INVALIDATE
-- *
-- *  This makes MMU_GATHER_RCU_TABLE_FREE avoid calling tlb_flush_mmu_tlbonly()
-- *  before freeing the page-table pages. This can be avoided if you use
-- *  MMU_GATHER_RCU_TABLE_FREE and your architecture does _NOT_ use the Linux
-- *  page-tables natively.
-- *
-  *  MMU_GATHER_NO_RANGE
-  *
-  *  Use this if your architecture lacks an efficient flush_tlb_range().
-@@ -203,6 +196,24 @@ extern void tlb_remove_table(struct mmu_gather *tlb, void *table);
- 
- #endif /* CONFIG_MMU_GATHER_TABLE_FREE */
- 
-+#ifdef CONFIG_MMU_GATHER_RCU_TABLE_FREE
-+
-+/*
-+ * This allows an architecture that does not use the linux page-tables for
-+ * hardware to skip the TLBI when freeing page tables.
-+ */
-+#ifndef tlb_needs_table_invalidate
-+#define tlb_needs_table_invalidate() (true)
-+#endif
-+
-+#else
-+
-+#ifdef tlb_needs_table_invalidate
-+#error tlb_needs_table_invalidate() requires MMU_GATHER_RCU_TABLE_FREE
-+#endif
-+
-+#endif /* CONFIG_MMU_GATHER_RCU_TABLE_FREE */
-+
- #ifndef CONFIG_MMU_GATHER_NO_GATHER
- /*
-  * If we can't allocate a page to make a big batch of page pointers
-diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
-index 9d103031568d..a3538cb2bcbe 100644
---- a/mm/mmu_gather.c
-+++ b/mm/mmu_gather.c
-@@ -177,14 +177,14 @@ static void tlb_remove_table_free(struct mmu_table_batch *batch)
-  */
- static inline void tlb_table_invalidate(struct mmu_gather *tlb)
- {
--#ifndef CONFIG_MMU_GATHER_NO_TABLE_INVALIDATE
--	/*
--	 * Invalidate page-table caches used by hardware walkers. Then we still
--	 * need to RCU-sched wait while freeing the pages because software
--	 * walkers can still be in-flight.
--	 */
--	tlb_flush_mmu_tlbonly(tlb);
--#endif
-+	if (tlb_needs_table_invalidate()) {
-+		/*
-+		 * Invalidate page-table caches used by hardware walkers. Then
-+		 * we still need to RCU-sched wait while freeing the pages
-+		 * because software walkers can still be in-flight.
-+		 */
-+		tlb_flush_mmu_tlbonly(tlb);
-+	}
- }
- 
- static void tlb_remove_table_one(void *table)
+On 12/13/2019 5:39 PM, Adam Ford wrote:=0A=
+> The i.MX8M Mini uses the same crypto engine as the i.MX8MQ, but=0A=
+> the driver is restricting the check to just the i.MX8MQ.=0A=
+> =0A=
+> This patch expands the check for either i.MX8MQ or i.MX8MM.=0A=
+> =0A=
+> Signed-off-by: Adam Ford <aford173@gmail.com>=0A=
+> =0A=
+=0A=
+For the series:=0A=
+=0A=
+Tested-by: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
+Reviewed-by: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
+=0A=
+> ---=0A=
+> V2:  Expand the check that forces the setting on imx8mq to also be true f=
+or imx8mm=0A=
+>       Explictly state imx8mm compatiblity instead of making it generic to=
+ all imx8m*=0A=
+>        this is mostly due to lack of other hardware to test=0A=
+> =0A=
+> diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c=0A=
+> index d7c3c3805693..c01dda692ecc 100644=0A=
+> --- a/drivers/crypto/caam/ctrl.c=0A=
+> +++ b/drivers/crypto/caam/ctrl.c=0A=
+> @@ -102,7 +102,8 @@ static inline int run_descriptor_deco0(struct device =
+*ctrldev, u32 *desc,=0A=
+>   	     * Apparently on i.MX8MQ it doesn't matter if virt_en =3D=3D 1=0A=
+>   	     * and the following steps should be performed regardless=0A=
+>   	     */=0A=
+> -	    of_machine_is_compatible("fsl,imx8mq")) {=0A=
+> +	    of_machine_is_compatible("fsl,imx8mq") ||=0A=
+> +	    of_machine_is_compatible("fsl,imx8mm")) {=0A=
+>   		clrsetbits_32(&ctrl->deco_rsr, 0, DECORSR_JR0);=0A=
+>   =0A=
+>   		while (!(rd_reg32(&ctrl->deco_rsr) & DECORSR_VALID) &&=0A=
+> @@ -509,6 +510,7 @@ static const struct soc_device_attribute caam_imx_soc=
+_table[] =3D {=0A=
+>   	{ .soc_id =3D "i.MX6*",  .data =3D &caam_imx6_data },=0A=
+>   	{ .soc_id =3D "i.MX7*",  .data =3D &caam_imx7_data },=0A=
+>   	{ .soc_id =3D "i.MX8MQ", .data =3D &caam_imx7_data },=0A=
+> +	{ .soc_id =3D "i.MX8MM", .data =3D &caam_imx7_data },=0A=
+>   	{ .family =3D "Freescale i.MX" },=0A=
+>   	{ /* sentinel */ }=0A=
+>   };=0A=
+> =0A=
+=0A=
