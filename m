@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 120D6C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38002C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB75C206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0779A206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:24:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520637;
-	bh=ykyXuBjdrvDsfkhIUrb1x8jlBJIu+YyjtsYEWvJ6v0M=;
+	s=default; t=1576520640;
+	bh=b6FHj+maMhZUKVUQhdEcWTeoceobhOMs2XG/SnLR0FU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ptmQlVypU5mnWJK/ppxIFkX4mmJ1mU0IIEoSeSG12pJ89XWG0oVDFvqEvuS91zaSg
-	 Bcq4j9zGDej8KHL119VS6hukX3pTYN1lgpnnUj0SRasAt++GIRq8+4PZ7hmNAKe0AK
-	 nz715dkuR/qmXqzv8Z2kJGLbDzaR/1NPc/UPZqc8=
+	b=qiJ7iYjwf7xeS8PNk2b1Zd7ICGav+ZA3WSXpAgbA2+rQDO0fuuypsgn/9AeGSGWAW
+	 YPkW+Z+rRu4i0Vpo2dnCrjA4FB5ZTVL8Q4GDoRb4h+ca1QxG8QfcuvEOJrwKDv+oVB
+	 q7lNoy3MInnVUcz5iDKmLcgl8gOyBgHIaBkP5uWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731973AbfLPSTr (ORCPT
+        id S1731964AbfLPSTk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:19:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48356 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:19:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731968AbfLPSTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:19:41 -0500
+        id S1731802AbfLPSTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:19:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6B00207FF;
-        Mon, 16 Dec 2019 18:19:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B9CF21775;
+        Mon, 16 Dec 2019 18:19:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520381;
-        bh=ykyXuBjdrvDsfkhIUrb1x8jlBJIu+YyjtsYEWvJ6v0M=;
+        s=default; t=1576520369;
+        bh=b6FHj+maMhZUKVUQhdEcWTeoceobhOMs2XG/SnLR0FU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UZOr5Lk4qOIc2nvxIJxRYk2dD2L96sYASTtCda+BPDF/UihAxGcHQ2DTTBLDwOOg7
-         n58gBQbX1xbnULzGCTF33qPLv9du8VDQ9zOZ1Cg0xZqaSUjyyQ85OSm0S+Z3rVTlsi
-         QWoNQDgHZYbn0ih98BIV1oiE19r6ACKXTKiICyAU=
+        b=qcX7U7CSeTA+AhugY7Vf3g4AlE/a//yOgo3C7Bo4DE4jTMPFUhCUzvaZpe551jcgr
+         BSiolTkZL81z0owKctG6isnD/Es36DICVqaroSTTmtgrPSKB1TpCLe+NubnzCd7HtU
+         wF2d0gLao5pFb+RqXAK9WGbwNrZIbbJHxZfTVJF4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.4 090/177] ASoC: fsl_audmix: Add spin lock to protect tdms
-Date:   Mon, 16 Dec 2019 18:49:06 +0100
-Message-Id: <20191216174839.092227511@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.4 124/177] ACPI: LPSS: Add LNXVIDEO -> BYT I2C1 to lpss_device_links
+Date:   Mon, 16 Dec 2019 18:49:40 +0100
+Message-Id: <20191216174843.681112398@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -61,75 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit fe965096c9495ddcf78ec163348105e2baf8d185 upstream.
+commit b3b3519c04bdff91651d0a6deb79dbd4516b5d7b upstream.
 
-Audmix support two substream, When two substream start
-to run, the trigger function may be called by two substream
-in same time, that the priv->tdms may be updated wrongly.
+Various Asus Bay Trail devices (T100TA, T100CHI, T200TA) have an embedded
+controller connected to I2C1 and the iGPU (LNXVIDEO) _PS0/_PS3 methods
+access it, so we need to add a consumer link from LNXVIDEO to I2C1 on
+these devices to avoid suspend/resume ordering problems.
 
-The expected priv->tdms is 0x3, but sometimes the
-result is 0x2, or 0x1.
-
-Fixes: be1df61cf06e ("ASoC: fsl: Add Audio Mixer CPU DAI driver")
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
-Link: https://lore.kernel.org/r/1e706afe53fdd1fbbbc79277c48a98f8416ba873.1573458378.git.shengjiu.wang@nxp.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Cc: <stable@vger.kernel.org>
+Fixes: 2d71ee0ce72f ("ACPI / LPSS: Add a device link from the GPU to the BYT I2C5 controller")
+Tested-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: 4.20+ <stable@vger.kernel.org> # 4.20+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/fsl/fsl_audmix.c |    6 ++++++
- sound/soc/fsl/fsl_audmix.h |    1 +
- 2 files changed, 7 insertions(+)
+ drivers/acpi/acpi_lpss.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/sound/soc/fsl/fsl_audmix.c
-+++ b/sound/soc/fsl/fsl_audmix.c
-@@ -286,6 +286,7 @@ static int fsl_audmix_dai_trigger(struct
- 				  struct snd_soc_dai *dai)
- {
- 	struct fsl_audmix *priv = snd_soc_dai_get_drvdata(dai);
-+	unsigned long lock_flags;
- 
- 	/* Capture stream shall not be handled */
- 	if (substream->stream == SNDRV_PCM_STREAM_CAPTURE)
-@@ -295,12 +296,16 @@ static int fsl_audmix_dai_trigger(struct
- 	case SNDRV_PCM_TRIGGER_START:
- 	case SNDRV_PCM_TRIGGER_RESUME:
- 	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-+		spin_lock_irqsave(&priv->lock, lock_flags);
- 		priv->tdms |= BIT(dai->driver->id);
-+		spin_unlock_irqrestore(&priv->lock, lock_flags);
- 		break;
- 	case SNDRV_PCM_TRIGGER_STOP:
- 	case SNDRV_PCM_TRIGGER_SUSPEND:
- 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-+		spin_lock_irqsave(&priv->lock, lock_flags);
- 		priv->tdms &= ~BIT(dai->driver->id);
-+		spin_unlock_irqrestore(&priv->lock, lock_flags);
- 		break;
- 	default:
- 		return -EINVAL;
-@@ -491,6 +496,7 @@ static int fsl_audmix_probe(struct platf
- 		return PTR_ERR(priv->ipg_clk);
- 	}
- 
-+	spin_lock_init(&priv->lock);
- 	platform_set_drvdata(pdev, priv);
- 	pm_runtime_enable(dev);
- 
---- a/sound/soc/fsl/fsl_audmix.h
-+++ b/sound/soc/fsl/fsl_audmix.h
-@@ -96,6 +96,7 @@ struct fsl_audmix {
- 	struct platform_device *pdev;
- 	struct regmap *regmap;
- 	struct clk *ipg_clk;
-+	spinlock_t lock; /* Protect tdms */
- 	u8 tdms;
- };
- 
+--- a/drivers/acpi/acpi_lpss.c
++++ b/drivers/acpi/acpi_lpss.c
+@@ -477,6 +477,8 @@ static const struct lpss_device_links lp
+ 	{"808622C1", "7", "80860F14", "3", DL_FLAG_PM_RUNTIME},
+ 	/* CHT iGPU depends on PMIC I2C controller */
+ 	{"808622C1", "7", "LNXVIDEO", NULL, DL_FLAG_PM_RUNTIME},
++	/* BYT iGPU depends on the Embedded Controller I2C controller (UID 1) */
++	{"80860F41", "1", "LNXVIDEO", NULL, DL_FLAG_PM_RUNTIME},
+ 	/* BYT CR iGPU depends on PMIC I2C controller (UID 5 on CR) */
+ 	{"80860F41", "5", "LNXVIDEO", NULL, DL_FLAG_PM_RUNTIME},
+ 	/* BYT iGPU depends on PMIC I2C controller (UID 7 on non CR) */
 
 
