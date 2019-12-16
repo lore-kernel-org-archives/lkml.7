@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65AC6C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97566C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F175206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:11:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63BAC2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:11:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519912;
-	bh=00g5RKiIENXMC3oLyUK6qvQXapP1X6bpjKBjMZkmUmE=;
+	s=default; t=1576519916;
+	bh=7OlzjaWYrNlZkBYMjW7YaLZgbyz7GzE2h/34B75E5tE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BtciO0HDUNTDCxdwHJ+ikyT2lSYeSQ7zkDkWVkF3zpqtT9YLCFtHSA9Kv+tvODBYv
-	 QNZsNo+YzMn0SVGzTrziKseS+NvT2tzjDQCT2VK11GsC940nmAr8c8opt7mzucoC12
-	 0i3NarHMHRqmutWYQjqZ7l35pmzRZ4unWhD5gu9Q=
+	b=N0jYBwOblBZ3nCNXZYS6xNHbMmtDS9LKU+mJbOC9j5pTsihMkiWeNA+lfq2S8g0vm
+	 i0iFfDFn01CpGEtlvsmrlZv5D4RkMF0XfJeXTO+HbBhpvxPCHwMmHRAB0hgK9SgIWA
+	 Jn2I85qlq/HGNTlyikzke3PPthQDxib6cL23ijoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730849AbfLPSLv (ORCPT
+        id S1730865AbfLPSLz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:11:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56176 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:11:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730832AbfLPSLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:11:48 -0500
+        id S1730149AbfLPSLx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:11:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD9352072D;
-        Mon, 16 Dec 2019 18:11:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B00222072D;
+        Mon, 16 Dec 2019 18:11:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519908;
-        bh=00g5RKiIENXMC3oLyUK6qvQXapP1X6bpjKBjMZkmUmE=;
+        s=default; t=1576519913;
+        bh=7OlzjaWYrNlZkBYMjW7YaLZgbyz7GzE2h/34B75E5tE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qGIFrQaobMNG/LsTmsqCpIuCF47JVbxBxTt8vdWD+/lrpzWx8NmT+OHYOd8delBqY
-         Z+CIwFn7FYDwtpX2a65M258xAH4691aNuKe9hJtzDRj+clrM5MKbGGQRYhIYqTz+Z4
-         NC2teG/eE+XygGsQ0ngiKrN60Sd1fU9Q+elI0UvM=
+        b=st5i5J8b1xsDJuj2lr11Ip6rlip1xNL+PSrWVS392veNS6S/zKSqnpmIh8SvKNCMX
+         Ubpu1M8AWtLoqe1IeslMpzpcX5YIbqCT504YsHRSJvArsVTyJUHuZWGMRcO3me2nyC
+         f9mbpST/sS+kOyQhj0QMuT947Dv044PJcQDLUtzM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.3 078/180] ASoC: fsl_audmix: Add spin lock to protect tdms
-Date:   Mon, 16 Dec 2019 18:48:38 +0100
-Message-Id: <20191216174830.960022512@linuxfoundation.org>
+        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.3 080/180] blk-mq: avoid sysfs buffer overflow with too many CPU cores
+Date:   Mon, 16 Dec 2019 18:48:40 +0100
+Message-Id: <20191216174831.264582626@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -61,75 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
+From: Ming Lei <ming.lei@redhat.com>
 
-commit fe965096c9495ddcf78ec163348105e2baf8d185 upstream.
+commit 8962842ca5abdcf98e22ab3b2b45a103f0408b95 upstream.
 
-Audmix support two substream, When two substream start
-to run, the trigger function may be called by two substream
-in same time, that the priv->tdms may be updated wrongly.
+It is reported that sysfs buffer overflow can be triggered if the system
+has too many CPU cores(>841 on 4K PAGE_SIZE) when showing CPUs of
+hctx via /sys/block/$DEV/mq/$N/cpu_list.
 
-The expected priv->tdms is 0x3, but sometimes the
-result is 0x2, or 0x1.
+Use snprintf to avoid the potential buffer overflow.
 
-Fixes: be1df61cf06e ("ASoC: fsl: Add Audio Mixer CPU DAI driver")
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
-Link: https://lore.kernel.org/r/1e706afe53fdd1fbbbc79277c48a98f8416ba873.1573458378.git.shengjiu.wang@nxp.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Cc: <stable@vger.kernel.org>
+This version doesn't change the attribute format, and simply stops
+showing CPU numbers if the buffer is going to overflow.
+
+Cc: stable@vger.kernel.org
+Fixes: 676141e48af7("blk-mq: don't dump CPU -> hw queue map on driver load")
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/fsl/fsl_audmix.c |    6 ++++++
- sound/soc/fsl/fsl_audmix.h |    1 +
- 2 files changed, 7 insertions(+)
+ block/blk-mq-sysfs.c |   15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
---- a/sound/soc/fsl/fsl_audmix.c
-+++ b/sound/soc/fsl/fsl_audmix.c
-@@ -286,6 +286,7 @@ static int fsl_audmix_dai_trigger(struct
- 				  struct snd_soc_dai *dai)
- {
- 	struct fsl_audmix *priv = snd_soc_dai_get_drvdata(dai);
-+	unsigned long lock_flags;
+--- a/block/blk-mq-sysfs.c
++++ b/block/blk-mq-sysfs.c
+@@ -166,20 +166,25 @@ static ssize_t blk_mq_hw_sysfs_nr_reserv
  
- 	/* Capture stream shall not be handled */
- 	if (substream->stream == SNDRV_PCM_STREAM_CAPTURE)
-@@ -295,12 +296,16 @@ static int fsl_audmix_dai_trigger(struct
- 	case SNDRV_PCM_TRIGGER_START:
- 	case SNDRV_PCM_TRIGGER_RESUME:
- 	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-+		spin_lock_irqsave(&priv->lock, lock_flags);
- 		priv->tdms |= BIT(dai->driver->id);
-+		spin_unlock_irqrestore(&priv->lock, lock_flags);
- 		break;
- 	case SNDRV_PCM_TRIGGER_STOP:
- 	case SNDRV_PCM_TRIGGER_SUSPEND:
- 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-+		spin_lock_irqsave(&priv->lock, lock_flags);
- 		priv->tdms &= ~BIT(dai->driver->id);
-+		spin_unlock_irqrestore(&priv->lock, lock_flags);
- 		break;
- 	default:
- 		return -EINVAL;
-@@ -493,6 +498,7 @@ static int fsl_audmix_probe(struct platf
- 		return PTR_ERR(priv->ipg_clk);
+ static ssize_t blk_mq_hw_sysfs_cpus_show(struct blk_mq_hw_ctx *hctx, char *page)
+ {
++	const size_t size = PAGE_SIZE - 1;
+ 	unsigned int i, first = 1;
+-	ssize_t ret = 0;
++	int ret = 0, pos = 0;
+ 
+ 	for_each_cpu(i, hctx->cpumask) {
+ 		if (first)
+-			ret += sprintf(ret + page, "%u", i);
++			ret = snprintf(pos + page, size - pos, "%u", i);
+ 		else
+-			ret += sprintf(ret + page, ", %u", i);
++			ret = snprintf(pos + page, size - pos, ", %u", i);
++
++		if (ret >= size - pos)
++			break;
+ 
+ 		first = 0;
++		pos += ret;
  	}
  
-+	spin_lock_init(&priv->lock);
- 	platform_set_drvdata(pdev, priv);
- 	pm_runtime_enable(dev);
+-	ret += sprintf(ret + page, "\n");
+-	return ret;
++	ret = snprintf(pos + page, size - pos, "\n");
++	return pos + ret;
+ }
  
---- a/sound/soc/fsl/fsl_audmix.h
-+++ b/sound/soc/fsl/fsl_audmix.h
-@@ -96,6 +96,7 @@ struct fsl_audmix {
- 	struct platform_device *pdev;
- 	struct regmap *regmap;
- 	struct clk *ipg_clk;
-+	spinlock_t lock; /* Protect tdms */
- 	u8 tdms;
- };
- 
+ static struct blk_mq_hw_ctx_sysfs_entry blk_mq_hw_sysfs_nr_tags = {
 
 
