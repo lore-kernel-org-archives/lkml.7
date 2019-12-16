@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C1EC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:10:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67042C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD7A320700
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:10:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C64420700
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:10:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519838;
-	bh=F2n07ws10lQmM2LodegTTQfMXCbscbF5aBDGHTmAry4=;
+	s=default; t=1576519842;
+	bh=Fd7ChdYtx6FGdMpsIhsq6sadR6GKedj+dYkI6xfVanY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ehb/S70LEZ1GUvk2kv7iTg2DjMj1Q5VA7UuDG9v0SrAYCUZOFGJFwufWVdt1utsDh
-	 LHBOOceiO/C7fi71/gLkLndmMek5qPKfWzbaFQAqWy9aQEsG+DvfMiH75Nj+JNZAEj
-	 wmzSV4LdnH6XbKqbF9j0EXZUUdsnBf97qZPfmcxQ=
+	b=ZXcoQA1lj2swFk3XActxA1IKMRJl2yGPgpw/kzd18620zqs7dwDzwtFH74M1dlAEE
+	 +XD1bHcC2tGlLvpUQg/3zYg4r2axZPn1p/t/oTMRTL7kfJEU5zXAdZs+Rh3OvKSBWA
+	 hJp/AJpG3W73vnD33Mg/vr1wpto8P0QYueziISVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730640AbfLPSKh (ORCPT
+        id S1730649AbfLPSKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:10:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53816 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:10:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730636AbfLPSKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:10:35 -0500
+        id S1730636AbfLPSKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:10:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC5A0206EC;
-        Mon, 16 Dec 2019 18:10:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 249E7206B7;
+        Mon, 16 Dec 2019 18:10:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519835;
-        bh=F2n07ws10lQmM2LodegTTQfMXCbscbF5aBDGHTmAry4=;
+        s=default; t=1576519837;
+        bh=Fd7ChdYtx6FGdMpsIhsq6sadR6GKedj+dYkI6xfVanY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0lkSu8eukGQt/bu/B+dU6jLS9ValV/cyluKPVAz9mzo8oI6UBBQgVD8gn4uruvZJJ
-         WJX+Lnc+jNjwOjRvUV8u9eE4b7qmGDIE+TWiBqnVvncnWb5M9hnuKsMZ2Rh8O8SgNS
-         N+6C1Su2KnB0EwgFgc+2f4s2ZjEe2R63lh03tC0k=
+        b=GYgaNzf6f31wGO6Sgk4zCJQz8UaORVX+Hj3wvVv+H52HW3ZfBx8WBKEJU6jCq473R
+         nT6zXXcj0tRkbgEvpU4vU3wFiIjqiKQRk6vq9Yp//RFKKd/Nbww8O/9EbyKgGxre9F
+         4uY8FDROySz5z7su4pNXCl+0mV2DWg23b7I2d8YI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        stable@vger.kernel.org,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.3 089/180] cpuidle: Do not unset the driver if it is there already
-Date:   Mon, 16 Dec 2019 18:48:49 +0100
-Message-Id: <20191216174834.498403049@linuxfoundation.org>
+Subject: [PATCH 5.3 090/180] cpuidle: teo: Ignore disabled idle states that are too deep
+Date:   Mon, 16 Dec 2019 18:48:50 +0100
+Message-Id: <20191216174834.567028096@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -59,58 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-commit 918c1fe9fbbe46fcf56837ff21f0ef96424e8b29 upstream.
+commit 069ce2ef1a6dd84cbd4d897b333e30f825e021f0 upstream.
 
-Fix __cpuidle_set_driver() to check if any of the CPUs in the mask has
-a driver different from drv already and, if so, return -EBUSY before
-updating any cpuidle_drivers per-CPU pointers.
+Prevent disabled CPU idle state with target residencies beyond the
+anticipated idle duration from being taken into account by the TEO
+governor.
 
-Fixes: 82467a5a885d ("cpuidle: simplify multiple driver support")
-Cc: 3.11+ <stable@vger.kernel.org> # 3.11+
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-[ rjw: Subject & changelog ]
+Fixes: b26bf6ab716f ("cpuidle: New timer events oriented governor for tickless systems")
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: 5.1+ <stable@vger.kernel.org> # 5.1+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/cpuidle/driver.c |   15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ drivers/cpuidle/governors/teo.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/cpuidle/driver.c
-+++ b/drivers/cpuidle/driver.c
-@@ -62,24 +62,23 @@ static inline void __cpuidle_unset_drive
-  * __cpuidle_set_driver - set per CPU driver variables for the given driver.
-  * @drv: a valid pointer to a struct cpuidle_driver
-  *
-- * For each CPU in the driver's cpumask, unset the registered driver per CPU
-- * to @drv.
-- *
-- * Returns 0 on success, -EBUSY if the CPUs have driver(s) already.
-+ * Returns 0 on success, -EBUSY if any CPU in the cpumask have a driver
-+ * different from drv already.
-  */
- static inline int __cpuidle_set_driver(struct cpuidle_driver *drv)
- {
- 	int cpu;
+--- a/drivers/cpuidle/governors/teo.c
++++ b/drivers/cpuidle/governors/teo.c
+@@ -266,6 +266,13 @@ static int teo_select(struct cpuidle_dri
  
- 	for_each_cpu(cpu, drv->cpumask) {
-+		struct cpuidle_driver *old_drv;
- 
--		if (__cpuidle_get_cpu_driver(cpu)) {
--			__cpuidle_unset_driver(drv);
-+		old_drv = __cpuidle_get_cpu_driver(cpu);
-+		if (old_drv && old_drv != drv)
- 			return -EBUSY;
--		}
-+	}
- 
-+	for_each_cpu(cpu, drv->cpumask)
- 		per_cpu(cpuidle_drivers, cpu) = drv;
--	}
- 
- 	return 0;
- }
+ 		if (s->disabled || su->disable) {
+ 			/*
++			 * Ignore disabled states with target residencies beyond
++			 * the anticipated idle duration.
++			 */
++			if (s->target_residency > duration_us)
++				continue;
++
++			/*
+ 			 * If the "early hits" metric of a disabled state is
+ 			 * greater than the current maximum, it should be taken
+ 			 * into account, because it would be a mistake to select
 
 
