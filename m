@@ -2,196 +2,135 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D81CEC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C5CC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACCDB2067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:04:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576523064;
-	bh=n2niy3GX1/9dWzk5LJO7Idaltrdy2g6TUiU7ytqHdg4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gRZzSEypscIKpEPgKlnhe6PaHu4YBkzC5pcBeA9SXlTy9ePwpBZdYMiydfk04Tb47
-	 I0UDOahU8E0p/FahZQqU4s0xHm67bdDgYaySCZVz8YWkOOk9QjB6p2QsXfkZrOzoEv
-	 QuuOB/eDWLVj2ad2kLMDc2CI8e1cU4jkqban7asY=
+	by mail.kernel.org (Postfix) with ESMTP id D91B42054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 19:04:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=colorfullife-com.20150623.gappssmtp.com header.i=@colorfullife-com.20150623.gappssmtp.com header.b="ccxiepF0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbfLPTEX (ORCPT
+        id S1727049AbfLPTE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 14:04:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59832 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726390AbfLPTEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 14:04:23 -0500
-Received: from localhost (unknown [122.182.192.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CF892064B;
-        Mon, 16 Dec 2019 19:04:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576523062;
-        bh=n2niy3GX1/9dWzk5LJO7Idaltrdy2g6TUiU7ytqHdg4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GrLm1kH8cGzprX5bRAdC9IFHf9PwgtB3rDM9Y1Rh4KyynOYRUxfFrdcO29vCOgCfS
-         S14SXrlvWYR1u/7RD/9MEzzKGP8YrjBDnYATHx8f8RDGUaSe7IQR9yNwwfN3hJH8Tj
-         MPM1KdIkBgL+6AY5w0e50P3IClgXBBcMGsxm00ao=
-Date:   Tue, 17 Dec 2019 00:34:15 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Can Guo <cang@codeaurora.org>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        Andy Gross <agross@kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 2/7] scsi: ufs-qcom: Add reset control support for
- host controller
-Message-ID: <20191216190415.GL2536@vkoul-mobl>
-References: <1573798172-20534-1-git-send-email-cang@codeaurora.org>
- <1573798172-20534-3-git-send-email-cang@codeaurora.org>
+        Mon, 16 Dec 2019 14:04:59 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53367 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726368AbfLPTE6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 14:04:58 -0500
+Received: by mail-wm1-f65.google.com with SMTP id m24so468191wmc.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 11:04:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=colorfullife-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-transfer-encoding:content-language;
+        bh=HreaAo5M8CvrtSZKWU6iORgOZbccygQ9kHqwUNDqXjI=;
+        b=ccxiepF0PZaIoCnbZMhHhtJVOJcDoDnpLsxQq2Esi4Fys3z+5aEPwmptpCD0CXXepi
+         7RvXNuEQP5thW6W1dktFf4keY9zSrrHC27sWYeX/e1xZtzYxY+AvE36sDkY6IvsFpwuH
+         NihoZ2SeHO0cr54rSEEcrI70oSHPNzQaJnjr+6ryzEM38B/C+c2f4XEZE07Ftb3u0uyK
+         HxMsFwnvLzkX5zPDoWwI36JV0EVKNbkPAGVVapuxP+DHtCUIisfibvTdsXGMie/cntoC
+         7dmXTmrJGzBAq/gTATNOO4zUAf0hdaOY4qm9TilcU/ERNhlhi4C5apvQZkVzQc959f9d
+         8b6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=HreaAo5M8CvrtSZKWU6iORgOZbccygQ9kHqwUNDqXjI=;
+        b=kVTLQiDO8+zBhmiARldw2wWcZvS+O7B6BKDuhlhpEqYgHOTyOFVxIf2dEe7iR/CCbN
+         SuMyYhjeEGYRxoZfoAk5b38ShUYOKNPvSTjoomcbR46tT9DtXPPlRdQUUMO3EoJ9Er7r
+         eWtzijsRtEs4oXDIQZH8R52XqZTCZ01EFbMy0jkEI8KcFVwc6NPQPPtaNoS9MS3yIeIc
+         5HO/9FMc+Io/N1z+YYxlUGaq+yOWJkeG/rlDF8aLgBQPjs1ya4SFes30R61DygTI4pBw
+         mN5CTv2wiLg+YXjygqDFXwfOxlQxvwgRad2f/clk3bTLm1yrxvSt+a2p82H/HVCt7LBl
+         M8Dg==
+X-Gm-Message-State: APjAAAUh6LRNehQR18smx/FjCohOTbV2crbiEnH5Fq4c2wCKa+zcHxla
+        MIWc80rKKwcZ7ZERzyufA1fEKWIEsUE=
+X-Google-Smtp-Source: APXvYqx+Ds7ZcBGn0IHVNSpsgby08zvIWR/pPsSMl2BjkbtPwtv6wZ2+KM7qroHlkY+u0FBv4vpC+A==
+X-Received: by 2002:a7b:c416:: with SMTP id k22mr580143wmi.10.1576523096098;
+        Mon, 16 Dec 2019 11:04:56 -0800 (PST)
+Received: from linux.fritz.box (p200300D9970662004EE5DE74B236A15C.dip0.t-ipconnect.de. [2003:d9:9706:6200:4ee5:de74:b236:a15c])
+        by smtp.googlemail.com with ESMTPSA id w20sm308960wmk.34.2019.12.16.11.04.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Dec 2019 11:04:54 -0800 (PST)
+Subject: Re: [PATCH] Revert "ipc,sem: remove uneeded sem_undo_list lock usage
+ in exit_sem()"
+To:     Ioanna Alifieraki <ioanna-maria.alifieraki@canonical.com>,
+        akpm@linux-foundation.org, herton@redhat.com, arnd@arndb.de,
+        catalin.marinas@arm.com, malat@debian.org, joel@joelfernandes.org,
+        gustavo@embeddedor.com, linux-kernel@vger.kernel.org,
+        jay.vosburgh@canonical.com, ioanna.alifieraki@gmail.com
+References: <20191211191318.11860-1-ioanna-maria.alifieraki@canonical.com>
+From:   Manfred Spraul <manfred@colorfullife.com>
+Message-ID: <d66d41fe-212f-effd-905a-5966a96ddb6e@colorfullife.com>
+Date:   Mon, 16 Dec 2019 20:04:53 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1573798172-20534-3-git-send-email-cang@codeaurora.org>
+In-Reply-To: <20191211191318.11860-1-ioanna-maria.alifieraki@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Can,
+Hi Ioanna,
 
-On 14-11-19, 22:09, Can Guo wrote:
-> Add reset control for host controller so that host controller can be reset
-> as required in its power up sequence.
+On 12/11/19 8:13 PM, Ioanna Alifieraki wrote:
+> This reverts commit a97955844807e327df11aa33869009d14d6b7de0.
+>
+> Commit a97955844807 ("ipc,sem: remove uneeded sem_undo_list lock usage
+> in exit_sem()") removes a lock that is needed.
 
-I am seeing a regression on UFS on SM8150-mtp with this patch. I think
-Jeff is seeing same one lenove laptop on 8998.
+Yes, you are right, the lock is needed.
 
-845 does not seem to have this issue and only thing I can see is that on
-sm8150 and 8998 we define reset as:
+The documentation is already correct:
 
-                        resets = <&gcc GCC_UFS_BCR>;
-                        reset-names = "rst";
+sem_undo_list.list_proc: undo_list->lock for write.
 
-Thanks
+[...]
+> Removing elements from list_id is safe for both exit_sem() and freeary()
+> due to sem_lock().  Removing elements from list_proc is not safe;
 
-> 
-> Signed-off-by: Can Guo <cang@codeaurora.org>
+Correct, removing elements is not safe.
+
+Removing one element would be ok, as we hold sem_lock.
+
+But if there are two elements, then we don't hold sem_lock for the 2nd 
+element, and thus the list is corrupted.
+
+> [1] https://bugzilla.redhat.com/show_bug.cgi?id=1694779
+>
+> Fixes: a97955844807 ("ipc,sem: remove uneeded sem_undo_list lock usage in exit_sem()")
+> Signed-off-by: Ioanna Alifieraki <ioanna-maria.alifieraki@canonical.com>
+Acked-by: Manfred Spraul <manfred@colorfullife.com>
 > ---
->  drivers/scsi/ufs/ufs-qcom.c | 53 +++++++++++++++++++++++++++++++++++++++++++++
->  drivers/scsi/ufs/ufs-qcom.h |  3 +++
->  2 files changed, 56 insertions(+)
-> 
-> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
-> index a5b7148..c69c29a1c 100644
-> --- a/drivers/scsi/ufs/ufs-qcom.c
-> +++ b/drivers/scsi/ufs/ufs-qcom.c
-> @@ -246,6 +246,44 @@ static void ufs_qcom_select_unipro_mode(struct ufs_qcom_host *host)
->  	mb();
->  }
->  
-> +/**
-> + * ufs_qcom_host_reset - reset host controller and PHY
-> + */
-> +static int ufs_qcom_host_reset(struct ufs_hba *hba)
-> +{
-> +	int ret = 0;
-> +	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
-> +
-> +	if (!host->core_reset) {
-> +		dev_warn(hba->dev, "%s: reset control not set\n", __func__);
-> +		goto out;
-> +	}
-> +
-> +	ret = reset_control_assert(host->core_reset);
-> +	if (ret) {
-> +		dev_err(hba->dev, "%s: core_reset assert failed, err = %d\n",
-> +				 __func__, ret);
-> +		goto out;
-> +	}
-> +
-> +	/*
-> +	 * The hardware requirement for delay between assert/deassert
-> +	 * is at least 3-4 sleep clock (32.7KHz) cycles, which comes to
-> +	 * ~125us (4/32768). To be on the safe side add 200us delay.
-> +	 */
-> +	usleep_range(200, 210);
-> +
-> +	ret = reset_control_deassert(host->core_reset);
-> +	if (ret)
-> +		dev_err(hba->dev, "%s: core_reset deassert failed, err = %d\n",
-> +				 __func__, ret);
-> +
-> +	usleep_range(1000, 1100);
-> +
-> +out:
-> +	return ret;
-> +}
-> +
->  static int ufs_qcom_power_up_sequence(struct ufs_hba *hba)
->  {
->  	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
-> @@ -254,6 +292,12 @@ static int ufs_qcom_power_up_sequence(struct ufs_hba *hba)
->  	bool is_rate_B = (UFS_QCOM_LIMIT_HS_RATE == PA_HS_MODE_B)
->  							? true : false;
->  
-> +	/* Reset UFS Host Controller and PHY */
-> +	ret = ufs_qcom_host_reset(hba);
-> +	if (ret)
-> +		dev_warn(hba->dev, "%s: host reset returned %d\n",
-> +				  __func__, ret);
-> +
->  	if (is_rate_B)
->  		phy_set_mode(phy, PHY_MODE_UFS_HS_B);
->  
-> @@ -1101,6 +1145,15 @@ static int ufs_qcom_init(struct ufs_hba *hba)
->  	host->hba = hba;
->  	ufshcd_set_variant(hba, host);
->  
-> +	/* Setup the reset control of HCI */
-> +	host->core_reset = devm_reset_control_get(hba->dev, "rst");
-> +	if (IS_ERR(host->core_reset)) {
-> +		err = PTR_ERR(host->core_reset);
-> +		dev_warn(dev, "Failed to get reset control %d\n", err);
-> +		host->core_reset = NULL;
-> +		err = 0;
-> +	}
-> +
->  	/* Fire up the reset controller. Failure here is non-fatal. */
->  	host->rcdev.of_node = dev->of_node;
->  	host->rcdev.ops = &ufs_qcom_reset_ops;
-> diff --git a/drivers/scsi/ufs/ufs-qcom.h b/drivers/scsi/ufs/ufs-qcom.h
-> index d401f17..2d95e7c 100644
-> --- a/drivers/scsi/ufs/ufs-qcom.h
-> +++ b/drivers/scsi/ufs/ufs-qcom.h
-> @@ -6,6 +6,7 @@
->  #define UFS_QCOM_H_
->  
->  #include <linux/reset-controller.h>
-> +#include <linux/reset.h>
->  
->  #define MAX_UFS_QCOM_HOSTS	1
->  #define MAX_U32                 (~(u32)0)
-> @@ -233,6 +234,8 @@ struct ufs_qcom_host {
->  	u32 dbg_print_en;
->  	struct ufs_qcom_testbus testbus;
->  
-> +	/* Reset control of HCI */
-> +	struct reset_control *core_reset;
->  	struct reset_controller_dev rcdev;
->  
->  	struct gpio_desc *device_reset;
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+>   ipc/sem.c | 6 ++----
+>   1 file changed, 2 insertions(+), 4 deletions(-)
+>
+> diff --git a/ipc/sem.c b/ipc/sem.c
+> index ec97a7072413..fe12ea8dd2b3 100644
+> --- a/ipc/sem.c
+> +++ b/ipc/sem.c
+> @@ -2368,11 +2368,9 @@ void exit_sem(struct task_struct *tsk)
+>   		ipc_assert_locked_object(&sma->sem_perm);
+>   		list_del(&un->list_id);
+>   
+> -		/* we are the last process using this ulp, acquiring ulp->lock
+> -		 * isn't required. Besides that, we are also protected against
+> -		 * IPC_RMID as we hold sma->sem_perm lock now
+> -		 */
+> +		spin_lock(&ulp->lock);
+>   		list_del_rcu(&un->list_proc);
+> +		spin_unlock(&ulp->lock);
+>   
+>   		/* perform adjustments registered in un */
+>   		for (i = 0; i < sma->sem_nsems; i++) {
 
--- 
-~Vinod
+
