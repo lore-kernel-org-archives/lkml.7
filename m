@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73056C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5FCC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ADA221582
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:48:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F3852082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:48:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576522128;
-	bh=nMJBTNqfc6009iVO2daAnnAIfdD07+2dKXOtxebiMQI=;
+	s=default; t=1576522133;
+	bh=l+iuQlcezMBd/7Et/nhWonLvMUief6HtBQvhF9FLr0A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MwEv6XewewF3uAQNb11j8niiCiXAHcIQx4lDxCTgoHbdJp+NL6Pv2xe+VP9TtE4r7
-	 1zfSHj4iZKePyO7YIucI6IyjRlnVkPfuP38gSTZtza9W0b3hnasV6VOMenXl1ykoM8
-	 mzfe6Sfiss9du4/3vLjiZ1CfapXzpF8EjKEAmUOE=
+	b=O2rRNBeudaOFkuKzAlUG7KznycYMAqZt6Mw7is6Cs000HSPfMtrlcKm91JkXUKVYj
+	 inQdi5vXgq4JvY5/p4mnkccyp99zBcsOJYtwauLgRJrSv2FiYpGcKAAe2VLoM2YZ4G
+	 KYXP4Gn5GgLWmKiEPuMKcbk2mGevnsUhfvU1E0sI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728109AbfLPSsr (ORCPT
+        id S1727836AbfLPRxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:48:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49126 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:53:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726526AbfLPRyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:54:00 -0500
+        id S1727826AbfLPRxv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:53:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A12A6206D3;
-        Mon, 16 Dec 2019 17:53:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E430120733;
+        Mon, 16 Dec 2019 17:53:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518840;
-        bh=nMJBTNqfc6009iVO2daAnnAIfdD07+2dKXOtxebiMQI=;
+        s=default; t=1576518830;
+        bh=l+iuQlcezMBd/7Et/nhWonLvMUief6HtBQvhF9FLr0A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ci6HvfdK2pCliNUvQ9JlyZxFSYaSgIaJjEcgGXgGMBzOZhmKINtiICUixHqnNA3Rt
-         UNniNkpNlbbHZIkIu9IU67IqbNdekksdqQC9JEZOUjcJu4ei/ChJW4kC8D1BCmO59s
-         f3wbcfte8e2L+bAj1b8Baa7W9j7bonkc1NYmTo9w=
+        b=JPNLy/OetpZOBSW3Mp+SXbO8+yzYq4DJ7/4y56fJGTL9EAPcEyFDQDP9BKHEcwj2U
+         PBbDXaD3EEMtjAPQjhDr++R+6I7jd5eu6QrA5a6ubM+jG8sb37q266xO8fZNfo+30n
+         lBZAM15hPHdYNfmDkfqWt1+4tYCAgNNdh8CMO4h8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Schiller <ms@dev.tdt.de>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 088/267] net/x25: fix called/calling length calculation in x25_parse_address_block
-Date:   Mon, 16 Dec 2019 18:46:54 +0100
-Message-Id: <20191216174857.864004482@linuxfoundation.org>
+Subject: [PATCH 4.14 084/267] arm64: dts: meson-gxl-libretech-cc: fix GPIO lines names
+Date:   Mon, 16 Dec 2019 18:46:50 +0100
+Message-Id: <20191216174857.585681299@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -60,33 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Schiller <ms@dev.tdt.de>
+From: Neil Armstrong <narmstrong@baylibre.com>
 
-[ Upstream commit d449ba3d581ed29f751a59792fdc775572c66904 ]
+[ Upstream commit 11fa9774612decea87144d7f950a9c53a4fe3050 ]
 
-The length of the called and calling address was not calculated
-correctly (BCD encoding).
+The gpio line names were set in the pinctrl node instead of the gpio node,
+at the time it was merged, it worked, but was obviously wrong.
+This patch moves the properties to the gpio nodes.
 
-Signed-off-by: Martin Schiller <ms@dev.tdt.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 47884c5c746e ("ARM64: dts: meson-gxl-libretech-cc: Add GPIO lines names")
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/x25/af_x25.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/x25/af_x25.c b/net/x25/af_x25.c
-index 1b830a6ee3ff6..6e7ad4c6f83c8 100644
---- a/net/x25/af_x25.c
-+++ b/net/x25/af_x25.c
-@@ -100,7 +100,7 @@ int x25_parse_address_block(struct sk_buff *skb,
- 	}
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+index 0814b6b29b86a..e2c71753e3278 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+@@ -139,7 +139,7 @@
+ 	};
+ };
  
- 	len = *skb->data;
--	needed = 1 + (len >> 4) + (len & 0x0f);
-+	needed = 1 + ((len >> 4) + (len & 0x0f) + 1) / 2;
+-&pinctrl_aobus {
++&gpio_ao {
+ 	gpio-line-names = "UART TX",
+ 			  "UART RX",
+ 			  "Blue LED",
+@@ -152,7 +152,7 @@
+ 			  "7J1 Header Pin13";
+ };
  
- 	if (!pskb_may_pull(skb, needed)) {
- 		/* packet is too short to hold the addresses it claims
+-&pinctrl_periphs {
++&gpio {
+ 	gpio-line-names = /* Bank GPIOZ */
+ 			  "", "", "", "", "", "", "",
+ 			  "", "", "", "", "", "", "",
 -- 
 2.20.1
 
