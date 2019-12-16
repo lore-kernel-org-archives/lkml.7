@@ -2,54 +2,54 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45442C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5977C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D7E3206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:48:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EAF62082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:48:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576522104;
-	bh=wIj8gMp24TWB2JPYURolixV89zLKt1lP8418gUBTlAI=;
+	s=default; t=1576522109;
+	bh=o3x2+YKwEjeXAK7UbwlJ/GR/Df7W8HFP/A1Hw0pWe6g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GPbKNoUG5db81WqmTikwO20ilz/yhY/Q6oZTacX6OdmjIFBFKft+J03HDtCT8hwqc
-	 Ceh9LfHRbDCTkXQQWc2gm0m8gD43hvWXU3t0T5FPvfo3BWFiRBQWbei81VHcuHncGS
-	 x+bSsCcAl98Y42x0Nm2h1/P5v7pHZgSKMt6EwMu4=
+	b=bBly8vClANEy/x1RLQgH7Z7Rljz2qPu40IthsA9ui5usHw5Hqx2wROFEYtMVeGc6l
+	 fQMqdOP0o5ovFvQaEM7j9xScpmupllHXVjMyUougK/ALhGPVrQXK8LEzKjUPue8iBT
+	 XI1xw5glkQ+f+SdiZcKzb4/KkotKPX5LT0NV76Sw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727904AbfLPRyY (ORCPT
+        id S1727927AbfLPSs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:54:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50058 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:48:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727892AbfLPRyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:54:21 -0500
+        id S1727472AbfLPRyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:54:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32D652146E;
-        Mon, 16 Dec 2019 17:54:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C075E20733;
+        Mon, 16 Dec 2019 17:54:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518859;
-        bh=wIj8gMp24TWB2JPYURolixV89zLKt1lP8418gUBTlAI=;
+        s=default; t=1576518857;
+        bh=o3x2+YKwEjeXAK7UbwlJ/GR/Df7W8HFP/A1Hw0pWe6g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=esP0r58NYLggXF1ZeJkYsOTY0FJbr7OlB8KTo9OwN6i+saHBKH8zccVkfCHcFBsF2
-         /MIyMbnBtEl1ADgy4FzuFKrM66mTrGMUJF/51FSoOisD9w/jk8pWd96cCk+CYj6+pt
-         cbZzAmBmyrENjhMIN69aHo5SgpYItpccDW2Qq1Ew=
+        b=n+dhXbwK9nuOPhTxv+PL+JSCliXHGHdmR8g5ZtREVs0fhkMpwX9QY9ym9+1pOKgMb
+         gk/oA/8qstoA64W4JFRERfO7dDCBEb7uGJP2BWxwWaEhwyIzFrAtimZJfRw97ZpWry
+         hxr0+jmGAW+ePiCuRcEK6vg6mo9dEZTUL/HIqvVo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Walmsley <paul.walmsley@sifive.com>,
-        Paul Walmsley <paul@pwsan.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        stable@vger.kernel.org, Yuchung Cheng <ycheng@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 095/267] modpost: skip ELF local symbols during section mismatch check
-Date:   Mon, 16 Dec 2019 18:47:01 +0100
-Message-Id: <20191216174901.927306028@linuxfoundation.org>
+Subject: [PATCH 4.14 094/267] tcp: fix SNMP TCP timeout under-estimation
+Date:   Mon, 16 Dec 2019 18:47:00 +0100
+Message-Id: <20191216174900.743422112@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -62,94 +62,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Walmsley <paul.walmsley@sifive.com>
+From: Yuchung Cheng <ycheng@google.com>
 
-[ Upstream commit a4d26f1a0958bb1c2b60c6f1e67c6f5d43e2647b ]
+[ Upstream commit e1561fe2dd69dc5dddd69bd73aa65355bdfb048b ]
 
-During development of a serial console driver with a gcc 8.2.0
-toolchain for RISC-V, the following modpost warning appeared:
+Previously the SNMP TCPTIMEOUTS counter has inconsistent accounting:
+1. It counts all SYN and SYN-ACK timeouts
+2. It counts timeouts in other states except recurring timeouts and
+   timeouts after fast recovery or disorder state.
 
-----
-WARNING: vmlinux.o(.data+0x19b10): Section mismatch in reference from the variable .LANCHOR1 to the function .init.text:sifive_serial_console_setup()
-The variable .LANCHOR1 references
-the function __init sifive_serial_console_setup()
-If the reference is valid then annotate the
-variable with __init* or __refdata (see linux/init.h) or name the variable:
-*_template, *_timer, *_sht, *_ops, *_probe, *_probe_one, *_console
-----
+Such selective accounting makes analysis difficult and complicated. For
+example the monitoring system needs to collect many other SNMP counters
+to infer the total amount of timeout events. This patch makes TCPTIMEOUTS
+counter simply counts all the retransmit timeout (SYN or data or FIN).
 
-".LANCHOR1" is an ELF local symbol, automatically created by gcc's section
-anchor generation code:
-
-https://gcc.gnu.org/onlinedocs/gccint/Anchored-Addresses.html
-
-https://gcc.gnu.org/git/?p=gcc.git;a=blob;f=gcc/varasm.c;h=cd9591a45617464946dcf9a126dde277d9de9804;hb=9fb89fa845c1b2e0a18d85ada0b077c84508ab78#l7473
-
-This was verified by compiling the kernel with -fno-section-anchors
-and observing that the ".LANCHOR1" ELF local symbol disappeared, and
-modpost no longer warned about the section mismatch.  The serial
-driver code idiom triggering the warning is standard Linux serial
-driver practice that has a specific whitelist inclusion in modpost.c.
-
-I'm neither a modpost nor an ELF expert, but naively, it doesn't seem
-useful for modpost to report section mismatch warnings caused by ELF
-local symbols by default.  Local symbols have compiler-generated
-names, and thus bypass modpost's whitelisting algorithm, which relies
-on the presence of a non-autogenerated symbol name.  This increases
-the likelihood that false positive warnings will be generated (as in
-the above case).
-
-Thus, disable section mismatch reporting on ELF local symbols.  The
-rationale here is similar to that of commit 2e3a10a1551d ("ARM: avoid
-ARM binutils leaking ELF local symbols") and of similar code already
-present in modpost.c:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/scripts/mod/modpost.c?h=v4.19-rc4&id=7876320f88802b22d4e2daf7eb027dd14175a0f8#n1256
-
-This third version of the patch implements a suggestion from Masahiro
-Yamada <yamada.masahiro@socionext.com> to restructure the code as an
-additional pattern matching step inside secref_whitelist(), and
-further improves the patch description.
-
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-Signed-off-by: Paul Walmsley <paul@pwsan.com>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Yuchung Cheng <ycheng@google.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Neal Cardwell <ncardwell@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/mod/modpost.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ net/ipv4/tcp_timer.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index c22041a4fc360..b6eb929899c55 100644
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@ -1174,6 +1174,14 @@ static const struct sectioncheck *section_mismatch(
-  *   fromsec = text section
-  *   refsymname = *.constprop.*
-  *
-+ * Pattern 6:
-+ *   Hide section mismatch warnings for ELF local symbols.  The goal
-+ *   is to eliminate false positive modpost warnings caused by
-+ *   compiler-generated ELF local symbol names such as ".LANCHOR1".
-+ *   Autogenerated symbol names bypass modpost's "Pattern 2"
-+ *   whitelisting, which relies on pattern-matching against symbol
-+ *   names to work.  (One situation where gcc can autogenerate ELF
-+ *   local symbols is when "-fsection-anchors" is used.)
-  **/
- static int secref_whitelist(const struct sectioncheck *mismatch,
- 			    const char *fromsec, const char *fromsym,
-@@ -1212,6 +1220,10 @@ static int secref_whitelist(const struct sectioncheck *mismatch,
- 	    match(fromsym, optim_symbols))
- 		return 0;
+diff --git a/net/ipv4/tcp_timer.c b/net/ipv4/tcp_timer.c
+index 04e2c43a43a5a..65f66bd585e62 100644
+--- a/net/ipv4/tcp_timer.c
++++ b/net/ipv4/tcp_timer.c
+@@ -464,11 +464,12 @@ void tcp_retransmit_timer(struct sock *sk)
+ 		goto out_reset_timer;
+ 	}
  
-+	/* Check for pattern 6 */
-+	if (strstarts(fromsym, ".L"))
-+		return 0;
-+
- 	return 1;
- }
++	__NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPTIMEOUTS);
+ 	if (tcp_write_timeout(sk))
+ 		goto out;
  
+ 	if (icsk->icsk_retransmits == 0) {
+-		int mib_idx;
++		int mib_idx = 0;
+ 
+ 		if (icsk->icsk_ca_state == TCP_CA_Recovery) {
+ 			if (tcp_is_sack(tp))
+@@ -483,10 +484,9 @@ void tcp_retransmit_timer(struct sock *sk)
+ 				mib_idx = LINUX_MIB_TCPSACKFAILURES;
+ 			else
+ 				mib_idx = LINUX_MIB_TCPRENOFAILURES;
+-		} else {
+-			mib_idx = LINUX_MIB_TCPTIMEOUTS;
+ 		}
+-		__NET_INC_STATS(sock_net(sk), mib_idx);
++		if (mib_idx)
++			__NET_INC_STATS(sock_net(sk), mib_idx);
+ 	}
+ 
+ 	tcp_enter_loss(sk);
 -- 
 2.20.1
 
