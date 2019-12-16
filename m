@@ -2,92 +2,159 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD83C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 07:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9333FC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 07:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3FBA20700
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 07:01:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D2BD20700
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 07:01:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="s4UJ2MyA"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="k8Jz8WhY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbfLPHBe (ORCPT
+        id S1726793AbfLPHBo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 02:01:34 -0500
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:51523 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726664AbfLPHBc (ORCPT
+        Mon, 16 Dec 2019 02:01:44 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:33746 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbfLPHBn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 02:01:32 -0500
-X-UUID: 527d581f68cd4a88a4bb6cd18c86e93b-20191216
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=LBQmw8g/lBN+U5HmClQ11koWGJ9vlo2PzQAgKucOP1A=;
-        b=s4UJ2MyAPd3GbNbJzWvbzdsreG14F0mZE3fmhBDGYV/EHY7ERSYt7QWUpSJCZ+L7cJo57veTbWR4Nxua3GWeYE9E503HmvmKrNzOEKHsveXBF1bhfVs6xghVtMsPRynjp1B18LHsJh0xf8AAUDSPIHbpKxb1kMBwD1SJK8wmfpo=;
-X-UUID: 527d581f68cd4a88a4bb6cd18c86e93b-20191216
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <jitao.shi@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 2106935372; Mon, 16 Dec 2019 15:01:26 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33DR.mediatek.inc
- (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 16 Dec
- 2019 14:58:51 +0800
-Received: from mszsdclx1018.gcn.mediatek.inc (172.27.4.253) by
- MTKCAS32.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1395.4 via Frontend Transport; Mon, 16 Dec 2019 15:01:03 +0800
-From:   Jitao Shi <jitao.shi@mediatek.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-pwm@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, CK Hu <ck.hu@mediatek.com>
-CC:     <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <sj.huang@mediatek.com>,
-        Jitao Shi <jitao.shi@mediatek.com>
-Subject: [PATCH v2 2/2] pwm/mtk_disp: move the reg enable trigger in config
-Date:   Mon, 16 Dec 2019 15:01:23 +0800
-Message-ID: <20191216070123.114719-3-jitao.shi@mediatek.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191216070123.114719-1-jitao.shi@mediatek.com>
-References: <20191216070123.114719-1-jitao.shi@mediatek.com>
+        Mon, 16 Dec 2019 02:01:43 -0500
+Received: by mail-qk1-f196.google.com with SMTP id d71so2552021qkc.0
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Dec 2019 23:01:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mNxq9QEx/Y0AFfmFBHfjO9qh1l6j5wyPEAuFcOtgvko=;
+        b=k8Jz8WhY1cxn9bFKXeAi5vzaTBfRitVt26Dv8N8sNlYJP+LrdDlQqaBI0DhBwVSp3j
+         jqUvtkluKNvckqYdwX0zAwgdTSijpgtwIQkpJR0wV31kbIiO6lN/sqeFNJxRolylHi9z
+         mkNpLYAbfL38r2dXtuppefORp2tXgISUEAbu4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mNxq9QEx/Y0AFfmFBHfjO9qh1l6j5wyPEAuFcOtgvko=;
+        b=gWduONo2NVATGsHelDZ+R49TFzQUdlfrbl7lE5Lylq9VRQEREbXsQSQb7poS6m7BM2
+         M/lrp4Kq/c3JYWLgKQPtlLNth/uvjaJEXT1s/JFiSE+ol5hxb3pVra86+osRMrsE+0Iv
+         fyCdm5nXmKxoBj6oj9gAnAT9HoD6fUWjrdpQm7kc95XH7n63C0h0Pr6a5ca3ko5/4bnf
+         uct0wDepeg8yIdaOBxCNDJW3HQydFirIpvT/fL5d6V0fcIIKFCUY/9JU/mtN5ONJRP8f
+         woHeaxLVvIU/tHDKjvfdFVL5i8eML507iNqPFUEMEJ7cDTCQ4Qx0PY6m4mMNXAvYN7Kr
+         XTVw==
+X-Gm-Message-State: APjAAAU0NNNZnK8YHpkL8LD6QjRyQDhPTpG6pyWGknPilPlF2QQPnOEf
+        rUWEzWw028QSgePqpnMX5I1HkI0MX1eoII3a7qYGiA==
+X-Google-Smtp-Source: APXvYqzVdceLqcG+3fAzc6E6Q5G9XbMKp+zuFLQXrq1VY+BvVu+NpyPVVDbAVBh4Vyd+Tbmbw9ZSQBEix3ZXm6HqNCo=
+X-Received: by 2002:ae9:f003:: with SMTP id l3mr25598095qkg.457.1576479702489;
+ Sun, 15 Dec 2019 23:01:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 141E8398241799075EC85A7A7B45A1B57CF9BB987071516055CCF6A929DF7FAD2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <1575960413-6900-1-git-send-email-weiyi.lu@mediatek.com> <1575960413-6900-4-git-send-email-weiyi.lu@mediatek.com>
+In-Reply-To: <1575960413-6900-4-git-send-email-weiyi.lu@mediatek.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Mon, 16 Dec 2019 15:01:31 +0800
+Message-ID: <CANMq1KC4Qz8yKNTqfjYb335RCY8t5pdRa09Bvroo_BNXv19hWQ@mail.gmail.com>
+Subject: Re: [PATCH v9 3/9] soc: mediatek: Add basic_clk_id to scp_power_data
+To:     Weiyi Lu <weiyi.lu@mediatek.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        James Liao <jamesjj.liao@mediatek.com>,
+        Fan Chen <fan.chen@mediatek.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Yong Wu <yong.wu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UmVtb3ZlIHRoZSByZWdpc3QgZW5hYmxlIHRyaWdnZXIgc2V0dGluZyBpbiBwcm9iZS4NCk1vdmUg
-dGhlIHRyaWdnZXIgdG8gbXRrX2Rpc3BfcHdtX2NvbmZpZygpLg0KDQpTaWduZWQtb2ZmLWJ5OiBK
-aXRhbyBTaGkgPGppdGFvLnNoaUBtZWRpYXRlay5jb20+DQotLS0NCiBkcml2ZXJzL3B3bS9wd20t
-bXRrLWRpc3AuYyB8IDIwICsrKysrKystLS0tLS0tLS0tLS0tDQogMSBmaWxlIGNoYW5nZWQsIDcg
-aW5zZXJ0aW9ucygrKSwgMTMgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3B3
-bS9wd20tbXRrLWRpc3AuYyBiL2RyaXZlcnMvcHdtL3B3bS1tdGstZGlzcC5jDQppbmRleCBjN2Ix
-NGFjYzkzMTYuLmMxYWFlNWI1NjkzYiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvcHdtL3B3bS1tdGst
-ZGlzcC5jDQorKysgYi9kcml2ZXJzL3B3bS9wd20tbXRrLWRpc3AuYw0KQEAgLTEyMiw2ICsxMjIs
-MTMgQEAgc3RhdGljIGludCBtdGtfZGlzcF9wd21fY29uZmlnKHN0cnVjdCBwd21fY2hpcCAqY2hp
-cCwgc3RydWN0IHB3bV9kZXZpY2UgKnB3bSwNCiAJCW10a19kaXNwX3B3bV91cGRhdGVfYml0cyht
-ZHAsIG1kcC0+ZGF0YS0+Y29tbWl0LA0KIAkJCQkJIG1kcC0+ZGF0YS0+Y29tbWl0X21hc2ssDQog
-CQkJCQkgMHgwKTsNCisJfSBlbHNlIHsNCisJCW10a19kaXNwX3B3bV91cGRhdGVfYml0cyhtZHAs
-IG1kcC0+ZGF0YS0+YmxzX2RlYnVnLA0KKwkJCQkJIG1kcC0+ZGF0YS0+YmxzX2RlYnVnX21hc2ss
-DQorCQkJCQkgbWRwLT5kYXRhLT5ibHNfZGVidWdfbWFzayk7DQorCQltdGtfZGlzcF9wd21fdXBk
-YXRlX2JpdHMobWRwLCBtZHAtPmRhdGEtPmNvbjAsDQorCQkJCQkgbWRwLT5kYXRhLT5jb24wX3Nl
-bCwNCisJCQkJCSBtZHAtPmRhdGEtPmNvbjBfc2VsKTsNCiAJfQ0KIA0KIAljbGtfZGlzYWJsZV91
-bnByZXBhcmUobWRwLT5jbGtfbW0pOw0KQEAgLTIwNywxOSArMjE0LDYgQEAgc3RhdGljIGludCBt
-dGtfZGlzcF9wd21fcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCiANCiAJcGxh
-dGZvcm1fc2V0X2RydmRhdGEocGRldiwgbWRwKTsNCiANCi0JLyoNCi0JICogRm9yIE1UMjcwMSwg
-ZGlzYWJsZSBkb3VibGUgYnVmZmVyIGJlZm9yZSB3cml0aW5nIHJlZ2lzdGVyDQotCSAqIGFuZCBz
-ZWxlY3QgbWFudWFsIG1vZGUgYW5kIHVzZSBQV01fUEVSSU9EL1BXTV9ISUdIX1dJRFRILg0KLQkg
-Ki8NCi0JaWYgKCFtZHAtPmRhdGEtPmhhc19jb21taXQpIHsNCi0JCW10a19kaXNwX3B3bV91cGRh
-dGVfYml0cyhtZHAsIG1kcC0+ZGF0YS0+YmxzX2RlYnVnLA0KLQkJCQkJIG1kcC0+ZGF0YS0+Ymxz
-X2RlYnVnX21hc2ssDQotCQkJCQkgbWRwLT5kYXRhLT5ibHNfZGVidWdfbWFzayk7DQotCQltdGtf
-ZGlzcF9wd21fdXBkYXRlX2JpdHMobWRwLCBtZHAtPmRhdGEtPmNvbjAsDQotCQkJCQkgbWRwLT5k
-YXRhLT5jb24wX3NlbCwNCi0JCQkJCSBtZHAtPmRhdGEtPmNvbjBfc2VsKTsNCi0JfQ0KLQ0KIAly
-ZXR1cm4gMDsNCiB9DQogDQotLSANCjIuMjEuMA0K
+On Tue, Dec 10, 2019 at 2:47 PM Weiyi Lu <weiyi.lu@mediatek.com> wrote:
+>
+> Try to stop extending the clk_id or clk_names if there are
+> more and more new BASIC clocks. To get its own clocks by the
+> basic_clk_id of each power domain.
 
+Looking at this a bit more, I'm not sure why we make this an option...
+
+The easiest way to make this consistent with non-MT8183 scpsys drivers
+is to add your missing clocks to "enum clk_id" and clk_names, but I
+understand it's not desired (number of clocks would blow up).
+
+Can we, instead, convert all existing scpsys drivers to use "char *"
+clock names instead?
+I made an attempt here and it seems simple enough:
+https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1969103
+
+>
+> Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
+> ---
+>  drivers/soc/mediatek/mtk-scpsys.c | 29 +++++++++++++++++++++--------
+>  1 file changed, 21 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
+> index f669d37..915d635 100644
+> --- a/drivers/soc/mediatek/mtk-scpsys.c
+> +++ b/drivers/soc/mediatek/mtk-scpsys.c
+> @@ -117,6 +117,8 @@ enum clk_id {
+>   * @sram_pdn_ack_bits: The mask for sram power control acked bits.
+>   * @bus_prot_mask: The mask for single step bus protection.
+>   * @clk_id: The basic clocks required by this power domain.
+> + * @basic_clk_id: provide the same purpose with field "clk_id"
+> + *                by declaring basic clock prefix name rather than clk_id.
+
+Actually, I prefer the name clk_name, not sure why I pushed you in
+that direction...
+
+>   * @caps: The flag for active wake-up action.
+>   */
+>  struct scp_domain_data {
+> @@ -127,6 +129,7 @@ struct scp_domain_data {
+>         u32 sram_pdn_ack_bits;
+>         u32 bus_prot_mask;
+>         enum clk_id clk_id[MAX_CLKS];
+> +       const char *basic_clk_id[MAX_CLKS];
+>         u8 caps;
+>  };
+>
+> @@ -493,16 +496,26 @@ static struct scp *init_scp(struct platform_device *pdev,
+>
+>                 scpd->data = data;
+>
+> -               for (j = 0; j < MAX_CLKS && data->clk_id[j]; j++) {
+> -                       struct clk *c = clk[data->clk_id[j]];
+> +               if (data->clk_id[0]) {
+> +                       WARN_ON(data->basic_clk_id[0]);
+>
+> -                       if (IS_ERR(c)) {
+> -                               dev_err(&pdev->dev, "%s: clk unavailable\n",
+> -                                       data->name);
+> -                               return ERR_CAST(c);
+> -                       }
+> +                       for (j = 0; j < MAX_CLKS && data->clk_id[j]; j++) {
+> +                               struct clk *c = clk[data->clk_id[j]];
+> +
+> +                               if (IS_ERR(c)) {
+> +                                       dev_err(&pdev->dev,
+> +                                               "%s: clk unavailable\n",
+> +                                               data->name);
+> +                                       return ERR_CAST(c);
+> +                               }
+>
+> -                       scpd->clk[j] = c;
+> +                               scpd->clk[j] = c;
+> +                       }
+> +               } else if (data->basic_clk_id[0]) {
+> +                       for (j = 0; j < MAX_CLKS &&
+> +                                       data->basic_clk_id[j]; j++)
+> +                               scpd->clk[j] = devm_clk_get(&pdev->dev,
+> +                                               data->basic_clk_id[j]);
+>                 }
+>
+>                 genpd->name = data->name;
+> --
+> 1.8.1.1.dirty
