@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9190FC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AAEFC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6062E2082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50B742082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:46:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521963;
-	bh=NaWavsSZhFlb4xQQSsr5Jhv73K6/rXkLUuFFF1PQqd4=;
+	s=default; t=1576521969;
+	bh=Kq/Fq7kyvsgnTWJMezzUi0YYEWQPd0NAaOiejOwwiTE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SDgyygpLGa8NgqRz09+7rDqXax0TblbgQc88ECRebIMvff5PrCu72VyrzvyIFuzc/
-	 0A4n6tJhyNQRtk1v7CSVm8EOOEQWzuPRTKZKxu7grjrGN1UdQJQ4pKks+HqG1kBly3
-	 vDQcrOOiVUAqjdVZB4ueGpKcuw5378bOHhwLu+K0=
+	b=vZKNzj0SS82pKSt/yk9R/yXa0CHzTy65ym58hHe7TVMgW1qbvCavenVV43qN/xn1a
+	 35famTu3sXx+6ckKCqx1CSjn3qG7P4bA/3GQe+8hkdyekViYBUjUnG+xCMxumIv3n2
+	 I7VIhN9WP5ZKZZsYz8wo7HW2S6mpz7/t20HMfZXo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbfLPR4m (ORCPT
+        id S1728599AbfLPSqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:56:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54952 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:46:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728259AbfLPR4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:56:38 -0500
+        id S1727067AbfLPR4d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:56:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE27C21582;
-        Mon, 16 Dec 2019 17:56:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7A3621582;
+        Mon, 16 Dec 2019 17:56:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518998;
-        bh=NaWavsSZhFlb4xQQSsr5Jhv73K6/rXkLUuFFF1PQqd4=;
+        s=default; t=1576518993;
+        bh=Kq/Fq7kyvsgnTWJMezzUi0YYEWQPd0NAaOiejOwwiTE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YZv3eL8jUkRbjtKKwAH1gA6zgijeW/c0Ois3gnqWm2VAMHrISi9Wnc+QFCIFKI3zW
-         TBu6nezakmMs7abFsrqgwmWm+bgQWuvwPQR3jDiM8KFwCmf49Ihq8GMmxiYoGq0j4v
-         5TxWnKI70yCS8H/k0B537g3Or7NPKf18fSa99T30=
+        b=qIyH/aiQN+QQdFqIoq2RXQEUDaQn3SGAmsoDVkGh8H7n1+2pzN6gW/tIog5R04hd+
+         jfJF8L8iW+0tAA/dFZAXWa2HYVlgKSnL1V6BvISiQDRSAXb6zZrsZFW6aTz5sEOOYf
+         QAJSuL+sCvEsUEEqooa8EZQcnikv07p1Qu+u/Cvw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+e3f4897236c4eeb8af4f@syzkaller.appspotmail.com,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.14 154/267] KVM: x86: fix out-of-bounds write in KVM_GET_EMULATED_CPUID (CVE-2019-19332)
-Date:   Mon, 16 Dec 2019 18:48:00 +0100
-Message-Id: <20191216174910.932121900@linuxfoundation.org>
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH 4.14 152/267] binder: Handle start==NULL in binder_update_page_range()
+Date:   Mon, 16 Dec 2019 18:47:58 +0100
+Message-Id: <20191216174910.820997337@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -61,43 +59,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Jann Horn <jannh@google.com>
 
-commit 433f4ba1904100da65a311033f17a9bf586b287e upstream.
+commit 2a9edd056ed4fbf9d2e797c3fc06335af35bccc4 upstream.
 
-The bounds check was present in KVM_GET_SUPPORTED_CPUID but not
-KVM_GET_EMULATED_CPUID.
+The old loop wouldn't stop when reaching `start` if `start==NULL`, instead
+continuing backwards to index -1 and crashing.
 
-Reported-by: syzbot+e3f4897236c4eeb8af4f@syzkaller.appspotmail.com
-Fixes: 84cffe499b94 ("kvm: Emulate MOVBE", 2013-10-29)
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Ben Hutchings <ben@decadent.org.uk>
+Luckily you need to be highly privileged to map things at NULL, so it's not
+a big problem.
+
+Fix it by adjusting the loop so that the loop variable is always in bounds.
+
+This patch is deliberately minimal to simplify backporting, but IMO this
+function could use a refactor. The jump labels in the second loop body are
+horrible (the error gotos should be jumping to free_range instead), and
+both loops would look nicer if they just iterated upwards through indices.
+And the up_read()+mmput() shouldn't be duplicated like that.
+
+Cc: stable@vger.kernel.org
+Fixes: 457b9a6f09f0 ("Staging: android: add binder driver")
+Signed-off-by: Jann Horn <jannh@google.com>
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+Link: https://lore.kernel.org/r/20191018205631.248274-3-jannh@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/cpuid.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/android/binder_alloc.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -404,7 +404,7 @@ static inline int __do_cpuid_ent(struct
+--- a/drivers/android/binder_alloc.c
++++ b/drivers/android/binder_alloc.c
+@@ -289,8 +289,7 @@ static int binder_update_page_range(stru
+ 	return 0;
  
- 	r = -E2BIG;
+ free_range:
+-	for (page_addr = end - PAGE_SIZE; page_addr >= start;
+-	     page_addr -= PAGE_SIZE) {
++	for (page_addr = end - PAGE_SIZE; 1; page_addr -= PAGE_SIZE) {
+ 		bool ret;
+ 		size_t index;
  
--	if (*nent >= maxnent)
-+	if (WARN_ON(*nent >= maxnent))
- 		goto out;
+@@ -303,6 +302,8 @@ free_range:
+ 		WARN_ON(!ret);
  
- 	do_cpuid_1_ent(entry, function, index);
-@@ -707,6 +707,9 @@ out:
- static int do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 func,
- 			u32 idx, int *nent, int maxnent, unsigned int type)
- {
-+	if (*nent >= maxnent)
-+		return -E2BIG;
-+
- 	if (type == KVM_GET_EMULATED_CPUID)
- 		return __do_cpuid_ent_emulated(entry, func, idx, nent, maxnent);
+ 		trace_binder_free_lru_end(alloc, index);
++		if (page_addr == start)
++			break;
+ 		continue;
  
+ err_vm_insert_page_failed:
+@@ -312,7 +313,8 @@ err_map_kernel_failed:
+ 		page->page_ptr = NULL;
+ err_alloc_page_failed:
+ err_page_ptr_cleared:
+-		;
++		if (page_addr == start)
++			break;
+ 	}
+ err_no_vma:
+ 	if (mm) {
 
 
