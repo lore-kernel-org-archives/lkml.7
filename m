@@ -2,136 +2,179 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A4AC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:22:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89127C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39F00206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:22:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C3DB206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:23:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576516988;
+	bh=fHbcvtzu1VdzlX9c5s4eLAvXwpMi1r6jDqkn5p32s8I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=D1zYBf2k2N3nsZhqlAaICxBX6cDzcrt1m/KH7onaiFaxCMMNdiMkcqHjI2c1q96qX
+	 dmdmWybPKP7y10bbJfQvUEcTsW5vqGhLoSBPF2kEAgdwwZdEnWLh/8eTw26CA4q2mL
+	 QyLbbNKr1mlfBVWh5pzvLnlTD0cRxEF6jZgbfDd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbfLPRWZ (ORCPT
+        id S1726729AbfLPRXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:22:25 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:37100 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726141AbfLPRWY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:22:24 -0500
-Received: by mail-pj1-f65.google.com with SMTP id ep17so3263065pjb.4;
-        Mon, 16 Dec 2019 09:22:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=v2qcov+FADvqNKCZLTTFv4XXmMDQ6mSro4B3OA7yDB4=;
-        b=YLApVkzXcoH9sYQXo6mubykVkMquzm4hPnOO2VYMdFTpdtjkwLBqLxMy5aRo/fpYiw
-         z199KvvkQzFkZxcukgOia5eV+SjGDcqP7CioizzE6UMFy6q/yrBwgqbZUasv8DeIAKnk
-         +EsZYxdbsRZKe7F1x+AcoLBQMJrvhe3IgL7xvsA2m0XMctCMGuHl+IRFvic48fE3fFL4
-         UJkKpttLNafXzX+/LYI48JaLKjhzlJWufz0ycibsaM86sHvaoPsYS1soW8GU5XZXEXyT
-         qB/qKYKefZtDb+xtWhWwJLBpWWcZlI6duU00/RE014KUUM133nr4bZmvMNWV9x3Ilw2w
-         qmPQ==
-X-Gm-Message-State: APjAAAX4vy2EicBRyoO73LzQVVDQ89uGpHD/THtu/2gNFvdFrNEuB8+4
-        qVxJ1TLoWuzU+q/9kmH2r0wkdhf4yYA=
-X-Google-Smtp-Source: APXvYqxldVMknpdg/eYJWmUNo2cFG3KPf6KXVYwf96AKErLg1KEQQefR53J33LuhjIbPJ3XNpWpZ0A==
-X-Received: by 2002:a17:90a:cc02:: with SMTP id b2mr66257pju.137.1576516943602;
-        Mon, 16 Dec 2019 09:22:23 -0800 (PST)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id c8sm23384328pfo.163.2019.12.16.09.22.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Dec 2019 09:22:22 -0800 (PST)
-Subject: Re: [PATCH v2 2/3] scsi: ufs: Modulize ufs-bsg
-To:     cang@codeaurora.org
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Evan Green <evgreen@chromium.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        open list <linux-kernel@vger.kernel.org>
-References: <1576054123-16417-1-git-send-email-cang@codeaurora.org>
- <0101016ef425ef65-5c4508cc-5e76-4107-bb27-270f66acaa9a-000000@us-west-2.amazonses.com>
- <20191212045357.GA415177@yoga>
- <0101016ef8b2e2f8-72260b08-e6ad-42fc-bd4b-4a0a72c5c9b3-000000@us-west-2.amazonses.com>
- <20191212063703.GC415177@yoga> <5691bfa1-42e5-3c5f-2497-590bcc0cb2b1@acm.org>
- <926dd55d8d0dc762b1f6461495fc747a@codeaurora.org>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <62933901-fcdf-b5ae-431d-e1fbfc897128@acm.org>
-Date:   Mon, 16 Dec 2019 09:22:21 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 16 Dec 2019 12:23:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53790 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725805AbfLPRXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:23:07 -0500
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64A772146E
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 17:23:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576516985;
+        bh=fHbcvtzu1VdzlX9c5s4eLAvXwpMi1r6jDqkn5p32s8I=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=kzCagTQkaLc2KKySRv+XTR9MWdy2/jBk5Dzbx3U1Lfll5mI+fo7ihWR/ZTDUDc6S6
+         8Hhv/qDkoOn1qITZyTTIebN1ayGL6lVpfOBp7/ksfb3F7CLcSjMZY7NUE8Ba1aV/p0
+         8TG+HNAZ0jikMTLywSXKLJ2Csh1QuSN1xpjKFBpM=
+Received: by mail-wr1-f43.google.com with SMTP id g17so8298563wro.2
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 09:23:05 -0800 (PST)
+X-Gm-Message-State: APjAAAWpbyXdIeu2AS3V3nnPuv1KRz2S2/TF+qbAOWqRr6bTc8YBsN8z
+        o+upQ0eF78DOBo9zN72CdMBIjUTP/wVQW2in+OdTWQ==
+X-Google-Smtp-Source: APXvYqzlPAu/PDh35DVHlZKmUKrrLPrawvOthGSWQnF5wzroTS23lOPMVJr5VXH3MmM7DF5D+Bxfw48zWe4raz1YCuY=
+X-Received: by 2002:adf:f20b:: with SMTP id p11mr30784935wro.195.1576516983627;
+ Mon, 16 Dec 2019 09:23:03 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <926dd55d8d0dc762b1f6461495fc747a@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <CALCETrW+qxrE633qetS4c1Rn2AX_hk5OgneZRtoZPFN1J395Ng@mail.gmail.com>
+ <20191121185303.GB199273@romley-ivt3.sc.intel.com> <20191121202508.GZ4097@hirez.programming.kicks-ass.net>
+ <CALCETrXbe_q07kL1AyaNaAqgUHsdN6rEDzzZ0CEtv-k9VvQL0A@mail.gmail.com>
+ <20191122092555.GA4097@hirez.programming.kicks-ass.net> <3908561D78D1C84285E8C5FCA982C28F7F4DD19F@ORSMSX115.amr.corp.intel.com>
+ <20191122203105.GE2844@hirez.programming.kicks-ass.net> <CALCETrVjXC7RHZCkAcWEeCrJq7DPeVBooK8S3mG0LT8q9AxvPw@mail.gmail.com>
+ <20191211175202.GQ2827@hirez.programming.kicks-ass.net> <CALCETrXUZ790WFk9SEzuiKg-wMva=RpWhZNYPf+MqzT0xdu+gg@mail.gmail.com>
+ <20191211223407.GT2844@hirez.programming.kicks-ass.net> <CALCETrUr+LwpQm5caeKgXGhaZ87HmcNn4wTsmkPzTEptp6sC6g@mail.gmail.com>
+ <8d880a468c6242b9a951a83716ddeb07@AcuMS.aculab.com>
+In-Reply-To: <8d880a468c6242b9a951a83716ddeb07@AcuMS.aculab.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 16 Dec 2019 09:22:50 -0800
+X-Gmail-Original-Message-ID: <CALCETrW1LDuzcnvav=MY1bUv4jQ25n30La5m5x8tXfDknfV_cQ@mail.gmail.com>
+Message-ID: <CALCETrW1LDuzcnvav=MY1bUv4jQ25n30La5m5x8tXfDknfV_cQ@mail.gmail.com>
+Subject: Re: [PATCH v10 6/6] x86/split_lock: Enable split lock detection by
+ kernel parameter
+To:     David Laight <David.Laight@aculab.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, Will Deacon <will@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/15/19 8:36 PM, cang@codeaurora.org wrote:
-> On 2019-12-16 05:49, Bart Van Assche wrote:
->> On 2019-12-11 22:37, Bjorn Andersson wrote:
->>> It's the asymmetry that I don't like.
->>>
->>> Perhaps if you instead make ufshcd platform_device_register_data() the
->>> bsg device you would solve the probe ordering, the remove will be
->>> symmetric and module autoloading will work as well (although then you
->>> need a MODULE_ALIAS of platform:device-name).
->>
->> Hi Bjorn,
->>
->> From Documentation/driver-api/driver-model/platform.rst:
->> "Platform devices are devices that typically appear as autonomous
->> entities in the system. This includes legacy port-based devices and
->> host bridges to peripheral buses, and most controllers integrated
->> into system-on-chip platforms.  What they usually have in common
->> is direct addressing from a CPU bus.  Rarely, a platform_device will
->> be connected through a segment of some other kind of bus; but its
->> registers will still be directly addressable."
->>
->> Do you agree that the above description is not a good match for the
->> ufs-bsg kernel module?
+On Mon, Dec 16, 2019 at 1:59 AM David Laight <David.Laight@aculab.com> wrote:
 >
-> I missed this one.
-> How about making it a plain device and add it from ufs driver?
+> From: Andy Lutomirski
+> > Sent: 12 December 2019 19:41
+> > On Wed, Dec 11, 2019 at 2:34 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> > >
+> > > On Wed, Dec 11, 2019 at 10:12:56AM -0800, Andy Lutomirski wrote:
+> >
+> > > > > Sure, but we're talking two cpus here.
+> > > > >
+> > > > >         u32 var = 0;
+> > > > >         u8 *ptr = &var;
+> > > > >
+> > > > >         CPU0                    CPU1
+> > > > >
+> > > > >                                 xchg(ptr, 1)
+> > > > >
+> > > > >         xchg((ptr+1, 1);
+> > > > >         r = READ_ONCE(var);
+> > > > >
+> > > > > AFAICT nothing guarantees r == 0x0101. The CPU1 store can be stuck in
+> > > > > CPU1's store-buffer. CPU0's xchg() does not overlap and therefore
+> > > > > doesn't force a snoop or forward.
+> > > >
+> > > > I think I don't quite understand.  The final value of var had better
+> > > > be 0x0101 or something is severely wrong.
+> > >
+> > > > But r can be 0x0100 because
+> > > > nothing in this example guarantees that the total order of the locked
+> > > > instructions has CPU 1's instruction first.
+> > >
+> > > Assuming CPU1 goes first, why would the load from CPU0 see CPU1's
+> > > ptr[0]? It can be in CPU1 store buffer, and TSO allows regular reads to
+> > > ignore (remote) store-buffers.
+> >
+> > What I'm saying is: if CPU0 goes first, then the three operations order as:
+> >
+> >
+> >
+> > xchg(ptr+1, 1);
+> > r = READ_ONCE(var);  /* 0x0100 */
+> > xchg(ptr, 1);
+> >
+> > Anyway, this is all a bit too hypothetical for me.  Is there a clear
+> > example where the total ordering of LOCKed instructions is observable?
+> >  That is, is there a sequence of operations on, presumably, two or
+> > three CPUs, such that LOCKed instructions being only partially ordered
+> > allows an outcome that is disallowed by a total ordering?  I suspect
+> > there is, but I haven't come up with it yet.  (I mean in an x86-like
+> > memory model.  Getting this in a relaxed atomic model is easy.)
+> >
+> > As a probably bad example:
+> >
+> > u32 x0, x1, a1, b0, b1;
+> >
+> > CPU 0:
+> > xchg(&x0, 1);
+> > barrier();
+> > a1 = READ_ONCE(x1);
+> >
+> > CPU 1:
+> > xchg(&b, 1);
+> >
+> > CPU 2:
+> > b1 = READ_ONCE(x1);
+> > smp_rmb();  /* which is just barrier() on x86 */
+> > b0 = READ_ONCE(x0);
+> >
+> > Suppose a1 == 0 and b1 == 1.  Then we know that CPU0's READ_ONCE
+> > happened before CPU1's xchg and hence CPU0's xchg happened before
+> > CPU1's xchg.  We also know that CPU2's first read observed the write
+> > from CPU1's xchg, which means that CPU2's second read should have been
+> > after CPU0's xchg (because the xchg operations have a total order
+> > according to the SDM).  This means that b0 can't be 0.
+> >
+> > Hence the outcome (a1, b1, b0) == (0, 1, 0) is disallowed.
+> >
+> > It's entirely possible that I screwed up the analysis.  But I think
+> > this means that the cache coherency mechanism is doing something more
+> > intelligent than just shoving the x0=1 write into the store buffer and
+> > letting it hang out there.  Something needs to make sure that CPU 2
+> > observes everything in the same order that CPU 0 observes, and, as far
+> > as I know it, there is a considerable amount of complexity in the CPUs
+> > that makes sure this happens.
+> >
+> > So here's my question: do you have a concrete example of a series of
+> > operations and an outcome that you suspect Intel CPUs allow but that
+> > is disallowed in the SDM?
+>
+> I'm not sure that example is at all relevant.
+> READ_ONCE() doesn't have any sequencing requirements on the cpu, just on the compiler.
+> (The same is true of any 'atomic read'.)
 
-Hi Can,
+I'm talking specifically about x86 here, where, for example, "Reads
+are not reordered with other reads".  So READ_ONCE *does* have
+sequencing requirements on the CPUs.
 
-Since the ufs_bsg kernel module already creates one device node under 
-/dev/bsg for each UFS host I don't think that we need to create any 
-additional device nodes for ufs-bsg devices. My proposal is to modify 
-the original patch 2/3 from this series as follows:
-* Use module_init() instead of late_initcall_sync().
-* Remove the ufshcd_get_hba_list_lock() and
-   ufshcd_put_hba_list_unlock() functions.
-* Implement a notification mechanism in the UFS core that invokes a
-   callback function after an UFS host has been created and also after an
-   UFS host has been removed.
-* Register for these notifications from inside the ufs-bsg driver.
-* During registration for notifications, invoke the UFS host creation
-   callback function for all known UFS hosts.
-* If the UFS core is unloaded, invoke the UFS host removal callback
-   function for all known UFS hosts.
-
-I think there are several examples of similar notification mechanisms in 
-the Linux kernel, e.g. the probe and remove callback functions in struct 
-pci_driver.
-
-Bart.
+Feel free to replace READ_ONCE with MOV in your head if you like :)
