@@ -2,105 +2,137 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 585D8C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0EFAC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:08:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F0202053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:06:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="eb4AVJUD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MeXLoRyL"
+	by mail.kernel.org (Postfix) with ESMTP id 67126206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:08:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576501731;
+	bh=oFimgua3wSM7IvCK5mmbQdghE/oP3KZf/KD6IRsELkc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kJV+OacVB/NI/Y+v05heZPp+vgFyLYMj3rFKX5bFmNMF+/qP5ehpS6ONguR+Yn6ll
+	 05aMkw4naiIpHGTNLSoqoTNIaL6D6QiQA3dMXpq7DeMBc7QXCDZv1q5j9rhHAT3+8z
+	 NIMvId2SbllUTMJUM1EDebbNeWHjTpe7o+AhB9mo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727810AbfLPNGi (ORCPT
+        id S1727738AbfLPNIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:06:38 -0500
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:42399 "EHLO
-        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727656AbfLPNGi (ORCPT
+        Mon, 16 Dec 2019 08:08:50 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40471 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727576AbfLPNIt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:06:38 -0500
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id A9FB0705;
-        Mon, 16 Dec 2019 08:06:36 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Mon, 16 Dec 2019 08:06:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=SSBA7Ov7ZJvUelq0IS5gSJti76n
-        EVtN812W5WLYVrgI=; b=eb4AVJUDZgm9Wdq7m42bZJ9k/w17EplO0Luz/EfvMAJ
-        a4/vNM9N9nS9nG95uZMtF5/PZTURH3YlqSMnjDapMuqKwSOyOD9MlQq4P8HxtzQd
-        aIE0HbOa0xUph/Z5Ps+uMnwlJX14YNSfD8YgbpTJ04jrGxNTJkpupGil/fZTTLlu
-        QRStvspT6IPEyoLGmY+9WBSvExVWVql6iZo+7l3xBx8Zfq9kRRLw/mSpD8WhDGd9
-        5glIuoOyoBXr8XFdz1cYxKL4kvLTlskewbXw2Yr2Gl+JCx0ezi7L/4Dx1KBSc3Ur
-        U6YuZiPWoPix35fAGw9zZqEEQ9/UX3qxV2Pp+iMYtRQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=SSBA7O
-        v7ZJvUelq0IS5gSJti76nEVtN812W5WLYVrgI=; b=MeXLoRyLzySTaJ3ie7qDZi
-        iHWqHXLDDkOdP5OKnVtZQcjDSi4Hc80HA/6DkruvW6LigX7fHUbAx7O0xh1fhRd8
-        GKVUQCdhJSDRrUiiwN5zqn6XpjRrSxKidPn60tnLWlmmmpzaPVvAo1SxNZadr/Vc
-        ux9piRkUd7rV/fJV8hVQznie0PRblKBOYAdEk5UaJ41ixCGIigVPteS1RM1SFhe8
-        xfbEUsBH8r5i/WdF6NnGBt6zi6w39hXPUr7iwYejzFNlML/qysFMfTBBzdrBRhEl
-        /S7HlBumlxYmWu6jbk9Zo90tifKrVu08qC87Z+lzTKxkE9BertpvTnqbvZ1kIElQ
-        ==
-X-ME-Sender: <xms:W4H3XbMLuF8lwWWfnnlVJa9wBa7D9hQ399mhA5ygQUCK_B2CZoZrOQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddthedggeekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
-    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
-    lhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:W4H3XUdVTj5UFtShc8iWGuC1MA3sG-buIL1tXHjIjx1Nc4A7OF3AKQ>
-    <xmx:W4H3XVxYirWCIB4bmwiRUYAjhleWJBMa-IG-I5O7e1m-yJXcSYg-lA>
-    <xmx:W4H3XZ3albaEG1jUTZ5-ZbBmasmsSASn6QKOwnKVf2OUV5V_gQvpUw>
-    <xmx:XIH3XftN7ey_9aKvgs-_kUAYzzjkfZ2cljj6vOF39mMOx_cPCBkcrQ>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 7DFAB3060130;
-        Mon, 16 Dec 2019 08:06:35 -0500 (EST)
-Date:   Mon, 16 Dec 2019 14:06:34 +0100
-From:   Greg KH <greg@kroah.com>
-To:     Tuowen Zhao <ztuowen@gmail.com>
-Cc:     Sasha Levin <sashal@kernel.org>, lee.jones@linaro.org,
-        linux-kernel@vger.kernel.org, andriy.shevchenko@linux.intel.com,
-        mika.westerberg@linux.intel.com, stable@vger.kernel.org,
-        linux@roeck-us.net
-Subject: Re: [PATCH v5 2/4] lib: devres: add a helper function for ioremap_uc
-Message-ID: <20191216130634.GA1563846@kroah.com>
-References: <20191016210629.1005086-3-ztuowen@gmail.com>
- <20191017143144.9985421848@mail.kernel.org>
- <b113dd8da86934acc90859dc592e0234fa88cfdc.camel@gmail.com>
- <20191018164738.GY31224@sasha-vm>
- <7eb0ed7d51b53f7d720a78d9b959c462adb850d4.camel@gmail.com>
+        Mon, 16 Dec 2019 08:08:49 -0500
+Received: by mail-wm1-f68.google.com with SMTP id t14so6612504wmi.5;
+        Mon, 16 Dec 2019 05:08:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=R9aFaAcGCVcst6+88KA41zQjrKH9qVtbZfnVDJrAXeA=;
+        b=fcwdeodEtXF1FVw8+hw4TY+lh7I6pV2jDU2l06kwenUTWL0zjSM7eSaNed0VM/ULR2
+         lTFQV8pU6AHnYRX1qE70Rv6bgrfdzHohKrhaUvu8FNDjrpoetwYnBI+FOSii1y8/Z4K2
+         COgEPQCrqCradG4Ri3rp1kPnXNHe9O+WIWzBBS98Eg7eL3PFvYrfDZ3e/O8CDysTQ6mW
+         eS+tCaNfDJRtS5yCf1kfVCcPa0ybyu3HuwLlhz+6TiDApH8kOBJdZV7GOtieWVyuYLYc
+         RF1BWm//rQQvi/CWFs6UNCvHqUWZS+ZgW+qR/KnFfwGkx5961LMWhr9q84Ie1YgUUHm2
+         1M5w==
+X-Gm-Message-State: APjAAAUjHNa0oIItvlc500fyCEuUBmZHjWCPvQ4whndD2cgk454KYnIa
+        rSvTbOAiIxfPufskW18joJA=
+X-Google-Smtp-Source: APXvYqy8gtSuQntZrQPzWn5lxIMk8mNr9xbOxQPZlJfg1nVxsqUCeU6NgB9SUAeVSAMe7A+IQxynug==
+X-Received: by 2002:a7b:cf26:: with SMTP id m6mr28538441wmg.17.1576501727108;
+        Mon, 16 Dec 2019 05:08:47 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id q3sm21924045wrn.33.2019.12.16.05.08.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 05:08:46 -0800 (PST)
+Date:   Mon, 16 Dec 2019 14:08:45 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Cc:     Yunsheng Lin <linyunsheng@huawei.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        "brouer@redhat.com" <brouer@redhat.com>,
+        "jonathan.lemon@gmail.com" <jonathan.lemon@gmail.com>,
+        Li Rongqing <lirongqing@baidu.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        peterz@infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        bhelgaas@google.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH][v2] page_pool: handle page recycle for NUMA_NO_NODE
+ condition
+Message-ID: <20191216130845.GF30281@dhcp22.suse.cz>
+References: <1575624767-3343-1-git-send-email-lirongqing@baidu.com>
+ <9fecbff3518d311ec7c3aee9ae0315a73682a4af.camel@mellanox.com>
+ <20191211194933.15b53c11@carbon>
+ <831ed886842c894f7b2ffe83fe34705180a86b3b.camel@mellanox.com>
+ <0a252066-fdc3-a81d-7a36-8f49d2babc01@huawei.com>
+ <20191216121557.GE30281@dhcp22.suse.cz>
+ <20191216123426.GA18663@apalos.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7eb0ed7d51b53f7d720a78d9b959c462adb850d4.camel@gmail.com>
+In-Reply-To: <20191216123426.GA18663@apalos.home>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 08:51:30AM -0700, Tuowen Zhao wrote:
-> Hi Sasha,
+On Mon 16-12-19 14:34:26, Ilias Apalodimas wrote:
+> Hi Michal, 
+> On Mon, Dec 16, 2019 at 01:15:57PM +0100, Michal Hocko wrote:
+> > On Thu 12-12-19 09:34:14, Yunsheng Lin wrote:
+> > > +CC Michal, Peter, Greg and Bjorn
+> > > Because there has been disscusion about where and how the NUMA_NO_NODE
+> > > should be handled before.
+> > 
+> > I do not have a full context. What is the question here?
 > 
-> Sorry to bother. Can I ask for patches in this series to NOT be applied
-> to stable?
-> 
-> They causes build failure on Hexagon.
-> 
-> Relevant patches include
-> 
-> sparc64: implement ioremap_uc
-> lib: devres: add a helper function for ioremap_uc
-> mfd: intel-lpss: Use devm_ioremap_uc for MMIO
+> When we allocate pages for the page_pool API, during the init, the driver writer
+> decides which NUMA node to use. The API can,  in some cases recycle the memory,
+> instead of freeing it and re-allocating it. If the NUMA node has changed (irq
+> affinity for example), we forbid recycling and free the memory, since recycling
+> and using memory on far NUMA nodes is more expensive (more expensive than
+> recycling, at least on the architectures we tried anyway).
+> Since this would be expensive to do it per packet, the burden falls on the 
+> driver writer for that. Drivers *have* to call page_pool_update_nid() or 
+> page_pool_nid_changed() if they want to check for that which runs once
+> per NAPI cycle.
 
-Oops, almost added that last one.  Will go drop them all now from my
-queue, thanks!
+Thanks for the clarification.
 
-greg k-h
+> The current code in the API though does not account for NUMA_NO_NODE. That's
+> what this is trying to fix.
+> If the page_pool params are initialized with that, we *never* recycle
+> the memory. This is happening because the API is allocating memory with 
+> 'nid = numa_mem_id()' if NUMA_NO_NODE is configured so the current if statement
+> 'page_to_nid(page) == pool->p.nid' will never trigger.
+
+OK. There is no explicit mention of the expected behavior for
+NUMA_NO_NODE. The semantic is usually that there is no NUMA placement
+requirement and the MM code simply starts the allocate from a local node
+in that case. But the memory might come from any node so there is no
+"local node" guarantee.
+
+So the main question is what is the expected semantic? Do people expect
+that NUMA_NO_NODE implies locality? Why don't you simply always reuse
+when there was no explicit numa requirement?
+
+> The initial proposal was to check:
+> pool->p.nid == NUMA_NO_NODE && page_to_nid(page) == numa_mem_id()));
+
+> After that the thread span out of control :)
+> My question is do we *really* have to check for 
+> page_to_nid(page) == numa_mem_id()? if the architecture is not NUMA aware
+> wouldn't pool->p.nid == NUMA_NO_NODE be enough?
+
+If the architecture is !NUMA then numa_mem_id and page_to_nid should
+always equal and be both zero.
+
+-- 
+Michal Hocko
+SUSE Labs
