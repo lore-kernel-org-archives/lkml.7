@@ -2,142 +2,147 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70851C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1328C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 516C020409
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:41:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B766820409
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:42:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576503766;
+	bh=0v1JfGDc126fBItXKyc4ZIJSHxrFHERbL9A2i0S0nOw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=lELAo9zE5PUO4ny4O5MySDn00vvTox2818KHPhjOpUEQcSXW25Mf63b4R2gNcsogS
+	 Pt1RKGISoYRtTLIfzsF/Hi1KYM4r5SLL+YXoK/qk8auUNv5eQVXtBF1OCJzZVhgD0C
+	 Smd77nxKvM1OCEP8JoNouYbO4BNbs+xPhfjKdcuY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbfLPNl2 (ORCPT
+        id S1727941AbfLPNmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:41:28 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53150 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727609AbfLPNl2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:41:28 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBGDcUlr076139;
-        Mon, 16 Dec 2019 08:40:40 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wwe8aaw6w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Dec 2019 08:40:40 -0500
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xBGDcdLa077440;
-        Mon, 16 Dec 2019 08:40:40 -0500
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wwe8aaw5x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Dec 2019 08:40:39 -0500
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xBGDeW0l014885;
-        Mon, 16 Dec 2019 13:40:38 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma03dal.us.ibm.com with ESMTP id 2wvqc689y6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Dec 2019 13:40:38 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBGDebSg43385342
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 16 Dec 2019 13:40:37 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BCF2B28058;
-        Mon, 16 Dec 2019 13:40:37 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2CF8028059;
-        Mon, 16 Dec 2019 13:40:32 +0000 (GMT)
-Received: from [9.199.36.91] (unknown [9.199.36.91])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 16 Dec 2019 13:40:31 +0000 (GMT)
-Subject: Re: [PATCH 05/17] asm-generic/tlb: Rename
- HAVE_RCU_TABLE_NO_INVALIDATE
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Will Deacon <will@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nick Piggin <npiggin@gmail.com>, linux-arch@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Helge Deller <deller@gmx.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Nick Hu <nickhu@andestech.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-References: <20191211120713.360281197@infradead.org>
- <20191211122955.940455408@infradead.org> <87woawzc1t.fsf@linux.ibm.com>
- <20191216123752.GM2844@hirez.programming.kicks-ass.net>
- <d52ea890-c2ea-88f3-9d62-b86e60ee77ae@linux.ibm.com>
- <20191216132004.GO2844@hirez.programming.kicks-ass.net>
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Message-ID: <a9ae27c8-aa84-cda3-355c-7abb3b450d38@linux.ibm.com>
-Date:   Mon, 16 Dec 2019 19:10:30 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 16 Dec 2019 08:42:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48336 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727834AbfLPNmp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 08:42:45 -0500
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17008206A5;
+        Mon, 16 Dec 2019 13:42:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576503764;
+        bh=0v1JfGDc126fBItXKyc4ZIJSHxrFHERbL9A2i0S0nOw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ruVVJXDbduFLcwmSg679iQNeoDdg2lFWVI2v2BkPye/QTPMzJtCbNQkVk3HdtCzPL
+         vIiVV5+GGHi5bfDHgRz48mDmGjUs3RWbjuphkSYfuT5JxVD5AGMfaCaPQ6crSKK8AE
+         62YZgGLK9jZFrziJ90Rr9otNwUAt5e96ZzUklCbo=
+Received: by mail-wr1-f48.google.com with SMTP id c14so7319027wrn.7;
+        Mon, 16 Dec 2019 05:42:44 -0800 (PST)
+X-Gm-Message-State: APjAAAWsLxbqC14UVWQuMgu0FjBjhzC6g4pZQ71b46AkAqZWXv72Ct2J
+        XaTgpMVryadG39CbgowZSDxA7DoenaqKrFrk14k=
+X-Google-Smtp-Source: APXvYqxPODUBwPoRDFD7zdAeQAap8dbisfaU0qDmq581xzIb9kxHBDLrHbRDpofwtqywSNRWgqebLus37HOu3FGBw5s=
+X-Received: by 2002:a5d:6b88:: with SMTP id n8mr31556564wrx.288.1576503762492;
+ Mon, 16 Dec 2019 05:42:42 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191216132004.GO2844@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-16_05:2019-12-16,2019-12-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=2 bulkscore=0
- phishscore=0 lowpriorityscore=0 malwarescore=0 priorityscore=1501
- adultscore=0 mlxscore=0 clxscore=1015 mlxlogscore=999 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912160122
+References: <20191215165924.28314-1-wens@kernel.org> <20191215165924.28314-12-wens@kernel.org>
+ <20191216133931.wliwn5woy3hstdg3@gilmour.lan>
+In-Reply-To: <20191216133931.wliwn5woy3hstdg3@gilmour.lan>
+From:   Chen-Yu Tsai <wens@kernel.org>
+Date:   Mon, 16 Dec 2019 21:42:30 +0800
+X-Gmail-Original-Message-ID: <CAGb2v64=p7RX_visHWawAFfPr8=ZDH4JqsoK__xnHKo6s3QOwg@mail.gmail.com>
+Message-ID: <CAGb2v64=p7RX_visHWawAFfPr8=ZDH4JqsoK__xnHKo6s3QOwg@mail.gmail.com>
+Subject: Re: [PATCH 11/14] ARM: dts: sun8i: r40: Add device node for CSI0
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     Chen-Yu Tsai <wens@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/16/19 6:50 PM, Peter Zijlstra wrote:
-> On Mon, Dec 16, 2019 at 06:43:53PM +0530, Aneesh Kumar K.V wrote:
->> On 12/16/19 6:07 PM, Peter Zijlstra wrote:
-> 
->>> I'm confused, are you saing you're happy to have PowerPC eat the extra
->>> TLB invalidates? I thought you cared about PPC performance :-)
->>>
->>>
->>
->> Instead can we do
->>
->> static inline void tlb_table_invalidate(struct mmu_gather *tlb)
->> {
->> #ifndef CONFIG_MMU_GATHER_RCU_TABLE_FREE
->> 	 * Invalidate page-table caches used by hardware walkers. Then we still
->> 	 * need to RCU-sched wait while freeing the pages because software
->> 	 * walkers can still be in-flight.
->> 	 */
->> 	tlb_flush_mmu_tlbonly(tlb);
->> #endif
->> }
-> 
-> How does that not break ARM/ARM64/s390 and x86 ?
-> 
+On Mon, Dec 16, 2019 at 9:39 PM Maxime Ripard <mripard@kernel.org> wrote:
+>
+> On Mon, Dec 16, 2019 at 12:59:21AM +0800, Chen-Yu Tsai wrote:
+> > From: Chen-Yu Tsai <wens@csie.org>
+> >
+> > The CSI0 and CSI1 blocks are the same as found on the A20. However only
+> > CSI0 is supported upstream right now.
+> >
+> > Add a device node for CSI0 using the A20 compatible as a fallback, and
+> > the standard pinctrl options. Also add the MBUS interconnect.
+> >
+> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> > ---
+> >  arch/arm/boot/dts/sun8i-r40.dtsi | 36 ++++++++++++++++++++++++++++++++
+> >  1 file changed, 36 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
+> > index 82ea0b5b0710..2d1e97cc4155 100644
+> > --- a/arch/arm/boot/dts/sun8i-r40.dtsi
+> > +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+> > @@ -180,6 +180,20 @@ nmi_intc: interrupt-controller@1c00030 {
+> >                       interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
+> >               };
+> >
+> > +             csi0: csi@1c09000 {
+> > +                     compatible = "allwinner,sun8i-r40-csi0",
+> > +                                  "allwinner,sun7i-a20-csi0";
+> > +                     reg = <0x01c09000 0x1000>;
+> > +                     interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+> > +                     clocks = <&ccu CLK_BUS_CSI0>, <&ccu CLK_CSI_SCLK>,
+> > +                              <&ccu CLK_DRAM_CSI0>;
+> > +                     clock-names = "bus", "isp", "ram";
+> > +                     resets = <&ccu RST_BUS_CSI0>;
+> > +                     interconnects = <&mbus 5>;
+> > +                     interconnect-names = "dma-mem";
+> > +                     status = "disabled";
+> > +             };
+> > +
+> >               mmc0: mmc@1c0f000 {
+> >                       compatible = "allwinner,sun8i-r40-mmc",
+> >                                    "allwinner,sun50i-a64-mmc";
+> > @@ -355,6 +369,20 @@ clk_out_a_pin: clk-out-a-pin {
+> >                               function = "clk_out_a";
+> >                       };
+> >
+> > +                     /omit-if-no-ref/
+> > +                     csi0_8bits_pins: csi0-8bits-pins {
+> > +                             pins = "PE0", "PE2", "PE3", "PE4", "PE5",
+> > +                                    "PE6", "PE7", "PE8", "PE9", "PE10",
+> > +                                    "PE11";
+> > +                             function = "csi0";
+> > +                     };
+> > +
+> > +                     /omit-if-no-ref/
+> > +                     csi0_mclk_pin: csi0-mclk-pin {
+> > +                             pins = "PE1";
+> > +                             function = "csi0";
+> > +                     };
+> > +
+> >                       gmac_rgmii_pins: gmac-rgmii-pins {
+> >                               pins = "PA0", "PA1", "PA2", "PA3",
+> >                                      "PA4", "PA5", "PA6", "PA7",
+> > @@ -624,6 +652,14 @@ gmac_mdio: mdio {
+> >                       };
+> >               };
+> >
+> > +             mbus: dram-controller@1c62000 {
+> > +                     compatible = "allwinner,sun8i-r40-mbus";
+> > +                     reg = <0x01c62000 0x1000>;
+> > +                     clocks = <&ccu 155>;
+>
+> We should export the clock too?
 
-Hmm I missed that usage of RCU_TABLE_NO_INVALIDATE.
+I meant to do it separately. Haven't gotten to it though.
 
-Ok I guess we need to revert this change that went upstream this merge 
-window then
-
-commit 52162ec784fa05f3a4b1d8e84421279998be3773
-Author: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Date:   Thu Oct 24 13:28:00 2019 +0530
-
-     powerpc/mm/book3s64/radix: Use freed_tables instead of need_flush_all
-
-
-
-I will review the change closely.
-
--aneesh
+ChenYu
