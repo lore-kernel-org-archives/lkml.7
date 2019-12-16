@@ -2,98 +2,183 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C622BC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07030C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9252B206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7C3320726
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 12:46:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DFOGEvKS"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Nav2Bog7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727699AbfLPMnZ (ORCPT
+        id S1727688AbfLPMqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 07:43:25 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:50400 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727599AbfLPMnZ (ORCPT
+        Mon, 16 Dec 2019 07:46:07 -0500
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:28881 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727611AbfLPMqH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 07:43:25 -0500
-Received: by mail-wm1-f65.google.com with SMTP id a5so6566036wmb.0;
-        Mon, 16 Dec 2019 04:43:23 -0800 (PST)
+        Mon, 16 Dec 2019 07:46:07 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Qr2ZAlkjX9hK9BD8ch3tnUVNPovTQcCLq7rKgec9jZI=;
-        b=DFOGEvKSljXP+xUoZlMilinfyWz1/V0mrK0zMC4Ybvs+eOUhtBZgEv3ny8f7ye6qC3
-         j2ovNRmw/NJVxtU8yyZe1mNterCuF6WUYjBihdCCAfNWpX4i8lBvFGzqrfImYO6SIif+
-         31z7kI7pbfpsS3DyLjl7/hPMJNOnITtxDiEL+ETP7myTtarx9KQVmN2/gvGT8nHf589w
-         vh6P6taoWMUUr84NPVyST+10UcxAaLTljW22eLvoWDZ20h4aHFZ1pCsRT+3kpKfxH/Ra
-         FXU3gE2N4EurQSIMKhFTE3u5q7DbOBd9rl34ObYXr63DQrQIDNfUfEuVkNBEcFlnZgZr
-         Oukg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Qr2ZAlkjX9hK9BD8ch3tnUVNPovTQcCLq7rKgec9jZI=;
-        b=Ys69xvxRbAOQfg1IWW+dOToPlfewD58BBQIdVixp/RrCTyTYIW6QHmMJVQyPc/HB6G
-         S7fGDwBo3s9/tlPBSYKKD5XqrCVwTduS8q4wwIuLLsvL3+iB7Uy6cVDx8Qr24m5WkXc9
-         CrpWcCLw9gAu1893FSrYWLN/sJ+rhm3usfLa9JOZWzCWpfiJwWyK6PX1pOiz7XhvRap0
-         X/mbzqFUBBFpaZhD1xAg6MlphA7Cs3kchpPgtSoV6B0dKBDFeXuRktvJxoknYTrqPGmQ
-         ejXnGMcnoZzbjiMnyNpHnuE2HYlzDI11B6qmNohjsdAsmt98MRdyj+TtMk18dkhLSIVO
-         cGDg==
-X-Gm-Message-State: APjAAAUdOt8TuyMYMPnpYU2F537xl628jzv2koPaMaFzllQOIkLr/qvU
-        ecM9XGSvqKUjLA6BpXfCSg==
-X-Google-Smtp-Source: APXvYqw9olDC6f/LpWJY4r+0PjsxH4SSOEyGDyRZEgEkwex24rlbEYe72uxvFjymCRcC11l/WCdghA==
-X-Received: by 2002:a1c:3141:: with SMTP id x62mr29335434wmx.18.1576500202839;
-        Mon, 16 Dec 2019 04:43:22 -0800 (PST)
-Received: from ninjahub.lan (host-92-15-174-53.as43234.net. [92.15.174.53])
-        by smtp.googlemail.com with ESMTPSA id t12sm20537323wrs.96.2019.12.16.04.43.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 04:43:22 -0800 (PST)
-From:   Jules Irenge <jbi.octave@gmail.com>
-To:     bokun.feng@gmail.com
-Cc:     ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jules Irenge <jbi.octave@gmail.com>
-Subject: [RESEND PATCH] kernel: bpf: add releases() annotation
-Date:   Mon, 16 Dec 2019 12:42:39 +0000
-Message-Id: <20191216124239.19180-1-jbi.octave@gmail.com>
-X-Mailer: git-send-email 2.23.0
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1576500366; x=1608036366;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=0TW+o5Tgcs6YL5BI1CJRd6ZjweSFLCGnKAQUOI6Qjb0=;
+  b=Nav2Bog7vqor/IBKRjMlU7P6UoVwKS8vGmQPIuN/UBF9Opi8ljlHIdTr
+   LxfgQNpsuQLaScbfJMuGJfRYF4FCuOl2i2sDa2zguXzZZUMMqaJTr2Td1
+   mihV55LpduR4m5fenvVJEk+hb6ra1nm187jGNivmcIFB13KKM6tAZ5cCJ
+   A=;
+IronPort-SDR: lj6VwkfMU5+vujBCYNe8M0EkLAMbAbxNEROEWrv98vwjyBBAwdR/cg6O5MdIo+qZudJuDWYh1d
+ ziFbA4gV2uVw==
+X-IronPort-AV: E=Sophos;i="5.69,321,1571702400"; 
+   d="scan'208";a="5354767"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-538b0bfb.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 16 Dec 2019 12:45:55 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2a-538b0bfb.us-west-2.amazon.com (Postfix) with ESMTPS id 4CBE5A25D6;
+        Mon, 16 Dec 2019 12:45:54 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 16 Dec 2019 12:45:53 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.100) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 16 Dec 2019 12:45:49 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <jgross@suse.com>, <axboe@kernel.dk>, <konrad.wilk@oracle.com>,
+        <roger.pau@citrix.com>
+CC:     SeongJae Park <sjpark@amazon.com>, <pdurrant@amazon.com>,
+        <sj38.park@gmail.com>, <xen-devel@lists.xenproject.org>,
+        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v10 0/4] xenbus/backend: Add a memory pressure handler callback
+Date:   Mon, 16 Dec 2019 13:45:23 +0100
+Message-ID: <20191216124527.30306-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.43.160.100]
+X-ClientProxiedBy: EX13D17UWC002.ant.amazon.com (10.43.162.61) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add sparse annotation to remove issue detected by sparse tool.
-warning: context imbalance in __bpf_prog_exit - unexpected unlock
+Granting pages consumes backend system memory.  In systems configured
+with insufficient spare memory for those pages, it can cause a memory
+pressure situation.  However, finding the optimal amount of the spare
+memory is challenging for large systems having dynamic resource
+utilization patterns.  Also, such a static configuration might lack
+flexibility.
 
-Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
----
- kernel/bpf/trampoline.c | 1 +
- 1 file changed, 1 insertion(+)
+To mitigate such problems, this patchset adds a memory reclaim callback
+to 'xenbus_driver' (patch 1) and use it to mitigate the problem in
+'xen-blkback' (patch 2).  The third and fourth patches are trivial
+cleanups.
 
-diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
-index 7e89f1f49d77..fb43b7a57e38 100644
---- a/kernel/bpf/trampoline.c
-+++ b/kernel/bpf/trampoline.c
-@@ -213,6 +213,7 @@ u64 notrace __bpf_prog_enter(void)
- }
- 
- void notrace __bpf_prog_exit(struct bpf_prog *prog, u64 start)
-+	__releases(RCU)
- {
- 	struct bpf_prog_stats *stats;
- 
+Base Version
+------------
+
+This patch is based on v5.4.  A complete tree is also available at my
+public git repo:
+https://github.com/sjp38/linux/tree/blkback_squeezing_v10
+
+
+Patch History
+-------------
+
+Changes from v9
+(https://lore.kernel.org/xen-devel/20191213153546.17425-1-sjpark@amazon.de/)
+ - Add 'Reviewed-by' and 'Acked-by' from Roger Pau Monné
+ - Update the commit message for overhead test of the 2nd path
+
+Changes from v8
+(https://lore.kernel.org/xen-devel/20191213130211.24011-1-sjpark@amazon.de/)
+ - Drop 'Reviewed-by: Juergen' from the second patch
+   (suggested by Roger Pau Monné)
+ - Update contact of the new module param to SeongJae Park
+   <sjpark@amazon.de>
+   (suggested by Roger Pau Monné)
+ - Wordsmith the description of the parameter
+   (suggested by Roger Pau Monné)
+ - Fix dumb bugs
+   (suggested by Roger Pau Monné)
+ - Move module param definition to xenbus.c and reduce the number of
+   lines for this change
+   (suggested by Roger Pau Monné)
+ - Add a comment for the new callback, reclaim_memory, as other
+   callbacks also have
+ - Add another trivial cleanup of xenbus.c file (4th patch)
+
+Changes from v7
+(https://lore.kernel.org/xen-devel/20191211181016.14366-1-sjpark@amazon.de/)
+ - Update sysfs-driver-xen-blkback for new parameter
+   (suggested by Roger Pau Monné)
+ - Use per-xen_blkif buffer_squeeze_end instead of global variable
+   (suggested by Roger Pau Monné)
+
+Changes from v6
+(https://lore.kernel.org/linux-block/20191211042428.5961-1-sjpark@amazon.de/)
+ - Remove more unnecessary prefixes (suggested by Roger Pau Monné)
+ - Constify a variable (suggested by Roger Pau Monné)
+ - Rename 'reclaim' into 'reclaim_memory' (suggested by Roger Pau Monné)
+ - More wordsmith of the commit message (suggested by Roger Pau Monné)
+
+Changes from v5
+(https://lore.kernel.org/linux-block/20191210080628.5264-1-sjpark@amazon.de/)
+ - Wordsmith the commit messages (suggested by Roger Pau Monné)
+ - Change the reclaim callback return type (suggested by Roger Pau
+   Monné)
+ - Change the type of the blkback squeeze duration variable
+   (suggested by Roger Pau Monné)
+ - Add a patch for removal of unnecessary static variable name prefixes
+   (suggested by Roger Pau Monné)
+ - Fix checkpatch.pl warnings
+
+Changes from v4
+(https://lore.kernel.org/xen-devel/20191209194305.20828-1-sjpark@amazon.com/)
+ - Remove domain id parameter from the callback (suggested by Juergen
+   Gross)
+ - Rename xen-blkback module parameter (suggested by Stefan Nuernburger)
+
+Changes from v3
+(https://lore.kernel.org/xen-devel/20191209085839.21215-1-sjpark@amazon.com/)
+ - Add general callback in xen_driver and use it (suggested by Juergen
+   Gross)
+
+Changes from v2
+(https://lore.kernel.org/linux-block/af195033-23d5-38ed-b73b-f6e2e3b34541@amazon.com)
+ - Rename the module parameter and variables for brevity
+   (aggressive shrinking -> squeezing)
+
+Changes from v1
+(https://lore.kernel.org/xen-devel/20191204113419.2298-1-sjpark@amazon.com/)
+ - Adjust the description to not use the term, `arbitrarily`
+   (suggested by Paul Durrant)
+ - Specify time unit of the duration in the parameter description,
+   (suggested by Maximilian Heyne)
+ - Change default aggressive shrinking duration from 1ms to 10ms
+ - Merge two patches into one single patch
+
+SeongJae Park (4):
+  xenbus/backend: Add memory pressure handler callback
+  xen/blkback: Squeeze page pools if a memory pressure is detected
+  xen/blkback: Remove unnecessary static variable name prefixes
+  xen/blkback: Consistently insert one empty line between functions
+
+ .../ABI/testing/sysfs-driver-xen-blkback      | 10 +++++
+ drivers/block/xen-blkback/blkback.c           | 42 +++++++++----------
+ drivers/block/xen-blkback/common.h            |  1 +
+ drivers/block/xen-blkback/xenbus.c            | 26 +++++++++---
+ drivers/xen/xenbus/xenbus_probe_backend.c     | 32 ++++++++++++++
+ include/xen/xenbus.h                          |  1 +
+ 6 files changed, 86 insertions(+), 26 deletions(-)
+
 -- 
-2.23.0
+2.17.1
 
