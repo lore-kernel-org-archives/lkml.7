@@ -2,149 +2,110 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F32EC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF05C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34C6E206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:46:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="JffkAK1t"
+	by mail.kernel.org (Postfix) with ESMTP id 790402082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:46:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576522008;
+	bh=U4z2sRDYdJKHX1PNo+xR3U0qZN1owb1vJ9hDYEmbJF4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=IP2jA8R0Ld8Ow2qM36+TpyFsR44AiSqwL6mHKxPqM6fisJL7j9rxjlO1anG1UAUsE
+	 dSbY50sJ/s4l2xo3j2NjFfReRuLHwIPBF6ry6IW/Jb4updrXikiZ/J9gMkgFKbTZyM
+	 u/h37gHepnxS2R+zF8qDqwWUlb83HbJZ0pY+ol5Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728513AbfLPSqh (ORCPT
+        id S1728144AbfLPR4B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:46:37 -0500
-Received: from mout.gmx.net ([212.227.15.19]:53821 "EHLO mout.gmx.net"
+        Mon, 16 Dec 2019 12:56:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728175AbfLPR4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:56:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1576518964;
-        bh=CAK+937vMJ7Ul1L0L0cRsieV0URSjAloZ41FxESMYZg=;
-        h=X-UI-Sender-Class:Subject:To:References:From:Date:In-Reply-To;
-        b=JffkAK1tV2BmEBhNaIPc4vAg6igCT7DVh2lVhf8TVpHgSNU/3O83zV/s7OOF/wA/n
-         d7ey00CzlVsbZRoFDpsN9KLDfOqR15mOfQQa6/wvO+etKanIz3EyZybKUjeoe+onCm
-         9gnq6ewgl1vR0GEARXVdPJ34hWuCcI0lR7nuEsE8=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.1.176] ([37.4.249.154]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M6lpM-1id5NS0toc-008KWy; Mon, 16
- Dec 2019 18:56:04 +0100
-Subject: Re: [PATCH AUTOSEL 5.4 133/350] Bluetooth: hci_bcm: Fix RTS handling
- during startup
-To:     Greg KH <greg@kroah.com>, Sasha Levin <sashal@kernel.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Marcel Holtmann <marcel@holtmann.org>,
-        linux-bluetooth@vger.kernel.org
-References: <20191210210735.9077-1-sashal@kernel.org>
- <20191210210735.9077-94-sashal@kernel.org>
- <20191216131512.c5x5ltndmdambdf4@core.my.home>
- <20191216132750.GA1646935@kroah.com>
-From:   Stefan Wahren <wahrenst@gmx.net>
-Message-ID: <9ea6af63-0133-284c-98a4-57d19c60d497@gmx.net>
-Date:   Mon, 16 Dec 2019 18:56:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1728117AbfLPRz5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:55:57 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 545BE206B7;
+        Mon, 16 Dec 2019 17:55:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576518956;
+        bh=U4z2sRDYdJKHX1PNo+xR3U0qZN1owb1vJ9hDYEmbJF4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GW1xW6RoZRG8C9xFexuB/f56U/eXZuosXkwcz88oI/90u8G6G24J6MlOWVKMgpqac
+         nZdpG3Z63GU4my+kh109VZZuMmzbP+Std+pkua6btN0Z79d2hcI4J2Sv0uEc1kBMiA
+         27VNdsjkQJA7IwD8T0+ASNLKrmEfX9SEoudxXGEI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        syzbot+19340dff067c2d3835c0@syzkaller.appspotmail.com,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.14 135/267] tty: vt: keyboard: reject invalid keycodes
+Date:   Mon, 16 Dec 2019 18:47:41 +0100
+Message-Id: <20191216174908.123251878@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
+References: <20191216174848.701533383@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20191216132750.GA1646935@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Provags-ID: V03:K1:1NGjEk2kmw7CCqJGd+/tmrSULyEcRMlyxmyL9HTkLzxJ3t5WPre
- h29L1kDiUcoAc5deXTwJbbDpbzsQPQziJ7QNj4jGfnaeGOyK4xzLxQS0A427fUgQqNIDH8w
- qAP3Cw8J8T5ge2H2PDtTALHSY5uvcc6ePf+5gfwGd02xgCd1rDtq0pWE96dhiygulNxnJne
- ssp/U87lfc9blvIt6MBNQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:KLJednpRabg=:T5c7YPDR4wYazTXu2MmIJe
- E+SqqfXyXnnDSPNkA/jBrVz/6+pOP+KcGfJdYeVPqa++qTH7k+ZmQtauFTjtT9w6y3jBrrP47
- /+hHD7VfuluBjr7b+87e/E2Q9yGJ5Jdi1xdGyiey46Rcv2GMDOlXHe8p3C+XzYgMZCanN5kXo
- WrYwgrEld69IcwI4cH6MV6R3qxoc40R9Ln39OkKAruN83IR8nPD3qxkgY5Yj2vdavAxwpeLkw
- QVeaZqXGy45BFMuOpdIq9qM3E0VNQtyXPgnNxiDwlRokbsoUxDxSqv6nyFoIbaY9w9SOEnkeG
- ONsxrqDHtoEs99GsE99PAMVAx5BpLwXd7sIVYgcEnM+F7rLDxMFpVdd4HeaPC0NC/0e1P3+or
- 9kh8U5gTXb5LmdO68Df/n56tsYn0p3xc7+prnFmhgrCSJiGqtTcC5xCFfT37x8uwK98Wywx9f
- 73b/wouir1NnWZaGFxzZ4iiVgGr21LJmv03o8l0PIItmiVqdIYLjxX6uGRdKag6ngtqTMK5ZA
- SJOnU62Qj0/dSjF5FJTbiBgiKEZz20+Rv2jgGWv8e2MQ5Z2g9EjAbnUUUnG9eh1DSqeWM81eg
- 0H2qN9KOc9sZ5W1aBOF8yl4U+NGvUnML5M0CYyuKtjU7feU36iv4KpcGabwf08gDX8aYm0yF2
- O0Umcm9UI77hQdMX5sSjDw9scrTiUttl3+sCm3McXQmImJ8k9HVqcqw2yVzkjzoAhJoMIsI1I
- A541DuPLICSFzevgpLHvvYXNbLJHoQdg8JHIrRiF48jTkc9B67J/L8riFGI+3ws6sOXPkBozZ
- CFKighY8lG5zAhqwR/Fi0FpHh82wyucb8n8GmPX/LiBoIZpYvH68rNeDrKIGOfzkNVii0KzFW
- Ibe3wPSVc+My842xtPbxHGuoQlVidb8kB1QV/Rf2L91ida6ML2fLc9Ki/o3BdSTxJL6IpSyT1
- z3NIGVSmWWzmoUlvOQl8+onDyW8ZfM9K0TnvaHcAffIugHIBIxwFvPzvuBj6IAlG/1rU4VyF1
- hUDaaVc/z4Z7WlIjScmpKUDAbqbFuX0wcORDT98xhYGwhRoQxCZ+mCPT9o1lQqSsxO/dMm4uB
- 2Td8XkjsXjT+xASgxnuSaNHSu+Ttw1a5LbPoONwfn6B7jCmWH154P/V+pNDLRDkSHm5xSWEN+
- dZiDgZUD8PMq1ugPPIb1O1S3NrlXZOQ4DTfcE7WgV3XwkLiwL34LFHDaqDkwMXl0ko0tCCqlF
- 0KdG0l9dQUSgpPj0kemw3NcWpYRIUYR88g58tgK7Kaz4YuPFyKczGMUShQ6c=
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 16.12.19 um 14:27 schrieb Greg KH:
-> On Mon, Dec 16, 2019 at 02:15:12PM +0100, Ond=C5=99ej Jirman wrote:
->> Hi,
->>
->> On Tue, Dec 10, 2019 at 04:03:58PM -0500, Sasha Levin wrote:
->>> From: Stefan Wahren <wahrenst@gmx.net>
->>>
->>> [ Upstream commit 3347a80965b38f096b1d6f995c00c9c9e53d4b8b ]
->>>
->>> The RPi 4 uses the hardware handshake lines for CYW43455, but the chip
->>> doesn't react to HCI requests during DT probe. The reason is the inpro=
-per
->>> handling of the RTS line during startup. According to the startup
->>> signaling sequence in the CYW43455 datasheet, the hosts RTS line must
->>> be driven after BT_REG_ON and BT_HOST_WAKE.
->>>
->>> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
->>> Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
->>> Signed-off-by: Sasha Levin <sashal@kernel.org>
->>> ---
->>>  drivers/bluetooth/hci_bcm.c | 2 ++
->>>  1 file changed, 2 insertions(+)
->>>
->>> diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
->>> index 7646636f2d183..0f73f6a686cb7 100644
->>> --- a/drivers/bluetooth/hci_bcm.c
->>> +++ b/drivers/bluetooth/hci_bcm.c
->>> @@ -445,9 +445,11 @@ static int bcm_open(struct hci_uart *hu)
->>>
->>>  out:
->>>  	if (bcm->dev) {
->>> +		hci_uart_set_flow_control(hu, true);
->>>  		hu->init_speed =3D bcm->dev->init_speed;
->>>  		hu->oper_speed =3D bcm->dev->oper_speed;
->>>  		err =3D bcm_gpio_set_power(bcm->dev, true);
->>> +		hci_uart_set_flow_control(hu, false);
->>>  		if (err)
->>>  			goto err_unset_hu;
->>>  	}
->> This causes bluetooth breakage (degraded bluetooth performance, due to =
-failure to
->> switch to higher baudrate) for Orange Pi 3 board:
->>
->> [    3.839134] Bluetooth: hci0: command 0xfc18 tx timeout
->> [   11.999136] Bluetooth: hci0: BCM: failed to write update baudrate (-=
-110)
->> [   12.004613] Bluetooth: hci0: Failed to set baudrate
->> [   12.123187] Bluetooth: hci0: BCM: chip id 130
->> [   12.128398] Bluetooth: hci0: BCM: features 0x0f
->> [   12.154686] Bluetooth: hci0: BCM4345C5
->> [   12.157165] Bluetooth: hci0: BCM4345C5 (003.006.006) build 0000
->> [   15.343684] Bluetooth: hci0: BCM4345C5 (003.006.006) build 0038
->>
->> I suggest not pushing this to stable.
-> Is it being fixed in Linus's tree?
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-No, because this mail was the first bug report.
+commit b2b2dd71e0859436d4e05b2f61f86140250ed3f8 upstream.
 
-But i agree with Ond=C5=99ej to not push it into stable.
+Do not try to handle keycodes that are too big, otherwise we risk doing
+out-of-bounds writes:
 
-Stefan
+BUG: KASAN: global-out-of-bounds in clear_bit include/asm-generic/bitops-instrumented.h:56 [inline]
+BUG: KASAN: global-out-of-bounds in kbd_keycode drivers/tty/vt/keyboard.c:1411 [inline]
+BUG: KASAN: global-out-of-bounds in kbd_event+0xe6b/0x3790 drivers/tty/vt/keyboard.c:1495
+Write of size 8 at addr ffffffff89a1b2d8 by task syz-executor108/1722
+...
+ kbd_keycode drivers/tty/vt/keyboard.c:1411 [inline]
+ kbd_event+0xe6b/0x3790 drivers/tty/vt/keyboard.c:1495
+ input_to_handler+0x3b6/0x4c0 drivers/input/input.c:118
+ input_pass_values.part.0+0x2e3/0x720 drivers/input/input.c:145
+ input_pass_values drivers/input/input.c:949 [inline]
+ input_set_keycode+0x290/0x320 drivers/input/input.c:954
+ evdev_handle_set_keycode_v2+0xc4/0x120 drivers/input/evdev.c:882
+ evdev_do_ioctl drivers/input/evdev.c:1150 [inline]
 
->
-> thanks,
->
-> greg k-h
+In this case we were dealing with a fuzzed HID device that declared over
+12K buttons, and while HID layer should not be reporting to us such big
+keycodes, we should also be defensive and reject invalid data ourselves as
+well.
+
+Reported-by: syzbot+19340dff067c2d3835c0@syzkaller.appspotmail.com
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191122204220.GA129459@dtor-ws
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/tty/vt/keyboard.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/tty/vt/keyboard.c
++++ b/drivers/tty/vt/keyboard.c
+@@ -1460,7 +1460,7 @@ static void kbd_event(struct input_handl
+ 
+ 	if (event_type == EV_MSC && event_code == MSC_RAW && HW_RAW(handle->dev))
+ 		kbd_rawcode(value);
+-	if (event_type == EV_KEY)
++	if (event_type == EV_KEY && event_code <= KEY_MAX)
+ 		kbd_keycode(event_code, value, HW_RAW(handle->dev));
+ 
+ 	spin_unlock(&kbd_event_lock);
+
+
