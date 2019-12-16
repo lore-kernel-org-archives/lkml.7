@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 379ACC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC25C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 022C32082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:34:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64AEB207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:34:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576521273;
-	bh=CXGhR5YD6QWVFxsBymmyI/D4aJ77GB7VXaUAYRKw6q0=;
+	s=default; t=1576521276;
+	bh=D9BzyQy5ZzPaglJk39CSdueO88kTdIsmK1/C+xN29lg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FnEGY7HD8rVkjX46Pg8bHeaaAwxou1rw5S6FWhd6Ll996qPBrJVGP3KOy3Hubk2LE
-	 HCi/XnViWoaR8ElkGbhIELvF2gX0lieB+yD4tnKB0xUiuhUEJY3QZb3i5uHSXZ+MpQ
-	 sQVqv1yEmUSXOTZR/6f05b7tOMNc4rr/LEmVlxR8=
+	b=G4ihQqKJEedxRKgdQFUn/CPYvC61liLP96Tsx3m16/p5AAE66lGVx56re2idaWgMX
+	 qCwkrwgnyX3I2BR+ciZrKJDxCs9FJRuZiMQ5pDao7X+8thM6ig5P3q5AltP3PunMp9
+	 OE03YN72Zubg9xablObeFEM7kXJH/zpNJdemVGRM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730594AbfLPSec (ORCPT
+        id S1730340AbfLPSIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:34:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50880 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:08:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727864AbfLPSI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:08:58 -0500
+        id S1729781AbfLPSIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:08:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47B85206E0;
-        Mon, 16 Dec 2019 18:08:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D5032072D;
+        Mon, 16 Dec 2019 18:08:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519737;
-        bh=CXGhR5YD6QWVFxsBymmyI/D4aJ77GB7VXaUAYRKw6q0=;
+        s=default; t=1576519730;
+        bh=D9BzyQy5ZzPaglJk39CSdueO88kTdIsmK1/C+xN29lg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aDVPNOs6o9XS9iIS+CM/ZGsnunZcTp2j9GuPq/zCA+QuEkICMTLUKqMNWffHMxR8j
-         nySiQ2YrqjEnlgG2kjb1F6iFivj2PHyZj3uxz6shuMDentTyDxzoZgSy4cB29km+Ei
-         YyBgWpA5/AAvSYmU4hDMYyncyXJPGJ5TVUX6EOD8=
+        b=pcXaqhZDY1ncxKboJUaBRKaqeCusGCRNKTr59RirC5+siZOzxIwSTCZEuivpUCNmR
+         5GFCB987jQzCnXo7RjNJiBiaxWvyAd/i8VrlHReirQLArBh0vZUJXYzprx4uK23C+E
+         kYrTkaT0Wz3ZSvczR8X7v33IlFxWDM2KTAVT1JDY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: [PATCH 5.3 048/180] usb: dwc3: pci: add ID for the Intel Comet Lake -H variant
-Date:   Mon, 16 Dec 2019 18:48:08 +0100
-Message-Id: <20191216174820.395455365@linuxfoundation.org>
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 5.3 046/180] virt_wifi: fix use-after-free in virt_wifi_newlink()
+Date:   Mon, 16 Dec 2019 18:48:06 +0100
+Message-Id: <20191216174820.093757147@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -60,45 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-commit 3c3caae4cd6e122472efcf64759ff6392fb6bce2 upstream.
+commit bc71d8b580ba81b55b6e15b1c0320632515b4bac upstream.
 
-The original ID that was added for Comet Lake PCH was
-actually for the -LP (low power) variant even though the
-constant for it said CMLH. Changing that while at it.
+When virt_wifi interface is created, virt_wifi_newlink() is called and
+it calls register_netdevice().
+if register_netdevice() fails, it internally would call
+->priv_destructor(), which is virt_wifi_net_device_destructor() and
+it frees netdev. but virt_wifi_newlink() still use netdev.
+So, use-after-free would occur in virt_wifi_newlink().
 
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Acked-by: Felipe Balbi <balbi@kernel.org>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191212093713.60614-1-heikki.krogerus@linux.intel.com
+Test commands:
+    ip link add dummy0 type dummy
+    modprobe bonding
+    ip link add bonding_masters link dummy0 type virt_wifi
+
+Splat looks like:
+[  202.220554] BUG: KASAN: use-after-free in virt_wifi_newlink+0x88b/0x9a0 [virt_wifi]
+[  202.221659] Read of size 8 at addr ffff888061629cb8 by task ip/852
+
+[  202.222896] CPU: 1 PID: 852 Comm: ip Not tainted 5.4.0-rc5 #3
+[  202.223765] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+[  202.225073] Call Trace:
+[  202.225532]  dump_stack+0x7c/0xbb
+[  202.226869]  print_address_description.constprop.5+0x1be/0x360
+[  202.229362]  __kasan_report+0x12a/0x16f
+[  202.230714]  kasan_report+0xe/0x20
+[  202.232595]  virt_wifi_newlink+0x88b/0x9a0 [virt_wifi]
+[  202.233370]  __rtnl_newlink+0xb9f/0x11b0
+[  202.244909]  rtnl_newlink+0x65/0x90
+[ ... ]
+
+Cc: stable@vger.kernel.org
+Fixes: c7cdba31ed8b ("mac80211-next: rtnetlink wifi simulation device")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Link: https://lore.kernel.org/r/20191121122645.9355-1-ap420073@gmail.com
+[trim stack dump a bit]
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/dwc3/dwc3-pci.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/net/wireless/virt_wifi.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/dwc3/dwc3-pci.c
-+++ b/drivers/usb/dwc3/dwc3-pci.c
-@@ -29,7 +29,8 @@
- #define PCI_DEVICE_ID_INTEL_BXT_M		0x1aaa
- #define PCI_DEVICE_ID_INTEL_APL			0x5aaa
- #define PCI_DEVICE_ID_INTEL_KBP			0xa2b0
--#define PCI_DEVICE_ID_INTEL_CMLH		0x02ee
-+#define PCI_DEVICE_ID_INTEL_CMLLP		0x02ee
-+#define PCI_DEVICE_ID_INTEL_CMLH		0x06ee
- #define PCI_DEVICE_ID_INTEL_GLK			0x31aa
- #define PCI_DEVICE_ID_INTEL_CNPLP		0x9dee
- #define PCI_DEVICE_ID_INTEL_CNPH		0xa36e
-@@ -308,6 +309,9 @@ static const struct pci_device_id dwc3_p
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_MRFLD),
- 	  (kernel_ulong_t) &dwc3_pci_mrfld_properties, },
+--- a/drivers/net/wireless/virt_wifi.c
++++ b/drivers/net/wireless/virt_wifi.c
+@@ -450,7 +450,6 @@ static void virt_wifi_net_device_destruc
+ 	 */
+ 	kfree(dev->ieee80211_ptr);
+ 	dev->ieee80211_ptr = NULL;
+-	free_netdev(dev);
+ }
  
-+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_CMLLP),
-+	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
-+
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_CMLH),
- 	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
+ /* No lock interaction. */
+@@ -458,7 +457,7 @@ static void virt_wifi_setup(struct net_d
+ {
+ 	ether_setup(dev);
+ 	dev->netdev_ops = &virt_wifi_ops;
+-	dev->priv_destructor = virt_wifi_net_device_destructor;
++	dev->needs_free_netdev  = true;
+ }
  
+ /* Called in a RCU read critical section from netif_receive_skb */
+@@ -544,6 +543,7 @@ static int virt_wifi_newlink(struct net
+ 		goto unregister_netdev;
+ 	}
+ 
++	dev->priv_destructor = virt_wifi_net_device_destructor;
+ 	priv->being_deleted = false;
+ 	priv->is_connected = false;
+ 	priv->is_up = false;
 
 
