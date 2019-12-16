@@ -2,89 +2,152 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F567C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C60F4C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAB87206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F5CF206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:41:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576521661;
+	bh=KWIJ7ZeDG4964tC5hBxLoL6XtKsLZ097pRrc/2uZips=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hiMpyiA46DkTJzgIAtnOPW7mOGGISRhGhY/x+AWbW9SqaIa++4oax964qEnwPHuex
+	 YgUAx1g68PJ384TTeOXdOGRiIWjWkDZdpOrr5U2yLfpdfneWiZknWK9mpvmIYMBfZP
+	 C4sgT2DQmowNBHfmxeE8ZGLCHXTkWBR7oBzc7Liw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729421AbfLPSky (ORCPT
+        id S1729513AbfLPSlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:40:54 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:60978 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728995AbfLPSBu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:01:50 -0500
-Received: from ip5f5a5f74.dynamic.kabel-deutschland.de ([95.90.95.116] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1igugj-0001nY-Bk; Mon, 16 Dec 2019 19:01:45 +0100
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Rob Herring <robh@kernel.org>
-Cc:     kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: Re: [PATCH RESEND 1/2] dt-bindings: phy: drop #clock-cells from rockchip,px30-dsi-dphy
-Date:   Mon, 16 Dec 2019 19:01:44 +0100
-Message-ID: <12525836.FhlgEYrHGb@diego>
-In-Reply-To: <20191216175615.GA23392@bogus>
-References: <20191216122448.27867-1-heiko@sntech.de> <20191216175615.GA23392@bogus>
+        Mon, 16 Dec 2019 13:41:00 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37614 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727711AbfLPSBr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:01:47 -0500
+Received: by mail-ot1-f66.google.com with SMTP id k14so10208430otn.4;
+        Mon, 16 Dec 2019 10:01:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Qc/5271R27TyFXwcNXdVrUFfe556FVCOMsvivSqHqAg=;
+        b=sIwN8SOCYrh/nxbAhf8Efrb51CrNXPhpY0l734Vh8OBL2ugyGrFZoXa1fVkEy1N9y9
+         l4+u6mgPpgypD5sBZxzPfomKiMroYUFWQ/MLIOocvrbxti62uPdguucj2nD1pmAp/BpP
+         cj9cTTTM9GJ5N1rbke8NAleASRSEeQMfGqkz22+OCoD+VKNGf3V/m8WF30hDCGdz/oLe
+         9oQj2f50n4OdZmWavP7BpCiZqoM85CtFB7M522/grz4FoffX5giBIkBBFbu4I7Mhjne/
+         JurKoQM6MGt70bF/Sd0uTqO+m/lPT/QzH9HRlZyCtltdxoBn4fL4sMh8DmyrVc2AtMQ3
+         Ax6g==
+X-Gm-Message-State: APjAAAU9BOJC9Lz7fKxcUfCynfTRxTPf6mYvoK9y4wpGGqQKh1sEdh1O
+        DebqEB+gRPZSHOEV3vOdjw==
+X-Google-Smtp-Source: APXvYqyDjtM59oNy+jnz+ALXTiAza8mNWXii6SfQ0a6fPk4PXCtGHdQapdtyKbKz29Lrhv+sKtPD2Q==
+X-Received: by 2002:a9d:1b4e:: with SMTP id l72mr33875485otl.345.1576519306408;
+        Mon, 16 Dec 2019 10:01:46 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id d59sm7084094otb.50.2019.12.16.10.01.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 10:01:45 -0800 (PST)
+Date:   Mon, 16 Dec 2019 12:01:44 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Taniya Das <tdas@codeaurora.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette =?iso-8859-1?Q?=A0?= 
+        <mturquette@baylibre.com>, David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v1 1/3] dt-bindings: clock: Add YAML schemas for the QCOM
+ MSS clock bindings
+Message-ID: <20191216180144.GA27463@bogus>
+References: <1575447687-9296-1-git-send-email-tdas@codeaurora.org>
+ <0101016ed0006092-b6693b0f-f8c6-428a-9b64-f6e1f4606844-000000@us-west-2.amazonses.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0101016ed0006092-b6693b0f-f8c6-428a-9b64-f6e1f4606844-000000@us-west-2.amazonses.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
-
-Am Montag, 16. Dezember 2019, 18:56:15 CET schrieb Rob Herring:
-> On Mon, 16 Dec 2019 13:24:47 +0100, Heiko Stuebner wrote:
-> > From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> > 
-> > Further review of the dsi components for the px30 revealed that the
-> > phy shouldn't expose the pll as clock but instead handle settings
-> > via phy parameters.
-> > 
-> > As the phy binding is new and not used anywhere yet, just drop them
-> > so they don't get used.
-> > 
-> > Fixes: 3817c7961179 ("dt-bindings: phy: add yaml binding for rockchip,px30-dsi-dphy")
-> > Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> > ---
-> > Hi Kishon,
-> > 
-> > maybe suitable as a fix for 5.5-rc?
-> > 
-> > Thanks
-> > Heiko
-> > 
-> >  .../devicetree/bindings/phy/rockchip,px30-dsi-dphy.yaml      | 5 -----
-> >  1 file changed, 5 deletions(-)
-> > 
+On Wed, Dec 04, 2019 at 08:21:56AM +0000, Taniya Das wrote:
+> The MSS clock provider have a bunch of generic properties that
+> are needed in a device tree. Add a YAML schemas for those.
 > 
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
+>  .../devicetree/bindings/clock/qcom,mss.yaml        | 40 ++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,mss.yaml
 > 
-> If a tag was not added on purpose, please state why and what changed.
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,mss.yaml b/Documentation/devicetree/bindings/clock/qcom,mss.yaml
+> new file mode 100644
+> index 0000000..4494a6b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/qcom,mss.yaml
+> @@ -0,0 +1,40 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
 
-sorry about that. The original response somehow did not thread correctly
-in my mail client, probably some fault on my side, so I've only found your
-mail just now by digging hard.
+Dual license new bindings please:
 
-@Kishon, the original mail already got an
+(GPL-2.0-only OR BSD-2-Clause)
 
-Acked-by: Rob Herring <robh@kernel.org>
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/bindings/clock/qcom,mss.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Modem Clock Controller Binding
+> +
+> +maintainers:
+> +  - Taniya Das <tdas@codeaurora.org>
+> +
+> +description: |
+> +  Qualcomm modem clock control module which supports the clocks.
+> +
+> +properties:
+> +  compatible :
+> +    enum:
+> +       - qcom,mss-sc7180
 
+Normal order is 'qcom,sc7180-mss'.
 
+> +
+> +  '#clock-cells':
+> +    const: 1
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - '#clock-cells'
 
+Add:
 
+additionalItems: false
+
+> +
+> +examples:
+> +  # Example of MSS with clock nodes properties for SC7180:
+> +  - |
+> +    clock-controller@41aa000 {
+> +      compatible = "qcom,sc7180-mss";
+> +      reg = <0x041aa000 0x100>;
+> +      reg-names = "cc";
+
+Not documented, nor necessary.
+
+> +      #clock-cells = <1>;
+> +    };
+> +...
+> --
+> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+> of the Code Aurora Forum, hosted by the  Linux Foundation.
+> 
