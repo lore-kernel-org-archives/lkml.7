@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 222C2C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 356A2C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBA34206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E05D2166E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:12:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519956;
-	bh=AEN01YZ8NVHmNiKwZzA9bUlX/f3KQSWQ6gZ5yHDG2eA=;
+	s=default; t=1576519958;
+	bh=/cv/6abJU3XvKGPnuAB8xlGpmyFKElwPZzPYxBS/kAU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hVj/FPqL18BKq0a7xbu7sbpOdVSpT1RNskHtNN1z8F0KhnEcCmI4URL1lZFXv6Y5r
-	 +/Ua1JsROMph0Ljula56WFcjx8kbb13urAtd/SKLeCRfUL160ueJew+jCMt71hmFCV
-	 bsP8/Pb9qajdwQ2CtWK1GDfB4RH3L56BPvAb7ncE=
+	b=KOaH84IYnp59M1kQOT3BWEqNdwFusJsyrLrzwuvldJAqIwQSReCrmpM2f1OkZLh5g
+	 ePvXWqaQ8wHgY8e4uKI4FgyrXw/vfH0JpYUyCf28syxzlLpfMVP+6TzQHGOq9eoA7T
+	 tuFT1qEJIlcvXudnqoYDhEgPeYeIpiS9NOxPkOB0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730971AbfLPSMf (ORCPT
+        id S1730979AbfLPSMh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:12:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57520 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:12:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730956AbfLPSMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:12:30 -0500
+        id S1730963AbfLPSMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:12:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53577206B7;
-        Mon, 16 Dec 2019 18:12:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFB94206E0;
+        Mon, 16 Dec 2019 18:12:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519949;
-        bh=AEN01YZ8NVHmNiKwZzA9bUlX/f3KQSWQ6gZ5yHDG2eA=;
+        s=default; t=1576519952;
+        bh=/cv/6abJU3XvKGPnuAB8xlGpmyFKElwPZzPYxBS/kAU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NWhedt6QqzEpx17yz3a3HVxnyHrTUiHemD7Ziv7+1Gsnn+hOmzFNDsmRxAx9iN8D+
-         vrsUv62pJnBQChevGDVyd2lSHi917gOG1TX9/zLi/1q+Od8fSaKqTuagUoerjr/RwC
-         3xbUCgBGal1iY0DKku6wEb4seSPMijT2dAyozP14=
+        b=EssGKJirLt2EGxUxdRAAz1JaW12BmX6yYpKgGtIo3CXielwhoXT5avdyOXnfqrjjD
+         LDv8eHdYVmiAX6CTGRTd1/dPfnsN1Pnehgq1XkEk6utk9Tcbl/F1deEpe8ulkfICj8
+         qanRUKWv6T0CosgyJcKi6k8845PI2xPCUTfv8T0g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
+        stable@vger.kernel.org, Quinn Tran <qutran@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 135/180] scsi: lpfc: Fix bad ndlp ptr in xri aborted handling
-Date:   Mon, 16 Dec 2019 18:49:35 +0100
-Message-Id: <20191216174842.314039855@linuxfoundation.org>
+Subject: [PATCH 5.3 136/180] scsi: qla2xxx: Fix abort timeout race condition.
+Date:   Mon, 16 Dec 2019 18:49:36 +0100
+Message-Id: <20191216174842.426476124@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
 References: <20191216174806.018988360@linuxfoundation.org>
@@ -61,127 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Quinn Tran <qutran@marvell.com>
 
-[ Upstream commit 324e1c402069e8d277d2a2b18ce40bde1265b96a ]
+[ Upstream commit 0c6df59061b23c7a951836d23977be34e896d3da ]
 
-In cases where I/O may be aborted, such as driver unload or link bounces,
-the system will crash based on a bad ndlp pointer.
+If an abort times out, the Abort IOCB completion and Abort timer can race
+against each other. This patch provides unique error code for timer path to
+allow proper cleanup.
 
-Example:
-  RIP: 0010:lpfc_sli4_abts_err_handler+0x15/0x140 [lpfc]
-  ...
-  lpfc_sli4_io_xri_aborted+0x20d/0x270 [lpfc]
-  lpfc_sli4_sp_handle_abort_xri_wcqe.isra.54+0x84/0x170 [lpfc]
-  lpfc_sli4_fp_handle_cqe+0xc2/0x480 [lpfc]
-  __lpfc_sli4_process_cq+0xc6/0x230 [lpfc]
-  __lpfc_sli4_hba_process_cq+0x29/0xc0 [lpfc]
-  process_one_work+0x14c/0x390
+[mkp: typo]
 
-Crash was caused by a bad ndlp address passed to I/O indicated by the XRI
-aborted CQE.  The address was not NULL so the routine deferenced the ndlp
-ptr. The bad ndlp also caused the lpfc_sli4_io_xri_aborted to call an
-erroneous io handler.  Root cause for the bad ndlp was an lpfc_ncmd that
-was aborted, put on the abort_io list, completed, taken off the abort_io
-list, sent to lpfc_release_nvme_buf where it was put back on the abort_io
-list because the lpfc_ncmd->flags setting LPFC_SBUF_XBUSY was not cleared
-on the final completion.
-
-Rework the exchange busy handling to ensure the flags are properly set for
-both scsi and nvme.
-
-Fixes: c490850a0947 ("scsi: lpfc: Adapt partitioned XRI lists to efficient sharing")
-Cc: <stable@vger.kernel.org> # v5.1+
-Link: https://lore.kernel.org/r/20191018211832.7917-6-jsmart2021@gmail.com
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Quinn Tran <qutran@marvell.com>
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_scsi.c | 11 +++++++----
- drivers/scsi/lpfc/lpfc_sli.c  |  5 ++++-
- drivers/scsi/lpfc/lpfc_sli.h  |  3 +--
- 3 files changed, 12 insertions(+), 7 deletions(-)
+ drivers/scsi/qla2xxx/qla_def.h  |  1 +
+ drivers/scsi/qla2xxx/qla_init.c | 18 ++++++++++++++++--
+ 2 files changed, 17 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_scsi.c b/drivers/scsi/lpfc/lpfc_scsi.c
-index f9df800e70672..6ba4a741a8053 100644
---- a/drivers/scsi/lpfc/lpfc_scsi.c
-+++ b/drivers/scsi/lpfc/lpfc_scsi.c
-@@ -583,7 +583,7 @@ lpfc_sli4_fcp_xri_aborted(struct lpfc_hba *phba,
- 		if (psb->cur_iocbq.sli4_xritag == xri) {
- 			list_del(&psb->list);
- 			qp->abts_scsi_io_bufs--;
--			psb->exch_busy = 0;
-+			psb->flags &= ~LPFC_SBUF_XBUSY;
- 			psb->status = IOSTAT_SUCCESS;
- 			spin_unlock(
- 				&qp->abts_scsi_buf_list_lock);
-@@ -615,7 +615,7 @@ lpfc_sli4_fcp_xri_aborted(struct lpfc_hba *phba,
- 		if (iocbq->sli4_xritag != xri)
- 			continue;
- 		psb = container_of(iocbq, struct lpfc_io_buf, cur_iocbq);
--		psb->exch_busy = 0;
-+		psb->flags &= ~LPFC_SBUF_XBUSY;
- 		spin_unlock_irqrestore(&phba->hbalock, iflag);
- 		if (!list_empty(&pring->txq))
- 			lpfc_worker_wake_up(phba);
-@@ -834,7 +834,7 @@ lpfc_release_scsi_buf_s4(struct lpfc_hba *phba, struct lpfc_io_buf *psb)
- 	psb->prot_seg_cnt = 0;
+diff --git a/drivers/scsi/qla2xxx/qla_def.h b/drivers/scsi/qla2xxx/qla_def.h
+index a2922b17b55b0..bb1c7b2d0ac1f 100644
+--- a/drivers/scsi/qla2xxx/qla_def.h
++++ b/drivers/scsi/qla2xxx/qla_def.h
+@@ -4629,6 +4629,7 @@ struct secure_flash_update_block_pk {
+ #define QLA_SUSPENDED			0x106
+ #define QLA_BUSY			0x107
+ #define QLA_ALREADY_REGISTERED		0x109
++#define QLA_OS_TIMER_EXPIRED		0x10a
  
- 	qp = psb->hdwq;
--	if (psb->exch_busy) {
-+	if (psb->flags & LPFC_SBUF_XBUSY) {
- 		spin_lock_irqsave(&qp->abts_scsi_buf_list_lock, iflag);
- 		psb->pCmd = NULL;
- 		list_add_tail(&psb->list, &qp->lpfc_abts_scsi_buf_list);
-@@ -3679,7 +3679,10 @@ lpfc_scsi_cmd_iocb_cmpl(struct lpfc_hba *phba, struct lpfc_iocbq *pIocbIn,
- 	lpfc_cmd->result = (pIocbOut->iocb.un.ulpWord[4] & IOERR_PARAM_MASK);
- 	lpfc_cmd->status = pIocbOut->iocb.ulpStatus;
- 	/* pick up SLI4 exhange busy status from HBA */
--	lpfc_cmd->exch_busy = pIocbOut->iocb_flag & LPFC_EXCHANGE_BUSY;
-+	if (pIocbOut->iocb_flag & LPFC_EXCHANGE_BUSY)
-+		lpfc_cmd->flags |= LPFC_SBUF_XBUSY;
-+	else
-+		lpfc_cmd->flags &= ~LPFC_SBUF_XBUSY;
+ #define NVRAM_DELAY()		udelay(10)
  
- #ifdef CONFIG_SCSI_LPFC_DEBUG_FS
- 	if (lpfc_cmd->prot_data_type) {
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index c7027ecd4d19e..6f6e306ff1e6c 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -11768,7 +11768,10 @@ lpfc_sli_wake_iocb_wait(struct lpfc_hba *phba,
- 		!(cmdiocbq->iocb_flag & LPFC_IO_LIBDFC)) {
- 		lpfc_cmd = container_of(cmdiocbq, struct lpfc_io_buf,
- 			cur_iocbq);
--		lpfc_cmd->exch_busy = rspiocbq->iocb_flag & LPFC_EXCHANGE_BUSY;
-+		if (rspiocbq && (rspiocbq->iocb_flag & LPFC_EXCHANGE_BUSY))
-+			lpfc_cmd->flags |= LPFC_SBUF_XBUSY;
-+		else
-+			lpfc_cmd->flags &= ~LPFC_SBUF_XBUSY;
- 	}
+diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
+index afc890bc50e4f..5df604fae7593 100644
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -99,9 +99,22 @@ static void qla24xx_abort_iocb_timeout(void *data)
+ {
+ 	srb_t *sp = data;
+ 	struct srb_iocb *abt = &sp->u.iocb_cmd;
++	struct qla_qpair *qpair = sp->qpair;
++	u32 handle;
++	unsigned long flags;
++
++	spin_lock_irqsave(qpair->qp_lock_ptr, flags);
++	for (handle = 1; handle < qpair->req->num_outstanding_cmds; handle++) {
++		/* removing the abort */
++		if (qpair->req->outstanding_cmds[handle] == sp) {
++			qpair->req->outstanding_cmds[handle] = NULL;
++			break;
++		}
++	}
++	spin_unlock_irqrestore(qpair->qp_lock_ptr, flags);
  
- 	pdone_q = cmdiocbq->context_un.wait_queue;
-diff --git a/drivers/scsi/lpfc/lpfc_sli.h b/drivers/scsi/lpfc/lpfc_sli.h
-index 467b8270f7fdd..9449236c231d5 100644
---- a/drivers/scsi/lpfc/lpfc_sli.h
-+++ b/drivers/scsi/lpfc/lpfc_sli.h
-@@ -375,14 +375,13 @@ struct lpfc_io_buf {
+ 	abt->u.abt.comp_status = CS_TIMEOUT;
+-	sp->done(sp, QLA_FUNCTION_TIMEOUT);
++	sp->done(sp, QLA_OS_TIMER_EXPIRED);
+ }
  
- 	struct lpfc_nodelist *ndlp;
- 	uint32_t timeout;
--	uint16_t flags;  /* TBD convert exch_busy to flags */
-+	uint16_t flags;
- #define LPFC_SBUF_XBUSY		0x1	/* SLI4 hba reported XB on WCQE cmpl */
- #define LPFC_SBUF_BUMP_QDEPTH	0x2	/* bumped queue depth counter */
- 					/* External DIF device IO conversions */
- #define LPFC_SBUF_NORMAL_DIF	0x4	/* normal mode to insert/strip */
- #define LPFC_SBUF_PASS_DIF	0x8	/* insert/strip mode to passthru */
- #define LPFC_SBUF_NOT_POSTED    0x10    /* SGL failed post to FW. */
--	uint16_t exch_busy;     /* SLI4 hba reported XB on complete WCQE */
- 	uint16_t status;	/* From IOCB Word 7- ulpStatus */
- 	uint32_t result;	/* From IOCB Word 4. */
+ static void qla24xx_abort_sp_done(void *ptr, int res)
+@@ -109,7 +122,8 @@ static void qla24xx_abort_sp_done(void *ptr, int res)
+ 	srb_t *sp = ptr;
+ 	struct srb_iocb *abt = &sp->u.iocb_cmd;
  
+-	if (del_timer(&sp->u.iocb_cmd.timer)) {
++	if ((res == QLA_OS_TIMER_EXPIRED) ||
++	    del_timer(&sp->u.iocb_cmd.timer)) {
+ 		if (sp->flags & SRB_WAKEUP_ON_COMP)
+ 			complete(&abt->u.abt.comp);
+ 		else
 -- 
 2.20.1
 
