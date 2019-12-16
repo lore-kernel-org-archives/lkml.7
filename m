@@ -2,115 +2,142 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 620DBC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E7BC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33035206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:09:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="Pp4eqeGn"
+	by mail.kernel.org (Postfix) with ESMTP id 3E3AB20726
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:09:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbfLPRGy (ORCPT
+        id S1727298AbfLPRJJ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 16 Dec 2019 12:09:09 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:27672 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727777AbfLPRGy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 12:06:54 -0500
-Received: from mail-dm6nam11on2045.outbound.protection.outlook.com ([40.107.223.45]:6092
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727717AbfLPRGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:06:47 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Y2aFV0b2iE+ffvgk5p/5PCEq6DeQxO4DjmEpkicD9Te20PEtRXj1l0lneRoq/rwYdx62DU6JIaVoBWbJnnMsuxud0wNEg5hWNHCT9g1XY6UogNZd2unUBOW9eukh77fz0mY3jmNJd+/sKYcF3GLVe29w12AlQnjACFvpzSCGEcIKvtSuBIXbhOZpnGJOCE0uDeSuKR5Ngion79ZVMAoAqEHdJPSYjzqKTSlfzivM91kXKuxs19MpblBsjJWRpmhTrwS8Y9gBSft1+Cfb6YgqfLBIJwCzVO2MGlco64uqErDW8mMcyZFUuQR+xn5vBL2kXR7TAPL6rDvRsYTYSj5XIA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NiwqIYI8P5k3+ifRaI0dZTotJIG9DHYZXl3NsSuZw8w=;
- b=DeJidyQP1NFGoKhPNXxjHqdlYZCTboItLgmU3n5Z7vZzY/5afwyunfnYkhYQqftaL6Vk1YTUncyG51vxdYEHEcND4BkEZ0ppBkPOi3/YNGO6vbyl5KpLwLwO7C/eIN2eIIAy7JCXFfYGbRFzYZQVsS1gfhPdUTcFDMfdr4PlrRIp56gPlNuXa1dghMw4GlyEarCRHA7MMGqEb3Wq3ESNypWcNIiTct1tBqy+fKin1Q85pMXvBcy/SJB+C9WF+9na9/fAcmRBFvQ00NIw2Yw8/NaTSbYp/CIhCLHr60bIqjNrDyysK6nLaJua2VQC5499If5bVcMdpQCYgp5+DsiDhg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NiwqIYI8P5k3+ifRaI0dZTotJIG9DHYZXl3NsSuZw8w=;
- b=Pp4eqeGnbh2pUIeTOlkIFxb1h2bBLMSkje3+V9j2Fz95vj/+W7lEHtvbqsswzeGJrVUsYrDYcdmcZZBcwgv530lFMcK9nhVfI1g21Th0GfWnqTYFy/IZ5u0VKbOs/fRftNZDwOEnmwpopYy1U+1gij2fU37Iblz0AVm7y1rSFn8=
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com (10.255.180.22) by
- MN2PR11MB4445.namprd11.prod.outlook.com (52.135.37.87) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.18; Mon, 16 Dec 2019 17:06:40 +0000
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::f46c:e5b4:2a85:f0bf]) by MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::f46c:e5b4:2a85:f0bf%4]) with mapi id 15.20.2538.019; Mon, 16 Dec 2019
- 17:06:39 +0000
-From:   =?utf-8?B?SsOpcsO0bWUgUG91aWxsZXI=?= <Jerome.Pouiller@silabs.com>
-To:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        =?utf-8?B?SsOpcsO0bWUgUG91aWxsZXI=?= <Jerome.Pouiller@silabs.com>
-Subject: [PATCH 36/55] staging: wfx: fix pm_mode timeout
-Thread-Topic: [PATCH 36/55] staging: wfx: fix pm_mode timeout
-Thread-Index: AQHVtDLKcxjSIwTc5kGd/Lrr+WZlcQ==
-Date:   Mon, 16 Dec 2019 17:03:52 +0000
-Message-ID: <20191216170302.29543-37-Jerome.Pouiller@silabs.com>
-References: <20191216170302.29543-1-Jerome.Pouiller@silabs.com>
-In-Reply-To: <20191216170302.29543-1-Jerome.Pouiller@silabs.com>
-Accept-Language: en-US
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-234-JuRnfgrMPl6iYDkTywHqlA-1; Mon, 16 Dec 2019 17:06:51 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 16 Dec 2019 17:06:50 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 16 Dec 2019 17:06:50 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Steven Rostedt' <rostedt@goodmis.org>
+CC:     'Tom Zanussi' <zanussi@kernel.org>,
+        Sven Schnelle <svens@stackframe.org>,
+        "linux-trace-devel@vger.kernel.org" 
+        <linux-trace-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: RE: ftrace histogram sorting broken on BE architecures
+Thread-Topic: ftrace histogram sorting broken on BE architecures
+Thread-Index: AQHVsSDKonZphcun20Oca4kHPqdeCKe87LwAgAAGU4CAAA+FUA==
+Date:   Mon, 16 Dec 2019 17:06:50 +0000
+Message-ID: <548eb8ae4b8742e4bf122af98b208925@AcuMS.aculab.com>
+References: <20191211123316.GD12147@stackframe.org>
+        <20191211103557.7bed6928@gandalf.local.home>
+        <20191211110959.2baeb70f@gandalf.local.home>
+        <1576178241.3309.2.camel@kernel.org>
+        <4805b40c3e1547f8a26eeac6932f6499@AcuMS.aculab.com>
+ <20191216110539.2b268d86@gandalf.local.home>
+In-Reply-To: <20191216110539.2b268d86@gandalf.local.home>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Jerome.Pouiller@silabs.com; 
-x-originating-ip: [37.71.187.125]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0efbac71-d6d3-41c9-e7e0-08d7824a5154
-x-ms-traffictypediagnostic: MN2PR11MB4445:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR11MB444564E52789B940FABBB73E93510@MN2PR11MB4445.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
-x-forefront-prvs: 02530BD3AA
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(366004)(39850400004)(396003)(136003)(189003)(199004)(110136005)(6486002)(107886003)(4744005)(36756003)(186003)(316002)(66946007)(54906003)(5660300002)(66574012)(66446008)(66556008)(85182001)(66476007)(76116006)(91956017)(64756008)(2616005)(6506007)(85202003)(2906002)(26005)(71200400001)(6512007)(4326008)(8936002)(81166006)(1076003)(478600001)(86362001)(81156014)(6666004)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4445;H:MN2PR11MB4063.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: silabs.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 4LzpIhHC6PyR1JoyVtpAi7JCMCs8g/PSS4QDmQaXs6m+AILosp/LqF6WRF2I3EbqsUrI0/KBLEPug+LAeyEV5jrotgf25uZeQlJI81Qfr6mYSxlHtoE/1BdX45AGRSZTI5ZVOmQD8wVmblZb+DrksH7D6TId21UPgZP3oV0/MsO1cDsmNY9nRv+zzZtiYDrbGTk7ombYblhJqVNfDwRLiSJyg5Muw0QHn2K4VNR1SRvGh9SGfHy8d2B1GC8HwG3aqXZdgoyrSXFiYUk0hL95/mNvYB6XMAgAKO+f18M1CDw+ZhyNsyN4QQ37GmPNNt0ZQvqko/73J4DYgKsEu6WEWBY1uGsT//3S3w0KuyrZiklrUBkYdrXXzUTiU98bjSyh2YBorKC/Kj9TJY6h8FrKWEaKYwxnrnIZQaX5YLEnH+bKtONQUoQemYU85QfGzD4h
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1F229203E031D94CBAADB965D4BF1927@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0efbac71-d6d3-41c9-e7e0-08d7824a5154
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Dec 2019 17:03:52.1274
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gxPnuuiZCwY7Op2K3arhuvi+QmMZX1vK9JdwWxSlyDcpjMQRwf/+CV5lNTp3GaqEVN+IEjhsYE4IdnzMQoCQwQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4445
+X-MC-Unique: JuRnfgrMPl6iYDkTywHqlA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSsOpcsO0bWUgUG91aWxsZXIgPGplcm9tZS5wb3VpbGxlckBzaWxhYnMuY29tPg0KDQpN
-YXhpbXVtIHJlcXVlc3QgdGltZSAoaG93IGxvbmcgYSByZXF1ZXN0IHdhaXQgZm9yIHRoZSBtZWRp
-dW0pIGlzIHNldCBpbg0KZmlybXdhcmUgdG8gNTEyVFUNCg0KU2lnbmVkLW9mZi1ieTogSsOpcsO0
-bWUgUG91aWxsZXIgPGplcm9tZS5wb3VpbGxlckBzaWxhYnMuY29tPg0KLS0tDQogZHJpdmVycy9z
-dGFnaW5nL3dmeC9zdGEuYyB8IDIgKy0NCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyks
-IDEgZGVsZXRpb24oLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvc3RhZ2luZy93Zngvc3RhLmMg
-Yi9kcml2ZXJzL3N0YWdpbmcvd2Z4L3N0YS5jDQppbmRleCBkY2I0NjkzZWM5ODAuLjQyYjBkMDFk
-ODVjYyAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvc3RhZ2luZy93Zngvc3RhLmMNCisrKyBiL2RyaXZl
-cnMvc3RhZ2luZy93Zngvc3RhLmMNCkBAIC0zNTksNyArMzU5LDcgQEAgc3RhdGljIGludCB3Znhf
-dXBkYXRlX3BtKHN0cnVjdCB3ZnhfdmlmICp3dmlmKQ0KIAl9DQogDQogCWlmICghd2FpdF9mb3Jf
-Y29tcGxldGlvbl90aW1lb3V0KCZ3dmlmLT5zZXRfcG1fbW9kZV9jb21wbGV0ZSwNCi0JCQkJCSBt
-c2Vjc190b19qaWZmaWVzKDMwMCkpKQ0KKwkJCQkJIFRVX1RPX0pJRkZJRVMoNTEyKSkpDQogCQlk
-ZXZfd2Fybih3dmlmLT53ZGV2LT5kZXYsDQogCQkJICJ0aW1lb3V0IHdoaWxlIHdhaXRpbmcgb2Yg
-c2V0X3BtX21vZGVfY29tcGxldGVcbiIpOw0KIAlyZXR1cm4gaGlmX3NldF9wbSh3dmlmLCAmcG0p
-Ow0KLS0gDQoyLjIwLjENCg==
+From: Steven Rostedt
+> Sent: 16 December 2019 16:06
+> On Mon, 16 Dec 2019 15:47:12 +0000
+> David Laight <David.Laight@ACULAB.COM> wrote:
+> 
+> > > From: Tom Zanussi
+> > > Sent: 12 December 2019 19:17
+> > > On Wed, 2019-12-11 at 11:09 -0500, Steven Rostedt wrote:
+> > > > On Wed, 11 Dec 2019 10:35:57 -0500
+> > > > Steven Rostedt <rostedt@goodmis.org> wrote:
+> > > >
+> > > > > > Any thoughts on how to fix this? I'm not sure whether i fully
+> > > > > > understand the
+> > > > > > ftrace maps... ;-)
+> > > > >
+> > > > > Your analysis makes sense. I'll take a deeper look at it.
+> > > >
+> > > > Sven,
+> > > >
+> > > > Does this patch fix it for you?
+> > > >
+> > > > Tom,
+> > > >
+> > > > Correct me if I'm wrong, from what I can tell, all sums and keys are
+> > > > u64 unless they are a string. Thus, I believe this patch should not
+> > > > have any issues.
+> > ...
+> > > > --- a/kernel/trace/tracing_map.c
+> > > > +++ b/kernel/trace/tracing_map.c
+> > > > @@ -148,8 +148,8 @@ static int tracing_map_cmp_atomic64(void *val_a,
+> > > > void *val_b)
+> > > >  #define DEFINE_TRACING_MAP_CMP_FN(type) 	\
+> > > >  static int tracing_map_cmp_##type(void *val_a, void *val_b) \
+> > > >  { \
+> > > > -	type a = *(type *)val_a; \
+> > > > -	type b = *(type *)val_b; \
+> > > > +	type a = (type)(*(u64 *)val_a); 	\
+> > > > +	type b = (type)(*(u64 *)val_b); 	\
+> > > > \
+> > > >  	return (a > b) ? 1 : ((a < b) ? -1 : 0); \
+> > > >  }
+> >
+> > That looks so horrid/wrong it can't be right on both BE and LE.
+> 
+> Well, the original is obviously not right for both BE and LE, but the
+> fix is:
+> 
+> 	type a = (type)(*(u64 *)val_a);
+> 
+> Which breaks down to:
+> 
+> 		(u64 *)val_a - make val_a a pointer to a u64 number
+> 
+> all values were written as u64.
+> 
+> 	u64 data = (u64)original_val_a
+> 
+> Where original_val_a could be a byte, short, int, long or long long.
+
+I'd sort of guessed that, but then the pointer type passed to tracing_map_cmp_##type()
+will always be 'u64 *' (since the field the address is taken of must be that type).
+Then the (u64 *) casts are no longer needed.
+
+Possibly you can just pass the u64 values to:
+tracing_map_cmp_##type(type a, type b)
+{
+	return a > b ? 1 : a < b ? -1 : 0;
+}
+
+The high bit masking and sign extension is then implicit in the call.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
