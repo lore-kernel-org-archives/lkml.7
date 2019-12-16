@@ -2,181 +2,105 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44970C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D91BC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17A082067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:49:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5356B206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:50:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lKMXj16A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728190AbfLPOts (ORCPT
+        id S1728197AbfLPOu6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 09:49:48 -0500
-Received: from mout.kundenserver.de ([217.72.192.75]:38319 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728014AbfLPOts (ORCPT
+        Mon, 16 Dec 2019 09:50:58 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:54558 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728086AbfLPOu6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 09:49:48 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1Mofst-1hwGO02HIf-00p79V; Mon, 16 Dec 2019 15:49:13 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Julian Calaby <julian.calaby@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] y2038: sparc: remove use of struct timex
-Date:   Mon, 16 Dec 2019 15:48:53 +0100
-Message-Id: <20191216144907.1931511-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Mon, 16 Dec 2019 09:50:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Y3dsY+rCZ72stCfTD3m+0TsmTj/a4NlFQ0hd6IQYEPE=; b=lKMXj16A/yhZR/XjFy7+ZjF8B
+        2bUZJOzvcQsK9xwHXf8tjsXQOXRKjUh6GBlMdQrCSbGiqz1LyP/9dzCE4qkaP09VIVxfbKC5gMcu1
+        WXcrxCYzpFa9fPXh/JEMhJyImklEZeBWsVfEkcXiqp8iCEa1XaAQ09Wui5gKRaXxnGtjnBplpB5is
+        dJjgkX33tJ7LdVSkzUQYX4CVoZ/Xk/A8nL0YRQz7yjFIemb2vchlxD1kKirmFo9YWHVLkujUJD22T
+        WvlRkH+xkMjgeEKfG1tIY0PWvF7OWX5sp7QWxrl/GtT9+k2fzmY9UwKQ57KQ8/L2zTh+eQ9peyhEd
+        hBWcq5leA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1igrhs-0001L1-Gl; Mon, 16 Dec 2019 14:50:44 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 974E0301747;
+        Mon, 16 Dec 2019 15:49:19 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 79DAE2B2A1923; Mon, 16 Dec 2019 15:50:41 +0100 (CET)
+Date:   Mon, 16 Dec 2019 15:50:41 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nick Piggin <npiggin@gmail.com>, linux-arch@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Helge Deller <deller@gmx.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Nick Hu <nickhu@andestech.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Re: [PATCH 05/17] asm-generic/tlb: Rename
+ HAVE_RCU_TABLE_NO_INVALIDATE
+Message-ID: <20191216145041.GG2827@hirez.programming.kicks-ass.net>
+References: <20191211120713.360281197@infradead.org>
+ <20191211122955.940455408@infradead.org>
+ <87woawzc1t.fsf@linux.ibm.com>
+ <20191216123752.GM2844@hirez.programming.kicks-ass.net>
+ <d52ea890-c2ea-88f3-9d62-b86e60ee77ae@linux.ibm.com>
+ <20191216132004.GO2844@hirez.programming.kicks-ass.net>
+ <a9ae27c8-aa84-cda3-355c-7abb3b450d38@linux.ibm.com>
+ <33ed03aa-a34c-3a81-0f83-20c3e8d4eff7@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:SD9rTavFUocz6lTgBzyWJKCDwZMGx6GQHqRzwZ5WgDi5LT4Zg47
- 60bHxonI53Bup8EujS4+6F+AMH/CfRjJySvogLwX86fOQ7WmIUSun0AYvtDdbHi0DCOuoHc
- HQQtPAOoXE/b+7Nx/Fanu1Vkc3/zSWXyitoA3+dGpn3owdwtAOIrT9udBSwqYgwXJf0Vf55
- Yki730p6PxSbIOZ/qRdXA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:A28Gjab46IU=:TUSBcmj2VLOO7RKETeVmBR
- 1tcCM3ko/hKnpa6Tdwxb21L+ZGs3s6yjR7fFX0/GwWMlqQh7pi3n1KHeKAxh6zJooB/3fa/5o
- 5BK9DD27o/1RJNfemhrKN1El8pk4PRC6G2juiuVHAjTViFMINEQaGa9Z6VTBVX+hyGVdJzQUf
- tK94d6+tIJgj6l0oVWL7TS1CtIwrTpGPQc75e2IrJesrvX2rapbVleWe1Dz05xW/1TDPkZcsD
- w7fPFX7winY5wLDW+E1zi6f3/5PlDDcVI28Bmb1Jh+AmGOE12lLqIU+DpDtSiWhfDCNnluwh5
- pS4ROP79ZFWzR2Zg70YenCovyCw8lvKIyHZzacr3i5cyct592BX5Ghlu5HWIu04O16wbgkt+D
- o5dm8O+MzRAv+urpEoAFLca1oofWvS670IyDbnV8hhhJVjlSgfmX91W15B9+s1uyec+dbR7C+
- knrvxqLhupx1Ls8rLg0LI/KzklBWl0uekrqlr84SzmxaDLeDROP1IrzGuFwfdJvppAF298IT5
- 1eH7toqXnK+9G9VCPENuC527adM8xmxhXoHbaeIQr3NdzW6ceg/QiUciJ8A/3Cp3+4UO82Vpq
- maxK/nq25gOOHCcldjRgb+sEOpbXgUIr8cbcKlt4Cnes7V+gUzRqzpjb35678QmHna3ovhiFO
- 4h0BCnH6gnugAhB+b8AwKzVzuCbybVFBQcP1ezetkovXJ/8nsZohGVinUEdW0UomZNXTw/bJm
- jSbY8FatMuxuMyqjlgZ81SdQwvaHAREzmw8LKAAoPNY2RZVUNmAOe4C5oLtvfX/lU/Utgwskc
- pB6mW8Hp8kmtekDFW1yiIeatoDsoP6j1q21uaIiM2qSJayLZX5qklURkysxFDplncRgEdSRyQ
- HV1TuGVr9Nu7s3cZHeWQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <33ed03aa-a34c-3a81-0f83-20c3e8d4eff7@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'struct timex' is one of the last users of 'struct timeval' and is
-only referenced in one place in the kernel any more, to convert the
-user space timex into the kernel-internal version on sparc64, with a
-different tv_usec member type.
+On Mon, Dec 16, 2019 at 07:24:24PM +0530, Aneesh Kumar K.V wrote:
 
-As a preparation for hiding the time_t definition and everything
-using that in the kernel, change the implementation once more
-to only convert the timeval member, and then enclose the
-struct definition in an #ifdef.
+> So __p*_free_tlb() routines on ppc64 just mark that we need a page walk
+> cache flush and the actual flush in done in tlb_flush_mmu.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-v2: send a version that it at least build tested this time
+Not quite, your __p*_free_tlb() goes to pgtable_free_tlb() which call
+tlb_remove_table().
 
-If this looks ok to you, please queue it in the sparc git for v5.6
+> As per
+> 
+> d86564a2f085b79ec046a5cba90188e61235280 (mm/tlb, x86/mm: Support
+> invalidating TLB caches for RCU_TABLE_FREE ) that is not sufficient?
 
- arch/sparc/kernel/sys_sparc_64.c | 33 ++++++++++++++++----------------
- include/uapi/linux/timex.h       |  2 ++
- 2 files changed, 19 insertions(+), 16 deletions(-)
+96bc9567cbe1 ("asm-generic/tlb, arch: Invert CONFIG_HAVE_RCU_TABLE_INVALIDATE")
 
-diff --git a/arch/sparc/kernel/sys_sparc_64.c b/arch/sparc/kernel/sys_sparc_64.c
-index 9f41a6f5a032..34917617f258 100644
---- a/arch/sparc/kernel/sys_sparc_64.c
-+++ b/arch/sparc/kernel/sys_sparc_64.c
-@@ -548,34 +548,35 @@ SYSCALL_DEFINE2(getdomainname, char __user *, name, int, len)
- 	return err;
- }
- 
--SYSCALL_DEFINE1(sparc_adjtimex, struct timex __user *, txc_p)
-+SYSCALL_DEFINE1(sparc_adjtimex, struct __kernel_timex __user *, txc_p)
- {
--	struct timex txc;		/* Local copy of parameter */
--	struct __kernel_timex *kt = (void *)&txc;
-+	struct __kernel_timex txc;
-+	struct __kernel_old_timeval *tv = (void *)&txc_p->time;
- 	int ret;
- 
- 	/* Copy the user data space into the kernel copy
- 	 * structure. But bear in mind that the structures
- 	 * may change
- 	 */
--	if (copy_from_user(&txc, txc_p, sizeof(struct timex)))
-+	if (copy_from_user(&txc, txc_p, sizeof(txc)))
- 		return -EFAULT;
- 
- 	/*
- 	 * override for sparc64 specific timeval type: tv_usec
- 	 * is 32 bit wide instead of 64-bit in __kernel_timex
- 	 */
--	kt->time.tv_usec = txc.time.tv_usec;
--	ret = do_adjtimex(kt);
--	txc.time.tv_usec = kt->time.tv_usec;
-+	txc.time.tv_usec = tv->tv_usec;
-+	ret = do_adjtimex(&txc);
-+	tv->tv_usec = txc.time.tv_usec;
- 
--	return copy_to_user(txc_p, &txc, sizeof(struct timex)) ? -EFAULT : ret;
-+	return copy_to_user(txc_p, &txc, sizeof(txc)) ? -EFAULT : ret;
- }
- 
--SYSCALL_DEFINE2(sparc_clock_adjtime, const clockid_t, which_clock,struct timex __user *, txc_p)
-+SYSCALL_DEFINE2(sparc_clock_adjtime, const clockid_t, which_clock,
-+		struct __kernel_timex __user *, txc_p)
- {
--	struct timex txc;		/* Local copy of parameter */
--	struct __kernel_timex *kt = (void *)&txc;
-+	struct __kernel_timex txc;
-+	struct __kernel_old_timeval *tv = (void *)&txc_p->time;
- 	int ret;
- 
- 	if (!IS_ENABLED(CONFIG_POSIX_TIMERS)) {
-@@ -590,18 +591,18 @@ SYSCALL_DEFINE2(sparc_clock_adjtime, const clockid_t, which_clock,struct timex _
- 	 * structure. But bear in mind that the structures
- 	 * may change
- 	 */
--	if (copy_from_user(&txc, txc_p, sizeof(struct timex)))
-+	if (copy_from_user(&txc, txc_p, sizeof(txc)))
- 		return -EFAULT;
- 
- 	/*
- 	 * override for sparc64 specific timeval type: tv_usec
- 	 * is 32 bit wide instead of 64-bit in __kernel_timex
- 	 */
--	kt->time.tv_usec = txc.time.tv_usec;
--	ret = do_clock_adjtime(which_clock, kt);
--	txc.time.tv_usec = kt->time.tv_usec;
-+	txc.time.tv_usec = tv->tv_usec;
-+	ret = do_clock_adjtime(which_clock, &txc);
-+	tv->tv_usec = txc.time.tv_usec;
- 
--	return copy_to_user(txc_p, &txc, sizeof(struct timex)) ? -EFAULT : ret;
-+	return copy_to_user(txc_p, &txc, sizeof(txc)) ? -EFAULT : ret;
- }
- 
- SYSCALL_DEFINE5(utrap_install, utrap_entry_t, type,
-diff --git a/include/uapi/linux/timex.h b/include/uapi/linux/timex.h
-index 9f517f9010bb..bd627c368d09 100644
---- a/include/uapi/linux/timex.h
-+++ b/include/uapi/linux/timex.h
-@@ -57,6 +57,7 @@
- 
- #define NTP_API		4	/* NTP API version */
- 
-+#ifndef __KERNEL__
- /*
-  * syscall interface - used (mainly by NTP daemon)
-  * to discipline kernel clock oscillator
-@@ -91,6 +92,7 @@ struct timex {
- 	int  :32; int  :32; int  :32; int  :32;
- 	int  :32; int  :32; int  :32;
- };
-+#endif
- 
- struct __kernel_timex_timeval {
- 	__kernel_time64_t       tv_sec;
--- 
-2.20.0
+And no. Since you have TABLE_NO_INVALIDATE set, tlb_remove_table() will
+not TLBI when it fails to allocate a batch page, which is an error for
+PPC-Radix.
 
+There is also no TLBI when the batch page is full and the RCU callback
+happens, which is also a bug on PPC-Radix.
