@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 639FFC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0930C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31DCA21835
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:49:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FF6321835
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:49:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576522166;
-	bh=l8vmj9ogPn3skiz7aMXSpTKDK2qnZilRS/XoaFSQH+o=;
+	s=default; t=1576522168;
+	bh=rDrWEFPlw/zmsNcazXUyUrysqrnelma9cR2EgBlJnSg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Oa8plZMk5wcE3fVxS7/nOEmd5DyRq8l7Pw0MU35XDQqINWq2JaeS8sYp8rak5pQ2G
-	 xDF0nLKkW1ZraKF01mUf45fFp8DZhc5OSMYrXM547zKR9g1E8gWIQuViVgKr1/Bv3a
-	 WoAW7DMDxNmrG4VwVAjE5c+98YCc3AoDjAZxboBA=
+	b=ry3KzTVx7TkcCG84aIBiuHslTvgEGTYRO1FyN2ViDk0MOXhKfR3L7WBgXnZES9AAN
+	 IHnx2hunZcKIDoCGJ+MBSlOBQ1Eemhy0Tc3QTxL8UOHpsn4XCYFVbNq4rhRxCdT1Nf
+	 B2mMGDl/XxZnxcuGU+ajNatczKhY/hLD+6JM/qtc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727678AbfLPRxE (ORCPT
+        id S1727646AbfLPRw4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:53:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45976 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:52:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727656AbfLPRxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:53:00 -0500
+        id S1727620AbfLPRwx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:52:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85D272166E;
-        Mon, 16 Dec 2019 17:52:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CA502166E;
+        Mon, 16 Dec 2019 17:52:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518780;
-        bh=l8vmj9ogPn3skiz7aMXSpTKDK2qnZilRS/XoaFSQH+o=;
+        s=default; t=1576518772;
+        bh=rDrWEFPlw/zmsNcazXUyUrysqrnelma9cR2EgBlJnSg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z66n1GUZEHICxigzWn7OJ6lEf96Tm26RSwJO4ewL6Jtxk5Ac5K/BvUPL/ZlI2xMU7
-         h0/fk8XDp6ZzxEp5/BWjJk3ifuZsINcS7gN9ZV/kmXSaIGm6H54SapKoCrhCp0to/7
-         KhAxfRk7x7WmfhUi18189pM2AYJ+fF5Jc7nZSBRU=
+        b=IRqNThU/kRYAxuu2jXW4UCQcZbOftyLBYMIer+28WR/ExCDthX8FqQZAZnxnsvKxX
+         BOb/rU7+RSdgWnBBkao/zey6ySBtpdNT3vRRHnXlsD9DBEzmjNG3VE8MVEfMOc7C7j
+         ObI7XXu4u8Uazs9d7Rp47c0eA7J0LMnmc1yOnd4E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
+        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 024/267] iwlwifi: mvm: synchronize TID queue removal
-Date:   Mon, 16 Dec 2019 18:45:50 +0100
-Message-Id: <20191216174851.549379891@linuxfoundation.org>
+Subject: [PATCH 4.14 058/267] media: cec: report Vendor ID after initialization
+Date:   Mon, 16 Dec 2019 18:46:24 +0100
+Message-Id: <20191216174855.421885798@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -60,45 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-[ Upstream commit 06bc6f6ed4ae0246a5e52094d1be90906a1361c7 ]
+[ Upstream commit 7f02ac77c768ba2bcdd0ce719c1fca0870ffe2fb ]
 
-When we mark a TID as no longer having a queue, there's no
-guarantee the TX path isn't using this txq_id right now,
-having accessed it just before we reset the value. To fix
-this, add synchronize_net() when we change the TIDs from
-having a queue to not having one, so that we can then be
-sure that the TX path is no longer accessing that queue.
+The CEC specification requires that the Vendor ID (if any) is reported
+after a logical address was claimed.
 
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+This was never done, so add support for this.
+
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/sta.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/media/cec/cec-adap.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-index d16e2ed4419fe..0cfdbaa2af3a7 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-@@ -436,6 +436,16 @@ static int iwl_mvm_remove_sta_queue_marking(struct iwl_mvm *mvm, int queue)
- 
- 	rcu_read_unlock();
- 
-+	/*
-+	 * The TX path may have been using this TXQ_ID from the tid_data,
-+	 * so make sure it's no longer running so that we can safely reuse
-+	 * this TXQ later. We've set all the TIDs to IWL_MVM_INVALID_QUEUE
-+	 * above, but nothing guarantees we've stopped using them. Thus,
-+	 * without this, we could get to iwl_mvm_disable_txq() and remove
-+	 * the queue while still sending frames to it.
-+	 */
-+	synchronize_net();
+diff --git a/drivers/media/cec/cec-adap.c b/drivers/media/cec/cec-adap.c
+index f8a808d45034e..27e57915eb4d1 100644
+--- a/drivers/media/cec/cec-adap.c
++++ b/drivers/media/cec/cec-adap.c
+@@ -1403,6 +1403,13 @@ configured:
+ 			las->log_addr[i],
+ 			cec_phys_addr_exp(adap->phys_addr));
+ 		cec_transmit_msg_fh(adap, &msg, NULL, false);
 +
- 	return disable_agg_tids;
- }
- 
++		/* Report Vendor ID */
++		if (adap->log_addrs.vendor_id != CEC_VENDOR_ID_NONE) {
++			cec_msg_device_vendor_id(&msg,
++						 adap->log_addrs.vendor_id);
++			cec_transmit_msg_fh(adap, &msg, NULL, false);
++		}
+ 	}
+ 	adap->kthread_config = NULL;
+ 	complete(&adap->config_completion);
 -- 
 2.20.1
 
