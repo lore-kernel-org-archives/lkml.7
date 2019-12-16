@@ -2,143 +2,133 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE192C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 06:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 517D3C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 06:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B44B62072B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 06:53:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="Pj6hI+Gq";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="sm2n9QN7"
+	by mail.kernel.org (Postfix) with ESMTP id 3166520700
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 06:53:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbfLPGxd (ORCPT
+        id S1726664AbfLPGxo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 01:53:33 -0500
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:49828 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726054AbfLPGxd (ORCPT
+        Mon, 16 Dec 2019 01:53:44 -0500
+Received: from mo-csw1516.securemx.jp ([210.130.202.155]:33644 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbfLPGxn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 01:53:33 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 3E7D78EE163;
-        Sun, 15 Dec 2019 22:53:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1576479212;
-        bh=Ub9QRo79yJlVnlr2oeZdZ301Q6v8WTDU9BOX4gLpaag=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Pj6hI+GqatQ04MmhUIj5idZNzTAYUcr0vIioF1HglrD4I3aK/E563yo3NwlnPl9jN
-         +umghs3f0tWrH6vfulqjmBtERnVMd0OROGVlNyh4pAAGumW2KrFht267MVR0a5gWH3
-         fttWODWrFMnpxdyoPPeKTwvF+AXk8BZ5Y8uNIJ+Y=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 0dI3UALlt898; Sun, 15 Dec 2019 22:53:32 -0800 (PST)
-Received: from [10.30.62.156] (unknown [103.5.140.163])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 014C38EE0E2;
-        Sun, 15 Dec 2019 22:53:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1576479211;
-        bh=Ub9QRo79yJlVnlr2oeZdZ301Q6v8WTDU9BOX4gLpaag=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=sm2n9QN7+7rGuZJ4JiWOff5A6+cy2uc0c+kxLSutr4ywCpenJU3C1m9G3eeAsw7/c
-         1LkilIWP+skklUmF+C3rMIiaEGcM+4HLZCWcBFHBODDDmJheRLW6VJ0NIlgMzDcv2S
-         PWzHoFLlJeAkhcA1ZixJlDl8+0LrAhJurTtNXFbI=
-Message-ID: <1576479187.3784.1.camel@HansenPartnership.com>
-Subject: Re: [PATCH v4 2/2] IMA: Call workqueue functions to measure queued
- keys
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        zohar@linux.ibm.com, linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
-        sashal@kernel.org, jamorris@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-Date:   Mon, 16 Dec 2019 15:53:07 +0900
-In-Reply-To: <1568ff14-316f-f2c4-84d4-7ca4c0a1936a@linux.microsoft.com>
-References: <20191213171827.28657-1-nramas@linux.microsoft.com>
-         <20191213171827.28657-3-nramas@linux.microsoft.com>
-         <1576257955.8504.20.camel@HansenPartnership.com>
-         <39624b97-245c-ed05-27c5-588787aacc00@linux.microsoft.com>
-         <1576423353.3343.3.camel@HansenPartnership.com>
-         <1568ff14-316f-f2c4-84d4-7ca4c0a1936a@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 16 Dec 2019 01:53:43 -0500
+Received: by mo-csw.securemx.jp (mx-mo-csw1516) id xBG6rTSv011327; Mon, 16 Dec 2019 15:53:29 +0900
+X-Iguazu-Qid: 34tKGlJZZm5ZOtrFJg
+X-Iguazu-QSIG: v=2; s=0; t=1576479208; q=34tKGlJZZm5ZOtrFJg; m=1iGBw1Qi+KmDlKhNqILFR4qOVaGF3CybMVK/P0DyAvw=
+Received: from imx2.toshiba.co.jp (imx2.toshiba.co.jp [106.186.93.51])
+        by relay.securemx.jp (mx-mr1512) id xBG6rRun013693;
+        Mon, 16 Dec 2019 15:53:28 +0900
+Received: from enc01.localdomain ([106.186.93.100])
+        by imx2.toshiba.co.jp  with ESMTP id xBG6rRcx004446;
+        Mon, 16 Dec 2019 15:53:27 +0900 (JST)
+Received: from hop001.toshiba.co.jp ([133.199.164.63])
+        by enc01.localdomain  with ESMTP id xBG6rR6r026063;
+        Mon, 16 Dec 2019 15:53:27 +0900
+From:   Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     linux-serial@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, nobuhiro1.iwamatsu@toshiba.co.jp,
+        shrirang.bagul@canonical.com, robh@kernel.org,
+        gregkh@linuxfoundation.org, johan@kernel.org
+Subject: Re: [RFC 0/1] serdes: Add whitelist to bring back missing serial port
+References: <20191216040825.523720-1-punit1.agrawal@toshiba.co.jp>
+        <b1ce4dff-7239-640a-fcc3-4ff935fdb3a7@redhat.com>
+Date:   Mon, 16 Dec 2019 15:54:06 +0900
+In-Reply-To: <b1ce4dff-7239-640a-fcc3-4ff935fdb3a7@redhat.com> (Hans de
+        Goede's message of "Mon, 16 Dec 2019 07:29:46 +0100")
+X-TSB-HOP: ON
+Message-ID: <87woawpxpt.fsf@kokedama.swc.toshiba.co.jp>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2019-12-15 at 17:12 -0800, Lakshmi Ramasubramanian wrote:
-> On 12/15/2019 7:22 AM, James Bottomley wrote:
-> 
-> Hi James,
-> 
-> > 
-> > This is the problem:
-> > 
-> > if (!flag)
-> >      pre()
-> > .
-> > .
-> > .
-> > if (!flag)
-> >      post()
-> > 
-> > And your pre and post function either have to both run or neither
-> > must.
-> >   However, the flag is set asynchronously, so if it gets set while
-> > another thread is running through the above code, it can change
-> > after
-> > pre is run but before post is.
-> > 
-> > James
-> 
-> The pre() and post() functions you have referenced above including
-> the 
-> check for the flag are executed with the mutex held.
-> 
-> Please see Mimi's response to the v3 email. I have copied it below:
-> 
-> ************************************
-> Reading the flag IS lock protected, just spread across two functions.
-> For performance, ima_post_key_create_or_update() checks
-> ima_process_keys, before calling ima_queue_key(), which takes the
-> mutex before checking ima_process_keys again.
-> 
-> As long as both the reader and writer, take the mutex before checking
-> the flag, the locking is fine.  The additional check, before taking
-> the mutex, is simply for performance.
-> ************************************
-> 
-> The flag is checked with the mutex held in the "reader" - 
-> ima_queue_key(). The key is queued with the mutex held only if the
-> flag 
-> is false.
-> 
-> The flag is protected in the "writer" also -
-> ima_process_queued_keys(). 
-> The flag is checked with the mutex held, set to true, and queued
-> keys 
-> (if any) are transferred to the temp list.
-> 
-> As Mimi has pointed out the additional check of the flag, before
-> taking 
-> the mutex in ima_post_key_create_or_update() and in 
-> ima_process_queued_keys(), is for performance reason.
-> 
-> If the flag is true, there is no need to take the mutex to check it 
-> again in those functions.
+Hi Hans,
 
-That doesn't matter ... the question is, is the input assumption that
-both pre/post have to be called or neither must correct?  If so, the
-code is wrong, if not, explain why.
+Thanks for chiming in.
 
-James
+Hans de Goede <hdegoede@redhat.com> writes:
 
+> HI,
+>
+> On 16-12-2019 05:08, Punit Agrawal wrote:
+>>
+>> Hi,
+>>
+>> While booting v5.5-rc1 on Apollo Lake based UP2[0], I ran into an
+>> issue with the primary serial port. The kernel is able to output to
+>> ttyS0 but systemd isn't able to raise a login prompt. On further
+>> investigation, it turns out that no serial device (/dev/ttyS0) is
+>> being created as the device is claimed by serdev sub-system.
+>>
+>> The issue has been reported in a few different places[0][1]. A patch
+>> was proposed to solve the issue but there doesn't seem to be any
+>> further progress[2]. Feedback on the thread suggested implementing a
+>> whitelist based approach - which is what this RFC does.
+>>
+>> With this patch, systemd is able to create a login prompt. The
+>> whitelist has intentionally been left blank as it's not clear which
+>> devices go in there.
+>
+> As I already mentioned when discussing this upstream:
+>
+> https://marc.info/?l=linux-serial&m=152460460418058&w=2
+>
+> I am afraid that a whitelist is not going to fly, that means
+> duplicating all the device-ids in all the relevant drivers and that
+> everytime we add a device-id we need to do so in 2 places. Just take
+> a look at drivers/bluetooth/hci_bcm.c at the device-id list starting
+> at line 1187 and that is just 1 driver.
+
+I had seen the linked mail but was missing the context given here. I am
+not that familiar with the serial devices framework.
+
+>
+> I also mention a hack for RTL8723BS devices there, but those have
+> gotten a proper in kernel driver in the mean time.
+>
+> Looking at the ACPI device id list in the proposed upstream fix
+> with a "hsuart serdev driver":
+> https://www.spinics.net/lists/linux-serial/msg30035.html
+>
+> +static const struct acpi_device_id hsuart_acpi_match[] = {
+> +	{"INT3511", 0},
+> +	{"INT3512", 0},
+> +	{ },
+> +};
+>
+> Then blacklist with just these 2 ids would clearly be a much better
+> approach, as we are talking 2 ids vs 50+ ids here for whitelist vs
+> blacklist.
+>
+> The whitepaper on this:
+> https://www.intel.com/content/dam/www/public/us/en/documents/white-papers/enabling-multi-com-port-white-paper.pdf
+> Also mentions these 2 as "the default Hardware IDs (INT3511 and INT3512) used here are Intel HS-UART COM
+> port peripheral device IDs." as the hardware ids to use if the port has no
+> specific function, in other words to use these 2 ids when under Linux the
+> serial-port should just show up as a /dev/ttyS* device.
+>
+> So I believe that the fix here is using a blacklist with just these 2
+> ids in there.
+
+That makes sense.
+
+A shorter list of exceptions is better than the longer list of supported
+device list that is going to be duplicated.
+
+I will respin the patches taking the blacklist approach if there is no
+other feedback.
+
+Thanks,
+Punit
