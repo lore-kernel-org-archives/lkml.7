@@ -2,205 +2,108 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1DAC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 642E8C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36C2E206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:03:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32C5A206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:03:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R3b/heiV"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="c+nMPYIj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727615AbfLPLDv (ORCPT
+        id S1727649AbfLPLD4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 06:03:51 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24294 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727466AbfLPLDv (ORCPT
+        Mon, 16 Dec 2019 06:03:56 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:34498 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727617AbfLPLDz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 06:03:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576494229;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=p2RmlOI11xjoTh4Dpq+Ljz66BvE8FSYAOiBa1w/vy/Y=;
-        b=R3b/heiVfXBM8H3+4CBNRAmvBXAx185L2DEqbbQZV9K278dL1tAvgAn6fStb1ro80xBtoP
-        nWMqScvunhXOtlnCWncMlblZpHc4uKyHyq62z8vbBorDfY8V4fDpWTh+MzVasP7JanwWwF
-        X4NbNIIEwwDj0w27n3mZEj2BqA1KVhs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-326-81QW0wMKOQyAWOo-d9MEaQ-1; Mon, 16 Dec 2019 06:03:45 -0500
-X-MC-Unique: 81QW0wMKOQyAWOo-d9MEaQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6A751107ACCD;
-        Mon, 16 Dec 2019 11:03:40 +0000 (UTC)
-Received: from [10.36.118.132] (unknown [10.36.118.132])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 93B105D9C5;
-        Mon, 16 Dec 2019 11:03:22 +0000 (UTC)
-Subject: Re: [PATCH RFC v4 00/13] virtio-mem: paravirtualized memory
-To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Sebastien Boeuf <sebastien.boeuf@intel.com>,
-        Samuel Ortiz <samuel.ortiz@intel.com>,
-        Robert Bradford <robert.bradford@intel.com>,
-        Luiz Capitulino <lcapitulino@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Alexander Potapenko <glider@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Young <dyoung@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Juergen Gross <jgross@suse.com>, Len Brown <lenb@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Wei Yang <richard.weiyang@gmail.com>
-References: <20191212171137.13872-1-david@redhat.com>
- <20191213201556.GC26990@char.us.oracle.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <178a5e94-f1f1-130c-9a28-2b8dd2be2abe@redhat.com>
-Date:   Mon, 16 Dec 2019 12:03:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 16 Dec 2019 06:03:55 -0500
+Received: by mail-qt1-f194.google.com with SMTP id 5so5449819qtz.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 03:03:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=KyT8iX33k7sFRkYd4RU7rY84Ij+yNZq0ApEE/O2fu+4=;
+        b=c+nMPYIjLlikLb2ZpmWU4U9s9hyYGvdF3o6ckh0KkdQWhoWxbaPpDXJjUfQoEjL4hs
+         JiqsWAkvw7+QhnYVC6Hm589MhvP5vdsHr/5C7CCmG19vVxIFQ8vQOct17sSzVFBr+E9w
+         WFZ53+XrUR+uIO3iN0ibxCexTTT377SJSCEV3v8jLXqTN1pJmxZz6+r8cnSemfqwTKtg
+         lN8RVRkPGWkVjY9s7IVZsYQfZ6VNmu+6leKlecJSTaLumd7U5JjtK1V1VzQIyZpbPQE1
+         9hXv3CvWDoV2MBW6kEiIztHmOeAZWFr6dl7BYg39nXpZM9umvUJBAdNswAK4F/Jp0GIj
+         GNhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=KyT8iX33k7sFRkYd4RU7rY84Ij+yNZq0ApEE/O2fu+4=;
+        b=Nfdk0KNw0tVK5PvvSYZqUB5yMdJbwJdST1hhQofHAJTOGsygDIuIe0lGneCvEE9Qha
+         YSYNn7Yqq4meuTl4Pk00tHbkkRjlHtS63F3mRhXNIcWYj4XCkJwoSY7WbndFwsQcVxcW
+         z/GaqO4V7CjkVW11DnBOXn1/vN/MRtbhRyCvP7DVa7MTp/xUzXvkeDrQeG85sfAr4BUx
+         N9e0lhqG86T2cl0T+Q5zLW6P0DyT9kSHxI3OuTsWZGy6DX5eMdLds94MjVhX7a8dg+Kt
+         qN0vBifW0a0HJ/kFHNqlmeKu5D88IGOXT4GzNDuSy5NYM1vMr7bgTTmb2u69y0ruX/3B
+         ZF/w==
+X-Gm-Message-State: APjAAAWO9Il4kG579pr1DmD/+KX53lZhJ2ZzMDZVTodCBPJxtYHEl4cr
+        GGHQVA9Fr6cvgnGpYH8CjhwydKdSI2Aa1D/SFvYVcA==
+X-Google-Smtp-Source: APXvYqzw6JZzysee+REdRGrquVmuOvAlaSakT5VJ1hcbEefqMpv5n487ZNnV9cdF1eId5+6AYmJ11V8kLlSsj2qNIv0=
+X-Received: by 2002:ac8:5208:: with SMTP id r8mr23685802qtn.131.1576494234130;
+ Mon, 16 Dec 2019 03:03:54 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191213201556.GC26990@char.us.oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+References: <20191210154157.21930-1-ktouil@baylibre.com> <20191210154157.21930-5-ktouil@baylibre.com>
+ <CACRpkdbHLv2R+XvCjCaEgaztUqpmHWCmSAqHABkkstJREkmfVw@mail.gmail.com>
+In-Reply-To: <CACRpkdbHLv2R+XvCjCaEgaztUqpmHWCmSAqHABkkstJREkmfVw@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 16 Dec 2019 12:03:42 +0100
+Message-ID: <CAMpxmJWGRskDudwLpzVZKvYb=Gbcxy6s0gCLUUFkgLq-CYEiZg@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] eeprom: at24: remove the write-protect pin support
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Khouloud Touil <ktouil@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        baylibre-upstreaming@groups.io,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13.12.19 21:15, Konrad Rzeszutek Wilk wrote:
-> On Thu, Dec 12, 2019 at 06:11:24PM +0100, David Hildenbrand wrote:
->> This series is based on latest linux-next. The patches are located at:
->>     https://github.com/davidhildenbrand/linux.git virtio-mem-rfc-v4
-> Heya!
+pon., 16 gru 2019 o 09:13 Linus Walleij <linus.walleij@linaro.org> napisa=
+=C5=82(a):
+>
+> On Tue, Dec 10, 2019 at 4:42 PM Khouloud Touil <ktouil@baylibre.com> wrot=
+e:
+>
+> > NVMEM framework is an interface for the at24 EEPROMs as well as for
+> > other drivers, instead of passing the wp-gpios over the different
+> > drivers each time, it would be better to pass it over the NVMEM
+> > subsystem once and for all.
+> >
+> > Removing the support for the write-protect pin after adding it to the
+> > NVMEM subsystem.
+> >
+> > Signed-off-by: Khouloud Touil <ktouil@baylibre.com>
+>
+> I wonder if this needs to be in the same patch that adds it to
+> the NVMEM subsystem, so as to avoid both code paths being
+> taken between the two patches (bisectability..)
+>
+> However that is not the biggest thing in the universe and I'm
+> no bisectability-perfectionist, so:
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>
+> Yours,
+> Linus Walleij
 
-Hi Konrad!
+AFAIK Khouloud tested it and it's bisectable thanks to using the
+optional gpiod_get() variant.
 
->=20
-> Would there be by any chance a virtio-spec git tree somewhere?
-
-I haven't started working on a spec yet - it's on my todo list but has
-low priority (one-man-team). I'll focus on the QEMU pieces next, once
-the kernel part is in an acceptable state.
-
-The uapi file contains quite some documentation - if somebody wants to
-start hacking on an alternative hypervisor implementation, I'm happy to
-answer questions until I have a spec ready.
-
->=20
-> ..snip..
->> ----------------------------------------------------------------------=
-----
->> 5. Future work
->> ----------------------------------------------------------------------=
-----
->>
->> The separate patches contain a lot of future work items. One of the ne=
-xt
->> steps is to make memory unplug more likely to succeed - currently, the=
-re
->> are no guarantees on how much memory can get unplugged again. I have
->=20
->=20
-> Or perhaps tell the caller why we can't and let them sort it out?
-> For example: "Application XYZ is mlocked. Can't offload'.
-
-Yes, it might in general be interesting for the guest to indicate
-persistent errors, both when hotplugging and hotunplugging memory.
-Indicating why unplugging is not able to succeed in that detail is,
-however, non-trivial.
-
-The hypervisor sets the requested size can can watch over the actual
-size of a virtio-mem device. Right now, after it updated the requested
-size, it can wait some time (e.g., 1-5 minutes). If the requested size
-was not reached after that time, it knows there is a persistent issue
-limiting plug/unplug. In the future, this could be extended by a rough
-or detailed root cause indication. In the worst case, the guest crashed
-and is no longer able to respond (not even with an error indication).
-
-One interesting piece of the current hypervisor (QEMU) design is that
-the maximum memory size a VM can consume is always known and QEMU will
-send QMP events to upper layers whenever that size changes. This means
-that you can e.g., reliably charge a customer how much memory a VM is
-actually able to consume over time (independent of hotplug/unplug
-errors). But yeah, the QEMU bits are still in a very early stage.
-
---=20
-Thanks,
-
-David / dhildenb
-
+Best regards,
+Bartosz Golaszewski
