@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D88EC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:06:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59084C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D48D920700
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:06:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26D7120CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:06:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519564;
-	bh=FRtwolZSfoLpput8mu1bah8CEizgvrjVeDj+1BvLqDA=;
+	s=default; t=1576519568;
+	bh=5PMj/yqtHGzgZjWYt94mGTIHFko8dd9eEjjS3SQabfM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mPbFnskgFmlwWm8/zCXmcJraSv7vdrFkfKAsTlsFYHM+DK1H8+LoD6Y6cuIP/15AF
-	 neFnRZTIef8jj0p4q9O4SwfpOrkrEn6jx46C4lkMKG2Km/RXDTxNceRnOPmdPV8t6s
-	 6MjVF0B23n5FkYqn84zS9kWQD44gF42eAwBBfzXY=
+	b=JGdO3tMUPDhCZC3lJxzoJwxZSMK/UUXpakeCxSofyqQwsxoDs5y222MhX3ZUIiqgu
+	 8q2kjUTFvFgLH+ciDl05P2rrel/faHvA5dMKESrlpCWYsDk8bDg8naKIOlds1ZCuoi
+	 GXxl/o4RBdcP2FsjkedlAx/EVczhWoiH0xGiX9mc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729926AbfLPSGD (ORCPT
+        id S1729933AbfLPSGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:06:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45190 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:06:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729730AbfLPSF6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:05:58 -0500
+        id S1729908AbfLPSGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:06:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D5AA20733;
-        Mon, 16 Dec 2019 18:05:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BA1720733;
+        Mon, 16 Dec 2019 18:06:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519558;
-        bh=FRtwolZSfoLpput8mu1bah8CEizgvrjVeDj+1BvLqDA=;
+        s=default; t=1576519562;
+        bh=5PMj/yqtHGzgZjWYt94mGTIHFko8dd9eEjjS3SQabfM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fprXEEh2RCbgCiX3AG+TBW1u15T0TYGYrB9YGz5JhctXFZWG4aDVMWKydqXNJDfHK
-         nCyMhkiCRepC7yZVT5UqMwzYJRutekeqY6m8PcFkQPEjxT7OqvmUslqInyMcHEvgM1
-         NUxLYQyPY3DGFEI/OiL/YO6/f4VWCU8M2HDmUWN0=
+        b=atxHS9XfxEoGbhRPlch2lZwXHucsCcvxgwodo/c3wbqetuhgoo5VPClX9t+SCx0yA
+         bDw2LfY9h+5KvcTGyepbpDtAEqHUQWaBOfhWV/mEINcAMhYKQaFtEQo7ChV3iHRfhp
+         OIjw6iwfaxypGYshR7pTYrS/7gJHkd61JU9wVwQU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pete Heist <pete@heistp.net>,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        stable@vger.kernel.org, Jian Shen <shenjian15@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 115/140] sch_cake: Correctly update parent qlen when splitting GSO packets
-Date:   Mon, 16 Dec 2019 18:49:43 +0100
-Message-Id: <20191216174818.717932404@linuxfoundation.org>
+Subject: [PATCH 4.19 117/140] net: hns3: clear pci private data when unload hns3 driver
+Date:   Mon, 16 Dec 2019 18:49:45 +0100
+Message-Id: <20191216174819.920030072@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -61,53 +62,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Toke Høiland-Jørgensen <toke@redhat.com>
+From: Jian Shen <shenjian15@huawei.com>
 
-[ Upstream commit 8c6c37fdc20ec9ffaa342f827a8e20afe736fb0c ]
+[ Upstream commit ac864c2346d087dd3739435af1b8d36be5f60c75 ]
 
-To ensure parent qdiscs have the same notion of the number of enqueued
-packets even after splitting a GSO packet, update the qdisc tree with the
-number of packets that was added due to the split.
+When unload hns3 driver, we should clear the pci private data.
 
-Reported-by: Pete Heist <pete@heistp.net>
-Tested-by: Pete Heist <pete@heistp.net>
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: Jian Shen <shenjian15@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/sch_cake.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/sched/sch_cake.c b/net/sched/sch_cake.c
-index 9fd37d91b5ed0..e4cf72b0675e1 100644
---- a/net/sched/sch_cake.c
-+++ b/net/sched/sch_cake.c
-@@ -1666,7 +1666,7 @@ static s32 cake_enqueue(struct sk_buff *skb, struct Qdisc *sch,
- 	if (skb_is_gso(skb) && q->rate_flags & CAKE_FLAG_SPLIT_GSO) {
- 		struct sk_buff *segs, *nskb;
- 		netdev_features_t features = netif_skb_features(skb);
--		unsigned int slen = 0;
-+		unsigned int slen = 0, numsegs = 0;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index b2860087a7dc7..4b4d9de0a6bb5 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -1620,6 +1620,7 @@ static void hns3_remove(struct pci_dev *pdev)
+ 		hns3_disable_sriov(pdev);
  
- 		segs = skb_gso_segment(skb, features & ~NETIF_F_GSO_MASK);
- 		if (IS_ERR_OR_NULL(segs))
-@@ -1682,6 +1682,7 @@ static s32 cake_enqueue(struct sk_buff *skb, struct Qdisc *sch,
- 			flow_queue_add(flow, segs);
+ 	hnae3_unregister_ae_dev(ae_dev);
++	pci_set_drvdata(pdev, NULL);
+ }
  
- 			sch->q.qlen++;
-+			numsegs++;
- 			slen += segs->len;
- 			q->buffer_used += segs->truesize;
- 			b->packets++;
-@@ -1695,7 +1696,7 @@ static s32 cake_enqueue(struct sk_buff *skb, struct Qdisc *sch,
- 		sch->qstats.backlog += slen;
- 		q->avg_window_bytes += slen;
- 
--		qdisc_tree_reduce_backlog(sch, 1, len);
-+		qdisc_tree_reduce_backlog(sch, 1-numsegs, len-slen);
- 		consume_skb(skb);
- 	} else {
- 		/* not splitting */
+ /**
 -- 
 2.20.1
 
