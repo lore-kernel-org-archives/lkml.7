@@ -2,462 +2,95 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F57C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E9FC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:01:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5666F20700
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:01:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8888206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 11:01:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727665AbfLPLBs (ORCPT
+        id S1727681AbfLPLB6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 06:01:48 -0500
-Received: from mx2.suse.de ([195.135.220.15]:36958 "EHLO mx1.suse.de"
+        Mon, 16 Dec 2019 06:01:58 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:37052 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727574AbfLPLBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 06:01:34 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 502A3AC7D;
-        Mon, 16 Dec 2019 11:01:30 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     andrew.murray@arm.com, maz@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     james.quinlan@broadcom.com, mbrugger@suse.com,
-        phil@raspberrypi.org, wahrenst@gmx.net, jeremy.linton@arm.com,
-        linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v5 4/6] PCI: brcmstb: Add MSI support
-Date:   Mon, 16 Dec 2019 12:01:10 +0100
-Message-Id: <20191216110113.30436-5-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191216110113.30436-1-nsaenzjulienne@suse.de>
-References: <20191216110113.30436-1-nsaenzjulienne@suse.de>
+        id S1727574AbfLPLB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 06:01:58 -0500
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id A52CA99EDB6985B6C7A7;
+        Mon, 16 Dec 2019 19:01:56 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Mon, 16 Dec 2019
+ 19:01:50 +0800
+From:   yu kuai <yukuai3@huawei.com>
+To:     <bp@alien8.de>, <mchehab@kernel.org>, <tony.luck@intel.com>,
+        <james.morse@arm.com>, <rrichter@marvell.com>
+CC:     <yukuai3@huawei.com>, <yi.zhang@huawei.com>,
+        <zhengbin13@huawei.com>, <linux-edac@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH V2] EDAC: remove set but not used variable 'ecc_loc'
+Date:   Mon, 16 Dec 2019 19:01:21 +0800
+Message-ID: <20191216110121.46698-1-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jim Quinlan <james.quinlan@broadcom.com>
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-This adds MSI support to the Broadcom STB PCIe host controller. The MSI
-controller is physically located within the PCIe block, however, there
-is no reason why the MSI controller could not be moved elsewhere in the
-future. MSIX is not supported by the HW.
+drivers/edac/i5100_edac.c: In function ‘i5100_read_log’:
+drivers/edac/i5100_edac.c:489:11: warning: variable ‘ecc_loc’
+set but not used [-Wunused-but-set-variable]
 
-Since the internal Brcmstb MSI controller is intertwined with the PCIe
-controller, it is not its own platform device but rather part of the
-PCIe platform device.
-
-Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Reviewed-by: Marc Zyngier <maz@kernel.org>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-
+It is never used, and so can be removed.
+Signed-off-by: yu kuai <yukuai3@huawei.com>
 ---
+changes in V2
+-remove the definition of the function i5100_redmemb_ecc_locator()
+ drivers/edac/i5100_edac.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-Changes since v3 (kept Marc's reviewed by as changes seem small enough):
-  - Use define to access MSI_DATA_CONFIG_VAL
-  - Update commit message
-
-Changes since v2:
-  - Use standard APIs on register operations
-  - Get rid of revision code
-  - Update rules to msi_target_addr selection
-  - Remove unwarranted MSI_FLAG_PCI_MSIX
-  - Small cosmetic changes
-
-Changes since v1:
-  - Move revision code and some registers to this patch
-  - Use PCIE_MSI_IRQ_DOMAIN in Kconfig
-  - Remove redundant register read from ISR
-  - Fail probe on MSI init error
-  - Get rid of msi_internal
-  - Use bitmap family of functions
-  - Use edge triggered setup
-  - Add comment regarding MultiMSI
-  - Simplify compose_msi_msg to avoid reg read
-
-This is based on Jim's original submission[1] with some slight changes
-regarding how pcie->msi_target_addr is decided.
-
-[1] https://patchwork.kernel.org/patch/10605955/
-
- drivers/pci/controller/Kconfig        |   1 +
- drivers/pci/controller/pcie-brcmstb.c | 261 +++++++++++++++++++++++++-
- 2 files changed, 261 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index 27504f108ee5..918e283bbff1 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -257,6 +257,7 @@ config PCIE_BRCMSTB
- 	tristate "Broadcom Brcmstb PCIe host controller"
- 	depends on ARCH_BCM2835 || COMPILE_TEST
- 	depends on OF
-+	depends on PCI_MSI_IRQ_DOMAIN
- 	help
- 	  Say Y here to enable PCIe host controller support for
- 	  Broadcom STB based SoCs, like the Raspberry Pi 4.
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index dd681164faa0..7ba06a0e1a71 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -2,6 +2,7 @@
- /* Copyright (C) 2009 - 2019 Broadcom */
- 
- #include <linux/bitfield.h>
-+#include <linux/bitops.h>
- #include <linux/clk.h>
- #include <linux/compiler.h>
- #include <linux/delay.h>
-@@ -9,11 +10,13 @@
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/ioport.h>
-+#include <linux/irqchip/chained_irq.h>
- #include <linux/irqdomain.h>
- #include <linux/kernel.h>
- #include <linux/list.h>
- #include <linux/log2.h>
- #include <linux/module.h>
-+#include <linux/msi.h>
- #include <linux/of_address.h>
- #include <linux/of_irq.h>
- #include <linux/of_pci.h>
-@@ -67,6 +70,12 @@
- #define PCIE_MISC_RC_BAR3_CONFIG_LO			0x403c
- #define  PCIE_MISC_RC_BAR3_CONFIG_LO_SIZE_MASK		0x1f
- 
-+#define PCIE_MISC_MSI_BAR_CONFIG_LO			0x4044
-+#define PCIE_MISC_MSI_BAR_CONFIG_HI			0x4048
-+
-+#define PCIE_MISC_MSI_DATA_CONFIG			0x404c
-+#define  PCIE_MISC_MSI_DATA_CONFIG_VAL			0xffe06540
-+
- #define PCIE_MISC_PCIE_CTRL				0x4064
- #define  PCIE_MISC_PCIE_CTRL_PCIE_L23_REQUEST_MASK	0x1
- 
-@@ -114,6 +123,11 @@
- 
- /* PCIe parameters */
- #define BRCM_NUM_PCIE_OUT_WINS		0x4
-+#define BRCM_INT_PCI_MSI_NR		32
-+
-+/* MSI target adresses */
-+#define BRCM_MSI_TARGET_ADDR_LT_4GB	0x0fffffffcULL
-+#define BRCM_MSI_TARGET_ADDR_GT_4GB	0xffffffffcULL
- 
- /* MDIO registers */
- #define MDIO_PORT0			0x0
-@@ -135,6 +149,19 @@
- #define SSC_STATUS_SSC_MASK		0x400
- #define SSC_STATUS_PLL_LOCK_MASK	0x800
- 
-+struct brcm_msi {
-+	struct device		*dev;
-+	void __iomem		*base;
-+	struct device_node	*np;
-+	struct irq_domain	*msi_domain;
-+	struct irq_domain	*inner_domain;
-+	struct mutex		lock; /* guards the alloc/free operations */
-+	u64			target_addr;
-+	int			irq;
-+	/* used indicates which MSI interrupts have been alloc'd */
-+	unsigned long		used;
-+};
-+
- /* Internal PCIe Host Controller Information.*/
- struct brcm_pcie {
- 	struct device		*dev;
-@@ -144,6 +171,8 @@ struct brcm_pcie {
- 	struct device_node	*np;
- 	bool			ssc;
- 	int			gen;
-+	u64			msi_target_addr;
-+	struct brcm_msi		*msi;
- };
- 
- /*
-@@ -309,6 +338,214 @@ static void brcm_pcie_set_outbound_win(struct brcm_pcie *pcie,
- 	writel(tmp, pcie->base + PCIE_MEM_WIN0_LIMIT_HI(win));
+diff --git a/drivers/edac/i5100_edac.c b/drivers/edac/i5100_edac.c
+index 0ddc41e47a96..191aa7c19ded 100644
+--- a/drivers/edac/i5100_edac.c
++++ b/drivers/edac/i5100_edac.c
+@@ -259,11 +259,6 @@ static inline u32 i5100_nrecmemb_ras(u32 a)
+ 	return a & ((1 << 16) - 1);
  }
  
-+static struct irq_chip brcm_msi_irq_chip = {
-+	.name            = "BRCM STB PCIe MSI",
-+	.irq_ack         = irq_chip_ack_parent,
-+	.irq_mask        = pci_msi_mask_irq,
-+	.irq_unmask      = pci_msi_unmask_irq,
-+};
-+
-+static struct msi_domain_info brcm_msi_domain_info = {
-+	/* Multi MSI is supported by the controller, but not by this driver */
-+	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS),
-+	.chip	= &brcm_msi_irq_chip,
-+};
-+
-+static void brcm_pcie_msi_isr(struct irq_desc *desc)
-+{
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	unsigned long status, virq;
-+	struct brcm_msi *msi;
-+	struct device *dev;
-+	u32 bit;
-+
-+	chained_irq_enter(chip, desc);
-+	msi = irq_desc_get_handler_data(desc);
-+	dev = msi->dev;
-+
-+	status = readl(msi->base + PCIE_MSI_INTR2_STATUS);
-+	for_each_set_bit(bit, &status, BRCM_INT_PCI_MSI_NR) {
-+		virq = irq_find_mapping(msi->inner_domain, bit);
-+		if (virq)
-+			generic_handle_irq(virq);
-+		else
-+			dev_dbg(dev, "unexpected MSI\n");
-+	}
-+
-+	chained_irq_exit(chip, desc);
-+}
-+
-+static void brcm_msi_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
-+{
-+	struct brcm_msi *msi = irq_data_get_irq_chip_data(data);
-+
-+	msg->address_lo = lower_32_bits(msi->target_addr);
-+	msg->address_hi = upper_32_bits(msi->target_addr);
-+	msg->data = (0xffff & PCIE_MISC_MSI_DATA_CONFIG_VAL) | data->hwirq;
-+}
-+
-+static int brcm_msi_set_affinity(struct irq_data *irq_data,
-+				 const struct cpumask *mask, bool force)
-+{
-+	return -EINVAL;
-+}
-+
-+static void brcm_msi_ack_irq(struct irq_data *data)
-+{
-+	struct brcm_msi *msi = irq_data_get_irq_chip_data(data);
-+
-+	writel(1 << data->hwirq, msi->base + PCIE_MSI_INTR2_CLR);
-+}
-+
-+
-+static struct irq_chip brcm_msi_bottom_irq_chip = {
-+	.name			= "BRCM STB MSI",
-+	.irq_compose_msi_msg	= brcm_msi_compose_msi_msg,
-+	.irq_set_affinity	= brcm_msi_set_affinity,
-+	.irq_ack                = brcm_msi_ack_irq,
-+};
-+
-+static int brcm_msi_alloc(struct brcm_msi *msi)
-+{
-+	int hwirq;
-+
-+	mutex_lock(&msi->lock);
-+	hwirq = bitmap_find_free_region(&msi->used, BRCM_INT_PCI_MSI_NR, 0);
-+	mutex_unlock(&msi->lock);
-+
-+	return hwirq;
-+}
-+
-+static void brcm_msi_free(struct brcm_msi *msi, unsigned long hwirq)
-+{
-+	mutex_lock(&msi->lock);
-+	bitmap_release_region(&msi->used, hwirq, 0);
-+	mutex_unlock(&msi->lock);
-+}
-+
-+static int brcm_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
-+				 unsigned int nr_irqs, void *args)
-+{
-+	struct brcm_msi *msi = domain->host_data;
-+	int hwirq;
-+
-+	hwirq = brcm_msi_alloc(msi);
-+
-+	if (hwirq < 0)
-+		return hwirq;
-+
-+	irq_domain_set_info(domain, virq, (irq_hw_number_t)hwirq,
-+			    &brcm_msi_bottom_irq_chip, domain->host_data,
-+			    handle_edge_irq, NULL, NULL);
-+	return 0;
-+}
-+
-+static void brcm_irq_domain_free(struct irq_domain *domain,
-+				 unsigned int virq, unsigned int nr_irqs)
-+{
-+	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
-+	struct brcm_msi *msi = irq_data_get_irq_chip_data(d);
-+
-+	brcm_msi_free(msi, d->hwirq);
-+}
-+
-+static const struct irq_domain_ops msi_domain_ops = {
-+	.alloc	= brcm_irq_domain_alloc,
-+	.free	= brcm_irq_domain_free,
-+};
-+
-+static int brcm_allocate_domains(struct brcm_msi *msi)
-+{
-+	struct fwnode_handle *fwnode = of_node_to_fwnode(msi->np);
-+	struct device *dev = msi->dev;
-+
-+	msi->inner_domain = irq_domain_add_linear(NULL, BRCM_INT_PCI_MSI_NR,
-+						  &msi_domain_ops, msi);
-+	if (!msi->inner_domain) {
-+		dev_err(dev, "failed to create IRQ domain\n");
-+		return -ENOMEM;
-+	}
-+
-+	msi->msi_domain = pci_msi_create_irq_domain(fwnode,
-+						    &brcm_msi_domain_info,
-+						    msi->inner_domain);
-+	if (!msi->msi_domain) {
-+		dev_err(dev, "failed to create MSI domain\n");
-+		irq_domain_remove(msi->inner_domain);
-+		return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+
-+static void brcm_free_domains(struct brcm_msi *msi)
-+{
-+	irq_domain_remove(msi->msi_domain);
-+	irq_domain_remove(msi->inner_domain);
-+}
-+
-+static void brcm_msi_remove(struct brcm_pcie *pcie)
-+{
-+	struct brcm_msi *msi = pcie->msi;
-+
-+	if (!msi)
-+		return;
-+	irq_set_chained_handler(msi->irq, NULL);
-+	irq_set_handler_data(msi->irq, NULL);
-+	brcm_free_domains(msi);
-+}
-+
-+static void brcm_msi_set_regs(struct brcm_msi *msi)
-+{
-+	writel(0xffffffff, msi->base + PCIE_MSI_INTR2_MASK_CLR);
-+
-+	/*
-+	 * The 0 bit of PCIE_MISC_MSI_BAR_CONFIG_LO is repurposed to MSI
-+	 * enable, which we set to 1.
-+	 */
-+	writel(lower_32_bits(msi->target_addr) | 0x1,
-+	       msi->base + PCIE_MISC_MSI_BAR_CONFIG_LO);
-+	writel(upper_32_bits(msi->target_addr),
-+	       msi->base + PCIE_MISC_MSI_BAR_CONFIG_HI);
-+
-+	writel(PCIE_MISC_MSI_DATA_CONFIG_VAL,
-+	       msi->base + PCIE_MISC_MSI_DATA_CONFIG);
-+}
-+
-+static int brcm_pcie_enable_msi(struct brcm_pcie *pcie)
-+{
-+	struct brcm_msi *msi;
-+	int irq, ret;
-+	struct device *dev = pcie->dev;
-+
-+	irq = irq_of_parse_and_map(dev->of_node, 1);
-+	if (irq <= 0) {
-+		dev_err(dev, "cannot map MSI interrupt\n");
-+		return -ENODEV;
-+	}
-+
-+	msi = devm_kzalloc(dev, sizeof(struct brcm_msi), GFP_KERNEL);
-+	if (!msi)
-+		return -ENOMEM;
-+
-+	msi->dev = dev;
-+	msi->base = pcie->base;
-+	msi->np = pcie->np;
-+	msi->target_addr = pcie->msi_target_addr;
-+	msi->irq = irq;
-+
-+	ret = brcm_allocate_domains(msi);
-+	if (ret)
-+		return ret;
-+
-+	irq_set_chained_handler_and_data(msi->irq, brcm_pcie_msi_isr, msi);
-+
-+	brcm_msi_set_regs(msi);
-+	pcie->msi = msi;
-+
-+	return 0;
-+}
-+
- /* The controller is capable of serving in both RC and EP roles */
- static bool brcm_pcie_rc_mode(struct brcm_pcie *pcie)
+-static inline u32 i5100_redmemb_ecc_locator(u32 a)
+-{
+-	return a & ((1 << 18) - 1);
+-}
+-
+ static inline u32 i5100_recmema_merr(u32 a)
  {
-@@ -490,6 +727,18 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
- 			  PCIE_MISC_MISC_CTRL_SCB0_SIZE_MASK);
- 	writel(tmp, base + PCIE_MISC_MISC_CTRL);
+ 	return i5100_nrecmema_merr(a);
+@@ -486,7 +481,6 @@ static void i5100_read_log(struct mem_ctl_info *mci, int chan,
+ 	u32 dw;
+ 	u32 dw2;
+ 	unsigned syndrome = 0;
+-	unsigned ecc_loc = 0;
+ 	unsigned merr;
+ 	unsigned bank;
+ 	unsigned rank;
+@@ -499,7 +493,6 @@ static void i5100_read_log(struct mem_ctl_info *mci, int chan,
+ 		pci_read_config_dword(pdev, I5100_REDMEMA, &dw2);
+ 		syndrome = dw2;
+ 		pci_read_config_dword(pdev, I5100_REDMEMB, &dw2);
+-		ecc_loc = i5100_redmemb_ecc_locator(dw2);
+ 	}
  
-+	/*
-+	 * We ideally want the MSI target address to be located in the 32bit
-+	 * addressable memory area. Some devices might depend on it. This is
-+	 * possible either when the inbound window is located above the lower
-+	 * 4GB or when the inbound area is smaller than 4GB (taking into
-+	 * account the rounding-up we're forced to perform).
-+	 */
-+	if (rc_bar2_offset >= SZ_4G || (rc_bar2_size + rc_bar2_offset) < SZ_4G)
-+		pcie->msi_target_addr = BRCM_MSI_TARGET_ADDR_LT_4GB;
-+	else
-+		pcie->msi_target_addr = BRCM_MSI_TARGET_ADDR_GT_4GB;
-+
- 	/* disable the PCIe->GISB memory window (RC_BAR1) */
- 	tmp = readl(base + PCIE_MISC_RC_BAR1_CONFIG_LO);
- 	tmp &= ~PCIE_MISC_RC_BAR1_CONFIG_LO_SIZE_MASK;
-@@ -639,6 +888,7 @@ static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
- 
- static void __brcm_pcie_remove(struct brcm_pcie *pcie)
- {
-+	brcm_msi_remove(pcie);
- 	brcm_pcie_turn_off(pcie);
- 	clk_disable_unprepare(pcie->clk);
- 	clk_put(pcie->clk);
-@@ -657,7 +907,7 @@ static int brcm_pcie_remove(struct platform_device *pdev)
- 
- static int brcm_pcie_probe(struct platform_device *pdev)
- {
--	struct device_node *np = pdev->dev.of_node;
-+	struct device_node *np = pdev->dev.of_node, *msi_np;
- 	struct pci_host_bridge *bridge;
- 	struct brcm_pcie *pcie;
- 	struct pci_bus *child;
-@@ -701,6 +951,15 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto fail;
- 
-+	msi_np = of_parse_phandle(pcie->np, "msi-parent", 0);
-+	if (pci_msi_enabled() && msi_np == pcie->np) {
-+		ret = brcm_pcie_enable_msi(pcie);
-+		if (ret) {
-+			dev_err(pcie->dev, "probe of internal MSI failed");
-+			goto fail;
-+		}
-+	}
-+
- 	bridge->dev.parent = &pdev->dev;
- 	bridge->busnr = 0;
- 	bridge->ops = &brcm_pcie_ops;
+ 	if (i5100_validlog_recmemvalid(dw)) {
 -- 
-2.24.0
+2.17.2
 
