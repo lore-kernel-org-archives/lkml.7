@@ -2,55 +2,52 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F43C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81748C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AF3A20733
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:01:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BE0921582
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:01:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519267;
-	bh=W7PLO8Fp8jc0DBwFwU+GYD+VE30nvNzYTretv8pTGZE=;
+	s=default; t=1576519270;
+	bh=i5XtLVMmI+2dJcN0KwB7A+BvEXbQvtvFuu2za7XVIY0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ExKr7hhsRuuCAHoDM5FoVDJyyUJ5xWFWxBh5DiF8ZI2UFL1gd4JkkH7rmVWqk/TfR
-	 tfKAyuWq6oqkd3TuuRT1zQOr5HqaqBDn5+fK+b7f2blMdngETfBdRhsGk0KL/68L5c
-	 kQ0+NQY6U48Jw9XU+jTA2Nl132pY/HFOKCT2XNSs=
+	b=z1hPjoKR/LA22NLPvvj/pjxMrlBB2n8Ch+WFtEqParaD+gefR8RWqK4oTqU+0Id3L
+	 wNHw0AKBd5X9sVighU/t6lknhtsp5NPFTcTehJsbGq7KYaJZwMMWCh+ngwxiX17smX
+	 8+UDg3vn3wXQsSBqArrwTwSP70tlhg+LaqENNSVU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbfLPSBG (ORCPT
+        id S1729103AbfLPSBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:01:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35582 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:01:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729067AbfLPSBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:01:01 -0500
+        id S1729090AbfLPSBF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:01:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B95420733;
-        Mon, 16 Dec 2019 18:00:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9622206B7;
+        Mon, 16 Dec 2019 18:01:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519260;
-        bh=W7PLO8Fp8jc0DBwFwU+GYD+VE30nvNzYTretv8pTGZE=;
+        s=default; t=1576519265;
+        bh=i5XtLVMmI+2dJcN0KwB7A+BvEXbQvtvFuu2za7XVIY0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YKCpX+JHAbqs0XGBZQwns473rHKADmbAiBOSygISnoHSWM3lx940AcQniBHNpM6RB
-         NQLTzdFV4dnK2B8z+u7g/21L5nZ8znBCkqJlnGg5G7XBMWNBdJRGXiSKMYijOPCLUp
-         GO10D9fPUbSsIDuikwkNa4gGuH/7nsnUUFXJ8dC8=
+        b=jzXn33OydXPL9nArm/C2siV3VEDZ4Dm7gp0BGBYanXTorMm9OoY6ogHrQ8rTu8ZHj
+         hs8jJzcdmSlplLE5X1P/qBaORAYzPrLFzgjlRA+dKqVazV3cZH5LfIE0hsLxoLHDoB
+         oFgCi64K7Fy4GiVYylrYi+fCVoJ4hCZZlXCsNfFw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 260/267] powerpc: Fix vDSO clock_getres()
-Date:   Mon, 16 Dec 2019 18:49:46 +0100
-Message-Id: <20191216174917.002735890@linuxfoundation.org>
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 4.14 262/267] firmware: qcom: scm: Ensure a0 status code is treated as signed
+Date:   Mon, 16 Dec 2019 18:49:48 +0100
+Message-Id: <20191216174917.142951136@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -63,138 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincenzo Frascino <vincenzo.frascino@arm.com>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit 552263456215ada7ee8700ce022d12b0cffe4802 ]
+commit ff34f3cce278a0982a7b66b1afaed6295141b1fc upstream.
 
-clock_getres in the vDSO library has to preserve the same behaviour
-of posix_get_hrtimer_res().
+The 'a0' member of 'struct arm_smccc_res' is declared as 'unsigned long',
+however the Qualcomm SCM firmware interface driver expects to receive
+negative error codes via this field, so ensure that it's cast to 'long'
+before comparing to see if it is less than 0.
 
-In particular, posix_get_hrtimer_res() does:
-    sec = 0;
-    ns = hrtimer_resolution;
-and hrtimer_resolution depends on the enablement of the high
-resolution timers that can happen either at compile or at run time.
+Cc: <stable@vger.kernel.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fix the powerpc vdso implementation of clock_getres keeping a copy of
-hrtimer_resolution in vdso data and using that directly.
-
-Fixes: a7f290dad32e ("[PATCH] powerpc: Merge vdso's and add vdso support to 32 bits kernel")
-Cc: stable@vger.kernel.org
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Acked-by: Shuah Khan <skhan@linuxfoundation.org>
-[chleroy: changed CLOCK_REALTIME_RES to CLOCK_HRTIMER_RES]
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/a55eca3a5e85233838c2349783bcb5164dae1d09.1575273217.git.christophe.leroy@c-s.fr
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/vdso_datapage.h  | 2 ++
- arch/powerpc/kernel/asm-offsets.c         | 2 +-
- arch/powerpc/kernel/time.c                | 1 +
- arch/powerpc/kernel/vdso32/gettimeofday.S | 7 +++++--
- arch/powerpc/kernel/vdso64/gettimeofday.S | 7 +++++--
- 5 files changed, 14 insertions(+), 5 deletions(-)
+ drivers/firmware/qcom_scm-64.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/include/asm/vdso_datapage.h b/arch/powerpc/include/asm/vdso_datapage.h
-index 1afe90ade595e..674c03350cd11 100644
---- a/arch/powerpc/include/asm/vdso_datapage.h
-+++ b/arch/powerpc/include/asm/vdso_datapage.h
-@@ -86,6 +86,7 @@ struct vdso_data {
- 	__s32 wtom_clock_nsec;
- 	struct timespec stamp_xtime;	/* xtime as at tb_orig_stamp */
- 	__u32 stamp_sec_fraction;	/* fractional seconds of stamp_xtime */
-+	__u32 hrtimer_res;			/* hrtimer resolution */
-    	__u32 syscall_map_64[SYSCALL_MAP_SIZE]; /* map of syscalls  */
-    	__u32 syscall_map_32[SYSCALL_MAP_SIZE]; /* map of syscalls */
- };
-@@ -107,6 +108,7 @@ struct vdso_data {
- 	__s32 wtom_clock_nsec;
- 	struct timespec stamp_xtime;	/* xtime as at tb_orig_stamp */
- 	__u32 stamp_sec_fraction;	/* fractional seconds of stamp_xtime */
-+	__u32 hrtimer_res;		/* hrtimer resolution */
-    	__u32 syscall_map_32[SYSCALL_MAP_SIZE]; /* map of syscalls */
- 	__u32 dcache_block_size;	/* L1 d-cache block size     */
- 	__u32 icache_block_size;	/* L1 i-cache block size     */
-diff --git a/arch/powerpc/kernel/asm-offsets.c b/arch/powerpc/kernel/asm-offsets.c
-index 2e5ea300258a0..1bc761e537a98 100644
---- a/arch/powerpc/kernel/asm-offsets.c
-+++ b/arch/powerpc/kernel/asm-offsets.c
-@@ -373,6 +373,7 @@ int main(void)
- 	OFFSET(WTOM_CLOCK_NSEC, vdso_data, wtom_clock_nsec);
- 	OFFSET(STAMP_XTIME, vdso_data, stamp_xtime);
- 	OFFSET(STAMP_SEC_FRAC, vdso_data, stamp_sec_fraction);
-+	OFFSET(CLOCK_HRTIMER_RES, vdso_data, hrtimer_res);
- 	OFFSET(CFG_ICACHE_BLOCKSZ, vdso_data, icache_block_size);
- 	OFFSET(CFG_DCACHE_BLOCKSZ, vdso_data, dcache_block_size);
- 	OFFSET(CFG_ICACHE_LOGBLOCKSZ, vdso_data, icache_log_block_size);
-@@ -401,7 +402,6 @@ int main(void)
- 	DEFINE(CLOCK_REALTIME, CLOCK_REALTIME);
- 	DEFINE(CLOCK_MONOTONIC, CLOCK_MONOTONIC);
- 	DEFINE(NSEC_PER_SEC, NSEC_PER_SEC);
--	DEFINE(CLOCK_REALTIME_RES, MONOTONIC_RES_NSEC);
+--- a/drivers/firmware/qcom_scm-64.c
++++ b/drivers/firmware/qcom_scm-64.c
+@@ -158,7 +158,7 @@ static int qcom_scm_call(struct device *
+ 		kfree(args_virt);
+ 	}
  
- #ifdef CONFIG_BUG
- 	DEFINE(BUG_ENTRY_SIZE, sizeof(struct bug_entry));
-diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
-index 7c7c5a16284d2..14f3f28a089e7 100644
---- a/arch/powerpc/kernel/time.c
-+++ b/arch/powerpc/kernel/time.c
-@@ -920,6 +920,7 @@ void update_vsyscall(struct timekeeper *tk)
- 	vdso_data->wtom_clock_nsec = tk->wall_to_monotonic.tv_nsec;
- 	vdso_data->stamp_xtime = xt;
- 	vdso_data->stamp_sec_fraction = frac_sec;
-+	vdso_data->hrtimer_res = hrtimer_resolution;
- 	smp_wmb();
- 	++(vdso_data->tb_update_count);
- }
-diff --git a/arch/powerpc/kernel/vdso32/gettimeofday.S b/arch/powerpc/kernel/vdso32/gettimeofday.S
-index 1e0bc5955a400..03a65fee8020e 100644
---- a/arch/powerpc/kernel/vdso32/gettimeofday.S
-+++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
-@@ -160,12 +160,15 @@ V_FUNCTION_BEGIN(__kernel_clock_getres)
- 	cror	cr0*4+eq,cr0*4+eq,cr1*4+eq
- 	bne	cr0,99f
+-	if (res->a0 < 0)
++	if ((long)res->a0 < 0)
+ 		return qcom_scm_remap_error(res->a0);
  
-+	mflr	r12
-+  .cfi_register lr,r12
-+	bl	__get_datapage@local	/* get data page */
-+	lwz	r5, CLOCK_HRTIMER_RES(r3)
-+	mtlr	r12
- 	li	r3,0
- 	cmpli	cr0,r4,0
- 	crclr	cr0*4+so
- 	beqlr
--	lis	r5,CLOCK_REALTIME_RES@h
--	ori	r5,r5,CLOCK_REALTIME_RES@l
- 	stw	r3,TSPC32_TV_SEC(r4)
- 	stw	r5,TSPC32_TV_NSEC(r4)
- 	blr
-diff --git a/arch/powerpc/kernel/vdso64/gettimeofday.S b/arch/powerpc/kernel/vdso64/gettimeofday.S
-index 09b2a49f6dd53..c973378e1f2bc 100644
---- a/arch/powerpc/kernel/vdso64/gettimeofday.S
-+++ b/arch/powerpc/kernel/vdso64/gettimeofday.S
-@@ -145,12 +145,15 @@ V_FUNCTION_BEGIN(__kernel_clock_getres)
- 	cror	cr0*4+eq,cr0*4+eq,cr1*4+eq
- 	bne	cr0,99f
- 
-+	mflr	r12
-+  .cfi_register lr,r12
-+	bl	V_LOCAL_FUNC(__get_datapage)
-+	lwz	r5, CLOCK_HRTIMER_RES(r3)
-+	mtlr	r12
- 	li	r3,0
- 	cmpldi	cr0,r4,0
- 	crclr	cr0*4+so
- 	beqlr
--	lis	r5,CLOCK_REALTIME_RES@h
--	ori	r5,r5,CLOCK_REALTIME_RES@l
- 	std	r3,TSPC64_TV_SEC(r4)
- 	std	r5,TSPC64_TV_NSEC(r4)
- 	blr
--- 
-2.20.1
-
+ 	return 0;
 
 
