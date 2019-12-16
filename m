@@ -2,117 +2,190 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC98EC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4DCAC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85600206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:46:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 919DB206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:47:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Mspx/K+Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbfLPIqq (ORCPT
+        id S1726969AbfLPIro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 03:46:46 -0500
-Received: from relay11.mail.gandi.net ([217.70.178.231]:32889 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726935AbfLPIqq (ORCPT
+        Mon, 16 Dec 2019 03:47:44 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44858 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbfLPIrn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 03:46:46 -0500
-Received: from localhost (lfbn-tou-1-1151-102.w90-76.abo.wanadoo.fr [90.76.211.102])
-        (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 6E64610000A;
-        Mon, 16 Dec 2019 08:46:42 +0000 (UTC)
-Date:   Mon, 16 Dec 2019 09:46:41 +0100
-From:   Antoine Tenart <antoine.tenart@bootlin.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     antoine.tenart@bootlin.com, sd@queasysnail.net, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
-        alexandre.belloni@bootlin.com, allan.nielsen@microchip.com,
-        camelia.groza@nxp.com, Simon.Edelhaus@aquantia.com,
-        Igor.Russkikh@aquantia.com, jakub.kicinski@netronome.com
-Subject: Re: [PATCH net-next v3 06/15] net: macsec: add nla support for
- changing the offloading selection
-Message-ID: <20191216084641.GA288774@kwain>
-References: <20191213154844.635389-1-antoine.tenart@bootlin.com>
- <20191213154844.635389-7-antoine.tenart@bootlin.com>
- <20191215.134452.1354053731963113491.davem@davemloft.net>
+        Mon, 16 Dec 2019 03:47:43 -0500
+Received: by mail-wr1-f66.google.com with SMTP id q10so6137628wrm.11
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 00:47:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=UCb1aLRLTzlVhWNMjZXZKGwuML6x7jOTgc2nDzZf58E=;
+        b=Mspx/K+QfHmNRZPHL6k5AJMceeZwtVPDzqXbxtrPfcHZCmPaxeuVIFSA4Rgd3YhD76
+         fT1t/dd8PunfVmAPihW8z0V8ypiLOnVwMbhLN4+gap6qinf7YXJvcPpIeGJRt3jqvGMP
+         3L8w5kf1WLsdAvw1jjEl1qSFmI63h9J4n93J7R3Y0Qvg/KFDNSb2eFhUeaKcTUaB1jsa
+         zEIaqTjvq2F8nfDEBLolbmA+4K+N1iHBaF7kroMNF6OpMRIEiSp934EJ5jmxrXlU4ZUS
+         D9xcCyfF7GBak9VY4qWm+AmbxpIupPIY1r/KSd43sD5ioVrT3JoOFBgx4Zsazft7dbYf
+         dssw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=UCb1aLRLTzlVhWNMjZXZKGwuML6x7jOTgc2nDzZf58E=;
+        b=rOaxW8sOIYMVj0oyW2RZ/M39JJDdaI6Jf2Pdbwcp50LL34MlqruO/37TQWm9uQkgvQ
+         gWWtxlX3ffnVUgz00IVm1A737hb2XvZTo620FHYKENXwIJjVQM3k9SX1L3VefZgg8Pn1
+         dB2TBCOojTZ9HAvqCFsesCUonTWQLAvWvqkuEZNkU+o+5ZfbDxrVszFBo7STdbjAHwoj
+         vr/6z2OxPw9d85kVcomnQ/f/qhetQewHrZ2DbWYTlAlF2Xbkc3syzdHDbw3biIn56n9r
+         qOKFgDcpx0vtzuxJsLnXRDcQfgBRveEm+8u7iiskg6Rjji88MeTgXk8nd1IYKr34EL4t
+         nN1w==
+X-Gm-Message-State: APjAAAVuX5lOqMVhR7AqIjQVt6iSDclA6jf1axaCfGMeDWunsY2vqh3Q
+        JB31+xXDOcQw9oSNPCqIHCLslg==
+X-Google-Smtp-Source: APXvYqyLnlEaVpkiF1HI78n8G1vzJZongnJIMYz+ifesrg0LxQphKWK8bFoJHiH4Wxje2YoxtG06rw==
+X-Received: by 2002:adf:fc03:: with SMTP id i3mr29498932wrr.306.1576486061156;
+        Mon, 16 Dec 2019 00:47:41 -0800 (PST)
+Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id z18sm19958406wmf.21.2019.12.16.00.47.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 00:47:40 -0800 (PST)
+References: <20191208210320.15539-1-repk@triplefau.lt> <1jpngxew6l.fsf@starbuckisacylon.baylibre.com> <20191215113634.GB7304@voidbox>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Remi Pommarel <repk@triplefau.lt>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Yue Wang <yue.wang@amlogic.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 0/2] PCI: amlogic: Make PCIe working reliably on AXG platforms
+In-reply-to: <20191215113634.GB7304@voidbox>
+Date:   Mon, 16 Dec 2019 09:47:39 +0100
+Message-ID: <1jsglkbqs4.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191215.134452.1354053731963113491.davem@davemloft.net>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello David,
 
-On Sun, Dec 15, 2019 at 01:44:52PM -0800, David Miller wrote:
-> From: Antoine Tenart <antoine.tenart@bootlin.com>
-> Date: Fri, 13 Dec 2019 16:48:35 +0100
-> 
-> > +static int macsec_upd_offload(struct sk_buff *skb, struct genl_info *info)
-> > +{
-> 
-> This function is over the top and in fact confusing.
-> 
-> Really, if you want to make semantics sane, you have to require that no
-> rules are installed when enabling offloading.  The required sequence of
-> events if "enable offloading, add initial rules".
-> 
-> > +	/* Check the physical interface isn't offloading another interface
-> > +	 * first.
-> > +	 */
-> > +	for_each_net(loop_net) {
-> > +		for_each_netdev(loop_net, loop_dev) {
-> > +			struct macsec_dev *priv;
-> > +
-> > +			if (!netif_is_macsec(loop_dev))
-> > +				continue;
-> > +
-> > +			priv = macsec_priv(loop_dev);
-> > +
-> > +			if (!macsec_check_offload(MACSEC_OFFLOAD_PHY, priv))
-> > +				continue;
-> > +
-> > +			if (priv->offload != MACSEC_OFFLOAD_OFF)
-> > +				return -EBUSY;
-> > +		}
-> > +	}
-> 
-> You are rejecting the enabling of offloading on one interface if any
-> interface in the entire system is doing macsec offload?  That doesn't
-> make any sense at all.
+On Sun 15 Dec 2019 at 12:36, Remi Pommarel <repk@triplefau.lt> wrote:
 
-You're right, it doesn't make sense to check all the interfaces in the
-entire system.
+> On Mon, Dec 09, 2019 at 09:32:18AM +0100, Jerome Brunet wrote:
+>> 
+>> On Sun 08 Dec 2019 at 22:03, Remi Pommarel <repk@triplefau.lt> wrote:
+>> 
+>> > PCIe device probing failures have been seen on some AXG platforms and were
+>> > due to unreliable clock signal output. Setting HHI_MIPI_CNTL0[26] bit
+>> > solved the problem. After being contacted about this, vendor reported that
+>> > this bit was linked to PCIe PLL CML output.
+>> 
+>> Thanks for reporting the problem.
+>> 
+>> As Martin pointed out, the CML outputs already exist in the AXG clock
+>> controller but are handled using HHI_PCIE_PLL_CNTL6. Although
+>> incomplete, it seems to be aligned with the datasheet I have (v0.9)
+>> 
+>> According to the same document, HHI_MIPI_CNTL0 belong to the MIPI Phy.
+>> Unfortunately bit 26 is not documented
+>> 
+>> AFAICT, the clock controller is not appropriate driver to deal with this
+>> register/bit
+>> 
+>
+> Regarding both @Martin's and your remark.
+>
+> Unfortunately the documentation I have and vendor feedback are a bit
+> vague to me. I do agree that CLKID_PCIE_PLL_CML_ENABLE is not a proper
+> name for this bit because this register is MIPI related.
+>
+> Here is the information I got from the vendor [1]. As you can see
+> HHI_MIPI_CNTL0[29] and HHI_MIPI_CNTL0[26] are related together, and
+> HHI_MIPI_CNTL0[29] is implemented in the clock controller as
+> axg_mipi_enable which is why I used this driver for HHI_MIPI_CNTL0[26].
+>
 
-> Really, just require that a macsec interface is "clean" (no rules installed
-> yet) in order to enable offloading.
+Seems I should have paid more attention when axg_mipi_enable.
+Bit 29 is yet another undocumented bit
 
-This would allow two different virtual MACsec interfaces with the same
-underlying hardware device to be offloaded. This is problematic as we
-would have no way to distinguish ingress packets between the two: once
-an ingress packet has been processed by the MACsec hardware block we
-have no way to retrieve the MACsec parameters specific to this packet,
-and we can't know to which MACsec flow the packet is related.
+> So maybe I could rename this bit to something MIPI related ?
 
-The above check was in fact reworked in between v2 and v3 and an
-important part disappeared: the idea was to check the underlying
-interface was not already offloading another virtual MACsec interface.
-The last check (was and) should be:
+This register region is simply not part of the main clock
+controller. The bits in it are not related to this controller but the
+MIPI PHY. It should not have been mapped in this way to begin with.
 
-  if (priv->real_dev == real_dev && priv->offload != MACSEC_OFFLOAD_OFF)
-	return -EBUSY;
+I can see how it would be convient to model this with a gate to just
+flip the bit when needed but it is just wrong.
 
-Thanks!
-Antoine
+The documentation says the register are for the MIPI analog PHY, it
+should be implemented as such and used by the PCIe as needed.
 
--- 
-Antoine Ténart, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Of course, fixing this (remapping the region and removing
+axg_mipi_enable) will be a bit messy. If you want to make that MIPI Phy
+driver, I can help you with the clock part.
+
+>
+>> >
+>> > This serie adds a way to set this bit through AXG clock gating logic.
+>> > Platforms having this kind of issue could make use of this gating by
+>> > applying a patch to their devicetree similar to:
+>> >
+>> >                 clocks = <&clkc CLKID_USB
+>> >                         &clkc CLKID_MIPI_ENABLE
+>> >                         &clkc CLKID_PCIE_A
+>> > -                       &clkc CLKID_PCIE_CML_EN0>;
+>> > +                       &clkc CLKID_PCIE_CML_EN0
+>> > +                       &clkc CLKID_PCIE_PLL_CML_ENABLE>;
+>> >                 clock-names = "pcie_general",
+>> >                                 "pcie_mipi_en",
+>> >                                 "pcie",
+>> > -                               "port";
+>> > +                               "port",
+>> > +                               "pll_cml_en";
+>> >                 resets = <&reset RESET_PCIE_PHY>,
+>> >                         <&reset RESET_PCIE_A>,
+>> >                         <&reset RESET_PCIE_APB>;
+>> 
+>> A few remarks for your future patches:
+>> 
+>> * You need to document any need binding you introduce:
+>>   It means that there should have been a patch in
+>>   Documentation/devicetree/... before using your newclock name in the
+>>   pcie driver. As Martin pointed out, dt-bindings should be dealt with
+>>   in their own patches
+>> 
+>> >
+>> >
+>> > Remi Pommarel (2):
+>> >   clk: meson: axg: add pcie pll cml gating
+>> 
+>> Whenever possible, patches intended for different maintainers should be
+>> sent separately (different series)
+>
+> Thanks, will do both of the above remarks.
+>
+>> 
+>> >   PCI: amlogic: Use PCIe pll gate when available
+>> >
+>> >  drivers/clk/meson/axg.c                | 3 +++
+>> >  drivers/clk/meson/axg.h                | 2 +-
+>> >  drivers/pci/controller/dwc/pci-meson.c | 5 +++++
+>> >  include/dt-bindings/clock/axg-clkc.h   | 1 +
+>> >  4 files changed, 10 insertions(+), 1 deletion(-)
+>> 
+>
+> Thanks for reviewing this.
+>
+> [1] https://i.snipboard.io/bHMPeq.jpg
+
