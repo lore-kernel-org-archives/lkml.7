@@ -2,124 +2,120 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A8AC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A55CBC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74373206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B35D206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:08:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="W5Wg+Ve/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728114AbfLPRIF (ORCPT
+        id S1728123AbfLPRIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:08:05 -0500
-Received: from mga05.intel.com ([192.55.52.43]:42270 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728102AbfLPRIB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:08:01 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 09:08:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,322,1571727600"; 
-   d="scan'208";a="247105417"
-Received: from andresma-mobl.amr.corp.intel.com (HELO [10.252.132.232]) ([10.252.132.232])
-  by fmsmga002.fm.intel.com with ESMTP; 16 Dec 2019 09:07:59 -0800
-Subject: Re: [alsa-devel] [PATCH v4 08/15] soundwire: add initial definitions
- for sdw_master_device
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        linux-kernel@vger.kernel.org,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        vkoul@kernel.org, broonie@kernel.org,
-        srinivas.kandagatla@linaro.org, jank@cadence.com,
-        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>
-References: <20191213050409.12776-1-pierre-louis.bossart@linux.intel.com>
- <20191213050409.12776-9-pierre-louis.bossart@linux.intel.com>
- <20191213072844.GF1750354@kroah.com>
- <7431d8cf-4a09-42af-14f5-01ab3b15b47b@linux.intel.com>
- <20191213161046.GA2653074@kroah.com>
- <20728848-e0ae-01f6-1c45-c8eef6a6a1f4@linux.intel.com>
- <20191214082742.GA3318534@kroah.com>
- <e9d77c58-e0bd-010c-bbc8-b54c82f065fd@linux.intel.com>
- <20191216162517.GA2258618@kroah.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <c8dfb12c-2394-3dfe-571d-dcc5fadb8dc2@linux.intel.com>
-Date:   Mon, 16 Dec 2019 11:07:59 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20191216162517.GA2258618@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mon, 16 Dec 2019 12:08:14 -0500
+Received: from mail-eopbgr690078.outbound.protection.outlook.com ([40.107.69.78]:42057
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727917AbfLPRHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:07:00 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Y7LV0368xuxGkVGqg6x0w+Ywz6uKiMdBn1hitwF5CZiYBqvkBtc3axYD9CG8UeFELoXSw2EdIWd9l/g0MRbi0qTBsMhhqySCIYip0X3kLY1B04PoeXpcZf/NY7g/6i3cO+cbxkuSAj0X7xjdjhcHd985irsVdzjGjlTaqIblmuKOHeHHtHZabvVm3ajbJ8amWYmdkRWpm8ZEQK3Ix1e74XZ4BJDVey/8onatqQwnDS4PpZCSDQ9K6HY8rNIPj7tIlsnFxqO/VEubemdWBulePqI+G1NnVswXji4SzTV8n40s/qSdr6xESMjK466qwKegWfA/QOCk83siqcBkVwJB+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JpekNFQ4BaFHhMa3F+Mu8dTR13JJLQ1MXOfdXlNJnzY=;
+ b=jE6fzcXpCjRCHyBrnR/3VubjnL5KuaNv7K7xbheJs8kZZc9WL2uR59xXrSdXWu4yxDAenoczpUaj42LFNwY2ah96cJHoXe9Xs8ooXvk6IDx+wnMH+tQG8XUupOLmNyh+G94nyPYEoxz2L7NIWER06m9NYfLQvxQpp+MIFg8nvy6hqy8DMRxv4B0mtMLS3vFG70KBXRk4Y14WPosWHB8vMl1TYDIS8hIEQMnVJOvHeAWUvxjD9pbsSH8+SReO2+k1abgcSjy3W40xNIE4IzwewdbB0Rbln4OKUIuU935r2N6x9kT8XY5pPmU7sNDoOlYdPfhTDtDL8usMiJRqRNUAog==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
+ dkim=pass header.d=silabs.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JpekNFQ4BaFHhMa3F+Mu8dTR13JJLQ1MXOfdXlNJnzY=;
+ b=W5Wg+Ve/x1jMdbo2Gx60w3eupdY7hpptR5bBmGICLvGj2DekrUUGxMcPtlkWWtzPGc3MIlcwm+Folhl3ixMyCcm2Q5wjuhl3PmMWEfhiKjbO6DiGBE6In+49TdMo3wUy89Z3wU4aZgnRB/Re4C5hZ2mdr13UhNeLut7EyMcG5cA=
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com (10.255.180.22) by
+ MN2PR11MB4142.namprd11.prod.outlook.com (20.179.149.157) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.15; Mon, 16 Dec 2019 17:06:46 +0000
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::f46c:e5b4:2a85:f0bf]) by MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::f46c:e5b4:2a85:f0bf%4]) with mapi id 15.20.2538.019; Mon, 16 Dec 2019
+ 17:06:46 +0000
+From:   =?utf-8?B?SsOpcsO0bWUgUG91aWxsZXI=?= <Jerome.Pouiller@silabs.com>
+To:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        =?utf-8?B?SsOpcsO0bWUgUG91aWxsZXI=?= <Jerome.Pouiller@silabs.com>
+Subject: [PATCH 46/55] staging: wfx: drop useless wfx_scan_complete()
+Thread-Topic: [PATCH 46/55] staging: wfx: drop useless wfx_scan_complete()
+Thread-Index: AQHVtDLNVVOp3pR6kUO12tBC04f/PQ==
+Date:   Mon, 16 Dec 2019 17:03:57 +0000
+Message-ID: <20191216170302.29543-47-Jerome.Pouiller@silabs.com>
+References: <20191216170302.29543-1-Jerome.Pouiller@silabs.com>
+In-Reply-To: <20191216170302.29543-1-Jerome.Pouiller@silabs.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jerome.Pouiller@silabs.com; 
+x-originating-ip: [37.71.187.125]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f92d0c9b-bb60-4ed9-146b-08d7824a554e
+x-ms-traffictypediagnostic: MN2PR11MB4142:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR11MB41424595FBDA5979894F249393510@MN2PR11MB4142.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:747;
+x-forefront-prvs: 02530BD3AA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(346002)(136003)(376002)(39850400004)(199004)(189003)(6512007)(71200400001)(91956017)(6486002)(8676002)(2906002)(54906003)(81166006)(81156014)(186003)(76116006)(478600001)(36756003)(85182001)(85202003)(6666004)(66556008)(66476007)(66446008)(64756008)(1076003)(66574012)(316002)(2616005)(4326008)(6506007)(26005)(8936002)(4744005)(110136005)(5660300002)(107886003)(66946007)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4142;H:MN2PR11MB4063.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: silabs.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: p9k4/EcUHKPY2RvfMXzJ59MpvomK8iZeoBGrD33ZCBtlYWnHERaBV858g1O6HEnCR2KHLqlil+s8Wo69TRI9u6Wnta3qZwjR3OVuwjFvLsDFliR1s+SmDv0BQx9ob4wTRmcZ+gpx3GvuuytAhRQEUdqKjpqTgYDk4Y7cw76FNVvG4qxoJIYrBlbAPhgwAXj4sLBbeWedw45qYbdh3A/R7qy2BMt5Rq6Z8fBX5VzLFKIYMHM5FUqZlMMam+qVO+2p0ZsqiUVfvTbfYhoLg4k3Ma+sfK1f+fgPNMFJm5ZvKumdMh2962eI9jJ7eN+pQwxS6almoIOQP7mPP2V8Kz+Yf/ws1yC0do+Ybeuw62GWQWqw0R6tB3JYOChloqgIt0LEz1iTAvFLY8ZZluN/3INi8FjXT0h2WdRV6CH64753fKu4D50EI5ELHcXQwLoxblX0
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5E8CE646798A7546A5123E6CEF6AA528@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: silabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f92d0c9b-bb60-4ed9-146b-08d7824a554e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Dec 2019 17:03:57.0276
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: iZJkZNE0/JKGXrqDnWTbO4hhR17x5MXFUECnaRvZi3vrXVkhJH1Jpbe5BxWDSd/jKuTAqcnnJD7M+ZIfZNs7DA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
->>>> diff --git a/drivers/soundwire/Makefile b/drivers/soundwire/Makefile
->>>> index 76a5c52b12b4..5bad8422887e 100644
->>>> --- a/drivers/soundwire/Makefile
->>>> +++ b/drivers/soundwire/Makefile
->>>> @@ -7,9 +7,11 @@ ccflags-y += -DDEBUG
->>>>    #Bus Objs
->>>>    soundwire-bus-objs := bus_type.o bus.o master.o slave.o mipi_disco.o
->>>> stream.o
->>>>    obj-$(CONFIG_SOUNDWIRE) += soundwire-bus.o
->>>> +ccflags-$(CONFIG_SOUNDWIRE) += -DDEFAULT_SYMBOL_NAMESPACE=SDW_CORE
->>>>
->>>>    soundwire-generic-allocation-objs := generic_bandwidth_allocation.o
->>>>    obj-$(CONFIG_SOUNDWIRE_GENERIC_ALLOCATION) +=
->>>> soundwire-generic-allocation.o
->>>> +ccflags-$(CONFIG_SOUNDWIRE_GENERIC_ALLOCATION) +=
->>>> -DDEFAULT_SYMBOL_NAMESPACE=SDW_CORE
->>>
->>> Don't use ccflags, just use the correct MODULE_EXPORT_NS() tag instead.
->>
->> The documentation [1] states
->>
->> "
->> Defining namespaces for all symbols of a subsystem can be very verbose and
->> may become hard to maintain. Therefore a default define
->> (DEFAULT_SYMBOL_NAMESPACE) is been provided, that, if set, will become the
->> default for all EXPORT_SYMBOL() and EXPORT_SYMBOL_GPL() macro expansions
->> that do not specify a namespace.
->> "
->>
->> If the ccflags option is not supported or no longer desired, it'd be worth
->> updating the documentation for dummies like me. I took the wording as a hint
->> to avoid using MODULE_EXPORT_NS.
-> 
-> It's supported, and works just fine.  It's just that you really don't
-> have a ton of exports, right?  What's wrong with manually marking them?
-
-I don't see a MODULE_EXPORT_NS so we'd have to change every single 
-EXPORT_SYMBOL to EXPORT_SYMBOL_NS.
-
-If we are talking about adding the namespaces just about the top-level 
-functions used by Intel, yes we have less than 10 and since they were 
-renamed it's no big deal.
-
-But if we want to use this namespace for lower-level components of the 
-SoundWire code, we have 17 exports in cadence_master.c and more than 27 
-for the core parts. With the Makefile changes shared last week you'd 
-have 3 changes, I find it more manageable but it's true that the 
-information would be split with the IMPORT_NS in the code and the 
-namespace definition in the Makefile.
-
-
->>> And "SDW_CORE" is odd, "SOUNDWIRE" instead?
->>
->> 'sdw' is the prefix used everywhere for SoundWire symbols.
-> 
-> Ok, I guess that ship has sailed :(
-
-we can still use SOUNDWIRE for the namespaces, that'd be fine. you're 
-right to call us on acronyms, it's a bad habit.
+RnJvbTogSsOpcsO0bWUgUG91aWxsZXIgPGplcm9tZS5wb3VpbGxlckBzaWxhYnMuY29tPg0KDQpT
+aW5jZSB3Znhfc2Nhbl9jb21wbGV0ZSgpIGlzIG5vdyBvbmx5IGNhbGxlZCBmcm9tDQp3Znhfc2Nh
+bl9jb21wbGV0ZV9jYigpLCBpdCBtYWtlIHNlbnNlIHRvIG1lcmdlIHRoZSBib3RoIGZ1bmN0aW9u
+cy4NCg0KU2lnbmVkLW9mZi1ieTogSsOpcsO0bWUgUG91aWxsZXIgPGplcm9tZS5wb3VpbGxlckBz
+aWxhYnMuY29tPg0KLS0tDQogZHJpdmVycy9zdGFnaW5nL3dmeC9zY2FuLmMgfCA5ICsrLS0tLS0t
+LQ0KIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0pDQoNCmRp
+ZmYgLS1naXQgYS9kcml2ZXJzL3N0YWdpbmcvd2Z4L3NjYW4uYyBiL2RyaXZlcnMvc3RhZ2luZy93
+Zngvc2Nhbi5jDQppbmRleCAzOTdmZTUxMWQzNGEuLmMwNDNmMmY3OTU0MSAxMDA2NDQNCi0tLSBh
+L2RyaXZlcnMvc3RhZ2luZy93Zngvc2Nhbi5jDQorKysgYi9kcml2ZXJzL3N0YWdpbmcvd2Z4L3Nj
+YW4uYw0KQEAgLTIyOCwxMiArMjI4LDYgQEAgdm9pZCB3Znhfc2Nhbl93b3JrKHN0cnVjdCB3b3Jr
+X3N0cnVjdCAqd29yaykNCiAJc2NoZWR1bGVfd29yaygmd3ZpZi0+c2Nhbi53b3JrKTsNCiB9DQog
+DQotc3RhdGljIHZvaWQgd2Z4X3NjYW5fY29tcGxldGUoc3RydWN0IHdmeF92aWYgKnd2aWYpDQot
+ew0KLQl1cCgmd3ZpZi0+c2Nhbi5sb2NrKTsNCi0Jd2Z4X3NjYW5fd29yaygmd3ZpZi0+c2Nhbi53
+b3JrKTsNCi19DQotDQogdm9pZCB3Znhfc2Nhbl9jb21wbGV0ZV9jYihzdHJ1Y3Qgd2Z4X3ZpZiAq
+d3ZpZiwNCiAJCQkgIGNvbnN0IHN0cnVjdCBoaWZfaW5kX3NjYW5fY21wbCAqYXJnKQ0KIHsNCkBA
+IC0yNTcsNiArMjUxLDcgQEAgdm9pZCB3Znhfc2Nhbl90aW1lb3V0KHN0cnVjdCB3b3JrX3N0cnVj
+dCAqd29yaykNCiAJCQl3dmlmLT5zY2FuLmN1cnIgPSB3dmlmLT5zY2FuLmVuZDsNCiAJCQloaWZf
+c3RvcF9zY2FuKHd2aWYpOw0KIAkJfQ0KLQkJd2Z4X3NjYW5fY29tcGxldGUod3ZpZik7DQorCQl1
+cCgmd3ZpZi0+c2Nhbi5sb2NrKTsNCisJCXdmeF9zY2FuX3dvcmsoJnd2aWYtPnNjYW4ud29yayk7
+DQogCX0NCiB9DQotLSANCjIuMjAuMQ0K
