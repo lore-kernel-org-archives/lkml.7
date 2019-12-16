@@ -2,142 +2,91 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A85C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC95C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:20:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48F2620725
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6131D20733
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:20:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zNhA6sQI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbfLPITK (ORCPT
+        id S1726875AbfLPIUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 03:19:10 -0500
-Received: from mout.kundenserver.de ([212.227.126.130]:53031 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726712AbfLPITJ (ORCPT
+        Mon, 16 Dec 2019 03:20:10 -0500
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:39635 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726722AbfLPIUK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 03:19:09 -0500
-Received: from [192.168.1.155] ([77.2.44.177]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MdwRi-1i63OV2Z8Q-00b1UM; Mon, 16 Dec 2019 09:18:53 +0100
-Subject: Re: [PATCH 0/2] New zonefs file system
-To:     Damien Le Moal <damien.lemoal@wdc.com>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Johannes Thumshirn <jth@kernel.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Hannes Reinecke <hare@suse.de>
-References: <20191212183816.102402-1-damien.lemoal@wdc.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <29fb138e-e9e5-5905-5422-4454c956e685@metux.net>
-Date:   Mon, 16 Dec 2019 09:18:23 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 16 Dec 2019 03:20:10 -0500
+Received: by mail-ua1-f67.google.com with SMTP id q22so1768128uam.6
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 00:20:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4ejdI6l2MpiYe782h59jIGE5FMUmgtUe4qzVwYNXmww=;
+        b=zNhA6sQIvrirlHCC9+lV8lwZmYIThF6Cb5/e10jRvCda1SodrIGyW+1y1FRxISYeqt
+         ymjut6ALn0lrVMeyzd0+Wq5TK73LF/UmbntZSTE9+HDYoHZzjMkMfFVWskPN3ePSbaSm
+         Rhp5nBqj+mVFO+JZSBBZsmiMg46Xoa7lxa0A4zIzuj9RLdtazLXsimA1mhiYn+Byk2ic
+         ZfEAwaDeDohDz18BHRUzfZHvQkhnPUaTP/eCjcihcbpl2twLfFUvg3T9/WvkDqfekzIo
+         lY5jMNMerytVgatLCjJcUkR14W9DYj/i3K7Xmj6dJsVsLnQ3SkDBa+d2qyALhl9Fw0TW
+         FChQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4ejdI6l2MpiYe782h59jIGE5FMUmgtUe4qzVwYNXmww=;
+        b=r1ro+2XeMQFiP5xjHt2+BztFamXzxJftoPLoMWC3GgERwyQsgbib7+F/pMb36X+Ccs
+         pUrstN/TqLUQPpu4aPb4zPN0Sf2qgETI2sbr8Gg+87w5D9FShMJ874nk5PEJLbR5ZR/c
+         sNawRg0yWTEKXdpOZAM9hP1fB/b++OKb6nhMriEP39kpD79XnHw6HwgAn8k4roupD2Cy
+         R1yrBaWZb8a7bzKYnIH3G4MFlDMJMIsM+TIIgt3gnllJHVERM2VhDvD0hXu0LiM933by
+         O65Udc2th3WA45XiREn3NrRL8/LEVFbVLx8Z7Cp7PWvYkTKXt9pkZ5Kof4RAL76xfjL4
+         gUUA==
+X-Gm-Message-State: APjAAAXZc6asX9qbEy0/OAenzSQ0T9vSR++woWto5pn3g2dFv2AsmFdV
+        wORlfR5EpQBzZ36z0jBsk1bMCeBgUpQzVUxgVOKAWw==
+X-Google-Smtp-Source: APXvYqyMIA/7VP13JucpywWenFRwuvJQzwyVI4uVwVCF1oD8d8lLCXdxOD2nx2LY/dqipJEgihXFLTAgCEdx8FIQays=
+X-Received: by 2002:ab0:32ce:: with SMTP id f14mr5108941uao.54.1576484409083;
+ Mon, 16 Dec 2019 00:20:09 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191212183816.102402-1-damien.lemoal@wdc.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: tl
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:tidq86cq2DrC1PaZAL2dKYJ8Xq6L/BNZALT0S0rGhHF9IHdklv6
- QxOC+tG0GGdRnDgug5OwTkqgahcCry64UVr6OT9eFfI6P66f3GmZDaaPWbn89dKmnyWUOZo
- /y1fU3Bs8t5MhU6qhWGVdM0SmkuMuM7SMXDWgweXBm5gBUDxo+G9oOt3Z/bTP4FyQfN2Z40
- ThdV/1wLYtycKHyr6Yr7A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:muUEbKg+/lA=:DVZVDvOZRrXWYtgG8RfWi0
- s7YWyjYaVPCML/RwUaWXCy2SMQ9xiKk3oMoPaBbicEfDKJrU/pKNESYnsUDyGwHBEcjhfTVKs
- kL8um95dhaYin3gncmQkwOfu14gWZpDX9ywW7KQ/V/SgfaAjnDa5OMhyKeV/VmdKlo/lfCN8I
- awC+pqryEm6balHN8hIYQY9N6B9+ul140bY3K2cidO6X1KRg/rZ4B57KKzkCV+7q+AMO4ZC4x
- 5yrjDt6tNrGzmYtSbVBVGoVXO4jejCSCYbc7AIW/baoKeZu5yhUUc0mnAN4BdlprXciIihKKm
- Xt6UoD89rDKLDkqK599Zu9MoWXPU2nOjmKrIy3oqJjjrOUYuq/IlMLWzxutXjyF74NC9C0UPs
- D/aejmBaDmFv0/LsWg1yp/shoVu6+vrXiB+fEUtIGdU1l0j7iH3rlpOEq/Xdaiz7NIWRAUCbj
- 2fbEpHE5RG0jkZjf9It7FmFsCDeHXVAq0pd5k/5eypylShLvhZWiJPlncNnUQ6PO6fP2kEs6r
- 1j04zgnnhi4yuwEGHcalIK5uOG5CQOvVivcCUsFL32D0hUiWGFJmPIrnbgRkq6S5NyNNU/aPs
- QNRE2fdfewU2vXVs42RRprDcrmTFx61CbdouTE9xKwIIV6Ryxfwt/OfU04IupvlO84MGOSwcH
- FZpGeva+pmKZxPCwN+gfcElxW5aK/g1DNikdMn/6paO/9zdHfxZbkhIF42bbo9AvMvAq0wN01
- Ju6PHROyJZb9Z5aw2GYSr1ApqURGZhUhdI83O+7duTs10Lh6zuAf8PZttKzrSufws/BtqnPoF
- 3Wf2uwNJnijgHUNIPnHENjQXqGutxJXNGJ6ypfjB9JBT0I1xnbkR1b+CvRS5SmfYV/ybkk7/0
- TSkZiM6jyyD5oR09dR/A==
+References: <1572419178-5750-1-git-send-email-mkshah@codeaurora.org> <1572419178-5750-2-git-send-email-mkshah@codeaurora.org>
+In-Reply-To: <1572419178-5750-2-git-send-email-mkshah@codeaurora.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 16 Dec 2019 09:19:58 +0100
+Message-ID: <CACRpkdZtbViGmGr=L3C4ibx3RVvB0tsv6JamvOPzo2mRmfk1FQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] pinctrl: qcom: sc7180: Add GPIO wakeup interrupt map
+To:     Maulik Shah <mkshah@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Doug Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12.12.19 19:38, Damien Le Moal wrote:
+On Wed, Oct 30, 2019 at 8:07 AM Maulik Shah <mkshah@codeaurora.org> wrote:
 
-Hi,
+> GPIOs that can be configured as wakeup sources, have their
+> interrupt lines routed to PDC interrupt controller.
+>
+> Provide the interrupt map of the GPIO to its wakeup capable
+> interrupt parent.
+>
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
 
-> zonefs is a very simple file system exposing each zone of a zoned block
-> device as a file. Unlike a regular file system with zoned block device
-> support (e.g. f2fs or the on-going btrfs effort), zonefs does not hide
-> the sequential write constraint of zoned block devices to the user.
+Patch applied for v5.6 with the ACKs!
 
-Just curious: what's the exact definition of "zoned" here ?
-Something like partitions ?
-
-Can these files then also serve as block devices for other filesystems ?
-Just a funny idea: could we handle partitions by a file system ?
-
-Even more funny idea: give file systems block device ops, so they can
-be directly used as such (w/o explicitly using loopdev) ;-)
-
-> Files representing sequential write zones of the device must be written
-> sequentially starting from the end of the file (append only writes).
-
-So, these files can only be accessed like a tape ?
-
-Assuming you're working ontop of standard block devices anyways (instead
-of tape-like media ;-)) - why introducing such a limitation ?
-
-> zonefs is not a POSIX compliant file system. It's goal is to simplify
-> the implementation of zoned block devices support in applications by
-> replacing raw block device file accesses with a richer file based API,
-> avoiding relying on direct block device file ioctls which may
-> be more obscure to developers. 
-
-ioctls ?
-
-Last time I checked, block devices could be easily accessed via plain
-file ops (read, write, seek, ...). You can basically treat them just
-like big files of fixed size.
-
-> One example of this approach is the
-> implementation of LSM (log-structured merge) tree structures (such as
-> used in RocksDB and LevelDB)
-
-The same LevelDB as used eg. in Chrome browser, which destroys itself
-every time a little temporary problem (eg. disk full) occours ?
-If that's the usecase I'd rather use an simple in-memory table instead
-and and enough swap, as leveldb isn't reliable enough for persistent
-data anyways :p
-
-> on zoned block devices by allowing SSTables
-> to be stored in a zone file similarly to a regular file system rather
-> than as a range of sectors of a zoned device. The introduction of the
-> higher level construct "one file is one zone" can help reducing the
-> amount of changes needed in the application while at the same time
-> allowing the use of zoned block devices with various programming
-> languages other than C.
-
-Why not just simply use files on a suited filesystem (w/ low block io
-overhead) or LVM volumes ?
-
-
---mtx
-
--- 
-Dringender Hinweis: aufgrund existenzieller Bedrohung durch "Emotet"
-sollten Sie *niemals* MS-Office-Dokumente via E-Mail annehmen/öffenen,
-selbst wenn diese von vermeintlich vertrauenswürdigen Absendern zu
-stammen scheinen. Andernfalls droht Totalschaden.
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Yours,
+Linus Walleij
