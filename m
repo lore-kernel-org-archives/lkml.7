@@ -2,91 +2,179 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B5B2C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F6B8C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A6FD2166E
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:41:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 394F221775
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:44:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="ujZB/Y7X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbfLPUlh (ORCPT
+        id S1726655AbfLPUox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 15:41:37 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53519 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726401AbfLPUlg (ORCPT
+        Mon, 16 Dec 2019 15:44:53 -0500
+Received: from mail-lj1-f181.google.com ([209.85.208.181]:46609 "EHLO
+        mail-lj1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbfLPUow (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 15:41:36 -0500
-Received: by mail-wm1-f66.google.com with SMTP id m24so728585wmc.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 12:41:35 -0800 (PST)
+        Mon, 16 Dec 2019 15:44:52 -0500
+Received: by mail-lj1-f181.google.com with SMTP id z17so8259312ljk.13
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 12:44:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=kMZ+ohHFSUBj4hQc2aSeFVGq7nRc0OvU5KlbiMjbC1U=;
+        b=ujZB/Y7XeISCORKzGRlgrNhWkJVmLtsJIqjQRHx5AAvtPevbVdxhj+7ZnFTqQlxnOT
+         ywCcuI6/3ZZSwDNGgUV3Z2OlRQJADA4E80r+jhBsGjIYgzeZvdKFhBIaPnBQkCaayp3k
+         cdBSUzILPpVHqmrO/HxXxeEced2weIlvXBsbrxrZ+mYWxfzBIRImf3dmopSqMVznYFL5
+         kpHJ3mdSysLwjr2pF8313eQRKgno86xab/nnqYsjc5Y2KOx3l75w9FEUi19g5rf4qh6W
+         EoB7BI5C55KXWLbLIDpQPxCraHBonknMg4SBYyPHUYJEw1mSfoz6ek5IpQq7/V4xnnym
+         ZEjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4LEUOClJGFBZXXimsbAlWTuczz0gXm2nGBL4FN9Bv/4=;
-        b=L+FevWT7WJ/o5Va3JiGWwhkTUUtMCwUjWFMF527ebC8iKrpOgfN/FSH+sjvv0masMS
-         X2gWiJpZqXDJmEbwC+9s1I+V1Akdp5T0nrcLIDRDuC+8K6k9BEBWDB718t3l2aT6K8Mx
-         wGzMjcvUMiRUW3GtCYlMIiMz6DJZMizVTOEAbqt/AjaF2Y0+ZXL9yOkpfRFoJgnHYQ3R
-         sB8p5d2mGCiZyLUSV6R+WBU8ykK3ywGXJ+ZYy9Htdf4NQiqZWuwe6WYnSENQvnggPiq7
-         qaxRxolzVc8IguL/kl97C3/HSD3AQ2tko0mArXlmKL8ZN157R2dM4uwWxP9Y12qoasGT
-         9aHg==
-X-Gm-Message-State: APjAAAWlcXW+nfBWlPjxwApyNzGLgEwMEGguFzv3T7GkIStyrdTnDRqk
-        hwuttjVt1LyYC1A1/hfmiPc=
-X-Google-Smtp-Source: APXvYqxbj7wa/3nG3xbSmpvEUqc+RDkNVQ++hJser00UJyvc40nYH9YoURVBkO0nn1m04737kSMJDA==
-X-Received: by 2002:a7b:c386:: with SMTP id s6mr924437wmj.105.1576528894763;
-        Mon, 16 Dec 2019 12:41:34 -0800 (PST)
-Received: from a483e7b01a66.ant.amazon.com (cpc91200-cmbg18-2-0-cust94.5-4.cable.virginm.net. [81.100.41.95])
-        by smtp.gmail.com with ESMTPSA id f1sm23611224wrp.93.2019.12.16.12.41.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Dec 2019 12:41:34 -0800 (PST)
-Subject: Re: [PATCH v4 2/6] arm/arm64/xen: use C inlines for privcmd_call
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>, jmorris@namei.org,
-        sashal@kernel.org, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com, will@kernel.org, steve.capper@arm.com,
-        linux-arm-kernel@lists.infradead.org, maz@kernel.org,
-        james.morse@arm.com, vladimir.murzin@arm.com, mark.rutland@arm.com,
-        tglx@linutronix.de, gregkh@linuxfoundation.org,
-        allison@lohutok.net, info@metux.net, alexios.zavras@intel.com,
-        sstabellini@kernel.org, boris.ostrovsky@oracle.com,
-        jgross@suse.com, stefan@agner.ch, yamada.masahiro@socionext.com,
-        xen-devel@lists.xenproject.org, linux@armlinux.org.uk,
-        andrew.cooper3@citrix.com
-References: <20191204232058.2500117-1-pasha.tatashin@soleen.com>
- <20191204232058.2500117-3-pasha.tatashin@soleen.com>
-From:   Julien Grall <julien@xen.org>
-Message-ID: <b3a6359a-e7df-b47b-f50d-31b716fae191@xen.org>
-Date:   Mon, 16 Dec 2019 20:41:32 +0000
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.3.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=kMZ+ohHFSUBj4hQc2aSeFVGq7nRc0OvU5KlbiMjbC1U=;
+        b=RKxbUOtuALIkAi0V9yqPQmwxt2hIwkJmLBo+ZI4gY3lTZDn4qK9CtixXABnZPcOzbp
+         bq9k2HvaiDQTimaJyzXeLg8st64mQcJjCqMkPfjoNBeBgYdVIKh83Fs0A8Qfqp8RknXT
+         gm3BZXQx4y7Tc/bOwmXVDnmPSJYJAeDXfkrGc6dG0LZwJMC4fCpQfj9cm3enmHIkXrlb
+         sCDQiu2XVKqdZ2AhQharegLSjFOkxNsuE9CUJswEw+xNi4I9VxA8G0PEyhCmvgA762nw
+         ftZMhnuKygtBw7pVWjJiXXA7zwevVN1p1Ij9LW8+cDzzjq2TnwEm7jGgIXANQRkZuuQ8
+         odIw==
+X-Gm-Message-State: APjAAAVwAgsfinqXqjyXcXLpfsPWad24jWFnespOmnxd0b9aEvkiqzlt
+        GN01E6LRU4qXOFnMpD9BfzlGmA==
+X-Google-Smtp-Source: APXvYqzSVpPLVKvizhOUuIbVJ6jUgR2LXPP3M+uhsQfJpeDvhsg9fL0joJ4evsmOLynV5Oo5+2Gp7g==
+X-Received: by 2002:a2e:556:: with SMTP id 83mr712749ljf.127.1576529090387;
+        Mon, 16 Dec 2019 12:44:50 -0800 (PST)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id k25sm11097754lji.42.2019.12.16.12.44.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 12:44:50 -0800 (PST)
+Date:   Mon, 16 Dec 2019 12:44:41 -0800
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Yuval Avnery <yuvalav@mellanox.com>
+Cc:     Jiri Pirko <jiri@mellanox.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        Daniel Jurgens <danielj@mellanox.com>
+Subject: Re: [PATCH net-next] netdevsim: Add max_vfs to bus_dev
+Message-ID: <20191216124441.634ea8ea@cakuba.netronome.com>
+In-Reply-To: <AM6PR05MB51422CE9C249DB03F486CB63C5540@AM6PR05MB5142.eurprd05.prod.outlook.com>
+References: <1576033133-18845-1-git-send-email-yuvalav@mellanox.com>
+        <20191211095854.6cd860f1@cakuba.netronome.com>
+        <AM6PR05MB514244DC6D25DDD433C0E238C55A0@AM6PR05MB5142.eurprd05.prod.outlook.com>
+        <20191211111537.416bf078@cakuba.netronome.com>
+        <AM6PR05MB5142CCAB9A06DAC199F7100CC55A0@AM6PR05MB5142.eurprd05.prod.outlook.com>
+        <20191211142401.742189cf@cakuba.netronome.com>
+        <AM6PR05MB51423D365FB5A8DB22B1DE62C55A0@AM6PR05MB5142.eurprd05.prod.outlook.com>
+        <20191211154952.50109494@cakuba.netronome.com>
+        <AM6PR05MB51425B74E736C5D765356DC8C5550@AM6PR05MB5142.eurprd05.prod.outlook.com>
+        <20191212102517.602a8a5d@cakuba.netronome.com>
+        <AM6PR05MB5142F0F18EA6B6F16C5888CEC5550@AM6PR05MB5142.eurprd05.prod.outlook.com>
+        <20191212175418.3b07b7a9@cakuba.netronome.com>
+        <AM6PR05MB514261CD6F95F104C0353A4BC5540@AM6PR05MB5142.eurprd05.prod.outlook.com>
+        <20191213100828.6767de6e@cakuba.netronome.com>
+        <AM6PR05MB51422CE9C249DB03F486CB63C5540@AM6PR05MB5142.eurprd05.prod.outlook.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-In-Reply-To: <20191204232058.2500117-3-pasha.tatashin@soleen.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-On 04/12/2019 23:20, Pavel Tatashin wrote:
-> privcmd_call requires to enable access to userspace for the
-> duration of the hypercall.
+On Fri, 13 Dec 2019 20:05:00 +0000, Yuval Avnery wrote:
+> > On Fri, 13 Dec 2019 03:21:02 +0000, Yuval Avnery wrote:  
+> > > > I see, is this a more fine grained capability or all or nothing for SR-IOV control?  
+> > > > I'd think that if the SmartNIC's eswitch just encapsulates all the
+> > > > frames into a
+> > > > L4 tunnel it shouldn't care about L2 addresses.  
+> > >
+> > > People keep saying that, but there are customers who wants this
+> > > capability :)  
+> > 
+> > Right, but we should have a plan for both, right? Some form of a switch
+> > between L4/no checking/ip link changes are okay vs strict checking/L2/
+> > SmartNIC provisions MAC addrs?  
 > 
-> Currently, this is done via assembly macros. Change it to C
-> inlines instead.
+> I am not sure I understand
+> The L2 checks will be on NIC, not on the switch.
+> Packet decapsulated and forwarded to the NIC, Where the MAC matters..
+
+If there is tunnelling involved where customer's L2 is not visible to
+the provider underlay why does the host ip-link not have a permission
+to change the MAC address?
+
+The NIC CPU can just learn about the customer MAC change and configure
+the overlay forwarding appropriately.
+
+> > > > > > What happens if the SR-IOV host changes the MAC? Is it used by
+> > > > > > HW or is the MAC provisioned by the control CPU used for things
+> > > > > > like spoof check?  
+> > > > >
+> > > > > Host shouldn't have privileges to do it.
+> > > > > If it does, then it's under the host ownership (like in non-smartnic mode).  
+> > > >
+> > > > I see so the MAC is fixed from bare metal host's PoV? And it has to
+> > > > be set  
+> > >
+> > > Yes
+> > >  
+> > > > through some high level cloud API (for live migration etc)?
+> > > > Do existing software stacks like libvirt handle not being able to
+> > > > set the MAC happily?  
+> > >
+> > > I am not sure what you mean.
+> > > What we are talking about here is the E-switch manager setting a MAC to another VF.  
+> > > When the VF driver loads it will query this MAC from the NIC. This is
+> > > the way It works today with "ip link set _vf_ mac"
+> > >
+> > > Or in other words we are replacing "ip link set _vf_ mac" and not "ip link set address"  
+> > > So that it can work from the SmartNic embedded system.
+> > > There is nothing really new here, ip link will not work from a
+> > > SmartNic, this is why need devlink subdev.  
+> > 
+> > Ack, but are we targeting the bare metal cloud scenario here or something
+> > more limited? In a bare metal cloud AFAIU the customers can use SR-IOV on
+> > the host, but the MACs need to be communicated/ /requested from the
+> > cloud management system.  
 > 
-> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-> Acked-by: Stefano Stabellini <sstabellini@kernel.org>
+> Yes, so the cloud management system communicates with the Control CPU, not the host,
+> Not whatever customer decides to run on the hypervisor. The host PF is powerless here (almost like VF).
+> 
+> > 
+> > IOW the ip link and the devlink APIs are in different domains of control.
+> > Customer has access to ip link and provider has access to devlink.  
+> 
+> For host VF - Customer has access to ip link exactly like in non-smartnic mode.
+> For host PF - "ip link set vf" will return error. Everything running on the host is not-trusted.
+> 
+> > 
+> > So my question is does libvirt run by the customer handle the fact that it can't
+> > poke at ip link gracefully, and if live migration is involved how is the customer
+> > supposed to ask the provider to move an address?  
+> 
+> I don't understand the question because I don't understand why is it different
+> from non-smartnic where the host hypervisor is in-charge.
+ 
+The ip-link API will suddenly start returning errors which may not be
+expected to the user space. So the question is what the user space is
+you're expecting to run/testing with? _Some_ user space should prove
+this design out before we merge it.
 
-Reviewed-by: Julien Grall <julien@xen.org>
-
-Cheers,
-
--- 
-Julien Grall
+The alternative design is to "forward" hosts ip-link requests to the
+NIC CPU and let software running there talk to the cloud back end.
+Rather than going 
+  customer -> could API -> NIC, 
+go 
+  customer -> NIC -> cloud API
+That obviously is more complex, but has the big advantage of nothing 
+on the host CPU having to change.
