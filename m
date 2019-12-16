@@ -2,52 +2,52 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D24C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC23CC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 789762072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:04:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C00AF2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:04:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576519454;
-	bh=83BQSEkgp5bprdqpW/F4vLP2KevEV0pHVowGKxb598k=;
+	s=default; t=1576519458;
+	bh=DmSp8Or9YMkcXzwwMGfPEohpelPbs30v25qF/wjmyYE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k4Q9P4R/6r5x1sew85lmc0RsEJ0MLCQgpjdwz2qayC1xItW975AWMK45wkUEJshIy
-	 xY1aMvghuBSGjxu70taRP/2Ne96cxhpvndq6mJdFfb+1/ME9NbX0mVj7EjiPstab47
-	 UBN5JuUB+GXJEAFu1aEoP6D2jhbHMlJ4MuRtfHSg=
+	b=fchpBp0gYR/buiiDwp/xNMJrxKF1jmAcS4xbkqANXPO2zTkHzJoLJrR/pngeypwei
+	 HLG9lP0gyhAP9GtE+J6cfIcDj9Fd739CyMpvFy+FWIzuhGDfTZ33wrTX+VNLlSmsSd
+	 /ZPCRAvtZSkx25Ck9zZHSeEm+eTMYe2U62KH7FpA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfLPSEN (ORCPT
+        id S1729206AbfLPSER (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:04:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41308 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:04:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729611AbfLPSEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:04:09 -0500
+        id S1729331AbfLPSEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:04:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1563420726;
-        Mon, 16 Dec 2019 18:04:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE00C2072D;
+        Mon, 16 Dec 2019 18:04:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576519448;
-        bh=83BQSEkgp5bprdqpW/F4vLP2KevEV0pHVowGKxb598k=;
+        s=default; t=1576519453;
+        bh=DmSp8Or9YMkcXzwwMGfPEohpelPbs30v25qF/wjmyYE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wmm4+TCo5JfaPn3qunjexCz6QbcXFg8OIEHxvLXDvdBvSZKl7g/ikzUSiWWW5FxM9
-         2JbAlw8TqxO8le0tnzTu+4js4qrQ1ONfM+YPplPulVCtB8GU26rZE0NhfGJx9BWn+J
-         f8t37UfDQkw/TYwneum8xM3zR7O6c5+l63IJBz1I=
+        b=VOwAqIJ6NlinFnsJXIkwUoKTQBOb1bTaRRoiGrDVzBR8gkO6uu+E4q3ktyhyH+Cw2
+         zvCZY7vGYJwA3zpvHOGWJKsJKYBifNqyaEfucGWbmCoTZlQlo+XYsjOWhMS6Ah8lPw
+         5/gJIVET91s+BZJv+uFSjfBgdcMLbTow6WktX9Bk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 4.19 070/140] intel_th: pci: Add Tiger Lake CPU support
-Date:   Mon, 16 Dec 2019 18:48:58 +0100
-Message-Id: <20191216174806.679445522@linuxfoundation.org>
+        stable@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.19 072/140] cpufreq: powernv: fix stack bloat and hard limit on number of CPUs
+Date:   Mon, 16 Dec 2019 18:49:00 +0100
+Message-Id: <20191216174807.086723618@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
 References: <20191216174747.111154704@linuxfoundation.org>
@@ -60,35 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+From: John Hubbard <jhubbard@nvidia.com>
 
-commit 6e6c18bcb78c0dc0601ebe216bed12c844492d0c upstream.
+commit db0d32d84031188443e25edbd50a71a6e7ac5d1d upstream.
 
-This adds support for the Trace Hub in Tiger Lake CPU.
+The following build warning occurred on powerpc 64-bit builds:
 
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20191120130806.44028-4-alexander.shishkin@linux.intel.com
+drivers/cpufreq/powernv-cpufreq.c: In function 'init_chip_info':
+drivers/cpufreq/powernv-cpufreq.c:1070:1: warning: the frame size of
+1040 bytes is larger than 1024 bytes [-Wframe-larger-than=]
+
+This is with a cross-compiler based on gcc 8.1.0, which I got from:
+  https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/8.1.0/
+
+The warning is due to putting 1024 bytes on the stack:
+
+    unsigned int chip[256];
+
+...and it's also undesirable to have a hard limit on the number of
+CPUs here.
+
+Fix both problems by dynamically allocating based on num_possible_cpus,
+as recommended by Michael Ellerman.
+
+Fixes: 053819e0bf840 ("cpufreq: powernv: Handle throttling due to Pmax capping at chip level")
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: 4.10+ <stable@vger.kernel.org> # 4.10+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwtracing/intel_th/pci.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/cpufreq/powernv-cpufreq.c |   17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
---- a/drivers/hwtracing/intel_th/pci.c
-+++ b/drivers/hwtracing/intel_th/pci.c
-@@ -191,6 +191,11 @@ static const struct pci_device_id intel_
- 		.driver_data = (kernel_ulong_t)&intel_th_2x,
- 	},
- 	{
-+		/* Tiger Lake CPU */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x9a33),
-+		.driver_data = (kernel_ulong_t)&intel_th_2x,
-+	},
-+	{
- 		/* Tiger Lake PCH */
- 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa0a6),
- 		.driver_data = (kernel_ulong_t)&intel_th_2x,
+--- a/drivers/cpufreq/powernv-cpufreq.c
++++ b/drivers/cpufreq/powernv-cpufreq.c
+@@ -1042,9 +1042,14 @@ static struct cpufreq_driver powernv_cpu
+ 
+ static int init_chip_info(void)
+ {
+-	unsigned int chip[256];
++	unsigned int *chip;
+ 	unsigned int cpu, i;
+ 	unsigned int prev_chip_id = UINT_MAX;
++	int ret = 0;
++
++	chip = kcalloc(num_possible_cpus(), sizeof(*chip), GFP_KERNEL);
++	if (!chip)
++		return -ENOMEM;
+ 
+ 	for_each_possible_cpu(cpu) {
+ 		unsigned int id = cpu_to_chip_id(cpu);
+@@ -1056,8 +1061,10 @@ static int init_chip_info(void)
+ 	}
+ 
+ 	chips = kcalloc(nr_chips, sizeof(struct chip), GFP_KERNEL);
+-	if (!chips)
+-		return -ENOMEM;
++	if (!chips) {
++		ret = -ENOMEM;
++		goto free_and_return;
++	}
+ 
+ 	for (i = 0; i < nr_chips; i++) {
+ 		chips[i].id = chip[i];
+@@ -1067,7 +1074,9 @@ static int init_chip_info(void)
+ 			per_cpu(chip_info, cpu) =  &chips[i];
+ 	}
+ 
+-	return 0;
++free_and_return:
++	kfree(chip);
++	return ret;
+ }
+ 
+ static inline void clean_chip_info(void)
 
 
