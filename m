@@ -2,173 +2,87 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4258C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C8CC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8653420725
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:52:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="P6aWTboU"
+	by mail.kernel.org (Postfix) with ESMTP id 6AED420684
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 10:53:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727525AbfLPKwO (ORCPT
+        id S1727534AbfLPKxg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 05:52:14 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:42740 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727099AbfLPKwO (ORCPT
+        Mon, 16 Dec 2019 05:53:36 -0500
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:38131 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727403AbfLPKxg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 05:52:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1576493531; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tJtKg4YBH/DsNNYyKShEC+cjzAd8qY62spFT3pgBt20=;
-        b=P6aWTboUJ49iR09mjEKD0sd3Jw123RPpiEYdRir1RQrcwtYq/ezKQrhszcaPBdS7A7DVQP
-        phKTilD8m1ja30fBqFmDrw+6BwZgBakNHExJ8ugrmvA3GrzeNUY4xoyEKDi/UYAMYQE5Gp
-        wfMBzqHQjI4GCgur+IiYHqri5cnNqPI=
-Date:   Mon, 16 Dec 2019 11:52:05 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: RE: [PATCH v2 3/3] power/supply: Add generic USB charger driver
-To:     Peter Chen <peter.chen@nxp.com>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>, od@zcrc.me,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Message-Id: <1576493525.3.0@crapouillou.net>
-In-Reply-To: <VI1PR04MB5327401FFD2D32E937548DD48B510@VI1PR04MB5327.eurprd04.prod.outlook.c
-        om>
-References: <20191211155032.167032-1-paul@crapouillou.net>
-        <20191211155032.167032-3-paul@crapouillou.net>
-        <20191212091814.GA7035@b29397-desktop> <1576270147.3.0@crapouillou.net>
-        <VI1PR04MB5327401FFD2D32E937548DD48B510@VI1PR04MB5327.eurprd04.prod.outlook.com>
+        Mon, 16 Dec 2019 05:53:36 -0500
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id EB18C24000F;
+        Mon, 16 Dec 2019 10:53:32 +0000 (UTC)
+Date:   Mon, 16 Dec 2019 11:53:31 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH] drm/panel: simple: Support reset GPIOs
+Message-ID: <20191216115331.5c6047f7@xps13>
+In-Reply-To: <20191214102354.GB2967@ravnborg.org>
+References: <20191213181325.26228-1-miquel.raynal@bootlin.com>
+        <20191214102354.GB2967@ravnborg.org>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+Hi Sam,
 
+Sam Ravnborg <sam@ravnborg.org> wrote on Sat, 14 Dec 2019 11:23:54
++0100:
 
-Le lun., d=E9c. 16, 2019 at 01:24, Peter Chen <peter.chen@nxp.com> a=20
-=E9crit :
->=20
->>  >>  +
->>  >>  +	desc =3D &charger->desc;
->>  >>  +	desc->name =3D "usb-charger";
->>  >>  +	desc->properties =3D usb_charger_properties;
->>  >>  +	desc->num_properties =3D ARRAY_SIZE(usb_charger_properties);
->>  >>  +	desc->get_property =3D usb_charger_get_property;
->>  >>  +	desc->type =3D POWER_SUPPLY_TYPE_USB;
->>  >
->>  > What's your further plan for this generic USB charger?
->>  > To support BC1.2, we need to know charger type, and how we could=20
->> get
->>  > it?
->>  >
->>  > Peter
->>=20
->>  Well I don't really know. The USB role framework does not give any=20
->> info about
->>  what's plugged.
->>=20
->=20
-> What's the use case for this patch set? How it be used?
+> Hi Miquel.
+> 
+> On Fri, Dec 13, 2019 at 07:13:25PM +0100, Miquel Raynal wrote:
+> > The panel common bindings provide a gpios-reset property which is
+> > active low by default. Let's support it in the simple driver.
+> > 
+> > De-asserting the reset pin implies a physical high, which in turns is
+> > a logic low.
+> > 
+> > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>  
+> 
+> Code looks fine - but I fail to see why simple panels would require a
+> reset pin.
+> 
+> Do you have any simple panels that requires this, or did you add it
+> because you saw it in the panel-common.yaml file?
 
-My devicetree:
+My hardware is:
 
-usb_otg: usb@13440000 {
-	compatible =3D "ingenic,jz4770-musb", "simple-mfd";
-	reg =3D <0x13440000 0x10000>;
-	[...]
+LVDS IP <----------> LVDS to RGB bridge <------------> Panel
 
-	usb-role-switch;
+While there is a simple "RGB to LVDS" bridge driver, there is none
+doing the work the other way around. In my case, the bridge has a reset
+pin.
 
-	connector {
-		compatible =3D "gpio-usb-b-connector", "usb-b-connector";
-		label =3D "mini-USB";
-		type =3D "mini";
+As until now there is no way to represent the "LVDS to RGB" bridge and
+because the bindings already document such reset pin, I decided to add
+support for it in the simple panel driver.
 
-		id-gpios =3D <&gpf 18 GPIO_ACTIVE_HIGH>;
-		vbus-gpios =3D <&gpb 5 GPIO_ACTIVE_HIGH>;
-		[...]
-	};
-
-	usb_charger: usb-charger {
-		compatible =3D "usb-charger";
-	};
-};
-
-The new gpio-usb-connector driver uses the ID/VBUS GPIOs to detect in=20
-which state (device, host, unconnected) a OTG connector is. However,=20
-that means I cannot use the standard gpio-charger driver to detect the=20
-presence of a charger based on the state of the VBUS gpio, since it's=20
-already requested here. So the point of this patchset is to provide an=20
-alternative to gpio-charger that works with OTG controllers compatible=20
-with 'usb-role-switch'.
-
-Cheers,
--Paul
-
-
->>  >
->>  >>  +
->>  >>  +	charger->charger =3D devm_power_supply_register(dev, desc,=20
->> &cfg);
->>  >>  +	if (IS_ERR(charger->charger)) {
->>  >>  +		dev_err(dev, "Unable to register charger");
->>  >>  +		return PTR_ERR(charger->charger);
->>  >>  +	}
->>  >>  +
->>  >>  +	err =3D usb_role_switch_register_notifier(charger->role,
->>  >> &charger->nb);
->>  >>  +	if (err) {
->>  >>  +		dev_err(dev, "Unable to register USB role switch notifier");
->>  >>  +		return err;
->>  >>  +	}
->>  >>  +
->>  >>  +	return devm_add_action_or_reset(dev, usb_charger_unregister,
->>  >> charger);
->>  >>  +}
->>  >>  +
->>  >>  +static const struct of_device_id usb_charger_of_match[] =3D {
->>  >>  +	{ .compatible =3D "usb-charger" },
->>  >>  +	{ /* sentinel */ },
->>  >>  +};
->>  >>  +MODULE_DEVICE_TABLE(of, usb_charger_of_match);  +  +static=20
->> struct
->>  >> platform_driver usb_charger_driver =3D {
->>  >>  +	.driver =3D {
->>  >>  +		.name =3D "usb-charger",
->>  >>  +		.of_match_table =3D of_match_ptr(usb_charger_of_match),
->>  >>  +	},
->>  >>  +	.probe =3D usb_charger_probe,
->>  >>  +};
->>  >>  +module_platform_driver(usb_charger_driver);
->>  >>  +
->>  >>  +MODULE_DESCRIPTION("Simple USB charger driver");
->>  >> +MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
->>  >> +MODULE_LICENSE("GPL");
->>  >>  --
->>  >>  2.24.0
->>  >>
->>  >
->>  > --
->>  >
->>  > Thanks,
->>  > Peter Chen
->>=20
->=20
-
-=
-
+Thanks,
+Miquèl
