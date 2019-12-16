@@ -2,182 +2,199 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7816AC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:36:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F3F0C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D00020684
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:36:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JMudFJ2Y"
+	by mail.kernel.org (Postfix) with ESMTP id 02607206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:36:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576521410;
+	bh=PzIDpLqDZL04s/4/LiPTqCmJZjCgeiQ9/gPmSbifxRM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=T//WxurD+8m3sPxfAiGJ5xVzpdQjFAr3AUL2lJHxmTAK0RRRgb7ZRWCbA2kKV5w6j
+	 Wu4Q1V3VhVkHK1r+Xkqteys29XIyOEgwMtdxXf4WL5wO632d8HiIKcMQXTNpnNir4n
+	 tT9VUMrX9stuKHpsChyu1LoDpLykuKJPo41kKRbI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729992AbfLPSgn (ORCPT
+        id S1730006AbfLPSGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:36:43 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:34939 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbfLPSgl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:36:41 -0500
-Received: by mail-wm1-f65.google.com with SMTP id p17so397754wmb.0;
-        Mon, 16 Dec 2019 10:36:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:thread-index
-         :content-language;
-        bh=j/OOxCQM0nUcpbg0rlV/CQsLDZ5ZDrjQy1E+zoBagdI=;
-        b=JMudFJ2YR4kBLZRZ9almvtkAsak9mnaHMWAzuyDZK9A4MwBFSNg5fcBgHysYr7i/oP
-         gd4rn1Y3xnJ7eTm93R/GL+UGJSfJp5g9Gt38H54NHl5h8wB+BQgAPlQ9eiq9IJLlSYkw
-         jWNY7zBm3j6fX6d+F/xj3LdKYOd4I/6xDUhAW2RNVV2BYq8wAO+QwB+o5sGD3o/uzoiw
-         7IxAklxNz5Klrvz5v2DnTGyJskKSk1AnzkoxhwQuxEcKxMCC8eQN9YAW1/3XvuCC/xmS
-         4gUiYcvQoHMUQqyfS/Z96E2e7VeNp+Fx8k1Tb4RQ2TMvCnRlpbqLklZaoauziWuxiL7p
-         fnow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:thread-index
-         :content-language;
-        bh=j/OOxCQM0nUcpbg0rlV/CQsLDZ5ZDrjQy1E+zoBagdI=;
-        b=h4F+ugMzGQrpZKe4p2veAO67jF+B8aMjsr4o/jZrQvyIOR6QH+tz8bxB0JRuR/Z63B
-         dvJ7P/iEOoEGi6RpbKWWJRXxTIOWd7PbbInI3W2c5uHbi1K5p9i3VJ9GLAnqxYdVOt6J
-         hUiS0CF8AK5vKQ+ePxMw2y0gkMmeWzkhbRrNcWNb3kSQ5ybWukgUVc00qj11Ndx1B2nX
-         k7W4+HFQbqu/EevDBSOFMOvUBKXHN6FcCMwuKMUN4O+smRFxe6FJuFwpUoYtJqjo9Dnb
-         8gXatXehLy/1T/KSvLJD7lYd8eSFwsrpqQcH2GKKO7FtTI2w2jI4UUHUfvnAZUULdT+S
-         TC7g==
-X-Gm-Message-State: APjAAAUTAFdDo7U4pzydM9TbcuGs33EhLGf6skvHo73JwnV4ugkFe2de
-        9qdurU/oHQ/qjzjp85B0dSs=
-X-Google-Smtp-Source: APXvYqzTLT8Xks5zl3PQnab/bVWlEWUCSFOpaVhki4OhCxHORt2ZcnjsQ9p2XXx+fSO9mGjCtiKDtA==
-X-Received: by 2002:a7b:cc82:: with SMTP id p2mr408319wma.159.1576521398960;
-        Mon, 16 Dec 2019 10:36:38 -0800 (PST)
-Received: from WINDOWSSS5SP16 (cpc96954-walt26-2-0-cust383.13-2.cable.virginm.net. [82.31.89.128])
-        by smtp.gmail.com with ESMTPSA id t8sm22501509wrp.69.2019.12.16.10.36.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 16 Dec 2019 10:36:38 -0800 (PST)
-From:   "Robert Milkowski" <rmilkowski@gmail.com>
-To:     <linux-nfs@vger.kernel.org>
-Cc:     "'Trond Myklebust'" <trond.myklebust@hammerspace.com>,
-        "'Anna Schumaker'" <anna.schumaker@netapp.com>,
-        <linux-kernel@vger.kernel.org>, <linux-nfs@vger.kernel.org>
-References: <05c201d5b439$d99083c0$8cb18b40$@gmail.com>
-In-Reply-To: <05c201d5b439$d99083c0$8cb18b40$@gmail.com>
-Subject: RE: [PATCH] NFSv4: open() should try lease recovery on NFS4ERR_EXPIRED
-Date:   Mon, 16 Dec 2019 18:36:37 -0000
-Message-ID: <05ce01d5b43f$c0861650$419242f0$@gmail.com>
+        Mon, 16 Dec 2019 13:06:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46952 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729639AbfLPSGh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:06:37 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DB9F20CC7;
+        Mon, 16 Dec 2019 18:06:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576519596;
+        bh=PzIDpLqDZL04s/4/LiPTqCmJZjCgeiQ9/gPmSbifxRM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=THfkqOBGWdJh6odp3Ivs9GDAeWhAj3Eyk8TEnCL6jUZqq6HWSZbMcqg3wxtm8zJda
+         WSd0JL9ow3us9daVuQanBoDOUz7N/lWE7z05TmWZ5OMgaH4e4ubWY+DFEmoxr+ZWc2
+         VjZDwYyKVOng3P/lsTLUGlwj2M+oCtdNZ+mnEr0o=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 130/140] powerpc: Fix vDSO clock_getres()
+Date:   Mon, 16 Dec 2019 18:49:58 +0100
+Message-Id: <20191216174828.572738108@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
+References: <20191216174747.111154704@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQHLcykFO2swrFFW3C5mPegNnWnxpafRjXFw
-Content-Language: en-gb
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Vincenzo Frascino <vincenzo.frascino@arm.com>
+
+[ Upstream commit 552263456215ada7ee8700ce022d12b0cffe4802 ]
+
+clock_getres in the vDSO library has to preserve the same behaviour
+of posix_get_hrtimer_res().
+
+In particular, posix_get_hrtimer_res() does:
+    sec = 0;
+    ns = hrtimer_resolution;
+and hrtimer_resolution depends on the enablement of the high
+resolution timers that can happen either at compile or at run time.
+
+Fix the powerpc vdso implementation of clock_getres keeping a copy of
+hrtimer_resolution in vdso data and using that directly.
+
+Fixes: a7f290dad32e ("[PATCH] powerpc: Merge vdso's and add vdso support to 32 bits kernel")
+Cc: stable@vger.kernel.org
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+[chleroy: changed CLOCK_REALTIME_RES to CLOCK_HRTIMER_RES]
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/a55eca3a5e85233838c2349783bcb5164dae1d09.1575273217.git.christophe.leroy@c-s.fr
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/powerpc/include/asm/vdso_datapage.h  | 2 ++
+ arch/powerpc/kernel/asm-offsets.c         | 2 +-
+ arch/powerpc/kernel/time.c                | 1 +
+ arch/powerpc/kernel/vdso32/gettimeofday.S | 7 +++++--
+ arch/powerpc/kernel/vdso64/gettimeofday.S | 7 +++++--
+ 5 files changed, 14 insertions(+), 5 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/vdso_datapage.h b/arch/powerpc/include/asm/vdso_datapage.h
+index bbc06bd72b1f2..4333b9a473dc4 100644
+--- a/arch/powerpc/include/asm/vdso_datapage.h
++++ b/arch/powerpc/include/asm/vdso_datapage.h
+@@ -86,6 +86,7 @@ struct vdso_data {
+ 	__s32 wtom_clock_nsec;			/* Wall to monotonic clock nsec */
+ 	__s64 wtom_clock_sec;			/* Wall to monotonic clock sec */
+ 	struct timespec stamp_xtime;		/* xtime as at tb_orig_stamp */
++	__u32 hrtimer_res;			/* hrtimer resolution */
+    	__u32 syscall_map_64[SYSCALL_MAP_SIZE]; /* map of syscalls  */
+    	__u32 syscall_map_32[SYSCALL_MAP_SIZE]; /* map of syscalls */
+ };
+@@ -107,6 +108,7 @@ struct vdso_data {
+ 	__s32 wtom_clock_nsec;
+ 	struct timespec stamp_xtime;	/* xtime as at tb_orig_stamp */
+ 	__u32 stamp_sec_fraction;	/* fractional seconds of stamp_xtime */
++	__u32 hrtimer_res;		/* hrtimer resolution */
+    	__u32 syscall_map_32[SYSCALL_MAP_SIZE]; /* map of syscalls */
+ 	__u32 dcache_block_size;	/* L1 d-cache block size     */
+ 	__u32 icache_block_size;	/* L1 i-cache block size     */
+diff --git a/arch/powerpc/kernel/asm-offsets.c b/arch/powerpc/kernel/asm-offsets.c
+index 7c3738d890e8b..50400f213bbf2 100644
+--- a/arch/powerpc/kernel/asm-offsets.c
++++ b/arch/powerpc/kernel/asm-offsets.c
+@@ -379,6 +379,7 @@ int main(void)
+ 	OFFSET(WTOM_CLOCK_NSEC, vdso_data, wtom_clock_nsec);
+ 	OFFSET(STAMP_XTIME, vdso_data, stamp_xtime);
+ 	OFFSET(STAMP_SEC_FRAC, vdso_data, stamp_sec_fraction);
++	OFFSET(CLOCK_HRTIMER_RES, vdso_data, hrtimer_res);
+ 	OFFSET(CFG_ICACHE_BLOCKSZ, vdso_data, icache_block_size);
+ 	OFFSET(CFG_DCACHE_BLOCKSZ, vdso_data, dcache_block_size);
+ 	OFFSET(CFG_ICACHE_LOGBLOCKSZ, vdso_data, icache_log_block_size);
+@@ -409,7 +410,6 @@ int main(void)
+ 	DEFINE(CLOCK_REALTIME_COARSE, CLOCK_REALTIME_COARSE);
+ 	DEFINE(CLOCK_MONOTONIC_COARSE, CLOCK_MONOTONIC_COARSE);
+ 	DEFINE(NSEC_PER_SEC, NSEC_PER_SEC);
+-	DEFINE(CLOCK_REALTIME_RES, MONOTONIC_RES_NSEC);
+ 
+ #ifdef CONFIG_BUG
+ 	DEFINE(BUG_ENTRY_SIZE, sizeof(struct bug_entry));
+diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
+index 7707990c4c169..8487ad6864621 100644
+--- a/arch/powerpc/kernel/time.c
++++ b/arch/powerpc/kernel/time.c
+@@ -929,6 +929,7 @@ void update_vsyscall(struct timekeeper *tk)
+ 	vdso_data->wtom_clock_nsec = tk->wall_to_monotonic.tv_nsec;
+ 	vdso_data->stamp_xtime = xt;
+ 	vdso_data->stamp_sec_fraction = frac_sec;
++	vdso_data->hrtimer_res = hrtimer_resolution;
+ 	smp_wmb();
+ 	++(vdso_data->tb_update_count);
+ }
+diff --git a/arch/powerpc/kernel/vdso32/gettimeofday.S b/arch/powerpc/kernel/vdso32/gettimeofday.S
+index afd516b572f86..49eecd28aef1e 100644
+--- a/arch/powerpc/kernel/vdso32/gettimeofday.S
++++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
+@@ -160,12 +160,15 @@ V_FUNCTION_BEGIN(__kernel_clock_getres)
+ 	cror	cr0*4+eq,cr0*4+eq,cr1*4+eq
+ 	bne	cr0,99f
+ 
++	mflr	r12
++  .cfi_register lr,r12
++	bl	__get_datapage@local	/* get data page */
++	lwz	r5, CLOCK_HRTIMER_RES(r3)
++	mtlr	r12
+ 	li	r3,0
+ 	cmpli	cr0,r4,0
+ 	crclr	cr0*4+so
+ 	beqlr
+-	lis	r5,CLOCK_REALTIME_RES@h
+-	ori	r5,r5,CLOCK_REALTIME_RES@l
+ 	stw	r3,TSPC32_TV_SEC(r4)
+ 	stw	r5,TSPC32_TV_NSEC(r4)
+ 	blr
+diff --git a/arch/powerpc/kernel/vdso64/gettimeofday.S b/arch/powerpc/kernel/vdso64/gettimeofday.S
+index 1f324c28705bc..020e90d1079dd 100644
+--- a/arch/powerpc/kernel/vdso64/gettimeofday.S
++++ b/arch/powerpc/kernel/vdso64/gettimeofday.S
+@@ -190,12 +190,15 @@ V_FUNCTION_BEGIN(__kernel_clock_getres)
+ 	cror	cr0*4+eq,cr0*4+eq,cr1*4+eq
+ 	bne	cr0,99f
+ 
++	mflr	r12
++  .cfi_register lr,r12
++	bl	V_LOCAL_FUNC(__get_datapage)
++	lwz	r5, CLOCK_HRTIMER_RES(r3)
++	mtlr	r12
+ 	li	r3,0
+ 	cmpldi	cr0,r4,0
+ 	crclr	cr0*4+so
+ 	beqlr
+-	lis	r5,CLOCK_REALTIME_RES@h
+-	ori	r5,r5,CLOCK_REALTIME_RES@l
+ 	std	r3,TSPC64_TV_SEC(r4)
+ 	std	r5,TSPC64_TV_NSEC(r4)
+ 	blr
+-- 
+2.20.1
 
 
-Currently if nfsv4 lease expires on a server Linux client will return EIO to
-open and won't try to recover.
-
-For example:
-
-$ date; strace -t -e trace=open head /mnt/3/var/log/vmware-vmsvc.log
->/dev/null
-Mon 16 Dec 17:37:16 GMT 2019
-...
-17:37:16 open("/mnt/3/var/log/vmware-vmsvc.log", O_RDONLY) = -1 EIO
-(Input/output error)
-...
-
-
-The network/nfs traffic:
-
-2638 17:37:16.286642918  10.50.2.57 -> 10.50.2.59  NFS 246 V4 Call ACCESS
-FH: 0x62d40c52, [Check: RD LU MD XT DL]
-2639 17:37:16.286929287  10.50.2.59 -> 10.50.2.57  NFS 194 V4 Reply (Call In
-2638) ACCESS, [Access Denied: MD XT DL], [Allowed: RD LU]
-2640 17:37:16.287295942  10.50.2.57 -> 10.50.2.59  NFS 258 V4 Call ACCESS
-FH: 0xeddb7439, [Check: RD LU MD XT DL]
-2641 17:37:16.287448815  10.50.2.59 -> 10.50.2.57  NFS 194 V4 Reply (Call In
-2640) ACCESS, [Access Denied: MD XT DL], [Allowed: RD LU]
-2642 17:37:16.287666576  10.50.2.57 -> 10.50.2.59  NFS 266 V4 Call ACCESS
-FH: 0x8503e2cd, [Check: RD LU MD XT DL]
-2643 17:37:16.287786851  10.50.2.59 -> 10.50.2.57  NFS 194 V4 Reply (Call In
-2642) ACCESS, [Access Denied: MD XT DL], [Allowed: RD LU]
-2644 17:37:16.287984808  10.50.2.57 -> 10.50.2.59  NFS 350 V4 Call OPEN DH:
-0x8503e2cd/vmware-vmsvc.log
-2645 17:37:16.288194276  10.50.2.59 -> 10.50.2.57  NFS 122 V4 Reply (Call In
-2644) OPEN Status: NFS4ERR_EXPIRED
-
-
-Both Linux and Solaris NFS servers return NFS4ERR_EXPIRED if nfsv4 lease
-expire.
-Recent ONTAP versions return NFS4ERR_STALE_CLIENTID which is handled
-correctly.
-
-The patch changes handling of NFS4ERR_EXPIRED error to also try to recover.
-
-The issue can be triggered by exporting over NFSv4 a filesystem with a
-sub-filesystem,
-for example by exporting / and /var (assuming /var is a separate
-filesystem).
-
-How to reproduce the issue:
-
-On an NFS server run:
-
-# cat /etc/exports
-/ *(rw,sync)
-/var *(rw,sync)
-
-
-On a Linux NFS client:
-
-# mount -o vers=4 10.50.2.59:/ /mnt/3
-
-$ date; strace -t -e trace=open head /mnt/3/var/log/vmware-vmsvc.log
->/dev/null
-Mon 16 Dec 17:28:45 GMT 2019
-...
-17:28:45 open("/mnt/3/var/log/vmware-vmsvc.log", O_RDONLY) = 3
-...
-
-
-Now, on the NFS client run:
-
-# while [ 1 ]; do date; umount /mnt/3/var; ls /mnt/3/var >/dev/null; sleep
-10; done
-...
-
-Because of another bug (see email with subject: [PATCH] NFSv4:
-nfs4_do_fsinfo() should not do implicit lease renewals)
-the above while loop will prevent the NFS client from sending RENEW
-operations to server as it currently assumes an implicit
-lease renewal which I believe is not compliant with the RFC. If you now wait
-long enough for the NFS server to expire the lease,
-and then try to open a file (with no other NFS activity) it should result in
-server sending NFS4ERR_EXPIRED and the NFS LINUX client
-will return EIO to an application as shown above.
-
-
-This also gets triggered if a sub-mount in automatically unmounted after
-nfs_mountpoint_expiry_timeout, then shortly after there is some
-access to it which will trigger for it to be automatically mounted again
-which will delay the client in sending the RENEW operation.
-This results  in a short window during which open() will return EIO to any
-files from the file server.
-
-This was tested with 5.5.0-rc2 and the provided patch is applied on top of
-the 5.5.0-rc2 as well.
-
-
-Best regards,
- Robert Milkowski
 
