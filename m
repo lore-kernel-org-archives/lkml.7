@@ -2,126 +2,147 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA14C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA25C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43A5D206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:30:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Q5OnBk5J"
+	by mail.kernel.org (Postfix) with ESMTP id 62331206EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:30:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576521024;
+	bh=/oYdgNYhk8Lv5klb/fdBxyt09HNKyYtpdnKzGykVzPw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=qni2tOD0wtR+DY0y2N6K2e7md15T2pNuX43Kb5aWsL/leOU4xHivjTE0uXKftRwQR
+	 +pylBuOnICNRZD5geEgi0XhULqo+WcYdmJmTHi1+faUubffPzzeoK1sAEc9hFF1jvr
+	 /dfQsxtTpv3rppJYHVnvLtH2MGmixxMb/gJ/h5eY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731339AbfLPSaQ (ORCPT
+        id S1731367AbfLPSaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:30:16 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:63927 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728069AbfLPSaO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:30:14 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576521013; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=TfuUlFywcHJXSJ0alv7KYk4aSCzvzEvraTMqxX+xQ+w=; b=Q5OnBk5JGscogj+6+jLM277Yscb/a7Cl4fe7WWle/IpYlU5EeCps4x2Awwand8uMWNTkMAdO
- A8lUCBuUN3JizfRj0WdVMKBPneEmhyzgnbTVX36ksv1cONwoBQttjyVmC6EuEm188N3GoN6J
- 48nbcPjt6x3AIMb+Q9gxK9+3Pkc=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5df7cd33.7f2d8a1e65e0-smtp-out-n03;
- Mon, 16 Dec 2019 18:30:11 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D1402C447A3; Mon, 16 Dec 2019 18:30:09 +0000 (UTC)
-Received: from [10.79.43.230] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 16 Dec 2019 13:30:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58376 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731016AbfLPSMw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:12:52 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1B666C43383;
-        Mon, 16 Dec 2019 18:30:03 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1B666C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-Subject: Re: [PATCH v3 2/2] interconnect: qcom: Add OSM L3 interconnect
- provider support
-To:     Evan Green <evgreen@chromium.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        David Dai <daidavid1@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-kernel-owner@vger.kernel.org
-References: <20191118154435.20357-1-sibis@codeaurora.org>
- <0101016e7f30ad15-18908ef0-a2b9-4a2a-bf32-6cb3aa447b01-000000@us-west-2.amazonses.com>
- <CAE=gft5jGagsFS2yBeJCLt9R26RQjx9bfMxhQu8Jj4uc4ca40w@mail.gmail.com>
- <0101016e83897442-ecc4c00f-c0d1-4c2c-92ed-ce78e65c0935-000000@us-west-2.amazonses.com>
- <0101016eac068d05-761f0d60-b1ef-400f-bf84-3164c2a26d2e-000000@us-west-2.amazonses.com>
- <CAE=gft5cS54qn0JjxO58xL6sFyQk4t=8ofLFWPUSVQ9sdU4XpQ@mail.gmail.com>
-From:   Sibi Sankar <sibis@codeaurora.org>
-Message-ID: <b11c2116-f247-17c5-69ca-071183365a01@codeaurora.org>
-Date:   Tue, 17 Dec 2019 00:00:01 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D1DC2166E;
+        Mon, 16 Dec 2019 18:12:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576519971;
+        bh=/oYdgNYhk8Lv5klb/fdBxyt09HNKyYtpdnKzGykVzPw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zw20mGB1S95MlXSQAE1YBEHaY/LIIYP8Si5T/R8/bHblYtRVHcjJuQHj7/BgC9Rwc
+         7eywBcbSRYAWmcgJLgjZir6L9iT6GypPC1+EO9+yW4DhIlVH1lHcOLCWKcLDSIS3Ko
+         LdjyaAdPw0d0pvPRGnbvuT6RA94XZxr19o6KxrAY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 144/180] scsi: qla2xxx: Really fix qla2xxx_eh_abort()
+Date:   Mon, 16 Dec 2019 18:49:44 +0100
+Message-Id: <20191216174843.370017056@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
+References: <20191216174806.018988360@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <CAE=gft5cS54qn0JjxO58xL6sFyQk4t=8ofLFWPUSVQ9sdU4XpQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Evan,
+From: Bart Van Assche <bvanassche@acm.org>
 
-On 12/7/19 12:46 AM, Evan Green wrote:
-> On Wed, Nov 27, 2019 at 12:42 AM Sibi Sankar <sibis@codeaurora.org> wrote:
->>
->> Hey Evan/Georgi,
->>
->> https://git.linaro.org/people/georgi.djakov/linux.git/commit/?h=icc-dev&id=9197da7d06e88666d1588e3c21a743e60381264d
->>
->> With the "Redefine interconnect provider
->> DT nodes for SDM845" series, wouldn't it
->> make more sense to define the OSM_L3 icc
->> nodes in the sdm845.c icc driver and have
->> the common helpers in osm_l3 driver? Though
->> we don't plan on linking the OSM L3 nodes
->> to the other nodes on SDM845/SC7180, we
->> might have GPU needing to be linked to the
->> OSM L3 nodes on future SoCs. Let me know
->> how you want this done.
->>
->> Anyway I'll re-spin the series once the
->> SDM845 icc re-work gets re-posted.
-> 
-> I don't have a clear picture of the proposal. You'd put the couple of
-> extra defines in sdm845.c for the new nodes. But then you'd need to do
-> something in icc_set() of sdm845. Is that when you'd call out to the
-> osm_l3 driver?
+[ Upstream commit 8dd9593cc07ad7d999bef81b06789ef873a94881 ]
 
-with sdm845 icc rework "https://patchwork.kernel.org/cover/11293399/"
-osm l3 icc provider needs to know the total number of rsc icc nodes,
-i.e I can define the total number of rsc nodes and continue using the
-same design as v3 since on sdm845/sc7180 gpu is not cache coherent.
+I'm not sure how this happened but the patch that was intended to fix abort
+handling was incomplete. This patch fixes that patch as follows:
 
-or have the osm l3 table population logic and osm icc_set as helpers
-and have it called from the sdm845/sc7180 icc driver so that we would
-be able to link osm_l3 with rsc nodes on future qcom SoCs.
+ - If aborting the SCSI command failed, wait until the SCSI command
+   completes.
 
-> 
+ - Return SUCCESS instead of FAILED if an abort attempt races with SCSI
+   command completion.
 
+ - Since qla2xxx_eh_abort() increments the sp reference count by calling
+   sp_get(), decrement the sp reference count before returning.
+
+Cc: Himanshu Madhani <hmadhani@marvell.com>
+Fixes: 219d27d7147e ("scsi: qla2xxx: Fix race conditions in the code for aborting SCSI commands")
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Tested-by: Himanshu Madhani <hmadhani@marvell.com>
+Reviewed-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/scsi/qla2xxx/qla_os.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index 82f6ae4dcfc0b..0f51387ceebdf 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -1274,6 +1274,7 @@ static int
+ qla2xxx_eh_abort(struct scsi_cmnd *cmd)
+ {
+ 	scsi_qla_host_t *vha = shost_priv(cmd->device->host);
++	DECLARE_COMPLETION_ONSTACK(comp);
+ 	srb_t *sp;
+ 	int ret;
+ 	unsigned int id;
+@@ -1309,6 +1310,7 @@ qla2xxx_eh_abort(struct scsi_cmnd *cmd)
+ 		return SUCCESS;
+ 	}
+ 
++	/* Get a reference to the sp and drop the lock. */
+ 	if (sp_get(sp)){
+ 		/* ref_count is already 0 */
+ 		spin_unlock_irqrestore(qpair->qp_lock_ptr, flags);
+@@ -1336,6 +1338,23 @@ qla2xxx_eh_abort(struct scsi_cmnd *cmd)
+ 		sp->done(sp, DID_ABORT << 16);
+ 		ret = SUCCESS;
+ 		break;
++	case QLA_FUNCTION_PARAMETER_ERROR: {
++		/* Wait for the command completion. */
++		uint32_t ratov = ha->r_a_tov/10;
++		uint32_t ratov_j = msecs_to_jiffies(4 * ratov * 1000);
++
++		WARN_ON_ONCE(sp->comp);
++		sp->comp = &comp;
++		if (!wait_for_completion_timeout(&comp, ratov_j)) {
++			ql_dbg(ql_dbg_taskm, vha, 0xffff,
++			    "%s: Abort wait timer (4 * R_A_TOV[%d]) expired\n",
++			    __func__, ha->r_a_tov);
++			ret = FAILED;
++		} else {
++			ret = SUCCESS;
++		}
++		break;
++	}
+ 	default:
+ 		/*
+ 		 * Either abort failed or abort and completion raced. Let
+@@ -1345,6 +1364,8 @@ qla2xxx_eh_abort(struct scsi_cmnd *cmd)
+ 		break;
+ 	}
+ 
++	sp->comp = NULL;
++	atomic_dec(&sp->ref_count);
+ 	ql_log(ql_log_info, vha, 0x801c,
+ 	    "Abort command issued nexus=%ld:%d:%llu -- %x.\n",
+ 	    vha->host_no, id, lun, ret);
 -- 
-Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.20.1
+
+
+
