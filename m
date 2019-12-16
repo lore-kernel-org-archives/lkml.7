@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AAE5C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60859C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FCF6207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:18:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 346AE2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:18:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520299;
-	bh=M1qSF9C6lbbG626ZISz/mHWHf8JxKj1u65Yh2IOaimM=;
+	s=default; t=1576520304;
+	bh=3L9xNonIBKOMIAmAjJJ3mH7RQZllzwt21aWztHPHiFs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WrBrId9Jm6Ma7CIZ6gs0JYW648Ih5QQRfClcyH5QIDuBBMcCoAW48j+dDHym4nwZw
-	 rRJTMfJlhHjwRP8V7fWhCOWrCbJ0BOWIZF2VIrnXhk8xvVeIqZKW4LoeXxQKM1PSj2
-	 fcOarkNp8I8jvpngp4JYOl4ZUKT2xlxvKQolqt6E=
+	b=wCnjZcGa2tgceuDzEMa2nFj5lxFkEfJGcHy67K5VhOO9olITJvhCJXVJl/KqqOKn3
+	 IYLWW6SbrT5xnPbRrx2Z1B56pJrd+y8frebsRDXPAzQbSQO0H+R4GETig4n6Hk0je2
+	 k4YWRV3FxBWikxdTeHJA5kydFwCBWT15+lw2+uow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731782AbfLPSSS (ORCPT
+        id S1731800AbfLPSSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:18:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43380 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:18:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731485AbfLPSSN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:18:13 -0500
+        id S1731783AbfLPSSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:18:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A7EF206E0;
-        Mon, 16 Dec 2019 18:18:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD5A420CC7;
+        Mon, 16 Dec 2019 18:18:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520293;
-        bh=M1qSF9C6lbbG626ZISz/mHWHf8JxKj1u65Yh2IOaimM=;
+        s=default; t=1576520298;
+        bh=3L9xNonIBKOMIAmAjJJ3mH7RQZllzwt21aWztHPHiFs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MhS+vcTMctakxR3uzhn+n8UO6vox0TwpQ/NMgMQ220R1s5KqbnJfNp1reFxzOTdr4
-         Aim8aewTGceuMkEDe1FjdcL0k8s/WbGKnuZxOEoN9j6fTdNsDxnvAzDReSpxOwbIeh
-         kJeoKf2TEJQ0/sP3LboQeOOUPaU+UszAlaeHlh0s=
+        b=yqZ5O19s2AODW8V4usUn1L819hsglS/pAInMLCTdLk/7s8MGshRXHgRuFsOQiKtHD
+         5FiZ7q6wZQW7SYPPb6iTV7A2DA9jg9NvQcILdZXsQFsiOf7XEXGz/7eghEHRge0E9c
+         ot4nTfaJnwd7u3MdCAaMVb4+qZuNcBef4iRGNVPo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 5.4 096/177] s390/mm: properly clear _PAGE_NOEXEC bit when it is not supported
-Date:   Mon, 16 Dec 2019 18:49:12 +0100
-Message-Id: <20191216174840.265440151@linuxfoundation.org>
+        Francois Buergisser <fbuergisser@chromium.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: [PATCH 5.4 098/177] media: hantro: Fix motion vectors usage condition
+Date:   Mon, 16 Dec 2019 18:49:14 +0100
+Message-Id: <20191216174840.762421341@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -60,65 +64,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+From: Francois Buergisser <fbuergisser@chromium.org>
 
-commit ab874f22d35a8058d8fdee5f13eb69d8867efeae upstream.
+commit 658f9d9921d7e76af03f689b5f0ffde042b8bf5b upstream.
 
-On older HW or under a hypervisor, w/o the instruction-execution-
-protection (IEP) facility, and also w/o EDAT-1, a translation-specification
-exception may be recognized when bit 55 of a pte is one (_PAGE_NOEXEC).
+The setting of the motion vectors usage and the setting of motion
+vectors address are currently done under different conditions.
 
-The current code tries to prevent setting _PAGE_NOEXEC in such cases,
-by removing it within set_pte_at(). However, ptep_set_access_flags()
-will modify a pte directly, w/o using set_pte_at(). There is at least
-one scenario where this can result in an active pte with _PAGE_NOEXEC
-set, which would then lead to a panic due to a translation-specification
-exception (write to swapped out page):
+When decoding pre-recorded videos, this results of leaving the motion
+vectors address unset, resulting in faulty memory accesses. Fix it
+by using the same condition everywhere, which matches the profiles
+that support motion vectors.
 
-do_swap_page
-  pte = mk_pte (with _PAGE_NOEXEC bit)
-  set_pte_at   (will remove _PAGE_NOEXEC bit in page table, but keep it
-                in local variable pte)
-  vmf->orig_pte = pte (pte still contains _PAGE_NOEXEC bit)
-  do_wp_page
-    wp_page_reuse
-      entry = vmf->orig_pte (still with _PAGE_NOEXEC bit)
-      ptep_set_access_flags (writes entry with _PAGE_NOEXEC bit)
-
-Fix this by clearing _PAGE_NOEXEC already in mk_pte_phys(), where the
-pgprot value is applied, so that no pte with _PAGE_NOEXEC will ever be
-visible, if it is not supported. The check in set_pte_at() can then also
-be removed.
-
-Cc: <stable@vger.kernel.org> # 4.11+
-Fixes: 57d7f939e7bd ("s390: add no-execute support")
-Signed-off-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Fixes: dea0a82f3d22 ("media: hantro: Add support for H264 decoding on G1")
+Signed-off-by: Francois Buergisser <fbuergisser@chromium.org>
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+Tested-by: Boris Brezillon <boris.brezillon@collabora.com>
+Cc: <stable@vger.kernel.org>      # for v5.4 and up
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/include/asm/pgtable.h |    4 ++--
+ drivers/staging/media/hantro/hantro_g1_h264_dec.c |    4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/s390/include/asm/pgtable.h
-+++ b/arch/s390/include/asm/pgtable.h
-@@ -1173,8 +1173,6 @@ void gmap_pmdp_idte_global(struct mm_str
- static inline void set_pte_at(struct mm_struct *mm, unsigned long addr,
- 			      pte_t *ptep, pte_t entry)
- {
--	if (!MACHINE_HAS_NX)
--		pte_val(entry) &= ~_PAGE_NOEXEC;
- 	if (pte_present(entry))
- 		pte_val(entry) &= ~_PAGE_UNUSED;
- 	if (mm_has_pgste(mm))
-@@ -1191,6 +1189,8 @@ static inline pte_t mk_pte_phys(unsigned
- {
- 	pte_t __pte;
- 	pte_val(__pte) = physpage + pgprot_val(pgprot);
-+	if (!MACHINE_HAS_NX)
-+		pte_val(__pte) &= ~_PAGE_NOEXEC;
- 	return pte_mkyoung(__pte);
- }
+--- a/drivers/staging/media/hantro/hantro_g1_h264_dec.c
++++ b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
+@@ -35,7 +35,7 @@ static void set_params(struct hantro_ctx
+ 	if (sps->flags & V4L2_H264_SPS_FLAG_MB_ADAPTIVE_FRAME_FIELD)
+ 		reg |= G1_REG_DEC_CTRL0_SEQ_MBAFF_E;
+ 	reg |= G1_REG_DEC_CTRL0_PICORD_COUNT_E;
+-	if (dec_param->nal_ref_idc)
++	if (sps->profile_idc > 66 && dec_param->nal_ref_idc)
+ 		reg |= G1_REG_DEC_CTRL0_WRITE_MVS_E;
+ 
+ 	if (!(sps->flags & V4L2_H264_SPS_FLAG_FRAME_MBS_ONLY) &&
+@@ -246,7 +246,7 @@ static void set_buffers(struct hantro_ct
+ 	vdpu_write_relaxed(vpu, dst_dma, G1_REG_ADDR_DST);
+ 
+ 	/* Higher profiles require DMV buffer appended to reference frames. */
+-	if (ctrls->sps->profile_idc > 66) {
++	if (ctrls->sps->profile_idc > 66 && ctrls->decode->nal_ref_idc) {
+ 		size_t pic_size = ctx->h264_dec.pic_size;
+ 		size_t mv_offset = round_up(pic_size, 8);
  
 
 
