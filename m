@@ -2,103 +2,162 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B576C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC46EC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F51820717
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:46:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JeX9P7d5"
+	by mail.kernel.org (Postfix) with ESMTP id B85F221775
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:49:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728178AbfLPOqD (ORCPT
+        id S1728158AbfLPOtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 09:46:03 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:40870 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728055AbfLPOqD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 09:46:03 -0500
-Received: by mail-lf1-f65.google.com with SMTP id i23so4409982lfo.7;
-        Mon, 16 Dec 2019 06:46:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8hrwNb+62xlSS4630TGqVTgZpEq9XuNM/h7RXL5PTp4=;
-        b=JeX9P7d5K86kD8jxLP0OqYX0Xo7tQt3V7bahsEzimx4TzCVwClPFlR1qlAegLRv9r3
-         p8si4pZeC0qzILFh9hYvpL75xyt2EuEUHmYq40odgPYB7fFdVDDRc7/E0Y9prfl5ZKSX
-         ZAzBRUWj4mgKGDR60sKFlX5R5yuStVbhL5mwyjaAvTs+KxHi81GdWr0JtXqnbEq/oPxg
-         W95/lZ8Uf2WuFbM25WYjm9l3PABEQOoX1Hbb5u7vzgLpx54F1dlY9qKrNXb2bE6WBlFr
-         VOUYhlxkep9Ckt8hE950xvXYsYhSgMr2Pypq0rp6B4/fxv8QlzH9KyO9FRoh5IccS695
-         +GbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8hrwNb+62xlSS4630TGqVTgZpEq9XuNM/h7RXL5PTp4=;
-        b=LNidchNzoHgItrXeplriLMvErObnG/Hs4HgkJ6nCxNASlcTmaFKuvAMQbggKtLpB4H
-         BeNOCKd+XL4g22AgRPynGf11ydfv0vzsp3VcdAHtd0kSb6L3cUr/eRcBSYNHADcLUoa3
-         d3QRJxjjI1v5hoSpHw7TaKRrNcxKwMuV8bKqyeedBzQ211nOp2A6SXcSFC132GFBNM81
-         YRbbvTiIcivVZ7WomOs8I3QbxKEtDbhgl4H/wwLw9RVH/FpeCdeYEQTID5b6ibSZ1em3
-         Xp4BnZM0Izx3N35TuG5OijNxeB4YDsbMY08NJWEJPovHcDdtTs7tag8UH2SrZKoWI4mz
-         4Kfg==
-X-Gm-Message-State: APjAAAXVahNZ99c1p5/5tl3LFoa35ZO3A5hC/7gzz2xB0iQVOSwTKyMr
-        LQyJIJe4tDuAVfm0dAgIclA71bgr
-X-Google-Smtp-Source: APXvYqxpUiYf76+8+R/J8+oxqzt6bKaYvjoUEm+LQ9lETcooxx3UqoSOQ5rP7pNrP6GB6JavMqdwKw==
-X-Received: by 2002:a19:8a41:: with SMTP id m62mr16906210lfd.5.1576507560617;
-        Mon, 16 Dec 2019 06:46:00 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id n23sm9158442lfa.41.2019.12.16.06.45.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Dec 2019 06:45:59 -0800 (PST)
-Subject: Re: [PATCH v1 0/3] Tegra GPIO: Minor code clean up
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-References: <20191215183047.9414-1-digetx@gmail.com>
-Message-ID: <b108c394-cdbc-e6c7-1688-69e05eea2279@gmail.com>
-Date:   Mon, 16 Dec 2019 17:45:57 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 16 Dec 2019 09:49:36 -0500
+Received: from foss.arm.com ([217.140.110.172]:57802 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728014AbfLPOtg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 09:49:36 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6271C1FB;
+        Mon, 16 Dec 2019 06:49:35 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CDCA93F718;
+        Mon, 16 Dec 2019 06:49:34 -0800 (PST)
+Date:   Mon, 16 Dec 2019 14:49:33 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org
+Subject: Re: [PATCH 05/13] PCI: cadence: Add read and write accessors to
+ perform only 32-bit accesses
+Message-ID: <20191216144932.GY24359@e119886-lin.cambridge.arm.com>
+References: <20191209092147.22901-1-kishon@ti.com>
+ <20191209092147.22901-6-kishon@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20191215183047.9414-1-digetx@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191209092147.22901-6-kishon@ti.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-15.12.2019 21:30, Dmitry Osipenko пишет:
-> Hello,
-> 
-> I was investigating why CPU hangs during of GPIO driver suspend and in
-> the end it turned out that it is a Broadcom WiFi driver problem because
-> it keeps OOB wake-interrupt enabled while WLAN interface is DOWN and this
-> may cause a bit weird CPU hang on writing to INT_ENB register during of
-> GPIO driver suspend. Meanwhile I also noticed that a few things could be
-> improved in the driver, that's what this small series addresses.
-> 
-> Dmitry Osipenko (3):
->   gpio: tegra: Use generic readl_relaxed/writel_relaxed accessors
->   gpio: tegra: Properly handle irq_set_irq_wake() error
->   gpio: tegra: Use NOIRQ phase for suspend/resume
-> 
->  drivers/gpio/gpio-tegra.c | 21 ++++++++++-----------
->  1 file changed, 10 insertions(+), 11 deletions(-)
-> 
+On Mon, Dec 09, 2019 at 02:51:39PM +0530, Kishon Vijay Abraham I wrote:
+> Certain platforms like TI's J721E allow only 32-bit register accesses.
 
-For the reference, here is the WiFi driver fix:
+When I first read this I thought you meant only 32-bit accesses are allowed
+and not other sizes (such as 64-bit). However the limitation you address
+here is that the J721E allows only 32-bit *aligned* register accesses.
 
-https://patchwork.ozlabs.org/patch/1209997/
+It would be helpful to make this clearer in the commit message.
+
+You can also shorten the commit subject to 'PCI: cadence: Add read/write
+accessors for 32-bit aligned accesses' or similar.
+
+> Add read and write accessors to perform only 32-bit accesses in order to
+> support platfroms like TI's J721E.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  drivers/pci/controller/cadence/pcie-cadence.c | 40 +++++++++++++++++++
+>  drivers/pci/controller/cadence/pcie-cadence.h |  2 +
+>  2 files changed, 42 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence.c b/drivers/pci/controller/cadence/pcie-cadence.c
+> index cd795f6fc1e2..de5b3b06f2d0 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence.c
+> @@ -7,6 +7,46 @@
+>  
+>  #include "pcie-cadence.h"
+>  
+> +u32 cdns_pcie_read32(void __iomem *addr, int size)
+
+Given there is already a cdns_pcie_readl in pcie-cadence.h it may help
+to name this in a way that doesn't cause confusion. Here 32 is perhaps
+being used to suggest the size of the actual read performed, the
+maximum size of 'size' or the alignment.
+
+
+> +{
+> +	void __iomem *aligned_addr = PTR_ALIGN_DOWN(addr, 0x4);
+> +	unsigned int offset = (unsigned long)addr & 0x3;
+> +	u32 val = readl(aligned_addr);
+> +
+> +	if (!IS_ALIGNED((uintptr_t)addr, size)) {
+> +		pr_err("Invalid Address in function:%s\n", __func__);
+
+Would this be better as a BUG? Without a BUG this error could get ignored
+and yet the device may not behave as expected.
+
+
+> +		return 0;
+> +	}
+> +
+> +	if (size > 2)
+> +		return val;
+
+I think you make the assumption here that if size > 2 then it's 4. It could
+be 3 (though unlikely) in which case you'd want to fall through to the next
+line.
+
+> +
+> +	return (val >> (8 * offset)) & ((1 << (size * 8)) - 1);
+> +}
+> +
+> +void cdns_pcie_write32(void __iomem *addr, int size, u32 value)
+> +{
+
+And same feedback for this function.
+
+Thanks,
+
+Andrew Murray
+
+> +	void __iomem *aligned_addr = PTR_ALIGN_DOWN(addr, 0x4);
+> +	unsigned int offset = (unsigned long)addr & 0x3;
+> +	u32 mask;
+> +	u32 val;
+> +
+> +	if (!IS_ALIGNED((uintptr_t)addr, size)) {
+> +		pr_err("Invalid Address in function:%s\n", __func__);
+> +		return;
+> +	}
+> +
+> +	if (size > 2) {
+> +		writel(value, addr);
+> +		return;
+> +	}
+> +
+> +	mask = ~(((1 << (size * 8)) - 1) << (offset * 8));
+> +	val = readl(aligned_addr) & mask;
+> +	val |= value << (offset * 8);
+> +	writel(val, aligned_addr);
+> +}
+> +
+>  void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 fn,
+>  				   u32 r, bool is_io,
+>  				   u64 cpu_addr, u64 pci_addr, size_t size)
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+> index f0395eaf9df5..5171d0da37da 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence.h
+> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
+> @@ -498,6 +498,8 @@ void cdns_pcie_reset_outbound_region(struct cdns_pcie *pcie, u32 r);
+>  void cdns_pcie_disable_phy(struct cdns_pcie *pcie);
+>  int cdns_pcie_enable_phy(struct cdns_pcie *pcie);
+>  int cdns_pcie_init_phy(struct device *dev, struct cdns_pcie *pcie);
+> +u32 cdns_pcie_read32(void __iomem *addr, int size);
+> +void cdns_pcie_write32(void __iomem *addr, int size, u32 value);
+>  extern const struct dev_pm_ops cdns_pcie_pm_ops;
+>  
+>  #endif /* _PCIE_CADENCE_H */
+> -- 
+> 2.17.1
+> 
