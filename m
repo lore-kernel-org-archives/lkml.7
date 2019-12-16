@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EEEAC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA35C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27594206EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:22:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87BF820717
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:22:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520528;
-	bh=7QcSZmxLMfOYuHnsaSlyf11HR26X7Ayx286v+ODvXhE=;
+	s=default; t=1576520530;
+	bh=pNacaEzUve952DMc+ojKhY/TSAljSVBx9N/TnS5BDmM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kb/QITGUyZUw7tWm7OsBGPEJPAWdF1DxRYkFosyzv2j7BE65VYwGyQTz494lSQHG2
-	 rnXPa/LxmK/00zK7GWigmVF+U2aPyS90+m588sQTL6QRhY90W7GC/QdkWeCIy0GLz0
-	 ZfMjUKFey5d7sTK/zYSs+deZYjJRAxi8qcBN9cx8=
+	b=fQvy2IVghHxE8JA7hJYU79c6bS4KkwgYxwGAgtzF5BQuTu4Q+YHi9LO8pjJ2pClYy
+	 B+ztGALDSMfP1TdW+qXC6aoXV4HHj8QN7Pj71MLKJ7gp5zhxdxpY4hMsCVPqt9S03m
+	 O6lBJEGR840FApPubRIiDcCoAhAfV41VohqGCU7M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732328AbfLPSWD (ORCPT
+        id S1732320AbfLPSWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:22:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57534 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:22:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57289 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732107AbfLPSVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:21:52 -0500
+        id S1732301AbfLPSVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:21:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C7162176D;
-        Mon, 16 Dec 2019 18:21:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0D96206EC;
+        Mon, 16 Dec 2019 18:21:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520511;
-        bh=7QcSZmxLMfOYuHnsaSlyf11HR26X7Ayx286v+ODvXhE=;
+        s=default; t=1576520509;
+        bh=pNacaEzUve952DMc+ojKhY/TSAljSVBx9N/TnS5BDmM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GKFY+LS2XqsIpS9WynBzE7cT9C5FOQz/NCTZ01ByE5aREr7iWRCb7nTR7qhescQki
-         vHEv4VqbnjorGKE3CVGvepWtR+kI2BMqIS9EOrFORhtc31FwH9VSaw/HEVs17UbO7T
-         hItBCB29jWnQ3FAu+LWoFAUXAqMm9Jco/9A2+dp4=
+        b=nyiNQ8ywoX2yo+CPjEMVZ2P4ouGa788stlfPvkJ3aoFdXkDyHARBzvbwgURNJQZWq
+         kP+XWP8IOcUtuTAC/sdmlcoE8jhPs0REyL7voICh2jL9MLu2Y4hui9/4Xo4BMe+Ut/
+         53m8ap8WnmNL+mouNBgmz4TQh1JdfqVO1J/PKyrw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chen Jun <chenjun102@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>, Qian Cai <cai@lca.pw>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 171/177] mm/shmem.c: cast the type of unmap_start to u64
-Date:   Mon, 16 Dec 2019 18:50:27 +0100
-Message-Id: <20191216174850.407207098@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 5.4 177/177] ext4: fix leak of quota reservations
+Date:   Mon, 16 Dec 2019 18:50:33 +0100
+Message-Id: <20191216174851.197443318@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -62,73 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen Jun <chenjun102@huawei.com>
+From: Jan Kara <jack@suse.cz>
 
-commit aa71ecd8d86500da6081a72da6b0b524007e0627 upstream.
+commit f4c2d372b89a1e504ebb7b7eb3e29b8306479366 upstream.
 
-In 64bit system. sb->s_maxbytes of shmem filesystem is MAX_LFS_FILESIZE,
-which equal LLONG_MAX.
+Commit 8fcc3a580651 ("ext4: rework reserved cluster accounting when
+invalidating pages") moved freeing of delayed allocation reservations
+from dirty page invalidation time to time when we evict corresponding
+status extent from extent status tree. For inodes which don't have any
+blocks allocated this may actually happen only in ext4_clear_blocks()
+which is after we've dropped references to quota structures from the
+inode. Thus reservation of quota leaked. Fix the problem by clearing
+quota information from the inode only after evicting extent status tree
+in ext4_clear_inode().
 
-If offset > LLONG_MAX - PAGE_SIZE, offset + len < LLONG_MAX in
-shmem_fallocate, which will pass the checking in vfs_fallocate.
-
-	/* Check for wrap through zero too */
-	if (((offset + len) > inode->i_sb->s_maxbytes) || ((offset + len) < 0))
-		return -EFBIG;
-
-loff_t unmap_start = round_up(offset, PAGE_SIZE) in shmem_fallocate
-causes a overflow.
-
-Syzkaller reports a overflow problem in mm/shmem:
-
-  UBSAN: Undefined behaviour in mm/shmem.c:2014:10
-  signed integer overflow: '9223372036854775807 + 1' cannot be represented in type 'long long int'
-  CPU: 0 PID:17076 Comm: syz-executor0 Not tainted 4.1.46+ #1
-  Hardware name: linux, dummy-virt (DT)
-  Call trace:
-     dump_backtrace+0x0/0x2c8 arch/arm64/kernel/traps.c:100
-     show_stack+0x20/0x30 arch/arm64/kernel/traps.c:238
-     __dump_stack lib/dump_stack.c:15 [inline]
-     ubsan_epilogue+0x18/0x70 lib/ubsan.c:164
-     handle_overflow+0x158/0x1b0 lib/ubsan.c:195
-     shmem_fallocate+0x6d0/0x820 mm/shmem.c:2104
-     vfs_fallocate+0x238/0x428 fs/open.c:312
-     SYSC_fallocate fs/open.c:335 [inline]
-     SyS_fallocate+0x54/0xc8 fs/open.c:239
-
-The highest bit of unmap_start will be appended with sign bit 1
-(overflow) when calculate shmem_falloc.start:
-
-    shmem_falloc.start = unmap_start >> PAGE_SHIFT.
-
-Fix it by casting the type of unmap_start to u64, when right shifted.
-
-This bug is found in LTS Linux 4.1.  It also seems to exist in mainline.
-
-Link: http://lkml.kernel.org/r/1573867464-5107-1-git-send-email-chenjun102@huawei.com
-Signed-off-by: Chen Jun <chenjun102@huawei.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Qian Cai <cai@lca.pw>
-Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/20191108115420.GI20863@quack2.suse.cz
+Reported-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Fixes: 8fcc3a580651 ("ext4: rework reserved cluster accounting when invalidating pages")
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/shmem.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ext4/ialloc.c |    5 -----
+ fs/ext4/super.c  |    2 +-
+ 2 files changed, 1 insertion(+), 6 deletions(-)
 
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -2745,7 +2745,7 @@ static long shmem_fallocate(struct file
- 		}
+--- a/fs/ext4/ialloc.c
++++ b/fs/ext4/ialloc.c
+@@ -265,13 +265,8 @@ void ext4_free_inode(handle_t *handle, s
+ 	ext4_debug("freeing inode %lu\n", ino);
+ 	trace_ext4_free_inode(inode);
  
- 		shmem_falloc.waitq = &shmem_falloc_waitq;
--		shmem_falloc.start = unmap_start >> PAGE_SHIFT;
-+		shmem_falloc.start = (u64)unmap_start >> PAGE_SHIFT;
- 		shmem_falloc.next = (unmap_end + 1) >> PAGE_SHIFT;
- 		spin_lock(&inode->i_lock);
- 		inode->i_private = &shmem_falloc;
+-	/*
+-	 * Note: we must free any quota before locking the superblock,
+-	 * as writing the quota to disk may need the lock as well.
+-	 */
+ 	dquot_initialize(inode);
+ 	dquot_free_inode(inode);
+-	dquot_drop(inode);
+ 
+ 	is_directory = S_ISDIR(inode->i_mode);
+ 
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -1172,9 +1172,9 @@ void ext4_clear_inode(struct inode *inod
+ {
+ 	invalidate_inode_buffers(inode);
+ 	clear_inode(inode);
+-	dquot_drop(inode);
+ 	ext4_discard_preallocations(inode);
+ 	ext4_es_remove_extent(inode, 0, EXT_MAX_BLOCKS);
++	dquot_drop(inode);
+ 	if (EXT4_I(inode)->jinode) {
+ 		jbd2_journal_release_jbd_inode(EXT4_JOURNAL(inode),
+ 					       EXT4_I(inode)->jinode);
 
 
