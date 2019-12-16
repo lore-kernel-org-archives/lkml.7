@@ -2,99 +2,102 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB14C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18731C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95ECE20665
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:19:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D341F20684
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 13:20:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EekAYTbg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbfLPNTf (ORCPT
+        id S1727875AbfLPNUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 08:19:35 -0500
-Received: from mout.kundenserver.de ([212.227.17.10]:36633 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727653AbfLPNTf (ORCPT
+        Mon, 16 Dec 2019 08:20:42 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:39922 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727653AbfLPNUm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:19:35 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1Myb8N-1hmQPH0w85-00yyN5; Mon, 16 Dec 2019 14:19:06 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Felix Fietkau <nbd@nbd.name>,
-        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        Mon, 16 Dec 2019 08:20:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=AIBNLHtUi45jjfcVIL9A+S21fh6ASfhp4YxY7c5nbV0=; b=EekAYTbgHV8U4aNxc1/MCeO3Q
+        J3YIWEqsUPf4ThjMCPzenT99XhnYOyeCGIXk0fydclAME38x9AfcTJnxUxBPN40vl1kquSjyyqhux
+        2brkNugJGgIYmteTLGXIOMlFlL2XldHeBx6KWIqd7H0cveUnkDusYVCQBeYmmvJUXU4Rw4IZp7pV0
+        sXNWGH+w04Ho9bM4GSUsPeInODngOMXkuga/vyZ+K/H+mmdWp/NtFPwlxUVW9D42kkf+OdKz5sVtu
+        UoEDJBfNI7uT/J2M4Au5funK7rzqsuWkrS5/3aHTo9fp4LldlXRWvQsLN5fi1wcfp+7axY5bD9xdD
+        v+573oERw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1igqIC-0006kI-Lg; Mon, 16 Dec 2019 13:20:08 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5087E3035D4;
+        Mon, 16 Dec 2019 14:18:41 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 10B7529D74791; Mon, 16 Dec 2019 14:20:04 +0100 (CET)
+Date:   Mon, 16 Dec 2019 14:20:04 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nick Piggin <npiggin@gmail.com>, linux-arch@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Ryder Lee <ryder.lee@mediatek.com>,
-        Roy Luo <royluo@google.com>,
-        Stanislaw Gruszka <sgruszka@redhat.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] mt76: fix LED link time failure
-Date:   Mon, 16 Dec 2019 14:18:42 +0100
-Message-Id: <20191216131902.3251040-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Helge Deller <deller@gmx.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Nick Hu <nickhu@andestech.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Re: [PATCH 05/17] asm-generic/tlb: Rename
+ HAVE_RCU_TABLE_NO_INVALIDATE
+Message-ID: <20191216132004.GO2844@hirez.programming.kicks-ass.net>
+References: <20191211120713.360281197@infradead.org>
+ <20191211122955.940455408@infradead.org>
+ <87woawzc1t.fsf@linux.ibm.com>
+ <20191216123752.GM2844@hirez.programming.kicks-ass.net>
+ <d52ea890-c2ea-88f3-9d62-b86e60ee77ae@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:FfIXsVXcNeBt8DM3/oD14gV9AaEg1kuMd8THyqz4/RSYXt8bzol
- VT4nBhvNIR65oxPVAJBoQCx0Mg5xsmZZG4yY3iGDfIiztAFr9RRwyuwPZKCC1hP2Ebc2X1g
- FX+vENnYZfUQsOedDzvoVbIxv6rRVM10x3+jQQ75bdj2i/k+bC7y4tgiHPKrg398sgXI1Hk
- CLe6qn9H88bpgLmlWv4pw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:iAZnidCZDMU=:WDeq3eS82GM9y63nrZiRmo
- 3JUG+UEbatz6cBmivM2B7+tBfsLXMZPjHyLnrYgr8AQyO4VWAWkAXvdINXftuV1yV9kOT2rJu
- rFD+Nb3NkNJP8T0W6aM3QVe+3hkwqidu4Qhbd7gcSGqEBJEJ1wEmoI5q3AWpjo4SVRh8BY/n8
- 1+v+yWdQEGSsYoAMpz0Q1pIWrsWpqQH59RXvBqCkFqpBg55DuFUvLAKZEnScfkj0zIDN9Sgh9
- y8edPkXPZocBM/alaots63k5Bc2TPiRiRqRs+U63biMkj68b47s3D6euxclI+ZalStQg9kw+t
- ltbSCk2Y5gaZ0nKKOX9lNNTof0DsU+auYJNy6RLT9k0pOwQ4VA2fXM1jzReLUS0jM/krpArf8
- uWGrdBr2/oEAAhhmoD7+dtqG+po7AwkTWOJYCDELxbGHPkKCDKPL7nOScNrIVqIO9hJA3XFwx
- OwY458CCIgKVJrBZKeI4EqLCmBs0J33fFkJcFCHjT1OWO8EBfmbv4nij7kY56kIynKxQRLJi6
- EbqKgPjtXCx92W+gDjbgHclBHuonNeSJXn1wm1FG2xglOPqs3qH5324sYq6NlZeehhTGpudYM
- gyV9UmJ+mEXBCI2NyjMtMLnyfRn72odkyFt6/CC82Lz4MCI3EKl8sWGx1y8G9G41Vj2GPmPUN
- pNjMciMVw6LVfiIKdJFboThBK+H2qcvbEszQ69sDfbLW3KUmmjMRmksX3R5XlgWcO/1lWCQnk
- h7NruKmPzsF471JVvfDsgChsoHsHBMUZQN3WT7y3wNhZtPFNmNa7aQovOOtyklkh7XhJHfyaJ
- nFkOl56Fng8tuNQkCDI+XFmo/EQGsS8UfUm8JRGCi1clYe0Kv1fT8B8zoCvK+9Wy7uvds+1QB
- fTcUteDG3KZFdJlzhPOw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d52ea890-c2ea-88f3-9d62-b86e60ee77ae@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mt76_led_cleanup() function is called unconditionally, which
-leads to a link error when CONFIG_LEDS is a loadable module or
-disabled but mt76 is built-in:
+On Mon, Dec 16, 2019 at 06:43:53PM +0530, Aneesh Kumar K.V wrote:
+> On 12/16/19 6:07 PM, Peter Zijlstra wrote:
 
-drivers/net/wireless/mediatek/mt76/mac80211.o: In function `mt76_unregister_device':
-mac80211.c:(.text+0x2ac): undefined reference to `led_classdev_unregister'
+> > I'm confused, are you saing you're happy to have PowerPC eat the extra
+> > TLB invalidates? I thought you cared about PPC performance :-)
+> > 
+> > 
+> 
+> Instead can we do
+> 
+> static inline void tlb_table_invalidate(struct mmu_gather *tlb)
+> {
+> #ifndef CONFIG_MMU_GATHER_RCU_TABLE_FREE
+> 	 * Invalidate page-table caches used by hardware walkers. Then we still
+> 	 * need to RCU-sched wait while freeing the pages because software
+> 	 * walkers can still be in-flight.
+> 	 */
+> 	tlb_flush_mmu_tlbonly(tlb);
+> #endif
+> }
 
-Use the same trick that is guarding the registration, using an
-IS_ENABLED() check for the CONFIG_MT76_LEDS symbol that indicates
-whether LEDs can be used or not.
-
-Fixes: 36f7e2b2bb1d ("mt76: do not use devm API for led classdev")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/net/wireless/mediatek/mt76/mac80211.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/mediatek/mt76/mac80211.c b/drivers/net/wireless/mediatek/mt76/mac80211.c
-index b9f2a401041a..96018fd65779 100644
---- a/drivers/net/wireless/mediatek/mt76/mac80211.c
-+++ b/drivers/net/wireless/mediatek/mt76/mac80211.c
-@@ -378,7 +378,8 @@ void mt76_unregister_device(struct mt76_dev *dev)
- {
- 	struct ieee80211_hw *hw = dev->hw;
- 
--	mt76_led_cleanup(dev);
-+	if (IS_ENABLED(CONFIG_MT76_LEDS))
-+		mt76_led_cleanup(dev);
- 	mt76_tx_status_check(dev, NULL, true);
- 	ieee80211_unregister_hw(hw);
- }
--- 
-2.20.0
-
+How does that not break ARM/ARM64/s390 and x86 ?
