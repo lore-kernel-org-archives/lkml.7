@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E65C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F17C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2BB9206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B10BE2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:47:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576522062;
-	bh=R/1Pe+51lnUrSYgci/VpK5jOdqWlvHLMMjNQ13mXhUE=;
+	s=default; t=1576522065;
+	bh=aP1+HLHEBGjmgiAvEQxFL+KKzZFXJLxEeEdBiYu7nMA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RSD8P3isPPqTlIt1JwsC5YsSCt43BznbCHYjgXOAG0lJiiKPS+u8CPvj/FW0JMg7H
-	 uBgHIVEaJxl5VFzHJUd6QY97lfh2As4yZyYF+JFt3f9gGZ+EujRPPMh64nXAXDVJtq
-	 BZ+nd+iVkb2P6/daomnCPNfnK5xmbppmHHX5EElI=
+	b=C5aZmmj9oxebkWS/tmU3lwapTIhwL5Wzh33DjE2uDO1QNYgKo7q4rDT06UGo4aerT
+	 wc3lNbKD9JOBoLRVVf6D2k0KykDVnSAQcz38jOljHngD7jMPgUzk95CerHUutEhz1g
+	 5IZBHo7nZOiAJ7cbwyxVO90lGRvz2AfFCqHMsWEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbfLPRy4 (ORCPT
+        id S1727561AbfLPSro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:54:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51294 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:47:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727684AbfLPRyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:54:49 -0500
+        id S1727720AbfLPRy4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:54:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60CE02053B;
-        Mon, 16 Dec 2019 17:54:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFED420663;
+        Mon, 16 Dec 2019 17:54:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518888;
-        bh=R/1Pe+51lnUrSYgci/VpK5jOdqWlvHLMMjNQ13mXhUE=;
+        s=default; t=1576518896;
+        bh=aP1+HLHEBGjmgiAvEQxFL+KKzZFXJLxEeEdBiYu7nMA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yhmYuAQW/1O9jYLmRdxtV3FiePalMStISec0Xw0nU5XgQBycLJILvLrxXZhJDBGZT
-         SsFE6/BpIVZ4NOYLeMNzHUjk8/XVvctOP40SFg/d4YlTRvR7vj6DVr792HVW0J00Bv
-         eSEqDZaB+H/czP911if9vLxGsPkR+JOTRkVPl+jE=
+        b=azLhTcQ9jVqZm53UGZNOWP4XI2wkqBHc23alN3qJOij0FvpPZxONU2PEE+B5GX/34
+         qkVnw9IUw/G1D7OTPZXovLxx8Z/goP4824qP14RjQyP/Lp+HdhguJTYrYUe+z+eQ4i
+         M3nQxbY0Tarp4RA6r1n6QY8nKXfYbwgZ/Sl6V0ks=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Teigland <teigland@redhat.com>,
+        stable@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Krzysztof Goreczny <krzysztof.goreczny@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 101/267] dlm: fix invalid cluster name warning
-Date:   Mon, 16 Dec 2019 18:47:07 +0100
-Message-Id: <20191216174902.249335047@linuxfoundation.org>
+Subject: [PATCH 4.14 112/267] IB/hfi1: Ignore LNI errors before DC8051 transitions to Polling state
+Date:   Mon, 16 Dec 2019 18:47:18 +0100
+Message-Id: <20191216174902.849580387@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -59,45 +64,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Teigland <teigland@redhat.com>
+From: Kaike Wan <kaike.wan@intel.com>
 
-[ Upstream commit 3595c559326d0b660bb088a88e22e0ca630a0e35 ]
+[ Upstream commit c1a797c0818e0122c7ec8422edd971cfec9b15ea ]
 
-The warning added in commit 3b0e761ba83
-  "dlm: print log message when cluster name is not set"
+When it is requested to change its physical state back to Offline while in
+the process to go up, DC8051 will set the ERROR field in the
+DC8051_DBG_ERR_INFO_SET_BY_8051 register. This ERROR field will remain
+until the next time when DC8051 transitions from Offline to Polling.
+Subsequently, when the host requests DC8051 to change its physical state
+to Polling again, it may receive a DC8051 interrupt with the stale ERROR
+field still in DC8051_DBG_ERR_INFO_SET_BY_8051. If the host link state has
+been changed to Polling, this stale ERROR will force the host to
+transition to Offline state, resulting in a vicious cycle of Polling
+->Offline->Polling->Offline. On the other hand, if the host link state is
+still Offline when the stale ERROR is received, the stale ERROR will be
+ignored, and the link will come up correctly.  This patch implements the
+correct behavior by changing host link state to Polling only after DC8051
+changes its physical state to Polling.
 
-did not account for the fact that lockspaces created
-from userland do not supply a cluster name, so bogus
-warnings are printed every time a userland lockspace
-is created.
-
-Signed-off-by: David Teigland <teigland@redhat.com>
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Krzysztof Goreczny <krzysztof.goreczny@intel.com>
+Signed-off-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/dlm/user.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/infiniband/hw/hfi1/chip.c | 47 ++++++++++++++++++++++++++++++-
+ 1 file changed, 46 insertions(+), 1 deletion(-)
 
-diff --git a/fs/dlm/user.c b/fs/dlm/user.c
-index 1f0c071d4a861..02de11695d0ba 100644
---- a/fs/dlm/user.c
-+++ b/fs/dlm/user.c
-@@ -25,6 +25,7 @@
- #include "lvb_table.h"
- #include "user.h"
- #include "ast.h"
-+#include "config.h"
+diff --git a/drivers/infiniband/hw/hfi1/chip.c b/drivers/infiniband/hw/hfi1/chip.c
+index 9dcdc0a8685e7..9f78bb07744c7 100644
+--- a/drivers/infiniband/hw/hfi1/chip.c
++++ b/drivers/infiniband/hw/hfi1/chip.c
+@@ -1074,6 +1074,8 @@ static void log_state_transition(struct hfi1_pportdata *ppd, u32 state);
+ static void log_physical_state(struct hfi1_pportdata *ppd, u32 state);
+ static int wait_physical_linkstate(struct hfi1_pportdata *ppd, u32 state,
+ 				   int msecs);
++static int wait_phys_link_out_of_offline(struct hfi1_pportdata *ppd,
++					 int msecs);
+ static void read_planned_down_reason_code(struct hfi1_devdata *dd, u8 *pdrrc);
+ static void read_link_down_reason(struct hfi1_devdata *dd, u8 *ldr);
+ static void handle_temp_err(struct hfi1_devdata *dd);
+@@ -10731,13 +10733,15 @@ int set_link_state(struct hfi1_pportdata *ppd, u32 state)
+ 			break;
  
- static const char name_prefix[] = "dlm";
- static const struct file_operations device_fops;
-@@ -404,7 +405,7 @@ static int device_create_lockspace(struct dlm_lspace_params *params)
- 	if (!capable(CAP_SYS_ADMIN))
- 		return -EPERM;
+ 		ppd->port_error_action = 0;
+-		ppd->host_link_state = HLS_DN_POLL;
  
--	error = dlm_new_lockspace(params->name, NULL, params->flags,
-+	error = dlm_new_lockspace(params->name, dlm_config.ci_cluster_name, params->flags,
- 				  DLM_USER_LVB_LEN, NULL, NULL, NULL,
- 				  &lockspace);
- 	if (error)
+ 		if (quick_linkup) {
+ 			/* quick linkup does not go into polling */
+ 			ret = do_quick_linkup(dd);
+ 		} else {
+ 			ret1 = set_physical_link_state(dd, PLS_POLLING);
++			if (!ret1)
++				ret1 = wait_phys_link_out_of_offline(ppd,
++								     3000);
+ 			if (ret1 != HCMD_SUCCESS) {
+ 				dd_dev_err(dd,
+ 					   "Failed to transition to Polling link state, return 0x%x\n",
+@@ -10745,6 +10749,14 @@ int set_link_state(struct hfi1_pportdata *ppd, u32 state)
+ 				ret = -EINVAL;
+ 			}
+ 		}
++
++		/*
++		 * Change the host link state after requesting DC8051 to
++		 * change its physical state so that we can ignore any
++		 * interrupt with stale LNI(XX) error, which will not be
++		 * cleared until DC8051 transitions to Polling state.
++		 */
++		ppd->host_link_state = HLS_DN_POLL;
+ 		ppd->offline_disabled_reason =
+ 			HFI1_ODR_MASK(OPA_LINKDOWN_REASON_NONE);
+ 		/*
+@@ -12870,6 +12882,39 @@ static int wait_phys_link_offline_substates(struct hfi1_pportdata *ppd,
+ 	return read_state;
+ }
+ 
++/*
++ * wait_phys_link_out_of_offline - wait for any out of offline state
++ * @ppd: port device
++ * @msecs: the number of milliseconds to wait
++ *
++ * Wait up to msecs milliseconds for any out of offline physical link
++ * state change to occur.
++ * Returns 0 if at least one state is reached, otherwise -ETIMEDOUT.
++ */
++static int wait_phys_link_out_of_offline(struct hfi1_pportdata *ppd,
++					 int msecs)
++{
++	u32 read_state;
++	unsigned long timeout;
++
++	timeout = jiffies + msecs_to_jiffies(msecs);
++	while (1) {
++		read_state = read_physical_state(ppd->dd);
++		if ((read_state & 0xF0) != PLS_OFFLINE)
++			break;
++		if (time_after(jiffies, timeout)) {
++			dd_dev_err(ppd->dd,
++				   "timeout waiting for phy link out of offline. Read state 0x%x, %dms\n",
++				   read_state, msecs);
++			return -ETIMEDOUT;
++		}
++		usleep_range(1950, 2050); /* sleep 2ms-ish */
++	}
++
++	log_state_transition(ppd, read_state);
++	return read_state;
++}
++
+ #define CLEAR_STATIC_RATE_CONTROL_SMASK(r) \
+ (r &= ~SEND_CTXT_CHECK_ENABLE_DISALLOW_PBC_STATIC_RATE_CONTROL_SMASK)
+ 
 -- 
 2.20.1
 
