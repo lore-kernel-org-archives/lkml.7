@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BEFAC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 167B5C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D457A21775
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:55:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1B0B206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:55:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576518936;
-	bh=YOOKKu7KZKalCYc9fcrbvluf+Q6hWobR9h7/kUaryYI=;
+	s=default; t=1576518939;
+	bh=TxFF3dCzgNZSD/LydwsZgVZni2PRmnqkI8Is8MlGsmM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yVD/KrdhOk9n31jFpHQPb6aGhZA8UqoTHwNuXY9949Csi00925WcrDX+uEh4Z+rxH
-	 nksuqSuMf6bGlVETvgHYaDn189VrW436e+zCyG3OOwhjyIHkVGdIVUyYThJ+r4CUTk
-	 qTSz6+TwVugpCIFCutePgS2gg0inVR8Gm1lyeYPI=
+	b=Puu2GHKtHBD1HIYFM5M4FTJ9RhzpFBN82vkmXuJNYUjxXSy5GsUexnAfsxC9Y/gio
+	 HSUgJBRphkeWOvtIuR/3n9OUYyPuYO2FdIBYWwsO62ZweEqhdF5BDmsc4RJe2XG10w
+	 zWlEH/Cop7Lr6+1/TV56qYqr/TfqOtHiBWwguYd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728042AbfLPRzf (ORCPT
+        id S1727407AbfLPRzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:55:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52676 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:55:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728025AbfLPRz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:55:28 -0500
+        id S1727864AbfLPRzf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:55:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4622820663;
-        Mon, 16 Dec 2019 17:55:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BCA2206B7;
+        Mon, 16 Dec 2019 17:55:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518927;
-        bh=YOOKKu7KZKalCYc9fcrbvluf+Q6hWobR9h7/kUaryYI=;
+        s=default; t=1576518935;
+        bh=TxFF3dCzgNZSD/LydwsZgVZni2PRmnqkI8Is8MlGsmM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x+g/5iGxQ5raqEPv6wOzQGp877Zdxtm9LVSh1szIq2hgODJRz/5qctVfZnQIaEjkh
-         hT5fIG2h8EzaCfLroWGSVAe/nPgJ8Yy/P1brFtwuDhgmA1pQXzPoDl4cgILr45bZhb
-         ScNLfaklev847MN1TSk5un/+wMGkN4RJpQ6vq4EM=
+        b=c4JXiovsO11CaPoT1jTfKYejDclMWC83rFjCseVuQxOQygn5DSkKgJzCjzl/yIpPx
+         FkVuHI+AeP38LwscVuzQKrsU6/08HmtWNNpBi7ipkvJqWoJAnGYLVt3BYFAuu2a4f4
+         aSVgDWUDLsz+p8niULQZDE2GO6qCT8W8MNcqgLKA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+f153bde47a62e0b05f83@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 124/267] ALSA: pcm: oss: Avoid potential buffer overflows
-Date:   Mon, 16 Dec 2019 18:47:30 +0100
-Message-Id: <20191216174903.510811312@linuxfoundation.org>
+        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.14 127/267] Input: synaptics-rmi4 - re-enable IRQs in f34v7_do_reflash
+Date:   Mon, 16 Dec 2019 18:47:33 +0100
+Message-Id: <20191216174904.447628873@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -60,64 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Lucas Stach <l.stach@pengutronix.de>
 
-commit 4cc8d6505ab82db3357613d36e6c58a297f57f7c upstream.
+commit 86bcd3a12999447faad60ec59c2d64d18d8e61ac upstream.
 
-syzkaller reported an invalid access in PCM OSS read, and this seems
-to be an overflow of the internal buffer allocated for a plugin.
-Since the rate plugin adjusts its transfer size dynamically, the
-calculation for the chained plugin might be bigger than the given
-buffer size in some extreme cases, which lead to such an buffer
-overflow as caught by KASAN.
+F34 is a bit special as it reinitializes the device and related driver
+structs during the firmware update. This clears the fn_irq_mask which
+will then prevent F34 from receiving further interrupts, leading to
+timeouts during the firmware update. Make sure to reinitialize the
+IRQ enables at the appropriate times.
 
-Fix it by limiting the max transfer size properly by checking against
-the destination size in each plugin transfer callback.
+The issue is in F34 code, but the commit in the fixes tag exposed the
+issue, as before this commit things would work by accident.
 
-Reported-by: syzbot+f153bde47a62e0b05f83@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191204144824.17801-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 363c53875aef (Input: synaptics-rmi4 - avoid processing unknown IRQs)
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Link: https://lore.kernel.org/r/20191129133514.23224-1-l.stach@pengutronix.de
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/oss/linear.c |    2 ++
- sound/core/oss/mulaw.c  |    2 ++
- sound/core/oss/route.c  |    2 ++
- 3 files changed, 6 insertions(+)
+ drivers/input/rmi4/rmi_f34v7.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/sound/core/oss/linear.c
-+++ b/sound/core/oss/linear.c
-@@ -107,6 +107,8 @@ static snd_pcm_sframes_t linear_transfer
- 		}
- 	}
- #endif
-+	if (frames > dst_channels[0].frames)
-+		frames = dst_channels[0].frames;
- 	convert(plugin, src_channels, dst_channels, frames);
- 	return frames;
- }
---- a/sound/core/oss/mulaw.c
-+++ b/sound/core/oss/mulaw.c
-@@ -269,6 +269,8 @@ static snd_pcm_sframes_t mulaw_transfer(
- 		}
- 	}
- #endif
-+	if (frames > dst_channels[0].frames)
-+		frames = dst_channels[0].frames;
- 	data = (struct mulaw_priv *)plugin->extra_data;
- 	data->func(plugin, src_channels, dst_channels, frames);
- 	return frames;
---- a/sound/core/oss/route.c
-+++ b/sound/core/oss/route.c
-@@ -57,6 +57,8 @@ static snd_pcm_sframes_t route_transfer(
- 		return -ENXIO;
- 	if (frames == 0)
- 		return 0;
-+	if (frames > dst_channels[0].frames)
-+		frames = dst_channels[0].frames;
+--- a/drivers/input/rmi4/rmi_f34v7.c
++++ b/drivers/input/rmi4/rmi_f34v7.c
+@@ -1192,6 +1192,9 @@ int rmi_f34v7_do_reflash(struct f34_data
+ {
+ 	int ret;
  
- 	nsrcs = plugin->src_format.channels;
- 	ndsts = plugin->dst_format.channels;
++	f34->fn->rmi_dev->driver->set_irq_bits(f34->fn->rmi_dev,
++					       f34->fn->irq_mask);
++
+ 	rmi_f34v7_read_queries_bl_version(f34);
+ 
+ 	f34->v7.image = fw->data;
 
 
