@@ -2,72 +2,103 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63823C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B576C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2755B206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:44:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F51820717
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:46:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JeX9P7d5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728215AbfLPOoN (ORCPT
+        id S1728178AbfLPOqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 09:44:13 -0500
-Received: from olimex.com ([184.105.72.32]:36376 "EHLO olimex.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728164AbfLPOoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 09:44:12 -0500
-Received: from localhost.localdomain ([94.155.250.134])
-        by olimex.com with ESMTPSA (ECDHE-RSA-AES128-GCM-SHA256:TLSv1.2:Kx=ECDH:Au=RSA:Enc=AESGCM(128):Mac=AEAD) (SMTP-AUTH username stefan@olimex.com, mechanism PLAIN)
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 06:44:00 -0800
-From:   Stefan Mavrodiev <stefan@olimex.com>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org (open list:DRM DRIVERS FOR ALLWINNER
-        A10),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Allwinner
-        sunXi SoC support), linux-kernel@vger.kernel.org (open list)
-Cc:     linux-sunxi@googlegroups.com, Stefan Mavrodiev <stefan@olimex.com>
-Subject: [PATCH 1/1] drm/sun4i: hdmi: Check for null pointer before cleanup
-Date:   Mon, 16 Dec 2019 16:43:48 +0200
-Message-Id: <20191216144348.7540-1-stefan@olimex.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 16 Dec 2019 09:46:03 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40870 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728055AbfLPOqD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 09:46:03 -0500
+Received: by mail-lf1-f65.google.com with SMTP id i23so4409982lfo.7;
+        Mon, 16 Dec 2019 06:46:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8hrwNb+62xlSS4630TGqVTgZpEq9XuNM/h7RXL5PTp4=;
+        b=JeX9P7d5K86kD8jxLP0OqYX0Xo7tQt3V7bahsEzimx4TzCVwClPFlR1qlAegLRv9r3
+         p8si4pZeC0qzILFh9hYvpL75xyt2EuEUHmYq40odgPYB7fFdVDDRc7/E0Y9prfl5ZKSX
+         ZAzBRUWj4mgKGDR60sKFlX5R5yuStVbhL5mwyjaAvTs+KxHi81GdWr0JtXqnbEq/oPxg
+         W95/lZ8Uf2WuFbM25WYjm9l3PABEQOoX1Hbb5u7vzgLpx54F1dlY9qKrNXb2bE6WBlFr
+         VOUYhlxkep9Ckt8hE950xvXYsYhSgMr2Pypq0rp6B4/fxv8QlzH9KyO9FRoh5IccS695
+         +GbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8hrwNb+62xlSS4630TGqVTgZpEq9XuNM/h7RXL5PTp4=;
+        b=LNidchNzoHgItrXeplriLMvErObnG/Hs4HgkJ6nCxNASlcTmaFKuvAMQbggKtLpB4H
+         BeNOCKd+XL4g22AgRPynGf11ydfv0vzsp3VcdAHtd0kSb6L3cUr/eRcBSYNHADcLUoa3
+         d3QRJxjjI1v5hoSpHw7TaKRrNcxKwMuV8bKqyeedBzQ211nOp2A6SXcSFC132GFBNM81
+         YRbbvTiIcivVZ7WomOs8I3QbxKEtDbhgl4H/wwLw9RVH/FpeCdeYEQTID5b6ibSZ1em3
+         Xp4BnZM0Izx3N35TuG5OijNxeB4YDsbMY08NJWEJPovHcDdtTs7tag8UH2SrZKoWI4mz
+         4Kfg==
+X-Gm-Message-State: APjAAAXVahNZ99c1p5/5tl3LFoa35ZO3A5hC/7gzz2xB0iQVOSwTKyMr
+        LQyJIJe4tDuAVfm0dAgIclA71bgr
+X-Google-Smtp-Source: APXvYqxpUiYf76+8+R/J8+oxqzt6bKaYvjoUEm+LQ9lETcooxx3UqoSOQ5rP7pNrP6GB6JavMqdwKw==
+X-Received: by 2002:a19:8a41:: with SMTP id m62mr16906210lfd.5.1576507560617;
+        Mon, 16 Dec 2019 06:46:00 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id n23sm9158442lfa.41.2019.12.16.06.45.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Dec 2019 06:45:59 -0800 (PST)
+Subject: Re: [PATCH v1 0/3] Tegra GPIO: Minor code clean up
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+References: <20191215183047.9414-1-digetx@gmail.com>
+Message-ID: <b108c394-cdbc-e6c7-1688-69e05eea2279@gmail.com>
+Date:   Mon, 16 Dec 2019 17:45:57 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <20191215183047.9414-1-digetx@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's possible hdmi->connector and hdmi->encoder divices to be NULL.
-This can happen when building as kernel module and you try to remove
-the module.
+15.12.2019 21:30, Dmitry Osipenko пишет:
+> Hello,
+> 
+> I was investigating why CPU hangs during of GPIO driver suspend and in
+> the end it turned out that it is a Broadcom WiFi driver problem because
+> it keeps OOB wake-interrupt enabled while WLAN interface is DOWN and this
+> may cause a bit weird CPU hang on writing to INT_ENB register during of
+> GPIO driver suspend. Meanwhile I also noticed that a few things could be
+> improved in the driver, that's what this small series addresses.
+> 
+> Dmitry Osipenko (3):
+>   gpio: tegra: Use generic readl_relaxed/writel_relaxed accessors
+>   gpio: tegra: Properly handle irq_set_irq_wake() error
+>   gpio: tegra: Use NOIRQ phase for suspend/resume
+> 
+>  drivers/gpio/gpio-tegra.c | 21 ++++++++++-----------
+>  1 file changed, 10 insertions(+), 11 deletions(-)
+> 
 
-This patch make simple null check, before calling the cleanup functions.
+For the reference, here is the WiFi driver fix:
 
-Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
----
- drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-index a7c4654445c7..b61e00f2ecb8 100644
---- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-@@ -685,8 +685,10 @@ static void sun4i_hdmi_unbind(struct device *dev, struct device *master,
- 	struct sun4i_hdmi *hdmi = dev_get_drvdata(dev);
- 
- 	cec_unregister_adapter(hdmi->cec_adap);
--	drm_connector_cleanup(&hdmi->connector);
--	drm_encoder_cleanup(&hdmi->encoder);
-+	if (hdmi->connector.dev)
-+		drm_connector_cleanup(&hdmi->connector);
-+	if (hdmi->encoder.dev)
-+		drm_encoder_cleanup(&hdmi->encoder);
- 	i2c_del_adapter(hdmi->i2c);
- 	i2c_put_adapter(hdmi->ddc_i2c);
- 	clk_disable_unprepare(hdmi->mod_clk);
--- 
-2.17.1
-
+https://patchwork.ozlabs.org/patch/1209997/
