@@ -2,62 +2,59 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF9FFC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 183B7C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:47:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7E3321835
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:47:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3D3821835
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 20:47:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576529268;
-	bh=AHIxHCZn5O33ir7Tz+Pc4yZfThRcdwfTHwkAQkkxnh8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=V6DpO4Wh5009vv1C925FNFT+8kitcHGmMU4UzDtT6f19gLHT/Cf53lYJYGxyfj0WU
-	 dnCdm6drjM4B74eD2SfxK+v5rVKZ1/7lfsMnQy/e/TVjcbRVYHKh1TbJs9kEILf4HL
-	 2Y+juo7/ZdCzscn42b4Afs5BYhz1I3DccxhxrfaE=
+	s=default; t=1576529272;
+	bh=zLDuk+iqG/QwoL1dVSRWMOwgNWBx3OEn0K7EFUh877k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DTY+novM9H8G1nkgSAryEGZ8G7Gsr/18J5HSlW6QCA9Fc+pvlhA7ZAhDGDoROggf8
+	 QuhzO31JlEV7zIwb0kMD09rFzOHgfWgWoqNEsHEZsMaAKdNWGCL/GDxMvJwT89lFq5
+	 Whh2a4MWOnhBAG93qzuUmh/UNIjSLskQVQ80Xugs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbfLPUrr (ORCPT
+        id S1726776AbfLPUrv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 15:47:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56062 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 15:47:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbfLPUrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 15:47:47 -0500
+        id S1726275AbfLPUrt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 15:47:49 -0500
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C94321775;
-        Mon, 16 Dec 2019 20:47:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 940E3218AC;
+        Mon, 16 Dec 2019 20:47:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576529266;
-        bh=AHIxHCZn5O33ir7Tz+Pc4yZfThRcdwfTHwkAQkkxnh8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=s754W1cd5pFR9BAxO/SEuXMqoJoqmOxamehyGOhQOsIjg1udllusSfzYDbzgSGMKX
-         I1vtb3hz7fXi3mJQMcLTZ72/T51khCtmpDIZPouMvy5ZjE5WPuKCqwLI+0MyqU/XnR
-         BJ6n8Guw8A/BJsRbepRSICa7O2HSkDNojiZglmJ0=
+        s=default; t=1576529269;
+        bh=zLDuk+iqG/QwoL1dVSRWMOwgNWBx3OEn0K7EFUh877k=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=MrKmQkqSIefuhnUgxJ63AQgqhkfLiXLfHOb6xyWaW9mnmJAwDwk9Tj5YZjpZyD5F/
+         ehHopTUvgHH+eh0naKIiwIE3SJ/Q9NbDyIePPfyCNpgBdxtAWRJcVl8wqfDj8/LCfY
+         mjT4Dz79NsWGvsI4Xd4jewQgXQc8SrLopJKZD8TM=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ed Maste <emaste@freebsd.org>,
-        John Garry <john.garry@huawei.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Sudipm Mukherjee <sudipm.mukherjee@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [GIT PULL 0/9] perf/urgent fixes
-Date:   Mon, 16 Dec 2019 17:47:29 -0300
-Message-Id: <20191216204738.12107-1-acme@kernel.org>
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Bharata B Rao <bharata@linux.ibm.com>,
+        Paul Mackerras <paulus@ozlabs.org>
+Subject: [PATCH 1/9] tools headers kvm: Sync linux/kvm.h with the kernel sources
+Date:   Mon, 16 Dec 2019 17:47:30 -0300
+Message-Id: <20191216204738.12107-2-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191216204738.12107-1-acme@kernel.org>
+References: <20191216204738.12107-1-acme@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -65,117 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ingo/Thomas,
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-	Please consider pulling,
+To pick up the changes from:
 
-Best regards,
+  22945688acd4 ("KVM: PPC: Book3S HV: Support reset of secure guest")
 
-- Arnaldo
+No tools changes are caused by this, as the only defines so far used
+from these files are for syscall arg pretty printing are:
 
+  $ grep KVM tools/perf/trace/beauty/*.sh
+  tools/perf/trace/beauty/kvm_ioctl.sh:regex='^#[[:space:]]*define[[:space:]]+KVM_(\w+)[[:space:]]+_IO[RW]*\([[:space:]]*KVMIO[[:space:]]*,[[:space:]]*(0x[[:xdigit:]]+).*'
+  $
 
-The following changes since commit 761bfc33dd7504de951aa7b9db27a3cc5df1fde6:
+This addresses these tools/perf build warnings:
 
-  Merge remote-tracking branch 'torvalds/master' into perf/urgent (2019-12-11 09:58:16 -0300)
+  Warning: Kernel ABI header at 'tools/include/uapi/linux/kvm.h' differs from latest version at 'include/uapi/linux/kvm.h'
+  diff -u tools/include/uapi/linux/kvm.h include/uapi/linux/kvm.h
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-5.5-20191216
-
-for you to fetch changes up to 58b3bafff8257c6946df5d6aeb215b8ac839ed2a:
-
-  perf vendor events s390: Remove name from L1D_RO_EXCL_WRITES description (2019-12-16 13:40:26 -0300)
-
-----------------------------------------------------------------
-perf/urgent fixes:
-
-perf top:
-
- Arnaldo Carvalho de Melo:
-
- - Do not bail out when perf_env__read_cpuid() returns ENOSYS, which
-   has been reported happening on aarch64.
-
-perf metricgroup:
-
-  Kajol Jain:
-
-  - Fix printing event names of metric group with multiple events
-
-vendor events:
-
-x86:
-
-  Ravi Bangoria:
-
-  - Fix Kernel_Utilization metric.
-
-s390:
-
-  Ed Maste:
-
-  - Fix counter long description for DTLB1_GPAGE_WRITES and L1D_RO_EXCL_WRITES.
-
-perf header:
-
-  Michael Petlan:
-
-  - Fix false warning when there are no duplicate cache entries
-
-libtraceevent:
-
-  Sudip Mukherjee:
-
-  - Allow custom libdir path
-
-API headers:
-
-  Arnaldo Carvalho de Melo:
-
-  - Sync linux/kvm.h with the kernel sources.
-
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Bharata B Rao <bharata@linux.ibm.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Paul Mackerras <paulus@ozlabs.org>
+Link: https://lkml.kernel.org/n/tip-bdbe4x02johhul05a03o27zj@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/include/uapi/linux/kvm.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-----------------------------------------------------------------
-Arnaldo Carvalho de Melo (3):
-      tools headers kvm: Sync linux/kvm.h with the kernel sources
-      perf arch: Make the default get_cpuid() return compatible error
-      perf top: Do not bail out when perf_env__read_cpuid() returns ENOSYS
+diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
+index e6f17c8e2dba..f0a16b4adbbd 100644
+--- a/tools/include/uapi/linux/kvm.h
++++ b/tools/include/uapi/linux/kvm.h
+@@ -1348,6 +1348,7 @@ struct kvm_s390_ucas_mapping {
+ #define KVM_PPC_GET_CPU_CHAR	  _IOR(KVMIO,  0xb1, struct kvm_ppc_cpu_char)
+ /* Available with KVM_CAP_PMU_EVENT_FILTER */
+ #define KVM_SET_PMU_EVENT_FILTER  _IOW(KVMIO,  0xb2, struct kvm_pmu_event_filter)
++#define KVM_PPC_SVM_OFF		  _IO(KVMIO,  0xb3)
+ 
+ /* ioctl for vm fd */
+ #define KVM_CREATE_DEVICE	  _IOWR(KVMIO,  0xe0, struct kvm_create_device)
+-- 
+2.21.0
 
-Ed Maste (2):
-      perf vendor events s390: Fix counter long description for DTLB1_GPAGE_WRITES
-      perf vendor events s390: Remove name from L1D_RO_EXCL_WRITES description
-
-Kajol Jain (1):
-      perf metricgroup: Fix printing event names of metric group with multiple events
-
-Michael Petlan (1):
-      perf header: Fix false warning when there are no duplicate cache entries
-
-Ravi Bangoria (1):
-      perf/x86/pmu-events: Fix Kernel_Utilization metric
-
-Sudip Mukherjee (1):
-      libtraceevent: Allow custom libdir path
-
- tools/include/uapi/linux/kvm.h                     |  1 +
- tools/lib/traceevent/Makefile                      |  5 +++--
- tools/lib/traceevent/plugins/Makefile              |  5 +++--
- tools/perf/builtin-top.c                           | 10 +++++++---
- .../perf/pmu-events/arch/s390/cf_z13/extended.json |  2 +-
- .../perf/pmu-events/arch/s390/cf_z14/extended.json |  2 +-
- .../pmu-events/arch/x86/broadwell/bdw-metrics.json |  2 +-
- .../arch/x86/broadwellde/bdwde-metrics.json        |  2 +-
- .../arch/x86/broadwellx/bdx-metrics.json           |  2 +-
- .../arch/x86/cascadelakex/clx-metrics.json         |  2 +-
- .../pmu-events/arch/x86/haswell/hsw-metrics.json   |  2 +-
- .../pmu-events/arch/x86/haswellx/hsx-metrics.json  |  2 +-
- .../pmu-events/arch/x86/ivybridge/ivb-metrics.json |  2 +-
- .../pmu-events/arch/x86/ivytown/ivt-metrics.json   |  2 +-
- .../pmu-events/arch/x86/jaketown/jkt-metrics.json  |  2 +-
- .../arch/x86/sandybridge/snb-metrics.json          |  2 +-
- .../pmu-events/arch/x86/skylake/skl-metrics.json   |  2 +-
- .../pmu-events/arch/x86/skylakex/skx-metrics.json  |  2 +-
- tools/perf/util/header.c                           | 23 +++++++---------------
- tools/perf/util/metricgroup.c                      |  7 +++++--
- 20 files changed, 40 insertions(+), 39 deletions(-)
