@@ -2,203 +2,186 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B87C2D0BF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B661C2D0D0
 	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C490E20725
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:47:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 660EF20665
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 09:47:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="u5Sd0Jwc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="haRxTYcb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbfLPJrr (ORCPT
+        id S1727138AbfLPJrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 04:47:47 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:39778 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726937AbfLPJrr (ORCPT
+        Mon, 16 Dec 2019 04:47:48 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:32752 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726977AbfLPJrr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 04:47:47 -0500
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 96377A34;
-        Mon, 16 Dec 2019 10:47:43 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1576489664;
-        bh=Oa2zjAy88eEZOO6lAfiyhi8EQOZLEhABzdV73KDcbSo=;
-        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=u5Sd0JwcfaKKAWiiHOfo9Y0ljJZxXVVEKOyGXV4p+8uAdJ4tkN8gPDvs8Dmy/ltlQ
-         XOiR+yl24p4SaLgMZ9y0EgeC3CL57IlIt2C9aP7FBkARsYEZC1TN+twDUrpbSd6TLW
-         UXv/PJu9IA+G/QNetGj32u7vGrHB8DfF6ysO5860=
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-Subject: Re: [PATCH] drm: rcar-du: Add r8a77980 support
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Simon Horman <horms@verge.net.au>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        linux-renesas-soc@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVERS FOR RENESAS" <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190911192502.16609-1-kieran.bingham+renesas@ideasonboard.com>
- <70b94265-69f3-d18f-1b67-b5b814723b1b@cogentembedded.com>
- <20190913082129.lvusbp6pbcayqh5r@verge.net.au>
- <20190913090359.GC29992@pendragon.ideasonboard.com>
- <2eeacacc-f190-4ba8-32bc-b4103b41db46@ideasonboard.com>
- <20191213004812.GA27328@pendragon.ideasonboard.com>
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Organization: Ideas on Board
-Message-ID: <19cb3d1c-6910-4bec-13bb-adb875ddd077@ideasonboard.com>
-Date:   Mon, 16 Dec 2019 09:47:40 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576489666;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=x4F0S6F+puErRf/9qNGD3qSr4YnaGP1lnAVzdVRgZvU=;
+        b=haRxTYcb+pPrHZlwLDOkXthIEeYXVmZXQAZh8YDqeXjnDxJ+5AyX0HT6mdoVVFUtBrsG3k
+        V/oq40QpgvLlnE4pLdoGdbxa4RkjcXKqVOxF9f2t5wTaGVEERBSKKXkoXQMwZRbLoxgfhv
+        E7HQ4+0Rb4sGWBmmUWm7nLxsM6pan+c=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-261-bPoOpwa_MnulqnxHRIoEoA-1; Mon, 16 Dec 2019 04:47:43 -0500
+X-MC-Unique: bPoOpwa_MnulqnxHRIoEoA-1
+Received: by mail-qk1-f197.google.com with SMTP id c202so4322495qkg.4
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 01:47:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=x4F0S6F+puErRf/9qNGD3qSr4YnaGP1lnAVzdVRgZvU=;
+        b=MMcj/0XyR68dqQeK+hIGIIbV94MmuFcdJYeu6/md8Swp5TFlOW+YGF79crjU7oJEQy
+         Rn1rraiihDGODr6r1dsNJIklkROZB9CJ8hPOfCC0GUMD7mk/tY4t8p51A4ovyHr3E6xB
+         ytqt0WmofToDDfWluTRugSNAx49nGr33swLuJ04YRe2MWejKGR/vNeHwAkyRTj263bPs
+         5MpBk+iob01ZNO3CueNPKaa2KPrI8oK+8pQSYFbizsPAlK+E18CJiR4/EvYKQT4ednOg
+         roTtAJHDUt+QhKY/WNpfRKqSoBMueO9IMHNmJgcXfZCv+zuwuU9Yp8uEhctbSiF4MY7w
+         PPfQ==
+X-Gm-Message-State: APjAAAUjzK3f5Pu2WNwl3uWTpHuB+eWeT5Pk2ic2qVdebuBeKjbxyRPZ
+        1n9Dmy4gTXg3SwQhgOCgpgavm6TDG9bH4r1BLvRpm1OSz9F7YeOURwQqdwDlrkTTFmbIKz2FJdj
+        U5REt+81VktboYDybDx3nCeX/
+X-Received: by 2002:aed:256f:: with SMTP id w44mr7069754qtc.331.1576489663040;
+        Mon, 16 Dec 2019 01:47:43 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxIZNYdabqmI0CG0aOJ0NQEhESVmckgU7vVqS63tN6mOzzA5VFGb+hnjE+Zgtxy3Azad9N/Jw==
+X-Received: by 2002:aed:256f:: with SMTP id w44mr7069748qtc.331.1576489662780;
+        Mon, 16 Dec 2019 01:47:42 -0800 (PST)
+Received: from redhat.com (bzq-111-168-31-5.red.bezeqint.net. [31.168.111.5])
+        by smtp.gmail.com with ESMTPSA id r10sm5762779qkm.23.2019.12.16.01.47.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 01:47:41 -0800 (PST)
+Date:   Mon, 16 Dec 2019 04:47:36 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH RFC 04/15] KVM: Implement ring-based dirty memory tracking
+Message-ID: <20191216044619-mutt-send-email-mst@kernel.org>
+References: <20191129213505.18472-1-peterx@redhat.com>
+ <20191129213505.18472-5-peterx@redhat.com>
+ <20191211063830-mutt-send-email-mst@kernel.org>
+ <20191211205952.GA5091@xz-x1>
+ <20191211172713-mutt-send-email-mst@kernel.org>
+ <46ceb88c-0ddd-0d9a-7128-3aa5a7d9d233@redhat.com>
+ <20191215173302.GB83861@xz-x1>
 MIME-Version: 1.0
-In-Reply-To: <20191213004812.GA27328@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191215173302.GB83861@xz-x1>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
-
-On 13/12/2019 00:48, Laurent Pinchart wrote:
-> Hi Kieran,
+On Sun, Dec 15, 2019 at 12:33:02PM -0500, Peter Xu wrote:
+> On Thu, Dec 12, 2019 at 01:08:14AM +0100, Paolo Bonzini wrote:
+> > >>> What depends on what here? Looks suspicious ...
+> > >>
+> > >> Hmm, I think maybe it can be removed because the entry pointer
+> > >> reference below should be an ordering constraint already?
+> > 
+> > entry->xxx depends on ring->reset_index.
 > 
-> On Mon, Dec 09, 2019 at 12:41:07PM +0000, Kieran Bingham wrote:
->> On 13/09/2019 10:03, Laurent Pinchart wrote:
->>> On Fri, Sep 13, 2019 at 10:21:29AM +0200, Simon Horman wrote:
->>>> On Thu, Sep 12, 2019 at 01:00:41PM +0300, Sergei Shtylyov wrote:
->>>>> On 11.09.2019 22:25, Kieran Bingham wrote:
->>>>>
->>>>>> Add direct support for the r8a77980 (V3H).
->>>>>>
->>>>>> The V3H shares a common, compatible configuration with the r8a77970
->>>>>> (V3M) so that device info structure is reused.
->>>>>
->>>>>    Do we really need to add yet another compatible in this case?
->>>>> I just added r8a77970 to the compatible prop in the r8a77980 DT. That's why
->>>>> a patch like this one didn't get posted by me.
->>>>
->>>> The reason for having per-SoC compat strings is that the IP blocks
->>>> are not versioned and while we can observe that there are similarities
->>>> between, f.e. the DU on the r8a77970 and r8a77980, we can't be certain that
->>>> differences may not emerge at some point. By having per-SoC compat strings
->>>> we have the flexibility for the driver to address any such differences as
->>>> the need arises.
->>>>
->>>> My recollection is that this scheme has been adopted for non-versioned
->>>> Renesas IP blocks since June 2015 and uses of this scheme well before that.
->>>
->>> Sure, but we could use
->>>
->>> 	compatible = "renesas,du-r8a77980", "renesas,du-r8a77970";
-
-We already do in arch/arm64/boot/dts/renesas/r8a77980.dtsi.
-
-However that is the *only* non r8a77980 reference in the file so it,
-itself looks *very* much out of place.
-
-
-Furthermore, the main purpose of this patch is that we clearly document
-the driver as supporting the r8a77980 in the bindings (No mention that
-you must use the ..970 binding), yet in actual fact - the driver could
-not currently support loading a device with the following compatible:
-
-	compatible = "renesas,du-r8a77980";
-
-
->>> in DT without updating the driver. If the r8a77980 turns out to be
->>> different, we'll then update the driver without a need to modify DT. I'm
->>> fine either way, so
->>>
->>> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->>
->> Thanks,
->>
->> This patch has an RB tag from you, and Simon, but alas I don't believe
->> it has been picked up in your drm/du/next branch.
->>
->> Is this patch acceptable? Or do I need to repost?
+> Yes that's true, but...
 > 
-> Could you just confirm I should apply this patch, and not go for the
-> alternative proposal above ?
-
-I believe the alternative proposal above is what we have today isn't it?
-
-
-Yes, I do believe we should apply this patch.
-
-
-I'm going to assume you haven't read the other arguments on this thread
-so I'll paste them here:
-
->>> <Sergei>
->>>    Do we really need to add yet another compatible in this case?
->>> I just added r8a77970 to the compatible prop in the r8a77980 DT. That's why
->>> a patch like this one didn't get posted by me.
->>
->> <Kieran>
->> It's not just about the compatible string for me here,
->>
->> There is no indication in the driver that it supports the r8a77980, and
->> no comment in the driver to explain that the r8a77980 is shared by the
->> r8a77970.
->>
->> This patch makes that explicit at the driver.
->>
->> Also - I am considering sending a patch (that I've already created
->> anyway) to remove the r8a77970 reference from the
->>
->>   arch/arm64/boot/dts/renesas/r8a77980.dtsi file.
->>
->> This is the *only* non r8a77980 reference in this file, so it seems very
->> out of place.
+>         entry = &ring->dirty_gfns[ring->reset_index & (ring->size - 1)];
+>         /* barrier? */
+>         next_slot = READ_ONCE(entry->slot);
+>         next_offset = READ_ONCE(entry->offset);
 > 
-> <Geert>
-> Agreed.
-> 
->> In fact more so than that - except for a seemingly glaring typo, that
->> I'll investigate and send a patch for next, this is the *only* cross-soc
->> compatible reference:
->>
->> #!/bin/sh
->>
->> files=r8a77*.dtsi
->>
->> for f in $files;
->> do
->>         soc=`basename $f .dtsi | sed 's/-.*//'`
->>         echo "F: $f soc: $soc";
->>
->>         # Find all references to all socs, then hide 'this' soc
->>         grep r8a77 $f | grep -v $soc
-> 
-> This hides the complete line.  So you better use e.g.
-> 
->     sed -e "s/$soc/soc/ig" $f | grep -i r8a
-> 
-> instead.  No new offenders, though.
-> 
->> done;
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
+> ... I think entry->xxx depends on entry first, then entry depends on
+> reset_index.  So it seems fine because all things have a dependency?
 
+Is reset_index changed from another thread then?
+If yes then you want to read reset_index with READ_ONCE.
+That includes a dependency barrier.
 
-This is the only occurrence within *all* of our compatibles where we do
-not reference the compatible string of the device, and we require
-specifying 'another compatible'.
-
-This is not documented anywhere, and doesn't seem to follow
-{best,any}-practices. That's why I'm trying to fix it up.
-
---
-Regards
-
-Kieran
+> > 
+> > >>> what's the story around locking here? Why is it safe
+> > >>> not to take the lock sometimes?
+> > >>
+> > >> kvm_dirty_ring_push() will be with lock==true only when the per-vm
+> > >> ring is used.  For per-vcpu ring, because that will only happen with
+> > >> the vcpu context, then we don't need locks (so kvm_dirty_ring_push()
+> > >> is called with lock==false).
+> > 
+> > FWIW this will be done much more nicely in v2.
+> > 
+> > >>>> +	page = alloc_page(GFP_KERNEL | __GFP_ZERO);
+> > >>>> +	if (!page) {
+> > >>>> +		r = -ENOMEM;
+> > >>>> +		goto out_err_alloc_page;
+> > >>>> +	}
+> > >>>> +	kvm->vm_run = page_address(page);
+> > >>>
+> > >>> So 4K with just 8 bytes used. Not as bad as 1/2Mbyte for the ring but
+> > >>> still. What is wrong with just a pointer and calling put_user?
+> > >>
+> > >> I want to make it the start point for sharing fields between
+> > >> user/kernel per-vm.  Just like kvm_run for per-vcpu.
+> > 
+> > This page is actually not needed at all.  Userspace can just map at
+> > KVM_DIRTY_LOG_PAGE_OFFSET, the indices reside there.  You can drop
+> > kvm_vm_run completely.
+> 
+> I changed it because otherwise we use one entry of the padding, and
+> all the rest of paddings are a waste of memory because we can never
+> really use the padding as new fields only for the 1st entry which
+> overlaps with the indices.  IMHO that could even waste more than 4k.
+> 
+> (for now we only "waste" 4K for per-vm, kvm_run is already mapped so
+>  no waste there, not to say potentially I still think we can use the
+>  kvm_vm_run in the future)
+> 
+> > 
+> > >>>> +	} else {
+> > >>>> +		/*
+> > >>>> +		 * Put onto per vm ring because no vcpu context.  Kick
+> > >>>> +		 * vcpu0 if ring is full.
+> > >>>
+> > >>> What about tasks on vcpu 0? Do guests realize it's a bad idea to put
+> > >>> critical tasks there, they will be penalized disproportionally?
+> > >>
+> > >> Reasonable question.  So far we can't avoid it because vcpu exit is
+> > >> the event mechanism to say "hey please collect dirty bits".  Maybe
+> > >> someway is better than this, but I'll need to rethink all these
+> > >> over...
+> > > 
+> > > Maybe signal an eventfd, and let userspace worry about deciding what to
+> > > do.
+> > 
+> > This has to be done synchronously.  But the vm ring should be used very
+> > rarely (it's for things like kvmclock updates that write to guest memory
+> > outside a vCPU), possibly a handful of times in the whole run of the VM.
+> 
+> I've summarized a list of callers who might dirty guest memory in the
+> other thread, it seems to me that even the kvm clock is using per-vcpu
+> contexts.
+> 
+> > 
+> > >>> KVM_DIRTY_RING_MAX_ENTRIES is not part of UAPI.
+> > >>> So how does userspace know what's legal?
+> > >>> Do you expect it to just try?
+> > >>
+> > >> Yep that's what I thought. :)
+> > 
+> > We should return it for KVM_CHECK_EXTENSION.
+> 
+> OK.  I'll drop the versioning.
+> 
+> -- 
+> Peter Xu
 
