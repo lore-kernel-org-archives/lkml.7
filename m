@@ -2,163 +2,201 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F9BC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8DA7C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AD3A205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:23:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QSKs5fDu"
+	by mail.kernel.org (Postfix) with ESMTP id 9201C205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 14:23:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576506219;
+	bh=YJ/icD3v+QxfuZAhkfKG6L7gWrUWVIS8Joh9R5IcQr8=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=dVdvlBCP1ndAtfvxYUFCpL5cK3SviYBIF7VFItTMpMKNz/Om/AwicV6U99ogqHUt1
+	 CgbceP9qq/LaoQSzkPeGDo9QqjUaehe2hir7lHuddwAHWVStmFFupreE85vglutapn
+	 PIe50RCGwL2qZ0/v7hefTvqmv2vTeK6KdcZgfvk8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728112AbfLPOX2 (ORCPT
+        id S1728129AbfLPOXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 09:23:28 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40662 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727579AbfLPOX2 (ORCPT
+        Mon, 16 Dec 2019 09:23:38 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:52574 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727579AbfLPOXi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 09:23:28 -0500
-Received: by mail-lf1-f66.google.com with SMTP id i23so4351203lfo.7;
-        Mon, 16 Dec 2019 06:23:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=SDz/eeiUYW00uzzbWG7DKDZnUYir/tuNRcDkO6zwBsY=;
-        b=QSKs5fDuzVkdH3m7fH8YkBd2PodkArxmfGtpqkuhuHCEVIp44IPGrWiUNbPNyXUmLD
-         oSHUzqxTaiFBb6jPo1aKzD2rTL9ojEqbf5svoH5nxZ3IXiNAytr/ZoFCSKwRMPjHK0AS
-         VT53eJgj9gMFfhc8TrEZZmPCIY3/4aD5AEJnsnqtICB+d4kXxpkYChbX6m4gYHiNoNgN
-         3lQBVP3TF/xAnM5T0HqA0Fl6XY2exCS26s/auhrVPYFHtIKP4Y/WWPB9PHeqB1tnTF7O
-         vPP1joK9iNxxU2KYaly0vR3sCwNXTHtMkMPBFzwGHAEeHKQI7rxEnM/hpZqrhD5n/bLk
-         3nrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SDz/eeiUYW00uzzbWG7DKDZnUYir/tuNRcDkO6zwBsY=;
-        b=iPpByowVbXuG43bUgpFXJxytQwDsIFjcmm8cbhrKOEMy81HLXl+KX+oX/JA8WRbQmE
-         O7GjIoYWDUF77BE8QYXv95PGnVXjAzk/cxOzbTzLH/fKXjn8SGw21+qzA2oigi/pgP2c
-         +k9OcVQYrJNIyAXQAlNOiQKKhoxKYIBKOw4GiFTZQzMreoB+GWNvz3rYf5059FHxFl4Z
-         MAMwtzjPf++QWT39pkt5tIWpklMwgmi8Nj1tC5NotgJ52TVwCASQf8W23FrbyUjjz6pF
-         kfmXm9ba2TvYQgnMOmV7b9djVefdMHK6WOnaVhptYAYi2gMA9NNmRDObomsaRJV3+ySV
-         e+4w==
-X-Gm-Message-State: APjAAAXrLaTr3JfzfYFdGEYq/MG3Jt9b7IB1bvQC4JMMUHyEYnlg0N6a
-        f8IlqZXzb3Y3vycR3k56Sxw=
-X-Google-Smtp-Source: APXvYqzMOp3oG1zDPBMq6S4CYV0V+gLdClhVaX0UoySeNVrCOjjJid4LlJ3k7mjrc3KHQBTL0oZ4VA==
-X-Received: by 2002:ac2:4194:: with SMTP id z20mr17309513lfh.20.1576506205560;
-        Mon, 16 Dec 2019 06:23:25 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id q10sm10729440ljj.60.2019.12.16.06.23.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Dec 2019 06:23:24 -0800 (PST)
-Subject: Re: [PATCH v3 03/15] soc: tegra: Add Tegra PMC clock registrations
- into PMC driver
-To:     Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        mperttunen@nvidia.com, sboyd@kernel.org,
-        gregkh@linuxfoundation.org, tglx@linutronix.de, robh+dt@kernel.org,
-        mark.rutland@arm.com, allison@lohutok.net, pgaikwad@nvidia.com,
-        mturquette@baylibre.com, horms+renesas@verge.net.au,
-        Jisheng.Zhang@synaptics.com, krzk@kernel.org, arnd@arndb.de,
-        spujar@nvidia.com, josephl@nvidia.com, vidyas@nvidia.com,
-        daniel.lezcano@linaro.org, mmaddireddy@nvidia.com,
-        markz@nvidia.com, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lgirdwood@gmail.com,
-        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
-        alexios.zavras@intel.com, alsa-devel@alsa-project.org
-References: <288a1701-def6-d628-26bc-a305f817bdb1@gmail.com>
- <78644d45-2ae3-121f-99fc-0a46f205907d@nvidia.com>
- <b35916e1-c6ee-52ca-9111-5ae109437b6e@nvidia.com>
- <ccb715cc-c927-ea91-a26e-24d6eeeeef1a@gmail.com>
- <ee1d39d4-9a57-da9b-fce6-8130dac1d2fd@nvidia.com>
- <49da77dc-b346-68eb-9ef8-42cfb3221489@nvidia.com>
- <3f1c9325-3017-62be-1e3b-82fd28540fdf@nvidia.com>
- <6fcbff3d-8695-7cd0-60de-6eb523b6964c@gmail.com>
- <20191211151028.GZ28289@pdeschrijver-desktop.Nvidia.com>
- <0930a710-174b-859b-294c-e9f81f6a3b5e@gmail.com>
- <20191216122005.GB28289@pdeschrijver-desktop.Nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <53653719-f8e5-f6d1-a1d1-e53c7ccd7636@gmail.com>
-Date:   Mon, 16 Dec 2019 17:23:23 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 16 Dec 2019 09:23:38 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1igrHb-0000wL-Aw; Mon, 16 Dec 2019 15:23:35 +0100
+To:     Guoheyi <guoheyi@huawei.com>
+Subject: Re: [PATCH] irq-gic-v3: fix NULL dereference of disabled  =?UTF-8?Q?redist=5Fbase?=
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-In-Reply-To: <20191216122005.GB28289@pdeschrijver-desktop.Nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
+Date:   Mon, 16 Dec 2019 14:23:34 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     <linux-kernel@vger.kernel.org>, <wanghaibin.wang@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>
+In-Reply-To: <c1447d9f-df4a-db07-adae-7e7e6c0f6455@huawei.com>
+References: <20191216062745.63397-1-guoheyi@huawei.com>
+ <36a042f6bcea5b5d5bfd9f6e6f01d6f5@www.loen.fr>
+ <c1447d9f-df4a-db07-adae-7e7e6c0f6455@huawei.com>
+Message-ID: <a4d0973bae1c50d947e7f84f3ec63d8f@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: guoheyi@huawei.com, linux-kernel@vger.kernel.org, wanghaibin.wang@huawei.com, tglx@linutronix.de, jason@lakedaemon.net
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-16.12.2019 15:20, Peter De Schrijver пишет:
-> On Thu, Dec 12, 2019 at 04:43:53AM +0300, Dmitry Osipenko wrote:
->> External email: Use caution opening links or attachments
+On 2019-12-16 13:50, Guoheyi wrote:
+> 在 2019/12/16 19:14, Marc Zyngier 写道:
+>> Hi Heyi,
 >>
+>> On 2019-12-16 06:27, Heyi Guo wrote:
+>>> If we use ACPI MADT GICC structure to pass single redistributor 
+>>> base,
+>>> and mark some GICC as disabled, we'll get below call trace during
+>>> boot:
+>>>
+>>> [    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
+>>> [    0.000000] GICv3: 256 SPIs implemented
+>>> [    0.000000] GICv3: 0 Extended SPIs implemented
+>>> [    0.000000] GICv3: Distributor has no Range Selector support
+>>> [    0.000000] Unable to handle kernel paging request at virtual
+>>> address 000000000000ffe8
+>>> [    0.000000] Mem abort info:
+>>> [    0.000000]   ESR = 0x96000004
+>>> [    0.000000]   EC = 0x25: DABT (current EL), IL = 32 bits
+>>> [    0.000000]   SET = 0, FnV = 0
+>>> [    0.000000]   EA = 0, S1PTW = 0
+>>> [    0.000000] Data abort info:
+>>> [    0.000000]   ISV = 0, ISS = 0x00000004
+>>> [    0.000000]   CM = 0, WnR = 0
+>>> [    0.000000] [000000000000ffe8] user address but active_mm is 
+>>> swapper
+>>> [    0.000000] Internal error: Oops: 96000004 [#1] SMP
+>>> [    0.000000] Modules linked in:
+>>> [    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.5.0-rc1 
+>>> #5
+>>> [    0.000000] pstate: 20000085 (nzCv daIf -PAN -UAO)
+>>> [    0.000000] pc : gic_iterate_rdists+0x58/0x130
+>>> [    0.000000] lr : gic_iterate_rdists+0x80/0x130
+>>> [    0.000000] sp : ffff8000113d3cb0
+>>> [    0.000000] x29: ffff8000113d3cb0 x28: 0000000000000000
+>>> [    0.000000] x27: 0000000000000000 x26: 0000000000000018
+>>> [    0.000000] x25: 000000000000ffe8 x24: 000000000000003f
+>>> [    0.000000] x23: ffff800010588040 x22: 00000000000005e8
+>>> [    0.000000] x21: ffff8000113df7d0 x20: 0000030f00003f11
+>>> [    0.000000] x19: 0000000000000000 x18: ffffffffffffffff
+>>> [    0.000000] x17: 0000000014aeb8dc x16: 00000000c3ba0ccf
+>>> [    0.000000] x15: ffff8000113d9908 x14: ffff8000913d3a37
+>>> [    0.000000] x13: ffff8000113d3a45 x12: ffff800011402000
+>>> [    0.000000] x11: ffff8000113d39d0 x10: ffff8000113db980
+>>> [    0.000000] x9 : 00000000ffffffd0 x8 : ffff8000106dca98
+>>> [    0.000000] x7 : 000000000000005b x6 : 0000000000000000
+>>> [    0.000000] x5 : 0000000000000000 x4 : ffff8000128c0000
+>>> [    0.000000] x3 : ffff8000128a0000 x2 : ffff0003fc3c7000
+>>> [    0.000000] x1 : 0000000000000001 x0 : 000000000000ffe8
+>>> [    0.000000] Call trace:
+>>> [    0.000000]  gic_iterate_rdists+0x58/0x130
+>>> [    0.000000]  gic_init_bases+0x200/0x4b4
+>>> [    0.000000]  gic_acpi_init+0x148/0x284
+>>> [    0.000000]  acpi_match_madt+0x4c/0x84
+>>> [    0.000000]  acpi_table_parse_entries_array+0x188/0x278
+>>> [    0.000000]  acpi_table_parse_entries+0x70/0x98
+>>> [    0.000000]  acpi_table_parse_madt+0x40/0x50
+>>> [    0.000000]  __acpi_probe_device_table+0x88/0xe4
+>>> [    0.000000]  irqchip_init+0x38/0x40
+>>> [    0.000000]  init_IRQ+0x168/0x19c
+>>> [    0.000000]  start_kernel+0x328/0x508
+>>> [    0.000000] Code: f90017b6 9b3a7f16 f8766853 8b190260 (b9400000)
+>>> [    0.000000] ---[ end trace ae5cf232d924bfc1 ]---
+>>> [    0.000000] Kernel panic - not syncing: Fatal exception
+>>> [    0.000000] Rebooting in 3 seconds..
+>>>
+>>> In this case, nr_redist_regions counts all GICC structures but only
+>>> enabled ones have redistributor mapped. So add check to avoid NULL
+>>> deference of redist_base.
+>>>
+>>> Signed-off-by: Heyi Guo <guoheyi@huawei.com>
+>>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>>> Cc: Jason Cooper <jason@lakedaemon.net>
+>>> Cc: Marc Zyngier <maz@kernel.org>
+>>> ---
+>>>  drivers/irqchip/irq-gic-v3.c | 7 +++++++
+>>>  1 file changed, 7 insertions(+)
+>>>
+>>> diff --git a/drivers/irqchip/irq-gic-v3.c 
+>>> b/drivers/irqchip/irq-gic-v3.c
+>>> index d6218012097b..bd9d55cadef9 100644
+>>> --- a/drivers/irqchip/irq-gic-v3.c
+>>> +++ b/drivers/irqchip/irq-gic-v3.c
+>>> @@ -781,6 +781,13 @@ static int gic_iterate_rdists(int (*fn)(struct
+>>> redist_region *, void __iomem *))
+>>>          u64 typer;
+>>>          u32 reg;
+>>>
+>>> +        /*
+>>> +         * redist_base may be NULL if we use single_redist and 
+>>> some GICC
+>>> +         * structure is disabled.
+>>> +         */
+>>> +        if (!ptr)
+>>> +            continue;
+>>> +
+>>>          reg = readl_relaxed(ptr + GICR_PIDR2) & 
+>>> GIC_PIDR2_ARCH_MASK;
+>>>          if (reg != GIC_PIDR2_ARCH_GICv3 &&
+>>>              reg != GIC_PIDR2_ARCH_GICv4) { /* We're in trouble... 
+>>> */
 >>
->> 11.12.2019 18:10, Peter De Schrijver пишет:
->>> On Tue, Dec 10, 2019 at 08:41:56PM +0300, Dmitry Osipenko wrote:
->>>
->>> ..
->>>
->>>>>
->>>>> PMC clock gate is based on the state of CLKx_ACCEPT_REQ and FORCE_EN
->>>>> like explained above.
->>>>>
->>>>> CLKx_ACCEPT_REQ is 0 default and FORCE_EN acts as gate to enable/disable
->>>>> EXTPERIPH clock output to PMC CLK_OUT_1/2/3.
->>>>
->>>> [and to enable OSC as well]
->>>>
->>>>> So I believe we need to register as MUX and Gate rather than as a single
->>>>> clock. Please confirm.
->>>>
->>>> 1. The force-enabling is applied to both OSC and EXTERN sources of
->>>> PMC_CLK_OUT_x by PMC at once.
->>>>
->>>> 2. Both of PMC's force-enabling and OSC/EXTERN selection is internal to PMC.
->>>>
->>>> Should be better to define it as a single "pmc_clk_out_x". I don't see
->>>> any good reasons for differentiating PMC's Gate from the MUX, it's a
->>>> single hardware unit from a point of view of the rest of the system.
->>>>
->>>> Peter, do you have any objections?
->>>
->>> The reason to have separate gate and mux clocks, is to preserve compatibility
->>> with existing users.
->>> Otherwise the current users would need to figure out if there's a
->>> single clock or 2 clocks to configure. I don't think adding that code in
->>> each user is worth it only to have a sligthly nicer modelling of the
->>> hardware.
+>> This feels like the wrong fix. The redistributor region array should
+>> be completely populated, and there is an assumption all over this 
+>> driver
+>> that there is no junk in these structures.
+>
+>
+> Oh, I thought the place holder for disabled GICR in nr_redist_regions
+> were for some special reason, like CPU hotplug. Now I know I was 
+> wrong
+> :)
+
+CPU hotplug would imply that the redistributors are available.
+My interpretation of the ACPI MADT GICC subtable is that the
+redistributors are simply inaccessible when disabled.
+
+Otherwise, it'd be legitimate to just map them and live with
+redistributors that do not have a corresponding CPU (which we
+otherwise do). See ebe2f8718007 for details.
+
+If we need to support redistributors becoming enabled under our
+feet, then we'll have to handle this in a different way. We're
+not there yet.
+
+>> You're seeing this because we don't track the number of *enabled* 
+>> rdists,
+>> and allocate the number of regions based on the number of overall 
+>> GICC
+>> entries instead of the number of enabled redistributors.
 >>
->> Could you please clarify what do you mean by the "existing users"?
->> AFAIK, nothing in kernel uses mux clocks.
-> 
-> The DT clk bindings allow for parent initialization, so it's certainly
-> possible there are some DTs which rely on this. We promised to never
-> break the bindings, which changing to 1 clock would do. 
+>> How about this instead?
+>
+> It looks good to me, and works fine in my case.
 
-What about this variant:
+Can I take this as a Tested-by: ?
 
-  1. Keep the old CaR code in place.
+Thanks,
 
-  2. Make CaR driver to scan whole device-tree for the legacy PMC clocks.
-
-  3. If legacy clock is found, then register PMC clocks from CaR.
-
-  4. If legacy clocks are not found, then don't register PMC clocks from
-CaR.
-
-  5. Add clocks support to the PMC driver and only register them if
-legacy clocks are not registered by CaR.
-
-Now both old and new DTBs can co-exist and work, everyone happy.
+         M.
+-- 
+Jazz is not dead. It just smells funny...
