@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC70AC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F21EC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:17:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2E1A207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:17:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7410C20717
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:17:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520244;
-	bh=scIzxaMxVO554JDzXNOVbhm1IvuW/iER85f3ATy/oU0=;
+	s=default; t=1576520248;
+	bh=t/mQB9trprsEjguIoB/TjzlkDKBEgAi7fOOg2AS/ePs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i9+7m5xqcvga7sHOb44ml8VaEvx1VRtlvs18ShM0DFtFYZPgCuvK47LhcRNLzjgUg
-	 Rbj3f32gqPKcx2jJqJW8rSr1JtZx7dbvlOKdodS+VSw3sbUetwLDg2tLvQeNWGNYuU
-	 bRJIN3NOoqWv11cNz9IXuvgYHXRDQIaPkEsbwzRU=
+	b=d19eJV4D70sga7UDY0ZjfzEOpPcQRnFWCm3yek4mxtu96C6EIqyWi47FV9emLIkmJ
+	 nbQ4ybBd5j0yaSWgRMJ/xvZhWL21/uoFy9bmISHw4Zs8sCdnOlyHg+FXjQLgOry/16
+	 yzhHY5UiV9/8824nRGxWhn5jbqnSkec0bivqrZJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731506AbfLPSRX (ORCPT
+        id S1728631AbfLPSR1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:17:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40712 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:17:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730925AbfLPSRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:17:10 -0500
+        id S1731622AbfLPSRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:17:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAD5F206E0;
-        Mon, 16 Dec 2019 18:17:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE97120717;
+        Mon, 16 Dec 2019 18:17:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520230;
-        bh=scIzxaMxVO554JDzXNOVbhm1IvuW/iER85f3ATy/oU0=;
+        s=default; t=1576520235;
+        bh=t/mQB9trprsEjguIoB/TjzlkDKBEgAi7fOOg2AS/ePs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f/VzZpkdStN79r31dXAmJTu09uVLUFcw7KoNiZS+2cmkasGO11MutRXxPYQ/bIcL2
-         ZQ8ky6SaMmWyHYKJyXrtAL/ALCwXFcSIwoHQ98vag7hK/zl+ZHoGIYV1TdtpipH4xZ
-         UvD5bo38+zTXrTOd0MFOdFdudAtz8dysp1gXxfsk=
+        b=yA68f+v8bahEoJB8DtgqF47d4S9Dm23WSC7BZnIMs3Y9pYtgt+uHB7notmMfQmVXR
+         pe+seq0nJWNcvR5UAcUs5I73qQluMxydcw+3Ub2leG+k7kQ45Zor46mTLfzmqKFEw+
+         Xw3uKEOkSwVuznRoaQ4uRcz08C41qshSkuWq1Ofw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 069/177] Btrfs: fix metadata space leak on fixup worker failure to set range as delalloc
-Date:   Mon, 16 Dec 2019 18:48:45 +0100
-Message-Id: <20191216174834.659227784@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.4 044/177] USB: atm: ueagle-atm: add missing endpoint check
+Date:   Mon, 16 Dec 2019 18:48:20 +0100
+Message-Id: <20191216174829.816172819@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -60,55 +58,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 536870071dbc4278264f59c9a2f5f447e584d139 upstream.
+commit 09068c1ad53fb077bdac288869dec2435420bdc4 upstream.
 
-In the fixup worker, if we fail to mark the range as delalloc in the io
-tree, we must release the previously reserved metadata, as well as update
-the outstanding extents counter for the inode, otherwise we leak metadata
-space.
+Make sure that the interrupt interface has an endpoint before trying to
+access its endpoint descriptors to avoid dereferencing a NULL pointer.
 
-In pratice we can't return an error from btrfs_set_extent_delalloc(),
-which is just a wrapper around __set_extent_bit(), as for most errors
-__set_extent_bit() does a BUG_ON() (or panics which hits a BUG_ON() as
-well) and returning an -EEXIST error doesn't happen in this case since
-the exclusive bits parameter always has a value of 0 through this code
-path. Nevertheless, just fix the error handling in the fixup worker,
-in case one day __set_extent_bit() can return an error to this code
-path.
+The driver binds to the interrupt interface with interface number 0, but
+must not assume that this interface or its current alternate setting are
+the first entries in the corresponding configuration arrays.
 
-Fixes: f3038ee3a3f101 ("btrfs: Handle btrfs_set_extent_delalloc failure in fixup worker")
-CC: stable@vger.kernel.org # 4.19+
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: b72458a80c75 ("[PATCH] USB: Eagle and ADI 930 usb adsl modem driver")
+Cc: stable <stable@vger.kernel.org>     # 2.6.16
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191210112601.3561-2-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/inode.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/usb/atm/ueagle-atm.c |   18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -2214,12 +2214,16 @@ again:
- 		mapping_set_error(page->mapping, ret);
- 		end_extent_writepage(page, ret, page_start, page_end);
- 		ClearPageChecked(page);
--		goto out;
-+		goto out_reserved;
+--- a/drivers/usb/atm/ueagle-atm.c
++++ b/drivers/usb/atm/ueagle-atm.c
+@@ -2124,10 +2124,11 @@ resubmit:
+ /*
+  * Start the modem : init the data and start kernel thread
+  */
+-static int uea_boot(struct uea_softc *sc)
++static int uea_boot(struct uea_softc *sc, struct usb_interface *intf)
+ {
+-	int ret, size;
+ 	struct intr_pkt *intr;
++	int ret = -ENOMEM;
++	int size;
+ 
+ 	uea_enters(INS_TO_USBDEV(sc));
+ 
+@@ -2152,6 +2153,11 @@ static int uea_boot(struct uea_softc *sc
+ 	if (UEA_CHIP_VERSION(sc) == ADI930)
+ 		load_XILINX_firmware(sc);
+ 
++	if (intf->cur_altsetting->desc.bNumEndpoints < 1) {
++		ret = -ENODEV;
++		goto err0;
++	}
++
+ 	intr = kmalloc(size, GFP_KERNEL);
+ 	if (!intr)
+ 		goto err0;
+@@ -2163,8 +2169,7 @@ static int uea_boot(struct uea_softc *sc
+ 	usb_fill_int_urb(sc->urb_int, sc->usb_dev,
+ 			 usb_rcvintpipe(sc->usb_dev, UEA_INTR_PIPE),
+ 			 intr, size, uea_intr, sc,
+-			 sc->usb_dev->actconfig->interface[0]->altsetting[0].
+-			 endpoint[0].desc.bInterval);
++			 intf->cur_altsetting->endpoint[0].desc.bInterval);
+ 
+ 	ret = usb_submit_urb(sc->urb_int, GFP_KERNEL);
+ 	if (ret < 0) {
+@@ -2179,6 +2184,7 @@ static int uea_boot(struct uea_softc *sc
+ 	sc->kthread = kthread_create(uea_kthread, sc, "ueagle-atm");
+ 	if (IS_ERR(sc->kthread)) {
+ 		uea_err(INS_TO_USBDEV(sc), "failed to create thread\n");
++		ret = PTR_ERR(sc->kthread);
+ 		goto err2;
  	}
  
- 	ClearPageChecked(page);
- 	set_page_dirty(page);
-+out_reserved:
- 	btrfs_delalloc_release_extents(BTRFS_I(inode), PAGE_SIZE);
-+	if (ret)
-+		btrfs_delalloc_release_space(inode, data_reserved, page_start,
-+					     PAGE_SIZE, true);
- out:
- 	unlock_extent_cached(&BTRFS_I(inode)->io_tree, page_start, page_end,
- 			     &cached_state);
+@@ -2193,7 +2199,7 @@ err1:
+ 	kfree(intr);
+ err0:
+ 	uea_leaves(INS_TO_USBDEV(sc));
+-	return -ENOMEM;
++	return ret;
+ }
+ 
+ /*
+@@ -2548,7 +2554,7 @@ static int uea_bind(struct usbatm_data *
+ 		}
+ 	}
+ 
+-	ret = uea_boot(sc);
++	ret = uea_boot(sc, intf);
+ 	if (ret < 0)
+ 		goto error;
+ 
 
 
