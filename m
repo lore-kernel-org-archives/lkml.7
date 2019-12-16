@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F09BC43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C500DC43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B1C4206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:53:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C95921739
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 17:53:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576518807;
-	bh=XOTApJkCiuammR73DmCm1PlS4Vhi+iv3evwzFFAsCI4=;
+	s=default; t=1576518811;
+	bh=dDBDlbf091Mgq77WY0ie6J14Z/JMU3bD7FbbkoZrOnk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tZ4zmhL77XcocytOq+QG7b5TYEOQX1QYBzaGu54qMTnGaFUX+MKHiYIwQ+ZFTG2br
-	 4xewbY6+rQA8oLKqpVpPVskfOlViyGlpP8bbNolLeDJlUxh2OOkCLZSqA/6HXndpR+
-	 TStnvVtpjACOXH3eDKChK/j5/LxZAB9vX2iCFWY8=
+	b=yk05l33zmxGYTe4hT9VYR88OUPf3SIiKq3Vu02bp2mC6YmG6jycdcs1baRYyjtZqP
+	 st8F8FBbrIlypftIOkas4SpUYIDFwpEivAL4qhKmeY5sc1Y9Wq6H62TBWYwr/D/PVk
+	 qrVp6kMqet/aaQ0lC9S5jou4P27YIBjoG26qo6TM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727740AbfLPRx0 (ORCPT
+        id S1727754AbfLPRxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 12:53:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47012 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 12:53:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727726AbfLPRxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 12:53:19 -0500
+        id S1727741AbfLPRx0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 12:53:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAB4B2166E;
-        Mon, 16 Dec 2019 17:53:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED5E920733;
+        Mon, 16 Dec 2019 17:53:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576518799;
-        bh=XOTApJkCiuammR73DmCm1PlS4Vhi+iv3evwzFFAsCI4=;
+        s=default; t=1576518806;
+        bh=dDBDlbf091Mgq77WY0ie6J14Z/JMU3bD7FbbkoZrOnk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b4I0oztdaeZ3cS2uk/3U4x/YBMWQcjiU9OFwZWGFigdLVXdjUgzGtgf63O20vVKpK
-         k2ArtyCDjykAog8zwUqdLeL1JrHxG1okcmZrJy+IBqnwPWxXscbIofr5FuW3one1SB
-         xug0j53oaJJw0yozYOok9AGkLW5ky6zwokoZf2DE=
+        b=zrCrMviGdpzol3YP/oMpPmj1E/MJENrFANC/4iB8OiOVLuaWg6Kol43Cc6YqqQEFr
+         QA49xfPX71P3PSwy2wNuqcTpLsqs/trufJA3l+cdlBIbrA4omMN4xZs7eidIzfDvQi
+         Rk6oQiknEgidyYTVyvRaYtMx4jlMLLnTOiq1wrFw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        stable@vger.kernel.org, "J. Bruce Fields" <bfields@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 072/267] altera-stapl: check for a null key before strcasecmping it
-Date:   Mon, 16 Dec 2019 18:46:38 +0100
-Message-Id: <20191216174856.598207705@linuxfoundation.org>
+Subject: [PATCH 4.14 075/267] lockd: fix decoding of TEST results
+Date:   Mon, 16 Dec 2019 18:46:41 +0100
+Message-Id: <20191216174856.855742103@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
 References: <20191216174848.701533383@linuxfoundation.org>
@@ -59,39 +59,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: J. Bruce Fields <bfields@redhat.com>
 
-[ Upstream commit 9ccb645683ef46e3c52c12c088a368baa58447d4 ]
+[ Upstream commit b8db159239b3f51e2b909859935cc25cb3ff3eed ]
 
-Currently the null check on key is occurring after the strcasecmp on
-the key, hence there is a potential null pointer dereference on key.
-Fix this by checking if key is null first. Also replace the == 0
-check on strcasecmp with just the ! operator.
+We fail to advance the read pointer when reading the stat.oh field that
+identifies the lock-holder in a TEST result.
 
-Detected by CoverityScan, CID#1248787 ("Dereference before null check")
+This turns out not to matter if the server is knfsd, which always
+returns a zero-length field.  But other servers (Ganesha is an example)
+may not do this.  The result is bad values in fcntl F_GETLK results.
 
-Fixes: fa766c9be58b ("[media] Altera FPGA firmware download module")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fix this.
+
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/altera-stapl/altera.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/lockd/clnt4xdr.c | 22 ++++++----------------
+ fs/lockd/clntxdr.c  | 22 ++++++----------------
+ 2 files changed, 12 insertions(+), 32 deletions(-)
 
-diff --git a/drivers/misc/altera-stapl/altera.c b/drivers/misc/altera-stapl/altera.c
-index f53e217e963f5..494e263daa748 100644
---- a/drivers/misc/altera-stapl/altera.c
-+++ b/drivers/misc/altera-stapl/altera.c
-@@ -2176,8 +2176,7 @@ static int altera_get_note(u8 *p, s32 program_size,
- 			key_ptr = &p[note_strings +
- 					get_unaligned_be32(
- 					&p[note_table + (8 * i)])];
--			if ((strncasecmp(key, key_ptr, strlen(key_ptr)) == 0) &&
--						(key != NULL)) {
-+			if (key && !strncasecmp(key, key_ptr, strlen(key_ptr))) {
- 				status = 0;
+diff --git a/fs/lockd/clnt4xdr.c b/fs/lockd/clnt4xdr.c
+index 00d5ef5f99f73..214a2fa1f1e39 100644
+--- a/fs/lockd/clnt4xdr.c
++++ b/fs/lockd/clnt4xdr.c
+@@ -128,24 +128,14 @@ static void encode_netobj(struct xdr_stream *xdr,
+ static int decode_netobj(struct xdr_stream *xdr,
+ 			 struct xdr_netobj *obj)
+ {
+-	u32 length;
+-	__be32 *p;
++	ssize_t ret;
  
- 				value_ptr = &p[note_strings +
+-	p = xdr_inline_decode(xdr, 4);
+-	if (unlikely(p == NULL))
+-		goto out_overflow;
+-	length = be32_to_cpup(p++);
+-	if (unlikely(length > XDR_MAX_NETOBJ))
+-		goto out_size;
+-	obj->len = length;
+-	obj->data = (u8 *)p;
++	ret = xdr_stream_decode_opaque_inline(xdr, (void *)&obj->data,
++						XDR_MAX_NETOBJ);
++	if (unlikely(ret < 0))
++		return -EIO;
++	obj->len = ret;
+ 	return 0;
+-out_size:
+-	dprintk("NFS: returned netobj was too long: %u\n", length);
+-	return -EIO;
+-out_overflow:
+-	print_overflow_msg(__func__, xdr);
+-	return -EIO;
+ }
+ 
+ /*
+diff --git a/fs/lockd/clntxdr.c b/fs/lockd/clntxdr.c
+index 2c6176387143c..747b9c8c940ac 100644
+--- a/fs/lockd/clntxdr.c
++++ b/fs/lockd/clntxdr.c
+@@ -125,24 +125,14 @@ static void encode_netobj(struct xdr_stream *xdr,
+ static int decode_netobj(struct xdr_stream *xdr,
+ 			 struct xdr_netobj *obj)
+ {
+-	u32 length;
+-	__be32 *p;
++	ssize_t ret;
+ 
+-	p = xdr_inline_decode(xdr, 4);
+-	if (unlikely(p == NULL))
+-		goto out_overflow;
+-	length = be32_to_cpup(p++);
+-	if (unlikely(length > XDR_MAX_NETOBJ))
+-		goto out_size;
+-	obj->len = length;
+-	obj->data = (u8 *)p;
++	ret = xdr_stream_decode_opaque_inline(xdr, (void *)&obj->data,
++			XDR_MAX_NETOBJ);
++	if (unlikely(ret < 0))
++		return -EIO;
++	obj->len = ret;
+ 	return 0;
+-out_size:
+-	dprintk("NFS: returned netobj was too long: %u\n", length);
+-	return -EIO;
+-out_overflow:
+-	print_overflow_msg(__func__, xdr);
+-	return -EIO;
+ }
+ 
+ /*
 -- 
 2.20.1
 
