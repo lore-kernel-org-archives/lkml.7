@@ -2,211 +2,210 @@ Return-Path: <SRS0=TLrx=2G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64841C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:42:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34712C2D0CF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30C8D2075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:42:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="jbh0NrtO"
+	by mail.kernel.org (Postfix) with ESMTP id EEA6C207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 08:43:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbfLPImz (ORCPT
+        id S1727015AbfLPIne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 03:42:55 -0500
-Received: from zimbra2.kalray.eu ([92.103.151.219]:55486 "EHLO
-        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbfLPImz (ORCPT
+        Mon, 16 Dec 2019 03:43:34 -0500
+Received: from mout.kundenserver.de ([212.227.126.134]:53423 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726798AbfLPIne (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 03:42:55 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 7EEE827E06A1;
-        Mon, 16 Dec 2019 09:42:52 +0100 (CET)
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id NQCUBw1mJnlk; Mon, 16 Dec 2019 09:42:52 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id E710F27E06A4;
-        Mon, 16 Dec 2019 09:42:51 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu E710F27E06A4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
-        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1576485772;
-        bh=gR7DBMPuqguujsqKIqRecEZSem6IJvNPYFmN412TxpE=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=jbh0NrtOycOeLM+mv/6Qm0MWzA3LsgKaAoDSSzCTSuBJuLPu4hyxbyDzv4+u2dAqd
-         Ut/+P9QcfH1yqk208VSPQ/f42Me7Iazu7MYNL3ZLD/8/rUFa3Y2IcYUfZape/+Au4P
-         55rQF+HRulYfMLAvhF2py1Q8opFZfxQvN/I3+628=
-X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id JDFXdj145mgC; Mon, 16 Dec 2019 09:42:51 +0100 (CET)
-Received: from zimbra2.kalray.eu (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id C66D827E0650;
-        Mon, 16 Dec 2019 09:42:51 +0100 (CET)
-Date:   Mon, 16 Dec 2019 09:42:51 +0100 (CET)
-From:   =?utf-8?Q?Cl=C3=A9ment?= Leger <cleger@kalray.eu>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Fabien DESSENNE <fabien.dessenne@st.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Message-ID: <1428337657.96784882.1576485771590.JavaMail.zimbra@kalray.eu>
-In-Reply-To: <1576362603.3.5@crapouillou.net>
-References: <20191210164014.50739-1-paul@crapouillou.net> <20191210164014.50739-3-paul@crapouillou.net> <f25180f2-7c6d-0022-12b2-cd9c202f39d3@st.com> <1576362603.3.5@crapouillou.net>
-Subject: Re: [PATCH v4 3/5] remoteproc: Add prepare/unprepare callbacks
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [192.168.40.202]
-X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - GC75 (Linux)/8.8.12_GA_3794)
-Thread-Topic: remoteproc: Add prepare/unprepare callbacks
-Thread-Index: uueckZt7bHlt5Prq/c0hmSkfQsRjRg==
+        Mon, 16 Dec 2019 03:43:34 -0500
+Received: from orion.localdomain ([77.2.44.177]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1N2jO8-1hiOOQ3fYa-0137DZ; Mon, 16 Dec 2019 09:43:02 +0100
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca,
+        linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH] drivers: char: tpm: remove unneeded MODULE_VERSION() usage
+Date:   Mon, 16 Dec 2019 09:42:30 +0100
+Message-Id: <20191216084230.31412-1-info@metux.net>
+X-Mailer: git-send-email 2.11.0
+X-Provags-ID: V03:K1:ZRMRCvGtq21lbtgskvbS5prFUgst+5RwJZEQW66QiN+qjkuMlBc
+ uGZLISeYLgQ9heOIGqmejXQW6EJ1Yj9dlSn4uQwVBS1GCATDsnRMdpuN2L0Y/QUQihyF0/5
+ Py17FBwzilsZjijPn/vtG8iHe13gTG4QALNK+LcHtpbLNoRNZbWECYtzyjqi0Lcjg6loX+I
+ NHKQcxcT7bFsh1zJN5JKA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Vjz3eEF+RtM=:F0xI2+yKDrF/uAcYVylI+4
+ ahqQZRJcfO3yYU1eNu6//nO3A6Ja3NgWdT9Nc0GvRRrlI4wnqJCBw5wuAPKMKaGzyld0IL5St
+ J9D92bkdON63U8qjqD1sZkeLSj8Qmc9EhmWtstpsHfeOrVDb7D0V19qwrQNJTwIMlwzfMLe3I
+ cJaYKAmHjbNyjk6Q64WnKRg5GFFVlVwZmMyVOckx3/sD2MyJLgBrbqPvEBROBDJJgNDw8nnUe
+ kEFF05o6SpkkOjCuZUYVZOL+aD4SaAbmeyn/ZuNesS4j30Qj3XMU89WnQC6r/PT+IZf7wX4iX
+ m46zrRlJ1bx49wb/yBxbWbn6JK0F1zK9VZXpJpDLzccyjsVmvGCl9vWVZXEduyj94+mjCzT31
+ jYOzPuGa8V5aOcBXAb0zpReZwFAt2IC4tB3byXiP7g7wUWhVuRTpVEBiUl4patVJzzpwRy0hk
+ c5wllrnS1XY9Nq04xi6kK/2Qw/XzoKPKpydCQ8jW8ej2lhJCxpZEHtkTGxbQl5VW3LqPtnuZv
+ VZqUp/x+JicXB9T8BVb9Nzf2Oj3NONihS5xbJI0CCbXIgdB/BQSE1D1nVZOy2WZgWcwY2yFno
+ VQscnZT3NyJo4ev9PifZVok1856aobhigBtC0lyS1au2onN2P0dvdCdz+Z6hVY0hD0jir/F21
+ /9q3/Oao7UyStGt3D4DJz3oDlX/pf0In9Iasp4HBcLtEUkqgqR6U754W+XX+Tf/cyG2JjB9qA
+ KRvyBWA7jdZAyv6MJdsjja897fr69VHC02t1JPSbZUQO+kkOAVdWg3ZaM/uAXmXMxUvMa8Szn
+ msY6NWOyGD9r64v0G6KPQeiLMug3ZEqarR12hTPzvc7w306zwmigf+dX8vM4f9re/a8GbP5UN
+ gFgHs04gu0r0wfJ2MTnA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul
+Remove MODULE_VERSION(), as it isn't needed at all: the only version
+making sense is the kernel version.
 
------ On 14 Dec, 2019, at 23:30, Paul Cercueil paul@crapouillou.net wrote:
+See also: https://lkml.org/lkml/2017/11/22/480
 
-> Hi Fabien,
->=20
->=20
-> Le jeu., d=C3=A9c. 12, 2019 at 10:03, Fabien DESSENNE
-> <fabien.dessenne@st.com> a =C3=A9crit :
->> Hi Paul
->>=20
->>=20
->> On 10/12/2019 5:40 PM, Paul Cercueil wrote:
->>>  The .prepare() callback is called before the firmware is loaded to
->>>  memory. This is useful for instance in the case where some setup is
->>>  required for the memory to be accessible.
->>=20
->>=20
->> I am trying to figure out what king of 'setup' may be required. From
->> the
->> ingenic driver I understand that you need to enable clocks to allow
->> some
->> memory access.
->>=20
->> Instead of adding this new ops, why not enabling clocks in probe()?
->=20
-> Enabling the clocks in the probe means that the clocks will be
-> unconditionally enabled until the driver is removed, even if the remote
-> processor end up being unused. That would be a waste of power.
+Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+---
+ drivers/char/tpm/st33zp24/i2c.c      | 1 -
+ drivers/char/tpm/st33zp24/spi.c      | 1 -
+ drivers/char/tpm/st33zp24/st33zp24.c | 1 -
+ drivers/char/tpm/tpm-interface.c     | 1 -
+ drivers/char/tpm/tpm_atmel.c         | 1 -
+ drivers/char/tpm/tpm_crb.c           | 1 -
+ drivers/char/tpm/tpm_i2c_infineon.c  | 1 -
+ drivers/char/tpm/tpm_ibmvtpm.c       | 1 -
+ drivers/char/tpm/tpm_infineon.c      | 1 -
+ drivers/char/tpm/tpm_nsc.c           | 1 -
+ drivers/char/tpm/tpm_tis.c           | 1 -
+ drivers/char/tpm/tpm_tis_core.c      | 1 -
+ drivers/char/tpm/tpm_vtpm_proxy.c    | 1 -
+ 13 files changed, 13 deletions(-)
 
-We have the same kind of "problem" for k1c remoteproc driver (not yet
-upstream, depends on new arch). We need to enable clocks to load code
-into remote processor memory and currently we do that in probe.
-However, as you stated, we would like to enable them as late as possible
-(just before loading code) to avoid wasting power unnecessarily. So the
-"prepare" callback totally makes sense.
+diff --git a/drivers/char/tpm/st33zp24/i2c.c b/drivers/char/tpm/st33zp24/i2c.c
+index 35333b65acd1..71df056f14c9 100644
+--- a/drivers/char/tpm/st33zp24/i2c.c
++++ b/drivers/char/tpm/st33zp24/i2c.c
+@@ -313,5 +313,4 @@ module_i2c_driver(st33zp24_i2c_driver);
+ 
+ MODULE_AUTHOR("TPM support (TPMsupport@list.st.com)");
+ MODULE_DESCRIPTION("STM TPM 1.2 I2C ST33 Driver");
+-MODULE_VERSION("1.3.0");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/char/tpm/st33zp24/spi.c b/drivers/char/tpm/st33zp24/spi.c
+index 26e09de50f1e..94ceced4d57d 100644
+--- a/drivers/char/tpm/st33zp24/spi.c
++++ b/drivers/char/tpm/st33zp24/spi.c
+@@ -430,5 +430,4 @@ module_spi_driver(st33zp24_spi_driver);
+ 
+ MODULE_AUTHOR("TPM support (TPMsupport@list.st.com)");
+ MODULE_DESCRIPTION("STM TPM 1.2 SPI ST33 Driver");
+-MODULE_VERSION("1.3.0");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/char/tpm/st33zp24/st33zp24.c b/drivers/char/tpm/st33zp24/st33zp24.c
+index 37bb13f516be..60269b6ac470 100644
+--- a/drivers/char/tpm/st33zp24/st33zp24.c
++++ b/drivers/char/tpm/st33zp24/st33zp24.c
+@@ -646,5 +646,4 @@ EXPORT_SYMBOL(st33zp24_pm_resume);
+ 
+ MODULE_AUTHOR("TPM support (TPMsupport@list.st.com)");
+ MODULE_DESCRIPTION("ST33ZP24 TPM 1.2 driver");
+-MODULE_VERSION("1.3.0");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
+index a438b1206fcb..91d4584f399d 100644
+--- a/drivers/char/tpm/tpm-interface.c
++++ b/drivers/char/tpm/tpm-interface.c
+@@ -514,5 +514,4 @@ module_exit(tpm_exit);
+ 
+ MODULE_AUTHOR("Leendert van Doorn (leendert@watson.ibm.com)");
+ MODULE_DESCRIPTION("TPM Driver");
+-MODULE_VERSION("2.0");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/char/tpm/tpm_atmel.c b/drivers/char/tpm/tpm_atmel.c
+index 54a6750a6757..35bf249cc95a 100644
+--- a/drivers/char/tpm/tpm_atmel.c
++++ b/drivers/char/tpm/tpm_atmel.c
+@@ -231,5 +231,4 @@ module_exit(cleanup_atmel);
+ 
+ MODULE_AUTHOR("Leendert van Doorn (leendert@watson.ibm.com)");
+ MODULE_DESCRIPTION("TPM Driver");
+-MODULE_VERSION("2.0");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/char/tpm/tpm_crb.c b/drivers/char/tpm/tpm_crb.c
+index a9dcf31eadd2..3e72b7b99cce 100644
+--- a/drivers/char/tpm/tpm_crb.c
++++ b/drivers/char/tpm/tpm_crb.c
+@@ -748,5 +748,4 @@ static struct acpi_driver crb_acpi_driver = {
+ module_acpi_driver(crb_acpi_driver);
+ MODULE_AUTHOR("Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>");
+ MODULE_DESCRIPTION("TPM2 Driver");
+-MODULE_VERSION("0.1");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/char/tpm/tpm_i2c_infineon.c b/drivers/char/tpm/tpm_i2c_infineon.c
+index a19d32cb4e94..8920b7c19fcb 100644
+--- a/drivers/char/tpm/tpm_i2c_infineon.c
++++ b/drivers/char/tpm/tpm_i2c_infineon.c
+@@ -731,5 +731,4 @@ static struct i2c_driver tpm_tis_i2c_driver = {
+ module_i2c_driver(tpm_tis_i2c_driver);
+ MODULE_AUTHOR("Peter Huewe <peter.huewe@infineon.com>");
+ MODULE_DESCRIPTION("TPM TIS I2C Infineon Driver");
+-MODULE_VERSION("2.2.0");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/char/tpm/tpm_ibmvtpm.c b/drivers/char/tpm/tpm_ibmvtpm.c
+index 78cc52690177..034d24758915 100644
+--- a/drivers/char/tpm/tpm_ibmvtpm.c
++++ b/drivers/char/tpm/tpm_ibmvtpm.c
+@@ -723,5 +723,4 @@ module_exit(ibmvtpm_module_exit);
+ 
+ MODULE_AUTHOR("adlai@us.ibm.com");
+ MODULE_DESCRIPTION("IBM vTPM Driver");
+-MODULE_VERSION("1.0");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/char/tpm/tpm_infineon.c b/drivers/char/tpm/tpm_infineon.c
+index 9c924a1440a9..8a58966c5c9b 100644
+--- a/drivers/char/tpm/tpm_infineon.c
++++ b/drivers/char/tpm/tpm_infineon.c
+@@ -621,5 +621,4 @@ module_pnp_driver(tpm_inf_pnp_driver);
+ 
+ MODULE_AUTHOR("Marcel Selhorst <tpmdd@sirrix.com>");
+ MODULE_DESCRIPTION("Driver for Infineon TPM SLD 9630 TT 1.1 / SLB 9635 TT 1.2");
+-MODULE_VERSION("1.9.2");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/char/tpm/tpm_nsc.c b/drivers/char/tpm/tpm_nsc.c
+index 038701d48351..6ab2fe7e8782 100644
+--- a/drivers/char/tpm/tpm_nsc.c
++++ b/drivers/char/tpm/tpm_nsc.c
+@@ -412,5 +412,4 @@ module_exit(cleanup_nsc);
+ 
+ MODULE_AUTHOR("Leendert van Doorn (leendert@watson.ibm.com)");
+ MODULE_DESCRIPTION("TPM Driver");
+-MODULE_VERSION("2.0");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/char/tpm/tpm_tis.c b/drivers/char/tpm/tpm_tis.c
+index e7df342a317d..713773ebff81 100644
+--- a/drivers/char/tpm/tpm_tis.c
++++ b/drivers/char/tpm/tpm_tis.c
+@@ -397,5 +397,4 @@ module_init(init_tis);
+ module_exit(cleanup_tis);
+ MODULE_AUTHOR("Leendert van Doorn (leendert@watson.ibm.com)");
+ MODULE_DESCRIPTION("TPM Driver");
+-MODULE_VERSION("2.0");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
+index 8af2cee1a762..1aeb11e5fd5b 100644
+--- a/drivers/char/tpm/tpm_tis_core.c
++++ b/drivers/char/tpm/tpm_tis_core.c
+@@ -1150,5 +1150,4 @@ EXPORT_SYMBOL_GPL(tpm_tis_resume);
+ 
+ MODULE_AUTHOR("Leendert van Doorn (leendert@watson.ibm.com)");
+ MODULE_DESCRIPTION("TPM Driver");
+-MODULE_VERSION("2.0");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/char/tpm/tpm_vtpm_proxy.c b/drivers/char/tpm/tpm_vtpm_proxy.c
+index 91c772e38bb5..18f14162d1c1 100644
+--- a/drivers/char/tpm/tpm_vtpm_proxy.c
++++ b/drivers/char/tpm/tpm_vtpm_proxy.c
+@@ -729,5 +729,4 @@ module_exit(vtpm_module_exit);
+ 
+ MODULE_AUTHOR("Stefan Berger (stefanb@us.ibm.com)");
+ MODULE_DESCRIPTION("vTPM Driver");
+-MODULE_VERSION("0.1");
+ MODULE_LICENSE("GPL");
+-- 
+2.11.0
 
-Regards,
-
-Cl=C3=A9ment
-
->=20
-> Cheers,
-> -Paul
->=20
->=20
->>=20
->> BR
->>=20
->> Fabien
->>=20
->>=20
->>>=20
->>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>>  ---
->>>=20
->>>  Notes:
->>>       v2-v4: No change
->>>=20
->>>    drivers/remoteproc/remoteproc_core.c | 16 +++++++++++++++-
->>>    include/linux/remoteproc.h           |  4 ++++
->>>    2 files changed, 19 insertions(+), 1 deletion(-)
->>>=20
->>>  diff --git a/drivers/remoteproc/remoteproc_core.c
->>> b/drivers/remoteproc/remoteproc_core.c
->>>  index 0a9fc7fdd1c3..3ea5f675a148 100644
->>>  --- a/drivers/remoteproc/remoteproc_core.c
->>>  +++ b/drivers/remoteproc/remoteproc_core.c
->>>  @@ -1299,11 +1299,19 @@ static int rproc_start(struct rproc *rproc,
->>> const struct firmware *fw)
->>>    =09struct device *dev =3D &rproc->dev;
->>>    =09int ret;
->>>=20
->>>  +=09if (rproc->ops->prepare) {
->>>  +=09=09ret =3D rproc->ops->prepare(rproc);
->>>  +=09=09if (ret) {
->>>  +=09=09=09dev_err(dev, "Failed to prepare rproc: %d\n", ret);
->>>  +=09=09=09return ret;
->>>  +=09=09}
->>>  +=09}
->>>  +
->>>    =09/* load the ELF segments to memory */
->>>    =09ret =3D rproc_load_segments(rproc, fw);
->>>    =09if (ret) {
->>>    =09=09dev_err(dev, "Failed to load program segments: %d\n", ret);
->>>  -=09=09return ret;
->>>  +=09=09goto unprepare_rproc;
->>>    =09}
->>>=20
->>>    =09/*
->>>  @@ -1354,6 +1362,9 @@ static int rproc_start(struct rproc *rproc,
->>> const struct firmware *fw)
->>>    =09rproc_unprepare_subdevices(rproc);
->>>    reset_table_ptr:
->>>    =09rproc->table_ptr =3D rproc->cached_table;
->>>  +unprepare_rproc:
->>>  +=09if (rproc->ops->unprepare)
->>>  +=09=09rproc->ops->unprepare(rproc);
->>>=20
->>>    =09return ret;
->>>    }
->>>  @@ -1483,6 +1494,9 @@ static int rproc_stop(struct rproc *rproc,
->>> bool crashed)
->>>=20
->>>    =09rproc->state =3D RPROC_OFFLINE;
->>>=20
->>>  +=09if (rproc->ops->unprepare)
->>>  +=09=09rproc->ops->unprepare(rproc);
->>>  +
->>>    =09dev_info(dev, "stopped remote processor %s\n", rproc->name);
->>>=20
->>>    =09return 0;
->>>  diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
->>>  index 5f201f0c86c3..a6272d1ba384 100644
->>>  --- a/include/linux/remoteproc.h
->>>  +++ b/include/linux/remoteproc.h
->>>  @@ -355,6 +355,8 @@ enum rsc_handling_status {
->>>=20
->>>    /**
->>>     * struct rproc_ops - platform-specific device handlers
->>>  + * @prepare:=09prepare the device for power up (before the firmware
->>> is loaded)
->>>  + * @unprepare:=09unprepare the device after it is stopped
->>>     * @start:=09power on the device and boot it
->>>     * @stop:=09power off the device
->>>     * @kick:=09kick a virtqueue (virtqueue id given as a parameter)
->>>  @@ -371,6 +373,8 @@ enum rsc_handling_status {
->>>     * @get_boot_addr:=09get boot address to entry point specified in
->>> firmware
->>>     */
->>>    struct rproc_ops {
->>>  +=09int (*prepare)(struct rproc *rproc);
->>>  +=09void (*unprepare)(struct rproc *rproc);
->>>    =09int (*start)(struct rproc *rproc);
->>>    =09int (*stop)(struct rproc *rproc);
-> >>    =09void (*kick)(struct rproc *rproc, int vqid);
