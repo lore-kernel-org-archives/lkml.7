@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE5E7C43603
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E856C43603
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A291620717
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:24:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5741620674
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Dec 2019 18:24:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576520670;
-	bh=P1W7VsLg1ccfrXtluoSlXoEz9xd4qtjEQuc9NOvlP5Y=;
+	s=default; t=1576520678;
+	bh=I/aQZOgdx/StfqxD/zjch/Q7mN7Mb/s/G1BBWN5EtvE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mfQRP8v9bzF318qBq+HVTZTaz+LaGkq/0CB6CkTEWAP/GzW+ShA+0F9+uxRF5ch2s
-	 eSDCDo7y53KfZ673TtdDWEO/fgjp+iHLxQtbhEqzTt8anUTzGogkAHgfRd0hd95QdF
-	 uy6k6tNhPeZvU8DUF2P5QywYWapy6mnSkDFJs4uE=
+	b=SiiQ0tMxj5mfxRJSokgDJT5xVeLQvYXUR03p73Ba2znlEsLahsn2fB5xc7huq5mVs
+	 CExxr+4d54M71LPejKdLp4IESrODotwHk+QVv/JxmcbPdpFUh0r5N/yRJ74ahM7z9S
+	 rFW92myLpsgMOJ8Mlol9HSxfo3YbCj+SojPQNOxM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732039AbfLPSY3 (ORCPT
+        id S1732031AbfLPSYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 13:24:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46714 "EHLO mail.kernel.org"
+        Mon, 16 Dec 2019 13:24:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731737AbfLPSTM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 13:19:12 -0500
+        id S1731875AbfLPSTA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 13:19:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A6BA207FF;
-        Mon, 16 Dec 2019 18:19:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29A72206EC;
+        Mon, 16 Dec 2019 18:18:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576520351;
-        bh=P1W7VsLg1ccfrXtluoSlXoEz9xd4qtjEQuc9NOvlP5Y=;
+        s=default; t=1576520339;
+        bh=I/aQZOgdx/StfqxD/zjch/Q7mN7Mb/s/G1BBWN5EtvE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fW138bzxVLueSJigiJeTcuRNnVw3HZ5CANubNQgLyCXA3pzNtLEvu+8eQWpqTDuyk
-         0M3OaXOJ5x+XDTyV/rBo081f1EZTuBcFINODiIHXqNSdvfXOd9VEJ0QHMh7iVzW1qH
-         RBRYRZVUSSLCWYMo3SR0h5IM0t24PUp68df6oZlM=
+        b=m6LePJr0asZSvtjG8vqqqS3j1NRoFmt4y4JmRqZijkPWAH5/duozshCO+HpABRbmx
+         Ib4CGVwedv188nBwayWeeWdOhUPFmenqfOxjsiVCOxJZkJ26A0ZKRkRRz6xgEDmztD
+         7Jzc+EYF1R6mt2exNAp4A22HUugMQmQrqf3PnKDY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.4 118/177] cpufreq: powernv: fix stack bloat and hard limit on number of CPUs
-Date:   Mon, 16 Dec 2019 18:49:34 +0100
-Message-Id: <20191216174842.951300479@linuxfoundation.org>
+        stable@vger.kernel.org, Jacob Rasmussen <jacobraz@google.com>,
+        Ross Zwisler <zwisler@google.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.4 087/177] ASoC: rt5645: Fixed buddy jack support.
+Date:   Mon, 16 Dec 2019 18:49:03 +0100
+Message-Id: <20191216174838.656873901@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
 References: <20191216174811.158424118@linuxfoundation.org>
@@ -60,81 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Hubbard <jhubbard@nvidia.com>
+From: Jacob Rasmussen <jacobraz@chromium.org>
 
-commit db0d32d84031188443e25edbd50a71a6e7ac5d1d upstream.
+commit e7cfd867fd9842f346688f28412eb83dec342900 upstream.
 
-The following build warning occurred on powerpc 64-bit builds:
+The headphone jack on buddy was broken with the following commit:
+commit 6b5da66322c5 ("ASoC: rt5645: read jd1_1 status for jd
+detection").
+This changes the jd_mode for buddy to 4 so buddy can read from the same
+register that was used in the working version of this driver without
+affecting any other devices that might use this, since no other device uses
+jd_mode = 4. To test this I plugged and uplugged the headphone jack, verifying
+audio works.
 
-drivers/cpufreq/powernv-cpufreq.c: In function 'init_chip_info':
-drivers/cpufreq/powernv-cpufreq.c:1070:1: warning: the frame size of
-1040 bytes is larger than 1024 bytes [-Wframe-larger-than=]
-
-This is with a cross-compiler based on gcc 8.1.0, which I got from:
-  https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/8.1.0/
-
-The warning is due to putting 1024 bytes on the stack:
-
-    unsigned int chip[256];
-
-...and it's also undesirable to have a hard limit on the number of
-CPUs here.
-
-Fix both problems by dynamically allocating based on num_possible_cpus,
-as recommended by Michael Ellerman.
-
-Fixes: 053819e0bf840 ("cpufreq: powernv: Handle throttling due to Pmax capping at chip level")
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: 4.10+ <stable@vger.kernel.org> # 4.10+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Jacob Rasmussen <jacobraz@google.com>
+Reviewed-by: Ross Zwisler <zwisler@google.com>
+Link: https://lore.kernel.org/r/20191111185957.217244-1-jacobraz@google.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/cpufreq/powernv-cpufreq.c |   17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ sound/soc/codecs/rt5645.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/cpufreq/powernv-cpufreq.c
-+++ b/drivers/cpufreq/powernv-cpufreq.c
-@@ -1041,9 +1041,14 @@ static struct cpufreq_driver powernv_cpu
+--- a/sound/soc/codecs/rt5645.c
++++ b/sound/soc/codecs/rt5645.c
+@@ -3270,6 +3270,9 @@ static void rt5645_jack_detect_work(stru
+ 		snd_soc_jack_report(rt5645->mic_jack,
+ 				    report, SND_JACK_MICROPHONE);
+ 		return;
++	case 4:
++		val = snd_soc_component_read32(rt5645->component, RT5645_A_JD_CTRL1) & 0x002;
++		break;
+ 	default: /* read rt5645 jd1_1 status */
+ 		val = snd_soc_component_read32(rt5645->component, RT5645_INT_IRQ_ST) & 0x1000;
+ 		break;
+@@ -3603,7 +3606,7 @@ static const struct rt5645_platform_data
+ static const struct rt5645_platform_data buddy_platform_data = {
+ 	.dmic1_data_pin = RT5645_DMIC_DATA_GPIO5,
+ 	.dmic2_data_pin = RT5645_DMIC_DATA_IN2P,
+-	.jd_mode = 3,
++	.jd_mode = 4,
+ 	.level_trigger_irq = true,
+ };
  
- static int init_chip_info(void)
- {
--	unsigned int chip[256];
-+	unsigned int *chip;
- 	unsigned int cpu, i;
- 	unsigned int prev_chip_id = UINT_MAX;
-+	int ret = 0;
-+
-+	chip = kcalloc(num_possible_cpus(), sizeof(*chip), GFP_KERNEL);
-+	if (!chip)
-+		return -ENOMEM;
- 
- 	for_each_possible_cpu(cpu) {
- 		unsigned int id = cpu_to_chip_id(cpu);
-@@ -1055,8 +1060,10 @@ static int init_chip_info(void)
- 	}
- 
- 	chips = kcalloc(nr_chips, sizeof(struct chip), GFP_KERNEL);
--	if (!chips)
--		return -ENOMEM;
-+	if (!chips) {
-+		ret = -ENOMEM;
-+		goto free_and_return;
-+	}
- 
- 	for (i = 0; i < nr_chips; i++) {
- 		chips[i].id = chip[i];
-@@ -1066,7 +1073,9 @@ static int init_chip_info(void)
- 			per_cpu(chip_info, cpu) =  &chips[i];
- 	}
- 
--	return 0;
-+free_and_return:
-+	kfree(chip);
-+	return ret;
- }
- 
- static inline void clean_chip_info(void)
+@@ -3999,6 +4002,7 @@ static int rt5645_i2c_probe(struct i2c_c
+ 					   RT5645_JD1_MODE_1);
+ 			break;
+ 		case 3:
++		case 4:
+ 			regmap_update_bits(rt5645->regmap, RT5645_A_JD_CTRL1,
+ 					   RT5645_JD1_MODE_MASK,
+ 					   RT5645_JD1_MODE_2);
 
 
