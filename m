@@ -2,185 +2,178 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC0AC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3205CC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E971B2072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:53:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bkG2AteH"
+	by mail.kernel.org (Postfix) with ESMTP id 08FDB2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:55:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbfLQIx4 (ORCPT
+        id S1726920AbfLQIzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 03:53:56 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:33251 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbfLQIx4 (ORCPT
+        Tue, 17 Dec 2019 03:55:01 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:49117 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbfLQIzA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 03:53:56 -0500
-Received: by mail-qt1-f194.google.com with SMTP id d5so6637427qto.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 00:53:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lNkD7ydP3s/P+FetLy4J67pZ0T8hiY+n2ErAKxQuVEg=;
-        b=bkG2AteHw4Jpg1XcJauq7J4nY5gH1TKhZ3WVi8kfM6fLsvsgO6bNC2sdaQxi0c5/pA
-         v1C7dfujIlLRNbt+9eJCANTbIP+GD5P6yassTyK7frUrBAT9CnY8ibWbpG1NzgnWq17+
-         wggT4eGpcTzVCkXEz6oWCDEVckUxP9WLq99PjE47RcGwq5cBcR4nv3KlXwQNd7J7qbIq
-         KgUWacbStzQR2rkHzO9AZigawrc/CJS0UpMiMZYOHfwyDcmKa5QP3VlCvOGsVLhzl+1/
-         za7r8lKMw5fNqlyZGvVgBD7Zo0qWgsaYdlnvnLvfMywJ3elkrJ+oVGGK/F1ja2A7S/FK
-         bhQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lNkD7ydP3s/P+FetLy4J67pZ0T8hiY+n2ErAKxQuVEg=;
-        b=hNDrTGuKY+MKoNWtrUm2PiG0vJkbGZF+4L+X8aXbs3N3Sks+glDuV7ocY3O5HSHn/0
-         xlyShWZpj/ph0suXz8FfATxoN0fcNb3JFOBRl6+QBd4gJeQBLJ1MSnsxRwMyii+qejUV
-         QO6Z3oEZJNfFV0QoZ5GznZ1OdCjkoflk7qNf61EEUVdzI7BulcffYLX4lXXzAFOaI0oD
-         mmoxOkzPKxxE3OHKnf79VB+wmQnNxLLQyuqhYynUHDevgKr5y/VZg8tFl1PFSCDQubb+
-         9EtUOh7A13Zi0Kt/4hn5yjtYsC5pR5gAIJAiy4QDt2ap+3m+BJlV0EKL67BGrsLiao+9
-         ki4Q==
-X-Gm-Message-State: APjAAAXsGlt974ZhBTxj8y/YHezM4R6IHGGjv1bDDOZ7LBUcOgAJD1PO
-        oWCMMEi/BHqY9muMB35nlaxYfzqnQUMFmAl6CkgYDA==
-X-Google-Smtp-Source: APXvYqzwIKj2HlrC5Ps/42sQm/GCab8Hi8O3ZXrKhX4W/OpGA6wAQ42L51BFJyup5T3ckn098vmWK456DxicbQZN5Zg=
-X-Received: by 2002:ac8:6691:: with SMTP id d17mr3369786qtp.57.1576572834197;
- Tue, 17 Dec 2019 00:53:54 -0800 (PST)
+        Tue, 17 Dec 2019 03:55:00 -0500
+Received: from mail-qk1-f171.google.com ([209.85.222.171]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MXop2-1iBKX82BI4-00YBbm; Tue, 17 Dec 2019 09:54:58 +0100
+Received: by mail-qk1-f171.google.com with SMTP id x129so174943qke.8;
+        Tue, 17 Dec 2019 00:54:58 -0800 (PST)
+X-Gm-Message-State: APjAAAXNG2+9NUH4Fcy7Or18esGaQdcU/0HUKwazUmvLn9WIJropDTPy
+        znb/Iw88weMWhDetMx/fRco63HDyaVmLehppnTA=
+X-Google-Smtp-Source: APXvYqzKiLsbZVrfvGk9+cg1ubafjtbflqD9p/VamlqKp16D5EdmeX1UgRWAb1NnN5heyvsziKaivNRpaH1iYITOlvM=
+X-Received: by 2002:a37:2f02:: with SMTP id v2mr3750201qkh.3.1576572897205;
+ Tue, 17 Dec 2019 00:54:57 -0800 (PST)
 MIME-Version: 1.0
-References: <20191216095955.9886-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <20191216114636.GB1515069@kroah.com> <ce36371b-0ca6-5819-2604-65627ce58fc8@i-love.sakura.ne.jp>
- <20191216201834.GA785904@mit.edu> <46e8f6b3-46ac-6600-ba40-9545b7e44016@i-love.sakura.ne.jp>
- <CACT4Y+ZLaR=GR2nssb_buGC0ULNpQW6jvX0p8NAE-vReDY5fPA@mail.gmail.com>
-In-Reply-To: <CACT4Y+ZLaR=GR2nssb_buGC0ULNpQW6jvX0p8NAE-vReDY5fPA@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 17 Dec 2019 09:53:42 +0100
-Message-ID: <CACT4Y+Y1NTsRmifm2QLCnGom_=TnOo5Nf4EzQ=7gCJLYzx9gKA@mail.gmail.com>
-Subject: Re: [PATCH] kconfig: Add kernel config option for fuzz testing.
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Andi Kleen <ak@linux.intel.com>, matthewgarrett@google.com
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jiri Slaby <jslaby@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20191217010001.GA14461@ircssh-2.c.rugged-nimbus-611.internal>
+ <20191217015001.sp6mrhuiqrivkq3u@wittgenstein> <CAMp4zn8fzeiJVSn6EtRi6UAGh6AL3QWu=PZxw+=TAYJORjn_Sw@mail.gmail.com>
+In-Reply-To: <CAMp4zn8fzeiJVSn6EtRi6UAGh6AL3QWu=PZxw+=TAYJORjn_Sw@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 17 Dec 2019 09:54:40 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a3G-W8s0G2-XKuDw9dRmupZSyiF6FRRAnvDt9=kMMzS8w@mail.gmail.com>
+Message-ID: <CAK8P3a3G-W8s0G2-XKuDw9dRmupZSyiF6FRRAnvDt9=kMMzS8w@mail.gmail.com>
+Subject: Re: [PATCH v3 2/4] pid: Add PIDFD_IOCTL_GETFD to fetch file
+ descriptors from processes
+To:     Sargun Dhillon <sargun@sargun.me>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Tycho Andersen <tycho@tycho.ws>, Jann Horn <jannh@google.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Al Viro <viro@zeniv.linux.org.uk>, gpascutto@mozilla.com,
+        ealvarez@mozilla.com, Florian Weimer <fweimer@redhat.com>,
+        jld@mozilla.com
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:HRAACjC5zp8lxNpo/BksdLlwiLLHqEgHh0jsn+k4S+2Eh5Uv53p
+ C9bFh5wXL+Ju5zWDstGOtRlYMtrjwfZ8garW/jHChtuDow7fI3r16tRRGedKQpUV3L18ETu
+ yI1dmiiZG89YnQ/Uh+YEoa6qfcpPzo5agoss9tX7MfCVL13uPPYcSa0HevOPwcq5CO2DeV+
+ rvBWzQVDBrRIzj8OofEEA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ewGeybDoAh4=:QfLyBhyd5Jll7i1z3Q7vNn
+ 1kgevxEMDqrLzxfQVkK9qVir47KyAfs1CrUroOSId9jmjVWLXxIR417SaAm9fCsrUDNkshAhl
+ JCZicW9jpmJ3wUnMCnvWGavQYEK9pFw/FLcKckTHs9Hz7SfzKkRT5oEUP55T6ucuenLlLgds7
+ xJvOgc1Wf5MryhB0Hq3+1cOZHgZ/wwkSU9L3SpvoLYABbzHNn7pvMYkJkb7K9TJdT21krgD4Y
+ 4YFZAI0veXXh1COcA/JwwHg9SpoXBr+Yk7PldiIiBOyya6NooxZn56uywBuXQ6ksU/I+wsgs1
+ mXHGQ/J9oqSook9Fg2c7xDeSja55fq6mE/On0sj5Xb3MhoRbtLPUkuupUrqBhewpgxdA/zOFr
+ rTGYOniuUQI5kd8T2WyoOTaFuQS/Afe3mOjQiVDqmS7cO6qgZiFUygRFq17sHHiNmRaDxmBSD
+ MZ/VOMCKA/+xjvZrJBjvT4DOWPjBQl1cdMIwBVAJQf0R4OaF/xcHR3BAO1qDH3txyVLLcVuaI
+ 2li9HRDNuK/pMBIAfUvb3L0bAEFbSzc0Zhtb4ZpJDhBspN/wR+lC2iuUIwQzL9LJ//9unnxYt
+ sABx7gtMdv0SIU4KKQOkIp56VK3TtLCp9/HnH0TAT1eQ6kPn1JH7ByaUwCjwec1ryzvHReOBh
+ n97qVTTU5W8sKOoEBgTQqGiQ4FISnzK+ltko21PTuCwrzjTfT91EwGSlVDT+8rUA/HZCYymid
+ 2d2sgCkAeALEf4JQHena2ky5zu/87i2wNp1NVICd8drY72i6S4D6JnhFp5MYM84fGjfOzUDEF
+ HBM8RGxK0atTnFC1BPpEgvRmKOjfFlQSyvojNuFxv29a6cF044YHkdodF7e49TgFCyu6Q9mpk
+ B2dCO8sC42gON0AMrVGg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 9:36 AM Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Mon, Dec 16, 2019 at 10:07 PM Tetsuo Handa
-> <penguin-kernel@i-love.sakura.ne.jp> wrote:
+On Tue, Dec 17, 2019 at 3:50 AM Sargun Dhillon <sargun@sargun.me> wrote:
+> On Mon, Dec 16, 2019 at 5:50 PM Christian Brauner <christian.brauner@ubuntu.com> wrote:
+> > > +
+> > > +#include <linux/types.h>
+> > > +#include <linux/ioctl.h>
+> > > +
+> > > +/* options to pass in to pidfd_getfd_args flags */
+> > > +#define PIDFD_GETFD_CLOEXEC (1 << 0) /* open the fd with cloexec */
 > >
-> > On 2019/12/17 5:18, Theodore Y. Ts'o wrote:
-> > >> this case was too hard to blacklist, as explained at
-> > >> https://lore.kernel.org/lkml/4d1a4b51-999b-63c6-5ce3-a704013cecb6@i-love.sakura.ne.jp/ .
-> > >> syz_execute_func() can find deeper bug by executing arbitrary binary code, but
-> > >> we cannot blacklist specific syscalls/arguments for syz_execute_func() testcases.
-> > >> Unless we guard on the kernel side, we won't be able to re-enable syz_execute_func()
-> > >> testcases.
-> > >
-> > > I looked at the reference, but I didn't see the explanation in the
-> > > above link about why it was "too hard to blacklist".  In fact, it
-> > > looks like a bit earlier in the thread, Dmitry stated that adding this
-> > > find of blacklist "is not hard"?
-> > >
-> > > https://lore.kernel.org/lkml/CACT4Y+Z_+H09iOPzSzJfs=_D=dczk22gL02FjuZ6HXO+p0kRyA@mail.gmail.com/
-> > >
+> > Please, make them cloexec by default unless there's a very good reason
+> > not to.
 > >
-> > That thread handled two bugs which disabled console output.
+> For now then, should I have flags, and just say "reserved for future usage",
+> or would you prefer that I drop flags entirely?
+
+There is no need for adding reserved fields in an ioctl, just add a new ioctl
+number if you need it later.
+
+> > > +
+> > > +struct pidfd_getfd_args {
+> > > +     __u32 size;             /* sizeof(pidfd_getfd_args) */
+> > > +     __u32 fd;       /* the tracee's file descriptor to get */
+> > > +     __u32 flags;
+> > > +};
 > >
-> > The former bug (March 2019) was that fuzzer was calling syslog(SYSLOG_ACTION_CONSOLE_LEVEL) and
-> > was fixed by blacklisting syslog(SYSLOG_ACTION_CONSOLE_LEVEL). This case was easy to blacklist.
+> > I think you want to either want to pad this
 > >
-> > The latter bug (May 2019) was that fuzzer was calling binary code (via syz_execute_func()) which
-> > emdebbed a system call that changes console loglevel. Since it was too difficult to blacklist,
-> > syzkaller gave up use of syz_execute_func().
->
->
-> Yes, what Tetsuo says. Only syscall numbers and top-level arguments to
-> syscalls are easy to filter out. When indirect memory is passed to
-> kernel or (fd,ioctl) pairs are involved it boils down to solving the
-> halting problem.
->
-> There are some nice benefits of doing this in some form in kernel:
-> 1. It makes reported crashes more trustworthy for kernel developers.
-> Currently you receive a crash and you don't know if it's a bug, or
-> working as intended (as turned out with serial console). It also
-> happened with syzkaller learning interesting ways to reach /dev/mem,
-> which was directly prohibited, but it managed to reach it via some
-> mounts and corrupted file names. Disabling the DEVMEM config in the
-> end reliably solved it once and for all.
->
-> 2. It avoids duplication across test systems. Doing this in each test
-> system is again makes kernel testing hard and imposes duplication.
-> Tomorrow somebody runs new version of trinity, triforce, afl, perf
-> fuzzer and they hit the same issues, you get the same reports, and
-> have the same discussions and they slowly build the same list.
->
-> I like the idea of runtime knob that Andi proposed, and in fact this
-> looks quite similar to lockdown needs. And in fact it already have
-> LOCKDOWN_TIOCSSERIAL (does it does exactly the same as what we need?
-> if not, it may be something to improve in lockdown). It seems that any
-> fuzzing needs at least LOCKDOWN_INTEGRITY_MAX.
->
-> Could we incorporate some of the checks in this patch into lockdown?
-> FWIW we've just disabled sysrq entirely:
-> https://github.com/google/syzkaller/blob/master/dashboard/config/bits-syzbot.config#L182
-> because random packets over usb can trigger a panic sysrq (again
-> almost impossible to reliably filter these out on fuzzer side).
->
-> Not sure why lockdown prohibits parts of TIOCSSERIAL. Does it want to
-> prevent memory corruption, or also prevent turning off console output
-> (hiding traces)? If the latter then it may be reasonable to lockdown
-> lowering of console_loglevel.
->
-> But looks at some of the chunks here, it seems that we want something
-> slightly orthogonal to lockdown integrity/confidentiality, which
-> liveness/dos-prevention (can't accidentally bring down the whole
-> machine). E.g. FIFREEZE or bad SYSRQs.
->
-> There was some reason I did not enable lockdown when it was merged.
-> Now looking at the list again: LOCKDOWN_DEBUGFS is a no-go for us...
+> > +struct pidfd_getfd_args {
+> > +       __u32 size;             /* sizeof(pidfd_getfd_args) */
+> > +       __u32 fd;       /* the tracee's file descriptor to get */
+> > +       __u32 flags;
+> >         __u32 reserved;
+> > +};
+> >
+> > or use __aligned_u64 everywhere which I'd personally prefer instead of
+> > this manual padding everywhere.
 
-+Matthew for a lockdown question
-We are considering [ab]using lockdown (you knew this will happen!) for
-fuzzing kernel. LOCKDOWN_DEBUGFS is a no-go for us and we may want a
-few other things that may be fuzzing-specific.
-The current inflexibility comes from the global ordering of levels:
+No, don't make ioctl structures extensible. If there is no 64-bit member
+in it, 32-bit alignment is sufficient.
 
-if (kernel_locked_down >= level)
-if (kernel_locked_down >= what) {
+Also, having implicit padding is dangerous because it makes it easier to
+leave it uninitialized, leaking kernel stack information on the copy_to_user().
 
-Is it done for performance? Or for simplicity?
-If it would be more like an arbitrary bitset, then we could pick and
-choose what we need and add few options on the side (not part of
-integrity/confidentiality).
-I see several potential ways to do it:
-1. Rework the current code to allow arbitrary sets of options enabled.
-2. Leave the current global ordering and checks intact and add a
-separate mode that will do bitmask-like checks (e.g. under
-CONFIG_LOCK_DOWN_FUZZER).
-3. Or hardcode the fuzzer list statically based on config (but then we
-can leave the rest of the code intact), e.g.:
+Please drop the '__u32 size' argument, too: the size is fixed by definition
+(through the _IOWR macro) and if you need to extend it you get a new
+command anyway.
 
-#if !CONFIG_LOCK_DOWN_FUZZER
-    [LOCKDOWN_DEBUGFS] = "debugfs access",
-#endif
-#if CONFIG_LOCK_DOWN_FUZZER
-    [LOCKDOWN_FIFREEZE] = "FIFREEZE ioctl",
-#endif
+> Wouldn't __attribute__((packed)) achieve a similar thing of making sure
+> the struct is a constant size across all compilers?
+>
+> I'll go with __aligned_u64 instead of packed, if you don't want to use packed.
 
-Thoughts?
+__attribute__((packed)) is worse because it forces compilers to use byte
+access on architectures that have no fast unaligned 32-bit load/store.
+Basically you should never put __packed on a structure, but instead add
+it to members that need to be unaligned within a sturct for compatibility
+reasons.
+
+> > > +
+> > > +#define PIDFD_IOC_MAGIC                      'p'
+> > > +#define PIDFD_IO(nr)                 _IO(PIDFD_IOC_MAGIC, nr)
+> > > +#define PIDFD_IOR(nr, type)          _IOR(PIDFD_IOC_MAGIC, nr, type)
+> > > +#define PIDFD_IOW(nr, type)          _IOW(PIDFD_IOC_MAGIC, nr, type)
+> > > +#define PIDFD_IOWR(nr, type)         _IOWR(PIDFD_IOC_MAGIC, nr, type)
+
+Drop these macros, they just make it harder to grep or script around the use
+of _IOWR/_IOR/_IOW
+
+> > > +#define PIDFD_IOCTL_GETFD            PIDFD_IOWR(0xb0, \
+> > > +                                             struct pidfd_getfd_args)
+
+Without the size and flag members, this can become the simpler
+
+#define PIDFD_IOCTL_GETFD  _IOWR('p', 0xb0, __u32)
+
+> > > +
+> > >  const struct file_operations pidfd_fops = {
+> > >       .release = pidfd_release,
+> > >       .poll = pidfd_poll,
+> > > +     .unlocked_ioctl = pidfd_ioctl,
+
+This needs
+
++    .compat_ioctl = compat_ptr_ioctl,
+
+To work on compat tasks.
+
+Finally, there is the question whether this should be an ioctl
+operation at all, or
+if it would better be done as a proper syscall. Functionally the two
+are the same
+here, but doing such a fundamental operation as an ioctl doesn't feel
+quite right
+to me. As a system call, this could be something like
+
+int pidfd_get_fd(int pidfd, int their_fd, int flags);
+
+along the lines of dup3().
+
+        Arnd
