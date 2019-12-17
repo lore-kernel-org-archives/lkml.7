@@ -2,121 +2,92 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36BDAC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63ABEC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0768E20716
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:05:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EA0020716
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:06:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Ilzyvjgs"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OHiLswZP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728456AbfLQUFo (ORCPT
+        id S1727908AbfLQUGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 15:05:44 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:15578 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727587AbfLQUEO (ORCPT
+        Tue, 17 Dec 2019 15:06:04 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43791 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbfLQUGD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 15:04:14 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5df934b40000>; Tue, 17 Dec 2019 12:04:04 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 17 Dec 2019 12:04:13 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 17 Dec 2019 12:04:13 -0800
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 17 Dec
- 2019 20:04:12 +0000
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 17 Dec
- 2019 20:04:12 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 17 Dec 2019 20:04:12 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.174.101]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5df934bb0003>; Tue, 17 Dec 2019 12:04:12 -0800
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <digetx@gmail.com>,
-        <mperttunen@nvidia.com>, <gregkh@linuxfoundation.org>,
-        <sboyd@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <spujar@nvidia.com>, <josephl@nvidia.com>,
-        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
-        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 03/19] clk: tegra: Fix Tegra PMC clock out parents
-Date:   Tue, 17 Dec 2019 12:03:50 -0800
-Message-ID: <1576613046-17159-4-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576613046-17159-1-git-send-email-skomatineni@nvidia.com>
-References: <1576613046-17159-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Tue, 17 Dec 2019 15:06:03 -0500
+Received: by mail-ot1-f67.google.com with SMTP id p8so15077595oth.10
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 12:06:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EgcM3vc0ZSfajVYBW3jpsISkfHzXaQbZ2787YmHbQ6c=;
+        b=OHiLswZP/NI5ZTrjsWcf3N5aSKGxVSU34yUgdVuDV2cftv6HYQb+PLBoymqeOqMxP+
+         D5qc+EN9YFueg4RiLwD5M+WsD25yBv6JC7A2P4j5UBLRNiMDiaugwfbqdw/CWFyahPXZ
+         zZ8oRgJZeNBXStl7HTfdf9Ae9hcvYGh6pDVjj9q4vbtdwiB+pUf2zAWf6HfcwFd+jUrv
+         aIoTsEkx1MK6nomOBiRH89FZ+BDIQipj+7pHfvIElupDBtRecWPv9H0Dbj+4fjlDgXVo
+         6rwKF/g2otXn/wIqzB8DPrJuQX7MhbURYk21VUSkrEMZiFxCp+57WbaPVi2KLoYF+1QO
+         2r3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EgcM3vc0ZSfajVYBW3jpsISkfHzXaQbZ2787YmHbQ6c=;
+        b=Yg9Kr1IisBvZpEhbU5fhl5Rns5U6grk4Nxu6ztgNs0BCoaUhnijck0YbljdKubG5dJ
+         +uxmfsNBub/6wmLbee+qXB58SDaFdcVFnhEPm6eeJVrSEd+pfaPy5Gn4gTl+PgSYMDSl
+         ksmVrBtPEu68QHW7ejZlqg/KQ8IpQwKdliTykBFE1VUhCd89cFOV42mwHZmC8hwBpK/s
+         CGvWSlh58imdKOWmKHUSKSnBUNjqQZl7U0nMQjnSvoex0UFNNz4S0NPLPLd3GIMjJFNy
+         gdBzs1KAltCk6HjPF0BIJvMm/boVeM4h88wospr1t/cPnXdLIa9tOoSA5gQgeua7duRU
+         802Q==
+X-Gm-Message-State: APjAAAUEZ5VZzHPgc9LFwWnmcjYQEpPBOtnsv70F5T0DoPvabwni70qV
+        2VNsY0JHqgiILCRloefLJCJunXzrPJTAcXHJ5q/tMw==
+X-Google-Smtp-Source: APXvYqz1EBmRWccePNkjo39wUIVivMFlFzt6nqIufy0Ymh7XqrHk183/c4rF9JFEi2L6arjokRalY8S3b7lsAdfkhV8=
+X-Received: by 2002:a05:6830:154c:: with SMTP id l12mr39578362otp.275.1576613162751;
+ Tue, 17 Dec 2019 12:06:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576613044; bh=jX1cHxQTxMoGEsw+O/JuXtnczaKSZYeLGNN+1j++LWw=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=IlzyvjgspuI/BU5JYb2/qZDJsuwGO4cN6eU4lJCx7tKZEo9uKzWxTsxUYbGDKkTzv
-         JuWUdVObU/8rcrMgJfoEVQnuada0Q4Oo49iJLiUmJ4LMtREQCoXzjT0xrbNIV3MU/N
-         1F3O1dfZtkr5vCYWg6dQ7VvWrhi2h8hNVjjCItfo49NqqHJRLw4v0OXSnjNfDbs4EN
-         KGB0LIu4xcdVHoZQpW9yDrT8ctCHYl2lXbydsr7iokq7bt2rsyMbDjNOkrN0MqHwKT
-         LSffKAOg1w/1QxensP4jihy/rTuoGINsiEAg6A5AqKqnZRJKlOYaEnY6wFltd3Kh2k
-         OCF40kZyVDHoA==
+References: <20191212181422.31033-1-linux@dominikbrodowski.net>
+ <157644301187.32474.6697415383792507785.pr-tracker-bot@kernel.org>
+ <CAJmaN=ksaH5AgRUdVPGWKZzjEinU+goaCqedH1PW6OmKYc_TuA@mail.gmail.com> <20191217193755.GA4075755@kroah.com>
+In-Reply-To: <20191217193755.GA4075755@kroah.com>
+From:   Jesse Barnes <jsbarnes@google.com>
+Date:   Tue, 17 Dec 2019 12:05:51 -0800
+Message-ID: <CAJmaN=kxg3O+dss2ccfFAP85wAce2a5KS+4ednt71JHOe7CvqQ@mail.gmail.com>
+Subject: Re: [GIT PULL] remove ksys_mount() and ksys_dup()
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     pr-tracker-bot@kernel.org,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra PMC clock out parents are osc, osc_div2, osc_div4 and extern
-clock.
+On Tue, Dec 17, 2019 at 11:38 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, Dec 17, 2019 at 11:33:38AM -0800, Jesse Barnes wrote:
+> > Still debugging, but this causes a panic in console_on_rootfs() when we try
+> > to dup the fds for stderr and stdout.  Probably because in my config I have
+> > VT and framebuffer console disabled?
+> > Reverting 8243186f0cc7c57cf9d6a110cd7315c44e3e0be8
+> > and b49a733d684e0096340b93e9dfd471f0e3ddc06d worked around it for now...
+>
+> Should already be fixed in Linus's tree.
 
-Clock driver is using incorrect parents clk_m, clk_m_div2, clk_m_div4
-for PMC clocks.
+Arg sorry for the html mail.  I see the reverts now.
 
-This patch fixes this.
-
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- drivers/clk/tegra/clk-tegra-pmc.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/clk/tegra/clk-tegra-pmc.c b/drivers/clk/tegra/clk-tegra-pmc.c
-index bec3e008335f..5e044ba1ae36 100644
---- a/drivers/clk/tegra/clk-tegra-pmc.c
-+++ b/drivers/clk/tegra/clk-tegra-pmc.c
-@@ -49,16 +49,16 @@ struct pmc_clk_init_data {
- 
- static DEFINE_SPINLOCK(clk_out_lock);
- 
--static const char *clk_out1_parents[] = { "clk_m", "clk_m_div2",
--	"clk_m_div4", "extern1",
-+static const char *clk_out1_parents[] = { "osc", "osc_div2",
-+	"osc_div4", "extern1",
- };
- 
--static const char *clk_out2_parents[] = { "clk_m", "clk_m_div2",
--	"clk_m_div4", "extern2",
-+static const char *clk_out2_parents[] = { "osc", "osc_div2",
-+	"osc_div4", "extern2",
- };
- 
--static const char *clk_out3_parents[] = { "clk_m", "clk_m_div2",
--	"clk_m_div4", "extern3",
-+static const char *clk_out3_parents[] = { "osc", "osc_div2",
-+	"osc_div4", "extern3",
- };
- 
- static struct pmc_clk_init_data pmc_clks[] = {
--- 
-2.7.4
-
+Thanks,
+Jesse
