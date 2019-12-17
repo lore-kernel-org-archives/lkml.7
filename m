@@ -2,104 +2,108 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4A4C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 425DCC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 905A92146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:54:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12A3B2146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:56:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="mne8nhxl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727736AbfLQPyq (ORCPT
+        id S1727804AbfLQP4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 10:54:46 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:34465 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726925AbfLQPyq (ORCPT
+        Tue, 17 Dec 2019 10:56:45 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35665 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726858AbfLQP4o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 10:54:46 -0500
-Received: from callcc.thunk.org (guestnat-104-133-0-111.corp.google.com [104.133.0.111] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id xBHFq7oS013359
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 Dec 2019 10:52:08 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id D856A420821; Tue, 17 Dec 2019 10:52:06 -0500 (EST)
-Date:   Tue, 17 Dec 2019 10:52:06 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Andi Kleen <ak@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jiri Slaby <jslaby@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] kconfig: Add kernel config option for fuzz testing.
-Message-ID: <20191217155206.GA824812@mit.edu>
-References: <20191216095955.9886-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <20191216114636.GB1515069@kroah.com>
- <ce36371b-0ca6-5819-2604-65627ce58fc8@i-love.sakura.ne.jp>
- <20191216201834.GA785904@mit.edu>
- <46e8f6b3-46ac-6600-ba40-9545b7e44016@i-love.sakura.ne.jp>
- <CACT4Y+ZLaR=GR2nssb_buGC0ULNpQW6jvX0p8NAE-vReDY5fPA@mail.gmail.com>
+        Tue, 17 Dec 2019 10:56:44 -0500
+Received: by mail-wr1-f66.google.com with SMTP id g17so11876297wro.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 07:56:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Kru/p1qE5H/BCcW43apBsFqD+qqTgGNhKSFSdhalhZw=;
+        b=mne8nhxlUm5JUVJvci8lY6PyqcJV58bkC/8MDX3fLFmKigBiUT2/qYAVumFGxcCQKH
+         Lj2xkBkFvl4p3SnIPI1/tosatcIg9yz7/xCw01e/oYKvCYJTGjYLkiRt7lZXEkzTMDDi
+         koiy7XLiHNLTtPsPdvJn0F4aRm0UoxyPXhCqjPgTanpJCHs1G08oXGcl9VrZE3+2FnBH
+         VUxQHqYUdNGqdIfRAT1LOa1iiVP2JU7kEE5qzDFfdB66qbMWKkf7SdLY36Z+gFcATrCZ
+         rqUX0MU6tbLJkV6Gp+ZZVn06QNbK0OBpr48hKvsnsHJejoFCmclwuyq0Vb1/l+pSWMxh
+         XNxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Kru/p1qE5H/BCcW43apBsFqD+qqTgGNhKSFSdhalhZw=;
+        b=mIcWA+lAzMOqG2034AzgbUWzUafsh3wgRgMEjbAQM6/SkrfyTQAvMDuNv3CA6FvV03
+         SFr8YcofVISYgEOKw2XeovvHA19RBJZebFQy10XVvQiqJdL8g2nvHF7N8M4Pa0gWSq6S
+         8/zwdwnsSV3CFJqTRANUVpLBt8GyeoTzcumwLbud3UOGJKZf7B8E4HBIBsBv6cvwhPli
+         O/JjnYGWDCQWgLUtyU56COse2BuaLUO+oaL6ewRAFo5XQ5448VQDIUiuJEybfXKr6y9y
+         1puHBcnAgGLuU/W1J3ON23Z3FqtMB3K0bWigB8thdXMyR/dIgXl2Sd165rr76fteYC+/
+         hV/Q==
+X-Gm-Message-State: APjAAAVHOIH/ubb6EL3Xuyk0iPFBcJUwZz+hm3LqXRZMkWvd3f3+rqA/
+        aseACV4lkYM1fR7K510wIXhze3FPISA=
+X-Google-Smtp-Source: APXvYqyNMAVe3i3HHStXWaTydu4DNl69XCzW5OGGXtdFookbpapo5jksY/g3ZK42dfA5bT/chPKB5Q==
+X-Received: by 2002:a5d:56ca:: with SMTP id m10mr36759405wrw.313.1576598202967;
+        Tue, 17 Dec 2019 07:56:42 -0800 (PST)
+Received: from [10.83.36.153] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id x16sm3455140wmk.35.2019.12.17.07.56.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Dec 2019 07:56:42 -0800 (PST)
+Subject: Re: [PATCH] tty: serial: samsung_tty: do not abuse the struct
+ uart_port unused fields
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Kukjin Kim <kgene@kernel.org>, Hyunki Koo <kkoos00@naver.com>,
+        HYUN-KI KOO <hyunki00.koo@samsung.com>,
+        Shinbeom Choi <sbeom.choi@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191217140232.GA3489190@kroah.com>
+ <e0fbb679-54fb-25c6-0e88-012d0490e291@arista.com>
+ <20191217155219.GA3754999@kroah.com>
+From:   Dmitry Safonov <dima@arista.com>
+Message-ID: <c0b28ccc-7a0e-f6e7-ac6f-f310094acc03@arista.com>
+Date:   Tue, 17 Dec 2019 15:56:40 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+ZLaR=GR2nssb_buGC0ULNpQW6jvX0p8NAE-vReDY5fPA@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191217155219.GA3754999@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 09:36:43AM +0100, Dmitry Vyukov wrote:
-> Yes, what Tetsuo says. Only syscall numbers and top-level arguments to
-> syscalls are easy to filter out. When indirect memory is passed to
-> kernel or (fd,ioctl) pairs are involved it boils down to solving the
-> halting problem.
+On 12/17/19 3:52 PM, Greg Kroah-Hartman wrote:
+> On Tue, Dec 17, 2019 at 03:47:34PM +0000, Dmitry Safonov wrote:
+>> On 12/17/19 2:02 PM, Greg Kroah-Hartman wrote:
+>>> The samsung_tty driver was trying to abuse the struct uart_port by using
+>>> two "empty" bytes for its own use.  That's not ok, and was found by
+>>> removing those fields from the structure.
+>>>
+>>> Move the variables into the port-specific structure, which is where
+>>> everything else for this port already is.  There is no space wasted here
+>>> as there was an empty "hole" in the structure already for these bytes.
+>>
+>> Thanks!
+>> Sorry for not noticing this myself.
+> 
+> You wouldn't have noticed this unless you build for that platform. I
+> just recently made it buildable for other ones.
 
-I disagree that it's equivalent to solving the halting problem.
-Otherwise, we couldn't filter in the kernel.  Let's think about ways
-we can solve this.  One is to simply do what valgrind does; this
-handles even self-modifying code, since you're essentially running an
-x86-to-x86 emulator, and then you find an attempted trap to the
-kernel, you can transfer control to a program which vets the arguments
-to the system call.
+Ah, I was running CONFIG_COMPILE_TEST and thought that it should trigger
+anything (and fixed an issue before sending). Probably, managed not to
+enable samsung driver's option.
 
-Another approach might be to do this filtering in an BPF hook
-installed at syscall entry.  Technically this is being done in the
-kernel, but the advantage of this approach is that the BPF program can
-be distributed alongside Syzkaller, and it can be Syzkaller-specific.
-That way when we need to add a new blacklist entry, it can be done
-without needing to wait for a kernel patch.
-
-And note that there may *always* be some ioctls which we will need to
-suppress.  For example, an attempt to send a SANITIZE ERASE to a
-storage device; or an attempt to freeze the root file system, etc.
-And I'm not sure all of these are ones that we can prevent by using
-the lockdown setting.  There may very well be some commands that a
-legitamate system administrator might want to execute that will, when
-executed in the wrong circumstances causes the system to crash.  But
-so long as it doesn't violate the trusted boot semantics which are the
-whole point of lockdown, we would need to allow them.
-
-So I suspect that some kind of filtering which is Syzkaller specific
-is going to be inevitably needed, if you want to throw random binary
-code and see what causes problem, and you insist on allowing these
-random binary bits to be run as root.  Trying to prevent root from
-being able to kill or self-DOS a machine goes way beyond any of our
-current security mechanisms, and is something which is only really
-needed by Fuzzers.  Personally, I suspect some kind of BPF filtering
-is probably your best bet, since it will a bit more architecturally
-portable than using some kind of Valgrind-like approach.  (Although
-Valgrind *does* most of the architectures that I suspect we're going
-to care about.)
-
-						- Ted
+Thanks,
+          Dmitry
