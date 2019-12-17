@@ -2,34 +2,34 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D35DC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FFECC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C956F206D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36DC1206D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:34:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727985AbfLQMdv (ORCPT
+        id S1728218AbfLQMeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:33:51 -0500
-Received: from mga18.intel.com ([134.134.136.126]:47966 "EHLO mga18.intel.com"
+        Tue, 17 Dec 2019 07:34:46 -0500
+Received: from mga07.intel.com ([134.134.136.100]:28139 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727666AbfLQMdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 07:33:50 -0500
+        id S1726571AbfLQMdv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 07:33:51 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 04:33:50 -0800
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 04:33:50 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,325,1571727600"; 
-   d="scan'208";a="389811678"
+   d="scan'208";a="415448229"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga005.jf.intel.com with ESMTP; 17 Dec 2019 04:33:46 -0800
+  by fmsmga005.fm.intel.com with ESMTP; 17 Dec 2019 04:33:46 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 641FE12A; Tue, 17 Dec 2019 14:33:45 +0200 (EET)
+        id 854B624C; Tue, 17 Dec 2019 14:33:45 +0200 (EET)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     linux-usb@vger.kernel.org
 Cc:     Andreas Noever <andreas.noever@gmail.com>,
@@ -47,10 +47,12 @@ Cc:     Andreas Noever <andreas.noever@gmail.com>,
         Christian Kellner <ckellner@redhat.com>,
         "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/9] thunderbolt: Add support for USB4
-Date:   Tue, 17 Dec 2019 15:33:36 +0300
-Message-Id: <20191217123345.31850-1-mika.westerberg@linux.intel.com>
+Subject: [PATCH v2 3/9] thunderbolt: Populate PG field in hot plug acknowledgment packet
+Date:   Tue, 17 Dec 2019 15:33:39 +0300
+Message-Id: <20191217123345.31850-4-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191217123345.31850-1-mika.westerberg@linux.intel.com>
+References: <20191217123345.31850-1-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,117 +60,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+USB4 1.0 section 6.4.2.7 specifies a new field (PG) in notification
+packet that is sent as response of hot plug/unplug events. This field
+tells whether the acknowledgment is for plug or unplug event. This needs
+to be set accordingly in order the router to send further hot plug
+notifications.
 
-USB4 is the public specification of Thunderbolt 3 protocol and can be
-downloaded here:
+To make it simpler we fill the field unconditionally. Legacy devices do
+not look at this field so there should be no problems with them.
 
-  https://www.usb.org/sites/default/files/USB4%20Specification_1.zip
+While there rename tb_cfg_error() to tb_cfg_ack_plug() and update the
+log message accordingly. The function is only used to ack plug/unplug
+events.
 
-USB4 is about tunneling different protocols over a single cable (in the
-same way as Thunderbolt). The current USB4 spec supports PCIe, Display Port
-and USB 3.x, and also software based protocols such as networking between
-domains (hosts).
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+---
+ drivers/thunderbolt/ctl.c     | 19 +++++++++++++------
+ drivers/thunderbolt/ctl.h     |  3 +--
+ drivers/thunderbolt/tb.c      |  3 +--
+ drivers/thunderbolt/tb_msgs.h |  6 +++++-
+ 4 files changed, 20 insertions(+), 11 deletions(-)
 
-So far PCs have been using firmware based Connection Manager (FW CM, ICM)
-and Apple systems have been using software based one (SW CM, ECM). A
-Connection Manager is the entity that handles creation of different tunnel
-types through the USB4 (and Thunderbolt) fabric. With USB4 the plan is to
-have software based Connection Manager everywhere but some early systems
-will come with firmware based connection manager.
-
-Current Linux Thunderbolt driver supports both "modes" and can detect which
-one to use dynamically.
-
-This series extends the Linux Thunderbolt driver to support USB4 compliant
-hosts and devices (this applies to both firmware and software based
-connection managers). USB4 Features enabled by this series include:
-
-  - PCIe tunneling
-  - Display Port tunneling
-  - USB 3.x tunneling
-  - P2P networking (implemented in drivers/net/thunderbolt.c)
-  - Host and device NVM firmware upgrade
-
-Power management support is still work in progress. It will be submitted
-later on once properly tested.
-
-The previous versions of the series can be seen here:
-
-  v1: https://lore.kernel.org/linux-usb/20191023112154.64235-1-mika.westerberg@linux.intel.com/
-  RFC: https://lore.kernel.org/lkml/20191001113830.13028-1-mika.westerberg@linux.intel.com/
-
-Changes from v1:
-
-  * Rebased on top of v5.5-rc2.
-  * Add a new patch to populate PG field in hotplug ack packet.
-  * Rename the networking driver Kconfig symbol to CONFIG_USB4_NET to
-    follow the driver itself (CONFIG_USB4).
-
-Changes from the RFC version:
-
-  * Spelled out what are ICM, and SW CM (and ECM)
-  * Log warning in tb_switch_add() instead of the caller
-  * Use Lukas' suggestion in port walk helper macro and also drop
-    tb_switch_for_each_remote_port() and tb_switch_for_each_connected_port()
-  * Rework icm.c::add_switch() so that we don't need to pass huge amount of
-    parameters to it
-  * Add rx/tx versions of link width/speed attributes following convention
-    used in USB bus (with the exception that we provide rx_speed and
-    tx_speed as well).
-  * Spell out DROM and try to clarify what linking in patch [11/25] means.
-  * Add a new patch that expands controller name in existing tb_switch_is_xy()
-    functions and do the same for tb_switch_is_ar()/tr().
-  * Move register name conversion pathes up in the series so that we can
-    apply them for v5.5 already.
-  * Update changelog of patch [14/25] so that it only mentions Titan Ridge.
-  * Rename CONFIG_THUNDERBOLT to CONFIG_USB4, this should be more future
-    proof.
-  * Check if TMU is enabled in tb_switch_tmu_enable().
-  * Use "usb3" and "USB3" in USB 3.x tunneling functionality instead of
-    plain "usb".
-  * Reword documentation patch [25/25] according to received comments.
-  * Introduce icm_firmware_running().
-
-Mika Westerberg (6):
-  thunderbolt: Make tb_find_port() available to other files
-  thunderbolt: Call tb_eeprom_get_drom_offset() from tb_eeprom_read_n()
-  thunderbolt: Populate PG field in hot plug acknowledgment packet
-  thunderbolt: Add initial support for USB4
-  thunderbolt: Update Kconfig entries to USB4
-  thunderbolt: Update documentation with the USB4 information
-
-Rajmohan Mani (3):
-  thunderbolt: Make tb_switch_find_cap() available to other files
-  thunderbolt: Add support for Time Management Unit
-  thunderbolt: Add support for USB 3.x tunnels
-
- Documentation/admin-guide/thunderbolt.rst |  30 +-
- drivers/Makefile                          |   2 +-
- drivers/net/Kconfig                       |  10 +-
- drivers/net/Makefile                      |   2 +-
- drivers/thunderbolt/Kconfig               |  11 +-
- drivers/thunderbolt/Makefile              |   4 +-
- drivers/thunderbolt/cap.c                 |  11 +-
- drivers/thunderbolt/ctl.c                 |  19 +-
- drivers/thunderbolt/ctl.h                 |   3 +-
- drivers/thunderbolt/eeprom.c              | 137 ++--
- drivers/thunderbolt/nhi.c                 |   3 +
- drivers/thunderbolt/nhi.h                 |   2 +
- drivers/thunderbolt/switch.c              | 439 ++++++++++---
- drivers/thunderbolt/tb.c                  | 227 +++++--
- drivers/thunderbolt/tb.h                  | 101 +++
- drivers/thunderbolt/tb_msgs.h             |   6 +-
- drivers/thunderbolt/tb_regs.h             |  65 +-
- drivers/thunderbolt/tmu.c                 | 383 +++++++++++
- drivers/thunderbolt/tunnel.c              | 169 ++++-
- drivers/thunderbolt/tunnel.h              |   9 +
- drivers/thunderbolt/usb4.c                | 764 ++++++++++++++++++++++
- drivers/thunderbolt/xdomain.c             |   6 +
- 22 files changed, 2167 insertions(+), 236 deletions(-)
- create mode 100644 drivers/thunderbolt/tmu.c
- create mode 100644 drivers/thunderbolt/usb4.c
-
+diff --git a/drivers/thunderbolt/ctl.c b/drivers/thunderbolt/ctl.c
+index d97813e80e5f..f77ceae5c7d7 100644
+--- a/drivers/thunderbolt/ctl.c
++++ b/drivers/thunderbolt/ctl.c
+@@ -708,19 +708,26 @@ void tb_ctl_stop(struct tb_ctl *ctl)
+ /* public interface, commands */
+ 
+ /**
+- * tb_cfg_error() - send error packet
++ * tb_cfg_ack_plug() - Ack hot plug/unplug event
++ * @ctl: Control channel to use
++ * @route: Router that originated the event
++ * @port: Port where the hot plug/unplug happened
++ * @unplug: Ack hot plug or unplug
+  *
+- * Return: Returns 0 on success or an error code on failure.
++ * Call this as response for hot plug/unplug event to ack it.
++ * Returns %0 on success or an error code on failure.
+  */
+-int tb_cfg_error(struct tb_ctl *ctl, u64 route, u32 port,
+-		 enum tb_cfg_error error)
++int tb_cfg_ack_plug(struct tb_ctl *ctl, u64 route, u32 port, bool unplug)
+ {
+ 	struct cfg_error_pkg pkg = {
+ 		.header = tb_cfg_make_header(route),
+ 		.port = port,
+-		.error = error,
++		.error = TB_CFG_ERROR_ACK_PLUG_EVENT,
++		.pg = unplug ? TB_CFG_ERROR_PG_HOT_UNPLUG
++			     : TB_CFG_ERROR_PG_HOT_PLUG,
+ 	};
+-	tb_ctl_dbg(ctl, "resetting error on %llx:%x.\n", route, port);
++	tb_ctl_dbg(ctl, "acking hot %splug event on %llx:%x\n",
++		   unplug ? "un" : "", route, port);
+ 	return tb_ctl_tx(ctl, &pkg, sizeof(pkg), TB_CFG_PKG_ERROR);
+ }
+ 
+diff --git a/drivers/thunderbolt/ctl.h b/drivers/thunderbolt/ctl.h
+index 2f1a1e111110..97cb03b38953 100644
+--- a/drivers/thunderbolt/ctl.h
++++ b/drivers/thunderbolt/ctl.h
+@@ -123,8 +123,7 @@ static inline struct tb_cfg_header tb_cfg_make_header(u64 route)
+ 	return header;
+ }
+ 
+-int tb_cfg_error(struct tb_ctl *ctl, u64 route, u32 port,
+-		 enum tb_cfg_error error);
++int tb_cfg_ack_plug(struct tb_ctl *ctl, u64 route, u32 port, bool unplug);
+ struct tb_cfg_result tb_cfg_reset(struct tb_ctl *ctl, u64 route,
+ 				  int timeout_msec);
+ struct tb_cfg_result tb_cfg_read_raw(struct tb_ctl *ctl, void *buffer,
+diff --git a/drivers/thunderbolt/tb.c b/drivers/thunderbolt/tb.c
+index 54085f67810a..e54d0d89a32d 100644
+--- a/drivers/thunderbolt/tb.c
++++ b/drivers/thunderbolt/tb.c
+@@ -768,8 +768,7 @@ static void tb_handle_event(struct tb *tb, enum tb_cfg_pkg_type type,
+ 
+ 	route = tb_cfg_get_route(&pkg->header);
+ 
+-	if (tb_cfg_error(tb->ctl, route, pkg->port,
+-			 TB_CFG_ERROR_ACK_PLUG_EVENT)) {
++	if (tb_cfg_ack_plug(tb->ctl, route, pkg->port, pkg->unplug)) {
+ 		tb_warn(tb, "could not ack plug event on %llx:%x\n", route,
+ 			pkg->port);
+ 	}
+diff --git a/drivers/thunderbolt/tb_msgs.h b/drivers/thunderbolt/tb_msgs.h
+index 3705057723b6..fc208c567953 100644
+--- a/drivers/thunderbolt/tb_msgs.h
++++ b/drivers/thunderbolt/tb_msgs.h
+@@ -67,9 +67,13 @@ struct cfg_error_pkg {
+ 	u32 zero1:4;
+ 	u32 port:6;
+ 	u32 zero2:2; /* Both should be zero, still they are different fields. */
+-	u32 zero3:16;
++	u32 zero3:14;
++	u32 pg:2;
+ } __packed;
+ 
++#define TB_CFG_ERROR_PG_HOT_PLUG	0x2
++#define TB_CFG_ERROR_PG_HOT_UNPLUG	0x3
++
+ /* TB_CFG_PKG_EVENT */
+ struct cfg_event_pkg {
+ 	struct tb_cfg_header header;
 -- 
 2.24.0
 
