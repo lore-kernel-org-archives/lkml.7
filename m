@@ -2,123 +2,158 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C22FC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA7C3C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F33820716
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:31:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC00120716
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:32:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="bmijsgR9";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JQpNJtE7"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KmFEP4Em"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727265AbfLQKb6 (ORCPT
+        id S1727333AbfLQKcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 05:31:58 -0500
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:38269 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725940AbfLQKb5 (ORCPT
+        Tue, 17 Dec 2019 05:32:02 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:52916 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725940AbfLQKcA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 05:31:57 -0500
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailnew.nyi.internal (Postfix) with ESMTP id CBD7B6C1D;
-        Tue, 17 Dec 2019 05:31:55 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Tue, 17 Dec 2019 05:31:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=WVOKI5Xa8ynfxOHUH8uTfezXeuU
-        ofMPbouYAeeiBwfo=; b=bmijsgR9pBP2Ebh5XRA1uJIvaotKaT0uunVjVlY8l1C
-        aoxODXf2Z/oIfgaiOn3GfxvN12hOlmxSVrt/DaUn2ui5y4YWSoDc09CpwSTSPvtv
-        EpCAVbR4ENthlY2tusERvGdA4V9WukWKml4U8LbisXwsFqGk1MgOy+dKLHjxHdSZ
-        tyhvxw41ZOLsopmAjnd9nL0d0uAsWaB51tldwy0lqX74f4dbGKrZ/mRVPrNLxV+M
-        svbfpDgHzf/aKOcs6RlMmOlKIh1N8lDoWOt+0RBjBAS6nPLpU/KfKRRvelNIHB04
-        GM/lHpfosT7/ny01Wzi9gelg9d+2McwmJLd6HiJHazw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=WVOKI5
-        Xa8ynfxOHUH8uTfezXeuUofMPbouYAeeiBwfo=; b=JQpNJtE7YDoUUklw9zvFjP
-        wZ9Ih3qPBkDVD9rCoT5gWFxZZMwAusismfQXbuYWFxuPirAhMF5u+liubo54g2f9
-        VSPkmDIF7Z97Skk7gKtoH/EFJbwhbIq5myFJfZ1wZMfnXUVwYdTnTdbRYh7eeVJZ
-        gJr09v+76QbaX2xWEI3SPIzQs13zYK+p0ljuNvrE/AQuYI3MW6dLZmiD5Z7rxO48
-        XkEdENERvqJHzLTz0PGGUNfi9qhPrrHD1byP+9dNJtTDnPd2NMWkBFlCPwUsYFit
-        JZjF92wtLbfZEF63mps1svac1aKgx7nquB1ubhn+c8c1T9KtwpDHE9SUMhQ+u0pA
-        ==
-X-ME-Sender: <xms:mq74XbTn4Mg9VZkNfMUDm5tvQnvEyJ2uURgkgoUYXKa8WCLK8XbTTw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddtjedgudehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvuffkfhggtggujgesthdtre
-    dttddtvdenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheq
-    necukfhppeekfedrkeeirdekledruddtjeenucfrrghrrghmpehmrghilhhfrhhomhepgh
-    hrvghgsehkrhhorghhrdgtohhmnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:mq74XU4x3XQ7_I5tSP0AKITnKCi65jdaYkOmpNjBtanvDdZYLiOoiQ>
-    <xmx:mq74XQUg-13Hasut9Vfn0iVM61swGMfn27ddmuXCObXilt8-pdnw2g>
-    <xmx:mq74Xa-et88YfpMZI-Zc-HV_sTQU6ySLnoywFpS3bcb4zJHuXMgkdg>
-    <xmx:m674Xe8EJYjeh9FVPEltY81zCiKvaT4ZKJ8GAjBTR6L8hMaNwuJDaQ>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 4E5FF8005C;
-        Tue, 17 Dec 2019 05:31:54 -0500 (EST)
-Date:   Tue, 17 Dec 2019 11:31:52 +0100
-From:   Greg KH <greg@kroah.com>
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, dmitry.torokhov@gmail.com,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com,
-        arnd@arndb.de, masahiroy@kernel.org, michal.lkml@markovi.net,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        linux-gpio@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH] RFC: platform driver registering via initcall tables
-Message-ID: <20191217103152.GB2914497@kroah.com>
-References: <20191217102219.29223-1-info@metux.net>
+        Tue, 17 Dec 2019 05:32:00 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576578719; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=xFFX4wMybPgYg/kJCtbV3gnzPuYvr9ckt/7D10fLnN0=; b=KmFEP4EmSAppqc2ByN4M4KESfZRHmBdGZ0hlzT7U+uBFEy7phFjIEeaXxynXdsUME4SYMHIC
+ jxIw6boBqBVIyb5yB0HKYqTHFJ+Fu96hMw4fyhMpI/fKFy/Omc1vXG/M82yyzxSrux7CqXmG
+ L8MJggJJ6ImQzjd/k5e4bdBRclM=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5df8ae9f.7fe28a4e5228-smtp-out-n02;
+ Tue, 17 Dec 2019 10:31:59 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 16896C447A0; Tue, 17 Dec 2019 10:31:59 +0000 (UTC)
+Received: from [10.131.117.127] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id AB9FCC433CB;
+        Tue, 17 Dec 2019 10:31:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AB9FCC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: sc7180: Add rpmh power-domain node
+To:     Sibi Sankar <sibis@codeaurora.org>, bjorn.andersson@linaro.org,
+        robh+dt@kernel.org
+Cc:     agross@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        mark.rutland@arm.com, swboyd@chromium.org, dianders@chromium.org
+References: <20191216115531.17573-1-sibis@codeaurora.org>
+ <20191216115531.17573-3-sibis@codeaurora.org>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <fe28c214-f86b-b849-78e8-f879185269f7@codeaurora.org>
+Date:   Tue, 17 Dec 2019 16:01:53 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191217102219.29223-1-info@metux.net>
+In-Reply-To: <20191216115531.17573-3-sibis@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 11:22:19AM +0100, Enrico Weigelt, metux IT consult wrote:
-> A large portion of platform drivers doesn't need their own init/exit
-> functions. At source level, the boilerplate is already replaced by
-> module_platform_driver() macro call, which creates this code under
-> the hood. But in the binary, the code is still there.
+On 12/16/2019 5:25 PM, Sibi Sankar wrote:
+> Add the DT node for the rpmhpd power controller on SC7180 SoCs.
 > 
-> This patch is an attempt to remove them it, by the same approach
-> already used for the init functions: collect pointers to the driver
-> structs in special sections, which are then processed by the init
-> code which already calls the init function vectors. For each level,
-> the structs are processed right after the init funcs, so we guarantee
-> the existing order, and explicit inits always come before the automatic
-> registering.
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
 
-No, what is so "special" about platform drivers that they require this?
+Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
 
-If anything, we should be moving _AWAY_ from platform drivers and use
-real bus drivers instead.
-
-> Downside of apprach: cluttering init code w/ a little bit knowledge
-> about driver related stuff (calls to platform_driver_register(), etc).
-
-Exactly, don't.
-
-> For now, only implemented for the built-in case (modules still go the
-> old route). The module case is a little bit trickier: either we have to
-> extend the module header (and modpost tool) or do some dynamic symbol
-> lookup.
+>   arch/arm64/boot/dts/qcom/sc7180.dtsi | 55 ++++++++++++++++++++++++++++
+>   1 file changed, 55 insertions(+)
 > 
-> This patch is just a PoC for further discussions, not ready for mainline.
-> It also changes a few drivers, just for illustration. In case the general
-> approach is accepted, it will be cleaned up and splitted.
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 01bbb58ae5160..fb17dc62d7ab1 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -9,6 +9,7 @@
+>   #include <dt-bindings/clock/qcom,rpmh.h>
+>   #include <dt-bindings/interrupt-controller/arm-gic.h>
+>   #include <dt-bindings/phy/phy-qcom-qusb2.h>
+> +#include <dt-bindings/power/qcom-rpmpd.h>
+>   #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+>   
+>   / {
+> @@ -1284,6 +1285,60 @@
+>   				clock-names = "xo";
+>   				#clock-cells = <1>;
+>   			};
+> +
+> +			rpmhpd: power-controller {
+> +				compatible = "qcom,sc7180-rpmhpd";
+> +				#power-domain-cells = <1>;
+> +				operating-points-v2 = <&rpmhpd_opp_table>;
+> +
+> +				rpmhpd_opp_table: opp-table {
+> +					compatible = "operating-points-v2";
+> +
+> +					rpmhpd_opp_ret: opp1 {
+> +						opp-level = <RPMH_REGULATOR_LEVEL_RETENTION>;
+> +					};
+> +
+> +					rpmhpd_opp_min_svs: opp2 {
+> +						opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
+> +					};
+> +
+> +					rpmhpd_opp_low_svs: opp3 {
+> +						opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
+> +					};
+> +
+> +					rpmhpd_opp_svs: opp4 {
+> +						opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
+> +					};
+> +
+> +					rpmhpd_opp_svs_l1: opp5 {
+> +						opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
+> +					};
+> +
+> +					rpmhpd_opp_svs_l2: opp6 {
+> +						opp-level = <RPMH_REGULATOR_LEVEL_SVS_L2>;
+> +					};
+> +
+> +					rpmhpd_opp_nom: opp7 {
+> +						opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
+> +					};
+> +
+> +					rpmhpd_opp_nom_l1: opp8 {
+> +						opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
+> +					};
+> +
+> +					rpmhpd_opp_nom_l2: opp9 {
+> +						opp-level = <RPMH_REGULATOR_LEVEL_NOM_L2>;
+> +					};
+> +
+> +					rpmhpd_opp_turbo: opp10 {
+> +						opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
+> +					};
+> +
+> +					rpmhpd_opp_turbo_l1: opp11 {
+> +						opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
+> +					};
+> +				};
+> +			};
+>   		};
+>   
+>   		cpufreq_hw: cpufreq@18323000 {
+> 
 
-Please no, I don't see why this is even needed.
-
-greg k-h
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
