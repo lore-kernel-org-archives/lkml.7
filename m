@@ -2,138 +2,273 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=FORGED_MUA_MOZILLA,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE4CC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6D2C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CF1624655
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:38:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7353124655
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:40:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728523AbfLQOiT (ORCPT
+        id S1728757AbfLQOki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:38:19 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:4958 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726962AbfLQOiS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:38:18 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBHEWlH5109289
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 09:38:17 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wwe61ga3m-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 09:38:17 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <riteshh@linux.ibm.com>;
-        Tue, 17 Dec 2019 14:38:14 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 17 Dec 2019 14:38:10 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBHEc9sM29229106
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 17 Dec 2019 14:38:09 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C41404C04E;
-        Tue, 17 Dec 2019 14:38:09 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E8F1D4C058;
-        Tue, 17 Dec 2019 14:38:07 +0000 (GMT)
-Received: from [9.199.158.112] (unknown [9.199.158.112])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 17 Dec 2019 14:38:07 +0000 (GMT)
-Subject: Re: [PATCH] ext4: fix Wunused-but-set-variable warning in
- ext4_add_entry()
-To:     Yunfeng Ye <yeyunfeng@huawei.com>, tytso@mit.edu,
-        adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
-        "linfeilong@huawei.com" <linfeilong@huawei.com>
-References: <c351e548-f094-aa90-bf8e-b267284c493e@huawei.com>
-From:   Ritesh Harjani <riteshh@linux.ibm.com>
-Date:   Tue, 17 Dec 2019 20:08:06 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 17 Dec 2019 09:40:38 -0500
+Received: from foss.arm.com ([217.140.110.172]:39214 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728532AbfLQOki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 09:40:38 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 474501FB;
+        Tue, 17 Dec 2019 06:40:37 -0800 (PST)
+Received: from arm.com (e112269-lin.cambridge.arm.com [10.1.196.56])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4B9183F67D;
+        Tue, 17 Dec 2019 06:40:35 -0800 (PST)
+Date:   Tue, 17 Dec 2019 14:40:33 +0000
+From:   Steven Price <steven.price@arm.com>
+To:     "yezengruan@huawei.com" <yezengruan@huawei.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "maz@kernel.org" <maz@kernel.org>,
+        James Morse <James.Morse@arm.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        "julien.thierry.kdev@gmail.com" <julien.thierry.kdev@gmail.com>,
+        Catalin Marinas <Catalin.Marinas@arm.com>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH 5/5] KVM: arm64: Support the vcpu preemption check
+Message-ID: <20191217144032.GD38811@arm.com>
+References: <20191217135549.3240-1-yezengruan@huawei.com>
+ <20191217135549.3240-6-yezengruan@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <c351e548-f094-aa90-bf8e-b267284c493e@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19121714-0008-0000-0000-00000341D58A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19121714-0009-0000-0000-00004A61E6D5
-Message-Id: <20191217143807.E8F1D4C058@d06av22.portsmouth.uk.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-17_02:2019-12-17,2019-12-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- impostorscore=0 suspectscore=0 adultscore=0 bulkscore=0 mlxlogscore=985
- clxscore=1015 priorityscore=1501 spamscore=0 mlxscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-1912170123
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191217135549.3240-6-yezengruan@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 12/17/19 5:41 PM, Yunfeng Ye wrote:
-> Warning is found when compile with "-Wunused-but-set-variable":
+On Tue, Dec 17, 2019 at 01:55:49PM +0000, yezengruan@huawei.com wrote:
+> From: Zengruan Ye <yezengruan@huawei.com>
 > 
-> fs/ext4/namei.c: In function ‘ext4_add_entry’:
-> fs/ext4/namei.c:2167:23: warning: variable ‘sbi’ set but not used
-> [-Wunused-but-set-variable]
->    struct ext4_sb_info *sbi;
->                         ^~~
-> Fix this by moving the variable @sbi under CONFIG_UNICODE.
+> Support the vcpu_is_preempted() functionality under KVM/arm64. This will
+> enhance lock performance on overcommitted hosts (more runnable vcpus
+> than physical cpus in the system) as doing busy waits for preempted
+> vcpus will hurt system performance far worse than early yielding.
 > 
-> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-
-Looks good to me. You may add:
-
-Reviewed-by: Ritesh Harjani <riteshh@linux.ibm.com>
-
-
-
+> unix benchmark result:
+>   host:  kernel 5.5.0-rc1, HiSilicon Kunpeng920, 8 cpus
+>   guest: kernel 5.5.0-rc1, 16 vcpus
+> 
+>                test-case                |    after-patch    |   before-patch
+> ----------------------------------------+-------------------+------------------
+>  Dhrystone 2 using register variables   | 334600751.0 lps   | 335319028.3 lps
+>  Double-Precision Whetstone             |     32856.1 MWIPS |     32849.6 MWIPS
+>  Execl Throughput                       |      3662.1 lps   |      2718.0 lps
+>  File Copy 1024 bufsize 2000 maxblocks  |    432906.4 KBps  |    158011.8 KBps
+>  File Copy 256 bufsize 500 maxblocks    |    116023.0 KBps  |     37664.0 KBps
+>  File Copy 4096 bufsize 8000 maxblocks  |   1432769.8 KBps  |    441108.8 KBps
+>  Pipe Throughput                        |   6405029.6 lps   |   6021457.6 lps
+>  Pipe-based Context Switching           |    185872.7 lps   |    184255.3 lps
+>  Process Creation                       |      4025.7 lps   |      3706.6 lps
+>  Shell Scripts (1 concurrent)           |      6745.6 lpm   |      6436.1 lpm
+>  Shell Scripts (8 concurrent)           |       998.7 lpm   |       931.1 lpm
+>  System Call Overhead                   |   3913363.1 lps   |   3883287.8 lps
+> ----------------------------------------+-------------------+------------------
+>  System Benchmarks Index Score          |      1835.1       |      1327.6
+> 
+> Signed-off-by: Zengruan Ye <yezengruan@huawei.com>
 > ---
->   fs/ext4/namei.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
+>  arch/arm64/include/asm/paravirt.h |  3 +
+>  arch/arm64/kernel/paravirt.c      | 91 +++++++++++++++++++++++++++++++
+>  arch/arm64/kernel/setup.c         |  2 +
+>  include/linux/cpuhotplug.h        |  1 +
+>  4 files changed, 97 insertions(+)
 > 
-> diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
-> index a856997d87b5..617349be460f 100644
-> --- a/fs/ext4/namei.c
-> +++ b/fs/ext4/namei.c
-> @@ -2164,7 +2164,9 @@ static int ext4_add_entry(handle_t *handle, struct dentry *dentry,
->   	struct buffer_head *bh = NULL;
->   	struct ext4_dir_entry_2 *de;
->   	struct super_block *sb;
-> +#ifdef CONFIG_UNICODE
->   	struct ext4_sb_info *sbi;
-> +#endif
->   	struct ext4_filename fname;
->   	int	retval;
->   	int	dx_fallback=0;
-> @@ -2176,12 +2178,12 @@ static int ext4_add_entry(handle_t *handle, struct dentry *dentry,
->   		csum_size = sizeof(struct ext4_dir_entry_tail);
-> 
->   	sb = dir->i_sb;
-> -	sbi = EXT4_SB(sb);
->   	blocksize = sb->s_blocksize;
->   	if (!dentry->d_name.len)
->   		return -EINVAL;
-> 
->   #ifdef CONFIG_UNICODE
-> +	sbi = EXT4_SB(sb);
->   	if (ext4_has_strict_mode(sbi) && IS_CASEFOLDED(dir) &&
->   	    sbi->s_encoding && utf8_validate(sbi->s_encoding, &dentry->d_name))
->   		return -EINVAL;
-> 
+> diff --git a/arch/arm64/include/asm/paravirt.h b/arch/arm64/include/asm/paravirt.h
+> index 7b1c81b544bb..a2cd0183bbef 100644
+> --- a/arch/arm64/include/asm/paravirt.h
+> +++ b/arch/arm64/include/asm/paravirt.h
+> @@ -29,6 +29,8 @@ static inline u64 paravirt_steal_clock(int cpu)
+>  
+>  int __init pv_time_init(void);
+>  
+> +int __init kvm_guest_init(void);
+> +
 
+This is a *very* generic name - I suggest something like pv_lock_init()
+so it's clear what the function actually does.
+
+>  __visible bool __native_vcpu_is_preempted(int cpu);
+>  
+>  static inline bool pv_vcpu_is_preempted(int cpu)
+> @@ -39,6 +41,7 @@ static inline bool pv_vcpu_is_preempted(int cpu)
+>  #else
+>  
+>  #define pv_time_init() do {} while (0)
+> +#define kvm_guest_init() do {} while (0)
+>  
+>  #endif // CONFIG_PARAVIRT
+>  
+> diff --git a/arch/arm64/kernel/paravirt.c b/arch/arm64/kernel/paravirt.c
+> index d8f1ba8c22ce..a86dead40473 100644
+> --- a/arch/arm64/kernel/paravirt.c
+> +++ b/arch/arm64/kernel/paravirt.c
+> @@ -22,6 +22,7 @@
+>  #include <asm/paravirt.h>
+>  #include <asm/pvclock-abi.h>
+>  #include <asm/smp_plat.h>
+> +#include <asm/pvlock-abi.h>
+>  
+>  struct static_key paravirt_steal_enabled;
+>  struct static_key paravirt_steal_rq_enabled;
+> @@ -158,3 +159,93 @@ int __init pv_time_init(void)
+>  
+>  	return 0;
+>  }
+> +
+> +DEFINE_PER_CPU(struct pvlock_vcpu_state, pvlock_vcpu_region) __aligned(64);
+> +EXPORT_PER_CPU_SYMBOL(pvlock_vcpu_region);
+> +
+> +static int pvlock_vcpu_state_dying_cpu(unsigned int cpu)
+> +{
+> +	struct pvlock_vcpu_state *reg;
+> +
+> +	reg = this_cpu_ptr(&pvlock_vcpu_region);
+> +	if (!reg)
+> +		return -EFAULT;
+> +
+> +	memset(reg, 0, sizeof(*reg));
+
+I might be missing something obvious here - but I don't see the point of
+this. The hypervisor might immediately overwrite the structure again.
+Indeed you should conside a mechanism for the guest to "unregister" the
+region - otherwise you will face issues with the likes of kexec.
+
+For pv_time the memory is allocated by the hypervisor not the guest to
+avoid lifetime issues about kexec.
+
+> +
+> +	return 0;
+> +}
+> +
+> +static int init_pvlock_vcpu_state(unsigned int cpu)
+> +{
+> +	struct pvlock_vcpu_state *reg;
+> +	struct arm_smccc_res res;
+> +
+> +	reg = this_cpu_ptr(&pvlock_vcpu_region);
+> +	if (!reg)
+> +		return -EFAULT;
+> +
+> +	/* Pass the memory address to host via hypercall */
+> +	arm_smccc_1_1_invoke(ARM_SMCCC_HV_PV_LOCK_PREEMPTED,
+> +			     virt_to_phys(reg), &res);
+> +
+> +	return 0;
+> +}
+> +
+> +static bool kvm_vcpu_is_preempted(int cpu)
+> +{
+> +	struct pvlock_vcpu_state *reg = &per_cpu(pvlock_vcpu_region, cpu);
+> +
+> +	if (reg)
+> +		return !!(reg->preempted & 1);
+> +
+> +	return false;
+> +}
+> +
+> +static int kvm_arm_init_pvlock(void)
+> +{
+> +	int ret;
+> +
+> +	ret = cpuhp_setup_state(CPUHP_AP_ARM_KVM_PVLOCK_STARTING,
+> +				"hypervisor/arm/pvlock:starting",
+> +				init_pvlock_vcpu_state,
+> +				pvlock_vcpu_state_dying_cpu);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	pv_ops.lock.vcpu_is_preempted = kvm_vcpu_is_preempted;
+> +
+> +	pr_info("using PV-lock preempted\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static bool has_kvm_pvlock(void)
+> +{
+> +	struct arm_smccc_res res;
+> +
+> +	/* To detect the presence of PV lock support we require SMCCC 1.1+ */
+> +	if (psci_ops.smccc_version < SMCCC_VERSION_1_1)
+> +		return false;
+> +
+> +	arm_smccc_1_1_invoke(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
+> +			     ARM_SMCCC_HV_PV_LOCK_FEATURES, &res);
+> +
+> +	if (res.a0 != SMCCC_RET_SUCCESS)
+> +		return false;
+> +
+> +	return true;
+> +}
+> +
+> +int __init kvm_guest_init(void)
+> +{
+> +	if (is_hyp_mode_available())
+> +		return 0;
+> +
+> +	if (!has_kvm_pvlock())
+> +		return 0;
+> +
+> +	kvm_arm_init_pvlock();
+
+Consider reporting errors from kvm_arm_init_pvlock()? At the moment
+it's impossible to tell the difference between pvlock not being
+supported and something failing in the setup.
+
+Steve
+
+> +
+> +	return 0;
+> +}
+> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+> index 56f664561754..64c4d515ba2d 100644
+> --- a/arch/arm64/kernel/setup.c
+> +++ b/arch/arm64/kernel/setup.c
+> @@ -341,6 +341,8 @@ void __init setup_arch(char **cmdline_p)
+>  	smp_init_cpus();
+>  	smp_build_mpidr_hash();
+>  
+> +	kvm_guest_init();
+> +
+>  	/* Init percpu seeds for random tags after cpus are set up. */
+>  	kasan_init_tags();
+>  
+> diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
+> index e51ee772b9f5..f72ff95ab63a 100644
+> --- a/include/linux/cpuhotplug.h
+> +++ b/include/linux/cpuhotplug.h
+> @@ -138,6 +138,7 @@ enum cpuhp_state {
+>  	CPUHP_AP_DUMMY_TIMER_STARTING,
+>  	CPUHP_AP_ARM_XEN_STARTING,
+>  	CPUHP_AP_ARM_KVMPV_STARTING,
+> +	CPUHP_AP_ARM_KVM_PVLOCK_STARTING,
+>  	CPUHP_AP_ARM_CORESIGHT_STARTING,
+>  	CPUHP_AP_ARM64_ISNDEP_STARTING,
+>  	CPUHP_AP_SMPCFD_DYING,
+> -- 
+> 2.19.1
+> 
+> 
