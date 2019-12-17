@@ -2,346 +2,134 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 274CFC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97615C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C973D21835
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:30:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="HT6uRgsi"
+	by mail.kernel.org (Postfix) with ESMTP id 6BF9821D7D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:30:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576600247;
+	bh=Ruri3xp18Qqifgv+llL3zcYiL8zvB2i9sWMuqfeuf+k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=l5TtM7rb7Oc6Rc2ty4lx/OCjBj7dQio0rllCPWvArCr2BdEKf7IsHJJNWPRnJWqhI
+	 LiuGnXB2E11Ye5qnfi9FjidY3ORWKZSjgoCVr+EpqgzifYe/DKjmBq4lwsBjVpnO2a
+	 3nGhs92rD65p2Dam2UeKWu5U7TVQW1/AqLL4lxwg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728569AbfLQQae (ORCPT
+        id S1728615AbfLQQaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 11:30:34 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45727 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728250AbfLQQae (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 11:30:34 -0500
-Received: by mail-lj1-f194.google.com with SMTP id j26so2525754ljc.12
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 08:30:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cumulusnetworks.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Hxtg+YPeEh/CJ4PM9f7LQ6pCe3SqbPbTeTT9Ww5LcjE=;
-        b=HT6uRgsiNb/eThMajw5UupWJSOZmSdm5zNrkj23Tsf6mkEvs0+V91gmlDj0tsNb/5b
-         O4wlb6h6ufbaft78jUOoCukes8g83GHtwpw/JQTNliicZDVkG1mBq4XU5j31J9d9YZMF
-         ARscxprCG2s1mQXQA1tCmxQOxXcsJBpT4NWRU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Hxtg+YPeEh/CJ4PM9f7LQ6pCe3SqbPbTeTT9Ww5LcjE=;
-        b=SPF7FSm5Y+Y6YzhQR7MIfHApUspCFuFV/15PSLVtFzoFrn5uFHq4vaSnlo7mz9936K
-         tcr8CvPpDxSt/16krmRueU6Hjcl2TIclHVDp5LXrj0L3Vx1lw/Gh/BcG9yCaots9/FQC
-         wWPO1zQ+SRWxaNh0W3JgE7MhsFO+XenL1kEwHFq7/sxSKX/Mi8fKm5ilGSQWvkOFWRss
-         i43KxrSsw9GYIHyKgvnIwmYhmf52m6d3eqTlQLKrZ9HrfRBamaE3pMUhoO2TENZfyfMP
-         d05fI0sAKkpaeSGXW3PWWXdIAJe2VcSKs+etHv2fJp08XXqSnmBbftI3AKwZqdNrQ9dP
-         kMFg==
-X-Gm-Message-State: APjAAAX1uUnlFn4TOWkZjUb7AXpVjDlbXmYi7e9iZ2TgtNdT+g2N8W4i
-        bhJCid+y3OXlIrouHXrwjKy87A==
-X-Google-Smtp-Source: APXvYqxUjwrZS0rHP0TdP+4SpIDpWvHE3HfzPqlbo+em+QsQDIE+wfhwdoLWbJXBYrutq/V/OuY4MQ==
-X-Received: by 2002:a2e:9886:: with SMTP id b6mr3880532ljj.47.1576600231473;
-        Tue, 17 Dec 2019 08:30:31 -0800 (PST)
-Received: from [192.168.0.107] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
-        by smtp.gmail.com with ESMTPSA id y29sm12866981ljd.88.2019.12.17.08.30.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Dec 2019 08:30:30 -0800 (PST)
-Subject: Re: [PATCH net-next v2] openvswitch: add TTL decrement action
-To:     Matteo Croce <mcroce@redhat.com>, netdev@vger.kernel.org,
-        dev@openvswitch.org
-Cc:     linux-kernel@vger.kernel.org, Pravin B Shelar <pshelar@ovn.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Bindiya Kurle <bindiyakurle@gmail.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        Ben Pfaff <blp@ovn.org>
-References: <20191217155102.46039-1-mcroce@redhat.com>
-From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Message-ID: <cf5b01f8-b4e4-90da-0ee7-b1d81ee6d342@cumulusnetworks.com>
-Date:   Tue, 17 Dec 2019 18:30:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 17 Dec 2019 11:30:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56076 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728214AbfLQQaq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 11:30:46 -0500
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4FA721835;
+        Tue, 17 Dec 2019 16:30:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576600245;
+        bh=Ruri3xp18Qqifgv+llL3zcYiL8zvB2i9sWMuqfeuf+k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nRw8mIyNZPgJgNQKxV12br+jPuVGBsPbBd8R2L0MKGnXYkV1orl+4g4PRX8jLyGiA
+         v+xT5QbnJMl2Y1s4y14pHKMxPikne1O1PdI+mBzGegRfyl7xGgMgG1D1pJiZBNuXp4
+         ajpNr0TEJ7SPd/Ds9YsFCnruHmPfRfmzpvJqhxxY=
+Date:   Tue, 17 Dec 2019 11:30:43 -0500
+From:   Sasha Levin <sashal@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Andrea Merello <andrea.merello@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH 4.19 106/140] iio: ad7949: kill pointless
+ "readback"-handling code
+Message-ID: <20191217163043.GH17708@sasha-vm>
+References: <20191216174747.111154704@linuxfoundation.org>
+ <20191216174815.749524432@linuxfoundation.org>
+ <CAN8YU5NrEbJx3yxBNoRWnwUiAYWffDp6gEcCcGUK+g4zjbHwEg@mail.gmail.com>
+ <20191216184536.GB2411653@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20191217155102.46039-1-mcroce@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20191216184536.GB2411653@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/12/2019 17:51, Matteo Croce wrote:
-> New action to decrement TTL instead of setting it to a fixed value.
-> This action will decrement the TTL and, in case of expired TTL, drop it
-> or execute an action passed via a nested attribute.
-> The default TTL expired action is to drop the packet.
-> 
-> Supports both IPv4 and IPv6 via the ttl and hop_limit fields, respectively.
-> 
-> Tested with a corresponding change in the userspace:
-> 
->     # ovs-dpctl dump-flows
->     in_port(2),eth(),eth_type(0x0800), packets:0, bytes:0, used:never, actions:dec_ttl{ttl<=1 action:(drop)},1,1
->     in_port(1),eth(),eth_type(0x0800), packets:0, bytes:0, used:never, actions:dec_ttl{ttl<=1 action:(drop)},1,2
->     in_port(1),eth(),eth_type(0x0806), packets:0, bytes:0, used:never, actions:2
->     in_port(2),eth(),eth_type(0x0806), packets:0, bytes:0, used:never, actions:1
-> 
->     # ping -c1 192.168.0.2 -t 42
->     IP (tos 0x0, ttl 41, id 61647, offset 0, flags [DF], proto ICMP (1), length 84)
->         192.168.0.1 > 192.168.0.2: ICMP echo request, id 386, seq 1, length 64
->     # ping -c1 192.168.0.2 -t 120
->     IP (tos 0x0, ttl 119, id 62070, offset 0, flags [DF], proto ICMP (1), length 84)
->         192.168.0.1 > 192.168.0.2: ICMP echo request, id 388, seq 1, length 64
->     # ping -c1 192.168.0.2 -t 1
->     #
-> 
-> Co-authored-by: Bindiya Kurle <bindiyakurle@gmail.com>
-> Signed-off-by: Bindiya Kurle <bindiyakurle@gmail.com>
-> Signed-off-by: Matteo Croce <mcroce@redhat.com>
-> ---
->  include/uapi/linux/openvswitch.h |  22 +++++++
->  net/openvswitch/actions.c        |  71 +++++++++++++++++++++
->  net/openvswitch/flow_netlink.c   | 105 +++++++++++++++++++++++++++++++
->  3 files changed, 198 insertions(+)
-> 
+On Mon, Dec 16, 2019 at 07:45:36PM +0100, Greg Kroah-Hartman wrote:
+>On Mon, Dec 16, 2019 at 07:31:31PM +0100, Andrea Merello wrote:
+>> Something nasty seems happening here: it looks like the commit message
+>> and the actual diff have nothing to do one wrt the other; the commit
+>> message is from one of my patches, the diff is against some unrelated
+>> file.
+>>
+>> Il giorno lun 16 dic 2019 alle ore 19:05 Greg Kroah-Hartman
+>> <gregkh@linuxfoundation.org> ha scritto:
+>> >
+>> > From: Meng Li <Meng.Li@windriver.com>
+>> >
+>> > [ Upstream commit c270bbf7bb9ddc4e2a51b3c56557c377c9ac79bc ]
+>> >
+>> > The device could be configured to spit out also the configuration word
+>> > while reading the AD result value (in the same SPI xfer) - this is called
+>> > "readback" in the device datasheet.
+>> >
+>> > The driver checks if readback is enabled and it eventually adjusts the SPI
+>> > xfer length and it applies proper shifts to still get the data, discarding
+>> > the configuration word.
+>> >
+>> > The readback option is actually never enabled (the driver disables it), so
+>> > the said checks do not serve for any purpose.
+>> >
+>> > Since enabling the readback option seems not to provide any advantage (the
+>> > driver entirely sets the configuration word without relying on any default
+>> > value), just kill the said, unused, code.
+>> >
+>> > Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
+>> > Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+>> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> > Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> > ---
+>> >  drivers/edac/altera_edac.c | 1 +
+>> >  1 file changed, 1 insertion(+)
+>> >
+>> > diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+>> > index 56de378ad13dc..c9108906bcdc0 100644
+>> > --- a/drivers/edac/altera_edac.c
+>> > +++ b/drivers/edac/altera_edac.c
+>> > @@ -600,6 +600,7 @@ static const struct regmap_config s10_sdram_regmap_cfg = {
+>> >         .reg_read = s10_protected_reg_read,
+>> >         .reg_write = s10_protected_reg_write,
+>> >         .use_single_rw = true,
+>> > +       .fast_io = true,
+>> >  };
+>> >
+>> >  static int altr_s10_sdram_probe(struct platform_device *pdev)
+>> > --
+>> > 2.20.1
+>> >
+>> >
+>> >
+>
+>Wow, something went wrong.
+>
+>Sasha, can you look into this?
 
-Hi Matteo,
+Yikes, sorry - this is one of the commits that needed to be manually
+backported, and I must have copy pasted the wrong commit hash to use as
+the commit message.
 
-[snip]
-> +}
-> +
->  /* When 'last' is true, sample() should always consume the 'skb'.
->   * Otherwise, sample() should keep 'skb' intact regardless what
->   * actions are executed within sample().
-> @@ -1176,6 +1201,44 @@ static int execute_check_pkt_len(struct datapath *dp, struct sk_buff *skb,
->  			     nla_len(actions), last, clone_flow_key);
->  }
->  
-> +static int execute_dec_ttl(struct sk_buff *skb, struct sw_flow_key *key)
-> +{
-> +	int err;
-> +
-> +	if (skb->protocol == htons(ETH_P_IPV6)) {
-> +		struct ipv6hdr *nh = ipv6_hdr(skb);
-> +
-> +		err = skb_ensure_writable(skb, skb_network_offset(skb) +
-> +					  sizeof(*nh));
+This really is 56d9e7bd3fa0 ("EDAC/altera: Use fast register IO for S10
+IRQs") which needs to be in the stable tree, I'll go fix up the message.
 
-skb_ensure_writable() calls pskb_may_pull() which may reallocate so nh might become invalid.
-It seems the IPv4 version below is ok as the ptr is reloaded.
-
-One q as I don't know ovs that much - can this action be called only with
-skb->protocol ==  ETH_P_IP/IPV6 ? I.e. Are we sure that if it's not v6, then it must be v4 ?
-
-
+-- 
 Thanks,
- Nik
-
-> +		if (unlikely(err))
-> +			return err;
-> +
-> +		if (nh->hop_limit <= 1)
-> +			return -EHOSTUNREACH;
-> +
-> +		key->ip.ttl = --nh->hop_limit;
-> +	} else {
-> +		struct iphdr *nh = ip_hdr(skb);
-> +		u8 old_ttl;
-> +
-> +		err = skb_ensure_writable(skb, skb_network_offset(skb) +
-> +					  sizeof(*nh));
-> +		if (unlikely(err))
-> +			return err;
-> +
-> +		nh = ip_hdr(skb);
-> +		if (nh->ttl <= 1)
-> +			return -EHOSTUNREACH;
-> +
-> +		old_ttl = nh->ttl--;
-> +		csum_replace2(&nh->check, htons(old_ttl << 8),
-> +			      htons(nh->ttl << 8));
-> +		key->ip.ttl = nh->ttl;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  /* Execute a list of actions against 'skb'. */
->  static int do_execute_actions(struct datapath *dp, struct sk_buff *skb,
->  			      struct sw_flow_key *key,
-> @@ -1347,6 +1410,14 @@ static int do_execute_actions(struct datapath *dp, struct sk_buff *skb,
->  
->  			break;
->  		}
-> +
-> +		case OVS_ACTION_ATTR_DEC_TTL:
-> +			err = execute_dec_ttl(skb, key);
-> +			if (err == -EHOSTUNREACH) {
-> +				err = dec_ttl(dp, skb, key, a, true);
-> +				return err;
-> +			}
-> +			break;
->  		}
->  
->  		if (unlikely(err)) {
-> diff --git a/net/openvswitch/flow_netlink.c b/net/openvswitch/flow_netlink.c
-> index 65c2e3458ff5..a9eea2ffb8b0 100644
-> --- a/net/openvswitch/flow_netlink.c
-> +++ b/net/openvswitch/flow_netlink.c
-> @@ -61,6 +61,7 @@ static bool actions_may_change_flow(const struct nlattr *actions)
->  		case OVS_ACTION_ATTR_RECIRC:
->  		case OVS_ACTION_ATTR_TRUNC:
->  		case OVS_ACTION_ATTR_USERSPACE:
-> +		case OVS_ACTION_ATTR_DEC_TTL:
->  			break;
->  
->  		case OVS_ACTION_ATTR_CT:
-> @@ -2494,6 +2495,59 @@ static int validate_and_copy_sample(struct net *net, const struct nlattr *attr,
->  	return 0;
->  }
->  
-> +static int validate_and_copy_dec_ttl(struct net *net, const struct nlattr *attr,
-> +				     const struct sw_flow_key *key,
-> +				     struct sw_flow_actions **sfa,
-> +				     __be16 eth_type, __be16 vlan_tci,
-> +				     u32 mpls_label_count, bool log)
-> +{
-> +	struct nlattr *attrs[OVS_DEC_TTL_ATTR_MAX + 1] = { 0 };
-> +	const struct nlattr *action_type, *action;
-> +	struct nlattr *a;
-> +	int rem, start, err;
-> +	struct dec_ttl_arg arg;
-> +
-> +	nla_for_each_nested(a, attr, rem) {
-> +		int type = nla_type(a);
-> +
-> +		if (!type || type > OVS_DEC_TTL_ATTR_MAX || attrs[type])
-> +			return -EINVAL;
-> +
-> +		attrs[type] = a;
-> +	}
-> +	if (rem)
-> +		return -EINVAL;
-> +
-> +	action_type = attrs[OVS_DEC_TTL_ATTR_ACTION_TYPE];
-> +	if (!action_type || nla_len(action_type) != sizeof(u32))
-> +		return -EINVAL;
-> +
-> +	start = add_nested_action_start(sfa, OVS_ACTION_ATTR_DEC_TTL, log);
-> +	if (start < 0)
-> +		return start;
-> +
-> +	arg.action_type = nla_get_u32(action_type);
-> +	err = ovs_nla_add_action(sfa, OVS_DEC_TTL_ATTR_ARG,
-> +				 &arg, sizeof(arg), log);
-> +	if (err)
-> +		return err;
-> +
-> +	if (arg.action_type == OVS_DEC_TTL_ACTION_USER_SPACE) {
-> +		action = attrs[OVS_DEC_TTL_ATTR_ACTION];
-> +		if (!action || (nla_len(action) && nla_len(action) < NLA_HDRLEN))
-> +			return -EINVAL;
-> +
-> +		err = __ovs_nla_copy_actions(net, action, key, sfa, eth_type,
-> +					     vlan_tci, mpls_label_count, log);
-> +		if (err)
-> +			return err;
-> +	}
-> +
-> +	add_nested_action_end(*sfa, start);
-> +
-> +	return 0;
-> +}
-> +
->  static int validate_and_copy_clone(struct net *net,
->  				   const struct nlattr *attr,
->  				   const struct sw_flow_key *key,
-> @@ -3005,6 +3059,7 @@ static int __ovs_nla_copy_actions(struct net *net, const struct nlattr *attr,
->  			[OVS_ACTION_ATTR_METER] = sizeof(u32),
->  			[OVS_ACTION_ATTR_CLONE] = (u32)-1,
->  			[OVS_ACTION_ATTR_CHECK_PKT_LEN] = (u32)-1,
-> +			[OVS_ACTION_ATTR_DEC_TTL] = (u32)-1,
->  		};
->  		const struct ovs_action_push_vlan *vlan;
->  		int type = nla_type(a);
-> @@ -3233,6 +3288,15 @@ static int __ovs_nla_copy_actions(struct net *net, const struct nlattr *attr,
->  			break;
->  		}
->  
-> +		case OVS_ACTION_ATTR_DEC_TTL:
-> +			err = validate_and_copy_dec_ttl(net, a, key, sfa,
-> +							eth_type, vlan_tci,
-> +							mpls_label_count, log);
-> +			if (err)
-> +				return err;
-> +			skip_copy = true;
-> +			break;
-> +
->  		default:
->  			OVS_NLERR(log, "Unknown Action type %d", type);
->  			return -EINVAL;
-> @@ -3404,6 +3468,41 @@ static int check_pkt_len_action_to_attr(const struct nlattr *attr,
->  	return err;
->  }
->  
-> +static int dec_ttl_action_to_attr(const struct nlattr *att, struct sk_buff *skb)
-> +{
-> +	struct nlattr *start, *ac_start = NULL, *dec_ttl;
-> +	int err = 0, rem = nla_len(att);
-> +	const struct dec_ttl_arg *arg;
-> +	struct nlattr *actions;
-> +
-> +	start = nla_nest_start_noflag(skb, OVS_ACTION_ATTR_DEC_TTL);
-> +	if (!start)
-> +		return -EMSGSIZE;
-> +
-> +	dec_ttl = nla_data(att);
-> +	arg = nla_data(dec_ttl);
-> +	actions = nla_next(dec_ttl, &rem);
-> +
-> +	if (nla_put_u32(skb, OVS_DEC_TTL_ATTR_ACTION_TYPE, arg->action_type)) {
-> +		nla_nest_cancel(skb, start);
-> +		return -EMSGSIZE;
-> +	}
-> +
-> +	if (arg->action_type == OVS_DEC_TTL_ACTION_USER_SPACE) {
-> +		ac_start = nla_nest_start_noflag(skb, OVS_DEC_TTL_ATTR_ACTION);
-> +		if (!ac_start) {
-> +			nla_nest_cancel(skb, ac_start);
-> +			nla_nest_cancel(skb, start);
-> +			return -EMSGSIZE;
-> +		}
-> +		err = ovs_nla_put_actions(actions, rem, skb);
-> +		nla_nest_end(skb, ac_start);
-> +	}
-> +	nla_nest_end(skb, start);
-> +
-> +	return err;
-> +}
-> +
->  static int set_action_to_attr(const struct nlattr *a, struct sk_buff *skb)
->  {
->  	const struct nlattr *ovs_key = nla_data(a);
-> @@ -3504,6 +3603,12 @@ int ovs_nla_put_actions(const struct nlattr *attr, int len, struct sk_buff *skb)
->  				return err;
->  			break;
->  
-> +		case OVS_ACTION_ATTR_DEC_TTL:
-> +			err = dec_ttl_action_to_attr(a, skb);
-> +			if (err)
-> +				return err;
-> +			break;
-> +
->  		default:
->  			if (nla_put(skb, type, nla_len(a), nla_data(a)))
->  				return -EMSGSIZE;
-> 
-
+Sasha
