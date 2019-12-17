@@ -2,182 +2,103 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78EF6C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E130AC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 485372082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:50:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="o9X58MhU"
+	by mail.kernel.org (Postfix) with ESMTP id BE6AF21582
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:50:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbfLQVuc (ORCPT
+        id S1728004AbfLQVud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 17 Dec 2019 16:50:33 -0500
+Received: from mga11.intel.com ([192.55.52.93]:63078 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726891AbfLQVuc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 17 Dec 2019 16:50:32 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:2035 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726764AbfLQVub (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 16:50:31 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5df94d9d0001>; Tue, 17 Dec 2019 13:50:21 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 17 Dec 2019 13:50:30 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 17 Dec 2019 13:50:30 -0800
-Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 17 Dec
- 2019 21:50:25 +0000
-Subject: Re: [PATCH v5 1/2] mm/mmu_notifier: make interval notifier updates
- safe
-To:     Jason Gunthorpe <jgg@mellanox.com>
-CC:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        "John Hubbard" <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>
-References: <20191216195733.28353-1-rcampbell@nvidia.com>
- <20191216195733.28353-2-rcampbell@nvidia.com>
- <20191217205147.GI16762@mellanox.com>
-X-Nvconfidentiality: public
-From:   Ralph Campbell <rcampbell@nvidia.com>
-Message-ID: <59d4ea9e-3f6b-11c2-75d1-5baecd5b4ae2@nvidia.com>
-Date:   Tue, 17 Dec 2019 13:50:24 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 13:50:16 -0800
+X-IronPort-AV: E=Sophos;i="5.69,327,1571727600"; 
+   d="scan'208";a="389970373"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 13:50:16 -0800
+Message-ID: <70b3e09ce40ab8bc54a8509e3ea2ec13bfeb3e47.camel@linux.intel.com>
+Subject: Re: [PATCH v15 3/7] mm: Add function __putback_isolated_page
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Alexander Duyck <alexander.duyck@gmail.com>, kvm@vger.kernel.org,
+        mst@redhat.com, linux-kernel@vger.kernel.org, willy@infradead.org,
+        mhocko@kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, vbabka@suse.cz,
+        yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
+        pagupta@redhat.com, riel@surriel.com, lcapitulino@redhat.com,
+        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com, osalvador@suse.de
+Date:   Tue, 17 Dec 2019 13:50:16 -0800
+In-Reply-To: <08EFF184-E727-4A79-ABEF-52F2463860C3@redhat.com>
+References: <1a6e4646f570bf193924e099557841eb6e77a80d.camel@linux.intel.com>
+         <08EFF184-E727-4A79-ABEF-52F2463860C3@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-In-Reply-To: <20191217205147.GI16762@mellanox.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576619421; bh=ubRwwOL58AcjmKU930Mo4/AFRBsWefx09sMu3dEEirc=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=o9X58MhU1lozHt8qde/Q5U6KjYd3qMmrQyCLe2/+dszqfziDR3n8ceyKtdUt/KX2T
-         TqANXJM1PO5DhmjicCs066E7UMKoUTge6kuelmVtI2V9U/sGPLHcT03CF66JpnjXip
-         enuLbXhSPdGSMkoV24owjgKJgocKN8sCz5K5vOie5/e5qQDxECTI6zFOuSfSwGJhVo
-         8zFisarGWYrEei1T7nwS6gVgSyZ7TWeD3NMJnTuAWn1zGKaZPOjLQvlqMmJtbUg9Pi
-         kGfdoBRjEL93SOfMYpJQYz1+bIA1eSUOemZh5H0qWX7H3nPekrmfWwJMbg4pMuWy7r
-         BUPx+RMAK+nOA==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 12/17/19 12:51 PM, Jason Gunthorpe wrote:
-> On Mon, Dec 16, 2019 at 11:57:32AM -0800, Ralph Campbell wrote:
->> mmu_interval_notifier_insert() and mmu_interval_notifier_remove() can't
->> be called safely from inside the invalidate() callback. This is fine for
->> devices with explicit memory region register and unregister calls but it
->> is desirable from a programming model standpoint to not require explicit
->> memory region registration. Regions can be registered based on device
->> address faults but without a mechanism for updating or removing the mmu
->> interval notifiers in response to munmap(), the invalidation callbacks
->> will be for regions that are stale or apply to different mmaped regions.
+On Tue, 2019-12-17 at 19:46 +0100, David Hildenbrand wrote:
+> > Am 17.12.2019 um 19:25 schrieb Alexander Duyck <alexander.h.duyck@linux.intel.com>:
+> > 
+> > ﻿On Tue, 2019-12-17 at 18:24 +0100, David Hildenbrand wrote:
+> > > > > > Also there are some scenarios where __page_to_pfn is not that simple a
+> > > > > > call with us having to get the node ID so we can find the pgdat structure
+> > > > > > to perform the calculation. I'm not sure the compiler would be ble to
+> > > > > > figure out that the result is the same for both calls, so it is better to
+> > > > > > make it explicit.
+> > > > > 
+> > > > > Only in case of CONFIG_SPARSEMEM we have to go via the section - but I
+> > > > > doubt this is really worth optimizing here.
+> > > > > 
+> > > > > But yeah, I'm fine with this change, only "IMHO
+> > > > > get_pageblock_migratetype() would be nicer" :)
+> > > > 
+> > > > Aren't most distros running with CONFIG_SPARSEMEM enabled? If that is the
+> > > > case why not optimize for it?
+> > > 
+> > > Because I tend to dislike micro-optimizations without performance
+> > > numbers for code that is not on a hot path. But I mean in this case, as
+> > > you said, you need the pfn either way, so it's completely fine with.
+> > > 
+> > > I do wonder, however, if you should just pass in the migratetype from
+> > > the caller. That would be even faster ;)
+> > 
+> > The problem is page isolation. We can end up with a page being moved to an
+> > isolate pageblock while we aren't holding the zone lock, and as such we
+> > likely need to test it again anyway. So there isn't value in storing and
+> > reusing the value for cases like page reporting.
+> > 
+> > In addition, the act of isolating the page can cause the migratetype to
+> > change as __isolate_free_page will attempt to change the migratetype to
+> > movable if it is one of the standard percpu types and we are pulling at
+> > least half a pageblock out. So storing the value before we isolate it
+> > would be problematic as well.
+> > 
+> > Undoing page isolation is the exception to the issues pointed out above,
+> > but in that case we are overwriting the pageblock migratetype anyway so
+> > the cache lines involved should all be warm from having just set the
+> > value.
 > 
-> What we do in RDMA is drive the removal from a work queue, as we need
-> a synchronize_srcu anyhow to serialize everything to do with
-> destroying a part of the address space mirror.
-> 
-> Is it really necessary to have all this stuff just to save doing
-> something like a work queue?
+> Nothing would speak against querying the migratetype in the caller and
+> passing it on. After all you‘re holding the zone lock, so it can‘t
+> change.
 
-Well, the invalidates already have to use the driver lock to synchronize
-so handling the range tracking updates semi-synchronously seems more
-straightforward to me.
+That's a fair argument. I will go ahead and make that change since it only
+really adds one line to patch 4 and allows us to drop several lines from
+patch 3.
 
-Do you feel strongly that adding a work queue is the right way to handle
-this?
-
-> Also, I think we are not taking core kernel APIs like this with out an
-> in-kernel user??
-
-Right. I was looking for feedback before updating nouveau to use it.
-
->> diff --git a/include/linux/mmu_notifier.h b/include/linux/mmu_notifier.h
->> index 9e6caa8ecd19..55fbefcdc564 100644
->> +++ b/include/linux/mmu_notifier.h
->> @@ -233,11 +233,18 @@ struct mmu_notifier {
->>    * @invalidate: Upon return the caller must stop using any SPTEs within this
->>    *              range. This function can sleep. Return false only if sleeping
->>    *              was required but mmu_notifier_range_blockable(range) is false.
->> + * @release:	This function will be called when the mmu_interval_notifier
->> + *		is removed from the interval tree. Defining this function also
->> + *		allows mmu_interval_notifier_remove() and
->> + *		mmu_interval_notifier_update() to be called from the
->> + *		invalidate() callback function (i.e., they won't block waiting
->> + *		for invalidations to finish.
-> 
-> Having a function called remove that doesn't block seems like very
-> poor choice of language, we've tended to use put to describe that
-> operation.
-> 
-> The difference is meaningful as people often create use after free
-> bugs in drivers when presented with interfaces named 'remove' or
-> 'destroy' that don't actually guarentee there is not going to be
-> continued accesses to the memory.
-
-OK. I can rename it put().
-
->>    */
->>   struct mmu_interval_notifier_ops {
->>   	bool (*invalidate)(struct mmu_interval_notifier *mni,
->>   			   const struct mmu_notifier_range *range,
->>   			   unsigned long cur_seq);
->> +	void (*release)(struct mmu_interval_notifier *mni);
->>   };
->>   
->>   struct mmu_interval_notifier {
->> @@ -246,6 +253,8 @@ struct mmu_interval_notifier {
->>   	struct mm_struct *mm;
->>   	struct hlist_node deferred_item;
->>   	unsigned long invalidate_seq;
->> +	unsigned long deferred_start;
->> +	unsigned long deferred_last;
-> 
-> I couldn't quite understand how something like this can work, what is
-> preventing parallel updates?
-
-It is serialized by the struct mmu_notifier_mm lock.
-If there are no tasks walking the interval tree, the update
-happens synchronously under the lock. If there are walkers,
-the start/last values are stored under the lock and the last caller's
-values are used to update the interval tree when the last walker
-finishes (under the lock again).
-
->> +/**
->> + * mmu_interval_notifier_update - Update interval notifier end
->> + * @mni: Interval notifier to update
->> + * @start: New starting virtual address to monitor
->> + * @length: New length of the range to monitor
->> + *
->> + * This function updates the range being monitored.
->> + * If there is no release() function defined, the call will wait for the
->> + * update to finish before returning.
->> + */
->> +int mmu_interval_notifier_update(struct mmu_interval_notifier *mni,
->> +				 unsigned long start, unsigned long length)
->> +{
-> 
-> Update should probably be its own patch
-> 
-> Jason
-
-OK.
-Thanks for the review.
