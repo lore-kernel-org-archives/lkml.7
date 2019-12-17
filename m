@@ -2,121 +2,170 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 491A8C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A30C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F9182054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:54:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CA4020733
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:55:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ZOws7pGj"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="a4aLz8mh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727337AbfLQJyb (ORCPT
+        id S1727313AbfLQJzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 04:54:31 -0500
-Received: from mail-eopbgr20068.outbound.protection.outlook.com ([40.107.2.68]:57334
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726700AbfLQJya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 04:54:30 -0500
+        Tue, 17 Dec 2019 04:55:43 -0500
+Received: from mail1.bemta26.messagelabs.com ([85.158.142.112]:52695 "EHLO
+        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726700AbfLQJzn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 04:55:43 -0500
+Received: from [85.158.142.204] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-1.bemta.az-b.eu-central-1.aws.symcld.net id 13/A4-12462-B16A8FD5; Tue, 17 Dec 2019 09:55:39 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrCJsWRWlGSWpSXmKPExsWSoc9iqiu97Ee
+  swepnQhbzj5xjtVg1dSeLxf2vRxktpvxZzmSxef4fRovLu+awWXzYdZXZonXvEXYHDo9NqzrZ
+  PO5c28Pm0f/XwOPzJrkAlijWzLyk/IoE1oy1Z96zFXSwVRzYPYW9gfEdSxcjJwejwFJmiYlzM
+  7oYuYDsYywSP5q62SCczYwSv3t/gjksAieYJZqfzAVzhASmMUm8uvWQGcJ5wiix9/BcsGFsAh
+  YSk088YAOxRQRCJV4fbQQrYhbYyCyxZvJ0RpCEsICbxMe7L1kgitwlrrw8zQph+0n8aT8I1sw
+  ioCox8etqMJtXIFFix8MmVohtT5kkzs3/AdbAKWAiMWFnGyvEG7ISXxpXM4PYzALiEreezGcC
+  sSUEBCSW7DnPDGGLSrx8/A+qPlXiZNMNRoi4jsTZ60+gbCWJeXOPQNmyEpfmdwPZHEC2r0TLK
+  T6Y8i0/zrNC2BYSS7pbWSBKVCT+HaqECBdIbPl9hg3CVpM4O7Ed6gIZidszOsBekRBYwSIx4e
+  YexgmM+rOQXA1h60gs2P2JDcLWlli28DXzLHBQCEqcnPmEZQEjyypGi6SizPSMktzEzBxdQwM
+  DXUNDY11zXSMLvcQq3SS91FLd5NS8kqJEoKReYnmxXnFlbnJOil5easkmRmACSylkl9nBOO/r
+  W71DjJIcTEqivDzuP2KF+JLyUyozEosz4otKc1KLDzHKcHAoSfA2LwTKCRalpqdWpGXmAJMpT
+  FqCg0dJhJdlCVCat7ggMbc4Mx0idYpRl2PCy7mLmIVY8vLzUqXEectBigRAijJK8+BGwBL7JU
+  ZZKWFeRgYGBiGegtSi3MwSVPlXjOIcjErCvOYgU3gy80rgNr0COoIJ6Agjv28gR5QkIqSkGpi
+  kXl9XETzBp+wapOPZ7BS0lyuRu9zvVdApu0fxotHxDP+qBCL5PpzZWPSsjNdWzzV4ufYq1vTV
+  Ajlb+VdsveQlMyczTr1R7+CWHb8+GDlJr8wOXC/Y11J43lvrzd+Tuw9de7yzfzOvhXf9MsP7c
+  wrS+NlO977/G9kjbXEuaGudVHnnuvyLGvYeZ6c5qfzOKuaSeCPu0+4Xr36Y7bvmPoucw098gz
+  s+5ordzDhqrZw/V7h405P069p/DKN2vPE4VvE57rX37e2rmfoF55k+M3n9x1n6Ud3t+w7vzv2
+  7v/y16BHNn2qpd3WYCqevs40snD1h7pXnUzPOy5pFnEg+cTYwTtik/0qSj/NU25DLqUosxRmJ
+  hlrMRcWJAC5o6wxnBAAA
+X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
+X-Msg-Ref: server-13.tower-249.messagelabs.com!1576576538!724236!1
+X-Originating-IP: [104.47.4.53]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.44.22; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 10360 invoked from network); 17 Dec 2019 09:55:39 -0000
+Received: from mail-am5eur02lp2053.outbound.protection.outlook.com (HELO EUR02-AM5-obe.outbound.protection.outlook.com) (104.47.4.53)
+  by server-13.tower-249.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 17 Dec 2019 09:55:39 -0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jxRN88eKkGqsiYbADeQ9pf3cLNRMqt8x7hSQXzgv383UHyfrG/qT8Jjgxo1oOSPkfCURf6v9MHm87VtvblePtN5fYE5HjluPo+mlySH5ioF+ANQzkZEmMxIup2VpjJW0akzpCi+UMoAQuZc/4VruA/nsbHJxD5dJvKFAfShanPMZn7dOAKhEe8z98u+x3KRfNX6Kt6/7fES7vRnbMoPVOe7+3LNJSsR8SzxsZjdlWGBKrpFf8nBlpg0RZ8fVhxTzxvrimBSeLZQJdo7/XZB6ILKY3u39q1vi3BTsGy5f9RVPNH9wfIq8Pzb/QeXLjvUCffQUAgJehEp10lIkGdG11g==
+ b=oEgj8BG9NstJvp7c9llEsuX9WEcoAv/yHBF607fXgEe7zLp4TqlUkdAu4HKwATU9WRWpVomTN1o3fExMxMVNLKwYXA0uTEY/TStVpwMjnNU1n8pEZLoThOziFLyJIHA0Fd1vYmtK4mm2RIXYN4LAcoA5haJBrwAxuY0COPK4IkVB0lF0Y5FJUMJNQhQxZdCbznoDpFi5meU1//QvP36av0o6S0jY7oSzLD8d30/dwofYAA+S/aib2BrGljQOG/F64V5QcEv9EcXtZG3hozdeGWpvl7YwywcIZC4pxOn0Pusk9TXRaMBBQh06zLSiAnmdwRrmM1uNkIrrRPKdIoWLrg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T7tP4hbAl9bMy8r8GyhO+M72eEuQxmoQZBTo0iNRT40=;
- b=PNH7f1/aABKbJzMvyo6Vc3ivNTjMQcKS7m8ex6Mcp0jcTqkfeeSmCPL17hBSfflcXBPYkIymTlf0GTpbYfEK+0fUg7NohCaYx/1EPcd37AdNq1X1kWpWoecEOnDz2qHuSsv8RrLhQH7dYIFO+4/uyY7xBMNgkAOsXqg70kajNnyZCZwBCulb1YNFth0McNvyDy//uuNyeDnYToigF3EhZNMJLfU+nxvlZQtXKPDmdRu1/Dd1IzZMRqXemWmLLBNkagkcoMwkaddUg8coMgsOt/Wgrn83VRTOZfWNv6bMLqxQ2S/yBhHv89D84uOHqB5Nazw7I/HZyTiKXk+B3QMMBg==
+ bh=ixHk+NYZYSq3rSpdRFseeILAoCRNtZltpKJEM0fEGAQ=;
+ b=b63pBBGe+c9z44VzSg9h2uvyKK9RfG3LUfOxAaSTVIjdnSRKX8THf5ekfC9BL/39y9QkCHEJtd03QkytV1uPH3AttEGYby4bq70j3jSTwKWYdhJJTHdkUkXa9n2lw/pLR+ZzUuTam+RokLxd2lk5vkn+G+jz66nh3NCdS6dCzee0MJ566wR5YehFTmyZsyl6L+OQIqentWn7DM1cPHEsXise5oSkdJS9/XmQXFduk55wyAbh1F4Gh90TsgrSWVmRruHhU9Y6TtFXlmyspD4Hr3/M33NgF6bAMK42qVGbLChnsohVziee2uuGVMENXljX9hWiPmXgSzsnpz9K20pjRw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
+ dkim=pass header.d=diasemi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector1-dialogsemiconductor-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T7tP4hbAl9bMy8r8GyhO+M72eEuQxmoQZBTo0iNRT40=;
- b=ZOws7pGjNVTyZYx0ejIfAu9gyMQG4a1Hx6LWQoP1qAgaAAOtgzIbjxsPZY08/27oPFbIOw8+EypXI3seWIHtdvrUsr2FJrxg5qeaAVXaliHbv04I8EvuQPEe0QMpbPRUV4bNznLXi/2BiTFRriFF6lMfvPWjPhzJbqn8Sdemg1w=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3888.eurprd04.prod.outlook.com (52.134.16.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.16; Tue, 17 Dec 2019 09:54:27 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::64c8:fba:99e8:5ec4]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::64c8:fba:99e8:5ec4%6]) with mapi id 15.20.2538.019; Tue, 17 Dec 2019
- 09:54:27 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Adam Ford <aford173@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
+ bh=ixHk+NYZYSq3rSpdRFseeILAoCRNtZltpKJEM0fEGAQ=;
+ b=a4aLz8mhGVNQtsz6sdIa9wQOM7mYQih7eCKDldP8nfIhyGtVO/htS2Sv6Q/8H7e3yyR0lsOqxIDDpIH1inCxXremrUjyLBbo5K4BGMfaF83nMlCSvwL5qGDMKMSBA9o3iAXlVoIXvDbgae4eGbhm859PSJnDbGzTKEoKhgFJ12I=
+Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM (10.169.154.136) by
+ AM5PR1001MB1122.EURPRD10.PROD.OUTLOOK.COM (10.169.148.149) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2559.13; Tue, 17 Dec 2019 09:55:38 +0000
+Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::ed23:3ca0:97ef:c868]) by AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::ed23:3ca0:97ef:c868%10]) with mapi id 15.20.2538.019; Tue, 17 Dec
+ 2019 09:55:38 +0000
+From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+To:     Marco Felsch <m.felsch@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>
+CC:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
-Subject: Re: [PATCH V2 2/3] arm64: dts: imx8mm: Add Crypto CAAM support
-Thread-Topic: [PATCH V2 2/3] arm64: dts: imx8mm: Add Crypto CAAM support
-Thread-Index: AQHVsct/+SP2Ww+o5k+GDgxV/pyqQQ==
-Date:   Tue, 17 Dec 2019 09:54:27 +0000
-Message-ID: <VI1PR0402MB34858B13E8CA7570A70D87AB98500@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <20191213153910.11235-1-aford173@gmail.com>
- <20191213153910.11235-2-aford173@gmail.com>
-Accept-Language: en-US
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: RE: [RESEND PATCH v3 3/3] pinctrl: da9062: add driver support
+Thread-Topic: [RESEND PATCH v3 3/3] pinctrl: da9062: add driver support
+Thread-Index: AQHVsQXfQ9DGkUJA90ed8RfDS4RwT6e2sLrQgAW3YgCAAC5RgIABUS2AgAA2KNA=
+Date:   Tue, 17 Dec 2019 09:55:38 +0000
+Message-ID: <AM5PR1001MB09945AA014D512511E4DF4A880500@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+References: <20191212160413.15232-1-m.felsch@pengutronix.de>
+ <20191212160413.15232-4-m.felsch@pengutronix.de>
+ <AM5PR1001MB0994E2D72A95E4AC4796F80A80550@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191216074734.ctjxx6rqtj6mt2dw@pengutronix.de>
+ <CACRpkdbZ67jp64oMS0Q=aDuo18i_fT22grST0qSVjk_9EV=4hw@mail.gmail.com>
+ <20191217064009.GB31182@pengutronix.de>
+In-Reply-To: <20191217064009.GB31182@pengutronix.de>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [94.69.234.123]
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.225.80.228]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 27d5f69c-f660-4647-a301-08d782d71a9f
-x-ms-traffictypediagnostic: VI1PR0402MB3888:|VI1PR0402MB3888:
+x-ms-office365-filtering-correlation-id: 7e08b4cf-e48b-4b92-145e-08d782d744fb
+x-ms-traffictypediagnostic: AM5PR1001MB1122:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB3888284A871D9E0F91EC7F9598500@VI1PR0402MB3888.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-microsoft-antispam-prvs: <AM5PR1001MB11225BD0F4BDA0F28510FDB3A7500@AM5PR1001MB1122.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:3968;
 x-forefront-prvs: 02543CD7CD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(346002)(376002)(366004)(39860400002)(189003)(199004)(110136005)(54906003)(71200400001)(558084003)(76116006)(6506007)(316002)(2906002)(81166006)(81156014)(9686003)(7696005)(64756008)(66446008)(66476007)(66946007)(66556008)(52536014)(26005)(7416002)(186003)(44832011)(86362001)(5660300002)(91956017)(4326008)(33656002)(55016002)(8936002)(478600001)(53546011)(8676002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3888;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(136003)(376002)(39860400002)(396003)(346002)(189003)(199004)(76116006)(52536014)(8676002)(26005)(66476007)(66946007)(66446008)(9686003)(478600001)(5660300002)(2906002)(64756008)(66556008)(71200400001)(55016002)(81166006)(81156014)(53546011)(86362001)(8936002)(55236004)(4744005)(33656002)(186003)(316002)(54906003)(110136005)(6506007)(4326008)(7696005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR1001MB1122;H:AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: diasemi.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: +c23WI0QZD/2PyYxYGb4zA6JZy7BJ5cUqJ3wiF4ZAWZtgGiHJpqk902V4sZrzq03Dbdw7AlwLsiaBDd5sPuRtFKm6CDwEY0ORTYBZ0GMB23GY2+r1Igd4+rr5sb8V3tzUyB5nmqh0+esy8qyhlnIKEKKx6WXSNh9zvtnm8K1EkjjE0B1TphrTPuvBj5nTLIXCWDtYLcFnSD+KWiBzL1HgZbiRq6xV+2ug5AUTT+4WD2jxq8UZtUEAirvH3RP7aR/zMBIggSn9vUERI+v1Udx1bUTOLS1vofNYFlYDcX3WebBntsR7NjtlAuwoNowdWAnMCr6Q1zJ9FTBziwfegOJ0EYRbjLN2vKkQ8CW/xgSv1ZWCHBqiyCWy/FYTWFgEbKC1OvONJ0CIvWASLiB5+w4RldNyZ613Z1sWlpDOw44viHZ5nMoYB7a5Vrw5ZV27r4RoWjlQdVtx5DWHR45WIzNK7ZYL8gHyJj/Z4wOTfnv5Cc=
-Content-Type: text/plain; charset="iso-8859-2"
+x-microsoft-antispam-message-info: AbwX28du+0vtu+zp4Lt3OP8/3UFDOsZLVU16obgthkCi5qGx9F+u+JGSKUMeAN1J2GRFVKd+CoqnQ6mdKZVFLxGlzw4elyYUjkritDXafUZ7mqqiY51hE8XACO/ar0M+rp3seQbjmOTIvfUGA/N2nF/3bdrky7ogf4dr6jiMCQbxAl0ywKgAi+Jtm+UNmBqh9pUUFWZCg5lmFvb2TiDdQi5zOr8hS3lZhOREr5MBTgooxMKYAZw5KQuPYLe51TA1vdJWpT72wIW7jws3TI/LmYu+C+YSQoBM+JmnMXhsDfEs/lkL0d/L7Cz9sGkP0ZXtNAM2Jdc+rx0Shso6QYl2Iu3BLmY2h4bGb1CfKk8llDkutIb5HgAizvm3Hd7xU81kSnWdzSkOr55ApXVN0I9ykRazuYd7oX9hoIYGJs7kxcAbH6UdnAdHhTlU3CiPQH4Y
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 27d5f69c-f660-4647-a301-08d782d71a9f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Dec 2019 09:54:27.1124
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7e08b4cf-e48b-4b92-145e-08d782d744fb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Dec 2019 09:55:38.1949
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: bpHhOkvxBpH70r/4OpI+afK29Rk583hQ4Jgr38M+95RIAZP5DGilH4BjWymS+RhJqS3xRZdz2IgBaePaTw68AA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3888
+X-MS-Exchange-CrossTenant-userprincipalname: 89eLLnY0NopC/g+7NMvLWJXR89YCoTxG+hBkkgIopiF1AzdsMy25x0c39h054hP1Y9jPY0+NO/FdViWgV6P5L3BcZmYFBil9Y5mrwenaLkc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR1001MB1122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/13/2019 5:39 PM, Adam Ford wrote:=0A=
-> The i.MX8M Mini supports the same crypto engine as what is in=0A=
-> the i.MX8MQ, but it is not currently present in the device tree.=0A=
-> =0A=
-> This patch places in into the device tree.=0A=
-		    ^ it=0A=
-> =0A=
-> Signed-off-by: Adam Ford <aford173@gmail.com>=0A=
-Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
-=0A=
-Thanks,=0A=
-Horia=0A=
+On 17 December 2019 06:40, Marco Felsch wrote:
+
+> On 19-12-16 11:33, Linus Walleij wrote:
+> > On Mon, Dec 16, 2019 at 8:47 AM Marco Felsch <m.felsch@pengutronix.de>
+> wrote:
+> >
+> > > Nice catch, Linus is it okay to add this as follow up patch? The curr=
+ent
+> > > patch isn't wrong without the 'PIN_CONFIG_BIAS_DISABLE' case.
+> >
+> > No strong opinion on that as long as the result is running code.
+>=20
+> Of course the code is running and was tested. Just didn't covered this
+> use case.
+>=20
+> Adam is this okay with you?
+
+If you want to send a follow up straight after then that's ok although to m=
+e
+that seems like more effort. :)
+
+Anyway:
+
+Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+
+>=20
+> Regards,
+>   Marco
+>=20
+> > Yours,
+> > Linus Walleij
+> >
