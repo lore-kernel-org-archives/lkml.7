@@ -2,135 +2,120 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A77C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D8E2C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B32062082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1F792146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:56:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576583767;
+	bh=1r7AN0czj0xiNrTVfZrml5C7N6BRaKeUyjqy5t2hhyo=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=YvB7+Uefb9tv/o+Cg1I2ACoteV33t80cl2MQEDztA4LZ/6lZZm9hE/xCOqHxxxitE
+	 ErXo6C7RGeflNCr1YzLFSQyGF/vj8ru61whdvLAWyRMiq5ZtlA3vSEeaaly7J/WAne
+	 ROXrry30If5M7Rselzh5+LAEPIykJISYNolQQp5g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbfLQL4C (ORCPT
+        id S1727671AbfLQLzy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 06:56:02 -0500
-Received: from mga02.intel.com ([134.134.136.20]:53797 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727384AbfLQLz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 06:55:56 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 03:55:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,325,1571727600"; 
-   d="scan'208";a="205451607"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by orsmga007.jf.intel.com with ESMTP; 17 Dec 2019 03:55:54 -0800
-From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Ammy Yi <ammy.yi@intel.com>, stable@vger.kernel.org
-Subject: [GIT PULL 4/4] intel_th: msu: Fix window switching without windows
-Date:   Tue, 17 Dec 2019 13:55:27 +0200
-Message-Id: <20191217115527.74383-5-alexander.shishkin@linux.intel.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191217115527.74383-1-alexander.shishkin@linux.intel.com>
-References: <20191217115527.74383-1-alexander.shishkin@linux.intel.com>
+        Tue, 17 Dec 2019 06:55:54 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46251 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727602AbfLQLzv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 06:55:51 -0500
+Received: by mail-wr1-f66.google.com with SMTP id z7so10938770wrl.13
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 03:55:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=OtmFiej67XuS7AjH3gCT52rylnlqajW0xLd41zGxrVA=;
+        b=N/W+u9xh/vc1iC2i1uCwSGxezovI6wLYK90KMcPZe7tO5yvZF6eyXaGDbWksCZv4yZ
+         H/s59+ZMS88SrjcBKEVyYCWaXtfTl8pCtNB5uclNssLfxXCcUPUfJjM4I+JvNd07N/Kh
+         I6IzcgJU/xI2qKkC0LipoKudIUUOO8wvVFH4LXULFjZBqtpZgHYLl9B+jPp/1zHAjSJ0
+         QSQ9J8gxSEckgnspslvZU77AFiBs4hOecq63yESrE1XfLTrDtCJex53IhY77EeHWIeIk
+         vIrhvAmJ+ssxuKBMMZJcLtKUxsszVoejJY+Bc0HZ+4I3nd9fNxHmELiW6xWooUaUk7wM
+         2nHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=OtmFiej67XuS7AjH3gCT52rylnlqajW0xLd41zGxrVA=;
+        b=XWIRPELsgK5q6gz6W4H6oa/BDG+Ej+UvFMGdclc1sUxq6mtafeGPgaXbCfditZnCVU
+         0TQgo09blVaqiAHtgqqUPzJb1XvVFhlVxKv1Yuqv2dSAlOORUMrvGcgc4SwJjiK9uDUK
+         NwcmFV8quJP+7wGiybHHBq4T+Wz9lYiJtrLHB9AkJOCXAUQ3AEo4C2Z7w3HdZw2njS/N
+         pbRdL/PJHp2rseNkiLpKSrD3E1BGSyluqbXC+6E5S7BZej4QqNyeXYGrABD2Rn/V5Rs6
+         OncBj2vI2hyAFpD3DoEosN/b+ZAL0XurQgt3pHKJ8RNac2NuiKhtq2Z5HVNRvP6kMofF
+         GWdA==
+X-Gm-Message-State: APjAAAX5aPHqLj/R3baodYBbGGeplrB6pQHQbb/4Gqf52EgWHLrdpUv2
+        UGC0Qrfx/rug8M/w0yFKi58=
+X-Google-Smtp-Source: APXvYqyVlfTe/p1PtUB4pXyc6v3v8TQTmAcnI44j0/aMfqRT9KZDiOXpGvbTEgIWOkPo3ijPqnR+Eg==
+X-Received: by 2002:adf:ef10:: with SMTP id e16mr34917892wro.336.1576583749962;
+        Tue, 17 Dec 2019 03:55:49 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id u14sm25678590wrm.51.2019.12.17.03.55.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 03:55:49 -0800 (PST)
+Date:   Tue, 17 Dec 2019 12:55:47 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>
+Subject: [GIT PULL] timer fixes
+Message-ID: <20191217115547.GA68104@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 6cac7866c2741 ("intel_th: msu: Add a sysfs attribute to trigger
-window switch") adds a NULL pointer dereference in the case when there are
-no windows allocated:
+Linus,
 
-> BUG: kernel NULL pointer dereference, address: 0000000000000000
-> #PF: supervisor read access in kernel mode
-> #PF: error_code(0x0000) - not-present page
-> PGD 0 P4D 0
-> Oops: 0000 1 SMP
-> CPU: 5 PID: 1110 Comm: bash Not tainted 5.5.0-rc1+ #1
-> RIP: 0010:msc_win_switch+0xa/0x80 [intel_th_msu]
-> Call Trace:
-> ? win_switch_store+0x9b/0xc0 [intel_th_msu]
-> dev_attr_store+0x17/0x30
-> sysfs_kf_write+0x3e/0x50
-> kernfs_fop_write+0xda/0x1b0
-> __vfs_write+0x1b/0x40
-> vfs_write+0xb9/0x1a0
-> ksys_write+0x67/0xe0
-> __x64_sys_write+0x1a/0x20
-> do_syscall_64+0x57/0x1d0
-> entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Please pull the latest timers-urgent-for-linus git tree from:
 
-Fix that by disallowing window switching with multiwindow buffers without
-windows.
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-urgent-for-linus
 
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Fixes: 6cac7866c2741 ("intel_th: msu: Add a sysfs attribute to trigger window switch")
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reported-by: Ammy Yi <ammy.yi@intel.com>
-Tested-by: Ammy Yi <ammy.yi@intel.com>
-Cc: stable@vger.kernel.org # v5.2+
----
- drivers/hwtracing/intel_th/msu.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+   # HEAD: e0748539e3d594dd26f0d27a270f14720b22a406 x86/intel: Disable HPET on Intel Ice Lake platforms
 
-diff --git a/drivers/hwtracing/intel_th/msu.c b/drivers/hwtracing/intel_th/msu.c
-index 6d240dfae9d9..8e48c7458aa3 100644
---- a/drivers/hwtracing/intel_th/msu.c
-+++ b/drivers/hwtracing/intel_th/msu.c
-@@ -1676,10 +1676,13 @@ static int intel_th_msc_init(struct msc *msc)
- 	return 0;
- }
- 
--static void msc_win_switch(struct msc *msc)
-+static int msc_win_switch(struct msc *msc)
- {
- 	struct msc_window *first;
- 
-+	if (list_empty(&msc->win_list))
-+		return -EINVAL;
-+
- 	first = list_first_entry(&msc->win_list, struct msc_window, entry);
- 
- 	if (msc_is_last_win(msc->cur_win))
-@@ -1691,6 +1694,8 @@ static void msc_win_switch(struct msc *msc)
- 	msc->base_addr = msc_win_base_dma(msc->cur_win);
- 
- 	intel_th_trace_switch(msc->thdev);
-+
-+	return 0;
- }
- 
- /**
-@@ -2025,16 +2030,15 @@ win_switch_store(struct device *dev, struct device_attribute *attr,
- 	if (val != 1)
- 		return -EINVAL;
- 
-+	ret = -EINVAL;
- 	mutex_lock(&msc->buf_mutex);
- 	/*
- 	 * Window switch can only happen in the "multi" mode.
- 	 * If a external buffer is engaged, they have the full
- 	 * control over window switching.
+Add HPET quirks for the Intel "Coffee Lake H" and "Ice Lake" platforms.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Kai-Heng Feng (2):
+      x86/intel: Disable HPET on Intel Coffee Lake H platforms
+      x86/intel: Disable HPET on Intel Ice Lake platforms
+
+
+ arch/x86/kernel/early-quirks.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
+index 4cba91ec8049..2f9ec14be3b1 100644
+--- a/arch/x86/kernel/early-quirks.c
++++ b/arch/x86/kernel/early-quirks.c
+@@ -710,8 +710,12 @@ static struct chipset early_qrk[] __initdata = {
  	 */
--	if (msc->mode != MSC_MODE_MULTI || msc->mbuf)
--		ret = -ENOTSUPP;
--	else
--		msc_win_switch(msc);
-+	if (msc->mode == MSC_MODE_MULTI && !msc->mbuf)
-+		ret = msc_win_switch(msc);
- 	mutex_unlock(&msc->buf_mutex);
- 
- 	return ret ? ret : size;
--- 
-2.24.0
-
+ 	{ PCI_VENDOR_ID_INTEL, 0x0f00,
+ 		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
++	{ PCI_VENDOR_ID_INTEL, 0x3e20,
++		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
+ 	{ PCI_VENDOR_ID_INTEL, 0x3ec4,
+ 		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
++	{ PCI_VENDOR_ID_INTEL, 0x8a12,
++		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
+ 	{ PCI_VENDOR_ID_BROADCOM, 0x4331,
+ 	  PCI_CLASS_NETWORK_OTHER, PCI_ANY_ID, 0, apple_airport_reset},
+ 	{}
