@@ -2,103 +2,110 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E273C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF3DC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 699122176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FC5E2176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:08:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="oeleUBPd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726072AbfLQXIf (ORCPT
+        id S1726556AbfLQXIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 18:08:35 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:12714 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725892AbfLQXIf (ORCPT
+        Tue, 17 Dec 2019 18:08:52 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35632 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726470AbfLQXIv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 18:08:35 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBHN490L003762
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 18:08:33 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wy1x1cnfk-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 18:08:33 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 17 Dec 2019 23:08:31 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 17 Dec 2019 23:08:28 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBHN8Rbb65536022
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 17 Dec 2019 23:08:27 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 379E84203F;
-        Tue, 17 Dec 2019 23:08:27 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E1F2342047;
-        Tue, 17 Dec 2019 23:08:25 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.184.53])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 17 Dec 2019 23:08:25 +0000 (GMT)
-Subject: Re: [PATCH] integrity: Expose data structures required for
- include/linux/integrity.h
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Casey Schaufler <casey@schaufler-ca.com>,
-        Florent Revest <revest@chromium.org>,
-        linux-integrity@vger.kernel.org
-Cc:     jmorris@namei.org, serge@hallyn.com, revest@google.com,
-        allison@lohutok.net, armijn@tjaldur.nl, bauerman@linux.ibm.com,
-        linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
-Date:   Tue, 17 Dec 2019 18:08:25 -0500
-In-Reply-To: <e9e366d3-6c5d-743b-ffde-6b95b85884a2@schaufler-ca.com>
-References: <20191217134748.198011-1-revest@chromium.org>
-         <e9e366d3-6c5d-743b-ffde-6b95b85884a2@schaufler-ca.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Tue, 17 Dec 2019 18:08:51 -0500
+Received: by mail-lj1-f194.google.com with SMTP id j6so12870174lja.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 15:08:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=aGiB+hbSb9LA36NPoJtb7z2ChL7/cE8oaRzpEVpg4xY=;
+        b=oeleUBPdDbOz5yUEadMq26sIIXeXyzMJVh5AKg+rfxxa6qrVXWpmVAuQsBbyY5l6pa
+         VfbTQWrC3v1a9rfIm5Quejgv9tFi/+ert3ZMEyKp005+tyOC0XAEVcAMriz9gYl8/nJP
+         DaOhA18cLXy18h4fZHDT/9cAJEPUOae43La46AE/vaHD0sidTb9gMb9FfPHRjpk1r/mK
+         +TcZSmbzWyVwfNtrer+doj6A4kpUT6ScA4S7rzGIiJSbj2f4f/DjCdgZek0+/CIziilJ
+         i6GJISoJUff7mOjry42NaefmsL5lCtNb7Yb+OzjH+fDHlegO+3i9U/s4xtEm5AMug85+
+         gIKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=aGiB+hbSb9LA36NPoJtb7z2ChL7/cE8oaRzpEVpg4xY=;
+        b=BaI/QvcRhl77P5ydqpXhlWxvVFXgQs7cds9FmX/fi/NkJ3Aoe7aPFsQg2VO1gIod2M
+         lsQCLD6WwIip7+VBYvgFfqYdfBorvp+79nGUXw+p/jgdyD0gz+erB/umj1PP11FYBF4V
+         Mekaj89l/5J0M4OomXSvfku5l3hYhWI2NKrntRRq6mIQ5R/YHzp/dCBr6D9h9vKYlaGg
+         oJnV29k77zKNyNpzuT5au6fpKZ37TjZiKvM2gWlgbDaBp8DM3LpCkF9ULgqkHEtvPl53
+         MUYuatbxRCEY22ZJiyjqSgJ4nQhk8kp8roIoPtsArwD2SI9GURM6mUaMQ4Gxp4tjlonC
+         z03A==
+X-Gm-Message-State: APjAAAVzxvL4vQRNIwilcfKchtbV2XFObxr7XNAXAlfbJHCGOR7udmTg
+        JEo6cxeRxKMNbfYCY6sxtu6n6g==
+X-Google-Smtp-Source: APXvYqxukD7cTbWUkQTWB6DyDuO/pcX3ri7d1UFgmbDdVl/nzx1L/sDaryeDQItlZCm2Yo/AF3Rtbg==
+X-Received: by 2002:a2e:b010:: with SMTP id y16mr203585ljk.238.1576624129615;
+        Tue, 17 Dec 2019 15:08:49 -0800 (PST)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id r125sm74526lff.70.2019.12.17.15.08.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 15:08:49 -0800 (PST)
+Date:   Tue, 17 Dec 2019 15:08:41 -0800
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Doug Berger <opendmb@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 3/8] net: bcmgenet: use CHECKSUM_COMPLETE for
+ NETIF_F_RXCSUM
+Message-ID: <20191217150841.563d6fb9@cakuba.netronome.com>
+In-Reply-To: <1576616549-39097-4-git-send-email-opendmb@gmail.com>
+References: <1576616549-39097-1-git-send-email-opendmb@gmail.com>
+        <1576616549-39097-4-git-send-email-opendmb@gmail.com>
+Organization: Netronome Systems, Ltd.
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19121723-0012-0000-0000-00000375F5E4
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19121723-0013-0000-0000-000021B1E249
-Message-Id: <1576624105.4579.379.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-17_04:2019-12-17,2019-12-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=859 bulkscore=0
- adultscore=0 mlxscore=0 malwarescore=0 priorityscore=1501 clxscore=1015
- suspectscore=0 phishscore=0 spamscore=0 lowpriorityscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-1912170184
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-12-17 at 08:25 -0800, Casey Schaufler wrote:
-> On 12/17/2019 5:47 AM, Florent Revest wrote:
-> > From: Florent Revest <revest@google.com>
-> >
-> > include/linux/integrity.h exposes the prototype of integrity_inode_get().
-> > However, it relies on struct integrity_iint_cache which is currently
-> > defined in an internal header, security/integrity/integrity.h.
-> >
-> > To allow the rest of the kernel to use integrity_inode_get,
-> 
-> Why do you want to do this?
+On Tue, 17 Dec 2019 13:02:24 -0800, Doug Berger wrote:
+> @@ -1793,6 +1792,10 @@ static unsigned int bcmgenet_desc_rx(struct bcmgenet_rx_ring *ring,
+>  
+>  			status = (struct status_64 *)skb->data;
+>  			dma_length_status = status->length_status;
+> +			if (priv->desc_rxchk_en) {
+> +				skb->csum = ntohs(status->rx_csum & 0xffff);
 
-ditto
+This adds a new warning for a W=1 C=1 build:
 
-> 
-> >  this patch
-> > moves the definition of the necessary structures from a private header
-> > to a global kernel header.
-> >
+../drivers/net/ethernet/broadcom/genet/bcmgenet.c:1796:45: warning: cast to res\
+tricted __be16                                                                  
+../drivers/net/ethernet/broadcom/genet/bcmgenet.c:1796:45: warning: cast to res\
+tricted __be16                                                                  
+../drivers/net/ethernet/broadcom/genet/bcmgenet.c:1796:45: warning: cast to res\
+tricted __be16                                                                  
+../drivers/net/ethernet/broadcom/genet/bcmgenet.c:1796:45: warning: cast to res\
+tricted __be16                                                                  
+../drivers/net/ethernet/broadcom/genet/bcmgenet.c:1796:43: warning: incorrect t\
+ype in assignment (different base types)                                        
+../drivers/net/ethernet/broadcom/genet/bcmgenet.c:1796:43:    expected restrict\
+ed __wsum [usertype] csum                                                       
+../drivers/net/ethernet/broadcom/genet/bcmgenet.c:1796:43:    got int           
+   
+Could you perhaps consider a __force cast or such?
+
+> +				skb->ip_summed = CHECKSUM_COMPLETE;
+> +			}
+>  		}
+>  
+>  		/* DMA flags and length are still valid no matter how
 
