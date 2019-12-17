@@ -2,125 +2,139 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D38DC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98857C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1B3420663
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:17:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7947D21739
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:18:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728868AbfLQORb (ORCPT
+        id S1728905AbfLQOSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:17:31 -0500
-Received: from relay.sw.ru ([185.231.240.75]:46920 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728554AbfLQORa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:17:30 -0500
-Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1ihDeB-0005aE-AS; Tue, 17 Dec 2019 17:16:23 +0300
-Subject: Re: [PATCH RFC 0/3] block,ext4: Introduce REQ_OP_ASSIGN_RANGE to
- reflect extents allocation in block device internals
-To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, axboe@kernel.dk
-Cc:     tytso@mit.edu, adilger.kernel@dilger.ca, ming.lei@redhat.com,
-        osandov@fb.com, jthumshirn@suse.de, minwoo.im.dev@gmail.com,
-        damien.lemoal@wdc.com, andrea.parri@amarulasolutions.com,
-        hare@suse.com, tj@kernel.org, ajay.joshi@wdc.com, sagi@grimberg.me,
-        dsterba@suse.com, chaitanya.kulkarni@wdc.com, bvanassche@acm.org,
-        dhowells@redhat.com, asml.silence@gmail.com
-References: <157599668662.12112.10184894900037871860.stgit@localhost.localdomain>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <750538f7-33af-d98d-47d1-9753fd87e8fd@virtuozzo.com>
-Date:   Tue, 17 Dec 2019 17:16:22 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 17 Dec 2019 09:18:01 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:43844 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728656AbfLQOSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 09:18:01 -0500
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id BCF571E5A5D103F890AB;
+        Tue, 17 Dec 2019 22:17:57 +0800 (CST)
+Received: from huawei.com (10.175.127.16) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Tue, 17 Dec 2019
+ 22:17:50 +0800
+From:   Pan Zhang <zhangpan26@huawei.com>
+To:     <zhangpan26@huawei.com>, <gregkh@linuxfoundation.org>,
+        <rientjes@google.com>, <hushiyuan@huawei.com>,
+        <ulf.hansson@linaro.org>, <allison@lohutok.net>,
+        <tglx@linutronix.de>
+CC:     <linux-mmc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: Re: [PATCH] mmc: host: use kzalloc instead of kmalloc and memset
+Date:   Tue, 17 Dec 2019 22:17:33 +0800
+Message-ID: <1576592253-18670-1-git-send-email-zhangpan26@huawei.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <20191217073242.GB2472756@kroah.com>
+References: <20191217073242.GB2472756@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <157599668662.12112.10184894900037871860.stgit@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.127.16]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+On Tue, 17 Dec 2019, 15:33 Greg KH <gregkh@linuxfoundation.org> wrote:
+>> Signed-off-by: Pan Zhang <zhangpan26@huawei.com>
+>> ---
+>>  drivers/mmc/host/vub300.c | 4 +---
+>>  1 file changed, 1 insertion(+), 3 deletions(-)
 
-Any comments on this?
+>I know I can not take patches without any changelog text, hopefully other maintainers also do the same.
 
-Thanks
+>Please fix,
 
-On 10.12.2019 19:56, Kirill Tkhai wrote:
-> Information about continuous extent placement may be useful
-> for some block devices. Say, distributed network filesystems,
-> which provide block device interface, may use this information
-> for better blocks placement over the nodes in their cluster,
-> and for better performance. Block devices, which map a file
-> on another filesystem (loop), may request the same length extent
-> on underlining filesystem for less fragmentation and for batching
-> allocation requests. Also, hypervisors like QEMU may use this
-> information for optimization of cluster allocations.
-> 
-> This patchset introduces REQ_OP_ASSIGN_RANGE, which is going
-> to be used for forwarding user's fallocate(0) requests into
-> block device internals. It rather similar to existing
-> REQ_OP_DISCARD, REQ_OP_WRITE_ZEROES, etc. The corresponding
-> exported primitive is called blkdev_issue_assign_range().
-> See [1/3] for the details.
-> 
-> Patch [2/3] teaches loop driver to handle REQ_OP_ASSIGN_RANGE
-> requests by calling fallocate(0).
-> 
-> Patch [3/3] makes ext4 to notify a block device about fallocate(0).
-> 
-> Here is a simple test I did:
-> https://gist.github.com/tkhai/5b788651cdb74c1dbff3500745878856
-> 
-> I attached a file on ext4 to loop. Then, created ext4 partition
-> on loop device and started the test in the partition. Direct-io
-> is enabled on loop.
-> 
-> The test fallocates 4G file and writes from some offset with
-> given step, then it chooses another offset and repeats. After
-> the test all the blocks in the file become written.
-> 
-> The results shows that batching extents-assigning requests improves
-> the performance:
-> 
-> Before patchset: real ~ 1min 27sec
-> After patchset:  real ~ 1min 16sec (18% better)
-> 
-> Ordinary fallocate() before writes improves the performance
-> by batching the requests. These results just show, the same
-> is in case of forwarding extents information to underlining
-> filesystem.
-> ---
-> 
-> Kirill Tkhai (3):
->       block: Add support for REQ_OP_ASSIGN_RANGE operation
->       loop: Forward REQ_OP_ASSIGN_RANGE into fallocate(0)
->       ext4: Notify block device about fallocate(0)-assigned blocks
-> 
-> 
->  block/blk-core.c          |    4 +++
->  block/blk-lib.c           |   70 +++++++++++++++++++++++++++++++++++++++++++++
->  block/blk-merge.c         |   21 ++++++++++++++
->  block/bounce.c            |    1 +
->  drivers/block/loop.c      |    5 +++
->  fs/ext4/ext4.h            |    1 +
->  fs/ext4/extents.c         |   11 ++++++-
->  include/linux/bio.h       |    3 ++
->  include/linux/blk_types.h |    2 +
->  include/linux/blkdev.h    |   29 +++++++++++++++++++
->  10 files changed, 145 insertions(+), 2 deletions(-)
-> 
-> --
-> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-> 
+and 
+
+>> Signed-off-by: Pan Zhang <zhangpan26@huawei.com>
+>> ---
+>>  drivers/mmc/host/vub300.c | 12 ++++--------
+>>  1 file changed, 4 insertions(+), 8 deletions(-)
+
+>What changed from v1?  Always put that below the --- line.
+
+I am so sorry about that I didnot explain this patch clearly.
+I complemented patch v2 just after sending the patch v1 because I found that following code has similar problems.
+
+My changelog text can be also my reply to the following question:
+
+On Tue, 17 Dec 2019, 15:32 David Rientjes <rientjes@google.com> wrote:
+>I think the previous code is an optimization since the first interrupt_size bytes
+>or ts bytes of xfer_buffer would otherwise unnecessarily be zeroed and then copied to.
+
+Part of the memory will be written twice after this change, but that 
+should be negligible.
+1. xfer_buffer or xfer_buffer - interrupt_size, it won't be big.
+2. __download_offload_pseudocode func wouldnot be called frequently.
+  
+
+Signed-off-by: Pan Zhang <zhangpan26@huawei.com>
+---
+ drivers/mmc/host/vub300.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/mmc/host/vub300.c b/drivers/mmc/host/vub300.c
+index 6ced1b7..e18931d 100644
+--- a/drivers/mmc/host/vub300.c
++++ b/drivers/mmc/host/vub300.c
+@@ -1227,12 +1227,10 @@ static void __download_offload_pseudocode(struct vub300_mmc_host *vub300,
+ 	size -= 1;
+ 	if (interrupt_size < size) {
+ 		u16 xfer_length = roundup_to_multiple_of_64(interrupt_size);
+-		u8 *xfer_buffer = kmalloc(xfer_length, GFP_KERNEL);
++		u8 *xfer_buffer = kzalloc(xfer_length, GFP_KERNEL);
+ 		if (xfer_buffer) {
+ 			int retval;
+ 			memcpy(xfer_buffer, data, interrupt_size);
+-			memset(xfer_buffer + interrupt_size, 0,
+-			       xfer_length - interrupt_size);
+ 			size -= interrupt_size;
+ 			data += interrupt_size;
+ 			retval =
+@@ -1270,12 +1268,10 @@ static void __download_offload_pseudocode(struct vub300_mmc_host *vub300,
+ 	size -= 1;
+ 	if (ts < size) {
+ 		u16 xfer_length = roundup_to_multiple_of_64(ts);
+-		u8 *xfer_buffer = kmalloc(xfer_length, GFP_KERNEL);
++		u8 *xfer_buffer = kzalloc(xfer_length, GFP_KERNEL);
+ 		if (xfer_buffer) {
+ 			int retval;
+ 			memcpy(xfer_buffer, data, ts);
+-			memset(xfer_buffer + ts, 0,
+-			       xfer_length - ts);
+ 			size -= ts;
+ 			data += ts;
+ 			retval =
+@@ -1465,7 +1461,7 @@ static int __command_read_data(struct vub300_mmc_host *vub300,
+ 			}
+ 		}
+ 	} else {
+-		u8 *buf = kmalloc(padded_length, GFP_KERNEL);
++		u8 *buf = kzalloc(padded_length, GFP_KERNEL);
+ 		if (buf) {
+ 			int result;
+ 			unsigned pipe = usb_rcvbulkpipe(vub300->udev,
+@@ -2024,7 +2020,7 @@ static void vub300_mmc_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
+ 		msleep(600);
+ 		vub300->card_powered = 1;
+ 	} else if (ios->power_mode == MMC_POWER_ON) {
+-		u8 *buf = kmalloc(8, GFP_KERNEL);
++		u8 *buf = kzalloc(8, GFP_KERNEL);
+ 		if (buf) {
+ 			__set_clock_speed(vub300, buf, ios);
+ 			kfree(buf);
+-- 
+2.7.4
 
