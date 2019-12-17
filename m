@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACAA7C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CAD6C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F9A221775
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:18:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7F23206D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:18:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576613883;
-	bh=kEzd6Eru2VH38W+se05bRAU9NDzKkuX0IcMfRBl0caQ=;
+	s=default; t=1576613891;
+	bh=PJiEPMx8lGF7s4HdtS1jYrTzVzqBn9e36Kna/nilcdQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Oa0t+p1FfRxCqYdhv4aCrRaEIeXJM4CRPPB9YmGaHD0BrO/QhnhzNlLluYvXjcC3F
-	 NT6NgjtBoDnKiBl0u48yi0Ei/BygVtqmVbYCuDYl3EZSfMYIc6gNTPvUrzngMVV94z
-	 ZoJOmAg+nQgdKAX5Jm1X4ANE0D0JDFDrRn02MC+w=
+	b=fMxaZ/vj2Mc5Ri5B29IXgDLdMsrKREGqILSkFUOvy1IHCU9//KnggxAIBVPgRivtR
+	 8+G1huH5++/EVv4A273+KGaNoeO8l4UJjrrsx9VvGQQ9TSoCEUMlVXeLVuhWEagAlI
+	 Y67ns4DF7pc9GdDhDBaFneS+If7wHhZy2tg0MWF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728924AbfLQUSC (ORCPT
+        id S1728928AbfLQUSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 15:18:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41378 "EHLO mail.kernel.org"
+        Tue, 17 Dec 2019 15:18:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728635AbfLQURD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 15:17:03 -0500
+        id S1728457AbfLQUQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 15:16:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DB652465E;
-        Tue, 17 Dec 2019 20:17:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94BF724676;
+        Tue, 17 Dec 2019 20:16:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576613822;
-        bh=kEzd6Eru2VH38W+se05bRAU9NDzKkuX0IcMfRBl0caQ=;
+        s=default; t=1576613808;
+        bh=PJiEPMx8lGF7s4HdtS1jYrTzVzqBn9e36Kna/nilcdQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gYJM5E6CnLFW4bq1eF4BwltwiYpt1/XXsC0oIaXsogz7Vc1TEB4hl6yDD8a/tNlLZ
-         iFx1iDu3S/gMim1T+7Sopl82eA1wa+BdkSFU5D6Xj47dEY5IX3MBR/Kp8wotXc0arD
-         +f5AoOFgVClOfkzxL53B/j11LWL1D7dZTXYeRTGY=
+        b=lxB4TKPD5/dMCPQ6pXsseKAzS/xBdaZxp8nz4+ggLylLRsGpyHwk59pSYmDT63SWI
+         gSYJU1iLQ+fY05O8jp+OJdb0l3j3tbQUl0mHv2S9iVrOCTI7gQuVr1LVOb7j2QW546
+         bC16a/E98IuTp1XpKi289MDhvl5oUEl8MqbheIDs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Martin Varghese <martin.varghese@nokia.com>,
-        Pravin B Shelar <pshelar@ovn.org>,
+        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
+        Sabrina Dubroca <sd@queasysnail.net>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 20/25] Fixed updating of ethertype in function skb_mpls_pop
-Date:   Tue, 17 Dec 2019 21:16:19 +0100
-Message-Id: <20191217200910.968496971@linuxfoundation.org>
+Subject: [PATCH 5.3 15/25] net: ipv6_stub: use ip6_dst_lookup_flow instead of ip6_dst_lookup
+Date:   Tue, 17 Dec 2019 21:16:14 +0100
+Message-Id: <20191217200909.340275241@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191217200903.179327435@linuxfoundation.org>
 References: <20191217200903.179327435@linuxfoundation.org>
@@ -61,105 +60,243 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Varghese <martin.varghese@nokia.com>
+From: Sabrina Dubroca <sd@queasysnail.net>
 
-[ Upstream commit 040b5cfbcefa263ccf2c118c4938308606bb7ed8 ]
+[ Upstream commit 6c8991f41546c3c472503dff1ea9daaddf9331c2 ]
 
-The skb_mpls_pop was not updating ethertype of an ethernet packet if the
-packet was originally received from a non ARPHRD_ETHER device.
+ipv6_stub uses the ip6_dst_lookup function to allow other modules to
+perform IPv6 lookups. However, this function skips the XFRM layer
+entirely.
 
-In the below OVS data path flow, since the device corresponding to port 7
-is an l3 device (ARPHRD_NONE) the skb_mpls_pop function does not update
-the ethertype of the packet even though the previous push_eth action had
-added an ethernet header to the packet.
+All users of ipv6_stub->ip6_dst_lookup use ip_route_output_flow (via the
+ip_route_output_key and ip_route_output helpers) for their IPv4 lookups,
+which calls xfrm_lookup_route(). This patch fixes this inconsistent
+behavior by switching the stub to ip6_dst_lookup_flow, which also calls
+xfrm_lookup_route().
 
-recirc_id(0),in_port(7),eth_type(0x8847),
-mpls(label=12/0xfffff,tc=0/0,ttl=0/0x0,bos=1/1),
-actions:push_eth(src=00:00:00:00:00:00,dst=00:00:00:00:00:00),
-pop_mpls(eth_type=0x800),4
+This requires some changes in all the callers, as these two functions
+take different arguments and have different return types.
 
-Fixes: ed246cee09b9 ("net: core: move pop MPLS functionality from OvS to core helper")
-Signed-off-by: Martin Varghese <martin.varghese@nokia.com>
-Acked-by: Pravin B Shelar <pshelar@ovn.org>
+Fixes: 5f81bd2e5d80 ("ipv6: export a stub for IPv6 symbols used by vxlan")
+Reported-by: Xiumei Mu <xmu@redhat.com>
+Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/skbuff.h    |    3 ++-
- net/core/skbuff.c         |    6 ++++--
- net/openvswitch/actions.c |    3 ++-
- net/sched/act_mpls.c      |    4 +++-
- 4 files changed, 11 insertions(+), 5 deletions(-)
+ drivers/infiniband/core/addr.c                      |    7 +++----
+ drivers/infiniband/sw/rxe/rxe_net.c                 |    8 +++++---
+ drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun.c |    8 ++++----
+ drivers/net/geneve.c                                |    4 +++-
+ drivers/net/vxlan.c                                 |    8 +++-----
+ include/net/ipv6_stubs.h                            |    6 ++++--
+ net/core/lwt_bpf.c                                  |    4 +---
+ net/ipv6/addrconf_core.c                            |   11 ++++++-----
+ net/ipv6/af_inet6.c                                 |    2 +-
+ net/mpls/af_mpls.c                                  |    7 +++----
+ net/tipc/udp_media.c                                |    9 ++++++---
+ 11 files changed, 39 insertions(+), 35 deletions(-)
 
---- a/include/linux/skbuff.h
-+++ b/include/linux/skbuff.h
-@@ -3483,7 +3483,8 @@ int skb_vlan_pop(struct sk_buff *skb);
- int skb_vlan_push(struct sk_buff *skb, __be16 vlan_proto, u16 vlan_tci);
- int skb_mpls_push(struct sk_buff *skb, __be32 mpls_lse, __be16 mpls_proto,
- 		  int mac_len);
--int skb_mpls_pop(struct sk_buff *skb, __be16 next_proto, int mac_len);
-+int skb_mpls_pop(struct sk_buff *skb, __be16 next_proto, int mac_len,
-+		 bool ethernet);
- int skb_mpls_update_lse(struct sk_buff *skb, __be32 mpls_lse);
- int skb_mpls_dec_ttl(struct sk_buff *skb);
- struct sk_buff *pskb_extract(struct sk_buff *skb, int off, int to_copy,
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -5517,12 +5517,14 @@ EXPORT_SYMBOL_GPL(skb_mpls_push);
-  * @skb: buffer
-  * @next_proto: ethertype of header after popped MPLS header
-  * @mac_len: length of the MAC header
-+ * @ethernet: flag to indicate if ethernet header is present in packet
-  *
-  * Expects skb->data at mac header.
-  *
-  * Returns 0 on success, -errno otherwise.
-  */
--int skb_mpls_pop(struct sk_buff *skb, __be16 next_proto, int mac_len)
-+int skb_mpls_pop(struct sk_buff *skb, __be16 next_proto, int mac_len,
-+		 bool ethernet)
+--- a/drivers/infiniband/core/addr.c
++++ b/drivers/infiniband/core/addr.c
+@@ -421,16 +421,15 @@ static int addr6_resolve(struct sockaddr
+ 				(const struct sockaddr_in6 *)dst_sock;
+ 	struct flowi6 fl6;
+ 	struct dst_entry *dst;
+-	int ret;
+ 
+ 	memset(&fl6, 0, sizeof fl6);
+ 	fl6.daddr = dst_in->sin6_addr;
+ 	fl6.saddr = src_in->sin6_addr;
+ 	fl6.flowi6_oif = addr->bound_dev_if;
+ 
+-	ret = ipv6_stub->ipv6_dst_lookup(addr->net, NULL, &dst, &fl6);
+-	if (ret < 0)
+-		return ret;
++	dst = ipv6_stub->ipv6_dst_lookup_flow(addr->net, NULL, &fl6, NULL);
++	if (IS_ERR(dst))
++		return PTR_ERR(dst);
+ 
+ 	if (ipv6_addr_any(&src_in->sin6_addr))
+ 		src_in->sin6_addr = fl6.saddr;
+--- a/drivers/infiniband/sw/rxe/rxe_net.c
++++ b/drivers/infiniband/sw/rxe/rxe_net.c
+@@ -117,10 +117,12 @@ static struct dst_entry *rxe_find_route6
+ 	memcpy(&fl6.daddr, daddr, sizeof(*daddr));
+ 	fl6.flowi6_proto = IPPROTO_UDP;
+ 
+-	if (unlikely(ipv6_stub->ipv6_dst_lookup(sock_net(recv_sockets.sk6->sk),
+-						recv_sockets.sk6->sk, &ndst, &fl6))) {
++	ndst = ipv6_stub->ipv6_dst_lookup_flow(sock_net(recv_sockets.sk6->sk),
++					       recv_sockets.sk6->sk, &fl6,
++					       NULL);
++	if (unlikely(IS_ERR(ndst))) {
+ 		pr_err_ratelimited("no route to %pI6\n", daddr);
+-		goto put;
++		return NULL;
+ 	}
+ 
+ 	if (unlikely(ndst->error)) {
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun.c
+@@ -137,10 +137,10 @@ static int mlx5e_route_lookup_ipv6(struc
+ #if IS_ENABLED(CONFIG_INET) && IS_ENABLED(CONFIG_IPV6)
+ 	int ret;
+ 
+-	ret = ipv6_stub->ipv6_dst_lookup(dev_net(mirred_dev), NULL, &dst,
+-					 fl6);
+-	if (ret < 0)
+-		return ret;
++	dst = ipv6_stub->ipv6_dst_lookup_flow(dev_net(mirred_dev), NULL, fl6,
++					      NULL);
++	if (IS_ERR(dst))
++		return PTR_ERR(dst);
+ 
+ 	if (!(*out_ttl))
+ 		*out_ttl = ip6_dst_hoplimit(dst);
+--- a/drivers/net/geneve.c
++++ b/drivers/net/geneve.c
+@@ -853,7 +853,9 @@ static struct dst_entry *geneve_get_v6_d
+ 		if (dst)
+ 			return dst;
+ 	}
+-	if (ipv6_stub->ipv6_dst_lookup(geneve->net, gs6->sock->sk, &dst, fl6)) {
++	dst = ipv6_stub->ipv6_dst_lookup_flow(geneve->net, gs6->sock->sk, fl6,
++					      NULL);
++	if (IS_ERR(dst)) {
+ 		netdev_dbg(dev, "no route to %pI6\n", &fl6->daddr);
+ 		return ERR_PTR(-ENETUNREACH);
+ 	}
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -2276,7 +2276,6 @@ static struct dst_entry *vxlan6_get_rout
+ 	bool use_cache = ip_tunnel_dst_cache_usable(skb, info);
+ 	struct dst_entry *ndst;
+ 	struct flowi6 fl6;
+-	int err;
+ 
+ 	if (!sock6)
+ 		return ERR_PTR(-EIO);
+@@ -2299,10 +2298,9 @@ static struct dst_entry *vxlan6_get_rout
+ 	fl6.fl6_dport = dport;
+ 	fl6.fl6_sport = sport;
+ 
+-	err = ipv6_stub->ipv6_dst_lookup(vxlan->net,
+-					 sock6->sock->sk,
+-					 &ndst, &fl6);
+-	if (unlikely(err < 0)) {
++	ndst = ipv6_stub->ipv6_dst_lookup_flow(vxlan->net, sock6->sock->sk,
++					       &fl6, NULL);
++	if (unlikely(IS_ERR(ndst))) {
+ 		netdev_dbg(dev, "no route to %pI6\n", daddr);
+ 		return ERR_PTR(-ENETUNREACH);
+ 	}
+--- a/include/net/ipv6_stubs.h
++++ b/include/net/ipv6_stubs.h
+@@ -24,8 +24,10 @@ struct ipv6_stub {
+ 				 const struct in6_addr *addr);
+ 	int (*ipv6_sock_mc_drop)(struct sock *sk, int ifindex,
+ 				 const struct in6_addr *addr);
+-	int (*ipv6_dst_lookup)(struct net *net, struct sock *sk,
+-			       struct dst_entry **dst, struct flowi6 *fl6);
++	struct dst_entry *(*ipv6_dst_lookup_flow)(struct net *net,
++						  const struct sock *sk,
++						  struct flowi6 *fl6,
++						  const struct in6_addr *final_dst);
+ 	int (*ipv6_route_input)(struct sk_buff *skb);
+ 
+ 	struct fib6_table *(*fib6_get_table)(struct net *net, u32 id);
+--- a/net/core/lwt_bpf.c
++++ b/net/core/lwt_bpf.c
+@@ -230,9 +230,7 @@ static int bpf_lwt_xmit_reroute(struct s
+ 		fl6.daddr = iph6->daddr;
+ 		fl6.saddr = iph6->saddr;
+ 
+-		err = ipv6_stub->ipv6_dst_lookup(net, skb->sk, &dst, &fl6);
+-		if (unlikely(err))
+-			goto err;
++		dst = ipv6_stub->ipv6_dst_lookup_flow(net, skb->sk, &fl6, NULL);
+ 		if (IS_ERR(dst)) {
+ 			err = PTR_ERR(dst);
+ 			goto err;
+--- a/net/ipv6/addrconf_core.c
++++ b/net/ipv6/addrconf_core.c
+@@ -128,11 +128,12 @@ int inet6addr_validator_notifier_call_ch
+ }
+ EXPORT_SYMBOL(inet6addr_validator_notifier_call_chain);
+ 
+-static int eafnosupport_ipv6_dst_lookup(struct net *net, struct sock *u1,
+-					struct dst_entry **u2,
+-					struct flowi6 *u3)
++static struct dst_entry *eafnosupport_ipv6_dst_lookup_flow(struct net *net,
++							   const struct sock *sk,
++							   struct flowi6 *fl6,
++							   const struct in6_addr *final_dst)
  {
- 	int err;
+-	return -EAFNOSUPPORT;
++	return ERR_PTR(-EAFNOSUPPORT);
+ }
  
-@@ -5541,7 +5543,7 @@ int skb_mpls_pop(struct sk_buff *skb, __
- 	skb_reset_mac_header(skb);
- 	skb_set_network_header(skb, mac_len);
+ static int eafnosupport_ipv6_route_input(struct sk_buff *skb)
+@@ -189,7 +190,7 @@ static int eafnosupport_ip6_del_rt(struc
+ }
  
--	if (skb->dev && skb->dev->type == ARPHRD_ETHER) {
-+	if (ethernet) {
- 		struct ethhdr *hdr;
+ const struct ipv6_stub *ipv6_stub __read_mostly = &(struct ipv6_stub) {
+-	.ipv6_dst_lookup   = eafnosupport_ipv6_dst_lookup,
++	.ipv6_dst_lookup_flow = eafnosupport_ipv6_dst_lookup_flow,
+ 	.ipv6_route_input  = eafnosupport_ipv6_route_input,
+ 	.fib6_get_table    = eafnosupport_fib6_get_table,
+ 	.fib6_table_lookup = eafnosupport_fib6_table_lookup,
+--- a/net/ipv6/af_inet6.c
++++ b/net/ipv6/af_inet6.c
+@@ -946,7 +946,7 @@ static int ipv6_route_input(struct sk_bu
+ static const struct ipv6_stub ipv6_stub_impl = {
+ 	.ipv6_sock_mc_join = ipv6_sock_mc_join,
+ 	.ipv6_sock_mc_drop = ipv6_sock_mc_drop,
+-	.ipv6_dst_lookup   = ip6_dst_lookup,
++	.ipv6_dst_lookup_flow = ip6_dst_lookup_flow,
+ 	.ipv6_route_input  = ipv6_route_input,
+ 	.fib6_get_table	   = fib6_get_table,
+ 	.fib6_table_lookup = fib6_table_lookup,
+--- a/net/mpls/af_mpls.c
++++ b/net/mpls/af_mpls.c
+@@ -617,16 +617,15 @@ static struct net_device *inet6_fib_look
+ 	struct net_device *dev;
+ 	struct dst_entry *dst;
+ 	struct flowi6 fl6;
+-	int err;
  
- 		/* use mpls_hdr() to get ethertype to account for VLANs. */
---- a/net/openvswitch/actions.c
-+++ b/net/openvswitch/actions.c
-@@ -179,7 +179,8 @@ static int pop_mpls(struct sk_buff *skb,
- {
- 	int err;
+ 	if (!ipv6_stub)
+ 		return ERR_PTR(-EAFNOSUPPORT);
  
--	err = skb_mpls_pop(skb, ethertype, skb->mac_len);
-+	err = skb_mpls_pop(skb, ethertype, skb->mac_len,
-+			   ovs_key_mac_proto(key) == MAC_PROTO_ETHERNET);
- 	if (err)
- 		return err;
+ 	memset(&fl6, 0, sizeof(fl6));
+ 	memcpy(&fl6.daddr, addr, sizeof(struct in6_addr));
+-	err = ipv6_stub->ipv6_dst_lookup(net, NULL, &dst, &fl6);
+-	if (err)
+-		return ERR_PTR(err);
++	dst = ipv6_stub->ipv6_dst_lookup_flow(net, NULL, &fl6, NULL);
++	if (IS_ERR(dst))
++		return ERR_CAST(dst);
  
---- a/net/sched/act_mpls.c
-+++ b/net/sched/act_mpls.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
- /* Copyright (C) 2019 Netronome Systems, Inc. */
- 
-+#include <linux/if_arp.h>
- #include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-@@ -76,7 +77,8 @@ static int tcf_mpls_act(struct sk_buff *
- 
- 	switch (p->tcfm_action) {
- 	case TCA_MPLS_ACT_POP:
--		if (skb_mpls_pop(skb, p->tcfm_proto, mac_len))
-+		if (skb_mpls_pop(skb, p->tcfm_proto, mac_len,
-+				 skb->dev && skb->dev->type == ARPHRD_ETHER))
- 			goto drop;
- 		break;
- 	case TCA_MPLS_ACT_PUSH:
+ 	dev = dst->dev;
+ 	dev_hold(dev);
+--- a/net/tipc/udp_media.c
++++ b/net/tipc/udp_media.c
+@@ -195,10 +195,13 @@ static int tipc_udp_xmit(struct net *net
+ 				.saddr = src->ipv6,
+ 				.flowi6_proto = IPPROTO_UDP
+ 			};
+-			err = ipv6_stub->ipv6_dst_lookup(net, ub->ubsock->sk,
+-							 &ndst, &fl6);
+-			if (err)
++			ndst = ipv6_stub->ipv6_dst_lookup_flow(net,
++							       ub->ubsock->sk,
++							       &fl6, NULL);
++			if (IS_ERR(ndst)) {
++				err = PTR_ERR(ndst);
+ 				goto tx_error;
++			}
+ 			dst_cache_set_ip6(cache, ndst, &fl6.saddr);
+ 		}
+ 		ttl = ip6_dst_hoplimit(ndst);
 
 
