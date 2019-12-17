@@ -2,103 +2,77 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8775C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A46C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90ECC206D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:50:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PedRStQa"
+	by mail.kernel.org (Postfix) with ESMTP id C467E24679
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:50:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbfLQHul (ORCPT
+        id S1726671AbfLQHus (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 02:50:41 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:53716 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbfLQHul (ORCPT
+        Tue, 17 Dec 2019 02:50:48 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:34355 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbfLQHus (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 02:50:41 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBH7oVs8082175;
-        Tue, 17 Dec 2019 01:50:31 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576569031;
-        bh=MaH2sErLpxeYmngtjI6q6hiIGh8Im8kVUfACGcBFcxM=;
-        h=From:To:CC:Subject:Date;
-        b=PedRStQaXUiBsqBd4AfT4VL/96DIog1txXfMnHGsrybqDCxfPSyzFld91tz8U6+DR
-         13N1UVnHNBYrgp8zJ/Mg9lJuefHkWDkIvWvGdGFtype1chQL2ENwJTgzLooUjFC5lg
-         +2U/4y1ERYRNd6ikLtR7D99HljeV9y2Ib0PzjRDI=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBH7oVOT047317
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 17 Dec 2019 01:50:31 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
- Dec 2019 01:50:30 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 17 Dec 2019 01:50:30 -0600
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBH7oSVU088646;
-        Tue, 17 Dec 2019 01:50:29 -0600
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <jic23@kernel.org>
-CC:     <vkoul@kernel.org>, <ludovic.desroches@microchip.com>,
-        <eugen.hristev@microchip.com>, <linux-iio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] iio: adc: at91: Use dma_request_chan() instead dma_request_slave_channel()
-Date:   Tue, 17 Dec 2019 09:50:43 +0200
-Message-ID: <20191217075043.23539-1-peter.ujfalusi@ti.com>
+        Tue, 17 Dec 2019 02:50:48 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ih7d0-00060f-NZ; Tue, 17 Dec 2019 08:50:46 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ih7cy-0001CU-Lt; Tue, 17 Dec 2019 08:50:44 +0100
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>
+Cc:     linux-kernel@vger.kernel.org, kernel@pengutronix.de
+Subject: [PATCH] tty: drop useless variable initialisation in tty_kopen()
+Date:   Tue, 17 Dec 2019 08:50:40 +0100
+Message-Id: <20191217075040.8020-1-u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dma_request_slave_channel() is a wrapper on top of dma_request_chan()
-eating up the error code.
+The driver variable is assigned to unconditionally and not used before.
+So there is no need to explicitly initialize it at the start of
+tty_kopen().
 
-By using dma_request_chan() directly the driver can support deferred
-probing against DMA.
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/iio/adc/at91-sama5d2_adc.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/tty/tty_io.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
-index e1850f3d5cf3..a5c7771227d5 100644
---- a/drivers/iio/adc/at91-sama5d2_adc.c
-+++ b/drivers/iio/adc/at91-sama5d2_adc.c
-@@ -1444,10 +1444,10 @@ static void at91_adc_dma_init(struct platform_device *pdev)
- 	if (st->dma_st.dma_chan)
- 		return;
+diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
+index d9f54c7d94f2..a1453fe10862 100644
+--- a/drivers/tty/tty_io.c
++++ b/drivers/tty/tty_io.c
+@@ -1892,9 +1892,9 @@ static struct tty_driver *tty_lookup_driver(dev_t device, struct file *filp,
+  */
+ struct tty_struct *tty_kopen(dev_t device)
+ {
+ 	struct tty_struct *tty;
+-	struct tty_driver *driver = NULL;
++	struct tty_driver *driver;
+ 	int index = -1;
  
--	st->dma_st.dma_chan = dma_request_slave_channel(&pdev->dev, "rx");
--
--	if (!st->dma_st.dma_chan)  {
-+	st->dma_st.dma_chan = dma_request_chan(&pdev->dev, "rx");
-+	if (IS_ERR(st->dma_st.dma_chan))  {
- 		dev_info(&pdev->dev, "can't get DMA channel\n");
-+		st->dma_st.dma_chan = NULL;
- 		goto dma_exit;
- 	}
- 
+ 	mutex_lock(&tty_mutex);
+ 	driver = tty_lookup_driver(device, NULL, &index);
 -- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.24.0
 
