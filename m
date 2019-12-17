@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE40C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 625BEC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F80424686
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:12:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 343DE206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:12:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576613529;
-	bh=zKxx6SDcqRNddDhazAbpBkQtKokDjwpLmwNG76EUBvE=;
+	s=default; t=1576613547;
+	bh=FfnKSyZoMFlkOL6GydMHuUSODldEug/qdjcyseevXTY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jm5DYuUioY/PMDLv83bbFjmbHT3GwqVtk+C2jqngFkEdc7gYQadV1KM0vuE72EJrF
-	 ixUh5C8DxEZQII7SFUVuZEjZywc8fVrF01GGSn1yJ7xSRt8NgzmS3pJpSYQ+jJwoF0
-	 avVMdy60b3+Oih4strE8+Vzh+6dgWfptfpgZPBf4=
+	b=ewD+Yzav9iXtLcZU5Moe5VgEFUdzqhNKUekmlKiI3yb/9oK89YMHLRwVGtiFEGEtP
+	 6pKzFIBySPiKj119ZfBYVPn5UqGAc1IIcDcKjuLHsEn0EKYdCOwuF3EUqgjQ+UHWEK
+	 QqTVqpbZ8AgM6Od42ei01xqDWbip2FuEq6qtV3Ck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728208AbfLQUMH (ORCPT
+        id S1728501AbfLQUM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 15:12:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37216 "EHLO mail.kernel.org"
+        Tue, 17 Dec 2019 15:12:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728520AbfLQUKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 15:10:53 -0500
+        id S1728001AbfLQUKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 15:10:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B751206D7;
-        Tue, 17 Dec 2019 20:10:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E2FF21D7D;
+        Tue, 17 Dec 2019 20:10:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576613452;
-        bh=zKxx6SDcqRNddDhazAbpBkQtKokDjwpLmwNG76EUBvE=;
+        s=default; t=1576613419;
+        bh=FfnKSyZoMFlkOL6GydMHuUSODldEug/qdjcyseevXTY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tHFlXxRNKGumAQV2x675ahGrUh9196qGFcFGfXmlFLU+27Od1GcmJ0WF+g0wIFqGc
-         5wdujgO2/P3KqrvsKlRUN36HycNYrzUCLrNUof/WeCxRuLE/M8hM8t6zHSQruYazMp
-         UHAMXZAfhLdcY8b4PAIgn76b88/Qyh7teevceph8=
+        b=w1vaDxfGTWKCqMci8BapCsSY9T4aLuwZ8mTPviEjZZyEzaBHEXkGA9NuLr6aATI0J
+         NzID4rGf8bRRNBB4EUYQzPChybSdrM33OFGDWg7UhtE0VxZJzMeysQekgA2fIOKv5r
+         XzmHRN4G6IbqN0sN2Wymj1k95/JmsdLEhZ5Ve9/8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Martin Varghese <martin.varghese@nokia.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 26/37] net: Fixed updating of ethertype in skb_mpls_push()
-Date:   Tue, 17 Dec 2019 21:09:47 +0100
-Message-Id: <20191217200731.277722200@linuxfoundation.org>
+        stable@vger.kernel.org, Huy Nguyen <huyn@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.4 14/37] net/mlx5e: Query global pause state before setting prio2buffer
+Date:   Tue, 17 Dec 2019 21:09:35 +0100
+Message-Id: <20191217200726.519858502@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191217200721.741054904@linuxfoundation.org>
 References: <20191217200721.741054904@linuxfoundation.org>
@@ -60,87 +59,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Varghese <martin.varghese@nokia.com>
+From: Huy Nguyen <huyn@mellanox.com>
 
-[ Upstream commit d04ac224b1688f005a84f764cfe29844f8e9da08 ]
+[ Upstream commit 73e6551699a32fac703ceea09214d6580edcf2d5 ]
 
-The skb_mpls_push was not updating ethertype of an ethernet packet if
-the packet was originally received from a non ARPHRD_ETHER device.
+When the user changes prio2buffer mapping while global pause is
+enabled, mlx5 driver incorrectly sets all active buffers
+(buffer that has at least one priority mapped) to lossy.
 
-In the below OVS data path flow, since the device corresponding to
-port 7 is an l3 device (ARPHRD_NONE) the skb_mpls_push function does
-not update the ethertype of the packet even though the previous
-push_eth action had added an ethernet header to the packet.
+Solution:
+If global pause is enabled, set all the active buffers to lossless
+in prio2buffer command.
+Also, add error message when buffer size is not enough to meet
+xoff threshold.
 
-recirc_id(0),in_port(7),eth_type(0x0800),ipv4(tos=0/0xfc,ttl=64,frag=no),
-actions:push_eth(src=00:00:00:00:00:00,dst=00:00:00:00:00:00),
-push_mpls(label=13,tc=0,ttl=64,bos=1,eth_type=0x8847),4
-
-Fixes: 8822e270d697 ("net: core: move push MPLS functionality from OvS to core helper")
-Signed-off-by: Martin Varghese <martin.varghese@nokia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 0696d60853d5 ("net/mlx5e: Receive buffer configuration")
+Signed-off-by: Huy Nguyen <huyn@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/skbuff.h    |    2 +-
- net/core/skbuff.c         |    4 ++--
- net/openvswitch/actions.c |    3 ++-
- net/sched/act_mpls.c      |    3 ++-
- 4 files changed, 7 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en/port_buffer.c |   27 +++++++++++++--
+ 1 file changed, 25 insertions(+), 2 deletions(-)
 
---- a/include/linux/skbuff.h
-+++ b/include/linux/skbuff.h
-@@ -3527,7 +3527,7 @@ int __skb_vlan_pop(struct sk_buff *skb,
- int skb_vlan_pop(struct sk_buff *skb);
- int skb_vlan_push(struct sk_buff *skb, __be16 vlan_proto, u16 vlan_tci);
- int skb_mpls_push(struct sk_buff *skb, __be32 mpls_lse, __be16 mpls_proto,
--		  int mac_len);
-+		  int mac_len, bool ethernet);
- int skb_mpls_pop(struct sk_buff *skb, __be16 next_proto, int mac_len,
- 		 bool ethernet);
- int skb_mpls_update_lse(struct sk_buff *skb, __be32 mpls_lse);
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -5484,7 +5484,7 @@ static void skb_mod_eth_type(struct sk_b
-  * Returns 0 on success, -errno otherwise.
-  */
- int skb_mpls_push(struct sk_buff *skb, __be32 mpls_lse, __be16 mpls_proto,
--		  int mac_len)
-+		  int mac_len, bool ethernet)
- {
- 	struct mpls_shim_hdr *lse;
- 	int err;
-@@ -5515,7 +5515,7 @@ int skb_mpls_push(struct sk_buff *skb, _
- 	lse->label_stack_entry = mpls_lse;
- 	skb_postpush_rcsum(skb, lse, MPLS_HLEN);
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/port_buffer.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/port_buffer.c
+@@ -155,8 +155,11 @@ static int update_xoff_threshold(struct
+ 		}
  
--	if (skb->dev && skb->dev->type == ARPHRD_ETHER)
-+	if (ethernet)
- 		skb_mod_eth_type(skb, eth_hdr(skb), mpls_proto);
- 	skb->protocol = mpls_proto;
+ 		if (port_buffer->buffer[i].size <
+-		    (xoff + max_mtu + (1 << MLX5E_BUFFER_CELL_SHIFT)))
++		    (xoff + max_mtu + (1 << MLX5E_BUFFER_CELL_SHIFT))) {
++			pr_err("buffer_size[%d]=%d is not enough for lossless buffer\n",
++			       i, port_buffer->buffer[i].size);
+ 			return -ENOMEM;
++		}
  
---- a/net/openvswitch/actions.c
-+++ b/net/openvswitch/actions.c
-@@ -166,7 +166,8 @@ static int push_mpls(struct sk_buff *skb
- 	int err;
+ 		port_buffer->buffer[i].xoff = port_buffer->buffer[i].size - xoff;
+ 		port_buffer->buffer[i].xon  =
+@@ -232,6 +235,26 @@ static int update_buffer_lossy(unsigned
+ 	return 0;
+ }
  
- 	err = skb_mpls_push(skb, mpls->mpls_lse, mpls->mpls_ethertype,
--			    skb->mac_len);
-+			    skb->mac_len,
-+			    ovs_key_mac_proto(key) == MAC_PROTO_ETHERNET);
- 	if (err)
- 		return err;
++static int fill_pfc_en(struct mlx5_core_dev *mdev, u8 *pfc_en)
++{
++	u32 g_rx_pause, g_tx_pause;
++	int err;
++
++	err = mlx5_query_port_pause(mdev, &g_rx_pause, &g_tx_pause);
++	if (err)
++		return err;
++
++	/* If global pause enabled, set all active buffers to lossless.
++	 * Otherwise, check PFC setting.
++	 */
++	if (g_rx_pause || g_tx_pause)
++		*pfc_en = 0xff;
++	else
++		err = mlx5_query_port_pfc(mdev, pfc_en, NULL);
++
++	return err;
++}
++
+ #define MINIMUM_MAX_MTU 9216
+ int mlx5e_port_manual_buffer_config(struct mlx5e_priv *priv,
+ 				    u32 change, unsigned int mtu,
+@@ -277,7 +300,7 @@ int mlx5e_port_manual_buffer_config(stru
  
---- a/net/sched/act_mpls.c
-+++ b/net/sched/act_mpls.c
-@@ -83,7 +83,8 @@ static int tcf_mpls_act(struct sk_buff *
- 		break;
- 	case TCA_MPLS_ACT_PUSH:
- 		new_lse = tcf_mpls_get_lse(NULL, p, !eth_p_mpls(skb->protocol));
--		if (skb_mpls_push(skb, new_lse, p->tcfm_proto, mac_len))
-+		if (skb_mpls_push(skb, new_lse, p->tcfm_proto, mac_len,
-+				  skb->dev && skb->dev->type == ARPHRD_ETHER))
- 			goto drop;
- 		break;
- 	case TCA_MPLS_ACT_MODIFY:
+ 	if (change & MLX5E_PORT_BUFFER_PRIO2BUFFER) {
+ 		update_prio2buffer = true;
+-		err = mlx5_query_port_pfc(priv->mdev, &curr_pfc_en, NULL);
++		err = fill_pfc_en(priv->mdev, &curr_pfc_en);
+ 		if (err)
+ 			return err;
+ 
 
 
