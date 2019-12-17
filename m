@@ -2,248 +2,166 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C82B8C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 17:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E051C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 17:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9855924655
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 17:27:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65E9824655
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 17:28:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cXjCCWzN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727741AbfLQR1Z (ORCPT
+        id S1727786AbfLQR2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 12:27:25 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2203 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727007AbfLQR1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 12:27:25 -0500
-Received: from LHREML712-CAH.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id BD1DE1F73C6738DE2CA0;
-        Tue, 17 Dec 2019 17:27:23 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- LHREML712-CAH.china.huawei.com (10.201.108.35) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 17 Dec 2019 17:27:23 +0000
-Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 17 Dec
- 2019 17:27:23 +0000
-Subject: Re: Warnings in DRM code when removing/unbinding a driver
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        "kongxinwei (A)" <kong.kongxinwei@hisilicon.com>,
-        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>
-CC:     Linuxarm <linuxarm@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-References: <07899bd5-e9a5-cff0-395f-b4fb3f0f7f6c@huawei.com>
- <f867543cf5d0fc3fdd0534749326411bcfc5e363.camel@collabora.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <c2e5f5a5-5839-42a9-2140-903e99e166db@huawei.com>
-Date:   Tue, 17 Dec 2019 17:27:22 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Tue, 17 Dec 2019 12:28:09 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33811 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbfLQR2J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 12:28:09 -0500
+Received: by mail-wr1-f65.google.com with SMTP id t2so12240286wrr.1;
+        Tue, 17 Dec 2019 09:28:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version:in-reply-to
+         :content-transfer-encoding;
+        bh=vXn2Yu4RkHlP1Gh90RCX44u/DnD2AY3PkGZLCTXZShY=;
+        b=cXjCCWzNHoaJgyu5OIAhA2JSISeRLzdsicjh5w4b9kGXxlnUazSpdYDlnZrlOSqKE4
+         Ku04u/hnECWcv8Y62FEoFKtozKEyoaUrlIob2NUiMoaDQuy+mQYBNbbQLLaGBX/6O9KM
+         pbFLYKyC38pfyCzXVwRPSwRsGTpVPoGxUJhbKQTbFnZMurl84obSvskY5a47FNc769Ap
+         uz2SdvgyiFK88ICAM8PCOcgHRVOBNvnyiRZuqtfMJcjCgOEv/69SRvYPtLPsZwWZ4J0v
+         BoWDMp/T+459syiNlholtJWR/jErBI1rTo4wYsVMRwAdYWCKbuYQ9xIyZnw46lSWOI3I
+         jNIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :in-reply-to:content-transfer-encoding;
+        bh=vXn2Yu4RkHlP1Gh90RCX44u/DnD2AY3PkGZLCTXZShY=;
+        b=LnxMsWBjXWTktTX7EzIQTDAmdvQICUwIzId+ewKOswhWq5lsHZWDrvaagCtMBNd0Wq
+         etDxrJQFCQPzMgvWyw3WJI6BsyBX0HGZNaGzCbdb6wdYGzbXb4I0Xq6p6gSynRjFWBsD
+         wGbKkrfqalORVPg1SzFS7TP3uVDh5N90dj4H74dPohQe65c27JVjeqXzQaaOHc53suwv
+         8VCbFdjbmHIiEpgKogJyGsn9bwuG4NthEsd8YkTiezNkDE5w7xousqnSzwKxXlNemsph
+         cJfuuIkJ2+hJq9GuTQOE7XT2av+DiDT/gnrSB9DPDUJxFBg4V5Z33l2rkaQVD34P35wk
+         qcQg==
+X-Gm-Message-State: APjAAAUnVjaqS8zkopL3GgMxX85Ar5la1h0tfIbV65oGLtWyfyY/w1Lp
+        Udcb5/HkUVVGzglu0lSHSGw=
+X-Google-Smtp-Source: APXvYqxWnHbAUaxerL55jC58SIZbNR5PNO5hY231h8MMtPhz29c3VbD89coH273KvyzCzv+FPtZxKQ==
+X-Received: by 2002:a5d:4687:: with SMTP id u7mr38050795wrq.176.1576603685895;
+        Tue, 17 Dec 2019 09:28:05 -0800 (PST)
+Received: from localhost.localdomain ([2a02:2450:10d2:194d:5015:4c4c:42e9:e517])
+        by smtp.gmail.com with ESMTPSA id 188sm3875074wmd.1.2019.12.17.09.28.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 17 Dec 2019 09:28:05 -0800 (PST)
+From:   SeongJae Park <sj38.park@gmail.com>
+To:     =?UTF-8?q?J=C3=BCrgen=20Gro=C3=9F?= <jgross@suse.com>
+Cc:     SeongJae Park <sjpark@amazon.com>, axboe@kernel.dk,
+        sj38.park@gmail.com, konrad.wilk@oracle.com, pdurrant@amazon.com,
+        SeongJae Park <sjpark@amazon.de>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, xen-devel@lists.xenproject.org,
+        roger.pau@citrix.com
+Subject: Re: Re: [Xen-devel] [PATCH v11 2/6] xenbus/backend: Protect xenbus callback with lock
+Date:   Tue, 17 Dec 2019 18:27:38 +0100
+Message-Id: <20191217172738.20787-1-sj38.park@gmail.com>
+X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
-In-Reply-To: <f867543cf5d0fc3fdd0534749326411bcfc5e363.camel@collabora.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.46]
-X-ClientProxiedBy: lhreml728-chm.china.huawei.com (10.201.108.79) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+In-Reply-To: <f9a601af-4413-ed1d-f7f4-89343118a2f1@suse.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ezequiel,
+On Tue, 17 Dec 2019 18:10:19 +0100 "Jürgen Groß" <jgross@suse.com> wrote:
 
-> On Mon, 2019-12-16 at 17:23 +0000, John Garry wrote:
->> Hi all,
->>
->> Enabling CONFIG_DEBUG_TEST_DRIVER_REMOVE causes many warns on a system
->> with the HIBMC hw:
->>
->> [   27.788806] WARNING: CPU: 24 PID: 1 at
->> drivers/gpu/drm/drm_gem_vram_helper.c:564 bo_driver_move_notify+0x8c/0x98
+> On 17.12.19 17:24, SeongJae Park wrote:
+> > On Tue, 17 Dec 2019 17:13:42 +0100 "Jürgen Groß" <jgross@suse.com> wrote:
+> > 
+> >> On 17.12.19 17:07, SeongJae Park wrote:
+> >>> From: SeongJae Park <sjpark@amazon.de>
+> >>>
+> >>> 'reclaim_memory' callback can race with a driver code as this callback
+> >>> will be called from any memory pressure detected context.  To deal with
+> >>> the case, this commit adds a spinlock in the 'xenbus_device'.  Whenever
+> >>> 'reclaim_memory' callback is called, the lock of the device which passed
+> >>> to the callback as its argument is locked.  Thus, drivers registering
+> >>> their 'reclaim_memory' callback should protect the data that might race
+> >>> with the callback with the lock by themselves.
+> >>>
+> >>> Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> >>> ---
+> >>>    drivers/xen/xenbus/xenbus_probe.c         |  1 +
+> >>>    drivers/xen/xenbus/xenbus_probe_backend.c | 10 ++++++++--
+> >>>    include/xen/xenbus.h                      |  2 ++
+> >>>    3 files changed, 11 insertions(+), 2 deletions(-)
+> >>>
+> >>> diff --git a/drivers/xen/xenbus/xenbus_probe.c b/drivers/xen/xenbus/xenbus_probe.c
+> >>> index 5b471889d723..b86393f172e6 100644
+> >>> --- a/drivers/xen/xenbus/xenbus_probe.c
+> >>> +++ b/drivers/xen/xenbus/xenbus_probe.c
+> >>> @@ -472,6 +472,7 @@ int xenbus_probe_node(struct xen_bus_type *bus,
+> >>>    		goto fail;
+> >>>    
+> >>>    	dev_set_name(&xendev->dev, "%s", devname);
+> >>> +	spin_lock_init(&xendev->reclaim_lock);
+> >>>    
+> >>>    	/* Register with generic device framework. */
+> >>>    	err = device_register(&xendev->dev);
+> >>> diff --git a/drivers/xen/xenbus/xenbus_probe_backend.c b/drivers/xen/xenbus/xenbus_probe_backend.c
+> >>> index 7e78ebef7c54..516aa64b9967 100644
+> >>> --- a/drivers/xen/xenbus/xenbus_probe_backend.c
+> >>> +++ b/drivers/xen/xenbus/xenbus_probe_backend.c
+> >>> @@ -251,12 +251,18 @@ static int backend_probe_and_watch(struct notifier_block *notifier,
+> >>>    static int backend_reclaim_memory(struct device *dev, void *data)
+> >>>    {
+> >>>    	const struct xenbus_driver *drv;
+> >>> +	struct xenbus_device *xdev;
+> >>> +	unsigned long flags;
+> >>>    
+> >>>    	if (!dev->driver)
+> >>>    		return 0;
+> >>>    	drv = to_xenbus_driver(dev->driver);
+> >>> -	if (drv && drv->reclaim_memory)
+> >>> -		drv->reclaim_memory(to_xenbus_device(dev));
+> >>> +	if (drv && drv->reclaim_memory) {
+> >>> +		xdev = to_xenbus_device(dev);
+> >>> +		spin_trylock_irqsave(&xdev->reclaim_lock, flags);
+> >>
+> >> You need spin_lock_irqsave() here. Or maybe spin_lock() would be fine,
+> >> too? I can't see a reason why you'd want to disable irqs here.
+> > 
+> > I needed to diable irq here as this is called from the memory shrinker context.
 > 
-> A total shot in the dark. This might make no sense,
-> but it's worth a try:
+> Okay.
+> 
+> > 
+> > Also, used 'trylock' because the 'probe()' and 'remove()' code of the driver
+> > might include memory allocation.  And the xen-blkback actually does.  If the
+> > allocation shows a memory pressure during the allocation, it will trigger this
+> > shrinker callback again and then deadlock.
+> 
+> In that case you need to either return when you didn't get the lock or
 
-Thanks for the suggestion, but still the same splat.
+Yes, it should.  Cannot believe how I posted this code.  Seems I made some
+terrible mistake while formatting patches.  Anyway, will return if fail to
+acquire the lock, in the next version.
 
-I haven't had a chance to analyze the problem myself. But perhaps we 
-should just change over the device-managed interface, as Daniel mentioned.
-
-> 
-> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> index 2fd4ca91a62d..69bb0e29da88 100644
-> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> @@ -247,9 +247,8 @@ static int hibmc_unload(struct drm_device *dev)
->   {
->          struct hibmc_drm_private *priv = dev->dev_private;
->   
-> -       hibmc_fbdev_fini(priv);
-> -
->          drm_atomic_helper_shutdown(dev);
-> +       hibmc_fbdev_fini(priv);
->   
->          if (dev->irq_enabled)
->                  drm_irq_uninstall(dev);
-> 
-> Hope it helps,
-> Ezequiel
-> 
 
 Thanks,
-John
+SeongJae Park
 
-[EOM]
-
->> [   27.798969] Modules linked in:
->> [   27.802018] CPU: 24 PID: 1 Comm: swapper/0 Tainted: G    B
->>    5.5.0-rc1-dirty #565
->> [   27.810358] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI
->> RC0 - V1.16.01 03/15/2019
->> [   27.818872] pstate: 20c00009 (nzCv daif +PAN +UAO)
->> [   27.823654] pc : bo_driver_move_notify+0x8c/0x98
->> [   27.828262] lr : bo_driver_move_notify+0x40/0x98
->> [   27.832868] sp : ffff00236f0677e0
->> [   27.836173] x29: ffff00236f0677e0 x28: ffffa0001454e5e0
->> [   27.841476] x27: ffff002366e52128 x26: ffffa000149e67b0
->> [   27.846779] x25: ffff002366e523e0 x24: ffff002336936120
->> [   27.852082] x23: ffff0023346f4010 x22: ffff002336936128
->> [   27.857385] x21: ffffa000149c15c0 x20: ffff0023369361f8
->> [   27.862687] x19: ffff002336936000 x18: 0000000000001258
->> [   27.867989] x17: 0000000000001190 x16: 00000000000011d0
->> [   27.873292] x15: 0000000000001348 x14: ffffa00012d68190
->> [   27.878595] x13: 0000000000000006 x12: 1ffff40003241f91
->> [   27.883897] x11: ffff940003241f91 x10: dfffa00000000000
->> [   27.889200] x9 : ffff940003241f92 x8 : 0000000000000001
->> [   27.894502] x7 : ffffa0001920fc88 x6 : ffff940003241f92
->> [   27.899804] x5 : ffff940003241f92 x4 : ffff0023369363a0
->> [   27.905107] x3 : ffffa00010c104b8 x2 : dfffa00000000000
->> [   27.910409] x1 : 0000000000000003 x0 : 0000000000000001
->> [   27.915712] Call trace:
->> [   27.918151]  bo_driver_move_notify+0x8c/0x98
->> [   27.922412]  ttm_bo_cleanup_memtype_use+0x54/0x100
->> [   27.927194]  ttm_bo_put+0x3a0/0x5d0
->> [   27.930673]  drm_gem_vram_object_free+0xc/0x18
->> [   27.935109]  drm_gem_object_free+0x34/0xd0
->> [   27.939196]  drm_gem_object_put_unlocked+0xc8/0xf0
->> [   27.943978]  hibmc_user_framebuffer_destroy+0x20/0x40
->> [   27.949020]  drm_framebuffer_free+0x48/0x58
->> [   27.953194]  drm_mode_object_put.part.1+0x90/0xe8
->> [   27.957889]  drm_mode_object_put+0x28/0x38
->> [   27.961976]  hibmc_fbdev_fini+0x54/0x78
->> [   27.965802]  hibmc_unload+0x2c/0xd0
->> [   27.969281]  hibmc_pci_remove+0x2c/0x40
->> [   27.973109]  pci_device_remove+0x6c/0x140
->> [   27.977110]  really_probe+0x174/0x548
->> [   27.980763]  driver_probe_device+0x7c/0x148
->> [   27.984936]  device_driver_attach+0x94/0xa0
->> [   27.989109]  __driver_attach+0xa8/0x110
->> [   27.992935]  bus_for_each_dev+0xe8/0x158
->> [   27.996849]  driver_attach+0x30/0x40
->> [   28.000415]  bus_add_driver+0x234/0x2f0
->> [   28.004241]  driver_register+0xbc/0x1d0
->> [   28.008067]  __pci_register_driver+0xbc/0xd0
->> [   28.012329]  hibmc_pci_driver_init+0x20/0x28
->> [   28.016590]  do_one_initcall+0xb4/0x254
->> [   28.020417]  kernel_init_freeable+0x27c/0x328
->> [   28.024765]  kernel_init+0x10/0x118
->> [   28.028245]  ret_from_fork+0x10/0x18
->> [   28.031813] ---[ end trace 35a83b71b657878d ]---
->> [   28.036503] ------------[ cut here ]------------
->> [   28.041115] WARNING: CPU: 24 PID: 1 at
->> drivers/gpu/drm/drm_gem_vram_helper.c:40 ttm_buffer_object_destroy+0x4c/0x80
->> [   28.051537] Modules linked in:
->> [   28.054585] CPU: 24 PID: 1 Comm: swapper/0 Tainted: G    B   W
->>    5.5.0-rc1-dirty #565
->> [   28.062924] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI
->> RC0 - V1.16.01 03/15/2019
->>
->> [snip]
->>
->> Indeed, simply unbinding the device from the driver causes the same sort
->> of issue:
->>
->> root@(none)$ cd ./bus/pci/drivers/hibmc-drm/
->> root@(none)$ ls
->> 0000:05:00.0  bind          new_id        remove_id     uevent        unbind
->> root@(none)$ echo 0000\:05\:00.0 > unbind
->> [  116.074352] ------------[ cut here ]------------
->> [  116.078978] WARNING: CPU: 17 PID: 1178 at
->> drivers/gpu/drm/drm_gem_vram_helper.c:40 ttm_buffer_object_destroy+0x4c/0x80
->> [  116.089661] Modules linked in:
->> [  116.092711] CPU: 17 PID: 1178 Comm: sh Tainted: G    B   W
->> 5.5.0-rc1-dirty #565
->> [  116.100704] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI
->> RC0 - V1.16.01 03/15/2019
->> [  116.109218] pstate: 20400009 (nzCv daif +PAN -UAO)
->> [  116.114001] pc : ttm_buffer_object_destroy+0x4c/0x80
->> [  116.118956] lr : ttm_buffer_object_destroy+0x18/0x80
->> [  116.123910] sp : ffff0022e6cef8e0
->> [  116.127215] x29: ffff0022e6cef8e0 x28: ffff00231b1fb000
->> [  116.132519] x27: 0000000000000000 x26: ffff00231b1fb000
->> [  116.137821] x25: ffff0022e6cefdc0 x24: 0000000000002480
->> [  116.143124] x23: ffff0023682b6ab0 x22: ffff0023682b6800
->> [  116.148427] x21: ffff0023682b6800 x20: 0000000000000000
->> [  116.153730] x19: ffff0023682b6800 x18: 0000000000000000
->> [  116.159032] x17: 000000000000000000000000001
->> [  116.185545] x7 : ffff0023682b6b07 x6 : ffff80046d056d61
->> [  116.190848] x5 : ffff80046d056d61 x4 : ffff0023682b6ba0
->> [  116.196151] x3 : ffffa00010197338 x2 : dfffa00000000000
->> [  116.201453] x1 : 0000000000000003 x0 : 0000000000000001
->> [  116.206756] Call trace:
->> [  116.209195]  ttm_buffer_object_destroy+0x4c/0x80
->> [  116.213803]  ttm_bo_release_list+0x184/0x220
->> [  116.218064]  ttm_bo_put+0x410/0x5d0
->> [  116.221544]  drm_gem_vram_object_free+0xc/0x18
->> [  116.225979]  drm_gem_object_free+0x34/0xd0
->> [  116.230066]  drm_gem_object_put_unlocked+0xc8/0xf0
->> [  116.234848]  hibmc_user_framebuffer_destroy+0x20/0x40
->> [  116.239890]  drm_framebuffer_free+0x48/0x58
->> [  116.244064]  drm_mode_object_put.part.1+0x90/0xe8
->> [  116.248759]  drm_mode_object_put+0x28/0x38
->> [  116.252846]  hibmc_fbdev_fini+0x54/0x78
->> [  116.256672]  hibmc_unload+0x2c/0xd0
->> [  116.260151]  hibmc_pci_remove+0x2c/0x40
->> [  116.263979]  pci_device_remove+0x6c/0x140
->> [  116.267980]  device_release_driver_internal+0x134/0x250
->> [  116.273196]  device_driver_detach+0x28/0x38
->> [  116.277369]  unbind_store+0xfc/0x150
->> [  116.280934]  drv_attr_store+0x48/0x60
->> [  116.284589]  sysfs_kf_write+0x80/0xb0
->> [  116.288241]  kernfs_fop_write+0x1d4/0x320
->> [  116.292243]  __vfs_write+0x54/0x98
->> [  116.295635]  vfs_write+0xe8/0x270
->> [  116.298940]  ksys_write+0xc8/0x180
->> [  116.302333]  __arm64_sys_write+0x40/0x50
->> [  116.306248]  el0_svc_common.constprop.0+0xa4/0x1f8
->> [  116.311029]  el0_svc_handler+0x34/0xb0
->> [  116.314770]  el0_sync_handler+0x10c/0x1c8
->> [  116.318769]  el0_sync+0x140/0x180
->> [  116.322074] ---[ end trace e60e43d0e316b5c8 ]---
->> [  116.326868] ------------[ cut here ]------------
->>
->>
->> dmesg and .config is here:
->> https://pastebin.com/4P5yaZBS
->>
->> I'm not sure if this is a HIBMC driver issue or issue with the framework.
->>
->> john
->>
->>
->> _______________________________________________
->> dri-devel mailing list
->> dri-devel@lists.freedesktop.org
->> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> 
+> - when obtaining the lock during probe() and remove() set a variable
+>    containing the current cpu number
+> - and reset that to e.g NR_CPUS before releasing the lock again
+> - in the shrinker callback do trylock, and if you didn't get the lock
+>    test whether the cpu-variable above is set to your current cpu and
+>    continue only if yes; if not, redo the the trylock
 > 
 > 
-
+> Juergen
