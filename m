@@ -2,126 +2,158 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7FA5C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A48F2C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A993624682
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:28:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7688A206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:29:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Mpu/CQwP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AtZSWquR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfLQK2t (ORCPT
+        id S1727121AbfLQK3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 05:28:49 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:54316 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbfLQK2t (ORCPT
+        Tue, 17 Dec 2019 05:29:38 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42890 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbfLQK3i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 05:28:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=xIsVCSCddGcBczzhrJmpWdldvcvD8/SOoTohcqfDdpc=; b=Mpu/CQwP505C8biFNOIztuq5H
-        RtEPYQbkrn288Xfq4TohizM2O4bz7zIrNfn3c8ST3u+aEsIkzbBO1wXLiCanTbMxTeihL7x4uRdzQ
-        2d9Kz0AvwC1Qrihh/ZBP1c1FMweIV/RGnSDW/GSgfW/ooLn2T+plH8ltRcjO/62630LsxyJXhBpjG
-        PXipzJ9uizk93dUJzqUmdhyNdlGkfyiwivC6qf8/i7mv03DCiVr2CrHvNctKEXbeRpv07ZOruJhdJ
-        193cpkjwBS8sxOvmph3UfpU7J++zH9R9NH4IkEiTTm7L+vzn6x/MDq4SV6pDDqm2SGuotgBhSiHW7
-        gnMQEQL9w==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:50030)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1ihA5j-0005M5-7h; Tue, 17 Dec 2019 10:28:35 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1ihA5f-0003KB-Ca; Tue, 17 Dec 2019 10:28:31 +0000
-Date:   Tue, 17 Dec 2019 10:28:31 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Vincent Whitchurch <vincent.whitchurch@axis.com>
-Cc:     akpm@linux-foundation.org, Vincent Whitchurch <rabinv@axis.com>,
-        treding@nvidia.com, linux-arm-kernel@lists.infradead.org,
-        arnd@arndb.de, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] asm/sections: Check for overflow in memory_contains()
-Message-ID: <20191217102831.GP25745@shell.armlinux.org.uk>
-References: <20191217102238.14792-1-vincent.whitchurch@axis.com>
+        Tue, 17 Dec 2019 05:29:38 -0500
+Received: by mail-pf1-f196.google.com with SMTP id 4so7296159pfz.9;
+        Tue, 17 Dec 2019 02:29:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JTNPZj4R6hy/kPfugeFWOdOqCxuLmzIRB2a24Rsi0UU=;
+        b=AtZSWquRFrJo8ANZBoLANMCHGsr8cmGI6j8EEx+sjQY+nbyEFwLQRHVkqsljBhNo7y
+         8y+wM0GNkXT5qXnjR8lSxKwMFfadj/B17/TEbIQBxDA3CZbeKX6TGbcVlJlO2qiYXqOP
+         JME9QiYiyOiHeCxwXQ1AecpN5J0Ne7JqPEqaMNrrbVhUyAjrJswRtrkNY4OTp1BjE/Kz
+         SfsbRYiUqsjiuQFafvQXMDN616KLJLRY/8Nr47P6XE7ZArIm96+ExcgSlu8Krhz/p6eg
+         qONuBPDW3ng5EJhLVx+j060v21sZbD6D3XFVlRCWx+z5ypbO8wCo+4rLrxPOfUZH+s99
+         ZDtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JTNPZj4R6hy/kPfugeFWOdOqCxuLmzIRB2a24Rsi0UU=;
+        b=UAVkvE3wlyJcg/t5kVvAL5h+5y+p9sMR4BF4wmvqo4KiJHkMkH/d5LY4okwpUUYUDe
+         sD2YxBNvvYEfUU988UqrRqjcVU6c4mZOha3L+7wyDg1fZaPcoeB4rceGTNe8Q7UjUBPQ
+         0NRPYgoSqrRu0ZyQ6bZ9MPimy4KElDj6u+PK4vflRp0ijh9w5MlKwqFAGSuvA509nsV3
+         POpymqqt4pdrV2BmPDzViztCIGU7zUgV14Jx9tg2CrpXslGEZkivJVjhO7dml5zE/cBW
+         +Ov+VXRzPYWCRH/U9DjXUAETAVbCmh4fgkiQOIAtpV9EpEulYcvhnr+c0ZYMpa/mt+ht
+         LM9Q==
+X-Gm-Message-State: APjAAAWPsrSlp9j2RY6f0PC7D0gsQba+9LCZHnuTQWqrifNNTJHZdjdl
+        OCMnztzqBYGxFunLUVBv5Pg=
+X-Google-Smtp-Source: APXvYqy2M3iyqy1LrgbvFNgojJi+KNd5nRPfflDx2XtvkMn4hf8GwtfkDMiFF+Y5WGt3jtskhcWSkw==
+X-Received: by 2002:a63:d958:: with SMTP id e24mr23804857pgj.31.1576578577547;
+        Tue, 17 Dec 2019 02:29:37 -0800 (PST)
+Received: from ruantu.dev.localdomain ([103.103.128.212])
+        by smtp.gmail.com with ESMTPSA id r193sm28177501pfr.100.2019.12.17.02.29.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 02:29:36 -0800 (PST)
+From:   YuDong Zhang <mtwget@gmail.com>
+To:     jic23@kernel.org
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, YuDong Zhang <mtwget@gmail.com>
+Subject: [PATCH v2 2/2] dt-bindings: iio: chemical: Add bindings for Dynament Premier series single gas sensor
+Date:   Tue, 17 Dec 2019 18:29:30 +0800
+Message-Id: <20191217102930.26102-1-mtwget@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191217102238.14792-1-vincent.whitchurch@axis.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 11:22:38AM +0100, Vincent Whitchurch wrote:
-> ARM uses memory_contains() from its stacktrace code via this function:
-> 
->  static inline bool in_entry_text(unsigned long addr)
->  {
->  	return memory_contains(__entry_text_start, __entry_text_end,
->  			       (void *)addr, 1);
->  }
-> 
-> addr is taken from the stack and can be a completely invalid.  If addr
-> is 0xffffffff, there is an overflow in the pointer arithmetic in
-> memory_contains() and in_entry_text() incorrectly returns true.
-> 
-> Fix this by adding an overflow check.  The check is done on unsigned
-> longs to avoid undefined behaviour.
-> 
-> Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
-> ---
->  include/asm-generic/sections.h | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/asm-generic/sections.h b/include/asm-generic/sections.h
-> index d1779d442aa5..e6e1b381c5df 100644
-> --- a/include/asm-generic/sections.h
-> +++ b/include/asm-generic/sections.h
-> @@ -105,7 +105,15 @@ static inline int arch_is_kernel_initmem_freed(unsigned long addr)
->  static inline bool memory_contains(void *begin, void *end, void *virt,
->  				   size_t size)
->  {
-> -	return virt >= begin && virt + size <= end;
-> +	unsigned long membegin = (unsigned long)begin;
-> +	unsigned long memend = (unsigned long)end;
-> +	unsigned long objbegin = (unsigned long)virt;
-> +	unsigned long objend = objbegin + size;
-> +
-> +	if (objend < objbegin)
-> +		return false;
-> +
-> +	return objbegin >= membegin && objend <= memend;
+Dynament Premier series single gas sensor.
 
-Would merely changing to:
+Signed-off-by: YuDong Zhang <mtwget@gmail.com>
+---
+ .../iio/chemical/dynament,premier.yaml        | 39 +++++++++++++++++++
+ .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
+ MAINTAINERS                                   |  1 +
+ 3 files changed, 42 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
 
-	return virt >= begin && virt <= end - size;
-
-be sufficient ?  Is end - size possible to underflow?
-
->  }
->  
->  /**
-> -- 
-> 2.20.0
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-
+diff --git a/Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml b/Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
+new file mode 100644
+index 000000000000..e2bbae4dd086
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
+@@ -0,0 +1,39 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/chemical/dynament,premier.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Dynament Premier series single gas sensor
++
++maintainers:
++  - YuDong Zhang <mtwget@gmail.com>
++
++description: |
++  single gas sensor capable of measuring gas concentration of dust
++  particles, multi-gas sensor are not supported.
++
++  Specifications about the sensor can be found at:
++    https://www.dynament.com/_webedit/uploaded-files/All%20Files/SIL%20Data/tds0045_1.44.pdf, read chapter 1.5.2 Read live data simple
++
++properties:
++  compatible:
++    enum:
++      - dynament,premier
++
++  vcc-supply:
++    description: regulator that provides power to the sensor
++
++required:
++  - compatible
++
++examples:
++  - |
++    serial {
++      single-gas-sensor {
++        compatible = "dynament,premier";
++        vcc-supply = <&reg_vcc5v0>;
++      };
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 6046f4555852..5afca0586c41 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -261,6 +261,8 @@ patternProperties:
+     description: Dragino Technology Co., Limited
+   "^dserve,.*":
+     description: dServe Technology B.V.
++  "^dynament,.*":
++    description: Dynament, Ltd.
+   "^ea,.*":
+     description: Embedded Artists AB
+   "^ebs-systart,.*":
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ae228ac7adc9..4842a0afe32b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5796,6 +5796,7 @@ DYNAMENT PREMIER SERIES SINGLE GAS SENSOR DRIVER
+ M:	YuDong Zhang <mtwget@gmail.com>
+ S:	Maintained
+ F:	drivers/iio/chemical/premier.c
++F:	Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
+ 
+ DYNAMIC DEBUG
+ M:	Jason Baron <jbaron@akamai.com>
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+2.24.1
+
