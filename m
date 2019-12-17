@@ -2,274 +2,261 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A226C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0370BC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21B1B24676
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:17:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C369724679
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:17:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TSOQzXTV"
+	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="V2jaMpLb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729134AbfLQQQE (ORCPT
+        id S1729308AbfLQQRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 11:16:04 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35930 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729000AbfLQQPx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 11:15:53 -0500
-Received: by mail-pl1-f196.google.com with SMTP id d15so6325564pll.3;
-        Tue, 17 Dec 2019 08:15:52 -0800 (PST)
+        Tue, 17 Dec 2019 11:17:17 -0500
+Received: from mail-dm6nam12on2072.outbound.protection.outlook.com ([40.107.243.72]:33729
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729107AbfLQQQF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 11:16:05 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aSallF4DR8GCIj97298x4g2ChZkr9GAZcO5wUM22P8b8TWOpU27pBkHWGk9s9iZyD96SPUd6eAGJ3PJM1YaVPIbI112mC4Hy6nA8ibIRE0m8Q2nueBvMj+L2Ri4LtqkDcLK2UD9FRMtHpNTxgWcjmWmYiVNKOcjZEoNCCrmvv50n5MMZer3LanwrvWgsDVJiVZmuC51Ej2QzhBfym/yYEMna0Slk6pvdgnNnA/XHpyFaX5rFVAsl2dandiWSihq51SQBrUUA7ulUk9vgnEH0Fmg9PpN3/5ECupWgZtQaMXzaQqkLJs4wD12/cQcdCldHY4BRdVkHp1UVODwBR1akIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wbH9speXFVud+k2dooXEmIhIUnNVYavXYIFmWKDTAHc=;
+ b=mRJ+BBzm9mBiFwWgKSJD0qba8LAuqVQmdl4pfTArUDbQvpoJ2nhEhFF8ShpeTDIYj1j/X0AwD4qH0MmfSAUOZAEfKDI86z/wAJkAgKpW0vSGEvlbeXpow2PYXgB6aOE9WpHGOhgoroM73hsoaB1B2ynCGOryVVf2CynxdI4HJkBsIlQqfCOHCRGJ+CB9I/GjTrkpuUsFx2YwXhY89f0kzq84z2eO7zf+oeFNdeAVJs+8dIyCNfkVYfwt6Gh63uDpEkVLiWmFblezGWVMuVEf1Rz42kIFFzTlOU9aexnntLbnOii/S95QjtI0c8pSGgA3ptrUN/7lE1q4jn6y/Mwn3g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
+ dkim=pass header.d=silabs.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Lq0HcHWIMCgqvJzEZbp3mJOsXRN3LKD9caHPebRuGeU=;
-        b=TSOQzXTVXZSWk9OszZ/sCsCMkt3LTf/VsXDey6HzUEm6QwmwWfOY8B5IWA/ULn2KxT
-         99V2PSDIGgI5gGw8XY9AnR4lLrS8SfpTf4BHI3j/kDvxFEVAl0HufaUe1yXHP+foIann
-         Ls/PThfLv6bfotH1OL5b2V6wg1LsEFvZacF9OxkLCeYBF/MTlPEnhsfHmIe19v1s7j6D
-         r08r6m0yEJYAYUNE9KqcvCVxcexr7Fc4U3+Vy8k/o8Qo2Egw0YOU+woxUpUzgJL3y+EZ
-         To6Xc0bfIKrUMwJoY2vF2UjnDjxb1EeQI7cGYwqKVJmUh8QSMQY7tySGlb3mK6+vF08I
-         JY/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Lq0HcHWIMCgqvJzEZbp3mJOsXRN3LKD9caHPebRuGeU=;
-        b=kcEgDCr/4BJWnx5rfNPVkh0Rtu3Kxh+Qb2J1T/qAAcrvuaT5qQ7mwFQAgsvYzX1Fx/
-         M8Mh3fty8XPw+YAcYp/TJZSvqiU/YZ8cA+9XH/QnFfoZkI5l1uSLuW/zS1H4/Y3dtm0h
-         Z+CCk4QoTTzK+/6HmwG8oV4q+1fB79crDFXxtER+6P7D8cQGJD9zKJKXrCHeNgc4pBXI
-         k5f7APUs9PyJzrrBZiiHaJDX6f0p6axJR/tNLQbiHXHtwEnOqZ4HbwPAjISrIc6lbk7S
-         djQwDvdZQuQauQUoYstZKgDVk/csHZ9R10HHXqR55GXVEKonfqNei3REmiTQ8fljT60T
-         oPtQ==
-X-Gm-Message-State: APjAAAWfiYPTq7eG7n6559ZslAB+AyCtjgVSEnPmwh+raD15WIC7zI4I
-        3o+AZwbwtjsuBcUQw/bYOnBniGFzflzKVg==
-X-Google-Smtp-Source: APXvYqw79bI0EywMb+ripBKRFTsDY6bo0dkGi+Xw0p9N1XSqBcwqziIpHlugv7M3PHqtqjc20gvGdA==
-X-Received: by 2002:a17:902:8c96:: with SMTP id t22mr24059076plo.288.1576599351177;
-        Tue, 17 Dec 2019 08:15:51 -0800 (PST)
-Received: from glados.lan ([2601:647:4c01:6541:fa16:54ff:fed1:1bd6])
-        by smtp.gmail.com with ESMTPSA id k15sm27704122pfg.37.2019.12.17.08.15.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 08:15:50 -0800 (PST)
-From:   Thomas Hebb <tommyhebb@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Thomas Hebb <tommyhebb@gmail.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv@lists.infradead.org
-Subject: [PATCH v2 1/3] kconfig: list all definitions of a symbol in help text
-Date:   Tue, 17 Dec 2019 08:15:43 -0800
-Message-Id: <351ce34a887733d966b4822ac9f831e68a5a16f6.1576599202.git.tommyhebb@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <cover.1576599202.git.tommyhebb@gmail.com>
-References: <cover.1576599202.git.tommyhebb@gmail.com>
+ d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wbH9speXFVud+k2dooXEmIhIUnNVYavXYIFmWKDTAHc=;
+ b=V2jaMpLbutqtGMhvQhPYowq3EbUr4rxtOfThiPvqLNVNovxi2F72iInwQc9Y4ZLDRcrlHDuT6InuPsuAq74h0qoC1armT4kSvp+Xisy7URR5CGLVfS/O9fEWKAE8kokz2NGeHvO6kSB657tj469MfMe+vAJnOfjNij3OHz9xMlk=
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com (10.255.180.22) by
+ MN2PR11MB4477.namprd11.prod.outlook.com (52.135.36.93) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.17; Tue, 17 Dec 2019 16:15:55 +0000
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::f46c:e5b4:2a85:f0bf]) by MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::f46c:e5b4:2a85:f0bf%4]) with mapi id 15.20.2538.019; Tue, 17 Dec 2019
+ 16:15:55 +0000
+From:   =?utf-8?B?SsOpcsO0bWUgUG91aWxsZXI=?= <Jerome.Pouiller@silabs.com>
+To:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        =?utf-8?B?SsOpcsO0bWUgUG91aWxsZXI=?= <Jerome.Pouiller@silabs.com>
+Subject: [PATCH v2 47/55] staging: wfx: simplify hif_scan() usage
+Thread-Topic: [PATCH v2 47/55] staging: wfx: simplify hif_scan() usage
+Thread-Index: AQHVtPU0k58JN+hftUSF/1n35wvDzA==
+Date:   Tue, 17 Dec 2019 16:15:32 +0000
+Message-ID: <20191217161318.31402-48-Jerome.Pouiller@silabs.com>
+References: <20191217161318.31402-1-Jerome.Pouiller@silabs.com>
+In-Reply-To: <20191217161318.31402-1-Jerome.Pouiller@silabs.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: PR0P264CA0174.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:100:1c::18) To MN2PR11MB4063.namprd11.prod.outlook.com
+ (2603:10b6:208:13f::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jerome.Pouiller@silabs.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.24.0
+x-originating-ip: [37.71.187.125]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a19b595c-2111-42e1-c94c-08d7830c5710
+x-ms-traffictypediagnostic: MN2PR11MB4477:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR11MB4477032FCBDB145C5124330F93500@MN2PR11MB4477.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 02543CD7CD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(396003)(136003)(366004)(39860400002)(199004)(189003)(1076003)(66574012)(186003)(107886003)(8676002)(6506007)(86362001)(478600001)(85182001)(5660300002)(81156014)(26005)(4326008)(6486002)(8936002)(316002)(110136005)(54906003)(64756008)(66446008)(66946007)(2616005)(66556008)(66476007)(85202003)(36756003)(6512007)(2906002)(52116002)(6666004)(71200400001)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4477;H:MN2PR11MB4063.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: silabs.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 6r01MSXe2aFAf/ZiENh9p5+0tF7fvy423dEH9urVdDeUckGlI+iqdmHi3QNEUE5mYHmIrBCQxttj441suSrl71u4A85sM0P/yoXicTkr5WHBWNofqoB/kh0R2+pp1frV5kw86GXiV1HYvSOzMDSzVMnMatiV14UT96H1xqbvNwM+uvz1yuog7ouGgq9hNXCkvIDApuB4QuLcTrEPQxyfbEkxoEQ2cBexfs4yJEIjElezWVqCaHdhe4rJNzov/ZISvjFy1pKT1uURt4TfPly0OqZ5665/0BxA5VGWnnRUCHfCx2FllsdgKOE7qq4R+0VTECwgd+PYpM7jZ0yvPAeBIZDL7/AP9lgbS8AKmLI2ZEh+Ggiw6pyEvPlfDir/s45fDTgP6l+moekS0TR3/y84FzzDehgGM2Aogs6kjNH6E9R43ZlJ7GZ9q9azbiUPZ7rr
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <82EB23D1E0380A4597A80618F5B26810@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: silabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a19b595c-2111-42e1-c94c-08d7830c5710
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Dec 2019 16:15:32.1827
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: uR22/Lf+ul/a6HuWm99dVwHFSLHVwjJ1gBHQwTTeUhireiJ7CTg3brifXeLzKFCk0PZpBzSRTsSUJ7snZdi8RQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4477
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In Kconfig, each symbol (representing a config option) can be defined in
-multiple places. Each definition may or may not have a prompt, which
-allows the option to be set via an interface like menuconfig. Each
-definition has a set of dependencies, which determine whether its prompt
-is visible and whether other pieces of the definition, like a default
-value, take effect.
-
-Historically, a symbol's help text (i.e. what's shown when a user
-presses '?' in menuconfig) contained some symbol-wide information not
-tied to any particular definition (e.g. what other symbols it selects)
-as well as the location (file name and line number) and dependencies of
-each prompt. Notably, the help text did not show the location or
-dependencies of definitions without prompts.
-
-Because this made it hard to reason about symbols that had no prompts,
-commit bcdedcc1afd6 ("menuconfig: print more info for symbol without
-prompts") changed the help text so that, instead of containing the
-location and dependencies of each prompt, it contained the location and
-dependencies of the symbol's first definition, regardless of whether or
-not that definition had a prompt.
-
-For symbols with only one definition, that change makes sense. However,
-it breaks down for symbols with multiple definitions: each definition
-has its own set of dependencies (the `dep` field of `struct menu`), and
-those dependencies are ORed together to get the symbol's dependency list
-(the `dir_dep` field of `struct symbol`). By printing only the
-dependencies of the first definition, the help text misleads users into
-believing that an option is more narrowly-applicable than it actually
-is.
-
-For an extreme example of this, we can look at the SYS_TEXT_BASE symbol
-in the Das U-Boot project (version 2019.10), which also uses Kconfig. (I
-unfortunately could not find an illustrative example in Linux.) This
-config option specifies the load address of the built binary and, as
-such, is applicable to basically every configuration possible. And yet,
-without this patch, its help text is as follows:
-
-  Symbol: SYS_TEXT_BASE [=]
-  Type  : hex
-  Prompt: U-Boot base address
-    Location:
-      -> ARM architecture
-  Prompt: Text Base
-    Location:
-      -> Boot images
-    Defined at arch/arm/mach-aspeed/Kconfig:9
-    Depends on: ARM [=n] && ARCH_ASPEED [=n]
-
-The help text indicates that the option is applicable only for a
-specific unselected architecture (aspeed), because that architecture's
-promptless definition (which just sets a default value), happens to be
-the first one seen. No definition or dependency information is printed
-for either of the two prompts listed.
-
-Because source locations and dependencies are fundamentally properties
-of definitions and not of symbols, we should treat them as such. This
-patch brings back the pre-bcdedcc1afd6 behavior for definitions with
-prompts but also separately prints the location and dependencies of
-those without prompts, solving the original problem in a different way.
-With this change, our SYS_TEXT_BASE example becomes
-
-   Symbol: SYS_TEXT_BASE [=]
-   Type  : hex
-   Defined at arch/arm/mach-stm32mp/Kconfig:83
-     Prompt: U-Boot base address
-     Depends on: ARM [=n] && ARCH_STM32MP [=n]
-     Location:
-       -> ARM architecture
-   Defined at Kconfig:532
-     Prompt: Text Base
-     Depends on: !NIOS2 [=n] && !XTENSA [=n] && !EFI_APP [=n]
-     Location:
-       -> Boot images
-   Defined at arch/arm/mach-aspeed/Kconfig:9
-     Depends on: ARM [=n] && ARCH_ASPEED [=n]
-   Defined  at arch/arm/mach-socfpga/Kconfig:25
-     Depends on: ARM [=n] && ARCH_SOCFPGA [=n]
-   <snip>
-   Defined at board/sifive/fu540/Kconfig:15
-     Depends on: RISCV [=n] && TARGET_SIFIVE_FU540 [=n]
-
-which is a much more accurate representation.
-
-Note that there is one notable difference between what gets printed for
-prompts after this change and what got printed before bcdedcc1afd6: the
-"Depends on" line now accurately represents the prompt's dependencies
-instead of conflating those with the prompt's visibility (which can
-include extra conditions). See the patch later in this series titled
-"kconfig: distinguish between dependencies and visibility in help text"
-for more details and better handling of that nuance.
-
-Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
----
-
-Changes in v2:
-- Added explicit U-Boot version in commit message + other rewordings
-- Made the new "Depends on:" line print actual dependencies instead of
-  visibility to avoid an intra-series regression, and noted that in the
-  commit message.
-- Get rid of redundant "with prompt" and "without prompt" notes in
-  definition text, but continue to ensure that definitions with prompts
-  are printed before ones without.
-
- scripts/kconfig/menu.c | 55 ++++++++++++++++++++++++------------------
- 1 file changed, 31 insertions(+), 24 deletions(-)
-
-diff --git a/scripts/kconfig/menu.c b/scripts/kconfig/menu.c
-index d9d16469859a..0e54632d2043 100644
---- a/scripts/kconfig/menu.c
-+++ b/scripts/kconfig/menu.c
-@@ -698,6 +698,21 @@ const char *menu_get_help(struct menu *menu)
- 		return "";
- }
- 
-+static void get_def_str(struct gstr *r, struct menu *menu)
-+{
-+	str_printf(r, "Defined at %s:%d\n",
-+		   menu->file->name, menu->lineno);
-+}
-+
-+static void get_dep_str(struct gstr *r, struct expr *expr, const char *prefix)
-+{
-+	if (!expr_is_yes(expr)) {
-+		str_append(r, prefix);
-+		expr_gstr_print(expr, r);
-+		str_append(r, "\n");
-+	}
-+}
-+
- static void get_prompt_str(struct gstr *r, struct property *prop,
- 			   struct list_head *head)
- {
-@@ -705,7 +720,9 @@ static void get_prompt_str(struct gstr *r, struct property *prop,
- 	struct menu *submenu[8], *menu, *location = NULL;
- 	struct jump_key *jump = NULL;
- 
--	str_printf(r, "Prompt: %s\n", prop->text);
-+	str_printf(r, "  Prompt: %s\n", prop->text);
-+
-+	get_dep_str(r, prop->menu->dep, "  Depends on: ");
- 	menu = prop->menu->parent;
- 	for (i = 0; menu != &rootmenu && i < 8; menu = menu->parent) {
- 		bool accessible = menu_is_visible(menu);
-@@ -755,18 +772,6 @@ static void get_prompt_str(struct gstr *r, struct property *prop,
- 	}
- }
- 
--/*
-- * get property of type P_SYMBOL
-- */
--static struct property *get_symbol_prop(struct symbol *sym)
--{
--	struct property *prop = NULL;
--
--	for_all_properties(sym, prop, P_SYMBOL)
--		break;
--	return prop;
--}
--
- static void get_symbol_props_str(struct gstr *r, struct symbol *sym,
- 				 enum prop_type tok, const char *prefix)
- {
-@@ -806,17 +811,19 @@ static void get_symbol_str(struct gstr *r, struct symbol *sym,
- 			}
- 		}
- 	}
--	for_all_prompts(sym, prop)
--		get_prompt_str(r, prop, head);
--
--	prop = get_symbol_prop(sym);
--	if (prop) {
--		str_printf(r, "  Defined at %s:%d\n", prop->menu->file->name,
--			prop->menu->lineno);
--		if (!expr_is_yes(prop->visible.expr)) {
--			str_append(r, "  Depends on: ");
--			expr_gstr_print(prop->visible.expr, r);
--			str_append(r, "\n");
-+
-+	/* Print the definitions with prompts before the ones without */
-+	for_all_properties(sym, prop, P_SYMBOL) {
-+		if (prop->menu->prompt) {
-+			get_def_str(r, prop->menu);
-+			get_prompt_str(r, prop->menu->prompt, head);
-+		}
-+	}
-+
-+	for_all_properties(sym, prop, P_SYMBOL) {
-+		if (!prop->menu->prompt) {
-+			get_def_str(r, prop->menu);
-+			get_dep_str(r, prop->menu->dep, "  Depends on: ");
- 		}
- 	}
- 
--- 
-2.24.1
-
+RnJvbTogSsOpcsO0bWUgUG91aWxsZXIgPGplcm9tZS5wb3VpbGxlckBzaWxhYnMuY29tPgoKVGhl
+IHN0cnVjdHVyZXMgaGlmX3JlcV9zdGFydF9zY2FuIGFuZCBoaWZfc3NpZF9kZWYgY29tZSBmcm9t
+IGhhcmR3YXJlCkFQSS4gSXQgaXMgbm90IGludGVuZGVkIHRvIGJlIG1hbmlwdWxhdGVkIGluIHVw
+cGVyIGxheWVycyBvZiB0aGUgZHJpdmVyLgoKU28sIHRoaXMgcGF0Y2ggcmVsb2NhdGUgaGFuZGxp
+bmcgb2YgdGhlc2VzIHN0cnVjdHVyZXMgdG8gaGlmX3NjYW4oKQoodGhlIGxvdyBsZXZlbCBmdW5j
+dGlvbikuIFRoaXMgY2hhbmdlIGFsc28gYWxsb3dzIHRvIGRyb3Agc3RydWN0CndmeF9zY2FuX3Bh
+cmFtcy4KClNpZ25lZC1vZmYtYnk6IErDqXLDtG1lIFBvdWlsbGVyIDxqZXJvbWUucG91aWxsZXJA
+c2lsYWJzLmNvbT4KLS0tCiBkcml2ZXJzL3N0YWdpbmcvd2Z4L2hpZl90eC5jIHwgNzYgKysrKysr
+KysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tCiBkcml2ZXJzL3N0YWdpbmcvd2Z4L2hpZl90
+eC5oIHwgMTAgKystLS0KIGRyaXZlcnMvc3RhZ2luZy93Zngvc2Nhbi5jICAgfCA1NCArKysrLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tCiBkcml2ZXJzL3N0YWdpbmcvd2Z4L3dmeC5oICAgIHwgIDEgKwog
+NCBmaWxlcyBjaGFuZ2VkLCA1OSBpbnNlcnRpb25zKCspLCA4MiBkZWxldGlvbnMoLSkKCmRpZmYg
+LS1naXQgYS9kcml2ZXJzL3N0YWdpbmcvd2Z4L2hpZl90eC5jIGIvZHJpdmVycy9zdGFnaW5nL3dm
+eC9oaWZfdHguYwppbmRleCAyNTliNDliOTkwOTguLjhhMzRhNTJkZDViOSAxMDA2NDQKLS0tIGEv
+ZHJpdmVycy9zdGFnaW5nL3dmeC9oaWZfdHguYworKysgYi9kcml2ZXJzL3N0YWdpbmcvd2Z4L2hp
+Zl90eC5jCkBAIC0yMjAsNDEgKzIyMCw1OSBAQCBpbnQgaGlmX3dyaXRlX21pYihzdHJ1Y3Qgd2Z4
+X2RldiAqd2RldiwgaW50IHZpZl9pZCwgdTE2IG1pYl9pZCwgdm9pZCAqdmFsLAogCXJldHVybiBy
+ZXQ7CiB9CiAKLWludCBoaWZfc2NhbihzdHJ1Y3Qgd2Z4X3ZpZiAqd3ZpZiwgY29uc3Qgc3RydWN0
+IHdmeF9zY2FuX3BhcmFtcyAqYXJnKQoraW50IGhpZl9zY2FuKHN0cnVjdCB3ZnhfdmlmICp3dmlm
+LCBzdHJ1Y3QgY2ZnODAyMTFfc2Nhbl9yZXF1ZXN0ICpyZXEsCisJICAgICBpbnQgY2hhbl9zdGFy
+dF9pZHgsIGludCBjaGFuX251bSkKIHsKIAlpbnQgcmV0LCBpOwogCXN0cnVjdCBoaWZfbXNnICpo
+aWY7Ci0Jc3RydWN0IGhpZl9zc2lkX2RlZiAqc3NpZHM7Ci0Jc2l6ZV90IGJ1Zl9sZW4gPSBzaXpl
+b2Yoc3RydWN0IGhpZl9yZXFfc3RhcnRfc2NhbikgKwotCQlhcmctPnNjYW5fcmVxLm51bV9vZl9j
+aGFubmVscyAqIHNpemVvZih1OCkgKwotCQlhcmctPnNjYW5fcmVxLm51bV9vZl9zc2lkcyAqIHNp
+emVvZihzdHJ1Y3QgaGlmX3NzaWRfZGVmKTsKLQlzdHJ1Y3QgaGlmX3JlcV9zdGFydF9zY2FuICpi
+b2R5ID0gd2Z4X2FsbG9jX2hpZihidWZfbGVuLCAmaGlmKTsKLQl1OCAqcHRyID0gKHU4ICopIGJv
+ZHkgKyBzaXplb2YoKmJvZHkpOwotCi0JV0FSTihhcmctPnNjYW5fcmVxLm51bV9vZl9jaGFubmVs
+cyA+IEhJRl9BUElfTUFYX05CX0NIQU5ORUxTLCAiaW52YWxpZCBwYXJhbXMiKTsKLQlXQVJOKGFy
+Zy0+c2Nhbl9yZXEubnVtX29mX3NzaWRzID4gMiwgImludmFsaWQgcGFyYW1zIik7Ci0JV0FSTihh
+cmctPnNjYW5fcmVxLmJhbmQgPiAxLCAiaW52YWxpZCBwYXJhbXMiKTsKLQotCS8vIEZJWE1FOiBU
+aGlzIEFQSSBpcyB1bm5lY2Vzc2FyeSBjb21wbGV4LCBmaXhpbmcgTnVtT2ZDaGFubmVscyBhbmQK
+LQkvLyBhZGRpbmcgYSBtZW1iZXIgU3NpZERlZiBhdCBlbmQgb2Ygc3RydWN0IGhpZl9yZXFfc3Rh
+cnRfc2NhbiB3b3VsZAotCS8vIHNpbXBsaWZ5IHRoYXQgYSBsb3QuCi0JbWVtY3B5KGJvZHksICZh
+cmctPnNjYW5fcmVxLCBzaXplb2YoKmJvZHkpKTsKLQljcHVfdG9fbGUzMnMoJmJvZHktPm1pbl9j
+aGFubmVsX3RpbWUpOwotCWNwdV90b19sZTMycygmYm9keS0+bWF4X2NoYW5uZWxfdGltZSk7Ci0J
+Y3B1X3RvX2xlMzJzKCZib2R5LT50eF9wb3dlcl9sZXZlbCk7Ci0JbWVtY3B5KHB0ciwgYXJnLT5z
+c2lkcywKLQkgICAgICAgYXJnLT5zY2FuX3JlcS5udW1fb2Zfc3NpZHMgKiBzaXplb2Yoc3RydWN0
+IGhpZl9zc2lkX2RlZikpOwotCXNzaWRzID0gKHN0cnVjdCBoaWZfc3NpZF9kZWYgKikgcHRyOwot
+CWZvciAoaSA9IDA7IGkgPCBib2R5LT5udW1fb2Zfc3NpZHM7ICsraSkKLQkJY3B1X3RvX2xlMzJz
+KCZzc2lkc1tpXS5zc2lkX2xlbmd0aCk7Ci0JcHRyICs9IGFyZy0+c2Nhbl9yZXEubnVtX29mX3Nz
+aWRzICogc2l6ZW9mKHN0cnVjdCBoaWZfc3NpZF9kZWYpOwotCW1lbWNweShwdHIsIGFyZy0+Y2gs
+IGFyZy0+c2Nhbl9yZXEubnVtX29mX2NoYW5uZWxzICogc2l6ZW9mKHU4KSk7Ci0JcHRyICs9IGFy
+Zy0+c2Nhbl9yZXEubnVtX29mX2NoYW5uZWxzICogc2l6ZW9mKHU4KTsKLQlXQVJOKGJ1Zl9sZW4g
+IT0gcHRyIC0gKHU4ICopIGJvZHksICJhbGxvY2F0aW9uIHNpemUgbWlzbWF0Y2giKTsKKwlzaXpl
+X3QgYnVmX2xlbiA9CisJCXNpemVvZihzdHJ1Y3QgaGlmX3JlcV9zdGFydF9zY2FuX2FsdCkgKyBj
+aGFuX251bSAqIHNpemVvZih1OCk7CisJc3RydWN0IGhpZl9yZXFfc3RhcnRfc2Nhbl9hbHQgKmJv
+ZHkgPSB3ZnhfYWxsb2NfaGlmKGJ1Zl9sZW4sICZoaWYpOworCWludCB0bW9fY2hhbl9mZywgdG1v
+X2NoYW5fYmcsIHRtbzsKKworCVdBUk4oY2hhbl9udW0gPiBISUZfQVBJX01BWF9OQl9DSEFOTkVM
+UywgImludmFsaWQgcGFyYW1zIik7CisJV0FSTihyZXEtPm5fc3NpZHMgPiBISUZfQVBJX01BWF9O
+Ql9TU0lEUywgImludmFsaWQgcGFyYW1zIik7CisKKwljb21waWxldGltZV9hc3NlcnQoSUVFRTgw
+MjExX01BWF9TU0lEX0xFTiA9PSBISUZfQVBJX1NTSURfU0laRSwKKwkJCSAgICJBUEkgaW5jb25z
+aXN0ZW5jeSIpOworCWZvciAoaSA9IDA7IGkgPCByZXEtPm5fc3NpZHM7IGkrKykgeworCQltZW1j
+cHkoYm9keS0+c3NpZF9kZWZbaV0uc3NpZCwgcmVxLT5zc2lkc1tpXS5zc2lkLAorCQkgICAgICAg
+SUVFRTgwMjExX01BWF9TU0lEX0xFTik7CisJCWJvZHktPnNzaWRfZGVmW2ldLnNzaWRfbGVuZ3Ro
+ID0KKwkJCWNwdV90b19sZTMyKHJlcS0+c3NpZHNbaV0uc3NpZF9sZW4pOworCX0KKwlib2R5LT5u
+dW1fb2Zfc3NpZHMgPSBISUZfQVBJX01BWF9OQl9TU0lEUzsKKwkvLyBCYWNrZ3JvdW5kIHNjYW4g
+aXMgYWx3YXlzIGEgZ29vZCBpZGVhCisJYm9keS0+c2Nhbl90eXBlLnR5cGUgPSAxOworCWJvZHkt
+PnNjYW5fZmxhZ3MuZmJnID0gMTsKKwlib2R5LT50eF9wb3dlcl9sZXZlbCA9CisJCWNwdV90b19s
+ZTMyKHJlcS0+Y2hhbm5lbHNbY2hhbl9zdGFydF9pZHhdLT5tYXhfcG93ZXIpOworCWJvZHktPm51
+bV9vZl9jaGFubmVscyA9IGNoYW5fbnVtOworCWZvciAoaSA9IDA7IGkgPCBjaGFuX251bTsgaSsr
+KQorCQlib2R5LT5jaGFubmVsX2xpc3RbaV0gPQorCQkJcmVxLT5jaGFubmVsc1tpICsgY2hhbl9z
+dGFydF9pZHhdLT5od192YWx1ZTsKKwlpZiAocmVxLT5ub19jY2spCisJCWJvZHktPm1heF90cmFu
+c21pdF9yYXRlID0gQVBJX1JBVEVfSU5ERVhfR182TUJQUzsKKwllbHNlCisJCWJvZHktPm1heF90
+cmFuc21pdF9yYXRlID0gQVBJX1JBVEVfSU5ERVhfQl8xTUJQUzsKKwlpZiAocmVxLT5jaGFubmVs
+c1tjaGFuX3N0YXJ0X2lkeF0tPmZsYWdzICYgSUVFRTgwMjExX0NIQU5fTk9fSVIpIHsKKwkJYm9k
+eS0+bWluX2NoYW5uZWxfdGltZSA9IGNwdV90b19sZTMyKDUwKTsKKwkJYm9keS0+bWF4X2NoYW5u
+ZWxfdGltZSA9IGNwdV90b19sZTMyKDE1MCk7CisJfSBlbHNlIHsKKwkJYm9keS0+bWluX2NoYW5u
+ZWxfdGltZSA9IGNwdV90b19sZTMyKDEwKTsKKwkJYm9keS0+bWF4X2NoYW5uZWxfdGltZSA9IGNw
+dV90b19sZTMyKDUwKTsKKwkJYm9keS0+bnVtX29mX3Byb2JlX3JlcXVlc3RzID0gMjsKKwkJYm9k
+eS0+cHJvYmVfZGVsYXkgPSAxMDA7CisJfQorCXRtb19jaGFuX2JnID0gbGUzMl90b19jcHUoYm9k
+eS0+bWF4X2NoYW5uZWxfdGltZSkgKiBVU0VDX1BFUl9UVTsKKwl0bW9fY2hhbl9mZyA9IDUxMiAq
+IFVTRUNfUEVSX1RVICsgYm9keS0+cHJvYmVfZGVsYXk7CisJdG1vX2NoYW5fZmcgKj0gYm9keS0+
+bnVtX29mX3Byb2JlX3JlcXVlc3RzOworCXRtbyA9IGNoYW5fbnVtICogbWF4KHRtb19jaGFuX2Jn
+LCB0bW9fY2hhbl9mZyk7CisKIAl3ZnhfZmlsbF9oZWFkZXIoaGlmLCB3dmlmLT5pZCwgSElGX1JF
+UV9JRF9TVEFSVF9TQ0FOLCBidWZfbGVuKTsKIAlyZXQgPSB3ZnhfY21kX3NlbmQod3ZpZi0+d2Rl
+diwgaGlmLCBOVUxMLCAwLCBmYWxzZSk7CiAJa2ZyZWUoaGlmKTsKLQlyZXR1cm4gcmV0OworCXJl
+dHVybiByZXQgPyByZXQgOiB1c2Vjc190b19qaWZmaWVzKHRtbyk7CiB9CiAKIGludCBoaWZfc3Rv
+cF9zY2FuKHN0cnVjdCB3ZnhfdmlmICp3dmlmKQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9zdGFnaW5n
+L3dmeC9oaWZfdHguaCBiL2RyaXZlcnMvc3RhZ2luZy93ZngvaGlmX3R4LmgKaW5kZXggZDg4MDE5
+NDIxZmJjLi5lODg1NWVhZDNhMTggMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvc3RhZ2luZy93ZngvaGlm
+X3R4LmgKKysrIGIvZHJpdmVycy9zdGFnaW5nL3dmeC9oaWZfdHguaApAQCAtMTMsMTUgKzEzLDEw
+IEBACiAjaW5jbHVkZSAiaGlmX2FwaV9jbWQuaCIKIAogc3RydWN0IGllZWU4MDIxMV90eF9xdWV1
+ZV9wYXJhbXM7CitzdHJ1Y3QgY2ZnODAyMTFfc2Nhbl9yZXF1ZXN0Owogc3RydWN0IHdmeF9kZXY7
+CiBzdHJ1Y3Qgd2Z4X3ZpZjsKIAotc3RydWN0IHdmeF9zY2FuX3BhcmFtcyB7Ci0Jc3RydWN0IGhp
+Zl9yZXFfc3RhcnRfc2NhbiBzY2FuX3JlcTsKLQlzdHJ1Y3QgaGlmX3NzaWRfZGVmICpzc2lkczsK
+LQl1OCAqY2g7Ci19OwotCiBzdHJ1Y3Qgd2Z4X2hpZl9jbWQgewogCXN0cnVjdCBtdXRleCAgICAg
+IGxvY2s7CiAJc3RydWN0IG11dGV4ICAgICAga2V5X3JlbmV3X2xvY2s7CkBAIC00NSw3ICs0MCw4
+IEBAIGludCBoaWZfcmVhZF9taWIoc3RydWN0IHdmeF9kZXYgKndkZXYsIGludCB2aWZfaWQsIHUx
+NiBtaWJfaWQsCiAJCSB2b2lkICpidWYsIHNpemVfdCBidWZfc2l6ZSk7CiBpbnQgaGlmX3dyaXRl
+X21pYihzdHJ1Y3Qgd2Z4X2RldiAqd2RldiwgaW50IHZpZl9pZCwgdTE2IG1pYl9pZCwKIAkJICB2
+b2lkICpidWYsIHNpemVfdCBidWZfc2l6ZSk7Ci1pbnQgaGlmX3NjYW4oc3RydWN0IHdmeF92aWYg
+Knd2aWYsIGNvbnN0IHN0cnVjdCB3Znhfc2Nhbl9wYXJhbXMgKmFyZyk7CitpbnQgaGlmX3NjYW4o
+c3RydWN0IHdmeF92aWYgKnd2aWYsIHN0cnVjdCBjZmc4MDIxMV9zY2FuX3JlcXVlc3QgKnJlcTgw
+MjExLAorCSAgICAgaW50IGNoYW5fc3RhcnQsIGludCBjaGFuX251bSk7CiBpbnQgaGlmX3N0b3Bf
+c2NhbihzdHJ1Y3Qgd2Z4X3ZpZiAqd3ZpZik7CiBpbnQgaGlmX2pvaW4oc3RydWN0IHdmeF92aWYg
+Knd2aWYsIGNvbnN0IHN0cnVjdCBoaWZfcmVxX2pvaW4gKmFyZyk7CiBpbnQgaGlmX3NldF9wbShz
+dHJ1Y3Qgd2Z4X3ZpZiAqd3ZpZiwgYm9vbCBwcywgaW50IGR5bmFtaWNfcHNfdGltZW91dCk7CmRp
+ZmYgLS1naXQgYS9kcml2ZXJzL3N0YWdpbmcvd2Z4L3NjYW4uYyBiL2RyaXZlcnMvc3RhZ2luZy93
+Zngvc2Nhbi5jCmluZGV4IGMwNDNmMmY3OTU0MS4uMTIyZGE4N2JiZjkyIDEwMDY0NAotLS0gYS9k
+cml2ZXJzL3N0YWdpbmcvd2Z4L3NjYW4uYworKysgYi9kcml2ZXJzL3N0YWdpbmcvd2Z4L3NjYW4u
+YwpAQCAtMzQsMTkgKzM0LDE4IEBAIHN0YXRpYyB2b2lkIHdmeF9zY2FuX3Jlc3RhcnRfZGVsYXll
+ZChzdHJ1Y3Qgd2Z4X3ZpZiAqd3ZpZikKIAl9CiB9CiAKLXN0YXRpYyBpbnQgd2Z4X3NjYW5fc3Rh
+cnQoc3RydWN0IHdmeF92aWYgKnd2aWYsIHN0cnVjdCB3Znhfc2Nhbl9wYXJhbXMgKnNjYW4pCitz
+dGF0aWMgaW50IHdmeF9zY2FuX3N0YXJ0KHN0cnVjdCB3ZnhfdmlmICp3dmlmLAorCQkJICBpbnQg
+Y2hhbl9zdGFydF9pZHgsIGludCBjaGFuX251bSkKIHsKLQlpbnQgdG1vID0gNTAwOworCWludCB0
+bW87CiAKIAlpZiAod3ZpZi0+c3RhdGUgPT0gV0ZYX1NUQVRFX1BSRV9TVEEpCiAJCXJldHVybiAt
+RUJVU1k7CiAKLQl0bW8gKz0gc2Nhbi0+c2Nhbl9yZXEubnVtX29mX2NoYW5uZWxzICoKLQkgICAg
+ICAgKCgyMCAqIChzY2FuLT5zY2FuX3JlcS5tYXhfY2hhbm5lbF90aW1lKSkgKyAxMCk7CiAJYXRv
+bWljX3NldCgmd3ZpZi0+c2Nhbi5pbl9wcm9ncmVzcywgMSk7CiAKLQlzY2hlZHVsZV9kZWxheWVk
+X3dvcmsoJnd2aWYtPnNjYW4udGltZW91dCwgbXNlY3NfdG9famlmZmllcyh0bW8pKTsKLQloaWZf
+c2Nhbih3dmlmLCBzY2FuKTsKKwl0bW8gPSBoaWZfc2Nhbih3dmlmLCB3dmlmLT5zY2FuLnJlcSwg
+Y2hhbl9zdGFydF9pZHgsIGNoYW5fbnVtKTsKKwlzY2hlZHVsZV9kZWxheWVkX3dvcmsoJnd2aWYt
+PnNjYW4udGltZW91dCwgdG1vKTsKIAlyZXR1cm4gMDsKIH0KIApAQCAtMTI4LDkgKzEyNyw2IEBA
+IHZvaWQgd2Z4X3NjYW5fd29yayhzdHJ1Y3Qgd29ya19zdHJ1Y3QgKndvcmspCiB7CiAJc3RydWN0
+IHdmeF92aWYgKnd2aWYgPSBjb250YWluZXJfb2Yod29yaywgc3RydWN0IHdmeF92aWYsIHNjYW4u
+d29yayk7CiAJc3RydWN0IGllZWU4MDIxMV9jaGFubmVsICoqaXQ7Ci0Jc3RydWN0IHdmeF9zY2Fu
+X3BhcmFtcyBzY2FuID0gewotCQkuc2Nhbl9yZXEuc2Nhbl90eXBlLnR5cGUgPSAwLCAgICAvKiBG
+b3JlZ3JvdW5kICovCi0JfTsKIAlzdHJ1Y3QgaWVlZTgwMjExX2NoYW5uZWwgKmZpcnN0OwogCWlu
+dCBpOwogCkBAIC0xNzMsNDggKzE2OSwxNCBAQCB2b2lkIHdmeF9zY2FuX3dvcmsoc3RydWN0IHdv
+cmtfc3RydWN0ICp3b3JrKQogCQkgICAgKCppdCktPm1heF9wb3dlciAhPSBmaXJzdC0+bWF4X3Bv
+d2VyKQogCQkJYnJlYWs7CiAJfQotCXNjYW4uc2Nhbl9yZXEuYmFuZCA9IGZpcnN0LT5iYW5kOwot
+Ci0JaWYgKHd2aWYtPnNjYW4ucmVxLT5ub19jY2spCi0JCXNjYW4uc2Nhbl9yZXEubWF4X3RyYW5z
+bWl0X3JhdGUgPSBBUElfUkFURV9JTkRFWF9HXzZNQlBTOwotCWVsc2UKLQkJc2Nhbi5zY2FuX3Jl
+cS5tYXhfdHJhbnNtaXRfcmF0ZSA9IEFQSV9SQVRFX0lOREVYX0JfMU1CUFM7Ci0Jc2Nhbi5zY2Fu
+X3JlcS5udW1fb2ZfcHJvYmVfcmVxdWVzdHMgPQotCQkoZmlyc3QtPmZsYWdzICYgSUVFRTgwMjEx
+X0NIQU5fTk9fSVIpID8gMCA6IDI7Ci0Jc2Nhbi5zY2FuX3JlcS5udW1fb2Zfc3NpZHMgPSB3dmlm
+LT5zY2FuLm5fc3NpZHM7Ci0Jc2Nhbi5zc2lkcyA9ICZ3dmlmLT5zY2FuLnNzaWRzWzBdOwotCXNj
+YW4uc2Nhbl9yZXEubnVtX29mX2NoYW5uZWxzID0gaXQgLSB3dmlmLT5zY2FuLmN1cnI7Ci0Jc2Nh
+bi5zY2FuX3JlcS5wcm9iZV9kZWxheSA9IDEwMDsKLQkvLyBGSVhNRTogQ2hlY2sgaWYgRlcgY2Fu
+IGRvIGFjdGl2ZSBzY2FuIHdoaWxlIGpvaW5lZC4KLQlpZiAod3ZpZi0+c3RhdGUgPT0gV0ZYX1NU
+QVRFX1NUQSkgewotCQlzY2FuLnNjYW5fcmVxLnNjYW5fdHlwZS50eXBlID0gMTsKLQkJc2Nhbi5z
+Y2FuX3JlcS5zY2FuX2ZsYWdzLmZiZyA9IDE7Ci0JfQotCi0Jc2Nhbi5jaCA9IGtjYWxsb2Moc2Nh
+bi5zY2FuX3JlcS5udW1fb2ZfY2hhbm5lbHMsCi0JCQkgIHNpemVvZih1OCksIEdGUF9LRVJORUwp
+OwotCi0JaWYgKCFzY2FuLmNoKSB7Ci0JCXd2aWYtPnNjYW4uc3RhdHVzID0gLUVOT01FTTsKLQkJ
+Z290byBmYWlsOwotCX0KLQlmb3IgKGkgPSAwOyBpIDwgc2Nhbi5zY2FuX3JlcS5udW1fb2ZfY2hh
+bm5lbHM7ICsraSkKLQkJc2Nhbi5jaFtpXSA9IHd2aWYtPnNjYW4uY3VycltpXS0+aHdfdmFsdWU7
+Ci0KLQlpZiAod3ZpZi0+c2Nhbi5jdXJyWzBdLT5mbGFncyAmIElFRUU4MDIxMV9DSEFOX05PX0lS
+KSB7Ci0JCXNjYW4uc2Nhbl9yZXEubWluX2NoYW5uZWxfdGltZSA9IDUwOwotCQlzY2FuLnNjYW5f
+cmVxLm1heF9jaGFubmVsX3RpbWUgPSAxNTA7Ci0JfSBlbHNlIHsKLQkJc2Nhbi5zY2FuX3JlcS5t
+aW5fY2hhbm5lbF90aW1lID0gMTA7Ci0JCXNjYW4uc2Nhbl9yZXEubWF4X2NoYW5uZWxfdGltZSA9
+IDUwOwotCX0KIAlpZiAoIShmaXJzdC0+ZmxhZ3MgJiBJRUVFODAyMTFfQ0hBTl9OT19JUikgJiYK
+IAkgICAgd3ZpZi0+c2Nhbi5vdXRwdXRfcG93ZXIgIT0gZmlyc3QtPm1heF9wb3dlcikgewogCQl3
+dmlmLT5zY2FuLm91dHB1dF9wb3dlciA9IGZpcnN0LT5tYXhfcG93ZXI7CiAJCWhpZl9zZXRfb3V0
+cHV0X3Bvd2VyKHd2aWYsIHd2aWYtPnNjYW4ub3V0cHV0X3Bvd2VyICogMTApOwogCX0KLQl3dmlm
+LT5zY2FuLnN0YXR1cyA9IHdmeF9zY2FuX3N0YXJ0KHd2aWYsICZzY2FuKTsKLQlrZnJlZShzY2Fu
+LmNoKTsKKwl3dmlmLT5zY2FuLnN0YXR1cyA9IHdmeF9zY2FuX3N0YXJ0KHd2aWYsCisJCQkJCSAg
+IHd2aWYtPnNjYW4uY3VyciAtIHd2aWYtPnNjYW4uYmVnaW4sCisJCQkJCSAgIGl0IC0gd3ZpZi0+
+c2Nhbi5jdXJyKTsKIAlpZiAod3ZpZi0+c2Nhbi5zdGF0dXMpCiAJCWdvdG8gZmFpbDsKIAl3dmlm
+LT5zY2FuLmN1cnIgPSBpdDsKZGlmZiAtLWdpdCBhL2RyaXZlcnMvc3RhZ2luZy93Zngvd2Z4Lmgg
+Yi9kcml2ZXJzL3N0YWdpbmcvd2Z4L3dmeC5oCmluZGV4IDk3MzczZDA0N2Y1OC4uMzVmNWRkYzJl
+ZWIzIDEwMDY0NAotLS0gYS9kcml2ZXJzL3N0YWdpbmcvd2Z4L3dmeC5oCisrKyBiL2RyaXZlcnMv
+c3RhZ2luZy93Zngvd2Z4LmgKQEAgLTI3LDYgKzI3LDcgQEAKICNpbmNsdWRlICJoaWZfYXBpX2dl
+bmVyYWwuaCIKIAogI2RlZmluZSBVU0VDX1BFUl9UWE9QIDMyIC8vIHNlZSBzdHJ1Y3QgaWVlZTgw
+MjExX3R4X3F1ZXVlX3BhcmFtcworI2RlZmluZSBVU0VDX1BFUl9UVSAxMDI0CiAKIHN0cnVjdCBo
+d2J1c19vcHM7CiAKLS0gCjIuMjQuMAoK
