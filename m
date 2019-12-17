@@ -2,111 +2,90 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5464C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 696A0C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 866BE2176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:10:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A0D620663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:10:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Kd+9qADN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728800AbfLQOKG (ORCPT
+        id S1728841AbfLQOKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:10:06 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:44566 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728746AbfLQOKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:10:05 -0500
-Received: from ip5f5a5f74.dynamic.kabel-deutschland.de ([95.90.95.116] helo=phil.sntech)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1ihDXy-0007Vs-0g; Tue, 17 Dec 2019 15:09:58 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     dri-devel@lists.freedesktop.org
-Cc:     thierry.reding@gmail.com, sam@ravnborg.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, heiko@sntech.de,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: [PATCH 2/3] dt-bindings: display: panel: Add binding document for Leadtek LTK500HD1829
-Date:   Tue, 17 Dec 2019 15:09:48 +0100
-Message-Id: <20191217140949.24280-2-heiko@sntech.de>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191217140949.24280-1-heiko@sntech.de>
-References: <20191217140949.24280-1-heiko@sntech.de>
+        Tue, 17 Dec 2019 09:10:19 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:40438 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728784AbfLQOKS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 09:10:18 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBHE9wHn090167;
+        Tue, 17 Dec 2019 08:09:58 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576591798;
+        bh=+zSK3PAMPYp0FPu/i7ULX8Y3uMs+6Ix91i0wfKcwKWM=;
+        h=From:To:CC:Subject:Date;
+        b=Kd+9qADNY0fkKTLgqzNW0WxC6W4tFZuv+asl/e/1LEwYLKUUvfrwXEK7MvA/axQEF
+         q4/mOy8i/TGrerJgLXlRg/ELq+4R9jm2mfx34WcHefBcYxkG/5L9QTuHPPtXLimLJX
+         4qkXNKEvGSbeL+r1INLDmmi8MhhGAnsqH0k4c/QU=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBHE9wi4123748;
+        Tue, 17 Dec 2019 08:09:58 -0600
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
+ Dec 2019 08:09:58 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 17 Dec 2019 08:09:58 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBHE9vbC005793;
+        Tue, 17 Dec 2019 08:09:57 -0600
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jic23@kernel.org>, <linux-iio@vger.kernel.org>
+CC:     <knaack.h@gmx.de>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
+        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH 0/2] Texas Instruments DAC8771
+Date:   Tue, 17 Dec 2019 08:07:29 -0600
+Message-ID: <20191217140731.30504-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Hello
 
-The LTK500HD1829 is a 5.0" 720x1280 DSI display.
+Introduce the TI DAC8771.
 
-Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
----
- .../display/panel/leadtek,ltk500hd1829.yaml   | 48 +++++++++++++++++++
- 1 file changed, 48 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/leadtek,ltk500hd1829.yaml
+The DAC8771 is a single channel, precision, fully integrated 16-bit digital to
+analog converter (DAC) with adaptive power management, and is designed to
+meet the requirements of industrial control applications.
 
-diff --git a/Documentation/devicetree/bindings/display/panel/leadtek,ltk500hd1829.yaml b/Documentation/devicetree/bindings/display/panel/leadtek,ltk500hd1829.yaml
-new file mode 100644
-index 000000000000..5f6ed75d7598
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/leadtek,ltk500hd1829.yaml
-@@ -0,0 +1,48 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/sony,acx424akp.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Leadtek LTK500HD1829 5.0in 720x1280 DSI panel
-+
-+maintainers:
-+  - Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-+
-+allOf:
-+  - $ref: panel-common.yaml#
-+
-+properties:
-+  compatible:
-+    const: leadtek,ltk500hd1829
-+  reg: true
-+  backlight: true
-+  port: true
-+  reset-gpios: true
-+  iovcc-supply:
-+     description: regulator that supplies the iovcc voltage
-+  vcc-supply:
-+     description: regulator that supplies the vcc voltage
-+
-+required:
-+  - compatible
-+  - reg
-+  - backlight
-+  - iovcc-supply
-+  - vcc-supply
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    dsi@ff450000 {
-+        panel@0 {
-+            compatible = "leadtek,ltk500hd1829";
-+            reg = <0>;
-+            backlight = <&backlight>;
-+            iovcc-supply = <&vcc_1v8>;
-+            vcc-supply = <&vcc_2v8>;
-+        };
-+    };
-+
-+...
+Dan
+
+Dan Murphy (2):
+  dt-binding: iio: dac8771: Add TI DAC8771 binding
+  iio: dac: Introduce the TI DAC8771 DAC driver
+
+ .../bindings/iio/dac/ti,dac8771.yaml          |  89 ++++
+ drivers/iio/dac/Kconfig                       |   7 +
+ drivers/iio/dac/Makefile                      |   1 +
+ drivers/iio/dac/ti-dac8771.c                  | 499 ++++++++++++++++++
+ 4 files changed, 596 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/dac/ti,dac8771.yaml
+ create mode 100644 drivers/iio/dac/ti-dac8771.c
+
 -- 
-2.24.0
+2.23.0
 
