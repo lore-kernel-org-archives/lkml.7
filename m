@@ -4,186 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFADC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF93C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E130C21739
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:46:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ABC221739
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:46:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728579AbfLQNqX (ORCPT
+        id S1728592AbfLQNq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 08:46:23 -0500
-Received: from relmlor2.renesas.com ([210.160.252.172]:14117 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728556AbfLQNqW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 08:46:22 -0500
-X-IronPort-AV: E=Sophos;i="5.69,325,1571670000"; 
-   d="scan'208";a="34441862"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 17 Dec 2019 22:46:20 +0900
-Received: from fabrizio-dev.ree.adwin.renesas.com (unknown [10.226.36.196])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 78AAA4841A47;
-        Tue, 17 Dec 2019 22:46:15 +0900 (JST)
-From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-To:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>,
-        Andrzej Hajda <a.hajda@samsung.com>
-Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        ebiharaml@si-linux.co.jp
-Subject: [PATCH v6 2/6] drm: rcar-du: lvds: Improve identification of panels
-Date:   Tue, 17 Dec 2019 13:45:57 +0000
-Message-Id: <1576590361-28244-3-git-send-email-fabrizio.castro@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576590361-28244-1-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1576590361-28244-1-git-send-email-fabrizio.castro@bp.renesas.com>
+        Tue, 17 Dec 2019 08:46:26 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:34098 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728556AbfLQNqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 08:46:25 -0500
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id AFEDE552BDB1ED8734B6;
+        Tue, 17 Dec 2019 21:46:22 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 17 Dec 2019 21:46:12 +0800
+From:   Chen Zhou <chenzhou10@huawei.com>
+To:     <jejb@linux.ibm.com>, <martin.petersen@oracle.com>
+CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <chenzhou10@huawei.com>
+Subject: [PATCH next] scsi: initio: make initio_state_7() static
+Date:   Tue, 17 Dec 2019 21:43:09 +0800
+Message-ID: <20191217134309.41649-1-chenzhou10@huawei.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dual-LVDS panels are mistakenly identified as bridges, this
-commit replaces the current logic with a call to
-drm_of_find_panel_or_bridge to sort that out.
+Fix sparse warning:
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+drivers/scsi/initio.c:1643:5: warning: symbol 'initio_state_7' was not declared. Should it be static?
 
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 ---
-v5->v6:
-* No change
+ drivers/scsi/initio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-v4->v5:
-* Addressed comments from Laurent's review
-
-v3->v4:
-* New patch extracted from patch:
-  "drm: rcar-du: lvds: Add dual-LVDS panels support"
----
- drivers/gpu/drm/rcar-du/rcar_lvds.c | 75 +++++--------------------------------
- 1 file changed, 10 insertions(+), 65 deletions(-)
-
-diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-index 87a5e8e..da71107 100644
---- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
-+++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-@@ -21,6 +21,7 @@
- #include <drm/drm_atomic.h>
- #include <drm/drm_atomic_helper.h>
- #include <drm/drm_bridge.h>
-+#include <drm/drm_of.h>
- #include <drm/drm_panel.h>
- #include <drm/drm_probe_helper.h>
+diff --git a/drivers/scsi/initio.c b/drivers/scsi/initio.c
+index 41fd64c..1d39628 100644
+--- a/drivers/scsi/initio.c
++++ b/drivers/scsi/initio.c
+@@ -1640,7 +1640,7 @@ static int initio_state_6(struct initio_host * host)
+  *
+  */
  
-@@ -712,79 +713,23 @@ static int rcar_lvds_parse_dt_companion(struct rcar_lvds *lvds)
- 
- static int rcar_lvds_parse_dt(struct rcar_lvds *lvds)
+-int initio_state_7(struct initio_host * host)
++static int initio_state_7(struct initio_host * host)
  {
--	struct device_node *local_output = NULL;
--	struct device_node *remote_input = NULL;
--	struct device_node *remote = NULL;
--	struct device_node *node;
--	bool is_bridge = false;
--	int ret = 0;
--
--	local_output = of_graph_get_endpoint_by_regs(lvds->dev->of_node, 1, 0);
--	if (!local_output) {
--		dev_dbg(lvds->dev, "unconnected port@1\n");
--		ret = -ENODEV;
--		goto done;
--	}
--
--	/*
--	 * Locate the connected entity and infer its type from the number of
--	 * endpoints.
--	 */
--	remote = of_graph_get_remote_port_parent(local_output);
--	if (!remote) {
--		dev_dbg(lvds->dev, "unconnected endpoint %pOF\n", local_output);
--		ret = -ENODEV;
--		goto done;
--	}
-+	int ret;
+ 	int cnt, i;
  
--	if (!of_device_is_available(remote)) {
--		dev_dbg(lvds->dev, "connected entity %pOF is disabled\n",
--			remote);
--		ret = -ENODEV;
-+	ret = drm_of_find_panel_or_bridge(lvds->dev->of_node, 1, 0,
-+					  &lvds->panel, &lvds->next_bridge);
-+	if (ret)
- 		goto done;
--	}
- 
--	remote_input = of_graph_get_remote_endpoint(local_output);
--
--	for_each_endpoint_of_node(remote, node) {
--		if (node != remote_input) {
--			/*
--			 * We've found one endpoint other than the input, this
--			 * must be a bridge.
--			 */
--			is_bridge = true;
--			of_node_put(node);
--			break;
--		}
--	}
--
--	if (is_bridge) {
--		lvds->next_bridge = of_drm_find_bridge(remote);
--		if (!lvds->next_bridge) {
--			ret = -EPROBE_DEFER;
--			goto done;
--		}
--
--		if (lvds->info->quirks & RCAR_LVDS_QUIRK_DUAL_LINK)
--			lvds->dual_link = lvds->next_bridge->timings
--					? lvds->next_bridge->timings->dual_link
--					: false;
--	} else {
--		lvds->panel = of_drm_find_panel(remote);
--		if (IS_ERR(lvds->panel)) {
--			ret = PTR_ERR(lvds->panel);
--			goto done;
--		}
--	}
-+	if ((lvds->info->quirks & RCAR_LVDS_QUIRK_DUAL_LINK) &&
-+	    lvds->next_bridge)
-+		lvds->dual_link = lvds->next_bridge->timings
-+				? lvds->next_bridge->timings->dual_link
-+				: false;
- 
- 	if (lvds->dual_link)
- 		ret = rcar_lvds_parse_dt_companion(lvds);
- 
- done:
--	of_node_put(local_output);
--	of_node_put(remote_input);
--	of_node_put(remote);
--
- 	/*
- 	 * On D3/E3 the LVDS encoder provides a clock to the DU, which can be
- 	 * used for the DPAD output even when the LVDS output is not connected.
 -- 
 2.7.4
 
