@@ -7,80 +7,81 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 323ABC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0309DC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEFA32176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:17:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C077C21775
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:17:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576556252;
-	bh=2PqTmh7lOIz2PT/wCyXjaP8m0gfDSQfTJFs64zaPy44=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J59macO3Ux7CFh77EVFv4DNhdyuTWInsUfl0MyJttDCFEioAGU4N6XdGYJ/DaNHHO
-	 0j7LYg6CsQ9oC2lYd+tFgt+TrBQuBpn5d/q3zD31PcKvLZu/UJnD6phrbqoZTh42zi
-	 xWYzgFFjpAngn9y9CEGmvujs5E96AIjxUvgDWgwk=
+	s=default; t=1576556261;
+	bh=h5i+Hz0WB36MXk9BHOF5sRsyng99R9L8efNPXO5JgNA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=H8uGX4cKvW2FxUZrq9KMrsQfEnfw4azT4DJqiyumMl9yLyom/8uK2OGnFeRMbytFh
+	 Bbgy3/9MobW2eQj35TTahKsXt5mX5rWHWV5yL2EvNRAorLP/HQ1rZR/9InE1fJXj5W
+	 EWtymZcrtx7QKpD/Mc60n6mvqttF4OQ+iT7KWtoo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727663AbfLQERb (ORCPT
+        id S1727794AbfLQERk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 23:17:31 -0500
-Received: from conuserg-08.nifty.com ([210.131.2.75]:50927 "EHLO
+        Mon, 16 Dec 2019 23:17:40 -0500
+Received: from conuserg-08.nifty.com ([210.131.2.75]:51175 "EHLO
         conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727506AbfLQERa (ORCPT
+        with ESMTP id S1727506AbfLQERk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 23:17:30 -0500
+        Mon, 16 Dec 2019 23:17:40 -0500
 Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id xBH4GfU4015071;
-        Tue, 17 Dec 2019 13:16:42 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com xBH4GfU4015071
+        by conuserg-08.nifty.com with ESMTP id xBH4GfU3015071;
+        Tue, 17 Dec 2019 13:16:41 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com xBH4GfU3015071
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1576556202;
-        bh=Rv8WC9dqDe37ICSXxuXsuqUKzxAsugVrlJDEH6dRoJY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ISQctXteuF7JV8kNwP0Mki+VFdTCmwSRuLZo3K3FTddZTCz67wlx4FKevNn/Yrq9b
-         Us7N+5G1TmpWvnb3hlLLNIMJo7d+4dDwU5WtgyiuvjrhHlsGAI+VZpvrHH5IroopQE
-         7ia4Grvmqx3ew914b1YIav8zi3Vuzu6NDMUOBWLcJII88r+0mC1ffmQJxq6o5FUNQ2
-         Lcbjy+5TiS1walATcb+Oqx6ajeVVuKOCYJ2h9iAvw0HE2qqBUNw1MQVCT67Ekhd5Bc
-         XFTXIp8RCLeISydKXo3ThEs94dJHD/UCYf57013+Swf3H1IQE4ull/n4GwurmjfaOC
-         xCuDTrYBKEOhg==
+        s=dec2015msa; t=1576556201;
+        bh=dEOWmF2zF5XiXL5o8aHjRVLSi/pDnppldeUGub5lGgI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=K+ONjyp1WJpm7fbKXwPIb30gjiFeQZIAmhI9SY5k0w+Tw0anYaGrGh0R4UClw7sd6
+         F2FHo2uLcJQxaC5Mk3rFN2ULVd0mombeRavKoBUywxAoE/DhsadjFtb/MBo8IMJX2a
+         2/hLOMOu38CpYxz599duKSHTOt2h3PRswFNDv1EPNxOtoXeG3spBbIBYDFmzqYgGVf
+         ZwzUVujF9c4km2M1ougcuiEcgSWkZ6xvYowZmoerybfdLQuGbyLE5wA2qvKSeMq4NV
+         AGtdLk6DjWC8vy3rv+67eAUhWK1crx0wLAgqTGdfdrthgzklU+/kmJPaLjOqiCzn6+
+         A9sZ3lcvn6aHQ==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
 Cc:     Steven Rostedt <rostedt@goodmis.org>,
         Masahiro Yamada <masahiroy@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] kconfig: localmodconfig: fix indentation for closing brace
-Date:   Tue, 17 Dec 2019 13:16:37 +0900
-Message-Id: <20191217041637.29558-2-masahiroy@kernel.org>
+Subject: [PATCH 1/2] kconfig: localmodconfig: remove unused $config
+Date:   Tue, 17 Dec 2019 13:16:36 +0900
+Message-Id: <20191217041637.29558-1-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191217041637.29558-1-masahiroy@kernel.org>
-References: <20191217041637.29558-1-masahiroy@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the closing brace for the foreach loop. Fix the misleading
-indentation.
+This is unused since commit cdfc47950a53 ("kconfig: search for a config
+to base the local(mod|yes)config on").
+
+Having unused $config is confusing because $config is used as a local
+variable in various sub-routines.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- scripts/kconfig/streamline_config.pl | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ scripts/kconfig/streamline_config.pl | 2 --
+ 1 file changed, 2 deletions(-)
 
 diff --git a/scripts/kconfig/streamline_config.pl b/scripts/kconfig/streamline_config.pl
-index bbaa1e11a4e9..e2f8504f5a2d 100755
+index 08d76d7b3b81..bbaa1e11a4e9 100755
 --- a/scripts/kconfig/streamline_config.pl
 +++ b/scripts/kconfig/streamline_config.pl
-@@ -372,7 +372,7 @@ if (defined($lsmod_file)) {
- 	    $lsmod = "$dir/lsmod";
- 	    last;
- 	}
--}
-+    }
-     if (!defined($lsmod)) {
- 	# try just the path
- 	$lsmod = "lsmod";
+@@ -56,8 +56,6 @@ sub dprint {
+     print STDERR @_;
+ }
+ 
+-my $config = ".config";
+-
+ my $uname = `uname -r`;
+ chomp $uname;
+ 
 -- 
 2.17.1
 
