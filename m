@@ -2,154 +2,268 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B5BC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE5DC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E0B62146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:01:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29C262146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:02:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B9paQZOl"
+	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="ozyiAI+z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728108AbfLQPBx (ORCPT
+        id S1728208AbfLQPCu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 10:01:53 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35592 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726560AbfLQPBw (ORCPT
+        Tue, 17 Dec 2019 10:02:50 -0500
+Received: from UCOL19PA34.eemsg.mail.mil ([214.24.24.194]:51342 "EHLO
+        UCOL19PA34.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726560AbfLQPCt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 10:01:52 -0500
-Received: by mail-io1-f67.google.com with SMTP id v18so10343253iol.2;
-        Tue, 17 Dec 2019 07:01:52 -0800 (PST)
+        Tue, 17 Dec 2019 10:02:49 -0500
+X-EEMSG-check-017: 62778706|UCOL19PA34_ESA_OUT01.csd.disa.mil
+X-IronPort-AV: E=Sophos;i="5.69,325,1571702400"; 
+   d="scan'208";a="62778706"
+Received: from emsm-gh1-uea10.ncsc.mil ([214.29.60.2])
+  by UCOL19PA34.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 17 Dec 2019 15:02:46 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/LO4BnDBVJtYXqePP2HLV29992kA+WWFsut1HNzWeNg=;
-        b=B9paQZOl1hZMuylgrJwTYPdgpFngbMoVZ5G8HQ4IOiosvkCE6KQnW5kWgBYiAToY0P
-         lYwSYZg86e0xcgPRXYRXw8HUDIFtKPpP+M0ICWE34wzJaHCTzI38xAFwJ9dC+ntDIRBH
-         w38rLBixTPZomKkbPNkPxR4Tp5/pPj1FpFKhqHuMI2f0ZjMRvIcYVohAQBQ11W0kAYKy
-         kfE0OvxcRK0dA1DFuJqTHOOSpIfCTeVuEucXuFMHbc9pSgWe4rPWeAsLeLEnGfW3Qy4i
-         hbYa6aBLjuT9xm0iA2yCNfBr7WbOlWr81ALiyvlduf5XEZoQMx9vBYBZbrCVw5zlomQT
-         1sXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/LO4BnDBVJtYXqePP2HLV29992kA+WWFsut1HNzWeNg=;
-        b=OfEpgqDrDu3N1GWQevCt2wwmPUx0/2zZ2dLA53AVYnbiZ2XoBLyFH3KHdqzvIsH54c
-         HmJXspJaHMHF05ACFpfY+GbOXdU150+/gVnPfWcnBg1dA4UJEmpGs+FiTuUx6zgCTRWx
-         tIoRnZqvbvIGHk5hO0dA7tsQuv8LXM6g1PXAzW+jlLYXU5UFXJg7RtHItxIQ7L4rwLFU
-         IKlxP+qQ9At1NIu5VDuso+tjuHRZhVH0FRwTYKZSZ/c+k2VP8gBN2d60VRNkPkpNcfVz
-         Xfpl9VFVlcYdwCxldvT2falcoQ8DJ2TAFIeER/3WCoKZEa/kHY9mVmRMjPFnpuv+E92m
-         ZqrA==
-X-Gm-Message-State: APjAAAVy+8UnfLf4RhoIM97pHxUbMcHSfrPo8P6Ah61bkcuJ4dVKSXmf
-        cPU01A95DxhAIOKxO2ZYxUnNEee8VzOJuEtLcg==
-X-Google-Smtp-Source: APXvYqwxyWhZ1goetVsgpi3HdFnEyoecxMsKxN0qC0xTb9oPD9987C/QkkoC6cl4Y4t0qwRP+qLZtTzPL38kIVz31RY=
-X-Received: by 2002:a6b:b717:: with SMTP id h23mr4081674iof.273.1576594911720;
- Tue, 17 Dec 2019 07:01:51 -0800 (PST)
-MIME-Version: 1.0
-References: <20191214175735.22518-1-ardb@kernel.org> <20191214175735.22518-10-ardb@kernel.org>
-In-Reply-To: <20191214175735.22518-10-ardb@kernel.org>
-From:   Brian Gerst <brgerst@gmail.com>
-Date:   Tue, 17 Dec 2019 10:01:40 -0500
-Message-ID: <CAMzpN2jni66jDPobSSP_2Bg9k_rJx8ENBB7-Lkz7hxFYGPe4xQ@mail.gmail.com>
-Subject: Re: [PATCH 09/10] efi/libstub: annotate firmware routines as __efiapi
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
+  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
+  s=tycho.nsa.gov; t=1576594966; x=1608130966;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=M8vVOKFL7M0o9dNSY+1QS9XWVSEgualJYa5ILUoa1w8=;
+  b=ozyiAI+znvKptnDveIiXFZc5Cf77Vs4nbDYKTSMSd0Xu6CnIwzG1aGu/
+   r87DxKj7MjtUw1yY18ORJi8UDyOaYa5fDv7VtnPcUtu1dHk7xrg3E8iZz
+   MKlVlYMRi9RAQA5hfnUueDeUwG2TDcC0PyoOge+OPQleTVWZzXhJ1LCtu
+   mClMndZVqhG/28Gl3wj0DF8DbDv+hGTssiROmvybA7ooy1XCb/BC5SNoC
+   ra01Bthge0hRvQ7EQBv3VK0BdbJj4NSgEO4kK4dHCpQkB9ZI/cboI8fen
+   K4xf5OArpXkD+S78jk+W4I1sG6MCRl4Bt75bSdR/aoTquVZoskyllAPcu
+   w==;
+X-IronPort-AV: E=Sophos;i="5.69,325,1571702400"; 
+   d="scan'208";a="31183820"
+IronPort-PHdr: =?us-ascii?q?9a23=3A4JhWxRKuMEvgieyRbdmcpTZWNBhigK39O0sv0r?=
+ =?us-ascii?q?FitYgVLvjyrarrMEGX3/hxlliBBdydt6sfzbCO7Ou+CSQp2tWoiDg6aptCVh?=
+ =?us-ascii?q?sI2409vjcLJ4q7M3D9N+PgdCcgHc5PBxdP9nC/NlVJSo6lPwWB6nK94iQPFR?=
+ =?us-ascii?q?rhKAF7Ovr6GpLIj8Swyuu+54Dfbx9HiTagb75+Ngu6oRnTu8UZgIZvKbs6xw?=
+ =?us-ascii?q?fUrHdPZ+lY335jK0iJnxb76Mew/Zpj/DpVtvk86cNOUrj0crohQ7BAAzsoL2?=
+ =?us-ascii?q?465MvwtRneVgSP/WcTUn8XkhVTHQfI6gzxU4rrvSv7sup93zSaPdHzQLspVz?=
+ =?us-ascii?q?mu87tnRRn1gyocKTU37H/YhdBxjKJDoRKuuRp/w5LPYIqIMPZyZ77Rcc8GSW?=
+ =?us-ascii?q?ZEWMteWTZBAoehZIURCeQPM/tTo43kq1cQqRayAA+hD/7txDBVnH/7xbA03f?=
+ =?us-ascii?q?ovEQ/G3wIuEdwBv3vWo9rpO6kfSvy1wavSwDnfc/9b1zXw5Y7VeR4hu/GMWr?=
+ =?us-ascii?q?dwfNLMx0kzCQzFllWQppLjPziIy+oNtnKU7+5kVe2xi28stgZ8oiOyycc3kY?=
+ =?us-ascii?q?TJmoIUxUzE9SV+2oo1I8a4R1Rhbd6rF5tQqTiXOo1rSc0sRGFovTw1yrwAuZ?=
+ =?us-ascii?q?OjeSgF0pInyhzFZ/yAaYiI7RTuX/uSLzdgnH9pZb2yihmo/UWg1+HwTNe43V?=
+ =?us-ascii?q?lUoiZfj9XBsG0G2QbJ5cidUPR9+1+s2TOI1w/O9O5JOVs0la/HK545xb4wi4?=
+ =?us-ascii?q?YTvVzDHiDonEX2i7ebdlk+9eiy6uTnf67mqoWdN49yhAH+Nb8uldKjDugiLg?=
+ =?us-ascii?q?gPX3SU+eS71LH5+032XK5KgeEsnqncsZDaIdwXpq+/AwBLzoYu8wuzAjip3d?=
+ =?us-ascii?q?gCnXQLMUhJdAyIgoT3IV3CPej0DfKljFStlDdryerGPrrkApjVNXjMjazhcK?=
+ =?us-ascii?q?1h609c1AUzzddf64hSCrEaOv3/QEDxtNvGDhMhKQy73/7nCMlh1oMZQW+AGK?=
+ =?us-ascii?q?uZP73dsFCW5uMjOfKDZJIItznnLfgl5PnujWEilF8ZfKmp24YXaX+iEvRnJU?=
+ =?us-ascii?q?WZfWTjgtMbHWgWuQo+SfTgiEeeXj5Le3ayQ6U86ykjCI24EYfMWJqtgb2a0S?=
+ =?us-ascii?q?e6GJ1WaHpGBUqRHnj2bYqLRu0AaCWIIs9uijYET6SuS5c91RGysw/306BoIf?=
+ =?us-ascii?q?bR+iIGrp/j18Z65/fVlR4s8Tx4FcOd03uCT2tshGMHWyc23LxjoUx60lqD1K?=
+ =?us-ascii?q?l4g/pXFdxU/P5JSBk1OoPcz+NgF9D+QB7OftCMSFy+WNWpHSkxTs4tw98Je0?=
+ =?us-ascii?q?t9Gc+tjhbC3yawBb8Vlr+LBIEw8q3GxHXxI8d9y3Db1KgulVUmQ81PNXG4ia?=
+ =?us-ascii?q?577QTcG4nJk0CBnaawaascxDLN9HuEzWeWvkFYVwlwUaPfUnAEfEfWqc725k?=
+ =?us-ascii?q?PeT7+vD7QoLA1BxNWGKqtLbN3pkFpHSO3iONTYf2K+hWOwCQyUybOLaYrgY3?=
+ =?us-ascii?q?8d0znFCEgYjwAT+m6LNRI5Bii8uWLeDTNuFVX1b0Py8Ol+tnK7Q1Q1zwGMc0?=
+ =?us-ascii?q?1uyb619gQJivybTvMZxqgEtzs5qzVoAFa92MrbBMCbpwp9Z6hcYs0y4E1B1W?=
+ =?us-ascii?q?3HswxxJJugL7pthlQGaQR4o1vu1wlrCoVHicUlt20lzAxyKa+D01NOaSmY3Z?=
+ =?us-ascii?q?buNb3TMGX94AqvZLTN2lHe0daW/KgP5O4/q1X5swGjDlAi/Gl/09lJz3uc4Y?=
+ =?us-ascii?q?3HDBIIXpLsVkY36gN6qqrBYiYn4oPbzmdjPbOzsj/Y1NIjHPElxQq4f9dDLK?=
+ =?us-ascii?q?OEExf/E8gCB8ewM+ElhVypbhYaM+BI8a47JcWme+GH2KG2Jupvhi+mh3xd4I?=
+ =?us-ascii?q?9hykKM6zZ8SunQ0pYe3f6YxASHWCnngVehqM/3nYREZDEUHmal1SfkA4tRbL?=
+ =?us-ascii?q?VofYkXEWeuP9G3xtJmip7vXn5Y80SjB0kH2M+yYheSaUby3QhO2kQWu3Cnnj?=
+ =?us-ascii?q?G4zzNsmTEzsqWfxDDOw/jldBcfJmFEXnJigknsIIWvlNAVQEioYBI0lBur4U?=
+ =?us-ascii?q?b12bJbqL1jIGbJW0tHYy/2L2R6WKuqqrWCe9JP6I8vsShPUuS8ZlSaSqXnrB?=
+ =?us-ascii?q?YBySPsAXZRxDAheDG2oJn2gxt6iGeFJnZpsHXZYd1wxQvY5NHEX/FR3SELRC?=
+ =?us-ascii?q?15iTnRG1i9MMOl/dSSl5ffrO++U3itWYFUcSnu1YmArje05XV2AR2jmPC+gs?=
+ =?us-ascii?q?PoERIg3i/91tllTyPIoQ3zYons0KS6PuZncVdyCFDg7Mp6H5l0kpEsi5EIxX?=
+ =?us-ascii?q?gampKV8GIGkWf3LNVUwrjxbGENRTEV2NPa+gvl11dmLn2TxoL1TGmSwsxkZ9?=
+ =?us-ascii?q?OieGMZxjo979xWCKeT9LFLhy91rUS3rA3LZ/hygykSyeE05H4Bg+EJuREtzi?=
+ =?us-ascii?q?WeArATG0lVJijslxWO79Cjo6Rbfmevcb6s1EVgmdCtFq2NogZZWHzhYJctAT?=
+ =?us-ascii?q?dw7tljMFLLyHDz7JvreNzQbdMTqx2UlRjAgvNWKJ0vjPoKgzRoOWbnsX0i0e?=
+ =?us-ascii?q?47ggRk3Yums4ifN2Vt4KW5DwZbNjLrecwT4S3ijaFZnsaVxI2gApVhGi8MXJ?=
+ =?us-ascii?q?vtTPKoDTcSue7gNwaUHz02sm2bFqbHHQ+D9EdmqGrCE5KxOHGRInkZzc5vRB?=
+ =?us-ascii?q?aaJExYjwAUWCs1koQlGQCtwczraF156SwJ5l7kthtMzfplNwXwUmfbqwalcT?=
+ =?us-ascii?q?M0SJmZLBpL8gFC/UDVMcqf7uN8BS1X44OuphSXKmOHfwRIEX0JWkucClD/IL?=
+ =?us-ascii?q?mu/8XA8+ufBuakMvvOe66OqfFaV/eJw5KiyY9m/zeKNsWSMXhuFfw72kxfXX?=
+ =?us-ascii?q?9nH8TVgSkASysSlyjVdc6UuA+8+jFrrsC46PnrXAPv5Y2SC7pdKNlv4A65jr?=
+ =?us-ascii?q?ueN+6KhSZ5NTZZ2ooJxX/P1bcfwVoShD91ejmzHrQPqzTNQLjTmqBJFR4bbT?=
+ =?us-ascii?q?18NM9S46I7xAlNNtbRisnp2b5gkv41F1BFWET6ms63YcwKIme9NE7IBUuQKr?=
+ =?us-ascii?q?SGKiPEw9vtbaO/V7JQluNUuAO0uTqBFE/jJDuDnSHzVx+zKeFMkD2bPBtGtY?=
+ =?us-ascii?q?G5cxZtD3XjTd3/Zh24LtB3lzs2zqMwhn7RK24cPiZzc1lXor2T8yxYmPN/FH?=
+ =?us-ascii?q?JF7nZ/KumEgSmZ5fHCKpkKqftrHjh0l+VC7XQ+yrtV6jxERfNslCvKsNFuuV?=
+ =?us-ascii?q?+mnvCSyjp8ThVOsC1LiZmVvUVtJ6rZ7INMWXXa8xIX62WfFRAKq8FiCt31tK?=
+ =?us-ascii?q?Ba0sLPm77rKDde79LU+tMRB8nSKMKbLnUhNQPlGDHaDAoKVjOrMWDfh1dBkP?=
+ =?us-ascii?q?GJ7HGVoII6pYbyl5UTVLBbT181Fu8dCkR9BtACJ413Xjw8m76BkMEI/Wa+rA?=
+ =?us-ascii?q?XWRMhCpZ/HWeiSDuvgKDaWlrREYQUHwa/2LYQXN4361FZuZUV9nITPA0DQR8?=
+ =?us-ascii?q?xCojV9bg8op0VA6GN+Tmo120LqbgOt4WITGuWunhEslAt+YOIt9Dj37lc5PV?=
+ =?us-ascii?q?XGvjc/kE40md/9mzCebCbxLLusXYFREyf7rFAxMp3gTgZrYg29g1ZkOC3HR7?=
+ =?us-ascii?q?1Plbtgc35kiAvGtZtIA/5cQrVOYAUMyvGPe/UozVNcpz2jxU9G4+vFFJRjmB?=
+ =?us-ascii?q?IycZG2tXJA2hljY8IuKKzOK6pG0EJQiriNviC2zOAxxhERJ0IX/GOVYi4It1?=
+ =?us-ascii?q?QCNqM6KCqw4uxs9QuCliNHeGgNUfoqv/1r9lslO+uc1i7vzqBMKl6qOuybLq?=
+ =?us-ascii?q?OZoHTAldWSTlM310IIk1NK8qNt0cs5dEqUTU8vn/OtEEEgMcfSJBAdRdde/X?=
+ =?us-ascii?q?7QejjG5ezJzIJ4LsO3C+zhS+yJqo4Qg0S5DEAoGZgB6oIKGZz6lAngINvqNv?=
+ =?us-ascii?q?Y3yBcp/xjxLR3RFPlVdQiZuDYBrdu2wJJ+0c9aPD5LRS1UKyO+4rrQ7iQjmu?=
+ =?us-ascii?q?SKWNcxKnsXFq4JMnV+DMSxniNxvHlaCjSzlOUDx17Gpx76qSOYKT74adN5LK?=
+ =?us-ascii?q?ORZBVjD/ms9Dk/+rTwglnSpNGWbWPzM9UkvN7M9OcTj5KGDe5EC7h7r0rY3Y?=
+ =?us-ascii?q?JfQjbiB2zGF9/zIZnzdo0lRdj1DGuqFF25lz8xCcz2OYDpZuKKhgbuTJ0StI?=
+ =?us-ascii?q?CbwDElOMmVEjAYBgc2pucf6aY6bgoGKdJvYxnvsQ0lcai2IBuZ1Nioa2KsLy?=
+ =?us-ascii?q?ZGCfhZ0ei+IbdQynxoJqWgz3c6T549ife2708lRZcWgxWYzvGmLcEKSy//AH?=
+ =?us-ascii?q?1SfEPRpDQ4v2lnKus2hOw4xUWM+XAYPiCGdaRSdGVeuM87BE+VPz0iA3Ekb1?=
+ =?us-ascii?q?yRl4zO5kirxb9Eu2N3ktBW2OhEtjDes4XFbTS3U6yuqJnJ+34qYN4mi658K4?=
+ =?us-ascii?q?ruJo2NrprFnj3ZQ9/XqALTFGaCHude0v1ZKyFVWuNBgilxIcUbvZdawVE4U8?=
+ =?us-ascii?q?03YbtVB/9o7pWrYjptACpa4CsdWpmF1TpK1uKk1pPXkhOdapErNloFvNNLn4?=
+ =?us-ascii?q?1ZGxV7eCwT7I+qU4HHkSfQUWURLwo77Q1I4BMG0IR3e7ahqKjBSZJXgxtRue?=
+ =?us-ascii?q?h1SWOfFJxv7UH6UUmQiF31SbOmieP/mUp5xenhw5EgUx52FEZZyvwewkAhM7?=
+ =?us-ascii?q?xmA7IbvofXvDuFbwbxtSTmz+7wd3dLzsiBTEH1FIrIsyLHVyQY/XAFDdtUxG?=
+ =?us-ascii?q?r3CYUZkw0/br0i4lpLPtb1KQ7F+zU4ytExTPGDXsexygNg9CxXSg=3D=3D?=
+X-IPAS-Result: =?us-ascii?q?A2BKAACQ7Phd/wHyM5BlHAEBAQEBBwEBEQEEBAEBgWwFA?=
+ =?us-ascii?q?QELAYFzgRhVIBIqhASJA4ZzBAaBN4lqj0qBewkBAQEBAQEBAQErDAEBhEACg?=
+ =?us-ascii?q?jw2Bw4CEAEBAQQBAQEBAQUDAQFshTcMgjspAYJ6AQUOFRUtFBALGAICJgICV?=
+ =?us-ascii?q?wYBDAYCAQGCXz8BglIlD64agTKEDQEBgUCDQIFIgQ4oAYlOgmN5gQeBOA+CX?=
+ =?us-ascii?q?T6CZAOEcoJeBI94hxRGlzOCPoJChG2OWwYbgkN0hwKQEC2OIIFGhwqTfgUtg?=
+ =?us-ascii?q?VgrCAIYCCEPgycJFjERFI1KiE+FCAFUIwMwAZF/AQE?=
+Received: from tarius.tycho.ncsc.mil (HELO tarius.infosec.tycho.ncsc.mil) ([144.51.242.1])
+  by EMSM-GH1-UEA10.NCSC.MIL with ESMTP; 17 Dec 2019 15:02:44 +0000
+Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
+        by tarius.infosec.tycho.ncsc.mil (8.14.7/8.14.4) with ESMTP id xBHF1mb0066955;
+        Tue, 17 Dec 2019 10:01:51 -0500
+Subject: Re: [PATCH v3 1/7] capabilities: introduce CAP_SYS_PERFMON to kernel
+ and user space
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Serge Hallyn <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Casey Schaufler <casey@schaufler-ca.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Arvind Sankar <nivedita@alum.mit.edu>
-Content-Type: text/plain; charset="UTF-8"
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        linux-kernel@vger.kernel.org,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        intel-gfx@lists.freedesktop.org,
+        Brendan Gregg <bgregg@netflix.com>, songliubraving@fb.com,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+References: <b175f283-d256-e37e-f447-6ba4ab4f3d3a@linux.intel.com>
+ <bd8adfde-f562-0e56-75aa-371c5354f350@linux.intel.com>
+From:   Stephen Smalley <sds@tycho.nsa.gov>
+Message-ID: <a9542dcd-6f02-92eb-bd97-8aa839e9036f@tycho.nsa.gov>
+Date:   Tue, 17 Dec 2019 10:02:25 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <bd8adfde-f562-0e56-75aa-371c5354f350@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 14, 2019 at 1:00 PM Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> Annotate all the firmware routines (boot services, runtime services and
-> protocol methods) called in the boot context as __efiapi, and make
-> it expand to __attribute__((ms_abi)) on 64-bit x86. This allows us
-> to use the compiler to generate the calls into firmware that use the
-> MS calling convention instead of the SysV one.
->
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+On 12/16/19 2:58 PM, Alexey Budankov wrote:
+> 
+> Introduce CAP_SYS_PERFMON capability devoted to secure system performance
+> monitoring and observability so that CAP_SYS_PERFMON would assist
+> CAP_SYS_ADMIN capability in its governing role for perf_events, i915_perf
+> and other subsystems of the kernel.
+> 
+> CAP_SYS_PERFMON intends to harden system security and integrity during
+> system performance monitoring and observability by decreasing attack surface
+> that is available to CAP_SYS_ADMIN privileged processes.
+> 
+> CAP_SYS_PERFMON intends to take over CAP_SYS_ADMIN credentials related to
+> system performance monitoring and observability and balance amount of
+> CAP_SYS_ADMIN credentials in accordance with the recommendations provided
+> in the man page for CAP_SYS_ADMIN [1]: "Note: this capability is overloaded;
+> see Notes to kernel developers, below."
+> 
+> [1] http://man7.org/linux/man-pages/man7/capabilities.7.html
+> 
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 > ---
->  arch/x86/Kconfig                      |   1 +
->  arch/x86/boot/compressed/eboot.h      |   4 +-
->  drivers/firmware/efi/libstub/random.c |   8 +-
->  include/linux/efi.h                   | 130 +++++++++++---------
->  4 files changed, 79 insertions(+), 64 deletions(-)
->
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 5e8949953660..8ba81036a7ef 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -1993,6 +1993,7 @@ config EFI
->  config EFI_STUB
->         bool "EFI stub support"
->         depends on EFI && !X86_USE_3DNOW
-> +       depends on $(cc-option,-mabi=ms)
->         select RELOCATABLE
->         ---help---
->            This kernel feature allows a bzImage to be loaded directly
-> diff --git a/arch/x86/boot/compressed/eboot.h b/arch/x86/boot/compressed/eboot.h
-> index 318531f128c2..512d2143a94f 100644
-> --- a/arch/x86/boot/compressed/eboot.h
-> +++ b/arch/x86/boot/compressed/eboot.h
-> @@ -19,8 +19,8 @@ typedef struct {
->  } efi_uga_draw_protocol_32_t;
->
->  typedef struct efi_uga_draw_protocol {
-> -       efi_status_t (*get_mode)(struct efi_uga_draw_protocol *,
-> -                                u32*, u32*, u32*, u32*);
-> +       efi_status_t (__efiapi *get_mode)(struct efi_uga_draw_protocol *,
-> +                                         u32*, u32*, u32*, u32*);
->         void *set_mode;
->         void *blt;
->  } efi_uga_draw_protocol_t;
-> diff --git a/drivers/firmware/efi/libstub/random.c b/drivers/firmware/efi/libstub/random.c
-> index 3b85883fb312..872d2de3eaaf 100644
-> --- a/drivers/firmware/efi/libstub/random.c
-> +++ b/drivers/firmware/efi/libstub/random.c
-> @@ -17,10 +17,10 @@ typedef struct {
->  } efi_rng_protocol_32_t;
->
->  struct efi_rng_protocol {
-> -       efi_status_t (*get_info)(struct efi_rng_protocol *,
-> -                                unsigned long *, efi_guid_t *);
-> -       efi_status_t (*get_rng)(struct efi_rng_protocol *,
-> -                               efi_guid_t *, unsigned long, u8 *out);
-> +       efi_status_t (__efiapi *get_info)(struct efi_rng_protocol *,
-> +                                         unsigned long *, efi_guid_t *);
-> +       efi_status_t (__efiapi *get_rng)(struct efi_rng_protocol *,
-> +                                        efi_guid_t *, unsigned long, u8 *out);
->  };
->
->  efi_status_t efi_get_random_bytes(efi_system_table_t *sys_table_arg,
-> diff --git a/include/linux/efi.h b/include/linux/efi.h
-> index 7f1a99bd2c05..2ba13d901055 100644
-> --- a/include/linux/efi.h
-> +++ b/include/linux/efi.h
-> @@ -48,6 +48,12 @@ typedef u16 efi_char16_t;            /* UNICODE character */
->  typedef u64 efi_physical_addr_t;
->  typedef void *efi_handle_t;
->
-> +#ifdef CONFIG_X86_64
-> +#define __efiapi __attribute__((ms_abi))
-> +#else
-> +#define __efiapi
+>   include/linux/capability.h          | 1 +
+>   include/uapi/linux/capability.h     | 8 +++++++-
+>   security/selinux/include/classmap.h | 4 ++--
+>   3 files changed, 10 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/linux/capability.h b/include/linux/capability.h
+> index ecce0f43c73a..6342502c4c2a 100644
+> --- a/include/linux/capability.h
+> +++ b/include/linux/capability.h
+> @@ -251,6 +251,7 @@ extern bool privileged_wrt_inode_uidgid(struct user_namespace *ns, const struct
+>   extern bool capable_wrt_inode_uidgid(const struct inode *inode, int cap);
+>   extern bool file_ns_capable(const struct file *file, struct user_namespace *ns, int cap);
+>   extern bool ptracer_capable(struct task_struct *tsk, struct user_namespace *ns);
+> +#define perfmon_capable() (capable(CAP_SYS_PERFMON) || capable(CAP_SYS_ADMIN))
 
-I think it would be better to explicitly use the regparm(0) attribute
-for 32-bit, even though that is currently the default.
+I think making it a static inline bool function instead of a macro would 
+be preferred?
 
---
-Brian Gerst
+Otherwise,
+Acked-by: Stephen Smalley <sds@tycho.nsa.gov>
+
+>   
+>   /* audit system wants to get cap info from files as well */
+>   extern int get_vfs_caps_from_disk(const struct dentry *dentry, struct cpu_vfs_cap_data *cpu_caps);
+> diff --git a/include/uapi/linux/capability.h b/include/uapi/linux/capability.h
+> index 240fdb9a60f6..98e03cc76c7c 100644
+> --- a/include/uapi/linux/capability.h
+> +++ b/include/uapi/linux/capability.h
+> @@ -366,8 +366,14 @@ struct vfs_ns_cap_data {
+>   
+>   #define CAP_AUDIT_READ		37
+>   
+> +/*
+> + * Allow system performance and observability privileged operations
+> + * using perf_events, i915_perf and other kernel subsystems
+> + */
+> +
+> +#define CAP_SYS_PERFMON		38
+>   
+> -#define CAP_LAST_CAP         CAP_AUDIT_READ
+> +#define CAP_LAST_CAP         CAP_SYS_PERFMON
+>   
+>   #define cap_valid(x) ((x) >= 0 && (x) <= CAP_LAST_CAP)
+>   
+> diff --git a/security/selinux/include/classmap.h b/security/selinux/include/classmap.h
+> index 7db24855e12d..bae602c623b0 100644
+> --- a/security/selinux/include/classmap.h
+> +++ b/security/selinux/include/classmap.h
+> @@ -27,9 +27,9 @@
+>   	    "audit_control", "setfcap"
+>   
+>   #define COMMON_CAP2_PERMS  "mac_override", "mac_admin", "syslog", \
+> -		"wake_alarm", "block_suspend", "audit_read"
+> +		"wake_alarm", "block_suspend", "audit_read", "sys_perfmon"
+>   
+> -#if CAP_LAST_CAP > CAP_AUDIT_READ
+> +#if CAP_LAST_CAP > CAP_SYS_PERFMON
+>   #error New capability defined, please update COMMON_CAP2_PERMS.
+>   #endif
+>   
+> 
+
