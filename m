@@ -2,251 +2,176 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D6AC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F7C7C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FD902146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65229207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:24:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576574590;
-	bh=FApipSdfsAMEsktvgc8mIG5R0LeSSG9ADCVylSkXRUY=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=z7/bxw7IfidskQWAARVwq+2Y5E7sc06SEiztC6l38GMI7aembksA1BzEvV34a1gFg
-	 k7dX7cd7/+viilRmK4BwwXIv0Ir32+YDNEdKsZAWAV32R63KeNOQY2op6w1uykJk5R
-	 /sgenFnv5StZZwTmv3DzA18WhvCKI/bmdmBTDNQM=
+	s=default; t=1576574682;
+	bh=6PIWuEhtUI+RkhpqPasL8EtWun3CNaybdET+BC/Pf1o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TwoijT7kBDtjZsEzW0uwiRAkFWCWhYYbJBuw0cKkKpx2AoKe1McHPxvevwFUktRym
+	 URkiuubKW2uvOX46g2MtIY6AKu16Ri+0JOyoYnMXaiX23hZKyqhu+Eu33grlpP7nnE
+	 OLdOeWLg3lyDpMfPgz1jMcriRH+Ewn6WzyWItcaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727384AbfLQJXJ (ORCPT
+        id S1727184AbfLQJYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 04:23:09 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:51894 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727021AbfLQJXH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 04:23:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Mime-Version:
-        Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=CrwtHR4Dny85Y2PIB0EDR3u2w3QOGOAA0nzDYKM9vNM=; b=1qh8GTgFQ64Dtn+OS3j3i4WY2i
-        MmmWDqbH99Rmmxn4awZXa/ZIHsqSPspboSp/G8wL51+bee/Mkm9SgoJxm0zTltRwzUk0IMANk2c3S
-        6/sqSw8ik0CBKEslCcbL4xWCKvQ8fzcMR+V/SwaCQ+wiWTMxdS93LlhuqQdZhj/dnw2D1hZeODr2e
-        vl69fiZEngwgpgUvFA/pO7zLHSs3RbyG8YM6qYcmo/KSA1MczRe0EBu1KxwhyC0mQOI0iYKGen1uB
-        gH85C0F5mZz7mhM4kVfTKwPdnU1+zcTvpZWVmulefgd9udhLv7Q6YIw7rxnI1VlyfDLZu+GoYO7r+
-        Al1OOJGA==;
-Received: from [54.239.6.185] (helo=u0c626add9cce5a.drs10.amazon.com)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ih94F-0002pV-VV; Tue, 17 Dec 2019 09:23:00 +0000
-Message-ID: <bcf52e98b1743410a87107b8430da49aec81fddd.camel@kernel.org>
-Subject: Re: [PATCH v3] hwrng: core: Freeze khwrng thread during suspend
-From:   Amit Shah <amit@kernel.org>
-To:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
-        Stephen Boyd <swboyd@chromium.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        Andrey Pronin <apronin@chromium.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Alexander Steffen <Alexander.Steffen@infineon.com>,
-        Amit Shah <amit@kernel.org>
-Date:   Tue, 17 Dec 2019 10:22:54 +0100
-In-Reply-To: <fe7e608e-d94d-a15c-bdc0-8431e9fce5c1@maciej.szmigiero.name>
-References: <20190805233241.220521-1-swboyd@chromium.org>
-         <4a45b3e0-ed3a-61d3-bfc6-957c7ba631bb@maciej.szmigiero.name>
-         <5db85058.1c69fb81.202d7.e3d0@mx.google.com>
-         <fbe7268f-3cda-ee0f-d02a-f2e78a599de5@maciej.szmigiero.name>
-         <5dc0c12e.1c69fb81.2ce1c.01ee@mx.google.com>
-         <fe7e608e-d94d-a15c-bdc0-8431e9fce5c1@maciej.szmigiero.name>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 17 Dec 2019 04:24:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48632 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726787AbfLQJYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 04:24:41 -0500
+Received: from localhost (unknown [171.61.91.91])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 340EE20663;
+        Tue, 17 Dec 2019 09:24:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576574680;
+        bh=6PIWuEhtUI+RkhpqPasL8EtWun3CNaybdET+BC/Pf1o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jBOtG8aieLBaEgJ6VXz/jZiiZBqVTdZo9U55uaWsKr/rMu+uoS9UYhhAyEbLmGRoX
+         pGhT6zuLkRfycTJImZKGRzjNjGGrE78LzYGMnrXiKWWD4G6qcKbuB7czPQERTrEtZ0
+         FwGKXtjk9hyaSmN9OzhI5jQVwfaiSug4bA7HiWfk=
+Date:   Tue, 17 Dec 2019 14:54:33 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     cang@codeaurora.org
+Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, asutoshd@codeaurora.org,
+        nguyenb@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com,
+        Andy Gross <agross@kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 2/7] scsi: ufs-qcom: Add reset control support for
+ host controller
+Message-ID: <20191217092433.GN2536@vkoul-mobl>
+References: <1573798172-20534-1-git-send-email-cang@codeaurora.org>
+ <1573798172-20534-3-git-send-email-cang@codeaurora.org>
+ <20191216190415.GL2536@vkoul-mobl>
+ <CAOCk7NpAp+DHBp-owyKGgJFLRajfSQR6ff1XMmAj6A4nM3VnMQ@mail.gmail.com>
+ <091562cbe7d88ca1c30638bc10197074@codeaurora.org>
+ <20191217041342.GM2536@vkoul-mobl>
+ <763d7b30593b31646f3c198c2be99671@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <763d7b30593b31646f3c198c2be99671@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(Apologies for the really late response.)
+Hi Can,
 
-On Sun, 2019-11-10 at 01:30 +0100, Maciej S. Szmigiero wrote:
-> On 05.11.2019 01:24, Stephen Boyd wrote:
-> > Quoting Maciej S. Szmigiero (2019-10-29 08:50:52)
-> > > On 29.10.2019 15:44, Stephen Boyd wrote:
-> > > > Quoting Maciej S. Szmigiero (2019-10-28 16:45:31)
-> > > > > Hi Stephen,
-> > > > > 
-> > > > > On 06.08.2019 01:32, Stephen Boyd wrote:
-> > > > > > The hwrng_fill() function can run while devices are
-> > > > > > suspending and
-> > > > > > resuming. If the hwrng is behind a bus such as i2c or SPI
-> > > > > > and that bus
-> > > > > > is suspended, the hwrng may hang the bus while attempting
-> > > > > > to add some
-> > > > > > randomness. It's been observed on ChromeOS devices with
-> > > > > > suspend-to-idle
-> > > > > > (s2idle) and an i2c based hwrng that this kthread may run
-> > > > > > and ask the
-> > > > > > hwrng device for randomness before the i2c bus has been
-> > > > > > resumed.
-> > > > > > 
-> > > > > > Let's make this kthread freezable so that we don't try to
-> > > > > > touch the
-> > > > > > hwrng during suspend/resume. This ensures that we can't
-> > > > > > cause the hwrng
-> > > > > > backing driver to get into a bad state because the device
-> > > > > > is guaranteed
-> > > > > > to be resumed before the hwrng kthread is thawed.
-> > > > > 
-> > > > > This patch broke suspend with virtio-rng loaded (it hangs).
-> > > > > 
-> > > > > The problematic call chain is:
-> > > > > virtrng_freeze() -> remove_common() -> hwrng_unregister() ->
-> > > > > kthread_stop().
-> > > > > 
-> > > > > 
-> > > > > It looks like kthread_stop() can't finish on a frozen khwrng
-> > > > > thread.
-> > > > 
-> > > > Can you provide the suspend/resume logs?
+On 17-12-19, 15:10, cang@codeaurora.org wrote:
+> On 2019-12-17 12:13, Vinod Koul wrote:
+> > Hi Can,
+> > 
+> > On 17-12-19, 08:37, cang@codeaurora.org wrote:
+> > > On 2019-12-17 03:12, Jeffrey Hugo wrote:
+> > > > On Mon, Dec 16, 2019 at 12:05 PM Vinod Koul <vkoul@kernel.org> wrote:
+> > > > >
+> > > > > Hi Can,
+> > > > >
+> > > > > On 14-11-19, 22:09, Can Guo wrote:
+> > > > > > Add reset control for host controller so that host controller can be reset
+> > > > > > as required in its power up sequence.
+> > > > >
+> > > > > I am seeing a regression on UFS on SM8150-mtp with this patch. I think
+> > > > > Jeff is seeing same one lenove laptop on 8998.
+> > > >
+> > > > Confirmed.
+> > > >
+> > > > >
+> > > > > 845 does not seem to have this issue and only thing I can see is
+> > > > > that on
+> > > > > sm8150 and 8998 we define reset as:
+> > > > >
+> > > > >                         resets = <&gcc GCC_UFS_BCR>;
+> > > > >                         reset-names = "rst";
+> > > > >
 > > > 
-> > > There isn't much in the kernel log, the closest thing I can get
-> > > is
-> > > with dyndbg="file drivers/base/power/main.c +p":
-> > > [   58.441073][ T3511] virtio-pci 0000:00:06.0: bus freeze
-> > > [   58.448744][ T3511] virtio-pci 0000:00:05.0: bus freeze
-> > > [   58.454500][ T3511] virtio-pci 0000:00:04.0: bus freeze
-> > > [   58.456873][ T3511] virtio-pci 0000:00:03.0: bus freeze
+> > > Hi Jeffrey and Vinod,
 > > > 
-> > > And then the VM hangs.
+> > > Thanks for reporting this. May I know what kind of regression do you
+> > > see on
+> > > 8150 and 8998?
+> > > BTW, do you have reset control for UFS PHY in your DT?
+> > > See 71278b058a9f8752e51030e363b7a7306938f64e.
 > > > 
-> > > The 0000:00:03.0 pci device is virtio-rng.
-> > > 
-> > > If I add printks around that kthread_stop() in hwrng_unregister()
-> > > only the first one gets printed.
+> > > FYI, we use reset control on all of our platforms and it is
+> > > a must during our power up sequence.
 > > 
-> > Ok. I don't know why virtio rng wants to remove itself and then
-> > reprobe
-> > across suspend/resume. Do you know the history there?
-> 
-> Hard to tell, I have added Amit, who had implemented these PM
-> callbacks
-> back in 2012, to CC now.
-
-The virtio queues need to be in sync with the host across suspend-
-resume.  The usual workflow is qemu creates a device, Linux registers
-the driver and maybe requests entropy at boot-up.  Later, when the
-hibernation image is restored, the previously-running Linux's queue
-indexes are used, which don't match with qemu's idea of where the
-indexes will be.  This makes qemu terminate the guest.
-
-To overcome this problem, the queues are removed before hibernate, and
-recreated after resume -- which ensures both are in sync again.
-
-I can imagine an addition to the virtio spec to re-initialize queues
-for the hibernation use-case; but the current code path will have to be
-around for the old-qemu usecase.
-
-
-> 
-> > Can you enable the dynamic debug printk in __refrigerator()?
+> > Yes we do have this and additionally both the DTS describe a 'rst' reset
+> > and this patch tries to use this.
 > > 
-> > 	file kernel/freezer.c +p
+> > Can you please tell me which platform this was tested on how the reset
+> > was described in DT
 > > 
-> > That will let us know when the kthread has been frozen/thawed.
-> > 
-> > Either way, it sounds like maybe it's what you say, virtio rng
-> > wants to
-> > call kthread_stop() on a kthread that's been frozen already and
-> > then it
-> > just hangs waiting for the thread to wake up, which it never does.
-> > I
-> > can't convince myself that the schedule() inside __refrigerator()
-> > won't
-> > wake up though. I would think it leaves the refrigerator when
-> > kthread_stop() is called because the kthread will wakeup from
-> > wake_up_process() in kthread_stop(), see it should stop in
-> > __refrigerator() and eventually exit. Maybe the hwrng thread is
-> > stuck
-> > somewhere else?
-> > 
+> > Thanks
 > 
-> Yes, it turns out the hwrng kthread is actually stuck inside
-> add_hwgenerator_randomness() in wait_event_freezable() call
-> introduced
-> by commit 59b569480dc8
-> ("random: Use wait_event_freezable() in
-> add_hwgenerator_randomness()").
+> Hi Vinod,
 > 
-> wait_event_freezable() ultimately calls __refrigerator() with its
-> check_kthr_stop argument set to false, which causes it to keep the
-> kthread frozen even if somebody calls kthread_stop() on it.
-> 
-> Calling wait_event_freezable() with kthread_should_stop() as a
-> condition
-> seems racy because it doesn't take into account the situation where
-> this
-> condition becomes true on a kthread marked for freezing only after it
-> has been checked.
-> 
-> I was able to make the VM write a s2disk image with the following
-> change:
-> --- a/drivers/char/random.c
-> +++ b/drivers/char/random.c
-> @@ -2500,8 +2500,8 @@ void add_hwgenerator_randomness(const char
-> *buffer, size_t count,
->  	 * We'll be woken up again once below
-> random_write_wakeup_thresh,
->  	 * or when the calling thread is about to terminate.
->  	 */
-> -	wait_event_freezable(random_write_wait,
-> -			kthread_should_stop() ||
-> +	wait_event_interruptible(random_write_wait,
-> +			kthread_should_stop() || freezing(current) ||
->  			ENTROPY_BITS(&input_pool) <=
-> random_write_wakeup_bits);
->  	mix_pool_bytes(poolp, buffer, count);
->  	credit_entropy_bits(poolp, entropy);
-> 
-> Calling freezing() should avoid the issue that the commit
-> 59b569480dc8
-> has fixed, as it is only a checking function, it doesn't actually do
-> the freezing.
-> 
-> However, while the written image seems valid (the machine will resume
-> successfully from it) the suspend process still hangs, only now a bit
-> later.
-> 
-> It turns out there is a second issue where the set_freezable() call
-> at the beginning of hwrng_fillfn() will freeze this kthread with
-> (again) check_kthr_stop argument set to false when this kthread gets
-> relaunched when devices are resumed to write the hibernation image
-> at the suspend time.
-> 
-> That makes the frozen kthread impossible to stop on shutdown, so the
-> VM hangs there.
-> 
-> If I only clear the PF_NOFREEZE flag instead of calling
-> set_freezable()
-> at the beginning of hwrng_fillfn() the suspend process will complete
-> successfully.
-> 
-> However, it seems to me that the real solution here would be to
-> change the virtio-rng driver to not unregister / reregister itself
-> on PM events rather than fight the freezer / kthread_stop()
-> interactions.
-> 
-> Maciej
+> If you are using the 8998's DT present on upstream, you may also need to
+> enable
+> device reset on your platform. (We usually do a device reset before call
+> ufshcd_hba_enable())
+> Given that 845 works fine, it may be the difference you have with 845. 845
+> has device
+> reset support ready in upstream code, you can check sdm845-mtp.dts.
+> It is same for 8150, which is a lack of device reset support in upstream
+> code base.
 
+I am using 8150mtp and you can see the DTS at [1]
+with this patch I get phy timeout error
 
+[    2.532594] qcom-qmp-phy 1d87000.phy: phy initialization timed-out
 
+If i revert this patch the Timeout goes away. UFS node for this platform
+is enabled in [2] and [3]
 
+I did add the GPIO as well for testing but that doesnt work, only thing
+that makes it work is rename the reset line to something other that 'rst'
 
+I found that with this patch the reset is invoked twice, not sure why!
 
+The 845 does not define a reset 'rst' but both 8150 and 8998 define
+that!
 
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux.git/log/?h=for-next
+[2]: https://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux.git/commit/?h=for-next&id=3834a2e92229ef26d30de28acb698b2b23d3e397
+[3]: https://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux.git/commit/?h=for-next&id=3e5bf28d2c3981f949e848eec8a60e0b9b61189d
+> 
+> To enable UFS device reset, please see
+> 1. https://lore.kernel.org/linux-arm-msm/20190828191756.24312-4-bjorn.andersson@linaro.org/
+> 2. 53a5372ce326116f3e3d3f1d701113b2542509f4
+
+Yes both are added for UFS and I am testing with these..
+> 
+> FYI, I tested the patch on 8250 and its family platforms. In my build, I
+> ported
+> change in #2 to my code base (in your case, make change to
+> drivers/pinctrl/qcom/pinctrl-msm8998.c) and enable the GPIO in DT like
+> sdm845-mtp.dts
+
+Please see drivers/pinctrl/qcom/pinctrl-sm8150.c upstream
+
+>         reset-gpios = <&tlmm 150 GPIO_ACTIVE_LOW>;
+
+Yup, added:
+
+        reset-gpios = <&tlmm 175 GPIO_ACTIVE_LOW>;
+
+-- 
+~Vinod
