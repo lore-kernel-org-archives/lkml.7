@@ -2,93 +2,107 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3CDCC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 03:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2823C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 03:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76C76207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 03:04:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="IHCr8bFT"
+	by mail.kernel.org (Postfix) with ESMTP id 75F67207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 03:06:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576551993;
+	bh=fhdqjYDVYEEaLcT+0wJ1io/OtqGNMnR2/gvbUPaqahU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=x1lk/ZGagU8fCGcK5nLMQuJFv6yKic2wLXB6vu9EC/Wacr964sDYAYPVJxMxIAHeC
+	 2/54nlKjqNYA4VnYpElyp+0Q7/lXi9o5Sk81QkFh3t9nTVvzmArUcjBtvHAdHP5RQG
+	 hHg/CniHtSdowMOL2RF2gTjGWsn56v9oPc2+CTmE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbfLQDEv (ORCPT
+        id S1727015AbfLQDGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 22:04:51 -0500
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:35130 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726793AbfLQDEp (ORCPT
+        Mon, 16 Dec 2019 22:06:32 -0500
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:58155 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbfLQDGc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 22:04:45 -0500
-X-UUID: f6a283e7c5b843438a620efea136782b-20191217
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=tZYQtktGRy8Who+pLVHW/cHqPk4WeYEvryM79MNiedY=;
-        b=IHCr8bFTemeyR0yHyvSYnntrcKSIY9PQ4eL3IJhVo4vtJgivGHX9RBV3Hj3QKaSd//7et7KFMvDJWNaJPXTUW5kQcuP22oEvv+TTpEC2aciJWcjXQd10nZ2NyXIVqnYYqsyNRTrZMwwnRWgmEZqKg3tExEQSNJNnSgkGvaquFnA=;
-X-UUID: f6a283e7c5b843438a620efea136782b-20191217
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <jitao.shi@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 712731630; Tue, 17 Dec 2019 11:04:40 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33DR.mediatek.inc
- (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 17 Dec
- 2019 11:02:04 +0800
-Received: from mszsdclx1018.gcn.mediatek.inc (172.27.4.253) by
- MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1395.4 via Frontend Transport; Tue, 17 Dec 2019 11:04:17 +0800
-From:   Jitao Shi <jitao.shi@mediatek.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-pwm@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, CK Hu <ck.hu@mediatek.com>
-CC:     <linux-mediatek@lists.infradead.org>, <sj.huang@mediatek.com>,
-        Jitao Shi <jitao.shi@mediatek.com>
-Subject: [PATCH v3 2/2] pwm: keep the trigger register after pwm setting.
-Date:   Tue, 17 Dec 2019 11:04:38 +0800
-Message-ID: <20191217030438.26657-3-jitao.shi@mediatek.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191217030438.26657-1-jitao.shi@mediatek.com>
-References: <20191217030438.26657-1-jitao.shi@mediatek.com>
+        Mon, 16 Dec 2019 22:06:32 -0500
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id xBH36CI2031595;
+        Tue, 17 Dec 2019 12:06:13 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com xBH36CI2031595
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1576551973;
+        bh=pugGGjF7UoSjVUlbexS6sMjOLhQht+PE5aPlQbu3gZI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=XG0jL4Z9K1FdE5J1JOKxZIxiZwa8NLcIxoZqNdqDodGPR20KM+MqHO2s5a5mHmZqW
+         wtvgE5naeIuBsDaM5g99Y41zIUJbo9bVfcjCmDRLyx75tvZUlMhA8FUSBoOCdAI3+H
+         l0ihq/zIAjKucOEWwVx4IrSL3Jygz8V2oA+VJ6tNyOK3IEGABp9h78h6GJEa2CSDSu
+         Sj2BLwivdka/vPEL+9uNgsTNz0kZ79eC5GUr/UVJnhq3eacLPRzL1KV76+uBymT5Hu
+         VmDcd2O3y/A6XEAqZw/vt99PSaLH0Cq+Z7cs/Ue0ozIGWwQS9B0tc3vJkfdckNdE73
+         q3dD17PQDdctQ==
+X-Nifty-SrcIP: [209.85.221.178]
+Received: by mail-vk1-f178.google.com with SMTP id o187so2280165vka.2;
+        Mon, 16 Dec 2019 19:06:13 -0800 (PST)
+X-Gm-Message-State: APjAAAVa5FlKlNPsTAt+PcO42ylnfUV6+yYx382ea2tdaSlHksey7XGr
+        IrdpD5IH2mspR12TYZZfw/qcLEbc3mCc13Pc0Wk=
+X-Google-Smtp-Source: APXvYqzpD0fO/aIi+ks5CVgoBnhS77OdbbT+Hz15RXdLJaxFP29PsPPPy4YjBrxnkc42+qznbFUj3VyFbxlLC1iTnak=
+X-Received: by 2002:a1f:8cd5:: with SMTP id o204mr1689010vkd.66.1576551972298;
+ Mon, 16 Dec 2019 19:06:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: BF5E4A39B272E435A2A08B084DA617DEA8856AAB3BF88A51B8CFCEF636FAB20D2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20191204225446.202981-1-dima@golovin.in> <CAKwvOdm-bhuJMRRN3tyNdb88+_TFd4m3b-7gX0-91VG4djzp+Q@mail.gmail.com>
+ <23883331575506134@vla1-3991b5027d7d.qloud-c.yandex.net>
+In-Reply-To: <23883331575506134@vla1-3991b5027d7d.qloud-c.yandex.net>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 17 Dec 2019 12:05:36 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATRWgfnP_C68aiOLacR_Bhz2oL6DgyUE76gENWfOvvGbQ@mail.gmail.com>
+Message-ID: <CAK7LNATRWgfnP_C68aiOLacR_Bhz2oL6DgyUE76gENWfOvvGbQ@mail.gmail.com>
+Subject: Re: [PATCH] x86/boot: kbuild: allow readelf executable to be specified
+To:     Dmitry Golovin <dima@golovin.in>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Ross Philipson <ross.philipson@oracle.com>,
+        Ross Burton <ross.burton@intel.com>,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "fenghua.yu@intel.com" <fenghua.yu@intel.com>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TW92ZSB0aGUgdHJpZ2dlciBhZnRlciBwd20gc2V0dGluZyB0byBhdm9pZCB0aGUgcHdtIHdyb25n
-IHNpZ25hbA0Kb3V0cHV0Lg0KDQpSZW1vdmUgdGhlIHJlZ2lzdCBlbmFibGUgdHJpZ2dlciBzZXR0
-aW5nIGluIHByb2JlLg0KTW92ZSB0aGUgdHJpZ2dlciB0byBlbmQgb2YgbXRrX2Rpc3BfcHdtX2Nv
-bmZpZygpLg0KDQpTaWduZWQtb2ZmLWJ5OiBKaXRhbyBTaGkgPGppdGFvLnNoaUBtZWRpYXRlay5j
-b20+DQotLS0NCiBkcml2ZXJzL3B3bS9wd20tbXRrLWRpc3AuYyB8IDIwICsrKysrKystLS0tLS0t
-LS0tLS0tDQogMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKSwgMTMgZGVsZXRpb25zKC0p
-DQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3B3bS9wd20tbXRrLWRpc3AuYyBiL2RyaXZlcnMvcHdt
-L3B3bS1tdGstZGlzcC5jDQppbmRleCBjN2IxNGFjYzkzMTYuLmMxYWFlNWI1NjkzYiAxMDA2NDQN
-Ci0tLSBhL2RyaXZlcnMvcHdtL3B3bS1tdGstZGlzcC5jDQorKysgYi9kcml2ZXJzL3B3bS9wd20t
-bXRrLWRpc3AuYw0KQEAgLTEyMiw2ICsxMjIsMTMgQEAgc3RhdGljIGludCBtdGtfZGlzcF9wd21f
-Y29uZmlnKHN0cnVjdCBwd21fY2hpcCAqY2hpcCwgc3RydWN0IHB3bV9kZXZpY2UgKnB3bSwNCiAJ
-CW10a19kaXNwX3B3bV91cGRhdGVfYml0cyhtZHAsIG1kcC0+ZGF0YS0+Y29tbWl0LA0KIAkJCQkJ
-IG1kcC0+ZGF0YS0+Y29tbWl0X21hc2ssDQogCQkJCQkgMHgwKTsNCisJfSBlbHNlIHsNCisJCW10
-a19kaXNwX3B3bV91cGRhdGVfYml0cyhtZHAsIG1kcC0+ZGF0YS0+YmxzX2RlYnVnLA0KKwkJCQkJ
-IG1kcC0+ZGF0YS0+YmxzX2RlYnVnX21hc2ssDQorCQkJCQkgbWRwLT5kYXRhLT5ibHNfZGVidWdf
-bWFzayk7DQorCQltdGtfZGlzcF9wd21fdXBkYXRlX2JpdHMobWRwLCBtZHAtPmRhdGEtPmNvbjAs
-DQorCQkJCQkgbWRwLT5kYXRhLT5jb24wX3NlbCwNCisJCQkJCSBtZHAtPmRhdGEtPmNvbjBfc2Vs
-KTsNCiAJfQ0KIA0KIAljbGtfZGlzYWJsZV91bnByZXBhcmUobWRwLT5jbGtfbW0pOw0KQEAgLTIw
-NywxOSArMjE0LDYgQEAgc3RhdGljIGludCBtdGtfZGlzcF9wd21fcHJvYmUoc3RydWN0IHBsYXRm
-b3JtX2RldmljZSAqcGRldikNCiANCiAJcGxhdGZvcm1fc2V0X2RydmRhdGEocGRldiwgbWRwKTsN
-CiANCi0JLyoNCi0JICogRm9yIE1UMjcwMSwgZGlzYWJsZSBkb3VibGUgYnVmZmVyIGJlZm9yZSB3
-cml0aW5nIHJlZ2lzdGVyDQotCSAqIGFuZCBzZWxlY3QgbWFudWFsIG1vZGUgYW5kIHVzZSBQV01f
-UEVSSU9EL1BXTV9ISUdIX1dJRFRILg0KLQkgKi8NCi0JaWYgKCFtZHAtPmRhdGEtPmhhc19jb21t
-aXQpIHsNCi0JCW10a19kaXNwX3B3bV91cGRhdGVfYml0cyhtZHAsIG1kcC0+ZGF0YS0+YmxzX2Rl
-YnVnLA0KLQkJCQkJIG1kcC0+ZGF0YS0+YmxzX2RlYnVnX21hc2ssDQotCQkJCQkgbWRwLT5kYXRh
-LT5ibHNfZGVidWdfbWFzayk7DQotCQltdGtfZGlzcF9wd21fdXBkYXRlX2JpdHMobWRwLCBtZHAt
-PmRhdGEtPmNvbjAsDQotCQkJCQkgbWRwLT5kYXRhLT5jb24wX3NlbCwNCi0JCQkJCSBtZHAtPmRh
-dGEtPmNvbjBfc2VsKTsNCi0JfQ0KLQ0KIAlyZXR1cm4gMDsNCiB9DQogDQotLSANCjIuMjEuMA0K
+On Thu, Dec 5, 2019 at 9:41 AM Dmitry Golovin <dima@golovin.in> wrote:
+>
+> 05.12.2019, 01:18, "'Nick Desaulniers' via Clang Built Linux" <clang-built-linux@googlegroups.com>:
+> >
+> > Grepping the kernel sources for `READELF`, it looks like
+> > arch/ia64/Makefile makes the same mistake. Would you mind fixing both
+> > cases in the same patch (v2)? I'm also curious about it's use in
+> > arch/ia64/scripts/unwcheck.py, and scripts/faddr2line. +ia64
+> > maintainers and list.
+> >
+> > I think if you simply remove the assignment on line 17 of
+> > arch/ia64/Makefile you should be fine.
+>
+> Perhaps something should be done to NM on line 16 of this file as well. Also
+> found similar invocation of `objcopy` in arch/riscv/kernel/vdso/Makefile.
+> I think IA64 and RISC-V changes should be made as separate commits.
+>
+> -- Dmitry
 
+Applied to linux-kbuid. Thanks.
+
+-- 
+Best Regards
+Masahiro Yamada
