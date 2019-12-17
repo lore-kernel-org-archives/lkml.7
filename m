@@ -2,87 +2,117 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25597C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AEF7C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB58320733
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D65E92067C
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:12:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="p2BA0wU8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KwFnS9QS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728309AbfLQSJY (ORCPT
+        id S1727939AbfLQSM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 13:09:24 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:41285 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727940AbfLQSJY (ORCPT
+        Tue, 17 Dec 2019 13:12:28 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:34230 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727360AbfLQSM2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 13:09:24 -0500
-Received: by mail-il1-f195.google.com with SMTP id f10so9151576ils.8
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 10:09:24 -0800 (PST)
+        Tue, 17 Dec 2019 13:12:28 -0500
+Received: by mail-qk1-f194.google.com with SMTP id j9so8086008qkk.1;
+        Tue, 17 Dec 2019 10:12:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=0QP0bNN7yAk9S0VSL+bDYhT11IE+1HUbY9Rj0py1yCE=;
-        b=p2BA0wU8M/ya6yrzSkxIH8TVd9h1XiBbINW+Huy2NFmyXElYd9Ia1D/NubOVDh1Kdv
-         MQzNQ1pcGc/s/T/a7H34WnfNU2OrpHngWKY5K9JDXNLtRN4CAUShGQaEV7HcucxfZULJ
-         /Xl+9X8Ms4lkoXXdnCQzfeJ8egxbdxgGEdSjWeOoLpK1eGfIYcpqvSMmjgbmn8Jxo5o3
-         HaHSNhhqNux4rLEzbvbyR4vk24bgbdRH9nKQzCyc4DNMp1bQ6q/k0x54f18ToB0NBDEz
-         WawJBKQIfVG9/FX+P/7OGGqeqPIBXEJ7vjTeup8usTBfs4khn6gdldLVwQPQaQ7vYtLs
-         qpOA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=94WcDwyswmJ+xZ6oQZ+EBBfqZNKwF38tRDgKQsxSOP8=;
+        b=KwFnS9QSEv9LyokZomttACcmx6y4KqxsdPNANWGey9uKIUNfsof9hFIGFTRC9Gfy+Y
+         cnd8Dm5yrC1ntADbk8l8Z+LcB91W41sUUYz3r53dm4k/6xhpA66WJCQkkeygyqvnD4q1
+         4n81ah1szCmtBZTRCLlwoBa1IkQzwX2yUNG3kbpA1/XxBcbKcM+xNYtnLYrzg3rkIscT
+         PpZEEun1Fh4hk/EBlJ0FlN+Uch/oW6M72jt+S+ChnUkk0HEiKgDDTY29cDaZX/T8gE/g
+         JW2TF8xQwUEW5KUV6knwLB1W7PhY/vSllRQa5FVMEQ0yjvXqWoMfefhB7D3S9DTPD5Ba
+         NLEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0QP0bNN7yAk9S0VSL+bDYhT11IE+1HUbY9Rj0py1yCE=;
-        b=ZG2nSeLymTbsr8j46si87Ct7FlNrcmcgrGsu80ilhfDwSMjckNtIX6DWXIQ/XHALB6
-         dRbEmSgJW8QfwqPmLFjtz/J+TJyDWpPHiVgSUyXO7YTcKNa7T7fmnSgPoQbST1UEozPu
-         RDK+gx5hzbyf1cgLPhL3wCz+9GekiDnL/43J8IXUhEyGRr5WT3kA/zkg7BRMGANUmh0h
-         OWOsXKhCGI7dpQ5tqO0n9LZKkG+13Xd6D0M0QYnPtFw93qiox7Pbo/6BcIJiZK/1R7iy
-         B0jgHiX71OA1/anL4NSPTRhT2blrJsq/1P4xUo/PkYHEHE2M+L/KerDVBOOTW41LSdLe
-         GCtQ==
-X-Gm-Message-State: APjAAAUL538A8Tyy4PZWeRUaHh0jeSS90BQ1Fc1/4A1HsdHydxjSFKPi
-        MXdEN39sPgcGKS8HswIT+TSun8Eg0/yrSA==
-X-Google-Smtp-Source: APXvYqzygSEbeuLKhJwgREmiPZE43+M37DDkao0wUrn9tOxKO0Bs/tSa8+mexekGEomP2+Y30lr4fg==
-X-Received: by 2002:a92:d3c6:: with SMTP id c6mr18655191ilh.228.1576606163657;
-        Tue, 17 Dec 2019 10:09:23 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id g62sm2809294ile.39.2019.12.17.10.09.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Dec 2019 10:09:23 -0800 (PST)
-Subject: Re: [PATCH for-5.5] io_uring: make HARDLINK imply LINK
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1576605351.git.asml.silence@gmail.com>
- <4d08ae851e48c030b726e00def4451466475b7e9.1576605351.git.asml.silence@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <30c12b37-997c-6625-50a1-1ed0e8bad2f9@kernel.dk>
-Date:   Tue, 17 Dec 2019 11:09:22 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=94WcDwyswmJ+xZ6oQZ+EBBfqZNKwF38tRDgKQsxSOP8=;
+        b=ALg86n9as8j0r+xAgJ0KBCjNJ6Vijpw1adjVJbpT1OWXKynjImkWZuyG7CsGWn7+D6
+         NvUDYGp21jAYe7YQAsRS0cl4i/8XfmGvWhDHH4Aqt9fLmEZrbTMVZdAqm02YyfmC3cxQ
+         fPUoC2wddAmck4y2zv0vPcxT7qEtCsio1eyI3uyIYIqEvqE5JV2o8YF9UTIf2sMgt7z8
+         5e+58AqceIdlOm0aixLDIoncymDG5mQixRsDoGoEpz2fR2tsNz4e0xuTSvIutGoMFYb5
+         KBidYpIfkUZhokTjhrlwTajwXaZhpr/qI6miaDbE6MF6JKVjuVt0FLkJ7GzM16b60MYK
+         a8bQ==
+X-Gm-Message-State: APjAAAUuay48qvJTL1GLmOKiglKFR7Pi1YHimARb0hzusM/A8pJXcj+K
+        Ga0Q6ifG+W2syIKyVw+sHEnHQKZxy8yJqSSWx4A=
+X-Google-Smtp-Source: APXvYqxokIyQB2bMqD8wFppcI0RegO2Y2reD8DeoM3KJDcVm8CV1EP6T+DJcgKPlB40YGBxIkiBPJwxdgxPR5QmEflQ=
+X-Received: by 2002:a05:620a:1401:: with SMTP id d1mr5798512qkj.79.1576606347113;
+ Tue, 17 Dec 2019 10:12:27 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <4d08ae851e48c030b726e00def4451466475b7e9.1576605351.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <056501d5b437$91f1c6c0$b5d55440$@gmail.com> <dea30ea3f0fc31e40b311c4d110c26cf40658dca.camel@hammerspace.com>
+ <05ea01d5b440$bd9d58d0$38d80a70$@gmail.com> <2d94fa3e9632c638f9e47999fd8e26cb3b34b4dc.camel@hammerspace.com>
+In-Reply-To: <2d94fa3e9632c638f9e47999fd8e26cb3b34b4dc.camel@hammerspace.com>
+From:   Robert Milkowski <rmilkowski@gmail.com>
+Date:   Tue, 17 Dec 2019 18:12:16 +0000
+Message-ID: <CALbTx=H_49MroKwuwyThirwtiJE5686cyCZwKth-yVSRx0srug@mail.gmail.com>
+Subject: Re: [PATCH] NFSv4: nfs4_do_fsinfo() should not do implicit lease renewals
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/17/19 10:57 AM, Pavel Begunkov wrote:
-> The rules are as follows, if IOSQE_IO_HARDLINK is specified, then it's a
-> link and there is no need in IOSQE_IO_LINK, though it could be there.
-> Add proper check.
+On Mon, 16 Dec 2019 at 18:58, Trond Myklebust <trondmy@hammerspace.com> wrote:
+>
+> -On Mon, 2019-12-16 at 18:43 +0000, Robert Milkowski wrote:
+> > > From: Trond Myklebust <trondmy@hammerspace.com>
+> > ...
+> > > NACK. The above argument only applies to legacy minor version 0
+> > > setups, and does not apply to NFSv4.1 or newer.
+> >
+> > Correct. However many sites still use v4.0.
+> >
+>
+> That's not a good reason to break code that works just fine for
+> NFSv4.1.
+>
 
-Applied, thanks.
+Of course not, that's not what I meant and I misunderstood your nack too.
 
--- 
-Jens Axboe
+> It would be better to move the initialisation of clp->cl_last_renewal
+> into nfs4_init_clientid() and nfs41_init_clientid() (after the calls to
+> nfs4_proc_setclientid_confirm() and nfs4_proc_create_session()
+> respectively).
+>
 
+This could be done but this is potentially a separate change, as in
+nfs4_do_fsinfo() we still need to
+make sure we do not implicitly renew lease for v4.0, so I think the
+patch needs to be modified as:
+
+...
++                       /* no implicit lease renewal allowed here for v4.0 */
++                       if (server->nfs_client->cl_minorversion == 0
+&& server->nfs_client->cl_last_renewal != 0)
++                               last_renewal =
+server->nfs_client->cl_last_renewal;
+                        nfs4_set_lease_period(server->nfs_client,
+                                        fsinfo->lease_time * HZ,
+-                                       now);
++                                       last_renewal);
+...
+
+This way it won't affect newer nfs versions (I don't think it affected
+them in any bad way, still it was unintended and not correct).
+Agree with the above change?
+
+btw: Chuck, thanks for the hint regarding the SEQUENCE op on v4.1+
