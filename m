@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 132F6C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27AC8C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E36C220733
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:01:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 079A520733
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:01:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727434AbfLQKB2 (ORCPT
+        id S1727456AbfLQKBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 05:01:28 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:54869 "EHLO
+        Tue, 17 Dec 2019 05:01:30 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:54876 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726700AbfLQKB0 (ORCPT
+        with ESMTP id S1727425AbfLQKB3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 05:01:26 -0500
+        Tue, 17 Dec 2019 05:01:29 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ih9fB-0003qg-C1; Tue, 17 Dec 2019 11:01:09 +0100
+        id 1ih9fA-0003qa-Vo; Tue, 17 Dec 2019 11:01:09 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 117C31C2A2F;
-        Tue, 17 Dec 2019 11:01:09 +0100 (CET)
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 926221C2A30;
+        Tue, 17 Dec 2019 11:01:08 +0100 (CET)
 Date:   Tue, 17 Dec 2019 10:01:08 -0000
-From:   "tip-bot2 for Yazen Ghannam" <tip-bot2@linutronix.de>
+From:   "tip-bot2 for Arnd Bergmann" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: ras/urgent] x86/MCE/AMD: Allow Reserved types to be overwritten
- in smca_banks[]
-Cc:     Yazen Ghannam <yazen.ghannam@amd.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@kernel.org>,
+Subject: [tip: ras/core] x86/mce/therm_throt: Mark throttle_active_work() as
+ __maybe_unused
+Cc:     Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@suse.de>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        bberg@redhat.com, ckellner@redhat.com,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        hdegoede@redhat.com, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>,
         "linux-edac" <linux-edac@vger.kernel.org>,
-        <stable@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Tony Luck <tony.luck@intel.com>, "x86-ml" <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191121141508.141273-1-Yazen.Ghannam@amd.com>
-References: <20191121141508.141273-1-Yazen.Ghannam@amd.com>
+In-Reply-To: <20191210203925.3119091-1-arnd@arndb.de>
+References: <20191210203925.3119091-1-arnd@arndb.de>
 MIME-Version: 1.0
-Message-ID: <157657686895.30329.6754435599070659049.tip-bot2@tip-bot2>
+Message-ID: <157657686842.30329.4552093141575050735.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,101 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the ras/urgent branch of tip:
+The following commit has been merged into the ras/core branch of tip:
 
-Commit-ID:     966af20929ac24360ba3fac5533eb2ab003747da
-Gitweb:        https://git.kernel.org/tip/966af20929ac24360ba3fac5533eb2ab003747da
-Author:        Yazen Ghannam <yazen.ghannam@amd.com>
-AuthorDate:    Thu, 21 Nov 2019 08:15:08 -06:00
+Commit-ID:     db1ae0314f47e88ae06679270adf17ffa245afd4
+Gitweb:        https://git.kernel.org/tip/db1ae0314f47e88ae06679270adf17ffa245afd4
+Author:        Arnd Bergmann <arnd@arndb.de>
+AuthorDate:    Tue, 10 Dec 2019 21:39:13 +01:00
 Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Tue, 17 Dec 2019 09:39:53 +01:00
+CommitterDate: Tue, 17 Dec 2019 10:26:28 +01:00
 
-x86/MCE/AMD: Allow Reserved types to be overwritten in smca_banks[]
+x86/mce/therm_throt: Mark throttle_active_work() as __maybe_unused
 
-Each logical CPU in Scalable MCA systems controls a unique set of MCA
-banks in the system. These banks are not shared between CPUs. The bank
-types and ordering will be the same across CPUs on currently available
-systems.
+throttle_active_work() is only called if CONFIG_SYSFS is set, otherwise
+we get a harmless warning:
 
-However, some CPUs may see a bank as Reserved/Read-as-Zero (RAZ) while
-other CPUs do not. In this case, the bank seen as Reserved on one CPU is
-assumed to be the same type as the bank seen as a known type on another
-CPU.
+  arch/x86/kernel/cpu/mce/therm_throt.c:238:13: error: 'throttle_active_work' \
+	  defined but not used [-Werror=unused-function]
 
-In general, this occurs when the hardware represented by the MCA bank
-is disabled, e.g. disabled memory controllers on certain models, etc.
-The MCA bank is disabled in the hardware, so there is no possibility of
-getting an MCA/MCE from it even if it is assumed to have a known type.
+Mark the function as __maybe_unused to avoid the warning.
 
-For example:
-
-Full system:
-	Bank  |  Type seen on CPU0  |  Type seen on CPU1
-	------------------------------------------------
-	 0    |         LS          |          LS
-	 1    |         UMC         |          UMC
-	 2    |         CS          |          CS
-
-System with hardware disabled:
-	Bank  |  Type seen on CPU0  |  Type seen on CPU1
-	------------------------------------------------
-	 0    |         LS          |          LS
-	 1    |         UMC         |          RAZ
-	 2    |         CS          |          CS
-
-For this reason, there is a single, global struct smca_banks[] that is
-initialized at boot time. This array is initialized on each CPU as it
-comes online. However, the array will not be updated if an entry already
-exists.
-
-This works as expected when the first CPU (usually CPU0) has all
-possible MCA banks enabled. But if the first CPU has a subset, then it
-will save a "Reserved" type in smca_banks[]. Successive CPUs will then
-not be able to update smca_banks[] even if they encounter a known bank
-type.
-
-This may result in unexpected behavior. Depending on the system
-configuration, a user may observe issues enumerating the MCA
-thresholding sysfs interface. The issues may be as trivial as sysfs
-entries not being available, or as severe as system hangs.
-
-For example:
-
-	Bank  |  Type seen on CPU0  |  Type seen on CPU1
-	------------------------------------------------
-	 0    |         LS          |          LS
-	 1    |         RAZ         |          UMC
-	 2    |         CS          |          CS
-
-Extend the smca_banks[] entry check to return if the entry is a
-non-reserved type. Otherwise, continue so that CPUs that encounter a
-known bank type can update smca_banks[].
-
-Fixes: 68627a697c19 ("x86/mce/AMD, EDAC/mce_amd: Enumerate Reserved SMCA bank type")
-Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Fixes: f6656208f04e ("x86/mce/therm_throt: Optimize notifications of thermal throttle")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: bberg@redhat.com
+Cc: ckellner@redhat.com
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: hdegoede@redhat.com
 Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
 Cc: linux-edac <linux-edac@vger.kernel.org>
-Cc: <stable@vger.kernel.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Tony Luck <tony.luck@intel.com>
 Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20191121141508.141273-1-Yazen.Ghannam@amd.com
+Link: https://lkml.kernel.org/r/20191210203925.3119091-1-arnd@arndb.de
 ---
- arch/x86/kernel/cpu/mce/amd.c | 2 +-
+ arch/x86/kernel/cpu/mce/therm_throt.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
-index e41e3b4..d6cf5c1 100644
---- a/arch/x86/kernel/cpu/mce/amd.c
-+++ b/arch/x86/kernel/cpu/mce/amd.c
-@@ -266,7 +266,7 @@ static void smca_configure(unsigned int bank, unsigned int cpu)
- 	smca_set_misc_banks_map(bank, cpu);
+diff --git a/arch/x86/kernel/cpu/mce/therm_throt.c b/arch/x86/kernel/cpu/mce/therm_throt.c
+index b38010b..8963493 100644
+--- a/arch/x86/kernel/cpu/mce/therm_throt.c
++++ b/arch/x86/kernel/cpu/mce/therm_throt.c
+@@ -235,7 +235,7 @@ static void get_therm_status(int level, bool *proc_hot, u8 *temp)
+ 	*temp = (msr_val >> 16) & 0x7F;
+ }
  
- 	/* Return early if this bank was already initialized. */
--	if (smca_banks[bank].hwid)
-+	if (smca_banks[bank].hwid && smca_banks[bank].hwid->hwid_mcatype != 0)
- 		return;
- 
- 	if (rdmsr_safe(MSR_AMD64_SMCA_MCx_IPID(bank), &low, &high)) {
+-static void throttle_active_work(struct work_struct *work)
++static void __maybe_unused throttle_active_work(struct work_struct *work)
+ {
+ 	struct _thermal_state *state = container_of(to_delayed_work(work),
+ 						struct _thermal_state, therm_work);
