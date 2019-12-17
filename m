@@ -2,101 +2,173 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E3C9C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3529C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 613112176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:26:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B66B12176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:27:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="emS66htb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729037AbfLQO0m convert rfc822-to-8bit (ORCPT
+        id S1729048AbfLQO1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:26:42 -0500
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2479 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728929AbfLQO0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:26:42 -0500
-Received: from DGGEML401-HUB.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id E69CBDC64C2256AF145F;
-        Tue, 17 Dec 2019 22:26:34 +0800 (CST)
-Received: from DGGEML424-HUB.china.huawei.com (10.1.199.41) by
- DGGEML401-HUB.china.huawei.com (10.3.17.32) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 17 Dec 2019 22:26:34 +0800
-Received: from DGGEML505-MBX.china.huawei.com ([169.254.12.46]) by
- dggeml424-hub.china.huawei.com ([10.1.199.41]) with mapi id 14.03.0439.000;
- Tue, 17 Dec 2019 22:26:27 +0800
-From:   "wubo (T)" <wubo40@huawei.com>
-To:     "hare@suse.de" <hare@suse.de>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "James.Bottomley@suse.de" <James.Bottomley@suse.de>,
-        "robert.w.love@intel.com" <robert.w.love@intel.com>,
-        "jeykholt@cisco.com" <jeykholt@cisco.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Mingfangsen <mingfangsen@huawei.com>
-Subject: [PATCH] scsi:libfc:fix fc_lport_ptp_setup(): Null pointer
- dereferences
-Thread-Topic: [PATCH] scsi:libfc:fix fc_lport_ptp_setup(): Null pointer
- dereferences
-Thread-Index: AdW04LVen96kzoPtQo2mFOzLRq0TiA==
-Date:   Tue, 17 Dec 2019 14:26:27 +0000
-Message-ID: <EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6915E9AA36@dggeml505-mbx.china.huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.173.221.252]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 17 Dec 2019 09:27:09 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27013 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728903AbfLQO1J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 09:27:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576592828;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Z1CBiShanVJNYbVwb0LcjMZgLZHPIdkMBclPmlJ8SwI=;
+        b=emS66htbOUvll71uA4ObaQykPQXS0IwkGdoI/M+qoIBe35E3yxTMxAVODd8CEcsFCtFpwk
+        31y3WSD7+5ggCTcvQPnjADejnxvK87HRyKTC64Mrce6gZXulnka55e3B/lYQ/tb7YocWeQ
+        HvfNh91udVBfk1ZoOL/QJCXJrFm9gQA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-329-fQXo3f4lPZOALOjDdo5WHQ-1; Tue, 17 Dec 2019 09:27:05 -0500
+X-MC-Unique: fQXo3f4lPZOALOjDdo5WHQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2B1F7CF98F;
+        Tue, 17 Dec 2019 14:27:03 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-123-81.rdu2.redhat.com [10.10.123.81])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B97F95D9E1;
+        Tue, 17 Dec 2019 14:27:01 +0000 (UTC)
+Subject: Re: [PATCH v2] mm/hugetlb: Defer freeing of huge pages if in non-task
+ context
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Michal Hocko <mhocko@kernel.org>
+Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Matthew Wilcox <willy@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+References: <20191217012508.31495-1-longman@redhat.com>
+ <20191217093143.GC31063@dhcp22.suse.cz>
+ <87c2ff49-999e-3196-791f-36e3d42ad79c@virtuozzo.com>
+ <0b8a59a0-517f-1387-ad00-cb47fb5fc50c@redhat.com>
+ <99caa26d-e14d-ed38-f56a-e6aee203251a@virtuozzo.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <64f74cba-c5b3-0cea-8713-70e408f6a495@redhat.com>
+Date:   Tue, 17 Dec 2019 09:27:01 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+In-Reply-To: <99caa26d-e14d-ed38-f56a-e6aee203251a@virtuozzo.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wu Bo <wubo40@huawei.com>
+On 12/17/19 9:13 AM, Kirill Tkhai wrote:
+> On 17.12.2019 17:00, Waiman Long wrote:
+>> On 12/17/19 5:50 AM, Kirill Tkhai wrote:
+>>> On 17.12.2019 12:31, Michal Hocko wrote:
+>>>> On Mon 16-12-19 20:25:08, Waiman Long wrote:
+>>>> [...]
+>>>>> Both the hugetbl_lock and the subpool lock can be acquired in
+>>>>> free_huge_page(). One way to solve the problem is to make both locks
+>>>>> irq-safe.
+>>>> Please document why we do not take this, quite natural path and instead
+>>>> we have to come up with an elaborate way instead. I believe the primary
+>>>> motivation is that some operations under those locks are quite
+>>>> expensive. Please add that to the changelog and ideally to the code as
+>>>> well. We probably want to fix those anyway and then this would be a
+>>>> temporary workaround.
+>>>>
+>>>>> Another alternative is to defer the freeing to a workqueue job.
+>>>>>
+>>>>> This patch implements the deferred freeing by adding a
+>>>>> free_hpage_workfn() work function to do the actual freeing. The
+>>>>> free_huge_page() call in a non-task context saves the page to be freed
+>>>>> in the hpage_freelist linked list in a lockless manner.
+>>>> Do we need to over complicate this (presumably) rare event by a lockless
+>>>> algorithm? Why cannot we use a dedicated spin lock for for the linked
+>>>> list manipulation? This should be really a trivial code without an
+>>>> additional burden of all the lockless subtleties.
+>>> Why not llist_add()/llist_del_all() ?
+>>>
+>> The llist_add() and llist_del_all() are just simple helpers. Because
+>> this lockless case involve synchronization of two variables, the llist
+>> helpers do not directly apply here. So the rests cannot be used. It will
+>> look awkward it is partially converted to use the helpers. If we convert
+>> to use a lock as suggested by Michal, using the helpers will be an
+>> overkill as xchg() will not be needed.
+> I don't understand you. What are two variables?
+>
+> Why can't you simply do the below?
+>
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index ac65bb5e38ac..e8ec753f3d92 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -1136,7 +1136,7 @@ static inline void ClearPageHugeTemporary(struct page *page)
+>  	page[2].mapping = NULL;
+>  }
+>  
+> -void free_huge_page(struct page *page)
+> +static void __free_huge_page(struct page *page)
+>  {
+>  	/*
+>  	 * Can't pass hstate in here because it is called from the
+> @@ -1199,6 +1199,35 @@ void free_huge_page(struct page *page)
+>  	spin_unlock(&hugetlb_lock);
+>  }
+>  
+> +static struct llist_head hpage_freelist = LLIST_HEAD_INIT;
+> +
+> +static void free_hpage_workfn(struct work_struct *work)
+> +{
+> +	struct llist_node *node;
+> +	struct page *page;
+> +
+> +	node = llist_del_all(&hpage_freelist);
+> +
+> +	while (node) {
+> +		page = container_of(node, struct page, mapping);
+> +		node = node->next;
+> +		__free_huge_page(page);
+> +	}
+> +}
+> +
+> +static DECLARE_WORK(free_hpage_work, free_hpage_workfn);
+> +
+> +void free_huge_page(struct page *page)
+> +{
+> +	if (!in_task()) {
+> +		if (llist_add((struct llist_node *)&page->mapping, &hpage_freelist))
+> +			schedule_work(&free_hpage_work);
+> +		return;
+> +	}
+> +
+> +	__free_huge_page(page);
+> +}
+> +
+>  static void prep_new_huge_page(struct hstate *h, struct page *page, int nid)
+>  {
+>  	INIT_LIST_HEAD(&page->lru);
+>
+You are right. That should work. I was not aware of the llist before so
+I haven't fully grasped its capability. Thanks for the suggestion.
 
-The code following:
-fc_rport_create()
-    ...
-    rdata = kzalloc(sizeof(*rdata) + lport->rport_priv_size, GFP_KERNEL);
-    if (!rdata)
-        return NULL;
-    ...
+Cheers,
+Longman
 
-fc_lport_ptp_setup()
-   ...
-   lport->ptp_rdata = fc_rport_create(lport, remote_fid);
-   kref_get(&lport->ptp_rdata->kref);
-   lport->ptp_rdata->ids.port_name = remote_wwpn;
-   ...
-
-Fix by adding a check for lport->ptp_rdata before be used on fc_lport_ptp_setup func.
-
-Signed-off-by: Wu Bo <wubo40@huawei.com>
----
- drivers/scsi/libfc/fc_lport.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/scsi/libfc/fc_lport.c b/drivers/scsi/libfc/fc_lport.c
-index 684c5e3..36e7bdd 100644
---- a/drivers/scsi/libfc/fc_lport.c
-+++ b/drivers/scsi/libfc/fc_lport.c
-@@ -238,6 +238,10 @@ static void fc_lport_ptp_setup(struct fc_lport *lport,
-        }
-        mutex_lock(&lport->disc.disc_mutex);
-        lport->ptp_rdata = fc_rport_create(lport, remote_fid);
-+       if (!lport->ptp_rdata) {
-+               mutex_unlock(&lport->disc.disc_mutex);
-+               return;
-+       }
-        kref_get(&lport->ptp_rdata->kref);
-        lport->ptp_rdata->ids.port_name = remote_wwpn;
-        lport->ptp_rdata->ids.node_name = remote_wwnn;
---
-1.8.3.1
