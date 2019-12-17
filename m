@@ -2,81 +2,127 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25040C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8811C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF50A2064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:59:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576580355;
-	bh=earumEdZNTDpsNDpvOr9SXNYoRmK3/hYz59yXC3bFyw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=j1CiOdggAhbVeUbgxUpslPF/GTp8OnpDEIA757WiKVNnVEjNyHQzo8j1F1Hv5Exn9
-	 03j5CD9dWYMkqOD2ViCDY0JlVFrnE2JKdcrRZydZ/FjJRSbcV0EclTEZw3TwW+JyNy
-	 o88AUrokxrbBqInDAQfGjPaGtvgBb8W/deLgfYO0=
+	by mail.kernel.org (Postfix) with ESMTP id AF2072082E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:00:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZKi2ffTW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727483AbfLQK7O (ORCPT
+        id S1726756AbfLQLAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 05:59:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39884 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726487AbfLQK7N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 05:59:13 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 613722082E;
-        Tue, 17 Dec 2019 10:59:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576580353;
-        bh=earumEdZNTDpsNDpvOr9SXNYoRmK3/hYz59yXC3bFyw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EyrwcL0j1bZOE032d+pitw22XQzicjfOzMcEpoT5hCmtVN5KDkPmL0xTS6Vcm/D+j
-         ZpNuo/kzmAKyoR6quRCa0kEGJthxSxjXrHMZiAatvrUkitijsdhJkcSeY5gU2HEH5N
-         A3an6IVm/4sCOTWgDae6L13mNYoAYQJOT2kZWtRw=
-Date:   Tue, 17 Dec 2019 10:59:07 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/5] iommu: arm: Use iommu_put_resv_regions_simple()
-Message-ID: <20191217105907.GA32012@willie-the-truck>
-References: <20191209145007.2433144-1-thierry.reding@gmail.com>
- <20191209145007.2433144-3-thierry.reding@gmail.com>
+        Tue, 17 Dec 2019 06:00:16 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:39151 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbfLQLAQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 06:00:16 -0500
+Received: by mail-qk1-f196.google.com with SMTP id c16so4129444qko.6
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 03:00:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mG99GA6/Xiwz9qwjNacdCgRQBNUN/DJm+EdzhM5zdJk=;
+        b=ZKi2ffTW6CKhiLlUehhNua4oR+IQVrnfldGgSCvYobXyaxf4QGLMGV1ZZ6p4OBl2tI
+         FkPzuoOceoPyusSCU5xvdzfD0Jr7XdnBsgcW7GlTB8qKVhWCSKtCBYlgVotmWsyfUHm2
+         GL9Y+50K4eb6Wx3TwS6+mOVTAmbDmPtwNFU0USc1pvW0N98+98OXqgU/O1e0K/WRt0Hj
+         q+4ovQ8zbfrAtOkcQotudiZmC2nGxboSBOmLjkpvV5f2Qu9PixHe4hYSngMd6J3ELeNH
+         8pgdbSEjSs7FVMvOEIbXJ+gOTGPRFEGOfa1bVyhCWL92V8E5Moi4UQ7aOev0/NGOIhLz
+         1ayg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mG99GA6/Xiwz9qwjNacdCgRQBNUN/DJm+EdzhM5zdJk=;
+        b=KY3Oz0qtVg/ZpZywbG+5uUnbQazjKxUbzeqiorNRxJHcooM9Tnom3rPFAHWmje34M1
+         YmBD0q1XsQUe3qXeIRePe0zOIeQ6inv0bd0UX4385bbCXYGvMsI+kM9TNIi5PdkRtdfd
+         LGznWJEHv4zpxplMFntBi0Lkm++zkAsdt/k7ITVuxveIzoeDCc69AFhqXOuD9J29nTlj
+         TjcYqMpcJ31NI4cuECP2bP/pQzFkhnnHnce4TUjNlSaLsYaSqYrLrdaoh8L+d72t5bUw
+         ij8z4k3Snl9t1rk4LeM76tCToK3/QfaLxnGgDfYg4i7NoEM4x1WoJ2DsIiAGwd+5KAeu
+         a/nw==
+X-Gm-Message-State: APjAAAVHaKeOk6NTrZ4m1emDleQRr1O0sq1vwbpafjml41YNFK1VIZ2P
+        H6C39z75QBM8e/ngzujehXmN/3FDPl8Nu3+hpZICcQ==
+X-Google-Smtp-Source: APXvYqywDIx8QZijrqsCgnbP1i8WSjZej+2z1QKYbvCx4iGWrKY4auHMIOJEyC9uciCsefBQ0G4vqX+E02yg22qADrU=
+X-Received: by 2002:ae9:eb48:: with SMTP id b69mr4157084qkg.43.1576580415093;
+ Tue, 17 Dec 2019 03:00:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191209145007.2433144-3-thierry.reding@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <95e7a12ac909e7de584133772efc7ef982a16bbb.1576170740.git.andreyknvl@google.com>
+ <Pine.LNX.4.44L0.1912121313030.1352-100000@iolanthe.rowland.org> <CAAeHK+yOBcNz_iopRs6PEu=1-rZn6Gkm+Urq+iVBFQeSjSXqNA@mail.gmail.com>
+In-Reply-To: <CAAeHK+yOBcNz_iopRs6PEu=1-rZn6Gkm+Urq+iVBFQeSjSXqNA@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 17 Dec 2019 12:00:03 +0100
+Message-ID: <CACT4Y+aN20NXxXhe9qv_WRLntAHbL98Shj8NAvg0WafDw8C=jA@mail.gmail.com>
+Subject: Re: [PATCH RFC 1/2] kcov: collect coverage from interrupts
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 03:50:04PM +0100, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
-> 
-> Use the new standard function instead of open-coding it.
-> 
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> ---
->  drivers/iommu/arm-smmu-v3.c | 11 +----------
->  drivers/iommu/arm-smmu.c    | 11 +----------
->  2 files changed, 2 insertions(+), 20 deletions(-)
+On Fri, Dec 13, 2019 at 1:09 PM Andrey Konovalov <andreyknvl@google.com> wrote:
+>
+> On Thu, Dec 12, 2019 at 7:15 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+> >
+> > On Thu, 12 Dec 2019, Andrey Konovalov wrote:
+> >
+> > > This change extends kcov remote coverage support to allow collecting
+> > > coverage from interrupts in addition to kernel background threads.
+> > >
+> > > To collect coverage from code that is executed in interrupt context, a
+> > > part of that code has to be annotated with kcov_remote_start/stop() in a
+> > > similar way as how it is done for global kernel background threads. Then
+> > > the handle used for the annotations has to be passed to the
+> > > KCOV_REMOTE_ENABLE ioctl.
+> > >
+> > > Internally this patch adjusts the __sanitizer_cov_trace_pc() compiler
+> > > inserted callback to not bail out when called from interrupt context.
+> > > kcov_remote_start/stop() are updated to save/restore the current per
+> > > task kcov state in a per-cpu area (in case the interrupt came when the
+> > > kernel was already collecting coverage in task context). Coverage from
+> > > interrupts is collected into pre-allocated per-cpu areas, whose size is
+> > > controlled by the new CONFIG_KCOV_IRQ_AREA_SIZE.
+> > >
+> > > This patch also cleans up some of kcov debug messages.
+> > >
+> > > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> > > ---
+> >
+> > > diff --git a/drivers/usb/gadget/udc/dummy_hcd.c b/drivers/usb/gadget/udc/dummy_hcd.c
+> > > index 4c9d1e49d5ed..faf84ada71a5 100644
+> > > --- a/drivers/usb/gadget/udc/dummy_hcd.c
+> > > +++ b/drivers/usb/gadget/udc/dummy_hcd.c
+> > > @@ -38,6 +38,7 @@
+> > >  #include <linux/usb/gadget.h>
+> > >  #include <linux/usb/hcd.h>
+> > >  #include <linux/scatterlist.h>
+> > > +#include <linux/kcov.h>
+> > >
+> > >  #include <asm/byteorder.h>
+> > >  #include <linux/io.h>
+> >
+> > That's the only change to this driver.  As such, it doesn't appear to
+> > be needed, judging by the patch description.
+>
+> Right, will fix in the next version, thanks!
 
-Acked-by: Will Deacon <will@kernel.org>
-
-Will
+Please also post a github or gerrit link. These small scraps of
+changes without context and better visualisation are extremely hard to
+review meaningfully.
