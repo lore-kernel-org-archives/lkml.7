@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1181EC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2272EC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E59BD24673
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:52:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 030EB24673
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:52:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727697AbfLQAwk (ORCPT
+        id S1727736AbfLQAwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:52:40 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35558 "EHLO
+        Mon, 16 Dec 2019 19:52:50 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35600 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727209AbfLQAvq (ORCPT
+        by vger.kernel.org with ESMTP id S1727217AbfLQAvp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 19:51:46 -0500
+        Mon, 16 Dec 2019 19:51:45 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15O-0003PJ-3b; Tue, 17 Dec 2019 00:51:38 +0000
+        id 1ih15L-0003Ma-G0; Tue, 17 Dec 2019 00:51:35 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15L-0005fi-CI; Tue, 17 Dec 2019 00:51:35 +0000
+        id 1ih15K-0005do-Un; Tue, 17 Dec 2019 00:51:34 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,24 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Feng Tang" <feng.tang@intel.com>,
-        "Kai-Heng Feng" <kai.heng.feng@canonical.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>
-Date:   Tue, 17 Dec 2019 00:47:42 +0000
-Message-ID: <lsq.1576543535.205670437@decadent.org.uk>
+        "Konstantin Khlebnikov" <khlebnikov@yandex-team.ru>,
+        "David Hildenbrand" <david@redhat.com>,
+        "Johannes Weiner" <hannes@cmpxchg.org>,
+        "Vlastimil Babka" <vbabka@suse.cz>,
+        "Waiman Long" <longman@redhat.com>, "Mel Gorman" <mgorman@suse.de>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Rafael Aquini" <aquini@redhat.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Song Liu" <songliubraving@fb.com>,
+        "David Rientjes" <rientjes@google.com>,
+        "Michal Hocko" <mhocko@suse.com>, "Jann Horn" <jannh@google.com>,
+        "Roman Gushchin" <guro@fb.com>
+Date:   Tue, 17 Dec 2019 00:47:35 +0000
+Message-ID: <lsq.1576543535.546970827@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 128/136] x86/quirks: Disable HPET on Intel Coffe Lake
- platforms
+Subject: [PATCH 3.16 121/136] mm, vmstat: hide /proc/pagetypeinfo from
+ normal users
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,41 +66,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Michal Hocko <mhocko@suse.com>
 
-commit fc5db58539b49351e76f19817ed1102bf7c712d0 upstream.
+commit abaed0112c1db08be15a784a2c5c8a8b3063cdd3 upstream.
 
-Some Coffee Lake platforms have a skewed HPET timer once the SoCs entered
-PC10, which in consequence marks TSC as unstable because HPET is used as
-watchdog clocksource for TSC.
+/proc/pagetypeinfo is a debugging tool to examine internal page
+allocator state wrt to fragmentation.  It is not very useful for any
+other use so normal users really do not need to read this file.
 
-Harry Pan tried to work around it in the clocksource watchdog code [1]
-thereby creating a circular dependency between HPET and TSC. This also
-ignores the fact, that HPET is not only unsuitable as watchdog clocksource
-on these systems, it becomes unusable in general.
+Waiman Long has noticed that reading this file can have negative side
+effects because zone->lock is necessary for gathering data and that a)
+interferes with the page allocator and its users and b) can lead to hard
+lockups on large machines which have very long free_list.
 
-Disable HPET on affected platforms.
+Reduce both issues by simply not exporting the file to regular users.
 
-Suggested-by: Feng Tang <feng.tang@intel.com>
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203183
-Link: https://lore.kernel.org/lkml/20190516090651.1396-1-harry.pan@intel.com/ [1]
-Link: https://lkml.kernel.org/r/20191016103816.30650-1-kai.heng.feng@canonical.com
+Link: http://lkml.kernel.org/r/20191025072610.18526-2-mhocko@kernel.org
+Fixes: 467c996c1e19 ("Print out statistics in relation to fragmentation avoidance to /proc/pagetypeinfo")
+Signed-off-by: Michal Hocko <mhocko@suse.com>
+Reported-by: Waiman Long <longman@redhat.com>
+Acked-by: Mel Gorman <mgorman@suse.de>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Acked-by: Waiman Long <longman@redhat.com>
+Acked-by: Rafael Aquini <aquini@redhat.com>
+Acked-by: David Rientjes <rientjes@google.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc: Jann Horn <jannh@google.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/kernel/early-quirks.c | 2 ++
- 1 file changed, 2 insertions(+)
+ mm/vmstat.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kernel/early-quirks.c
-+++ b/arch/x86/kernel/early-quirks.c
-@@ -672,6 +672,8 @@ static struct chipset early_qrk[] __init
- 	 */
- 	{ PCI_VENDOR_ID_INTEL, 0x0f00,
- 		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
-+	{ PCI_VENDOR_ID_INTEL, 0x3ec4,
-+		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
- 	{ PCI_VENDOR_ID_BROADCOM, 0x4331,
- 	  PCI_CLASS_NETWORK_OTHER, PCI_ANY_ID, 0, apple_airport_reset},
- 	{}
+--- a/mm/vmstat.c
++++ b/mm/vmstat.c
+@@ -1318,7 +1318,7 @@ static int __init setup_vmstat(void)
+ #endif
+ #ifdef CONFIG_PROC_FS
+ 	proc_create("buddyinfo", S_IRUGO, NULL, &fragmentation_file_operations);
+-	proc_create("pagetypeinfo", S_IRUGO, NULL, &pagetypeinfo_file_ops);
++	proc_create("pagetypeinfo", 0400, NULL, &pagetypeinfo_file_ops);
+ 	proc_create("vmstat", S_IRUGO, NULL, &proc_vmstat_file_operations);
+ 	proc_create("zoneinfo", S_IRUGO, NULL, &proc_zoneinfo_file_operations);
+ #endif
 
