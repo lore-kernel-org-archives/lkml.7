@@ -2,92 +2,122 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1472C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F006EC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 798062072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:32:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N7LjdDas"
+	by mail.kernel.org (Postfix) with ESMTP id C631C24683
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:32:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576607543;
+	bh=utRU0rcTxqsnhWk9PNVbjZTpVL/hhO/HrBD/nPxq4fM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rrI9Ss7AM8KSZZhAAn8gmbjMN8aaivKQmYJ4OnRO9hC4AjvpQto2qu6uzkM2ERMTG
+	 eT8+Pr/JumTyfWd6nXk0/rGuHte1Dsv8l5+DoD7R7Yk+R0bhACp2v5+719FLibXt5S
+	 X+Nfd0lDgjCNZa8x9AixwgVphW4MwmipBNq+sRHU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbfLQScC (ORCPT
+        id S1728101AbfLQScW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 13:32:02 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40922 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726813AbfLQScC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 13:32:02 -0500
-Received: by mail-pl1-f193.google.com with SMTP id g6so6479854plp.7;
-        Tue, 17 Dec 2019 10:32:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Jt9igp/vb3Q4imVycGHAIChk8Rd9kKBHmsaYFmp6Y7o=;
-        b=N7LjdDasH4+CqBepfgfMlE44vLxYadjQ67o+oL4zFoXyrMfU7okw0uW4mSe5x3Htfo
-         UkAiTrsYVYfxgqDvIuH+2KQyQ0ERJKbUJx5/5bWr+b+lXGSCx1rVdWnGJBdDVZ23dVpS
-         mmk87XHA+7PvbKmkqc8uLcer8HcL6Slcn1s00QmAZxR8kyIXOyVuI7dxt0PBMJu9mkp6
-         z30iHL3T8qBoYehiyo3jaI9+BmLori12ZbIKe2V+oHALmcQQa2Yz/P94/yKIM2DNShrw
-         6P+KLDPEVLWXEsRU4GxUsQdM5z8KWnFklXH09NBSEb7OjR6g1xfLQTFGnWLfe6dXpMme
-         oUwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Jt9igp/vb3Q4imVycGHAIChk8Rd9kKBHmsaYFmp6Y7o=;
-        b=ef4ez/MgN/NnuNB1UHV6o0Op7es+4Q3vWzgQQMjcXurDThv5VfXST/R4zM5k8iYfdn
-         s2vGXzon9WErEmnTGo4Brmt4qXxxgj1T6NbtJft29K6QMShtl/tP+TfASSSq5qzfQOca
-         SM4bdeSU3X72HePKRLrBrvUtv5H7ma+O0ZFoCWoYYnXD4NZMaA77I8A8NgrRVfNVWfP0
-         qbiqbNbkiw3OxRy+mMrUmpTehzPc45rnSprIJoIxhZi5wz/W1QbzO/fmAw2EABDrU9yk
-         EyO6Yd9talPfEmiR+/SByl1vIs6tZhNwdVrMxrcd4oCkG7A07gh0/4GuJDTdx3Ohkn1V
-         Dk2w==
-X-Gm-Message-State: APjAAAXbEn6UOuiwoAn55xacAyZEKAk99yQys1xF/O3GU35Jsfionc5A
-        X3aEyIFnQw72iJSgwq7052679/3C
-X-Google-Smtp-Source: APXvYqytROhdFNm7gtHFIYzQThGI9Cm4KPk4pN7Lte39uDB9Dpss2233RTNPTm5a05S1YiowJ/D9Fw==
-X-Received: by 2002:a17:90a:6587:: with SMTP id k7mr7540210pjj.40.1576607521697;
-        Tue, 17 Dec 2019 10:32:01 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id r6sm27579405pfh.91.2019.12.17.10.32.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 17 Dec 2019 10:32:00 -0800 (PST)
-Date:   Tue, 17 Dec 2019 10:31:59 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.4 000/177] 5.4.4-stable review
-Message-ID: <20191217183159.GB29679@roeck-us.net>
-References: <20191216174811.158424118@linuxfoundation.org>
+        Tue, 17 Dec 2019 13:32:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33638 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726813AbfLQScW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 13:32:22 -0500
+Received: from rapoport-lnx (unknown [87.71.31.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4F022072D;
+        Tue, 17 Dec 2019 18:32:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576607541;
+        bh=utRU0rcTxqsnhWk9PNVbjZTpVL/hhO/HrBD/nPxq4fM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rdWRiqTKQ4SxW0b6an1UEYpDfBwhuvKp6ARSjzCkngo1iXrbrLgOZnAOaq+ATyvkp
+         ioZZY+/NDuvIYNtHKlBjfGGiAtAFhaQCLhG2bJW9ozes7DFPaaudXXilp6WsB3EBDN
+         OUnCOguhqK7w7hztbs3HnqpA0mK2yijRgOMvgWx4=
+Date:   Tue, 17 Dec 2019 20:32:14 +0200
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linux-sh list <linux-sh@vger.kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH 2/2] sh: add support for folded p4d page tables
+Message-ID: <20191217183213.GA29446@rapoport-lnx>
+References: <20191217142150.10392-1-rppt@kernel.org>
+ <20191217142150.10392-3-rppt@kernel.org>
+ <CAMuHMdXYp7EBK446EsDt_HLDvc96TPP9oPZmsLtFL5VvhSejjw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAMuHMdXYp7EBK446EsDt_HLDvc96TPP9oPZmsLtFL5VvhSejjw@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 06:47:36PM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.4 release.
-> There are 177 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Tue, Dec 17, 2019 at 06:59:43PM +0100, Geert Uytterhoeven wrote:
+> Hi Mike,
 > 
-> Responses should be made by Wed, 18 Dec 2019 17:41:25 +0000.
-> Anything received after that time might be too late.
+> On Tue, Dec 17, 2019 at 3:23 PM Mike Rapoport <rppt@kernel.org> wrote:
+> > From: Mike Rapoport <rppt@linux.ibm.com>
+> >
+> > Implement primitives necessary for the 4th level folding, add walks of p4d
+> > level where appropriate and remove usage of __ARCH_USE_5LEVEL_HACK.
+> >
+> > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 > 
+> Thanks for your patch!
+> 
+> > --- a/arch/sh/mm/fault.c
+> > +++ b/arch/sh/mm/fault.c
+> > @@ -65,7 +66,20 @@ static void show_pte(struct mm_struct *mm, unsigned long addr)
+> >                         break;
+> >                 }
+> >
+> > -               pud = pud_offset(pgd, addr);
+> > +               p4d = p4d_offset(pgd, addr);
+> > +               if (PTRS_PER_P4D != 1)
+> > +                       printk(", *p4d=%0*Lx", (u32)(sizeof(*p4d) * 2),
+> > +                              (u64)p4d_val(*p4d));
+> 
+> This (and the prints below) is gonna cause lots of broken output lines.
+> You should use pr_cont() instead, and probably rebase on top of  my
+> "[PATCH 7/7] sh: fault: Modernize printing of kernel messages"
+> (https://lore.kernel.org/lkml/20191203162645.19950-8-geert+renesas@glider.be/).
 
-Build results:
-	total: 158 pass: 158 fail: 0
-Qemu test results:
-	total: 387 pass: 387 fail: 0
+Ok, will fix.	 
 
-Guenter
+> > +
+> > +               if (p4d_none(*p4d))
+> > +                       break;
+> > +
+> > +               if (p4d_bad(*p4d)) {
+> > +                       printk("(bad)");
+> > +                       break;
+> > +               }
+> > +
+> > +               pud = pud_offset(p4d, addr);
+> >                 if (PTRS_PER_PUD != 1)
+> >                         printk(", *pud=%0*Lx", (u32)(sizeof(*pud) * 2),
+> >                                (u64)pud_val(*pud));
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> -- 
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+
+-- 
+Sincerely yours,
+Mike.
