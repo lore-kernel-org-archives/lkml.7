@@ -2,122 +2,195 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C71C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD48C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0D622146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:55:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5349C2146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:56:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EQ9/fKgC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727512AbfLQMzB (ORCPT
+        id S1727572AbfLQM4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:55:01 -0500
-Received: from www262.sakura.ne.jp ([202.181.97.72]:63654 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726623AbfLQMzB (ORCPT
+        Tue, 17 Dec 2019 07:56:21 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:60072 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726141AbfLQM4V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 07:55:01 -0500
-Received: from fsav404.sakura.ne.jp (fsav404.sakura.ne.jp [133.242.250.103])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id xBHCs3Gj062399;
-        Tue, 17 Dec 2019 21:54:03 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav404.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav404.sakura.ne.jp);
- Tue, 17 Dec 2019 21:54:03 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav404.sakura.ne.jp)
-Received: from [192.168.1.9] (softbank126040062084.bbtec.net [126.40.62.84])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id xBHCs2LC062394
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Tue, 17 Dec 2019 21:54:03 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH] kconfig: Add kernel config option for fuzz testing.
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20191216095955.9886-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <CACT4Y+b6ZMfLCSe_x8_ME4hyKB9hz9B84LiNV8-u1SVDzqLCHA@mail.gmail.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <a62a6576-940b-31a8-1d37-8b4c0828d86b@i-love.sakura.ne.jp>
-Date:   Tue, 17 Dec 2019 21:54:02 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Tue, 17 Dec 2019 07:56:21 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBHCuCMN064150;
+        Tue, 17 Dec 2019 06:56:12 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576587372;
+        bh=1qUgNe6rvXdvP9mRolqQkKsWnzN3nvAWiLVZf6TRI+U=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=EQ9/fKgC2hOFL44pXoYPkcccs5aBLXdamoRU3yB3PAxwLUXG6lzfflUhe7mompcKg
+         22GahX2PuIopZgqtYC/tYJTrc72KuVWjh4QtV9E85/Yeq86PFwyE274S7tDdIFUNAW
+         xdtoSS+7OgiQfOTtg0IKhTOfwrsF3jlXwz3iqw9o=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBHCuCNP062296
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 17 Dec 2019 06:56:12 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
+ Dec 2019 06:56:11 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 17 Dec 2019 06:56:11 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBHCuBvg129742;
+        Tue, 17 Dec 2019 06:56:11 -0600
+Subject: Re: [PATCH 2/2] leds: lm3692x: Allow to set ovp and brigthness mode
+To:     =?UTF-8?Q?Guido_G=c3=bcnther?= <agx@sigxcpu.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <cover.1576499103.git.agx@sigxcpu.org>
+ <9c87a17aefbf758d58f199f7046114ee7505a1fa.1576499103.git.agx@sigxcpu.org>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <3d66b07d-b4c5-43e6-4378-d63cc84b8d43@ti.com>
+Date:   Tue, 17 Dec 2019 06:53:45 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <CACT4Y+b6ZMfLCSe_x8_ME4hyKB9hz9B84LiNV8-u1SVDzqLCHA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <9c87a17aefbf758d58f199f7046114ee7505a1fa.1576499103.git.agx@sigxcpu.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/12/17 17:41, Dmitry Vyukov wrote:
->> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
->> index 90655910b0c7..367b92ad598b 100644
->> --- a/drivers/tty/serial/8250/8250_port.c
->> +++ b/drivers/tty/serial/8250/8250_port.c
->> @@ -519,11 +519,14 @@ serial_port_out_sync(struct uart_port *p, int offset, int value)
->>         case UPIO_MEM32:
->>         case UPIO_MEM32BE:
->>         case UPIO_AU:
->> -               p->serial_out(p, offset, value);
->> +               /* Writing to random kernel address causes crash. */
->> +               if (!IS_ENABLED(CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING))
->> +                       p->serial_out(p, offset, value);
-> 
-> Does this do the same as LOCKDOWN_TIOCSSERIAL? How is it different?
+Guido
 
-I don't know. If there were an oversight in condition of lines 852-858,
-uart_startup() might be called due to "goto check_and_exit;" without
-hitting security_locked_down(LOCKDOWN_TIOCSSERIAL) check.
+On 12/16/19 6:28 AM, Guido Günther wrote:
+> Overvoltage protection and brightness mode are currently hardcoded
+> as disabled in the driver. Make these configurable via DT.
 
-846:    old_flags = uport->flags;
-847:    new_flags = (__force upf_t)new_info->flags;
-848:    old_custom_divisor = uport->custom_divisor;
-849:
-850:    if (!capable(CAP_SYS_ADMIN)) {
-851:            retval = -EPERM;
-852:            if (change_irq || change_port ||
-853:                (new_info->baud_base != uport->uartclk / 16) ||
-854:                (close_delay != port->close_delay) ||
-855:                (closing_wait != port->closing_wait) ||
-856:                (new_info->xmit_fifo_size &&
-857:                 new_info->xmit_fifo_size != uport->fifosize) ||
-858:                (((new_flags ^ old_flags) & ~UPF_USR_MASK) != 0))
-859:                    goto exit;
-860:            uport->flags = ((uport->flags & ~UPF_USR_MASK) |
-861:                           (new_flags & UPF_USR_MASK));
-862:            uport->custom_divisor = new_info->custom_divisor;
-863:            goto check_and_exit;
-864:    }
-865:
-866:    retval = security_locked_down(LOCKDOWN_TIOCSSERIAL);
-867:    if (retval && (change_irq || change_port))
-868:            goto exit;
+Can we split these up to two separate patch series?
 
-> 
->>                 p->serial_in(p, UART_LCR);      /* safe, no side-effects */
->>                 break;
->>         default:
->> -               p->serial_out(p, offset, value);
->> +               if (!IS_ENABLED(CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING))
->> +                       p->serial_out(p, offset, value);
->>         }
->>  }
+We are adding 2 separate features and if something is incorrect with one 
+of the changes it is a bit hard to debug.
 
-But I came think that "BUG: unable to handle kernel NULL pointer dereference in
-mem_serial_out" is a real kernel bug which should be fixed. It seems that crash
-occurs only when "struct serial_struct"->iomem_base == NULL, and EBUSY is
-returned otherwise. That is, some sanity check is wrong.
+>
+> Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> ---
+>   drivers/leds/leds-lm3692x.c | 43 +++++++++++++++++++++++++++++++------
+>   1 file changed, 37 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/leds/leds-lm3692x.c b/drivers/leds/leds-lm3692x.c
+> index 8b408102e138..2c084b333628 100644
+> --- a/drivers/leds/leds-lm3692x.c
+> +++ b/drivers/leds/leds-lm3692x.c
+> @@ -114,6 +114,7 @@ struct lm3692x_led {
+>   	struct regulator *regulator;
+>   	int led_enable;
+>   	int model_id;
+> +	u8 boost_ctrl, brightness_ctrl;
+>   };
+>   
+>   static const struct reg_default lm3692x_reg_defs[] = {
+> @@ -249,10 +250,7 @@ static int lm3692x_init(struct lm3692x_led *led)
+>   	if (ret)
+>   		goto out;
+>   
+> -	ret = regmap_write(led->regmap, LM3692X_BOOST_CTRL,
+> -			LM3692X_BOOST_SW_1MHZ |
+> -			LM3692X_BOOST_SW_NO_SHIFT |
+> -			LM3692X_OCP_PROT_1_5A);
+> +	ret = regmap_write(led->regmap, LM3692X_BOOST_CTRL, led->boost_ctrl);
+>   	if (ret)
+>   		goto out;
+
+regmap_update_bits
+
+
+>   
+> @@ -268,8 +266,7 @@ static int lm3692x_init(struct lm3692x_led *led)
+>   	if (ret)
+>   		goto out;
+>   
+> -	ret = regmap_write(led->regmap, LM3692X_BRT_CTRL,
+> -			LM3692X_BL_ADJ_POL | LM3692X_RAMP_EN);
+> +	ret = regmap_write(led->regmap, LM3692X_BRT_CTRL, led->brightness_ctrl);
+>   	if (ret)
+>   		goto out;
+regmap_update_bits
+>   
+> @@ -326,6 +323,8 @@ static int lm3692x_probe_dt(struct lm3692x_led *led)
+>   {
+>   	struct fwnode_handle *child = NULL;
+>   	struct led_init_data init_data = {};
+> +	u32 ovp = 0;
+> +	bool exp_mode;
+>   	int ret;
+>   
+>   	led->enable_gpio = devm_gpiod_get_optional(&led->client->dev,
+> @@ -350,6 +349,38 @@ static int lm3692x_probe_dt(struct lm3692x_led *led)
+>   		led->regulator = NULL;
+>   	}
+>   
+> +	led->boost_ctrl = LM3692X_BOOST_SW_1MHZ |
+> +		LM3692X_BOOST_SW_NO_SHIFT |
+> +		LM3692X_OCP_PROT_1_5A;
+Make this a #define and then it can be reused as a mask for 
+regmap_update_bits
+> +	ret = device_property_read_u32(&led->client->dev,
+> +				       "ti,overvoltage-volts", &ovp);
+> +	if (!ret) {
+
+if (ret)
+
+     set boost_ctrl to default value since the default is not 0
+
+led->boost_ctrl |= LM3692X_OVP_29V;
+
+else
+
+      do case
+
+> +		switch (ovp) {
+> +		case 0:
+> +			break;
+> +		case 22:
+If the value is 21v why is this case 22?  DT binding says 21 is the 
+first value
+> +			led->boost_ctrl |= LM3692X_OVP_21V;
+> +			break;
+> +		case 25:
+> +			led->boost_ctrl |= LM3692X_OVP_25V;
+> +			break;
+> +		case 29:
+> +			led->boost_ctrl |= LM3692X_OVP_29V;
+> +			break;
+> +		default:
+> +			dev_err(&led->client->dev, "Invalid OVP %d\n", ovp);
+> +			return -EINVAL;
+> +		}
+> +	}
+> +	dev_dbg(&led->client->dev, "OVP: %dV", ovp);
+> +
+extra debug statement
+> +	led->brightness_ctrl = LM3692X_BL_ADJ_POL | LM3692X_RAMP_EN;
+Same comment as before on the #define
+> +	exp_mode = device_property_read_bool(&led->client->dev,
+> +				     "ti,brightness-mapping-exponential");
+> +	dev_dbg(&led->client->dev, "Exponential brightness: %d", exp_mode);
+
+extra debug statement
+
+Dan
+
 
