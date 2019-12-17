@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E652C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAAB7C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 592A424676
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 903B32146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576613454;
-	bh=Aeftx0RiFoltP/GkP5iTSbFpXgr6WT6c5XhRqiw+aR0=;
+	s=default; t=1576613457;
+	bh=OiFhIcifzz8a9/5L/DqokOrcqWj3Md1Md86yV0+RNkg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nO/oEtiqkYETFDW/6uuIyTP5v88RUAxO0gxtdFNrAyBxAYdi8zP1GRCmn3d1/oTdf
-	 mQy2j48Vf0okhzN6RKGsUZdAYz857z8Upbg4TGq2FVmRIiumEG0Jkk+svebK7Hwx0a
-	 mkBhRSJYmCZFAeRbiVcDpWsprne+CS0Zd6qS0JXw=
+	b=hDg4cRHdkQngnZuFf+J2BOTx/CiIHa3C8ehPSAaw43DqD8iq440VKkOinc/hp0Q6X
+	 hU7tKzCE/SQEkP4rcZ37T6E0hzf4lGOmsf5RLlo4dlRroPPyAv+gd8ytlQoVnMVAHH
+	 6ke1rgmii819e6KPdO+l1JA10frCbjCyGEiNtPos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728535AbfLQUKx (ORCPT
+        id S1728551AbfLQUK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 15:10:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37112 "EHLO mail.kernel.org"
+        Tue, 17 Dec 2019 15:10:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728506AbfLQUKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 15:10:50 -0500
+        id S1728506AbfLQUKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 15:10:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CD6D2146E;
-        Tue, 17 Dec 2019 20:10:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 025D12146E;
+        Tue, 17 Dec 2019 20:10:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576613449;
-        bh=Aeftx0RiFoltP/GkP5iTSbFpXgr6WT6c5XhRqiw+aR0=;
+        s=default; t=1576613454;
+        bh=OiFhIcifzz8a9/5L/DqokOrcqWj3Md1Md86yV0+RNkg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NJyPXzVmjR+3zMD8k8IpMq6iR1EwCgBLt3H/03QhEoFnKA0eiRshacbp2tnLtqrnh
-         DCjm/xwIYTGWulNHVb97GF9CpsYedHzW2JSuobFxzy87GhOtJY1lHA1GCOukkJJLQm
-         kFUCgCPcZVNMaqC9+nmYvSbTU7VmzbTmcJNVBm5U=
+        b=NC41xaww1ctmU2MPm1zlQEHL26Nk3MeS1NDU86P5+mLtaYZHJYIMqxhDiH7o1bwhx
+         V1Oz/sFvPyVUJQ0TD2xYsHEtEIZ8LNVpjY8SGABKz267zcEmbSQUcMRi3o7D6Tovb2
+         uyB/EzRfopCNOIr/QnE6kJxTAu2waxeHJ3NqfXAo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cong Wang <xiyou.wangcong@gmail.com>,
-        Taehee Yoo <ap420073@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 25/37] hsr: fix a NULL pointer dereference in hsr_dev_xmit()
-Date:   Tue, 17 Dec 2019 21:09:46 +0100
-Message-Id: <20191217200730.290250938@linuxfoundation.org>
+        stable@vger.kernel.org, Eran Ben Elisha <eranbe@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.4 27/37] net/mlx5e: Fix TXQ indices to be sequential
+Date:   Tue, 17 Dec 2019 21:09:48 +0100
+Message-Id: <20191217200732.249770987@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191217200721.741054904@linuxfoundation.org>
 References: <20191217200721.741054904@linuxfoundation.org>
@@ -60,97 +59,150 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Eran Ben Elisha <eranbe@mellanox.com>
 
-[ Upstream commit df95467b6d2bfce49667ee4b71c67249b01957f7 ]
+[ Upstream commit c55d8b108caa2ec1ae8dddd02cb9d3a740f7c838 ]
 
-hsr_dev_xmit() calls hsr_port_get_hsr() to find master node and that would
-return NULL if master node is not existing in the list.
-But hsr_dev_xmit() doesn't check return pointer so a NULL dereference
-could occur.
+Cited patch changed (channel index, tc) => (TXQ index) mapping to be a
+static one, in order to keep indices consistent when changing number of
+channels or TCs.
 
-Test commands:
-    ip netns add nst
-    ip link add veth0 type veth peer name veth1
-    ip link add veth2 type veth peer name veth3
-    ip link set veth1 netns nst
-    ip link set veth3 netns nst
-    ip link set veth0 up
-    ip link set veth2 up
-    ip link add hsr0 type hsr slave1 veth0 slave2 veth2
-    ip a a 192.168.100.1/24 dev hsr0
-    ip link set hsr0 up
-    ip netns exec nst ip link set veth1 up
-    ip netns exec nst ip link set veth3 up
-    ip netns exec nst ip link add hsr1 type hsr slave1 veth1 slave2 veth3
-    ip netns exec nst ip a a 192.168.100.2/24 dev hsr1
-    ip netns exec nst ip link set hsr1 up
-    hping3 192.168.100.2 -2 --flood &
-    modprobe -rv hsr
+For 32 channels (OOB) and 8 TCs, real num of TXQs is 256.
+When reducing the amount of channels to 8, the real num of TXQs will be
+changed to 64.
+This indices method is buggy:
+- Channel #0, TC 3, the TXQ index is 96.
+- Index 8 is not valid, as there is no such TXQ from driver perspective
+  (As it represents channel #8, TC 0, which is not valid with the above
+  configuration).
 
-Splat looks like:
-[  217.351122][ T1635] kasan: CONFIG_KASAN_INLINE enabled
-[  217.352969][ T1635] kasan: GPF could be caused by NULL-ptr deref or user memory access
-[  217.354297][ T1635] general protection fault: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
-[  217.355507][ T1635] CPU: 1 PID: 1635 Comm: hping3 Not tainted 5.4.0+ #192
-[  217.356472][ T1635] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[  217.357804][ T1635] RIP: 0010:hsr_dev_xmit+0x34/0x90 [hsr]
-[  217.373010][ T1635] Code: 48 8d be 00 0c 00 00 be 04 00 00 00 48 83 ec 08 e8 21 be ff ff 48 8d 78 10 48 ba 00 b
-[  217.376919][ T1635] RSP: 0018:ffff8880cd8af058 EFLAGS: 00010202
-[  217.377571][ T1635] RAX: 0000000000000000 RBX: ffff8880acde6840 RCX: 0000000000000002
-[  217.379465][ T1635] RDX: dffffc0000000000 RSI: 0000000000000004 RDI: 0000000000000010
-[  217.380274][ T1635] RBP: ffff8880acde6840 R08: ffffed101b440d5d R09: 0000000000000001
-[  217.381078][ T1635] R10: 0000000000000001 R11: ffffed101b440d5c R12: ffff8880bffcc000
-[  217.382023][ T1635] R13: ffff8880bffcc088 R14: 0000000000000000 R15: ffff8880ca675c00
-[  217.383094][ T1635] FS:  00007f060d9d1740(0000) GS:ffff8880da000000(0000) knlGS:0000000000000000
-[  217.384289][ T1635] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  217.385009][ T1635] CR2: 00007faf15381dd0 CR3: 00000000d523c001 CR4: 00000000000606e0
-[  217.385940][ T1635] Call Trace:
-[  217.386544][ T1635]  dev_hard_start_xmit+0x160/0x740
-[  217.387114][ T1635]  __dev_queue_xmit+0x1961/0x2e10
-[  217.388118][ T1635]  ? check_object+0xaf/0x260
-[  217.391466][ T1635]  ? __alloc_skb+0xb9/0x500
-[  217.392017][ T1635]  ? init_object+0x6b/0x80
-[  217.392629][ T1635]  ? netdev_core_pick_tx+0x2e0/0x2e0
-[  217.393175][ T1635]  ? __alloc_skb+0xb9/0x500
-[  217.393727][ T1635]  ? rcu_read_lock_sched_held+0x90/0xc0
-[  217.394331][ T1635]  ? rcu_read_lock_bh_held+0xa0/0xa0
-[  217.395013][ T1635]  ? kasan_unpoison_shadow+0x30/0x40
-[  217.395668][ T1635]  ? __kasan_kmalloc.constprop.4+0xa0/0xd0
-[  217.396280][ T1635]  ? __kmalloc_node_track_caller+0x3a8/0x3f0
-[  217.399007][ T1635]  ? __kasan_kmalloc.constprop.4+0xa0/0xd0
-[  217.400093][ T1635]  ? __kmalloc_reserve.isra.46+0x2e/0xb0
-[  217.401118][ T1635]  ? memset+0x1f/0x40
-[  217.402529][ T1635]  ? __alloc_skb+0x317/0x500
-[  217.404915][ T1635]  ? arp_xmit+0xca/0x2c0
-[ ... ]
+As part of driver's select queue, it calls netdev_pick_tx which returns an
+index in the range of real number of TXQs. Depends on the return value,
+with the examples above, driver could have returned index larger than the
+real number of tx queues, or crash the kernel as it tries to read invalid
+address of SQ which was not allocated.
 
-Fixes: 311633b60406 ("hsr: switch ->dellink() to ->ndo_uninit()")
-Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fix that by allocating sequential TXQ indices, and hold a new mapping
+between (channel index, tc) => (real TXQ index). This mapping will be
+updated as part of priv channels activation, and is used in
+mlx5e_select_queue to find the selected queue index.
+
+The existing indices mapping (channel_tc2txq) is no longer needed, as it
+is used only for statistics structures and can be calculated on run time.
+Delete its definintion and updates.
+
+Fixes: 8bfaf07f7806 ("net/mlx5e: Present SW stats when state is not opened")
+Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/hsr/hsr_device.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en.h       |    2 -
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c  |   31 ++++++++-------------
+ drivers/net/ethernet/mellanox/mlx5/core/en_stats.c |    2 -
+ drivers/net/ethernet/mellanox/mlx5/core/en_tx.c    |    2 -
+ 4 files changed, 15 insertions(+), 22 deletions(-)
 
---- a/net/hsr/hsr_device.c
-+++ b/net/hsr/hsr_device.c
-@@ -227,8 +227,13 @@ static int hsr_dev_xmit(struct sk_buff *
- 	struct hsr_port *master;
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+@@ -816,7 +816,7 @@ struct mlx5e_xsk {
+ struct mlx5e_priv {
+ 	/* priv data path fields - start */
+ 	struct mlx5e_txqsq *txq2sq[MLX5E_MAX_NUM_CHANNELS * MLX5E_MAX_NUM_TC];
+-	int channel_tc2txq[MLX5E_MAX_NUM_CHANNELS][MLX5E_MAX_NUM_TC];
++	int channel_tc2realtxq[MLX5E_MAX_NUM_CHANNELS][MLX5E_MAX_NUM_TC];
+ #ifdef CONFIG_MLX5_CORE_EN_DCB
+ 	struct mlx5e_dcbx_dp       dcbx_dp;
+ #endif
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -1693,11 +1693,10 @@ static int mlx5e_open_sqs(struct mlx5e_c
+ 			  struct mlx5e_params *params,
+ 			  struct mlx5e_channel_param *cparam)
+ {
+-	struct mlx5e_priv *priv = c->priv;
+ 	int err, tc;
  
- 	master = hsr_port_get_hsr(hsr, HSR_PT_MASTER);
--	skb->dev = master->dev;
--	hsr_forward_skb(skb, master);
-+	if (master) {
-+		skb->dev = master->dev;
-+		hsr_forward_skb(skb, master);
-+	} else {
-+		atomic_long_inc(&dev->tx_dropped);
-+		dev_kfree_skb_any(skb);
-+	}
- 	return NETDEV_TX_OK;
+ 	for (tc = 0; tc < params->num_tc; tc++) {
+-		int txq_ix = c->ix + tc * priv->max_nch;
++		int txq_ix = c->ix + tc * params->num_channels;
+ 
+ 		err = mlx5e_open_txqsq(c, c->priv->tisn[c->lag_port][tc], txq_ix,
+ 				       params, &cparam->sq, &c->sq[tc], tc);
+@@ -2878,26 +2877,21 @@ static void mlx5e_netdev_set_tcs(struct
+ 		netdev_set_tc_queue(netdev, tc, nch, 0);
  }
  
+-static void mlx5e_build_tc2txq_maps(struct mlx5e_priv *priv)
++static void mlx5e_build_txq_maps(struct mlx5e_priv *priv)
+ {
+-	int i, tc;
++	int i, ch;
+ 
+-	for (i = 0; i < priv->max_nch; i++)
+-		for (tc = 0; tc < priv->profile->max_tc; tc++)
+-			priv->channel_tc2txq[i][tc] = i + tc * priv->max_nch;
+-}
++	ch = priv->channels.num;
+ 
+-static void mlx5e_build_tx2sq_maps(struct mlx5e_priv *priv)
+-{
+-	struct mlx5e_channel *c;
+-	struct mlx5e_txqsq *sq;
+-	int i, tc;
++	for (i = 0; i < ch; i++) {
++		int tc;
++
++		for (tc = 0; tc < priv->channels.params.num_tc; tc++) {
++			struct mlx5e_channel *c = priv->channels.c[i];
++			struct mlx5e_txqsq *sq = &c->sq[tc];
+ 
+-	for (i = 0; i < priv->channels.num; i++) {
+-		c = priv->channels.c[i];
+-		for (tc = 0; tc < c->num_tc; tc++) {
+-			sq = &c->sq[tc];
+ 			priv->txq2sq[sq->txq_ix] = sq;
++			priv->channel_tc2realtxq[i][tc] = i + tc * ch;
+ 		}
+ 	}
+ }
+@@ -2912,7 +2906,7 @@ void mlx5e_activate_priv_channels(struct
+ 	netif_set_real_num_tx_queues(netdev, num_txqs);
+ 	netif_set_real_num_rx_queues(netdev, num_rxqs);
+ 
+-	mlx5e_build_tx2sq_maps(priv);
++	mlx5e_build_txq_maps(priv);
+ 	mlx5e_activate_channels(&priv->channels);
+ 	mlx5e_xdp_tx_enable(priv);
+ 	netif_tx_start_all_queues(priv->netdev);
+@@ -5028,7 +5022,6 @@ static int mlx5e_nic_init(struct mlx5_co
+ 	if (err)
+ 		mlx5_core_err(mdev, "TLS initialization failed, %d\n", err);
+ 	mlx5e_build_nic_netdev(netdev);
+-	mlx5e_build_tc2txq_maps(priv);
+ 	mlx5e_health_create_reporters(priv);
+ 
+ 	return 0;
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
+@@ -1601,7 +1601,7 @@ static int mlx5e_grp_channels_fill_strin
+ 			for (j = 0; j < NUM_SQ_STATS; j++)
+ 				sprintf(data + (idx++) * ETH_GSTRING_LEN,
+ 					sq_stats_desc[j].format,
+-					priv->channel_tc2txq[i][tc]);
++					i + tc * max_nch);
+ 
+ 	for (i = 0; i < max_nch; i++) {
+ 		for (j = 0; j < NUM_XSKSQ_STATS * is_xsk; j++)
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+@@ -93,7 +93,7 @@ u16 mlx5e_select_queue(struct net_device
+ 	if (txq_ix >= num_channels)
+ 		txq_ix = priv->txq2sq[txq_ix]->ch_ix;
+ 
+-	return priv->channel_tc2txq[txq_ix][up];
++	return priv->channel_tc2realtxq[txq_ix][up];
+ }
+ 
+ static inline int mlx5e_skb_l2_header_offset(struct sk_buff *skb)
 
 
