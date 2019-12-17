@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE1FC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EAAC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81B9C24693
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65A0924673
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:54:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbfLQAyK (ORCPT
+        id S1728110AbfLQAyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:54:10 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35514 "EHLO
+        Mon, 16 Dec 2019 19:54:17 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35374 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727174AbfLQAvo (ORCPT
+        by vger.kernel.org with ESMTP id S1727086AbfLQAvo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 19:51:44 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15L-0003Mi-15; Tue, 17 Dec 2019 00:51:35 +0000
+        id 1ih15K-0003MS-QN; Tue, 17 Dec 2019 00:51:34 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15K-0005cK-Af; Tue, 17 Dec 2019 00:51:34 +0000
+        id 1ih15K-0005cs-Je; Tue, 17 Dec 2019 00:51:34 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Yihui ZENG" <yzeng56@asu.edu>,
-        "Vasily Gorbik" <gor@linux.ibm.com>,
-        "Heiko Carstens" <heiko.carstens@de.ibm.com>,
+        "Jozsef Kadlecsik" <kadlec@netfilter.org>,
         "Dan Carpenter" <dan.carpenter@oracle.com>
-Date:   Tue, 17 Dec 2019 00:47:25 +0000
-Message-ID: <lsq.1576543535.376923680@decadent.org.uk>
+Date:   Tue, 17 Dec 2019 00:47:29 +0000
+Message-ID: <lsq.1576543535.460649484@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 111/136] s390/cmm: fix information leak in
- cmm_timeout_handler()
+Subject: [PATCH 3.16 115/136] netfilter: ipset: Fix an error code in
+ ip_set_sockfn_get()
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,63 +56,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Yihui ZENG <yzeng56@asu.edu>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit b8e51a6a9db94bc1fb18ae831b3dab106b5a4b5f upstream.
+commit 30b7244d79651460ff114ba8f7987ed94c86b99a upstream.
 
-The problem is that we were putting the NUL terminator too far:
+The copy_to_user() function returns the number of bytes remaining to be
+copied.  In this code, that positive return is checked at the end of the
+function and we return zero/success.  What we should do instead is
+return -EFAULT.
 
-	buf[sizeof(buf) - 1] = '\0';
-
-If the user input isn't NUL terminated and they haven't initialized the
-whole buffer then it leads to an info leak.  The NUL terminator should
-be:
-
-	buf[len - 1] = '\0';
-
-Signed-off-by: Yihui Zeng <yzeng56@asu.edu>
+Fixes: a7b4f989a629 ("netfilter: ipset: IP set core support")
 Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-[heiko.carstens@de.ibm.com: keep semantics of how *lenp and *ppos are handled]
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Jozsef Kadlecsik <kadlec@netfilter.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/s390/mm/cmm.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ net/netfilter/ipset/ip_set_core.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/arch/s390/mm/cmm.c
-+++ b/arch/s390/mm/cmm.c
-@@ -306,16 +306,16 @@ static int cmm_timeout_handler(struct ct
- 	}
+--- a/net/netfilter/ipset/ip_set_core.c
++++ b/net/netfilter/ipset/ip_set_core.c
+@@ -1860,8 +1860,9 @@ ip_set_sockfn_get(struct sock *sk, int o
+ 		}
  
- 	if (write) {
--		len = *lenp;
--		if (copy_from_user(buf, buffer,
--				   len > sizeof(buf) ? sizeof(buf) : len))
-+		len = min(*lenp, sizeof(buf));
-+		if (copy_from_user(buf, buffer, len))
- 			return -EFAULT;
--		buf[sizeof(buf) - 1] = '\0';
-+		buf[len - 1] = '\0';
- 		cmm_skip_blanks(buf, &p);
- 		nr = simple_strtoul(p, &p, 0);
- 		cmm_skip_blanks(p, &p);
- 		seconds = simple_strtoul(p, &p, 0);
- 		cmm_set_timeout(nr, seconds);
-+		*ppos += *lenp;
- 	} else {
- 		len = sprintf(buf, "%ld %ld\n",
- 			      cmm_timeout_pages, cmm_timeout_seconds);
-@@ -323,9 +323,9 @@ static int cmm_timeout_handler(struct ct
- 			len = *lenp;
- 		if (copy_to_user(buffer, buf, len))
- 			return -EFAULT;
-+		*lenp = len;
-+		*ppos += len;
+ 		req_version->version = IPSET_PROTOCOL;
+-		ret = copy_to_user(user, req_version,
+-				   sizeof(struct ip_set_req_version));
++		if (copy_to_user(user, req_version,
++				 sizeof(struct ip_set_req_version)))
++			ret = -EFAULT;
+ 		goto done;
  	}
--	*lenp = len;
--	*ppos += len;
- 	return 0;
- }
+ 	case IP_SET_OP_GET_BYNAME: {
+@@ -1918,7 +1919,8 @@ ip_set_sockfn_get(struct sock *sk, int o
+ 	}	/* end of switch(op) */
  
+ copy:
+-	ret = copy_to_user(user, data, copylen);
++	if (copy_to_user(user, data, copylen))
++		ret = -EFAULT;
+ 
+ done:
+ 	vfree(data);
 
