@@ -2,213 +2,290 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D6BC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B89C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA2DF2082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8654A207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:42:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="saInMKAo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbfLQIk4 (ORCPT
+        id S1726754AbfLQImG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 03:40:56 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:16150 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726402AbfLQIkz (ORCPT
+        Tue, 17 Dec 2019 03:42:06 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:45822 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbfLQImG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 03:40:55 -0500
-Received: from [10.28.39.99] (10.28.39.99) by mail-sz.amlogic.com (10.28.11.5)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 17 Dec
- 2019 16:41:25 +0800
-Subject: Re: [PATCH v4 2/6] clk: meson: add support for A1 PLL clock ops
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-CC:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20191206074052.15557-1-jian.hu@amlogic.com>
- <20191206074052.15557-3-jian.hu@amlogic.com>
- <1j8snhluhg.fsf@starbuckisacylon.baylibre.com>
-From:   Jian Hu <jian.hu@amlogic.com>
-Message-ID: <741284be-2ae8-1102-22bc-c510e822c883@amlogic.com>
-Date:   Tue, 17 Dec 2019 16:41:25 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Tue, 17 Dec 2019 03:42:06 -0500
+Received: by mail-qv1-f67.google.com with SMTP id l14so3265539qvu.12
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 00:42:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ot1NXFRXEXslQ1BiG5c/pveR7V8fokc9P8o8Hmj6RRo=;
+        b=saInMKAo+1/h08gr7LgPhmd7klk32PLs9hPjytf4a/x7fOS+MUboOiCn4ZaMa5Hpbp
+         q192wc/ttCNVgLCwXQvOWxkAvFYSlYFrfTMDYVi7a9T5eAUcKblWpTPDSYlwFb//mdqZ
+         RwAKwGkmEVP+KPJQqjPW+Q5Kp5Rih32/Ma07qwLXszUjipGFLJh2It69Eoh+d8UOIoAp
+         +mTqeahNnBsH7eU92Ip/jVZni7vLFok3sacOW1J6r/HzN2ofPtccWgfS3rsI8hFEv0ZO
+         VDIAoJva702g2F5hiHJWlP36PdHbfe6G+HPTlpe9PtddDkyueB84WO1AuDVNymHBhNwU
+         BtUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ot1NXFRXEXslQ1BiG5c/pveR7V8fokc9P8o8Hmj6RRo=;
+        b=CU2/YQD1GnwZizoui2WWUWYmt3+8STl+SJqr4i6t4e1INJY5KBGIZYdoIK6zGURKgH
+         U4vIW8BQA5dTRO7xdAsUb3N6GcSWD2qdTqoXo01yLanoEUcH0xY60iWWaF2lZZNDFSAF
+         3FktZYpmh+hvs2L8SO+6fsYNB3x8kRYHeDN//nEXxYlH8SzKSP4DV8jvD9hklloLnLf7
+         eU711oZ0I9vvybBHOajxkbNBuSYpyoRbNZ1B+4CtszO/u+7R8GcLx1GQyvbJX5jmPz9v
+         a2SydjUonKSR0Tm3PGmr20Nsk//faFf05YsJk2l1BGwDEiM/Nc2F9KN6TsDEMMTEIfU2
+         k3ww==
+X-Gm-Message-State: APjAAAWVAMRCqigEZwqP01pCO9KL8oc+h6NuE75LX0Y1mmnwceQPyIXn
+        qnq99CMaDJHTVbiM36xgWvdQyJS5UoihFe9MBvzADQ==
+X-Google-Smtp-Source: APXvYqzEFfqktKNkkyXocXtfnioNzTz9ysJZ2hfnwDKqehMSAOeV7SWRQPpgH08+9bL84r2pfKFQe1t9CqvBuKMcR9Q=
+X-Received: by 2002:ad4:4c84:: with SMTP id bs4mr3540503qvb.34.1576572124605;
+ Tue, 17 Dec 2019 00:42:04 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1j8snhluhg.fsf@starbuckisacylon.baylibre.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.28.39.99]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+References: <20191216095955.9886-1-penguin-kernel@I-love.SAKURA.ne.jp>
+In-Reply-To: <20191216095955.9886-1-penguin-kernel@I-love.SAKURA.ne.jp>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 17 Dec 2019 09:41:53 +0100
+Message-ID: <CACT4Y+b6ZMfLCSe_x8_ME4hyKB9hz9B84LiNV8-u1SVDzqLCHA@mail.gmail.com>
+Subject: Re: [PATCH] kconfig: Add kernel config option for fuzz testing.
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Dec 16, 2019 at 11:01 AM Tetsuo Handa
+<penguin-kernel@i-love.sakura.ne.jp> wrote:
+>
+> While syzkaller is finding many bugs, sometimes syzkaller examines
+> stupid operations. But disabling operations using kernel config option
+> is problematic because "kernel config option excludes whole module when
+> there is still room for examining all but specific operation" and
+> "the list of kernel config options becomes too complicated to maintain
+> because such list changes over time". Thus, this patch introduces a
+> kernel config option which allows disabling only specific operations.
+> This kernel config option should be enabled only when building kernels
+> for fuzz testing.
+>
+> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+> Cc: Dmitry Vyukov <dvyukov@google.com>
+> ---
+>  drivers/char/mem.c                  |  6 +++---
+>  drivers/tty/serial/8250/8250_port.c |  7 +++++--
+>  drivers/tty/vt/keyboard.c           |  3 +++
+>  fs/ioctl.c                          |  5 +++++
+>  include/linux/uaccess.h             | 12 ++++++++++++
+>  kernel/printk/printk.c              |  8 ++++++++
+>  lib/Kconfig.debug                   | 10 ++++++++++
+>  lib/usercopy.c                      | 27 +++++++++++++++++++++++++++
+>  8 files changed, 73 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/char/mem.c b/drivers/char/mem.c
+> index 43dd0891ca1e..63aff3ae7c2b 100644
+> --- a/drivers/char/mem.c
+> +++ b/drivers/char/mem.c
+> @@ -246,7 +246,7 @@ static ssize_t write_mem(struct file *file, const char __user *buf,
+>                                 return -EFAULT;
+>                         }
+>
+> -                       copied = copy_from_user(ptr, buf, sz);
+> +                       copied = copy_from_user_to_any(ptr, buf, sz);
+
+FWIW we disable /dev/{mem,kmem} in the config now:
+https://github.com/google/syzkaller/blob/master/dashboard/config/bits-syzbot.config#L169
+And this looks like a reasonable thing to do for any fuzzing.
 
 
-On 2019/12/12 18:16, Jerome Brunet wrote:
-> 
-> On Fri 06 Dec 2019 at 08:40, Jian Hu <jian.hu@amlogic.com> wrote:
-> 
->> The A1 PLL design is different with previous SoCs. The PLL
->> internal analog modules Power-on sequence is different
->> with previous, and thus requires a strict register sequence to
->> enable the PLL.
->>
->> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
->> ---
->>   drivers/clk/meson/clk-pll.c | 21 +++++++++++++++++++++
->>   drivers/clk/meson/clk-pll.h |  1 +
->>   drivers/clk/meson/parm.h    |  1 +
->>   3 files changed, 23 insertions(+)
->>
->> diff --git a/drivers/clk/meson/clk-pll.c b/drivers/clk/meson/clk-pll.c
->> index ddb1e5634739..4aff31a51589 100644
->> --- a/drivers/clk/meson/clk-pll.c
->> +++ b/drivers/clk/meson/clk-pll.c
->> @@ -318,6 +318,23 @@ static int meson_clk_pll_enable(struct clk_hw *hw)
->>   	struct clk_regmap *clk = to_clk_regmap(hw);
->>   	struct meson_clk_pll_data *pll = meson_clk_pll_data(clk);
->>   
->> +	/*
->> +	 * The A1 design is different with previous SoCs.The PLL
->> +	 * internal analog modules Power-on sequence is different with
->> +	 * previous, and thus requires a strict register sequence to
->> +	 * enable the PLL.
-> 
-> The code does something more, not completly different. This comment is
-> not aligned with what the code does
-ok, I will correct the comment.
-> 
->> +	 */
->> +	if (MESON_PARM_APPLICABLE(&pll->current_en)) {
->> +		/* Enable the pll */
->> +		meson_parm_write(clk->map, &pll->en, 1);
->> +		udelay(10);
->> +		/* Enable the pll self-adaption module current */
->> +		meson_parm_write(clk->map, &pll->current_en, 1);
->> +		udelay(40);
->> +		meson_parm_write(clk->map, &pll->rst, 1);
->> +		meson_parm_write(clk->map, &pll->rst, 0);
-> 
-> Here you enable the PLL and self adaptation module then reset the PLL.
-> However:
-> #1 when you enter this function, the PLL should already by in reset
-> and disabled
-> #2 the code after that will reset the PLL again
-For A1 PLLs, There is no reset bit, It will not reset the PLL.
-And in V2, you mentioned PARM 'rst' can be used for one toggling, And 
-'rst' is used for BIT(6) in CTRL2.
+>                         unxlate_dev_mem_ptr(p, ptr);
+>                         if (copied) {
+>                                 written += sz - copied;
+> @@ -550,7 +550,7 @@ static ssize_t do_write_kmem(unsigned long p, const char __user *buf,
+>                 if (!virt_addr_valid(ptr))
+>                         return -ENXIO;
+>
+> -               copied = copy_from_user(ptr, buf, sz);
+> +               copied = copy_from_user_to_any(ptr, buf, sz);
+>                 if (copied) {
+>                         written += sz - copied;
+>                         if (written)
+> @@ -604,7 +604,7 @@ static ssize_t write_kmem(struct file *file, const char __user *buf,
+>                                 err = -ENXIO;
+>                                 break;
+>                         }
+> -                       n = copy_from_user(kbuf, buf, sz);
+> +                       n = copy_from_user_to_any(kbuf, buf, sz);
+>                         if (n) {
+>                                 err = -EFAULT;
+>                                 break;
+> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+> index 90655910b0c7..367b92ad598b 100644
+> --- a/drivers/tty/serial/8250/8250_port.c
+> +++ b/drivers/tty/serial/8250/8250_port.c
+> @@ -519,11 +519,14 @@ serial_port_out_sync(struct uart_port *p, int offset, int value)
+>         case UPIO_MEM32:
+>         case UPIO_MEM32BE:
+>         case UPIO_AU:
+> -               p->serial_out(p, offset, value);
+> +               /* Writing to random kernel address causes crash. */
+> +               if (!IS_ENABLED(CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING))
+> +                       p->serial_out(p, offset, value);
 
-Quote V2 the HIFI PLL init_regs definition：
+Does this do the same as LOCKDOWN_TIOCSSERIAL? How is it different?
 
-
-+static const struct reg_sequence a1_hifi_init_regs[] = {
-+	{ .reg = ANACTRL_HIFIPLL_CTRL1, .def = 0x01800000 },
-+	{ .reg = ANACTRL_HIFIPLL_CTRL2, .def = 0x00001100 },
-+	{ .reg = ANACTRL_HIFIPLL_CTRL3, .def = 0x100a1100 },
-+	{ .reg = ANACTRL_HIFIPLL_CTRL4, .def = 0x00302000 },
-+	{ .reg = ANACTRL_HIFIPLL_CTRL0, .def = 0x01f18440 },
-+	{ .reg = ANACTRL_HIFIPLL_CTRL0, .def = 0x11f18440, .delay_us = 10 },
-+	{ .reg = ANACTRL_HIFIPLL_CTRL0, .def = 0x15f18440, .delay_us = 40 },
-+	{ .reg = ANACTRL_HIFIPLL_CTRL2, .def = 0x00001140 },
-+	{ .reg = ANACTRL_HIFIPLL_CTRL2, .def = 0x00001100 },
-+};
-
-So maybe another new PARM should be defined to avoid the ambiguity.
-What do you think about it?
-
-> 
-> So if what you submited works, inserting the following should accomplish
-> the same thing:
-> 
-> ---8<---
-> diff --git a/drivers/clk/meson/clk-pll.c b/drivers/clk/meson/clk-pll.c
-> index 489092dde3a6..9b38df0a7682 100644
-> --- a/drivers/clk/meson/clk-pll.c
-> +++ b/drivers/clk/meson/clk-pll.c
-> @@ -330,6 +330,13 @@ static int meson_clk_pll_enable(struct clk_hw *hw)
->          /* Enable the pll */
->          meson_parm_write(clk->map, &pll->en, 1);
-> 
-> +       if (MESON_PARM_APPLICABLE(&pll->current_en)) {
-> +               udelay(10);
-> +               /* Enable the pll self-adaption module current */
-> +               meson_parm_write(clk->map, &pll->current_en, 1);
-> +               udelay(40);
-> +       }
+>                 p->serial_in(p, UART_LCR);      /* safe, no side-effects */
+>                 break;
+>         default:
+> -               p->serial_out(p, offset, value);
+> +               if (!IS_ENABLED(CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING))
+> +                       p->serial_out(p, offset, value);
+>         }
+>  }
+>
+> diff --git a/drivers/tty/vt/keyboard.c b/drivers/tty/vt/keyboard.c
+> index 15d33fa0c925..367820b8ff59 100644
+> --- a/drivers/tty/vt/keyboard.c
+> +++ b/drivers/tty/vt/keyboard.c
+> @@ -633,6 +633,9 @@ static void k_spec(struct vc_data *vc, unsigned char value, char up_flag)
+>              kbd->kbdmode == VC_OFF) &&
+>              value != KVAL(K_SAK))
+>                 return;         /* SAK is allowed even in raw mode */
+> +       /* Repeating SysRq-t forever causes RCU stalls. */
+> +       if (IS_ENABLED(CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING))
+> +               return;
+>         fn_handler[value](vc);
+>  }
+>
+> diff --git a/fs/ioctl.c b/fs/ioctl.c
+> index 2f5e4e5b97e1..f879aa94b118 100644
+> --- a/fs/ioctl.c
+> +++ b/fs/ioctl.c
+> @@ -601,6 +601,11 @@ static int ioctl_fsfreeze(struct file *filp)
+>         if (sb->s_op->freeze_fs == NULL && sb->s_op->freeze_super == NULL)
+>                 return -EOPNOTSUPP;
+>
+> +#ifdef CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING
+> +       /* Freezing filesystems causes hung tasks. */
+> +       return -EBUSY;
+> +#endif
 > +
->          /* Take the pll out reset */
->          meson_parm_write(clk->map, &pll->rst, 0);
-> --->8---
-> 
-> 
-> 
-> 
->> +	}
->> +
->>   	/* do nothing if the PLL is already enabled */
->>   	if (clk_hw_is_enabled(hw))
->>   		return 0;
-> 
-> In any case, nothing should be done on the clock before this check
-> otherwise you might just break the clock
-> 
-OK, I will put the enabled check ahead.
->> @@ -347,6 +364,10 @@ static void meson_clk_pll_disable(struct clk_hw *hw)
->>   
->>   	/* Disable the pll */
->>   	meson_parm_write(clk->map, &pll->en, 0);
->> +
->> +	/* Disable PLL internal self-adaption module current */
->> +	if (MESON_PARM_APPLICABLE(&pll->current_en))
->> +		meson_parm_write(clk->map, &pll->current_en, 0);
->>   }
->>   
->>   static int meson_clk_pll_set_rate(struct clk_hw *hw, unsigned long rate,
->> diff --git a/drivers/clk/meson/clk-pll.h b/drivers/clk/meson/clk-pll.h
->> index 367efd0f6410..30f039242a65 100644
->> --- a/drivers/clk/meson/clk-pll.h
->> +++ b/drivers/clk/meson/clk-pll.h
->> @@ -36,6 +36,7 @@ struct meson_clk_pll_data {
->>   	struct parm frac;
->>   	struct parm l;
->>   	struct parm rst;
->> +	struct parm current_en;
->>   	const struct reg_sequence *init_regs;
->>   	unsigned int init_count;
->>   	const struct pll_params_table *table;
->> diff --git a/drivers/clk/meson/parm.h b/drivers/clk/meson/parm.h
->> index 3c9ef1b505ce..c53fb26577e3 100644
->> --- a/drivers/clk/meson/parm.h
->> +++ b/drivers/clk/meson/parm.h
->> @@ -20,6 +20,7 @@
->>   	(((reg) & CLRPMASK(width, shift)) | ((val) << (shift)))
->>   
->>   #define MESON_PARM_APPLICABLE(p)		(!!((p)->width))
->> +#define MESON_PARM_CURRENT(p)			(!!((p)->width))
-> 
-> Why do we need that ?
-OK, I will remove it ,and use 'MESON_PARM_APPLICABLE' instead
-> 
->>   
->>   struct parm {
->>   	u16	reg_off;
-> 
-> .
-> 
+>         /* Freeze */
+>         if (sb->s_op->freeze_super)
+>                 return sb->s_op->freeze_super(sb);
+> diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+> index 67f016010aad..6e5ddd0fdcce 100644
+> --- a/include/linux/uaccess.h
+> +++ b/include/linux/uaccess.h
+> @@ -387,4 +387,16 @@ void __noreturn usercopy_abort(const char *name, const char *detail,
+>                                unsigned long len);
+>  #endif
+>
+> +#ifdef CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING
+> +unsigned long __must_check copy_from_user_to_any(void *to,
+> +                                                const void __user *from,
+> +                                                unsigned long n);
+> +#else
+> +static __always_inline unsigned long __must_check
+> +copy_from_user_to_any(void *to, const void __user *from, unsigned long n)
+> +{
+> +       return copy_from_user(to, from, n);
+> +}
+> +#endif
+> +
+>  #endif         /* __LINUX_UACCESS_H__ */
+> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> index 1ef6f75d92f1..9a2f95a78fef 100644
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -1198,6 +1198,14 @@ MODULE_PARM_DESC(ignore_loglevel,
+>
+>  static bool suppress_message_printing(int level)
+>  {
+> +#ifdef CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING
+> +       /*
+> +        * Changing console_loglevel causes "no output". But ignoring
+> +        * console_loglevel is easier than preventing change of
+> +        * console_loglevel.
+> +        */
+> +       return (level >= CONSOLE_LOGLEVEL_DEFAULT && !ignore_loglevel);
+> +#endif
+>         return (level >= console_loglevel && !ignore_loglevel);
+>  }
+>
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index d1842fe756d5..f9836cc23942 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -2184,4 +2184,14 @@ config HYPERV_TESTING
+>         help
+>           Select this option to enable Hyper-V vmbus testing.
+>
+> +config KERNEL_BUILT_FOR_FUZZ_TESTING
+> +       bool "Build kernel for fuzz testing"
+> +       default n
+> +       help
+> +        Say N unless you are building kernels for fuzz testing.
+> +        Saying Y here disables several things that legitimately cause
+> +        damage under a fuzzer workload (e.g. copying to arbitrary
+> +        user-specified kernel address, changing console loglevel,
+> +        freezing filesystems).
+> +
+>  endmenu # Kernel hacking
+> diff --git a/lib/usercopy.c b/lib/usercopy.c
+> index cbb4d9ec00f2..f7d5d243a63d 100644
+> --- a/lib/usercopy.c
+> +++ b/lib/usercopy.c
+> @@ -86,3 +86,30 @@ int check_zeroed_user(const void __user *from, size_t size)
+>         return -EFAULT;
+>  }
+>  EXPORT_SYMBOL(check_zeroed_user);
+> +
+> +#ifdef CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING
+> +/*
+> + * Since copying to arbitrary user-specified kernel address will crash
+> + * the kernel trivially, do not copy to user-specified kernel address
+> + * if the kernel was build for fuzz testing.
+> + */
+> +unsigned long __must_check copy_from_user_to_any(void *to,
+> +                                                const void __user *from,
+> +                                                unsigned long n)
+> +{
+> +       static char dummybuf[PAGE_SIZE];
+> +       unsigned long ret = 0;
+> +
+> +       while (n) {
+> +               unsigned long size = min(n, sizeof(dummybuf));
+> +
+> +               ret = copy_from_user(dummybuf, from, size);
+> +               if (ret)
+> +                       break;
+> +               from += size;
+> +               n -= size;
+> +       }
+> +       return ret;
+> +}
+> +EXPORT_SYMBOL(copy_from_user_to_any);
+> +#endif
+> --
+> 2.18.1
+>
