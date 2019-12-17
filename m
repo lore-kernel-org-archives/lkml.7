@@ -2,105 +2,161 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5176AC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 611DDC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2811D21739
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:51:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576590700;
-	bh=Q7UqnpC27UH1gRfRYAQcz4JNHrgVn2RRkrbH5cdedog=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=08S/upgz/jRMD5FrPPWjvWv190L3+au3pu6Lgz2gmVMMbhcPTiwUXzw7qoeOIdnxb
-	 RT2YWSSbcZMGiuwDbad7KqlsrwvpjJxvUnrNvmjmkSn5Bo3wP0w8X26+OX5Ty7X38v
-	 omF0e1ARNGwTQnMLfnsnOAYhvTkEq8jWLx0fhU44=
+	by mail.kernel.org (Postfix) with ESMTP id 2B8B121D7D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:51:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="guHBR27y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728572AbfLQNvj (ORCPT
+        id S1728600AbfLQNvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 08:51:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43092 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726962AbfLQNvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 08:51:38 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA00620716;
-        Tue, 17 Dec 2019 13:51:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576590698;
-        bh=Q7UqnpC27UH1gRfRYAQcz4JNHrgVn2RRkrbH5cdedog=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KVRVoSAwi3Ql+NgC7/lanHNTLz/qhwc8ijXAzQJzjpl5uwUQgd3dsUcKI9pORF9+n
-         R3GYjiGFquoLTUbchwDHt4EmwAripNKl9MfvciqSMb/LwCEppVWRmhDWWyuROO3AQC
-         IeYu4LLJjqtHK3o8G5fQ0dWSr72oFeHx6460qq6g=
-Date:   Tue, 17 Dec 2019 14:51:36 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Dmitry Safonov <dima@arista.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Jiri Slaby <jslaby@suse.com>,
-        Vasiliy Khoruzhick <vasilykh@arista.com>,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH 03/58] serial_core: Un-ifdef sysrq SUPPORT_SYSRQ
-Message-ID: <20191217135136.GA3425650@kroah.com>
-References: <20191213000657.931618-1-dima@arista.com>
- <20191213000657.931618-4-dima@arista.com>
+        Tue, 17 Dec 2019 08:51:43 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39801 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728573AbfLQNvm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 08:51:42 -0500
+Received: by mail-wr1-f68.google.com with SMTP id y11so11371121wrt.6
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 05:51:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=UpDwTP6xUYOJn/p4VO1T9tIwMyJ+3s44ALkmuaBYU3U=;
+        b=guHBR27yvZI1WGUgGNV0FTbLksEs26VjD6okj2KrEUZ7Ia9/PrXNaZQYES9kx2u57m
+         oVvQTfRwGfahNrqlqQBPDj+2O2vZZNokYrE/qiQnQkopHSabr32d+bsO5z+DnsUOdIxI
+         hIGI4d4ordTo242Ptbjn4jXZv42nuGRgWDqBW1Dl4/AerEzcjhNjT01J78z299Lq3xz8
+         3W+IguJOnYqVJpr8AFwmLUoh22IRK2t6d2f5eBSCw33X9fQFT2oi44TUaaNtoMkfE18H
+         itAbZTJ38FVK5VxN7K+nXcf1UH6RI2VMB7XSMWy/HDHJRC/wMzvzy6qPjYwn290DwdaS
+         Rciw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=UpDwTP6xUYOJn/p4VO1T9tIwMyJ+3s44ALkmuaBYU3U=;
+        b=hANub0lINckexy0RZEFioPAIjVmt2r6HcCDP8wlXp3g3d1BNgirxoyP6s4tiMXcDtO
+         5Q6JNYTp7Rlt36BzOKoHy/jlCcySP0BSGU0sk84Y+knFZyeVf4WEc3vBhgsn2lG3iO0r
+         bBXtKOBwcgNH5+Jo6+VCnBkEZWdxF3BVs1a94vnSx0fOyV7L+nfjUTB3yqPfnoIFnpmw
+         vxYeGRiL9KvasGzdFScPPStPMD8HBiUKjNpKFE8dHV5LHvobIfURNvoZ2bvJOhaW4tpk
+         HPdNjZ2SU2Td0ktLstIafFr4WW/Ho5UtY7n9S+s3RBUNWHiODMkfGUIIDw+OQMPYv7f1
+         ijFQ==
+X-Gm-Message-State: APjAAAV4VMjLyXCqlQjjkJ7+RlRh51LZPONOlyIT1kbTsN1ZUFj86Vcl
+        +xqbyaSl5hXa6cz8wGKyToxM4g==
+X-Google-Smtp-Source: APXvYqzWqTHQ/8Hj1jyKQHKlahN+h3FSMhKarcDhsgeUhMP0afvTz0/tlTOqBvWUYAzzGTWaWT4WIg==
+X-Received: by 2002:a05:6000:12c9:: with SMTP id l9mr39105103wrx.304.1576590700711;
+        Tue, 17 Dec 2019 05:51:40 -0800 (PST)
+Received: from dell ([2.27.35.132])
+        by smtp.gmail.com with ESMTPSA id n189sm3191999wme.33.2019.12.17.05.51.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 05:51:40 -0800 (PST)
+Date:   Tue, 17 Dec 2019 13:51:40 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
+        <ville.syrjala@linux.intel.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-acpi@vger.kernel.org,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] mfd: intel_soc_pmic: Rename pwm_backlight pwm-lookup
+ to pwm_pmic_backlight
+Message-ID: <20191217135140.GL18955@dell>
+References: <20191212084546.GA3468@dell>
+ <d22e9a04-da09-0f41-a78e-ac17a947650a@redhat.com>
+ <20191212155209.GC3468@dell>
+ <4d07445d-98b1-f23c-0aac-07709b45df78@redhat.com>
+ <20191213082734.GE3468@dell>
+ <d648794d-4c76-cfa1-dcbd-16c34d409c51@redhat.com>
+ <20191216093016.GE3648@dell>
+ <fc3c29da-528d-a6b6-d13b-92e6469eadea@redhat.com>
+ <20191217081127.GI18955@dell>
+ <87immfyth2.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191213000657.931618-4-dima@arista.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87immfyth2.fsf@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 12:06:02AM +0000, Dmitry Safonov wrote:
-> The SUPPORT_SYSRQ is messy: every .c source should define it before
-> including "serial_core.h" if sysrq is supported or struct uart_port will
-> differ in sizes. Also this prevents moving to serial_core.c functions:
-> uart_handle_sysrq_char(), uart_prepare_sysrq_char(),
-> uart_unlock_and_check_sysrq().
-> 
-> It doesn't save many bytes in the structure, and a better way to reduce
-> it's size would be making rs485 and iso7816 pointers.
-> 
-> Introduce `has_sysrq` member to be used by serial line drivers further.
-> 
-> Signed-off-by: Dmitry Safonov <dima@arista.com>
-> ---
->  include/linux/serial_core.h | 77 +++++++++++++++++++++----------------
->  1 file changed, 43 insertions(+), 34 deletions(-)
-> 
-> diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
-> index bbbe57bf5163..5f761c399282 100644
-> --- a/include/linux/serial_core.h
-> +++ b/include/linux/serial_core.h
-> @@ -240,14 +240,13 @@ struct uart_port {
->  	resource_size_t		mapsize;
->  	struct device		*dev;			/* parent device */
->  
-> -#if defined(CONFIG_SERIAL_CORE_CONSOLE) || defined(SUPPORT_SYSRQ)
->  	unsigned long		sysrq;			/* sysrq timeout */
->  	unsigned int		sysrq_ch;		/* char for sysrq */
-> -#endif
-> +	unsigned char		has_sysrq;
->  
->  	unsigned char		hub6;			/* this should be in the 8250 driver */
->  	unsigned char		suspended;
-> -	unsigned char		unused[2];
+On Tue, 17 Dec 2019, Jani Nikula wrote:
 
-Ugh, the samsung driver was using both of these fields to overload
-things for it's own use :(
+> On Tue, 17 Dec 2019, Lee Jones <lee.jones@linaro.org> wrote:
+> > On Mon, 16 Dec 2019, Hans de Goede wrote:
+> >
+> >> Hi,
+> >> 
+> >> Doing immutable branches assumes that there is a base point,
+> >> e.g. 5.5-rc1 where the immutable branch can then be based on and
+> >> that the branch can then be merged without issues into both subsystems.
+> >> 
+> >> drm is constantly evolving to deal with and mostly catch up with new
+> >> hardware as both GPUs and display-pipelines are evolving quite rapidly
+> >> atm drm-intel-next has about 400 commits on top of 5.5-rc1 so for an
+> >> immutable branch I can either base it on drm-intel-next which
+> >> violates your request for a clean minimal branch to merge; or I can
+> >> base it on 5.5-rc1 which leads to a big chance of problems when
+> >> merging it given to large amount of churn in drm-intel-next.
+> >
+> > This is a *slightly* more compelling reason than the ones you've
+> > previously provided.
+> >
+> >> So instead of the normal case of 2 subsystems seeing some changes
+> >> on both side the case we have here is a part of a file which has
+> >> not changed since 2015-06-26 in one subsys (and changing only
+> >> a single line there!) and OTOH we have bigger changes to a subsys
+> >> which see 400 patches land in the first week since rc1 .
+> >
+> > This is not.
+> >
+> >> I hope that you agree that in this case given the large amount of
+> >> churn in drm-intel-next it makes since to just straight forward
+> >> apply these patches on top of drm-intel-next.
+> >
+> > I have Acked this patch, but remember *this* is the exception rather
+> > than the rule.  If/when we have a case where a contributor works
+> > cross-subsystem with DRM and the code/file adapted is live (more
+> > likely to change), I will have to insist on an immutable branch
+> > strategy.  DRM will have to deal with that appropriately.
+> 
+> Hi, thanks for the ack and reaching an agreement with Hans, and sorry
+> for not responding earlier.
+> 
+> It's not unusual for us to have topic branches for cross-subsystem or
+> cross-driver changes, and I think usually we try to be accommodating in
+> merging stuff through whichever tree it makes most sense. In fact my ack
+> to do just that was my first response on this series [1].
+> 
+> So I don't really know why the fuss. We'll anyway deal with any
+> cross-subsystem series on a case by case basis, depending on what makes
+> most sense, and what suits all maintainers involved.
 
-It's not your fault, I'll go fix up that driver first before applying
-this one.
+Perfect.  Thanks for the clarification.  I look forward to working
+with you guys in the future.
 
-bah, what a horrid hack they did...
+Hans was making the case that this was impractical for DRM, due to the
+amount of churn you guys receive, hence the discussion.  I'm very
+pleased that this is not the case.
 
-greg k-h
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
