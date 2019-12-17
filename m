@@ -2,154 +2,66 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 795D3C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A624AC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4989321582
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:21:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="tF3zPMN+"
+	by mail.kernel.org (Postfix) with ESMTP id 84CA32176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:23:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbfLQXVg (ORCPT
+        id S1726620AbfLQXXF convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 18:21:36 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45642 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726470AbfLQXVf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 18:21:35 -0500
-Received: by mail-pl1-f194.google.com with SMTP id b22so68611pls.12
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 15:21:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=GmljEGBgtpmc+8iroW//rwgukhMJ+MwtBQPSUaRaS9c=;
-        b=tF3zPMN+/xu3h+Z5rc57rMs7F8Uo4B619gxCsAZmQCjTeNfkbAUoXCz+Qp4/P8uWiP
-         PGjWV//gldA44MkBn5jDzom3+5uOclW8sLvhquOPXeL2djxus01tP7mr2Nnnw5+Zf04m
-         zj+3tAeqVxoFHz8r2hCa/QPdEGB4Uq8p9OxcTvmS9jG03J7j+pedvkVvoa9q/h0BOLKL
-         G70TlY/vlv9vI+5WlDES6AZ+NZKdkSJBYy15L/I5b2sgLr5ueEQYyb5PYonrFhuHFNl1
-         9i919KS4E9Gu26/YF4l81LF5k13QRgqd47QiZip7t6ILLl6tDQ7mBpvabb1ZGQgvD5Wk
-         80nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GmljEGBgtpmc+8iroW//rwgukhMJ+MwtBQPSUaRaS9c=;
-        b=LYC88r8kvlMosaNfFHo/teHujfB5WbTAX9ToRlu3eP5o7lVeh7CADGlquZGqg74YVH
-         t1dM1pTkgxFIze2rmGrK2v4E2CHJP1BhaRSFZglIIuLRxPyfw0JdiBpnslru5NOu2SoT
-         XD0HxsnptTZJ3dIXcUvaqnLmkLo5d9JIr8I/StoH/lsgyq7aveLN6sCpFy0fZmsYpEHw
-         0+NFEliASWdeFcA/qzzRsncEjsHnYWCoC2pzCPtHmXm8qW5jUwRcnpBaoZCkUDox0PFi
-         X1Eq0DU/u8oVFiwjGiChyzTtqDU9cZO7J0u4qxhMBAXGBeEQD9hEdWh8X7uWPTeOSZx8
-         GFOw==
-X-Gm-Message-State: APjAAAX1FE3mmxK1U+xx2a4p4FwrLn901s1BfzxvJUf6QqS3sXhVkT7K
-        Ra4MAaEUdnhf4wTOiZoJBdAuU9/oHnoGwA==
-X-Google-Smtp-Source: APXvYqxGsyOATNrzJ3PctjFgAJdiNKMaZyiM508Mj9ocTn2uiWx9F9tQ95+TYTddhHmvBSfucqwUfw==
-X-Received: by 2002:a17:90a:1ae9:: with SMTP id p96mr26433pjp.8.1576624894229;
-        Tue, 17 Dec 2019 15:21:34 -0800 (PST)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id 12sm93553pfn.177.2019.12.17.15.21.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Dec 2019 15:21:33 -0800 (PST)
-Subject: Re: [PATCH 2/2] io_uring: batch getting pcpu references
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1576621553.git.asml.silence@gmail.com>
- <b72c5ec7f6d9a9881948de6cb88d30cc5e0354e9.1576621553.git.asml.silence@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <e54d77e4-9357-cb9e-9d06-d96b24f49a44@kernel.dk>
-Date:   Tue, 17 Dec 2019 16:21:32 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 17 Dec 2019 18:23:05 -0500
+Received: from muru.com ([72.249.23.125]:49072 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725940AbfLQXXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 18:23:05 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id A89FC8116;
+        Tue, 17 Dec 2019 23:23:44 +0000 (UTC)
+Date:   Tue, 17 Dec 2019 15:23:02 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: linux-next: Fixes tag needs some work in the omap-fixes tree
+Message-ID: <20191217232302.GF35479@atomide.com>
+References: <20191218071348.024f73e4@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <b72c5ec7f6d9a9881948de6cb88d30cc5e0354e9.1576621553.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20191218071348.024f73e4@canb.auug.org.au>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/17/19 3:28 PM, Pavel Begunkov wrote:
-> percpu_ref_tryget() has its own overhead. Instead getting a reference
-> for each request, grab a bunch once per io_submit_sqes().
+* Stephen Rothwell <sfr@canb.auug.org.au> [191217 20:53]:
+> Hi all,
 > 
-> basic benchmark with submit and wait 128 non-linked nops showed ~5%
-> performance gain. (7044 KIOPS vs 7423)
+> In commit
 > 
-> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-> ---
+>   d094e1b4b232 ("ARM: dts: am571x-idk: Fix gpios property to have the correct  gpio number")
 > 
-> For notice: it could be done without @extra_refs variable,
-> but looked too tangled because of gotos.
+> Fixes tag
 > 
+>   Fixes: d23f3839fe97d8dce03d ("ARM: dts: DRA7: Add pcie1 dt node for
 > 
->  fs/io_uring.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
+> has these problem(s):
 > 
-> diff --git a/fs/io_uring.c b/fs/io_uring.c
-> index cf4138f0e504..6c85dfc62224 100644
-> --- a/fs/io_uring.c
-> +++ b/fs/io_uring.c
-> @@ -845,9 +845,6 @@ static struct io_kiocb *io_get_req(struct io_ring_ctx *ctx,
->  	gfp_t gfp = GFP_KERNEL | __GFP_NOWARN;
->  	struct io_kiocb *req;
->  
-> -	if (!percpu_ref_tryget(&ctx->refs))
-> -		return NULL;
-> -
->  	if (!state) {
->  		req = kmem_cache_alloc(req_cachep, gfp);
->  		if (unlikely(!req))
-> @@ -3929,6 +3926,7 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
->  	struct io_submit_state state, *statep = NULL;
->  	struct io_kiocb *link = NULL;
->  	int i, submitted = 0;
-> +	unsigned int extra_refs;
->  	bool mm_fault = false;
->  
->  	/* if we have a backlog and couldn't flush it all, return BUSY */
-> @@ -3941,6 +3939,10 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
->  		statep = &state;
->  	}
->  
-> +	if (!percpu_ref_tryget_many(&ctx->refs, nr))
-> +		return -EAGAIN;
-> +	extra_refs = nr;
-> +
->  	for (i = 0; i < nr; i++) {
->  		struct io_kiocb *req = io_get_req(ctx, statep);
->  
-> @@ -3949,6 +3951,7 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
->  				submitted = -EAGAIN;
->  			break;
->  		}
-> +		--extra_refs;
->  		if (!io_get_sqring(ctx, req)) {
->  			__io_free_req(req);
->  			break;
-> @@ -3976,6 +3979,8 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
->  		io_queue_link_head(link);
->  	if (statep)
->  		io_submit_state_end(&state);
-> +	if (extra_refs)
-> +		percpu_ref_put_many(&ctx->refs, extra_refs);
+>   - Subject has leading but no trailing parentheses
+>   - Subject has leading but no trailing quotes
+> 
+> Please do not break FIxes tags over more that one line.  Also, keep all
+> the tags together at the end of the commit message.
 
-Might be cleaner to introduce a 'ret' variable, and leave submitted to be just
-that, the number submitted. Then you could just do:
+Thanks will fix up.
 
-if (submitted != nr)
-	percpu_ref_put_many(&ctx->refs, nr - submitted);
-
-and not need that weird extra_refs.
-
--- 
-Jens Axboe
+Tony
 
