@@ -2,83 +2,112 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95283C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB05CC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 649832176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:33:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lgUgbxt+"
+	by mail.kernel.org (Postfix) with ESMTP id B5D3820733
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:33:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbfLQTdY (ORCPT
+        id S1727962AbfLQTdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 14:33:24 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:38640 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726742AbfLQTdY (ORCPT
+        Tue, 17 Dec 2019 14:33:49 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37978 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726742AbfLQTds (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 14:33:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=GnokyztFg1DrYU8iij3eOiPO8udMbVo2S5pAbtFt5ys=; b=lgUgbxt+e5hQ8D72Q9a/UvNcL
-        9mgkGlBV78kun+06E/0o6K/CcPbOL/RVYtzQwGnoOz8OF5lco0EveCv6Ygjg9Y9k5bt6FIaSRXPF2
-        2SECRY8jH8+iZqqqwiiFObsKdR3r3Agaf40gAFLz3GRBy4JP0Hu7xnz6sL2dhkLhyIN5KLFpl5TI9
-        rjqg6ZmpTleGVr1OoMcY40tliT1dWy+BaWp/thI46n2MPVxdTm4tzct/PznxbUZyqLXtVcwPKB1bK
-        yxc0JQwf4eUkR/PemEUFtqqUXH/opU+QUmiBFeciYnEHMnwPwPCYaIZA+o7g5thtbWUZNc1srn+5U
-        t32jI8Y0w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ihIar-00062W-Oc; Tue, 17 Dec 2019 19:33:17 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 654F930038D;
-        Tue, 17 Dec 2019 20:31:52 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 15D4C2B2CEC1B; Tue, 17 Dec 2019 20:33:15 +0100 (CET)
-Date:   Tue, 17 Dec 2019 20:33:15 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     chenqiwu <qiwuchen55@gmail.com>, christian.brauner@ubuntu.com,
-        mingo@kernel.org, kernel-team@android.com,
-        linux-kernel@vger.kernel.org, chenqiwu@xiaomi.com
-Subject: Re: [PATCH v2] kernel/exit: do panic earlier to get coredump if
- global init task exit
-Message-ID: <20191217193315.GG2844@hirez.programming.kicks-ass.net>
-References: <1576466324-6067-1-git-send-email-qiwuchen55@gmail.com>
- <20191216172841.GA10466@redhat.com>
- <20191216174410.xiqurqnqyipbuy4e@wittgenstein>
- <20191217105042.GA21784@cqw-OptiPlex-7050>
- <20191217142515.GB23152@redhat.com>
- <20191217145620.GA26585@cqw-OptiPlex-7050>
- <20191217152333.GC23152@redhat.com>
+        Tue, 17 Dec 2019 14:33:48 -0500
+Received: by mail-pf1-f194.google.com with SMTP id x185so8108429pfc.5;
+        Tue, 17 Dec 2019 11:33:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sphtT1DtfRV6nmsmhC84wFhknw0860VVLYEGqnAn6m0=;
+        b=ERGG9hkhAWHsxvfxy9D5Dgz32TJ9iM8NazaXyYg0KAx9s9d2XGDRevPeoT5XaFWyLj
+         jPo4k8NfTUWUNv5qQ5L/rE3NCihoMvDgHLfdgVYbEcvqcuhrqXHqL37yp6g/igCD1Dea
+         CU/5SBR5mXgtbBMBTeDAbaCgMJvqquZF6XUDTOpRitQZouw2V+MaOhD85OVyUP+vN1jX
+         WZhcHiSi8Y1rkyUlxb7+ZiTcl978/8tHuG3f4Yvye8zD59MRXq38evZE8waHsDbU6maP
+         QKx8j7gonzJPabL9WgR0/EkcVUcGpV6gCc+VCm8xcm9tN7ZsGw0DuW/FZ6hc87t92Yld
+         fPyw==
+X-Gm-Message-State: APjAAAWF3AcoNa6CXraZzFTnOajfaU5qcPGQiYJdEoBsjygvki5lsLze
+        POwLnG4R6/Wci3h3Wu55F7xPEX/l
+X-Google-Smtp-Source: APXvYqzR+b8On1Qg5pUAGdjkD+LGiI3BORdnzprcEqc2o0S8ib/TTq3QFPYfRD3kRbSPxMLYBvUKcw==
+X-Received: by 2002:a63:5a26:: with SMTP id o38mr26391027pgb.273.1576611227420;
+        Tue, 17 Dec 2019 11:33:47 -0800 (PST)
+Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
+        by smtp.gmail.com with ESMTPSA id b190sm27601882pfg.66.2019.12.17.11.33.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Dec 2019 11:33:46 -0800 (PST)
+Subject: Re: [PATCH] scsi: RDMA/srpt: Fix incorrect pointer dereference
+To:     Aditya Pakki <pakki001@umn.edu>
+Cc:     kjlu@umn.edu, Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191217192649.24212-1-pakki001@umn.edu>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <4103701f-27f0-f856-7aae-97420b8236d2@acm.org>
+Date:   Tue, 17 Dec 2019 11:33:45 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191217152333.GC23152@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191217192649.24212-1-pakki001@umn.edu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 04:23:33PM +0100, Oleg Nesterov wrote:
-> On 12/17, chenqiwu wrote:
-> >
-> > But in fact, I think atomic_read()
-> > can avoid the racy even if both threads exit in parallel, since it is
-> > an atomic operation forever.
+On 12/17/19 11:26 AM, Aditya Pakki wrote:
+> In srpt_queue_response(), the rdma channel ch is first
+> dereferenced and then checked for NULL. This renders the
+> assertion ineffective. This patch removes the assertion and
+> avoids potential NULL pointer dereference.
 > 
-> Hmm, not sure I understand. atomic_read() is just READ_ONCE(), it can't be
-> re-ordered but that is all.
+> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+> ---
+>   drivers/infiniband/ulp/srpt/ib_srpt.c | 8 +++++---
+>   1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/infiniband/ulp/srpt/ib_srpt.c b/drivers/infiniband/ulp/srpt/ib_srpt.c
+> index 23c782e3d49a..bbc6729c81c0 100644
+> --- a/drivers/infiniband/ulp/srpt/ib_srpt.c
+> +++ b/drivers/infiniband/ulp/srpt/ib_srpt.c
+> @@ -2803,15 +2803,17 @@ static void srpt_queue_response(struct se_cmd *cmd)
+>   	struct srpt_send_ioctx *ioctx =
+>   		container_of(cmd, struct srpt_send_ioctx, cmd);
+>   	struct srpt_rdma_ch *ch = ioctx->ch;
+> -	struct srpt_device *sdev = ch->sport->sdev;
+>   	struct ib_send_wr send_wr, *first_wr = &send_wr;
+> -	struct ib_sge sge;
+>   	enum srpt_command_state state;
+> +	struct srpt_device *sdev;
+>   	int resp_len, ret, i;
+> +	struct ib_sge sge;
+>   	u8 srp_tm_status;
+>   
+> -	BUG_ON(!ch);
+> +	if (WARN_ON(!ch))
+> +		return;
+>   
+> +	sdev = ch->sport->sdev;
+>   	state = ioctx->state;
+>   	switch (state) {
+>   	case SRPT_STATE_NEW:
 
-That, atomic_read() is just a read. It doesn't modify the variable,
-therefore there isn't anything 'atomic' even remotely possible.
+Instead of making all these changes, please remove the BUG_ON(!ch) 
+statement. If the condition ioctx->ch == NULL would ever be encountered 
+then the call trace reported on the console will be sufficient to figure 
+out what happened.
+
+Thanks,
+
+Bart.
+
+
