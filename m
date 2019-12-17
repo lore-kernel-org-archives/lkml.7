@@ -2,148 +2,99 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A91EBC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 17:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20CEAC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 17:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E1F4206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 17:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED7E621582
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 17:57:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Llkj7s5+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f3WvUd6i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727753AbfLQRzy (ORCPT
+        id S1727754AbfLQR5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 12:55:54 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:59646 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726722AbfLQRzy (ORCPT
+        Tue, 17 Dec 2019 12:57:51 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44050 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726722AbfLQR5v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 12:55:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576605353;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=M7e6SsR0adMoPhT0GmsplLfMKmkYiVgsu5hzgKJZohY=;
-        b=Llkj7s5+G6IEvDPQIiO0yP4Bf6y5Eb7idn77JreQY94swSOn7LSrjpKaznL4DbFCNIFM4b
-        LD1lNWlyebOQ509yGrjnb/mFxDavR0aPX1ud06GxTro/5FfeMCS5O5fv1fyUlkn3eXQUP1
-        jQZppxIXPGcCCfdeFGiyabYmFMU/Hnw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-40-L6si89IqOXGqVPyM0K9y6A-1; Tue, 17 Dec 2019 12:55:49 -0500
-X-MC-Unique: L6si89IqOXGqVPyM0K9y6A-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 26415107ACC5;
-        Tue, 17 Dec 2019 17:55:48 +0000 (UTC)
-Received: from cantor.redhat.com (ovpn-116-112.phx2.redhat.com [10.3.116.112])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A9C542657B;
-        Tue, 17 Dec 2019 17:55:47 +0000 (UTC)
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Joerg Roedel <jroedel@suse.de>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        David Woodhouse <dwmw2@infradead.org>, stable@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Subject: [RFC PATCH] iommu/vt-d: avoid panic in __dmar_remove_one_dev_info
-Date:   Tue, 17 Dec 2019 10:55:42 -0700
-Message-Id: <20191217175542.22187-1-jsnitsel@redhat.com>
+        Tue, 17 Dec 2019 12:57:51 -0500
+Received: by mail-wr1-f68.google.com with SMTP id q10so12288719wrm.11;
+        Tue, 17 Dec 2019 09:57:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=/veVuxGSNZ6vYt8Kjkt9fU6DsI7r6dl8u0XAVHaGrcg=;
+        b=f3WvUd6ikw3G1bFlEBfT7KHmgufnclAxHFqMsSQiLDChE00tf1+cFKvrGlZcGdvq6r
+         uVwRBPyq7Gq7uvNs2fi2trO95U7rSFJsQkJ5sJMnEzNe1bUS9f51mAYuS7d+omlZhCZ1
+         ldjK6qyUmwiYCxffMSDw57MI71y6h+v6S7wo9ZTHPl8Gl77QqemXXZLz33dCqorlwv58
+         QPdWzqBoH0JSK1bjE9ZkVYK8opFCbY4oZa4XJAxxHRWc9ssj5oLfXLESlaaCkFYa7DdA
+         Wgix5epNPW4vrMP++zl32v6jKJzyIRW4aarlPFctI0sCTFl4K5JYpUplJLCZzt3snFD8
+         XjoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=/veVuxGSNZ6vYt8Kjkt9fU6DsI7r6dl8u0XAVHaGrcg=;
+        b=AJOeH56U8wyNAozLdYaLxHQiobdutGUo+vbtkRgTmVUxWUusneRqG2VYfSGRkOiCDf
+         L+9Ha3o5NUEjYj32j2qmEarv48GW98k8Z2KMSJEDQk6d2DRVO9YLI6KZbgpiLh/U6EeV
+         gwlmzH2XXtRauU1pfA5LT6fx6xHGIrd32yQ4YzXxpasstzyIfjPEQH8OhFvxLekR2XpP
+         NM5eGI7EOCBmp2pvfSYgeG1m7Z3WwzutMNeQylLIMwVkZN9oiMwgaztbKyj35ybzrrwB
+         FRqveCVssE52ClhEPX8v/zihiXPhY2mEEUvt4EBBQdwU7pnfJZvyzUsq8xWtNukVRSG6
+         b/sg==
+X-Gm-Message-State: APjAAAWeI2U6PtTJqqMR2ifULdxLWEd/CeyGhxQroTllqWWsCyiaYH0O
+        YJOQolLGTqKdt4BR2yUdBZQ=
+X-Google-Smtp-Source: APXvYqyLTN3dFvqiJkcm/MgGQwIOBoYmUuQjRL8j3JY3p4ln+YyFqtnPDDsZoWtGgYD1LMgqZ3yhiQ==
+X-Received: by 2002:adf:81e3:: with SMTP id 90mr37921736wra.23.1576605468725;
+        Tue, 17 Dec 2019 09:57:48 -0800 (PST)
+Received: from localhost.localdomain ([109.126.149.134])
+        by smtp.gmail.com with ESMTPSA id z8sm26466192wrq.22.2019.12.17.09.57.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 09:57:48 -0800 (PST)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH for-5.5] io_uring: make HARDLINK imply LINK
+Date:   Tue, 17 Dec 2019 20:57:05 +0300
+Message-Id: <4d08ae851e48c030b726e00def4451466475b7e9.1576605351.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <cover.1576605351.git.asml.silence@gmail.com>
+References: <cover.1576605351.git.asml.silence@gmail.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In addition to checking for a null pointer, verify that
-info does not have the value DEFER_DEVICE_DOMAIN_INFO or
-DUMMY_DEVICE_DOMAIN_INFO. If info has one of those values
-__dmar_remove_one_dev_info will panic when trying to access
-a member of the device_domain_info struct.
+The rules are as follows, if IOSQE_IO_HARDLINK is specified, then it's a
+link and there is no need in IOSQE_IO_LINK, though it could be there.
+Add proper check.
 
-    [    1.464241] BUG: unable to handle kernel NULL pointer dereference =
-at 000000000000004e
-    [    1.464241] PGD 0 P4D 0
-    [    1.464241] Oops: 0000 [#1] SMP PTI
-    [    1.464241] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G        W     =
-   --------- -  - 4.18.0-160.el8.x86_64 #1
-    [    1.464241] Hardware name: HP ProLiant DL360 Gen9/ProLiant DL360 G=
-en9, BIOS P89 07/21/2019
-    [    1.464241] RIP: 0010:__dmar_remove_one_dev_info+0x27/0x250
-    [    1.464241] Code: 00 00 00 0f 1f 44 00 00 8b 05 35 ec 75 01 41 56 =
-41 55 41 54 55 53 85 c0 0f 84 99 01 00 00 48 85 ff 0f 84 92 01 00 00 48 8=
-9 fb <4c> 8b 67 50 48 8b 6f 58 $
-    [    1.464241] RSP: 0000:ffffc900000dfd10 EFLAGS: 00010082
-    [    1.464241] RAX: 0000000000000001 RBX: fffffffffffffffe RCX: 00000=
-00000000000
-    [    1.464241] RDX: 0000000000000001 RSI: 0000000000000004 RDI: fffff=
-ffffffffffe
-    [    1.464241] RBP: ffff88ec7a72f368 R08: 0000000000000457 R09: 00000=
-00000000039
-    [    1.464241] R10: 0000000000000000 R11: ffffc900000dfa58 R12: ffff8=
-8ec7a0eec20
-    [    1.464241] R13: ffff88ec6fd0eab0 R14: ffffffff81eae980 R15: 00000=
-00000000000
-    [    1.464241] FS:  0000000000000000(0000) GS:ffff88ec7a600000(0000) =
-knlGS:0000000000000000
-    [    1.464241] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-    [    1.464241] CR2: 000000000000004e CR3: 0000006c7900a001 C 00000000=
-001606b0
-    [    1.464241] Call Trace:
-    [    1.464241]  dmar_remove_one_dev_info.isra.68+0x27/0x40
-    [    1.464241]  intel_iommu_add_device+0x124/0x180
-    [    1.464241]  ? iommu_probe_device+0x40/0x40
-    [    1.464241]  add_iommu_group+0xa/0x20
-    [    1.464241]  bus_for_each_dev+0x77/0xc0
-    [    1.464241]  ? down_write+0xe/0x40
-    [    1.464241]  bus_set_iommu+0x85/0xc0
-    [    1.464241]  intel_iommu_init+0x4b4/0x777
-    [    1.464241]  ? e820__memblock_setup+0x63/0x63
-    [    1.464241]  ? do_early_param+0x91/0x91
-    [    1.464241]  pci_iommu_init+0x19/0x45
-    [    1.464241]  do_one_initcall+0x46/0x1c3
-    [    1.464241]  ? do_early_param+0x91/0x91
-    [    1.464241]  kernel_init_freeable+0x1af/0x258
-    [    1.464241]  ? rest_init+0xaa/0xaa
-    [    1.464241]  kernel_init+0xa/0x107
-    [    1.464241]  ret_from_fork+0x35/0x40
-    [    1.464241] Modules linked in:
-    [    1.464241] CR2: 000000000000004e
-    [    1.464241] ---[ end trace 0927d2ba8b8032b5 ]---
-
-Cc: Joerg Roedel <jroedel@suse.de>
-Cc: Lu Baolu <baolu.lu@linux.intel.com>
-Cc: David Woodhouse <dwmw2@infradead.org>
-Cc: stable@vger.kernel.org # v5.3+
-Cc: iommu@lists.linux-foundation.org
-Fixes: ae23bfb68f28 ("iommu/vt-d: Detach domain before using a private on=
-e")
-Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
 ---
- drivers/iommu/intel-iommu.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/io_uring.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 0c8d81f56a30..e42a09794fa2 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -5163,7 +5163,8 @@ static void dmar_remove_one_dev_info(struct device =
-*dev)
-=20
- 	spin_lock_irqsave(&device_domain_lock, flags);
- 	info =3D dev->archdata.iommu;
--	if (info)
-+	if (info && info !=3D DEFER_DEVICE_DOMAIN_INFO
-+	    && info !=3D DUMMY_DEVICE_DOMAIN_INFO)
- 		__dmar_remove_one_dev_info(info);
- 	spin_unlock_irqrestore(&device_domain_lock, flags);
- }
---=20
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 339b57aac5ca..eb6d897ea087 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -3577,7 +3577,7 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
+ 		 * If previous wasn't linked and we have a linked command,
+ 		 * that's the end of the chain. Submit the previous link.
+ 		 */
+-		if (!(sqe_flags & IOSQE_IO_LINK) && link) {
++		if (!(sqe_flags & (IOSQE_IO_LINK|IOSQE_IO_HARDLINK)) && link) {
+ 			io_queue_link_head(link);
+ 			link = NULL;
+ 		}
+-- 
 2.24.0
 
