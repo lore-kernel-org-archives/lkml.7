@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E0A6C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A40FC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2819F24679
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B36824679
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:55:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728111AbfLQAzq (ORCPT
+        id S1728267AbfLQAzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:55:46 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35266 "EHLO
+        Mon, 16 Dec 2019 19:55:48 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35230 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727024AbfLQAvn (ORCPT
+        by vger.kernel.org with ESMTP id S1727002AbfLQAvn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 19:51:43 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15K-0003MA-9I; Tue, 17 Dec 2019 00:51:34 +0000
+        id 1ih15I-0003L2-3j; Tue, 17 Dec 2019 00:51:32 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15J-0005bU-Qk; Tue, 17 Dec 2019 00:51:33 +0000
+        id 1ih15H-0005WP-LN; Tue, 17 Dec 2019 00:51:31 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,19 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Luis Henriques" <lhenriques@suse.com>,
-        "Ilya Dryomov" <idryomov@gmail.com>,
-        "Jeff Layton" <jlayton@kernel.org>
-Date:   Tue, 17 Dec 2019 00:47:17 +0000
-Message-ID: <lsq.1576543535.425487150@decadent.org.uk>
+        "Pekka Enberg" <penberg@kernel.org>,
+        "Roman Gushchin" <guro@fb.com>,
+        "Vladimir Davydov" <vdavydov.dev@gmail.com>,
+        "Qian Cai" <cai@lca.pw>, "Michal Hocko" <mhocko@suse.com>,
+        "David Rientjes" <rientjes@google.com>,
+        "Joonsoo Kim" <iamjoonsoo.kim@lge.com>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Tejun Heo" <tj@kernel.org>, "Christoph Lameter" <cl@linux.com>
+Date:   Tue, 17 Dec 2019 00:46:37 +0000
+Message-ID: <lsq.1576543535.631651561@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 103/136] ceph: fix use-after-free in __ceph_remove_cap()
+Subject: [PATCH 3.16 063/136] mm/slub: fix a deadlock in show_slab_objects()
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,70 +61,183 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Luis Henriques <lhenriques@suse.com>
+From: Qian Cai <cai@lca.pw>
 
-commit ea60ed6fcf29eebc78f2ce91491e6309ee005a01 upstream.
+commit e4f8e513c3d353c134ad4eef9fd0bba12406c7c8 upstream.
 
-KASAN reports a use-after-free when running xfstest generic/531, with the
-following trace:
+A long time ago we fixed a similar deadlock in show_slab_objects() [1].
+However, it is apparently due to the commits like 01fb58bcba63 ("slab:
+remove synchronous synchronize_sched() from memcg cache deactivation
+path") and 03afc0e25f7f ("slab: get_online_mems for
+kmem_cache_{create,destroy,shrink}"), this kind of deadlock is back by
+just reading files in /sys/kernel/slab which will generate a lockdep
+splat below.
 
-[  293.903362]  kasan_report+0xe/0x20
-[  293.903365]  rb_erase+0x1f/0x790
-[  293.903370]  __ceph_remove_cap+0x201/0x370
-[  293.903375]  __ceph_remove_caps+0x4b/0x70
-[  293.903380]  ceph_evict_inode+0x4e/0x360
-[  293.903386]  evict+0x169/0x290
-[  293.903390]  __dentry_kill+0x16f/0x250
-[  293.903394]  dput+0x1c6/0x440
-[  293.903398]  __fput+0x184/0x330
-[  293.903404]  task_work_run+0xb9/0xe0
-[  293.903410]  exit_to_usermode_loop+0xd3/0xe0
-[  293.903413]  do_syscall_64+0x1a0/0x1c0
-[  293.903417]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Since the "mem_hotplug_lock" here is only to obtain a stable online node
+mask while racing with NUMA node hotplug, in the worst case, the results
+may me miscalculated while doing NUMA node hotplug, but they shall be
+corrected by later reads of the same files.
 
-This happens because __ceph_remove_cap() may queue a cap release
-(__ceph_queue_cap_release) which can be scheduled before that cap is
-removed from the inode list with
+  WARNING: possible circular locking dependency detected
+  ------------------------------------------------------
+  cat/5224 is trying to acquire lock:
+  ffff900012ac3120 (mem_hotplug_lock.rw_sem){++++}, at:
+  show_slab_objects+0x94/0x3a8
 
-	rb_erase(&cap->ci_node, &ci->i_caps);
+  but task is already holding lock:
+  b8ff009693eee398 (kn->count#45){++++}, at: kernfs_seq_start+0x44/0xf0
 
-And, when this finally happens, the use-after-free will occur.
+  which lock already depends on the new lock.
 
-This can be fixed by removing the cap from the inode list before being
-removed from the session list, and thus eliminating the risk of an UAF.
+  the existing dependency chain (in reverse order) is:
 
-Signed-off-by: Luis Henriques <lhenriques@suse.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+  -> #2 (kn->count#45){++++}:
+         lock_acquire+0x31c/0x360
+         __kernfs_remove+0x290/0x490
+         kernfs_remove+0x30/0x44
+         sysfs_remove_dir+0x70/0x88
+         kobject_del+0x50/0xb0
+         sysfs_slab_unlink+0x2c/0x38
+         shutdown_cache+0xa0/0xf0
+         kmemcg_cache_shutdown_fn+0x1c/0x34
+         kmemcg_workfn+0x44/0x64
+         process_one_work+0x4f4/0x950
+         worker_thread+0x390/0x4bc
+         kthread+0x1cc/0x1e8
+         ret_from_fork+0x10/0x18
+
+  -> #1 (slab_mutex){+.+.}:
+         lock_acquire+0x31c/0x360
+         __mutex_lock_common+0x16c/0xf78
+         mutex_lock_nested+0x40/0x50
+         memcg_create_kmem_cache+0x38/0x16c
+         memcg_kmem_cache_create_func+0x3c/0x70
+         process_one_work+0x4f4/0x950
+         worker_thread+0x390/0x4bc
+         kthread+0x1cc/0x1e8
+         ret_from_fork+0x10/0x18
+
+  -> #0 (mem_hotplug_lock.rw_sem){++++}:
+         validate_chain+0xd10/0x2bcc
+         __lock_acquire+0x7f4/0xb8c
+         lock_acquire+0x31c/0x360
+         get_online_mems+0x54/0x150
+         show_slab_objects+0x94/0x3a8
+         total_objects_show+0x28/0x34
+         slab_attr_show+0x38/0x54
+         sysfs_kf_seq_show+0x198/0x2d4
+         kernfs_seq_show+0xa4/0xcc
+         seq_read+0x30c/0x8a8
+         kernfs_fop_read+0xa8/0x314
+         __vfs_read+0x88/0x20c
+         vfs_read+0xd8/0x10c
+         ksys_read+0xb0/0x120
+         __arm64_sys_read+0x54/0x88
+         el0_svc_handler+0x170/0x240
+         el0_svc+0x8/0xc
+
+  other info that might help us debug this:
+
+  Chain exists of:
+    mem_hotplug_lock.rw_sem --> slab_mutex --> kn->count#45
+
+   Possible unsafe locking scenario:
+
+         CPU0                    CPU1
+         ----                    ----
+    lock(kn->count#45);
+                                 lock(slab_mutex);
+                                 lock(kn->count#45);
+    lock(mem_hotplug_lock.rw_sem);
+
+   *** DEADLOCK ***
+
+  3 locks held by cat/5224:
+   #0: 9eff00095b14b2a0 (&p->lock){+.+.}, at: seq_read+0x4c/0x8a8
+   #1: 0eff008997041480 (&of->mutex){+.+.}, at: kernfs_seq_start+0x34/0xf0
+   #2: b8ff009693eee398 (kn->count#45){++++}, at:
+  kernfs_seq_start+0x44/0xf0
+
+  stack backtrace:
+  Call trace:
+   dump_backtrace+0x0/0x248
+   show_stack+0x20/0x2c
+   dump_stack+0xd0/0x140
+   print_circular_bug+0x368/0x380
+   check_noncircular+0x248/0x250
+   validate_chain+0xd10/0x2bcc
+   __lock_acquire+0x7f4/0xb8c
+   lock_acquire+0x31c/0x360
+   get_online_mems+0x54/0x150
+   show_slab_objects+0x94/0x3a8
+   total_objects_show+0x28/0x34
+   slab_attr_show+0x38/0x54
+   sysfs_kf_seq_show+0x198/0x2d4
+   kernfs_seq_show+0xa4/0xcc
+   seq_read+0x30c/0x8a8
+   kernfs_fop_read+0xa8/0x314
+   __vfs_read+0x88/0x20c
+   vfs_read+0xd8/0x10c
+   ksys_read+0xb0/0x120
+   __arm64_sys_read+0x54/0x88
+   el0_svc_handler+0x170/0x240
+   el0_svc+0x8/0xc
+
+I think it is important to mention that this doesn't expose the
+show_slab_objects to use-after-free.  There is only a single path that
+might really race here and that is the slab hotplug notifier callback
+__kmem_cache_shrink (via slab_mem_going_offline_callback) but that path
+doesn't really destroy kmem_cache_node data structures.
+
+[1] http://lkml.iu.edu/hypermail/linux/kernel/1101.0/02850.html
+
+[akpm@linux-foundation.org: add comment explaining why we don't need mem_hotplug_lock]
+Link: http://lkml.kernel.org/r/1570192309-10132-1-git-send-email-cai@lca.pw
+Fixes: 01fb58bcba63 ("slab: remove synchronous synchronize_sched() from memcg cache deactivation path")
+Fixes: 03afc0e25f7f ("slab: get_online_mems for kmem_cache_{create,destroy,shrink}")
+Signed-off-by: Qian Cai <cai@lca.pw>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: Roman Gushchin <guro@fb.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/ceph/caps.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ mm/slub.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
---- a/fs/ceph/caps.c
-+++ b/fs/ceph/caps.c
-@@ -913,6 +913,11 @@ void __ceph_remove_cap(struct ceph_cap *
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -4329,7 +4329,17 @@ static ssize_t show_slab_objects(struct
+ 		}
+ 	}
  
- 	dout("__ceph_remove_cap %p from %p\n", cap, &ci->vfs_inode);
- 
-+	/* remove from inode's cap rbtree, and clear auth cap */
-+	rb_erase(&cap->ci_node, &ci->i_caps);
-+	if (ci->i_auth_cap == cap)
-+		ci->i_auth_cap = NULL;
+-	get_online_mems();
++	/*
++	 * It is impossible to take "mem_hotplug_lock" here with "kernfs_mutex"
++	 * already held which will conflict with an existing lock order:
++	 *
++	 * mem_hotplug_lock->slab_mutex->kernfs_mutex
++	 *
++	 * We don't really need mem_hotplug_lock (to hold off
++	 * slab_mem_going_offline_callback) here because slab's memory hot
++	 * unplug code doesn't destroy the kmem_cache->node[] data.
++	 */
 +
- 	/* remove from session list */
- 	spin_lock(&session->s_cap_lock);
- 	/*
-@@ -939,11 +944,6 @@ void __ceph_remove_cap(struct ceph_cap *
- 	cap->ci = NULL;
- 	spin_unlock(&session->s_cap_lock);
- 
--	/* remove from inode list */
--	rb_erase(&cap->ci_node, &ci->i_caps);
--	if (ci->i_auth_cap == cap)
--		ci->i_auth_cap = NULL;
--
- 	if (removed)
- 		ceph_put_cap(mdsc, cap);
- 
+ #ifdef CONFIG_SLUB_DEBUG
+ 	if (flags & SO_ALL) {
+ 		for_each_node_state(node, N_NORMAL_MEMORY) {
+@@ -4369,7 +4379,6 @@ static ssize_t show_slab_objects(struct
+ 			x += sprintf(buf + x, " N%d=%lu",
+ 					node, nodes[node]);
+ #endif
+-	put_online_mems();
+ 	kfree(nodes);
+ 	return x + sprintf(buf + x, "\n");
+ }
 
