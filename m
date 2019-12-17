@@ -2,178 +2,385 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC35C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6650CC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:46:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4187F21835
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:46:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576586790;
-	bh=/gq2ENt0qurcVlUyxnvb9suA8Oq34sFd4ycuAWG0OYw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2jpcKkW44BzKdN6h3/fEE4wzuXkLW1P1/t6DJ1+zl7llH/15wrsSTAopjG11VBQ1W
-	 +mHhaRpgsLxzGMrGSaCeUjSXVmGYrKA2kCaY94mbk1z17HM1CsbPZV+egiY6neiBi5
-	 wIfV620JOtEZzpTiI2FAothyYj2zYfvPhUZd3imw=
+	by mail.kernel.org (Postfix) with ESMTP id 2FEAD21582
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:46:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="LJAPSpSx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbfLQMq3 (ORCPT
+        id S1728420AbfLQMqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:46:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48720 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727621AbfLQMq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 07:46:28 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 17 Dec 2019 07:46:37 -0500
+Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:38960 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728049AbfLQMqV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 07:46:21 -0500
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2366024685;
-        Tue, 17 Dec 2019 12:46:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576586785;
-        bh=/gq2ENt0qurcVlUyxnvb9suA8Oq34sFd4ycuAWG0OYw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=j8I3PCZJ3SBxmKHTk5I21xBg/zjO931JgqSvclKg/dys27/ayvnvyj9VRwtpI3RfW
-         RC+9m+kZcpSc9UwqPOZrvDV2/Ao6o2w4ckwBk1pjRx+sUaN7vvwT0BsjnCG5fsY6bG
-         8ovygytVqyQpjU06fqAsbjAT2T8vRsNozJjCCLr8=
-Date:   Tue, 17 Dec 2019 13:46:23 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     linux-usb@vger.kernel.org,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Lukas Wunner <lukas@wunner.de>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Mario.Limonciello@dell.com,
-        Anthony Wong <anthony.wong@canonical.com>,
-        Oliver Neukum <oneukum@suse.com>,
-        Christian Kellner <ckellner@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/9] thunderbolt: Populate PG field in hot plug
- acknowledgment packet
-Message-ID: <20191217124623.GB3175457@kroah.com>
-References: <20191217123345.31850-1-mika.westerberg@linux.intel.com>
- <20191217123345.31850-4-mika.westerberg@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191217123345.31850-4-mika.westerberg@linux.intel.com>
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 5E132C00CC;
+        Tue, 17 Dec 2019 12:46:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1576586780; bh=fBmg9YO9gXGptmoawpTJ6ZduoL85BJe/Hw0dREJDins=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=LJAPSpSxVmGXk1gHOmHiD9zjbBRAlVQqot2OVxFJ7Dkm4U2A7HAgeMweKoD3NUZI9
+         SlcwJQYHXL8Yr0ADgdeAAhyY0C2hVqo5oOPmbbFHtMOGaMaKW6qdujhlCz3/9ozUkA
+         wSzkcpw6L6gEnb/fVsVgspAd7q+BHpPRKaAB6RR9ltHUKM3bdhdq6sC6Y8vYyhK/pp
+         /xcn3K8tAZa/vy6nke8sGXFNHmT76BTQg3aiFu1TKJ4Nuzev/fRUEpmPb7FDWgnAZ/
+         o/EwXnrfrzT61AkD6+Nh6KoDDzCqhiEcowscf1sr/1QTUIDB5aqaKxqY5+L3jFgbSO
+         rYJCYxLmW744Q==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id D9D41A0095;
+        Tue, 17 Dec 2019 12:46:17 +0000 (UTC)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v2 5/7] net: stmmac: Add basic EST support for GMAC5+
+Date:   Tue, 17 Dec 2019 13:46:09 +0100
+Message-Id: <7657fccefb7f8d916060514a6b4550c932e4cc06.1576586602.git.Jose.Abreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1576586602.git.Jose.Abreu@synopsys.com>
+References: <cover.1576586602.git.Jose.Abreu@synopsys.com>
+In-Reply-To: <cover.1576586602.git.Jose.Abreu@synopsys.com>
+References: <cover.1576586602.git.Jose.Abreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 03:33:39PM +0300, Mika Westerberg wrote:
-> USB4 1.0 section 6.4.2.7 specifies a new field (PG) in notification
-> packet that is sent as response of hot plug/unplug events. This field
-> tells whether the acknowledgment is for plug or unplug event. This needs
-> to be set accordingly in order the router to send further hot plug
-> notifications.
-> 
-> To make it simpler we fill the field unconditionally. Legacy devices do
-> not look at this field so there should be no problems with them.
-> 
-> While there rename tb_cfg_error() to tb_cfg_ack_plug() and update the
-> log message accordingly. The function is only used to ack plug/unplug
-> events.
-> 
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> ---
->  drivers/thunderbolt/ctl.c     | 19 +++++++++++++------
->  drivers/thunderbolt/ctl.h     |  3 +--
->  drivers/thunderbolt/tb.c      |  3 +--
->  drivers/thunderbolt/tb_msgs.h |  6 +++++-
->  4 files changed, 20 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/thunderbolt/ctl.c b/drivers/thunderbolt/ctl.c
-> index d97813e80e5f..f77ceae5c7d7 100644
-> --- a/drivers/thunderbolt/ctl.c
-> +++ b/drivers/thunderbolt/ctl.c
-> @@ -708,19 +708,26 @@ void tb_ctl_stop(struct tb_ctl *ctl)
->  /* public interface, commands */
->  
->  /**
-> - * tb_cfg_error() - send error packet
-> + * tb_cfg_ack_plug() - Ack hot plug/unplug event
-> + * @ctl: Control channel to use
-> + * @route: Router that originated the event
-> + * @port: Port where the hot plug/unplug happened
-> + * @unplug: Ack hot plug or unplug
->   *
-> - * Return: Returns 0 on success or an error code on failure.
-> + * Call this as response for hot plug/unplug event to ack it.
-> + * Returns %0 on success or an error code on failure.
->   */
-> -int tb_cfg_error(struct tb_ctl *ctl, u64 route, u32 port,
-> -		 enum tb_cfg_error error)
-> +int tb_cfg_ack_plug(struct tb_ctl *ctl, u64 route, u32 port, bool unplug)
->  {
->  	struct cfg_error_pkg pkg = {
->  		.header = tb_cfg_make_header(route),
->  		.port = port,
-> -		.error = error,
-> +		.error = TB_CFG_ERROR_ACK_PLUG_EVENT,
-> +		.pg = unplug ? TB_CFG_ERROR_PG_HOT_UNPLUG
-> +			     : TB_CFG_ERROR_PG_HOT_PLUG,
->  	};
-> -	tb_ctl_dbg(ctl, "resetting error on %llx:%x.\n", route, port);
-> +	tb_ctl_dbg(ctl, "acking hot %splug event on %llx:%x\n",
-> +		   unplug ? "un" : "", route, port);
->  	return tb_ctl_tx(ctl, &pkg, sizeof(pkg), TB_CFG_PKG_ERROR);
->  }
->  
-> diff --git a/drivers/thunderbolt/ctl.h b/drivers/thunderbolt/ctl.h
-> index 2f1a1e111110..97cb03b38953 100644
-> --- a/drivers/thunderbolt/ctl.h
-> +++ b/drivers/thunderbolt/ctl.h
-> @@ -123,8 +123,7 @@ static inline struct tb_cfg_header tb_cfg_make_header(u64 route)
->  	return header;
->  }
->  
-> -int tb_cfg_error(struct tb_ctl *ctl, u64 route, u32 port,
-> -		 enum tb_cfg_error error);
-> +int tb_cfg_ack_plug(struct tb_ctl *ctl, u64 route, u32 port, bool unplug);
->  struct tb_cfg_result tb_cfg_reset(struct tb_ctl *ctl, u64 route,
->  				  int timeout_msec);
->  struct tb_cfg_result tb_cfg_read_raw(struct tb_ctl *ctl, void *buffer,
-> diff --git a/drivers/thunderbolt/tb.c b/drivers/thunderbolt/tb.c
-> index 54085f67810a..e54d0d89a32d 100644
-> --- a/drivers/thunderbolt/tb.c
-> +++ b/drivers/thunderbolt/tb.c
-> @@ -768,8 +768,7 @@ static void tb_handle_event(struct tb *tb, enum tb_cfg_pkg_type type,
->  
->  	route = tb_cfg_get_route(&pkg->header);
->  
-> -	if (tb_cfg_error(tb->ctl, route, pkg->port,
-> -			 TB_CFG_ERROR_ACK_PLUG_EVENT)) {
-> +	if (tb_cfg_ack_plug(tb->ctl, route, pkg->port, pkg->unplug)) {
->  		tb_warn(tb, "could not ack plug event on %llx:%x\n", route,
->  			pkg->port);
->  	}
-> diff --git a/drivers/thunderbolt/tb_msgs.h b/drivers/thunderbolt/tb_msgs.h
-> index 3705057723b6..fc208c567953 100644
-> --- a/drivers/thunderbolt/tb_msgs.h
-> +++ b/drivers/thunderbolt/tb_msgs.h
-> @@ -67,9 +67,13 @@ struct cfg_error_pkg {
->  	u32 zero1:4;
->  	u32 port:6;
->  	u32 zero2:2; /* Both should be zero, still they are different fields. */
-> -	u32 zero3:16;
-> +	u32 zero3:14;
-> +	u32 pg:2;
->  } __packed;
+From: Jose Abreu <joabreu@synopsys.com>
 
-Meta-comment, how does this work for endian issues?  gcc will "always"
-pack these in the correct way such that they match up to the bits on the
-wire?
+Adds the support for EST in GMAC5+ cores. This feature allows to offload
+scheduling of queues opening time to the IP.
 
-thanks,
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 
-greg k-h
+---
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Jose Abreu <joabreu@synopsys.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/net/ethernet/stmicro/stmmac/common.h      |  4 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac4.h      |  9 +++
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c |  2 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c  |  3 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac5.c      | 95 +++++++++++++++++++++++
+ drivers/net/ethernet/stmicro/stmmac/dwmac5.h      | 19 +++++
+ drivers/net/ethernet/stmicro/stmmac/hwif.h        |  5 ++
+ include/linux/stmmac.h                            | 11 +++
+ 8 files changed, 148 insertions(+)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
+index b210e987a1db..2f1fc93a9b1e 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/common.h
++++ b/drivers/net/ethernet/stmicro/stmmac/common.h
+@@ -363,6 +363,10 @@ struct dma_features {
+ 	unsigned int dvlan;
+ 	unsigned int l3l4fnum;
+ 	unsigned int arpoffsel;
++	/* TSN Features */
++	unsigned int estwid;
++	unsigned int estdep;
++	unsigned int estsel;
+ };
+ 
+ /* GMAC TX FIFO is 8K, Rx FIFO is 16K */
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
+index 2dc70d104161..f7f5a2751147 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
+@@ -176,6 +176,8 @@ enum power_event {
+ #define GMAC_CONFIG_SARC		GENMASK(30, 28)
+ #define GMAC_CONFIG_SARC_SHIFT		28
+ #define GMAC_CONFIG_IPC			BIT(27)
++#define GMAC_CONFIG_IPG			GENMASK(26, 24)
++#define GMAC_CONFIG_IPG_SHIFT		24
+ #define GMAC_CONFIG_2K			BIT(22)
+ #define GMAC_CONFIG_ACS			BIT(20)
+ #define GMAC_CONFIG_BE			BIT(18)
+@@ -183,6 +185,7 @@ enum power_event {
+ #define GMAC_CONFIG_JE			BIT(16)
+ #define GMAC_CONFIG_PS			BIT(15)
+ #define GMAC_CONFIG_FES			BIT(14)
++#define GMAC_CONFIG_FES_SHIFT		14
+ #define GMAC_CONFIG_DM			BIT(13)
+ #define GMAC_CONFIG_LM			BIT(12)
+ #define GMAC_CONFIG_DCRS		BIT(9)
+@@ -190,6 +193,9 @@ enum power_event {
+ #define GMAC_CONFIG_RE			BIT(0)
+ 
+ /* MAC extended config */
++#define GMAC_CONFIG_EIPG		GENMASK(29, 25)
++#define GMAC_CONFIG_EIPG_SHIFT		25
++#define GMAC_CONFIG_EIPG_EN		BIT(24)
+ #define GMAC_CONFIG_HDSMS		GENMASK(22, 20)
+ #define GMAC_CONFIG_HDSMS_SHIFT		20
+ #define GMAC_CONFIG_HDSMS_256		(0x2 << GMAC_CONFIG_HDSMS_SHIFT)
+@@ -231,6 +237,9 @@ enum power_event {
+ 
+ /* MAC HW features3 bitmap */
+ #define GMAC_HW_FEAT_ASP		GENMASK(29, 28)
++#define GMAC_HW_FEAT_ESTWID		GENMASK(21, 20)
++#define GMAC_HW_FEAT_ESTDEP		GENMASK(19, 17)
++#define GMAC_HW_FEAT_ESTSEL		BIT(16)
+ #define GMAC_HW_FEAT_FRPES		GENMASK(14, 13)
+ #define GMAC_HW_FEAT_FRPBS		GENMASK(12, 11)
+ #define GMAC_HW_FEAT_FRPSEL		BIT(10)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+index 40ca00e596dd..8df7496411a0 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+@@ -984,6 +984,7 @@ const struct stmmac_ops dwmac410_ops = {
+ 	.set_arp_offload = dwmac4_set_arp_offload,
+ 	.config_l3_filter = dwmac4_config_l3_filter,
+ 	.config_l4_filter = dwmac4_config_l4_filter,
++	.est_configure = dwmac5_est_configure,
+ };
+ 
+ const struct stmmac_ops dwmac510_ops = {
+@@ -1027,6 +1028,7 @@ const struct stmmac_ops dwmac510_ops = {
+ 	.set_arp_offload = dwmac4_set_arp_offload,
+ 	.config_l3_filter = dwmac4_config_l3_filter,
+ 	.config_l4_filter = dwmac4_config_l4_filter,
++	.est_configure = dwmac5_est_configure,
+ };
+ 
+ int dwmac4_setup(struct stmmac_priv *priv)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
+index c15409030710..3552ce1201ff 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
+@@ -404,6 +404,9 @@ static void dwmac4_get_hw_feature(void __iomem *ioaddr,
+ 
+ 	/* 5.10 Features */
+ 	dma_cap->asp = (hw_cap & GMAC_HW_FEAT_ASP) >> 28;
++	dma_cap->estwid = (hw_cap & GMAC_HW_FEAT_ESTWID) >> 20;
++	dma_cap->estdep = (hw_cap & GMAC_HW_FEAT_ESTDEP) >> 17;
++	dma_cap->estsel = (hw_cap & GMAC_HW_FEAT_ESTSEL) >> 16;
+ 	dma_cap->frpes = (hw_cap & GMAC_HW_FEAT_FRPES) >> 13;
+ 	dma_cap->frpbs = (hw_cap & GMAC_HW_FEAT_FRPBS) >> 11;
+ 	dma_cap->frpsel = (hw_cap & GMAC_HW_FEAT_FRPSEL) >> 10;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac5.c b/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
+index e436fa160c7d..8047f402fb3f 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
+@@ -550,3 +550,98 @@ int dwmac5_flex_pps_config(void __iomem *ioaddr, int index,
+ 	writel(val, ioaddr + MAC_PPS_CONTROL);
+ 	return 0;
+ }
++
++static int dwmac5_est_write(void __iomem *ioaddr, u32 reg, u32 val, bool gcl)
++{
++	u32 ctrl;
++
++	writel(val, ioaddr + MTL_EST_GCL_DATA);
++
++	ctrl = (reg << ADDR_SHIFT);
++	ctrl |= gcl ? 0 : GCRR;
++
++	writel(ctrl, ioaddr + MTL_EST_GCL_CONTROL);
++
++	ctrl |= SRWO;
++	writel(ctrl, ioaddr + MTL_EST_GCL_CONTROL);
++
++	return readl_poll_timeout(ioaddr + MTL_EST_GCL_CONTROL,
++				  ctrl, !(ctrl & SRWO), 100, 5000);
++}
++
++int dwmac5_est_configure(void __iomem *ioaddr, struct stmmac_est *cfg,
++			 unsigned int ptp_rate)
++{
++	u32 speed, total_offset, offset, ctrl, ctr_low;
++	u32 extcfg = readl(ioaddr + GMAC_EXT_CONFIG);
++	u32 mac_cfg = readl(ioaddr + GMAC_CONFIG);
++	int i, ret = 0x0;
++	u64 total_ctr;
++
++	if (extcfg & GMAC_CONFIG_EIPG_EN) {
++		offset = (extcfg & GMAC_CONFIG_EIPG) >> GMAC_CONFIG_EIPG_SHIFT;
++		offset = 104 + (offset * 8);
++	} else {
++		offset = (mac_cfg & GMAC_CONFIG_IPG) >> GMAC_CONFIG_IPG_SHIFT;
++		offset = 96 - (offset * 8);
++	}
++
++	speed = mac_cfg & (GMAC_CONFIG_PS | GMAC_CONFIG_FES);
++	speed = speed >> GMAC_CONFIG_FES_SHIFT;
++
++	switch (speed) {
++	case 0x0:
++		offset = offset * 1000; /* 1G */
++		break;
++	case 0x1:
++		offset = offset * 400; /* 2.5G */
++		break;
++	case 0x2:
++		offset = offset * 100000; /* 10M */
++		break;
++	case 0x3:
++		offset = offset * 10000; /* 100M */
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	offset = offset / 1000;
++
++	ret |= dwmac5_est_write(ioaddr, BTR_LOW, cfg->btr[0], false);
++	ret |= dwmac5_est_write(ioaddr, BTR_HIGH, cfg->btr[1], false);
++	ret |= dwmac5_est_write(ioaddr, TER, cfg->ter, false);
++	ret |= dwmac5_est_write(ioaddr, LLR, cfg->gcl_size, false);
++	if (ret)
++		return ret;
++
++	total_offset = 0;
++	for (i = 0; i < cfg->gcl_size; i++) {
++		ret = dwmac5_est_write(ioaddr, i, cfg->gcl[i] + offset, true);
++		if (ret)
++			return ret;
++
++		total_offset += offset;
++	}
++
++	total_ctr = cfg->ctr[0] + cfg->ctr[1] * 1000000000;
++	total_ctr += total_offset;
++
++	ctr_low = do_div(total_ctr, 1000000000);
++
++	ret |= dwmac5_est_write(ioaddr, CTR_LOW, ctr_low, false);
++	ret |= dwmac5_est_write(ioaddr, CTR_HIGH, total_ctr, false);
++	if (ret)
++		return ret;
++
++	ctrl = readl(ioaddr + MTL_EST_CONTROL);
++	ctrl &= ~PTOV;
++	ctrl |= ((1000000000 / ptp_rate) * 6) << PTOV_SHIFT;
++	if (cfg->enable)
++		ctrl |= EEST | SSWL;
++	else
++		ctrl &= ~EEST;
++
++	writel(ctrl, ioaddr + MTL_EST_CONTROL);
++	return 0;
++}
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac5.h b/drivers/net/ethernet/stmicro/stmmac/dwmac5.h
+index 23fecf68f781..70e6d8837dd9 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac5.h
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac5.h
+@@ -30,6 +30,23 @@
+ #define MAC_PPSx_INTERVAL(x)		(0x00000b88 + ((x) * 0x10))
+ #define MAC_PPSx_WIDTH(x)		(0x00000b8c + ((x) * 0x10))
+ 
++#define MTL_EST_CONTROL			0x00000c50
++#define PTOV				GENMASK(31, 24)
++#define PTOV_SHIFT			24
++#define SSWL				BIT(1)
++#define EEST				BIT(0)
++#define MTL_EST_GCL_CONTROL		0x00000c80
++#define BTR_LOW				0x0
++#define BTR_HIGH			0x1
++#define CTR_LOW				0x2
++#define CTR_HIGH			0x3
++#define TER				0x4
++#define LLR				0x5
++#define ADDR_SHIFT			8
++#define GCRR				BIT(2)
++#define SRWO				BIT(0)
++#define MTL_EST_GCL_DATA		0x00000c84
++
+ #define MTL_RXP_CONTROL_STATUS		0x00000ca0
+ #define RXPI				BIT(31)
+ #define NPE				GENMASK(23, 16)
+@@ -83,5 +100,7 @@ int dwmac5_rxp_config(void __iomem *ioaddr, struct stmmac_tc_entry *entries,
+ int dwmac5_flex_pps_config(void __iomem *ioaddr, int index,
+ 			   struct stmmac_pps_cfg *cfg, bool enable,
+ 			   u32 sub_second_inc, u32 systime_flags);
++int dwmac5_est_configure(void __iomem *ioaddr, struct stmmac_est *cfg,
++			 unsigned int ptp_rate);
+ 
+ #endif /* __DWMAC5_H__ */
+diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
+index 098fbe7a5862..9fd34df6eb16 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
++++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
+@@ -276,6 +276,7 @@ struct stmmac_safety_stats;
+ struct stmmac_tc_entry;
+ struct stmmac_pps_cfg;
+ struct stmmac_rss;
++struct stmmac_est;
+ 
+ /* Helpers to program the MAC core */
+ struct stmmac_ops {
+@@ -373,6 +374,8 @@ struct stmmac_ops {
+ 				bool en, bool udp, bool sa, bool inv,
+ 				u32 match);
+ 	void (*set_arp_offload)(struct mac_device_info *hw, bool en, u32 addr);
++	int (*est_configure)(void __iomem *ioaddr, struct stmmac_est *cfg,
++			     unsigned int ptp_rate);
+ };
+ 
+ #define stmmac_core_init(__priv, __args...) \
+@@ -459,6 +462,8 @@ struct stmmac_ops {
+ 	stmmac_do_callback(__priv, mac, config_l4_filter, __args)
+ #define stmmac_set_arp_offload(__priv, __args...) \
+ 	stmmac_do_void_callback(__priv, mac, set_arp_offload, __args)
++#define stmmac_est_configure(__priv, __args...) \
++	stmmac_do_callback(__priv, mac, est_configure, __args)
+ 
+ /* PTP and HW Timer helpers */
+ struct stmmac_hwtimestamp {
+diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
+index d4bcd9387136..55587cc10567 100644
+--- a/include/linux/stmmac.h
++++ b/include/linux/stmmac.h
+@@ -109,6 +109,16 @@ struct stmmac_axi {
+ 	bool axi_rb;
+ };
+ 
++#define EST_GCL		1024
++struct stmmac_est {
++	int enable;
++	u32 btr[2];
++	u32 ctr[2];
++	u32 ter;
++	u32 gcl[EST_GCL];
++	u32 gcl_size;
++};
++
+ struct stmmac_rxq_cfg {
+ 	u8 mode_to_use;
+ 	u32 chan;
+@@ -139,6 +149,7 @@ struct plat_stmmacenet_data {
+ 	struct device_node *phylink_node;
+ 	struct device_node *mdio_node;
+ 	struct stmmac_dma_cfg *dma_cfg;
++	struct stmmac_est *est;
+ 	int clk_csr;
+ 	int has_gmac;
+ 	int enh_desc;
+-- 
+2.7.4
+
