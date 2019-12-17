@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A22A6C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4265C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 747562465E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B203524655
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:49:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576594144;
-	bh=a9mKoMbq2WRjoubXG8o0HMichj1xLz9Of/S2vlHQBag=;
+	s=default; t=1576594148;
+	bh=r3AXnhR7xsUJTV3NEL1UMNJrX4OujeOlnNaLTshSxc4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qYUB6lmEjebvWHk982V8oaRvIyfVfjMzEt31fkQ+pX6L+WMarCxVunzHPIj6U0UGc
-	 MVX285AHU0yvnWkQQsfWyg+CSqS3tpBw5REkIkGN3CInOyvZNk7DQJTZbw6f0rRn8K
-	 ySkqTkWQRikcj8cHiRkG8C9zCrGavP2Vs+Dz2aVI=
+	b=id/N+2mPYKXCcrv0FxKVjMB5oPRlsprEr8u3GyvZQ7sr8h8iZWIJkVvfGRyI3UGUf
+	 68uwUR7rWJMphmBkHJlL2XKNu3AvmJ2NC/e/2AuwJPNNWxhTa5HNxNqFryIdPtS/0i
+	 WsajrqhFlL49B6Sgmi+qPr0JRmHaWAs+OmfMSiXc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729261AbfLQOtD (ORCPT
+        id S1729274AbfLQOtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:49:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41038 "EHLO mail.kernel.org"
+        Tue, 17 Dec 2019 09:49:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728573AbfLQOtB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:49:01 -0500
+        id S1728573AbfLQOtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 09:49:05 -0500
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D881024676;
-        Tue, 17 Dec 2019 14:48:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6534E24672;
+        Tue, 17 Dec 2019 14:49:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576594140;
-        bh=a9mKoMbq2WRjoubXG8o0HMichj1xLz9Of/S2vlHQBag=;
+        s=default; t=1576594144;
+        bh=r3AXnhR7xsUJTV3NEL1UMNJrX4OujeOlnNaLTshSxc4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eFvN+YMlDgvFPX0Szbng8VshAM9JOO+2Swb6e/ztBIqWc3lGUXPTxcm72pQ83+xK0
-         eVtQ+ZBMtVXwt4V0pqNeI2pFmAzplxFU+rhZHaj3Vg9Nsf2peAkGNYPtoe9/U7dirf
-         zxJTkQRp9sxIbIhXyhrLQmN/WHrx/8ZKM2p6BwSE=
+        b=w2HvgazONbz/GFwBtxKjGp+PuBknpNhCfN49MilLT7eFL7OBKFpKg5C93Sf5PSfKD
+         AcsKNYNZ0wa+UCiiDkMB7vVnANespjHyUnthueCk0b7X5FZelZ6XKm6aQOLMFApDjk
+         37ymDps6YoR7gg4lLt9Xhy9hWa6WFC9tJX0sBoZM=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
 Cc:     Ingo Molnar <mingo@kernel.org>,
@@ -46,14 +46,14 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Andi Kleen <ak@linux.intel.com>,
         Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@intel.com>
-Subject: [PATCH 03/12] perf report/top: Add menu entry for toggling callchain expansion
-Date:   Tue, 17 Dec 2019 11:48:19 -0300
-Message-Id: <20191217144828.2460-4-acme@kernel.org>
+        Kan Liang <kan.liang@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 04/12] perf report/top: Improve toggle callchain menu option
+Date:   Tue, 17 Dec 2019 11:48:20 -0300
+Message-Id: <20191217144828.2460-5-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191217144828.2460-1-acme@kernel.org>
 References: <20191217144828.2460-1-acme@kernel.org>
@@ -66,66 +66,129 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Since previously pressing ENTER toggled expansion/collapse of callchain
-entries and now brings up the same menu used when callchains are not
-present, add an entry so that users can quickly figure out the change in
-behaviour.
+Taking into account the current status of the callchain, i.e. if folded,
+show "Expand", otherwise "Collapse", also show the name of the entry
+that will be affected and mention the hotkeys for expanding/collapsing
+all callchains below the main entry, the one that appears with/without
+callchains.
 
-Its worth mentioning that we also always had 'e'/'c' to expand/collapse
-all entries in a hist entry and 'E'/'C' for all hist entries.
-
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Kan Liang <kan.liang@intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-f9o03jo29fypvd8ly3j49d36@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-03arm6poo8463k5tfcfp7gkk@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/browsers/hists.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ tools/perf/ui/browsers/hists.c | 54 ++++++++++++++++++++++++++++++++--
+ tools/perf/util/sort.c         |  3 +-
+ tools/perf/util/sort.h         |  2 ++
+ 3 files changed, 54 insertions(+), 5 deletions(-)
 
 diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index fefa505d4fa8..1b5a5990dddb 100644
+index 1b5a5990dddb..a4413d983216 100644
 --- a/tools/perf/ui/browsers/hists.c
 +++ b/tools/perf/ui/browsers/hists.c
-@@ -2527,6 +2527,26 @@ add_dso_opt(struct hist_browser *browser, struct popup_action *act,
- 	return 1;
+@@ -391,6 +391,52 @@ static void hist_entry__init_have_children(struct hist_entry *he)
+ 	he->init_have_children = true;
  }
  
-+static int do_toggle_callchain(struct hist_browser *browser, struct popup_action *act __maybe_unused)
-+{
-+	hist_browser__toggle_fold(browser);
-+	return 0;
-+}
-+
-+static int add_callchain_toggle_opt(struct hist_browser *browser, struct popup_action *act, char **optstr)
++static bool hist_browser__selection_has_children(struct hist_browser *browser)
 +{
 +	struct hist_entry *he = browser->he_selection;
++	struct map_symbol *ms = browser->selection;
 +
-+        if (!he->has_children)
-+                return 0;
++	if (!he || !ms)
++		return false;
 +
-+	if (asprintf(optstr, "Expand/Collapse callchain") < 0)
-+		return 0;
++	if (ms == &he->ms)
++	       return he->has_children;
 +
-+	act->fn = do_toggle_callchain;
-+	return 1;
++	return container_of(ms, struct callchain_list, ms)->has_children;
 +}
 +
- static int
- do_browse_map(struct hist_browser *browser __maybe_unused,
- 	      struct popup_action *act)
-@@ -3137,6 +3157,7 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
- 					     &options[nr_options], thread);
- 		nr_options += add_dso_opt(browser, &actions[nr_options],
- 					  &options[nr_options], map);
-+		nr_options += add_callchain_toggle_opt(browser, &actions[nr_options], &options[nr_options]);
- 		nr_options += add_map_opt(browser, &actions[nr_options],
- 					  &options[nr_options],
- 					  browser->selection ?
++static bool hist_browser__selection_unfolded(struct hist_browser *browser)
++{
++	struct hist_entry *he = browser->he_selection;
++	struct map_symbol *ms = browser->selection;
++
++	if (!he || !ms)
++		return false;
++
++	if (ms == &he->ms)
++	       return he->unfolded;
++
++	return container_of(ms, struct callchain_list, ms)->unfolded;
++}
++
++static char *hist_browser__selection_sym_name(struct hist_browser *browser, char *bf, size_t size)
++{
++	struct hist_entry *he = browser->he_selection;
++	struct map_symbol *ms = browser->selection;
++	struct callchain_list *callchain_entry;
++
++	if (!he || !ms)
++		return NULL;
++
++	if (ms == &he->ms) {
++	       hist_entry__sym_snprintf(he, bf, size, 0);
++	       return bf + 4; // skip the level, e.g. '[k] '
++	}
++
++	callchain_entry = container_of(ms, struct callchain_list, ms);
++	return callchain_list__sym_name(callchain_entry, bf, size, browser->show_dso);
++}
++
+ static bool hist_browser__toggle_fold(struct hist_browser *browser)
+ {
+ 	struct hist_entry *he = browser->he_selection;
+@@ -2535,12 +2581,14 @@ static int do_toggle_callchain(struct hist_browser *browser, struct popup_action
+ 
+ static int add_callchain_toggle_opt(struct hist_browser *browser, struct popup_action *act, char **optstr)
+ {
+-	struct hist_entry *he = browser->he_selection;
++	char sym_name[512];
+ 
+-        if (!he->has_children)
++        if (!hist_browser__selection_has_children(browser))
+                 return 0;
+ 
+-	if (asprintf(optstr, "Expand/Collapse callchain") < 0)
++	if (asprintf(optstr, "%s [%s] callchain (one level, same as '+' hotkey, use 'e'/'c' for the whole main level entry)",
++		     hist_browser__selection_unfolded(browser) ? "Collapse" : "Expand",
++		     hist_browser__selection_sym_name(browser, sym_name, sizeof(sym_name))) < 0)
+ 		return 0;
+ 
+ 	act->fn = do_toggle_callchain;
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index 9fcba2872130..ab0cfd790ad0 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -324,8 +324,7 @@ static int _hist_entry__sym_snprintf(struct map_symbol *ms,
+ 	return ret;
+ }
+ 
+-static int hist_entry__sym_snprintf(struct hist_entry *he, char *bf,
+-				    size_t size, unsigned int width)
++int hist_entry__sym_snprintf(struct hist_entry *he, char *bf, size_t size, unsigned int width)
+ {
+ 	return _hist_entry__sym_snprintf(&he->ms, he->ip,
+ 					 he->level, bf, size, width);
+diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
+index 5aff9542d9b7..6c862d62d052 100644
+--- a/tools/perf/util/sort.h
++++ b/tools/perf/util/sort.h
+@@ -164,6 +164,8 @@ static __pure inline bool hist_entry__has_callchains(struct hist_entry *he)
+ 	return he->callchain_size != 0;
+ }
+ 
++int hist_entry__sym_snprintf(struct hist_entry *he, char *bf, size_t size, unsigned int width);
++
+ static inline bool hist_entry__has_pairs(struct hist_entry *he)
+ {
+ 	return !list_empty(&he->pairs.node);
 -- 
 2.21.0
 
