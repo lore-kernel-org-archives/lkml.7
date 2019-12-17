@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 660AFC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3997C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37E9C206D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:58:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B652924673
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:58:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727498AbfLQA6h (ORCPT
+        id S1728017AbfLQA6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:58:37 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34844 "EHLO
+        Mon, 16 Dec 2019 19:58:40 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34822 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726762AbfLQAvi (ORCPT
+        by vger.kernel.org with ESMTP id S1726757AbfLQAvi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 19:51:38 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15I-0003Kl-9l; Tue, 17 Dec 2019 00:51:32 +0000
+        id 1ih15I-0003Kl-1m; Tue, 17 Dec 2019 00:51:32 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15H-0005WK-KV; Tue, 17 Dec 2019 00:51:31 +0000
+        id 1ih15H-0005Wf-OX; Tue, 17 Dec 2019 00:51:31 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Helge Deller" <deller@gmx.de>
-Date:   Tue, 17 Dec 2019 00:46:36 +0000
-Message-ID: <lsq.1576543535.901115451@decadent.org.uk>
+        "Jeff Layton" <jlayton@kernel.org>,
+        "Ilya Dryomov" <idryomov@gmail.com>
+Date:   Tue, 17 Dec 2019 00:46:39 +0000
+Message-ID: <lsq.1576543535.764911256@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 062/136] parisc: Fix vmap memory leak in
- ioremap()/iounmap()
+Subject: [PATCH 3.16 065/136] ceph: just skip unrecognized info in
+ ceph_reply_info_extra
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,57 +56,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Helge Deller <deller@gmx.de>
+From: Jeff Layton <jlayton@kernel.org>
 
-commit 513f7f747e1cba81f28a436911fba0b485878ebd upstream.
+commit 1d3f87233e26362fc3d4e59f0f31a71b570f90b9 upstream.
 
-Sven noticed that calling ioremap() and iounmap() multiple times leads
-to a vmap memory leak:
-	vmap allocation for size 4198400 failed:
-	use vmalloc=<size> to increase size
+In the future, we're going to want to extend the ceph_reply_info_extra
+for create replies. Currently though, the kernel code doesn't accept an
+extra blob that is larger than the expected data.
 
-It seems we missed calling vunmap() in iounmap().
+Change the code to skip over any unrecognized fields at the end of the
+extra blob, rather than returning -EIO.
 
-Signed-off-by: Helge Deller <deller@gmx.de>
-Noticed-by: Sven Schnelle <svens@stackframe.org>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/parisc/mm/ioremap.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ fs/ceph/mds_client.c | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
---- a/arch/parisc/mm/ioremap.c
-+++ b/arch/parisc/mm/ioremap.c
-@@ -2,7 +2,7 @@
-  * arch/parisc/mm/ioremap.c
-  *
-  * (C) Copyright 1995 1996 Linus Torvalds
-- * (C) Copyright 2001-2006 Helge Deller <deller@gmx.de>
-+ * (C) Copyright 2001-2019 Helge Deller <deller@gmx.de>
-  * (C) Copyright 2005 Kyle McMartin <kyle@parisc-linux.org>
-  */
- 
-@@ -83,7 +83,7 @@ void __iomem * __ioremap(unsigned long p
- 	addr = (void __iomem *) area->addr;
- 	if (ioremap_page_range((unsigned long)addr, (unsigned long)addr + size,
- 			       phys_addr, pgprot)) {
--		vfree(addr);
-+		vunmap(addr);
- 		return NULL;
+--- a/fs/ceph/mds_client.c
++++ b/fs/ceph/mds_client.c
+@@ -199,8 +199,8 @@ static int parse_reply_info_dir(void **p
  	}
  
-@@ -91,9 +91,11 @@ void __iomem * __ioremap(unsigned long p
- }
- EXPORT_SYMBOL(__ioremap);
+ done:
+-	if (*p != end)
+-		goto bad;
++	/* Skip over any unrecognized fields */
++	*p = end;
+ 	return 0;
  
--void iounmap(const volatile void __iomem *addr)
-+void iounmap(const volatile void __iomem *io_addr)
- {
--	if (addr > high_memory)
--		return vfree((void *) (PAGE_MASK & (unsigned long __force) addr));
-+	unsigned long addr = (unsigned long)io_addr & PAGE_MASK;
-+
-+	if (is_vmalloc_addr((void *)addr))
-+		vunmap((void *)addr);
+ bad:
+@@ -221,12 +221,10 @@ static int parse_reply_info_filelock(voi
+ 		goto bad;
+ 
+ 	info->filelock_reply = *p;
+-	*p += sizeof(*info->filelock_reply);
+ 
+-	if (unlikely(*p != end))
+-		goto bad;
++	/* Skip over any unrecognized fields */
++	*p = end;
+ 	return 0;
+-
+ bad:
+ 	return -EIO;
  }
- EXPORT_SYMBOL(iounmap);
+@@ -239,18 +237,21 @@ static int parse_reply_info_create(void
+ 				  u64 features)
+ {
+ 	if (features & CEPH_FEATURE_REPLY_CREATE_INODE) {
++		/* Malformed reply? */
+ 		if (*p == end) {
+ 			info->has_create_ino = false;
+ 		} else {
+ 			info->has_create_ino = true;
+-			info->ino = ceph_decode_64(p);
++			ceph_decode_64_safe(p, end, info->ino, bad);
+ 		}
++	} else {
++		if (*p != end)
++			goto bad;
+ 	}
+ 
+-	if (unlikely(*p != end))
+-		goto bad;
++	/* Skip over any unrecognized fields */
++	*p = end;
+ 	return 0;
+-
+ bad:
+ 	return -EIO;
+ }
 
