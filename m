@@ -2,172 +2,77 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE25C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 321E1C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D38F92072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:56:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F32C02072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:59:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bPoj1k7J"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dmixie/n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbfLQI4c (ORCPT
+        id S1726911AbfLQI7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 03:56:32 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:23525 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727070AbfLQI4b (ORCPT
+        Tue, 17 Dec 2019 03:59:05 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:51660 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbfLQI7E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 03:56:31 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576572990; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=ZJq7Qp3bn1KsgMY+MZCRUXUmBAGCDF5Rh8QzjkblaaY=;
- b=bPoj1k7Je11sJPa9xjm5pwnhuZmpKhA2yLSgx/L4AMvuguhtTbVan2EiUZDzZDFASJLqD1Is
- Vonxa8BFtaZcY6ly2gJ+foXq6VW27SoYPgcH+5x8LZmrg/2TiVbpJYQzqN/FGuBn0pu112I+
- n87MFONvYhGGMRhzm8rj2UhiuMM=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5df8983b.7f2a43eacbc8-smtp-out-n02;
- Tue, 17 Dec 2019 08:56:27 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 703BFC447AE; Tue, 17 Dec 2019 08:56:25 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6B16BC433CB;
-        Tue, 17 Dec 2019 08:56:23 +0000 (UTC)
+        Tue, 17 Dec 2019 03:59:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=umUpQwNCFcx4pJ445vi4RUlvQ3RCBfh2CumoCKRy+mk=; b=dmixie/nerThIK4dsyBBVW4EI
+        eYS7fSANuZVJl7nMZkU+KmMDZgIrp7uFvjbNKnCto4kwOuUvebXu7miWQjkatuoUKChmlGdg7LNB+
+        5I8HS7wI1IVkTYfF26Q96j89zUo+N4dddai0r7GnJtXnnH1gBHPdt0sMxmFsNZ8AaBuA2aeVUI0LA
+        KzRV5OW6rp0WgrpGx0PQbZqH+VtItNULFEfyhl8Ku9WQF5UKRC4pqJCBpgrOJCHjusjwr5JXNCI8J
+        KWSYIhRRu8LAF7Pqo6BE0WwAuk6Bl/omWYsAOQFfvGYB1Fssr992VAjtBT4h5bfpsEarqEVPtiYkM
+        W0v6zSaTw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ih8gz-0001jU-7R; Tue, 17 Dec 2019 08:58:57 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CE79E3007F2;
+        Tue, 17 Dec 2019 09:57:32 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id F36782B3D7E90; Tue, 17 Dec 2019 09:58:54 +0100 (CET)
+Date:   Tue, 17 Dec 2019 09:58:54 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc:     akpm@linux-foundation.org, npiggin@gmail.com, mpe@ellerman.id.au,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [RFC PATCH 2/2] mm/mmu_gather: Avoid multiple page walk cache
+ flush
+Message-ID: <20191217085854.GW2844@hirez.programming.kicks-ass.net>
+References: <20191217071713.93399-1-aneesh.kumar@linux.ibm.com>
+ <20191217071713.93399-2-aneesh.kumar@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Tue, 17 Dec 2019 16:56:23 +0800
-From:   cang@codeaurora.org
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Evan Green <evgreen@chromium.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/3] scsi: ufs: Modulize ufs-bsg
-In-Reply-To: <62933901-fcdf-b5ae-431d-e1fbfc897128@acm.org>
-References: <1576054123-16417-1-git-send-email-cang@codeaurora.org>
- <0101016ef425ef65-5c4508cc-5e76-4107-bb27-270f66acaa9a-000000@us-west-2.amazonses.com>
- <20191212045357.GA415177@yoga>
- <0101016ef8b2e2f8-72260b08-e6ad-42fc-bd4b-4a0a72c5c9b3-000000@us-west-2.amazonses.com>
- <20191212063703.GC415177@yoga>
- <5691bfa1-42e5-3c5f-2497-590bcc0cb2b1@acm.org>
- <926dd55d8d0dc762b1f6461495fc747a@codeaurora.org>
- <62933901-fcdf-b5ae-431d-e1fbfc897128@acm.org>
-Message-ID: <b3fee6ea02c4c3c46eeba81b0bdcf7c4@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191217071713.93399-2-aneesh.kumar@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-17 01:22, Bart Van Assche wrote:
-> On 12/15/19 8:36 PM, cang@codeaurora.org wrote:
->> On 2019-12-16 05:49, Bart Van Assche wrote:
->>> On 2019-12-11 22:37, Bjorn Andersson wrote:
->>>> It's the asymmetry that I don't like.
->>>> 
->>>> Perhaps if you instead make ufshcd platform_device_register_data() 
->>>> the
->>>> bsg device you would solve the probe ordering, the remove will be
->>>> symmetric and module autoloading will work as well (although then 
->>>> you
->>>> need a MODULE_ALIAS of platform:device-name).
->>> 
->>> Hi Bjorn,
->>> 
->>> From Documentation/driver-api/driver-model/platform.rst:
->>> "Platform devices are devices that typically appear as autonomous
->>> entities in the system. This includes legacy port-based devices and
->>> host bridges to peripheral buses, and most controllers integrated
->>> into system-on-chip platforms.  What they usually have in common
->>> is direct addressing from a CPU bus.  Rarely, a platform_device will
->>> be connected through a segment of some other kind of bus; but its
->>> registers will still be directly addressable."
->>> 
->>> Do you agree that the above description is not a good match for the
->>> ufs-bsg kernel module?
->> 
->> I missed this one.
->> How about making it a plain device and add it from ufs driver?
-> 
-> Hi Can,
-> 
-> Since the ufs_bsg kernel module already creates one device node under
-> /dev/bsg for each UFS host I don't think that we need to create any
-> additional device nodes for ufs-bsg devices. My proposal is to modify
-> the original patch 2/3 from this series as follows:
-> * Use module_init() instead of late_initcall_sync().
-> * Remove the ufshcd_get_hba_list_lock() and
->   ufshcd_put_hba_list_unlock() functions.
-> * Implement a notification mechanism in the UFS core that invokes a
->   callback function after an UFS host has been created and also after 
-> an
->   UFS host has been removed.
-> * Register for these notifications from inside the ufs-bsg driver.
-> * During registration for notifications, invoke the UFS host creation
->   callback function for all known UFS hosts.
-> * If the UFS core is unloaded, invoke the UFS host removal callback
->   function for all known UFS hosts.
-> 
-> I think there are several examples of similar notification mechanisms
-> in the Linux kernel, e.g. the probe and remove callback functions in
-> struct pci_driver.
-> 
-> Bart.
+On Tue, Dec 17, 2019 at 12:47:13PM +0530, Aneesh Kumar K.V wrote:
+> On tlb_finish_mmu() kernel does a tlb flush before  mmu gather table invalidate.
+> The mmu gather table invalidate depending on kernel config also does another
+> TLBI. Avoid the later on tlb_finish_mmu().
 
-Hi Bart,
+That is already avoided, if you look at tlb_flush_mmu_tlbonly() it does
+__tlb_range_reset(), which results in ->end = 0, which then triggers the
+early exit on the next invocation:
 
-Even in the current ufs_bsg.c, it creates two devices, one is ufs-bsg,
-one is the char dev node under /dev/bsg. Why this becomes a problem
-after make it a module?
-
-I took a look into the pci_driver, it is no different than making 
-ufs-bsg
-a plain device. The only special place about pci_driver is that it has 
-its
-own probe() and remove(), and the probe() in its bus_type calls the
-probe() in pci_driver. Meaning the bus->probe() is an intermediate call
-used to pass whatever needed by pci_driver->probe().
-
-Of course we can also do this, but isn't it too much for ufs-bsg?
-For our case, calling set_dev_drvdata(bsg_dev, hba) to pass hba to
-ufs_bsg.c would be enough.
-
-If you take a look at the V3 patch, the change makes the ufs_bsg.c
-much conciser. platform_device_register_data() does everything for us,
-initialize the device, set device name, provide the match func,
-bus type and release func.
-
-Since ufs-bsg is somewhat not a platform device, we can still add it
-as a plain device, just need a few more lines to get it initialized.
-This allows us leverage kernel's device driver model. Just like Greg
-commented, we don't need to re-implement the mechanism again.
-
-Thanks,
-Can Guo.
+	if (!tlb->end)
+		return;
