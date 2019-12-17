@@ -2,89 +2,76 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13EF5C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86CE3C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5FA12146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DA8F2146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:58:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=marples.name header.i=@marples.name header.b="u56qz470"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728437AbfLQO4j (ORCPT
+        id S1727820AbfLQO6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:56:39 -0500
-Received: from mga12.intel.com ([192.55.52.136]:40919 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726560AbfLQO4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:56:39 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 06:56:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,325,1571727600"; 
-   d="scan'208";a="221779419"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 17 Dec 2019 06:56:33 -0800
-Received: by lahna (sSMTP sendmail emulation); Tue, 17 Dec 2019 16:56:32 +0200
-Date:   Tue, 17 Dec 2019 16:56:32 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-usb@vger.kernel.org,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Lukas Wunner <lukas@wunner.de>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Mario.Limonciello@dell.com,
-        Anthony Wong <anthony.wong@canonical.com>,
-        Oliver Neukum <oneukum@suse.com>,
-        Christian Kellner <ckellner@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/9] thunderbolt: Populate PG field in hot plug
- acknowledgment packet
-Message-ID: <20191217145632.GM2913417@lahna.fi.intel.com>
-References: <20191217123345.31850-1-mika.westerberg@linux.intel.com>
- <20191217123345.31850-4-mika.westerberg@linux.intel.com>
- <20191217124745.GC3175457@kroah.com>
+        Tue, 17 Dec 2019 09:58:12 -0500
+Received: from relay2.marples.name ([77.68.23.143]:60032 "EHLO
+        relay2.marples.name" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726560AbfLQO6M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 09:58:12 -0500
+X-Greylist: delayed 437 seconds by postgrey-1.27 at vger.kernel.org; Tue, 17 Dec 2019 09:58:11 EST
+Received: from mail.marples.name (cpc115040-bour7-2-0-cust370.15-1.cable.virginm.net [81.108.15.115])
+        by relay2.marples.name (Postfix) with ESMTPS id 62A247A2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 14:50:52 +0000 (UTC)
+Received: from [10.73.1.30] (unknown [10.73.1.30])
+        (using TLSv1.2 with cipher ECDHE-ECDSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.marples.name (Postfix) with ESMTPSA id D263D1CD553;
+        Tue, 17 Dec 2019 14:48:51 +0000 (GMT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marples.name;
+        s=mail; t=1576594131;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=yKLrOljADJd251/sjY/sg9T0uYP7Yoc26fkVr1L8qFc=;
+        b=u56qz470AjUPEoEJc49mAj8vRRKL+MOMzk5K6aDGI+2z7nKGo1hjoJ1fwGe5+4iA/TryV8
+        VMhz5+FeAp8EF5kgEsvyimOuKNHN/hXraYLhIuZ7ukiXrg1bGDFRUz8pzZQsO/9IYXG510
+        hvxsclAkbYCZYohFziFOPk3X8Tqe5so=
+To:     linux-kernel@vger.kernel.org
+From:   Roy Marples <roy@marples.name>
+Subject: [PATCH] netlink: Align NLA_ALIGNTO with the other ALIGNTO macros
+Cc:     akpm@linux-foundation.org, trivial@kernel.org
+Message-ID: <cf7912dd-3352-84d9-653a-86dcc1696a62@marples.name>
+Date:   Tue, 17 Dec 2019 14:50:50 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191217124745.GC3175457@kroah.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 01:47:45PM +0100, Greg Kroah-Hartman wrote:
-> On Tue, Dec 17, 2019 at 03:33:39PM +0300, Mika Westerberg wrote:
-> > USB4 1.0 section 6.4.2.7 specifies a new field (PG) in notification
-> > packet that is sent as response of hot plug/unplug events. This field
-> > tells whether the acknowledgment is for plug or unplug event. This needs
-> > to be set accordingly in order the router to send further hot plug
-> > notifications.
-> > 
-> > To make it simpler we fill the field unconditionally. Legacy devices do
-> > not look at this field so there should be no problems with them.
-> > 
-> > While there rename tb_cfg_error() to tb_cfg_ack_plug() and update the
-> > log message accordingly. The function is only used to ack plug/unplug
-> > events.
-> > 
-> > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> 
-> First 3 patches look "trivial" enough for me to take right now, any
-> objection to that?
+This avoids sign conversion errors.
 
-No objections from my side :)
+Signed-off-by: Roy Marples <roy@marples.name>
 
-> Should I be using my usb tree for this?
+diff --git a/include/uapi/linux/netlink.h b/include/uapi/linux/netlink.h
+index 0a4d73317759..c9ed05f14005 100644
+--- a/include/uapi/linux/netlink.h
++++ b/include/uapi/linux/netlink.h
+@@ -227,7 +227,7 @@ struct nlattr {
+  #define NLA_F_NET_BYTEORDER    (1 << 14)
+  #define NLA_TYPE_MASK          ~(NLA_F_NESTED | NLA_F_NET_BYTEORDER)
 
-Yes, I think it makes sense now that this is also under USB IF umbrella.
+-#define NLA_ALIGNTO            4
++#define NLA_ALIGNTO            4U
+  #define NLA_ALIGN(len)         (((len) + NLA_ALIGNTO - 1) & ~(NLA_ALIGNTO - 1))
+  #define NLA_HDRLEN             ((int) NLA_ALIGN(sizeof(struct nlattr)))
+
