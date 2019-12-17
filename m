@@ -2,131 +2,108 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE7FC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C97FC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A36E2072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:50:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40D7F2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:50:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qrn+3EgA"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dLt0JBQr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727425AbfLQKuM (ORCPT
+        id S1727443AbfLQKum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 05:50:12 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58439 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726655AbfLQKuM (ORCPT
+        Tue, 17 Dec 2019 05:50:42 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:32930 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726655AbfLQKum (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 05:50:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576579811;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Rt3wBXjdkOLTAGZAw3Tafg9k0wX1EERiUeh4YXdvZFw=;
-        b=Qrn+3EgAZPFBLLyg2ECXeAk+dJeF5fBFO5P2JugKSba2jI6UlNpUqArs8627tm6BpV//b5
-        PW0XPLTlI5WHKRMiaJAMIUT3yoeHDbtp7m7sTk6WzeVgVxrjucY5y2jxz3LXP6FTBt8eKC
-        t5yzt8dXn3LpKVcjvxvpUamnn/YxvtY=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-178-IfRpNcThPD-zI8UXpqFZLg-1; Tue, 17 Dec 2019 05:50:06 -0500
-X-MC-Unique: IfRpNcThPD-zI8UXpqFZLg-1
-Received: by mail-qk1-f197.google.com with SMTP id 143so6577151qkg.12
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 02:50:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Rt3wBXjdkOLTAGZAw3Tafg9k0wX1EERiUeh4YXdvZFw=;
-        b=XQSjnIbvbBSkFDZzxoZ/bHmvYe8McnSxjFcvvY6dWm+i7V5QuNnMSwEr0o2yaJjEAT
-         UagYQIZegzfPjZtfEsCLGJOATBD55H/yXKrFTwSXolqwtQF07Sq8y9zb35N3CMcCIp7O
-         EB9zouB8pYQlQJ4BhsL+yr5vBmCdcXF1LCsjE18JWcPpAs62qX593A/t73mxpUzbqsD4
-         X6W7JI58IHUUyxRyiQyIb9bVH5gEodqiOtZ07Uou/shC9XWY7iCTp6drzZSda/KFEQM9
-         BPO5YcTO9pQ9C3Faa37NfQY0B6ArAxoYnu0DgbQmQG9p43cGHbvk1MOKtJf1Ib1QwdBM
-         Im0Q==
-X-Gm-Message-State: APjAAAXHZzUiDev0xxFwL1lF39G7r0GcPfwjZUcX1K/jxIugAl71XOUA
-        OzMjIBACEwgPPjLSQjFiouHPVEFUIKLckzS5mhtIN63BWUIHup3dCojFpc7RRMLztHJyVpE+jey
-        hUpDaAYacxvoMSFmXlD+jANONWD5e/BmPSws1EzG9
-X-Received: by 2002:ad4:46ce:: with SMTP id g14mr3904989qvw.67.1576579805655;
-        Tue, 17 Dec 2019 02:50:05 -0800 (PST)
-X-Google-Smtp-Source: APXvYqw/VLutc07+0j4Bx9/r9IYnqLdnpclrVJSO4VZrNxQqBV6UHMzCpcyo2Ftqj81CkaG3aSoCQu3p0VvOw1+5D9I=
-X-Received: by 2002:ad4:46ce:: with SMTP id g14mr3904970qvw.67.1576579805418;
- Tue, 17 Dec 2019 02:50:05 -0800 (PST)
+        Tue, 17 Dec 2019 05:50:42 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBHAoZOM117616;
+        Tue, 17 Dec 2019 04:50:35 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576579835;
+        bh=mNFMFcC05t4v52oPlhk2o6wWbxZw16JxfddIxoRlzLQ=;
+        h=From:To:CC:Subject:Date;
+        b=dLt0JBQrhwTctsIJomqlhk94hZBf00U4vfjLrTkD2hZT8dsDOVeg5n1KzqkJwVgV2
+         BPZLhIo+WrCvly5FIBFBUWTwvAqEn74fVeNclog2EnbqRqO6wADZ6OtvWCO2zr2e+T
+         ktWFro6uHeTo4jG8HYhswGbspp24AOOdInn4EVF4=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBHAoZTm065630
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 17 Dec 2019 04:50:35 -0600
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
+ Dec 2019 04:50:35 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 17 Dec 2019 04:50:35 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBHAoX3N044630;
+        Tue, 17 Dec 2019 04:50:33 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vireshk@kernel.org>, <b.zolnierkie@samsung.com>, <axboe@kernel.dk>
+CC:     <vkoul@kernel.org>, <linux-ide@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] ata: pata_arasam_cf: Use dma_request_chan() instead dma_request_slave_channel()
+Date:   Tue, 17 Dec 2019 12:50:48 +0200
+Message-ID: <20191217105048.25327-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <1576551722-16966-1-git-send-email-zhangpan26@huawei.com>
-In-Reply-To: <1576551722-16966-1-git-send-email-zhangpan26@huawei.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Tue, 17 Dec 2019 11:49:54 +0100
-Message-ID: <CAO-hwJ+5Ch02fPQ+XF=A4iEcH81V5PrCdV2qGQDZ8HxnQAoEog@mail.gmail.com>
-Subject: Re: [PATCH] drivers/hid/hid-multitouch.c: fix a possible null pointer access.
-To:     z00417012 <zhangpan26@huawei.com>
-Cc:     hushiyuan@huawei.com, Jiri Kosina <jikos@kernel.org>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+dma_request_slave_channel() is a wrapper on top of dma_request_chan()
+eating up the error code.
 
-On Tue, Dec 17, 2019 at 4:17 AM z00417012 <zhangpan26@huawei.com> wrote:
+By using dma_request_chan() directly the driver can support deferred
+probing against DMA.
 
-Can you add at the beginning of your commit message:
-From: Pan Zhang <zhangpan26@huawei.com>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ drivers/ata/pata_arasan_cf.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-This way we have the commit author that matches the signature, which
-is a requirement for the kernel.
+diff --git a/drivers/ata/pata_arasan_cf.c b/drivers/ata/pata_arasan_cf.c
+index 135173c8d138..69b555d83f68 100644
+--- a/drivers/ata/pata_arasan_cf.c
++++ b/drivers/ata/pata_arasan_cf.c
+@@ -526,9 +526,10 @@ static void data_xfer(struct work_struct *work)
+ 
+ 	/* request dma channels */
+ 	/* dma_request_channel may sleep, so calling from process context */
+-	acdev->dma_chan = dma_request_slave_channel(acdev->host->dev, "data");
+-	if (!acdev->dma_chan) {
++	acdev->dma_chan = dma_request_chan(acdev->host->dev, "data");
++	if (IS_ERR(acdev->dma_chan)) {
+ 		dev_err(acdev->host->dev, "Unable to get dma_chan\n");
++		acdev->dma_chan = NULL;
+ 		goto chan_request_fail;
+ 	}
+ 
+@@ -539,6 +540,7 @@ static void data_xfer(struct work_struct *work)
+ 	}
+ 
+ 	dma_release_channel(acdev->dma_chan);
++	acdev->dma_chan = NULL;
+ 
+ 	/* data xferred successfully */
+ 	if (!ret) {
+-- 
+Peter
 
->
-> 1002     if ((quirks & MT_QUIRK_IGNORE_DUPLICATES) && mt) {
-> 1003         struct input_mt_slot *i_slot = &mt->slots[slotnum];
-> 1004
-> 1005         if (input_mt_is_active(i_slot) &&
-> 1006             input_mt_is_used(mt, i_slot))
-> 1007             return -EAGAIN;
-> 1008     }
->
-> We previously assumed 'mt' could be null (see line 1002).
->
-> The following situation is similar, so add a judgement.
->
-> Signed-off-by: Pan Zhang <zhangpan26@huawei.com>
-> ---
->  drivers/hid/hid-multitouch.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
-> index 3cfeb16..368de81 100644
-> --- a/drivers/hid/hid-multitouch.c
-> +++ b/drivers/hid/hid-multitouch.c
-> @@ -1019,7 +1019,7 @@ static int mt_process_slot(struct mt_device *td, struct input_dev *input,
->                 tool = MT_TOOL_DIAL;
->         else if (unlikely(!confidence_state)) {
->                 tool = MT_TOOL_PALM;
-> -               if (!active &&
-> +               if (!active && mt
-
-Ack on the principle, but this doesn't even compile. You are missing a
-`&&` at the end of the line.
-
-Can you send a v2 with the comments above? And we will queue the v2
-for 5.5 I think.
-
-Cheers,
-Benjamin
-
->                     input_mt_is_active(&mt->slots[slotnum])) {
->                         /*
->                          * The non-confidence was reported for
-> --
-> 2.7.4
->
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
