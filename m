@@ -2,142 +2,162 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B3BC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F5AC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 345112146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:01:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="OWsgohQO"
+	by mail.kernel.org (Postfix) with ESMTP id 91ABE2064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:04:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727216AbfLQLBq (ORCPT
+        id S1726729AbfLQLEF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 06:01:46 -0500
-Received: from mail-eopbgr770085.outbound.protection.outlook.com ([40.107.77.85]:53526
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725870AbfLQLBp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 06:01:45 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CBK6egodDM8heHFHSPoV/U/8CBgdvJJHu0afOZ+EGqfmz2lRbFBBrQAKuQhe0o4UjsQkIM2YN8W+OCN6vsGhi52Zp20mmHcJKKQWA4u/W9Px1DQYlDBq82JJqCzcFH2Im6oGEoYi6rm35Jd6A9BA+job7jQLbtcQ897Fz38HP2jj9s8EaYiGhCKKniaMgnd7lNX7T3XOvWoex9D0cHfHaJ6okySzLa4UZh7cacZxkS3gMgErau1wniHbUtXuTZOkvVYucRRnhn42xuNXnQ8rbnWPV2lAEBDI5gb7kCD0t/Z2WNGK2VAeMVFSHVEFyhqoDfw3G/WnuQh50wIwMUNWYg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8TbthLPrlbPDnOfoKDUmoVo9r0/Jb+RMoq4uT+F2PJQ=;
- b=ZWjZu1Tq/cq8W/jjSuwGhbiw+dJiNn0j/ZEZ7biE9hMG+/9GPM3OeGQvbigdeYdmsaIYYRolgKFOL+bC+4IbJZdmTWlckX+e0A6DViiTxczg/52oEEdza/FrzmvxRkDHHF+M8TxYbxTTtdWo30XoZodVmHtcjBU9r+OIeBpFdnCxanIZdiHgoTHBVlw+OkT8UDuAObmc9rl8fVdYeBrvM4UUk9Wq5oJ/mt2cCZJ54jrk3Y8rU7lEBUpyoA+//YphrukVP69xZqei/VS3Cwv6m3AyxquDmvKP8ruxkgFg72VRis0W0/2IJxbu48mN/wEAoSl/GDd++oKRdFJLQBkLww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8TbthLPrlbPDnOfoKDUmoVo9r0/Jb+RMoq4uT+F2PJQ=;
- b=OWsgohQO0YjGGiCj/PUDnIkrw+TUGf3hQRFNNq80e/706xm4BeWlsPVabh30rN8vZJKiRY+8m+g6TjNSa90qaHHFjr7pCtBcD+oqYZT1fArQ5SHzJeBcvU6pZjOflPBv21A04ecLlC2GxWqEwpzoOxDgUzBHqtGGyUHs+JVIph0=
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com (10.255.180.22) by
- MN2PR11MB4461.namprd11.prod.outlook.com (52.135.39.93) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.17; Tue, 17 Dec 2019 11:01:43 +0000
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::f46c:e5b4:2a85:f0bf]) by MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::f46c:e5b4:2a85:f0bf%4]) with mapi id 15.20.2538.019; Tue, 17 Dec 2019
- 11:01:43 +0000
-From:   =?iso-8859-1?Q?J=E9r=F4me_Pouiller?= <Jerome.Pouiller@silabs.com>
-To:     Felix Fietkau <nbd@nbd.name>
-CC:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH 07/55] staging: wfx: ensure that retry policy always
- fallbacks to MCS0 / 1Mbps
-Thread-Topic: [PATCH 07/55] staging: wfx: ensure that retry policy always
- fallbacks to MCS0 / 1Mbps
-Thread-Index: AQHVtDLBov0Pg1nqV0CYOt2kPrSx7ae9D0mAgAEbCoA=
-Date:   Tue, 17 Dec 2019 11:01:42 +0000
-Message-ID: <3755885.sodJc2dsoe@pc-42>
-References: <20191216170302.29543-1-Jerome.Pouiller@silabs.com>
- <20191216170302.29543-8-Jerome.Pouiller@silabs.com>
- <0777ef33-e1f4-148a-40cb-cfe7b42d5364@nbd.name>
-In-Reply-To: <0777ef33-e1f4-148a-40cb-cfe7b42d5364@nbd.name>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Jerome.Pouiller@silabs.com; 
-x-originating-ip: [37.71.187.125]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6d9de33d-b94e-4191-6261-08d782e08028
-x-ms-traffictypediagnostic: MN2PR11MB4461:
-x-microsoft-antispam-prvs: <MN2PR11MB446105737698AAEDD37D38DC93500@MN2PR11MB4461.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 02543CD7CD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(136003)(366004)(376002)(346002)(39850400004)(396003)(199004)(189003)(6506007)(71200400001)(316002)(91956017)(76116006)(66556008)(33716001)(66476007)(66446008)(6916009)(64756008)(54906003)(478600001)(66946007)(26005)(6486002)(9686003)(6512007)(81166006)(66574012)(5660300002)(8936002)(86362001)(81156014)(4326008)(2906002)(186003)(53546011)(4001150100001)(8676002)(39026012);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4461;H:MN2PR11MB4063.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: silabs.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: PRrE5Zn3tL0UaGSnqbrqKw0dWcIzTq13dezNXTbuet93gUYtk9pgfN88PLO+LTSoQBhfqqP2iq1mUmTrVSnv+itAKvnpSMlUjIwH0PTHCJrp20L9RwNc/1fJ/KG0tj3I54FV101LA4G7TbQo0tPeO1i8zIU1V3b9WKrp1iqlXUQtYmxhvuOKnuwsQ2q7ekD78M0tS02V5C2EzOJ7CWqioma9zGb5Kl/sUJiFihKQBRLa3dpx9Lie5fOJVRgz1MyFR49KXz9lxArgDSrWDRUkb9exfxnp0p+1CbPWsTluk27xNddSDeszTbSgNnlDb9UfvXad0Cklmdb/0Xh5+/naH43BH6nh2qoj7fdDPJP9YxfLU4iLf5TmKTvSUMZ0vuLf7hL4e/OLDMN9XIGiok1CanvXKuLcEqEXtB4Mbv4oJZtAmh5SLVP2jRhRqFaukRJxtetAnK+Gs99/AFvxQcNIcUT0xie+4CuVuHp3lzuExOi8pbzIUUi30gIr1yka2a+8
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <1D0704F34739504DB32815630A19F424@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 17 Dec 2019 06:04:05 -0500
+Received: from foss.arm.com ([217.140.110.172]:33176 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725940AbfLQLEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 06:04:05 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0095031B;
+        Tue, 17 Dec 2019 03:04:04 -0800 (PST)
+Received: from [10.37.12.145] (unknown [10.37.12.145])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5F8933F6CF;
+        Tue, 17 Dec 2019 03:04:00 -0800 (PST)
+Subject: Re: [PATCH 7/9] memory: samsung: exynos5422-dmc: Replace deprecated
+ 'devfreq-events' property
+To:     Chanwoo Choi <cw00.choi@samsung.com>, krzk@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
+        leonard.crestez@nxp.com
+Cc:     a.swigon@samsung.com, m.szyprowski@samsung.com, kgene@kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
+References: <20191217055738.28445-1-cw00.choi@samsung.com>
+ <CGME20191217055106epcas1p2c43a45e34983c1b3e60cc6fd842dd33e@epcas1p2.samsung.com>
+ <20191217055738.28445-8-cw00.choi@samsung.com>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <500aaeb0-85ca-c1f5-2f30-a7b1e95810b6@arm.com>
+Date:   Tue, 17 Dec 2019 11:03:58 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6d9de33d-b94e-4191-6261-08d782e08028
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Dec 2019 11:01:42.8181
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ABHEEATnkS2RafS72jTmvMb62lGw56SdI77944eyNmuN97xPNY9OmlJkGnhS34B+83pF4OQZOXFHHlZ8TDnAtw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4461
+In-Reply-To: <20191217055738.28445-8-cw00.choi@samsung.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday 16 December 2019 19:08:39 CET Felix Fietkau wrote:
-> On 2019-12-16 18:03, J=E9r=F4me Pouiller wrote:
-> > From: J=E9r=F4me Pouiller <jerome.pouiller@silabs.com>
-> >
-> > When not using HT mode, minstrel always includes 1Mbps as fallback rate=
-.
-> > But, when using HT mode, this fallback is not included. Yet, it seems
-> > that it could save some frames. So, this patch add it unconditionally.
-> >
-> > Signed-off-by: J=E9r=F4me Pouiller <jerome.pouiller@silabs.com>
-> Are you sure that's a good idea? Sometimes a little packet loss can be
-> preferable over a larger amount of airtime wasted through using really
-> low rates. Especially when you consider bufferbloat.
+Hi Chanwoo,
 
-Hello Felix,
+On 12/17/19 5:57 AM, Chanwoo Choi wrote:
+> In order to remove the deprecated 'devfreq-events' property, replace with
+> new 'exynos,ppmu-device' property in order to get the devfreq-event device
+> in devicetree file instead of 'devfreq-events' property. But, to guarantee
+> the backward-compatibility, keep the support 'devfreq-events' property.
+> 
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> ---
+>   .../memory-controllers/exynos5422-dmc.txt     |  6 ++--
+>   drivers/memory/samsung/exynos5422-dmc.c       | 29 +++++++++++++++----
+>   2 files changed, 26 insertions(+), 9 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> index 02e4a1f862f1..1e1b3702f045 100644
+> --- a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> +++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> @@ -17,14 +17,14 @@ Required properties for DMC device for Exynos5422:
+>   - clock-names : should include "fout_spll", "mout_sclk_spll", "ff_dout_spll2",
+>     "fout_bpll", "mout_bpll", "sclk_bpll", "mout_mx_mspll_ccore",
+>     "mout_mclk_cdrex"  entries
+> -- devfreq-events : phandles for PPMU devices connected to this DMC.
+> +- exynos,ppmu-device : phandles for PPMU devices connected to this DMC.
+>   - vdd-supply : phandle for voltage regulator which is connected.
+>   - reg : registers of two CDREX controllers.
+>   - operating-points-v2 : phandle for OPPs described in v2 definition.
+>   - device-handle : phandle of the connected DRAM memory device. For more
+>   	information please refer to documentation file:
+>   	Documentation/devicetree/bindings/ddr/lpddr3.txt
+> -- devfreq-events : phandles of the PPMU events used by the controller.
+> +- exynos,ppmu-device : phandles of the PPMU events used by the controller.
+>   - samsung,syscon-clk : phandle of the clock register set used by the controller,
+>   	these registers are used for enabling a 'pause' feature and are not
+>   	exposed by clock framework but they must be used in a safe way.
+> @@ -73,7 +73,7 @@ Example:
+>   			      "mout_mx_mspll_ccore",
+>   			      "mout_mclk_cdrex";
+>   		operating-points-v2 = <&dmc_opp_table>;
+> -		devfreq-events = <&ppmu_event3_dmc0_0>,	<&ppmu_event3_dmc0_1>,
+> +		exynos,ppmu-device = <&ppmu_event3_dmc0_0>, <&ppmu_event3_dmc0_1>,
+>   				 <&ppmu_event3_dmc1_0>, <&ppmu_event3_dmc1_1>;
+>   		device-handle = <&samsung_K3QF2F20DB>;
+>   		vdd-supply = <&buck1_reg>;
+> diff --git a/drivers/memory/samsung/exynos5422-dmc.c b/drivers/memory/samsung/exynos5422-dmc.c
+> index c3195111d646..96593f37a478 100644
+> --- a/drivers/memory/samsung/exynos5422-dmc.c
+> +++ b/drivers/memory/samsung/exynos5422-dmc.c
+> @@ -1270,10 +1270,17 @@ static int exynos5_dmc_init_clks(struct exynos5_dmc *dmc)
+>   static struct devfreq_event_dev *get_edev_by_node(struct device_node *np,
+>   							int index)
+>   {
+> -	struct device_node *node = of_parse_phandle(np, "devfreq-events",
+> +	struct device_node *node = of_parse_phandle(np, "exynos,ppmu-device",
+>   							index);
+> -	if (!node)
+> -		return ERR_PTR(-ENODEV);
+> +	if (!node) {
+> +		 /*
+> +		  * Check the deprecated 'devfreq-events' property
+> +		  * to support backward-compatibility.
+> +		 */
+> +		node = of_parse_phandle(np, "devfreq-events", index);
+> +		if (!node)
+> +			return ERR_PTR(-ENODEV);
+> +	}
+>   	return devfreq_event_get_edev_by_node(node);
+>   }
+>   
+> @@ -1292,10 +1299,20 @@ static int exynos5_performance_counters_init(struct exynos5_dmc *dmc)
+>   	int ret, i;
+>   
+>   	dmc->num_counters = of_property_count_elems_of_size(dmc->dev->of_node,
+> -					"devfreq-events", sizeof(u32));
+> +					"exynos,ppmu-device", sizeof(u32));
+>   	if (dmc->num_counters < 0) {
+> -		dev_err(dmc->dev, "could not get devfreq-event counters\n");
+> -		return dmc->num_counters;
+> +		 /*
+> +		  * Check the deprecated 'devfreq-events' property
+> +		  * to support backward-compatibility.
+> +		 */
+> +		dmc->num_counters = of_property_count_elems_of_size(
+> +					dmc->dev->of_node,
+> +					"devfreq-events", sizeof(u32));
+> +		if (dmc->num_counters < 0) {
+> +			dev_err(dmc->dev,
+> +				"could not get devfreq-event counters\n");
+> +			return dmc->num_counters;
+> +		}
+>   	}
+>   
+>   	counters_size = sizeof(struct devfreq_event_dev) * dmc->num_counters;
+> 
 
-I have observed that, in some circumstances, TCP throughput was far=20
-better with 802.11g than with 802.11n. I found that 802.11n had more Tx=20
-failures. These failures have big impacts on the congestion window. When=20
-the congestion window is low, it impacts the capacity of aggregation of=20
-the link. Thus, it does not help to improve the congestion windows.
+Looks good to me. The fallback with backward-compatibility is a good
+idea in my opinion. Thank you for the change and feel free to and my:
 
-By investigating deeper, it appears that the minstrel (used by 802.11g)
-always add rate 1Mbps to the rate list while minstrel_ht (used by
-802.11n) don't (compare minstrel_update_rates() and
-minstrel_ht_update_rates()). This difference seems to be correlated to
-the difference of TCP throughput I can observe.
+Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
 
-I did some search in git history and I did not find any explanation for=20
-this difference between minstrel and minstrel_ht (however, it seems you=20
-are the right person to ask :) ). I didn't find why it would be
-efficient on minstrel and inefficient on minstrel_ht. And since this
-change fix the issue that I observed, I have tried to apply it and wait
-for feedback.
 
---=20
-J=E9r=F4me Pouiller
+Regarding the whole patch set, for the first glance it looks reasonable
+and good. AIRC some developers were arguing for the "devfreq-events"
+entry in DT. Now it should be fine. I will spend more time today for
+reviewing the whole patch set.
 
+Regards,
+Lukasz
