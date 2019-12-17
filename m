@@ -2,45 +2,43 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B3ACC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2EDC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D51D120665
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4C1F218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:43:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="XSN08CLA"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="HduQpf2d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727262AbfLQLn1 (ORCPT
+        id S1727823AbfLQLnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 06:43:27 -0500
-Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:36534 "EHLO
+        Tue, 17 Dec 2019 06:43:33 -0500
+Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:36498 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727216AbfLQLmy (ORCPT
+        by vger.kernel.org with ESMTP id S1726560AbfLQLmx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 06:42:54 -0500
+        Tue, 17 Dec 2019 06:42:53 -0500
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 3B7D0C00AE;
-        Tue, 17 Dec 2019 11:42:52 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 370A0C0090;
+        Tue, 17 Dec 2019 11:42:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1576582973; bh=4JXJjVE53ev4CfJxLlgwEg4UYykJKXcBztnhJOlrhd4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=XSN08CLAx/e8IwL0UGtZXT6EP42WewjKso9AIB/RVn6GD5J2EVHtPfizHOqlu4Aft
-         5eqSdhtSytTv/LSydejeKa/9F70NZzB2E7obdowhLyCFE9hMsooor4XO0mH++AV13L
-         SXNd7ASjMJ+oMhQ4aSkbmDhQqEwDogntMbt77vdDjHSalyENM51EJtFjNVGnIULOjX
-         EOWdfNfxrAoGUjwTeC/WC0+S992Qkf7r5OG2Aj+/xomg8YgAw5oBYySBEL5IJispv3
-         90s8f+BCCMSpsBclZ8M16Oudl3vpHRLhFKwFF1+wZ4XS03gX/rSspPjqoYtKvEnUfG
-         vcEUr0OLLLRVw==
+        t=1576582973; bh=bvrgmTjDjbpDwsqCzu8qIM9KHRWSisoWbeB6RbR+JtQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=HduQpf2dk1d8eV9eWHGbzyocyXUSHdKXyz9lNikUuySkQXii9l9aVd1bGN0JxnDkZ
+         KKGlHNNilwYCP0/OOOPBjPDDUgZplEGJ8qUkXtKbrK3E7OUiCE2zJ2rRbEwy+swqyM
+         Ov1CgXczTrecxuTpvl7H5pRyFYKm45pOgN5pMeEexvN4SpEkih4ANn1HC6swUy4Tdm
+         xtKNXWN6Z+FAe8kZ6VdWuaSkMmOqtSMaMXiz0a0f9QkJzHv1Tj0cbjVO8TeOLUtWV1
+         3NnHy2lFytfYaG0gP0N2+gPoQeLIHJ9IiVuiqoiwXACq6+h4wpjd2sP1Yp2jA2ao5p
+         Yux+5pJrCLcPg==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id E4488A0095;
-        Tue, 17 Dec 2019 11:42:50 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id F1375A007B;
+        Tue, 17 Dec 2019 11:42:47 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
 Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
@@ -53,24 +51,33 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net v2 4/8] net: stmmac: Only the last buffer has the FCS field
-Date:   Tue, 17 Dec 2019 12:42:34 +0100
-Message-Id: <b8e23536316451076155f4de5cc25516ab679e2e.1576581853.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH net v2 0/8] net: stmmac: Fixes for -net
+Date:   Tue, 17 Dec 2019 12:42:30 +0100
+Message-Id: <cover.1576581853.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1576581853.git.Jose.Abreu@synopsys.com>
-References: <cover.1576581853.git.Jose.Abreu@synopsys.com>
-In-Reply-To: <cover.1576581853.git.Jose.Abreu@synopsys.com>
-References: <cover.1576581853.git.Jose.Abreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Only the last received buffer contains the FCS field. Check for end of
-packet before trying to strip the FCS field.
+Fixes for stmmac respinned with Fixes tag.
 
-Fixes: 88ebe2cf7f3f ("net: stmmac: Rework stmmac_rx()")
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+1) Fixes the filtering selftests (again) for cases when the number of multicast
+filters are not enough.
+
+2) Fixes SPH feature for MTU > default.
+
+3) Fixes the behavior of accepting invalid MTU values.
+
+4) Fixes FCS stripping for multi-descriptor packets.
+
+5) Fixes the change of RX buffer size in XGMAC.
+
+6) Fixes RX buffer size alignment.
+
+7) Fixes the 16KB buffer alignment.
+
+8) Fixes the enabling of 16KB buffer size feature.
 
 ---
 Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
@@ -83,25 +90,24 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 2ebac89049ed..8c191e4d35d0 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -3644,8 +3644,9 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
- 		 * feature is always disabled and packets need to be
- 		 * stripped manually.
- 		 */
--		if (unlikely(priv->synopsys_id >= DWMAC_CORE_4_00) ||
--		    unlikely(status != llc_snap)) {
-+		if (likely(!(status & rx_not_ls)) &&
-+		    (likely(priv->synopsys_id >= DWMAC_CORE_4_00) ||
-+		     unlikely(status != llc_snap))) {
- 			if (buf2_len)
- 				buf2_len -= ETH_FCS_LEN;
- 			else
+Jose Abreu (8):
+  net: stmmac: selftests: Needs to check the number of Multicast regs
+  net: stmmac: Determine earlier the size of RX buffer
+  net: stmmac: Do not accept invalid MTU values
+  net: stmmac: Only the last buffer has the FCS field
+  net: stmmac: xgmac: Clear previous RX buffer size
+  net: stmmac: RX buffer size must be 16 byte aligned
+  net: stmmac: 16KB buffer must be 16 byte aligned
+  net: stmmac: Enable 16KB buffer size
+
+ drivers/net/ethernet/stmicro/stmmac/common.h       |  5 +--
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     |  2 +
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c |  3 +-
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  | 45 ++++++++++++++--------
+ .../net/ethernet/stmicro/stmmac/stmmac_selftests.c |  4 ++
+ 5 files changed, 38 insertions(+), 21 deletions(-)
+
 -- 
 2.7.4
 
