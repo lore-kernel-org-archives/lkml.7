@@ -6,74 +6,87 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5151AC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE6B1C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E1B12072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:51:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E26D2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:51:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727498AbfLQKvH (ORCPT
+        id S1727519AbfLQKvK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 05:51:07 -0500
-Received: from relay.sw.ru ([185.231.240.75]:37746 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727489AbfLQKvG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 05:51:06 -0500
-Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1ihAQi-0003L8-8F; Tue, 17 Dec 2019 13:50:16 +0300
-Subject: Re: Re: [PATCH v2] mm/hugetlb: Defer freeing of huge pages if in
- non-task context
-To:     Michal Hocko <mhocko@kernel.org>, Waiman Long <longman@redhat.com>
-Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Matthew Wilcox <willy@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-References: <20191217012508.31495-1-longman@redhat.com>
- <20191217093143.GC31063@dhcp22.suse.cz>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <87c2ff49-999e-3196-791f-36e3d42ad79c@virtuozzo.com>
-Date:   Tue, 17 Dec 2019 13:50:15 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 17 Dec 2019 05:51:10 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:41965 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727489AbfLQKvI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 05:51:08 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ihARS-000152-O1; Tue, 17 Dec 2019 11:51:02 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ihARR-0004u2-SF; Tue, 17 Dec 2019 11:51:01 +0100
+Date:   Tue, 17 Dec 2019 11:51:01 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-serial@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: Re: [PATCH v2 1/3] tty: new helper function tty_kopen_shared
+Message-ID: <20191217105101.fd23zsxxi2e42ltt@pengutronix.de>
+References: <20191217081718.23807-1-u.kleine-koenig@pengutronix.de>
+ <20191217081718.23807-2-u.kleine-koenig@pengutronix.de>
+ <20191217082733.GA2672708@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20191217093143.GC31063@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191217082733.GA2672708@kroah.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.12.2019 12:31, Michal Hocko wrote:
-> On Mon 16-12-19 20:25:08, Waiman Long wrote:
-> [...]
->> Both the hugetbl_lock and the subpool lock can be acquired in
->> free_huge_page(). One way to solve the problem is to make both locks
->> irq-safe.
-> 
-> Please document why we do not take this, quite natural path and instead
-> we have to come up with an elaborate way instead. I believe the primary
-> motivation is that some operations under those locks are quite
-> expensive. Please add that to the changelog and ideally to the code as
-> well. We probably want to fix those anyway and then this would be a
-> temporary workaround.
-> 
->> Another alternative is to defer the freeing to a workqueue job.
->>
->> This patch implements the deferred freeing by adding a
->> free_hpage_workfn() work function to do the actual freeing. The
->> free_huge_page() call in a non-task context saves the page to be freed
->> in the hpage_freelist linked list in a lockless manner.
-> 
-> Do we need to over complicate this (presumably) rare event by a lockless
-> algorithm? Why cannot we use a dedicated spin lock for for the linked
-> list manipulation? This should be really a trivial code without an
-> additional burden of all the lockless subtleties.
+Hello Greg,
 
-Why not llist_add()/llist_del_all() ?
+all feedback I don't respond to is planned to be fixed in v3.
+
+On Tue, Dec 17, 2019 at 09:27:33AM +0100, Greg Kroah-Hartman wrote:
+> On Tue, Dec 17, 2019 at 09:17:16AM +0100, Uwe Kleine-König wrote:
+> > +struct tty_struct *tty_kopen_shared(dev_t device)
+> > +{
+> > +	struct tty_struct *tty;
+> > +	struct tty_driver *driver;
+> > +	int index = -1;
+> > +
+> > +	mutex_lock(&tty_mutex);
+> > +	driver = tty_lookup_driver(device, NULL, &index);
+> > +	if (IS_ERR(driver)) {
+> > +		tty = ERR_CAST(driver);
+> > +		goto err_lookup_driver;
+> > +	}
+> > +
+> > +	tty = tty_driver_lookup_tty(driver, NULL, index);
+> 
+> No error check?
+
+Well, the caller of tty_kopen_shared is supposed to check for error
+returns. Do you think an error message here would be approriate? I'd do
+this in the caller similar to how tty_kopen works.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
