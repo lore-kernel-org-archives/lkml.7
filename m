@@ -2,93 +2,138 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A2FC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2470CC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB52321582
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:35:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576625725;
-	bh=HMstQrZKuwi74wJ4cMmuorxOn5AW/f4Mj1GadtC2JCI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kcOidliolvRFJzv0qLPubPvSHSYss53r8p0DM9GY4uT7FtavbJMunDZTIdjrWKCLN
-	 5Pj2mvzXUy815exJipMUsktRkHzxYthm3SvlKwTl/yeuf1AufyNcJIiC9MbTyIkLnG
-	 clpV6Z8oeqEVDfbfDCjYQyKfTOpfDaSguctIpw5M=
+	by mail.kernel.org (Postfix) with ESMTP id DB77B2176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:36:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RhJaSLhD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbfLQXfX (ORCPT
+        id S1726539AbfLQXgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 18:35:23 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:35927 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfLQXfX (ORCPT
+        Tue, 17 Dec 2019 18:36:35 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38070 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726143AbfLQXgf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 18:35:23 -0500
-Received: by mail-oi1-f195.google.com with SMTP id c16so107536oic.3;
-        Tue, 17 Dec 2019 15:35:23 -0800 (PST)
+        Tue, 17 Dec 2019 18:36:35 -0500
+Received: by mail-pl1-f193.google.com with SMTP id f20so98655plj.5;
+        Tue, 17 Dec 2019 15:36:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=xkuE0Re50X58qMcOOTpNENDS+WqmBfa58nlwdeEP/sg=;
+        b=RhJaSLhDCOZDRdViIhV0f6JTBvsiMe1QEkv8QulUVRvfHBvOOhC7vqSo8iwqr7odEC
+         w1jHw8URrrbi0yQFiIaTYcMUXoewUx3jHYzSonGIGbqN6SYTdACAM483cvZkjgga0HhB
+         t3h9nuAtFQ/7aZMgSQvVWs2huX5EYb3uEEtZsydxxGofeme9Hxn5tELy5ER+7Sh0mEDJ
+         kjnYMy9VZRd8uHcrTxbPnqrj4nO1rfcWK9UOMdFCR+mA5PObNwicJS3XmCrxvb2aCutZ
+         r69PTtYe5RKcsTQgsVjPK+Tbm7kAWoZQMCliZCjvMZHv7k6TrNuPlAh3RCcuhQoP7avJ
+         PZ2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BI73ZBRjjqR0+V9ow7XsG6Zpq8G1O7yVR3mkt4nqq1I=;
-        b=GeQ97sb5pTHYufmxnSh1mGTrLIGA0VEm5cCQTzx6hOjm9HXI+q+bgcyxPcD7Zm+7oX
-         i8v+mwYN/Psm01C3OjEXtIua0dX6OrAc7/PhY5PhNCToV8ztVLXfLu3QIa5H5Tz+X+pM
-         TvGPBcrPDAKMSoCjVM/HJtoSI40ga2HXG0hWeQHwo4Rug4fC+bwv4A7Q3TxKi99WTjQK
-         W+WckxTS6Mwe1/3lqDTBY4Zbjn8EkXYWh4QRQdf0X2/ctX0QSyQfQ8ffKbgycxQfX/ed
-         JcCC8FZgNvo/Fql6YMGJuQNXW8Rp22GWwVcr6btWx/3b9nVDVMSuZpFewjCf6wlni1zp
-         yN0w==
-X-Gm-Message-State: APjAAAUXQRX0A5UF/79PRPLfoQflqM+l+AGD0RnG4oliFNMPe5sRe4GQ
-        +I+tnuyuxTm5L9V2roZVFQ==
-X-Google-Smtp-Source: APXvYqyRMza5p9FcM6gHlmpJkzd8vwIoG+HS9nMq49ZnmHNRYgI1aLev14QmXW//C7ZTMozv5ATcsw==
-X-Received: by 2002:a05:6808:3ca:: with SMTP id o10mr3165499oie.14.1576625722498;
-        Tue, 17 Dec 2019 15:35:22 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o16sm17262oic.7.2019.12.17.15.35.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 15:35:21 -0800 (PST)
-Date:   Tue, 17 Dec 2019 17:35:20 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Pascal Paillet <p.paillet@st.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, p.paillet@st.com
-Subject: Re: [PATCH v3] regulator: Convert stm32-pwr regulator to json-schema
-Message-ID: <20191217233520.GA31425@bogus>
-References: <20191205161359.20755-1-p.paillet@st.com>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=xkuE0Re50X58qMcOOTpNENDS+WqmBfa58nlwdeEP/sg=;
+        b=lyAvJAVZjzDBQ1MjCv2qPrWCYQd1sn5oXtY5pg8vyzRY0WB+wx44s+31Y4wazNukbS
+         1fpvFthX3MV/FotVPBsHEWnv/Jptt88SmUfPPmGPZk05pKEH6UAvfHOCsGqXvK6v0Kp1
+         mDHFAqmW9sIA/OHedGpmZpxdeFrQKzoF2B7UK5NIpxSV2iJx3OMpriFHlFvMD7f0RI5W
+         jWjDzs6mJTO6NRy5VXVBBFEOSEYpJGLaD6m69lHQTA/Z9QfFF1XvydChAaHv02nS9j2P
+         JBax6pH3gz+DX3DaZMSF548tubboaF1SKv6k8NlEif7TEr/IUjR4iOoyR8G8JKPy08j7
+         Geew==
+X-Gm-Message-State: APjAAAWLQpajkInXh4/5V643ZGEpSj30yMrA9n+mgF+//04bMf9pF0sh
+        ZMhKHpyPDzDeZP6O/WsO/EhM2xb0
+X-Google-Smtp-Source: APXvYqwsmxSvCnlCnOWQZbZDEub7d8RLvy0B/w08aUO3aBV43AnXtZ1a8L2bQfNc9LzYPnRvBvkc8A==
+X-Received: by 2002:a17:90b:3115:: with SMTP id gc21mr79930pjb.54.1576625794394;
+        Tue, 17 Dec 2019 15:36:34 -0800 (PST)
+Received: from [10.67.49.112] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id g19sm125791pfh.134.2019.12.17.15.36.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Dec 2019 15:36:33 -0800 (PST)
+Subject: Re: [PATCH net-next 3/8] net: bcmgenet: use CHECKSUM_COMPLETE for
+ NETIF_F_RXCSUM
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1576616549-39097-1-git-send-email-opendmb@gmail.com>
+ <1576616549-39097-4-git-send-email-opendmb@gmail.com>
+ <43c460b7-9091-6306-3d39-a4ff1fdc0d5d@gmail.com>
+From:   Doug Berger <opendmb@gmail.com>
+Autocrypt: addr=opendmb@gmail.com; prefer-encrypt=mutual; keydata=
+ xsBNBFWUMnYBCADCqDWlxLrPaGxwJpK/JHR+3Lar1S3M3K98bCw5GjIKFmnrdW4pXlm1Hdk5
+ vspF6aQKcjmgLt3oNtaJ8xTR/q9URQ1DrKX/7CgTwPe2dQdI7gNSAE2bbxo7/2umYBm/B7h2
+ b0PMWgI0vGybu6UY1e8iGOBWs3haZK2M0eg2rPkdm2d6jkhYjD4w2tsbT08IBX/rA40uoo2B
+ DHijLtRSYuNTY0pwfOrJ7BYeM0U82CRGBpqHFrj/o1ZFMPxLXkUT5V1GyDiY7I3vAuzo/prY
+ m4sfbV6SHxJlreotbFufaWcYmRhY2e/bhIqsGjeHnALpNf1AE2r/KEhx390l2c+PrkrNABEB
+ AAHNJkRvdWcgQmVyZ2VyIDxkb3VnLmJlcmdlckBicm9hZGNvbS5jb20+wsEHBBABAgCxBQJa
+ sDPxFwoAAb9Iy/59LfFRBZrQ2vI+6hEaOwDdIBQAAAAAABYAAWtleS11c2FnZS1tYXNrQHBn
+ cC5jb22OMBSAAAAAACAAB3ByZWZlcnJlZC1lbWFpbC1lbmNvZGluZ0BwZ3AuY29tcGdwbWlt
+ ZQgLCQgHAwIBCgIZAQUXgAAAABkYbGRhcDovL2tleXMuYnJvYWRjb20uY29tBRsDAAAAAxYC
+ AQUeAQAAAAQVCAkKAAoJEEv0cxXPMIiXDXMH/Aj4wrSvJTwDDz/pb4GQaiQrI1LSVG7vE+Yy
+ IbLer+wB55nLQhLQbYVuCgH2XmccMxNm8jmDO4EJi60ji6x5GgBzHtHGsbM14l1mN52ONCjy
+ 2QiADohikzPjbygTBvtE7y1YK/WgGyau4CSCWUqybE/vFvEf3yNATBh+P7fhQUqKvMZsqVhO
+ x3YIHs7rz8t4mo2Ttm8dxzGsVaJdo/Z7e9prNHKkRhArH5fi8GMp8OO5XCWGYrEPkZcwC4DC
+ dBY5J8zRpGZjLlBa0WSv7wKKBjNvOzkbKeincsypBF6SqYVLxFoegaBrLqxzIHPsG7YurZxE
+ i7UH1vG/1zEt8UPgggTOwE0EVZQydwEIAM90iYKjEH8SniKcOWDCUC2jF5CopHPhwVGgTWhS
+ vvJsm8ZK7HOdq/OmA6BcwpVZiLU4jQh9d7y9JR1eSehX0dadDHld3+ERRH1/rzH+0XCK4JgP
+ FGzw54oUVmoA9zma9DfPLB/Erp//6LzmmUipKKJC1896gN6ygVO9VHgqEXZJWcuGEEqTixm7
+ kgaCb+HkitO7uy1XZarzL3l63qvy6s5rNqzJsoXE/vG/LWK5xqxU/FxSPZqFeWbX5kQN5XeJ
+ F+I13twBRA84G+3HqOwlZ7yhYpBoQD+QFjj4LdUS9pBpedJ2iv4t7fmw2AGXVK7BRPs92gyE
+ eINAQp3QTMenqvcAEQEAAcLCoAQYAQIBKwUCVZQyeAUbDAAAAMBdIAQZAQgABgUCVZQydwAK
+ CRCmyye0zhoEDXXVCACjD34z8fRasq398eCHzh1RCRI8vRW1hKY+Ur8ET7gDswto369A3PYS
+ 38hK4Na3PQJ0kjB12p7EVA1rpYz/lpBCDMp6E2PyJ7ZyTgkYGHJvHfrj06pSPVP5EGDLIVOV
+ F5RGUdA/rS1crcTmQ5r1RYye4wQu6z4pc4+IUNNF5K38iepMT/Z+F+oDTJiysWVrhpC2dila
+ 6VvTKipK1k75dvVkyT2u5ijGIqrKs2iwUJqr8RPUUYpZlqKLP+kiR+p+YI16zqb1OfBf5I6H
+ F20s6kKSk145XoDAV9+h05X0NuG0W2q/eBcta+TChiV3i8/44C8vn4YBJxbpj2IxyJmGyq2J
+ ASkJEEv0cxXPMIiXwF0gBBkBCAAGBQJVlDJ3AAoJEKbLJ7TOGgQNddUIAKMPfjPx9Fqyrf3x
+ 4IfOHVEJEjy9FbWEpj5SvwRPuAOzC2jfr0Dc9hLfyErg1rc9AnSSMHXansRUDWuljP+WkEIM
+ ynoTY/IntnJOCRgYcm8d+uPTqlI9U/kQYMshU5UXlEZR0D+tLVytxOZDmvVFjJ7jBC7rPilz
+ j4hQ00XkrfyJ6kxP9n4X6gNMmLKxZWuGkLZ2KVrpW9MqKkrWTvl29WTJPa7mKMYiqsqzaLBQ
+ mqvxE9RRilmWoos/6SJH6n5gjXrOpvU58F/kjocXbSzqQpKTXjlegMBX36HTlfQ24bRbar94
+ Fy1r5MKGJXeLz/jgLy+fhgEnFumPYjHImYbKrYlN5gf8CIoI48e2+5V9b6YlvMeOCGMajcvU
+ rHJGgdF+SpHoc95bQLV+cMLFO5/4UdPxP8NFnJWoeoD/6MxKa6Z5SjqUS8k3hk81mc3dFQh3
+ yWj74xNe+1SCn/7UYGsnPQP9rveri8eubraoRZMgLe1XdzyjG8TsWqemAa7/kcMbu3VdHe7N
+ /jdoA2BGF7+/ZujdO89UCrorkH0TOgmicZzaZwN94GYmm69lsbiWWEBvBOLbLIEWAzS0xG//
+ PxsxZ8Cr0utzY4gvbg+7lrBd9WwZ1HU96vBSAeUKAV5YMxvFlZCTS2O3w0Y/lxNR57iFPTPx
+ rQQYjNSD8+NSdOsIpGNCZ9xhWw==
+Message-ID: <60fdef3f-3926-d960-f0ce-7effd9578495@gmail.com>
+Date:   Tue, 17 Dec 2019 15:36:33 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191205161359.20755-1-p.paillet@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <43c460b7-9091-6306-3d39-a4ff1fdc0d5d@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 5 Dec 2019 17:13:59 +0100, Pascal Paillet wrote:
-> Convert the stm32-pwr regulator binding to DT schema format using
-> json-schema.
+On 12/17/19 2:52 PM, Florian Fainelli wrote:
+> On 12/17/19 1:02 PM, Doug Berger wrote:
+>> This commit updates the Rx checksum offload behavior of the driver
+>> to use the more generic CHECKSUM_COMPLETE method that supports all
+>> protocols over the CHECKSUM_UNNECESSARY method that only applies
+>> to some protocols known by the hardware.
+>>
+>> This behavior is perceived to be superior.
+>>
+>> Signed-off-by: Doug Berger <opendmb@gmail.com>
 > 
-> Signed-off-by: Pascal Paillet <p.paillet@st.com>
-> ---
-> Changes since v2:
-> remove /schemas/types.yaml#/definitions/phandle-array for supply
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 > 
->  .../regulator/st,stm32mp1-pwr-reg.txt         | 43 -------------
->  .../regulator/st,stm32mp1-pwr-reg.yaml        | 64 +++++++++++++++++++
->  2 files changed, 64 insertions(+), 43 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
->  create mode 100644 Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.yaml
+> You could also remove priv->dma_rx_chk_bit which is now write only after
+> this patch and not used anymore.
 > 
+Good idea. I'll resubmit shortly.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+-Doug
