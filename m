@@ -2,102 +2,108 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 232DAC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 993D6C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E44362082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:37:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576571850;
-	bh=r3ptfJb3sD1f3kPMFSXcZSbpqwaMLKgnCG8vqFdH40I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YqiAbo2rpDKlUl8u/nYF+tuaZWGNENl5qvAnt6okkFve2uYqHux5zMPRssSaNQlXr
-	 a7rbNsu+AYQYAM17Pd6mSzYqEEO0rRZ9gHsyHcYUB8BL/M+d4BNkvx9kMH2/Ql7MWb
-	 tuqOFtpKIyfE7cPaBsUVb6Jmkl8gbzYWOn+OqUjY=
+	by mail.kernel.org (Postfix) with ESMTP id 6775F207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:38:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iaEjEkXe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbfLQIh3 (ORCPT
+        id S1726734AbfLQIiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 03:37:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40900 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726402AbfLQIh2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 03:37:28 -0500
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C1B9207FF;
-        Tue, 17 Dec 2019 08:37:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576571847;
-        bh=r3ptfJb3sD1f3kPMFSXcZSbpqwaMLKgnCG8vqFdH40I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pGyVvcxgw7K4EJ86MNOFfl3Ex9Igjw7KGmh1LxAHAbTbTaxVbXG5Qw8K+Yt+lPds3
-         XLyoU5w7PGseGXlJY2v0UYls0xCgqSo6mKX7ZhD0CmpicsHHIFUpVcuL+QSPRbZJtd
-         cHvxz35MmDoDvcdUWdEE/33HQKBmH424Y90Pk66c=
-Date:   Tue, 17 Dec 2019 09:37:24 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Chen-Yu Tsai <wens@csie.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH v2 3/4] ARM: dts: sun8i: a83t: Correct USB3503 GPIOs
- polarity
-Message-ID: <20191217083724.6hva5rzvblrsrvlr@gilmour.lan>
-References: <20191211145054.24835-1-m.szyprowski@samsung.com>
- <CGME20191211145222eucas1p1d761af59e04017ddadbdbd1cceb59b1f@eucas1p1.samsung.com>
- <20191211145217.25025-1-m.szyprowski@samsung.com>
+        Tue, 17 Dec 2019 03:38:54 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:38551 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726402AbfLQIiy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 03:38:54 -0500
+Received: by mail-qk1-f194.google.com with SMTP id k6so5275497qki.5
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 00:38:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lIrJhAT0FZhqQC6+Cfro2tTwtRlfUc9In4WJNBC43uo=;
+        b=iaEjEkXevA627OxJCzZ3NT3qqWnixZkvLc+Zn6rDW2XaSJM1DAQ1pnANyQhzNZWdh1
+         ZJQVCnCn3V/O06S7e/Fbm622YJQOyHOFH4sVpvEqfskqGkvYsad+HHQvc42xo16Rz+8I
+         3qc6Ec2MvYPxm5McGtdapkq9zdbcm0K5fTHcf/g0BaJHevbYKgORRhenmyBvOa+hR+zg
+         FH5GUdmgKa3FSqa7j7Yz38fVVN26FhVekIZ/wf6jUjBechjAFgtAodAhHSadHAobt/Ut
+         mwg+6McPmtVlWTMNL2DXAhf/HGhlznRWDUUfr8Jcm4HNFoYEINSmPxKBsNp+85H3gTmd
+         MYOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lIrJhAT0FZhqQC6+Cfro2tTwtRlfUc9In4WJNBC43uo=;
+        b=SplqGCdqufmZo7FQNUSIUfWkq/7sMsE433+O264011Fa9KYVz4iXGLUq0kLmUeUXej
+         k55e2P0+LOUj/rrnRcH0GRPhivIr//czWOmrNyJoGrAEw8evFHbZHpGEqf+NFgdvSQed
+         DwSzzww6mt+nEx6DcaCp42ybiTIRYtIEXc/OTsAR3FdasuGsV9kmPAjNQZaEfvzh1Fif
+         u6HHKEijaEulk7mddrbYe09BlivZd7lG6btDy0UfABnZ1qsfoczqZRE1xOtCM2AMVD1I
+         2KgM0qRmY3DvmVX4SJF3u6rLu9Kqdk1ttS1m9vjglrisb8thYKIkdpu8EB0yqMpsF+gd
+         fVbw==
+X-Gm-Message-State: APjAAAUc3lzSr2c4ZGwybB7LsvUbaZGdqwH5937u1vDpXGUWSSSnk/1M
+        UJgv9ACJ4i4Yrg7TOWF9dCXFjxqh9lNcWhjGZ6xl+A==
+X-Google-Smtp-Source: APXvYqx9z2ouMjEeQz/Xavdg/AecETmTyPaGZA4hqLN0aYcZAhJk9Mdy7kggv+Ou1e8U8qRibYrlZ+Y1VuTCMVTyuFQ=
+X-Received: by 2002:ae9:eb48:: with SMTP id b69mr3684654qkg.43.1576571932878;
+ Tue, 17 Dec 2019 00:38:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="37sxn2mbr4dhx5yw"
-Content-Disposition: inline
-In-Reply-To: <20191211145217.25025-1-m.szyprowski@samsung.com>
+References: <20191216095955.9886-1-penguin-kernel@I-love.SAKURA.ne.jp>
+ <20191217051234.GA54407@google.com> <CACT4Y+ZV_syKQt6hDwf3WH5-LpFo==rsVsQY7+YCMfpUCtzj_A@mail.gmail.com>
+ <20191217082449.GC54407@google.com>
+In-Reply-To: <20191217082449.GC54407@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 17 Dec 2019 09:38:41 +0100
+Message-ID: <CACT4Y+bdvwSBTeqkfJ3kWMOB_QSq84TzumeoTzv89v3in-439A@mail.gmail.com>
+Subject: Re: [PATCH] kconfig: Add kernel config option for fuzz testing.
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---37sxn2mbr4dhx5yw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Dec 11, 2019 at 03:52:17PM +0100, Marek Szyprowski wrote:
-> Current USB3503 driver ignores GPIO polarity and always operates as if the
-> GPIO lines were flagged as ACTIVE_HIGH. Fix the polarity for the existing
-> USB3503 chip applications to match the chip specification and common
-> convention for naming the pins. The only pin, which has to be ACTIVE_LOW
-> is the reset pin. The remaining are ACTIVE_HIGH. This change allows later
-> to fix the USB3503 driver to properly use generic GPIO bindings and read
-> polarity from DT.
+On Tue, Dec 17, 2019 at 9:24 AM Sergey Senozhatsky
+<sergey.senozhatsky.work@gmail.com> wrote:
 >
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> On (19/12/17 08:54), Dmitry Vyukov wrote:
+> > On Tue, Dec 17, 2019 at 6:12 AM Sergey Senozhatsky
+> > <sergey.senozhatsky.work@gmail.com> wrote:
+> > >
+> > > On (19/12/16 18:59), Tetsuo Handa wrote:
+> > >
+> > > Can you fuzz test with `ignore_loglevel'?
+> >
+> > We can set ignore_loglevel in syzbot configs, but won't it then print
+> > everything including verbose debug output?
+>
+> What would be the most active source of debug output?
+>
+> dev_dbg(), which is dev_printk(KERN_DEBUG), can be compiled out, if I'm
+> not mistaken. It probably depends on CONFIG_DEBUG or something similar,
+> unlike dev_printk(), which depends on CONFIG_PRINTK. It seems that we have
+> significantly more dev_dbg() users, than direct dev_printk(KERN_DEBUG).
+>
+> Does fuzz tester hit pr_debug() often? File systems? Some of them
+> have ways to compile out debugging output as well. E.g. jbd_debug,
+> _debug, ext4_debug, and so on.
 
-Applied, thanks
-
-Maxime
-
---37sxn2mbr4dhx5yw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfiTxAAKCRDj7w1vZxhR
-xcWTAQDDHYrUUmf3Bv5q4dBtplu5iG6rQLy1lGxBQ+bI4Rg//AEAya5NBPixtgql
-ctYP1dwe0l9O3OcFDTjIvoQcg6KsuQI=
-=i22t
------END PGP SIGNATURE-----
-
---37sxn2mbr4dhx5yw--
+As far as I remember it produces an infinite amount of output on debug
+level. Even for normal level it produces much more than one would
+normally expect as it does random things all over the kernel with
+maximum frequency.
