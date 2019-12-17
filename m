@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D38C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BFE9C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 001DC20CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:58:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AAF020CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:59:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728128AbfLQA6y (ORCPT
+        id S1728172AbfLQA7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:58:54 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34818 "EHLO
+        Mon, 16 Dec 2019 19:59:05 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34760 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726752AbfLQAvh (ORCPT
+        by vger.kernel.org with ESMTP id S1726402AbfLQAvh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 19:51:37 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15I-0003L9-20; Tue, 17 Dec 2019 00:51:32 +0000
+        id 1ih15H-0003Ky-J7; Tue, 17 Dec 2019 00:51:31 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15G-0005UZ-R0; Tue, 17 Dec 2019 00:51:30 +0000
+        id 1ih15G-0005UJ-MJ; Tue, 17 Dec 2019 00:51:30 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Eric Dumazet" <edumazet@google.com>,
-        "syzbot" <syzkaller@googlegroups.com>
-Date:   Tue, 17 Dec 2019 00:46:15 +0000
-Message-ID: <lsq.1576543535.857630143@decadent.org.uk>
+        "Lorenzo Bianconi" <lorenzo.bianconi@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Date:   Tue, 17 Dec 2019 00:46:12 +0000
+Message-ID: <lsq.1576543535.858518471@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 041/136] nfc: fix memory leak in llcp_sock_bind()
+Subject: [PATCH 3.16 038/136] net: ipv4: use a dedicated counter for
+ icmp_v4 redirect packets
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,61 +56,86 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Dumazet <edumazet@google.com>
+From: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
 
-commit a0c2dc1fe63e2869b74c1c7f6a81d1745c8a695d upstream.
+commit c09551c6ff7fe16a79a42133bcecba5fc2fc3291 upstream.
 
-sysbot reported a memory leak after a bind() has failed.
+According to the algorithm described in the comment block at the
+beginning of ip_rt_send_redirect, the host should try to send
+'ip_rt_redirect_number' ICMP redirect packets with an exponential
+backoff and then stop sending them at all assuming that the destination
+ignores redirects.
+If the device has previously sent some ICMP error packets that are
+rate-limited (e.g TTL expired) and continues to receive traffic,
+the redirect packets will never be transmitted. This happens since
+peer->rate_tokens will be typically greater than 'ip_rt_redirect_number'
+and so it will never be reset even if the redirect silence timeout
+(ip_rt_redirect_silence) has elapsed without receiving any packet
+requiring redirects.
 
-While we are at it, abort the operation if kmemdup() has failed.
+Fix it by using a dedicated counter for the number of ICMP redirect
+packets that has been sent by the host
 
-BUG: memory leak
-unreferenced object 0xffff888105d83ec0 (size 32):
-  comm "syz-executor067", pid 7207, jiffies 4294956228 (age 19.430s)
-  hex dump (first 32 bytes):
-    00 69 6c 65 20 72 65 61 64 00 6e 65 74 3a 5b 34  .ile read.net:[4
-    30 32 36 35 33 33 30 39 37 5d 00 00 00 00 00 00  026533097]......
-  backtrace:
-    [<0000000036bac473>] kmemleak_alloc_recursive /./include/linux/kmemleak.h:43 [inline]
-    [<0000000036bac473>] slab_post_alloc_hook /mm/slab.h:522 [inline]
-    [<0000000036bac473>] slab_alloc /mm/slab.c:3319 [inline]
-    [<0000000036bac473>] __do_kmalloc /mm/slab.c:3653 [inline]
-    [<0000000036bac473>] __kmalloc_track_caller+0x169/0x2d0 /mm/slab.c:3670
-    [<000000000cd39d07>] kmemdup+0x27/0x60 /mm/util.c:120
-    [<000000008e57e5fc>] kmemdup /./include/linux/string.h:432 [inline]
-    [<000000008e57e5fc>] llcp_sock_bind+0x1b3/0x230 /net/nfc/llcp_sock.c:107
-    [<000000009cb0b5d3>] __sys_bind+0x11c/0x140 /net/socket.c:1647
-    [<00000000492c3bbc>] __do_sys_bind /net/socket.c:1658 [inline]
-    [<00000000492c3bbc>] __se_sys_bind /net/socket.c:1656 [inline]
-    [<00000000492c3bbc>] __x64_sys_bind+0x1e/0x30 /net/socket.c:1656
-    [<0000000008704b2a>] do_syscall_64+0x76/0x1a0 /arch/x86/entry/common.c:296
-    [<000000009f4c57a4>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+I have not been able to identify a given commit that introduced the
+issue since ip_rt_send_redirect implements the same rate-limiting
+algorithm from commit 1da177e4c3f4 ("Linux-2.6.12-rc2")
 
-Fixes: 30cc4587659e ("NFC: Move LLCP code to the NFC top level diirectory")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
+[bwh: Backported to 3.16: adjust context, indentation]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/nfc/llcp_sock.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ include/net/inetpeer.h | 1 +
+ net/ipv4/inetpeer.c    | 1 +
+ net/ipv4/route.c       | 7 +++++--
+ 3 files changed, 7 insertions(+), 2 deletions(-)
 
---- a/net/nfc/llcp_sock.c
-+++ b/net/nfc/llcp_sock.c
-@@ -117,9 +117,14 @@ static int llcp_sock_bind(struct socket
- 	llcp_sock->service_name = kmemdup(llcp_addr.service_name,
- 					  llcp_sock->service_name_len,
- 					  GFP_KERNEL);
--
-+	if (!llcp_sock->service_name) {
-+		ret = -ENOMEM;
-+		goto put_dev;
+--- a/include/net/inetpeer.h
++++ b/include/net/inetpeer.h
+@@ -35,6 +35,7 @@ struct inet_peer {
+ 
+ 	u32			metrics[RTAX_MAX];
+ 	u32			rate_tokens;	/* rate limiting for ICMP */
++	u32			n_redirects;
+ 	unsigned long		rate_last;
+ 	union {
+ 		struct list_head	gc_list;
+--- a/net/ipv4/inetpeer.c
++++ b/net/ipv4/inetpeer.c
+@@ -485,6 +485,7 @@ relookup:
+ 		atomic_set(&p->rid, 0);
+ 		p->metrics[RTAX_LOCK-1] = INETPEER_METRICS_NEW;
+ 		p->rate_tokens = 0;
++		p->n_redirects = 0;
+ 		/* 60*HZ is arbitrary, but chosen enough high so that the first
+ 		 * calculation of tokens is at its maximum.
+ 		 */
+--- a/net/ipv4/route.c
++++ b/net/ipv4/route.c
+@@ -872,13 +872,15 @@ void ip_rt_send_redirect(struct sk_buff
+ 	/* No redirected packets during ip_rt_redirect_silence;
+ 	 * reset the algorithm.
+ 	 */
+-	if (time_after(jiffies, peer->rate_last + ip_rt_redirect_silence))
++	if (time_after(jiffies, peer->rate_last + ip_rt_redirect_silence)) {
+ 		peer->rate_tokens = 0;
++		peer->n_redirects = 0;
 +	}
- 	llcp_sock->ssap = nfc_llcp_get_sdp_ssap(local, llcp_sock);
- 	if (llcp_sock->ssap == LLCP_SAP_MAX) {
-+		kfree(llcp_sock->service_name);
-+		llcp_sock->service_name = NULL;
- 		ret = -EADDRINUSE;
- 		goto put_dev;
+ 
+ 	/* Too many ignored redirects; do not send anything
+ 	 * set dst.rate_last to the last seen redirected packet.
+ 	 */
+-	if (peer->rate_tokens >= ip_rt_redirect_number) {
++	if (peer->n_redirects >= ip_rt_redirect_number) {
+ 		peer->rate_last = jiffies;
+ 		goto out_put_peer;
  	}
+@@ -895,6 +897,7 @@ void ip_rt_send_redirect(struct sk_buff
+ 		icmp_send(skb, ICMP_REDIRECT, ICMP_REDIR_HOST, gw);
+ 		peer->rate_last = jiffies;
+ 		++peer->rate_tokens;
++		++peer->n_redirects;
+ #ifdef CONFIG_IP_ROUTE_VERBOSE
+ 		if (log_martians &&
+ 		    peer->rate_tokens == ip_rt_redirect_number)
 
