@@ -2,379 +2,104 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2594C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC202C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C652207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:51:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1AFB207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:52:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="sjW1P66h"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PG7xVVA8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727151AbfLQJvl (ORCPT
+        id S1727188AbfLQJwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 04:51:41 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:56133 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727121AbfLQJvl (ORCPT
+        Tue, 17 Dec 2019 04:52:05 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:52092 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726700AbfLQJwF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 04:51:41 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576576299; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=ElyiGCSTKeLJoWIpT8ban3spRdfD4ATDvEMWbIvIlno=; b=sjW1P66hcoL471SGjySksz7ANMjAIlEUHmWIrLKJWymmmgKw5Gr4LrdjQZoDGxq3EozZ1Zkq
- jCJK/E+VTlMBSRnjJX8YXypqCEvxyyzIOKJmS0aRUBpYXqndl84/wPB0unnRdZv+qar7YOJ1
- 5lWbJBCTjahaxLXv2DUn5fFWYlw=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5df8a527.7fedd5f40f80-smtp-out-n03;
- Tue, 17 Dec 2019 09:51:35 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B0385C4479F; Tue, 17 Dec 2019 09:51:34 +0000 (UTC)
-Received: from akashast-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4CE76C433CB;
-        Tue, 17 Dec 2019 09:51:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4CE76C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-From:   Akash Asthana <akashast@codeaurora.org>
-To:     robh+dt@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org,
-        mark.rutland@arm.com
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
-        swboyd@chromium.org, Akash Asthana <akashast@codeaurora.org>
-Subject: [PATCH V2] dt-bindings: geni-se: Convert QUP geni-se bindings to YAML
-Date:   Tue, 17 Dec 2019 15:21:19 +0530
-Message-Id: <1576576279-29927-1-git-send-email-akashast@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Tue, 17 Dec 2019 04:52:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=P+XbrbFamg7yOE0Az6flqWnD9aZupyC6htsQMuIN+Lg=; b=PG7xVVA84MBmFPXHJO0+9E9qB
+        +wOrDfW1Kc8+1qs6zVG/P9fjbyvREghDYuijgW8cTgvGOGgvXjXwgB6+agg1s3FzrLQrkDdS40pXy
+        ZP7sUXHrGr2B7L8bj3N1KoCqscY3cDI/qTOmWGEdbVYBMiU1M+XB1jgHSqtpB6ccW1qaOu/JHVjDG
+        ng154sMmj36bsQA4nEI8hpJvXi3T29lIt2v0HrBH7CMSbVy1zVg7gVwOvSo/nIpVfSSerb76waarB
+        1ITJaG92EtOKGLjWo9zaECAskhhtnAywQEI/1/c2yGgG1yotjcBpMSZQkel+pi0CjO6UiZlL1qt1B
+        VcXefwcaA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ih9WK-0004V4-4X; Tue, 17 Dec 2019 09:52:00 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 650FA305FE5;
+        Tue, 17 Dec 2019 10:50:34 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id EEC602B3D7E85; Tue, 17 Dec 2019 10:51:56 +0100 (CET)
+Date:   Tue, 17 Dec 2019 10:51:56 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nadav Amit <namit@vmware.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] smp: Allow smp_call_function_single_async() to insert
+ locked csd
+Message-ID: <20191217095156.GZ2844@hirez.programming.kicks-ass.net>
+References: <20191204204823.1503-1-peterx@redhat.com>
+ <20191211154058.GO2827@hirez.programming.kicks-ass.net>
+ <20191211162925.GD48697@xz-x1>
+ <20191216203705.GV2844@hirez.programming.kicks-ass.net>
+ <20191216205833.GB161272@xz-x1>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191216205833.GB161272@xz-x1>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert QUP geni-se bindings to DT schema format using json-schema.
+On Mon, Dec 16, 2019 at 03:58:33PM -0500, Peter Xu wrote:
+> On Mon, Dec 16, 2019 at 09:37:05PM +0100, Peter Zijlstra wrote:
+> > On Wed, Dec 11, 2019 at 11:29:25AM -0500, Peter Xu wrote:
 
-Signed-off-by: Akash Asthana <akashast@codeaurora.org>
----
-Changes in V2:
- - As per Stephen's comment corrected defintion of interrupts for UART node.
-   Any valid UART node must contain atleast 1 interrupts.
+> > > (3) Others:
+> > > 
+> > > *** arch/mips/kernel/process.c:
+> > > raise_backtrace[713]           smp_call_function_single_async(cpu, csd);
+> > 
+> > per-cpu csd data, seems perfectly fine usage.
+> 
+> I'm not sure whether I get the point, I just feel like it could still
+> trigger as long as we do it super fast, before IPI handled,
+> disregarding whether it's per-cpu csd or not.
 
- .../devicetree/bindings/soc/qcom/qcom,geni-se.txt  |  94 ----------
- .../devicetree/bindings/soc/qcom/qcom,geni-se.yaml | 197 +++++++++++++++++++++
- 2 files changed, 197 insertions(+), 94 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
- create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
+No, I wasn't paying attention last night. I'm thinking this one might
+maybe be in 1). It does the state check using that bitmap.
 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
-deleted file mode 100644
-index dab7ca9..0000000
---- a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
-+++ /dev/null
-@@ -1,94 +0,0 @@
--Qualcomm Technologies, Inc. GENI Serial Engine QUP Wrapper Controller
--
--Generic Interface (GENI) based Qualcomm Universal Peripheral (QUP) wrapper
--is a programmable module for supporting a wide range of serial interfaces
--like UART, SPI, I2C, I3C, etc. A single QUP module can provide upto 8 Serial
--Interfaces, using its internal Serial Engines. The GENI Serial Engine QUP
--Wrapper controller is modeled as a node with zero or more child nodes each
--representing a serial engine.
--
--Required properties:
--- compatible:		Must be "qcom,geni-se-qup".
--- reg:			Must contain QUP register address and length.
--- clock-names:		Must contain "m-ahb" and "s-ahb".
--- clocks:		AHB clocks needed by the device.
--
--Required properties if child node exists:
--- #address-cells: 	Must be <1> for Serial Engine Address
--- #size-cells: 		Must be <1> for Serial Engine Address Size
--- ranges: 		Must be present
--
--Properties for children:
--
--A GENI based QUP wrapper controller node can contain 0 or more child nodes
--representing serial devices.  These serial devices can be a QCOM UART, I2C
--controller, SPI controller, or some combination of aforementioned devices.
--Please refer below the child node definitions for the supported serial
--interface protocols.
--
--Qualcomm Technologies Inc. GENI Serial Engine based I2C Controller
--
--Required properties:
--- compatible:		Must be "qcom,geni-i2c".
--- reg: 			Must contain QUP register address and length.
--- interrupts: 		Must contain I2C interrupt.
--- clock-names: 		Must contain "se".
--- clocks: 		Serial engine core clock needed by the device.
--- #address-cells:	Must be <1> for I2C device address.
--- #size-cells:		Must be <0> as I2C addresses have no size component.
--
--Optional property:
--- clock-frequency:	Desired I2C bus clock frequency in Hz.
--			When missing default to 100000Hz.
--
--Child nodes should conform to I2C bus binding as described in i2c.txt.
--
--Qualcomm Technologies Inc. GENI Serial Engine based UART Controller
--
--Required properties:
--- compatible:		Must be "qcom,geni-debug-uart" or "qcom,geni-uart".
--- reg: 			Must contain UART register location and length.
--- interrupts: 		Must contain UART core interrupts.
--- clock-names:		Must contain "se".
--- clocks:		Serial engine core clock needed by the device.
--
--Qualcomm Technologies Inc. GENI Serial Engine based SPI Controller
--node binding is described in
--Documentation/devicetree/bindings/spi/qcom,spi-geni-qcom.txt.
--
--Example:
--	geniqup@8c0000 {
--		compatible = "qcom,geni-se-qup";
--		reg = <0x8c0000 0x6000>;
--		clock-names = "m-ahb", "s-ahb";
--		clocks = <&clock_gcc GCC_QUPV3_WRAP_0_M_AHB_CLK>,
--			<&clock_gcc GCC_QUPV3_WRAP_0_S_AHB_CLK>;
--		#address-cells = <1>;
--		#size-cells = <1>;
--		ranges;
--
--		i2c0: i2c@a94000 {
--			compatible = "qcom,geni-i2c";
--			reg = <0xa94000 0x4000>;
--			interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
--			clock-names = "se";
--			clocks = <&clock_gcc GCC_QUPV3_WRAP0_S5_CLK>;
--			pinctrl-names = "default", "sleep";
--			pinctrl-0 = <&qup_1_i2c_5_active>;
--			pinctrl-1 = <&qup_1_i2c_5_sleep>;
--			#address-cells = <1>;
--			#size-cells = <0>;
--		};
--
--		uart0: serial@a88000 {
--			compatible = "qcom,geni-debug-uart";
--			reg = <0xa88000 0x7000>;
--			interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
--			clock-names = "se";
--			clocks = <&clock_gcc GCC_QUPV3_WRAP0_S0_CLK>;
--			pinctrl-names = "default", "sleep";
--			pinctrl-0 = <&qup_1_uart_3_active>;
--			pinctrl-1 = <&qup_1_uart_3_sleep>;
--		};
--
--	}
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
-new file mode 100644
-index 0000000..5ba0e0e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
-@@ -0,0 +1,197 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/soc/qcom/qcom,geni-se.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: GENI Serial Engine QUP Wrapper Controller
-+
-+maintainers:
-+ - Mukesh Savaliya <msavaliy@codeaurora.org>
-+ - Akash Asthana <akashast@codeaurora.org>
-+
-+description: |
-+ Generic Interface (GENI) based Qualcomm Universal Peripheral (QUP) wrapper
-+ is a programmable module for supporting a wide range of serial interfaces
-+ like UART, SPI, I2C, I3C, etc. A single QUP module can provide upto 8 Serial
-+ Interfaces, using its internal Serial Engines. The GENI Serial Engine QUP
-+ Wrapper controller is modeled as a node with zero or more child nodes each
-+ representing a serial engine.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - qcom,geni-se-qup
-+
-+  reg:
-+    description: QUP wrapper common register address and length.
-+
-+  clock-names:
-+    items:
-+      - const: m-ahb
-+      - const: s-ahb
-+
-+  clocks:
-+    minItems: 2
-+    maxItems: 2
-+    items:
-+      - description: Master AHB Clock
-+      - description: Slave AHB Clock
-+
-+  "#address-cells":
-+     const: 2
-+
-+  "#size-cells":
-+     const: 2
-+
-+  ranges: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - "#address-cells"
-+  - "#size-cells"
-+  - ranges
-+
-+patternProperties:
-+  "[i2c|spi]@[0-9]+$":
-+    type: object
-+    description: GENI Serial Engine based I2C and SPI Controller.
-+                 SPI in master mode supports up to 50MHz, up to four chip
-+                 selects, programmable data path from 4 bits to 32 bits and
-+                 numerous protocol variants.
-+
-+    properties:
-+      compatible:
-+        enum:
-+          - qcom,geni-i2c
-+          - qcom,geni-spi
-+
-+      reg:
-+        description: GENI Serial Engine register address and length.
-+
-+      interrupts:
-+        maxItems: 1
-+
-+      clock-names:
-+        const: se
-+
-+      clocks:
-+        description: Serial engine core clock needed by the device.
-+        maxItems: 1
-+
-+      "#address-cells":
-+         const: 1
-+
-+      "#size-cells":
-+         const: 0
-+
-+      clock-frequency:
-+        description: Desired I2C bus clock frequency in Hz.
-+        default: 100000
-+
-+    required:
-+      - compatible
-+      - reg
-+      - interrupts
-+      - clock-names
-+      - clocks
-+      - "#address-cells"
-+      - "#size-cells"
-+
-+  "serial@[0-9]+$":
-+    type: object
-+    description: GENI Serial Engine based UART Controller.
-+
-+    properties:
-+      compatible:
-+        enum:
-+          - qcom,geni-uart
-+          - qcom,geni-debug-uart
-+
-+      reg:
-+        description: GENI Serial Engine register address and length.
-+
-+      interrupts:
-+        minItems: 1
-+        maxItems: 2
-+        items:
-+          - description: UART core irq
-+          - description: Wakeup irq (RX GPIO)
-+
-+      clock-names:
-+        const: se
-+
-+      clocks:
-+        description: Serial engine core clock needed by the device.
-+        maxItems: 1
-+
-+    required:
-+      - compatible
-+      - reg
-+      - interrupts
-+      - clock-names
-+      - clocks
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    soc: soc@0 {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        qupv3_id_0: geniqup@8c0000 {
-+            compatible = "qcom,geni-se-qup";
-+            reg = <0 0x008c0000 0 0x6000>;
-+            clocks = <&gcc GCC_QUPV3_WRAP_0_M_AHB_CLK>,
-+                <&gcc GCC_QUPV3_WRAP_0_S_AHB_CLK>;
-+            #address-cells = <2>;
-+            #size-cells = <2>;
-+            ranges;
-+            status = "disabled";
-+
-+            i2c0: i2c@880000 {
-+                compatible = "qcom,geni-i2c";
-+                reg = <0 0x00880000 0 0x4000>;
-+                clock-names = "se";
-+                clocks = <&gcc GCC_QUPV3_WRAP0_S0_CLK>;
-+                pinctrl-names = "default";
-+                pinctrl-0 = <&qup_i2c0_default>;
-+                interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+                status = "disabled";
-+            };
-+
-+            spi0: spi@880000 {
-+                compatible = "qcom,geni-spi";
-+                reg = <0 0x00880000 0 0x4000>;
-+                clock-names = "se";
-+                clocks = <&gcc GCC_QUPV3_WRAP0_S0_CLK>;
-+                pinctrl-names = "default";
-+                pinctrl-0 = <&qup_spi0_default>;
-+                interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+                status = "disabled";
-+            };
-+
-+            uart0: serial@880000 {
-+                compatible = "qcom,geni-uart";
-+                reg = <0 0x00880000 0 0x4000>;
-+                clock-names = "se";
-+                clocks = <&gcc GCC_QUPV3_WRAP0_S0_CLK>;
-+                pinctrl-names = "default";
-+                pinctrl-0 = <&qup_uart0_default>;
-+                interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
-+                status = "disabled";
-+            };
-+        };
-+    };
-+
-+...
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+> > > *** arch/x86/kernel/cpuid.c:
+> > > cpuid_read[85]                 err = smp_call_function_single_async(cpu, &csd);
+> > > *** arch/x86/lib/msr-smp.c:
+> > > rdmsr_safe_on_cpu[182]         err = smp_call_function_single_async(cpu, &csd);
+> > 
+> > These two have csd on stack and wait with a completion. seems fine.
+> 
+> Yeh this is true, then I'm confused why they don't use the sync()
+> helpers..
+
+I suspect to be nice for virt. Both CPUID and MSR accesses can trap. but
+now I'm confused, because it is mostly WRMSR that traps.
+
+Anyway, see the commit here: 07cde313b2d2 ("x86/msr: Allow rdmsr_safe_on_cpu() to schedule")
