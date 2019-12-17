@@ -2,95 +2,105 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E3DC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5176AC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF2AD20733
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:49:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="TJ/Scu83"
+	by mail.kernel.org (Postfix) with ESMTP id 2811D21739
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:51:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576590700;
+	bh=Q7UqnpC27UH1gRfRYAQcz4JNHrgVn2RRkrbH5cdedog=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=08S/upgz/jRMD5FrPPWjvWv190L3+au3pu6Lgz2gmVMMbhcPTiwUXzw7qoeOIdnxb
+	 RT2YWSSbcZMGiuwDbad7KqlsrwvpjJxvUnrNvmjmkSn5Bo3wP0w8X26+OX5Ty7X38v
+	 omF0e1ARNGwTQnMLfnsnOAYhvTkEq8jWLx0fhU44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728533AbfLQNtj (ORCPT
+        id S1728572AbfLQNvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 08:49:39 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:55230 "EHLO mail.skyhub.de"
+        Tue, 17 Dec 2019 08:51:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726962AbfLQNti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 08:49:38 -0500
-Received: from zn.tnic (p200300EC2F0BBF009DDBE489521279C1.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:bf00:9ddb:e489:5212:79c1])
+        id S1726962AbfLQNvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 08:51:38 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 629771EC0419;
-        Tue, 17 Dec 2019 14:49:32 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1576590572;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=NnxRmWgXR04lov5uUe4Y9eBEjC/dJ8PLB6ALjMhspEU=;
-        b=TJ/Scu83qAvDm1yqbm7OqNy1WIybTlQX6dv1VHY4h42q+MTkWzjoQk34XOqwo3EiK3kmem
-        ecsKz+yWWT5zvbpfqkBM7vYYWEFsFKi6TYdBB2AD1ej7S9TxcqKgFZjK346LuAqiCR3IXe
-        xDzQYaVhKbpk/VZlK+03kUkkzkdmuS0=
-Date:   Tue, 17 Dec 2019 14:49:23 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Bhupesh Sharma <bhsharma@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bhupesh SHARMA <bhupesh.linux@gmail.com>, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        kexec mailing list <kexec@lists.infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        James Morse <james.morse@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Steve Capper <steve.capper@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Dave Anderson <anderson@redhat.com>,
-        Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Subject: Re: [PATCH v5 0/5] Append new variables to vmcoreinfo (TCR_EL1.T1SZ
- for arm64 and MAX_PHYSMEM_BITS for all archs)
-Message-ID: <20191217134923.GE28788@zn.tnic>
-References: <1574972621-25750-1-git-send-email-bhsharma@redhat.com>
- <20191214122734.GC28635@zn.tnic>
- <CACi5LpP2PPcmaQw95V4MUzhvENq9+mB7UR7eib2HADCDHLz4oA@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id DA00620716;
+        Tue, 17 Dec 2019 13:51:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576590698;
+        bh=Q7UqnpC27UH1gRfRYAQcz4JNHrgVn2RRkrbH5cdedog=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KVRVoSAwi3Ql+NgC7/lanHNTLz/qhwc8ijXAzQJzjpl5uwUQgd3dsUcKI9pORF9+n
+         R3GYjiGFquoLTUbchwDHt4EmwAripNKl9MfvciqSMb/LwCEppVWRmhDWWyuROO3AQC
+         IeYu4LLJjqtHK3o8G5fQ0dWSr72oFeHx6460qq6g=
+Date:   Tue, 17 Dec 2019 14:51:36 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Dmitry Safonov <dima@arista.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Jiri Slaby <jslaby@suse.com>,
+        Vasiliy Khoruzhick <vasilykh@arista.com>,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCH 03/58] serial_core: Un-ifdef sysrq SUPPORT_SYSRQ
+Message-ID: <20191217135136.GA3425650@kroah.com>
+References: <20191213000657.931618-1-dima@arista.com>
+ <20191213000657.931618-4-dima@arista.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACi5LpP2PPcmaQw95V4MUzhvENq9+mB7UR7eib2HADCDHLz4oA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191213000657.931618-4-dima@arista.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 12:16:12PM +0530, Bhupesh Sharma wrote:
-> I remember there was a suggestion during the review of an earlier
-> version to keep them as a separate patch(es) so that the documentation
-> text is easier to review,
+On Fri, Dec 13, 2019 at 12:06:02AM +0000, Dmitry Safonov wrote:
+> The SUPPORT_SYSRQ is messy: every .c source should define it before
+> including "serial_core.h" if sysrq is supported or struct uart_port will
+> differ in sizes. Also this prevents moving to serial_core.c functions:
+> uart_handle_sysrq_char(), uart_prepare_sysrq_char(),
+> uart_unlock_and_check_sysrq().
+> 
+> It doesn't save many bytes in the structure, and a better way to reduce
+> it's size would be making rs485 and iso7816 pointers.
+> 
+> Introduce `has_sysrq` member to be used by serial line drivers further.
+> 
+> Signed-off-by: Dmitry Safonov <dima@arista.com>
+> ---
+>  include/linux/serial_core.h | 77 +++++++++++++++++++++----------------
+>  1 file changed, 43 insertions(+), 34 deletions(-)
+> 
+> diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
+> index bbbe57bf5163..5f761c399282 100644
+> --- a/include/linux/serial_core.h
+> +++ b/include/linux/serial_core.h
+> @@ -240,14 +240,13 @@ struct uart_port {
+>  	resource_size_t		mapsize;
+>  	struct device		*dev;			/* parent device */
+>  
+> -#if defined(CONFIG_SERIAL_CORE_CONSOLE) || defined(SUPPORT_SYSRQ)
+>  	unsigned long		sysrq;			/* sysrq timeout */
+>  	unsigned int		sysrq_ch;		/* char for sysrq */
+> -#endif
+> +	unsigned char		has_sysrq;
+>  
+>  	unsigned char		hub6;			/* this should be in the 8250 driver */
+>  	unsigned char		suspended;
+> -	unsigned char		unused[2];
 
-Documentation text is one sentence, respectively. Not really worth a
-separate patch.
+Ugh, the samsung driver was using both of these fields to overload
+things for it's own use :(
 
-> I can merge the documentation patches with the respective patches
-> (which export the variables/defines to vmcoreinfo) in v6,
+It's not your fault, I'll go fix up that driver first before applying
+this one.
 
-Please do.
+bah, what a horrid hack they did...
 
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+greg k-h
