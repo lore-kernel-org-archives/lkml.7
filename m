@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C605C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD11BC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A2D424676
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9644324673
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:51:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbfLQAvw (ORCPT
+        id S1727492AbfLQAv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:51:52 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34994 "EHLO
+        Mon, 16 Dec 2019 19:51:57 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35088 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726867AbfLQAvl (ORCPT
+        by vger.kernel.org with ESMTP id S1726935AbfLQAvl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 19:51:41 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15I-0003LN-HK; Tue, 17 Dec 2019 00:51:32 +0000
+        id 1ih15I-0003LD-27; Tue, 17 Dec 2019 00:51:32 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15H-0005V8-5O; Tue, 17 Dec 2019 00:51:31 +0000
+        id 1ih15G-0005Uj-UK; Tue, 17 Dec 2019 00:51:30 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,19 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Steve French" <stfrench@microsoft.com>,
-        "Pavel Shilovsky" <piastryyy@gmail.com>,
-        "Pavel Shilovsky" <pshilov@microsoft.com>
-Date:   Tue, 17 Dec 2019 00:46:22 +0000
-Message-ID: <lsq.1576543535.913579306@decadent.org.uk>
+        "Ingo Molnar" <mingo@redhat.com>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Russell King" <linux@armlinux.org.uk>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Kees Cook" <keescook@chromium.org>,
+        "Feng Tang" <feng.tang@intel.com>, "Xogium" <contact@xogium.me>,
+        "Petr Mladek" <pmladek@suse.com>, "Will Deacon" <will@kernel.org>
+Date:   Tue, 17 Dec 2019 00:46:17 +0000
+Message-ID: <lsq.1576543535.860974359@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 048/136] CIFS: Force reval dentry if LOOKUP_REVAL
- flag is set
+Subject: [PATCH 3.16 043/136] panic: ensure preemption is disabled during
+ panic()
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,51 +61,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Pavel Shilovsky <piastryyy@gmail.com>
+From: Will Deacon <will@kernel.org>
 
-commit 0b3d0ef9840f7be202393ca9116b857f6f793715 upstream.
+commit 20bb759a66be52cf4a9ddd17fddaf509e11490cd upstream.
 
-Mark inode for force revalidation if LOOKUP_REVAL flag is set.
-This tells the client to actually send a QueryInfo request to
-the server to obtain the latest metadata in case a directory
-or a file were changed remotely. Only do that if the client
-doesn't have a lease for the file to avoid unneeded round
-trips to the server.
+Calling 'panic()' on a kernel with CONFIG_PREEMPT=y can leave the
+calling CPU in an infinite loop, but with interrupts and preemption
+enabled.  From this state, userspace can continue to be scheduled,
+despite the system being "dead" as far as the kernel is concerned.
 
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-[bwh: Backported to 3.16: adjust context]
+This is easily reproducible on arm64 when booting with "nosmp" on the
+command line; a couple of shell scripts print out a periodic "Ping"
+message whilst another triggers a crash by writing to
+/proc/sysrq-trigger:
+
+  | sysrq: Trigger a crash
+  | Kernel panic - not syncing: sysrq triggered crash
+  | CPU: 0 PID: 1 Comm: init Not tainted 5.2.15 #1
+  | Hardware name: linux,dummy-virt (DT)
+  | Call trace:
+  |  dump_backtrace+0x0/0x148
+  |  show_stack+0x14/0x20
+  |  dump_stack+0xa0/0xc4
+  |  panic+0x140/0x32c
+  |  sysrq_handle_reboot+0x0/0x20
+  |  __handle_sysrq+0x124/0x190
+  |  write_sysrq_trigger+0x64/0x88
+  |  proc_reg_write+0x60/0xa8
+  |  __vfs_write+0x18/0x40
+  |  vfs_write+0xa4/0x1b8
+  |  ksys_write+0x64/0xf0
+  |  __arm64_sys_write+0x14/0x20
+  |  el0_svc_common.constprop.0+0xb0/0x168
+  |  el0_svc_handler+0x28/0x78
+  |  el0_svc+0x8/0xc
+  | Kernel Offset: disabled
+  | CPU features: 0x0002,24002004
+  | Memory Limit: none
+  | ---[ end Kernel panic - not syncing: sysrq triggered crash ]---
+  |  Ping 2!
+  |  Ping 1!
+  |  Ping 1!
+  |  Ping 2!
+
+The issue can also be triggered on x86 kernels if CONFIG_SMP=n,
+otherwise local interrupts are disabled in 'smp_send_stop()'.
+
+Disable preemption in 'panic()' before re-enabling interrupts.
+
+Link: http://lkml.kernel.org/r/20191002123538.22609-1-will@kernel.org
+Link: https://lore.kernel.org/r/BX1W47JXPMR8.58IYW53H6M5N@dragonstone
+Signed-off-by: Will Deacon <will@kernel.org>
+Reported-by: Xogium <contact@xogium.me>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Feng Tang <feng.tang@intel.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/cifs/dir.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ kernel/panic.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/cifs/dir.c
-+++ b/fs/cifs/dir.c
-@@ -817,10 +817,16 @@ lookup_out:
- static int
- cifs_d_revalidate(struct dentry *direntry, unsigned int flags)
- {
-+	struct inode *inode;
-+
- 	if (flags & LOOKUP_RCU)
- 		return -ECHILD;
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -110,6 +110,7 @@ void panic(const char *fmt, ...)
+ 	 * after the panic_lock is acquired) from invoking panic again.
+ 	 */
+ 	local_irq_disable();
++	preempt_disable_notrace();
  
- 	if (direntry->d_inode) {
-+		inode = d_inode(direntry);
-+		if ((flags & LOOKUP_REVAL) && !CIFS_CACHE_READ(CIFS_I(inode)))
-+			CIFS_I(inode)->time = 0; /* force reval */
-+
- 		if (cifs_revalidate_dentry(direntry))
- 			return 0;
- 		else {
-@@ -831,7 +837,7 @@ cifs_d_revalidate(struct dentry *direntr
- 			 * attributes will have been updated by
- 			 * cifs_revalidate_dentry().
- 			 */
--			if (IS_AUTOMOUNT(direntry->d_inode) &&
-+			if (IS_AUTOMOUNT(inode) &&
- 			   !(direntry->d_flags & DCACHE_NEED_AUTOMOUNT)) {
- 				spin_lock(&direntry->d_lock);
- 				direntry->d_flags |= DCACHE_NEED_AUTOMOUNT;
+ 	/*
+ 	 * It's possible to come here directly from a panic-assertion and
 
