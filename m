@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10447C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A22A6C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBD5924679
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 747562465E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:49:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576594139;
-	bh=NFKnt6gXz+nYGmbT4x1wciBl+3LU8xpNNu9xNlIPmto=;
+	s=default; t=1576594144;
+	bh=a9mKoMbq2WRjoubXG8o0HMichj1xLz9Of/S2vlHQBag=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=etMk3V0km3ZqtfKiYP/oW+p9ZLjpziyYP218X01GryMZI6lTSSUuAP4QoLzuGrtXW
-	 mU+ww9YlQ+SC8yLSUiUsUNn2LP1P2jdc969zq4XhroUSHTMjp/DNXnFZGGDEQswERl
-	 IFGkXNG9OGWGwQqlcl1j9wUx6hqLr9vfg2wegE5c=
+	b=qYUB6lmEjebvWHk982V8oaRvIyfVfjMzEt31fkQ+pX6L+WMarCxVunzHPIj6U0UGc
+	 MVX285AHU0yvnWkQQsfWyg+CSqS3tpBw5REkIkGN3CInOyvZNk7DQJTZbw6f0rRn8K
+	 ySkqTkWQRikcj8cHiRkG8C9zCrGavP2Vs+Dz2aVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729251AbfLQOs7 (ORCPT
+        id S1729261AbfLQOtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:48:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40966 "EHLO mail.kernel.org"
+        Tue, 17 Dec 2019 09:49:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728573AbfLQOs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:48:58 -0500
+        id S1728573AbfLQOtB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 09:49:01 -0500
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57E1024655;
-        Tue, 17 Dec 2019 14:48:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D881024676;
+        Tue, 17 Dec 2019 14:48:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576594137;
-        bh=NFKnt6gXz+nYGmbT4x1wciBl+3LU8xpNNu9xNlIPmto=;
+        s=default; t=1576594140;
+        bh=a9mKoMbq2WRjoubXG8o0HMichj1xLz9Of/S2vlHQBag=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PXsoUHFh03zcn33oXAyZb668QPlNTtNu2U+Exz+vJSCP21HKnVV+qezymPad52Piu
-         7dgP1s47E8SaZ3ijB7hTwRpoVRO3eSrte0GzRMye8s5T89pfy6eOE9XmtxQQvEQbjb
-         9hfOcpRnRkDcglJP/sK0xXB6pGbOKd36TG81waUU=
+        b=eFvN+YMlDgvFPX0Szbng8VshAM9JOO+2Swb6e/ztBIqWc3lGUXPTxcm72pQ83+xK0
+         eVtQ+ZBMtVXwt4V0pqNeI2pFmAzplxFU+rhZHaj3Vg9Nsf2peAkGNYPtoe9/U7dirf
+         zxJTkQRp9sxIbIhXyhrLQmN/WHrx/8ZKM2p6BwSE=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
 Cc:     Ingo Molnar <mingo@kernel.org>,
@@ -51,9 +51,9 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Andi Kleen <ak@linux.intel.com>,
         Jin Yao <yao.jin@linux.intel.com>,
         Kan Liang <kan.liang@intel.com>
-Subject: [PATCH 02/12] perf report/top: Make ENTER consistently bring up menu
-Date:   Tue, 17 Dec 2019 11:48:18 -0300
-Message-Id: <20191217144828.2460-3-acme@kernel.org>
+Subject: [PATCH 03/12] perf report/top: Add menu entry for toggling callchain expansion
+Date:   Tue, 17 Dec 2019 11:48:19 -0300
+Message-Id: <20191217144828.2460-4-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191217144828.2460-1-acme@kernel.org>
 References: <20191217144828.2460-1-acme@kernel.org>
@@ -66,49 +66,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-When callchains are present the ENTER key switches from bringing up the
-menu that offers Annotation, Zoom by DSO, etc to expanding/collapsing
-one callchain level, causing confusion, fix it by making it consistently
-bring up the menu and use '+' to expand/collapse one callchain level.
+Since previously pressing ENTER toggled expansion/collapse of callchain
+entries and now brings up the same menu used when callchains are not
+present, add an entry so that users can quickly figure out the change in
+behaviour.
 
-Next patch will also add an entry to the menu to allow
-expanding/collapsing, so that people used to ENTER expanding one
-callchain level can quickly find it and use it instead.
+Its worth mentioning that we also always had 'e'/'c' to expand/collapse
+all entries in a hist entry and 'E'/'C' for all hist entries.
 
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Kan Liang <kan.liang@intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-bjz35omktig8cwn6lbj1ifns@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-f9o03jo29fypvd8ly3j49d36@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/browsers/hists.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/ui/browsers/hists.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
 diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index cfc6172ecab7..fefa505d4fa8 100644
+index fefa505d4fa8..1b5a5990dddb 100644
 --- a/tools/perf/ui/browsers/hists.c
 +++ b/tools/perf/ui/browsers/hists.c
-@@ -706,7 +706,7 @@ int hist_browser__run(struct hist_browser *browser, const char *help,
- 			browser->show_headers = !browser->show_headers;
- 			hist_browser__update_rows(browser);
- 			break;
--		case K_ENTER:
-+		case '+':
- 			if (hist_browser__toggle_fold(browser))
- 				break;
- 			/* fall thru */
-@@ -2858,6 +2858,7 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
- 	"For symbolic views (--sort has sym):\n\n"			\
- 	"ENTER         Zoom into DSO/Threads & Annotate current symbol\n" \
- 	"ESC           Zoom out\n"					\
-+	"+             Expand/Collapse one callchain level\n"		\
- 	"a             Annotate current symbol\n"			\
- 	"C             Collapse all callchains\n"			\
- 	"d             Zoom into current DSO\n"				\
+@@ -2527,6 +2527,26 @@ add_dso_opt(struct hist_browser *browser, struct popup_action *act,
+ 	return 1;
+ }
+ 
++static int do_toggle_callchain(struct hist_browser *browser, struct popup_action *act __maybe_unused)
++{
++	hist_browser__toggle_fold(browser);
++	return 0;
++}
++
++static int add_callchain_toggle_opt(struct hist_browser *browser, struct popup_action *act, char **optstr)
++{
++	struct hist_entry *he = browser->he_selection;
++
++        if (!he->has_children)
++                return 0;
++
++	if (asprintf(optstr, "Expand/Collapse callchain") < 0)
++		return 0;
++
++	act->fn = do_toggle_callchain;
++	return 1;
++}
++
+ static int
+ do_browse_map(struct hist_browser *browser __maybe_unused,
+ 	      struct popup_action *act)
+@@ -3137,6 +3157,7 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
+ 					     &options[nr_options], thread);
+ 		nr_options += add_dso_opt(browser, &actions[nr_options],
+ 					  &options[nr_options], map);
++		nr_options += add_callchain_toggle_opt(browser, &actions[nr_options], &options[nr_options]);
+ 		nr_options += add_map_opt(browser, &actions[nr_options],
+ 					  &options[nr_options],
+ 					  browser->selection ?
 -- 
 2.21.0
 
