@@ -2,80 +2,134 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00AA4C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC4F5C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA5C121D7D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:43:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DD6C21D7D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:46:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lCn6/tA8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727960AbfLQAn7 (ORCPT
+        id S1727925AbfLQAqE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:43:59 -0500
-Received: from mga12.intel.com ([192.55.52.136]:40685 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727282AbfLQAn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 19:43:58 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 16:43:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,323,1571727600"; 
-   d="scan'208";a="365200915"
-Received: from chauvina-mobl1.ger.corp.intel.com ([10.251.85.48])
-  by orsmga004.jf.intel.com with ESMTP; 16 Dec 2019 16:43:54 -0800
-Message-ID: <8afc1bc6551c81ff84b8ac9fd86aed14ed7b7240.camel@linux.intel.com>
-Subject: Re: [PATCH] tpm_tis: reserve chip for duration of tpm_tis_core_init
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Jerry Snitselaar <jsnitsel@redhat.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Christian Bundy <christianbundy@fraction.io>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        stable@vger.kernel.org, linux-intergrity@vger.kernel.org
-In-Reply-To: <20191211231758.22263-1-jsnitsel@redhat.com>
-References: <20191211231758.22263-1-jsnitsel@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160
- Espoo
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 16 Dec 2019 19:46:04 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:17808 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726556AbfLQAqE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 19:46:04 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576543563; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=ykcUs/EViOpCxoK1Xh5e32ZUk+bAyurgZ958r4iU0Mc=;
+ b=lCn6/tA8L214hSZSq+No+T9I/eejEgPfRFF4aVZSK/D0d3xjeEGiX0jYnzoDx7km4OIRqStY
+ poMoKp5JcGepFn71e1TCex3YW1UPK8I76lOR62u26asoWg7Ud4CqtkEmnB9fWsXEqWYuYyM1
+ 1qqEW2DBj+fQZkhDOMZkYgqyEkA=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5df8254a.7f94a45f1dc0-smtp-out-n01;
+ Tue, 17 Dec 2019 00:46:02 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D8FC0C447AC; Tue, 17 Dec 2019 00:46:01 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 21BFBC433CB;
+        Tue, 17 Dec 2019 00:46:00 +0000 (UTC)
 MIME-Version: 1.0
-Date:   Tue, 17 Dec 2019 02:43:50 +0200
-User-Agent: Evolution 3.34.1-2 
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Tue, 17 Dec 2019 08:46:00 +0800
+From:   cang@codeaurora.org
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] scsi: ufs: Put SCSI host after remove it
+In-Reply-To: <cf4915df-5ae4-0dfd-5d44-1fe959d141e2@acm.org>
+References: <1576328616-30404-1-git-send-email-cang@codeaurora.org>
+ <1576328616-30404-2-git-send-email-cang@codeaurora.org>
+ <85475247-efd5-732e-ae74-6d9a11e1bdf2@acm.org>
+ <cd6dc7c90d43b8ca8254a43da48334fc@codeaurora.org>
+ <cf4915df-5ae4-0dfd-5d44-1fe959d141e2@acm.org>
+Message-ID: <0343644f49adee06e6b2f3f631fe1637@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-12-11 at 16:17 -0700, Jerry Snitselaar wrote:
-> Instead of repeatedly calling tpm_chip_start/tpm_chip_stop when
-> issuing commands to the tpm during initialization, just reserve the
-> chip after wait_startup, and release it when we are ready to call
-> tpm_chip_register.
+On 2019-12-17 01:39, Bart Van Assche wrote:
+> On 12/16/19 6:31 AM, cang@codeaurora.org wrote:
+>> As SCSI host is allocated in ufshcd_platform_init() during platform
+>> drive probe, it is much more appropriate if platform driver calls
+>> ufshcd_dealloc_host() in their own drv->remove() path. How do you
+>> think if I change it as below? If it is OK to you, please ignore my
+>> previous mails.
+>> 
+>> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+>> index 3d4582e..ea45756 100644
+>> --- a/drivers/scsi/ufs/ufs-qcom.c
+>> +++ b/drivers/scsi/ufs/ufs-qcom.c
+>> @@ -3239,6 +3239,7 @@ static int ufs_qcom_remove(struct 
+>> platform_device *pdev)
+>> 
+>>          pm_runtime_get_sync(&(pdev)->dev);
+>>          ufshcd_remove(hba);
+>> +       ufshcd_dealloc_host(hba);
+>>          return 0;
+>>   }
 > 
-> Cc: Christian Bundy <christianbundy@fraction.io>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Peter Huewe <peterhuewe@gmx.de>
-> Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Stefan Berger <stefanb@linux.vnet.ibm.com>
-> Cc: stable@vger.kernel.org
-> Cc: linux-intergrity@vger.kernel.org
-> Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of tpm_transmit()")
-> Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
+> Hi Can,
+> 
+> Apparently some UFS drivers call ufshcd_remove() only and others
+> (PCIe) call both ufshcd_remove() and ufshcd_dealloc_host(). I think
+> that the above change will cause trouble for the PCIe driver unless
+> the ufshcd_dealloc_host() call is removed from ufshcd_pci_remove().
+> 
+> Thanks,
+> 
+> Bart.
 
-Sorry for the latency.
+Hi Bart,
 
-For me this looks good for putting to my rc3 PR with a minor twist:
+You may get me wrong. I mean we should do like what ufshcd-pci.c does.
+As driver probe routine allocates SCSI host, then driver remove() should
+de-allocate it. Meaning ufs_qcom_remove() should call both 
+ufshcd_remove()
+and ufshcd_dealloc_host().
 
-1. Rename out_err as err_probe.
-2. Rename out_start as err_start.
+diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+index 3d4582e..ea45756 100644
+--- a/drivers/scsi/ufs/ufs-qcom.c
++++ b/drivers/scsi/ufs/ufs-qcom.c
+@@ -3239,6 +3239,7 @@ static int ufs_qcom_remove(struct platform_device 
+*pdev)
 
-/Jarkko
+           pm_runtime_get_sync(&(pdev)->dev);
+           ufshcd_remove(hba);
+  +       ufshcd_dealloc_host(hba);
+           return 0;
+    }
 
+Thanks,
+
+Can Guo.
