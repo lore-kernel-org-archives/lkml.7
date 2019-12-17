@@ -2,74 +2,84 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0F5C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A052CC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 522CD21D7D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:46:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576601201;
-	bh=dtdHww0rQgXjndhYivazqMjYBkTgiymWRHanmNJmHDs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=d5egepa73SKtLSk+1NFjgu7wii1B0hHug3NaHmInyGjypmpn8zdwPZJ6El6k+PMSY
-	 sPqsgDrF24+CfF+5NFpjV0/mgh84OrWvha+9r9CjohKZ5peBCfP9SbRSBvbMd+RZEK
-	 k4HneeAX4VAzhAHDnIzf+DcTpWTCVMKvm/YV0BhY=
+	by mail.kernel.org (Postfix) with ESMTP id 8171C24655
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:46:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728191AbfLQQqk (ORCPT
+        id S1728307AbfLQQqq convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 11:46:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33412 "EHLO mail.kernel.org"
+        Tue, 17 Dec 2019 11:46:46 -0500
+Received: from muru.com ([72.249.23.125]:48958 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727947AbfLQQqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 11:46:39 -0500
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C581924655;
-        Tue, 17 Dec 2019 16:46:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576601199;
-        bh=dtdHww0rQgXjndhYivazqMjYBkTgiymWRHanmNJmHDs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=i1Sf0cFRdfMGLk1h3va55thwoCVMSSepJ1VffDuYuF3UGsvI/X4MLb5ga81p5okm/
-         RcNO4KMYaRYu29YGS1/NsGrhz+pQr8WP8ewQIOtWkdUWt+maU1H9TOkumYi9Yisp0I
-         wvWWTThcO29+zhXTiS6j6ZB9V8L4SLcjDUo9dk68=
-Date:   Tue, 17 Dec 2019 17:46:36 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Jose Abreu <joabreu@synopsys.com>, netdev@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH] dt-bindings: Add missing 'properties' keyword enclosing
- 'snps,tso'
-Message-ID: <20191217164636.663okrgubucuvmcv@gilmour.lan>
-References: <20191217163946.25052-1-robh@kernel.org>
+        id S1727692AbfLQQqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 11:46:44 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 6275E8116;
+        Tue, 17 Dec 2019 16:47:22 +0000 (UTC)
+Date:   Tue, 17 Dec 2019 08:46:40 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-omap@vger.kernel.org, sre@kernel.org, nekit1000@gmail.com,
+        mpartap@gmx.net, merlijn@wizzup.org, martin_rysavy@centrum.cz,
+        Sekhar Nori <nsekhar@ti.com>, stable@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Lechner <david@lechnology.com>
+Subject: Re: TI omap compile problem in 5.5-rc1? was Re: [PATCH] ARM:
+ davinci: select CONFIG_RESET_CONTROLLER
+Message-ID: <20191217164640.GX35479@atomide.com>
+References: <20191210195202.622734-1-arnd@arndb.de>
+ <20191217104520.GA6812@amd>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191217163946.25052-1-robh@kernel.org>
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20191217104520.GA6812@amd>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 10:39:46AM -0600, Rob Herring wrote:
-> DT property definitions must be under a 'properties' keyword. This was
-> missing for 'snps,tso' in an if/then clause. A meta-schema fix will
-> catch future errors like this.
->
-> Fixes: 7db3545aef5f ("dt-bindings: net: stmmac: Convert the binding to a schemas")
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Signed-off-by: Rob Herring <robh@kernel.org>
+* Pavel Machek <pavel@ucw.cz> [191217 10:46]:
+> Hi!
+> 
+> > Selecting RESET_CONTROLLER is actually required, otherwise we
+> > can get a link failure in the clock driver:
+> > 
+> > drivers/clk/davinci/psc.o: In function `__davinci_psc_register_clocks':
+> > psc.c:(.text+0x9a0): undefined reference to `devm_reset_controller_register'
+> > drivers/clk/davinci/psc-da850.o: In function `da850_psc0_init':
+> > psc-da850.c:(.text+0x24): undefined reference to
+> > `reset_controller_add_lookup'
+> 
+> Does omap need similar handing in 5.5-rc1?
+> 
+>   LD      .tmp_vmlinux1
+>   drivers/soc/ti/omap_prm.o: In function `omap_prm_probe':
+>   omap_prm.c:(.text+0x4d0): undefined reference to
+>   `devm_reset_controller_register'
+>   /data/fast/l/k/Makefile:1077: recipe for target 'vmlinux' failed
+>   make[1]: *** [vmlinux] Error 1
+> 
+> Enabling reset controller seems to help::
+> 
+> Reset Controller Support (RESET_CONTROLLER) [Y/n/?] (NEW)
+>   TI SYSCON Reset Driver (RESET_TI_SYSCON) [N/m/y/?] (NEW)
 
-Acked-by: Maxime Ripard <mripard@kernel.org>
+Yes see the patch Arnd recently posted to do that.
 
-Thanks!
-Maxime
+Regards,
+
+Tony
+
+
