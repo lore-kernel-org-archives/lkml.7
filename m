@@ -2,164 +2,307 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1680DC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62129C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D647820733
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:16:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D92020733
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:21:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="AqJbXtcM"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lt+uD0fr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbfLQJQk (ORCPT
+        id S1726787AbfLQJVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 04:16:40 -0500
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:15788 "EHLO
-        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726191AbfLQJQk (ORCPT
+        Tue, 17 Dec 2019 04:21:00 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:16892 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726612AbfLQJU7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 04:16:40 -0500
-Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBH9F18q025947;
-        Tue, 17 Dec 2019 04:16:30 -0500
-Received: from nam04-co1-obe.outbound.protection.outlook.com (mail-co1nam04lp2050.outbound.protection.outlook.com [104.47.45.50])
-        by mx0b-00128a01.pphosted.com with ESMTP id 2wxf1msjvy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 Dec 2019 04:16:30 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iWbNAQUj/l8qjYCc576TUTZQWIZ/74GwL24KN1KmpTdyIrVcnvFimnT5s77SIEy+L+jfkU0DErJ/NWUJbuUh9o/90Tw8SsannhcBHPsJcXOYuSnDFgp7xNdhPvnBSB3cISQJ9YYTWwQEsj8+Wn6rskomli3CX4HO5NZYZJd3yUM8Uxzx27YpLCPVVfJIcco0Bt5HLq9J6BNHpDgjDtkILL3XLJLw9qKNMkuXyqfVnxUwxY9tcnX8jhMROXrozz+3ZlhcwZrXGq2rMC9KO+Y1YlHkb0wCe8XL3ZW1HFc/G/kDwR/qvs11gzie67zV1ObnWWFEIIJbXjt5inVpAHHX7Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w4EDPQGvqtAh2MZR79VceHLjyLBXcLiY/Wb2uIqDhBM=;
- b=BPxnb6hz44IvJeGCWKXGfhSSaG9lCH9FSfzbVAdwrn/cx4Y+E5vIcMjM+roiuH/8eBMw/R9+yxVHCt8Ae8ZVtTH2bp4dqybxhMFzQAO/Y9F49Sf2sASYmP8zMYv7o5qLCr43LH60m4m9eTrequNcgnp7TOZr9cC1HT5fvBQNbb6C8e9v9qYZfECvXGTIO9BCX0zbnIwmatwW1YKGwB+6nb8Gwa09BQKRD45BGmVwuXGRYJ2hCvvsltt05fkNSNefygZvK6cN6wM+SsmXzFYmSW+ayDfALHHknQ5FsvuIGuFYHwPTAzm7mFPS+085gQ4jyzGU4dOU2G/NnwgNfcLehA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.71.25.55) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
- dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w4EDPQGvqtAh2MZR79VceHLjyLBXcLiY/Wb2uIqDhBM=;
- b=AqJbXtcMIEx2bvAwifDYAAFdgU9CIv+r7UHHowu6FQE6Qf0g1f2CJmxEAZGsF5B3Y6mHrh3h3klhjrlIdIQVxmwfJKMv46K/Zyn7NjjKHnkZ7GcCG0JmT5N2E9AShcrguQoiNqlrhHlEZZqNJAFtom/ERs+hwTgciD7d/5sVx3M=
-Received: from SN6PR04CA0095.namprd04.prod.outlook.com (2603:10b6:805:f2::36)
- by DM6PR03MB5306.namprd03.prod.outlook.com (2603:10b6:5:243::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2538.15; Tue, 17 Dec
- 2019 09:16:29 +0000
-Received: from SN1NAM02FT011.eop-nam02.prod.protection.outlook.com
- (2603:10b6:805:f2:cafe::4b) by SN6PR04CA0095.outlook.office365.com
- (2603:10b6:805:f2::36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2538.17 via Frontend
- Transport; Tue, 17 Dec 2019 09:16:28 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
-Received: from nwd2mta1.analog.com (137.71.25.55) by
- SN1NAM02FT011.mail.protection.outlook.com (10.152.72.82) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2538.14
- via Frontend Transport; Tue, 17 Dec 2019 09:16:28 +0000
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id xBH9GQeM019258
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
-        Tue, 17 Dec 2019 01:16:27 -0800
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Tue, 17 Dec
- 2019 01:16:25 -0800
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Tue, 17 Dec 2019 04:16:25 -0500
-Received: from saturn.ad.analog.com ([10.48.65.123])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id xBH9GMb8025878;
-        Tue, 17 Dec 2019 04:16:22 -0500
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <gregkh@linuxfoundation.org>, <peterhuewe@gmx.de>,
-        <jarkko.sakkinen@linux.intel.com>, <jgg@ziepe.ca>, <arnd@arndb.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH V3] tpm_tis_spi: use new 'delay' structure for SPI transfer delays
-Date:   Tue, 17 Dec 2019 11:16:15 +0200
-Message-ID: <20191217091615.12764-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191204080049.32701-1-alexandru.ardelean@analog.com>
-References: <20191204080049.32701-1-alexandru.ardelean@analog.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(376002)(136003)(346002)(39860400002)(54534003)(199004)(189003)(4326008)(107886003)(478600001)(7696005)(8936002)(5660300002)(426003)(336012)(7636002)(8676002)(86362001)(2616005)(186003)(6666004)(356004)(2906002)(70206006)(70586007)(54906003)(110136005)(44832011)(246002)(316002)(26005)(36756003)(1076003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB5306;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4b0691f0-4646-4bcd-d4b1-08d782d1cc50
-X-MS-TrafficTypeDiagnostic: DM6PR03MB5306:
-X-Microsoft-Antispam-PRVS: <DM6PR03MB5306E592135F81B890A6C6B3F9500@DM6PR03MB5306.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1388;
-X-Forefront-PRVS: 02543CD7CD
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: qeUcg+K+hkqniABFuOBZUMidTLIIXidRdWEGhryA9HDMXRqkvd5FoZ7SQp/e3gvQLnr9YRv1QAun0GeCJraOAvaWiwB02f/RxouzaJ+y5DvDnTgAQnmSNUT6Xb5Hix0gN258TaisIwFe+i3RUypw6+TDZ8j5Crg3LhdFiqbmjnweeRUo/3QOeBekTAkDHRtb4NaxmSnLl92Ft9pkSl+0MoWT+Rg27yEHSQZA1RmDHoZ5IxSqZSOdUd9GJROvzCM6WXNcz7HYiGzL/jnNf2GpQXb333bjyrif51pNev9qRLKJfRyQW7u58/jMtO05cwbAYkfGf57IJfDmVXuJAuf29OBbd0GN7w80KwoNBezIomLRXhiibsabto96kek6rlkw7YQ7kZLcXeSx+U3Jld1ZpS45IeCFGMFLelS1eboTsThgNREj7oFRadWBfZDOzDNz/fv4dkNTbRx4Z50YMmxfqGeauUVMOuu3i/RHOS4KVHs0VqTTMkG3QOfGse2BurKY
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Dec 2019 09:16:28.2648
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4b0691f0-4646-4bcd-d4b1-08d782d1cc50
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB5306
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-17_01:2019-12-16,2019-12-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 suspectscore=0 impostorscore=0 malwarescore=0 mlxlogscore=999
- clxscore=1015 mlxscore=0 priorityscore=1501 bulkscore=0 spamscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912170081
+        Tue, 17 Dec 2019 04:20:59 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576574458; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=PlIaJ4ZqEnoCA+hUESMOQjOQKmzzZq0WvaSfGafB3xY=; b=lt+uD0frOqheKQj1V0kzN0O54Rn8IyhI75qWXHrUIMGgmDk7omS9iW5basifgxeimZad0YgS
+ gkSWlpc/VdrUV44ztBoRMT9NPoEWIf4Eabxz1cThIz7cY11hovk25OXIWfKcLpHh5GhMSbbJ
+ 3EIcrtivngYtE8muIuWEHKLCVgw=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5df89df6.7f2d925816c0-smtp-out-n03;
+ Tue, 17 Dec 2019 09:20:54 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E4538C4479C; Tue, 17 Dec 2019 09:20:52 +0000 (UTC)
+Received: from sthella-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sthella)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 383A4C447A9;
+        Tue, 17 Dec 2019 09:20:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 383A4C447A9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sthella@codeaurora.org
+From:   Shyam Kumar Thella <sthella@codeaurora.org>
+To:     srinivas.kandagatla@linaro.org
+Cc:     Shyam Kumar Thella <sthella@codeaurora.org>, agross@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: [PATCH] nvmem: add QTI SDAM driver
+Date:   Tue, 17 Dec 2019 14:50:32 +0530
+Message-Id: <1576574432-9649-1-git-send-email-sthella@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In a recent change to the SPI subsystem [1], a new 'delay' struct was added
-to replace the 'delay_usecs'. This change replaces the current
-'delay_usecs' with 'delay' for this driver.
+QTI SDAM driver allows PMIC peripherals to access the shared memory
+that is available on QTI PMICs.
 
-The 'spi_transfer_delay_exec()' function [in the SPI framework] makes sure
-that both 'delay_usecs' & 'delay' are used (in this order to preserve
-backwards compatibility).
-
-[1] commit bebcfd272df6485 ("spi: introduce `delay` field for
-`spi_transfer` + spi_transfer_delay_exec()")
-
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Change-Id: I40005646ab1fbba9e0e4aa68e0a61cfbc7b51ba6
+Signed-off-by: Shyam Kumar Thella <sthella@codeaurora.org>
 ---
+ drivers/nvmem/Kconfig          |   8 ++
+ drivers/nvmem/Makefile         |   1 +
+ drivers/nvmem/qcom-spmi-sdam.c | 197 +++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 206 insertions(+)
+ create mode 100644 drivers/nvmem/qcom-spmi-sdam.c
 
-Changelog v2 -> v3:
-* replaced symbol ` with ' ; did not change it for title of
-  commit bebcfd272df6485 , since that one has been commited with
-  symbol ` in the commit title
-
- drivers/char/tpm/tpm_tis_spi.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/char/tpm/tpm_tis_spi.c b/drivers/char/tpm/tpm_tis_spi.c
-index d1754fd6c573..d96755935529 100644
---- a/drivers/char/tpm/tpm_tis_spi.c
-+++ b/drivers/char/tpm/tpm_tis_spi.c
-@@ -110,7 +110,8 @@ int tpm_tis_spi_transfer(struct tpm_tis_data *data, u32 addr, u16 len,
+diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
+index 73567e9..35efab1 100644
+--- a/drivers/nvmem/Kconfig
++++ b/drivers/nvmem/Kconfig
+@@ -109,6 +109,14 @@ config QCOM_QFPROM
+ 	  This driver can also be built as a module. If so, the module
+ 	  will be called nvmem_qfprom.
  
- 		spi_xfer.cs_change = 0;
- 		spi_xfer.len = transfer_len;
--		spi_xfer.delay_usecs = 5;
-+		spi_xfer.delay.value = 5;
-+		spi_xfer.delay.unit = SPI_DELAY_UNIT_USECS;
- 
- 		if (in) {
- 			spi_xfer.tx_buf = NULL;
++config NVMEM_SPMI_SDAM
++	tristate "SPMI SDAM Support"
++	depends on SPMI
++	help
++	  This driver supports the Shared Direct Access Memory Module on
++	  Qualcomm Technologies, Inc. PMICs. It provides the clients
++	  an interface to read/write to the SDAM module's shared memory.
++
+ config ROCKCHIP_EFUSE
+ 	tristate "Rockchip eFuse Support"
+ 	depends on ARCH_ROCKCHIP || COMPILE_TEST
+diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
+index 9e66782..877a0b0 100644
+--- a/drivers/nvmem/Makefile
++++ b/drivers/nvmem/Makefile
+@@ -28,6 +28,7 @@ obj-$(CONFIG_MTK_EFUSE)		+= nvmem_mtk-efuse.o
+ nvmem_mtk-efuse-y		:= mtk-efuse.o
+ obj-$(CONFIG_QCOM_QFPROM)	+= nvmem_qfprom.o
+ nvmem_qfprom-y			:= qfprom.o
++obj-$(CONFIG_NVMEM_SPMI_SDAM)	+= qcom-spmi-sdam.o
+ obj-$(CONFIG_ROCKCHIP_EFUSE)	+= nvmem_rockchip_efuse.o
+ nvmem_rockchip_efuse-y		:= rockchip-efuse.o
+ obj-$(CONFIG_ROCKCHIP_OTP)	+= nvmem-rockchip-otp.o
+diff --git a/drivers/nvmem/qcom-spmi-sdam.c b/drivers/nvmem/qcom-spmi-sdam.c
+new file mode 100644
+index 0000000..e80a446
+--- /dev/null
++++ b/drivers/nvmem/qcom-spmi-sdam.c
+@@ -0,0 +1,197 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2017 The Linux Foundation. All rights reserved.
++ */
++
++#include <linux/device.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
++#include <linux/nvmem-provider.h>
++#include <linux/regmap.h>
++
++#define SDAM_MEM_START			0x40
++#define REGISTER_MAP_ID			0x40
++#define REGISTER_MAP_VERSION		0x41
++#define SDAM_SIZE			0x44
++#define SDAM_PBS_TRIG_SET		0xE5
++#define SDAM_PBS_TRIG_CLR		0xE6
++
++struct sdam_chip {
++	struct platform_device		*pdev;
++	struct regmap			*regmap;
++	int				base;
++	int				size;
++};
++
++/* read only register offsets */
++static const u8 sdam_ro_map[] = {
++	REGISTER_MAP_ID,
++	REGISTER_MAP_VERSION,
++	SDAM_SIZE
++};
++
++static bool is_valid(struct sdam_chip *sdam, unsigned int offset, size_t len)
++{
++	int sdam_mem_end = SDAM_MEM_START + sdam->size - 1;
++
++	if (!len)
++		return false;
++
++	if (offset >= SDAM_MEM_START && offset <= sdam_mem_end
++				&& (offset + len - 1) <= sdam_mem_end)
++		return true;
++	else if ((offset == SDAM_PBS_TRIG_SET || offset == SDAM_PBS_TRIG_CLR)
++				&& (len == 1))
++		return true;
++
++	return false;
++}
++
++static bool is_ro(unsigned int offset, size_t len)
++{
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(sdam_ro_map); i++)
++		if (offset <= sdam_ro_map[i] && (offset + len) > sdam_ro_map[i])
++			return true;
++
++	return false;
++}
++
++static int sdam_read(void *priv, unsigned int offset, void *val, size_t bytes)
++{
++	struct sdam_chip *sdam = priv;
++	int rc;
++
++	if (!is_valid(sdam, offset, bytes)) {
++		pr_err("Invalid SDAM offset 0x%02x len=%zd\n", offset, bytes);
++		return -EINVAL;
++	}
++
++	rc = regmap_bulk_read(sdam->regmap, sdam->base + offset, val, bytes);
++	if (rc < 0)
++		pr_err("Failed to read SDAM offset 0x%02x len=%zd, rc=%d\n",
++						offset, bytes, rc);
++
++	return rc;
++}
++
++static int sdam_write(void *priv, unsigned int offset, void *val, size_t bytes)
++{
++	struct sdam_chip *sdam = priv;
++	int rc;
++
++	if (!is_valid(sdam, offset, bytes)) {
++		pr_err("Invalid SDAM offset 0x%02x len=%zd\n", offset, bytes);
++		return -EINVAL;
++	}
++
++	if (is_ro(offset, bytes)) {
++		pr_err("Invalid write offset 0x%02x len=%zd\n", offset, bytes);
++		return -EINVAL;
++	}
++
++	rc = regmap_bulk_write(sdam->regmap, sdam->base + offset, val, bytes);
++	if (rc < 0)
++		pr_err("Failed to write SDAM offset 0x%02x len=%zd, rc=%d\n",
++						offset, bytes, rc);
++
++	return rc;
++}
++
++static int sdam_probe(struct platform_device *pdev)
++{
++	struct sdam_chip *sdam;
++	struct nvmem_device *nvmem;
++	struct nvmem_config *sdam_config;
++	unsigned int val = 0;
++	int rc;
++
++	sdam = devm_kzalloc(&pdev->dev, sizeof(*sdam), GFP_KERNEL);
++	if (!sdam)
++		return -ENOMEM;
++
++	sdam_config = devm_kzalloc(&pdev->dev, sizeof(*sdam_config),
++							GFP_KERNEL);
++	if (!sdam_config)
++		return -ENOMEM;
++
++	sdam->regmap = dev_get_regmap(pdev->dev.parent, NULL);
++	if (!sdam->regmap) {
++		pr_err("Failed to get regmap handle\n");
++		return -ENXIO;
++	}
++
++	rc = of_property_read_u32(pdev->dev.of_node, "reg", &sdam->base);
++	if (rc < 0) {
++		pr_err("Failed to get SDAM base, rc=%d\n", rc);
++		return -EINVAL;
++	}
++
++	rc = regmap_read(sdam->regmap, sdam->base + SDAM_SIZE, &val);
++	if (rc < 0) {
++		pr_err("Failed to read SDAM_SIZE rc=%d\n", rc);
++		return -EINVAL;
++	}
++	sdam->size = val * 32;
++
++	sdam_config->dev = &pdev->dev;
++	sdam_config->name = "spmi_sdam";
++	sdam_config->id = pdev->id;
++	sdam_config->owner = THIS_MODULE,
++	sdam_config->stride = 1;
++	sdam_config->word_size = 1;
++	sdam_config->reg_read = sdam_read;
++	sdam_config->reg_write = sdam_write;
++	sdam_config->priv = sdam;
++
++	nvmem = nvmem_register(sdam_config);
++	if (IS_ERR(nvmem)) {
++		pr_err("Failed to register SDAM nvmem device rc=%ld\n",
++						PTR_ERR(nvmem));
++		return -ENXIO;
++	}
++	platform_set_drvdata(pdev, nvmem);
++
++	pr_info("SDAM base=0x%04x size=%d registered successfully\n",
++						sdam->base, sdam->size);
++
++	return 0;
++}
++
++static int sdam_remove(struct platform_device *pdev)
++{
++	struct nvmem_device *nvmem = platform_get_drvdata(pdev);
++
++	return nvmem_unregister(nvmem);
++}
++
++static const struct of_device_id sdam_match_table[] = {
++	{.compatible = "qcom,spmi-sdam"},
++	{},
++};
++
++static struct platform_driver sdam_driver = {
++	.driver = {
++		.name = "qcom,spmi-sdam",
++		.of_match_table = sdam_match_table,
++	},
++	.probe		= sdam_probe,
++	.remove		= sdam_remove,
++};
++
++static int __init sdam_init(void)
++{
++	return platform_driver_register(&sdam_driver);
++}
++subsys_initcall(sdam_init);
++
++static void __exit sdam_exit(void)
++{
++	return platform_driver_unregister(&sdam_driver);
++}
++module_exit(sdam_exit);
++
++MODULE_DESCRIPTION("QCOM SPMI SDAM driver");
++MODULE_LICENSE("GPL v2");
 -- 
-2.20.1
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+ a Linux Foundation Collaborative Project
