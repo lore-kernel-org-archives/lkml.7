@@ -2,103 +2,209 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01593C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30421C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D45AD2465E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:06:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F138424676
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:08:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="bnCH8CLC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728120AbfLQQG0 (ORCPT
+        id S1727802AbfLQQIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 11:06:26 -0500
-Received: from mga12.intel.com ([192.55.52.136]:46895 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727737AbfLQQGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 11:06:25 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 08:06:25 -0800
-X-IronPort-AV: E=Sophos;i="5.69,326,1571727600"; 
-   d="scan'208";a="209748794"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 08:06:21 -0800
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Steven Price <steven.price@arm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>
-Subject: Re: [Intel-gfx] linux-next: Tree for Dec 16 (drm_panel & intel_panel)
-In-Reply-To: <CAHp75Vd28j5_xexHyXacRaSv=VRkmBLrSh=w2FE8nmAGWdAo6A@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20191216162209.5b5256dd@canb.auug.org.au> <d92bec2a-62cb-004e-7f8c-01fc12a53a74@infradead.org> <20191217054255.GA26868@ravnborg.org> <65c9dc7b-3c61-8204-07da-212632732791@infradead.org> <aede39a0-3469-130d-f416-0e9426ebcec9@arm.com> <CAHp75VfmGo1LzsHiq_UvWbhvRGovtaLVnRPZJ=40arrJWq6HvA@mail.gmail.com> <87d0cnynst.fsf@intel.com> <CAHp75Vd28j5_xexHyXacRaSv=VRkmBLrSh=w2FE8nmAGWdAo6A@mail.gmail.com>
-Date:   Tue, 17 Dec 2019 18:06:18 +0200
-Message-ID: <87a77rym11.fsf@intel.com>
+        Tue, 17 Dec 2019 11:08:35 -0500
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:31058 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726858AbfLQQIf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 11:08:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1576598913; x=1608134913;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=k0I76KDoH+Ci1ztva7Qrivr8vQ9oSswMnJqX6noDdf0=;
+  b=bnCH8CLC6cHzIOkJWWrL9F8GQqIt7VJugsVm84TG+oeZbNBbjQZFeDoh
+   ap17zB/foSnKYUJlQjHu1+kP0UG7427f24jBwQJg5DxYZB5sBPkDNuDIj
+   vlcAZPBk29YdapHUjeL5QxesX1c9MC1PbnkS2M3JDhkKXcRBGPl9dGIEV
+   Y=;
+IronPort-SDR: Qfa0OSQrrFWYCmyV+k2qrt5bWTKPedxp2SKK8tZsK9VZpq9mHDZnDdKRNjLUEfwgyCCzGs2OOD
+ LC8tOGTXcTzA==
+X-IronPort-AV: E=Sophos;i="5.69,326,1571702400"; 
+   d="scan'208";a="5642827"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-22cc717f.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 17 Dec 2019 16:08:22 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2a-22cc717f.us-west-2.amazon.com (Postfix) with ESMTPS id 925E6A25DB;
+        Tue, 17 Dec 2019 16:08:19 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1236.3; Tue, 17 Dec 2019 16:08:19 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.179) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 17 Dec 2019 16:08:14 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <jgross@suse.com>, <axboe@kernel.dk>, <konrad.wilk@oracle.com>,
+        <roger.pau@citrix.com>
+CC:     SeongJae Park <sjpark@amazon.com>, <pdurrant@amazon.com>,
+        <sj38.park@gmail.com>, <xen-devel@lists.xenproject.org>,
+        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v11 0/6] xenbus/backend: Add a memory pressure handler callback
+Date:   Tue, 17 Dec 2019 17:07:42 +0100
+Message-ID: <20191217160748.693-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.43.161.179]
+X-ClientProxiedBy: EX13d09UWC002.ant.amazon.com (10.43.162.102) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Dec 2019, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> On Tue, Dec 17, 2019 at 5:28 PM Jani Nikula <jani.nikula@linux.intel.com> wrote:
->> On Tue, 17 Dec 2019, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
->> > On Tue, Dec 17, 2019 at 1:56 PM Steven Price <steven.price@arm.com> wrote:
->
->> > I think the proper one is to have s/IS_ENABLED/IS_REACHABLE/.
->> > It fixes issue for me.
->>
->> As discussed off-line, this will allow silently building and linking a
->> configuration that's actually broken. (No backlight support despite
->> expectations.)
->
-> In my case I have deliberately compile backlight as a module to be
-> used exclusively with backlight-gpio which has nothing to do with
-> i915. I dunno if backlight is a MUST dependency for i915.
+Granting pages consumes backend system memory.  In systems configured
+with insufficient spare memory for those pages, it can cause a memory
+pressure situation.  However, finding the optimal amount of the spare
+memory is challenging for large systems having dynamic resource
+utilization patterns.  Also, such a static configuration might lack
+flexibility.
 
-It's not a required dependency, all combinations of i915 and backlight
-are fine, *except* i915=y, backlight=m. This can be achieved with:
+To mitigate such problems, this patchset adds a memory reclaim callback
+to 'xenbus_driver' (patch 1) and then introduce a lock for race
+condition avoidance (patch 2).  Those two patches could be merged into
+one patch if necessary.
 
-	depends on BACKLIGHT_CLASS_DEVICE || BACKLIGHT_CLASS_DEVICE=n
+The third patch applies the callback mechanism to mitigate the problem
+in 'xen-blkback' (patch 3), but it lacks use of the race condition
+mitigation.  Following change (patch 4) applies the race protection
+mechanism to the blkback.  Patch 3 and patch 4 has seperated for only
+review convenience.  Highly recommend to merge those into one patch as
+patch 3 applied version might confuse bisecting.
 
-BR,
-Jani.
+The fifth and sixth patches are trivial cleanups; those fix nits we
+found during the development of this patchset.
 
->
-> From my perspective the original commit, with all good that it
-> provides, should not break previously working configurations. Though
-> we might argue if my "working" kernel configuration had been broken in
-> the first place...
->
-> Just my 2 cents, though.
->
->> IMO deep down the problem is that we "select" BACKLIGHT_CLASS_DEVICE all
->> over the place, while we should "depends on" it. Everything else is just
->> duct tape that allows configurations where built-in code calls backlight
->> symbols in modules. It used to be more about an interaction with ACPI,
->> now we've added DRM_PANEL to the mix.
->>
->> I've proposed a fix five years ago [1]. That's what it takes to fix
->> these recurring failures for good. I'm not really all that interested in
->> the whack-a-mole with the hacks.
->
-> Agree with this. The root cause must be fixed once and for all.
-> I guess it should be a logical continuation of Sam's series.
->
->> [1] http://lore.kernel.org/r/1413580403-16225-1-git-send-email-jani.nikula@intel.com
+Note that patch 1, 3, 5, 6 are same with previous version.  I made the
+changes in this version to different commits (only second and fourth
+patches) to make review more comfortable.  Especially, the third and
+fourth patches should be merged into one patch, as the third one alone
+might make bisecting confuse.  Tthe next version of this patchset will
+also merge those.
+
+
+Base Version
+------------
+
+This patch is based on v5.4.  A complete tree is also available at my
+public git repo:
+https://github.com/sjp38/linux/tree/patches/blkback/buffer_squeeze/v11
+
+
+Patch History
+-------------
+
+Changes from v10
+(https://lore.kernel.org/xen-devel/20191216124527.30306-1-sjpark@amazon.com/)
+ - Fix race condition (reported by SeongJae, suggested by Juergen)
+
+Changes from v9
+(https://lore.kernel.org/xen-devel/20191213153546.17425-1-sjpark@amazon.de/)
+ - Add 'Reviewed-by' and 'Acked-by' from Roger Pau Monné
+ - Update the commit message for overhead test of the 2nd path
+
+Changes from v8
+(https://lore.kernel.org/xen-devel/20191213130211.24011-1-sjpark@amazon.de/)
+ - Drop 'Reviewed-by: Juergen' from the second patch
+   (suggested by Roger Pau Monné)
+ - Update contact of the new module param to SeongJae Park
+   <sjpark@amazon.de>
+   (suggested by Roger Pau Monné)
+ - Wordsmith the description of the parameter
+   (suggested by Roger Pau Monné)
+ - Fix dumb bugs
+   (suggested by Roger Pau Monné)
+ - Move module param definition to xenbus.c and reduce the number of
+   lines for this change
+   (suggested by Roger Pau Monné)
+ - Add a comment for the new callback, reclaim_memory, as other
+   callbacks also have
+ - Add another trivial cleanup of xenbus.c file (4th patch)
+
+Changes from v7
+(https://lore.kernel.org/xen-devel/20191211181016.14366-1-sjpark@amazon.de/)
+ - Update sysfs-driver-xen-blkback for new parameter
+   (suggested by Roger Pau Monné)
+ - Use per-xen_blkif buffer_squeeze_end instead of global variable
+   (suggested by Roger Pau Monné)
+
+Changes from v6
+(https://lore.kernel.org/linux-block/20191211042428.5961-1-sjpark@amazon.de/)
+ - Remove more unnecessary prefixes (suggested by Roger Pau Monné)
+ - Constify a variable (suggested by Roger Pau Monné)
+ - Rename 'reclaim' into 'reclaim_memory' (suggested by Roger Pau Monné)
+ - More wordsmith of the commit message (suggested by Roger Pau Monné)
+
+Changes from v5
+(https://lore.kernel.org/linux-block/20191210080628.5264-1-sjpark@amazon.de/)
+ - Wordsmith the commit messages (suggested by Roger Pau Monné)
+ - Change the reclaim callback return type (suggested by Roger Pau
+   Monné)
+ - Change the type of the blkback squeeze duration variable
+   (suggested by Roger Pau Monné)
+ - Add a patch for removal of unnecessary static variable name prefixes
+   (suggested by Roger Pau Monné)
+ - Fix checkpatch.pl warnings
+
+Changes from v4
+(https://lore.kernel.org/xen-devel/20191209194305.20828-1-sjpark@amazon.com/)
+ - Remove domain id parameter from the callback (suggested by Juergen
+   Gross)
+ - Rename xen-blkback module parameter (suggested by Stefan Nuernburger)
+
+Changes from v3
+(https://lore.kernel.org/xen-devel/20191209085839.21215-1-sjpark@amazon.com/)
+ - Add general callback in xen_driver and use it (suggested by Juergen
+   Gross)
+
+Changes from v2
+(https://lore.kernel.org/linux-block/af195033-23d5-38ed-b73b-f6e2e3b34541@amazon.com)
+ - Rename the module parameter and variables for brevity
+   (aggressive shrinking -> squeezing)
+
+Changes from v1
+(https://lore.kernel.org/xen-devel/20191204113419.2298-1-sjpark@amazon.com/)
+ - Adjust the description to not use the term, `arbitrarily`
+   (suggested by Paul Durrant)
+ - Specify time unit of the duration in the parameter description,
+   (suggested by Maximilian Heyne)
+ - Change default aggressive shrinking duration from 1ms to 10ms
+ - Merge two patches into one single patch
+
+
+SeongJae Park (6):
+  xenbus/backend: Add memory pressure handler callback
+  xenbus/backend: Protect xenbus callback with lock
+  xen/blkback: Squeeze page pools if a memory pressure is detected
+  xen/blkback: Protect 'reclaim_memory()' with 'reclaim_lock'
+  xen/blkback: Remove unnecessary static variable name prefixes
+  xen/blkback: Consistently insert one empty line between functions
+
+ .../ABI/testing/sysfs-driver-xen-blkback      | 10 +++++
+ drivers/block/xen-blkback/blkback.c           | 42 +++++++++----------
+ drivers/block/xen-blkback/common.h            |  1 +
+ drivers/block/xen-blkback/xenbus.c            | 37 +++++++++++++---
+ drivers/xen/xenbus/xenbus_probe.c             |  1 +
+ drivers/xen/xenbus/xenbus_probe_backend.c     | 38 +++++++++++++++++
+ include/xen/xenbus.h                          |  3 ++
+ 7 files changed, 106 insertions(+), 26 deletions(-)
 
 -- 
-Jani Nikula, Intel Open Source Graphics Center
+2.17.1
+
