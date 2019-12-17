@@ -2,91 +2,115 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE4BBC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 755DBC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:47:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 854802072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:46:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576594017;
-	bh=fhMesn83IKAxNRDhgVHJgyYWKzv/CXg+cCNOfDYvvFo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cinN5mrACP/sjvcZPRnse3kwKJtWCcLsXAvHMcpj9JbJ0jZ3Hwg9RKS2Q2nUIVlWL
-	 d1b/Yt+VuJfhTZ29IEde1TDlY6Wc/PyvSRsz5SqaJOG7KzAGouIFMt2t2cdSca7TW5
-	 kOgyY8kiGOsgE0vCe8XBr0m59ivRqcZzos5dW8sI=
+	by mail.kernel.org (Postfix) with ESMTP id 52C7A2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:47:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729194AbfLQOq4 (ORCPT
+        id S1729207AbfLQOrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:46:56 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53665 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728573AbfLQOq4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:46:56 -0500
-Received: by mail-wm1-f66.google.com with SMTP id m24so3194020wmc.3;
-        Tue, 17 Dec 2019 06:46:54 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tO9xCSowUipoQ7W1AR4AKa8ZqnZXGPs6Es0GLJPzMG4=;
-        b=IRoB1LuyN3xZcturJXHUAGMtzDjEYCBSOQXVLpusA69ZYTAo474BvPCFfkYpiNy0mA
-         7zPlCzIG/XPnVLDmPurFkNqA9kPMAZaPH+V06WBgPJx+HUmImA5Fp9XamHOzPnRlxHg1
-         iXbFmSjK41q+RRu9Z+qYdZD8/Akl075zqZ3LGSD6+VhNadwf09eMdMhaZniATepOHyM2
-         HnndZlwDZojZLaL4SXtWYQ4vA7soFp5Pv1YgOMGSks6UXh8yaG8jtd9Gyd1dIUjk6J3C
-         4d8pYN+/mPuVGKyFF5D1HIvEbgn91JStU2WfMppRYEY9zIt4dcdxWFo65aTxs/PPITaT
-         6LbQ==
-X-Gm-Message-State: APjAAAXtLuWTlJY2RMsV2cXVnl7EZTXDS+rx/RhZWzOztS2AyMCU0v/M
-        ptlmnc6Xi2Y0/dbzOX/SgVk=
-X-Google-Smtp-Source: APXvYqyQRDROOdlH8DpI5kAyQN88ZStAn4sknFkwi74VDSblzzh4EemeMlpYs4PM61Jl1NA5Lndw7g==
-X-Received: by 2002:a1c:c919:: with SMTP id f25mr5812629wmb.49.1576594013826;
-        Tue, 17 Dec 2019 06:46:53 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id 5sm26063280wrh.5.2019.12.17.06.46.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 06:46:52 -0800 (PST)
-Date:   Tue, 17 Dec 2019 15:46:52 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Chris Down <chris@chrisdown.name>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: memcontrol.c: move mem_cgroup_id_get_many under
- CONFIG_MMU
-Message-ID: <20191217144652.GA7272@dhcp22.suse.cz>
-References: <20191217135440.GB58496@chrisdown.name>
- <392D7C59-5538-4A9B-8974-DB0B64880C2C@lca.pw>
+        Tue, 17 Dec 2019 09:47:05 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8138 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728573AbfLQOrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 09:47:04 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 5B53CFE0FA289D2C1F80;
+        Tue, 17 Dec 2019 22:47:02 +0800 (CST)
+Received: from [127.0.0.1] (10.177.251.225) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Tue, 17 Dec 2019
+ 22:46:56 +0800
+Subject: Re: [PATCH] ext4: fix Wunused-but-set-variable warning in
+ ext4_add_entry()
+To:     Ritesh Harjani <riteshh@linux.ibm.com>, <tytso@mit.edu>,
+        <adilger.kernel@dilger.ca>, <linux-ext4@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
+        "linfeilong@huawei.com" <linfeilong@huawei.com>
+References: <c351e548-f094-aa90-bf8e-b267284c493e@huawei.com>
+ <20191217143807.E8F1D4C058@d06av22.portsmouth.uk.ibm.com>
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Message-ID: <4e0f0042-0c4a-3b36-d83a-147e55507338@huawei.com>
+Date:   Tue, 17 Dec 2019 22:46:18 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <392D7C59-5538-4A9B-8974-DB0B64880C2C@lca.pw>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191217143807.E8F1D4C058@d06av22.portsmouth.uk.ibm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.177.251.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 17-12-19 09:16:36, Qian Cai wrote:
-> 
-> 
-> > On Dec 17, 2019, at 8:54 AM, Chris Down <chris@chrisdown.name> wrote:
-> > 
-> > Let's just add __maybe_unused, since it seems like what we want in this scenario -- it avoids new users having to enter preprocessor madness, while also not polluting the build output.
-> 
-> __maybe_unused should only be used in the last resort as it mark the compiler to catch the real issues in the future. In this case, it might be better just ignore it as only non-realistic compiling test would use !CONFIG_MMU in this case.
 
-yes, I would just ignore this warning. Btw. it seems that this is
-enabled by default for -Wall. Is this useful for kernel builds at
-all? Does it realistically help discovering real issues? If not then
-can we simply blacklist it?
--- 
-Michal Hocko
-SUSE Labs
+
+On 2019/12/17 22:38, Ritesh Harjani wrote:
+> 
+> 
+> On 12/17/19 5:41 PM, Yunfeng Ye wrote:
+>> Warning is found when compile with "-Wunused-but-set-variable":
+>>
+>> fs/ext4/namei.c: In function ‘ext4_add_entry’:
+>> fs/ext4/namei.c:2167:23: warning: variable ‘sbi’ set but not used
+>> [-Wunused-but-set-variable]
+>>    struct ext4_sb_info *sbi;
+>>                         ^~~
+>> Fix this by moving the variable @sbi under CONFIG_UNICODE.
+>>
+>> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+> 
+> Looks good to me. You may add:
+> 
+> Reviewed-by: Ritesh Harjani <riteshh@linux.ibm.com>
+> 
+ok, thanks.
+
+> 
+> 
+>> ---
+>>   fs/ext4/namei.c | 4 +++-
+>>   1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
+>> index a856997d87b5..617349be460f 100644
+>> --- a/fs/ext4/namei.c
+>> +++ b/fs/ext4/namei.c
+>> @@ -2164,7 +2164,9 @@ static int ext4_add_entry(handle_t *handle, struct dentry *dentry,
+>>       struct buffer_head *bh = NULL;
+>>       struct ext4_dir_entry_2 *de;
+>>       struct super_block *sb;
+>> +#ifdef CONFIG_UNICODE
+>>       struct ext4_sb_info *sbi;
+>> +#endif
+>>       struct ext4_filename fname;
+>>       int    retval;
+>>       int    dx_fallback=0;
+>> @@ -2176,12 +2178,12 @@ static int ext4_add_entry(handle_t *handle, struct dentry *dentry,
+>>           csum_size = sizeof(struct ext4_dir_entry_tail);
+>>
+>>       sb = dir->i_sb;
+>> -    sbi = EXT4_SB(sb);
+>>       blocksize = sb->s_blocksize;
+>>       if (!dentry->d_name.len)
+>>           return -EINVAL;
+>>
+>>   #ifdef CONFIG_UNICODE
+>> +    sbi = EXT4_SB(sb);
+>>       if (ext4_has_strict_mode(sbi) && IS_CASEFOLDED(dir) &&
+>>           sbi->s_encoding && utf8_validate(sbi->s_encoding, &dentry->d_name))
+>>           return -EINVAL;
+>>
+> 
+> 
+> .
+> 
+
