@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C766C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC3FC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70D4E206D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB2A224673
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:56:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727591AbfLQA4i (ORCPT
+        id S1727458AbfLQA4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:56:38 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35052 "EHLO
+        Mon, 16 Dec 2019 19:56:42 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35082 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726907AbfLQAvl (ORCPT
+        by vger.kernel.org with ESMTP id S1726933AbfLQAvl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 19:51:41 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15I-0003Ky-Al; Tue, 17 Dec 2019 00:51:32 +0000
+        id 1ih15K-0003M9-8M; Tue, 17 Dec 2019 00:51:34 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15H-0005WF-JG; Tue, 17 Dec 2019 00:51:31 +0000
+        id 1ih15J-0005bG-P9; Tue, 17 Dec 2019 00:51:33 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        syzbot+0cc629f19ccb8534935b@syzkaller.appspotmail.com,
-        "Simon Wunderlich" <sw@simonwunderlich.de>,
-        "Sven Eckelmann" <sven@narfation.org>
-Date:   Tue, 17 Dec 2019 00:46:35 +0000
-Message-ID: <lsq.1576543535.565401289@decadent.org.uk>
+        "Alan Stern" <stern@rowland.harvard.edu>,
+        "Felipe Balbi" <balbi@kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Date:   Tue, 17 Dec 2019 00:47:16 +0000
+Message-ID: <lsq.1576543535.102946779@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 061/136] batman-adv: Avoid free/alloc race when
- handling OGM buffer
+Subject: [PATCH 3.16 102/136] USB: gadget: Reject endpoints with 0
+ maxpacket value
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,191 +57,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sven Eckelmann <sven@narfation.org>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit 40e220b4218bb3d278e5e8cc04ccdfd1c7ff8307 upstream.
+commit 54f83b8c8ea9b22082a496deadf90447a326954e upstream.
 
-Each slave interface of an B.A.T.M.A.N. IV virtual interface has an OGM
-packet buffer which is initialized using data from netdevice notifier and
-other rtnetlink related hooks. It is sent regularly via various slave
-interfaces of the batadv virtual interface and in this process also
-modified (realloced) to integrate additional state information via TVLV
-containers.
+Endpoints with a maxpacket length of 0 are probably useless.  They
+can't transfer any data, and it's not at all unlikely that a UDC will
+crash or hang when trying to handle a non-zero-length usb_request for
+such an endpoint.  Indeed, dummy-hcd gets a divide error when trying
+to calculate the remainder of a transfer length by the maxpacket
+value, as discovered by the syzbot fuzzer.
 
-It must be avoided that the worker item is executed without a common lock
-with the netdevice notifier/rtnetlink helpers. Otherwise it can either
-happen that half modified/freed data is sent out or functions modifying the
-OGM buffer try to access already freed memory regions.
+Currently the gadget core does not check for endpoints having a
+maxpacket value of 0.  This patch adds a check to usb_ep_enable(),
+preventing such endpoints from being used.
 
-Reported-by: syzbot+0cc629f19ccb8534935b@syzkaller.appspotmail.com
-Fixes: c6c8fea29769 ("net: Add batman-adv meshing protocol")
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
-[bwh: Backported to 3.16:
- - Don't add status check in batadv_iv_ogm_schedule()
- - Adjust context]
+As far as I know, none of the gadget drivers in the kernel tries to
+create an endpoint with maxpacket = 0, but until now there has been
+nothing to prevent userspace programs under gadgetfs or configfs from
+doing it.
+
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Reported-and-tested-by: syzbot+8ab8bf161038a8768553@syzkaller.appspotmail.com
+Acked-by: Felipe Balbi <balbi@kernel.org>
+
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.1910281052370.1485-100000@iolanthe.rowland.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/net/batman-adv/bat_iv_ogm.c
-+++ b/net/batman-adv/bat_iv_ogm.c
-@@ -26,6 +26,8 @@
- #include "bat_algo.h"
- #include "network-coding.h"
- 
-+#include <linux/lockdep.h>
-+#include <linux/mutex.h>
- 
- /**
-  * batadv_dup_status - duplicate status
-@@ -308,14 +310,18 @@ static int batadv_iv_ogm_iface_enable(st
- 	unsigned char *ogm_buff;
- 	uint32_t random_seqno;
- 
-+	mutex_lock(&hard_iface->bat_iv.ogm_buff_mutex);
-+
- 	/* randomize initial seqno to avoid collision */
- 	get_random_bytes(&random_seqno, sizeof(random_seqno));
- 	atomic_set(&hard_iface->bat_iv.ogm_seqno, random_seqno);
- 
- 	hard_iface->bat_iv.ogm_buff_len = BATADV_OGM_HLEN;
- 	ogm_buff = kmalloc(hard_iface->bat_iv.ogm_buff_len, GFP_ATOMIC);
--	if (!ogm_buff)
-+	if (!ogm_buff) {
-+		mutex_unlock(&hard_iface->bat_iv.ogm_buff_mutex);
- 		return -ENOMEM;
+ include/linux/usb/gadget.h | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+--- a/include/linux/usb/gadget.h
++++ b/include/linux/usb/gadget.h
+@@ -222,6 +222,16 @@ static inline void usb_ep_set_maxpacket_
+  */
+ static inline int usb_ep_enable(struct usb_ep *ep)
+ {
++	/* UDC drivers can't handle endpoints with maxpacket size 0 */
++	if (usb_endpoint_maxp(ep->desc) == 0) {
++		/*
++		 * We should log an error message here, but we can't call
++		 * dev_err() because there's no way to find the gadget
++		 * given only ep.
++		 */
++		return -EINVAL;
 +	}
- 
- 	hard_iface->bat_iv.ogm_buff = ogm_buff;
- 
-@@ -327,36 +333,60 @@ static int batadv_iv_ogm_iface_enable(st
- 	batadv_ogm_packet->reserved = 0;
- 	batadv_ogm_packet->tq = BATADV_TQ_MAX_VALUE;
- 
-+	mutex_unlock(&hard_iface->bat_iv.ogm_buff_mutex);
 +
- 	return 0;
+ 	return ep->ops->enable(ep, ep->desc);
  }
  
- static void batadv_iv_ogm_iface_disable(struct batadv_hard_iface *hard_iface)
- {
-+	mutex_lock(&hard_iface->bat_iv.ogm_buff_mutex);
-+
- 	kfree(hard_iface->bat_iv.ogm_buff);
- 	hard_iface->bat_iv.ogm_buff = NULL;
-+
-+	mutex_unlock(&hard_iface->bat_iv.ogm_buff_mutex);
- }
- 
- static void batadv_iv_ogm_iface_update_mac(struct batadv_hard_iface *hard_iface)
- {
- 	struct batadv_ogm_packet *batadv_ogm_packet;
--	unsigned char *ogm_buff = hard_iface->bat_iv.ogm_buff;
-+	void *ogm_buff;
- 
--	batadv_ogm_packet = (struct batadv_ogm_packet *)ogm_buff;
-+	mutex_lock(&hard_iface->bat_iv.ogm_buff_mutex);
-+
-+	ogm_buff = hard_iface->bat_iv.ogm_buff;
-+	if (!ogm_buff)
-+		goto unlock;
-+
-+	batadv_ogm_packet = ogm_buff;
- 	ether_addr_copy(batadv_ogm_packet->orig,
- 			hard_iface->net_dev->dev_addr);
- 	ether_addr_copy(batadv_ogm_packet->prev_sender,
- 			hard_iface->net_dev->dev_addr);
-+
-+unlock:
-+	mutex_unlock(&hard_iface->bat_iv.ogm_buff_mutex);
- }
- 
- static void
- batadv_iv_ogm_primary_iface_set(struct batadv_hard_iface *hard_iface)
- {
- 	struct batadv_ogm_packet *batadv_ogm_packet;
--	unsigned char *ogm_buff = hard_iface->bat_iv.ogm_buff;
-+	void *ogm_buff;
- 
--	batadv_ogm_packet = (struct batadv_ogm_packet *)ogm_buff;
-+	mutex_lock(&hard_iface->bat_iv.ogm_buff_mutex);
-+
-+	ogm_buff = hard_iface->bat_iv.ogm_buff;
-+	if (!ogm_buff)
-+		goto unlock;
-+
-+	batadv_ogm_packet = ogm_buff;
- 	batadv_ogm_packet->flags = BATADV_PRIMARIES_FIRST_HOP;
- 	batadv_ogm_packet->ttl = BATADV_TTL;
-+
-+unlock:
-+	mutex_unlock(&hard_iface->bat_iv.ogm_buff_mutex);
- }
- 
- /* when do we schedule our own ogm to be sent */
-@@ -891,7 +921,11 @@ batadv_iv_ogm_slide_own_bcast_window(str
- 	}
- }
- 
--static void batadv_iv_ogm_schedule(struct batadv_hard_iface *hard_iface)
-+/**
-+ * batadv_iv_ogm_schedule_buff() - schedule submission of hardif ogm buffer
-+ * @hard_iface: interface whose ogm buffer should be transmitted
-+ */
-+static void batadv_iv_ogm_schedule_buff(struct batadv_hard_iface *hard_iface)
- {
- 	struct batadv_priv *bat_priv = netdev_priv(hard_iface->soft_iface);
- 	unsigned char **ogm_buff = &hard_iface->bat_iv.ogm_buff;
-@@ -902,6 +936,8 @@ static void batadv_iv_ogm_schedule(struc
- 	uint16_t tvlv_len = 0;
- 	unsigned long send_time;
- 
-+	lockdep_assert_held(&hard_iface->bat_iv.ogm_buff_mutex);
-+
- 	primary_if = batadv_primary_if_get_selected(bat_priv);
- 
- 	if (hard_iface == primary_if) {
-@@ -1560,6 +1596,13 @@ out:
- 	kfree_skb(skb_priv);
- }
- 
-+static void batadv_iv_ogm_schedule(struct batadv_hard_iface *hard_iface)
-+{
-+	mutex_lock(&hard_iface->bat_iv.ogm_buff_mutex);
-+	batadv_iv_ogm_schedule_buff(hard_iface);
-+	mutex_unlock(&hard_iface->bat_iv.ogm_buff_mutex);
-+}
-+
- /**
-  * batadv_iv_ogm_process - process an incoming batman iv OGM
-  * @skb: the skb containing the OGM
---- a/net/batman-adv/hard-interface.c
-+++ b/net/batman-adv/hard-interface.c
-@@ -31,6 +31,7 @@
- 
- #include <linux/if_arp.h>
- #include <linux/if_ether.h>
-+#include <linux/mutex.h>
- 
- void batadv_hardif_free_rcu(struct rcu_head *rcu)
- {
-@@ -591,6 +592,7 @@ batadv_hardif_add_interface(struct net_d
- 	INIT_WORK(&hard_iface->cleanup_work,
- 		  batadv_hardif_remove_interface_finish);
- 
-+	mutex_init(&hard_iface->bat_iv.ogm_buff_mutex);
- 	hard_iface->num_bcasts = BATADV_NUM_BCASTS_DEFAULT;
- 	if (batadv_is_wifi_netdev(net_dev))
- 		hard_iface->num_bcasts = BATADV_NUM_BCASTS_WIRELESS;
---- a/net/batman-adv/types.h
-+++ b/net/batman-adv/types.h
-@@ -68,6 +68,9 @@ struct batadv_hard_iface_bat_iv {
- 	unsigned char *ogm_buff;
- 	int ogm_buff_len;
- 	atomic_t ogm_seqno;
-+
-+	/** @ogm_buff_mutex: lock protecting ogm_buff and ogm_buff_len */
-+	struct mutex ogm_buff_mutex;
- };
- 
- /**
 
