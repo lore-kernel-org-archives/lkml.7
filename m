@@ -2,118 +2,198 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B33ACC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D723AC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:24:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80C4B2146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:22:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BCC621D7D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:24:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="FvyIhtqi"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="XheFhTOz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728128AbfLQVWV (ORCPT
+        id S1728217AbfLQVYa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 16:22:21 -0500
-Received: from mta-p6.oit.umn.edu ([134.84.196.206]:52826 "EHLO
-        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726731AbfLQVWU (ORCPT
+        Tue, 17 Dec 2019 16:24:30 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:38492 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726731AbfLQVYa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 16:22:20 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 47crgv6Qbrz9vYTl
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 21:22:19 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p6.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id L93353aeJXco for <linux-kernel@vger.kernel.org>;
-        Tue, 17 Dec 2019 15:22:19 -0600 (CST)
-Received: from mail-yw1-f72.google.com (mail-yw1-f72.google.com [209.85.161.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 47crgv5Cjcz9vYV8
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 15:22:19 -0600 (CST)
-Received: by mail-yw1-f72.google.com with SMTP id q130so9152411ywh.11
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 13:22:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xKSXDJGEfO6XnQrXdIqcw1t4M7GCKuGkDlvUOYzoj9E=;
-        b=FvyIhtqi2TU6dCcZtEq40XFqYCUpKactMnMWvPoLcHOE9a7z+IblwJjvMhVVwWPxew
-         m/n+MdzJ2U442WIYSPvp8Kts3/SOHeEomUEyux07PFqecBWnGNOZcbDjw1n5zWRsvxKn
-         sjcoIsj3FFfgdymVtZDdKoYDd9NnuDpymNvESEGgmpDLnWQT8ZO7+66Jr5XZayEDiEWl
-         5G5fbB53ZC81eAW+R/uip0uEIjmSjqJMPk/+HI5KhrTmkpzM2aDCgO6YZcnqmhwZz0PW
-         MhowlFaOU3sJQ7aYfmyaE8viHJfljLoKzAIGOk+JcqqmJXMNA6HWwTXV7QLCdmvnhbLq
-         n3sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xKSXDJGEfO6XnQrXdIqcw1t4M7GCKuGkDlvUOYzoj9E=;
-        b=nn3egDqaLiFDOMNy8C71yjVEVqB1RxyiypudTHj/B+tu/CfVseUNFntGXoLn2slfrO
-         aN2/V53/DhwEkzBh/8RJj1c5zapy8cKFxC4glCUH6hWnVZUkEvvPtcYd0HCO6IJlwCZM
-         uGtUILQLoBNleWVgPY/Bn7HV8zmov8MGL8JQXkFKGlQXab6QHYUjlPE2JjOHLlGYEtl8
-         A/Q/TE5EW1D0YrWwvt37QNSThmA3tynRxDs/lsh+wOPMMjxSzmt1vLZ2bDhhlvqMSd8I
-         2SxA+4spRKax1VAfc6BKNhiihYqgiUSCQnkywVOXyAKSLxeUU43HsmiYj4HrPVfFpROy
-         Rs4A==
-X-Gm-Message-State: APjAAAWM/0WFT7obFxDhcEWhb76845VlSla2d/0AnvB2uQSEyh6jOD0p
-        0N+nVOEjUdgUXbUn5bw/pGdVvGmc1QVq5os9Qo/Y8VrUhWahxkqjsXv52E4YbTdUCP3x/thEoKW
-        g1hyYnnWmFnpyjUFAxoPHJYO6LUg3
-X-Received: by 2002:a81:de03:: with SMTP id k3mr693555ywj.504.1576617739219;
-        Tue, 17 Dec 2019 13:22:19 -0800 (PST)
-X-Google-Smtp-Source: APXvYqy6+drdAHEBR8pRqveMcJwWGEBYCzK6y5x7+hFckUzevP2NHLT1ZNcmcUQ00ImO6UEXbJBcgw==
-X-Received: by 2002:a81:de03:: with SMTP id k3mr693534ywj.504.1576617738960;
-        Tue, 17 Dec 2019 13:22:18 -0800 (PST)
-Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
-        by smtp.gmail.com with ESMTPSA id m7sm22002ywh.24.2019.12.17.13.22.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 13:22:18 -0800 (PST)
-From:   Aditya Pakki <pakki001@umn.edu>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: libfc: remove unnecessary assertion on ep variable
-Date:   Tue, 17 Dec 2019 15:22:13 -0600
-Message-Id: <20191217212214.30722-1-pakki001@umn.edu>
-X-Mailer: git-send-email 2.20.1
+        Tue, 17 Dec 2019 16:24:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1576617868; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4C9AwKJoFefXH+ToH8CSxGK5C+sj8QnbEUgDjj7IX84=;
+        b=XheFhTOzEWgjztClMj0L64tByp2E6JNkSY03/XUQ97k6wj1JvqbMLoFbROM8AAIeKgguFE
+        uKI5d1OJjevXTsjMS0hOSXrvQUBzbRm7WMJBhEfLdQCKv91MdVKqRzFiOhm/azDXCin5q+
+        Ak/NWKcuO5zRaypR6YsuDEMb7Lj76RI=
+Date:   Tue, 17 Dec 2019 22:24:23 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: RE: [PATCH v2 3/3] power/supply: Add generic USB charger driver
+To:     Peter Chen <peter.chen@nxp.com>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>, od@zcrc.me,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Message-Id: <1576617863.3.1@crapouillou.net>
+In-Reply-To: <VI1PR04MB5327B8EF35340FC4B2D02DE88B500@VI1PR04MB5327.eurprd04.prod.outlook.c
+        om>
+References: <20191211155032.167032-1-paul@crapouillou.net>
+        <20191211155032.167032-3-paul@crapouillou.net>
+        <20191212091814.GA7035@b29397-desktop> <1576270147.3.0@crapouillou.net>
+        <VI1PR04MB5327401FFD2D32E937548DD48B510@VI1PR04MB5327.eurprd04.prod.outlook.com>
+        <1576493525.3.0@crapouillou.net>
+        <VI1PR04MB5327B8EF35340FC4B2D02DE88B500@VI1PR04MB5327.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In ft_recv_write_data(), the pointer ep is dereferenced first and
-then asserts for NULL. The patch removes the unnecessary assertion.
+Hi Peter,
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
----
- drivers/target/tcm_fc/tfc_io.c | 1 -
- 1 file changed, 1 deletion(-)
+Le mar., d=E9c. 17, 2019 at 01:32, Peter Chen <peter.chen@nxp.com> a=20
+=E9crit :
+>=20
+>>  Le lun., d=E9c. 16, 2019 at 01:24, Peter Chen <peter.chen@nxp.com> a=20
+>> =E9crit :
+>>  >
+>>  >>  >>  +
+>>  >>  >>  +	desc =3D &charger->desc;
+>>  >>  >>  +	desc->name =3D "usb-charger";
+>>  >>  >>  +	desc->properties =3D usb_charger_properties;
+>>  >>  >>  +	desc->num_properties =3D ARRAY_SIZE(usb_charger_properties);
+>>  >>  >>  +	desc->get_property =3D usb_charger_get_property;
+>>  >>  >>  +	desc->type =3D POWER_SUPPLY_TYPE_USB;
+>>  >>  >
+>>  >>  > What's your further plan for this generic USB charger?
+>>  >>  > To support BC1.2, we need to know charger type, and how we=20
+>> could
+>>  >> get  > it?
+>>  >>  >
+>>  >>  > Peter
+>>  >>
+>>  >>  Well I don't really know. The USB role framework does not give=20
+>> any
+>>  >> info about  what's plugged.
+>>  >>
+>>  >
+>>  > What's the use case for this patch set? How it be used?
+>>=20
+>>  My devicetree:
+>>=20
+>>  usb_otg: usb@13440000 {
+>>  	compatible =3D "ingenic,jz4770-musb", "simple-mfd";
+>>  	reg =3D <0x13440000 0x10000>;
+>>  	[...]
+>>=20
+>>  	usb-role-switch;
+>>=20
+>>  	connector {
+>>  		compatible =3D "gpio-usb-b-connector", "usb-b-connector";
+>>  		label =3D "mini-USB";
+>>  		type =3D "mini";
+>>=20
+>>  		id-gpios =3D <&gpf 18 GPIO_ACTIVE_HIGH>;
+>>  		vbus-gpios =3D <&gpb 5 GPIO_ACTIVE_HIGH>;
+>>  		[...]
+>>  	};
+>>=20
+>>  	usb_charger: usb-charger {
+>>  		compatible =3D "usb-charger";
+>>  	};
+>>  };
+>>=20
+>>  The new gpio-usb-connector driver uses the ID/VBUS GPIOs to detect=20
+>> in
+>>  which state (device, host, unconnected) a OTG connector is. However,
+>>  that means I cannot use the standard gpio-charger driver to detect=20
+>> the
+>>  presence of a charger based on the state of the VBUS gpio, since=20
+>> it's
+>>  already requested here. So the point of this patchset is to provide=20
+>> an
+>>  alternative to gpio-charger that works with OTG controllers=20
+>> compatible
+>>  with 'usb-role-switch'.
+>>=20
+>=20
+> Thanks for explaining it.
+>=20
+> What's the user for this USB charger,  PMIC or what else? How the=20
+> user uses
+> this USB charger interface?
 
-diff --git a/drivers/target/tcm_fc/tfc_io.c b/drivers/target/tcm_fc/tfc_io.c
-index 1354a157e9af..6a38ff936389 100644
---- a/drivers/target/tcm_fc/tfc_io.c
-+++ b/drivers/target/tcm_fc/tfc_io.c
-@@ -221,7 +221,6 @@ void ft_recv_write_data(struct ft_cmd *cmd, struct fc_frame *fp)
- 	ep = fc_seq_exch(seq);
- 	lport = ep->lp;
- 	if (cmd->was_ddp_setup) {
--		BUG_ON(!ep);
- 		BUG_ON(!lport);
- 		/*
- 		 * Since DDP (Large Rx offload) was setup for this request,
--- 
-2.20.1
+It's exported as a standard charger, so it can be passed to client=20
+drivers through devicetree, and its online status can be retrieved from=20
+sysfs.
+
+-Paul
+
+>=20
+>>=20
+>>=20
+>>  >>  >
+>>  >>  >>  +
+>>  >>  >>  +	charger->charger =3D devm_power_supply_register(dev, desc,
+>>  >> &cfg);
+>>  >>  >>  +	if (IS_ERR(charger->charger)) {
+>>  >>  >>  +		dev_err(dev, "Unable to register charger");
+>>  >>  >>  +		return PTR_ERR(charger->charger);
+>>  >>  >>  +	}
+>>  >>  >>  +
+>>  >>  >>  +	err =3D usb_role_switch_register_notifier(charger->role,
+>>  >>  >> &charger->nb);
+>>  >>  >>  +	if (err) {
+>>  >>  >>  +		dev_err(dev, "Unable to register USB role switch=20
+>> notifier");
+>>  >>  >>  +		return err;
+>>  >>  >>  +	}
+>>  >>  >>  +
+>>  >>  >>  +	return devm_add_action_or_reset(dev,=20
+>> usb_charger_unregister,
+>>  >>  >> charger);
+>>  >>  >>  +}
+>>  >>  >>  +
+>>  >>  >>  +static const struct of_device_id usb_charger_of_match[] =3D {
+>>  >>  >>  +	{ .compatible =3D "usb-charger" },
+>>  >>  >>  +	{ /* sentinel */ },
+>>  >>  >>  +};
+>>  >>  >>  +MODULE_DEVICE_TABLE(of, usb_charger_of_match);  +  +static
+>>  >> struct
+>>  >>  >> platform_driver usb_charger_driver =3D {
+>>  >>  >>  +	.driver =3D {
+>>  >>  >>  +		.name =3D "usb-charger",
+>>  >>  >>  +		.of_match_table =3D of_match_ptr(usb_charger_of_match),
+>>  >>  >>  +	},
+>>  >>  >>  +	.probe =3D usb_charger_probe,
+>>  >>  >>  +};
+>>  >>  >>  +module_platform_driver(usb_charger_driver);
+>>  >>  >>  +
+>>  >>  >>  +MODULE_DESCRIPTION("Simple USB charger driver");
+>>  >>  >> +MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
+>>  >>  >> +MODULE_LICENSE("GPL");
+>>  >>  >>  --
+>>  >>  >>  2.24.0
+>>  >>  >>
+>>  >>  >
+>>  >>  > --
+>>  >>  >
+>>  >>  > Thanks,
+>>  >>  > Peter Chen
+>>  >>
+>>  >
+>>=20
+>=20
+
+=
 
