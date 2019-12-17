@@ -2,238 +2,188 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4868FC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF50C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:05:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 121BD2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:05:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D32520716
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:05:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VEIA4q3x"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="c1TXials"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728052AbfLQUFd (ORCPT
+        id S1728124AbfLQUFg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 15:05:33 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36389 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728126AbfLQUF3 (ORCPT
+        Tue, 17 Dec 2019 15:05:36 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:2767 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727036AbfLQUEP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 15:05:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576613128;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=r9zDOVhpgif2r8wUOSynylPPUD8w13YV6BIbZ8Cxr3I=;
-        b=VEIA4q3xLdaTvnttoVaUqvgc/66g8iLrMHNJPLGXmZu9iYVGfgfiUEkL/u6BDX8p+UV60Q
-        FciEVHn0y2W+ysY0EOkJrFdxzoPV3JYZkpe15twinx9sKpuhGA9ZfTNwUnLtwc7jotrEhl
-        7GuZ4hnS8/NKjFDg4pXajfVS/hb3/co=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-224-9W2NCPbKMJqPR5OnkoERkQ-1; Tue, 17 Dec 2019 15:05:20 -0500
-X-MC-Unique: 9W2NCPbKMJqPR5OnkoERkQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C1DFE108598D;
-        Tue, 17 Dec 2019 20:05:16 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-123-81.rdu2.redhat.com [10.10.123.81])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A9C7B5D9E1;
-        Tue, 17 Dec 2019 20:05:13 +0000 (UTC)
-Subject: Re: [PATCH v7 5/5] locking/qspinlock: Introduce the shuffle reduction
- optimization into CNA
-To:     Alex Kogan <alex.kogan@oracle.com>
-Cc:     rahul.x.yadav@oracle.com, tglx@linutronix.de,
-        linux@armlinux.org.uk, hpa@zytor.com, dave.dice@oracle.com,
-        mingo@redhat.com, will.deacon@arm.com, arnd@arndb.de,
-        jglauber@marvell.com, guohanjun@huawei.com, x86@kernel.org,
-        daniel.m.jordan@oracle.com, steven.sistare@oracle.com,
-        bp@alien8.de, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, peterz@infradead.org,
-        linux-arch@vger.kernel.org
-References: <f1164ae9-ebcf-41f0-8395-224cdb0f249d@default>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <64c7b7fd-079c-55d1-258c-8c23802b992d@redhat.com>
-Date:   Tue, 17 Dec 2019 15:05:13 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 17 Dec 2019 15:04:15 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5df934a20000>; Tue, 17 Dec 2019 12:03:46 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 17 Dec 2019 12:04:14 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 17 Dec 2019 12:04:14 -0800
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 17 Dec
+ 2019 20:04:14 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 17 Dec 2019 20:04:14 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.174.101]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5df934bd0002>; Tue, 17 Dec 2019 12:04:14 -0800
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <digetx@gmail.com>,
+        <mperttunen@nvidia.com>, <gregkh@linuxfoundation.org>,
+        <sboyd@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <spujar@nvidia.com>, <josephl@nvidia.com>,
+        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
+        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4 05/19] dt-bindings: soc: tegra-pmc: Add Tegra PMC clock bindings
+Date:   Tue, 17 Dec 2019 12:03:52 -0800
+Message-ID: <1576613046-17159-6-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1576613046-17159-1-git-send-email-skomatineni@nvidia.com>
+References: <1576613046-17159-1-git-send-email-skomatineni@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-In-Reply-To: <f1164ae9-ebcf-41f0-8395-224cdb0f249d@default>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1576613026; bh=SJs0uOhQMCX7QeE3qqpJsedMWOcbK6k/CG0iYVIjl1Y=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=c1TXialsDi8iCNcGwAaeO5aEOlk0D0fTEiyOamVV0KPJXbhMPA4q1dj+Ya3bmRBne
+         PmDYOqGpis9tIefyds/YnqHRXyDfdUT8GeZBrhmMyewoJnYFwyWHrKZ5rujOqUNDfx
+         6B/fFCSswPoWWk2EkFfRrTKjlVPQbPJLk4+pc+r71tZcojTQuZqb7uKD2GmHsUhQTq
+         C1mG+QYH8oxFMdKdR/0aMFeiDPWNFhXtFahJ26vFTpS5OklONJFtVN/rSGI+B0dJsH
+         ADOKIHO4lTKnoFvAlsf2dz5v2Ox0alYwX4n76e7FfyAaKhmFcHgHk5trRTJQfo1JXf
+         thIf5oyWTELyA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/10/19 1:56 PM, Alex Kogan wrote:
-> ----- longman@redhat.com wrote:
->
->> On 11/25/19 4:07 PM, Alex Kogan wrote:
->>> @@ -234,12 +263,13 @@ __always_inline u32 cna_pre_scan(struct
->> qspinlock *lock,
->>>  	struct cna_node *cn =3D (struct cna_node *)node;
->>> =20
->>>  	/*
->>> -	 * setting @pre_scan_result to 1 indicates that no post-scan
->>> +	 * setting @pre_scan_result to 1 or 2 indicates that no post-scan
->>>  	 * should be made in cna_pass_lock()
->>>  	 */
->>>  	cn->pre_scan_result =3D
->>> -		cn->intra_count =3D=3D intra_node_handoff_threshold ?
->>> -			1 : cna_scan_main_queue(node, node);
->>> +		(node->locked <=3D 1 && probably(SHUFFLE_REDUCTION_PROB_ARG)) ?
->>> +			1 : cn->intra_count =3D=3D intra_node_handoff_threshold ?
->>> +			2 : cna_scan_main_queue(node, node);
->>> =20
->>>  	return 0;
->>>  }
->>> @@ -253,12 +283,15 @@ static inline void cna_pass_lock(struct
->> mcs_spinlock *node,
->>> =20
->>>  	u32 scan =3D cn->pre_scan_result;
->>> =20
->>> +	if (scan =3D=3D 1)
->>> +		goto pass_lock;
->>> +
->>>  	/*
->>>  	 * check if a successor from the same numa node has not been found
->> in
->>>  	 * pre-scan, and if so, try to find it in post-scan starting from
->> the
->>>  	 * node where pre-scan stopped (stored in @pre_scan_result)
->>>  	 */
->>> -	if (scan > 1)
->>> +	if (scan > 2)
->>>  		scan =3D cna_scan_main_queue(node, decode_tail(scan));
->>> =20
->>>  	if (!scan) { /* if found a successor from the same numa node */
->>> @@ -281,5 +314,6 @@ static inline void cna_pass_lock(struct
->> mcs_spinlock *node,
->>>  		tail_2nd->next =3D next;
->>>  	}
->>> =20
->>> +pass_lock:
->>>  	arch_mcs_pass_lock(&next_holder->locked, val);
->>>  }
->> I think you might have mishandled the proper accounting of
->> intra_count.
->> How about something like:
->>
->> diff --git a/kernel/locking/qspinlock_cna.h
->> b/kernel/locking/qspinlock_cna.h
->> index f1eef6bece7b..03f8fdec2b80 100644
->> --- a/kernel/locking/qspinlock_cna.h
->> +++ b/kernel/locking/qspinlock_cna.h
->> @@ -268,7 +268,7 @@ __always_inline u32 cna_pre_scan(struct qspinlock
->> *lock,
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cn->pre_scan_result =3D
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 (node->locked <=3D 1 &&
->> probably(SHUFFLE_REDUCTION_PROB_ARG)) ?
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 1 : cn->i=
-ntra_count =3D=3D
->> intra_node_handoff_threshold ?
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 1 : cn->i=
-ntra_count >=3D
->> intra_node_handoff_threshold ?
-> We reset =E2=80=98intra_count' in cna_init_node(), which is called befo=
-re we enter=20
-> the slow path, and set it at most once when we pass the internal (CNA) =
-lock
-> by taking the owner=E2=80=99s value + 1. Only after we get the internal=
- lock, we
-> call this cna_pre_scan() function, where we check the threshold.=20
-> IOW, having 'intra_count > intra_node_handoff_threshold' would mean a b=
-ug,=20
-> and having =E2=80=9C>=3D=E2=80=9C would mask it.=20
-> Perhaps I can add WARN_ON(cn->intra_count > intra_node_handoff_threshol=
-d)
-> here instead, although I'm not sure if that is a good idea performance-=
-wise.
+Tegra PMC has 3 clocks clk_out_1, clk_out_2, and clk_out_3.
 
-The code that I added below could have the possibility of making
-intra_count > intra_node_handoff_threshold. I agree with your assessment
-of the current code. This conditional check is fine if no further change
-is made.
+This patch documents PMC clock bindings and adds a header defining
+Tegra PMC clock ids.
 
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      | 37 +++++++++++++++++++++-
+ include/dt-bindings/soc/tegra-pmc.h                | 15 +++++++++
+ 2 files changed, 51 insertions(+), 1 deletion(-)
+ create mode 100644 include/dt-bindings/soc/tegra-pmc.h
 
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 2 : cn=
-a_scan_main_queue(node, node);
->> =C2=A0
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->> @@ -283,9 +283,6 @@ static inline void cna_pass_lock(struct
->> mcs_spinlock
->> *node,
->> =C2=A0
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 scan =3D cn->pre_scan_r=
-esult;
->> =C2=A0
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (scan =3D=3D 1)
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 goto pass_lock;
->> -
-> The thing is that we want to avoid as much of the shuffling-related ove=
-rhead
-> as we can when the spinlock is only lightly contended. That's why we ha=
-ve this
-> early exit here that avoids the rest of the logic of triaging through p=
-ossible
-> 'scan' values.
-That is a valid point. Maybe you can document that fact you are
-optimizing for performance instead of better correctness.
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * check if a successo=
-r from the same numa node has not been
->> found in
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * pre-scan, and if so=
-, try to find it in post-scan starting
->> from the
->> @@ -294,7 +291,13 @@ static inline void cna_pass_lock(struct
->> mcs_spinlock *node,
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (scan > 2)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 scan =3D cna_scan_main_queue(node, decode_tail(scan));
->> =C2=A0
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!scan) { /* if found a succe=
-ssor from the same numa node
->> */
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (scan <=3D 1) { /* if found a=
- successor from the same numa
->> node */
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 /* inc @intra_count if the secondary queue is not
->> empty */
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 ((struct cna_node *)next_holder)->intra_count =3D
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cn->intra=
-_count + (node->locked > 1);
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 if ((scan =3D=3D 1)
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto pass=
-_lock;
->> +
-> Hmm, I am not sure this makes the code any better/more readable,
-> while this does add the overhead of going through 3 branches before
-> jumping to 'pass_lock'.
->
-This is just a suggestion for improving the correctness of the code. I
-am fine if you opt for better performance.
-
-Cheers,
-Longman
+diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+index cb12f33a247f..80cdcad4ab8c 100644
+--- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
++++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+@@ -21,6 +21,10 @@ Required properties:
+ - clock-names : Must include the following entries:
+   "pclk" (The Tegra clock of that name),
+   "clk32k_in" (The 32KHz clock input to Tegra).
++- #clock-cells : Should be 1 for Tegra30 and higher.
++  In clock consumers, this cell represents the PMC clock ID.
++  The assignments may be found in header file
++  <dt-bindings/soc/tegra-pmc.h>.
+ 
+ Optional properties:
+ - nvidia,invert-interrupt : If present, inverts the PMU interrupt signal.
+@@ -80,11 +84,12 @@ Optional nodes:
+ Example:
+ 
+ / SoC dts including file
+-pmc@7000f400 {
++pmc: pmc@7000f400 {
+ 	compatible = "nvidia,tegra20-pmc";
+ 	reg = <0x7000e400 0x400>;
+ 	clocks = <&tegra_car 110>, <&clk32k_in>;
+ 	clock-names = "pclk", "clk32k_in";
++	#clock-cells = <1>;
+ 	nvidia,invert-interrupt;
+ 	nvidia,suspend-mode = <1>;
+ 	nvidia,cpu-pwr-good-time = <2000>;
+@@ -171,6 +176,7 @@ Example:
+ 		reg = <0x0 0x7000e400 0x0 0x400>;
+ 		clocks = <&tegra_car TEGRA210_CLK_PCLK>, <&clk32k_in>;
+ 		clock-names = "pclk", "clk32k_in";
++		#clock-cells = <1>;
+ 
+ 		powergates {
+ 			pd_audio: aud {
+@@ -260,6 +266,7 @@ Pad configuration state example:
+ 		reg = <0x0 0x7000e400 0x0 0x400>;
+ 		clocks = <&tegra_car TEGRA210_CLK_PCLK>, <&clk32k_in>;
+ 		clock-names = "pclk", "clk32k_in";
++		#clock-cells = <1>;
+ 
+ 		...
+ 
+@@ -298,3 +305,31 @@ Pinctrl client example:
+ 		pinctrl-1 = <&hdmi_on>;
+ 		pinctrl-names = "hdmi-on", "hdmi-off";
+ 	};
++
++== Clock Control ==
++
++Tegra PMC has 3 clocks clk_1, clk_2 and clk_3. Each of these clocks has
++source selection and enable/disable gate.
++Parent/source for these clocks can be either of osc, osc_div2, osc_div4,
++or extern clock from Tegra CAR module.
++
++Clock configuration example:
++	pmc: pmc@7000e400 {
++		compatible = "nvidia,tegra210-pmc";
++		reg = <0x0 0x7000e400 0x0 0x400>;
++		clocks = <&tegra_car TEGRA210_CLK_PCLK>, <&clk32k_in>;
++		clock-names = "pclk", "clk32k_in";
++		#clock-cells = <1>;
++	};
++
++Clock consumer example:
++	i2c@7000c500 {
++		cam_sensor {
++			...
++			clocks = <&pmc TEGRA_PMC_CLK_OUT_3>;
++			clock-names = "mclk";
++			assigned-clocks = <&pmc TEGRA_PMC_CLK_OUT_3>;
++			assigned-clock-parents = <&tegra_car TEGRA210_CLK_EXTERN3>;
++			...
++		};
++	};
+diff --git a/include/dt-bindings/soc/tegra-pmc.h b/include/dt-bindings/soc/tegra-pmc.h
+new file mode 100644
+index 000000000000..f7c866404456
+--- /dev/null
++++ b/include/dt-bindings/soc/tegra-pmc.h
+@@ -0,0 +1,15 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (c) 2019-2020, NVIDIA CORPORATION.  All rights reserved.
++ */
++
++#ifndef _DT_BINDINGS_SOC_TEGRA_PMC_H
++#define _DT_BINDINGS_SOC_TEGRA_PMC_H
++
++#define TEGRA_PMC_CLK_OUT_1		0
++#define TEGRA_PMC_CLK_OUT_2		1
++#define TEGRA_PMC_CLK_OUT_3		2
++
++#define TEGRA_PMC_CLK_MAX		3
++
++#endif	/* _DT_BINDINGS_SOC_TEGRA_PMC_H */
+-- 
+2.7.4
 
