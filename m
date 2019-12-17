@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C395C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F201EC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA52B24676
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:52:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D13B824676
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:52:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727584AbfLQAwG (ORCPT
+        id S1727631AbfLQAwK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:52:06 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35494 "EHLO
+        Mon, 16 Dec 2019 19:52:10 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35512 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727166AbfLQAvo (ORCPT
+        by vger.kernel.org with ESMTP id S1727177AbfLQAvp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 19:51:44 -0500
+        Mon, 16 Dec 2019 19:51:45 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15N-0003PI-Nw; Tue, 17 Dec 2019 00:51:37 +0000
+        id 1ih15K-0003N3-Ub; Tue, 17 Dec 2019 00:51:35 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15L-0005fS-BE; Tue, 17 Dec 2019 00:51:35 +0000
+        id 1ih15J-0005aC-0u; Tue, 17 Dec 2019 00:51:33 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Al Viro" <viro@zeniv.linux.org.uk>
-Date:   Tue, 17 Dec 2019 00:47:41 +0000
-Message-ID: <lsq.1576543535.471783342@decadent.org.uk>
+        "Dmitry Korotin" <dkorotin@wavecomp.com>,
+        linux-mips@vger.kernel.org, "Paul Burton" <paulburton@kernel.org>
+Date:   Tue, 17 Dec 2019 00:47:03 +0000
+Message-ID: <lsq.1576543535.646013337@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 127/136] ecryptfs_lookup_interpose(): lower_dentry->d_parent
- is not stable either
+Subject: [PATCH 3.16 089/136] MIPS: tlbex: Fix build_restore_pagemask
+ KScratch restore
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,58 +56,102 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Paul Burton <paulburton@kernel.org>
 
-commit 762c69685ff7ad5ad7fee0656671e20a0c9c864d upstream.
+commit b42aa3fd5957e4daf4b69129e5ce752a2a53e7d6 upstream.
 
-We need to get the underlying dentry of parent; sure, absent the races
-it is the parent of underlying dentry, but there's nothing to prevent
-losing a timeslice to preemtion in the middle of evaluation of
-lower_dentry->d_parent->d_inode, having another process move lower_dentry
-around and have its (ex)parent not pinned anymore and freed on memory
-pressure.  Then we regain CPU and try to fetch ->d_inode from memory
-that is freed by that point.
+build_restore_pagemask() will restore the value of register $1/$at when
+its restore_scratch argument is non-zero, and aims to do so by filling a
+branch delay slot. Commit 0b24cae4d535 ("MIPS: Add missing EHB in mtc0
+-> mfc0 sequence.") added an EHB instruction (Execution Hazard Barrier)
+prior to restoring $1 from a KScratch register, in order to resolve a
+hazard that can result in stale values of the KScratch register being
+observed. In particular, P-class CPUs from MIPS with out of order
+execution pipelines such as the P5600 & P6600 are affected.
 
-dentry->d_parent *is* stable here - it's an argument of ->lookup() and
-we are guaranteed that it won't be moved anywhere until we feed it
-to d_add/d_splice_alias.  So we safely go that way to get to its
-underlying dentry.
+Unfortunately this EHB instruction was inserted in the branch delay slot
+causing the MFC0 instruction which performs the restoration to no longer
+execute along with the branch. The result is that the $1 register isn't
+actually restored, ie. the TLB refill exception handler clobbers it -
+which is exactly the problem the EHB is meant to avoid for the P-class
+CPUs.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-[bwh: Backported to 3.16:
- - Open-code d_inode()
- - Adjust context]
+Similarly build_get_pgd_vmalloc() will restore the value of $1/$at when
+its mode argument equals refill_scratch, and suffers from the same
+problem.
+
+Fix this by in both cases moving the EHB earlier in the emitted code.
+There's no reason it needs to immediately precede the MFC0 - it simply
+needs to be between the MTC0 & MFC0.
+
+This bug only affects Cavium Octeon systems which use
+build_fast_tlb_refill_handler().
+
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Fixes: 0b24cae4d535 ("MIPS: Add missing EHB in mtc0 -> mfc0 sequence.")
+Cc: Dmitry Korotin <dkorotin@wavecomp.com>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/ecryptfs/inode.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ arch/mips/mm/tlbex.c | 23 +++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
 
---- a/fs/ecryptfs/inode.c
-+++ b/fs/ecryptfs/inode.c
-@@ -341,9 +341,9 @@ static int ecryptfs_lookup_interpose(str
- 				     struct dentry *lower_dentry,
- 				     struct inode *dir_inode)
+--- a/arch/mips/mm/tlbex.c
++++ b/arch/mips/mm/tlbex.c
+@@ -652,6 +652,13 @@ static void build_restore_pagemask(u32 *
+ 				   int restore_scratch)
  {
-+	struct path *path = ecryptfs_dentry_to_lower_path(dentry->d_parent);
- 	struct inode *inode, *lower_inode;
- 	struct ecryptfs_dentry_info *dentry_info;
--	struct vfsmount *lower_mnt;
- 	int rc = 0;
- 
- 	dentry_info = kmem_cache_alloc(ecryptfs_dentry_info_cache, GFP_KERNEL);
-@@ -355,12 +355,11 @@ static int ecryptfs_lookup_interpose(str
- 		return -ENOMEM;
+ 	if (restore_scratch) {
++		/*
++		 * Ensure the MFC0 below observes the value written to the
++		 * KScratch register by the prior MTC0.
++		 */
++		if (scratch_reg >= 0)
++			uasm_i_ehb(p);
++
+ 		/* Reset default page size */
+ 		if (PM_DEFAULT_MASK >> 16) {
+ 			uasm_i_lui(p, tmp, PM_DEFAULT_MASK >> 16);
+@@ -666,12 +673,10 @@ static void build_restore_pagemask(u32 *
+ 			uasm_i_mtc0(p, 0, C0_PAGEMASK);
+ 			uasm_il_b(p, r, lid);
+ 		}
+-		if (scratch_reg >= 0) {
+-			uasm_i_ehb(p);
++		if (scratch_reg >= 0)
+ 			UASM_i_MFC0(p, 1, c0_kscratch(), scratch_reg);
+-		} else {
++		else
+ 			UASM_i_LW(p, 1, scratchpad_offset(0), 0);
+-		}
+ 	} else {
+ 		/* Reset default page size */
+ 		if (PM_DEFAULT_MASK >> 16) {
+@@ -893,6 +898,10 @@ build_get_pgd_vmalloc64(u32 **p, struct
  	}
+ 	if (mode != not_refill && check_for_high_segbits) {
+ 		uasm_l_large_segbits_fault(l, *p);
++
++		if (mode == refill_scratch && scratch_reg >= 0)
++			uasm_i_ehb(p);
++
+ 		/*
+ 		 * We get here if we are an xsseg address, or if we are
+ 		 * an xuseg address above (PGDIR_SHIFT+PGDIR_BITS) boundary.
+@@ -909,12 +918,10 @@ build_get_pgd_vmalloc64(u32 **p, struct
+ 		uasm_i_jr(p, ptr);
  
--	lower_mnt = mntget(ecryptfs_dentry_to_lower_mnt(dentry->d_parent));
--	fsstack_copy_attr_atime(dir_inode, lower_dentry->d_parent->d_inode);
-+	fsstack_copy_attr_atime(dir_inode, path->dentry->d_inode);
- 	BUG_ON(!d_count(lower_dentry));
- 
- 	ecryptfs_set_dentry_private(dentry, dentry_info);
--	dentry_info->lower_path.mnt = lower_mnt;
-+	dentry_info->lower_path.mnt = mntget(path->mnt);
- 	dentry_info->lower_path.dentry = lower_dentry;
- 
- 	/*
+ 		if (mode == refill_scratch) {
+-			if (scratch_reg >= 0) {
+-				uasm_i_ehb(p);
++			if (scratch_reg >= 0)
+ 				UASM_i_MFC0(p, 1, c0_kscratch(), scratch_reg);
+-			} else {
++			else
+ 				UASM_i_LW(p, 1, scratchpad_offset(0), 0);
+-			}
+ 		} else {
+ 			uasm_i_nop(p);
+ 		}
 
