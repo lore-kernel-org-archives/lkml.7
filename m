@@ -2,100 +2,248 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 526A4C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4D6C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2672521582
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCE6B2146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:37:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rajagiritech-edu-in.20150623.gappssmtp.com header.i=@rajagiritech-edu-in.20150623.gappssmtp.com header.b="jF/qD4Bk"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ccTmGFRp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728035AbfLQMhl (ORCPT
+        id S1728079AbfLQMhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:37:41 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42858 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727948AbfLQMhk (ORCPT
+        Tue, 17 Dec 2019 07:37:45 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:25967 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727952AbfLQMho (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 07:37:40 -0500
-Received: by mail-pl1-f193.google.com with SMTP id p9so1809587plk.9
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 04:37:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rajagiritech-edu-in.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MRudvmKhJDWYtzneDuCIws5zDLnO7yoUHBs3dAUugWc=;
-        b=jF/qD4BknEFRCtTNqmrtKXztOwg8qDq5/1np9XgRXSq/6WBXUR3hZLMz5Ag/uGmzxv
-         baxZHfit28ov6PRGnkNNgThDdFE7MHeypi7bLi4FNYh2CYlU83KVj3RGN/HCGwzm3noc
-         /7SEarI0b9E7r5BoWrXihFoBkSGYFmQzrltwz0Gx3BA7NdXIs5Kzn5JtR+sWbBTf75EL
-         LRRm2fB7wWk7qRVGPjPQ6HXPo39rH8fpaDC2jhhozINJnqT//0qpKgntXM+zZSPP/WT/
-         g/+2XLHmvhe+u7VVsy52blYmo2B/Nqfz5Rd+wmFkoo132R0ZU1wPzaKn/qPj7k/MJpBJ
-         z4kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MRudvmKhJDWYtzneDuCIws5zDLnO7yoUHBs3dAUugWc=;
-        b=UZOe+HNpMnH/jMR48hLwXKImGqNxid56VGtrAG6TC+A/P+ejKKxBzehsNfsHIvzazo
-         FcYXeHzWdTfBCparp1BoL/M8LHHkCm9SToIpm52GjjphE7HD7NyhulBstQtdGzrBO89w
-         tolXdYbkgm2DOkmTWtntwFqlmgPeV089Sa1KJZCb4coywif9SkjZncGmr9tpvR01PbBv
-         IFnVa488qJu/0vcl1QkPxuarfwsDGL+gIYG6KZekO3dLsFcU9D1NO9PD5jIJxvJ9lg9m
-         7LvdXCZIwGyxHVi7IiIhZnnGpbCgC+DdiKjYl2a6eq0ReY5/wXoHqKJm8oyKbL2vYtXY
-         /k7w==
-X-Gm-Message-State: APjAAAWZHm0760xH84go6yfrLSmuC9M2GyX9DJ28L8BYlQa7tXZq1vq4
-        nUz647BKG4xnjvAIx1xatazQM0rO+AE=
-X-Google-Smtp-Source: APXvYqwhUF3RlGnGikHc4pNISjJk5YxydwinKeNP1wBXzeE9lF9vDsz5YnzP44Qkb9ZLo7Y+iTOjwA==
-X-Received: by 2002:a17:90a:17e3:: with SMTP id q90mr5601351pja.139.1576586260124;
-        Tue, 17 Dec 2019 04:37:40 -0800 (PST)
-Received: from debian ([122.174.84.27])
-        by smtp.gmail.com with ESMTPSA id k5sm3258658pju.5.2019.12.17.04.37.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 04:37:39 -0800 (PST)
-Date:   Tue, 17 Dec 2019 18:07:32 +0530
-From:   Jeffrin Jose <jeffrin@rajagiritech.edu.in>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        jeffrin@rajagiritech.edu.in
-Subject: Re: [PATCH 5.4 000/177] 5.4.4-stable review
-Message-ID: <20191217123732.GA3492@debian>
-References: <20191216174811.158424118@linuxfoundation.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Tue, 17 Dec 2019 07:37:44 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576586263; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=L3/HMtgYSDflzjxxjzr+u6UmPO/4DuGCdnbd+Vej9yI=; b=ccTmGFRpArw/l08UB21FxnaWPG0+Jt1y/Yzrv2DhkNLnzSwImAEjnZv81XKFCqFMN8kNKVii
+ a1l3HrvUASPQVy0q/WQ0iZptiysxGheDiyIy2wE2/ONtiRiUHkzE8+mW/t36M/lJdOC5FP7B
+ WPzcSrM0VvFhig2Xu1N1GKrfUuA=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5df8cc15.7f995ced8148-smtp-out-n02;
+ Tue, 17 Dec 2019 12:37:41 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 52D41C447A0; Tue, 17 Dec 2019 12:37:40 +0000 (UTC)
+Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vbadigan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 77874C433CB;
+        Tue, 17 Dec 2019 12:37:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 77874C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
+From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org, agross@kernel.org
+Cc:     asutoshd@codeaurora.org, stummala@codeaurora.org,
+        sayalil@codeaurora.org, cang@codeaurora.org,
+        rampraka@codeaurora.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Ritesh Harjani <riteshh@codeaurora.org>,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Subject: [PATCH V1] mmc: sdhci-msm: Add CQHCI support for sdhci-msm
+Date:   Tue, 17 Dec 2019 18:07:13 +0530
+Message-Id: <1576586233-28443-1-git-send-email-vbadigan@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 06:47:36PM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.4 release.
-> There are 177 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed, 18 Dec 2019 17:41:25 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.4-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
-> 
-> thanks,
+From: Ritesh Harjani <riteshh@codeaurora.org>
 
-No new errors from "dmesg -l err" on a typical kernel configuration on my laptop.
+This adds CQHCI support for sdhci-msm platforms.
 
---
-software engineer
-rajagiri school of engineering and technology
+Signed-off-by: Ritesh Harjani <riteshh@codeaurora.org>
+Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+
+---
+This patch is based on RFC patch
+https://lkml.org/lkml/2017/8/30/313
+
+Changes since RFC:
+	- Updated settings so that TDLBA won't get reset when
+	  CQE is enabled.
+	- Removed new compatible string and moved to supports-cqe
+	  dt flag to identify CQE support.
+	- Incorporated review comments.
+
+Tested on: qcs404, sc7180
+---
+ drivers/mmc/host/sdhci-msm.c | 115 ++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 114 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+index 3d0bb5e..a4e3507 100644
+--- a/drivers/mmc/host/sdhci-msm.c
++++ b/drivers/mmc/host/sdhci-msm.c
+@@ -15,6 +15,7 @@
+ #include <linux/regulator/consumer.h>
+ 
+ #include "sdhci-pltfm.h"
++#include "cqhci.h"
+ 
+ #define CORE_MCI_VERSION		0x50
+ #define CORE_VERSION_MAJOR_SHIFT	28
+@@ -122,6 +123,10 @@
+ #define msm_host_writel(msm_host, val, host, offset) \
+ 	msm_host->var_ops->msm_writel_relaxed(val, host, offset)
+ 
++/* CQHCI vendor specific registers */
++#define CQHCI_VENDOR_CFG1	0xA00
++#define DISABLE_RST_ON_CMDQ_EN	(0x3 << 13)
++
+ struct sdhci_msm_offset {
+ 	u32 core_hc_mode;
+ 	u32 core_mci_data_cnt;
+@@ -1567,6 +1572,109 @@ static void sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
+ 	__sdhci_msm_set_clock(host, clock);
+ }
+ 
++/*****************************************************************************\
++ *                                                                           *
++ * MSM Command Queue Engine (CQE)                                            *
++ *                                                                           *
++\*****************************************************************************/
++
++static u32 sdhci_msm_cqe_irq(struct sdhci_host *host, u32 intmask)
++{
++	int cmd_error = 0;
++	int data_error = 0;
++
++	if (!sdhci_cqe_irq(host, intmask, &cmd_error, &data_error))
++		return intmask;
++
++	cqhci_irq(host->mmc, intmask, cmd_error, data_error);
++	return 0;
++}
++
++void sdhci_msm_cqe_disable(struct mmc_host *mmc, bool recovery)
++{
++	struct sdhci_host *host = mmc_priv(mmc);
++	unsigned long flags;
++	u32 ctrl;
++
++	/*
++	 * When CQE is halted, the legacy SDHCI path operates only
++	 * on 128bit descriptors in 64bit mode.
++	 */
++	if (host->flags & SDHCI_USE_64_BIT_DMA)
++		host->desc_sz = 16;
++
++	spin_lock_irqsave(&host->lock, flags);
++
++	/*
++	 * During CQE operation command complete bit gets latched.
++	 * So s/w should clear command complete interrupt status when CQE is
++	 * halted. Otherwise unexpected SDCHI legacy interrupt gets
++	 * triggered when CQE is halted.
++	 */
++	ctrl = sdhci_readl(host, SDHCI_INT_ENABLE);
++	ctrl |= SDHCI_INT_RESPONSE;
++	sdhci_writel(host,  ctrl, SDHCI_INT_ENABLE);
++	sdhci_writel(host, SDHCI_INT_RESPONSE, SDHCI_INT_STATUS);
++
++	spin_unlock_irqrestore(&host->lock, flags);
++
++	sdhci_cqe_disable(mmc, recovery);
++}
++
++static const struct cqhci_host_ops sdhci_msm_cqhci_ops = {
++	.enable		= sdhci_cqe_enable,
++	.disable	= sdhci_msm_cqe_disable,
++};
++
++static int sdhci_msm_cqe_add_host(struct sdhci_host *host,
++				struct platform_device *pdev)
++{
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
++	struct cqhci_host *cq_host;
++	bool dma64;
++	int ret;
++
++	ret = sdhci_setup_host(host);
++	if (ret)
++		return ret;
++
++	cq_host = cqhci_pltfm_init(pdev);
++	if (IS_ERR(cq_host)) {
++		ret = PTR_ERR(cq_host);
++		dev_err(&pdev->dev, "cqhci-pltfm init: failed: %d\n", ret);
++		goto cleanup;
++	}
++
++	msm_host->mmc->caps2 |= MMC_CAP2_CQE | MMC_CAP2_CQE_DCMD;
++	cq_host->ops = &sdhci_msm_cqhci_ops;
++
++	dma64 = host->flags & SDHCI_USE_64_BIT_DMA;
++
++	ret = cqhci_init(cq_host, host->mmc, dma64);
++	if (ret) {
++		dev_err(&pdev->dev, "%s: CQE init: failed (%d)\n",
++				mmc_hostname(host->mmc), ret);
++		goto cleanup;
++	}
++
++	/* Disable cqe reset due to cqe enable signal */
++	cqhci_writel(cq_host, cqhci_readl(cq_host, CQHCI_VENDOR_CFG1) |
++		       DISABLE_RST_ON_CMDQ_EN, CQHCI_VENDOR_CFG1);
++
++	ret = __sdhci_add_host(host);
++	if (ret)
++		goto cleanup;
++
++	dev_info(&pdev->dev, "%s: CQE init: success\n",
++			mmc_hostname(host->mmc));
++	return ret;
++
++cleanup:
++	sdhci_cleanup_host(host);
++	return ret;
++}
++
+ /*
+  * Platform specific register write functions. This is so that, if any
+  * register write needs to be followed up by platform specific actions,
+@@ -1731,6 +1839,7 @@ static void sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
+ 	.set_uhs_signaling = sdhci_msm_set_uhs_signaling,
+ 	.write_w = sdhci_msm_writew,
+ 	.write_b = sdhci_msm_writeb,
++	.irq	= sdhci_msm_cqe_irq,
+ };
+ 
+ static const struct sdhci_pltfm_data sdhci_msm_pdata = {
+@@ -1754,6 +1863,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+ 	u8 core_major;
+ 	const struct sdhci_msm_offset *msm_offset;
+ 	const struct sdhci_msm_variant_info *var_info;
++	struct device_node *node = pdev->dev.of_node;
+ 
+ 	host = sdhci_pltfm_init(pdev, &sdhci_msm_pdata, sizeof(*msm_host));
+ 	if (IS_ERR(host))
+@@ -1952,7 +2062,10 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+ 	pm_runtime_use_autosuspend(&pdev->dev);
+ 
+ 	host->mmc_host_ops.execute_tuning = sdhci_msm_execute_tuning;
+-	ret = sdhci_add_host(host);
++	if (of_property_read_bool(node, "supports-cqe"))
++		ret = sdhci_msm_cqe_add_host(host, pdev);
++	else
++		ret = sdhci_add_host(host);
+ 	if (ret)
+ 		goto pm_runtime_disable;
+ 	sdhci_msm_set_regulator_caps(msm_host);
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
