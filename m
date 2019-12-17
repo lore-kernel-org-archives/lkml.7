@@ -2,228 +2,113 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B976EC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0F5C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D1C7218AC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:50:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE2C321582
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:50:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IdskijD4"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="ftYRHw2i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbfLQWuZ (ORCPT
+        id S1726617AbfLQWuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 17:50:25 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43600 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbfLQWuZ (ORCPT
+        Tue, 17 Dec 2019 17:50:54 -0500
+Received: from mta-p6.oit.umn.edu ([134.84.196.206]:58936 "EHLO
+        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbfLQWux (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 17:50:25 -0500
-Received: by mail-pg1-f195.google.com with SMTP id k197so100466pga.10;
-        Tue, 17 Dec 2019 14:50:24 -0800 (PST)
+        Tue, 17 Dec 2019 17:50:53 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 47ctf46Xg9z9vYVN
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 22:50:52 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p6.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id VwAi-iUp865J for <linux-kernel@vger.kernel.org>;
+        Tue, 17 Dec 2019 16:50:52 -0600 (CST)
+Received: from mail-yb1-f200.google.com (mail-yb1-f200.google.com [209.85.219.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 47ctf45PFTz9vYVK
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 16:50:52 -0600 (CST)
+Received: by mail-yb1-f200.google.com with SMTP id k190so5448yba.15
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 14:50:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=+TnDTXs1lzMnWtLAgPPWwOLrYNuxW1IXk2XEJQz09/I=;
-        b=IdskijD4Nb9zhzhBU3KpYteX9WG0D9CusGT2Ty8kKstGFm2AsDJz/q4DwEQP0c0U3x
-         vCck7W6tWtBbunVuaBNRj4j/qJFkx9NzqzoRT2ZYuUUohn+lTworcjz8L4iLRub4gEKh
-         2eCrj7UK1/9ghd2i1fQFvWh30chBYW8y7nFgXhR1ToXKebMCPX7adJPlKpKKhYnlYHuT
-         hdu54MoOMCw5QReT9OV6H3chwywjRhvsCb0/1Xcq32V6yZ8Ex0cjTqOEHSgtJc11Oq2R
-         4VFzii5a9HfMMxbLqKLHBGgtGhGPVXZDzlxVLJ56aotrwkqZMEXdW4qio7lbLZTmP5qh
-         hoIA==
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WQI/3o46QTkpBu3QKMA5BleVhXZfhU7Xm3Wn0FysZY8=;
+        b=ftYRHw2iSFBHJUU538asJywbx36G+pFGYfFVcK7r1aZ0bpi9oWu19KGOSNibZm4HgV
+         eUFdEqVmriCVgmFK3wBwHnMkDHSW5SL9DKBz5YJS5wdzok2WwSunIHhYV0blLgbNZ8Sl
+         00L5ZzydanXqYkYq17yH1nE61gMimzYCgsROikcNLQ39Jy6go8Q8nXV0VMQrD5RnSrxA
+         rpK6Of24PFGXgH5VYzcbcQvBxX5pnJj1qozaaYZEx1Q3Bog6nwT2QoZOA+0OMrNwwbj7
+         mlOQABHdojh2+Fg2WHUECH7K9IfE9m2rLC8K5x5F0Mam0YXfNCY+X9TiBGDDzCjsauX7
+         Gm2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=+TnDTXs1lzMnWtLAgPPWwOLrYNuxW1IXk2XEJQz09/I=;
-        b=ItcSGQ8N5XlOnc/oe6CPBBEIjJLT/Cuq04tgXkchUjldBSnnIsR6UTG4+tOxPqhscr
-         E/u2xIRXoaDjxVxFHE3D4H2sNQR4N2aO2QhvWWNsEueVPNlAmGywgRPydwiM+0tOArAa
-         lnSDVbVi2NuJZlrbAghl50ST98QeE4wYpNw250NrT1Opsn+sCeXY/CDFeQJoDn5hFoGq
-         ctdfXYpV1dhlqNb38CJnLFwqkZThYRLYuj2JNDJSc5L+Vor9loHXSaSo5A39I0rXeATI
-         3T87ZXN+LggZ70A+Lowostl1jyvFGC4nFfs8qcb0Fylr62kuey5cYr3qB9y/JREusSzZ
-         A94A==
-X-Gm-Message-State: APjAAAXcPnyXFLdlrnGv09DOIqBgE03TQhKnlVVATeCqTifeTkVOvu/U
-        jQCPFECMQmkYereKz1nfYY8=
-X-Google-Smtp-Source: APXvYqyIuuevXTJ1358EAR4bTnYcaknv0s9VjaFiC+JwpkXY+9D6bOQOlyHOcGwhDtqtJF1huJyrEg==
-X-Received: by 2002:a62:33c6:: with SMTP id z189mr85248pfz.246.1576623024108;
-        Tue, 17 Dec 2019 14:50:24 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id w11sm20740pgs.60.2019.12.17.14.50.23
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WQI/3o46QTkpBu3QKMA5BleVhXZfhU7Xm3Wn0FysZY8=;
+        b=pqbg5Bj4Nj4UaDDPUmYrPFeM9niN7iX3wONu1wvLp7xwl4StpYcNjcRE2aUh2zjWHT
+         aId0VcWG7empiBoh2RZUHdaPBF0ocyagUUb5F0TUqCosVPCGYPkUTulZdBOb8VuSDH5B
+         JXjTF0uZXxea6sBq5fDKaX993Qm33tOSL5yCP3NLZkwubxEXfgjIT3eFxvTwlAqZJOyE
+         ztJ9KMjqoewk4RFHfHNbNFiIROMrzKU3UjZipqoco95rLPc0S8OjfbVeDXSOw12xiuP3
+         1tV2rzM+8QoqqZGnr/HmLr/J4mWD6QU2ovKl6rY2fIYUip9uDNZLRfijgMhuborJqMr7
+         wYCg==
+X-Gm-Message-State: APjAAAW3mMdnbledFFakwThKdvrYU6B/mwdZtuS92nAFeXjZ5PSiYG/3
+        zXKAnsH/MvcsXT8ciL5cqdmm6VfD3vUoQqapOxHjOvnqCPV7EaN7s9TzTnW9Mw85R9RMcBPuazm
+        gt0GDUxYeOl/flM82qh766Dzb4fe4
+X-Received: by 2002:a25:7451:: with SMTP id p78mr472597ybc.22.1576623052025;
+        Tue, 17 Dec 2019 14:50:52 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxcdfKJfOCr5lNQA1daYm5XnEIRWKbkgY77t7JSl9qjnnSLaxc3Sj0TtYDq+OzJoTelJ+SaBg==
+X-Received: by 2002:a25:7451:: with SMTP id p78mr472586ybc.22.1576623051796;
+        Tue, 17 Dec 2019 14:50:51 -0800 (PST)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id p191sm114665ywp.86.2019.12.17.14.50.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 14:50:23 -0800 (PST)
-Date:   Tue, 17 Dec 2019 14:50:21 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Jiri Kosina <jikos@kernel.org>
-Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] HID: hiddev: fix mess in hiddev_open()
-Message-ID: <20191217225021.GA34258@dtor-ws>
+        Tue, 17 Dec 2019 14:50:51 -0800 (PST)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] nfsd: remove unnecessary assertion in nfsd4_encode_replay
+Date:   Tue, 17 Dec 2019 16:50:47 -0600
+Message-Id: <20191217225048.3411-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The open method of hiddev handler fails to bring the device out of
-autosuspend state as was promised in 0361a28d3f9a, as it actually has 2
-blocks that try to start the transport (call hid_hw_open()) with both
-being guarded by the "open" counter, so the 2nd block is never executed as
-the first block increments the counter so it is never at 0 when we check
-it for the second block.
+The replay variable is set in the only caller of nfsd4_encode_replay.
+The assertion is unnecessary and the patch removes this check.
 
-Additionally hiddev_open() was leaving counter incremented on errors,
-causing the device to never be reopened properly if there was ever an
-error.
-
-Let's fix all of this by factoring out code that creates client structure
-and powers up the device into a separate function that is being called
-from usbhid_open() with the "existancelock" being held.
-
-Fixes: 0361a28d3f9a ("HID: autosuspend support for USB HID")
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
 ---
- drivers/hid/usbhid/hiddev.c | 97 ++++++++++++++++---------------------
- 1 file changed, 42 insertions(+), 55 deletions(-)
+ fs/nfsd/nfs4xdr.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/hid/usbhid/hiddev.c b/drivers/hid/usbhid/hiddev.c
-index 1f9bc4483465..c879b214a479 100644
---- a/drivers/hid/usbhid/hiddev.c
-+++ b/drivers/hid/usbhid/hiddev.c
-@@ -241,12 +241,51 @@ static int hiddev_release(struct inode * inode, struct file * file)
- 	return 0;
- }
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index d2dc4c0e22e8..fb2433676376 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -4500,8 +4500,6 @@ nfsd4_encode_replay(struct xdr_stream *xdr, struct nfsd4_op *op)
+ 	__be32 *p;
+ 	struct nfs4_replay *rp = op->replay;
  
-+static int __hiddev_open(struct hiddev *hiddev, struct file *file)
-+{
-+	struct hiddev_list *list;
-+	int error;
-+
-+	lockdep_assert_held(&hiddev->existancelock);
-+
-+	list = vzalloc(sizeof(*list));
-+	if (!list)
-+		return -ENOMEM;
-+
-+	mutex_init(&list->thread_lock);
-+	list->hiddev = hiddev;
-+
-+	if (!hiddev->open++) {
-+		error = hid_hw_power(hiddev->hid, PM_HINT_FULLON);
-+		if (error < 0)
-+			goto err_drop_count;
-+
-+		error = hid_hw_open(hiddev->hid);
-+		if (error < 0)
-+			goto err_normal_power;
-+	}
-+
-+	spin_lock_irq(&hiddev->list_lock);
-+	list_add_tail(&list->node, &hiddev->list);
-+	spin_unlock_irq(&hiddev->list_lock);
-+
-+	file->private_data = list;
-+
-+	return 0;
-+
-+err_normal_power:
-+	hid_hw_power(hiddev->hid, PM_HINT_NORMAL);
-+err_drop_count:
-+	hiddev->open--;
-+	vfree(list);
-+	return error;
-+}
-+
- /*
-  * open file op
-  */
- static int hiddev_open(struct inode *inode, struct file *file)
- {
--	struct hiddev_list *list;
- 	struct usb_interface *intf;
- 	struct hid_device *hid;
- 	struct hiddev *hiddev;
-@@ -255,66 +294,14 @@ static int hiddev_open(struct inode *inode, struct file *file)
- 	intf = usbhid_find_interface(iminor(inode));
- 	if (!intf)
- 		return -ENODEV;
-+
- 	hid = usb_get_intfdata(intf);
- 	hiddev = hid->hiddev;
- 
--	if (!(list = vzalloc(sizeof(struct hiddev_list))))
--		return -ENOMEM;
--	mutex_init(&list->thread_lock);
--	list->hiddev = hiddev;
--	file->private_data = list;
+-	BUG_ON(!rp);
 -
--	/*
--	 * no need for locking because the USB major number
--	 * is shared which usbcore guards against disconnect
--	 */
--	if (list->hiddev->exist) {
--		if (!list->hiddev->open++) {
--			res = hid_hw_open(hiddev->hid);
--			if (res < 0)
--				goto bail;
--		}
--	} else {
--		res = -ENODEV;
--		goto bail;
--	}
--
--	spin_lock_irq(&list->hiddev->list_lock);
--	list_add_tail(&list->node, &hiddev->list);
--	spin_unlock_irq(&list->hiddev->list_lock);
--
- 	mutex_lock(&hiddev->existancelock);
--	/*
--	 * recheck exist with existance lock held to
--	 * avoid opening a disconnected device
--	 */
--	if (!list->hiddev->exist) {
--		res = -ENODEV;
--		goto bail_unlock;
--	}
--	if (!list->hiddev->open++)
--		if (list->hiddev->exist) {
--			struct hid_device *hid = hiddev->hid;
--			res = hid_hw_power(hid, PM_HINT_FULLON);
--			if (res < 0)
--				goto bail_unlock;
--			res = hid_hw_open(hid);
--			if (res < 0)
--				goto bail_normal_power;
--		}
--	mutex_unlock(&hiddev->existancelock);
--	return 0;
--bail_normal_power:
--	hid_hw_power(hid, PM_HINT_NORMAL);
--bail_unlock:
-+	res = hiddev->exist ? __hiddev_open(hiddev, file) : -ENODEV;
- 	mutex_unlock(&hiddev->existancelock);
- 
--	spin_lock_irq(&list->hiddev->list_lock);
--	list_del(&list->node);
--	spin_unlock_irq(&list->hiddev->list_lock);
--bail:
--	file->private_data = NULL;
--	vfree(list);
- 	return res;
- }
- 
+ 	p = xdr_reserve_space(xdr, 8 + rp->rp_buflen);
+ 	if (!p) {
+ 		WARN_ON_ONCE(1);
 -- 
-2.24.1.735.g03f4e72817-goog
+2.20.1
 
-
--- 
-Dmitry
