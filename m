@@ -2,173 +2,100 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07976C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 17:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 129A3C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 17:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDD2621582
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 17:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4E6721582
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 17:19:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VgJHaWiZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vi8EBTAo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727613AbfLQRSv (ORCPT
+        id S1727709AbfLQRTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 12:18:51 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:26766 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727495AbfLQRSv (ORCPT
+        Tue, 17 Dec 2019 12:19:11 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:36419 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726887AbfLQRTK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 12:18:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576603128;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:in-reply-to:in-reply-to:  references:references;
-        bh=CKPKIyJZy6U8LXytr+HzyJpjpcjvTy2Qoof8V3zblHk=;
-        b=VgJHaWiZDDklwgKYGQw+FqSW19OiMvMKXU7ecyS5b6shD/FeuSfgSIq2OcIpkSnVRcHYed
-        AuWtzWGjGTrJHCSg3IP9AJUSKu20OabEJVV70RkNiVHWP6F+TCON391U3xQVsbIJYPRb4p
-        m7OohJwoF4gkNZcxju3vg4PRYFvrKIY=
-Received: from mail-yb1-f198.google.com (mail-yb1-f198.google.com
- [209.85.219.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-357-Is2hmgv8Mri6Ah8WCh9FsA-1; Tue, 17 Dec 2019 12:18:47 -0500
-X-MC-Unique: Is2hmgv8Mri6Ah8WCh9FsA-1
-Received: by mail-yb1-f198.google.com with SMTP id y204so7422669yby.18
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 09:18:47 -0800 (PST)
+        Tue, 17 Dec 2019 12:19:10 -0500
+Received: by mail-pl1-f196.google.com with SMTP id d15so6401742pll.3;
+        Tue, 17 Dec 2019 09:19:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=0+bQNPLFRgrOnjruSTJiPHn1ioRUh4JUplPIt6H3zco=;
+        b=Vi8EBTAoHCx//m8jY8MWHk9Vg8SHJeRdd1m0Ml2k+7DWhHfGxEcgfIHoOFlJ0NSx+D
+         dc7BKSbdC8cMwVuhQbKtaU2EmJuc+tuu+WgWNZ2w6ZvnYbumIdEwDvxAHyEU7G73XvRJ
+         okJv4BSKIxvJDi4Tu69sQam902T1DqYebrd79Tk0rTOEbB7ZHiVy8Ok7R4K5MHqk+3UM
+         UcK+bj0waHefluq+SYUG/OKHNuFbvGtCSXgg9PPy0W6H7Od6PbNaHvST2K0lQjcF5QAv
+         bKn3P6ImNT9rgus2QO0b+kD5zrUk+7VPMHuUqQOecrZcVTWN4Opyn5qOOhu/yA6uIl5z
+         9LIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=CKPKIyJZy6U8LXytr+HzyJpjpcjvTy2Qoof8V3zblHk=;
-        b=KKmV344zFGmv4II2kjuQXpZHRjo/TZNNkU0eC6kG/MsNCcQe51Idh2PGogxAdHaQmm
-         giTIETCHgOYFpKme/7st1yBmJhdTnFaRvmgnVbGh94/Yfz5Ttz3CVHrbV/0TTPFMIcwZ
-         M2TqwddP5ftADoBXnp1UuN3v8ndgHaf8MPpUvGYuKJNhAW73aGkLbBLrjpYlDDTpuowd
-         iY1LZdUu7d50KL3rA+CdylvVqP65mJ1lDiLr87sEa7lwjQ+tHQRarGee76m7iw6T2AH/
-         oVUqzabbEABCMKi3WpWMxBPQpGwtIpW375REUZhMFDEtmgzekRd6l31X92UN9LNdCwPe
-         w7LQ==
-X-Gm-Message-State: APjAAAXrJYWYWydZF91PDeBIzp8gOdfmhKLZApOPeFx0ad8gkGKX5o2L
-        3IrNJs14uJWKDJCna4hOLmUTwrvgJmxEbZsUgs5rl+iM3+/RA5wkdag/0gYMUmTp2aeedmRuYnd
-        Sn7QTzqDxkK6k1+QHx1jFjHZr
-X-Received: by 2002:a25:1286:: with SMTP id 128mr14032736ybs.214.1576603127010;
-        Tue, 17 Dec 2019 09:18:47 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzZrH0mBs2K/Kr+dAvXBSDBHex+NYXpJ/cSs5fhNlzaQzHOdQV1tnra7qB6pm6f7dWba0Vm3w==
-X-Received: by 2002:a25:1286:: with SMTP id 128mr14032717ybs.214.1576603126752;
-        Tue, 17 Dec 2019 09:18:46 -0800 (PST)
-Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
-        by smtp.gmail.com with ESMTPSA id h184sm6884054ywa.70.2019.12.17.09.18.45
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=0+bQNPLFRgrOnjruSTJiPHn1ioRUh4JUplPIt6H3zco=;
+        b=rwesFq1yHY/GhXivC1DX4IkL0fYu7G170jNmUNyn/88UnBOfS43oThmtwQ7scPPMzG
+         ALVBSaOyzsd7NmET3oZaRSTl4+wpnu5zF8CfyPtTDqBmw6YNlbuafpjxmugD9EXJ0JAQ
+         Cf7zjhGVVtuwSQQo26zX8XEof68LaOCktKm9NMSI+pz37Y013cmHqqiV5B5NuiMYmqqG
+         I0bxyC/SnWFCFCGdQ1Bvu0Bh2W8MSSJ4LAfhAshpvPnnDyus/d4f3RYdk9r00hSCl0Dm
+         GuupyeKrsOvLnUoWzlJjwfDDUyQCF2bCnK/bLTX1OCZVmCq3TsBiFv4ygT17zPW+TXyF
+         eH2A==
+X-Gm-Message-State: APjAAAXriezdBCFuDKW/V282sZ3KLmloCVgKJkCOD9+rU9Mofxvuz273
+        1ezai3kW6Duu+n2SMvqVbBk=
+X-Google-Smtp-Source: APXvYqzU5Jj/4ldH9kbwaYhFB+jis5t+pdYif2vfndTq3mRrNah3880ddnF/9HXmy3biZkqqq4ZSkQ==
+X-Received: by 2002:a17:902:bb8c:: with SMTP id m12mr24410091pls.320.1576603149784;
+        Tue, 17 Dec 2019 09:19:09 -0800 (PST)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id w66sm27618721pfw.102.2019.12.17.09.19.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 09:18:45 -0800 (PST)
-Date:   Tue, 17 Dec 2019 10:18:44 -0700
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christian Bundy <christianbundy@fraction.io>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        stable <stable@vger.kernel.org>, linux-integrity@vger.kernel.org
-Subject: Re: [PATCH v2] tpm_tis: reserve chip for duration of
- tpm_tis_core_init
-Message-ID: <20191217171844.huqlj5csr262zkkk@cantor>
-Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
-Mail-Followup-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christian Bundy <christianbundy@fraction.io>,
-        Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        stable <stable@vger.kernel.org>, linux-integrity@vger.kernel.org
-References: <20191211231758.22263-1-jsnitsel@redhat.com>
- <20191211235455.24424-1-jsnitsel@redhat.com>
- <5aef0fbe28ed23b963c53d61445b0bac6f108642.camel@linux.intel.com>
- <CAPcyv4h60z889bfbiwvVhsj6MxmOPiPY8ZuPB_skxkZx-N+OGw@mail.gmail.com>
- <20191217020022.knh7uxt4pn77wk5m@cantor>
- <CAPcyv4iepQup4bwMuWzq6r5gdx83hgYckUWFF7yF=rszjz3dtQ@mail.gmail.com>
- <5d0763334def7d7ae1e7cf931ef9b14184dce238.camel@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <5d0763334def7d7ae1e7cf931ef9b14184dce238.camel@linux.intel.com>
+        Tue, 17 Dec 2019 09:19:09 -0800 (PST)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     mturquette@baylibre.com, sboyd@kernel.org
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH] clk: qcom: Avoid SMMU/cx gdsc corner cases
+Date:   Tue, 17 Dec 2019 09:19:05 -0800
+Message-Id: <20191217171905.5619-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue Dec 17 19, Jarkko Sakkinen wrote:
->On Mon, 2019-12-16 at 18:14 -0800, Dan Williams wrote:
->> On Mon, Dec 16, 2019 at 6:00 PM Jerry Snitselaar <jsnitsel@redhat.com> wrote:
->> > On Mon Dec 16 19, Dan Williams wrote:
->> > > On Mon, Dec 16, 2019 at 4:59 PM Jarkko Sakkinen
->> > > <jarkko.sakkinen@linux.intel.com> wrote:
->> > > > On Wed, 2019-12-11 at 16:54 -0700, Jerry Snitselaar wrote:
->> > > > > Instead of repeatedly calling tpm_chip_start/tpm_chip_stop when
->> > > > > issuing commands to the tpm during initialization, just reserve the
->> > > > > chip after wait_startup, and release it when we are ready to call
->> > > > > tpm_chip_register.
->> > > > >
->> > > > > Cc: Christian Bundy <christianbundy@fraction.io>
->> > > > > Cc: Dan Williams <dan.j.williams@intel.com>
->> > > > > Cc: Peter Huewe <peterhuewe@gmx.de>
->> > > > > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
->> > > > > Cc: Jason Gunthorpe <jgg@ziepe.ca>
->> > > > > Cc: Stefan Berger <stefanb@linux.vnet.ibm.com>
->> > > > > Cc: stable@vger.kernel.org
->> > > > > Cc: linux-integrity@vger.kernel.org
->> > > > > Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of tpm_transmit()")
->> > > > > Fixes: 5b359c7c4372 ("tpm_tis_core: Turn on the TPM before probing IRQ's")
->> > > > > Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
->> > > >
->> > > > I pushed to my master with minor tweaks and added my tags.
->> > > >
->> > > > Please check before I put it to linux-next.
->> > >
->> > > I don't see it yet here:
->> > >
->> > > http://git.infradead.org/users/jjs/linux-tpmdd.git/shortlog/refs/heads/master
->> > >
->> > > However, I wanted to make sure you captured that this does *not* fix
->> > > the interrupt issue. I.e. make sure you remove the "Fixes:
->> > > 5b359c7c4372 ("tpm_tis_core: Turn on the TPM before probing IRQ's")"
->> > > tag.
->> > >
->> > > With that said, are you going to include the revert of:
->> > >
->> > > 1ea32c83c699 tpm_tis_core: Set TPM_CHIP_FLAG_IRQ before probing for interrupts
->> >
->> > Dan, with the above reverted do you still get the screaming interrupt?
->>
->> Yes, the screaming interrupt goes away, although it is replaced by
->> these messages when the driver starts:
->>
->> [    3.725131] tpm_tis IFX0740:00: 2.0 TPM (device-id 0x1B, rev-id 16)
->> [    3.725358] tpm tpm0: tpm_try_transmit: send(): error -5
->> [    3.725359] tpm tpm0: [Firmware Bug]: TPM interrupt not working,
->> polling instead
->>
->> If the choice is "error message + polled-mode" vs "pinning a cpu with
->> interrupts" I'd accept the former, but wanted Jarkko with his
->> maintainer hat to weigh in.
->>
->> Is there a simple sanity check I can run to see if the TPM is still
->> operational in this state?
->
->What about T490S?
->
->/Jarkko
->
+Mark the msm8998 cpu CX gdsc as votable and use the hw control to avoid
+corner cases with SMMU per hardware documentation.
 
-Hi Jarkko, I'm waiting to hear back from the t490s user, but I imagine
-it still has the problem as well.
+Fixes: 3f7df5baa259 ("clk: qcom: Add MSM8998 GPU Clock Controller (GPUCC) driver")
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+ drivers/clk/qcom/gpucc-msm8998.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Christian, were you able to try this patch and verify it still
-resolves the issue you were having with the kernel failing to get the
-timeouts and durations from the tpm?
-
-Thanks,
-Jerry
+diff --git a/drivers/clk/qcom/gpucc-msm8998.c b/drivers/clk/qcom/gpucc-msm8998.c
+index e5e2492b20c5..9b3923af02a1 100644
+--- a/drivers/clk/qcom/gpucc-msm8998.c
++++ b/drivers/clk/qcom/gpucc-msm8998.c
+@@ -242,10 +242,12 @@ static struct clk_branch gfx3d_isense_clk = {
+ 
+ static struct gdsc gpu_cx_gdsc = {
+ 	.gdscr = 0x1004,
++	.gds_hw_ctrl = 0x1008,
+ 	.pd = {
+ 		.name = "gpu_cx",
+ 	},
+ 	.pwrsts = PWRSTS_OFF_ON,
++	.flags = VOTABLE,
+ };
+ 
+ static struct gdsc gpu_gx_gdsc = {
+-- 
+2.17.1
 
