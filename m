@@ -2,135 +2,129 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 625BEC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:12:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F7F9C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 343DE206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:12:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576613547;
-	bh=FfnKSyZoMFlkOL6GydMHuUSODldEug/qdjcyseevXTY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ewD+Yzav9iXtLcZU5Moe5VgEFUdzqhNKUekmlKiI3yb/9oK89YMHLRwVGtiFEGEtP
-	 6pKzFIBySPiKj119ZfBYVPn5UqGAc1IIcDcKjuLHsEn0EKYdCOwuF3EUqgjQ+UHWEK
-	 QqTVqpbZ8AgM6Od42ei01xqDWbip2FuEq6qtV3Ck=
+	by mail.kernel.org (Postfix) with ESMTP id 58FBC206D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:12:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Pq32bIRD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728501AbfLQUM0 (ORCPT
+        id S1728416AbfLQUMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 15:12:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36462 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728001AbfLQUKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 15:10:20 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Tue, 17 Dec 2019 15:12:24 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:45364 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727231AbfLQUMX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 15:12:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=JrPNw1xqWhalZX2E4G40ImbRJBJbFB1eZ7m4nQw4xcs=; b=Pq32bIRDfVvgqHNTwuGZyEapY
+        nVVq9FBbLHpryr/yI8F5sMrmHfHtMdS1i1yezfB7S7ZKuYJ3o2NBEvOcf8uK1wM/iReFrYd5qaCtV
+        j2Q7TwOSDA0BigjmlWP7IO982wohwNUU5dIRGotFSUTzbyuq2fVs3uO7MNpsJxXGwTs34OdTg2gOm
+        eUCJxvj652+cOrqzXSXrON9Jhqwb4DoXP3YiqDtBCb4XNujBt4VYkpPmViw5zMFmQ6OkVo5HeXJhg
+        kJGBZxIEsb6Uf1QZ67lHvMfYrvwTFk+eJgM9b4Da3CMZ3OPdvNbxob87d3hILeGjSOwn3AQM502YW
+        1AKOdEWNg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ihJCV-0003aT-Eo; Tue, 17 Dec 2019 20:12:11 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E2FF21D7D;
-        Tue, 17 Dec 2019 20:10:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576613419;
-        bh=FfnKSyZoMFlkOL6GydMHuUSODldEug/qdjcyseevXTY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w1vaDxfGTWKCqMci8BapCsSY9T4aLuwZ8mTPviEjZZyEzaBHEXkGA9NuLr6aATI0J
-         NzID4rGf8bRRNBB4EUYQzPChybSdrM33OFGDWg7UhtE0VxZJzMeysQekgA2fIOKv5r
-         XzmHRN4G6IbqN0sN2Wymj1k95/JmsdLEhZ5Ve9/8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Huy Nguyen <huyn@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.4 14/37] net/mlx5e: Query global pause state before setting prio2buffer
-Date:   Tue, 17 Dec 2019 21:09:35 +0100
-Message-Id: <20191217200726.519858502@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191217200721.741054904@linuxfoundation.org>
-References: <20191217200721.741054904@linuxfoundation.org>
-User-Agent: quilt/0.66
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BCF453066B3;
+        Tue, 17 Dec 2019 21:10:45 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 57B082B2B0509; Tue, 17 Dec 2019 21:12:08 +0100 (CET)
+Date:   Tue, 17 Dec 2019 21:12:08 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc:     akpm@linux-foundation.org, npiggin@gmail.com, mpe@ellerman.id.au,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, Will Deacon <will@kernel.org>
+Subject: [PATCH] asm-generic/tlb: Avoid potential double flush
+Message-ID: <20191217201208.GQ2871@hirez.programming.kicks-ass.net>
+References: <20191217071713.93399-1-aneesh.kumar@linux.ibm.com>
+ <20191217071713.93399-2-aneesh.kumar@linux.ibm.com>
+ <20191217085854.GW2844@hirez.programming.kicks-ass.net>
+ <32404765-ad4f-6612-d1a9-43f9acdc8a62@linux.ibm.com>
+ <20191217123416.GH2827@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191217123416.GH2827@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huy Nguyen <huyn@mellanox.com>
+On Tue, Dec 17, 2019 at 01:34:16PM +0100, Peter Zijlstra wrote:
+> Perhaps if we replace !tlb->end with something like:
+> 
+>   !tlb->freed_tables && !tlb->cleared_p*
+> 
+> (which GCC should be able to do with a single load and mask)
+> 
+> I've not really thought too hard about it yet, I need to run some
+> errands, but I'll look at it more closely when I get back.
 
-[ Upstream commit 73e6551699a32fac703ceea09214d6580edcf2d5 ]
+AFAICT this should work.
 
-When the user changes prio2buffer mapping while global pause is
-enabled, mlx5 driver incorrectly sets all active buffers
-(buffer that has at least one priority mapped) to lossy.
-
-Solution:
-If global pause is enabled, set all the active buffers to lossless
-in prio2buffer command.
-Also, add error message when buffer size is not enough to meet
-xoff threshold.
-
-Fixes: 0696d60853d5 ("net/mlx5e: Receive buffer configuration")
-Signed-off-by: Huy Nguyen <huyn@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en/port_buffer.c |   27 +++++++++++++--
- 1 file changed, 25 insertions(+), 2 deletions(-)
+Subject: asm-generic/tlb: Avoid potential double flush
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en/port_buffer.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en/port_buffer.c
-@@ -155,8 +155,11 @@ static int update_xoff_threshold(struct
- 		}
+Aneesh reported that:
+
+	tlb_flush_mmu()
+	  tlb_flush_mmu_tlbonly()
+	    tlb_flush()			<-- #1
+	  tlb_flush_mmu_free()
+	    tlb_table_flush()
+	      tlb_table_invalidate()
+	        tlb_flush_mmu_tlbonly()
+		  tlb_flush()		<-- #2
+
+does two TLBIs when tlb->fullmm, because __tlb_reset_range() will not
+clear tlb->end in that case.
+
+Observe that any caller to __tlb_adjust_range() also sets at least one
+of the tlb->freed_tables || tlb->cleared_p* bits, and those are
+unconditionally cleared by __tlb_reset_range().
+
+Change the condition for actually issuing TLBI to having one of those
+bits set, as opposed to having tlb->end != 0.
+
+Reported-by: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ include/asm-generic/tlb.h | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
+index fe0ea6ff3636..c9a25c5a83e8 100644
+--- a/include/asm-generic/tlb.h
++++ b/include/asm-generic/tlb.h
+@@ -402,7 +402,12 @@ tlb_update_vma_flags(struct mmu_gather *tlb, struct vm_area_struct *vma) { }
  
- 		if (port_buffer->buffer[i].size <
--		    (xoff + max_mtu + (1 << MLX5E_BUFFER_CELL_SHIFT)))
-+		    (xoff + max_mtu + (1 << MLX5E_BUFFER_CELL_SHIFT))) {
-+			pr_err("buffer_size[%d]=%d is not enough for lossless buffer\n",
-+			       i, port_buffer->buffer[i].size);
- 			return -ENOMEM;
-+		}
- 
- 		port_buffer->buffer[i].xoff = port_buffer->buffer[i].size - xoff;
- 		port_buffer->buffer[i].xon  =
-@@ -232,6 +235,26 @@ static int update_buffer_lossy(unsigned
- 	return 0;
- }
- 
-+static int fill_pfc_en(struct mlx5_core_dev *mdev, u8 *pfc_en)
-+{
-+	u32 g_rx_pause, g_tx_pause;
-+	int err;
-+
-+	err = mlx5_query_port_pause(mdev, &g_rx_pause, &g_tx_pause);
-+	if (err)
-+		return err;
-+
-+	/* If global pause enabled, set all active buffers to lossless.
-+	 * Otherwise, check PFC setting.
+ static inline void tlb_flush_mmu_tlbonly(struct mmu_gather *tlb)
+ {
+-	if (!tlb->end)
++	/*
++	 * Anything calling __tlb_adjust_range() also sets at least one of
++	 * these bits.
 +	 */
-+	if (g_rx_pause || g_tx_pause)
-+		*pfc_en = 0xff;
-+	else
-+		err = mlx5_query_port_pfc(mdev, pfc_en, NULL);
-+
-+	return err;
-+}
-+
- #define MINIMUM_MAX_MTU 9216
- int mlx5e_port_manual_buffer_config(struct mlx5e_priv *priv,
- 				    u32 change, unsigned int mtu,
-@@ -277,7 +300,7 @@ int mlx5e_port_manual_buffer_config(stru
++	if (!(tlb->freed_tables || tlb->cleared_ptes || tlb->cleared_pmds ||
++	      tlb->cleared_puds || tlb->cleared_p4ds))
+ 		return;
  
- 	if (change & MLX5E_PORT_BUFFER_PRIO2BUFFER) {
- 		update_prio2buffer = true;
--		err = mlx5_query_port_pfc(priv->mdev, &curr_pfc_en, NULL);
-+		err = fill_pfc_en(priv->mdev, &curr_pfc_en);
- 		if (err)
- 			return err;
- 
-
-
+ 	tlb_flush(tlb);
