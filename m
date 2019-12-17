@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 860C4C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E0A6C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 661A824673
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:55:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2819F24679
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:55:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727685AbfLQAzl (ORCPT
+        id S1728111AbfLQAzq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:55:41 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35332 "EHLO
+        Mon, 16 Dec 2019 19:55:46 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35266 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727063AbfLQAvn (ORCPT
+        by vger.kernel.org with ESMTP id S1727024AbfLQAvn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 19:51:43 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15K-0003MU-Vj; Tue, 17 Dec 2019 00:51:35 +0000
+        id 1ih15K-0003MA-9I; Tue, 17 Dec 2019 00:51:34 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15K-0005c7-85; Tue, 17 Dec 2019 00:51:34 +0000
+        id 1ih15J-0005bU-Qk; Tue, 17 Dec 2019 00:51:33 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Takashi Iwai" <tiwai@suse.de>
-Date:   Tue, 17 Dec 2019 00:47:23 +0000
-Message-ID: <lsq.1576543535.499499175@decadent.org.uk>
+        "Luis Henriques" <lhenriques@suse.com>,
+        "Ilya Dryomov" <idryomov@gmail.com>,
+        "Jeff Layton" <jlayton@kernel.org>
+Date:   Tue, 17 Dec 2019 00:47:17 +0000
+Message-ID: <lsq.1576543535.425487150@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 109/136] ALSA: timer: Fix incorrectly assigned timer
- instance
+Subject: [PATCH 3.16 103/136] ceph: fix use-after-free in __ceph_remove_cap()
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,58 +56,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Luis Henriques <lhenriques@suse.com>
 
-commit e7af6307a8a54f0b873960b32b6a644f2d0fbd97 upstream.
+commit ea60ed6fcf29eebc78f2ce91491e6309ee005a01 upstream.
 
-The clean up commit 41672c0c24a6 ("ALSA: timer: Simplify error path in
-snd_timer_open()") unified the error handling code paths with the
-standard goto, but it introduced a subtle bug: the timer instance is
-stored in snd_timer_open() incorrectly even if it returns an error.
-This may eventually lead to UAF, as spotted by fuzzer.
+KASAN reports a use-after-free when running xfstest generic/531, with the
+following trace:
 
-The culprit is the snd_timer_open() code checks the
-SNDRV_TIMER_IFLG_EXCLUSIVE flag with the common variable timeri.
-This variable is supposed to be the newly created instance, but we
-(ab-)used it for a temporary check before the actual creation of a
-timer instance.  After that point, there is another check for the max
-number of instances, and it bails out if over the threshold.  Before
-the refactoring above, it worked fine because the code returned
-directly from that point.  After the refactoring, however, it jumps to
-the unified error path that stores the timeri variable in return --
-even if it returns an error.  Unfortunately this stored value is kept
-in the caller side (snd_timer_user_tselect()) in tu->timeri.  This
-causes inconsistency later, as if the timer was successfully
-assigned.
+[  293.903362]  kasan_report+0xe/0x20
+[  293.903365]  rb_erase+0x1f/0x790
+[  293.903370]  __ceph_remove_cap+0x201/0x370
+[  293.903375]  __ceph_remove_caps+0x4b/0x70
+[  293.903380]  ceph_evict_inode+0x4e/0x360
+[  293.903386]  evict+0x169/0x290
+[  293.903390]  __dentry_kill+0x16f/0x250
+[  293.903394]  dput+0x1c6/0x440
+[  293.903398]  __fput+0x184/0x330
+[  293.903404]  task_work_run+0xb9/0xe0
+[  293.903410]  exit_to_usermode_loop+0xd3/0xe0
+[  293.903413]  do_syscall_64+0x1a0/0x1c0
+[  293.903417]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-In this patch, we fix it by not re-using timeri variable but a
-temporary variable for testing the exclusive connection, so timeri
-remains NULL at that point.
+This happens because __ceph_remove_cap() may queue a cap release
+(__ceph_queue_cap_release) which can be scheduled before that cap is
+removed from the inode list with
 
-Fixes: 41672c0c24a6 ("ALSA: timer: Simplify error path in snd_timer_open()")
-Reported-and-tested-by: Tristan Madani <tristmd@gmail.com>
-Link: https://lore.kernel.org/r/20191106165547.23518-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+	rb_erase(&cap->ci_node, &ci->i_caps);
+
+And, when this finally happens, the use-after-free will occur.
+
+This can be fixed by removing the cap from the inode list before being
+removed from the session list, and thus eliminating the risk of an UAF.
+
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- sound/core/timer.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/ceph/caps.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/sound/core/timer.c
-+++ b/sound/core/timer.c
-@@ -297,11 +297,11 @@ int snd_timer_open(struct snd_timer_inst
- 		goto unlock;
- 	}
- 	if (!list_empty(&timer->open_list_head)) {
--		timeri = list_entry(timer->open_list_head.next,
-+		struct snd_timer_instance *t =
-+			list_entry(timer->open_list_head.next,
- 				    struct snd_timer_instance, open_list);
--		if (timeri->flags & SNDRV_TIMER_IFLG_EXCLUSIVE) {
-+		if (t->flags & SNDRV_TIMER_IFLG_EXCLUSIVE) {
- 			err = -EBUSY;
--			timeri = NULL;
- 			goto unlock;
- 		}
- 	}
+--- a/fs/ceph/caps.c
++++ b/fs/ceph/caps.c
+@@ -913,6 +913,11 @@ void __ceph_remove_cap(struct ceph_cap *
+ 
+ 	dout("__ceph_remove_cap %p from %p\n", cap, &ci->vfs_inode);
+ 
++	/* remove from inode's cap rbtree, and clear auth cap */
++	rb_erase(&cap->ci_node, &ci->i_caps);
++	if (ci->i_auth_cap == cap)
++		ci->i_auth_cap = NULL;
++
+ 	/* remove from session list */
+ 	spin_lock(&session->s_cap_lock);
+ 	/*
+@@ -939,11 +944,6 @@ void __ceph_remove_cap(struct ceph_cap *
+ 	cap->ci = NULL;
+ 	spin_unlock(&session->s_cap_lock);
+ 
+-	/* remove from inode list */
+-	rb_erase(&cap->ci_node, &ci->i_caps);
+-	if (ci->i_auth_cap == cap)
+-		ci->i_auth_cap = NULL;
+-
+ 	if (removed)
+ 		ceph_put_cap(mdsc, cap);
+ 
 
