@@ -2,201 +2,131 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB38C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD0BC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89C7121582
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:27:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576596448;
-	bh=t6J26HpNYkT7zBIcDR+UAX5qqa5jsg26hrbhFgAYiqI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=J1vT4ryoX+TyTYarzc3ZGxrc00bSxNWgLYzpEa54Iki6HlRR760EL+LqkOEQQZGM6
-	 IJL2zwrkGXr74wWdzxsv/LQnoru9AmsHm+P5qsK9igzXwaHznkU6EaA/Jbv8b3BF2t
-	 enGro8QptSXcUPmTfxXwDnb5T2TDsQo5hfeVBwII=
+	by mail.kernel.org (Postfix) with ESMTP id 1B5CF2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:28:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728331AbfLQP11 (ORCPT
+        id S1727830AbfLQP2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 10:27:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58204 "EHLO mail.kernel.org"
+        Tue, 17 Dec 2019 10:28:11 -0500
+Received: from mga04.intel.com ([192.55.52.120]:55880 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727459AbfLQP11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 10:27:27 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA7362072D;
-        Tue, 17 Dec 2019 15:27:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576596446;
-        bh=t6J26HpNYkT7zBIcDR+UAX5qqa5jsg26hrbhFgAYiqI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yRIgBV57PmcSGPTlOKR12ZVdoqYXCLFYTJP+R7ch46IwJteaACTx3BDOy/Zy3iGQy
-         zVnbPz1imt1gwe0bfj0NtZLKQJxENe/0kDa6oBmoYIq4Y0WpIyAl4Hm1BqHGycMdYz
-         0bhaccVDsL8VstUjEOO3M5+cCqFR+F6QCJcpt+1A=
-Date:   Tue, 17 Dec 2019 16:27:24 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Jiri Slaby <jslaby@suse.com>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] leds: trigger: implement a tty trigger
-Message-ID: <20191217152724.GA3667595@kroah.com>
-References: <20191217150736.1479-1-u.kleine-koenig@pengutronix.de>
- <20191217150736.1479-4-u.kleine-koenig@pengutronix.de>
+        id S1727039AbfLQP2L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 10:28:11 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 07:28:10 -0800
+X-IronPort-AV: E=Sophos;i="5.69,325,1571727600"; 
+   d="scan'208";a="209736160"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 07:28:05 -0800
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Steven Price <steven.price@arm.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>
+Subject: Re: [Intel-gfx] linux-next: Tree for Dec 16 (drm_panel & intel_panel)
+In-Reply-To: <CAHp75VfmGo1LzsHiq_UvWbhvRGovtaLVnRPZJ=40arrJWq6HvA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20191216162209.5b5256dd@canb.auug.org.au> <d92bec2a-62cb-004e-7f8c-01fc12a53a74@infradead.org> <20191217054255.GA26868@ravnborg.org> <65c9dc7b-3c61-8204-07da-212632732791@infradead.org> <aede39a0-3469-130d-f416-0e9426ebcec9@arm.com> <CAHp75VfmGo1LzsHiq_UvWbhvRGovtaLVnRPZJ=40arrJWq6HvA@mail.gmail.com>
+Date:   Tue, 17 Dec 2019 17:28:02 +0200
+Message-ID: <87d0cnynst.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191217150736.1479-4-u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 04:07:36PM +0100, Uwe Kleine-König wrote:
-> Usage is as follows:
-> 
-> 	myled=ledname
-> 	tty=ttyS0
-> 
-> 	echo tty > /sys/class/leds/$myled/trigger
-> 	cat /sys/class/tty/$tty/dev > /sys/class/leds/$myled/dev
+On Tue, 17 Dec 2019, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> On Tue, Dec 17, 2019 at 1:56 PM Steven Price <steven.price@arm.com> wrote:
+>> On 17/12/2019 06:37, Randy Dunlap wrote:
+>> > On 12/16/19 9:42 PM, Sam Ravnborg wrote:
+>> >> On Mon, Dec 16, 2019 at 08:25:11AM -0800, Randy Dunlap wrote:
+>> >>> On 12/15/19 9:22 PM, Stephen Rothwell wrote:
+>
+>> >>> on x86_64:
+>> >>>
+>> >>> ld: drivers/gpu/drm/drm_panel.o: in function `drm_panel_of_backlight':
+>> >>> (.text+0x2ee): undefined reference to `devm_of_find_backlight'
+>> >>>
+>> >>> ld: drivers/gpu/drm/i915/display/intel_panel.o: in function `intel_backlight_device_register':
+>> >>> intel_panel.c:(.text+0x593e): undefined reference to `backlight_device_register'
+>> >>> ld: drivers/gpu/drm/i915/display/intel_panel.o: in function `intel_backlight_device_unregister':
+>> >>> intel_panel.c:(.text+0x5a04): undefined reference to `backlight_device_unregister'
+>> >>>
+>> >>> CONFIG_DRM_PANEL=y
+>> >>> CONFIG_BACKLIGHT_CLASS_DEVICE=m
+>> >>> CONFIG_DRM_I915=y
+>> >>>
+>> >>> Full randconfig file is attached.
+>> >>
+>> >> Can you please verify if you have:
+>> >> 907aa265fde6589b8059dc51649c6d1f49ade2f3
+>> >> ("drm/drm_panel: fix EXPORT of drm_panel_of_backlight")
+>> >>
+>> >> This commit is supposed to fix it.
+>> >>
+>> >>      Sam
+>> >>
+>> >
+>> > Hi Sam,
+>> > I don't have the linux-next.git tree so I can't check that.
+>> > I just built whatever is in linux-next of 20191216.
+>> >
+>>
+>> 907aa265fde6589b8059dc51649c6d1f49ade2f3 ("drm/drm_panel: fix EXPORT of
+>> drm_panel_of_backlight") is fixing drm_panel_of_backlight(), but the
+>> error above is for backlight_device_register().
+>>
+>> From what I can tell, that commit is actually the cause of the error -
+>> now intel_backlight_device_register() is being included in the kernel
+>> even though it calls backlight_device_register() which is in a module.
+>> Of course it also fixed the original error, so reverting it isn't any
+>> use.
+>>
+>> The below Kconfig change fixes the build for me, but I've no idea
+>> whether this is the correct fix.
+>
+> I think the proper one is to have s/IS_ENABLED/IS_REACHABLE/.
+> It fixes issue for me.
 
-Is this the correct instructions?  Aren't you looking for a major/minor
-number instead in your sysfs file?
+As discussed off-line, this will allow silently building and linking a
+configuration that's actually broken. (No backlight support despite
+expectations.)
 
-> 
-> . When this new trigger is active it periodically checks the tty's
-> statistics and when it changed since the last check the led is flashed
-> once.
-> 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> ---
->  drivers/leds/trigger/Kconfig       |   7 ++
->  drivers/leds/trigger/Makefile      |   1 +
->  drivers/leds/trigger/ledtrig-tty.c | 159 +++++++++++++++++++++++++++++
->  3 files changed, 167 insertions(+)
->  create mode 100644 drivers/leds/trigger/ledtrig-tty.c
-> 
-> diff --git a/drivers/leds/trigger/Kconfig b/drivers/leds/trigger/Kconfig
-> index ce9429ca6dde..40ff08c93f56 100644
-> --- a/drivers/leds/trigger/Kconfig
-> +++ b/drivers/leds/trigger/Kconfig
-> @@ -144,4 +144,11 @@ config LEDS_TRIGGER_AUDIO
->  	  the audio mute and mic-mute changes.
->  	  If unsure, say N
->  
-> +config LEDS_TRIGGER_TTY
-> +	tristate "LED Trigger for TTY devices"
-> +	depends on TTY
-> +	help
-> +	  This allows LEDs to be controlled by activity on ttys which includes
-> +	  serial devices like /dev/ttyS0.
-> +
->  endif # LEDS_TRIGGERS
-> diff --git a/drivers/leds/trigger/Makefile b/drivers/leds/trigger/Makefile
-> index 733a83e2a718..25c4db97cdd4 100644
-> --- a/drivers/leds/trigger/Makefile
-> +++ b/drivers/leds/trigger/Makefile
-> @@ -15,3 +15,4 @@ obj-$(CONFIG_LEDS_TRIGGER_PANIC)	+= ledtrig-panic.o
->  obj-$(CONFIG_LEDS_TRIGGER_NETDEV)	+= ledtrig-netdev.o
->  obj-$(CONFIG_LEDS_TRIGGER_PATTERN)	+= ledtrig-pattern.o
->  obj-$(CONFIG_LEDS_TRIGGER_AUDIO)	+= ledtrig-audio.o
-> +obj-$(CONFIG_LEDS_TRIGGER_TTY)		+= ledtrig-tty.o
-> diff --git a/drivers/leds/trigger/ledtrig-tty.c b/drivers/leds/trigger/ledtrig-tty.c
-> new file mode 100644
-> index 000000000000..0157aa0b2ce3
-> --- /dev/null
-> +++ b/drivers/leds/trigger/ledtrig-tty.c
-> @@ -0,0 +1,159 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <linux/leds.h>
-> +#include <linux/module.h>
-> +#include <linux/slab.h>
-> +#include <linux/tty.h>
-> +#include <uapi/linux/serial.h>
-> +
-> +struct ledtrig_tty_data {
-> +	struct led_classdev *led_cdev;
-> +	struct delayed_work dwork;
-> +	struct tty_struct *tty;
-> +	dev_t device;
-> +	int rx, tx;
-> +};
-> +
-> +static void ledtrig_tty_halt(struct ledtrig_tty_data *trigger_data)
-> +{
-> +	cancel_delayed_work_sync(&trigger_data->dwork);
-> +}
-> +
-> +static void ledtrig_tty_restart(struct ledtrig_tty_data *trigger_data)
-> +{
-> +	if (!trigger_data->tty)
-> +		return;
-> +
-> +	schedule_delayed_work(&trigger_data->dwork, 0);
-> +}
-> +
-> +static ssize_t dev_show(struct device *dev,
-> +			struct device_attribute *attr, char *buf)
-> +{
-> +	struct ledtrig_tty_data *trigger_data = led_trigger_get_drvdata(dev);
-> +	ssize_t len = 0;
-> +
-> +	if (trigger_data->tty)
-> +		len = sprintf(buf, "%u\n", trigger_data->device);
+IMO deep down the problem is that we "select" BACKLIGHT_CLASS_DEVICE all
+over the place, while we should "depends on" it. Everything else is just
+duct tape that allows configurations where built-in code calls backlight
+symbols in modules. It used to be more about an interaction with ACPI,
+now we've added DRM_PANEL to the mix.
 
-Will that print a dev_t in a format that userspace can make sense of it?
-Should you split it up with MAJOR:MINOR instead?
+I've proposed a fix five years ago [1]. That's what it takes to fix
+these recurring failures for good. I'm not really all that interested in
+the whack-a-mole with the hacks.
 
 
+BR,
+Jani.
 
-> +
-> +	return len;
-> +}
-> +
-> +static ssize_t dev_store(struct device *dev,
-> +			 struct device_attribute *attr, const char *buf,
-> +			 size_t size)
-> +{
-> +	struct ledtrig_tty_data *trigger_data = led_trigger_get_drvdata(dev);
-> +	struct tty_struct *tty;
-> +	unsigned major, minor;
-> +	int ret;
-> +
-> +	if (size == 0 || (size == 1 && buf[0] == '\n')) {
-> +		tty = NULL;
-> +	} else {
-> +		ret = sscanf(buf, "%u:%u", &major, &minor);
-> +		if (ret < 2) {
-> +			dev_err(dev, "invalid value\n");
 
-Can I DoS the syslog with this?  :)
+[1] http://lore.kernel.org/r/1413580403-16225-1-git-send-email-jani.nikula@intel.com
 
-> +			return -EINVAL;
-> +		}
-> +
-> +		tty = tty_kopen_shared(MKDEV(major, minor));
-> +		if (IS_ERR(tty)) {
-> +			dev_err(dev, "failed to open tty: %pe\n", tty);
 
-Same here, dev_dbg() perhaps?
-
-Other than these minor things, looks good to me.
-
-Your tty changes are fine, if I can get an ack from the led maintainers
-about a working patch 3, I'll be glad to take all 3 in my tree.
-
-thanks,
-
-greg k-h
+-- 
+Jani Nikula, Intel Open Source Graphics Center
