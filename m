@@ -2,171 +2,150 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F3C1C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 707C2C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE33821582
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:18:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BBD921582
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:19:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HZbZ2275"
+	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="OTnAvgH5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729394AbfLQQSu (ORCPT
+        id S1729405AbfLQQS6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 11:18:50 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21216 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729153AbfLQQSs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 11:18:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576599526;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vK5NDcBxim7yNbmFnJiOrQ1gwFPi/J/vE1JJF/ionzc=;
-        b=HZbZ22750qr61IBA33Ps03ASUNsRAUZc72HiDowOpMNCfK9XmPYFDc4hcUgXys9Gra1aAX
-        cdGzFs9WoJ/Cl6od1px0Z4H/6jgiew2KjNegR+VzxcQLJi5QyqEBKZKujbVYUZJPdENoj1
-        REHyGUDYAG3VUvO91ib66JbBusBiHqc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-246-AFz6fOSUM3alHFfb2t83Tg-1; Tue, 17 Dec 2019 11:18:42 -0500
-X-MC-Unique: AFz6fOSUM3alHFfb2t83Tg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9E8DF800D24;
-        Tue, 17 Dec 2019 16:18:41 +0000 (UTC)
-Received: from x1.home (ovpn-116-53.phx2.redhat.com [10.3.116.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 83C2F68872;
-        Tue, 17 Dec 2019 16:18:38 +0000 (UTC)
-Date:   Tue, 17 Dec 2019 09:18:37 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, Peter Xu <peterx@redhat.com>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        Tue, 17 Dec 2019 11:18:58 -0500
+Received: from mail-bn7nam10on2081.outbound.protection.outlook.com ([40.107.92.81]:6496
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728958AbfLQQPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 11:15:46 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=L83fGUrgq1dsjFLLLKJF0H9R2xcaw7j34SYlv0o48YqpVy0k09N8Zr9LoR1frUVCboJS7MNeLzdoO+H1RbJZL/eARy0JE1cU/tD3eJSahLI7s87F+g37EQElOoJTasE8Yw+B3/HnbUDttr9gdmR38Ed9aQT6QxQkN/+NAjBJfOBZJFxdwMXCRL2D4+Hf7HmoqfgWe4YyoP+XyG4ZJ5LaNGWZmFYwQZHNImDnKd3lK1CRq84Jwm0VSmxVkozQjO9O7qLHfxWV6qbJuWTsz3gW9JvfWLqK0sWONXN3iHW/cTLPb+vtD9THXjALV3UyGT2rGAfi2UdimSyvQ4fzL84yGg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=L2XACO0dpTiYEzM0HmaENcUMzlW+3tomdmhqT6ZUZlA=;
+ b=ls913lfEcKqK+y50hTa+8fs0SwWodOljr5Tx0UcUuNX91ciDQv+lWN0ev3CAM57do0Cno8TkOz7JF9K7SvY6QydHKYp9I0c83wDt5stquDIVE1VXrhNyg+s8h1fRIErXIzvF26KBmrJsHu/zsPB4G9VdJ5q/9cWlTFpU025nvcxB6yJYyDbJSNkNsUdvNBA8aiN8Se609LzJVSnvRnXY+8LwO1BjLTIq64HGbXKe+bbvbua3GjGDwzXIyjBiCNLe+HP7ua971Tk92K0TUscNTVrJ2b51eUpjFU22P+A0G/bceY6q4HChH7bSLP0S3xKwJckJRcpxkZQ1n8G9OdpWlg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
+ dkim=pass header.d=silabs.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=L2XACO0dpTiYEzM0HmaENcUMzlW+3tomdmhqT6ZUZlA=;
+ b=OTnAvgH58dNq/CI+qhTaM7B8/DtkxE3wYY8AiHElb6pJhIWyOJdkjEqveF+SE/Qohb8TS5Ej17zGQdSN3lUNitOhxeYX3D0OPO0KGFg+wD48QumRjnG5NW+ZvzPp48S41gjVAfTdQpXrPcK1HFtkOWfaXwcaohyDLjKGcmOgAbw=
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com (10.255.180.22) by
+ MN2PR11MB4208.namprd11.prod.outlook.com (52.135.36.80) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.20; Tue, 17 Dec 2019 16:15:41 +0000
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::f46c:e5b4:2a85:f0bf]) by MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::f46c:e5b4:2a85:f0bf%4]) with mapi id 15.20.2538.019; Tue, 17 Dec 2019
+ 16:15:41 +0000
+From:   =?utf-8?B?SsOpcsO0bWUgUG91aWxsZXI=?= <Jerome.Pouiller@silabs.com>
+To:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Wang, Zhenyu Z" <zhenyu.z.wang@intel.com>,
-        "Zhao, Yan Y" <yan.y.zhao@intel.com>
-Subject: Re: [PATCH RFC 04/15] KVM: Implement ring-based dirty memory
- tracking
-Message-ID: <20191217091837.744982d3@x1.home>
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D645E55@SHSMSX104.ccr.corp.intel.com>
-References: <20191202201036.GJ4063@linux.intel.com>
-        <20191202211640.GF31681@xz-x1>
-        <20191202215049.GB8120@linux.intel.com>
-        <fd882b9f-e510-ff0d-db43-eced75427fc6@redhat.com>
-        <20191203184600.GB19877@linux.intel.com>
-        <374f18f1-0592-9b70-adbb-0a72cc77d426@redhat.com>
-        <20191209215400.GA3352@xz-x1>
-        <affd9d84-1b84-0c25-c431-a075c58c33dc@redhat.com>
-        <20191210155259.GD3352@xz-x1>
-        <3e6cb5ec-66c0-00ab-b75e-ad2beb1d216d@redhat.com>
-        <20191215172124.GA83861@xz-x1>
-        <f117d46a-7528-ce32-8e46-4f3f35937079@redhat.com>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D645E55@SHSMSX104.ccr.corp.intel.com>
-Organization: Red Hat
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        =?utf-8?B?SsOpcsO0bWUgUG91aWxsZXI=?= <Jerome.Pouiller@silabs.com>
+Subject: [PATCH v2 32/55] staging: wfx: drop useless argument from
+ wfx_set_pm()
+Thread-Topic: [PATCH v2 32/55] staging: wfx: drop useless argument from
+ wfx_set_pm()
+Thread-Index: AQHVtPUpo7oG/S2dEEeGnUWnLCzT5g==
+Date:   Tue, 17 Dec 2019 16:15:12 +0000
+Message-ID: <20191217161318.31402-33-Jerome.Pouiller@silabs.com>
+References: <20191217161318.31402-1-Jerome.Pouiller@silabs.com>
+In-Reply-To: <20191217161318.31402-1-Jerome.Pouiller@silabs.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: PR0P264CA0174.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:100:1c::18) To MN2PR11MB4063.namprd11.prod.outlook.com
+ (2603:10b6:208:13f::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jerome.Pouiller@silabs.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.24.0
+x-originating-ip: [37.71.187.125]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f34e4e10-12fd-4e6e-c618-08d7830c4b54
+x-ms-traffictypediagnostic: MN2PR11MB4208:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR11MB4208FD53BD5B8A40E62E9E5893500@MN2PR11MB4208.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:843;
+x-forefront-prvs: 02543CD7CD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39850400004)(396003)(366004)(136003)(376002)(346002)(199004)(189003)(5660300002)(316002)(6506007)(85182001)(478600001)(71200400001)(2906002)(36756003)(186003)(26005)(81166006)(54906003)(1076003)(110136005)(66574012)(4326008)(8676002)(86362001)(6486002)(6666004)(52116002)(6512007)(64756008)(85202003)(66946007)(66476007)(66446008)(66556008)(8936002)(107886003)(2616005)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4208;H:MN2PR11MB4063.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: silabs.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 08CT7vNgjEZs3BM0DuHb6N1veMpXsUs7++94t5RcQtjpnAOUOUCgiVXnysM8a+tdNucdcSQX9pa8yY74OLRjUgK3O32gAnVN82Y0F9ilbTsdrj5CiA9W9b50Mbp6nTvXPD2S/LXPoxRaWoJUgX8S8QptQiifVXYAThnlTG3GNAMHwlgK3Nu47Zvbt5rtw/B1/Dkz9syBL6r3doTiHo0JDj0jAFiyitFNNN/8u3+iH8kwdBFGnh6JXQ551vnqruv6TERlLoSd9IBphyQYrfgfPIoZZHhJRzgYmCR4eeb8SxM8hw/G4KVS7bC9LqECrBFi6P/ESHMuL0MDR9eAZJ0LD7od8LjHJ1+H6Zat5Xmpm5IMOxm0nro7rxm6xKPhhjENMKiM6O+V5G80YiwKdttFGlzHjpWrhWcg4V5hkNdBeFX3JO0/lUnyxPfFiedztwzn
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B5DB3455A9FCC74DAC977B557346428D@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-OriginatorOrg: silabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f34e4e10-12fd-4e6e-c618-08d7830c4b54
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Dec 2019 16:15:12.5756
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: J8+/7z0f2ZknzlPAwxcygyXz559gwUieRGTsSc0hPzQ9nN7dOZZ5DOqm0irO7lXsSoIfoReq1G/Se/mUGCmB8g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4208
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Dec 2019 02:28:33 +0000
-"Tian, Kevin" <kevin.tian@intel.com> wrote:
-
-> > From: Paolo Bonzini
-> > Sent: Monday, December 16, 2019 6:08 PM
-> > 
-> > [Alex and Kevin: there are doubts below regarding dirty page tracking
-> > from VFIO and mdev devices, which perhaps you can help with]
-> > 
-> > On 15/12/19 18:21, Peter Xu wrote:  
-> > >                 init_rmode_tss
-> > >                     vmx_set_tss_addr
-> > >                         kvm_vm_ioctl_set_tss_addr [*]
-> > >                 init_rmode_identity_map
-> > >                     vmx_create_vcpu [*]  
-> > 
-> > These don't matter because their content is not visible to userspace
-> > (the backing storage is mmap-ed by __x86_set_memory_region).  In fact, d
-> >   
-> > >                 vmx_write_pml_buffer
-> > >                     kvm_arch_write_log_dirty [&]
-> > >                 kvm_write_guest
-> > >                     kvm_hv_setup_tsc_page
-> > >                         kvm_guest_time_update [&]
-> > >                     nested_flush_cached_shadow_vmcs12 [&]
-> > >                     kvm_write_wall_clock [&]
-> > >                     kvm_pv_clock_pairing [&]
-> > >                     kvmgt_rw_gpa [?]  
-> > 
-> > This then expands (partially) to
-> > 
-> > intel_gvt_hypervisor_write_gpa
-> >     emulate_csb_update
-> >         emulate_execlist_ctx_schedule_out
-> >             complete_execlist_workload
-> >                 complete_current_workload
-> >                      workload_thread
-> >         emulate_execlist_ctx_schedule_in
-> >             prepare_execlist_workload
-> >                 prepare_workload
-> >                     dispatch_workload
-> >                         workload_thread
-> > 
-> > So KVMGT is always writing to GPAs instead of IOVAs and basically
-> > bypassing a guest IOMMU.  So here it would be better if kvmgt was
-> > changed not use kvm_write_guest (also because I'd probably have nacked
-> > that if I had known :)).  
-> 
-> I agree. 
-> 
-> > 
-> > As far as I know, there is some work on live migration with both VFIO
-> > and mdev, and that probably includes some dirty page tracking API.
-> > kvmgt could switch to that API, or there could be VFIO APIs similar to
-> > kvm_write_guest but taking IOVAs instead of GPAs.  Advantage: this would
-> > fix the GPA/IOVA confusion.  Disadvantage: userspace would lose the
-> > tracking of writes from mdev devices.  Kevin, are these writes used in
-> > any way?  Do the calls to intel_gvt_hypervisor_write_gpa covers all
-> > writes from kvmgt vGPUs, or can the hardware write to memory as well
-> > (which would be my guess if I didn't know anything about kvmgt, which I
-> > pretty much don't)?  
-> 
-> intel_gvt_hypervisor_write_gpa covers all writes due to software mediation.
-> 
-> for hardware updates, it needs be mapped in IOMMU through vfio_pin_pages 
-> before any DMA happens. The ongoing dirty tracking effort in VFIO will take
-> every pinned page through that API as dirtied.
-> 
-> However, currently VFIO doesn't implement any vfio_read/write_guest
-> interface yet. and it doesn't make sense to use vfio_pin_pages for software
-> dirtied pages, as pin is unnecessary and heavy involving iommu invalidation.
-> 
-> Alex, if you are OK we'll work on such interface and move kvmgt to use it.
-> After it's accepted, we can also mark pages dirty through this new interface
-> in Kirti's dirty page tracking series.
-
-I'm not sure what you're asking for, is it an interface for the host
-CPU to read/write the memory backing of a mapped IOVA range without
-pinning pages?  That seems like something like that would make sense for
-an emulation model where a page does not need to be pinned for physical
-DMA.  If you're asking more for an interface that understands the
-userspace driver is a VM (ie. implied using a _guest postfix on the
-function name) and knows about GPA mappings beyond the windows directly
-mapped for device access, I'd not look fondly on such a request.
-Thanks,
-
-Alex
-
+RnJvbTogSsOpcsO0bWUgUG91aWxsZXIgPGplcm9tZS5wb3VpbGxlckBzaWxhYnMuY29tPgoKQXJn
+dW1lbnQgdG8gd2Z4X3NldF9wbSgpIGlzIGFsd2F5cyB3dmlmLT5wb3dlcnNhdmVfbW9kZS4gU28s
+IHdlIGNhbgpzaW1wbGlmeSBpdC4KClNpZ25lZC1vZmYtYnk6IErDqXLDtG1lIFBvdWlsbGVyIDxq
+ZXJvbWUucG91aWxsZXJAc2lsYWJzLmNvbT4KLS0tCiBkcml2ZXJzL3N0YWdpbmcvd2Z4L3N0YS5j
+IHwgMTYgKysrKysrKy0tLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKSwg
+OSBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL3N0YWdpbmcvd2Z4L3N0YS5jIGIv
+ZHJpdmVycy9zdGFnaW5nL3dmeC9zdGEuYwppbmRleCBlYjA4N2I5YzgwOTcuLmVlMWIxNTk1MDM4
+OSAxMDA2NDQKLS0tIGEvZHJpdmVycy9zdGFnaW5nL3dmeC9zdGEuYworKysgYi9kcml2ZXJzL3N0
+YWdpbmcvd2Z4L3N0YS5jCkBAIC0zMjYsMTIgKzMyNiwxMCBAQCB2b2lkIHdmeF9jb25maWd1cmVf
+ZmlsdGVyKHN0cnVjdCBpZWVlODAyMTFfaHcgKmh3LAogCX0KIH0KIAotc3RhdGljIGludCB3Znhf
+c2V0X3BtKHN0cnVjdCB3ZnhfdmlmICp3dmlmLAotCQkgICAgICBjb25zdCBzdHJ1Y3QgaGlmX3Jl
+cV9zZXRfcG1fbW9kZSAqYXJnKQorc3RhdGljIGludCB3ZnhfdXBkYXRlX3BtKHN0cnVjdCB3Znhf
+dmlmICp3dmlmKQogewotCXN0cnVjdCBoaWZfcmVxX3NldF9wbV9tb2RlIHBtID0gKmFyZzsKKwlz
+dHJ1Y3QgaGlmX3JlcV9zZXRfcG1fbW9kZSBwbSA9IHd2aWYtPnBvd2Vyc2F2ZV9tb2RlOwogCXUx
+NiB1YXBzZF9mbGFnczsKLQlpbnQgcmV0OwogCiAJaWYgKHd2aWYtPnN0YXRlICE9IFdGWF9TVEFU
+RV9TVEEgfHwgIXd2aWYtPmJzc19wYXJhbXMuYWlkKQogCQlyZXR1cm4gMDsKQEAgLTM5MCw3ICsz
+ODgsNyBAQCBpbnQgd2Z4X2NvbmZfdHgoc3RydWN0IGllZWU4MDIxMV9odyAqaHcsIHN0cnVjdCBp
+ZWVlODAyMTFfdmlmICp2aWYsCiAJCQlpZiAoIXJldCAmJiB3dmlmLT5zZXRic3NwYXJhbXNfZG9u
+ZSAmJgogCQkJICAgIHd2aWYtPnN0YXRlID09IFdGWF9TVEFURV9TVEEgJiYKIAkJCSAgICBvbGRf
+dWFwc2RfZmxhZ3MgIT0gbmV3X3VhcHNkX2ZsYWdzKQotCQkJCXJldCA9IHdmeF9zZXRfcG0od3Zp
+ZiwgJnd2aWYtPnBvd2Vyc2F2ZV9tb2RlKTsKKwkJCQlyZXQgPSB3ZnhfdXBkYXRlX3BtKHd2aWYp
+OwogCQl9CiAJfSBlbHNlIHsKIAkJcmV0ID0gLUVJTlZBTDsKQEAgLTEwMTQsNyArMTAxMiw3IEBA
+IHN0YXRpYyB2b2lkIHdmeF9qb2luX2ZpbmFsaXplKHN0cnVjdCB3ZnhfdmlmICp3dmlmLAogCQlo
+aWZfc2V0X2Jzc19wYXJhbXMod3ZpZiwgJnd2aWYtPmJzc19wYXJhbXMpOwogCQl3dmlmLT5zZXRi
+c3NwYXJhbXNfZG9uZSA9IHRydWU7CiAJCXdmeF9zZXRfYmVhY29uX3dha2V1cF9wZXJpb2Rfd29y
+aygmd3ZpZi0+c2V0X2JlYWNvbl93YWtldXBfcGVyaW9kX3dvcmspOwotCQl3Znhfc2V0X3BtKHd2
+aWYsICZ3dmlmLT5wb3dlcnNhdmVfbW9kZSk7CisJCXdmeF91cGRhdGVfcG0od3ZpZik7CiAJfQog
+fQogCkBAIC0xNDUxLDcgKzE0NDksNyBAQCBpbnQgd2Z4X2NvbmZpZyhzdHJ1Y3QgaWVlZTgwMjEx
+X2h3ICpodywgdTMyIGNoYW5nZWQpCiAJCQkJfQogCQkJfQogCQkJaWYgKHd2aWYtPnN0YXRlID09
+IFdGWF9TVEFURV9TVEEgJiYgd3ZpZi0+YnNzX3BhcmFtcy5haWQpCi0JCQkJd2Z4X3NldF9wbSh3
+dmlmLCAmd3ZpZi0+cG93ZXJzYXZlX21vZGUpOworCQkJCXdmeF91cGRhdGVfcG0od3ZpZik7CiAJ
+CX0KIAkJd3ZpZiA9IHdkZXZfdG9fd3ZpZih3ZGV2LCAwKTsKIAl9CkBAIC0xNTkxLDcgKzE1ODks
+NyBAQCBpbnQgd2Z4X2FkZF9pbnRlcmZhY2Uoc3RydWN0IGllZWU4MDIxMV9odyAqaHcsIHN0cnVj
+dCBpZWVlODAyMTFfdmlmICp2aWYpCiAJCWVsc2UKIAkJCWhpZl9zZXRfYmxvY2tfYWNrX3BvbGlj
+eSh3dmlmLCAweDAwLCAweDAwKTsKIAkJLy8gQ29tYm8gZm9yY2UgcG93ZXJzYXZlIG1vZGUuIFdl
+IGNhbiByZS1lbmFibGUgaXQgbm93Ci0JCXdmeF9zZXRfcG0od3ZpZiwgJnd2aWYtPnBvd2Vyc2F2
+ZV9tb2RlKTsKKwkJd2Z4X3VwZGF0ZV9wbSh3dmlmKTsKIAl9CiAJcmV0dXJuIDA7CiB9CkBAIC0x
+NjY2LDcgKzE2NjQsNyBAQCB2b2lkIHdmeF9yZW1vdmVfaW50ZXJmYWNlKHN0cnVjdCBpZWVlODAy
+MTFfaHcgKmh3LAogCQllbHNlCiAJCQloaWZfc2V0X2Jsb2NrX2Fja19wb2xpY3kod3ZpZiwgMHgw
+MCwgMHgwMCk7CiAJCS8vIENvbWJvIGZvcmNlIHBvd2Vyc2F2ZSBtb2RlLiBXZSBjYW4gcmUtZW5h
+YmxlIGl0IG5vdwotCQl3Znhfc2V0X3BtKHd2aWYsICZ3dmlmLT5wb3dlcnNhdmVfbW9kZSk7CisJ
+CXdmeF91cGRhdGVfcG0od3ZpZik7CiAJfQogfQogCi0tIAoyLjI0LjAKCg==
