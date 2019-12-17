@@ -7,92 +7,80 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA8BC2D0C5
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA7DC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:19:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 583552176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:18:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EE3B21775
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:19:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576556320;
-	bh=0IBzuUXwH9TcBNioN5GPFnmjnoVvyqIofOrTsNHGdko=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=d4Ymnw6bZB4rP8eD1DEprS0/BBm1vWVvJYgoqrtqKblZm93QU6U2h+/UEGUVPmN4u
-	 OJwZWNVOlKf36d3Hs/yy5RZkELfRhaeBnjm46HtEeH9hkA8OvO7K/MP3wJkJiiE/6R
-	 zRd9crrWc+MN0oV71Rz2IdH+MPseZ2LMvv44ukrA=
+	s=default; t=1576556342;
+	bh=vLYvuuuOBtirizTvfuMiKkHqK1dmhuS9VwB7s2fbgas=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=XiyLhAYghIDswilCeBgSZYgZzwKbOeqHmqC8UI7dLCvnuhwo84w2tO2b+bXzPyyFZ
+	 kcAPEAf+a064RbSRkeow+fxl9KR9ZLh0FRj14V9BGwisLJuR2R/0gBFEO3u/EgdlZt
+	 AOZB51FXplGCAthOt895d0xI1T7QElRK2fgYpyXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727595AbfLQESj (ORCPT
+        id S1727774AbfLQETB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 23:18:39 -0500
-Received: from conuserg-12.nifty.com ([210.131.2.79]:56123 "EHLO
+        Mon, 16 Dec 2019 23:19:01 -0500
+Received: from conuserg-12.nifty.com ([210.131.2.79]:56751 "EHLO
         conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727125AbfLQESj (ORCPT
+        with ESMTP id S1727125AbfLQETB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 23:18:39 -0500
+        Mon, 16 Dec 2019 23:19:01 -0500
 Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id xBH4IZc4028568;
-        Tue, 17 Dec 2019 13:18:35 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com xBH4IZc4028568
+        by conuserg-12.nifty.com with ESMTP id xBH4IZc5028568;
+        Tue, 17 Dec 2019 13:18:36 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com xBH4IZc5028568
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
         s=dec2015msa; t=1576556316;
-        bh=WdRasutc6Uyv9TaO7y3aMQzJKcAh6B5ft1yyxxZn5Yg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=AOoZeYUEJ0nthQZvmog6Ad0xws+VpKms9z7neq2LLvtHgjj3Qdgo3aSgGEBhEv1fH
-         1nnkIfk9WfL5z55VnyQONLrew7ajY5p9QjmF7e9de2icbVcS4IVvj2VzUswfFyA24/
-         GrsTYYJnW1R9ikz6vqtt+bCZnze1q6G//kAbGHkZs6Xy6S5bn1pJxqW5nxT2tI7koF
-         R9NnSI9Eg8oRb0/yJDpeiF1od4l82qUpfLKkSdaIkqR+W6mdtFQ+kbQR/3OcGW/fjv
-         EHbg+9cgGq3iM8nZT4WcdmS05jZhrjXS0K9zpkzn3B0lOZuL78QJgLhxghC5poIclk
-         vxnLRl5XnhdlA==
+        bh=25xyd3OdDOunsYOF2gLZCqtPxA+eTs4L4gtuLHu79xE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=SzqyV8QHiNQY/4+KrpHpC8JJxX0dsPxCyy8v56TRraBnEFT/Ag5AMZ+syLfEE2dgK
+         HBoe2ByyzL9zPkZBmZazWuXBAZNHrSdUbQeRQzY1IfQETskQyanZfjPYtVQCPy889+
+         iXOt8dWkqqkAucVctXJEjV/gHLrQ19pn81G0Hfu0OE5pErdSlUmwZq58W+GEdj+Su8
+         6M/yonnVsxPM6+nDvSt/PYRpeRrbTnTfvC31smgp5f3xqxk6OdaTWGgLidE5+kz3Bb
+         RmHpnQOJOxV8v4XX7+7kHv9d6nrnVPb8dF7YqZszLD81SQmaQb99YgjqW+EyI/TvgT
+         7AqIpmLa8+dAg==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
 Cc:     Masahiro Yamada <masahiroy@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] kconfig: fix too deep indentation in Makefile
-Date:   Tue, 17 Dec 2019 13:18:18 +0900
-Message-Id: <20191217041819.29732-1-masahiroy@kernel.org>
+Subject: [PATCH 2/2] kconfig: use $(PERL) in Makefile
+Date:   Tue, 17 Dec 2019 13:18:19 +0900
+Message-Id: <20191217041819.29732-2-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191217041819.29732-1-masahiroy@kernel.org>
+References: <20191217041819.29732-1-masahiroy@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The indentation for if ... else ... fi is too deep. Fix it.
+The top Makefile defines and exports the variable 'PERL'. Use it in
+case somebody wants to specify a particular version of perl from the
+command line.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- scripts/kconfig/Makefile | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ scripts/kconfig/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
-index 2f1a59fa5169..f826a257d576 100644
+index f826a257d576..953a2859302c 100644
 --- a/scripts/kconfig/Makefile
 +++ b/scripts/kconfig/Makefile
-@@ -48,15 +48,15 @@ build_xconfig: $(obj)/qconf
+@@ -47,7 +47,7 @@ build_gconfig: $(obj)/gconf
+ build_xconfig: $(obj)/qconf
  
  localyesconfig localmodconfig: $(obj)/conf
- 	$(Q)perl $(srctree)/$(src)/streamline_config.pl --$@ $(srctree) $(Kconfig) > .tmp.config
--	$(Q)if [ -f .config ]; then 					\
--			cmp -s .tmp.config .config ||			\
--			(mv -f .config .config.old.1;			\
--			 mv -f .tmp.config .config;			\
--			 $< $(silent) --oldconfig $(Kconfig);		\
--			 mv -f .config.old.1 .config.old)		\
--	else								\
--			mv -f .tmp.config .config;			\
--			$< $(silent) --oldconfig $(Kconfig);		\
-+	$(Q)if [ -f .config ]; then 				\
-+		cmp -s .tmp.config .config ||			\
-+		(mv -f .config .config.old.1;			\
-+		 mv -f .tmp.config .config;			\
-+		 $< $(silent) --oldconfig $(Kconfig);		\
-+		 mv -f .config.old.1 .config.old)		\
-+	else							\
-+		mv -f .tmp.config .config;			\
-+		$< $(silent) --oldconfig $(Kconfig);		\
- 	fi
- 	$(Q)rm -f .tmp.config
- 
+-	$(Q)perl $(srctree)/$(src)/streamline_config.pl --$@ $(srctree) $(Kconfig) > .tmp.config
++	$(Q)$(PERL) $(srctree)/$(src)/streamline_config.pl --$@ $(srctree) $(Kconfig) > .tmp.config
+ 	$(Q)if [ -f .config ]; then 				\
+ 		cmp -s .tmp.config .config ||			\
+ 		(mv -f .config .config.old.1;			\
 -- 
 2.17.1
 
