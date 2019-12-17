@@ -6,76 +6,172 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A21FC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5AB8C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B00221739
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9332B21739
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:56:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728567AbfLQN4V (ORCPT
+        id S1728671AbfLQN4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 08:56:21 -0500
-Received: from mout.kundenserver.de ([212.227.17.10]:43689 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726164AbfLQN4V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 08:56:21 -0500
-Received: from orion.localdomain ([95.114.21.161]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MeTsQ-1i8yVi3lOG-00aWiV; Tue, 17 Dec 2019 14:56:11 +0100
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     masahiroy@kernel.org, michal.lkml@markovi.net,
-        linux-kbuild@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: [PATCH v2] scripts: package: mkdebian: add missing rsync dependency
-Date:   Tue, 17 Dec 2019 14:55:39 +0100
-Message-Id: <20191217135539.17157-1-info@metux.net>
-X-Mailer: git-send-email 2.11.0
-X-Provags-ID: V03:K1:WUPSATQufwv3g8sriCrzFFny9krz3puHsUsVhC/8qZCoO8QvHna
- pcDXn1rS776PGDUel6/bOG0/+NOXCUi2FtJwRiCp3RFiPENrDV3ByJxTMEXhjHxWSP7D614
- r080F0CHrFXg2C6rt3G1UhEueRdXw1uUmK8fSeWTUre4BMxuKFKSGezkv6DWc4Uax9sXT6S
- xHb/wFVa4HCiOcM5MuFxA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:akmmA8gGnfA=:gadcc7LVAR0Su+9V+MKzLc
- PPWOhg5p2ou9NQ1kL8GR4JDM6/n/Ea7aMJrX6RA64ny8ARrQr5qQ1GOJeDqNL6AXQ8KU5xbC6
- wKGIvoOUqEKLQsPW2a6C1CcRgJzZEkKMZSQCYOMJlFIvVD534smOJvxZe1WSXT6kraaAPNZnT
- yX2Fcj1AbZmXR4m+gq/TmRxXS7rBzqRx5Tv1Ud1q9NMrmoopN87B/DT7aYq5T2ybFdUFbcvFS
- 0LWhTuc+tGaoopq/yDLGXNBTQrZbPjpxc/Z4ysA1UAuA5N6PT4lapB5MLYGza04BqR43sPjPx
- 2+kb9rcHA1skoadqOoD7f0TUqxUursjfxmMocZiPAC3dYOy467gw/6ci8qepH+fVpLSzwE212
- m8i3PxqFn/HWDOCiGv8alZKy7m0fM+4BrJGiuity7N0j21ZfuX4KrKxMKwBQEN1IFwR0L/KDw
- Zqed4ehrbW5tdFFe+KqMWJrPJ7rOS79T39PffLiqUAubZTBWA0gkjqJ5EmsS4pxzWpGftzsdC
- EC6t032IC7/VD8//MkIcHCXf6IOtJ9b6u5BrN2qGfBv22BBxESN3zEqeDyUNzJTB/aghmqsuA
- 26wpLNBrFwTDOMGGqF021X7n4N474+P1WIpb5xkrL14FkAx27M6sOYOvfQa47mSgou9wBsOz8
- 9gK5Eus47BXB3IPGIF1M61rQEZpQ5pFkHyQOgcRjI/HUcI3wXnnuiKYwPHtfP/VOBCh6RiJPC
- OSZDGCSnTy9858bEi725NL8ZjbMMRkAOk7z8Pz+jwP3M64C0v6nom9cyRnelx7AVRTUSb7LVS
- neW8I2kQKR89MrnXepuAnmXO74YUJ/a6HhU/CDvL8LLVJyAghLA3eGiqybEVbnjbGmCobqX+k
- bhgflO3FhirHN9ARfrRw==
+        Tue, 17 Dec 2019 08:56:33 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:48956 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728568AbfLQN4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 08:56:32 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id C086CF8CE4FD6D29296B;
+        Tue, 17 Dec 2019 21:56:30 +0800 (CST)
+Received: from DESKTOP-1NISPDV.china.huawei.com (10.173.221.248) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 17 Dec 2019 21:56:24 +0800
+From:   <yezengruan@huawei.com>
+To:     <yezengruan@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>,
+        <virtualization@lists.linux-foundation.org>
+CC:     <maz@kernel.org>, <james.morse@arm.com>, <linux@armlinux.org.uk>,
+        <suzuki.poulose@arm.com>, <julien.thierry.kdev@gmail.com>,
+        <catalin.marinas@arm.com>, <mark.rutland@arm.com>,
+        <will@kernel.org>, <steven.price@arm.com>,
+        <daniel.lezcano@linaro.org>
+Subject: [PATCH 4/5] KVM: arm64: Add interface to support vcpu preempted check
+Date:   Tue, 17 Dec 2019 21:55:48 +0800
+Message-ID: <20191217135549.3240-5-yezengruan@huawei.com>
+X-Mailer: git-send-email 2.23.0.windows.1
+In-Reply-To: <20191217135549.3240-1-yezengruan@huawei.com>
+References: <20191217135549.3240-1-yezengruan@huawei.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.173.221.248]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We've missed the dependency to rsync, so build fails on
-minimal containers.
+From: Zengruan Ye <yezengruan@huawei.com>
 
-Fixes: 59b2bd05f5f4 ("kbuild: add 'headers' target to build up uapi headers in usr/include")
-Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+This is to fix some lock holder preemption issues. Some other locks
+implementation do a spin loop before acquiring the lock itself.
+Currently kernel has an interface of bool vcpu_is_preempted(int cpu). It
+takes the cpu as parameter and return true if the cpu is preempted.
+Then kernel can break the spin loops upon the retval of vcpu_is_preempted.
+
+As kernel has used this interface, So lets support it.
+
+Signed-off-by: Zengruan Ye <yezengruan@huawei.com>
 ---
- scripts/package/mkdebian | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/include/asm/paravirt.h      | 12 ++++++++++++
+ arch/arm64/include/asm/spinlock.h      |  7 +++++++
+ arch/arm64/kernel/Makefile             |  2 +-
+ arch/arm64/kernel/paravirt-spinlocks.c | 13 +++++++++++++
+ arch/arm64/kernel/paravirt.c           |  4 +++-
+ 5 files changed, 36 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm64/kernel/paravirt-spinlocks.c
 
-diff --git a/scripts/package/mkdebian b/scripts/package/mkdebian
-index e0750b70453f..7c230016b08d 100755
---- a/scripts/package/mkdebian
-+++ b/scripts/package/mkdebian
-@@ -174,7 +174,7 @@ Source: $sourcename
- Section: kernel
- Priority: optional
- Maintainer: $maintainer
--Build-Depends: bc, kmod, cpio, bison, flex | flex:native $extra_build_depends
-+Build-Depends: bc, rsync, kmod, cpio, bison, flex | flex:native $extra_build_depends
- Homepage: http://www.kernel.org/
+diff --git a/arch/arm64/include/asm/paravirt.h b/arch/arm64/include/asm/paravirt.h
+index cf3a0fd7c1a7..7b1c81b544bb 100644
+--- a/arch/arm64/include/asm/paravirt.h
++++ b/arch/arm64/include/asm/paravirt.h
+@@ -11,8 +11,13 @@ struct pv_time_ops {
+ 	unsigned long long (*steal_clock)(int cpu);
+ };
  
- Package: $packagename
++struct pv_lock_ops {
++	bool (*vcpu_is_preempted)(int cpu);
++};
++
+ struct paravirt_patch_template {
+ 	struct pv_time_ops time;
++	struct pv_lock_ops lock;
+ };
+ 
+ extern struct paravirt_patch_template pv_ops;
+@@ -24,6 +29,13 @@ static inline u64 paravirt_steal_clock(int cpu)
+ 
+ int __init pv_time_init(void);
+ 
++__visible bool __native_vcpu_is_preempted(int cpu);
++
++static inline bool pv_vcpu_is_preempted(int cpu)
++{
++	return pv_ops.lock.vcpu_is_preempted(cpu);
++}
++
+ #else
+ 
+ #define pv_time_init() do {} while (0)
+diff --git a/arch/arm64/include/asm/spinlock.h b/arch/arm64/include/asm/spinlock.h
+index b093b287babf..45ff1b2949a6 100644
+--- a/arch/arm64/include/asm/spinlock.h
++++ b/arch/arm64/include/asm/spinlock.h
+@@ -7,8 +7,15 @@
+ 
+ #include <asm/qrwlock.h>
+ #include <asm/qspinlock.h>
++#include <asm/paravirt.h>
+ 
+ /* See include/linux/spinlock.h */
+ #define smp_mb__after_spinlock()	smp_mb()
+ 
++#define vcpu_is_preempted vcpu_is_preempted
++static inline bool vcpu_is_preempted(long cpu)
++{
++	return pv_vcpu_is_preempted(cpu);
++}
++
+ #endif /* __ASM_SPINLOCK_H */
+diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
+index fc6488660f64..b23cdae433a4 100644
+--- a/arch/arm64/kernel/Makefile
++++ b/arch/arm64/kernel/Makefile
+@@ -50,7 +50,7 @@ obj-$(CONFIG_ARMV8_DEPRECATED)		+= armv8_deprecated.o
+ obj-$(CONFIG_ACPI)			+= acpi.o
+ obj-$(CONFIG_ACPI_NUMA)			+= acpi_numa.o
+ obj-$(CONFIG_ARM64_ACPI_PARKING_PROTOCOL)	+= acpi_parking_protocol.o
+-obj-$(CONFIG_PARAVIRT)			+= paravirt.o
++obj-$(CONFIG_PARAVIRT)			+= paravirt.o paravirt-spinlocks.o
+ obj-$(CONFIG_RANDOMIZE_BASE)		+= kaslr.o
+ obj-$(CONFIG_HIBERNATION)		+= hibernate.o hibernate-asm.o
+ obj-$(CONFIG_KEXEC_CORE)		+= machine_kexec.o relocate_kernel.o	\
+diff --git a/arch/arm64/kernel/paravirt-spinlocks.c b/arch/arm64/kernel/paravirt-spinlocks.c
+new file mode 100644
+index 000000000000..718aa773d45c
+--- /dev/null
++++ b/arch/arm64/kernel/paravirt-spinlocks.c
+@@ -0,0 +1,13 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright(c) 2019 Huawei Technologies Co., Ltd
++ * Author: Zengruan Ye <yezengruan@huawei.com>
++ */
++
++#include <linux/spinlock.h>
++#include <asm/paravirt.h>
++
++__visible bool __native_vcpu_is_preempted(int cpu)
++{
++	return false;
++}
+diff --git a/arch/arm64/kernel/paravirt.c b/arch/arm64/kernel/paravirt.c
+index 1ef702b0be2d..d8f1ba8c22ce 100644
+--- a/arch/arm64/kernel/paravirt.c
++++ b/arch/arm64/kernel/paravirt.c
+@@ -26,7 +26,9 @@
+ struct static_key paravirt_steal_enabled;
+ struct static_key paravirt_steal_rq_enabled;
+ 
+-struct paravirt_patch_template pv_ops;
++struct paravirt_patch_template pv_ops = {
++	.lock.vcpu_is_preempted		= __native_vcpu_is_preempted,
++};
+ EXPORT_SYMBOL_GPL(pv_ops);
+ 
+ struct pv_time_stolen_time_region {
 -- 
-2.11.0
+2.19.1
+
 
