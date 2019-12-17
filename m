@@ -2,67 +2,61 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 915CDC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8308C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60D8421582
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:40:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576618815;
-	bh=Wc14UeokW5LvLYjVQcbtcF+Eacw8mOVXMJiT1hUDrzA=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=w5vFiJjvkW0D7tujg+IpHTEnnRa5Nrl1D/LDN4anN7xcb/FC2f8JK5LreOMHx3TS7
-	 aCuvBXVyxnhfE+ZDrynGUhf89nF0X32KhlsWp8+k+IRmdeOfmaHK4BoRzIx/6BovJi
-	 TcAZ/Eq3UvrzRLrolC1juRKh+09AVTIW1GTPVeaQ=
+	by mail.kernel.org (Postfix) with ESMTP id B18F02082E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:42:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728272AbfLQVkO (ORCPT
+        id S1727820AbfLQVm3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 16:40:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40678 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727988AbfLQVkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 16:40:13 -0500
-Subject: Re: [GIT PULL] Btrfs fixes for 5.5-rc3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576618813;
-        bh=Wc14UeokW5LvLYjVQcbtcF+Eacw8mOVXMJiT1hUDrzA=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=BnCVo0vvUOyrOS9YgeYat1dwueR3FS68EiBbAhTwLvAtCeLHwkWCYrAy1gU8wOzhY
-         CZMD8tqXPwWKZe/b+XlYKhB1a+iMVmtiUmAZhNPCyM61XPkdFnlrVNWUvrrA/AmXxx
-         pW6WGiJdMPFVgWECfqNFm875oWGKbyYS6HjU3F/M=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <cover.1576601647.git.dsterba@suse.com>
-References: <cover.1576601647.git.dsterba@suse.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <cover.1576601647.git.dsterba@suse.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.5-rc2-tag
-X-PR-Tracked-Commit-Id: fbd542971aa1e9ec33212afe1d9b4f1106cd85a1
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 2187f215ebaac73ddbd814696d7c7fa34f0c3de0
-Message-Id: <157661881317.22679.5708312827036168575.pr-tracker-bot@kernel.org>
-Date:   Tue, 17 Dec 2019 21:40:13 +0000
-To:     David Sterba <dsterba@suse.com>
-Cc:     torvalds@linux-foundation.org, David Sterba <dsterba@suse.com>,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+        Tue, 17 Dec 2019 16:42:29 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:43216 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726764AbfLQVm3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 16:42:29 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id E7051145DC505;
+        Tue, 17 Dec 2019 13:42:28 -0800 (PST)
+Date:   Tue, 17 Dec 2019 13:42:28 -0800 (PST)
+Message-Id: <20191217.134228.92517242104749153.davem@davemloft.net>
+To:     xiaojiangfeng@huawei.com
+Cc:     yisen.zhuang@huawei.com, salil.mehta@huawei.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        leeyou.li@huawei.com, nixiaoming@huawei.com
+Subject: Re: [PATCH] net: hisilicon: Fix a BUG trigered by wrong bytes_compl
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1576308182-121147-1-git-send-email-xiaojiangfeng@huawei.com>
+References: <1576308182-121147-1-git-send-email-xiaojiangfeng@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 17 Dec 2019 13:42:29 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 17 Dec 2019 18:08:16 +0100:
+From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Date: Sat, 14 Dec 2019 15:23:02 +0800
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.5-rc2-tag
+> In addition, I adjusted the position of "count++;"
+> to make the code more readable.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2187f215ebaac73ddbd814696d7c7fa34f0c3de0
+This is an unrelated cleanup and should not be done in the same change
+as your bug fix, submit this if you like for net-next after net has next
+been merged into net-next.
 
-Thank you!
+> 
+> Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+You need to provide an appropriate Fixes: tag.
