@@ -2,107 +2,192 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B27C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF8AC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3CC82082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:08:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="XlMSk7A8"
+	by mail.kernel.org (Postfix) with ESMTP id 6A59F20733
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:08:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728203AbfLQSIq (ORCPT
+        id S1728349AbfLQSIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 13:08:46 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41018 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727805AbfLQSIq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 13:08:46 -0500
-Received: by mail-io1-f65.google.com with SMTP id c16so12084881ioo.8
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 10:08:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZIJyvkgniYTRbfVXcX1GxMAL0QR6Z8+gBwpFH9B/c4o=;
-        b=XlMSk7A88wGRbKPmBiK+0N9lxDaruaINHiTIT+XEKts5pKGzy9dnHPdZZo2HouzJj2
-         UezX+XPJHeZ+F5CfDjtpJ5XdSDJtZ+koIOi7Sd+bzyL9Qgqr54KjVIz1Gz+5DB8dDNcj
-         qxT42ZDVS8ut17EXMMS23SKbC0c62AVtHHDsQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZIJyvkgniYTRbfVXcX1GxMAL0QR6Z8+gBwpFH9B/c4o=;
-        b=A1a3UCTU8IHvSn1Wr5NWo8rFljHySVHFp/hWTsYFSfPDIJzwJne0zNWFMrfA61DC4P
-         7VBPqZl8Ui4wPMoYrfxfWHJwctgnnMHtQMsu84WXQBBle1FnF+IL3R2RdCqfYTma2flo
-         cvOYPMmheq9lCqO7EClKiBeHFn/DXmgnp1MhuXtiavYhPvUThpL75mndjxV/KqnOlwvY
-         +tXv86f33fZSADxPZAcvienZxmX2jav/JaBYm0LRKzsL9zxJTQJLfR8wlJYm8ZQWmgnj
-         SiPsiVgAiHX3oR8nCC1ZUPokfJzq7gKS+/F5SS3uex6017AHDAGy3x+Rq1HPEHhRaBfM
-         WGGA==
-X-Gm-Message-State: APjAAAUYPihz7V7KgFx7SegeWt3Q+ufmLiwBD8TQwewOVhun6Z0jLWF8
-        zT5jTbfFeCHkvDnz8UftwhqBLnVF2hjJourY4Gl5Ag==
-X-Google-Smtp-Source: APXvYqxRQov73i2S2wI8koP3gXNvUCrtrWmcjpiZqNtU+6+fSqNO+yoiT72worXPzEwwctA/CUwaC06tsekviuWP3Kc=
-X-Received: by 2002:a6b:6f07:: with SMTP id k7mr4799644ioc.174.1576606125798;
- Tue, 17 Dec 2019 10:08:45 -0800 (PST)
+        Tue, 17 Dec 2019 13:08:51 -0500
+Received: from mx2.suse.de ([195.135.220.15]:58804 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727754AbfLQSIu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 13:08:50 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 88661AF05;
+        Tue, 17 Dec 2019 18:08:47 +0000 (UTC)
+From:   Michal Suchanek <msuchanek@suse.de>
+To:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Michal Suchanek <msuchanek@suse.de>
+Subject: [PATCH] scsi: blacklist: add VMware ESXi cdrom - broken tray emulation
+Date:   Tue, 17 Dec 2019 19:08:40 +0100
+Message-Id: <20191217180840.9414-1-msuchanek@suse.de>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <20191212145042.12694-1-labbott@redhat.com> <CAOi1vP9E2yLeFptg7o99usEi=x3kf=NnHYdURXPhX4vTXKCTCQ@mail.gmail.com>
- <fbe90a0b-cf24-8c0c-48eb-6183852dfbf1@redhat.com> <CAHk-=wh7Wuk9QCP6oH5Qc1a89_X6H1CHRK_OyB4NLmX7nRYJeA@mail.gmail.com>
- <cf4c9634-1503-d182-cb12-810fb969bc96@redhat.com> <20191212213609.GK4203@ZenIV.linux.org.uk>
- <CAJfpegv_zY6w6=pOL0x=sjuQmGae0ymOafZXjyAdNEHj+EKyNA@mail.gmail.com> <32253.1576604947@warthog.procyon.org.uk>
-In-Reply-To: <32253.1576604947@warthog.procyon.org.uk>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Tue, 17 Dec 2019 19:08:34 +0100
-Message-ID: <CAJfpeguwy+dyPmad8RE5JmUce8ecze8Kccj--YgXaEHThxeT4g@mail.gmail.com>
-Subject: Re: [PATCH] vfs: Don't reject unknown parameters
-To:     David Howells <dhowells@redhat.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Laura Abbott <labbott@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Jeremi Piotrowski <jeremi.piotrowski@gmail.com>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Phillip Lougher <phillip@squashfs.org.uk>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 6:49 PM David Howells <dhowells@redhat.com> wrote:
->
-> Miklos Szeredi <miklos@szeredi.hu> wrote:
->
-> > > So you could bloody well just leave recognition (and handling) of "source"
-> > > to the caller, leaving you with just this:
-> > >
-> > >         if (strcmp(param->key, "source") == 0)
-> > >                 return -ENOPARAM;
-> > >         /* Just log an error for backwards compatibility */
-> > >         errorf(fc, "%s: Unknown parameter '%s'", fc->fs_type->name, param->key);
-> > >         return 0;
-> >
-> > Which is fine for the old mount(2) interface.
-> >
-> > But we have a brand new API as well; do we really need to carry these
-> > backward compatibility issues forward?  I mean checking if a
-> > param/flag is supported or not *is* useful and lacking that check is
-> > the source of numerous headaches in legacy interfaces (just take the
-> > open(2) example and the introduction of O_TMPFILE).
->
-> The problem with what you're suggesting is that you can't then make
-> /sbin/mount to use the new syscalls because that would change userspace
-> behaviour - unless you either teach /sbin/mount which filesystems discard
-> which errors from unrecognised options or pass a flag to the kernel to shift
-> into or out of 'strict' mode.
+The WMware ESXi cdrom identifies itself as:
+sr 0:0:0:0: [sr0] scsi3-mmc drive: vendor: "NECVMWarVMware SATA CD001.00"
+model: "VMware SATA CD001.00"
+with the following get_capabilities print in sr.c:
+        sr_printk(KERN_INFO, cd,
+                  "scsi3-mmc drive: vendor: \"%s\" model: \"%s\"\n",
+                  cd->device->vendor, cd->device->model);
 
-The latter has minor cost, so we can add it easily.  Long term I think
-it makes sense to move this mess up to userspace, and hence let
-util-linux deal with it.
+The model looks like reliable identification while vendor does not.
 
-Thanks,
-Miklos
+The drive claims to have a tray and claims to be able to close it.
+However, the UI has no notion of a tray - when medium is ejected it is
+dropped in the floor and the user must select a medium again before the
+drive can be re-loaded.  On the kernel side the tray_move call to close
+the tray succeeds but the drive state does not change as a result of the
+call.
+
+The drive does not in fact emulate the tray state. There are two ways to
+get the medium state. One is the SCSI status:
+
+Physical drive:
+
+Fixed format, current; Sense key: Not Ready
+Additional sense: Medium not present - tray open
+Raw sense data (in hex):
+        70 00 02 00 00 00 00 0a  00 00 00 00 3a 02 00 00
+        00 00
+
+Fixed format, current; Sense key: Not Ready
+Additional sense: Medium not present - tray closed
+ Raw sense data (in hex):
+        70 00 02 00 00 00 00 0a  00 00 00 00 3a 01 00 00
+        00 00
+
+VMware ESXi:
+
+Fixed format, current; Sense key: Not Ready
+Additional sense: Medium not present
+  Info fld=0x0 [0]
+ Raw sense data (in hex):
+        f0 00 02 00 00 00 00 0a  00 00 00 00 3a 00 00 00
+        00 00
+
+So the tray state is not reported here. Other is medium status which the
+kernel prefers if available. Adding a print here gives:
+
+cdrom: get_media_event success: code = 0, door_open = 1, medium_present = 0
+
+door_open is interpreted as open tray. This is fine so long as tray_move
+would close the tray when requested or report an error which never
+happens on VMware ESXi servers (5.5 and 6.5 tested).
+
+This is a popular virtualization platform so a workaround is worthwhile.
+
+Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+---
+v2: new patch
+v3: change into a blacklist flag
+v4: fix vendor match condition
+---
+ drivers/scsi/scsi_devinfo.c | 15 +++++++++------
+ drivers/scsi/sr.c           |  6 ++++++
+ include/scsi/scsi_devinfo.h |  7 ++++++-
+ 3 files changed, 21 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/scsi/scsi_devinfo.c b/drivers/scsi/scsi_devinfo.c
+index df14597752ec..923f54b88d24 100644
+--- a/drivers/scsi/scsi_devinfo.c
++++ b/drivers/scsi/scsi_devinfo.c
+@@ -252,6 +252,7 @@ static struct {
+ 	{"TOSHIBA", "CD-ROM", NULL, BLIST_ISROM},
+ 	{"Traxdata", "CDR4120", NULL, BLIST_NOLUN},	/* locks up */
+ 	{"USB2.0", "SMARTMEDIA/XD", NULL, BLIST_FORCELUN | BLIST_INQUIRY_36},
++	{"VMware", "VMware", NULL, BLIST_NO_MATCH_VENDOR | BLIST_NO_TRAY},
+ 	{"WangDAT", "Model 2600", "01.7", BLIST_SELECT_NO_ATN},
+ 	{"WangDAT", "Model 3200", "02.2", BLIST_SELECT_NO_ATN},
+ 	{"WangDAT", "Model 1300", "02.4", BLIST_SELECT_NO_ATN},
+@@ -454,10 +455,11 @@ static struct scsi_dev_info_list *scsi_dev_info_list_find(const char *vendor,
+ 			/*
+ 			 * vendor strings must be an exact match
+ 			 */
+-			if (vmax != strnlen(devinfo->vendor,
+-					    sizeof(devinfo->vendor)) ||
+-			    memcmp(devinfo->vendor, vskip, vmax))
+-				continue;
++			if (!(devinfo->flags & BLIST_NO_MATCH_VENDOR))
++				if (vmax != strnlen(devinfo->vendor,
++						    sizeof(devinfo->vendor)) ||
++				    memcmp(devinfo->vendor, vskip, vmax))
++					continue;
+ 
+ 			/*
+ 			 * @model specifies the full string, and
+@@ -468,8 +470,9 @@ static struct scsi_dev_info_list *scsi_dev_info_list_find(const char *vendor,
+ 				continue;
+ 			return devinfo;
+ 		} else {
+-			if (!memcmp(devinfo->vendor, vendor,
+-				    sizeof(devinfo->vendor)) &&
++			if ((!memcmp(devinfo->vendor, vendor,
++				    sizeof(devinfo->vendor))
++			       || (devinfo->flags & BLIST_NO_MATCH_VENDOR)) &&
+ 			    !memcmp(devinfo->model, model,
+ 				    sizeof(devinfo->model)))
+ 				return devinfo;
+diff --git a/drivers/scsi/sr.c b/drivers/scsi/sr.c
+index 4664fdf75c0f..07c319494bf4 100644
+--- a/drivers/scsi/sr.c
++++ b/drivers/scsi/sr.c
+@@ -58,6 +58,7 @@
+ #include <scsi/scsi_eh.h>
+ #include <scsi/scsi_host.h>
+ #include <scsi/scsi_ioctl.h>	/* For the door lock/unlock commands */
++#include <scsi/scsi_devinfo.h>
+ 
+ #include "scsi_logging.h"
+ #include "sr.h"
+@@ -922,6 +923,11 @@ static void get_capabilities(struct scsi_cd *cd)
+ 		  buffer[n + 4] & 0x20 ? "xa/form2 " : "",	/* can read xa/from2 */
+ 		  buffer[n + 5] & 0x01 ? "cdda " : "", /* can read audio data */
+ 		  loadmech[buffer[n + 6] >> 5]);
++	if (cd->device->sdev_bflags & BLIST_NO_TRAY) {
++		buffer[n + 6] &= ~(0xff << 5);
++		sr_printk(KERN_INFO, cd,
++			  "Tray emulation bug workaround: tray -> caddy\n");
++	}
+ 	if ((buffer[n + 6] >> 5) == 0)
+ 		/* caddy drives can't close tray... */
+ 		cd->cdi.mask |= CDC_CLOSE_TRAY;
+diff --git a/include/scsi/scsi_devinfo.h b/include/scsi/scsi_devinfo.h
+index 3fdb322d4c4b..17ea96936cc6 100644
+--- a/include/scsi/scsi_devinfo.h
++++ b/include/scsi/scsi_devinfo.h
+@@ -67,8 +67,13 @@
+ #define BLIST_RETRY_ITF		((__force blist_flags_t)(1ULL << 32))
+ /* Always retry ABORTED_COMMAND with ASC 0xc1 */
+ #define BLIST_RETRY_ASC_C1	((__force blist_flags_t)(1ULL << 33))
++/* Device reports to have a tray but it cannot be operated reliably */
++#define BLIST_NO_TRAY		((__force blist_flags_t)(1ULL << 34))
++/* Vendor string is bogus */
++#define BLIST_NO_MATCH_VENDOR	((__force blist_flags_t)(1ULL << 35))
+ 
+-#define __BLIST_LAST_USED BLIST_RETRY_ASC_C1
++
++#define __BLIST_LAST_USED BLIST_NO_MATCH_VENDOR
+ 
+ #define __BLIST_HIGH_UNUSED (~(__BLIST_LAST_USED | \
+ 			       (__force blist_flags_t) \
+-- 
+2.23.0
+
