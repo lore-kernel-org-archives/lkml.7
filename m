@@ -2,160 +2,128 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25EC5C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65EF7C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECED421775
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 321F6218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:26:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yj4w6UN1"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="JMRMfVjd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727741AbfLQTZp (ORCPT
+        id S1727725AbfLQT0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 14:25:45 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:35334 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727652AbfLQTZm (ORCPT
+        Tue, 17 Dec 2019 14:26:54 -0500
+Received: from mta-p7.oit.umn.edu ([134.84.196.207]:41442 "EHLO
+        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726723AbfLQT0x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 14:25:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576610741;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=y/GSH9L+lqwwKL7tpQxfKMi8HXTb6wPETmNgD2aapTI=;
-        b=Yj4w6UN1z1X1lmSkcpQR60ZpawGS4sfw79OAgTnO72Xe3x7I8vq2sX9evfib0l8OaOy2qN
-        Bx+Za35xRd4RL7OhYvT/FiqmiLlD//qolutRmvtp3c2sa9RQcYt5tOLsrXH7NeED/bjF7r
-        1r543snuSVuVavvBS6eKPV8VlCM5LSY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-303-lXYPbbDPM76NbYRny-Qz6A-1; Tue, 17 Dec 2019 14:25:40 -0500
-X-MC-Unique: lXYPbbDPM76NbYRny-Qz6A-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 17 Dec 2019 14:26:53 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 47cp6j0M2Xz9vpbW
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 19:26:53 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p7.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id oefFbZIGSUvx for <linux-kernel@vger.kernel.org>;
+        Tue, 17 Dec 2019 13:26:52 -0600 (CST)
+Received: from mail-yb1-f198.google.com (mail-yb1-f198.google.com [209.85.219.198])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 03576107ACC7;
-        Tue, 17 Dec 2019 19:25:38 +0000 (UTC)
-Received: from x2.localnet (ovpn-116-249.phx2.redhat.com [10.3.116.249])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8B983610E1;
-        Tue, 17 Dec 2019 19:25:29 +0000 (UTC)
-From:   Steve Grubb <sgrubb@redhat.com>
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     Paul Moore <paul@paul-moore.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
-        Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        Dan Walsh <dwalsh@redhat.com>, mpatel@redhat.com
-Subject: Re: [PATCH ghak90 V7 06/21] audit: contid limit of 32k imposed to avoid DoS
-Date:   Tue, 17 Dec 2019 14:25:29 -0500
-Message-ID: <2318345.msVmMTmnKu@x2>
-Organization: Red Hat
-In-Reply-To: <20191217184541.tagssqt4zujbanf6@madcap2.tricolour.ca>
-References: <cover.1568834524.git.rgb@redhat.com> <CAHC9VhTrKVQNvTPoX5xdx-TUX_ukpMv2tNFFqLa2Njs17GuQMg@mail.gmail.com> <20191217184541.tagssqt4zujbanf6@madcap2.tricolour.ca>
+        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id 47cp6h6Q0Lz9vpZx
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 13:26:52 -0600 (CST)
+Received: by mail-yb1-f198.google.com with SMTP id v186so10084154ybc.4
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 11:26:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RTtM8DgoTYeomLpAB4HP6QUtZc/12vcFjV+hqAPb2JA=;
+        b=JMRMfVjdaC3RYJNHwnXub+ZSawvRo+0REws/XPzbXdE15VrnCgJHhpm2yilPHn9sRu
+         zuRYmp8T+/ZKT+7RcoW0zzy+IGmNBLi9nWg/iV5w+/iyl/E/ksnxD8lQ9P9V7qoR/Pq7
+         icvO6xv3kPqaptf9FBx6+BKBpP4Sm09WGi3ongTQZdqtSbICpjK/8SP6IeCpMQFAFD9V
+         eOxs9CWJmHHKO9gfSA+0LwjLxX+E784sq+mm3cxIeA0US7GRxEHxKNsQlS/8SswVY7E8
+         uWJaHdqJDH75PWdrLMlpaNXeMb1ljZxByamn9DVUHGqIulL+D0G0XTahjxGkYurn5Cjo
+         m+tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RTtM8DgoTYeomLpAB4HP6QUtZc/12vcFjV+hqAPb2JA=;
+        b=OkiFL4eGbV6o86HZLwIv5Sh+vP39rwBtcPwYqU/p97Db4FYdQXDBlv0Q7eFBtn560Q
+         A0g13e/KCOUxFI8gOanT4XOJOM3OR7VBnSkpsqvT1vBtFDxFaFESd8uwh2azibwfMGbp
+         0jGC50ZNHQIzqDcFnDHtobaBIDMLEZf5snihEvupZfMsxqD47GKzz0Jmpeo3AzyhsASS
+         zvclz3pQWWfOs7U0+hDC4SmYWwWuUZzwVFdbOirGoM5svLH8UKWKk8kjBe/r51GxXk7h
+         H+/IjQ2hsg6EJdUa0gROWVRQecO0LHUV9FzSq8NtFc4RdxttYFvADr9hsHz/hUZv+VRg
+         2/Fg==
+X-Gm-Message-State: APjAAAWeUJCLH67ng+8Ct6NzDa8dScfM3kUs1Y6JIphqYZERhgBN8fPY
+        DTJ1p3wZo9unycHP5AgtwqX1iYGuIrXpkQnL16zoKoeTHQjyR+gWm+XltHzcFaVBuf5mxRRj4H0
+        09LyVomsUJ14NTOrOqXqV/hn4lxCG
+X-Received: by 2002:a81:8785:: with SMTP id x127mr151813ywf.455.1576610812346;
+        Tue, 17 Dec 2019 11:26:52 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzgHpky9NVFPlztSbQ7vnaNKGoWCoY5ZJfFY1EWtEFon5WLK7ZI2IrVnQNR9SnF12NFAuyBng==
+X-Received: by 2002:a81:8785:: with SMTP id x127mr151793ywf.455.1576610812101;
+        Tue, 17 Dec 2019 11:26:52 -0800 (PST)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id i127sm10126017ywe.65.2019.12.17.11.26.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 11:26:51 -0800 (PST)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, Bart Van Assche <bvanassche@acm.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: RDMA/srpt: Fix incorrect pointer dereference
+Date:   Tue, 17 Dec 2019 13:26:49 -0600
+Message-Id: <20191217192649.24212-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, December 17, 2019 1:45:41 PM EST Richard Guy Briggs wrote:
-> On 2019-11-08 12:49, Paul Moore wrote:
-> > On Thu, Oct 24, 2019 at 5:23 PM Richard Guy Briggs <rgb@redhat.com> 
-wrote:
-> > > On 2019-10-10 20:38, Paul Moore wrote:
-> > > > On Fri, Sep 27, 2019 at 8:52 AM Neil Horman <nhorman@tuxdriver.com> 
-wrote:
-> > > > > On Wed, Sep 18, 2019 at 09:22:23PM -0400, Richard Guy Briggs wrote:
-> > > > > > Set an arbitrary limit on the number of audit container
-> > > > > > identifiers to
-> > > > > > limit abuse.
-> > > > > > 
-> > > > > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > > > > > ---
-> > > > > > kernel/audit.c | 8 ++++++++
-> > > > > > kernel/audit.h | 4 ++++
-> > > > > > 2 files changed, 12 insertions(+)
-> > > > > > 
-> > > > > > diff --git a/kernel/audit.c b/kernel/audit.c
-> > > > > > index 53d13d638c63..329916534dd2 100644
-> > > > > > --- a/kernel/audit.c
-> > > > > > +++ b/kernel/audit.c
-> > > > 
-> > > > ...
-> > > > 
-> > > > > > @@ -2465,6 +2472,7 @@ int audit_set_contid(struct task_struct
-> > > > > > *task, u64 contid) newcont->owner = current;
-> > > > > > refcount_set(&newcont->refcount, 1);
-> > > > > > list_add_rcu(&newcont->list, &audit_contid_hash[h]);
-> > > > > > +                             audit_contid_count++;
-> > > > > > } else {
-> > > > > > rc = -ENOMEM;
-> > > > > > goto conterror;
-> > > > > > diff --git a/kernel/audit.h b/kernel/audit.h
-> > > > > > index 162de8366b32..543f1334ba47 100644
-> > > > > > --- a/kernel/audit.h
-> > > > > > +++ b/kernel/audit.h
-> > > > > > @@ -219,6 +219,10 @@ static inline int audit_hash_contid(u64
-> > > > > > contid)
-> > > > > > return (contid & (AUDIT_CONTID_BUCKETS-1));
-> > > > > > }
-> > > > > > 
-> > > > > > +extern int audit_contid_count;
-> > > > > > +
-> > > > > > +#define AUDIT_CONTID_COUNT   1 << 16
-> > > > > > +
-> > > > > 
-> > > > > Just to ask the question, since it wasn't clear in the changelog,
-> > > > > what
-> > > > > abuse are you avoiding here?  Ostensibly you should be able to
-> > > > > create as
-> > > > > many container ids as you have space for, and the simple creation
-> > > > > of
-> > > > > container ids doesn't seem like the resource strain I would be
-> > > > > concerned
-> > > > > about here, given that an orchestrator can still create as many
-> > > > > containers as the system will otherwise allow, which will consume
-> > > > > significantly more ram/disk/etc.
-> > > > 
-> > > > I've got a similar question.  Up to this point in the patchset, there
-> > > > is a potential issue of hash bucket chain lengths and traversing them
-> > > > with a spinlock held, but it seems like we shouldn't be putting an
-> > > > arbitrary limit on audit container IDs unless we have a good reason
-> > > > for it.  If for some reason we do want to enforce a limit, it should
-> > > > probably be a tunable value like a sysctl, or similar.
-> > > 
-> > > Can you separate and clarify the concerns here?
-> > 
-> > "Why are you doing this?" is about as simple as I can pose the question.
-> 
-> It was more of a concern for total system resources, primarily memory,
-> but this is self-limiting and an arbitrary concern.
-> 
-> The other limit of depth of nesting has different concerns that arise
-> depending on how reporting is done.
+In srpt_queue_response(), the rdma channel ch is first
+dereferenced and then checked for NULL. This renders the
+assertion ineffective. This patch removes the assertion and
+avoids potential NULL pointer dereference.
 
-Well, there is a limit on the audit record size. So, whatever is being sent 
-in the record plus the size of the timestamp deducted from 
-MAX_AUDIT_MESSAGE_LENGTH (8970) is the limit. That can be divided by however 
-many ID's fit in that space and you have the real limit.
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+---
+ drivers/infiniband/ulp/srpt/ib_srpt.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
--Steve
-
--Steve
-
-
+diff --git a/drivers/infiniband/ulp/srpt/ib_srpt.c b/drivers/infiniband/ulp/srpt/ib_srpt.c
+index 23c782e3d49a..bbc6729c81c0 100644
+--- a/drivers/infiniband/ulp/srpt/ib_srpt.c
++++ b/drivers/infiniband/ulp/srpt/ib_srpt.c
+@@ -2803,15 +2803,17 @@ static void srpt_queue_response(struct se_cmd *cmd)
+ 	struct srpt_send_ioctx *ioctx =
+ 		container_of(cmd, struct srpt_send_ioctx, cmd);
+ 	struct srpt_rdma_ch *ch = ioctx->ch;
+-	struct srpt_device *sdev = ch->sport->sdev;
+ 	struct ib_send_wr send_wr, *first_wr = &send_wr;
+-	struct ib_sge sge;
+ 	enum srpt_command_state state;
++	struct srpt_device *sdev;
+ 	int resp_len, ret, i;
++	struct ib_sge sge;
+ 	u8 srp_tm_status;
+ 
+-	BUG_ON(!ch);
++	if (WARN_ON(!ch))
++		return;
+ 
++	sdev = ch->sport->sdev;
+ 	state = ioctx->state;
+ 	switch (state) {
+ 	case SRPT_STATE_NEW:
+-- 
+2.20.1
 
