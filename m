@@ -2,134 +2,123 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97615C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF787C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BF9821D7D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:30:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576600247;
-	bh=Ruri3xp18Qqifgv+llL3zcYiL8zvB2i9sWMuqfeuf+k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l5TtM7rb7Oc6Rc2ty4lx/OCjBj7dQio0rllCPWvArCr2BdEKf7IsHJJNWPRnJWqhI
-	 LiuGnXB2E11Ye5qnfi9FjidY3ORWKZSjgoCVr+EpqgzifYe/DKjmBq4lwsBjVpnO2a
-	 3nGhs92rD65p2Dam2UeKWu5U7TVQW1/AqLL4lxwg=
+	by mail.kernel.org (Postfix) with ESMTP id BF39421D7D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:30:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RAwPlPFV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728615AbfLQQaq (ORCPT
+        id S1728674AbfLQQat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 11:30:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56076 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728214AbfLQQaq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 11:30:46 -0500
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4FA721835;
-        Tue, 17 Dec 2019 16:30:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576600245;
-        bh=Ruri3xp18Qqifgv+llL3zcYiL8zvB2i9sWMuqfeuf+k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nRw8mIyNZPgJgNQKxV12br+jPuVGBsPbBd8R2L0MKGnXYkV1orl+4g4PRX8jLyGiA
-         v+xT5QbnJMl2Y1s4y14pHKMxPikne1O1PdI+mBzGegRfyl7xGgMgG1D1pJiZBNuXp4
-         ajpNr0TEJ7SPd/Ds9YsFCnruHmPfRfmzpvJqhxxY=
-Date:   Tue, 17 Dec 2019 11:30:43 -0500
-From:   Sasha Levin <sashal@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Andrea Merello <andrea.merello@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH 4.19 106/140] iio: ad7949: kill pointless
- "readback"-handling code
-Message-ID: <20191217163043.GH17708@sasha-vm>
-References: <20191216174747.111154704@linuxfoundation.org>
- <20191216174815.749524432@linuxfoundation.org>
- <CAN8YU5NrEbJx3yxBNoRWnwUiAYWffDp6gEcCcGUK+g4zjbHwEg@mail.gmail.com>
- <20191216184536.GB2411653@kroah.com>
+        Tue, 17 Dec 2019 11:30:49 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:20183 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728238AbfLQQas (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 11:30:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576600247;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ap670LPy12Q7/8a16LjycNst+xdpGA3dsChug73d5nU=;
+        b=RAwPlPFVOFnCvlvS29sQNfIV3r1O+u4sauDHlvec7aMbtr4io6zClXnE3YBrOg30s48T4U
+        FpmIpE3TvCAi/xB+WGtuRxxw9Dec9oMdbH4W7MwfLekfIgBv7R39ITh21IZxDXRbi/jQY5
+        MIZMabOCLrkBCGgc0frL+XljcdwlFRw=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-275-2MTth8rMOfeqzg_XIzMnCA-1; Tue, 17 Dec 2019 11:30:46 -0500
+X-MC-Unique: 2MTth8rMOfeqzg_XIzMnCA-1
+Received: by mail-wr1-f69.google.com with SMTP id h30so5565392wrh.5
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 08:30:45 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ap670LPy12Q7/8a16LjycNst+xdpGA3dsChug73d5nU=;
+        b=BYJ9jpbvgP+MB3B7UYfOn2RsdPcfA/tkNXpjIGtSZiBHnNv6j47Pv8QKXQ5BQY4mhi
+         THqFmJ2rANNVUtiHHWv+U3d7cKtyN3Wr2pFNqdmhe3W2FIXAo8LRuRwIf+tGpkMM0BEW
+         FZ9LVlRA6htxEgQmwLzUpfPll0Ytnu+kv2MVNzxfxnG3TPj6w+Y7Fovuau+RkN4mXLYq
+         4IoyVmeuCGD+SwE5CPw6CuzczY/NsyeMTyvivCkuePeeqX5s4AvCM9ijsDDeKNYKje9e
+         USe8G9IqMW8XX2Xo5NquXGU87eZXhTqcuUsrCS6TYvyhnLSVIJYBachLLrfmMJcSO+yw
+         SrhA==
+X-Gm-Message-State: APjAAAXXM2iLCHlD7NBe791hIhPzfY+ulUFBv1k1crQXa6gOg1lZ1JHH
+        Sn3uqxuQXTo0mACm9i8eFZVAMHG/GAYIuhLEpWlQ9wcC0zagW3rBDt4x0xus8xlHrKSFEsfdhFV
+        QgJaf6YNT4DypNtH33Ec5RujQ
+X-Received: by 2002:a1c:18e:: with SMTP id 136mr6629643wmb.53.1576600245051;
+        Tue, 17 Dec 2019 08:30:45 -0800 (PST)
+X-Google-Smtp-Source: APXvYqympyH0YgvfHQF/+r2TKl3XLNPcDWYbY9gSaina8WVxwgLNBW8wAR3QILILNbDyVG9ju439Kg==
+X-Received: by 2002:a1c:18e:: with SMTP id 136mr6629615wmb.53.1576600244834;
+        Tue, 17 Dec 2019 08:30:44 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:503f:4ffc:fc4a:f29a? ([2001:b07:6468:f312:503f:4ffc:fc4a:f29a])
+        by smtp.gmail.com with ESMTPSA id s128sm3518280wme.39.2019.12.17.08.30.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Dec 2019 08:30:44 -0800 (PST)
+Subject: Re: [PATCH RFC 04/15] KVM: Implement ring-based dirty memory tracking
+To:     Alex Williamson <alex.williamson@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     Peter Xu <peterx@redhat.com>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Wang, Zhenyu Z" <zhenyu.z.wang@intel.com>,
+        "Zhao, Yan Y" <yan.y.zhao@intel.com>
+References: <20191202201036.GJ4063@linux.intel.com>
+ <20191202211640.GF31681@xz-x1> <20191202215049.GB8120@linux.intel.com>
+ <fd882b9f-e510-ff0d-db43-eced75427fc6@redhat.com>
+ <20191203184600.GB19877@linux.intel.com>
+ <374f18f1-0592-9b70-adbb-0a72cc77d426@redhat.com>
+ <20191209215400.GA3352@xz-x1>
+ <affd9d84-1b84-0c25-c431-a075c58c33dc@redhat.com>
+ <20191210155259.GD3352@xz-x1>
+ <3e6cb5ec-66c0-00ab-b75e-ad2beb1d216d@redhat.com>
+ <20191215172124.GA83861@xz-x1>
+ <f117d46a-7528-ce32-8e46-4f3f35937079@redhat.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D645E55@SHSMSX104.ccr.corp.intel.com>
+ <20191217091837.744982d3@x1.home>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <10cc6fc6-c837-1a1a-a344-df97793b5ff5@redhat.com>
+Date:   Tue, 17 Dec 2019 17:30:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20191216184536.GB2411653@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191217091837.744982d3@x1.home>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 07:45:36PM +0100, Greg Kroah-Hartman wrote:
->On Mon, Dec 16, 2019 at 07:31:31PM +0100, Andrea Merello wrote:
->> Something nasty seems happening here: it looks like the commit message
->> and the actual diff have nothing to do one wrt the other; the commit
->> message is from one of my patches, the diff is against some unrelated
->> file.
+On 17/12/19 17:18, Alex Williamson wrote:
 >>
->> Il giorno lun 16 dic 2019 alle ore 19:05 Greg Kroah-Hartman
->> <gregkh@linuxfoundation.org> ha scritto:
->> >
->> > From: Meng Li <Meng.Li@windriver.com>
->> >
->> > [ Upstream commit c270bbf7bb9ddc4e2a51b3c56557c377c9ac79bc ]
->> >
->> > The device could be configured to spit out also the configuration word
->> > while reading the AD result value (in the same SPI xfer) - this is called
->> > "readback" in the device datasheet.
->> >
->> > The driver checks if readback is enabled and it eventually adjusts the SPI
->> > xfer length and it applies proper shifts to still get the data, discarding
->> > the configuration word.
->> >
->> > The readback option is actually never enabled (the driver disables it), so
->> > the said checks do not serve for any purpose.
->> >
->> > Since enabling the readback option seems not to provide any advantage (the
->> > driver entirely sets the configuration word without relying on any default
->> > value), just kill the said, unused, code.
->> >
->> > Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
->> > Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
->> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> > Signed-off-by: Sasha Levin <sashal@kernel.org>
->> > ---
->> >  drivers/edac/altera_edac.c | 1 +
->> >  1 file changed, 1 insertion(+)
->> >
->> > diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
->> > index 56de378ad13dc..c9108906bcdc0 100644
->> > --- a/drivers/edac/altera_edac.c
->> > +++ b/drivers/edac/altera_edac.c
->> > @@ -600,6 +600,7 @@ static const struct regmap_config s10_sdram_regmap_cfg = {
->> >         .reg_read = s10_protected_reg_read,
->> >         .reg_write = s10_protected_reg_write,
->> >         .use_single_rw = true,
->> > +       .fast_io = true,
->> >  };
->> >
->> >  static int altr_s10_sdram_probe(struct platform_device *pdev)
->> > --
->> > 2.20.1
->> >
->> >
->> >
->
->Wow, something went wrong.
->
->Sasha, can you look into this?
+>> Alex, if you are OK we'll work on such interface and move kvmgt to use it.
+>> After it's accepted, we can also mark pages dirty through this new interface
+>> in Kirti's dirty page tracking series.
+> I'm not sure what you're asking for, is it an interface for the host
+> CPU to read/write the memory backing of a mapped IOVA range without
+> pinning pages?  That seems like something like that would make sense for
+> an emulation model where a page does not need to be pinned for physical
+> DMA.  If you're asking more for an interface that understands the
+> userspace driver is a VM (ie. implied using a _guest postfix on the
+> function name) and knows about GPA mappings beyond the windows directly
+> mapped for device access, I'd not look fondly on such a request.
 
-Yikes, sorry - this is one of the commits that needed to be manually
-backported, and I must have copy pasted the wrong commit hash to use as
-the commit message.
+No, it would definitely be the former, using IOVAs to access guest
+memory---kvmgt is currently doing the latter by calling into KVM, and
+I'm not really fond of that either.
 
-This really is 56d9e7bd3fa0 ("EDAC/altera: Use fast register IO for S10
-IRQs") which needs to be in the stable tree, I'll go fix up the message.
+Paolo
 
--- 
-Thanks,
-Sasha
