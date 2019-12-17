@@ -2,72 +2,57 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E56C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 05:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71056C2D0C5
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 05:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 970302072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 05:18:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U3GzqEIW"
+	by mail.kernel.org (Postfix) with ESMTP id 46EEF2146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 05:23:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576560221;
+	bh=gTBRUZTAj08OEJZUmrm/ewxMPRPrawoPjsr3dDQQ800=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=VwttAp/1bZ/SHXDHO3rdRSlQilbamcxdY5gRR+7GaWI0sVOaTqB7xZnKlps3MAxWA
+	 T8SLKyDWavW5c1mrGeQF8BwGtMXdoI3eGuW208YE3DoUgCEKh3g4uPz3eoJO9nbVDX
+	 o7cU7PYNP55XcQfeZmZl0rm6Xrgi+CyxyQ7pxhn4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfLQFSr (ORCPT
+        id S1727092AbfLQFXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 00:18:47 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37258 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726143AbfLQFSr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 00:18:47 -0500
-Received: by mail-pl1-f195.google.com with SMTP id c23so5543634plz.4
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 21:18:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=uBQX+wvsPbLaiUS1zyynw0jvBJQmpOApGSy++FgD+D4=;
-        b=U3GzqEIWEGa4OHOdIVygDEojbTbLZh1XQ2gEV2EcpAFBFQkKJr9ZxsB6R+3lPqq4pX
-         znFtxDHYtEJwUlgWp29ucI4XGte4kD96mWpRQlGJA/jvC6qdFusv642Dg8qG7b+qlr5j
-         Hgp5VcB7N37R/XFA5YbMv2bVG+Ib5MBHUtAZi+UvtgqK1TA+YINqWHX3NzzKe/y7uWgY
-         EekYTTjUj6EX37pasv+0bhh7UaMK4ipmMV+4rfe0SxvqzVGEcw/y6H3SorT+qqpxf9Tv
-         hXi+eBdHopGyvYVaemCivi0GjrnsMYgJEtpe3t2wsDz7C43QFZBtWDx3C7pGvwMdzodf
-         FWqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=uBQX+wvsPbLaiUS1zyynw0jvBJQmpOApGSy++FgD+D4=;
-        b=sowx4aU73bctulTyRAUe5pdNwQrK/ortTH1fnPOIEQGZnggXOp5mODUR1Ea5iwIH0w
-         f+PawG4AHPJWH2IzkN2autl4EZgmwuWc0fkRmd6Hy3kGiuE3MwzSa7rHLm1PEmKO0mpU
-         nCFSWe58MOzGrZFzLtW6OzPuK2p2LkrZzQYrcn4oEq+Y99DFXrkXlKhm9J6vmTSuiIg3
-         DN4NpEUc0QniMgwdPo/CV2KIPd8mxSIyWPC9Rjbn7YICU+p5+a9TTbeQMsW4Kpgyr9Eh
-         eXdRd8d0HCqDQW/TA/ahTHX3FS+wFvoqCtU7Cyr86lz41ruB2AQh3VyRBMkygv5K+0nd
-         xNWQ==
-X-Gm-Message-State: APjAAAXZZYeNwS8F/5WPeWaowdeNiExtT/XbMq3QqRXWpswbJ7Qb9AbQ
-        yQ0Mz6HGyP3ZKD8TxrKLxi8=
-X-Google-Smtp-Source: APXvYqxur3DLLtcfzqXoeUKO7snYdyrMm0EK+BpxBiv+v6MXjld32TSUbmQfknza+eC9EcsaB9h+Xg==
-X-Received: by 2002:a17:90a:b318:: with SMTP id d24mr3990001pjr.142.1576559926619;
-        Mon, 16 Dec 2019 21:18:46 -0800 (PST)
-Received: from localhost.localdomain ([2408:821b:3c17:cb30:1977:b0f8:1014:66a0])
-        by smtp.gmail.com with ESMTPSA id w12sm24678960pfd.58.2019.12.16.21.18.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 21:18:46 -0800 (PST)
-From:   youling257 <youling257@gmail.com>
-To:     linux@dominikbrodowski.net
-Cc:     viro@zeniv.linux.org.uk, torvalds@linux-foundation.org,
-        gregkh@linuxfoundation.org, rafael@kernel.org,
-        akpm@linux-foundation.org, mingo@kernel.org,
-        linux-kernel@vger.kernel.org, youling257 <youling257@gmail.com>
-Subject: Re: [PATCH 4/5] init: unify opening /dev/console as stdin/stdout/stderr
-Date:   Tue, 17 Dec 2019 13:17:51 +0800
-Message-Id: <20191217051751.7998-1-youling257@gmail.com>
+        Tue, 17 Dec 2019 00:23:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49720 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726164AbfLQFXj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 00:23:39 -0500
+Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.30.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 889B12072B;
+        Tue, 17 Dec 2019 05:23:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576560218;
+        bh=gTBRUZTAj08OEJZUmrm/ewxMPRPrawoPjsr3dDQQ800=;
+        h=From:To:Cc:Subject:Date:From;
+        b=SSPOk5UWGjZTQF6arwuC5jG8hGqYNW46VN3fEW/EXcGphRgBAd8SLL9XMd9oAqlYc
+         5Uo82aPrM4+6gfnmxEVTCypMUFrPpQO2lb1/Bg8Sx8DHftePSkav+lA3nXRYLGUSQM
+         DUYxQIXqlSuL6dT78rQO6yCxRJfX0bvcZJZmzS50=
+Received: by wens.tw (Postfix, from userid 1000)
+        id 57AA75FCA8; Tue, 17 Dec 2019 13:23:36 +0800 (CST)
+From:   Chen-Yu Tsai <wens@kernel.org>
+To:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Cc:     Chen-Yu Tsai <wens@kernel.org>, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] thermal: rockchip: enable hwmon
+Date:   Tue, 17 Dec 2019 13:23:28 +0800
+Message-Id: <20191217052328.25633-1-wens@kernel.org>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191212181422.31033-1-linux@dominikbrodowski.net>
-References: <20191212181422.31033-1-linux@dominikbrodowski.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,7 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-it caused Androidx86 /system/bin/sh: No controlling tty: open /dev/tty: No such device or address
-/system/bin/sh: warning: won't have full job control
+From: Chen-Yu Tsai <wens@csie.org>
 
-Androidx86 alt+f1 root on tmpfs, alt+f2/f3 root on rootfs.
+By default of-based thermal driver do not have hwmon entries registered.
+
+Do this explicitly so users can use standard hwmon interfaces and tools
+to read the temperature.
+
+This is based on similar changes for bcm2835_thermal in commit
+d56c19d07e0b ("thermal: bcm2835: enable hwmon explicitly").
+
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+---
+ drivers/thermal/rockchip_thermal.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_thermal.c
+index 9ed8085bb792..d53ba7dabf16 100644
+--- a/drivers/thermal/rockchip_thermal.c
++++ b/drivers/thermal/rockchip_thermal.c
+@@ -19,6 +19,8 @@
+ #include <linux/mfd/syscon.h>
+ #include <linux/pinctrl/consumer.h>
+ 
++#include "thermal_hwmon.h"
++
+ /*
+  * If the temperature over a period of time High,
+  * the resulting TSHUT gave CRU module,let it reset the entire chip,
+@@ -1210,7 +1212,11 @@ rockchip_thermal_register_sensor(struct platform_device *pdev,
+ 		return error;
+ 	}
+ 
+-	return 0;
++	/* thermal_zone doesn't enable hwmon as default, enable it here */
++	sensor->tzd->tzp->no_hwmon = false;
++	error = thermal_add_hwmon_sysfs(sensor->tzd);
++
++	return error;
+ }
+ 
+ /**
+-- 
+2.24.0
+
