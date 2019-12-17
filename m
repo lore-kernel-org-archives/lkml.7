@@ -2,143 +2,230 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B21C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FCEFC2D0C5
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AB1F2176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:21:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D5D3218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:22:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bICWgS5r"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cL8b7J3n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727695AbfLQEVD (ORCPT
+        id S1727722AbfLQEWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 23:21:03 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46915 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbfLQEVC (ORCPT
+        Mon, 16 Dec 2019 23:22:33 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37590 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbfLQEWc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 23:21:02 -0500
-Received: by mail-pl1-f196.google.com with SMTP id k20so5455645pll.13;
-        Mon, 16 Dec 2019 20:21:02 -0800 (PST)
+        Mon, 16 Dec 2019 23:22:32 -0500
+Received: by mail-lf1-f68.google.com with SMTP id b15so5922935lfc.4
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 20:22:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1dhrWMKVs0KTJdvoLHIwqKx+SooldXEIUnlctNZyd24=;
-        b=bICWgS5rux5fbWmrgeTA24HGXKEgn2EDTPjH8yidgqQm8ZY7in7URgbA2LKrOF3LCQ
-         p6FhN8Ghce01yenIMuVhbo8JkmwPfeZobAw3R1cy0UVXXAotfceSxT6RlH3+krNvKJPS
-         smclAlJw4/hvKt1fXJa5wy1e5mZHcqwVnBqgd10xNrY9zGS8joLNkLD/ZJakMuG8HdjZ
-         Oiv2K4v7VDvQ47VAg7LMU4ROmJj9qunpXJUPzUARXdkwrPc7gmLc2kB7r0TbnQZnPe5Q
-         gQgmckd54pvK90mQ1ide7rpaF3iAFo8V7MvVfv4KsSCSMkEPqfAdJ8U/SEzvveWNCrsp
-         HVXw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=yLCgm6EIK/PewzFuy4vIAGJuhSX93YxxKWM+fKq1dL0=;
+        b=cL8b7J3nglQ0EfjAy78uPCN2UhJVO/Zc03XbdN3Alhsuk2AWjMgN5Dog3GCraurf6B
+         d4i3y92YpbkfhTEYNWyz21P0f7/H4m+0Hr6tQWw8jp9nYgjtfTVhPC26X0v2kZNPbQgw
+         8msd7+ALkGWsuyrFRigyCwmqxmTXJfZDvEnX6DtVR+SUFgmAckOWgfsVc9XtLSsDfHnW
+         oHzuaL9yvHn0G8+RoQyQG8UY8OID2DwVMA/UBQKHQap+jJaypCtTbQhzJmRtuhwwDmk/
+         myzdVoU4JoKuYsTrS6HbMGtWGMIoS7QHonPk+VzuPBPlREgWab11J3LcfPDunn5Nc1Uz
+         n3NQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1dhrWMKVs0KTJdvoLHIwqKx+SooldXEIUnlctNZyd24=;
-        b=FtyJpge8Muc9MBG7m87A99+SjXO+/bPrGEW9EMa7YO6m+lgjIA4KsKghaSK+BA3wMs
-         tDDKl4arzF1vyyIQuRCjZ9OabUTdQvCdPb9q6gYVfGIQBFYwho8acl2npBihS1/mi52b
-         MqyGZz0CmxStfHydbSG3mFEpK5K/yz8StAoM0nKWvUHt0QZMDcGYwcF5yt7CrmZv7unR
-         958SdGmueFUz2pSVnqRNrlutP6OwSiPLzIf8R74v6A2Va0rWrrv7sJJ6nKG8pw7QgwCG
-         mt/jwJoDt8y7iZRRdEgteR7Ye/WssWUx1emvk8pjLFC438OlAZhJb8GzBZf7FfiuE9vP
-         0D/g==
-X-Gm-Message-State: APjAAAUKN7WlP1VgC3RIAFd5u25c0BVzX34W/gP/6PyDtQ/ipFzB1fei
-        ukqXeTzjyR3vnBBBLdIhJVk=
-X-Google-Smtp-Source: APXvYqxVd0mKhRZCKOnZFBo0ppXpy8qS2wEsSanP647rWSVDfDnnJ+XyZh1+YSiEdqCDajdLbp5YDg==
-X-Received: by 2002:a17:90a:fa92:: with SMTP id cu18mr3710241pjb.114.1576556462069;
-        Mon, 16 Dec 2019 20:21:02 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id f8sm1076415pjg.28.2019.12.16.20.20.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Dec 2019 20:20:59 -0800 (PST)
-Subject: Re: [PATCH 1/1] hwmon: Driver for temperature sensors on SATA drives
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org,
-        Chris Healy <cphealy@gmail.com>
-References: <20191209052119.32072-1-linux@roeck-us.net>
- <20191209052119.32072-2-linux@roeck-us.net>
- <CACRpkdYjidQHB0=S_brDxH3k+qJ2mfXCTF9A3SVZkPvBaVg6JQ@mail.gmail.com>
- <yq1wob1jfjm.fsf@oracle.com>
- <541a7ddd-f4c9-5d5f-4f43-0ae5bc46aef6@roeck-us.net>
- <yq1tv5zhdn5.fsf@oracle.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <c5689126-46bc-b551-11d7-e5bd8c01f82c@roeck-us.net>
-Date:   Mon, 16 Dec 2019 20:20:57 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=yLCgm6EIK/PewzFuy4vIAGJuhSX93YxxKWM+fKq1dL0=;
+        b=OyuZoM6RjKZTlJknRtbzfG3V/Ic+6ydJIO4fwgynP+FSuFHgJTnIhFR0y3LzumO4FQ
+         Dux939eD2+03rgNDJqmdiIy8zTqkBIlTWuG4By3X3x7CIbfMQsh7PqVz80/UueUXcUS5
+         XJ+QE08hP1Hn/lInaKp8lrzpYSwP22rtUkIE6axkBUmgkCKkuBRiCep6ph7ZO0jjqSUU
+         XW0UM+BxE7LOIZjc0Y2o9gEyCbOQM1R4H+gtcjcerzEau3v8Wr3fFiFOLr7G8N9CC9X0
+         ji/8fNC1JPwvsng/BseIRponKoghY7ssFHyVGLrXVWnazC4KNyrTMeCUdVeRVQ2fYEm9
+         kyxw==
+X-Gm-Message-State: APjAAAVAbtPoB6qT03pf6+wacn9cZ7+NzbVd9KFp0WwkyUqPl9Gg8VfL
+        WQdCK6cNYKapwycgOKURXA5Zfmu4WuBuwHHDwT+Gzw==
+X-Google-Smtp-Source: APXvYqziug7DlE3EmO7LVeGdDOUj+1C01+LOsNufEsD6UKVq0X27bllk44WLGsbCW8ROGEA193vtUHjVlLJwlOBN7EY=
+X-Received: by 2002:a19:8a06:: with SMTP id m6mr1348555lfd.99.1576556550592;
+ Mon, 16 Dec 2019 20:22:30 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <yq1tv5zhdn5.fsf@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191216174848.701533383@linuxfoundation.org>
+In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 17 Dec 2019 09:52:19 +0530
+Message-ID: <CA+G9fYta8SH1EhzTSLshp1xx=MqmbSKPM2oXdV1qMSx=o2Tqsw@mail.gmail.com>
+Subject: Re: [PATCH 4.14 000/267] 4.14.159-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.com>, Arnd Bergmann <arnd@arndb.de>,
+        william.kucharski@oracle.com, bepvte@gmail.com, rppt@linux.ibm.com,
+        Jan Kara <jack@suse.cz>, rientjes@google.com,
+        dan.j.williams@intel.com, Vlastimil Babka <vbabka@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/16/19 6:47 PM, Martin K. Petersen wrote:
-> 
-> Guenter,
-> 
->> Not sure I understand what you mean with 'bazillions of sensors' and
->> 'sensor per scsi_device'. Can you elaborate ? I see one sensor per
->> drive, which is what I would expect.
-> 
-> Yes, but for storage arrays, hanging off of struct scsi_device means you
-> would get a sensor for each volume you create. Even though you
-> presumably only have one physical "box" to monitor (ignoring for a
-> moment that the drives inside the box may have their own sensors that
-> may or may not be visible to the host).
-> 
-> Also, multi-actuator disk drives are shipping. They present themselves
-> to the host as a target with multiple LUNs. Once again you'll probably
-> have one temperature sensor for the physical drive but many virtual
-> disks being presented to the OS. So you'd end up with for instance 4
-> sensors in hwmon even though there physically only is one.
-> 
-> It's a tough call since there may be hardware configurations where
-> distinct per-LUN temperature is valid (some quirky JBODs represent disk
-> drives as different LUNs instead of different targets, for instance).
-> 
-> How expensive will it be to have - say - 100 hwmon sensors instantiated
-> for a drive tray?
-> 
+Results from Linaro=E2=80=99s test farm.
+Regressions on arm and qemu_arm.
 
-If that drive tray has 100 physical drives, that is what I would expect
-to see. The most expensive part is the device entry, and there are already
-several of those for each scsi device. I have seen systems with hundreds
-of hwmon devices (backbone switches tend to be quite generous with
-voltage, current, power, and temperature sensors), so I am not
-particularly concerned in that regard. If there are 100 physical drives,
-you would actually want to see the temperature of each drive separately,
-as one of them might be overheating due to some internal failure.
+Regressions (compared to build v4.14.158)
+------------------------------------------------------------------------
+x15:
+  ltp-fs-tests:
+    * proc01
 
-If the storage array is represented to the system as single huge physical
-drive, which is then split into logical entities not related to physical
-drives, I guess that would represent a problem for system management overall.
-Maybe such boxes have separate thermal monitoring ? Either case, we
-have the question if it is possible to distinguish the pseudo-physical
-drive from the virtual drives (or volumes).
+qemu_arm:
+  libhugetlbfs:
+    * HUGETLB_SHM_yes-shmoverride_linked-2M-32
+    * LD_PRELOAD_libhugetlbfs.so-HUGETLB_SHM_yes-shmoverride_unlinked-2M-32
+    * counters.sh-2M-32
+    * truncate_sigbus_versus_oom-2M-32
 
-I would not mind to tie the hardware monitoring device to something else
-than the scsi device if the scsi device does not always have a physical
-representation. Is there a way to determine if a scsi device is virtual
-or real ? Obviously it does not make sense to report the same temperature
-multiple times, and we would want only a single temperature reported
-for each physical drive. At the same time, I absolutely want to avoid
-a situation where a single hardware monitoring device would report
-the temperature of multiple drives. The concern here is crossing OIR
-boundaries. A single hardware monitoring device should never cross
-an OIR boundary.
+  ltp-fs-tests:
+    * proc01
 
-Thanks,
-Guenter
+On Mon, 16 Dec 2019 at 23:21, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.14.159 release.
+> There are 267 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed, 18 Dec 2019 17:41:25 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.14.159-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.14.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
+> -------------
+> Pseudo-Shortlog of commits:
+>
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>     Linux 4.14.159-rc1
+
+> Michal Hocko <mhocko@suse.com>
+>     mm, thp, proc: report THP eligibility for each vma
+
+LTP proc01 :
+----------------
+[ 1205.874471] ICMPv6: process `proc01' is using deprecated sysctl
+(syscall) net.ipv6.neigh.default.base_reachable_time - use
+net.ipv6.neigh.default.base_reachable_time_ms instead
+[ 1205.905262] nr_pdflush_threads exported in /proc is scheduled for remova=
+l
+[ 1215.501494] Unable to handle kernel NULL pointer dereference at
+virtual address 000001d0
+[ 1215.505049] pgd =3D ea89e7c0
+[ 1215.506115] [000001d0] *pgd=3D6b2fc003, *pmd=3D13f916003
+[ 1215.508081] Internal error: Oops: 207 [#1] SMP ARM
+[ 1215.510200] Modules linked in: crc32_arm_ce sha2_arm_ce sha256_arm
+sha1_arm_ce sha1_arm aes_arm_ce crypto_simd cryptd fuse
+[ 1215.515303] CPU: 2 PID: 4950 Comm: proc01 Not tainted 4.14.159-rc1 #1
+[ 1215.518334] Hardware name: Generic DT based system
+[ 1215.520553] task: ea874240 task.stack: eb5e8000
+[ 1215.522681] PC is at transparent_hugepage_enabled+0x54/0xb4
+[ 1215.525237] LR is at transparent_hugepage_enabled+0x48/0xb4
+[ 1215.527831] pc : [<c060d1bc>]    lr : [<c060d1b0>]    psr: 600f0013
+[ 1215.530735] sp : eb5e9d68  ip : eb5e9d68  fp : eb5e9d7c
+[ 1215.533145] r10: 00000004  r9 : 00000000  r8 : 0000d6f0
+[ 1215.535559] r7 : ec74ff00  r6 : eb5e9de8  r5 : c1c0e320  r4 : c1c0e320
+[ 1215.538507] r3 : 00000000  r2 : 80000000  r1 : c165d6cd  r0 : 00000000
+[ 1215.541498] Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment=
+ user
+[ 1215.544839] Control: 30c5383d  Table: 6a89e7c0  DAC: dbadc0de
+[ 1215.547527] Process proc01 (pid: 4950, stack limit =3D 0xeb5e8220)
+[ 1215.550292] Stack: (0xeb5e9d68 to 0xeb5ea000)
+....
+[ 1215.631288] [<c060d1bc>] (transparent_hugepage_enabled) from
+[<c06a4ba8>] (show_smap+0x298/0x454)
+[ 1215.635364] [<c06a4ba8>] (show_smap) from [<c06a4da0>]
+(show_tid_smap+0x1c/0x20)
+[ 1215.638733] [<c06a4da0>] (show_tid_smap) from [<c065acb0>]
+(seq_read+0x3c4/0x520)
+[ 1215.642134] [<c065acb0>] (seq_read) from [<c062d274>] (__vfs_read+0x38/0=
+x12c)
+[ 1215.645410] [<c062d274>] (__vfs_read) from [<c062d404>] (vfs_read+0x9c/0=
+x164)
+[ 1215.648750] [<c062d404>] (vfs_read) from [<c062d9f0>] (SyS_read+0x5c/0xd=
+0)
+[ 1215.651906] [<c062d9f0>] (SyS_read) from [<c0408d20>]
+(ret_fast_syscall+0x0/0x28)
+[ 1215.655371] Code: ebff672f e3500000 1afffff7 e5943020 (e59331d0)
+[ 1215.658332] ---[ end trace 6088de7e307c3c4c ]---
+
+libhugetlbfs test suite caused this failure on arm32,
+---------------------------------------------------------------------
+
+malloc (2M: 32): [   45.815802] Unable to handle kernel NULL pointer
+dereference at virtual address 000001d0
+[   45.824194] pgd =3D ec174080
+[   45.827020] [000001d0] *pgd=3Dac29b003, *pmd=3Dfb076003
+[   45.831953] Internal error: Oops: 207 [#1] SMP ARM
+[   45.836773] Modules linked in: snd_soc_simple_card
+snd_soc_simple_card_utils snd_soc_core ac97_bus snd_pcm_dmaengine
+snd_pcm snd_timer snd soundcore fuse
+[   45.850649] CPU: 1 PID: 436 Comm: malloc Not tainted 4.14.159-rc1 #1
+[   45.857039] Hardware name: Generic DRA74X (Flattened Device Tree)
+[   45.863166] task: ec116a00 task.stack: ec64c000
+[   45.867731] PC is at transparent_hugepage_enabled+0x54/0xb4
+[   45.873333] LR is at transparent_hugepage_enabled+0x48/0xb4
+[   45.878934] pc : [<c060d1bc>]    lr : [<c060d1b0>]    psr: 600b0013
+[   45.885234] sp : ec64dd68  ip : ec64dd68  fp : ec64dd7c
+[   45.890487] r10: 00000004  r9 : 00000000  r8 : 0000d6f0
+[   45.895740] r7 : ca2a29c0  r6 : ec64dde8  r5 : c1c0e320  r4 : c1c0e320
+[   45.902301] r3 : 00000000  r2 : 80000000  r1 : c165d6cd  r0 : 00000000
+[   45.908864] Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment=
+ user
+[   45.916036] Control: 30c5387d  Table: ac174080  DAC: 55555555
+[   45.921813] Process malloc (pid: 436, stack limit =3D 0xec64c220)
+[   45.927765] Stack: (0xec64dd68 to 0xec64e000)
+..
+[   46.104774] [<c060d1bc>] (transparent_hugepage_enabled) from
+[<c06a4ba8>] (show_smap+0x298/0x454)
+[   46.113697] [<c06a4ba8>] (show_smap) from [<c06a4d80>]
+(show_pid_smap+0x1c/0x20)
+[   46.121136] [<c06a4d80>] (show_pid_smap) from [<c065a9d0>]
+(seq_read+0xe4/0x520)
+[   46.128576] [<c065a9d0>] (seq_read) from [<c062d274>] (__vfs_read+0x38/0=
+x12c)
+[   46.135752] [<c062d274>] (__vfs_read) from [<c062d404>] (vfs_read+0x9c/0=
+x164)
+[   46.142926] [<c062d404>] (vfs_read) from [<c062d9f0>] (SyS_read+0x5c/0xd=
+0)
+[   46.149842] [<c062d9f0>] (SyS_read) from [<c0408d20>]
+(ret_fast_syscall+0x0/0x28)
+[   46.157367] Code: ebff672f e3500000 1afffff7 e5943020 (e59331d0)
+[   46.163616] ---[ end trace c51b58b4d19d6cce ]---
+
+
+Full test log,
+https://lkft.validation.linaro.org/scheduler/job/1058080#L1126
+https://lkft.validation.linaro.org/scheduler/job/1057628#L5461
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
