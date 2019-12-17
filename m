@@ -2,106 +2,119 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F18BAC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 856A8C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCA6921582
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52B5121582
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:25:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="pEKyMxys"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfLQXXt (ORCPT
+        id S1726496AbfLQXZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 18:23:49 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:52668 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725940AbfLQXXt (ORCPT
+        Tue, 17 Dec 2019 18:25:33 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:55832 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726072AbfLQXZc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 18:23:49 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ihMBr-0003Ex-Td; Tue, 17 Dec 2019 23:23:44 +0000
-Date:   Tue, 17 Dec 2019 23:23:43 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Jesse Barnes <jsbarnes@google.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] remove ksys_mount() and ksys_dup()
-Message-ID: <20191217232343.GE4203@ZenIV.linux.org.uk>
-References: <20191212181422.31033-1-linux@dominikbrodowski.net>
- <157644301187.32474.6697415383792507785.pr-tracker-bot@kernel.org>
- <CAJmaN=ksaH5AgRUdVPGWKZzjEinU+goaCqedH1PW6OmKYc_TuA@mail.gmail.com>
- <CAHk-=wgjNqEfaVssn1Bd897dGFMVAjeg3tiDWZ7-z886fBCTLA@mail.gmail.com>
- <CAJmaN=mNVJVGPkwYvE6PmQSgT8o3Uo3=1iQm2NFicZ2fFC6Pxw@mail.gmail.com>
- <20191217225743.GD4203@ZenIV.linux.org.uk>
+        Tue, 17 Dec 2019 18:25:32 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576625132; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=YJEwly1+ltZDuvrkRrwDOT3yLn4EXIUPFyMApEtgGuc=; b=pEKyMxysmfBKyQC9dZAmvgCV3lBjsLFBWUUl5hADHxfcsLWvPsT7hbGbpPR0ZE0svKnyMwCa
+ ZKod/Kol6gplkYZ0XeW+SQcvGU8220RnPqCJvehC6T6LRd4tz8E73bdtH7wSrb/HR1+Sj6am
+ VaLLEB0kbVKb305dgl1OjgFADr8=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5df963eb.7fefd4384a08-smtp-out-n02;
+ Tue, 17 Dec 2019 23:25:31 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A9800C447A3; Tue, 17 Dec 2019 23:25:29 +0000 (UTC)
+Received: from [10.46.161.159] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: asutoshd)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 480D5C433CB;
+        Tue, 17 Dec 2019 23:25:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 480D5C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
+Subject: Re: [PATCH v1 2/2] scsi: ufs: disable interrupt during clock-gating
+To:     Stanley Chu <stanley.chu@mediatek.com>, linux-scsi@vger.kernel.org,
+        martin.petersen@oracle.com, avri.altman@wdc.com,
+        alim.akhtar@samsung.com, pedrom.sousa@synopsys.com,
+        jejb@linux.ibm.com, matthias.bgg@gmail.com
+Cc:     linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        beanhuo@micron.com, kuohong.wang@mediatek.com,
+        peter.wang@mediatek.com, chun-hung.wu@mediatek.com,
+        andy.teng@mediatek.com
+References: <1575721321-8071-1-git-send-email-stanley.chu@mediatek.com>
+ <1575721321-8071-3-git-send-email-stanley.chu@mediatek.com>
+From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
+Message-ID: <a36d111e-ef7f-9f9b-6f6a-692a9980103a@codeaurora.org>
+Date:   Tue, 17 Dec 2019 15:25:27 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191217225743.GD4203@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <1575721321-8071-3-git-send-email-stanley.chu@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 10:57:43PM +0000, Al Viro wrote:
-> On Tue, Dec 17, 2019 at 02:21:03PM -0800, Jesse Barnes wrote:
-> > > and yes,that particular problem only triggers when you have some odd
-> > > root filesystem without a /dev/console. Or a kernel config that
-> > > doesn't have those devices enabled at all.
-> > >
-> > > I delayed pulling it for a couple of days, but the branch was not in
-> > > linux-next, so my delay didn't make any difference, and all these
-> > > things only became obvious after I pulled. And while it was all
-> > > horribly buggy, it was only buggy for the "these cases don't happen in
-> > > a normal distro" case, so the regular use didn't show them.
-> > >
-> > > My bad. I shouldn't have pulled this, but it all looked very obvious
-> > > and trivial.
-> > 
-> > Oh I should have caught that too, I was looking right at it...
-> > 
-> > But anyway it looks like a nice cleanup with a few more fixes.
-> > Hopefully we can get there soon...
+On 12/7/2019 4:22 AM, Stanley Chu wrote:
+> Similar to suspend, ufshcd interrupt can be disabled since
+> there won't be any host controller transaction expected till
+> clocks ungated.
 > 
-> FWIW, this is precisely what I'd been talking about[*] - instead of
-> a plain "we are reusing the damn syscall, with fixed interface and
-> debugged by userland all the time" we'd got an open-coded analogue
-> that will be a headache (and a source of bitrot) for years.
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+> ---
+>   drivers/scsi/ufs/ufshcd.c | 4 ++++
+>   1 file changed, 4 insertions(+)
 > 
-> It's not a normal part of the kernel, and I bloody well remember
-> what kind of headache it had been before it got massaged to use
-> of plain syscalls.  Constant need to remember that a change in
-> VFS guts might break something in the code that is hell to
-> debug - getting test coverage for it is not fun at all.  As we
-> are seeing right now...
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index f80bd4e811cb..5de105e82c32 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -1490,6 +1490,8 @@ static void ufshcd_ungate_work(struct work_struct *work)
+>   	spin_unlock_irqrestore(hba->host->host_lock, flags);
+>   	ufshcd_setup_clocks(hba, true);
+>   
+> +	ufshcd_enable_irq(hba);
+> +
+>   	/* Exit from hibern8 */
+>   	if (ufshcd_can_hibern8_during_gating(hba)) {
+>   		/* Prevent gating in this path */
+> @@ -1636,6 +1638,8 @@ static void ufshcd_gate_work(struct work_struct *work)
+>   		ufshcd_set_link_hibern8(hba);
+>   	}
+>   
+> +	ufshcd_disable_irq(hba);
+> +
+>   	if (!ufshcd_is_link_active(hba))
+>   		ufshcd_setup_clocks(hba, false);
+>   	else
 > 
-> Seriously, these parts of init/* ought to be treated as userland code
-> that runs in kernel mode mostly because it's too much PITA to arrange
-> building a static ELF binary and linking it into the image.
-> 
-> 
-> [*] "IMO it's not a good idea.  Exposing the guts of fs/namespace.c to
-> what's essentially a userland code that happens to run in kernel thread
-> is asking for trouble - we'd been there and it had been hell to untangle."
-> 
-> My fault, I guess - should've been more specific than that ;-/
 
-PS: please, don't take that kind of stuff any further; right now all that
-thing does is marshalling the arguments.  At that level it's just going
-to be a headache while debugging that code.  Take it further (e.g.
-play with calling do_move_mount() et.al. instead of using MS_MOVE) and
-the headache will be ongoing, not just one-time.  "Just use ksys_...()
-in init/*.c" prevented that kind of stuff; now that this policy no
-longer holds, we'd better watch out for trouble in that area.
+Hi,
+Does this save significant power? I see that gate/ungate of clocks 
+happen far too frequently than suspend/resume.
 
-To quote the original patchset, "instead of pretending to be userspace,
-... can be implemented using using in-kernel functions" and exact same
-rationale would lead to a lot of trouble.  That's what I'm really
-worried about; let's not go there.
+Have you considered how much latency this would add to the 
+gating/ungating path?
+
+-asd
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+Linux Foundation Collaborative Project
