@@ -2,174 +2,114 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B387AC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB62C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AA6124655
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:49:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576594181;
-	bh=XVpHmNreLLNB+QbMt8qUng6dJKnd7LnmO8+bZHGXAgo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eaDyHTXhelJbdseIs5Cq2tYh8EcOL6N+xWg2M1/k2z5KQs+JX0cp9AaBxsmy7CuEO
-	 r2rWUwKYd/BFGXRWcO/w2VvjKX9jHHAXAUJuP3SkTLlfg+2JnS+hXrgOe7DB4rCJ/c
-	 Ad2ef9Hreqbob85+QMjmeMUdrLEv/sw4LSHsmCQ4=
+	by mail.kernel.org (Postfix) with ESMTP id AF4DE2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:50:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="Gi07bExC";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IN/hScjO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729379AbfLQOtk (ORCPT
+        id S1728912AbfLQOuK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:49:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41352 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729294AbfLQOtP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:49:15 -0500
-Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFA7E24655;
-        Tue, 17 Dec 2019 14:49:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576594155;
-        bh=XVpHmNreLLNB+QbMt8qUng6dJKnd7LnmO8+bZHGXAgo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2iaWDT/Mnc1M1kazFmjyxvoYpQtliqxaj+V8MKrsEWxvi18UA76eVJx4Me2JeGDZn
-         duGZ6+I7R0Bwgf+vhmY4doyjOfNOMLW12EUUTdWmsOxfajp4fXwsj0N6y0d2+16Z99
-         sTiVN5vtYHYyaKO11XN6vOK2TM6IhksrjSt0ij80=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 07/12] perf hists browser: Allow passing an initial hotkey
-Date:   Tue, 17 Dec 2019 11:48:23 -0300
-Message-Id: <20191217144828.2460-8-acme@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191217144828.2460-1-acme@kernel.org>
-References: <20191217144828.2460-1-acme@kernel.org>
+        Tue, 17 Dec 2019 09:50:10 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:42573 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727127AbfLQOuI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 09:50:08 -0500
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailnew.nyi.internal (Postfix) with ESMTP id A9CCD6395;
+        Tue, 17 Dec 2019 09:50:07 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Tue, 17 Dec 2019 09:50:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=4cIp2F9GZx6Q23WhgNIogqD6bW4
+        O5qNKgcTSyASlC+E=; b=Gi07bExCvjAN5nuKqBLZG/2jy5AaWcQ5uMg2TpS9idd
+        f2DZOM9lxNYv9Q2HIyHURhjyE3bAdY+wNeNSry5kiy6k0sqTi+z5AZTF46LMqSZI
+        9geI4AMMqQVK3ZxvSsg05x/u8nASRNEIpLq9mLRPJg3p5+cggr7QAiqegfRs6fm7
+        QNrXkJo64FxdVy+rT1GyGWzoLbQMBkEWBRUQKJe9PPynJIyOuNa/nyMn3TAqAUOO
+        /HDqWXqb5F8beAz6aLOSOmQzj/CwcM1Ll4HQspIBcdb/mrRcDGr6Dy8Bwjt/Qhjb
+        7y6nAjOfqn6c5TQ3KObMY0LG9RukN00NgofzHxBAQRQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=4cIp2F
+        9GZx6Q23WhgNIogqD6bW4O5qNKgcTSyASlC+E=; b=IN/hScjOmdr2LXAzMFThmY
+        ftq7zHz6ZA/FdebKUxQpUUk+NucUKkdRie8EoGP0M6ZXK/hNJubRrah3mU+7DDYg
+        ji4QQvChsgXOd/FpV+sNZLWb2utwe3vJM0y7SYtbccJCiZtCczioOyLW9a6exeTL
+        Da9qBZwlaFSDKmxdnCL+kyqVNOd/AGS345lkeQfvWpHWq/PwZ3Lco3xvNx9p5nLj
+        qeTNhJe49U0HM+oSy2ZX6o+I/VFCCodJpCyqAt2BCuF6iwCupzhdfU6LRGFZeq5k
+        N2eOivd26k9D5AuLw2hcmzu8H1TOzA3wwImkNZg9tj5EhQLLz4Du8WxkBA5nDnqA
+        ==
+X-ME-Sender: <xms:Huv4XaE6IPHj7TGEPCGQcFoOIxspKi3_l63oR-zCZNwWF1JLdQyXhQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddtjedgieekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvuffkfhggtggujgesthdtre
+    dttddtvdenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheq
+    necukfhppeekfedrkeeirdekledruddtjeenucfrrghrrghmpehmrghilhhfrhhomhepgh
+    hrvghgsehkrhhorghhrdgtohhmnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:Huv4XWeD6OmVXRDK67xOb7vsMpbu-4WODJ4MAJ2mFsAWOc43DngMKA>
+    <xmx:Huv4XbBgeDOnz5WCr93LDCx1d_VmpipmdFnHavoE60aJzEf4rE5JLw>
+    <xmx:Huv4XZZ54qRO_THZMvYkAtsSmgxGaFQtetIlonFHtaXeRd7O1TVp9g>
+    <xmx:H-v4XX43xI83jWx_a8WhLOU7T4gfG6swGrFd7heNb0ixK98hQnvaMQ>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 25BD880064;
+        Tue, 17 Dec 2019 09:50:05 -0500 (EST)
+Date:   Tue, 17 Dec 2019 15:50:03 +0100
+From:   Greg KH <greg@kroah.com>
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, dmitry.torokhov@gmail.com,
+        jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com,
+        arnd@arndb.de, masahiroy@kernel.org, michal.lkml@markovi.net,
+        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
+        linux-gpio@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH] RFC: platform driver registering via initcall tables
+Message-ID: <20191217145003.GB3639802@kroah.com>
+References: <20191217102219.29223-1-info@metux.net>
+ <20191217103152.GB2914497@kroah.com>
+ <6422bc88-6d0a-7b51-aaa7-640c6961b177@metux.net>
+ <20191217140646.GC3489463@kroah.com>
+ <d938b8e1-d9ce-9ad6-4178-86219e99d4df@metux.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d938b8e1-d9ce-9ad6-4178-86219e99d4df@metux.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+On Tue, Dec 17, 2019 at 03:43:56PM +0100, Enrico Weigelt, metux IT consult wrote:
+> On 17.12.19 15:06, Greg KH wrote:
+> 
+> > That's not needed, and you are going to break the implicit ordering we
+> > already have with link order.  
+> 
+> Ups, 10 points for you - I didn't consider that.
+> 
+> > You are going to have to figure out what
+> > bus type the driver is, to determine what segment it was in, to figure
+> > out what was loaded before what.
+> 
+> hmm, if it's just the ordering by bus type (but not within one bus
+> type), then it shouldn't be the big deal to fix, as I'll need one table
+> and register-loop per bus-type anyways.
+> 
+> By the way: how is there init order ensured with dynamically loaded
+> modules ? (for cases where there aren't explicit symbol dependencies)
 
-Sometimes we're in an outer code, like the main hists browser popup menu
-and the user follows a suggestion about using some hotkey, and that
-hotkey is really handled by hists_browser__run(), so allow for calling
-it with that hotkey, making it handle it instead of waiting for the user
-to press one.
+See the recent work in the driver core for DT fixes for that very issue.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-i0kwpuicoy4p1tyrw5k054zq@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-c2c.c       |  4 ++--
- tools/perf/ui/browsers/hists.c | 13 +++++++------
- tools/perf/ui/browsers/hists.h |  2 +-
- 3 files changed, 10 insertions(+), 9 deletions(-)
-
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index e69f44941aad..346351260c0b 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -2384,7 +2384,7 @@ static int perf_c2c__browse_cacheline(struct hist_entry *he)
- 	c2c_browser__update_nr_entries(browser);
- 
- 	while (1) {
--		key = hist_browser__run(browser, "? - help", true);
-+		key = hist_browser__run(browser, "? - help", true, 0);
- 
- 		switch (key) {
- 		case 's':
-@@ -2453,7 +2453,7 @@ static int perf_c2c__hists_browse(struct hists *hists)
- 	c2c_browser__update_nr_entries(browser);
- 
- 	while (1) {
--		key = hist_browser__run(browser, "? - help", true);
-+		key = hist_browser__run(browser, "? - help", true, 0);
- 
- 		switch (key) {
- 		case 'q':
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 6dfdd8d5a743..3b7af5a8d101 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -673,9 +673,8 @@ static int hist_browser__title(struct hist_browser *browser, char *bf, size_t si
- }
- 
- int hist_browser__run(struct hist_browser *browser, const char *help,
--		      bool warn_lost_event)
-+		      bool warn_lost_event, int key)
- {
--	int key;
- 	char title[160];
- 	struct hist_browser_timer *hbt = browser->hbt;
- 	int delay_secs = hbt ? hbt->refresh : 0;
-@@ -688,9 +687,12 @@ int hist_browser__run(struct hist_browser *browser, const char *help,
- 	if (ui_browser__show(&browser->b, title, "%s", help) < 0)
- 		return -1;
- 
-+	if (key)
-+		goto do_hotkey;
-+
- 	while (1) {
- 		key = ui_browser__run(&browser->b, delay_secs);
--
-+do_hotkey:
- 		switch (key) {
- 		case K_TIMER: {
- 			u64 nr_entries;
-@@ -2994,8 +2996,7 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
- 
- 		nr_options = 0;
- 
--		key = hist_browser__run(browser, helpline,
--					warn_lost_event);
-+		key = hist_browser__run(browser, helpline, warn_lost_event, 0);
- 
- 		if (browser->he_selection != NULL) {
- 			thread = hist_browser__selected_thread(browser);
-@@ -3573,7 +3574,7 @@ int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
- 	memset(&action, 0, sizeof(action));
- 
- 	while (1) {
--		key = hist_browser__run(browser, "? - help", true);
-+		key = hist_browser__run(browser, "? - help", true, 0);
- 
- 		switch (key) {
- 		case 'q':
-diff --git a/tools/perf/ui/browsers/hists.h b/tools/perf/ui/browsers/hists.h
-index 078f2f2c7abd..1e938d9ffa5e 100644
---- a/tools/perf/ui/browsers/hists.h
-+++ b/tools/perf/ui/browsers/hists.h
-@@ -34,7 +34,7 @@ struct hist_browser {
- struct hist_browser *hist_browser__new(struct hists *hists);
- void hist_browser__delete(struct hist_browser *browser);
- int hist_browser__run(struct hist_browser *browser, const char *help,
--		      bool warn_lost_event);
-+		      bool warn_lost_event, int key);
- void hist_browser__init(struct hist_browser *browser,
- 			struct hists *hists);
- #endif /* _PERF_UI_BROWSER_HISTS_H_ */
--- 
-2.21.0
-
+greg k-h
