@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D41BCC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FC9C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A72CE21582
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6629D2146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:41:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728762AbfLQUla (ORCPT
+        id S1728773AbfLQUld (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 15:41:30 -0500
-Received: from mga07.intel.com ([134.134.136.100]:63051 "EHLO mga07.intel.com"
+        Tue, 17 Dec 2019 15:41:33 -0500
+Received: from mga01.intel.com ([192.55.52.88]:19766 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728482AbfLQUkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728499AbfLQUkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 17 Dec 2019 15:40:45 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 12:40:43 -0800
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 12:40:44 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,326,1571727600"; 
-   d="scan'208";a="389952603"
+   d="scan'208";a="389952629"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by orsmga005.jf.intel.com with ESMTP; 17 Dec 2019 12:40:42 -0800
+  by orsmga005.jf.intel.com with ESMTP; 17 Dec 2019 12:40:43 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     James Hogan <jhogan@kernel.org>,
         Paul Mackerras <paulus@ozlabs.org>,
@@ -50,9 +50,9 @@ Cc:     David Hildenbrand <david@redhat.com>,
         kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
         Christoffer Dall <christoffer.dall@arm.com>,
         =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>
-Subject: [PATCH v4 10/19] KVM: Drop "const" attribute from old memslot in commit_memory_region()
-Date:   Tue, 17 Dec 2019 12:40:32 -0800
-Message-Id: <20191217204041.10815-11-sean.j.christopherson@intel.com>
+Subject: [PATCH v4 18/19] KVM: Dynamically size memslot array based on number of used slots
+Date:   Tue, 17 Dec 2019 12:40:40 -0800
+Message-Id: <20191217204041.10815-19-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191217204041.10815-1-sean.j.christopherson@intel.com>
 References: <20191217204041.10815-1-sean.j.christopherson@intel.com>
@@ -63,114 +63,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop the "const" attribute from @old in kvm_arch_commit_memory_region()
-to allow arch specific code to free arch specific resources in the old
-memslot without having to cast away the attribute.  Freeing resources in
-kvm_arch_commit_memory_region() paves the way for simplifying
-kvm_free_memslot() by eliminating the last usage of its @dont param.
+Now that the memslot logic doesn't assume memslots are always non-NULL,
+dynamically size the array of memslots instead of unconditionally
+allocating memory for the maximum number of memslots.
 
+Note, because a to-be-deleted memslot must first be invalidated, the
+array size cannot be immediately reduced when deleting a memslot.
+However, consecutive deletions will realize the memory savings, i.e.
+a second deletion will trim the entry.
+
+Tested-by: Christoffer Dall <christoffer.dall@arm.com>
+Tested-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/mips/kvm/mips.c       | 2 +-
- arch/powerpc/kvm/powerpc.c | 2 +-
- arch/s390/kvm/kvm-s390.c   | 2 +-
- arch/x86/kvm/x86.c         | 2 +-
- include/linux/kvm_host.h   | 2 +-
- virt/kvm/arm/mmu.c         | 2 +-
- virt/kvm/kvm_main.c        | 2 +-
- 7 files changed, 7 insertions(+), 7 deletions(-)
+ include/linux/kvm_host.h |  2 +-
+ virt/kvm/kvm_main.c      | 31 ++++++++++++++++++++++++++++---
+ 2 files changed, 29 insertions(+), 4 deletions(-)
 
-diff --git a/arch/mips/kvm/mips.c b/arch/mips/kvm/mips.c
-index 713e5465edb0..108ed14cbcac 100644
---- a/arch/mips/kvm/mips.c
-+++ b/arch/mips/kvm/mips.c
-@@ -224,7 +224,7 @@ int kvm_arch_prepare_memory_region(struct kvm *kvm,
- 
- void kvm_arch_commit_memory_region(struct kvm *kvm,
- 				   const struct kvm_userspace_memory_region *mem,
--				   const struct kvm_memory_slot *old,
-+				   struct kvm_memory_slot *old,
- 				   const struct kvm_memory_slot *new,
- 				   enum kvm_mr_change change)
- {
-diff --git a/arch/powerpc/kvm/powerpc.c b/arch/powerpc/kvm/powerpc.c
-index c922711a6dd8..6fd61b9dd783 100644
---- a/arch/powerpc/kvm/powerpc.c
-+++ b/arch/powerpc/kvm/powerpc.c
-@@ -701,7 +701,7 @@ int kvm_arch_prepare_memory_region(struct kvm *kvm,
- 
- void kvm_arch_commit_memory_region(struct kvm *kvm,
- 				   const struct kvm_userspace_memory_region *mem,
--				   const struct kvm_memory_slot *old,
-+				   struct kvm_memory_slot *old,
- 				   const struct kvm_memory_slot *new,
- 				   enum kvm_mr_change change)
- {
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index 1be45bad7849..a5b917b72ca0 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -4516,7 +4516,7 @@ int kvm_arch_prepare_memory_region(struct kvm *kvm,
- 
- void kvm_arch_commit_memory_region(struct kvm *kvm,
- 				const struct kvm_userspace_memory_region *mem,
--				const struct kvm_memory_slot *old,
-+				struct kvm_memory_slot *old,
- 				const struct kvm_memory_slot *new,
- 				enum kvm_mr_change change)
- {
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 4892ded361b3..0911b2f634c5 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -9842,7 +9842,7 @@ static void kvm_mmu_slot_apply_flags(struct kvm *kvm,
- 
- void kvm_arch_commit_memory_region(struct kvm *kvm,
- 				const struct kvm_userspace_memory_region *mem,
--				const struct kvm_memory_slot *old,
-+				struct kvm_memory_slot *old,
- 				const struct kvm_memory_slot *new,
- 				enum kvm_mr_change change)
- {
 diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 46dd713da634..7d86dbb467f7 100644
+index 49b6b457a157..eecfa1fe0fc7 100644
 --- a/include/linux/kvm_host.h
 +++ b/include/linux/kvm_host.h
-@@ -681,7 +681,7 @@ int kvm_arch_prepare_memory_region(struct kvm *kvm,
- 				enum kvm_mr_change change);
- void kvm_arch_commit_memory_region(struct kvm *kvm,
- 				const struct kvm_userspace_memory_region *mem,
--				const struct kvm_memory_slot *old,
-+				struct kvm_memory_slot *old,
- 				const struct kvm_memory_slot *new,
- 				enum kvm_mr_change change);
- bool kvm_largepages_enabled(void);
-diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
-index f264de85f648..4941746929ab 100644
---- a/virt/kvm/arm/mmu.c
-+++ b/virt/kvm/arm/mmu.c
-@@ -2246,7 +2246,7 @@ int kvm_mmu_init(void)
+@@ -433,11 +433,11 @@ static inline int kvm_arch_vcpu_memslots_id(struct kvm_vcpu *vcpu)
+  */
+ struct kvm_memslots {
+ 	u64 generation;
+-	struct kvm_memory_slot memslots[KVM_MEM_SLOTS_NUM];
+ 	/* The mapping table from slot id to the index in memslots[]. */
+ 	short id_to_index[KVM_MEM_SLOTS_NUM];
+ 	atomic_t lru_slot;
+ 	int used_slots;
++	struct kvm_memory_slot memslots[];
+ };
  
- void kvm_arch_commit_memory_region(struct kvm *kvm,
- 				   const struct kvm_userspace_memory_region *mem,
--				   const struct kvm_memory_slot *old,
-+				   struct kvm_memory_slot *old,
- 				   const struct kvm_memory_slot *new,
- 				   enum kvm_mr_change change)
- {
+ struct kvm {
 diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 3663ac229c4d..acf52fa16500 100644
+index a1566c5cee26..57926579551b 100644
 --- a/virt/kvm/kvm_main.c
 +++ b/virt/kvm/kvm_main.c
-@@ -988,7 +988,7 @@ static struct kvm_memslots *install_new_memslots(struct kvm *kvm,
+@@ -569,7 +569,7 @@ static struct kvm_memslots *kvm_alloc_memslots(void)
+ 		return NULL;
  
+ 	for (i = 0; i < KVM_MEM_SLOTS_NUM; i++)
+-		slots->id_to_index[i] = slots->memslots[i].id = -1;
++		slots->id_to_index[i] = -1;
+ 
+ 	return slots;
+ }
+@@ -1081,6 +1081,32 @@ static struct kvm_memslots *install_new_memslots(struct kvm *kvm,
+ 	return old_memslots;
+ }
+ 
++/*
++ * Note, at a minimum, the current number of used slots must be allocated, even
++ * when deleting a memslot, as we need a complete duplicate of the memslots for
++ * use when invalidating a memslot prior to deleting/moving the memslot.
++ */
++static struct kvm_memslots *kvm_dup_memslots(struct kvm_memslots *old,
++					     enum kvm_mr_change change)
++{
++	struct kvm_memslots *slots;
++	size_t old_size, new_size;
++
++	old_size = sizeof(struct kvm_memslots) +
++		   (sizeof(struct kvm_memory_slot) * old->used_slots);
++
++	if (change == KVM_MR_CREATE)
++		new_size = old_size + sizeof(struct kvm_memory_slot);
++	else
++		new_size = old_size;
++
++	slots = kvzalloc(new_size, GFP_KERNEL_ACCOUNT);
++	if (likely(slots))
++		memcpy(slots, old, old_size);
++
++	return slots;
++}
++
  static int kvm_set_memslot(struct kvm *kvm,
  			   const struct kvm_userspace_memory_region *mem,
--			   const struct kvm_memory_slot *old,
-+			   struct kvm_memory_slot *old,
- 			   struct kvm_memory_slot *new, int as_id,
- 			   enum kvm_mr_change change)
- {
+ 			   struct kvm_memory_slot *old,
+@@ -1091,10 +1117,9 @@ static int kvm_set_memslot(struct kvm *kvm,
+ 	struct kvm_memslots *slots;
+ 	int r;
+ 
+-	slots = kvzalloc(sizeof(struct kvm_memslots), GFP_KERNEL_ACCOUNT);
++	slots = kvm_dup_memslots(__kvm_memslots(kvm, as_id), change);
+ 	if (!slots)
+ 		return -ENOMEM;
+-	memcpy(slots, __kvm_memslots(kvm, as_id), sizeof(struct kvm_memslots));
+ 
+ 	if (change == KVM_MR_DELETE || change == KVM_MR_MOVE) {
+ 		/*
 -- 
 2.24.1
 
