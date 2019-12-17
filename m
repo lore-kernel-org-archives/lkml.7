@@ -2,108 +2,105 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BDAC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 058DAC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B451218AC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:32:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0EB521835
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:33:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="vTaRVEwi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KEu6GFBq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728374AbfLQNcp (ORCPT
+        id S1728394AbfLQNdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 08:32:45 -0500
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:45638 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727286AbfLQNcn (ORCPT
+        Tue, 17 Dec 2019 08:33:36 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:40278 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726164AbfLQNdf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 08:32:43 -0500
+        Tue, 17 Dec 2019 08:33:35 -0500
+Received: by mail-pj1-f68.google.com with SMTP id s35so4595723pjb.7;
+        Tue, 17 Dec 2019 05:33:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1576589563; x=1608125563;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=xFBgFF359VKnRAXaxtzuRfTSQoaKQ3ji8za7lRotgcg=;
-  b=vTaRVEwibQNmo9msk9I0p55K5TKc+gJ8SRGh3cTo/LI+YYgWxZHxKyPb
-   dmzKmdfg8BYwIiyaxMadKJa34Mi0H/g9T9tNa9W2pvZJy+stCYJgrW/yS
-   heLMgZjVRnHoxn6oQ3lcG7BGHYfxW0EieTyRBg8A06qnVpAnz39HNFI5T
-   Q=;
-IronPort-SDR: 97FMGiWWh4D2HG4sFPz60bCjTRTep23ZDvDxTj7NuVeDDXnY0adm9qcQvFrCAQnLxQcJRhgZia
- 6Iqi+PNSLcLg==
-X-IronPort-AV: E=Sophos;i="5.69,325,1571702400"; 
-   d="scan'208";a="14007166"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-715bee71.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 17 Dec 2019 13:32:32 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-715bee71.us-east-1.amazon.com (Postfix) with ESMTPS id 9B9ABA1CFC;
-        Tue, 17 Dec 2019 13:32:29 +0000 (UTC)
-Received: from EX13D32EUB003.ant.amazon.com (10.43.166.165) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1236.3; Tue, 17 Dec 2019 13:32:29 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
- EX13D32EUB003.ant.amazon.com (10.43.166.165) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 17 Dec 2019 13:32:28 +0000
-Received: from u2f063a87eabd5f.cbg10.amazon.com (10.125.106.135) by
- mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP Server id
- 15.0.1367.3 via Frontend Transport; Tue, 17 Dec 2019 13:32:26 +0000
-From:   Paul Durrant <pdurrant@amazon.com>
-To:     <xen-devel@lists.xenproject.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Paul Durrant <pdurrant@amazon.com>, Wei Liu <wei.liu@kernel.org>,
-        "Paul Durrant" <paul@xen.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH net-next 3/3] xen-netback: remove 'hotplug-status' once it has served its purpose
-Date:   Tue, 17 Dec 2019 13:32:18 +0000
-Message-ID: <20191217133218.27085-4-pdurrant@amazon.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191217133218.27085-1-pdurrant@amazon.com>
-References: <20191217133218.27085-1-pdurrant@amazon.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=44FjkOn/XLQ+zFbEeie+qKzDhgYPpksuKEmuM6SY0/I=;
+        b=KEu6GFBqmNG75zG+7przID6KXw0HQFuiUppkDgzIlWE2qT3An6oQ1vSrurEma9+Gb0
+         ipZtrAmgrDptjpW0ECWaTJ+RLq45ng9p24QjN8P17nScRfQZZhWD8CHztIWpuvV4CxHM
+         QtPvvhFy/jd8MHFXStxNJ47HVUq2nrK3SbY1elm0enS0BVvYKGTaQy3C2S9YwnrznQHk
+         LhZenTNkPIxi/1hOWb/dHM0l2Sb2Du+s8lqpLx+A9k9xuZtTwbw+VKFe2hpaiJ1eJCCg
+         8ws9qjAFfaAPpaKATNpzVG4KA1q9IZ4uNaGuA+qX2tCI5zp3nzdWc1nN21l6RxV0p6AF
+         xwvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=44FjkOn/XLQ+zFbEeie+qKzDhgYPpksuKEmuM6SY0/I=;
+        b=snpVa/RSJAqebgn1Fdq5tZlWVUUY0IMvhKHqqTteyN0innCWjvFiiKauH/NSpGFQGa
+         iluC+5zY2miDhxHbgCQxTFt4E8xcsO6p23y9S4DIPN4x6SGoGridAQrxHyxqVQWMcTZH
+         X1mpHCHfSu/THJn7joeYQmFR0vX0rsVUpTFLurZvbx0XBYm7AUh6UbRACk+f4Bbp6gYG
+         DesD7wWVy2rD5iYv2cIbqKZV5w/5mOTaLYqrZDcBDHytBmm9/Xyi91hZgMx6E230j1dS
+         j9cT09NKiYeEszXoA8myE1bB+gVr6uqQuSCKGbqJblc40FnYi3Cw1/PnKO4agX/rAr8/
+         kl9Q==
+X-Gm-Message-State: APjAAAWdjbQQD/YKatBp+Gu79eOJkhN0Rfc4bU3uvIXfxT2yqIicIIRt
+        j34HZex6JHw6tQCMYEut+WY=
+X-Google-Smtp-Source: APXvYqwmroYp//z/XHkQUr6PxhbEQKH1be7LwohqimmimSV+Vml4gldj7Xb9tUuBFkW3WeBWY3y2uQ==
+X-Received: by 2002:a17:902:724b:: with SMTP id c11mr22367771pll.177.1576589615158;
+        Tue, 17 Dec 2019 05:33:35 -0800 (PST)
+Received: from oslab.tsinghua.edu.cn ([166.111.139.172])
+        by smtp.gmail.com with ESMTPSA id d13sm3367619pjx.21.2019.12.17.05.33.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 05:33:34 -0800 (PST)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH] fs: nfs: fix a possible sleep-in-atomic-context bug in _pnfs_grab_empty_layout()
+Date:   Tue, 17 Dec 2019 21:33:19 +0800
+Message-Id: <20191217133319.11861-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Removing the 'hotplug-status' node in netback_remove() is wrong; the script
-may not have completed. Only remove the node once the watch has fired and
-has been unregistered.
+The filesystem may sleep while holding a spinlock.
+The function call path (from bottom to top) in Linux 4.19 is:
 
-Signed-off-by: Paul Durrant <pdurrant@amazon.com>
+fs/nfs/pnfs.c, 2052: 
+	pnfs_find_alloc_layout(GFP_KERNEL) in _pnfs_grab_empty_layout
+fs/nfs/pnfs.c, 2051: 
+	spin_lock in _pnfs_grab_empty_layout
+
+pnfs_find_alloc_layout(GFP_KERNEL) can sleep at runtime.
+
+To fix this possible bug, GFP_KERNEL is replaced with GFP_ATOMIC for
+pnfs_find_alloc_layout().
+
+This bug is found by a static analysis tool STCheck written by myself.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
 ---
-Cc: Wei Liu <wei.liu@kernel.org>
-Cc: Paul Durrant <paul@xen.org>
-Cc: "David S. Miller" <davem@davemloft.net>
----
- drivers/net/xen-netback/xenbus.c | 2 +-
+ fs/nfs/pnfs.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/xen-netback/xenbus.c b/drivers/net/xen-netback/xenbus.c
-index 682e5e20971b..17b4950ec051 100644
---- a/drivers/net/xen-netback/xenbus.c
-+++ b/drivers/net/xen-netback/xenbus.c
-@@ -648,6 +648,7 @@ static void hotplug_status_changed(struct xenbus_watch *watch,
+diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
+index cec3070ab577..cfbe170f0651 100644
+--- a/fs/nfs/pnfs.c
++++ b/fs/nfs/pnfs.c
+@@ -2138,7 +2138,7 @@ _pnfs_grab_empty_layout(struct inode *ino, struct nfs_open_context *ctx)
+ 	struct pnfs_layout_hdr *lo;
  
- 		/* Not interested in this watch anymore. */
- 		unregister_hotplug_status_watch(be);
-+		xenbus_rm(XBT_NIL, be->dev->nodename, "hotplug-status");
- 	}
- 	kfree(str);
- }
-@@ -959,7 +960,6 @@ static int netback_remove(struct xenbus_device *dev)
- 	if (be->vif) {
- 		kobject_uevent(&dev->dev.kobj, KOBJ_OFFLINE);
- 		xen_unregister_watchers(be->vif);
--		xenbus_rm(XBT_NIL, dev->nodename, "hotplug-status");
- 		xenvif_free(be->vif);
- 		be->vif = NULL;
- 	}
+ 	spin_lock(&ino->i_lock);
+-	lo = pnfs_find_alloc_layout(ino, ctx, GFP_KERNEL);
++	lo = pnfs_find_alloc_layout(ino, ctx, GFP_ATOMIC);
+ 	if (!lo)
+ 		goto out_unlock;
+ 	if (!test_bit(NFS_LAYOUT_INVALID_STID, &lo->plh_flags))
 -- 
-2.20.1
+2.17.1
 
