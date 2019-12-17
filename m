@@ -7,44 +7,42 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C0EC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA3BC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBA1724679
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A87BC21835
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728352AbfLQMkd (ORCPT
+        id S1728358AbfLQMki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:40:33 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55286 "EHLO
+        Tue, 17 Dec 2019 07:40:38 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55280 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728269AbfLQMkE (ORCPT
+        with ESMTP id S1727935AbfLQMkC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 07:40:04 -0500
+        Tue, 17 Dec 2019 07:40:02 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ihC8l-0001o4-Cg; Tue, 17 Dec 2019 13:39:51 +0100
+        id 1ihC8s-0001ro-UJ; Tue, 17 Dec 2019 13:39:59 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id BC1451C2A3D;
-        Tue, 17 Dec 2019 13:39:50 +0100 (CET)
-Date:   Tue, 17 Dec 2019 12:39:50 -0000
-From:   "tip-bot2 for Alexander Shishkin" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 15EDB1C2A40;
+        Tue, 17 Dec 2019 13:39:53 +0100 (CET)
+Date:   Tue, 17 Dec 2019 12:39:52 -0000
+From:   "tip-bot2 for Frederic Weisbecker" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf/x86/intel/bts: Fix the use of page_private()
-Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191205142853.28894-2-alexander.shishkin@linux.intel.com>
-References: <20191205142853.28894-2-alexander.shishkin@linux.intel.com>
+Subject: [tip: sched/core] sched: Use fair:prio_changed() instead of ad-hoc
+ implementation
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20191203160106.18806-3-frederic@kernel.org>
+References: <20191203160106.18806-3-frederic@kernel.org>
 MIME-Version: 1.0
-Message-ID: <157658639063.30329.9964492624988033137.tip-bot2@tip-bot2>
+Message-ID: <157658639295.30329.4061098261424663170.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,96 +56,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/urgent branch of tip:
+The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     ff61541cc6c1962957758ba433c574b76f588d23
-Gitweb:        https://git.kernel.org/tip/ff61541cc6c1962957758ba433c574b76f588d23
-Author:        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-AuthorDate:    Thu, 05 Dec 2019 17:28:52 +03:00
+Commit-ID:     5443a0be6121d557e12951537e10159e4c61035d
+Gitweb:        https://git.kernel.org/tip/5443a0be6121d557e12951537e10159e4c61035d
+Author:        Frederic Weisbecker <frederic@kernel.org>
+AuthorDate:    Tue, 03 Dec 2019 17:01:06 +01:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Tue, 17 Dec 2019 13:32:46 +01:00
+CommitterDate: Tue, 17 Dec 2019 13:32:50 +01:00
 
-perf/x86/intel/bts: Fix the use of page_private()
+sched: Use fair:prio_changed() instead of ad-hoc implementation
 
-Commit
+set_user_nice() implements its own version of fair::prio_changed() and
+therefore misses a specific optimization towards nohz_full CPUs that
+avoid sending an resched IPI to a reniced task running alone. Use the
+proper callback instead.
 
-  8062382c8dbe2 ("perf/x86/intel/bts: Add BTS PMU driver")
-
-brought in a warning with the BTS buffer initialization
-that is easily tripped with (assuming KPTI is disabled):
-
-instantly throwing:
-
-> ------------[ cut here ]------------
-> WARNING: CPU: 2 PID: 326 at arch/x86/events/intel/bts.c:86 bts_buffer_setup_aux+0x117/0x3d0
-> Modules linked in:
-> CPU: 2 PID: 326 Comm: perf Not tainted 5.4.0-rc8-00291-gceb9e77324fa #904
-> RIP: 0010:bts_buffer_setup_aux+0x117/0x3d0
-> Call Trace:
->  rb_alloc_aux+0x339/0x550
->  perf_mmap+0x607/0xc70
->  mmap_region+0x76b/0xbd0
-...
-
-It appears to assume (for lost raisins) that PagePrivate() is set,
-while later it actually tests for PagePrivate() before using
-page_private().
-
-Make it consistent and always check PagePrivate() before using
-page_private().
-
-Fixes: 8062382c8dbe2 ("perf/x86/intel/bts: Add BTS PMU driver")
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Reported-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Link: https://lkml.kernel.org/r/20191205142853.28894-2-alexander.shishkin@linux.intel.com
+Cc: Ingo Molnar <mingo@kernel.org>
+Link: https://lkml.kernel.org/r/20191203160106.18806-3-frederic@kernel.org
 ---
- arch/x86/events/intel/bts.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ kernel/sched/core.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
-index 38de4a7..6a3b599 100644
---- a/arch/x86/events/intel/bts.c
-+++ b/arch/x86/events/intel/bts.c
-@@ -63,9 +63,17 @@ struct bts_buffer {
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 90e4b00..15508c2 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -4540,17 +4540,17 @@ void set_user_nice(struct task_struct *p, long nice)
+ 	p->prio = effective_prio(p);
+ 	delta = p->prio - old_prio;
  
- static struct pmu bts_pmu;
- 
-+static int buf_nr_pages(struct page *page)
-+{
-+	if (!PagePrivate(page))
-+		return 1;
+-	if (queued) {
++	if (queued)
+ 		enqueue_task(rq, p, ENQUEUE_RESTORE | ENQUEUE_NOCLOCK);
+-		/*
+-		 * If the task increased its priority or is running and
+-		 * lowered its priority, then reschedule its CPU:
+-		 */
+-		if (delta < 0 || (delta > 0 && task_running(rq, p)))
+-			resched_curr(rq);
+-	}
+ 	if (running)
+ 		set_next_task(rq, p);
 +
-+	return 1 << page_private(page);
-+}
++	/*
++	 * If the task increased its priority or is running and
++	 * lowered its priority, then reschedule its CPU:
++	 */
++	p->sched_class->prio_changed(rq, p, old_prio);
 +
- static size_t buf_size(struct page *page)
- {
--	return 1 << (PAGE_SHIFT + page_private(page));
-+	return buf_nr_pages(page) * PAGE_SIZE;
+ out_unlock:
+ 	task_rq_unlock(rq, p, &rf);
  }
- 
- static void *
-@@ -83,9 +91,7 @@ bts_buffer_setup_aux(struct perf_event *event, void **pages,
- 	/* count all the high order buffers */
- 	for (pg = 0, nbuf = 0; pg < nr_pages;) {
- 		page = virt_to_page(pages[pg]);
--		if (WARN_ON_ONCE(!PagePrivate(page) && nr_pages > 1))
--			return NULL;
--		pg += 1 << page_private(page);
-+		pg += buf_nr_pages(page);
- 		nbuf++;
- 	}
- 
-@@ -109,7 +115,7 @@ bts_buffer_setup_aux(struct perf_event *event, void **pages,
- 		unsigned int __nr_pages;
- 
- 		page = virt_to_page(pages[pg]);
--		__nr_pages = PagePrivate(page) ? 1 << page_private(page) : 1;
-+		__nr_pages = buf_nr_pages(page);
- 		buf->buf[nbuf].page = page;
- 		buf->buf[nbuf].offset = offset;
- 		buf->buf[nbuf].displacement = (pad ? BTS_RECORD_SIZE - pad : 0);
