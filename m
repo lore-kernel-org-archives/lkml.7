@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B81C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0E2C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:15:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7AAD206E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:14:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 254672176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:15:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576556099;
-	bh=9bevpXRJo8YKeMzq83BvUn+kDrNbs/iGWmKyRFqTmig=;
+	s=default; t=1576556102;
+	bh=nHBZARSCljW8/8hjS8btsfR0kX5K0JKPnXWrNmqybTM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IbHQcDD+ZzjZsmDovrYJ9BQgk2phbpnrODKc24ZTXKdFH9kePSNyntbJmYl0QsrQn
-	 mudxSfGQp72oAb43PyQr8FqgE9VFK1bMRD4MrJKLbzI1ynFduKCaZ6g2uS6O6sWwcy
-	 BrGAH28+BlYt1zeqbkg140l78rzcp08/xPFH1uqY=
+	b=ZFRpQHXt2o0VCPsyQSuR1goGEINgfZgBr9EvbBb/CfXoc5UwXlA4mDakR2QDdi4bI
+	 9MXedcc1HIWz4LGsWUkCELALQ9X1VRc0mzvWvA4nfSsDQ0Vj+8p4bLICEK8ZPSowUP
+	 /SOI6K4LoDCcLmHXbOIzWnYoN5e+yLoigOXpzhNA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbfLQEO6 (ORCPT
+        id S1727786AbfLQEO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 16 Dec 2019 23:14:58 -0500
-Received: from conuserg-12.nifty.com ([210.131.2.79]:49419 "EHLO
+Received: from conuserg-12.nifty.com ([210.131.2.79]:49418 "EHLO
         conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727687AbfLQEOw (ORCPT
+        with ESMTP id S1727684AbfLQEOw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 23:14:52 -0500
 Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id xBH4EPAE024524;
-        Tue, 17 Dec 2019 13:14:28 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com xBH4EPAE024524
+        by conuserg-12.nifty.com with ESMTP id xBH4EPAH024524;
+        Tue, 17 Dec 2019 13:14:30 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com xBH4EPAH024524
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1576556068;
-        bh=An5jhCMPBE3WXglnz3cPdiHBZ9YvliinUc141cReA9Q=;
+        s=dec2015msa; t=1576556071;
+        bh=a17nZoX2gmVNQ4RyqbzSYYjo3e0s9uhnamYb1ruGEGA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LIwEzAcDb9tAP/VfggJbke3KYC4/YcOSFeZ/GKCrvmffj+LyH+EaV7PIgAU1v5MB7
-         cNfNIqGJQoeRbT8/fFAQTIa0TVonMmumZlhsbch304tUGLleN2aEuIGeRN6Ki3KOjD
-         NTfqbXXrPenilsFd+x9WBO5DW8HcV+tb3018Lad80hUfnKasMO431JJdHitZ0dDHrY
-         mM26zSIjzsDSrdMJ5tAMTcm3I81LRnZ7pLysrjRAqELdKKb6tB8zfUrbrABie48mvu
-         03A7IO7Tg+DRPK7t3n1Dx2l91vXrGfOTi8p4G69Q9xR5iu53+HjS6o0FOWEyEydPw3
-         Xjt2/3cvQoSMw==
+        b=1LiE6IMaPP9ehZN+dvlxyyzzzJmXkTuhpeWon0y25ZSwbnNsqbneQRAE0XVEzQ8s7
+         RmoUTBQou3XprADyX27eyReBJaF9Yoma+Sv8y429iOz/XsuNdaEZ+wsVp3kApgcCgO
+         m/YPQSX/BB1ILaoaua57eca0GlZHtO8OuH6at2GMNrkKRmLAOIJ71c+4XgnjqLFQWI
+         HI+JahCUfcHFwd2QDclWkpQdc+gOSJLNHzCoL//NGZXcLWrCIVfR0J4g1ogBRjaI75
+         2IHa403kHzvsgoQ7cpJA9jLZYgJjmY1WTeUhDXyGRfcIq0WOtwUEGtuw5wrXe8kzLi
+         am8EiHbpkDV5g==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
 Cc:     Ulf Magnusson <ulfalizer@gmail.com>,
         Masahiro Yamada <masahiroy@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 4/8] kconfig: remove 'prompt' symbol
-Date:   Tue, 17 Dec 2019 13:14:19 +0900
-Message-Id: <20191217041424.29285-5-masahiroy@kernel.org>
+Subject: [PATCH 7/8] kconfig: remove sym from struct property
+Date:   Tue, 17 Dec 2019 13:14:22 +0900
+Message-Id: <20191217041424.29285-8-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191217041424.29285-1-masahiroy@kernel.org>
 References: <20191217041424.29285-1-masahiroy@kernel.org>
@@ -59,96 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that 'prompt' is only reduced from T_WORD_QUOTE without any action,
-use T_WORD_QUOTE directly.
+struct property can reference to the symbol that it is associated with
+by prop->menu->sym.
+
+Fix up the one usage of prop->sym, and remove sym from struct property.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- scripts/kconfig/parser.y | 17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
+ scripts/kconfig/expr.h   | 1 -
+ scripts/kconfig/parser.y | 2 +-
+ scripts/kconfig/symbol.c | 1 -
+ 3 files changed, 1 insertion(+), 3 deletions(-)
 
+diff --git a/scripts/kconfig/expr.h b/scripts/kconfig/expr.h
+index 017843c9a4f4..6e102a3b8bd5 100644
+--- a/scripts/kconfig/expr.h
++++ b/scripts/kconfig/expr.h
+@@ -191,7 +191,6 @@ enum prop_type {
+ 
+ struct property {
+ 	struct property *next;     /* next property - null if last */
+-	struct symbol *sym;        /* the symbol for which the property is associated */
+ 	enum prop_type type;       /* type of property */
+ 	const char *text;          /* the prompt value - P_PROMPT, P_MENU, P_COMMENT */
+ 	struct expr_value visible;
 diff --git a/scripts/kconfig/parser.y b/scripts/kconfig/parser.y
-index 80585f04f590..40e46996e6a5 100644
+index 40e46996e6a5..d5c41a5c370c 100644
 --- a/scripts/kconfig/parser.y
 +++ b/scripts/kconfig/parser.y
-@@ -93,7 +93,6 @@ static struct menu *current_choice_menu;
- %left T_LESS T_LESS_EQUAL T_GREATER T_GREATER_EQUAL
- %nonassoc T_NOT
+@@ -671,7 +671,7 @@ static void print_symbol(FILE *out, struct menu *menu)
+ 			break;
+ 		case P_SYMBOL:
+ 			fputs( "  symbol ", out);
+-			fprintf(out, "%s\n", prop->sym->name);
++			fprintf(out, "%s\n", prop->menu->sym->name);
+ 			break;
+ 		default:
+ 			fprintf(out, "  unknown prop %d!\n", prop->type);
+diff --git a/scripts/kconfig/symbol.c b/scripts/kconfig/symbol.c
+index f56eec5ea4c7..dbc5365d8bbc 100644
+--- a/scripts/kconfig/symbol.c
++++ b/scripts/kconfig/symbol.c
+@@ -1281,7 +1281,6 @@ struct property *prop_alloc(enum prop_type type, struct symbol *sym)
+ 	prop = xmalloc(sizeof(*prop));
+ 	memset(prop, 0, sizeof(*prop));
+ 	prop->type = type;
+-	prop->sym = sym;
+ 	prop->file = current_file;
+ 	prop->lineno = zconf_lineno();
  
--%type <string> prompt
- %type <symbol> nonconst_symbol
- %type <symbol> symbol
- %type <type> type logic_type default
-@@ -116,7 +115,7 @@ input: mainmenu_stmt stmt_list | stmt_list;
- 
- /* mainmenu entry */
- 
--mainmenu_stmt: T_MAINMENU prompt T_EOL
-+mainmenu_stmt: T_MAINMENU T_WORD_QUOTE T_EOL
- {
- 	menu_add_prompt(P_MENU, $2, NULL);
- };
-@@ -184,7 +183,7 @@ config_option: type prompt_stmt_opt T_EOL
- 		$1);
- };
- 
--config_option: T_PROMPT prompt if_expr T_EOL
-+config_option: T_PROMPT T_WORD_QUOTE if_expr T_EOL
- {
- 	menu_add_prompt(P_PROMPT, $2, $3);
- 	printd(DEBUG_PARSE, "%s:%d:prompt\n", zconf_curname(), zconf_lineno());
-@@ -276,7 +275,7 @@ choice_option_list:
- 	| choice_option_list help
- ;
- 
--choice_option: T_PROMPT prompt if_expr T_EOL
-+choice_option: T_PROMPT T_WORD_QUOTE if_expr T_EOL
- {
- 	menu_add_prompt(P_PROMPT, $2, $3);
- 	printd(DEBUG_PARSE, "%s:%d:prompt\n", zconf_curname(), zconf_lineno());
-@@ -345,7 +344,7 @@ if_stmt: if_entry stmt_list if_end
- 
- /* menu entry */
- 
--menu: T_MENU prompt T_EOL
-+menu: T_MENU T_WORD_QUOTE T_EOL
- {
- 	menu_add_entry(NULL);
- 	menu_add_prompt(P_MENU, $2, NULL);
-@@ -374,7 +373,7 @@ menu_option_list:
- 	| menu_option_list depends
- ;
- 
--source_stmt: T_SOURCE prompt T_EOL
-+source_stmt: T_SOURCE T_WORD_QUOTE T_EOL
- {
- 	printd(DEBUG_PARSE, "%s:%d:source %s\n", zconf_curname(), zconf_lineno(), $2);
- 	zconf_nextfile($2);
-@@ -383,7 +382,7 @@ source_stmt: T_SOURCE prompt T_EOL
- 
- /* comment entry */
- 
--comment: T_COMMENT prompt T_EOL
-+comment: T_COMMENT T_WORD_QUOTE T_EOL
- {
- 	menu_add_entry(NULL);
- 	menu_add_prompt(P_COMMENT, $2, NULL);
-@@ -440,13 +439,11 @@ visible: T_VISIBLE if_expr T_EOL
- 
- prompt_stmt_opt:
- 	  /* empty */
--	| prompt if_expr
-+	| T_WORD_QUOTE if_expr
- {
- 	menu_add_prompt(P_PROMPT, $1, $2);
- };
- 
--prompt:	  T_WORD_QUOTE
--
- end:	  T_ENDMENU T_EOL	{ $$ = "menu"; }
- 	| T_ENDCHOICE T_EOL	{ $$ = "choice"; current_choice_menu = NULL; }
- 	| T_ENDIF T_EOL		{ $$ = "if"; }
 -- 
 2.17.1
 
