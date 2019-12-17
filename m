@@ -2,66 +2,116 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C506BC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42EE4C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A50BD2072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:48:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18BB32072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:48:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZdEizmhc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727328AbfLQKsl (ORCPT
+        id S1727381AbfLQKsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 05:48:41 -0500
-Received: from mx2.suse.de ([195.135.220.15]:33108 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725870AbfLQKsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 05:48:41 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id BEEF4ADA1;
-        Tue, 17 Dec 2019 10:48:39 +0000 (UTC)
-Date:   Tue, 17 Dec 2019 11:48:38 +0100
-From:   Joerg Roedel <jroedel@suse.de>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] iommu/vt-d: Allocate reserved region for ISA with
- correct permission
-Message-ID: <20191217104838.GC28651@suse.de>
-References: <20191213053642.5696-1-jsnitsel@redhat.com>
- <3a9bcdc5-9e78-945d-f6e4-5af6829bf4f0@linux.intel.com>
+        Tue, 17 Dec 2019 05:48:55 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:35608 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726655AbfLQKsw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 05:48:52 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBHAmihR056883;
+        Tue, 17 Dec 2019 04:48:44 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576579724;
+        bh=T3CMfOvjx9ecvb9eaAPNLrofr0AxqpXdmnvNE+n/PCk=;
+        h=From:To:CC:Subject:Date;
+        b=ZdEizmhcKA80AK6pc8WJjjoNy3fSuXzf8i++I4jbHgq1HHWRXqEdxgdLfu1dtlJh4
+         4KiziI+4GZldQWBj2WmDohVEKZ/oJVA3Mx4xalCh4JlnozmbfkcS5nGkx5OThfHwuG
+         WbfdStAR4Zc/AdhYOEmWp10bSHfwrbOj/5Yrt8+Y=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBHAmijj093336
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 17 Dec 2019 04:48:44 -0600
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
+ Dec 2019 04:48:43 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 17 Dec 2019 04:48:43 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBHAmfcv016608;
+        Tue, 17 Dec 2019 04:48:42 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <rjw@rjwysocki.net>, <lenb@kernel.org>
+CC:     <vkoul@kernel.org>, <linux-acpi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] docs: firmware-guide: acpi: Change dma_request_slave_channel to dma_request_chan
+Date:   Tue, 17 Dec 2019 12:48:56 +0200
+Message-ID: <20191217104856.24987-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3a9bcdc5-9e78-945d-f6e4-5af6829bf4f0@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 15, 2019 at 01:39:31PM +0800, Lu Baolu wrote:
-> Hi,
-> 
-> On 12/13/19 1:36 PM, Jerry Snitselaar wrote:
-> > Currently the reserved region for ISA is allocated with no
-> > permissions. If a dma domain is being used, mapping this region will
-> > fail. Set the permissions to DMA_PTE_READ|DMA_PTE_WRITE.
-> > 
-> > Cc: Joerg Roedel <jroedel@suse.de>
-> > Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> > Cc: iommu@lists.linux-foundation.org
-> > Cc: stable@vger.kernel.org # v5.3+
-> > Fixes: d850c2ee5fe2 ("iommu/vt-d: Expose ISA direct mapping region via iommu_get_resv_regions")
-> > Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
-> 
-> This fix looks reasonable to me.
-> 
-> Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+dma_request_chan() is the preferred API to request slave channels.
 
-Applied for v5.5, thanks.
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ .../firmware-guide/acpi/enumeration.rst          | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/Documentation/firmware-guide/acpi/enumeration.rst b/Documentation/firmware-guide/acpi/enumeration.rst
+index 0a72b6321f5f..c13fee8b02ba 100644
+--- a/Documentation/firmware-guide/acpi/enumeration.rst
++++ b/Documentation/firmware-guide/acpi/enumeration.rst
+@@ -71,8 +71,8 @@ DMA support
+ DMA controllers enumerated via ACPI should be registered in the system to
+ provide generic access to their resources. For example, a driver that would
+ like to be accessible to slave devices via generic API call
+-dma_request_slave_channel() must register itself at the end of the probe
+-function like this::
++dma_request_chan() must register itself at the end of the probe function like
++this::
+ 
+ 	err = devm_acpi_dma_controller_register(dev, xlate_func, dw);
+ 	/* Handle the error if it's not a case of !CONFIG_ACPI */
+@@ -112,15 +112,15 @@ could look like::
+ 	}
+ 	#endif
+ 
+-dma_request_slave_channel() will call xlate_func() for each registered DMA
+-controller. In the xlate function the proper channel must be chosen based on
++dma_request_chan() will call xlate_func() for each registered DMA controller.
++In the xlate function the proper channel must be chosen based on
+ information in struct acpi_dma_spec and the properties of the controller
+ provided by struct acpi_dma.
+ 
+-Clients must call dma_request_slave_channel() with the string parameter that
+-corresponds to a specific FixedDMA resource. By default "tx" means the first
+-entry of the FixedDMA resource array, "rx" means the second entry. The table
+-below shows a layout::
++Clients must call dma_request_chan() with the string parameter that corresponds
++to a specific FixedDMA resource. By default "tx" means the first entry of the
++FixedDMA resource array, "rx" means the second entry. The table below shows a
++layout::
+ 
+ 	Device (I2C0)
+ 	{
+-- 
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
