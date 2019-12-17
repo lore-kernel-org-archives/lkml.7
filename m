@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4617CC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A6EC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17A1124689
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBF7824676
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:53:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728086AbfLQAx4 (ORCPT
+        id S1728071AbfLQAxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:53:56 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35404 "EHLO
+        Mon, 16 Dec 2019 19:53:55 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35382 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727102AbfLQAvo (ORCPT
+        by vger.kernel.org with ESMTP id S1727089AbfLQAvo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 19:51:44 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15K-0003Ma-W5; Tue, 17 Dec 2019 00:51:35 +0000
+        id 1ih15L-0003MU-EJ; Tue, 17 Dec 2019 00:51:35 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15K-0005cc-De; Tue, 17 Dec 2019 00:51:34 +0000
+        id 1ih15K-0005d8-Ns; Tue, 17 Dec 2019 00:51:34 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Takashi Sakamoto" <o-takashi@sakamocchi.jp>,
-        "Takashi Iwai" <tiwai@suse.de>
-Date:   Tue, 17 Dec 2019 00:47:27 +0000
-Message-ID: <lsq.1576543535.459588578@decadent.org.uk>
+        "Bernd Krumboeck" <b.krumboeck@gmail.com>,
+        "Marc Kleine-Budde" <mkl@pengutronix.de>,
+        "Wolfgang Grandegger" <wg@grandegger.com>,
+        "Johan Hovold" <johan@kernel.org>
+Date:   Tue, 17 Dec 2019 00:47:31 +0000
+Message-ID: <lsq.1576543535.317323082@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 113/136] ALSA: bebob: fix to detect configured source
- of sampling clock for Focusrite Saffire Pro i/o series
+Subject: [PATCH 3.16 117/136] can: usb_8dev: fix use-after-free on disconnect
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,47 +57,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+From: Johan Hovold <johan@kernel.org>
 
-commit 706ad6746a66546daf96d4e4a95e46faf6cf689a upstream.
+commit 3759739426186a924675651b388d1c3963c5710e upstream.
 
-For Focusrite Saffire Pro i/o, the lowest 8 bits of register represents
-configured source of sampling clock. The next lowest 8 bits represents
-whether the configured source is actually detected or not just after
-the register is changed for the source.
+The driver was accessing its driver data after having freed it.
 
-Current implementation evaluates whole the register to detect configured
-source. This results in failure due to the next lowest 8 bits when the
-source is connected in advance.
-
-This commit fixes the bug.
-
-Fixes: 25784ec2d034 ("ALSA: bebob: Add support for Focusrite Saffire/SaffirePro series")
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Link: https://lore.kernel.org/r/20191102150920.20367-1-o-takashi@sakamocchi.jp
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 0024d8ad1639 ("can: usb_8dev: Add support for USB2CAN interface from 8 devices")
+Cc: Bernd Krumboeck <b.krumboeck@gmail.com>
+Cc: Wolfgang Grandegger <wg@grandegger.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- sound/firewire/bebob/bebob_focusrite.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/can/usb/usb_8dev.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/sound/firewire/bebob/bebob_focusrite.c
-+++ b/sound/firewire/bebob/bebob_focusrite.c
-@@ -28,6 +28,8 @@
- #define SAFFIRE_CLOCK_SOURCE_SPDIF		1
+--- a/drivers/net/can/usb/usb_8dev.c
++++ b/drivers/net/can/usb/usb_8dev.c
+@@ -1013,9 +1013,8 @@ static void usb_8dev_disconnect(struct u
+ 		netdev_info(priv->netdev, "device disconnected\n");
  
- /* clock sources as returned from register of Saffire Pro 10 and 26 */
-+#define SAFFIREPRO_CLOCK_SOURCE_SELECT_MASK	0x000000ff
-+#define SAFFIREPRO_CLOCK_SOURCE_DETECT_MASK	0x0000ff00
- #define SAFFIREPRO_CLOCK_SOURCE_INTERNAL	0
- #define SAFFIREPRO_CLOCK_SOURCE_SKIP		1 /* never used on hardware */
- #define SAFFIREPRO_CLOCK_SOURCE_SPDIF		2
-@@ -184,6 +186,7 @@ saffirepro_both_clk_src_get(struct snd_b
- 		map = saffirepro_clk_maps[1];
+ 		unregister_netdev(priv->netdev);
+-		free_candev(priv->netdev);
+-
+ 		unlink_all_urbs(priv);
++		free_candev(priv->netdev);
+ 	}
  
- 	/* In a case that this driver cannot handle the value of register. */
-+	value &= SAFFIREPRO_CLOCK_SOURCE_SELECT_MASK;
- 	if (value >= SAFFIREPRO_CLOCK_SOURCE_COUNT || map[value] < 0) {
- 		err = -EIO;
- 		goto end;
+ }
 
