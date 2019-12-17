@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 636DDC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60040C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37FCE24676
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:53:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 385CF24682
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:53:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727841AbfLQAxD (ORCPT
+        id S1727939AbfLQAxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:53:03 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35582 "EHLO
+        Mon, 16 Dec 2019 19:53:10 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35538 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727210AbfLQAvp (ORCPT
+        by vger.kernel.org with ESMTP id S1727193AbfLQAvp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 19:51:45 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15O-0003Pc-Ds; Tue, 17 Dec 2019 00:51:38 +0000
+        id 1ih15L-0003Ml-Gm; Tue, 17 Dec 2019 00:51:35 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15L-0005g6-JA; Tue, 17 Dec 2019 00:51:35 +0000
+        id 1ih15J-0005ak-Be; Tue, 17 Dec 2019 00:51:33 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,27 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Michal Hocko" <mhocko@kernel.org>, "Roman Gushchin" <guro@fb.com>,
-        "Shakeel Butt" <shakeelb@google.com>,
+        "Borislav Petkov" <bp@alien8.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Vince Weaver" <vincent.weaver@maine.edu>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
+        "Jiri Olsa" <jolsa@redhat.com>,
+        "Namhyung Kim" <namhyung@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Arnaldo Carvalho de Melo" <acme@redhat.com>,
         "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "Tejun Heo" <tj@kernel.org>, "Johannes Weiner" <hannes@cmpxchg.org>
-Date:   Tue, 17 Dec 2019 00:47:45 +0000
-Message-ID: <lsq.1576543535.143088853@decadent.org.uk>
+        "Ingo Molnar" <mingo@kernel.org>,
+        "Stephane Eranian" <eranian@google.com>,
+        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+        "Kim Phillips" <kim.phillips@amd.com>
+Date:   Tue, 17 Dec 2019 00:47:10 +0000
+Message-ID: <lsq.1576543535.24713784@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 131/136] mm: hugetlb: switch to css_tryget() in
- hugetlb_cgroup_charge_cgroup()
+Subject: [PATCH 3.16 096/136] perf/x86/amd/ibs: Handle erratum #420 only
+ on the affected CPU family (10h)
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,46 +69,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Roman Gushchin <guro@fb.com>
+From: Kim Phillips <kim.phillips@amd.com>
 
-commit 0362f326d86c645b5e96b7dbc3ee515986ed019d upstream.
+commit e431e79b60603079d269e0c2a5177943b95fa4b6 upstream.
 
-An exiting task might belong to an offline cgroup.  In this case an
-attempt to grab a cgroup reference from the task can end up with an
-infinite loop in hugetlb_cgroup_charge_cgroup(), because neither the
-cgroup will become online, neither the task will be migrated to a live
-cgroup.
+This saves us writing the IBS control MSR twice when disabling the
+event.
 
-Fix this by switching over to css_tryget().  As css_tryget_online()
-can't guarantee that the cgroup won't go offline, in most cases the
-check doesn't make sense.  In this particular case users of
-hugetlb_cgroup_charge_cgroup() are not affected by this change.
+I searched revision guides for all families since 10h, and did not
+find occurrence of erratum #420, nor anything remotely similar:
+so we isolate the secondary MSR write to family 10h only.
 
-A similar problem is described by commit 18fa84a2db0e ("cgroup: Use
-css_tryget() instead of css_tryget_online() in task_get_css()").
+Also unconditionally update the count mask for IBS Op implementations
+that have read & writeable current count (CurCnt) fields in addition
+to the MaxCnt field.  These bits were reserved on prior
+implementations, and therefore shouldn't have negative impact.
 
-Link: http://lkml.kernel.org/r/20191106225131.3543616-2-guro@fb.com
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-Acked-by: Tejun Heo <tj@kernel.org>
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
-Cc: Michal Hocko <mhocko@kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Fixes: c9574fe0bdb9 ("perf/x86-ibs: Implement workaround for IBS erratum #420")
+Link: https://lkml.kernel.org/r/20191023150955.30292-2-kim.phillips@amd.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+[bwh: Backported to 3.16:
+ - Don't update the count mask; we don't use or define the CurCnt fields here
+ - Adjust filename]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- mm/hugetlb_cgroup.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/mm/hugetlb_cgroup.c
-+++ b/mm/hugetlb_cgroup.c
-@@ -181,7 +181,7 @@ int hugetlb_cgroup_charge_cgroup(int idx
- again:
- 	rcu_read_lock();
- 	h_cg = hugetlb_cgroup_from_task(current);
--	if (!css_tryget_online(&h_cg->css)) {
-+	if (!css_tryget(&h_cg->css)) {
- 		rcu_read_unlock();
- 		goto again;
- 	}
+--- a/arch/x86/kernel/cpu/perf_event_amd_ibs.c
++++ b/arch/x86/kernel/cpu/perf_event_amd_ibs.c
+@@ -351,7 +351,8 @@ static inline void perf_ibs_disable_even
+ 					  struct hw_perf_event *hwc, u64 config)
+ {
+ 	config &= ~perf_ibs->cnt_mask;
+-	wrmsrl(hwc->config_base, config);
++	if (boot_cpu_data.x86 == 0x10)
++		wrmsrl(hwc->config_base, config);
+ 	config &= ~perf_ibs->enable_mask;
+ 	wrmsrl(hwc->config_base, config);
+ }
 
