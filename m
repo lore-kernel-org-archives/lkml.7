@@ -2,98 +2,142 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D23ACC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8960C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5A6B2072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B70824655
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:48:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576594133;
+	bh=DouMnEypPivoifXJFz6hce+F4/UFWoqpLTMz/a0CnHE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=KmJqcnX+s5jXKoJCx7Q96xbypI6Dac4edqH/cB1H3igpyAfDasJAUsKihKNYexiqc
+	 skOd7TLwW23HorCy7DQ2HArQRQvYGw+P3d/f2ifZ54af8egVx7KTlh+hdf3padpq2o
+	 iz8m+Nub8j1BuHOAcTW4idpE83rLF7+M6pkbYcGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729217AbfLQOri (ORCPT
+        id S1729226AbfLQOsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:47:38 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:40348 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728573AbfLQOri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:47:38 -0500
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id C19E15D16B50E293F60B;
-        Tue, 17 Dec 2019 22:47:35 +0800 (CST)
-Received: from [127.0.0.1] (10.177.251.225) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Tue, 17 Dec 2019
- 22:47:25 +0800
-To:     <tytso@mit.edu>, <adilger.kernel@dilger.ca>,
-        <linux-ext4@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Ritesh Harjani <riteshh@linux.ibm.com>
-CC:     "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
-        "linfeilong@huawei.com" <linfeilong@huawei.com>
-From:   Yunfeng Ye <yeyunfeng@huawei.com>
-Subject: [PATCH v2] ext4: fix Wunused-but-set-variable warning in
- ext4_add_entry()
-Message-ID: <cb5eb904-224a-9701-c38f-cb23514b1fff@huawei.com>
-Date:   Tue, 17 Dec 2019 22:46:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 17 Dec 2019 09:48:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40840 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728573AbfLQOsw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 09:48:52 -0500
+Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDA112072D;
+        Tue, 17 Dec 2019 14:48:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576594131;
+        bh=DouMnEypPivoifXJFz6hce+F4/UFWoqpLTMz/a0CnHE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=2f1TmzgeEmH/ZpKizBnhPS2kNtzsJzOIbOViS79//0yUB1+tmze+v4TPfnoRLjY/Q
+         qrd81jjz4MyovTEX8w//Lngzaz+uZmGRhkTWK9BeL63rxMgI3MbhpeSWIJsbjmWHjD
+         CYeiYOvimdAET2umKmWiuS3gBSF8O6oE0ijCyGaU=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Kan Liang <kan.liang@intel.com>
+Subject: [RFC] perf report/top with callchain fixes improvements
+Date:   Tue, 17 Dec 2019 11:48:16 -0300
+Message-Id: <20191217144828.2460-1-acme@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.177.251.225]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Warning is found when compile with "-Wunused-but-set-variable":
+Hi,
 
-fs/ext4/namei.c: In function ‘ext4_add_entry’:
-fs/ext4/namei.c:2167:23: warning: variable ‘sbi’ set but not used
-[-Wunused-but-set-variable]
-  struct ext4_sb_info *sbi;
-                       ^~~
-Fix this by moving the variable @sbi under CONFIG_UNICODE.
+	These patches try to address inconsistencies in the navigation
+in the 'perf report' and 'perf top' when callchains are present.
 
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-Reviewed-by: Ritesh Harjani <riteshh@linux.ibm.com>
----
-v1 -> v2:
- - add "Reviewed-by"
+ 	Linus reported that when pressing ENTER with callchains enabled
+it no longer shows the popup menu, instead it toggles the callchains,
+which is surprising and rather annoying.
 
- fs/ext4/namei.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+	So this patchset makes it consistent by presenting the popup
+menu when ENTER is pressed and callchains are present, and then an
+extra menu entry, associated with the new '+' toggle is added and
+appears proeminently in the popup menu, together with suggestions about
+using 'e' to toogle all the callchains for the top level entry,
 
-diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
-index a856997d87b5..617349be460f 100644
---- a/fs/ext4/namei.c
-+++ b/fs/ext4/namei.c
-@@ -2164,7 +2164,9 @@ static int ext4_add_entry(handle_t *handle, struct dentry *dentry,
- 	struct buffer_head *bh = NULL;
- 	struct ext4_dir_entry_2 *de;
- 	struct super_block *sb;
-+#ifdef CONFIG_UNICODE
- 	struct ext4_sb_info *sbi;
-+#endif
- 	struct ext4_filename fname;
- 	int	retval;
- 	int	dx_fallback=0;
-@@ -2176,12 +2178,12 @@ static int ext4_add_entry(handle_t *handle, struct dentry *dentry,
- 		csum_size = sizeof(struct ext4_dir_entry_tail);
+	Other changes in this patchkit allows for using those suggested
+hotkeys directly from the popup menu and add a new 'k' hotkey to zoom
+straight into the main kernel map. Pressing it again works just like
+using the popup menu via ENTER + "Zoom out of the kernel" or using ESC
+to Zoom out from the last filtering operation.
 
- 	sb = dir->i_sb;
--	sbi = EXT4_SB(sb);
- 	blocksize = sb->s_blocksize;
- 	if (!dentry->d_name.len)
- 		return -EINVAL;
+	While working on this I noticed some other oddities like in
+the default --children mode where the Annotation popup option appeared
+even for entries where no samples were taken, i.e. something that
+appeared just on some callchain, suppressing the Annotation popup entry
+for those cases. If the user insists in using the 'a' hotkey on such an
+entry, a popup warning is showed.
 
- #ifdef CONFIG_UNICODE
-+	sbi = EXT4_SB(sb);
- 	if (ext4_has_strict_mode(sbi) && IS_CASEFOLDED(dir) &&
- 	    sbi->s_encoding && utf8_validate(sbi->s_encoding, &dentry->d_name))
- 		return -EINVAL;
+	Also a fix for kernel maps for ranges that seldom appear in
+samples, like "[kernel.vmlinux].init.text", that didn't a pointer back
+to the kernel maps data structure and thus was causing an assertion
+falure were found and fix, please test, available at:
+
+	Available at:
+
+git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf/hists_browser
+
+Best regards,
+
+- Arnaldo
+
+Arnaldo Carvalho de Melo (12):
+  perf hists browser: Restore ESC as "Zoom out" of DSO/thread/etc
+  perf report/top: Make ENTER consistently bring up menu
+  perf report/top: Add menu entry for toggling callchain expansion
+  perf report/top: Improve toggle callchain menu option
+  perf hists browser: Generalize the do_zoom_dso() function
+  perf report/top: Add 'k' hotkey to zoom directly into the kernel map
+  perf hists browser: Allow passing an initial hotkey
+  tools ui popup: Allow returning hotkeys
+  perf report/top: Allow pressing hotkeys in the options popup menu
+  perf report/top: Do not offer annotation for symbols without samples
+  perf report/top: Make 'e' visible in the help and make it toggle showing callchains
+  perf maps: Set maps pointer in the kmap area for kernel maps
+
+ tools/perf/builtin-c2c.c            |   4 +-
+ tools/perf/tests/maps.c             |   8 +-
+ tools/perf/ui/browsers/hists.c      | 141 ++++++++++++++++++++++++----
+ tools/perf/ui/browsers/hists.h      |   2 +-
+ tools/perf/ui/browsers/res_sample.c |   2 +-
+ tools/perf/ui/browsers/scripts.c    |   2 +-
+ tools/perf/ui/tui/util.c            |  12 ++-
+ tools/perf/ui/util.h                |   2 +-
+ tools/perf/util/auxtrace.c          |   2 +-
+ tools/perf/util/dso.c               |   4 +-
+ tools/perf/util/dso.h               |   4 +-
+ tools/perf/util/machine.c           |  10 +-
+ tools/perf/util/map.c               |  15 ++-
+ tools/perf/util/map.h               |   2 +-
+ tools/perf/util/probe-event.c       |  10 +-
+ tools/perf/util/sort.c              |   3 +-
+ tools/perf/util/sort.h              |   2 +
+ tools/perf/util/symbol-elf.c        |   2 +-
+ tools/perf/util/symbol.c            |   6 +-
+ 19 files changed, 178 insertions(+), 55 deletions(-)
+
 -- 
-2.7.4
+2.21.0
 
