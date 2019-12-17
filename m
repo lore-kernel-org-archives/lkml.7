@@ -2,75 +2,154 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B99C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 795D3C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0B192176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:21:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4989321582
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:21:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="tF3zPMN+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbfLQXVa (ORCPT
+        id S1726539AbfLQXVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 18:21:30 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:44428 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725886AbfLQXVa (ORCPT
+        Tue, 17 Dec 2019 18:21:36 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45642 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726470AbfLQXVf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 18:21:30 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id BD4F714A6F7E9;
-        Tue, 17 Dec 2019 15:21:29 -0800 (PST)
-Date:   Tue, 17 Dec 2019 15:21:26 -0800 (PST)
-Message-Id: <20191217.152126.1428798833164203299.davem@davemloft.net>
-To:     f.fainelli@gmail.com
-Cc:     opendmb@gmail.com, bcm-kernel-feedback-list@broadcom.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 3/8] net: bcmgenet: use CHECKSUM_COMPLETE for
- NETIF_F_RXCSUM
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <042fad13-f6a2-6d1b-ba7a-61c60e394115@gmail.com>
-References: <1576616549-39097-4-git-send-email-opendmb@gmail.com>
-        <20191217.131631.2246524906428878009.davem@davemloft.net>
-        <042fad13-f6a2-6d1b-ba7a-61c60e394115@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Tue, 17 Dec 2019 18:21:35 -0500
+Received: by mail-pl1-f194.google.com with SMTP id b22so68611pls.12
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 15:21:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=GmljEGBgtpmc+8iroW//rwgukhMJ+MwtBQPSUaRaS9c=;
+        b=tF3zPMN+/xu3h+Z5rc57rMs7F8Uo4B619gxCsAZmQCjTeNfkbAUoXCz+Qp4/P8uWiP
+         PGjWV//gldA44MkBn5jDzom3+5uOclW8sLvhquOPXeL2djxus01tP7mr2Nnnw5+Zf04m
+         zj+3tAeqVxoFHz8r2hCa/QPdEGB4Uq8p9OxcTvmS9jG03J7j+pedvkVvoa9q/h0BOLKL
+         G70TlY/vlv9vI+5WlDES6AZ+NZKdkSJBYy15L/I5b2sgLr5ueEQYyb5PYonrFhuHFNl1
+         9i919KS4E9Gu26/YF4l81LF5k13QRgqd47QiZip7t6ILLl6tDQ7mBpvabb1ZGQgvD5Wk
+         80nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GmljEGBgtpmc+8iroW//rwgukhMJ+MwtBQPSUaRaS9c=;
+        b=LYC88r8kvlMosaNfFHo/teHujfB5WbTAX9ToRlu3eP5o7lVeh7CADGlquZGqg74YVH
+         t1dM1pTkgxFIze2rmGrK2v4E2CHJP1BhaRSFZglIIuLRxPyfw0JdiBpnslru5NOu2SoT
+         XD0HxsnptTZJ3dIXcUvaqnLmkLo5d9JIr8I/StoH/lsgyq7aveLN6sCpFy0fZmsYpEHw
+         0+NFEliASWdeFcA/qzzRsncEjsHnYWCoC2pzCPtHmXm8qW5jUwRcnpBaoZCkUDox0PFi
+         X1Eq0DU/u8oVFiwjGiChyzTtqDU9cZO7J0u4qxhMBAXGBeEQD9hEdWh8X7uWPTeOSZx8
+         GFOw==
+X-Gm-Message-State: APjAAAX1FE3mmxK1U+xx2a4p4FwrLn901s1BfzxvJUf6QqS3sXhVkT7K
+        Ra4MAaEUdnhf4wTOiZoJBdAuU9/oHnoGwA==
+X-Google-Smtp-Source: APXvYqxGsyOATNrzJ3PctjFgAJdiNKMaZyiM508Mj9ocTn2uiWx9F9tQ95+TYTddhHmvBSfucqwUfw==
+X-Received: by 2002:a17:90a:1ae9:: with SMTP id p96mr26433pjp.8.1576624894229;
+        Tue, 17 Dec 2019 15:21:34 -0800 (PST)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id 12sm93553pfn.177.2019.12.17.15.21.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Dec 2019 15:21:33 -0800 (PST)
+Subject: Re: [PATCH 2/2] io_uring: batch getting pcpu references
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1576621553.git.asml.silence@gmail.com>
+ <b72c5ec7f6d9a9881948de6cb88d30cc5e0354e9.1576621553.git.asml.silence@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <e54d77e4-9357-cb9e-9d06-d96b24f49a44@kernel.dk>
+Date:   Tue, 17 Dec 2019 16:21:32 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <b72c5ec7f6d9a9881948de6cb88d30cc5e0354e9.1576621553.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 17 Dec 2019 15:21:30 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
-Date: Tue, 17 Dec 2019 14:52:07 -0800
-
-> On 12/17/19 1:16 PM, David Miller wrote:
->> From: Doug Berger <opendmb@gmail.com>
->> Date: Tue, 17 Dec 2019 13:02:24 -0800
->> 
->>> This commit updates the Rx checksum offload behavior of the driver
->>> to use the more generic CHECKSUM_COMPLETE method that supports all
->>> protocols over the CHECKSUM_UNNECESSARY method that only applies
->>> to some protocols known by the hardware.
->>>
->>> This behavior is perceived to be superior.
->>>
->>> Signed-off-by: Doug Berger <opendmb@gmail.com>
->> 
->> This has to be done in the same patch that you change to use
->> the NETIF_F_HW_CSUM feature flag.
+On 12/17/19 3:28 PM, Pavel Begunkov wrote:
+> percpu_ref_tryget() has its own overhead. Instead getting a reference
+> for each request, grab a bunch once per io_submit_sqes().
 > 
-> Even if we were already advertising support for NETIF_F_RXCSUM before
-> patch #2? Not questioning your comment, just trying to understand why
-> this is deemed necessary here since it does not affect the same "direction".
+> basic benchmark with submit and wait 128 non-linked nops showed ~5%
+> performance gain. (7044 KIOPS vs 7423)
+> 
+> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+> ---
+> 
+> For notice: it could be done without @extra_refs variable,
+> but looked too tangled because of gotos.
+> 
+> 
+>  fs/io_uring.c | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
+> 
+> diff --git a/fs/io_uring.c b/fs/io_uring.c
+> index cf4138f0e504..6c85dfc62224 100644
+> --- a/fs/io_uring.c
+> +++ b/fs/io_uring.c
+> @@ -845,9 +845,6 @@ static struct io_kiocb *io_get_req(struct io_ring_ctx *ctx,
+>  	gfp_t gfp = GFP_KERNEL | __GFP_NOWARN;
+>  	struct io_kiocb *req;
+>  
+> -	if (!percpu_ref_tryget(&ctx->refs))
+> -		return NULL;
+> -
+>  	if (!state) {
+>  		req = kmem_cache_alloc(req_cachep, gfp);
+>  		if (unlikely(!req))
+> @@ -3929,6 +3926,7 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
+>  	struct io_submit_state state, *statep = NULL;
+>  	struct io_kiocb *link = NULL;
+>  	int i, submitted = 0;
+> +	unsigned int extra_refs;
+>  	bool mm_fault = false;
+>  
+>  	/* if we have a backlog and couldn't flush it all, return BUSY */
+> @@ -3941,6 +3939,10 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
+>  		statep = &state;
+>  	}
+>  
+> +	if (!percpu_ref_tryget_many(&ctx->refs, nr))
+> +		return -EAGAIN;
+> +	extra_refs = nr;
+> +
+>  	for (i = 0; i < nr; i++) {
+>  		struct io_kiocb *req = io_get_req(ctx, statep);
+>  
+> @@ -3949,6 +3951,7 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
+>  				submitted = -EAGAIN;
+>  			break;
+>  		}
+> +		--extra_refs;
+>  		if (!io_get_sqring(ctx, req)) {
+>  			__io_free_req(req);
+>  			break;
+> @@ -3976,6 +3979,8 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
+>  		io_queue_link_head(link);
+>  	if (statep)
+>  		io_submit_state_end(&state);
+> +	if (extra_refs)
+> +		percpu_ref_put_many(&ctx->refs, extra_refs);
 
-My bad... I misunderstood the situation.
+Might be cleaner to introduce a 'ret' variable, and leave submitted to be just
+that, the number submitted. Then you could just do:
 
-Ignore me :-)
+if (submitted != nr)
+	percpu_ref_put_many(&ctx->refs, nr - submitted);
+
+and not need that weird extra_refs.
+
+-- 
+Jens Axboe
+
