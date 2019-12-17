@@ -7,62 +7,65 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA12C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE222C2D0C5
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C397B206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:41:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A39172072B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:45:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="VFltoxNY"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="hwq1LeVP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbfLQEly (ORCPT
+        id S1727324AbfLQEpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 23:41:54 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44343 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbfLQEly (ORCPT
+        Mon, 16 Dec 2019 23:45:13 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38265 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726772AbfLQEpM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 23:41:54 -0500
-Received: by mail-pg1-f196.google.com with SMTP id x7so4932012pgl.11
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 20:41:54 -0800 (PST)
+        Mon, 16 Dec 2019 23:45:12 -0500
+Received: by mail-pf1-f194.google.com with SMTP id x185so6830059pfc.5
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 20:45:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=Nk/W+5arQWBs6ZTiLBLgKOQUzXBaBv6sspqmS0EGHAM=;
-        b=VFltoxNYivcht4mRSWRTABNUZvebN0skY+qag2OouKIz4KqoGdQmi4ks7UY7ToejLS
-         PmM3/SsG0KYROTJchUegQ3ZKsLyrq5lALVi2+chGheV8prVT/7HfsHzIbUdUDgz7kTNP
-         zjniJjRLCzchA/KZiT0RuPe7ihTp+/PUsHsWRD1bU+TPYDYSCwEyH0g1yct1GMqi9RhG
-         UUJ4UwXZA2d+P+qF2Ri1CIuw6DbNBK8lO5Nl7nueHYBUIEskketwZPFuWS4B6vjw4Mr3
-         xPHjde8l+pjtEqQ+rWrE2InDsMB/QEkTr46EBkZ3I0slwcAj8Se9E/UPwWViFjCTYgph
-         blEg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=IFOKANEwowyMqUieyt/3xc40UqgVgL4V9AjtjYPrU80=;
+        b=hwq1LeVPzmXCN5bkDg6sViC8UrSNXBnAr/kOYMwcvKNWqeqHwVfbOCXLAF/kdcTXGc
+         YHcBAyZKcQmABsOTmsdjKVpFaNe1A+CguRV9XMPbBZJVdc6dzV/Fbr2kI6Ba0hYKMbum
+         3mkxNKFo9JD8pJtyRijXdRPjNC+jYvSTqNl4MmLOspugxR/S9s8d5B5OHRsAksFve+02
+         Uc6gUTRRNgqU4MoSXtvs76Kxe7ZDdYVMtlnuPfwlu+4so94y3kmcpl8zvn0qYbAJI1UV
+         4LU2dA3crDQAr1vQ+sZtN3fvv9i35adZvQ7UZRIj0FLEg67Nvm8z0XakP0PgRBo/mtwd
+         Pp6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Nk/W+5arQWBs6ZTiLBLgKOQUzXBaBv6sspqmS0EGHAM=;
-        b=lXba0G3Gb+YWHiW6M2cHi4LYizHLjTpVG60Q7m4OZWeYibz/TfRvgEDWKQfmEUTwKj
-         u11n2jgqMQJV9KGZdbaPe+rHctdTGkMlv9mRiY/tWvq0/NvgHCR3o3eaCSJNyX1dBd4p
-         3ZcHgTUFd+TsSGNo4HTdA8oZj+lOggHf7D6zyVZz16XG1O4CufGWd9SVKKWBLhwqyl/M
-         Ib5fiC5hJtiplXeV6YNTg2TZz5Tp7Gwj7UMDddJfFH4WFlit5JfY1BcMr716gUzXWSmE
-         DMAvZBbsvzyVxVgm+G95PBGv2kVL3B6SGr/vb2JCpwjPlDUC/Wdee2EfxK/0e4CjCVjg
-         AQJA==
-X-Gm-Message-State: APjAAAXvbMIMHUBnyeMQ2qIl100Wn1LnmT8qqq8x9nPC9gJidcyO1vZX
-        2LOC/Cd/RIZjj79ynkOQmzhYjA==
-X-Google-Smtp-Source: APXvYqy+E/6fERbL4RyzNs3+QqabIKLKD87ynTY+Mde2PSKfFtuH0kuleB413ORzLD8oVL9ma/uqWQ==
-X-Received: by 2002:aa7:9d0d:: with SMTP id k13mr21099578pfp.254.1576557713533;
-        Mon, 16 Dec 2019 20:41:53 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=IFOKANEwowyMqUieyt/3xc40UqgVgL4V9AjtjYPrU80=;
+        b=E4UHNMukk1VE/nTyND19NUZWVgjKbr/K76BDxoechVO+/+duSA6sa7zPH36/Q6dWJx
+         kUppmDVfs/OgtlBt0EkIf5LzkjVLzGQomXpYXZUS4tKXcG07aVpKGu8FAqZgOsp8nZcb
+         rDfV1cZzCvc8CD1FOhP0qNz+aPooRC9NE/CdvOL+rH8hQRluJHssATHykFXuJAIPLSQy
+         cFqT8dWBme8wJUTeAWnFQ7QyH6NT+XhJsS4KjRzz1bQvWPyAWUG5Ef1IlsAhv4KrguxM
+         LbnietQs0rBipeaTe72aly5lXYE206Ga7Am6smTehHeqrfaf4vBX6GKr/Ga0vx/+16xq
+         pAUA==
+X-Gm-Message-State: APjAAAXuTPE4deR836y2pW+KEHJB9Oo4d4gkrcOBO3jlEaKcQH1LNLLw
+        dlblok3vJVv9ec6EYGaJk3LlfA==
+X-Google-Smtp-Source: APXvYqy1w0O44FGIbN6ye1YVpK07d95OsREGZToQpWkiZo0HNxUzZTJL/QrtF7b+2ssKObkpqPKZlA==
+X-Received: by 2002:a63:31d0:: with SMTP id x199mr23145963pgx.286.1576557912262;
+        Mon, 16 Dec 2019 20:45:12 -0800 (PST)
 Received: from rip.lixom.net (99-152-116-91.lightspeed.sntcca.sbcglobal.net. [99.152.116.91])
-        by smtp.gmail.com with ESMTPSA id q12sm24307946pfh.158.2019.12.16.20.41.52
+        by smtp.gmail.com with ESMTPSA id h6sm23597091pgq.61.2019.12.16.20.45.11
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 16 Dec 2019 20:41:52 -0800 (PST)
+        Mon, 16 Dec 2019 20:45:11 -0800 (PST)
 From:   Olof Johansson <olof@lixom.net>
 To:     Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>
 Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
         Olof Johansson <olof@lixom.net>
-Subject: [PATCH] clk: declare clk_core_reparent_orphans() inline
-Date:   Mon, 16 Dec 2019 20:41:46 -0800
-Message-Id: <20191217044146.127200-1-olof@lixom.net>
+Subject: [PATCH v2] clk: declare clk_core_reparent_orphans() inline
+Date:   Mon, 16 Dec 2019 20:45:05 -0800
+Message-Id: <20191217044505.127574-1-olof@lixom.net>
 X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20191217044146.127200-1-olof@lixom.net>
+References: <20191217044146.127200-1-olof@lixom.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -78,6 +81,10 @@ compiler will happily handle it without warning.
 Fixes: 66d9506440bb ("clk: walk orphan list on clock provider registration")
 Signed-off-by: Olof Johansson <olof@lixom.net>
 ---
+
+v2: Forgot to amend when I switched from __maybe_unused to inline. Use
+either version, your choice.
+
  drivers/clk/clk.c | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
