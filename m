@@ -2,199 +2,198 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C53BC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCA8C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFA8221D7D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:20:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1B0A206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:22:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfLQBU1 (ORCPT
+        id S1726467AbfLQBWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 20:20:27 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:58256 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725805AbfLQBU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 20:20:26 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 3BFE2A565485DD866307;
-        Tue, 17 Dec 2019 09:20:24 +0800 (CST)
-Received: from [127.0.0.1] (10.133.216.73) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Tue, 17 Dec 2019
- 09:20:13 +0800
-Subject: Re: [PATCH] irq-gic-v3: fix NULL dereference of disabled redist_base
-To:     Marc Zyngier <maz@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <wanghaibin.wang@huawei.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>
-References: <20191216062745.63397-1-guoheyi@huawei.com>
- <36a042f6bcea5b5d5bfd9f6e6f01d6f5@www.loen.fr>
- <c1447d9f-df4a-db07-adae-7e7e6c0f6455@huawei.com>
- <a4d0973bae1c50d947e7f84f3ec63d8f@www.loen.fr>
-From:   Guoheyi <guoheyi@huawei.com>
-Message-ID: <78431a3a-325e-c30b-54f6-5303f0727c0b@huawei.com>
-Date:   Tue, 17 Dec 2019 09:20:12 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 16 Dec 2019 20:22:33 -0500
+Received: from regular1.263xmail.com ([211.150.70.195]:47750 "EHLO
+        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbfLQBWd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 20:22:33 -0500
+Received: from localhost (unknown [192.168.167.32])
+        by regular1.263xmail.com (Postfix) with ESMTP id 0BC1ABC6;
+        Tue, 17 Dec 2019 09:22:23 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-SKE-CHECKED: 1
+X-ABS-CHECKED: 1
+Received: from [192.168.30.14] (42.17.110.36.static.bjtelecom.net [36.110.17.42])
+        by smtp.263.net (postfix) whith ESMTP id P20510T140147972622080S1576545740921042_;
+        Tue, 17 Dec 2019 09:22:22 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <f54d02cd2c5f8334c6d5cfe055826e0c>
+X-RL-SENDER: chengang@emindsoft.com.cn
+X-SENDER: chengang@emindsoft.com.cn
+X-LOGIN-NAME: chengang@emindsoft.com.cn
+X-FST-TO: lvlisong@emindsoft.com.cn
+X-SENDER-IP: 36.110.17.42
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 5
+Subject: Re: [PATCH] drivers: tty: serial: 8250: fintek: Can enable or disable
+ irq sharing based on isa or pci bus
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     gregkh@linuxfoundation.org, jslaby@suse.com, sr@denx.de,
+        mika.westerberg@linux.intel.com, yegorslists@googlemail.com,
+        yuehaibing@huawei.com, haolee.swjtu@gmail.com, dsterba@suse.com,
+        mojha@codeaurora.org, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lv Li-song <lvlisong@emindsoft.com.cn>
+References: <20191213051717.2058-1-chengang@emindsoft.com.cn>
+ <20191213105033.GT32742@smile.fi.intel.com>
+ <758a0ca9-8f81-1a10-d9e1-11f86fac3de1@emindsoft.com.cn>
+ <20191216095120.GN32742@smile.fi.intel.com>
+From:   Chen Gang <chengang@emindsoft.com.cn>
+Message-ID: <2c4cba36-5833-ca08-4153-2061edf33186@emindsoft.com.cn>
+Date:   Tue, 17 Dec 2019 09:22:20 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <a4d0973bae1c50d947e7f84f3ec63d8f@www.loen.fr>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20191216095120.GN32742@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.133.216.73]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-在 2019/12/16 22:23, Marc Zyngier 写道:
-> On 2019-12-16 13:50, Guoheyi wrote:
->> 在 2019/12/16 19:14, Marc Zyngier 写道:
->>> Hi Heyi,
->>>
->>> On 2019-12-16 06:27, Heyi Guo wrote:
->>>> If we use ACPI MADT GICC structure to pass single redistributor base,
->>>> and mark some GICC as disabled, we'll get below call trace during
->>>> boot:
->>>>
->>>> [    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
->>>> [    0.000000] GICv3: 256 SPIs implemented
->>>> [    0.000000] GICv3: 0 Extended SPIs implemented
->>>> [    0.000000] GICv3: Distributor has no Range Selector support
->>>> [    0.000000] Unable to handle kernel paging request at virtual
->>>> address 000000000000ffe8
->>>> [    0.000000] Mem abort info:
->>>> [    0.000000]   ESR = 0x96000004
->>>> [    0.000000]   EC = 0x25: DABT (current EL), IL = 32 bits
->>>> [    0.000000]   SET = 0, FnV = 0
->>>> [    0.000000]   EA = 0, S1PTW = 0
->>>> [    0.000000] Data abort info:
->>>> [    0.000000]   ISV = 0, ISS = 0x00000004
->>>> [    0.000000]   CM = 0, WnR = 0
->>>> [    0.000000] [000000000000ffe8] user address but active_mm is 
->>>> swapper
->>>> [    0.000000] Internal error: Oops: 96000004 [#1] SMP
->>>> [    0.000000] Modules linked in:
->>>> [    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.5.0-rc1 #5
->>>> [    0.000000] pstate: 20000085 (nzCv daIf -PAN -UAO)
->>>> [    0.000000] pc : gic_iterate_rdists+0x58/0x130
->>>> [    0.000000] lr : gic_iterate_rdists+0x80/0x130
->>>> [    0.000000] sp : ffff8000113d3cb0
->>>> [    0.000000] x29: ffff8000113d3cb0 x28: 0000000000000000
->>>> [    0.000000] x27: 0000000000000000 x26: 0000000000000018
->>>> [    0.000000] x25: 000000000000ffe8 x24: 000000000000003f
->>>> [    0.000000] x23: ffff800010588040 x22: 00000000000005e8
->>>> [    0.000000] x21: ffff8000113df7d0 x20: 0000030f00003f11
->>>> [    0.000000] x19: 0000000000000000 x18: ffffffffffffffff
->>>> [    0.000000] x17: 0000000014aeb8dc x16: 00000000c3ba0ccf
->>>> [    0.000000] x15: ffff8000113d9908 x14: ffff8000913d3a37
->>>> [    0.000000] x13: ffff8000113d3a45 x12: ffff800011402000
->>>> [    0.000000] x11: ffff8000113d39d0 x10: ffff8000113db980
->>>> [    0.000000] x9 : 00000000ffffffd0 x8 : ffff8000106dca98
->>>> [    0.000000] x7 : 000000000000005b x6 : 0000000000000000
->>>> [    0.000000] x5 : 0000000000000000 x4 : ffff8000128c0000
->>>> [    0.000000] x3 : ffff8000128a0000 x2 : ffff0003fc3c7000
->>>> [    0.000000] x1 : 0000000000000001 x0 : 000000000000ffe8
->>>> [    0.000000] Call trace:
->>>> [    0.000000]  gic_iterate_rdists+0x58/0x130
->>>> [    0.000000]  gic_init_bases+0x200/0x4b4
->>>> [    0.000000]  gic_acpi_init+0x148/0x284
->>>> [    0.000000]  acpi_match_madt+0x4c/0x84
->>>> [    0.000000]  acpi_table_parse_entries_array+0x188/0x278
->>>> [    0.000000]  acpi_table_parse_entries+0x70/0x98
->>>> [    0.000000]  acpi_table_parse_madt+0x40/0x50
->>>> [    0.000000]  __acpi_probe_device_table+0x88/0xe4
->>>> [    0.000000]  irqchip_init+0x38/0x40
->>>> [    0.000000]  init_IRQ+0x168/0x19c
->>>> [    0.000000]  start_kernel+0x328/0x508
->>>> [    0.000000] Code: f90017b6 9b3a7f16 f8766853 8b190260 (b9400000)
->>>> [    0.000000] ---[ end trace ae5cf232d924bfc1 ]---
->>>> [    0.000000] Kernel panic - not syncing: Fatal exception
->>>> [    0.000000] Rebooting in 3 seconds..
->>>>
->>>> In this case, nr_redist_regions counts all GICC structures but only
->>>> enabled ones have redistributor mapped. So add check to avoid NULL
->>>> deference of redist_base.
->>>>
->>>> Signed-off-by: Heyi Guo <guoheyi@huawei.com>
->>>> Cc: Thomas Gleixner <tglx@linutronix.de>
->>>> Cc: Jason Cooper <jason@lakedaemon.net>
->>>> Cc: Marc Zyngier <maz@kernel.org>
->>>> ---
->>>>  drivers/irqchip/irq-gic-v3.c | 7 +++++++
->>>>  1 file changed, 7 insertions(+)
->>>>
->>>> diff --git a/drivers/irqchip/irq-gic-v3.c 
->>>> b/drivers/irqchip/irq-gic-v3.c
->>>> index d6218012097b..bd9d55cadef9 100644
->>>> --- a/drivers/irqchip/irq-gic-v3.c
->>>> +++ b/drivers/irqchip/irq-gic-v3.c
->>>> @@ -781,6 +781,13 @@ static int gic_iterate_rdists(int (*fn)(struct
->>>> redist_region *, void __iomem *))
->>>>          u64 typer;
->>>>          u32 reg;
->>>>
->>>> +        /*
->>>> +         * redist_base may be NULL if we use single_redist and 
->>>> some GICC
->>>> +         * structure is disabled.
->>>> +         */
->>>> +        if (!ptr)
->>>> +            continue;
->>>> +
->>>>          reg = readl_relaxed(ptr + GICR_PIDR2) & GIC_PIDR2_ARCH_MASK;
->>>>          if (reg != GIC_PIDR2_ARCH_GICv3 &&
->>>>              reg != GIC_PIDR2_ARCH_GICv4) { /* We're in trouble... */
->>>
->>> This feels like the wrong fix. The redistributor region array should
->>> be completely populated, and there is an assumption all over this 
->>> driver
->>> that there is no junk in these structures.
+On 2019/12/16 下午5:51, Andy Shevchenko wrote:
+> On Mon, Dec 16, 2019 at 10:27:23AM +0800, Chen Gang wrote:
+>> Thank you for your reply.
 >>
+>> I guess, this patch has to be refactored to match the related linux
+>> versions. And excuse me, my orignal hardware environments has been gone,
+>> so I can not give the new refactored patch additional test.
 >>
->> Oh, I thought the place holder for disabled GICR in nr_redist_regions
->> were for some special reason, like CPU hotplug. Now I know I was wrong
->> :)
->
-> CPU hotplug would imply that the redistributors are available.
-> My interpretation of the ACPI MADT GICC subtable is that the
-> redistributors are simply inaccessible when disabled.
->
-> Otherwise, it'd be legitimate to just map them and live with
-> redistributors that do not have a corresponding CPU (which we
-> otherwise do). See ebe2f8718007 for details.
->
-> If we need to support redistributors becoming enabled under our
-> feet, then we'll have to handle this in a different way. We're
-> not there yet.
-Got it.
->
->>> You're seeing this because we don't track the number of *enabled* 
->>> rdists,
->>> and allocate the number of regions based on the number of overall GICC
->>> entries instead of the number of enabled redistributors.
+>> It is necessary to continue discussing and reviewing this patch to let
+>> it be known completely, but I guess I am not the suitable persion to
+>> refactor the patch.
+> 
+> Yeah, you may refactor it, but please mention in the comment (the text going
+> after '---' line) that you are not able to test it. At least for maintainer it
+> may be a crucial point either to take your change or not.
+> 
+
+OK, I shall try to refactor the patch within this weekend in the latest
+linux-next tree.
+
+I should abey the GPL license, so it is my duty to send my modification
+to upstream and try my best to let the patch OK. If the patch can not be
+merged, I can understand (especially, the patch is too late).
+
+>> On 2019/12/13 下午6:50, Andy Shevchenko wrote:
+>>> On Fri, Dec 13, 2019 at 01:17:17PM +0800, chengang@emindsoft.com.cn wrote:
+> 
+>>>>  				aux |= inb(addr[i] + DATA_PORT) << 8;
+>>>>  				if (aux != io_address)
+>>>>  					continue;
 >>>
->>> How about this instead?
+>>>> -
+>>>
+>>> What the point?
+> 
+> (1)
+> 
+>>>> +#if IS_ENABLED(CONFIG_SERIAL_8250_FINTEK_IRQ_SHARING)
+>>>> +				set_icsr(addr[i], k);
+>>>> +#endif
+>>>>  				fintek_8250_exit_key(addr[i]);
+>>>>  				*key = keys[j];
+>>>>  				*index = k;
+>>>> @@ -179,53 +212,6 @@ static int fintek_8250_base_port(u16 io_address, u8 *key, u8 *index)
+>>>>  	return -ENODEV;
+>>>>  }
+>>>>  
 >>
->> It looks good to me, and works fine in my case.
->
-> Can I take this as a Tested-by: ?
+>> In my case at that time, for fintex irq sharing, it needed additional
+>> initinalization, or it could not work well. I wrote the related code
+>> based on the fintek data-sheet which was downloaded from internet.
+> 
+> I guess it's an answer to the (1). Though in (1) I simple meant the removal
+> of blank line (see, I emphasized the excerpt I'm commenting with blank lines
+> before and after).
+> 
 
-Sure.
+Oh, sorry, I missunderstood. For me, reserving the original blank line
+is OK.
 
-Tested-by: Heyi Guo <guoheyi@huawei.com>
+>>>> -static int
+>>>> -fintek_8250_probe(struct pnp_dev *dev, const struct pnp_device_id *dev_id)
+>>>
+>>> Why did you move this function?
+>>> It's now not only hard to follow what has been changed, and to review.
+>>>
+>>>> --- a/drivers/tty/serial/8250/8250_pnp.c
+>>>> +++ b/drivers/tty/serial/8250/8250_pnp.c
+>>>> @@ -438,8 +438,13 @@ static int
+>>>>  serial_pnp_probe(struct pnp_dev *dev, const struct pnp_device_id *dev_id)
+>>>>  {
+>>>>  	struct uart_8250_port uart, *port;
+>>>> -	int ret, line, flags = dev_id->driver_data;
+>>>> +	int ret, line, flags;
+>>>>  
+>>>
+>>
+>> I thought locating the main probe function at the end of the source file
+>> was better for normal code reading (maybe it need be a seperate patch).
+> 
+> Yes, it needs to be in a separated (preparatory) patch.
+> 
+>> But if we don't mind, we can still remain its orignal position.
+> 
+> I do mind, sorry. The rule of thumb is one logical change per patch.
+> 
 
+OK, in the latest linux tree, if necessary, I will send 2 patches.
 
-Thanks,
+>>>> +#if IS_BUILTIN(CONFIG_SERIAL_8250_FINTEK)
+>>>> +	if (!fintek_8250_probe(dev, dev_id))
+>>>> +		return 0;
+>>>> +#endif
+>>>> +	flags = dev_id->driver_data;
+>>>
+>>> Oh, I don't like this.
+>>> It needs a bit more refactoring done first.
+>>>
+>>> The idea that we are not going to pollute generic driver(s) with quirks anymore
+>>> (only when it's really unavoidable).
+>>>
+>>
+>> At that time, for me, I could not get any new better ways in a short
+>> time, and the issue had to be fixed in time, so the code was not good
+>> engough.
+> 
+> It's not an excuse to put hacks in the code that will make maintenance hard.
+> The usual case is such situations is that author of the fix do:
+> 
+> - provide a fix (perhaps ugly one)
+> - refactor and clean up the code
+> 
+> So at the result we have keep maintainable piece in kernel.
+> This is by the way my main motivation to NAK this change.
+> 
+>> At present, Linux version has been changed much, welcome any one to
+>> refactor it for current linux version or another related old linux
+>> versions if this patch is valuable more or less.
+> 
+> Then it's no go for this patch, sorry.
+> 
 
-Heyi
+Yes, refactoring and cleaning up the code is the patch sender's
+resposibility.
 
->
-> Thanks,
->
->         M.
+And thank you for reviewing the patch.
+
 
