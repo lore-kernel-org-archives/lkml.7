@@ -6,34 +6,36 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2BDC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A68EBC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09452206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:43:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 839E4206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:43:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728477AbfLQNnz (ORCPT
+        id S1728501AbfLQNn6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 08:43:55 -0500
-Received: from foss.arm.com ([217.140.110.172]:37530 "EHLO foss.arm.com"
+        Tue, 17 Dec 2019 08:43:58 -0500
+Received: from foss.arm.com ([217.140.110.172]:37544 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726962AbfLQNny (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 08:43:54 -0500
+        id S1726962AbfLQNn4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 08:43:56 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F04331FB;
-        Tue, 17 Dec 2019 05:43:53 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 38A3231B;
+        Tue, 17 Dec 2019 05:43:56 -0800 (PST)
 Received: from e123648.arm.com (unknown [10.37.12.145])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 373813F719;
-        Tue, 17 Dec 2019 05:43:52 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5B7003F719;
+        Tue, 17 Dec 2019 05:43:54 -0800 (PST)
 From:   lukasz.luba@arm.com
 To:     linux-kernel@vger.kernel.org, sudeep.holla@arm.com,
         linux-arm-kernel@lists.infradead.org
 Cc:     rostedt@goodmis.org, mingo@redhat.com, james.quinlan@broadcom.com,
         Lukasz Luba <lukasz.luba@arm.com>
-Subject: [PATCH v2 1/2] include: trace: Add SCMI header with trace events
-Date:   Tue, 17 Dec 2019 13:43:44 +0000
-Message-Id: <20191217134345.14004-1-lukasz.luba@arm.com>
+Subject: [PATCH v2 2/2] drivers: firmware: scmi: Extend SCMI transport layer by trace events
+Date:   Tue, 17 Dec 2019 13:43:45 +0000
+Message-Id: <20191217134345.14004-2-lukasz.luba@arm.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191217134345.14004-1-lukasz.luba@arm.com>
+References: <20191217134345.14004-1-lukasz.luba@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -41,129 +43,108 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Lukasz Luba <lukasz.luba@arm.com>
 
-Adding trace events would help to measure the speed of the communication
-channel. It can be also potentially used helpful during investigation
-of some issues platforms which use different transport layer.
+The SCMI transport layer communicates via mailboxes and shared memory with
+firmware running on a microcontroller. It is platform specific how long it
+takes to pass a SCMI message. The most sensitive requests are coming from
+CPUFreq subsystem, which might be used by the scheduler.
+Thus, there is a need to measure these delays and capture anomalies.
+This change introduces trace events wrapped around transfer code.
 
-Update also MAINTAINERS file with information that the new trace events
-are maintained.
+According to Jim's suggestion a unique transfer_id is to distinguish
+similar entries which might have the same message id, protocol id and
+sequence. This is a case then there are some timeouts in transfers.
 
 Suggested-by: Jim Quinlan <james.quinlan@broadcom.com>
 Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
 ---
- MAINTAINERS                 |  1 +
- include/trace/events/scmi.h | 90 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 91 insertions(+)
- create mode 100644 include/trace/events/scmi.h
+ drivers/firmware/arm_scmi/common.h |  2 ++
+ drivers/firmware/arm_scmi/driver.c | 18 ++++++++++++++++++
+ 2 files changed, 20 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index cc0a4a8ae06a..0182315226fc 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15966,6 +15966,7 @@ F:	drivers/firmware/arm_scpi.c
- F:	drivers/firmware/arm_scmi/
- F:	drivers/reset/reset-scmi.c
- F:	include/linux/sc[mp]i_protocol.h
-+F:	include/trace/events/scmi.h
+diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
+index 5237c2ff79fe..df35358ff324 100644
+--- a/drivers/firmware/arm_scmi/common.h
++++ b/drivers/firmware/arm_scmi/common.h
+@@ -81,6 +81,7 @@ struct scmi_msg {
+ /**
+  * struct scmi_xfer - Structure representing a message flow
+  *
++ * @transfer_id: Unique ID for debug & profiling purpose
+  * @hdr: Transmit message header
+  * @tx: Transmit message
+  * @rx: Receive message, the buffer should be pre-allocated to store
+@@ -90,6 +91,7 @@ struct scmi_msg {
+  * @async: pointer to delayed response message received event completion
+  */
+ struct scmi_xfer {
++	int transfer_id;
+ 	struct scmi_msg_hdr hdr;
+ 	struct scmi_msg tx;
+ 	struct scmi_msg rx;
+diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+index 3eb0382491ce..15c5629ad2cd 100644
+--- a/drivers/firmware/arm_scmi/driver.c
++++ b/drivers/firmware/arm_scmi/driver.c
+@@ -29,6 +29,9 @@
  
- SYSTEM RESET/SHUTDOWN DRIVERS
- M:	Sebastian Reichel <sre@kernel.org>
-diff --git a/include/trace/events/scmi.h b/include/trace/events/scmi.h
-new file mode 100644
-index 000000000000..f076c430d243
---- /dev/null
-+++ b/include/trace/events/scmi.h
-@@ -0,0 +1,90 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM scmi
+ #include "common.h"
+ 
++#define CREATE_TRACE_POINTS
++#include <trace/events/scmi.h>
 +
-+#if !defined(_TRACE_SCMI_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_SCMI_H
+ #define MSG_ID_MASK		GENMASK(7, 0)
+ #define MSG_XTRACT_ID(hdr)	FIELD_GET(MSG_ID_MASK, (hdr))
+ #define MSG_TYPE_MASK		GENMASK(9, 8)
+@@ -61,6 +64,8 @@ enum scmi_error_codes {
+ static LIST_HEAD(scmi_list);
+ /* Protection for the entire list */
+ static DEFINE_MUTEX(scmi_list_mutex);
++/* Track the unique id for the transfers for debug & profiling purpose */
++static atomic_t transfer_last_id;
+ 
+ /**
+  * struct scmi_xfers_info - Structure to manage transfer information
+@@ -304,6 +309,7 @@ static struct scmi_xfer *scmi_xfer_get(const struct scmi_handle *handle,
+ 	xfer = &minfo->xfer_block[xfer_id];
+ 	xfer->hdr.seq = xfer_id;
+ 	reinit_completion(&xfer->done);
++	xfer->transfer_id = atomic_inc_return(&transfer_last_id);
+ 
+ 	return xfer;
+ }
+@@ -374,6 +380,10 @@ static void scmi_rx_callback(struct mbox_client *cl, void *m)
+ 
+ 	scmi_fetch_response(xfer, mem);
+ 
++	trace_scmi_rx_done(xfer->transfer_id, xfer->hdr.id,
++			   xfer->hdr.protocol_id, xfer->hdr.seq,
++			   msg_type);
 +
-+#include <linux/tracepoint.h>
+ 	if (msg_type == MSG_TYPE_DELAYED_RESP)
+ 		complete(xfer->async_done);
+ 	else
+@@ -439,6 +449,10 @@ int scmi_do_xfer(const struct scmi_handle *handle, struct scmi_xfer *xfer)
+ 	if (unlikely(!cinfo))
+ 		return -EINVAL;
+ 
++	trace_scmi_xfer_begin(xfer->transfer_id, xfer->hdr.id,
++			      xfer->hdr.protocol_id, xfer->hdr.seq,
++			      xfer->hdr.poll_completion);
 +
-+TRACE_EVENT(scmi_xfer_begin,
-+	TP_PROTO(int transfer_id, u8 msg_id, u8 protocol_id, u16 seq,
-+		 bool poll),
-+	TP_ARGS(transfer_id, msg_id, protocol_id, seq, poll),
+ 	ret = mbox_send_message(cinfo->chan, xfer);
+ 	if (ret < 0) {
+ 		dev_dbg(dev, "mbox send fail %d\n", ret);
+@@ -478,6 +492,10 @@ int scmi_do_xfer(const struct scmi_handle *handle, struct scmi_xfer *xfer)
+ 	 */
+ 	mbox_client_txdone(cinfo->chan, ret);
+ 
++	trace_scmi_xfer_end(xfer->transfer_id, xfer->hdr.id,
++			    xfer->hdr.protocol_id, xfer->hdr.seq,
++			    xfer->hdr.status);
 +
-+	TP_STRUCT__entry(
-+		__field(int, transfer_id)
-+		__field(u8, msg_id)
-+		__field(u8, protocol_id)
-+		__field(u16, seq)
-+		__field(bool, poll)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->transfer_id = transfer_id;
-+		__entry->msg_id = msg_id;
-+		__entry->protocol_id = protocol_id;
-+		__entry->seq = seq;
-+		__entry->poll = poll;
-+	),
-+
-+	TP_printk("transfer_id=%d msg_id=%u protocol_id=%u seq=%u poll=%u",
-+		__entry->transfer_id, __entry->msg_id, __entry->protocol_id,
-+		__entry->seq, __entry->poll)
-+);
-+
-+TRACE_EVENT(scmi_xfer_end,
-+	TP_PROTO(int transfer_id, u8 msg_id, u8 protocol_id, u16 seq,
-+		 u32 status),
-+	TP_ARGS(transfer_id, msg_id, protocol_id, seq, status),
-+
-+	TP_STRUCT__entry(
-+		__field(int, transfer_id)
-+		__field(u8, msg_id)
-+		__field(u8, protocol_id)
-+		__field(u16, seq)
-+		__field(u32, status)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->transfer_id = transfer_id;
-+		__entry->msg_id = msg_id;
-+		__entry->protocol_id = protocol_id;
-+		__entry->seq = seq;
-+		__entry->status = status;
-+	),
-+
-+	TP_printk("transfer_id=%d msg_id=%u protocol_id=%u seq=%u status=%u",
-+		__entry->transfer_id, __entry->msg_id, __entry->protocol_id,
-+		__entry->seq, __entry->status)
-+);
-+
-+TRACE_EVENT(scmi_rx_done,
-+	TP_PROTO(int transfer_id, u8 msg_id, u8 protocol_id, u16 seq,
-+		 u8 msg_type),
-+	TP_ARGS(transfer_id, msg_id, protocol_id, seq, msg_type),
-+
-+	TP_STRUCT__entry(
-+		__field(int, transfer_id)
-+		__field(u8, msg_id)
-+		__field(u8, protocol_id)
-+		__field(u16, seq)
-+		__field(u8, msg_type)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->transfer_id = transfer_id;
-+		__entry->msg_id = msg_id;
-+		__entry->protocol_id = protocol_id;
-+		__entry->seq = seq;
-+		__entry->msg_type = msg_type;
-+	),
-+
-+	TP_printk("transfer_id=%d msg_id=%u protocol_id=%u seq=%u msg_type=%u",
-+		__entry->transfer_id, __entry->msg_id, __entry->protocol_id,
-+		__entry->seq, __entry->msg_type)
-+);
-+#endif /* _TRACE_SCMI_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
+ 	return ret;
+ }
+ 
 -- 
 2.17.1
 
