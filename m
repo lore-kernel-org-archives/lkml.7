@@ -2,117 +2,129 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B54A9C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D48C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8856D21775
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 021F821739
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:06:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WRtcZHMe"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="f9tkSxBn";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AQDaSeiW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728750AbfLQOGk (ORCPT
+        id S1728794AbfLQOGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:06:40 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:52373 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726164AbfLQOGk (ORCPT
+        Tue, 17 Dec 2019 09:06:55 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:48123 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726164AbfLQOGy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:06:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576591598;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zQ1VJJyR0fM6YEJQp8p0uOYw5xwcBVp/Fl4tPeamlLo=;
-        b=WRtcZHMemCxWShq2STgpuz/o5NlaAWACOdgixKJmHYRIljihyB4PqYWfisGa4gaOzTBmzi
-        bY/Xs6/GxDgobEnS4krK6JBmwnmgrk3FKniG3h26ZowH2lOJVwdlRSuhq/6kzNW+RWiYDs
-        Qs7cLD7iSzNYrMM4bna/R/d3JZhho54=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-105-wx6UWhcWNXy-WfpXQjk71w-1; Tue, 17 Dec 2019 09:06:35 -0500
-X-MC-Unique: wx6UWhcWNXy-WfpXQjk71w-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D36628DFF1B;
-        Tue, 17 Dec 2019 14:06:33 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-123-81.rdu2.redhat.com [10.10.123.81])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E62805C545;
-        Tue, 17 Dec 2019 14:06:32 +0000 (UTC)
-Subject: Re: [PATCH v2] mm/hugetlb: Defer freeing of huge pages if in non-task
- context
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Matthew Wilcox <willy@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-References: <20191217012508.31495-1-longman@redhat.com>
- <20191217093143.GC31063@dhcp22.suse.cz>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <4bb217ac-d80a-12b8-839f-2db9ced2636b@redhat.com>
-Date:   Tue, 17 Dec 2019 09:06:31 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 17 Dec 2019 09:06:54 -0500
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailnew.nyi.internal (Postfix) with ESMTP id C24962EC6;
+        Tue, 17 Dec 2019 09:06:52 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Tue, 17 Dec 2019 09:06:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=eTfZFWGi2smTIboUi+zb16BN5p3
+        65ojxo8UtApRdrno=; b=f9tkSxBnH8B04ocRQbrSrxJ/KUA5blrabluCkfWQWpA
+        pMyPAQCTkyNRjEKBm65HGE2E31nkIdUTfnEsNATgqoL6UV6mlQJM6zlZX1XD0Iyf
+        RM5JiSyQR0aOCRkQawfMsWTbBPd6sTuk1cjmGx7bsw1g0eAiw9MoGv8ZTrxU2/PN
+        Z8MeoJre5CkhSj653Wme+Z5/rTacgCg/fXfDhNXVjCm+g03Cot7tSvS6I5GdoIUw
+        IYldt+k8Bdcq74xc4auXBF2kjp5gbL73ug1am5NL+0ZAs/4NZX7TWgbC8wfR+sis
+        T6Bgu7dd6EhZmen4w00L8qhfR2riV53ZIp00iDfb0Jw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=eTfZFW
+        Gi2smTIboUi+zb16BN5p365ojxo8UtApRdrno=; b=AQDaSeiWpqvGSbZLeLnuaL
+        wMmyVKG1UmbHGV1h0Ro+wZpDzTcfKV99i3YWJQ9o8xdrwgBwNemTYWPe1Tqbkb5l
+        psF5yIMs5w5Ag0TQS17IyUV5LizKS9+f+KmR4VUG+Z3VY5lEOORMLfw0G3mMnmHQ
+        AgaCFUGWKlmbW7M/VAnhDG/M75UEtkGVm1iLFss9Qk2v3ZV5VcV5e7+JtrTsYFVl
+        aQjFFq42tujH5sP6ftZ6uVk6hU3YFVduevKL1kO5hmZJuG3vlktw4EHORNIrRL07
+        tQPbu1Mr7M9VB7XyxG2d1UgMPUB4uR6rdlkw/rsf1lEpz3crliFwrx60TcSMWJAA
+        ==
+X-ME-Sender: <xms:--D4XdLZsdQmxSmgsLkN7cXn2bxx8gRHsYyHMJAfEnkmN8VANyuA0w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddtjedgheelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvuffkfhggtggujgesthdtre
+    dttddtvdenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheq
+    necukfhppeekfedrkeeirdekledruddtjeenucfrrghrrghmpehmrghilhhfrhhomhepgh
+    hrvghgsehkrhhorghhrdgtohhmnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:--D4XbEYHp2-kPuIG59C4Kl8OOlB_3tVYtLRDu2Ik_uE8uvfJa5XOg>
+    <xmx:--D4XQF9seA1xGquH3HeVPyGspu2rwCEX1dFMcsKP5gk59cJI7bifA>
+    <xmx:--D4XbtFPyAwX9F_pdIlKhzD8qV00SzbDSuAj4Jyc-fQGNtyALma6Q>
+    <xmx:_OD4XW6MGPJBTTOQGOeoamg_JCrFeTZpL8VTexlu-vYMP6J95djZVA>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 8C92C80065;
+        Tue, 17 Dec 2019 09:06:50 -0500 (EST)
+Date:   Tue, 17 Dec 2019 15:06:46 +0100
+From:   Greg KH <greg@kroah.com>
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, dmitry.torokhov@gmail.com,
+        jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com,
+        arnd@arndb.de, masahiroy@kernel.org, michal.lkml@markovi.net,
+        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
+        linux-gpio@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH] RFC: platform driver registering via initcall tables
+Message-ID: <20191217140646.GC3489463@kroah.com>
+References: <20191217102219.29223-1-info@metux.net>
+ <20191217103152.GB2914497@kroah.com>
+ <6422bc88-6d0a-7b51-aaa7-640c6961b177@metux.net>
 MIME-Version: 1.0
-In-Reply-To: <20191217093143.GC31063@dhcp22.suse.cz>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6422bc88-6d0a-7b51-aaa7-640c6961b177@metux.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/17/19 4:31 AM, Michal Hocko wrote:
-> On Mon 16-12-19 20:25:08, Waiman Long wrote:
-> [...]
->> Both the hugetbl_lock and the subpool lock can be acquired in
->> free_huge_page(). One way to solve the problem is to make both locks
->> irq-safe.
-> Please document why we do not take this, quite natural path and instead
-> we have to come up with an elaborate way instead. I believe the primary
-> motivation is that some operations under those locks are quite
-> expensive. Please add that to the changelog and ideally to the code as
-> well. We probably want to fix those anyway and then this would be a
-> temporary workaround.
->
-Fair enough, I will include data from Mike about some use cases where
-hugetlb_lock will be held for a long time.
+On Tue, Dec 17, 2019 at 02:44:39PM +0100, Enrico Weigelt, metux IT consult wrote:
+> On 17.12.19 11:31, Greg KH wrote:
+> 
+> Hi,
+> 
+> > No, what is so "special" about platform drivers that they require this?
+> 
+> Nothing, of course ;-)
+> 
+> It's the the starting point for this PoC. The idea actually is doing
+> this for all other driver types, too (eg. spi, pci, usb, ...). But
+> they'll need their own tables, as different *_register() functions have
+> to be called - just haven't implemented that yet.
 
+That's not needed, and you are going to break the implicit ordering we
+already have with link order.  You are going to have to figure out what
+bus type the driver is, to determine what segment it was in, to figure
+out what was loaded before what.
 
->> Another alternative is to defer the freeing to a workqueue job.
->>
->> This patch implements the deferred freeing by adding a
->> free_hpage_workfn() work function to do the actual freeing. The
->> free_huge_page() call in a non-task context saves the page to be freed
->> in the hpage_freelist linked list in a lockless manner.
-> Do we need to over complicate this (presumably) rare event by a lockless
-> algorithm? Why cannot we use a dedicated spin lock for for the linked
-> list manipulation? This should be really a trivial code without an
-> additional burden of all the lockless subtleties.
+Not good.
 
-Right, I can use an irq-safe raw spinlock instead. I am fine doing that.
+> > If anything, we should be moving _AWAY_ from platform drivers and use
+> > real bus drivers instead.
+> 
+> That would be nice, but, unfortunately, we have lots of devices which
+> aren't attached to any (probing-capable) bus. That's why we have things
+> like oftree, etc.
+> 
+> > Please no, I don't see why this is even needed.
+> 
+> The idea is getting rid of all the init code, which all just does the
+> same, just calls some *_register() function.
 
+There's no need to get rid of it, what are you trying to save here?  How
+can you be sure init order is still the same?
 
->
->> +	pr_debug("HugeTLB: free_hpage_workfn() frees %d huge page(s)\n", cnt);
-> Why do we need the debugging message here?
+thanks,
 
-It is there just to verify that the workfn is properly activated and
-frees the huge page. This message won't be printed by default. I can
-remove it if you guys don't really want a debug statement here.
-
-Cheers,
-Longman
-
+greg k-h
