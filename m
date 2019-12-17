@@ -2,111 +2,103 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E7DBC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5888EC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:28:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42B9D207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24D35207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:28:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JioxTie0"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ealmZETn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727594AbfLQL2X (ORCPT
+        id S1727434AbfLQL2r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 06:28:23 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:12987 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727112AbfLQL2X (ORCPT
+        Tue, 17 Dec 2019 06:28:47 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:39534 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726729AbfLQL2r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 06:28:23 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5df8bbcc0000>; Tue, 17 Dec 2019 03:28:13 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 17 Dec 2019 03:28:22 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 17 Dec 2019 03:28:22 -0800
-Received: from [10.21.133.51] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 17 Dec
- 2019 11:28:19 +0000
-Subject: Re: [PATCH 5.4 000/177] 5.4.4-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20191216174811.158424118@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <b0514e98-0238-b226-de8d-865394a8c6f3@nvidia.com>
-Date:   Tue, 17 Dec 2019 11:28:17 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 17 Dec 2019 06:28:47 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBHBSZh1071148;
+        Tue, 17 Dec 2019 05:28:35 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576582115;
+        bh=WL0T9j68qwDD2LuB0VajA7vfBQNu8J+ddVt41j8JUFw=;
+        h=From:To:CC:Subject:Date;
+        b=ealmZETnusIhW6fnlwU3yO/8BlRM0TFyfgAJluEMsyDAjcm4KrI/fQp985xeyjOAi
+         1htmq6faMHMj7nrTa/04EygPzDB6CMSk1rK2Nw+7Cu3ce8rCK61UiEs9zde4Fu4Co/
+         F01Ji5Qjv/ro7PDj3juublEsNUNvR9Vs5m09bTjc=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBHBSZMD124925;
+        Tue, 17 Dec 2019 05:28:35 -0600
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
+ Dec 2019 05:28:35 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 17 Dec 2019 05:28:35 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBHBSWdS090173;
+        Tue, 17 Dec 2019 05:28:33 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <ulf.hansson@linaro.org>, <shawnguo@kernel.org>,
+        <s.hauer@pengutronix.de>
+CC:     <vkoul@kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH] mmc: mxs: Use dma_request_chan() instead dma_request_slave_channel()
+Date:   Tue, 17 Dec 2019 13:28:47 +0200
+Message-ID: <20191217112847.31351-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576582093; bh=QxxLWs26ZbD1guhwQwQsDkMiRykZ0nt21dSycWY2nAY=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=JioxTie0538wBNl6OJA9vDQLciwAJyM4RVYRo+CtEvH3axs7QU52t1iUDRgm5+O3/
-         RSxTEny6nwxYeWpGucYgSMTqdlKp7GIpgUnsznssypVEsZJ5eYJVhG7+DuFBBS6kZs
-         3rH5oPHjFDDhq5NO+IhfDwXpUNA/ApLgEmfHYCQQ2nhk9MDW+8wv0KsmP7hB0OVtDD
-         /i9jJNPagfAOrEQvcocDdlm43HhKkP76pbi7XsxY0YmYfatCx60UiaEEVLxyKm12V9
-         bHjqe0olE2BkSPFOD+tyyiw8EnLX/Sv8P9fL1TmKWqjrcEyENVIb0knpM58b8ZwY56
-         ZaO7Rg2P57PcA==
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+dma_request_slave_channel() is a wrapper on top of dma_request_chan()
+eating up the error code.
 
-On 16/12/2019 17:47, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.4 release.
-> There are 177 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed, 18 Dec 2019 17:41:25 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.4-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
-> -------------
+By using dma_request_chan() directly the driver can support deferred
+probing against DMA.
 
-All tests are passing for Tegra ...
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ drivers/mmc/host/mxs-mmc.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Test results for stable-v5.4:
-    13 builds:	13 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    38 tests:	38 pass, 0 fail
-
-Linux version:	5.4.4-rc1-gfffa88522363
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
-
-Cheers
-Jon
-
+diff --git a/drivers/mmc/host/mxs-mmc.c b/drivers/mmc/host/mxs-mmc.c
+index 4031217d21c3..d82674aed447 100644
+--- a/drivers/mmc/host/mxs-mmc.c
++++ b/drivers/mmc/host/mxs-mmc.c
+@@ -623,11 +623,11 @@ static int mxs_mmc_probe(struct platform_device *pdev)
+ 		goto out_clk_disable;
+ 	}
+ 
+-	ssp->dmach = dma_request_slave_channel(&pdev->dev, "rx-tx");
+-	if (!ssp->dmach) {
++	ssp->dmach = dma_request_chan(&pdev->dev, "rx-tx");
++	if (IS_ERR(ssp->dmach)) {
+ 		dev_err(mmc_dev(host->mmc),
+ 			"%s: failed to request dma\n", __func__);
+-		ret = -ENODEV;
++		ret = PTR_ERR(ssp->dmach);
+ 		goto out_clk_disable;
+ 	}
+ 
 -- 
-nvpublic
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
