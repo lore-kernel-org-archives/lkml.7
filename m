@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80901C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C1FC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:11:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B854206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CD1F2465E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:11:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576613468;
-	bh=iGr0PRDYC3xSiwAXOImaTCuwC5jlNCPnVlM6bYUKVEw=;
+	s=default; t=1576613470;
+	bh=yfXMX4PLHDZv8MTXcX+8/pQrj/RT0pN2aDR+vwmqh9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=daKYKiEjrXwzQ6oM1aXQie6xovpQ2VgdsQlwrVNalKIgy82ySguK7eT/WRTfRW1jy
-	 FSwubQyfyFqL4a0lSBXBFae/VsbRV+CCU7DVDywA23AG9SiMPD6hCav7DhAvj5zydx
-	 3Ckiz5AndIxJFh4TRubULjIGCbwP3ex0wY0K6fS4=
+	b=Jn11TyWM5B4RUoQfLplKW5aDXZh55q28oHHknYkT/ywy1VILsUOfUgc5S7lcXnZEv
+	 2wOSLDm26b+6wEJBQDOgAvlrUObxJVQIKRM8enoiwGiUF8GXdozXTeaXtye9h2+aeW
+	 mIwfXFAWdAH1hY6a/NiMiaVu79wlnpLfWKXgwWtI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728589AbfLQULH (ORCPT
+        id S1728611AbfLQULJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 15:11:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37480 "EHLO mail.kernel.org"
+        Tue, 17 Dec 2019 15:11:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728638AbfLQULF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 15:11:05 -0500
+        id S1728592AbfLQULH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 15:11:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC1992465E;
-        Tue, 17 Dec 2019 20:11:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 481EC24684;
+        Tue, 17 Dec 2019 20:11:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576613464;
-        bh=iGr0PRDYC3xSiwAXOImaTCuwC5jlNCPnVlM6bYUKVEw=;
+        s=default; t=1576613466;
+        bh=yfXMX4PLHDZv8MTXcX+8/pQrj/RT0pN2aDR+vwmqh9Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H8Y3tLO6QXIpyaAFuu14fX60Lt+ckY07szE550MklBiMGYsqhzXcBdBGBMLARzvey
-         hnMIj99J9f5vPxTPyHD061mW1xDIjOy1oAOjGuTUIUkmbzn2ZuZT64jDLcG2abW+Ia
-         U03W8afl88h9e10rV5QGh297e2rL3LnxSMQAGGvI=
+        b=w/wVYWPskjTc7r31YD6vgMeY63vmskNuDbC5UcfDnHJjHX5AaJ6jwHnCqqP48RsK+
+         sDe2c8qhqanrtK0PJuEp1ugN1oJmiNOHfRjWo1oG11xw/N0b8odBftddjd0wkJ8qeN
+         1u1YTpZW5A9YaWoQ7H40bPh8yIVQ5b+6J1dfrgaE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Lobakin <alobakin@dlink.ru>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 04/37] net: dsa: fix flow dissection on Tx path
-Date:   Tue, 17 Dec 2019 21:09:25 +0100
-Message-Id: <20191217200723.348510574@linuxfoundation.org>
+        stable@vger.kernel.org, Aya Levin <ayal@mellanox.com>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.4 31/37] net/mlx5e: Fix translation of link mode into speed
+Date:   Tue, 17 Dec 2019 21:09:52 +0100
+Message-Id: <20191217200733.783539788@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191217200721.741054904@linuxfoundation.org>
 References: <20191217200721.741054904@linuxfoundation.org>
@@ -60,114 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@dlink.ru>
+From: Aya Levin <ayal@mellanox.com>
 
-[ Upstream commit 8bef0af09a5415df761b04fa487a6c34acae74bc ]
+[ Upstream commit 6d485e5e555436d2c13accdb10807328c4158a17 ]
 
-Commit 43e665287f93 ("net-next: dsa: fix flow dissection") added an
-ability to override protocol and network offset during flow dissection
-for DSA-enabled devices (i.e. controllers shipped as switch CPU ports)
-in order to fix skb hashing for RPS on Rx path.
+Add a missing value in translation of PTYS ext_eth_proto_oper to its
+corresponding speed. When ext_eth_proto_oper bit 10 is set, ethtool
+shows unknown speed. With this fix, ethtool shows speed is 100G as
+expected.
 
-However, skb_hash() and added part of code can be invoked not only on
-Rx, but also on Tx path if we have a multi-queued device and:
- - kernel is running on UP system or
- - XPS is not configured.
-
-The call stack in this two cases will be like: dev_queue_xmit() ->
-__dev_queue_xmit() -> netdev_core_pick_tx() -> netdev_pick_tx() ->
-skb_tx_hash() -> skb_get_hash().
-
-The problem is that skbs queued for Tx have both network offset and
-correct protocol already set up even after inserting a CPU tag by DSA
-tagger, so calling tag_ops->flow_dissect() on this path actually only
-breaks flow dissection and hashing.
-
-This can be observed by adding debug prints just before and right after
-tag_ops->flow_dissect() call to the related block of code:
-
-Before the patch:
-
-Rx path (RPS):
-
-[   19.240001] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
-[   19.244271] tag_ops->flow_dissect()
-[   19.247811] Rx: proto: 0x0800, nhoff: 8	/* ETH_P_IP */
-
-[   19.215435] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
-[   19.219746] tag_ops->flow_dissect()
-[   19.223241] Rx: proto: 0x0806, nhoff: 8	/* ETH_P_ARP */
-
-[   18.654057] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
-[   18.658332] tag_ops->flow_dissect()
-[   18.661826] Rx: proto: 0x8100, nhoff: 8	/* ETH_P_8021Q */
-
-Tx path (UP system):
-
-[   18.759560] Tx: proto: 0x0800, nhoff: 26	/* ETH_P_IP */
-[   18.763933] tag_ops->flow_dissect()
-[   18.767485] Tx: proto: 0x920b, nhoff: 34	/* junk */
-
-[   22.800020] Tx: proto: 0x0806, nhoff: 26	/* ETH_P_ARP */
-[   22.804392] tag_ops->flow_dissect()
-[   22.807921] Tx: proto: 0x920b, nhoff: 34	/* junk */
-
-[   16.898342] Tx: proto: 0x86dd, nhoff: 26	/* ETH_P_IPV6 */
-[   16.902705] tag_ops->flow_dissect()
-[   16.906227] Tx: proto: 0x920b, nhoff: 34	/* junk */
-
-After:
-
-Rx path (RPS):
-
-[   16.520993] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
-[   16.525260] tag_ops->flow_dissect()
-[   16.528808] Rx: proto: 0x0800, nhoff: 8	/* ETH_P_IP */
-
-[   15.484807] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
-[   15.490417] tag_ops->flow_dissect()
-[   15.495223] Rx: proto: 0x0806, nhoff: 8	/* ETH_P_ARP */
-
-[   17.134621] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
-[   17.138895] tag_ops->flow_dissect()
-[   17.142388] Rx: proto: 0x8100, nhoff: 8	/* ETH_P_8021Q */
-
-Tx path (UP system):
-
-[   15.499558] Tx: proto: 0x0800, nhoff: 26	/* ETH_P_IP */
-
-[   20.664689] Tx: proto: 0x0806, nhoff: 26	/* ETH_P_ARP */
-
-[   18.565782] Tx: proto: 0x86dd, nhoff: 26	/* ETH_P_IPV6 */
-
-In order to fix that we can add the check 'proto == htons(ETH_P_XDSA)'
-to prevent code from calling tag_ops->flow_dissect() on Tx.
-I also decided to initialize 'offset' variable so tagger callbacks can
-now safely leave it untouched without provoking a chaos.
-
-Fixes: 43e665287f93 ("net-next: dsa: fix flow dissection")
-Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: a08b4ed1373d ("net/mlx5: Add support to ext_* fields introduced in Port Type and Speed register")
+Signed-off-by: Aya Levin <ayal@mellanox.com>
+Reviewed-by: Eran Ben Elisha <eranbe@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/flow_dissector.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en/port.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/core/flow_dissector.c
-+++ b/net/core/flow_dissector.c
-@@ -870,9 +870,10 @@ bool __skb_flow_dissect(const struct net
- 		nhoff = skb_network_offset(skb);
- 		hlen = skb_headlen(skb);
- #if IS_ENABLED(CONFIG_NET_DSA)
--		if (unlikely(skb->dev && netdev_uses_dsa(skb->dev))) {
-+		if (unlikely(skb->dev && netdev_uses_dsa(skb->dev) &&
-+			     proto == htons(ETH_P_XDSA))) {
- 			const struct dsa_device_ops *ops;
--			int offset;
-+			int offset = 0;
- 
- 			ops = skb->dev->dsa_ptr->tag_ops;
- 			if (ops->flow_dissect &&
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/port.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/port.c
+@@ -73,6 +73,7 @@ static const u32 mlx5e_ext_link_speed[ML
+ 	[MLX5E_50GAUI_2_LAUI_2_50GBASE_CR2_KR2]	= 50000,
+ 	[MLX5E_50GAUI_1_LAUI_1_50GBASE_CR_KR]	= 50000,
+ 	[MLX5E_CAUI_4_100GBASE_CR4_KR4]		= 100000,
++	[MLX5E_100GAUI_2_100GBASE_CR2_KR2]	= 100000,
+ 	[MLX5E_200GAUI_4_200GBASE_CR4_KR4]	= 200000,
+ 	[MLX5E_400GAUI_8]			= 400000,
+ };
 
 
