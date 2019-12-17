@@ -2,77 +2,72 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AEBDC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 03:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C37C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 03:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEEE3206D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 03:02:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5E8E206D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 03:02:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbfLQDC2 (ORCPT
+        id S1726989AbfLQDCc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 22:02:28 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:34812 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726446AbfLQDC2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 22:02:28 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id C96DBE269370C8643418;
-        Tue, 17 Dec 2019 11:02:25 +0800 (CST)
-Received: from huawei.com (10.175.127.16) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Tue, 17 Dec 2019
- 11:02:19 +0800
-From:   z00417012 <zhangpan26@huawei.com>
-To:     <zhangpan26@huawei.com>, <hushiyuan@huawei.com>,
-        <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
-        <rydberg@bitmath.org>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] drivers/hid/hid-multitouch.c: fix a possible null pointer access.
-Date:   Tue, 17 Dec 2019 11:02:02 +0800
-Message-ID: <1576551722-16966-1-git-send-email-zhangpan26@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 16 Dec 2019 22:02:32 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:40774 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbfLQDCb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 22:02:31 -0500
+Received: from [213.220.153.21] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1ih382-0006OH-Gc; Tue, 17 Dec 2019 03:02:30 +0000
+Date:   Tue, 17 Dec 2019 04:02:29 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Sargun Dhillon <sargun@sargun.me>
+Cc:     linux-kernel@vger.kernel.org,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, tycho@tycho.ws, jannh@google.com,
+        cyphar@cyphar.com, oleg@redhat.com, luto@amacapital.net,
+        viro@zeniv.linux.org.uk, gpascutto@mozilla.com,
+        ealvarez@mozilla.com, fweimer@redhat.com, jld@mozilla.com
+Subject: Re: [PATCH v3 0/4] Add pidfd getfd ioctl (Was Add ptrace get_fd
+ request)
+Message-ID: <20191217030229.2lcfrdbcc6ynumht@wittgenstein>
+References: <20191217005842.GA14379@ircssh-2.c.rugged-nimbus-611.internal>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.127.16]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191217005842.GA14379@ircssh-2.c.rugged-nimbus-611.internal>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1002     if ((quirks & MT_QUIRK_IGNORE_DUPLICATES) && mt) {
-1003         struct input_mt_slot *i_slot = &mt->slots[slotnum];
-1004 
-1005         if (input_mt_is_active(i_slot) &&
-1006             input_mt_is_used(mt, i_slot))
-1007             return -EAGAIN;
-1008     }
+On Tue, Dec 17, 2019 at 12:58:45AM +0000, Sargun Dhillon wrote:
+> This patchset introduces a mechanism to capture file descriptors from other
+> processes by pidfd and ioctl. Although this can be achieved using
 
-We previously assumed 'mt' could be null (see line 1002).
+I like the idea in general as it's quite useful in general. And also for
+the seccomp notifier and probably for CRIU too.
+A few things that crossed my mind.
+A thing I'm worried about is that this will be a stepping stone for
+people argue for an fd-replacement feature though I think that
+fd-injection not replacement might be sufficient.
 
-The following situation is similar, so add a judgement.
+I wonder whether we need to worry about special file descriptors, i.e.
+anything anon-inode based, or devpts devices but I guess those concerns
+already apply to ptrace anyway.
 
-Signed-off-by: Pan Zhang <zhangpan26@huawei.com>
----
- drivers/hid/hid-multitouch.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+One more thing, with GETFD it seems useful to me that later we can add
+a new flag - like I suggested in the previous version - to the seccomp
+notifier that would allow a caller to request that with each seccomp
+message received via the notifier ioctl() from the kernel a pidfd is
+sent along. This would make it quite elegant to get fds for the
+supervised task.
 
-diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
-index 3cfeb16..368de81 100644
---- a/drivers/hid/hid-multitouch.c
-+++ b/drivers/hid/hid-multitouch.c
-@@ -1019,7 +1019,7 @@ static int mt_process_slot(struct mt_device *td, struct input_dev *input,
- 		tool = MT_TOOL_DIAL;
- 	else if (unlikely(!confidence_state)) {
- 		tool = MT_TOOL_PALM;
--		if (!active &&
-+		if (!active && mt
- 		    input_mt_is_active(&mt->slots[slotnum])) {
- 			/*
- 			 * The non-confidence was reported for
--- 
-2.7.4
-
+Christian
