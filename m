@@ -2,248 +2,114 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4D6C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B14C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCE6B2146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A0872082E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:39:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ccTmGFRp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OB47TxYS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728079AbfLQMhp (ORCPT
+        id S1727974AbfLQMjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:37:45 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:25967 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727952AbfLQMho (ORCPT
+        Tue, 17 Dec 2019 07:39:06 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34210 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727406AbfLQMjG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 07:37:44 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576586263; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=L3/HMtgYSDflzjxxjzr+u6UmPO/4DuGCdnbd+Vej9yI=; b=ccTmGFRpArw/l08UB21FxnaWPG0+Jt1y/Yzrv2DhkNLnzSwImAEjnZv81XKFCqFMN8kNKVii
- a1l3HrvUASPQVy0q/WQ0iZptiysxGheDiyIy2wE2/ONtiRiUHkzE8+mW/t36M/lJdOC5FP7B
- WPzcSrM0VvFhig2Xu1N1GKrfUuA=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5df8cc15.7f995ced8148-smtp-out-n02;
- Tue, 17 Dec 2019 12:37:41 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 52D41C447A0; Tue, 17 Dec 2019 12:37:40 +0000 (UTC)
-Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Tue, 17 Dec 2019 07:39:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576586344;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=6/+/rP4yVcVCmqqAdPWGNeQB+QcVV+9W2swAIqchAZ8=;
+        b=OB47TxYSprW5Yde5WgyM8wlNbGzrv2aCwbrquu2D6i/tUovsEIBGBuyn4V9PmNnwqhVqzi
+        /S0g58mUdlo12lPGnnyB9MaFJnR+0P9T+2Gy36dxS/90iCnghX8OgG1ClGxB7mBTJ7ALd4
+        qraVvsrEijFkxdTWuFA0wqk3txNr6Js=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-428-69guOL_oM8Ge5FQcEp_K6A-1; Tue, 17 Dec 2019 07:39:01 -0500
+X-MC-Unique: 69guOL_oM8Ge5FQcEp_K6A-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 77874C433CB;
-        Tue, 17 Dec 2019 12:37:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 77874C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org, agross@kernel.org
-Cc:     asutoshd@codeaurora.org, stummala@codeaurora.org,
-        sayalil@codeaurora.org, cang@codeaurora.org,
-        rampraka@codeaurora.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Ritesh Harjani <riteshh@codeaurora.org>,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Subject: [PATCH V1] mmc: sdhci-msm: Add CQHCI support for sdhci-msm
-Date:   Tue, 17 Dec 2019 18:07:13 +0530
-Message-Id: <1576586233-28443-1-git-send-email-vbadigan@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 07544800D4E;
+        Tue, 17 Dec 2019 12:38:58 +0000 (UTC)
+Received: from t480s.redhat.com (unknown [10.36.118.8])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E50671000329;
+        Tue, 17 Dec 2019 12:38:51 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
+        Allison Randal <allison@lohutok.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Paul Mackerras <paulus@samba.org>,
+        Rashmica Gupta <rashmica.g@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH RFC v1 0/3] powerpc/memtrace: Don't offline memory blocks via offline_pages()
+Date:   Tue, 17 Dec 2019 13:38:48 +0100
+Message-Id: <20191217123851.8854-1-david@redhat.com>
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ritesh Harjani <riteshh@codeaurora.org>
+This RFC is based on linux-next and
+- 2 patches from "PATCH RFC v4 00/13] virtio-mem: paravirtualized memory"
+ -> "mm: Allow to offline unmovable PageOffline() pages via
+     MEM_GOING_OFFLINE" [1]
+ -> "mm/memory_hotplug: Introduce offline_and_remove_memory()" [2]
+- "mm/memory_hotplug: Don't free usage map when removing a re-added early
+   section" [3]
 
-This adds CQHCI support for sdhci-msm platforms.
+A branch with all patches (kept updated) is available at:
+	https://github.com/davidhildenbrand/linux.git memtrace
 
-Signed-off-by: Ritesh Harjani <riteshh@codeaurora.org>
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Stop using offline_pages() to offline memory blocks. Allocate the memory
+blocks using alloc_contig_pages() first and offline+remove the allcoated
+memory blocks using a clean MM interface. Offlining of allocated memory i=
+s
+made possible by using PageOffline() in combination with a memory notifie=
+r
+(similar to virto-mem).
 
----
-This patch is based on RFC patch
-https://lkml.org/lkml/2017/8/30/313
+Note: In the future, we might want to switch to only removing/readding th=
+e
+page tables of the allocated memory (while still marking it PageOffline()=
+).
+However, that might have other implications, and requires work from PPC
+people (IOW, I won't fiddle with that :) ).
 
-Changes since RFC:
-	- Updated settings so that TDLBA won't get reset when
-	  CQE is enabled.
-	- Removed new compatible string and moved to supports-cqe
-	  dt flag to identify CQE support.
-	- Incorporated review comments.
+[1] https://lkml.kernel.org/r/20191212171137.13872-8-david@redhat.com
+[2] https://lkml.kernel.org/r/20191212171137.13872-10-david@redhat.com
+[3] https://lkml.kernel.org/r/20191217104637.5509-1-david@redhat.com
 
-Tested on: qcs404, sc7180
----
- drivers/mmc/host/sdhci-msm.c | 115 ++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 114 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-index 3d0bb5e..a4e3507 100644
---- a/drivers/mmc/host/sdhci-msm.c
-+++ b/drivers/mmc/host/sdhci-msm.c
-@@ -15,6 +15,7 @@
- #include <linux/regulator/consumer.h>
- 
- #include "sdhci-pltfm.h"
-+#include "cqhci.h"
- 
- #define CORE_MCI_VERSION		0x50
- #define CORE_VERSION_MAJOR_SHIFT	28
-@@ -122,6 +123,10 @@
- #define msm_host_writel(msm_host, val, host, offset) \
- 	msm_host->var_ops->msm_writel_relaxed(val, host, offset)
- 
-+/* CQHCI vendor specific registers */
-+#define CQHCI_VENDOR_CFG1	0xA00
-+#define DISABLE_RST_ON_CMDQ_EN	(0x3 << 13)
-+
- struct sdhci_msm_offset {
- 	u32 core_hc_mode;
- 	u32 core_mci_data_cnt;
-@@ -1567,6 +1572,109 @@ static void sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
- 	__sdhci_msm_set_clock(host, clock);
- }
- 
-+/*****************************************************************************\
-+ *                                                                           *
-+ * MSM Command Queue Engine (CQE)                                            *
-+ *                                                                           *
-+\*****************************************************************************/
-+
-+static u32 sdhci_msm_cqe_irq(struct sdhci_host *host, u32 intmask)
-+{
-+	int cmd_error = 0;
-+	int data_error = 0;
-+
-+	if (!sdhci_cqe_irq(host, intmask, &cmd_error, &data_error))
-+		return intmask;
-+
-+	cqhci_irq(host->mmc, intmask, cmd_error, data_error);
-+	return 0;
-+}
-+
-+void sdhci_msm_cqe_disable(struct mmc_host *mmc, bool recovery)
-+{
-+	struct sdhci_host *host = mmc_priv(mmc);
-+	unsigned long flags;
-+	u32 ctrl;
-+
-+	/*
-+	 * When CQE is halted, the legacy SDHCI path operates only
-+	 * on 128bit descriptors in 64bit mode.
-+	 */
-+	if (host->flags & SDHCI_USE_64_BIT_DMA)
-+		host->desc_sz = 16;
-+
-+	spin_lock_irqsave(&host->lock, flags);
-+
-+	/*
-+	 * During CQE operation command complete bit gets latched.
-+	 * So s/w should clear command complete interrupt status when CQE is
-+	 * halted. Otherwise unexpected SDCHI legacy interrupt gets
-+	 * triggered when CQE is halted.
-+	 */
-+	ctrl = sdhci_readl(host, SDHCI_INT_ENABLE);
-+	ctrl |= SDHCI_INT_RESPONSE;
-+	sdhci_writel(host,  ctrl, SDHCI_INT_ENABLE);
-+	sdhci_writel(host, SDHCI_INT_RESPONSE, SDHCI_INT_STATUS);
-+
-+	spin_unlock_irqrestore(&host->lock, flags);
-+
-+	sdhci_cqe_disable(mmc, recovery);
-+}
-+
-+static const struct cqhci_host_ops sdhci_msm_cqhci_ops = {
-+	.enable		= sdhci_cqe_enable,
-+	.disable	= sdhci_msm_cqe_disable,
-+};
-+
-+static int sdhci_msm_cqe_add_host(struct sdhci_host *host,
-+				struct platform_device *pdev)
-+{
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
-+	struct cqhci_host *cq_host;
-+	bool dma64;
-+	int ret;
-+
-+	ret = sdhci_setup_host(host);
-+	if (ret)
-+		return ret;
-+
-+	cq_host = cqhci_pltfm_init(pdev);
-+	if (IS_ERR(cq_host)) {
-+		ret = PTR_ERR(cq_host);
-+		dev_err(&pdev->dev, "cqhci-pltfm init: failed: %d\n", ret);
-+		goto cleanup;
-+	}
-+
-+	msm_host->mmc->caps2 |= MMC_CAP2_CQE | MMC_CAP2_CQE_DCMD;
-+	cq_host->ops = &sdhci_msm_cqhci_ops;
-+
-+	dma64 = host->flags & SDHCI_USE_64_BIT_DMA;
-+
-+	ret = cqhci_init(cq_host, host->mmc, dma64);
-+	if (ret) {
-+		dev_err(&pdev->dev, "%s: CQE init: failed (%d)\n",
-+				mmc_hostname(host->mmc), ret);
-+		goto cleanup;
-+	}
-+
-+	/* Disable cqe reset due to cqe enable signal */
-+	cqhci_writel(cq_host, cqhci_readl(cq_host, CQHCI_VENDOR_CFG1) |
-+		       DISABLE_RST_ON_CMDQ_EN, CQHCI_VENDOR_CFG1);
-+
-+	ret = __sdhci_add_host(host);
-+	if (ret)
-+		goto cleanup;
-+
-+	dev_info(&pdev->dev, "%s: CQE init: success\n",
-+			mmc_hostname(host->mmc));
-+	return ret;
-+
-+cleanup:
-+	sdhci_cleanup_host(host);
-+	return ret;
-+}
-+
- /*
-  * Platform specific register write functions. This is so that, if any
-  * register write needs to be followed up by platform specific actions,
-@@ -1731,6 +1839,7 @@ static void sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
- 	.set_uhs_signaling = sdhci_msm_set_uhs_signaling,
- 	.write_w = sdhci_msm_writew,
- 	.write_b = sdhci_msm_writeb,
-+	.irq	= sdhci_msm_cqe_irq,
- };
- 
- static const struct sdhci_pltfm_data sdhci_msm_pdata = {
-@@ -1754,6 +1863,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
- 	u8 core_major;
- 	const struct sdhci_msm_offset *msm_offset;
- 	const struct sdhci_msm_variant_info *var_info;
-+	struct device_node *node = pdev->dev.of_node;
- 
- 	host = sdhci_pltfm_init(pdev, &sdhci_msm_pdata, sizeof(*msm_host));
- 	if (IS_ERR(host))
-@@ -1952,7 +2062,10 @@ static int sdhci_msm_probe(struct platform_device *pdev)
- 	pm_runtime_use_autosuspend(&pdev->dev);
- 
- 	host->mmc_host_ops.execute_tuning = sdhci_msm_execute_tuning;
--	ret = sdhci_add_host(host);
-+	if (of_property_read_bool(node, "supports-cqe"))
-+		ret = sdhci_msm_cqe_add_host(host, pdev);
-+	else
-+		ret = sdhci_add_host(host);
- 	if (ret)
- 		goto pm_runtime_disable;
- 	sdhci_msm_set_regulator_caps(msm_host);
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+David Hildenbrand (3):
+  powerpc/memtrace: Enforce power of 2 for memory buffer size
+  powerpc/memtrace: Factor out readding memory into memtrace_free_node()
+  powerpc/memtrace: Don't offline memory blocks via offline_pages()
+
+ arch/powerpc/platforms/powernv/Kconfig    |   1 +
+ arch/powerpc/platforms/powernv/memtrace.c | 217 ++++++++++++++--------
+ 2 files changed, 136 insertions(+), 82 deletions(-)
+
+--=20
+2.23.0
+
