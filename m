@@ -2,133 +2,115 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16749C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83336C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA158206E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:13:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ooZ3b25f"
+	by mail.kernel.org (Postfix) with ESMTP id 530C920717
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:16:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbfLQBNq (ORCPT
+        id S1726560AbfLQBQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 20:13:46 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:34882 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbfLQBNp (ORCPT
+        Mon, 16 Dec 2019 20:16:01 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39558 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbfLQBQA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 20:13:45 -0500
-Received: by mail-oi1-f194.google.com with SMTP id k4so497155oik.2
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 17:13:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/Gz2pfk83gxmeYwRdsPahvEeJS5pQqN1WazyBRjRhto=;
-        b=ooZ3b25fI6kv5zyAhlRDYLL/Lta9UAjZJ2ZmjTaK4c2cUxFG5tRCt1GwUsnecOXmv0
-         weNx0eHo2pfbzX+sN+l0tdj+Gffk6olg8jEEbD85Xl+1bcjK5TfC53gAAwPsCsaiMrRH
-         4gC81AJVwIC2mJ8OVvtCxGrHnkVYDtxCJ37jx7j/r20D7EDiPk/13HcbQ+qzy38PBqRU
-         sRqekF9HlX9Cy/9n6tMkJG4WxLFRJbS8oB2aqP9XC7RRgr/bYa3pfWeeAQb89HMWWjfX
-         2ynQM6mRUlp9KVgvKaemyppKH/DDpbmDShwj5VLx6/DFE2gSjOODWaXZjWbAmh6P3z/v
-         6swQ==
+        Mon, 16 Dec 2019 20:16:00 -0500
+Received: by mail-pf1-f196.google.com with SMTP id 2so6589377pfx.6;
+        Mon, 16 Dec 2019 17:16:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/Gz2pfk83gxmeYwRdsPahvEeJS5pQqN1WazyBRjRhto=;
-        b=grQNDZvp5Mskss+Lek9QKLPXhpvng1V1hmZON4YgidqCUmaxxc38Cbp36EOU0G+h+K
-         q1uKlS37wNY2pnWZeVp7VqqhCfT5/NGWJb2ytiF5HzQYDtuuaCsvRgrpskjXtmnyS/iR
-         dod6XtQCuQMup4eRCYwJ7bZRIysM7wsMOXZQAnvOV6JwuE/ZFXe4kxZpZsBjbHvPaacJ
-         Hka95uJzrMKNAx2mO99Cb6hor2tQTayc9WeUVXUejXEBmIoSEZt0GSBkQtjzR7lYqVkv
-         6SI+J+Z54yIIKJ4IOR9WNQdrtrjRKYUGrixO2FH4a+JKVzuyct4xyZ6LmZSVZNR6AwTW
-         Fb/g==
-X-Gm-Message-State: APjAAAUcT6ieiefBc++Ym14WkCByCbuUVW7zkCc/WMkx0Ci51oZiJ/vm
-        D2s563E4rH0zyPcEj3/ZZKxoW6p2gw1Pwe4Pmm5anl1BCtXsuw==
-X-Google-Smtp-Source: APXvYqw1K714n5uzrU/DqhE5hq4qTxDhMwll3wid7OcY1dyfJe66ZxpOeksE7ntSDlrUdkMp2vopw7scMlouv0aIqxo=
-X-Received: by 2002:aca:c7cb:: with SMTP id x194mr1051074oif.157.1576545224611;
- Mon, 16 Dec 2019 17:13:44 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=lnFICRRWvqMlfifCfXqW5y21+lbROw+2Gffyp/oXtz4=;
+        b=qi7YjEbYobMbLF/YMVNolzxw/hZeuoGqqpOokg4Pvodm28fSyTfYLVVVchcAAx1OKF
+         ETD0X8hilxjKqlTnMubqb5B9UM/BS5LQG2Jiwqk9aYdxJ0+9jYrvCtu9ekJ0Bd22SPtE
+         JmZLgNanr+HmNyeFDVui/h+Me4iwXGhPAVqe5cqkUtVCrasCWahgUhbA2WvQZ8ioZtWx
+         MwRCnHRV/hPXQIDDNKwZf6LDJtj+1JRGifcucmT3ytqsSH7nXZL8cj16pNy6A/CrLUBd
+         dE2goLEWqG61S8PhemshOVUngNiVV046b5WgnwLOddpOVcp/1WTOOfyB2oolJUQ1QxFG
+         965g==
+X-Gm-Message-State: APjAAAU0ZFKz1mb4gq5Ctx5pcUi/pMFfjaFHExb50WKKNNiQfyeoHKb0
+        IJEDkXGDfSB7sgL8CutvcBrsb6Ftqig=
+X-Google-Smtp-Source: APXvYqw22fD1K1guuhtGxO8ryny+Pns/FUQdlNF9Mvb4TN+NZjxaaTEI5kB/FiWj3zZWZZmdo7joMQ==
+X-Received: by 2002:a62:5547:: with SMTP id j68mr20166456pfb.6.1576545359890;
+        Mon, 16 Dec 2019 17:15:59 -0800 (PST)
+Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
+        by smtp.gmail.com with ESMTPSA id 129sm24020918pfw.71.2019.12.16.17.15.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Dec 2019 17:15:58 -0800 (PST)
+Subject: Re: [PATCH 1/2] scsi: ufs: Put SCSI host after remove it
+To:     cang@codeaurora.org
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        open list <linux-kernel@vger.kernel.org>
+References: <1576328616-30404-1-git-send-email-cang@codeaurora.org>
+ <1576328616-30404-2-git-send-email-cang@codeaurora.org>
+ <85475247-efd5-732e-ae74-6d9a11e1bdf2@acm.org>
+ <cd6dc7c90d43b8ca8254a43da48334fc@codeaurora.org>
+ <cf4915df-5ae4-0dfd-5d44-1fe959d141e2@acm.org>
+ <0343644f49adee06e6b2f3f631fe1637@codeaurora.org>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <ecef25b7-44c0-6b94-c429-6ee5f9508caf@acm.org>
+Date:   Mon, 16 Dec 2019 17:15:57 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20191217010001.GA14461@ircssh-2.c.rugged-nimbus-611.internal>
-In-Reply-To: <20191217010001.GA14461@ircssh-2.c.rugged-nimbus-611.internal>
-From:   Jann Horn <jannh@google.com>
-Date:   Tue, 17 Dec 2019 02:13:16 +0100
-Message-ID: <CAG48ez0ooeZfdBf+u9uE3mzo2yc7f1D5EHZ09Jz5T8VVh6AWYw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] pid: Add PIDFD_IOCTL_GETFD to fetch file
- descriptors from processes
-To:     Sargun Dhillon <sargun@sargun.me>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Al Viro <viro@zeniv.linux.org.uk>, gpascutto@mozilla.com,
-        ealvarez@mozilla.com, Florian Weimer <fweimer@redhat.com>,
-        jld@mozilla.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <0343644f49adee06e6b2f3f631fe1637@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 2:00 AM Sargun Dhillon <sargun@sargun.me> wrote:
-> This adds an ioctl which allows file descriptors to be extracted
-> from processes based on their pidfd.
-[...]
-> You must have the ability to ptrace the process in order to extract any
-> file descriptors from it. ptrace can already be used to extract file
-> descriptors based on parasitic code injections, so the permissions
-> model is aligned.
-[...]
-> +       task = get_pid_task(pid, PIDTYPE_PID);
-> +       if (!task)
-> +               return -ESRCH;
-> +       ret = -EPERM;
+On 12/16/19 4:46 PM, cang@codeaurora.org wrote:
+> On 2019-12-17 01:39, Bart Van Assche wrote:
+>> Apparently some UFS drivers call ufshcd_remove() only and others
+>> (PCIe) call both ufshcd_remove() and ufshcd_dealloc_host(). I think
+>> that the above change will cause trouble for the PCIe driver unless
+>> the ufshcd_dealloc_host() call is removed from ufshcd_pci_remove().
+>
+> You may get me wrong. I mean we should do like what ufshcd-pci.c does.
+> As driver probe routine allocates SCSI host, then driver remove() should
+> de-allocate it. Meaning ufs_qcom_remove() should call both ufshcd_remove()
+> and ufshcd_dealloc_host().
+> 
+> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+> index 3d4582e..ea45756 100644
+> --- a/drivers/scsi/ufs/ufs-qcom.c
+> +++ b/drivers/scsi/ufs/ufs-qcom.c
+> @@ -3239,6 +3239,7 @@ static int ufs_qcom_remove(struct platform_device 
+> *pdev)
+> 
+>            pm_runtime_get_sync(&(pdev)->dev);
+>            ufshcd_remove(hba);
+>   +       ufshcd_dealloc_host(hba);
+>            return 0;
+>     }
 
-Please add something like
+Hi Can,
 
-if (mutex_lock_killable(&task->signal->cred_guard_mutex))
-  goto out;
+If it is possible to move the ufshcd_dealloc_host() into ufshcd_remove() 
+then I would prefer to do that. If all UFS transport drivers need that 
+call then I think that call should happen from the UFS core instead of 
+from the transport drivers.
 
-here, and drop the mutex after fget_task().
+Thanks,
 
-> +       if (!ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS))
-> +               goto out;
-> +       ret = -EBADF;
-> +       file = fget_task(task, args.fd);
-> +       if (!file)
-> +               goto out;
-> +
-> +       fd = get_unused_fd_flags(fd_flags);
-> +       if (fd < 0) {
-> +               ret = fd;
-> +               goto out_put_file;
-> +       }
-> +       /*
-> +        * security_file_receive must come last since it may have side effects
-> +        * and cannot be reversed.
-> +        */
-> +       ret = security_file_receive(file);
-> +       if (ret)
-> +               goto out_put_fd;
-> +
-> +       fd_install(fd, file);
-> +       put_task_struct(task);
-> +       return fd;
-> +
-> +out_put_fd:
-> +       put_unused_fd(fd);
-> +out_put_file:
-> +       fput(file);
-> +out:
-> +       put_task_struct(task);
-> +       return ret;
-> +}
+Bart.
