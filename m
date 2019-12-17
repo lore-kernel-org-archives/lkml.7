@@ -2,105 +2,90 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F4ECC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D682EC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 517192146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:11:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QYJDZjza"
+	by mail.kernel.org (Postfix) with ESMTP id A220A218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:12:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576595571;
+	bh=lXKJlNQ3+DU4bpWWhzdm1tStVSt+54Yjgk12RqnteFw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=CDd3J6QTZJPE/PLTLB+1JlDeJqEdGMAdFxs42wg1f+mM4ungNGrjaE6Ujbi+1wtDG
+	 6Rg6YX60EzHQb7DyTU4xRNOlh0Imbau2Forncgpv4534qaFMfUwppY4i+nKXgT81iL
+	 wqhjxxLtUSW2cEDj6cVCBDQhuFmykfiognarlZL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbfLQPLT (ORCPT
+        id S1727736AbfLQPMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 10:11:19 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:36465 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727241AbfLQPLS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 10:11:18 -0500
-Received: by mail-pl1-f195.google.com with SMTP id d15so6239437pll.3;
-        Tue, 17 Dec 2019 07:11:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=aFantIhWi/fHJq2cr+Zbx6RZiqepAGB6P0r03ViBSsA=;
-        b=QYJDZjza4evSS+x1Jb5cMJ3wbCTfcsYUKvfvznRoIgd8u+cAB3f1FHmgKHBqGccifv
-         +hKsPzcBU+bQqytO2u0gvTtuT0Sq+PxFJ6fj3EwiBfQEN1Go7jVFTSkFJNX0zmeV2pLc
-         +IGcG66ao0ZcAZ7qA/Z0QYrPbgyfyfXCwOj+xnGlM3qD8eLFIAffik0xOL/QrNWWY8Kc
-         1q1Nmx7ZhN2DBdmGfpvcPxhtW5fS3vy/+TTNOTq99n015kp8dPLbArir2wbacyiJ5mFv
-         AYUmkn7iXb/JcIZypbB9kLU5+GgYc1BrbUx4Kf2i7advrCV54BZfKmyO5j6O1UF7vsvi
-         5mhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=aFantIhWi/fHJq2cr+Zbx6RZiqepAGB6P0r03ViBSsA=;
-        b=ZyvuYzWgDUKvXyJLVVYlHd/YXSqtuDp9WJVX+9wAtW4aj4sYCYaaeiihh0CvXsI6CY
-         +dfEXOyc6V8U+4mFc6W6U7Ke+VGWn4Cc4QvjnesZrfo8T+BGCDuyXG9PTsJEbRwF/bqD
-         eQKQ2CwqjiUMr+tCXjQfhE8c8JNHpD6Ks/rqY6FnT2CzSoZ514X2nRtGNWtAlT03sJkJ
-         UO7aDyZct526RXuEF8iJsZ2kFM1n3LzPKg22uU//WjqZd8jbi7TCAeTHJxipieHgpIDf
-         +537npA4QmVxM8gxhy6gUAqtZ8eipTuu3IY43gJ4DJJR18D5VSi3257hLmcHgVusBf/s
-         MA6Q==
-X-Gm-Message-State: APjAAAV0+ANZB+fMkX92aFB26dLdj47bYcka1cJO7MVLF9egmIZlxX8v
-        QqNWorK4fGVD2FS3aAuEBpE=
-X-Google-Smtp-Source: APXvYqwtYKpcn252vIXVA4HxmqgaVwlB9/YwzBUU2SU/SIyHMiI2r3UDySrZNyEa2AryZHkv2By44Q==
-X-Received: by 2002:a17:902:6a8a:: with SMTP id n10mr23659556plk.9.1576595478158;
-        Tue, 17 Dec 2019 07:11:18 -0800 (PST)
-Received: from localhost ([43.224.245.179])
-        by smtp.gmail.com with ESMTPSA id m3sm26507128pgp.32.2019.12.17.07.11.16
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Tue, 17 Dec 2019 07:11:17 -0800 (PST)
-From:   qiwuchen55@gmail.com
-To:     viro@zeniv.linux.org.uk
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        chenqiwu <chenqiwu@xiaomi.com>
-Subject: [RESEND PATCH] fput: Use unbound workqueue for scheduling delayed fput works
-Date:   Tue, 17 Dec 2019 23:11:12 +0800
-Message-Id: <1576595472-27341-1-git-send-email-qiwuchen55@gmail.com>
-X-Mailer: git-send-email 1.9.1
+        Tue, 17 Dec 2019 10:12:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53044 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727417AbfLQPMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 10:12:50 -0500
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8D782146E;
+        Tue, 17 Dec 2019 15:12:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576595569;
+        bh=lXKJlNQ3+DU4bpWWhzdm1tStVSt+54Yjgk12RqnteFw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=WR/W9yMAR8mCOXtOv0whHOf8AjX7OVRFHK48XZ5INi/1WgFPI4S4YkMikTQn0XkGz
+         hklTlzSSMLsEk2l87P5Pfyoi+iS9xBEjzMbJvvpNEAvlP8+1RkMxIlNi2kq2eXWQph
+         NvPhMeVV+RF5t2hatovhGAbDphQ7bN0VXnbZAe6Q=
+Date:   Tue, 17 Dec 2019 09:12:48 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Logan Gunthorpe <logang@deltatee.com>
+Subject: Re: [PATCH v12 0/4] PCI: Patch series to improve Thunderbolt
+ enumeration
+Message-ID: <20191217151248.GA165530@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PSXP216MB043892C04178AB333F7AF08C80580@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: chenqiwu <chenqiwu@xiaomi.com>
+On Mon, Dec 09, 2019 at 12:59:29PM +0000, Nicholas Johnson wrote:
+> Hi all,
+> 
+> Since last time:
+> 	Reverse Christmas tree for a couple of variables
+> 
+> 	Changed while to whilst (sounds more formal, and so that 
+> 	grepping for "while" only brings up code)
+> 
+> 	Made sure they still apply to latest Linux v5.5-rc1
+> 
+> Kind regards,
+> Nicholas
+> 
+> Nicholas Johnson (4):
+>   PCI: Consider alignment of hot-added bridges when distributing
+>     available resources
+>   PCI: In extend_bridge_window() change available to new_size
+>   PCI: Change extend_bridge_window() to set resource size directly
+>   PCI: Allow extend_bridge_window() to shrink resource if necessary
 
-There is a potential starvation that the number of delayed fput works
-increase rapidly if task exit storm or fs unmount issue happens.
+I have tentatively applied these to pci/resource for v5.6, but I need
+some kind of high-level description for why we want these changes.
 
-Since the delayed fput works are expected to be executed as soon as
-possible. The commonly accepted wisdom that the measurements of scheduling
-works via the unbound workqueue show lowered worst-case latency responses
-of up to 5x over bound workqueue.
+The commit logs describe what the code does, and that's good, but we
+really need a little more of the *why* and what the user-visible
+benefit is.  I know some of this was in earlier postings, but it seems
+to have gotten lost along the way.
 
-Work items queued to an unbound wq are not bound to any specific CPU, not
-concurrency managed. All queued works are executed immediately as long as
-max_active limit is not reached and resources are available.
-
-Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
----
- fs/file_table.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/fs/file_table.c b/fs/file_table.c
-index 30d55c9..472ad92 100644
---- a/fs/file_table.c
-+++ b/fs/file_table.c
-@@ -348,7 +348,8 @@ void fput_many(struct file *file, unsigned int refs)
- 		}
- 
- 		if (llist_add(&file->f_u.fu_llist, &delayed_fput_list))
--			schedule_delayed_work(&delayed_fput_work, 1);
-+			queue_delayed_work(system_unbound_wq,
-+					&delayed_fput_work, 1);
- 	}
- }
- 
--- 
-1.9.1
-
+Bjorn
