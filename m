@@ -2,153 +2,122 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9087CC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A69DC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 724B820716
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE01D20716
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:52:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bjOyv4WF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728618AbfLQNvx (ORCPT
+        id S1728627AbfLQNwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 08:51:53 -0500
-Received: from mx2.suse.de ([195.135.220.15]:48134 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728573AbfLQNvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 08:51:53 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id B5CBDAB91;
-        Tue, 17 Dec 2019 13:51:50 +0000 (UTC)
-Subject: Re: [Xen-devel] [PATCH v10 2/4] xen/blkback: Squeeze page pools if a
- memory pressure is detected
-To:     SeongJae Park <sjpark@amazon.com>,
-        =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>
-Cc:     SeongJae Park <sj38.park@gmail.com>, sjpark@amazon.de,
-        axboe@kernel.dk, konrad.wilk@oracle.com, pdurrant@amazon.com,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        xen-devel@lists.xenproject.org
-References: <20191217131526.17300-1-sjpark@amazon.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <9c465967-3bbf-595b-b61c-c44fa95e41d5@suse.com>
-Date:   Tue, 17 Dec 2019 14:51:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <20191217131526.17300-1-sjpark@amazon.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Tue, 17 Dec 2019 08:52:36 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46967 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728388AbfLQNwg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 08:52:36 -0500
+Received: by mail-pl1-f196.google.com with SMTP id y8so146319pll.13
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 05:52:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=4Ab3Q/X4ZX5gMws9nUNXBeFR4zcomqzcsyRHhrq8jyw=;
+        b=bjOyv4WFNA4Oiymym030hvCTlXDF88KMh8GhOROZW1CBvNWjeEu7md9vnE2vrZU2DH
+         eijW5Zxcylr10kqvF7gxoPPnxI/oNVp3NDQ9QDAOT/hlaKFBKCwEqMnS/lAHvFfI9+Tf
+         5uiFyBRmQI6dcgpafCAxYmxoK6OGOU5pD6m7aiirOkUDVXkNqHlEexV6RXhMa7IuMH29
+         omWFCSFF6Sqnui+mmfa6bbchqDIVjg3vr86PyR9DHuNEvyPMtebB4EMHyUnd7ONy/ZmU
+         sqL7MJzUEMUga2WjtTjUqIUEjklL510v4ADYm/+0jXnczO4vsOzQWDPwdQ1ZywAZ4RB0
+         qZdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=4Ab3Q/X4ZX5gMws9nUNXBeFR4zcomqzcsyRHhrq8jyw=;
+        b=DZMnPub3pe2dh2uvatHG4thkUib9j+yLRJ3AQpBU2gBBGA/Jll/L5GCUdLDkpsScKA
+         vKC/wIRxEG8ByIt5tj/epMlIEeEbh1uAsvV8uwp9+o55ljOKvwhvg5HrUoMMeYNaMEWV
+         kV/Kz7P+eqKmrgpf3OTzyJIsL5uQ/yp/5lmuzb3GwEzv3C2N47xg2pTWXJuEFeBfTZYv
+         /p5Ci06W3YkiICG+GtnLikSB9DmtV36Yv1es1xPC0+SmeIUouukQLWnFPbjakvEExxOy
+         53WBYfFy4we7nKrJTbr3G6PG77NiQu8nNzZSUD7QS6iRqLXhU0rkzTH3XB5aq07AUwZT
+         80PQ==
+X-Gm-Message-State: APjAAAXz4Hxq1qtcngArECWRmXUkXC9htN7FdGYAP2L6w0khqZOqXATx
+        14n7jGyXjzE0qwrtylfo/94=
+X-Google-Smtp-Source: APXvYqwg7iJqE7pkEx8c34mv/h5j38/Pvrmvpcu6TQkHXieFxOzdarytJCM8d0HbKBYvVOBk6zJV2w==
+X-Received: by 2002:a17:902:bf0b:: with SMTP id bi11mr2085843plb.282.1576590755583;
+        Tue, 17 Dec 2019 05:52:35 -0800 (PST)
+Received: from oslab.tsinghua.edu.cn ([166.111.139.172])
+        by smtp.gmail.com with ESMTPSA id k1sm18091229pgq.70.2019.12.17.05.52.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 05:52:35 -0800 (PST)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     dwmw2@infradead.org, richard@nod.at
+Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH] fs: jffs2: fix possible sleep-in-atomic-context bugs
+Date:   Tue, 17 Dec 2019 21:51:43 +0800
+Message-Id: <20191217135143.12875-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.12.19 14:15, SeongJae Park wrote:
-> On Tue, 17 Dec 2019 12:39:15 +0100 "Roger Pau Monné" <roger.pau@citrix.com> wrote:
-> 
->> On Mon, Dec 16, 2019 at 08:48:03PM +0100, SeongJae Park wrote:
->>> On on, 16 Dec 2019 17:23:44 +0100, Jürgen Groß wrote:
->>>
->>>> On 16.12.19 17:15, SeongJae Park wrote:
->>>>> On Mon, 16 Dec 2019 15:37:20 +0100 SeongJae Park <sjpark@amazon.com> wrote:
->>>>>
->>>>>> On Mon, 16 Dec 2019 13:45:25 +0100 SeongJae Park <sjpark@amazon.com> wrote:
->>>>>>
->>>>>>> From: SeongJae Park <sjpark@amazon.de>
->>>>>>>
->>>>> [...]
->>>>>>> --- a/drivers/block/xen-blkback/xenbus.c
->>>>>>> +++ b/drivers/block/xen-blkback/xenbus.c
->>>>>>> @@ -824,6 +824,24 @@ static void frontend_changed(struct xenbus_device *dev,
->>>>>>>    }
->>>>>>>    
->>>>>>>    
->>>>>>> +/* Once a memory pressure is detected, squeeze free page pools for a while. */
->>>>>>> +static unsigned int buffer_squeeze_duration_ms = 10;
->>>>>>> +module_param_named(buffer_squeeze_duration_ms,
->>>>>>> +		buffer_squeeze_duration_ms, int, 0644);
->>>>>>> +MODULE_PARM_DESC(buffer_squeeze_duration_ms,
->>>>>>> +"Duration in ms to squeeze pages buffer when a memory pressure is detected");
->>>>>>> +
->>>>>>> +/*
->>>>>>> + * Callback received when the memory pressure is detected.
->>>>>>> + */
->>>>>>> +static void reclaim_memory(struct xenbus_device *dev)
->>>>>>> +{
->>>>>>> +	struct backend_info *be = dev_get_drvdata(&dev->dev);
->>>>>>> +
->>>>>>> +	be->blkif->buffer_squeeze_end = jiffies +
->>>>>>> +		msecs_to_jiffies(buffer_squeeze_duration_ms);
->>>>>>
->>>>>> This callback might race with 'xen_blkbk_probe()'.  The race could result in
->>>>>> __NULL dereferencing__, as 'xen_blkbk_probe()' sets '->blkif' after it links
->>>>>> 'be' to the 'dev'.  Please _don't merge_ this patch now!
->>>>>>
->>>>>> I will do more test and share results.  Meanwhile, if you have any opinion,
->>>>>> please let me know.
->>>
->>> I reduced system memory and attached bunch of devices in short time so that
->>> memory pressure occurs while device attachments are ongoing.  Under this
->>> circumstance, I was able to see the race.
->>>
->>>>>
->>>>> Not only '->blkif', but 'be' itself also coule be a NULL.  As similar
->>>>> concurrency issues could be in other drivers in their way, I suggest to change
->>>>> the reclaim callback ('->reclaim_memory') to be called for each driver instead
->>>>> of each device.  Then, each driver could be able to deal with its concurrency
->>>>> issues by itself.
->>>>
->>>> Hmm, I don't like that. This would need to be changed back in case we
->>>> add per-guest quota.
->>>
->>> Extending this callback in that way would be still not too hard.  We could use
->>> the argument to the callback.  I would keep the argument of the callback to
->>> 'struct device *' as is, and will add a comment saying 'NULL' value of the
->>> argument means every devices.  As an example, xenbus would pass NULL-ending
->>> array of the device pointers that need to free its resources.
->>>
->>> After seeing this race, I am now also thinking it could be better to delegate
->>> detailed control of each device to its driver, as some drivers have some
->>> complicated and unique relation with its devices.
->>>
->>>>
->>>> Wouldn't a get_device() before calling the callback and a put_device()
->>>> afterwards avoid that problem?
->>>
->>> I didn't used the reference count manipulation operations because other similar
->>> parts also didn't.  But, if there is no implicit reference count guarantee, it
->>> seems those operations are indeed necessary.
->>>
->>> That said, as get/put operations only adjust the reference count, those will
->>> not make the callback to wait until the linking of the 'backend' and 'blkif' to
->>> the device (xen_blkbk_probe()) is finished.  Thus, the race could still happen.
->>> Or, am I missing something?
->>
->> I would expect the device is not added to the list of backend devices
->> until the probe hook has finished with a non-error return code. Ie:
->> bus_for_each_dev should _not_ iterate over devices for which the probe
->> function hasn't been run to competition without errors.
->>
->> The same way I would expect the remove hook to first remove the device
->> from the list of backend devices and then run the remove hook.
->>
->> blkback uses an ad-hoc reference counting mechanism, but if the above
->> assumptions are true I think it would be enough to take an extra
->> reference in xen_blkbk_probe and drop it in xen_blkbk_remove.
-> 
-> Well, if the assumption is true, wouldn't the Juergen's approach solved the
-> problem?  As previously said, I tried the approach but failed to solve this
-> race.  The assumption is wrong or I missed something.  I think Juergen also
-> think the assumption is not true as he suggested use of locking but not sure.
-> Juergen, if I misunderstood, please let me know.
+The filesystem may sleep while holding a spinlock.
+The function call path (from bottom to top) in Linux 4.19 is:
 
-bus_for_each_dev() does no locking at all. All it does is
-taking krefs on the iterated objects in order to avoid them
-to be freed under its feet.
+fs/jffs2/malloc.c, 188: 
+	kmem_cache_alloc(GFP_KERNEL) in jffs2_alloc_refblock
+fs/jffs2/malloc.c, 221: 
+	jffs2_alloc_refblock in jffs2_prealloc_raw_node_refs
+fs/jffs2/wbuf.c, 164: 
+	jffs2_prealloc_raw_node_refs in jffs2_block_refile
+fs/jffs2/wbuf.c, 291: 
+	jffs2_block_refile in jffs2_wbuf_recover
+fs/jffs2/wbuf.c, 287: 
+	spin_lock in jffs2_wbuf_recover
 
+fs/jffs2/malloc.c, 188: 
+    kmem_cache_alloc(GFP_KERNEL) in jffs2_alloc_refblock
+fs/jffs2/malloc.c, 221: 
+    jffs2_alloc_refblock in jffs2_prealloc_raw_node_refs
+fs/jffs2/wbuf.c, 164: 
+    jffs2_prealloc_raw_node_refs in jffs2_block_refile
+fs/jffs2/wbuf.c, 927: 
+	jffs2_block_refile in jffs2_flash_writev
+fs/jffs2/wbuf.c, 924: 
+	spin_lock in jffs2_flash_writev
 
-Juergen
+kmem_cache_alloc(GFP_KERNEL) can sleep at runtime.
+
+To fix these possible bugs, GFP_KERNEL is replaced with GFP_ATOMIC for
+kmem_cache_alloc().
+
+These bugs are found by a static analysis tool STCheck written by myself.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+ fs/jffs2/malloc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/jffs2/malloc.c b/fs/jffs2/malloc.c
+index ce1189793288..66496ef09716 100644
+--- a/fs/jffs2/malloc.c
++++ b/fs/jffs2/malloc.c
+@@ -185,7 +185,7 @@ static struct jffs2_raw_node_ref *jffs2_alloc_refblock(void)
+ {
+ 	struct jffs2_raw_node_ref *ret;
+ 
+-	ret = kmem_cache_alloc(raw_node_ref_slab, GFP_KERNEL);
++	ret = kmem_cache_alloc(raw_node_ref_slab, GFP_ATOMIC);
+ 	if (ret) {
+ 		int i = 0;
+ 		for (i=0; i < REFS_PER_BLOCK; i++) {
+-- 
+2.17.1
+
