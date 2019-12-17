@@ -2,440 +2,98 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C24C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01534C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCBBB24655
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:43:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5A1C2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:44:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728914AbfLQOnm (ORCPT
+        id S1729184AbfLQOop (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:43:42 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37988 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728872AbfLQOnl (ORCPT
+        Tue, 17 Dec 2019 09:44:45 -0500
+Received: from mout.kundenserver.de ([212.227.126.130]:36969 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728573AbfLQOoo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:43:41 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBHEhM1O155157
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 09:43:40 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wvv8xtjt0-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 09:43:30 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <huntbag@linux.vnet.ibm.com>;
-        Tue, 17 Dec 2019 14:42:41 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 17 Dec 2019 14:42:39 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBHEgcxU47186300
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 17 Dec 2019 14:42:38 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 85B07A405B;
-        Tue, 17 Dec 2019 14:42:38 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2A69EA4060;
-        Tue, 17 Dec 2019 14:42:37 +0000 (GMT)
-Received: from ltc-wspoon6.aus.stglabs.ibm.com (unknown [9.40.193.95])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 17 Dec 2019 14:42:37 +0000 (GMT)
-From:   Abhishek Goel <huntbag@linux.vnet.ibm.com>
-To:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     rjw@rjwysocki.net, daniel.lezcano@linaro.org,
-        ego@linux.vnet.ibm.com, oohall@gmail.com, mpe@ellerman.id.au,
-        svaidy@linux.ibm.com, Abhishek Goel <huntbag@linux.vnet.ibm.com>
-Subject: [RFC] cpuidle : Add debugfs support for cpuidle core
-Date:   Tue, 17 Dec 2019 08:38:34 -0600
-X-Mailer: git-send-email 2.17.1
-X-TM-AS-GCONF: 00
-x-cbid: 19121714-0016-0000-0000-000002D5D1D9
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19121714-0017-0000-0000-000033380B9A
-Message-Id: <20191217143834.19797-1-huntbag@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-17_02:2019-12-17,2019-12-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- priorityscore=1501 lowpriorityscore=0 mlxlogscore=999 impostorscore=0
- clxscore=1011 mlxscore=0 phishscore=0 spamscore=0 malwarescore=0
- bulkscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912170124
+        Tue, 17 Dec 2019 09:44:44 -0500
+Received: from [192.168.1.155] ([95.114.21.161]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MuUvS-1hqm5e2k0Q-00rXXn; Tue, 17 Dec 2019 15:44:28 +0100
+Subject: Re: [PATCH] RFC: platform driver registering via initcall tables
+To:     Greg KH <greg@kroah.com>
+Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, dmitry.torokhov@gmail.com,
+        jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com,
+        arnd@arndb.de, masahiroy@kernel.org, michal.lkml@markovi.net,
+        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
+        linux-gpio@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+References: <20191217102219.29223-1-info@metux.net>
+ <20191217103152.GB2914497@kroah.com>
+ <6422bc88-6d0a-7b51-aaa7-640c6961b177@metux.net>
+ <20191217140646.GC3489463@kroah.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Message-ID: <d938b8e1-d9ce-9ad6-4178-86219e99d4df@metux.net>
+Date:   Tue, 17 Dec 2019 15:43:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191217140646.GC3489463@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: tl
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:w0io69mBkaf+1h5xS2clNhiKVEe0x4xPMiO1d6eDOgUuj5grIk6
+ So0gw1+GpivSUVTFQR/DDSbg+QPfwUh7WmxUQSwRGfkUPGn5UuLFc7ZXrVgMiGCWcvV7EnZ
+ YcouJJBHv4s14A2UoTWwsoWv1v7AXM1bV8eKUMEFutfAUA0OO6kYs7L0qW0jC11eMqimXtO
+ a6XJNpIUDfbJJ14c1ttfw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:sYdPWCf9KOc=:0AdzDPaTOQKhydTgTxPD3i
+ 7vxT1r6DXk1q3sntultkN3yeyfwZO1L5/I1tey9mzWV4VA+QtLhy8j/GxOIkVoro6LseGlci6
+ W12X0KPN6zHyzUFSEN+WudCDKhMSlfHeKZFry+8utzzVh6X9+igOSGELwhRWwdqQJiZOcu0oO
+ QZ05ieWKgwvl2Uh/MTg3RL2rBdrdsEAyemNTcVIECVbSPuHPq8auHKLK93V7iegjvA0alhL1U
+ /WaxrxT+hXtjLC5Y831LJC9pTnymxqwddhRor0yitiemCO20+Mt4kNnapMMvBDlgit3U9kCWQ
+ ghGaWfk2sB8r7OhNMqgF4AcETtelNyx8ZQjuxDdhj3ikLhlIf4dSz/5U1KyusXwnJ7lk0EX8V
+ dPLRb30N/xbIpSx44Lhd6/rgXBKpZ7FH12J/8gAAyWIKwO+w0pwFu8U8MTiUnCLlpDB7s67q8
+ Tq14Jj4cBz5vzTEHK1X6ZMsayDQl4Lm9NCbf+JrbqipltyHENFei9Roxzr27MBzuTGO7qSiT+
+ IDmX9O+smuMCUheOjOxXAWdsli6m+5yHIx4jWjyt9GNlGerF+YvMktccX/fSzS+5MhHH9zJqy
+ DgtqxPSJhnAd5M/YSfD7Ivsjhoxx6G5V2BHwwGwEhVxZWIK6leQxc9x7ntbA+ploa4GgA/8Mv
+ AOdgb5DGJbfqvDiIjJyE3Kq6vR97PhyIOT4HY9flUCSa1gKkPC5p/WvWC6mpXlfXCRgzt3IF+
+ 3oVArTRk9F1Kc+K0wuTuPBtt4Kgs+Un9XjZUDiZdMnIqH1J2Ed29wURCgNhD6S8guCL7jAL7I
+ Z0z8+jHTBIU3qT6HA9SqRQtKynKLt5/00XkPx6phElHcm7JrtRgFPVAz1gTlfHSQr6qUSFbrz
+ q03NkMAgx3EPRvOQwR7w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Up until now, we did not have a way to tune cpuidle attribute like
-residency in kernel. This patch adds support for debugfs in cpuidle core.
-Thereby providing support for tuning cpuidle attributes like residency in
-kernel at runtime.
-For example: Tuning residency at runtime can be used to quantify governors
-decision making as governor uses residency as one of the parameter to
-take decision about the state that needs to be entered while idling.
+On 17.12.19 15:06, Greg KH wrote:
 
-Currently, Only residency have been added in debugfs framework. We can
-later on add attributes like latency too.
+> That's not needed, and you are going to break the implicit ordering we
+> already have with link order.  
 
-Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
+Ups, 10 points for you - I didn't consider that.
+
+> You are going to have to figure out what
+> bus type the driver is, to determine what segment it was in, to figure
+> out what was loaded before what.
+
+hmm, if it's just the ordering by bus type (but not within one bus
+type), then it shouldn't be the big deal to fix, as I'll need one table
+and register-loop per bus-type anyways.
+
+By the way: how is there init order ensured with dynamically loaded
+modules ? (for cases where there aren't explicit symbol dependencies)
+
+
+--mtx
+
 ---
- drivers/cpuidle/Kconfig           |   8 ++
- drivers/cpuidle/Makefile          |   1 +
- drivers/cpuidle/cpuidle-debugfs.c | 188 ++++++++++++++++++++++++++++++
- drivers/cpuidle/cpuidle.c         |  19 ++-
- drivers/cpuidle/cpuidle.h         |  24 ++++
- include/linux/cpuidle.h           |   3 +
- 6 files changed, 241 insertions(+), 2 deletions(-)
- create mode 100644 drivers/cpuidle/cpuidle-debugfs.c
-
-diff --git a/drivers/cpuidle/Kconfig b/drivers/cpuidle/Kconfig
-index 88727b7c0d59..630a5a90744b 100644
---- a/drivers/cpuidle/Kconfig
-+++ b/drivers/cpuidle/Kconfig
-@@ -71,6 +71,14 @@ config HALTPOLL_CPUIDLE
-          before halting in the guest (more efficient than polling in the
-          host via halt_poll_ns for some scenarios).
- 
-+config CPUIDLE_DEBUG_FS
-+	bool "cpuidle state debugging information in debugfs"
-+	default y
-+	depends on DEBUG_FS
-+	help
-+	Include cpuidle state debugging information in debugfs. This is mostly
-+	useful for kernel developers, but it does not incur any cost at runtime.
-+
- endif
- 
- config ARCH_NEEDS_CPU_IDLE_COUPLED
-diff --git a/drivers/cpuidle/Makefile b/drivers/cpuidle/Makefile
-index ee70d5cc5b99..8b5a3f4fe7ec 100644
---- a/drivers/cpuidle/Makefile
-+++ b/drivers/cpuidle/Makefile
-@@ -8,6 +8,7 @@ obj-$(CONFIG_ARCH_NEEDS_CPU_IDLE_COUPLED) += coupled.o
- obj-$(CONFIG_DT_IDLE_STATES)		  += dt_idle_states.o
- obj-$(CONFIG_ARCH_HAS_CPU_RELAX)	  += poll_state.o
- obj-$(CONFIG_HALTPOLL_CPUIDLE)		  += cpuidle-haltpoll.o
-+obj-$(CONFIG_CPUIDLE_DEBUG_FS)		  += cpuidle-debugfs.o
- 
- ##################################################################################
- # ARM SoC drivers
-diff --git a/drivers/cpuidle/cpuidle-debugfs.c b/drivers/cpuidle/cpuidle-debugfs.c
-new file mode 100644
-index 000000000000..4ebb9d6debae
---- /dev/null
-+++ b/drivers/cpuidle/cpuidle-debugfs.c
-@@ -0,0 +1,188 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * cpuidle-debugfs : Debugfs for cpuidle driver
-+ */
-+#include <linux/kernel.h>
-+#include <linux/cpu.h>
-+#include <linux/cpuidle.h>
-+#include <linux/debugfs.h>
-+#include <linux/uaccess.h>
-+
-+#include "cpuidle.h"
-+
-+#define BUFF_SIZE 12
-+
-+static int residency_show(void *data, struct seq_file *m)
-+{
-+	struct cpuidle_state *state = data;
-+	char op[BUFF_SIZE];
-+
-+	snprintf(op, BUFF_SIZE, "%llu\n",
-+			ktime_to_us(state->target_residency_ns));
-+	seq_puts(m, op);
-+	return 0;
-+}
-+
-+static ssize_t residency_write(void *data, const char __user *buf,
-+			       size_t count, loff_t *ppos)
-+{
-+	struct cpuidle_driver *drv = cpuidle_get_driver();
-+	struct cpuidle_state *state = data;
-+	char opbuf[BUFF_SIZE] = { }, *op;
-+	unsigned long long res;
-+	int err, i, curr_index = INT_MAX;
-+
-+	if (count >= BUFF_SIZE) {
-+		pr_err("%s: operation too long", __func__);
-+		return -EINVAL;
-+	}
-+
-+	if (copy_from_user(opbuf, buf, count))
-+		return -EFAULT;
-+
-+	op = strstrip(opbuf);
-+	err = kstrtoull(op, 0, &res);
-+	if (err)
-+		return err;
-+
-+	for (i = 0; i < drv->state_count; i++) {
-+		if (&drv->states[i] == state) {
-+			curr_index = i;
-+			break;
-+		}
-+	}
-+	if (curr_index == INT_MAX) {
-+		pr_err("state not found\n");
-+		return -EFAULT;
-+	}
-+
-+	/* Maintain linearity of residency values */
-+	mutex_lock(&cpuidle_lock);
-+	if (curr_index && curr_index < drv->state_count - 1) {
-+		if (drv->states[curr_index - 1].target_residency < res &&
-+		    drv->states[curr_index + 1].target_residency > res) {
-+			/* Update both the residency and residency_ns */
-+			state->target_residency = (unsigned int)res;
-+			state->target_residency_ns =
-+				state->target_residency * NSEC_PER_USEC;
-+		} else {
-+			goto inval;
-+		}
-+	} else if (!curr_index) {
-+		if (drv->states[curr_index + 1].target_residency > res) {
-+			state->target_residency = (unsigned int)res;
-+			state->target_residency_ns =
-+				state->target_residency * NSEC_PER_USEC;
-+		} else {
-+			goto inval;
-+		}
-+	} else {
-+		if (drv->states[curr_index - 1].target_residency < res) {
-+			state->target_residency = (unsigned int)res;
-+			state->target_residency_ns =
-+				state->target_residency * NSEC_PER_USEC;
-+		} else {
-+			goto inval;
-+		}
-+	}
-+
-+	mutex_unlock(&cpuidle_lock);
-+	return count;
-+
-+inval:
-+	pr_err("Input value out of bound\n");
-+	mutex_unlock(&cpuidle_lock);
-+	return -EINVAL;
-+}
-+
-+static int cpuidle_debugfs_show(struct seq_file *m, void *v)
-+{
-+	const struct cpuidle_debugfs_attr *attr = m->private;
-+	void *data = d_inode(m->file->f_path.dentry->d_parent)->i_private;
-+
-+	return attr->show(data, m);
-+}
-+
-+static ssize_t cpuidle_debugfs_write(struct file *file, const char __user *buf,
-+				     size_t count, loff_t *ppos)
-+{
-+	struct seq_file *m = file->private_data;
-+	const struct cpuidle_debugfs_attr *attr = m->private;
-+	void *data = d_inode(file->f_path.dentry->d_parent)->i_private;
-+
-+	if (!attr->write)
-+		return -EPERM;
-+
-+	return attr->write(data, buf, count, ppos);
-+}
-+
-+static int cpuidle_debugfs_open(struct inode *inode, struct file *file)
-+{
-+	const struct cpuidle_debugfs_attr *attr = inode->i_private;
-+
-+	if (WARN_ON_ONCE(!attr->show))
-+		return -EPERM;
-+
-+	return single_open(file, cpuidle_debugfs_show, inode->i_private);
-+}
-+
-+
-+static const struct file_operations cpuidle_debugfs_fops = {
-+	.open		= cpuidle_debugfs_open,
-+	.read		= seq_read,
-+	.write		= cpuidle_debugfs_write,
-+};
-+
-+static const struct cpuidle_debugfs_attr cpuidle_debugfs_attrs[] = {
-+	{ "target_residency", 0600, residency_show, residency_write},
-+	/* We can add other attributes like latency in future */
-+	{ },
-+};
-+
-+static void debugfs_create_files(struct dentry *parent, void *data,
-+				 const struct cpuidle_debugfs_attr *attr)
-+{
-+	if (IS_ERR_OR_NULL(parent))
-+		return;
-+
-+	d_inode(parent)->i_private = data;
-+
-+	for (; attr->name; attr++)
-+		debugfs_create_file(attr->name, attr->mode, parent,
-+				   (void *)attr, &cpuidle_debugfs_fops);
-+}
-+
-+/*
-+ * cpuidle_state_debugfs_unregister : creates a debugfs instance for each
-+ *				      cpuidle state for cpuidle driver
-+ * @index : index of cpuidle state
-+ */
-+void cpuidle_state_debugfs_unregister(int index)
-+{
-+	struct cpuidle_driver *drv;
-+
-+	drv = cpuidle_get_driver();
-+	debugfs_remove_recursive(drv->states[index].debugfs_dir);
-+}
-+
-+/*
-+ * cpuidle_state_debugfs_register : creates a debugfs instance for each cpuidle
-+ *				    state for cpuidle driver
-+ * @index : index of cpuidle state
-+ */
-+void cpuidle_state_debugfs_register(int index)
-+{
-+	struct cpuidle_driver *drv;
-+	struct cpuidle_state *state;
-+	char state_name[BUFF_SIZE];
-+
-+	drv = cpuidle_get_driver();
-+	state = &drv->states[index];
-+
-+	snprintf(state_name, BUFF_SIZE, "state%d", index);
-+	state->debugfs_dir = debugfs_create_dir(state_name,
-+						cpuidle_debugfs_root);
-+
-+	debugfs_create_files(state->debugfs_dir, state, cpuidle_debugfs_attrs);
-+}
-+
-diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
-index 569dbac443bd..33d7fb25d879 100644
---- a/drivers/cpuidle/cpuidle.c
-+++ b/drivers/cpuidle/cpuidle.c
-@@ -23,6 +23,7 @@
- #include <linux/suspend.h>
- #include <linux/tick.h>
- #include <trace/events/power.h>
-+#include <linux/debugfs.h>
- 
- #include "cpuidle.h"
- 
-@@ -32,6 +33,10 @@ DEFINE_PER_CPU(struct cpuidle_device, cpuidle_dev);
- DEFINE_MUTEX(cpuidle_lock);
- LIST_HEAD(cpuidle_detected_devices);
- 
-+#ifdef CONFIG_DEBUG_FS
-+struct dentry *cpuidle_debugfs_root;
-+#endif
-+
- static int enabled_devices;
- static int off __read_mostly;
- static int initialized __read_mostly;
-@@ -666,9 +671,12 @@ EXPORT_SYMBOL_GPL(cpuidle_unregister_device);
-  */
- void cpuidle_unregister(struct cpuidle_driver *drv)
- {
--	int cpu;
-+	int cpu, i;
- 	struct cpuidle_device *device;
- 
-+	for (i = 0; i < drv->state_count; i++)
-+		cpuidle_state_debugfs_unregister(i);
-+
- 	for_each_cpu(cpu, drv->cpumask) {
- 		device = &per_cpu(cpuidle_dev, cpu);
- 		cpuidle_unregister_device(device);
-@@ -692,7 +700,7 @@ EXPORT_SYMBOL_GPL(cpuidle_unregister);
- int cpuidle_register(struct cpuidle_driver *drv,
- 		     const struct cpumask *const coupled_cpus)
- {
--	int ret, cpu;
-+	int ret, cpu, i;
- 	struct cpuidle_device *device;
- 
- 	ret = cpuidle_register_driver(drv);
-@@ -724,6 +732,9 @@ int cpuidle_register(struct cpuidle_driver *drv,
- 		break;
- 	}
- 
-+	for (i = 0; i < drv->state_count; i++)
-+		cpuidle_state_debugfs_register(i);
-+
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(cpuidle_register);
-@@ -774,6 +785,10 @@ static int __init cpuidle_init(void)
- 
- 	latency_notifier_init(&cpuidle_latency_notifier);
- 
-+#ifdef CONFIG_DEBUG_FS
-+	cpuidle_debugfs_root = debugfs_create_dir("cpuidle", NULL);
-+#endif
-+
- 	return 0;
- }
- 
-diff --git a/drivers/cpuidle/cpuidle.h b/drivers/cpuidle/cpuidle.h
-index 9f336af17fa6..781a9d0f4b43 100644
---- a/drivers/cpuidle/cpuidle.h
-+++ b/drivers/cpuidle/cpuidle.h
-@@ -37,6 +37,30 @@ extern void cpuidle_remove_device_sysfs(struct cpuidle_device *device);
- extern int cpuidle_add_sysfs(struct cpuidle_device *dev);
- extern void cpuidle_remove_sysfs(struct cpuidle_device *dev);
- 
-+#ifdef CONFIG_CPUIDLE_DEBUG_FS
-+
-+#include <linux/seq_file.h>
-+
-+extern struct dentry *cpuidle_debugfs_root;
-+
-+struct cpuidle_debugfs_attr {
-+	const char *name;
-+	umode_t mode;
-+	int (*show)(void *, struct seq_file *);
-+	ssize_t (*write)(void *, const char __user *, size_t, loff_t *);
-+};
-+
-+extern void cpuidle_state_debugfs_register(int index);
-+extern void cpuidle_state_debugfs_unregister(int index);
-+#else
-+void cpuidle_state_debugfs_register(int index)
-+{
-+}
-+void cpuidle_state_debugfs_unregister(int index)
-+{
-+}
-+#endif
-+
- #ifdef CONFIG_ARCH_NEEDS_CPU_IDLE_COUPLED
- bool cpuidle_state_is_coupled(struct cpuidle_driver *drv, int state);
- int cpuidle_coupled_state_verify(struct cpuidle_driver *drv);
-diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
-index 2dbe46b7c213..fc4f2d7d7419 100644
---- a/include/linux/cpuidle.h
-+++ b/include/linux/cpuidle.h
-@@ -70,6 +70,9 @@ struct cpuidle_state {
- 	void (*enter_s2idle) (struct cpuidle_device *dev,
- 			      struct cpuidle_driver *drv,
- 			      int index);
-+#ifdef CONFIG_CPUIDLE_DEBUG_FS
-+	struct dentry	*debugfs_dir;
-+#endif
- };
- 
- /* Idle State Flags */
--- 
-2.17.1
-
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
