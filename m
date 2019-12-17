@@ -2,157 +2,131 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 010F8C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE7FC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE3D12072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A36E2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:50:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qrn+3EgA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727407AbfLQKtB (ORCPT
+        id S1727425AbfLQKuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 05:49:01 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50766 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726655AbfLQKtB (ORCPT
+        Tue, 17 Dec 2019 05:50:12 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58439 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726655AbfLQKuM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 05:49:01 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBHAldWZ145136;
-        Tue, 17 Dec 2019 05:48:46 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wwdvndmjd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 Dec 2019 05:48:46 -0500
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xBHAmj1j004044;
-        Tue, 17 Dec 2019 05:48:45 -0500
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wwdvndmhf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 Dec 2019 05:48:45 -0500
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xBHAe7Df006118;
-        Tue, 17 Dec 2019 10:48:44 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma03wdc.us.ibm.com with ESMTP id 2wvqc6bj7h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 Dec 2019 10:48:44 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBHAmiY115073728
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 17 Dec 2019 10:48:44 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E0690AE06A;
-        Tue, 17 Dec 2019 10:48:43 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8D85AAE05F;
-        Tue, 17 Dec 2019 10:48:41 +0000 (GMT)
-Received: from [9.204.201.20] (unknown [9.204.201.20])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 17 Dec 2019 10:48:41 +0000 (GMT)
-Subject: Re: [RFC PATCH 1/2] mm/mmu_gather: Invalidate TLB correctly on batch
- allocation failure and flush
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     akpm@linux-foundation.org, npiggin@gmail.com, mpe@ellerman.id.au,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-References: <20191217071713.93399-1-aneesh.kumar@linux.ibm.com>
- <20191217090914.GX2844@hirez.programming.kicks-ass.net>
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Message-ID: <3d250b04-a78d-20a7-d41e-50e48e08d1cb@linux.ibm.com>
-Date:   Tue, 17 Dec 2019 16:18:40 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 17 Dec 2019 05:50:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576579811;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Rt3wBXjdkOLTAGZAw3Tafg9k0wX1EERiUeh4YXdvZFw=;
+        b=Qrn+3EgAZPFBLLyg2ECXeAk+dJeF5fBFO5P2JugKSba2jI6UlNpUqArs8627tm6BpV//b5
+        PW0XPLTlI5WHKRMiaJAMIUT3yoeHDbtp7m7sTk6WzeVgVxrjucY5y2jxz3LXP6FTBt8eKC
+        t5yzt8dXn3LpKVcjvxvpUamnn/YxvtY=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-178-IfRpNcThPD-zI8UXpqFZLg-1; Tue, 17 Dec 2019 05:50:06 -0500
+X-MC-Unique: IfRpNcThPD-zI8UXpqFZLg-1
+Received: by mail-qk1-f197.google.com with SMTP id 143so6577151qkg.12
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 02:50:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Rt3wBXjdkOLTAGZAw3Tafg9k0wX1EERiUeh4YXdvZFw=;
+        b=XQSjnIbvbBSkFDZzxoZ/bHmvYe8McnSxjFcvvY6dWm+i7V5QuNnMSwEr0o2yaJjEAT
+         UagYQIZegzfPjZtfEsCLGJOATBD55H/yXKrFTwSXolqwtQF07Sq8y9zb35N3CMcCIp7O
+         EB9zouB8pYQlQJ4BhsL+yr5vBmCdcXF1LCsjE18JWcPpAs62qX593A/t73mxpUzbqsD4
+         X6W7JI58IHUUyxRyiQyIb9bVH5gEodqiOtZ07Uou/shC9XWY7iCTp6drzZSda/KFEQM9
+         BPO5YcTO9pQ9C3Faa37NfQY0B6ArAxoYnu0DgbQmQG9p43cGHbvk1MOKtJf1Ib1QwdBM
+         Im0Q==
+X-Gm-Message-State: APjAAAXHZzUiDev0xxFwL1lF39G7r0GcPfwjZUcX1K/jxIugAl71XOUA
+        OzMjIBACEwgPPjLSQjFiouHPVEFUIKLckzS5mhtIN63BWUIHup3dCojFpc7RRMLztHJyVpE+jey
+        hUpDaAYacxvoMSFmXlD+jANONWD5e/BmPSws1EzG9
+X-Received: by 2002:ad4:46ce:: with SMTP id g14mr3904989qvw.67.1576579805655;
+        Tue, 17 Dec 2019 02:50:05 -0800 (PST)
+X-Google-Smtp-Source: APXvYqw/VLutc07+0j4Bx9/r9IYnqLdnpclrVJSO4VZrNxQqBV6UHMzCpcyo2Ftqj81CkaG3aSoCQu3p0VvOw1+5D9I=
+X-Received: by 2002:ad4:46ce:: with SMTP id g14mr3904970qvw.67.1576579805418;
+ Tue, 17 Dec 2019 02:50:05 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191217090914.GX2844@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-17_02:2019-12-16,2019-12-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- mlxlogscore=999 lowpriorityscore=0 malwarescore=0 spamscore=0 bulkscore=0
- suspectscore=2 clxscore=1015 phishscore=0 impostorscore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912170093
+References: <1576551722-16966-1-git-send-email-zhangpan26@huawei.com>
+In-Reply-To: <1576551722-16966-1-git-send-email-zhangpan26@huawei.com>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Tue, 17 Dec 2019 11:49:54 +0100
+Message-ID: <CAO-hwJ+5Ch02fPQ+XF=A4iEcH81V5PrCdV2qGQDZ8HxnQAoEog@mail.gmail.com>
+Subject: Re: [PATCH] drivers/hid/hid-multitouch.c: fix a possible null pointer access.
+To:     z00417012 <zhangpan26@huawei.com>
+Cc:     hushiyuan@huawei.com, Jiri Kosina <jikos@kernel.org>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/17/19 2:39 PM, Peter Zijlstra wrote:
-> On Tue, Dec 17, 2019 at 12:47:12PM +0530, Aneesh Kumar K.V wrote:
->> Architectures for which we have hardware walkers of Linux page table should
->> flush TLB on mmu gather batch allocation failures and batch flush. Some
->> architectures like POWER supports multiple translation modes (hash and radix)
->> and in the case of POWER only radix translation mode needs the above TLBI.
->> This is because for hash translation mode kernel wants to avoid this extra
->> flush since there are no hardware walkers of linux page table. With radix
->> translation, the hardware also walks linux page table and with that, kernel
->> needs to make sure to TLB invalidate page walk cache before page table pages are
->> freed.
-> 
->> Based on changes from Peter Zijlstra <peterz@infradead.org>
-> 
-> AFAICT it is all my patch ;-)
+Hi,
 
-Yes. I moved the changes you had to upstream. I can update the From: in 
-the next version if you are ok with that?
+On Tue, Dec 17, 2019 at 4:17 AM z00417012 <zhangpan26@huawei.com> wrote:
 
-> 
-> Anyway, this commit:
-> 
->> More details in
->> commit: d86564a2f085 ("mm/tlb, x86/mm: Support invalidating TLB caches for RCU_TABLE_FREE")
-> 
-> states that you do an explicit invalidate in __p*_free_tlb(), which, if
-> I'm not mistaken is still there:
-> 
->    arch/powerpc/include/asm/nohash/pgalloc.h:      tlb_flush_pgtable(tlb, address);
-> 
+Can you add at the beginning of your commit message:
+From: Pan Zhang <zhangpan26@huawei.com>
 
-nohash is not really radix. So we still do the tlb flush from the 
-pte_free_tlb for nohash and for PPC-radix, we let tlb_table_invalidate 
-to flush that.
+This way we have the commit author that matches the signature, which
+is a requirement for the kernel.
 
+>
+> 1002     if ((quirks & MT_QUIRK_IGNORE_DUPLICATES) && mt) {
+> 1003         struct input_mt_slot *i_slot = &mt->slots[slotnum];
+> 1004
+> 1005         if (input_mt_is_active(i_slot) &&
+> 1006             input_mt_is_used(mt, i_slot))
+> 1007             return -EAGAIN;
+> 1008     }
+>
+> We previously assumed 'mt' could be null (see line 1002).
+>
+> The following situation is similar, so add a judgement.
+>
+> Signed-off-by: Pan Zhang <zhangpan26@huawei.com>
+> ---
+>  drivers/hid/hid-multitouch.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
+> index 3cfeb16..368de81 100644
+> --- a/drivers/hid/hid-multitouch.c
+> +++ b/drivers/hid/hid-multitouch.c
+> @@ -1019,7 +1019,7 @@ static int mt_process_slot(struct mt_device *td, struct input_dev *input,
+>                 tool = MT_TOOL_DIAL;
+>         else if (unlikely(!confidence_state)) {
+>                 tool = MT_TOOL_PALM;
+> -               if (!active &&
+> +               if (!active && mt
 
-> Or am I reading this wrong? I'm thinking you can remove that now.
-> 
->> diff --git a/arch/powerpc/include/asm/tlb.h b/arch/powerpc/include/asm/tlb.h
->> index b2c0be93929d..feea1a09bbce 100644
->> --- a/arch/powerpc/include/asm/tlb.h
->> +++ b/arch/powerpc/include/asm/tlb.h
->> @@ -27,6 +27,10 @@
->>   #define tlb_flush tlb_flush
->>   extern void tlb_flush(struct mmu_gather *tlb);
->>   
->> +#ifdef CONFIG_HAVE_RCU_TABLE_FREE
-> /*
->   * PPC-Hash does not use the linux page-tables, so we can avoid
->   * the TLBI for page-table freeing, PPC-Radix otoh does use the
->   * page-tables and needs the TLBI.
->   */
->> +#define tlb_needs_table_invalidate()	radix_enabled()
->> +#endif
-> 
-> Also, are you really sure about the !SMP case? Esp. on Radix I'm
-> thinking that the PWC (page-walk-cache) can give trouble even on UP,
-> when we get preempted in the middle of mmu_gather. Hmm?
-> 
+Ack on the principle, but this doesn't even compile. You are missing a
+`&&` at the end of the line.
 
-Yes, looking at !SMP I guess we do have issue there. we do free the 
-pagetable pages directly in __p*_free_tlb() with the current code. That 
-will definitely not work. Are you suggesting we enable 
-HAVE_RCU_TABLE_FREE even for !SMP?
+Can you send a v2 with the comments above? And we will queue the v2
+for 5.5 I think.
 
->>   /* Get the generic bits... */
->>   #include <asm-generic/tlb.h>
-> 
-> 
+Cheers,
+Benjamin
 
--aneesh
+>                     input_mt_is_active(&mt->slots[slotnum])) {
+>                         /*
+>                          * The non-confidence was reported for
+> --
+> 2.7.4
+>
+
