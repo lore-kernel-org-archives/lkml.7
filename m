@@ -2,100 +2,184 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9C5C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0417C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6085207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:07:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576584430;
-	bh=xln5+huOJ+nrvh0qFGTI6Ch286BBnjAm0h9svAjmdRg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mH8VmLgy/kHApxCpxn9T0cgb/2HvsSHHxfu8AXOjVNZWOCk7zZrbpdLhZIwDTAh+F
-	 USUxhBCREAyjS3i4Qpk0X/XqdWMaL+3+MSJAL8tCVsDqDUyP696rX5kfmnYDXXfCVV
-	 QpR2MaV2r+kshM41s29kNxzeXXjOQRbZWX6evdG8=
+	by mail.kernel.org (Postfix) with ESMTP id C21ED20733
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:09:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbfLQMHK (ORCPT
+        id S1727726AbfLQMJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:07:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36842 "EHLO mail.kernel.org"
+        Tue, 17 Dec 2019 07:09:20 -0500
+Received: from mga06.intel.com ([134.134.136.31]:39944 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726943AbfLQMHJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 07:07:09 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 263BF20733;
-        Tue, 17 Dec 2019 12:07:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576584428;
-        bh=xln5+huOJ+nrvh0qFGTI6Ch286BBnjAm0h9svAjmdRg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CNwSShe6yoclbRTf51HFSsZFz1hYi2CkeMGZs4LG7fMYiQ3VoCDeIZvMKNG8hYtz+
-         hzkAn8S5f8rR1C/Nn01SAgZ1D3VrtEr7hGkh5XI0X8a1rMZ1y+80GCMhD75H24W7Pw
-         1X41mxgF5XYs0c1M3jsss1P9tdqqVlv4t7eSXxJ4=
-Date:   Tue, 17 Dec 2019 13:07:06 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 5.4 000/177] 5.4.4-stable review
-Message-ID: <20191217120706.GC3156341@kroah.com>
-References: <20191216174811.158424118@linuxfoundation.org>
- <b0514e98-0238-b226-de8d-865394a8c6f3@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b0514e98-0238-b226-de8d-865394a8c6f3@nvidia.com>
+        id S1726275AbfLQMJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 07:09:19 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 04:09:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,325,1571727600"; 
+   d="scan'208";a="389803981"
+Received: from unknown (HELO linuxpc.iind.intel.com) ([10.223.107.129])
+  by orsmga005.jf.intel.com with ESMTP; 17 Dec 2019 04:09:16 -0800
+From:   Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>
+To:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        tglx@linutronix.de, rfontana@redhat.com, allison@lohutok.net,
+        jacob.jun.pan@linux.intel.com
+Cc:     rui.zhang@intel.com, srinivas.pandruvada@linux.intel.com,
+        andriy.shevchenko@intel.com, sumeet.r.pawnikar@intel.com
+Subject: [PATCH v3] tools/thermal: tmon: replace error message SIGINT with SIGTERM
+Date:   Tue, 17 Dec 2019 17:45:31 +0530
+Message-Id: <1576584931-2063-1-git-send-email-sumeet.r.pawnikar@intel.com>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 11:28:17AM +0000, Jon Hunter wrote:
-> 
-> On 16/12/2019 17:47, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.4.4 release.
-> > There are 177 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Wed, 18 Dec 2019 17:41:25 +0000.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.4-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> > 
-> > -------------
-> 
-> All tests are passing for Tegra ...
-> 
-> Test results for stable-v5.4:
->     13 builds:	13 pass, 0 fail
->     22 boots:	22 pass, 0 fail
->     38 tests:	38 pass, 0 fail
-> 
-> Linux version:	5.4.4-rc1-gfffa88522363
-> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
->                 tegra194-p2972-0000, tegra20-ventana,
->                 tegra210-p2371-2180, tegra30-cardhu-a04
-> 
+Fix the wrong error message reporting by replacing SIGINT with SIGTERM.
+Fix multiple checkpatch errors and warnings.
 
-Wonderful, thanks for testing all of these and letting me know.
+Signed-off-by: Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>
+---
+ tools/thermal/tmon/tmon.c | 26 +++++++++-----------------
+ 1 file changed, 9 insertions(+), 17 deletions(-)
 
-greg k-h
+diff --git a/tools/thermal/tmon/tmon.c b/tools/thermal/tmon/tmon.c
+index 83ec6e482f12..7eb3216a27f4 100644
+--- a/tools/thermal/tmon/tmon.c
++++ b/tools/thermal/tmon/tmon.c
+@@ -46,7 +46,7 @@ static void	start_daemon_mode(void);
+ 
+ pthread_t event_tid;
+ pthread_mutex_t input_lock;
+-void usage()
++void usage(void)
+ {
+ 	printf("Usage: tmon [OPTION...]\n");
+ 	printf("  -c, --control         cooling device in control\n");
+@@ -62,7 +62,7 @@ void usage()
+ 	exit(0);
+ }
+ 
+-void version()
++void version(void)
+ {
+ 	printf("TMON version %s\n", VERSION);
+ 	exit(EXIT_SUCCESS);
+@@ -70,7 +70,6 @@ void version()
+ 
+ static void tmon_cleanup(void)
+ {
+-
+ 	syslog(LOG_INFO, "TMON exit cleanup\n");
+ 	fflush(stdout);
+ 	refresh();
+@@ -96,7 +95,6 @@ static void tmon_cleanup(void)
+ 	exit(1);
+ }
+ 
+-
+ static void tmon_sig_handler(int sig)
+ {
+ 	syslog(LOG_INFO, "TMON caught signal %d\n", sig);
+@@ -120,7 +118,6 @@ static void tmon_sig_handler(int sig)
+ 	tmon_exit = true;
+ }
+ 
+-
+ static void start_syslog(void)
+ {
+ 	if (debug_on)
+@@ -167,7 +164,6 @@ static void prepare_logging(void)
+ 		return;
+ 	}
+ 
+-
+ 	fprintf(tmon_log, "#----------- THERMAL SYSTEM CONFIG -------------\n");
+ 	for (i = 0; i < ptdata.nr_tz_sensor; i++) {
+ 		char binding_str[33]; /* size of long + 1 */
+@@ -175,7 +171,7 @@ static void prepare_logging(void)
+ 
+ 		memset(binding_str, 0, sizeof(binding_str));
+ 		for (j = 0; j < 32; j++)
+-			binding_str[j] = (ptdata.tzi[i].cdev_binding & 1<<j) ?
++			binding_str[j] = (ptdata.tzi[i].cdev_binding & (1 << j)) ?
+ 				'1' : '0';
+ 
+ 		fprintf(tmon_log, "#thermal zone %s%02d cdevs binding: %32s\n",
+@@ -187,7 +183,6 @@ static void prepare_logging(void)
+ 				trip_type_name[ptdata.tzi[i].tp[j].type],
+ 				ptdata.tzi[i].tp[j].temp);
+ 		}
+-
+ 	}
+ 
+ 	for (i = 0; i <	ptdata.nr_cooling_dev; i++)
+@@ -219,7 +214,6 @@ static struct option opts[] = {
+ 	{ 0, 0, NULL, 0 }
+ };
+ 
+-
+ int main(int argc, char **argv)
+ {
+ 	int err = 0;
+@@ -283,7 +277,7 @@ int main(int argc, char **argv)
+ 	if (signal(SIGINT, tmon_sig_handler) == SIG_ERR)
+ 		syslog(LOG_DEBUG, "Cannot handle SIGINT\n");
+ 	if (signal(SIGTERM, tmon_sig_handler) == SIG_ERR)
+-		syslog(LOG_DEBUG, "Cannot handle SIGINT\n");
++		syslog(LOG_DEBUG, "Cannot handle SIGTERM\n");
+ 
+ 	if (probe_thermal_sysfs()) {
+ 		pthread_mutex_destroy(&input_lock);
+@@ -328,8 +322,7 @@ int main(int argc, char **argv)
+ 			show_cooling_device();
+ 		}
+ 		time_elapsed += ticktime;
+-		controller_handler(trec[0].temp[target_tz_index] / 1000,
+-				&yk);
++		controller_handler(trec[0].temp[target_tz_index] / 1000, &yk);
+ 		trec[0].pid_out_pct = yk;
+ 		if (!dialogue_on)
+ 			show_control_w();
+@@ -340,14 +333,15 @@ int main(int argc, char **argv)
+ 	return 0;
+ }
+ 
+-static void start_daemon_mode()
++static void start_daemon_mode(void)
+ {
+ 	daemon_mode = 1;
+ 	/* fork */
+ 	pid_t	sid, pid = fork();
+-	if (pid < 0) {
++
++	if (pid < 0)
+ 		exit(EXIT_FAILURE);
+-	} else if (pid > 0)
++	else if (pid > 0)
+ 		/* kill parent */
+ 		exit(EXIT_SUCCESS);
+ 
+@@ -366,11 +360,9 @@ static void start_daemon_mode()
+ 	if ((chdir("/")) < 0)
+ 		exit(EXIT_FAILURE);
+ 
+-
+ 	sleep(10);
+ 
+ 	close(STDIN_FILENO);
+ 	close(STDOUT_FILENO);
+ 	close(STDERR_FILENO);
+-
+ }
+-- 
+2.17.1
+
