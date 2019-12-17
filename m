@@ -2,105 +2,70 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 058DAC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACB7C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0EB521835
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:33:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KEu6GFBq"
+	by mail.kernel.org (Postfix) with ESMTP id 73CC020733
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:34:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728394AbfLQNdg (ORCPT
+        id S1728378AbfLQNef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 08:33:36 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:40278 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726164AbfLQNdf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 08:33:35 -0500
-Received: by mail-pj1-f68.google.com with SMTP id s35so4595723pjb.7;
-        Tue, 17 Dec 2019 05:33:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=44FjkOn/XLQ+zFbEeie+qKzDhgYPpksuKEmuM6SY0/I=;
-        b=KEu6GFBqmNG75zG+7przID6KXw0HQFuiUppkDgzIlWE2qT3An6oQ1vSrurEma9+Gb0
-         ipZtrAmgrDptjpW0ECWaTJ+RLq45ng9p24QjN8P17nScRfQZZhWD8CHztIWpuvV4CxHM
-         QtPvvhFy/jd8MHFXStxNJ47HVUq2nrK3SbY1elm0enS0BVvYKGTaQy3C2S9YwnrznQHk
-         LhZenTNkPIxi/1hOWb/dHM0l2Sb2Du+s8lqpLx+A9k9xuZtTwbw+VKFe2hpaiJ1eJCCg
-         8ws9qjAFfaAPpaKATNpzVG4KA1q9IZ4uNaGuA+qX2tCI5zp3nzdWc1nN21l6RxV0p6AF
-         xwvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=44FjkOn/XLQ+zFbEeie+qKzDhgYPpksuKEmuM6SY0/I=;
-        b=snpVa/RSJAqebgn1Fdq5tZlWVUUY0IMvhKHqqTteyN0innCWjvFiiKauH/NSpGFQGa
-         iluC+5zY2miDhxHbgCQxTFt4E8xcsO6p23y9S4DIPN4x6SGoGridAQrxHyxqVQWMcTZH
-         X1mpHCHfSu/THJn7joeYQmFR0vX0rsVUpTFLurZvbx0XBYm7AUh6UbRACk+f4Bbp6gYG
-         DesD7wWVy2rD5iYv2cIbqKZV5w/5mOTaLYqrZDcBDHytBmm9/Xyi91hZgMx6E230j1dS
-         j9cT09NKiYeEszXoA8myE1bB+gVr6uqQuSCKGbqJblc40FnYi3Cw1/PnKO4agX/rAr8/
-         kl9Q==
-X-Gm-Message-State: APjAAAWdjbQQD/YKatBp+Gu79eOJkhN0Rfc4bU3uvIXfxT2yqIicIIRt
-        j34HZex6JHw6tQCMYEut+WY=
-X-Google-Smtp-Source: APXvYqwmroYp//z/XHkQUr6PxhbEQKH1be7LwohqimmimSV+Vml4gldj7Xb9tUuBFkW3WeBWY3y2uQ==
-X-Received: by 2002:a17:902:724b:: with SMTP id c11mr22367771pll.177.1576589615158;
-        Tue, 17 Dec 2019 05:33:35 -0800 (PST)
-Received: from oslab.tsinghua.edu.cn ([166.111.139.172])
-        by smtp.gmail.com with ESMTPSA id d13sm3367619pjx.21.2019.12.17.05.33.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 05:33:34 -0800 (PST)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] fs: nfs: fix a possible sleep-in-atomic-context bug in _pnfs_grab_empty_layout()
-Date:   Tue, 17 Dec 2019 21:33:19 +0800
-Message-Id: <20191217133319.11861-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 17 Dec 2019 08:34:35 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7699 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726164AbfLQNef (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 08:34:35 -0500
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 3BF1EBC5B25D3D4192AA;
+        Tue, 17 Dec 2019 21:34:31 +0800 (CST)
+Received: from huawei.com (10.175.127.16) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Tue, 17 Dec 2019
+ 21:34:21 +0800
+From:   Pan Zhang <zhangpan26@huawei.com>
+To:     <zhangpan26@huawei.com>, <hushiyuan@huawei.com>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <gregkh@linuxfoundation.org>, <willy@infradead.org>,
+        <tglx@linutronix.de>, <ard.biesheuvel@arm.com>,
+        <anshuman.khandual@arm.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] mm: change_memory_common: add spaces for `*` operator
+Date:   Tue, 17 Dec 2019 21:34:04 +0800
+Message-ID: <1576589644-23293-1-git-send-email-zhangpan26@huawei.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.175.127.16]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The filesystem may sleep while holding a spinlock.
-The function call path (from bottom to top) in Linux 4.19 is:
+Leaves one space before and after a binary operator both, it may be more elegant.
 
-fs/nfs/pnfs.c, 2052: 
-	pnfs_find_alloc_layout(GFP_KERNEL) in _pnfs_grab_empty_layout
-fs/nfs/pnfs.c, 2051: 
-	spin_lock in _pnfs_grab_empty_layout
-
-pnfs_find_alloc_layout(GFP_KERNEL) can sleep at runtime.
-
-To fix this possible bug, GFP_KERNEL is replaced with GFP_ATOMIC for
-pnfs_find_alloc_layout().
-
-This bug is found by a static analysis tool STCheck written by myself.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Pan Zhang <zhangpan26@huawei.com>
 ---
- fs/nfs/pnfs.c | 2 +-
+ arch/arm64/mm/pageattr.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-index cec3070ab577..cfbe170f0651 100644
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -2138,7 +2138,7 @@ _pnfs_grab_empty_layout(struct inode *ino, struct nfs_open_context *ctx)
- 	struct pnfs_layout_hdr *lo;
- 
- 	spin_lock(&ino->i_lock);
--	lo = pnfs_find_alloc_layout(ino, ctx, GFP_KERNEL);
-+	lo = pnfs_find_alloc_layout(ino, ctx, GFP_ATOMIC);
- 	if (!lo)
- 		goto out_unlock;
- 	if (!test_bit(NFS_LAYOUT_INVALID_STID, &lo->plh_flags))
+diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
+index 9ce7bd9..250c490 100644
+--- a/arch/arm64/mm/pageattr.c
++++ b/arch/arm64/mm/pageattr.c
+@@ -54,7 +54,7 @@ static int change_memory_common(unsigned long addr, int numpages,
+ 				pgprot_t set_mask, pgprot_t clear_mask)
+ {
+ 	unsigned long start = addr;
+-	unsigned long size = PAGE_SIZE*numpages;
++	unsigned long size = PAGE_SIZE * numpages;
+ 	unsigned long end = start + size;
+ 	struct vm_struct *area;
+ 	int i;
 -- 
-2.17.1
+2.7.4
 
