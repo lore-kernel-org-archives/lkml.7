@@ -2,140 +2,113 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC378C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 06:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B06C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 06:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3AD4206D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 06:55:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="PK58Xwfj"
+	by mail.kernel.org (Postfix) with ESMTP id 467F0206D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 06:56:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727415AbfLQGzV (ORCPT
+        id S1726998AbfLQG4e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 01:55:21 -0500
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:37728 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbfLQGzU (ORCPT
+        Tue, 17 Dec 2019 01:56:34 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:45098 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725856AbfLQG4d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 01:55:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1576565719; x=1608101719;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=T9K3lKhMfSN5B7d68XGv/PcvnlA/60URcRUENSGixLQ=;
-  b=PK58Xwfjmo6NIrN7BymuOHoq3as4F7hlZDQ+97/mrsmi4ytpXWO3elwz
-   BoKBnMNBDC5xEleyrfups1FGvKB5QOtxz+xoO04JLp6cwgqvCG6OIdaW5
-   R2vmu2bz2BRudg77mGhoYaHRaZQOazGoQkN8zIZ9G5ncQ2Tov25QUWvTE
-   E=;
-IronPort-SDR: rNnwRIUsCfyGZDs3c0A73mBnWIKyIxTRSURqOA14JXu1aDa5YpMgUeJ8O5Xegn4At2JfEXTgKr
- Ng2MSyrGZnAw==
-X-IronPort-AV: E=Sophos;i="5.69,324,1571702400"; 
-   d="scan'208";a="13948926"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-168cbb73.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 17 Dec 2019 06:55:07 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2c-168cbb73.us-west-2.amazon.com (Postfix) with ESMTPS id 82AE6A2373;
-        Tue, 17 Dec 2019 06:55:07 +0000 (UTC)
-Received: from EX13D06EUC002.ant.amazon.com (10.43.164.186) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1236.3; Tue, 17 Dec 2019 06:55:07 +0000
-Received: from EX13D11EUB003.ant.amazon.com (10.43.166.58) by
- EX13D06EUC002.ant.amazon.com (10.43.164.186) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 17 Dec 2019 06:55:06 +0000
-Received: from EX13D11EUB003.ant.amazon.com ([10.43.166.58]) by
- EX13D11EUB003.ant.amazon.com ([10.43.166.58]) with mapi id 15.00.1367.000;
- Tue, 17 Dec 2019 06:55:05 +0000
-From:   "Jubran, Samih" <sameehj@amazon.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        "Belgazal, Netanel" <netanel@amazon.com>
-Subject: RE: linux-next: manual merge of the net-next tree with the net tree
-Thread-Topic: linux-next: manual merge of the net-next tree with the net tree
-Thread-Index: AQHVs5wu+ZmsiIcfoUW6P1PgUrQTwae95g1A
-Date:   Tue, 17 Dec 2019 06:55:05 +0000
-Message-ID: <56c41d0552944b1fb62b466aea6c79ee@EX13D11EUB003.ant.amazon.com>
-References: <20191216100516.22d2d85f@canb.auug.org.au>
-In-Reply-To: <20191216100516.22d2d85f@canb.auug.org.au>
-Accept-Language: en-US
-Content-Language: en-US
+        Tue, 17 Dec 2019 01:56:33 -0500
+X-AuditID: c0a8fbf4-183ff70000001fa6-5b-5df87c1ebcc5
+Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 31.34.08102.E1C78FD5; Tue, 17 Dec 2019 07:56:30 +0100 (CET)
+Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
+ WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
+ 14.03.0439.000; Tue, 17 Dec 2019 07:56:26 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "broonie@kernel.org" <broonie@kernel.org>
+CC:     "corbet@lwn.net" <corbet@lwn.net>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "noralf@tronnes.org" <noralf@tronnes.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>
+Subject: Re: [PATCH v6 09/15] regulator: bd71828: Basic support for ROHM
+ bd71828 PMIC regulators
+Thread-Topic: [PATCH v6 09/15] regulator: bd71828: Basic support for ROHM
+ bd71828 PMIC regulators
+Thread-Index: AQHVsAfYI3uVDvKcOUypO4bwmJ45Qqe80OIAgAEMf4A=
+Date:   Tue, 17 Dec 2019 06:56:23 +0000
+Message-ID: <06f1f3529fc168daa513e0a6db7b4e0147f86358.camel@fi.rohmeurope.com>
+References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+         <5b1c4a22c7945e97ff2a7924abfeb3239043f8eb.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+         <20191216145528.GE4161@sirena.org.uk>
+In-Reply-To: <20191216145528.GE4161@sirena.org.uk>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.164.68]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <270552940107BB4D8F91F4EA5DFF4642@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
+X-Brightmail-Tracker: H4sIAAAAAAAAA02TfVAUZRzHe3af23142WY9MR4prU6LMULAzHmmmIaZatxmimFqppnSkxbY
+        OCa4o72DEW2KSQVBYsTzZLoA5XiRt+nwitEIhhs6DA8ijxej0AhlGNQGswgUxdplVfjr+T7P
+        9/l+P88fvwfR+jo2AmWYbZJsFjMNTDD0Ntw5Fb3+k1vG2IOthNQGRlhSOFPPksUjZ1kyW+mH
+        xDExyZBJbyEgx30DOnKo71sd2VfjZshYWysk4//2ADI3fJAiR++epMjNkt91pLqgFpJvjt8F
+        ZKi9giFtf34NyNnmYYbU/RKgSEVdLyQ3/i6iSMD/OnH4Z1hyyd/DkH2BUZoc6PSx5N6FU5CU
+        DmxPWCe0VLUA4c7CESDcGD3AClUte4XvnJdYwdNUxAgXL3QwQldlCyvUlNp1wlx/GRSmqt1Q
+        +HH0NCWUV92mBHeJDwgNzfOs8I9nfRL/fkh8imjLfScj3Rzzygchps6TTUx2O7v7/GmvLh+c
+        YItBEML8Vlx2pUBXDIKRnh8BeOiYg9U2vQBPLQ7AYoAQw8fj4l+XAmF8NHYs1DCqpvnhEPzV
+        9ztUvZpPwe4fCijtTirumq65r1/CPdMuWtWQfwZ7S1qBWsnxibix6mMN1Q/w2LB9qTOI34Iv
+        X/dCVQN+HS7Kn6E0Vjj2TM3rtEfzuLbjZ1rTa/DVK/funxtw5+2JpSfT/Cbsbo/Rogn44uI4
+        q+mn8dFDE0ua41fhc19OwsPgMecKgnM57VyRdq5IO1ekTwBdE8BZYkZmumiT4jbLUs5m2WLK
+        UpZUS5YHaGM3ewb81/1GN6AQ6AZrEWVYw4Vuv2XUP5piScsziVZTspyTKVm7AUa0IYw789S8
+        Uc+liXl7JNnywHocQUM4FzlRZtTzKusjScqW5AfuEwgZMPf8XqV0lSylS7s/zMi0LdsUClLL
+        gyPCrJI5TZLFHJspWR2PZKsyH6oVqnCH9ihxzpotZimnWtQPotDhq5UuGvkq61y0HpotZiki
+        nBtUSbx61ZRjfgi6BsIRMKzm/lKLQpW/97DnmoKgFMSWxDkVYROXrYh8YHl7xwsksr/8XUeS
+        /VXX9bLCRFvnuY0JjfW+F7dF+zZugOPlztiBxvPUF6l0c8zgs0mbovqmu36L9dd2oG3vWXeW
+        VPsf2WoHFW2zazfs90Tt7Nv1x1j8k/vl+ZG83F2labk3IwOX7QsJg0b08k9xxtdSGno/k01v
+        1n8uBr0FPw11QQO0msS452jZKv4PHr7zGzgEAAA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Sent: Monday, December 16, 2019 1:05 AM
-> To: David Miller <davem@davemloft.net>; Networking
-> <netdev@vger.kernel.org>
-> Cc: Linux Next Mailing List <linux-next@vger.kernel.org>; Linux Kernel
-> Mailing List <linux-kernel@vger.kernel.org>; Belgazal, Netanel
-> <netanel@amazon.com>; Jubran, Samih <sameehj@amazon.com>
-> Subject: linux-next: manual merge of the net-next tree with the net tree
->=20
-> Hi all,
->=20
-> Today's linux-next merge of the net-next tree got a conflict in:
->=20
->   drivers/net/ethernet/amazon/ena/ena_netdev.c
->=20
-> between commit:
->=20
->   24dee0c7478d ("net: ena: fix napi handler misbehavior when the napi
-> budget is zero")
->=20
-> from the net tree and commit:
->=20
->   548c4940b9f1 ("net: ena: Implement XDP_TX action")
->=20
-> from the net-next tree.
->=20
-> I fixed it up (see below) and can carry the fix as necessary. This is now=
- fixed
-> as far as linux-next is concerned, but any non trivial conflicts should b=
-e
-> mentioned to your upstream maintainer when your tree is submitted for
-> merging.  You may also want to consider cooperating with the maintainer o=
-f
-> the conflicting tree to minimise any particularly complex conflicts.
->=20
-> --
-> Cheers,
-> Stephen Rothwell
->=20
-> diff --cc drivers/net/ethernet/amazon/ena/ena_netdev.c
-> index 948583fdcc28,26954fde4766..000000000000
-> --- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
-> +++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-> @@@ -1237,9 -1861,8 +1861,8 @@@ static int ena_io_poll(struct napi_stru
->   {
->   	struct ena_napi *ena_napi =3D container_of(napi, struct ena_napi,
-> napi);
->   	struct ena_ring *tx_ring, *rx_ring;
-> -
->  -	u32 tx_work_done;
->  -	u32 rx_work_done;
->  +	int tx_work_done;
->  +	int rx_work_done =3D 0;
->   	int tx_budget;
->   	int napi_comp_call =3D 0;
->   	int ret;
-
-Thanks, looks good to me. Sorry for the inconvenience.
+VGhhbmtzIE1hcmssDQoNCk9uIE1vbiwgMjAxOS0xMi0xNiBhdCAxNDo1NSArMDAwMCwgTWFyayBC
+cm93biB3cm90ZToNCj4gT24gV2VkLCBEZWMgMTEsIDIwMTkgYXQgMTE6NDY6MTFBTSArMDIwMCwg
+TWF0dGkgVmFpdHRpbmVuIHdyb3RlOg0KPiANCj4gPiArc3RhdGljIGludCBiZDcxODI4X2xkbzZf
+Z2V0X3ZvbHRhZ2Uoc3RydWN0IHJlZ3VsYXRvcl9kZXYgKnJkZXYpDQo+ID4gK3sNCj4gPiArCXJl
+dHVybiBCRDcxODI4X0xET182X1ZPTFRBR0U7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBj
+b25zdCBzdHJ1Y3QgcmVndWxhdG9yX29wcyBiZDcxODI4X2xkbzZfb3BzID0gew0KPiA+ICsJLmVu
+YWJsZSA9IHJlZ3VsYXRvcl9lbmFibGVfcmVnbWFwLA0KPiA+ICsJLmRpc2FibGUgPSByZWd1bGF0
+b3JfZGlzYWJsZV9yZWdtYXAsDQo+ID4gKwkuZ2V0X3ZvbHRhZ2UgPSBiZDcxODI4X2xkbzZfZ2V0
+X3ZvbHRhZ2UsDQo+IA0KPiBZb3UgY2FuIGp1c3Qgc2V0IGZpeGVkX3VWIGluIHRoZSByZWd1bGF0
+b3JfZGVzYywgeW91IGRvbid0IG5lZWQgYQ0KPiBnZXRfdm9sdGFnZSgpIG9wZXJhdGlvbiBoZXJl
+LiAgT3RoZXJ3aXNlIHRoaXMgbG9va3MgZ29vZCwgSSdsbCBhcHBseQ0KPiBpdA0KPiBhbmQgcGxl
+YXNlIHNlbmQgYW4gaW5jcmVtZW50YWwgZml4IGZvciB0aGlzLg0KDQpXaWxsIGRvIDopDQoNCkJy
+LA0KCU1hdHRpDQo=
