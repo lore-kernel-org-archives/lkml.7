@@ -2,42 +2,44 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B9DC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 05:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A86C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 05:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6C092072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 05:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 646272072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 05:12:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbfLQFMW (ORCPT
+        id S1727128AbfLQFM1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 00:12:22 -0500
+        Tue, 17 Dec 2019 00:12:27 -0500
 Received: from mxout2.idt.com ([157.165.5.26]:54554 "EHLO mxout2.idt.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725812AbfLQFMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 00:12:22 -0500
+        id S1725836AbfLQFMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 00:12:23 -0500
 X-Greylist: delayed 540 seconds by postgrey-1.27 at vger.kernel.org; Tue, 17 Dec 2019 00:12:21 EST
 Received: from mail3.idt.com (localhost [127.0.0.1])
-        by mxout2.idt.com (8.14.4/8.14.4) with ESMTP id xBH53DAV031480;
-        Mon, 16 Dec 2019 21:03:14 -0800
+        by mxout2.idt.com (8.14.4/8.14.4) with ESMTP id xBH53I3G031495;
+        Mon, 16 Dec 2019 21:03:18 -0800
 Received: from corpml1.corp.idt.com (corpml1.corp.idt.com [157.165.140.20])
-        by mail3.idt.com (8.14.4/8.14.4) with ESMTP id xBH53DaT026481;
-        Mon, 16 Dec 2019 21:03:13 -0800
+        by mail3.idt.com (8.14.4/8.14.4) with ESMTP id xBH53I4e026492;
+        Mon, 16 Dec 2019 21:03:18 -0800
 Received: from vcheng-VirtualBox.localdomain (corpimss2.corp.idt.com [157.165.141.30])
-        by corpml1.corp.idt.com (8.11.7p1+Sun/8.11.7) with ESMTP id xBH53CV16982;
-        Mon, 16 Dec 2019 21:03:12 -0800 (PST)
+        by corpml1.corp.idt.com (8.11.7p1+Sun/8.11.7) with ESMTP id xBH53GV16998;
+        Mon, 16 Dec 2019 21:03:16 -0800 (PST)
 From:   vincent.cheng.xh@renesas.com
 To:     robh+dt@kernel.org, mark.rutland@arm.com, richardcochran@gmail.com
 Cc:     devicetree@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Vincent Cheng <vincent.cheng.xh@renesas.com>
-Subject: [PATCH net-next 0/3] Replace IDT with Renesas and improve version info.
-Date:   Tue, 17 Dec 2019 00:03:05 -0500
-Message-Id: <1576558988-20837-1-git-send-email-vincent.cheng.xh@renesas.com>
+Subject: [PATCH net-next 3/3] ptp: clockmatrix: Rework clockmatrix version information.
+Date:   Tue, 17 Dec 2019 00:03:08 -0500
+Message-Id: <1576558988-20837-4-git-send-email-vincent.cheng.xh@renesas.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1576558988-20837-1-git-send-email-vincent.cheng.xh@renesas.com>
+References: <1576558988-20837-1-git-send-email-vincent.cheng.xh@renesas.com>
 X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -46,35 +48,113 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Vincent Cheng <vincent.cheng.xh@renesas.com>
 
-This series replaces IDT references with Renesas to align with the corporate 
-structure and change the version info displayed for the clockmatrix chip.
+Remove pipeline id, bond id, csr id, and irq id.
+Changes source register for reading HW rev id.
+Add OTP config select.
 
-- Patch 1 Add Replace idt with renesas in dt-bindings
-- Patch 2 Replaces IDT references with Renesas
-- Patch 3 Replace pipeline, bond, rev, csr, irq with HW rev and 
-  OTP config select.
+Signed-off-by: Vincent Cheng <vincent.cheng.xh@renesas.com>
+---
+ drivers/ptp/ptp_clockmatrix.c | 63 ++++++++-----------------------------------
+ 1 file changed, 11 insertions(+), 52 deletions(-)
 
-Fixes: 3a6ba7dc7799 ("ptp: Add a ptp clock driver for IDT ClockMatrix.")
-
-Vincent Cheng (3):
-  dt-bindings: ptp: Rename ptp-idtcm.yaml to ptp-cm.yaml
-  ptp: clockmatrix: Remove IDT references or replace with Renesas.
-  ptp: clockmatrix: Rework clockmatrix version information.
-
- Documentation/devicetree/bindings/ptp/ptp-cm.yaml  |  69 ++
- .../devicetree/bindings/ptp/ptp-idtcm.yaml         |  69 --
- drivers/ptp/Kconfig                                |   6 +-
- drivers/ptp/Makefile                               |   2 +-
- drivers/ptp/clockmatrix_reg.h                      | 661 ++++++++++++++++++++
- drivers/ptp/idt8a340_reg.h                         | 659 --------------------
- drivers/ptp/ptp_clockmatrix.c                      | 691 ++++++++++-----------
- drivers/ptp/ptp_clockmatrix.h                      |  28 +-
- 8 files changed, 1065 insertions(+), 1120 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/ptp/ptp-cm.yaml
- delete mode 100644 Documentation/devicetree/bindings/ptp/ptp-idtcm.yaml
- create mode 100644 drivers/ptp/clockmatrix_reg.h
- delete mode 100644 drivers/ptp/idt8a340_reg.h
-
+diff --git a/drivers/ptp/ptp_clockmatrix.c b/drivers/ptp/ptp_clockmatrix.c
+index 66e3266..4ba5ea48 100644
+--- a/drivers/ptp/ptp_clockmatrix.c
++++ b/drivers/ptp/ptp_clockmatrix.c
+@@ -597,36 +597,7 @@ static int cm_state_machine_reset(struct cm *cm)
+ 
+ static int cm_read_hw_rev_id(struct cm *cm, u8 *hw_rev_id)
+ {
+-	return cm_read(cm, GENERAL_STATUS, HW_REV_ID, hw_rev_id, sizeof(u8));
+-}
+-
+-static int cm_read_bond_id(struct cm *cm, u8 *bond_id)
+-{
+-	return cm_read(cm, GENERAL_STATUS, BOND_ID, bond_id, sizeof(u8));
+-}
+-
+-static int cm_read_hw_csr_id(struct cm *cm, u16 *hw_csr_id)
+-{
+-	int err;
+-	u8 buf[2] = {0};
+-
+-	err = cm_read(cm, GENERAL_STATUS, HW_CSR_ID, buf, sizeof(buf));
+-
+-	*hw_csr_id = (buf[1] << 8) | buf[0];
+-
+-	return err;
+-}
+-
+-static int cm_read_hw_irq_id(struct cm *cm, u16 *hw_irq_id)
+-{
+-	int err;
+-	u8 buf[2] = {0};
+-
+-	err = cm_read(cm, GENERAL_STATUS, HW_IRQ_ID, buf, sizeof(buf));
+-
+-	*hw_irq_id = (buf[1] << 8) | buf[0];
+-
+-	return err;
++	return cm_read(cm, HW_REVISION, REV_ID, hw_rev_id, sizeof(u8));
+ }
+ 
+ static int cm_read_product_id(struct cm *cm, u16 *product_id)
+@@ -663,16 +634,10 @@ static int cm_read_hotfix_release(struct cm *cm, u8 *hotfix)
+ 	return cm_read(cm, GENERAL_STATUS, HOTFIX_REL, hotfix, sizeof(u8));
+ }
+ 
+-static int cm_read_pipeline(struct cm *cm, u32 *pipeline)
++static int cm_read_otp_scsr_config_select(struct cm *cm, u8 *config_select)
+ {
+-	int err;
+-	u8 buf[4] = {0};
+-
+-	err = cm_read(cm, GENERAL_STATUS, PIPELINE_ID, &buf[0], sizeof(buf));
+-
+-	*pipeline = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
+-
+-	return err;
++	return cm_read(cm, GENERAL_STATUS, OTP_SCSR_CONFIG_SELECT,
++		       config_select, sizeof(u8));
+ }
+ 
+ static int process_pll_mask(struct cm *cm, u32 addr, u8 val, u8 *mask)
+@@ -1062,28 +1027,22 @@ static void cm_display_version_info(struct cm *cm)
+ 	u8 major;
+ 	u8 minor;
+ 	u8 hotfix;
+-	u32 pipeline;
+ 	u16 product_id;
+-	u16 csr_id;
+-	u16 irq_id;
+ 	u8 hw_rev_id;
+-	u8 bond_id;
++	u8 config_select;
++	char *fmt = "%d.%d.%d, Id: 0x%04x  HW Rev: %d  OTP Config Select: %d\n";
+ 
+ 	cm_read_major_release(cm, &major);
+ 	cm_read_minor_release(cm, &minor);
+ 	cm_read_hotfix_release(cm, &hotfix);
+-	cm_read_pipeline(cm, &pipeline);
+ 
+ 	cm_read_product_id(cm, &product_id);
+ 	cm_read_hw_rev_id(cm, &hw_rev_id);
+-	cm_read_bond_id(cm, &bond_id);
+-	cm_read_hw_csr_id(cm, &csr_id);
+-	cm_read_hw_irq_id(cm, &irq_id);
+-
+-	dev_info(&cm->client->dev, "Version:  %d.%d.%d, Pipeline %u\t"
+-		 "0x%04x, Rev %d, Bond %d, CSR %d, IRQ %d\n",
+-		 major, minor, hotfix, pipeline,
+-		 product_id, hw_rev_id, bond_id, csr_id, irq_id);
++
++	cm_read_otp_scsr_config_select(cm, &config_select);
++
++	dev_info(&cm->client->dev, fmt, major, minor, hotfix, product_id,
++		 hw_rev_id, config_select);
+ }
+ 
+ static struct ptp_clock_info cm_caps = {
 -- 
 2.7.4
 
