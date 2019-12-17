@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D735BC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E9EC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9F8E206D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:58:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 079CC24673
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:58:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbfLQA6W (ORCPT
+        id S1726992AbfLQA6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:58:22 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34892 "EHLO
+        Mon, 16 Dec 2019 19:58:20 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34908 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726783AbfLQAvj (ORCPT
+        by vger.kernel.org with ESMTP id S1726793AbfLQAvj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 19:51:39 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15I-0003Kl-Hs; Tue, 17 Dec 2019 00:51:32 +0000
+        id 1ih15I-0003L6-AJ; Tue, 17 Dec 2019 00:51:32 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15I-0005YV-BL; Tue, 17 Dec 2019 00:51:32 +0000
+        id 1ih15H-0005X0-QM; Tue, 17 Dec 2019 00:51:31 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
         "Johan Hovold" <johan@kernel.org>
-Date:   Tue, 17 Dec 2019 00:46:48 +0000
-Message-ID: <lsq.1576543535.764009942@decadent.org.uk>
+Date:   Tue, 17 Dec 2019 00:46:41 +0000
+Message-ID: <lsq.1576543535.360288038@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 074/136] USB: serial: ti_usb_3410_5052: fix
- port-close races
+Subject: [PATCH 3.16 067/136] USB: legousbtower: fix memleak on disconnect
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,48 +57,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Hovold <johan@kernel.org>
 
-commit 6f1d1dc8d540a9aa6e39b9cb86d3a67bbc1c8d8d upstream.
+commit b6c03e5f7b463efcafd1ce141bd5a8fc4e583ae2 upstream.
 
-Fix races between closing a port and opening or closing another port on
-the same device which could lead to a failure to start or stop the
-shared interrupt URB. The latter could potentially cause a
-use-after-free or worse in the completion handler on driver unbind.
+If disconnect() races with release() after a process has been
+interrupted, release() could end up returning early and the driver would
+fail to free its driver data.
 
 Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
 Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191010125835.27031-3-johan@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/serial/ti_usb_3410_5052.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ drivers/usb/misc/legousbtower.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
---- a/drivers/usb/serial/ti_usb_3410_5052.c
-+++ b/drivers/usb/serial/ti_usb_3410_5052.c
-@@ -542,7 +542,6 @@ static void ti_close(struct usb_serial_p
- 	struct ti_port *tport;
- 	int port_number;
- 	int status;
--	int do_unlock;
- 	unsigned long flags;
- 
- 	tdev = usb_get_serial_data(port->serial);
-@@ -569,16 +568,13 @@ static void ti_close(struct usb_serial_p
- 			"%s - cannot send close port command, %d\n"
- 							, __func__, status);
- 
--	/* if mutex_lock is interrupted, continue anyway */
--	do_unlock = !mutex_lock_interruptible(&tdev->td_open_close_lock);
-+	mutex_lock(&tdev->td_open_close_lock);
- 	--tport->tp_tdev->td_open_port_count;
--	if (tport->tp_tdev->td_open_port_count <= 0) {
-+	if (tport->tp_tdev->td_open_port_count == 0) {
- 		/* last port is closed, shut down interrupt urb */
- 		usb_kill_urb(port->serial->port[0]->interrupt_in_urb);
--		tport->tp_tdev->td_open_port_count = 0;
+--- a/drivers/usb/misc/legousbtower.c
++++ b/drivers/usb/misc/legousbtower.c
+@@ -425,10 +425,7 @@ static int tower_release (struct inode *
+ 		goto exit;
  	}
--	if (do_unlock)
--		mutex_unlock(&tdev->td_open_close_lock);
-+	mutex_unlock(&tdev->td_open_close_lock);
- }
  
+-	if (mutex_lock_interruptible(&dev->lock)) {
+-	        retval = -ERESTARTSYS;
+-		goto exit;
+-	}
++	mutex_lock(&dev->lock);
  
+ 	if (dev->open_count != 1) {
+ 		dev_dbg(&dev->udev->dev, "%s: device not opened exactly once\n",
 
