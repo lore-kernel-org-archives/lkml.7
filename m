@@ -7,39 +7,44 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC35C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD63C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A70721582
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45FB224679
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbfLQMkH (ORCPT
+        id S1728334AbfLQMkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:40:07 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55268 "EHLO
+        Tue, 17 Dec 2019 07:40:25 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55287 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728251AbfLQMkC (ORCPT
+        with ESMTP id S1728275AbfLQMkG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 07:40:02 -0500
+        Tue, 17 Dec 2019 07:40:06 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ihC8o-0001pn-6Y; Tue, 17 Dec 2019 13:39:54 +0100
+        id 1ihC8l-0001o0-6M; Tue, 17 Dec 2019 13:39:51 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A95331C2A3F;
-        Tue, 17 Dec 2019 13:39:52 +0100 (CET)
-Date:   Tue, 17 Dec 2019 12:39:52 -0000
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 896D61C2A3C;
+        Tue, 17 Dec 2019 13:39:50 +0100 (CET)
+Date:   Tue, 17 Dec 2019 12:39:50 -0000
+From:   "tip-bot2 for Alexander Shishkin" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] cpu/hotplug, stop_machine: Fix stop_machine vs
- hotplug order
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+Subject: [tip: perf/urgent] perf/x86/intel: Fix PT PMI handling
+Cc:     Vitaly Slobodskoy <vitaly.slobodskoy@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20191210105101.77210-1-alexander.shishkin@linux.intel.com>
+References: <20191210105101.77210-1-alexander.shishkin@linux.intel.com>
 MIME-Version: 1.0
-Message-ID: <157658639252.30329.1683017961505048318.tip-bot2@tip-bot2>
+Message-ID: <157658639044.30329.8671733952601494347.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -53,92 +58,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/core branch of tip:
+The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     45178ac0cea853fe0e405bf11e101bdebea57b15
-Gitweb:        https://git.kernel.org/tip/45178ac0cea853fe0e405bf11e101bdebea57b15
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Tue, 10 Dec 2019 09:34:54 +01:00
+Commit-ID:     92ca7da4bdc24d63bb0bcd241c11441ddb63b80a
+Gitweb:        https://git.kernel.org/tip/92ca7da4bdc24d63bb0bcd241c11441ddb63b80a
+Author:        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+AuthorDate:    Tue, 10 Dec 2019 12:51:01 +02:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Tue, 17 Dec 2019 13:32:50 +01:00
+CommitterDate: Tue, 17 Dec 2019 13:32:46 +01:00
 
-cpu/hotplug, stop_machine: Fix stop_machine vs hotplug order
+perf/x86/intel: Fix PT PMI handling
 
-Paul reported a very sporadic, rcutorture induced, workqueue failure.
-When the planets align, the workqueue rescuer's self-migrate fails and
-then triggers a WARN for running a work on the wrong CPU.
+Commit:
 
-Tejun then figured that set_cpus_allowed_ptr()'s stop_one_cpu() call
-could be ignored! When stopper->enabled is false, stop_machine will
-insta complete the work, without actually doing the work. Worse, it
-will not WARN about this (we really should fix this).
+  ccbebba4c6bf ("perf/x86/intel/pt: Bypass PT vs. LBR exclusivity if the core supports it")
 
-It turns out there is a small window where a freshly online'ed CPU is
-marked 'online' but doesn't yet have the stopper task running:
+skips the PT/LBR exclusivity check on CPUs where PT and LBRs coexist, but
+also inadvertently skips the active_events bump for PT in that case, which
+is a bug. If there aren't any hardware events at the same time as PT, the
+PMI handler will ignore PT PMIs, as active_events reads zero in that case,
+resulting in the "Uhhuh" spurious NMI warning and PT data loss.
 
-	BP				AP
+Fix this by always increasing active_events for PT events.
 
-	bringup_cpu()
-	  __cpu_up(cpu, idle)	 -->	start_secondary()
-					...
-					cpu_startup_entry()
-	  bringup_wait_for_ap()
-	    wait_for_ap_thread() <--	  cpuhp_online_idle()
-					  while (1)
-					    do_idle()
-
-					... available to run kthreads ...
-
-	    stop_machine_unpark()
-	      stopper->enable = true;
-
-Close this by moving the stop_machine_unpark() into
-cpuhp_online_idle(), such that the stopper thread is ready before we
-start the idle loop and schedule.
-
-Reported-by: "Paul E. McKenney" <paulmck@kernel.org>
-Debugged-by: Tejun Heo <tj@kernel.org>
+Fixes: ccbebba4c6bf ("perf/x86/intel/pt: Bypass PT vs. LBR exclusivity if the core supports it")
+Reported-by: Vitaly Slobodskoy <vitaly.slobodskoy@intel.com>
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Tested-by: "Paul E. McKenney" <paulmck@kernel.org>
+Acked-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Link: https://lkml.kernel.org/r/20191210105101.77210-1-alexander.shishkin@linux.intel.com
 ---
- kernel/cpu.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ arch/x86/events/core.c |  9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index a59cc98..e7f7967 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -525,8 +525,7 @@ static int bringup_wait_for_ap(unsigned int cpu)
- 	if (WARN_ON_ONCE((!cpu_online(cpu))))
- 		return -ECANCELED;
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 84fe1be..f118af9 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -376,7 +376,7 @@ int x86_add_exclusive(unsigned int what)
+ 	 * LBR and BTS are still mutually exclusive.
+ 	 */
+ 	if (x86_pmu.lbr_pt_coexist && what == x86_lbr_exclusive_pt)
+-		return 0;
++		goto out;
  
--	/* Unpark the stopper thread and the hotplug thread of the target cpu */
--	stop_machine_unpark(cpu);
-+	/* Unpark the hotplug thread of the target cpu */
- 	kthread_unpark(st->thread);
+ 	if (!atomic_inc_not_zero(&x86_pmu.lbr_exclusive[what])) {
+ 		mutex_lock(&pmc_reserve_mutex);
+@@ -388,6 +388,7 @@ int x86_add_exclusive(unsigned int what)
+ 		mutex_unlock(&pmc_reserve_mutex);
+ 	}
  
- 	/*
-@@ -1089,8 +1088,8 @@ void notify_cpu_starting(unsigned int cpu)
++out:
+ 	atomic_inc(&active_events);
+ 	return 0;
  
- /*
-  * Called from the idle task. Wake up the controlling task which brings the
-- * stopper and the hotplug thread of the upcoming CPU up and then delegates
-- * the rest of the online bringup to the hotplug thread.
-+ * hotplug thread of the upcoming CPU up and then delegates the rest of the
-+ * online bringup to the hotplug thread.
-  */
- void cpuhp_online_idle(enum cpuhp_state state)
+@@ -398,11 +399,15 @@ fail_unlock:
+ 
+ void x86_del_exclusive(unsigned int what)
  {
-@@ -1100,6 +1099,12 @@ void cpuhp_online_idle(enum cpuhp_state state)
- 	if (state != CPUHP_AP_ONLINE_IDLE)
++	atomic_dec(&active_events);
++
++	/*
++	 * See the comment in x86_add_exclusive().
++	 */
+ 	if (x86_pmu.lbr_pt_coexist && what == x86_lbr_exclusive_pt)
  		return;
  
-+	/*
-+	 * Unpart the stopper thread before we start the idle loop (and start
-+	 * scheduling); this ensures the stopper task is always available.
-+	 */
-+	stop_machine_unpark(smp_processor_id());
-+
- 	st->state = CPUHP_AP_ONLINE_IDLE;
- 	complete_ap_thread(st, true);
+ 	atomic_dec(&x86_pmu.lbr_exclusive[what]);
+-	atomic_dec(&active_events);
  }
+ 
+ int x86_setup_perfctr(struct perf_event *event)
