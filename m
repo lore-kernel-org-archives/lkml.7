@@ -2,193 +2,108 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F8DAC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69474C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDD482146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:07:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40B0121D7D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:08:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576595337;
+	bh=vYx0v2RYfVbzezxf0WzhCOWD1hRsb9GKJtKuNB+YUAc=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=xtwvdm0rm/CXHDOaHdiU3PEiMkCTSjwDblmptlrBiHiM/uN49xuimCo+LV8Tne10h
+	 J+0uq7cNhn7kMymUffxTKKfpW+kYNGG6np/xgFVCU/o0nOmEn+3UKDx2XAsmqr4/Rk
+	 pyU9BXR7jUMDhacWQeAEoax/DIbXjYt8DyjQ0oxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727897AbfLQPHz (ORCPT
+        id S1727830AbfLQPI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 10:07:55 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:56509 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727587AbfLQPHr (ORCPT
+        Tue, 17 Dec 2019 10:08:56 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:35648 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727465AbfLQPI4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 10:07:47 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ihERp-0008EC-JR; Tue, 17 Dec 2019 16:07:41 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ihERp-0000VP-3j; Tue, 17 Dec 2019 16:07:41 +0100
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-Cc:     kernel@pengutronix.de, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: [PATCH v3 1/3] tty: rename tty_kopen() and add new function tty_kopen_shared()
-Date:   Tue, 17 Dec 2019 16:07:34 +0100
-Message-Id: <20191217150736.1479-2-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191217150736.1479-1-u.kleine-koenig@pengutronix.de>
-References: <20191217150736.1479-1-u.kleine-koenig@pengutronix.de>
+        Tue, 17 Dec 2019 10:08:56 -0500
+Received: by mail-io1-f67.google.com with SMTP id v18so10373365iol.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 07:08:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=bHgBoZjI4n84pTBe8b2XKBtgme/qK2l3tBlbTZYezI4=;
+        b=AfmS0cSw5QZHULbCOFeGtG7GAHck2Q++sb5um6GXJkmP3N74teYGjrH8nxhXlh4S9U
+         3K2/LXXnxBr7Qb4EnJcdKWCcBV4kBG6YIs+la6InGRWI03RKxE5NyD3e+dB73rH+39ur
+         bC72PrPQnTlDFqxEATW/TENGnRKLcFeO1pRTo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bHgBoZjI4n84pTBe8b2XKBtgme/qK2l3tBlbTZYezI4=;
+        b=JhuDtjZVH9Bt9RZBFCjotNcf1aA9GKZMO3OL5qitJq4Wayy7f99rh53O1BUxifWZaZ
+         wZb1x84DWKlSfyMQsXYMwdq1xu5vWff8mdg2LU0CqChk5Maa88xoqpdnFgUgbz3YVLZp
+         uLlHGCRgupsFiBBhWav89xHDNUJOiivo36E5YHhb3JyDDM6pdat+kVmxkAlOCAZLnK5Z
+         i6QJfKzINHnzNr4RRvXOH+yp+9h7lPHfmHkE4eBgSILd2siECjmYbtg4tuk3iF4PmaG/
+         PU3qBTA3+loGPt7AHuXsj4f4LNi/GdA/ZpasXDMPmgBPWYvpG9TI9LkmFwlRUDWjh19K
+         KfFQ==
+X-Gm-Message-State: APjAAAWG5WrRfakupjd6SYZqoPg104A3ErBVYBqxTcNez7cWqCCM0NQP
+        NqDwJsx7FTNDm9ksdmwvgOXo3Q==
+X-Google-Smtp-Source: APXvYqyTHwu0VRhRXpJa0BvlWII0VilsqEu6uN33ZMGJiPdgsD3daCtfo2G9T4JwIvCqzVkI1QWgcA==
+X-Received: by 2002:a6b:ed15:: with SMTP id n21mr1646057iog.128.1576595335283;
+        Tue, 17 Dec 2019 07:08:55 -0800 (PST)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id 16sm5246124iog.13.2019.12.17.07.08.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Dec 2019 07:08:54 -0800 (PST)
+Subject: Re: [PATCH v2] selftests: livepatch: Fix it to do root uid check and
+ skip
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     jpoimboe@redhat.com, jikos@kernel.org, mbenes@suse.cz,
+        joe.lawrence@redhat.com, shuah@kernel.org,
+        live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20191216191840.15188-1-skhan@linuxfoundation.org>
+ <20191217090210.ky3il3qu4jkr2vaa@pathway.suse.cz>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <8f2a1599-df35-ec19-da9a-795330cf185f@linuxfoundation.org>
+Date:   Tue, 17 Dec 2019 08:08:53 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20191217090210.ky3il3qu4jkr2vaa@pathway.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce a new function tty_kopen_shared() that yields a struct
-tty_struct. The semantic difference to tty_kopen() is that the tty is
-expected to be used already. So rename tty_kopen() to
-tty_kopen_exclusive() for clearness, adapt the single user and put the
-common code in a new static helper function.
+On 12/17/19 2:02 AM, Petr Mladek wrote:
+> On Mon 2019-12-16 12:18:40, Shuah Khan wrote:
+>> livepatch test configures the system and debug environment to run
+>> tests. Some of these actions fail without root access and test
+>> dumps several permission denied messages before it exits.
+>>
+>> Fix test-state.sh to call setup_config instead of set_dynamic_debug
+>> as suggested by Petr Mladek <pmladek@suse.com>
+>>
+>> Fix it to check root uid and exit with skip code instead.
+>>
+>> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+> 
+> Reviewed-by: Petr Mladek <pmladek@suse.com>
+> 
+> Shuah, I assume that you will push this fix via linux-kselftest tree.
+> Please, tell us if you have other preference.
+> 
 
-tty_kopen_shared is to be used to implement an LED trigger for tty
-devices in one of the next patches.
+Hi Petr, Yes I will push this in. Thanks for the reviews.
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/staging/speakup/spk_ttyio.c |  2 +-
- drivers/tty/tty_io.c                | 58 ++++++++++++++++++++---------
- include/linux/tty.h                 |  5 ++-
- 3 files changed, 44 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/staging/speakup/spk_ttyio.c b/drivers/staging/speakup/spk_ttyio.c
-index 5a9eff08cb96..e9db06eae875 100644
---- a/drivers/staging/speakup/spk_ttyio.c
-+++ b/drivers/staging/speakup/spk_ttyio.c
-@@ -147,7 +147,7 @@ static int spk_ttyio_initialise_ldisc(struct spk_synth *synth)
- 	if (ret)
- 		return ret;
- 
--	tty = tty_kopen(dev);
-+	tty = tty_kopen_exclusive(dev);
- 	if (IS_ERR(tty))
- 		return PTR_ERR(tty);
- 
-diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
-index a1453fe10862..b718666ce73c 100644
---- a/drivers/tty/tty_io.c
-+++ b/drivers/tty/tty_io.c
-@@ -1875,22 +1875,7 @@ static struct tty_driver *tty_lookup_driver(dev_t device, struct file *filp,
- 	return driver;
- }
- 
--/**
-- *	tty_kopen	-	open a tty device for kernel
-- *	@device: dev_t of device to open
-- *
-- *	Opens tty exclusively for kernel. Performs the driver lookup,
-- *	makes sure it's not already opened and performs the first-time
-- *	tty initialization.
-- *
-- *	Returns the locked initialized &tty_struct
-- *
-- *	Claims the global tty_mutex to serialize:
-- *	  - concurrent first-time tty initialization
-- *	  - concurrent tty driver removal w/ lookup
-- *	  - concurrent tty removal from driver table
-- */
--struct tty_struct *tty_kopen(dev_t device)
-+static struct tty_struct *tty_kopen(dev_t device, int shared)
- {
- 	struct tty_struct *tty;
- 	struct tty_driver *driver;
-@@ -1905,7 +1890,7 @@ struct tty_struct *tty_kopen(dev_t device)
- 
- 	/* check whether we're reopening an existing tty */
- 	tty = tty_driver_lookup_tty(driver, NULL, index);
--	if (IS_ERR(tty))
-+	if (IS_ERR(tty) || shared)
- 		goto out;
- 
- 	if (tty) {
-@@ -1923,7 +1908,44 @@ struct tty_struct *tty_kopen(dev_t device)
- 	tty_driver_kref_put(driver);
- 	return tty;
- }
--EXPORT_SYMBOL_GPL(tty_kopen);
-+
-+/**
-+ *	tty_kopen_exclusive	-	open a tty device for kernel
-+ *	@device: dev_t of device to open
-+ *
-+ *	Opens tty exclusively for kernel. Performs the driver lookup,
-+ *	makes sure it's not already opened and performs the first-time
-+ *	tty initialization.
-+ *
-+ *	Returns the locked initialized &tty_struct
-+ *
-+ *	Claims the global tty_mutex to serialize:
-+ *	  - concurrent first-time tty initialization
-+ *	  - concurrent tty driver removal w/ lookup
-+ *	  - concurrent tty removal from driver table
-+ */
-+struct tty_struct *tty_kopen_exclusive(dev_t device)
-+{
-+	return tty_kopen(device, 0);
-+}
-+EXPORT_SYMBOL_GPL(tty_kopen_exclusive);
-+
-+/**
-+ *	tty_kopen_shared	-	open a tty device for shared in-kernel use
-+ *	@device: dev_t of device to open
-+ *
-+ *	Opens an already existing tty
-+ *	rnel. Performs the driver lookup,
-+ *	makes sure it's not already opened and performs the first-time
-+ *	tty initialization.
-+ *
-+ *	Locking is identical to tty_kopen() above.
-+ */
-+struct tty_struct *tty_kopen_shared(dev_t device)
-+{
-+	return tty_kopen(device, 1);
-+}
-+EXPORT_SYMBOL_GPL(tty_kopen_shared);
- 
- /**
-  *	tty_open_by_driver	-	open a tty device
-diff --git a/include/linux/tty.h b/include/linux/tty.h
-index bfa4e2ee94a9..d0bcf3226fb2 100644
---- a/include/linux/tty.h
-+++ b/include/linux/tty.h
-@@ -411,7 +411,8 @@ extern struct tty_struct *get_current_tty(void);
- /* tty_io.c */
- extern int __init tty_init(void);
- extern const char *tty_name(const struct tty_struct *tty);
--extern struct tty_struct *tty_kopen(dev_t device);
-+extern struct tty_struct *tty_kopen_exclusive(dev_t device);
-+extern struct tty_struct *tty_kopen_shared(dev_t device);
- extern void tty_kclose(struct tty_struct *tty);
- extern int tty_dev_name_to_number(const char *name, dev_t *number);
- extern int tty_ldisc_lock(struct tty_struct *tty, unsigned long timeout);
-@@ -436,7 +437,7 @@ static inline int __init tty_init(void)
- { return 0; }
- static inline const char *tty_name(const struct tty_struct *tty)
- { return "(none)"; }
--static inline struct tty_struct *tty_kopen(dev_t device)
-+static inline struct tty_struct *tty_kopen_exclusive(dev_t device)
- { return ERR_PTR(-ENODEV); }
- static inline void tty_kclose(struct tty_struct *tty)
- { }
--- 
-2.24.0
-
+thanks,
+-- Shuah
