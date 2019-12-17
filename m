@@ -2,223 +2,192 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A473AC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 802C0C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A1A42146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:50:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4895621582
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:51:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NZJi5kGx"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="YSL7chqk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbfLQUuD (ORCPT
+        id S1727854AbfLQUv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 15:50:03 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28115 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726252AbfLQUuC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 15:50:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576615801;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:mime-version:mime-version:
-         content-type:content-type:in-reply-to:in-reply-to:  references:references;
-        bh=J73YVZfMxZAcikPu3TQX3XB3CLXiyf6r8SXyDPM2a/Q=;
-        b=NZJi5kGx134qHbNoJ4n6jjWQmYY75BmORKtJBKaOb0K8WXFQnQRndcskqOmxcg9cNJeZfA
-        fyIMmZhDt9XgIogxWawF+f9G+PZWMEkxzfg1p7jOMprYC/PzwNcevc7Bo149RS+DTenwW4
-        8pXLrXHQj/8T/XdiOz9mAVOlwbtJgDM=
-Received: from mail-yb1-f197.google.com (mail-yb1-f197.google.com
- [209.85.219.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-91-6lyTJg9zNtmTU3VKamd73w-1; Tue, 17 Dec 2019 15:50:00 -0500
-X-MC-Unique: 6lyTJg9zNtmTU3VKamd73w-1
-Received: by mail-yb1-f197.google.com with SMTP id a14so4389958ybh.14
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 12:50:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:reply-to
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=J73YVZfMxZAcikPu3TQX3XB3CLXiyf6r8SXyDPM2a/Q=;
-        b=KBgXA8krv3i+xgHmXT87ocPBZdScr5FhDTANo7tZaPhx3Xua2g/XCuJiTTfVydGIoA
-         ug0ACgmyB4u7pMRitRfnoDBvff8Tq8pHsrnrmaLRHQjLuIXSFreHX3qicS/pRjINOqgy
-         5AI65I2lDOiYWnSivKTBBU4AS9UdxFtaQ3193oBopin5HBAIQc/6ulIKNaOMR0+iZdT4
-         LiuvCFVisCnA9xbTVF1Qsd88hKShgbrNFq8s9XfBZqsVY32LW59+JKmNVpLaxZ8/VJPb
-         P4/X8/baQMPB65a6EHCqN9Nkz8auKfuisoa7PF/ZinA/KQdVCAhzZkNeIVI6tKeeSfbW
-         7t1Q==
-X-Gm-Message-State: APjAAAUxQfFFJ6zYdwJlaTSlgSHZg3k4YaFPZp767mDQh5qHTepFi0gD
-        JLBuY1XKsY1boUCYW03gzlXOw5z5C0GBzi1+BdhIs5wO3neBZh1mJVOTb7cxPJegbRw7BX5w+Gb
-        /P/4Ekj1ni6DtuUyefViiYZxI
-X-Received: by 2002:a81:a7c3:: with SMTP id e186mr544966ywh.7.1576615799115;
-        Tue, 17 Dec 2019 12:49:59 -0800 (PST)
-X-Google-Smtp-Source: APXvYqw2euIojC/x9hatXJUaQw8cCQt9qSXTwZErl80ZyUUPVkzXxI5EZizUVgOUgo9pf9yiFFJMOw==
-X-Received: by 2002:a81:a7c3:: with SMTP id e186mr544945ywh.7.1576615798795;
-        Tue, 17 Dec 2019 12:49:58 -0800 (PST)
-Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
-        by smtp.gmail.com with ESMTPSA id 144sm7031975ywy.20.2019.12.17.12.49.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 12:49:58 -0800 (PST)
-Date:   Tue, 17 Dec 2019 13:49:48 -0700
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Joerg Roedel <jroedel@suse.de>,
-        David Woodhouse <dwmw2@infradead.org>, stable@vger.kernel.org
-Subject: Re: [RFC PATCH] iommu/vt-d: avoid panic in __dmar_remove_one_dev_info
-Message-ID: <20191217204948.p6pgnls2rrlr2nnk@cantor>
-Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
-Mail-Followup-To: linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org, Joerg Roedel <jroedel@suse.de>,
-        David Woodhouse <dwmw2@infradead.org>, stable@vger.kernel.org
-References: <20191217175542.22187-1-jsnitsel@redhat.com>
- <20191217203954.6xfaw5jto75q4nxm@cantor>
+        Tue, 17 Dec 2019 15:51:57 -0500
+Received: from mail-eopbgr10079.outbound.protection.outlook.com ([40.107.1.79]:44830
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727241AbfLQUv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 15:51:57 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=L7+1bbrdowOopBNmwWs80/4jkajb6Bak/lSSbtqzQHrBNZB6Do0H9hPuzzhg99RQJVku1IS5BUMho/yHFK6cAlmXpPm5lN1uJ62T4TsDgvSGx3x44FPK22lkPzVDySpWOIEiPSz6HGBARJbo5VLe2IDJJtE/h5+wjt18MpmAFFmopeWZqPeLfLrPYNmWvZ6wmZWuxZuS85gC4sqbrOhW2ktL3gssXVhvt2Lh7PofW1lZj0cmQCNuQwYQK8EvbckZOWT4rbUOlOSMv/4vgHNgXLjmLlHjM03pIje+H4TOlmgPsL3qvXq7n/DjUMPP5yvCPDJMWZD51tJWuGT5fFgLUw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=S1CMvljqDvlT87841a7S3V0KeBkbDcag1+0RMhek1D8=;
+ b=nROgWYfCVDKWOqH438Z5C5kWKYwlMKEHFZ/i5mnEsdcY+CGeEZt64xXnwwe2WYS155gvTEvfNVY5yivfNwyn34l6atus/j3JQn3Y7TYF6FMsewt8FCVUuGHf9A8Iu+1yZ8ZDHWmGKo7xfcEyjqrW6ofg5jmdUKeV1M4H/SlCyBXLbZcl7mpIyMPI/xWCNZzEMagEo7DellQhQZNoU75Prj55nSCT4spk1zG1ZQZe2K75srWXkDC/TdhFHcqwemC85wK77XWsRrHCmKgCEBV9O8Ry1MwkviHIMEpPXEK/SwBdq/gHUFcQnCUTe0dgLldZqfkSjx/tU/GQxoMeKqS8MQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=S1CMvljqDvlT87841a7S3V0KeBkbDcag1+0RMhek1D8=;
+ b=YSL7chqk0GlyWvuc5w6RtB1pwT1gI1x6n+kooVXpaPkT7c9+aZy5CmTKvaOBMbJrNDfz2eZsLKKVfccXVT4hk4S5D7TGz/nDH0v1Mr2NykXuJAGMdKdLmOgGnzsRjky6vGJoPh/52gOf4JV3NMkn0JOC0ucy9EmZAUSRRWXnZfM=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
+ VI1PR05MB3375.eurprd05.prod.outlook.com (10.175.244.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.15; Tue, 17 Dec 2019 20:51:51 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::18df:a0fe:18eb:a96b]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::18df:a0fe:18eb:a96b%6]) with mapi id 15.20.2538.019; Tue, 17 Dec 2019
+ 20:51:51 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+CC:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>
+Subject: Re: [PATCH v5 1/2] mm/mmu_notifier: make interval notifier updates
+ safe
+Thread-Topic: [PATCH v5 1/2] mm/mmu_notifier: make interval notifier updates
+ safe
+Thread-Index: AQHVtEsczeksfKC51EmFDx7aa5U3hKe+zwGA
+Date:   Tue, 17 Dec 2019 20:51:50 +0000
+Message-ID: <20191217205147.GI16762@mellanox.com>
+References: <20191216195733.28353-1-rcampbell@nvidia.com>
+ <20191216195733.28353-2-rcampbell@nvidia.com>
+In-Reply-To: <20191216195733.28353-2-rcampbell@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BN8PR15CA0050.namprd15.prod.outlook.com
+ (2603:10b6:408:80::27) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [142.68.57.212]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 094c5636-ac31-4315-4d41-08d78332f055
+x-ms-traffictypediagnostic: VI1PR05MB3375:
+x-microsoft-antispam-prvs: <VI1PR05MB33758F6EFD67C96F15AC10B2CF500@VI1PR05MB3375.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 02543CD7CD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(376002)(39860400002)(366004)(396003)(189003)(199004)(52116002)(7416002)(86362001)(8936002)(81166006)(81156014)(8676002)(6512007)(66476007)(5660300002)(64756008)(66446008)(4326008)(316002)(66946007)(66556008)(54906003)(2906002)(478600001)(71200400001)(15650500001)(2616005)(36756003)(6916009)(1076003)(6486002)(33656002)(26005)(186003)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB3375;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: MrwH/zYWoT0JRAREzByKmPBLa+evEa/W6NJ50SBfh+blOSxM4Z/ZqX24Fbqk64qP+Kz7b7z7/jQ2uNnQeziWrBqtR97Co4EYDDHfPUzjZJ6BS/eS2B662z6UiNxndWx2KpuL6UfaqtEXJ3FNdmFWLYHban40XaIAYUkVzdgxwAPaUJ3htgTv6zfxjlGOED64z4De3eHFOOzwO3gVBXNOBGTJgydetQUZlmUI+Hpx6JJcSyqBl4T1yvl2a73pOaLIvIXWXVF9p1lY0H6qkAvelWzD1vnwSOgVEQX3ykeDZW2jpBzJShowGkFUljb4rCCm7G5bhtdQw6GafhOWCq4r0qWBDIUuN06Fc1b+1P9mtkCa3v4sM92Jy0DYhxmPmTWXpNw3Vq68YsxJSt0juRZIoctSwyK5WHq/KIWxZ8TzUWpfzGexipUYsAqaOhR7wBPS
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <79EE60004729144E9D508620086137F8@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20191217203954.6xfaw5jto75q4nxm@cantor>
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 094c5636-ac31-4315-4d41-08d78332f055
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Dec 2019 20:51:51.0393
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Op09DmgL2oEwa8ZOHUfhRd82XVCL4wgYOQ9S1eWdjixrcpUcXWdkZdTg4DCtwTGhtNUkqqT83UJycbv2ey31HQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB3375
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue Dec 17 19, Jerry Snitselaar wrote:
->On Tue Dec 17 19, Jerry Snitselaar wrote:
->>In addition to checking for a null pointer, verify that
->>info does not have the value DEFER_DEVICE_DOMAIN_INFO or
->>DUMMY_DEVICE_DOMAIN_INFO. If info has one of those values
->>__dmar_remove_one_dev_info will panic when trying to access
->>a member of the device_domain_info struct.
->>
->>   [    1.464241] BUG: unable to handle kernel NULL pointer dereference at 000000000000004e
->>   [    1.464241] PGD 0 P4D 0
->>   [    1.464241] Oops: 0000 [#1] SMP PTI
->>   [    1.464241] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G        W        --------- -  - 4.18.0-160.el8.x86_64 #1
->>   [    1.464241] Hardware name: HP ProLiant DL360 Gen9/ProLiant DL360 Gen9, BIOS P89 07/21/2019
->>   [    1.464241] RIP: 0010:__dmar_remove_one_dev_info+0x27/0x250
->>   [    1.464241] Code: 00 00 00 0f 1f 44 00 00 8b 05 35 ec 75 01 41 56 41 55 41 54 55 53 85 c0 0f 84 99 01 00 00 48 85 ff 0f 84 92 01 00 00 48 89 fb <4c> 8b 67 50 48 8b 6f 58 $
->>   [    1.464241] RSP: 0000:ffffc900000dfd10 EFLAGS: 00010082
->>   [    1.464241] RAX: 0000000000000001 RBX: fffffffffffffffe RCX: 0000000000000000
->>   [    1.464241] RDX: 0000000000000001 RSI: 0000000000000004 RDI: fffffffffffffffe
->>   [    1.464241] RBP: ffff88ec7a72f368 R08: 0000000000000457 R09: 0000000000000039
->>   [    1.464241] R10: 0000000000000000 R11: ffffc900000dfa58 R12: ffff88ec7a0eec20
->>   [    1.464241] R13: ffff88ec6fd0eab0 R14: ffffffff81eae980 R15: 0000000000000000
->>   [    1.464241] FS:  0000000000000000(0000) GS:ffff88ec7a600000(0000) knlGS:0000000000000000
->>   [    1.464241] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>   [    1.464241] CR2: 000000000000004e CR3: 0000006c7900a001 C 00000000001606b0
->>   [    1.464241] Call Trace:
->>   [    1.464241]  dmar_remove_one_dev_info.isra.68+0x27/0x40
->>   [    1.464241]  intel_iommu_add_device+0x124/0x180
->>   [    1.464241]  ? iommu_probe_device+0x40/0x40
->>   [    1.464241]  add_iommu_group+0xa/0x20
->>   [    1.464241]  bus_for_each_dev+0x77/0xc0
->>   [    1.464241]  ? down_write+0xe/0x40
->>   [    1.464241]  bus_set_iommu+0x85/0xc0
->>   [    1.464241]  intel_iommu_init+0x4b4/0x777
->>   [    1.464241]  ? e820__memblock_setup+0x63/0x63
->>   [    1.464241]  ? do_early_param+0x91/0x91
->>   [    1.464241]  pci_iommu_init+0x19/0x45
->>   [    1.464241]  do_one_initcall+0x46/0x1c3
->>   [    1.464241]  ? do_early_param+0x91/0x91
->>   [    1.464241]  kernel_init_freeable+0x1af/0x258
->>   [    1.464241]  ? rest_init+0xaa/0xaa
->>   [    1.464241]  kernel_init+0xa/0x107
->>   [    1.464241]  ret_from_fork+0x35/0x40
->>   [    1.464241] Modules linked in:
->>   [    1.464241] CR2: 000000000000004e
->>   [    1.464241] ---[ end trace 0927d2ba8b8032b5 ]---
->>
->>Cc: Joerg Roedel <jroedel@suse.de>
->>Cc: Lu Baolu <baolu.lu@linux.intel.com>
->>Cc: David Woodhouse <dwmw2@infradead.org>
->>Cc: stable@vger.kernel.org # v5.3+
->>Cc: iommu@lists.linux-foundation.org
->>Fixes: ae23bfb68f28 ("iommu/vt-d: Detach domain before using a private one")
->>Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
->>---
->>drivers/iommu/intel-iommu.c | 3 ++-
->>1 file changed, 2 insertions(+), 1 deletion(-)
->>
->>diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
->>index 0c8d81f56a30..e42a09794fa2 100644
->>--- a/drivers/iommu/intel-iommu.c
->>+++ b/drivers/iommu/intel-iommu.c
->>@@ -5163,7 +5163,8 @@ static void dmar_remove_one_dev_info(struct device *dev)
->>
->>	spin_lock_irqsave(&device_domain_lock, flags);
->>	info = dev->archdata.iommu;
->>-	if (info)
->>+	if (info && info != DEFER_DEVICE_DOMAIN_INFO
->>+	    && info != DUMMY_DEVICE_DOMAIN_INFO)
->>		__dmar_remove_one_dev_info(info);
->>	spin_unlock_irqrestore(&device_domain_lock, flags);
->>}
->>-- 
->>2.24.0
->>
->>_______________________________________________
->>iommu mailing list
->>iommu@lists.linux-foundation.org
->>https://lists.linuxfoundation.org/mailman/listinfo/iommu
->>
->
->Nack this.
->
->Apparently the issue is just being seen with the kdump kernel.  I'm
->wondering if it is already solved by 6c3a44ed3c55 ("iommu/vt-d: Turn
->off translations at shutdown").  Testing a 5.5 build now.
+On Mon, Dec 16, 2019 at 11:57:32AM -0800, Ralph Campbell wrote:
+> mmu_interval_notifier_insert() and mmu_interval_notifier_remove() can't
+> be called safely from inside the invalidate() callback. This is fine for
+> devices with explicit memory region register and unregister calls but it
+> is desirable from a programming model standpoint to not require explicit
+> memory region registration. Regions can be registered based on device
+> address faults but without a mechanism for updating or removing the mmu
+> interval notifiers in response to munmap(), the invalidation callbacks
+> will be for regions that are stale or apply to different mmaped regions.
 
-And a minute later I got a response. The 5.5 kernel hits the original
-panic when booting into the kdump kernel.
+What we do in RDMA is drive the removal from a work queue, as we need
+a synchronize_srcu anyhow to serialize everything to do with
+destroying a part of the address space mirror.
 
-I need to test with this patch on 5.5, but with a test build of our
-kernel with this patch the problem just moves to:
+Is it really necessary to have all this stuff just to save doing
+something like a work queue?
 
-[    3.742317] pci 0000:01:00.0: Using iommu dma mapping
-[    3.744020] pci 0000:01:00.1: Adding to iommu group 86
-[    3.746697] NMI watchdog: Watchdog detected hard LOCKUP on cpu 0Modules linked in:
-[    3.746697] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 4.18.0-167.el8.iommu6.x86_64 #1
-[    3.746697] Hardware name: HP ProLiant DL560 Gen9/ProLiant DL560 Gen9, BIOS P85 07/21/2019
-[    3.746697] RIP: 0010:native_queued_spin_lock_slowpath+0x5d/0x1d0
-[    3.746697] Code: 0f ba 2f 08 0f 92 c0 0f b6 c0 c1 e0 08 89 c2 8b 07 30 e4 09 d0 a9 00 01 ff ff 75 47 85 c$
-[    3.746697] RSP: 0000:ffffc900000f3bd8 EFLAGS: 00000002
-[    3.746697] RAX: 0000000000000101 RBX: 0000000000000046 RCX: ffff88887f170000
-[    3.746697] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff82e8a600
-[    3.746697] RBP: ffff88886fd0ec00 R08: 0000000000000004 R09: ffffc900000f3b94
-[    3.746697] R10: 0000000000000001 R11: ffff88887a4e3200 R12: ffff88887cbf6540
-[    3.746697] R13: 0000000000000001 R14: ffff88887a4e3480 R15: 0000000000000001
-[    3.746697] FS:  0000000000000000(0000) GS:ffff88887f600000(0000) knlGS:0000000000000000
-[    3.746697] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    3.746697] CR2: 0000000000000000 CR3: 000000087de0a001 CR4: 00000000003606b0
-[    3.746697] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[    3.746697] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[    3.746697] Call Trace:
-[    3.746697]  _raw_spin_lock_irqsave+0x32/0x40
-[    3.746697]  dmar_insert_one_dev_info+0xa3/0x4d0     
-[    3.746697]  ? free_unref_page_commit+0x91/0x100
-[    3.746697]  ? device_to_iommu+0x1a3/0x220
-[    3.746697]  domain_add_dev_info+0x50/0x90
-[    3.746697]  intel_iommu_attach_device+0xb7/0x140
-[    3.746697]  find_domain+0x41/0x60
-[    3.746697]  dmar_insert_one_dev_info+0xaf/0x4d0
-[    3.746697]  ? device_to_iommu+0x1a3/0x220
-[    3.746697]  domain_add_dev_info+0x50/0x90
-[    3.746697]  intel_iommu_add_device+0x137/0x180
-[    3.746697]  ? iommu_probe_device+0x40/0x
-[    3.746697]  add_iommu_group+0xa/0x20
-[    3.746697]  bus_for_each_dev+0x77/0xc0
-[    3.746697]  ? down_write+0xe/0x40
-[    3.746697]  bus_set_iommu+0x85/0xc0
-[    3.746697]  intel_iommu_init+0x4b4/0x777
-[    3.746697]  ? e820__memblock_setup+0x63/0x63
-[    3.746697]  ? do_early_param+0x91/0x91
-[    3.746697]  pci_iommu_init+0x19/0x45
-[    3.746697]  do_one_initcall+0x46/0x1c3
-[    3.746697]  ? do_early_param+0x91/0x91
-[    3.746697]  kernel_init_freeable+0x1af/0x258
-[    3.746697]  ? rest_init+0xaa/0xaa
-[    3.746697]  kernel_init+0xa/0x103
-[    3.746697]  ret_from_fork+0x35/0x40
+Also, I think we are not taking core kernel APIs like this with out an
+in-kernel user??
 
+> diff --git a/include/linux/mmu_notifier.h b/include/linux/mmu_notifier.h
+> index 9e6caa8ecd19..55fbefcdc564 100644
+> +++ b/include/linux/mmu_notifier.h
+> @@ -233,11 +233,18 @@ struct mmu_notifier {
+>   * @invalidate: Upon return the caller must stop using any SPTEs within =
+this
+>   *              range. This function can sleep. Return false only if sle=
+eping
+>   *              was required but mmu_notifier_range_blockable(range) is =
+false.
+> + * @release:	This function will be called when the mmu_interval_notifier
+> + *		is removed from the interval tree. Defining this function also
+> + *		allows mmu_interval_notifier_remove() and
+> + *		mmu_interval_notifier_update() to be called from the
+> + *		invalidate() callback function (i.e., they won't block waiting
+> + *		for invalidations to finish.
+
+Having a function called remove that doesn't block seems like very
+poor choice of language, we've tended to use put to describe that
+operation.
+
+The difference is meaningful as people often create use after free
+bugs in drivers when presented with interfaces named 'remove' or
+'destroy' that don't actually guarentee there is not going to be
+continued accesses to the memory.
+
+>   */
+>  struct mmu_interval_notifier_ops {
+>  	bool (*invalidate)(struct mmu_interval_notifier *mni,
+>  			   const struct mmu_notifier_range *range,
+>  			   unsigned long cur_seq);
+> +	void (*release)(struct mmu_interval_notifier *mni);
+>  };
+> =20
+>  struct mmu_interval_notifier {
+> @@ -246,6 +253,8 @@ struct mmu_interval_notifier {
+>  	struct mm_struct *mm;
+>  	struct hlist_node deferred_item;
+>  	unsigned long invalidate_seq;
+> +	unsigned long deferred_start;
+> +	unsigned long deferred_last;
+
+I couldn't quite understand how something like this can work, what is
+preventing parallel updates?
+
+> +/**
+> + * mmu_interval_notifier_update - Update interval notifier end
+> + * @mni: Interval notifier to update
+> + * @start: New starting virtual address to monitor
+> + * @length: New length of the range to monitor
+> + *
+> + * This function updates the range being monitored.
+> + * If there is no release() function defined, the call will wait for the
+> + * update to finish before returning.
+> + */
+> +int mmu_interval_notifier_update(struct mmu_interval_notifier *mni,
+> +				 unsigned long start, unsigned long length)
+> +{
+
+Update should probably be its own patch
+
+Jason
