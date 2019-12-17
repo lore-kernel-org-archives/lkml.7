@@ -2,89 +2,119 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6237FC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A785C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F46724672
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:34:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D5FA21D7D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:37:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a7jgwxe1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbfLQAe5 (ORCPT
+        id S1727897AbfLQAhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:34:57 -0500
-Received: from muru.com ([72.249.23.125]:48846 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726556AbfLQAe5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 19:34:57 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 5DD0A810D;
-        Tue, 17 Dec 2019 00:35:35 +0000 (UTC)
-Date:   Mon, 16 Dec 2019 16:34:53 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     Evgeniy Polyakov <zbr@ioremap.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        "H . Nikolaus Schaller" <hns@goldelico.com>,
-        Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCHv2] w1: omap-hdq: Simplify driver with PM runtime
- autosuspend
-Message-ID: <20191217003453.GU35479@atomide.com>
-References: <20191216145359.28219-1-tony@atomide.com>
- <20191216164335.GP35479@atomide.com>
- <CAHCN7xLYRm3Lstb=-r6hguDOrxwi-dT0nTzkhYM0S5GYtEzckw@mail.gmail.com>
+        Mon, 16 Dec 2019 19:37:22 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41021 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726556AbfLQAhV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 19:37:21 -0500
+Received: by mail-pg1-f193.google.com with SMTP id x8so4667425pgk.8;
+        Mon, 16 Dec 2019 16:37:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SQFSETw4Xz7lWLspxui/apQzjaLDfPbcy6MZjlbtiaM=;
+        b=a7jgwxe1nhIp6NjFKACWFYKSUaDd5K/NaobbNo4SeOYQBLQyLYFBFzH9liVIuntz1T
+         gi9liv7HNbn7EoSdP/ZAT9hHin3eI7h08yrrYNAAMKIu7uyAA6+urmZn9a2FlB+ZiOlq
+         iLyLWnP43Laof2vnMBAUzeI9JqqvzY/dnGECZHCQU6hIOPr0C0nbe//V9gRX/L7XDQVx
+         yDyHmoFOSQ0EoVR6u1amsp62Ds1zYwqSl6ZPSurG049nR5h2W2qjhBDsy8p3E/zImDMq
+         XkDEWaNFDuN2MHj3qtLb0TG8CcSpWvN0ts2CXeFpEJGqOSK4dyqNKx098z41zAecUrQI
+         kCpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SQFSETw4Xz7lWLspxui/apQzjaLDfPbcy6MZjlbtiaM=;
+        b=glLV316JObYHAHZjX/48ScbZOUDrtFSWA7UR/nClVCyZoaS2oNgmj5hu/R78GbdyRO
+         kYFJKgXyQBxNYX5rYK0Dw9MEfWwJff1BY3FPsKNY4JN9nBvi5sb3HI0gDjLU0N/P+gkn
+         fjYaMiVjjD6IYgG0y/j9tDIdhhISSnUv6yly4lZDIYiS/BE4S+CljODEqdM8UAlYZUY9
+         tMjcoTJ7qHiKAj9lFoVCm2XEZjRHGppCqcVkfFvj18OORY2sWRreFS6huX0/i3ZSlfwx
+         8cArBufzE5nD30GvhfjDp4eupl9kzJQGDs+mlGylN36yfrMK9mR8MMwAQ6R6hpPQYcMX
+         ogeQ==
+X-Gm-Message-State: APjAAAVKThFg7loTkfe8mA/Nn55mMs/cWyZel1Wo8qNtJJdUcOcPqGKY
+        t6e4E7k+rvLD1tFZSWemDQUqp8Mcp+g=
+X-Google-Smtp-Source: APXvYqyqEit9pkliF11YU1baCODG9ekGu7JsQSrq0svaqH/0LxGNlo0f2+t6EKcLHYniDch+iG0Ckw==
+X-Received: by 2002:a62:5243:: with SMTP id g64mr19192407pfb.101.1576543040666;
+        Mon, 16 Dec 2019 16:37:20 -0800 (PST)
+Received: from localhost.localdomain ([177.220.172.83])
+        by smtp.gmail.com with ESMTPSA id in19sm713725pjb.11.2019.12.16.16.37.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 16:37:19 -0800 (PST)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+        id F0DEDC0DB9; Mon, 16 Dec 2019 21:37:16 -0300 (-03)
+Date:   Mon, 16 Dec 2019 21:37:16 -0300
+From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+To:     Neil Horman <nhorman@tuxdriver.com>
+Cc:     syzbot <syzbot+772d9e36c490b18d51d1@syzkaller.appspotmail.com>,
+        davem@davemloft.net, linux-kernel@vger.kernel.org,
+        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, vyasevich@gmail.com
+Subject: Re: memory leak in sctp_stream_init
+Message-ID: <20191217003716.GC5058@localhost.localdomain>
+References: <000000000000f531080599c4073c@google.com>
+ <20191216114828.GA20281@hmswarspite.think-freely.org>
+ <20191216145638.GB5058@localhost.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHCN7xLYRm3Lstb=-r6hguDOrxwi-dT0nTzkhYM0S5GYtEzckw@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191216145638.GB5058@localhost.localdomain>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Adam Ford <aford173@gmail.com> [191216 19:04]:
-> On Mon, Dec 16, 2019 at 10:43 AM Tony Lindgren <tony@atomide.com> wrote:
-> >
-> > * Tony Lindgren <tony@atomide.com> [191216 14:54]:
-> > > Vignesh, any comments on the ti,mode = "1w" and removal of the call to
-> > > hdq_disable_interrupt()? Is there some specific section where we need
-> > > to have interrupts disabled and then re-enabled?
-> >
-> > OK I got "1w" mode working too now. We need to clear the irqstatus before
-> > calling wait_event_timeout() on it, and we're now missing it in the
-> > hdq_read_byte().
-> >
-> > Looks like we should not tinker with the actual irstatus register though,
-> > that's up to the hdq_isr() to manage.
-> >
-> > So the following helper is probably what we want to do additionally.
-> > I'll be posting v3 of the $subject patch.
-> 
-> I manually attempted to apply the patches.  I 'think' I did it right.
-> 
-> For testing, I ran:
->   watch cat /sys/devices/w1_bus_master1/01-000000000000/power_supply/bq27000-battery/voltage_now
-> 
-> I inserted and removed the power cable several times and observed the
-> voltage readings with the battery connected.
-> The numbers looked reasonable.
-> 
-> I then put the board to suspend, waited a few seconds and woke the
-> board from sleep.  I resumed my 'watch' function from above and it
-> worked just fine.
-> If there is nothing else you want me to test, go ahead and add:
-> 
-> Tested-by: Adam Ford <aford173@gmail.com> #logicpd-torpedo-37xx-devkit
+On Mon, Dec 16, 2019 at 11:56:38AM -0300, Marcelo Ricardo Leitner wrote:
+...
+> Considering that genradix_prealloc() failure is not fatal, seems the
+> fix here is to just ignore the failure in sctp_stream_alloc_out() and
+> let genradix try again later on.
 
-Thanks for testing, will post v3  shortly with the acks.
+Better yet, this fixes it here:
 
-Regards,
+---8<---
 
-Tony
+diff --git a/net/sctp/stream.c b/net/sctp/stream.c
+index df60b5ef24cb..e0b01bf912b3 100644
+--- a/net/sctp/stream.c
++++ b/net/sctp/stream.c
+@@ -84,8 +84,10 @@ static int sctp_stream_alloc_out(struct sctp_stream *stream, __u16 outcnt,
+ 		return 0;
+ 
+ 	ret = genradix_prealloc(&stream->out, outcnt, gfp);
+-	if (ret)
++	if (ret) {
++		genradix_free(&stream->out);
+ 		return ret;
++	}
+ 
+ 	stream->outcnt = outcnt;
+ 	return 0;
+@@ -100,8 +102,10 @@ static int sctp_stream_alloc_in(struct sctp_stream *stream, __u16 incnt,
+ 		return 0;
+ 
+ 	ret = genradix_prealloc(&stream->in, incnt, gfp);
+-	if (ret)
++	if (ret) {
++		genradix_free(&stream->in);
+ 		return ret;
++	}
+ 
+ 	stream->incnt = incnt;
+ 	return 0;
