@@ -2,113 +2,104 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF06C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 051D7C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD5A0206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:03:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB9B4206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:03:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o1uu9pMU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728467AbfLQVDj (ORCPT
+        id S1728487AbfLQVDl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 16:03:39 -0500
-Received: from mga04.intel.com ([192.55.52.120]:15620 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728308AbfLQVDa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 16:03:41 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40818 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728299AbfLQVDa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 17 Dec 2019 16:03:30 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 13:03:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,326,1571727600"; 
-   d="scan'208";a="240560978"
-Received: from smcdonal-mobl2.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.255.83.42])
-  by fmsmga004.fm.intel.com with ESMTP; 17 Dec 2019 13:03:28 -0800
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
-        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: [PATCH v5 07/17] soundwire: slave: move uevent handling to slave device level
-Date:   Tue, 17 Dec 2019 15:03:04 -0600
-Message-Id: <20191217210314.20410-8-pierre-louis.bossart@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191217210314.20410-1-pierre-louis.bossart@linux.intel.com>
-References: <20191217210314.20410-1-pierre-louis.bossart@linux.intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: by mail-wm1-f66.google.com with SMTP id t14so4706607wmi.5;
+        Tue, 17 Dec 2019 13:03:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=r9MEyJQ7xvqRtu/cx7pnw1DLhc2cZ7pjuqsZn/yC3vQ=;
+        b=o1uu9pMUtQnkBpSFKw7Z/v9QCY0tsk8SbusLF3JzbkPczLMv+pBwaFGTqEQCoVV4Lo
+         B1GQofHHOq8A/7WDtrpFe9jsVjyHtXeWX5MjeJkK5cjHH5B7a6rvaoUFOCyvharjFT3i
+         oSBrgUla5c8bAkM51DOchpxTR10KklD7ES9BDX6PY2jkIaqvm7Rp3o/S4/zXIz3dw7fq
+         O7OmNiOxhtn+2MeYRFARh/8BCB20kVeJFN2NHftAMxsi1NamcF9KTlx5wsomxH0ttKoB
+         FwVGTTMS5ZAQiibOyNOrjKqvy29LPuBh6rRYTkWwgNBkqDKlNy701d+sHOun+VU4/XK4
+         Kjsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=r9MEyJQ7xvqRtu/cx7pnw1DLhc2cZ7pjuqsZn/yC3vQ=;
+        b=BhG6tOpP6S1RrlCVv+L0bWJO6XW16N/iPtasMQAmFuOzJp0kg5UiE6Vs5z67vZXY48
+         Ml3rXtdRjGj8uDsaYy3xyrLdZ5Mogq8rXMTvQB7oI+v1T+qgUxUp4oq6rYYtINBPbLnR
+         QvQn+2vh/mCERAHgFXlYAW8T3xOnbLVyvTmQHsrkBJSCuwXjy0E+2QazHNLLDKB9bxLg
+         IBCmzED0BgkUSudNVHwhcBFlz3vZtOLCRlfXHIdPmtXA+6E0cv+u/iaTo7ZKhiqCE52b
+         54z4Ja8gGgsWSCweyb8DxJIS9T8dY/wweg0hmUzGp4DlS4D8Zhqg/lX5uSZMUDUJ9KKk
+         8VXw==
+X-Gm-Message-State: APjAAAWv2rGWKuPglrUUJkDE+pPdEElSbhFaZS4g3ivRg4mKz9w686gE
+        WD28CdxHbq7XJ9UJVQ4LBTI=
+X-Google-Smtp-Source: APXvYqx2rRwNzXbZWKDlAuQ19ISsVoZB11/RJNO8lRwUIoSWsBxkeJI/HRjX3hQLa/QcTL1ULm0UIg==
+X-Received: by 2002:a1c:41c4:: with SMTP id o187mr7743727wma.24.1576616608908;
+        Tue, 17 Dec 2019 13:03:28 -0800 (PST)
+Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id i5sm37856wml.31.2019.12.17.13.03.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 17 Dec 2019 13:03:28 -0800 (PST)
+From:   Doug Berger <opendmb@gmail.com>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>
+Subject: [PATCH net-next 6/8] net: bcmgenet: Turn on offloads by default
+Date:   Tue, 17 Dec 2019 13:02:27 -0800
+Message-Id: <1576616549-39097-7-git-send-email-opendmb@gmail.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1576616549-39097-1-git-send-email-opendmb@gmail.com>
+References: <1576616549-39097-1-git-send-email-opendmb@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the .uevent callback is set at the bus level. This is not
-necessary, we only really need to deal with uevents for the Slave
-device, so move the uevent handling at that level.
+We can turn on the RX/TX checksum offloads and the scatter/gather
+features by default and make sure that those are properly reflected
+back to e.g: stacked devices such as VLAN.
 
-Suggested-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Doug Berger <opendmb@gmail.com>
 ---
- drivers/soundwire/bus.h      | 2 ++
- drivers/soundwire/bus_type.c | 3 +--
- drivers/soundwire/slave.c    | 1 +
- 3 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/soundwire/bus.h b/drivers/soundwire/bus.h
-index cb482da914da..be01a5f3d00b 100644
---- a/drivers/soundwire/bus.h
-+++ b/drivers/soundwire/bus.h
-@@ -6,6 +6,8 @@
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+index 0df44c7076f1..b751fa76d0b0 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -3532,9 +3532,11 @@ static int bcmgenet_probe(struct platform_device *pdev)
  
- #define DEFAULT_BANK_SWITCH_TIMEOUT 3000
+ 	priv->msg_enable = netif_msg_init(-1, GENET_MSG_DEFAULT);
  
-+int sdw_uevent(struct device *dev, struct kobj_uevent_env *env);
-+
- #if IS_ENABLED(CONFIG_ACPI)
- int sdw_acpi_find_slaves(struct sdw_bus *bus);
- #else
-diff --git a/drivers/soundwire/bus_type.c b/drivers/soundwire/bus_type.c
-index 9719680a1e48..605bc7ae57a8 100644
---- a/drivers/soundwire/bus_type.c
-+++ b/drivers/soundwire/bus_type.c
-@@ -47,7 +47,7 @@ int sdw_slave_modalias(const struct sdw_slave *slave, char *buf, size_t size)
- 			slave->id.mfg_id, slave->id.part_id);
- }
+-	/* Set hardware features */
+-	dev->hw_features |= NETIF_F_SG | NETIF_F_HIGHDMA | NETIF_F_HW_CSUM |
+-		NETIF_F_RXCSUM;
++	/* Set default features */
++	dev->features |= NETIF_F_SG | NETIF_F_HIGHDMA | NETIF_F_HW_CSUM |
++			 NETIF_F_RXCSUM;
++	dev->hw_features |= dev->features;
++	dev->vlan_features |= dev->features;
  
--static int sdw_uevent(struct device *dev, struct kobj_uevent_env *env)
-+int sdw_uevent(struct device *dev, struct kobj_uevent_env *env)
- {
- 	struct sdw_slave *slave;
- 	char modalias[32];
-@@ -76,7 +76,6 @@ static int sdw_uevent(struct device *dev, struct kobj_uevent_env *env)
- struct bus_type sdw_bus_type = {
- 	.name = "soundwire",
- 	.match = sdw_bus_match,
--	.uevent = sdw_uevent,
- };
- EXPORT_SYMBOL_GPL(sdw_bus_type);
- 
-diff --git a/drivers/soundwire/slave.c b/drivers/soundwire/slave.c
-index c87267f12a3b..014c3ece1f17 100644
---- a/drivers/soundwire/slave.c
-+++ b/drivers/soundwire/slave.c
-@@ -17,6 +17,7 @@ static void sdw_slave_release(struct device *dev)
- struct device_type sdw_slave_type = {
- 	.name =		"sdw_slave",
- 	.release =	sdw_slave_release,
-+	.uevent = sdw_uevent,
- };
- 
- static int sdw_slave_add(struct sdw_bus *bus,
+ 	/* Request the WOL interrupt and advertise suspend if available */
+ 	priv->wol_irq_disabled = true;
 -- 
-2.20.1
+2.7.4
 
