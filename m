@@ -2,97 +2,106 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF855C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F1BC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0A5A2146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:42:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 082952146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:44:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="E3QhkF8y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728181AbfLQMmn (ORCPT
+        id S1728228AbfLQMoD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:42:43 -0500
-Received: from foss.arm.com ([217.140.110.172]:35818 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727519AbfLQMml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 07:42:41 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3DFF531B;
-        Tue, 17 Dec 2019 04:42:41 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A9D143F718;
-        Tue, 17 Dec 2019 04:42:40 -0800 (PST)
-Date:   Tue, 17 Dec 2019 12:42:39 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org
-Subject: Re: [PATCH 08/13] PCI: cadence: Use local management register to
- configure Vendor ID
-Message-ID: <20191217124238.GE24359@e119886-lin.cambridge.arm.com>
-References: <20191209092147.22901-1-kishon@ti.com>
- <20191209092147.22901-9-kishon@ti.com>
+        Tue, 17 Dec 2019 07:44:03 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:46968 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726920AbfLQMoC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 07:44:02 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBHChk1p096977;
+        Tue, 17 Dec 2019 06:43:46 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576586626;
+        bh=fBE++3ilO6IUmK3o0yQscRjirNExl2DOv8fz3sakjvo=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=E3QhkF8ybUKO93tbkloFLpppJfdXzD0bjEgghZNSYUsXyGsgtZU6vjmG86jLFsPyd
+         Eb+qlxWfnNDrttCV4h+QdwhB4ULlJICecsoOn9kiE0l9bK+msMVxFXetBQaFIhwxnJ
+         uDfmTETbgWGN5Vz13Nf+KN5UYDjSM8cV1Yy6S8os=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBHChkR2098566
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 17 Dec 2019 06:43:46 -0600
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
+ Dec 2019 06:43:45 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 17 Dec 2019 06:43:45 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBHChjMt109382;
+        Tue, 17 Dec 2019 06:43:45 -0600
+Subject: Re: [PATCH 1/2] dt: bindings: lm3692x: Document new properties
+To:     =?UTF-8?Q?Guido_G=c3=bcnther?= <agx@sigxcpu.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <cover.1576499103.git.agx@sigxcpu.org>
+ <35a23315938909c80e7772838e1de0d2d46302f2.1576499103.git.agx@sigxcpu.org>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <c523ccf6-6958-7457-c47b-f98e08588cfe@ti.com>
+Date:   Tue, 17 Dec 2019 06:41:19 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191209092147.22901-9-kishon@ti.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <35a23315938909c80e7772838e1de0d2d46302f2.1576499103.git.agx@sigxcpu.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 02:51:42PM +0530, Kishon Vijay Abraham I wrote:
-> PCI_VENDOR_ID in root port configuration space is read-only register
-> and writing to it will have no effect. Use local management register to
-> configure Vendor ID and Subsystem Vendor ID.
+Guido
 
-Is this a bug fix? Can you add a Fixes tag and make that clearer?
+Thanks for the patch
 
-Thanks,
-
-Andrew Murray
-
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+On 12/16/19 6:28 AM, Guido Günther wrote:
+> We allow configuration of brightness mode and over voltage
+> protection.
+>
+> Signed-off-by: Guido Günther <agx@sigxcpu.org>
 > ---
->  drivers/pci/controller/cadence/pcie-cadence-host.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> index cf817be237af..afb2c96a6538 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> @@ -71,6 +71,7 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
->  {
->  	struct cdns_pcie *pcie = &rc->pcie;
->  	u32 value, ctrl;
-> +	u32 id;
->  
->  	/*
->  	 * Set the root complex BAR configuration register:
-> @@ -90,8 +91,12 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
->  	cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
->  
->  	/* Set root port configuration space */
-> -	if (rc->vendor_id != 0xffff)
-> -		cdns_pcie_rp_writew(pcie, PCI_VENDOR_ID, rc->vendor_id);
-> +	if (rc->vendor_id != 0xffff) {
-> +		id = CDNS_PCIE_LM_ID_VENDOR(rc->vendor_id) |
-> +			CDNS_PCIE_LM_ID_SUBSYS(rc->vendor_id);
-> +		cdns_pcie_writel(pcie, CDNS_PCIE_LM_ID, id);
-> +	}
-> +
->  	if (rc->device_id != 0xffff)
->  		cdns_pcie_rp_writew(pcie, PCI_DEVICE_ID, rc->device_id);
->  
-> -- 
-> 2.17.1
-> 
+>   Documentation/devicetree/bindings/leds/leds-lm3692x.txt | 4 ++++
+>   1 file changed, 4 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
+> index 4c2d923f8758..f195e8b45d85 100644
+> --- a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
+> +++ b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
+> @@ -18,6 +18,10 @@ Required properties:
+>   Optional properties:
+>   	- enable-gpios : gpio pin to enable/disable the device.
+>   	- vled-supply : LED supply
+> +	- ti,brightness-mapping-exponential: Whether to use exponential
+> +	    brightness mapping
+> +	- ti,overvoltage-volts: Overvoltage protection in Volts, can
+> +	    be 0 (unprotected), 21, 25 or 29V
+>   
+
+Can you show examples of these in the DT binding?
+
+Dan
+
+
