@@ -2,105 +2,154 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71056C2D0C5
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 05:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 897AAC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 05:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46EEF2146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 05:23:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576560221;
-	bh=gTBRUZTAj08OEJZUmrm/ewxMPRPrawoPjsr3dDQQ800=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=VwttAp/1bZ/SHXDHO3rdRSlQilbamcxdY5gRR+7GaWI0sVOaTqB7xZnKlps3MAxWA
-	 T8SLKyDWavW5c1mrGeQF8BwGtMXdoI3eGuW208YE3DoUgCEKh3g4uPz3eoJO9nbVDX
-	 o7cU7PYNP55XcQfeZmZl0rm6Xrgi+CyxyQ7pxhn4=
+	by mail.kernel.org (Postfix) with ESMTP id 5C5FA2072B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 05:33:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbfLQFXj (ORCPT
+        id S1726920AbfLQFdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 00:23:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49720 "EHLO mail.kernel.org"
+        Tue, 17 Dec 2019 00:33:19 -0500
+Received: from mga03.intel.com ([134.134.136.65]:46641 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726164AbfLQFXj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 00:23:39 -0500
-Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.30.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 889B12072B;
-        Tue, 17 Dec 2019 05:23:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576560218;
-        bh=gTBRUZTAj08OEJZUmrm/ewxMPRPrawoPjsr3dDQQ800=;
-        h=From:To:Cc:Subject:Date:From;
-        b=SSPOk5UWGjZTQF6arwuC5jG8hGqYNW46VN3fEW/EXcGphRgBAd8SLL9XMd9oAqlYc
-         5Uo82aPrM4+6gfnmxEVTCypMUFrPpQO2lb1/Bg8Sx8DHftePSkav+lA3nXRYLGUSQM
-         DUYxQIXqlSuL6dT78rQO6yCxRJfX0bvcZJZmzS50=
-Received: by wens.tw (Postfix, from userid 1000)
-        id 57AA75FCA8; Tue, 17 Dec 2019 13:23:36 +0800 (CST)
-From:   Chen-Yu Tsai <wens@kernel.org>
-To:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     Chen-Yu Tsai <wens@kernel.org>, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] thermal: rockchip: enable hwmon
-Date:   Tue, 17 Dec 2019 13:23:28 +0800
-Message-Id: <20191217052328.25633-1-wens@kernel.org>
-X-Mailer: git-send-email 2.24.0
+        id S1725796AbfLQFdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 00:33:19 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 21:33:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,324,1571727600"; 
+   d="scan'208";a="297938879"
+Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.9])
+  by orsmga001.jf.intel.com with ESMTP; 16 Dec 2019 21:33:15 -0800
+Date:   Tue, 17 Dec 2019 00:25:02 -0500
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     'Paolo Bonzini' <pbonzini@redhat.com>,
+        Peter Xu <peterx@redhat.com>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Wang, Zhenyu Z" <zhenyu.z.wang@intel.com>
+Subject: Re: [PATCH RFC 04/15] KVM: Implement ring-based dirty memory tracking
+Message-ID: <20191217052502.GF21868@joy-OptiPlex-7040>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20191203184600.GB19877@linux.intel.com>
+ <374f18f1-0592-9b70-adbb-0a72cc77d426@redhat.com>
+ <20191209215400.GA3352@xz-x1>
+ <affd9d84-1b84-0c25-c431-a075c58c33dc@redhat.com>
+ <20191210155259.GD3352@xz-x1>
+ <3e6cb5ec-66c0-00ab-b75e-ad2beb1d216d@redhat.com>
+ <20191215172124.GA83861@xz-x1>
+ <f117d46a-7528-ce32-8e46-4f3f35937079@redhat.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D645E5F@SHSMSX104.ccr.corp.intel.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D646148@SHSMSX104.ccr.corp.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D646148@SHSMSX104.ccr.corp.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+On Tue, Dec 17, 2019 at 01:17:29PM +0800, Tian, Kevin wrote:
+> > From: Tian, Kevin
+> > Sent: Tuesday, December 17, 2019 10:29 AM
+> > 
+> > > From: Paolo Bonzini
+> > > Sent: Monday, December 16, 2019 6:08 PM
+> > >
+> > > [Alex and Kevin: there are doubts below regarding dirty page tracking
+> > > from VFIO and mdev devices, which perhaps you can help with]
+> > >
+> > > On 15/12/19 18:21, Peter Xu wrote:
+> > > >                 init_rmode_tss
+> > > >                     vmx_set_tss_addr
+> > > >                         kvm_vm_ioctl_set_tss_addr [*]
+> > > >                 init_rmode_identity_map
+> > > >                     vmx_create_vcpu [*]
+> > >
+> > > These don't matter because their content is not visible to userspace
+> > > (the backing storage is mmap-ed by __x86_set_memory_region).  In fact, d
+> > >
+> > > >                 vmx_write_pml_buffer
+> > > >                     kvm_arch_write_log_dirty [&]
+> > > >                 kvm_write_guest
+> > > >                     kvm_hv_setup_tsc_page
+> > > >                         kvm_guest_time_update [&]
+> > > >                     nested_flush_cached_shadow_vmcs12 [&]
+> > > >                     kvm_write_wall_clock [&]
+> > > >                     kvm_pv_clock_pairing [&]
+> > > >                     kvmgt_rw_gpa [?]
+> > >
+> > > This then expands (partially) to
+> > >
+> > > intel_gvt_hypervisor_write_gpa
+> > >     emulate_csb_update
+> > >         emulate_execlist_ctx_schedule_out
+> > >             complete_execlist_workload
+> > >                 complete_current_workload
+> > >                      workload_thread
+> > >         emulate_execlist_ctx_schedule_in
+> > >             prepare_execlist_workload
+> > >                 prepare_workload
+> > >                     dispatch_workload
+> > >                         workload_thread
+> > >
+> > > So KVMGT is always writing to GPAs instead of IOVAs and basically
+> > > bypassing a guest IOMMU.  So here it would be better if kvmgt was
+> > > changed not use kvm_write_guest (also because I'd probably have nacked
+> > > that if I had known :)).
+> > 
+> > I agree.
+> > 
+> > >
+> > > As far as I know, there is some work on live migration with both VFIO
+> > > and mdev, and that probably includes some dirty page tracking API.
+> > > kvmgt could switch to that API, or there could be VFIO APIs similar to
+> > > kvm_write_guest but taking IOVAs instead of GPAs.  Advantage: this would
+> > > fix the GPA/IOVA confusion.  Disadvantage: userspace would lose the
+> > > tracking of writes from mdev devices.  Kevin, are these writes used in
+> > > any way?  Do the calls to intel_gvt_hypervisor_write_gpa covers all
+> > > writes from kvmgt vGPUs, or can the hardware write to memory as well
+> > > (which would be my guess if I didn't know anything about kvmgt, which I
+> > > pretty much don't)?
+> > 
+> > intel_gvt_hypervisor_write_gpa covers all writes due to software mediation.
+> > 
+> > for hardware updates, it needs be mapped in IOMMU through
+> > vfio_pin_pages
+> > before any DMA happens. The ongoing dirty tracking effort in VFIO will take
+> > every pinned page through that API as dirtied.
+> > 
+> > However, currently VFIO doesn't implement any vfio_read/write_guest
+> > interface yet. and it doesn't make sense to use vfio_pin_pages for software
+> > dirtied pages, as pin is unnecessary and heavy involving iommu invalidation.
+> 
+> One correction. vfio_pin_pages doesn't involve iommu invalidation. I should
+> just mean that pinning the page is not necessary. We just need a kvm-like
+> interface based on hva to access.
+>
+And can we propose to differentiate read and write when calling vfio_pin_pages, e.g.
+vfio_pin_pages_read, vfio_pin_pages_write? Otherwise, calling to
+vfio_pin_pages will unnecessarily cause read pages to be dirty and
+sometimes reading guest pages is a way for device model to track dirty
+pages.
 
-By default of-based thermal driver do not have hwmon entries registered.
-
-Do this explicitly so users can use standard hwmon interfaces and tools
-to read the temperature.
-
-This is based on similar changes for bcm2835_thermal in commit
-d56c19d07e0b ("thermal: bcm2835: enable hwmon explicitly").
-
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- drivers/thermal/rockchip_thermal.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_thermal.c
-index 9ed8085bb792..d53ba7dabf16 100644
---- a/drivers/thermal/rockchip_thermal.c
-+++ b/drivers/thermal/rockchip_thermal.c
-@@ -19,6 +19,8 @@
- #include <linux/mfd/syscon.h>
- #include <linux/pinctrl/consumer.h>
- 
-+#include "thermal_hwmon.h"
-+
- /*
-  * If the temperature over a period of time High,
-  * the resulting TSHUT gave CRU module,let it reset the entire chip,
-@@ -1210,7 +1212,11 @@ rockchip_thermal_register_sensor(struct platform_device *pdev,
- 		return error;
- 	}
- 
--	return 0;
-+	/* thermal_zone doesn't enable hwmon as default, enable it here */
-+	sensor->tzd->tzp->no_hwmon = false;
-+	error = thermal_add_hwmon_sysfs(sensor->tzd);
-+
-+	return error;
- }
- 
- /**
--- 
-2.24.0
-
+> > 
+> > Alex, if you are OK we'll work on such interface and move kvmgt to use it.
+> > After it's accepted, we can also mark pages dirty through this new interface
+> > in Kirti's dirty page tracking series.
+> > 
