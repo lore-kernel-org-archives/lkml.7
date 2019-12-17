@@ -2,152 +2,110 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4197C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39663C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 840482465E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:59:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576594769;
-	bh=X1PiVxcDVotj0DhdvGj1bIfqqxEYbzQbmZ7rzefwzlI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=nUsCYf0meCk0+ezCqnoLA5SC3mWZrqUGCNBROnJnczuIJmxR6vRqrFI0bz3amLyeO
-	 ben3ONXIvrsHMp3H/t9Eo4Cym/fHVjEfAS9bsyW476veeaaUPMelubos8SD3gqOzTP
-	 mhSctZt6wcTXEomiSezvxWiWjAwZfdUpYNsStVFE=
+	by mail.kernel.org (Postfix) with ESMTP id 04F092176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:59:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="IpUKUVmy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbfLQO72 (ORCPT
+        id S1728035AbfLQO7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:59:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45918 "EHLO mail.kernel.org"
+        Tue, 17 Dec 2019 09:59:32 -0500
+Received: from nbd.name ([46.4.11.11]:44488 "EHLO nbd.name"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726560AbfLQO72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:59:28 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C1432146E;
-        Tue, 17 Dec 2019 14:59:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576594766;
-        bh=X1PiVxcDVotj0DhdvGj1bIfqqxEYbzQbmZ7rzefwzlI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=nr0K06QNQmm1n9qx+9jVB2d+Ydzi4sALusD8JzCqB3ntD3yvFbLJNuPHAptIVLsF+
-         PDs806kXbdNEAiy/H7HLANWQHb4WI5T2N345xg8/syBy4SMsutm/n6ctLJ9sEI3da3
-         HgtLDZWf/zydqfQ+j3AHA3IguZqFxvBe8fuWClG4=
-Date:   Tue, 17 Dec 2019 23:59:21 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     paulmck@kernel.org
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        David Miller <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -tip] kprobes: Lock rcu_read_lock() while searching
- kprobe
-Message-Id: <20191217235921.01cecb379e5e58493a0815af@kernel.org>
-In-Reply-To: <20191209033910.GD2889@paulmck-ThinkPad-P72>
-References: <157527193358.11113.14859628506665612104.stgit@devnote2>
-        <20191202210854.GD17234@google.com>
-        <20191203071329.GC115767@gmail.com>
-        <20191203175712.GI2889@paulmck-ThinkPad-P72>
-        <20191204100549.GB114697@gmail.com>
-        <20191204161239.GL2889@paulmck-ThinkPad-P72>
-        <20191206011137.GB142442@google.com>
-        <20191206031151.GY2889@paulmck-ThinkPad-P72>
-        <20191208000842.GA62607@google.com>
-        <20191209033910.GD2889@paulmck-ThinkPad-P72>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        id S1726560AbfLQO7b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 09:59:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
+         s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=+8L1lSnnK7nL4n5raeEmDmK4NyWmLIl9WA4sSDwK8jc=; b=IpUKUVmyJkWbdN9lK7cDmd9D4J
+        QR4qMW/VReCCQfTHbjgaPcsUzxxYz+T46GgnyWeKD0w5m5vrH1Klt3reSte6ZWql86dJ3rxtqKIr3
+        HRHjaJhOOvjL1diFYWZyDISzzpCSmt60vCl3xRwEPVWUtMoljzJjjWSN3WDl0r5AfPuA=;
+Received: from [178.162.209.142] (helo=nf.local)
+        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <nbd@nbd.name>)
+        id 1ihEJm-00046H-Vc; Tue, 17 Dec 2019 15:59:23 +0100
+Subject: Re: [PATCH] mt76: fix LED link time failure
+To:     Kalle Valo <kvalo@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>
+Cc:     Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Roy Luo <royluo@google.com>,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20191216131902.3251040-1-arnd@arndb.de>
+ <87lfrbaull.fsf@kamboji.qca.qualcomm.com>
+From:   Felix Fietkau <nbd@nbd.name>
+Autocrypt: addr=nbd@nbd.name; prefer-encrypt=mutual; keydata=
+ xsDiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
+ ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
+ Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
+ AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
+ vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
+ wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
+ TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
+ l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwc0cRmVsaXggRmll
+ dGthdSA8bmJkQG5iZC5uYW1lPsJgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
+ HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
+ VrwYTIThkTlQzsFNBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
+ CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
+ VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
+ Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
+ DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
+ wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
+ f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
+ aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
+ FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
+ TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabwkkE
+ GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCfTKx80VvCR/PvsUlrvdOLsIgeRGAAn1ee
+ RjMaxwtSdaCKMw3j33ZbsWS4
+Message-ID: <c029f35a-6fd9-fc69-aa8f-16b66235f71e@nbd.name>
+Date:   Tue, 17 Dec 2019 15:59:22 +0100
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <87lfrbaull.fsf@kamboji.qca.qualcomm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Sun, 8 Dec 2019 19:39:11 -0800
-"Paul E. McKenney" <paulmck@kernel.org> wrote:
-
-> On Sat, Dec 07, 2019 at 07:08:42PM -0500, Joel Fernandes wrote:
-> > On Thu, Dec 05, 2019 at 07:11:51PM -0800, Paul E. McKenney wrote:
-> > > On Thu, Dec 05, 2019 at 08:11:37PM -0500, Joel Fernandes wrote:
-> > > > On Wed, Dec 04, 2019 at 08:12:39AM -0800, Paul E. McKenney wrote:
-> > > > > On Wed, Dec 04, 2019 at 11:05:50AM +0100, Ingo Molnar wrote:
-> > > > > > 
-> > > > > > * Paul E. McKenney <paulmck@kernel.org> wrote:
-> > > > > > 
-> > > > > > > >  * This list-traversal primitive may safely run concurrently with
-> > > > > > > >  * the _rcu list-mutation primitives such as hlist_add_head_rcu()
-> > > > > > > >  * as long as the traversal is guarded by rcu_read_lock().
-> > > > > > > >  */
-> > > > > > > > #define hlist_for_each_entry_rcu(pos, head, member, cond...)            \
-> > > > > > > > 
-> > > > > > > > is actively harmful. Why is it there?
-> > > > > > > 
-> > > > > > > For cases where common code might be invoked both from the reader
-> > > > > > > (with RCU protection) and from the updater (protected by some
-> > > > > > > lock).  This common code can then use the optional argument to
-> > > > > > > hlist_for_each_entry_rcu() to truthfully tell lockdep that it might be
-> > > > > > > called with either form of protection in place.
-> > > > > > > 
-> > > > > > > This also combines with the __rcu tag used to mark RCU-protected
-> > > > > > > pointers, in which case sparse complains when a non-RCU API is applied
-> > > > > > > to these pointers, to get back to your earlier question about use of
-> > > > > > > hlist_for_each_entry_rcu() within the update-side lock.
-> > > > > > > 
-> > > > > > > But what are you seeing as actively harmful about all of this?
-> > > > > > > What should we be doing instead?
-> > > > > > 
-> > > > > > Yeah, so basically in the write-locked path hlist_for_each_entry() 
-> > > > > > generates (slightly) more efficient code than hlist_for_each_entry_rcu(), 
-> > > > > > correct?
-> > > > > 
-> > > > > Potentially yes, if the READ_ONCE() constrains the compiler.  Or not,
-> > > > > depending of course on the compiler and the surrounding code.
-> > > > > 
-> > > > > > Also, the principle of passing warning flags around is problematic - but 
-> > > > > > I can see the point in this specific case.
-> > > > > 
-> > > > > Would it help to add an hlist_for_each_entry_protected() that expected
-> > > > > RCU-protected pointers and write-side protection, analogous to
-> > > > > rcu_dereference_protected()?  Or would that expansion of the RCU API
-> > > > > outweigh any benefits?
-> > > > 
-> > > > Personally, I like keeping the same API and using the optional argument like
-> > > > we did thus preventing too many APIs / new APIs.
-> > > 
-> > > Would you be willing to put together a prototype patch so that people
-> > > can see exactly how it would look?
-> > 
-> > Hi Paul,
-> > 
-> > I was referring to the same API we have at the moment (that is
-> > hlist_for_each_entry_rcu() with the additional cond parameter). I was saying
-> > let us keep that and not add a hlist_for_each_entry_protected() instead, so
-> > as to not proliferate the number of APIs.
-> > 
-> > Or did I miss the point?
+On 2019-12-17 15:35, Kalle Valo wrote:
+> Arnd Bergmann <arnd@arndb.de> writes:
 > 
-> This would work for me.  The only concern would be inefficiency, but we
-> have heard from people saying that the unnecessary inefficiency is only
-> on code paths that they do not care about, so we should be good.
+>> The mt76_led_cleanup() function is called unconditionally, which
+>> leads to a link error when CONFIG_LEDS is a loadable module or
+>> disabled but mt76 is built-in:
+>>
+>> drivers/net/wireless/mediatek/mt76/mac80211.o: In function `mt76_unregister_device':
+>> mac80211.c:(.text+0x2ac): undefined reference to `led_classdev_unregister'
+>>
+>> Use the same trick that is guarding the registration, using an
+>> IS_ENABLED() check for the CONFIG_MT76_LEDS symbol that indicates
+>> whether LEDs can be used or not.
+>>
+>> Fixes: 36f7e2b2bb1d ("mt76: do not use devm API for led classdev")
+>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> 
+> Felix, as this is a regression in v5.5-rc1 can I take this directly to
+> wireless-drivers?
+Yes. Please add:
+Acked-by: Felix Fietkau <nbd@nbd.name>
 
-So, what will be the conclusion here, Ingo?
-
-I faced other warnings in tracing subsystem, so I need to add more
-lockdep_is_held()s there to suppress warnings.
-
-Thank you,
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+- Felix
