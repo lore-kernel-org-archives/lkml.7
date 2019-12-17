@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D39F9C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4617CC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A950C24676
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:53:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17A1124689
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:53:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbfLQAxw (ORCPT
+        id S1728086AbfLQAx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:53:52 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35446 "EHLO
+        Mon, 16 Dec 2019 19:53:56 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35404 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727138AbfLQAvo (ORCPT
+        by vger.kernel.org with ESMTP id S1727102AbfLQAvo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 19:51:44 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15K-0003Mi-I5; Tue, 17 Dec 2019 00:51:34 +0000
+        id 1ih15K-0003Ma-W5; Tue, 17 Dec 2019 00:51:35 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15I-0005ZR-J7; Tue, 17 Dec 2019 00:51:32 +0000
+        id 1ih15K-0005cc-De; Tue, 17 Dec 2019 00:51:34 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Wei Liu" <wei.liu@kernel.org>, "Paul Durrant" <paul@xen.org>,
-        "Juergen Gross" <jgross@suse.com>,
-        "David S. Miller" <davem@davemloft.net>
-Date:   Tue, 17 Dec 2019 00:46:54 +0000
-Message-ID: <lsq.1576543535.4014536@decadent.org.uk>
+        "Takashi Sakamoto" <o-takashi@sakamocchi.jp>,
+        "Takashi Iwai" <tiwai@suse.de>
+Date:   Tue, 17 Dec 2019 00:47:27 +0000
+Message-ID: <lsq.1576543535.459588578@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 080/136] xen/netback: fix error path of
- xenvif_connect_data()
+Subject: [PATCH 3.16 113/136] ALSA: bebob: fix to detect configured source
+ of sampling clock for Focusrite Saffire Pro i/o series
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,33 +56,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Juergen Gross <jgross@suse.com>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-commit 3d5c1a037d37392a6859afbde49be5ba6a70a6b3 upstream.
+commit 706ad6746a66546daf96d4e4a95e46faf6cf689a upstream.
 
-xenvif_connect_data() calls module_put() in case of error. This is
-wrong as there is no related module_get().
+For Focusrite Saffire Pro i/o, the lowest 8 bits of register represents
+configured source of sampling clock. The next lowest 8 bits represents
+whether the configured source is actually detected or not just after
+the register is changed for the source.
 
-Remove the superfluous module_put().
+Current implementation evaluates whole the register to detect configured
+source. This results in failure due to the next lowest 8 bits when the
+source is connected in advance.
 
-Fixes: 279f438e36c0a7 ("xen-netback: Don't destroy the netdev until the vif is shut down")
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Reviewed-by: Paul Durrant <paul@xen.org>
-Reviewed-by: Wei Liu <wei.liu@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This commit fixes the bug.
+
+Fixes: 25784ec2d034 ("ALSA: bebob: Add support for Focusrite Saffire/SaffirePro series")
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Link: https://lore.kernel.org/r/20191102150920.20367-1-o-takashi@sakamocchi.jp
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/xen-netback/interface.c | 1 -
- 1 file changed, 1 deletion(-)
+ sound/firewire/bebob/bebob_focusrite.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/net/xen-netback/interface.c
-+++ b/drivers/net/xen-netback/interface.c
-@@ -616,7 +616,6 @@ err_tx_unbind:
- err_unmap:
- 	xenvif_unmap_frontend_rings(queue);
- err:
--	module_put(THIS_MODULE);
- 	return err;
- }
+--- a/sound/firewire/bebob/bebob_focusrite.c
++++ b/sound/firewire/bebob/bebob_focusrite.c
+@@ -28,6 +28,8 @@
+ #define SAFFIRE_CLOCK_SOURCE_SPDIF		1
  
+ /* clock sources as returned from register of Saffire Pro 10 and 26 */
++#define SAFFIREPRO_CLOCK_SOURCE_SELECT_MASK	0x000000ff
++#define SAFFIREPRO_CLOCK_SOURCE_DETECT_MASK	0x0000ff00
+ #define SAFFIREPRO_CLOCK_SOURCE_INTERNAL	0
+ #define SAFFIREPRO_CLOCK_SOURCE_SKIP		1 /* never used on hardware */
+ #define SAFFIREPRO_CLOCK_SOURCE_SPDIF		2
+@@ -184,6 +186,7 @@ saffirepro_both_clk_src_get(struct snd_b
+ 		map = saffirepro_clk_maps[1];
+ 
+ 	/* In a case that this driver cannot handle the value of register. */
++	value &= SAFFIREPRO_CLOCK_SOURCE_SELECT_MASK;
+ 	if (value >= SAFFIREPRO_CLOCK_SOURCE_COUNT || map[value] < 0) {
+ 		err = -EIO;
+ 		goto end;
 
