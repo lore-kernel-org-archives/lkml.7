@@ -2,105 +2,160 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C461C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 02:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45613C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 02:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 506762176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 02:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 192F62176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 02:47:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbfLQCos (ORCPT
+        id S1726733AbfLQCr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 21:44:48 -0500
-Received: from mga07.intel.com ([134.134.136.100]:28074 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726437AbfLQCos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 21:44:48 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 18:44:47 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,323,1571727600"; 
-   d="scan'208";a="221643930"
-Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
-  by fmsmga001.fm.intel.com with ESMTP; 16 Dec 2019 18:44:47 -0800
-Received: from fmsmsx116.amr.corp.intel.com (10.18.116.20) by
- FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 16 Dec 2019 18:44:47 -0800
-Received: from shsmsx154.ccr.corp.intel.com (10.239.6.54) by
- fmsmsx116.amr.corp.intel.com (10.18.116.20) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 16 Dec 2019 18:44:47 -0800
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.90]) by
- SHSMSX154.ccr.corp.intel.com ([169.254.7.71]) with mapi id 14.03.0439.000;
- Tue, 17 Dec 2019 10:44:45 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "David Woodhouse" <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>
-CC:     "Raj, Ashok" <ashok.raj@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>, Peter Xu <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3 5/6] iommu/vt-d: Flush PASID-based iotlb for iova
- over first level
-Thread-Topic: [PATCH v3 5/6] iommu/vt-d: Flush PASID-based iotlb for iova
- over first level
-Thread-Index: AQHVr8iiJX/bvAPmK0eIArQDcTD6yKe33K3QgACZjICAAndaMIACHLkAgAAFFACAAACDAIAAl1Vg
-Date:   Tue, 17 Dec 2019 02:44:44 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C25743A135D50@SHSMSX104.ccr.corp.intel.com>
-References: <20191211021219.8997-1-baolu.lu@linux.intel.com>
- <20191211021219.8997-6-baolu.lu@linux.intel.com>
- <A2975661238FB949B60364EF0F2C25743A130C08@SHSMSX104.ccr.corp.intel.com>
- <f1e5cfea-8b11-6d72-8e57-65daea51c050@linux.intel.com>
- <A2975661238FB949B60364EF0F2C25743A132C50@SHSMSX104.ccr.corp.intel.com>
- <6a5f6695-d1fd-e7d1-3ea3-f222a1ef0e54@linux.intel.com>
- <b4a879b2-a5c7-b0bf-8cd4-7397aeebc381@linux.intel.com>
- <2b024c1e-79bd-6827-47e6-ae9457054c79@linux.intel.com>
-In-Reply-To: <2b024c1e-79bd-6827-47e6-ae9457054c79@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiM2JiZjNhYjctY2IyNi00NjcxLTkxYjEtZTQ0ZWY2ZWQ0MjQzIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoic3k5R2ljVUpuY3REWVlQOHl0b01hQnZkSnhUbWtPUXcreEY4c3hMQlJKMDdaMHU3M2UzdHZ0UWpPTkRPT2QyVSJ9
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 16 Dec 2019 21:47:58 -0500
+Received: from spam01.hygon.cn ([110.188.70.11]:29065 "EHLO spam1.hygon.cn"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726446AbfLQCr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 21:47:57 -0500
+Received: from MK-DB.hygon.cn ([172.23.18.60])
+        by spam1.hygon.cn with ESMTP id xBH2geS6075240;
+        Tue, 17 Dec 2019 10:42:40 +0800 (GMT-8)
+        (envelope-from linjiasen@hygon.cn)
+Received: from cncheex01.Hygon.cn ([172.23.18.10])
+        by MK-DB.hygon.cn with ESMTP id xBH2gQSk004059;
+        Tue, 17 Dec 2019 10:42:26 +0800 (GMT-8)
+        (envelope-from linjiasen@hygon.cn)
+Received: from ubuntu.localdomain (172.23.18.44) by cncheex01.Hygon.cn
+ (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Tue, 17 Dec
+ 2019 10:42:32 +0800
+From:   Jiasen Lin <linjiasen@hygon.cn>
+To:     <linux-kernel@vger.kernel.org>, <linux-ntb@googlegroups.com>,
+        <jdmason@kudzu.us>, <logang@deltatee.com>
+CC:     <allenbh@gmail.com>, <dave.jiang@intel.com>, <linjiasen@hygon.cn>,
+        <sanju.mehta@amd.com>
+Subject: [PATCH] NTB: ntb_perf: Add more debugfs entries for ntb_perf
+Date:   Mon, 16 Dec 2019 18:42:16 -0800
+Message-ID: <1576550536-84697-1-git-send-email-linjiasen@hygon.cn>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [172.23.18.44]
+X-ClientProxiedBy: cncheex01.Hygon.cn (172.23.18.10) To cncheex01.Hygon.cn
+ (172.23.18.10)
+X-MAIL: spam1.hygon.cn xBH2geS6075240
+X-DNSRBL: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBMdSBCYW9sdSBbbWFpbHRvOmJhb2x1Lmx1QGxpbnV4LmludGVsLmNvbV0NCj4gU2Vu
-dDogVHVlc2RheSwgRGVjZW1iZXIgMTcsIDIwMTkgOTozOSBBTQ0KPiBUbzogTGl1LCBZaSBMIDx5
-aS5sLmxpdUBpbnRlbC5jb20+OyBKb2VyZyBSb2VkZWwgPGpvcm9AOGJ5dGVzLm9yZz47IERhdmlk
-DQo+IFdvb2Rob3VzZSA8ZHdtdzJAaW5mcmFkZWFkLm9yZz47IEFsZXggV2lsbGlhbXNvbg0KPiA8
-YWxleC53aWxsaWFtc29uQHJlZGhhdC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgNS82
-XSBpb21tdS92dC1kOiBGbHVzaCBQQVNJRC1iYXNlZCBpb3RsYiBmb3IgaW92YSBvdmVyIGZpcnN0
-DQo+IGxldmVsDQo+IA0KPiBIaSwNCj4gDQo+IE9uIDEyLzE3LzE5IDk6MzcgQU0sIEx1IEJhb2x1
-IHdyb3RlOg0KPiA+IFlvdSBhcmUgcmlnaHQuIEkgd2lsbCBjaGFuZ2UgaXQgYWNjb3JkaW5nbHku
-IFRoZSBsb2dpYyBzaG91bGQgbG9vaw0KPiA+IGxpa2U6DQo+ID4NCj4gPiBpZiAoZG9tYWluIGF0
-dGFjaGVkIHRvIHBoeXNpY2FsIGRldmljZSkNCj4gPiAgwqDCoMKgwqBmbHVzaF9waW90bGJfd2l0
-aF9SSUQyUEFTSUQoKQ0KPiA+IGVsc2UgaWYgKGRvbWFpbl9hdHRhY2hlZF90b19tZGV2X2Rldmlj
-ZSkNCj4gPiAgwqDCoMKgwqBmbHVzaF9waW90bGJfd2l0aF9kZWZhdWx0X3Bhc2lkKCkNCj4gPg0K
-PiANCj4gQm90aCEgc28gbm8gImVsc2UiIGhlcmUuDQoNCmFoYSwgaWYgd2Ugd2FudCB0byBmbHVz
-aCBtb3JlIHByZWNpc2VseSwgd2UgbWF5IGNoZWNrIHdoZXRoZXINCmRvbWFpbi0+ZGVmYXVsdF9w
-YXNpZCBpcyBhbGxvY2F0ZWQuIElmIG5vdCwgaXQgbWVhbnMgbm8gbWRldiBpcw0KaW52b2x2ZWQs
-IHRoZW4gd2UgbWF5IHNhdmUgYSBwX2lvdGxiX2ludl9kc2Mgc3VibWlzc2lvbiBhbmQgYWxzbw0K
-c2F2ZSBWVC1kIGhhcmR3YXJlIGNpcmNsZXMgZnJvbSBkb2luZyB1c2VsZXNzIGZsdXNoLiBUaGlz
-IGlzIGp1c3QNCm9wdGltaXphdGlvbiwgaXQncyB1cCB0byB5b3UgdG8gcGljayBpdCBvciBub3Qg
-aW4gdGhpcyBwYXRjaHNldC4gSSdtDQpmaW5lIHdpdGggZmx1c2ggImJvdGgiIHNpbmNlIGl0IGd1
-YXJhbnRlZXMgY29ycmVjdG5lc3MuDQoNClJlZ2FyZHMsDQpZaSBMaXUNCg==
+Currently, read input and output buffer is not supported yet in
+debugfs of ntb_perf. We can not confirm whether the output data is
+transmitted to the input buffer at peer memory through NTB.
+
+This patch add new entries in debugfs which implement interface to read
+a part of input and out buffer. User can dump output and input data at
+local and peer system by hexdump command, and then compare them manually.
+
+Signed-off-by: Jiasen Lin <linjiasen@hygon.cn>
+---
+ drivers/ntb/test/ntb_perf.c | 59 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
+
+diff --git a/drivers/ntb/test/ntb_perf.c b/drivers/ntb/test/ntb_perf.c
+index e9b7c2d..338c3ec 100644
+--- a/drivers/ntb/test/ntb_perf.c
++++ b/drivers/ntb/test/ntb_perf.c
+@@ -106,6 +106,8 @@ MODULE_DESCRIPTION("PCIe NTB Performance Measurement Tool");
+ 
+ #define PERF_BUF_LEN 1024
+ 
++#define MAX_STR_LENGTH		16
++
+ static unsigned long max_mw_size;
+ module_param(max_mw_size, ulong, 0644);
+ MODULE_PARM_DESC(max_mw_size, "Upper limit of memory window size");
+@@ -1227,6 +1229,46 @@ static const struct file_operations perf_dbgfs_info = {
+ 	.read = perf_dbgfs_read_info
+ };
+ 
++static ssize_t perf_dbgfs_read_inbuf(struct file *filep,
++				    char __user *ubuf,
++				    size_t size, loff_t *offp)
++{
++	struct perf_peer *peer = filep->private_data;
++	size_t buf_size;
++
++	if (!peer->inbuf)
++		return -ENXIO;
++
++	buf_size = min_t(size_t, size, peer->inbuf_size);
++	return simple_read_from_buffer(ubuf, size, offp,
++					peer->inbuf, buf_size);
++}
++
++static const struct file_operations perf_dbgfs_inbuf = {
++	.open = simple_open,
++	.read = perf_dbgfs_read_inbuf,
++};
++
++static ssize_t perf_dbgfs_read_outbuf(struct file *filep,
++				    char __user *ubuf,
++				    size_t size, loff_t *offp)
++{
++	struct perf_peer *peer = filep->private_data;
++	size_t buf_size;
++
++	if (!peer->outbuf)
++		return -ENXIO;
++
++	buf_size = min_t(size_t, size, peer->outbuf_size);
++	return simple_read_from_buffer(ubuf, size, offp,
++					peer->outbuf, buf_size);
++}
++
++static const struct file_operations perf_dbgfs_outbuf = {
++	.open = simple_open,
++	.read = perf_dbgfs_read_outbuf,
++};
++
+ static ssize_t perf_dbgfs_read_run(struct file *filep, char __user *ubuf,
+ 				   size_t size, loff_t *offp)
+ {
+@@ -1318,6 +1360,9 @@ static const struct file_operations perf_dbgfs_tcnt = {
+ static void perf_setup_dbgfs(struct perf_ctx *perf)
+ {
+ 	struct pci_dev *pdev = perf->ntb->pdev;
++	struct perf_peer *peer;
++	int pidx;
++	char name[MAX_STR_LENGTH];
+ 
+ 	perf->dbgfs_dir = debugfs_create_dir(pci_name(pdev), perf_dbgfs_topdir);
+ 	if (!perf->dbgfs_dir) {
+@@ -1334,6 +1379,20 @@ static void perf_setup_dbgfs(struct perf_ctx *perf)
+ 	debugfs_create_file("threads_count", 0600, perf->dbgfs_dir, perf,
+ 			    &perf_dbgfs_tcnt);
+ 
++	for (pidx = 0; pidx < perf->pcnt; pidx++) {
++		peer = &perf->peers[pidx];
++		if (!peer)
++			continue;
++		memset(name, 0, sizeof(name));
++		snprintf(name, sizeof(name), "%s_%u", "inbuf_info", pidx);
++		debugfs_create_file(name, 0600, perf->dbgfs_dir, peer,
++					&perf_dbgfs_inbuf);
++
++		memset(name, 0, sizeof(name));
++		snprintf(name, sizeof(name), "%s_%u", "outbuf_info", pidx);
++		debugfs_create_file(name, 0600, perf->dbgfs_dir, peer,
++					&perf_dbgfs_outbuf);
++	}
+ 	/* They are made read-only for test exec safety and integrity */
+ 	debugfs_create_u8("chunk_order", 0500, perf->dbgfs_dir, &chunk_order);
+ 
+-- 
+2.7.4
+
