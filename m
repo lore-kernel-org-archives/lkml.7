@@ -2,126 +2,138 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BECF5C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 645D3C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92B4B2465E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:46:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576597598;
-	bh=4rs0lmRSTGNyaDVp8rZ0QHqyZgvvyoEYGzImTT2MZ30=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Xw9VY1Gu+y4j0c3aSRkHttTlnl9vcinwkmUTPBNC63IEfYW/OLuslgxtvePY85IeK
-	 O09JvzxTTKV/SasWVoL15PNs+vZ9tdhTFbCASbKgCoCLb2YctW7RvcKLFCPbR2NphR
-	 1EH6ID3nqJfCs8fNhkwXp6JzL83yYlQMVWvUwePA=
+	by mail.kernel.org (Postfix) with ESMTP id 3BA732465E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:47:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rqk/w/lO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728006AbfLQPqh (ORCPT
+        id S1728071AbfLQPrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 10:46:37 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46560 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbfLQPqh (ORCPT
+        Tue, 17 Dec 2019 10:47:08 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38565 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbfLQPrH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 10:46:37 -0500
-Received: by mail-wr1-f67.google.com with SMTP id z7so11789153wrl.13;
-        Tue, 17 Dec 2019 07:46:35 -0800 (PST)
+        Tue, 17 Dec 2019 10:47:07 -0500
+Received: by mail-pl1-f193.google.com with SMTP id f20so4516041plj.5;
+        Tue, 17 Dec 2019 07:47:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vOtwYzlf5BFOGPS2i3uFK7gceSiUI5q9A1BDB60vRjo=;
+        b=Rqk/w/lOd9uHLGdW1G/qZzQfTemaMfGD4hQOOtBGTgUWHKhRZNu3P9rjW1IsUJgzdt
+         G5aOMQVpp3oilAUveyqVWlgwEydUiDkWMRCZoCWgmBll1Dmck30d/HVzJO2rI0su7TyQ
+         f1hr5Gtnt8TaHLZkHpF+JmIo6TJu/UJ9B92NvHn1YrBXLZJdhV0uRBvXZfttZKC1Uukp
+         fgpUUI5HnfVo/cvULo2C8aWxZAUrDHMtZHUg1JyRIbJqYrQM7Cl1bXMNmACW4IVloUEv
+         EJJTd1XpWzKBqxSjnWUiZS7dSrXeR97UHEVbcgQZS1cYNIsSDIMyF5tX+5CQZFZUmjQw
+         h9bA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TuQqZHZA7F8zrUioSoTgrl1c8FOUxjce+qXhdDt9T1Q=;
-        b=AxubpVzRcqYzO7BrUu3OqNk1eBOT7Cj+ci/3E5dMeMz276EcjSYNagr5/yfUPyh/Ze
-         rG9A2JiltDk5it4ZI2OBm6Je4UucyaJbWs2SJUQdtroCIk063fPinJSb8xZNhqRSyvFq
-         9dCDHs3hwJcTJb7y/Exzzkajbsz0WLVUK/6CWoRU2Ypa9MJFABSQE7BYl6b4XxAvg4um
-         vITqTiwPYbGASobeL1OeQZb+oMgvLJ8w/l1pVqgzETuCOpjwal8h+tvTghnaHDFkcx4X
-         uGPMGWJ6eU9bQ2fn14YEq0yesGQIpn086/io/XFMwgo6ilv0mbQirzTWWkkPKuDbC20f
-         HF+Q==
-X-Gm-Message-State: APjAAAVuf+1O6w1NoOz536FnS2lUgK7RJc3St7oaGqlQrLQGQpHznSHY
-        NMsHXguU2CGBdfObs9J5UI4=
-X-Google-Smtp-Source: APXvYqyaLlXC8wOzGI//HEchY8EnBI7KhMkSmqaaisJZeWL/y3zxtl1RZBwyNF+AYAa4cVtyJryIXw==
-X-Received: by 2002:adf:f2d0:: with SMTP id d16mr36372586wrp.110.1576597595052;
-        Tue, 17 Dec 2019 07:46:35 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id z8sm26075799wrq.22.2019.12.17.07.46.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 07:46:34 -0800 (PST)
-Date:   Tue, 17 Dec 2019 16:46:33 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Chris Down <chris@chrisdown.name>
-Cc:     Qian Cai <cai@lca.pw>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: memcontrol.c: move mem_cgroup_id_get_many under
- CONFIG_MMU
-Message-ID: <20191217154633.GE7272@dhcp22.suse.cz>
-References: <20191217135440.GB58496@chrisdown.name>
- <392D7C59-5538-4A9B-8974-DB0B64880C2C@lca.pw>
- <20191217144652.GA7272@dhcp22.suse.cz>
- <20191217150921.GA136178@chrisdown.name>
- <20191217151931.GD7272@dhcp22.suse.cz>
- <20191217152814.GB136178@chrisdown.name>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vOtwYzlf5BFOGPS2i3uFK7gceSiUI5q9A1BDB60vRjo=;
+        b=P0M3jdupyS4eBy9G5K1XJurJpb0SuzVKShz3KXovVgysgNhQbKKDD8T6GI8e4xTgjj
+         tTx94q5oIDqvgTGeB8ZamTZKYkwK+Cxq3jqCGnqcdKOSPHE58rdkRDrH4Oyy72eZJSSo
+         gMwAc65J8w/bHMRjmkSThBUKcdFcVF5H/WHPgWAiSemc0OKDh6shIgyicSyw1jk5GcYE
+         2t87ewV+ZppWLs/7BVv6Z4WWSHLNh+dy+6lK+mvReiCUHKEmE1mqZLzsp6mqZAvUX6+f
+         A6bAn7uMA2RoZq0CIJiGqqs+98c3NRhGQ2cuJ9eu4J7dnoiXXRJNSUkVGiUY15wiRhIY
+         gizw==
+X-Gm-Message-State: APjAAAXlg8mfrXSzsf5Oyq/PuUZsdLdVWA8b+M1luda1HxPDQeVhj4oO
+        2PtfSWbkbblSo9LGoBwadhE=
+X-Google-Smtp-Source: APXvYqwAMrF5r62qmk0u1vRjUs5ls5a3I5G16sxctobohr3j5fkV44s5Ng4U89e82VuPRn7IcUEXhQ==
+X-Received: by 2002:a17:90a:a010:: with SMTP id q16mr6994619pjp.115.1576597626942;
+        Tue, 17 Dec 2019 07:47:06 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id u1sm26067232pfn.133.2019.12.17.07.47.05
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 17 Dec 2019 07:47:06 -0800 (PST)
+Date:   Tue, 17 Dec 2019 07:47:04 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>
+Subject: Re: [PATCH 0/1] Summary: hwmon driver for temperature sensors on
+ SATA drives
+Message-ID: <20191217154704.GA32673@roeck-us.net>
+References: <20191209052119.32072-1-linux@roeck-us.net>
+ <yq15zinmrmj.fsf@oracle.com>
+ <67b75394-801d-ce91-55f2-f0c0db9cfffc@roeck-us.net>
+ <yq1y2vbhe6i.fsf@oracle.com>
+ <83d528fc-42b7-aa3f-5dd9-a000268da38e@roeck-us.net>
+ <BYAPR04MB5816CA0C1CAFC21F7955F79FE7500@BYAPR04MB5816.namprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191217152814.GB136178@chrisdown.name>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <BYAPR04MB5816CA0C1CAFC21F7955F79FE7500@BYAPR04MB5816.namprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 17-12-19 15:28:14, Chris Down wrote:
-> Michal Hocko writes:
-> > On Tue 17-12-19 15:09:21, Chris Down wrote:
-> > [...]
-> > > (Side note: I'm moderately baffled that a tightly scoped __maybe_unused is
-> > > considered sinister but somehow disabling -Wunused-function is on the table
-> > > :-))
-> > 
-> > Well, I usually do not like to see __maybe_unused because that is prone
-> > to bit-rot and loses its usefulness. Looking into the recent git logs
-> > most -Wunused-function led to the code removal (which is really good
-> > but the compiler is likely to do that already so the overall impact is
-> > not that large) or more ifdefery. I do not really see many instance of
-> > __maybe_unused.
+On Tue, Dec 17, 2019 at 05:50:17AM +0000, Damien Le Moal wrote:
+> On 2019/12/17 12:57, Guenter Roeck wrote:
+> > On 12/16/19 6:35 PM, Martin K. Petersen wrote:
+> >>
+> >> Guenter,
+> >>
+> >>> If and when drives are detected which report bad information, such
+> >>> drives can be added to a blacklist without impact on the core SCSI or
+> >>> ATA code. Until that happens, not loading the driver solves the
+> >>> problem on any affected system.
+> >>
+> >> My only concern with that is that we'll have blacklisting several
+> >> places. We already have ATA and SCSI blacklists. If we now add a third
+> >> place, that's going to be a maintenance nightmare.
+> >>
+> >> More on that below.
+> >>
+> >>>> My concerns are wrt. identifying whether SMART data is available for
+> >>>> USB/UAS. I am not too worried about ATA and "real" SCSI (ignoring RAID
+> >>>> controllers that hide the real drives in various ways).
+> >>
+> >> OK, so I spent my weekend tinkering with 15+ years of accumulated USB
+> >> devices. And my conclusion is that no, we can't in any sensible manner,
+> >> support USB storage monitoring in the kernel. There is no heuristic that
+> >> I can find that identifies that "this is a hard drive or an SSD and
+> >> attempting one of the various SMART methods may be safe". As opposed to
+> >> "this is a USB key that's likely to lock up if you try". And that's
+> >> ignoring the drives with USB-ATA bridges that I managed to wedge in my
+> >> attempt at sending down commands.
+> >>
+> >> Even smartmontools is failing to work on a huge part of my vintage
+> >> collection.  Thanks to a wide variety of bridges with random, custom
+> >> interfaces.
+> >>
+> >> So my stance on all this is that I'm fine with your general approach for
+> >> ATA. I will post a patch adding the required bits for SCSI. And if a
+> >> device does not implement either of the two standard methods, people
+> >> should use smartmontools.
+> >>
+> >> Wrt. name, since I've added SCSI support, satatemp is a bit of a
+> >> misnomer. drivetemp, maybe? No particular preference.
+> >>
+> > Agreed, if we extend this to SCSI, satatemp is less than perfect.
+> > drivetemp ? disktemp ? I am open to suggestions, with maybe a small
+> > personal preference for disktemp out of those two.
 > 
-> Hmm, but __maybe_unused is easy to find and document the reasons behind
-> nearby, and then reevaluate at some later time. On the other hand, it's much
-> *harder* to reevaluate which functions actually are unused in the long term
-> if we remove -Wunused-function, because enabling it to find candidates will
-> result in an incredibly amount of noise from those who have missed unused
-> functions previously due to the lack of the warning.
+> "disk" tend to imply HDD, excluding SSDs. So my vote goes to
+> "drivetemp", or even the more generic, "devtemp".
+> 
+"devtemp" would apply to all devices with temperature sensors, which
+would be a bit too generic. I'll take that as a vote for "drivetemp".
 
-I usually git grep for the function and that covers many cases. But
-realistically, I am more than skeptical people are going to do a regular
-cleanup like that. And that is the biggest deal with this annotation.
-Once it gets marked it will just stay that way and potentially get
-really unused eventually. So the overall benefit is close the zero in
-that case.
-
-Maybe dropping -Wunused-function is an overreaction. Git log shows there
-has been some code removed which is probably the most viable reaction to
-those reports. Maybe we just want to add those for W=1 or something like
-that.
-
-> Maybe Qian is right and we should just ignore such patches, but I think that
-> comes with its own risks that we will alienate perfectly well intentioned
-> new contributors to mm without them having any idea why we did that.
-
-I believe that both possitive and negative reaction to _any_ patch has
-to be properly justified - same applies to the patch itself. A warning
-report/fix is not an expcetion. In this particular case it has been pointed
-out that the reported function is a general purpose one which just
-happens to be used only for CONFIG_SWAP (rather than CONFIG_MMU) and
-using additional ifdeferry is likely not going to help long term.
--- 
-Michal Hocko
-SUSE Labs
+Guenter
