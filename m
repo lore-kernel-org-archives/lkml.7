@@ -2,91 +2,94 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8FD5C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8360EC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A13B821582
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:23:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YdxRijRc"
+	by mail.kernel.org (Postfix) with ESMTP id 61B9E2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:25:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728639AbfLQPXo (ORCPT
+        id S1728349AbfLQPZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 10:23:44 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53370 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728320AbfLQPXo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 10:23:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576596223;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=FISSAqDTrddEYk3QkzjWh3id0BIOLIODLvyAsnqqLws=;
-        b=YdxRijRcNpr+IjhbHIGk4ipssPl6RBO+4iu8/j0f0bCWNHsFqeP7HQa3/MYyxUr9bqXKKC
-        zvq21zWmPAUKdDV7LXwTWuut8AMLgswO7iBfVsxan8TxBmkbBOqDpd/rSbNyNZnaLaaLIu
-        yts1tfd2Dc5NwJHkDFr10eBNvRvUBGA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-69-DbcCpax7PwGxjiiKDTHHig-1; Tue, 17 Dec 2019 10:23:40 -0500
-X-MC-Unique: DbcCpax7PwGxjiiKDTHHig-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 80B578DC1A0;
-        Tue, 17 Dec 2019 15:23:38 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
-        by smtp.corp.redhat.com (Postfix) with SMTP id D698360BE0;
-        Tue, 17 Dec 2019 15:23:36 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Tue, 17 Dec 2019 16:23:35 +0100 (CET)
-Date:   Tue, 17 Dec 2019 16:23:33 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     chenqiwu <qiwuchen55@gmail.com>
-Cc:     christian.brauner@ubuntu.com, peterz@infradead.org,
-        mingo@kernel.org, kernel-team@android.com,
-        linux-kernel@vger.kernel.org, chenqiwu@xiaomi.com
-Subject: Re: [PATCH v2] kernel/exit: do panic earlier to get coredump if
- global init task exit
-Message-ID: <20191217152333.GC23152@redhat.com>
-References: <1576466324-6067-1-git-send-email-qiwuchen55@gmail.com>
- <20191216172841.GA10466@redhat.com>
- <20191216174410.xiqurqnqyipbuy4e@wittgenstein>
- <20191217105042.GA21784@cqw-OptiPlex-7050>
- <20191217142515.GB23152@redhat.com>
- <20191217145620.GA26585@cqw-OptiPlex-7050>
+        Tue, 17 Dec 2019 10:25:15 -0500
+Received: from mx2.suse.de ([195.135.220.15]:42974 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727723AbfLQPZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 10:25:15 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 42562AC5F;
+        Tue, 17 Dec 2019 15:25:13 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 6F254DA81D; Tue, 17 Dec 2019 16:25:11 +0100 (CET)
+Date:   Tue, 17 Dec 2019 16:25:11 +0100
+From:   David Sterba <dsterba@suse.cz>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Btrfs <linux-btrfs@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: linux-next: Tree for Dec 6 (objtool, lots in btrfs)
+Message-ID: <20191217152511.GG3929@suse.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Randy Dunlap <rdunlap@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Btrfs <linux-btrfs@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+References: <cd4091e4-1c04-a880-f239-00bc053f46a2@infradead.org>
+ <20191211134929.GL3929@twin.jikos.cz>
+ <c751bc1a-505c-5050-3c4c-c83be81b4e48@infradead.org>
+ <20191212184725.db3ost7rcopotr5u@treble>
+ <b9b0c81b-0ca8-dfb7-958f-cd58a449b6fb@infradead.org>
+ <ba2a7a9b-933b-d4e4-8970-85b6c1291fca@infradead.org>
+ <20191213235054.6k2lcnwa63r26zwi@treble>
+ <c6a33c21-3e71-ac98-cc95-db008764917c@infradead.org>
+ <20191214054515.ougsr5ykhl3vvy57@treble>
+ <fe1e0318-9b74-7ae0-07bd-d7a6c908e79a@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191217145620.GA26585@cqw-OptiPlex-7050>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <fe1e0318-9b74-7ae0-07bd-d7a6c908e79a@infradead.org>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/17, chenqiwu wrote:
->
-> But in fact, I think atomic_read()
-> can avoid the racy even if both threads exit in parallel, since it is
-> an atomic operation forever.
+On Fri, Dec 13, 2019 at 11:05:18PM -0800, Randy Dunlap wrote:
+> OK, that fixes most of them, but still leaves these 2:
+> 
+> btrfs006.out:fs/btrfs/extent_io.o: warning: objtool: __set_extent_bit()+0x536: unreachable instruction
 
-Hmm, not sure I understand. atomic_read() is just READ_ONCE(), it can't be
-re-ordered but that is all.
+Hard to read from the assembly what C statement is it referring to. I
+think there are also several functions inlined, I don't see anything
+suspicious inside __set_extent_bit itself.
 
-How can it avoid the race if it is called before atomic_dec_and_test() ?
+> btrfs006.out:fs/btrfs/relocation.o: warning: objtool: add_tree_block()+0x501: unreachable instruction
 
-Again, suppose that we have 2 exiting threads and signal->live == 2. With
-your patch each thread does atomic_read() before atomic_dec_and_test(),
-both threads can observe atomic_read(signal->live) == 2 simply because
-the counter was not decremented yet.
+Probably also heavily inlined, the function has like 50 lines, a few
+non-trivial function calls but the offset in the warning suggests a
+larger size.
 
-Oleg.
+While browsing the callees I noticed that both have in common a function
+that is supposed to print and stop at fatal errors. They're
+extent_io_tree_panic (extent_io.c) and backref_tree_panic
+(relocation.c). Both call btrfs_panic which is a macro:
 
+3239 #define btrfs_panic(fs_info, errno, fmt, args...)                       \
+3240 do {                                                                    \
+3241         __btrfs_panic(fs_info, __func__, __LINE__, errno, fmt, ##args); \
+3242         BUG();                                                          \
+3243 } while (0)
+
+There are no conditionals and BUG has the __noreturn annotation
+(unreachable()) so all is in place and I don't have better ideas what's
+causing the reports.
