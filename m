@@ -2,135 +2,133 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B24C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 17:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C44AC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 17:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 951372465E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 17:07:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576602447;
-	bh=9qLjCTJpYDZjDSgYG+Ze2rFSDFpRuJkwVOsNbCXu0yY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PdX9s269Q7u5tPYfjSLNBUzWXgOZ0UOI3Frs1bmCGhyFnx88mrfi376OujBPID6d5
-	 0KwczeiMDZuBzKOHeeE+rkm5OqbFNqYkaFpDBHmVNxs74xcoo1t/MmIGFKik6Sls2W
-	 kk7/+FvOVvPAwnQ3p6eeIqUItd75MkWWXr9Z9TvQ=
+	by mail.kernel.org (Postfix) with ESMTP id 09B8324655
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 17:08:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727628AbfLQRH0 (ORCPT
+        id S1727804AbfLQRIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 12:07:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41742 "EHLO mail.kernel.org"
+        Tue, 17 Dec 2019 12:08:22 -0500
+Received: from mx2.suse.de ([195.135.220.15]:47194 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726191AbfLQRH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 12:07:26 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10F5D21582;
-        Tue, 17 Dec 2019 17:07:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576602445;
-        bh=9qLjCTJpYDZjDSgYG+Ze2rFSDFpRuJkwVOsNbCXu0yY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MCZA19g8+N5u/xEbIwE1OkPJs7Q9S+e4Y81lid+WvA3+cRX4qe8OuIKisihkv0c/l
-         11VbnaWSg9gj0yX2tA2M/5poVsgWBQNWKvgdJIz/uubigq7HhGPmSVAoAbgku2i5Ye
-         YBVeE6w6e3k1AR2O/IkXLuxvyZNJbHTKwRVO/jMc=
-Date:   Tue, 17 Dec 2019 17:07:19 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, dja@axtens.net,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: Re: READ_ONCE() + STACKPROTECTOR_STRONG == :/ (was Re: [GIT PULL]
- Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops))
-Message-ID: <20191217170719.GA869@willie-the-truck>
-References: <20191212100756.GA11317@willie-the-truck>
- <20191212104610.GW2827@hirez.programming.kicks-ass.net>
- <CAHk-=wjUBsH0BYDBv=q36482G-U7c=9bC89L_BViSciTfb8fhA@mail.gmail.com>
- <20191212180634.GA19020@willie-the-truck>
- <CAHk-=whRxB0adkz+V7SQC8Ac_rr_YfaPY8M2mFDfJP2FFBNz8A@mail.gmail.com>
- <20191212193401.GB19020@willie-the-truck>
- <CAHk-=wiMuHmWzQ7-CRQB6o+SHtA-u-Rp6VZwPcqDbjAaug80rQ@mail.gmail.com>
+        id S1727198AbfLQRIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 12:08:21 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 6D88BACCA;
+        Tue, 17 Dec 2019 17:08:19 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id AA7AEDA791; Tue, 17 Dec 2019 18:08:17 +0100 (CET)
+From:   David Sterba <dsterba@suse.com>
+To:     torvalds@linux-foundation.org
+Cc:     David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Btrfs fixes for 5.5-rc3
+Date:   Tue, 17 Dec 2019 18:08:16 +0100
+Message-Id: <cover.1576601647.git.dsterba@suse.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wiMuHmWzQ7-CRQB6o+SHtA-u-Rp6VZwPcqDbjAaug80rQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 12:49:52PM -0800, Linus Torvalds wrote:
-> On Thu, Dec 12, 2019 at 11:34 AM Will Deacon <will@kernel.org> wrote:
-> >
-> > The root of my concern in all of this, and what started me looking at it in
-> > the first place, is the interaction with 'typeof()'. Inheriting 'volatile'
-> > for a pointer means that local variables in macros declared using typeof()
-> > suddenly start generating *hideous* code, particularly when pointless stack
-> > spills get stackprotector all excited.
-> 
-> Yeah, removing volatile can be a bit annoying.
-> 
-> For the particular case of the bitops, though, it's not an issue.
-> Since you know the type there, you can just cast it.
-> 
-> And if we had the rule that READ_ONCE() was an arithmetic type, you could do
-> 
->     typeof(0+(*p)) __var;
-> 
-> since you might as well get the integer promotion anyway (on the
-> non-volatile result).
-> 
-> But that doesn't work with structures or unions, of course.
-> 
-> I'm not entirely sure we have READ_ONCE() with a struct. I do know we
-> have it with 64-bit entities on 32-bit machines, but that's ok with
-> the "0+" trick.
+Hi,
 
-Other than the two trivial examples Arnd and I spotted, it looks like
-we're in for some fun with the page-table types such as pud_t but that
-/should/ be fixable with enough effort.
+a mix of regression fixes and regular fixes for stable trees. Please
+pull. Thanks.
 
-However, I'm really banging my head against the compiler trying to get
-your trick above to work for pointer types when the pointed-to-type is
-not defined. As a very cut down example (I pulled this back out of the
-preprocessor and cleaned it up a bit):
+Changes:
 
+- fix swapped error messages for qgroup enable/rescan
 
-struct dentry {
-	struct inode *d_inode;
-};
+- fixes for NO_HOLES feature with clone range
 
-static inline struct inode *d_inode_rcu(struct dentry *dentry)
-{
-	return ({
-		typeof(0 + dentry->d_inode) __x = (*(volatile typeof(dentry->d_inode) *)&(dentry->d_inode));
-		(typeof(dentry->d_inode))__x;
-	});
-}
+- fix deadlock between iget/srcu lock/synchronize srcu while freeing an
+  inode
 
+- fix double lock on subvolume cross-rename
 
-Trying to compile this results in:
+- tree log fixes
+  - fix missing data checksums after replaying a log tree
+  - also teach tree-checker about this problem
+  - skip log replay on orphaned roots
 
-  | In function 'd_inode_rcu':
-  | error: invalid use of undefined type 'struct inode'
+- fix maximum devices constraints for RAID1C -3 and -4
 
-whereas it compiles fine if you remove the '0 +' from the first typeof.
+- send: don't print warning on read-only mount regarding orphan cleanup
 
-What am I missing? Perhaps the compiler wants the size information of
-'struct inode' before it will contemplate the arithmetic, but if so then
-I don't think we can use this trick after all. Hmm.
+- error handling fixes
 
-Will
+----------------------------------------------------------------
+The following changes since commit fa17ed069c61286b26382e23b57a62930657b9c1:
+
+  btrfs: drop bdev argument from submit_extent_page (2019-11-18 23:43:58 +0100)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.5-rc2-tag
+
+for you to fetch changes up to fbd542971aa1e9ec33212afe1d9b4f1106cd85a1:
+
+  btrfs: send: remove WARN_ON for readonly mount (2019-12-13 14:10:46 +0100)
+
+----------------------------------------------------------------
+Anand Jain (1):
+      btrfs: send: remove WARN_ON for readonly mount
+
+Andreas Färber (1):
+      btrfs: tree-checker: Fix error format string for size_t
+
+Dan Carpenter (1):
+      btrfs: return error pointer from alloc_test_extent_buffer
+
+David Sterba (1):
+      btrfs: fix devs_max constraints for raid1c3 and raid1c4
+
+Filipe Manana (5):
+      Btrfs: fix cloning range with a hole when using the NO_HOLES feature
+      Btrfs: fix missing data checksums after replaying a log tree
+      Btrfs: make tree checker detect checksum items with overlapping ranges
+      Btrfs: fix removal logic of the tree mod log that leads to use-after-free issues
+      Btrfs: fix hole extent items with a zero size after range cloning
+
+Josef Bacik (7):
+      btrfs: do not call synchronize_srcu() in inode_tree_del
+      btrfs: handle error in btrfs_cache_block_group
+      btrfs: don't double lock the subvol_sem for rename exchange
+      btrfs: abort transaction after failed inode updates in create_subvol
+      btrfs: handle ENOENT in btrfs_uuid_tree_iterate
+      btrfs: skip log replay on orphaned roots
+      btrfs: do not leak reloc root if we fail to read the fs root
+
+Nikolay Borisov (1):
+      btrfs: Fix error messages in qgroup_rescan_init
+
+ fs/btrfs/ctree.c                       |  2 +-
+ fs/btrfs/ctree.h                       |  2 +-
+ fs/btrfs/extent-tree.c                 | 27 ++++++++++++++----
+ fs/btrfs/extent_io.c                   |  6 ++--
+ fs/btrfs/file-item.c                   |  7 +++--
+ fs/btrfs/file.c                        |  4 +--
+ fs/btrfs/inode.c                       | 12 +++-----
+ fs/btrfs/ioctl.c                       | 26 ++++++++---------
+ fs/btrfs/qgroup.c                      |  4 +--
+ fs/btrfs/relocation.c                  |  1 +
+ fs/btrfs/send.c                        |  6 ----
+ fs/btrfs/tests/free-space-tree-tests.c |  4 +--
+ fs/btrfs/tests/qgroup-tests.c          |  4 +--
+ fs/btrfs/tree-checker.c                | 20 +++++++++++--
+ fs/btrfs/tree-log.c                    | 52 ++++++++++++++++++++++++++++++----
+ fs/btrfs/uuid-tree.c                   |  2 ++
+ fs/btrfs/volumes.c                     |  4 +--
+ 17 files changed, 127 insertions(+), 56 deletions(-)
