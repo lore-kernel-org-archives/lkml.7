@@ -2,242 +2,77 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB93C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A8AAC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:33:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0135721D7D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F04A24655
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:33:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576593203;
+	bh=bex6ErfzhcBInBMSGQXwaj+78VMOHN9BNaFtE8Gpn6U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Pm8ac8zVqLBKCg9nX8T0VdsxBHCSQIyVOZZJqd4OSEY2Lx3RlcvXHNlU1xgWHsb8C
+	 ONf08FFQ8R6KTAkoKH4haKiRV9Lf/lCW57gi3y9e9l9RU2H0NI4uCdiq/8bREJUQdb
+	 ZNHAaWkaL2eghJhYmLB1wdki12PH/oW8RDV0he/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729155AbfLQOdH (ORCPT
+        id S1729166AbfLQOdW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:33:07 -0500
-Received: from foss.arm.com ([217.140.110.172]:38998 "EHLO foss.arm.com"
+        Tue, 17 Dec 2019 09:33:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726487AbfLQOdG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:33:06 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C68241FB;
-        Tue, 17 Dec 2019 06:33:05 -0800 (PST)
-Received: from arm.com (e112269-lin.cambridge.arm.com [10.1.196.56])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CA7893F67D;
-        Tue, 17 Dec 2019 06:33:03 -0800 (PST)
-Date:   Tue, 17 Dec 2019 14:33:01 +0000
-From:   Steven Price <steven.price@arm.com>
-To:     "yezengruan@huawei.com" <yezengruan@huawei.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "maz@kernel.org" <maz@kernel.org>,
-        James Morse <James.Morse@arm.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        "julien.thierry.kdev@gmail.com" <julien.thierry.kdev@gmail.com>,
-        Catalin Marinas <Catalin.Marinas@arm.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH 3/5] KVM: arm64: Support pvlock preempted via shared
- structure
-Message-ID: <20191217143301.GC38811@arm.com>
-References: <20191217135549.3240-1-yezengruan@huawei.com>
- <20191217135549.3240-4-yezengruan@huawei.com>
+        id S1726487AbfLQOdW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 09:33:22 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC35421D7D;
+        Tue, 17 Dec 2019 14:33:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576593201;
+        bh=bex6ErfzhcBInBMSGQXwaj+78VMOHN9BNaFtE8Gpn6U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TtAcxE8zkCPpCVEr0noO9pFNKn8zCQUtAW3zw+iSKRiDLmBkvecMIsDZ2QRfjT5vt
+         M0DLRZR4CZDmXkFHzHS1i9QK25mak36/wp/ybYGuhNL56FpLnEYTaPqYEFUbZGqj5Q
+         6plmkf9hq05T2ZIsYeJTI/nC6BUA4fhb1WkiSh/8=
+Date:   Tue, 17 Dec 2019 15:33:19 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Subject: Re: [PATCH 4.14 000/267] 4.14.159-stable review
+Message-ID: <20191217143319.GA3624714@kroah.com>
+References: <20191216174848.701533383@linuxfoundation.org>
+ <20191217090548.GA2801817@kroah.com>
+ <CA+G9fYunRMLr8Fi7S7FTXK1dskE_w10=5XdE7Ew__HDFvHy_2Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191217135549.3240-4-yezengruan@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G9fYunRMLr8Fi7S7FTXK1dskE_w10=5XdE7Ew__HDFvHy_2Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 01:55:47PM +0000, yezengruan@huawei.com wrote:
-> From: Zengruan Ye <yezengruan@huawei.com>
+On Tue, Dec 17, 2019 at 07:58:25PM +0530, Naresh Kamboju wrote:
+> On Tue, 17 Dec 2019 at 14:35, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> > There is a -rc2 out now to resolve some reported issues:
+> >         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.159-rc2.gz
 > 
-> Implement the service call for configuring a shared structure between a
-> vcpu and the hypervisor in which the hypervisor can tell the vcpu is
-> running or not.
-> 
-> The preempted field is zero if 1) some old KVM deos not support this filed.
-> 2) the vcpu is not preempted. Other values means the vcpu has been preempted.
-> 
-> Signed-off-by: Zengruan Ye <yezengruan@huawei.com>
-> ---
->  arch/arm/include/asm/kvm_host.h   | 13 +++++++++++++
->  arch/arm64/include/asm/kvm_host.h | 17 +++++++++++++++++
->  arch/arm64/kvm/Makefile           |  1 +
->  virt/kvm/arm/arm.c                |  8 ++++++++
->  virt/kvm/arm/hypercalls.c         |  4 ++++
->  virt/kvm/arm/pvlock.c             | 21 +++++++++++++++++++++
->  6 files changed, 64 insertions(+)
->  create mode 100644 virt/kvm/arm/pvlock.c
-> 
-> diff --git a/arch/arm/include/asm/kvm_host.h b/arch/arm/include/asm/kvm_host.h
-> index 556cd818eccf..098375f1c89e 100644
-> --- a/arch/arm/include/asm/kvm_host.h
-> +++ b/arch/arm/include/asm/kvm_host.h
-> @@ -356,6 +356,19 @@ static inline bool kvm_arm_is_pvtime_enabled(struct kvm_vcpu_arch *vcpu_arch)
->  	return false;
->  }
->  
-> +static inline void kvm_arm_pvlock_preempted_init(struct kvm_vcpu_arch *vcpu_arch)
-> +{
-> +}
-> +
-> +static inline bool kvm_arm_is_pvlock_preempted_ready(struct kvm_vcpu_arch *vcpu_arch)
-> +{
-> +	return false;
-> +}
-> +
-> +static inline void kvm_update_pvlock_preempted(struct kvm_vcpu *vcpu, u64 preempted)
-> +{
-> +}
-> +
->  void kvm_mmu_wp_memory_region(struct kvm *kvm, int slot);
->  
->  struct kvm_vcpu *kvm_mpidr_to_vcpu(struct kvm *kvm, unsigned long mpidr);
-> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-> index c61260cf63c5..d9b2a21a87ac 100644
-> --- a/arch/arm64/include/asm/kvm_host.h
-> +++ b/arch/arm64/include/asm/kvm_host.h
-> @@ -354,6 +354,11 @@ struct kvm_vcpu_arch {
->  		u64 last_steal;
->  		gpa_t base;
->  	} steal;
-> +
-> +	/* Guest PV lock state */
-> +	struct {
-> +		gpa_t base;
-> +	} pv;
->  };
->  
->  /* Pointer to the vcpu's SVE FFR for sve_{save,load}_state() */
-> @@ -515,6 +520,18 @@ static inline bool kvm_arm_is_pvtime_enabled(struct kvm_vcpu_arch *vcpu_arch)
->  	return (vcpu_arch->steal.base != GPA_INVALID);
->  }
->  
-> +static inline void kvm_arm_pvlock_preempted_init(struct kvm_vcpu_arch *vcpu_arch)
-> +{
-> +	vcpu_arch->pv.base = GPA_INVALID;
-> +}
-> +
-> +static inline bool kvm_arm_is_pvlock_preempted_ready(struct kvm_vcpu_arch *vcpu_arch)
-> +{
-> +	return (vcpu_arch->pv.base != GPA_INVALID);
-> +}
-> +
-> +void kvm_update_pvlock_preempted(struct kvm_vcpu *vcpu, u64 preempted);
-> +
->  void kvm_set_sei_esr(struct kvm_vcpu *vcpu, u64 syndrome);
->  
->  struct kvm_vcpu *kvm_mpidr_to_vcpu(struct kvm *kvm, unsigned long mpidr);
-> diff --git a/arch/arm64/kvm/Makefile b/arch/arm64/kvm/Makefile
-> index 5ffbdc39e780..e4591f56d5f1 100644
-> --- a/arch/arm64/kvm/Makefile
-> +++ b/arch/arm64/kvm/Makefile
-> @@ -15,6 +15,7 @@ kvm-$(CONFIG_KVM_ARM_HOST) += $(KVM)/arm/arm.o $(KVM)/arm/mmu.o $(KVM)/arm/mmio.
->  kvm-$(CONFIG_KVM_ARM_HOST) += $(KVM)/arm/psci.o $(KVM)/arm/perf.o
->  kvm-$(CONFIG_KVM_ARM_HOST) += $(KVM)/arm/hypercalls.o
->  kvm-$(CONFIG_KVM_ARM_HOST) += $(KVM)/arm/pvtime.o
-> +kvm-$(CONFIG_KVM_ARM_HOST) += $(KVM)/arm/pvlock.o
->  
->  kvm-$(CONFIG_KVM_ARM_HOST) += inject_fault.o regmap.o va_layout.o
->  kvm-$(CONFIG_KVM_ARM_HOST) += hyp.o hyp-init.o handle_exit.o
-> diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
-> index 12e0280291ce..c562f62fdd45 100644
-> --- a/virt/kvm/arm/arm.c
-> +++ b/virt/kvm/arm/arm.c
-> @@ -383,6 +383,8 @@ int kvm_arch_vcpu_init(struct kvm_vcpu *vcpu)
->  
->  	kvm_arm_pvtime_vcpu_init(&vcpu->arch);
->  
-> +	kvm_arm_pvlock_preempted_init(&vcpu->arch);
-> +
->  	return kvm_vgic_vcpu_init(vcpu);
->  }
->  
-> @@ -421,6 +423,9 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
->  		vcpu_set_wfx_traps(vcpu);
->  
->  	vcpu_ptrauth_setup_lazy(vcpu);
-> +
-> +	if (kvm_arm_is_pvlock_preempted_ready(&vcpu->arch))
-> +		kvm_update_pvlock_preempted(vcpu, 0);
->  }
->  
->  void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
-> @@ -434,6 +439,9 @@ void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
->  	vcpu->cpu = -1;
->  
->  	kvm_arm_set_running_vcpu(NULL);
-> +
-> +	if (kvm_arm_is_pvlock_preempted_ready(&vcpu->arch))
-> +		kvm_update_pvlock_preempted(vcpu, 1);
->  }
->  
->  static void vcpu_power_off(struct kvm_vcpu *vcpu)
-> diff --git a/virt/kvm/arm/hypercalls.c b/virt/kvm/arm/hypercalls.c
-> index ff13871fd85a..5964982ccd05 100644
-> --- a/virt/kvm/arm/hypercalls.c
-> +++ b/virt/kvm/arm/hypercalls.c
-> @@ -65,6 +65,10 @@ int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)
->  		if (gpa != GPA_INVALID)
->  			val = gpa;
->  		break;
-> +	case ARM_SMCCC_HV_PV_LOCK_PREEMPTED:
-> +		vcpu->arch.pv.base = smccc_get_arg1(vcpu);
-> +		val = SMCCC_RET_SUCCESS;
+> Results from Linaro’s test farm.
+> No regressions on arm64, arm, x86_64, and i386.
 
-It would be useful to at least do some basic validation that the address
-passed in is valid. Debugging problems with this interface will be hard
-if it always returns success even if the address cannot be used.
+Wonderful, thanks for the quick turn-around.
 
-The second patch also states that the structure should be 64 byte
-aligned, but there's nothing here to enforce that.
-
-Steve
-
-> +		break;
->  	default:
->  		return kvm_psci_call(vcpu);
->  	}
-> diff --git a/virt/kvm/arm/pvlock.c b/virt/kvm/arm/pvlock.c
-> new file mode 100644
-> index 000000000000..c3464958b0f5
-> --- /dev/null
-> +++ b/virt/kvm/arm/pvlock.c
-> @@ -0,0 +1,21 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright(c) 2019 Huawei Technologies Co., Ltd
-> + * Author: Zengruan Ye <yezengruan@huawei.com>
-> + */
-> +
-> +#include <linux/arm-smccc.h>
-> +#include <linux/kvm_host.h>
-> +
-> +#include <kvm/arm_hypercalls.h>
-> +
-> +void kvm_update_pvlock_preempted(struct kvm_vcpu *vcpu, u64 preempted)
-> +{
-> +	u64 preempted_le;
-> +	u64 base;
-> +	struct kvm *kvm = vcpu->kvm;
-> +
-> +	base = vcpu->arch.pv.base;
-> +	preempted_le = cpu_to_le64(preempted);
-> +	kvm_put_guest(kvm, base, preempted_le, u64);
-> +}
-> -- 
-> 2.19.1
-> 
-> 
+greg k-h
