@@ -2,266 +2,256 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D61FC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 041B7C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68E89207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C209B206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:29:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FgLEfejj"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="tc/PfHiq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727262AbfLQJZq (ORCPT
+        id S1726884AbfLQJ3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 04:25:46 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:37267 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727189AbfLQJZp (ORCPT
+        Tue, 17 Dec 2019 04:29:43 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46214 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbfLQJ3m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 04:25:45 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576574744; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=SznHY6tqtOpVDZ62HlJkzg75oAx7s1L7CUOTYTLlJEQ=; b=FgLEfejjqYe8EraDIGx0odPnQXsBM3elCc0Od7TLe2Ue+yw+MJyottL6ugnTBMHrqbY63A/V
- F2WBcgy9meZog3L6moccMCgAi9fk6qeVtjiPWPM3OqaWW2CxRygTQd+wp+YcALno6+mqgeE+
- yh1Vr0SIDtcftZBV71Z23D33rS4=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5df89f18.7fa5a19b3490-smtp-out-n02;
- Tue, 17 Dec 2019 09:25:44 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DA8B1C433A2; Tue, 17 Dec 2019 09:25:42 +0000 (UTC)
-Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8DC88C43383;
-        Tue, 17 Dec 2019 09:25:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8DC88C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     bjorn.andersson@linaro.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH] arm64: dts: qcom: sm8150: Add ADSP, CDSP, MPSS and SLPI remoteprocs
-Date:   Tue, 17 Dec 2019 14:55:03 +0530
-Message-Id: <20191217092503.10699-1-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.22.1
+        Tue, 17 Dec 2019 04:29:42 -0500
+Received: by mail-wr1-f65.google.com with SMTP id z7so10429061wrl.13
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 01:29:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=alzctH88nkGm93shdXD815TJhUtkbcFmRm1xB1d3sFA=;
+        b=tc/PfHiqx1g9OhIykMghdMOuoCxnyJdDyPEmSV0knr75jcrkVRJZfKmHAYXm0FBKDs
+         UYcH2/HU30rCIORaulUyRPU2g20qK1XerGUoLQvh5R/AVgf6VVEscmumSNrBSMV2Qa3h
+         ra0DnMItw09nmDb4xque4pdDav7HoQeaCKg7vpm/fsrICZonkm40JYK5j0VJ6ROlMzTD
+         6ow4dYP5+wQH/Q3bqg5XlisumxdsJXmQU5VlttKhl7EA0dbEVuzAeDyGnQVIBHfvwqhG
+         OhKCA5abYNyJxzr33sL7Z2jL1BOIUcPqfFWI3maLedUfMIYXp9Vi1jawxUDhzqA0CaKQ
+         +riw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version:content-transfer-encoding;
+        bh=alzctH88nkGm93shdXD815TJhUtkbcFmRm1xB1d3sFA=;
+        b=a/iVwPfz8UF+mL1wXDVuDPhZA2Gy8gibDV/B0N4PM0UaTdKRuc6D2yO9PbsCQX/KIi
+         406md1XMYRemTtavbAT+kkeGS92Ltsam3KTdueRoiTEAzURWMGf9QKPwQ1gzc0azWYXV
+         3+7LqIa0dcxTvUMk8CwyEfuWwCs6wCB74RKcxnZEoHswobqOoz4EyeKJ1VsolMGIVdTb
+         vKVB475Av4HbHjVR1WYo6Sye0Zr1MFd3Gl/ctw6AYyJhw2BRPunrbzv2shlFftRHpPXM
+         INKpI1WFaFdwYAOa8rRsxZ2NEw5hTzTgYA/de+TYUr6Q4vvm4hq+sBxEugERHDAnjnpy
+         cv6g==
+X-Gm-Message-State: APjAAAWnsnqOqbOBsRsgPlGqzkzJFXqrCwOvP2rMX0BqSwh6wBhigTk3
+        YF9INwgrSZW2S0AvHI6t5eD/zw==
+X-Google-Smtp-Source: APXvYqy/DS/azJ653mUdjjacLdbuxYCf410YHUG5mlvieCYQz0Ahh9MbX5t88z0FLKKawrQe+Eanww==
+X-Received: by 2002:a5d:6349:: with SMTP id b9mr37238202wrw.346.1576574979348;
+        Tue, 17 Dec 2019 01:29:39 -0800 (PST)
+Received: from localhost (uluru.liltaz.com. [163.172.81.188])
+        by smtp.gmail.com with ESMTPSA id q8sm2258746wmq.3.2019.12.17.01.29.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 01:29:38 -0800 (PST)
+References: <20191206074052.15557-1-jian.hu@amlogic.com> <20191206074052.15557-3-jian.hu@amlogic.com> <1j8snhluhg.fsf@starbuckisacylon.baylibre.com> <741284be-2ae8-1102-22bc-c510e822c883@amlogic.com>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Jian Hu <jian.hu@amlogic.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
+        "Martin Blumenstingl" <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Chandle Zou <chandle.zou@amlogic.com>,
+        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 2/6] clk: meson: add support for A1 PLL clock ops
+In-reply-to: <741284be-2ae8-1102-22bc-c510e822c883@amlogic.com>
+Date:   Tue, 17 Dec 2019 10:29:37 +0100
+Message-ID: <1jk16vb8qm.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add ADSP, CDSP, MPSS and SLPI device tree nodes for SM8150 SoC.
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sm8150-mtp.dts |  12 +++
- arch/arm64/boot/dts/qcom/sm8150.dtsi    | 138 ++++++++++++++++++++++++
- 2 files changed, 150 insertions(+)
+On Tue 17 Dec 2019 at 09:41, Jian Hu <jian.hu@amlogic.com> wrote:
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
-index d6837d7fa2f18..c00dd3d2b6cc4 100644
---- a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
-@@ -366,6 +366,18 @@
- 	};
- };
- 
-+&remoteproc_adsp {
-+	status = "okay";
-+};
-+
-+&remoteproc_cdsp {
-+	status = "okay";
-+};
-+
-+&remoteproc_slpi {
-+	status = "okay";
-+};
-+
- &tlmm {
- 	gpio-reserved-ranges = <0 4>, <126 4>;
- };
-diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-index 06f04e4c3a7cf..694be3c001a68 100644
---- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-@@ -5,6 +5,7 @@
-  */
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/power/qcom-aoss-qmp.h>
- #include <dt-bindings/power/qcom-rpmpd.h>
- #include <dt-bindings/soc/qcom,rpmh-rsc.h>
- #include <dt-bindings/clock/qcom,rpmh.h>
-@@ -494,6 +495,41 @@
- 			reg = <0x0 0x01f40000 0x0 0x40000>;
- 		};
- 
-+		remoteproc_slpi: remoteproc@2400000 {
-+			compatible = "qcom,sm8150-slpi-pas";
-+			reg = <0x0 0x02400000 0x0 0x4040>;
-+
-+			interrupts-extended = <&intc GIC_SPI 494 IRQ_TYPE_EDGE_RISING>,
-+					      <&slpi_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-+					      <&slpi_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
-+					      <&slpi_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
-+					      <&slpi_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "wdog", "fatal", "ready",
-+					  "handover", "stop-ack";
-+
-+			clocks = <&rpmhcc RPMH_CXO_CLK>;
-+			clock-names = "xo";
-+
-+			power-domains = <&aoss_qmp AOSS_QMP_LS_SLPI>,
-+					<&rpmhpd SM8150_LCX>,
-+					<&rpmhpd SM8150_LMX>;
-+			power-domain-names = "load_state", "lcx", "lmx";
-+
-+			memory-region = <&slpi_mem>;
-+
-+			qcom,smem-states = <&slpi_smp2p_out 0>;
-+			qcom,smem-state-names = "stop";
-+
-+			status = "disabled";
-+
-+			glink-edge {
-+				interrupts = <GIC_SPI 170 IRQ_TYPE_EDGE_RISING>;
-+				label = "dsps";
-+				qcom,remote-pid = <3>;
-+				mboxes = <&apss_shared 24>;
-+			};
-+		};
-+
- 		tlmm: pinctrl@3100000 {
- 			compatible = "qcom,sm8150-pinctrl";
- 			reg = <0x0 0x03100000 0x0 0x300000>,
-@@ -509,6 +545,74 @@
- 			#interrupt-cells = <2>;
- 		};
- 
-+		remoteproc_mpss: remoteproc@4080000 {
-+			compatible = "qcom,sm8150-mpss-pas";
-+			reg = <0x0 0x04080000 0x0 0x4040>;
-+
-+			interrupts-extended = <&intc GIC_SPI 266 IRQ_TYPE_EDGE_RISING>,
-+					      <&modem_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-+					      <&modem_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
-+					      <&modem_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
-+					      <&modem_smp2p_in 3 IRQ_TYPE_EDGE_RISING>,
-+					      <&modem_smp2p_in 7 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "wdog", "fatal", "ready", "handover",
-+					  "stop-ack", "shutdown-ack";
-+
-+			clocks = <&rpmhcc RPMH_CXO_CLK>;
-+			clock-names = "xo";
-+
-+			power-domains = <&aoss_qmp AOSS_QMP_LS_MODEM>,
-+					<&rpmhpd SM8150_CX>,
-+					<&rpmhpd SM8150_MSS>;
-+			power-domain-names = "load_state", "cx", "mss";
-+
-+			memory-region = <&mpss_mem>;
-+
-+			qcom,smem-states = <&modem_smp2p_out 0>;
-+			qcom,smem-state-names = "stop";
-+
-+			glink-edge {
-+				interrupts = <GIC_SPI 449 IRQ_TYPE_EDGE_RISING>;
-+				label = "modem";
-+				qcom,remote-pid = <1>;
-+				mboxes = <&apss_shared 12>;
-+			};
-+		};
-+
-+		remoteproc_cdsp: remoteproc@8300000 {
-+			compatible = "qcom,sm8150-cdsp-pas";
-+			reg = <0x0 0x08300000 0x0 0x4040>;
-+
-+			interrupts-extended = <&intc GIC_SPI 578 IRQ_TYPE_EDGE_RISING>,
-+					      <&cdsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-+					      <&cdsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
-+					      <&cdsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
-+					      <&cdsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "wdog", "fatal", "ready",
-+					  "handover", "stop-ack";
-+
-+			clocks = <&rpmhcc RPMH_CXO_CLK>;
-+			clock-names = "xo";
-+
-+			power-domains = <&aoss_qmp AOSS_QMP_LS_CDSP>,
-+					<&rpmhpd SM8150_CX>;
-+			power-domain-names = "load_state", "cx";
-+
-+			memory-region = <&cdsp_mem>;
-+
-+			qcom,smem-states = <&cdsp_smp2p_out 0>;
-+			qcom,smem-state-names = "stop";
-+
-+			status = "disabled";
-+
-+			glink-edge {
-+				interrupts = <GIC_SPI 574 IRQ_TYPE_EDGE_RISING>;
-+				label = "cdsp";
-+				qcom,remote-pid = <5>;
-+				mboxes = <&apss_shared 4>;
-+			};
-+		};
-+
- 		aoss_qmp: power-controller@c300000 {
- 			compatible = "qcom,sm8150-aoss-qmp";
- 			reg = <0x0 0x0c300000 0x0 0x100000>;
-@@ -538,6 +642,40 @@
- 			cell-index = <0>;
- 		};
- 
-+		remoteproc_adsp: remoteproc@17300000 {
-+			compatible = "qcom,sm8150-adsp-pas";
-+			reg = <0x0 0x17300000 0x0 0x4040>;
-+
-+			interrupts-extended = <&intc GIC_SPI 162 IRQ_TYPE_EDGE_RISING>,
-+					      <&adsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-+					      <&adsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
-+					      <&adsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
-+					      <&adsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "wdog", "fatal", "ready",
-+					  "handover", "stop-ack";
-+
-+			clocks = <&rpmhcc RPMH_CXO_CLK>;
-+			clock-names = "xo";
-+
-+			power-domains = <&aoss_qmp AOSS_QMP_LS_LPASS>,
-+					<&rpmhpd SM8150_CX>;
-+			power-domain-names = "load_state", "cx";
-+
-+			memory-region = <&adsp_mem>;
-+
-+			qcom,smem-states = <&adsp_smp2p_out 0>;
-+			qcom,smem-state-names = "stop";
-+
-+			status = "disabled";
-+
-+			glink-edge {
-+				interrupts = <GIC_SPI 156 IRQ_TYPE_EDGE_RISING>;
-+				label = "lpass";
-+				qcom,remote-pid = <2>;
-+				mboxes = <&apss_shared 8>;
-+			};
-+		};
-+
- 		intc: interrupt-controller@17a00000 {
- 			compatible = "arm,gic-v3";
- 			interrupt-controller;
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> On 2019/12/12 18:16, Jerome Brunet wrote:
+>>
+>> On Fri 06 Dec 2019 at 08:40, Jian Hu <jian.hu@amlogic.com> wrote:
+>>
+>>> The A1 PLL design is different with previous SoCs. The PLL
+>>> internal analog modules Power-on sequence is different
+>>> with previous, and thus requires a strict register sequence to
+>>> enable the PLL.
+>>>
+>>> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+>>> ---
+>>>   drivers/clk/meson/clk-pll.c | 21 +++++++++++++++++++++
+>>>   drivers/clk/meson/clk-pll.h |  1 +
+>>>   drivers/clk/meson/parm.h    |  1 +
+>>>   3 files changed, 23 insertions(+)
+>>>
+>>> diff --git a/drivers/clk/meson/clk-pll.c b/drivers/clk/meson/clk-pll.c
+>>> index ddb1e5634739..4aff31a51589 100644
+>>> --- a/drivers/clk/meson/clk-pll.c
+>>> +++ b/drivers/clk/meson/clk-pll.c
+>>> @@ -318,6 +318,23 @@ static int meson_clk_pll_enable(struct clk_hw *hw)
+>>>   	struct clk_regmap *clk =3D to_clk_regmap(hw);
+>>>   	struct meson_clk_pll_data *pll =3D meson_clk_pll_data(clk);
+>>>   +	/*
+>>> +	 * The A1 design is different with previous SoCs.The PLL
+>>> +	 * internal analog modules Power-on sequence is different with
+>>> +	 * previous, and thus requires a strict register sequence to
+>>> +	 * enable the PLL.
+>>
+>> The code does something more, not completly different. This comment is
+>> not aligned with what the code does
+> ok, I will correct the comment.
+>>
+>>> +	 */
+>>> +	if (MESON_PARM_APPLICABLE(&pll->current_en)) {
+>>> +		/* Enable the pll */
+>>> +		meson_parm_write(clk->map, &pll->en, 1);
+>>> +		udelay(10);
+>>> +		/* Enable the pll self-adaption module current */
+>>> +		meson_parm_write(clk->map, &pll->current_en, 1);
+>>> +		udelay(40);
+>>> +		meson_parm_write(clk->map, &pll->rst, 1);
+>>> +		meson_parm_write(clk->map, &pll->rst, 0);
+>>
+>> Here you enable the PLL and self adaptation module then reset the PLL.
+>> However:
+>> #1 when you enter this function, the PLL should already by in reset
+>> and disabled
+>> #2 the code after that will reset the PLL again
+> For A1 PLLs, There is no reset bit, It will not reset the PLL.
+> And in V2, you mentioned PARM 'rst' can be used for one toggling, And 'rs=
+t'
+> is used for BIT(6) in CTRL2.
+>
+
+oh my ! What is it then ? Why do you need to toggle it ? What does is do ?
+
+> Quote V2 the HIFI PLL init_regs definition=EF=BC=9A
+>
+>
+> +static const struct reg_sequence a1_hifi_init_regs[] =3D {
+> +	{ .reg =3D ANACTRL_HIFIPLL_CTRL1, .def =3D 0x01800000 },
+> +	{ .reg =3D ANACTRL_HIFIPLL_CTRL2, .def =3D 0x00001100 },
+> +	{ .reg =3D ANACTRL_HIFIPLL_CTRL3, .def =3D 0x100a1100 },
+> +	{ .reg =3D ANACTRL_HIFIPLL_CTRL4, .def =3D 0x00302000 },
+> +	{ .reg =3D ANACTRL_HIFIPLL_CTRL0, .def =3D 0x01f18440 },
+> +	{ .reg =3D ANACTRL_HIFIPLL_CTRL0, .def =3D 0x11f18440, .delay_us =3D 10=
+ },
+> +	{ .reg =3D ANACTRL_HIFIPLL_CTRL0, .def =3D 0x15f18440, .delay_us =3D 40=
+ },
+> +	{ .reg =3D ANACTRL_HIFIPLL_CTRL2, .def =3D 0x00001140 },
+> +	{ .reg =3D ANACTRL_HIFIPLL_CTRL2, .def =3D 0x00001100 },
+> +};
+>
+> So maybe another new PARM should be defined to avoid the ambiguity.
+> What do you think about it?
+
+This is not the point of my comment Jian !
+
+I'm assuming here that you have tested your v4 before sending and that
+it work (hopefully)
+
+The fact is that with this code, when disabled the bit behind rst
+(whatever it is) is set. So when you get to enable the bit is already set.
+The code you sent does the same as the snip I gave you in the reply.
+
+Now, if your PLL is THAT different, maybe it would be best if you could
+clearly explain how it works, what bit should be set and why. Then we
+will be able to figure out how the driver has to be restructured.
+
+>
+>>
+>> So if what you submited works, inserting the following should accomplish
+>> the same thing:
+>>
+>> ---8<---
+>> diff --git a/drivers/clk/meson/clk-pll.c b/drivers/clk/meson/clk-pll.c
+>> index 489092dde3a6..9b38df0a7682 100644
+>> --- a/drivers/clk/meson/clk-pll.c
+>> +++ b/drivers/clk/meson/clk-pll.c
+>> @@ -330,6 +330,13 @@ static int meson_clk_pll_enable(struct clk_hw *hw)
+>>          /* Enable the pll */
+>>          meson_parm_write(clk->map, &pll->en, 1);
+>>
+>> +       if (MESON_PARM_APPLICABLE(&pll->current_en)) {
+>> +               udelay(10);
+>> +               /* Enable the pll self-adaption module current */
+>> +               meson_parm_write(clk->map, &pll->current_en, 1);
+>> +               udelay(40);
+>> +       }
+>> +
+>>          /* Take the pll out reset */
+>>          meson_parm_write(clk->map, &pll->rst, 0);
+>> --->8---
+>>
+>>
+>>
+>>
+>>> +	}
+>>> +
+>>>   	/* do nothing if the PLL is already enabled */
+>>>   	if (clk_hw_is_enabled(hw))
+>>>   		return 0;
+>>
+>> In any case, nothing should be done on the clock before this check
+>> otherwise you might just break the clock
+>>
+> OK, I will put the enabled check ahead.
+>>> @@ -347,6 +364,10 @@ static void meson_clk_pll_disable(struct clk_hw *h=
+w)
+>>>     	/* Disable the pll */
+>>>   	meson_parm_write(clk->map, &pll->en, 0);
+>>> +
+>>> +	/* Disable PLL internal self-adaption module current */
+>>> +	if (MESON_PARM_APPLICABLE(&pll->current_en))
+>>> +		meson_parm_write(clk->map, &pll->current_en, 0);
+>>>   }
+>>>     static int meson_clk_pll_set_rate(struct clk_hw *hw, unsigned long
+>>> rate,
+>>> diff --git a/drivers/clk/meson/clk-pll.h b/drivers/clk/meson/clk-pll.h
+>>> index 367efd0f6410..30f039242a65 100644
+>>> --- a/drivers/clk/meson/clk-pll.h
+>>> +++ b/drivers/clk/meson/clk-pll.h
+>>> @@ -36,6 +36,7 @@ struct meson_clk_pll_data {
+>>>   	struct parm frac;
+>>>   	struct parm l;
+>>>   	struct parm rst;
+>>> +	struct parm current_en;
+>>>   	const struct reg_sequence *init_regs;
+>>>   	unsigned int init_count;
+>>>   	const struct pll_params_table *table;
+>>> diff --git a/drivers/clk/meson/parm.h b/drivers/clk/meson/parm.h
+>>> index 3c9ef1b505ce..c53fb26577e3 100644
+>>> --- a/drivers/clk/meson/parm.h
+>>> +++ b/drivers/clk/meson/parm.h
+>>> @@ -20,6 +20,7 @@
+>>>   	(((reg) & CLRPMASK(width, shift)) | ((val) << (shift)))
+>>>     #define MESON_PARM_APPLICABLE(p)		(!!((p)->width))
+>>> +#define MESON_PARM_CURRENT(p)			(!!((p)->width))
+>>
+>> Why do we need that ?
+> OK, I will remove it ,and use 'MESON_PARM_APPLICABLE' instead
+>>
+>>>     struct parm {
+>>>   	u16	reg_off;
+>>
+>> .
+>>
+
