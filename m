@@ -2,125 +2,139 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E39AC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5930BC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BA8124680
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:19:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F24920733
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:20:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576606843;
+	bh=R7X+VUc54FRJM8mODYV5OWQAzW0djewmzAEIK4csmKc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EufHforMiMICZXXBWNNLLCHMW97MTr/rMsv2OxUNlzWz6RKVumneeEQ/MKN77FWEo
+	 LxBHoPqbtqHt30V3SBcwXV5eIGT1Za0hPV60iCO9Jj3CLut5Yry6iy3nms3Sjt3tvj
+	 g4fqv/SIi+T44+YMwuoAngutaIIN4HEZyzlxBYX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727756AbfLQSTy (ORCPT
+        id S1727802AbfLQSUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 13:19:54 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37952 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbfLQSTy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 13:19:54 -0500
-Received: by mail-pf1-f194.google.com with SMTP id x185so7993863pfc.5;
-        Tue, 17 Dec 2019 10:19:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6YNl0Yd8NVMwMJOCBya0bHRM93tJ7VmBB94v+InASf4=;
-        b=afuJ6vzXPSDkk0ySgCDT3GDaILuoE6AhEXM6FHyP0DcR4JC0mbsv4+DhNIv4mKLqBx
-         45mXRHn3AgmcfRHOrqqLSWpbiQPN4Xz8kwzOQADjP3vk3xy6RwLhhTFAo5hUDXgEIcTg
-         cGrcH6/RAJimDlfYZtRRiSZtfbquQfbD8XY6U/2nEN+zwnERn+DdvftD1C/VN1rdUPuZ
-         Bz3qUR9/U0XPc+5TGLLerFI6RYHbFbzfIU7sfknc4u+5VOvsODi5PY0o9nYUHCJ6fsUv
-         3A/GbUNJAt8Noq/LAjuJAn/7j+5ercAzSYVojxwr3s9zAtRLEvH80YCMQru8P/zMtSsT
-         8Aeg==
-X-Gm-Message-State: APjAAAXAWtcDl/ZPznGnobJW+5Kl/J3s2hHIhX5TmWEBx7Iur7LkLM0P
-        w+ayZlLx2bGsRoD7/ezzstG1wnjxq2s=
-X-Google-Smtp-Source: APXvYqwI5IyuEhS/9/hIW8BOOmbJbuuAiyqQJ1TOHcjSjQ4+aT28bwP2qvMM4+/VtdUCN0eZu/t/yw==
-X-Received: by 2002:a63:d358:: with SMTP id u24mr26881689pgi.218.1576606792841;
-        Tue, 17 Dec 2019 10:19:52 -0800 (PST)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id x8sm2257286pfd.76.2019.12.17.10.19.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Dec 2019 10:19:51 -0800 (PST)
-Subject: Re: [PATCH v2 2/3] scsi: ufs: Modulize ufs-bsg
-To:     cang@codeaurora.org
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Evan Green <evgreen@chromium.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        open list <linux-kernel@vger.kernel.org>
-References: <1576054123-16417-1-git-send-email-cang@codeaurora.org>
- <0101016ef425ef65-5c4508cc-5e76-4107-bb27-270f66acaa9a-000000@us-west-2.amazonses.com>
- <20191212045357.GA415177@yoga>
- <0101016ef8b2e2f8-72260b08-e6ad-42fc-bd4b-4a0a72c5c9b3-000000@us-west-2.amazonses.com>
- <20191212063703.GC415177@yoga> <5691bfa1-42e5-3c5f-2497-590bcc0cb2b1@acm.org>
- <926dd55d8d0dc762b1f6461495fc747a@codeaurora.org>
- <62933901-fcdf-b5ae-431d-e1fbfc897128@acm.org>
- <b3fee6ea02c4c3c46eeba81b0bdcf7c4@codeaurora.org>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <f6e458e2-5be6-0bc0-a612-4a8bf9aae8bd@acm.org>
-Date:   Tue, 17 Dec 2019 10:19:50 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 17 Dec 2019 13:20:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56134 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726191AbfLQSUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 13:20:41 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58267206D7;
+        Tue, 17 Dec 2019 18:20:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576606840;
+        bh=R7X+VUc54FRJM8mODYV5OWQAzW0djewmzAEIK4csmKc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eG0W1wu0zdM4xxKifZJXzioeiaxkB1ibqklJyy91q5gqIKPkNuxIwZkOuK29BnIZh
+         7KeGxZQabmchNJh5cCxH6GyziI7A9YUhebBiHWXAwfsAwWUvf5h57pU4wlZFrtadr1
+         KMEg5WzOW9WpY+tuptiNClHekvcV/3XfNZni+/8Q=
+Date:   Tue, 17 Dec 2019 19:20:38 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Pavel Machek <pavel@ucw.cz>,
+        Dan Murphy <dmurphy@ti.com>, Jiri Slaby <jslaby@suse.com>,
+        kernel@pengutronix.de, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] tty: rename tty_kopen() and add new function
+ tty_kopen_shared()
+Message-ID: <20191217182038.GA3853604@kroah.com>
+References: <20191217165816.19324-1-u.kleine-koenig@pengutronix.de>
+ <20191217165816.19324-2-u.kleine-koenig@pengutronix.de>
+ <c83b364b-3494-cf3d-0429-61ec3b502be0@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <b3fee6ea02c4c3c46eeba81b0bdcf7c4@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c83b364b-3494-cf3d-0429-61ec3b502be0@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/17/19 12:56 AM, cang@codeaurora.org wrote:
-> Even in the current ufs_bsg.c, it creates two devices, one is ufs-bsg,
-> one is the char dev node under /dev/bsg. Why this becomes a problem
-> after make it a module?
+On Tue, Dec 17, 2019 at 07:08:47PM +0100, Jacek Anaszewski wrote:
+> Hi Uwe,
 > 
-> I took a look into the pci_driver, it is no different than making ufs-bsg
-> a plain device. The only special place about pci_driver is that it has its
-> own probe() and remove(), and the probe() in its bus_type calls the
-> probe() in pci_driver. Meaning the bus->probe() is an intermediate call
-> used to pass whatever needed by pci_driver->probe().
+> I wanted to test the set but unfortunately this
+> patch does not apply. See below for the apparent reason.
 > 
-> Of course we can also do this, but isn't it too much for ufs-bsg?
-> For our case, calling set_dev_drvdata(bsg_dev, hba) to pass hba to
-> ufs_bsg.c would be enough.
+> On 12/17/19 5:58 PM, Uwe Kleine-König wrote:
+> > Introduce a new function tty_kopen_shared() that yields a struct
+> > tty_struct. The semantic difference to tty_kopen() is that the tty is
+> > expected to be used already. So rename tty_kopen() to
+> > tty_kopen_exclusive() for clearness, adapt the single user and put the
+> > common code in a new static helper function.
+> > 
+> > tty_kopen_shared is to be used to implement an LED trigger for tty
+> > devices in one of the next patches.
+> > 
+> > Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > ---
+> >  drivers/staging/speakup/spk_ttyio.c |  2 +-
+> >  drivers/tty/tty_io.c                | 58 ++++++++++++++++++++---------
+> >  include/linux/tty.h                 |  5 ++-
+> >  3 files changed, 44 insertions(+), 21 deletions(-)
+> > 
+> > diff --git a/drivers/staging/speakup/spk_ttyio.c b/drivers/staging/speakup/spk_ttyio.c
+> > index 5a9eff08cb96..e9db06eae875 100644
+> > --- a/drivers/staging/speakup/spk_ttyio.c
+> > +++ b/drivers/staging/speakup/spk_ttyio.c
+> > @@ -147,7 +147,7 @@ static int spk_ttyio_initialise_ldisc(struct spk_synth *synth)
+> >  	if (ret)
+> >  		return ret;
+> >  
+> > -	tty = tty_kopen(dev);
+> > +	tty = tty_kopen_exclusive(dev);
+> >  	if (IS_ERR(tty))
+> >  		return PTR_ERR(tty);
+> >  
+> > diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
+> > index a1453fe10862..b718666ce73c 100644
+> > --- a/drivers/tty/tty_io.c
+> > +++ b/drivers/tty/tty_io.c
+> > @@ -1875,22 +1875,7 @@ static struct tty_driver *tty_lookup_driver(dev_t device, struct file *filp,
+> >  	return driver;
+> >  }
+> >  
+> > -/**
+> > - *	tty_kopen	-	open a tty device for kernel
+> > - *	@device: dev_t of device to open
+> > - *
+> > - *	Opens tty exclusively for kernel. Performs the driver lookup,
+> > - *	makes sure it's not already opened and performs the first-time
+> > - *	tty initialization.
+> > - *
+> > - *	Returns the locked initialized &tty_struct
+> > - *
+> > - *	Claims the global tty_mutex to serialize:
+> > - *	  - concurrent first-time tty initialization
+> > - *	  - concurrent tty driver removal w/ lookup
+> > - *	  - concurrent tty removal from driver table
+> > - */
+> > -struct tty_struct *tty_kopen(dev_t device)
+> > +static struct tty_struct *tty_kopen(dev_t device, int shared)
+> >  {
+> >  	struct tty_struct *tty;
+> >  	struct tty_driver *driver;
 > 
-> If you take a look at the V3 patch, the change makes the ufs_bsg.c
-> much conciser. platform_device_register_data() does everything for us,
-> initialize the device, set device name, provide the match func,
-> bus type and release func.
+> In mainline, even in v5.5-rc2 we have here NULL assignment:
 > 
-> Since ufs-bsg is somewhat not a platform device, we can still add it
-> as a plain device, just need a few more lines to get it initialized.
-> This allows us leverage kernel's device driver model. Just like Greg
-> commented, we don't need to re-implement the mechanism again.
+> struct tty_driver *driver = NULL;
 
-Hi Can,
+This is based on a patch that is already in my tty-testing tree and that
+was posted earlier.  It should show up in linux-next in a day or so.
 
-Since ufs-bsg is not a platform device I think it would be wrong to 
-model ufs-bsg devices as platform devices.
+thanks,
 
-Please have a look at the bus_register() and bus_unregister() functions 
-as Greg KH asked. Using the bus abstraction is not that hard. An example 
-is e.g. available in the scsi_debug driver, namely the pseudo_lld_bus.
-
-Thanks,
-
-Bart.
+greg k-h
