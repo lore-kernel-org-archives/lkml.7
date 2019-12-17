@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B24C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23400C2D0C5
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54BA3206E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:14:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9B56206E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:14:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576556093;
-	bh=gL+n45Y8J7nZzArPZtwslrhpL2MpoxSfqyZuKjhFUYw=;
+	s=default; t=1576556095;
+	bh=cOk6IIlH6PebtbSxCJ8oriLNKUaqEMp/IBEKTp999QU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TAaI7gFz6MH1oMoZXLSscgQOD3Ts2rwZCdk4vg+4uBkkFwWnntx+V/bDYrZw5d+z/
-	 WtLVPkjdUe3CJS6YgrYr178T1msWoemvPMVWgnZk/SCdfvJ9Z4KdK1FweZiHnTxLdl
-	 AZRPlGV2wYwEgbDZupmO8pw1Ebi3xxt/T3DGgdD8=
+	b=hi58dsoSd36DqUZc/Z8wK0gsoQZ/rd6ZuD9k+/jl+IpxRwIDQNhrPu8PemanaMFeN
+	 Wu/Iuz9xzZrRArAaCyhSgTEAJalNEjOQWBxp0KXTm1A1j4SrQvYSJyc1BvFEwNigl8
+	 I5initAI8gHkBPDd68onMdt+Bn7D9bU1l9jowgtE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727729AbfLQEOw (ORCPT
+        id S1727751AbfLQEOy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 23:14:52 -0500
-Received: from conuserg-12.nifty.com ([210.131.2.79]:49410 "EHLO
+        Mon, 16 Dec 2019 23:14:54 -0500
+Received: from conuserg-12.nifty.com ([210.131.2.79]:49416 "EHLO
         conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727472AbfLQEOv (ORCPT
+        with ESMTP id S1727683AbfLQEOw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 23:14:51 -0500
+        Mon, 16 Dec 2019 23:14:52 -0500
 Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id xBH4EPAI024524;
-        Tue, 17 Dec 2019 13:14:31 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com xBH4EPAI024524
+        by conuserg-12.nifty.com with ESMTP id xBH4EPAF024524;
+        Tue, 17 Dec 2019 13:14:29 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com xBH4EPAF024524
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1576556071;
-        bh=2R2qiN5dNPqF6NEga1JY7x7NqLiqE7O4OMCOP5WmCd4=;
+        s=dec2015msa; t=1576556069;
+        bh=zTfsz4q4N5zqvuqTxH8EVK2Vwep22Qgk0oB4uevhHXM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dYqTKlChd96JXA4L9b0zfGNe66UAWKUC8O+AYVgsbNpLG0SYAn8s9jlITw/mx5zxo
-         2/J3hrzpjxOqFoQMMs/C2XAu1cTmFr9NyleQa0PB6VNIXP4Kiv6z30U2YTG8OemIyy
-         dFlCUHruAEpPeudnqhQHxR4fUMg0hZCxtkB88ljeOK0G12c1HAcujvb21y9Kv6OOm+
-         yAKDg+Btv+0/EAAkTn+TpAB1zfSjcVkIOsLFh5ZeKik8v5sS6u9YPOwRvR1tEq58LM
-         1NfIi7OLHpXcjAIUi4z7pzlQTDtzjA8duB3dpM/fBx3vasv+qLzUrAlL0hXQu+86MB
-         /NBePIEylyIgw==
+        b=LdvTRScsLP6hfOvy61kc3+9uLpg3c0hbsdIBe+3gew4wfgJvCrAljsUdiU8TyQDUt
+         SC82+xqVm9kmodzGUADghrVn8JNR3MwJd1go3b9kv1Vs1WhFlhXAwrzITP/W2SqYGd
+         Bhzm4TOM39+pcdSPF5+vxXtgxNHuN0SQ63SBfvDwjQFo+Slo82viULRbp4lx4S2K+G
+         O175ZhHxQVfGAXg1IqvWv/Ac6L9mmLjb71WtEdzcHC5/13PVbjdmZebUatBuunXpv5
+         ILJrfBAR616w0Rc+ZZ/8pWb9TJ6G53AqUVdzUR1BlEWMhOnREk3jq+XOtQ8fMp6YyA
+         CpG90L5J8s2eA==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
 Cc:     Ulf Magnusson <ulfalizer@gmail.com>,
         Masahiro Yamada <masahiroy@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 8/8] kconfig: squash prop_alloc() into menu_add_prop()
-Date:   Tue, 17 Dec 2019 13:14:23 +0900
-Message-Id: <20191217041424.29285-9-masahiroy@kernel.org>
+Subject: [PATCH 5/8] kconfig: move prompt handling to menu_add_prompt() from menu_add_prop()
+Date:   Tue, 17 Dec 2019 13:14:20 +0900
+Message-Id: <20191217041424.29285-6-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191217041424.29285-1-masahiroy@kernel.org>
 References: <20191217041424.29285-1-masahiroy@kernel.org>
@@ -59,94 +59,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-prop_alloc() is only called from menu_add_prop(). Squash it.
+menu_add_prompt() is the only function that calls menu_add_prop() with
+non-NULL prompt.
+
+So, the code inside the if-conditional block of menu_add_prop() can be
+moved to menu_add_prompt().
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- scripts/kconfig/lkc.h    |  1 -
- scripts/kconfig/menu.c   | 18 +++++++++++++++++-
- scripts/kconfig/symbol.c | 21 ---------------------
- 3 files changed, 17 insertions(+), 23 deletions(-)
+ scripts/kconfig/menu.c | 70 ++++++++++++++++++++----------------------
+ 1 file changed, 34 insertions(+), 36 deletions(-)
 
-diff --git a/scripts/kconfig/lkc.h b/scripts/kconfig/lkc.h
-index 4fb16f316626..73d3f01f1736 100644
---- a/scripts/kconfig/lkc.h
-+++ b/scripts/kconfig/lkc.h
-@@ -112,7 +112,6 @@ struct symbol *sym_choice_default(struct symbol *sym);
- struct property *sym_get_range_prop(struct symbol *sym);
- const char *sym_get_string_default(struct symbol *sym);
- struct symbol *sym_check_deps(struct symbol *sym);
--struct property *prop_alloc(enum prop_type type, struct symbol *sym);
- struct symbol *prop_get_symbol(struct property *prop);
- 
- static inline tristate sym_get_tristate_value(struct symbol *sym)
 diff --git a/scripts/kconfig/menu.c b/scripts/kconfig/menu.c
-index 5a43784ded2c..8b772ced755d 100644
+index bbabf0a59ac4..45daece8d983 100644
 --- a/scripts/kconfig/menu.c
 +++ b/scripts/kconfig/menu.c
-@@ -127,12 +127,28 @@ void menu_set_type(int type)
- static struct property *menu_add_prop(enum prop_type type, struct expr *expr,
- 				      struct expr *dep)
- {
--	struct property *prop = prop_alloc(type, current_entry->sym);
-+	struct property *prop;
- 
-+	prop = xmalloc(sizeof(*prop));
-+	memset(prop, 0, sizeof(*prop));
-+	prop->type = type;
-+	prop->file = current_file;
-+	prop->lineno = zconf_lineno();
- 	prop->menu = current_entry;
+@@ -132,53 +132,51 @@ static struct property *menu_add_prop(enum prop_type type, char *prompt, struct
  	prop->expr = expr;
  	prop->visible.expr = dep;
  
-+	/* append property to the prop list of symbol */
-+	if (current_entry->sym) {
-+		struct property **propp;
-+
-+		for (propp = &current_entry->sym->prop;
-+		     *propp;
-+		     propp = &(*propp)->next)
-+			;
-+		*propp = prop;
+-	if (prompt) {
+-		if (isspace(*prompt)) {
+-			prop_warn(prop, "leading whitespace ignored");
+-			while (isspace(*prompt))
+-				prompt++;
+-		}
+-		if (current_entry->prompt)
+-			prop_warn(prop, "prompt redefined");
++	return prop;
++}
+ 
+-		/* Apply all upper menus' visibilities to actual prompts. */
+-		if(type == P_PROMPT) {
+-			struct menu *menu = current_entry;
++struct property *menu_add_prompt(enum prop_type type, char *prompt,
++				 struct expr *dep)
++{
++	struct property *prop = menu_add_prop(type, prompt, NULL, dep);
+ 
+-			while ((menu = menu->parent) != NULL) {
+-				struct expr *dup_expr;
++	if (isspace(*prompt)) {
++		prop_warn(prop, "leading whitespace ignored");
++		while (isspace(*prompt))
++			prompt++;
 +	}
++	if (current_entry->prompt)
++		prop_warn(prop, "prompt redefined");
+ 
+-				if (!menu->visibility)
+-					continue;
+-				/*
+-				 * Do not add a reference to the
+-				 * menu's visibility expression but
+-				 * use a copy of it.  Otherwise the
+-				 * expression reduction functions
+-				 * will modify expressions that have
+-				 * multiple references which can
+-				 * cause unwanted side effects.
+-				 */
+-				dup_expr = expr_copy(menu->visibility);
++	/* Apply all upper menus' visibilities to actual prompts. */
++	if (type == P_PROMPT) {
++		struct menu *menu = current_entry;
+ 
+-				prop->visible.expr
+-					= expr_alloc_and(prop->visible.expr,
+-							 dup_expr);
+-			}
+-		}
++		while ((menu = menu->parent) != NULL) {
++			struct expr *dup_expr;
+ 
+-		current_entry->prompt = prop;
++			if (!menu->visibility)
++				continue;
++			/*
++			 * Do not add a reference to the menu's visibility
++			 * expression but use a copy of it. Otherwise the
++			 * expression reduction functions will modify
++			 * expressions that have multiple references which
++			 * can cause unwanted side effects.
++			 */
++			dup_expr = expr_copy(menu->visibility);
 +
++			prop->visible.expr = expr_alloc_and(prop->visible.expr,
++							    dup_expr);
++		}
+ 	}
++
++	current_entry->prompt = prop;
+ 	prop->text = prompt;
+ 
  	return prop;
  }
  
-diff --git a/scripts/kconfig/symbol.c b/scripts/kconfig/symbol.c
-index dbc5365d8bbc..8d38b700b314 100644
---- a/scripts/kconfig/symbol.c
-+++ b/scripts/kconfig/symbol.c
-@@ -1273,27 +1273,6 @@ struct symbol *sym_check_deps(struct symbol *sym)
- 	return sym2;
- }
- 
--struct property *prop_alloc(enum prop_type type, struct symbol *sym)
+-struct property *menu_add_prompt(enum prop_type type, char *prompt, struct expr *dep)
 -{
--	struct property *prop;
--	struct property **propp;
--
--	prop = xmalloc(sizeof(*prop));
--	memset(prop, 0, sizeof(*prop));
--	prop->type = type;
--	prop->file = current_file;
--	prop->lineno = zconf_lineno();
--
--	/* append property to the prop list of symbol */
--	if (sym) {
--		for (propp = &sym->prop; *propp; propp = &(*propp)->next)
--			;
--		*propp = prop;
--	}
--
--	return prop;
+-	return menu_add_prop(type, prompt, NULL, dep);
 -}
 -
- struct symbol *prop_get_symbol(struct property *prop)
+ void menu_add_visibility(struct expr *expr)
  {
- 	if (prop->expr && (prop->expr->type == E_SYMBOL ||
+ 	current_entry->visibility = expr_alloc_and(current_entry->visibility,
 -- 
 2.17.1
 
