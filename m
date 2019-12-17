@@ -2,157 +2,222 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EC7C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BDB7C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D495E21582
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:33:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1949521582
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:35:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728519AbfLQQdj (ORCPT
+        id S1728363AbfLQQfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 11:33:39 -0500
-Received: from mga02.intel.com ([134.134.136.20]:8478 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728241AbfLQQdi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 11:33:38 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 08:33:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,326,1571727600"; 
-   d="scan'208";a="221792307"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga001.fm.intel.com with ESMTP; 17 Dec 2019 08:33:37 -0800
-Subject: Re: [PATCH 5/5] dmaengine: ioat: Support in-use unbind
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     "Williams, Dan J" <dan.j.williams@intel.com>,
-        Kit Chow <kchow@gigaio.com>
-References: <20191216190120.21374-1-logang@deltatee.com>
- <20191216190120.21374-6-logang@deltatee.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <9cc20739-2a02-b4e1-b5e6-9578fe9314ef@intel.com>
-Date:   Tue, 17 Dec 2019 09:33:37 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 17 Dec 2019 11:35:05 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:50102 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728009AbfLQQfF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 11:35:05 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 022D929240D
+Message-ID: <f867543cf5d0fc3fdd0534749326411bcfc5e363.camel@collabora.com>
+Subject: Re: Warnings in DRM code when removing/unbinding a driver
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     John Garry <john.garry@huawei.com>,
+        xinliang <z.liuxinliang@hisilicon.com>,
+        "kongxinwei (A)" <kong.kongxinwei@hisilicon.com>,
+        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
+        "airlied@linux.ie" <airlied@linux.ie>, daniel@ffwll.ch
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+Date:   Tue, 17 Dec 2019 13:34:52 -0300
+In-Reply-To: <07899bd5-e9a5-cff0-395f-b4fb3f0f7f6c@huawei.com>
+References: <07899bd5-e9a5-cff0-395f-b4fb3f0f7f6c@huawei.com>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-In-Reply-To: <20191216190120.21374-6-logang@deltatee.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi John,
+
+On Mon, 2019-12-16 at 17:23 +0000, John Garry wrote:
+> Hi all,
+> 
+> Enabling CONFIG_DEBUG_TEST_DRIVER_REMOVE causes many warns on a system 
+> with the HIBMC hw:
+> 
+> [   27.788806] WARNING: CPU: 24 PID: 1 at 
+> drivers/gpu/drm/drm_gem_vram_helper.c:564 bo_driver_move_notify+0x8c/0x98
+
+A total shot in the dark. This might make no sense,
+but it's worth a try:
+
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+index 2fd4ca91a62d..69bb0e29da88 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
++++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+@@ -247,9 +247,8 @@ static int hibmc_unload(struct drm_device *dev)
+ {
+        struct hibmc_drm_private *priv = dev->dev_private;
+ 
+-       hibmc_fbdev_fini(priv);
+-
+        drm_atomic_helper_shutdown(dev);
++       hibmc_fbdev_fini(priv);
+ 
+        if (dev->irq_enabled)
+                drm_irq_uninstall(dev);
+
+Hope it helps,
+Ezequiel
+
+> [   27.798969] Modules linked in:
+> [   27.802018] CPU: 24 PID: 1 Comm: swapper/0 Tainted: G    B 
+>   5.5.0-rc1-dirty #565
+> [   27.810358] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI 
+> RC0 - V1.16.01 03/15/2019
+> [   27.818872] pstate: 20c00009 (nzCv daif +PAN +UAO)
+> [   27.823654] pc : bo_driver_move_notify+0x8c/0x98
+> [   27.828262] lr : bo_driver_move_notify+0x40/0x98
+> [   27.832868] sp : ffff00236f0677e0
+> [   27.836173] x29: ffff00236f0677e0 x28: ffffa0001454e5e0
+> [   27.841476] x27: ffff002366e52128 x26: ffffa000149e67b0
+> [   27.846779] x25: ffff002366e523e0 x24: ffff002336936120
+> [   27.852082] x23: ffff0023346f4010 x22: ffff002336936128
+> [   27.857385] x21: ffffa000149c15c0 x20: ffff0023369361f8
+> [   27.862687] x19: ffff002336936000 x18: 0000000000001258
+> [   27.867989] x17: 0000000000001190 x16: 00000000000011d0
+> [   27.873292] x15: 0000000000001348 x14: ffffa00012d68190
+> [   27.878595] x13: 0000000000000006 x12: 1ffff40003241f91
+> [   27.883897] x11: ffff940003241f91 x10: dfffa00000000000
+> [   27.889200] x9 : ffff940003241f92 x8 : 0000000000000001
+> [   27.894502] x7 : ffffa0001920fc88 x6 : ffff940003241f92
+> [   27.899804] x5 : ffff940003241f92 x4 : ffff0023369363a0
+> [   27.905107] x3 : ffffa00010c104b8 x2 : dfffa00000000000
+> [   27.910409] x1 : 0000000000000003 x0 : 0000000000000001
+> [   27.915712] Call trace:
+> [   27.918151]  bo_driver_move_notify+0x8c/0x98
+> [   27.922412]  ttm_bo_cleanup_memtype_use+0x54/0x100
+> [   27.927194]  ttm_bo_put+0x3a0/0x5d0
+> [   27.930673]  drm_gem_vram_object_free+0xc/0x18
+> [   27.935109]  drm_gem_object_free+0x34/0xd0
+> [   27.939196]  drm_gem_object_put_unlocked+0xc8/0xf0
+> [   27.943978]  hibmc_user_framebuffer_destroy+0x20/0x40
+> [   27.949020]  drm_framebuffer_free+0x48/0x58
+> [   27.953194]  drm_mode_object_put.part.1+0x90/0xe8
+> [   27.957889]  drm_mode_object_put+0x28/0x38
+> [   27.961976]  hibmc_fbdev_fini+0x54/0x78
+> [   27.965802]  hibmc_unload+0x2c/0xd0
+> [   27.969281]  hibmc_pci_remove+0x2c/0x40
+> [   27.973109]  pci_device_remove+0x6c/0x140
+> [   27.977110]  really_probe+0x174/0x548
+> [   27.980763]  driver_probe_device+0x7c/0x148
+> [   27.984936]  device_driver_attach+0x94/0xa0
+> [   27.989109]  __driver_attach+0xa8/0x110
+> [   27.992935]  bus_for_each_dev+0xe8/0x158
+> [   27.996849]  driver_attach+0x30/0x40
+> [   28.000415]  bus_add_driver+0x234/0x2f0
+> [   28.004241]  driver_register+0xbc/0x1d0
+> [   28.008067]  __pci_register_driver+0xbc/0xd0
+> [   28.012329]  hibmc_pci_driver_init+0x20/0x28
+> [   28.016590]  do_one_initcall+0xb4/0x254
+> [   28.020417]  kernel_init_freeable+0x27c/0x328
+> [   28.024765]  kernel_init+0x10/0x118
+> [   28.028245]  ret_from_fork+0x10/0x18
+> [   28.031813] ---[ end trace 35a83b71b657878d ]---
+> [   28.036503] ------------[ cut here ]------------
+> [   28.041115] WARNING: CPU: 24 PID: 1 at 
+> drivers/gpu/drm/drm_gem_vram_helper.c:40 ttm_buffer_object_destroy+0x4c/0x80
+> [   28.051537] Modules linked in:
+> [   28.054585] CPU: 24 PID: 1 Comm: swapper/0 Tainted: G    B   W 
+>   5.5.0-rc1-dirty #565
+> [   28.062924] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI 
+> RC0 - V1.16.01 03/15/2019
+> 
+> [snip]
+> 
+> Indeed, simply unbinding the device from the driver causes the same sort 
+> of issue:
+> 
+> root@(none)$ cd ./bus/pci/drivers/hibmc-drm/
+> root@(none)$ ls
+> 0000:05:00.0  bind          new_id        remove_id     uevent        unbind
+> root@(none)$ echo 0000\:05\:00.0 > unbind
+> [  116.074352] ------------[ cut here ]------------
+> [  116.078978] WARNING: CPU: 17 PID: 1178 at 
+> drivers/gpu/drm/drm_gem_vram_helper.c:40 ttm_buffer_object_destroy+0x4c/0x80
+> [  116.089661] Modules linked in:
+> [  116.092711] CPU: 17 PID: 1178 Comm: sh Tainted: G    B   W 
+> 5.5.0-rc1-dirty #565
+> [  116.100704] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI 
+> RC0 - V1.16.01 03/15/2019
+> [  116.109218] pstate: 20400009 (nzCv daif +PAN -UAO)
+> [  116.114001] pc : ttm_buffer_object_destroy+0x4c/0x80
+> [  116.118956] lr : ttm_buffer_object_destroy+0x18/0x80
+> [  116.123910] sp : ffff0022e6cef8e0
+> [  116.127215] x29: ffff0022e6cef8e0 x28: ffff00231b1fb000
+> [  116.132519] x27: 0000000000000000 x26: ffff00231b1fb000
+> [  116.137821] x25: ffff0022e6cefdc0 x24: 0000000000002480
+> [  116.143124] x23: ffff0023682b6ab0 x22: ffff0023682b6800
+> [  116.148427] x21: ffff0023682b6800 x20: 0000000000000000
+> [  116.153730] x19: ffff0023682b6800 x18: 0000000000000000
+> [  116.159032] x17: 000000000000000000000000001
+> [  116.185545] x7 : ffff0023682b6b07 x6 : ffff80046d056d61
+> [  116.190848] x5 : ffff80046d056d61 x4 : ffff0023682b6ba0
+> [  116.196151] x3 : ffffa00010197338 x2 : dfffa00000000000
+> [  116.201453] x1 : 0000000000000003 x0 : 0000000000000001
+> [  116.206756] Call trace:
+> [  116.209195]  ttm_buffer_object_destroy+0x4c/0x80
+> [  116.213803]  ttm_bo_release_list+0x184/0x220
+> [  116.218064]  ttm_bo_put+0x410/0x5d0
+> [  116.221544]  drm_gem_vram_object_free+0xc/0x18
+> [  116.225979]  drm_gem_object_free+0x34/0xd0
+> [  116.230066]  drm_gem_object_put_unlocked+0xc8/0xf0
+> [  116.234848]  hibmc_user_framebuffer_destroy+0x20/0x40
+> [  116.239890]  drm_framebuffer_free+0x48/0x58
+> [  116.244064]  drm_mode_object_put.part.1+0x90/0xe8
+> [  116.248759]  drm_mode_object_put+0x28/0x38
+> [  116.252846]  hibmc_fbdev_fini+0x54/0x78
+> [  116.256672]  hibmc_unload+0x2c/0xd0
+> [  116.260151]  hibmc_pci_remove+0x2c/0x40
+> [  116.263979]  pci_device_remove+0x6c/0x140
+> [  116.267980]  device_release_driver_internal+0x134/0x250
+> [  116.273196]  device_driver_detach+0x28/0x38
+> [  116.277369]  unbind_store+0xfc/0x150
+> [  116.280934]  drv_attr_store+0x48/0x60
+> [  116.284589]  sysfs_kf_write+0x80/0xb0
+> [  116.288241]  kernfs_fop_write+0x1d4/0x320
+> [  116.292243]  __vfs_write+0x54/0x98
+> [  116.295635]  vfs_write+0xe8/0x270
+> [  116.298940]  ksys_write+0xc8/0x180
+> [  116.302333]  __arm64_sys_write+0x40/0x50
+> [  116.306248]  el0_svc_common.constprop.0+0xa4/0x1f8
+> [  116.311029]  el0_svc_handler+0x34/0xb0
+> [  116.314770]  el0_sync_handler+0x10c/0x1c8
+> [  116.318769]  el0_sync+0x140/0x180
+> [  116.322074] ---[ end trace e60e43d0e316b5c8 ]---
+> [  116.326868] ------------[ cut here ]------------
+> 
+> 
+> dmesg and .config is here:
+> https://pastebin.com/4P5yaZBS
+> 
+> I'm not sure if this is a HIBMC driver issue or issue with the framework.
+> 
+> john
+> 
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
 
-On 12/16/19 12:01 PM, Logan Gunthorpe wrote:
-> Don't allocate memory using the devm infrastructure and instead call
-> kfree with the new dmaengine device_release call back. This ensures
-> the structures are available until the last reference is dropped.
-> 
-> We also need to ensure we call ioat_shutdown() in ioat_remove() so
-> that all the channels are quiesced and further transaction fails.
-> 
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Acked-by: Dave Jiang <dave.jiang@intel.com>
-
-> ---
->   drivers/dma/ioat/init.c | 38 ++++++++++++++++++++++++++------------
->   1 file changed, 26 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/dma/ioat/init.c b/drivers/dma/ioat/init.c
-> index a6a6dc432db8..60e9afbb896c 100644
-> --- a/drivers/dma/ioat/init.c
-> +++ b/drivers/dma/ioat/init.c
-> @@ -556,10 +556,6 @@ static void ioat_dma_remove(struct ioatdma_device *ioat_dma)
->   	ioat_kobject_del(ioat_dma);
->   
->   	dma_async_device_unregister(dma);
-> -
-> -	dma_pool_destroy(ioat_dma->completion_pool);
-> -
-> -	INIT_LIST_HEAD(&dma->channels);
->   }
->   
->   /**
-> @@ -589,7 +585,7 @@ static void ioat_enumerate_channels(struct ioatdma_device *ioat_dma)
->   	dev_dbg(dev, "%s: xfercap = %d\n", __func__, 1 << xfercap_log);
->   
->   	for (i = 0; i < dma->chancnt; i++) {
-> -		ioat_chan = devm_kzalloc(dev, sizeof(*ioat_chan), GFP_KERNEL);
-> +		ioat_chan = kzalloc(sizeof(*ioat_chan), GFP_KERNEL);
->   		if (!ioat_chan)
->   			break;
->   
-> @@ -624,12 +620,16 @@ static void ioat_free_chan_resources(struct dma_chan *c)
->   		return;
->   
->   	ioat_stop(ioat_chan);
-> -	ioat_reset_hw(ioat_chan);
->   
-> -	/* Put LTR to idle */
-> -	if (ioat_dma->version >= IOAT_VER_3_4)
-> -		writeb(IOAT_CHAN_LTR_SWSEL_IDLE,
-> -			ioat_chan->reg_base + IOAT_CHAN_LTR_SWSEL_OFFSET);
-> +	if (!test_bit(IOAT_CHAN_DOWN, &ioat_chan->state)) {
-> +		ioat_reset_hw(ioat_chan);
-> +
-> +		/* Put LTR to idle */
-> +		if (ioat_dma->version >= IOAT_VER_3_4)
-> +			writeb(IOAT_CHAN_LTR_SWSEL_IDLE,
-> +			       ioat_chan->reg_base +
-> +			       IOAT_CHAN_LTR_SWSEL_OFFSET);
-> +	}
->   
->   	spin_lock_bh(&ioat_chan->cleanup_lock);
->   	spin_lock_bh(&ioat_chan->prep_lock);
-> @@ -1322,16 +1322,28 @@ static struct pci_driver ioat_pci_driver = {
->   	.err_handler	= &ioat_err_handler,
->   };
->   
-> +static void release_ioatdma(struct dma_device *device)
-> +{
-> +	struct ioatdma_device *d = to_ioatdma_device(device);
-> +	int i;
-> +
-> +	for (i = 0; i < IOAT_MAX_CHANS; i++)
-> +		kfree(d->idx[i]);
-> +
-> +	dma_pool_destroy(d->completion_pool);
-> +	kfree(d);
-> +}
-> +
->   static struct ioatdma_device *
->   alloc_ioatdma(struct pci_dev *pdev, void __iomem *iobase)
->   {
-> -	struct device *dev = &pdev->dev;
-> -	struct ioatdma_device *d = devm_kzalloc(dev, sizeof(*d), GFP_KERNEL);
-> +	struct ioatdma_device *d = kzalloc(sizeof(*d), GFP_KERNEL);
->   
->   	if (!d)
->   		return NULL;
->   	d->pdev = pdev;
->   	d->reg_base = iobase;
-> +	d->dma_dev.device_release = release_ioatdma;
->   	return d;
->   }
->   
-> @@ -1400,6 +1412,8 @@ static void ioat_remove(struct pci_dev *pdev)
->   	if (!device)
->   		return;
->   
-> +	ioat_shutdown(pdev);
-> +
->   	dev_err(&pdev->dev, "Removing dma and dca services\n");
->   	if (device->dca) {
->   		unregister_dca_provider(device->dca, &pdev->dev);
-> 
