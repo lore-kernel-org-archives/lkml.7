@@ -2,76 +2,152 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86CE3C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4197C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DA8F2146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:58:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=marples.name header.i=@marples.name header.b="u56qz470"
+	by mail.kernel.org (Postfix) with ESMTP id 840482465E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:59:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576594769;
+	bh=X1PiVxcDVotj0DhdvGj1bIfqqxEYbzQbmZ7rzefwzlI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=nUsCYf0meCk0+ezCqnoLA5SC3mWZrqUGCNBROnJnczuIJmxR6vRqrFI0bz3amLyeO
+	 ben3ONXIvrsHMp3H/t9Eo4Cym/fHVjEfAS9bsyW476veeaaUPMelubos8SD3gqOzTP
+	 mhSctZt6wcTXEomiSezvxWiWjAwZfdUpYNsStVFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbfLQO6M (ORCPT
+        id S1727909AbfLQO72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:58:12 -0500
-Received: from relay2.marples.name ([77.68.23.143]:60032 "EHLO
-        relay2.marples.name" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726560AbfLQO6M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:58:12 -0500
-X-Greylist: delayed 437 seconds by postgrey-1.27 at vger.kernel.org; Tue, 17 Dec 2019 09:58:11 EST
-Received: from mail.marples.name (cpc115040-bour7-2-0-cust370.15-1.cable.virginm.net [81.108.15.115])
-        by relay2.marples.name (Postfix) with ESMTPS id 62A247A2
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 14:50:52 +0000 (UTC)
-Received: from [10.73.1.30] (unknown [10.73.1.30])
-        (using TLSv1.2 with cipher ECDHE-ECDSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 17 Dec 2019 09:59:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45918 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726560AbfLQO72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 09:59:28 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.marples.name (Postfix) with ESMTPSA id D263D1CD553;
-        Tue, 17 Dec 2019 14:48:51 +0000 (GMT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marples.name;
-        s=mail; t=1576594131;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=yKLrOljADJd251/sjY/sg9T0uYP7Yoc26fkVr1L8qFc=;
-        b=u56qz470AjUPEoEJc49mAj8vRRKL+MOMzk5K6aDGI+2z7nKGo1hjoJ1fwGe5+4iA/TryV8
-        VMhz5+FeAp8EF5kgEsvyimOuKNHN/hXraYLhIuZ7ukiXrg1bGDFRUz8pzZQsO/9IYXG510
-        hvxsclAkbYCZYohFziFOPk3X8Tqe5so=
-To:     linux-kernel@vger.kernel.org
-From:   Roy Marples <roy@marples.name>
-Subject: [PATCH] netlink: Align NLA_ALIGNTO with the other ALIGNTO macros
-Cc:     akpm@linux-foundation.org, trivial@kernel.org
-Message-ID: <cf7912dd-3352-84d9-653a-86dcc1696a62@marples.name>
-Date:   Tue, 17 Dec 2019 14:50:50 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C1432146E;
+        Tue, 17 Dec 2019 14:59:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576594766;
+        bh=X1PiVxcDVotj0DhdvGj1bIfqqxEYbzQbmZ7rzefwzlI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=nr0K06QNQmm1n9qx+9jVB2d+Ydzi4sALusD8JzCqB3ntD3yvFbLJNuPHAptIVLsF+
+         PDs806kXbdNEAiy/H7HLANWQHb4WI5T2N345xg8/syBy4SMsutm/n6ctLJ9sEI3da3
+         HgtLDZWf/zydqfQ+j3AHA3IguZqFxvBe8fuWClG4=
+Date:   Tue, 17 Dec 2019 23:59:21 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     paulmck@kernel.org
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        David Miller <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -tip] kprobes: Lock rcu_read_lock() while searching
+ kprobe
+Message-Id: <20191217235921.01cecb379e5e58493a0815af@kernel.org>
+In-Reply-To: <20191209033910.GD2889@paulmck-ThinkPad-P72>
+References: <157527193358.11113.14859628506665612104.stgit@devnote2>
+        <20191202210854.GD17234@google.com>
+        <20191203071329.GC115767@gmail.com>
+        <20191203175712.GI2889@paulmck-ThinkPad-P72>
+        <20191204100549.GB114697@gmail.com>
+        <20191204161239.GL2889@paulmck-ThinkPad-P72>
+        <20191206011137.GB142442@google.com>
+        <20191206031151.GY2889@paulmck-ThinkPad-P72>
+        <20191208000842.GA62607@google.com>
+        <20191209033910.GD2889@paulmck-ThinkPad-P72>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This avoids sign conversion errors.
+Hi,
 
-Signed-off-by: Roy Marples <roy@marples.name>
+On Sun, 8 Dec 2019 19:39:11 -0800
+"Paul E. McKenney" <paulmck@kernel.org> wrote:
 
-diff --git a/include/uapi/linux/netlink.h b/include/uapi/linux/netlink.h
-index 0a4d73317759..c9ed05f14005 100644
---- a/include/uapi/linux/netlink.h
-+++ b/include/uapi/linux/netlink.h
-@@ -227,7 +227,7 @@ struct nlattr {
-  #define NLA_F_NET_BYTEORDER    (1 << 14)
-  #define NLA_TYPE_MASK          ~(NLA_F_NESTED | NLA_F_NET_BYTEORDER)
+> On Sat, Dec 07, 2019 at 07:08:42PM -0500, Joel Fernandes wrote:
+> > On Thu, Dec 05, 2019 at 07:11:51PM -0800, Paul E. McKenney wrote:
+> > > On Thu, Dec 05, 2019 at 08:11:37PM -0500, Joel Fernandes wrote:
+> > > > On Wed, Dec 04, 2019 at 08:12:39AM -0800, Paul E. McKenney wrote:
+> > > > > On Wed, Dec 04, 2019 at 11:05:50AM +0100, Ingo Molnar wrote:
+> > > > > > 
+> > > > > > * Paul E. McKenney <paulmck@kernel.org> wrote:
+> > > > > > 
+> > > > > > > >  * This list-traversal primitive may safely run concurrently with
+> > > > > > > >  * the _rcu list-mutation primitives such as hlist_add_head_rcu()
+> > > > > > > >  * as long as the traversal is guarded by rcu_read_lock().
+> > > > > > > >  */
+> > > > > > > > #define hlist_for_each_entry_rcu(pos, head, member, cond...)            \
+> > > > > > > > 
+> > > > > > > > is actively harmful. Why is it there?
+> > > > > > > 
+> > > > > > > For cases where common code might be invoked both from the reader
+> > > > > > > (with RCU protection) and from the updater (protected by some
+> > > > > > > lock).  This common code can then use the optional argument to
+> > > > > > > hlist_for_each_entry_rcu() to truthfully tell lockdep that it might be
+> > > > > > > called with either form of protection in place.
+> > > > > > > 
+> > > > > > > This also combines with the __rcu tag used to mark RCU-protected
+> > > > > > > pointers, in which case sparse complains when a non-RCU API is applied
+> > > > > > > to these pointers, to get back to your earlier question about use of
+> > > > > > > hlist_for_each_entry_rcu() within the update-side lock.
+> > > > > > > 
+> > > > > > > But what are you seeing as actively harmful about all of this?
+> > > > > > > What should we be doing instead?
+> > > > > > 
+> > > > > > Yeah, so basically in the write-locked path hlist_for_each_entry() 
+> > > > > > generates (slightly) more efficient code than hlist_for_each_entry_rcu(), 
+> > > > > > correct?
+> > > > > 
+> > > > > Potentially yes, if the READ_ONCE() constrains the compiler.  Or not,
+> > > > > depending of course on the compiler and the surrounding code.
+> > > > > 
+> > > > > > Also, the principle of passing warning flags around is problematic - but 
+> > > > > > I can see the point in this specific case.
+> > > > > 
+> > > > > Would it help to add an hlist_for_each_entry_protected() that expected
+> > > > > RCU-protected pointers and write-side protection, analogous to
+> > > > > rcu_dereference_protected()?  Or would that expansion of the RCU API
+> > > > > outweigh any benefits?
+> > > > 
+> > > > Personally, I like keeping the same API and using the optional argument like
+> > > > we did thus preventing too many APIs / new APIs.
+> > > 
+> > > Would you be willing to put together a prototype patch so that people
+> > > can see exactly how it would look?
+> > 
+> > Hi Paul,
+> > 
+> > I was referring to the same API we have at the moment (that is
+> > hlist_for_each_entry_rcu() with the additional cond parameter). I was saying
+> > let us keep that and not add a hlist_for_each_entry_protected() instead, so
+> > as to not proliferate the number of APIs.
+> > 
+> > Or did I miss the point?
+> 
+> This would work for me.  The only concern would be inefficiency, but we
+> have heard from people saying that the unnecessary inefficiency is only
+> on code paths that they do not care about, so we should be good.
 
--#define NLA_ALIGNTO            4
-+#define NLA_ALIGNTO            4U
-  #define NLA_ALIGN(len)         (((len) + NLA_ALIGNTO - 1) & ~(NLA_ALIGNTO - 1))
-  #define NLA_HDRLEN             ((int) NLA_ALIGN(sizeof(struct nlattr)))
+So, what will be the conclusion here, Ingo?
 
+I faced other warnings in tracing subsystem, so I need to add more
+lockdep_is_held()s there to suppress warnings.
+
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
