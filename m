@@ -2,115 +2,96 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75244C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0AB5C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:51:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4618520716
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B703620716
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:51:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="URsFUMuL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OXJVfZN+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbfLQJug (ORCPT
+        id S1727120AbfLQJvc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 04:50:36 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:41182 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726859AbfLQJug (ORCPT
+        Tue, 17 Dec 2019 04:51:32 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:40480 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726859AbfLQJvc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 04:50:36 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576576235; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=3CUilBvV7ZA84ceFahgKnBFtukCYJ8i4/df1MQRWEkw=; b=URsFUMuLy7a8Eqwea9Ob3e90xawrRFmk4DXZrVcux0OqmiharYcRhar7jyS0a5tViny5aFXf
- 46jzMm2+lvT3rPW+GoJ43pqwUF7y6L6l9iBCThfXb3JETqjNkQXbex89pi+Jc+bfFUFrKS2y
- /C5iDLZXt/CXVWajnjhWkOg90V0=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5df8a4ea.7fb9893968f0-smtp-out-n02;
- Tue, 17 Dec 2019 09:50:34 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 700C9C447A5; Tue, 17 Dec 2019 09:50:34 +0000 (UTC)
-Received: from [10.252.222.65] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3314FC447A2;
-        Tue, 17 Dec 2019 09:50:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3314FC447A2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-Subject: Re: [PATCH] dt-bindings: geni-se: Convert QUP geni-se bindings to
- YAML
-To:     Stephen Boyd <swboyd@chromium.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, mark.rutland@arm.com,
-        robh+dt@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mgautam@codeaurora.org
-References: <1576488351-22396-1-git-send-email-akashast@codeaurora.org>
- <5df7b3fa.1c69fb81.fa080.21a7@mx.google.com>
-From:   Akash Asthana <akashast@codeaurora.org>
-Message-ID: <70921be6-487b-ce59-ed71-4e7980dc66f4@codeaurora.org>
-Date:   Tue, 17 Dec 2019 15:19:52 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-MIME-Version: 1.0
-In-Reply-To: <5df7b3fa.1c69fb81.fa080.21a7@mx.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        Tue, 17 Dec 2019 04:51:32 -0500
+Received: by mail-pl1-f194.google.com with SMTP id g6so5852013plp.7;
+        Tue, 17 Dec 2019 01:51:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Mz0FL23L69c1tpx2ygN4sLzZLSZmhkV7Slvkay3hNvM=;
+        b=OXJVfZN+wUzAkeOonP0tbHHRoCC1wA9zG+K/NvBDVmyq6YoF7MEnzBb0uAo9I5EZzc
+         Ma536Rf5ruYIo6KVaCZH8ngdN7d154xwdmg4d3PW5RjsrRCBoMpXdUuWtyjEwrHSPznQ
+         q8AhTeh2DeF35+ktY/HqskjW8pGcN3xeA0IUUMpHsaM53Ady2jFouhOkpWq1hGOSWRVV
+         f34VatGJo+/Hyj2Q9dS1R9PhRT6Wbz+Zk3mzlMjR37C5XoT/K03GVScny8bV82BxxoI1
+         R3PpKQQuuDJaPG2Bq1dxwUXpryT3eZJG4OQsjd52aTHet7gb28DfCQx/0wm8D91lQLXU
+         HYgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Mz0FL23L69c1tpx2ygN4sLzZLSZmhkV7Slvkay3hNvM=;
+        b=gZA8cETVwB79QQCwld2Zu5SJnBbCK2ud8XDtyf+mJ9iqKiyXkyhqC5oC7K5cD+7uFC
+         IJBV/x6N22coVmxh1PbiZ9ZAZS+R3yjQl9pnBEPl5/ixiujxg3vgg0oJ5t58g5OBBLCy
+         AV33gHet+0tdZISS0l4M6wz7geeUFbAu5iemWVgfCOB/x3Ts1U1DuGVqAeOGbBBEvjPu
+         O+CpsLDoFzslzK85fzH2hMzMKhDItx4IhbrikBfuz7d6DBJ+JwzfC3ZL6KZz1n9Hx/xz
+         nvmlrO6T45vt+ci5+FUSaK3T2X9Um9wK/ZxyQhkETSc9hwtaPvtmQZzjgGMCCwoZq1fl
+         uu0A==
+X-Gm-Message-State: APjAAAW6cHdGusUUjSpfeKnKDiD2sAcTEPl0nL1HWcfYRjak8Uc+DA68
+        XXcMymlWPtEBPLD4oIx2MjI=
+X-Google-Smtp-Source: APXvYqxiGW9b3uK9c/V8DXYYYSApcBCsYHNjFlrQSwcb0IsPmWuT+FGHKzu7ThC7N6Q5wtdC5+JeuA==
+X-Received: by 2002:a17:902:be02:: with SMTP id r2mr20684990pls.76.1576576291674;
+        Tue, 17 Dec 2019 01:51:31 -0800 (PST)
+Received: from oslab.tsinghua.edu.cn ([166.111.139.172])
+        by smtp.gmail.com with ESMTPSA id l1sm26291310pgs.47.2019.12.17.01.51.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 01:51:31 -0800 (PST)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     b-liu@ti.com, gregkh@linuxfoundation.org
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH] usb: musb: Remove unnecessary check of musb->hcd in musb_handle_intr_connect()
+Date:   Tue, 17 Dec 2019 17:50:23 +0800
+Message-Id: <20191217095023.6878-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In musb_handle_intr_connect(), musb->hcd should be non-null, 
+so the check of musb->hcd on line 783 could be dropped.
 
-On 12/16/2019 10:12 PM, Stephen Boyd wrote:
-> Quoting Akash Asthana (2019-12-16 01:25:51)
->> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
->> new file mode 100644
->> index 0000000..2c3b911
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
->> @@ -0,0 +1,196 @@
-> [...]
->> +
->> +  "serial@[0-9]+$":
->> +    type: object
->> +    description: GENI Serial Engine based UART Controller.
->> +
->> +    properties:
->> +      compatible:
->> +        enum:
->> +          - qcom,geni-uart
->> +          - qcom,geni-debug-uart
->> +
->> +      reg:
->> +        description: GENI Serial Engine register address and length.
->> +
->> +      interrupts:
->> +        description: Contains UART core and wakeup interrupts for wakeup
->> +                     capable UART devices. We configure wakeup interrupt
->> +                     on UART RX line using TLMM interrupt controller.
->> +        maxItems: 2
-> Shouldn't there be a minItems: 1 here? And then you should specify the order?
-> Presumably something like
->
-> 	interrupts:
-> 	  minItems: 1
-> 	  maxItems: 2
-> 	  items:
-> 	    - description: UART core irq
-> 	    - description: Wakeup irq (RX GPIO)
+Thank Greg for good advice.
 
-Yeah ok, Thanks for correction.
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+ drivers/usb/musb/musb_core.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-I will update this in next version.
-
+diff --git a/drivers/usb/musb/musb_core.c b/drivers/usb/musb/musb_core.c
+index 15cca912c53e..ce57f253a8e1 100644
+--- a/drivers/usb/musb/musb_core.c
++++ b/drivers/usb/musb/musb_core.c
+@@ -780,8 +780,7 @@ static void musb_handle_intr_connect(struct musb *musb, u8 devctl, u8 int_usb)
+ 		musb_dbg(musb, "HNP: CONNECT, now b_host");
+ b_host:
+ 		musb->xceiv->otg->state = OTG_STATE_B_HOST;
+-		if (musb->hcd)
+-			musb->hcd->self.is_b_host = 1;
++		musb->hcd->self.is_b_host = 1;
+ 		del_timer(&musb->otg_timer);
+ 		break;
+ 	default:
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+2.17.1
+
