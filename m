@@ -2,125 +2,95 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4034BC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B03E1C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14A3121582
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:11:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TAuRvIkz"
+	by mail.kernel.org (Postfix) with ESMTP id 87CE5206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:11:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728051AbfLQNLd (ORCPT
+        id S1728094AbfLQNLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 08:11:33 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:46319 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726962AbfLQNLc (ORCPT
+        Tue, 17 Dec 2019 08:11:36 -0500
+Received: from mout.kundenserver.de ([212.227.126.187]:45603 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726962AbfLQNLg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 08:11:32 -0500
-Received: by mail-pj1-f67.google.com with SMTP id z21so4558125pjq.13
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 05:11:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=0bLDwlFhAjD8JtsYFaAWxIGU/Ti65IuVrutK0Wnwgh8=;
-        b=TAuRvIkzOJHjpRc9awnY0e6r2IWU7Gi6v5PV5CP94fu2+VtCKjM3XUqifVueOckKUH
-         d2fFSdNG/i1T2MBK+fy4evxJfUr+28/JP7AWL7Hw7ohz9G4msyEW3Rijby9DSxA473L8
-         IhAfQ2+HULliz+DFiHPXcNFDSKKXiwjTDE2qJ/SFTh8ww9dvEvSrDdWFu3ObuWoXxM33
-         IbALuXs5eSJpO3ubPWz6kdZe4g+GwJcX+m4llBnivP6OIM9VvK3UTtZmQrWdh5MNj/ht
-         vJ8TColPBA4quSZpBWOIn164XGwHC4ko+vSs4NOu7BhRN/oMEDZp0OOJIZTD+sHKCe9/
-         EbyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=0bLDwlFhAjD8JtsYFaAWxIGU/Ti65IuVrutK0Wnwgh8=;
-        b=tm8Cf5AqBvfYahcXaQbtV12HzjTjz4YLEhbm3pYhMKNMCzrT/NqTGY6d8fpgiqtYt9
-         YecTllbZi1vvlFtXRRb32BTWx2j8cm0Ivkc0fUSJHW8wYbHBVL6efGJfpKkXOy7r+2px
-         H24azFGVYt36zo9FyMRWonbeEG7CmCOxhmmdcAZ0biNu1BK0+QP8NjKPMhegqCOW9WMc
-         7g/e5Xq38xjeAlUmq0QYRtux+KaUvhx57ttE8eAIe28//bKlII202pwo5fR41Dciqm88
-         QfaaakEPf1njCme/Iv8nsQDWT4ALkqY0vTqvIC1mmtYtQDsoqzYVoZinLQoWPTguc8mr
-         J4ZQ==
-X-Gm-Message-State: APjAAAXZwMDC25R72EZvu3KrhMJGeHtx+++GmOYEf6DT7IjwVG6ICCMs
-        Qdy6pAOAxlk6ZwSiz/kssmG6oHluqGc=
-X-Google-Smtp-Source: APXvYqy5Zw08hhM6pxUoWPxI6pHme3hvlON8SIHpX4hJW6WIeLwb+ViJQ7OCiWtEWvmYyhTdC6xyug==
-X-Received: by 2002:a17:902:b609:: with SMTP id b9mr22592307pls.70.1576588291234;
-        Tue, 17 Dec 2019 05:11:31 -0800 (PST)
-Received: from ?IPv6:2402:f000:1:1501:200:5efe:166.111.139.134? ([2402:f000:1:1501:200:5efe:a66f:8b86])
-        by smtp.gmail.com with ESMTPSA id x65sm23435167pfb.171.2019.12.17.05.11.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 17 Dec 2019 05:11:30 -0800 (PST)
-Subject: Re: [BUG] kernel: kcov: a possible sleep-in-atomic-context bug in
- kcov_ioctl()
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Hans Liljestrand <ishkamiel@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <3c4608bc-9c84-d79b-de76-b1a1a2a4fb6d@gmail.com>
- <CACT4Y+b3nvFAgM32SF0Bv46EOO4UFEK3M99pqYzEwmsmLvmhTQ@mail.gmail.com>
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-Message-ID: <e0305f5c-ae52-c144-fe50-00f3f815ad82@gmail.com>
-Date:   Tue, 17 Dec 2019 21:11:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Tue, 17 Dec 2019 08:11:36 -0500
+Received: from [192.168.1.155] ([95.114.21.161]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1McpW6-1i8PmK0D1G-00a12l; Tue, 17 Dec 2019 14:11:22 +0100
+Subject: Re: [PATCH v7 01/13] exfat: add in-memory and on-disk structures and
+ headers
+To:     Namjae Jeon <namjae.jeon@samsung.com>,
+        'Markus Elfring' <Markus.Elfring@web.de>
+Cc:     linux-kernel@vger.kernel.org, 'Christoph Hellwig' <hch@lst.de>,
+        'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>,
+        'Sungjong Seo' <sj1557.seo@samsung.com>,
+        =?UTF-8?Q?=27Valdis_Kl=c4=93tnieks=27?= <valdis.kletnieks@vt.edu>,
+        linux-fsdevel@vger.kernel.org
+References: <20191213055028.5574-2-namjae.jeon@samsung.com>
+ <CGME20191216135033epcas5p3f2ec096506b1a48535ce0796fef23b9e@epcas5p3.samsung.com>
+ <088a50ad-dc67-4ff6-624d-a1ac2008b420@web.de>
+ <002401d5b46d$543f7ee0$fcbe7ca0$@samsung.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Message-ID: <c6698d0c-d909-c9dc-5608-0b986d63a471@metux.net>
+Date:   Tue, 17 Dec 2019 14:10:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <CACT4Y+b3nvFAgM32SF0Bv46EOO4UFEK3M99pqYzEwmsmLvmhTQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+In-Reply-To: <002401d5b46d$543f7ee0$fcbe7ca0$@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: tl
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:mh372I7jZZSLHn3TFj2C4vjsq8xUP2bJNTgyJkEC5Ux0+Q+dvGX
+ xduxo7XdAI059eJX9/44Yq1irmLdP5UBBY+ObsaLvHjYn95DPmiz+YTuxxHDBmv6SCQv55G
+ U4uujJDDY6ac+c4b+1mjOokJtGGEX++sEOpJyzMJPrbHHZqDKy48brfkVNi21uuE8m906G5
+ omOFg0/1HD//Avp3Jp33w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:yv7qDD8T/Ss=:C85R98w7NY3LaLz4fH72+J
+ CO+BMGRbLbJDjY5Qga2WpvOMLY6UgQ4UYeqy33ixeCYRvRjnIaOdbHwDFoJOdJm5Pdm2VsFn3
+ zWh3DNIIRqL7Xxj4sINX4W3BBKXUvdlwx10/jJVucKdSA0sJtckKA46mw8xu/AlR04f1htgyG
+ 7hlQv8gg3AIfxTg1RFVJwG9DjF7ZumWA2eIEXg7v6Jc1qYT7XgsDhTuxkl37gtPpMbUgm5vLc
+ 9QyVbWaIEg6j+WA1asbMiRM/0o2yif70shJk2UUl4nwAlRqsgZToERDMJS6rSeNLJfhnE/vnx
+ ISWWxLubVufrIw9SL5ve5Ap6DkikkqAcI1yP+gYHyLvTIZPhmjZ0SI7r9xUYwTE5Bs2zxvDoW
+ GJhhG+QskV7GFVX1Gw/McK66cWz6+SLrnHgoIdSKpw6zXl/IXurqUxPdaEQK28Fd2vmT7ZP6O
+ PNok5eT2CzxlZFGvlBzl1QByynWUMve0PVV3SYx0cZomauHCotpfRizVrLyQvgLsSRiCU09ay
+ M9r/VFccNmwmc4hgwwZUYqLAlcWYk+aXbFw4EaPGKqLoqeMVi40neS8AJVWVd9UgU1rVI+dP3
+ mpMnPWJ+Uu/cbOQ7e5N/TrTctlcgDWT1CGnlBHlnakHAtEVEUrPSvOX+47HX0T310S6HgP2gp
+ jouZliDWWxccY4D4zrktZshUO/bZaEkEJeS0Po9biAY4C7k1Rr/94iyPwTMW8Tq9BtWiNFchW
+ L2ZD+2uO4Q9OOnsh7pyaOQvN1pEgqQNUr8jJJ88+tOUzfYNi6J3wF5+ejcjL6yV5txECnYAW8
+ cqlKSewU9wHqvFFBbH8AR52mTyd7ss4xyJjq5CLtmnLgNCLteSP1RNGrI/mh4OGemypiI/W1u
+ 0sNQoSx5ojcEPZs5MYBg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 17.12.19 01:02, Namjae Jeon wrote:
+>> 2. Which source file should provide the corresponding implementation?
+>>    (I did not find it in the update step “[PATCH v7 06/13] exfat: add exfat
+>>    entry operations” so far.)
+> Good catch, I will move it on next version.
+
+By the way: do you think the driver is already stable enough for
+production use ? Are there any limitations we have to consider ?
+
+I just have a client, who wants to use it in a semi-embedded (telemetry)
+device, for recording to an external USB drive.
 
 
-On 2019/12/17 21:02, Dmitry Vyukov wrote:
-> On Tue, Dec 17, 2019 at 1:56 PM Jia-Ju Bai <baijiaju1990@gmail.com> wrote:
->> The kernel may sleep while holding a spinlock.
->> The function call path (from bottom to top) in Linux 4.19 is:
->>
->> kernel/kcov.c, 237:
->>       vfree in kcov_put
->> kernel/kcov.c, 413:
->>       kcov_put in kcov_ioctl_locked
->> kernel/kcov.c, 427:
->>       kcov_ioctl_locked in kcov_ioctl
->> kernel/kcov.c, 426:
->>       spin_lock in kcov_ioctl
->>
->> vfree() can sleep at runtime.
->>
->> I am not sure how to properly fix this possible bug, so I only report it.
->> A possible way is to replace vfree() with kfree(), and replace related
->> calls to vmalloc() with kmalloc().
->>
->> This bug is found by a static analysis tool STCheck written by myself.
-> Hi Jia-Ju,
->
-> Are you sure kcov_ioctl_locked can really release the descriptor? It
-> happens in the context of ioctl, which means there is an open
-> reference for the file descriptor. So ioctl should not do vfree I
-> would assume.
-
-Thanks for the reply :)
-I am not sure, because I am not familiar with kcov.
-But looking at the code, if the reference count of kcov is 1, vfree() 
-could be called.
+--mtx
 
 
-Best wishes,
-Jia-Ju Bai
+-- 
+---
+Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
+werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
+GPG/PGP-Schlüssel zu.
+---
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
