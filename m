@@ -2,93 +2,130 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14258C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E87FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D463E206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:19:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44454206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:19:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576595975;
-	bh=EJtK6aAQJGztLShvbadWFyoB03ck7Av3zqUu4jtmUcI=;
+	s=default; t=1576595984;
+	bh=K3G4TQZr7CYHmEJwoV7I2f70tg7GGFtXgrXSz/VHhVA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CqAYHYXRYjC9nDODfpQz58Abillkn+7eZvvLc1lfqPAKavpOpw9B4BPlyx2Af2b9/
-	 ZKt16UJEcb438rEdpouS0Pcw7sGPzd4g1qM16aPkbfW9SQsiGo3tQOvpNeqd5BK+me
-	 jlVU0sgOxzm1yQamibjrzZg4R3MYC7u5sbr+JQVk=
+	b=Oq2KdEiBIufT62fkhyqnajGO2pgFEofnfJBuD6pxjqPRW/oVONUlOtp8T8Ki7w8fa
+	 LrXOOVk+dM255GMwK1i4t0XEamfgL1bkZjtH1WKttIrV82G5KEA2+6dvosoE5OJJTs
+	 vnkLehbQRTDr/MfuNb2Tbgdikkj+FYbwgss7cw6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbfLQPTe (ORCPT
+        id S1728340AbfLQPTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 10:19:34 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38499 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727459AbfLQPTe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 10:19:34 -0500
-Received: by mail-wm1-f66.google.com with SMTP id u2so3596394wmc.3;
-        Tue, 17 Dec 2019 07:19:33 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4zEQ83F2qGoC/F92fA9F7HDEhihvKc7tNEjbPfQsODw=;
-        b=LuZJfxArESzZXf0+Bf4L3MVHeODbImPQkqXtlzdqkAYhsBJJITn5s6d+jeXXNRGrGB
-         EnG23JzgKmw9+SFlw73blctygtExI2+lUZffXvyus+EuKQuC1d8X8TbTHCl2m9pLz2T5
-         YEWmE0VVKY0m8EFnya4pO6yjzUh0X3/HSY5ETPRYkC/1vrhj8M6Kcy35eGgNok7IdB6Q
-         +9nkCa6NOCN5X9ozE9FC5CnIG9XRRstLZATia1LUNBMhQN89Pn0dQ7n7+qlmCJqaEaJU
-         1Ohi23/kkUh2fZ6yrlwh2c1ViAS4iqQAJohkkBBHoUGEDFXPSuGZ1V+GXV2DxEvVI3VU
-         ic0A==
-X-Gm-Message-State: APjAAAVRpOAlsUkF1uKF4u7IHLVO2k6PmWOxDB3SYeiQefJZnuGteGXd
-        MKRHkIWhX7Q8s5naoS9fS9Q=
-X-Google-Smtp-Source: APXvYqztX/vQknATUnJPGuoDhEQMMAkKQ4QrJJ9k4b4XynST/j+I8Qhac3CMutXvlAw3+85wIvzcjA==
-X-Received: by 2002:a1c:ddc5:: with SMTP id u188mr5787814wmg.83.1576595972595;
-        Tue, 17 Dec 2019 07:19:32 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id a9sm3347964wmm.15.2019.12.17.07.19.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 07:19:31 -0800 (PST)
-Date:   Tue, 17 Dec 2019 16:19:31 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Chris Down <chris@chrisdown.name>
-Cc:     Qian Cai <cai@lca.pw>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: memcontrol.c: move mem_cgroup_id_get_many under
- CONFIG_MMU
-Message-ID: <20191217151931.GD7272@dhcp22.suse.cz>
-References: <20191217135440.GB58496@chrisdown.name>
- <392D7C59-5538-4A9B-8974-DB0B64880C2C@lca.pw>
- <20191217144652.GA7272@dhcp22.suse.cz>
- <20191217150921.GA136178@chrisdown.name>
+        Tue, 17 Dec 2019 10:19:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56038 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728227AbfLQPTn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 10:19:43 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E188206A5;
+        Tue, 17 Dec 2019 15:19:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576595982;
+        bh=K3G4TQZr7CYHmEJwoV7I2f70tg7GGFtXgrXSz/VHhVA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HzsVL0/VBaicl1VLel0zxkkX6nH5/SKo6OtcFJXfjdk/C/FJ6J/Dymf+7uqRKkB6E
+         Tg/cCyJEdvPfqOgErNyOziApd8aCCSeICOHC4wcFECxzg+0Z5gCMr9YO0Vsi4KVfhb
+         Kp8nWv1fsPObJbgsS/OmlynFml+xC9SLHTj5i8m8=
+Date:   Tue, 17 Dec 2019 16:19:40 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jic23@kernel.org, Michael Hennerich <michael.hennerich@analog.com>
+Subject: Re: [PATCH] iio: core: print error message on debugfs register
+ failure
+Message-ID: <20191217151940.GB3654493@kroah.com>
+References: <20191211151636.13547-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191217150921.GA136178@chrisdown.name>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191211151636.13547-1-alexandru.ardelean@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 17-12-19 15:09:21, Chris Down wrote:
-[...]
-> (Side note: I'm moderately baffled that a tightly scoped __maybe_unused is
-> considered sinister but somehow disabling -Wunused-function is on the table
-> :-))
+On Wed, Dec 11, 2019 at 05:16:36PM +0200, Alexandru Ardelean wrote:
+> From: Michael Hennerich <michael.hennerich@analog.com>
+> 
+> If there's a failure when registering a debugfs entry for a device, don't
+> silently ignore the failure. Instead, print an error message and an error
+> code signaling the failure.
 
-Well, I usually do not like to see __maybe_unused because that is prone
-to bit-rot and loses its usefulness. Looking into the recent git logs
-most -Wunused-function led to the code removal (which is really good
-but the compiler is likely to do that already so the overall impact is
-not that large) or more ifdefery. I do not really see many instance of
-__maybe_unused.
+No, never do that.
 
--- 
-Michal Hocko
-SUSE Labs
+> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> ---
+>  drivers/iio/industrialio-core.c | 34 +++++++++++++++++++++++++++------
+>  1 file changed, 28 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+> index dab67cb69fe6..662dabf8b08c 100644
+> --- a/drivers/iio/industrialio-core.c
+> +++ b/drivers/iio/industrialio-core.c
+> @@ -364,23 +364,45 @@ static const struct file_operations iio_debugfs_reg_fops = {
+>  static void iio_device_unregister_debugfs(struct iio_dev *indio_dev)
+>  {
+>  	debugfs_remove_recursive(indio_dev->debugfs_dentry);
+> +	indio_dev->debugfs_dentry = NULL;
+>  }
+>  
+>  static void iio_device_register_debugfs(struct iio_dev *indio_dev)
+>  {
+> +	struct dentry *d;
+> +	int ret;
+> +
+>  	if (indio_dev->info->debugfs_reg_access == NULL)
+>  		return;
+>  
+>  	if (!iio_debugfs_dentry)
+>  		return;
+>  
+> -	indio_dev->debugfs_dentry =
+> -		debugfs_create_dir(dev_name(&indio_dev->dev),
+> -				   iio_debugfs_dentry);
+> +	d = debugfs_create_dir(dev_name(&indio_dev->dev), iio_debugfs_dentry);
+> +	if (IS_ERR_OR_NULL(d))
+> +		goto error;
+
+No, don't do that, I spent a lot of time removing all of these pointless
+checks.
+
+No kernel code shoudl ever care if debugfs is workign or not, just make
+the call and move on.   You can always pass the result of a debugfs call
+into another one with no problems.
+
+> +
+> +	indio_dev->debugfs_dentry = d;
+> +
+> +	d = debugfs_create_file("direct_reg_access", 0644,
+> +				indio_dev->debugfs_dentry, indio_dev,
+> +				&iio_debugfs_reg_fops);
+> +
+> +	if (IS_ERR_OR_NULL(d))
+> +		goto error;
+
+This check isn't even correct :)
+
+So this isn't going to work no matter what, sorry.
+
+just don't do this.
+
+The code is just fine as-is.
+
+thanks,
+
+greg k-h
