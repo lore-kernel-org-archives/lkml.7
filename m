@@ -2,74 +2,108 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD6D9C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:36:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C377C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B18A32146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:36:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 460682146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:37:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728001AbfLQTgn (ORCPT
+        id S1728025AbfLQThH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 14:36:43 -0500
-Received: from mail.bugwerft.de ([46.23.86.59]:41634 "EHLO mail.bugwerft.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726612AbfLQTgn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 14:36:43 -0500
-Received: from [192.168.178.106] (pD95EF574.dip0.t-ipconnect.de [217.94.245.116])
-        by mail.bugwerft.de (Postfix) with ESMTPSA id 2FC83281AEB;
-        Tue, 17 Dec 2019 19:30:17 +0000 (UTC)
-Subject: Re: [PATCH 06/10] mfd: Add core driver for AD242x A2B transceivers
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        broonie@kernel.org, lars@metafoo.de, pascal.huerst@gmail.com
-References: <20191209183511.3576038-1-daniel@zonque.org>
- <20191209183511.3576038-8-daniel@zonque.org> <20191217133952.GJ18955@dell>
- <20191217134617.GK18955@dell>
-From:   Daniel Mack <daniel@zonque.org>
-Message-ID: <ff062a37-e07d-3d6c-7fa5-9e6dc74b1aa9@zonque.org>
-Date:   Tue, 17 Dec 2019 20:36:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 17 Dec 2019 14:37:07 -0500
+Received: from mout.kundenserver.de ([212.227.126.130]:40697 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726612AbfLQThG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 14:37:06 -0500
+Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MK3BO-1iPCk31Wr0-00LRpU for <linux-kernel@vger.kernel.org>; Tue, 17 Dec
+ 2019 20:37:05 +0100
+Received: by mail-qk1-f172.google.com with SMTP id 21so6535432qky.4
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 11:37:05 -0800 (PST)
+X-Gm-Message-State: APjAAAWPIa6Dv5UqSyon5UD6HjgEpWZxRvcLWfOaA15mXYjH7dtO4gzh
+        y4GA8LMUBwUJX9b4FjG6nVuhrNguLPkPH/tmo6c=
+X-Google-Smtp-Source: APXvYqw3+s7qQFhMroHKJHTpeeeEQA+c8IYEivQguj0Uwpw8ohqZYzlz6cX2TpJ8GKdmMRgkE8Tdeq4RIFKKZ0HWTrM=
+X-Received: by 2002:a37:84a:: with SMTP id 71mr6731872qki.138.1576611424271;
+ Tue, 17 Dec 2019 11:37:04 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191217134617.GK18955@dell>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191217172455.186395-1-Jason@zx2c4.com>
+In-Reply-To: <20191217172455.186395-1-Jason@zx2c4.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 17 Dec 2019 20:36:48 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a00O6_XjUd33_4esaEXu4fEf4+3fvrttXMzx=-1ruFaAQ@mail.gmail.com>
+Message-ID: <CAK8P3a00O6_XjUd33_4esaEXu4fEf4+3fvrttXMzx=-1ruFaAQ@mail.gmail.com>
+Subject: Re: [PATCH] random: don't forget compat_ioctl on unrandom
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:z2nFtk5MYl031enViuErDcm83x+3F3aklgD455tvmyajHdbJO0S
+ LkCvfM1yyFlMY4xs8N7fxcc1ElC+E6mW81umRGVQub3Sd9K5iCFKzqVNxyUl0jyO4J5jn2y
+ Ffi0XjytXVQ+KXpYsMfzQDCAIC8rvmsrU7/H5sVbrB6OXXlXz1QCEueoTKLTNqgKW2t/qZo
+ 5nuEaTuqSGQmkz8DjE61w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:XPrvu9UMPuA=:+t9u7yMeTfOmfAQIuD+ZNZ
+ WqOsUTzDJc3iqlWX54pd6oMo+pvXaPOtiMJpe0Bd2rwChi1/6tTBtBnHB12VQxYrTBGSmXmPM
+ m9zj6aSlFqOxDerimuzEmtOLTAyd78TDwuVJfJ/GrqIUzNOYOxMB/j9AHJ7HqYOrmZviByrxm
+ hzxCtEXqseGe+tZjX52wolAxm3pPAhynPHjmQV7Y8wpZmWMnJi1wIRbcUumE79YXhAKCJbMuM
+ E5ldR8dsMPa8kLRwUezFFPyfdxvZe0yjwkukGcCp23jqCo6t+Nkhau8gabUpn/wdCBdXB0w/Q
+ wFkC269K9Fv2Z6GM1J5HutlpYYB9T7cdu5I27DHfYwv/qwUSzLaLn3vNcfEPTLOqGxYXxDa9E
+ GUjd0O6A/Hc1UPKypXOFOJRFFrpATUkzB6jw9xVr/BhAthTHXaUMPndZqn4BbLMke+ueFPZVQ
+ cRmrlrZYKRM7KlF5jSpUWTtMjYRlLR2Ga7DI1T6Z+xb+iUXPGKq4/hX2q8evLvzCc6/N8FXsA
+ MYy+uMtWnAPFnXsbkzxDZcr57S9tVqU0KKxMugb1vWoqgPFhge3swhQUg4oe/U1EZtmqRMSbv
+ 9lK05pov2BFqb/78fGNj8430b+hz97Pm1g3yQSWrouFhnekErrsJe4E0VcRpA8agTlhJsTw6B
+ J6+/MWFGRDCnu9Hxa0KYkQWHrIpwSjk2iEXewuxRjXE3Sw5rH1IuDCuZ8bvN1S3DsY9405R1S
+ 9GOLYWraV7kt2Xr/rm4LISr5RBJvpoVnxtB4TCmBoBzJ6Uuk931f3hyZ5kD8B5t8ajghmESlg
+ LgWhsg6Hr+bdIb4rxt+MwJCF1TdyhVQSncg7lqFCFPtYEUXzWOoGRMUwQxnl2rbtubtAALsBx
+ dlLJF4w3tZEftZqdRtGw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lee,
+On Tue, Dec 17, 2019 at 6:25 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+>
+> Recently, there's been some compat ioctl cleanup, in which large
+> hardcoded lists were replaced with compat_ptr_ioctl. One of these
+> changes involved removing the random.c hardcoded list entries and adding
+> a compat ioctl function pointer to the random.c fops. In the process,
+> urandom was forgotten about, so this commit fixes that oversight.
+>
+> Fixes: 507e4e2b430b ("compat_ioctl: remove /dev/random commands")
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
 
-On 12/17/19 2:46 PM, Lee Jones wrote:
-> One thing I should mention upfront; there is too much code "doing
-> things" in here for it to be an MFD.  MFDs don't care about; syncs,
-> slots, TDM, inverting lines, upstreams, downstreams, etc etc etc.
-> Anything remotely technical or functional, the code that "does things"
-> should be moved out to the relevant areas.  In the case of this
-> device, that's looking like one of the Audio related subsystems.
+Thanks for debugging this. I had already sent the same
+patch a few days ago after the first report:
 
-Okay, that's good to know.
+https://lore.kernel.org/lkml/20191207185837.4030699-1-arnd@arndb.de/
 
-I in fact considered that when I started working on it; after all, A2B 
-stands for "automotive audio bus". The reason why I didn't do it was the 
-fact that these devices certainly do have multiple functions, where 
-audio is just one of them, and there needs to be a 'top-level' layer 
-that enables all these functions and does the node discovery etc. Hence 
-I thought it's cleaner to separate things that way.
+Greg, can you please apply one of these and send it to Linus for 5.5-rc3?
 
-I can move things over to the ASoC layer for the next iteration, and 
-then maybe also merge the codec driver with the baseline drivers. Let's 
-see how this looks like then.
+     Arnd
 
-
-Thanks,
-Daniel
+> ---
+>  drivers/char/random.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/char/random.c b/drivers/char/random.c
+> index 909e0c3d82ea..cda12933a17d 100644
+> --- a/drivers/char/random.c
+> +++ b/drivers/char/random.c
+> @@ -2175,6 +2175,7 @@ const struct file_operations urandom_fops = {
+>         .read  = urandom_read,
+>         .write = random_write,
+>         .unlocked_ioctl = random_ioctl,
+> +       .compat_ioctl = compat_ptr_ioctl,
+>         .fasync = random_fasync,
+>         .llseek = noop_llseek,
+>  };
+> --
+> 2.24.1
+>
