@@ -2,122 +2,141 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59EAFC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 02:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A958AC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 02:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27574206D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 02:16:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fMahm2K5"
+	by mail.kernel.org (Postfix) with ESMTP id 7B26320CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 02:26:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbfLQCQV (ORCPT
+        id S1726705AbfLQC0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 21:16:21 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:35348 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726368AbfLQCQV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 21:16:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=siGlAtwbpMtn2+e/O7hKM+nw0EWpzij1iF2dGkh6S28=; b=fMahm2K5a4Q9AU7WAk02csbb8w
-        kPQUQkYGI1oxLG13qBOQYj40/hcOw6UrbIKgqlWAymUgbivUWBlJBr0EBJQYEtGKsLM8iyozgPkhR
-        FPjoylR+LfIYOO09S4gFDvvCUKRYE/fh7bNn6HwUfg9TmcvJAjXXkTRfLfGT0whTBbTyUtZUxfZag
-        +0zeiBvJK7mPFXM2IspiWLrfiiZq7641o5OVTZLszsOX8JG98YfVlKnY82iYtBwOt/maBbZGdzFdP
-        e1qJxVzjYr8raPVoeo/pMmCTp9aG32t41zTdk8q0B6hkXf3iUmfVdwvYGFDRVoEXOHUOfvmsgjjNm
-        v/67Uo4A==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ih2PF-0007pq-5W; Tue, 17 Dec 2019 02:16:13 +0000
-Date:   Mon, 16 Dec 2019 18:16:13 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
-        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, shakeelb@google.com,
-        hannes@cmpxchg.org, Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        swkhack <swkhack@gmail.com>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Colin Ian King <colin.king@canonical.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: Re: [PATCH v6 02/10] mm/lru: replace pgdat lru_lock with lruvec lock
-Message-ID: <20191217021613.GB32169@bombadil.infradead.org>
-References: <1576488386-32544-1-git-send-email-alex.shi@linux.alibaba.com>
- <1576488386-32544-3-git-send-email-alex.shi@linux.alibaba.com>
- <20191216121427.GZ32169@bombadil.infradead.org>
- <286c11c2-480f-37d6-e9fe-91822f862cd6@linux.alibaba.com>
+        Mon, 16 Dec 2019 21:26:22 -0500
+Received: from mga03.intel.com ([134.134.136.65]:15828 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726591AbfLQC0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 21:26:21 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 18:26:20 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,323,1571727600"; 
+   d="scan'208";a="217366633"
+Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
+  by orsmga006.jf.intel.com with ESMTP; 16 Dec 2019 18:26:20 -0800
+Received: from fmsmsx119.amr.corp.intel.com (10.18.124.207) by
+ FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 16 Dec 2019 18:26:20 -0800
+Received: from shsmsx154.ccr.corp.intel.com (10.239.6.54) by
+ FMSMSX119.amr.corp.intel.com (10.18.124.207) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 16 Dec 2019 18:26:19 -0800
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.90]) by
+ SHSMSX154.ccr.corp.intel.com ([169.254.7.71]) with mapi id 14.03.0439.000;
+ Tue, 17 Dec 2019 10:26:18 +0800
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+CC:     "Raj, Ashok" <ashok.raj@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>, Peter Xu <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3 5/6] iommu/vt-d: Flush PASID-based iotlb for iova
+ over first level
+Thread-Topic: [PATCH v3 5/6] iommu/vt-d: Flush PASID-based iotlb for iova
+ over first level
+Thread-Index: AQHVr8iiJX/bvAPmK0eIArQDcTD6yKe33K3QgACZjICAAndaMIACHLkAgAAFFACAAJLKQA==
+Date:   Tue, 17 Dec 2019 02:26:17 +0000
+Message-ID: <A2975661238FB949B60364EF0F2C25743A135CAB@SHSMSX104.ccr.corp.intel.com>
+References: <20191211021219.8997-1-baolu.lu@linux.intel.com>
+ <20191211021219.8997-6-baolu.lu@linux.intel.com>
+ <A2975661238FB949B60364EF0F2C25743A130C08@SHSMSX104.ccr.corp.intel.com>
+ <f1e5cfea-8b11-6d72-8e57-65daea51c050@linux.intel.com>
+ <A2975661238FB949B60364EF0F2C25743A132C50@SHSMSX104.ccr.corp.intel.com>
+ <6a5f6695-d1fd-e7d1-3ea3-f222a1ef0e54@linux.intel.com>
+ <b4a879b2-a5c7-b0bf-8cd4-7397aeebc381@linux.intel.com>
+In-Reply-To: <b4a879b2-a5c7-b0bf-8cd4-7397aeebc381@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMDIxNWMyOWQtMmViMi00MDliLWIwODAtMmYyNDAzZTY1ZTFkIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiakNFTFFiaFZhTnNLWFNSNjY3a2FkVmpmWDBqd3JxZlQ3Q3RXektlWjYxdTdobDFzaGJSMjRWbGZtQlFROGtkTiJ9
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <286c11c2-480f-37d6-e9fe-91822f862cd6@linux.alibaba.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 09:30:13AM +0800, Alex Shi wrote:
-> 在 2019/12/16 下午8:14, Matthew Wilcox 写道:
-> > On Mon, Dec 16, 2019 at 05:26:18PM +0800, Alex Shi wrote:
-> >> -static void lock_page_lru(struct page *page, int *isolated)
-> >> +static struct lruvec *lock_page_lru(struct page *page, int *isolated)
-> >>  {
-> >> -	pg_data_t *pgdat = page_pgdat(page);
-> >> +	struct lruvec *lruvec = lock_page_lruvec_irq(page);
-> >>  
-> >> -	spin_lock_irq(&pgdat->lru_lock);
-> >>  	if (PageLRU(page)) {
-> >> -		struct lruvec *lruvec;
-> >>  
-> >> -		lruvec = mem_cgroup_page_lruvec(page, pgdat);
-> >>  		ClearPageLRU(page);
-> >>  		del_page_from_lru_list(page, lruvec, page_lru(page));
-> >>  		*isolated = 1;
-> >>  	} else
-> >>  		*isolated = 0;
-> >> +
-> >> +	return lruvec;
-> >>  }
-> > 
-> > You still didn't fix this function.  Go back and look at my comment from
-> > the last time you sent this patch set.
-> > 
-> 
-> Sorry for the misunderstanding. I guess what your want is fold the patch 9th into this, is that right?
-> Any comments for the 9th patch?
-
-I didn't get as far as looking at the ninth patch because I saw this
-one was wrong and stopped looking.  This is not the first time *with
-this patch set* that you've been told to *fix the patch*, not submit
-something that's broken and fix it in a later patch.
-
-I'll look at patch 9 later.
+PiBGcm9tOiBMdSBCYW9sdSBbbWFpbHRvOmJhb2x1Lmx1QGxpbnV4LmludGVsLmNvbV0NCj4gU2Vu
+dDogVHVlc2RheSwgRGVjZW1iZXIgMTcsIDIwMTkgOTozNyBBTQ0KPiBUbzogTGl1LCBZaSBMIDx5
+aS5sLmxpdUBpbnRlbC5jb20+OyBKb2VyZyBSb2VkZWwgPGpvcm9AOGJ5dGVzLm9yZz47IERhdmlk
+DQo+IFdvb2Rob3VzZSA8ZHdtdzJAaW5mcmFkZWFkLm9yZz47IEFsZXggV2lsbGlhbXNvbg0KPiA8
+YWxleC53aWxsaWFtc29uQHJlZGhhdC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgNS82
+XSBpb21tdS92dC1kOiBGbHVzaCBQQVNJRC1iYXNlZCBpb3RsYiBmb3IgaW92YSBvdmVyIGZpcnN0
+DQo+IGxldmVsDQo+IA0KPiBIaSBhZ2FpbiwNCj4gDQo+IE9uIDEyLzE3LzE5IDk6MTkgQU0sIEx1
+IEJhb2x1IHdyb3RlOg0KPiA+IEhpIFlpLA0KPiA+DQo+ID4gT24gMTIvMTUvMTkgNToyMiBQTSwg
+TGl1LCBZaSBMIHdyb3RlOg0KPiA+PiBPaywgbGV0IG1lIGV4cGxhaW4gbW9yZS4uLiBkZWZhdWx0
+IHBhc2lkIGlzIG1lYW5pbmdmdWwgb25seSB3aGVuDQo+ID4+IHRoZSBkb21haW4gaGFzIGJlZW4g
+YXR0YWNoZWQgdG8gYSBkZXZpY2UgYXMgYW4gYXV4LWRvbWFpbi4gcmlnaHQ/DQo+ID4NCj4gPiBO
+byBleGFjdGx5LiBFYWNoIGRvbWFpbiBoYXMgYSBzcGVjaWZpYyBkZWZhdWx0IHBhc2lkLCBubyBt
+YXR0ZXIgbm9ybWFsDQo+ID4gZG9tYWluIChSSUQgYmFzZWQpIG9yIGF1eC1kb21haW4gKFBBU0lE
+IGJhc2VkKS4gVGhlIGRpZmZlcmVuY2UgaXMgZm9yIGENCj4gPiBub3JtYWwgZG9tYWluIFJJRDJQ
+QVNJRCB2YWx1ZSBpcyB1c2VkLCBmb3IgYW4gYXV4LWRvbWFpbiB0aGUgcGFzaWQgaXMNCj4gPiBh
+bGxvY2F0ZWQgZnJvbSBhIGdsb2JhbCBwb29sLg0KPiA+DQo+ID4gVGhlIHNhbWUgY29uY2VwdCB1
+c2VkIGluIFZULWQgMy54IHNjYWxhYmxlIG1vZGUuIEZvciBSSUQgYmFzZWQgRE1BDQo+ID4gdHJh
+bnNsYXRpb24gUklEMlBBU0lEIHZhbHVlIGlzIHVzZWQgd2hlbiB3YWxraW5nIHRoZSB0YWJsZXM7
+IEZvciBQQVNJRA0KPiA+IGJhc2VkIERNQSB0cmFuc2xhdGlvbiBhIHJlYWwgcGFzaWQgaW4gdGhl
+IHRyYW5zYWN0aW9uIGlzIHVzZWQuDQo+ID4NCj4gPj4gSWYgYSBkb21haW4gb25seSBoYXMgb25l
+IGRldmljZSwgYW5kIGl0IGlzIGF0dGFjaGVkIHRvIHRoaXMgZGV2aWNlIGFzDQo+ID4+IG5vcm1h
+bCBkb21haW4gKG5vcm1hbCBkb21haW4gbWVhbnMgbm9uIGF1eC1kb21haW4gaGVyZSkuIFRoZW4N
+Cj4gPj4geW91IHNob3VsZCBmbHVzaCBjYWNoZSB3aXRoIGRvbWFpbi1pZCBhbmQgUklEMlBBU0lE
+IHZhbHVlLg0KPiA+PiBJZiBhIGRvbWFpbiBoYXMgb25lIGRldmljZSwgYW5kIGl0IGlzIGF0dGFj
+aGVkIHRvIHRoaXMgZGV2aWNlIGFzDQo+ID4+IGF1eC1kb21haW4uIFRoZW4geW91IG1heSB3YW50
+IHRvIGZsdXNoIGNhY2hlIHdpdGggZG9tYWluLWlkDQo+ID4+IGFuZCBkZWZhdWx0IHBhc2lkLiBy
+aWdodD8NCj4gPg0KPiA+IEEgZG9tYWluJ3MgY291bnRlcnBhcnQgaXMgSU9NTVUgZ3JvdXAuIFNv
+IHdlIHNheSBhdHRhY2gvZGV0YWNoIGRvbWFpbg0KPiA+IHRvL2Zyb20gZGV2aWNlcyBpbiBhIGdy
+b3VwLiBXZSBkb24ndCBhbGxvdyBkZXZpY2VzIHdpdGggZGlmZmVyZW50DQo+ID4gZGVmYXVsdCBw
+YXNpZCBzaXR0aW5nIGluIGEgc2FtZSBncm91cCwgcmlnaHQ/DQo+ID4NCj4gPj4gVGhlbiBsZXQn
+cyBjb21lIHRvIHRoZSBjYXNlIEkgbWVudGlvbmVkIGluIHByZXZpb3VzIGVtYWlsLiBhIG1kZXYN
+Cj4gPj4gYW5kIGFub3RoZXIgZGV2aWNlIGFzc2lnbmVkIHRvIGEgc2luZ2xlIFZNLiBJbiBob3N0
+LCB5b3Ugd2lsbCBoYXZlDQo+ID4+IGEgZG9tYWluIHdoaWNoIGhhcyB0d28gZGV2aWNlcywgb25l
+IGRldmljZShkZXZhKSBpcyBhdHRhY2hlZCBhcw0KPiA+DQo+ID4gTm8uIFdlIHdpbGwgaGF2ZSB0
+d28gSU9NTVUgZ3JvdXBzIGFuZCB0d28gZG9tYWlucy4gQ29ycmVjdCBtZSBpZiBteQ0KPiA+IHVu
+ZGVyc3RhbmRpbmcgaXMgbm90IHJpZ2h0Lg0KPiANCj4gUmVjb25zaWRlcmVkIHRoaXMuIFVuZm9y
+dHVuYXRlbHksIG15IHVuZGVyc3RhbmRpbmcgaXMgbm90IHJpZ2h0LiA6LSgNCj4gDQo+IEEgc2lu
+Z2xlIGRvbWFpbiBjb3VsZCBiZSBhdHRhY2hlZCB0byBtdWx0aXBsZSBJT01NVSBncm91cHMuIFNv
+IGl0DQo+IGNvbWVzIHRvIHRoZSBpc3N1ZSB5b3UgY29uY2VybmVkLiBEbyBJIHVuZGVyc3RhbmQg
+aXQgcmlnaHQ/DQoNCnllcy4gRGV2aWNlIHdpdGhpbiB0aGUgc2FtZSBncm91cCBoYXMgbm8gc3Vj
+aCBpc3N1ZSBzaW5jZSBzdWNoDQpkZXZpY2VzIGFyZSBub3QgYWJsZSB0byBlbmFibGVkIGF1eC1k
+b21haW4uIE5vdyBvdXIgdW5kZXJzdGFuZGluZw0KYXJlIGFsaWduZWQuIDotKQ0KDQo+ID4NCj4g
+Pj4gbm9ybWFsIGRvbWFpbiwgYW5vdGhlciBvbmUgKGRldkIpIGlzIGF0dGFjaGVkIGFzIGF1eC1k
+b21haW4uIFRoZW4NCj4gPj4gd2hpY2ggcGFzaWQgc2hvdWxkIGJlIHVzZWQgd2hlbiB0aGUgbWFw
+cGluZyBpbiBJT1ZBIHBhZ2UgdGFibGUgaXMNCj4gPj4gbW9kaWZpZWQ/IFJJRDJQQVNJRCBvciBk
+ZWZhdWx0IHBhc2lkPyBJIHRoaW5rIGJvdGggc2hvdWxkIGJlIHVzZWQNCj4gPj4gc2luY2UgdGhl
+IGRvbWFpbiBtZWFucyBkaWZmZXJlbnRseSB0byB0aGUgdHdvIGRldmljZXMuIElmIHlvdSBqdXN0
+DQo+ID4+IHVzZSBkZWZhdWx0IHBhc2lkLCB0aGVuIGRldmEgbWF5IHN0aWxsIGJlIGFibGUgdG8g
+dXNlIHN0YWxlIGNhY2hlcy4NCj4gDQo+IFlvdSBhcmUgcmlnaHQuIEkgd2lsbCBjaGFuZ2UgaXQg
+YWNjb3JkaW5nbHkuIFRoZSBsb2dpYyBzaG91bGQgbG9vaw0KPiBsaWtlOg0KPiANCj4gaWYgKGRv
+bWFpbiBhdHRhY2hlZCB0byBwaHlzaWNhbCBkZXZpY2UpDQo+IAlmbHVzaF9waW90bGJfd2l0aF9S
+SUQyUEFTSUQoKQ0KPiBlbHNlIGlmIChkb21haW5fYXR0YWNoZWRfdG9fbWRldl9kZXZpY2UpDQo+
+IAlmbHVzaF9waW90bGJfd2l0aF9kZWZhdWx0X3Bhc2lkKCkNCj4gDQo+IERvZXMgdGhpcyB3b3Jr
+IGZvciB5b3U/IFRoYW5rcyBmb3IgY2F0Y2hpbmcgdGhpcyENCg0KSWYgbm8gZWxzZSwgaXQgd291
+bGQgd29yayBmb3Igc2NhbGFibGUgbW9kZS4gXl9eIEkgbm90aWNlZCB5b3UndmUNCmFscmVhZHkg
+Y29ycmVjdGVkIGJ5IHlvdXJzZWxmIGluIGFub3RoZXIgcmVwbHkuIDotKSBMb29rIGZvcndhcmQg
+dG8NCnlvdXIgbmV4dCB2ZXJzaW9uLg0KDQpSZWdhcmRzLA0KWWkgTGl1DQo=
