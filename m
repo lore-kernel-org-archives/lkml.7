@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2FE2C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9560C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92B8224673
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8CAD20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:55:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728243AbfLQAz3 (ORCPT
+        id S1728052AbfLQAzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:55:29 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35272 "EHLO
+        Mon, 16 Dec 2019 19:55:24 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35286 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727031AbfLQAvn (ORCPT
+        by vger.kernel.org with ESMTP id S1727039AbfLQAvn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 19:51:43 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15K-0003Mn-N7; Tue, 17 Dec 2019 00:51:34 +0000
+        id 1ih15I-0003LC-Iy; Tue, 17 Dec 2019 00:51:32 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15I-0005Zh-MC; Tue, 17 Dec 2019 00:51:32 +0000
+        id 1ih15I-0005Yk-E2; Tue, 17 Dec 2019 00:51:32 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Vineet Gupta" <vgupta@synopsys.com>,
-        "Alexey Brodkin" <abrodkin@synopsys.com>,
-        "Alexey Brodkin" <Alexey.Brodkin@synopsys.com>
-Date:   Tue, 17 Dec 2019 00:46:57 +0000
-Message-ID: <lsq.1576543535.455415966@decadent.org.uk>
+        "Yufen Yu" <yuyufen@huawei.com>,
+        "Bart Van Assche" <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Date:   Tue, 17 Dec 2019 00:46:50 +0000
+Message-ID: <lsq.1576543535.245209603@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 083/136] ARC: perf: Accommodate big-endian CPU
+Subject: [PATCH 3.16 076/136] scsi: core: try to get module before
+ removing device
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,76 +57,91 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+From: Yufen Yu <yuyufen@huawei.com>
 
-commit 5effc09c4907901f0e71e68e5f2e14211d9a203f upstream.
+commit 77c301287ebae86cc71d03eb3806f271cb14da79 upstream.
 
-8-letter strings representing ARC perf events are stores in two
-32-bit registers as ASCII characters like that: "IJMP", "IALL", "IJMPTAK" etc.
+We have a test case like block/001 in blktests, which will create a scsi
+device by loading scsi_debug module and then try to delete the device by
+sysfs interface. At the same time, it may remove the scsi_debug module.
 
-And the same order of bytes in the word is used regardless CPU endianness.
+And getting a invalid paging request BUG_ON as following:
 
-Which means in case of big-endian CPU core we need to swap bytes to get
-the same order as if it was on little-endian CPU.
+[   34.625854] BUG: unable to handle page fault for address: ffffffffa0016bb8
+[   34.629189] Oops: 0000 [#1] SMP PTI
+[   34.629618] CPU: 1 PID: 450 Comm: bash Tainted: G        W         5.4.0-rc3+ #473
+[   34.632524] RIP: 0010:scsi_proc_hostdir_rm+0x5/0xa0
+[   34.643555] CR2: ffffffffa0016bb8 CR3: 000000012cd88000 CR4: 00000000000006e0
+[   34.644545] Call Trace:
+[   34.644907]  scsi_host_dev_release+0x6b/0x1f0
+[   34.645511]  device_release+0x74/0x110
+[   34.646046]  kobject_put+0x116/0x390
+[   34.646559]  put_device+0x17/0x30
+[   34.647041]  scsi_target_dev_release+0x2b/0x40
+[   34.647652]  device_release+0x74/0x110
+[   34.648186]  kobject_put+0x116/0x390
+[   34.648691]  put_device+0x17/0x30
+[   34.649157]  scsi_device_dev_release_usercontext+0x2e8/0x360
+[   34.649953]  execute_in_process_context+0x29/0x80
+[   34.650603]  scsi_device_dev_release+0x20/0x30
+[   34.651221]  device_release+0x74/0x110
+[   34.651732]  kobject_put+0x116/0x390
+[   34.652230]  sysfs_unbreak_active_protection+0x3f/0x50
+[   34.652935]  sdev_store_delete.cold.4+0x71/0x8f
+[   34.653579]  dev_attr_store+0x1b/0x40
+[   34.654103]  sysfs_kf_write+0x3d/0x60
+[   34.654603]  kernfs_fop_write+0x174/0x250
+[   34.655165]  __vfs_write+0x1f/0x60
+[   34.655639]  vfs_write+0xc7/0x280
+[   34.656117]  ksys_write+0x6d/0x140
+[   34.656591]  __x64_sys_write+0x1e/0x30
+[   34.657114]  do_syscall_64+0xb1/0x400
+[   34.657627]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[   34.658335] RIP: 0033:0x7f156f337130
 
-Otherwise we're seeing the following error message on boot:
-------------------------->8----------------------
-ARC perf        : 8 counters (32 bits), 40 conditions, [overflow IRQ support]
-sysfs: cannot create duplicate filename '/devices/arc_pct/events/pmji'
-CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.2.18 #3
-Stack Trace:
-  arc_unwind_core+0xd4/0xfc
-  dump_stack+0x64/0x80
-  sysfs_warn_dup+0x46/0x58
-  sysfs_add_file_mode_ns+0xb2/0x168
-  create_files+0x70/0x2a0
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 1 at kernel/events/core.c:12144 perf_event_sysfs_init+0x70/0xa0
-Failed to register pmu: arc_pct, reason -17
-Modules linked in:
-CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.2.18 #3
-Stack Trace:
-  arc_unwind_core+0xd4/0xfc
-  dump_stack+0x64/0x80
-  __warn+0x9c/0xd4
-  warn_slowpath_fmt+0x22/0x2c
-  perf_event_sysfs_init+0x70/0xa0
----[ end trace a75fb9a9837bd1ec ]---
-------------------------->8----------------------
+During deleting scsi target, the scsi_debug module have been removed. Then,
+sdebug_driver_template belonged to the module cannot be accessd, resulting
+in scsi_proc_hostdir_rm() BUG_ON.
 
-What happens here we're trying to register more than one raw perf event
-with the same name "PMJI". Why? Because ARC perf events are 4 to 8 letters
-and encoded into two 32-bit words. In this particular case we deal with 2
-events:
- * "IJMP____" which counts all jump & branch instructions
- * "IJMPC___" which counts only conditional jumps & branches
+To fix the bug, we add scsi_device_get() in sdev_store_delete() to try to
+increase refcount of module, avoiding the module been removed.
 
-Those strings are split in two 32-bit words this way "IJMP" + "____" &
-"IJMP" + "C___" correspondingly. Now if we read them swapped due to CPU core
-being big-endian then we read "PMJI" + "____" & "PMJI" + "___C".
-
-And since we interpret read array of ASCII letters as a null-terminated string
-on big-endian CPU we end up with 2 events of the same name "PMJI".
-
-Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
-[bwh: Backported to 3.16: adjust context]
+Link: https://lore.kernel.org/r/20191015130556.18061-1-yuyufen@huawei.com
+Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/arc/kernel/perf_event.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/scsi_sysfs.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
---- a/arch/arc/kernel/perf_event.c
-+++ b/arch/arc/kernel/perf_event.c
-@@ -274,8 +274,8 @@ static int arc_pmu_device_probe(struct p
+--- a/drivers/scsi/scsi_sysfs.c
++++ b/drivers/scsi/scsi_sysfs.c
+@@ -652,6 +652,14 @@ sdev_store_delete(struct device *dev, st
+ 		  const char *buf, size_t count)
+ {
+ 	struct kernfs_node *kn;
++	struct scsi_device *sdev = to_scsi_device(dev);
++
++	/*
++	 * We need to try to get module, avoiding the module been removed
++	 * during delete.
++	 */
++	if (scsi_device_get(sdev))
++		return -ENODEV;
  
- 	for (j = 0; j < cc_bcr.c; j++) {
- 		write_aux_reg(ARC_REG_CC_INDEX, j);
--		cc_name.indiv.word0 = read_aux_reg(ARC_REG_CC_NAME0);
--		cc_name.indiv.word1 = read_aux_reg(ARC_REG_CC_NAME1);
-+		cc_name.indiv.word0 = le32_to_cpu(read_aux_reg(ARC_REG_CC_NAME0));
-+		cc_name.indiv.word1 = le32_to_cpu(read_aux_reg(ARC_REG_CC_NAME1));
- 		for (i = 0; i < ARRAY_SIZE(arc_pmu_ev_hw_map); i++) {
- 			if (arc_pmu_ev_hw_map[i] &&
- 			    !strcmp(arc_pmu_ev_hw_map[i], cc_name.str) &&
+ 	kn = sysfs_break_active_protection(&dev->kobj, &attr->attr);
+ 	WARN_ON_ONCE(!kn);
+@@ -666,9 +674,10 @@ sdev_store_delete(struct device *dev, st
+ 	 * state into SDEV_DEL.
+ 	 */
+ 	device_remove_file(dev, attr);
+-	scsi_remove_device(to_scsi_device(dev));
++	scsi_remove_device(sdev);
+ 	if (kn)
+ 		sysfs_unbreak_active_protection(kn);
++	scsi_device_put(sdev);
+ 	return count;
+ };
+ static DEVICE_ATTR(delete, S_IWUSR, NULL, sdev_store_delete);
 
