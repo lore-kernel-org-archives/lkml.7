@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4330C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA60C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0CA721582
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B8B621775
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728270AbfLQMkD (ORCPT
+        id S1728281AbfLQMkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:40:03 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55265 "EHLO
+        Tue, 17 Dec 2019 07:40:05 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55269 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728157AbfLQMkB (ORCPT
+        with ESMTP id S1728250AbfLQMkB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 17 Dec 2019 07:40:01 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ihC8m-0001oW-Dw; Tue, 17 Dec 2019 13:39:52 +0100
+        id 1ihC8r-0001sK-8T; Tue, 17 Dec 2019 13:39:57 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 922521C2A3B;
-        Tue, 17 Dec 2019 13:39:51 +0100 (CET)
-Date:   Tue, 17 Dec 2019 12:39:51 -0000
-From:   "tip-bot2 for Johannes Weiner" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5F2631C2A42;
+        Tue, 17 Dec 2019 13:39:53 +0100 (CET)
+Date:   Tue, 17 Dec 2019 12:39:53 -0000
+From:   "tip-bot2 for Frederic Weisbecker" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/urgent] psi: Fix a division error in psi poll()
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Jingfeng Xie <xiejingfeng@linux.alibaba.com>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191203183524.41378-3-hannes@cmpxchg.org>
-References: <20191203183524.41378-3-hannes@cmpxchg.org>
+Subject: [tip: sched/core] sched: Spare resched IPI when prio changes on a
+ single fair task
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20191203160106.18806-2-frederic@kernel.org>
+References: <20191203160106.18806-2-frederic@kernel.org>
 MIME-Version: 1.0
-Message-ID: <157658639149.30329.11554714780751480566.tip-bot2@tip-bot2>
+Message-ID: <157658639317.30329.4178285376901273238.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,43 +56,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/urgent branch of tip:
+The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     c3466952ca1514158d7c16c9cfc48c27d5c5dc0f
-Gitweb:        https://git.kernel.org/tip/c3466952ca1514158d7c16c9cfc48c27d5c5dc0f
-Author:        Johannes Weiner <hannes@cmpxchg.org>
-AuthorDate:    Tue, 03 Dec 2019 13:35:24 -05:00
+Commit-ID:     7c2e8bbd87db661122e92d71a394dd7bb3ada4d3
+Gitweb:        https://git.kernel.org/tip/7c2e8bbd87db661122e92d71a394dd7bb3ada4d3
+Author:        Frederic Weisbecker <frederic@kernel.org>
+AuthorDate:    Tue, 03 Dec 2019 17:01:05 +01:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Tue, 17 Dec 2019 13:32:48 +01:00
+CommitterDate: Tue, 17 Dec 2019 13:32:50 +01:00
 
-psi: Fix a division error in psi poll()
+sched: Spare resched IPI when prio changes on a single fair task
 
-The psi window size is a u64 an can be up to 10 seconds right now,
-which exceeds the lower 32 bits of the variable. We currently use
-div_u64 for it, which is meant only for 32-bit divisors. The result is
-garbage pressure sampling values and even potential div0 crashes.
+The runqueue of a fair task being remotely reniced is going to get a
+resched IPI in order to reassess which task should be the current
+running on the CPU. However that evaluation is useless if the fair task
+is running alone, in which case we can spare that IPI, preventing
+nohz_full CPUs from being disturbed.
 
-Use div64_u64.
-
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+Reported-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Suren Baghdasaryan <surenb@google.com>
-Cc: Jingfeng Xie <xiejingfeng@linux.alibaba.com>
-Link: https://lkml.kernel.org/r/20191203183524.41378-3-hannes@cmpxchg.org
+Cc: Ingo Molnar <mingo@kernel.org>
+Link: https://lkml.kernel.org/r/20191203160106.18806-2-frederic@kernel.org
 ---
- kernel/sched/psi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/sched/fair.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-index 970db46..ce8f674 100644
---- a/kernel/sched/psi.c
-+++ b/kernel/sched/psi.c
-@@ -482,7 +482,7 @@ static u64 window_update(struct psi_window *win, u64 now, u64 value)
- 		u32 remaining;
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 08a233e..846f50b 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -10322,6 +10322,9 @@ prio_changed_fair(struct rq *rq, struct task_struct *p, int oldprio)
+ 	if (!task_on_rq_queued(p))
+ 		return;
  
- 		remaining = win->size - elapsed;
--		growth += div_u64(win->prev_growth * remaining, win->size);
-+		growth += div64_u64(win->prev_growth * remaining, win->size);
- 	}
- 
- 	return growth;
++	if (rq->cfs.nr_running == 1)
++		return;
++
+ 	/*
+ 	 * Reschedule if we are currently running on this runqueue and
+ 	 * our priority decreased, or if we are not currently running on
