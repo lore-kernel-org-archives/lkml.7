@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 776AAC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10356C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5510924679
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFDFA24683
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:52:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727682AbfLQAwg (ORCPT
+        id S1726470AbfLQAwl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:52:36 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35652 "EHLO
+        Mon, 16 Dec 2019 19:52:41 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35632 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727221AbfLQAvq (ORCPT
+        by vger.kernel.org with ESMTP id S1727256AbfLQAvp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 19:51:46 -0500
+        Mon, 16 Dec 2019 19:51:45 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15K-0003N2-Pi; Tue, 17 Dec 2019 00:51:34 +0000
+        id 1ih15O-0003Py-Gh; Tue, 17 Dec 2019 00:51:38 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15I-0005a6-Uk; Tue, 17 Dec 2019 00:51:32 +0000
+        id 1ih15M-0005gV-1t; Tue, 17 Dec 2019 00:51:36 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jonas Gorski" <jonas.gorski@gmail.com>,
-        linux-mips@vger.kernel.org, "James Hogan" <jhogan@kernel.org>,
-        "Ralf Baechle" <ralf@linux-mips.org>,
-        "Paul Burton" <paulburton@kernel.org>,
-        "Florian Fainelli" <f.fainelli@gmail.com>
-Date:   Tue, 17 Dec 2019 00:47:02 +0000
-Message-ID: <lsq.1576543535.456304494@decadent.org.uk>
+        "" <stable@vger.kernel.org>, "zhangyi (F)" <yi.zhang@huawei.com>
+Date:   Tue, 17 Dec 2019 00:47:50 +0000
+Message-ID: <lsq.1576543535.856402608@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 088/136] MIPS: bmips: mark exception vectors as char
- arrays
+Subject: [PATCH 3.16 136/136] fs/dcache: move  security_d_instantiate()
+ behind attaching dentry to inode
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,97 +55,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jonas Gorski <jonas.gorski@gmail.com>
+From: "zhangyi (F)" <yi.zhang@huawei.com>
 
-commit e4f5cb1a9b27c0f94ef4f5a0178a3fde2d3d0e9e upstream.
+During backport 1e2e547a93a "do d_instantiate/unlock_new_inode
+combinations safely", there was a error instantiating sequence of
+attaching dentry to inode and calling security_d_instantiate().
 
-The vectors span more than one byte, so mark them as arrays.
+Before commit ce23e640133 "->getxattr(): pass dentry and inode as
+separate arguments" and b96809173e9 "security_d_instantiate(): move to
+the point prior to attaching dentry to inode", security_d_instantiate()
+should be called beind __d_instantiate(), otherwise it will trigger
+below problem when CONFIG_SECURITY_SMACK on ext4 was enabled because
+d_inode(dentry) used by ->getxattr() is NULL before __d_instantiate()
+instantiate inode.
 
-Fixes the following build error when building when using GCC 8.3:
+[   31.858026] BUG: unable to handle kernel paging request at ffffffffffffff70
+...
+[   31.882024] Call Trace:
+[   31.882378]  [<ffffffffa347f75c>] ext4_xattr_get+0x8c/0x3e0
+[   31.883195]  [<ffffffffa3489454>] ext4_xattr_security_get+0x24/0x40
+[   31.884086]  [<ffffffffa336a56b>] generic_getxattr+0x5b/0x90
+[   31.884907]  [<ffffffffa3700514>] smk_fetch+0xb4/0x150
+[   31.885634]  [<ffffffffa3700772>] smack_d_instantiate+0x1c2/0x550
+[   31.886508]  [<ffffffffa36f9a5a>] security_d_instantiate+0x3a/0x80
+[   31.887389]  [<ffffffffa3353b26>] d_instantiate_new+0x36/0x130
+[   31.888223]  [<ffffffffa342b1ef>] ext4_mkdir+0x4af/0x6a0
+[   31.888928]  [<ffffffffa3343470>] vfs_mkdir+0x100/0x280
+[   31.889536]  [<ffffffffa334b086>] SyS_mkdir+0xb6/0x170
+[   31.890255]  [<ffffffffa307c855>] ? trace_do_page_fault+0x95/0x2b0
+[   31.891134]  [<ffffffffa3c5e078>] entry_SYSCALL_64_fastpath+0x18/0x73
 
-In file included from ./include/linux/string.h:19,
-                 from ./include/linux/bitmap.h:9,
-                 from ./include/linux/cpumask.h:12,
-                 from ./arch/mips/include/asm/processor.h:15,
-                 from ./arch/mips/include/asm/thread_info.h:16,
-                 from ./include/linux/thread_info.h:38,
-                 from ./include/asm-generic/preempt.h:5,
-                 from ./arch/mips/include/generated/asm/preempt.h:1,
-                 from ./include/linux/preempt.h:81,
-                 from ./include/linux/spinlock.h:51,
-                 from ./include/linux/mmzone.h:8,
-                 from ./include/linux/bootmem.h:8,
-                 from arch/mips/bcm63xx/prom.c:10:
-arch/mips/bcm63xx/prom.c: In function 'prom_init':
-./arch/mips/include/asm/string.h:162:11: error: '__builtin_memcpy' forming offset [2, 32] is out of the bounds [0, 1] of object 'bmips_smp_movevec' with type 'char' [-Werror=array-bounds]
-   __ret = __builtin_memcpy((dst), (src), __len); \
-           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-arch/mips/bcm63xx/prom.c:97:3: note: in expansion of macro 'memcpy'
-   memcpy((void *)0xa0000200, &bmips_smp_movevec, 0x20);
-   ^~~~~~
-In file included from arch/mips/bcm63xx/prom.c:14:
-./arch/mips/include/asm/bmips.h:80:13: note: 'bmips_smp_movevec' declared here
- extern char bmips_smp_movevec;
-
-Fixes: 18a1eef92dcd ("MIPS: BMIPS: Introduce bmips.h")
-Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Paul Burton <paulburton@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
+Cc: <stable@vger.kernel.org> # 3.16, 4.4
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/mips/bcm63xx/prom.c      |  2 +-
- arch/mips/include/asm/bmips.h | 10 +++++-----
- arch/mips/kernel/smp-bmips.c  |  8 ++++----
- 3 files changed, 10 insertions(+), 10 deletions(-)
+ fs/dcache.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/mips/bcm63xx/prom.c
-+++ b/arch/mips/bcm63xx/prom.c
-@@ -88,7 +88,7 @@ void __init prom_init(void)
- 		 * Here we will start up CPU1 in the background and ask it to
- 		 * reconfigure itself then go back to sleep.
- 		 */
--		memcpy((void *)0xa0000200, &bmips_smp_movevec, 0x20);
-+		memcpy((void *)0xa0000200, bmips_smp_movevec, 0x20);
- 		__sync();
- 		set_c0_cause(C_SW0);
- 		cpumask_set_cpu(1, &bmips_booted_mask);
---- a/arch/mips/include/asm/bmips.h
-+++ b/arch/mips/include/asm/bmips.h
-@@ -75,11 +75,11 @@ static inline int register_bmips_smp_ops
- #endif
+--- a/fs/dcache.c
++++ b/fs/dcache.c
+@@ -1685,7 +1685,6 @@ void d_instantiate_new(struct dentry *en
+ 	BUG_ON(!hlist_unhashed(&entry->d_u.d_alias));
+ 	BUG_ON(!inode);
+ 	lockdep_annotate_inode_mutex_key(inode);
+-	security_d_instantiate(entry, inode);
+ 	spin_lock(&inode->i_lock);
+ 	__d_instantiate(entry, inode);
+ 	WARN_ON(!(inode->i_state & I_NEW));
+@@ -1693,6 +1692,7 @@ void d_instantiate_new(struct dentry *en
+ 	smp_mb();
+ 	wake_up_bit(&inode->i_state, __I_NEW);
+ 	spin_unlock(&inode->i_lock);
++	security_d_instantiate(entry, inode);
  }
+ EXPORT_SYMBOL(d_instantiate_new);
  
--extern char bmips_reset_nmi_vec;
--extern char bmips_reset_nmi_vec_end;
--extern char bmips_smp_movevec;
--extern char bmips_smp_int_vec;
--extern char bmips_smp_int_vec_end;
-+extern char bmips_reset_nmi_vec[];
-+extern char bmips_reset_nmi_vec_end[];
-+extern char bmips_smp_movevec[];
-+extern char bmips_smp_int_vec[];
-+extern char bmips_smp_int_vec_end[];
- 
- extern int bmips_smp_enabled;
- extern int bmips_cpu_offset;
---- a/arch/mips/kernel/smp-bmips.c
-+++ b/arch/mips/kernel/smp-bmips.c
-@@ -467,10 +467,10 @@ static void bmips_wr_vec(unsigned long d
- 
- static inline void bmips_nmi_handler_setup(void)
- {
--	bmips_wr_vec(BMIPS_NMI_RESET_VEC, &bmips_reset_nmi_vec,
--		&bmips_reset_nmi_vec_end);
--	bmips_wr_vec(BMIPS_WARM_RESTART_VEC, &bmips_smp_int_vec,
--		&bmips_smp_int_vec_end);
-+	bmips_wr_vec(BMIPS_NMI_RESET_VEC, bmips_reset_nmi_vec,
-+		bmips_reset_nmi_vec_end);
-+	bmips_wr_vec(BMIPS_WARM_RESTART_VEC, bmips_smp_int_vec,
-+		bmips_smp_int_vec_end);
- }
- 
- void bmips_ebase_setup(void)
 
