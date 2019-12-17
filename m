@@ -2,108 +2,213 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 993D6C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D6BC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6775F207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:38:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iaEjEkXe"
+	by mail.kernel.org (Postfix) with ESMTP id BA2DF2082E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:40:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbfLQIiy (ORCPT
+        id S1726751AbfLQIk4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 03:38:54 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:38551 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726402AbfLQIiy (ORCPT
+        Tue, 17 Dec 2019 03:40:56 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:16150 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726402AbfLQIkz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 03:38:54 -0500
-Received: by mail-qk1-f194.google.com with SMTP id k6so5275497qki.5
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 00:38:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lIrJhAT0FZhqQC6+Cfro2tTwtRlfUc9In4WJNBC43uo=;
-        b=iaEjEkXevA627OxJCzZ3NT3qqWnixZkvLc+Zn6rDW2XaSJM1DAQ1pnANyQhzNZWdh1
-         ZJQVCnCn3V/O06S7e/Fbm622YJQOyHOFH4sVpvEqfskqGkvYsad+HHQvc42xo16Rz+8I
-         3qc6Ec2MvYPxm5McGtdapkq9zdbcm0K5fTHcf/g0BaJHevbYKgORRhenmyBvOa+hR+zg
-         FH5GUdmgKa3FSqa7j7Yz38fVVN26FhVekIZ/wf6jUjBechjAFgtAodAhHSadHAobt/Ut
-         mwg+6McPmtVlWTMNL2DXAhf/HGhlznRWDUUfr8Jcm4HNFoYEINSmPxKBsNp+85H3gTmd
-         MYOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lIrJhAT0FZhqQC6+Cfro2tTwtRlfUc9In4WJNBC43uo=;
-        b=SplqGCdqufmZo7FQNUSIUfWkq/7sMsE433+O264011Fa9KYVz4iXGLUq0kLmUeUXej
-         k55e2P0+LOUj/rrnRcH0GRPhivIr//czWOmrNyJoGrAEw8evFHbZHpGEqf+NFgdvSQed
-         DwSzzww6mt+nEx6DcaCp42ybiTIRYtIEXc/OTsAR3FdasuGsV9kmPAjNQZaEfvzh1Fif
-         u6HHKEijaEulk7mddrbYe09BlivZd7lG6btDy0UfABnZ1qsfoczqZRE1xOtCM2AMVD1I
-         2KgM0qRmY3DvmVX4SJF3u6rLu9Kqdk1ttS1m9vjglrisb8thYKIkdpu8EB0yqMpsF+gd
-         fVbw==
-X-Gm-Message-State: APjAAAUc3lzSr2c4ZGwybB7LsvUbaZGdqwH5937u1vDpXGUWSSSnk/1M
-        UJgv9ACJ4i4Yrg7TOWF9dCXFjxqh9lNcWhjGZ6xl+A==
-X-Google-Smtp-Source: APXvYqx9z2ouMjEeQz/Xavdg/AecETmTyPaGZA4hqLN0aYcZAhJk9Mdy7kggv+Ou1e8U8qRibYrlZ+Y1VuTCMVTyuFQ=
-X-Received: by 2002:ae9:eb48:: with SMTP id b69mr3684654qkg.43.1576571932878;
- Tue, 17 Dec 2019 00:38:52 -0800 (PST)
+        Tue, 17 Dec 2019 03:40:55 -0500
+Received: from [10.28.39.99] (10.28.39.99) by mail-sz.amlogic.com (10.28.11.5)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 17 Dec
+ 2019 16:41:25 +0800
+Subject: Re: [PATCH v4 2/6] clk: meson: add support for A1 PLL clock ops
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+CC:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Chandle Zou <chandle.zou@amlogic.com>,
+        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20191206074052.15557-1-jian.hu@amlogic.com>
+ <20191206074052.15557-3-jian.hu@amlogic.com>
+ <1j8snhluhg.fsf@starbuckisacylon.baylibre.com>
+From:   Jian Hu <jian.hu@amlogic.com>
+Message-ID: <741284be-2ae8-1102-22bc-c510e822c883@amlogic.com>
+Date:   Tue, 17 Dec 2019 16:41:25 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-References: <20191216095955.9886-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <20191217051234.GA54407@google.com> <CACT4Y+ZV_syKQt6hDwf3WH5-LpFo==rsVsQY7+YCMfpUCtzj_A@mail.gmail.com>
- <20191217082449.GC54407@google.com>
-In-Reply-To: <20191217082449.GC54407@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 17 Dec 2019 09:38:41 +0100
-Message-ID: <CACT4Y+bdvwSBTeqkfJ3kWMOB_QSq84TzumeoTzv89v3in-439A@mail.gmail.com>
-Subject: Re: [PATCH] kconfig: Add kernel config option for fuzz testing.
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1j8snhluhg.fsf@starbuckisacylon.baylibre.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.28.39.99]
+X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
+ (10.28.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 9:24 AM Sergey Senozhatsky
-<sergey.senozhatsky.work@gmail.com> wrote:
->
-> On (19/12/17 08:54), Dmitry Vyukov wrote:
-> > On Tue, Dec 17, 2019 at 6:12 AM Sergey Senozhatsky
-> > <sergey.senozhatsky.work@gmail.com> wrote:
-> > >
-> > > On (19/12/16 18:59), Tetsuo Handa wrote:
-> > >
-> > > Can you fuzz test with `ignore_loglevel'?
-> >
-> > We can set ignore_loglevel in syzbot configs, but won't it then print
-> > everything including verbose debug output?
->
-> What would be the most active source of debug output?
->
-> dev_dbg(), which is dev_printk(KERN_DEBUG), can be compiled out, if I'm
-> not mistaken. It probably depends on CONFIG_DEBUG or something similar,
-> unlike dev_printk(), which depends on CONFIG_PRINTK. It seems that we have
-> significantly more dev_dbg() users, than direct dev_printk(KERN_DEBUG).
->
-> Does fuzz tester hit pr_debug() often? File systems? Some of them
-> have ways to compile out debugging output as well. E.g. jbd_debug,
-> _debug, ext4_debug, and so on.
 
-As far as I remember it produces an infinite amount of output on debug
-level. Even for normal level it produces much more than one would
-normally expect as it does random things all over the kernel with
-maximum frequency.
+
+On 2019/12/12 18:16, Jerome Brunet wrote:
+> 
+> On Fri 06 Dec 2019 at 08:40, Jian Hu <jian.hu@amlogic.com> wrote:
+> 
+>> The A1 PLL design is different with previous SoCs. The PLL
+>> internal analog modules Power-on sequence is different
+>> with previous, and thus requires a strict register sequence to
+>> enable the PLL.
+>>
+>> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+>> ---
+>>   drivers/clk/meson/clk-pll.c | 21 +++++++++++++++++++++
+>>   drivers/clk/meson/clk-pll.h |  1 +
+>>   drivers/clk/meson/parm.h    |  1 +
+>>   3 files changed, 23 insertions(+)
+>>
+>> diff --git a/drivers/clk/meson/clk-pll.c b/drivers/clk/meson/clk-pll.c
+>> index ddb1e5634739..4aff31a51589 100644
+>> --- a/drivers/clk/meson/clk-pll.c
+>> +++ b/drivers/clk/meson/clk-pll.c
+>> @@ -318,6 +318,23 @@ static int meson_clk_pll_enable(struct clk_hw *hw)
+>>   	struct clk_regmap *clk = to_clk_regmap(hw);
+>>   	struct meson_clk_pll_data *pll = meson_clk_pll_data(clk);
+>>   
+>> +	/*
+>> +	 * The A1 design is different with previous SoCs.The PLL
+>> +	 * internal analog modules Power-on sequence is different with
+>> +	 * previous, and thus requires a strict register sequence to
+>> +	 * enable the PLL.
+> 
+> The code does something more, not completly different. This comment is
+> not aligned with what the code does
+ok, I will correct the comment.
+> 
+>> +	 */
+>> +	if (MESON_PARM_APPLICABLE(&pll->current_en)) {
+>> +		/* Enable the pll */
+>> +		meson_parm_write(clk->map, &pll->en, 1);
+>> +		udelay(10);
+>> +		/* Enable the pll self-adaption module current */
+>> +		meson_parm_write(clk->map, &pll->current_en, 1);
+>> +		udelay(40);
+>> +		meson_parm_write(clk->map, &pll->rst, 1);
+>> +		meson_parm_write(clk->map, &pll->rst, 0);
+> 
+> Here you enable the PLL and self adaptation module then reset the PLL.
+> However:
+> #1 when you enter this function, the PLL should already by in reset
+> and disabled
+> #2 the code after that will reset the PLL again
+For A1 PLLs, There is no reset bit, It will not reset the PLL.
+And in V2, you mentioned PARM 'rst' can be used for one toggling, And 
+'rst' is used for BIT(6) in CTRL2.
+
+Quote V2 the HIFI PLL init_regs definition：
+
+
++static const struct reg_sequence a1_hifi_init_regs[] = {
++	{ .reg = ANACTRL_HIFIPLL_CTRL1, .def = 0x01800000 },
++	{ .reg = ANACTRL_HIFIPLL_CTRL2, .def = 0x00001100 },
++	{ .reg = ANACTRL_HIFIPLL_CTRL3, .def = 0x100a1100 },
++	{ .reg = ANACTRL_HIFIPLL_CTRL4, .def = 0x00302000 },
++	{ .reg = ANACTRL_HIFIPLL_CTRL0, .def = 0x01f18440 },
++	{ .reg = ANACTRL_HIFIPLL_CTRL0, .def = 0x11f18440, .delay_us = 10 },
++	{ .reg = ANACTRL_HIFIPLL_CTRL0, .def = 0x15f18440, .delay_us = 40 },
++	{ .reg = ANACTRL_HIFIPLL_CTRL2, .def = 0x00001140 },
++	{ .reg = ANACTRL_HIFIPLL_CTRL2, .def = 0x00001100 },
++};
+
+So maybe another new PARM should be defined to avoid the ambiguity.
+What do you think about it?
+
+> 
+> So if what you submited works, inserting the following should accomplish
+> the same thing:
+> 
+> ---8<---
+> diff --git a/drivers/clk/meson/clk-pll.c b/drivers/clk/meson/clk-pll.c
+> index 489092dde3a6..9b38df0a7682 100644
+> --- a/drivers/clk/meson/clk-pll.c
+> +++ b/drivers/clk/meson/clk-pll.c
+> @@ -330,6 +330,13 @@ static int meson_clk_pll_enable(struct clk_hw *hw)
+>          /* Enable the pll */
+>          meson_parm_write(clk->map, &pll->en, 1);
+> 
+> +       if (MESON_PARM_APPLICABLE(&pll->current_en)) {
+> +               udelay(10);
+> +               /* Enable the pll self-adaption module current */
+> +               meson_parm_write(clk->map, &pll->current_en, 1);
+> +               udelay(40);
+> +       }
+> +
+>          /* Take the pll out reset */
+>          meson_parm_write(clk->map, &pll->rst, 0);
+> --->8---
+> 
+> 
+> 
+> 
+>> +	}
+>> +
+>>   	/* do nothing if the PLL is already enabled */
+>>   	if (clk_hw_is_enabled(hw))
+>>   		return 0;
+> 
+> In any case, nothing should be done on the clock before this check
+> otherwise you might just break the clock
+> 
+OK, I will put the enabled check ahead.
+>> @@ -347,6 +364,10 @@ static void meson_clk_pll_disable(struct clk_hw *hw)
+>>   
+>>   	/* Disable the pll */
+>>   	meson_parm_write(clk->map, &pll->en, 0);
+>> +
+>> +	/* Disable PLL internal self-adaption module current */
+>> +	if (MESON_PARM_APPLICABLE(&pll->current_en))
+>> +		meson_parm_write(clk->map, &pll->current_en, 0);
+>>   }
+>>   
+>>   static int meson_clk_pll_set_rate(struct clk_hw *hw, unsigned long rate,
+>> diff --git a/drivers/clk/meson/clk-pll.h b/drivers/clk/meson/clk-pll.h
+>> index 367efd0f6410..30f039242a65 100644
+>> --- a/drivers/clk/meson/clk-pll.h
+>> +++ b/drivers/clk/meson/clk-pll.h
+>> @@ -36,6 +36,7 @@ struct meson_clk_pll_data {
+>>   	struct parm frac;
+>>   	struct parm l;
+>>   	struct parm rst;
+>> +	struct parm current_en;
+>>   	const struct reg_sequence *init_regs;
+>>   	unsigned int init_count;
+>>   	const struct pll_params_table *table;
+>> diff --git a/drivers/clk/meson/parm.h b/drivers/clk/meson/parm.h
+>> index 3c9ef1b505ce..c53fb26577e3 100644
+>> --- a/drivers/clk/meson/parm.h
+>> +++ b/drivers/clk/meson/parm.h
+>> @@ -20,6 +20,7 @@
+>>   	(((reg) & CLRPMASK(width, shift)) | ((val) << (shift)))
+>>   
+>>   #define MESON_PARM_APPLICABLE(p)		(!!((p)->width))
+>> +#define MESON_PARM_CURRENT(p)			(!!((p)->width))
+> 
+> Why do we need that ?
+OK, I will remove it ,and use 'MESON_PARM_APPLICABLE' instead
+> 
+>>   
+>>   struct parm {
+>>   	u16	reg_off;
+> 
+> .
+> 
