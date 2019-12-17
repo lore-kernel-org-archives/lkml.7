@@ -2,238 +2,103 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A473C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42330C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02B1421775
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:16:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0605F21D7D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:16:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576613793;
-	bh=iJ+bQ/+NcBBtmyAde9K0JT+XHSMTuSP4HkjLQZOgIR0=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=RB/Fq9vIcS4Ek3mSAAfeBDcJCvVgq5Oqm4wot4xLS5HqRES01qKxumAQKC96g3B++
-	 hFarrmXveygt/CpwiaUiZxBs8KeIb8wIIpNI0cv3GUA8JlBNJ9oN5awylXAnXrG5UB
-	 h2W5nNo/OyJ1066ZMrWHjTONT4AJmwnd/6MhqU/Y=
+	s=default; t=1576613798;
+	bh=JG9DOh+IoZQ3r3wJXk/PkDVTYhAM1YS6uaGnCJGbDfE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=fQWHliCiU6JTCmzC66EmvisJDWeEm3nztclhnBUox1XuJhRXv2ZCkFbvJWWabMuBs
+	 KLW8xagwNxD8cur1uCclarH2mRLhb37c5GtbC10ShELVDCXtNLeiNZN58NSAHU+Q2e
+	 7LABJ7vNiqwSPFG8EYkpt6vZ7Sj0f0RsmYD2Pan4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbfLQUQc (ORCPT
+        id S1728254AbfLQUQh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 15:16:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40706 "EHLO mail.kernel.org"
+        Tue, 17 Dec 2019 15:16:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727241AbfLQUQb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 15:16:31 -0500
+        id S1727594AbfLQUQg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 15:16:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 714912176D;
-        Tue, 17 Dec 2019 20:16:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2242A21775;
+        Tue, 17 Dec 2019 20:16:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576613789;
-        bh=iJ+bQ/+NcBBtmyAde9K0JT+XHSMTuSP4HkjLQZOgIR0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Ud4GzmfFm18E66o3nofUwX1UbkfY1CYe6lcDJT0fWalXrb/sMJFnd9ixhorR64MG7
-         M2Xr84IWYXuZkNIttgVLBHN2aMriSTdRjNW5nPadMWUeC+8UD/jAPKNBBBhCqUs+5Q
-         qUSPvxOSRiGFCSybMt5+UaoFP9Wlllp1DxQIEDXg=
+        s=default; t=1576613795;
+        bh=JG9DOh+IoZQ3r3wJXk/PkDVTYhAM1YS6uaGnCJGbDfE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1h6tGzOVse33jWC59va3dB+Jt6rl0yNgMWsRHVlGbMTnrEjHXhYcL5ZzRxkMP0yO0
+         uk7MJXxlRPgdtlEFPJ8UWwoJB1pw8Z8UVxDHghOWPGk/+i4U5iRD5GhWuhiA2+jh3i
+         B+r7R1edwALUgCImIiUaeoBll1Vzn7TtxafioSZI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 5.3 00/25] 5.3.18-stable review
-Date:   Tue, 17 Dec 2019 21:15:59 +0100
-Message-Id: <20191217200903.179327435@linuxfoundation.org>
+        stable@vger.kernel.org, Aaron Conole <aconole@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.3 10/25] openvswitch: support asymmetric conntrack
+Date:   Tue, 17 Dec 2019 21:16:09 +0100
+Message-Id: <20191217200907.705861351@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
+In-Reply-To: <20191217200903.179327435@linuxfoundation.org>
+References: <20191217200903.179327435@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.3.18-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.3.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.3.18-rc1
-X-KernelTest-Deadline: 2019-12-19T20:09+00:00
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 5.3.18 release.
-There are 25 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+From: Aaron Conole <aconole@redhat.com>
 
-Note, this is the LAST 5.3.y kernel to be released, after this one, it
-will be end-of-life.  You should have moved to the 5.4.y series already
-by now.
+[ Upstream commit 5d50aa83e2c8e91ced2cca77c198b468ca9210f4 ]
 
-Responses should be made by Thu, 19 Dec 2019 20:08:42 +0000.
-Anything received after that time might be too late.
+The openvswitch module shares a common conntrack and NAT infrastructure
+exposed via netfilter.  It's possible that a packet needs both SNAT and
+DNAT manipulation, due to e.g. tuple collision.  Netfilter can support
+this because it runs through the NAT table twice - once on ingress and
+again after egress.  The openvswitch module doesn't have such capability.
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.18-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
-and the diffstat can be found below.
+Like netfilter hook infrastructure, we should run through NAT twice to
+keep the symmetry.
 
-thanks,
+Fixes: 05752523e565 ("openvswitch: Interface with NAT.")
+Signed-off-by: Aaron Conole <aconole@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/openvswitch/conntrack.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 5.3.18-rc1
-
-Jonathan Lemon <jonathan.lemon@gmail.com>
-    xdp: obtain the mem_id mutex before trying to remove an entry.
-
-Jonathan Lemon <jonathan.lemon@gmail.com>
-    page_pool: do not release pool until inflight == 0.
-
-Eran Ben Elisha <eranbe@mellanox.com>
-    net/mlx5e: Fix TXQ indices to be sequential
-
-Martin Varghese <martin.varghese@nokia.com>
-    net: Fixed updating of ethertype in skb_mpls_push()
-
-Taehee Yoo <ap420073@gmail.com>
-    hsr: fix a NULL pointer dereference in hsr_dev_xmit()
-
-Martin Varghese <martin.varghese@nokia.com>
-    Fixed updating of ethertype in function skb_mpls_pop
-
-Cong Wang <xiyou.wangcong@gmail.com>
-    gre: refetch erspan header from skb->data after pskb_may_pull()
-
-Guillaume Nault <gnault@redhat.com>
-    tcp: Protect accesses to .ts_recent_stamp with {READ,WRITE}_ONCE()
-
-Guillaume Nault <gnault@redhat.com>
-    tcp: tighten acceptance of ACKs not matching a child socket
-
-Guillaume Nault <gnault@redhat.com>
-    tcp: fix rejected syncookies due to stale timestamps
-
-Sabrina Dubroca <sd@queasysnail.net>
-    net: ipv6_stub: use ip6_dst_lookup_flow instead of ip6_dst_lookup
-
-Sabrina Dubroca <sd@queasysnail.net>
-    net: ipv6: add net argument to ip6_dst_lookup_flow
-
-Huy Nguyen <huyn@mellanox.com>
-    net/mlx5e: Query global pause state before setting prio2buffer
-
-Taehee Yoo <ap420073@gmail.com>
-    tipc: fix ordering of tipc module init and exit routine
-
-Eric Dumazet <edumazet@google.com>
-    tcp: md5: fix potential overestimation of TCP option space
-
-Aaron Conole <aconole@redhat.com>
-    openvswitch: support asymmetric conntrack
-
-Valentin Vidic <vvidic@valentin-vidic.from.hr>
-    net/tls: Fix return values to avoid ENOTSUPP
-
-Mian Yousaf Kaukab <ykaukab@suse.de>
-    net: thunderx: start phy before starting autonegotiation
-
-Jouni Hogander <jouni.hogander@unikie.com>
-    net-sysfs: Call dev_hold always in netdev_queue_add_kobject
-
-Dust Li <dust.li@linux.alibaba.com>
-    net: sched: fix dump qlen for sch_mq/sch_mqprio with NOLOCK subqueues
-
-Grygorii Strashko <grygorii.strashko@ti.com>
-    net: ethernet: ti: cpsw: fix extra rx interrupt
-
-Alexander Lobakin <alobakin@dlink.ru>
-    net: dsa: fix flow dissection on Tx path
-
-Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-    net: bridge: deny dev_set_mac_address() when unregistering
-
-Vladyslav Tarasiuk <vladyslavt@mellanox.com>
-    mqprio: Fix out-of-bounds access in mqprio_dump
-
-Eric Dumazet <edumazet@google.com>
-    inet: protect against too small mtu values.
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |   4 +-
- drivers/infiniband/core/addr.c                     |   7 +-
- drivers/infiniband/sw/rxe/rxe_net.c                |   8 +-
- drivers/net/ethernet/cavium/thunder/thunder_bgx.c  |   2 +-
- drivers/net/ethernet/mellanox/mlx5/core/en.h       |   2 +-
- .../ethernet/mellanox/mlx5/core/en/port_buffer.c   |  27 ++++-
- .../net/ethernet/mellanox/mlx5/core/en/tc_tun.c    |   8 +-
- drivers/net/ethernet/mellanox/mlx5/core/en_main.c  |  31 ++----
- drivers/net/ethernet/mellanox/mlx5/core/en_stats.c |   2 +-
- drivers/net/ethernet/mellanox/mlx5/core/en_tx.c    |   2 +-
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |   4 +-
- drivers/net/ethernet/ti/cpsw.c                     |   2 +-
- drivers/net/geneve.c                               |   4 +-
- drivers/net/vxlan.c                                |   8 +-
- include/linux/netdevice.h                          |   5 +
- include/linux/skbuff.h                             |   5 +-
- include/linux/time.h                               |  13 +++
- include/net/ip.h                                   |   5 +
- include/net/ipv6.h                                 |   2 +-
- include/net/ipv6_stubs.h                           |   6 +-
- include/net/page_pool.h                            |  52 +++------
- include/net/tcp.h                                  |  27 +++--
- include/net/xdp_priv.h                             |   4 -
- include/trace/events/xdp.h                         |  19 +---
- net/bridge/br_device.c                             |   6 +
- net/core/dev.c                                     |   3 +-
- net/core/flow_dissector.c                          |   5 +-
- net/core/lwt_bpf.c                                 |   4 +-
- net/core/net-sysfs.c                               |   7 +-
- net/core/page_pool.c                               | 122 +++++++++++++--------
- net/core/skbuff.c                                  |  10 +-
- net/core/xdp.c                                     | 117 +++++++-------------
- net/dccp/ipv6.c                                    |   6 +-
- net/hsr/hsr_device.c                               |   9 +-
- net/ipv4/devinet.c                                 |   5 -
- net/ipv4/gre_demux.c                               |   2 +-
- net/ipv4/ip_output.c                               |  13 ++-
- net/ipv4/tcp_output.c                              |   5 +-
- net/ipv6/addrconf_core.c                           |  11 +-
- net/ipv6/af_inet6.c                                |   4 +-
- net/ipv6/datagram.c                                |   2 +-
- net/ipv6/inet6_connection_sock.c                   |   4 +-
- net/ipv6/ip6_output.c                              |   8 +-
- net/ipv6/raw.c                                     |   2 +-
- net/ipv6/syncookies.c                              |   2 +-
- net/ipv6/tcp_ipv6.c                                |   4 +-
- net/l2tp/l2tp_ip6.c                                |   2 +-
- net/mpls/af_mpls.c                                 |   7 +-
- net/openvswitch/actions.c                          |   6 +-
- net/openvswitch/conntrack.c                        |  11 ++
- net/sched/act_mpls.c                               |   7 +-
- net/sched/sch_mq.c                                 |   1 +
- net/sched/sch_mqprio.c                             |   3 +-
- net/sctp/ipv6.c                                    |   4 +-
- net/tipc/core.c                                    |  29 ++---
- net/tipc/udp_media.c                               |   9 +-
- net/tls/tls_device.c                               |   8 +-
- net/tls/tls_main.c                                 |   4 +-
- net/tls/tls_sw.c                                   |   8 +-
- tools/testing/selftests/net/tls.c                  |   8 +-
- 60 files changed, 375 insertions(+), 332 deletions(-)
+--- a/net/openvswitch/conntrack.c
++++ b/net/openvswitch/conntrack.c
+@@ -903,6 +903,17 @@ static int ovs_ct_nat(struct net *net, s
+ 	}
+ 	err = ovs_ct_nat_execute(skb, ct, ctinfo, &info->range, maniptype);
+ 
++	if (err == NF_ACCEPT &&
++	    ct->status & IPS_SRC_NAT && ct->status & IPS_DST_NAT) {
++		if (maniptype == NF_NAT_MANIP_SRC)
++			maniptype = NF_NAT_MANIP_DST;
++		else
++			maniptype = NF_NAT_MANIP_SRC;
++
++		err = ovs_ct_nat_execute(skb, ct, ctinfo, &info->range,
++					 maniptype);
++	}
++
+ 	/* Mark NAT done if successful and update the flow key. */
+ 	if (err == NF_ACCEPT)
+ 		ovs_nat_update_key(key, skb, maniptype);
 
 
