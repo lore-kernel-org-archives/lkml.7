@@ -2,314 +2,112 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D401AC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C934C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A62C2067C
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 530552067C
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:54:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lTG+PpfF"
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="NBYb0wme"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728653AbfLQNye (ORCPT
+        id S1728660AbfLQNyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 08:54:34 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35852 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728593AbfLQNyd (ORCPT
+        Tue, 17 Dec 2019 08:54:44 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39465 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728568AbfLQNyn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 08:54:33 -0500
-Received: by mail-wr1-f66.google.com with SMTP id z3so3858742wru.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 05:54:32 -0800 (PST)
+        Tue, 17 Dec 2019 08:54:43 -0500
+Received: by mail-wm1-f67.google.com with SMTP id b72so3262892wme.4
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 05:54:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=chrisdown.name; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=oA8lLtw5+Ki0rvk2E5DHDZT8Xzrj3ly5MFjUCZJfvp4=;
-        b=lTG+PpfFsBwem7LWNxasDI84APR3q/FRpiSMZtA97AEzPrTw2ZyGUJQg/2FxOcmzPj
-         mR8fMTv8VyALWzwIWUVsBn08FAh1PZukJmgC3lBgktyX0rejOrHDGoS+brxtqiakPnkw
-         +Lp5ryB6ZwG4GA7LfhEGedR1eicJaEWe+LMu4udE1xyaJyW9uUIpiZsMoP6UMmVWXSTX
-         pa5+4HCL7T03BoJ5cUrNB0Dol/uKTrsHHawoIZQSQ9Tgj1fhu8JpdmCFKDMsIeTjeWop
-         bSBopk1rH/KXWuS/YL9zR1B30nDVAx0UFUfY375pnL/CKYQhEI+hIlOXnU5xyuBlv5uz
-         bVfg==
+         :content-disposition:in-reply-to;
+        bh=0tDf420l6OJe0Bwhn9GE+pW7tyo0iSFruHkLYhzOzAo=;
+        b=NBYb0wmeeE28IfoeJrHNR1nDrO2AHN8CdVfPvDeRfkbZeQiKbRNDWRDE53oyz1Qvin
+         1Z7E0QX1fhIgd7ApaTelr4wPdPP3JqfQJRxyV4VIziwJGIJr6WzgZDPtcapqvqlqReR7
+         Ylo8CwcB1K3wbYJWKBlqC8Kc8tQAW16Bt76kA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=oA8lLtw5+Ki0rvk2E5DHDZT8Xzrj3ly5MFjUCZJfvp4=;
-        b=gF1amulKW8zwM7KY4UyLdZiibmtirquZkEmqjrowcgawOE3ngaddqpivt+cRUgT1eu
-         m5RUiIA9tEDSUYUs+3MzCw6u+UL7XeioD9JXwB01uy/sPSEbOZbmjLIC5GgmCd9TBv1O
-         wgpibqRzSdL36WCMcbZoTSyxC1VW2PrYLvQWLUlx1EEFWIWCbKm2uH4iDKPsw1ixt9iR
-         liaO0aZLeMhDWpWQVQC/ArnE4LabaB5K9fJ0BtVkTDDFf2+VVQSwpWl2Uw2JENARO3sF
-         H11KydDR4pEBfcfWqfpYqQZNIRNQA3cCwzauXoU0grK4m6UX2FZjq1Shsje0orVDoUYa
-         iBHA==
-X-Gm-Message-State: APjAAAVVEbPOYcQ6o5yOcuqS9vMTH6d5DuQWbcmAbul2CEwn3MM1C0OQ
-        11yTrPepIMYPgkqh9dJQTo7ybA==
-X-Google-Smtp-Source: APXvYqwHiX7Jsxay7dET6g2LF2XE9E9hwjKYARcptPGb5BljEooR+jLCasy9A33y/rTtfMlkvAcXww==
-X-Received: by 2002:adf:f80c:: with SMTP id s12mr36904115wrp.1.1576590871292;
-        Tue, 17 Dec 2019 05:54:31 -0800 (PST)
-Received: from dell ([2.27.35.132])
-        by smtp.gmail.com with ESMTPSA id x10sm25415862wrp.58.2019.12.17.05.54.29
+         :mime-version:content-disposition:in-reply-to;
+        bh=0tDf420l6OJe0Bwhn9GE+pW7tyo0iSFruHkLYhzOzAo=;
+        b=gYSPB0qvNkjZwXRIhdnque2CmHXRVLSCPDSe+4bcnF13FJHpWH8pYS6kKZbHCRqiPa
+         MigjMwPekfX0lANfUARJfMJV/Lk2CAScUEDrOi7GZgX2iqVj2Xw//KH3iJXLNm4ES+vp
+         Z6Ay4ab1IzwzZGJZVVXefifjzWW/Ux7l1LD3S+7HDJRN06J9BZUMqWbyeeoT9teAYOgB
+         wj0wj/c7/0pwvVnRS3v5m+6DN3O9GNRXWB3t8G4/fENZCYjlb41KcVPEnhHOu4Blm+qQ
+         quy3I0ng6voUqYUCnPKdsj1itUwFsJWyxWPzdvd5YzmJcDNdijjq+4Jd/XSlQBJ/TqzS
+         HApg==
+X-Gm-Message-State: APjAAAWcToyX7s2doY5hWQ9wHEFZWIh+rrsoEHjll9i/KRFR/E+3gG5b
+        D57CjRF9TdiP1osEDA8K3mwYkJpCSnc=
+X-Google-Smtp-Source: APXvYqymxQF288/hhyASLUrJbI0GnBe6CY2DqQcMtrvEJHtVaNq5Y+tyGlDwmL1e5t1aoJrxF06sxw==
+X-Received: by 2002:a1c:c90e:: with SMTP id f14mr5703560wmb.47.1576590881556;
+        Tue, 17 Dec 2019 05:54:41 -0800 (PST)
+Received: from localhost ([2620:10d:c092:180::1:f184])
+        by smtp.gmail.com with ESMTPSA id z6sm26950594wrw.36.2019.12.17.05.54.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 05:54:30 -0800 (PST)
-Date:   Tue, 17 Dec 2019 13:54:30 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "corbet@lwn.net" <corbet@lwn.net>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "noralf@tronnes.org" <noralf@tronnes.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>
-Subject: Re: [PATCH v6 05/15] mfd: bd71828: Support ROHM BD71828 PMIC - core
-Message-ID: <20191217135430.GM18955@dell>
-References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
- <252de5646fedfec7c575269843a47091fe199c79.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
- <20191216164641.GC18955@dell>
- <5593db6b3328c0a1a7069d839f5c777b4b3822b6.camel@fi.rohmeurope.com>
+        Tue, 17 Dec 2019 05:54:40 -0800 (PST)
+Date:   Tue, 17 Dec 2019 13:54:40 +0000
+From:   Chris Down <chris@chrisdown.name>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: memcontrol.c: move mem_cgroup_id_get_many under
+ CONFIG_MMU
+Message-ID: <20191217135440.GB58496@chrisdown.name>
+References: <87fthjh2ib.wl-kuninori.morimoto.gx@renesas.com>
+ <20191217095329.GD31063@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5593db6b3328c0a1a7069d839f5c777b4b3822b6.camel@fi.rohmeurope.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191217095329.GD31063@dhcp22.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Dec 2019, Vaittinen, Matti wrote:
+Hi Kuninori,
 
-> Hello Lee,
-> 
-> On Mon, 2019-12-16 at 16:46 +0000, Lee Jones wrote:
-> > On Wed, 11 Dec 2019, Matti Vaittinen wrote:
-> > 
-> > > BD71828GW is a single-chip power management IC for battery-powered
-> > > portable
-> > > devices. The IC integrates 7 buck converters, 7 LDOs, and a 1500 mA
-> > > single-cell linear charger. Also included is a Coulomb counter, a
-> > > real-time
-> > > clock (RTC), 3 GPO/regulator control pins, HALL input and a 32.768
-> > > kHz
-> > > clock gate.
-> > > 
-> > > Add MFD core driver providing interrupt controller facilities and
-> > > i2c
-> > > access to sub device drivers.
-> > > 
-> > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > > ---
-> > > 
-> > > Changes since v5:
-> > > - No changes
-> > > 
-> > >  drivers/mfd/Kconfig              |  15 ++
-> > >  drivers/mfd/Makefile             |   2 +-
-> > >  drivers/mfd/rohm-bd71828.c       | 319 +++++++++++++++++++++++
-> > >  include/linux/mfd/rohm-bd71828.h | 425
-> > > +++++++++++++++++++++++++++++++
-> > >  include/linux/mfd/rohm-generic.h |   1 +
-> > >  5 files changed, 761 insertions(+), 1 deletion(-)
-> > >  create mode 100644 drivers/mfd/rohm-bd71828.c
-> > >  create mode 100644 include/linux/mfd/rohm-bd71828.h
-> > 
-> > Couple of small nits.  Once fixed, please apply my:
-> > 
-> > For my own reference:
-> >   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-> > 
-> > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > > index 420900852166..c3c9432ef51c 100644
-> > > --- a/drivers/mfd/Kconfig
-> > > +++ b/drivers/mfd/Kconfig
-> > > @@ -1906,6 +1906,21 @@ config MFD_ROHM_BD70528
-> > >  	  10 bits SAR ADC for battery temperature monitor and 1S
-> > > battery
-> > >  	  charger.
-> > >  
-> > > +config MFD_ROHM_BD71828
-> > > +	tristate "ROHM BD71828 Power Management IC"
-> > > +	depends on I2C=y
-> > > +	depends on OF
-> > > +	select REGMAP_I2C
-> > > +	select REGMAP_IRQ
-> > > +	select MFD_CORE
-> > > +	help
-> > > +	  Select this option to get support for the ROHM BD71828 Power
-> > > +	  Management IC. BD71828GW is a single-chip power management IC
-> > > for
-> > > +	  battery-powered portable devices. The IC integrates 7 buck
-> > > +	  converters, 7 LDOs, and a 1500 mA single-cell linear charger.
-> > > +	  Also included is a Coulomb counter, a real-time clock (RTC),
-> > > and
-> > > +	  a 32.768 kHz clock gate.
-> > > +
-> > >  config MFD_STM32_LPTIMER
-> > >  	tristate "Support for STM32 Low-Power Timer"
-> > >  	depends on (ARCH_STM32 && OF) || COMPILE_TEST
-> > > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> > > index aed99f08739f..ca2d55c679c5 100644
-> > > --- a/drivers/mfd/Makefile
-> > > +++ b/drivers/mfd/Makefile
-> > > @@ -252,6 +252,6 @@ obj-$(CONFIG_MFD_MXS_LRADC)     += mxs-lradc.o
-> > >  obj-$(CONFIG_MFD_SC27XX_PMIC)	+= sprd-sc27xx-spi.o
-> > >  obj-$(CONFIG_RAVE_SP_CORE)	+= rave-sp.o
-> > >  obj-$(CONFIG_MFD_ROHM_BD70528)	+= rohm-bd70528.o
-> > > +obj-$(CONFIG_MFD_ROHM_BD71828)	+= rohm-bd71828.o
-> > >  obj-$(CONFIG_MFD_ROHM_BD718XX)	+= rohm-bd718x7.o
-> > >  obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
-> > > -
-> > 
-> > Nit: This is an unrelated change and should not really be in this
-> > patch.
-> 
-> Ok. Will get rid of it.
-> 
-> > 
-> > > diff --git a/drivers/mfd/rohm-bd71828.c b/drivers/mfd/rohm-
-> > > bd71828.c
-> > > new file mode 100644
-> > > index 000000000000..7f445d699fd9
-> > > --- /dev/null
-> > > +++ b/drivers/mfd/rohm-bd71828.c
-> > > @@ -0,0 +1,319 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-only
-> > > +//
-> > > +// Copyright (C) 2019 ROHM Semiconductors
-> > > +//
-> > > +// ROHM BD71828 PMIC driver
-> > > +
-> 
-> //snip
-> 
-> > > +
-> > > +static struct i2c_driver bd71828_drv = {
-> > > +	.driver = {
-> > > +		.name = "rohm-bd71828",
-> > > +		.of_match_table = bd71828_of_match,
-> > > +	},
-> > > +	.probe_new = &bd71828_i2c_probe,
-> > > +};
-> > > +
-> > 
-> > Nit: You can remove this line.
-> 
-> Will do.
-> 
-> > 
-> > > +module_i2c_driver(bd71828_drv);
-> > > +
-> > > +MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > > ");
-> > > +MODULE_DESCRIPTION("ROHM BD71828 Power Management IC driver");
-> > > +MODULE_LICENSE("GPL");
-> > 
-> > This does not match the header.
-> 
-> How is that? This is what is stated in module.h for the 
-> MODULE_LICENSE:
-> 
-> /*
->  * The following license idents are currently accepted as indicating
-> free
->  * software modules
->  *
->  *	"GPL"				[GNU Public License v2]
->  *	"GPL v2"			[GNU Public License v2]
->  *	"GPL and additional rights"	[GNU Public License v2 rights
-> and more]
->  *	"Dual BSD/GPL"			[GNU Public License v2
->  *					 or BSD license choice]
->  *	"Dual MIT/GPL"			[GNU Public License v2
->  *					 or MIT license choice]
->  *	"Dual MPL/GPL"			[GNU Public License v2
->  *					 or Mozilla license choice]
->  *
->  * The following other idents are available
->  *
->  *	"Proprietary"			[Non free products]
->  *
->  * Both "GPL v2" and "GPL" (the latter also in dual licensed strings)
-> are
->  * merely stating that the module is licensed under the GPL v2, but are
-> not
->  * telling whether "GPL v2 only" or "GPL v2 or later". The reason why
-> there
->  * are two variants is a historic and failed attempt to convey more
->  * information in the MODULE_LICENSE string. For module loading the
->  * "only/or later" distinction is completely irrelevant and does
-> neither
->  * replace the proper license identifiers in the corresponding source
-> file
->  * nor amends them in any way. The sole purpose is to make the
->  * 'Proprietary' flagging work and to refuse to bind symbols which are
->  * exported with EXPORT_SYMBOL_GPL when a non free module is loaded.
->  *
->  * In the same way "BSD" is not a clear license information. It merely
->  * states, that the module is licensed under one of the compatible BSD
->  * license variants. The detailed and correct license information is
-> again
->  * to be found in the corresponding source files.
->  *
->  * There are dual licensed components, but when running with Linux it
-> is the
->  * GPL that is relevant so this is a non issue. Similarly LGPL linked
-> with GPL
->  * is a GPL combined work.
->  *
->  * This exists for several reasons
->  * 1.	So modinfo can show license info for users wanting to vet their
-> setup
->  *	is free
->  * 2.	So the community can ignore bug reports including proprietary
-> modules
->  * 3.	So vendors can do likewise based on their own policies
->  */
-> #define MODULE_LICENSE(_license) MODULE_INFO(license, _license)
-> 
-> I have no objections on changing the license if needed but can you
-> please tell me what is Ok combos then - I am having hard time when
-> trying to select licenses which are acceptable for all.
+Michal Hocko writes:
+>On Tue 17-12-19 15:47:40, Kuninori Morimoto wrote:
+>> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+>>
+>> mem_cgroup_id_get_many() is used under CONFIG_MMU.
+>
+>Not really. It is used when SWAP is enabled currently. But it is not
+>really bound to the swap functionality by any means. It just happens
+>that we do not have other users currently. We might put it under
+>CONFIG_SWAP but I do not really think it is a big improvement.
 
-If you have this in your header:
+Agreed, I think we shouldn't wrap this in preprocessor conditionals it since 
+it's entirely possible it will end up used elsewhere and we'll end up with a 
+mess of #ifdefs.
 
-  GPL-2.0-only
+>> This patch moves it to under CONFIG_MMU.
+>> We will get below warning without this patch
+>> if .config doesn't have CONFIG_MMU.
+>>
+>> 	LINUX/mm/memcontrol.c:4814:13: warning: 'mem_cgroup_id_get_many'\
+>> 		defined but not used [-Wunused-function]
+>> 	static void mem_cgroup_id_get_many(struct mem_cgroup *memcg, unsigned int n)
+>> 	^~~~~~~~~~~~~~~~~~~~~~
+>
+>Is this warning really a big deal? The function is not used, alright,
+>and the compiler will likely just drop it.
 
-Your MODULE tags should read:
+Let's just add __maybe_unused, since it seems like what we want in this 
+scenario -- it avoids new users having to enter preprocessor madness, while 
+also not polluting the build output.
 
-MODULE_LICENSE("GPL v2");
+Once you've done that, I'll send over my ack. :-)
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Thanks.
