@@ -2,279 +2,88 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B45C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A12CC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B68020CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:50:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF0BD2082E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:52:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Zg/g4sKx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfLQBuH (ORCPT
+        id S1726512AbfLQBwO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 20:50:07 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:39685 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbfLQBuH (ORCPT
+        Mon, 16 Dec 2019 20:52:14 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:35341 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbfLQBwN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 20:50:07 -0500
-Received: from [213.220.153.21] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1ih1zv-0002DT-F6; Tue, 17 Dec 2019 01:50:03 +0000
-Date:   Tue, 17 Dec 2019 02:50:02 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Sargun Dhillon <sargun@sargun.me>
-Cc:     linux-kernel@vger.kernel.org,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, tycho@tycho.ws, jannh@google.com,
-        cyphar@cyphar.com, oleg@redhat.com, luto@amacapital.net,
-        viro@zeniv.linux.org.uk, gpascutto@mozilla.com,
-        ealvarez@mozilla.com, fweimer@redhat.com, jld@mozilla.com,
-        arnd@arndb.de
-Subject: Re: [PATCH v3 2/4] pid: Add PIDFD_IOCTL_GETFD to fetch file
- descriptors from processes
-Message-ID: <20191217015001.sp6mrhuiqrivkq3u@wittgenstein>
-References: <20191217010001.GA14461@ircssh-2.c.rugged-nimbus-611.internal>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191217010001.GA14461@ircssh-2.c.rugged-nimbus-611.internal>
-User-Agent: NeoMutt/20180716
+        Mon, 16 Dec 2019 20:52:13 -0500
+Received: by mail-qk1-f196.google.com with SMTP id z76so4005295qka.2
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 17:52:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=VVyljFYvcymdWCFK/BttoIqrDbX+SNPTmTVvMoaS1rc=;
+        b=Zg/g4sKxrShJQPXDzs8HDRW8YlgUrvsTibiQNkDioCdFslJvaJsftDgwZSScLzBoVz
+         vv4Uc1S6vG8jZXIeC7VMU6iPWHnpyjXY0+wJ7/A1xZlwnSYJkdX6Az2KpUePN4mXFcGD
+         HplBwEOpJSiPHC3Sv3mSqcGinzb/Gu326DVyFiAwdPWNKkjvYsTXCbfbdlJgieRIrdXG
+         H6MyA4PPj6VmQQCZ1EZM++fi7Nxz88pRV9SojH+Vp90ISnTLyk8368rKdeDKesA6TzBT
+         0+Iy9P8uGFVCeW/Q1OBgcfZQAP/BBflR7kOZJvB4QyzLywINSbkBYkCFOTdjVmCk9U23
+         cj2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=VVyljFYvcymdWCFK/BttoIqrDbX+SNPTmTVvMoaS1rc=;
+        b=mXSJ1As/8Wxa1qFlSEtOiJj0IHyF5djy5suh1xpz/RTQCxXwbzJvQFtCzRcwA6NeCB
+         TpilGO8MQeMSkLtI/21ItP1InKRZu2OpSc5UAAgNubq7rwrNEvidEr7xgQnALiQczwre
+         KdDW+Ab0kGZjT8d71YdNT5ACAJL+1fjTVtoVtb/Qz05tJV4o8rlHpw4AYDygdhGk8ak1
+         UJC80nyJWZPBnzViNHdu7Jq8KJgrdAmJaN01/Mi9r3H2BFIxsvWRFS8qSOsZs/TZmqIW
+         WV85j40tAfqqoMY6hxHzTfL1MzrEE8fqKsIq+N0g4ZYat+PhF8XNSWHhBUi2Gx6NFqOt
+         FNRg==
+X-Gm-Message-State: APjAAAVeDOZ2ywoG+kytHPRQuUfYY+Eb+01oeoSTD5jsQ3EdtOopIi0Z
+        J94V8e0MOWM/SGWFSHTUU4JlzQ==
+X-Google-Smtp-Source: APXvYqw7J/dHExe28smm7mZd9XhG1WSjUmpefrFPr1IqCbyGGLmlwbVphL2rCumhhBkfSfgbjKlx+g==
+X-Received: by 2002:a37:7b84:: with SMTP id w126mr2644733qkc.280.1576547532672;
+        Mon, 16 Dec 2019 17:52:12 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id e2sm6551540qkl.3.2019.12.16.17.52.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Dec 2019 17:52:11 -0800 (PST)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] char/random: silence a lockdep splat with printk()
+Date:   Mon, 16 Dec 2019 20:52:10 -0500
+Message-Id: <4F9E9335-334B-4600-8BC3-4AF91510D113@lca.pw>
+References: <20191205010055.GO93017@google.com>
+Cc:     tytso@mit.edu, Arnd Bergmann <arnd@arndb.de>,
+        gregkh@linuxfoundation.org, pmladek@suse.com, rostedt@goodmis.org,
+        Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org,
+        dan.j.williams@intel.com, peterz@infradead.org, longman@redhat.com,
+        tglx@linutronix.de, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20191205010055.GO93017@google.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Cc Arnd since he fiddled with ioctl()s quite a bit recently.]
 
-On Tue, Dec 17, 2019 at 01:00:04AM +0000, Sargun Dhillon wrote:
-> This adds an ioctl which allows file descriptors to be extracted
-> from processes based on their pidfd.
-> 
-> One reason to use this is to allow sandboxers to take actions on file
-> descriptors on the behalf of another process. For example, this can be
-> combined with seccomp-bpf's user notification to do on-demand fd
-> extraction and take privileged actions. For example, it can be used
-> to bind a socket to a privileged port. This is similar to ptrace, and
-> using ptrace parasitic code injection to extract a file descriptor from a
-> process, but without breaking debuggers, or paying the ptrace overhead
-> cost.
-> 
-> You must have the ability to ptrace the process in order to extract any
-> file descriptors from it. ptrace can already be used to extract file
-> descriptors based on parasitic code injections, so the permissions
-> model is aligned.
-> 
-> The ioctl takes a pointer to pidfd_getfd_args. pidfd_getfd_args contains
-> a size, which allows for gradual evolution of the API. There is an options
-> field, which can be used to state whether the fd should be opened with
-> CLOEXEC, or not. An additional options field may be added in the future
-> to include the ability to clear cgroup information about the file
-> descriptor at a later point. If the structure is from a newer kernel, and
-> includes members which make it larger than the structure that's known to
-> this kernel version, E2BIG will be returned.
-> 
-> Signed-off-by: Sargun Dhillon <sargun@sargun.me>
-> ---
->  Documentation/ioctl/ioctl-number.rst |  1 +
->  include/linux/pid.h                  |  1 +
->  include/uapi/linux/pid.h             | 26 ++++++++++
->  kernel/fork.c                        | 72 ++++++++++++++++++++++++++++
->  4 files changed, 100 insertions(+)
->  create mode 100644 include/uapi/linux/pid.h
-> 
-> diff --git a/Documentation/ioctl/ioctl-number.rst b/Documentation/ioctl/ioctl-number.rst
-> index bef79cd4c6b4..be2efb93acd1 100644
-> --- a/Documentation/ioctl/ioctl-number.rst
-> +++ b/Documentation/ioctl/ioctl-number.rst
-> @@ -272,6 +272,7 @@ Code  Seq#    Include File                                           Comments
->                                                                       <mailto:tim@cyberelk.net>
->  'p'   A1-A5  linux/pps.h                                             LinuxPPS
->                                                                       <mailto:giometti@linux.it>
-> +'p'   B0-CF  uapi/linux/pid.h
->  'q'   00-1F  linux/serio.h
->  'q'   80-FF  linux/telephony.h                                       Internet PhoneJACK, Internet LineJACK
->               linux/ixjuser.h                                         <http://web.archive.org/web/%2A/http://www.quicknet.net>
-> diff --git a/include/linux/pid.h b/include/linux/pid.h
-> index 9645b1194c98..65f1a73040c9 100644
-> --- a/include/linux/pid.h
-> +++ b/include/linux/pid.h
-> @@ -5,6 +5,7 @@
->  #include <linux/rculist.h>
->  #include <linux/wait.h>
->  #include <linux/refcount.h>
-> +#include <uapi/linux/pid.h>
 
-That should be pidfd.h and the resulting new file be placed under the
-pidfd entry in maintainers:
-+F:     include/uapi/linux/pidfd.h
+> On Dec 4, 2019, at 8:00 PM, Sergey Senozhatsky <sergey.senozhatsky.work@gm=
+ail.com> wrote:
+>=20
+> A 'Reviewed-by' will suffice.
+>=20
+> Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 
->  
->  enum pid_type
->  {
-> diff --git a/include/uapi/linux/pid.h b/include/uapi/linux/pid.h
-> new file mode 100644
-> index 000000000000..4ec02ed8b39a
-> --- /dev/null
-> +++ b/include/uapi/linux/pid.h
-> @@ -0,0 +1,26 @@
-> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> +#ifndef _UAPI_LINUX_PID_H
-> +#define _UAPI_LINUX_PID_H
-> +
-> +#include <linux/types.h>
-> +#include <linux/ioctl.h>
-> +
-> +/* options to pass in to pidfd_getfd_args flags */
-> +#define PIDFD_GETFD_CLOEXEC (1 << 0)	/* open the fd with cloexec */
-
-Please, make them cloexec by default unless there's a very good reason
-not to.
-
-> +
-> +struct pidfd_getfd_args {
-> +	__u32 size;		/* sizeof(pidfd_getfd_args) */
-> +	__u32 fd;       /* the tracee's file descriptor to get */
-> +	__u32 flags;
-> +};
-
-I think you want to either want to pad this
-
-+struct pidfd_getfd_args {
-+	__u32 size;		/* sizeof(pidfd_getfd_args) */
-+	__u32 fd;       /* the tracee's file descriptor to get */
-+	__u32 flags;
-	__u32 reserved;
-+};
-
-or use __aligned_u64 everywhere which I'd personally prefer instead of
-this manual padding everywhere.
-
-> +
-> +#define PIDFD_IOC_MAGIC			'p'
-> +#define PIDFD_IO(nr)			_IO(PIDFD_IOC_MAGIC, nr)
-> +#define PIDFD_IOR(nr, type)		_IOR(PIDFD_IOC_MAGIC, nr, type)
-> +#define PIDFD_IOW(nr, type)		_IOW(PIDFD_IOC_MAGIC, nr, type)
-> +#define PIDFD_IOWR(nr, type)		_IOWR(PIDFD_IOC_MAGIC, nr, type)
-> +
-> +#define PIDFD_IOCTL_GETFD		PIDFD_IOWR(0xb0, \
-> +						struct pidfd_getfd_args)
-> +
-> +#endif /* _UAPI_LINUX_PID_H */
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index 6cabc124378c..d9971e664e82 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -1726,9 +1726,81 @@ static __poll_t pidfd_poll(struct file *file, struct poll_table_struct *pts)
->  	return poll_flags;
->  }
->  
-> +static long pidfd_getfd(struct pid *pid, struct pidfd_getfd_args __user *buf)
-> +{
-> +	struct pidfd_getfd_args args;
-> +	unsigned int fd_flags = 0;
-> +	struct task_struct *task;
-> +	struct file *file;
-> +	u32 user_size;
-> +	int ret, fd;
-> +
-> +	ret = get_user(user_size, &buf->size);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = copy_struct_from_user(&args, sizeof(args), buf, user_size);
-> +	if (ret)
-> +		return ret;
-> +	if ((args.flags & ~(PIDFD_GETFD_CLOEXEC)) != 0)
-> +		return -EINVAL;
-
-Nit: It's more common - especially in this file - to do
-
-if (args.flags & ~PIDFD_GETFD_CLOEXEC)
-	return -EINVAL;
-
-> +	if (args.flags & PIDFD_GETFD_CLOEXEC)
-> +		fd_flags |= O_CLOEXEC;
-> +
-> +	task = get_pid_task(pid, PIDTYPE_PID);
-> +	if (!task)
-> +		return -ESRCH;
-
-\n
-
-> +	ret = -EPERM;
-> +	if (!ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS))
-> +		goto out;
-
-\n
-
-Please don't pre-set errors unless they are used by multiple exit paths.
-if (!ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS)) {
-	ret = -EPERM;
-	goto out;
-}
-
-> +	ret = -EBADF;
-> +	file = fget_task(task, args.fd);
-> +	if (!file)
-> +		goto out;
-
-Same.
-
-> +
-> +	fd = get_unused_fd_flags(fd_flags);
-> +	if (fd < 0) {
-> +		ret = fd;
-> +		goto out_put_file;
-> +	}
-
-\n
-
-> +	/*
-> +	 * security_file_receive must come last since it may have side effects
-> +	 * and cannot be reversed.
-> +	 */
-> +	ret = security_file_receive(file);
-> +	if (ret)
-> +		goto out_put_fd;
-> +
-> +	fd_install(fd, file);
-> +	put_task_struct(task);
-> +	return fd;
-> +
-> +out_put_fd:
-> +	put_unused_fd(fd);
-> +out_put_file:
-> +	fput(file);
-> +out:
-> +	put_task_struct(task);
-> +	return ret;
-> +}
-> +
-> +static long pidfd_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-> +{
-> +	struct pid *pid = file->private_data;
-> +	void __user *buf = (void __user *)arg;
-> +
-> +	switch (cmd) {
-> +	case PIDFD_IOCTL_GETFD:
-> +		return pidfd_getfd(pid, buf);
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
->  const struct file_operations pidfd_fops = {
->  	.release = pidfd_release,
->  	.poll = pidfd_poll,
-> +	.unlocked_ioctl = pidfd_ioctl,
->  #ifdef CONFIG_PROC_FS
->  	.show_fdinfo = pidfd_show_fdinfo,
->  #endif
-> -- 
-> 2.20.1
-> 
+Ted, could you take a look at this trivial patch?=
