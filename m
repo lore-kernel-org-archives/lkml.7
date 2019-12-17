@@ -2,116 +2,84 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B18EC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F903C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:22:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D1CE2082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:21:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="WEe+w1Te"
+	by mail.kernel.org (Postfix) with ESMTP id 00EFC21582
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:22:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbfLQWVn (ORCPT
+        id S1726691AbfLQWWH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 17:21:43 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:40970 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726569AbfLQWVm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 17:21:42 -0500
-Received: from [10.137.112.111] (unknown [131.107.147.111])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 6E22C20B4798;
-        Tue, 17 Dec 2019 14:21:41 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6E22C20B4798
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1576621301;
-        bh=9l7xQkDf03ilEjwohU/zhtjkixpnGAYFMtbXbBZSvxM=;
-        h=From:Subject:To:Cc:References:Date:In-Reply-To:From;
-        b=WEe+w1TeuZmWnymGKdDsY3f9DP8G7qfHy8EGMv1hOtCvhRlGy6Gmf3v9sMofUcNKK
-         3cyDtINBX0PEKcsTsyuAqU9gIugGq2FvqD7tHfgrT/UsGSX6w9i6b9oWjDj/AAep++
-         eisdpbZataBVn34Y29qsL5HzdXxLAPfRtxMb36nU=
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Subject: Re: [PATCH v4 2/2] IMA: Call workqueue functions to measure queued
- keys
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        zohar@linux.ibm.com, linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
-        sashal@kernel.org, jamorris@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-References: <20191213171827.28657-1-nramas@linux.microsoft.com>
- <20191213171827.28657-3-nramas@linux.microsoft.com>
- <1576257955.8504.20.camel@HansenPartnership.com>
- <39624b97-245c-ed05-27c5-588787aacc00@linux.microsoft.com>
- <1576423353.3343.3.camel@HansenPartnership.com>
- <1568ff14-316f-f2c4-84d4-7ca4c0a1936a@linux.microsoft.com>
- <1576479187.3784.1.camel@HansenPartnership.com>
- <8844a360-6d1e-1435-db7c-fd7739487168@linux.microsoft.com>
- <1576531022.3365.6.camel@HansenPartnership.com>
- <35a6c241-9a46-2657-51d1-0c04d32a9fae@linux.microsoft.com>
- <f25b7299-1530-2e43-cdf4-2208c82fc768@linux.microsoft.com>
-Message-ID: <152580f3-2a1f-fa33-cc25-f25747a470a5@linux.microsoft.com>
-Date:   Tue, 17 Dec 2019 14:22:07 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <f25b7299-1530-2e43-cdf4-2208c82fc768@linux.microsoft.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Tue, 17 Dec 2019 17:22:07 -0500
+Received: from mx2.suse.de ([195.135.220.15]:53768 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726512AbfLQWWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 17:22:06 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 038FEB17E;
+        Tue, 17 Dec 2019 22:22:04 +0000 (UTC)
+Date:   Tue, 17 Dec 2019 23:22:04 +0100
+Message-ID: <s5hh81y1tkj.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v7 0/8] Fix year 2038 issue for sound subsystem
+In-Reply-To: <CAK8P3a3um5paR7DoNE3Qa9pjJx4jDfzsCbh+ihSPf1aGA10Niw@mail.gmail.com>
+References: <20191211212025.1981822-1-arnd@arndb.de>
+        <s5htv5z1bes.wl-tiwai@suse.de>
+        <CAK8P3a3um5paR7DoNE3Qa9pjJx4jDfzsCbh+ihSPf1aGA10Niw@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi James,
+On Tue, 17 Dec 2019 22:15:32 +0100,
+Arnd Bergmann wrote:
+> 
+> On Tue, Dec 17, 2019 at 11:42 AM Takashi Iwai <tiwai@suse.de> wrote:
+> > On Wed, 11 Dec 2019 22:20:16 +0100,
+> > Arnd Bergmann wrote:
+> 
+> > >
+> > > I hope I addressed all review comments by now, so please pull this
+> > > for linux-5.6.
+> > >
+> > > A git branch with the same contents is available for testing at [1].
+> > >
+> > >      Arnd
+> >
+> > I see no issue other than the timer API patch Ben pointed.
+> >
+> > Could you resubmit that patch?  Or just submit the whole as v8, I
+> > don't mind either way.  Then we'll get this done for 5.6.
+> 
+> Can you take this as a pull request? That would be ideal for me,
+> as I can then use it as a parent for a shared branch with additional
+> cleanups on top (removing time_t etc) in linux-next. It also provides
+> a nice place to preserve the series cover letter.
+> 
+> I'm sending you the pull request now, and the last modified patch,
+> in case you prefer the patch over a git tag.
 
->>>
->>> This is the problem: in the race case you may still be adding keys to
->>> the queue after the other thread has processed it. Those keys won't get
->>> processed because the flag is now false in the post check so the
->>> current thread won't process them either.
->>>
->>> James
->>>
+That's fine for me.  Now I pulled it to a branch for 5.6 kernel.
 
-Please let me know if you still think there is a race condition.
+Thanks for your patient works!
 
-If yes, please explain how a key would be added to the queue after 
-ima_process_queued_keys() has processed queued keys.
-ima_process_keys flag will be true when queued keys have been processed.
 
-> 
-> Please keep in mind that ima_queue_key() returns a boolean indicating 
-> whether or not the key was queued. This flag is set inside the lock - 
-> please see the code snippet from ima_queue_key() below:
-> 
-> +    mutex_lock(&ima_keys_mutex);
-> +    if (!ima_process_keys) {
-> +        list_add_tail(&entry->list, &ima_keys);
-> +        queued = true;
-> +    }
-> +    mutex_unlock(&ima_keys_mutex);
-> 
-> If ima_process_keys had changed from false to true, ima_queue_key() will 
-> not queue the key and return false to ima_post_key_create_or_update().
-> 
-> Code snippet in ima_post_key_create_or_update():
-> 
-> +    if (!ima_process_keys)
-> +        queued = ima_queue_key(keyring, payload, payload_len);
-> +
-> +    if (queued)
-> +        return;
-> 
-> If the "queued" is false, ima_post_key_create_or_update() will process 
-> the key immediately.
-> 
->   -lakshmi
-
-thanks,
-  -lakshmi
+Takashi
