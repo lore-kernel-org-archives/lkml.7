@@ -2,81 +2,136 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B080DC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5809EC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 869112082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:01:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="DlMguMDf"
+	by mail.kernel.org (Postfix) with ESMTP id 3902C20733
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:01:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727393AbfLQKBP (ORCPT
+        id S1727420AbfLQKBY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 05:01:15 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:46574 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727262AbfLQKBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 05:01:15 -0500
-Received: from zn.tnic (p200300EC2F0BBF00F58FA9348D88329A.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:bf00:f58f:a934:8d88:329a])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 790FB1EC0260;
+        Tue, 17 Dec 2019 05:01:24 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:54861 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727039AbfLQKBX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 05:01:23 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1ih9fB-0003qk-Hn; Tue, 17 Dec 2019 11:01:09 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3E6311C2A30;
         Tue, 17 Dec 2019 11:01:09 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1576576869;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=TWk0Ol/lk6IEl4Vsq0oe0f7c2cy06oHSdWbOz4PG6IY=;
-        b=DlMguMDfC0St/aTlvGhhCp616NnyCeGG1qnurzGXonbEexxuT7gJRBA4a3hJproUul0gtZ
-        pBfOua8u+qghEDIEbMN2Puq8qa90JfzZreU5W+Lo3+3Vwo4goIIOg8zWp/rqXA9I32eLxU
-        IEJ1kxrwgrXCS9Z25fJyaE4jIEmxdoY=
-Date:   Tue, 17 Dec 2019 11:01:02 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-tip-commits@vger.kernel.org" 
-        <linux-tip-commits@vger.kernel.org>, Borislav Petkov <bp@suse.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>, x86-ml <x86@kernel.org>
-Subject: Re: [tip: ras/core] x86/mce/AMD: Allow Reserved types to be
- overwritten in smca_banks[]
-Message-ID: <20191217100102.GC28788@zn.tnic>
-References: <20191121141508.141273-1-Yazen.Ghannam@amd.com>
- <157597242273.30329.4326721384243738456.tip-bot2@tip-bot2>
- <SN6PR12MB2639C1AF7F5EC7F16B22D244F8500@SN6PR12MB2639.namprd12.prod.outlook.com>
+Date:   Tue, 17 Dec 2019 10:01:09 -0000
+From:   "tip-bot2 for Konstantin Khlebnikov" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: ras/urgent] x86/MCE/AMD: Do not use rdmsr_safe_on_cpu() in
+ smca_configure()
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Borislav Petkov <bp@suse.de>,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        "linux-edac" <linux-edac@vger.kernel.org>,
+        <stable@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>, "x86-ml" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <157252708836.3876.4604398213417262402.stgit@buzz>
+References: <157252708836.3876.4604398213417262402.stgit@buzz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <SN6PR12MB2639C1AF7F5EC7F16B22D244F8500@SN6PR12MB2639.namprd12.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Message-ID: <157657686913.30329.12674595394156740801.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 01:49:13AM +0000, Ghannam, Yazen wrote:
-> Can this please be applied to ras/urgent? It fixes a boot issue on some
-> recently released AMD systems.
-> 
-> I had the Fixes tag, but I forgot to include CC:<stable>. Sorry about that.
+The following commit has been merged into the ras/urgent branch of tip:
 
-Ok, I've reshuffled ras/core and ras/urgent and pushed them out. I'd
-appreciate it if you ran the urgent branch too, on your end. I tested on
-everything I have here but my hw doesn't trigger any boot hang issues
-anyway. If you have people reporting issues, now would be a good time
-for them to test it too.
+Commit-ID:     246ff09f89e54fdf740a8d496176c86743db3ec7
+Gitweb:        https://git.kernel.org/tip/246ff09f89e54fdf740a8d496176c86743db3ec7
+Author:        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+AuthorDate:    Thu, 31 Oct 2019 16:04:48 +03:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Tue, 17 Dec 2019 09:39:33 +01:00
 
-Thx.
+x86/MCE/AMD: Do not use rdmsr_safe_on_cpu() in smca_configure()
 
--- 
-Regards/Gruss,
-    Boris.
+... because interrupts are disabled that early and sending IPIs can
+deadlock:
 
-https://people.kernel.org/tglx/notes-about-netiquette
+  BUG: sleeping function called from invalid context at kernel/sched/completion.c:99
+  in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 0, name: swapper/1
+  no locks held by swapper/1/0.
+  irq event stamp: 0
+  hardirqs last  enabled at (0): [<0000000000000000>] 0x0
+  hardirqs last disabled at (0): [<ffffffff8106dda9>] copy_process+0x8b9/0x1ca0
+  softirqs last  enabled at (0): [<ffffffff8106dda9>] copy_process+0x8b9/0x1ca0
+  softirqs last disabled at (0): [<0000000000000000>] 0x0
+  Preemption disabled at:
+  [<ffffffff8104703b>] start_secondary+0x3b/0x190
+  CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.5.0-rc2+ #1
+  Hardware name: GIGABYTE MZ01-CE1-00/MZ01-CE1-00, BIOS F02 08/29/2018
+  Call Trace:
+   dump_stack
+   ___might_sleep.cold.92
+   wait_for_completion
+   ? generic_exec_single
+   rdmsr_safe_on_cpu
+   ? wrmsr_on_cpus
+   mce_amd_feature_init
+   mcheck_cpu_init
+   identify_cpu
+   identify_secondary_cpu
+   smp_store_cpu_info
+   start_secondary
+   secondary_startup_64
+
+The function smca_configure() is called only on the current CPU anyway,
+therefore replace rdmsr_safe_on_cpu() with atomic rdmsr_safe() and avoid
+the IPI.
+
+ [ bp: Update commit message. ]
+
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Cc: <stable@vger.kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/157252708836.3876.4604398213417262402.stgit@buzz
+---
+ arch/x86/kernel/cpu/mce/amd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
+index 5167bd2..e41e3b4 100644
+--- a/arch/x86/kernel/cpu/mce/amd.c
++++ b/arch/x86/kernel/cpu/mce/amd.c
+@@ -269,7 +269,7 @@ static void smca_configure(unsigned int bank, unsigned int cpu)
+ 	if (smca_banks[bank].hwid)
+ 		return;
+ 
+-	if (rdmsr_safe_on_cpu(cpu, MSR_AMD64_SMCA_MCx_IPID(bank), &low, &high)) {
++	if (rdmsr_safe(MSR_AMD64_SMCA_MCx_IPID(bank), &low, &high)) {
+ 		pr_warn("Failed to read MCA_IPID for bank %d\n", bank);
+ 		return;
+ 	}
