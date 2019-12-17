@@ -2,201 +2,82 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F784C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D46C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32B7221D7D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D41D20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:40:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbfLQBjM convert rfc822-to-8bit (ORCPT
+        id S1726666AbfLQBkJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 20:39:12 -0500
-Received: from smtp.h3c.com ([60.191.123.50]:47529 "EHLO h3cspam02-ex.h3c.com"
+        Mon, 16 Dec 2019 20:40:09 -0500
+Received: from mga04.intel.com ([192.55.52.120]:50019 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726016AbfLQBjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 20:39:11 -0500
-Received: from DAG2EX08-IDC.srv.huawei-3com.com ([10.8.0.71])
-        by h3cspam02-ex.h3c.com with ESMTPS id xBH1cGoM097357
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 17 Dec 2019 09:38:16 +0800 (GMT-8)
-        (envelope-from li.kai4@h3c.com)
-Received: from DAG2EX07-IDC.srv.huawei-3com.com (10.8.0.70) by
- DAG2EX08-IDC.srv.huawei-3com.com (10.8.0.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 17 Dec 2019 09:38:17 +0800
-Received: from DAG2EX07-IDC.srv.huawei-3com.com ([::1]) by
- DAG2EX07-IDC.srv.huawei-3com.com ([fe80::c439:37f7:8e24:31c4%9]) with mapi id
- 15.01.1713.004; Tue, 17 Dec 2019 09:38:17 +0800
-From:   Likai <li.kai4@h3c.com>
-To:     Joseph Qi <jiangqi903@gmail.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        "mark@fasheh.com" <mark@fasheh.com>,
-        "jlbec@evilplan.org" <jlbec@evilplan.org>,
-        "chge@linux.alibaba.com" <chge@linux.alibaba.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "ocfs2-devel@oss.oracle.com" <ocfs2-devel@oss.oracle.com>
-Subject: Re: [Ocfs2-devel] [PATCH v2] ocfs2: call journal flush to mark
- journal as empty after journal recovery when mount
-Thread-Topic: [Ocfs2-devel] [PATCH v2] ocfs2: call journal flush to mark
- journal as empty after journal recovery when mount
-Thread-Index: AQHVsLF+fHlMp3IiE02yjxgB9B140g==
-Date:   Tue, 17 Dec 2019 01:38:17 +0000
-Message-ID: <9ee4d5964a444d238a216e1ac0986d01@h3c.com>
-References: <20191212060000.930-1-li.kai4@h3c.com>
- <7cf9e23b-04a1-09a0-77a6-fe31f7a6a1b5@linux.alibaba.com>
- <57197a96b6e145bf8f992f103157cb1f@h3c.com>
- <6e031007-746a-76ec-e542-ca18ab830dc6@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.125.108.72]
-x-sender-location: DAG2
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1726016AbfLQBkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 20:40:08 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 17:40:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,323,1571727600"; 
+   d="scan'208";a="227319975"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga002.jf.intel.com with ESMTP; 16 Dec 2019 17:40:04 -0800
+Cc:     baolu.lu@linux.intel.com, "Raj, Ashok" <ashok.raj@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>, Peter Xu <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 5/6] iommu/vt-d: Flush PASID-based iotlb for iova over
+ first level
+To:     "Liu, Yi L" <yi.l.liu@intel.com>, Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+References: <20191211021219.8997-1-baolu.lu@linux.intel.com>
+ <20191211021219.8997-6-baolu.lu@linux.intel.com>
+ <A2975661238FB949B60364EF0F2C25743A130C08@SHSMSX104.ccr.corp.intel.com>
+ <f1e5cfea-8b11-6d72-8e57-65daea51c050@linux.intel.com>
+ <A2975661238FB949B60364EF0F2C25743A132C50@SHSMSX104.ccr.corp.intel.com>
+ <6a5f6695-d1fd-e7d1-3ea3-f222a1ef0e54@linux.intel.com>
+ <b4a879b2-a5c7-b0bf-8cd4-7397aeebc381@linux.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <2b024c1e-79bd-6827-47e6-ae9457054c79@linux.intel.com>
+Date:   Tue, 17 Dec 2019 09:39:12 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-X-DNSRBL: 
-X-MAIL: h3cspam02-ex.h3c.com xBH1cGoM097357
+In-Reply-To: <b4a879b2-a5c7-b0bf-8cd4-7397aeebc381@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/12/16 21:36, Joseph Qi wrote:
->
-> On 19/12/16 20:12, Likai wrote:
->> On 2019/12/16 18:02, Joseph Qi wrote:
->>> On 19/12/12 14:00, Kai Li wrote:
->>>> If journal is dirty when mount, it will be replayed but jbd2 sb
->>>> log tail cannot be updated to mark a new start because
->>>> journal->j_flag has already been set with JBD2_ABORT first
->>>> in journal_init_common. When a new transaction is committed, it
->>>> will be recored in block 1 first(journal->j_tail is set to 1 in
->>>> journal_reset).If emergency restart happens again before journal
->>>> super block is updated unfortunately, the new recorded trans will
->>>> not be replayed in the next mount.
->>>>
->>>> The following steps describe this procedure in detail.
->>>> 1. mount and touch some files
->>>> 2. these transactions are committed to journal area but not checkpointed
->>>> 3. emergency restart
->>>> 4. mount again and its journals are replayed
->>>> 5. journal super block's first s_start is 1, but its s_seq is not updated
->>>> 6. touch a new file and its trans is committed but not checkpointed
->>>> 7. emergency restart again
->>>> 8. mount and journal is dirty, but trans committed in 6 will not be
->>>> replayed.
->>>>
->>>> This exception happens easily when this lun is used by only one node. If it
->>>> is used by multi-nodes, other node will replay its journal and its
->>>> journal super block will be updated after recovery like what this patch
->>>> does.
->>>>
->>>> ocfs2_recover_node->ocfs2_replay_journal.
->>>>
->>>> The following jbd2 journal can be generated by touching a new file after
->>>> journal is replayed, and seq 15 is the first valid commit, but first seq
->>>> is 13 in journal super block.
->>>> logdump:
->>>> Block 0: Journal Superblock
->>>> Seq: 0   Type: 4 (JBD2_SUPERBLOCK_V2)
->>>> Blocksize: 4096   Total Blocks: 32768   First Block: 1
->>>> First Commit ID: 13   Start Log Blknum: 1
->>>> Error: 0
->>>> Feature Compat: 0
->>>> Feature Incompat: 2 block64
->>>> Feature RO compat: 0
->>>> Journal UUID: 4ED3822C54294467A4F8E87D2BA4BC36
->>>> FS Share Cnt: 1   Dynamic Superblk Blknum: 0
->>>> Per Txn Block Limit    Journal: 0    Data: 0
->>>>
->>>> Block 1: Journal Commit Block
->>>> Seq: 14   Type: 2 (JBD2_COMMIT_BLOCK)
->>>>
->>>> Block 2: Journal Descriptor
->>>> Seq: 15   Type: 1 (JBD2_DESCRIPTOR_BLOCK)
->>>> No. Blocknum        Flags
->>>>  0. 587             none
->>>> UUID: 00000000000000000000000000000000
->>>>  1. 8257792         JBD2_FLAG_SAME_UUID
->>>>  2. 619             JBD2_FLAG_SAME_UUID
->>>>  3. 24772864        JBD2_FLAG_SAME_UUID
->>>>  4. 8257802         JBD2_FLAG_SAME_UUID
->>>>  5. 513             JBD2_FLAG_SAME_UUID JBD2_FLAG_LAST_TAG
->>>> ...
->>>> Block 7: Inode
->>>> Inode: 8257802   Mode: 0640   Generation: 57157641 (0x3682809)
->>>> FS Generation: 2839773110 (0xa9437fb6)
->>>> CRC32: 00000000   ECC: 0000
->>>> Type: Regular   Attr: 0x0   Flags: Valid
->>>> Dynamic Features: (0x1) InlineData
->>>> User: 0 (root)   Group: 0 (root)   Size: 7
->>>> Links: 1   Clusters: 0
->>>> ctime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
->>>> atime: 0x5de5d870 0x113181a1 -- Tue Dec  3 11:37:20.288457121 2019
->>>> mtime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
->>>> dtime: 0x0 -- Thu Jan  1 08:00:00 1970
->>>> ...
->>>> Block 9: Journal Commit Block
->>>> Seq: 15   Type: 2 (JBD2_COMMIT_BLOCK)
->>>>
->>>> The following is jouranl recovery log when recovering the upper jbd2
->>>> journal when mount again.
->>>> syslog:
->>>> [ 2265.648622] ocfs2: File system on device (252,1) was not unmounted cleanly, recovering it.
->>>> [ 2265.649695] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 0
->>>> [ 2265.650407] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 1
->>>> [ 2265.650409] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 2
->>>> [ 2265.650410] fs/jbd2/recovery.c:(jbd2_journal_recover, 278): JBD2: recovery, exit status 0, recovered transactions 13 to 13
->>>>
->>>> Due to first commit seq 13 recorded in journal super is not consistent
->>>> with the value recorded in block 1(seq is 14), journal recovery will be
->>>> terminated before seq 15 even though it is an unbroken commit, inode
->>>> 8257802 is a new file and it will be lost.
->>>>
->>>> Signed-off-by: Kai Li <li.kai4@h3c.com>
->>>> ---
->>>>  fs/ocfs2/journal.c | 9 +++++++++
->>>>  1 file changed, 9 insertions(+)
->>>>
->>>> diff --git a/fs/ocfs2/journal.c b/fs/ocfs2/journal.c
->>>> index 1afe57f425a0..5c7a489f47b0 100644
->>>> --- a/fs/ocfs2/journal.c
->>>> +++ b/fs/ocfs2/journal.c
->>>> @@ -1066,6 +1066,15 @@ int ocfs2_journal_load(struct ocfs2_journal *journal, int local, int replayed)
->>>>  
->>>>  	ocfs2_clear_journal_error(osb->sb, journal->j_journal, osb->slot_num);
->>>>  
->>>> +	if (replayed) {
->>>> +		mlog(ML_NOTICE, "journal recovery complete");
->>> I don't think this log is appropriate, or we can change it to something like:
->>> "Journal is dirty, wipe it first"?
->>>
->>> Thanks,
->>> Joseph
->> This log is not used to interpret journal flush's purpose and calling
->> journal flush to make jbd2 super block become normal should be a
->> requisite operation internally,
->> maybe a mark should be better I think if necessary.
->> In addition,  ocfs2 prints a log like 'ocfs2: File system on device (%s)
->> was not  unmounted cleanly, recovering it' before,
->> and  journal has already been replayed in
->> jbd2_journal_load->jbd2_journal_recover,  this log just means that it is
->> done here.
->> So I don't think it is inappropriate,  could you think abort my proposal
->> again?
->>
-> Not really, just think that this log has no actual meaning.
-> Or we can simply remove it.
->
-> Thanks,
-> Joseph
->
-Ok,  simply remove it,  any other suggestions?
+Hi,
 
-Thanks
+On 12/17/19 9:37 AM, Lu Baolu wrote:
+> You are right. I will change it accordingly. The logic should look
+> like:
+> 
+> if (domain attached to physical device)
+>      flush_piotlb_with_RID2PASID()
+> else if (domain_attached_to_mdev_device)
+>      flush_piotlb_with_default_pasid()
+> 
 
+Both! so no "else" here.
+
+Best regards,
+baolu
+
+> Does this work for you? Thanks for catching this!
