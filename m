@@ -7,44 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD63C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D132FC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45FB224679
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1969218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728334AbfLQMkZ (ORCPT
+        id S1728342AbfLQMk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:40:25 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55287 "EHLO
+        Tue, 17 Dec 2019 07:40:28 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55284 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728275AbfLQMkG (ORCPT
+        with ESMTP id S1728264AbfLQMkF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 07:40:06 -0500
+        Tue, 17 Dec 2019 07:40:05 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ihC8l-0001o0-6M; Tue, 17 Dec 2019 13:39:51 +0100
+        id 1ihC8q-0001pe-Ce; Tue, 17 Dec 2019 13:39:56 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 896D61C2A3C;
-        Tue, 17 Dec 2019 13:39:50 +0100 (CET)
-Date:   Tue, 17 Dec 2019 12:39:50 -0000
-From:   "tip-bot2 for Alexander Shishkin" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 36EE71C2A3D;
+        Tue, 17 Dec 2019 13:39:52 +0100 (CET)
+Date:   Tue, 17 Dec 2019 12:39:52 -0000
+From:   "tip-bot2 for Peng Wang" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf/x86/intel: Fix PT PMI handling
-Cc:     Vitaly Slobodskoy <vitaly.slobodskoy@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+Subject: [tip: sched/core] schied/fair: Skip calculating @contrib without load
+Cc:     Peng Wang <rocking@linux.alibaba.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191210105101.77210-1-alexander.shishkin@linux.intel.com>
-References: <20191210105101.77210-1-alexander.shishkin@linux.intel.com>
+In-Reply-To: <1576208740-35609-1-git-send-email-rocking@linux.alibaba.com>
+References: <1576208740-35609-1-git-send-email-rocking@linux.alibaba.com>
 MIME-Version: 1.0
-Message-ID: <157658639044.30329.8671733952601494347.tip-bot2@tip-bot2>
+Message-ID: <157658639209.30329.5550277285445533985.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,77 +55,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/urgent branch of tip:
+The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     92ca7da4bdc24d63bb0bcd241c11441ddb63b80a
-Gitweb:        https://git.kernel.org/tip/92ca7da4bdc24d63bb0bcd241c11441ddb63b80a
-Author:        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-AuthorDate:    Tue, 10 Dec 2019 12:51:01 +02:00
+Commit-ID:     d040e0734fb3dedfe24c3d94f5a32b4812eca610
+Gitweb:        https://git.kernel.org/tip/d040e0734fb3dedfe24c3d94f5a32b4812eca610
+Author:        Peng Wang <rocking@linux.alibaba.com>
+AuthorDate:    Fri, 13 Dec 2019 11:45:40 +08:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Tue, 17 Dec 2019 13:32:46 +01:00
+CommitterDate: Tue, 17 Dec 2019 13:32:51 +01:00
 
-perf/x86/intel: Fix PT PMI handling
+schied/fair: Skip calculating @contrib without load
 
-Commit:
+Because of the:
 
-  ccbebba4c6bf ("perf/x86/intel/pt: Bypass PT vs. LBR exclusivity if the core supports it")
+	if (!load)
+		runnable = running = 0;
 
-skips the PT/LBR exclusivity check on CPUs where PT and LBRs coexist, but
-also inadvertently skips the active_events bump for PT in that case, which
-is a bug. If there aren't any hardware events at the same time as PT, the
-PMI handler will ignore PT PMIs, as active_events reads zero in that case,
-resulting in the "Uhhuh" spurious NMI warning and PT data loss.
+clause in ___update_load_sum(), all the actual users of @contrib in
+accumulate_sum():
 
-Fix this by always increasing active_events for PT events.
+	if (load)
+		sa->load_sum += load * contrib;
+	if (runnable)
+		sa->runnable_load_sum += runnable * contrib;
+	if (running)
+		sa->util_sum += contrib << SCHED_CAPACITY_SHIFT;
 
-Fixes: ccbebba4c6bf ("perf/x86/intel/pt: Bypass PT vs. LBR exclusivity if the core supports it")
-Reported-by: Vitaly Slobodskoy <vitaly.slobodskoy@intel.com>
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+don't happen, and therefore we don't care what @contrib actually is and
+calculating it is pointless.
+
+If we count the times when @load equals zero and not as below:
+
+	if (load) {
+		load_is_not_zero_count++;
+		contrib = __accumulate_pelt_segments(periods,
+				1024 - sa->period_contrib,delta);
+	} else
+		load_is_zero_count++;
+
+As we can see, load_is_zero_count is much bigger than
+load_is_zero_count, and the gap is gradually widening:
+
+	load_is_zero_count:            6016044 times
+	load_is_not_zero_count:         244316 times
+	19:50:43 up 1 min,  1 user,  load average: 0.09, 0.06, 0.02
+
+	load_is_zero_count:            7956168 times
+	load_is_not_zero_count:         261472 times
+	19:51:42 up 2 min,  1 user,  load average: 0.03, 0.05, 0.01
+
+	load_is_zero_count:           10199896 times
+	load_is_not_zero_count:         278364 times
+	19:52:51 up 3 min,  1 user,  load average: 0.06, 0.05, 0.01
+
+	load_is_zero_count:           14333700 times
+	load_is_not_zero_count:         318424 times
+	19:54:53 up 5 min,  1 user,  load average: 0.01, 0.03, 0.00
+
+Perhaps we can gain some performance advantage by saving these
+unnecessary calculation.
+
+Signed-off-by: Peng Wang <rocking@linux.alibaba.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Link: https://lkml.kernel.org/r/20191210105101.77210-1-alexander.shishkin@linux.intel.com
+Reviewed-by: Vincent Guittot < vincent.guittot@linaro.org>
+Link: https://lkml.kernel.org/r/1576208740-35609-1-git-send-email-rocking@linux.alibaba.com
 ---
- arch/x86/events/core.c |  9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ kernel/sched/pelt.c | 20 +++++++++++++++++---
+ 1 file changed, 17 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 84fe1be..f118af9 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -376,7 +376,7 @@ int x86_add_exclusive(unsigned int what)
- 	 * LBR and BTS are still mutually exclusive.
- 	 */
- 	if (x86_pmu.lbr_pt_coexist && what == x86_lbr_exclusive_pt)
--		return 0;
-+		goto out;
- 
- 	if (!atomic_inc_not_zero(&x86_pmu.lbr_exclusive[what])) {
- 		mutex_lock(&pmc_reserve_mutex);
-@@ -388,6 +388,7 @@ int x86_add_exclusive(unsigned int what)
- 		mutex_unlock(&pmc_reserve_mutex);
+diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
+index a96db50..bd006b7 100644
+--- a/kernel/sched/pelt.c
++++ b/kernel/sched/pelt.c
+@@ -129,8 +129,20 @@ accumulate_sum(u64 delta, struct sched_avg *sa,
+ 		 * Step 2
+ 		 */
+ 		delta %= 1024;
+-		contrib = __accumulate_pelt_segments(periods,
+-				1024 - sa->period_contrib, delta);
++		if (load) {
++			/*
++			 * This relies on the:
++			 *
++			 * if (!load)
++			 *	runnable = running = 0;
++			 *
++			 * clause from ___update_load_sum(); this results in
++			 * the below usage of @contrib to dissapear entirely,
++			 * so no point in calculating it.
++			 */
++			contrib = __accumulate_pelt_segments(periods,
++					1024 - sa->period_contrib, delta);
++		}
  	}
+ 	sa->period_contrib = delta;
  
-+out:
- 	atomic_inc(&active_events);
- 	return 0;
- 
-@@ -398,11 +399,15 @@ fail_unlock:
- 
- void x86_del_exclusive(unsigned int what)
- {
-+	atomic_dec(&active_events);
-+
-+	/*
-+	 * See the comment in x86_add_exclusive().
-+	 */
- 	if (x86_pmu.lbr_pt_coexist && what == x86_lbr_exclusive_pt)
- 		return;
- 
- 	atomic_dec(&x86_pmu.lbr_exclusive[what]);
--	atomic_dec(&active_events);
- }
- 
- int x86_setup_perfctr(struct perf_event *event)
+@@ -205,7 +217,9 @@ ___update_load_sum(u64 now, struct sched_avg *sa,
+ 	 * This means that weight will be 0 but not running for a sched_entity
+ 	 * but also for a cfs_rq if the latter becomes idle. As an example,
+ 	 * this happens during idle_balance() which calls
+-	 * update_blocked_averages()
++	 * update_blocked_averages().
++	 *
++	 * Also see the comment in accumulate_sum().
+ 	 */
+ 	if (!load)
+ 		runnable = running = 0;
