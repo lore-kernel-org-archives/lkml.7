@@ -2,149 +2,104 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A68EBC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D140C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 839E4206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:43:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CFE220733
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:45:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728501AbfLQNn6 (ORCPT
+        id S1728520AbfLQNpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 08:43:58 -0500
-Received: from foss.arm.com ([217.140.110.172]:37544 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726962AbfLQNn4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 08:43:56 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 38A3231B;
-        Tue, 17 Dec 2019 05:43:56 -0800 (PST)
-Received: from e123648.arm.com (unknown [10.37.12.145])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5B7003F719;
-        Tue, 17 Dec 2019 05:43:54 -0800 (PST)
-From:   lukasz.luba@arm.com
-To:     linux-kernel@vger.kernel.org, sudeep.holla@arm.com,
-        linux-arm-kernel@lists.infradead.org
-Cc:     rostedt@goodmis.org, mingo@redhat.com, james.quinlan@broadcom.com,
-        Lukasz Luba <lukasz.luba@arm.com>
-Subject: [PATCH v2 2/2] drivers: firmware: scmi: Extend SCMI transport layer by trace events
-Date:   Tue, 17 Dec 2019 13:43:45 +0000
-Message-Id: <20191217134345.14004-2-lukasz.luba@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191217134345.14004-1-lukasz.luba@arm.com>
-References: <20191217134345.14004-1-lukasz.luba@arm.com>
+        Tue, 17 Dec 2019 08:45:31 -0500
+Received: from mout.kundenserver.de ([212.227.126.131]:50523 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726164AbfLQNpa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 08:45:30 -0500
+Received: from [192.168.1.155] ([95.114.21.161]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MfYgC-1i1FZn1CtU-00fzgB; Tue, 17 Dec 2019 14:45:11 +0100
+Subject: Re: [PATCH] RFC: platform driver registering via initcall tables
+To:     Greg KH <greg@kroah.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, dmitry.torokhov@gmail.com,
+        jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com,
+        arnd@arndb.de, masahiroy@kernel.org, michal.lkml@markovi.net,
+        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
+        linux-gpio@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+References: <20191217102219.29223-1-info@metux.net>
+ <20191217103152.GB2914497@kroah.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Message-ID: <6422bc88-6d0a-7b51-aaa7-640c6961b177@metux.net>
+Date:   Tue, 17 Dec 2019 14:44:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191217103152.GB2914497@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: tl
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:UIxsKeF+t4AJ8q6DRnqSCsifxsav8JqTSzPbvflDT49nTCN38N2
+ kn8QUDipr/KlL5RzF2fLtyOuCzxNjxUSI4UZqAlp6xIsJjV2bywjnE+BMyjssnPF9+oH6ww
+ j5NFvhGrB1pzGK+XoSpXibonoL3JFM9dGJqe8hfLnfeBH94z62AKKyID1MFmz2D/kfr9ua1
+ +I6P+xiT9RjL5BBgRigTg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nhzDFcqFHhI=:Tt4Fe7MEEtN81vc41C7AoZ
+ wctLg7SjkItjTD1J3EE0wIIRp68zGRkICb7akDkm7TzGVY/Jv10cHWbbYxhEfiW4whMmm7gx1
+ calgbAvlJfzZju7vWqVRx24cZKnsPXbGGNQI6AltrredEl0JuONWHGFccnaBRDzW2rH1MKxpx
+ 7guijvh0tF+MuaZMsUVm1dIggOl4cQFDElahLOqvviCWwKyID5OeS4sL9WhPMRRYqxAHM9q5O
+ uPRf4lICI04o5CkAW0vu/jJU2fDAqqn8VRS8aZfQZtuRhCtoDTvZTEoOMN/icN7ljMBCxrxzO
+ jKVvHCAs/ZD0+MWmVOPS6sdGZYhKGJfOrGUMZTIo07lGNMYuMdb6Mvx7qAuFP3Yttazz361XR
+ WOiEbrlEia6jOwJTx0JGQiUkJqwUMutPSCYqHT+ZlswBl3PcXs2kTDeEimiMTkTWcs6cnQ5YJ
+ 0Ev+Ibgd1aJ5uVBqPmFfJs821dyrQ/nj2kpivSX944s+JlT5J79FdHn3yG5tlk4NsXcGYZpDb
+ +Su81EDqspIcaHEsqNYqm4wHR4C4MRln/yQ/qEtoFPV/rx6N17k0IIo+d/DbjDUJ5PoLA6scG
+ u5HIncBDs/JHZGLSftyL04NMt7m/WCxdQ6vh4pOOgJ+pBlIOtaNs/sr2RGvaMd1drejh8xN8T
+ oVqTHasq/lYf0bopjmsmrUnoodoESr4GakdnC5EivRzMSeLiz11uVTbijiJ6z5hpZxZEUXDoy
+ GSj9nLs8W6dvwEJKDzhLDRZdwjHLl6WE/XxOcwxG3eQ2N/ab5WauSh8y5djcp7H16KpJZ6A69
+ pcY7K1TMdNUlig8lhlUX+Ij4IEaClVQj0yKqknPNhhHZTCef462eFxVdARrJ0sbaH1PRWpIfH
+ buhiRZ+mDZotLHFEAKJ93oZ2o67FNflSKVDFquVEZb6lab6XoEveVJVdH6nxtOBexbBLcxxXW
+ ARVod/u0vtgm8aj0oa/n+a8Xz6kwOYwTrei/SbYDwnKT6YuTO5xQd
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukasz Luba <lukasz.luba@arm.com>
+On 17.12.19 11:31, Greg KH wrote:
 
-The SCMI transport layer communicates via mailboxes and shared memory with
-firmware running on a microcontroller. It is platform specific how long it
-takes to pass a SCMI message. The most sensitive requests are coming from
-CPUFreq subsystem, which might be used by the scheduler.
-Thus, there is a need to measure these delays and capture anomalies.
-This change introduces trace events wrapped around transfer code.
+Hi,
 
-According to Jim's suggestion a unique transfer_id is to distinguish
-similar entries which might have the same message id, protocol id and
-sequence. This is a case then there are some timeouts in transfers.
+> No, what is so "special" about platform drivers that they require this?
 
-Suggested-by: Jim Quinlan <james.quinlan@broadcom.com>
-Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+Nothing, of course ;-)
+
+It's the the starting point for this PoC. The idea actually is doing
+this for all other driver types, too (eg. spi, pci, usb, ...). But
+they'll need their own tables, as different *_register() functions have
+to be called - just haven't implemented that yet.
+
+> If anything, we should be moving _AWAY_ from platform drivers and use
+> real bus drivers instead.
+
+That would be nice, but, unfortunately, we have lots of devices which
+aren't attached to any (probing-capable) bus. That's why we have things
+like oftree, etc.
+
+> Please no, I don't see why this is even needed.
+
+The idea is getting rid of all the init code, which all just does the
+same, just calls some *_register() function.
+
+
+--mtx
+
 ---
- drivers/firmware/arm_scmi/common.h |  2 ++
- drivers/firmware/arm_scmi/driver.c | 18 ++++++++++++++++++
- 2 files changed, 20 insertions(+)
-
-diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
-index 5237c2ff79fe..df35358ff324 100644
---- a/drivers/firmware/arm_scmi/common.h
-+++ b/drivers/firmware/arm_scmi/common.h
-@@ -81,6 +81,7 @@ struct scmi_msg {
- /**
-  * struct scmi_xfer - Structure representing a message flow
-  *
-+ * @transfer_id: Unique ID for debug & profiling purpose
-  * @hdr: Transmit message header
-  * @tx: Transmit message
-  * @rx: Receive message, the buffer should be pre-allocated to store
-@@ -90,6 +91,7 @@ struct scmi_msg {
-  * @async: pointer to delayed response message received event completion
-  */
- struct scmi_xfer {
-+	int transfer_id;
- 	struct scmi_msg_hdr hdr;
- 	struct scmi_msg tx;
- 	struct scmi_msg rx;
-diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index 3eb0382491ce..15c5629ad2cd 100644
---- a/drivers/firmware/arm_scmi/driver.c
-+++ b/drivers/firmware/arm_scmi/driver.c
-@@ -29,6 +29,9 @@
- 
- #include "common.h"
- 
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/scmi.h>
-+
- #define MSG_ID_MASK		GENMASK(7, 0)
- #define MSG_XTRACT_ID(hdr)	FIELD_GET(MSG_ID_MASK, (hdr))
- #define MSG_TYPE_MASK		GENMASK(9, 8)
-@@ -61,6 +64,8 @@ enum scmi_error_codes {
- static LIST_HEAD(scmi_list);
- /* Protection for the entire list */
- static DEFINE_MUTEX(scmi_list_mutex);
-+/* Track the unique id for the transfers for debug & profiling purpose */
-+static atomic_t transfer_last_id;
- 
- /**
-  * struct scmi_xfers_info - Structure to manage transfer information
-@@ -304,6 +309,7 @@ static struct scmi_xfer *scmi_xfer_get(const struct scmi_handle *handle,
- 	xfer = &minfo->xfer_block[xfer_id];
- 	xfer->hdr.seq = xfer_id;
- 	reinit_completion(&xfer->done);
-+	xfer->transfer_id = atomic_inc_return(&transfer_last_id);
- 
- 	return xfer;
- }
-@@ -374,6 +380,10 @@ static void scmi_rx_callback(struct mbox_client *cl, void *m)
- 
- 	scmi_fetch_response(xfer, mem);
- 
-+	trace_scmi_rx_done(xfer->transfer_id, xfer->hdr.id,
-+			   xfer->hdr.protocol_id, xfer->hdr.seq,
-+			   msg_type);
-+
- 	if (msg_type == MSG_TYPE_DELAYED_RESP)
- 		complete(xfer->async_done);
- 	else
-@@ -439,6 +449,10 @@ int scmi_do_xfer(const struct scmi_handle *handle, struct scmi_xfer *xfer)
- 	if (unlikely(!cinfo))
- 		return -EINVAL;
- 
-+	trace_scmi_xfer_begin(xfer->transfer_id, xfer->hdr.id,
-+			      xfer->hdr.protocol_id, xfer->hdr.seq,
-+			      xfer->hdr.poll_completion);
-+
- 	ret = mbox_send_message(cinfo->chan, xfer);
- 	if (ret < 0) {
- 		dev_dbg(dev, "mbox send fail %d\n", ret);
-@@ -478,6 +492,10 @@ int scmi_do_xfer(const struct scmi_handle *handle, struct scmi_xfer *xfer)
- 	 */
- 	mbox_client_txdone(cinfo->chan, ret);
- 
-+	trace_scmi_xfer_end(xfer->transfer_id, xfer->hdr.id,
-+			    xfer->hdr.protocol_id, xfer->hdr.seq,
-+			    xfer->hdr.status);
-+
- 	return ret;
- }
- 
--- 
-2.17.1
-
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
