@@ -2,89 +2,328 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D23AEC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 185C6C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:00:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8FE5206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:00:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4DCE24655
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:00:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="Mqtxg1bO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727474AbfLQBAU (ORCPT
+        id S1728347AbfLQBAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 20:00:20 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34648 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726368AbfLQAve (ORCPT
+        Mon, 16 Dec 2019 20:00:22 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:34270 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728325AbfLQBAU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 19:51:34 -0500
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1ih15G-0003K9-Kj; Tue, 17 Dec 2019 00:51:30 +0000
-Received: from ben by deadeye with local (Exim 4.93-RC7)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1ih15G-0005TC-1G; Tue, 17 Dec 2019 00:51:30 +0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+        Mon, 16 Dec 2019 20:00:20 -0500
+Received: by mail-io1-f66.google.com with SMTP id z193so5585706iof.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 17:00:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sargun.me; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=jNutB9PnCuNZ95WEy1zSnjhlufU614JfWZptXrTBQH4=;
+        b=Mqtxg1bODF0az/WYzqiTEFT+iACXA78wSudLXZFTA94ymiUxdJBI3gMvuRm9IIp4ge
+         I5T3o+b3jNzq9Q1CSMbCGIff+McGHZ8wvq9R1Kl4YzOQL5Z4fogEjQxk9Aez3mTEzLmo
+         NmGpLrP8qJve90iMoBwqSckOiVdg3rA/9DuAI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=jNutB9PnCuNZ95WEy1zSnjhlufU614JfWZptXrTBQH4=;
+        b=Wtu+SjUFGWwabOGg+j0AYmzm7YKPStxKtIB8kjwz77ZNZDFQvABOppxANrnd8MQFHB
+         3gDdJvZy2UCnANv51//Y9dp6SJKasYLClHthaauvGEr4sNWwxRR7afL6jcPSO/FhpQTt
+         WOWJGJQM4d/Qr+Vnx+L5ZRW76LlqAcOOMVuXSkNvLMR4wPdBmaWuUV77SUqDA2SxZ9Vh
+         ZyDOkHcDVuyzg2XaNubZrMRDM8NmrJ52yaxxMAy1wOPI4rfBrG1JA9gysTSfERE/XYgU
+         MZjtoxkMoyma54OfZb4XiAMp1wVyEhFhcM6uqty9b5SPAwo1ktVc4gmCb2uafGoRwBpf
+         gL+A==
+X-Gm-Message-State: APjAAAWXLWiLI445ZTyfnNBDoySc8uSSr3cyvvYFOjK6bHMraeDWos45
+        6rVdP//hYSL52xfGbYO/CvgeXxhD3XG6Ug==
+X-Google-Smtp-Source: APXvYqxPnsnDlmTtm5UBuWSnOAOJ6tzOVibfDvwnPw1QTcZOJ5ICRVowYB46fgHIHU7m2JN24Dcy3Q==
+X-Received: by 2002:a02:335d:: with SMTP id k29mr5864060jak.22.1576544418494;
+        Mon, 16 Dec 2019 17:00:18 -0800 (PST)
+Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
+        by smtp.gmail.com with ESMTPSA id p12sm4413125ilk.66.2019.12.16.17.00.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 16 Dec 2019 17:00:18 -0800 (PST)
+Date:   Tue, 17 Dec 2019 01:00:16 +0000
+From:   Sargun Dhillon <sargun@sargun.me>
+To:     linux-kernel@vger.kernel.org,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Cc:     tycho@tycho.ws, jannh@google.com, cyphar@cyphar.com,
+        christian.brauner@ubuntu.com, oleg@redhat.com, luto@amacapital.net,
+        viro@zeniv.linux.org.uk, gpascutto@mozilla.com,
+        ealvarez@mozilla.com, fweimer@redhat.com, jld@mozilla.com
+Subject: [PATCH v3 3/4] samples: split generalized user-trap code into helper
+ file
+Message-ID: <20191217010014.GA14470@ircssh-2.c.rugged-nimbus-611.internal>
 MIME-Version: 1.0
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Johan Hovold" <johan@kernel.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Date:   Tue, 17 Dec 2019 00:45:58 +0000
-Message-ID: <lsq.1576543535.751286311@decadent.org.uk>
-X-Mailer: LinuxStableQueue (scripts by bwh)
-X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 024/136] USB: legousbtower: fix slab info leak at probe
-In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-3.16.80-rc1 review patch.  If anyone has any objections, please let me know.
+This moves the code for setting up a syscall interceptor with user
+notification and sending the user notification file descriptor over a
+socket using SCM_RIGHTS into a file that can be shared between multiple
+samples.
 
-------------------
-
-From: Johan Hovold <johan@kernel.org>
-
-commit 1d427be4a39defadda6dd8f4659bc17f7591740f upstream.
-
-Make sure to check for short transfers when retrieving the version
-information at probe to avoid leaking uninitialised slab data when
-logging it.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20190919083039.30898-2-johan@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Sargun Dhillon <sargun@sargun.me>
 ---
- drivers/usb/misc/legousbtower.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ samples/seccomp/Makefile           |  6 ++-
+ samples/seccomp/user-trap-helper.c | 84 +++++++++++++++++++++++++++++
+ samples/seccomp/user-trap-helper.h | 13 +++++
+ samples/seccomp/user-trap.c        | 85 +-----------------------------
+ 4 files changed, 103 insertions(+), 85 deletions(-)
+ create mode 100644 samples/seccomp/user-trap-helper.c
+ create mode 100644 samples/seccomp/user-trap-helper.h
 
---- a/drivers/usb/misc/legousbtower.c
-+++ b/drivers/usb/misc/legousbtower.c
-@@ -923,8 +923,10 @@ static int tower_probe (struct usb_inter
- 				  get_version_reply,
- 				  sizeof(*get_version_reply),
- 				  1000);
--	if (result < 0) {
--		dev_err(idev, "LEGO USB Tower get version control request failed\n");
-+	if (result < sizeof(*get_version_reply)) {
-+		if (result >= 0)
-+			result = -EIO;
-+		dev_err(idev, "get version request failed: %d\n", result);
- 		retval = result;
- 		goto error;
- 	}
+diff --git a/samples/seccomp/Makefile b/samples/seccomp/Makefile
+index 009775b52538..82b7347318d1 100644
+--- a/samples/seccomp/Makefile
++++ b/samples/seccomp/Makefile
+@@ -16,9 +16,13 @@ HOSTCFLAGS_bpf-direct.o += -I$(objtree)/usr/include
+ HOSTCFLAGS_bpf-direct.o += -idirafter $(objtree)/include
+ bpf-direct-objs := bpf-direct.o
+ 
++
++HOSTCFLAGS_user-trap-helper.o += -I$(objtree)/usr/include
++HOSTCFLAGS_user-trap-helper.o += -idirafter $(objtree)/include
++
+ HOSTCFLAGS_user-trap.o += -I$(objtree)/usr/include
+ HOSTCFLAGS_user-trap.o += -idirafter $(objtree)/include
+-user-trap-objs := user-trap.o
++user-trap-objs := user-trap.o user-trap-helper.o
+ 
+ # Try to match the kernel target.
+ ifndef CONFIG_64BIT
+diff --git a/samples/seccomp/user-trap-helper.c b/samples/seccomp/user-trap-helper.c
+new file mode 100644
+index 000000000000..f91ae9d947c5
+--- /dev/null
++++ b/samples/seccomp/user-trap-helper.c
+@@ -0,0 +1,84 @@
++#include <linux/seccomp.h>
++#include <linux/filter.h>
++#include <unistd.h>
++#include <errno.h>
++#include <stdio.h>
++#include <stddef.h>
++#include <sys/types.h>
++#include <sys/syscall.h>
++#include <sys/socket.h>
++#include "user-trap-helper.h"
++
++#define ARRAY_SIZE(x) (sizeof(x) / sizeof(*(x)))
++
++int user_trap_syscall(int nr, unsigned int flags)
++{
++	struct sock_filter filter[] = {
++		BPF_STMT(BPF_LD+BPF_W+BPF_ABS,
++			offsetof(struct seccomp_data, nr)),
++		BPF_JUMP(BPF_JMP+BPF_JEQ+BPF_K, nr, 0, 1),
++		BPF_STMT(BPF_RET+BPF_K, SECCOMP_RET_USER_NOTIF),
++		BPF_STMT(BPF_RET+BPF_K, SECCOMP_RET_ALLOW),
++	};
++
++	struct sock_fprog prog = {
++		.len = (unsigned short)ARRAY_SIZE(filter),
++		.filter = filter,
++	};
++
++	return seccomp(SECCOMP_SET_MODE_FILTER, flags, &prog);
++}
++
++int send_fd(int sock, int fd)
++{
++	struct msghdr msg = {};
++	struct cmsghdr *cmsg;
++	char buf[CMSG_SPACE(sizeof(int))] = {0}, c = 'c';
++	struct iovec io = {
++		.iov_base = &c,
++		.iov_len = 1,
++	};
++
++	msg.msg_iov = &io;
++	msg.msg_iovlen = 1;
++	msg.msg_control = buf;
++	msg.msg_controllen = sizeof(buf);
++	cmsg = CMSG_FIRSTHDR(&msg);
++	cmsg->cmsg_level = SOL_SOCKET;
++	cmsg->cmsg_type = SCM_RIGHTS;
++	cmsg->cmsg_len = CMSG_LEN(sizeof(int));
++	*((int *)CMSG_DATA(cmsg)) = fd;
++	msg.msg_controllen = cmsg->cmsg_len;
++
++	if (sendmsg(sock, &msg, 0) < 0) {
++		perror("sendmsg");
++		return -1;
++	}
++
++	return 0;
++}
++
++int recv_fd(int sock)
++{
++	struct msghdr msg = {};
++	struct cmsghdr *cmsg;
++	char buf[CMSG_SPACE(sizeof(int))] = {0}, c = 'c';
++	struct iovec io = {
++		.iov_base = &c,
++		.iov_len = 1,
++	};
++
++	msg.msg_iov = &io;
++	msg.msg_iovlen = 1;
++	msg.msg_control = buf;
++	msg.msg_controllen = sizeof(buf);
++
++	if (recvmsg(sock, &msg, 0) < 0) {
++		perror("recvmsg");
++		return -1;
++	}
++
++	cmsg = CMSG_FIRSTHDR(&msg);
++
++	return *((int *)CMSG_DATA(cmsg));
++}
+diff --git a/samples/seccomp/user-trap-helper.h b/samples/seccomp/user-trap-helper.h
+new file mode 100644
+index 000000000000..a5ebda25fdfe
+--- /dev/null
++++ b/samples/seccomp/user-trap-helper.h
+@@ -0,0 +1,13 @@
++#include <unistd.h>
++#include <sys/syscall.h>
++#include <errno.h>
++
++static inline int seccomp(unsigned int op, unsigned int flags, void *args)
++{
++	errno = 0;
++	return syscall(__NR_seccomp, op, flags, args);
++}
++
++int user_trap_syscall(int nr, unsigned int flags);
++int send_fd(int sock, int fd);
++int recv_fd(int sock);
+diff --git a/samples/seccomp/user-trap.c b/samples/seccomp/user-trap.c
+index 6d0125ca8af7..1b6526587456 100644
+--- a/samples/seccomp/user-trap.c
++++ b/samples/seccomp/user-trap.c
+@@ -5,101 +5,18 @@
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <string.h>
+-#include <stddef.h>
+ #include <sys/sysmacros.h>
+ #include <sys/types.h>
+ #include <sys/wait.h>
+ #include <sys/socket.h>
+ #include <sys/stat.h>
+ #include <sys/mman.h>
+-#include <sys/syscall.h>
+ #include <sys/user.h>
+ #include <sys/ioctl.h>
+-#include <sys/ptrace.h>
+ #include <sys/mount.h>
+ #include <linux/limits.h>
+-#include <linux/filter.h>
+ #include <linux/seccomp.h>
+-
+-#define ARRAY_SIZE(x) (sizeof(x) / sizeof(*(x)))
+-
+-static int seccomp(unsigned int op, unsigned int flags, void *args)
+-{
+-	errno = 0;
+-	return syscall(__NR_seccomp, op, flags, args);
+-}
+-
+-static int send_fd(int sock, int fd)
+-{
+-	struct msghdr msg = {};
+-	struct cmsghdr *cmsg;
+-	char buf[CMSG_SPACE(sizeof(int))] = {0}, c = 'c';
+-	struct iovec io = {
+-		.iov_base = &c,
+-		.iov_len = 1,
+-	};
+-
+-	msg.msg_iov = &io;
+-	msg.msg_iovlen = 1;
+-	msg.msg_control = buf;
+-	msg.msg_controllen = sizeof(buf);
+-	cmsg = CMSG_FIRSTHDR(&msg);
+-	cmsg->cmsg_level = SOL_SOCKET;
+-	cmsg->cmsg_type = SCM_RIGHTS;
+-	cmsg->cmsg_len = CMSG_LEN(sizeof(int));
+-	*((int *)CMSG_DATA(cmsg)) = fd;
+-	msg.msg_controllen = cmsg->cmsg_len;
+-
+-	if (sendmsg(sock, &msg, 0) < 0) {
+-		perror("sendmsg");
+-		return -1;
+-	}
+-
+-	return 0;
+-}
+-
+-static int recv_fd(int sock)
+-{
+-	struct msghdr msg = {};
+-	struct cmsghdr *cmsg;
+-	char buf[CMSG_SPACE(sizeof(int))] = {0}, c = 'c';
+-	struct iovec io = {
+-		.iov_base = &c,
+-		.iov_len = 1,
+-	};
+-
+-	msg.msg_iov = &io;
+-	msg.msg_iovlen = 1;
+-	msg.msg_control = buf;
+-	msg.msg_controllen = sizeof(buf);
+-
+-	if (recvmsg(sock, &msg, 0) < 0) {
+-		perror("recvmsg");
+-		return -1;
+-	}
+-
+-	cmsg = CMSG_FIRSTHDR(&msg);
+-
+-	return *((int *)CMSG_DATA(cmsg));
+-}
+-
+-static int user_trap_syscall(int nr, unsigned int flags)
+-{
+-	struct sock_filter filter[] = {
+-		BPF_STMT(BPF_LD+BPF_W+BPF_ABS,
+-			offsetof(struct seccomp_data, nr)),
+-		BPF_JUMP(BPF_JMP+BPF_JEQ+BPF_K, nr, 0, 1),
+-		BPF_STMT(BPF_RET+BPF_K, SECCOMP_RET_USER_NOTIF),
+-		BPF_STMT(BPF_RET+BPF_K, SECCOMP_RET_ALLOW),
+-	};
+-
+-	struct sock_fprog prog = {
+-		.len = (unsigned short)ARRAY_SIZE(filter),
+-		.filter = filter,
+-	};
+-
+-	return seccomp(SECCOMP_SET_MODE_FILTER, flags, &prog);
+-}
++#include "user-trap-helper.h"
+ 
+ static int handle_req(struct seccomp_notif *req,
+ 		      struct seccomp_notif_resp *resp, int listener)
+-- 
+2.20.1
 
