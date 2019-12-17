@@ -2,128 +2,124 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E6BC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 17:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCDBFC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 17:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76B5D24655
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 17:08:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="stQ7HrR8"
+	by mail.kernel.org (Postfix) with ESMTP id AE37121582
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 17:10:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbfLQRI0 (ORCPT
+        id S1727786AbfLQRK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 12:08:26 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:45514 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727198AbfLQRI0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 12:08:26 -0500
-Received: by mail-oi1-f195.google.com with SMTP id v10so5918346oiv.12
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 09:08:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MX5ryTLyNj1gEJN4sAxITw/PDa3L7q0z0atwMq1Sllw=;
-        b=stQ7HrR8NLUsEd/uKcjLTm8K2InQYMIR3k0x+rFPgURFB5KG0yx3arx4y53sIfEArF
-         2sW/VixVADH95/PrHcDkWXFVxsxOm1TlwOsRAvpt9JB+6Ksj8iGT/tOhpqyRvBkaYAUY
-         2y+TMFjlTYh2vIh8gkkzzsV2PkH3GHk4/YnI0pEKe4uAO2reLYCxjxfPwVqineaigDgA
-         PduA30a6IOlQ7RpPm1BvTwcDJTuDHH/xdiRSvKo1KIOo9rWbdqW8lh6D+hTedNl4z0EU
-         wJM7b5eSXJRTD8qRAvE8vZFzOiSDUzQ8wMbJFmYzyzNWKozoRIuT2KtNsz0cH2SjVvb+
-         I3hQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MX5ryTLyNj1gEJN4sAxITw/PDa3L7q0z0atwMq1Sllw=;
-        b=rr6VXAd5u2O49dt5L7R79MIl9GI3t6mk61LGarCY1iwhPbca6PAUuXnywaZTXQgcbD
-         UilvAXack08Rw3dHCZQG8DVCScSn6XhXD3W7eLkjqM5XQ8dHU/Dwi5u3E6+1vD3n6nVP
-         HK2BODSadWdeYBIfzFVknuYROSrBjtIuKhYng22aO8rvUliEBZSOXmtZ/mXQfrvzljSF
-         rHH7X4T5QTLlEgueIbU7Jqyz7gBiFBiyP/Nipmj8Hj89KCYOTdAFrTazLjQXimrdvM3Z
-         IREkjDtWj7t1HM7Cbvcbh/smXPnF6s6K35Tc9dk0cMEdHYdez5LIWjSTmf2Rey0iNy3b
-         nqzA==
-X-Gm-Message-State: APjAAAXttq8NUuDUy3dUUG/R7iEKLfLTB+aGKrfdqKOoklKsLkxcdNui
-        uaErb2m+vOmp2cfmnqW2UqfVC6aQPtkErfsWoKDPig==
-X-Google-Smtp-Source: APXvYqxLG7bWE9YdSVjIU8t3m/nXCwJvl2pBOamYDowsUPR2xloYjm0CkOITzBgkXp6Y+XU6F55krB3cB8r5tqx42h4=
-X-Received: by 2002:aca:5fc6:: with SMTP id t189mr2244612oib.166.1576602505161;
- Tue, 17 Dec 2019 09:08:25 -0800 (PST)
+        Tue, 17 Dec 2019 12:10:26 -0500
+Received: from mx2.suse.de ([195.135.220.15]:47944 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726623AbfLQRKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 12:10:25 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id B13D5AC23;
+        Tue, 17 Dec 2019 17:10:22 +0000 (UTC)
+Subject: Re: [Xen-devel] [PATCH v11 2/6] xenbus/backend: Protect xenbus
+ callback with lock
+To:     SeongJae Park <sjpark@amazon.com>
+Cc:     axboe@kernel.dk, konrad.wilk@oracle.com, roger.pau@citrix.com,
+        linux-block@vger.kernel.org, pdurrant@amazon.com,
+        SeongJae Park <sjpark@amazon.de>, linux-kernel@vger.kernel.org,
+        sj38.park@gmail.com, xen-devel@lists.xenproject.org
+References: <20191217162406.4711-1-sjpark@amazon.com>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <f9a601af-4413-ed1d-f7f4-89343118a2f1@suse.com>
+Date:   Tue, 17 Dec 2019 18:10:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-References: <c1244a5f-b82a-baee-262a-7241531036ad@ti.com> <1576503511-27500-1-git-send-email-zhongjiang@huawei.com>
- <CALAqxLWAWc6NZDnixWhmHg6BtGHXTy6pZ6GXM0F=SkoYH8DiQw@mail.gmail.com> <5DF83CEC.5060002@huawei.com>
-In-Reply-To: <5DF83CEC.5060002@huawei.com>
-From:   Sumit Semwal <sumit.semwal@linaro.org>
-Date:   Tue, 17 Dec 2019 22:38:11 +0530
-Message-ID: <CAO_48GFzdM9ZsNYTRc1JVQxUQ77TtVCYdUcCGQzkJDf-Ob=L-Q@mail.gmail.com>
-Subject: Re: [PATCH v2] dma-heap: Make the symbol 'dma_heap_ioctl_cmds' static
-To:     zhong jiang <zhongjiang@huawei.com>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        "Andrew F. Davis" <afd@ti.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191217162406.4711-1-sjpark@amazon.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Zhong Jiang,
+On 17.12.19 17:24, SeongJae Park wrote:
+> On Tue, 17 Dec 2019 17:13:42 +0100 "Jürgen Groß" <jgross@suse.com> wrote:
+> 
+>> On 17.12.19 17:07, SeongJae Park wrote:
+>>> From: SeongJae Park <sjpark@amazon.de>
+>>>
+>>> 'reclaim_memory' callback can race with a driver code as this callback
+>>> will be called from any memory pressure detected context.  To deal with
+>>> the case, this commit adds a spinlock in the 'xenbus_device'.  Whenever
+>>> 'reclaim_memory' callback is called, the lock of the device which passed
+>>> to the callback as its argument is locked.  Thus, drivers registering
+>>> their 'reclaim_memory' callback should protect the data that might race
+>>> with the callback with the lock by themselves.
+>>>
+>>> Signed-off-by: SeongJae Park <sjpark@amazon.de>
+>>> ---
+>>>    drivers/xen/xenbus/xenbus_probe.c         |  1 +
+>>>    drivers/xen/xenbus/xenbus_probe_backend.c | 10 ++++++++--
+>>>    include/xen/xenbus.h                      |  2 ++
+>>>    3 files changed, 11 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/xen/xenbus/xenbus_probe.c b/drivers/xen/xenbus/xenbus_probe.c
+>>> index 5b471889d723..b86393f172e6 100644
+>>> --- a/drivers/xen/xenbus/xenbus_probe.c
+>>> +++ b/drivers/xen/xenbus/xenbus_probe.c
+>>> @@ -472,6 +472,7 @@ int xenbus_probe_node(struct xen_bus_type *bus,
+>>>    		goto fail;
+>>>    
+>>>    	dev_set_name(&xendev->dev, "%s", devname);
+>>> +	spin_lock_init(&xendev->reclaim_lock);
+>>>    
+>>>    	/* Register with generic device framework. */
+>>>    	err = device_register(&xendev->dev);
+>>> diff --git a/drivers/xen/xenbus/xenbus_probe_backend.c b/drivers/xen/xenbus/xenbus_probe_backend.c
+>>> index 7e78ebef7c54..516aa64b9967 100644
+>>> --- a/drivers/xen/xenbus/xenbus_probe_backend.c
+>>> +++ b/drivers/xen/xenbus/xenbus_probe_backend.c
+>>> @@ -251,12 +251,18 @@ static int backend_probe_and_watch(struct notifier_block *notifier,
+>>>    static int backend_reclaim_memory(struct device *dev, void *data)
+>>>    {
+>>>    	const struct xenbus_driver *drv;
+>>> +	struct xenbus_device *xdev;
+>>> +	unsigned long flags;
+>>>    
+>>>    	if (!dev->driver)
+>>>    		return 0;
+>>>    	drv = to_xenbus_driver(dev->driver);
+>>> -	if (drv && drv->reclaim_memory)
+>>> -		drv->reclaim_memory(to_xenbus_device(dev));
+>>> +	if (drv && drv->reclaim_memory) {
+>>> +		xdev = to_xenbus_device(dev);
+>>> +		spin_trylock_irqsave(&xdev->reclaim_lock, flags);
+>>
+>> You need spin_lock_irqsave() here. Or maybe spin_lock() would be fine,
+>> too? I can't see a reason why you'd want to disable irqs here.
+> 
+> I needed to diable irq here as this is called from the memory shrinker context.
 
-On Tue, 17 Dec 2019 at 07:56, zhong jiang <zhongjiang@huawei.com> wrote:
->
-> On 2019/12/17 5:13, John Stultz wrote:
-> > On Mon, Dec 16, 2019 at 5:43 AM zhong jiang <zhongjiang@huawei.com> wrote:
-> >> Fix the following sparse warning.
-Thanks for the patch; could I request you to please use
-scripts/get_maintainer.pl to get the cc: list for the patches?
+Okay.
 
-+ dri-devel.
-> >>
-> >> drivers/dma-buf/dma-heap.c:109:14: warning: symbol 'dma_heap_ioctl_cmds' was not declared. Should it be static?
-> >>
-> >> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
-> >> ---
-> >>  drivers/dma-buf/dma-heap.c | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/dma-buf/dma-heap.c b/drivers/dma-buf/dma-heap.c
-> >> index 4f04d10..da2090e 100644
-> >> --- a/drivers/dma-buf/dma-heap.c
-> >> +++ b/drivers/dma-buf/dma-heap.c
-> >> @@ -106,7 +106,7 @@ static long dma_heap_ioctl_allocate(struct file *file, void *data)
-> >>         return 0;
-> >>  }
-> >>
-> >> -unsigned int dma_heap_ioctl_cmds[] = {
-> >> +static unsigned int dma_heap_ioctl_cmds[] = {
-> >>         DMA_HEAP_IOC_ALLOC,
-> >>  };
-> > Acked-by: John Stultz <john.stultz@linaro.org>
-> >
-> > This patch will collide with Andrew's _IOCTL_ naming change, but its a
-> > fairly simple thing to resolve.
-> >
-> > Sumit: If you're comfortable resolving the collision, please queue
-> > with the rest of the recent changes for drm-misc-next.
-> > Otherwise, I'm happy to submit the resolution I tested with here
-> > afterwards. Let me know.
-Of course, I am sure I can handle collisions, John, or else being a
-maintainer might get a tad difficult :)
-> As it is an fairly simple patch, I hope you can resolve the issue directly.
->
-> Thanks,
-> zhong jiang
-> > thanks
-> > -john
-> >
-Best,
-Sumit.
+> 
+> Also, used 'trylock' because the 'probe()' and 'remove()' code of the driver
+> might include memory allocation.  And the xen-blkback actually does.  If the
+> allocation shows a memory pressure during the allocation, it will trigger this
+> shrinker callback again and then deadlock.
+
+In that case you need to either return when you didn't get the lock or
+
+- when obtaining the lock during probe() and remove() set a variable
+   containing the current cpu number
+- and reset that to e.g NR_CPUS before releasing the lock again
+- in the shrinker callback do trylock, and if you didn't get the lock
+   test whether the cpu-variable above is set to your current cpu and
+   continue only if yes; if not, redo the the trylock
+
+
+Juergen
