@@ -2,198 +2,116 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 954AFC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 02:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48565C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 02:33:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60788218AC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 02:32:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qFYMvuRy"
+	by mail.kernel.org (Postfix) with ESMTP id 23AFA218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 02:33:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbfLQCcP (ORCPT
+        id S1726722AbfLQCdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 21:32:15 -0500
-Received: from mailout4.samsung.com ([203.254.224.34]:20584 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbfLQCcP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 21:32:15 -0500
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20191217023212epoutp046bec2635e905d7dd3c37852e14f59828~hB8_Mq2q61038210382epoutp04R
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 02:32:12 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20191217023212epoutp046bec2635e905d7dd3c37852e14f59828~hB8_Mq2q61038210382epoutp04R
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1576549932;
-        bh=mMgaBAjJ5TOxfqNYEjY0AzqFRyeAhiQmYb1750iLmJY=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=qFYMvuRyoT3erZtiyejMkF6SAlNXrIghNEfq15mk6Io2Y1XQInU+7DNBeZziaTHKc
-         xTr+mHuPS0HZUzh9pNt9SSbfIHBG7jZARx22rQUVXXr6Gyciwk+7hbKMxUwlIugo7X
-         pED8qMKNBOCh+7q69fLt+ovWqgP43l5s5Cohk8pc=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20191217023211epcas1p29255cdf63c8f0d1fdbaca5c7f1d571d5~hB89fCwCJ2705127051epcas1p2r;
-        Tue, 17 Dec 2019 02:32:11 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.158]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 47cMbr2j3gzMqYlx; Tue, 17 Dec
-        2019 02:32:08 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        37.62.51241.52E38FD5; Tue, 17 Dec 2019 11:32:05 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191217023205epcas1p22da079575ecabcd27216985c27dacbb4~hB83U5Rm-2929129291epcas1p2G;
-        Tue, 17 Dec 2019 02:32:05 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191217023205epsmtrp2042d1da9ef4380ac08eae62d2f1fe5ef~hB83T_kAa2622726227epsmtrp2C;
-        Tue, 17 Dec 2019 02:32:05 +0000 (GMT)
-X-AuditID: b6c32a39-14bff7000001c829-14-5df83e2553f4
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        75.6C.10238.42E38FD5; Tue, 17 Dec 2019 11:32:05 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191217023204epsmtip236f0b41761dc42ae328c48f973093a02~hB82_kLk_2632626326epsmtip2S;
-        Tue, 17 Dec 2019 02:32:04 +0000 (GMT)
-Subject: Re: [v5, PATCH 2/5] dt-bindings: devfreq: add compatible for mt8183
- cci devfreq
-To:     "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        srv_heupstream@mediatek.com, fan.chen@mediatek.com
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <2c875e5e-bd57-3d67-5995-8a450735dbda@samsung.com>
-Date:   Tue, 17 Dec 2019 11:38:39 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
-MIME-Version: 1.0
-In-Reply-To: <1574769046-28449-3-git-send-email-andrew-sh.cheng@mediatek.com>
+        Mon, 16 Dec 2019 21:33:35 -0500
+Received: from mga18.intel.com ([134.134.136.126]:8431 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726437AbfLQCde (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 21:33:34 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 18:33:34 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,323,1571727600"; 
+   d="scan'208";a="209535052"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by orsmga008.jf.intel.com with ESMTP; 16 Dec 2019 18:33:33 -0800
+Received: from fmsmsx162.amr.corp.intel.com (10.18.125.71) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 16 Dec 2019 18:33:33 -0800
+Received: from shsmsx108.ccr.corp.intel.com (10.239.4.97) by
+ fmsmsx162.amr.corp.intel.com (10.18.125.71) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 16 Dec 2019 18:33:32 -0800
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.90]) by
+ SHSMSX108.ccr.corp.intel.com ([169.254.8.46]) with mapi id 14.03.0439.000;
+ Tue, 17 Dec 2019 10:33:31 +0800
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "David Woodhouse" <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+CC:     "Raj, Ashok" <ashok.raj@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>, Peter Xu <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3 4/6] iommu/vt-d: Setup pasid entries for iova over
+ first level
+Thread-Topic: [PATCH v3 4/6] iommu/vt-d: Setup pasid entries for iova over
+ first level
+Thread-Index: AQHVr8iyIh/47oarrk2lLODWaUc1kqe3zByggACkbgCAAoJegIACI9KAgACM1XA=
+Date:   Tue, 17 Dec 2019 02:33:30 +0000
+Message-ID: <A2975661238FB949B60364EF0F2C25743A135CE8@SHSMSX104.ccr.corp.intel.com>
+References: <20191211021219.8997-1-baolu.lu@linux.intel.com>
+ <20191211021219.8997-5-baolu.lu@linux.intel.com>
+ <A2975661238FB949B60364EF0F2C25743A1309A9@SHSMSX104.ccr.corp.intel.com>
+ <acb93807-7a78-b81a-3b27-fde9ee4d7edb@linux.intel.com>
+ <A2975661238FB949B60364EF0F2C25743A132C9A@SHSMSX104.ccr.corp.intel.com>
+ <b883602c-ecdf-11ea-c26c-4b221bf7634d@linux.intel.com>
+In-Reply-To: <b883602c-ecdf-11ea-c26c-4b221bf7634d@linux.intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrDJsWRmVeSWpSXmKPExsWy7bCmga6q3Y9Yg4btehbb179gtZh/5Byr
-        xbc7v5kszja9YbfY9Pgaq8XlXXPYLC43X2S0+Nx7hNFi6fWLTBZNLcYWtxtXsFm8+XGWyeLM
-        6UusFq17j7Bb/Lu2kcVi+l0hi41fPRwEPdbMW8PosXPWXXaPTas62TzuXNvD5rF5Sb1Hy8n9
-        LB5brrazePRtWcXocfzGdiaPz5vkAriism0yUhNTUosUUvOS81My89JtlbyD453jTc0MDHUN
-        LS3MlRTyEnNTbZVcfAJ03TJzgL5RUihLzCkFCgUkFhcr6dvZFOWXlqQqZOQXl9gqpRak5BRY
-        FugVJ+YWl+al6yXn51oZGhgYmQIVJmRnPLm6gqmgT6Di3aSFLA2Mq3i7GDk4JARMJOa2FXcx
-        cnIICexglFi7urCLkQvI/sQosbrhCCuE841R4vHGj6wgVWAN5/tZIBJ7GSW2HbgH5bxnlLjx
-        9DEzSJWwQJTEnjOLGEESIgKTmCUmbH7ACJJgFrjFKPF6PxuIzSagJbH/xQ0wm19AUeLqj8dg
-        NbwCdhKfeuawgNgsAqoSV193g9miAmESJ7e1QNUISpyc+QQszingK7F83Rc2iPniEreezGeC
-        sOUltr+dwwxyhITALXaJXcdfskP84CLxueUoC4QtLPHq+BaouJTE53d72SDsaomVJ4+wQTR3
-        MEps2X8BGgDGEvuXTmYChR6zgKbE+l36EGFFiZ2/50I9ySfx7msPKySAeSU62oQgSpQlLj+4
-        ywRhS0osbu9km8CoNAvJO7OQvDALyQuzEJYtYGRZxSiWWlCcm55abFhgihzbmxjBKV3Lcgfj
-        sXM+hxgFOBiVeHglSr7HCrEmlhVX5h5ilOBgVhLh3aEAFOJNSaysSi3Kjy8qzUktPsRoCgzt
-        icxSosn5wHyTVxJvaGpkbGxsYWJoZmpoqCTOy/HjYqyQQHpiSWp2ampBahFMHxMHp1QDo4Rk
-        1oukyb7iMXw/qyynHDAqaZr0erpB7r0dymY1RzX/Z1kE3zVdxLjrv/S57ld5m2Wq+JS2z7on
-        vvEws4a8ediZMKXVJs5hBa7sm//O3t2qWTmtKTZ7pkXQ19/W0RFFycXTnRmS/fXdW388eN2o
-        NP+hVw/D8YdZffUMM2f63Lx/UNihp99WiaU4I9FQi7moOBEADvC/vv8DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrBIsWRmVeSWpSXmKPExsWy7bCSvK6q3Y9YgwUTmC22r3/BajH/yDlW
-        i293fjNZnG16w26x6fE1VovLu+awWVxuvsho8bn3CKPF0usXmSyaWowtbjeuYLN48+Msk8WZ
-        05dYLVr3HmG3+HdtI4vF9LtCFhu/ejgIeqyZt4bRY+esu+wem1Z1snncubaHzWPzknqPlpP7
-        WTy2XG1n8ejbsorR4/iN7UwenzfJBXBFcdmkpOZklqUW6dslcGU8ubqCqaBPoOLdpIUsDYyr
-        eLsYOTkkBEwk5p7vZwGxhQR2M0rMXscFEZeUmHbxKHMXIweQLSxx+HBxFyMXUMlbRon3TZNY
-        QWqEBaIk9pxZxAiSEBGYxizx9N9rNhCHWeAWo8Sm5iPsEC2PGSVm/XrCCNLCJqAlsf/FDTYQ
-        m19AUeLqj8dgcV4BO4lPPXPAzmARUJW4+robzBYVCJPYueQxE0SNoMTJmU/A4pwCvhLL130B
-        m8MsoC7xZ94lZghbXOLWk/lMELa8xPa3c5gnMArPQtI+C0nLLCQts5C0LGBkWcUomVpQnJue
-        W2xYYJiXWq5XnJhbXJqXrpecn7uJERzfWpo7GC8viT/EKMDBqMTDK1HyPVaINbGsuDL3EKME
-        B7OSCO8OBaAQb0piZVVqUX58UWlOavEhRmkOFiVx3qd5xyKFBNITS1KzU1MLUotgskwcnFIN
-        jBbX55vUrH7S/c1o94KH6exT/B6aql46KCHhJDBjb8JC51S5Ws3DmlH3FffVJKx5uDXYraDk
-        /5mHD77+09z6ZPqZLbyf1PoT+je+jLxoJKA4bY4db1ZyHif3hXKrlXkH1ya+SnB8c2adyuem
-        HVocmiZ7D2jNWtL9bZ7SpDT1+sh0Du3zPkxzfJRYijMSDbWYi4oTAUP8nyHrAgAA
-X-CMS-MailID: 20191217023205epcas1p22da079575ecabcd27216985c27dacbb4
-X-Msg-Generator: CA
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYjZmNDgwMGEtNDE2Ni00NzhmLWI5MDktMTJkZWM0ZmY2MDYzIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiN1dCbjRyNlNUSkdEeVVrSWd3ZlRETXRsdlFhVkkra2ZBaTZiUzJYOTlNZGFqS0lydE9XTlFjV2xReUFoeFlCOCJ9
+x-originating-ip: [10.239.127.40]
 Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191126115134epcas5p43ec69b25093165dad94f95e9213804cb
-References: <1574769046-28449-1-git-send-email-andrew-sh.cheng@mediatek.com>
-        <CGME20191126115134epcas5p43ec69b25093165dad94f95e9213804cb@epcas5p4.samsung.com>
-        <1574769046-28449-3-git-send-email-andrew-sh.cheng@mediatek.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 11/26/19 8:50 PM, Andrew-sh.Cheng wrote:
-> From: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
-> 
-> This adds dt-binding documentation of cci devfreq
-> for Mediatek MT8183 SoC platform.
-> 
-> Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
-> ---
->  .../bindings/devfreq/mt8183-cci-devfreq.txt          | 20 ++++++++++++++++++++
-
-mt8183-cci.txt is better without 'devfreq' word.
-
-I recommend to make the binding document with yaml.
-You can refer to the example[1]
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git/commit/?h=devfreq-next&id=6ad0b4fb960c3bc32034d8f3ec7609c8bcb8d9a4
-
->  1 file changed, 20 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/devfreq/mt8183-cci-devfreq.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/devfreq/mt8183-cci-devfreq.txt b/Documentation/devicetree/bindings/devfreq/mt8183-cci-devfreq.txt
-> new file mode 100644
-> index 000000000000..a65a70bb9f09
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/devfreq/mt8183-cci-devfreq.txt
-> @@ -0,0 +1,20 @@
-> +* Mediatek Cache Coherent Interconnect(CCI) frequency device
-
-recommend to add the more detailed description 
-of what is the role of this driver.
-
-> +
-> +Required properties:
-> +- compatible: should contain "mediatek,mt8183-cci" for frequency scaling of CCI
-> +- clocks: for frequency scaling of CCI
-> +- clock-names: for frequency scaling of CCI driver to reference
-
-	
-
-> +- regulator: for voltage scaling of CCI
-> +- operating-points-v2: for frequency scaling of CCI opp table
-> +
-> +Example:
-> +	cci: cci {
-> +		compatible = "mediatek,mt8183-cci";
-> +		clocks = <&apmixedsys CLK_APMIXED_CCIPLL>;
-> +		clock-names = "cci_clock";
-
-Recommend to use 'cci' without '_clock' because we can
-know that it's clock name event if '_clock'.
-
-> +		operating-points-v2 = <&cci_opp>;
-> +	};
-> +
-> +	&cci {
-> +		proc-supply = <&mt6358_vproc12_reg>;
-> +	};
-> \ No newline at end of file
-> 
-
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+PiBGcm9tOiBMdSBCYW9sdSA8IGJhb2x1Lmx1QGxpbnV4LmludGVsLmNvbSA+DQo+IFNlbnQ6IFR1
+ZXNkYXksIERlY2VtYmVyIDE3LCAyMDE5IDEwOjA0IEFNDQo+IFRvOiBMaXUsIFlpIEwgPHlpLmwu
+bGl1QGludGVsLmNvbT47IEpvZXJnIFJvZWRlbCA8am9yb0A4Ynl0ZXMub3JnPjsgRGF2aWQNCj4g
+V29vZGhvdXNlIDxkd213MkBpbmZyYWRlYWQub3JnPjsgQWxleCBXaWxsaWFtc29uDQo+IDxhbGV4
+LndpbGxpYW1zb25AcmVkaGF0LmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MyA0LzZdIGlv
+bW11L3Z0LWQ6IFNldHVwIHBhc2lkIGVudHJpZXMgZm9yIGlvdmEgb3ZlciBmaXJzdCBsZXZlbA0K
+PiANCj4gSGkgWWksDQo+IA0KPiBPbiAxMi8xNS8xOSA1OjM3IFBNLCBMaXUsIFlpIEwgd3JvdGU6
+DQo+ID4+IFhEIChiaXQgNjMpIGlzIG9ubHkgZm9yIHRoZSBmaXJzdCBsZXZlbCwgYW5kIFNOUCAo
+Yml0IDExKSBpcyBvbmx5IGZvcg0KPiA+PiBzZWNvbmQgbGV2ZWwsIHJpZ2h0PyBJIHRoaW5rIHdl
+IG5lZWQgdG8gYWx3YXlzIHNldCBYRCBiaXQgZm9yIElPVkEgb3ZlciBGTCBjYXNlLg0KPiB0aG91
+Z2h0cz8NCj4gPiBPb3BzLCBJIG1hZGUgYSBtaXN0YWtlIGhlcmUuIFBsZWFzZSBmb3JnZXQgU05Q
+IGJpdCwgdGhlcmUgaXMgbm8gd2F5IHRvDQo+ID4gY29udHJvbCBTTlAgd2l0aCBmaXJzdCBsZXZl
+bCBwYWdlIHRhYmxlLjotKQ0KPiA+DQo+ID4gQWN0dWFsbHksIGl0IGlzIGV4ZWN1dGUgKGJpdCAx
+KSBvZiBzZWNvbmQgbGV2ZWwgcGFnZSB0YWJsZSB3aGljaCBJIHdhbnRlZCB0byBzYXkuDQo+ID4g
+SWYgc29mdHdhcmUgc2V0cyBSL1cvWCBwZXJtaXNzaW9uIHRvIGFuIElPVkEsIHdpdGggSU9WQSBv
+dmVyIHNlY29uZA0KPiA+IGxldmVsIHBhZ2UgdGFibGUsIGl0IHdpbGwgc2V0IGJpdCAxLiBIb3dl
+dmVyLCBpZiBJT1ZBIGlzIG92ZXIgZmlyc3QNCj4gPiBsZXZlbCBwYWdlIHRhYmxlLCBpdCBtYXkg
+bmVlZCB0byBjbGVhciBYRCBiaXQuIFRoaXMgaXMgd2hhdCBJIHdhbnQgdG8NCj4gPiBzYXkgaGVy
+ZS4gSWYgSU9WQSBkb2VzbuKAmXQgYWxsb3cgZXhlY3V0ZSBwZXJtaXNzaW9uLCBpdCdzIG9rIHRv
+IGFsd2F5cw0KPiA+IHNldCBYRCBiaXQgZm9yIElPVkEgb3ZlciBGTCBjYXNlLiBCdXQgSSB3b3Vs
+ZCBsaWtlIHRvIGRvIGl0IGp1c3QgYXMNCj4gPiB3aGF0IHdlIGRpZCBmb3IgUi9XIHBlcm1pc3Np
+b24uIFIvVyBwZXJtaXNzaW9uIHJlbGllcyBvbiB0aGUgcGVybWlzc2lvbg0KPiBjb25maWd1cmVk
+IGJ5IHRoZSBwYWdlIG1hcCBjYWxsZXIuIHJpZ2h0Pw0KPiANCj4gR290IHlvdXIgcG9pbnQuDQo+
+IA0KPiBDdXJyZW50IGRyaXZlciBhbHdheXMgY2xlYXJkIFggKGJpdCAyKSBpbiB0aGUgc2Vjb25k
+IGxldmVsIHBhZ2UgdGFibGUuDQo+IFNvIHdlIHdpbGwgYWx3YXlzIHNldCBYRCBiaXQgKGJpdCA2
+MykgaW4gdGhlIGZpcnN0IGxldmVsIHBhZ2UgdGFibGUuDQoNCnllcywgSSBhbHNvIG5vdGljZWQg
+WCAoYml0IDIpIGlzIG5vdCB1c2VkIGluIGludGVsLWlvbW11IGRyaXZlci4gU28gSQ0Ka25vdyB3
+aHkgeW91IHNldCBYRCBmb3IgSU9WQSBvdmVyIEZMIGNhc2UuIEJ1dCBpdCdzIGEgbGl0dGxlIGJp
+dCB3ZWlyZA0KdG8gaGFyZCBjb2RlIGl0LiBUaGF0J3Mgd2h5IEkgc3VnZ2VzdGVkIHRvIHJlbGF5
+IHBhZ2UgbWFwIGNhbGxlcidzDQpwZXJtaXNzaW9uIGlucHV0Lg0KDQo+IElmIHdlIGRlY2lkZSB0
+byB1c2UgdGhlIFggcGVybWlzc2lvbiwgd2UgbmVlZCBhIHNlcGFyYXRlZCBwYXRjaCwgcmlnaHQ/
+DQoNCnN1cmUsIGl0IHdvdWxkIGJlIGEgc2VwYXJhdGUgcGF0Y2ggc2luY2UgY3VycmVudCBjb2Rl
+IGRvZXNu4oCZdCBhcHBseQ0KWCBwZXJtaXNzaW9uLg0KDQpSZWdhcmRzLA0KWWkgTGl1DQo=
