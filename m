@@ -2,68 +2,92 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16708C2D0C5
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 123CAC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6E24206E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:11:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1F642176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:11:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfLQELl (ORCPT
+        id S1727484AbfLQELq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 23:11:41 -0500
-Received: from mail.loongson.cn ([114.242.206.163]:32890 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726296AbfLQELl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 23:11:41 -0500
-Received: from [10.130.0.36] (unknown [123.138.236.242])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx7xRtVfhd2b0LAA--.296S3;
-        Tue, 17 Dec 2019 12:11:26 +0800 (CST)
-To:     jdelvare@suse.com, jhogan@kernel.org, paulburton@kernel.org,
-        ralf@linux-mips.org
-References: <1573478985-3535-1-git-send-email-yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v2] MIPS: Scan the DMI system information
-Cc:     yangtiezhu@loongson.cn, jiaxun.yang@flygoat.com,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        lixuefeng@loongson.cn, yangyinglu@loongson.cn
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <a45b4f64-6685-c0d8-da81-5536246be2c4@loongson.cn>
-Date:   Tue, 17 Dec 2019 12:11:20 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
-MIME-Version: 1.0
-In-Reply-To: <1573478985-3535-1-git-send-email-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9Dx7xRtVfhd2b0LAA--.296S3
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYJ7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
-        6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
-        kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8I
-        cVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87
-        Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAK
-        zVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx
-        8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwAC
-        I402YVCY1x02628vn2kIc2xKxwCYjI0SjxkI62AI1cAE67vIY487MxkIecxEwVAFwVW8Xw
-        CF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
-        6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64
-        vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_
-        Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIx
-        AIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfUnHqcUUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Mon, 16 Dec 2019 23:11:46 -0500
+Received: from ybironout4.netvigator.com ([210.87.250.77]:63575 "EHLO
+        ybironout4.netvigator.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726296AbfLQELq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 23:11:46 -0500
+X-Greylist: delayed 612 seconds by postgrey-1.27 at vger.kernel.org; Mon, 16 Dec 2019 23:11:44 EST
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0DoBgDqUvhd/5YXxstkHgELHIFzC4Igg?=
+ =?us-ascii?q?UEgEhoQlTuOeoUShSiBewkBAQE7AgEBgy2BEwKCFCQ1CA4CEAEBBAEBAQIBBQR?=
+ =?us-ascii?q?thGtYhVYJBidSEBgIJgtXGVuCRwGCdgavfjMaAoo3gTaHP4RZFAY/gUGBR4Ioc?=
+ =?us-ascii?q?4dtgkoEl1CXMQqCNJYIAhmOZwOLXi2oZoIAATaBWIEFgVkKgURQEY0yFxWOGzQ?=
+ =?us-ascii?q?zgQSRZgE?=
+X-IronPort-AV: E=Sophos;i="5.69,324,1571673600"; 
+   d="scan'208";a="170931205"
+Received: from unknown (HELO ybironoah03.netvigator.com) ([203.198.23.150])
+  by ybironout4v1.netvigator.com with ESMTP; 17 Dec 2019 12:01:29 +0800
+Received: from unknown (HELO rhel76.localdomain) ([42.200.157.25])
+  by ybironoah03.netvigator.com with ESMTP; 17 Dec 2019 12:01:29 +0800
+From:   "Chan Shu Tak, Alex" <alexchan@task.com.hk>
+Cc:     "Chan Shu Tak, Alex" <alexchan@task.com.hk>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] llc2: Remove the condition operator in llc_stat_ev_rx_null_dsap_xid_c and llc_stat_ev_rx_null_dsap_test_c.
+Date:   Tue, 17 Dec 2019 12:00:36 +0800
+Message-Id: <1576555237-4037-1-git-send-email-alexchan@task.com.hk>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1576340820-4929-1-git-send-email-alexchan@task.com.hk>
+References: <1576340820-4929-1-git-send-email-alexchan@task.com.hk>
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ping,
+From: "Chan Shu Tak, Alex" <alexchan@task.com.hk>
 
-Any problem in this patch?
+When a frame with NULL DSAP is received, llc_station_rcv is called.
+In turn, llc_stat_ev_rx_null_dsap_xid_c is called to check if it is a NULL
+XID frame. The original condition operator returns 1 when the incoming
+frame is not a NULL XID frame and 0 otherwise. As a result, an incoming
+NULL TEST frame would trigger an XID response instead.
 
-Thanks,
+To fix the error, we just need to remove the condition operator.
 
-Tiezhu Yang
+The same error is found in llc_stat_ev_rx_null_dsap_test_c and fixed.
+
+Signed-off-by: Chan Shu Tak, Alex <alexchan@task.com.hk>
+---
+ net/llc/llc_station.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/net/llc/llc_station.c b/net/llc/llc_station.c
+index 90955d7..c29170e 100644
+--- a/net/llc/llc_station.c
++++ b/net/llc/llc_station.c
+@@ -32,7 +32,7 @@ static int llc_stat_ev_rx_null_dsap_xid_c(struct sk_buff *skb)
+ 	return LLC_PDU_IS_CMD(pdu) &&			/* command PDU */
+ 	       LLC_PDU_TYPE_IS_U(pdu) &&		/* U type PDU */
+ 	       LLC_U_PDU_CMD(pdu) == LLC_1_PDU_CMD_XID &&
+-	       !pdu->dsap ? 1 : 0;			/* NULL DSAP value */
++	       !pdu->dsap;				/* NULL DSAP value */
+ }
+ 
+ static int llc_stat_ev_rx_null_dsap_test_c(struct sk_buff *skb)
+@@ -42,7 +42,7 @@ static int llc_stat_ev_rx_null_dsap_test_c(struct sk_buff *skb)
+ 	return LLC_PDU_IS_CMD(pdu) &&			/* command PDU */
+ 	       LLC_PDU_TYPE_IS_U(pdu) &&		/* U type PDU */
+ 	       LLC_U_PDU_CMD(pdu) == LLC_1_PDU_CMD_TEST &&
+-	       !pdu->dsap ? 1 : 0;			/* NULL DSAP */
++	       !pdu->dsap;				/* NULL DSAP */
+ }
+ 
+ static int llc_station_ac_send_xid_r(struct sk_buff *skb)
+-- 
+1.8.3.1
 
