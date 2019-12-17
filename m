@@ -2,145 +2,193 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71CD9C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3656C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EE5721582
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:18:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9619B2465E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:18:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="Mq++CyPp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CVtreZDP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728840AbfLQQSK (ORCPT
+        id S1729366AbfLQQSV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 11:18:10 -0500
-Received: from mail-dm6nam12on2072.outbound.protection.outlook.com ([40.107.243.72]:33729
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729013AbfLQQPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 11:15:54 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=D9fymUrmZlaRhDthp6CRECFfOpT22K5ON5Mtda0sgr8oaIfIswnaGUYerPSDcm3GYbN7ck3LTStG0durbPt5FOZeHp2ZzHCN/RGIzNR6qnRrMO8t9UCcPiu8Jv3F09FeeJ/qIPz5FVTJi9tCtQkW3T3F6a19ccIHWrpy6RDgQxADCBHwvtDwMeEG6ACiu7sRiUPHwaxNyK15GupzmFvy78Xn5dpYv4d6R2apsc5MuVQ4GWSRaNpG6Te0+mm2zpKBy+FXckt8PmKtpOYfaHzsWBEVPbKSN1PD11FCGtLo4qVa2zWu/WjHIgYOxW3lN+SaLKWuWZhFZ+dLgx5DrO6bJw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Me8/rbIanGxpbYOTeZgvzL3WSGozBd3Rm0cYjOm2ft0=;
- b=H5kweVL8y1gsvAjwqRWBwtyFoqq/LjRNJzfI0fejaCvOfkiH8e3jDxsNN0CpVchWl8AWyeXW1ySZ4ndP+03wwkIsOABLbKn9t6Rtx+iUUQ2AxPtNdeBNR7U5uN1bXA22RFUAhAw5WPY7Dj9e0yHQIB8Gyw3UkP5QKgWZvArsC7G6WTZ0vctdYqKIZ5O6hR/u25Fas5BsBM5KIkUvIO1qbZMv7TFbY0LQtJuDAx+JWvwrXSEe4OvuDKyg8QrB5f2nENQ9cZHA8kBRpjq7ryl7cw38iuharf0TQJ7yP2fsxL0c3V3uaVft2V9gkmx3pdtzcjPjreXmqIng0KPAiLkBAA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
+        Tue, 17 Dec 2019 11:18:21 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46207 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729015AbfLQQPx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 11:15:53 -0500
+Received: by mail-pl1-f195.google.com with SMTP id y8so321943pll.13;
+        Tue, 17 Dec 2019 08:15:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Me8/rbIanGxpbYOTeZgvzL3WSGozBd3Rm0cYjOm2ft0=;
- b=Mq++CyPpBSPdRhLNSyVR70Pm0Md7AO4FM6bKa4ATzgjnyg/Qnf5nQY3fU5rMJi1+WUSNou/BpOCTtE6K4WOnJ1ZnYE5QRNi9qVyIjPiWaP4Q1vgLGdTlxBMqYBpw/UXblZpq8GORTrjVkXyZ/3+W+djod6rAPl8+PpfPqJ/Rmmk=
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com (10.255.180.22) by
- MN2PR11MB4477.namprd11.prod.outlook.com (52.135.36.93) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.17; Tue, 17 Dec 2019 16:15:48 +0000
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::f46c:e5b4:2a85:f0bf]) by MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::f46c:e5b4:2a85:f0bf%4]) with mapi id 15.20.2538.019; Tue, 17 Dec 2019
- 16:15:48 +0000
-From:   =?utf-8?B?SsOpcsO0bWUgUG91aWxsZXI=?= <Jerome.Pouiller@silabs.com>
-To:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        =?utf-8?B?SsOpcsO0bWUgUG91aWxsZXI=?= <Jerome.Pouiller@silabs.com>
-Subject: [PATCH v2 44/55] staging: wfx: hif_scan() never fails
-Thread-Topic: [PATCH v2 44/55] staging: wfx: hif_scan() never fails
-Thread-Index: AQHVtPUyvEYYGiAvQkWgAuq5fP/76Q==
-Date:   Tue, 17 Dec 2019 16:15:28 +0000
-Message-ID: <20191217161318.31402-45-Jerome.Pouiller@silabs.com>
-References: <20191217161318.31402-1-Jerome.Pouiller@silabs.com>
-In-Reply-To: <20191217161318.31402-1-Jerome.Pouiller@silabs.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: PR0P264CA0174.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:100:1c::18) To MN2PR11MB4063.namprd11.prod.outlook.com
- (2603:10b6:208:13f::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Jerome.Pouiller@silabs.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.24.0
-x-originating-ip: [37.71.187.125]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e69c46a4-94cd-44f1-5385-08d7830c54c7
-x-ms-traffictypediagnostic: MN2PR11MB4477:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR11MB4477695E9FCC6CD8BCAB303393500@MN2PR11MB4477.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 02543CD7CD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(396003)(136003)(366004)(39860400002)(199004)(189003)(1076003)(186003)(107886003)(8676002)(6506007)(86362001)(478600001)(85182001)(5660300002)(81156014)(26005)(4326008)(6486002)(8936002)(316002)(110136005)(54906003)(64756008)(66446008)(66946007)(2616005)(66556008)(66476007)(85202003)(36756003)(6512007)(2906002)(52116002)(6666004)(71200400001)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4477;H:MN2PR11MB4063.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: silabs.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0eIBLABmbMQrdiVPf3o/CLEvTVYUhBW35a0h0GKqbyd43sNGJ8j3yV4Fa9k9sIqHrJnbDuFiKCnGBpWXedDAXEqgF7f2Ikm59nuTzMQJMUM8O0hBgbsnUGvZ6ZbnZqdDXfa611gJRrfQiVRLcJoLHC6Kv/KlnfwqOG8yJLTnL14EBV6MK5kjoafOD4U4VmkvTrAjgE4xU65hVST/MT3PxwG6Lo3CZwUVjkYsd1s4ocEU4vNBFW34LAjGaUsWRJ5NVnobclj7wNX8U/cN1a8ZEGUbAMymsyds6KEjQ3hir2q00OuNA9AkCTVk+2nmo1DwFHe1aPR0hG68Z4yVkp2ApevTQhYXP0m0hSmYWjJ3pRwJaCsl+ss4udFHx/JlgX73suiW0nxeEvkN4IDEy9+nbbYKdYkToko/RgWvq4oqTPFgXsfxDGpqvWlXjupwc/qj
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E27986E50A648F4A8B158C4A5FA24D6D@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=nvfz0A2ZvP4AK3QEhPIGVEQE0gFv3qk/GmdZliKFO6A=;
+        b=CVtreZDPZZJiZSWzv8lwSJIgatTJTjo7lKs3WeWqJa7HRYn75GbB0+e04gsd/7Rd7m
+         NyLNaOBu6kqTuS7HMcfVvJgwf5T6x7kMoG6MbuB13TgTXimfK8HJvoj5AAsBbkQGbWfa
+         cuRNiJt6SycRj6jdoT7z10cYulJhGPcWM57rdBiG7SE3B5z3DjoDbKhoKFP4bdCeYgil
+         mOCXZDE5Qa074L8aCc/n77oIWXJ7xIN0NB/sZsZW+GnoQAAxyE+73dG2v6DnwapwADHt
+         eTZYmK5AcGU5fSu28uan+MylLLsAkuaGV0GR/bfxQc3p2T9LVzbFMxSYXrQ1Lm/1pFyJ
+         nf7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=nvfz0A2ZvP4AK3QEhPIGVEQE0gFv3qk/GmdZliKFO6A=;
+        b=fo0UhmGjXlrdctvubIBHG9vHiB0YAAHAL1Zg8JoLQfrQ7W32GGlnI/1ClgUQQ6zHeN
+         iHOetSu2MoRjdV7PX+i5fQvPho0cgefNF6VKZcxkTv0v7hrDwIUtzQzmUT8PtQtu11D7
+         8W/NeiWI0xmy+1hx9HrcVQMKtpODdb1DhmAAyM9jbBIV+tiEjcaKb/P+MWHCqvkGqUrB
+         dxz6q08Rbalk/9Cq/11g3ntnQUq/6K3BpY7GkJFEkKn6yHkrUy1Xwx2IrOmYBd+iaSOG
+         Rs6PdCEhtzX7B8hSahqzmR1TbklZdACMPzz/6TOhDU5mAsJfa2Yv1/sczcz8ZHTREKrd
+         Utdw==
+X-Gm-Message-State: APjAAAWmRG0ikS7MwqVcQOeYI+0OWUScyLWB/upN9sbLkVP/Lkv9JKsl
+        u7H4HLo++tzXqV+c+p731Zbt8GlITOMVWA==
+X-Google-Smtp-Source: APXvYqyYCRDx0TFyqVYKOZHhB55hjFC3rr5CadlhQrDgXjepxqJokh9IxLlFXEIaNvpXL7ejBxzdgg==
+X-Received: by 2002:a17:90a:d801:: with SMTP id a1mr7133236pjv.34.1576599352484;
+        Tue, 17 Dec 2019 08:15:52 -0800 (PST)
+Received: from glados.lan ([2601:647:4c01:6541:fa16:54ff:fed1:1bd6])
+        by smtp.gmail.com with ESMTPSA id k15sm27704122pfg.37.2019.12.17.08.15.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 08:15:52 -0800 (PST)
+From:   Thomas Hebb <tommyhebb@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Thomas Hebb <tommyhebb@gmail.com>
+Subject: [PATCH v2 2/3] kconfig: distinguish between dependencies and visibility in help text
+Date:   Tue, 17 Dec 2019 08:15:44 -0800
+Message-Id: <0f377f484587480701ba22c4b66ea0e7d83db870.1576599202.git.tommyhebb@gmail.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <cover.1576599202.git.tommyhebb@gmail.com>
+References: <cover.1576599202.git.tommyhebb@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e69c46a4-94cd-44f1-5385-08d7830c54c7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Dec 2019 16:15:28.2919
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 3UHIqdDLykm3GyqZmhRKhFyGBpw2mVA8i3TQ+Fcu3MgqjP6/vXd3Xq+cla6c2ZnC2kmlQj8jYxS8qMBeGLlS7Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4477
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSsOpcsO0bWUgUG91aWxsZXIgPGplcm9tZS5wb3VpbGxlckBzaWxhYnMuY29tPgoKSWYg
-c2NhbiBmYWlscywgc3RhdHVzIGlzIHJldHVybmVkIGluIGhpZl9pbmRfc2Nhbl9jbXBsLiBoaWZf
-c2NhbgphbHdheXMgcmV0dXJuIGEgc3VjY2Vzcy4gU28sIHdlIGNhbiBzaW1wbGlmeSB0aGUgY29k
-ZS4KClNpZ25lZC1vZmYtYnk6IErDqXLDtG1lIFBvdWlsbGVyIDxqZXJvbWUucG91aWxsZXJAc2ls
-YWJzLmNvbT4KLS0tCiBkcml2ZXJzL3N0YWdpbmcvd2Z4L3NjYW4uYyB8IDIwICsrLS0tLS0tLS0t
-LS0tLS0tLS0tCiBkcml2ZXJzL3N0YWdpbmcvd2Z4L3NjYW4uaCB8ICAxIC0KIDIgZmlsZXMgY2hh
-bmdlZCwgMiBpbnNlcnRpb25zKCspLCAxOSBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2
-ZXJzL3N0YWdpbmcvd2Z4L3NjYW4uYyBiL2RyaXZlcnMvc3RhZ2luZy93Zngvc2Nhbi5jCmluZGV4
-IDRiOTVlNmE5N2RmNy4uY2RjY2I2N2NiMzBlIDEwMDY0NAotLS0gYS9kcml2ZXJzL3N0YWdpbmcv
-d2Z4L3NjYW4uYworKysgYi9kcml2ZXJzL3N0YWdpbmcvd2Z4L3NjYW4uYwpAQCAtMzYsNyArMzYs
-NiBAQCBzdGF0aWMgdm9pZCB3Znhfc2Nhbl9yZXN0YXJ0X2RlbGF5ZWQoc3RydWN0IHdmeF92aWYg
-Knd2aWYpCiAKIHN0YXRpYyBpbnQgd2Z4X3NjYW5fc3RhcnQoc3RydWN0IHdmeF92aWYgKnd2aWYs
-IHN0cnVjdCB3Znhfc2Nhbl9wYXJhbXMgKnNjYW4pCiB7Ci0JaW50IHJldDsKIAlpbnQgdG1vID0g
-NTAwOwogCiAJaWYgKHd2aWYtPnN0YXRlID09IFdGWF9TVEFURV9QUkVfU1RBKQpAQCAtNDgsMTUg
-KzQ3LDggQEAgc3RhdGljIGludCB3Znhfc2Nhbl9zdGFydChzdHJ1Y3Qgd2Z4X3ZpZiAqd3ZpZiwg
-c3RydWN0IHdmeF9zY2FuX3BhcmFtcyAqc2NhbikKIAlhdG9taWNfc2V0KCZ3dmlmLT53ZGV2LT5z
-Y2FuX2luX3Byb2dyZXNzLCAxKTsKIAogCXNjaGVkdWxlX2RlbGF5ZWRfd29yaygmd3ZpZi0+c2Nh
-bi50aW1lb3V0LCBtc2Vjc190b19qaWZmaWVzKHRtbykpOwotCXJldCA9IGhpZl9zY2FuKHd2aWYs
-IHNjYW4pOwotCWlmIChyZXQpIHsKLQkJd2Z4X3NjYW5fZmFpbGVkX2NiKHd2aWYpOwotCQlhdG9t
-aWNfc2V0KCZ3dmlmLT5zY2FuLmluX3Byb2dyZXNzLCAwKTsKLQkJYXRvbWljX3NldCgmd3ZpZi0+
-d2Rldi0+c2Nhbl9pbl9wcm9ncmVzcywgMCk7Ci0JCWNhbmNlbF9kZWxheWVkX3dvcmtfc3luYygm
-d3ZpZi0+c2Nhbi50aW1lb3V0KTsKLQkJd2Z4X3NjYW5fcmVzdGFydF9kZWxheWVkKHd2aWYpOwot
-CX0KLQlyZXR1cm4gcmV0OworCWhpZl9zY2FuKHd2aWYsIHNjYW4pOworCXJldHVybiAwOwogfQog
-CiBpbnQgd2Z4X2h3X3NjYW4oc3RydWN0IGllZWU4MDIxMV9odyAqaHcsCkBAIC0yNDUsMTQgKzIz
-Nyw2IEBAIHN0YXRpYyB2b2lkIHdmeF9zY2FuX2NvbXBsZXRlKHN0cnVjdCB3ZnhfdmlmICp3dmlm
-KQogCXdmeF9zY2FuX3dvcmsoJnd2aWYtPnNjYW4ud29yayk7CiB9CiAKLXZvaWQgd2Z4X3NjYW5f
-ZmFpbGVkX2NiKHN0cnVjdCB3ZnhfdmlmICp3dmlmKQotewotCWlmIChjYW5jZWxfZGVsYXllZF93
-b3JrX3N5bmMoJnd2aWYtPnNjYW4udGltZW91dCkgPiAwKSB7Ci0JCXd2aWYtPnNjYW4uc3RhdHVz
-ID0gLUVJTzsKLQkJc2NoZWR1bGVfd29yaygmd3ZpZi0+c2Nhbi50aW1lb3V0LndvcmspOwotCX0K
-LX0KLQogdm9pZCB3Znhfc2Nhbl9jb21wbGV0ZV9jYihzdHJ1Y3Qgd2Z4X3ZpZiAqd3ZpZiwKIAkJ
-CSAgY29uc3Qgc3RydWN0IGhpZl9pbmRfc2Nhbl9jbXBsICphcmcpCiB7CmRpZmYgLS1naXQgYS9k
-cml2ZXJzL3N0YWdpbmcvd2Z4L3NjYW4uaCBiL2RyaXZlcnMvc3RhZ2luZy93Zngvc2Nhbi5oCmlu
-ZGV4IGM3YzBhYjE3OGM4Ny4uZTcxZTVmMGY1MjJlIDEwMDY0NAotLS0gYS9kcml2ZXJzL3N0YWdp
-bmcvd2Z4L3NjYW4uaAorKysgYi9kcml2ZXJzL3N0YWdpbmcvd2Z4L3NjYW4uaApAQCAtMzgsNiAr
-MzgsNSBAQCB2b2lkIHdmeF9zY2FuX3dvcmsoc3RydWN0IHdvcmtfc3RydWN0ICp3b3JrKTsKIHZv
-aWQgd2Z4X3NjYW5fdGltZW91dChzdHJ1Y3Qgd29ya19zdHJ1Y3QgKndvcmspOwogdm9pZCB3Znhf
-c2Nhbl9jb21wbGV0ZV9jYihzdHJ1Y3Qgd2Z4X3ZpZiAqd3ZpZiwKIAkJCSAgY29uc3Qgc3RydWN0
-IGhpZl9pbmRfc2Nhbl9jbXBsICphcmcpOwotdm9pZCB3Znhfc2Nhbl9mYWlsZWRfY2Ioc3RydWN0
-IHdmeF92aWYgKnd2aWYpOwogCiAjZW5kaWYgLyogV0ZYX1NDQU5fSCAqLwotLSAKMi4yNC4wCgo=
+Kconfig makes a distinction between dependencies (defined by "depends
+on" expressions and enclosing "if" blocks) and visibility (which
+includes all dependencies, but also includes inline "if" expressions of
+individual properties as well as, for prompts, "visible if" expressions
+of enclosing menus).
+
+Before commit bcdedcc1afd6 ("menuconfig: print more info for symbol
+without prompts"), the "Depends on" lines of a symbol's help text
+indicated the visibility of the prompt property they appeared under.
+After bcdedcc1afd, there was always only a single "Depends on" line,
+which indicated the visibility of the first P_SYMBOL property of the
+symbol. Since P_SYMBOLs never have inline if expressions, this was in
+effect the same as the dependencies of the menu item that the P_SYMBOL
+was attached to.
+
+Neither of these situations accurately conveyed the dependencies of a
+symbol--the first because it was actually the visibility, and the second
+because it only showed the dependencies from a single definition.
+
+With this series, we are back to printing separate dependencies for each
+definition, but we print the actual dependencies (rather than the
+visibility) in the "Depends on" line. However, it can still be useful to
+know the visibility of a prompt, so this patch adds a "Visible if" line
+that shows the visibility only if the visibility is different from the
+dependencies (which it isn't for most prompts in Linux).
+
+Before:
+
+  Symbol: THUMB2_KERNEL [=n]
+  Type  : bool
+  Defined at arch/arm/Kconfig:1417
+    Prompt: Compile the kernel in Thumb-2 mode
+    Depends on: (CPU_V7 [=y] || CPU_V7M [=n]) && !CPU_V6 [=n] && !CPU_V6K [=n]
+    Location:
+      -> Kernel Features
+    Selects: ARM_UNWIND [=n]
+
+After:
+
+   Symbol: THUMB2_KERNEL [=n]
+   Type  : bool
+   Defined at arch/arm/Kconfig:1417
+     Prompt: Compile the kernel in Thumb-2 mode
+     Depends on: (CPU_V7 [=y] || CPU_V7M [=n]) && !CPU_V6 [=n] && !CPU_V6K [=n]
+     Visible if: (CPU_V7 [=y] || CPU_V7M [=n]) && !CPU_V6 [=n] && !CPU_V6K [=n] && !CPU_THUMBONLY [=n]
+     Location:
+       -> Kernel Features
+     Selects: ARM_UNWIND [=n]
+
+Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
+---
+
+Changes in v2:
+- Fixed checkpatch issues
+
+ scripts/kconfig/expr.c |  3 +--
+ scripts/kconfig/expr.h |  1 +
+ scripts/kconfig/menu.c | 11 +++++++++++
+ 3 files changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/kconfig/expr.c b/scripts/kconfig/expr.c
+index 9f1de58e9f0c..81ebf8108ca7 100644
+--- a/scripts/kconfig/expr.c
++++ b/scripts/kconfig/expr.c
+@@ -13,7 +13,6 @@
+ 
+ #define DEBUG_EXPR	0
+ 
+-static int expr_eq(struct expr *e1, struct expr *e2);
+ static struct expr *expr_eliminate_yn(struct expr *e);
+ 
+ struct expr *expr_alloc_symbol(struct symbol *sym)
+@@ -250,7 +249,7 @@ void expr_eliminate_eq(struct expr **ep1, struct expr **ep2)
+  * equals some operand in the other (operands do not need to appear in the same
+  * order), recursively.
+  */
+-static int expr_eq(struct expr *e1, struct expr *e2)
++int expr_eq(struct expr *e1, struct expr *e2)
+ {
+ 	int res, old_count;
+ 
+diff --git a/scripts/kconfig/expr.h b/scripts/kconfig/expr.h
+index 017843c9a4f4..d0f17bc9c4ef 100644
+--- a/scripts/kconfig/expr.h
++++ b/scripts/kconfig/expr.h
+@@ -301,6 +301,7 @@ struct expr *expr_alloc_or(struct expr *e1, struct expr *e2);
+ struct expr *expr_copy(const struct expr *org);
+ void expr_free(struct expr *e);
+ void expr_eliminate_eq(struct expr **ep1, struct expr **ep2);
++int expr_eq(struct expr *e1, struct expr *e2);
+ tristate expr_calc_value(struct expr *e);
+ struct expr *expr_trans_bool(struct expr *e);
+ struct expr *expr_eliminate_dups(struct expr *e);
+diff --git a/scripts/kconfig/menu.c b/scripts/kconfig/menu.c
+index 0e54632d2043..dcf7f32f0bba 100644
+--- a/scripts/kconfig/menu.c
++++ b/scripts/kconfig/menu.c
+@@ -723,6 +723,17 @@ static void get_prompt_str(struct gstr *r, struct property *prop,
+ 	str_printf(r, "  Prompt: %s\n", prop->text);
+ 
+ 	get_dep_str(r, prop->menu->dep, "  Depends on: ");
++	/*
++	 * Most prompts in Linux have visibility that exactly matches their
++	 * dependencies. For these, we print only the dependencies to improve
++	 * readability. However, prompts with inline "if" expressions and
++	 * prompts with a parent that has a "visible if" expression have
++	 * differing dependencies and visibility. In these rare cases, we
++	 * print both.
++	 */
++	if (!expr_eq(prop->menu->dep, prop->visible.expr))
++		get_dep_str(r, prop->visible.expr, "  Visible if: ");
++
+ 	menu = prop->menu->parent;
+ 	for (i = 0; menu != &rootmenu && i < 8; menu = menu->parent) {
+ 		bool accessible = menu_is_visible(menu);
+-- 
+2.24.1
+
