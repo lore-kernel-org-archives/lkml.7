@@ -2,178 +2,164 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4006DC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD69EC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D3A324655
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:24:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B43220716
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:24:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kylvoz58"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="DF1XF4tp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728508AbfLQQY0 (ORCPT
+        id S1728529AbfLQQYo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 11:24:26 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:55643 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728147AbfLQQYZ (ORCPT
+        Tue, 17 Dec 2019 11:24:44 -0500
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:52712 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728245AbfLQQYo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 11:24:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576599863;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UaYxxpQ+7yMxn9ORHCOWMBFO7RIyafsf5c6/e+ioEqg=;
-        b=Kylvoz584eWl5Snvi1sZa5103QMnWg01475hZ2MX58rJvRx40HNm+f04EcSkxz7dJ8bjRl
-        EZVk78X0kClq4OkMUu7cZU4H/2gRadDXCw/kMhD9iuuVROhL6Tu9y9DKr2P3P+gSzJIfia
-        ttlTPgvyP6DMZvzlDlXBmBoSRuHE9yE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-240-Iv3ZR-nEMGWfuzbhq_B8Eg-1; Tue, 17 Dec 2019 11:24:22 -0500
-X-MC-Unique: Iv3ZR-nEMGWfuzbhq_B8Eg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 43E00800EBF;
-        Tue, 17 Dec 2019 16:24:21 +0000 (UTC)
-Received: from x1.home (ovpn-116-53.phx2.redhat.com [10.3.116.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4B144620CC;
-        Tue, 17 Dec 2019 16:24:18 +0000 (UTC)
-Date:   Tue, 17 Dec 2019 09:24:17 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Yan Zhao <yan.y.zhao@intel.com>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        'Paolo Bonzini' <pbonzini@redhat.com>,
-        Peter Xu <peterx@redhat.com>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Wang, Zhenyu Z" <zhenyu.z.wang@intel.com>
-Subject: Re: [PATCH RFC 04/15] KVM: Implement ring-based dirty memory
- tracking
-Message-ID: <20191217092417.1c4f4586@x1.home>
-In-Reply-To: <20191217052502.GF21868@joy-OptiPlex-7040>
-References: <20191203184600.GB19877@linux.intel.com>
-        <374f18f1-0592-9b70-adbb-0a72cc77d426@redhat.com>
-        <20191209215400.GA3352@xz-x1>
-        <affd9d84-1b84-0c25-c431-a075c58c33dc@redhat.com>
-        <20191210155259.GD3352@xz-x1>
-        <3e6cb5ec-66c0-00ab-b75e-ad2beb1d216d@redhat.com>
-        <20191215172124.GA83861@xz-x1>
-        <f117d46a-7528-ce32-8e46-4f3f35937079@redhat.com>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D645E5F@SHSMSX104.ccr.corp.intel.com>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D646148@SHSMSX104.ccr.corp.intel.com>
-        <20191217052502.GF21868@joy-OptiPlex-7040>
-Organization: Red Hat
+        Tue, 17 Dec 2019 11:24:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1576599884; x=1608135884;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   in-reply-to:content-transfer-encoding;
+  bh=6CjLT/jXM24rz/CtEsr3sfgvACZw7Z+OWO4pwc33DNA=;
+  b=DF1XF4tpPFRfpi5PB+Nzc6esRN/lmuTrT630ln4dVUqiPWUNCGp020kL
+   kq2DgD5HEM/4+VvPsCP2Hwki23CPZ+9V77gpzRgqqpNuB9FbAT8jih/d8
+   9eflJ5kLxTPYHawNDofoH/SL8GBtyNjUSx1ZScF2wqnyBgjXxV4iTcmsa
+   s=;
+IronPort-SDR: l/5bBVqxQm+PGBhtTf/q0S//8Ztt3FG2SPwySz7BkUjYe4bKLQS0PyvVYKwTQiZO1BdfSZNFme
+ t5zCG84erTug==
+X-IronPort-AV: E=Sophos;i="5.69,326,1571702400"; 
+   d="scan'208";a="9474974"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 17 Dec 2019 16:24:43 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com (Postfix) with ESMTPS id 3F287A221F;
+        Tue, 17 Dec 2019 16:24:40 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1236.3; Tue, 17 Dec 2019 16:24:39 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.205) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 17 Dec 2019 16:24:34 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     =?UTF-8?q?J=C3=BCrgen=20Gro=C3=9F?= <jgross@suse.com>
+CC:     SeongJae Park <sjpark@amazon.com>, <axboe@kernel.dk>,
+        <konrad.wilk@oracle.com>, <roger.pau@citrix.com>,
+        <linux-block@vger.kernel.org>, <pdurrant@amazon.com>,
+        SeongJae Park <sjpark@amazon.de>,
+        <linux-kernel@vger.kernel.org>, <sj38.park@gmail.com>,
+        <xen-devel@lists.xenproject.org>
+Subject: Re: Re: [Xen-devel] [PATCH v11 2/6] xenbus/backend: Protect xenbus callback with lock
+Date:   Tue, 17 Dec 2019 17:24:06 +0100
+Message-ID: <20191217162406.4711-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <44327bf3-45ed-3e5a-3984-36ea40f53fc5@suse.com> (raw)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.43.161.205]
+X-ClientProxiedBy: EX13D02UWB004.ant.amazon.com (10.43.161.11) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Dec 2019 00:25:02 -0500
-Yan Zhao <yan.y.zhao@intel.com> wrote:
+On Tue, 17 Dec 2019 17:13:42 +0100 "Jürgen Groß" <jgross@suse.com> wrote:
 
-> On Tue, Dec 17, 2019 at 01:17:29PM +0800, Tian, Kevin wrote:
-> > > From: Tian, Kevin
-> > > Sent: Tuesday, December 17, 2019 10:29 AM
-> > >   
-> > > > From: Paolo Bonzini
-> > > > Sent: Monday, December 16, 2019 6:08 PM
-> > > >
-> > > > [Alex and Kevin: there are doubts below regarding dirty page tracking
-> > > > from VFIO and mdev devices, which perhaps you can help with]
-> > > >
-> > > > On 15/12/19 18:21, Peter Xu wrote:  
-> > > > >                 init_rmode_tss
-> > > > >                     vmx_set_tss_addr
-> > > > >                         kvm_vm_ioctl_set_tss_addr [*]
-> > > > >                 init_rmode_identity_map
-> > > > >                     vmx_create_vcpu [*]  
-> > > >
-> > > > These don't matter because their content is not visible to userspace
-> > > > (the backing storage is mmap-ed by __x86_set_memory_region).  In fact, d
-> > > >  
-> > > > >                 vmx_write_pml_buffer
-> > > > >                     kvm_arch_write_log_dirty [&]
-> > > > >                 kvm_write_guest
-> > > > >                     kvm_hv_setup_tsc_page
-> > > > >                         kvm_guest_time_update [&]
-> > > > >                     nested_flush_cached_shadow_vmcs12 [&]
-> > > > >                     kvm_write_wall_clock [&]
-> > > > >                     kvm_pv_clock_pairing [&]
-> > > > >                     kvmgt_rw_gpa [?]  
-> > > >
-> > > > This then expands (partially) to
-> > > >
-> > > > intel_gvt_hypervisor_write_gpa
-> > > >     emulate_csb_update
-> > > >         emulate_execlist_ctx_schedule_out
-> > > >             complete_execlist_workload
-> > > >                 complete_current_workload
-> > > >                      workload_thread
-> > > >         emulate_execlist_ctx_schedule_in
-> > > >             prepare_execlist_workload
-> > > >                 prepare_workload
-> > > >                     dispatch_workload
-> > > >                         workload_thread
-> > > >
-> > > > So KVMGT is always writing to GPAs instead of IOVAs and basically
-> > > > bypassing a guest IOMMU.  So here it would be better if kvmgt was
-> > > > changed not use kvm_write_guest (also because I'd probably have nacked
-> > > > that if I had known :)).  
-> > > 
-> > > I agree.
-> > >   
-> > > >
-> > > > As far as I know, there is some work on live migration with both VFIO
-> > > > and mdev, and that probably includes some dirty page tracking API.
-> > > > kvmgt could switch to that API, or there could be VFIO APIs similar to
-> > > > kvm_write_guest but taking IOVAs instead of GPAs.  Advantage: this would
-> > > > fix the GPA/IOVA confusion.  Disadvantage: userspace would lose the
-> > > > tracking of writes from mdev devices.  Kevin, are these writes used in
-> > > > any way?  Do the calls to intel_gvt_hypervisor_write_gpa covers all
-> > > > writes from kvmgt vGPUs, or can the hardware write to memory as well
-> > > > (which would be my guess if I didn't know anything about kvmgt, which I
-> > > > pretty much don't)?  
-> > > 
-> > > intel_gvt_hypervisor_write_gpa covers all writes due to software mediation.
-> > > 
-> > > for hardware updates, it needs be mapped in IOMMU through
-> > > vfio_pin_pages
-> > > before any DMA happens. The ongoing dirty tracking effort in VFIO will take
-> > > every pinned page through that API as dirtied.
-> > > 
-> > > However, currently VFIO doesn't implement any vfio_read/write_guest
-> > > interface yet. and it doesn't make sense to use vfio_pin_pages for software
-> > > dirtied pages, as pin is unnecessary and heavy involving iommu invalidation.  
+> On 17.12.19 17:07, SeongJae Park wrote:
+> > From: SeongJae Park <sjpark@amazon.de>
 > > 
-> > One correction. vfio_pin_pages doesn't involve iommu invalidation. I should
-> > just mean that pinning the page is not necessary. We just need a kvm-like
-> > interface based on hva to access.
-> >  
-> And can we propose to differentiate read and write when calling vfio_pin_pages, e.g.
-> vfio_pin_pages_read, vfio_pin_pages_write? Otherwise, calling to
-> vfio_pin_pages will unnecessarily cause read pages to be dirty and
-> sometimes reading guest pages is a way for device model to track dirty
-> pages.
+> > 'reclaim_memory' callback can race with a driver code as this callback
+> > will be called from any memory pressure detected context.  To deal with
+> > the case, this commit adds a spinlock in the 'xenbus_device'.  Whenever
+> > 'reclaim_memory' callback is called, the lock of the device which passed
+> > to the callback as its argument is locked.  Thus, drivers registering
+> > their 'reclaim_memory' callback should protect the data that might race
+> > with the callback with the lock by themselves.
+> > 
+> > Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> > ---
+> >   drivers/xen/xenbus/xenbus_probe.c         |  1 +
+> >   drivers/xen/xenbus/xenbus_probe_backend.c | 10 ++++++++--
+> >   include/xen/xenbus.h                      |  2 ++
+> >   3 files changed, 11 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/xen/xenbus/xenbus_probe.c b/drivers/xen/xenbus/xenbus_probe.c
+> > index 5b471889d723..b86393f172e6 100644
+> > --- a/drivers/xen/xenbus/xenbus_probe.c
+> > +++ b/drivers/xen/xenbus/xenbus_probe.c
+> > @@ -472,6 +472,7 @@ int xenbus_probe_node(struct xen_bus_type *bus,
+> >   		goto fail;
+> >   
+> >   	dev_set_name(&xendev->dev, "%s", devname);
+> > +	spin_lock_init(&xendev->reclaim_lock);
+> >   
+> >   	/* Register with generic device framework. */
+> >   	err = device_register(&xendev->dev);
+> > diff --git a/drivers/xen/xenbus/xenbus_probe_backend.c b/drivers/xen/xenbus/xenbus_probe_backend.c
+> > index 7e78ebef7c54..516aa64b9967 100644
+> > --- a/drivers/xen/xenbus/xenbus_probe_backend.c
+> > +++ b/drivers/xen/xenbus/xenbus_probe_backend.c
+> > @@ -251,12 +251,18 @@ static int backend_probe_and_watch(struct notifier_block *notifier,
+> >   static int backend_reclaim_memory(struct device *dev, void *data)
+> >   {
+> >   	const struct xenbus_driver *drv;
+> > +	struct xenbus_device *xdev;
+> > +	unsigned long flags;
+> >   
+> >   	if (!dev->driver)
+> >   		return 0;
+> >   	drv = to_xenbus_driver(dev->driver);
+> > -	if (drv && drv->reclaim_memory)
+> > -		drv->reclaim_memory(to_xenbus_device(dev));
+> > +	if (drv && drv->reclaim_memory) {
+> > +		xdev = to_xenbus_device(dev);
+> > +		spin_trylock_irqsave(&xdev->reclaim_lock, flags);
+> 
+> You need spin_lock_irqsave() here. Or maybe spin_lock() would be fine,
+> too? I can't see a reason why you'd want to disable irqs here.
 
-Yes, I've discussed this with Kirti, when devices add more fine grained
-dirty tracking we'll probably need to extend the mdev pinned pages
-interface to allow vendor drivers to indicate a pinning is intended to
-be used as read-only and perhaps also a way to unpin a page that was
-pinned as read-write as clean, if the device did not write to it.  So
-perhaps vfio_pin_pages_for_read() and vfio_unpin_pages_clean().  Thanks,
+I needed to diable irq here as this is called from the memory shrinker context.
 
-Alex
+Also, used 'trylock' because the 'probe()' and 'remove()' code of the driver
+might include memory allocation.  And the xen-blkback actually does.  If the
+allocation shows a memory pressure during the allocation, it will trigger this
+shrinker callback again and then deadlock.
 
+
+Thanks,
+SeongJae Park
+
+> 
+> > +		drv->reclaim_memory(xdev);
+> > +		spin_unlock_irqrestore(&xdev->reclaim_lock, flags);
+> > +	}
+> >   	return 0;
+> >   }
+> >   
+> > diff --git a/include/xen/xenbus.h b/include/xen/xenbus.h
+> > index c861cfb6f720..d9468313061d 100644
+> > --- a/include/xen/xenbus.h
+> > +++ b/include/xen/xenbus.h
+> > @@ -76,6 +76,8 @@ struct xenbus_device {
+> >   	enum xenbus_state state;
+> >   	struct completion down;
+> >   	struct work_struct work;
+> > +	/* 'reclaim_memory' callback is called while this lock is acquired */
+> > +	spinlock_t reclaim_lock;
+> >   };
+> >   
+> >   static inline struct xenbus_device *to_xenbus_device(struct device *dev)
+> > 
+> 
+> 
+> Juergen
+> 
