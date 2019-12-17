@@ -2,147 +2,125 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2CA9C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8568C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9E52207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:46:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576583167;
-	bh=FSYmznTCrH/t0FXDFtlTli3TVJHcanlbcCEjLAceibQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x71Kd4D57sfMefXLedfBGy/CeYq8+yQwqJyps8bCEBpIEdZf4Zz1cokfZWpa6SD4x
-	 132sM74Lcf7ryiJ631EEa8oG4YF9uL52AhWJTEtpjsDQdFNnbhGMFk6iGR1U6xki/i
-	 uGd1Tc1tKLncw98Y2WCTqKwqjexfPebD3jPhH9w0=
+	by mail.kernel.org (Postfix) with ESMTP id BAF92206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:48:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lWEV3DCJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727473AbfLQLqG (ORCPT
+        id S1727577AbfLQLsC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 06:46:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56568 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726383AbfLQLqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 06:46:06 -0500
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8978E206D7;
-        Tue, 17 Dec 2019 11:46:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576583166;
-        bh=FSYmznTCrH/t0FXDFtlTli3TVJHcanlbcCEjLAceibQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Z6HHxJ6ZqwDNatYgyHmfxllT2K/L2tpPxT5egMpa/ZGN7FUu3bQqTu7SW6CTV3LlD
-         YhbQkwaXcnL6kwJoKZR4EpTJsM8utu6rrMLAY3AJnWrOvxpN5rVvNeN1mEGJkZun6x
-         LFgTuzFGYzlwUZzE7I2WDjpRhwwg4ny5/gH3q64Y=
-Date:   Tue, 17 Dec 2019 12:46:03 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Stefan Mavrodiev <stefan@olimex.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVERS FOR ALLWINNER A10" 
-        <dri-devel@lists.freedesktop.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 1/1] drm/sun4i: hdmi: Check for null pointer before
- cleanup
-Message-ID: <20191217114603.6cyrfx3sekn6uwmp@gilmour.lan>
-References: <20191216144348.7540-1-stefan@olimex.com>
- <20191216161258.lmkq2ersfm746t7q@gilmour.lan>
- <cebda755-2649-79a1-fd08-79b13edef1a5@olimex.com>
+        Tue, 17 Dec 2019 06:48:02 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:33648 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727420AbfLQLsC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 06:48:02 -0500
+Received: by mail-oi1-f194.google.com with SMTP id v140so5191967oie.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 03:48:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EAdxW05i7d7gW+a6Wba66sBPKj5tpTYH9ExE5qq5cGU=;
+        b=lWEV3DCJyy4L98m+vavG9UF/W/9ctfPRui0uJK+G8yw3G5Vpzin17Fyjjj8IE/71ot
+         bonRRZfevyyKy0C99HJgyXeepnDEOBzZ6ZZ+K0c8RyCyeO5igLiD6h4a0Z4/OFxZDL2M
+         dNlQbnYyESCziKRARI6owpeRG1pHTXe355OLKK5u5t0cNphlt+G2gcGcAXFoS9Pb/SgF
+         +3wMvZ7beiDRbwPLMyGsQ7GnEPOh5EnqOHc581bXcdpM74xcRsyKl8FOudzZmuk9ISn0
+         c+7bbqM4w+jPNGcumVnBWXNph2k1VERFhOz2ytYbDsbognT45MxeCbIAFSUZRutd9KFF
+         tsbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EAdxW05i7d7gW+a6Wba66sBPKj5tpTYH9ExE5qq5cGU=;
+        b=W57WjpnjjrwZmg00asLlV93AM3ss08AM5cyVLxkTt+j09pEvVahilBpWNPTJB+4OY6
+         6OYv7v2LACwGF5jppIGg1eDv5v5Xm8u9nXZbaKuR/vVYisW92f+uYfOBZNEBjMtCToIb
+         yPnK55w2hNvOQnyDRRtGW/Cstxv7ndozQyq5Wz1w8fEGQizyVO3lxqTZBkpGzKWX9JGa
+         eL4zWEUmldW7FGxD6UgVjV/v26AD1BRYyEtJZUgK5ywXsKfYHAA/jklRpb/5l2CBlsmo
+         lk4zUx2MJxx/LakpJv/FN8Pq8crZYZZtdHwiOhi9bDysZjhjl9R8hV93Jjc2aKLbBY03
+         wjdg==
+X-Gm-Message-State: APjAAAUEqRkQzTd25qDl4cfv6sF9QvaOBmHuECUP1UY2v8WTZT3jJ5xH
+        iwZ9T1Sz0+686xtjYaisymzBlx0xejaWAHj/bhjV9YkW
+X-Google-Smtp-Source: APXvYqz+7DTgeFdpT15jtAObL66M3PmDh49qpopKxYwm2aGnFSuFDPh6WiuGcDIHkOUnWWYxsnaCsJeAazJ0twv+QFY=
+X-Received: by 2002:a05:6808:312:: with SMTP id i18mr1384548oie.44.1576583281345;
+ Tue, 17 Dec 2019 03:48:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4sf4dxcrkye2odw4"
-Content-Disposition: inline
-In-Reply-To: <cebda755-2649-79a1-fd08-79b13edef1a5@olimex.com>
+References: <20191121152239.28405-1-sudipm.mukherjee@gmail.com>
+ <20191121152239.28405-2-sudipm.mukherjee@gmail.com> <20191121164138.GD651886@kroah.com>
+ <20191121210155.limd7v6cpd5yz2e7@debian> <eef58b47-f208-2ac5-6e02-a87f9568c70f@suse.com>
+ <20191210114147.ivple4ccr4bj6c4h@debian> <20191212111519.GA1534818@kroah.com>
+In-Reply-To: <20191212111519.GA1534818@kroah.com>
+From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Date:   Tue, 17 Dec 2019 11:47:25 +0000
+Message-ID: <CADVatmMK=dCaAzdHbmQ6Qj5gqcvSiL3BRZDL6jnEM2G_C3pUpw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] tty: use tty_init_dev_retry() to workaround a race condition
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jiri Slaby <jslaby@suse.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Greg,
 
---4sf4dxcrkye2odw4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Dec 17, 2019 at 08:45:07AM +0200, Stefan Mavrodiev wrote:
-> Hi,
+On Thu, Dec 12, 2019 at 11:15 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> On 12/16/19 6:12 PM, Maxime Ripard wrote:
-> > Hi,
+> On Tue, Dec 10, 2019 at 11:41:47AM +0000, Sudip Mukherjee wrote:
+> > Hi Jiri,
 > >
-> > On Mon, Dec 16, 2019 at 04:43:48PM +0200, Stefan Mavrodiev wrote:
-> > > It's possible hdmi->connector and hdmi->encoder divices to be NULL.
-> > > This can happen when building as kernel module and you try to remove
-> > > the module.
+> > On Fri, Nov 22, 2019 at 10:05:09AM +0100, Jiri Slaby wrote:
+> > > On 21. 11. 19, 22:01, Sudip Mukherjee wrote:
+> > > > Hi Greg,
+> > > >
+> > > > On Thu, Nov 21, 2019 at 05:41:38PM +0100, Greg Kroah-Hartman wrote:
+> > > >> On Thu, Nov 21, 2019 at 03:22:39PM +0000, Sudip Mukherjee wrote:
+> > > >>> There seems to be a race condition in tty drivers and I could see on
+> > > >>> many boot cycles a NULL pointer dereference as tty_init_dev() tries to
+> > > >>> do 'tty->port->itty = tty' even though tty->port is NULL.
+> > <snip>
+> > > >>>
+> > > >>> uart_add_one_port() registers the console, as soon as it registers, the
+> > > >>> userspace tries to use it and that leads to tty_open() but
+> > > >>> uart_add_one_port() has not yet done tty_port_link_device() and so
+> > > >>> tty->port is not yet configured when control reaches tty_init_dev().
+> > > >>
+> > > >> Shouldn't we do tty_port_link_device() before uart_add_one_port() to
+> > > >> remove that race?  Once you register the console, yes, tty_open() can
+> > > >> happen, so the driver had better be ready to go at that point in time.
+> > > >>
+> > > >
+> > > > But tty_port_link_device() is done by uart_add_one_port() itself.
+> > > > After registering the console uart_add_one_port() will call
+> > > > tty_port_register_device_attr_serdev() and tty_port_link_device() is
+> > > > called from this. Thats still tty core.
 > > >
-> > > This patch make simple null check, before calling the cleanup functions.
-> > >
-> > > Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
-> > > ---
-> > >   drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c | 6 ++++--
-> > >   1 file changed, 4 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-> > > index a7c4654445c7..b61e00f2ecb8 100644
-> > > --- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-> > > +++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-> > > @@ -685,8 +685,10 @@ static void sun4i_hdmi_unbind(struct device *dev, struct device *master,
-> > >   	struct sun4i_hdmi *hdmi = dev_get_drvdata(dev);
-> > >
-> > >   	cec_unregister_adapter(hdmi->cec_adap);
-> > > -	drm_connector_cleanup(&hdmi->connector);
-> > > -	drm_encoder_cleanup(&hdmi->encoder);
-> > > +	if (hdmi->connector.dev)
-> > > +		drm_connector_cleanup(&hdmi->connector);
-> > > +	if (hdmi->encoder.dev)
-> > > +		drm_encoder_cleanup(&hdmi->encoder);
-> > Hmmm, this doesn't look right. Do you have more information on how you
-> > can reproduce it?
+> > > Interferences of console vs tty code are ugly. Does it help to simply
+> > > put tty_port_link_device to uart_add_one_port before uart_configure_port?
+> >
+> > sorry for the late response, got busy with an out-of-tree driver.
+> >
+> > It fixes the problem if I put tty_port_link_device() before
+> > uart_configure_port(). Please check the attached patch and that
+> > completely fixes the problem. Do you want me to send a proper patch for
+> > it or do you want me to check more into it?
 >
-> Just build sun4i_drm_hdmi as module (CONFIG_DRM_SUN4I_HDMI=m). Then try to
-> unload the module:
->
-> # rmmod sun4i_drm_hdmi
->
-> And you get this:
->
-> Unable to handle kernel NULL pointer dereference at virtual address 00000000
-> pgd = 6b032436
-> [00000000] *pgd=00000000
-> Internal error: Oops: 5 [#1] SMP ARM
-> Modules linked in: sun4i_drm_hdmi(-)
-> CPU: 0 PID: 1081 Comm: rmmod Not tainted 5.5.0-rc1-00030-g6ec417030d93 #33
-> Hardware name: Allwinner sun7i (A20) Family
-> PC is at drm_connector_cleanup+0x40/0x208
-> LR is at sun4i_hdmi_unbind+0x10/0x54 [sun4i_drm_hdmi]
-> ...
->
->
-> I've tested that with sunxi/for-next branch on A20-OLinuXino board.
+> This looks a lot more sane to me, can you resend it in proper format so
+> that I can apply it?
 
-Yeah, you detailed the symptoms nicely in the commit log, but my point
-was that we shouldn't end up in that situation in the first place.
+https://lore.kernel.org/lkml/20191212131602.29504-1-sudipm.mukherjee@gmail.com/
 
-Your patch works around it, but it doesn't fix the underlying
-issue. Is drm_connector_cleanup (or the encoder variant) called twice?
 
-Maxime
-
---4sf4dxcrkye2odw4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfi/+wAKCRDj7w1vZxhR
-xRNjAQC7oJK/mRAOZxDvPrd3U6hA6m9QGzkH2Fe26Ysx5e30KAEA8FrKu+Iex/VN
-2gTqC7KjHIhRIdb45q+kWSalzI4FRw4=
-=bFhs
------END PGP SIGNATURE-----
-
---4sf4dxcrkye2odw4--
+-- 
+Regards
+Sudip
