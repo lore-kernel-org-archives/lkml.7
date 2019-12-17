@@ -2,108 +2,197 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 425DCC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C33C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12A3B2146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:56:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 429192146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:57:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="mne8nhxl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ONl1GkVu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbfLQP4p (ORCPT
+        id S1727895AbfLQP5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 10:56:45 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35665 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726858AbfLQP4o (ORCPT
+        Tue, 17 Dec 2019 10:57:47 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:36135 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726933AbfLQP5q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 10:56:44 -0500
-Received: by mail-wr1-f66.google.com with SMTP id g17so11876297wro.2
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 07:56:43 -0800 (PST)
+        Tue, 17 Dec 2019 10:57:46 -0500
+Received: by mail-oi1-f196.google.com with SMTP id c16so4972618oic.3;
+        Tue, 17 Dec 2019 07:57:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Kru/p1qE5H/BCcW43apBsFqD+qqTgGNhKSFSdhalhZw=;
-        b=mne8nhxlUm5JUVJvci8lY6PyqcJV58bkC/8MDX3fLFmKigBiUT2/qYAVumFGxcCQKH
-         Lj2xkBkFvl4p3SnIPI1/tosatcIg9yz7/xCw01e/oYKvCYJTGjYLkiRt7lZXEkzTMDDi
-         koiy7XLiHNLTtPsPdvJn0F4aRm0UoxyPXhCqjPgTanpJCHs1G08oXGcl9VrZE3+2FnBH
-         VUxQHqYUdNGqdIfRAT1LOa1iiVP2JU7kEE5qzDFfdB66qbMWKkf7SdLY36Z+gFcATrCZ
-         rqUX0MU6tbLJkV6Gp+ZZVn06QNbK0OBpr48hKvsnsHJejoFCmclwuyq0Vb1/l+pSWMxh
-         XNxA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xgsJlsnEOSDd3+anDElz+/MLtJOX8bL3V5H2TOhN4zU=;
+        b=ONl1GkVupx/9vxFQ/42Bu9QIieHlkn+bNwJ0gGzbXw/rgAVP7AB4cxjTMcKfWKpXCI
+         BElqfDMLtktOIHQnKG+kmP/1OvG+jVmS34f/YTqhFat86sKxgMxV2pk634IVmYx8PNG0
+         hYj0HXPwV3UehLmmF1FpUp8ISMoeOlM0vr6vqrZa7Yo+qgjAJeThVYdOhRyGPOyAYacn
+         ornVtCCSEPzU2apT8nHRCy9ubbxNKeVUJ5rof9oJrSNkMHOYyj6NLYRytzcv6iJ/RmRQ
+         SfXq3OZcsHX+R7kPHxsv3iu0ftQN6qZmf97cohFF75Y69cfdxPSPRBUTEkvtAPK+lD2B
+         9iyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Kru/p1qE5H/BCcW43apBsFqD+qqTgGNhKSFSdhalhZw=;
-        b=mIcWA+lAzMOqG2034AzgbUWzUafsh3wgRgMEjbAQM6/SkrfyTQAvMDuNv3CA6FvV03
-         SFr8YcofVISYgEOKw2XeovvHA19RBJZebFQy10XVvQiqJdL8g2nvHF7N8M4Pa0gWSq6S
-         8/zwdwnsSV3CFJqTRANUVpLBt8GyeoTzcumwLbud3UOGJKZf7B8E4HBIBsBv6cvwhPli
-         O/JjnYGWDCQWgLUtyU56COse2BuaLUO+oaL6ewRAFo5XQ5448VQDIUiuJEybfXKr6y9y
-         1puHBcnAgGLuU/W1J3ON23Z3FqtMB3K0bWigB8thdXMyR/dIgXl2Sd165rr76fteYC+/
-         hV/Q==
-X-Gm-Message-State: APjAAAVHOIH/ubb6EL3Xuyk0iPFBcJUwZz+hm3LqXRZMkWvd3f3+rqA/
-        aseACV4lkYM1fR7K510wIXhze3FPISA=
-X-Google-Smtp-Source: APXvYqyNMAVe3i3HHStXWaTydu4DNl69XCzW5OGGXtdFookbpapo5jksY/g3ZK42dfA5bT/chPKB5Q==
-X-Received: by 2002:a5d:56ca:: with SMTP id m10mr36759405wrw.313.1576598202967;
-        Tue, 17 Dec 2019 07:56:42 -0800 (PST)
-Received: from [10.83.36.153] ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id x16sm3455140wmk.35.2019.12.17.07.56.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Dec 2019 07:56:42 -0800 (PST)
-Subject: Re: [PATCH] tty: serial: samsung_tty: do not abuse the struct
- uart_port unused fields
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Kukjin Kim <kgene@kernel.org>, Hyunki Koo <kkoos00@naver.com>,
-        HYUN-KI KOO <hyunki00.koo@samsung.com>,
-        Shinbeom Choi <sbeom.choi@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191217140232.GA3489190@kroah.com>
- <e0fbb679-54fb-25c6-0e88-012d0490e291@arista.com>
- <20191217155219.GA3754999@kroah.com>
-From:   Dmitry Safonov <dima@arista.com>
-Message-ID: <c0b28ccc-7a0e-f6e7-ac6f-f310094acc03@arista.com>
-Date:   Tue, 17 Dec 2019 15:56:40 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xgsJlsnEOSDd3+anDElz+/MLtJOX8bL3V5H2TOhN4zU=;
+        b=HV6EmZYs5FOVmaNW6Au7rDm3tcc0Xd0ZdQDD3cN09YO/TH9Zi4SCe1JxY0AH6hQWnk
+         XIwqj3pIRc2USBd02lwwPbT2/1e3r9c1EZouRCN7xW2tIMqDJEncW5gl3tEeVzs+ZfK9
+         3Tdndx4CYc4WZNMkYUGdzUwx3ILz1kUsPJEao7PbkfaAwT2U64+0QSaPs8SpIlB7BiAS
+         9EbB/Fm9S4vJGrDdo8d89fO7LdR1qA5KenT4G3GeekkHkVRPOBNBUQHAelkgkah+x5XB
+         BdPF8p8bhIPHqK9xXxEEX779919BdIBSq0UXzIk5sODmcaUziE/zQo4A6Nr/VjDIYR1r
+         FFew==
+X-Gm-Message-State: APjAAAX24sFM1qa27iDvf3aI2Msg5SHh1Dq6DRXeyHscRLHB/u+EO8vS
+        sn+MwnxxmHKq8B8S6OhV1W7nGdk+Kv5C/canHh8=
+X-Google-Smtp-Source: APXvYqy+H4AjSCMbsIFUw3s5H9RuLkB1/H+/canhjchlOwoGIzP563muGoFOj/jvQ21OvmLFhpAB1KMBKCkr3N9gDWM=
+X-Received: by 2002:aca:54cc:: with SMTP id i195mr1825342oib.126.1576598265181;
+ Tue, 17 Dec 2019 07:57:45 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191217155219.GA3754999@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <000000000000a6f2030598bbe38c@google.com> <0000000000000e32950599ac5a96@google.com>
+ <20191216150017.GA27202@linux.fritz.box> <CAJ8uoz3nCxcmnPonNunYhswskidn=PnN8=4_jXW4B=Xu4k_DoQ@mail.gmail.com>
+ <CAJ8uoz312gDBGpqOJiKqrXn456sy6u+Gnvcvv_+0=EimasRoUw@mail.gmail.com> <20191217154031.GI5624@arrakis.emea.arm.com>
+In-Reply-To: <20191217154031.GI5624@arrakis.emea.arm.com>
+From:   Magnus Karlsson <magnus.karlsson@gmail.com>
+Date:   Tue, 17 Dec 2019 16:57:34 +0100
+Message-ID: <CAJ8uoz3yDK8sEE05cKA8siBi-Dc0wtbe1-zYgbz_-pd5t69j8w@mail.gmail.com>
+Subject: Re: WARNING in wp_page_copy
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        kirill.shutemov@linux.intel.com, justin.he@arm.com,
+        linux-mm@kvack.org,
+        syzbot <syzbot+9301f2f33873407d5b33@syzkaller.appspotmail.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        bpf <bpf@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>, hawk@kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        linux-kernel@vger.kernel.org,
+        "Karlsson, Magnus" <magnus.karlsson@intel.com>,
+        Network Development <netdev@vger.kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        syzkaller-bugs@googlegroups.com, Yonghong Song <yhs@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/17/19 3:52 PM, Greg Kroah-Hartman wrote:
-> On Tue, Dec 17, 2019 at 03:47:34PM +0000, Dmitry Safonov wrote:
->> On 12/17/19 2:02 PM, Greg Kroah-Hartman wrote:
->>> The samsung_tty driver was trying to abuse the struct uart_port by using
->>> two "empty" bytes for its own use.  That's not ok, and was found by
->>> removing those fields from the structure.
->>>
->>> Move the variables into the port-specific structure, which is where
->>> everything else for this port already is.  There is no space wasted here
->>> as there was an empty "hole" in the structure already for these bytes.
->>
->> Thanks!
->> Sorry for not noticing this myself.
-> 
-> You wouldn't have noticed this unless you build for that platform. I
-> just recently made it buildable for other ones.
+On Tue, Dec 17, 2019 at 4:40 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
+>
+> Hi Magnus,
+>
+> Thanks for investigating this. I have more questions below rather than a
+> solution.
+>
+> On Tue, Dec 17, 2019 at 02:27:22PM +0100, Magnus Karlsson wrote:
+> > On Mon, Dec 16, 2019 at 4:10 PM Magnus Karlsson
+> > <magnus.karlsson@gmail.com> wrote:
+> > > On Mon, Dec 16, 2019 at 4:00 PM Daniel Borkmann <daniel@iogearbox.net> wrote:
+> > > >
+> > > > On Sat, Dec 14, 2019 at 08:20:07AM -0800, syzbot wrote:
+> > > > > syzbot has found a reproducer for the following crash on:
+> > > > >
+> > > > > HEAD commit:    1d1997db Revert "nfp: abm: fix memory leak in nfp_abm_u32_..
+> > > > > git tree:       net-next
+> > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=1029f851e00000
+> > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=cef1fd5032faee91
+> > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=9301f2f33873407d5b33
+> > > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=119d9fb1e00000
+> > > > >
+> > > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > > > Reported-by: syzbot+9301f2f33873407d5b33@syzkaller.appspotmail.com
+> > > >
+> > > > Bjorn / Magnus, given xsk below, PTAL, thanks!
+> > >
+> > > Thanks. I will take a look at it right away.
+> > >
+> > > /Magnus
+> >
+> > After looking through the syzcaller report, I have the following
+> > hypothesis that would dearly need some comments from MM-savy people
+> > out there. Syzcaller creates, using mmap, a memory area that is
+>
+> I guess that's not an anonymous mmap() since we don't seem to have a
+> struct page for src in cow_user_page() (the WARN_ON_ONCE path). Do you
+> have more information on the mmap() call?
 
-Ah, I was running CONFIG_COMPILE_TEST and thought that it should trigger
-anything (and fixed an issue before sending). Probably, managed not to
-enable samsung driver's option.
+I have this from the syzcaller logs:
 
-Thanks,
-          Dmitry
+mmap(&(0x7f0000001000/0x2000)=nil, 0x2000, 0xfffffe, 0x12, r8, 0x0)
+getsockopt$XDP_MMAP_OFFSETS(r8, 0x11b, 0x7, &(0x7f0000001300),
+&(0x7f0000000100)=0x60)
+
+The full log can be found at:
+https://syzkaller.appspot.com/x/repro.syz?x=119d9fb1e00000
+
+Hope this helps.
+
+> > write-only and supplies this to a getsockopt call (in this case
+> > XDP_STATISTICS, but probably does not matter really) as the area where
+> > it wants the values to be stored. When the getsockopt implementation
+> > gets to copy_to_user() to write out the values to user space, it
+> > encounters a page fault when accessing this write-only page. When
+> > servicing this, it gets to the following piece of code that triggers
+> > the warning that syzcaller reports:
+> >
+> > static inline bool cow_user_page(struct page *dst, struct page *src,
+> >                                  struct vm_fault *vmf)
+> > {
+> > ....
+> > snip
+> > ....
+> >        /*
+> >          * This really shouldn't fail, because the page is there
+> >          * in the page tables. But it might just be unreadable,
+> >          * in which case we just give up and fill the result with
+> >          * zeroes.
+> >          */
+> >         if (__copy_from_user_inatomic(kaddr, uaddr, PAGE_SIZE)) {
+> >                 /*
+> >                  * Give a warn in case there can be some obscure
+> >                  * use-case
+> >                  */
+> >                 WARN_ON_ONCE(1);
+> >                 clear_page(kaddr);
+> >         }
+>
+> So on x86, a PROT_WRITE-only private page is mapped as non-readable? I
+> had the impression that write-only still allows reading by looking at
+> the __P010 definition.
+>
+> Anyway, if it's not an anonymous mmap(), whoever handled the mapping may
+> have changed the permissions (e.g. some device).
+>
+> > So without a warning. My hypothesis is that if we create a page in the
+> > same way as syzcaller then any getsockopt that does a copy_to_user()
+> > (pretty much all of them I guess) will get this warning.
+>
+> The copy_to_user() only triggers the do_wp_page() fault handling. If
+> this is a CoW page (private read-only presumably, or at least not
+> writeable), the kernel tries to copy the original page given to
+> getsockopt into a new page and restart the copy_to_user(). Since the
+> kernel doesn't have a struct page for this (e.g. PFN mapping), it uses
+> __copy_from_user_inatomic() which fails because of the read permission.
+>
+> > I have not tried this, so I might be wrong. If this is true, then the
+> > question is what to do about it. One possible fix would be just to
+> > remove the warning to get the same behavior as before. But it was
+> > probably put there for a reason.
+>
+> It was there for some obscure cases, as the comment says ;). If the
+> above is a valid scenario that the user can trigger, we should probably
+> remove the WARN_ON.
+>
+> --
+> Catalin
+>
