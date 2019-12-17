@@ -2,403 +2,143 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E826C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECEEC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 02:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 357072082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:57:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 754DD2082E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 02:00:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tm1I36Oi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbfLQB5M (ORCPT
+        id S1726558AbfLQCAa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 20:57:12 -0500
-Received: from mga05.intel.com ([192.55.52.43]:24988 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726133AbfLQB5M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 20:57:12 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 17:57:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,323,1571727600"; 
-   d="scan'208";a="217620583"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by orsmga003.jf.intel.com with ESMTP; 16 Dec 2019 17:57:07 -0800
-From:   "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        kishon@ti.com
-Cc:     andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, peter.harliman.liem@intel.com,
-        Ramuthevar Vadivel Murugan 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: [PATCH v10 2/2] phy: intel-lgm-emmc: Add support for eMMC PHY
-Date:   Tue, 17 Dec 2019 09:56:58 +0800
-Message-Id: <20191217015658.23017-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20191217015658.23017-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20191217015658.23017-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        Mon, 16 Dec 2019 21:00:30 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47312 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726180AbfLQCAa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 21:00:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576548029;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:in-reply-to:in-reply-to:  references:references;
+        bh=rPjKUP3c5OBgFxjGzOJRPYxmS5qHOOKhkgjmkw+YN2I=;
+        b=Tm1I36OiIFq/QZzccKweDyHULLc1YkRbaknYVBgtMkYQApd5VUVWV0WIzC3o4o1oQnDvi/
+        GqEFE5k1WTjj7z0bd/Xb4MR+UPN3dLGCfLjfi2a3P9fD2aa4k/JqVueKvYFikFvIjAsAQr
+        cibYedeZEGGqEpCH2L5EFg3FLLHUjIE=
+Received: from mail-yw1-f70.google.com (mail-yw1-f70.google.com
+ [209.85.161.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-363-0F2LHWcmNpa0xjdqwvduhw-1; Mon, 16 Dec 2019 21:00:26 -0500
+X-MC-Unique: 0F2LHWcmNpa0xjdqwvduhw-1
+Received: by mail-yw1-f70.google.com with SMTP id 16so6992485ywz.5
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 18:00:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=rPjKUP3c5OBgFxjGzOJRPYxmS5qHOOKhkgjmkw+YN2I=;
+        b=DjjxEcJnQ888D/IVoC4LJngedSINLBNO2ZhQ4IEBwghtKHViVGAeozV05AeEgGWavE
+         uxDDCpwlGn0UVcwjxMR0iO8IfJnroKW0yektjhGdps8NoKaugTZxDTg3NiS0v6RY5D2b
+         K6LVcarstJPh4eULOxFPvShqKxCBZsGSSAQO4K4UkhWba/C50pP/1ZFRO9Fq1UyGI1Co
+         VoOLy6eg1mY0/UB9qEXAK4wTIO6lki4sKEtvUR4EOQ817Wz3EvkbXTK4qUvA4NKtMYfI
+         o8CBnNOcgLnhG1e22myXDdU0TROAN+zaesHYNzLyDpRSbN4xexzc4NPSnIpdITSmZons
+         ATew==
+X-Gm-Message-State: APjAAAUhtud0JSeSFO8DdFAKWQApJf3+QXbYqA3QN9TgzTwYFFkaDqDI
+        lmPvdFcr5rRSxc3alF6ua9+29dAGqddMXYQKBTObWkJ2v/+Hqg4rDqncldGRkEYHGjh4OckuAKr
+        Ttjw5kRSIe3SI7LsMbhx9ZsJN
+X-Received: by 2002:a25:8c9:: with SMTP id 192mr4617222ybi.328.1576548025512;
+        Mon, 16 Dec 2019 18:00:25 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzSHXlqGOcOwe8mrQawvzd98LxvqAZaVnHrkCZ/xB8ek5ZKZOwysxZHuTASPJ2GCZv3Avp1zw==
+X-Received: by 2002:a25:8c9:: with SMTP id 192mr4617202ybi.328.1576548025222;
+        Mon, 16 Dec 2019 18:00:25 -0800 (PST)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id n1sm2256975ywe.78.2019.12.16.18.00.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 18:00:24 -0800 (PST)
+Date:   Mon, 16 Dec 2019 19:00:22 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christian Bundy <christianbundy@fraction.io>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        stable <stable@vger.kernel.org>, linux-integrity@vger.kernel.org
+Subject: Re: [PATCH v2] tpm_tis: reserve chip for duration of
+ tpm_tis_core_init
+Message-ID: <20191217020022.knh7uxt4pn77wk5m@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: Dan Williams <dan.j.williams@intel.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christian Bundy <christianbundy@fraction.io>,
+        Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        stable <stable@vger.kernel.org>, linux-integrity@vger.kernel.org
+References: <20191211231758.22263-1-jsnitsel@redhat.com>
+ <20191211235455.24424-1-jsnitsel@redhat.com>
+ <5aef0fbe28ed23b963c53d61445b0bac6f108642.camel@linux.intel.com>
+ <CAPcyv4h60z889bfbiwvVhsj6MxmOPiPY8ZuPB_skxkZx-N+OGw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4h60z889bfbiwvVhsj6MxmOPiPY8ZuPB_skxkZx-N+OGw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+On Mon Dec 16 19, Dan Williams wrote:
+>On Mon, Dec 16, 2019 at 4:59 PM Jarkko Sakkinen
+><jarkko.sakkinen@linux.intel.com> wrote:
+>>
+>> On Wed, 2019-12-11 at 16:54 -0700, Jerry Snitselaar wrote:
+>> > Instead of repeatedly calling tpm_chip_start/tpm_chip_stop when
+>> > issuing commands to the tpm during initialization, just reserve the
+>> > chip after wait_startup, and release it when we are ready to call
+>> > tpm_chip_register.
+>> >
+>> > Cc: Christian Bundy <christianbundy@fraction.io>
+>> > Cc: Dan Williams <dan.j.williams@intel.com>
+>> > Cc: Peter Huewe <peterhuewe@gmx.de>
+>> > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+>> > Cc: Jason Gunthorpe <jgg@ziepe.ca>
+>> > Cc: Stefan Berger <stefanb@linux.vnet.ibm.com>
+>> > Cc: stable@vger.kernel.org
+>> > Cc: linux-integrity@vger.kernel.org
+>> > Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of tpm_transmit()")
+>> > Fixes: 5b359c7c4372 ("tpm_tis_core: Turn on the TPM before probing IRQ's")
+>> > Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
+>>
+>> I pushed to my master with minor tweaks and added my tags.
+>>
+>> Please check before I put it to linux-next.
+>
+>I don't see it yet here:
+>
+>http://git.infradead.org/users/jjs/linux-tpmdd.git/shortlog/refs/heads/master
+>
+>However, I wanted to make sure you captured that this does *not* fix
+>the interrupt issue. I.e. make sure you remove the "Fixes:
+>5b359c7c4372 ("tpm_tis_core: Turn on the TPM before probing IRQ's")"
+>tag.
+>
+>With that said, are you going to include the revert of:
+>
+>1ea32c83c699 tpm_tis_core: Set TPM_CHIP_FLAG_IRQ before probing for interrupts
 
-Add support for eMMC PHY on Intel's Lightning Mountain SoC.
+Dan, with the above reverted do you still get the screaming interrupt?
 
-Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
----
- drivers/phy/Kconfig                |   1 +
- drivers/phy/Makefile               |   1 +
- drivers/phy/intel/Kconfig          |   9 ++
- drivers/phy/intel/Makefile         |   2 +
- drivers/phy/intel/phy-intel-emmc.c | 283 +++++++++++++++++++++++++++++++++++++
- 5 files changed, 296 insertions(+)
- create mode 100644 drivers/phy/intel/Kconfig
- create mode 100644 drivers/phy/intel/Makefile
- create mode 100644 drivers/phy/intel/phy-intel-emmc.c
-
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index 0263db2ac874..b3ed94b98d9b 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -69,5 +69,6 @@ source "drivers/phy/socionext/Kconfig"
- source "drivers/phy/st/Kconfig"
- source "drivers/phy/tegra/Kconfig"
- source "drivers/phy/ti/Kconfig"
-+source "drivers/phy/intel/Kconfig"
- 
- endmenu
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index c96a1afc95bd..310c149a9df5 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -18,6 +18,7 @@ obj-y					+= broadcom/	\
- 					   cadence/	\
- 					   freescale/	\
- 					   hisilicon/	\
-+					   intel/	\
- 					   lantiq/	\
- 					   marvell/	\
- 					   motorola/	\
-diff --git a/drivers/phy/intel/Kconfig b/drivers/phy/intel/Kconfig
-new file mode 100644
-index 000000000000..4ea6a8897cd7
---- /dev/null
-+++ b/drivers/phy/intel/Kconfig
-@@ -0,0 +1,9 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Phy drivers for Intel Lightning Mountain(LGM) platform
-+#
-+config PHY_INTEL_EMMC
-+	tristate "Intel EMMC PHY driver"
-+	select GENERIC_PHY
-+	help
-+	  Enable this to support the Intel EMMC PHY
-diff --git a/drivers/phy/intel/Makefile b/drivers/phy/intel/Makefile
-new file mode 100644
-index 000000000000..6b876a75599d
---- /dev/null
-+++ b/drivers/phy/intel/Makefile
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0
-+obj-$(CONFIG_PHY_INTEL_EMMC)            += phy-intel-emmc.o
-diff --git a/drivers/phy/intel/phy-intel-emmc.c b/drivers/phy/intel/phy-intel-emmc.c
-new file mode 100644
-index 000000000000..1a358e7fd236
---- /dev/null
-+++ b/drivers/phy/intel/phy-intel-emmc.c
-@@ -0,0 +1,283 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Intel eMMC PHY driver
-+ * Copyright (C) 2019 Intel, Corp.
-+ */
-+
-+#include <linux/bits.h>
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+/* eMMC phy register definitions */
-+#define EMMC_PHYCTRL0_REG	0xa8
-+#define DR_TY_MASK		GENMASK(30, 28)
-+#define DR_TY_SHIFT(x)		(((x) << 28) & DR_TY_MASK)
-+#define OTAPDLYENA		BIT(14)
-+#define OTAPDLYSEL_MASK		GENMASK(13, 10)
-+#define OTAPDLYSEL_SHIFT(x)	(((x) << 10) & OTAPDLYSEL_MASK)
-+
-+#define EMMC_PHYCTRL1_REG	0xac
-+#define PDB_MASK		BIT(0)
-+#define PDB_SHIFT(x)		(((x) << 0) & PDB_MASK)
-+#define ENDLL_MASK		BIT(7)
-+#define ENDLL_SHIFT(x)		(((x) << 7) & ENDLL_MASK)
-+
-+#define EMMC_PHYCTRL2_REG	0xb0
-+#define FRQSEL_25M		0
-+#define FRQSEL_50M		1
-+#define FRQSEL_100M		2
-+#define FRQSEL_150M		3
-+#define FRQSEL_MASK		GENMASK(24, 22)
-+#define FRQSEL_SHIFT(x)		(((x) << 22) & FRQSEL_MASK)
-+
-+#define EMMC_PHYSTAT_REG	0xbc
-+#define CALDONE_MASK		BIT(9)
-+#define DLLRDY_MASK		BIT(8)
-+#define IS_CALDONE(x)	((x) & CALDONE_MASK)
-+#define IS_DLLRDY(x)	((x) & DLLRDY_MASK)
-+
-+struct intel_emmc_phy {
-+	struct regmap *syscfg;
-+	struct clk *emmcclk;
-+};
-+
-+static int intel_emmc_phy_power(struct phy *phy, bool on_off)
-+{
-+	struct intel_emmc_phy *priv = phy_get_drvdata(phy);
-+	unsigned int caldone;
-+	unsigned int dllrdy;
-+	unsigned int freqsel;
-+	unsigned long rate;
-+	int ret, quot;
-+
-+	/*
-+	 * Keep phyctrl_pdb and phyctrl_endll low to allow
-+	 * initialization of CALIO state M/C DFFs
-+	 */
-+	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL1_REG, PDB_MASK,
-+				 PDB_SHIFT(0));
-+	if (ret) {
-+		dev_err(&phy->dev, "CALIO power down bar failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Already finish power_off above */
-+	if (!on_off)
-+		return 0;
-+
-+	rate = clk_get_rate(priv->emmcclk);
-+	quot = DIV_ROUND_CLOSEST(rate, 50000000);
-+	if (quot > FRQSEL_150M)
-+		dev_warn(&phy->dev, "Unsupported rate: %lu\n", rate);
-+	freqsel = clamp_t(int, quot, FRQSEL_25M, FRQSEL_150M);
-+
-+	/*
-+	 * According to the user manual, calpad calibration
-+	 * cycle takes more than 2us without the minimal recommended
-+	 * value, so we may need a little margin here
-+	 */
-+	udelay(5);
-+
-+	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL1_REG, PDB_MASK,
-+				 PDB_SHIFT(1));
-+	if (ret) {
-+		dev_err(&phy->dev, "CALIO power down bar failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/*
-+	 * According to the user manual, it asks driver to wait 5us for
-+	 * calpad busy trimming. However it is documented that this value is
-+	 * PVT(A.K.A process,voltage and temperature) relevant, so some
-+	 * failure cases are found which indicates we should be more tolerant
-+	 * to calpad busy trimming.
-+	 */
-+	ret = regmap_read_poll_timeout(priv->syscfg, EMMC_PHYSTAT_REG,
-+				       caldone, IS_CALDONE(caldone),
-+				       0, 50);
-+	if (ret) {
-+		dev_err(&phy->dev, "caldone failed, ret=%d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Set the frequency of the DLL operation */
-+	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL2_REG, FRQSEL_MASK,
-+				 FRQSEL_SHIFT(freqsel));
-+	if (ret) {
-+		dev_err(&phy->dev, "set the frequency of dll failed:%d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Turn on the DLL */
-+	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL1_REG, ENDLL_MASK,
-+				 ENDLL_SHIFT(1));
-+	if (ret) {
-+		dev_err(&phy->dev, "turn on the dll failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/*
-+	 * After enabling analog DLL circuits docs say that we need 10.2 us if
-+	 * our source clock is at 50 MHz and that lock time scales linearly
-+	 * with clock speed.  If we are powering on the PHY and the card clock
-+	 * is super slow (like 100 kHZ) this could take as long as 5.1 ms as
-+	 * per the math: 10.2 us * (50000000 Hz / 100000 Hz) => 5.1 ms
-+	 * Hopefully we won't be running at 100 kHz, but we should still make
-+	 * sure we wait long enough.
-+	 *
-+	 * NOTE: There appear to be corner cases where the DLL seems to take
-+	 * extra long to lock for reasons that aren't understood.  In some
-+	 * extreme cases we've seen it take up to over 10ms (!).  We'll be
-+	 * generous and give it 50ms.
-+	 */
-+	ret = regmap_read_poll_timeout(priv->syscfg,
-+				       EMMC_PHYSTAT_REG,
-+				       dllrdy, IS_DLLRDY(dllrdy),
-+				       0, 50 * USEC_PER_MSEC);
-+	if (ret) {
-+		dev_err(&phy->dev, "dllrdy failed. ret=%d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int intel_emmc_phy_init(struct phy *phy)
-+{
-+	struct intel_emmc_phy *priv = phy_get_drvdata(phy);
-+
-+	/*
-+	 * We purposely get the clock here and not in probe to avoid the
-+	 * circular dependency problem. We expect:
-+	 * - PHY driver to probe
-+	 * - SDHCI driver to start probe
-+	 * - SDHCI driver to register it's clock
-+	 * - SDHCI driver to get the PHY
-+	 * - SDHCI driver to init the PHY
-+	 *
-+	 * The clock is optional, so upon any error just return it like
-+	 * any other error to user.
-+	 *
-+	 */
-+	priv->emmcclk = clk_get_optional(&phy->dev, "emmcclk");
-+	if (IS_ERR(priv->emmcclk)) {
-+		dev_err(&phy->dev, "ERROR: getting emmcclk\n");
-+		return PTR_ERR(priv->emmcclk);
-+	}
-+
-+	return 0;
-+}
-+
-+static int intel_emmc_phy_exit(struct phy *phy)
-+{
-+	struct intel_emmc_phy *priv = phy_get_drvdata(phy);
-+
-+	clk_put(priv->emmcclk);
-+
-+	return 0;
-+}
-+
-+static int intel_emmc_phy_power_on(struct phy *phy)
-+{
-+	struct intel_emmc_phy *priv = phy_get_drvdata(phy);
-+	int ret;
-+
-+	/* Drive impedance: 50 Ohm */
-+	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL0_REG, DR_TY_MASK,
-+				 DR_TY_SHIFT(6));
-+	if (ret) {
-+		dev_err(&phy->dev, "ERROR set drive-impednce-50ohm: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Output tap delay: disable */
-+	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL0_REG, OTAPDLYENA,
-+				 0);
-+	if (ret) {
-+		dev_err(&phy->dev, "ERROR Set output tap delay : %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Output tap delay */
-+	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL0_REG,
-+				 OTAPDLYSEL_MASK, OTAPDLYSEL_SHIFT(4));
-+	if (ret) {
-+		dev_err(&phy->dev, "ERROR: output tap dly select: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Power up eMMC phy analog blocks */
-+	return intel_emmc_phy_power(phy, true);
-+}
-+
-+static int intel_emmc_phy_power_off(struct phy *phy)
-+{
-+	/* Power down eMMC phy analog blocks */
-+	return intel_emmc_phy_power(phy, false);
-+}
-+
-+static const struct phy_ops ops = {
-+	.init		= intel_emmc_phy_init,
-+	.exit		= intel_emmc_phy_exit,
-+	.power_on	= intel_emmc_phy_power_on,
-+	.power_off	= intel_emmc_phy_power_off,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static int intel_emmc_phy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	struct intel_emmc_phy *priv;
-+	struct phy *generic_phy;
-+	struct phy_provider *phy_provider;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	/* Get eMMC phy (accessed via chiptop) regmap */
-+	priv->syscfg = syscon_regmap_lookup_by_phandle(np, "intel,syscon");
-+	if (IS_ERR(priv->syscfg)) {
-+		dev_err(dev, "failed to find syscon\n");
-+		return PTR_ERR(priv->syscfg);
-+	}
-+
-+	generic_phy = devm_phy_create(dev, np, &ops);
-+	if (IS_ERR(generic_phy)) {
-+		dev_err(dev, "failed to create PHY\n");
-+		return PTR_ERR(generic_phy);
-+	}
-+
-+	phy_set_drvdata(generic_phy, priv);
-+	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+
-+	return PTR_ERR_OR_ZERO(phy_provider);
-+}
-+
-+static const struct of_device_id intel_emmc_phy_dt_ids[] = {
-+	{ .compatible = "intel,lgm-emmc-phy" },
-+	{}
-+};
-+
-+MODULE_DEVICE_TABLE(of, intel_emmc_phy_dt_ids);
-+
-+static struct platform_driver intel_emmc_driver = {
-+	.probe		= intel_emmc_phy_probe,
-+	.driver		= {
-+		.name	= "intel-emmc-phy",
-+		.of_match_table = intel_emmc_phy_dt_ids,
-+	},
-+};
-+
-+module_platform_driver(intel_emmc_driver);
-+
-+MODULE_AUTHOR("Peter Harliman Liem <peter.harliman.liem@intel.com>");
-+MODULE_DESCRIPTION("Intel eMMC PHY driver");
--- 
-2.11.0
+>5b359c7c4372 tpm_tis_core: Turn on the TPM before probing IRQ's
+>
+>...in your -rc3 pull?
+>
 
