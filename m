@@ -2,113 +2,97 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75493C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB34BC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AA5A2465E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:29:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9941A24672
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:31:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DQ/Yv5n2"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="pzuQ36fy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbfLQA3m (ORCPT
+        id S1727657AbfLQAbL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:29:42 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:31838 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727657AbfLQA3l (ORCPT
+        Mon, 16 Dec 2019 19:31:11 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46119 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726556AbfLQAbL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 19:29:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576542581;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=antzMkYf/U0vXbAJGf3csWT6K+Y56PQIgS/aq/+uEbg=;
-        b=DQ/Yv5n2RT07rGBlxHixCZmkMxKErKzYv65kA4CMx/1B7HmnGoW4FRtCIi5Y/T11RUlGMC
-        HujK2mQ0889BZp1/afHrOh+dbrSTqQXBLywwuwQ05s3tcNVw4nViVYSJauVxGrtyXSnfmf
-        MzoR8fPIto1LsgddYSvQ7ME3U0gvHMo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-25-0djIX59hMCiRz7MXIGJkRg-1; Mon, 16 Dec 2019 19:29:35 -0500
-X-MC-Unique: 0djIX59hMCiRz7MXIGJkRg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 586E9800D41;
-        Tue, 17 Dec 2019 00:29:34 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-120-151.rdu2.redhat.com [10.10.120.151])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 679C4100032E;
-        Tue, 17 Dec 2019 00:29:33 +0000 (UTC)
-Subject: Re: [PATCH] mm/hugetlb: Defer freeing of huge pages if in non-task
- context
-From:   Waiman Long <longman@redhat.com>
-To:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Matthew Wilcox <willy@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Andi Kleen <ak@linux.intel.com>,
-        Michal Hocko <mhocko@kernel.org>
-References: <20191216182739.26880-1-longman@redhat.com>
- <530afa00-4da9-61cd-d1f3-66803bcd30e6@oracle.com>
- <2d7c31f9-371d-9a46-96c4-c37dd761c28d@redhat.com>
-Organization: Red Hat
-Message-ID: <c7adfa62-c517-4c1e-ab69-1acc66a413e0@redhat.com>
-Date:   Mon, 16 Dec 2019 19:29:32 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <2d7c31f9-371d-9a46-96c4-c37dd761c28d@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        Mon, 16 Dec 2019 19:31:11 -0500
+Received: by mail-pg1-f194.google.com with SMTP id z124so4645472pgb.13
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 16:31:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=WSuwwYIVFUsjY7TS++RdcJdZuzp4+uR38u5yiZR0+uA=;
+        b=pzuQ36fylxKrCIkJKdqN8movucWUzwoSOb3tudW2cHu8/4aFYzDQo8Oz1c8JcxN/In
+         0PB1to5e5OIHrkBbcIldpGY4HdcESInV4uhALiuWHN+CDyH0CgsdS76BoXqvP/vD1e1q
+         /TDuOOMuUlPWyFKny6/RLI/aX/As13Ycxijm72/JO1eofaS5KVDiAUnOllzmATDp42SE
+         +F7pPB0+fPCV8CfcuDhdi05RSKhEWdvjCdvFnsaJqC0v0QCenB+utLL7RNjdS77BVnja
+         crZ155pMNcjK/buMed0MxSf8v2l1H3daPYB+RgCy+tncBhqLcLOb3yX2zDBLqgnbvdGl
+         QFEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=WSuwwYIVFUsjY7TS++RdcJdZuzp4+uR38u5yiZR0+uA=;
+        b=gP3u+MwXcsWNffytOFRkkkNZ8r1X+qRhH2XmrAO4eoJ2DP/tLU2vLpck3vOsBO5vyP
+         k51d3tN5k5m8JHCcHdk2yls69QLLeEIWJHEqrlObSTVthP15IGu02C1Vz1alvaNcR267
+         PEQK+S5e4n9SpHNjdPCf1JUZMOs3AcxEJXRLP13/YKOcjnxSj+OEA4fZErt9dzWJwnrC
+         gaOxlTFtdE2sK6E3tfJD2TRr2qGwzmj7xmBcxSMOcc6csjjFKMclCxW5Tn1WJFmbUSsa
+         8hZ4IxaMd508bb4uMTZ4le7uSPR/tvQnDBP09kxMuZGTKjq7o6B1VOV47TH+/vjdf+wG
+         lWbA==
+X-Gm-Message-State: APjAAAUW2Pd1pskaUVJ3Uf7srur3OS2Qgxmbs9KldQsB7SyUE1ByamHD
+        mRwTXWEBGXpNn3FBUBDxeHtu7THV7u41U31K
+X-Google-Smtp-Source: APXvYqzC+hbsFEokWS5VHXNRrZx29+QKBmic6aWP/F1soS5H6PGZYbgptLUiZUzB0PITqbhhajGUTQ==
+X-Received: by 2002:aa7:86c5:: with SMTP id h5mr18989496pfo.259.1576542670651;
+        Mon, 16 Dec 2019 16:31:10 -0800 (PST)
+Received: from rip.lixom.net (99-152-116-91.lightspeed.sntcca.sbcglobal.net. [99.152.116.91])
+        by smtp.gmail.com with ESMTPSA id a19sm23813873pfn.50.2019.12.16.16.31.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 16 Dec 2019 16:31:09 -0800 (PST)
+From:   Olof Johansson <olof@lixom.net>
+To:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>
+Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Olof Johansson <olof@lixom.net>
+Subject: [PATCH] riscv: export __lshrti3
+Date:   Mon, 16 Dec 2019 16:30:57 -0800
+Message-Id: <20191217003057.39300-1-olof@lixom.net>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/16/19 6:20 PM, Waiman Long wrote:
->>> +
->>> +	/*
->>> +	 * Racing may prevent some deferred huge pages in hpage_freelist
->>> +	 * from being freed. Check here and call schedule_work() if that
->>> +	 * is the case.
->>> +	 */
->>> +	if (unlikely(hpage_freelist && !work_pending(&free_hpage_work)))
->>> +		schedule_work(&free_hpage_work);
->> Can you describe the race which would leave deferred huge pages on
->> hpage_freelist?  I am having a hard time determining how that can happen.
-> I am being cautious here. It is related how the workqueue works. Whether
-> a call to schedule_work() has any effect depends on the pending bit in
-> the workqueue structure. I suppose that it is cleared once the work is
-> done. So depending on when the bit is cleared, there may be a small
-> timing window where free_hpage_workfn() is done but the bit has not been
-> cleared yet. A concurrent softIRQ task may update hpage_freelist and
-> call schedule_work() without actually queuing it. Perhaps I can check
-> the return status of schedule_work() and wait for a while there until
-> the queuing is successfully or the free list is changed. I will need to
-> look more carefully at the workqueue code to see how big this timing
-> window is.
->> And, if this indeed can happen then I would have to ask what happens if
->> a page is 'stuck' and we do not call free_huge_page?  Do we need to take
->> that case into account?
-> As said above, there may be way to reduce the racing window or eliminate
-> it altogether. I need a bit more time to investigate that. If there is
-> no way to eliminate the racing window, it is possible that a huge page
-> may get stuck in the free list for a while.
+ARM64 exports it already, and recently it started showing up as needed
+with allmodconfig.
 
-My mistake. The pending bit is actually cleared before calling the
-workfn. That shows I don't fully understand the work queue
-functionality. In this case, there should be no race. I will remove the
-unnecessary check.
+To keep things building as expected, let's export on riscv as well.
 
-Cheers,
-Longman
+Signed-off-by: Olof Johansson <olof@lixom.net>
+---
+
+It'd be nice to see this go in through 5.5-rc, since the breakage showed
+up this merge window. It was triggered by ce5c31db3645 ("lib/ubsan:
+don't serialize UBSAN report"), but I think that was just coincidental.
+
+ arch/riscv/lib/tishift.S | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/riscv/lib/tishift.S b/arch/riscv/lib/tishift.S
+index 15f9d54c7db63..8ecb7db331cfe 100644
+--- a/arch/riscv/lib/tishift.S
++++ b/arch/riscv/lib/tishift.S
+@@ -35,3 +35,4 @@ ENTRY(__lshrti3)
+ 	addi	sp,sp,16
+ 	ret
+ ENDPROC(__lshrti3)
++EXPORT_SYMBOL(__lshrti3)
+-- 
+2.11.0
 
