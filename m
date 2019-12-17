@@ -2,75 +2,94 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E27AC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 724FCC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33C9C2176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:38:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576611480;
-	bh=tYP35VXrTs41pboITJSUY+kOGBdJF3MnzMU00b7I8eg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bDZOAHbs+i/NzUI60AMoiKfCIx+NXsjHCQ9K8TlaJDfDnlvsQlmghAhPV8xBTIuz2
-	 zVBlZRfzV4+JkxX3gxWCJTFkNJr3t4zjhw6itUgO2UxqriJEQ2fqA538eP/8QAjwOf
-	 71QMNK9Cfz1dz69GBHnwgbOrVs+RivPVkMThXSPo=
+	by mail.kernel.org (Postfix) with ESMTP id 392F72146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:38:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YXhDvqAH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728074AbfLQTh7 (ORCPT
+        id S1727725AbfLQTit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 14:37:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52992 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726612AbfLQTh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 14:37:58 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 17 Dec 2019 14:38:49 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:50831 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726742AbfLQTis (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 14:38:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576611527;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=tJ1o8nlR0lPNvSLMwteIRJqp9viWARZSJMO3WUBLrv4=;
+        b=YXhDvqAHzWHLI4Z9LVECPccM/EfGDC90feovL1L2FmlPFCqz7jROBKRiuvC57B+vZ5XOk5
+        Cs48XgVa7AfK1QznVuyV9Vah7TiRKP/7NrSTm41/RJTb8YYs6dw/cNtz1Ipu2QpYcFT7WT
+        Pq9/D/SdQ7ud95zLXZHK7OgeBQW9Y+0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-308-Le-WnOEVPPemCJONncbb0A-1; Tue, 17 Dec 2019 14:38:42 -0500
+X-MC-Unique: Le-WnOEVPPemCJONncbb0A-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D22962146E;
-        Tue, 17 Dec 2019 19:37:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576611478;
-        bh=tYP35VXrTs41pboITJSUY+kOGBdJF3MnzMU00b7I8eg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FahD794mMIkI2Vn1o+dtoQSjiEHYAGkUkQEny2InsvA2MiTG6HDD7DIedbI+PyBL8
-         0Y3uCpdZLtHtelJ87gvpRT2A64ztCmeNG4ca9RTeioud4Pt6BFy6X2xjkAtqzcm9KL
-         OLA8DXnwgaugjYrWKrnEoF9BC2DdT1L1zfrPxoCY=
-Date:   Tue, 17 Dec 2019 20:37:55 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jesse Barnes <jsbarnes@google.com>
-Cc:     pr-tracker-bot@kernel.org,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A6F00593A0;
+        Tue, 17 Dec 2019 19:38:40 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-123-81.rdu2.redhat.com [10.10.123.81])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6455D1001281;
+        Tue, 17 Dec 2019 19:38:39 +0000 (UTC)
+Subject: Re: [PATCH v3] mm/hugetlb: Defer freeing of huge pages if in non-task
+ context
+To:     Mike Kravetz <mike.kravetz@oracle.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] remove ksys_mount() and ksys_dup()
-Message-ID: <20191217193755.GA4075755@kroah.com>
-References: <20191212181422.31033-1-linux@dominikbrodowski.net>
- <157644301187.32474.6697415383792507785.pr-tracker-bot@kernel.org>
- <CAJmaN=ksaH5AgRUdVPGWKZzjEinU+goaCqedH1PW6OmKYc_TuA@mail.gmail.com>
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Matthew Wilcox <willy@infradead.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>
+References: <20191217170331.30893-1-longman@redhat.com>
+ <20191217185557.tgtsvaad24j745gf@linux-p48b>
+ <4f7b23c9-6e05-3b71-9a94-f8d494d8b0e1@redhat.com>
+ <20191217190803.xs6xkmm4struzmru@linux-p48b>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <a0038e13-371a-0967-bfcc-aee2d734cd0a@redhat.com>
+Date:   Tue, 17 Dec 2019 14:38:38 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJmaN=ksaH5AgRUdVPGWKZzjEinU+goaCqedH1PW6OmKYc_TuA@mail.gmail.com>
+In-Reply-To: <20191217190803.xs6xkmm4struzmru@linux-p48b>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 11:33:38AM -0800, Jesse Barnes wrote:
-> Still debugging, but this causes a panic in console_on_rootfs() when we try
-> to dup the fds for stderr and stdout.  Probably because in my config I have
-> VT and framebuffer console disabled?
-> Reverting 8243186f0cc7c57cf9d6a110cd7315c44e3e0be8
-> and b49a733d684e0096340b93e9dfd471f0e3ddc06d worked around it for now...
+On 12/17/19 2:08 PM, Davidlohr Bueso wrote:
+> On Tue, 17 Dec 2019, Waiman Long wrote:
+>
+>> I could use this helper, but the statement is simple enough to
+>> understand.
+>
+> Yes, but I'm mainly thinking for the sake of anyone looking through
+> llist users in the future, which can easily miss this when grepping
+> for example. Anyway, yes probably does not merit a v4 unless akpm wants
+> to fold it in or something. 
 
-Should already be fixed in Linus's tree.
+You can send a follow up patch to make that change if akpm doesn't roll
+it in.
 
-thanks,
+Cheers,
+Longman
 
-greg k-h
