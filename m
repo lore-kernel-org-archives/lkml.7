@@ -2,175 +2,98 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 855EBC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C31C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C80A2082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:05:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576609545;
-	bh=38ZA2A7wYLRZmoUJteH86rg48TqQeWVoaBrY03TQ3rI=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=A5Kxo3zwj+SxiMOYOmRg7qc0ZGJi9ajvQxQHjQqo1aRRt/+Z5Zv5xqajP+Gx8jTeD
-	 P8IsWcdOi2fWGUWLak889KPcRrNPv3YTjiKzsb6pWsA3qn/29aI6ynDVbXGshPWuXt
-	 6eAvh4mg+mydDJDBj7Dfz4yzigxqeZKdR6qW/Cl0=
+	by mail.kernel.org (Postfix) with ESMTP id 75DD52082E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:06:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CE+hrIYo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727595AbfLQTFo (ORCPT
+        id S1727711AbfLQTGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 14:05:44 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:39067 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726623AbfLQTFo (ORCPT
+        Tue, 17 Dec 2019 14:06:15 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38151 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726731AbfLQTGO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 14:05:44 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1ihIA9-0004hk-CM; Tue, 17 Dec 2019 20:05:41 +0100
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCH v2 7/7] arm64: nofpsmid: Handle =?UTF-8?Q?TIF=5FFOREIG?=  =?UTF-8?Q?N=5FFPSTATE=20flag=20cleanly?=
-X-PHP-Originating-Script: 0:main.inc
+        Tue, 17 Dec 2019 14:06:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576609573;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=b0zxRRtx431jc/y/uldsiCxJPFBL7PynAZnho2SH+cY=;
+        b=CE+hrIYol8R+OYGv/be3oeOCE25DhjbEdbhAIqVNRQJfLuQripdra+wECRK42cZFB5SMRs
+        s2eUHpKAVYfIihGhjxAl+pB6lP1LiOFXQz7e440MlaV+7I33DVLCEG6IkM47RbTC6LIcZ7
+        T1J/AlOaHCMXXrswiFkMealoX5274qM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-200-_Bi380WDNKqpTK94Ahy16A-1; Tue, 17 Dec 2019 14:06:08 -0500
+X-MC-Unique: _Bi380WDNKqpTK94Ahy16A-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A25F910866FE;
+        Tue, 17 Dec 2019 19:06:07 +0000 (UTC)
+Received: from shalem.localdomain.com (ovpn-116-227.ams2.redhat.com [10.36.116.227])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 623C319C58;
+        Tue, 17 Dec 2019 19:06:06 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: [PATCH] platform/x86: hp-wmi: Make buffer for HPWMI_FEATURE2_QUERY 128 bytes
+Date:   Tue, 17 Dec 2019 20:06:04 +0100
+Message-Id: <20191217190604.638467-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 17 Dec 2019 19:05:41 +0000
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <will@kernel.org>,
-        <mark.rutland@arm.com>, <dave.martin@arm.com>,
-        <catalin.marinas@arm.com>, <ard.biesheuvel@linaro.org>,
-        <christoffer.dall@arm.com>, Marc Zyngier <marc.zyngier@arm.com>
-In-Reply-To: <20191217183402.2259904-8-suzuki.poulose@arm.com>
-References: <20191217183402.2259904-1-suzuki.poulose@arm.com>
- <20191217183402.2259904-8-suzuki.poulose@arm.com>
-Message-ID: <94c0bdd9f26c3262ff8a885d13a64d22@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: suzuki.poulose@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, will@kernel.org, mark.rutland@arm.com, dave.martin@arm.com, catalin.marinas@arm.com, ard.biesheuvel@linaro.org, christoffer.dall@arm.com, marc.zyngier@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suzuki,
+At least on the HP Envy x360 15-cp0xxx model the WMI interface
+for HPWMI_FEATURE2_QUERY requires an outsize of at least 128 bytes,
+otherwise it fails with an error code 5 (HPWMI_RET_INVALID_PARAMETERS):
 
-On 2019-12-17 18:34, Suzuki K Poulose wrote:
-> We detect the absence of FP/SIMD after an incapable CPU is brought 
-> up,
-> and by then we have kernel threads running already with
-> TIF_FOREIGN_FPSTATE set
-> which could be set for early userspace applications (e.g, modprobe 
-> triggered
-> from initramfs) and init. This could cause the applications to loop
-> forever in
-> do_nofity_resume() as we never clear the TIF flag, once we now know 
-> that
-> we don't support FP.
->
-> Fix this by making sure that we clear the TIF_FOREIGN_FPSTATE flag
-> for tasks which may have them set, as we would have done in the 
-> normal
-> case, but avoiding touching the hardware state (since we don't 
-> support any).
->
-> Also to make sure we handle the cases seemlessly we categorise the
-> helper functions to two :
->  1) Helpers for common core code, which calls into take appropriate
->     actions without knowing the current FPSIMD state of the CPU/task.
->
->     e.g fpsimd_restore_current_state(), fpsimd_flush_task_state(),
->         fpsimd_save_and_flush_cpu_state().
->
->     We bail out early for these functions, taking any appropriate 
-> actions
->     (e.g, clearing the TIF flag) where necessary to hide the handling
->     from core code.
->
->  2) Helpers used when the presence of FP/SIMD is apparent.
->     i.e, save/restore the FP/SIMD register state, modify the CPU/task
->     FP/SIMD state.
->     e.g,
->
->     fpsimd_save(), task_fpsimd_load() - save/restore task FP/SIMD 
-> registers
->
->     fpsimd_bind_task_to_cpu()  \
->                                 - Update the "state" metadata for 
-> CPU/task.
->     fpsimd_bind_state_to_cpu() /
->
->     fpsimd_update_current_state() - Update the fp/simd state for the 
-> current
->                                     task from memory.
->
->     These must not be called in the absence of FP/SIMD. Put in a 
-> WARNING
->     to make sure they are not invoked in the absence of FP/SIMD.
->
-> KVM also uses the TIF_FOREIGN_FPSTATE flag to manage the FP/SIMD 
-> state
-> on the CPU. However, without FP/SIMD support we trap all accesses and
-> inject undefined instruction. Thus we should never "load" guest 
-> state.
-> Add a sanity check to make sure this is valid.
+Dec 06 00:59:38 kernel: hp_wmi: query 0xd returned error 0x5
 
-Yes, but no, see below.
+We do not care about the contents of the buffer, we just want to know
+if the HPWMI_FEATURE2_QUERY command is supported.
 
->
-> Fixes: 82e0191a1aa11abf ("arm64: Support systems without FP/ASIMD")
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Marc Zyngier <marc.zyngier@arm.com>
+This commits bumps the buffer size, fixing the error.
 
-No idea who that guy is. It's a fake! ;-)
+Cc: stable@vger.kernel.org
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=3D1520703
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/hp-wmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> ---
->  arch/arm64/kernel/fpsimd.c  | 31 +++++++++++++++++++++++++++----
->  arch/arm64/kvm/hyp/switch.c |  9 +++++++++
->  2 files changed, 36 insertions(+), 4 deletions(-)
->
+diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.=
+c
+index 9579a706fc08..a881b709af25 100644
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -300,7 +300,7 @@ static int __init hp_wmi_bios_2008_later(void)
+=20
+ static int __init hp_wmi_bios_2009_later(void)
+ {
+-	int state =3D 0;
++	u8 state[128];
+ 	int ret =3D hp_wmi_perform_query(HPWMI_FEATURE2_QUERY, HPWMI_READ, &sta=
+te,
+ 				       sizeof(state), sizeof(state));
+ 	if (!ret)
+--=20
+2.23.0
 
-[...]
-
-> diff --git a/arch/arm64/kvm/hyp/switch.c 
-> b/arch/arm64/kvm/hyp/switch.c
-> index 72fbbd86eb5e..9696ebb5c13a 100644
-> --- a/arch/arm64/kvm/hyp/switch.c
-> +++ b/arch/arm64/kvm/hyp/switch.c
-> @@ -28,10 +28,19 @@
->  /* Check whether the FP regs were dirtied while in the host-side run
-> loop: */
->  static bool __hyp_text update_fp_enabled(struct kvm_vcpu *vcpu)
->  {
-> +	/*
-> +	 * When the system doesn't support FP/SIMD, we cannot rely on
-> +	 * the state of _TIF_FOREIGN_FPSTATE. However, we will never
-> +	 * set the KVM_ARM64_FP_ENABLED, as the FP/SIMD accesses always
-> +	 * inject an abort into the guest. Thus we always trap the
-> +	 * accesses.
-> +	 */
->  	if (vcpu->arch.host_thread_info->flags & _TIF_FOREIGN_FPSTATE)
->  		vcpu->arch.flags &= ~(KVM_ARM64_FP_ENABLED |
->  				      KVM_ARM64_FP_HOST);
->
-> +	WARN_ON(!system_supports_fpsimd() &&
-> +		(vcpu->arch.flags & KVM_ARM64_FP_ENABLED));
-
-Careful, this will panic the host if it happens on a !VHE host
-(calling non-inline stuff from a __hyp_text function is usually
-not a good idea).
-
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
