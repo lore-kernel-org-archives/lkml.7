@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A57C6C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B582C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8374C206D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:56:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70AFF20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:56:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728271AbfLQA4E (ORCPT
+        id S1727585AbfLQA4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:56:04 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35282 "EHLO
+        Mon, 16 Dec 2019 19:56:09 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35162 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727035AbfLQAvn (ORCPT
+        by vger.kernel.org with ESMTP id S1726967AbfLQAvm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 19:51:43 -0500
+        Mon, 16 Dec 2019 19:51:42 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15I-0003LX-Kg; Tue, 17 Dec 2019 00:51:32 +0000
+        id 1ih15K-0003MS-HT; Tue, 17 Dec 2019 00:51:34 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15H-0005VN-9R; Tue, 17 Dec 2019 00:51:31 +0000
+        id 1ih15J-0005b7-M6; Tue, 17 Dec 2019 00:51:33 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jing Xiangfeng" <jingxiangfeng@huawei.com>,
-        "Russell King" <rmk+kernel@armlinux.org.uk>
-Date:   Tue, 17 Dec 2019 00:46:25 +0000
-Message-ID: <lsq.1576543535.681330910@decadent.org.uk>
+        "Himanshu Madhani" <hmadhani@marvell.com>,
+        "Nicholas Piggin" <npiggin@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Date:   Tue, 17 Dec 2019 00:47:15 +0000
+Message-ID: <lsq.1576543535.640379191@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 051/136] ARM: mm: fix alignment handler faults under
- memory pressure
+Subject: [PATCH 3.16 101/136] scsi: qla2xxx: stop timer in shutdown path
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,105 +56,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Nicholas Piggin <npiggin@gmail.com>
 
-commit 67e15fa5b487adb9b78a92789eeff2d6ec8f5cee upstream.
+commit d3566abb1a1e7772116e4d50fb6a58d19c9802e5 upstream.
 
-When the system has high memory pressure, the page containing the
-instruction may be paged out.  Using probe_kernel_address() means that
-if the page is swapped out, the resulting page fault will not be
-handled because page faults are disabled by this function.
+In shutdown/reboot paths, the timer is not stopped:
 
-Use get_user() to read the instruction instead.
+  qla2x00_shutdown
+  pci_device_shutdown
+  device_shutdown
+  kernel_restart_prepare
+  kernel_restart
+  sys_reboot
 
-Reported-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
-Fixes: b255188f90e2 ("ARM: fix scheduling while atomic warning in alignment handling code")
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-[bwh: Backported to 3.16: adjust context]
+This causes lockups (on powerpc) when firmware config space access calls
+are interrupted by smp_send_stop later in reboot.
+
+Fixes: e30d1756480dc ("[SCSI] qla2xxx: Addition of shutdown callback handler.")
+Link: https://lore.kernel.org/r/20191024063804.14538-1-npiggin@gmail.com
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/arm/mm/alignment.c | 44 +++++++++++++++++++++++++++++++++--------
- 1 file changed, 36 insertions(+), 8 deletions(-)
+ drivers/scsi/qla2xxx/qla_os.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/arch/arm/mm/alignment.c
-+++ b/arch/arm/mm/alignment.c
-@@ -746,6 +746,36 @@ do_alignment_t32_to_handler(unsigned lon
- 	return NULL;
- }
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -3006,6 +3006,10 @@ qla2x00_shutdown(struct pci_dev *pdev)
+ 	/* Stop currently executing firmware. */
+ 	qla2x00_try_to_stop_firmware(vha);
  
-+static int alignment_get_arm(struct pt_regs *regs, u32 *ip, unsigned long *inst)
-+{
-+	u32 instr = 0;
-+	int fault;
++	/* Disable timer */
++	if (vha->timer_active)
++		qla2x00_stop_timer(vha);
 +
-+	if (user_mode(regs))
-+		fault = get_user(instr, ip);
-+	else
-+		fault = probe_kernel_address(ip, instr);
-+
-+	*inst = __mem_to_opcode_arm(instr);
-+
-+	return fault;
-+}
-+
-+static int alignment_get_thumb(struct pt_regs *regs, u16 *ip, u16 *inst)
-+{
-+	u16 instr = 0;
-+	int fault;
-+
-+	if (user_mode(regs))
-+		fault = get_user(instr, ip);
-+	else
-+		fault = probe_kernel_address(ip, instr);
-+
-+	*inst = __mem_to_opcode_thumb16(instr);
-+
-+	return fault;
-+}
-+
- static int
- do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
- {
-@@ -753,10 +783,10 @@ do_alignment(unsigned long addr, unsigne
- 	unsigned long instr = 0, instrptr;
- 	int (*handler)(unsigned long addr, unsigned long instr, struct pt_regs *regs);
- 	unsigned int type;
--	unsigned int fault;
- 	u16 tinstr = 0;
- 	int isize = 4;
- 	int thumb2_32b = 0;
-+	int fault;
+ 	/* Turn adapter off line */
+ 	vha->flags.online = 0;
  
- 	if (interrupts_enabled(regs))
- 		local_irq_enable();
-@@ -765,15 +795,14 @@ do_alignment(unsigned long addr, unsigne
- 
- 	if (thumb_mode(regs)) {
- 		u16 *ptr = (u16 *)(instrptr & ~1);
--		fault = probe_kernel_address(ptr, tinstr);
--		tinstr = __mem_to_opcode_thumb16(tinstr);
-+
-+		fault = alignment_get_thumb(regs, ptr, &tinstr);
- 		if (!fault) {
- 			if (cpu_architecture() >= CPU_ARCH_ARMv7 &&
- 			    IS_T32(tinstr)) {
- 				/* Thumb-2 32-bit */
--				u16 tinst2 = 0;
--				fault = probe_kernel_address(ptr + 1, tinst2);
--				tinst2 = __mem_to_opcode_thumb16(tinst2);
-+				u16 tinst2;
-+				fault = alignment_get_thumb(regs, ptr + 1, &tinst2);
- 				instr = __opcode_thumb32_compose(tinstr, tinst2);
- 				thumb2_32b = 1;
- 			} else {
-@@ -782,8 +811,7 @@ do_alignment(unsigned long addr, unsigne
- 			}
- 		}
- 	} else {
--		fault = probe_kernel_address(instrptr, instr);
--		instr = __mem_to_opcode_arm(instr);
-+		fault = alignment_get_arm(regs, (void *)instrptr, &instr);
- 	}
- 
- 	if (fault) {
 
