@@ -2,422 +2,123 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA1CC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C22FC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C43D721739
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:31:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F33820716
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:31:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="sa6GbDos"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="bmijsgR9";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JQpNJtE7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727181AbfLQKb3 (ORCPT
+        id S1727265AbfLQKb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 05:31:29 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:52916 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726164AbfLQKb2 (ORCPT
+        Tue, 17 Dec 2019 05:31:58 -0500
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:38269 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725940AbfLQKb5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 05:31:28 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576578687; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=8KuBApXzd0MD/XPYy5T+nfSH5RIRIiDCIVYgXYT/E2g=; b=sa6GbDosmcZHwhL+x8BroLKngrTmFxxA8O/i0MZ3JDtkS8uXDVy1ED9iGsij7ipB1zK2eXZY
- COLhjLrNfg+lznUQ+rEVFBXbcd80K56a93voC6xCypZyJHTLtoufvUwuo9mrCCweHGqJ4Mb4
- LmCLCPFmXfurTLEMIuKBR3xtSpY=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5df8ae7e.7f42b0711f48-smtp-out-n01;
- Tue, 17 Dec 2019 10:31:26 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8CE5FC433A2; Tue, 17 Dec 2019 10:31:26 +0000 (UTC)
-Received: from [10.131.117.127] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3A065C447A6;
-        Tue, 17 Dec 2019 10:31:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3A065C447A6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH 1/2] dt-bindings: power: rpmpd: Convert rpmpd bindings to
- yaml
-To:     Sibi Sankar <sibis@codeaurora.org>, bjorn.andersson@linaro.org,
-        robh+dt@kernel.org
-Cc:     agross@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        mark.rutland@arm.com, swboyd@chromium.org, dianders@chromium.org
-References: <20191216115531.17573-1-sibis@codeaurora.org>
- <20191216115531.17573-2-sibis@codeaurora.org>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <ca58310b-c4f3-2912-a496-2826ff3df16b@codeaurora.org>
-Date:   Tue, 17 Dec 2019 16:01:00 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Tue, 17 Dec 2019 05:31:57 -0500
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailnew.nyi.internal (Postfix) with ESMTP id CBD7B6C1D;
+        Tue, 17 Dec 2019 05:31:55 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Tue, 17 Dec 2019 05:31:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=WVOKI5Xa8ynfxOHUH8uTfezXeuU
+        ofMPbouYAeeiBwfo=; b=bmijsgR9pBP2Ebh5XRA1uJIvaotKaT0uunVjVlY8l1C
+        aoxODXf2Z/oIfgaiOn3GfxvN12hOlmxSVrt/DaUn2ui5y4YWSoDc09CpwSTSPvtv
+        EpCAVbR4ENthlY2tusERvGdA4V9WukWKml4U8LbisXwsFqGk1MgOy+dKLHjxHdSZ
+        tyhvxw41ZOLsopmAjnd9nL0d0uAsWaB51tldwy0lqX74f4dbGKrZ/mRVPrNLxV+M
+        svbfpDgHzf/aKOcs6RlMmOlKIh1N8lDoWOt+0RBjBAS6nPLpU/KfKRRvelNIHB04
+        GM/lHpfosT7/ny01Wzi9gelg9d+2McwmJLd6HiJHazw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=WVOKI5
+        Xa8ynfxOHUH8uTfezXeuUofMPbouYAeeiBwfo=; b=JQpNJtE7YDoUUklw9zvFjP
+        wZ9Ih3qPBkDVD9rCoT5gWFxZZMwAusismfQXbuYWFxuPirAhMF5u+liubo54g2f9
+        VSPkmDIF7Z97Skk7gKtoH/EFJbwhbIq5myFJfZ1wZMfnXUVwYdTnTdbRYh7eeVJZ
+        gJr09v+76QbaX2xWEI3SPIzQs13zYK+p0ljuNvrE/AQuYI3MW6dLZmiD5Z7rxO48
+        XkEdENERvqJHzLTz0PGGUNfi9qhPrrHD1byP+9dNJtTDnPd2NMWkBFlCPwUsYFit
+        JZjF92wtLbfZEF63mps1svac1aKgx7nquB1ubhn+c8c1T9KtwpDHE9SUMhQ+u0pA
+        ==
+X-ME-Sender: <xms:mq74XbTn4Mg9VZkNfMUDm5tvQnvEyJ2uURgkgoUYXKa8WCLK8XbTTw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddtjedgudehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvuffkfhggtggujgesthdtre
+    dttddtvdenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheq
+    necukfhppeekfedrkeeirdekledruddtjeenucfrrghrrghmpehmrghilhhfrhhomhepgh
+    hrvghgsehkrhhorghhrdgtohhmnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:mq74XU4x3XQ7_I5tSP0AKITnKCi65jdaYkOmpNjBtanvDdZYLiOoiQ>
+    <xmx:mq74XQUg-13Hasut9Vfn0iVM61swGMfn27ddmuXCObXilt8-pdnw2g>
+    <xmx:mq74Xa-et88YfpMZI-Zc-HV_sTQU6ySLnoywFpS3bcb4zJHuXMgkdg>
+    <xmx:m674Xe8EJYjeh9FVPEltY81zCiKvaT4ZKJ8GAjBTR6L8hMaNwuJDaQ>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 4E5FF8005C;
+        Tue, 17 Dec 2019 05:31:54 -0500 (EST)
+Date:   Tue, 17 Dec 2019 11:31:52 +0100
+From:   Greg KH <greg@kroah.com>
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, dmitry.torokhov@gmail.com,
+        jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com,
+        arnd@arndb.de, masahiroy@kernel.org, michal.lkml@markovi.net,
+        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
+        linux-gpio@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH] RFC: platform driver registering via initcall tables
+Message-ID: <20191217103152.GB2914497@kroah.com>
+References: <20191217102219.29223-1-info@metux.net>
 MIME-Version: 1.0
-In-Reply-To: <20191216115531.17573-2-sibis@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191217102219.29223-1-info@metux.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 12/16/2019 5:25 PM, Sibi Sankar wrote:
-> Convert RPM/RPMH power-domain bindings to yaml.
+On Tue, Dec 17, 2019 at 11:22:19AM +0100, Enrico Weigelt, metux IT consult wrote:
+> A large portion of platform drivers doesn't need their own init/exit
+> functions. At source level, the boilerplate is already replaced by
+> module_platform_driver() macro call, which creates this code under
+> the hood. But in the binary, the code is still there.
 > 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
+> This patch is an attempt to remove them it, by the same approach
+> already used for the init functions: collect pointers to the driver
+> structs in special sections, which are then processed by the init
+> code which already calls the init function vectors. For each level,
+> the structs are processed right after the init funcs, so we guarantee
+> the existing order, and explicit inits always come before the automatic
+> registering.
 
-Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
+No, what is so "special" about platform drivers that they require this?
 
->   .../devicetree/bindings/power/qcom,rpmpd.txt  | 150 ----------------
->   .../devicetree/bindings/power/qcom,rpmpd.yaml | 170 ++++++++++++++++++
->   2 files changed, 170 insertions(+), 150 deletions(-)
->   delete mode 100644 Documentation/devicetree/bindings/power/qcom,rpmpd.txt
->   create mode 100644 Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
+If anything, we should be moving _AWAY_ from platform drivers and use
+real bus drivers instead.
+
+> Downside of apprach: cluttering init code w/ a little bit knowledge
+> about driver related stuff (calls to platform_driver_register(), etc).
+
+Exactly, don't.
+
+> For now, only implemented for the built-in case (modules still go the
+> old route). The module case is a little bit trickier: either we have to
+> extend the module header (and modpost tool) or do some dynamic symbol
+> lookup.
 > 
-> diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-> deleted file mode 100644
-> index 6346d00b1b400..0000000000000
-> --- a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-> +++ /dev/null
-> @@ -1,150 +0,0 @@
-> -Qualcomm RPM/RPMh Power domains
-> -
-> -For RPM/RPMh Power domains, we communicate a performance state to RPM/RPMh
-> -which then translates it into a corresponding voltage on a rail
-> -
-> -Required Properties:
-> - - compatible: Should be one of the following
-> -	* qcom,msm8976-rpmpd: RPM Power domain for the msm8976 family of SoC
-> -	* qcom,msm8996-rpmpd: RPM Power domain for the msm8996 family of SoC
-> -	* qcom,msm8998-rpmpd: RPM Power domain for the msm8998 family of SoC
-> -	* qcom,qcs404-rpmpd: RPM Power domain for the qcs404 family of SoC
-> -	* qcom,sc7180-rpmhpd: RPMh Power domain for the sc7180 family of SoC
-> -	* qcom,sdm845-rpmhpd: RPMh Power domain for the sdm845 family of SoC
-> -	* qcom,sm8150-rpmhpd: RPMh Power domain for the sm8150 family of SoC
-> - - #power-domain-cells: number of cells in Power domain specifier
-> -	must be 1.
-> - - operating-points-v2: Phandle to the OPP table for the Power domain.
-> -	Refer to Documentation/devicetree/bindings/power/power_domain.txt
-> -	and Documentation/devicetree/bindings/opp/opp.txt for more details
-> -
-> -Refer to <dt-bindings/power/qcom-rpmpd.h> for the level values for
-> -various OPPs for different platforms as well as Power domain indexes
-> -
-> -Example: rpmh power domain controller and OPP table
-> -
-> -#include <dt-bindings/power/qcom-rpmhpd.h>
-> -
-> -opp-level values specified in the OPP tables for RPMh power domains
-> -should use the RPMH_REGULATOR_LEVEL_* constants from
-> -<dt-bindings/power/qcom-rpmhpd.h>
-> -
-> -	rpmhpd: power-controller {
-> -		compatible = "qcom,sdm845-rpmhpd";
-> -		#power-domain-cells = <1>;
-> -		operating-points-v2 = <&rpmhpd_opp_table>;
-> -
-> -		rpmhpd_opp_table: opp-table {
-> -			compatible = "operating-points-v2";
-> -
-> -			rpmhpd_opp_ret: opp1 {
-> -				opp-level = <RPMH_REGULATOR_LEVEL_RETENTION>;
-> -			};
-> -
-> -			rpmhpd_opp_min_svs: opp2 {
-> -				opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
-> -			};
-> -
-> -			rpmhpd_opp_low_svs: opp3 {
-> -				opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
-> -			};
-> -
-> -			rpmhpd_opp_svs: opp4 {
-> -				opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
-> -			};
-> -
-> -			rpmhpd_opp_svs_l1: opp5 {
-> -				opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
-> -			};
-> -
-> -			rpmhpd_opp_nom: opp6 {
-> -				opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
-> -			};
-> -
-> -			rpmhpd_opp_nom_l1: opp7 {
-> -				opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
-> -			};
-> -
-> -			rpmhpd_opp_nom_l2: opp8 {
-> -				opp-level = <RPMH_REGULATOR_LEVEL_NOM_L2>;
-> -			};
-> -
-> -			rpmhpd_opp_turbo: opp9 {
-> -				opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
-> -			};
-> -
-> -			rpmhpd_opp_turbo_l1: opp10 {
-> -				opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
-> -			};
-> -		};
-> -	};
-> -
-> -Example: rpm power domain controller and OPP table
-> -
-> -	rpmpd: power-controller {
-> -		compatible = "qcom,msm8996-rpmpd";
-> -		#power-domain-cells = <1>;
-> -		operating-points-v2 = <&rpmpd_opp_table>;
-> -
-> -		rpmpd_opp_table: opp-table {
-> -			compatible = "operating-points-v2";
-> -
-> -			rpmpd_opp_low: opp1 {
-> -				opp-level = <1>;
-> -			};
-> -
-> -			rpmpd_opp_ret: opp2 {
-> -				opp-level = <2>;
-> -			};
-> -
-> -			rpmpd_opp_svs: opp3 {
-> -				opp-level = <3>;
-> -			};
-> -
-> -			rpmpd_opp_normal: opp4 {
-> -				opp-level = <4>;
-> -			};
-> -
-> -			rpmpd_opp_high: opp5 {
-> -				opp-level = <5>;
-> -			};
-> -
-> -			rpmpd_opp_turbo: opp6 {
-> -				opp-level = <6>;
-> -			};
-> -		};
-> -	};
-> -
-> -Example: Client/Consumer device using OPP table
-> -
-> -	leaky-device0@12350000 {
-> -		compatible = "foo,i-leak-current";
-> -		reg = <0x12350000 0x1000>;
-> -		power-domains = <&rpmhpd SDM845_MX>;
-> -		operating-points-v2 = <&leaky_opp_table>;
-> -	};
-> -
-> -
-> -	leaky_opp_table: opp-table {
-> -		compatible = "operating-points-v2";
-> -
-> -		opp1 {
-> -			opp-hz = /bits/ 64 <144000>;
-> -			required-opps = <&rpmhpd_opp_low>;
-> -		};
-> -
-> -		opp2 {
-> -			opp-hz = /bits/ 64 <400000>;
-> -			required-opps = <&rpmhpd_opp_ret>;
-> -		};
-> -
-> -		opp3 {
-> -			opp-hz = /bits/ 64 <20000000>;
-> -			required-opps = <&rpmpd_opp_svs>;
-> -		};
-> -
-> -		opp4 {
-> -			opp-hz = /bits/ 64 <25000000>;
-> -			required-opps = <&rpmpd_opp_normal>;
-> -		};
-> -	};
-> diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml b/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
-> new file mode 100644
-> index 0000000000000..4aebf024e4427
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
-> @@ -0,0 +1,170 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/power/qcom,rpmpd.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm RPM/RPMh Power domains
-> +
-> +maintainers:
-> +  - Rajendra Nayak <rnayak@codeaurora.org>
-> +
-> +description:
-> +  For RPM/RPMh Power domains, we communicate a performance state to RPM/RPMh
-> +  which then translates it into a corresponding voltage on a rail
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,msm8976-rpmpd
-> +      - qcom,msm8996-rpmpd
-> +      - qcom,msm8998-rpmpd
-> +      - qcom,qcs404-rpmpd
-> +      - qcom,sc7180-rpmhpd
-> +      - qcom,sdm845-rpmhpd
-> +      - qcom,sm8150-rpmhpd
-> +
-> +  '#power-domain-cells':
-> +    const: 1
-> +
-> +  operating-points-v2: true
-> +
-> +  opp-table:
-> +    type: object
-> +
-> +required:
-> +  - compatible
-> +  - '#power-domain-cells'
-> +  - operating-points-v2
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +
-> +    // Example 1 (rpmh power domain controller and OPP table):
-> +
-> +    #include <dt-bindings/power/qcom-rpmpd.h>
-> +
-> +    rpmhpd: power-controller {
-> +      compatible = "qcom,sdm845-rpmhpd";
-> +      #power-domain-cells = <1>;
-> +      operating-points-v2 = <&rpmhpd_opp_table>;
-> +
-> +      rpmhpd_opp_table: opp-table {
-> +        compatible = "operating-points-v2";
-> +
-> +        rpmhpd_opp_ret: opp1 {
-> +          opp-level = <RPMH_REGULATOR_LEVEL_RETENTION>;
-> +        };
-> +
-> +        rpmhpd_opp_min_svs: opp2 {
-> +          opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
-> +        };
-> +
-> +        rpmhpd_opp_low_svs: opp3 {
-> +          opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
-> +        };
-> +
-> +        rpmhpd_opp_svs: opp4 {
-> +          opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
-> +        };
-> +
-> +        rpmhpd_opp_svs_l1: opp5 {
-> +          opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
-> +        };
-> +
-> +        rpmhpd_opp_nom: opp6 {
-> +          opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
-> +        };
-> +
-> +        rpmhpd_opp_nom_l1: opp7 {
-> +          opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
-> +        };
-> +
-> +        rpmhpd_opp_nom_l2: opp8 {
-> +          opp-level = <RPMH_REGULATOR_LEVEL_NOM_L2>;
-> +        };
-> +
-> +        rpmhpd_opp_turbo: opp9 {
-> +          opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
-> +        };
-> +
-> +        rpmhpd_opp_turbo_l1: opp10 {
-> +          opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
-> +        };
-> +      };
-> +    };
-> +
-> +  - |
-> +
-> +    // Example 2 (rpm power domain controller and OPP table):
-> +
-> +    rpmpd: power-controller {
-> +      compatible = "qcom,msm8996-rpmpd";
-> +      #power-domain-cells = <1>;
-> +      operating-points-v2 = <&rpmpd_opp_table>;
-> +
-> +      rpmpd_opp_table: opp-table {
-> +        compatible = "operating-points-v2";
-> +
-> +        rpmpd_opp_low: opp1 {
-> +          opp-level = <1>;
-> +        };
-> +
-> +        rpmpd_opp_ret: opp2 {
-> +          opp-level = <2>;
-> +        };
-> +
-> +        rpmpd_opp_svs: opp3 {
-> +          opp-level = <3>;
-> +        };
-> +
-> +        rpmpd_opp_normal: opp4 {
-> +          opp-level = <4>;
-> +        };
-> +
-> +        rpmpd_opp_high: opp5 {
-> +          opp-level = <5>;
-> +        };
-> +
-> +        rpmpd_opp_turbo: opp6 {
-> +          opp-level = <6>;
-> +        };
-> +      };
-> +    };
-> +
-> +  - |
-> +
-> +    // Example 3 (Client/Consumer device using OPP table):
-> +
-> +    leaky-device0@12350000 {
-> +      compatible = "foo,i-leak-current";
-> +      reg = <0x12350000 0x1000>;
-> +      power-domains = <&rpmhpd 0>;
-> +      operating-points-v2 = <&leaky_opp_table>;
-> +    };
-> +
-> +    leaky_opp_table: opp-table {
-> +      compatible = "operating-points-v2";
-> +      opp1 {
-> +        opp-hz = /bits/ 64 <144000>;
-> +        required-opps = <&rpmhpd_opp_low>;
-> +      };
-> +
-> +      opp2 {
-> +        opp-hz = /bits/ 64 <400000>;
-> +        required-opps = <&rpmhpd_opp_ret>;
-> +      };
-> +
-> +      opp3 {
-> +        opp-hz = /bits/ 64 <20000000>;
-> +        required-opps = <&rpmpd_opp_svs>;
-> +      };
-> +
-> +      opp4 {
-> +        opp-hz = /bits/ 64 <25000000>;
-> +        required-opps = <&rpmpd_opp_normal>;
-> +      };
-> +    };
-> +...
-> 
+> This patch is just a PoC for further discussions, not ready for mainline.
+> It also changes a few drivers, just for illustration. In case the general
+> approach is accepted, it will be cleaned up and splitted.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Please no, I don't see why this is even needed.
+
+greg k-h
