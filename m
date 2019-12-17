@@ -2,109 +2,86 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A10C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87FF6C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE44B21739
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:00:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="Kw1586Eb"
+	by mail.kernel.org (Postfix) with ESMTP id 5C9E021835
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:01:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576569661;
+	bh=S2ZJz3dmg/iV/HXN0K8nTRakpRHEekt71LuYRmWiS1o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oqQdkBAusKf1A/XMYKo6WHinWLbC21nFG4i/F046CHtcfN0o/PXp+hhHFcx9nkM5i
+	 mWwj2u/HIMeS/Dr/YDP/ygIR0nvGPPwFrjlACe8d5XARhNLHUGlq0B6LlalTLY17it
+	 O9Aqraa7c5IS+IFgdJL5vJB/rrVh75NElInRzqyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbfLQIA4 (ORCPT
+        id S1726916AbfLQIBA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 03:00:56 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:43460 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbfLQIA4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 03:00:56 -0500
-Received: by mail-io1-f66.google.com with SMTP id s2so9958230iog.10
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 00:00:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=fjfBTXD/0Rg93fYPAe9SEo+I0qrNg9n7YS5lPldbMxg=;
-        b=Kw1586Eb7ayc/Uevj8kSs/jgbYJZ5RYqw6C/4PkUaMTeDr28DglPtZD1DpVyn1eGW3
-         gdH8K+XvoTplIyxy5dARmY3R34o7vUJ7Vekk7cA71Z/jc21kJsq1tPVO0q3Vrpd/4nVf
-         nem3oX3/rwi1QWu+HC4paVuGsbly6AzhY414oydHkwRHfygrV9dAovK/YbW4QSOZiucx
-         vycrxUBnDwLIO0sUyaIwB9gGUNB1aJmu/4TZf3sYpeXu+lsEQnGfvJ6bvIqLFEseV7H3
-         pkoJcKkz0EaZzEODKNX5LjiNY67fjwLigUHtMjkcLluVjeg/Q/oBqpu17LrvkDoh/87L
-         K2SQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=fjfBTXD/0Rg93fYPAe9SEo+I0qrNg9n7YS5lPldbMxg=;
-        b=fFehi2NSzEOdPzcsuGWAJVAWg3me9jEh/3FXjaN1xGnjzs4F0OSU6UFWH45KDnMTch
-         RIBtvb17gLKq+d6k/BRai6YIY7Z9k+VfHTUEGKFkbme+Y07hBQhQRmc9VJWlXDjl4BS6
-         avH/GkQutwdM/ySF6u95hiksir3dJHvAFaVdVqJ29bqeVS06KxUCzX9tkE2+uMMYg0hS
-         E5Fxem53Nipua8UGOXSYM+DxpwwDoTFKGi1tscD+5ZlDNf5i7onnR0BYTtSdQu5l1S4Z
-         ezKBDFx0vaGwJ3rCjuZKxBYFo7GNyM7QEkzQorstkBdzNBLQUFoE0hdCocbm3kMdbt0j
-         MG3A==
-X-Gm-Message-State: APjAAAUOYyfuZKy1mrP5WmBhBlpNBWAwZeqQfdlqZ3qlTILdqnoNxZpk
-        xo+4dTgGVpiPAk0uLjJpsQP0TkY5bUq4qK2izSlRLQ==
-X-Google-Smtp-Source: APXvYqz32eReTALarnf1P0DDPtaS3epoXURcAZnKU7rDx0beSWVeeDK4EoJbvrSnuhkreRg5/vzJ1Z7KVBqugRXabrU=
-X-Received: by 2002:a02:c85b:: with SMTP id r27mr7986096jao.57.1576569655617;
- Tue, 17 Dec 2019 00:00:55 -0800 (PST)
+        Tue, 17 Dec 2019 03:01:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56354 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726072AbfLQIA5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 03:00:57 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50F60207FF;
+        Tue, 17 Dec 2019 08:00:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576569656;
+        bh=S2ZJz3dmg/iV/HXN0K8nTRakpRHEekt71LuYRmWiS1o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gNomV5mbcvv6DBQ0Ba/ZgFDnLZqCa8UqHlhj/bJQH+uSJ/fDGF5JFB9e+MnsqJ366
+         mZIiNTdgquVMQdFuXEUrWzSApd4Uxn23bahmTxIHJDGOdWi8kZXW1OsI/oX7zDDVTH
+         mWSdKWSdRI1TDLubAzAfG0mMas7CxRCpBMHvRke0=
+Date:   Tue, 17 Dec 2019 09:00:54 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     kbuild test robot <lkp@intel.com>,
+        "kernelci . org bot" <bot@kernelci.org>,
+        Olof's autobuilder <build@lixom.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Karsten Keil <isdn@linux-pingi.de>,
+        David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] [staging-next] isdn: don't mark kcapi_proc_exit as __exit
+Message-ID: <20191217080054.GA2525210@kroah.com>
+References: <20191216194909.1983639-1-arnd@arndb.de>
 MIME-Version: 1.0
-References: <20191213162453.15691-1-brgl@bgdev.pl> <20191213162453.15691-2-brgl@bgdev.pl>
- <b9a28314-4fce-ebbd-be20-b0ffa2f1f15f@lechnology.com>
-In-Reply-To: <b9a28314-4fce-ebbd-be20-b0ffa2f1f15f@lechnology.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 17 Dec 2019 09:00:44 +0100
-Message-ID: <CAMRc=McRKwYkUcY9J8cEkwoMnGYxs7SkTnOnFsVMDZD2DkJ1Zw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] clocksource: davinci: work around a clocksource
- problem on dm365 SoC
-To:     David Lechner <david@lechnology.com>
-Cc:     Sekhar Nori <nsekhar@ti.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kevin Hilman <khilman@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191216194909.1983639-1-arnd@arndb.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pon., 16 gru 2019 o 18:58 David Lechner <david@lechnology.com> napisa=C5=82=
-(a):
->
-> >
-> > +static unsigned int davinci_clocksource_tim32_mode;
->
-> static unsigned bool davinci_clocksource_initialized;
->
-> > +
-> >   static struct davinci_clockevent *
-> >   to_davinci_clockevent(struct clock_event_device *clockevent)
-> >   {
-> > @@ -94,7 +96,7 @@ static void davinci_tim12_shutdown(void __iomem *base=
-)
-> >        * halves. In this case TIM34 runs in periodic mode and we must
-> >        * not modify it.
-> >        */
-> > -     tcr |=3D DAVINCI_TIMER_ENAMODE_PERIODIC <<
-> > +     tcr |=3D davinci_clocksource_tim32_mode <<
-> >               DAVINCI_TIMER_ENAMODE_SHIFT_TIM34;
->
->         if (davinci_clocksource_initialized)
->                 tcr |=3D DAVINCI_TIMER_ENAMODE_PERIODIC <<
->                         DAVINCI_TIMER_ENAMODE_SHIFT_TIM34;
+On Mon, Dec 16, 2019 at 08:48:56PM +0100, Arnd Bergmann wrote:
+> As everybody pointed out by now, my patch to clean up CAPI introduced
+> a link time warning, as the two parts of the capi driver are now in
+> one module and the exit function may need to be called in the error
+> path of the init function:
+> 
+> >> WARNING: drivers/isdn/capi/kernelcapi.o(.text+0xea4): Section mismatch in reference from the function kcapi_exit() to the function .exit.text:kcapi_proc_exit()
+>    The function kcapi_exit() references a function in an exit section.
+>    Often the function kcapi_proc_exit() has valid usage outside the exit section
+>    and the fix is to remove the __exit annotation of kcapi_proc_exit.
+> 
+> Remove the incorrect __exit annotation.
+> 
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Reported-by: kernelci.org bot <bot@kernelci.org>
+> Reported-by: Olof's autobuilder <build@lixom.net>
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/isdn/capi/kcapi_proc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-I thought about doing this initially, but then figured this code would
-be called a lot, so why not avoid branching and just store the right
-value? Alternatively we can do:
+Thanks for this, now applied.
 
-    if (likely(davinci_clocksource_initialized)
-        ....
-
-Bart
+greg k-h
