@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A90C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA38C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01444206D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FB2524673
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:54:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728203AbfLQAyt (ORCPT
+        id S1727640AbfLQAyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:54:49 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35466 "EHLO
+        Mon, 16 Dec 2019 19:54:52 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35356 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727128AbfLQAvo (ORCPT
+        by vger.kernel.org with ESMTP id S1727071AbfLQAvo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 19:51:44 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15L-0003Mn-Ac; Tue, 17 Dec 2019 00:51:35 +0000
+        id 1ih15L-0003M9-Df; Tue, 17 Dec 2019 00:51:35 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15K-0005dR-Rj; Tue, 17 Dec 2019 00:51:34 +0000
+        id 1ih15L-0005eN-2b; Tue, 17 Dec 2019 00:51:35 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,18 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jiri Olsa" <jolsa@kernel.org>,
-        "Michael Petlan" <mpetlan@redhat.com>,
-        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
-        "Namhyung Kim" <namhyung@kernel.org>,
-        "Arnaldo Carvalho de Melo" <acme@redhat.com>,
-        "Andi Kleen" <ak@linux.intel.com>,
-        "Peter Zijlstra" <peterz@infradead.org>
-Date:   Tue, 17 Dec 2019 00:47:34 +0000
-Message-ID: <lsq.1576543535.194539542@decadent.org.uk>
+        "Yong Zhao" <yong.zhao@amd.com>,
+        "Alex Deucher" <alexander.deucher@amd.com>
+Date:   Tue, 17 Dec 2019 00:47:37 +0000
+Message-ID: <lsq.1576543535.572177647@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 120/136] perf tools: Fix time sorting
+Subject: [PATCH 3.16 123/136] drm/radeon: fix si_enable_smc_cac() failed issue
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -60,43 +55,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-commit 722ddfde366fd46205456a9c5ff9b3359dc9a75e upstream.
+commit 2c409ba81be25516afe05ae27a4a15da01740b01 upstream.
 
-The final sort might get confused when the comparison is done over
-bigger numbers than int like for -s time.
+Need to set the dte flag on this asic.
 
-Check the following report for longer workloads:
+Port the fix from amdgpu:
+5cb818b861be114 ("drm/amd/amdgpu: fix si_enable_smc_cac() failed issue")
 
-  $ perf report -s time -F time,overhead --stdio
-
-Fix hist_entry__sort() to properly return int64_t and not possible cut
-int.
-
-Fixes: 043ca389a318 ("perf tools: Use hpp formats to sort final output")
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20191104232711.16055-1-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Reviewed-by: Yong Zhao <yong.zhao@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- tools/perf/util/hist.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/radeon/si_dpm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -1032,7 +1032,7 @@ void hists__collapse_resort(struct hists
- 	}
- }
- 
--static int hist_entry__sort(struct hist_entry *a, struct hist_entry *b)
-+static int64_t hist_entry__sort(struct hist_entry *a, struct hist_entry *b)
- {
- 	struct perf_hpp_fmt *fmt;
- 	int64_t cmp = 0;
+--- a/drivers/gpu/drm/radeon/si_dpm.c
++++ b/drivers/gpu/drm/radeon/si_dpm.c
+@@ -1951,6 +1951,7 @@ static void si_initialize_powertune_defa
+ 		case 0x682C:
+ 			si_pi->cac_weights = cac_weights_cape_verde_pro;
+ 			si_pi->dte_data = dte_data_sun_xt;
++			update_dte_from_pl2 = true;
+ 			break;
+ 		case 0x6825:
+ 		case 0x6827:
 
