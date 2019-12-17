@@ -6,42 +6,67 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D28C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1952C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB92720733
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D5B92072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:35:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728382AbfLQSfO (ORCPT
+        id S1728276AbfLQSfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 13:35:14 -0500
-Received: from verein.lst.de ([213.95.11.211]:60115 "EHLO verein.lst.de"
+        Tue, 17 Dec 2019 13:35:51 -0500
+Received: from muru.com ([72.249.23.125]:49048 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726874AbfLQSfN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 13:35:13 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id ECFA468B05; Tue, 17 Dec 2019 19:35:10 +0100 (CET)
-Date:   Tue, 17 Dec 2019 19:35:10 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        linux-mips <linux-mips@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: RFC: kill off ioremap_nocache
-Message-ID: <20191217183510.GA32372@lst.de>
-References: <20191209135823.28465-1-hch@lst.de> <CAADWXX9zEBT-NPCwE09D+6=8iCZ+kCmdyXoGrTKhnmYn82XEJQ@mail.gmail.com>
+        id S1726813AbfLQSfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 13:35:51 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 8BE4C8116;
+        Tue, 17 Dec 2019 18:36:30 +0000 (UTC)
+Date:   Tue, 17 Dec 2019 10:35:48 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     santosh.shilimkar@oracle.com
+Cc:     Dave Gerlach <d-gerlach@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH] soc: ti: wkup_m3_ipc: Fix race condition with rproc_boot
+Message-ID: <20191217183548.GE35479@atomide.com>
+References: <20191212040314.14753-1-d-gerlach@ti.com>
+ <20191217182534.GD35479@atomide.com>
+ <05b9f0ff-bbc2-d8a7-3261-54c03a149db8@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAADWXX9zEBT-NPCwE09D+6=8iCZ+kCmdyXoGrTKhnmYn82XEJQ@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <05b9f0ff-bbc2-d8a7-3261-54c03a149db8@oracle.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I've pushed this out to the for-next branch and thus linux-next.  Let's
-see if anyone screams.
+* santosh.shilimkar@oracle.com <santosh.shilimkar@oracle.com> [191217 18:33]:
+> On 12/17/19 10:25 AM, Tony Lindgren wrote:
+> > Hi,
+> > 
+> > * Dave Gerlach <d-gerlach@ti.com> [191211 20:02]:
+> > > Any user of wkup_m3_ipc calls wkup_m3_ipc_get to get a handle and this
+> > > checks the value of the static variable m3_ipc_state to see if the
+> > > wkup_m3 is ready. Currently this is populated during probe before
+> > > rproc_boot has been called, meaning there is a window of time that
+> > > wkup_m3_ipc_get can return a valid handle but the wkup_m3 itself is not
+> > > ready, leading to invalid IPC calls to the wkup_m3 and system
+> > > instability.
+> > > 
+> > > To avoid this, move the population of the m3_ipc_state variable until
+> > > after rproc_boot has succeeded to guarantee a valid and usable handle
+> > > is always returned.
+> > 
+> > Santosh, do you want me to pick this one into my fixes branch?
+> > 
+> Sure, go ahead.
+> 
+> Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
+
+OK thanks applying into fixes.
+
+Tony
