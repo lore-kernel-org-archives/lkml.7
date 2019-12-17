@@ -2,146 +2,125 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 917C8C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D5DC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CE3F24672
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:30:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC12A20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:31:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aF+YMJON"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbfLQBaj (ORCPT
+        id S1726742AbfLQBbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 20:30:39 -0500
-Received: from mga17.intel.com ([192.55.52.151]:4933 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725805AbfLQBaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 20:30:39 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 17:30:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,323,1571727600"; 
-   d="scan'208";a="415282141"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 16 Dec 2019 17:30:37 -0800
-Received: from [10.226.38.59] (unknown [10.226.38.59])
-        by linux.intel.com (Postfix) with ESMTP id AC2185802E5;
-        Mon, 16 Dec 2019 17:30:35 -0800 (PST)
-Subject: Re: [PATCH v9 1/2] dt-bindings: phy: intel-emmc-phy: Add YAML schema
- for LGM eMMC PHY
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        kishon@ti.com, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        peter.harliman.liem@intel.com
-References: <20191216034838.21875-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20191216034838.21875-2-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20191216175348.GA18405@bogus>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <5a59e7a4-dd3a-1719-9ec6-a2b0354ce842@linux.intel.com>
-Date:   Tue, 17 Dec 2019 09:30:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 16 Dec 2019 20:31:18 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:42937 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726281AbfLQBbS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 20:31:18 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576546277; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=rtNLx7+QI8vJ9iMXYE4MF2d+y/lbnqAVplnH0gmdM2o=;
+ b=aF+YMJONqugGysPzA5wMcMfnuAfFXuqnq+0uMjop9QiLngLuzGFJ4mQOC1jNUrT18/5ylhOX
+ EfCooLNTTgr70y+gr8w9gn/e4zVWKA2+HwhsxeH8tjkZhunJNAoXaTc9ItQv/g9rfghjtc7z
+ 3MP/7+Izsood6Esn6WLBkX1TyfI=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5df82fde.7f2d8aa31110-smtp-out-n03;
+ Tue, 17 Dec 2019 01:31:10 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B1969C447A5; Tue, 17 Dec 2019 01:31:09 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B284EC447A5;
+        Tue, 17 Dec 2019 01:31:08 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20191216175348.GA18405@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Tue, 17 Dec 2019 09:31:08 +0800
+From:   cang@codeaurora.org
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] scsi: ufs: Put SCSI host after remove it
+In-Reply-To: <ecef25b7-44c0-6b94-c429-6ee5f9508caf@acm.org>
+References: <1576328616-30404-1-git-send-email-cang@codeaurora.org>
+ <1576328616-30404-2-git-send-email-cang@codeaurora.org>
+ <85475247-efd5-732e-ae74-6d9a11e1bdf2@acm.org>
+ <cd6dc7c90d43b8ca8254a43da48334fc@codeaurora.org>
+ <cf4915df-5ae4-0dfd-5d44-1fe959d141e2@acm.org>
+ <0343644f49adee06e6b2f3f631fe1637@codeaurora.org>
+ <ecef25b7-44c0-6b94-c429-6ee5f9508caf@acm.org>
+Message-ID: <d9d18f050ec2d2c86943fa76f73719a1@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 2019-12-17 09:15, Bart Van Assche wrote:
+> On 12/16/19 4:46 PM, cang@codeaurora.org wrote:
+>> On 2019-12-17 01:39, Bart Van Assche wrote:
+>>> Apparently some UFS drivers call ufshcd_remove() only and others
+>>> (PCIe) call both ufshcd_remove() and ufshcd_dealloc_host(). I think
+>>> that the above change will cause trouble for the PCIe driver unless
+>>> the ufshcd_dealloc_host() call is removed from ufshcd_pci_remove().
+>> 
+>> You may get me wrong. I mean we should do like what ufshcd-pci.c does.
+>> As driver probe routine allocates SCSI host, then driver remove() 
+>> should
+>> de-allocate it. Meaning ufs_qcom_remove() should call both 
+>> ufshcd_remove()
+>> and ufshcd_dealloc_host().
+>> 
+>> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+>> index 3d4582e..ea45756 100644
+>> --- a/drivers/scsi/ufs/ufs-qcom.c
+>> +++ b/drivers/scsi/ufs/ufs-qcom.c
+>> @@ -3239,6 +3239,7 @@ static int ufs_qcom_remove(struct 
+>> platform_device *pdev)
+>> 
+>>            pm_runtime_get_sync(&(pdev)->dev);
+>>            ufshcd_remove(hba);
+>>   +       ufshcd_dealloc_host(hba);
+>>            return 0;
+>>     }
+> 
+> Hi Can,
+> 
+> If it is possible to move the ufshcd_dealloc_host() into
+> ufshcd_remove() then I would prefer to do that. If all UFS transport
+> drivers need that call then I think that call should happen from the
+> UFS core instead of from the transport drivers.
+> 
+> Thanks,
+> 
+> Bart.
 
-On 17/12/2019 1:53 AM, Rob Herring wrote:
-> On Mon, Dec 16, 2019 at 11:48:37AM +0800, Ramuthevar,Vadivel MuruganX wrote:
->> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>
->> Add a YAML schema to use the host controller driver with the
->> eMMC PHY on Intel's Lightning Mountain SoC.
->>
->> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> ---
->>   .../bindings/phy/intel,lgm-emmc-phy.yaml           | 58 ++++++++++++++++++++++
->>   1 file changed, 58 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
->> new file mode 100644
->> index 000000000000..a7d4224b2001
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
->> @@ -0,0 +1,58 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/phy/intel,lgm-emmc-phy.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Intel Lightning Mountain(LGM) eMMC PHY Device Tree Bindings
->> +
->> +maintainers:
->> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> +
->> +description: |+
->> +  Bindings for eMMC PHY on Intel's Lightning Mountain SoC, syscon
->> +  node is used to reference the base address of eMMC phy registers.
->> +
->> +  The eMMC PHY node should be the child of a syscon node with the
->> +  required property:
->> +
->> +  - compatible:         Should be one of the following:
->> +                        "intel,lgm-syscon", "syscon"
->> +  - reg:
->> +      maxItems: 1
->> +
->> +properties:
->> +  compatible:
->> +      const: intel,lgm-emmc-phy
->> +
->> +  "#phy-cells":
->> +    const: 0
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 1
->> +
->> +required:
->> +  - "#phy-cells"
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +  - clock-names
-> Need to drop clock-names here too and in the example.
+Yeah, that is an once for all solution, but I not sure if PCI folks are
+OK if I remove the ufshcd_dealloc_host() call from their driver.
+In next version, I will try to make such change and see.
 
-Thanks for pointing out, Drop it in both places.
-
-With Best Regards
-Vadivel
->> +
->> +examples:
->> +  - |
->> +    sysconf: chiptop@e0200000 {
->> +      compatible = "intel,lgm-syscon", "syscon";
->> +      reg = <0xe0200000 0x100>;
->> +
->> +      emmc-phy: emmc-phy@a8 {
->> +        compatible = "intel,lgm-emmc-phy";
->> +        reg = <0x00a8 0x10>;
->> +        clocks = <&emmc>;
->> +        clock-names = "emmcclk";
->> +        #phy-cells = <0>;
->> +      };
->> +    };
->> +...
->> -- 
->> 2.11.0
->>
+Thanks,
+Can Guo.
