@@ -2,85 +2,90 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC92AC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D3AC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8313921D7D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:17:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576595830;
-	bh=il1CvCc9YvCKbEZZGWzWIzWhs7dSJR3F9V+6YYPouT0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cHTF3FP1gozWqLMa3iUdxdRJJKq38nV/kGeVhVoLp6H/eMNhgJDW81CEkNTv7cVbu
-	 hO6Yk1YWLUS3Oe7kvmaEtI8fQ+3uf5jQTAgfvcTPcpo0+HvKlRgIZ7ZECBy9gQnUmU
-	 /AAwEdgV3U9xVN6vSgsa1K3CGuO707a7VLR1Azhw=
+	by mail.kernel.org (Postfix) with ESMTP id 99DAD21D7D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:17:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="d9bCdpSb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727809AbfLQPRJ (ORCPT
+        id S1728279AbfLQPRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 10:17:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55086 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727223AbfLQPRJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 10:17:09 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6809E2146E;
-        Tue, 17 Dec 2019 15:17:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576595828;
-        bh=il1CvCc9YvCKbEZZGWzWIzWhs7dSJR3F9V+6YYPouT0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hrqWdS5vHLlXxM/XFKetJ7/abKxVz1BiJLGP3Lp/LrbG8dvDVbo6G4lp/c2EsGhjw
-         1+5jAyMfIwd0oPbC3UJYEa9sR4HEzzk4Ss88c0ZzN+ixABvoDIWSTU6F+2p0A1gECT
-         FznJoURH/gUoIQE+dYmC8ChHNoYTeTd9bWZNZfH8=
-Date:   Tue, 17 Dec 2019 16:17:06 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jeff Chang <richtek.jeff.chang@gmail.com>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, matthias.bgg@gmail.com,
-        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, jeff_chang@richtek.com
-Subject: Re: [PATCH] ASoC: Add MediaTek MT6660 Speaker Amp Driver
-Message-ID: <20191217151706.GA3654493@kroah.com>
-References: <1576148934-27701-1-git-send-email-richtek.jeff.chang@gmail.com>
-MIME-Version: 1.0
+        Tue, 17 Dec 2019 10:17:15 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:37105 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727756AbfLQPRN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 10:17:13 -0500
+Received: by mail-qk1-f194.google.com with SMTP id 21so5789175qky.4
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 07:17:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=QBbJhTwA/z9GheRdVz6DmV0ve21qD4tE529ywgzTv4I=;
+        b=d9bCdpSbGIQ2bZQYmFNSt27dYg2M8iWZwhztIVSpbfasIXUPfe9wfODDgBXYwS+JyO
+         Gv3TTGJk82AvVWFURXKuscdcGA0HsfV01pD/QIDsVJmelRXOfAde709zspdbcG8ICcc7
+         7TNB7KXnhm1FIo4TfOcfXQvk5nlWUU9HlOKjB4BCaP67Vuf1CgtKnicQw9mirkKllLU2
+         M/a7YslEdG6U+m8J2FZ77M+8bRBnh3JeZWOf4vPXkFIzi7HAeKhBmRNHQe1i7gyA1pzn
+         a8+ey1AIdl0lgF0SWzVjIXgYk2NCOn6AkDxukN3hUDa+fNb/qaSLFPWl6523TIa7FcdY
+         zL8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=QBbJhTwA/z9GheRdVz6DmV0ve21qD4tE529ywgzTv4I=;
+        b=dz+1Ed0pW8gAzENXNgdyD1OUcil2GcJIPEQIA7f1XL37Pe/1Nscce546uNpwPMfKjr
+         I3D2g/vyn4yy4YawH2ofDO08CAT0ZVODDc4EloQQTnoPS4OkD4DBLeB31Q19XArildxn
+         KPR3JcIwu0VGigUvxGHQprqbp0GxtYbAOZaaLmQ3XZ/FVCKPuwm3/t1HlYV3oWaIyXwt
+         tPdatT+BsOVV7F3K8U2qAjgz5SjaK4ZTnBXy9LEor/xmXmK1HULiZyEjCtbTkZ/+Nz67
+         Xi6B7gGj3GIsaURcvaWqqalocDsQKtPNTqxY2tyPbVQjG2SHb5o9n4jrk09LoGo8Myk5
+         JQpw==
+X-Gm-Message-State: APjAAAW2ScZjO5+GZGCWByDn/3O0j6NHJjZyv9KP/6gxdlX83in0l4pW
+        fUWWV5/dXId/xPmJDnLVI5Fs+Q==
+X-Google-Smtp-Source: APXvYqxc4OvUcMuruBVNLedZUEl90a9Pdz8xXR4S1pf38oV2+oQQJTx99hLJYlWM6tZGPH1Gp7jarA==
+X-Received: by 2002:a37:6294:: with SMTP id w142mr5114586qkb.284.1576595832242;
+        Tue, 17 Dec 2019 07:17:12 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id t7sm7120087qkm.136.2019.12.17.07.17.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Dec 2019 07:17:11 -0800 (PST)
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1576148934-27701-1-git-send-email-richtek.jeff.chang@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] mm: memcontrol.c: move mem_cgroup_id_get_many under CONFIG_MMU
+Date:   Tue, 17 Dec 2019 10:17:10 -0500
+Message-Id: <E7311A37-F5D9-4248-A51A-9B105A49A923@lca.pw>
+References: <20191217151343.GC7272@dhcp22.suse.cz>
+Cc:     Chris Down <chris@chrisdown.name>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20191217151343.GC7272@dhcp22.suse.cz>
+To:     Michal Hocko <mhocko@kernel.org>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 07:08:54PM +0800, Jeff Chang wrote:
-ookup("ext_dev_io", NULL);
-> +	if (!d->rt_root) {
-> +		d->rt_root = debugfs_create_dir("ext_dev_io", NULL);
-> +		if (!d->rt_root)
-> +			return -ENODEV;
 
-No need to ever check the result of this function
 
-> +		d->rt_dir_create = true;
-> +	}
-> +	d->ic_root = debugfs_create_dir(di->dirname, d->rt_root);
-> +	if (!d->ic_root)
-> +		goto err_cleanup_rt;
+> On Dec 17, 2019, at 10:13 AM, Michal Hocko <mhocko@kernel.org> wrote:
+>=20
+> I do understand the general purpose of the warning. I am simply not sure
+> the kernel tree is a good candidate with a huge number of different
+> config combinations that might easily result in warnings which would
+> tend to result in even more ifdeferry than we have.
 
-Same here.
-
-> +	if (!debugfs_create_u16("reg", 0644, d->ic_root, &d->reg))
-> +		goto err_cleanup_ic;
-
-No need to ever check any result of any debugfs_create_* function.  In
-fact, this function doesn't even return a value anymore, so if you tried
-to build this against Linus's latest tree, it wouldn't work :)
-
-thanks,
-
-greg k-h
+Yes, compiling test without real-world use case is evil. Once we ignore the e=
+vil, it becomes much more manageable.=
