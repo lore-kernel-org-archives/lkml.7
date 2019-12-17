@@ -2,106 +2,193 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89481C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8ABFC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B9E12465E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:54:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CHeMb+GA"
+	by mail.kernel.org (Postfix) with ESMTP id 8359B21835
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:58:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727711AbfLQQyN (ORCPT
+        id S1727797AbfLQQ6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 11:54:13 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39095 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbfLQQyN (ORCPT
+        Tue, 17 Dec 2019 11:58:32 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:36859 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727529AbfLQQ6c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 11:54:13 -0500
-Received: by mail-pf1-f193.google.com with SMTP id q10so1011854pfs.6;
-        Tue, 17 Dec 2019 08:54:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=UqAALhbJUctlAt3Rayrh/HqASiW433RXhLjAxX/LchI=;
-        b=CHeMb+GAK3Gs7iOFr2CN0dWpnuZNG1f514VN72zNLF7RdYkYTRzNVP5e8QnLocKguz
-         nlMQl0OUGSSVPh/OKrl3TQoMlmrNqGnFFtXgqi+xMq5obRx/6zKjKEuviqAMaD7DnU5g
-         c2325fu/9Wal14/7+j7KDtmAFKDYuvjACJOWfISQSNlOkKTJk6L93U+ZCycPELYsF/vY
-         Xv1TGFUZizkza1ZfkdwE+zeajvlxIx6BbNBzRrHnL3wGv3n1VVcHLdLG0G9Moyb+rxvw
-         xi4Hhr9irF0cmQUm9yreJ9mchqc7XKsjiQRf2KTUr0Sv2YHLCCARKhGdmP/c2XiIgzXP
-         gjOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=UqAALhbJUctlAt3Rayrh/HqASiW433RXhLjAxX/LchI=;
-        b=J92R6i07KiSGsD+uWb3QqYjVtkbtQQlRGhsujQZvOfMezKFEcsSDP+8D4+pRhZkC7W
-         5YHy1fuwH2lDrMx07U/BGqTig9LZuuXfPtleaQSCb8NOXIjyd/0H1Dg7jjqLVLRSjKDS
-         +E6AdcabUbv16lXlrsk2F5KdlnLeQgF9ZwBUmWhGQnXHn8T/Hhynr/rh7x7tQDuS1+LM
-         5VZbeS2DwzyNbyTWRYbFhYCrOI2M5zErNeQS7AYqkXJVLxsBK1PTPSSIb3Dm1+1PVTNy
-         XPZgz76sAl8N2CxNwLBiRDGIyho0eqxpFSD19SADMWPUneDUMuZ/2uWFvXX803AyesDd
-         p4KQ==
-X-Gm-Message-State: APjAAAXrDrD2NVJYCZdD/cavl1bWgE41OTabgSAUvTA6GLuq6xon/ISE
-        p04eCtpoRlOHh0+E6p7UNLU=
-X-Google-Smtp-Source: APXvYqyYabh+3GFRO9Qpf0Ga8UhH0LczUeqATaOub5FWvAvtoLRKCpBPsnvqVfvGdwlGhTm9esZngg==
-X-Received: by 2002:a63:1106:: with SMTP id g6mr26017569pgl.13.1576601652689;
-        Tue, 17 Dec 2019 08:54:12 -0800 (PST)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id v72sm4082803pjb.25.2019.12.17.08.54.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 08:54:12 -0800 (PST)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     mturquette@baylibre.com, sboyd@kernel.org
-Cc:     andy.gross@linaro.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH] clk: qcom: smd: Add missing bimc clock
-Date:   Tue, 17 Dec 2019 08:54:09 -0800
-Message-Id: <20191217165409.4919-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 17 Dec 2019 11:58:32 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ihGAx-0003dK-In; Tue, 17 Dec 2019 17:58:23 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ihGAw-000400-1k; Tue, 17 Dec 2019 17:58:22 +0100
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>
+Cc:     kernel@pengutronix.de, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: [PATCH v4 1/3] tty: rename tty_kopen() and add new function tty_kopen_shared()
+Date:   Tue, 17 Dec 2019 17:58:14 +0100
+Message-Id: <20191217165816.19324-2-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191217165816.19324-1-u.kleine-koenig@pengutronix.de>
+References: <20191217165816.19324-1-u.kleine-koenig@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It turns out booting the modem is dependent on a bimc vote from Linux on
-msm8998.  To make the modem happy, add the bimc clock to rely on the
-default vote from rpmcc.  Once we have interconnect support, bimc should
-be controlled properly.
+Introduce a new function tty_kopen_shared() that yields a struct
+tty_struct. The semantic difference to tty_kopen() is that the tty is
+expected to be used already. So rename tty_kopen() to
+tty_kopen_exclusive() for clearness, adapt the single user and put the
+common code in a new static helper function.
 
-Fixes: 6131dc81211c ("clk: qcom: smd: Add support for MSM8998 rpm clocks")
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+tty_kopen_shared is to be used to implement an LED trigger for tty
+devices in one of the next patches.
+
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/clk/qcom/clk-smd-rpm.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/staging/speakup/spk_ttyio.c |  2 +-
+ drivers/tty/tty_io.c                | 58 ++++++++++++++++++++---------
+ include/linux/tty.h                 |  5 ++-
+ 3 files changed, 44 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/clk/qcom/clk-smd-rpm.c b/drivers/clk/qcom/clk-smd-rpm.c
-index 930fa4a4c52a..e5c3db11bf26 100644
---- a/drivers/clk/qcom/clk-smd-rpm.c
-+++ b/drivers/clk/qcom/clk-smd-rpm.c
-@@ -648,6 +648,7 @@ static const struct rpm_smd_clk_desc rpm_clk_qcs404 = {
- };
+diff --git a/drivers/staging/speakup/spk_ttyio.c b/drivers/staging/speakup/spk_ttyio.c
+index 5a9eff08cb96..e9db06eae875 100644
+--- a/drivers/staging/speakup/spk_ttyio.c
++++ b/drivers/staging/speakup/spk_ttyio.c
+@@ -147,7 +147,7 @@ static int spk_ttyio_initialise_ldisc(struct spk_synth *synth)
+ 	if (ret)
+ 		return ret;
  
- /* msm8998 */
-+DEFINE_CLK_SMD_RPM(msm8998, bimc_clk, bimc_a_clk, QCOM_SMD_RPM_MEM_CLK, 0);
- DEFINE_CLK_SMD_RPM(msm8998, pcnoc_clk, pcnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 0);
- DEFINE_CLK_SMD_RPM(msm8998, snoc_clk, snoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 1);
- DEFINE_CLK_SMD_RPM(msm8998, cnoc_clk, cnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 2);
-@@ -671,6 +672,8 @@ DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8998, rf_clk2_pin, rf_clk2_a_pin, 5);
- DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, rf_clk3, rf_clk3_a, 6);
- DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8998, rf_clk3_pin, rf_clk3_a_pin, 6);
- static struct clk_smd_rpm *msm8998_clks[] = {
-+	[RPM_SMD_BIMC_CLK] = &msm8998_bimc_clk,
-+	[RPM_SMD_BIMC_A_CLK] = &msm8998_bimc_a_clk,
- 	[RPM_SMD_PCNOC_CLK] = &msm8998_pcnoc_clk,
- 	[RPM_SMD_PCNOC_A_CLK] = &msm8998_pcnoc_a_clk,
- 	[RPM_SMD_SNOC_CLK] = &msm8998_snoc_clk,
+-	tty = tty_kopen(dev);
++	tty = tty_kopen_exclusive(dev);
+ 	if (IS_ERR(tty))
+ 		return PTR_ERR(tty);
+ 
+diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
+index a1453fe10862..b718666ce73c 100644
+--- a/drivers/tty/tty_io.c
++++ b/drivers/tty/tty_io.c
+@@ -1875,22 +1875,7 @@ static struct tty_driver *tty_lookup_driver(dev_t device, struct file *filp,
+ 	return driver;
+ }
+ 
+-/**
+- *	tty_kopen	-	open a tty device for kernel
+- *	@device: dev_t of device to open
+- *
+- *	Opens tty exclusively for kernel. Performs the driver lookup,
+- *	makes sure it's not already opened and performs the first-time
+- *	tty initialization.
+- *
+- *	Returns the locked initialized &tty_struct
+- *
+- *	Claims the global tty_mutex to serialize:
+- *	  - concurrent first-time tty initialization
+- *	  - concurrent tty driver removal w/ lookup
+- *	  - concurrent tty removal from driver table
+- */
+-struct tty_struct *tty_kopen(dev_t device)
++static struct tty_struct *tty_kopen(dev_t device, int shared)
+ {
+ 	struct tty_struct *tty;
+ 	struct tty_driver *driver;
+@@ -1905,7 +1890,7 @@ struct tty_struct *tty_kopen(dev_t device)
+ 
+ 	/* check whether we're reopening an existing tty */
+ 	tty = tty_driver_lookup_tty(driver, NULL, index);
+-	if (IS_ERR(tty))
++	if (IS_ERR(tty) || shared)
+ 		goto out;
+ 
+ 	if (tty) {
+@@ -1923,7 +1908,44 @@ struct tty_struct *tty_kopen(dev_t device)
+ 	tty_driver_kref_put(driver);
+ 	return tty;
+ }
+-EXPORT_SYMBOL_GPL(tty_kopen);
++
++/**
++ *	tty_kopen_exclusive	-	open a tty device for kernel
++ *	@device: dev_t of device to open
++ *
++ *	Opens tty exclusively for kernel. Performs the driver lookup,
++ *	makes sure it's not already opened and performs the first-time
++ *	tty initialization.
++ *
++ *	Returns the locked initialized &tty_struct
++ *
++ *	Claims the global tty_mutex to serialize:
++ *	  - concurrent first-time tty initialization
++ *	  - concurrent tty driver removal w/ lookup
++ *	  - concurrent tty removal from driver table
++ */
++struct tty_struct *tty_kopen_exclusive(dev_t device)
++{
++	return tty_kopen(device, 0);
++}
++EXPORT_SYMBOL_GPL(tty_kopen_exclusive);
++
++/**
++ *	tty_kopen_shared	-	open a tty device for shared in-kernel use
++ *	@device: dev_t of device to open
++ *
++ *	Opens an already existing tty
++ *	rnel. Performs the driver lookup,
++ *	makes sure it's not already opened and performs the first-time
++ *	tty initialization.
++ *
++ *	Locking is identical to tty_kopen() above.
++ */
++struct tty_struct *tty_kopen_shared(dev_t device)
++{
++	return tty_kopen(device, 1);
++}
++EXPORT_SYMBOL_GPL(tty_kopen_shared);
+ 
+ /**
+  *	tty_open_by_driver	-	open a tty device
+diff --git a/include/linux/tty.h b/include/linux/tty.h
+index bfa4e2ee94a9..d0bcf3226fb2 100644
+--- a/include/linux/tty.h
++++ b/include/linux/tty.h
+@@ -411,7 +411,8 @@ extern struct tty_struct *get_current_tty(void);
+ /* tty_io.c */
+ extern int __init tty_init(void);
+ extern const char *tty_name(const struct tty_struct *tty);
+-extern struct tty_struct *tty_kopen(dev_t device);
++extern struct tty_struct *tty_kopen_exclusive(dev_t device);
++extern struct tty_struct *tty_kopen_shared(dev_t device);
+ extern void tty_kclose(struct tty_struct *tty);
+ extern int tty_dev_name_to_number(const char *name, dev_t *number);
+ extern int tty_ldisc_lock(struct tty_struct *tty, unsigned long timeout);
+@@ -436,7 +437,7 @@ static inline int __init tty_init(void)
+ { return 0; }
+ static inline const char *tty_name(const struct tty_struct *tty)
+ { return "(none)"; }
+-static inline struct tty_struct *tty_kopen(dev_t device)
++static inline struct tty_struct *tty_kopen_exclusive(dev_t device)
+ { return ERR_PTR(-ENODEV); }
+ static inline void tty_kclose(struct tty_struct *tty)
+ { }
 -- 
-2.17.1
+2.24.0
 
