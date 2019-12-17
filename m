@@ -2,93 +2,107 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37356C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A33C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03F71206D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:53:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576569224;
-	bh=GBDK8XppUFNSz5gp2F8XZAezflx4x5mLVQRxqNz4gkw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=avPEFcNfSzZaCH2HvCHyWSUov7aniQ6/Dv2bxhFPX547uYxGKxfyvfFJVm0sI6kja
-	 lI78YqfruNfHaL0N9rQcy6RoF623FmuNL2sxbIZZEOhd045bWz+NrNmZ63yc4uMtuN
-	 OmZ/DZ9sPTCcGgWrvNAi9AVKVEVGE198GFQUch4s=
+	by mail.kernel.org (Postfix) with ESMTP id 2115F206D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:54:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="LQJUaOR9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbfLQHxn (ORCPT
+        id S1726813AbfLQHyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 02:53:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52544 "EHLO mail.kernel.org"
+        Tue, 17 Dec 2019 02:54:05 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:40972 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbfLQHxm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 02:53:42 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1726446AbfLQHyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 02:54:04 -0500
+Received: from zn.tnic (p200300EC2F0BBF00D423EC4793E13B2B.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:bf00:d423:ec47:93e1:3b2b])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF3D2206D8;
-        Tue, 17 Dec 2019 07:53:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576569222;
-        bh=GBDK8XppUFNSz5gp2F8XZAezflx4x5mLVQRxqNz4gkw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BdbY+e9e/+FSfuBi2RL5ZEMUEeOCQMMBWOoDI94CM9dBkAeh4OqcC9HbySIZ6PJSi
-         txsQcQ73hbyzlbVYJIait0GDPgQNJ+wWKe1fi9yT6f59/NHXYpAbPcT9q2mIeG/0z/
-         7ZfIoJHkoEiaaD5O2yC3VHTUnvO4yzsSfFcg4M3I=
-Date:   Tue, 17 Dec 2019 08:53:37 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Subject: Re: [PATCH 5.4 000/177] 5.4.4-stable review
-Message-ID: <20191217075337.GF2474507@kroah.com>
-References: <20191216174811.158424118@linuxfoundation.org>
- <CA+G9fYt-=ZbHLEEn8VisqAN9ry6rj_Vc-7yFr+bVn3uTwhCxqQ@mail.gmail.com>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3C4441EC0C9C;
+        Tue, 17 Dec 2019 08:54:03 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1576569243;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=bRRPLwpHzOt2xZPhIDBu2caULRFpQfO1a3EOTMqwHkQ=;
+        b=LQJUaOR99M4qnR1l+1odlkzq+fcdJ98rsUfalrcAaypsEVG2cHk0OHYs8LK/QA33NVFjgV
+        Lt6ex9BOiRnb8jGtqCX0REh/rvwH2KDCspkdWuvq5zfMB1XiRf0fLWy0eb7RR6WdwXrDFW
+        rzrIMmgY2VAEClX9ZrhCjh634wObLPo=
+Date:   Tue, 17 Dec 2019 08:53:55 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     Yazen Ghannam <Yazen.Ghannam@amd.com>,
+        Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org,
+        linux-edac@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH] x86/MCE/AMD: fix warning about sleep-in-atomic at early
+ boot
+Message-ID: <20191217075355.GA15129@zn.tnic>
+References: <157252708836.3876.4604398213417262402.stgit@buzz>
+ <20191031142955.GA23693@nazgul.tnic>
+ <ad7a25d9-1ca5-0791-ae0a-63c524040bcb@yandex-team.ru>
+ <20191107105310.GD19501@zn.tnic>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYt-=ZbHLEEn8VisqAN9ry6rj_Vc-7yFr+bVn3uTwhCxqQ@mail.gmail.com>
+In-Reply-To: <20191107105310.GD19501@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 12:53:37PM +0530, Naresh Kamboju wrote:
-> On Mon, 16 Dec 2019 at 23:46, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 5.4.4 release.
-> > There are 177 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Wed, 18 Dec 2019 17:41:25 +0000.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.4-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
+On Thu, Nov 07, 2019 at 11:53:10AM +0100, Borislav Petkov wrote:
+> On Fri, Nov 01, 2019 at 04:39:17PM +0300, Konstantin Khlebnikov wrote:
+> > I tried 5.4 once but there was no warning.
+> > Code in 4.19 and in mainline almost the same.
 > 
-> Results from Linaro’s test farm.
-> No regressions on arm64, arm, x86_64, and i386.
+> Yes, but early boot code has changed a lot since 4.19. If you can't
+> trigger it on 5.4, then I'll drop the BUG splat from your commit message
+> and change it to talk about replacing the IPI-sending function, which is
+> a good cleanup in itself.
 
-Thanks for testing all of these other ones too.
+Ok, I was able to trigger it myself:
 
-greg k-h
+[    0.822602] BUG: sleeping function called from invalid context at kernel/sched/completion.c:99
+[    0.822602] in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 0, name: swapper/1
+[    0.822602] no locks held by swapper/1/0.
+[    0.822602] irq event stamp: 0
+[    0.822602] hardirqs last  enabled at (0): [<0000000000000000>] 0x0
+[    0.822602] hardirqs last disabled at (0): [<ffffffff8106dda9>] copy_process+0x8b9/0x1ca0
+[    0.822602] softirqs last  enabled at (0): [<ffffffff8106dda9>] copy_process+0x8b9/0x1ca0
+[    0.822602] softirqs last disabled at (0): [<0000000000000000>] 0x0
+[    0.822602] Preemption disabled at:
+[    0.822602] [<ffffffff8104703b>] start_secondary+0x3b/0x190
+[    0.822602] CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.5.0-rc2+ #1
+[    0.822602] Hardware name: GIGABYTE MZ01-CE1-00/MZ01-CE1-00, BIOS F02 08/29/2018
+[    0.822602] Call Trace:
+[    0.822602]  dump_stack+0x71/0xa0
+[    0.822602]  ___might_sleep.cold.92+0xf7/0x11f
+[    0.822602]  wait_for_completion+0x3c/0x180
+[    0.822602]  ? generic_exec_single+0xca/0x100
+[    0.822602]  rdmsr_safe_on_cpu+0xe8/0x100
+[    0.822602]  ? wrmsr_on_cpus+0x20/0x20
+[    0.822602]  mce_amd_feature_init+0x2ab/0x590
+[    0.822602]  mcheck_cpu_init+0x17a/0x4d0
+[    0.822602]  identify_cpu+0x3f0/0x750
+[    0.822602]  identify_secondary_cpu+0x13/0x80
+[    0.822602]  smp_store_cpu_info+0x45/0x50
+[    0.822602]  start_secondary+0x50/0x190
+[    0.822602]  secondary_startup_64+0xa4/0xb0
+
+Rerouting patch...
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
