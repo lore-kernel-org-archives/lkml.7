@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F134C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15844C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6599E24679
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:53:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAD332467B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:53:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbfLQAxI (ORCPT
+        id S1727862AbfLQAxG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:53:08 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35478 "EHLO
+        Mon, 16 Dec 2019 19:53:06 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35554 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727152AbfLQAvp (ORCPT
+        by vger.kernel.org with ESMTP id S1727205AbfLQAvp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 19:51:45 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15L-0003ND-93; Tue, 17 Dec 2019 00:51:35 +0000
+        id 1ih15O-0003PR-5c; Tue, 17 Dec 2019 00:51:38 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15J-0005aQ-4u; Tue, 17 Dec 2019 00:51:33 +0000
+        id 1ih15L-0005fo-Dv; Tue, 17 Dec 2019 00:51:35 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Marek Szyprowski" <m.szyprowski@samsung.com>,
-        "Reported-by: Marian Mihailescu" <mihailescu2m@gmail.com>,
-        "Sylwester Nawrocki" <s.nawrocki@samsung.com>
-Date:   Tue, 17 Dec 2019 00:47:06 +0000
-Message-ID: <lsq.1576543535.482826178@decadent.org.uk>
+        "Henry Lin" <henryl@nvidia.com>, "Takashi Iwai" <tiwai@suse.de>
+Date:   Tue, 17 Dec 2019 00:47:43 +0000
+Message-ID: <lsq.1576543535.324896323@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 092/136] clk: samsung: exynos5420: Preserve PLL
- configuration during suspend/resume
+Subject: [PATCH 3.16 129/136] ALSA: usb-audio: not submit urb for stopped
+ endpoint
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,44 +55,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Henry Lin <henryl@nvidia.com>
 
-commit e9323b664ce29547d996195e8a6129a351c39108 upstream.
+commit 528699317dd6dc722dccc11b68800cf945109390 upstream.
 
-Properly save and restore all top PLL related configuration registers
-during suspend/resume cycle. So far driver only handled EPLL and RPLL
-clocks, all other were reset to default values after suspend/resume cycle.
-This caused for example lower G3D (MALI Panfrost) performance after system
-resume, even if performance governor has been selected.
+While output urb's snd_complete_urb() is executing, calling
+prepare_outbound_urb() may cause endpoint stopped before
+prepare_outbound_urb() returns and result in next urb submitted
+to stopped endpoint. usb-audio driver cannot re-use it afterwards as
+the urb is still hold by usb stack.
 
-Reported-by: Reported-by: Marian Mihailescu <mihailescu2m@gmail.com>
-Fixes: 773424326b51 ("clk: samsung: exynos5420: add more registers to restore list")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+This change checks EP_FLAG_RUNNING flag after prepare_outbound_urb() again
+to let snd_complete_urb() know the endpoint already stopped and does not
+submit next urb. Below kind of error will be fixed:
+
+[  213.153103] usb 1-2: timeout: still 1 active urbs on EP #1
+[  213.164121] usb 1-2: cannot submit urb 0, error -16: unknown error
+
+Signed-off-by: Henry Lin <henryl@nvidia.com>
+Link: https://lore.kernel.org/r/20191113021420.13377-1-henryl@nvidia.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/clk/samsung/clk-exynos5420.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ sound/usb/endpoint.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/clk/samsung/clk-exynos5420.c
-+++ b/drivers/clk/samsung/clk-exynos5420.c
-@@ -162,12 +162,18 @@ static unsigned long exynos5x_clk_regs[]
- 	GATE_BUS_CPU,
- 	GATE_SCLK_CPU,
- 	CLKOUT_CMU_CPU,
-+	CPLL_CON0,
-+	DPLL_CON0,
- 	EPLL_CON0,
- 	EPLL_CON1,
- 	EPLL_CON2,
- 	RPLL_CON0,
- 	RPLL_CON1,
- 	RPLL_CON2,
-+	IPLL_CON0,
-+	SPLL_CON0,
-+	VPLL_CON0,
-+	MPLL_CON0,
- 	SRC_TOP0,
- 	SRC_TOP1,
- 	SRC_TOP2,
+--- a/sound/usb/endpoint.c
++++ b/sound/usb/endpoint.c
+@@ -377,6 +377,9 @@ static void snd_complete_urb(struct urb
+ 		}
+ 
+ 		prepare_outbound_urb(ep, ctx);
++		/* can be stopped during prepare callback */
++		if (unlikely(!test_bit(EP_FLAG_RUNNING, &ep->flags)))
++			goto exit_clear;
+ 	} else {
+ 		retire_inbound_urb(ep, ctx);
+ 		/* can be stopped during retire callback */
 
