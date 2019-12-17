@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C59ABC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2FE2C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A168620CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:55:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92B8224673
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:55:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728264AbfLQAzb (ORCPT
+        id S1728243AbfLQAz3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:55:31 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35328 "EHLO
+        Mon, 16 Dec 2019 19:55:29 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35272 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727056AbfLQAvn (ORCPT
+        by vger.kernel.org with ESMTP id S1727031AbfLQAvn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 19:51:43 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15L-0003Mm-1T; Tue, 17 Dec 2019 00:51:35 +0000
+        id 1ih15K-0003Mn-N7; Tue, 17 Dec 2019 00:51:34 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15K-0005c0-5C; Tue, 17 Dec 2019 00:51:34 +0000
+        id 1ih15I-0005Zh-MC; Tue, 17 Dec 2019 00:51:32 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Takashi Iwai" <tiwai@suse.de>
-Date:   Tue, 17 Dec 2019 00:47:22 +0000
-Message-ID: <lsq.1576543535.26422639@decadent.org.uk>
+        "Vineet Gupta" <vgupta@synopsys.com>,
+        "Alexey Brodkin" <abrodkin@synopsys.com>,
+        "Alexey Brodkin" <Alexey.Brodkin@synopsys.com>
+Date:   Tue, 17 Dec 2019 00:46:57 +0000
+Message-ID: <lsq.1576543535.455415966@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 108/136] ALSA: timer: Simplify error path in
- snd_timer_open()
+Subject: [PATCH 3.16 083/136] ARC: perf: Accommodate big-endian CPU
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,126 +56,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
 
-commit 41672c0c24a62699d20aab53b98d843b16483053 upstream.
+commit 5effc09c4907901f0e71e68e5f2e14211d9a203f upstream.
 
-Just a minor refactoring to use the standard goto for error paths in
-snd_timer_open() instead of open code.  The first mutex_lock() is
-moved to the beginning of the function to make the code clearer.
+8-letter strings representing ARC perf events are stores in two
+32-bit registers as ASCII characters like that: "IJMP", "IALL", "IJMPTAK" etc.
 
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-[bwh: Backported to 3.16 as dependency of commit a39331867335
- "ALSA: timer: Fix mutex deadlock at releasing card"]
+And the same order of bytes in the word is used regardless CPU endianness.
+
+Which means in case of big-endian CPU core we need to swap bytes to get
+the same order as if it was on little-endian CPU.
+
+Otherwise we're seeing the following error message on boot:
+------------------------->8----------------------
+ARC perf        : 8 counters (32 bits), 40 conditions, [overflow IRQ support]
+sysfs: cannot create duplicate filename '/devices/arc_pct/events/pmji'
+CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.2.18 #3
+Stack Trace:
+  arc_unwind_core+0xd4/0xfc
+  dump_stack+0x64/0x80
+  sysfs_warn_dup+0x46/0x58
+  sysfs_add_file_mode_ns+0xb2/0x168
+  create_files+0x70/0x2a0
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 1 at kernel/events/core.c:12144 perf_event_sysfs_init+0x70/0xa0
+Failed to register pmu: arc_pct, reason -17
+Modules linked in:
+CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.2.18 #3
+Stack Trace:
+  arc_unwind_core+0xd4/0xfc
+  dump_stack+0x64/0x80
+  __warn+0x9c/0xd4
+  warn_slowpath_fmt+0x22/0x2c
+  perf_event_sysfs_init+0x70/0xa0
+---[ end trace a75fb9a9837bd1ec ]---
+------------------------->8----------------------
+
+What happens here we're trying to register more than one raw perf event
+with the same name "PMJI". Why? Because ARC perf events are 4 to 8 letters
+and encoded into two 32-bit words. In this particular case we deal with 2
+events:
+ * "IJMP____" which counts all jump & branch instructions
+ * "IJMPC___" which counts only conditional jumps & branches
+
+Those strings are split in two 32-bit words this way "IJMP" + "____" &
+"IJMP" + "C___" correspondingly. Now if we read them swapped due to CPU core
+being big-endian then we read "PMJI" + "____" & "PMJI" + "___C".
+
+And since we interpret read array of ASCII letters as a null-terminated string
+on big-endian CPU we end up with 2 events of the same name "PMJI".
+
+Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- sound/core/timer.c | 39 ++++++++++++++++++++-------------------
- 1 file changed, 20 insertions(+), 19 deletions(-)
+ arch/arc/kernel/perf_event.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/sound/core/timer.c
-+++ b/sound/core/timer.c
-@@ -255,19 +255,20 @@ int snd_timer_open(struct snd_timer_inst
- 	struct snd_timer_instance *timeri = NULL;
- 	int err;
+--- a/arch/arc/kernel/perf_event.c
++++ b/arch/arc/kernel/perf_event.c
+@@ -274,8 +274,8 @@ static int arc_pmu_device_probe(struct p
  
-+	mutex_lock(&register_mutex);
- 	if (tid->dev_class == SNDRV_TIMER_CLASS_SLAVE) {
- 		/* open a slave instance */
- 		if (tid->dev_sclass <= SNDRV_TIMER_SCLASS_NONE ||
- 		    tid->dev_sclass > SNDRV_TIMER_SCLASS_OSS_SEQUENCER) {
- 			pr_debug("ALSA: timer: invalid slave class %i\n",
- 				 tid->dev_sclass);
--			return -EINVAL;
-+			err = -EINVAL;
-+			goto unlock;
- 		}
--		mutex_lock(&register_mutex);
- 		timeri = snd_timer_instance_new(owner, NULL);
- 		if (!timeri) {
--			mutex_unlock(&register_mutex);
--			return -ENOMEM;
-+			err = -ENOMEM;
-+			goto unlock;
- 		}
- 		timeri->slave_class = tid->dev_sclass;
- 		timeri->slave_id = tid->device;
-@@ -278,13 +279,10 @@ int snd_timer_open(struct snd_timer_inst
- 			snd_timer_close_locked(timeri);
- 			timeri = NULL;
- 		}
--		mutex_unlock(&register_mutex);
--		*ti = timeri;
--		return err;
-+		goto unlock;
- 	}
- 
- 	/* open a master instance */
--	mutex_lock(&register_mutex);
- 	timer = snd_timer_find(tid);
- #ifdef CONFIG_MODULES
- 	if (!timer) {
-@@ -295,25 +293,26 @@ int snd_timer_open(struct snd_timer_inst
- 	}
- #endif
- 	if (!timer) {
--		mutex_unlock(&register_mutex);
--		return -ENODEV;
-+		err = -ENODEV;
-+		goto unlock;
- 	}
- 	if (!list_empty(&timer->open_list_head)) {
- 		timeri = list_entry(timer->open_list_head.next,
- 				    struct snd_timer_instance, open_list);
- 		if (timeri->flags & SNDRV_TIMER_IFLG_EXCLUSIVE) {
--			mutex_unlock(&register_mutex);
--			return -EBUSY;
-+			err = -EBUSY;
-+			timeri = NULL;
-+			goto unlock;
- 		}
- 	}
- 	if (timer->num_instances >= timer->max_instances) {
--		mutex_unlock(&register_mutex);
--		return -EBUSY;
-+		err = -EBUSY;
-+		goto unlock;
- 	}
- 	timeri = snd_timer_instance_new(owner, timer);
- 	if (!timeri) {
--		mutex_unlock(&register_mutex);
--		return -ENOMEM;
-+		err = -ENOMEM;
-+		goto unlock;
- 	}
- 	/* take a card refcount for safe disconnection */
- 	if (timer->card)
-@@ -322,16 +321,16 @@ int snd_timer_open(struct snd_timer_inst
- 	timeri->slave_id = slave_id;
- 
- 	if (list_empty(&timer->open_list_head) && timer->hw.open) {
--		int err = timer->hw.open(timer);
-+		err = timer->hw.open(timer);
- 		if (err) {
- 			kfree(timeri->owner);
- 			kfree(timeri);
-+			timeri = NULL;
- 
- 			if (timer->card)
- 				put_device(&timer->card->card_dev);
- 			module_put(timer->module);
--			mutex_unlock(&register_mutex);
--			return err;
-+			goto unlock;
- 		}
- 	}
- 
-@@ -342,6 +341,8 @@ int snd_timer_open(struct snd_timer_inst
- 		snd_timer_close_locked(timeri);
- 		timeri = NULL;
- 	}
-+
-+ unlock:
- 	mutex_unlock(&register_mutex);
- 	*ti = timeri;
- 	return err;
+ 	for (j = 0; j < cc_bcr.c; j++) {
+ 		write_aux_reg(ARC_REG_CC_INDEX, j);
+-		cc_name.indiv.word0 = read_aux_reg(ARC_REG_CC_NAME0);
+-		cc_name.indiv.word1 = read_aux_reg(ARC_REG_CC_NAME1);
++		cc_name.indiv.word0 = le32_to_cpu(read_aux_reg(ARC_REG_CC_NAME0));
++		cc_name.indiv.word1 = le32_to_cpu(read_aux_reg(ARC_REG_CC_NAME1));
+ 		for (i = 0; i < ARRAY_SIZE(arc_pmu_ev_hw_map); i++) {
+ 			if (arc_pmu_ev_hw_map[i] &&
+ 			    !strcmp(arc_pmu_ev_hw_map[i], cc_name.str) &&
 
