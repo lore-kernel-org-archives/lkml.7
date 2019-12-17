@@ -2,71 +2,104 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B8FC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 02:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA83C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 02:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9CBF2176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 02:07:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEF2D2176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 02:07:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbfLQCH1 (ORCPT
+        id S1726747AbfLQCHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 21:07:27 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:39870 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726180AbfLQCH1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 21:07:27 -0500
-Received: from [213.220.153.21] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1ih2Gj-000354-4v; Tue, 17 Dec 2019 02:07:25 +0000
-Date:   Tue, 17 Dec 2019 03:07:24 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Sargun Dhillon <sargun@sargun.me>
-Cc:     linux-kernel@vger.kernel.org,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, tycho@tycho.ws, jannh@google.com,
-        cyphar@cyphar.com, oleg@redhat.com, luto@amacapital.net,
-        viro@zeniv.linux.org.uk, gpascutto@mozilla.com,
-        ealvarez@mozilla.com, fweimer@redhat.com, jld@mozilla.com
-Subject: Re: [PATCH v3 4/4] samples: Add example of using pidfd getfd in
- conjunction with user trap
-Message-ID: <20191217020723.cluy5x2kg5q3ithf@wittgenstein>
-References: <20191217010025.GA14479@ircssh-2.c.rugged-nimbus-611.internal>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191217010025.GA14479@ircssh-2.c.rugged-nimbus-611.internal>
-User-Agent: NeoMutt/20180716
+        Mon, 16 Dec 2019 21:07:43 -0500
+Received: from mga14.intel.com ([192.55.52.115]:36892 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726133AbfLQCHm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 21:07:42 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 17:37:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,323,1571727600"; 
+   d="scan'208";a="217616412"
+Received: from rzhang1-mobile.sh.intel.com ([10.239.195.243])
+  by orsmga003.jf.intel.com with ESMTP; 16 Dec 2019 17:37:09 -0800
+Message-ID: <2dcde56646eea0a8d8002d0b07b1702d64284034.camel@intel.com>
+Subject: Re: [PATCH v3 5/5] thermal: int340x_thermal: Add new Tiger Lake
+ hardware IDs to support thermal driver
+From:   Zhang Rui <rui.zhang@intel.com>
+To:     Gayatri Kammela <gayatri.kammela@intel.com>,
+        linux-pm@vger.kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, alex.hung@canonical.com,
+        linux-acpi@vger.kernel.org, lenb@kernel.org, rjw@rjwysocki.net,
+        linux-kernel@vger.kernel.org, daniel.lezcano@linaro.org,
+        amit.kucheria@verdurent.com, charles.d.prestopine@intel.com,
+        dvhart@infradead.org, "Rafael J . Wysocki" <rafael@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+Date:   Tue, 17 Dec 2019 09:37:09 +0800
+In-Reply-To: <354062a481f1b8b207fa7035abb50fcb80e8ce32.1576520244.git.gayatri.kammela@intel.com>
+References: <cover.1576520244.git.gayatri.kammela@intel.com>
+         <354062a481f1b8b207fa7035abb50fcb80e8ce32.1576520244.git.gayatri.kammela@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 01:00:27AM +0000, Sargun Dhillon wrote:
-> This sample adds the usage of SECCOMP_RET_USER_NOTIF together with pidfd
-> GETFD ioctl. It shows trapping a syscall, and handling it by extracting
-> the FD into the parent process without stopping the child process.
-> Although, in this example, there's no explicit policy separation in
-> the two processes, it can be generalized into the example of a transparent
-> proxy.
+On Mon, 2019-12-16 at 10:31 -0800, Gayatri Kammela wrote:
+> Tiger Lake has a new unique hardware IDs to support thermal driver.
+> Hence, add them.
 > 
-> Signed-off-by: Sargun Dhillon <sargun@sargun.me>
+> Cc: Rafael J. Wysocki <rafael@kernel.org>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Zhang rui <rui.zhang@intel.com>
+> Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+> Reviewed-by: Pandruvada, Srinivas <srinivas.pandruvada@intel.com>
+> Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
+
+Acked-by: Zhang Rui <rui.zhang@intel.com>
+
+thanks,
+rui
 > ---
->  samples/seccomp/.gitignore        |   1 +
->  samples/seccomp/Makefile          |   9 +-
->  samples/seccomp/user-trap-pidfd.c | 190 ++++++++++++++++++++++++++++++
+>  drivers/thermal/intel/int340x_thermal/int3400_thermal.c | 1 +
+>  drivers/thermal/intel/int340x_thermal/int3403_thermal.c | 1 +
+>  2 files changed, 2 insertions(+)
+> 
+> diff --git a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
+> b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
+> index 3517883b5cdb..efae0c02d898 100644
+> --- a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
+> +++ b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
+> @@ -369,6 +369,7 @@ static int int3400_thermal_remove(struct
+> platform_device *pdev)
+>  }
+>  
+>  static const struct acpi_device_id int3400_thermal_match[] = {
+> +	{"INT1040", 0},
+>  	{"INT3400", 0},
+>  	{}
+>  };
+> diff --git a/drivers/thermal/intel/int340x_thermal/int3403_thermal.c
+> b/drivers/thermal/intel/int340x_thermal/int3403_thermal.c
+> index a7bbd8584ae2..aeece1e136a5 100644
+> --- a/drivers/thermal/intel/int340x_thermal/int3403_thermal.c
+> +++ b/drivers/thermal/intel/int340x_thermal/int3403_thermal.c
+> @@ -282,6 +282,7 @@ static int int3403_remove(struct platform_device
+> *pdev)
+>  }
+>  
+>  static const struct acpi_device_id int3403_device_ids[] = {
+> +	{"INT1043", 0},
+>  	{"INT3403", 0},
+>  	{"", 0},
+>  };
 
-This is a great sample.
-Could you please also add tests without seccomp to the pidfd-testsuite
-itself under tools/testing/selftests/pidfd. I want to have all pidfd
-features tested in one place so that people don't need to run
-seccomp-bpf, or compile the optional samples but can just run the pidfd
-test-suite and it'll bang on all features.
-
-Christian
