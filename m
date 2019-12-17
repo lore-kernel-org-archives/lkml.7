@@ -2,70 +2,42 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA539C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B99C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E57A21775
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:29:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H+Gbqi40"
+	by mail.kernel.org (Postfix) with ESMTP id 4315121582
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:29:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbfLQW3U (ORCPT
+        id S1726799AbfLQW3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 17:29:20 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34788 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726704AbfLQW3U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 17:29:20 -0500
-Received: by mail-wr1-f68.google.com with SMTP id t2so187239wrr.1;
-        Tue, 17 Dec 2019 14:29:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=aber1vb0rqClqP4Eusyc1u8qLbsEelt+bd1/MaFY8Y4=;
-        b=H+Gbqi40ANhhfugSzZ5l3x/nWHcUUktrQxurPvVHmeN2uTGLGa9iAVqF0hWOp4S6kG
-         sow2dJy2JCDgXMZpoe9v91T5dI47+ou4FS1qgHnQ1aJSZaT/tEFVn/E3IUJAHbB+nZg+
-         0Hglb4ujtaQ4x+w7dHQenmhepCMjK6upvBoTKCsA3qmU0GiWQJJcpRIeHFTTrEvLvGvU
-         HSbg/EThKCR7E+EuUMdSuH3AaH53qw5pWxmNRMtoHRkMastW/RG1FL19nJPDY8WD7rqd
-         7ueJEA8DLpv9eGtTt+Tz8SHT9joDciBIqPFT/ZSDNEsrfCCj+YEGuYifWsyUyIgcNOul
-         cyXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=aber1vb0rqClqP4Eusyc1u8qLbsEelt+bd1/MaFY8Y4=;
-        b=irjMR9gcGoQVdbzlOBog9gqUVGYPk+BT/+94YHWuMUhewvZ33Z1Pwst1Fsnto+i0cx
-         i2YGZauuC+gETeIixi9Cct77EF5H02FyndRFkf5mTKjAhKn5H9CpaBapEQKHbSQ/yRjA
-         k/5hlZfKZ7VSOTOzUdnZ5zUq4mInIrVuolqtLwtuZs86w5bb8dRmRiHL2Etc7aPnaj+l
-         m2lkg5c6jAtoyx6J4B1far0niWKufea7QtkaGnnkCDDy11WKS5dP6SzkigvQLH2X9J0r
-         lxU3//amg2amNI4JRylkqGQs66bz/zB5FTUbXcWOE4/bkP0kl6pQBf37uW7U3wnhY/Oa
-         nO3A==
-X-Gm-Message-State: APjAAAUSXVC+93eT+WBfXy9XXv5s8UzHybjOjL4VV7nlYgAGWkjBN3pk
-        +MfRki9QV4Pxp6GFK2QQNvjB0Dll
-X-Google-Smtp-Source: APXvYqz2LG9onczwpw3P3jtIw28QHlYfkKKnLdpk3CAC9Av1vFilPuOL8ZEeUtmnq+JrNtuERDswxQ==
-X-Received: by 2002:a05:6000:1052:: with SMTP id c18mr39471537wrx.268.1576621758002;
-        Tue, 17 Dec 2019 14:29:18 -0800 (PST)
-Received: from localhost.localdomain ([109.126.149.134])
-        by smtp.gmail.com with ESMTPSA id q68sm306036wme.14.2019.12.17.14.29.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 14:29:17 -0800 (PST)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] io_uring: batch getting pcpu references
-Date:   Wed, 18 Dec 2019 01:28:39 +0300
-Message-Id: <b72c5ec7f6d9a9881948de6cb88d30cc5e0354e9.1576621553.git.asml.silence@gmail.com>
+        Tue, 17 Dec 2019 17:29:24 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:48042 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726774AbfLQW3W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 17:29:22 -0500
+Received: from ip5f5a5f74.dynamic.kabel-deutschland.de ([95.90.95.116] helo=phil.sntech)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1ihLLA-0001IQ-Sv; Tue, 17 Dec 2019 23:29:16 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     dri-devel@lists.freedesktop.org
+Cc:     thierry.reding@gmail.com, sam@ravnborg.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        christoph.muellner@theobroma-systems.com, maxime@cerno.tech,
+        heiko@sntech.de,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: [PATCH v4 2/3] dt-bindings: display: panel: Add binding document for Xinpeng XPP055C272
+Date:   Tue, 17 Dec 2019 23:29:05 +0100
+Message-Id: <20191217222906.19943-2-heiko@sntech.de>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1576621553.git.asml.silence@gmail.com>
-References: <cover.1576621553.git.asml.silence@gmail.com>
+In-Reply-To: <20191217222906.19943-1-heiko@sntech.de>
+References: <20191217222906.19943-1-heiko@sntech.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,72 +45,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-percpu_ref_tryget() has its own overhead. Instead getting a reference
-for each request, grab a bunch once per io_submit_sqes().
+From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
-basic benchmark with submit and wait 128 non-linked nops showed ~5%
-performance gain. (7044 KIOPS vs 7423)
+The XPP055C272 is a 5.5" 720x1280 DSI display.
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+changes in v4:
+- fix id (Maxime)
+- drop port (Maxime)
+changes in v2:
+- add size info into binding title (Sam)
+- add more required properties (Sam)
+
+Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 ---
+ .../display/panel/xinpeng,xpp055c272.yaml     | 47 +++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/xinpeng,xpp055c272.yaml
 
-For notice: it could be done without @extra_refs variable,
-but looked too tangled because of gotos.
-
-
- fs/io_uring.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
-
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index cf4138f0e504..6c85dfc62224 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -845,9 +845,6 @@ static struct io_kiocb *io_get_req(struct io_ring_ctx *ctx,
- 	gfp_t gfp = GFP_KERNEL | __GFP_NOWARN;
- 	struct io_kiocb *req;
- 
--	if (!percpu_ref_tryget(&ctx->refs))
--		return NULL;
--
- 	if (!state) {
- 		req = kmem_cache_alloc(req_cachep, gfp);
- 		if (unlikely(!req))
-@@ -3929,6 +3926,7 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
- 	struct io_submit_state state, *statep = NULL;
- 	struct io_kiocb *link = NULL;
- 	int i, submitted = 0;
-+	unsigned int extra_refs;
- 	bool mm_fault = false;
- 
- 	/* if we have a backlog and couldn't flush it all, return BUSY */
-@@ -3941,6 +3939,10 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
- 		statep = &state;
- 	}
- 
-+	if (!percpu_ref_tryget_many(&ctx->refs, nr))
-+		return -EAGAIN;
-+	extra_refs = nr;
+diff --git a/Documentation/devicetree/bindings/display/panel/xinpeng,xpp055c272.yaml b/Documentation/devicetree/bindings/display/panel/xinpeng,xpp055c272.yaml
+new file mode 100644
+index 000000000000..378cf9e2549d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/xinpeng,xpp055c272.yaml
+@@ -0,0 +1,47 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/panel/xinpeng,xpp055c272.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 	for (i = 0; i < nr; i++) {
- 		struct io_kiocb *req = io_get_req(ctx, statep);
- 
-@@ -3949,6 +3951,7 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
- 				submitted = -EAGAIN;
- 			break;
- 		}
-+		--extra_refs;
- 		if (!io_get_sqring(ctx, req)) {
- 			__io_free_req(req);
- 			break;
-@@ -3976,6 +3979,8 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
- 		io_queue_link_head(link);
- 	if (statep)
- 		io_submit_state_end(&state);
-+	if (extra_refs)
-+		percpu_ref_put_many(&ctx->refs, extra_refs);
- 
- 	 /* Commit SQ ring head once we've consumed and submitted all SQEs */
- 	io_commit_sqring(ctx);
++title: Xinpeng XPP055C272 5.5in 720x1280 DSI panel
++
++maintainers:
++  - Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
++
++allOf:
++  - $ref: panel-common.yaml#
++
++properties:
++  compatible:
++    const: xinpeng,xpp055c272
++  reg: true
++  backlight: true
++  reset-gpios: true
++  iovcc-supply:
++     description: regulator that supplies the iovcc voltage
++  vci-supply:
++     description: regulator that supplies the vci voltage
++
++required:
++  - compatible
++  - reg
++  - backlight
++  - iovcc-supply
++  - vci-supply
++
++additionalProperties: false
++
++examples:
++  - |
++    dsi@ff450000 {
++        panel@0 {
++            compatible = "xinpeng,xpp055c272";
++            reg = <0>;
++            backlight = <&backlight>;
++            iovcc-supply = <&vcc_1v8>;
++            vci-supply = <&vcc3v3_lcd>;
++        };
++    };
++
++...
 -- 
 2.24.0
 
