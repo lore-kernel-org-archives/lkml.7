@@ -2,147 +2,142 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72167C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B3BC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 489492064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:01:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 345112146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:01:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C4WQX0+t"
+	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="OWsgohQO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfLQLBT (ORCPT
+        id S1727216AbfLQLBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 06:01:19 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:31131 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726383AbfLQLBS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 06:01:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576580478;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=3vA9Vnk1UEw8zythyJTx0T7YO0Culo/5vTl9iz/0YAo=;
-        b=C4WQX0+t53Mtc3yJV2akYK/sOLjRgqO2Jf1EB1GFA/cx3Bjg+Fhx71j2WwMWXiRlyDywhr
-        OwiAZXLYMpwHu19GYbhmQ1MYn/2S1yc/iUAHrzt8iiDyvH+03GZ5T8/p2i4QeO1mRLxc9E
-        4+ETWajHsbYG51y7c97z79Q3U+Ccurw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-151-OuxESiG3MDu3YLy2GTm1gg-1; Tue, 17 Dec 2019 06:01:14 -0500
-X-MC-Unique: OuxESiG3MDu3YLy2GTm1gg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6C106DBA7;
-        Tue, 17 Dec 2019 11:01:13 +0000 (UTC)
-Received: from [10.36.118.8] (unknown [10.36.118.8])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 685E8620A7;
-        Tue, 17 Dec 2019 11:01:12 +0000 (UTC)
-Subject: Re: [PATCH] mm: remove dead code totalram_pages_set()
-To:     Wei Yang <richardw.yang@linux.intel.com>, akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20191217064401.18047-1-richardw.yang@linux.intel.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <64835f9c-3ead-ef6e-3eeb-5de2b9725fa2@redhat.com>
-Date:   Tue, 17 Dec 2019 12:01:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20191217064401.18047-1-richardw.yang@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252
+        Tue, 17 Dec 2019 06:01:46 -0500
+Received: from mail-eopbgr770085.outbound.protection.outlook.com ([40.107.77.85]:53526
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725870AbfLQLBp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 06:01:45 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CBK6egodDM8heHFHSPoV/U/8CBgdvJJHu0afOZ+EGqfmz2lRbFBBrQAKuQhe0o4UjsQkIM2YN8W+OCN6vsGhi52Zp20mmHcJKKQWA4u/W9Px1DQYlDBq82JJqCzcFH2Im6oGEoYi6rm35Jd6A9BA+job7jQLbtcQ897Fz38HP2jj9s8EaYiGhCKKniaMgnd7lNX7T3XOvWoex9D0cHfHaJ6okySzLa4UZh7cacZxkS3gMgErau1wniHbUtXuTZOkvVYucRRnhn42xuNXnQ8rbnWPV2lAEBDI5gb7kCD0t/Z2WNGK2VAeMVFSHVEFyhqoDfw3G/WnuQh50wIwMUNWYg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8TbthLPrlbPDnOfoKDUmoVo9r0/Jb+RMoq4uT+F2PJQ=;
+ b=ZWjZu1Tq/cq8W/jjSuwGhbiw+dJiNn0j/ZEZ7biE9hMG+/9GPM3OeGQvbigdeYdmsaIYYRolgKFOL+bC+4IbJZdmTWlckX+e0A6DViiTxczg/52oEEdza/FrzmvxRkDHHF+M8TxYbxTTtdWo30XoZodVmHtcjBU9r+OIeBpFdnCxanIZdiHgoTHBVlw+OkT8UDuAObmc9rl8fVdYeBrvM4UUk9Wq5oJ/mt2cCZJ54jrk3Y8rU7lEBUpyoA+//YphrukVP69xZqei/VS3Cwv6m3AyxquDmvKP8ruxkgFg72VRis0W0/2IJxbu48mN/wEAoSl/GDd++oKRdFJLQBkLww==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
+ dkim=pass header.d=silabs.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8TbthLPrlbPDnOfoKDUmoVo9r0/Jb+RMoq4uT+F2PJQ=;
+ b=OWsgohQO0YjGGiCj/PUDnIkrw+TUGf3hQRFNNq80e/706xm4BeWlsPVabh30rN8vZJKiRY+8m+g6TjNSa90qaHHFjr7pCtBcD+oqYZT1fArQ5SHzJeBcvU6pZjOflPBv21A04ecLlC2GxWqEwpzoOxDgUzBHqtGGyUHs+JVIph0=
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com (10.255.180.22) by
+ MN2PR11MB4461.namprd11.prod.outlook.com (52.135.39.93) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.17; Tue, 17 Dec 2019 11:01:43 +0000
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::f46c:e5b4:2a85:f0bf]) by MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::f46c:e5b4:2a85:f0bf%4]) with mapi id 15.20.2538.019; Tue, 17 Dec 2019
+ 11:01:43 +0000
+From:   =?iso-8859-1?Q?J=E9r=F4me_Pouiller?= <Jerome.Pouiller@silabs.com>
+To:     Felix Fietkau <nbd@nbd.name>
+CC:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH 07/55] staging: wfx: ensure that retry policy always
+ fallbacks to MCS0 / 1Mbps
+Thread-Topic: [PATCH 07/55] staging: wfx: ensure that retry policy always
+ fallbacks to MCS0 / 1Mbps
+Thread-Index: AQHVtDLBov0Pg1nqV0CYOt2kPrSx7ae9D0mAgAEbCoA=
+Date:   Tue, 17 Dec 2019 11:01:42 +0000
+Message-ID: <3755885.sodJc2dsoe@pc-42>
+References: <20191216170302.29543-1-Jerome.Pouiller@silabs.com>
+ <20191216170302.29543-8-Jerome.Pouiller@silabs.com>
+ <0777ef33-e1f4-148a-40cb-cfe7b42d5364@nbd.name>
+In-Reply-To: <0777ef33-e1f4-148a-40cb-cfe7b42d5364@nbd.name>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jerome.Pouiller@silabs.com; 
+x-originating-ip: [37.71.187.125]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6d9de33d-b94e-4191-6261-08d782e08028
+x-ms-traffictypediagnostic: MN2PR11MB4461:
+x-microsoft-antispam-prvs: <MN2PR11MB446105737698AAEDD37D38DC93500@MN2PR11MB4461.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 02543CD7CD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(136003)(366004)(376002)(346002)(39850400004)(396003)(199004)(189003)(6506007)(71200400001)(316002)(91956017)(76116006)(66556008)(33716001)(66476007)(66446008)(6916009)(64756008)(54906003)(478600001)(66946007)(26005)(6486002)(9686003)(6512007)(81166006)(66574012)(5660300002)(8936002)(86362001)(81156014)(4326008)(2906002)(186003)(53546011)(4001150100001)(8676002)(39026012);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4461;H:MN2PR11MB4063.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: silabs.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: PRrE5Zn3tL0UaGSnqbrqKw0dWcIzTq13dezNXTbuet93gUYtk9pgfN88PLO+LTSoQBhfqqP2iq1mUmTrVSnv+itAKvnpSMlUjIwH0PTHCJrp20L9RwNc/1fJ/KG0tj3I54FV101LA4G7TbQo0tPeO1i8zIU1V3b9WKrp1iqlXUQtYmxhvuOKnuwsQ2q7ekD78M0tS02V5C2EzOJ7CWqioma9zGb5Kl/sUJiFihKQBRLa3dpx9Lie5fOJVRgz1MyFR49KXz9lxArgDSrWDRUkb9exfxnp0p+1CbPWsTluk27xNddSDeszTbSgNnlDb9UfvXad0Cklmdb/0Xh5+/naH43BH6nh2qoj7fdDPJP9YxfLU4iLf5TmKTvSUMZ0vuLf7hL4e/OLDMN9XIGiok1CanvXKuLcEqEXtB4Mbv4oJZtAmh5SLVP2jRhRqFaukRJxtetAnK+Gs99/AFvxQcNIcUT0xie+4CuVuHp3lzuExOi8pbzIUUi30gIr1yka2a+8
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <1D0704F34739504DB32815630A19F424@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: silabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6d9de33d-b94e-4191-6261-08d782e08028
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Dec 2019 11:01:42.8181
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ABHEEATnkS2RafS72jTmvMb62lGw56SdI77944eyNmuN97xPNY9OmlJkGnhS34B+83pF4OQZOXFHHlZ8TDnAtw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4461
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.12.19 07:44, Wei Yang wrote:
-> No one use totalram_pages_set(), just remote it.
+On Monday 16 December 2019 19:08:39 CET Felix Fietkau wrote:
+> On 2019-12-16 18:03, J=E9r=F4me Pouiller wrote:
+> > From: J=E9r=F4me Pouiller <jerome.pouiller@silabs.com>
+> >
+> > When not using HT mode, minstrel always includes 1Mbps as fallback rate=
+.
+> > But, when using HT mode, this fallback is not included. Yet, it seems
+> > that it could save some frames. So, this patch add it unconditionally.
+> >
+> > Signed-off-by: J=E9r=F4me Pouiller <jerome.pouiller@silabs.com>
+> Are you sure that's a good idea? Sometimes a little packet loss can be
+> preferable over a larger amount of airtime wasted through using really
+> low rates. Especially when you consider bufferbloat.
 
-s/use/uses/
-s/remote/remove/
+Hello Felix,
 
-> 
-> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
-> ---
->  include/linux/mm.h | 5 -----
->  1 file changed, 5 deletions(-)
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 74232b28949b..4cf023c4c6b3 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -70,11 +70,6 @@ static inline void totalram_pages_add(long count)
->  	atomic_long_add(count, &_totalram_pages);
->  }
->  
-> -static inline void totalram_pages_set(long val)
-> -{
-> -	atomic_long_set(&_totalram_pages, val);
-> -}
-> -
->  extern void * high_memory;
->  extern int page_cluster;
->  
-> 
+I have observed that, in some circumstances, TCP throughput was far=20
+better with 802.11g than with 802.11n. I found that 802.11n had more Tx=20
+failures. These failures have big impacts on the congestion window. When=20
+the congestion window is low, it impacts the capacity of aggregation of=20
+the link. Thus, it does not help to improve the congestion windows.
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+By investigating deeper, it appears that the minstrel (used by 802.11g)
+always add rate 1Mbps to the rate list while minstrel_ht (used by
+802.11n) don't (compare minstrel_update_rates() and
+minstrel_ht_update_rates()). This difference seems to be correlated to
+the difference of TCP throughput I can observe.
 
--- 
-Thanks,
+I did some search in git history and I did not find any explanation for=20
+this difference between minstrel and minstrel_ht (however, it seems you=20
+are the right person to ask :) ). I didn't find why it would be
+efficient on minstrel and inefficient on minstrel_ht. And since this
+change fix the issue that I observed, I have tried to apply it and wait
+for feedback.
 
-David / dhildenb
+--=20
+J=E9r=F4me Pouiller
 
