@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB6EC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F134C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8445D24679
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:53:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6599E24679
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:53:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbfLQAxN (ORCPT
+        id S1727896AbfLQAxI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:53:13 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35546 "EHLO
+        Mon, 16 Dec 2019 19:53:08 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35478 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727198AbfLQAvp (ORCPT
+        by vger.kernel.org with ESMTP id S1727152AbfLQAvp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 19:51:45 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15L-0003N3-H1; Tue, 17 Dec 2019 00:51:35 +0000
+        id 1ih15L-0003ND-93; Tue, 17 Dec 2019 00:51:35 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15J-0005af-AZ; Tue, 17 Dec 2019 00:51:33 +0000
+        id 1ih15J-0005aQ-4u; Tue, 17 Dec 2019 00:51:33 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,26 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
-        "Stephane Eranian" <eranian@google.com>,
-        "Kim Phillips" <kim.phillips@amd.com>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "Ingo Molnar" <mingo@kernel.org>, "Jiri Olsa" <jolsa@redhat.com>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
-        "Arnaldo Carvalho de Melo" <acme@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Namhyung Kim" <namhyung@kernel.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Borislav Petkov" <bp@alien8.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Vince Weaver" <vincent.weaver@maine.edu>
-Date:   Tue, 17 Dec 2019 00:47:09 +0000
-Message-ID: <lsq.1576543535.546437391@decadent.org.uk>
+        "Marek Szyprowski" <m.szyprowski@samsung.com>,
+        "Reported-by: Marian Mihailescu" <mihailescu2m@gmail.com>,
+        "Sylwester Nawrocki" <s.nawrocki@samsung.com>
+Date:   Tue, 17 Dec 2019 00:47:06 +0000
+Message-ID: <lsq.1576543535.482826178@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 095/136] perf/x86/amd/ibs: Fix reading of the IBS
- OpData register and thus precise RIP validity
+Subject: [PATCH 3.16 092/136] clk: samsung: exynos5420: Preserve PLL
+ configuration during suspend/resume
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -68,49 +57,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Kim Phillips <kim.phillips@amd.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-commit 317b96bb14303c7998dbcd5bc606bd8038fdd4b4 upstream.
+commit e9323b664ce29547d996195e8a6129a351c39108 upstream.
 
-The loop that reads all the IBS MSRs into *buf stopped one MSR short of
-reading the IbsOpData register, which contains the RipInvalid status bit.
+Properly save and restore all top PLL related configuration registers
+during suspend/resume cycle. So far driver only handled EPLL and RPLL
+clocks, all other were reset to default values after suspend/resume cycle.
+This caused for example lower G3D (MALI Panfrost) performance after system
+resume, even if performance governor has been selected.
 
-Fix the offset_max assignment so the MSR gets read, so the RIP invalid
-evaluation is based on what the IBS h/w output, instead of what was
-left in memory.
-
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Fixes: d47e8238cd76 ("perf/x86-ibs: Take instruction pointer from ibs sample")
-Link: https://lkml.kernel.org/r/20191023150955.30292-1-kim.phillips@amd.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-[bwh: Backported to 3.16: adjust filename]
+Reported-by: Reported-by: Marian Mihailescu <mihailescu2m@gmail.com>
+Fixes: 773424326b51 ("clk: samsung: exynos5420: add more registers to restore list")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/kernel/cpu/perf_event_amd_ibs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/samsung/clk-exynos5420.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/arch/x86/kernel/cpu/perf_event_amd_ibs.c
-+++ b/arch/x86/kernel/cpu/perf_event_amd_ibs.c
-@@ -555,7 +555,7 @@ static int perf_ibs_handle_irq(struct pe
- 	if (event->attr.sample_type & PERF_SAMPLE_RAW)
- 		offset_max = perf_ibs->offset_max;
- 	else if (check_rip)
--		offset_max = 2;
-+		offset_max = 3;
- 	else
- 		offset_max = 1;
- 	do {
+--- a/drivers/clk/samsung/clk-exynos5420.c
++++ b/drivers/clk/samsung/clk-exynos5420.c
+@@ -162,12 +162,18 @@ static unsigned long exynos5x_clk_regs[]
+ 	GATE_BUS_CPU,
+ 	GATE_SCLK_CPU,
+ 	CLKOUT_CMU_CPU,
++	CPLL_CON0,
++	DPLL_CON0,
+ 	EPLL_CON0,
+ 	EPLL_CON1,
+ 	EPLL_CON2,
+ 	RPLL_CON0,
+ 	RPLL_CON1,
+ 	RPLL_CON2,
++	IPLL_CON0,
++	SPLL_CON0,
++	VPLL_CON0,
++	MPLL_CON0,
+ 	SRC_TOP0,
+ 	SRC_TOP1,
+ 	SRC_TOP2,
 
