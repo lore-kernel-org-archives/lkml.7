@@ -3,119 +3,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4696BC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D05C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2355E21835
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:38:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F45B21835
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:43:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbfLQWiU (ORCPT
+        id S1726383AbfLQWnl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 17:38:20 -0500
-Received: from foss.arm.com ([217.140.110.172]:50992 "EHLO foss.arm.com"
+        Tue, 17 Dec 2019 17:43:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725812AbfLQWiT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 17:38:19 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 69A711FB;
-        Tue, 17 Dec 2019 14:38:18 -0800 (PST)
-Received: from mbp (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7B2153F718;
-        Tue, 17 Dec 2019 14:38:15 -0800 (PST)
-Date:   Tue, 17 Dec 2019 22:38:09 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Magnus Karlsson <magnus.karlsson@gmail.com>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        kirill.shutemov@linux.intel.com, justin.he@arm.com,
-        linux-mm@kvack.org,
-        syzbot <syzbot+9301f2f33873407d5b33@syzkaller.appspotmail.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        bpf <bpf@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>, hawk@kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        linux-kernel@vger.kernel.org,
-        "Karlsson, Magnus" <magnus.karlsson@intel.com>,
-        Network Development <netdev@vger.kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        syzkaller-bugs@googlegroups.com, Yonghong Song <yhs@fb.com>
-Subject: Re: WARNING in wp_page_copy
-Message-ID: <20191217223808.GA14982@mbp>
-References: <000000000000a6f2030598bbe38c@google.com>
- <0000000000000e32950599ac5a96@google.com>
- <20191216150017.GA27202@linux.fritz.box>
- <CAJ8uoz3nCxcmnPonNunYhswskidn=PnN8=4_jXW4B=Xu4k_DoQ@mail.gmail.com>
- <CAJ8uoz312gDBGpqOJiKqrXn456sy6u+Gnvcvv_+0=EimasRoUw@mail.gmail.com>
- <20191217154031.GI5624@arrakis.emea.arm.com>
- <CAJ8uoz3yDK8sEE05cKA8siBi-Dc0wtbe1-zYgbz_-pd5t69j8w@mail.gmail.com>
+        id S1725886AbfLQWnl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 17:43:41 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5BFC21582;
+        Tue, 17 Dec 2019 22:43:40 +0000 (UTC)
+Date:   Tue, 17 Dec 2019 17:43:39 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Subject: Re: ftrace trace_raw_pipe format
+Message-ID: <20191217174339.1b622706@gandalf.local.home>
+In-Reply-To: <20191217173403.61f4e2d8@gandalf.local.home>
+References: <e8f9744ddffc4527b222ce72d41c61a1@AcuMS.aculab.com>
+        <20191217173403.61f4e2d8@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJ8uoz3yDK8sEE05cKA8siBi-Dc0wtbe1-zYgbz_-pd5t69j8w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 04:57:34PM +0100, Magnus Karlsson wrote:
-> On Tue, Dec 17, 2019 at 4:40 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > On Tue, Dec 17, 2019 at 02:27:22PM +0100, Magnus Karlsson wrote:
-> > > On Mon, Dec 16, 2019 at 4:10 PM Magnus Karlsson
-> > > <magnus.karlsson@gmail.com> wrote:
-> > > > On Mon, Dec 16, 2019 at 4:00 PM Daniel Borkmann <daniel@iogearbox.net> wrote:
-> > > > > On Sat, Dec 14, 2019 at 08:20:07AM -0800, syzbot wrote:
-> > > > > > syzbot has found a reproducer for the following crash on:
-> > > > > >
-> > > > > > HEAD commit:    1d1997db Revert "nfp: abm: fix memory leak in nfp_abm_u32_..
-> > > > > > git tree:       net-next
-> > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=1029f851e00000
-> > > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=cef1fd5032faee91
-> > > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=9301f2f33873407d5b33
-> > > > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=119d9fb1e00000
-> > > > > >
-> > > > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > > > > Reported-by: syzbot+9301f2f33873407d5b33@syzkaller.appspotmail.com
-> > > > >
-> > > > > Bjorn / Magnus, given xsk below, PTAL, thanks!
-> > > >
-> > > > Thanks. I will take a look at it right away.
-> > > >
-> > > > /Magnus
-> > >
-> > > After looking through the syzcaller report, I have the following
-> > > hypothesis that would dearly need some comments from MM-savy people
-> > > out there. Syzcaller creates, using mmap, a memory area that is
-> >
-> > I guess that's not an anonymous mmap() since we don't seem to have a
-> > struct page for src in cow_user_page() (the WARN_ON_ONCE path). Do you
-> > have more information on the mmap() call?
-> 
-> I have this from the syzcaller logs:
-> 
-> mmap(&(0x7f0000001000/0x2000)=nil, 0x2000, 0xfffffe, 0x12, r8, 0x0)
-> getsockopt$XDP_MMAP_OFFSETS(r8, 0x11b, 0x7, &(0x7f0000001300),
-> &(0x7f0000000100)=0x60)
-> 
-> The full log can be found at:
-> https://syzkaller.appspot.com/x/repro.syz?x=119d9fb1e00000
+On Tue, 17 Dec 2019 17:34:03 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Thanks. Prior to mmap, we have:
+>  $ gcc -g -Wall read-trace-pipe-raw.c -o read-trace-pipe-raw -ltraceevent -ldl
 
-r8 = socket$xdp(0x2c, 0x3, 0x0)
+I plan on adding this to the top of the file:
 
-So basically we have an mmap() on a socket descriptor with a subsequent
-copy_to_user() writing this range. We do we even end up doing CoW on
-such mapping? Maybe the socket code should also implement the .fault()
-file op. It needs more digging.
+  // SPDX-License-Identifier: LGPL-2.1
 
--- 
-Catalin
+In case you are wondering what license it will be under.
+
+-- Steve
