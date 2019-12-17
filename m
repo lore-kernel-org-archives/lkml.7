@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EAAC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16179C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65A0924673
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE30424673
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:54:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728110AbfLQAyR (ORCPT
+        id S1728123AbfLQAyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:54:17 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35374 "EHLO
+        Mon, 16 Dec 2019 19:54:18 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35532 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727086AbfLQAvo (ORCPT
+        by vger.kernel.org with ESMTP id S1727185AbfLQAvo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 19:51:44 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15K-0003MS-QN; Tue, 17 Dec 2019 00:51:34 +0000
+        id 1ih15N-0003P8-KJ; Tue, 17 Dec 2019 00:51:37 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15K-0005cs-Je; Tue, 17 Dec 2019 00:51:34 +0000
+        id 1ih15L-0005ei-6s; Tue, 17 Dec 2019 00:51:35 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jozsef Kadlecsik" <kadlec@netfilter.org>,
-        "Dan Carpenter" <dan.carpenter@oracle.com>
-Date:   Tue, 17 Dec 2019 00:47:29 +0000
-Message-ID: <lsq.1576543535.460649484@decadent.org.uk>
+        "Takashi Iwai" <tiwai@suse.de>
+Date:   Tue, 17 Dec 2019 00:47:39 +0000
+Message-ID: <lsq.1576543535.499255447@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 115/136] netfilter: ipset: Fix an error code in
- ip_set_sockfn_get()
+Subject: [PATCH 3.16 125/136] ALSA: usb-audio: Fix missing error check at
+ mixer resolution test
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,45 +55,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 30b7244d79651460ff114ba8f7987ed94c86b99a upstream.
+commit 167beb1756791e0806365a3f86a0da10d7a327ee upstream.
 
-The copy_to_user() function returns the number of bytes remaining to be
-copied.  In this code, that positive return is checked at the end of the
-function and we return zero/success.  What we should do instead is
-return -EFAULT.
+A check of the return value from get_cur_mix_raw() is missing at the
+resolution test code in get_min_max_with_quirks(), which may leave the
+variable untouched, leading to a random uninitialized value, as
+detected by syzkaller fuzzer.
 
-Fixes: a7b4f989a629 ("netfilter: ipset: IP set core support")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Jozsef Kadlecsik <kadlec@netfilter.org>
+Add the missing return error check for fixing that.
+
+Reported-and-tested-by: syzbot+abe1ab7afc62c6bb6377@syzkaller.appspotmail.com
+Link: https://lore.kernel.org/r/20191109181658.30368-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/netfilter/ipset/ip_set_core.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ sound/usb/mixer.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/net/netfilter/ipset/ip_set_core.c
-+++ b/net/netfilter/ipset/ip_set_core.c
-@@ -1860,8 +1860,9 @@ ip_set_sockfn_get(struct sock *sk, int o
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -1014,7 +1014,8 @@ static int get_min_max_with_quirks(struc
+ 		if (cval->min + cval->res < cval->max) {
+ 			int last_valid_res = cval->res;
+ 			int saved, test, check;
+-			get_cur_mix_raw(cval, minchn, &saved);
++			if (get_cur_mix_raw(cval, minchn, &saved) < 0)
++				goto no_res_check;
+ 			for (;;) {
+ 				test = saved;
+ 				if (test < cval->max)
+@@ -1034,6 +1035,7 @@ static int get_min_max_with_quirks(struc
+ 			set_cur_mix_value(cval, minchn, 0, saved);
  		}
  
- 		req_version->version = IPSET_PROTOCOL;
--		ret = copy_to_user(user, req_version,
--				   sizeof(struct ip_set_req_version));
-+		if (copy_to_user(user, req_version,
-+				 sizeof(struct ip_set_req_version)))
-+			ret = -EFAULT;
- 		goto done;
++no_res_check:
+ 		cval->initialized = 1;
  	}
- 	case IP_SET_OP_GET_BYNAME: {
-@@ -1918,7 +1919,8 @@ ip_set_sockfn_get(struct sock *sk, int o
- 	}	/* end of switch(op) */
  
- copy:
--	ret = copy_to_user(user, data, copylen);
-+	if (copy_to_user(user, data, copylen))
-+		ret = -EFAULT;
- 
- done:
- 	vfree(data);
 
