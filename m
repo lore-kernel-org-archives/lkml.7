@@ -2,142 +2,124 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA6EC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC01C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4B2D21835
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:31:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0A452467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:32:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbfLQMbb (ORCPT
+        id S1727904AbfLQMct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:31:31 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:45657 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727859AbfLQMb2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 07:31:28 -0500
-Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1ihC0V-0005OG-Hy; Tue, 17 Dec 2019 13:31:19 +0100
-Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1ihC0S-0006OI-I9; Tue, 17 Dec 2019 13:31:16 +0100
-Date:   Tue, 17 Dec 2019 13:31:16 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "andrew@aj.id.au" <andrew@aj.id.au>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
- selection documentation
-Message-ID: <20191217123116.GB29666@pengutronix.de>
-References: <20191210094144.mxximpuouchy3fqu@pengutronix.de>
- <AM5PR1001MB099497419E4DCA69D424EC35805A0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
- <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
- <20191212161019.GF4310@sirena.org.uk>
- <20191212162152.5uu3feacduetysq7@pengutronix.de>
- <20191212165124.GJ4310@sirena.org.uk>
- <20191216085525.csr2aglm5md4vtsw@pengutronix.de>
- <AM5PR1001MB09941005A47B603805D3C53280510@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
- <20191217090034.GD31182@pengutronix.de>
- <AM5PR1001MB099460B2D291644F088707BA80500@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+        Tue, 17 Dec 2019 07:32:49 -0500
+Received: from foss.arm.com ([217.140.110.172]:35370 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727427AbfLQMcs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 07:32:48 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 053A531B;
+        Tue, 17 Dec 2019 04:32:48 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6FF5B3F718;
+        Tue, 17 Dec 2019 04:32:47 -0800 (PST)
+Date:   Tue, 17 Dec 2019 12:32:44 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org
+Subject: Re: [PATCH 06/13] PCI: cadence: Allow pci_host_bridge to have custom
+ pci_ops
+Message-ID: <20191217123243.GC24359@e119886-lin.cambridge.arm.com>
+References: <20191209092147.22901-1-kishon@ti.com>
+ <20191209092147.22901-7-kishon@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <AM5PR1001MB099460B2D291644F088707BA80500@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 13:21:27 up 110 days, 35 min, 93 users,  load average: 0.98, 1.01,
- 1.03
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20191209092147.22901-7-kishon@ti.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-12-17 09:53, Adam Thomson wrote:
-> On 17 December 2019 09:01, Marco Felsch wrote:
+On Mon, Dec 09, 2019 at 02:51:40PM +0530, Kishon Vijay Abraham I wrote:
+> Certain platforms like TI's J721E allows only 32-bit configuration
+> space access. In such cases pci_generic_config_read and
+> pci_generic_config_write cannot be used. Add support in Cadence core
+> to let pci_host_bridge have custom pci_ops.
 > 
-> > > > The enabel control signal is always available, please check [1] table
-> > > > 63. There is a mux in front of the enable pin so:
-> > > >
-> > > >              +-------------
-> > > >  Seq. |\     |   Regulator
-> > > >  GPI1 | \    |
-> > > >  GPI2 | | -- > Enable
-> > > >  GPI3 | /    |
-> > > >       |/     .
-> > > >              .
-> > > >              .
-> > > >
-> > > > Adam please correct me if this is wrong.
-> > >
-> > > Yes the register can always be configured regardless of the associated pin
-> > > configuration, but if say GPIO1 was configured as a GPO but a regulator was
-> > > configured to use GPIO1 as its GPI control mechanism, the output signal from
-> > > GPIO1 would be ignored, the sequencer control would not have any effect and
-> > > you're simply left with manual I2C control. Really we shouldn't be getting into
-> > > that situation though. If a GPIO is to be used as a regulator control signal
-> > > then it should be marked as such and I don't think we should be able to use that
-> > > pin for anything other than regulator control.
-> > 
-> > I see, so we have to guarantee that the requested gpio is configured as
-> > input. This can be done by:
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  drivers/pci/controller/cadence/pcie-cadence-host.c | 7 ++++---
+>  drivers/pci/controller/cadence/pcie-cadence.h      | 8 ++++++++
+>  2 files changed, 12 insertions(+), 3 deletions(-)
 > 
-> This is one of the reasons I thought this was better suited to being done in the
-> pinctrl/pinmux side. If you configure the GPIO as for regulator control then
-> the code can automatically configure the GPIO for input. That doesn't then need
-> to be in the regulator driver.
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> index 0929554f5a81..2efc33b1cade 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> @@ -12,8 +12,8 @@
+>  
+>  #include "pcie-cadence.h"
+>  
+> -static void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
+> -				      int where)
+> +void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
+> +			       int where)
+>  {
+>  	struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
+>  	struct cdns_pcie_rc *rc = pci_host_bridge_priv(bridge);
+> @@ -289,7 +289,8 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>  	list_splice_init(&resources, &bridge->windows);
+>  	bridge->dev.parent = dev;
+>  	bridge->busnr = pcie->bus;
+> -	bridge->ops = &cdns_pcie_host_ops;
+> +	if (!bridge->ops)
+> +		bridge->ops = &cdns_pcie_host_ops;
+>  	bridge->map_irq = of_irq_parse_and_map_pci;
+>  	bridge->swizzle_irq = pci_common_swizzle;
+>  
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+> index 5171d0da37da..c879dd3d2893 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence.h
+> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
+> @@ -472,11 +472,19 @@ static inline bool cdns_pcie_is_link_up(struct cdns_pcie *pcie)
+>  
+>  #ifdef CONFIG_PCIE_CADENCE_HOST
+>  int cdns_pcie_host_setup(struct cdns_pcie_rc *rc);
+> +void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
+> +			       int where);
 
-I still don't prefer that way.. pls check my arguments I already made
-and I don't wanna repeat it again.
+The commit message doesn't explain why this change in visibility is needed).
 
-> But yes we wouldn't really want to configure a regulator to be controlled via a
-> GPI when it's configured as a GPO as it makes no sense.
+>  #else
+>  static inline int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>  {
+>  	return 0;
+>  }
+> +
+> +static inline void __iomem *cdns_pci_map_bus(struct pci_bus *bus,
+> +					     unsigned int devfn,
+> +					     int where)
+> +{
 
-Okay, so the check is all we need to hardening the driver against wrong
-usage :)
+This still needs to return something right?
 
-Regards,
-  Marco
+Thanks,
 
+Andrew Murray
+
+> +}
+>  #endif
+>  
+>  #ifdef CONFIG_PCIE_CADENCE_EP
+> -- 
+> 2.17.1
 > 
-> > 
-> >   if (gpi->flags & FLAG_IS_OUT)
-> >   	return -EINVAL;
-> > 
-> > Regards,
-> >   Marco
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
