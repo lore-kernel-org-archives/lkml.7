@@ -2,265 +2,131 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A13C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:36:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E723C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3E5620733
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:36:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576589770;
-	bh=0GcJLxA7OSgngk5Cbf7gZ164cpouoGCQ7wXshqh7xP0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Sw2tMnOY7iB4MucOGv67t4zcBCmtvu7nP44hL5YywDo1n0MvimDzLpy83qXAUJxgL
-	 U9naDDpdAvWLGETqcXARr+MQa7IXc53AjzcKGGtQQOytZKy49zYQnWCrLgZfTqUnZ9
-	 iJ4zXwuNjJCGrDIPEYXUkpyz2rKkDUN9boHtvHkM=
+	by mail.kernel.org (Postfix) with ESMTP id 1B61720733
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:36:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="p6+HhIGv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728118AbfLQNgJ (ORCPT
+        id S1728387AbfLQNgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 08:36:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37292 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726164AbfLQNgJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 08:36:09 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69B9320733;
-        Tue, 17 Dec 2019 13:36:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576589767;
-        bh=0GcJLxA7OSgngk5Cbf7gZ164cpouoGCQ7wXshqh7xP0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OO7sYP9hzJ2LKFUjWYMr8cKQRSxT34uYSPAm9E/Ynn6jHkHN7qs+n58IU5Pq5mMJX
-         z8As6iSwaa4HYA7zrZ/1VAByV6uIXw4sihKKWn/HxO+ihsUjgLgfbM6rztO94oQHTP
-         6KDwwBh4NboagV0PZHwAnG1Zgwa/GJv0gnSlTtmo=
-Date:   Tue, 17 Dec 2019 14:36:05 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Dave Kim <david.kim@ncipher.com>
-Cc:     arnd@arndb.de, linux-kernel@vger.kernel.org,
-        Tim Magee <tim.magee@ncipher.com>
-Subject: Re: [PATCH 1/1] drivers: misc: Add support for nCipher HSM devices
-Message-ID: <20191217133605.GC3362771@kroah.com>
-References: <20191217132244.14768-1-david.kim@ncipher.com>
- <20191217132244.14768-2-david.kim@ncipher.com>
+        Tue, 17 Dec 2019 08:36:19 -0500
+Received: from mail-eopbgr70055.outbound.protection.outlook.com ([40.107.7.55]:61190
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726164AbfLQNgS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 08:36:18 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=I9Gon2hrtrlptndyMyeNWJ059M1HJLusBJDnZN1aftZ2N7J03QJ7XNhzv1urVES5PKE7UEK28lz8ObCMIamgFy2ptOKvL1PeMqMS4A7T33AerS9vDKoFFbPUWIfTuAA+IRTO7ldUWSEKcurG9tnK5bX8jAk0i3jVPwEE7+bktEW7IALycnzMr86CuY66b/y61B7tBJLFqIgOUo36Hzn4RUvHCR+5SEht4ujAtfoS7A4HhFcvo8uuy9RN7FuGvDrQplKdMbaY3X57uZOLHAziGNJTDWwydDSEpySr8dHLnNKhTR6rNKJjevFP6qT3O5Z3wtGVX6DBzCG4j0c4QYMBNA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Adlb4ujzA5vPu0uD/xNCBLCI9mBY08e8rmyGlw7IEb4=;
+ b=CUp8p75V51bZwKpLbwnOJ6KAmfEaHdrbRYYhgzrs+Mm40Pc7MFzdt7hmJvmhIifRvw/lB1NeFW8fvwdgHf0lWFCI8Dg/iSmhbMimQqwdrOoMuiKnIydwwEDiKmsk7CgnZEqLA0tECOEaUlnImr9QIR0sRbANpYuU0dki/G2QkBFXwFBX+EM9kfZPt3kgYPkJaV65NgIZDcn2ALg9tFyFskel6JY8J4uwBWy3VwDfiC8Y4LlX18/H973FQNZ+nMGo+hDN/pNPgBmzL5mGi09zDtBg0d5KQ5ErWrmDwqSK7hqnEIqSBhH38GrUakoaUURZlOnz/ilVT+D48IVJ8rYEoQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Adlb4ujzA5vPu0uD/xNCBLCI9mBY08e8rmyGlw7IEb4=;
+ b=p6+HhIGvJeLUeDCNSLq4kusX6V5wBkIXo4Fv7VfZaRcZUa/oQLSjVnPzjfmy+EyqEOkeXAwL03zRz82zC/YTda6Z4/dkql3joTRantMFlPVqKI3DWPPcHNgj/ZuqI57F8HRq2GAXX7XI1jpBTBZMWpNK8Ly/iBGjQjqhVeBDQOk=
+Received: from VE1PR04MB6367.eurprd04.prod.outlook.com (20.179.232.85) by
+ VE1PR04MB6733.eurprd04.prod.outlook.com (20.179.233.84) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.18; Tue, 17 Dec 2019 13:36:14 +0000
+Received: from VE1PR04MB6367.eurprd04.prod.outlook.com
+ ([fe80::84f0:21ba:2d32:4283]) by VE1PR04MB6367.eurprd04.prod.outlook.com
+ ([fe80::84f0:21ba:2d32:4283%4]) with mapi id 15.20.2538.019; Tue, 17 Dec 2019
+ 13:36:14 +0000
+From:   Marco Antonio Franchi <marco.franchi@nxp.com>
+To:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "marcofrk@gmail.com" <marcofrk@gmail.com>
+CC:     "festevam@gmail.com" <festevam@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "atv@google.com" <atv@google.com>,
+        Marco Antonio Franchi <marco.franchi@nxp.com>
+Subject: [PATCH v5 1/2] dt-bindings: arm: Add Google Coral Edge TPU entry
+Thread-Topic: [PATCH v5 1/2] dt-bindings: arm: Add Google Coral Edge TPU entry
+Thread-Index: AQHVtN7zl4Nd3NuOGkSHsjlyxcOh9g==
+Date:   Tue, 17 Dec 2019 13:36:14 +0000
+Message-ID: <20191217133607.8892-1-marco.franchi@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN1PR12CA0058.namprd12.prod.outlook.com
+ (2603:10b6:802:20::29) To VE1PR04MB6367.eurprd04.prod.outlook.com
+ (2603:10a6:803:11a::21)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=marco.franchi@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [177.221.114.206]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: fe58f70f-2735-4bff-41be-08d782f6160c
+x-ms-traffictypediagnostic: VE1PR04MB6733:|VE1PR04MB6733:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB673366B17D8DBC497EE1F85FF6500@VE1PR04MB6733.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:644;
+x-forefront-prvs: 02543CD7CD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(376002)(39860400002)(366004)(396003)(199004)(189003)(6512007)(52116002)(6486002)(316002)(6506007)(36756003)(478600001)(26005)(64756008)(66946007)(8936002)(8676002)(66446008)(81166006)(81156014)(66476007)(66556008)(71200400001)(54906003)(86362001)(2616005)(2906002)(1076003)(110136005)(4744005)(186003)(4326008)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6733;H:VE1PR04MB6367.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: rCXyiiwe/E6G+ZDzI8zMXWcqwKv9gEySgPlPaZ5dQOEbIIJgY3ZpFc/zcv0ljSz9rcDqG9Z2xFuYmUqHYLWsDVkZwadktGeOttQUvSZFL3E68pHtI9vpALEFvewwoouD/TctfIK14GMQ55ElHapCL2HH+CTNK3SXZA+S+kiajHf6WlogIGdxVkETAnWTMK7Tnm+VnYTkEqnPWwmE8T57txVAu13WGIHV0Sfw2+hlFWjf5zGWnBR8Ri2F7Inuj6i8+UjQeLTz4nGygQS1v5QGnNYh+XjDClEUi5yCMG/KHjc6/DtPAdbDmkCNbFO3kTwdqIM7JQ3M9M+Rd/Qv1jFNO5o4u+R54RhhB45jMZdkTgJBk4XYQCdhGHoCryFACJtjvl1/QA16s7LhFUwXuXK1xmUXE37qWwY5OAckWkTJ6LI4JcsNag0uawxYoSJIC05K
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191217132244.14768-2-david.kim@ncipher.com>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fe58f70f-2735-4bff-41be-08d782f6160c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Dec 2019 13:36:14.2800
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vBmWh8FqHvFlPDL5fZN25bsDtVXEXv5ejeb0unW2VyykcYglxfoGgK2dTryckLfVHFbcF2CF2uhZ27wueGQhSw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6733
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 01:22:44PM +0000, Dave Kim wrote:
-> --- /dev/null
-> +++ b/include/uapi/linux/nshield_solo.h
-> @@ -0,0 +1,181 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
-> +/*
-> + *
-> + * nshield_solo.h: UAPI header for driving the nCipher PCI HSMs using the
-> + * nshield_solo module
-> + *
-> + */
-> +#ifndef _UAPI_NSHIELD_SOLO_H_
-> +#define _UAPI_NSHIELD_SOLO_H_
-> +
-> +#include <linux/types.h>
-> +#include <linux/ioctl.h>
-> +
-> +/* Device ioctl struct definitions */
-> +
-> +/* Result of the ENQUIRY ioctl. */
-> +struct nfdev_enquiry_str {
-> +	__u32 busno; /**< Which bus is the PCI device on. */
-> +	__u8 slotno; /**< Which slot is the PCI device in. */
-> +	__u8 reserved[3]; /**< for consistent struct alignment */
+Add Google Coral Edge TPU, named as imx8mq-phanbell, to the
+imx8mq supported devices.
 
-What is this crazy /**< text?
+Signed-off-by: Marco Franchi <marco.franchi@nxp.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+Changes since v4:
+- none
+ Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-Please use correct kerneldoc formatting to help document things.
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation=
+/devicetree/bindings/arm/fsl.yaml
+index f79683a628f0..5d24bd3ecc81 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -284,6 +284,7 @@ properties:
+           - enum:
+               - boundary,imx8mq-nitrogen8m # i.MX8MQ NITROGEN Board
+               - fsl,imx8mq-evk            # i.MX8MQ EVK Board
++              - google,imx8mq-phanbell    # Google Coral Edge TPU
+               - purism,librem5-devkit     # Purism Librem5 devkit
+               - solidrun,hummingboard-pulse # SolidRun Hummingboard Pulse
+               - technexion,pico-pi-imx8m  # TechNexion PICO-PI-8M evk
+--=20
+2.17.1
 
-> +};
-> +
-> +/* Result of the STATS ioctl. */
-> +struct nfdev_stats_str {
-> +	__u32 isr; /**< Count interrupts. */
-> +	__u32 isr_read; /**< Count read interrupts. */
-> +	__u32 isr_write; /**< Count write interrupts. */
-> +	__u32 write_fail; /**< Count write failures. */
-> +	__u32 write_block; /**< Count blocks written. */
-> +	__u32 write_byte; /**< Count bytes written. */
-> +	__u32 read_fail; /**< Count read failures. */
-> +	__u32 read_block; /**< Count blocks read. */
-> +	__u32 read_byte; /**< Count bytes read. */
-> +	__u32 ensure_fail; /**< Count read request failures. */
-> +	__u32 ensure; /**< Count read requests. */
-> +};
-> +
-> +/* Result of the STATUS ioctl. */
-> +struct nfdev_status_str {
-> +	__u32 status; /**< Status flags. */
-> +	char error[8]; /**< Error string. */
-> +};
-> +
-> +/* Input to the CONTROL ioctl. */
-> +struct nfdev_control_str {
-> +	__u32 control; /**< Control flags. */
-> +};
-> +
-> +/** Index of control bits indicating desired mode
-> + *
-> + * Desired mode follows the M_ModuleMode enumeration.
-> + */
-> +#define NFDEV_CONTROL_MODE_SHIFT       1
-> +
-> +/** Detect a backwards-compatible control value
-> + *
-> + * Returns true if the request control value "makes no difference", i.e.
-> + * and the failure of an attempt to set it is therefore uninteresting.
-> + */
-> +#define NFDEV_CONTROL_HARMLESS(c) ((c) <= 1)
-
-Why does userspace need this?
-
-
-> +
-> +/** Monitor firmware supports MOI control and error reporting
-> + */
-
-Correct kerneldoc format everywhere please.
-
-> +#define NFDEV_STATUS_MONITOR_MOI       0x0001
-> +
-> +/** Application firmware supports MOI control and error reporting
-> + */
-> +#define NFDEV_STATUS_APPLICATION_MOI   0x0002
-> +
-> +/** Application firmware running and supports error reporting
-> + */
-> +#define NFDEV_STATUS_APPLICATION_RUNNING 0x0004
-> +
-> +/** HSM failed
-> + *
-> + * Consult error[] for additional information.
-> + */
-> +#define NFDEV_STATUS_FAILED            0x0008
-> +
-> +/** Standard PCI interface. */
-> +#define NFDEV_IF_STANDARD	       0x01
-> +
-> +/** PCI interface with read replies pushed from device
-> + *  via DMA.
-> + */
-> +#define NFDEV_IF_PCI_PUSH	       0x02
-> +
-> +/** PCI interface with read replies pushed from device
-> + *  and write requests pulled from host via DMA.
-> + */
-> +#define NFDEV_IF_PCI_PULL 0x03
-> +
-> +/** Maximum PCI interface. */
-> +#define NFDEV_IF_MAX_VERS              NFDEV_IF_PCI_PUSH_PULL
-> +
-> +/* platform independent base ioctl numbers */
-> +
-> +enum {
-> +	/** Enquiry ioctl.
-> +	 *  \return nfdev_enquiry_str describing the attached device.
-> +	 */
-> +	NFDEV_IOCTL_NUM_ENQUIRY = 1,
-> +
-> +	/** Channel Update ioctl.
-> +	 *  \deprecated
-> +	 */
-> +	NFDEV_IOCTL_NUM_CHUPDATE,
-
-You have to explicitly set your enums if you want them to work properly
-in an ioctl.  As it is, this will fail in nasty ways you can never debug
-:(
-
-> +
-> +	/** Ensure Reading ioctl.
-> +	 *  Signal a read request to the device.
-> +	 *  \param (unsigned int) Length of data to be read.
-> +	 */
-
-Again, kerneldoc please.
-
-> +	NFDEV_IOCTL_NUM_ENSUREREADING,
-> +
-> +	/** Device Count ioctl.
-> +	 *  Not implemented for on all platforms.
-> +	 *  \return (int) the number of attached devices.
-> +	 */
-> +	NFDEV_IOCTL_NUM_DEVCOUNT,
-> +
-> +	/** Internal Debug ioctl.
-> +	 *  Not implemented in release drivers.
-> +	 */
-> +	NFDEV_IOCTL_NUM_DEBUG,
-> +
-> +	/** PCI Interface Version ioctl.
-> +	 *  \param (int) Maximum PCI interface version
-> +	 *   supported by the user of the device.
-> +	 */
-> +	NFDEV_IOCTL_NUM_PCI_IFVERS,
-> +
-> +	/** Statistics ioctl.
-> +	 *  \return nfdev_enquiry_str describing the attached device.
-> +	 */
-> +	NFDEV_IOCTL_NUM_STATS,
-> +
-> +	/** Module control ioctl
-> +	 * \param (nfdev_control_str) Value to write to HSM
-> +	 * control register
-> +	 */
-> +	NFDEV_IOCTL_NUM_CONTROL,
-> +
-> +	/** Module state ioctl
-> +	 * \return (nfdev_status_str) Values read from HSM
-> +	 * status/error registers
-> +	 */
-> +	NFDEV_IOCTL_NUM_STATUS,
-> +};
-> +
-> +#define NFDEV_IOCTL_TYPE 0x10
-> +
-> +#define NFDEV_IOCTL_CHUPDATE                                                   \
-> +	_IO(NFDEV_IOCTL_TYPE, NFDEV_IOCTL_NUM_CHUPDATE)
-> +
-> +#define NFDEV_IOCTL_ENQUIRY                                                    \
-> +	_IOR(NFDEV_IOCTL_TYPE, NFDEV_IOCTL_NUM_ENQUIRY,                        \
-> +	     struct nfdev_enquiry_str)
-> +
-> +#define NFDEV_IOCTL_ENSUREREADING                                              \
-> +	_IOW(NFDEV_IOCTL_TYPE, NFDEV_IOCTL_NUM_ENSUREREADING, int)
-> +
-> +#define NFDEV_IOCTL_ENSUREREADING_BUG3349                                      \
-> +	_IO(NFDEV_IOCTL_TYPE, NFDEV_IOCTL_NUM_ENSUREREADING)
-> +
-> +#define NFDEV_IOCTL_DEBUG                                                      \
-> +	_IOW(NFDEV_IOCTL_TYPE, NFDEV_IOCTL_NUM_DEBUG, int)
-
-Why do you care about debugging to userspace through an ioctl?  Just use
-debugfs and be done with it, that's what it is there for.  Also you can
-use dynamic debugging (hopefully you already are) and use that
-kernel-wide api/interface.
-
-Individual drivers should NEVER have custom debugging controls and
-macros.
-
-> +
-> +#define NFDEV_IOCTL_PCI_IFVERS                                                 \
-> +	_IOW(NFDEV_IOCTL_TYPE, NFDEV_IOCTL_NUM_PCI_IFVERS, int)
-
-Can't you get this from the pci device information?
-
-thanks,
-
-greg k-h
