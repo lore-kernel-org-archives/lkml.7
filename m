@@ -2,107 +2,102 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A33C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79BFAC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2115F206D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4994C2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:54:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="LQJUaOR9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JtqePC7J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbfLQHyF (ORCPT
+        id S1726701AbfLQHyr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 02:54:05 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:40972 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726446AbfLQHyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 02:54:04 -0500
-Received: from zn.tnic (p200300EC2F0BBF00D423EC4793E13B2B.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:bf00:d423:ec47:93e1:3b2b])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3C4441EC0C9C;
-        Tue, 17 Dec 2019 08:54:03 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1576569243;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=bRRPLwpHzOt2xZPhIDBu2caULRFpQfO1a3EOTMqwHkQ=;
-        b=LQJUaOR99M4qnR1l+1odlkzq+fcdJ98rsUfalrcAaypsEVG2cHk0OHYs8LK/QA33NVFjgV
-        Lt6ex9BOiRnb8jGtqCX0REh/rvwH2KDCspkdWuvq5zfMB1XiRf0fLWy0eb7RR6WdwXrDFW
-        rzrIMmgY2VAEClX9ZrhCjh634wObLPo=
-Date:   Tue, 17 Dec 2019 08:53:55 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     Yazen Ghannam <Yazen.Ghannam@amd.com>,
-        Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org,
-        linux-edac@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH] x86/MCE/AMD: fix warning about sleep-in-atomic at early
- boot
-Message-ID: <20191217075355.GA15129@zn.tnic>
-References: <157252708836.3876.4604398213417262402.stgit@buzz>
- <20191031142955.GA23693@nazgul.tnic>
- <ad7a25d9-1ca5-0791-ae0a-63c524040bcb@yandex-team.ru>
- <20191107105310.GD19501@zn.tnic>
+        Tue, 17 Dec 2019 02:54:47 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:40475 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbfLQHyr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 02:54:47 -0500
+Received: by mail-qv1-f68.google.com with SMTP id dp13so157098qvb.7
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 23:54:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5l4//tPqX8+cxTOuVs9KhFWMcYb3LqJ7eqQCoXvsPxY=;
+        b=JtqePC7JPCUwzjZCicFvgmrDaO2OrEUtPvbcwc1FQlvPkP/Nr5WqRH1sUgkLsTD49C
+         GQcnHD8sQvmsih/7vEVjX/Oq5itDIJNrQZMgZ20zAul4YhHdJPFk9IAuShMV27TPTgpz
+         /f+ebSQ3ADIW0Qz37pCLKNUSZ2WVpPOFTo/NDNjdWIaqddOK2vPlPcE4H49f+CXpngS1
+         VTGtRnAUMEAAKNddG4QmNgfm2LThzHdw01NbPElkKLRDV/bUQlpBQRfBZEE/gjmJYq2m
+         Z4fA0oWtRv9IPEXgJqbO9eHnuSz7F9vy4wo6SeaarY51Et1dbkzL0ym7cOmrrHxp0Kj3
+         jJqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5l4//tPqX8+cxTOuVs9KhFWMcYb3LqJ7eqQCoXvsPxY=;
+        b=kkTcCORrFeIGgYHTGbc/9B3yrQc1sLmRjgf9zgMRljc0OfPjpXNik401rbA9DzDHU/
+         u6xkMiKoIWRF/62dL6juU6+4SAG8H7liz14h3KYWJD0WltSkRmQFBaSVETe8gU3BPy28
+         MDV+UbDltFbT90+akSIGxt7B8gLeprgpWniY7y45zNtD0aMZjQ4OIg1fEYTjwqWA9/U6
+         KjZ4DQI4GBgg/yx6tdbvSbNQV/Ml2RkJvtxKOwkriINXD+s5WUGQM97Ot2L6ZI7TADAF
+         w5D81PCQfbwNiDcbIuygprUoU5ZUpje0hM9m6yYsWgXYGG26QKFkeUFWU06dFZIhMET5
+         XAhg==
+X-Gm-Message-State: APjAAAUQGwHk0P4oWOK3y3sa88BkQEL8VmD2g3mZh5+vhsvceob1x/Ch
+        1MylRWT1mukSJSpa+6whsztjv3ky/W2yoQ82EOSqZQ==
+X-Google-Smtp-Source: APXvYqxIAmSU4Hq1DnMpsxMQfmHADjAfN6vlbcaAj4+89ENlpGdvnI1hnmtAslJOiSFHseYL6+PZmknTP7x1MHM3yIE=
+X-Received: by 2002:ad4:4c84:: with SMTP id bs4mr3407059qvb.34.1576569286123;
+ Mon, 16 Dec 2019 23:54:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191107105310.GD19501@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191216095955.9886-1-penguin-kernel@I-love.SAKURA.ne.jp> <20191217051234.GA54407@google.com>
+In-Reply-To: <20191217051234.GA54407@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 17 Dec 2019 08:54:34 +0100
+Message-ID: <CACT4Y+ZV_syKQt6hDwf3WH5-LpFo==rsVsQY7+YCMfpUCtzj_A@mail.gmail.com>
+Subject: Re: [PATCH] kconfig: Add kernel config option for fuzz testing.
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 11:53:10AM +0100, Borislav Petkov wrote:
-> On Fri, Nov 01, 2019 at 04:39:17PM +0300, Konstantin Khlebnikov wrote:
-> > I tried 5.4 once but there was no warning.
-> > Code in 4.19 and in mainline almost the same.
-> 
-> Yes, but early boot code has changed a lot since 4.19. If you can't
-> trigger it on 5.4, then I'll drop the BUG splat from your commit message
-> and change it to talk about replacing the IPI-sending function, which is
-> a good cleanup in itself.
+On Tue, Dec 17, 2019 at 6:12 AM Sergey Senozhatsky
+<sergey.senozhatsky.work@gmail.com> wrote:
+>
+> On (19/12/16 18:59), Tetsuo Handa wrote:
+> [..]
+> > +++ b/kernel/printk/printk.c
+> > @@ -1198,6 +1198,14 @@ MODULE_PARM_DESC(ignore_loglevel,
+> >
+> >  static bool suppress_message_printing(int level)
+> >  {
+> > +#ifdef CONFIG_KERNEL_BUILT_FOR_FUZZ_TESTING
+> > +     /*
+> > +      * Changing console_loglevel causes "no output". But ignoring
+> > +      * console_loglevel is easier than preventing change of
+> > +      * console_loglevel.
+> > +      */
+> > +     return (level >= CONSOLE_LOGLEVEL_DEFAULT && !ignore_loglevel);
+> > +#endif
+> >       return (level >= console_loglevel && !ignore_loglevel);
+> >  }
+>
+> Can you fuzz test with `ignore_loglevel'?
 
-Ok, I was able to trigger it myself:
-
-[    0.822602] BUG: sleeping function called from invalid context at kernel/sched/completion.c:99
-[    0.822602] in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 0, name: swapper/1
-[    0.822602] no locks held by swapper/1/0.
-[    0.822602] irq event stamp: 0
-[    0.822602] hardirqs last  enabled at (0): [<0000000000000000>] 0x0
-[    0.822602] hardirqs last disabled at (0): [<ffffffff8106dda9>] copy_process+0x8b9/0x1ca0
-[    0.822602] softirqs last  enabled at (0): [<ffffffff8106dda9>] copy_process+0x8b9/0x1ca0
-[    0.822602] softirqs last disabled at (0): [<0000000000000000>] 0x0
-[    0.822602] Preemption disabled at:
-[    0.822602] [<ffffffff8104703b>] start_secondary+0x3b/0x190
-[    0.822602] CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.5.0-rc2+ #1
-[    0.822602] Hardware name: GIGABYTE MZ01-CE1-00/MZ01-CE1-00, BIOS F02 08/29/2018
-[    0.822602] Call Trace:
-[    0.822602]  dump_stack+0x71/0xa0
-[    0.822602]  ___might_sleep.cold.92+0xf7/0x11f
-[    0.822602]  wait_for_completion+0x3c/0x180
-[    0.822602]  ? generic_exec_single+0xca/0x100
-[    0.822602]  rdmsr_safe_on_cpu+0xe8/0x100
-[    0.822602]  ? wrmsr_on_cpus+0x20/0x20
-[    0.822602]  mce_amd_feature_init+0x2ab/0x590
-[    0.822602]  mcheck_cpu_init+0x17a/0x4d0
-[    0.822602]  identify_cpu+0x3f0/0x750
-[    0.822602]  identify_secondary_cpu+0x13/0x80
-[    0.822602]  smp_store_cpu_info+0x45/0x50
-[    0.822602]  start_secondary+0x50/0x190
-[    0.822602]  secondary_startup_64+0xa4/0xb0
-
-Rerouting patch...
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+We can set ignore_loglevel in syzbot configs, but won't it then print
+everything including verbose debug output?
