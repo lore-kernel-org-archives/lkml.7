@@ -2,87 +2,129 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0462BC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8FCC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFD5A20CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:55:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576544109;
-	bh=20cLHPtsJJjaRnZm0+KAq/1wc9qHqUZDqOQVShiQSrM=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=q69bqeAQqiRhoyVffIAqAnelNXKg7Rf8bwZEOnIBZfTfDMQcD9fJi1rDQaVWNqfJ3
-	 ZSOM/l7gfkrHA3j4Jp/98+dooc30gkvLvwF6E6PhEmSWcYxZR5zbyIZ5y0XgdwTqKV
-	 I+GM2dQO1aPgLfgL4wvNzVvoOgAcP2fOUDcNmmp8=
+	by mail.kernel.org (Postfix) with ESMTP id 7B4C020684
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:55:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727274AbfLQAzI (ORCPT
+        id S1728234AbfLQAz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:55:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41726 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728173AbfLQAyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 19:54:41 -0500
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04DC02053B;
-        Tue, 17 Dec 2019 00:54:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576544080;
-        bh=20cLHPtsJJjaRnZm0+KAq/1wc9qHqUZDqOQVShiQSrM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=fZ0awonq4TOAvqUCHkyHhQQfvYYI+GDhp7FsIl+AxszxxlykndDIGeDvvUNyJI9Do
-         5to+Sd8zXeSwrthNx1Kr4eBFPYG5QL0mYs5f8vandoizd79npDWZD6a4qs1aHiQdvV
-         LnVZ0TGQfJBmK8P9NdjI9WPaUj0SxAYCBxtCIW8Y=
-Subject: Re: [PATCH 5.4 000/177] 5.4.4-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20191216174811.158424118@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <aa042a91-ebf3-5f32-5fb4-98e11d8b7cab@kernel.org>
-Date:   Mon, 16 Dec 2019 17:54:20 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 16 Dec 2019 19:55:26 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35276 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727030AbfLQAvn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 19:51:43 -0500
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1ih15K-0003MU-9E; Tue, 17 Dec 2019 00:51:34 +0000
+Received: from ben by deadeye with local (Exim 4.93-RC7)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1ih15I-0005Z2-Gc; Tue, 17 Dec 2019 00:51:32 +0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
-In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Doug Berger" <opendmb@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Florian Fainelli" <f.fainelli@gmail.com>
+Date:   Tue, 17 Dec 2019 00:46:52 +0000
+Message-ID: <lsq.1576543535.926693273@decadent.org.uk>
+X-Mailer: LinuxStableQueue (scripts by bwh)
+X-Patchwork-Hint: ignore
+Subject: [PATCH 3.16 078/136] net: bcmgenet: reset 40nm EPHY on energy detect
+In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/16/19 10:47 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.4 release.
-> There are 177 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed, 18 Dec 2019 17:41:25 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.4-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+3.16.80-rc1 review patch.  If anyone has any objections, please let me know.
 
-Compiled and booted on my test system. No dmesg regressions.
+------------------
 
-thanks,
--- Shuah
+From: Doug Berger <opendmb@gmail.com>
+
+commit 25382b991d252aed961cd434176240f9de6bb15f upstream.
+
+The EPHY integrated into the 40nm Set-Top Box devices can falsely
+detect energy when connected to a disabled peer interface. When the
+peer interface is enabled the EPHY will detect and report the link
+as active, but on occasion may get into a state where it is not
+able to exchange data with the connected GENET MAC. This issue has
+not been observed when the link parameters are auto-negotiated;
+however, it has been observed with a manually configured link.
+
+It has been empirically determined that issuing a soft reset to the
+EPHY when energy is detected prevents it from getting into this bad
+state.
+
+Fixes: 1c1008c793fa ("net: bcmgenet: add main driver file")
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+[bwh: Backported to 3.16: adjust context]
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+---
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -1558,11 +1558,13 @@ static void init_umac(struct bcmgenet_pr
+ 	dev_dbg(kdev, "%s:Enabling RXDMA_BDONE interrupt\n", __func__);
+ 
+ 	/* Monitor cable plug/unpluged event for internal PHY */
+-	if (phy_is_internal(priv->phydev))
++	if (phy_is_internal(priv->phydev)) {
+ 		cpu_mask_clear |= (UMAC_IRQ_LINK_DOWN | UMAC_IRQ_LINK_UP);
+-	else if (priv->ext_phy)
++		if (GENET_IS_V1(priv) || GENET_IS_V2(priv) || GENET_IS_V3(priv))
++			cpu_mask_clear |= UMAC_IRQ_PHY_DET_R;
++	} else if (priv->ext_phy) {
+ 		cpu_mask_clear |= (UMAC_IRQ_LINK_DOWN | UMAC_IRQ_LINK_UP);
+-	else if (priv->phy_interface == PHY_INTERFACE_MODE_MOCA) {
++	} else if (priv->phy_interface == PHY_INTERFACE_MODE_MOCA) {
+ 		reg = bcmgenet_bp_mc_get(priv);
+ 		reg |= BIT(priv->hw_params->bp_in_en_shift);
+ 
+@@ -1861,11 +1863,16 @@ static void bcmgenet_irq_task(struct wor
+ 	priv->irq0_stat = 0;
+ 	spin_unlock_irqrestore(&priv->lock, flags);
+ 
++	if (status & UMAC_IRQ_PHY_DET_R &&
++	    priv->dev->phydev->autoneg != AUTONEG_ENABLE)
++		phy_init_hw(priv->dev->phydev);
++
+ 	/* Link UP/DOWN event */
+ 	if ((priv->hw_params->flags & GENET_HAS_MDIO_INTR) &&
+ 		(status & (UMAC_IRQ_LINK_UP|UMAC_IRQ_LINK_DOWN)))
+ 		phy_mac_interrupt(priv->phydev,
+ 			status & UMAC_IRQ_LINK_UP);
++
+ }
+ 
+ /* bcmgenet_isr1: interrupt handler for ring buffer. */
+@@ -1934,7 +1941,7 @@ static irqreturn_t bcmgenet_isr0(int irq
+ 	}
+ 
+ 	/* all other interested interrupts handled in bottom half */
+-	status &= UMAC_IRQ_LINK_UP | UMAC_IRQ_LINK_DOWN;
++	status &= (UMAC_IRQ_LINK_UP | UMAC_IRQ_LINK_DOWN | UMAC_IRQ_PHY_DET_R);
+ 	if (status) {
+ 		/* Save irq status for bottom-half processing. */
+ 		spin_lock_irqsave(&priv->lock, flags);
 
