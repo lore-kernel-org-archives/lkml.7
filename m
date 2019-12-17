@@ -7,98 +7,80 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92460C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 323ABC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6411F2465E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:15:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEFA32176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:17:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576556108;
-	bh=gixdtZYQbYephnc08CdCIjqGTf2Z8q/HgtYJ8MHYVts=;
+	s=default; t=1576556252;
+	bh=2PqTmh7lOIz2PT/wCyXjaP8m0gfDSQfTJFs64zaPy44=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hTE0ru/ejMg/qSeR6+13CR+jctrHqqlOXko0coUHcU7ftyu73Jxzp9k3UvJdqYtnb
-	 EwywAxHbhehFmLyh2o+nWd3bWPf3XZCHqH5xsazu8ERK20Dj7tgu5jBPzUEQ2Fkf1h
-	 h+GolhvwrjCy08JNegVNHfYFgEqqfi8m5JW+cT2c=
+	b=J59macO3Ux7CFh77EVFv4DNhdyuTWInsUfl0MyJttDCFEioAGU4N6XdGYJ/DaNHHO
+	 0j7LYg6CsQ9oC2lYd+tFgt+TrBQuBpn5d/q3zD31PcKvLZu/UJnD6phrbqoZTh42zi
+	 xWYzgFFjpAngn9y9CEGmvujs5E96AIjxUvgDWgwk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbfLQEPF (ORCPT
+        id S1727663AbfLQERb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 23:15:05 -0500
-Received: from conuserg-12.nifty.com ([210.131.2.79]:49413 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727680AbfLQEOv (ORCPT
+        Mon, 16 Dec 2019 23:17:31 -0500
+Received: from conuserg-08.nifty.com ([210.131.2.75]:50927 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727506AbfLQERa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 23:14:51 -0500
+        Mon, 16 Dec 2019 23:17:30 -0500
 Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id xBH4EPAD024524;
-        Tue, 17 Dec 2019 13:14:28 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com xBH4EPAD024524
+        by conuserg-08.nifty.com with ESMTP id xBH4GfU4015071;
+        Tue, 17 Dec 2019 13:16:42 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com xBH4GfU4015071
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1576556068;
-        bh=+kyEsSfRk7GZ3DX/TzRbKlttag60tm9I4S84+8zbCx4=;
+        s=dec2015msa; t=1576556202;
+        bh=Rv8WC9dqDe37ICSXxuXsuqUKzxAsugVrlJDEH6dRoJY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B8/BMaAZF29OOEhNNdaOjKpveXoD5EoyJM+CzsYHyOoYmlhoC6UdcPMeJ+1w3cDwo
-         JjzR1NijZBBFs8L1nq9jqrAeP/PFqtuyHAaWKij+Z/agoA6U60NYkEkeYKgrvrpuWP
-         wxxjzxJpNzgXRp1cUuA7L0SLCWxk1hDDhZZnAwTfHErNTplVYvFvOa2c9qqNKrx5PR
-         81shUntBrtoJdJZEdQ8OP42JN0AD6X54MMxKtFQRfcKcM92xUMlWsnrx3RUZkuVe5G
-         lJ/yzeOx3HbcLLV431gT0JHX+ifAk4xEqVLVr8+KkpB9GV9vmrPSYTQ5myFwNF4214
-         wmSVHHnuYdIkg==
+        b=ISQctXteuF7JV8kNwP0Mki+VFdTCmwSRuLZo3K3FTddZTCz67wlx4FKevNn/Yrq9b
+         Us7N+5G1TmpWvnb3hlLLNIMJo7d+4dDwU5WtgyiuvjrhHlsGAI+VZpvrHH5IroopQE
+         7ia4Grvmqx3ew914b1YIav8zi3Vuzu6NDMUOBWLcJII88r+0mC1ffmQJxq6o5FUNQ2
+         Lcbjy+5TiS1walATcb+Oqx6ajeVVuKOCYJ2h9iAvw0HE2qqBUNw1MQVCT67Ekhd5Bc
+         XFTXIp8RCLeISydKXo3ThEs94dJHD/UCYf57013+Swf3H1IQE4ull/n4GwurmjfaOC
+         xCuDTrYBKEOhg==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
-Cc:     Ulf Magnusson <ulfalizer@gmail.com>,
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
         Masahiro Yamada <masahiroy@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 3/8] kconfig: drop T_WORD from the RHS of 'prompt' symbol
-Date:   Tue, 17 Dec 2019 13:14:18 +0900
-Message-Id: <20191217041424.29285-4-masahiroy@kernel.org>
+Subject: [PATCH 2/2] kconfig: localmodconfig: fix indentation for closing brace
+Date:   Tue, 17 Dec 2019 13:16:37 +0900
+Message-Id: <20191217041637.29558-2-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191217041424.29285-1-masahiroy@kernel.org>
-References: <20191217041424.29285-1-masahiroy@kernel.org>
+In-Reply-To: <20191217041637.29558-1-masahiroy@kernel.org>
+References: <20191217041637.29558-1-masahiroy@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 8636a1f9677d ("treewide: surround Kconfig file paths with double
-quotes") killed use-cases to reduce an unquoted string into the 'prompt'
-symbol.
-
-Kconfig still allows to use an unquoted string in the context of menu,
-source, or prompt.
-
-So, you can omit quoting if the prompt is a single word:
-
-    bool foo
-
-..., but I do not think this is so useful.
-
-Let's require quoting:
-
-    bool "foo"
-
-All the Kconfig files in the kernel are written in this way.
+This is the closing brace for the foreach loop. Fix the misleading
+indentation.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- scripts/kconfig/parser.y | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ scripts/kconfig/streamline_config.pl | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/scripts/kconfig/parser.y b/scripts/kconfig/parser.y
-index 86e75ea74731..80585f04f590 100644
---- a/scripts/kconfig/parser.y
-+++ b/scripts/kconfig/parser.y
-@@ -445,9 +445,7 @@ prompt_stmt_opt:
- 	menu_add_prompt(P_PROMPT, $1, $2);
- };
- 
--prompt:	  T_WORD
--	| T_WORD_QUOTE
--;
-+prompt:	  T_WORD_QUOTE
- 
- end:	  T_ENDMENU T_EOL	{ $$ = "menu"; }
- 	| T_ENDCHOICE T_EOL	{ $$ = "choice"; current_choice_menu = NULL; }
+diff --git a/scripts/kconfig/streamline_config.pl b/scripts/kconfig/streamline_config.pl
+index bbaa1e11a4e9..e2f8504f5a2d 100755
+--- a/scripts/kconfig/streamline_config.pl
++++ b/scripts/kconfig/streamline_config.pl
+@@ -372,7 +372,7 @@ if (defined($lsmod_file)) {
+ 	    $lsmod = "$dir/lsmod";
+ 	    last;
+ 	}
+-}
++    }
+     if (!defined($lsmod)) {
+ 	# try just the path
+ 	$lsmod = "lsmod";
 -- 
 2.17.1
 
