@@ -2,277 +2,118 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66667C2D0C5
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF60AC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BA2E20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:07:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB27B2467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:09:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="DYjCY3iM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pj9zXHNB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbfLQJHl (ORCPT
+        id S1726680AbfLQJJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 04:07:41 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:36136 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725805AbfLQJHk (ORCPT
+        Tue, 17 Dec 2019 04:09:23 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:51774 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbfLQJJX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 04:07:40 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBH94A7E005597;
-        Tue, 17 Dec 2019 10:07:26 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=41mvUSOwuAhruiHu99TAoHez/M+143fLkG4jSCqmno8=;
- b=DYjCY3iMb3XomGOBSJb3DIIBH1iAFGaxNgrnV5mAt3JVS0oLVdFwgBXgxlQ/YePFsseD
- JHdgin5HBp8CiJDGHEqMma/lDCd5y69flPFJ2rhTJLq7Qm54C0+CWvUwD554kVPfyMrw
- akg0fxXi6OzjHaCLbJ5wFNpDIikq8E/tXEK7lRfQcKHZ49o1AXQcqWtbNFI5uT3kNUnS
- JIBLNd/RQBY280Ea8q0V2KhdRPKTkq0T51uhE3nFbbEo7qhePCtvx6gOR7yI/3fIdqxS
- 30rRXmk2OjnhMDroOEGYXVpy7/rh3VaYf70sSeW0Ru9bdrYZzXnWEFVdWUjA8bhtX9Co IQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2wvp36wwta-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 Dec 2019 10:07:26 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BDE1A10003D;
-        Tue, 17 Dec 2019 10:07:18 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8B8D42A5785;
-        Tue, 17 Dec 2019 10:07:18 +0100 (CET)
-Received: from localhost (10.75.127.49) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 17 Dec 2019 10:07:17
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <broonie@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <alexandre.torgue@st.com>
-CC:     <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Erwan Leray <erwan.leray@st.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH v2] dt-bindings: spi: Convert stm32 spi bindings to json-schema
-Date:   Tue, 17 Dec 2019 10:07:15 +0100
-Message-ID: <20191217090715.13334-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
+        Tue, 17 Dec 2019 04:09:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=LLbbhzPHRdMFZlP/HUcM9v4cCpiGyzf8ItvqlMapKa8=; b=pj9zXHNBi1JNV2/wNvFPR6io8
+        555ewGWGCwse9AsiEmr4M5iAc0J7SLwy26abo/ALaQHP04NR+qgvNMlB8KoVuxGe/n5UAr3EujzWg
+        iYKy/dcOUWBMcs9UKDphelfO9oH9193OSeBHkBS1phDidmJU31C32xi9zA4R6al7g+jEi5X7T8zed
+        r1LWstxJYJ7elRHiJrIXqTrjszQGPLZ14W7ROal+qPqhKHo+w30L2al+zCvfC+XPpffEM+IrjP46T
+        bZWKuEo+Somid/yRUSFT/K+1BSXMlTxVWAEudgrsDENu2LL2cdRWNwrUvlqI/ETZ1CKY4gtUbGL0Y
+        2gv1SEecQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ih8qy-0001tB-2n; Tue, 17 Dec 2019 09:09:16 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 102233035D4;
+        Tue, 17 Dec 2019 10:07:52 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 931D82B3D7E81; Tue, 17 Dec 2019 10:09:14 +0100 (CET)
+Date:   Tue, 17 Dec 2019 10:09:14 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc:     akpm@linux-foundation.org, npiggin@gmail.com, mpe@ellerman.id.au,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [RFC PATCH 1/2] mm/mmu_gather: Invalidate TLB correctly on batch
+ allocation failure and flush
+Message-ID: <20191217090914.GX2844@hirez.programming.kicks-ass.net>
+References: <20191217071713.93399-1-aneesh.kumar@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG7NODE2.st.com (10.75.127.20) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-17_01:2019-12-16,2019-12-16 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191217071713.93399-1-aneesh.kumar@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the STM32 spi binding to DT schema format using json-schema
+On Tue, Dec 17, 2019 at 12:47:12PM +0530, Aneesh Kumar K.V wrote:
+> Architectures for which we have hardware walkers of Linux page table should
+> flush TLB on mmu gather batch allocation failures and batch flush. Some
+> architectures like POWER supports multiple translation modes (hash and radix)
+> and in the case of POWER only radix translation mode needs the above TLBI.
+> This is because for hash translation mode kernel wants to avoid this extra
+> flush since there are no hardware walkers of linux page table. With radix
+> translation, the hardware also walks linux page table and with that, kernel
+> needs to make sure to TLB invalidate page walk cache before page table pages are
+> freed.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-CC: Erwan Leray <erwan.leray@st.com>
-CC: Fabrice Gasnier <fabrice.gasnier@st.com>
-CC: Amelie Delaunay <amelie.delaunay@st.com>
----
-changes in version 2:
-- fix typo in if block (compatible + contains)
-  The boths typos weren't detected by checkpatch.
-- remove type for st,spi-midi-ns property but not add upper limit
-  because the driver compute a delay (expressed in SPI clock cycles periods)
-  from this value (expressed in nanoseconds) and all that depends of the SPI
-  bus clock.
- .../devicetree/bindings/spi/spi-stm32.txt          |  62 ------------
- .../devicetree/bindings/spi/st,stm32-spi.yaml      | 105 +++++++++++++++++++++
- 2 files changed, 105 insertions(+), 62 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/spi/spi-stm32.txt
- create mode 100644 Documentation/devicetree/bindings/spi/st,stm32-spi.yaml
+> Based on changes from Peter Zijlstra <peterz@infradead.org>
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-stm32.txt b/Documentation/devicetree/bindings/spi/spi-stm32.txt
-deleted file mode 100644
-index d82755c63eaf..000000000000
---- a/Documentation/devicetree/bindings/spi/spi-stm32.txt
-+++ /dev/null
-@@ -1,62 +0,0 @@
--STMicroelectronics STM32 SPI Controller
--
--The STM32 SPI controller is used to communicate with external devices using
--the Serial Peripheral Interface. It supports full-duplex, half-duplex and
--simplex synchronous serial communication with external devices. It supports
--from 4 to 32-bit data size. Although it can be configured as master or slave,
--only master is supported by the driver.
--
--Required properties:
--- compatible: Should be one of:
--  "st,stm32h7-spi"
--  "st,stm32f4-spi"
--- reg: Offset and length of the device's register set.
--- interrupts: Must contain the interrupt id.
--- clocks: Must contain an entry for spiclk (which feeds the internal clock
--	  generator).
--- #address-cells:  Number of cells required to define a chip select address.
--- #size-cells: Should be zero.
--
--Optional properties:
--- resets: Must contain the phandle to the reset controller.
--- A pinctrl state named "default" may be defined to set pins in mode of
--  operation for SPI transfer.
--- dmas: DMA specifiers for tx and rx dma. DMA fifo mode must be used. See the
--  STM32 DMA bindings, Documentation/devicetree/bindings/dma/stm32-dma.txt.
--- dma-names: DMA request names should include "tx" and "rx" if present.
--- cs-gpios: list of GPIO chip selects. See the SPI bus bindings,
--  Documentation/devicetree/bindings/spi/spi-bus.txt
--
--
--Child nodes represent devices on the SPI bus
--  See ../spi/spi-bus.txt
--
--Optional properties:
--- st,spi-midi-ns: Only for STM32H7, (Master Inter-Data Idleness) minimum time
--		  delay in nanoseconds inserted between two consecutive data
--		  frames.
--
--
--Example:
--	spi2: spi@40003800 {
--		#address-cells = <1>;
--		#size-cells = <0>;
--		compatible = "st,stm32h7-spi";
--		reg = <0x40003800 0x400>;
--		interrupts = <36>;
--		clocks = <&rcc SPI2_CK>;
--		resets = <&rcc 1166>;
--		dmas = <&dmamux1 0 39 0x400 0x01>,
--		       <&dmamux1 1 40 0x400 0x01>;
--		dma-names = "rx", "tx";
--		pinctrl-0 = <&spi2_pins_b>;
--		pinctrl-names = "default";
--		cs-gpios = <&gpioa 11 0>;
--
--		aardvark@0 {
--			compatible = "totalphase,aardvark";
--			reg = <0>;
--			spi-max-frequency = <4000000>;
--			st,spi-midi-ns = <4000>;
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml b/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml
-new file mode 100644
-index 000000000000..f0d979664f07
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml
-@@ -0,0 +1,105 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spi/st,stm32-spi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: STMicroelectronics STM32 SPI Controller bindings
-+
-+description: |
-+  The STM32 SPI controller is used to communicate with external devices using
-+  the Serial Peripheral Interface. It supports full-duplex, half-duplex and
-+  simplex synchronous serial communication with external devices. It supports
-+  from 4 to 32-bit data size.
-+
-+maintainers:
-+  - Erwan Leray <erwan.leray@st.com>
-+  - Fabrice Gasnier <fabrice.gasnier@st.com>
-+
-+allOf:
-+  - $ref: "spi-controller.yaml#"
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: st,stm32f4-spi
-+
-+    then:
-+      properties:
-+        st,spi-midi-ns: false
-+
-+properties:
-+  compatible:
-+    enum:
-+      - st,stm32f4-spi
-+      - st,stm32h7-spi
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  dmas:
-+    description: |
-+      DMA specifiers for tx and rx dma. DMA fifo mode must be used. See
-+      the STM32 DMA bindings Documentation/devicetree/bindings/dma/stm32-dma.txt.
-+    items:
-+      - description: rx DMA channel
-+      - description: tx DMA channel
-+
-+  dma-names:
-+    items:
-+      - const: rx
-+      - const: tx
-+
-+patternProperties:
-+  "^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}@[0-9a-f]+$":
-+    type: object
-+    # SPI slave nodes must be children of the SPI master node and can
-+    # contain the following properties.
-+    properties:
-+      st,spi-midi-ns:
-+        description: |
-+          Only for STM32H7, (Master Inter-Data Idleness) minimum time
-+          delay in nanoseconds inserted between two consecutive data frames.
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - interrupts
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/stm32mp1-clks.h>
-+    #include <dt-bindings/reset/stm32mp1-resets.h>
-+    spi@4000b000 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      compatible = "st,stm32h7-spi";
-+      reg = <0x4000b000 0x400>;
-+      interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-+      clocks = <&rcc SPI2_K>;
-+      resets = <&rcc SPI2_R>;
-+      dmas = <&dmamux1 0 39 0x400 0x05>,
-+             <&dmamux1 1 40 0x400 0x05>;
-+      dma-names = "rx", "tx";
-+      cs-gpios = <&gpioa 11 0>;
-+
-+      aardvark@0 {
-+        compatible = "totalphase,aardvark";
-+        reg = <0>;
-+        spi-max-frequency = <4000000>;
-+        st,spi-midi-ns = <4000>;
-+      };
-+    };
-+
-+...
--- 
-2.15.0
+AFAICT it is all my patch ;-)
+
+Anyway, this commit:
+
+> More details in
+> commit: d86564a2f085 ("mm/tlb, x86/mm: Support invalidating TLB caches for RCU_TABLE_FREE")
+
+states that you do an explicit invalidate in __p*_free_tlb(), which, if
+I'm not mistaken is still there:
+
+  arch/powerpc/include/asm/nohash/pgalloc.h:      tlb_flush_pgtable(tlb, address);
+
+Or am I reading this wrong? I'm thinking you can remove that now.
+
+> diff --git a/arch/powerpc/include/asm/tlb.h b/arch/powerpc/include/asm/tlb.h
+> index b2c0be93929d..feea1a09bbce 100644
+> --- a/arch/powerpc/include/asm/tlb.h
+> +++ b/arch/powerpc/include/asm/tlb.h
+> @@ -27,6 +27,10 @@
+>  #define tlb_flush tlb_flush
+>  extern void tlb_flush(struct mmu_gather *tlb);
+>  
+> +#ifdef CONFIG_HAVE_RCU_TABLE_FREE
+/*
+ * PPC-Hash does not use the linux page-tables, so we can avoid
+ * the TLBI for page-table freeing, PPC-Radix otoh does use the
+ * page-tables and needs the TLBI.
+ */
+> +#define tlb_needs_table_invalidate()	radix_enabled()
+> +#endif
+
+Also, are you really sure about the !SMP case? Esp. on Radix I'm
+thinking that the PWC (page-walk-cache) can give trouble even on UP,
+when we get preempted in the middle of mmu_gather. Hmm?
+
+>  /* Get the generic bits... */
+>  #include <asm-generic/tlb.h>
+
 
