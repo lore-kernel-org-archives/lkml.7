@@ -2,121 +2,113 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB23C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF7FC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A3E621582
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:05:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aKTNLfD9"
+	by mail.kernel.org (Postfix) with ESMTP id 4773C21775
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:05:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728171AbfLQVDZ (ORCPT
+        id S1726764AbfLQVFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 17 Dec 2019 16:05:05 -0500
+Received: from mga04.intel.com ([192.55.52.120]:15620 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728168AbfLQVDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 17 Dec 2019 16:03:25 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51131 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727531AbfLQVDU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 16:03:20 -0500
-Received: by mail-wm1-f67.google.com with SMTP id a5so4343382wmb.0;
-        Tue, 17 Dec 2019 13:03:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=/AYGnaY52D8sTJ8v+M32HjD/4/ljP+HptYpvJ6gRoJU=;
-        b=aKTNLfD9uwFAkheMuc9ovj1lYQUuOvhFPZevrml+hj7ggZKitkuIwzMRzA3jGBUpo1
-         qTyVnYfH71ZMM6iXv5tJ/gvBXp6+4gUQS9wRAZi4O2EzcxFAFQcCnwaSRPUEjL5FXPHg
-         KYXil54Duq34UWHM7Bn6rYleJjNci7FYXOGmeq4VUHcSSR7KbKjUx7ndk3Tut2pZz2ab
-         JUkehBnVZ7NHnTdvnPojkuowYUf9dnBkhK8ieCfLQbO4vNV3Q/aTU9gSJ2RuZjU9Cmr8
-         lZSCX305RxMClP49lo1Sq1X+I4LnQgGm+ALQwM7XWHUQlEFFpQzNia9r0iQ9MlKCaBxq
-         sSWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=/AYGnaY52D8sTJ8v+M32HjD/4/ljP+HptYpvJ6gRoJU=;
-        b=R/kWxXcMfaodDl/ZrpJ/dB8vgf3TIY2VJo8aF/wZM2dQlnMlQIuaM29TVDrAi9zE+7
-         cuQteoZWXxdlVPlmcZ5TcbyEEOEim30pcYs2Uimho1Scv2k6O6WoWIgxDdrx7KDyhKdA
-         VUjfieHWi4O9U7rQX2EiWonblsBHn8lR3BNa/x3McqukYNfFjwJW8cZXxmfMEgiMiCdP
-         ia8dM/vO6Y7x1Ephbz7KBJgdJN+MOiO2Y3N/omEHdCYSCNopBQ2d2PoIAlQC2kzUUXoz
-         exY89N+0bB1Szrh2W+Z07pmXylZfvD5s16rW0sIlzbxJre2eLukv3noBlYWdC1cUvchS
-         Fhvw==
-X-Gm-Message-State: APjAAAXV2S87Y8fwKib7/WIKtMkIsAW9EDqoBr7cr3jLBT49Xz9o4eJ4
-        b6OO9kbazeQP6lzQm5Cnfno=
-X-Google-Smtp-Source: APXvYqyKOCqC8XbXj81TCEPdrfxwBY/JaIp3Idhsc6HbGPDp4KdSuA6Bh1fwKeDTqZ7Eqj0KgZhCTA==
-X-Received: by 2002:a1c:7419:: with SMTP id p25mr7443172wmc.129.1576616598729;
-        Tue, 17 Dec 2019 13:03:18 -0800 (PST)
-Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id i5sm37856wml.31.2019.12.17.13.03.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 17 Dec 2019 13:03:18 -0800 (PST)
-From:   Doug Berger <opendmb@gmail.com>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>
-Subject: [PATCH net-next 1/8] net: bcmgenet: enable NETIF_F_HIGHDMA flag
-Date:   Tue, 17 Dec 2019 13:02:22 -0800
-Message-Id: <1576616549-39097-2-git-send-email-opendmb@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576616549-39097-1-git-send-email-opendmb@gmail.com>
-References: <1576616549-39097-1-git-send-email-opendmb@gmail.com>
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 13:03:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,326,1571727600"; 
+   d="scan'208";a="240560963"
+Received: from smcdonal-mobl2.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.255.83.42])
+  by fmsmga004.fm.intel.com with ESMTP; 17 Dec 2019 13:03:23 -0800
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: [PATCH v5 04/17] soundwire: bus_type: rename sdw_drv_ to sdw_slave_drv
+Date:   Tue, 17 Dec 2019 15:03:01 -0600
+Message-Id: <20191217210314.20410-5-pierre-louis.bossart@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191217210314.20410-1-pierre-louis.bossart@linux.intel.com>
+References: <20191217210314.20410-1-pierre-louis.bossart@linux.intel.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit configures the DMA masks for the GENET driver and
-sets the NETIF_F_HIGHDMA flag to report support of the feature.
+Before we add master driver support, make sure there is no ambiguity
+and no occurrences of sdw_drv_ functions.
 
-Signed-off-by: Doug Berger <opendmb@gmail.com>
+No functionality change.
+
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 ---
- drivers/net/ethernet/broadcom/genet/bcmgenet.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/soundwire/bus_type.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index 32f1245a69e2..d9defb8b1e5f 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -2,7 +2,7 @@
- /*
-  * Broadcom GENET (Gigabit Ethernet) controller driver
-  *
-- * Copyright (c) 2014-2017 Broadcom
-+ * Copyright (c) 2014-2019 Broadcom
-  */
+diff --git a/drivers/soundwire/bus_type.c b/drivers/soundwire/bus_type.c
+index 2b2830b622fa..9a0fd3ee1014 100644
+--- a/drivers/soundwire/bus_type.c
++++ b/drivers/soundwire/bus_type.c
+@@ -67,7 +67,7 @@ struct bus_type sdw_bus_type = {
+ };
+ EXPORT_SYMBOL_GPL(sdw_bus_type);
  
- #define pr_fmt(fmt)				"bcmgenet: " fmt
-@@ -3537,7 +3537,7 @@ static int bcmgenet_probe(struct platform_device *pdev)
+-static int sdw_drv_probe(struct device *dev)
++static int sdw_slave_drv_probe(struct device *dev)
+ {
+ 	struct sdw_slave *slave = to_sdw_slave_device(dev);
+ 	struct sdw_driver *drv = to_sdw_slave_driver(dev->driver);
+@@ -113,7 +113,7 @@ static int sdw_drv_probe(struct device *dev)
+ 	return 0;
+ }
  
- 	/* Set hardware features */
- 	dev->hw_features |= NETIF_F_SG | NETIF_F_IP_CSUM |
--		NETIF_F_IPV6_CSUM | NETIF_F_RXCSUM;
-+		NETIF_F_IPV6_CSUM | NETIF_F_HIGHDMA | NETIF_F_RXCSUM;
+-static int sdw_drv_remove(struct device *dev)
++static int sdw_slave_drv_remove(struct device *dev)
+ {
+ 	struct sdw_slave *slave = to_sdw_slave_device(dev);
+ 	struct sdw_driver *drv = to_sdw_slave_driver(dev->driver);
+@@ -127,7 +127,7 @@ static int sdw_drv_remove(struct device *dev)
+ 	return ret;
+ }
  
- 	/* Request the WOL interrupt and advertise suspend if available */
- 	priv->wol_irq_disabled = true;
-@@ -3574,6 +3574,14 @@ static int bcmgenet_probe(struct platform_device *pdev)
+-static void sdw_drv_shutdown(struct device *dev)
++static void sdw_slave_drv_shutdown(struct device *dev)
+ {
+ 	struct sdw_slave *slave = to_sdw_slave_device(dev);
+ 	struct sdw_driver *drv = to_sdw_slave_driver(dev->driver);
+@@ -155,13 +155,13 @@ int __sdw_register_slave_driver(struct sdw_driver *drv,
+ 	}
  
- 	bcmgenet_set_hw_params(priv);
+ 	drv->driver.owner = owner;
+-	drv->driver.probe = sdw_drv_probe;
++	drv->driver.probe = sdw_slave_drv_probe;
  
-+	err = -EIO;
-+	if (priv->hw_params->flags & GENET_HAS_40BITS)
-+		err = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(40));
-+	if (err)
-+		err = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-+	if (err)
-+		goto err;
-+
- 	/* Mii wait queue */
- 	init_waitqueue_head(&priv->wq);
- 	/* Always use RX_BUF_LENGTH (2KB) buffer for all chips */
+ 	if (drv->remove)
+-		drv->driver.remove = sdw_drv_remove;
++		drv->driver.remove = sdw_slave_drv_remove;
+ 
+ 	if (drv->shutdown)
+-		drv->driver.shutdown = sdw_drv_shutdown;
++		drv->driver.shutdown = sdw_slave_drv_shutdown;
+ 
+ 	return driver_register(&drv->driver);
+ }
 -- 
-2.7.4
+2.20.1
 
