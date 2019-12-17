@@ -6,34 +6,36 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 402D6C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 261E6C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B7A021739
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:07:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC934218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:07:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728804AbfLQOHV (ORCPT
+        id S1728815AbfLQOHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:07:21 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:44354 "EHLO gloria.sntech.de"
+        Tue, 17 Dec 2019 09:07:23 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:44358 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726164AbfLQOHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728707AbfLQOHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 17 Dec 2019 09:07:21 -0500
 Received: from ip5f5a5f74.dynamic.kabel-deutschland.de ([95.90.95.116] helo=phil.sntech)
         by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.89)
         (envelope-from <heiko@sntech.de>)
-        id 1ihDVJ-0007SU-4b; Tue, 17 Dec 2019 15:07:13 +0100
+        id 1ihDVJ-0007SU-Er; Tue, 17 Dec 2019 15:07:13 +0100
 From:   Heiko Stuebner <heiko@sntech.de>
 To:     dri-devel@lists.freedesktop.org
 Cc:     thierry.reding@gmail.com, sam@ravnborg.org, robh+dt@kernel.org,
         mark.rutland@arm.com, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, heiko@sntech.de,
         Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: [PATCH v3 1/3] dt-bindings: Add vendor prefix for Xinpeng Technology
-Date:   Tue, 17 Dec 2019 15:07:01 +0100
-Message-Id: <20191217140703.23867-1-heiko@sntech.de>
+Subject: [PATCH v3 2/3] dt-bindings: display: panel: Add binding document for Xinpeng XPP055C272
+Date:   Tue, 17 Dec 2019 15:07:02 +0100
+Message-Id: <20191217140703.23867-2-heiko@sntech.de>
 X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191217140703.23867-1-heiko@sntech.de>
+References: <20191217140703.23867-1-heiko@sntech.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -43,27 +45,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
-Shenzhen Xinpeng Technology Co., Ltd produces for example display panels.
+The XPP055C272 is a 5.5" 720x1280 DSI display.
+
+changes in v2:
+- add size info into binding title (Sam)
+- add more required properties (Sam)
 
 Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ .../display/panel/xinpeng,xpp055c272.yaml     | 48 +++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/xinpeng,xpp055c272.yaml
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 6046f4555852..85e7c26a05c7 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -1056,6 +1056,8 @@ patternProperties:
-     description: Extreme Engineering Solutions (X-ES)
-   "^xillybus,.*":
-     description: Xillybus Ltd.
-+  "^xinpeng,.*":
-+    description: Shenzhen Xinpeng Technology Co., Ltd
-   "^xlnx,.*":
-     description: Xilinx
-   "^xunlong,.*":
+diff --git a/Documentation/devicetree/bindings/display/panel/xinpeng,xpp055c272.yaml b/Documentation/devicetree/bindings/display/panel/xinpeng,xpp055c272.yaml
+new file mode 100644
+index 000000000000..2d0fc97d735c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/xinpeng,xpp055c272.yaml
+@@ -0,0 +1,48 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/panel/sony,acx424akp.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Xinpeng XPP055C272 5.5in 720x1280 DSI panel
++
++maintainers:
++  - Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
++
++allOf:
++  - $ref: panel-common.yaml#
++
++properties:
++  compatible:
++    const: xinpeng,xpp055c272
++  reg: true
++  backlight: true
++  port: true
++  reset-gpios: true
++  iovcc-supply:
++     description: regulator that supplies the iovcc voltage
++  vci-supply:
++     description: regulator that supplies the vci voltage
++
++required:
++  - compatible
++  - reg
++  - backlight
++  - iovcc-supply
++  - vci-supply
++
++additionalProperties: false
++
++examples:
++  - |
++    dsi@ff450000 {
++        panel@0 {
++            compatible = "xinpeng,xpp055c272";
++            reg = <0>;
++            backlight = <&backlight>;
++            iovcc-supply = <&vcc_1v8>;
++            vci-supply = <&vcc3v3_lcd>;
++        };
++    };
++
++...
 -- 
 2.24.0
 
