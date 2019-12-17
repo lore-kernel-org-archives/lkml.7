@@ -2,130 +2,85 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42FE2C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD20CC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 237A121775
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:21:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 869162176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:21:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576592518;
+	bh=ueGS3iFnbRD2iFw8cOWQhfJY1+W3N8aPfHC9xXQTM3k=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=170IUDaUnBGLr8igsujMEr3t4r8ZQxZLyaLz2BrConkETwXBJQlKzjEALCjno21s8
+	 MZ8yhprw+YWdtQE2oGzshGMp5Qvv6eQw1RkbFGtjk71HeZxDBieuwYqm59hQKkno7B
+	 eo/z7GwS3CD50pZZFmSDr+v8NhDfijcbRKiejl6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728908AbfLQOVr (ORCPT
+        id S1728940AbfLQOV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:21:47 -0500
-Received: from foss.arm.com ([217.140.110.172]:38616 "EHLO foss.arm.com"
+        Tue, 17 Dec 2019 09:21:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728573AbfLQOVq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:21:46 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD7E31FB;
-        Tue, 17 Dec 2019 06:21:45 -0800 (PST)
-Received: from arm.com (e112269-lin.cambridge.arm.com [10.1.196.56])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E29473F719;
-        Tue, 17 Dec 2019 06:21:43 -0800 (PST)
-Date:   Tue, 17 Dec 2019 14:21:39 +0000
-From:   Steven Price <steven.price@arm.com>
-To:     "yezengruan@huawei.com" <yezengruan@huawei.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "maz@kernel.org" <maz@kernel.org>,
-        James Morse <James.Morse@arm.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        "julien.thierry.kdev@gmail.com" <julien.thierry.kdev@gmail.com>,
-        Catalin Marinas <Catalin.Marinas@arm.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH 1/5] KVM: arm64: Document PV-lock interface
-Message-ID: <20191217142138.GA38811@arm.com>
-References: <20191217135549.3240-1-yezengruan@huawei.com>
- <20191217135549.3240-2-yezengruan@huawei.com>
+        id S1728573AbfLQOV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 09:21:57 -0500
+Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A21DE21739;
+        Tue, 17 Dec 2019 14:21:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576592516;
+        bh=ueGS3iFnbRD2iFw8cOWQhfJY1+W3N8aPfHC9xXQTM3k=;
+        h=From:To:Cc:Subject:Date:From;
+        b=vXqu8GIYA+hYaUmgXRVbbmFskLdI7UcMHOrLuCJ5+ZIGvhrrT78TzXFmu5Kg6KEHz
+         l6TeEGPx+2TBBo90EMku8XRyTGbrcQ6ftVeaW8AmwU+osMK7PklMv4u8UxQmD8Inir
+         rvo0iiYhHA6uC+5q19TNAd9ZGKG71sh+gBkKD53k=
+From:   Mike Rapoport <rppt@kernel.org>
+To:     linux-sh@vger.kernel.org
+Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH 0/2] sh: get rid of __ARCH_USE_5LEVEL_HACK
+Date:   Tue, 17 Dec 2019 16:21:48 +0200
+Message-Id: <20191217142150.10392-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191217135549.3240-2-yezengruan@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 01:55:45PM +0000, yezengruan@huawei.com wrote:
-> From: Zengruan Ye <yezengruan@huawei.com>
-> 
-> Introduce a paravirtualization interface for KVM/arm64 to obtain the vcpu
-> is currently running or not.
-> 
-> A hypercall interface is provided for the guest to interrogate the
-> hypervisor's support for this interface and the location of the shared
-> memory structures.
-> 
-> Signed-off-by: Zengruan Ye <yezengruan@huawei.com>
-> ---
->  Documentation/virt/kvm/arm/pvlock.rst | 31 +++++++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/virt/kvm/arm/pvlock.rst
-> 
-> diff --git a/Documentation/virt/kvm/arm/pvlock.rst b/Documentation/virt/kvm/arm/pvlock.rst
-> new file mode 100644
-> index 000000000000..eec0c36edf17
-> --- /dev/null
-> +++ b/Documentation/virt/kvm/arm/pvlock.rst
-> @@ -0,0 +1,31 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +Paravirtualized lock support for arm64
-> +======================================
-> +
-> +KVM/arm64 provids some hypervisor service calls to support a paravirtualized
-> +guest obtaining the vcpu is currently running or not.
-> +
-> +Two new SMCCC compatible hypercalls are defined:
-> +
-> +* PV_LOCK_FEATURES:   0xC5000040
-> +* PV_LOCK_PREEMPTED:  0xC5000041
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-These values are in the "Standard Hypervisor Service Calls" section of
-SMCCC - so is there a document that describes this features such that
-other OSes or hypervisors can implement it? I'm also not entirely sure
-of the process of ensuring that the IDs picked are non-conflicting.
+Hi,
 
-Otherwise if this is a KVM specific interface this should probably
-belong within the "Vendor Specific Hypervisor Service Calls" section
-along with some probing that the hypervisor is actually KVM. Although I
-don't see anything KVM specific.
+These patches update the SuperH page table folding/unfolding to take into
+account the 5th level.
 
-> +
-> +The existence of the PV_LOCK hypercall should be probed using the SMCCC 1.1
-> +ARCH_FEATURES mechanism before calling it.
-> +
-> +PV_LOCK_FEATURES
-> +    ============= ========    ==========
-> +    Function ID:  (uint32)    0xC5000040
-> +    PV_call_id:   (uint32)    The function to query for support.
-> +    Return value: (int64)     NOT_SUPPORTED (-1) or SUCCESS (0) if the relevant
-> +                              PV-lock feature is supported by the hypervisor.
-> +    ============= ========    ==========
-> +
-> +PV_LOCK_PREEMPTED
-> +    ============= ========    ==========
-> +    Function ID:  (uint32)    0xC5000041
-> +    Return value: (int64)     NOT_SUPPORTED (-1) or SUCCESS (0) if the IPA of
-> +                              this vcpu's pv data structure is configured by
-> +                              the hypervisor.
-> +    ============= ========    ==========
+Mike Rapoport (2):
+  sh: drop __pXd_offset() macros that duplicate pXd_index() ones
+  sh: add support for folded p4d page tables
 
-From the code it looks like there's another argument for this SMC - the
-physical address (or IPA) of a struct pvlock_vcpu_state. This structure
-also needs to be described as it is part of the ABI.
+ arch/sh/include/asm/pgtable-2level.h |  1 -
+ arch/sh/include/asm/pgtable-3level.h |  1 -
+ arch/sh/include/asm/pgtable_32.h     |  5 ++---
+ arch/sh/include/asm/pgtable_64.h     |  5 ++---
+ arch/sh/kernel/io_trapped.c          |  7 ++++++-
+ arch/sh/mm/cache-sh4.c               |  4 +++-
+ arch/sh/mm/cache-sh5.c               |  7 ++++++-
+ arch/sh/mm/fault.c                   | 26 +++++++++++++++++++++++---
+ arch/sh/mm/hugetlbpage.c             | 28 ++++++++++++++++++----------
+ arch/sh/mm/init.c                    | 15 +++++++++++----
+ arch/sh/mm/kmap.c                    |  2 +-
+ arch/sh/mm/tlbex_32.c                |  6 +++++-
+ arch/sh/mm/tlbex_64.c                |  7 ++++++-
+ 13 files changed, 83 insertions(+), 31 deletions(-)
 
-Steve
+-- 
+2.24.0
+
