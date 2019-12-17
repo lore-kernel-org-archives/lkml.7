@@ -2,139 +2,267 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1019C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 266B5C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 968A521582
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:31:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="OQ7guJUd"
+	by mail.kernel.org (Postfix) with ESMTP id E699321582
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:33:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726333AbfLQXbq (ORCPT
+        id S1726487AbfLQXdF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 18:31:46 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39915 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbfLQXbq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 18:31:46 -0500
-Received: by mail-pl1-f193.google.com with SMTP id z3so91815plk.6
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 15:31:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:references:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=cDR6dB5iHTX3mAZkKGzaI63EdL/MxGLZ2WcpfIyLM9I=;
-        b=OQ7guJUdx6GhP94QWJyRDRg4/0+6a/DZj1bDlPSx29RmJembu2CSzW9xPZ47HHDupZ
-         vnXqpZrXpU1jVSJ6r2txfDkPJarb2qGJfgto2g8KvD9r7MoTcljSeCKPd/11nd2ad51o
-         Z/0XvhnjB1nnmh9apoDVnFoahxxZ+VyErkdREc4MmuIwMHZs8P/xhYFuNKL/nmJBHOK6
-         YxTyH954288aWL1CVRf4Jwj5tXgF0wRnB1qweC5y3EFZ2gwCSNj5d/SOKw+pDAJsHNvd
-         AoIVoxlsmAXego86v6PkUgatV0iFgITHCuuViefOxZ0oy4sNUPBfHOYZKEsLzewnNnSu
-         e22A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cDR6dB5iHTX3mAZkKGzaI63EdL/MxGLZ2WcpfIyLM9I=;
-        b=mucpAV3C4JbJtB6DLmfanyWrMxhIYeOCVM/VwS9/k3R5STYd8Ii4D0jeHuhB8DRvkB
-         X2suxTldSVFUP70dPZRBQ5DPF2i+Ju82GOXc9s7nazRpNq2BpoQju/fz9gKUILTQIYOL
-         crm4dlgTqsjyWTx4F8k4LOIzA63D2X6XcETEsBLHOI+bNVHZrH2//N8ORr402iq5Oo3n
-         CSDh0kURdmALnQ0XZEtFzKxH6a3Xcgfr3C4EhiPPQdq8gnvJZvzb+bvTAxxYKxlSFP83
-         fwXyrGhYQaxZuDFAPsdW0m+hMXWT4PzsCZUeN7pTowr/dZE+kjEhJ1Szz2AG8UkQCGYt
-         nJVA==
-X-Gm-Message-State: APjAAAV/7bxkWlmfqK74ADWXY/YywiPvwRLE1dhyWOkU+94iYYf4PUrl
-        zAc93VrcQQUQE/2pDK5BOP8xB95av+g=
-X-Google-Smtp-Source: APXvYqxLO1fHh/2I7vcDoXQtDrPaOaQv1joybrHHoj0vl9q+mGObuWZh16p2OsNK99e+M/7WhG+1HA==
-X-Received: by 2002:a17:90b:d85:: with SMTP id bg5mr2665pjb.99.1576625505378;
-        Tue, 17 Dec 2019 15:31:45 -0800 (PST)
-Received: from ?IPv6:2620:10d:c081:1131::13f4? ([2620:10d:c090:180::6446])
-        by smtp.gmail.com with ESMTPSA id o7sm124164pfg.138.2019.12.17.15.31.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Dec 2019 15:31:44 -0800 (PST)
-Subject: Re: [PATCH 2/2] io_uring: batch getting pcpu references
-From:   Jens Axboe <axboe@kernel.dk>
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1576621553.git.asml.silence@gmail.com>
- <b72c5ec7f6d9a9881948de6cb88d30cc5e0354e9.1576621553.git.asml.silence@gmail.com>
- <e54d77e4-9357-cb9e-9d06-d96b24f49a44@kernel.dk>
-Message-ID: <6f29aacb-a067-fc9d-5625-0625557be2e1@kernel.dk>
-Date:   Tue, 17 Dec 2019 16:31:42 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 17 Dec 2019 18:33:05 -0500
+Received: from mga04.intel.com ([192.55.52.120]:24448 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725805AbfLQXdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 18:33:04 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 15:33:00 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,327,1571727600"; 
+   d="scan'208";a="212733905"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by fmsmga008.fm.intel.com with ESMTP; 17 Dec 2019 15:33:00 -0800
+Subject: [PATCH RFC v3 00/14] idxd driver for Intel Data Streaming
+ Accelerator
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vkoul@kernel.org
+Cc:     dan.j.williams@intel.com, tony.luck@intel.com, jing.lin@intel.com,
+        ashok.raj@intel.com, sanjay.k.kumar@intel.com, megha.dey@intel.com,
+        jacob.jun.pan@intel.com, yi.l.liu@intel.com, axboe@kernel.dk,
+        akpm@linux-foundation.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, fenghua.yu@intel.com, hpa@zytor.com
+Date:   Tue, 17 Dec 2019 16:32:59 -0700
+Message-ID: <157662541786.51652.7666763291600764054.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-In-Reply-To: <e54d77e4-9357-cb9e-9d06-d96b24f49a44@kernel.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/17/19 4:21 PM, Jens Axboe wrote:
-> On 12/17/19 3:28 PM, Pavel Begunkov wrote:
->> percpu_ref_tryget() has its own overhead. Instead getting a reference
->> for each request, grab a bunch once per io_submit_sqes().
->>
->> basic benchmark with submit and wait 128 non-linked nops showed ~5%
->> performance gain. (7044 KIOPS vs 7423)
->>
->> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
->> ---
->>
->> For notice: it could be done without @extra_refs variable,
->> but looked too tangled because of gotos.
->>
->>
->>  fs/io_uring.c | 11 ++++++++---
->>  1 file changed, 8 insertions(+), 3 deletions(-)
->>
->> diff --git a/fs/io_uring.c b/fs/io_uring.c
->> index cf4138f0e504..6c85dfc62224 100644
->> --- a/fs/io_uring.c
->> +++ b/fs/io_uring.c
->> @@ -845,9 +845,6 @@ static struct io_kiocb *io_get_req(struct io_ring_ctx *ctx,
->>  	gfp_t gfp = GFP_KERNEL | __GFP_NOWARN;
->>  	struct io_kiocb *req;
->>  
->> -	if (!percpu_ref_tryget(&ctx->refs))
->> -		return NULL;
->> -
->>  	if (!state) {
->>  		req = kmem_cache_alloc(req_cachep, gfp);
->>  		if (unlikely(!req))
->> @@ -3929,6 +3926,7 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
->>  	struct io_submit_state state, *statep = NULL;
->>  	struct io_kiocb *link = NULL;
->>  	int i, submitted = 0;
->> +	unsigned int extra_refs;
->>  	bool mm_fault = false;
->>  
->>  	/* if we have a backlog and couldn't flush it all, return BUSY */
->> @@ -3941,6 +3939,10 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
->>  		statep = &state;
->>  	}
->>  
->> +	if (!percpu_ref_tryget_many(&ctx->refs, nr))
->> +		return -EAGAIN;
->> +	extra_refs = nr;
->> +
->>  	for (i = 0; i < nr; i++) {
->>  		struct io_kiocb *req = io_get_req(ctx, statep);
->>  
+v3:
+akpm:
+- Change request_alloc to context_alloc to make it more generic
+- Make context_alloc only built when selected via CONFIG_CONTEXT_ALLOC
+- Change function names to context_alloc_from_pages() and
+  context_free_from_pages().
+- Added commenting to better document the functions.
 
-This also needs to come before the submit_state_start().
+v2:
+Borislav:
+- Pushed CPU feature check burden to the driver and removed feature check and alignment check from iosubmit_cmds512()
+- Removed generic support and make iosubmit_cmds512() x86 only
+DaveH:
+- added comments to explain __iowrite512() quirks.
 
-I forgot to mention that I really like the idea, no point in NOT batching
-the refs when we know exactly how many refs we need.
+The patch series breaks down into following parts:
+Patch 1: x86 arch, add a new I/O accessor based on movdir64b
+Patches 2,3,5-7,12: dmaengine subsystem additions
+Patch 4: mm and block, moving common allocation code from blk-mq to mm
+Patches 8-11,13,14: idxd driver
 
--- 
-Jens Axboe
+This patch series implements the first part of the driver for the Intel
+Data Streaming accelerator, the Intel Data Accelerator driver (idxd).
+The Intel DSA replaces the Intel IOAT DMA engine from previous Xeon platforms
+on a future processor platform. Many new features are implemented by Intel DSA.
+1. Descriptors can be issued directly from kernel, user, and guest via new CPU
+   instructions enqcmd, enqcmds, and movdir64b. The descriptor is written to
+   an mmio address in one of the device's PCI BAR and is called a portal.
+   New CPU instruction details can be found in the latest Intel Software
+   Developer's Manual. [1]
+2. Shared workqueues allow multiple users issue descriptors to the same
+   workqueue.
+3. Shared Virtual Memory (SVM) support allows using virtual address instead of
+   requiring pinned physical address that traditional DMA controllers require.
+   This simplifies programming and makes it easier for user space to do DMA
+   operations. Page faults can be recovered through PCI Address Translation
+   Service (ATS) performed by the DMA device.
+4. Supports scalable IOV (SIOV) to accelerate virtualization. [2]
 
+The submission will happen in multiple stages depending on availability of
+kernel support for Process Address Space ID (PASID), IOMMU, vIOMMU, and
+Interrupt Message Storage (IMS).
+
+Stage 1 (this series): idxd driver with only dedicated workqueue support.
+	- No PASID support
+	- No shared workqueue (requires PASID) support
+	- With DMA engine plumbing
+	- With char driver for user command portal export.
+Stage 2. idxd driver with PASID support and shared workqueue support
+STage 3. idxd driver with VFIO mediated device (mdev) and with IMS support.
+
+The DSA device defines sub-components called workqueues, groups, and engines.
+A group is an abstract container that can have 1 or more workqueues and 1 or
+more engines. The number of groups, workqueues, and engines supported by the
+device can be detected from the general capabilities register. The workqueues
+are where descriptors queued up before being processed by the engines.
+
+The DSA device also has a memory BAR that contains multiple portals.
+Depending on the offset from the BAR, various portals can be used to submit
+descriptors with one of the CPU commands mentioned above. The types of
+portals are MSIX limited, MSIX unlimited, IMS limited, and IMS unlimited as
+defined by the hardware spec. The MSIX unlimited portals are reserved for
+kernel submissions. The limited portals can be exported to user space for
+application usages. A limited portal is configured by the workqueue threshold
+attribute and can be restricted to have a workqueue size that is smaller than
+the actual workqueue size. This allows the kernel to submit command descriptors
+to a workqueue and not be blocked by the user application.
+
+There are two types of workqueues that the DSA device supports, dedicated and
+shared. A dedicated workqueue receives descriptors via the movdir64b
+instruction. This instruction is a posted write and therefore does not wait for
+a completion. Because of this, the software must keep track of the number of
+descriptors submitted to the workqueue. A full workqueue will drop the
+descriptor without notice. A shared workqueue accepts the enqcmds instruction in
+the kernel and enqcmd instruction from user applications. The command will set
+the zero flag to indicate whether the submission of the descriptor is
+successful. The enqcmd(s) instruction is non-posted and waits for the write
+completion before return.
+
+The stage 1 of the patch submission provides a base driver that only support
+the dedicated workqueue type without PASID support. The supported source and
+destination addresses must be physical. This is similar to traditional
+DMA operations where the device receives a descriptor with physical source and
+destination addresses for operation. Plumbing to the existing kernel dmaengine
+subsystem is added in order to support such usages. DMA memmove operation can be
+tested with the in kernel dmatest module.
+
+A large part of the base driver is the sysfs component.  There is also
+no requirement for DSA to be used during early kernel boot. Configuration
+of the device during initramfs should be sufficient.
+
+A bus type (dsa_bus) is defined for a hierachy of DSA devices and
+sub-components to be connected to, /sys/bus/dsa/.
+A struct device is created for each DSA device and for each of its
+sub-component (workqueues, groups, and engines).  So looking under
+/sys/bus/dsa/devices, one would observe entries such as dsa0, dsa1, wq0.0,
+wq1.0, group0.0, engine0.0, and etc. Each of those has sysfs attributes
+underneath that allows the configuration of those parts or reporting status or
+capabilities of the parts that they represent.
+
+/sys/bus/dsa/devices
+├── dsa0 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0
+├── engine0.0 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0/engine0.0
+├── engine0.1 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0/engine0.1
+├── engine0.2 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0/engine0.2
+├── engine0.3 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0/engine0.3
+├── group0.0 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0/group0.0
+├── group0.1 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0/group0.1
+├── group0.2 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0/group0.2
+├── group0.3 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0/group0.3
+├── wq0.0 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0/wq0.0
+├── wq0.1 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0/wq0.1
+├── wq0.2 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0/wq0.2
+├── wq0.3 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0/wq0.3
+├── wq0.4 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0/wq0.4
+├── wq0.5 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0/wq0.5
+├── wq0.6 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0/wq0.6
+├── wq0.7 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0/wq0.7
+
+Under /sys/bus/dsa/drivers/dsa/ there is a bind and an unbind attribute. Those
+allow us to enable and disable the device and workqueue components through the
+bus probe and remove functions in the driver. By writing the "device" names
+(i.e. dsa0, wq0.0) into bind or unbind attributes we can enable or disable those
+components respectively. This is the typical driver-core bind / unbind behavior.
+
+The workqueue device attributes exports two attributes, type and name, to
+indicate how the workqueue is being utilized. There are 2 primary types that
+the driver recognizes: kernel, user. An additonal mdev type is available from
+stage 3 enabling.  The "kernel" type marks the workqueue for in kernel usages.
+The "user" type surfaces a char device for user application consumption.
+The "name" attribute is a string type that marks the workqueue for more
+specific usages. For example, for the dmaengine subsystem to claim the
+workqueue the name should be "dmanegine". For "user" queue types, the name
+can be any valid string useful for identification by the user application.
+
+For the "user" workqueue that surfaces a char device, char device allows a
+limited portal region to be exported to user applications by the mmap() call
+once the application opens the char device.  Character device nodes in
+/dev/dsa/wqM.N will be made visible for application to open the device.
+A user application can use the enqcmd CPU instruction to submit
+descriptors directly to a workqueue without kernel driver involvement.
+
+Kernel branch for easy review:
+https://github.com/intel/idxd-driver.git idxd-stage1
+
+[1]: https://software.intel.com/en-us/articles/intel-sdm
+[2]: https://software.intel.com/en-us/download/intel-scalable-io-virtualization-technical-specification
+[3]: https://software.intel.com/en-us/download/intel-data-streaming-accelerator-preliminary-architecture-specification
+[4]: https://01.org/blogs/2019/introducing-intel-data-streaming-accelerator
+
+---
+
+Dave Jiang (13):
+      x86/asm: add iosubmit_cmds512() based on movdir64b CPU instruction
+      dmaengine: break out channel registration
+      dmaengine: add new dma device registration
+      mm: create common code from request allocation based from blk-mq code
+      dmaengine: add dma_request support functions
+      dmaengine: add dma request submit and completion path support
+      dmaengine: update dmatest to support dma request
+      dmaengine: idxd: Init and probe for Intel data accelerators
+      dmaengine: idxd: add configuration component of driver
+      dmaengine: idxd: add descriptor manipulation routines
+      dmaengine: idxd: connect idxd to dmaengine subsystem
+      dmaengine: request submit optimization
+      dmaengine: idxd: add char driver to expose submission portal to userland
+
+Jing Lin (1):
+      dmaengine: idxd: add sysfs ABI for idxd driver
+
+
+ Documentation/ABI/stable/sysfs-driver-dma-idxd |  171 +++
+ MAINTAINERS                                    |    8 
+ arch/x86/include/asm/io.h                      |   42 +
+ block/Kconfig                                  |    1 
+ block/blk-mq.c                                 |   94 -
+ drivers/dma/Kconfig                            |   20 
+ drivers/dma/Makefile                           |    2 
+ drivers/dma/dma-request.c                      |   96 ++
+ drivers/dma/dmaengine.c                        |  312 +++--
+ drivers/dma/dmatest.c                          |  366 ++++--
+ drivers/dma/idxd/Makefile                      |    2 
+ drivers/dma/idxd/cdev.c                        |  302 +++++
+ drivers/dma/idxd/device.c                      |  699 +++++++++++
+ drivers/dma/idxd/dma.c                         |  120 ++
+ drivers/dma/idxd/idxd.h                        |  308 +++++
+ drivers/dma/idxd/init.c                        |  551 +++++++++
+ drivers/dma/idxd/irq.c                         |  275 ++++
+ drivers/dma/idxd/registers.h                   |  336 +++++
+ drivers/dma/idxd/submit.c                      |  178 +++
+ drivers/dma/idxd/sysfs.c                       | 1528 ++++++++++++++++++++++++
+ include/linux/dmaengine.h                      |  132 ++
+ include/linux/idxd.h                           |   20 
+ include/linux/mempool.h                        |   10 
+ include/uapi/linux/idxd.h                      |  218 +++
+ mm/Kconfig                                     |    6 
+ mm/Makefile                                    |    1 
+ mm/context_alloc.c                             |  137 ++
+ usr/include/Makefile                           |    1 
+ 28 files changed, 5651 insertions(+), 285 deletions(-)
+ create mode 100644 Documentation/ABI/stable/sysfs-driver-dma-idxd
+ create mode 100644 drivers/dma/dma-request.c
+ create mode 100644 drivers/dma/idxd/Makefile
+ create mode 100644 drivers/dma/idxd/cdev.c
+ create mode 100644 drivers/dma/idxd/device.c
+ create mode 100644 drivers/dma/idxd/dma.c
+ create mode 100644 drivers/dma/idxd/idxd.h
+ create mode 100644 drivers/dma/idxd/init.c
+ create mode 100644 drivers/dma/idxd/irq.c
+ create mode 100644 drivers/dma/idxd/registers.h
+ create mode 100644 drivers/dma/idxd/submit.c
+ create mode 100644 drivers/dma/idxd/sysfs.c
+ create mode 100644 include/linux/idxd.h
+ create mode 100644 include/uapi/linux/idxd.h
+ create mode 100644 mm/context_alloc.c
+
+--
