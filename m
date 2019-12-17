@@ -2,94 +2,127 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57695C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B743FC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16A8920663
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 885AF20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:15:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ey6cCVpC"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="NGKMIMuw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728835AbfLQOO7 (ORCPT
+        id S1728853AbfLQOPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:14:59 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:44018 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728546AbfLQOO6 (ORCPT
+        Tue, 17 Dec 2019 09:15:38 -0500
+Received: from esa2.hc3370-68.iphmx.com ([216.71.145.153]:49037 "EHLO
+        esa2.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728546AbfLQOPi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:14:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576592098;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Z3WKtHiJ7FkkQLNQo2Osm4wM8wUQdLSRjz4d46zCmMM=;
-        b=ey6cCVpCg2A/Gj9bOISdERdo3UHLmixVEejNcIyfuwZRmdp9jG9z2kNh0agC9Yaw8Qh/n2
-        uIDCzXTUbFeYJxHAjwP14T+Dzn/m9RKO7jHyd76KHfXL5DMkrTROpGziI5FroiB9/802dB
-        P3rIFi/7M3H8vBweuru/hsGsgk2Ij8s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-356-bGQaAXeKOMOsM3xkZYW5cw-1; Tue, 17 Dec 2019 09:14:54 -0500
-X-MC-Unique: bGQaAXeKOMOsM3xkZYW5cw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4188F1044804;
-        Tue, 17 Dec 2019 14:14:53 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 79D376016C;
-        Tue, 17 Dec 2019 14:14:51 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Tue, 17 Dec 2019 15:14:50 +0100 (CET)
-Date:   Tue, 17 Dec 2019 15:14:48 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     qiwuchen55@gmail.com, peterz@infradead.org, mingo@kernel.org,
-        kernel-team@android.com, linux-kernel@vger.kernel.org,
-        chenqiwu@xiaomi.com
-Subject: Re: [PATCH v2] kernel/exit: do panic earlier to get coredump if
- global init task exit
-Message-ID: <20191217141447.GA23152@redhat.com>
-References: <1576466324-6067-1-git-send-email-qiwuchen55@gmail.com>
- <20191216172841.GA10466@redhat.com>
- <20191216174410.xiqurqnqyipbuy4e@wittgenstein>
+        Tue, 17 Dec 2019 09:15:38 -0500
+X-Greylist: delayed 426 seconds by postgrey-1.27 at vger.kernel.org; Tue, 17 Dec 2019 09:15:37 EST
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1576592138;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=6sVUlp5NLpAAtn28yCdoOs3OAGb5AYegKQzCNbECZMs=;
+  b=NGKMIMuwjbsndsi+gKnf6KNHbUX5wTuwiCeP84xCj0ZbAgnr1D7vaA9E
+   Bwfxuekq+hmotqXiikdRt347RADTbF7JSOK26WOqqlGCuVWCKqYy0+/O4
+   pZDM4U0+cuCsH2N3nff+eBa9J7+c/Go8xTGvSF887TI3s0vAhpVQsyKqv
+   0=;
+Authentication-Results: esa2.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=sergey.dyasli@citrix.com; spf=Pass smtp.mailfrom=sergey.dyasli@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa2.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  sergey.dyasli@citrix.com) identity=pra;
+  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
+  envelope-from="sergey.dyasli@citrix.com";
+  x-sender="sergey.dyasli@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa2.hc3370-68.iphmx.com: domain of
+  sergey.dyasli@citrix.com designates 162.221.158.21 as
+  permitted sender) identity=mailfrom;
+  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
+  envelope-from="sergey.dyasli@citrix.com";
+  x-sender="sergey.dyasli@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
+  ip4:168.245.78.127 ~all"
+Received-SPF: None (esa2.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
+  envelope-from="sergey.dyasli@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: Qz+c6mG1vz35ZJwUvyQJelqy2kgveD6KCcxwLp9FNQnAHJ1QazmJmY/dh1yXGSem3ftegBTm4h
+ Cnoa+vMuS7jASwz1gwns4+0Ooh/Q4BdRskCgKFwt+mke0Kfk536ajFrYOAQ3wrQ/+TMZYB+swF
+ m51kFtVRpixwwoen2tlLImLf8fjkYvCZuV9i+PAXJHKIlqbQZrssD8XfDLDXAuytnAwHcs/pK0
+ f7ZgAKFYGsHtJvelXFOx4cqa2Q32g7tKRsSAxDY+Bi13vI1wQjAtg90OkDjradGyUnpdYPXrR+
+ DZ8=
+X-SBRS: 2.7
+X-MesageID: 9817027
+X-Ironport-Server: esa2.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.69,325,1571716800"; 
+   d="scan'208";a="9817027"
+From:   Sergey Dyasli <sergey.dyasli@citrix.com>
+To:     <xen-devel@lists.xen.org>, <kasan-dev@googlegroups.com>,
+        <linux-kernel@vger.kernel.org>
+CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        "Stefano Stabellini" <sstabellini@kernel.org>,
+        George Dunlap <george.dunlap@citrix.com>,
+        Ross Lagerwall <ross.lagerwall@citrix.com>,
+        Sergey Dyasli <sergey.dyasli@citrix.com>
+Subject: [RFC PATCH 0/3] basic KASAN support for Xen PV domains
+Date:   Tue, 17 Dec 2019 14:08:01 +0000
+Message-ID: <20191217140804.27364-1-sergey.dyasli@citrix.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191216174410.xiqurqnqyipbuy4e@wittgenstein>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/16, Christian Brauner wrote:
->
-> On Mon, Dec 16, 2019 at 06:28:41PM +0100, Oleg Nesterov wrote:
-> >
-> > And I am worried atomic_dec_and_test() is called too early...
-> >
-> > Say, acct_process() can report the exit while some sub-thread sleeps
->
-> Hm, I'm not following here. I might just be slow. acct_process() doesn't
-> seem to report exit status and has been called after group_dead before.
+This series allows to boot and run Xen PV kernels (Dom0 and DomU) with
+CONFIG_KASAN=y. It has been used internally for some time now with good
+results for finding memory corruption issues in Dom0 kernel.
 
-Yes, but with this patch group_dead becomes true before the process is
-"dead enough".
+Only Outline instrumentation is supported at the moment.
 
-Suppose a process has 2 threads, T1, and T2.
+Patch 1 is of RFC quality
+Patches 2-3 are independent and quite self-contained.
 
-T1 exits, decrements signal->live, and sleeps in PTRACE_EVENT_EXIT.
+Sergey Dyasli (1):
+  x86/xen: add basic KASAN support for PV kernel
 
-T2 exits, decrements signal->live, group_dead == T, it calls acct_process()
-which reports the fact this process has exited. Probably not a real problem,
-but still strange, this process has not exited yet, it is not even a zombie.
+Ross Lagerwall (2):
+  xen: teach KASAN about grant tables
+  xen/netback: Fix grant copy across page boundary with KASAN
 
-Oleg.
+ arch/x86/mm/init.c                | 14 ++++++++
+ arch/x86/mm/kasan_init_64.c       | 28 ++++++++++++++++
+ arch/x86/xen/Makefile             |  7 ++++
+ arch/x86/xen/enlighten_pv.c       |  3 ++
+ arch/x86/xen/mmu_pv.c             | 13 ++++++--
+ arch/x86/xen/multicalls.c         | 10 ++++++
+ drivers/net/xen-netback/common.h  |  2 +-
+ drivers/net/xen-netback/netback.c | 55 ++++++++++++++++++++++++-------
+ drivers/xen/Makefile              |  2 ++
+ drivers/xen/grant-table.c         |  5 ++-
+ kernel/Makefile                   |  2 ++
+ lib/Kconfig.kasan                 |  3 +-
+ 12 files changed, 128 insertions(+), 16 deletions(-)
+
+-- 
+2.17.1
 
