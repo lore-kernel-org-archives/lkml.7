@@ -2,597 +2,227 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38764C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:16:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC48C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB2BF21775
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:16:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2239421775
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:17:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lJKGasHN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P42pRDpf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbfLQXQb (ORCPT
+        id S1726622AbfLQXRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 18:16:31 -0500
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:53227 "EHLO
-        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbfLQXQ1 (ORCPT
+        Tue, 17 Dec 2019 18:17:50 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:46016 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725892AbfLQXRs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 18:16:27 -0500
-Received: by mail-pl1-f202.google.com with SMTP id x10so38527plo.19
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 15:16:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=fTVIJElalvmhQcv6zCj5CfRWey5jujNpNV62myM6KqA=;
-        b=lJKGasHN1Vsxb/CCKpDadNM0XjWtPgrjSccXZB+PhyLTmYpAT7CEhD0kilSarDhwNW
-         T98dril0kPOjmk7nV85UsMRoifQEHOS61paWif5xaq2hJuN8ca5a0SbDUKpK4TYklube
-         wmaMy9FeSagZXnwkjHd6r2HM7W/k1HKLUk5A+Nvkp+BpKWkAokX/Qxo7AVekAMGjvU1B
-         nsybNtM5yqJH4bTVfxKhow4d2KGWf+kfnFPQhqN39rwvlYAxNur72wWwF6/rhu6Uei6K
-         FL9BXIVsI0/UMnrK33MAIr2YcVxuhQiVvchOIuYO17BimZVTFeG0TkGR0f6/ToX+iWtG
-         RsBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=fTVIJElalvmhQcv6zCj5CfRWey5jujNpNV62myM6KqA=;
-        b=amtN8jhfenLHURxjoXbFZh70DwEjiHfsEMQ7d1bZnCepyYHxCAV8R0FLnPY/ST+ZXq
-         g2ZyjssJlEeiRVsF3teaalKhMnB8ki61F4DeBDO2xrM6PFazmeYiw280gAoSAy1ajJiQ
-         gPb48DPDCOghQz0JoQLrwvdMLuJMdWp4MYkECzUuGsKGVcQi83d5N+R8GL5IyE/mQ2oJ
-         gujJD2POPWxXoiAViX9xLX0O8BNgvhcRDkPAy2+gSYse7FvSzTm21hXMZLnzlTa10RnN
-         v7XjqFVZQgR00haxpgbWY5QWd1cxSBOya31ATwwJy5Rr0EPaH+q7E9KtJAktvghcQhbZ
-         l9Ww==
-X-Gm-Message-State: APjAAAWgm4G8YUhOmPVR3o5Qf567OAU2LzT6wqaqPq/oMIRMiTGepMQo
-        c376FThVj6AvBHBFqucEmaQMlrQNaiy0jeARsw==
-X-Google-Smtp-Source: APXvYqzu57uNnzxTX9JH0yE4G49D4D5hzS3yzb1m8FKHMcBjqfI2Amk33AVX94DI9S+exnn4bmzLlMQdRhnkskeIeQ==
-X-Received: by 2002:a63:4f59:: with SMTP id p25mr417697pgl.230.1576624586680;
- Tue, 17 Dec 2019 15:16:26 -0800 (PST)
-Date:   Tue, 17 Dec 2019 15:16:11 -0800
-In-Reply-To: <20191217231615.164161-1-almasrymina@google.com>
-Message-Id: <20191217231615.164161-4-almasrymina@google.com>
-Mime-Version: 1.0
-References: <20191217231615.164161-1-almasrymina@google.com>
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
-Subject: [PATCH v9 4/8] hugetlb: disable region_add file_region coalescing
-From:   Mina Almasry <almasrymina@google.com>
-To:     mike.kravetz@oracle.com
-Cc:     shuah@kernel.org, almasrymina@google.com, rientjes@google.com,
-        shakeelb@google.com, gthelen@google.com, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org,
-        aneesh.kumar@linux.vnet.ibm.com, mkoutny@suse.com
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 17 Dec 2019 18:17:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576624666;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=6vRPlHz1BtYlsRl4iL0a42PQZIs+OZkdPOBgCK2qhEw=;
+        b=P42pRDpfxnMKVL9xlVH9lSfFDNe3txlR2FUhl10qWjt1bYaSREysQzvImujcZTvAXykjDv
+        RKmzZNgNcwmk2xsucwgNb7foITsJBEzAcM88nI9mf9Crmf71ps82t2m0lTMCmNVgbHodir
+        6vUpZ2u0qwfvPLhmYaijOAr6k99nLVI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-277-J8TN0XzFMPelNY6EPhZ_hw-1; Tue, 17 Dec 2019 18:17:43 -0500
+X-MC-Unique: J8TN0XzFMPelNY6EPhZ_hw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 621418017DF;
+        Tue, 17 Dec 2019 23:17:41 +0000 (UTC)
+Received: from firesoul.localdomain (ovpn-200-28.brq.redhat.com [10.40.200.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 606DD7C856;
+        Tue, 17 Dec 2019 23:17:38 +0000 (UTC)
+Received: from [192.168.42.3] (localhost [IPv6:::1])
+        by firesoul.localdomain (Postfix) with ESMTP id 1107830736C73;
+        Wed, 18 Dec 2019 00:17:37 +0100 (CET)
+Subject: [net-next v3 PATCH] page_pool: handle page recycle for NUMA_NO_NODE
+ condition
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     Jesper Dangaard Brouer <brouer@redhat.com>, lirongqing@baidu.com,
+        linyunsheng@huawei.com,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Saeed Mahameed <saeedm@mellanox.com>, mhocko@kernel.org,
+        peterz@infradead.org, linux-kernel@vger.kernel.org
+Date:   Wed, 18 Dec 2019 00:17:36 +0100
+Message-ID: <157662465670.141017.5588210646574716982.stgit@firesoul>
+User-Agent: StGit/0.19
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A follow up patch in this series adds hugetlb cgroup uncharge info the
-file_region entries in resv->regions. The cgroup uncharge info may
-differ for different regions, so they can no longer be coalesced at
-region_add time. So, disable region coalescing in region_add in this
-patch.
+The check in pool_page_reusable (page_to_nid(page) == pool->p.nid) is
+not valid if page_pool was configured with pool->p.nid = NUMA_NO_NODE.
 
-Behavior change:
+The goal of the NUMA changes in commit d5394610b1ba ("page_pool: Don't
+recycle non-reusable pages"), were to have RX-pages that belongs to the
+same NUMA node as the CPU processing RX-packet during softirq/NAPI. As
+illustrated by the performance measurements.
 
-Say a resv_map exists like this [0->1], [2->3], and [5->6].
+This patch moves the NAPI checks out of fast-path, and at the same time
+solves the NUMA_NO_NODE issue.
 
-Then a region_chg/add call comes in region_chg/add(f=0, t=5).
+First realize that alloc_pages_node() with pool->p.nid = NUMA_NO_NODE
+will lookup current CPU nid (Numa ID) via numa_mem_id(), which is used
+as the the preferred nid.  It is only in rare situations, where
+e.g. NUMA zone runs dry, that page gets doesn't get allocated from
+preferred nid.  The page_pool API allows drivers to control the nid
+themselves via controlling pool->p.nid.
 
-Old code would generate resv->regions: [0->5], [5->6].
-New code would generate resv->regions: [0->1], [1->2], [2->3], [3->5],
-[5->6].
+This patch moves the NAPI check to when alloc cache is refilled, via
+dequeuing/consuming pages from the ptr_ring. Thus, we can allow placing
+pages from remote NUMA into the ptr_ring, as the dequeue/consume step
+will check the NUMA node. All current drivers using page_pool will
+alloc/refill RX-ring from same CPU running softirq/NAPI process.
 
-Special care needs to be taken to handle the resv->adds_in_progress
-variable correctly. In the past, only 1 region would be added for every
-region_chg and region_add call. But now, each call may add multiple
-regions, so we can no longer increment adds_in_progress by 1 in region_chg,
-or decrement adds_in_progress by 1 after region_add or region_abort. Instead,
-region_chg calls add_reservation_in_range() to count the number of regions
-needed and allocates those, and that info is passed to region_add and
-region_abort to decrement adds_in_progress correctly.
+Drivers that control the nid explicitly, also use page_pool_update_nid
+when changing nid runtime.  To speed up transision to new nid the alloc
+cache is now flushed on nid changes.  This force pages to come from
+ptr_ring, which does the appropate nid check.
 
-We've also modified the assumption that region_add after region_chg
-never fails. region_chg now pre-allocates at least 1 region for
-region_add. If region_add needs more regions than region_chg has
-allocated for it, then it may fail.
+For the NUMA_NO_NODE case, when a NIC IRQ is moved to another NUMA
+node, then ptr_ring will be emptied in 65 (PP_ALLOC_CACHE_REFILL+1)
+chunks per allocation and allocation fall-through to the real
+page-allocator with the new nid derived from numa_mem_id(). We accept
+that transitioning the alloc cache doesn't happen immediately.
 
-Signed-off-by: Mina Almasry <almasrymina@google.com>
-Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
-
+Fixes: d5394610b1ba ("page_pool: Don't recycle non-reusable pages")
+Reported-by: Li RongQing <lirongqing@baidu.com>
+Reported-by: Yunsheng Lin <linyunsheng@huawei.com>
+Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
 ---
+ net/core/page_pool.c |   64 ++++++++++++++++++++++++++++++++++++++------------
+ 1 file changed, 49 insertions(+), 15 deletions(-)
 
-Changes in v9:
-- Added clarifications in the comments and addressed minor issues from
-code review.
-Changes in v7:
-- region_chg no longer allocates (t-f) / 2 file_region entries.
-Changes in v6:
-- Fix bug in number of region_caches allocated by region_chg
-
----
- mm/hugetlb.c | 327 +++++++++++++++++++++++++++++++++++----------------
- 1 file changed, 223 insertions(+), 104 deletions(-)
-
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 7782977970301..3f70742e3aee4 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -244,110 +244,179 @@ struct file_region {
- 	long to;
- };
-
-+/* Helper that removes a struct file_region from the resv_map cache and returns
-+ * it for use.
-+ */
-+static struct file_region *
-+get_file_region_entry_from_cache(struct resv_map *resv, long from, long to)
-+{
-+	struct file_region *nrg = NULL;
+diff --git a/net/core/page_pool.c b/net/core/page_pool.c
+index a6aefe989043..37316ea66937 100644
+--- a/net/core/page_pool.c
++++ b/net/core/page_pool.c
+@@ -96,19 +96,22 @@ struct page_pool *page_pool_create(const struct page_pool_params *params)
+ }
+ EXPORT_SYMBOL(page_pool_create);
+ 
++static void __page_pool_return_page(struct page_pool *pool, struct page *page);
 +
-+	VM_BUG_ON(resv->region_cache_count <= 0);
-+
-+	resv->region_cache_count--;
-+	nrg = list_first_entry(&resv->region_cache, struct file_region, link);
-+	VM_BUG_ON(!nrg);
-+	list_del(&nrg->link);
-+
-+	nrg->from = from;
-+	nrg->to = to;
-+
-+	return nrg;
-+}
-+
- /* Must be called with resv->lock held. Calling this with count_only == true
-  * will count the number of pages to be added but will not modify the linked
-- * list.
-+ * list. If regions_needed != NULL and count_only == true, then regions_needed
-+ * will indicate the number of file_regions needed in the cache to carry out to
-+ * add the regions for this range.
-  */
- static long add_reservation_in_range(struct resv_map *resv, long f, long t,
--				     bool count_only)
-+				     long *regions_needed, bool count_only)
+ /* fast path */
+ static struct page *__page_pool_get_cached(struct page_pool *pool)
  {
--	long chg = 0;
-+	long add = 0;
- 	struct list_head *head = &resv->regions;
-+	long last_accounted_offset = f;
- 	struct file_region *rg = NULL, *trg = NULL, *nrg = NULL;
-
--	/* Locate the region we are before or in. */
--	list_for_each_entry(rg, head, link)
--		if (f <= rg->to)
--			break;
--
--	/* Round our left edge to the current segment if it encloses us. */
--	if (f > rg->from)
--		f = rg->from;
-+	if (regions_needed)
-+		*regions_needed = 0;
-
--	chg = t - f;
-+	/* In this loop, we essentially handle an entry for the range
-+	 * [last_accounted_offset, rg->from), at every iteration, with some
-+	 * bounds checking.
-+	 */
-+	list_for_each_entry_safe(rg, trg, head, link) {
-+		/* Skip irrelevant regions that start before our range. */
-+		if (rg->from < f) {
-+			/* If this region ends after the last accounted offset,
-+			 * then we need to update last_accounted_offset.
-+			 */
-+			if (rg->to > last_accounted_offset)
-+				last_accounted_offset = rg->to;
-+			continue;
-+		}
-
--	/* Check for and consume any regions we now overlap with. */
--	nrg = rg;
--	list_for_each_entry_safe(rg, trg, rg->link.prev, link) {
--		if (&rg->link == head)
--			break;
-+		/* When we find a region that starts beyond our range, we've
-+		 * finished.
-+		 */
- 		if (rg->from > t)
- 			break;
-
--		/* We overlap with this area, if it extends further than
--		 * us then we must extend ourselves.  Account for its
--		 * existing reservation.
-+		/* Add an entry for last_accounted_offset -> rg->from, and
-+		 * update last_accounted_offset.
- 		 */
--		if (rg->to > t) {
--			chg += rg->to - t;
--			t = rg->to;
-+		if (rg->from > last_accounted_offset) {
-+			add += rg->from - last_accounted_offset;
-+			if (!count_only) {
-+				nrg = get_file_region_entry_from_cache(
-+					resv, last_accounted_offset, rg->from);
-+				list_add(&nrg->link, rg->link.prev);
-+			} else if (regions_needed)
-+				*regions_needed += 1;
+ 	struct ptr_ring *r = &pool->ring;
++	struct page *first_page, *page;
+ 	bool refill = false;
+-	struct page *page;
++	int i, curr_nid;
+ 
+ 	/* Test for safe-context, caller should provide this guarantee */
+ 	if (likely(in_serving_softirq())) {
+ 		if (likely(pool->alloc.count)) {
+ 			/* Fast-path */
+-			page = pool->alloc.cache[--pool->alloc.count];
+-			return page;
++			first_page = pool->alloc.cache[--pool->alloc.count];
++			return first_page;
  		}
--		chg -= rg->to - rg->from;
-
--		if (!count_only && rg != nrg) {
--			list_del(&rg->link);
--			kfree(rg);
--		}
-+		last_accounted_offset = rg->to;
+ 		refill = true;
  	}
-
--	if (!count_only) {
--		nrg->from = f;
--		nrg->to = t;
-+	/* Handle the case where our range extends beyond
-+	 * last_accounted_offset.
-+	 */
-+	if (last_accounted_offset < t) {
-+		add += t - last_accounted_offset;
-+		if (!count_only) {
-+			nrg = get_file_region_entry_from_cache(
-+				resv, last_accounted_offset, t);
-+			list_add(&nrg->link, rg->link.prev);
-+		} else if (regions_needed)
-+			*regions_needed += 1;
- 	}
-
--	return chg;
-+	return add;
- }
-
- /*
-  * Add the huge page range represented by [f, t) to the reserve
-- * map.  Existing regions will be expanded to accommodate the specified
-- * range, or a region will be taken from the cache.  Sufficient regions
-- * must exist in the cache due to the previous call to region_chg with
-- * the same range.
-+ * map.  Regions will be taken from the cache to fill in this range.
-+ * Sufficient regions should exist in the cache due to the previous
-+ * call to region_chg with the same range, but in some cases the cache will not
-+ * have sufficient entries due to races with other code doing region_add or
-+ * region_del.  The extra needed entries will be allocated.
-  *
-- * Return the number of new huge pages added to the map.  This
-- * number is greater than or equal to zero.
-+ * regions_needed is the out value provided by a previous call to region_chg.
-+ *
-+ * Return the number of new huge pages added to the map.  This number is greater
-+ * than or equal to zero.  If file_region entries needed to be allocated for
-+ * this operation and we were not able to allocate, it ruturns -ENOMEM.
-+ * region_add of regions of length 1 never allocate file_regions and cannot
-+ * fail; region_chg will always allocate at least 1 entry and a region_add for
-+ * 1 page will only require at most 1 entry.
-  */
--static long region_add(struct resv_map *resv, long f, long t)
-+static long region_add(struct resv_map *resv, long f, long t,
-+		       long in_regions_needed)
- {
--	struct list_head *head = &resv->regions;
--	struct file_region *rg, *nrg;
--	long add = 0;
-+	long add = 0, actual_regions_needed = 0, i = 0;
-+	struct file_region *trg = NULL, *rg = NULL;
-+	struct list_head allocated_regions;
-+
-+	INIT_LIST_HEAD(&allocated_regions);
-
- 	spin_lock(&resv->lock);
--	/* Locate the region we are either in or before. */
--	list_for_each_entry(rg, head, link)
--		if (f <= rg->to)
--			break;
-+retry:
-+
-+	/* Count how many regions are actually needed to execute this add. */
-+	add_reservation_in_range(resv, f, t, &actual_regions_needed, true);
-
- 	/*
--	 * If no region exists which can be expanded to include the
--	 * specified range, pull a region descriptor from the cache
--	 * and use it for this range.
-+	 * Check for sufficient descriptors in the cache to accommodate
-+	 * this add operation. Note that actual_regions_needed may be greater
-+	 * than in_regions_needed. In this case, we need to make sure that we
-+	 * allocate extra entries, such that we have enough for all the
-+	 * existing adds_in_progress, plus the excess needed for this
-+	 * operation.
+@@ -117,17 +120,42 @@ static struct page *__page_pool_get_cached(struct page_pool *pool)
+ 	if (__ptr_ring_empty(r))
+ 		return NULL;
+ 
+-	/* Slow-path: Get page from locked ring queue,
+-	 * refill alloc array if requested.
++	/* Softirq guarantee CPU and thus NUMA node is stable. This,
++	 * assumes CPU refilling driver RX-ring will also run RX-NAPI.
  	 */
--	if (&rg->link == head || t < rg->from) {
--		VM_BUG_ON(resv->region_cache_count <= 0);
-+	if (resv->region_cache_count <
-+	    resv->adds_in_progress +
-+		    (actual_regions_needed - in_regions_needed)) {
-+		/* region_add operation of range 1 should never need to
-+		 * allocate file_region entries.
-+		 */
-+		VM_BUG_ON(t - f <= 1);
-
--		resv->region_cache_count--;
--		nrg = list_first_entry(&resv->region_cache, struct file_region,
--					link);
--		list_del(&nrg->link);
-+		/* Must drop lock to allocate a new descriptor. */
-+		spin_unlock(&resv->lock);
-+		for (i = 0; i < (actual_regions_needed - in_regions_needed);
-+		     i++) {
-+			trg = kmalloc(sizeof(*trg), GFP_KERNEL);
-+			if (!trg)
-+				goto out_of_memory;
-+			list_add(&trg->link, &allocated_regions);
-+		}
-+		spin_lock(&resv->lock);
-
--		nrg->from = f;
--		nrg->to = t;
--		list_add(&nrg->link, rg->link.prev);
-+		list_for_each_entry_safe(rg, trg, &allocated_regions, link) {
-+			list_del(&rg->link);
-+			list_add(&rg->link, &resv->region_cache);
-+			resv->region_cache_count++;
-+		}
-
--		add += t - f;
--		goto out_locked;
-+		goto retry;
- 	}
-
--	add = add_reservation_in_range(resv, f, t, false);
-+	add = add_reservation_in_range(resv, f, t, NULL, false);
++	curr_nid = numa_mem_id();
 +
-+	resv->adds_in_progress -= in_regions_needed;
-
--out_locked:
--	resv->adds_in_progress--;
- 	spin_unlock(&resv->lock);
- 	VM_BUG_ON(add < 0);
- 	return add;
++	/* Slower-path: Get pages from locked ring queue */
+ 	spin_lock(&r->consumer_lock);
+-	page = __ptr_ring_consume(r);
+-	if (refill)
+-		pool->alloc.count = __ptr_ring_consume_batched(r,
+-							pool->alloc.cache,
+-							PP_ALLOC_CACHE_REFILL);
++	first_page = __ptr_ring_consume(r);
 +
-+out_of_memory:
-+	list_for_each_entry_safe(rg, trg, &allocated_regions, link) {
-+		list_del(&rg->link);
-+		kfree(rg);
++	/* Fallback to page-allocator if NUMA node doesn't match */
++	if (first_page && unlikely(!(page_to_nid(first_page) == curr_nid))) {
++		__page_pool_return_page(pool, first_page);
++		first_page = NULL;
 +	}
-+	return -ENOMEM;
- }
-
- /*
-@@ -357,49 +426,79 @@ static long region_add(struct resv_map *resv, long f, long t)
-  * call to region_add that will actually modify the reserve
-  * map to add the specified range [f, t).  region_chg does
-  * not change the number of huge pages represented by the
-- * map.  A new file_region structure is added to the cache
-- * as a placeholder, so that the subsequent region_add
-- * call will have all the regions it needs and will not fail.
-+ * map.  A number of new file_region structures is added to the cache as a
-+ * placeholder, for the subsequent region_add call to use. At least 1
-+ * file_region structure is added.
-+ *
-+ * out_regions_needed is the number of regions added to the
-+ * resv->adds_in_progress.  This value needs to be provided to a follow up call
-+ * to region_add or region_abort for proper accounting.
-  *
-  * Returns the number of huge pages that need to be added to the existing
-  * reservation map for the range [f, t).  This number is greater or equal to
-  * zero.  -ENOMEM is returned if a new file_region structure or cache entry
-  * is needed and can not be allocated.
-  */
--static long region_chg(struct resv_map *resv, long f, long t)
-+static long region_chg(struct resv_map *resv, long f, long t,
-+		       long *out_regions_needed)
- {
--	long chg = 0;
-+	struct file_region *trg = NULL, *rg = NULL;
-+	long chg = 0, i = 0, to_allocate = 0;
-+	struct list_head allocated_regions;
 +
-+	INIT_LIST_HEAD(&allocated_regions);
-
- 	spin_lock(&resv->lock);
--retry_locked:
--	resv->adds_in_progress++;
++	if (unlikely(!refill))
++		goto out;
 +
-+	/* Count how many hugepages in this range are NOT respresented. */
-+	chg = add_reservation_in_range(resv, f, t, out_regions_needed, true);
++	/* Refill alloc array, but only if NUMA node match */
++	for (i = 0; i < PP_ALLOC_CACHE_REFILL; i++) {
++		page = __ptr_ring_consume(r);
++		if (unlikely(!page))
++			break;
 +
-+	if (*out_regions_needed == 0)
-+		*out_regions_needed = 1;
-+
-+	resv->adds_in_progress += *out_regions_needed;
-
- 	/*
- 	 * Check for sufficient descriptors in the cache to accommodate
- 	 * the number of in progress add operations.
- 	 */
--	if (resv->adds_in_progress > resv->region_cache_count) {
--		struct file_region *trg;
--
--		VM_BUG_ON(resv->adds_in_progress - resv->region_cache_count > 1);
--		/* Must drop lock to allocate a new descriptor. */
--		resv->adds_in_progress--;
-+	while (resv->region_cache_count < resv->adds_in_progress) {
-+		to_allocate = resv->adds_in_progress - resv->region_cache_count;
-+
-+		/* Must drop lock to allocate a new descriptor. Note that even
-+		 * though we drop the lock here, we do not make another call to
-+		 * add_reservation_in_range after re-acquiring the lock.
-+		 * Essentially this branch makes sure that we have enough
-+		 * descriptors in the cache as suggested by the first call to
-+		 * add_reservation_in_range. If more regions turn out to be
-+		 * required, region_add will deal with it.
-+		 */
- 		spin_unlock(&resv->lock);
--
--		trg = kmalloc(sizeof(*trg), GFP_KERNEL);
--		if (!trg)
--			return -ENOMEM;
-+		for (i = 0; i < to_allocate; i++) {
-+			trg = kmalloc(sizeof(*trg), GFP_KERNEL);
-+			if (!trg)
-+				goto out_of_memory;
-+			list_add(&trg->link, &allocated_regions);
-+		}
-
- 		spin_lock(&resv->lock);
--		list_add(&trg->link, &resv->region_cache);
--		resv->region_cache_count++;
--		goto retry_locked;
--	}
-
--	chg = add_reservation_in_range(resv, f, t, true);
-+		list_for_each_entry_safe(rg, trg, &allocated_regions, link) {
-+			list_del(&rg->link);
-+			list_add(&rg->link, &resv->region_cache);
-+			resv->region_cache_count++;
-+		}
-+	}
-
- 	spin_unlock(&resv->lock);
- 	return chg;
-+
-+out_of_memory:
-+	list_for_each_entry_safe(rg, trg, &allocated_regions, link) {
-+		list_del(&rg->link);
-+		kfree(rg);
-+	}
-+	return -ENOMEM;
- }
-
- /*
-@@ -407,17 +506,20 @@ static long region_chg(struct resv_map *resv, long f, long t)
-  * of the resv_map keeps track of the operations in progress between
-  * calls to region_chg and region_add.  Operations are sometimes
-  * aborted after the call to region_chg.  In such cases, region_abort
-- * is called to decrement the adds_in_progress counter.
-+ * is called to decrement the adds_in_progress counter. regions_needed
-+ * is the value returned by the region_chg call, it is used to decrement
-+ * the adds_in_progress counter.
-  *
-  * NOTE: The range arguments [f, t) are not needed or used in this
-  * routine.  They are kept to make reading the calling code easier as
-  * arguments will match the associated region_chg call.
-  */
--static void region_abort(struct resv_map *resv, long f, long t)
-+static void region_abort(struct resv_map *resv, long f, long t,
-+			 long regions_needed)
- {
- 	spin_lock(&resv->lock);
- 	VM_BUG_ON(!resv->region_cache_count);
--	resv->adds_in_progress--;
-+	resv->adds_in_progress -= regions_needed;
- 	spin_unlock(&resv->lock);
- }
-
-@@ -1834,6 +1936,7 @@ static long __vma_reservation_common(struct hstate *h,
- 	struct resv_map *resv;
- 	pgoff_t idx;
- 	long ret;
-+	long dummy_out_regions_needed;
-
- 	resv = vma_resv_map(vma);
- 	if (!resv)
-@@ -1842,20 +1945,29 @@ static long __vma_reservation_common(struct hstate *h,
- 	idx = vma_hugecache_offset(h, vma, addr);
- 	switch (mode) {
- 	case VMA_NEEDS_RESV:
--		ret = region_chg(resv, idx, idx + 1);
-+		ret = region_chg(resv, idx, idx + 1, &dummy_out_regions_needed);
-+		/* We assume that vma_reservation_* routines always operate on
-+		 * 1 page, and that adding to resv map a 1 page entry can only
-+		 * ever require 1 region.
-+		 */
-+		VM_BUG_ON(dummy_out_regions_needed != 1);
- 		break;
- 	case VMA_COMMIT_RESV:
--		ret = region_add(resv, idx, idx + 1);
-+		ret = region_add(resv, idx, idx + 1, 1);
-+		/* region_add calls of range 1 should never fail. */
-+		VM_BUG_ON(ret < 0);
- 		break;
- 	case VMA_END_RESV:
--		region_abort(resv, idx, idx + 1);
-+		region_abort(resv, idx, idx + 1, 1);
- 		ret = 0;
- 		break;
- 	case VMA_ADD_RESV:
--		if (vma->vm_flags & VM_MAYSHARE)
--			ret = region_add(resv, idx, idx + 1);
--		else {
--			region_abort(resv, idx, idx + 1);
-+		if (vma->vm_flags & VM_MAYSHARE) {
-+			ret = region_add(resv, idx, idx + 1, 1);
-+			/* region_add calls of range 1 should never fail. */
-+			VM_BUG_ON(ret < 0);
++		if (likely(page_to_nid(page) == curr_nid)) {
++			pool->alloc.cache[pool->alloc.count++] = page;
 +		} else {
-+			region_abort(resv, idx, idx + 1, 1);
- 			ret = region_del(resv, idx, idx + 1);
- 		}
- 		break;
-@@ -4523,12 +4635,12 @@ int hugetlb_reserve_pages(struct inode *inode,
- 					struct vm_area_struct *vma,
- 					vm_flags_t vm_flags)
++			/* Release page to page-allocator, assume
++			 * refcnt == 1 invariant of cached pages
++			 */
++			__page_pool_return_page(pool, page);
++		}
++	}
++out:
+ 	spin_unlock(&r->consumer_lock);
+-	return page;
++	return first_page;
+ }
+ 
+ static void page_pool_dma_sync_for_device(struct page_pool *pool,
+@@ -311,13 +339,10 @@ static bool __page_pool_recycle_direct(struct page *page,
+ 
+ /* page is NOT reusable when:
+  * 1) allocated when system is under some pressure. (page_is_pfmemalloc)
+- * 2) belongs to a different NUMA node than pool->p.nid.
+- *
+- * To update pool->p.nid users must call page_pool_update_nid.
+  */
+ static bool pool_page_reusable(struct page_pool *pool, struct page *page)
  {
--	long ret, chg;
-+	long ret, chg, add = -1;
- 	struct hstate *h = hstate_inode(inode);
- 	struct hugepage_subpool *spool = subpool_inode(inode);
- 	struct resv_map *resv_map;
- 	struct hugetlb_cgroup *h_cg;
--	long gbl_reserve;
-+	long gbl_reserve, regions_needed = 0;
-
- 	/* This should never happen */
- 	if (from > to) {
-@@ -4558,7 +4670,7 @@ int hugetlb_reserve_pages(struct inode *inode,
- 		 */
- 		resv_map = inode_resv_map(inode);
-
--		chg = region_chg(resv_map, from, to);
-+		chg = region_chg(resv_map, from, to, &regions_needed);
-
- 	} else {
- 		/* Private mapping. */
-@@ -4628,9 +4740,14 @@ int hugetlb_reserve_pages(struct inode *inode,
- 	 * else has to be done for private mappings here
- 	 */
- 	if (!vma || vma->vm_flags & VM_MAYSHARE) {
--		long add = region_add(resv_map, from, to);
--
--		if (unlikely(chg > add)) {
-+		add = region_add(resv_map, from, to, regions_needed);
+-	return !page_is_pfmemalloc(page) && page_to_nid(page) == pool->p.nid;
++	return !page_is_pfmemalloc(page);
+ }
+ 
+ void __page_pool_put_page(struct page_pool *pool, struct page *page,
+@@ -484,7 +509,16 @@ EXPORT_SYMBOL(page_pool_destroy);
+ /* Caller must provide appropriate safe context, e.g. NAPI. */
+ void page_pool_update_nid(struct page_pool *pool, int new_nid)
+ {
++	struct page *page;
 +
-+		if (unlikely(add < 0)) {
-+			hugetlb_acct_memory(h, -gbl_reserve);
-+			/* put back original number of pages, chg */
-+			(void)hugepage_subpool_put_pages(spool, chg);
-+			goto out_err;
-+		} else if (unlikely(chg > add)) {
- 			/*
- 			 * pages in this range were added to the reserve
- 			 * map between region_chg and region_add.  This
-@@ -4648,9 +4765,11 @@ int hugetlb_reserve_pages(struct inode *inode,
- 	return 0;
- out_err:
- 	if (!vma || vma->vm_flags & VM_MAYSHARE)
--		/* Don't call region_abort if region_chg failed */
--		if (chg >= 0)
--			region_abort(resv_map, from, to);
-+		/* Only call region_abort if the region_chg succeeded but the
-+		 * region_add failed or didn't run.
-+		 */
-+		if (chg >= 0 && add < 0)
-+			region_abort(resv_map, from, to, regions_needed);
- 	if (vma && is_vma_resv_set(vma, HPAGE_RESV_OWNER))
- 		kref_put(&resv_map->refs, resv_map_release);
- 	return ret;
---
-2.24.1.735.g03f4e72817-goog
++	WARN_ON(!in_serving_softirq());
+ 	trace_page_pool_update_nid(pool, new_nid);
+ 	pool->p.nid = new_nid;
++
++	/* Flush pool alloc cache, as refill will check NUMA node */
++	while (pool->alloc.count) {
++		page = pool->alloc.cache[--pool->alloc.count];
++		__page_pool_return_page(pool, page);
++	}
+ }
+ EXPORT_SYMBOL(page_pool_update_nid);
+
+
