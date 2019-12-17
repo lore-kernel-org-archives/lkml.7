@@ -2,120 +2,134 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A39DAC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F19CC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E00521582
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:06:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="KBmfJyYo"
+	by mail.kernel.org (Postfix) with ESMTP id E8B982176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:07:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728409AbfLQVGZ (ORCPT
+        id S1727966AbfLQVHf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 16:06:25 -0500
-Received: from mta-p5.oit.umn.edu ([134.84.196.205]:34940 "EHLO
-        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726252AbfLQVGZ (ORCPT
+        Tue, 17 Dec 2019 16:07:35 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:9298 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726634AbfLQVHf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 16:06:25 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 47crKX2v95z9vbXw
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 21:06:24 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p5.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id IWvmopA0X948 for <linux-kernel@vger.kernel.org>;
-        Tue, 17 Dec 2019 15:06:24 -0600 (CST)
-Received: from mail-yw1-f72.google.com (mail-yw1-f72.google.com [209.85.161.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 47crKX1k2Hz9vbY8
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 15:06:24 -0600 (CST)
-Received: by mail-yw1-f72.google.com with SMTP id 199so8742954ywe.20
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 13:06:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RVnukGaiui+du4+M3rktd/RcuLA80ABz3WVIbi2xHtI=;
-        b=KBmfJyYowdx1h9k2Ktvy/CuZa7KBLKl+kv2WSWq4E1LLh/iGH1BZ2uKtukY/W2uzVo
-         TpOpE0M/TjXJBydFNILe7JcWTtYgiVQq2UeznWuReLZCjbu5K78i6Cls+VL3XtsWT2fQ
-         XqEb708qgSlCd/b2D+Rd3w2WrFn4lkITSTNECAMlkziteLnFv3NCZJMSGRpMZxt7LFwz
-         qrHA64qCQ192u2heFfyU9uhQM/LWbb68NUezxaKZnEDdVrKoyC2KtmnmQWcdvb07iARW
-         PMlTvvt7+lbf30tRWppvhTekxCkugnWrCjXMRCIrRGISPvcs/vncRp/4eZWU732GnxE0
-         U0gA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RVnukGaiui+du4+M3rktd/RcuLA80ABz3WVIbi2xHtI=;
-        b=q9HYqJafwG1JemueSNhiFNxATNZSDONNZ6ayhlZPDRha5mt2lvMC5+isKUvU60G25G
-         yvQd6eeuSJivP+IPJ5sVRZEioOn24Xa/iYzX42qGKeOVqeFJ4NMBcp5V5xG58jFrk4KW
-         Zg+ndPCxuH4dasNTkC0vtDubV8zPHHFV6oJih43+pRmbtlOCoB+CfeYafeLIu9eYeCS3
-         655+rD8UlYlE/p5L0Rr3aTLSTEKpGMSLLIZfBYFzoV9x2m4d8yuFT+Xr82DpnIw2Ivpe
-         V/R135rxWyW3ZSaBLGROVLyfgWd1FWbcQUs8SfCgjCVHG62+q2eBOPq2BO+GBkMI3I4U
-         g42A==
-X-Gm-Message-State: APjAAAU/TwiRT4LQ3e8zhHvRUnpR8uZwgKQxSwXJKbjZZfncnNCyum3Y
-        FD4gIFmVojUwMsFtbPyS99bNacju7M4rMxD8s/qk2N58r7Yd1c0BoD3ftjcsipUwORFbTEhdjZH
-        2+jABXwrtkBMCov6kV2/7WXU0aguK
-X-Received: by 2002:a0d:dbd5:: with SMTP id d204mr640591ywe.22.1576616783709;
-        Tue, 17 Dec 2019 13:06:23 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxobVgJolFCbVUp/qKSoQ1G1fQbOomuh913hWdYuOGTVfl6p/BvJ6GamqZF59q/3T4hYM6AfA==
-X-Received: by 2002:a0d:dbd5:: with SMTP id d204mr640571ywe.22.1576616783505;
-        Tue, 17 Dec 2019 13:06:23 -0800 (PST)
-Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
-        by smtp.gmail.com with ESMTPSA id w138sm6913670ywd.89.2019.12.17.13.06.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 13:06:23 -0800 (PST)
-From:   Aditya Pakki <pakki001@umn.edu>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Markus Elfring <elfring@users.sourceforge.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] hdlcdrv: replace unnecessary assertion in hdlcdrv_register
-Date:   Tue, 17 Dec 2019 15:06:19 -0600
-Message-Id: <20191217210620.29775-1-pakki001@umn.edu>
-X-Mailer: git-send-email 2.20.1
+        Tue, 17 Dec 2019 16:07:35 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBHKw0Li045694;
+        Tue, 17 Dec 2019 16:07:22 -0500
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wy46cvduj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Dec 2019 16:07:22 -0500
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xBHL7CWf003720;
+        Tue, 17 Dec 2019 21:07:21 GMT
+Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
+        by ppma02dal.us.ibm.com with ESMTP id 2wvqc6qgy6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Dec 2019 21:07:21 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBHL7KOV51511682
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 Dec 2019 21:07:20 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6632EAE05F;
+        Tue, 17 Dec 2019 21:07:20 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 118F0AE063;
+        Tue, 17 Dec 2019 21:07:19 +0000 (GMT)
+Received: from LeoBras.aus.stglabs.ibm.com (unknown [9.18.235.137])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 17 Dec 2019 21:07:18 +0000 (GMT)
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Paul Mackerras <paulus@ozlabs.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Leonardo Bras <leonardo@linux.ibm.com>, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        farosas@linux.ibm.com, aik@ozlabs.ru
+Subject: [PATCH 1/1] kvm/book3s_64: Fixes crash caused by not cleaning vhost IOTLB
+Date:   Tue, 17 Dec 2019 18:06:58 -0300
+Message-Id: <20191217210658.73144-1-leonardo@linux.ibm.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-17_04:2019-12-17,2019-12-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ suspectscore=2 mlxlogscore=999 spamscore=0 impostorscore=0 mlxscore=0
+ lowpriorityscore=0 bulkscore=0 clxscore=1015 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912170168
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In hdlcdrv_register, failure to register the driver causes a crash.
-The three callers of hdlcdrv_register all pass valid pointers and
-do not fail. The patch eliminates the unnecessary BUG_ON assertion.
+Fixes a bug that happens when a virtual machine is created without DDW,
+with vhost supporting a virtio-net device.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
----
-v1: Changed from returning -EINVAL to deleting BUG_ON as identified
-by Stephen Hemminger.
----
- drivers/net/hamradio/hdlcdrv.c | 2 --
- 1 file changed, 2 deletions(-)
+In this scenario, an IOMMU with 32-bit DMA window will possibly map
+IOVA's to different memory addresses.
 
-diff --git a/drivers/net/hamradio/hdlcdrv.c b/drivers/net/hamradio/hdlcdrv.c
-index df495b5595f5..e7413a643929 100644
---- a/drivers/net/hamradio/hdlcdrv.c
-+++ b/drivers/net/hamradio/hdlcdrv.c
-@@ -687,8 +687,6 @@ struct net_device *hdlcdrv_register(const struct hdlcdrv_ops *ops,
- 	struct hdlcdrv_state *s;
- 	int err;
+As the code works today, H_STUFF_TCE hypercall will be dealt only with
+kvm code, which does not invalidate the IOTLB entry in vhost, meaning
+that at some point, and old entry can cause an access to a previous
+memory address that IOVA pointed.
+
+Example:
+- virtio-net passes IOVA N to vhost, which point to M1
+- vhost tries IOTLB, but miss
+- vhost translates IOVA N and stores result to IOTLB
+- vhost writes to M1
+- (some IOMMU usage)
+- virtio-net passes IOVA N to vhost, which now points to M2
+- vhost tries IOTLB, and translates IOVA N to M1
+- vhost writes to M1 <error, should write to M2>
+
+The reason why this error was not so evident, is probably because the
+IOTLB was small enough to almost always miss at the point an IOVA was
+reused. Raising the IOTLB size to 32k (which is a module parameter that
+defaults to 2k) is enough to reproduce the bug in +90% of the runs.
+It usually takes less than 10 seconds of netperf to cause this bug
+to happen.
+
+A few minutes after reproducing this bug, the guest usually crash.
+
+Fixing this bug involves cleaning a IOVA entry from IOTLB.
+The guest kernel trigger this by doing a H_STUFF_TCE hypercall with
+tce_value == 0.
+
+This change fixes this bug by returning H_TOO_HARD on kvmppc_h_stuff_tce
+when tce_value == 0, which causes kvm to let qemu deal with this.
+In this case, qemu does free the vhost IOTLB entry, which fixes the bug.
+
+Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
+---
+ arch/powerpc/kvm/book3s_64_vio.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/powerpc/kvm/book3s_64_vio.c b/arch/powerpc/kvm/book3s_64_vio.c
+index 883a66e76638..841eff3f6392 100644
+--- a/arch/powerpc/kvm/book3s_64_vio.c
++++ b/arch/powerpc/kvm/book3s_64_vio.c
+@@ -710,6 +710,9 @@ long kvmppc_h_stuff_tce(struct kvm_vcpu *vcpu,
+ 	if (ret != H_SUCCESS)
+ 		return ret;
  
--	BUG_ON(ops == NULL);
--
- 	if (privsize < sizeof(struct hdlcdrv_state))
- 		privsize = sizeof(struct hdlcdrv_state);
- 
++	if (tce_value == 0)
++		return H_TOO_HARD;
++
+ 	/* Check permission bits only to allow userspace poison TCE for debug */
+ 	if (tce_value & (TCE_PCI_WRITE | TCE_PCI_READ))
+ 		return H_PARAMETER;
 -- 
-2.20.1
+2.23.0
 
