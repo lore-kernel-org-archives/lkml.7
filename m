@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE591C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FEAC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C99A24679
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1029206D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:57:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727476AbfLQA5Y (ORCPT
+        id S1727359AbfLQA5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:57:24 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34986 "EHLO
+        Mon, 16 Dec 2019 19:57:31 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34968 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726865AbfLQAvk (ORCPT
+        by vger.kernel.org with ESMTP id S1726858AbfLQAvk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 19:51:40 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15I-0003L9-B4; Tue, 17 Dec 2019 00:51:32 +0000
+        id 1ih15I-0003Km-Hk; Tue, 17 Dec 2019 00:51:32 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15I-0005Xo-4R; Tue, 17 Dec 2019 00:51:32 +0000
+        id 1ih15I-0005Yb-Cl; Tue, 17 Dec 2019 00:51:32 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Daniel Drake" <drake@endlessm.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        "Bjorn Helgaas" <bhelgaas@google.com>
-Date:   Tue, 17 Dec 2019 00:46:45 +0000
-Message-ID: <lsq.1576543535.672337928@decadent.org.uk>
+        "David Sterba" <dsterba@suse.com>,
+        "Filipe Manana" <fdmanana@suse.com>
+Date:   Tue, 17 Dec 2019 00:46:49 +0000
+Message-ID: <lsq.1576543535.611022098@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 071/136] PCI: PM: Fix pci_power_up()
+Subject: [PATCH 3.16 075/136] Btrfs: check for the full sync flag while
+ holding the inode lock during fsync
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,78 +56,86 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit 45144d42f299455911cc29366656c7324a3a7c97 upstream.
+commit ba0b084ac309283db6e329785c1dc4f45fdbd379 upstream.
 
-There is an arbitrary difference between the system resume and
-runtime resume code paths for PCI devices regarding the delay to
-apply when switching the devices from D3cold to D0.
+We were checking for the full fsync flag in the inode before locking the
+inode, which is racy, since at that that time it might not be set but
+after we acquire the inode lock some other task set it. One case where
+this can happen is on a system low on memory and some concurrent task
+failed to allocate an extent map and therefore set the full sync flag on
+the inode, to force the next fsync to work in full mode.
 
-Namely, pci_restore_standard_config() used in the runtime resume
-code path calls pci_set_power_state() which in turn invokes
-__pci_start_power_transition() to power up the device through the
-platform firmware and that function applies the transition delay
-(as per PCI Express Base Specification Revision 2.0, Section 6.6.1).
-However, pci_pm_default_resume_early() used in the system resume
-code path calls pci_power_up() which doesn't apply the delay at
-all and that causes issues to occur during resume from
-suspend-to-idle on some systems where the delay is required.
+A consequence of missing the full fsync flag set is hitting the problems
+fixed by commit 0c713cbab620 ("Btrfs: fix race between ranged fsync and
+writeback of adjacent ranges"), BUG_ON() when dropping extents from a log
+tree, hitting assertion failures at tree-log.c:copy_items() or all sorts
+of weird inconsistencies after replaying a log due to file extents items
+representing ranges that overlap.
 
-Since there is no reason for that difference to exist, modify
-pci_power_up() to follow pci_set_power_state() more closely and
-invoke __pci_start_power_transition() from there to call the
-platform firmware to power up the device (in case that's necessary).
+So just move the check such that it's done after locking the inode and
+before starting writeback again.
 
-Fixes: db288c9c5f9d ("PCI / PM: restore the original behavior of pci_set_power_state()")
-Reported-by: Daniel Drake <drake@endlessm.com>
-Tested-by: Daniel Drake <drake@endlessm.com>
-Link: https://lore.kernel.org/linux-pm/CAD8Lp44TYxrMgPLkHCqF9hv6smEurMXvmmvmtyFhZ6Q4SE+dig@mail.gmail.com/T/#m21be74af263c6a34f36e0fc5c77c5449d9406925
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Fixes: 0c713cbab620 ("Btrfs: fix race between ranged fsync and writeback of adjacent ranges")
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+[bwh: Backported to 3.16:
+ - Keep the "len" variable since we pass it to btrfs_wait_ordered_range()
+   in two different places here
+ - Adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/pci/pci.c | 24 +++++++++++-------------
- 1 file changed, 11 insertions(+), 13 deletions(-)
-
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -657,19 +657,6 @@ void pci_update_current_state(struct pci
- }
+--- a/fs/btrfs/file.c
++++ b/fs/btrfs/file.c
+@@ -1888,23 +1888,6 @@ int btrfs_sync_file(struct file *file, l
+ 	bool full_sync = 0;
+ 	u64 len;
  
- /**
-- * pci_power_up - Put the given device into D0 forcibly
-- * @dev: PCI device to power up
-- */
--void pci_power_up(struct pci_dev *dev)
--{
--	if (platform_pci_power_manageable(dev))
--		platform_pci_set_power_state(dev, PCI_D0);
+-	/*
+-	 * If the inode needs a full sync, make sure we use a full range to
+-	 * avoid log tree corruption, due to hole detection racing with ordered
+-	 * extent completion for adjacent ranges, and assertion failures during
+-	 * hole detection.
+-	 */
+-	if (test_bit(BTRFS_INODE_NEEDS_FULL_SYNC,
+-		     &BTRFS_I(inode)->runtime_flags)) {
+-		start = 0;
+-		end = LLONG_MAX;
+-	}
 -
--	pci_raw_set_power_state(dev, PCI_D0);
--	pci_update_current_state(dev, PCI_D0);
--}
--
--/**
-  * pci_platform_power_transition - Use platform to change device power state
-  * @dev: PCI device to handle.
-  * @state: State to put the device into.
-@@ -845,6 +832,17 @@ int pci_set_power_state(struct pci_dev *
- EXPORT_SYMBOL(pci_set_power_state);
+-	/*
+-	 * The range length can be represented by u64, we have to do the typecasts
+-	 * to avoid signed overflow if it's [0, LLONG_MAX] eg. from fsync()
+-	 */
+-	len = (u64)end - (u64)start + 1;
+ 	trace_btrfs_sync_file(file, datasync);
  
- /**
-+ * pci_power_up - Put the given device into D0 forcibly
-+ * @dev: PCI device to power up
-+ */
-+void pci_power_up(struct pci_dev *dev)
-+{
-+	__pci_start_power_transition(dev, PCI_D0);
-+	pci_raw_set_power_state(dev, PCI_D0);
-+	pci_update_current_state(dev, PCI_D0);
-+}
+ 	/*
+@@ -1925,6 +1908,25 @@ int btrfs_sync_file(struct file *file, l
+ 	mutex_lock(&inode->i_mutex);
+ 
+ 	/*
++	 * If the inode needs a full sync, make sure we use a full range to
++	 * avoid log tree corruption, due to hole detection racing with ordered
++	 * extent completion for adjacent ranges, and assertion failures during
++	 * hole detection. Do this while holding the inode lock, to avoid races
++	 * with other tasks.
++	 */
++	if (test_bit(BTRFS_INODE_NEEDS_FULL_SYNC,
++		     &BTRFS_I(inode)->runtime_flags)) {
++		start = 0;
++		end = LLONG_MAX;
++	}
 +
-+/**
-  * pci_choose_state - Choose the power state of a PCI device
-  * @dev: PCI device to be suspended
-  * @state: target sleep state for the whole system. This is the value
++	/*
++	 * The range length can be represented by u64, we have to do the typecasts
++	 * to avoid signed overflow if it's [0, LLONG_MAX] eg. from fsync()
++	 */
++	len = (u64)end - (u64)start + 1;
++
++	/*
+ 	 * We flush the dirty pages again to avoid some dirty pages in the
+ 	 * range being left.
+ 	 */
 
