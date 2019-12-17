@@ -2,299 +2,90 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73859C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 03:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7204DC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 03:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4517C20716
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 03:44:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 435FD2072B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 03:56:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="AQu47qdP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbfLQDoc (ORCPT
+        id S1727193AbfLQD4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 22:44:32 -0500
-Received: from mga01.intel.com ([192.55.52.88]:13194 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726526AbfLQDoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 22:44:32 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 19:44:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,324,1571727600"; 
-   d="scan'208";a="209549389"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 16 Dec 2019 19:44:31 -0800
-Received: from [10.226.38.59] (unknown [10.226.38.59])
-        by linux.intel.com (Postfix) with ESMTP id 582C3580342;
-        Mon, 16 Dec 2019 19:44:29 -0800 (PST)
-Subject: Re: [PATCH v3 1/2] dt-bindings: spi: Add schema for Cadence QSPI
- Controller driver
-To:     Vignesh Raghavendra <vigneshr@ti.com>, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     broonie@kernel.org, robh+dt@kernel.org, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com
-References: <20191209084035.55603-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20191209084035.55603-2-vadivel.muruganx.ramuthevar@linux.intel.com>
- <8d71f459-96a2-4b09-05e1-5f905e9bb3af@ti.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <e1a6098e-8b04-82e2-8e1a-fa6a124cc7c8@linux.intel.com>
-Date:   Tue, 17 Dec 2019 11:44:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 16 Dec 2019 22:56:32 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:50203 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726296AbfLQD4c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 22:56:32 -0500
+X-UUID: b4e0593fd24b49e28bff3763b079efa4-20191217
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=KkmyAsKPyDcGBnKBUKfiIEN/q+ZFhqtz1dZUrUzasmY=;
+        b=AQu47qdPYZ4rF19lIlMz96C/lzXnNcMWCmHvcKFBkN7ia+QDja/BWIQIJW7UscKdZo3hO4NxmAstqoAkxAbdoihaaUCMBxVawqE+Mxhl3qXjOH0tqFx87ArUwOMysDtM+cMOaxahDPJDxXDGBut14LYojDIF9NdizBocgGR+ibU=;
+X-UUID: b4e0593fd24b49e28bff3763b079efa4-20191217
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <jitao.shi@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1777341739; Tue, 17 Dec 2019 11:56:22 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by mtkmbs05n2.mediatek.inc
+ (172.21.101.140) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 17 Dec
+ 2019 11:55:59 +0800
+Received: from [10.16.6.141] (172.27.4.253) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 17 Dec 2019 11:55:59 +0800
+Message-ID: <1576554988.19567.3.camel@mszsdaap41>
+Subject: Re: [PATCH v3 0/2] clocks don't disable when pwm_mtk_disp suspend
+From:   Jitao Shi <jitao.shi@mediatek.com>
+To:     Chen-Yu Tsai <wens@kernel.org>
+CC:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-pwm@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        CK Hu <ck.hu@mediatek.com>, <sj.huang@mediatek.com>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>
+Date:   Tue, 17 Dec 2019 11:56:28 +0800
+In-Reply-To: <CAGb2v65v+W3-fNwiC_0uN2RpFUBRu3iL2t+OaGHLjVHHWFJVwQ@mail.gmail.com>
+References: <20191217030438.26657-1-jitao.shi@mediatek.com>
+         <CAGb2v65v+W3-fNwiC_0uN2RpFUBRu3iL2t+OaGHLjVHHWFJVwQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <8d71f459-96a2-4b09-05e1-5f905e9bb3af@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vignesh,
+T24gVHVlLCAyMDE5LTEyLTE3IGF0IDExOjI2ICswODAwLCBDaGVuLVl1IFRzYWkgd3JvdGU6DQo+
+IEhpLA0KPiANCj4gT24gVHVlLCBEZWMgMTcsIDIwMTkgYXQgMTE6MDggQU0gSml0YW8gU2hpIDxq
+aXRhby5zaGlAbWVkaWF0ZWsuY29tPiB3cm90ZToNCj4gPg0KPiA+IENoYW5nZXMgc2luY2UgdG8g
+djI6DQo+ID4gIC0gRWRpdCBjb21taXQgbXNnLg0KPiA+DQo+ID4gQ2hhbmdlcyBzaW5jZSB0byB2
+MToNCj4gPiAgLSBFZGl0IGNvbW1pdCBtc2cuDQo+ID4gIC0gUmVtb3ZlIHRoZSByZWdpc3RlciB0
+cmlnZ2VyIGluIHByb2JlLg0KPiA+ICAtIFJlYmFzZSB0byB2NS41LXJjMS4NCj4gPg0KPiA+IENo
+YW5nZXMgaW4gcGF0Y2hlczoNCj4gPiAgLSBtYXRjaCBwd21fbXRrX2Rpc3AgY2xvY2sgd2hlbiBz
+dXNwZW5kL3Jlc3VtZQ0KPiA+ICAtIHRyaWdnZXIgcHdtX210a19kaXNwIHJlZyB3b3JraW5nIGFm
+dGVyIGNvbmZpZw0KPiA+DQo+ID4gSml0YW8gU2hpICgyKToNCj4gPiAgIHB3bTogZml4IHB3bSBj
+bG9ja3Mgbm90IHBvd2Vyb2ZmIHdoZW4gZGlzYWJsZSBwd20NCj4gPiAgIHB3bToga2VlcCB0aGUg
+dHJpZ2dlciByZWdpc3RlciBhZnRlciBwd20gc2V0dGluZy4NCj4gDQo+IFBsZWFzZSBhZGQgYXBw
+cm9wcmlhdGUgdGFncyB0byB5b3VyIHBhdGNoZXMuIFRoZXNlIGFyZSBub3QgZ2VuZXJpYyBwd20N
+Cj4gcGF0Y2hlcywgYnV0IGFyZSBzcGVjaWZpYyB0byBvbmUgZHJpdmVyLg0KPiANCj4gQ29uc2lk
+ZXIgdGhlIHByZWZpeDogInB3bTogbXRrLWRpc3A6ICIgc28gb3RoZXJzIGNhbiBmaWx0ZXIgb3V0
+IHRoZQ0KPiBub2lzZSB3aXRob3V0IGxvb2tpbmcgYXQgdGhlIGNvbnRlbnQuDQo+IA0KPiBDaGVu
+WXUNCg0KT0suIEknbGwgZml4IHRoaXMgcHJlZml4Lg0KDQpCZXN0IFJlZ2FyZHMNCkppdGFvDQo+
+IA0KPiA+DQo+ID4gIGRyaXZlcnMvcHdtL3B3bS1tdGstZGlzcC5jIHwgNjMgKysrKysrKysrKysr
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDE5IGluc2Vy
+dGlvbnMoKyksIDQ0IGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gLS0NCj4gPiAyLjIxLjANCj4gPiBf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPiA+IGxpbnV4
+LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0DQo+ID4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnDQo+ID4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9saW51eC1hcm0ta2VybmVsDQoNCg==
 
-    Thank you for the review comments.
-
-On 16/12/2019 8:50 PM, Vignesh Raghavendra wrote:
-> Hi,
->
-> On 09/12/19 2:10 pm, Ramuthevar,Vadivel MuruganX wrote:
->> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>
->> Add dt-bindings documentation for Cadence-QSPI controller to support
->> spi based flash memories.
->>
->> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> ---
->>   .../devicetree/bindings/spi/cadence,qspi.yaml      | 162 +++++++++++++++++++++
->>   1 file changed, 162 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/spi/cadence,qspi.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/spi/cadence,qspi.yaml b/Documentation/devicetree/bindings/spi/cadence,qspi.yaml
->> new file mode 100644
->> index 000000000000..7756c34bb453
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/spi/cadence,qspi.yaml
->> @@ -0,0 +1,162 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/spi/cadence,qspi.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: Cadence QSPI Flash Controller support
->> +
->> +maintainers:
->> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> +
->> +allOf:
->> +  - $ref: "spi-controller.yaml#"
->> +
->> +description: |
->> +  Add support for the Cadence QSPI controller,This controller is
->> +  present in the Intel LGM, Altera SoCFPGA and TI SoCs and this driver
->> +  has been tested On Intel's LGM SoC.
->> +
-> This looks like a commit message. Description should probably says
-> something like "Binding Documentation for Cadence QSPI controller..."
-Agreed!, will change it in next patch.
->> +  - compatible : should be one of the following:
->> +        Generic default - "cdns,qspi-nor".
->> +        For TI 66AK2G SoC - "ti,k2g-qspi", "cdns,qspi-nor".
->> +        For TI AM654 SoC  - "ti,am654-ospi", "cdns,qspi-nor".
->> +        For Intel LGM SoC - "intel,lgm-qspi", "cdns,qspi-nor".
->> +
->> +properties:
->> +  compatible:
->> +    enum:
-> This should be:
->
->    compatible:
->      oneOf:
->        - items:
->          - enum:
->             - ti,k2g-qspi
->          - const: cdns,qspi-nor
->
->        - items:
->          - enum:
->             - ti,am654-ospi
->          - const: cdns,qspi-nor
->
->        - items:
->          - enum:
->             - intel,lgm-qspi
->          - const: cdns,qspi-nor
->
->        - items:
->          - const: cdns,qspi-nor
-will follow the same code.
->> +      - cadence,qspi
-> This wrong and does not match what you is there in description above.
-> "cadence" is not a valid vendor prefix... It should be "cdns" as per
-> Documentation/devicetree/bindings/vendor-prefixes.yaml
->
-> Have you verified this yaml schema? I see bunch of errors for my platform
-schema is built not verified on the platform,  when I was built there is 
-no errors
->> +      - cdns,qspi-nor
->> +      - ti,k2g-qspi
->> +      - ti,am654-ospi
->> +      - intel,lgm-qspi
->> +
->> +  reg:
->> +    description: |
->> +      Contains two entries, each of which is a tuple consisting of a
->> +      Physical address and length. The first entry is the address and
->> +      length of the controller register set. The second entry is the
->> +      address and length of the QSPI Controller data area.
-> Don't you need to put a constraint here, like:
->
-> maxItems: 2
-Noted , will fixt it.
->
->> +
->> +  interrupts:
->> +    description:
->> +      Unit interrupt specifier for the controller interrupt.
->> +
-> maxItems: 1??
->
->> +  clocks:
->> +    description:
->> +      phandle to the Quad SPI clock.
->> +
-> maxItems: 1??
-noted, will drop it.
->> +  cdns,fifo-depth:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description:
->> +      Size of the data FIFO in words.
->> +
->> +  cdns,fifo-width:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description:
->> +      Bus width of the data FIFO in bytes.
->> +
->> +  cdns,trigger-address:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description:
->> +      32-bit indirect AHB trigger address.
->> +
->> +  cdns,is-decoded-cs:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description:
->> +      Flag to indicate whether decoder is used or not.
->> +
->> +  cdns,rclk-en:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description: |
->> +      Flag to indicate that QSPI return clock is used to latch the read data
->> +      rather than the QSPI clock. Make sure that QSPI return clock is populated
->> +      on the board before using this property.
->> +
->> +  resets:
->> +    minItems: 1
->> +    maxItems: 2
->> +
->> +  reset-names:
->> +    minItems: 1
->> +    maxItems: 2
->> +    items:
->> +      - const: qspi
->> +      - const: qspi-ocp
->> +
->> +# subnode's properties
->> +patternProperties:
->> +  "^.*@[0-9a-fA-F]+$":
->> +    type: object
->> +    description:
->> +      flash device uses the subnodes below defined properties.
->> +
->> +  cdns,read-delay:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description:
->> +      Delay for read capture logic, in clock cycles.
->> +
->> +  cdns,tshsl-ns:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description: |
->> +      Delay in nanoseconds for the length that the master mode chip select
->> +      outputs are de-asserted between transactions.
->> +
->> +  cdns,tsd2d-ns:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description: |
->> +      Delay in nanoseconds between one chip select being de-activated
->> +      and the activation of another.
->> +
->> +  cdns,tchsh-ns:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description: |
->> +      Delay in nanoseconds between last bit of current transaction and
->> +      deasserting the device chip select (qspi_n_ss_out).
->> +
->> +  cdns,tslch-ns:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description: |
->> +      Delay in nanoseconds between setting qspi_n_ss_out low and
->> +      first bit transfer.
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - interrupts
->> +  - clocks
->> +  - cdns,is-decoded-cs
-> Not a required property as per existing DT bindings
-noted, will drop it.
->
->> +  - cdns,fifo-depth
->> +  - cdns,fifo-width
->> +  - cdns,trigger-address
->
->> +  - resets
->> +  - reset-names
-> Again optional properties
-Noted
->> +
->> +examples:
->> +  - |
->> +    qspi: spi@ff705000 {
->> +          compatible = "cadence,qspi", "cdns,qspi-nor";
->> +          #address-cells = <1>;
->> +          #size-cells = <0>;
->> +          reg = <0xff705000 0x1000>,
->> +                <0xffa00000 0x1000>;
->> +          interrupts = <0 151 4>;
->> +          clocks = <&qspi_clk>;
->> +          cdns,is-decoded-cs;
->> +          cdns,fifo-depth = <128>;
->> +          cdns,fifo-width = <4>;
->> +          cdns,trigger-address = <0x00000000>;
->> +          resets = <&rst QSPI_RESET>, <&rst QSPI_OCP_RESET>;
->> +          reset-names = "qspi", "qspi-ocp";
->> +
->> +          flash0: n25q00@0 {
->> +              ...
->> +              cdns,read-delay = <4>;
->> +              cdns,tshsl-ns = <50>;
->> +              cdns,tsd2d-ns = <50>;
->> +              cdns,tchsh-ns = <4>;
->> +              cdns,tslch-ns = <4>;
->> +          };
->> +    };
->> +
->>
-> No blank line before EOF, please
-
-Noted, will fix it next patch.
-
----
-with Best Regards
-Vadivel
