@@ -2,115 +2,225 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45910C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C3FBC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 190E5207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:50:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7F732072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:52:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="N52btY71"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GsoCp2lQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbfLQIuX (ORCPT
+        id S1726825AbfLQIws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 03:50:23 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:49604 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbfLQIuW (ORCPT
+        Tue, 17 Dec 2019 03:52:48 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:51570 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbfLQIwr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 03:50:22 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBH8oIgj011515;
-        Tue, 17 Dec 2019 02:50:18 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576572618;
-        bh=7VWSQNU7kHSJwi7TH4NML4wI3nW2GubcarW9HzOBN7Q=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=N52btY71OtDkSnFeBOSSRrRcoW29gHkRieddMJuRupAYEk0B//pL5jf88hLP+ECd7
-         5G8q/jX0J9gR40qP6qan5hmVqQO1nS5zfGHZDouUD3QGi0B1NVUC5AbIaJKGI4dH70
-         X49t4DVHOmCdsPOxN0eiYBjhqfSV0Xo2tTOnl9Os=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBH8oI0S040163
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 17 Dec 2019 02:50:18 -0600
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
- Dec 2019 02:50:18 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 17 Dec 2019 02:50:18 -0600
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBH8o6dY062966;
-        Tue, 17 Dec 2019 02:50:15 -0600
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>
-Subject: [PATCH 3/3] ARM: dts: beagle-x15-common: Model 5V0 regulator
-Date:   Tue, 17 Dec 2019 14:21:24 +0530
-Message-ID: <20191217085124.22480-4-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191217085124.22480-1-kishon@ti.com>
-References: <20191217085124.22480-1-kishon@ti.com>
+        Tue, 17 Dec 2019 03:52:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=e7MsRN1Cc5QQgaWIRQ0I0Cup1V0/a2pfUDMH1FkzGjw=; b=GsoCp2lQsGWsLax78S+F+kMQB
+        0A2DdjG1W3TZOvz74fatAjrMPN0dcxf6vFmzOsM5oiH04hcaB+0O5v+ap/yyA4rAKPsSPzhYFXCaC
+        NBQkXP3MOaDcQopOXUhOGBKQ3ZkxUybQ8SdaAknlqFCxDGbx+TdSihjXQ7KCXetue1/f6cJUHZ6ch
+        psmNBRzAQcOeE2NrrV8NmyRmZ6uWzbQGgFeAq4lNCgGiUKwVs3UIVvrhOg/5PUvMrAtRta4HJaUbh
+        B47WqooGkhKp5/bKqljwHyHUAG9AorWHgRzq/KRJIusjf4ZQRGmNzyCf7HBi/a5Gkiwo203BAgEdG
+        y6GbmjQRA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ih8Zz-0001EY-He; Tue, 17 Dec 2019 08:51:44 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EDD4A300F29;
+        Tue, 17 Dec 2019 09:50:15 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 296E12B3D7E8F; Tue, 17 Dec 2019 09:51:38 +0100 (CET)
+Date:   Tue, 17 Dec 2019 09:51:38 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nick Piggin <npiggin@gmail.com>, linux-arch@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Helge Deller <deller@gmx.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Nick Hu <nickhu@andestech.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Re: [PATCH 05/17] asm-generic/tlb: Rename
+ HAVE_RCU_TABLE_NO_INVALIDATE
+Message-ID: <20191217085138.GN2871@hirez.programming.kicks-ass.net>
+References: <20191211120713.360281197@infradead.org>
+ <20191211122955.940455408@infradead.org>
+ <87woawzc1t.fsf@linux.ibm.com>
+ <20191216123752.GM2844@hirez.programming.kicks-ass.net>
+ <d52ea890-c2ea-88f3-9d62-b86e60ee77ae@linux.ibm.com>
+ <20191216132004.GO2844@hirez.programming.kicks-ass.net>
+ <a9ae27c8-aa84-cda3-355c-7abb3b450d38@linux.ibm.com>
+ <33ed03aa-a34c-3a81-0f83-20c3e8d4eff7@linux.ibm.com>
+ <20191216145041.GG2827@hirez.programming.kicks-ass.net>
+ <20191216151419.GL2871@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191216151419.GL2871@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On am57xx-beagle-x15, 5V0 is connected to P16, P17, P18 and P19
-connectors. On am57xx-evm, 5V0 regulator is used to get 3V6 regulator
-which is connected to the COMQ port. Model 5V0 regulator here in order
-for it to be used in am57xx-evm to model 3V6 regulator.
+On Mon, Dec 16, 2019 at 04:14:19PM +0100, Peter Zijlstra wrote:
+> It seems to me you need something like this here patch, all you need to
+> add is a suitable definition of tlb_needs_table_invalidate() for Power.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- .../boot/dts/am57xx-beagle-x15-common.dtsi    | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
+FWIW, Paul (Burton), MIPS should be able to have
+tlb_needs_table_invalidate() return false when it has pure software TLB
+fill. I tried to have a quick look for P5600 and P6600 to see if I could
+find the right state that indicates hardware TLB, but couldn't find
+anything.
 
-diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-index 9a94c96b0350..a813a0cf3ff3 100644
---- a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-+++ b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-@@ -29,6 +29,27 @@
- 		reg = <0x0 0x80000000 0x0 0x80000000>;
- 	};
- 
-+	main_12v0: fixedregulator-main_12v0 {
-+		/* main supply */
-+		compatible = "regulator-fixed";
-+		regulator-name = "main_12v0";
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
-+	evm_5v0: fixedregulator-evm_5v0 {
-+		/* Output of TPS54531D */
-+		compatible = "regulator-fixed";
-+		regulator-name = "evm_5v0";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&main_12v0>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
- 	vdd_3v3: fixedregulator-vdd_3v3 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vdd_3v3";
--- 
-2.17.1
-
+> ---
+> 
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index c44ef15866a3..98de654b79b3 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -400,10 +400,6 @@ config MMU_GATHER_RCU_TABLE_FREE
+>  	bool
+>  	select MMU_GATHER_TABLE_FREE
+>  
+> -config MMU_GATHER_NO_TABLE_INVALIDATE
+> -	bool
+> -	depends on MMU_GATHER_RCU_TABLE_FREE
+> -
+>  config MMU_GATHER_PAGE_SIZE
+>  	bool
+>  
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index 3dea4c8d39f2..2ddf24822d5b 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -223,7 +223,6 @@ config PPC
+>  	select HAVE_PERF_REGS
+>  	select HAVE_PERF_USER_STACK_DUMP
+>  	select MMU_GATHER_RCU_TABLE_FREE		if SMP
+> -	select MMU_GATHER_NO_TABLE_INVALIDATE	if MMU_GATHER_RCU_TABLE_FREE
+>  	select MMU_GATHER_PAGE_SIZE
+>  	select HAVE_REGS_AND_STACK_ACCESS_API
+>  	select HAVE_RELIABLE_STACKTRACE		if PPC_BOOK3S_64 && CPU_LITTLE_ENDIAN
+> diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
+> index a76e915ab207..acf20b6c0a54 100644
+> --- a/arch/sparc/Kconfig
+> +++ b/arch/sparc/Kconfig
+> @@ -66,7 +66,6 @@ config SPARC64
+>  	select HAVE_KRETPROBES
+>  	select HAVE_KPROBES
+>  	select MMU_GATHER_RCU_TABLE_FREE if SMP
+> -	select MMU_GATHER_NO_TABLE_INVALIDATE if MMU_GATHER_RCU_TABLE_FREE
+>  	select HAVE_MEMBLOCK_NODE_MAP
+>  	select HAVE_ARCH_TRANSPARENT_HUGEPAGE
+>  	select HAVE_DYNAMIC_FTRACE
+> diff --git a/arch/sparc/include/asm/tlb_64.h b/arch/sparc/include/asm/tlb_64.h
+> index a2f3fa61ee36..ac8e74a96122 100644
+> --- a/arch/sparc/include/asm/tlb_64.h
+> +++ b/arch/sparc/include/asm/tlb_64.h
+> @@ -28,6 +28,12 @@ void flush_tlb_pending(void);
+>  #define __tlb_remove_tlb_entry(tlb, ptep, address) do { } while (0)
+>  #define tlb_flush(tlb)	flush_tlb_pending()
+>  
+> +/*
+> + * SPARC64's hardware TLB fill does not use the Linux page-tables
+> + * and therefore we don't need a TLBI when freeing page-table pages.
+> + */
+> +#define tlb_needs_table_invalidate()	(false)
+> +
+>  #include <asm-generic/tlb.h>
+>  
+>  #endif /* _SPARC64_TLB_H */
+> diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
+> index fe0ea6ff3636..4108d6d18ca5 100644
+> --- a/include/asm-generic/tlb.h
+> +++ b/include/asm-generic/tlb.h
+> @@ -156,13 +156,6 @@
+>   *  Useful if your architecture doesn't use IPIs for remote TLB invalidates
+>   *  and therefore doesn't naturally serialize with software page-table walkers.
+>   *
+> - *  MMU_GATHER_NO_TABLE_INVALIDATE
+> - *
+> - *  This makes MMU_GATHER_RCU_TABLE_FREE avoid calling tlb_flush_mmu_tlbonly()
+> - *  before freeing the page-table pages. This can be avoided if you use
+> - *  MMU_GATHER_RCU_TABLE_FREE and your architecture does _NOT_ use the Linux
+> - *  page-tables natively.
+> - *
+>   *  MMU_GATHER_NO_RANGE
+>   *
+>   *  Use this if your architecture lacks an efficient flush_tlb_range().
+> @@ -203,6 +196,24 @@ extern void tlb_remove_table(struct mmu_gather *tlb, void *table);
+>  
+>  #endif /* CONFIG_MMU_GATHER_TABLE_FREE */
+>  
+> +#ifdef CONFIG_MMU_GATHER_RCU_TABLE_FREE
+> +
+> +/*
+> + * This allows an architecture that does not use the linux page-tables for
+> + * hardware to skip the TLBI when freeing page tables.
+> + */
+> +#ifndef tlb_needs_table_invalidate
+> +#define tlb_needs_table_invalidate() (true)
+> +#endif
+> +
+> +#else
+> +
+> +#ifdef tlb_needs_table_invalidate
+> +#error tlb_needs_table_invalidate() requires MMU_GATHER_RCU_TABLE_FREE
+> +#endif
+> +
+> +#endif /* CONFIG_MMU_GATHER_RCU_TABLE_FREE */
+> +
+>  #ifndef CONFIG_MMU_GATHER_NO_GATHER
+>  /*
+>   * If we can't allocate a page to make a big batch of page pointers
+> diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
+> index 9d103031568d..a3538cb2bcbe 100644
+> --- a/mm/mmu_gather.c
+> +++ b/mm/mmu_gather.c
+> @@ -177,14 +177,14 @@ static void tlb_remove_table_free(struct mmu_table_batch *batch)
+>   */
+>  static inline void tlb_table_invalidate(struct mmu_gather *tlb)
+>  {
+> -#ifndef CONFIG_MMU_GATHER_NO_TABLE_INVALIDATE
+> -	/*
+> -	 * Invalidate page-table caches used by hardware walkers. Then we still
+> -	 * need to RCU-sched wait while freeing the pages because software
+> -	 * walkers can still be in-flight.
+> -	 */
+> -	tlb_flush_mmu_tlbonly(tlb);
+> -#endif
+> +	if (tlb_needs_table_invalidate()) {
+> +		/*
+> +		 * Invalidate page-table caches used by hardware walkers. Then
+> +		 * we still need to RCU-sched wait while freeing the pages
+> +		 * because software walkers can still be in-flight.
+> +		 */
+> +		tlb_flush_mmu_tlbonly(tlb);
+> +	}
+>  }
+>  
+>  static void tlb_remove_table_one(void *table)
