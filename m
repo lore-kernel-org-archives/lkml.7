@@ -2,73 +2,49 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FF3C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB18C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D828206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:04:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mvRDQsws"
+	by mail.kernel.org (Postfix) with ESMTP id DB3B8206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:04:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728773AbfLQVEl (ORCPT
+        id S1728289AbfLQVD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 16:04:41 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36118 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727241AbfLQVEi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 16:04:38 -0500
-Received: by mail-pf1-f195.google.com with SMTP id x184so8262185pfb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 13:04:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1+26A+2VB2HJa/JQAWYAfB+QQDCd/IKr2ogBbGLbutU=;
-        b=mvRDQswsWn70e5n9/hEvMCOUivm4JLj9eLcfRTfba0W+0Qq59F9fXuqaprna0IMKXI
-         D9XlZ/XVMcKDHKX+lRYml3D2wnvj0YGFWwdl+RYGkKCeMk1qaLrn7xU6A5eZqajjDmOA
-         B7iJSSgekYCrZT8R1GNcxzvgJy594UukTKDqE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1+26A+2VB2HJa/JQAWYAfB+QQDCd/IKr2ogBbGLbutU=;
-        b=cMAddzkkfhH6sPgmw2clarq13I5ttPwm0VBgLBASWKkEl82VFo0PznpeeoucUPoo4U
-         0CujnlFQ/qIesNIUaZENrmwXZW8aWZBZLRzGBJ+ifMhnMmUL20ebj45wDKbkclwcA+F9
-         TEXycud+bmcwpEcKn/urpVS/rIpjZUg6xwfYQxHt4cMlgSJnJADyf7L5+S1/OY2PoyIk
-         dyw3Mn+lAb1Z80duwCniavNpbidbDf2PeseeKmOtnxcVQ3aBZrOrZmb9SHz/dstFhWO2
-         qxKtP7hhX3LPilDcujkBR6mU/5pGtQDiA/DtYNXFcdLTPkvL2ulXOUVzxpwoY2Ueykfw
-         78TQ==
-X-Gm-Message-State: APjAAAXtRJ2dKyUE/V+IstkrIMqSm5rH33IYTZC83r+rV2vcLs4CaYLx
-        HC4M/IvJ0jN9yKXowRARc3jOKw==
-X-Google-Smtp-Source: APXvYqx8uYGUj8zzwEF0jGyJKMRn4A2TAQwLPUGapJkhurejbCH8bXNW1EM6Cx+z/k7HOiEBCV/zng==
-X-Received: by 2002:aa7:82d5:: with SMTP id f21mr25319829pfn.245.1576616677617;
-        Tue, 17 Dec 2019 13:04:37 -0800 (PST)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id u18sm27818964pgi.44.2019.12.17.13.04.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 13:04:36 -0800 (PST)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linus.walleij@linaro.org, mka@chromium.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org,
-        Roja Rani Yarubandi <rojay@codeaurora.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH] arm64: dts: qcom: sc7180: Fix I2C/UART numbers 2, 4, 7, and 9
-Date:   Tue, 17 Dec 2019 13:04:07 -0800
-Message-Id: <20191217130352.1.Id8562de45e8441cac34699047e25e7424281e9d4@changeid>
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+        Tue, 17 Dec 2019 16:03:29 -0500
+Received: from mga04.intel.com ([192.55.52.120]:15620 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727929AbfLQVDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 16:03:22 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 13:03:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,326,1571727600"; 
+   d="scan'208";a="240560950"
+Received: from smcdonal-mobl2.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.255.83.42])
+  by fmsmga004.fm.intel.com with ESMTP; 17 Dec 2019 13:03:20 -0800
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: [PATCH v5 02/17] soundwire: rename dev_to_sdw_dev macro
+Date:   Tue, 17 Dec 2019 15:02:59 -0600
+Message-Id: <20191217210314.20410-3-pierre-louis.bossart@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191217210314.20410-1-pierre-louis.bossart@linux.intel.com>
+References: <20191217210314.20410-1-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,103 +52,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit f4a73f5e2633 ("pinctrl: qcom: sc7180: Add new qup functions")
-has landed which means that we absolutely need to use the proper names
-for the pinmuxing for I2C/UART numbers 2, 4, 7, and 9.  Let's do it.
+Since we want to introduce master devices, rename macro so that we
+have consistency between slave and master device access.
 
-For reference:
-- If you get only one of this commit and the pinctrl commit then none
-  of I2C/UART 2, 4, 7, and 9 will work.
-- If you get neither of these commits then I2C 2, 4, 7, and 9 will
-  work but not UART.
-
-...but despite the above it should be fine for this commit to land in
-the Qualcomm tree because sc7180.dtsi only exists there (it hasn't
-made it to mainline).
-
-Fixes: ba3fc6496366 ("arm64: dts: sc7180: Add qupv3_0 and qupv3_1")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 ---
+ drivers/base/regmap/regmap-sdw.c |  4 ++--
+ drivers/soundwire/bus.c          |  2 +-
+ drivers/soundwire/bus_type.c     | 11 ++++++-----
+ drivers/soundwire/slave.c        |  2 +-
+ include/linux/soundwire/sdw.h    |  3 ++-
+ 5 files changed, 12 insertions(+), 10 deletions(-)
 
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 52a58615ec06..faa9ef733204 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -717,7 +717,7 @@ pinmux {
- 			qup_i2c2_default: qup-i2c2-default {
- 				pinmux {
- 					pins = "gpio15", "gpio16";
--					function = "qup02";
-+					function = "qup02_i2c";
- 				};
- 			};
+diff --git a/drivers/base/regmap/regmap-sdw.c b/drivers/base/regmap/regmap-sdw.c
+index 50a66382d87d..d1fc0c22180a 100644
+--- a/drivers/base/regmap/regmap-sdw.c
++++ b/drivers/base/regmap/regmap-sdw.c
+@@ -10,7 +10,7 @@
+ static int regmap_sdw_write(void *context, unsigned int reg, unsigned int val)
+ {
+ 	struct device *dev = context;
+-	struct sdw_slave *slave = dev_to_sdw_dev(dev);
++	struct sdw_slave *slave = to_sdw_slave_device(dev);
  
-@@ -731,7 +731,7 @@ pinmux {
- 			qup_i2c4_default: qup-i2c4-default {
- 				pinmux {
- 					pins = "gpio115", "gpio116";
--					function = "qup04";
-+					function = "qup04_i2c";
- 				};
- 			};
+ 	return sdw_write(slave, reg, val);
+ }
+@@ -18,7 +18,7 @@ static int regmap_sdw_write(void *context, unsigned int reg, unsigned int val)
+ static int regmap_sdw_read(void *context, unsigned int reg, unsigned int *val)
+ {
+ 	struct device *dev = context;
+-	struct sdw_slave *slave = dev_to_sdw_dev(dev);
++	struct sdw_slave *slave = to_sdw_slave_device(dev);
+ 	int read;
  
-@@ -752,7 +752,7 @@ pinmux {
- 			qup_i2c7_default: qup-i2c7-default {
- 				pinmux {
- 					pins = "gpio6", "gpio7";
--					function = "qup11";
-+					function = "qup11_i2c";
- 				};
- 			};
+ 	read = sdw_read(slave, reg);
+diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
+index be5d437058ed..4b22ee996a65 100644
+--- a/drivers/soundwire/bus.c
++++ b/drivers/soundwire/bus.c
+@@ -110,7 +110,7 @@ EXPORT_SYMBOL(sdw_add_bus_master);
  
-@@ -766,7 +766,7 @@ pinmux {
- 			qup_i2c9_default: qup-i2c9-default {
- 				pinmux {
- 					pins = "gpio46", "gpio47";
--					function = "qup13";
-+					function = "qup13_i2c";
- 				};
- 			};
+ static int sdw_delete_slave(struct device *dev, void *data)
+ {
+-	struct sdw_slave *slave = dev_to_sdw_dev(dev);
++	struct sdw_slave *slave = to_sdw_slave_device(dev);
+ 	struct sdw_bus *bus = slave->bus;
  
-@@ -867,7 +867,7 @@ pinmux {
- 			qup_uart2_default: qup-uart2-default {
- 				pinmux {
- 					pins = "gpio15", "gpio16";
--					function = "qup02";
-+					function = "qup02_uart";
- 				};
- 			};
+ 	sdw_slave_debugfs_exit(slave);
+diff --git a/drivers/soundwire/bus_type.c b/drivers/soundwire/bus_type.c
+index 370b94752662..c0585bcc8a41 100644
+--- a/drivers/soundwire/bus_type.c
++++ b/drivers/soundwire/bus_type.c
+@@ -33,7 +33,7 @@ sdw_get_device_id(struct sdw_slave *slave, struct sdw_driver *drv)
  
-@@ -882,7 +882,7 @@ pinmux {
- 			qup_uart4_default: qup-uart4-default {
- 				pinmux {
- 					pins = "gpio115", "gpio116";
--					function = "qup04";
-+					function = "qup04_uart";
- 				};
- 			};
+ static int sdw_bus_match(struct device *dev, struct device_driver *ddrv)
+ {
+-	struct sdw_slave *slave = dev_to_sdw_dev(dev);
++	struct sdw_slave *slave = to_sdw_slave_device(dev);
+ 	struct sdw_driver *drv = drv_to_sdw_slave_driver(ddrv);
  
-@@ -905,7 +905,7 @@ pinmux {
- 			qup_uart7_default: qup-uart7-default {
- 				pinmux {
- 					pins = "gpio6", "gpio7";
--					function = "qup11";
-+					function = "qup11_uart";
- 				};
- 			};
+ 	return !!sdw_get_device_id(slave, drv);
+@@ -49,7 +49,7 @@ int sdw_slave_modalias(const struct sdw_slave *slave, char *buf, size_t size)
  
-@@ -919,7 +919,7 @@ pinmux {
- 			qup_uart9_default: qup-uart9-default {
- 				pinmux {
- 					pins = "gpio46", "gpio47";
--					function = "qup13";
-+					function = "qup13_uart";
- 				};
- 			};
+ static int sdw_uevent(struct device *dev, struct kobj_uevent_env *env)
+ {
+-	struct sdw_slave *slave = dev_to_sdw_dev(dev);
++	struct sdw_slave *slave = to_sdw_slave_device(dev);
+ 	char modalias[32];
  
+ 	sdw_slave_modalias(slave, modalias, sizeof(modalias));
+@@ -69,7 +69,7 @@ EXPORT_SYMBOL_GPL(sdw_bus_type);
+ 
+ static int sdw_drv_probe(struct device *dev)
+ {
+-	struct sdw_slave *slave = dev_to_sdw_dev(dev);
++	struct sdw_slave *slave = to_sdw_slave_device(dev);
+ 	struct sdw_driver *drv = drv_to_sdw_slave_driver(dev->driver);
+ 	const struct sdw_device_id *id;
+ 	int ret;
+@@ -115,8 +115,9 @@ static int sdw_drv_probe(struct device *dev)
+ 
+ static int sdw_drv_remove(struct device *dev)
+ {
+-	struct sdw_slave *slave = dev_to_sdw_dev(dev);
++	struct sdw_slave *slave = to_sdw_slave_device(dev);
+ 	struct sdw_driver *drv = drv_to_sdw_slave_driver(dev->driver);
++
+ 	int ret = 0;
+ 
+ 	if (drv->remove)
+@@ -129,7 +130,7 @@ static int sdw_drv_remove(struct device *dev)
+ 
+ static void sdw_drv_shutdown(struct device *dev)
+ {
+-	struct sdw_slave *slave = dev_to_sdw_dev(dev);
++	struct sdw_slave *slave = to_sdw_slave_device(dev);
+ 	struct sdw_driver *drv = drv_to_sdw_slave_driver(dev->driver);
+ 
+ 	if (drv->shutdown)
+diff --git a/drivers/soundwire/slave.c b/drivers/soundwire/slave.c
+index 19919975bb6d..48a513680db6 100644
+--- a/drivers/soundwire/slave.c
++++ b/drivers/soundwire/slave.c
+@@ -9,7 +9,7 @@
+ 
+ static void sdw_slave_release(struct device *dev)
+ {
+-	struct sdw_slave *slave = dev_to_sdw_dev(dev);
++	struct sdw_slave *slave = to_sdw_slave_device(dev);
+ 
+ 	kfree(slave);
+ }
+diff --git a/include/linux/soundwire/sdw.h b/include/linux/soundwire/sdw.h
+index b7c9eca4332a..5b1180f1e6b5 100644
+--- a/include/linux/soundwire/sdw.h
++++ b/include/linux/soundwire/sdw.h
+@@ -582,7 +582,8 @@ struct sdw_slave {
+ 	u32 unattach_request;
+ };
+ 
+-#define dev_to_sdw_dev(_dev) container_of(_dev, struct sdw_slave, dev)
++#define to_sdw_slave_device(d) \
++	container_of(d, struct sdw_slave, dev)
+ 
+ struct sdw_driver {
+ 	const char *name;
 -- 
-2.24.1.735.g03f4e72817-goog
+2.20.1
 
