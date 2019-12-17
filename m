@@ -2,123 +2,216 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45775C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E83FDC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:14:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25E6224676
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:13:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9757421582
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:14:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="ZwzI5KSR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728241AbfLQQNs (ORCPT
+        id S1728281AbfLQQOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 11:13:48 -0500
-Received: from mx2.suse.de ([195.135.220.15]:48522 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726858AbfLQQNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 11:13:47 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 5DB33AB7F;
-        Tue, 17 Dec 2019 16:13:45 +0000 (UTC)
-Subject: Re: [PATCH v11 2/6] xenbus/backend: Protect xenbus callback with lock
-To:     SeongJae Park <sjpark@amazon.com>, axboe@kernel.dk,
-        konrad.wilk@oracle.com, roger.pau@citrix.com
-Cc:     SeongJae Park <sjpark@amazon.de>, pdurrant@amazon.com,
-        sj38.park@gmail.com, xen-devel@lists.xenproject.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191217160748.693-1-sjpark@amazon.com>
- <20191217160748.693-3-sjpark@amazon.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <44327bf3-45ed-3e5a-3984-36ea40f53fc5@suse.com>
-Date:   Tue, 17 Dec 2019 17:13:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <20191217160748.693-3-sjpark@amazon.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Tue, 17 Dec 2019 11:14:31 -0500
+Received: from mail-eopbgr770078.outbound.protection.outlook.com ([40.107.77.78]:1089
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726858AbfLQQOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 11:14:31 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZiMDn/mexsqYSGj6CjGhRXzj6bPaOZP2RbJpMZpMMPMCYwb5D45lP8POMNhjufz+/oRepYBgQ8WP8aYnXF/EERQeCttiK4xnY+lXYsgVNWkNpRCm7ihvvsXVEXqx96fpCEQ+yh+KDUkwlG9i5WnhlR2/30czokkVSIj+gSaaRiV9O+5r+dT0Cq98Z5xfUXJq9JHD+JdYtaYILvbkMu8IhiAryyBqvs5aJBOJCd0OOOO23Vs7XTkck/B2q7Y8M28OdAoT3H5CGVQdiI4mVnCoZFZTYXTXDWlzfEQnslwkVZ2+JWCxVcm4hz4T6HuZgowji4P0JVdDCTG5J7GQ902rOw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G9sf6uxYBqVnhHIwr4AEGVfLgcNH20xLFhJFPAO+Tvo=;
+ b=cOO9DgzhhOXIKJJbTNoS0FLBGm/ZJs7ANwbv3eq39ZlMJ24JnhHKwACsYAWyyP4kdWIkldwGsbU0faeWpOv/mXCmeDTIZ5gOkzyuk2AbBrdH0Cp2xsobHGmjCB49DubaMggCpMEHEh68u2Kqz+p52hAlNKp4rjW+Kft5ft4q/pso9R8xW3wXY+8ArT6rDiWRKfAdM86tiUl/SYjIu/SHsWYSmp5N5tkQdFky1Wk1wwYtIAH8P+BDntgo0SDBtiDYWWVzHcAls2jVw97oYSIi7isYHuxaaWh8J1jZ4oSA4yTc3U1qGaJEh5YLLVISvu22qJ1gcdD8/hHv1Z+enjfK6Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
+ dkim=pass header.d=silabs.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G9sf6uxYBqVnhHIwr4AEGVfLgcNH20xLFhJFPAO+Tvo=;
+ b=ZwzI5KSRwLx/uUp1bQgRIzqfBFhQb0PU2c0SCIkw1RNA+eLJN7D3VDXIB9Q/HfLg2j2RLme2Yh9/pAqL8n5VC6ghIdWotsQhNYwZdSZ4Zn5LyNjYBTHLfHVP8k0uQ69NX3UsQ6G+6/LknYxlv1dpFTbeRAM+7/zh+PilGbQVl8w=
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com (10.255.180.22) by
+ MN2PR11MB3678.namprd11.prod.outlook.com (20.178.254.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.16; Tue, 17 Dec 2019 16:14:26 +0000
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::f46c:e5b4:2a85:f0bf]) by MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::f46c:e5b4:2a85:f0bf%4]) with mapi id 15.20.2538.019; Tue, 17 Dec 2019
+ 16:14:26 +0000
+From:   =?utf-8?B?SsOpcsO0bWUgUG91aWxsZXI=?= <Jerome.Pouiller@silabs.com>
+To:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        =?utf-8?B?SsOpcsO0bWUgUG91aWxsZXI=?= <Jerome.Pouiller@silabs.com>
+Subject: [PATCH v2 00/55] Improve wfx driver
+Thread-Topic: [PATCH v2 00/55] Improve wfx driver
+Thread-Index: AQHVtPUN97auvOsN5kugh2/rPbsjIw==
+Date:   Tue, 17 Dec 2019 16:14:26 +0000
+Message-ID: <20191217161318.31402-1-Jerome.Pouiller@silabs.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: PR0P264CA0174.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:100:1c::18) To MN2PR11MB4063.namprd11.prod.outlook.com
+ (2603:10b6:208:13f::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jerome.Pouiller@silabs.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.24.0
+x-originating-ip: [37.71.187.125]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0434cd04-502c-4932-d222-08d7830c2fdc
+x-ms-traffictypediagnostic: MN2PR11MB3678:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR11MB36787CB3D8CF501B15121B0293500@MN2PR11MB3678.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 02543CD7CD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(396003)(39840400004)(366004)(136003)(53754006)(43544003)(199004)(189003)(6512007)(66574012)(1076003)(478600001)(86362001)(8936002)(110136005)(316002)(2616005)(26005)(6506007)(5660300002)(36756003)(6486002)(66946007)(66476007)(66556008)(64756008)(66446008)(71200400001)(52116002)(85182001)(81166006)(81156014)(8676002)(54906003)(107886003)(2906002)(4326008)(186003)(85202003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3678;H:MN2PR11MB4063.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: silabs.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Pjj+jeG9A5ypTwgTkk1Ny8nrX6VPGI/0mpKmeDp4hAx9k+Wn/n/37ABZBPxioXkDtVSp2KdRalvtghn6bWhsyZ6jqbnfFejKNyeFbui/u/H1BNPTHE4ISg8KcUzb7dw734ibq+m6z29+lA5nYX+/S4ZHrCC3rtw/ESQF+GJVTVM38mNRhKZ6J6QZMam06YER9TFcu1RGEKGLGvcGxQNM9Peyaq6biofUewc/712yx9uFF4YuKbJx2wgRHV360ID+GSiHXZf23entaoyMkdrbZzrJc2I1BH/Ibv5F5K0bg307vuaxo7MEOU6CrtIbs/Kb8E1WG2grooicHLAe0k7tmo/Faz/c3cSw1GeDypxNRFYQ9W7MGbioJck8Aw9TMEjzuf7hHOFgrD5Ifr1FrjzEyTl23rV+4+tIQXcks/Pk4fTQp7ZceF+eSg1NPw6JYnIiNeM5fStVkK2KVsFIamwx7BuEC1K8vhHEazJCXneULPYSf89Q4nt5N/pT25FQ1gv0jmZbJVRykJ/nRA/I43rH2A==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <27B5DEA8D623804783FD0D8FE69D1801@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: silabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0434cd04-502c-4932-d222-08d7830c2fdc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Dec 2019 16:14:26.5019
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: WEFvtyiybsu1YoG+/WS9JLlRdf6IUKd9EppEU6QQJJznc0jaQ5rtAWjmQDKuy4ewotV/Do7YdJ91jBumG2Tw2w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3678
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.12.19 17:07, SeongJae Park wrote:
-> From: SeongJae Park <sjpark@amazon.de>
-> 
-> 'reclaim_memory' callback can race with a driver code as this callback
-> will be called from any memory pressure detected context.  To deal with
-> the case, this commit adds a spinlock in the 'xenbus_device'.  Whenever
-> 'reclaim_memory' callback is called, the lock of the device which passed
-> to the callback as its argument is locked.  Thus, drivers registering
-> their 'reclaim_memory' callback should protect the data that might race
-> with the callback with the lock by themselves.
-> 
-> Signed-off-by: SeongJae Park <sjpark@amazon.de>
-> ---
->   drivers/xen/xenbus/xenbus_probe.c         |  1 +
->   drivers/xen/xenbus/xenbus_probe_backend.c | 10 ++++++++--
->   include/xen/xenbus.h                      |  2 ++
->   3 files changed, 11 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/xen/xenbus/xenbus_probe.c b/drivers/xen/xenbus/xenbus_probe.c
-> index 5b471889d723..b86393f172e6 100644
-> --- a/drivers/xen/xenbus/xenbus_probe.c
-> +++ b/drivers/xen/xenbus/xenbus_probe.c
-> @@ -472,6 +472,7 @@ int xenbus_probe_node(struct xen_bus_type *bus,
->   		goto fail;
->   
->   	dev_set_name(&xendev->dev, "%s", devname);
-> +	spin_lock_init(&xendev->reclaim_lock);
->   
->   	/* Register with generic device framework. */
->   	err = device_register(&xendev->dev);
-> diff --git a/drivers/xen/xenbus/xenbus_probe_backend.c b/drivers/xen/xenbus/xenbus_probe_backend.c
-> index 7e78ebef7c54..516aa64b9967 100644
-> --- a/drivers/xen/xenbus/xenbus_probe_backend.c
-> +++ b/drivers/xen/xenbus/xenbus_probe_backend.c
-> @@ -251,12 +251,18 @@ static int backend_probe_and_watch(struct notifier_block *notifier,
->   static int backend_reclaim_memory(struct device *dev, void *data)
->   {
->   	const struct xenbus_driver *drv;
-> +	struct xenbus_device *xdev;
-> +	unsigned long flags;
->   
->   	if (!dev->driver)
->   		return 0;
->   	drv = to_xenbus_driver(dev->driver);
-> -	if (drv && drv->reclaim_memory)
-> -		drv->reclaim_memory(to_xenbus_device(dev));
-> +	if (drv && drv->reclaim_memory) {
-> +		xdev = to_xenbus_device(dev);
-> +		spin_trylock_irqsave(&xdev->reclaim_lock, flags);
-
-You need spin_lock_irqsave() here. Or maybe spin_lock() would be fine,
-too? I can't see a reason why you'd want to disable irqs here.
-
-> +		drv->reclaim_memory(xdev);
-> +		spin_unlock_irqrestore(&xdev->reclaim_lock, flags);
-> +	}
->   	return 0;
->   }
->   
-> diff --git a/include/xen/xenbus.h b/include/xen/xenbus.h
-> index c861cfb6f720..d9468313061d 100644
-> --- a/include/xen/xenbus.h
-> +++ b/include/xen/xenbus.h
-> @@ -76,6 +76,8 @@ struct xenbus_device {
->   	enum xenbus_state state;
->   	struct completion down;
->   	struct work_struct work;
-> +	/* 'reclaim_memory' callback is called while this lock is acquired */
-> +	spinlock_t reclaim_lock;
->   };
->   
->   static inline struct xenbus_device *to_xenbus_device(struct device *dev)
-> 
-
-
-Juergen
+RnJvbTogSsOpcsO0bWUgUG91aWxsZXIgPGplcm9tZS5wb3VpbGxlckBzaWxhYnMuY29tPgoKSGVs
+bG8gYWxsLAoKVGhpcyBwdWxsIHJlcXVlc3QgY29udGludWUgdG8gY2xlYW4gdXAgdGhlIHdmeCBk
+cml2ZXIuIEl0IGNhbiBiZSBtb3JlIG9yCmxlc3MgZGl2aWRlZCBpbiBmb3VyIHBhcnRzOgogIC0g
+MDAwMSB0byAwMDA5IGZpeCBzb21lIGlzc3VlcyAoc2hvdWxkIGJlIGluY2x1ZGVkIGluIDUuNT8p
+CiAgLSAwMDEwIHRvIDAwMjggbW9zdGx5IGNvbnRhaW5zIGNvc21ldGljcyBjaGFuZ2VzCiAgLSAw
+MDI5IHRvIDAwNDMgcmUtd29yayBwb3dlciBzYXZlIChpbiBzdGF0aW9uIG1vZGUpIGFuZCBRb1MK
+ICAtIDAwNDQgdG8gMDA1NCByZS13b3JrIHRoZSBzY2FuIHByb2Nlc3MKClRoZSBsYXN0IHBhdGNo
+IHVwZGF0ZXMgdGhlIFRPRE8gd2l0aCBhIG1vcmUgcHJlY2lzZSBsaXN0LiBJIGluY2x1ZGVkCnJl
+ZmVyZW5jZXMgdG8gZGlzY3Vzc2lvbnMgSSBoYXZlIGhhZCBvbiBtYWlsaW5nIGxpc3RzLCBpbiBv
+cmRlciB0byBub3QKZm9yZ2V0IHRoZW0uIEkgc3RhcnRlZCB0aGUgZmlyc3QgaXRlbXMgb2YgdGhl
+IGxpc3QgYW5kIEkgaG9wZSB0byBiZSBhYmxlCnRvIHNlbmQgYW5vdGhlciAoc21hbGxlcikgcHVs
+bCByZXF1ZXN0IGluIDItMyB3ZWVrcy4KClRoaXMgc2VyaWVzIGFsc28gdHJ5IGNsYXJpZnkgdGhl
+IG92ZXJhbGwgYXJjaGl0ZWN0dXJlOgoKICAgICwtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0uCiAgICB8ICAgICAgICAgICAgICAgIG1hYzgwMjExICAgICAgICAgICAgfAogICAg
+YC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLScKICAgICwtLS0tLS0tLS0tLS0r
+LS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0uCiAgICB8ICAgIHN0YSAgICAgfCAgICAgICAgICAgfCAg
+ICAgICAgICAgfAogICAgfCAgICBzY2FuICAgIHwgICAgICAgICAgIHwgICAgICAgICAgIHwKICAg
+IHwgICAgbWFpbiAgICB8ICAgICAgICAgICB8ICAgICAgICAgICB8CiAgICArLS0tLS0tLS0tLS0t
+KyAgZGF0YV90eCAgfCAgICAgICAgICAgfAogICAgfCAgICBrZXkgICAgIHwgICAgICAgICAgIHwg
+IGRhdGFfcnggIHwKICAgIHwgaGlmX3R4X21pYiB8ICAgcXVldWUgICB8ICAgICAgICAgICB8CiAg
+ICB8ICAgaGlmX3R4ICAgfCAgICAgICAgICAgfCAgICAgICAgICAgfAogICAgfCAgIGhpZl9yeCAg
+IHwgICAgICAgICAgIHwgICAgICAgICAgIHwKICAgIHwgIGhpZl9hcGlfKiB8ICAgICAgICAgICB8
+ICAgICAgICAgICB8CiAgICArLS0tLS0tLS0tLS0tKy0tLS0tLS0tLS0tKy0tLS0tLS0tLS0tKy0t
+LS0tLS0tLgogICAgfCAgICAgICAgICAgICAgICAgIGJoICAgICAgICAgICAgICAgIHwgIGZ3aW8g
+IHwKICAgIHwgICAgICAgICAgICAgIHNlY3VyZV9saW5rICAgICAgICAgICB8ICAgICAgICB8CiAg
+ICArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tKy0tLS0tLS0tKwogICAgfCAg
+ICAgICAgICAgICAgICAgICAgIGh3aW8gICAgICAgICAgICAgICAgICAgIHwKICAgICstLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rCiAgICB8ICAgICAgICAgICAg
+ICAgICAgIGJ1c19zZGlvICAgICAgICAgICAgICAgICAgfAogICAgfCAgICAgICAgICAgICAgICAg
+ICBidXNfc3BpICAgICAgICAgICAgICAgICAgIHwKICAgIHwgICAgICAgICAgICAgICAgICAgIGh3
+YnVzICAgICAgICAgICAgICAgICAgICB8CiAgICBgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tJwogICAgLC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS4KICAgIHwgICAgICAgICAgICAgICAgICAgc2Rpby9zcGkgICAgICAgICAg
+ICAgICAgICB8CiAgICArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tKwogICAgfCAgICAgICAgICAgICAgICAgICBoYXJkd2FyZSAgICAgICAgICAgICAgICAgIHwK
+ICAgIGAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0nCgpJdCB0
+cnkgdG8gbWFrZSBhIGNsZWFyIHNlcGFyYXRpb24gYmV0d2VlbiBmdW5jdGlvbnMgdGhhdCB0YWtl
+IGNhcmUgb2YKaGFyZHdhcmUgY29tbXVuaWNhdGlvbiAoaGlmXyopIGFuZCBmdW5jdGlvbnMgdGhh
+dCB3b3JrIHdpdGggbWFjODAyMTEKKHN0YS5jIGFuZCBzY2FuLmMpLgoKdjI6CiAgLSBGaXggbGlu
+ZSBlbmRzCiAgLSBVcGRhdGUgVE9ETyB3aXRoIEZlbGl4IGlkZWEKICAtIEFkZCBhcmNoaXRlY3R1
+cmUgc2NoZW1hdGljcyBpbiBjb3ZlciBsZXR0ZXIKCgpKw6lyw7RtZSBQb3VpbGxlciAoNTUpOgog
+IHN0YWdpbmc6IHdmeDogZml4IHRoZSBjYWNoZSBvZiByYXRlIHBvbGljaWVzIG9uIGludGVyZmFj
+ZSByZXNldAogIHN0YWdpbmc6IHdmeDogZml4IGNhc2Ugb2YgbGFjayBvZiB0eF9yZXRyeV9wb2xp
+Y2llcwogIHN0YWdpbmc6IHdmeDogZml4IGNvdW50ZXIgb3ZlcmZsb3cKICBzdGFnaW5nOiB3Zng6
+IHVzZSBib29sZWFuIGFwcHJvcHJpYXRlbHkKICBzdGFnaW5nOiB3Zng6IGZpcm13YXJlIGRvZXMg
+bm90IHN1cHBvcnQgbW9yZSB0aGFuIDMyIHRvdGFsIHJldHJpZXMKICBzdGFnaW5nOiB3Zng6IGZp
+eCByYXRlIGNvbnRyb2wgaGFuZGxpbmcKICBzdGFnaW5nOiB3Zng6IGVuc3VyZSB0aGF0IHJldHJ5
+IHBvbGljeSBhbHdheXMgZmFsbGJhY2tzIHRvIE1DUzAgLwogICAgMU1icHMKICBzdGFnaW5nOiB3
+Zng6IGRldGVjdCByYWNlIGNvbmRpdGlvbiBpbiBXRVAgYXV0aGVudGljYXRpb24KICBzdGFnaW5n
+OiB3Zng6IGZpeCBoaWZfc2V0X21mcCgpIHdpdGggYmlnIGVuZGlhbiBob3N0cwogIHN0YWdpbmc6
+IHdmeDogZml4IHdyb25nIGVycm9yIG1lc3NhZ2UKICBzdGFnaW5nOiB3Zng6IGluY3JlYXNlIFNQ
+SSBidXMgZnJlcXVlbmN5IGxpbWl0CiAgc3RhZ2luZzogd2Z4OiBkb24ndCBwcmludCB1c2VsZXNz
+IGVycm9yIG1lc3NhZ2VzCiAgc3RhZ2luZzogd2Z4OiBhdm9pZCBkb3VibGUgd2FybmluZyB3aGVu
+IG5vIG1vcmUgdHggcG9saWN5IGFyZQogICAgYXZhaWxhYmxlCiAgc3RhZ2luZzogd2Z4OiBpbXBy
+b3ZlIGVycm9yIG1lc3NhZ2Ugb24gdW5leHBlY3RlZCBjb25maXJtYXRpb24KICBzdGFnaW5nOiB3
+Zng6IHRha2UgYWR2YW50YWdlIG9mIElTX0VSUl9PUl9OVUxMKCkKICBzdGFnaW5nOiB3Zng6IHVu
+aWZvcm1pemUgbmFtaW5nIHJ1bGUKICBzdGFnaW5nOiB3Zng6IHVzZSBtZWFuaW5nZnVsIG5hbWVz
+IGZvciBDRkdfQllURV9PUkRFUl8qCiAgc3RhZ2luZzogd2Z4OiByZW1vdmUgdXNlbGVzcyBpbmNs
+dWRlCiAgc3RhZ2luZzogd2Z4OiBzaW1wbGlmeSB2YXJpYWJsZSBhc3NpZ25tZW50CiAgc3RhZ2lu
+Zzogd2Z4OiBtYWtlIGNvbmRpdGlvbnMgZWFzaWVyIHRvIHJlYWQKICBzdGFnaW5nOiB3Zng6IGVu
+c3VyZSB0aGF0IHRyYWNlcyBuZXZlciBtb2RpZnkgYXJndW1lbnRzCiAgc3RhZ2luZzogd2Z4OiBl
+bnN1cmUgdGhhdCByZWNlaXZlZCBoaWYgbWVzc2FnZXMgYXJlIG5ldmVyIG1vZGlmaWVkCiAgc3Rh
+Z2luZzogd2Z4OiBmaXggdHlwbyBpbiAibnVtX29mX3NzaV9kcyIKICBzdGFnaW5nOiB3Zng6IGZp
+eCB0eXBvIGluICJudW1faV9lcyIKICBzdGFnaW5nOiB3Zng6IGZpeCBuYW1lIG9mIHN0cnVjdCBo
+aWZfcmVxX3N0YXJ0X3NjYW5fYWx0CiAgc3RhZ2luZzogd2Z4OiBpbXByb3ZlIEFQSSBvZiBoaWZf
+cmVxX2pvaW4tPmluZnJhc3RydWN0dXJlX2Jzc19tb2RlCiAgc3RhZ2luZzogd2Z4OiBiZXR0ZXIg
+bmFtaW5nIGZvciBoaWZfcmVxX2pvaW4tPnNob3J0X3ByZWFtYmxlCiAgc3RhZ2luZzogd2Z4OiBi
+ZXR0ZXIgbmFtaW5nIGZvcgogICAgaGlmX21pYl9zZXRfYXNzb2NpYXRpb25fbW9kZS0+Z3JlZW5m
+aWVsZAogIHN0YWdpbmc6IHdmeDogc2ltcGxpZnkgaGFuZGxpbmcgb2YgdHhfbG9jayBpbiB3Znhf
+ZG9fam9pbigpCiAgc3RhZ2luZzogd2Z4OiBmaXJtd2FyZSBhbHJlYWR5IGhhbmRsZSBwb3dlcnNh
+dmUgbW9kZSBkdXJpbmcgc2NhbgogIHN0YWdpbmc6IHdmeDogZGVjbGFyZSB3Znhfc2V0X3BtKCkg
+c3RhdGljCiAgc3RhZ2luZzogd2Z4OiBkcm9wIHVzZWxlc3MgYXJndW1lbnQgZnJvbSB3Znhfc2V0
+X3BtKCkKICBzdGFnaW5nOiB3Zng6IHJlbW92ZSByZWR1bmRhbnQgdGVzdCB3aGlsZSBjYWxsaW5n
+IHdmeF91cGRhdGVfcG0oKQogIHN0YWdpbmc6IHdmeDogZHJvcCB1bm5lY2Vzc2FyeSB3dmlmLT5w
+b3dlcnNhdmVfbW9kZQogIHN0YWdpbmc6IHdmeDogZG8gbm90IHRyeSB0byBzYXZlIGNhbGwgdG8g
+aGlmX3NldF9wbSgpCiAgc3RhZ2luZzogd2Z4OiBmaXggcG1fbW9kZSB0aW1lb3V0CiAgc3RhZ2lu
+Zzogd2Z4OiBzaW1wbGlmeSB3ZnhfY29uZl90eCgpCiAgc3RhZ2luZzogd2Z4OiBwcmVmZXIgYSBi
+aXRtYXNrIGluc3RlYWQgb2YgYW4gYXJyYXkgb2YgYm9vbGVhbgogIHN0YWdpbmc6IHdmeDogc2lt
+cGxpZnkgaGlmX3NldF91YXBzZF9pbmZvKCkgdXNhZ2UKICBzdGFnaW5nOiB3Zng6IHNpbXBsaWZ5
+IGhpZl9zZXRfcG0oKSB1c2FnZQogIHN0YWdpbmc6IHdmeDogZHJvcCBzdHJ1Y3Qgd2Z4X2VkY2Ff
+cGFyYW1zCiAgc3RhZ2luZzogd2Z4OiByZW1vdmUgdW5uZWNlc3NhcnkgRURDQSBpbml0aWFsaXNh
+dGlvbgogIHN0YWdpbmc6IHdmeDogc2ltcGxpZnkgaGlmX3NldF9lZGNhX3F1ZXVlX3BhcmFtcygp
+IHVzYWdlCiAgc3RhZ2luZzogd2Z4OiBoaWZfc2NhbigpIG5ldmVyIGZhaWxzCiAgc3RhZ2luZzog
+d2Z4OiBkZXZpY2UgYWxyZWFkeSBoYW5kbGUgc2xlZXAgbW9kZSBkdXJpbmcgc2NhbgogIHN0YWdp
+bmc6IHdmeDogZHJvcCB1c2VsZXNzIHdmeF9zY2FuX2NvbXBsZXRlKCkKICBzdGFnaW5nOiB3Zng6
+IHNpbXBsaWZ5IGhpZl9zY2FuKCkgdXNhZ2UKICBzdGFnaW5nOiB3Zng6IGludHJvZHVjZSB1cGRh
+dGVfcHJvYmVfdG1wbCgpCiAgc3RhZ2luZzogd2Z4OiBzaW1wbGlmeSBoaWZfc2V0X3RlbXBsYXRl
+X2ZyYW1lKCkgdXNhZ2UKICBzdGFnaW5nOiB3Zng6IHJld3JpdGUgd2Z4X2h3X3NjYW4oKQogIHN0
+YWdpbmc6IHdmeDogd29ya2Fyb3VuZCBidWcgd2l0aCAiaXcgc2NhbiIKICBzdGFnaW5nOiB3Zng6
+IGRlbGF5ZWRfdW5qb2luIGNhbm5vdCBoYXBwZW4KICBzdGFnaW5nOiB3Zng6IGRlbGF5ZWRfbGlu
+a19sb3NzIGNhbm5vdCBoYXBwZW4KICBzdGFnaW5nOiB3Zng6IGltcGxlbWVudCBjYW5jZWxfaHdf
+c2NhbigpCiAgc3RhZ2luZzogd2Z4OiB1cGRhdGUgVE9ETwoKIGRyaXZlcnMvc3RhZ2luZy93Zngv
+VE9ETyAgICAgICAgICB8ICA4MSArKysrKy0tCiBkcml2ZXJzL3N0YWdpbmcvd2Z4L2JoLmMgICAg
+ICAgICAgfCAgIDMgKy0KIGRyaXZlcnMvc3RhZ2luZy93ZngvYnVzX3NwaS5jICAgICB8ICAgOSAr
+LQogZHJpdmVycy9zdGFnaW5nL3dmeC9kYXRhX3J4LmMgICAgIHwgICA4ICstCiBkcml2ZXJzL3N0
+YWdpbmcvd2Z4L2RhdGFfcnguaCAgICAgfCAgIDQgKy0KIGRyaXZlcnMvc3RhZ2luZy93ZngvZGF0
+YV90eC5jICAgICB8ICA0MCArKystCiBkcml2ZXJzL3N0YWdpbmcvd2Z4L2RhdGFfdHguaCAgICAg
+fCAgIDcgKy0KIGRyaXZlcnMvc3RhZ2luZy93ZngvZndpby5jICAgICAgICB8ICAyOCArLS0KIGRy
+aXZlcnMvc3RhZ2luZy93ZngvaGlmX2FwaV9jbWQuaCB8ICAzMiArLS0KIGRyaXZlcnMvc3RhZ2lu
+Zy93ZngvaGlmX2FwaV9taWIuaCB8ICAxMyArLQogZHJpdmVycy9zdGFnaW5nL3dmeC9oaWZfcngu
+YyAgICAgIHwgMTAzICsrKysrLS0tLQogZHJpdmVycy9zdGFnaW5nL3dmeC9oaWZfdHguYyAgICAg
+IHwgMTA5ICsrKysrLS0tLQogZHJpdmVycy9zdGFnaW5nL3dmeC9oaWZfdHguaCAgICAgIHwgIDE3
+ICstCiBkcml2ZXJzL3N0YWdpbmcvd2Z4L2hpZl90eF9taWIuaCAgfCAgMjcgKystCiBkcml2ZXJz
+L3N0YWdpbmcvd2Z4L2h3aW8uaCAgICAgICAgfCAgMTUgKy0KIGRyaXZlcnMvc3RhZ2luZy93Zngv
+bWFpbi5jICAgICAgICB8ICAgNSArLQogZHJpdmVycy9zdGFnaW5nL3dmeC9xdWV1ZS5jICAgICAg
+IHwgICA5ICstCiBkcml2ZXJzL3N0YWdpbmcvd2Z4L3NjYW4uYyAgICAgICAgfCAzMjMgKysrKysr
+Ky0tLS0tLS0tLS0tLS0tLS0tLS0tCiBkcml2ZXJzL3N0YWdpbmcvd2Z4L3NjYW4uaCAgICAgICAg
+fCAgMjUgKy0tCiBkcml2ZXJzL3N0YWdpbmcvd2Z4L3NlY3VyZV9saW5rLmggfCAgIDggKy0KIGRy
+aXZlcnMvc3RhZ2luZy93Zngvc3RhLmMgICAgICAgICB8IDM1MyArKysrKysrKy0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0KIGRyaXZlcnMvc3RhZ2luZy93Zngvc3RhLmggICAgICAgICB8ICAgOSArLQog
+ZHJpdmVycy9zdGFnaW5nL3dmeC90cmFjZXMuaCAgICAgIHwgIDE0ICstCiBkcml2ZXJzL3N0YWdp
+bmcvd2Z4L3dmeC5oICAgICAgICAgfCAgMTggKy0KIDI0IGZpbGVzIGNoYW5nZWQsIDUwOSBpbnNl
+cnRpb25zKCspLCA3NTEgZGVsZXRpb25zKC0pCgotLSAKMi4yNC4wCgo=
