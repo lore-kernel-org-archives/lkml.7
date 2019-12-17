@@ -2,133 +2,83 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CB9C2D0C5
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1CF4C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F38D20717
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:32:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s4cUqU7z"
+	by mail.kernel.org (Postfix) with ESMTP id C4A462146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:32:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576571579;
+	bh=KaMIYYTK97ljJkmoWGyzXxyeIHqCzEem6vx3BF/K95c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Yolhw4qMf52vvyzdAclJVMbM3utfGmYN3fXd4YVrdMkGIZTt1ZmHiha0wP+5vq5go
+	 SSh9ovR9uaLoNbyk/hFnhhVzuSe5V/EoZGgPWkd90K1XfkNwEiRumh9CntYQMEfDrC
+	 U/jz3kqYNaKiHLpJMO1lVlAoaH2uxgikBodBYkBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbfLQIcu (ORCPT
+        id S1726733AbfLQIc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 03:32:50 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35112 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbfLQIcu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 03:32:50 -0500
-Received: by mail-wr1-f66.google.com with SMTP id g17so10300010wro.2
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 00:32:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=R52GCiHJK3v0MVwNFwQLeAJ4rzyKsEn4BdptyWy4AqA=;
-        b=s4cUqU7z5DxsmuduvpFWzEYurebM7Q6vMPcgppHlChAw3Vs91NrCpXn33JuKSVS5Hc
-         Ta9w3XdFEwU43agc49krlQx+SLg/q+tbM/YUc0HpuNA2YzoB9WN0Ut0+EPpuby+/fXcl
-         r+RG/BOj9wuqdXNIbfpjWVzYLu4Dxt+bq8vSauNM32L27vleJtqlZdLGDNpGvD37JVcP
-         K6SzSmV/zSvgw4qT6qFrtQ8lJ8yzHPd4xb4HOABQBSOdlyMLv/hW9F7PNWc+XQceBwfo
-         zuelU9UMLMHqGQb8sJR+UT83XbCiSNm0C4aEcAEUyGDfQixXC37ZCOqIwhwf5Vpol2q7
-         hffg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=R52GCiHJK3v0MVwNFwQLeAJ4rzyKsEn4BdptyWy4AqA=;
-        b=WsA/XE8xDhOShALiDjah3dFcGfQSlwZR7Ll0bfvYBfcSxT2DeKA+7inNAzmXZMiavZ
-         9/I1FOn/gNoehgcL3L40vPpMrvw5f/IN9bzlbX28ZRO6XXmjUjBBe704uITrPx/bYZh2
-         sYpaMtl3W1tQSZhI0ORycFdOs6vAIOmy0TdpEYsA8Vb8n8jlSmSBIOcAxvRroYl/h6S0
-         X7Ow/MTfnkHPjHHR3kfSGJcPOu3JkhCRhtzcoLoDtH81qJIbQVgH2MoAMJqww1zJa6dl
-         A942SHmw4foeOIcju/3wa2otAERkuVS+/1IeA+HwV3wKWl2TUz08O8JF3CF5NUKS3ahj
-         EQbg==
-X-Gm-Message-State: APjAAAVo9xQFbcWa/689rv/Qaom75g6nBEO5LeDs+OjeGD5zEkNRxrAD
-        kLZmEQ++3vY9rYFuVwwlY/+WyI8dHSRN/n7LYG7GkA==
-X-Google-Smtp-Source: APXvYqwQEyk2xHApao080Ej8fa/PLzVHPCsQb1w8HIAU4PKswqdlVBFdjiXoAMVnJnp9bNAXWzs6xzijUyn1oFV4ec0=
-X-Received: by 2002:a5d:46c1:: with SMTP id g1mr34763145wrs.200.1576571567865;
- Tue, 17 Dec 2019 00:32:47 -0800 (PST)
+        Tue, 17 Dec 2019 03:32:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38394 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725893AbfLQIc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 03:32:58 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3ACF820717;
+        Tue, 17 Dec 2019 08:32:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576571577;
+        bh=KaMIYYTK97ljJkmoWGyzXxyeIHqCzEem6vx3BF/K95c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CCp/gKW2FM+ds1U0VZ2esuhAB/PBwBNbrZ+YQRpdNJ6yWAS7n4XZucBznhJZhQGNr
+         msTA3K4BgEnfrQ9MHTy153ZC+oWX+7pB7KFytATGFmSR2y/QRyAHAZSwDm3L2Pq0MX
+         eIC37abYyBJ4WzzNN0lyHE5SfsORdB46njx15lac=
+Date:   Tue, 17 Dec 2019 09:32:54 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-serial@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: Re: [PATCH v2 0/3] tty/leds: implement a trigger for ttys
+Message-ID: <20191217083254.GD2672708@kroah.com>
+References: <20191217081718.23807-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
-References: <20191214175735.22518-1-ardb@kernel.org> <20191214175735.22518-11-ardb@kernel.org>
- <20191215193054.GA2187004@rani.riverdale.lan>
-In-Reply-To: <20191215193054.GA2187004@rani.riverdale.lan>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Tue, 17 Dec 2019 08:32:39 +0000
-Message-ID: <CAKv+Gu9Ycs8JRvimxfFMRy=tQ0SqX3MYnv0VfUPVAE_Q1S0y1A@mail.gmail.com>
-Subject: Re: [PATCH 10/10] efi/libstub/x86: avoid thunking for native firmware calls
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191217081718.23807-1-u.kleine-koenig@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 15 Dec 2019 at 21:31, Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> On Sat, Dec 14, 2019 at 06:57:35PM +0100, Ard Biesheuvel wrote:
-> >
-> > @@ -232,7 +232,7 @@ static inline bool efi_is_native(void)
-> >  #define efi_table_attr(table, attr, instance) ({                     \
-> >       __typeof__(((table##_t *)0)->attr) __ret;                       \
-> >       if (efi_is_native()) {                                          \
-> > -             __ret = ((table##_t *)instance)->attr;                  \
-> > +             __ret = instance->attr;                                 \
-> >       } else {                                                        \
-> >               __typeof__(((table##_32_t *)0)->attr) at;               \
-> >               at = (((table##_32_t *)(unsigned long)instance)->attr); \
->
-> Is there a reason we didn't remove this cast for native-mode earlier in
-> the series?
->
+On Tue, Dec 17, 2019 at 09:17:15AM +0100, Uwe Kleine-König wrote:
+> Hello,
+> 
+> back in November last year I sent my last approach to implement an led
+> trigger for UARTs (Message-Id:
+> 20181106213739.29628-1-u.kleine-koenig@pengutronix.de). This was parked
+> on my todo list since then somewhere far from the top.
+> 
+> This is a new approach. Similar to the netdev trigger the tty trigger
+> introduced here periodically checks the statistics related to a given
+> tty and if that changed the LED is flashed once.
+> 
+> I had to introduce two functions in the tty layer to be able to get my
+> hands on the needed data in the first two patches, the third patch then
+> adds the trigger.
 
-Yes. In patch 9/10, I fix a couple of occurrences where the protocol
-pointer is a void*, so without the cast, things break.
+I like the idea, seems sane.  Minor code nits on the implementation
+though...
 
-> > @@ -242,19 +242,25 @@ static inline bool efi_is_native(void)
-> >  })
-> >
-> >  #define efi_call_proto(protocol, f, instance, ...)                   \
-> > -     __efi_early()->call((unsigned long)                             \
-> > +     efi_is_native()                                                 \
-> > +             ? instance->f(instance, ##__VA_ARGS__)                  \
-> > +             : efi64_thunk((unsigned long)                           \
-> >                               efi_table_attr(protocol, f, instance),  \
-> > -             instance, ##__VA_ARGS__)
-> > +                     instance, ##__VA_ARGS__)
-> >
-> >  #define efi_call_early(f, ...)                                               \
-> > -     __efi_early()->call((unsigned long)                             \
-> > +     efi_is_native()                                                 \
-> > +             ? __efi_early()->boot_services->f(__VA_ARGS__)          \
-> > +             : efi64_thunk((unsigned long)                           \
-> >                               efi_table_attr(efi_boot_services, f,    \
-> > -             __efi_early()->boot_services), __VA_ARGS__)
-> > +                     __efi_early()->boot_services), __VA_ARGS__)
-> >
-> >  #define efi_call_runtime(f, ...)                                     \
-> > -     __efi_early()->call((unsigned long)                             \
-> > +     efi_is_native()                                                 \
-> > +             ? __efi_early()->runtime_services->f(__VA_ARGS__)       \
-> > +             : efi64_thunk((unsigned long)                           \
-> >                               efi_table_attr(efi_runtime_services, f, \
-> > -             __efi_early()->runtime_services), __VA_ARGS__)
-> > +                     __efi_early()->runtime_services), __VA_ARGS__)
-> >
-> >  extern bool efi_reboot_required(void);
-> >  extern bool efi_is_table_address(unsigned long phys_addr);
->
-> For the efi_call macros, their definition should be enclosed in
-> parentheses now that it's a ternary operator.
+thanks,
 
-Ack
+greg k-h
