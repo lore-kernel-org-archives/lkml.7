@@ -2,134 +2,160 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D45C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FBFC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE45E24655
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:38:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CViFBv0Q"
+	by mail.kernel.org (Postfix) with ESMTP id 16E0A24655
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:40:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbfLQPiq (ORCPT
+        id S1727825AbfLQPki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 10:38:46 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24472 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727558AbfLQPiq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 10:38:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576597125;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=oe8wx3LqrRs6+5QV/gvDiaHevjNBAUocaR3nOV3H/ec=;
-        b=CViFBv0QAAG6MnoCHUCypJFEpZtdaJtZ+8tAGhCsJ5AQCocK1tWPFRg5IbfR6k+fvPo5xP
-        vFvcgKdlaIlMSEDzImjHSPZ4C0LaALeyf3f1h2+YdMN5wcLvPjQ8A5yqujY4wyn4V1Lz3z
-        2f4tvU3StTtWzp5UZrfuYHvXODrD73s=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-159-xQWpzthYM9eRgburR-zGKQ-1; Tue, 17 Dec 2019 10:38:40 -0500
-X-MC-Unique: xQWpzthYM9eRgburR-zGKQ-1
-Received: by mail-qk1-f200.google.com with SMTP id j16so7123277qkk.17
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 07:38:40 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=oe8wx3LqrRs6+5QV/gvDiaHevjNBAUocaR3nOV3H/ec=;
-        b=t4l8rHmul5smqsw+D6Rd75v7Owi1yBF/9BIhnOagBzjTqKVdnnxEF537FG64+u0P2D
-         f3ykKIGWUkQ2D1hy/U4oW/YKaZKngDZzxCDO7Rz6XVxpFMCRGgLhcIORhHV0lU6Dp/GQ
-         izEpLO5W/rG2AYJIknuLKTVYf5qMHsw+AX8G2PMW4hHgmpWXRKkxubSNerUK5Xt5Yc6P
-         wPCPYc2RCIWKo8qYu0jFE759wREKFRW90u+xaHp2kC+pgHBfk4uTNp3ce2tLydYwbLi0
-         cXiD+5Plqt1qtTM5k2rxL33Z7d5YlQf797Fes1OSO064qSSq73wt/uy/8sJTjgvUt3CL
-         5WhQ==
-X-Gm-Message-State: APjAAAU5Xu2aN/n0u/U8ivN2lbKUnbECK3Ts7gs1CY81SZsc2Jz+9TCc
-        A3TaubdOn5QebjThP0XdiTGjPE4UiHVZ5lJS0/AiKdp4SyXpoVoCy2A/CTiV9MVYKOJa6/u+dTv
-        TDLfuXDOmsaKR1wYcwZDan82R
-X-Received: by 2002:ac8:4151:: with SMTP id e17mr5184993qtm.234.1576597119904;
-        Tue, 17 Dec 2019 07:38:39 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyOzAD8USssim+OrRbQDGZuuA6bLMYmSzkOFB1tXv7s1A1ojilmiaIx2TMYZyPHAFnmkbw/+w==
-X-Received: by 2002:ac8:4151:: with SMTP id e17mr5184971qtm.234.1576597119698;
-        Tue, 17 Dec 2019 07:38:39 -0800 (PST)
-Received: from xz-x1 ([104.156.64.74])
-        by smtp.gmail.com with ESMTPSA id b7sm7172621qkh.106.2019.12.17.07.38.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 07:38:38 -0800 (PST)
-Date:   Tue, 17 Dec 2019 10:38:37 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Christophe de Dinechin <dinechin@redhat.com>,
-        Christophe de Dinechin <christophe.de.dinechin@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH RFC 04/15] KVM: Implement ring-based dirty memory tracking
-Message-ID: <20191217153837.GC7258@xz-x1>
-References: <20191129213505.18472-1-peterx@redhat.com>
- <20191129213505.18472-5-peterx@redhat.com>
- <m1lfrihj2n.fsf@dinechin.org>
- <20191213202324.GI16429@xz-x1>
- <bc15650b-df59-f508-1090-21dafc6e8ad1@redhat.com>
- <E167A793-B42A-422D-8D46-B992CB6EBE69@redhat.com>
- <d59ac0eb-e65a-a46f-886e-6df80a2b142f@redhat.com>
+        Tue, 17 Dec 2019 10:40:38 -0500
+Received: from foss.arm.com ([217.140.110.172]:40798 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727415AbfLQPkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 10:40:37 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C29281FB;
+        Tue, 17 Dec 2019 07:40:36 -0800 (PST)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0D4A73F67D;
+        Tue, 17 Dec 2019 07:40:33 -0800 (PST)
+Date:   Tue, 17 Dec 2019 15:40:31 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Magnus Karlsson <magnus.karlsson@gmail.com>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        kirill.shutemov@linux.intel.com, justin.he@arm.com,
+        linux-mm@kvack.org,
+        syzbot <syzbot+9301f2f33873407d5b33@syzkaller.appspotmail.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        bpf <bpf@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>, hawk@kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        linux-kernel@vger.kernel.org,
+        "Karlsson, Magnus" <magnus.karlsson@intel.com>,
+        Network Development <netdev@vger.kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        syzkaller-bugs@googlegroups.com, Yonghong Song <yhs@fb.com>
+Subject: Re: WARNING in wp_page_copy
+Message-ID: <20191217154031.GI5624@arrakis.emea.arm.com>
+References: <000000000000a6f2030598bbe38c@google.com>
+ <0000000000000e32950599ac5a96@google.com>
+ <20191216150017.GA27202@linux.fritz.box>
+ <CAJ8uoz3nCxcmnPonNunYhswskidn=PnN8=4_jXW4B=Xu4k_DoQ@mail.gmail.com>
+ <CAJ8uoz312gDBGpqOJiKqrXn456sy6u+Gnvcvv_+0=EimasRoUw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d59ac0eb-e65a-a46f-886e-6df80a2b142f@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CAJ8uoz312gDBGpqOJiKqrXn456sy6u+Gnvcvv_+0=EimasRoUw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 01:19:05PM +0100, Paolo Bonzini wrote:
-> On 17/12/19 13:16, Christophe de Dinechin wrote:
-> > 
-> > 
-> >> On 14 Dec 2019, at 08:57, Paolo Bonzini <pbonzini@redhat.com> wrote:
-> >>
-> >> On 13/12/19 21:23, Peter Xu wrote:
-> >>>> What is the benefit of using u16 for that? That means with 4K pages, you
-> >>>> can share at most 256M of dirty memory each time? That seems low to me,
-> >>>> especially since it's sufficient to touch one byte in a page to dirty it.
-> >>>>
-> >>>> Actually, this is not consistent with the definition in the code ;-)
-> >>>> So I'll assume it's actually u32.
-> >>> Yes it's u32 now.  Actually I believe at least Paolo would prefer u16
-> >>> more. :)
-> >>
-> >> It has to be u16, because it overlaps the padding of the first entry.
-> > 
-> > Wow, now that’s subtle.
-> > 
-> > That definitely needs a union with the padding to make this explicit.
-> > 
-> > (My guess is you do that to page-align the whole thing and avoid adding a
-> > page just for the counters)
+Hi Magnus,
 
-(Just to make sure this is clear... Paolo was talking about the
- previous version.  This version does not have this limitation because
- we don't have that union definition any more)
+Thanks for investigating this. I have more questions below rather than a
+solution.
 
+On Tue, Dec 17, 2019 at 02:27:22PM +0100, Magnus Karlsson wrote:
+> On Mon, Dec 16, 2019 at 4:10 PM Magnus Karlsson
+> <magnus.karlsson@gmail.com> wrote:
+> > On Mon, Dec 16, 2019 at 4:00 PM Daniel Borkmann <daniel@iogearbox.net> wrote:
+> > >
+> > > On Sat, Dec 14, 2019 at 08:20:07AM -0800, syzbot wrote:
+> > > > syzbot has found a reproducer for the following crash on:
+> > > >
+> > > > HEAD commit:    1d1997db Revert "nfp: abm: fix memory leak in nfp_abm_u32_..
+> > > > git tree:       net-next
+> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=1029f851e00000
+> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=cef1fd5032faee91
+> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=9301f2f33873407d5b33
+> > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=119d9fb1e00000
+> > > >
+> > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > > Reported-by: syzbot+9301f2f33873407d5b33@syzkaller.appspotmail.com
+> > >
+> > > Bjorn / Magnus, given xsk below, PTAL, thanks!
+> >
+> > Thanks. I will take a look at it right away.
+> >
+> > /Magnus
 > 
-> Yes, that was the idea but Peter decided to scrap it. :)
+> After looking through the syzcaller report, I have the following
+> hypothesis that would dearly need some comments from MM-savy people
+> out there. Syzcaller creates, using mmap, a memory area that is
 
-There's still time to persuade me to going back to it. :)
+I guess that's not an anonymous mmap() since we don't seem to have a
+struct page for src in cow_user_page() (the WARN_ON_ONCE path). Do you
+have more information on the mmap() call?
 
-(Though, yes I still like current solution... if we can get rid of the
- only kvmgt ugliness, we can even throw away the per-vm ring with its
- "extra" 4k page.  Then I suppose it'll be even harder to persuade me :)
+> write-only and supplies this to a getsockopt call (in this case
+> XDP_STATISTICS, but probably does not matter really) as the area where
+> it wants the values to be stored. When the getsockopt implementation
+> gets to copy_to_user() to write out the values to user space, it
+> encounters a page fault when accessing this write-only page. When
+> servicing this, it gets to the following piece of code that triggers
+> the warning that syzcaller reports:
+> 
+> static inline bool cow_user_page(struct page *dst, struct page *src,
+>                                  struct vm_fault *vmf)
+> {
+> ....
+> snip
+> ....
+>        /*
+>          * This really shouldn't fail, because the page is there
+>          * in the page tables. But it might just be unreadable,
+>          * in which case we just give up and fill the result with
+>          * zeroes.
+>          */
+>         if (__copy_from_user_inatomic(kaddr, uaddr, PAGE_SIZE)) {
+>                 /*
+>                  * Give a warn in case there can be some obscure
+>                  * use-case
+>                  */
+>                 WARN_ON_ONCE(1);
+>                 clear_page(kaddr);
+>         }
+
+So on x86, a PROT_WRITE-only private page is mapped as non-readable? I
+had the impression that write-only still allows reading by looking at
+the __P010 definition.
+
+Anyway, if it's not an anonymous mmap(), whoever handled the mapping may
+have changed the permissions (e.g. some device).
+
+> So without a warning. My hypothesis is that if we create a page in the
+> same way as syzcaller then any getsockopt that does a copy_to_user()
+> (pretty much all of them I guess) will get this warning.
+
+The copy_to_user() only triggers the do_wp_page() fault handling. If
+this is a CoW page (private read-only presumably, or at least not
+writeable), the kernel tries to copy the original page given to
+getsockopt into a new page and restart the copy_to_user(). Since the
+kernel doesn't have a struct page for this (e.g. PFN mapping), it uses
+__copy_from_user_inatomic() which fails because of the read permission.
+
+> I have not tried this, so I might be wrong. If this is true, then the
+> question is what to do about it. One possible fix would be just to
+> remove the warning to get the same behavior as before. But it was
+> probably put there for a reason.
+
+It was there for some obscure cases, as the comment says ;). If the
+above is a valid scenario that the user can trigger, we should probably
+remove the WARN_ON.
 
 -- 
-Peter Xu
-
+Catalin
