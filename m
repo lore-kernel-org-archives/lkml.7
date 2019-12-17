@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A452FC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D38C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8239620CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:58:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 001DC20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:58:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728167AbfLQA6z (ORCPT
+        id S1728128AbfLQA6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:58:55 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34776 "EHLO
+        Mon, 16 Dec 2019 19:58:54 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34818 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726742AbfLQAvh (ORCPT
+        by vger.kernel.org with ESMTP id S1726752AbfLQAvh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 19:51:37 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15H-0003Ku-QR; Tue, 17 Dec 2019 00:51:31 +0000
+        id 1ih15I-0003L9-20; Tue, 17 Dec 2019 00:51:32 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15H-0005W0-GT; Tue, 17 Dec 2019 00:51:31 +0000
+        id 1ih15G-0005UZ-R0; Tue, 17 Dec 2019 00:51:30 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Johan Hovold" <johan@kernel.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Date:   Tue, 17 Dec 2019 00:46:32 +0000
-Message-ID: <lsq.1576543535.458010526@decadent.org.uk>
+        "David S. Miller" <davem@davemloft.net>,
+        "Eric Dumazet" <edumazet@google.com>,
+        "syzbot" <syzkaller@googlegroups.com>
+Date:   Tue, 17 Dec 2019 00:46:15 +0000
+Message-ID: <lsq.1576543535.857630143@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 058/136] USB: yurex: fix NULL-derefs on disconnect
+Subject: [PATCH 3.16 041/136] nfc: fix memory leak in llcp_sock_bind()
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,90 +56,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Johan Hovold <johan@kernel.org>
+From: Eric Dumazet <edumazet@google.com>
 
-commit aafb00a977cf7d81821f7c9d12e04c558c22dc3c upstream.
+commit a0c2dc1fe63e2869b74c1c7f6a81d1745c8a695d upstream.
 
-The driver was using its struct usb_interface pointer as an inverted
-disconnected flag, but was setting it to NULL without making sure all
-code paths that used it were done with it.
+sysbot reported a memory leak after a bind() has failed.
 
-Before commit ef61eb43ada6 ("USB: yurex: Fix protection fault after
-device removal") this included the interrupt-in completion handler, but
-there are further accesses in dev_err and dev_dbg statements in
-yurex_write() and the driver-data destructor (sic!).
+While we are at it, abort the operation if kmemdup() has failed.
 
-Fix this by unconditionally stopping also the control URB at disconnect
-and by using a dedicated disconnected flag.
+BUG: memory leak
+unreferenced object 0xffff888105d83ec0 (size 32):
+  comm "syz-executor067", pid 7207, jiffies 4294956228 (age 19.430s)
+  hex dump (first 32 bytes):
+    00 69 6c 65 20 72 65 61 64 00 6e 65 74 3a 5b 34  .ile read.net:[4
+    30 32 36 35 33 33 30 39 37 5d 00 00 00 00 00 00  026533097]......
+  backtrace:
+    [<0000000036bac473>] kmemleak_alloc_recursive /./include/linux/kmemleak.h:43 [inline]
+    [<0000000036bac473>] slab_post_alloc_hook /mm/slab.h:522 [inline]
+    [<0000000036bac473>] slab_alloc /mm/slab.c:3319 [inline]
+    [<0000000036bac473>] __do_kmalloc /mm/slab.c:3653 [inline]
+    [<0000000036bac473>] __kmalloc_track_caller+0x169/0x2d0 /mm/slab.c:3670
+    [<000000000cd39d07>] kmemdup+0x27/0x60 /mm/util.c:120
+    [<000000008e57e5fc>] kmemdup /./include/linux/string.h:432 [inline]
+    [<000000008e57e5fc>] llcp_sock_bind+0x1b3/0x230 /net/nfc/llcp_sock.c:107
+    [<000000009cb0b5d3>] __sys_bind+0x11c/0x140 /net/socket.c:1647
+    [<00000000492c3bbc>] __do_sys_bind /net/socket.c:1658 [inline]
+    [<00000000492c3bbc>] __se_sys_bind /net/socket.c:1656 [inline]
+    [<00000000492c3bbc>] __x64_sys_bind+0x1e/0x30 /net/socket.c:1656
+    [<0000000008704b2a>] do_syscall_64+0x76/0x1a0 /arch/x86/entry/common.c:296
+    [<000000009f4c57a4>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Note that we need to take a reference to the struct usb_interface to
-avoid a use-after-free in the destructor whenever the device was
-disconnected while the character device was still open.
-
-Fixes: aadd6472d904 ("USB: yurex.c: remove dbg() usage")
-Fixes: 45714104b9e8 ("USB: yurex.c: remove err() usage")
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191009153848.8664-6-johan@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 30cc4587659e ("NFC: Move LLCP code to the NFC top level diirectory")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/misc/yurex.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ net/nfc/llcp_sock.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/misc/yurex.c
-+++ b/drivers/usb/misc/yurex.c
-@@ -64,6 +64,7 @@ struct usb_yurex {
- 
- 	struct kref		kref;
- 	struct mutex		io_mutex;
-+	unsigned long		disconnected:1;
- 	struct fasync_struct	*async_queue;
- 	wait_queue_head_t	waitq;
- 
-@@ -111,6 +112,7 @@ static void yurex_delete(struct kref *kr
- 				dev->int_buffer, dev->urb->transfer_dma);
- 		usb_free_urb(dev->urb);
+--- a/net/nfc/llcp_sock.c
++++ b/net/nfc/llcp_sock.c
+@@ -117,9 +117,14 @@ static int llcp_sock_bind(struct socket
+ 	llcp_sock->service_name = kmemdup(llcp_addr.service_name,
+ 					  llcp_sock->service_name_len,
+ 					  GFP_KERNEL);
+-
++	if (!llcp_sock->service_name) {
++		ret = -ENOMEM;
++		goto put_dev;
++	}
+ 	llcp_sock->ssap = nfc_llcp_get_sdp_ssap(local, llcp_sock);
+ 	if (llcp_sock->ssap == LLCP_SAP_MAX) {
++		kfree(llcp_sock->service_name);
++		llcp_sock->service_name = NULL;
+ 		ret = -EADDRINUSE;
+ 		goto put_dev;
  	}
-+	usb_put_intf(dev->interface);
- 	usb_put_dev(dev->udev);
- 	kfree(dev);
- }
-@@ -211,7 +213,7 @@ static int yurex_probe(struct usb_interf
- 	init_waitqueue_head(&dev->waitq);
- 
- 	dev->udev = usb_get_dev(interface_to_usbdev(interface));
--	dev->interface = interface;
-+	dev->interface = usb_get_intf(interface);
- 
- 	/* set up the endpoint information */
- 	iface_desc = interface->cur_altsetting;
-@@ -334,8 +336,9 @@ static void yurex_disconnect(struct usb_
- 
- 	/* prevent more I/O from starting */
- 	usb_poison_urb(dev->urb);
-+	usb_poison_urb(dev->cntl_urb);
- 	mutex_lock(&dev->io_mutex);
--	dev->interface = NULL;
-+	dev->disconnected = 1;
- 	mutex_unlock(&dev->io_mutex);
- 
- 	/* wakeup waiters */
-@@ -422,7 +425,7 @@ static ssize_t yurex_read(struct file *f
- 	dev = (struct usb_yurex *)file->private_data;
- 
- 	mutex_lock(&dev->io_mutex);
--	if (!dev->interface) {		/* already disconnected */
-+	if (dev->disconnected) {		/* already disconnected */
- 		mutex_unlock(&dev->io_mutex);
- 		return -ENODEV;
- 	}
-@@ -453,7 +456,7 @@ static ssize_t yurex_write(struct file *
- 		goto error;
- 
- 	mutex_lock(&dev->io_mutex);
--	if (!dev->interface) {		/* already disconnected */
-+	if (dev->disconnected) {		/* already disconnected */
- 		mutex_unlock(&dev->io_mutex);
- 		retval = -ENODEV;
- 		goto error;
 
