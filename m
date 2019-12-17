@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 541D3C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE524C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B80C21775
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:17:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ABA72176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:17:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576613852;
-	bh=P64S/eDpZ7NFJNdJRDDHHz/GsObYeX4R0GSCQO3buHA=;
+	s=default; t=1576613855;
+	bh=nIDUZ5x1ijafsIxuP8KiqpXw0WQNyP8PQqUybLP5dzI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ahSxUhf9qIRxUYIVLUF5DtfuwCGwOLhe//NkedqwN1oFrMSzgK5OOsOX5qtvOgEoa
-	 EFerYxquYgppv1v2Fb3MFFp4O/bMfbIcX0vG3wlVNxo93It8fl/UtnxRuA7OrKRZeA
-	 OKGDiGDYBEF22yRDVzHh25t3uSRGCmjyiZXC6qT0=
+	b=UaKSwNxksuQJR2q2bVG/7pjdj2pjlWLyWU4Wyv28TR/9dRQ1rulhMc8CkIgoaNhKN
+	 a+vzeDWXswpmsFjfekL9hLNW2T46vHZUbCQQGYTvCmVcFw4nSM3lvlo6nV4NSx1xrV
+	 VUeWTRgBe4gBfiY3viLetKXNdIO3dschmkKviZHc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728866AbfLQURb (ORCPT
+        id S1727577AbfLQURe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 15:17:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41998 "EHLO mail.kernel.org"
+        Tue, 17 Dec 2019 15:17:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728001AbfLQUR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 15:17:28 -0500
+        id S1728848AbfLQURZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 15:17:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F365F206D8;
-        Tue, 17 Dec 2019 20:17:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7779121D7D;
+        Tue, 17 Dec 2019 20:17:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576613847;
-        bh=P64S/eDpZ7NFJNdJRDDHHz/GsObYeX4R0GSCQO3buHA=;
+        s=default; t=1576613844;
+        bh=nIDUZ5x1ijafsIxuP8KiqpXw0WQNyP8PQqUybLP5dzI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pmEmbCMNQA84mY5SoDck+R0VMqwAghN/xGuMiInE3n3QmxqO5D8p45S6tZyAvuAnd
-         5xmth42Eo0aj64Wn3n5fQntdXyRjz60Qa+SBv354RGrlyaR5pcC4rxM7f/hICcg8L3
-         ISDOTjOD5LEFfAkEyyK9+WDf5ctwUlLzvvXguiCg=
+        b=TSlHXqVLXUMRT+21lJgK7JiF3dppWn04o0Qr3EWdsRDNe8KI98qjLlXUkhBHQ0zri
+         J0W6ZtE7KYdOmOrEvn5CtzIfqskZXi22Ua5QzlBdQGp0rX1pQbnEte+XyaqFFootsX
+         T0R6B62wluI0orFdoPZgOpTnSlJPV3JvZ9mbZ2iw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        David Miller <davem@davemloft.net>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH 5.3 07/25] net-sysfs: Call dev_hold always in netdev_queue_add_kobject
-Date:   Tue, 17 Dec 2019 21:16:06 +0100
-Message-Id: <20191217200906.709677914@linuxfoundation.org>
+        stable@vger.kernel.org, Dust Li <dust.li@linux.alibaba.com>,
+        Tony Lu <tonylu@linux.alibaba.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.3 06/25] net: sched: fix dump qlen for sch_mq/sch_mqprio with NOLOCK subqueues
+Date:   Tue, 17 Dec 2019 21:16:05 +0100
+Message-Id: <20191217200906.165798806@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191217200903.179327435@linuxfoundation.org>
 References: <20191217200903.179327435@linuxfoundation.org>
@@ -61,46 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jouni Hogander <jouni.hogander@unikie.com>
+From: Dust Li <dust.li@linux.alibaba.com>
 
-[ Upstream commit e0b60903b434a7ee21ba8d8659f207ed84101e89 ]
+[ Upstream commit 2f23cd42e19c22c24ff0e221089b7b6123b117c5 ]
 
-Dev_hold has to be called always in netdev_queue_add_kobject.
-Otherwise usage count drops below 0 in case of failure in
-kobject_init_and_add.
+sch->q.len hasn't been set if the subqueue is a NOLOCK qdisc
+ in mq_dump() and mqprio_dump().
 
-Fixes: b8eb718348b8 ("net-sysfs: Fix reference count leak in rx|netdev_queue_add_kobject")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc: David Miller <davem@davemloft.net>
-Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Fixes: ce679e8df7ed ("net: sched: add support for TCQ_F_NOLOCK subqueues to sch_mqprio")
+Signed-off-by: Dust Li <dust.li@linux.alibaba.com>
+Signed-off-by: Tony Lu <tonylu@linux.alibaba.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/net-sysfs.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ net/sched/sch_mq.c     |    1 +
+ net/sched/sch_mqprio.c |    1 +
+ 2 files changed, 2 insertions(+)
 
---- a/net/core/net-sysfs.c
-+++ b/net/core/net-sysfs.c
-@@ -1457,14 +1457,17 @@ static int netdev_queue_add_kobject(stru
- 	struct kobject *kobj = &queue->kobj;
- 	int error = 0;
- 
-+	/* Kobject_put later will trigger netdev_queue_release call
-+	 * which decreases dev refcount: Take that reference here
-+	 */
-+	dev_hold(queue->dev);
-+
- 	kobj->kset = dev->queues_kset;
- 	error = kobject_init_and_add(kobj, &netdev_queue_ktype, NULL,
- 				     "tx-%u", index);
- 	if (error)
- 		return error;
- 
--	dev_hold(queue->dev);
--
- #ifdef CONFIG_BQL
- 	error = sysfs_create_group(kobj, &dql_group);
- 	if (error) {
+--- a/net/sched/sch_mq.c
++++ b/net/sched/sch_mq.c
+@@ -153,6 +153,7 @@ static int mq_dump(struct Qdisc *sch, st
+ 			__gnet_stats_copy_queue(&sch->qstats,
+ 						qdisc->cpu_qstats,
+ 						&qdisc->qstats, qlen);
++			sch->q.qlen		+= qlen;
+ 		} else {
+ 			sch->q.qlen		+= qdisc->q.qlen;
+ 			sch->bstats.bytes	+= qdisc->bstats.bytes;
+--- a/net/sched/sch_mqprio.c
++++ b/net/sched/sch_mqprio.c
+@@ -411,6 +411,7 @@ static int mqprio_dump(struct Qdisc *sch
+ 			__gnet_stats_copy_queue(&sch->qstats,
+ 						qdisc->cpu_qstats,
+ 						&qdisc->qstats, qlen);
++			sch->q.qlen		+= qlen;
+ 		} else {
+ 			sch->q.qlen		+= qdisc->q.qlen;
+ 			sch->bstats.bytes	+= qdisc->bstats.bytes;
 
 
