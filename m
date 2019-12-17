@@ -2,96 +2,173 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF830C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D35DC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A2C3206CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:34:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lN7ggJsd"
+	by mail.kernel.org (Postfix) with ESMTP id C956F206D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:34:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728201AbfLQMeg (ORCPT
+        id S1727985AbfLQMdv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:34:36 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:53330 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728189AbfLQMee (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 07:34:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8mJuCyKjbY4p5hrL3FaFjHlnxABVvtHNpVH8k6QqFE0=; b=lN7ggJsd/PhLseMxdiALXg3R/
-        4uvOheP59jmS2XidPb6H3ByQ2nZalq8GMhm2utOOQjYpdwsI58MstKlwnjNkiHKEnZ8uLhMASfJ7c
-        E5/W85KbHse6owyrhCS0DfMhnYcSSNdnoKv/eEbX+6I3O5XujZmeUma7YV+9Jc5XzuuBhDUeOZgCA
-        iUL2xvkoULaw5Vmp5lYrEO7nQPLLiXvcvf3pGP7onL4btwDxfiwQ5OBJ92zvsCJ1OmxSHWoes/FR7
-        KHbQI3aBIAoOVK+uZSBTLzvQyhhTJp1hpN7Ox1wcgJK4hSVTftFYIEAX25EdeeiUP4RLFQEgEqyV0
-        rpSU1zp/g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ihC3Q-0006oK-7G; Tue, 17 Dec 2019 12:34:20 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5D3B830658B;
-        Tue, 17 Dec 2019 13:32:54 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A7FAB2B2CF993; Tue, 17 Dec 2019 13:34:16 +0100 (CET)
-Date:   Tue, 17 Dec 2019 13:34:16 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc:     akpm@linux-foundation.org, npiggin@gmail.com, mpe@ellerman.id.au,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [RFC PATCH 2/2] mm/mmu_gather: Avoid multiple page walk cache
- flush
-Message-ID: <20191217123416.GH2827@hirez.programming.kicks-ass.net>
-References: <20191217071713.93399-1-aneesh.kumar@linux.ibm.com>
- <20191217071713.93399-2-aneesh.kumar@linux.ibm.com>
- <20191217085854.GW2844@hirez.programming.kicks-ass.net>
- <32404765-ad4f-6612-d1a9-43f9acdc8a62@linux.ibm.com>
+        Tue, 17 Dec 2019 07:33:51 -0500
+Received: from mga18.intel.com ([134.134.136.126]:47966 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727666AbfLQMdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 07:33:50 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 04:33:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,325,1571727600"; 
+   d="scan'208";a="389811678"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga005.jf.intel.com with ESMTP; 17 Dec 2019 04:33:46 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 641FE12A; Tue, 17 Dec 2019 14:33:45 +0200 (EET)
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     linux-usb@vger.kernel.org
+Cc:     Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Rajmohan Mani <rajmohan.mani@intel.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Lukas Wunner <lukas@wunner.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Mario.Limonciello@dell.com,
+        Anthony Wong <anthony.wong@canonical.com>,
+        Oliver Neukum <oneukum@suse.com>,
+        Christian Kellner <ckellner@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/9] thunderbolt: Add support for USB4
+Date:   Tue, 17 Dec 2019 15:33:36 +0300
+Message-Id: <20191217123345.31850-1-mika.westerberg@linux.intel.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <32404765-ad4f-6612-d1a9-43f9acdc8a62@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 03:45:36PM +0530, Aneesh Kumar K.V wrote:
-> On 12/17/19 2:28 PM, Peter Zijlstra wrote:
-> > On Tue, Dec 17, 2019 at 12:47:13PM +0530, Aneesh Kumar K.V wrote:
-> > > On tlb_finish_mmu() kernel does a tlb flush before  mmu gather table invalidate.
-> > > The mmu gather table invalidate depending on kernel config also does another
-> > > TLBI. Avoid the later on tlb_finish_mmu().
-> > 
-> > That is already avoided, if you look at tlb_flush_mmu_tlbonly() it does
-> > __tlb_range_reset(), which results in ->end = 0, which then triggers the
-> > early exit on the next invocation:
-> > 
-> > 	if (!tlb->end)
-> > 		return;
-> > 
-> 
-> Is that true for tlb->fulmm flush?
+Hi all,
 
-Hmm, no, but I'm thinking you patch is broken, even for that case. We
-must issue the TLBI before call_rcu().
+USB4 is the public specification of Thunderbolt 3 protocol and can be
+downloaded here:
 
-Perhaps if we replace !tlb->end with something like:
+  https://www.usb.org/sites/default/files/USB4%20Specification_1.zip
 
-  !tlb->freed_tables && !tlb->cleared_p*
+USB4 is about tunneling different protocols over a single cable (in the
+same way as Thunderbolt). The current USB4 spec supports PCIe, Display Port
+and USB 3.x, and also software based protocols such as networking between
+domains (hosts).
 
-(which GCC should be able to do with a single load and mask)
+So far PCs have been using firmware based Connection Manager (FW CM, ICM)
+and Apple systems have been using software based one (SW CM, ECM). A
+Connection Manager is the entity that handles creation of different tunnel
+types through the USB4 (and Thunderbolt) fabric. With USB4 the plan is to
+have software based Connection Manager everywhere but some early systems
+will come with firmware based connection manager.
 
-I've not really thought too hard about it yet, I need to run some
-errands, but I'll look at it more closely when I get back.
+Current Linux Thunderbolt driver supports both "modes" and can detect which
+one to use dynamically.
+
+This series extends the Linux Thunderbolt driver to support USB4 compliant
+hosts and devices (this applies to both firmware and software based
+connection managers). USB4 Features enabled by this series include:
+
+  - PCIe tunneling
+  - Display Port tunneling
+  - USB 3.x tunneling
+  - P2P networking (implemented in drivers/net/thunderbolt.c)
+  - Host and device NVM firmware upgrade
+
+Power management support is still work in progress. It will be submitted
+later on once properly tested.
+
+The previous versions of the series can be seen here:
+
+  v1: https://lore.kernel.org/linux-usb/20191023112154.64235-1-mika.westerberg@linux.intel.com/
+  RFC: https://lore.kernel.org/lkml/20191001113830.13028-1-mika.westerberg@linux.intel.com/
+
+Changes from v1:
+
+  * Rebased on top of v5.5-rc2.
+  * Add a new patch to populate PG field in hotplug ack packet.
+  * Rename the networking driver Kconfig symbol to CONFIG_USB4_NET to
+    follow the driver itself (CONFIG_USB4).
+
+Changes from the RFC version:
+
+  * Spelled out what are ICM, and SW CM (and ECM)
+  * Log warning in tb_switch_add() instead of the caller
+  * Use Lukas' suggestion in port walk helper macro and also drop
+    tb_switch_for_each_remote_port() and tb_switch_for_each_connected_port()
+  * Rework icm.c::add_switch() so that we don't need to pass huge amount of
+    parameters to it
+  * Add rx/tx versions of link width/speed attributes following convention
+    used in USB bus (with the exception that we provide rx_speed and
+    tx_speed as well).
+  * Spell out DROM and try to clarify what linking in patch [11/25] means.
+  * Add a new patch that expands controller name in existing tb_switch_is_xy()
+    functions and do the same for tb_switch_is_ar()/tr().
+  * Move register name conversion pathes up in the series so that we can
+    apply them for v5.5 already.
+  * Update changelog of patch [14/25] so that it only mentions Titan Ridge.
+  * Rename CONFIG_THUNDERBOLT to CONFIG_USB4, this should be more future
+    proof.
+  * Check if TMU is enabled in tb_switch_tmu_enable().
+  * Use "usb3" and "USB3" in USB 3.x tunneling functionality instead of
+    plain "usb".
+  * Reword documentation patch [25/25] according to received comments.
+  * Introduce icm_firmware_running().
+
+Mika Westerberg (6):
+  thunderbolt: Make tb_find_port() available to other files
+  thunderbolt: Call tb_eeprom_get_drom_offset() from tb_eeprom_read_n()
+  thunderbolt: Populate PG field in hot plug acknowledgment packet
+  thunderbolt: Add initial support for USB4
+  thunderbolt: Update Kconfig entries to USB4
+  thunderbolt: Update documentation with the USB4 information
+
+Rajmohan Mani (3):
+  thunderbolt: Make tb_switch_find_cap() available to other files
+  thunderbolt: Add support for Time Management Unit
+  thunderbolt: Add support for USB 3.x tunnels
+
+ Documentation/admin-guide/thunderbolt.rst |  30 +-
+ drivers/Makefile                          |   2 +-
+ drivers/net/Kconfig                       |  10 +-
+ drivers/net/Makefile                      |   2 +-
+ drivers/thunderbolt/Kconfig               |  11 +-
+ drivers/thunderbolt/Makefile              |   4 +-
+ drivers/thunderbolt/cap.c                 |  11 +-
+ drivers/thunderbolt/ctl.c                 |  19 +-
+ drivers/thunderbolt/ctl.h                 |   3 +-
+ drivers/thunderbolt/eeprom.c              | 137 ++--
+ drivers/thunderbolt/nhi.c                 |   3 +
+ drivers/thunderbolt/nhi.h                 |   2 +
+ drivers/thunderbolt/switch.c              | 439 ++++++++++---
+ drivers/thunderbolt/tb.c                  | 227 +++++--
+ drivers/thunderbolt/tb.h                  | 101 +++
+ drivers/thunderbolt/tb_msgs.h             |   6 +-
+ drivers/thunderbolt/tb_regs.h             |  65 +-
+ drivers/thunderbolt/tmu.c                 | 383 +++++++++++
+ drivers/thunderbolt/tunnel.c              | 169 ++++-
+ drivers/thunderbolt/tunnel.h              |   9 +
+ drivers/thunderbolt/usb4.c                | 764 ++++++++++++++++++++++
+ drivers/thunderbolt/xdomain.c             |   6 +
+ 22 files changed, 2167 insertions(+), 236 deletions(-)
+ create mode 100644 drivers/thunderbolt/tmu.c
+ create mode 100644 drivers/thunderbolt/usb4.c
+
+-- 
+2.24.0
+
