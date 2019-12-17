@@ -2,133 +2,122 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 039E1C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 02:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59EAFC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 02:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE46F206D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 02:15:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27574206D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 02:16:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="H9I9GiVp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fMahm2K5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfLQCPG (ORCPT
+        id S1726715AbfLQCQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 21:15:06 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45409 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbfLQCPG (ORCPT
+        Mon, 16 Dec 2019 21:16:21 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:35348 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726368AbfLQCQV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 21:15:06 -0500
-Received: by mail-ot1-f68.google.com with SMTP id 59so11572209otp.12
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 18:15:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=hSvfaH25oAhh/GJ5npVnk0ddU3zMTib4iqi8IyCVFEM=;
-        b=H9I9GiVpWz3ou92JWp8c1ew2PSghYxs9X61n4SENvkc+Wc4FNaIeifhOIQEtUCewZl
-         rP4BR4mbkSPSP5WQj71gZL26K230ZwlroMZ6VOPHct1q4iYB66x6lAOGvFFokwlRRBkB
-         MhW4wefVdz9KzTJNneSUPvef3VFF0dclBoKE6fck79RCYKB34QIiU8lY2DWQqFDNVVQI
-         2caJ3kiToCCAKxZKcQaqI+TGG+GOZimzRvdDmphoM/DMoY810RmCBdJOcd+n6iYOKFue
-         GZSiU4qUhexoq9lQme2oOyOPHkyAb7MnedxIngBoR5i/3R9H6WCtrroU68Qwn2+JCu2w
-         JHZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=hSvfaH25oAhh/GJ5npVnk0ddU3zMTib4iqi8IyCVFEM=;
-        b=pF6Jw5TZGv4GKUEMNZSNgx3pPK0VbjigF2GVUvVex2Ayjo0Zt2Xoo9wgWh4sxf7s81
-         S8ZqCwwHegLeoLGO1Im32IIWBDrpgdavA7Cst7qSVn2b1OUAepxMU+fhIp+6TCRIAcav
-         4jy+DScjpLi6igDVB/fvritQpo+wrFplJeNRsb2PVzrq/0pIfcxpFkQB43cV9YFR7EH/
-         7wFRZEN1WN6hT9dMdg2nLXOK7P+Pf1IWwMr6gNjauvL583PadB/1kXKclaV/63DcxXfp
-         tuc/BK92Wz0JxSH16+DUzxMoq3jLKDA09SHFBTqvxdgo9a4LbAtNTakz64l3WFe/Qfxd
-         mgww==
-X-Gm-Message-State: APjAAAX8n+Q8pL3UJSFVtU8e1JGtUGP59Mld3/KWXxJY8ktRx4UUqSrb
-        1nR+H3uoNVXkmSA+o69Lxm8/ftv70bA7kMnWgJczMA==
-X-Google-Smtp-Source: APXvYqwqpw8bUx0FpOqaVuTzR8UZTy3esLt2CYxeCMQz+CNnkplkrTyZNMZfbc/wcQk/2LOPJSzrHwpwo1It2GUJQqc=
-X-Received: by 2002:a9d:4789:: with SMTP id b9mr32985141otf.247.1576548905572;
- Mon, 16 Dec 2019 18:15:05 -0800 (PST)
-MIME-Version: 1.0
-References: <20191211231758.22263-1-jsnitsel@redhat.com> <20191211235455.24424-1-jsnitsel@redhat.com>
- <5aef0fbe28ed23b963c53d61445b0bac6f108642.camel@linux.intel.com>
- <CAPcyv4h60z889bfbiwvVhsj6MxmOPiPY8ZuPB_skxkZx-N+OGw@mail.gmail.com> <20191217020022.knh7uxt4pn77wk5m@cantor>
-In-Reply-To: <20191217020022.knh7uxt4pn77wk5m@cantor>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 16 Dec 2019 18:14:54 -0800
-Message-ID: <CAPcyv4iepQup4bwMuWzq6r5gdx83hgYckUWFF7yF=rszjz3dtQ@mail.gmail.com>
-Subject: Re: [PATCH v2] tpm_tis: reserve chip for duration of tpm_tis_core_init
-To:     Jerry Snitselaar <jsnitsel@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christian Bundy <christianbundy@fraction.io>,
-        Peter Huewe <peterhuewe@gmx.de>,
+        Mon, 16 Dec 2019 21:16:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=siGlAtwbpMtn2+e/O7hKM+nw0EWpzij1iF2dGkh6S28=; b=fMahm2K5a4Q9AU7WAk02csbb8w
+        kPQUQkYGI1oxLG13qBOQYj40/hcOw6UrbIKgqlWAymUgbivUWBlJBr0EBJQYEtGKsLM8iyozgPkhR
+        FPjoylR+LfIYOO09S4gFDvvCUKRYE/fh7bNn6HwUfg9TmcvJAjXXkTRfLfGT0whTBbTyUtZUxfZag
+        +0zeiBvJK7mPFXM2IspiWLrfiiZq7641o5OVTZLszsOX8JG98YfVlKnY82iYtBwOt/maBbZGdzFdP
+        e1qJxVzjYr8raPVoeo/pMmCTp9aG32t41zTdk8q0B6hkXf3iUmfVdwvYGFDRVoEXOHUOfvmsgjjNm
+        v/67Uo4A==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ih2PF-0007pq-5W; Tue, 17 Dec 2019 02:16:13 +0000
+Date:   Mon, 16 Dec 2019 18:16:13 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
+        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
+        yang.shi@linux.alibaba.com, shakeelb@google.com,
+        hannes@cmpxchg.org, Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Chris Down <chris@chrisdown.name>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        swkhack <swkhack@gmail.com>,
+        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Colin Ian King <colin.king@canonical.com>,
         Jason Gunthorpe <jgg@ziepe.ca>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        stable <stable@vger.kernel.org>, linux-integrity@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: Re: [PATCH v6 02/10] mm/lru: replace pgdat lru_lock with lruvec lock
+Message-ID: <20191217021613.GB32169@bombadil.infradead.org>
+References: <1576488386-32544-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1576488386-32544-3-git-send-email-alex.shi@linux.alibaba.com>
+ <20191216121427.GZ32169@bombadil.infradead.org>
+ <286c11c2-480f-37d6-e9fe-91822f862cd6@linux.alibaba.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <286c11c2-480f-37d6-e9fe-91822f862cd6@linux.alibaba.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 6:00 PM Jerry Snitselaar <jsnitsel@redhat.com> wrote:
->
-> On Mon Dec 16 19, Dan Williams wrote:
-> >On Mon, Dec 16, 2019 at 4:59 PM Jarkko Sakkinen
-> ><jarkko.sakkinen@linux.intel.com> wrote:
-> >>
-> >> On Wed, 2019-12-11 at 16:54 -0700, Jerry Snitselaar wrote:
-> >> > Instead of repeatedly calling tpm_chip_start/tpm_chip_stop when
-> >> > issuing commands to the tpm during initialization, just reserve the
-> >> > chip after wait_startup, and release it when we are ready to call
-> >> > tpm_chip_register.
-> >> >
-> >> > Cc: Christian Bundy <christianbundy@fraction.io>
-> >> > Cc: Dan Williams <dan.j.williams@intel.com>
-> >> > Cc: Peter Huewe <peterhuewe@gmx.de>
-> >> > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> >> > Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> >> > Cc: Stefan Berger <stefanb@linux.vnet.ibm.com>
-> >> > Cc: stable@vger.kernel.org
-> >> > Cc: linux-integrity@vger.kernel.org
-> >> > Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of tpm_transmit()")
-> >> > Fixes: 5b359c7c4372 ("tpm_tis_core: Turn on the TPM before probing IRQ's")
-> >> > Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
-> >>
-> >> I pushed to my master with minor tweaks and added my tags.
-> >>
-> >> Please check before I put it to linux-next.
-> >
-> >I don't see it yet here:
-> >
-> >http://git.infradead.org/users/jjs/linux-tpmdd.git/shortlog/refs/heads/master
-> >
-> >However, I wanted to make sure you captured that this does *not* fix
-> >the interrupt issue. I.e. make sure you remove the "Fixes:
-> >5b359c7c4372 ("tpm_tis_core: Turn on the TPM before probing IRQ's")"
-> >tag.
-> >
-> >With that said, are you going to include the revert of:
-> >
-> >1ea32c83c699 tpm_tis_core: Set TPM_CHIP_FLAG_IRQ before probing for interrupts
->
-> Dan, with the above reverted do you still get the screaming interrupt?
+On Tue, Dec 17, 2019 at 09:30:13AM +0800, Alex Shi wrote:
+> 在 2019/12/16 下午8:14, Matthew Wilcox 写道:
+> > On Mon, Dec 16, 2019 at 05:26:18PM +0800, Alex Shi wrote:
+> >> -static void lock_page_lru(struct page *page, int *isolated)
+> >> +static struct lruvec *lock_page_lru(struct page *page, int *isolated)
+> >>  {
+> >> -	pg_data_t *pgdat = page_pgdat(page);
+> >> +	struct lruvec *lruvec = lock_page_lruvec_irq(page);
+> >>  
+> >> -	spin_lock_irq(&pgdat->lru_lock);
+> >>  	if (PageLRU(page)) {
+> >> -		struct lruvec *lruvec;
+> >>  
+> >> -		lruvec = mem_cgroup_page_lruvec(page, pgdat);
+> >>  		ClearPageLRU(page);
+> >>  		del_page_from_lru_list(page, lruvec, page_lru(page));
+> >>  		*isolated = 1;
+> >>  	} else
+> >>  		*isolated = 0;
+> >> +
+> >> +	return lruvec;
+> >>  }
+> > 
+> > You still didn't fix this function.  Go back and look at my comment from
+> > the last time you sent this patch set.
+> > 
+> 
+> Sorry for the misunderstanding. I guess what your want is fold the patch 9th into this, is that right?
+> Any comments for the 9th patch?
 
-Yes, the screaming interrupt goes away, although it is replaced by
-these messages when the driver starts:
+I didn't get as far as looking at the ninth patch because I saw this
+one was wrong and stopped looking.  This is not the first time *with
+this patch set* that you've been told to *fix the patch*, not submit
+something that's broken and fix it in a later patch.
 
-[    3.725131] tpm_tis IFX0740:00: 2.0 TPM (device-id 0x1B, rev-id 16)
-[    3.725358] tpm tpm0: tpm_try_transmit: send(): error -5
-[    3.725359] tpm tpm0: [Firmware Bug]: TPM interrupt not working,
-polling instead
-
-If the choice is "error message + polled-mode" vs "pinning a cpu with
-interrupts" I'd accept the former, but wanted Jarkko with his
-maintainer hat to weigh in.
-
-Is there a simple sanity check I can run to see if the TPM is still
-operational in this state?
+I'll look at patch 9 later.
