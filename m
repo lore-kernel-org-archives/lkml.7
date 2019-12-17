@@ -2,137 +2,93 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F4CC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4184C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E860C206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:14:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fCf3+rQC"
+	by mail.kernel.org (Postfix) with ESMTP id BF9E720716
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:15:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbfLQNOT (ORCPT
+        id S1728184AbfLQNPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 08:14:19 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:46674 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727202AbfLQNOS (ORCPT
+        Tue, 17 Dec 2019 08:15:09 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:32972 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727029AbfLQNPJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 08:14:18 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBHDECDD035600;
-        Tue, 17 Dec 2019 07:14:12 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576588452;
-        bh=vV44X6DKUE88PgxfEZq2hgsou+dqVy3bJZRsCUIl+xU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=fCf3+rQCCiVfi/8tZAE1VfSWUiJHg1AjCXwo39J+xwacAHTOi3fjR6H5ubvgXNzb8
-         kpsvJUYYftIyjrO8AfCobR9OsW9MKGpetMIgUgFBcAqvauPrL+kl5z24JwDjCTn8p5
-         xVLKCbfN8uBC/CV2NHECMpv/VOvcw4jle6WbCHCk=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBHDECsk009710
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 17 Dec 2019 07:14:12 -0600
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
- Dec 2019 07:14:11 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 17 Dec 2019 07:14:12 -0600
-Received: from [10.250.79.55] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBHDEBUU010091;
-        Tue, 17 Dec 2019 07:14:11 -0600
-Subject: Re: [PATCH] ARM: OMAP: Use ARM SMC Calling Convention when OP-TEE is
- available
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Mark Rutland <mark.rutland@arm.com>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <a351461a-f6a1-334b-6bdd-a56626914fb3@ti.com>
- <20191119190721.GO35479@atomide.com>
- <7fa11037-8d33-2274-c8cc-80e9630b38b0@ti.com>
- <20191119192029.GP35479@atomide.com>
- <0ad31b32-712e-5bef-5645-0336dfec99cc@ti.com>
- <20191119194425.GQ35479@atomide.com>
- <f2f53e5e-6c95-e32f-d67a-284bb88e73e0@ti.com>
- <1ff8ae4b-5de3-4fdf-7318-d33398dc7fc8@ti.com>
- <20191216210407.GR35479@atomide.com>
- <9adad579-98b4-f228-caf3-f4996dcaecda@ti.com>
- <20191216224105.GS35479@atomide.com>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <35e4b682-0d2f-23b1-6df4-428c6bcb4d59@ti.com>
-Date:   Tue, 17 Dec 2019 08:14:11 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 17 Dec 2019 08:15:09 -0500
+Received: by mail-io1-f72.google.com with SMTP id i8so8360087ioi.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 05:15:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=B0G27HutWkfu5xLB9fvDAdsszGJaL9/rxUz4vJbLL+w=;
+        b=bKBy6Rtf7SCvGzokNcQSFglmhk9xV2ZdCIo9i+BBUDk5JU/Fo38wyK8cTbPAVsob63
+         zqk1saE0D/8RQaEyctailkVqi8cEPRN2NCOj5yTSYzLgg9fSPgaqjse7nloZS0Im1jw5
+         ouwfX4U7IMX/WDRZdTYAzLAIMkjKfEGZAv7ft+1JVLLT847BnTKlzK9VOwUUgMxpgGY8
+         S9h8KyofjXF6c0NdNO1RZ3A7Zj4gveAEMDvIQ+LoO/Sucaz0203Szy6blu3vtXuTYmAP
+         oU0933+VDEuDGDbcOF4Scu47aa9uKww4IJPKa2aDGQkc/vFOQZqumhXy0FHkKiFtlZm6
+         7HcQ==
+X-Gm-Message-State: APjAAAVtSv4rjfhm38gMjVEkQH/r96jwmhFC6yGILoDUiKjhVkuo3w5B
+        m/LJ71P86ski1LpfRViGrN2wZvUKQXhHM/rLCxmzY94orYgS
+X-Google-Smtp-Source: APXvYqx35F467ecFTaqSMdHfjN9WKsv2Kzryk40TTIQNGLKBrorU/8D6WyfPEa0Zrb4oxIuHvQhoa60HGb1QviwYQORZIvEHC4xO
 MIME-Version: 1.0
-In-Reply-To: <20191216224105.GS35479@atomide.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Received: by 2002:a5d:8854:: with SMTP id t20mr3613549ios.121.1576588508566;
+ Tue, 17 Dec 2019 05:15:08 -0800 (PST)
+Date:   Tue, 17 Dec 2019 05:15:08 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000029d340599e61e11@google.com>
+Subject: BUG: bad host security descriptor; not enough data (3 vs 5 left)
+From:   syzbot <syzbot+7b2f76fab6cdba59689b@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/16/19 5:41 PM, Tony Lindgren wrote:
-> * Andrew F. Davis <afd@ti.com> [191216 22:34]:
->> On 12/16/19 4:04 PM, Tony Lindgren wrote:
->>> * Andrew F. Davis <afd@ti.com> [191216 20:57]:
->>>> Looks like the TI quirk idea is not moving forward, even the QCOM quirk
->>>> looks like it may get kicked out. arm_smccc_smc() will remain only for
->>>> SMCCC compliant calls, but it looks like a generic arm_smc() wouldn't be
->>>> too opposed upstream.
->>>
->>> Yes so it seems.
->>>
->>>> Either way this patch would still be valid as when OP-TEE is present
->>>> then arm_smccc_smc() will be the right call to make, how we handle the
->>>> legacy calls can be sorted out later if a generic SMC call is implemented.
->>>
->>> Please see my comment regarding this patch earlier in this thread
->>> pasted below for convenience:
->>>
->>> * Tony Lindgren <tony@atomide.com> [191119 16:22]:
->>>> In any case, you should do the necessary checks for HAVE_ARM_SMCCC
->>>> only once during init. I'm not sure how much checking for
->>>> "/firmware/optee" helps here, sounds like we have a broken system
->>>> if the firmware is not there while the arm_smccc_smc() should
->>>> still work just fine :)
->>>
->>> So only check once during init. And during init, you should probably
->>> also check that arm_smccc_smc() actually infd optee if
->>> "/firmware/optee" is set, and only then set set the right function
->>> pointer or some flag.
->>>
->>
->> Okay, I'll check only once and make sure the node is "okay".
-> 
-> Yes we don't want to parse the dts over and over.
-> 
->> I'll do the check during the first call to an SMC caller, I wouldn't
->> want to pollute the OMAP generic init code for something that is only
->> called on HS platforms, plus these SMC calls are rare (only 3 calls
->> during boot of AM57x for instance) so performance is not critical, so I
->> don't want to do anything fancy like code patching :), I'll just use a flag.
-> 
-> Please just add omap_early_initcall() to omap-secure.c while at it
-> to deal with this.
-> 
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    4cc037ec usb: gadget: add raw-gadget interface
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=17597049e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a2d3f61a19fd0cf1
+dashboard link: https://syzkaller.appspot.com/bug?extid=7b2f76fab6cdba59689b
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1724ae99e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17ed23a6e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+7b2f76fab6cdba59689b@syzkaller.appspotmail.com
+
+usb 1-1: config 0 interface 0 altsetting 0 has 3 endpoint descriptors,  
+different from the interface descriptor's value: 4
+usb 1-1: New USB device found, idVendor=13dc, idProduct=5611,  
+bcdDevice=2f.15
+usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+usb 1-1: config 0 descriptor??
+hwa-hc 1-1:0.0: Wire Adapter v106.52 newer than groked v1.0
+hwa-hc 1-1:0.0: FIXME: USB_MAXCHILDREN too low for WUSB adapter (194 ports)
+usb 1-1: BUG: bad host security descriptor; not enough data (3 vs 5 left)
+usb 1-1: supported encryption types:
+usb 1-1: E: host doesn't support CCM-1 crypto
+hwa-hc 1-1:0.0: Wireless USB HWA host controller
+hwa-hc 1-1:0.0: new USB bus registered, assigned bus number 11
 
 
-omap_early_initcall()s are not called until after all the SMC calls have
-already happened.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Andrew
-
-
-> Regards,
-> 
-> Tony
-> 
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
