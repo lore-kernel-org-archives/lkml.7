@@ -2,268 +2,258 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE5DC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E227C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29C262146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:02:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="ozyiAI+z"
+	by mail.kernel.org (Postfix) with ESMTP id 345EF2146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:03:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728208AbfLQPCu (ORCPT
+        id S1728227AbfLQPDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 10:02:50 -0500
-Received: from UCOL19PA34.eemsg.mail.mil ([214.24.24.194]:51342 "EHLO
-        UCOL19PA34.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726560AbfLQPCt (ORCPT
+        Tue, 17 Dec 2019 10:03:07 -0500
+Received: from mout.kundenserver.de ([212.227.126.131]:34221 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728137AbfLQPDG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 10:02:49 -0500
-X-EEMSG-check-017: 62778706|UCOL19PA34_ESA_OUT01.csd.disa.mil
-X-IronPort-AV: E=Sophos;i="5.69,325,1571702400"; 
-   d="scan'208";a="62778706"
-Received: from emsm-gh1-uea10.ncsc.mil ([214.29.60.2])
-  by UCOL19PA34.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 17 Dec 2019 15:02:46 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
-  s=tycho.nsa.gov; t=1576594966; x=1608130966;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=M8vVOKFL7M0o9dNSY+1QS9XWVSEgualJYa5ILUoa1w8=;
-  b=ozyiAI+znvKptnDveIiXFZc5Cf77Vs4nbDYKTSMSd0Xu6CnIwzG1aGu/
-   r87DxKj7MjtUw1yY18ORJi8UDyOaYa5fDv7VtnPcUtu1dHk7xrg3E8iZz
-   MKlVlYMRi9RAQA5hfnUueDeUwG2TDcC0PyoOge+OPQleTVWZzXhJ1LCtu
-   mClMndZVqhG/28Gl3wj0DF8DbDv+hGTssiROmvybA7ooy1XCb/BC5SNoC
-   ra01Bthge0hRvQ7EQBv3VK0BdbJj4NSgEO4kK4dHCpQkB9ZI/cboI8fen
-   K4xf5OArpXkD+S78jk+W4I1sG6MCRl4Bt75bSdR/aoTquVZoskyllAPcu
-   w==;
-X-IronPort-AV: E=Sophos;i="5.69,325,1571702400"; 
-   d="scan'208";a="31183820"
-IronPort-PHdr: =?us-ascii?q?9a23=3A4JhWxRKuMEvgieyRbdmcpTZWNBhigK39O0sv0r?=
- =?us-ascii?q?FitYgVLvjyrarrMEGX3/hxlliBBdydt6sfzbCO7Ou+CSQp2tWoiDg6aptCVh?=
- =?us-ascii?q?sI2409vjcLJ4q7M3D9N+PgdCcgHc5PBxdP9nC/NlVJSo6lPwWB6nK94iQPFR?=
- =?us-ascii?q?rhKAF7Ovr6GpLIj8Swyuu+54Dfbx9HiTagb75+Ngu6oRnTu8UZgIZvKbs6xw?=
- =?us-ascii?q?fUrHdPZ+lY335jK0iJnxb76Mew/Zpj/DpVtvk86cNOUrj0crohQ7BAAzsoL2?=
- =?us-ascii?q?465MvwtRneVgSP/WcTUn8XkhVTHQfI6gzxU4rrvSv7sup93zSaPdHzQLspVz?=
- =?us-ascii?q?mu87tnRRn1gyocKTU37H/YhdBxjKJDoRKuuRp/w5LPYIqIMPZyZ77Rcc8GSW?=
- =?us-ascii?q?ZEWMteWTZBAoehZIURCeQPM/tTo43kq1cQqRayAA+hD/7txDBVnH/7xbA03f?=
- =?us-ascii?q?ovEQ/G3wIuEdwBv3vWo9rpO6kfSvy1wavSwDnfc/9b1zXw5Y7VeR4hu/GMWr?=
- =?us-ascii?q?dwfNLMx0kzCQzFllWQppLjPziIy+oNtnKU7+5kVe2xi28stgZ8oiOyycc3kY?=
- =?us-ascii?q?TJmoIUxUzE9SV+2oo1I8a4R1Rhbd6rF5tQqTiXOo1rSc0sRGFovTw1yrwAuZ?=
- =?us-ascii?q?OjeSgF0pInyhzFZ/yAaYiI7RTuX/uSLzdgnH9pZb2yihmo/UWg1+HwTNe43V?=
- =?us-ascii?q?lUoiZfj9XBsG0G2QbJ5cidUPR9+1+s2TOI1w/O9O5JOVs0la/HK545xb4wi4?=
- =?us-ascii?q?YTvVzDHiDonEX2i7ebdlk+9eiy6uTnf67mqoWdN49yhAH+Nb8uldKjDugiLg?=
- =?us-ascii?q?gPX3SU+eS71LH5+032XK5KgeEsnqncsZDaIdwXpq+/AwBLzoYu8wuzAjip3d?=
- =?us-ascii?q?gCnXQLMUhJdAyIgoT3IV3CPej0DfKljFStlDdryerGPrrkApjVNXjMjazhcK?=
- =?us-ascii?q?1h609c1AUzzddf64hSCrEaOv3/QEDxtNvGDhMhKQy73/7nCMlh1oMZQW+AGK?=
- =?us-ascii?q?uZP73dsFCW5uMjOfKDZJIItznnLfgl5PnujWEilF8ZfKmp24YXaX+iEvRnJU?=
- =?us-ascii?q?WZfWTjgtMbHWgWuQo+SfTgiEeeXj5Le3ayQ6U86ykjCI24EYfMWJqtgb2a0S?=
- =?us-ascii?q?e6GJ1WaHpGBUqRHnj2bYqLRu0AaCWIIs9uijYET6SuS5c91RGysw/306BoIf?=
- =?us-ascii?q?bR+iIGrp/j18Z65/fVlR4s8Tx4FcOd03uCT2tshGMHWyc23LxjoUx60lqD1K?=
- =?us-ascii?q?l4g/pXFdxU/P5JSBk1OoPcz+NgF9D+QB7OftCMSFy+WNWpHSkxTs4tw98Je0?=
- =?us-ascii?q?t9Gc+tjhbC3yawBb8Vlr+LBIEw8q3GxHXxI8d9y3Db1KgulVUmQ81PNXG4ia?=
- =?us-ascii?q?577QTcG4nJk0CBnaawaascxDLN9HuEzWeWvkFYVwlwUaPfUnAEfEfWqc725k?=
- =?us-ascii?q?PeT7+vD7QoLA1BxNWGKqtLbN3pkFpHSO3iONTYf2K+hWOwCQyUybOLaYrgY3?=
- =?us-ascii?q?8d0znFCEgYjwAT+m6LNRI5Bii8uWLeDTNuFVX1b0Py8Ol+tnK7Q1Q1zwGMc0?=
- =?us-ascii?q?1uyb619gQJivybTvMZxqgEtzs5qzVoAFa92MrbBMCbpwp9Z6hcYs0y4E1B1W?=
- =?us-ascii?q?3HswxxJJugL7pthlQGaQR4o1vu1wlrCoVHicUlt20lzAxyKa+D01NOaSmY3Z?=
- =?us-ascii?q?buNb3TMGX94AqvZLTN2lHe0daW/KgP5O4/q1X5swGjDlAi/Gl/09lJz3uc4Y?=
- =?us-ascii?q?3HDBIIXpLsVkY36gN6qqrBYiYn4oPbzmdjPbOzsj/Y1NIjHPElxQq4f9dDLK?=
- =?us-ascii?q?OEExf/E8gCB8ewM+ElhVypbhYaM+BI8a47JcWme+GH2KG2Jupvhi+mh3xd4I?=
- =?us-ascii?q?9hykKM6zZ8SunQ0pYe3f6YxASHWCnngVehqM/3nYREZDEUHmal1SfkA4tRbL?=
- =?us-ascii?q?VofYkXEWeuP9G3xtJmip7vXn5Y80SjB0kH2M+yYheSaUby3QhO2kQWu3Cnnj?=
- =?us-ascii?q?G4zzNsmTEzsqWfxDDOw/jldBcfJmFEXnJigknsIIWvlNAVQEioYBI0lBur4U?=
- =?us-ascii?q?b12bJbqL1jIGbJW0tHYy/2L2R6WKuqqrWCe9JP6I8vsShPUuS8ZlSaSqXnrB?=
- =?us-ascii?q?YBySPsAXZRxDAheDG2oJn2gxt6iGeFJnZpsHXZYd1wxQvY5NHEX/FR3SELRC?=
- =?us-ascii?q?15iTnRG1i9MMOl/dSSl5ffrO++U3itWYFUcSnu1YmArje05XV2AR2jmPC+gs?=
- =?us-ascii?q?PoERIg3i/91tllTyPIoQ3zYons0KS6PuZncVdyCFDg7Mp6H5l0kpEsi5EIxX?=
- =?us-ascii?q?gampKV8GIGkWf3LNVUwrjxbGENRTEV2NPa+gvl11dmLn2TxoL1TGmSwsxkZ9?=
- =?us-ascii?q?OieGMZxjo979xWCKeT9LFLhy91rUS3rA3LZ/hygykSyeE05H4Bg+EJuREtzi?=
- =?us-ascii?q?WeArATG0lVJijslxWO79Cjo6Rbfmevcb6s1EVgmdCtFq2NogZZWHzhYJctAT?=
- =?us-ascii?q?dw7tljMFLLyHDz7JvreNzQbdMTqx2UlRjAgvNWKJ0vjPoKgzRoOWbnsX0i0e?=
- =?us-ascii?q?47ggRk3Yums4ifN2Vt4KW5DwZbNjLrecwT4S3ijaFZnsaVxI2gApVhGi8MXJ?=
- =?us-ascii?q?vtTPKoDTcSue7gNwaUHz02sm2bFqbHHQ+D9EdmqGrCE5KxOHGRInkZzc5vRB?=
- =?us-ascii?q?aaJExYjwAUWCs1koQlGQCtwczraF156SwJ5l7kthtMzfplNwXwUmfbqwalcT?=
- =?us-ascii?q?M0SJmZLBpL8gFC/UDVMcqf7uN8BS1X44OuphSXKmOHfwRIEX0JWkucClD/IL?=
- =?us-ascii?q?mu/8XA8+ufBuakMvvOe66OqfFaV/eJw5KiyY9m/zeKNsWSMXhuFfw72kxfXX?=
- =?us-ascii?q?9nH8TVgSkASysSlyjVdc6UuA+8+jFrrsC46PnrXAPv5Y2SC7pdKNlv4A65jr?=
- =?us-ascii?q?ueN+6KhSZ5NTZZ2ooJxX/P1bcfwVoShD91ejmzHrQPqzTNQLjTmqBJFR4bbT?=
- =?us-ascii?q?18NM9S46I7xAlNNtbRisnp2b5gkv41F1BFWET6ms63YcwKIme9NE7IBUuQKr?=
- =?us-ascii?q?SGKiPEw9vtbaO/V7JQluNUuAO0uTqBFE/jJDuDnSHzVx+zKeFMkD2bPBtGtY?=
- =?us-ascii?q?G5cxZtD3XjTd3/Zh24LtB3lzs2zqMwhn7RK24cPiZzc1lXor2T8yxYmPN/FH?=
- =?us-ascii?q?JF7nZ/KumEgSmZ5fHCKpkKqftrHjh0l+VC7XQ+yrtV6jxERfNslCvKsNFuuV?=
- =?us-ascii?q?+mnvCSyjp8ThVOsC1LiZmVvUVtJ6rZ7INMWXXa8xIX62WfFRAKq8FiCt31tK?=
- =?us-ascii?q?Ba0sLPm77rKDde79LU+tMRB8nSKMKbLnUhNQPlGDHaDAoKVjOrMWDfh1dBkP?=
- =?us-ascii?q?GJ7HGVoII6pYbyl5UTVLBbT181Fu8dCkR9BtACJ413Xjw8m76BkMEI/Wa+rA?=
- =?us-ascii?q?XWRMhCpZ/HWeiSDuvgKDaWlrREYQUHwa/2LYQXN4361FZuZUV9nITPA0DQR8?=
- =?us-ascii?q?xCojV9bg8op0VA6GN+Tmo120LqbgOt4WITGuWunhEslAt+YOIt9Dj37lc5PV?=
- =?us-ascii?q?XGvjc/kE40md/9mzCebCbxLLusXYFREyf7rFAxMp3gTgZrYg29g1ZkOC3HR7?=
- =?us-ascii?q?1Plbtgc35kiAvGtZtIA/5cQrVOYAUMyvGPe/UozVNcpz2jxU9G4+vFFJRjmB?=
- =?us-ascii?q?IycZG2tXJA2hljY8IuKKzOK6pG0EJQiriNviC2zOAxxhERJ0IX/GOVYi4It1?=
- =?us-ascii?q?QCNqM6KCqw4uxs9QuCliNHeGgNUfoqv/1r9lslO+uc1i7vzqBMKl6qOuybLq?=
- =?us-ascii?q?OZoHTAldWSTlM310IIk1NK8qNt0cs5dEqUTU8vn/OtEEEgMcfSJBAdRdde/X?=
- =?us-ascii?q?7QejjG5ezJzIJ4LsO3C+zhS+yJqo4Qg0S5DEAoGZgB6oIKGZz6lAngINvqNv?=
- =?us-ascii?q?Y3yBcp/xjxLR3RFPlVdQiZuDYBrdu2wJJ+0c9aPD5LRS1UKyO+4rrQ7iQjmu?=
- =?us-ascii?q?SKWNcxKnsXFq4JMnV+DMSxniNxvHlaCjSzlOUDx17Gpx76qSOYKT74adN5LK?=
- =?us-ascii?q?ORZBVjD/ms9Dk/+rTwglnSpNGWbWPzM9UkvN7M9OcTj5KGDe5EC7h7r0rY3Y?=
- =?us-ascii?q?JfQjbiB2zGF9/zIZnzdo0lRdj1DGuqFF25lz8xCcz2OYDpZuKKhgbuTJ0StI?=
- =?us-ascii?q?CbwDElOMmVEjAYBgc2pucf6aY6bgoGKdJvYxnvsQ0lcai2IBuZ1Nioa2KsLy?=
- =?us-ascii?q?ZGCfhZ0ei+IbdQynxoJqWgz3c6T549ife2708lRZcWgxWYzvGmLcEKSy//AH?=
- =?us-ascii?q?1SfEPRpDQ4v2lnKus2hOw4xUWM+XAYPiCGdaRSdGVeuM87BE+VPz0iA3Ekb1?=
- =?us-ascii?q?yRl4zO5kirxb9Eu2N3ktBW2OhEtjDes4XFbTS3U6yuqJnJ+34qYN4mi658K4?=
- =?us-ascii?q?ruJo2NrprFnj3ZQ9/XqALTFGaCHude0v1ZKyFVWuNBgilxIcUbvZdawVE4U8?=
- =?us-ascii?q?03YbtVB/9o7pWrYjptACpa4CsdWpmF1TpK1uKk1pPXkhOdapErNloFvNNLn4?=
- =?us-ascii?q?1ZGxV7eCwT7I+qU4HHkSfQUWURLwo77Q1I4BMG0IR3e7ahqKjBSZJXgxtRue?=
- =?us-ascii?q?h1SWOfFJxv7UH6UUmQiF31SbOmieP/mUp5xenhw5EgUx52FEZZyvwewkAhM7?=
- =?us-ascii?q?xmA7IbvofXvDuFbwbxtSTmz+7wd3dLzsiBTEH1FIrIsyLHVyQY/XAFDdtUxG?=
- =?us-ascii?q?r3CYUZkw0/br0i4lpLPtb1KQ7F+zU4ytExTPGDXsexygNg9CxXSg=3D=3D?=
-X-IPAS-Result: =?us-ascii?q?A2BKAACQ7Phd/wHyM5BlHAEBAQEBBwEBEQEEBAEBgWwFA?=
- =?us-ascii?q?QELAYFzgRhVIBIqhASJA4ZzBAaBN4lqj0qBewkBAQEBAQEBAQErDAEBhEACg?=
- =?us-ascii?q?jw2Bw4CEAEBAQQBAQEBAQUDAQFshTcMgjspAYJ6AQUOFRUtFBALGAICJgICV?=
- =?us-ascii?q?wYBDAYCAQGCXz8BglIlD64agTKEDQEBgUCDQIFIgQ4oAYlOgmN5gQeBOA+CX?=
- =?us-ascii?q?T6CZAOEcoJeBI94hxRGlzOCPoJChG2OWwYbgkN0hwKQEC2OIIFGhwqTfgUtg?=
- =?us-ascii?q?VgrCAIYCCEPgycJFjERFI1KiE+FCAFUIwMwAZF/AQE?=
-Received: from tarius.tycho.ncsc.mil (HELO tarius.infosec.tycho.ncsc.mil) ([144.51.242.1])
-  by EMSM-GH1-UEA10.NCSC.MIL with ESMTP; 17 Dec 2019 15:02:44 +0000
-Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
-        by tarius.infosec.tycho.ncsc.mil (8.14.7/8.14.4) with ESMTP id xBHF1mb0066955;
-        Tue, 17 Dec 2019 10:01:51 -0500
-Subject: Re: [PATCH v3 1/7] capabilities: introduce CAP_SYS_PERFMON to kernel
- and user space
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
-        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Serge Hallyn <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>,
-        Casey Schaufler <casey@schaufler-ca.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        linux-kernel@vger.kernel.org,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        intel-gfx@lists.freedesktop.org,
-        Brendan Gregg <bgregg@netflix.com>, songliubraving@fb.com,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-References: <b175f283-d256-e37e-f447-6ba4ab4f3d3a@linux.intel.com>
- <bd8adfde-f562-0e56-75aa-371c5354f350@linux.intel.com>
-From:   Stephen Smalley <sds@tycho.nsa.gov>
-Message-ID: <a9542dcd-6f02-92eb-bd97-8aa839e9036f@tycho.nsa.gov>
-Date:   Tue, 17 Dec 2019 10:02:25 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 17 Dec 2019 10:03:06 -0500
+Received: from mail-qk1-f178.google.com ([209.85.222.178]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MidPj-1i5QvH1viJ-00fkml; Tue, 17 Dec 2019 16:03:04 +0100
+Received: by mail-qk1-f178.google.com with SMTP id t129so2257882qke.10;
+        Tue, 17 Dec 2019 07:03:04 -0800 (PST)
+X-Gm-Message-State: APjAAAWzOiS9gq08VJXc2Jg0cICH6LbvbFT6vgm8HDWORUX/TGzRBDtz
+        NmTpXXOX2VjGyRunFrdDy4SBHKYVDAh43LwboIQ=
+X-Google-Smtp-Source: APXvYqwc0fq6mo/e9+54FsMGfmRP7FjPi8In/jh2UBJWxjovcfmNBj+vHsKIKGnSh3evb92wQN+j3ZT+6Ci1E7bllrw=
+X-Received: by 2002:a05:620a:a5b:: with SMTP id j27mr5516403qka.286.1576594983209;
+ Tue, 17 Dec 2019 07:03:03 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <bd8adfde-f562-0e56-75aa-371c5354f350@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191213204936.3643476-1-arnd@arndb.de> <20191213205417.3871055-12-arnd@arndb.de>
+ <20191213211728.GL99875@magnolia> <CAK8P3a3k9dq+9DnPFBKdzOe=ALPXXjCvBBj8r_xsqz1vTswGsg@mail.gmail.com>
+In-Reply-To: <CAK8P3a3k9dq+9DnPFBKdzOe=ALPXXjCvBBj8r_xsqz1vTswGsg@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 17 Dec 2019 16:02:47 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2nJKR+_Gc6G_S6Bd0fKecBCM+a2cekOU+6m6kw_c4q9A@mail.gmail.com>
+Message-ID: <CAK8P3a2nJKR+_Gc6G_S6Bd0fKecBCM+a2cekOU+6m6kw_c4q9A@mail.gmail.com>
+Subject: Re: [PATCH v2 21/24] xfs: quota: move to time64_t interfaces
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Brian Foster <bfoster@redhat.com>,
+        Carlos Maiolino <cmaiolino@redhat.com>,
+        Pavel Reichl <preichl@redhat.com>,
+        Eric Sandeen <sandeen@sandeen.net>,
+        Dave Chinner <dchinner@redhat.com>,
+        Allison Collins <allison.henderson@oracle.com>,
+        Jan Kara <jack@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:fpGAju1zQvUCcUf48j/gXu75msZcF0o5OEonjKLAZGOjaJEnHuh
+ mo3IRrlG1L56Tsae6vueRz7aFXMHpc3MWu7NfQjU6kB3TD9kZAE6FdOeSLqxmQoNVt81olx
+ Ygq+wXrGcb2+u8XLMEw8/w7y1ro7H6ua7KLaN03eBRQoN2BdJ5/l0ntWpD6EIenLHspXLxh
+ QXq7J2uPz1d/1NjzMDOGQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:6mydIPYCVns=:5M9ks08R1UtQXi/DFck2FR
+ WTtu5IVff2r6qNY+6wnQ2ra4JwJGpC1XNNPUJ5Z6QtIBpUA6jqnCmmViTJicjxIeKvbvUvnd4
+ Dol1eVuDahuknfQyFL6hrqM+2YEXA4fPiQ0FubpK4+5Hol60TksLoKKyDIHQna5yunmJ2opd4
+ PdXshmw2jF3BeMtEiiMouLstQuHrVsJqC6++1iExvOqPrvqoqm91GZQp33JmFUb2HstnYV7Sb
+ leP+3SqeStg2foMe4wbRiylhG43kzH0Qa5wzGTW7yjcohcKDQxOkSMDD86KHS2AoZnsBG2kTA
+ wbcOgRNLqrRY1GeLcSr3d8Q0NqqYLUvc3Y0YasRc0oObNx9CAlOD3bCluM+7NT4k533bVo6Hv
+ EmMMMxXes3e1LQBtQeee9gDi9gbFkeFb8O91kTW02gXbk4349jEtviH8fJLcqD3eehX+UzzDO
+ 4dTsvpV6g5wrnTB5BoU432aH8+xlecXR4u+TKawzXYMjqH7ufYcDf4kQQjBKKfDw4dFryUteF
+ ABQnnaMZ4MA4rZaELoAsI4BGHKPHXA/6l0gzcNIcy2g1owU0N7L4zsPuc2pNBAIyjsmH9LZ/b
+ sCot4/8LRk4ABvvoznSiboEBFqoi7+4t9I5iBhqy9Ml1pWM5QTLopLedxayZFreVSu3JKg9sq
+ 56Hhuc1/MWaDyQc9EaQMD3/qpI1SyJetHufDhg+a/nw/pZXhWX6blQE3DTKECQ8FgUmVJTgHA
+ m7EpNOl0OnmsYlV0C/gY9G1cpADSUGXBti3fM2iVJAeI0xLh/mw5ZCuhmi62VuRSH9+cvj9G3
+ U3OByhm4a7ayIpdDsmh2GFnur+c4PX8fjZI+5jsRQ7oOnLLYZyJDau1wTkQGRMdohyUjf9X92
+ S9aHx3LrDS6049+YJp9Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/16/19 2:58 PM, Alexey Budankov wrote:
-> 
-> Introduce CAP_SYS_PERFMON capability devoted to secure system performance
-> monitoring and observability so that CAP_SYS_PERFMON would assist
-> CAP_SYS_ADMIN capability in its governing role for perf_events, i915_perf
-> and other subsystems of the kernel.
-> 
-> CAP_SYS_PERFMON intends to harden system security and integrity during
-> system performance monitoring and observability by decreasing attack surface
-> that is available to CAP_SYS_ADMIN privileged processes.
-> 
-> CAP_SYS_PERFMON intends to take over CAP_SYS_ADMIN credentials related to
-> system performance monitoring and observability and balance amount of
-> CAP_SYS_ADMIN credentials in accordance with the recommendations provided
-> in the man page for CAP_SYS_ADMIN [1]: "Note: this capability is overloaded;
-> see Notes to kernel developers, below."
-> 
-> [1] http://man7.org/linux/man-pages/man7/capabilities.7.html
-> 
-> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-> ---
->   include/linux/capability.h          | 1 +
->   include/uapi/linux/capability.h     | 8 +++++++-
->   security/selinux/include/classmap.h | 4 ++--
->   3 files changed, 10 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/capability.h b/include/linux/capability.h
-> index ecce0f43c73a..6342502c4c2a 100644
-> --- a/include/linux/capability.h
-> +++ b/include/linux/capability.h
-> @@ -251,6 +251,7 @@ extern bool privileged_wrt_inode_uidgid(struct user_namespace *ns, const struct
->   extern bool capable_wrt_inode_uidgid(const struct inode *inode, int cap);
->   extern bool file_ns_capable(const struct file *file, struct user_namespace *ns, int cap);
->   extern bool ptracer_capable(struct task_struct *tsk, struct user_namespace *ns);
-> +#define perfmon_capable() (capable(CAP_SYS_PERFMON) || capable(CAP_SYS_ADMIN))
+On Mon, Dec 16, 2019 at 5:52 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> On Fri, Dec 13, 2019 at 10:17 PM Darrick J. Wong <darrick.wong@oracle.com> wrote:
+>>
+>> Hmm, so one thing that I clean up on the way to bigtime is the total
+>> lack of clamping here.  If (for example) it's September 2105 and
+>> rtbtimelimit is set to 1 year, this will cause an integer overflow.  The
+>> quota timer will be set to 1970 and expire immediately, rather than what
+>> I'd consider the best effort of February 2106.
 
-I think making it a static inline bool function instead of a macro would 
-be preferred?
+One more hing to note (I will add this to the changelog text) is that on
+32-bit architectures, the limit here is y2038, while on 64-bit
+architectures it's y2106:
 
-Otherwise,
-Acked-by: Stephen Smalley <sds@tycho.nsa.gov>
+int xfs_trans_dqresv(...)
+{
+       time_t                  timer; /* signed 'long' */
+       timer = be32_to_cpu(dqp->q_core.d_btimer);
+       /* get_seconds() returns unsigned long */
+      if ((timer != 0 && get_seconds() > timer))
+                return -EDQUOT;
+}
 
->   
->   /* audit system wants to get cap info from files as well */
->   extern int get_vfs_caps_from_disk(const struct dentry *dentry, struct cpu_vfs_cap_data *cpu_caps);
-> diff --git a/include/uapi/linux/capability.h b/include/uapi/linux/capability.h
-> index 240fdb9a60f6..98e03cc76c7c 100644
-> --- a/include/uapi/linux/capability.h
-> +++ b/include/uapi/linux/capability.h
-> @@ -366,8 +366,14 @@ struct vfs_ns_cap_data {
->   
->   #define CAP_AUDIT_READ		37
->   
-> +/*
-> + * Allow system performance and observability privileged operations
-> + * using perf_events, i915_perf and other kernel subsystems
-> + */
-> +
-> +#define CAP_SYS_PERFMON		38
->   
-> -#define CAP_LAST_CAP         CAP_AUDIT_READ
-> +#define CAP_LAST_CAP         CAP_SYS_PERFMON
->   
->   #define cap_valid(x) ((x) >= 0 && (x) <= CAP_LAST_CAP)
->   
-> diff --git a/security/selinux/include/classmap.h b/security/selinux/include/classmap.h
-> index 7db24855e12d..bae602c623b0 100644
-> --- a/security/selinux/include/classmap.h
-> +++ b/security/selinux/include/classmap.h
-> @@ -27,9 +27,9 @@
->   	    "audit_control", "setfcap"
->   
->   #define COMMON_CAP2_PERMS  "mac_override", "mac_admin", "syslog", \
-> -		"wake_alarm", "block_suspend", "audit_read"
-> +		"wake_alarm", "block_suspend", "audit_read", "sys_perfmon"
->   
-> -#if CAP_LAST_CAP > CAP_AUDIT_READ
-> +#if CAP_LAST_CAP > CAP_SYS_PERFMON
->   #error New capability defined, please update COMMON_CAP2_PERMS.
->   #endif
->   
-> 
+> I don't think clamping would be good here, that just replaces
+> one bug with another at the overflow time. If you would like to
+> have something better before this gets extended, I could try to
+> come up with a version that converts it to the nearest 64-bit
+> timestamp, similar to the way that time_before32() in the kernel
+> or the NTP protocol work.
+>
+> If you think it can get extended properly soon, I'd just leave the
+> patch as it is today in order to remove the get_seconds()
+> interface for v5.6.
 
+I've tried this now, and but this feels wrong: it adds lots of complexity
+for corner cases and is still fragile, e.g. when the time is wrong
+during boot before ntp runs. See that patch below for reference.
+
+I also see that quotatool on xfs always uses the old xfs quota
+interface, so it already overflows on the user space side. Fixing
+this properly seems to be a bigger effort than I was planning for
+(on an unpatched 64-bit kernel):
+
+$ sudo quotatool -b    -u  -t 220month  /mnt/tmp -r
+$ rm file ; fallocate -l 11M file
+$ sudo quotatool -d /mnt/tmp -u arnd
+1000 /mnt/tmp 11264 10240 20480 570239975 2 0 00
+$ sudo quotatool -b    -u  -t 222month  /mnt/tmp -r
+$ rm file ; fallocate -l 11M file
+$ sudo quotatool -d /mnt/tmp -u arnd
+1000 /mnt/tmp 11264 10240 20480 18446744069990008316 2 0 00
+
+       Arnd
+
+diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
+index 9cfd3209f52b..6c9128bb607b 100644
+--- a/fs/xfs/xfs_dquot.c
++++ b/fs/xfs/xfs_dquot.c
+@@ -98,6 +98,23 @@ xfs_qm_adjust_dqlimits(
+                xfs_dquot_set_prealloc_limits(dq);
+ }
+
++static __be32 xfs_quota_timeout32(s64 limit)
++{
++       time64_t now = ktime_get_real_seconds();
++       u32 timeout;
++
++       /* avoid overflows in out-of-range limits */
++       if ((u64)limit > S32_MAX)
++               limit = S32_MAX;
++       timeout = now + limit;
++
++       /* avoid timeout of zero */
++       if (lower_32_bits(timeout) == 0)
++               return cpu_to_be32(1);
++
++       return cpu_to_be32(lower_32_bits(timeout));
++}
++
+ /*
+  * Check the limits and timers of a dquot and start or reset timers
+  * if necessary.
+@@ -137,7 +154,7 @@ xfs_qm_adjust_dqtimers(
+                    (d->d_blk_hardlimit &&
+                     (be64_to_cpu(d->d_bcount) >
+                      be64_to_cpu(d->d_blk_hardlimit)))) {
+-                       d->d_btimer = cpu_to_be32(ktime_get_real_seconds() +
++                       d->d_btimer = xfs_quota_timeout32(
+                                        mp->m_quotainfo->qi_btimelimit);
+                } else {
+                        d->d_bwarns = 0;
+@@ -160,7 +177,7 @@ xfs_qm_adjust_dqtimers(
+                    (d->d_ino_hardlimit &&
+                     (be64_to_cpu(d->d_icount) >
+                      be64_to_cpu(d->d_ino_hardlimit)))) {
+-                       d->d_itimer = cpu_to_be32(ktime_get_real_seconds() +
++                       d->d_itimer = xfs_quota_timeout32(
+                                        mp->m_quotainfo->qi_itimelimit);
+                } else {
+                        d->d_iwarns = 0;
+@@ -183,7 +200,7 @@ xfs_qm_adjust_dqtimers(
+                    (d->d_rtb_hardlimit &&
+                     (be64_to_cpu(d->d_rtbcount) >
+                      be64_to_cpu(d->d_rtb_hardlimit)))) {
+-                       d->d_rtbtimer = cpu_to_be32(ktime_get_real_seconds() +
++                       d->d_rtbtimer = xfs_quota_timeout32(
+                                        mp->m_quotainfo->qi_rtbtimelimit);
+                } else {
+                        d->d_rtbwarns = 0;
+diff --git a/fs/xfs/xfs_qm_syscalls.c b/fs/xfs/xfs_qm_syscalls.c
+index 1ea82764bf89..2087626b4bee 100644
+--- a/fs/xfs/xfs_qm_syscalls.c
++++ b/fs/xfs/xfs_qm_syscalls.c
+@@ -601,6 +601,14 @@ xfs_qm_scall_setqlim(
+        return error;
+ }
+
++/* Assume timers are within +/- 68 years of current wall clock */
++static time64_t xfs_quota_time32_to_time64(time64_t now, __be32 timer)
++{
++       s32 diff = be32_to_cpu(timer) - lower_32_bits(now);
++
++       return now + diff;
++}
++
+ /* Fill out the quota context. */
+ static void
+ xfs_qm_scall_getquota_fill_qc(
+@@ -609,6 +617,8 @@ xfs_qm_scall_getquota_fill_qc(
+        const struct xfs_dquot  *dqp,
+        struct qc_dqblk         *dst)
+ {
++       time64_t now = ktime_get_real_seconds();
++
+        memset(dst, 0, sizeof(*dst));
+        dst->d_spc_hardlimit =
+                XFS_FSB_TO_B(mp, be64_to_cpu(dqp->q_core.d_blk_hardlimit));
+@@ -618,8 +628,8 @@ xfs_qm_scall_getquota_fill_qc(
+        dst->d_ino_softlimit = be64_to_cpu(dqp->q_core.d_ino_softlimit);
+        dst->d_space = XFS_FSB_TO_B(mp, dqp->q_res_bcount);
+        dst->d_ino_count = dqp->q_res_icount;
+-       dst->d_spc_timer = be32_to_cpu(dqp->q_core.d_btimer);
+-       dst->d_ino_timer = be32_to_cpu(dqp->q_core.d_itimer);
++       dst->d_spc_timer = xfs_quota_time32_to_time64(now,
+dqp->q_core.d_btimer);
++       dst->d_ino_timer = xfs_quota_time32_to_time64(now,
+dqp->q_core.d_itimer);
+        dst->d_ino_warns = be16_to_cpu(dqp->q_core.d_iwarns);
+        dst->d_spc_warns = be16_to_cpu(dqp->q_core.d_bwarns);
+        dst->d_rt_spc_hardlimit =
+@@ -627,7 +637,7 @@ xfs_qm_scall_getquota_fill_qc(
+        dst->d_rt_spc_softlimit =
+                XFS_FSB_TO_B(mp, be64_to_cpu(dqp->q_core.d_rtb_softlimit));
+        dst->d_rt_space = XFS_FSB_TO_B(mp, dqp->q_res_rtbcount);
+-       dst->d_rt_spc_timer = be32_to_cpu(dqp->q_core.d_rtbtimer);
++       dst->d_rt_spc_timer = xfs_quota_time32_to_time64(now,
+dqp->q_core.d_rtbtimer);
+        dst->d_rt_spc_warns = be16_to_cpu(dqp->q_core.d_rtbwarns);
+
+        /*
+diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
+index d1b9869bc5fa..c75887da6546 100644
+--- a/fs/xfs/xfs_trans_dquot.c
++++ b/fs/xfs/xfs_trans_dquot.c
+@@ -636,7 +636,8 @@ xfs_trans_dqresv(
+                        }
+                        if (softlimit && total_count > softlimit) {
+                                if ((timer != 0 &&
+-                                    ktime_get_real_seconds() > timer) ||
++                                    time_after32(ktime_get_real_seconds(),
++                                                 timer)) ||
+                                    (warns != 0 && warns >= warnlimit)) {
+                                        xfs_quota_warn(mp, dqp,
+                                                       QUOTA_NL_BSOFTLONGWARN);
+@@ -664,7 +665,8 @@ xfs_trans_dqresv(
+                        }
+                        if (softlimit && total_count > softlimit) {
+                                if  ((timer != 0 &&
+-                                     ktime_get_real_seconds() > timer) ||
++                                    time_after32(ktime_get_real_seconds(),
++                                                 timer)) ||
+                                     (warns != 0 && warns >= warnlimit)) {
+                                        xfs_quota_warn(mp, dqp,
+                                                       QUOTA_NL_ISOFTLONGWARN);
