@@ -2,118 +2,98 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D884FC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 076C2C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE76A2146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:39:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576586378;
-	bh=vvz7gRRGOLVgJN2hy14P3yRZf+0s4neZD7mnv0tCiOo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=2Z6cqRyqCpbq6Rso2PqHZGnjAzVyHshtWyFAv2uWAQNl4xbocpKKYxU1F7zy+t+DJ
-	 M2U3R04xwFgBZ/A+pJgIFCLLsBmBxwPHLC6aHUb9hEd6ZumS2TGpIUQCFKzRLkryw/
-	 JWg4G8AaVE08aebK2C45rlZsjHwMvqTvJagyU3uY=
+	by mail.kernel.org (Postfix) with ESMTP id D59C121835
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:39:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728224AbfLQMjh (ORCPT
+        id S1728236AbfLQMj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:39:37 -0500
-Received: from foss.arm.com ([217.140.110.172]:35672 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728051AbfLQMjg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 07:39:36 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9169431B;
-        Tue, 17 Dec 2019 04:39:35 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 11FBF3F718;
-        Tue, 17 Dec 2019 04:39:34 -0800 (PST)
-Date:   Tue, 17 Dec 2019 12:39:33 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     bcm-kernel-feedback-list@broadcom.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jim Quinlan <jquinlan@broadcom.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Ray Jui <ray.jui@broadcom.com>,
-        Scott Branden <scott.branden@broadcom.com>
-Subject: Applied "spi: bcm2835: no dev_err() on clk_get() -EPROBE_DEFER" to the spi tree
-In-Reply-To: <20191216230802.45715-2-jquinlan@broadcom.com>
-Message-Id: <applied-20191216230802.45715-2-jquinlan@broadcom.com>
-X-Patchwork-Hint: ignore
+        Tue, 17 Dec 2019 07:39:56 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55226 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727519AbfLQMj4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 07:39:56 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1ihC8l-0001nm-6A; Tue, 17 Dec 2019 13:39:51 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 55FB31C2A3B;
+        Tue, 17 Dec 2019 13:39:50 +0100 (CET)
+Date:   Tue, 17 Dec 2019 12:39:50 -0000
+From:   "tip-bot2 for Sebastian Andrzej Siewior" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/urgent] perf/core: Add SRCU annotation for pmus list walk
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20191119121429.zhcubzdhm672zasg@linutronix.de>
+References: <20191119121429.zhcubzdhm672zasg@linutronix.de>
+MIME-Version: 1.0
+Message-ID: <157658639017.30329.2861654231460722207.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+The following commit has been merged into the perf/urgent branch of tip:
 
-   spi: bcm2835: no dev_err() on clk_get() -EPROBE_DEFER
+Commit-ID:     9f0bff1180efc9ea988fed3fd93da7647151ac8b
+Gitweb:        https://git.kernel.org/tip/9f0bff1180efc9ea988fed3fd93da7647151ac8b
+Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+AuthorDate:    Tue, 19 Nov 2019 13:14:29 +01:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Tue, 17 Dec 2019 13:32:46 +01:00
 
-has been applied to the spi tree at
+perf/core: Add SRCU annotation for pmus list walk
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.6
+Since commit
+   28875945ba98d ("rcu: Add support for consolidated-RCU reader checking")
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+there is an additional check to ensure that a RCU related lock is held
+while the RCU list is iterated.
+This section holds the SRCU reader lock instead.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Add annotation to list_for_each_entry_rcu() that pmus_srcu must be
+acquired during the list traversal.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From f4dc4abdce4cc290555604107c04854a911b9441 Mon Sep 17 00:00:00 2001
-From: Jim Quinlan <james.quinlan@broadcom.com>
-Date: Mon, 16 Dec 2019 18:08:02 -0500
-Subject: [PATCH] spi: bcm2835: no dev_err() on clk_get() -EPROBE_DEFER
-
-Use dev_dbg() on -EPROBE_DEFER and dev_err() on all
-other errors.
-
-Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Link: https://lore.kernel.org/r/20191216230802.45715-2-jquinlan@broadcom.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Link: https://lkml.kernel.org/r/20191119121429.zhcubzdhm672zasg@linutronix.de
 ---
- drivers/spi/spi-bcm2835.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ kernel/events/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-bcm2835.c b/drivers/spi/spi-bcm2835.c
-index 69df79914504..b784c9fdf9ec 100644
---- a/drivers/spi/spi-bcm2835.c
-+++ b/drivers/spi/spi-bcm2835.c
-@@ -1317,7 +1317,10 @@ static int bcm2835_spi_probe(struct platform_device *pdev)
- 	bs->clk = devm_clk_get(&pdev->dev, NULL);
- 	if (IS_ERR(bs->clk)) {
- 		err = PTR_ERR(bs->clk);
--		dev_err(&pdev->dev, "could not get clk: %d\n", err);
-+		if (err == -EPROBE_DEFER)
-+			dev_dbg(&pdev->dev, "could not get clk: %d\n", err);
-+		else
-+			dev_err(&pdev->dev, "could not get clk: %d\n", err);
- 		goto out_controller_put;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 4ff86d5..a1f8bde 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -10523,7 +10523,7 @@ again:
+ 		goto unlock;
  	}
  
--- 
-2.20.1
-
+-	list_for_each_entry_rcu(pmu, &pmus, entry) {
++	list_for_each_entry_rcu(pmu, &pmus, entry, lockdep_is_held(&pmus_srcu)) {
+ 		ret = perf_try_init_event(pmu, event);
+ 		if (!ret)
+ 			goto unlock;
