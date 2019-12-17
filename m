@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE089C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2EFC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAB422082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:32:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F29292082E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:32:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727728AbfLQLcZ (ORCPT
+        id S1727737AbfLQLc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 06:32:25 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55071 "EHLO
+        Tue, 17 Dec 2019 06:32:27 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55073 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727632AbfLQLcJ (ORCPT
+        with ESMTP id S1727637AbfLQLcJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 17 Dec 2019 06:32:09 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ihB4z-0007MI-Ry; Tue, 17 Dec 2019 12:31:53 +0100
+        id 1ihB50-0007Mk-M3; Tue, 17 Dec 2019 12:31:54 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id F3A6F1C2A34;
-        Tue, 17 Dec 2019 12:31:52 +0100 (CET)
-Date:   Tue, 17 Dec 2019 11:31:52 -0000
-From:   "tip-bot2 for Ed Maste" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 56AEC1C2A34;
+        Tue, 17 Dec 2019 12:31:54 +0100 (CET)
+Date:   Tue, 17 Dec 2019 11:31:54 -0000
+From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf vendor events s390: Remove name from
- L1D_RO_EXCL_WRITES description
-Cc:     Ed Maste <emaste@freebsd.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+Subject: [tip: perf/urgent] perf top: Do not bail out when
+ perf_env__read_cpuid() returns ENOSYS
+Cc:     John Garry <john.garry@huawei.com>,
         Mark Rutland <mark.rutland@arm.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Nick Hu <nickhu@andestech.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Vincent Chen <deanbo422@gmail.com>,
+        Will Deacon <will@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191212145346.5026-1-emaste@freefall.freebsd.org>
-References: <20191212145346.5026-1-emaste@freefall.freebsd.org>
+In-Reply-To: <tip-lxwjr0cd2eggzx04a780ffrv@git.kernel.org>
+References: <tip-lxwjr0cd2eggzx04a780ffrv@git.kernel.org>
 MIME-Version: 1.0
-Message-ID: <157658231276.30329.18331050645912292704.tip-bot2@tip-bot2>
+Message-ID: <157658231424.30329.14769800099775764092.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -66,46 +62,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     58b3bafff8257c6946df5d6aeb215b8ac839ed2a
-Gitweb:        https://git.kernel.org/tip/58b3bafff8257c6946df5d6aeb215b8ac839ed2a
-Author:        Ed Maste <emaste@freebsd.org>
-AuthorDate:    Thu, 12 Dec 2019 14:53:46 
+Commit-ID:     61208e6e1003b3fd8d2d1f2a72ec27be43955c0b
+Gitweb:        https://git.kernel.org/tip/61208e6e1003b3fd8d2d1f2a72ec27be43955c0b
+Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate:    Wed, 11 Dec 2019 10:21:59 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Mon, 16 Dec 2019 13:40:26 -03:00
+CommitterDate: Wed, 11 Dec 2019 12:26:25 -03:00
 
-perf vendor events s390: Remove name from L1D_RO_EXCL_WRITES description
+perf top: Do not bail out when perf_env__read_cpuid() returns ENOSYS
 
-In 7fcfa9a2d9 an unintended prefix "Counter:18 Name:" was removed from
-the description for L1D_RO_EXCL_WRITES, but the extra name remained in
-the description.  Remove it too.
+'perf top' stopped working on hw architectures that do not provide a
+get_cpuid() implementation and thus fallback to the weak get_cpuid()
+default function.
 
-Fixes: 7fcfa9a2d9a7 ("perf list: Fix s390 counter long description for L1D_RO_EXCL_WRITES")
-Signed-off-by: Ed Maste <emaste@freebsd.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Greentime Hu <green.hu@gmail.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
+This is done because at annotation time we may need it in the arch
+specific annotation init routine, but that is only being used by arches
+that do provide a get_cpuid() implementation:
+
+  $ find tools/  -name "*.[ch]" | xargs grep 'evlist->env'
+  tools/perf/builtin-top.c:	top.evlist->env = &perf_env;
+  tools/perf/util/evsel.c:		return evsel->evlist->env;
+  tools/perf/util/s390-cpumsf.c:	sf->machine_type = s390_cpumsf_get_type(session->evlist->env->cpuid);
+  tools/perf/util/header.c:	session->evlist->env = &header->env;
+  tools/perf/util/sample-raw.c:	const char *arch_pf = perf_env__arch(evlist->env);
+  $
+
+  $ find tools/perf/arch  -name "*.[ch]" | xargs grep -w get_cpuid
+  tools/perf/arch/x86/util/auxtrace.c:	ret = get_cpuid(buffer, sizeof(buffer));
+  tools/perf/arch/x86/util/header.c:get_cpuid(char *buffer, size_t sz)
+  tools/perf/arch/powerpc/util/header.c:get_cpuid(char *buffer, size_t sz)
+  tools/perf/arch/s390/util/header.c: * Implementation of get_cpuid().
+  tools/perf/arch/s390/util/header.c:int get_cpuid(char *buffer, size_t sz)
+  tools/perf/arch/s390/util/header.c:	if (buf && get_cpuid(buf, 128))
+  $
+
+For 'report' or 'script', i.e. tools working on perf.data files, that is
+setup while reading the header, its just top that needs to explicitely
+read it at tool start.
+
+Fixes: 608127f73779 ("perf top: Initialize perf_env->cpuid, needed by the per arch annotation init routine")
+Reported-by: John Garry <john.garry@huawei.com>
+Analysed-by: Jiri Olsa <jolsa@kernel.org>
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Tested-by: Mark Rutland <mark.rutland@arm.com>
+Tested-by: John Garry <john.garry@huawei.com> # arm64
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Nick Hu <nickhu@andestech.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Richter <tmricht@linux.ibm.com>
-Cc: Vincent Chen <deanbo422@gmail.com>
-Link: http://lore.kernel.org/lkml/20191212145346.5026-1-emaste@freefall.freebsd.org
+Cc: Will Deacon <will@kernel.org>
+Link: https://lkml.kernel.org/n/tip-lxwjr0cd2eggzx04a780ffrv@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/pmu-events/arch/s390/cf_z14/extended.json | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/builtin-top.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/s390/cf_z14/extended.json b/tools/perf/pmu-events/arch/s390/cf_z14/extended.json
-index 6861815..89e0707 100644
---- a/tools/perf/pmu-events/arch/s390/cf_z14/extended.json
-+++ b/tools/perf/pmu-events/arch/s390/cf_z14/extended.json
-@@ -4,7 +4,7 @@
- 		"EventCode": "128",
- 		"EventName": "L1D_RO_EXCL_WRITES",
- 		"BriefDescription": "L1D Read-only Exclusive Writes",
--		"PublicDescription": "L1D_RO_EXCL_WRITES A directory write to the Level-1 Data cache where the line was originally in a Read-Only state in the cache but has been updated to be in the Exclusive state that allows stores to the cache line"
-+		"PublicDescription": "A directory write to the Level-1 Data cache where the line was originally in a Read-Only state in the cache but has been updated to be in the Exclusive state that allows stores to the cache line"
- 	},
- 	{
- 		"Unit": "CPU-M-CF",
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index dc80044..795e353 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1568,9 +1568,13 @@ int cmd_top(int argc, const char **argv)
+ 	 */
+ 	status = perf_env__read_cpuid(&perf_env);
+ 	if (status) {
+-		pr_err("Couldn't read the cpuid for this machine: %s\n",
+-		       str_error_r(errno, errbuf, sizeof(errbuf)));
+-		goto out_delete_evlist;
++		/*
++		 * Some arches do not provide a get_cpuid(), so just use pr_debug, otherwise
++		 * warn the user explicitely.
++		 */
++		eprintf(status == ENOSYS ? 1 : 0, verbose,
++			"Couldn't read the cpuid for this machine: %s\n",
++			str_error_r(errno, errbuf, sizeof(errbuf)));
+ 	}
+ 	top.evlist->env = &perf_env;
+ 
