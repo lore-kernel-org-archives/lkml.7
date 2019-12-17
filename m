@@ -2,139 +2,110 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5930BC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45624C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F24920733
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:20:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576606843;
-	bh=R7X+VUc54FRJM8mODYV5OWQAzW0djewmzAEIK4csmKc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EufHforMiMICZXXBWNNLLCHMW97MTr/rMsv2OxUNlzWz6RKVumneeEQ/MKN77FWEo
-	 LxBHoPqbtqHt30V3SBcwXV5eIGT1Za0hPV60iCO9Jj3CLut5Yry6iy3nms3Sjt3tvj
-	 g4fqv/SIi+T44+YMwuoAngutaIIN4HEZyzlxBYX8=
+	by mail.kernel.org (Postfix) with ESMTP id 1C3422072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:21:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fepTE0HU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727802AbfLQSUm (ORCPT
+        id S1727905AbfLQSV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 13:20:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56134 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726191AbfLQSUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 13:20:41 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58267206D7;
-        Tue, 17 Dec 2019 18:20:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576606840;
-        bh=R7X+VUc54FRJM8mODYV5OWQAzW0djewmzAEIK4csmKc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eG0W1wu0zdM4xxKifZJXzioeiaxkB1ibqklJyy91q5gqIKPkNuxIwZkOuK29BnIZh
-         7KeGxZQabmchNJh5cCxH6GyziI7A9YUhebBiHWXAwfsAwWUvf5h57pU4wlZFrtadr1
-         KMEg5WzOW9WpY+tuptiNClHekvcV/3XfNZni+/8Q=
-Date:   Tue, 17 Dec 2019 19:20:38 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Pavel Machek <pavel@ucw.cz>,
-        Dan Murphy <dmurphy@ti.com>, Jiri Slaby <jslaby@suse.com>,
-        kernel@pengutronix.de, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: Re: [PATCH v4 1/3] tty: rename tty_kopen() and add new function
- tty_kopen_shared()
-Message-ID: <20191217182038.GA3853604@kroah.com>
-References: <20191217165816.19324-1-u.kleine-koenig@pengutronix.de>
- <20191217165816.19324-2-u.kleine-koenig@pengutronix.de>
- <c83b364b-3494-cf3d-0429-61ec3b502be0@gmail.com>
+        Tue, 17 Dec 2019 13:21:57 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40080 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726722AbfLQSV5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 13:21:57 -0500
+Received: by mail-pf1-f193.google.com with SMTP id q8so7994881pfh.7
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 10:21:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=qkSZEp2LsinKzRtMJteSGld5vsa6OFgl+t86XDP5eEU=;
+        b=fepTE0HUb5CxTHXBrBY/0AvfYJMMrP1gat9cDME0DI3EuyUd6j3bN1pQjn/LoB/JX5
+         FplU4s+GxX6xCAMCsdFs+w4PxLGsCGR+K+4ZqqrwKaj22+Inf0SCofnPXxQ81SobXr0V
+         FYwTUqXsz/LtG/3rJsZz934fXOd2gNEXg8QK4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qkSZEp2LsinKzRtMJteSGld5vsa6OFgl+t86XDP5eEU=;
+        b=b1rKj5/EgYBRhcZ8zw8JAOw3o9x9L59OucKkho1tkueSPggen7nC+23ZZeXN7UVc9g
+         gF/y736WNGWTeiTegknLghQzj9aU18U3NKQz7SAInUaoMXZShklkyHQKqNI/mdbUDkKj
+         D/D7y6xpUE69pEjzHpqmBfytkhZY6ZL3i9qHiYofUY2+qRu+DEipa3FDCJoL24eFddQA
+         clODf9bRvEDbPV1hERVxHzj1lhq9hJCnUMClL+JcxITRYxhktAzyeCtEXPVtmasGVjtj
+         6uWGFloVkTsQxHdKZdph2b8423lX5MvcnqQPUmej7PFLEiaLCU4q5JOc+w51w3YIP8V5
+         kXVw==
+X-Gm-Message-State: APjAAAXbGtCkaopP/1yxriyGr5W5GBGxuVCMcbvkzNjKsgn6Oiy0Z+bp
+        45wrGpgFunQ8Z8r06maPPKcy6Q==
+X-Google-Smtp-Source: APXvYqxIHPlHk6frzgBdbcR7f5i/RUbydfwrku2XtLrzXZ5HNuusSXKMYkvaNahnG8jdCyClazvg1w==
+X-Received: by 2002:a63:a555:: with SMTP id r21mr23297365pgu.158.1576606916432;
+        Tue, 17 Dec 2019 10:21:56 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id 73sm27711835pgc.13.2019.12.17.10.21.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Dec 2019 10:21:55 -0800 (PST)
+Date:   Tue, 17 Dec 2019 10:21:54 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Dikshita Agarwal <dikshita@codeaurora.org>
+Cc:     andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        vgarodia@codeaurora.org
+Subject: Re: [PATCH] arm64: dts: sc7180: Enable video node
+Message-ID: <20191217182154.GU228856@google.com>
+References: <1576569218-24817-1-git-send-email-dikshita@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c83b364b-3494-cf3d-0429-61ec3b502be0@gmail.com>
+In-Reply-To: <1576569218-24817-1-git-send-email-dikshita@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 07:08:47PM +0100, Jacek Anaszewski wrote:
-> Hi Uwe,
-> 
-> I wanted to test the set but unfortunately this
-> patch does not apply. See below for the apparent reason.
-> 
-> On 12/17/19 5:58 PM, Uwe Kleine-König wrote:
-> > Introduce a new function tty_kopen_shared() that yields a struct
-> > tty_struct. The semantic difference to tty_kopen() is that the tty is
-> > expected to be used already. So rename tty_kopen() to
-> > tty_kopen_exclusive() for clearness, adapt the single user and put the
-> > common code in a new static helper function.
-> > 
-> > tty_kopen_shared is to be used to implement an LED trigger for tty
-> > devices in one of the next patches.
-> > 
-> > Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> > ---
-> >  drivers/staging/speakup/spk_ttyio.c |  2 +-
-> >  drivers/tty/tty_io.c                | 58 ++++++++++++++++++++---------
-> >  include/linux/tty.h                 |  5 ++-
-> >  3 files changed, 44 insertions(+), 21 deletions(-)
-> > 
-> > diff --git a/drivers/staging/speakup/spk_ttyio.c b/drivers/staging/speakup/spk_ttyio.c
-> > index 5a9eff08cb96..e9db06eae875 100644
-> > --- a/drivers/staging/speakup/spk_ttyio.c
-> > +++ b/drivers/staging/speakup/spk_ttyio.c
-> > @@ -147,7 +147,7 @@ static int spk_ttyio_initialise_ldisc(struct spk_synth *synth)
-> >  	if (ret)
-> >  		return ret;
-> >  
-> > -	tty = tty_kopen(dev);
-> > +	tty = tty_kopen_exclusive(dev);
-> >  	if (IS_ERR(tty))
-> >  		return PTR_ERR(tty);
-> >  
-> > diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
-> > index a1453fe10862..b718666ce73c 100644
-> > --- a/drivers/tty/tty_io.c
-> > +++ b/drivers/tty/tty_io.c
-> > @@ -1875,22 +1875,7 @@ static struct tty_driver *tty_lookup_driver(dev_t device, struct file *filp,
-> >  	return driver;
-> >  }
-> >  
-> > -/**
-> > - *	tty_kopen	-	open a tty device for kernel
-> > - *	@device: dev_t of device to open
-> > - *
-> > - *	Opens tty exclusively for kernel. Performs the driver lookup,
-> > - *	makes sure it's not already opened and performs the first-time
-> > - *	tty initialization.
-> > - *
-> > - *	Returns the locked initialized &tty_struct
-> > - *
-> > - *	Claims the global tty_mutex to serialize:
-> > - *	  - concurrent first-time tty initialization
-> > - *	  - concurrent tty driver removal w/ lookup
-> > - *	  - concurrent tty removal from driver table
-> > - */
-> > -struct tty_struct *tty_kopen(dev_t device)
-> > +static struct tty_struct *tty_kopen(dev_t device, int shared)
-> >  {
-> >  	struct tty_struct *tty;
-> >  	struct tty_driver *driver;
-> 
-> In mainline, even in v5.5-rc2 we have here NULL assignment:
-> 
-> struct tty_driver *driver = NULL;
+Hi
 
-This is based on a patch that is already in my tty-testing tree and that
-was posted earlier.  It should show up in linux-next in a day or so.
+On Tue, Dec 17, 2019 at 01:23:38PM +0530, Dikshita Agarwal wrote:
+> This is a preparation gerrit to enable video node for sc7180.
 
-thanks,
+gerrit is a code review tool, please change to something like
+"Add venus video codec node for sc7180"
 
-greg k-h
+> This change depends on patch series Venus new features.
+
+Notes like this should not be part of the commit message, but put
+below '---'. It would also be good to include a link to the series,
+I suppose it's
+https://patchwork.kernel.org/project/linux-arm-msm/list/?series=213439
+
+> Signed-off-by: Dikshita Agarwal <dikshita@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 52a5861..ccf9ef5 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -1297,6 +1297,34 @@
+>  
+>  			#freq-domain-cells = <1>;
+>  		};
+> +
+> +		venus: video-codec@aa00000 {
+> +			compatible = "qcom,sc7180-venus";
+
+This compatible string is not listed in the bindings
+(Documentation/devicetree/bindings/media/qcom,venus.txt), nor
+in the driver.
+
