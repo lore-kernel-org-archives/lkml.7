@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F12C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 541D3C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6680421775
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:17:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B80C21775
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:17:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576613848;
-	bh=mEjOtDnWl6Sk8Dcq5ErPMR05oSVZPAxURSZP407aJqQ=;
+	s=default; t=1576613852;
+	bh=P64S/eDpZ7NFJNdJRDDHHz/GsObYeX4R0GSCQO3buHA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gpRyEPTt5dVYyb6IkqaHJy3q9zN5WytuYlJqu5Ui3epuFqEvCpqEIMK+SI1tEK5Nt
-	 J2G+gGW4u85pC6u23ptcR2glf8M0clc4WvRrUPgwC+FcO9sBGjz3BZAS7X/fYj3Izn
-	 DmdWjc/yP3Ktood8IHuq+X3wWRwfBju1pUE+mXgE=
+	b=ahSxUhf9qIRxUYIVLUF5DtfuwCGwOLhe//NkedqwN1oFrMSzgK5OOsOX5qtvOgEoa
+	 EFerYxquYgppv1v2Fb3MFFp4O/bMfbIcX0vG3wlVNxo93It8fl/UtnxRuA7OrKRZeA
+	 OKGDiGDYBEF22yRDVzHh25t3uSRGCmjyiZXC6qT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727918AbfLQURX (ORCPT
+        id S1728866AbfLQURb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 15:17:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41768 "EHLO mail.kernel.org"
+        Tue, 17 Dec 2019 15:17:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728772AbfLQURS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 15:17:18 -0500
+        id S1728001AbfLQUR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 15:17:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25A49206D8;
-        Tue, 17 Dec 2019 20:17:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F365F206D8;
+        Tue, 17 Dec 2019 20:17:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576613837;
-        bh=mEjOtDnWl6Sk8Dcq5ErPMR05oSVZPAxURSZP407aJqQ=;
+        s=default; t=1576613847;
+        bh=P64S/eDpZ7NFJNdJRDDHHz/GsObYeX4R0GSCQO3buHA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cCWUjaJcVdQkmpX2IWUqeIt6VptLMf1t6SCx3z03ebBrH1nhIsvNDIDGaLeHsAHSf
-         /MjoI6HU+Mgktei2MvKKlvpFg6q9C/joPgKQrRd1OFdq+crONvCnZgL7Ye0fg4kt/X
-         77rT+bqKJ9rVvuejtpoqURnBQHCIG0j58PamaPZs=
+        b=pmEmbCMNQA84mY5SoDck+R0VMqwAghN/xGuMiInE3n3QmxqO5D8p45S6tZyAvuAnd
+         5xmth42Eo0aj64Wn3n5fQntdXyRjz60Qa+SBv354RGrlyaR5pcC4rxM7f/hICcg8L3
+         ISDOTjOD5LEFfAkEyyK9+WDf5ctwUlLzvvXguiCg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+2add91c08eb181fea1bf@syzkaller.appspotmail.com,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 03/25] net: bridge: deny dev_set_mac_address() when unregistering
-Date:   Tue, 17 Dec 2019 21:16:02 +0100
-Message-Id: <20191217200904.674817598@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        David Miller <davem@davemloft.net>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH 5.3 07/25] net-sysfs: Call dev_hold always in netdev_queue_add_kobject
+Date:   Tue, 17 Dec 2019 21:16:06 +0100
+Message-Id: <20191217200906.709677914@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191217200903.179327435@linuxfoundation.org>
 References: <20191217200903.179327435@linuxfoundation.org>
@@ -61,76 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+From: Jouni Hogander <jouni.hogander@unikie.com>
 
-[ Upstream commit c4b4c421857dc7b1cf0dccbd738472360ff2cd70 ]
+[ Upstream commit e0b60903b434a7ee21ba8d8659f207ed84101e89 ]
 
-We have an interesting memory leak in the bridge when it is being
-unregistered and is a slave to a master device which would change the
-mac of its slaves on unregister (e.g. bond, team). This is a very
-unusual setup but we do end up leaking 1 fdb entry because
-dev_set_mac_address() would cause the bridge to insert the new mac address
-into its table after all fdbs are flushed, i.e. after dellink() on the
-bridge has finished and we call NETDEV_UNREGISTER the bond/team would
-release it and will call dev_set_mac_address() to restore its original
-address and that in turn will add an fdb in the bridge.
-One fix is to check for the bridge dev's reg_state in its
-ndo_set_mac_address callback and return an error if the bridge is not in
-NETREG_REGISTERED.
+Dev_hold has to be called always in netdev_queue_add_kobject.
+Otherwise usage count drops below 0 in case of failure in
+kobject_init_and_add.
 
-Easy steps to reproduce:
- 1. add bond in mode != A/B
- 2. add any slave to the bond
- 3. add bridge dev as a slave to the bond
- 4. destroy the bridge device
-
-Trace:
- unreferenced object 0xffff888035c4d080 (size 128):
-   comm "ip", pid 4068, jiffies 4296209429 (age 1413.753s)
-   hex dump (first 32 bytes):
-     41 1d c9 36 80 88 ff ff 00 00 00 00 00 00 00 00  A..6............
-     d2 19 c9 5e 3f d7 00 00 00 00 00 00 00 00 00 00  ...^?...........
-   backtrace:
-     [<00000000ddb525dc>] kmem_cache_alloc+0x155/0x26f
-     [<00000000633ff1e0>] fdb_create+0x21/0x486 [bridge]
-     [<0000000092b17e9c>] fdb_insert+0x91/0xdc [bridge]
-     [<00000000f2a0f0ff>] br_fdb_change_mac_address+0xb3/0x175 [bridge]
-     [<000000001de02dbd>] br_stp_change_bridge_id+0xf/0xff [bridge]
-     [<00000000ac0e32b1>] br_set_mac_address+0x76/0x99 [bridge]
-     [<000000006846a77f>] dev_set_mac_address+0x63/0x9b
-     [<00000000d30738fc>] __bond_release_one+0x3f6/0x455 [bonding]
-     [<00000000fc7ec01d>] bond_netdev_event+0x2f2/0x400 [bonding]
-     [<00000000305d7795>] notifier_call_chain+0x38/0x56
-     [<0000000028885d4a>] call_netdevice_notifiers+0x1e/0x23
-     [<000000008279477b>] rollback_registered_many+0x353/0x6a4
-     [<0000000018ef753a>] unregister_netdevice_many+0x17/0x6f
-     [<00000000ba854b7a>] rtnl_delete_link+0x3c/0x43
-     [<00000000adf8618d>] rtnl_dellink+0x1dc/0x20a
-     [<000000009b6395fd>] rtnetlink_rcv_msg+0x23d/0x268
-
-Fixes: 43598813386f ("bridge: add local MAC address to forwarding table (v2)")
-Reported-by: syzbot+2add91c08eb181fea1bf@syzkaller.appspotmail.com
-Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Fixes: b8eb718348b8 ("net-sysfs: Fix reference count leak in rx|netdev_queue_add_kobject")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: David Miller <davem@davemloft.net>
+Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/bridge/br_device.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ net/core/net-sysfs.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/net/bridge/br_device.c
-+++ b/net/bridge/br_device.c
-@@ -253,6 +253,12 @@ static int br_set_mac_address(struct net
- 	if (!is_valid_ether_addr(addr->sa_data))
- 		return -EADDRNOTAVAIL;
+--- a/net/core/net-sysfs.c
++++ b/net/core/net-sysfs.c
+@@ -1457,14 +1457,17 @@ static int netdev_queue_add_kobject(stru
+ 	struct kobject *kobj = &queue->kobj;
+ 	int error = 0;
  
-+	/* dev_set_mac_addr() can be called by a master device on bridge's
-+	 * NETDEV_UNREGISTER, but since it's being destroyed do nothing
++	/* Kobject_put later will trigger netdev_queue_release call
++	 * which decreases dev refcount: Take that reference here
 +	 */
-+	if (dev->reg_state != NETREG_REGISTERED)
-+		return -EBUSY;
++	dev_hold(queue->dev);
 +
- 	spin_lock_bh(&br->lock);
- 	if (!ether_addr_equal(dev->dev_addr, addr->sa_data)) {
- 		/* Mac address will be changed in br_stp_change_bridge_id(). */
+ 	kobj->kset = dev->queues_kset;
+ 	error = kobject_init_and_add(kobj, &netdev_queue_ktype, NULL,
+ 				     "tx-%u", index);
+ 	if (error)
+ 		return error;
+ 
+-	dev_hold(queue->dev);
+-
+ #ifdef CONFIG_BQL
+ 	error = sysfs_create_group(kobj, &dql_group);
+ 	if (error) {
 
 
