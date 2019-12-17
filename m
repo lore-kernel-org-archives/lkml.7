@@ -2,135 +2,177 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7081C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FF3C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3ECA21D7D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:04:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D828206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:04:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IepK1T4e"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mvRDQsws"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728740AbfLQVEZ (ORCPT
+        id S1728773AbfLQVEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 16:04:25 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54915 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728399AbfLQVDf (ORCPT
+        Tue, 17 Dec 2019 16:04:41 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36118 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727241AbfLQVEi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 16:03:35 -0500
-Received: by mail-wm1-f66.google.com with SMTP id b19so4322671wmj.4;
-        Tue, 17 Dec 2019 13:03:33 -0800 (PST)
+        Tue, 17 Dec 2019 16:04:38 -0500
+Received: by mail-pf1-f195.google.com with SMTP id x184so8262185pfb.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 13:04:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=3xyP56jfldk/QOafjRLnUwDKDDtqv9xmwev/LMdHDz4=;
-        b=IepK1T4eyRa/Fd+JEJACkzRNKWN1Mi65wb9Z/timiiFdWrYIV4mpLb6KSJFxeO7pSB
-         0+D8H2z738RcaY6hMbUQdLG4KlneBfkoLKDSwUw/trV5H9rp816xzLJUvzlNWdJ67Z3x
-         myjRFDYiumHaR6otSdbWyiBFRYBaOLm38WVBEMNBgh5LBUG/rbFdR+RcMBVTQ/eEP63w
-         1+1kb/lhj9wKzHbzMpy2dVerl/Kv5znE91r+3OEamPsJs3p4guhZWDH+jlIUPzP+yg5R
-         wgOS+ynUchrx+dKkoYi4ixxPZk3dRxhh2wue53MIP56XTF5sXzXjejB1CdkV042zNwq9
-         nq1A==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1+26A+2VB2HJa/JQAWYAfB+QQDCd/IKr2ogBbGLbutU=;
+        b=mvRDQswsWn70e5n9/hEvMCOUivm4JLj9eLcfRTfba0W+0Qq59F9fXuqaprna0IMKXI
+         D9XlZ/XVMcKDHKX+lRYml3D2wnvj0YGFWwdl+RYGkKCeMk1qaLrn7xU6A5eZqajjDmOA
+         B7iJSSgekYCrZT8R1GNcxzvgJy594UukTKDqE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=3xyP56jfldk/QOafjRLnUwDKDDtqv9xmwev/LMdHDz4=;
-        b=FkW7sRroOKGJZIzEeg0Eh4ByRq7lfhbxs94qN0XtxpQ8iuEEkLYTd2Kcp/mcZg3DAN
-         6sqMdjcA0e8lFP4s2cTF0bdHZffxD95AbWt0TZZCLmsjSz5M92sly1EddDcyLJ8IrML9
-         /MWUY+bNM6F3nJIqJ/mv32zdm3dqKFSTPSpFjKTb1oyYQ00lmPD7PCz37Y6d/fEFSykh
-         uw2LxxiQI82YAcz14pZUlG1IVRDnThdqBvJ1LOC9MqjdJHkZLrgmZd1YkozLltQpc3Eh
-         JlW8lytNgW/a4bE4ffe9rzSWRnmihjIUD9g9oOIo43FbsxH+clmShv/XV1b2q95wqnea
-         /5Vg==
-X-Gm-Message-State: APjAAAXYCG7m6j7NuFp/SjCt8DczjURKgTtU5SzmCWfuepjFidc2tc+b
-        HWMB3ufE8RIHLRzTW1Ed2fk=
-X-Google-Smtp-Source: APXvYqx6FXdGu1uMMrx6xqysMukshZBb05oMC7T5qwh/o6DLubYhJW5yLiDondYhhFYgINnWAChviw==
-X-Received: by 2002:a1c:c919:: with SMTP id f25mr7554275wmb.49.1576616613191;
-        Tue, 17 Dec 2019 13:03:33 -0800 (PST)
-Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id i5sm37856wml.31.2019.12.17.13.03.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 17 Dec 2019 13:03:32 -0800 (PST)
-From:   Doug Berger <opendmb@gmail.com>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>
-Subject: [PATCH net-next 8/8] net: bcmgenet: Add software counters to track reallocations
-Date:   Tue, 17 Dec 2019 13:02:29 -0800
-Message-Id: <1576616549-39097-9-git-send-email-opendmb@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576616549-39097-1-git-send-email-opendmb@gmail.com>
-References: <1576616549-39097-1-git-send-email-opendmb@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1+26A+2VB2HJa/JQAWYAfB+QQDCd/IKr2ogBbGLbutU=;
+        b=cMAddzkkfhH6sPgmw2clarq13I5ttPwm0VBgLBASWKkEl82VFo0PznpeeoucUPoo4U
+         0CujnlFQ/qIesNIUaZENrmwXZW8aWZBZLRzGBJ+ifMhnMmUL20ebj45wDKbkclwcA+F9
+         TEXycud+bmcwpEcKn/urpVS/rIpjZUg6xwfYQxHt4cMlgSJnJADyf7L5+S1/OY2PoyIk
+         dyw3Mn+lAb1Z80duwCniavNpbidbDf2PeseeKmOtnxcVQ3aBZrOrZmb9SHz/dstFhWO2
+         qxKtP7hhX3LPilDcujkBR6mU/5pGtQDiA/DtYNXFcdLTPkvL2ulXOUVzxpwoY2Ueykfw
+         78TQ==
+X-Gm-Message-State: APjAAAXtRJ2dKyUE/V+IstkrIMqSm5rH33IYTZC83r+rV2vcLs4CaYLx
+        HC4M/IvJ0jN9yKXowRARc3jOKw==
+X-Google-Smtp-Source: APXvYqx8uYGUj8zzwEF0jGyJKMRn4A2TAQwLPUGapJkhurejbCH8bXNW1EM6Cx+z/k7HOiEBCV/zng==
+X-Received: by 2002:aa7:82d5:: with SMTP id f21mr25319829pfn.245.1576616677617;
+        Tue, 17 Dec 2019 13:04:37 -0800 (PST)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id u18sm27818964pgi.44.2019.12.17.13.04.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 13:04:36 -0800 (PST)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linus.walleij@linaro.org, mka@chromium.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org,
+        Roja Rani Yarubandi <rojay@codeaurora.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH] arm64: dts: qcom: sc7180: Fix I2C/UART numbers 2, 4, 7, and 9
+Date:   Tue, 17 Dec 2019 13:04:07 -0800
+Message-Id: <20191217130352.1.Id8562de45e8441cac34699047e25e7424281e9d4@changeid>
+X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When inserting the TSB, keep track of how many times we had to do
-it and if there was a failure in doing so, this helps profile the
-driver for possibly incorrect headroom settings.
+Commit f4a73f5e2633 ("pinctrl: qcom: sc7180: Add new qup functions")
+has landed which means that we absolutely need to use the proper names
+for the pinmuxing for I2C/UART numbers 2, 4, 7, and 9.  Let's do it.
 
-Signed-off-by: Doug Berger <opendmb@gmail.com>
+For reference:
+- If you get only one of this commit and the pinctrl commit then none
+  of I2C/UART 2, 4, 7, and 9 will work.
+- If you get neither of these commits then I2C 2, 4, 7, and 9 will
+  work but not UART.
+
+...but despite the above it should be fine for this commit to land in
+the Qualcomm tree because sc7180.dtsi only exists there (it hasn't
+made it to mainline).
+
+Fixes: ba3fc6496366 ("arm64: dts: sc7180: Add qupv3_0 and qupv3_1")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
- drivers/net/ethernet/broadcom/genet/bcmgenet.c | 6 ++++++
- drivers/net/ethernet/broadcom/genet/bcmgenet.h | 2 ++
- 2 files changed, 8 insertions(+)
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index 0280e76bb60f..e0109b86c054 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -861,6 +861,9 @@ static const struct bcmgenet_stats bcmgenet_gstrings_stats[] = {
- 	STAT_GENET_SOFT_MIB("alloc_rx_buff_failed", mib.alloc_rx_buff_failed),
- 	STAT_GENET_SOFT_MIB("rx_dma_failed", mib.rx_dma_failed),
- 	STAT_GENET_SOFT_MIB("tx_dma_failed", mib.tx_dma_failed),
-+	STAT_GENET_SOFT_MIB("tx_realloc_tsb", mib.tx_realloc_tsb),
-+	STAT_GENET_SOFT_MIB("tx_realloc_tsb_failed",
-+			    mib.tx_realloc_tsb_failed),
- 	/* Per TX queues */
- 	STAT_GENET_Q(0),
- 	STAT_GENET_Q(1),
-@@ -1487,6 +1490,7 @@ static void bcmgenet_tx_reclaim_all(struct net_device *dev)
- static struct sk_buff *bcmgenet_put_tx_csum(struct net_device *dev,
- 					    struct sk_buff *skb)
- {
-+	struct bcmgenet_priv *priv = netdev_priv(dev);
- 	struct status_64 *status = NULL;
- 	struct sk_buff *new_skb;
- 	u16 offset;
-@@ -1501,11 +1505,13 @@ static struct sk_buff *bcmgenet_put_tx_csum(struct net_device *dev,
- 		new_skb = skb_realloc_headroom(skb, sizeof(*status));
- 		if (!new_skb) {
- 			dev_kfree_skb_any(skb);
-+			priv->mib.tx_realloc_tsb_failed++;
- 			dev->stats.tx_dropped++;
- 			return NULL;
- 		}
- 		dev_consume_skb_any(skb);
- 		skb = new_skb;
-+		priv->mib.tx_realloc_tsb++;
- 	}
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 52a58615ec06..faa9ef733204 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -717,7 +717,7 @@ pinmux {
+ 			qup_i2c2_default: qup-i2c2-default {
+ 				pinmux {
+ 					pins = "gpio15", "gpio16";
+-					function = "qup02";
++					function = "qup02_i2c";
+ 				};
+ 			};
  
- 	skb_push(skb, sizeof(*status));
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.h b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-index 11645cccc207..178d000e462f 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-@@ -144,6 +144,8 @@ struct bcmgenet_mib_counters {
- 	u32	alloc_rx_buff_failed;
- 	u32	rx_dma_failed;
- 	u32	tx_dma_failed;
-+	u32	tx_realloc_tsb;
-+	u32	tx_realloc_tsb_failed;
- };
+@@ -731,7 +731,7 @@ pinmux {
+ 			qup_i2c4_default: qup-i2c4-default {
+ 				pinmux {
+ 					pins = "gpio115", "gpio116";
+-					function = "qup04";
++					function = "qup04_i2c";
+ 				};
+ 			};
  
- #define UMAC_HD_BKP_CTRL		0x004
+@@ -752,7 +752,7 @@ pinmux {
+ 			qup_i2c7_default: qup-i2c7-default {
+ 				pinmux {
+ 					pins = "gpio6", "gpio7";
+-					function = "qup11";
++					function = "qup11_i2c";
+ 				};
+ 			};
+ 
+@@ -766,7 +766,7 @@ pinmux {
+ 			qup_i2c9_default: qup-i2c9-default {
+ 				pinmux {
+ 					pins = "gpio46", "gpio47";
+-					function = "qup13";
++					function = "qup13_i2c";
+ 				};
+ 			};
+ 
+@@ -867,7 +867,7 @@ pinmux {
+ 			qup_uart2_default: qup-uart2-default {
+ 				pinmux {
+ 					pins = "gpio15", "gpio16";
+-					function = "qup02";
++					function = "qup02_uart";
+ 				};
+ 			};
+ 
+@@ -882,7 +882,7 @@ pinmux {
+ 			qup_uart4_default: qup-uart4-default {
+ 				pinmux {
+ 					pins = "gpio115", "gpio116";
+-					function = "qup04";
++					function = "qup04_uart";
+ 				};
+ 			};
+ 
+@@ -905,7 +905,7 @@ pinmux {
+ 			qup_uart7_default: qup-uart7-default {
+ 				pinmux {
+ 					pins = "gpio6", "gpio7";
+-					function = "qup11";
++					function = "qup11_uart";
+ 				};
+ 			};
+ 
+@@ -919,7 +919,7 @@ pinmux {
+ 			qup_uart9_default: qup-uart9-default {
+ 				pinmux {
+ 					pins = "gpio46", "gpio47";
+-					function = "qup13";
++					function = "qup13_uart";
+ 				};
+ 			};
+ 
 -- 
-2.7.4
+2.24.1.735.g03f4e72817-goog
 
