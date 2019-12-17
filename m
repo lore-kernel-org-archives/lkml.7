@@ -4,42 +4,42 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E64C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5CE1C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69231207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A05820665
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:42:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="CPyPQiS7"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="iFvfqZE+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727601AbfLQLmy (ORCPT
+        id S1727642AbfLQLmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 06:42:54 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:48802 "EHLO
+        Tue, 17 Dec 2019 06:42:55 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:36486 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726383AbfLQLmx (ORCPT
+        by vger.kernel.org with ESMTP id S1726275AbfLQLmx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 17 Dec 2019 06:42:53 -0500
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 860A842657;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 5F029C00CC;
         Tue, 17 Dec 2019 11:42:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1576582973; bh=Q+mn6nGIE2m/MwzUx3zhn1TL+1xPevthZYqgen3IL6o=;
+        t=1576582973; bh=4HnZAoZdscSffoLRQAaVEBPU8XsY4emx6y4nwnhMNOU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=CPyPQiS7cNBDuHT0EPyG8Qnw8jPFHmY8oLgXRC3+o/XTrrZZpVeomapftaQ98C90+
-         wdCsPOdwiIA4v7n8vdEyW6wNuEdbfENPOwvGdfM0g60+CHQVYeVd3I0L6mR9cnKh/l
-         VPOjidREOLXL/nmu9B5Fi8SM/A+moR6pdUoFt+bBejwAL1l0IN7QYgQOvocG4X1J9g
-         6xQeJ6CEQY6U0sFN26YW7ozGGvI18gjFI+Z2kWeuG8w6TkIA/x//PwY2DL2CGLgGPO
-         sHCnL2/XMuGe+3nCbm1wTQLkiNLyMRlZUci6MLNHwxeBjx4AFW7vogcDefCuEFYicE
-         ccBgaCba6QFxg==
+        b=iFvfqZE+ri6Zxkv0ZNvJVIK7B8BqwBjDU0xdO8thZMK4mzGk/WVw5vnpyxplnzQfZ
+         XOQPBZibCT3cfUSLr4zWGLVM6GoCmDIddsgaN6rgT9gxYTW4T/w8AQ2ChgxWDUM5At
+         NCERTO4bAybLoR8/L/dBeXIVZ3a4OJ3u6JC88yZQEX9P/PDmVeE8yTDlIWvOiYfhWS
+         KvY25GMfYlTcISHJ3ODEoWvJn0vwZof1BXPZ7zKqFrUCMLeRJurnDOtsj9ACEmQ5Ik
+         Tj44Qq2pBZ0VI6obs8udowrWyoNJniIOTY0NiK6bcynwHUGpxXTq6jD3JktvL/skaZ
+         0wCchpWovsRWQ==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 16CA6A00AB;
+        by mailhost.synopsys.com (Postfix) with ESMTP id 045F9A00A7;
         Tue, 17 Dec 2019 11:42:51 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
@@ -53,9 +53,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net v2 7/8] net: stmmac: 16KB buffer must be 16 byte aligned
-Date:   Tue, 17 Dec 2019 12:42:37 +0100
-Message-Id: <83241d7ac5df5c39711a666403ee36b68029a01a.1576581853.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH net v2 6/8] net: stmmac: RX buffer size must be 16 byte aligned
+Date:   Tue, 17 Dec 2019 12:42:36 +0100
+Message-Id: <8d7b87265a2727a28896203f5569d7039c2c34c8.1576581853.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1576581853.git.Jose.Abreu@synopsys.com>
 References: <cover.1576581853.git.Jose.Abreu@synopsys.com>
@@ -66,7 +66,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 16KB RX Buffer must also be 16 byte aligned. Fix it.
+We need to align the RX buffer size to at least 16 byte so that IP
+doesn't mis-behave. This is required by HW.
 
 Fixes: 7ac6653a085b ("stmmac: Move the STMicroelectronics driver")
 Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
@@ -82,25 +83,22 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/common.h | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
-index b210e987a1db..94f94686cf7d 100644
---- a/drivers/net/ethernet/stmicro/stmmac/common.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-@@ -365,9 +365,8 @@ struct dma_features {
- 	unsigned int arpoffsel;
- };
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 8c191e4d35d0..eb31d7fb321c 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -46,7 +46,7 @@
+ #include "dwxgmac2.h"
+ #include "hwif.h"
  
--/* GMAC TX FIFO is 8K, Rx FIFO is 16K */
--#define BUF_SIZE_16KiB 16384
--/* RX Buffer size must be < 8191 and multiple of 4/8/16 bytes */
-+/* RX Buffer size must be multiple of 4/8/16 bytes */
-+#define BUF_SIZE_16KiB 16368
- #define BUF_SIZE_8KiB 8188
- #define BUF_SIZE_4KiB 4096
- #define BUF_SIZE_2KiB 2048
+-#define	STMMAC_ALIGN(x)		__ALIGN_KERNEL(x, SMP_CACHE_BYTES)
++#define	STMMAC_ALIGN(x)		ALIGN_DOWN(ALIGN_DOWN(x, SMP_CACHE_BYTES), 16)
+ #define	TSO_MAX_BUFF_SIZE	(SZ_16K - 1)
+ 
+ /* Module parameters */
 -- 
 2.7.4
 
