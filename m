@@ -2,91 +2,96 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C54E4C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF440C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:29:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9817E21582
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:29:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C41F42082E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:29:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kfM6Q0/1"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="k7XGpINc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbfLQW3P (ORCPT
+        id S1726747AbfLQW3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 17:29:15 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37520 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbfLQW3P (ORCPT
+        Tue, 17 Dec 2019 17:29:19 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:57830 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726699AbfLQW3S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 17:29:15 -0500
-Received: by mail-wr1-f68.google.com with SMTP id w15so170909wru.4;
-        Tue, 17 Dec 2019 14:29:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RWt3ExeYVb/xt0x3jVaJlfGbFsShLKuVbmttW51IueE=;
-        b=kfM6Q0/1Gf2mZKbm46WIyfVxZK8VpBb2002YJXgoY5oY0pkQKoFYaxNeD76WBF36XZ
-         JaCMcFiJ3gn2LW/ccGxtyXHZCZWMf64p4jPQb1akaVf3DmiV83a6r/Tho9FYz95HTrRn
-         ZA+MNFpNqMz8t6FYPl0ff7dFWEE513WBv1IJPrd5hS+JWt+eSFHvCgxkUs/ejHneYxX9
-         wyOyWBjeRQsrLdjuGqPydESb5/nmCI20QAZWucmTDo28d1D08dJcair4F7PsYHl9cZsR
-         GKS9qrx1siYqFAQFZrNz9EwS1/2FLVKCuXhohG9efCPfEh7DZ7oyCu0wzbgnjcYG7lIw
-         5oYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RWt3ExeYVb/xt0x3jVaJlfGbFsShLKuVbmttW51IueE=;
-        b=asdpZ16F/IPe03qSz5lEMsBEhRtpgqPmJ34yucAHxdKJQ9P2t8ivGGlCWHO+SQxNlu
-         iO8WOtxtoajTq7uOAtA2UL+9CFi2Aod0avoe28q7pveWX1zA97PTSuh7xKfemBOPcZdZ
-         2Fld93o7n8ks1zAtJyAocrip9Mo1UQVec7H4vr6I2wU0844hFWx1oDpZ6ykdSaW4m7tB
-         J92MVzobEYY37uMCjxW3KDEy3MWp85BUlB7c2NTLFO/Dna2pJj7URTIzm4fTKj6PSH9S
-         YzcwKrfY9oAF5h7HUimbpci2zDZrwQOonFbYgCu04yWumg/HxNbkZVUbpgDKrKex7uUI
-         Dh3g==
-X-Gm-Message-State: APjAAAVTcznFCHe0gLtRwO/HfJOYBiJ479jyFWEGSR/jUTNu0YkNdzcB
-        Zt/bg/B7kmVuvEeXgAnWG+lTkFwt
-X-Google-Smtp-Source: APXvYqzFcZxyFVGyTB2tAeBNEcsOQevIlYU6VrSNZzKtZ13+c/sgnOzRyb/Y8ic3hwjDPsp338HrMg==
-X-Received: by 2002:adf:f508:: with SMTP id q8mr39712456wro.334.1576621752896;
-        Tue, 17 Dec 2019 14:29:12 -0800 (PST)
-Received: from localhost.localdomain ([109.126.149.134])
-        by smtp.gmail.com with ESMTPSA id q68sm306036wme.14.2019.12.17.14.29.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 14:29:12 -0800 (PST)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] optimise ctx's refs grabbing in io_uring
-Date:   Wed, 18 Dec 2019 01:28:37 +0300
-Message-Id: <cover.1576621553.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Tue, 17 Dec 2019 17:29:18 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBHMT4QX084634;
+        Tue, 17 Dec 2019 22:29:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=WinYCZ/RHcEQP5GUOI5SFMAS3SdpMxoM5iaMD28Lx8U=;
+ b=k7XGpINcjCLf5XAOrXKHTVx/ZHVsue9yEyN/KKr1a+CQBNTECo1sAneTg5+WsW4sWXKT
+ 56k77uZaBpUOkNv+LztXxyXW/2AMBK3hfvTILs5NBnLOiUQmoApEX9u/8Ugpswk+V+w5
+ uK7rfwe6XsIsB1BW/swJ+HLbLjGmOgMcOCXoxus/Y0GaoKoQnr2zhmJbS48FW+uyKbD9
+ Aj1Wbw/d6vWunLA8hSMrcTm0dLw/pjA+qGlVZQxPrzJHxLeTgvWTvoBIJrlLltLFD7ib
+ dBwfwUhBNX0LpH0ShKpS9PGXD3hxL9dNxPq9yOS6Op3kxXDMUIXAS5N7WAjYP82s7aA0 mg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2wvrcr9mhv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 Dec 2019 22:29:13 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBHMSvEO028614;
+        Tue, 17 Dec 2019 22:29:12 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2wxm4wdppd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 Dec 2019 22:29:08 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBHMSVxp026592;
+        Tue, 17 Dec 2019 22:28:31 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 17 Dec 2019 14:28:31 -0800
+To:     Michal Suchanek <msuchanek@suse.de>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH] scsi: blacklist: add VMware ESXi cdrom - broken tray emulation
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20191217180840.9414-1-msuchanek@suse.de>
+Date:   Tue, 17 Dec 2019 17:28:28 -0500
+In-Reply-To: <20191217180840.9414-1-msuchanek@suse.de> (Michal Suchanek's
+        message of "Tue, 17 Dec 2019 19:08:40 +0100")
+Message-ID: <yq1bls6h9ir.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9474 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=961
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912170179
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9474 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912170179
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Optimise percpu_ref_tryget() by not calling it for each request, but
-batching it. This gave a measurable performance boost, though with
-a bit unconventional(/unrealistic?) workload.
 
-There is still one step to add, which is not implemented with
-patchset, and will amortise the effect calls to io_uring_enter().
+Michal,
 
-rebased on top of for-5.6/io_uring
+> +	{"VMware", "VMware", NULL, BLIST_NO_MATCH_VENDOR | BLIST_NO_TRAY},
 
-Pavel Begunkov (2):
-  pcpu_ref: add percpu_ref_tryget_many()
-  io_uring: batch getting pcpu references
-
- fs/io_uring.c                   | 11 ++++++++---
- include/linux/percpu-refcount.h | 24 ++++++++++++++++++++----
- 2 files changed, 28 insertions(+), 7 deletions(-)
+Please don't introduce a blist flag to work around deficiencies in the
+matching interface. I suggest you tweak the matching functions so they
+handle a NULL vendor string correctly.
 
 -- 
-2.24.0
-
+Martin K. Petersen	Oracle Linux Engineering
