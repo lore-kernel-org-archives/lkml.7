@@ -6,93 +6,100 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F384BC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A40C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB3DD2146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:28:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C1B22072B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:38:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbfLQE2s (ORCPT
+        id S1727387AbfLQEi2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 23:28:48 -0500
-Received: from mo-csw1514.securemx.jp ([210.130.202.153]:58742 "EHLO
+        Mon, 16 Dec 2019 23:38:28 -0500
+Received: from mo-csw1515.securemx.jp ([210.130.202.154]:37476 "EHLO
         mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbfLQE2r (ORCPT
+        with ESMTP id S1725836AbfLQEi1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 23:28:47 -0500
-Received: by mo-csw.securemx.jp (mx-mo-csw1514) id xBH4SbUr031223; Tue, 17 Dec 2019 13:28:37 +0900
-X-Iguazu-Qid: 34tMW239pyFjTEImBk
-X-Iguazu-QSIG: v=2; s=0; t=1576556917; q=34tMW239pyFjTEImBk; m=xvkk2ILyQf2Wk8qjQeD3kZv9hP1nl1f2dieNnZRzlS0=
-Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
-        by relay.securemx.jp (mx-mr1512) id xBH4SZdR023261;
-        Tue, 17 Dec 2019 13:28:36 +0900
-Received: from enc02.toshiba.co.jp ([61.202.160.51])
-        by imx12.toshiba.co.jp  with ESMTP id xBH4SZ6C022042;
-        Tue, 17 Dec 2019 13:28:35 +0900 (JST)
-Received: from hop101.toshiba.co.jp ([133.199.85.107])
-        by enc02.toshiba.co.jp  with ESMTP id xBH4SZso023846;
-        Tue, 17 Dec 2019 13:28:35 +0900
-Date:   Tue, 17 Dec 2019 13:28:29 +0900
+        Mon, 16 Dec 2019 23:38:27 -0500
+Received: by mo-csw.securemx.jp (mx-mo-csw1515) id xBH4cFR5010467; Tue, 17 Dec 2019 13:38:15 +0900
+X-Iguazu-Qid: 34tMKo1JevEwTib89y
+X-Iguazu-QSIG: v=2; s=0; t=1576557494; q=34tMKo1JevEwTib89y; m=R/+K17mdD/Vln+E9qkngc/OrgbDAB07oZZSVseeD9SY=
+Received: from imx2.toshiba.co.jp (imx2.toshiba.co.jp [106.186.93.51])
+        by relay.securemx.jp (mx-mr1511) id xBH4cERN039096;
+        Tue, 17 Dec 2019 13:38:14 +0900
+Received: from enc01.localdomain ([106.186.93.100])
+        by imx2.toshiba.co.jp  with ESMTP id xBH4cDCh007642;
+        Tue, 17 Dec 2019 13:38:14 +0900 (JST)
+Received: from hop001.toshiba.co.jp ([133.199.164.63])
+        by enc01.localdomain  with ESMTP id xBH4cDUn017234;
+        Tue, 17 Dec 2019 13:38:13 +0900
+Date:   Tue, 17 Dec 2019 13:38:10 +0900
 From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH 4.14 204/267] blk-mq: avoid sysfs buffer overflow with
- too many CPU cores
+        Tejun Heo <tj@kernel.org>,
+        Marcin Pawlowski <mpawlowski@fb.com>,
+        "Williams, Gerald S" <gerald.s.williams@intel.com>
+Subject: Re: [PATCH 4.19 053/140] workqueue: Fix spurious sanity check
+ failures in destroy_workqueue()
 X-TSB-HOP: ON
-Message-ID: <20191217042829.x3n4h4yiuogklmym@toshiba.co.jp>
-References: <20191216174848.701533383@linuxfoundation.org>
- <20191216174913.713799376@linuxfoundation.org>
+Message-ID: <20191217043810.xamko46u2g4sdkwp@toshiba.co.jp>
+References: <20191216174747.111154704@linuxfoundation.org>
+ <20191216174802.938835002@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191216174913.713799376@linuxfoundation.org>
+In-Reply-To: <20191216174802.938835002@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 06:48:50PM +0100, Greg Kroah-Hartman wrote:
-> From: Ming Lei <ming.lei@redhat.com>
+On Mon, Dec 16, 2019 at 06:48:41PM +0100, Greg Kroah-Hartman wrote:
+> From: Tejun Heo <tj@kernel.org>
 > 
-> commit 8962842ca5abdcf98e22ab3b2b45a103f0408b95 upstream.
+> commit def98c84b6cdf2eeea19ec5736e90e316df5206b upstream.
 > 
-> It is reported that sysfs buffer overflow can be triggered if the system
-> has too many CPU cores(>841 on 4K PAGE_SIZE) when showing CPUs of
-> hctx via /sys/block/$DEV/mq/$N/cpu_list.
+> Before actually destrying a workqueue, destroy_workqueue() checks
+> whether it's actually idle.  If it isn't, it prints out a bunch of
+> warning messages and leaves the workqueue dangling.  It unfortunately
+> has a couple issues.
 > 
-> Use snprintf to avoid the potential buffer overflow.
+> * Mayday list queueing increments pwq's refcnts which gets detected as
+>   busy and fails the sanity checks.  However, because mayday list
+>   queueing is asynchronous, this condition can happen without any
+>   actual work items left in the workqueue.
 > 
-> This version doesn't change the attribute format, and simply stops
-> showing CPU numbers if the buffer is going to overflow.
+> * Sanity check failure leaves the sysfs interface behind too which can
+>   lead to init failure of newer instances of the workqueue.
 > 
+> This patch fixes the above two by
+> 
+> * If a workqueue has a rescuer, disable and kill the rescuer before
+>   sanity checks.  Disabling and killing is guaranteed to flush the
+>   existing mayday list.
+> 
+> * Remove sysfs interface before sanity checks.
+> 
+> Signed-off-by: Tejun Heo <tj@kernel.org>
+> Reported-by: Marcin Pawlowski <mpawlowski@fb.com>
+> Reported-by: "Williams, Gerald S" <gerald.s.williams@intel.com>
 > Cc: stable@vger.kernel.org
-> Fixes: 676141e48af7("blk-mq: don't dump CPU -> hw queue map on driver load")
-> Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> Signed-off-by: Jens Axboe <axboe@kernel.dk>
 > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > 
 
-This commit also required following commit:
+This commit also requires the following commit:
 
-commit d2c9be89f8ebe7ebcc97676ac40f8dec1cf9b43a
-Author: Ming Lei <ming.lei@redhat.com>
-Date:   Mon Nov 4 16:26:53 2019 +0800
+commit 8efe1223d73c218ce7e8b2e0e9aadb974b582d7f
+Author: Tejun Heo <tj@kernel.org>
+Date:   Fri Sep 20 13:39:57 2019 -0700
 
-    blk-mq: make sure that line break can be printed
+    workqueue: Fix missing kfree(rescuer) in destroy_workqueue()
 
-    8962842ca5ab ("blk-mq: avoid sysfs buffer overflow with too many CPU cores")
-    avoids sysfs buffer overflow, and reserves one character for line break.
-    However, the last snprintf() doesn't get correct 'size' parameter passed
-    in, so fixed it.
+    Signed-off-by: Tejun Heo <tj@kernel.org>
+    Reported-by: Qian Cai <cai@lca.pw>
+    Fixes: def98c84b6cd ("workqueue: Fix spurious sanity check failures in destroy_workqueue()")
 
-    Fixes: 8962842ca5ab ("blk-mq: avoid sysfs buffer overflow with too many CPU cores")
-    Signed-off-by: Ming Lei <ming.lei@redhat.com>
-    Signed-off-by: Jens Axboe <axboe@kernel.dk>
-
-
-And this is also required for 4.4, 4.9 and 4.19.
-Please apply.
+This is also required to 4.4, 4.9, 4.14 and 5.3.
 
 Best regards,
   Nobuhiro
