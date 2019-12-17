@@ -2,177 +2,96 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47735C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 03:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 225F6C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 03:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13C77207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 03:09:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576552149;
-	bh=GQZDXJY7+IoZBUUHeRf+vP2H22Pn7yF0DZC89Vo2buA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mBH2la4GSnAkA6yZ+VM7fFlJgAEbC3movc0dF9vM4knY5HLFJNB84Rn/4Im08F4wF
-	 dCllFyJoTkX0yY6uA7SBsHgSupGdSkkqWTFYIzInxCZl395bMGL8Jrcsr3AdneNQfU
-	 1yw+NTDr3VF/97hKC73M7lCIpTOT1LHvsB1CHerI=
+	by mail.kernel.org (Postfix) with ESMTP id E843D207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 03:12:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="duRBMfT8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbfLQDJH (ORCPT
+        id S1727106AbfLQDMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 22:09:07 -0500
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:52790 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbfLQDJG (ORCPT
+        Mon, 16 Dec 2019 22:12:07 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:34162 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbfLQDMH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 22:09:06 -0500
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id xBH391vL025060;
-        Tue, 17 Dec 2019 12:09:02 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com xBH391vL025060
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1576552142;
-        bh=4t1lCV0uWZvKt43orN1gNW8W91nH0lua6ZWQXcaYvuY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Okp9a2bsp2PE72C9azsPCEhDvyTKuZzrLL9qYM4UOUvM9Lqq7GDc6koCQy2LAW3p+
-         BwekroqObQIlECBE9QGr1guw59AoB5EFvRS8JsUIbL6OoM9xuzmhlhPrG7gnRgSVZW
-         +3T6oCTNAXxh/QmepGVH2gC0UwgljFv/nChErL1BxdxCdPcmGbzw1oEA91MaV0PbwI
-         03DOlkW3O9lN6Am2MIZzbOzFodeeRZZgLQx4JMP5bLLJBAdd8EYqB+JIXyMOQKawIU
-         VpBbvPxCOAhmms+zsTqxpndgP7PGGcLhQWCSdXYpFKmbvklTfm6F7yTUGdou9Arhbo
-         YTOD/KskdfLKA==
-X-Nifty-SrcIP: [209.85.217.54]
-Received: by mail-vs1-f54.google.com with SMTP id p21so5560532vsq.6;
-        Mon, 16 Dec 2019 19:09:01 -0800 (PST)
-X-Gm-Message-State: APjAAAWVOvrD6JeUYyR6wMYeAFRa4O/exZQuQeEvShSMWmQu1W3+kgv1
-        JIFLw1Xt05+kvmEgu/fldZbmS4qAKfagw/7wO1w=
-X-Google-Smtp-Source: APXvYqyxsQBhb4rqdB6hYYCI8STz/7ZBGLNUTopGUs82CcGBl57Zvd0YwyiZlj3ZcI5buNlmMDb+RJY4DfSApGLxRYs=
-X-Received: by 2002:a67:7ac4:: with SMTP id v187mr1511012vsc.181.1576552140771;
- Mon, 16 Dec 2019 19:09:00 -0800 (PST)
+        Mon, 16 Dec 2019 22:12:07 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBH39Ew0115203;
+        Tue, 17 Dec 2019 03:11:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=0y020KkdpGMUzrroJ1sM8EQmv/IQmC6fiwvxd0e0FgU=;
+ b=duRBMfT8O/Yf4ZPAekw2rPzBySPOlCasXUi0A9bCOQWCl5nNhZbDCMtVbqKBkL6rpDzn
+ ksfCfyjURIoQpJZqyMGe6uhxB+QcqzbvwgcW9lkjoW2O/ndFJB4btqvhf8zz7DBrZTs2
+ OsvDcNUIfbGcAJ6/VIdIEunkCQLYt0yCYUWRjK2jgqCXhDCmACC1EAFjTxX7d6mP9Jm2
+ yVOiNgHQ+rlbZ29//RX3CJm7P7Ew+TESzV0CSEuyIBcpLpTszt6kd9XwWEzoWO8gyjd7
+ RKfIwkQahWPsHEfULDaxA/Pdakm/Nr7QZm7AtvC6BvFyjTzmlJByuQRJ0vpKifTRAp2D wA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2wvq5ubsv2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 Dec 2019 03:11:55 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBH39Cxg115796;
+        Tue, 17 Dec 2019 03:09:55 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2wxm5me40a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 Dec 2019 03:09:55 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBH39qBO027712;
+        Tue, 17 Dec 2019 03:09:52 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 16 Dec 2019 19:09:50 -0800
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Hannes Reinecke <hare@suse.com>, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scsi: lpfc: fix build failure with DEBUGFS disabled
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20191216131701.3125077-1-arnd@arndb.de>
+Date:   Mon, 16 Dec 2019 22:09:47 -0500
+In-Reply-To: <20191216131701.3125077-1-arnd@arndb.de> (Arnd Bergmann's message
+        of "Mon, 16 Dec 2019 14:16:49 +0100")
+Message-ID: <yq1h81zhclg.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-References: <20191209035148.17048-1-masahiroy@kernel.org>
-In-Reply-To: <20191209035148.17048-1-masahiroy@kernel.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 17 Dec 2019 12:08:25 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATWqr_kJhCs7Eohxe-QSU3A+Ebh7w88zXjYK_=V6xG8Pg@mail.gmail.com>
-Message-ID: <CAK7LNATWqr_kJhCs7Eohxe-QSU3A+Ebh7w88zXjYK_=V6xG8Pg@mail.gmail.com>
-Subject: Re: [PATCH] scripts/kallsyms: fix offset overflow of kallsyms_relative_base
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Olof Johansson <olof@lixom.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9473 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=725
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912170027
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9473 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=805 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912170027
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 9, 2019 at 12:52 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> Since commit 5e5c4fa78745 ("scripts/kallsyms: shrink table before
-> sorting it"), kallsyms_relative_base can be larger than _text, which
-> causes overflow when building the 32-bit kernel.
->
-> https://lkml.org/lkml/2019/12/7/156
->
-> This is because _text is, unless --all-symbols is specified, now
-> trimmed from the symbol table before record_relative_base() is called.
->
-> Handle the offset signedness also for kallsyms_relative_base. Introduce
-> a new helper, output_address(), to reduce the code duplication.
->
-> Fixes: 5e5c4fa78745 ("scripts/kallsyms: shrink table before sorting it")
-> Reported-by: Olof Johansson <olof@lixom.net>
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
->
 
-Applied to linux-kbuid.
+Arnd,
 
->  scripts/kallsyms.c | 38 ++++++++++++++++++--------------------
->  1 file changed, 18 insertions(+), 20 deletions(-)
->
-> diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
-> index fb55f262f42d..94153732ec00 100644
-> --- a/scripts/kallsyms.c
-> +++ b/scripts/kallsyms.c
-> @@ -310,6 +310,15 @@ static void output_label(const char *label)
->         printf("%s:\n", label);
->  }
->
-> +/* Provide proper symbols relocatability by their '_text' relativeness. */
-> +static void output_address(unsigned long long addr)
-> +{
-> +       if (_text <= addr)
-> +               printf("\tPTR\t_text + %#llx\n", addr - _text);
-> +       else
-> +               printf("\tPTR\t_text - %#llx\n", _text - addr);
-> +}
-> +
->  /* uncompress a compressed symbol. When this function is called, the best table
->   * might still be compressed itself, so the function needs to be recursive */
->  static int expand_symbol(const unsigned char *data, int len, char *result)
-> @@ -360,19 +369,6 @@ static void write_src(void)
->
->         printf("\t.section .rodata, \"a\"\n");
->
-> -       /* Provide proper symbols relocatability by their relativeness
-> -        * to a fixed anchor point in the runtime image, either '_text'
-> -        * for absolute address tables, in which case the linker will
-> -        * emit the final addresses at build time. Otherwise, use the
-> -        * offset relative to the lowest value encountered of all relative
-> -        * symbols, and emit non-relocatable fixed offsets that will be fixed
-> -        * up at runtime.
-> -        *
-> -        * The symbol names cannot be used to construct normal symbol
-> -        * references as the list of symbols contains symbols that are
-> -        * declared static and are private to their .o files.  This prevents
-> -        * .tmp_kallsyms.o or any other object from referencing them.
-> -        */
->         if (!base_relative)
->                 output_label("kallsyms_addresses");
->         else
-> @@ -380,6 +376,13 @@ static void write_src(void)
->
->         for (i = 0; i < table_cnt; i++) {
->                 if (base_relative) {
-> +                       /*
-> +                        * Use the offset relative to the lowest value
-> +                        * encountered of all relative symbols, and emit
-> +                        * non-relocatable fixed offsets that will be fixed
-> +                        * up at runtime.
-> +                        */
-> +
->                         long long offset;
->                         int overflow;
->
-> @@ -402,12 +405,7 @@ static void write_src(void)
->                         }
->                         printf("\t.long\t%#x\n", (int)offset);
->                 } else if (!symbol_absolute(&table[i])) {
-> -                       if (_text <= table[i].addr)
-> -                               printf("\tPTR\t_text + %#llx\n",
-> -                                       table[i].addr - _text);
-> -                       else
-> -                               printf("\tPTR\t_text - %#llx\n",
-> -                                       _text - table[i].addr);
-> +                       output_address(table[i].addr);
->                 } else {
->                         printf("\tPTR\t%#llx\n", table[i].addr);
->                 }
-> @@ -416,7 +414,7 @@ static void write_src(void)
->
->         if (base_relative) {
->                 output_label("kallsyms_relative_base");
-> -               printf("\tPTR\t_text - %#llx\n", _text - relative_base);
-> +               output_address(relative_base);
->                 printf("\n");
->         }
->
-> --
-> 2.17.1
->
+> A recent change appears to have moved an #endif by accident:
 
+Applied to 5.5/scsi-fixes, thanks!
 
 -- 
-Best Regards
-Masahiro Yamada
+Martin K. Petersen	Oracle Linux Engineering
