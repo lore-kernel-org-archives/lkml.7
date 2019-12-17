@@ -4,89 +4,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B5DAC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B504C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15D602176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 361F021835
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:49:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576626488;
-	bh=Mq+CzYePys3pngJ3MOYflnIFWFaWQfCqXPKgbYz3iVA=;
+	s=default; t=1576626543;
+	bh=bfLq0zjiMQPFWm4rp7k31jTDtIZZHlaC17DpzM/tp9k=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fP5hSPFecqZwB1D4e9ykAmsqCETchVFCoIPjb2aWti6SqMf9Dz/A0GUnEianPEGUt
-	 OmtlstmN36nho1LB1RkkVWb1MJUy2/AopnOQIMC1vKJulnvkDMsVniYfTKtB9Qr04g
-	 JcbUb5o4hFNwwtURwuESqOq63Z6Dn6O8N2/G6/VU=
+	b=W52xwGLXnUvdVNrcNwexmARTIEGxtZwcYatlbmAcv15tfRmvcm5G8HGefiDgietaB
+	 k3gforeAwKQp1m3SCB6YVlf706kqEMy5fI3lktBz9S0iP7eMMqz1QMnc7/Jg4y/+5J
+	 ZG4YvtrExcMHXnpirBQsKOOgY7AYudOKW6m2npnA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbfLQXsH (ORCPT
+        id S1726565AbfLQXtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 18:48:07 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41271 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbfLQXsE (ORCPT
+        Tue, 17 Dec 2019 18:49:02 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42931 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbfLQXtC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 18:48:04 -0500
-Received: by mail-oi1-f194.google.com with SMTP id i1so106570oie.8;
-        Tue, 17 Dec 2019 15:48:04 -0800 (PST)
+        Tue, 17 Dec 2019 18:49:02 -0500
+Received: by mail-ot1-f67.google.com with SMTP id 66so52499otd.9;
+        Tue, 17 Dec 2019 15:49:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Tutk/Fdb9yvvc0d6ClJQt0rt94NZhM3GPxr38qCafUE=;
-        b=Ygyb2krK+Lix6DY2BAitTkTJTXCKcg4mokG0/mioLBt+nejJ/FPPE3zNrTRHNqPT0I
-         Xf+DLBpdq2PNNXxo4QJBxQyxAA6I2Je0RLzD2HtYubFNCJBB7f+OLbrkjg2X9rT5YU8a
-         Zo4r4osHfJo5Sr+UVYHlqcYRrC34K9HXLadyJh0GmYNG8N1XWjArQc0Zub4Scu9TB1JR
-         FZXilE9irXoqpA4Or6OI1p0BYAF67MVGhmOHpj+Rk47BfslfjxstD6bIPiq881Znj4ca
-         smDY0tPa2c3tHLhAWqyfyT4P/vdbUJLuKPCz5TOzpQp2XAVv1BC34GPfQ3zGiGAUMRm1
-         ZhjA==
-X-Gm-Message-State: APjAAAUNTC0/xYdU7qwdb9jCrzNhSnVekLN3n1lWYwFc5hz7P/aPDC1I
-        K47xkhKPs/j/nuuBfuAapQ==
-X-Google-Smtp-Source: APXvYqyP2Fiocy07OTYHl4c41Qrueem8kz4bjMPaTYDoamQglq516HtSZQh0evY8NWPhggZ/yc0W4w==
-X-Received: by 2002:aca:b48a:: with SMTP id d132mr3061698oif.111.1576626483838;
-        Tue, 17 Dec 2019 15:48:03 -0800 (PST)
+        bh=Jlg2ki2yobPLE5+Iz6CrZ9HDHot4jm6bFyP7eLrU3qQ=;
+        b=FqvyGhL7of1GOVREgL/8ejZuNuqIPJTFRMX4xCIXw0we4NM053Q0qZ/np3717xs+EL
+         pY7iBu+ixQtSX5z0w2J1BetHrLbHLkU+0umS7KUm4+5OobkgS4SwMy0LVzdagLOYawao
+         AFJTZqWXraRvn+1+irNhBVGS7UejBbAuZdnzXkPRgmSeWgTO6+pjz72frMz5OAYtFDRU
+         Ajlv1RpcfNGJTTQwL8hIqwohgTiHOYBf0BplwEQL7oKOM9thAZUnKF1MF8+TNicYg1bY
+         LaOi7KkrQPS398/1QA8QXgX9wjI9FQOghBCkFsW+s/jQiBwy/2DywbTF+ICZBiBsZ2Qw
+         0I9Q==
+X-Gm-Message-State: APjAAAX/Hat2pBn9/dxEWIKqMfd0Tm1mR3kC+AwJq9LSb8qg9cL/I5B3
+        uCGVqmDzeefm7fjxoNcjRQ==
+X-Google-Smtp-Source: APXvYqw+ktR6zmWC15DCzXWZThyq8OS0sep09XrYuNDJkj8QrlsDYGIEMrNnc9m27AMPyfWoF5gKSw==
+X-Received: by 2002:a05:6830:22e2:: with SMTP id t2mr81055otc.129.1576626541083;
+        Tue, 17 Dec 2019 15:49:01 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e9sm165102oia.10.2019.12.17.15.48.02
+        by smtp.gmail.com with ESMTPSA id g8sm116989otq.19.2019.12.17.15.49.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 15:48:03 -0800 (PST)
-Date:   Tue, 17 Dec 2019 17:48:02 -0600
+        Tue, 17 Dec 2019 15:49:00 -0800 (PST)
+Date:   Tue, 17 Dec 2019 17:49:00 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com,
-        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: Re: [PATCH v2] dt-bindings: rtc: Convert stm32 rtc bindings to
- json-schema
-Message-ID: <20191217234802.GA21307@bogus>
-References: <20191214090025.10648-1-benjamin.gaignard@st.com>
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: Re: [PATCH v2] dt-bindings: stm32: convert mlahb to json-schema
+Message-ID: <20191217234900.GA429@bogus>
+References: <20191217082415.14844-1-arnaud.pouliquen@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191214090025.10648-1-benjamin.gaignard@st.com>
+In-Reply-To: <20191217082415.14844-1-arnaud.pouliquen@st.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 14 Dec 2019 10:00:25 +0100, Benjamin Gaignard wrote:
-> Convert the STM32 RTC binding to DT schema format using json-schema
+On Tue, 17 Dec 2019 09:24:15 +0100, Arnaud Pouliquen wrote:
+> Convert the ML-AHB bus bindings to DT schema format using json-schema
 > 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
 > ---
-> changes in version 2:
-> - remove useless type definitions
-> - move properties definitions in the core of the yaml
-> 
->  .../devicetree/bindings/rtc/st,stm32-rtc.txt       |  61 ---------
->  .../devicetree/bindings/rtc/st,stm32-rtc.yaml      | 139 +++++++++++++++++++++
->  2 files changed, 139 insertions(+), 61 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
->  create mode 100644 Documentation/devicetree/bindings/rtc/st,stm32-rtc.yaml
+> V2: Add "ranges" property as mandatory
+> ---
+>  .../devicetree/bindings/arm/stm32/mlahb.txt   | 37 ----------
+>  .../bindings/arm/stm32/st,mlahb.yaml          | 70 +++++++++++++++++++
+>  2 files changed, 70 insertions(+), 37 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/arm/stm32/mlahb.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/stm32/st,mlahb.yaml
 > 
 
 Applied, thanks.
