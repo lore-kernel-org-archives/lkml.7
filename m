@@ -2,73 +2,150 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C76FFC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CCEC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7EBD2465E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:28:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1153A21D7D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:28:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729108AbfLQO2o (ORCPT
+        id S1729123AbfLQO2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:28:44 -0500
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:40211 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728896AbfLQO2n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:28:43 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TlCbT0S_1576592909;
-Received: from localhost(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0TlCbT0S_1576592909)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 17 Dec 2019 22:28:37 +0800
-From:   Wen Yang <wenyang@linux.alibaba.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Joseph Qi <joseph.qi@linux.alibaba.com>, xlpang@linux.alibaba.com,
-        Wen Yang <wenyang@linux.alibaba.com>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] block: make the io_ticks counter more accurate
-Date:   Tue, 17 Dec 2019 22:28:28 +0800
-Message-Id: <20191217142828.79295-1-wenyang@linux.alibaba.com>
-X-Mailer: git-send-email 2.23.0
+        Tue, 17 Dec 2019 09:28:54 -0500
+Received: from foss.arm.com ([217.140.110.172]:38860 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728896AbfLQO2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 09:28:53 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9F3E71FB;
+        Tue, 17 Dec 2019 06:28:52 -0800 (PST)
+Received: from arm.com (e112269-lin.cambridge.arm.com [10.1.196.56])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A44063F67D;
+        Tue, 17 Dec 2019 06:28:50 -0800 (PST)
+Date:   Tue, 17 Dec 2019 14:28:48 +0000
+From:   Steven Price <steven.price@arm.com>
+To:     "yezengruan@huawei.com" <yezengruan@huawei.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "maz@kernel.org" <maz@kernel.org>,
+        James Morse <James.Morse@arm.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        "julien.thierry.kdev@gmail.com" <julien.thierry.kdev@gmail.com>,
+        Catalin Marinas <Catalin.Marinas@arm.com>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH 2/5] KVM: arm64: Implement PV_LOCK_FEATURES call
+Message-ID: <20191217142848.GB38811@arm.com>
+References: <20191217135549.3240-1-yezengruan@huawei.com>
+ <20191217135549.3240-3-yezengruan@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191217135549.3240-3-yezengruan@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of the jiffies, we should update the io_ticks counter
-with the passed in parameter 'now'.
+On Tue, Dec 17, 2019 at 01:55:46PM +0000, yezengruan@huawei.com wrote:
+> From: Zengruan Ye <yezengruan@huawei.com>
+> 
+> This provides a mechanism for querying which paravirtualized lock
+> features are available in this hypervisor.
+> 
+> Also add the header file which defines the ABI for the paravirtualized
+> lock features we're about to add.
+> 
+> Signed-off-by: Zengruan Ye <yezengruan@huawei.com>
+> ---
+>  arch/arm64/include/asm/pvlock-abi.h | 16 ++++++++++++++++
+>  include/linux/arm-smccc.h           | 13 +++++++++++++
+>  virt/kvm/arm/hypercalls.c           |  3 +++
+>  3 files changed, 32 insertions(+)
+>  create mode 100644 arch/arm64/include/asm/pvlock-abi.h
+> 
+> diff --git a/arch/arm64/include/asm/pvlock-abi.h b/arch/arm64/include/asm/pvlock-abi.h
+> new file mode 100644
+> index 000000000000..06e0c3d7710a
+> --- /dev/null
+> +++ b/arch/arm64/include/asm/pvlock-abi.h
+> @@ -0,0 +1,16 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright(c) 2019 Huawei Technologies Co., Ltd
+> + * Author: Zengruan Ye <yezengruan@huawei.com>
+> + */
+> +
+> +#ifndef __ASM_PVLOCK_ABI_H
+> +#define __ASM_PVLOCK_ABI_H
+> +
+> +struct pvlock_vcpu_state {
+> +	__le64 preempted;
 
-Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Mikulas Patocka <mpatocka@redhat.com>
-Cc: Mike Snitzer <snitzer@redhat.com>
-Cc: linux-block@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- block/blk-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Somewhere we need to document when 'preempted' is. It looks like it's a
+1-bit field from the later patches.
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 379f6f5..eb71873 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -1365,7 +1365,7 @@ void blk_account_io_done(struct request *req, u64 now)
- 		part_stat_lock();
- 		part = req->part;
- 
--		update_io_ticks(part, jiffies);
-+		update_io_ticks(part, now);
- 		part_stat_inc(part, ios[sgrp]);
- 		part_stat_add(part, nsecs[sgrp], now - req->start_time_ns);
- 		part_stat_add(part, time_in_queue, nsecs_to_jiffies64(now - req->start_time_ns));
--- 
-1.8.3.1
+> +	/* Structure must be 64 byte aligned, pad to that size */
+> +	u8 padding[56];
+> +} __packed;
+> +
+> +#endif
+> diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
+> index 59494df0f55b..59e65a951959 100644
+> --- a/include/linux/arm-smccc.h
+> +++ b/include/linux/arm-smccc.h
+> @@ -377,5 +377,18 @@ asmlinkage void __arm_smccc_hvc(unsigned long a0, unsigned long a1,
+>  			   ARM_SMCCC_OWNER_STANDARD_HYP,	\
+>  			   0x21)
+>  
+> +/* Paravirtualised lock calls */
+> +#define ARM_SMCCC_HV_PV_LOCK_FEATURES				\
+> +	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,			\
+> +			   ARM_SMCCC_SMC_64,			\
+> +			   ARM_SMCCC_OWNER_STANDARD_HYP,	\
+> +			   0x40)
+> +
+> +#define ARM_SMCCC_HV_PV_LOCK_PREEMPTED				\
+> +	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,			\
+> +			   ARM_SMCCC_SMC_64,			\
+> +			   ARM_SMCCC_OWNER_STANDARD_HYP,	\
+> +			   0x41)
+> +
+>  #endif /*__ASSEMBLY__*/
+>  #endif /*__LINUX_ARM_SMCCC_H*/
+> diff --git a/virt/kvm/arm/hypercalls.c b/virt/kvm/arm/hypercalls.c
+> index 550dfa3e53cd..ff13871fd85a 100644
+> --- a/virt/kvm/arm/hypercalls.c
+> +++ b/virt/kvm/arm/hypercalls.c
+> @@ -52,6 +52,9 @@ int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)
+>  		case ARM_SMCCC_HV_PV_TIME_FEATURES:
+>  			val = SMCCC_RET_SUCCESS;
+>  			break;
+> +		case ARM_SMCCC_HV_PV_LOCK_FEATURES:
+> +			val = SMCCC_RET_SUCCESS;
+> +			break;
 
+Ideally you wouldn't report that PV_LOCK_FEATURES exists until the
+actual hypercalls are wired up to avoid breaking a bisect.
+
+Steve
+
+>  		}
+>  		break;
+>  	case ARM_SMCCC_HV_PV_TIME_FEATURES:
+> -- 
+> 2.19.1
+> 
+> 
