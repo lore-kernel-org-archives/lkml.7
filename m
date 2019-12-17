@@ -2,137 +2,89 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF7BC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:32:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C7AC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:35:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8555C2082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:32:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E778E20716
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:35:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Qie8fWb/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H7Qpu+WL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727335AbfLQKcj (ORCPT
+        id S1727066AbfLQKf4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 05:32:39 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:48144 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726411AbfLQKcj (ORCPT
+        Tue, 17 Dec 2019 05:35:56 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:52336 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbfLQKf4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 05:32:39 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBHAWWme076204;
-        Tue, 17 Dec 2019 04:32:32 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576578752;
-        bh=5z22DOMxe9ERTYZQN4IPLEVBrsRz70Mah/Vov2vIbjk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Qie8fWb/48AlIMLVc4ts4LqusyY3F1qPGN4b+o4Xz+bvUjmFuqFw87c+FzZvh9Wm2
-         DzvpAJhd9MKV/aRrzCMtXmmv6cF2iXKwF53uu8+poYhTX6tpcaMcU6Jbk3D8+Lqwnw
-         lk8QhnMz1yOvOLvhm2CrO6PBPB1F4tuJdnzJPqRw=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBHAWV93068770
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 17 Dec 2019 04:32:31 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
- Dec 2019 04:32:30 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 17 Dec 2019 04:32:30 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBHAWSwp012173;
-        Tue, 17 Dec 2019 04:32:29 -0600
-Subject: Re: [PATCH] iio: adc: at91: Use dma_request_chan() instead
- dma_request_slave_channel()
-To:     <Eugen.Hristev@microchip.com>, <jic23@kernel.org>
-CC:     <vkoul@kernel.org>, <Ludovic.Desroches@microchip.com>,
-        <linux-iio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20191217075043.23539-1-peter.ujfalusi@ti.com>
- <102e71da-8b9c-8528-3bec-b4a22895fb44@microchip.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <d4885bc6-4e3b-42ee-1cf6-c782fa70d3cb@ti.com>
-Date:   Tue, 17 Dec 2019 12:32:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 17 Dec 2019 05:35:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=cpguh3IDeCnxmoBZl/VM0JnqhlGLFdyEGgb+VrtQl8g=; b=H7Qpu+WLL1B0AHle/9R8MNW2E
+        I0GB2ODZAWckMRmP9XPilPQ0SIr8T2qBqKoicFwRsHkLiNIFZLAJ9tExilRyFUUe0t90DcOB6rSdM
+        eett1zSJyl2cJeXHnMMmzoKhcy+4IDxDsmP0/oy4tf7QeELqt9PKT3xmhnZB0pqIMHqv+Be44+QNQ
+        bLbnST3mgcGcDZmqKZaDQNaOAkV/XqzaJ8+2PqTrusgK3GSC6P1RMJHjZgZmXU9cKt5jZbT/i20eg
+        rCR1bcEfylxaVZdvHh34jvLwfJM758dgv8/W+UDXykdBHF2acWzAahl/58V+rFJ89LHKRI8hpbCi7
+        KStGBOhHQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ihACj-00056i-7M; Tue, 17 Dec 2019 10:35:49 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 632733035D4;
+        Tue, 17 Dec 2019 11:34:25 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E8CD729E71042; Tue, 17 Dec 2019 11:35:47 +0100 (CET)
+Date:   Tue, 17 Dec 2019 11:35:47 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     mingo@kernel.org, will@kernel.org, oleg@redhat.com,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        bigeasy@linutronix.de, juri.lelli@redhat.com, williams@redhat.com,
+        bristot@redhat.com, longman@redhat.com, jack@suse.com
+Subject: Re: [PATCH 5/5] locking/percpu-rwsem: Remove the embedded rwsem
+Message-ID: <20191217103547.GC2844@hirez.programming.kicks-ass.net>
+References: <20191113102115.116470462@infradead.org>
+ <20191113102855.925208237@infradead.org>
+ <20191118195304.b3d6fg4jmmj7kmfh@linux-p48b>
 MIME-Version: 1.0
-In-Reply-To: <102e71da-8b9c-8528-3bec-b4a22895fb44@microchip.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191118195304.b3d6fg4jmmj7kmfh@linux-p48b>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eugen,
+On Mon, Nov 18, 2019 at 11:53:04AM -0800, Davidlohr Bueso wrote:
+> On Wed, 13 Nov 2019, Peter Zijlstra wrote:
+> > @@ -54,23 +52,23 @@ static bool __percpu_down_read_trylock(s
+> > 	 * the same CPU as the increment, avoiding the
+> > 	 * increment-on-one-CPU-and-decrement-on-another problem.
+> 
+> Nit: Now that you've made read_count more symmetric, maybe this first
+> paragraph can be moved down to __percpu_rwsem_trylock() reader side,
+> as such:
+> 
+> 	/*
+> 	 * Due to having preemption disabled the decrement happens on
+> 	 * the same CPU as the increment, avoiding the
+> 	 * increment-on-one-CPU-and-decrement-on-another problem.
+> 	 */
+> 	preempt_disable();
+> 	ret = __percpu_down_read_trylock(sem);
+> 	preempt_enable();
 
-On 17/12/2019 9.59, Eugen.Hristev@microchip.com wrote:
-> 
-> 
-> On 17.12.2019 09:50, Peter Ujfalusi wrote:
-> 
->> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
->> eating up the error code.
->>
->> By using dma_request_chan() directly the driver can support deferred
->> probing against DMA.
->>
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->> ---
->>   drivers/iio/adc/at91-sama5d2_adc.c | 6 +++---
->>   1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> Hi Peter,
-> 
-> Thank you for the patch.
-> Nitpick : at91 is another driver (old one for different platforms), so 
-> can you please change the commit oneline to iio: adc: at91-sama5d2_adc: 
-> to not be confused about which driver is affected.
+There's another callsite for that function too, so I think the current
+place still works best.
 
-Sorry, just sent v2 with the correct subject prefix.
-By mistake I looked at the git log of at91_adc.c and picked the wrong
-prefix.
-
-> 
-> Thanks !
-> Eugen
-> 
->>
->> diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
->> index e1850f3d5cf3..a5c7771227d5 100644
->> --- a/drivers/iio/adc/at91-sama5d2_adc.c
->> +++ b/drivers/iio/adc/at91-sama5d2_adc.c
->> @@ -1444,10 +1444,10 @@ static void at91_adc_dma_init(struct platform_device *pdev)
->>          if (st->dma_st.dma_chan)
->>                  return;
->>
->> -       st->dma_st.dma_chan = dma_request_slave_channel(&pdev->dev, "rx");
->> -
->> -       if (!st->dma_st.dma_chan)  {
->> +       st->dma_st.dma_chan = dma_request_chan(&pdev->dev, "rx");
->> +       if (IS_ERR(st->dma_st.dma_chan))  {
->>                  dev_info(&pdev->dev, "can't get DMA channel\n");
->> +               st->dma_st.dma_chan = NULL;
->>                  goto dma_exit;
->>          }
->>
->> --
->> Peter
->>
->> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
->> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
->>
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
