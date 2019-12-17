@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F966C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE591C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E26A324683
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:57:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C99A24679
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:57:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727723AbfLQA5L (ORCPT
+        id S1727476AbfLQA5Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:57:11 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35004 "EHLO
+        Mon, 16 Dec 2019 19:57:24 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34986 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726875AbfLQAvl (ORCPT
+        by vger.kernel.org with ESMTP id S1726865AbfLQAvk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 19:51:41 -0500
+        Mon, 16 Dec 2019 19:51:40 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15I-0003LM-H8; Tue, 17 Dec 2019 00:51:32 +0000
+        id 1ih15I-0003L9-B4; Tue, 17 Dec 2019 00:51:32 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15H-0005V4-4P; Tue, 17 Dec 2019 00:51:31 +0000
+        id 1ih15I-0005Xo-4R; Tue, 17 Dec 2019 00:51:32 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Steve French" <stfrench@microsoft.com>,
-        "Pavel Shilovsky" <piastryyy@gmail.com>,
-        "Pavel Shilovsky" <pshilov@microsoft.com>
-Date:   Tue, 17 Dec 2019 00:46:21 +0000
-Message-ID: <lsq.1576543535.917207900@decadent.org.uk>
+        "Daniel Drake" <drake@endlessm.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        "Bjorn Helgaas" <bhelgaas@google.com>
+Date:   Tue, 17 Dec 2019 00:46:45 +0000
+Message-ID: <lsq.1576543535.672337928@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 047/136] CIFS: Force revalidate inode when dentry is
- stale
+Subject: [PATCH 3.16 071/136] PCI: PM: Fix pci_power_up()
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,58 +56,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Pavel Shilovsky <piastryyy@gmail.com>
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-commit c82e5ac7fe3570a269c0929bf7899f62048e7dbc upstream.
+commit 45144d42f299455911cc29366656c7324a3a7c97 upstream.
 
-Currently the client indicates that a dentry is stale when inode
-numbers or type types between a local inode and a remote file
-don't match. If this is the case attributes is not being copied
-from remote to local, so, it is already known that the local copy
-has stale metadata. That's why the inode needs to be marked for
-revalidation in order to tell the VFS to lookup the dentry again
-before openning a file. This prevents unexpected stale errors
-to be returned to the user space when openning a file.
+There is an arbitrary difference between the system resume and
+runtime resume code paths for PCI devices regarding the delay to
+apply when switching the devices from D3cold to D0.
 
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Namely, pci_restore_standard_config() used in the runtime resume
+code path calls pci_set_power_state() which in turn invokes
+__pci_start_power_transition() to power up the device through the
+platform firmware and that function applies the transition delay
+(as per PCI Express Base Specification Revision 2.0, Section 6.6.1).
+However, pci_pm_default_resume_early() used in the system resume
+code path calls pci_power_up() which doesn't apply the delay at
+all and that causes issues to occur during resume from
+suspend-to-idle on some systems where the delay is required.
+
+Since there is no reason for that difference to exist, modify
+pci_power_up() to follow pci_set_power_state() more closely and
+invoke __pci_start_power_transition() from there to call the
+platform firmware to power up the device (in case that's necessary).
+
+Fixes: db288c9c5f9d ("PCI / PM: restore the original behavior of pci_set_power_state()")
+Reported-by: Daniel Drake <drake@endlessm.com>
+Tested-by: Daniel Drake <drake@endlessm.com>
+Link: https://lore.kernel.org/linux-pm/CAD8Lp44TYxrMgPLkHCqF9hv6smEurMXvmmvmtyFhZ6Q4SE+dig@mail.gmail.com/T/#m21be74af263c6a34f36e0fc5c77c5449d9406925
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/cifs/inode.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/pci/pci.c | 24 +++++++++++-------------
+ 1 file changed, 11 insertions(+), 13 deletions(-)
 
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -405,6 +405,7 @@ int cifs_get_inode_info_unix(struct inod
- 		/* if uniqueid is different, return error */
- 		if (unlikely(cifs_sb->mnt_cifs_flags & CIFS_MOUNT_SERVER_INUM &&
- 		    CIFS_I(*pinode)->uniqueid != fattr.cf_uniqueid)) {
-+			CIFS_I(*pinode)->time = 0; /* force reval */
- 			rc = -ESTALE;
- 			goto cgiiu_exit;
- 		}
-@@ -412,6 +413,7 @@ int cifs_get_inode_info_unix(struct inod
- 		/* if filetype is different, return error */
- 		if (unlikely(((*pinode)->i_mode & S_IFMT) !=
- 		    (fattr.cf_mode & S_IFMT))) {
-+			CIFS_I(*pinode)->time = 0; /* force reval */
- 			rc = -ESTALE;
- 			goto cgiiu_exit;
- 		}
-@@ -873,6 +875,7 @@ cifs_get_inode_info(struct inode **inode
- 		/* if uniqueid is different, return error */
- 		if (unlikely(cifs_sb->mnt_cifs_flags & CIFS_MOUNT_SERVER_INUM &&
- 		    CIFS_I(*inode)->uniqueid != fattr.cf_uniqueid)) {
-+			CIFS_I(*inode)->time = 0; /* force reval */
- 			rc = -ESTALE;
- 			goto cgii_exit;
- 		}
-@@ -880,6 +883,7 @@ cifs_get_inode_info(struct inode **inode
- 		/* if filetype is different, return error */
- 		if (unlikely(((*inode)->i_mode & S_IFMT) !=
- 		    (fattr.cf_mode & S_IFMT))) {
-+			CIFS_I(*inode)->time = 0; /* force reval */
- 			rc = -ESTALE;
- 			goto cgii_exit;
- 		}
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -657,19 +657,6 @@ void pci_update_current_state(struct pci
+ }
+ 
+ /**
+- * pci_power_up - Put the given device into D0 forcibly
+- * @dev: PCI device to power up
+- */
+-void pci_power_up(struct pci_dev *dev)
+-{
+-	if (platform_pci_power_manageable(dev))
+-		platform_pci_set_power_state(dev, PCI_D0);
+-
+-	pci_raw_set_power_state(dev, PCI_D0);
+-	pci_update_current_state(dev, PCI_D0);
+-}
+-
+-/**
+  * pci_platform_power_transition - Use platform to change device power state
+  * @dev: PCI device to handle.
+  * @state: State to put the device into.
+@@ -845,6 +832,17 @@ int pci_set_power_state(struct pci_dev *
+ EXPORT_SYMBOL(pci_set_power_state);
+ 
+ /**
++ * pci_power_up - Put the given device into D0 forcibly
++ * @dev: PCI device to power up
++ */
++void pci_power_up(struct pci_dev *dev)
++{
++	__pci_start_power_transition(dev, PCI_D0);
++	pci_raw_set_power_state(dev, PCI_D0);
++	pci_update_current_state(dev, PCI_D0);
++}
++
++/**
+  * pci_choose_state - Choose the power state of a PCI device
+  * @dev: PCI device to be suspended
+  * @state: target sleep state for the whole system. This is the value
 
