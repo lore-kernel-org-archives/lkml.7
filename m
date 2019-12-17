@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22436C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 030B5C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2C9621835
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:46:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD98C21582
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:46:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="WSnreI+u"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="hhuB/r3g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbfLQMqV (ORCPT
+        id S1728433AbfLQMqu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:46:21 -0500
-Received: from sv2-smtprelay2.synopsys.com ([149.117.73.133]:50910 "EHLO
+        Tue, 17 Dec 2019 07:46:50 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:38888 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727519AbfLQMqU (ORCPT
+        by vger.kernel.org with ESMTP id S1727962AbfLQMqV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 07:46:20 -0500
+        Tue, 17 Dec 2019 07:46:21 -0500
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 68CA94268D;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 5DFE2C00C9;
         Tue, 17 Dec 2019 12:46:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1576586779; bh=7NQjEW95aI/xz0UWPZxjxnNVqObM0l68OQ7cF2ISsc0=;
+        t=1576586780; bh=a4OXfOga3Vii2W4f9BAWW9qHV0yF71H2Q7mz9cIL2CY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=WSnreI+uDDIuYil8ajFHW3FieYqXH3d9fyM6AB0hMCMbvfdpJAVEsqTGFIK4dEDDU
-         0ts9rCKqTO6q4Kwx4SYKDE9etyBhn5DW+0j7MqcCDBmq0LWQi8u4WkEoYiiko49ejq
-         6QW26pqGAOtwEccufd+rlbPqnLA5GM+6uOwDIEt1RZT+T/Z+H7h/og8l1+HQNbJUsE
-         jm3DIy0KnEWXe42q+J1pC6r7lJ6fbVVJTJwu8X7AeK5y7Abad11SuMp0zkhQvjCflz
-         Avn+VixMz+dP6WCIgcmONgOJ72b9tsRWker8e8wkoJroozJeWf1PJL5WGUHukow2eG
-         cdcAHZjzx9N5Q==
+        b=hhuB/r3gdCxLxVxxXabia3uuwv2PkbVxIVx1O9VWqro+JcJxxDZsLqyS/Mv3WAUVs
+         hJ5A3fbmucDRnqhCiDXKOawpCZrTOAz/4kAXqrHWcfdziXXs7rBWQDguLsP4JIEPbY
+         EqLbv1Ub+D+i2xe+zEocR0NUhXykn5HOq1UOjAFq/WxNVAyfBCOTF+uDq4/0+2p7TQ
+         5G1dEmA4ENsp46dTLwvOQ00mNskpkf1zA+j5tOvu9boe0FwcgQ0Aw1ei+cP3o808nH
+         1ZNYaJ6T0cUiXfN4fNXAlRhuAsAOxtQggxwSx2WeJprlyaBEaJ4pkHQ0Zi1q/m0lQT
+         wpZT7CMYXKb+g==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 08AE6A00A6;
-        Tue, 17 Dec 2019 12:46:18 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id C29EAA0089;
+        Tue, 17 Dec 2019 12:46:17 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
 Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
@@ -53,9 +53,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2 7/7] net: stmmac: Integrate EST with TAPRIO scheduler API
-Date:   Tue, 17 Dec 2019 13:46:11 +0100
-Message-Id: <0a37387c1bb2561583e6ac8c7788659741876f32.1576586602.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH net-next v2 2/7] net: stmmac: Always arm TX Timer at end of transmission start
+Date:   Tue, 17 Dec 2019 13:46:06 +0100
+Message-Id: <c76b0d51238192f81a52231b214f252b20be55c6.1576586602.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1576586602.git.Jose.Abreu@synopsys.com>
 References: <cover.1576586602.git.Jose.Abreu@synopsys.com>
@@ -66,9 +66,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that we have the EST code for XGMAC and QoS we can use it with the
-TAPRIO scheduler. Integrate it into the main driver and use the API to
-configure the EST feature.
+If TX Coalesce timer is enabled we should always arm it, otherwise we
+may hit the case where an interrupt is missed and the TX Queue will
+timeout.
+
+Arming the timer does not necessarly mean it will run the tx_clean()
+because this function is wrapped around NAPI launcher.
 
 Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
@@ -83,176 +86,47 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/hwif.h        |   5 +
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |   2 +
- drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c   | 108 ++++++++++++++++++++++
- 3 files changed, 115 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-index 9fd34df6eb16..22f79c0a9343 100644
---- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-@@ -521,6 +521,7 @@ struct stmmac_priv;
- struct tc_cls_u32_offload;
- struct tc_cbs_qopt_offload;
- struct flow_cls_offload;
-+struct tc_taprio_qopt_offload;
- 
- struct stmmac_tc_ops {
- 	int (*init)(struct stmmac_priv *priv);
-@@ -530,6 +531,8 @@ struct stmmac_tc_ops {
- 			 struct tc_cbs_qopt_offload *qopt);
- 	int (*setup_cls)(struct stmmac_priv *priv,
- 			 struct flow_cls_offload *cls);
-+	int (*setup_taprio)(struct stmmac_priv *priv,
-+			    struct tc_taprio_qopt_offload *qopt);
- };
- 
- #define stmmac_tc_init(__priv, __args...) \
-@@ -540,6 +543,8 @@ struct stmmac_tc_ops {
- 	stmmac_do_callback(__priv, tc, setup_cbs, __args)
- #define stmmac_tc_setup_cls(__priv, __args...) \
- 	stmmac_do_callback(__priv, tc, setup_cls, __args)
-+#define stmmac_tc_setup_taprio(__priv, __args...) \
-+	stmmac_do_callback(__priv, tc, setup_taprio, __args)
- 
- struct stmmac_counters;
- 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index b3c6c5e29404..03bd32420b3b 100644
+index 3299f5bb02e2..311647cdd672 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -4074,6 +4074,8 @@ static int stmmac_setup_tc(struct net_device *ndev, enum tc_setup_type type,
- 						  priv, priv, true);
- 	case TC_SETUP_QDISC_CBS:
- 		return stmmac_tc_setup_cbs(priv, priv, type_data);
-+	case TC_SETUP_QDISC_TAPRIO:
-+		return stmmac_tc_setup_taprio(priv, priv, type_data);
- 	default:
- 		return -EOPNOTSUPP;
+@@ -3053,8 +3053,6 @@ static netdev_tx_t stmmac_tso_xmit(struct sk_buff *skb, struct net_device *dev)
+ 		tx_q->tx_count_frames = 0;
+ 		stmmac_set_tx_ic(priv, desc);
+ 		priv->xstats.tx_set_ic_bit++;
+-	} else {
+-		stmmac_tx_timer_arm(priv, queue);
  	}
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
-index 7d972e0fd2b0..58d4ce094381 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
-@@ -591,9 +591,117 @@ static int tc_setup_cls(struct stmmac_priv *priv,
- 	return ret;
- }
  
-+static int tc_setup_taprio(struct stmmac_priv *priv,
-+			   struct tc_taprio_qopt_offload *qopt)
-+{
-+	u32 size, wid = priv->dma_cap.estwid, dep = priv->dma_cap.estdep;
-+	struct plat_stmmacenet_data *plat = priv->plat;
-+	struct timespec64 time;
-+	int i, ret = 0;
-+
-+	if (!priv->dma_cap.estsel)
-+		return -EOPNOTSUPP;
-+
-+	switch (wid) {
-+	case 0x1:
-+		wid = 16;
-+		break;
-+	case 0x2:
-+		wid = 20;
-+		break;
-+	case 0x3:
-+		wid = 24;
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	switch (dep) {
-+	case 0x1:
-+		dep = 64;
-+		break;
-+	case 0x2:
-+		dep = 128;
-+		break;
-+	case 0x3:
-+		dep = 256;
-+		break;
-+	case 0x4:
-+		dep = 512;
-+		break;
-+	case 0x5:
-+		dep = 1024;
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	if (!qopt->enable)
-+		goto disable;
-+	if (qopt->num_entries >= dep)
-+		return -EINVAL;
-+	if (!qopt->base_time)
-+		return -ERANGE;
-+	if (!qopt->cycle_time)
-+		return -ERANGE;
-+
-+	if (!plat->est) {
-+		plat->est = devm_kzalloc(priv->device, sizeof(*plat->est),
-+					 GFP_KERNEL);
-+		if (!plat->est)
-+			return -ENOMEM;
-+	} else {
-+		memset(plat->est, 0, sizeof(*plat->est));
-+	}
-+
-+	size = qopt->num_entries;
-+
-+	priv->plat->est->gcl_size = size;
-+	priv->plat->est->enable = qopt->enable;
-+
-+	for (i = 0; i < size; i++) {
-+		s64 delta_ns = qopt->entries[i].interval;
-+		u32 gates = qopt->entries[i].gate_mask;
-+
-+		if (delta_ns > GENMASK(wid, 0))
-+			return -ERANGE;
-+		if (gates > GENMASK(31 - wid, 0))
-+			return -ERANGE;
-+		if (qopt->entries[i].command != TC_TAPRIO_CMD_SET_GATES)
-+			return -EOPNOTSUPP;
-+
-+		priv->plat->est->gcl[i] = delta_ns | (gates << wid);
-+	}
-+
-+	/* Adjust for real system time */
-+	time = ktime_to_timespec64(qopt->base_time);
-+	priv->plat->est->btr[0] = (u32)time.tv_nsec;
-+	priv->plat->est->btr[1] = (u32)time.tv_sec;
-+
-+	priv->plat->est->ctr[0] = (u32)(qopt->cycle_time % NSEC_PER_SEC);
-+	priv->plat->est->ctr[1] = (u32)(qopt->cycle_time / NSEC_PER_SEC);
-+
-+	ret = stmmac_est_configure(priv, priv->ioaddr, priv->plat->est,
-+				   priv->plat->clk_ptp_rate);
-+	if (ret) {
-+		netdev_err(priv->dev, "failed to configure EST\n");
-+		goto disable;
-+	}
-+
-+	netdev_info(priv->dev, "configured EST\n");
-+	return 0;
-+
-+disable:
-+	priv->plat->est->enable = false;
-+	stmmac_est_configure(priv, priv->ioaddr, priv->plat->est,
-+			     priv->plat->clk_ptp_rate);
-+	return ret;
-+}
-+
- const struct stmmac_tc_ops dwmac510_tc_ops = {
- 	.init = tc_init,
- 	.setup_cls_u32 = tc_setup_cls_u32,
- 	.setup_cbs = tc_setup_cbs,
- 	.setup_cls = tc_setup_cls,
-+	.setup_taprio = tc_setup_taprio,
- };
+ 	/* We've used all descriptors we need for this skb, however,
+@@ -3125,6 +3123,7 @@ static netdev_tx_t stmmac_tso_xmit(struct sk_buff *skb, struct net_device *dev)
+ 
+ 	tx_q->tx_tail_addr = tx_q->dma_tx_phy + (tx_q->cur_tx * sizeof(*desc));
+ 	stmmac_set_tx_tail_ptr(priv, priv->ioaddr, tx_q->tx_tail_addr, queue);
++	stmmac_tx_timer_arm(priv, queue);
+ 
+ 	return NETDEV_TX_OK;
+ 
+@@ -3276,8 +3275,6 @@ static netdev_tx_t stmmac_xmit(struct sk_buff *skb, struct net_device *dev)
+ 		tx_q->tx_count_frames = 0;
+ 		stmmac_set_tx_ic(priv, desc);
+ 		priv->xstats.tx_set_ic_bit++;
+-	} else {
+-		stmmac_tx_timer_arm(priv, queue);
+ 	}
+ 
+ 	/* We've used all descriptors we need for this skb, however,
+@@ -3366,6 +3363,7 @@ static netdev_tx_t stmmac_xmit(struct sk_buff *skb, struct net_device *dev)
+ 
+ 	tx_q->tx_tail_addr = tx_q->dma_tx_phy + (tx_q->cur_tx * sizeof(*desc));
+ 	stmmac_set_tx_tail_ptr(priv, priv->ioaddr, tx_q->tx_tail_addr, queue);
++	stmmac_tx_timer_arm(priv, queue);
+ 
+ 	return NETDEV_TX_OK;
+ 
 -- 
 2.7.4
 
