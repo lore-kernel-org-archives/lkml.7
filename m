@@ -2,149 +2,180 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75BF2C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B6DC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A9D420717
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:15:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A539B20716
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:16:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="twFugwKS"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ZSTg77We"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728229AbfLQNPp (ORCPT
+        id S1728244AbfLQNQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 08:15:45 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:39644 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727736AbfLQNPo (ORCPT
+        Tue, 17 Dec 2019 08:16:16 -0500
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:42575 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727736AbfLQNQQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 08:15:44 -0500
-Received: by mail-lf1-f68.google.com with SMTP id y1so6943166lfb.6
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 05:15:43 -0800 (PST)
+        Tue, 17 Dec 2019 08:16:16 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sU3/bXls/KxSfTSBjP7Np2j+r9tPORCUpNYt9Wkb3H0=;
-        b=twFugwKSClwiFK9pIgO7mjoL4y1fANzpnWPPg1wTwIqKjgn28prcOM+dKfdME6pPlr
-         mCdNiBpOP+4uMXMLqy5xOkm+8ju4XmEzlmbOZv+jp9MJcBW8Tpsa+43t30Q0QyeF4fz/
-         V7KhLWSeYmhf7QGIyronz1vpg1TNGz5Wdjack0nIBKi02PK0lyfges9NJP8KXzWsQfGu
-         l/7U42ugm/C1W8txFBY3pz1L1Hw0HTDMxmSVa2G+t4wojhhLcIE5AsfyHoLx4/A8F5S8
-         4Ys7J8x8oGdJtp4M1ovdF2QfV52sG6TRqJlZ24+s0vMgy360bKS1/NDdT1NwxRXIsV73
-         fw6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sU3/bXls/KxSfTSBjP7Np2j+r9tPORCUpNYt9Wkb3H0=;
-        b=tUjrZ+bxfqlwifLutlfefk1VgSf7ddNIHZjTzEX5/vcUlTBMXDfM5fBUEzcQkpGIf3
-         0IyWTh64ydGfd1/x/fbSjxEhcDZH+XEytrRtOIpiiEAR7MY+PnU+UYJzqLtVlJSjZrvM
-         pjTd5Dyb/LMF6ZMuil+hJxMk+xE/vorBikfUyrXMZ4uJSND40ggZ6vJ2uasHxrB67pRS
-         XtXlU5E8L+kdxZ/BPlRbuAFheVFcxrRmregG2eu/j/u+PeGDSwDjT9mVMgF4DSpXBeHH
-         6HApuND3Swet7Dbh3ez/XqECcoJnox7HNJeyAk9cMssjEIFV20WlUsLhfOXJh5qyULj4
-         IuBA==
-X-Gm-Message-State: APjAAAUW3O32FVK7pacU/uv6JTiuJFFr3hy3mVXlRDKqIWl5sBFsGJl6
-        1Tg/X1WJNycKTKvn6daOSrU=
-X-Google-Smtp-Source: APXvYqywhi8tqotujrJmmue0owfK8Nn+XvY+KJWNp05k9D+frrRUuC1R33dTRUTctM4JFWfvDFsyvg==
-X-Received: by 2002:ac2:4436:: with SMTP id w22mr2676170lfl.185.1576588542951;
-        Tue, 17 Dec 2019 05:15:42 -0800 (PST)
-Received: from localhost.localdomain (78-63-27-146.static.zebra.lt. [78.63.27.146])
-        by smtp.gmail.com with ESMTPSA id q14sm12548416ljm.68.2019.12.17.05.15.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 05:15:42 -0800 (PST)
-From:   David Abdurachmanov <david.abdurachmanov@gmail.com>
-X-Google-Original-From: David Abdurachmanov <david.abdurachmanov@sifive.com>
-To:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <anup@brainfault.org>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        David Abdurachmanov <david.abdurachmanov@sifive.com>,
-        Yash Shah <yash.shah@sifive.com>,
-        Alexandre Ghiti <alex@ghiti.fr>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     david.abdurachmanov@gmail.com
-Subject: [PATCH] define vmemmap before pfn_to_page calls
-Date:   Tue, 17 Dec 2019 15:15:28 +0200
-Message-Id: <20191217131530.513096-1-david.abdurachmanov@sifive.com>
-X-Mailer: git-send-email 2.23.0
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1576588575; x=1608124575;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   in-reply-to:content-transfer-encoding;
+  bh=Nm1QED8gp43x/zT1UUHR9X947gKFEpZ03i/XIdxXDaI=;
+  b=ZSTg77Wead3kmxRhLwScE4a40nrMoCKDeGX3lcAD0fBIkXHex3RGCFTb
+   4AliDMTtJ7MYoL+ynx49NKDPCGx3H1C0vOyE7Zc3eKTY/WCvSCEv3CvKJ
+   PHhLJqJX2h7ZAwV1uytOvjjbONRRngydpgs77MPFmWNlU7S6A+ZbMbIYJ
+   U=;
+IronPort-SDR: vi4NhioA0murkDrs42ZQ2cyA/36yAAx4m9Msoq3hzWH6XkIljOquK3vpXTvIUE13e7V25F2a8z
+ gLY5hVXC/xKQ==
+X-IronPort-AV: E=Sophos;i="5.69,325,1571702400"; 
+   d="scan'208";a="14004316"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 17 Dec 2019 13:16:02 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com (Postfix) with ESMTPS id 17E0EA189E;
+        Tue, 17 Dec 2019 13:15:59 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 17 Dec 2019 13:15:58 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.74) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 17 Dec 2019 13:15:53 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
+        <jgross@suse.com>
+CC:     SeongJae Park <sj38.park@gmail.com>, <sjpark@amazon.de>,
+        <axboe@kernel.dk>, <konrad.wilk@oracle.com>, <pdurrant@amazon.com>,
+        <linux-kernel@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <xen-devel@lists.xenproject.org>
+Subject: Re: Re: [Xen-devel] [PATCH v10 2/4] xen/blkback: Squeeze page pools if a memory pressure is detected
+Date:   Tue, 17 Dec 2019 14:15:26 +0100
+Message-ID: <20191217131526.17300-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
+In-Reply-To: <20191217113915.GS11756@Air-de-Roger> (raw)
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.43.161.74]
+X-ClientProxiedBy: EX13D24UWA001.ant.amazon.com (10.43.160.138) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pfn_to_page call depends on `vmemmap` being available before the call.
-This caused compilation errors in Fedora/RISCV with 5.5-rc2 and was caused
-by NOMMU changes which moved declarations after functions definitions.
+On Tue, 17 Dec 2019 12:39:15 +0100 "Roger Pau Monné" <roger.pau@citrix.com> wrote:
 
-Signed-off-by: David Abdurachmanov <david.abdurachmanov@sifive.com>
-Fixes: 6bd33e1ece52 ("riscv: add nommu support")
----
- arch/riscv/include/asm/pgtable.h | 34 ++++++++++++++++----------------
- 1 file changed, 17 insertions(+), 17 deletions(-)
+> On Mon, Dec 16, 2019 at 08:48:03PM +0100, SeongJae Park wrote:
+> > On on, 16 Dec 2019 17:23:44 +0100, Jürgen Groß wrote:
+> > 
+> > > On 16.12.19 17:15, SeongJae Park wrote:
+> > > > On Mon, 16 Dec 2019 15:37:20 +0100 SeongJae Park <sjpark@amazon.com> wrote:
+> > > > 
+> > > >> On Mon, 16 Dec 2019 13:45:25 +0100 SeongJae Park <sjpark@amazon.com> wrote:
+> > > >>
+> > > >>> From: SeongJae Park <sjpark@amazon.de>
+> > > >>>
+> > > > [...]
+> > > >>> --- a/drivers/block/xen-blkback/xenbus.c
+> > > >>> +++ b/drivers/block/xen-blkback/xenbus.c
+> > > >>> @@ -824,6 +824,24 @@ static void frontend_changed(struct xenbus_device *dev,
+> > > >>>   }
+> > > >>>   
+> > > >>>   
+> > > >>> +/* Once a memory pressure is detected, squeeze free page pools for a while. */
+> > > >>> +static unsigned int buffer_squeeze_duration_ms = 10;
+> > > >>> +module_param_named(buffer_squeeze_duration_ms,
+> > > >>> +		buffer_squeeze_duration_ms, int, 0644);
+> > > >>> +MODULE_PARM_DESC(buffer_squeeze_duration_ms,
+> > > >>> +"Duration in ms to squeeze pages buffer when a memory pressure is detected");
+> > > >>> +
+> > > >>> +/*
+> > > >>> + * Callback received when the memory pressure is detected.
+> > > >>> + */
+> > > >>> +static void reclaim_memory(struct xenbus_device *dev)
+> > > >>> +{
+> > > >>> +	struct backend_info *be = dev_get_drvdata(&dev->dev);
+> > > >>> +
+> > > >>> +	be->blkif->buffer_squeeze_end = jiffies +
+> > > >>> +		msecs_to_jiffies(buffer_squeeze_duration_ms);
+> > > >>
+> > > >> This callback might race with 'xen_blkbk_probe()'.  The race could result in
+> > > >> __NULL dereferencing__, as 'xen_blkbk_probe()' sets '->blkif' after it links
+> > > >> 'be' to the 'dev'.  Please _don't merge_ this patch now!
+> > > >>
+> > > >> I will do more test and share results.  Meanwhile, if you have any opinion,
+> > > >> please let me know.
+> > 
+> > I reduced system memory and attached bunch of devices in short time so that
+> > memory pressure occurs while device attachments are ongoing.  Under this
+> > circumstance, I was able to see the race.
+> > 
+> > > > 
+> > > > Not only '->blkif', but 'be' itself also coule be a NULL.  As similar
+> > > > concurrency issues could be in other drivers in their way, I suggest to change
+> > > > the reclaim callback ('->reclaim_memory') to be called for each driver instead
+> > > > of each device.  Then, each driver could be able to deal with its concurrency
+> > > > issues by itself.
+> > > 
+> > > Hmm, I don't like that. This would need to be changed back in case we
+> > > add per-guest quota.
+> > 
+> > Extending this callback in that way would be still not too hard.  We could use
+> > the argument to the callback.  I would keep the argument of the callback to
+> > 'struct device *' as is, and will add a comment saying 'NULL' value of the
+> > argument means every devices.  As an example, xenbus would pass NULL-ending
+> > array of the device pointers that need to free its resources.
+> > 
+> > After seeing this race, I am now also thinking it could be better to delegate
+> > detailed control of each device to its driver, as some drivers have some
+> > complicated and unique relation with its devices.
+> > 
+> > > 
+> > > Wouldn't a get_device() before calling the callback and a put_device()
+> > > afterwards avoid that problem?
+> > 
+> > I didn't used the reference count manipulation operations because other similar
+> > parts also didn't.  But, if there is no implicit reference count guarantee, it
+> > seems those operations are indeed necessary.
+> > 
+> > That said, as get/put operations only adjust the reference count, those will
+> > not make the callback to wait until the linking of the 'backend' and 'blkif' to
+> > the device (xen_blkbk_probe()) is finished.  Thus, the race could still happen.
+> > Or, am I missing something?
+> 
+> I would expect the device is not added to the list of backend devices
+> until the probe hook has finished with a non-error return code. Ie:
+> bus_for_each_dev should _not_ iterate over devices for which the probe
+> function hasn't been run to competition without errors.
+> 
+> The same way I would expect the remove hook to first remove the device
+> from the list of backend devices and then run the remove hook.
+> 
+> blkback uses an ad-hoc reference counting mechanism, but if the above
+> assumptions are true I think it would be enough to take an extra
+> reference in xen_blkbk_probe and drop it in xen_blkbk_remove.
 
-diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index 7ff0ed4f292e..d8c89e6e6b3d 100644
---- a/arch/riscv/include/asm/pgtable.h
-+++ b/arch/riscv/include/asm/pgtable.h
-@@ -90,6 +90,23 @@ extern pgd_t swapper_pg_dir[];
- #define __S110	PAGE_SHARED_EXEC
- #define __S111	PAGE_SHARED_EXEC
- 
-+#define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
-+#define VMALLOC_END      (PAGE_OFFSET - 1)
-+#define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
-+
-+/*
-+ * Roughly size the vmemmap space to be large enough to fit enough
-+ * struct pages to map half the virtual address space. Then
-+ * position vmemmap directly below the VMALLOC region.
-+ */
-+#define VMEMMAP_SHIFT \
-+	(CONFIG_VA_BITS - PAGE_SHIFT - 1 + STRUCT_PAGE_MAX_SHIFT)
-+#define VMEMMAP_SIZE	BIT(VMEMMAP_SHIFT)
-+#define VMEMMAP_END	(VMALLOC_START - 1)
-+#define VMEMMAP_START	(VMALLOC_START - VMEMMAP_SIZE)
-+
-+#define vmemmap		((struct page *)VMEMMAP_START)
-+
- static inline int pmd_present(pmd_t pmd)
- {
- 	return (pmd_val(pmd) & (_PAGE_PRESENT | _PAGE_PROT_NONE));
-@@ -400,23 +417,6 @@ static inline int ptep_clear_flush_young(struct vm_area_struct *vma,
- #define __pte_to_swp_entry(pte)	((swp_entry_t) { pte_val(pte) })
- #define __swp_entry_to_pte(x)	((pte_t) { (x).val })
- 
--#define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
--#define VMALLOC_END      (PAGE_OFFSET - 1)
--#define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
--
--/*
-- * Roughly size the vmemmap space to be large enough to fit enough
-- * struct pages to map half the virtual address space. Then
-- * position vmemmap directly below the VMALLOC region.
-- */
--#define VMEMMAP_SHIFT \
--	(CONFIG_VA_BITS - PAGE_SHIFT - 1 + STRUCT_PAGE_MAX_SHIFT)
--#define VMEMMAP_SIZE	BIT(VMEMMAP_SHIFT)
--#define VMEMMAP_END	(VMALLOC_START - 1)
--#define VMEMMAP_START	(VMALLOC_START - VMEMMAP_SIZE)
--
--#define vmemmap		((struct page *)VMEMMAP_START)
--
- #define PCI_IO_SIZE      SZ_16M
- #define PCI_IO_END       VMEMMAP_START
- #define PCI_IO_START     (PCI_IO_END - PCI_IO_SIZE)
--- 
-2.23.0
+Well, if the assumption is true, wouldn't the Juergen's approach solved the
+problem?  As previously said, I tried the approach but failed to solve this
+race.  The assumption is wrong or I missed something.  I think Juergen also
+think the assumption is not true as he suggested use of locking but not sure.
+Juergen, if I misunderstood, please let me know.
 
+
+Thanks,
+SeongJae Park
+
+> 
+> Additionally it might be interesting to switch the ad-hoc reference
+> counting to use get_device/put_device (in a separate patch), but I'm
+> not sure how feasible that is.
+> 
+> Roger.
