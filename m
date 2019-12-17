@@ -2,109 +2,165 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8902C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DBB6C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B702F20733
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:32:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FktRscK/"
+	by mail.kernel.org (Postfix) with ESMTP id 682062072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:32:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576607579;
+	bh=rFFU7L01PinWZFbjcZutZtyRvMAKPXF7v8zhI6bSka8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=UBtQ3iguWY1/SCGkRiNvJ5CrlHQl0CqP5Qnd3iKyZ9Tju7Pq1BQWpgu4JnPHAXCS7
+	 SeK4MisTRn6KMAXGnxwBqfbzFlgSJ2a8xHHj7TG553aPT8Au3dxnZMDpQpFqx+I9z/
+	 JpxLQW4yFRUIhO1NU6kmdn4N8eNZ61T0H+TNvehc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728133AbfLQScd (ORCPT
+        id S1728171AbfLQSc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 13:32:33 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:59434 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726813AbfLQScd (ORCPT
+        Tue, 17 Dec 2019 13:32:58 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:40516 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726874AbfLQSc6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 13:32:33 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBHIOKsX101532;
-        Tue, 17 Dec 2019 18:32:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=VLXwZ5VzJPq80xqOoJ02BnfrcnEH06ja95rpjsHRG9o=;
- b=FktRscK/S0i8JKAK3RlJ0FnUPSu36bjwinHPITvDmRbICU3pb/ck31N+H0J0JiLx9KP6
- PY3WKLkgU7tzyTISWX/fBsamdb/glH3lsurxfEivGnebbrUfjevNQYSw7dICPhUBe2fP
- x46rwR3NNBFjQSSQjgbH40Px6HfBRKPBKyO+OlCCWW/cliCTbpnjt9m9YxRcCN4pG7p5
- 1DP8S+SPJqj1VLg5grBe2T8B9t2tzkbsI/ugIhTIRjYYtHBrXnlb3nWPtw/Zo34pwIb1
- mjUs7lhUTbe6m54laArBlrXvHVDUrAfchsqiOu4Gs9Ahr6LWMHC5twmQtcUwMZqrkzOa zw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2wvq5ugnp1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 17 Dec 2019 18:32:18 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBHITItG081367;
-        Tue, 17 Dec 2019 18:32:18 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2wxm5nng97-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 17 Dec 2019 18:32:18 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBHIWFSH006455;
-        Tue, 17 Dec 2019 18:32:17 GMT
-Received: from [10.10.32.221] (/10.10.32.221)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 17 Dec 2019 10:32:15 -0800
-Subject: Re: [PATCH] soc: ti: wkup_m3_ipc: Fix race condition with rproc_boot
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Dave Gerlach <d-gerlach@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, Suman Anna <s-anna@ti.com>
-References: <20191212040314.14753-1-d-gerlach@ti.com>
- <20191217182534.GD35479@atomide.com>
-From:   santosh.shilimkar@oracle.com
-Organization: Oracle Corporation
-Message-ID: <05b9f0ff-bbc2-d8a7-3261-54c03a149db8@oracle.com>
-Date:   Tue, 17 Dec 2019 10:32:14 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.2
+        Tue, 17 Dec 2019 13:32:58 -0500
+Received: by mail-lf1-f66.google.com with SMTP id i23so7672910lfo.7
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 10:32:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hYDXouQoU3y/R3fqSOF776cIghXwAxtEEUBgvo6xNr8=;
+        b=POj9QNWZ+2oG1d0wJ+AGe0JzUEl4bf+yTk0aMMoMg7V/xuJUZKcexLj2AQ+FpK+mEh
+         uOHM4ohY6YsLwl+ZUWno3ckqZcQXxs/dBSemQ87no/iOewhJAGNEbllh8ouSQ6OrUwPg
+         94y/v1tYI4aJP83wAxK3Q/Q5sG85HJcVEDDcY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hYDXouQoU3y/R3fqSOF776cIghXwAxtEEUBgvo6xNr8=;
+        b=lmViwn0AwtQRibXIXekZ1KnAC2X5VhfWAbmgwaPSo17cCmOb8FOMdiyILXUTD4b+R8
+         KvfM/PQPEXD84zcYWrGzHMpolUG2bv1cGx/qOmJW1Ddb5LYabT8hZ8zK7Q8QXfDBfcZG
+         6TSdh98KyhaWURek9f20YTg4b8KhlkVpGDzi+2iajbZ59MkjAtu2Txe0NxiTk4yDDOTi
+         PknBGXXt5FtSt8qbxdPAC8e1pVkx3DWtaTowdqKvQQaZoqd6datHg6ZPFnObgPvhla8f
+         RP1cFiekJ5o4QHTKtmPyXleWLvbcKAjjVp7zqCxAAsIZ+A3TF1+aDHIZiXoQx3AfCqZv
+         N7XQ==
+X-Gm-Message-State: APjAAAX9NEdo+h/KHlFtdqniQOmUHBlkH4Gtpxs9SVgE7wBAWRBo3PSH
+        5LbuovtHekwjvXsOaQY+/AXfDae5YL0=
+X-Google-Smtp-Source: APXvYqz1mz76j496CunZdHoqsT9QhXRTdGbbaXQL3+Wt9BqWIzPOPoiFBX/i9dBUW1Ewqsz2VHgAoQ==
+X-Received: by 2002:a19:c7c5:: with SMTP id x188mr3645916lff.22.1576607574601;
+        Tue, 17 Dec 2019 10:32:54 -0800 (PST)
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
+        by smtp.gmail.com with ESMTPSA id h24sm12933839ljl.80.2019.12.17.10.32.53
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Dec 2019 10:32:53 -0800 (PST)
+Received: by mail-lj1-f181.google.com with SMTP id h23so12065653ljc.8
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 10:32:53 -0800 (PST)
+X-Received: by 2002:a2e:9ad8:: with SMTP id p24mr4321859ljj.148.1576607573020;
+ Tue, 17 Dec 2019 10:32:53 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191217182534.GD35479@atomide.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9474 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=867
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912170145
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9474 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=930 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912170145
+References: <20191212100756.GA11317@willie-the-truck> <20191212104610.GW2827@hirez.programming.kicks-ass.net>
+ <CAHk-=wjUBsH0BYDBv=q36482G-U7c=9bC89L_BViSciTfb8fhA@mail.gmail.com>
+ <20191212180634.GA19020@willie-the-truck> <CAHk-=whRxB0adkz+V7SQC8Ac_rr_YfaPY8M2mFDfJP2FFBNz8A@mail.gmail.com>
+ <20191212193401.GB19020@willie-the-truck> <CAHk-=wiMuHmWzQ7-CRQB6o+SHtA-u-Rp6VZwPcqDbjAaug80rQ@mail.gmail.com>
+ <20191217170719.GA869@willie-the-truck> <CAHk-=whBnZBVNwu8aVVp205EKk7xtsnQgSjs38a5=y9HyheXzQ@mail.gmail.com>
+In-Reply-To: <CAHk-=whBnZBVNwu8aVVp205EKk7xtsnQgSjs38a5=y9HyheXzQ@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 17 Dec 2019 10:32:35 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjNLxSZZs+A0tyb-MnJ2YU-sqTAfy0-X+9vxjXfs_O4zA@mail.gmail.com>
+Message-ID: <CAHk-=wjNLxSZZs+A0tyb-MnJ2YU-sqTAfy0-X+9vxjXfs_O4zA@mail.gmail.com>
+Subject: Re: READ_ONCE() + STACKPROTECTOR_STRONG == :/ (was Re: [GIT PULL]
+ Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops))
+To:     Will Deacon <will@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Daniel Axtens <dja@axtens.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Content-Type: multipart/mixed; boundary="0000000000005752d20599ea8ef5"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/17/19 10:25 AM, Tony Lindgren wrote:
-> Hi,
-> 
-> * Dave Gerlach <d-gerlach@ti.com> [191211 20:02]:
->> Any user of wkup_m3_ipc calls wkup_m3_ipc_get to get a handle and this
->> checks the value of the static variable m3_ipc_state to see if the
->> wkup_m3 is ready. Currently this is populated during probe before
->> rproc_boot has been called, meaning there is a window of time that
->> wkup_m3_ipc_get can return a valid handle but the wkup_m3 itself is not
->> ready, leading to invalid IPC calls to the wkup_m3 and system
->> instability.
->>
->> To avoid this, move the population of the m3_ipc_state variable until
->> after rproc_boot has succeeded to guarantee a valid and usable handle
->> is always returned.
-> 
-> Santosh, do you want me to pick this one into my fixes branch?
-> 
-Sure, go ahead.
+--0000000000005752d20599ea8ef5
+Content-Type: text/plain; charset="UTF-8"
 
-Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
+On Tue, Dec 17, 2019 at 10:04 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> Let me think about it.
+
+How about we just get rid of the union entirely, and just use
+'unsigned long' or 'unsigned long long' depending on the size.
+
+Something like the attached patch - it still requires that it be an
+arithmetic type, but now because of the final cast.
+
+But it might still be a cast to a volatile type, of course. Then the
+result will be volatile, but at least now READ_ONCE() won't be taking
+the address of a volatile variable on the stack - does that at least
+fix some of the horrible code generation. Hmm?
+
+This is untested, because I obviously still have the cases of
+structures (page table entries) being accessed once..
+
+              Linus
+
+--0000000000005752d20599ea8ef5
+Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
+Content-Disposition: attachment; filename="patch.diff"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k4a7eqn90>
+X-Attachment-Id: f_k4a7eqn90
+
+IGluY2x1ZGUvbGludXgvY29tcGlsZXIuaCB8IDMzICsrKysrKysrKysrKysrKysrLS0tLS0tLS0t
+LS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDE3IGluc2VydGlvbnMoKyksIDE2IGRlbGV0aW9ucygt
+KQoKZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvY29tcGlsZXIuaCBiL2luY2x1ZGUvbGludXgv
+Y29tcGlsZXIuaAppbmRleCA1ZTg4ZTdlMzNhYmUuLjhiNDI4MjE5NGYxNiAxMDA2NDQKLS0tIGEv
+aW5jbHVkZS9saW51eC9jb21waWxlci5oCisrKyBiL2luY2x1ZGUvbGludXgvY29tcGlsZXIuaApA
+QCAtMTc5LDE4ICsxNzksMTggQEAgdm9pZCBmdHJhY2VfbGlrZWx5X3VwZGF0ZShzdHJ1Y3QgZnRy
+YWNlX2xpa2VseV9kYXRhICpmLCBpbnQgdmFsLAogCiAjaW5jbHVkZSA8dWFwaS9saW51eC90eXBl
+cy5oPgogCi0jZGVmaW5lIF9fUkVBRF9PTkNFX1NJWkUJCQkJCQlcCi0oewkJCQkJCQkJCVwKLQlz
+d2l0Y2ggKHNpemUpIHsJCQkJCQkJXAotCWNhc2UgMTogKihfX3U4ICopcmVzID0gKih2b2xhdGls
+ZSBfX3U4ICopcDsgYnJlYWs7CQlcCi0JY2FzZSAyOiAqKF9fdTE2ICopcmVzID0gKih2b2xhdGls
+ZSBfX3UxNiAqKXA7IGJyZWFrOwkJXAotCWNhc2UgNDogKihfX3UzMiAqKXJlcyA9ICoodm9sYXRp
+bGUgX191MzIgKilwOyBicmVhazsJCVwKLQljYXNlIDg6ICooX191NjQgKilyZXMgPSAqKHZvbGF0
+aWxlIF9fdTY0ICopcDsgYnJlYWs7CQlcCi0JZGVmYXVsdDoJCQkJCQkJXAotCQliYXJyaWVyKCk7
+CQkJCQkJXAotCQlfX2J1aWx0aW5fbWVtY3B5KCh2b2lkICopcmVzLCAoY29uc3Qgdm9pZCAqKXAs
+IHNpemUpOwlcCi0JCWJhcnJpZXIoKTsJCQkJCQlcCi0JfQkJCQkJCQkJXAorLyogInVuc2lnbmVk
+IGxvbmciIG9yICJ1bnNpZ25lZCBsb25nIGxvbmciIC0gbWFrZSBpdCBmaXQgaW4gYSByZWdpc3Rl
+ciBpZiBwb3NzaWJsZSAqLworI2RlZmluZSBfX1JFQURfT05DRV9UWVBFKHNpemUpIFwKKwlfX3R5
+cGVvZl9fKF9fYnVpbHRpbl9jaG9vc2VfZXhwcihzaXplID4gc2l6ZW9mKDBVTCksIDBVTEwsIDBV
+TCkpCisKKyNkZWZpbmUgX19SRUFEX09OQ0VfU0laRQkJCQkJCQlcCisoewkJCQkJCQkJCQlcCisJ
+c3dpdGNoIChzaXplKSB7CQkJCQkJCQlcCisJY2FzZSAxOiAqKHVuc2lnbmVkIGxvbmcgKilyZXMg
+PSAqKHZvbGF0aWxlIF9fdTggKilwOyBicmVhazsJCVwKKwljYXNlIDI6ICoodW5zaWduZWQgbG9u
+ZyAqKXJlcyA9ICoodm9sYXRpbGUgX191MTYgKilwOyBicmVhazsJCVwKKwljYXNlIDQ6ICoodW5z
+aWduZWQgbG9uZyAqKXJlcyA9ICoodm9sYXRpbGUgX191MzIgKilwOyBicmVhazsJCVwKKwljYXNl
+IDg6ICoodW5zaWduZWQgbG9uZyBsb25nICopcmVzID0gKih2b2xhdGlsZSBfX3U2NCAqKXA7IGJy
+ZWFrOwlcCisJfQkJCQkJCQkJCVwKIH0pCiAKIHN0YXRpYyBfX2Fsd2F5c19pbmxpbmUKQEAgLTI1
+OCwxMyArMjU4LDE0IEBAIHN0YXRpYyBfX2Fsd2F5c19pbmxpbmUgdm9pZCBfX3dyaXRlX29uY2Vf
+c2l6ZSh2b2xhdGlsZSB2b2lkICpwLCB2b2lkICpyZXMsIGludCBzCiAKICNkZWZpbmUgX19SRUFE
+X09OQ0UoeCwgY2hlY2spCQkJCQkJXAogKHsJCQkJCQkJCQlcCi0JdW5pb24geyB0eXBlb2YoeCkg
+X192YWw7IGNoYXIgX19jWzFdOyB9IF9fdTsJCQlcCisJX19SRUFEX09OQ0VfVFlQRShzaXplb2Yo
+eCkpIF9fdTsJCQkJXAorCWNvbXBpbGV0aW1lX2Fzc2VydChzaXplb2YoeCkgPD0gc2l6ZW9mKF9f
+dSksICJSRUFEX09OQ0UgdHlwZSIpOwlcCiAJaWYgKGNoZWNrKQkJCQkJCQlcCi0JCV9fcmVhZF9v
+bmNlX3NpemUoJih4KSwgX191Ll9fYywgc2l6ZW9mKHgpKTsJCVwKKwkJX19yZWFkX29uY2Vfc2l6
+ZSgmKHgpLCAmX191LCBzaXplb2YoeCkpOwkJXAogCWVsc2UJCQkJCQkJCVwKLQkJX19yZWFkX29u
+Y2Vfc2l6ZV9ub2NoZWNrKCYoeCksIF9fdS5fX2MsIHNpemVvZih4KSk7CVwKKwkJX19yZWFkX29u
+Y2Vfc2l6ZV9ub2NoZWNrKCYoeCksICZfX3UsIHNpemVvZih4KSk7CVwKIAlzbXBfcmVhZF9iYXJy
+aWVyX2RlcGVuZHMoKTsgLyogRW5mb3JjZSBkZXBlbmRlbmN5IG9yZGVyaW5nIGZyb20geCAqLyBc
+Ci0JX191Ll9fdmFsOwkJCQkJCQlcCisJKF9fdHlwZW9mX18oeCkpX191OwkJCQkJCVwKIH0pCiAj
+ZGVmaW5lIFJFQURfT05DRSh4KSBfX1JFQURfT05DRSh4LCAxKQogCg==
+--0000000000005752d20599ea8ef5--
