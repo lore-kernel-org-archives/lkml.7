@@ -2,87 +2,120 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A10C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D8ECC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0D58207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D7402082E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:05:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727517AbfLQMEi (ORCPT
+        id S1727639AbfLQMFO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:04:38 -0500
-Received: from mga12.intel.com ([192.55.52.136]:27305 "EHLO mga12.intel.com"
+        Tue, 17 Dec 2019 07:05:14 -0500
+Received: from mga05.intel.com ([192.55.52.43]:2665 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbfLQMEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 07:04:37 -0500
+        id S1726275AbfLQMFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 07:05:14 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 04:04:37 -0800
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 04:05:13 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,325,1571727600"; 
-   d="scan'208";a="212346469"
-Received: from um.fi.intel.com (HELO um) ([10.237.72.57])
-  by fmsmga007.fm.intel.com with ESMTP; 17 Dec 2019 04:04:36 -0800
-From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com
-Subject: Re: [GIT PULL 0/4] intel_th: Fixes for v5.5
-In-Reply-To: <20191217115527.74383-1-alexander.shishkin@linux.intel.com>
-References: <20191217115527.74383-1-alexander.shishkin@linux.intel.com>
-Date:   Tue, 17 Dec 2019 14:04:34 +0200
-Message-ID: <87tv5zb1kd.fsf@ashishki-desk.ger.corp.intel.com>
+   d="scan'208";a="221746321"
+Received: from pbroex-mobl1.ger.corp.intel.com ([10.251.85.107])
+  by fmsmga001.fm.intel.com with ESMTP; 17 Dec 2019 04:05:10 -0800
+Message-ID: <5d0763334def7d7ae1e7cf931ef9b14184dce238.camel@linux.intel.com>
+Subject: Re: [PATCH v2] tpm_tis: reserve chip for duration of
+ tpm_tis_core_init
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christian Bundy <christianbundy@fraction.io>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        stable <stable@vger.kernel.org>, linux-integrity@vger.kernel.org
+Date:   Tue, 17 Dec 2019 14:05:08 +0200
+In-Reply-To: <CAPcyv4iepQup4bwMuWzq6r5gdx83hgYckUWFF7yF=rszjz3dtQ@mail.gmail.com>
+References: <20191211231758.22263-1-jsnitsel@redhat.com>
+         <20191211235455.24424-1-jsnitsel@redhat.com>
+         <5aef0fbe28ed23b963c53d61445b0bac6f108642.camel@linux.intel.com>
+         <CAPcyv4h60z889bfbiwvVhsj6MxmOPiPY8ZuPB_skxkZx-N+OGw@mail.gmail.com>
+         <20191217020022.knh7uxt4pn77wk5m@cantor>
+         <CAPcyv4iepQup4bwMuWzq6r5gdx83hgYckUWFF7yF=rszjz3dtQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alexander Shishkin <alexander.shishkin@linux.intel.com> writes:
+On Mon, 2019-12-16 at 18:14 -0800, Dan Williams wrote:
+> On Mon, Dec 16, 2019 at 6:00 PM Jerry Snitselaar <jsnitsel@redhat.com> wrote:
+> > On Mon Dec 16 19, Dan Williams wrote:
+> > > On Mon, Dec 16, 2019 at 4:59 PM Jarkko Sakkinen
+> > > <jarkko.sakkinen@linux.intel.com> wrote:
+> > > > On Wed, 2019-12-11 at 16:54 -0700, Jerry Snitselaar wrote:
+> > > > > Instead of repeatedly calling tpm_chip_start/tpm_chip_stop when
+> > > > > issuing commands to the tpm during initialization, just reserve the
+> > > > > chip after wait_startup, and release it when we are ready to call
+> > > > > tpm_chip_register.
+> > > > > 
+> > > > > Cc: Christian Bundy <christianbundy@fraction.io>
+> > > > > Cc: Dan Williams <dan.j.williams@intel.com>
+> > > > > Cc: Peter Huewe <peterhuewe@gmx.de>
+> > > > > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > > > > Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> > > > > Cc: Stefan Berger <stefanb@linux.vnet.ibm.com>
+> > > > > Cc: stable@vger.kernel.org
+> > > > > Cc: linux-integrity@vger.kernel.org
+> > > > > Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of tpm_transmit()")
+> > > > > Fixes: 5b359c7c4372 ("tpm_tis_core: Turn on the TPM before probing IRQ's")
+> > > > > Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
+> > > > 
+> > > > I pushed to my master with minor tweaks and added my tags.
+> > > > 
+> > > > Please check before I put it to linux-next.
+> > > 
+> > > I don't see it yet here:
+> > > 
+> > > http://git.infradead.org/users/jjs/linux-tpmdd.git/shortlog/refs/heads/master
+> > > 
+> > > However, I wanted to make sure you captured that this does *not* fix
+> > > the interrupt issue. I.e. make sure you remove the "Fixes:
+> > > 5b359c7c4372 ("tpm_tis_core: Turn on the TPM before probing IRQ's")"
+> > > tag.
+> > > 
+> > > With that said, are you going to include the revert of:
+> > > 
+> > > 1ea32c83c699 tpm_tis_core: Set TPM_CHIP_FLAG_IRQ before probing for interrupts
+> > 
+> > Dan, with the above reverted do you still get the screaming interrupt?
+> 
+> Yes, the screaming interrupt goes away, although it is replaced by
+> these messages when the driver starts:
+> 
+> [    3.725131] tpm_tis IFX0740:00: 2.0 TPM (device-id 0x1B, rev-id 16)
+> [    3.725358] tpm tpm0: tpm_try_transmit: send(): error -5
+> [    3.725359] tpm tpm0: [Firmware Bug]: TPM interrupt not working,
+> polling instead
+> 
+> If the choice is "error message + polled-mode" vs "pinning a cpu with
+> interrupts" I'd accept the former, but wanted Jarkko with his
+> maintainer hat to weigh in.
+> 
+> Is there a simple sanity check I can run to see if the TPM is still
+> operational in this state?
 
-> Hi Greg,
->
-> These are the fixes I have so far. Both fixes are for commits in v5.2, so
-> stable is CC'd: one is incorrect irq freeing and one is a NULL dereference
-> from unintended use. Also included 2 new PCI IDs. Signed tag below,
-> individual patches follow. Please consider applying or pullyng. Thanks!
+What about T490S?
 
-The tag is wrong, apologies. Should be:
+/Jarkko
 
-The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
-
-  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/ash/stm.git tags/intel_th-fixes-for-greg-20191216
-
-for you to fetch changes up to 6958619f52e9bc47d7aee0475e9d2c1ae2fcda75:
-
-  intel_th: msu: Fix window switching without windows (2019-12-17 13:36:01 +0200)
-
-----------------------------------------------------------------
-intel_th: Fixes for v5.5
-
-These are:
- * 2 new PCI IDs
- * 2 bugfixes for bugs added in v5.2
-
-----------------------------------------------------------------
-Alexander Shishkin (4):
-      intel_th: pci: Add Comet Lake PCH-V support
-      intel_th: pci: Add Elkhart Lake SOC support
-      intel_th: Fix freeing IRQs
-      intel_th: msu: Fix window switching without windows
-
- drivers/hwtracing/intel_th/core.c     |  7 ++++---
- drivers/hwtracing/intel_th/intel_th.h |  2 ++
- drivers/hwtracing/intel_th/msu.c      | 14 +++++++++-----
- drivers/hwtracing/intel_th/pci.c      | 10 ++++++++++
- 4 files changed, 25 insertions(+), 8 deletions(-)
