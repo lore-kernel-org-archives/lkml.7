@@ -2,162 +2,95 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F5AC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A64C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91ABE2064B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:04:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1C592082E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:05:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576580758;
+	bh=ePf090R+2Dq3LbKbJzt3r0Wjqrbb4htnAyrTB+GuTDE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HP6io5UQtBsbOiRzBBfzSHC3T2OWvlOz/hbn958zd9SytqL+MdI2kj9sHRz0KCjbg
+	 kxpLweOd0Qu2VyZRxpRs5DUtxgiKnNGG7zXyKdEHrQgd2r5iHRfavitHQ2uIij7r3S
+	 xEkr4gffdD9l+1BNbjY29eYNA48jUyeYX55G2dvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbfLQLEF (ORCPT
+        id S1727138AbfLQLF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 06:04:05 -0500
-Received: from foss.arm.com ([217.140.110.172]:33176 "EHLO foss.arm.com"
+        Tue, 17 Dec 2019 06:05:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725940AbfLQLEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 06:04:05 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0095031B;
-        Tue, 17 Dec 2019 03:04:04 -0800 (PST)
-Received: from [10.37.12.145] (unknown [10.37.12.145])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5F8933F6CF;
-        Tue, 17 Dec 2019 03:04:00 -0800 (PST)
-Subject: Re: [PATCH 7/9] memory: samsung: exynos5422-dmc: Replace deprecated
- 'devfreq-events' property
-To:     Chanwoo Choi <cw00.choi@samsung.com>, krzk@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
-        leonard.crestez@nxp.com
-Cc:     a.swigon@samsung.com, m.szyprowski@samsung.com, kgene@kernel.org,
-        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
-References: <20191217055738.28445-1-cw00.choi@samsung.com>
- <CGME20191217055106epcas1p2c43a45e34983c1b3e60cc6fd842dd33e@epcas1p2.samsung.com>
- <20191217055738.28445-8-cw00.choi@samsung.com>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <500aaeb0-85ca-c1f5-2f30-a7b1e95810b6@arm.com>
-Date:   Tue, 17 Dec 2019 11:03:58 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726905AbfLQLF5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 06:05:57 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA4652064B;
+        Tue, 17 Dec 2019 11:05:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576580757;
+        bh=ePf090R+2Dq3LbKbJzt3r0Wjqrbb4htnAyrTB+GuTDE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kKcA9yrkQIcxlAkHIulAj5FktfHG2J23b1YVkpXpm+WuRNRKHh3yP8PS2Hd0KSmX3
+         7mEM6jh4ONZYcCNlWeURalD295M1vDWMQAedgCnripeLdFKw7MWzuUtG/Um8fszY1L
+         VktBelSHw6Q7pceceqaqgIGEnWW4DXDJDK3AeFgM=
+Date:   Tue, 17 Dec 2019 12:05:54 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-serial@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: Re: [PATCH v2 1/3] tty: new helper function tty_kopen_shared
+Message-ID: <20191217110554.GA3055718@kroah.com>
+References: <20191217081718.23807-1-u.kleine-koenig@pengutronix.de>
+ <20191217081718.23807-2-u.kleine-koenig@pengutronix.de>
+ <20191217082733.GA2672708@kroah.com>
+ <20191217105101.fd23zsxxi2e42ltt@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20191217055738.28445-8-cw00.choi@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191217105101.fd23zsxxi2e42ltt@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chanwoo,
-
-On 12/17/19 5:57 AM, Chanwoo Choi wrote:
-> In order to remove the deprecated 'devfreq-events' property, replace with
-> new 'exynos,ppmu-device' property in order to get the devfreq-event device
-> in devicetree file instead of 'devfreq-events' property. But, to guarantee
-> the backward-compatibility, keep the support 'devfreq-events' property.
+On Tue, Dec 17, 2019 at 11:51:01AM +0100, Uwe Kleine-König wrote:
+> Hello Greg,
 > 
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> ---
->   .../memory-controllers/exynos5422-dmc.txt     |  6 ++--
->   drivers/memory/samsung/exynos5422-dmc.c       | 29 +++++++++++++++----
->   2 files changed, 26 insertions(+), 9 deletions(-)
+> all feedback I don't respond to is planned to be fixed in v3.
 > 
-> diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> index 02e4a1f862f1..1e1b3702f045 100644
-> --- a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> +++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> @@ -17,14 +17,14 @@ Required properties for DMC device for Exynos5422:
->   - clock-names : should include "fout_spll", "mout_sclk_spll", "ff_dout_spll2",
->     "fout_bpll", "mout_bpll", "sclk_bpll", "mout_mx_mspll_ccore",
->     "mout_mclk_cdrex"  entries
-> -- devfreq-events : phandles for PPMU devices connected to this DMC.
-> +- exynos,ppmu-device : phandles for PPMU devices connected to this DMC.
->   - vdd-supply : phandle for voltage regulator which is connected.
->   - reg : registers of two CDREX controllers.
->   - operating-points-v2 : phandle for OPPs described in v2 definition.
->   - device-handle : phandle of the connected DRAM memory device. For more
->   	information please refer to documentation file:
->   	Documentation/devicetree/bindings/ddr/lpddr3.txt
-> -- devfreq-events : phandles of the PPMU events used by the controller.
-> +- exynos,ppmu-device : phandles of the PPMU events used by the controller.
->   - samsung,syscon-clk : phandle of the clock register set used by the controller,
->   	these registers are used for enabling a 'pause' feature and are not
->   	exposed by clock framework but they must be used in a safe way.
-> @@ -73,7 +73,7 @@ Example:
->   			      "mout_mx_mspll_ccore",
->   			      "mout_mclk_cdrex";
->   		operating-points-v2 = <&dmc_opp_table>;
-> -		devfreq-events = <&ppmu_event3_dmc0_0>,	<&ppmu_event3_dmc0_1>,
-> +		exynos,ppmu-device = <&ppmu_event3_dmc0_0>, <&ppmu_event3_dmc0_1>,
->   				 <&ppmu_event3_dmc1_0>, <&ppmu_event3_dmc1_1>;
->   		device-handle = <&samsung_K3QF2F20DB>;
->   		vdd-supply = <&buck1_reg>;
-> diff --git a/drivers/memory/samsung/exynos5422-dmc.c b/drivers/memory/samsung/exynos5422-dmc.c
-> index c3195111d646..96593f37a478 100644
-> --- a/drivers/memory/samsung/exynos5422-dmc.c
-> +++ b/drivers/memory/samsung/exynos5422-dmc.c
-> @@ -1270,10 +1270,17 @@ static int exynos5_dmc_init_clks(struct exynos5_dmc *dmc)
->   static struct devfreq_event_dev *get_edev_by_node(struct device_node *np,
->   							int index)
->   {
-> -	struct device_node *node = of_parse_phandle(np, "devfreq-events",
-> +	struct device_node *node = of_parse_phandle(np, "exynos,ppmu-device",
->   							index);
-> -	if (!node)
-> -		return ERR_PTR(-ENODEV);
-> +	if (!node) {
-> +		 /*
-> +		  * Check the deprecated 'devfreq-events' property
-> +		  * to support backward-compatibility.
-> +		 */
-> +		node = of_parse_phandle(np, "devfreq-events", index);
-> +		if (!node)
-> +			return ERR_PTR(-ENODEV);
-> +	}
->   	return devfreq_event_get_edev_by_node(node);
->   }
->   
-> @@ -1292,10 +1299,20 @@ static int exynos5_performance_counters_init(struct exynos5_dmc *dmc)
->   	int ret, i;
->   
->   	dmc->num_counters = of_property_count_elems_of_size(dmc->dev->of_node,
-> -					"devfreq-events", sizeof(u32));
-> +					"exynos,ppmu-device", sizeof(u32));
->   	if (dmc->num_counters < 0) {
-> -		dev_err(dmc->dev, "could not get devfreq-event counters\n");
-> -		return dmc->num_counters;
-> +		 /*
-> +		  * Check the deprecated 'devfreq-events' property
-> +		  * to support backward-compatibility.
-> +		 */
-> +		dmc->num_counters = of_property_count_elems_of_size(
-> +					dmc->dev->of_node,
-> +					"devfreq-events", sizeof(u32));
-> +		if (dmc->num_counters < 0) {
-> +			dev_err(dmc->dev,
-> +				"could not get devfreq-event counters\n");
-> +			return dmc->num_counters;
-> +		}
->   	}
->   
->   	counters_size = sizeof(struct devfreq_event_dev) * dmc->num_counters;
+> On Tue, Dec 17, 2019 at 09:27:33AM +0100, Greg Kroah-Hartman wrote:
+> > On Tue, Dec 17, 2019 at 09:17:16AM +0100, Uwe Kleine-König wrote:
+> > > +struct tty_struct *tty_kopen_shared(dev_t device)
+> > > +{
+> > > +	struct tty_struct *tty;
+> > > +	struct tty_driver *driver;
+> > > +	int index = -1;
+> > > +
+> > > +	mutex_lock(&tty_mutex);
+> > > +	driver = tty_lookup_driver(device, NULL, &index);
+> > > +	if (IS_ERR(driver)) {
+> > > +		tty = ERR_CAST(driver);
+> > > +		goto err_lookup_driver;
+> > > +	}
+> > > +
+> > > +	tty = tty_driver_lookup_tty(driver, NULL, index);
+> > 
+> > No error check?
 > 
+> Well, the caller of tty_kopen_shared is supposed to check for error
+> returns. Do you think an error message here would be approriate? I'd do
+> this in the caller similar to how tty_kopen works.
 
-Looks good to me. The fallback with backward-compatibility is a good
-idea in my opinion. Thank you for the change and feel free to and my:
+Ah, you are passing it on to the caller, ok, nevermind.
 
-Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
-
-
-Regarding the whole patch set, for the first glance it looks reasonable
-and good. AIRC some developers were arguing for the "devfreq-events"
-entry in DT. Now it should be fine. I will spend more time today for
-reviewing the whole patch set.
-
-Regards,
-Lukasz
+greg k-h
