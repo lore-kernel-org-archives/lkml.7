@@ -2,104 +2,106 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A40C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA12C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C1B22072B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:38:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C397B206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:41:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="VFltoxNY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727387AbfLQEi2 (ORCPT
+        id S1727329AbfLQEly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 23:38:28 -0500
-Received: from mo-csw1515.securemx.jp ([210.130.202.154]:37476 "EHLO
-        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbfLQEi1 (ORCPT
+        Mon, 16 Dec 2019 23:41:54 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44343 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbfLQEly (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 23:38:27 -0500
-Received: by mo-csw.securemx.jp (mx-mo-csw1515) id xBH4cFR5010467; Tue, 17 Dec 2019 13:38:15 +0900
-X-Iguazu-Qid: 34tMKo1JevEwTib89y
-X-Iguazu-QSIG: v=2; s=0; t=1576557494; q=34tMKo1JevEwTib89y; m=R/+K17mdD/Vln+E9qkngc/OrgbDAB07oZZSVseeD9SY=
-Received: from imx2.toshiba.co.jp (imx2.toshiba.co.jp [106.186.93.51])
-        by relay.securemx.jp (mx-mr1511) id xBH4cERN039096;
-        Tue, 17 Dec 2019 13:38:14 +0900
-Received: from enc01.localdomain ([106.186.93.100])
-        by imx2.toshiba.co.jp  with ESMTP id xBH4cDCh007642;
-        Tue, 17 Dec 2019 13:38:14 +0900 (JST)
-Received: from hop001.toshiba.co.jp ([133.199.164.63])
-        by enc01.localdomain  with ESMTP id xBH4cDUn017234;
-        Tue, 17 Dec 2019 13:38:13 +0900
-Date:   Tue, 17 Dec 2019 13:38:10 +0900
-From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Tejun Heo <tj@kernel.org>,
-        Marcin Pawlowski <mpawlowski@fb.com>,
-        "Williams, Gerald S" <gerald.s.williams@intel.com>
-Subject: Re: [PATCH 4.19 053/140] workqueue: Fix spurious sanity check
- failures in destroy_workqueue()
-X-TSB-HOP: ON
-Message-ID: <20191217043810.xamko46u2g4sdkwp@toshiba.co.jp>
-References: <20191216174747.111154704@linuxfoundation.org>
- <20191216174802.938835002@linuxfoundation.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191216174802.938835002@linuxfoundation.org>
+        Mon, 16 Dec 2019 23:41:54 -0500
+Received: by mail-pg1-f196.google.com with SMTP id x7so4932012pgl.11
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 20:41:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=Nk/W+5arQWBs6ZTiLBLgKOQUzXBaBv6sspqmS0EGHAM=;
+        b=VFltoxNYivcht4mRSWRTABNUZvebN0skY+qag2OouKIz4KqoGdQmi4ks7UY7ToejLS
+         PmM3/SsG0KYROTJchUegQ3ZKsLyrq5lALVi2+chGheV8prVT/7HfsHzIbUdUDgz7kTNP
+         zjniJjRLCzchA/KZiT0RuPe7ihTp+/PUsHsWRD1bU+TPYDYSCwEyH0g1yct1GMqi9RhG
+         UUJ4UwXZA2d+P+qF2Ri1CIuw6DbNBK8lO5Nl7nueHYBUIEskketwZPFuWS4B6vjw4Mr3
+         xPHjde8l+pjtEqQ+rWrE2InDsMB/QEkTr46EBkZ3I0slwcAj8Se9E/UPwWViFjCTYgph
+         blEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Nk/W+5arQWBs6ZTiLBLgKOQUzXBaBv6sspqmS0EGHAM=;
+        b=lXba0G3Gb+YWHiW6M2cHi4LYizHLjTpVG60Q7m4OZWeYibz/TfRvgEDWKQfmEUTwKj
+         u11n2jgqMQJV9KGZdbaPe+rHctdTGkMlv9mRiY/tWvq0/NvgHCR3o3eaCSJNyX1dBd4p
+         3ZcHgTUFd+TsSGNo4HTdA8oZj+lOggHf7D6zyVZz16XG1O4CufGWd9SVKKWBLhwqyl/M
+         Ib5fiC5hJtiplXeV6YNTg2TZz5Tp7Gwj7UMDddJfFH4WFlit5JfY1BcMr716gUzXWSmE
+         DMAvZBbsvzyVxVgm+G95PBGv2kVL3B6SGr/vb2JCpwjPlDUC/Wdee2EfxK/0e4CjCVjg
+         AQJA==
+X-Gm-Message-State: APjAAAXvbMIMHUBnyeMQ2qIl100Wn1LnmT8qqq8x9nPC9gJidcyO1vZX
+        2LOC/Cd/RIZjj79ynkOQmzhYjA==
+X-Google-Smtp-Source: APXvYqy+E/6fERbL4RyzNs3+QqabIKLKD87ynTY+Mde2PSKfFtuH0kuleB413ORzLD8oVL9ma/uqWQ==
+X-Received: by 2002:aa7:9d0d:: with SMTP id k13mr21099578pfp.254.1576557713533;
+        Mon, 16 Dec 2019 20:41:53 -0800 (PST)
+Received: from rip.lixom.net (99-152-116-91.lightspeed.sntcca.sbcglobal.net. [99.152.116.91])
+        by smtp.gmail.com with ESMTPSA id q12sm24307946pfh.158.2019.12.16.20.41.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 16 Dec 2019 20:41:52 -0800 (PST)
+From:   Olof Johansson <olof@lixom.net>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Olof Johansson <olof@lixom.net>
+Subject: [PATCH] clk: declare clk_core_reparent_orphans() inline
+Date:   Mon, 16 Dec 2019 20:41:46 -0800
+Message-Id: <20191217044146.127200-1-olof@lixom.net>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 06:48:41PM +0100, Greg Kroah-Hartman wrote:
-> From: Tejun Heo <tj@kernel.org>
-> 
-> commit def98c84b6cdf2eeea19ec5736e90e316df5206b upstream.
-> 
-> Before actually destrying a workqueue, destroy_workqueue() checks
-> whether it's actually idle.  If it isn't, it prints out a bunch of
-> warning messages and leaves the workqueue dangling.  It unfortunately
-> has a couple issues.
-> 
-> * Mayday list queueing increments pwq's refcnts which gets detected as
->   busy and fails the sanity checks.  However, because mayday list
->   queueing is asynchronous, this condition can happen without any
->   actual work items left in the workqueue.
-> 
-> * Sanity check failure leaves the sysfs interface behind too which can
->   lead to init failure of newer instances of the workqueue.
-> 
-> This patch fixes the above two by
-> 
-> * If a workqueue has a rescuer, disable and kill the rescuer before
->   sanity checks.  Disabling and killing is guaranteed to flush the
->   existing mayday list.
-> 
-> * Remove sysfs interface before sanity checks.
-> 
-> Signed-off-by: Tejun Heo <tj@kernel.org>
-> Reported-by: Marcin Pawlowski <mpawlowski@fb.com>
-> Reported-by: "Williams, Gerald S" <gerald.s.williams@intel.com>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
+A recent addition exposed a helper that is only used for
+CONFIG_OF. Instead of figuring out best place to have it in the order
+of various functions, just declare it as explicitly inline, and the
+compiler will happily handle it without warning.
 
-This commit also requires the following commit:
+(Also fixup of a single stray empty line while I was looking at the code)
 
-commit 8efe1223d73c218ce7e8b2e0e9aadb974b582d7f
-Author: Tejun Heo <tj@kernel.org>
-Date:   Fri Sep 20 13:39:57 2019 -0700
+Fixes: 66d9506440bb ("clk: walk orphan list on clock provider registration")
+Signed-off-by: Olof Johansson <olof@lixom.net>
+---
+ drivers/clk/clk.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-    workqueue: Fix missing kfree(rescuer) in destroy_workqueue()
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index ae2795b30e060..dc1e6481f6b33 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -3277,7 +3277,7 @@ static void clk_core_reparent_orphans_nolock(void)
+ 	}
+ }
+ 
+-static void clk_core_reparent_orphans(void)
++static void __maybe_unused clk_core_reparent_orphans(void)
+ {
+ 	clk_prepare_lock();
+ 	clk_core_reparent_orphans_nolock();
+@@ -3442,7 +3442,6 @@ static int __clk_core_init(struct clk_core *core)
+ 
+ 	clk_core_reparent_orphans_nolock();
+ 
+-
+ 	kref_init(&core->ref);
+ out:
+ 	clk_pm_runtime_put(core);
+-- 
+2.11.0
 
-    Signed-off-by: Tejun Heo <tj@kernel.org>
-    Reported-by: Qian Cai <cai@lca.pw>
-    Fixes: def98c84b6cd ("workqueue: Fix spurious sanity check failures in destroy_workqueue()")
-
-This is also required to 4.4, 4.9, 4.14 and 5.3.
-
-Best regards,
-  Nobuhiro
