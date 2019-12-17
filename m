@@ -2,140 +2,107 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70088C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99CAEC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39CE6206D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:54:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64FD62467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:54:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="KW9uxdKV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LZ0ndjGX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727490AbfLQUyB (ORCPT
+        id S1727905AbfLQUy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 15:54:01 -0500
-Received: from mta-p8.oit.umn.edu ([134.84.196.208]:51840 "EHLO
-        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726252AbfLQUyA (ORCPT
+        Tue, 17 Dec 2019 15:54:26 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:58086 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727402AbfLQUy0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 15:54:00 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 47cr3D10tgz9vYwf
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 20:54:00 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p8.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id PWSn7wD74zxG for <linux-kernel@vger.kernel.org>;
-        Tue, 17 Dec 2019 14:54:00 -0600 (CST)
-Received: from mail-yw1-f71.google.com (mail-yw1-f71.google.com [209.85.161.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 47cr3C6pHPz9vKkk
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 14:53:59 -0600 (CST)
-Received: by mail-yw1-f71.google.com with SMTP id c68so9158550ywa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 12:53:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=knhSf+eyCdoX1uYdgnl9DAzGqM/zDzsAxGOMt75GOeY=;
-        b=KW9uxdKVEE1cGboEmFPtl1bF+X0FhEtizkUnApethUm/LhLaZszjO3xBtQCAIuI1Ar
-         2SK9l6JiGdphs8PEFxbVTQKAQwDAMzijOfUw5x+JwRfDC0O2cl0a5F8oG6ejZ1SW6zSp
-         wabutn9GBBX35Wf0/fzS8xQx0FrLU4eRhy+S6/sd4As/7jaNgpHp6v8+h0eXo0fjxpXK
-         h3TNpQsiC5U2tXb6B6bNEe1uKsFyO+HSBQSNyaaHaU5ZfeItF9bnUV/KcT4LyRMoueDM
-         TK41NghYcTzCTo3hT5T68vg3M/V55K02wE8nLdtdqfhBmNvgBcObaDY+P8lfgJ4ITY2D
-         3FIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=knhSf+eyCdoX1uYdgnl9DAzGqM/zDzsAxGOMt75GOeY=;
-        b=BnTfGwPXfGcV82MDxMgnfrk7xhE7oBRWZbgSJyKYujXNmrTrMKMtOqs92oeSh15qEj
-         hqr79fXofdnocDpQsybDwmXrYQgNWYzGu9VJJ/WJz1vEsULB6ySg4H1BRBPMDHXL3bzq
-         5UWMCp1tKa31gnHsQK0RLE0e8d/5eiKHXPfN7mQvEkRJp51zSh1+KEkkK4FLadMoCwED
-         bz24K8kxZ+qvHW4GLYWbGhXIwUAH9lWZm+M42DJA1uGunfrY5+/xvOFOAMMx/w0BUTrO
-         Ya8Q/13peJnF6jqF9kefUmvZdb+WdWDjtVLzLdwfRIOf4sVooLjnd06P2RYqZ3ED1UPH
-         n5TQ==
-X-Gm-Message-State: APjAAAXGcRhpJPjYKTaFPa2VHyuL3v8UiwobG5rVyAh0M+iDaphFoRMA
-        64MZu3z5i+SlrWEyUgYsxVOv5zIFrYMm8J3bXreQ3w34edoR0uXrSTzbfgsSIucv65aE1g0XvAw
-        RuGU4LE7yZumnY3V3Z93OAHVSuoQd
-X-Received: by 2002:a25:dd04:: with SMTP id u4mr21885ybg.419.1576616039238;
-        Tue, 17 Dec 2019 12:53:59 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzgA5SI4ho9qhM2qkA9c0wLxK4/wVAABvXhm0AgOJCd5pQ/kuKS89YzxeQKtfbjs+EEsNCSGQ==
-X-Received: by 2002:a25:dd04:: with SMTP id u4mr21862ybg.419.1576616039020;
-        Tue, 17 Dec 2019 12:53:59 -0800 (PST)
-Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
-        by smtp.gmail.com with ESMTPSA id d143sm8500294ywb.51.2019.12.17.12.53.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 12:53:58 -0800 (PST)
-From:   Aditya Pakki <pakki001@umn.edu>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] xen/grant-table: remove multiple BUG_ON on gnttab_interface
-Date:   Tue, 17 Dec 2019 14:53:56 -0600
-Message-Id: <20191217205356.29172-1-pakki001@umn.edu>
-X-Mailer: git-send-email 2.20.1
+        Tue, 17 Dec 2019 15:54:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=XUsRpc5ei9NN7Lxdkonngt/t8AjkaZ5bnNlv1WXUG/s=; b=LZ0ndjGXusiCWS1b21+k60uAt
+        PhRQw0iNxJLA612DqqmdT2EHOj+NQN7nSqp1x5STFbwLIjuUTR1loFCxT+vi6QheIxpGk8scGfFEy
+        S0jzrdh5gagfe13LqnMZKoyhpFQQockRa0kymaeM3sRp9Cbwkqp8VI4x12c+uQHSSMjoZgUzJ9Xjh
+        5IHrAAeuQQhtrSeiJuHE9hO8v54wI+lvMpL0l/HKKkpzxTDlb/AOCDyNZ6y9zdImts2IVquFTww8j
+        IeCCU5LJV14iFkUh04aTbzSsaKOUZ8pHwx27dmEF3VAF925KGC2/i53SXqe2X/hCohn9gLMybYHA1
+        lvTPK/kmQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ihJrK-0006Qa-Hp; Tue, 17 Dec 2019 20:54:22 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 376613035D4;
+        Tue, 17 Dec 2019 21:52:58 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id F1F042B2CEC3D; Tue, 17 Dec 2019 21:54:20 +0100 (CET)
+Date:   Tue, 17 Dec 2019 21:54:20 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [GIT PULL] timer fixes
+Message-ID: <20191217205420.GK2844@hirez.programming.kicks-ass.net>
+References: <20191217115547.GA68104@gmail.com>
+ <CAHk-=wiVZMU69qB7nmkkyvjtDenQ+89V94V=3mmdY88uWYrZiQ@mail.gmail.com>
+ <20191217193039.GF2844@hirez.programming.kicks-ass.net>
+ <CAHk-=wgH8bSsgxnUAjuoUyDwHPKZwdVirH__=mJQu7RCFfCwZA@mail.gmail.com>
+ <20191217203506.GI2844@hirez.programming.kicks-ass.net>
+ <CAHk-=whccvKaB-Fezv9w9XuZx4JDz4jDiJd+dATTj7yErhvpKQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whccvKaB-Fezv9w9XuZx4JDz4jDiJd+dATTj7yErhvpKQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-gnttab_request_version() always sets the gnttab_interface variable
-and the assertions to check for empty gnttab_interface is unnecessary.
-The patch eliminates multiple such assertions.
+On Tue, Dec 17, 2019 at 12:43:46PM -0800, Linus Torvalds wrote:
+> On Tue, Dec 17, 2019 at 12:35 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > Pray.. the TSC MSR is still writable from SMM, so BIOS monkeys could
+> > still do what they've been doing for decades.
+> 
+> Sure. And the HPET is unreliable, so the checking causes issues.
+> 
+> Which one should we worry about?
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
----
-v1: Eliminate more BUG_ON calls, as suggested by Juergen Gross.
----
- drivers/xen/grant-table.c | 4 ----
- 1 file changed, 4 deletions(-)
+I'm just waiting for the system that messes up the TSC and doesn't have
+HPET/PIT _at_all_ :-/
 
-diff --git a/drivers/xen/grant-table.c b/drivers/xen/grant-table.c
-index 49b381e104ef..7b36b51cdb9f 100644
---- a/drivers/xen/grant-table.c
-+++ b/drivers/xen/grant-table.c
-@@ -664,7 +664,6 @@ static int grow_gnttab_list(unsigned int more_frames)
- 	unsigned int nr_glist_frames, new_nr_glist_frames;
- 	unsigned int grefs_per_frame;
- 
--	BUG_ON(gnttab_interface == NULL);
- 	grefs_per_frame = gnttab_interface->grefs_per_grant_frame;
- 
- 	new_nr_grant_frames = nr_grant_frames + more_frames;
-@@ -1160,7 +1159,6 @@ EXPORT_SYMBOL_GPL(gnttab_unmap_refs_sync);
- 
- static unsigned int nr_status_frames(unsigned int nr_grant_frames)
- {
--	BUG_ON(gnttab_interface == NULL);
- 	return gnttab_frames(nr_grant_frames, SPP);
- }
- 
-@@ -1388,7 +1386,6 @@ static int gnttab_expand(unsigned int req_entries)
- 	int rc;
- 	unsigned int cur, extra;
- 
--	BUG_ON(gnttab_interface == NULL);
- 	cur = nr_grant_frames;
- 	extra = ((req_entries + gnttab_interface->grefs_per_grant_frame - 1) /
- 		 gnttab_interface->grefs_per_grant_frame);
-@@ -1423,7 +1420,6 @@ int gnttab_init(void)
- 	/* Determine the maximum number of frames required for the
- 	 * grant reference free list on the current hypervisor.
- 	 */
--	BUG_ON(gnttab_interface == NULL);
- 	max_nr_glist_frames = (max_nr_grant_frames *
- 			       gnttab_interface->grefs_per_grant_frame / RPP);
- 
--- 
-2.20.1
+But yes, I get your point.
 
+> > Also, what consititutes a 'modern' CPU?
+> 
+> I think anything that has TSC_STABLE set should likely be considered
+> more reliable than HPET.
+> 
+> Or whatever the bit is called. The "doesn't stop in idle" thing.
+
+The doesn't stop on idle thing is CONSTANT_TSC, and that has been set
+since Nehalem, and there are a metric ton of systems still failing due
+to the described SMM 'feature'.
+
+Perhaps we can go with TSC_KNOWN_FREQ, which relies on CPUID.15h to tell
+us the actual TSC frequency, but I'm not sure all modern systems
+actually fill out that leaf :/
+
+The systems that completely got rid of the HPET/PIT pretty much must
+fill that out, otherwise there's just no way we can recover the TSC
+frequency.
+
+I'm going to have to wait for Thomas to chime in though; I only
+occasionally poke at this stuff ;-)
