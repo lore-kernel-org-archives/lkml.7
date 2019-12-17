@@ -2,83 +2,93 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 120C0C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A21C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B929821835
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:48:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="aBPRZsH/"
+	by mail.kernel.org (Postfix) with ESMTP id 968BA21775
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:54:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728431AbfLQMsN (ORCPT
+        id S1727378AbfLQMyV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:48:13 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:43331 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727948AbfLQMsM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 07:48:12 -0500
-Received: by mail-qk1-f193.google.com with SMTP id t129so1895691qke.10
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 04:48:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=wzOsaTy37YVhJkswFmGvk92S/B8MsC+ITE+1Iqoh25g=;
-        b=aBPRZsH/Sfs64AE3u3kW7ANtwYNQ2c4YQLMRAMI+8xHtmk/fnyElNYBvbVIskkwtpq
-         EBM0fihWBDRlg8o2yR/qSymZa36IyZUnDRzR2YjEE1kVwz/MaMnHbzfVhEDFsHWAPvBC
-         yaRfeDe7cvrYnwFOFR5TuAjiQGV4ojCOvboNoMic/ypR/5bhPo1uAYSoN00YqNJEQmGE
-         6ty7tArXC4tfhO8XGoVD+Gej4hC8vHw7A5R0reslUTXXyK/xarPIZyda5+sGt07JaqsP
-         Ny9vv1ERG8OAxqnhSRmlk+x/IZLTzZ8qfWngWnq1Tsf/lMYy0cfQxoHIwlb2n+Dp8VWX
-         rsCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=wzOsaTy37YVhJkswFmGvk92S/B8MsC+ITE+1Iqoh25g=;
-        b=aKNgfTN9smroQ8VpMnMSI69+YhuhhAsfcIq4oMPrV6SupshMYhjhpPrMbDEFQa6IRy
-         1i3sELNqVisEv1J2DpO/HFcupn3q1ks30KEKO/U2+SWIYFSnPmGPNtvf4iDPW1PXttwA
-         IQUfFNrbuDwwhOg/XeptD1pmOYa7QsYLH1bbU7swZmvxl9MpPGwCTLNqecx7+sgp4tKw
-         N3qRd0iF4sQERaISLkH4993OiJW+WkoWBzb76U6eL31JlCZbq3lQ4jQFqc/J6ZKJbwNu
-         nC6jmB+D9bi3+HJmQ606MNczniJlq91dqNrX/U020nf4NlWiqO5xVe9RtFK7LGPZcFjY
-         A8xA==
-X-Gm-Message-State: APjAAAX4d6cfCOAvi8oDGnEUn0ffOVWiHSgBz009oNkTrczTQxuGRHot
-        xRZBycejM6YEEYFKJj3QiYUuuHTNKag=
-X-Google-Smtp-Source: APXvYqwHTaCyhbqwJUYKrw0ZZj/f2bj/1jLWa3eyB/i5hKwSCtnzziH/aCeNS4Svx/9f5aXlXC34XQ==
-X-Received: by 2002:a05:620a:1472:: with SMTP id j18mr4911093qkl.184.1576586891494;
-        Tue, 17 Dec 2019 04:48:11 -0800 (PST)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id y18sm7017250qki.0.2019.12.17.04.48.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Dec 2019 04:48:10 -0800 (PST)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] mm: remove dead code totalram_pages_set()
-Date:   Tue, 17 Dec 2019 07:48:09 -0500
-Message-Id: <8456A27B-5F32-4BED-B826-27B17E87AA81@lca.pw>
-References: <20191217064401.18047-1-richardw.yang@linux.intel.com>
-Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191217064401.18047-1-richardw.yang@linux.intel.com>
-To:     Wei Yang <richardw.yang@linux.intel.com>
-X-Mailer: iPhone Mail (17C54)
+        Tue, 17 Dec 2019 07:54:21 -0500
+Received: from foss.arm.com ([217.140.110.172]:36156 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726411AbfLQMyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 07:54:21 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 89F7C31B;
+        Tue, 17 Dec 2019 04:54:20 -0800 (PST)
+Received: from [192.168.0.9] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 920BF3F719;
+        Tue, 17 Dec 2019 04:54:18 -0800 (PST)
+Subject: Re: [Patch v6 1/7] sched/pelt.c: Add support to track thermal
+ pressure
+To:     Thara Gopinath <thara.gopinath@linaro.org>, mingo@redhat.com,
+        peterz@infradead.org, ionela.voinescu@arm.com,
+        vincent.guittot@linaro.org, rui.zhang@intel.com,
+        qperret@google.com, daniel.lezcano@linaro.org,
+        viresh.kumar@linaro.org
+Cc:     linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+        javi.merino@kernel.org, amit.kucheria@verdurent.com
+References: <1576123908-12105-1-git-send-email-thara.gopinath@linaro.org>
+ <1576123908-12105-2-git-send-email-thara.gopinath@linaro.org>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <cdaf2c1f-63bb-2430-c53a-f19a45035fc5@arm.com>
+Date:   Tue, 17 Dec 2019 13:54:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <1576123908-12105-2-git-send-email-thara.gopinath@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 12/12/2019 05:11, Thara Gopinath wrote:
 
+minor: in subject: s/sched/pelt.c/sched/pelt
 
-> On Dec 17, 2019, at 1:44 AM, Wei Yang <richardw.yang@linux.intel.com> wrot=
-e:
->=20
-> No one use totalram_pages_set(), just remote it.
+[...]
 
-It is unlikely that this is unintentional, but can you figure out which comm=
-it removed the last caller just in case?=
+> diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
+> index a96db50..9aac3b7 100644
+> --- a/kernel/sched/pelt.c
+> +++ b/kernel/sched/pelt.c
+> @@ -353,6 +353,28 @@ int update_dl_rq_load_avg(u64 now, struct rq *rq, int running)
+>  	return 0;
+>  }
+>  
+> +/*
+> + * thermal:
+> + *
+> + *   load_sum = \Sum se->avg.load_sum
+
+Why not '\Sum rq->avg.load_sum' ?
+
+> + *
+> + *   util_avg and runnable_load_avg are not supported and meaningless.
+> + *
+> + */
+> +int update_thermal_load_avg(u64 now, struct rq *rq, u64 capacity)
+> +{
+> +	if (___update_load_sum(now, &rq->avg_thermal,
+> +			       capacity,
+> +			       capacity,
+> +			       capacity)) {
+> +		___update_load_avg(&rq->avg_thermal, 1, 1);
+> +		trace_pelt_thermal_tp(rq);
+> +		return 1;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+
+[...]
