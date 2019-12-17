@@ -2,142 +2,82 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C63C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D8EAC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 366D021582
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:27:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="ZOxWstGD"
+	by mail.kernel.org (Postfix) with ESMTP id 0BA2421582
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:32:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728254AbfLQV1e (ORCPT
+        id S1728300AbfLQVcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 16:27:34 -0500
-Received: from mout.web.de ([212.227.15.4]:55627 "EHLO mout.web.de"
+        Tue, 17 Dec 2019 16:32:45 -0500
+Received: from mga04.intel.com ([192.55.52.120]:17437 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726731AbfLQV1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 16:27:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1576618031;
-        bh=33IPvrVK6gje/u9qqC0f6+0yOZHAqs009QQpghuQUjU=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=ZOxWstGDvGSYFwMi/Jh2rmVkemKjVN+6hr/IBcSzlnB5xDYDoTKlWnO8VqKBAfD7v
-         FqGU2SvFYRnHmPXUffUzUfWRPgli//u8lOwZBw+O2amEv2flpbJazbxZUnQe39/JBC
-         Mu3OAy0NO/e2WXdGEU5t6JYa2uMymnIDtnWimdlc=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([2.243.185.133]) by smtp.web.de (mrweb004
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0LdalO-1i03SO3TDW-00ilkq; Tue, 17
- Dec 2019 22:27:10 +0100
-Subject: Re: [PATCH v2] hdlcdrv: replace unnecessary assertion in
- hdlcdrv_register
-To:     Aditya Pakki <pakki001@umn.edu>, netdev@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>, "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
+        id S1728051AbfLQVco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 16:32:44 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 13:32:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,326,1571727600"; 
+   d="scan'208";a="227639443"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
+  by orsmga002.jf.intel.com with ESMTP; 17 Dec 2019 13:32:42 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20191217210620.29775-1-pakki001@umn.edu>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <96cddfde-f0d9-4186-9e23-fe4285637c0f@web.de>
-Date:   Tue, 17 Dec 2019 22:27:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+Subject: [PATCH v2 0/5] KVM: x86: X86_FEATURE bit() cleanup
+Date:   Tue, 17 Dec 2019 13:32:37 -0800
+Message-Id: <20191217213242.11712-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20191217210620.29775-1-pakki001@umn.edu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:gmpqdUuSqMUyzBu7rUHRhEj3KoVtVM6ZQ4cZdtfENTln7TE57o2
- GT+vkr+xK9mrG/EM9QcYjQfVxyAbZGRBKhZmTIHAqzofo9DK1Ls+EwGaoFdsCpMKD2aQcMn
- 6lGKBtjyWfr1WwfwctinZ40crbTOobUtuCXERtjSukQel+mbWUtoH8w9g9R5bH3Xb9BSRjh
- kUR5b366bZ+TCFPPnTtqg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:I/SsTU3h7hI=:AehP7I8xJ9B6hYzrlnpl+P
- xz+bWnXyxqcfWHrSGC8rb+O25yH97sYnZGV4Jg669eboXQM1QpiY+vBM/bmYIrjC7MQIkiSJk
- Dz6Js5SKNN+vuOeE1F5brF6HQodegsJ3vkwv0aYvpmfRcA4WxYbcaEfz217knHJwh7vxMrGs2
- uZvcUf+7ee5bg00gDZMaohVQSZunfFmOLwGSAMFH0oCKzRlkgRqNd/IfaYDxZMsVowr6yp1qM
- AfZj/b2FzOgBGYJt51UFYczj4YyjMFun0GY3RB9Av07AZvu7fhRRTs/dnPlu/vtoXe0IYsmWh
- XH6SXMXFLqCImpIzm2uXjTzzudu0mWL11vDHEThUT2bSLRz3Wx+zcPCjcTyWJCSJwpHVzN+I4
- v+ZZfZOI9aHFXsWSVA0YP9myOK2GxMH09WrYitPIAVsffAFn00nsFK5J4Gi/8HeRwTbTmbMl9
- 9UsXk6ic/r3rJ+Z3yIB+u7GmPufvVH8HCHQbgsOr7O6lWd/qlpqIKnCcxN2x2+oG/6Nec2uy7
- Iw8qG55Y4MlJLk4hvOZJlgHSP8rSuw7O0w/TOOllO7i73H3qgVafqQTi36PdDorxhffMLrODY
- 6QsUxR/OOMGVZ/eFzABycQaoV5kjf/wmpzzXYAAmU259Ax5l2753CToY3bl4p+Jz58iiDwDei
- rZjmml5CtGKXjUREw26GzdhYuog8AlhQy16bk6UjuyKzwYWtHNUfIDoG6gAkYzn+nChELOqIz
- 6pkA1cpG8vAGIZbF7xuwFJaKs92ygPd2EpB0ADNZuMszlFo7T9hWXSMIwA1ikof0BwQ4Z2BnG
- 76C16wPLrGBWaB1Bhxzz0BrGqX8mVqzUZdDnAuW7nZ1Fqim7Is0CDrVPd2NJ/fbXeF3GRKKFN
- njuR0fCHpmhNjBc3vq3UyVMsWTx3JsHL+4hOlpl1ObRSjg7SMFzFQwsE+KmwyPPbE9rPYL820
- LgHHLIse7D7AUi2yTbRvT+eoVE27HVTBW2CTwohkR9sEeJDxrxoHHiYgXaODu2pKGQjnchY81
- J9X+gZk1vZ4cQPssvnUvHyP9i69szz9+nuYLfZ/UASxrannGjRryGPFqFbTV6JbRMoCy3noLT
- KI3HaZtL1xoYIWXOlzZ8FdRr23Hinp8RWv8EfFF7vs0OW2FmppqtXqGd4V27tJqz/mPDv03gc
- u7NfgqRrZTXcuvZAVDwiuarJ9Cy/OXrqqcL6jnMUP1GaGzeVh+HTsCUw+TOP9PabU9TXDIz9N
- ggWwn7wauSRvjEdabdaz8dhVHoitLzwJz/SDTEj7DAkUbcmVoNV98o33cFYY=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> The three callers of hdlcdrv_register all pass valid pointers and
-> do not fail. The patch eliminates the unnecessary BUG_ON assertion.
+Small series to add build-time protections on reverse CPUID lookup (and
+other usages of bit()), and to rename the misleading-generic bit() helper
+to something that better conveys its purpose.
 
-I suggest to replace the wording =E2=80=9CThe patch eliminates=E2=80=9D by=
- =E2=80=9CThus delete=E2=80=9D
-to make it imperative as desired.
+I don't love emulator changes in patch 1 as adding one-off helpers is a
+bit silly, but IMO it's the lesser of two evils, e.g. adding dedicated
+helpers is arguably less error prone than manually encoding a CPUID
+lookup, and the helpers approach avoids having to include cpuid.h in the
+emulator code.
 
-Will the tag =E2=80=9CFixes=E2=80=9D be added to the final change descript=
-ion?
+v2:
+  - Rework the assertions to use the reverse_cpuid table instead of
+    using the last cpufeatures word (which was not at all intuitive).
 
+Sean Christopherson (5):
+  KVM: x86: Add dedicated emulator helpers for querying CPUID features
+  KVM: x86: Move bit() helper to cpuid.h
+  KVM: x86: Add CPUID_7_1_EAX to the reverse CPUID table
+  KVM: x86: Expand build-time assertion on reverse CPUID usage
+  KVM: x86: Refactor and rename bit() to feature_bit() macro
 
-> ---
->  drivers/net/hamradio/hdlcdrv.c | 2 --
+ arch/x86/include/asm/kvm_emulate.h |  4 +++
+ arch/x86/kvm/cpuid.c               |  5 ++--
+ arch/x86/kvm/cpuid.h               | 41 +++++++++++++++++++++++++----
+ arch/x86/kvm/emulate.c             | 21 +++------------
+ arch/x86/kvm/svm.c                 |  4 +--
+ arch/x86/kvm/vmx/vmx.c             | 42 +++++++++++++++---------------
+ arch/x86/kvm/x86.c                 | 18 +++++++++++++
+ arch/x86/kvm/x86.h                 |  5 ----
+ 8 files changed, 87 insertions(+), 53 deletions(-)
 
-Please replace these triple dashes by a blank line.
+-- 
+2.24.1
 
-Regards,
-Markus
