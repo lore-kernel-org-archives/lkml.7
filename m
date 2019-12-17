@@ -2,178 +2,80 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3205CC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79444C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08FDB2072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:55:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45C802072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:56:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="h/O3F2cM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbfLQIzB (ORCPT
+        id S1727005AbfLQI4K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 03:55:01 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:49117 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbfLQIzA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 03:55:00 -0500
-Received: from mail-qk1-f171.google.com ([209.85.222.171]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MXop2-1iBKX82BI4-00YBbm; Tue, 17 Dec 2019 09:54:58 +0100
-Received: by mail-qk1-f171.google.com with SMTP id x129so174943qke.8;
-        Tue, 17 Dec 2019 00:54:58 -0800 (PST)
-X-Gm-Message-State: APjAAAXNG2+9NUH4Fcy7Or18esGaQdcU/0HUKwazUmvLn9WIJropDTPy
-        znb/Iw88weMWhDetMx/fRco63HDyaVmLehppnTA=
-X-Google-Smtp-Source: APXvYqzKiLsbZVrfvGk9+cg1ubafjtbflqD9p/VamlqKp16D5EdmeX1UgRWAb1NnN5heyvsziKaivNRpaH1iYITOlvM=
-X-Received: by 2002:a37:2f02:: with SMTP id v2mr3750201qkh.3.1576572897205;
- Tue, 17 Dec 2019 00:54:57 -0800 (PST)
+        Tue, 17 Dec 2019 03:56:10 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:56792 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725893AbfLQI4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 03:56:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=Rb0YZBuF7fyymuJc9F5dt+KrT6e7je4rrQTXU1u/Fns=; b=h/O3F2cMuzQs9kWWtp0mZ9Y8AT
+        ZPV6k3hZ9LS6BQ/tiBQzBib2NSRvrVKCzZzUz51FaXjhMdjMo8XsqR+DHG2mNuo7k864TUBs0FBWR
+        lvj0erRYQOKxcJjzkcydl8CT9Ww4uMh957VKhLXwlUvCUZsXv7wWd/Au5cObY6U8k+XM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1ih8e6-0002Gn-79; Tue, 17 Dec 2019 09:55:58 +0100
+Date:   Tue, 17 Dec 2019 09:55:58 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Chris Snook <chris.snook@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        James Hogan <jhogan@kernel.org>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, Russell King <linux@armlinux.org.uk>
+Subject: Re: [PATCH v5 5/5] net: dsa: add support for Atheros AR9331 built-in
+ switch
+Message-ID: <20191217085558.GF6994@lunn.ch>
+References: <20191216074403.313-1-o.rempel@pengutronix.de>
+ <20191216074403.313-6-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-References: <20191217010001.GA14461@ircssh-2.c.rugged-nimbus-611.internal>
- <20191217015001.sp6mrhuiqrivkq3u@wittgenstein> <CAMp4zn8fzeiJVSn6EtRi6UAGh6AL3QWu=PZxw+=TAYJORjn_Sw@mail.gmail.com>
-In-Reply-To: <CAMp4zn8fzeiJVSn6EtRi6UAGh6AL3QWu=PZxw+=TAYJORjn_Sw@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 17 Dec 2019 09:54:40 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a3G-W8s0G2-XKuDw9dRmupZSyiF6FRRAnvDt9=kMMzS8w@mail.gmail.com>
-Message-ID: <CAK8P3a3G-W8s0G2-XKuDw9dRmupZSyiF6FRRAnvDt9=kMMzS8w@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] pid: Add PIDFD_IOCTL_GETFD to fetch file
- descriptors from processes
-To:     Sargun Dhillon <sargun@sargun.me>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Tycho Andersen <tycho@tycho.ws>, Jann Horn <jannh@google.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Al Viro <viro@zeniv.linux.org.uk>, gpascutto@mozilla.com,
-        ealvarez@mozilla.com, Florian Weimer <fweimer@redhat.com>,
-        jld@mozilla.com
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:HRAACjC5zp8lxNpo/BksdLlwiLLHqEgHh0jsn+k4S+2Eh5Uv53p
- C9bFh5wXL+Ju5zWDstGOtRlYMtrjwfZ8garW/jHChtuDow7fI3r16tRRGedKQpUV3L18ETu
- yI1dmiiZG89YnQ/Uh+YEoa6qfcpPzo5agoss9tX7MfCVL13uPPYcSa0HevOPwcq5CO2DeV+
- rvBWzQVDBrRIzj8OofEEA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ewGeybDoAh4=:QfLyBhyd5Jll7i1z3Q7vNn
- 1kgevxEMDqrLzxfQVkK9qVir47KyAfs1CrUroOSId9jmjVWLXxIR417SaAm9fCsrUDNkshAhl
- JCZicW9jpmJ3wUnMCnvWGavQYEK9pFw/FLcKckTHs9Hz7SfzKkRT5oEUP55T6ucuenLlLgds7
- xJvOgc1Wf5MryhB0Hq3+1cOZHgZ/wwkSU9L3SpvoLYABbzHNn7pvMYkJkb7K9TJdT21krgD4Y
- 4YFZAI0veXXh1COcA/JwwHg9SpoXBr+Yk7PldiIiBOyya6NooxZn56uywBuXQ6ksU/I+wsgs1
- mXHGQ/J9oqSook9Fg2c7xDeSja55fq6mE/On0sj5Xb3MhoRbtLPUkuupUrqBhewpgxdA/zOFr
- rTGYOniuUQI5kd8T2WyoOTaFuQS/Afe3mOjQiVDqmS7cO6qgZiFUygRFq17sHHiNmRaDxmBSD
- MZ/VOMCKA/+xjvZrJBjvT4DOWPjBQl1cdMIwBVAJQf0R4OaF/xcHR3BAO1qDH3txyVLLcVuaI
- 2li9HRDNuK/pMBIAfUvb3L0bAEFbSzc0Zhtb4ZpJDhBspN/wR+lC2iuUIwQzL9LJ//9unnxYt
- sABx7gtMdv0SIU4KKQOkIp56VK3TtLCp9/HnH0TAT1eQ6kPn1JH7ByaUwCjwec1ryzvHReOBh
- n97qVTTU5W8sKOoEBgTQqGiQ4FISnzK+ltko21PTuCwrzjTfT91EwGSlVDT+8rUA/HZCYymid
- 2d2sgCkAeALEf4JQHena2ky5zu/87i2wNp1NVICd8drY72i6S4D6JnhFp5MYM84fGjfOzUDEF
- HBM8RGxK0atTnFC1BPpEgvRmKOjfFlQSyvojNuFxv29a6cF044YHkdodF7e49TgFCyu6Q9mpk
- B2dCO8sC42gON0AMrVGg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191216074403.313-6-o.rempel@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 3:50 AM Sargun Dhillon <sargun@sargun.me> wrote:
-> On Mon, Dec 16, 2019 at 5:50 PM Christian Brauner <christian.brauner@ubuntu.com> wrote:
-> > > +
-> > > +#include <linux/types.h>
-> > > +#include <linux/ioctl.h>
-> > > +
-> > > +/* options to pass in to pidfd_getfd_args flags */
-> > > +#define PIDFD_GETFD_CLOEXEC (1 << 0) /* open the fd with cloexec */
-> >
-> > Please, make them cloexec by default unless there's a very good reason
-> > not to.
-> >
-> For now then, should I have flags, and just say "reserved for future usage",
-> or would you prefer that I drop flags entirely?
+On Mon, Dec 16, 2019 at 08:44:03AM +0100, Oleksij Rempel wrote:
+> Provide basic support for Atheros AR9331 built-in switch. So far it
+> works as port multiplexer without any hardware offloading support.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> +
+> +/* dummy reg to change page */
+> +#define AR9331_SW_REG_PAGE			BIT(18)
 
-There is no need for adding reserved fields in an ioctl, just add a new ioctl
-number if you need it later.
+Nit pick: It seems odd to define a register number using a BIT macro.
 
-> > > +
-> > > +struct pidfd_getfd_args {
-> > > +     __u32 size;             /* sizeof(pidfd_getfd_args) */
-> > > +     __u32 fd;       /* the tracee's file descriptor to get */
-> > > +     __u32 flags;
-> > > +};
-> >
-> > I think you want to either want to pad this
-> >
-> > +struct pidfd_getfd_args {
-> > +       __u32 size;             /* sizeof(pidfd_getfd_args) */
-> > +       __u32 fd;       /* the tracee's file descriptor to get */
-> > +       __u32 flags;
-> >         __u32 reserved;
-> > +};
-> >
-> > or use __aligned_u64 everywhere which I'd personally prefer instead of
-> > this manual padding everywhere.
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-No, don't make ioctl structures extensible. If there is no 64-bit member
-in it, 32-bit alignment is sufficient.
-
-Also, having implicit padding is dangerous because it makes it easier to
-leave it uninitialized, leaking kernel stack information on the copy_to_user().
-
-Please drop the '__u32 size' argument, too: the size is fixed by definition
-(through the _IOWR macro) and if you need to extend it you get a new
-command anyway.
-
-> Wouldn't __attribute__((packed)) achieve a similar thing of making sure
-> the struct is a constant size across all compilers?
->
-> I'll go with __aligned_u64 instead of packed, if you don't want to use packed.
-
-__attribute__((packed)) is worse because it forces compilers to use byte
-access on architectures that have no fast unaligned 32-bit load/store.
-Basically you should never put __packed on a structure, but instead add
-it to members that need to be unaligned within a sturct for compatibility
-reasons.
-
-> > > +
-> > > +#define PIDFD_IOC_MAGIC                      'p'
-> > > +#define PIDFD_IO(nr)                 _IO(PIDFD_IOC_MAGIC, nr)
-> > > +#define PIDFD_IOR(nr, type)          _IOR(PIDFD_IOC_MAGIC, nr, type)
-> > > +#define PIDFD_IOW(nr, type)          _IOW(PIDFD_IOC_MAGIC, nr, type)
-> > > +#define PIDFD_IOWR(nr, type)         _IOWR(PIDFD_IOC_MAGIC, nr, type)
-
-Drop these macros, they just make it harder to grep or script around the use
-of _IOWR/_IOR/_IOW
-
-> > > +#define PIDFD_IOCTL_GETFD            PIDFD_IOWR(0xb0, \
-> > > +                                             struct pidfd_getfd_args)
-
-Without the size and flag members, this can become the simpler
-
-#define PIDFD_IOCTL_GETFD  _IOWR('p', 0xb0, __u32)
-
-> > > +
-> > >  const struct file_operations pidfd_fops = {
-> > >       .release = pidfd_release,
-> > >       .poll = pidfd_poll,
-> > > +     .unlocked_ioctl = pidfd_ioctl,
-
-This needs
-
-+    .compat_ioctl = compat_ptr_ioctl,
-
-To work on compat tasks.
-
-Finally, there is the question whether this should be an ioctl
-operation at all, or
-if it would better be done as a proper syscall. Functionally the two
-are the same
-here, but doing such a fundamental operation as an ioctl doesn't feel
-quite right
-to me. As a system call, this could be something like
-
-int pidfd_get_fd(int pidfd, int their_fd, int flags);
-
-along the lines of dup3().
-
-        Arnd
+    Andrew
