@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FCC4C43603
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB56C2D0C3
 	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:57:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC0220CC7
+	by mail.kernel.org (Postfix) with ESMTP id C33F620CC7
 	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:57:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbfLQA5P (ORCPT
+        id S1727940AbfLQA5N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:57:15 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34980 "EHLO
+        Mon, 16 Dec 2019 19:57:13 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35002 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726863AbfLQAvk (ORCPT
+        by vger.kernel.org with ESMTP id S1726873AbfLQAvl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 19:51:40 -0500
+        Mon, 16 Dec 2019 19:51:41 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15I-0003LI-HJ; Tue, 17 Dec 2019 00:51:32 +0000
+        id 1ih15I-0003L6-2j; Tue, 17 Dec 2019 00:51:32 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15H-0005Ux-21; Tue, 17 Dec 2019 00:51:31 +0000
+        id 1ih15H-0005W5-HH; Tue, 17 Dec 2019 00:51:31 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Steve French" <smfrench@gmail.com>,
-        "Ross Lagerwall" <ross.lagerwall@citrix.com>
-Date:   Tue, 17 Dec 2019 00:46:20 +0000
-Message-ID: <lsq.1576543535.883584702@decadent.org.uk>
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Date:   Tue, 17 Dec 2019 00:46:33 +0000
+Message-ID: <lsq.1576543535.547489665@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 046/136] cifs: Check uniqueid for SMB2+ and return
- -ESTALE if necessary
+Subject: [PATCH 3.16 059/136] tracing: Get trace_array reference for
+ available_tracers files
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,61 +55,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ross Lagerwall <ross.lagerwall@citrix.com>
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-commit a108471b5730b52017e73b58c9f486319d2ac308 upstream.
+commit 194c2c74f5532e62c218adeb8e2b683119503907 upstream.
 
-Commit 7196ac113a4f ("Fix to check Unique id and FileType when client
-refer file directly.") checks whether the uniqueid of an inode has
-changed when getting the inode info, but only when using the UNIX
-extensions. Add a similar check for SMB2+, since this can be done
-without an extra network roundtrip.
+As instances may have different tracers available, we need to look at the
+trace_array descriptor that shows the list of the available tracers for the
+instance. But there's a race between opening the file and an admin
+deleting the instance. The trace_array_get() needs to be called before
+accessing the trace_array.
 
-Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
-Signed-off-by: Steve French <smfrench@gmail.com>
+Fixes: 607e2ea167e56 ("tracing: Set up infrastructure to allow tracers for instances")
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/cifs/inode.c | 24 ++++++++++++++++++++++--
- 1 file changed, 22 insertions(+), 2 deletions(-)
+ kernel/trace/trace.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -815,8 +815,21 @@ cifs_get_inode_info(struct inode **inode
- 			}
- 		} else
- 			fattr.cf_uniqueid = iunique(sb, ROOT_I);
--	} else
--		fattr.cf_uniqueid = CIFS_I(*inode)->uniqueid;
-+	} else {
-+		if ((cifs_sb->mnt_cifs_flags & CIFS_MOUNT_SERVER_INUM) &&
-+		    validinum == false && server->ops->get_srv_inum) {
-+			/*
-+			 * Pass a NULL tcon to ensure we don't make a round
-+			 * trip to the server. This only works for SMB2+.
-+			 */
-+			tmprc = server->ops->get_srv_inum(xid,
-+				NULL, cifs_sb, full_path,
-+				&fattr.cf_uniqueid, data);
-+			if (tmprc)
-+				fattr.cf_uniqueid = CIFS_I(*inode)->uniqueid;
-+		} else
-+			fattr.cf_uniqueid = CIFS_I(*inode)->uniqueid;
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -3311,9 +3311,14 @@ static int show_traces_open(struct inode
+ 	if (tracing_disabled)
+ 		return -ENODEV;
+ 
++	if (trace_array_get(tr) < 0)
++		return -ENODEV;
++
+ 	ret = seq_open(file, &show_traces_seq_ops);
+-	if (ret)
++	if (ret) {
++		trace_array_put(tr);
+ 		return ret;
 +	}
  
- 	/* query for SFU type info if supported and needed */
- 	if (fattr.cf_cifsattrs & ATTR_SYSTEM &&
-@@ -857,6 +870,13 @@ cifs_get_inode_info(struct inode **inode
- 	} else {
- 		/* we already have inode, update it */
+ 	m = file->private_data;
+ 	m->private = tr;
+@@ -3321,6 +3326,14 @@ static int show_traces_open(struct inode
+ 	return 0;
+ }
  
-+		/* if uniqueid is different, return error */
-+		if (unlikely(cifs_sb->mnt_cifs_flags & CIFS_MOUNT_SERVER_INUM &&
-+		    CIFS_I(*inode)->uniqueid != fattr.cf_uniqueid)) {
-+			rc = -ESTALE;
-+			goto cgii_exit;
-+		}
++static int show_traces_release(struct inode *inode, struct file *file)
++{
++	struct trace_array *tr = inode->i_private;
 +
- 		/* if filetype is different, return error */
- 		if (unlikely(((*inode)->i_mode & S_IFMT) !=
- 		    (fattr.cf_mode & S_IFMT))) {
++	trace_array_put(tr);
++	return seq_release(inode, file);
++}
++
+ static ssize_t
+ tracing_write_stub(struct file *filp, const char __user *ubuf,
+ 		   size_t count, loff_t *ppos)
+@@ -3351,8 +3364,8 @@ static const struct file_operations trac
+ static const struct file_operations show_traces_fops = {
+ 	.open		= show_traces_open,
+ 	.read		= seq_read,
+-	.release	= seq_release,
+ 	.llseek		= seq_lseek,
++	.release	= show_traces_release,
+ };
+ 
+ /*
 
