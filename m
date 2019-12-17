@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F68BC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 776AAC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E069524676
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:52:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5510924679
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:52:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbfLQAvq (ORCPT
+        id S1727682AbfLQAwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:51:46 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34948 "EHLO
+        Mon, 16 Dec 2019 19:52:36 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35652 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726830AbfLQAvk (ORCPT
+        by vger.kernel.org with ESMTP id S1727221AbfLQAvq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 19:51:40 -0500
+        Mon, 16 Dec 2019 19:51:46 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15I-0003Ky-1y; Tue, 17 Dec 2019 00:51:32 +0000
+        id 1ih15K-0003N2-Pi; Tue, 17 Dec 2019 00:51:34 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15H-0005Wp-Ph; Tue, 17 Dec 2019 00:51:31 +0000
+        id 1ih15I-0005a6-Uk; Tue, 17 Dec 2019 00:51:32 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Johan Hovold" <johan@kernel.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Date:   Tue, 17 Dec 2019 00:46:40 +0000
-Message-ID: <lsq.1576543535.110927165@decadent.org.uk>
+        "Jonas Gorski" <jonas.gorski@gmail.com>,
+        linux-mips@vger.kernel.org, "James Hogan" <jhogan@kernel.org>,
+        "Ralf Baechle" <ralf@linux-mips.org>,
+        "Paul Burton" <paulburton@kernel.org>,
+        "Florian Fainelli" <f.fainelli@gmail.com>
+Date:   Tue, 17 Dec 2019 00:47:02 +0000
+Message-ID: <lsq.1576543535.456304494@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 066/136] USB: ldusb: fix memleak on disconnect
+Subject: [PATCH 3.16 088/136] MIPS: bmips: mark exception vectors as char
+ arrays
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,35 +59,97 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Johan Hovold <johan@kernel.org>
+From: Jonas Gorski <jonas.gorski@gmail.com>
 
-commit b14a39048c1156cfee76228bf449852da2f14df8 upstream.
+commit e4f5cb1a9b27c0f94ef4f5a0178a3fde2d3d0e9e upstream.
 
-If disconnect() races with release() after a process has been
-interrupted, release() could end up returning early and the driver would
-fail to free its driver data.
+The vectors span more than one byte, so mark them as arrays.
 
-Fixes: 2824bd250f0b ("[PATCH] USB: add ldusb driver")
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191010125835.27031-2-johan@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes the following build error when building when using GCC 8.3:
+
+In file included from ./include/linux/string.h:19,
+                 from ./include/linux/bitmap.h:9,
+                 from ./include/linux/cpumask.h:12,
+                 from ./arch/mips/include/asm/processor.h:15,
+                 from ./arch/mips/include/asm/thread_info.h:16,
+                 from ./include/linux/thread_info.h:38,
+                 from ./include/asm-generic/preempt.h:5,
+                 from ./arch/mips/include/generated/asm/preempt.h:1,
+                 from ./include/linux/preempt.h:81,
+                 from ./include/linux/spinlock.h:51,
+                 from ./include/linux/mmzone.h:8,
+                 from ./include/linux/bootmem.h:8,
+                 from arch/mips/bcm63xx/prom.c:10:
+arch/mips/bcm63xx/prom.c: In function 'prom_init':
+./arch/mips/include/asm/string.h:162:11: error: '__builtin_memcpy' forming offset [2, 32] is out of the bounds [0, 1] of object 'bmips_smp_movevec' with type 'char' [-Werror=array-bounds]
+   __ret = __builtin_memcpy((dst), (src), __len); \
+           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/mips/bcm63xx/prom.c:97:3: note: in expansion of macro 'memcpy'
+   memcpy((void *)0xa0000200, &bmips_smp_movevec, 0x20);
+   ^~~~~~
+In file included from arch/mips/bcm63xx/prom.c:14:
+./arch/mips/include/asm/bmips.h:80:13: note: 'bmips_smp_movevec' declared here
+ extern char bmips_smp_movevec;
+
+Fixes: 18a1eef92dcd ("MIPS: BMIPS: Introduce bmips.h")
+Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/misc/ldusb.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ arch/mips/bcm63xx/prom.c      |  2 +-
+ arch/mips/include/asm/bmips.h | 10 +++++-----
+ arch/mips/kernel/smp-bmips.c  |  8 ++++----
+ 3 files changed, 10 insertions(+), 10 deletions(-)
 
---- a/drivers/usb/misc/ldusb.c
-+++ b/drivers/usb/misc/ldusb.c
-@@ -394,10 +394,7 @@ static int ld_usb_release(struct inode *
- 		goto exit;
- 	}
+--- a/arch/mips/bcm63xx/prom.c
++++ b/arch/mips/bcm63xx/prom.c
+@@ -88,7 +88,7 @@ void __init prom_init(void)
+ 		 * Here we will start up CPU1 in the background and ask it to
+ 		 * reconfigure itself then go back to sleep.
+ 		 */
+-		memcpy((void *)0xa0000200, &bmips_smp_movevec, 0x20);
++		memcpy((void *)0xa0000200, bmips_smp_movevec, 0x20);
+ 		__sync();
+ 		set_c0_cause(C_SW0);
+ 		cpumask_set_cpu(1, &bmips_booted_mask);
+--- a/arch/mips/include/asm/bmips.h
++++ b/arch/mips/include/asm/bmips.h
+@@ -75,11 +75,11 @@ static inline int register_bmips_smp_ops
+ #endif
+ }
  
--	if (mutex_lock_interruptible(&dev->mutex)) {
--		retval = -ERESTARTSYS;
--		goto exit;
--	}
-+	mutex_lock(&dev->mutex);
+-extern char bmips_reset_nmi_vec;
+-extern char bmips_reset_nmi_vec_end;
+-extern char bmips_smp_movevec;
+-extern char bmips_smp_int_vec;
+-extern char bmips_smp_int_vec_end;
++extern char bmips_reset_nmi_vec[];
++extern char bmips_reset_nmi_vec_end[];
++extern char bmips_smp_movevec[];
++extern char bmips_smp_int_vec[];
++extern char bmips_smp_int_vec_end[];
  
- 	if (dev->open_count != 1) {
- 		retval = -ENODEV;
+ extern int bmips_smp_enabled;
+ extern int bmips_cpu_offset;
+--- a/arch/mips/kernel/smp-bmips.c
++++ b/arch/mips/kernel/smp-bmips.c
+@@ -467,10 +467,10 @@ static void bmips_wr_vec(unsigned long d
+ 
+ static inline void bmips_nmi_handler_setup(void)
+ {
+-	bmips_wr_vec(BMIPS_NMI_RESET_VEC, &bmips_reset_nmi_vec,
+-		&bmips_reset_nmi_vec_end);
+-	bmips_wr_vec(BMIPS_WARM_RESTART_VEC, &bmips_smp_int_vec,
+-		&bmips_smp_int_vec_end);
++	bmips_wr_vec(BMIPS_NMI_RESET_VEC, bmips_reset_nmi_vec,
++		bmips_reset_nmi_vec_end);
++	bmips_wr_vec(BMIPS_WARM_RESTART_VEC, bmips_smp_int_vec,
++		bmips_smp_int_vec_end);
+ }
+ 
+ void bmips_ebase_setup(void)
 
