@@ -2,129 +2,98 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F7F9C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B186DC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58FBC206D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:12:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 842A4206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:13:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Pq32bIRD"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="uRJRC9kn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728416AbfLQUMY (ORCPT
+        id S1727940AbfLQUNx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 15:12:24 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:45364 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727231AbfLQUMX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 15:12:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=JrPNw1xqWhalZX2E4G40ImbRJBJbFB1eZ7m4nQw4xcs=; b=Pq32bIRDfVvgqHNTwuGZyEapY
-        nVVq9FBbLHpryr/yI8F5sMrmHfHtMdS1i1yezfB7S7ZKuYJ3o2NBEvOcf8uK1wM/iReFrYd5qaCtV
-        j2Q7TwOSDA0BigjmlWP7IO982wohwNUU5dIRGotFSUTzbyuq2fVs3uO7MNpsJxXGwTs34OdTg2gOm
-        eUCJxvj652+cOrqzXSXrON9Jhqwb4DoXP3YiqDtBCb4XNujBt4VYkpPmViw5zMFmQ6OkVo5HeXJhg
-        kJGBZxIEsb6Uf1QZ67lHvMfYrvwTFk+eJgM9b4Da3CMZ3OPdvNbxob87d3hILeGjSOwn3AQM502YW
-        1AKOdEWNg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ihJCV-0003aT-Eo; Tue, 17 Dec 2019 20:12:11 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BCF453066B3;
-        Tue, 17 Dec 2019 21:10:45 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 57B082B2B0509; Tue, 17 Dec 2019 21:12:08 +0100 (CET)
-Date:   Tue, 17 Dec 2019 21:12:08 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc:     akpm@linux-foundation.org, npiggin@gmail.com, mpe@ellerman.id.au,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, Will Deacon <will@kernel.org>
-Subject: [PATCH] asm-generic/tlb: Avoid potential double flush
-Message-ID: <20191217201208.GQ2871@hirez.programming.kicks-ass.net>
-References: <20191217071713.93399-1-aneesh.kumar@linux.ibm.com>
- <20191217071713.93399-2-aneesh.kumar@linux.ibm.com>
- <20191217085854.GW2844@hirez.programming.kicks-ass.net>
- <32404765-ad4f-6612-d1a9-43f9acdc8a62@linux.ibm.com>
- <20191217123416.GH2827@hirez.programming.kicks-ass.net>
+        Tue, 17 Dec 2019 15:13:53 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:51465 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726967AbfLQUNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 15:13:53 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47cq8t1TM0z9sRC;
+        Wed, 18 Dec 2019 07:13:49 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1576613630;
+        bh=w1hDoDA1NRxotFgoED3hZItRRTvbqbNnQRT1X50Qcz8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=uRJRC9knnjoWbpv/A4gjv3/ZBnzWUICujlX/ya6l+GBiYqaEqMIyu4LeQnXSXrUtS
+         +UD17aCVLe7/OKBcUi7upfT6yJxxO4Dsb3XQXQFiuH+snvWbvdPCN8weH08IATXWHJ
+         570iT0+DzmDTdy6moCuC62D6CIdrLn/EnxtjyjmT1ZeXZPN0nmsfuH4/sNXSiC4cp0
+         bt6fOrpdB6ONONsWJvh0aSQVNYUWVeT1AT+93ZjcVsGbWMrMwpCPIIGWh4kLfvS8v+
+         DV02lIhqYVZit+r/xLyQ+6lpmFuYYfRhV0yoo6gEVEtpliPg0Sacvd4kDLQqudzp0M
+         d9lft2No3a3dg==
+Date:   Wed, 18 Dec 2019 07:13:48 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: linux-next: Fixes tag needs some work in the omap-fixes tree
+Message-ID: <20191218071348.024f73e4@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191217123416.GH2827@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/H++slodE+m8ve8SdDGsw3M7";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 01:34:16PM +0100, Peter Zijlstra wrote:
-> Perhaps if we replace !tlb->end with something like:
-> 
->   !tlb->freed_tables && !tlb->cleared_p*
-> 
-> (which GCC should be able to do with a single load and mask)
-> 
-> I've not really thought too hard about it yet, I need to run some
-> errands, but I'll look at it more closely when I get back.
+--Sig_/H++slodE+m8ve8SdDGsw3M7
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-AFAICT this should work.
+Hi all,
 
----
-Subject: asm-generic/tlb: Avoid potential double flush
+In commit
 
-Aneesh reported that:
+  d094e1b4b232 ("ARM: dts: am571x-idk: Fix gpios property to have the corre=
+ct  gpio number")
 
-	tlb_flush_mmu()
-	  tlb_flush_mmu_tlbonly()
-	    tlb_flush()			<-- #1
-	  tlb_flush_mmu_free()
-	    tlb_table_flush()
-	      tlb_table_invalidate()
-	        tlb_flush_mmu_tlbonly()
-		  tlb_flush()		<-- #2
+Fixes tag
 
-does two TLBIs when tlb->fullmm, because __tlb_reset_range() will not
-clear tlb->end in that case.
+  Fixes: d23f3839fe97d8dce03d ("ARM: dts: DRA7: Add pcie1 dt node for
 
-Observe that any caller to __tlb_adjust_range() also sets at least one
-of the tlb->freed_tables || tlb->cleared_p* bits, and those are
-unconditionally cleared by __tlb_reset_range().
+has these problem(s):
 
-Change the condition for actually issuing TLBI to having one of those
-bits set, as opposed to having tlb->end != 0.
+  - Subject has leading but no trailing parentheses
+  - Subject has leading but no trailing quotes
 
-Reported-by: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- include/asm-generic/tlb.h | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+Please do not break FIxes tags over more that one line.  Also, keep all
+the tags together at the end of the commit message.
 
-diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
-index fe0ea6ff3636..c9a25c5a83e8 100644
---- a/include/asm-generic/tlb.h
-+++ b/include/asm-generic/tlb.h
-@@ -402,7 +402,12 @@ tlb_update_vma_flags(struct mmu_gather *tlb, struct vm_area_struct *vma) { }
- 
- static inline void tlb_flush_mmu_tlbonly(struct mmu_gather *tlb)
- {
--	if (!tlb->end)
-+	/*
-+	 * Anything calling __tlb_adjust_range() also sets at least one of
-+	 * these bits.
-+	 */
-+	if (!(tlb->freed_tables || tlb->cleared_ptes || tlb->cleared_pmds ||
-+	      tlb->cleared_puds || tlb->cleared_p4ds))
- 		return;
- 
- 	tlb_flush(tlb);
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/H++slodE+m8ve8SdDGsw3M7
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl35NvwACgkQAVBC80lX
+0GyHyQf/fAVGOtsNGIUOlOlGUDPrzdGbOkrpECvJfDp3XR1NjoCMuuiu57OdtfiF
+Xt9zQy7nQrnYppmU+KXos7LMAEr0TrJRaeHgiRBt/rURFvVrAADvo770jJZiYni3
+7HU1o8YXUtQQB5VTKNKR5alcpQUELF2+5Hd4gk3Sadmai3F4+g80B/pqITmouS13
++cFp5Y75dL4KFMOW3VoCvena74Cxb2vuGfFDrJG4SmN2rJWVpBrL6oOZGHOVjlsC
+JRhpsJBo3aYsW7xXM2ngEyNbJDwZn4cjw8MpgPMSAJvHdZLna3GYyO6YieJe/pF4
+1/gb7L5DgLONvQm9coo2dNebcSu+NQ==
+=ulye
+-----END PGP SIGNATURE-----
+
+--Sig_/H++slodE+m8ve8SdDGsw3M7--
