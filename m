@@ -2,88 +2,104 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF97AC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB990C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA9FD24679
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:57:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576544278;
-	bh=arlHUxcowrP++Ny6/K4IC3w5gYo1UaKSQWAVKfsDsag=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=d/7OXcUvBdw2g4EFTB8a1kC7sIBFe/OMIWIcpON0WdqGgdZRuE4fFTUJIqunSP4rh
-	 FqZy9JsM5JVoz02cUcC9QcWGe+cTM5AqL2Bv5dO93/Ae0J+DR1Ri0I1QZedGUZ6TnG
-	 8oT/T+CIAE44LDQxKA8+FudMMZjniYaUe3TG5+JA=
+	by mail.kernel.org (Postfix) with ESMTP id 7A95524679
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:58:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbfLQA55 (ORCPT
+        id S1728129AbfLQA6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:57:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45200 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726637AbfLQA5x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 19:57:53 -0500
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86B3520CC7;
-        Tue, 17 Dec 2019 00:57:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576544273;
-        bh=arlHUxcowrP++Ny6/K4IC3w5gYo1UaKSQWAVKfsDsag=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=MheGbXg5uB9U32daoBMI7hncWPix7icWEBDh3Xb0SUVfDDv/J0whZpmA4Z1ESB3+Q
-         A2XRF3EvvH6uZQmGUAcqkjBIwM5MRyBwXyVe3udGOoZpb7MDhXRdRFVpX0B59oo3mP
-         Gwwztn96kImxOdj1fDfHWZ5cAxi/EFhL/1xy9Glo=
-Subject: Re: [PATCH 5.3 000/180] 5.3.17-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20191216174806.018988360@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <7f78940e-ebd0-dc8c-0439-bfe0a46d85e1@kernel.org>
-Date:   Mon, 16 Dec 2019 17:57:51 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 16 Dec 2019 19:58:03 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34920 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726795AbfLQAvj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 19:51:39 -0500
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1ih15I-0003Km-1z; Tue, 17 Dec 2019 00:51:32 +0000
+Received: from ben by deadeye with local (Exim 4.93-RC7)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1ih15H-0005WA-IR; Tue, 17 Dec 2019 00:51:31 +0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
-In-Reply-To: <20191216174806.018988360@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Markus Pargmann" <mpa@pengutronix.de>,
+        "Marek Lindner" <mareklindner@neomailbox.ch>
+Date:   Tue, 17 Dec 2019 00:46:34 +0000
+Message-ID: <lsq.1576543535.473638193@decadent.org.uk>
+X-Mailer: LinuxStableQueue (scripts by bwh)
+X-Patchwork-Hint: ignore
+Subject: [PATCH 3.16 060/136] batman-adv: iv_ogm_iface_enable, direct
+ return values
+In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/16/19 10:47 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.3.17 release.
-> There are 180 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed, 18 Dec 2019 17:41:25 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.17-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+3.16.80-rc1 review patch.  If anyone has any objections, please let me know.
 
-Compiled and booted on my test system. NO dmesg regressions.
+------------------
 
-thanks,
--- Shuah
+From: Markus Pargmann <mpa@pengutronix.de>
+
+commit 42d9f2cbd42e1ba137584da8305cf6f68b84f39d upstream.
+
+Directly return error values. No need to use a return variable.
+
+Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+Signed-off-by: Marek Lindner <mareklindner@neomailbox.ch>
+[bwh: Backported to 3.16 as dependency of commit 40e220b4218b
+ "batman-adv: Avoid free/alloc race when handling OGM buffer"]
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+---
+ net/batman-adv/bat_iv_ogm.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
+
+--- a/net/batman-adv/bat_iv_ogm.c
++++ b/net/batman-adv/bat_iv_ogm.c
+@@ -307,7 +307,6 @@ static int batadv_iv_ogm_iface_enable(st
+ 	struct batadv_ogm_packet *batadv_ogm_packet;
+ 	unsigned char *ogm_buff;
+ 	uint32_t random_seqno;
+-	int res = -ENOMEM;
+ 
+ 	/* randomize initial seqno to avoid collision */
+ 	get_random_bytes(&random_seqno, sizeof(random_seqno));
+@@ -316,7 +315,7 @@ static int batadv_iv_ogm_iface_enable(st
+ 	hard_iface->bat_iv.ogm_buff_len = BATADV_OGM_HLEN;
+ 	ogm_buff = kmalloc(hard_iface->bat_iv.ogm_buff_len, GFP_ATOMIC);
+ 	if (!ogm_buff)
+-		goto out;
++		return -ENOMEM;
+ 
+ 	hard_iface->bat_iv.ogm_buff = ogm_buff;
+ 
+@@ -328,10 +327,7 @@ static int batadv_iv_ogm_iface_enable(st
+ 	batadv_ogm_packet->reserved = 0;
+ 	batadv_ogm_packet->tq = BATADV_TQ_MAX_VALUE;
+ 
+-	res = 0;
+-
+-out:
+-	return res;
++	return 0;
+ }
+ 
+ static void batadv_iv_ogm_iface_disable(struct batadv_hard_iface *hard_iface)
 
