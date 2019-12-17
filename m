@@ -2,106 +2,126 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2823C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 03:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3AB7C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 03:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75F67207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 03:06:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 774FA207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 03:07:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576551993;
-	bh=fhdqjYDVYEEaLcT+0wJ1io/OtqGNMnR2/gvbUPaqahU=;
+	s=default; t=1576552037;
+	bh=CWOYsNvEW8g/2bfma/6vKZup5YgZ0FBb2EjfqK52orQ=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=x1lk/ZGagU8fCGcK5nLMQuJFv6yKic2wLXB6vu9EC/Wacr964sDYAYPVJxMxIAHeC
-	 2/54nlKjqNYA4VnYpElyp+0Q7/lXi9o5Sk81QkFh3t9nTVvzmArUcjBtvHAdHP5RQG
-	 hHg/CniHtSdowMOL2RF2gTjGWsn56v9oPc2+CTmE=
+	b=f/vIOyB/w83e//tW8B1pHrax0JY1p0aR0Pz44DYiiAr35I99UNlHL9mWRnEgjYBuD
+	 QBuzv5ZM70F1zJZHIez+qWfoTkZ1qpdSEcKNvnhdHG+PDbGVqFxxW/3CUeQnySBqNY
+	 IA+E2PRvVp2oFMQrsSSEz3kC5K/QrFLNPLGVC6mo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbfLQDGc (ORCPT
+        id S1727101AbfLQDHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 22:06:32 -0500
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:58155 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbfLQDGc (ORCPT
+        Mon, 16 Dec 2019 22:07:16 -0500
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:17117 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbfLQDHQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 22:06:32 -0500
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id xBH36CI2031595;
-        Tue, 17 Dec 2019 12:06:13 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com xBH36CI2031595
+        Mon, 16 Dec 2019 22:07:16 -0500
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id xBH375bO008091;
+        Tue, 17 Dec 2019 12:07:05 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com xBH375bO008091
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1576551973;
-        bh=pugGGjF7UoSjVUlbexS6sMjOLhQht+PE5aPlQbu3gZI=;
+        s=dec2015msa; t=1576552026;
+        bh=ZhOcBgDSv8Hn1El6HF4muJCBjTHKz+oJ4fyRLFMkLLE=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=XG0jL4Z9K1FdE5J1JOKxZIxiZwa8NLcIxoZqNdqDodGPR20KM+MqHO2s5a5mHmZqW
-         wtvgE5naeIuBsDaM5g99Y41zIUJbo9bVfcjCmDRLyx75tvZUlMhA8FUSBoOCdAI3+H
-         l0ihq/zIAjKucOEWwVx4IrSL3Jygz8V2oA+VJ6tNyOK3IEGABp9h78h6GJEa2CSDSu
-         Sj2BLwivdka/vPEL+9uNgsTNz0kZ79eC5GUr/UVJnhq3eacLPRzL1KV76+uBymT5Hu
-         VmDcd2O3y/A6XEAqZw/vt99PSaLH0Cq+Z7cs/Ue0ozIGWwQS9B0tc3vJkfdckNdE73
-         q3dD17PQDdctQ==
-X-Nifty-SrcIP: [209.85.221.178]
-Received: by mail-vk1-f178.google.com with SMTP id o187so2280165vka.2;
-        Mon, 16 Dec 2019 19:06:13 -0800 (PST)
-X-Gm-Message-State: APjAAAVa5FlKlNPsTAt+PcO42ylnfUV6+yYx382ea2tdaSlHksey7XGr
-        IrdpD5IH2mspR12TYZZfw/qcLEbc3mCc13Pc0Wk=
-X-Google-Smtp-Source: APXvYqzpD0fO/aIi+ks5CVgoBnhS77OdbbT+Hz15RXdLJaxFP29PsPPPy4YjBrxnkc42+qznbFUj3VyFbxlLC1iTnak=
-X-Received: by 2002:a1f:8cd5:: with SMTP id o204mr1689010vkd.66.1576551972298;
- Mon, 16 Dec 2019 19:06:12 -0800 (PST)
+        b=rqOJJ85K6CnWdEJYWWO0P4r8X9FyJrVU4m6wPXIwbJft4ahV4MSuiyqDVMC0u0iMo
+         h/xSDQiLASw9tP9HTnA1ejHpDhmLG8dxdEeTmtWvjjBLdy8CyOqNOsjDR7xkGPRwBO
+         a7Yjw2S0oFEF5rZcgWyEOs1WFvT5oGNFMJ4bB4c60akwb+kUu0/FR4WpQ3x63jxQMy
+         edL+jENzz+qgUMyAUZFA+adkfw4h4XEW/Z6FuqmBWBu47MGy/Yw2094YksI62FOaka
+         nTPSIMQmrNi2FuYSfLVHkzLhv5cLjyNqymsjuc9koPQ2SJ9wyCin4OLY/Di+2htiE6
+         8db7yD4dYXe9w==
+X-Nifty-SrcIP: [209.85.217.41]
+Received: by mail-vs1-f41.google.com with SMTP id f8so5556239vsq.8;
+        Mon, 16 Dec 2019 19:07:05 -0800 (PST)
+X-Gm-Message-State: APjAAAXEw3RnpUnYQpM9j+B+LemvNuonkTRMsspw3AR9NL8LrOGY7oqK
+        Q8QfyZ+VdLs7+3QKm8JYSArESHKkQJWvK2ZGzl8=
+X-Google-Smtp-Source: APXvYqw2xitO9pwMZ6r85qIc8vitKa7NvLz0X5hNFTgzj0IsuLeRUcKkvHmMGWgd1nGYfruahJVR4hf8o63tn/AUm7w=
+X-Received: by 2002:a67:7904:: with SMTP id u4mr1438775vsc.155.1576552024754;
+ Mon, 16 Dec 2019 19:07:04 -0800 (PST)
 MIME-Version: 1.0
-References: <20191204225446.202981-1-dima@golovin.in> <CAKwvOdm-bhuJMRRN3tyNdb88+_TFd4m3b-7gX0-91VG4djzp+Q@mail.gmail.com>
- <23883331575506134@vla1-3991b5027d7d.qloud-c.yandex.net>
-In-Reply-To: <23883331575506134@vla1-3991b5027d7d.qloud-c.yandex.net>
+References: <20191206130302.11473-1-masahiroy@kernel.org> <20191206130302.11473-2-masahiroy@kernel.org>
+In-Reply-To: <20191206130302.11473-2-masahiroy@kernel.org>
 From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 17 Dec 2019 12:05:36 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATRWgfnP_C68aiOLacR_Bhz2oL6DgyUE76gENWfOvvGbQ@mail.gmail.com>
-Message-ID: <CAK7LNATRWgfnP_C68aiOLacR_Bhz2oL6DgyUE76gENWfOvvGbQ@mail.gmail.com>
-Subject: Re: [PATCH] x86/boot: kbuild: allow readelf executable to be specified
-To:     Dmitry Golovin <dima@golovin.in>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Bruce Ashfield <bruce.ashfield@gmail.com>,
-        Ross Philipson <ross.philipson@oracle.com>,
-        Ross Burton <ross.burton@intel.com>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "fenghua.yu@intel.com" <fenghua.yu@intel.com>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>
+Date:   Tue, 17 Dec 2019 12:06:28 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARF5WzJhX2HS8U7uGX3D8D5aDi_ah1JUaM27iS49xYMAA@mail.gmail.com>
+Message-ID: <CAK7LNARF5WzJhX2HS8U7uGX3D8D5aDi_ah1JUaM27iS49xYMAA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] mkcompile_h: use printf for LINUX_COMPILE_BY
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 5, 2019 at 9:41 AM Dmitry Golovin <dima@golovin.in> wrote:
+On Fri, Dec 6, 2019 at 10:03 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
 >
-> 05.12.2019, 01:18, "'Nick Desaulniers' via Clang Built Linux" <clang-built-linux@googlegroups.com>:
-> >
-> > Grepping the kernel sources for `READELF`, it looks like
-> > arch/ia64/Makefile makes the same mistake. Would you mind fixing both
-> > cases in the same patch (v2)? I'm also curious about it's use in
-> > arch/ia64/scripts/unwcheck.py, and scripts/faddr2line. +ia64
-> > maintainers and list.
-> >
-> > I think if you simply remove the assignment on line 17 of
-> > arch/ia64/Makefile you should be fine.
+> Commit 858805b336be ("kbuild: add $(BASH) to run scripts with
+> bash-extension") shed light on portability issues. Here is another one.
 >
-> Perhaps something should be done to NM on line 16 of this file as well. Also
-> found similar invocation of `objcopy` in arch/riscv/kernel/vdso/Makefile.
-> I think IA64 and RISC-V changes should be made as separate commits.
+> Since commit f07726048d59 ("Fix handling of backlash character in
+> LINUX_COMPILE_BY name"), we must escape a backslash contained in
+> LINUX_COMPILE_BY. This is not working on distros like Ubuntu.
 >
-> -- Dmitry
+> As the POSIX spec [1] says, if any of the operands contain a backslash
+> ( '\' ) character, the results are implementation-defined.
+>
+> The actual shell of /bin/sh could be bash, dash depending on distros,
+> and the behavior of builtin echo command is different among them.
+>
+> The bash builtin echo, unless -e is given, copies the arguments to
+> output without expanding escape sequences (BSD-like behavior).
+>
+> The dash builtin echo, in contrast, adopts System V behavior, which
+> does expand escape sequences without any option.
+>
+> Even non-builtin /bin/echo behaves differently depending on the system.
+> Due to these variations, echo is considered as a non-portable command.
+> Using printf is the common solution to avoid the portability issue.
+>
+> [1] https://pubs.opengroup.org/onlinepubs/009695399/utilities/echo.html
+>
+> Fixes: 858805b336be ("kbuild: add $(BASH) to run scripts with bash-extension")
+> Reported-by: XXing Wei <xxing.wei@unisoc.com>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
 
-Applied to linux-kbuid. Thanks.
+Applied to linux-kbuid.
+
+
+>
+>  scripts/mkcompile_h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/scripts/mkcompile_h b/scripts/mkcompile_h
+> index 3097fec1756a..3a5a4b210c86 100755
+> --- a/scripts/mkcompile_h
+> +++ b/scripts/mkcompile_h
+> @@ -69,7 +69,7 @@ UTS_VERSION="$(echo $UTS_VERSION $CONFIG_FLAGS $TIMESTAMP | cut -b -$UTS_LEN)"
+>
+>    echo \#define UTS_VERSION \"$UTS_VERSION\"
+>
+> -  echo \#define LINUX_COMPILE_BY \"$LINUX_COMPILE_BY\"
+> +  printf '#define LINUX_COMPILE_BY "%s"\n' "$LINUX_COMPILE_BY"
+>    echo \#define LINUX_COMPILE_HOST \"$LINUX_COMPILE_HOST\"
+>
+>    echo \#define LINUX_COMPILER \"`$CC -v 2>&1 | grep ' version ' | sed 's/[[:space:]]*$//'`\"
+> --
+> 2.17.1
+>
+
 
 -- 
 Best Regards
