@@ -2,71 +2,105 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1952C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CFEFC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D5B92072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:35:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2440A20733
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:43:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728276AbfLQSfv (ORCPT
+        id S1727571AbfLQSns (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 13:35:51 -0500
-Received: from muru.com ([72.249.23.125]:49048 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726813AbfLQSfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 13:35:51 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 8BE4C8116;
-        Tue, 17 Dec 2019 18:36:30 +0000 (UTC)
-Date:   Tue, 17 Dec 2019 10:35:48 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     santosh.shilimkar@oracle.com
-Cc:     Dave Gerlach <d-gerlach@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH] soc: ti: wkup_m3_ipc: Fix race condition with rproc_boot
-Message-ID: <20191217183548.GE35479@atomide.com>
-References: <20191212040314.14753-1-d-gerlach@ti.com>
- <20191217182534.GD35479@atomide.com>
- <05b9f0ff-bbc2-d8a7-3261-54c03a149db8@oracle.com>
+        Tue, 17 Dec 2019 13:43:48 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:41150 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726887AbfLQSns (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 13:43:48 -0500
+Received: from [167.98.27.226] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1ihHov-0000rr-UU; Tue, 17 Dec 2019 18:43:46 +0000
+Received: from ben by deadeye with local (Exim 4.93)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1ihHou-0001UB-0F; Tue, 17 Dec 2019 18:43:44 +0000
+Message-ID: <1fde0e5a4cf7dddc96f29e8183dde770888ab4e4.camel@decadent.org.uk>
+Subject: Re: [PATCH 3.16 000/136] 3.16.80-rc1 review
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        Denis Kirjanov <kda@linux-powerpc.org>
+Date:   Tue, 17 Dec 2019 18:43:39 +0000
+In-Reply-To: <20191217181946.GD6047@roeck-us.net>
+References: <lsq.1576543534.33060804@decadent.org.uk>
+         <20191217181946.GD6047@roeck-us.net>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-6zvYZVFIZuXBkLas/bpb"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <05b9f0ff-bbc2-d8a7-3261-54c03a149db8@oracle.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-SA-Exim-Connect-IP: 167.98.27.226
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* santosh.shilimkar@oracle.com <santosh.shilimkar@oracle.com> [191217 18:33]:
-> On 12/17/19 10:25 AM, Tony Lindgren wrote:
-> > Hi,
-> > 
-> > * Dave Gerlach <d-gerlach@ti.com> [191211 20:02]:
-> > > Any user of wkup_m3_ipc calls wkup_m3_ipc_get to get a handle and this
-> > > checks the value of the static variable m3_ipc_state to see if the
-> > > wkup_m3 is ready. Currently this is populated during probe before
-> > > rproc_boot has been called, meaning there is a window of time that
-> > > wkup_m3_ipc_get can return a valid handle but the wkup_m3 itself is not
-> > > ready, leading to invalid IPC calls to the wkup_m3 and system
-> > > instability.
-> > > 
-> > > To avoid this, move the population of the m3_ipc_state variable until
-> > > after rproc_boot has succeeded to guarantee a valid and usable handle
-> > > is always returned.
-> > 
-> > Santosh, do you want me to pick this one into my fixes branch?
-> > 
-> Sure, go ahead.
-> 
-> Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
 
-OK thanks applying into fixes.
+--=-6zvYZVFIZuXBkLas/bpb
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Tony
+On Tue, 2019-12-17 at 10:19 -0800, Guenter Roeck wrote:
+> On Tue, Dec 17, 2019 at 12:45:34AM +0000, Ben Hutchings wrote:
+> > This is the start of the stable review cycle for the 3.16.80 release.
+> > There are 136 patches in this series, which will be posted as responses
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >=20
+> > Responses should be made by Thu Dec 19 12:00:00 UTC 2019.
+> > Anything received after that time might be too late.
+> >=20
+>=20
+> Build results:
+> 	total: 136 pass: 136 fail: 0
+> Qemu test results:
+> 	total: 229 pass: 229 fail: 0
+
+Thanks for testing,
+
+Ben.
+
+--=20
+Ben Hutchings
+If the facts do not conform to your theory, they must be disposed of.
+
+
+
+--=-6zvYZVFIZuXBkLas/bpb
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl35IdsACgkQ57/I7JWG
+EQnJRA//Z05rZ1KnaSO/Brw+VXP77YuW/gXtW4BRe8QSFakWytBAHfYO5wxDrf7y
+AlfqWpdwbi8WQWScGw7CHNrJBhtxM5DSgAZQlP3EO4SFBgCSb5P1arp9wlgqU2XO
+Lg4KlkICOQUaO8IbAXiHkqruq7bjUcfYN99n+g7zphiTAwB4jtM09tbob548pYjq
+p/7DK0IkVx8Ogo9GHsIniTby0eX/gZdWwdKzrIqgw8kOJGSj80iaVAoDVoHUs88+
+rkVu1L6gMRRWNdBjum11ZLJzHQLK+wg6n6QSqZRNHtRdgZKD3bsxiO730/Zq2UPE
+YoLU4u7td10DoRC/CL0rjW9XOKEkNpG8IHMlVz169xdlhJWkSXgFV6G8086R652o
+mgomPl9Hn7ac/ZzPnO7glo6lJ6QYVpuwgR8xsUc+ezmkrKxWXZExe9ZzrI7/5syr
+QXvn9YltrgUfyqsEEWmBiLejy6R+t3KwT9bG29eF8AQe7FTpf+KaC3eDRn0lKyB+
+HkVFAbzfn17eG2cFZcHtc2fIWGaAAJPOAyF7Z22EAncSfvcJZGJZgljvLSDe/+Ut
+Zkqw2EMG8S4LEWedFWvVfqydFjcVa9JwQapGbieQ/sTA4mpaK19dODNgXbQ9p9Pd
+fUlVNy8bbLBaBAYP7v1qBtT1TWtP4OXRwAKBM5fle0MideUJE94=
+=rSf7
+-----END PGP SIGNATURE-----
+
+--=-6zvYZVFIZuXBkLas/bpb--
