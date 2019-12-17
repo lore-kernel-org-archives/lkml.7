@@ -2,87 +2,87 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC81FC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0462BC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9349920684
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:55:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFD5A20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:55:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576544109;
+	bh=20cLHPtsJJjaRnZm0+KAq/1wc9qHqUZDqOQVShiQSrM=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=q69bqeAQqiRhoyVffIAqAnelNXKg7Rf8bwZEOnIBZfTfDMQcD9fJi1rDQaVWNqfJ3
+	 ZSOM/l7gfkrHA3j4Jp/98+dooc30gkvLvwF6E6PhEmSWcYxZR5zbyIZ5y0XgdwTqKV
+	 I+GM2dQO1aPgLfgL4wvNzVvoOgAcP2fOUDcNmmp8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbfLQAyh (ORCPT
+        id S1727274AbfLQAzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:54:37 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35350 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727066AbfLQAvo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 19:51:44 -0500
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1ih15K-0003MA-KR; Tue, 17 Dec 2019 00:51:34 +0000
-Received: from ben by deadeye with local (Exim 4.93-RC7)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1ih15J-0005be-WB; Tue, 17 Dec 2019 00:51:34 +0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+        Mon, 16 Dec 2019 19:55:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41726 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728173AbfLQAyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 19:54:41 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04DC02053B;
+        Tue, 17 Dec 2019 00:54:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576544080;
+        bh=20cLHPtsJJjaRnZm0+KAq/1wc9qHqUZDqOQVShiQSrM=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=fZ0awonq4TOAvqUCHkyHhQQfvYYI+GDhp7FsIl+AxszxxlykndDIGeDvvUNyJI9Do
+         5to+Sd8zXeSwrthNx1Kr4eBFPYG5QL0mYs5f8vandoizd79npDWZD6a4qs1aHiQdvV
+         LnVZ0TGQfJBmK8P9NdjI9WPaUj0SxAYCBxtCIW8Y=
+Subject: Re: [PATCH 5.4 000/177] 5.4.4-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20191216174811.158424118@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <aa042a91-ebf3-5f32-5fb4-98e11d8b7cab@kernel.org>
+Date:   Mon, 16 Dec 2019 17:54:20 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Johan Hovold" <johan@kernel.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Date:   Tue, 17 Dec 2019 00:47:19 +0000
-Message-ID: <lsq.1576543535.605152971@decadent.org.uk>
-X-Mailer: LinuxStableQueue (scripts by bwh)
-X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 105/136] USB: serial: whiteheat: fix potential slab
- corruption
-In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-3.16.80-rc1 review patch.  If anyone has any objections, please let me know.
+On 12/16/19 10:47 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.4 release.
+> There are 177 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed, 18 Dec 2019 17:41:25 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.4-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-------------------
+Compiled and booted on my test system. No dmesg regressions.
 
-From: Johan Hovold <johan@kernel.org>
-
-commit 1251dab9e0a2c4d0d2d48370ba5baa095a5e8774 upstream.
-
-Fix a user-controlled slab buffer overflow due to a missing sanity check
-on the bulk-out transfer buffer used for control requests.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191029102354.2733-2-johan@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
----
- drivers/usb/serial/whiteheat.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
---- a/drivers/usb/serial/whiteheat.c
-+++ b/drivers/usb/serial/whiteheat.c
-@@ -604,6 +604,10 @@ static int firm_send_command(struct usb_
- 
- 	command_port = port->serial->port[COMMAND_PORT];
- 	command_info = usb_get_serial_port_data(command_port);
-+
-+	if (command_port->bulk_out_size < datasize + 1)
-+		return -EIO;
-+
- 	mutex_lock(&command_info->mutex);
- 	command_info->command_finished = false;
- 
+thanks,
+-- Shuah
 
