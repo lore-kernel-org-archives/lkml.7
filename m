@@ -2,108 +2,171 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CC2C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55084C47409
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 588952176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:25:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 181312176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:25:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="csMVd4Xi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nDOQqhZN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729013AbfLQOZ1 (ORCPT
+        id S1729034AbfLQOZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:25:27 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:37698 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728903AbfLQOZ0 (ORCPT
+        Tue, 17 Dec 2019 09:25:41 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38494 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729014AbfLQOZk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:25:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576592725;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=LAx8txCepvJSwllvplJt1X8cg5M0O6h6PZ0wrniM3ew=;
-        b=csMVd4Xi1iJHhCZzqpI3JBhSUX31oz0iSLh5woH7U2iz5kIYZQvx66moRaKkJGbQGo9fmS
-        0sx1oE+V2yH7ra87Qw9m0+L+p7aQn7f4XuFUjlDzD1MZLmay4K5jnxsWBGae773GW/WmRB
-        gMcqdaiuSPxq8zrT4VKmaKeJvTVbfSw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-148-I5e3_c6gMruGIaFpqT6k-A-1; Tue, 17 Dec 2019 09:25:22 -0500
-X-MC-Unique: I5e3_c6gMruGIaFpqT6k-A-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CFA0110054E3;
-        Tue, 17 Dec 2019 14:25:20 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 324715D9E1;
-        Tue, 17 Dec 2019 14:25:19 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Tue, 17 Dec 2019 15:25:18 +0100 (CET)
-Date:   Tue, 17 Dec 2019 15:25:15 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     chenqiwu <qiwuchen55@gmail.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        peterz@infradead.org, mingo@kernel.org, kernel-team@android.com,
-        linux-kernel@vger.kernel.org, chenqiwu@xiaomi.com
-Subject: Re: [PATCH v2] kernel/exit: do panic earlier to get coredump if
- global init task exit
-Message-ID: <20191217142515.GB23152@redhat.com>
-References: <1576466324-6067-1-git-send-email-qiwuchen55@gmail.com>
- <20191216172841.GA10466@redhat.com>
- <20191216174410.xiqurqnqyipbuy4e@wittgenstein>
- <20191217105042.GA21784@cqw-OptiPlex-7050>
+        Tue, 17 Dec 2019 09:25:40 -0500
+Received: by mail-wm1-f68.google.com with SMTP id u2so3389511wmc.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 06:25:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=6kERw8dQIBACWsW0c+lQf/JA1vmIIx6c9Yg7JLLE81M=;
+        b=nDOQqhZNRhoqSIT9ygYhf6sYksvjQo/V0MI0iG8xAI89/NE0iO63AgxOdrYKa917lh
+         cV57WmnloRdU8ZjuMMbUdWOmp2MgBXI2WEQ5WqGnLOoJOFyKMPsabxDfUcaNKPAPeiM2
+         zv4czVKjcJqiWovFGXwRRlP2dVy0h+1BS1p9/h4xdRTva3rVoO1B1OcPZ/XgmnA+sJ40
+         vWKeXt+JEwXo0VccppBW2PHy+gJw6MXFYRlbIzyrMoKTbuZ7A7Y74SobzBvgiX6bUQpV
+         WikCepIxqMQ9K/Ngfgj9jIUxHUgZNtMRIlArBYGinPF/qsIGu7SOJYhQd1ZXTxJwZQUR
+         5tkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=6kERw8dQIBACWsW0c+lQf/JA1vmIIx6c9Yg7JLLE81M=;
+        b=OB8FQpVNER9MhR27nOxkkS5FmfBlTc3ZUoilNJS6K+a+GJRvz8hvUzXiYPm4AhKNH3
+         X7Cus6o/V3T8ebT7WRahsSysIagKSBsBEgabhV6H98aKEin0dUGrYMzwJ8h3C+CIlv2o
+         eqdMU595RiceYc2/JNQjlWRjKgLolZ4Et271HoiFAX3EuIwR3KEUPCDGkyMHTpBC4G0C
+         Gd7Ej2w0tiGtQrrJvZ3ERaokyPWnGj9iVQaszp2u2qU29QUL5EfUjiIVkP0OdxhzOJP0
+         B1Tr5xww978Hg0iFCkXNC/cIt+rex3aG/aSsMvExHGquB2A7N1jFK9xF7NPOVty5qjxx
+         fLyw==
+X-Gm-Message-State: APjAAAX8TACompEWlX4NdlAFnS9o547PeVZSnCDju9eD9mkNhYNLhWRD
+        +GWhTWzM1qqvE0JWxHpfZl/Qvg==
+X-Google-Smtp-Source: APXvYqxwCwi38Wr5D9A/L2wvMeZPSaKLDoI2uWPVSQnU9lhUcxlxXv46EcbtmUS5uruundfigIgz8w==
+X-Received: by 2002:a05:600c:2207:: with SMTP id z7mr5654182wml.138.1576592738272;
+        Tue, 17 Dec 2019 06:25:38 -0800 (PST)
+Received: from dell ([2.27.35.132])
+        by smtp.gmail.com with ESMTPSA id s65sm3189680wmf.48.2019.12.17.06.25.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 06:25:37 -0800 (PST)
+Date:   Tue, 17 Dec 2019 14:25:37 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Cc:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "noralf@tronnes.org" <noralf@tronnes.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>
+Subject: Re: [PATCH v6 05/15] mfd: bd71828: Support ROHM BD71828 PMIC - core
+Message-ID: <20191217142537.GN18955@dell>
+References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+ <252de5646fedfec7c575269843a47091fe199c79.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+ <20191216164641.GC18955@dell>
+ <5593db6b3328c0a1a7069d839f5c777b4b3822b6.camel@fi.rohmeurope.com>
+ <20191217135430.GM18955@dell>
+ <20191217140810.GD3489463@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191217105042.GA21784@cqw-OptiPlex-7050>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191217140810.GD3489463@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/17, chenqiwu wrote:
->
-> @@ -728,6 +724,15 @@ void __noreturn do_exit(long code)
->                 panic("Attempted to kill the idle task!");
->
->         /*
-> +        * If all threads of global init have exited, do panic imeddiately
-> +        * to get the coredump to find any clue for init task in userspace.
-> +        */
-> +       if (unlikely(is_global_init(tsk) &&
-> +               (atomic_read(&tsk->signal->live) == 1)))
+On Tue, 17 Dec 2019, gregkh@linuxfoundation.org wrote:
+> On Tue, Dec 17, 2019 at 01:54:30PM +0000, Lee Jones wrote:
+> > On Tue, 17 Dec 2019, Vaittinen, Matti wrote:
+> > > On Mon, 2019-12-16 at 16:46 +0000, Lee Jones wrote:
+> > > > On Wed, 11 Dec 2019, Matti Vaittinen wrote:
+> > > > 
+> > > > > BD71828GW is a single-chip power management IC for battery-powered
+> > > > > portable
+> > > > > devices. The IC integrates 7 buck converters, 7 LDOs, and a 1500 mA
+> > > > > single-cell linear charger. Also included is a Coulomb counter, a
+> > > > > real-time
+> > > > > clock (RTC), 3 GPO/regulator control pins, HALL input and a 32.768
+> > > > > kHz
+> > > > > clock gate.
+> > > > > 
+> > > > > Add MFD core driver providing interrupt controller facilities and
+> > > > > i2c
+> > > > > access to sub device drivers.
+> > > > > 
+> > > > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> > > > > ---
+> > > > > 
+> > > > > Changes since v5:
+> > > > > - No changes
+> > > > > 
+> > > > >  drivers/mfd/Kconfig              |  15 ++
+> > > > >  drivers/mfd/Makefile             |   2 +-
+> > > > >  drivers/mfd/rohm-bd71828.c       | 319 +++++++++++++++++++++++
+> > > > >  include/linux/mfd/rohm-bd71828.h | 425
+> > > > > +++++++++++++++++++++++++++++++
+> > > > >  include/linux/mfd/rohm-generic.h |   1 +
+> > > > >  5 files changed, 761 insertions(+), 1 deletion(-)
+> > > > >  create mode 100644 drivers/mfd/rohm-bd71828.c
+> > > > >  create mode 100644 include/linux/mfd/rohm-bd71828.h
 
-Well, I guess this will work in practice, but in theory this is racy.
+[...]
+> > 
+> > If you have this in your header:
+> > 
+> >   GPL-2.0-only
+> > 
+> > Your MODULE tags should read:
+> > 
+> > MODULE_LICENSE("GPL v2");
+> 
+> Nope, as per module.h, which is quoted here, either:
+> 	MODULE_LICENSE("GPL");
+> or:
+> 	MODULE_LICENSE("GPL v2");
+> mean the exact same thing.
 
-Suppose that signal->live == 2 and both threads exit in parallel. They
-both can see tsk->signal->live == 2 before atomic_dec_and_test().
+Interesting.  I always took a non-specified version to mean:
 
-If you are fine with this race I won't object, but please add a comment.
+  "... and any other future version of the licence"
 
-But why can't you simply do
+Educated, thanks!
 
-	--- x/kernel/exit.c
-	+++ x/kernel/exit.c
-	@@ -786,6 +786,8 @@ void __noreturn do_exit(long code)
-		acct_update_integrals(tsk);
-		group_dead = atomic_dec_and_test(&tsk->signal->live);
-		if (group_dead) {
-	+		if (unlikely(is_global_init(tsk)
-	+			panic(...);
-	 #ifdef CONFIG_POSIX_TIMERS
-			hrtimer_cancel(&tsk->signal->real_timer);
-			exit_itimers(tsk->signal);
-
-?
-
-Oleg.
-
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
