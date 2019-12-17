@@ -2,161 +2,153 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 611DDC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9087CC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B8B121D7D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:51:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="guHBR27y"
+	by mail.kernel.org (Postfix) with ESMTP id 724B820716
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:51:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728600AbfLQNvn (ORCPT
+        id S1728618AbfLQNvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 08:51:43 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39801 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728573AbfLQNvm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 08:51:42 -0500
-Received: by mail-wr1-f68.google.com with SMTP id y11so11371121wrt.6
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 05:51:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=UpDwTP6xUYOJn/p4VO1T9tIwMyJ+3s44ALkmuaBYU3U=;
-        b=guHBR27yvZI1WGUgGNV0FTbLksEs26VjD6okj2KrEUZ7Ia9/PrXNaZQYES9kx2u57m
-         oVvQTfRwGfahNrqlqQBPDj+2O2vZZNokYrE/qiQnQkopHSabr32d+bsO5z+DnsUOdIxI
-         hIGI4d4ordTo242Ptbjn4jXZv42nuGRgWDqBW1Dl4/AerEzcjhNjT01J78z299Lq3xz8
-         3W+IguJOnYqVJpr8AFwmLUoh22IRK2t6d2f5eBSCw33X9fQFT2oi44TUaaNtoMkfE18H
-         itAbZTJ38FVK5VxN7K+nXcf1UH6RI2VMB7XSMWy/HDHJRC/wMzvzy6qPjYwn290DwdaS
-         Rciw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=UpDwTP6xUYOJn/p4VO1T9tIwMyJ+3s44ALkmuaBYU3U=;
-        b=hANub0lINckexy0RZEFioPAIjVmt2r6HcCDP8wlXp3g3d1BNgirxoyP6s4tiMXcDtO
-         5Q6JNYTp7Rlt36BzOKoHy/jlCcySP0BSGU0sk84Y+knFZyeVf4WEc3vBhgsn2lG3iO0r
-         bBXtKOBwcgNH5+Jo6+VCnBkEZWdxF3BVs1a94vnSx0fOyV7L+nfjUTB3yqPfnoIFnpmw
-         vxYeGRiL9KvasGzdFScPPStPMD8HBiUKjNpKFE8dHV5LHvobIfURNvoZ2bvJOhaW4tpk
-         HPdNjZ2SU2Td0ktLstIafFr4WW/Ho5UtY7n9S+s3RBUNWHiODMkfGUIIDw+OQMPYv7f1
-         ijFQ==
-X-Gm-Message-State: APjAAAV4VMjLyXCqlQjjkJ7+RlRh51LZPONOlyIT1kbTsN1ZUFj86Vcl
-        +xqbyaSl5hXa6cz8wGKyToxM4g==
-X-Google-Smtp-Source: APXvYqzWqTHQ/8Hj1jyKQHKlahN+h3FSMhKarcDhsgeUhMP0afvTz0/tlTOqBvWUYAzzGTWaWT4WIg==
-X-Received: by 2002:a05:6000:12c9:: with SMTP id l9mr39105103wrx.304.1576590700711;
-        Tue, 17 Dec 2019 05:51:40 -0800 (PST)
-Received: from dell ([2.27.35.132])
-        by smtp.gmail.com with ESMTPSA id n189sm3191999wme.33.2019.12.17.05.51.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 05:51:40 -0800 (PST)
-Date:   Tue, 17 Dec 2019 13:51:40 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
-        <ville.syrjala@linux.intel.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-acpi@vger.kernel.org,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] mfd: intel_soc_pmic: Rename pwm_backlight pwm-lookup
- to pwm_pmic_backlight
-Message-ID: <20191217135140.GL18955@dell>
-References: <20191212084546.GA3468@dell>
- <d22e9a04-da09-0f41-a78e-ac17a947650a@redhat.com>
- <20191212155209.GC3468@dell>
- <4d07445d-98b1-f23c-0aac-07709b45df78@redhat.com>
- <20191213082734.GE3468@dell>
- <d648794d-4c76-cfa1-dcbd-16c34d409c51@redhat.com>
- <20191216093016.GE3648@dell>
- <fc3c29da-528d-a6b6-d13b-92e6469eadea@redhat.com>
- <20191217081127.GI18955@dell>
- <87immfyth2.fsf@intel.com>
+        Tue, 17 Dec 2019 08:51:53 -0500
+Received: from mx2.suse.de ([195.135.220.15]:48134 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728573AbfLQNvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 08:51:53 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id B5CBDAB91;
+        Tue, 17 Dec 2019 13:51:50 +0000 (UTC)
+Subject: Re: [Xen-devel] [PATCH v10 2/4] xen/blkback: Squeeze page pools if a
+ memory pressure is detected
+To:     SeongJae Park <sjpark@amazon.com>,
+        =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>
+Cc:     SeongJae Park <sj38.park@gmail.com>, sjpark@amazon.de,
+        axboe@kernel.dk, konrad.wilk@oracle.com, pdurrant@amazon.com,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        xen-devel@lists.xenproject.org
+References: <20191217131526.17300-1-sjpark@amazon.com>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <9c465967-3bbf-595b-b61c-c44fa95e41d5@suse.com>
+Date:   Tue, 17 Dec 2019 14:51:47 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <20191217131526.17300-1-sjpark@amazon.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <87immfyth2.fsf@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Dec 2019, Jani Nikula wrote:
-
-> On Tue, 17 Dec 2019, Lee Jones <lee.jones@linaro.org> wrote:
-> > On Mon, 16 Dec 2019, Hans de Goede wrote:
-> >
-> >> Hi,
-> >> 
-> >> Doing immutable branches assumes that there is a base point,
-> >> e.g. 5.5-rc1 where the immutable branch can then be based on and
-> >> that the branch can then be merged without issues into both subsystems.
-> >> 
-> >> drm is constantly evolving to deal with and mostly catch up with new
-> >> hardware as both GPUs and display-pipelines are evolving quite rapidly
-> >> atm drm-intel-next has about 400 commits on top of 5.5-rc1 so for an
-> >> immutable branch I can either base it on drm-intel-next which
-> >> violates your request for a clean minimal branch to merge; or I can
-> >> base it on 5.5-rc1 which leads to a big chance of problems when
-> >> merging it given to large amount of churn in drm-intel-next.
-> >
-> > This is a *slightly* more compelling reason than the ones you've
-> > previously provided.
-> >
-> >> So instead of the normal case of 2 subsystems seeing some changes
-> >> on both side the case we have here is a part of a file which has
-> >> not changed since 2015-06-26 in one subsys (and changing only
-> >> a single line there!) and OTOH we have bigger changes to a subsys
-> >> which see 400 patches land in the first week since rc1 .
-> >
-> > This is not.
-> >
-> >> I hope that you agree that in this case given the large amount of
-> >> churn in drm-intel-next it makes since to just straight forward
-> >> apply these patches on top of drm-intel-next.
-> >
-> > I have Acked this patch, but remember *this* is the exception rather
-> > than the rule.  If/when we have a case where a contributor works
-> > cross-subsystem with DRM and the code/file adapted is live (more
-> > likely to change), I will have to insist on an immutable branch
-> > strategy.  DRM will have to deal with that appropriately.
+On 17.12.19 14:15, SeongJae Park wrote:
+> On Tue, 17 Dec 2019 12:39:15 +0100 "Roger Pau Monné" <roger.pau@citrix.com> wrote:
 > 
-> Hi, thanks for the ack and reaching an agreement with Hans, and sorry
-> for not responding earlier.
+>> On Mon, Dec 16, 2019 at 08:48:03PM +0100, SeongJae Park wrote:
+>>> On on, 16 Dec 2019 17:23:44 +0100, Jürgen Groß wrote:
+>>>
+>>>> On 16.12.19 17:15, SeongJae Park wrote:
+>>>>> On Mon, 16 Dec 2019 15:37:20 +0100 SeongJae Park <sjpark@amazon.com> wrote:
+>>>>>
+>>>>>> On Mon, 16 Dec 2019 13:45:25 +0100 SeongJae Park <sjpark@amazon.com> wrote:
+>>>>>>
+>>>>>>> From: SeongJae Park <sjpark@amazon.de>
+>>>>>>>
+>>>>> [...]
+>>>>>>> --- a/drivers/block/xen-blkback/xenbus.c
+>>>>>>> +++ b/drivers/block/xen-blkback/xenbus.c
+>>>>>>> @@ -824,6 +824,24 @@ static void frontend_changed(struct xenbus_device *dev,
+>>>>>>>    }
+>>>>>>>    
+>>>>>>>    
+>>>>>>> +/* Once a memory pressure is detected, squeeze free page pools for a while. */
+>>>>>>> +static unsigned int buffer_squeeze_duration_ms = 10;
+>>>>>>> +module_param_named(buffer_squeeze_duration_ms,
+>>>>>>> +		buffer_squeeze_duration_ms, int, 0644);
+>>>>>>> +MODULE_PARM_DESC(buffer_squeeze_duration_ms,
+>>>>>>> +"Duration in ms to squeeze pages buffer when a memory pressure is detected");
+>>>>>>> +
+>>>>>>> +/*
+>>>>>>> + * Callback received when the memory pressure is detected.
+>>>>>>> + */
+>>>>>>> +static void reclaim_memory(struct xenbus_device *dev)
+>>>>>>> +{
+>>>>>>> +	struct backend_info *be = dev_get_drvdata(&dev->dev);
+>>>>>>> +
+>>>>>>> +	be->blkif->buffer_squeeze_end = jiffies +
+>>>>>>> +		msecs_to_jiffies(buffer_squeeze_duration_ms);
+>>>>>>
+>>>>>> This callback might race with 'xen_blkbk_probe()'.  The race could result in
+>>>>>> __NULL dereferencing__, as 'xen_blkbk_probe()' sets '->blkif' after it links
+>>>>>> 'be' to the 'dev'.  Please _don't merge_ this patch now!
+>>>>>>
+>>>>>> I will do more test and share results.  Meanwhile, if you have any opinion,
+>>>>>> please let me know.
+>>>
+>>> I reduced system memory and attached bunch of devices in short time so that
+>>> memory pressure occurs while device attachments are ongoing.  Under this
+>>> circumstance, I was able to see the race.
+>>>
+>>>>>
+>>>>> Not only '->blkif', but 'be' itself also coule be a NULL.  As similar
+>>>>> concurrency issues could be in other drivers in their way, I suggest to change
+>>>>> the reclaim callback ('->reclaim_memory') to be called for each driver instead
+>>>>> of each device.  Then, each driver could be able to deal with its concurrency
+>>>>> issues by itself.
+>>>>
+>>>> Hmm, I don't like that. This would need to be changed back in case we
+>>>> add per-guest quota.
+>>>
+>>> Extending this callback in that way would be still not too hard.  We could use
+>>> the argument to the callback.  I would keep the argument of the callback to
+>>> 'struct device *' as is, and will add a comment saying 'NULL' value of the
+>>> argument means every devices.  As an example, xenbus would pass NULL-ending
+>>> array of the device pointers that need to free its resources.
+>>>
+>>> After seeing this race, I am now also thinking it could be better to delegate
+>>> detailed control of each device to its driver, as some drivers have some
+>>> complicated and unique relation with its devices.
+>>>
+>>>>
+>>>> Wouldn't a get_device() before calling the callback and a put_device()
+>>>> afterwards avoid that problem?
+>>>
+>>> I didn't used the reference count manipulation operations because other similar
+>>> parts also didn't.  But, if there is no implicit reference count guarantee, it
+>>> seems those operations are indeed necessary.
+>>>
+>>> That said, as get/put operations only adjust the reference count, those will
+>>> not make the callback to wait until the linking of the 'backend' and 'blkif' to
+>>> the device (xen_blkbk_probe()) is finished.  Thus, the race could still happen.
+>>> Or, am I missing something?
+>>
+>> I would expect the device is not added to the list of backend devices
+>> until the probe hook has finished with a non-error return code. Ie:
+>> bus_for_each_dev should _not_ iterate over devices for which the probe
+>> function hasn't been run to competition without errors.
+>>
+>> The same way I would expect the remove hook to first remove the device
+>> from the list of backend devices and then run the remove hook.
+>>
+>> blkback uses an ad-hoc reference counting mechanism, but if the above
+>> assumptions are true I think it would be enough to take an extra
+>> reference in xen_blkbk_probe and drop it in xen_blkbk_remove.
 > 
-> It's not unusual for us to have topic branches for cross-subsystem or
-> cross-driver changes, and I think usually we try to be accommodating in
-> merging stuff through whichever tree it makes most sense. In fact my ack
-> to do just that was my first response on this series [1].
-> 
-> So I don't really know why the fuss. We'll anyway deal with any
-> cross-subsystem series on a case by case basis, depending on what makes
-> most sense, and what suits all maintainers involved.
+> Well, if the assumption is true, wouldn't the Juergen's approach solved the
+> problem?  As previously said, I tried the approach but failed to solve this
+> race.  The assumption is wrong or I missed something.  I think Juergen also
+> think the assumption is not true as he suggested use of locking but not sure.
+> Juergen, if I misunderstood, please let me know.
 
-Perfect.  Thanks for the clarification.  I look forward to working
-with you guys in the future.
+bus_for_each_dev() does no locking at all. All it does is
+taking krefs on the iterated objects in order to avoid them
+to be freed under its feet.
 
-Hans was making the case that this was impractical for DRM, due to the
-amount of churn you guys receive, hence the discussion.  I'm very
-pleased that this is not the case.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Juergen
