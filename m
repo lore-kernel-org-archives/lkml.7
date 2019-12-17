@@ -2,151 +2,128 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A553EC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AFFFC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83E8B21D7D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:51:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F27F6205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:52:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Hl2Y8hGQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfLQWvU (ORCPT
+        id S1726730AbfLQWwA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 17:51:20 -0500
-Received: from mga14.intel.com ([192.55.52.115]:3230 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725870AbfLQWvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 17:51:20 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 14:51:19 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,327,1571727600"; 
-   d="scan'208";a="247654290"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga002.fm.intel.com with ESMTP; 17 Dec 2019 14:51:18 -0800
-Date:   Tue, 17 Dec 2019 14:51:18 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     James Hogan <jhogan@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>,
-        kvm@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Cornelia Huck <cohuck@redhat.com>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        kvmarm@lists.cs.columbia.edu, Jim Mattson <jmattson@google.com>
-Subject: Re: [PATCH v4 07/19] KVM: Explicitly free allocated-but-unused dirty
- bitmap
-Message-ID: <20191217225118.GF11771@linux.intel.com>
-References: <20191217204041.10815-1-sean.j.christopherson@intel.com>
- <20191217204041.10815-8-sean.j.christopherson@intel.com>
- <20191217222446.GK7258@xz-x1>
+        Tue, 17 Dec 2019 17:52:00 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43869 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725886AbfLQWv7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 17:51:59 -0500
+Received: by mail-ot1-f68.google.com with SMTP id p8so15543140oth.10
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 14:51:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Bgj6GFgx8VThztK4Gu3+BzeDA/NznFDz/pSO11pXhjg=;
+        b=Hl2Y8hGQ+0lrr5/hQEqaf+/gbjNx2pyfaxEIghm4QuR3Hf/M3f7QA527VoNpOkY9fo
+         4kv2KeUY085H4H0ll6Hu44CmNk5yWK9kQ6RaeIBkekZDmxTOGIMcXisQhW3IJk9o47XG
+         1ieCEaj2RGguaP15oOZ0sl1hYp4v9vJyI3dgw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Bgj6GFgx8VThztK4Gu3+BzeDA/NznFDz/pSO11pXhjg=;
+        b=QUId7Ju6DxiqgCNryJQn8WRlr44RucQ+GvNM5pikJ6A0kTfiSyEIFRG+Rr1DvHurFq
+         1DeGlmP04hPeSfDsf5ouvxNp8PcZosZIKHyA9NG3w7T07Ntb7QfAQ40+pJQtXNLHQTbW
+         ObG+SDidLQoEYKXHV+Z7J06apTWAOOxchWwREbIVPkENAavp7WQIZXbWQDC1b+C4PYGu
+         +9lU0Nb4/rJCNVcMxLl3z25inbbvqZtW1VxMiN8uz9QQLXDf6gzrsAtgSr7AnPoXWmzW
+         rxKs50kt9gmWmrxfJkC2R3GOyWubC/aI6jc+MpzCQxkuOJOAQiumXEIi4QYVCQXBzVm4
+         g8Xg==
+X-Gm-Message-State: APjAAAW352eZEvQfRZS1ueTOHF95OGVsyM6cykm8S6DimnTnTlXPZ5h5
+        9Fcos8beJapH7UyLHvnDb3VzsSJt8stmYUCCCLHGqA==
+X-Google-Smtp-Source: APXvYqx+R5wFvTkSiUO0y6MYgmRmL50Cn5ck4GRTtls7IdGYcsg8QD5heARFegvJ+0lTn3tHAVoDp2cT7t3IUAtvC8o=
+X-Received: by 2002:a05:6830:1415:: with SMTP id v21mr41903346otp.188.1576623118725;
+ Tue, 17 Dec 2019 14:51:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191217222446.GK7258@xz-x1>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <f947d821-8e67-dcc7-d753-5b04d099792d@gmail.com>
+In-Reply-To: <f947d821-8e67-dcc7-d753-5b04d099792d@gmail.com>
+From:   Yuqing Shen <yuqing.shen@broadcom.com>
+Date:   Tue, 17 Dec 2019 15:51:47 -0700
+Message-ID: <CALqpNLdtWdrQKyH2DEcnW6vq_pwAEcsve=id0sysddNTE6hVpg@mail.gmail.com>
+Subject: Re: [PATCH v7 1/2] dt-bindings: edac: arm-dmc520.txt
+To:     Shiping Ji <shiping.linux@gmail.com>
+Cc:     bp@alien8.de, james.morse@arm.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mchehab@kernel.org,
+        linux-edac@vger.kernel.org, sashal@kernel.org,
+        Hang Li <hangl@microsoft.com>, lewan@microsoft.com,
+        ruizhao@microsoft.com, Scott Branden <scott.branden@broadcom.com>,
+        Ray Jui <ray.jui@broadcom.com>, shji@microsoft.com,
+        wangglei@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 05:24:46PM -0500, Peter Xu wrote:
-> On Tue, Dec 17, 2019 at 12:40:29PM -0800, Sean Christopherson wrote:
-> > Explicitly free an allocated-but-unused dirty bitmap instead of relying
-> > on kvm_free_memslot() if an error occurs in __kvm_set_memory_region().
-> > There is no longer a need to abuse kvm_free_memslot() to free arch
-> > specific resources as arch specific code is now called only after the
-> > common flow is guaranteed to succeed.  Arch code can still fail, but
-> > it's responsible for its own cleanup in that case.
-> > 
-> > Eliminating the error path's abuse of kvm_free_memslot() paves the way
-> > for simplifying kvm_free_memslot(), i.e. dropping its @dont param.
-> > 
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > ---
-> >  virt/kvm/kvm_main.c | 7 ++++---
-> >  1 file changed, 4 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> > index d403e93e3028..6b2261a9e139 100644
-> > --- a/virt/kvm/kvm_main.c
-> > +++ b/virt/kvm/kvm_main.c
-> > @@ -1096,7 +1096,7 @@ int __kvm_set_memory_region(struct kvm *kvm,
-> >  
-> >  	slots = kvzalloc(sizeof(struct kvm_memslots), GFP_KERNEL_ACCOUNT);
-> >  	if (!slots)
-> > -		goto out_free;
-> > +		goto out_bitmap;
-> >  	memcpy(slots, __kvm_memslots(kvm, as_id), sizeof(struct kvm_memslots));
-> >  
-> >  	if ((change == KVM_MR_DELETE) || (change == KVM_MR_MOVE)) {
-> > @@ -1144,8 +1144,9 @@ int __kvm_set_memory_region(struct kvm *kvm,
-> >  	if (change == KVM_MR_DELETE || change == KVM_MR_MOVE)
-> >  		slots = install_new_memslots(kvm, as_id, slots);
-> >  	kvfree(slots);
-> > -out_free:
-> > -	kvm_free_memslot(kvm, &new, &old);
-> > +out_bitmap:
-> > +	if (new.dirty_bitmap && !old.dirty_bitmap)
-> > +		kvm_destroy_dirty_bitmap(&new);
-> 
-> What if both the old and new have KVM_MEM_LOG_DIRTY_PAGES set?
-> kvm_free_memslot() did cover that but I see that you explicitly
-> dropped it.  Could I ask why?  Thanks,
+Hi, Shiping
+This commit looks good to me.
+Yuqing
 
-In that case, old.dirty_bitmap == new.dirty_bitmap, i.e. shouldn't be freed
-by this error path since doing so would result in a use-after-free via the
-old memslot.
-
-The kvm_free_memslot() logic is the same, albeit in a very twisted way.
-
-In __kvm_set_memory_region(), @old and @new start with the same dirty_bitmap.
-
-	new = old = *slot;
-
-And @new is modified based on KVM_MEM_LOG_DIRTY_PAGES.  If LOG_DIRTY_PAGES
-is set in both @new and @old, then both the "if" and "else if" evaluate
-false, i.e. new.dirty_bitmap == old.dirty_bitmap.
-
-	/* Allocate/free page dirty bitmap as needed */
-	if (!(new.flags & KVM_MEM_LOG_DIRTY_PAGES))
-		new.dirty_bitmap = NULL;
-	else if (!new.dirty_bitmap) {
-		r = kvm_create_dirty_bitmap(&new);
-		if (r)
-			return r;
-	}
-
-Subbing "@free <= @new" and "@dont <= @old" in kvm_free_memslot()
-
-  static void kvm_free_memslot(struct kvm *kvm, struct kvm_memory_slot *free,
-			       struct kvm_memory_slot *dont)
-  {
-	if (!dont || free->dirty_bitmap != dont->dirty_bitmap)
-		kvm_destroy_dirty_bitmap(free);
-
-
-yeids this, since @old is obviously non-NULL
-
-	if (new.dirty_bitmap != old.dirty_bitmap)
-		kvm_destroy_dirty_bitmap(&new);
-
-The dirty_bitmap allocation logic guarantees that new.dirty_bitmap is
-  a) NULL (the "if" case")
-  b) != old.dirty_bitmap iff old.dirty_bitmap == NULL (the "else if" case)
-  c) == old.dirty_bitmap (the implicit "else" case).
-
-kvm_free_memslot() frees @new.dirty_bitmap iff its != @old.dirty_bitmap,
-thus the explicit destroy only needs to check for (b).
+On Sun, Nov 17, 2019 at 7:10 PM Shiping Ji <shiping.linux@gmail.com> wrote:
+>
+> This is the device tree bindings for new EDAC driver dmc520_edac.c.
+>
+> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
+> Reviewed-by: James Morse <james.morse@arm.com>
+> Reviewed-by: Yuqing Shen <yuqing.shen@broadcom.com>
+>  Tested-by: Yuqing Shen <yuqing.shen@broadcom.com>
+> ---
+>      Changes in v7:
+>          - Added arm prefix to the interrupt-config property
+>
+> ---
+>  .../devicetree/bindings/edac/arm-dmc520.txt   | 26 +++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/edac/arm-dmc520.txt
+>
+> diff --git a/Documentation/devicetree/bindings/edac/arm-dmc520.txt b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
+> new file mode 100644
+> index 000000000000..476cf8b76f2a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
+> @@ -0,0 +1,26 @@
+> +* ARM DMC-520 EDAC node
+> +
+> +Required properties:
+> +- compatible  : "brcm,dmc-520", "arm,dmc-520".
+> +- reg   : Address range of the DMC-520 registers.
+> +- interrupts  : DMC-520 interrupt numbers. The example below specifies
+> +     two interrupt lines for dram_ecc_errc_int and
+> +     dram_ecc_errd_int.
+> +- arm,interrupt-config : This is an array of interrupt masks. For each of the
+> +     above interrupt line, add one interrupt mask element to
+> +     it. That is, there is a 1:1 mapping from each interrupt
+> +     line to an interrupt mask. An interrupt mask can represent
+> +     multiple interrupts being enabled. Refer to interrupt_control
+> +     register in DMC-520 TRM for interrupt mapping. In the example
+> +     below, the interrupt configuration enables dram_ecc_errc_int
+> +     and dram_ecc_errd_int. And each interrupt is connected to
+> +     a separate interrupt line.
+> +
+> +Example:
+> +
+> +dmc0: dmc@200000 {
+> + compatible = "brcm,dmc-520", "arm,dmc-520";
+> + reg = <0x200000 0x80000>;
+> + interrupts = <0x0 0x349 0x4>, <0x0 0x34B 0x4>;
+> + arm,interrupt-config = <0x4>, <0x8>;
+> +};
+> --
+> 2.17.1
+>
