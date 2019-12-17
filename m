@@ -2,119 +2,92 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CBBC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77BCDC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59BDA206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:22:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bM70QIlp"
+	by mail.kernel.org (Postfix) with ESMTP id 550C821739
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:23:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbfLQMWu (ORCPT
+        id S1727805AbfLQMXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:22:50 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:41264 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726747AbfLQMWu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 07:22:50 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBHCMgIe018636;
-        Tue, 17 Dec 2019 06:22:42 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576585362;
-        bh=qM9xJdxmrDLNaME/gOYVTnReJwrGrvAeNa92VYltRFM=;
-        h=From:To:CC:Subject:Date;
-        b=bM70QIlptkcNkidobo0JsKJTMLt21guPkDWa1gj2BY6HTH+1KGrOAEr/fwTXy4xe/
-         rtwCTbOCi79rEhbnrtlKk76ZFwkUUSaEcSX1ISRsoX/bqY8KKw6FF46rXmAvVIHm3j
-         6+We98QHhTHmX/cwOhwWvnYfRARygw8FcETyZ3rs=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBHCMgmr017727
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 17 Dec 2019 06:22:42 -0600
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
- Dec 2019 06:22:42 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 17 Dec 2019 06:22:42 -0600
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBHCMcZh054542;
-        Tue, 17 Dec 2019 06:22:39 -0600
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <ulf.hansson@linaro.org>, <f.fainelli@gmail.com>,
-        <rjui@broadcom.com>, <sbranden@broadcom.com>,
-        <nsaenzjulienne@suse.de>
-CC:     <vkoul@kernel.org>, <linux-mmc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <bcm-kernel-feedback-list@broadcom.com>,
-        <linux-rpi-kernel@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH v2] mmc: bcm2835: Use dma_request_chan() instead dma_request_slave_channel()
-Date:   Tue, 17 Dec 2019 14:22:54 +0200
-Message-ID: <20191217122254.7103-1-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.24.0
+        Tue, 17 Dec 2019 07:23:10 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:38432 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726191AbfLQMXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 07:23:10 -0500
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 4CE44463DC972C0C67C9;
+        Tue, 17 Dec 2019 20:23:08 +0800 (CST)
+Received: from [127.0.0.1] (10.177.251.225) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Tue, 17 Dec 2019
+ 20:22:58 +0800
+To:     <airlied@linux.ie>, Arnd Bergmann <arnd@arndb.de>,
+        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
+        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
+        "linfeilong@huawei.com" <linfeilong@huawei.com>
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Subject: [PATCH] agp: remove unused variable mcapndx
+Message-ID: <a7c98193-1180-732b-df86-843deca64275@huawei.com>
+Date:   Tue, 17 Dec 2019 20:21:37 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Originating-IP: [10.177.251.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dma_request_slave_channel() is a wrapper on top of dma_request_chan()
-eating up the error code.
+This patch fix the following warning:
+drivers/char/agp/isoch.c: In function ‘agp_3_5_isochronous_node_enable’:
+drivers/char/agp/isoch.c:87:5: warning: variable ‘mcapndx’ set but not
+used [-Wunused-but-set-variable]
+  u8 mcapndx;
+     ^~~~~~~
 
-By using dma_request_chan() directly the driver can support deferred
-probing against DMA.
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
 ---
-Hi,
+ drivers/char/agp/isoch.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-Changes since v1:
-- instead of returning jump to err: to free up resources
+diff --git a/drivers/char/agp/isoch.c b/drivers/char/agp/isoch.c
+index 31c374b1b91b..324992439ee8 100644
+--- a/drivers/char/agp/isoch.c
++++ b/drivers/char/agp/isoch.c
+@@ -84,7 +84,6 @@ static int agp_3_5_isochronous_node_enable(struct agp_bridge_data *bridge,
+ 	unsigned int cdev = 0;
+ 	u32 mnistat, tnistat, tstatus, mcmd;
+ 	u16 tnicmd, mnicmd;
+-	u8 mcapndx;
+ 	u32 tot_bw = 0, tot_n = 0, tot_rq = 0, y_max, rq_isoch, rq_async;
+ 	u32 step, rem, rem_isoch, rem_async;
+ 	int ret = 0;
+@@ -138,8 +137,6 @@ static int agp_3_5_isochronous_node_enable(struct agp_bridge_data *bridge,
+ 		cur = list_entry(pos, struct agp_3_5_dev, list);
+ 		dev = cur->dev;
 
-Regards,
-Peter
+-		mcapndx = cur->capndx;
+-
+ 		pci_read_config_dword(dev, cur->capndx+AGPNISTAT, &mnistat);
 
- drivers/mmc/host/bcm2835.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ 		master[cdev].maxbw = (mnistat >> 16) & 0xff;
+@@ -251,8 +248,6 @@ static int agp_3_5_isochronous_node_enable(struct agp_bridge_data *bridge,
+ 		cur = master[cdev].dev;
+ 		dev = cur->dev;
 
-diff --git a/drivers/mmc/host/bcm2835.c b/drivers/mmc/host/bcm2835.c
-index 99f61fd2a658..c3d949847cbd 100644
---- a/drivers/mmc/host/bcm2835.c
-+++ b/drivers/mmc/host/bcm2835.c
-@@ -1393,7 +1393,17 @@ static int bcm2835_probe(struct platform_device *pdev)
- 	host->dma_chan = NULL;
- 	host->dma_desc = NULL;
- 
--	host->dma_chan_rxtx = dma_request_slave_channel(dev, "rx-tx");
-+	host->dma_chan_rxtx = dma_request_chan(dev, "rx-tx");
-+	if (IS_ERR(host->dma_chan_rxtx)) {
-+		ret = PTR_ERR(host->dma_chan_rxtx);
-+		host->dma_chan_rxtx = NULL;
-+
-+		if (ret == -EPROBE_DEFER)
-+			goto err;
-+
-+		/* Ignore errors to fall back to PIO mode */
-+	}
-+
- 
- 	clk = devm_clk_get(dev, NULL);
- 	if (IS_ERR(clk)) {
+-		mcapndx = cur->capndx;
+-
+ 		master[cdev].rq += (cdev == ndevs - 1)
+ 		              ? (rem_async + rem_isoch) : step;
+
 -- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.7.4
 
