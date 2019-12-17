@@ -2,75 +2,93 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54EF2C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D87C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 325B2207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:53:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19734207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:54:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbfLQLxd convert rfc822-to-8bit (ORCPT
+        id S1727328AbfLQLyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 06:53:33 -0500
-Received: from szxga03-in.huawei.com ([45.249.212.189]:2107 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726141AbfLQLxc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 06:53:32 -0500
-Received: from DGGEML402-HUB.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id 5AAA6FC76425F2D8B827;
-        Tue, 17 Dec 2019 19:53:28 +0800 (CST)
-Received: from DGGEML505-MBX.china.huawei.com ([169.254.12.46]) by
- DGGEML402-HUB.china.huawei.com ([fe80::fca6:7568:4ee3:c776%31]) with mapi id
- 14.03.0439.000; Tue, 17 Dec 2019 19:53:22 +0800
-From:   "wubo (T)" <wubo40@huawei.com>
-To:     "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Mingfangsen <mingfangsen@huawei.com>
-Subject: [PATCH] scsi:remove unreachable code on scsi_decide_disposition func
-Thread-Topic: [PATCH] scsi:remove unreachable code on
- scsi_decide_disposition func
-Thread-Index: AdW0zylDYYuhZep7QPWk1qrXegsGRA==
-Date:   Tue, 17 Dec 2019 11:53:21 +0000
-Message-ID: <EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6915E9A7FD@dggeml505-mbx.china.huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.173.221.252]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 17 Dec 2019 06:54:12 -0500
+Received: from charlotte.tuxdriver.com ([70.61.120.58]:50113 "EHLO
+        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726141AbfLQLyL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 06:54:11 -0500
+Received: from 2606-a000-111b-43ee-0000-0000-0000-115f.inf6.spectrum.com ([2606:a000:111b:43ee::115f] helo=localhost)
+        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
+        (Exim 4.63)
+        (envelope-from <nhorman@tuxdriver.com>)
+        id 1ihBQN-0008M7-17; Tue, 17 Dec 2019 06:54:05 -0500
+Date:   Tue, 17 Dec 2019 06:53:58 -0500
+From:   Neil Horman <nhorman@tuxdriver.com>
+To:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Cc:     syzbot <syzbot+772d9e36c490b18d51d1@syzkaller.appspotmail.com>,
+        davem@davemloft.net, linux-kernel@vger.kernel.org,
+        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, vyasevich@gmail.com
+Subject: Re: memory leak in sctp_stream_init
+Message-ID: <20191217115358.GA730@hmswarspite.think-freely.org>
+References: <000000000000f531080599c4073c@google.com>
+ <20191216114828.GA20281@hmswarspite.think-freely.org>
+ <20191216145638.GB5058@localhost.localdomain>
+ <20191217003716.GC5058@localhost.localdomain>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191217003716.GC5058@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wu Bo <wubo40@huawei.com>
+On Mon, Dec 16, 2019 at 09:37:16PM -0300, Marcelo Ricardo Leitner wrote:
+> On Mon, Dec 16, 2019 at 11:56:38AM -0300, Marcelo Ricardo Leitner wrote:
+> ...
+> > Considering that genradix_prealloc() failure is not fatal, seems the
+> > fix here is to just ignore the failure in sctp_stream_alloc_out() and
+> > let genradix try again later on.
+> 
+> Better yet, this fixes it here:
+> 
+> ---8<---
+> 
+> diff --git a/net/sctp/stream.c b/net/sctp/stream.c
+> index df60b5ef24cb..e0b01bf912b3 100644
+> --- a/net/sctp/stream.c
+> +++ b/net/sctp/stream.c
+> @@ -84,8 +84,10 @@ static int sctp_stream_alloc_out(struct sctp_stream *stream, __u16 outcnt,
+>  		return 0;
+>  
+>  	ret = genradix_prealloc(&stream->out, outcnt, gfp);
+> -	if (ret)
+> +	if (ret) {
+> +		genradix_free(&stream->out);
+>  		return ret;
+> +	}
+>  
+>  	stream->outcnt = outcnt;
+>  	return 0;
+> @@ -100,8 +102,10 @@ static int sctp_stream_alloc_in(struct sctp_stream *stream, __u16 incnt,
+>  		return 0;
+>  
+>  	ret = genradix_prealloc(&stream->in, incnt, gfp);
+> -	if (ret)
+> +	if (ret) {
+> +		genradix_free(&stream->in);
+>  		return ret;
+> +	}
+>  
+>  	stream->incnt = incnt;
+>  	return 0;
+> 
+I get how that fixes this, but that doesn't really seem like the right fix in my
+mind.  Shouldn't genradix_prealloc internally free any memory its allocated if
+it fails part way through its operation?
 
-Remove unreachable code on scsi_decide_disposition func.
-
-Signed-off-by: Wu Bo <wubo40@huawei.com>
----
- drivers/scsi/scsi_error.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/scsi/scsi_error.c b/drivers/scsi/scsi_error.c
-index ae2fa17..c5e05c4 100644
---- a/drivers/scsi/scsi_error.c
-+++ b/drivers/scsi/scsi_error.c
-@@ -1934,7 +1934,6 @@ int scsi_decide_disposition(struct scsi_cmnd *scmd)
-        default:
-                return FAILED;
-        }
--       return FAILED;
-
- maybe_retry:
-
---
-1.8.3.1
+Neil
