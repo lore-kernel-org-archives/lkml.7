@@ -2,194 +2,128 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E0AC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5075C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0E4124684
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:49:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A59D624679
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:49:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576594151;
-	bh=kjSq6GCWlR5cgLYp1VuhTVE6QJ803IsXfUb8J/asdM0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=du3qy8wxZYS0WhP8MeDmJbr3xrnlcP9wJuaKq2BDaPfOxCOuJdplF0OqmpBT2lxBx
-	 H9HcljW92yV6nO7g86PO3UMfGhxFJpE3nmHJHWX6nitFPdzZWC0qmSN16yZ/+6XqSH
-	 yi6Z/VAl2sHnd/tr5gG6AOj+jWkv8hBxSG9Maq6U=
+	s=default; t=1576594157;
+	bh=8tEQnrjV2iZx6a6s8GZTx/5QLk5kJUnwb3yiaS8s5ns=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=NafO9QsAQnyLkDpCZhRUe4y3j9oSbagmrFI+fox1ZMCz9bmCYqOsXqnjQjirBl5J6
+	 kV/Af1TG4Tsqhy86TXsMzLAbxShItEQLuIHd8zw5gOzl79wFU3lWUOy2DheB+6OOQH
+	 zV8nnLs4nTuaY5SVQuVCucCWmAaTmAFe3PyqRE6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729293AbfLQOtK (ORCPT
+        id S1729307AbfLQOtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:49:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41170 "EHLO mail.kernel.org"
+        Tue, 17 Dec 2019 09:49:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729268AbfLQOtI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:49:08 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1729268AbfLQOtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 09:49:12 -0500
+Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D93024655;
-        Tue, 17 Dec 2019 14:49:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 712892465E;
+        Tue, 17 Dec 2019 14:49:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576594146;
-        bh=kjSq6GCWlR5cgLYp1VuhTVE6QJ803IsXfUb8J/asdM0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DG0rks66psWTR9lUXDkU3SUigPmJC7OpRztb/JUgHDhgMZ/piK2G0XCsyOhbk4VKZ
-         BSNR0FoXH0PLLogfSZ6/mayUBtCgVI7XtMGOkCGVUTx4rPjVfR0s58FK9pY6kJAiht
-         nbIiilJFf0E26fT+s/oS+/dZVLiduKwkM0gNxvVw=
-Date:   Tue, 17 Dec 2019 15:49:04 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     =?iso-8859-1?B?Suly9G1l?= Pouiller <Jerome.Pouiller@silabs.com>
-Cc:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: Re: [PATCH 01/55] staging: wfx: fix the cache of rate policies on
- interface reset
-Message-ID: <20191217144904.GA3639802@kroah.com>
-References: <20191216170302.29543-1-Jerome.Pouiller@silabs.com>
- <20191216170302.29543-2-Jerome.Pouiller@silabs.com>
- <20191217115211.GA3141324@kroah.com>
- <3810318.2NmXUpVtm0@pc-42>
+        s=default; t=1576594151;
+        bh=8tEQnrjV2iZx6a6s8GZTx/5QLk5kJUnwb3yiaS8s5ns=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=QrfXqrOamJfaTT3ZgL35itashIxsVkg0i4LTIJ8OhYs/nPYKa9Y1buHkYdpR7HKR/
+         95ibpgrxhbb8X3b+Ipd+sGTsi0FU/ZLRtU1FwJ8Fq8YYaX/9dIVT0RPajVPoKafqW2
+         q5DWPIHr/1Pg33PTy7i8G7wvUScPPd3+8ppt20uI=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 06/12] perf report/top: Add 'k' hotkey to zoom directly into the kernel map
+Date:   Tue, 17 Dec 2019 11:48:22 -0300
+Message-Id: <20191217144828.2460-7-acme@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191217144828.2460-1-acme@kernel.org>
+References: <20191217144828.2460-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <3810318.2NmXUpVtm0@pc-42>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 02:35:13PM +0000, Jérôme Pouiller wrote:
-> On Tuesday 17 December 2019 12:52:11 CET Greg Kroah-Hartman wrote:
-> > On Mon, Dec 16, 2019 at 05:03:33PM +0000, Jérôme Pouiller wrote:
-> > > From: Jérôme Pouiller <jerome.pouiller@silabs.com>
-> > >
-> > > Device and driver maintain a cache of rate policies (aka.
-> > > tx_retry_policy in hardware API).
-> > >
-> > > When hif_reset() is sent to hardware, device resets its cache of rate
-> > > policies. In order to keep driver in sync, it is necessary to do the
-> > > same on driver.
-> > >
-> > > Note, when driver tries to use a rate policy that has not been defined
-> > > on device, data is sent at 1Mbps. So, this patch should fix abnormal
-> > > throughput observed sometime after a reset of the interface.
-> > >
-> > > Signed-off-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
-> > > ---
-> > >  drivers/staging/wfx/data_tx.c | 3 +--
-> > >  drivers/staging/wfx/data_tx.h | 1 +
-> > >  drivers/staging/wfx/sta.c     | 6 +++++-
-> > >  3 files changed, 7 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/drivers/staging/wfx/data_tx.c b/drivers/staging/wfx/data_tx.c
-> > > index b722e9773232..02f001dab62b 100644
-> > > --- a/drivers/staging/wfx/data_tx.c
-> > > +++ b/drivers/staging/wfx/data_tx.c
-> > > @@ -249,7 +249,7 @@ static int wfx_tx_policy_upload(struct wfx_vif *wvif)
-> > >       return 0;
-> > >  }
-> > >
-> > > -static void wfx_tx_policy_upload_work(struct work_struct *work)
-> > > +void wfx_tx_policy_upload_work(struct work_struct *work)
-> > >  {
-> > >       struct wfx_vif *wvif =
-> > >               container_of(work, struct wfx_vif, tx_policy_upload_work);
-> > > @@ -270,7 +270,6 @@ void wfx_tx_policy_init(struct wfx_vif *wvif)
-> > >       spin_lock_init(&cache->lock);
-> > >       INIT_LIST_HEAD(&cache->used);
-> > >       INIT_LIST_HEAD(&cache->free);
-> > > -     INIT_WORK(&wvif->tx_policy_upload_work, wfx_tx_policy_upload_work);
-> > >
-> > >       for (i = 0; i < HIF_MIB_NUM_TX_RATE_RETRY_POLICIES; ++i)
-> > >               list_add(&cache->cache[i].link, &cache->free);
-> > > diff --git a/drivers/staging/wfx/data_tx.h b/drivers/staging/wfx/data_tx.h
-> > > index 29faa5640516..a0f9ae69baf5 100644
-> > > --- a/drivers/staging/wfx/data_tx.h
-> > > +++ b/drivers/staging/wfx/data_tx.h
-> > > @@ -61,6 +61,7 @@ struct wfx_tx_priv {
-> > >  } __packed;
-> > >
-> > >  void wfx_tx_policy_init(struct wfx_vif *wvif);
-> > > +void wfx_tx_policy_upload_work(struct work_struct *work);
-> > >
-> > >  void wfx_tx(struct ieee80211_hw *hw, struct ieee80211_tx_control *control,
-> > >           struct sk_buff *skb);
-> > > diff --git a/drivers/staging/wfx/sta.c b/drivers/staging/wfx/sta.c
-> > > index 29848a202ab4..471dd15b227f 100644
-> > > --- a/drivers/staging/wfx/sta.c
-> > > +++ b/drivers/staging/wfx/sta.c
-> > > @@ -592,6 +592,7 @@ static void wfx_do_unjoin(struct wfx_vif *wvif)
-> > >       wfx_tx_flush(wvif->wdev);
-> > >       hif_keep_alive_period(wvif, 0);
-> > >       hif_reset(wvif, false);
-> > > +     wfx_tx_policy_init(wvif);
-> > >       hif_set_output_power(wvif, wvif->wdev->output_power * 10);
-> > >       wvif->dtim_period = 0;
-> > >       hif_set_macaddr(wvif, wvif->vif->addr);
-> > > @@ -880,8 +881,10 @@ static int wfx_update_beaconing(struct wfx_vif *wvif)
-> > >               if (wvif->state != WFX_STATE_AP ||
-> > >                   wvif->beacon_int != conf->beacon_int) {
-> > >                       wfx_tx_lock_flush(wvif->wdev);
-> > > -                     if (wvif->state != WFX_STATE_PASSIVE)
-> > > +                     if (wvif->state != WFX_STATE_PASSIVE) {
-> > >                               hif_reset(wvif, false);
-> > > +                             wfx_tx_policy_init(wvif);
-> > > +                     }
-> > >                       wvif->state = WFX_STATE_PASSIVE;
-> > >                       wfx_start_ap(wvif);
-> > >                       wfx_tx_unlock(wvif->wdev);
-> > > @@ -1567,6 +1570,7 @@ int wfx_add_interface(struct ieee80211_hw *hw, struct ieee80211_vif *vif)
-> > >       INIT_WORK(&wvif->set_cts_work, wfx_set_cts_work);
-> > >       INIT_WORK(&wvif->unjoin_work, wfx_unjoin_work);
-> > >
-> > > +     INIT_WORK(&wvif->tx_policy_upload_work, wfx_tx_policy_upload_work);
-> > >       mutex_unlock(&wdev->conf_mutex);
-> > >
-> > >       hif_set_macaddr(wvif, vif->addr);
-> > 
-> > Meta-comment here.
-> > 
-> > I've been having to hand-edit your patches to get them to be able to
-> > apply so far, which is fine for 1-10 patches at a time, but when staring
-> > down a 55-patch series, that's not ok for my end.
-> > 
-> > The problem is that your email client is turning everything into base64
-> > text.  On it's own, that's fine, but when doing so it turns the
-> > line-ends from unix ones, into dos line-ends.  So, when git decodes the
-> > base64 text into "plain text" the patch obviously does not apply due to
-> > the line-ends not matching up.
-> > 
-> > Any chance you can fix your email client to not convert the line-ends?
-> 
-> Arg... I apologize for that. Yes, I will fix it and re-send the
-> pull-request.
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-thank you.
+As a convenience, equivalent to pressing Enter in a line with a kernel
+symbol and then selecting "Zoom" into the kernel DSO.
 
-> For the record:
-> 
-> In fact, the conversions to CR-LF and to base64 is done by the SMTP
-> server that I use (Microsoft Exchange... useless to say that I do not
-> administrate this server).
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-vbnlnrpyfvz9deqoobtc3dz7@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/ui/browsers/hists.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-Ah, I was wondering of that is why it happened.
+diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+index 8aba1aeea0eb..6dfdd8d5a743 100644
+--- a/tools/perf/ui/browsers/hists.c
++++ b/tools/perf/ui/browsers/hists.c
+@@ -18,7 +18,9 @@
+ #include "../../util/evlist.h"
+ #include "../../util/header.h"
+ #include "../../util/hist.h"
++#include "../../util/machine.h"
+ #include "../../util/map.h"
++#include "../../util/maps.h"
+ #include "../../util/symbol.h"
+ #include "../../util/map_symbol.h"
+ #include "../../util/branch.h"
+@@ -2566,7 +2568,7 @@ add_dso_opt(struct hist_browser *browser, struct popup_action *act,
+ 	if (!hists__has(browser->hists, dso) || map == NULL)
+ 		return 0;
+ 
+-	if (asprintf(optstr, "Zoom %s %s DSO",
++	if (asprintf(optstr, "Zoom %s %s DSO (use the 'k' hotkey to zoom directly into the kernel)",
+ 		     browser->hists->dso_filter ? "out of" : "into",
+ 		     __map__is_kernel(map) ? "the Kernel" : map->dso->short_name) < 0)
+ 		return 0;
+@@ -2936,6 +2938,7 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
+ 	"E             Expand all callchains\n"				\
+ 	"F             Toggle percentage of filtered entries\n"		\
+ 	"H             Display column headers\n"			\
++	"k             Zoom into the kernel map\n"			\
+ 	"L             Change percent limit\n"				\
+ 	"m             Display context menu\n"				\
+ 	"S             Zoom into current Processor Socket\n"		\
+@@ -3033,6 +3036,10 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
+ 			actions->ms.map = map;
+ 			do_zoom_dso(browser, actions);
+ 			continue;
++		case 'k':
++			if (browser->selection != NULL)
++				hists_browser__zoom_map(browser, browser->selection->maps->machine->vmlinux_map);
++			continue;
+ 		case 'V':
+ 			verbose = (verbose + 1) % 4;
+ 			browser->show_dso = verbose > 0;
+-- 
+2.21.0
 
-> I have already noticed that my SMTP server did weird things. So, I
-> configured git to encode in base64 itself.
-> However, the configuration line "sendemail.transferEncoding" is ignored
-> in my version of git (2.20) (--transfer-encoding=base64 continue to
-> work). Fortunately, the problem seems fixed with git 2.24.
-
-Oh good, I was trying to duplicate this with 2.24 and couldn't, glad
-they have fixed this there.
-
-thanks,
-
-greg k-h
