@@ -2,94 +2,119 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,LOTS_OF_MONEY,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFA6C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCBF2C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B8702053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:43:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pxDmp1Jj"
+	by mail.kernel.org (Postfix) with ESMTP id AA6352053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:43:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728128AbfLQUnN (ORCPT
+        id S1728508AbfLQUnM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 15:43:13 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:58032 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728346AbfLQUnI (ORCPT
+        Tue, 17 Dec 2019 15:43:12 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:47363 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728381AbfLQUnJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 15:43:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=x+Ec9IqzREstapl5wfLCmCMSJuQOX5mhkRIw0+geHOU=; b=pxDmp1JjioIRcXfSCH15Etec4
-        +cjuQDDDffcXwI9/KhhV6cZxqsInpMGtKzV97eDAChbJ3pYZcje9MU1VphOmxcqSuWJzT0H3hfNMs
-        jpUxAEk/awz0dCEemy0AhcD5WD6dL4yEKFkjO2Lx+lHzOpRwLfAxInWVglR1LHwMfpzo/Pv5k5F5d
-        BYkA/oMVX5hrHZfiXaFp4Y7yi+M5Jyc7qn1mwhIM/R8SX8omFKCFg1Kq39ne1v3leR+G3O8LC/6Si
-        Vqo/2eEoSTXCrvt5SXBDZg2N3ENm7Un9Q0FUhm2dkuId2No2VecZfFuL6gen+ueP8lUfTqpLv9s4c
-        LKeL4qo1g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ihJg5-0006CS-UO; Tue, 17 Dec 2019 20:42:46 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8CBFA306BB9;
-        Tue, 17 Dec 2019 21:41:21 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4BA462B2CEC3C; Tue, 17 Dec 2019 21:42:44 +0100 (CET)
-Date:   Tue, 17 Dec 2019 21:42:44 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Don <joshdon@google.com>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Paul Turner <pjt@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2] sched/fair: Do not set skip buddy up the sched
- hierarchy
-Message-ID: <20191217204244.GJ2844@hirez.programming.kicks-ass.net>
-References: <20191204200623.198897-1-joshdon@google.com>
- <CAKfTPtBZUUtJ=ZvQOWmKx_1zUXtNoqcS0M85ouQmgi36xzfM2A@mail.gmail.com>
- <CABk29NsCjgMVf-xrhpyzFBTpyTvyWxZc4RJSarnHVzdOXyVPMw@mail.gmail.com>
- <CAKfTPtCJGT0axT5=E=hLWtMav_kLGVFrSvjZS8+cfvjYS72vqQ@mail.gmail.com>
- <CABk29Ntp5eRFn2otK2o5Fe=uYOvKpjHgKRSw0_er45CVC025Pg@mail.gmail.com>
+        Tue, 17 Dec 2019 15:43:09 -0500
+Received: by mail-il1-f198.google.com with SMTP id x69so10403279ill.14
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 12:43:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=ZsG4GGhI1HdtobOHo0iYGQ381sBQZXGjK6JsTLf54tI=;
+        b=qBo9DZYJXhToZKKS3EQHdl2dlDTnPC0/j4O4lkqUOlyRT0M596PVbdSWV7qLGzF5lS
+         kD2fEq9z2ucynMot8QicNY739/AclPgAAkzeqM74Mx53eIWLNL6ZAXWFW3J8KMTzuWsF
+         IHmwdGWqa+zGP9x/Fx1nxpHqoZiLvW+KACW6b2zWlDJCRG+bL9+UqV3eDNDEaAh6F9GA
+         53deii8fC2LIzGGB9BNdK1QOQ5h+3eKFn4SaVthv2M/yUH9aRGy8mFZwDyOfKEa5BDt7
+         FItfjEUtAsAwLTGis6QzXb5D0aIgw4czEMZNsdhNIh9GOKuEQ4iEctLUi2w0bCYhcVrt
+         NDyg==
+X-Gm-Message-State: APjAAAUeMC2QiXWalabCFQ76wHnuell1qZ97lEmrzyHaKlUlkUEVQNT7
+        Bc0AKvwiOkUxqT2e43GMRD81ZCrJk6IaC8oi1UZdlT4N/0MO
+X-Google-Smtp-Source: APXvYqyu7jeTkwiEQsSvZo2qq1J2Cge2aNKRqMbtsXfHs+JssScBIJRW+W5oExAps69/GWTSttKC9a6p9iUPVSEaeSZY/T6eo+Tx
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABk29Ntp5eRFn2otK2o5Fe=uYOvKpjHgKRSw0_er45CVC025Pg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a5e:8417:: with SMTP id h23mr5163006ioj.17.1576615388758;
+ Tue, 17 Dec 2019 12:43:08 -0800 (PST)
+Date:   Tue, 17 Dec 2019 12:43:08 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000031cefb0599ec600b@google.com>
+Subject: KCSAN: data-race in poll_schedule_timeout.constprop.0 / pollwake (3)
+From:   syzbot <syzbot+9b3fb64bcc8c1d807595@syzkaller.appspotmail.com>
+To:     elver@google.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 11:58:28AM -0800, Josh Don wrote:
-> > Ingo, Peter, what do you think ?
-> 
-> I could add the Co-developed-by tag if that would be sufficient here.
-> As a side note, I'm also looking at upstreaming our other sched
-> fixes/patches, and some of these have the same issue with respect to
-> the original author.  How would you prefer I handle these in general?
+Hello,
 
-These internal patches that you have, don't they have a SoB on from the
-original author?
+syzbot found the following crash on:
 
-Ingo, Greg, how do we handle patches where the original Author has
-vanished/left etc and no SoB is present?
+HEAD commit:    245a4300 Merge branch 'rcu/kcsan' into tip/locking/kcsan
+git tree:       https://github.com/google/ktsan.git kcsan
+console output: https://syzkaller.appspot.com/x/log.txt?x=11beba8ee00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a38292766f8efdaa
+dashboard link: https://syzkaller.appspot.com/bug?extid=9b3fb64bcc8c1d807595
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-Now, in this case we know Venki was with Google in the US, and the US
-allows/has copyright assignment to employers and therefore any old SoB
-from a Google person should probably be sufficient, but that argument
-doesn't work in general (Germany for example doesn't allow copyright
-assignment/transfer).
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+9b3fb64bcc8c1d807595@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KCSAN: data-race in poll_schedule_timeout.constprop.0 / pollwake
+
+write to 0xffffc90001043c30 of 4 bytes by task 17695 on cpu 0:
+  __pollwake fs/select.c:197 [inline]
+  pollwake+0xe3/0x140 fs/select.c:217
+  __wake_up_common+0x7b/0x180 kernel/sched/wait.c:93
+  __wake_up_common_lock+0x77/0xb0 kernel/sched/wait.c:123
+  __wake_up+0xe/0x10 kernel/sched/wait.c:142
+  signalfd_notify include/linux/signalfd.h:22 [inline]
+  signalfd_notify include/linux/signalfd.h:19 [inline]
+  __send_signal+0x70e/0x870 kernel/signal.c:1158
+  send_signal+0x224/0x2b0 kernel/signal.c:1236
+  __group_send_sig_info kernel/signal.c:1275 [inline]
+  do_notify_parent+0x55b/0x5e0 kernel/signal.c:1992
+  exit_notify kernel/exit.c:670 [inline]
+  do_exit+0x16ef/0x18c0 kernel/exit.c:818
+  do_group_exit+0xb4/0x1c0 kernel/exit.c:895
+  __do_sys_exit_group kernel/exit.c:906 [inline]
+  __se_sys_exit_group kernel/exit.c:904 [inline]
+  __x64_sys_exit_group+0x2e/0x30 kernel/exit.c:904
+  do_syscall_64+0xcc/0x3a0 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+read to 0xffffc90001043c30 of 4 bytes by task 15995 on cpu 1:
+  poll_schedule_timeout.constprop.0+0x50/0xc0 fs/select.c:242
+  do_poll fs/select.c:951 [inline]
+  do_sys_poll+0x66d/0x990 fs/select.c:1001
+  __do_sys_poll fs/select.c:1059 [inline]
+  __se_sys_poll fs/select.c:1047 [inline]
+  __x64_sys_poll+0x10f/0x250 fs/select.c:1047
+  do_syscall_64+0xcc/0x3a0 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 1 PID: 15995 Comm: udevd Not tainted 5.5.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
