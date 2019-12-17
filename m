@@ -2,91 +2,130 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE66C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 143DDC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 210BD20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:16:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7D9521739
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:16:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="R4VeKMX5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pNerajbJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728817AbfLQOQl (ORCPT
+        id S1728901AbfLQOQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:16:41 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:36602 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728554AbfLQOQk (ORCPT
+        Tue, 17 Dec 2019 09:16:47 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40046 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728554AbfLQOQr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:16:40 -0500
-Received: by mail-qk1-f195.google.com with SMTP id a203so7340700qkc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 06:16:38 -0800 (PST)
+        Tue, 17 Dec 2019 09:16:47 -0500
+Received: by mail-lf1-f65.google.com with SMTP id i23so7068822lfo.7;
+        Tue, 17 Dec 2019 06:16:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=ZkdzLix0g7TLx3w5KL71e42yAFa7G9Wu3yCJiO5zBhs=;
-        b=R4VeKMX5z+UpczXH2iwhnXxVtV/oF7T7YQHHVdhLWz3zDT3WeJr7l93DvuR8yvVTv1
-         b8K8T6PxnmokRbgIrYOjdgQoidBrClvkj/ONfMxQ5qwk5O8VdAzKcNBZJRcqHTxrR9fv
-         6oZkLQMCNFUQ5RqfDFqqCiEYcPxcbVXU0GWa+V3TiQSvhU1WYhVdc+Wyyy3uWM0/S5EK
-         hEiB9TnfsOs25eWmyhQX7mf8iQrlU2obMGSU/PBQ/Kdp7Cpq5otTFcelPh4cIsg5+vi1
-         l7/uWYHT18DpZM2q2zh8DATf6vrIqr3vrPVB6SD6pC+LUQX8NwBm0Pev0kzsqmMQ18g+
-         1smA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=xlRkPJ2SEXs8vMsht2fGp1KJqPki3AeywUT3STRcBqE=;
+        b=pNerajbJfMbMciD+1btyom7lLX1CPk4VtH9PLBldrb/4MWc+pFhws6C8JRCjwOem3B
+         1xmxBvdXdmyxGrAl7ML9tWNAMI3i6omtt7Fb+ksrOs6u9VER5hAJnO0fOl6JDmHDyO2p
+         0Ito47Affr4qm7yUNkNbQmbiFwi+al+6aL429a1O773bP6KKve4Sl0qGTf3pvtImL2Od
+         3SkxVThHn8nqxPajDFmhylmcfSAbXn+yMU7YBRTw0HmXZomQdduDZpjXsK2o3eHKcO0w
+         cywyK95ghbpNCoU/xxz3CF+2QYF1bWunxgZ2B0cbH6zP0wQZcDNL5OYDzLAbnYGFqbfF
+         qxtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=ZkdzLix0g7TLx3w5KL71e42yAFa7G9Wu3yCJiO5zBhs=;
-        b=gWEy2EjwfUwdzNLM1n233erSAp/e3JrByZbD/gWVh9CTrFJQZEb5Ek4Bw4sDJzfXqS
-         +GcPuQCpUUvQ99xCDfkKrZE93YZg3x4mIV7k+cmJmu7/qWbWLMU0A1FlTFRTWof8j9jR
-         sSKUndiUll+CiOZropcBlGMPRHPZPeLGsHHRApZADQq+0+BbXniMOVV0sIHqagsPHq8C
-         9g1vowWnenAzD/WQ/msUfM4p4DQv6jXQjzMOUJ4a3BzAY7WDWi94wWHnbP6eyZUoWNKJ
-         IJkOORKmJiUYnUiKoqwTSUj5Rk2oOwwREKIoUFlQ+2qd/ds3fc3/MFnYU7trgVLxQ+ta
-         qtqQ==
-X-Gm-Message-State: APjAAAVviZO99BgEkq9Qc7HrmWCz4fv0lbv8M23odL3tDdvj9YssW0cQ
-        VAUgesfdi5zpTo206I5GCpsVzw==
-X-Google-Smtp-Source: APXvYqyIaW9SH9dIo0nTwluwbMjOkaOIBAywH/CZvwYvSZJusUJQDeyKQIEbOh3B2HI/AZvYCG2apQ==
-X-Received: by 2002:a37:a807:: with SMTP id r7mr5369874qke.346.1576592197757;
-        Tue, 17 Dec 2019 06:16:37 -0800 (PST)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id v2sm7089372qkj.29.2019.12.17.06.16.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Dec 2019 06:16:37 -0800 (PST)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] mm: memcontrol.c: move mem_cgroup_id_get_many under CONFIG_MMU
-Date:   Tue, 17 Dec 2019 09:16:36 -0500
-Message-Id: <392D7C59-5538-4A9B-8974-DB0B64880C2C@lca.pw>
-References: <20191217135440.GB58496@chrisdown.name>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xlRkPJ2SEXs8vMsht2fGp1KJqPki3AeywUT3STRcBqE=;
+        b=PFTAmBI5Ac7DaTG7en+j5qiMdsRU/15pcN+cHHQAuWAsaAE65PKaycIWoVn2k+PNxR
+         iEQR+gBKcxgjxIt4/PNlg+rtASY3ysg3VYB1d9UsDVhLtp3gq4MzLYW1XANgizmeQyBm
+         ThYwbrW8vP9B2qSstERgKYM7JhZY49LWT+Y/vXT2MxRDWPbJpEoGe+Gub+URQX+CWUNe
+         VW1zXS/tU3PbKfeUSQgxyHalVcTfTtfY3mmWVWr9SBMOu2Drbhiu0CL2CapgfBbVyJ78
+         bDO9aZ21C1nJnj6OTXn8l1Q3PwKJOWUH1wzlZyEZo7VEp2116hsnh/tOep9uL8pVJ8pq
+         EzBg==
+X-Gm-Message-State: APjAAAVCdR+Us3U6+qNZItMUMqtaWFnBVkBBEv2DmI8ozyP/3Wrwdsi5
+        iUWCJjSw4s6D1o7nmNaFOYfaVnMVcPo=
+X-Google-Smtp-Source: APXvYqzZmO0QaN360MRudjlIAma561Iv+ukGoVeX405aX62AZOqAfm4KOdQWEx2sa3SkZdPmUapC0w==
+X-Received: by 2002:a19:7015:: with SMTP id h21mr2839860lfc.68.1576592204973;
+        Tue, 17 Dec 2019 06:16:44 -0800 (PST)
+Received: from [172.31.190.83] ([86.57.146.226])
+        by smtp.gmail.com with ESMTPSA id h10sm1562537ljc.39.2019.12.17.06.16.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 17 Dec 2019 06:16:44 -0800 (PST)
+Subject: Re: [PATCH 3/3] io_uring: move *queue_link_head() from common path
+To:     Dmitry Dolgov <9erthalion6@gmail.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20191217135440.GB58496@chrisdown.name>
-To:     Chris Down <chris@chrisdown.name>
-X-Mailer: iPhone Mail (17C54)
+References: <cover.1576538176.git.asml.silence@gmail.com>
+ <eda17f0736faff0876c580f1cd841b61c92d7e39.1576538176.git.asml.silence@gmail.com>
+ <20191217140057.vswyslavkmrbcebz@localhost>
+From:   Pavel Begunkov <asml.silence@gmail.com>
+Message-ID: <3d59d0ed-50c0-2308-7b6d-c3f5d4459638@gmail.com>
+Date:   Tue, 17 Dec 2019 17:16:43 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
+MIME-Version: 1.0
+In-Reply-To: <20191217140057.vswyslavkmrbcebz@localhost>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 12/17/2019 5:00 PM, Dmitry Dolgov wrote:
+>> On Tue, Dec 17, 2019 at 02:22:09AM +0300, Pavel Begunkov wrote:
+>>
+>> Move io_queue_link_head() to links handling code in io_submit_sqe(),
+>> so it wouldn't need extra checks and would have better data locality.
+>>
+>> ---
+>>  fs/io_uring.c | 32 ++++++++++++++------------------
+>>  1 file changed, 14 insertions(+), 18 deletions(-)
+>>
+>> diff --git a/fs/io_uring.c b/fs/io_uring.c
+>> index bac9e711e38d..a880ed1409cb 100644
+>> --- a/fs/io_uring.c
+>> +++ b/fs/io_uring.c
+>> @@ -3373,13 +3373,15 @@ static bool io_submit_sqe(struct io_kiocb *req, struct io_submit_state *state,
+>>  			  struct io_kiocb **link)
+>>  {
+>>  	struct io_ring_ctx *ctx = req->ctx;
+>> +	unsigned int sqe_flags;
+>>  	int ret;
+>>
+>> +	sqe_flags = READ_ONCE(req->sqe->flags);
+> 
+> Just out of curiosity, why READ_ONCE it necessary here? I though, that
+> since io_submit_sqes happens within a uring_lock, it's already
+> protected. Do I miss something?
+> 
+SQEs are rw-shared with the userspace, that's it. Probably, there are
+more places where proper READ_ONCE() annotations have been lost.
 
+>> @@ -3421,9 +3423,15 @@ static bool io_submit_sqe(struct io_kiocb *req, struct io_submit_state *state,
+>>  		}
+>>  		trace_io_uring_link(ctx, req, head);
+>>  		list_add_tail(&req->link_list, &head->link_list);
+>> -	} else if (req->sqe->flags & (IOSQE_IO_LINK|IOSQE_IO_HARDLINK)) {
+>> +
+>> +		/* last request of a link, enqueue the link */
+>> +		if (!(sqe_flags & IOSQE_IO_LINK)) {
+> 
+> Yes, as you mentioned in the previous email, it seems correct that if
+> IOSQE_IO_HARDLINK imply IOSQE_IO_LINK, then here we need to check both.
+> 
+>> +			io_queue_link_head(head);
+>> +			*link = NULL;
+>> +		}
+>> +	} else if (sqe_flags & (IOSQE_IO_LINK|IOSQE_IO_HARDLINK)) {
 
-> On Dec 17, 2019, at 8:54 AM, Chris Down <chris@chrisdown.name> wrote:
->=20
-> Let's just add __maybe_unused, since it seems like what we want in this sc=
-enario -- it avoids new users having to enter preprocessor madness, while al=
-so not polluting the build output.
-
-__maybe_unused should only be used in the last resort as it mark the compile=
-r to catch the real issues in the future. In this case, it might be better j=
-ust ignore it as only non-realistic compiling test would use !CONFIG_MMU in t=
-his case.=
+-- 
+Pavel Begunkov
