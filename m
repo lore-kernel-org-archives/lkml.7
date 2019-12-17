@@ -2,103 +2,86 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC8B7C2D0C5
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D26C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3361206D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:52:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DQagl2Z9"
+	by mail.kernel.org (Postfix) with ESMTP id 41BD120733
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:52:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576569161;
+	bh=EE6TDiP1V3N/FLb6uYPI2wDikrmXsIXvjtdfQVaIDfg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UZEqx8v8nS7EvhG0kJUBgEbP5ZvVv+sh5asrMn8QFC6DcqTch+9Dzkc/FBBObq8Vu
+	 rFHsKMm85AxR/nVv6U6E9FC2gp3VSV4qzkwiPaxePaKeNu7bajFtTLKDZc8uYDew7+
+	 XRCft6/jKYXQJTzjNaNbU6pzkzGUKkXQFFQxrwm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbfLQHwP (ORCPT
+        id S1726768AbfLQHwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 02:52:15 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:53936 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbfLQHwP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 02:52:15 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBH7q8a8082887;
-        Tue, 17 Dec 2019 01:52:08 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576569128;
-        bh=JVOtlzp4SCMmIRdgV0Dwkwtw1zBJBOLFQP857cg/zhQ=;
-        h=From:To:CC:Subject:Date;
-        b=DQagl2Z9mA1II7/LrIfOiy+kvnFSvq3LR3YTlC9lD84Uor6OTYU0zqJ5QNAkjXRS5
-         IqFGPMfHchR75vQ7BqWh0VTz+v6B76K3TtXcE1DJupzGuHCBVn16BaYcag7sw8h2k5
-         rGBNOjHJ1PoW29Y8SrgJfYWZE47i88SCielTyrJY=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBH7q8jP049798
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 17 Dec 2019 01:52:08 -0600
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
- Dec 2019 01:52:08 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 17 Dec 2019 01:52:08 -0600
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBH7q5MV115230;
-        Tue, 17 Dec 2019 01:52:06 -0600
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <jic23@kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>
-CC:     <vkoul@kernel.org>, <linux-iio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH] iio: adc: stm32-dfsdm: Use dma_request_chan() instead dma_request_slave_channel()
-Date:   Tue, 17 Dec 2019 09:52:21 +0200
-Message-ID: <20191217075221.23895-1-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.24.0
+        Tue, 17 Dec 2019 02:52:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51768 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725730AbfLQHwk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 02:52:40 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29A8C206D3;
+        Tue, 17 Dec 2019 07:52:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576569159;
+        bh=EE6TDiP1V3N/FLb6uYPI2wDikrmXsIXvjtdfQVaIDfg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lUFMjYMI5NaoggSikx5zp7iysHuSH96AkyQ9AbRMaktE6ngcI6nlsRVn9yCw4Xfrf
+         QLxJZZ2PgkQbY+/k86lEfihdceAiIi6lvILwlYzmBgOBG2g3+MJjbrFa0lH9nzeeUP
+         Ud6vgSKwBlmvEoivkbVmZT/DyJrpNA0YGj1xfLuE=
+Date:   Tue, 17 Dec 2019 08:52:35 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     shuah <shuah@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.4 000/177] 5.4.4-stable review
+Message-ID: <20191217075235.GD2474507@kroah.com>
+References: <20191216174811.158424118@linuxfoundation.org>
+ <aa042a91-ebf3-5f32-5fb4-98e11d8b7cab@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aa042a91-ebf3-5f32-5fb4-98e11d8b7cab@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dma_request_slave_channel() is a wrapper on top of dma_request_chan()
-eating up the error code.
+On Mon, Dec 16, 2019 at 05:54:20PM -0700, shuah wrote:
+> On 12/16/19 10:47 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.4.4 release.
+> > There are 177 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Wed, 18 Dec 2019 17:41:25 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.4-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
+> 
+> Compiled and booted on my test system. No dmesg regressions.
 
-By using dma_request_chan() directly the driver can support deferred
-probing against DMA.
+Thanks for testing all of these and letting me know.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- drivers/iio/adc/stm32-dfsdm-adc.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
-index e493242c266e..3aac1a21f9d0 100644
---- a/drivers/iio/adc/stm32-dfsdm-adc.c
-+++ b/drivers/iio/adc/stm32-dfsdm-adc.c
-@@ -1383,9 +1383,9 @@ static int stm32_dfsdm_dma_request(struct iio_dev *indio_dev)
- {
- 	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
- 
--	adc->dma_chan = dma_request_slave_channel(&indio_dev->dev, "rx");
--	if (!adc->dma_chan)
--		return -EINVAL;
-+	adc->dma_chan = dma_request_chan(&indio_dev->dev, "rx");
-+	if (IS_ERR(adc->dma_chan))
-+		return PTR_ERR(adc->dma_chan);
- 
- 	adc->rx_buf = dma_alloc_coherent(adc->dma_chan->device->dev,
- 					 DFSDM_DMA_BUFFER_SIZE,
--- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+greg k-h
