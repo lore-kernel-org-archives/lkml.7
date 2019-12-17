@@ -2,248 +2,417 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1043CC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA23C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0F7221775
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DEF620717
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:30:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VMoTm28s"
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="jbZRCt7x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbfLQN1g (ORCPT
+        id S1727885AbfLQNap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 08:27:36 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37590 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726164AbfLQN1f (ORCPT
+        Tue, 17 Dec 2019 08:30:45 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45529 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726164AbfLQNap (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 08:27:35 -0500
-Received: by mail-oi1-f193.google.com with SMTP id h19so1231223oih.4;
-        Tue, 17 Dec 2019 05:27:34 -0800 (PST)
+        Tue, 17 Dec 2019 08:30:45 -0500
+Received: by mail-pl1-f194.google.com with SMTP id b22so3177080pls.12
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 05:30:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Xd9wAE+P8yM3OreCK1YxhqJ5UfXa6asjhTz7wEVb/Fc=;
-        b=VMoTm28szOB29Mkz4LBdS/S5CsaqGmjmwk3+Ii8HpRaZrWfCzXdRtFZ4gsgUKRi57v
-         DgDRa0TqFyOk4arQ6foqITfI7XfoWqXGc/4fkpMFlSZeKMfUzyahRvb2bN6MgPPWIhMF
-         QUdsIvOVvyalu2yX1F82+c07TIcZcl+uk1dIRMu5kPeFjAepI4T6NrAfaOSDxBkgCPXt
-         FA+ztNC5YWEALfSCBGPbdAZV4fOcKtftb9GQFuO/4zYd1ehY2Z76zJlFx8ld7pPi+Xef
-         yxpFDWO34ol9Au6UqtO6FqZofZOejx6lruxg6wDxtCirQyV8WRCgGRpU2hlHBB/rOLBH
-         9ubg==
+        d=axtens.net; s=google;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=Reh3wVNwDhfuM5Xh7lpmH6YixduOnw90SzrqZCSKyHk=;
+        b=jbZRCt7xr1S1nb2kjDK5LWlGGWVBGx8sLl3/hTkY7Un5RBsPRmmROpKWtaOmeEDm2f
+         FE1PvzilSVggd+UzKlaSEFZEwDW2RDIFhak/5GgCmvKl6J0YSR+bzWfmIpa5uTftEDO7
+         WvL0nqE/zdB4dyBMQhX0GNaEhn5MGc0V+HTI8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Xd9wAE+P8yM3OreCK1YxhqJ5UfXa6asjhTz7wEVb/Fc=;
-        b=W+f72u49jelmu0u5/q2FjkmpOj9RM/ZEGm734cI+Nx48QXtFAvJZgiDkA8Cz4itHvj
-         e4PBKkMfD9/MuRqsiSHU7lxMJwgEzIj1QdwXEXJJH3LasvLlp4qeUZ95KCLej7BejCWg
-         6c3c58HOW/RROavvrvxD8A9MACNo94lwIp1cecovC0EftcraD2ooSVK267nw3GkU+3qG
-         /9PpQhXuqxz6OFqDy3GpaxFCdYF4/JBpnC+MIjam8BcKMzYZLZRwWo8uPYO+12+IjXk2
-         NKTuoLcF4f9dBaWSLdY0AO8TR+E81kZgi6BXU3h4QQJvNCgUfmzzwa8hA8drDvL8re+e
-         dmig==
-X-Gm-Message-State: APjAAAUOk+mnVroYxGVkuw1D45Lrm34LDuuO3jUWrigAmt7yehCqlFza
-        2wbg/0ineFfb0BAhToLf+nPRVzPfqsvI8Uld9eA=
-X-Google-Smtp-Source: APXvYqy8G2Swlp8dNE324it6fHNXKyF/KTmOgSF4CCOdQUIwvj9Nuec/nj7C7rakyQqJWORAz6+dN+1/i39DBJVvuHc=
-X-Received: by 2002:aca:edd5:: with SMTP id l204mr1544881oih.98.1576589254135;
- Tue, 17 Dec 2019 05:27:34 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=Reh3wVNwDhfuM5Xh7lpmH6YixduOnw90SzrqZCSKyHk=;
+        b=PQJ1er6zrBhm8kO9p94LpF4jqFALPKBFMj29V9jhY5p4e6j7xK4OfG5tFYwoEOlwLf
+         ZZG5/H9GR6qTvr1OU/DsSx+Z8nXLivVIvqH6tKZPvZnPXhVAdzFxGft80uVvFOZDv/Ak
+         UKEOQ6UNEmXMdp6B3oWtDE33Ckw9yYFLDYNy4m876QKl4z7hcu/zUTFLk7yCWvlA15CE
+         920b3qRjyN0ag6AoIr/u0+9PU+ZlRsvMGQuzVSOSS/rR5Nd7lev3CKG950jZpBO+mTG+
+         +yipSUKXrlkz+qJAskvtPCd4i36o59/bmOL9mT9HLUoCnKXYmKLdw2ww2pd2bPHlR8hn
+         3oRw==
+X-Gm-Message-State: APjAAAX4r23RFEz3d7M+1dNShEPQrg8YZRiocqN9IL6s80p2MwzasEUE
+        emuLSqascLROVDaiZSP1vrvjKg==
+X-Google-Smtp-Source: APXvYqzZZIjQdBP9g9v1DY2eBOScLtsmLAktLwGeyirR8EH1Ql3weoGpSU2HLCG+fDGUIn6v6qQO6w==
+X-Received: by 2002:a17:902:8501:: with SMTP id bj1mr23059452plb.84.1576589442740;
+        Tue, 17 Dec 2019 05:30:42 -0800 (PST)
+Received: from localhost (2001-44b8-1113-6700-e4cb-43b3-6b6e-ca31.static.ipv6.internode.on.net. [2001:44b8:1113:6700:e4cb:43b3:6b6e:ca31])
+        by smtp.gmail.com with ESMTPSA id e23sm3430548pjt.23.2019.12.17.05.30.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 05:30:41 -0800 (PST)
+From:   Daniel Axtens <dja@axtens.net>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, kasan-dev@googlegroups.com,
+        aneesh.kumar@linux.ibm.com, bsingharora@gmail.com
+Cc:     Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH v3 3/3] powerpc: Book3S 64-bit "heavyweight" KASAN support
+In-Reply-To: <ec89e1c4-32d7-b96e-eb7e-dcb16cab89c0@c-s.fr>
+References: <20191212151656.26151-1-dja@axtens.net> <20191212151656.26151-4-dja@axtens.net> <ec89e1c4-32d7-b96e-eb7e-dcb16cab89c0@c-s.fr>
+Date:   Wed, 18 Dec 2019 00:30:37 +1100
+Message-ID: <87k16vaxky.fsf@dja-thinkpad.axtens.net>
 MIME-Version: 1.0
-References: <000000000000a6f2030598bbe38c@google.com> <0000000000000e32950599ac5a96@google.com>
- <20191216150017.GA27202@linux.fritz.box> <CAJ8uoz3nCxcmnPonNunYhswskidn=PnN8=4_jXW4B=Xu4k_DoQ@mail.gmail.com>
-In-Reply-To: <CAJ8uoz3nCxcmnPonNunYhswskidn=PnN8=4_jXW4B=Xu4k_DoQ@mail.gmail.com>
-From:   Magnus Karlsson <magnus.karlsson@gmail.com>
-Date:   Tue, 17 Dec 2019 14:27:22 +0100
-Message-ID: <CAJ8uoz312gDBGpqOJiKqrXn456sy6u+Gnvcvv_+0=EimasRoUw@mail.gmail.com>
-Subject: Re: WARNING in wp_page_copy
-To:     Daniel Borkmann <daniel@iogearbox.net>,
-        kirill.shutemov@linux.intel.com, justin.he@arm.com,
-        catalin.marinas@arm.com, linux-mm@kvack.org
-Cc:     syzbot <syzbot+9301f2f33873407d5b33@syzkaller.appspotmail.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        bpf <bpf@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>, hawk@kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        linux-kernel@vger.kernel.org,
-        "Karlsson, Magnus" <magnus.karlsson@intel.com>,
-        Network Development <netdev@vger.kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        syzkaller-bugs@googlegroups.com, Yonghong Song <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 4:10 PM Magnus Karlsson
-<magnus.karlsson@gmail.com> wrote:
+Hi Christophe,
+
+I'm working through your feedback, thank you. Regarding this one:
+
+>> --- a/arch/powerpc/kernel/process.c
+>> +++ b/arch/powerpc/kernel/process.c
+>> @@ -2081,7 +2081,14 @@ void show_stack(struct task_struct *tsk, unsigned long *stack)
+>>   		/*
+>>   		 * See if this is an exception frame.
+>>   		 * We look for the "regshere" marker in the current frame.
+>> +		 *
+>> +		 * KASAN may complain about this. If it is an exception frame,
+>> +		 * we won't have unpoisoned the stack in asm when we set the
+>> +		 * exception marker. If it's not an exception frame, who knows
+>> +		 * how things are laid out - the shadow could be in any state
+>> +		 * at all. Just disable KASAN reporting for now.
+>>   		 */
+>> +		kasan_disable_current();
+>>   		if (validate_sp(sp, tsk, STACK_INT_FRAME_SIZE)
+>>   		    && stack[STACK_FRAME_MARKER] == STACK_FRAME_REGS_MARKER) {
+>>   			struct pt_regs *regs = (struct pt_regs *)
+>> @@ -2091,6 +2098,7 @@ void show_stack(struct task_struct *tsk, unsigned long *stack)
+>>   			       regs->trap, (void *)regs->nip, (void *)lr);
+>>   			firstframe = 1;
+>>   		}
+>> +		kasan_enable_current();
 >
-> On Mon, Dec 16, 2019 at 4:00 PM Daniel Borkmann <daniel@iogearbox.net> wrote:
-> >
-> > On Sat, Dec 14, 2019 at 08:20:07AM -0800, syzbot wrote:
-> > > syzbot has found a reproducer for the following crash on:
-> > >
-> > > HEAD commit:    1d1997db Revert "nfp: abm: fix memory leak in nfp_abm_u32_..
-> > > git tree:       net-next
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=1029f851e00000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=cef1fd5032faee91
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=9301f2f33873407d5b33
-> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=119d9fb1e00000
-> > >
-> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > Reported-by: syzbot+9301f2f33873407d5b33@syzkaller.appspotmail.com
-> >
-> > Bjorn / Magnus, given xsk below, PTAL, thanks!
+> If this is really a concern for all targets including PPC32, should it 
+> be a separate patch with a Fixes: tag to be applied back in stable as well ?
+
+I've managed to repro this by commening out the kasan_disable/enable
+lines, and just booting in qemu without a disk attached:
+
+sudo qemu-system-ppc64 -accel kvm -m 2G -M pseries -cpu power9  -kernel ./vmlinux  -nographic -chardev stdio,id=charserial0,mux=on -device spapr-vty,chardev=charserial0,reg=0x30000000  -mon chardev=charserial0,mode=readline -nodefaults -smp 2 
+
+...
+
+[    0.210740] Kernel panic - not syncing: VFS: Unable to mount root fs on unknown-block(0,0)
+[    0.210789] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.5.0-rc1-next-20191213-16824-g469a24fbdb34 #12
+[    0.210844] Call Trace:
+[    0.210866] [c00000006a4839b0] [c000000001f74f48] dump_stack+0xfc/0x154 (unreliable)
+[    0.210915] [c00000006a483a00] [c00000000025411c] panic+0x258/0x59c
+[    0.210958] [c00000006a483aa0] [c0000000024870b0] mount_block_root+0x648/0x7ac
+[    0.211005] ==================================================================
+[    0.211054] BUG: KASAN: stack-out-of-bounds in show_stack+0x438/0x580
+[    0.211095] Read of size 8 at addr c00000006a483b00 by task swapper/0/1
+[    0.211134] 
+[    0.211152] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.5.0-rc1-next-20191213-16824-g469a24fbdb34 #12
+[    0.211207] Call Trace:
+[    0.211225] [c00000006a483680] [c000000001f74f48] dump_stack+0xfc/0x154 (unreliable)
+[    0.211274] [c00000006a4836d0] [c0000000008f877c] print_address_description.isra.10+0x7c/0x470
+[    0.211330] [c00000006a483760] [c0000000008f8e7c] __kasan_report+0x1bc/0x244
+[    0.211380] [c00000006a483830] [c0000000008f6eb8] kasan_report+0x18/0x30
+[    0.211422] [c00000006a483850] [c0000000008fa5d4] __asan_report_load8_noabort+0x24/0x40
+[    0.211471] [c00000006a483870] [c00000000003d448] show_stack+0x438/0x580
+[    0.211512] [c00000006a4839b0] [c000000001f74f48] dump_stack+0xfc/0x154
+[    0.211553] [c00000006a483a00] [c00000000025411c] panic+0x258/0x59c
+[    0.211595] [c00000006a483aa0] [c0000000024870b0] mount_block_root+0x648/0x7ac
+[    0.211644] [c00000006a483be0] [c000000002487784] prepare_namespace+0x1ec/0x240
+[    0.211694] [c00000006a483c60] [c00000000248669c] kernel_init_freeable+0x7f4/0x870
+[    0.211745] [c00000006a483da0] [c000000000011f30] kernel_init+0x3c/0x15c
+[    0.211787] [c00000006a483e20] [c00000000000bebc] ret_from_kernel_thread+0x5c/0x80
+[    0.211834] 
+[    0.211851] Allocated by task 0:
+[    0.211878]  save_stack+0x2c/0xe0
+[    0.211904]  __kasan_kmalloc.isra.16+0x11c/0x150
+[    0.211937]  kmem_cache_alloc_node+0x114/0x3b0
+[    0.211971]  copy_process+0x5b8/0x6410
+[    0.211996]  _do_fork+0x130/0xbf0
+[    0.212022]  kernel_thread+0xdc/0x130
+[    0.212047]  rest_init+0x44/0x184
+[    0.212072]  start_kernel+0x77c/0x7dc
+[    0.212098]  start_here_common+0x1c/0x20
+[    0.212122] 
+[    0.212139] Freed by task 0:
+[    0.212163] (stack is not available)
+[    0.212187] 
+[    0.212205] The buggy address belongs to the object at c00000006a480000
+[    0.212205]  which belongs to the cache thread_stack of size 16384
+[    0.212285] The buggy address is located 15104 bytes inside of
+[    0.212285]  16384-byte region [c00000006a480000, c00000006a484000)
+[    0.212356] The buggy address belongs to the page:
+[    0.212391] page:c00c0000001a9200 refcount:1 mapcount:0 mapping:c00000006a019e00 index:0x0 compound_mapcount: 0
+[    0.212455] raw: 007ffff000010200 5deadbeef0000100 5deadbeef0000122 c00000006a019e00
+[    0.212504] raw: 0000000000000000 0000000000100010 00000001ffffffff 0000000000000000
+[    0.212551] page dumped because: kasan: bad access detected
+[    0.212583] 
+[    0.212600] addr c00000006a483b00 is located in stack of task swapper/0/1 at offset 0 in frame:
+[    0.212656]  mount_block_root+0x0/0x7ac
+[    0.212681] 
+[    0.212698] this frame has 1 object:
+[    0.212722]  [32, 64) 'b'
+[    0.212723] 
+[    0.212755] Memory state around the buggy address:
+[    0.212788]  c00000006a483a00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[    0.212836]  c00000006a483a80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[    0.212884] >c00000006a483b00: f1 f1 f1 f1 00 00 00 00 f3 f3 f3 f3 00 00 00 00
+[    0.212931]                    ^
+[    0.212957]  c00000006a483b80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[    0.213005]  c00000006a483c00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[    0.213052] ==================================================================
+[    0.213100] Disabling lock debugging due to kernel taint
+[    0.213134] [c00000006a483be0] [c000000002487784] prepare_namespace+0x1ec/0x240
+[    0.213182] [c00000006a483c60] [c00000000248669c] kernel_init_freeable+0x7f4/0x870
+[    0.213231] [c00000006a483da0] [c000000000011f30] kernel_init+0x3c/0x15c
+[    0.213272] [c00000006a483e20] [c00000000000bebc] ret_from_kernel_thread+0x5c/0x80
+
+Is that something that reproduces on ppc32?
+
+I don't see it running the test_kasan tests, so I guess that matches up
+with your experience.
+
+Regards,
+Daniel
+
+
+
 >
-> Thanks. I will take a look at it right away.
+>>   
+>>   		sp = newsp;
+>>   	} while (count++ < kstack_depth_to_print);
+>> diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
+>> index 6620f37abe73..d994c7c39c8d 100644
+>> --- a/arch/powerpc/kernel/prom.c
+>> +++ b/arch/powerpc/kernel/prom.c
+>> @@ -72,6 +72,7 @@ unsigned long tce_alloc_start, tce_alloc_end;
+>>   u64 ppc64_rma_size;
+>>   #endif
+>>   static phys_addr_t first_memblock_size;
+>> +static phys_addr_t top_phys_addr;
+>>   static int __initdata boot_cpu_count;
+>>   
+>>   static int __init early_parse_mem(char *p)
+>> @@ -449,6 +450,26 @@ static bool validate_mem_limit(u64 base, u64 *size)
+>>   {
+>>   	u64 max_mem = 1UL << (MAX_PHYSMEM_BITS);
+>>   
+>> +	/*
+>> +	 * To handle the NUMA/discontiguous memory case, don't allow a block
+>> +	 * to be added if it falls completely beyond the configured physical
+>> +	 * memory. Print an informational message.
+>> +	 *
+>> +	 * Frustratingly we also see this with qemu - it seems to split the
+>> +	 * specified memory into a number of smaller blocks. If this happens
+>> +	 * under qemu, it probably represents misconfiguration. So we want
+>> +	 * the message to be noticeable, but not shouty.
+>> +	 *
+>> +	 * See Documentation/powerpc/kasan.txt
+>> +	 */
+>> +	if (IS_ENABLED(CONFIG_KASAN) &&
+>> +	    (base >= ((u64)CONFIG_PHYS_MEM_SIZE_FOR_KASAN << 20))) {
+>> +		pr_warn("KASAN: not adding memory block at %llx (size %llx)\n"
+>> +			"This could be due to discontiguous memory or kernel misconfiguration.",
+>> +			base, *size);
+>> +		return false;
+>> +	}
+>> +
+>>   	if (base >= max_mem)
+>>   		return false;
+>>   	if ((base + *size) > max_mem)
+>> @@ -572,8 +593,11 @@ void __init early_init_dt_add_memory_arch(u64 base, u64 size)
+>>   
+>>   	/* Add the chunk to the MEMBLOCK list */
+>>   	if (add_mem_to_memblock) {
+>> -		if (validate_mem_limit(base, &size))
+>> +		if (validate_mem_limit(base, &size)) {
+>>   			memblock_add(base, size);
+>> +			if (base + size > top_phys_addr)
+>> +				top_phys_addr = base + size;
+>> +		}
 >
-> /Magnus
-
-After looking through the syzcaller report, I have the following
-hypothesis that would dearly need some comments from MM-savy people
-out there. Syzcaller creates, using mmap, a memory area that is
-write-only and supplies this to a getsockopt call (in this case
-XDP_STATISTICS, but probably does not matter really) as the area where
-it wants the values to be stored. When the getsockopt implementation
-gets to copy_to_user() to write out the values to user space, it
-encounters a page fault when accessing this write-only page. When
-servicing this, it gets to the following piece of code that triggers
-the warning that syzcaller reports:
-
-static inline bool cow_user_page(struct page *dst, struct page *src,
-                                 struct vm_fault *vmf)
-{
-....
-snip
-....
-       /*
-         * This really shouldn't fail, because the page is there
-         * in the page tables. But it might just be unreadable,
-         * in which case we just give up and fill the result with
-         * zeroes.
-         */
-        if (__copy_from_user_inatomic(kaddr, uaddr, PAGE_SIZE)) {
-                /*
-                 * Give a warn in case there can be some obscure
-                 * use-case
-                 */
-                WARN_ON_ONCE(1);
-                clear_page(kaddr);
-        }
-
-Before the following commit, it used to look like this:
-
-commit 83d116c53058d505ddef051e90ab27f57015b025
-Author: Jia He <justin.he@arm.com>
-Date:   Fri Oct 11 22:09:39 2019 +0800
-
-    mm: fix double page fault on arm64 if PTE_AF is cleared
-
-static inline bool cow_user_page(struct page *dst, struct page *src,
-                                 struct vm_fault *vmf)
-{
-....
-snip
-....
-                /*
-                 * This really shouldn't fail, because the page is there
-                 * in the page tables. But it might just be unreadable,
-                 * in which case we just give up and fill the result with
-                 * zeroes.
-                 */
-                if (__copy_from_user_inatomic(kaddr, uaddr, PAGE_SIZE))
-                        clear_page(kaddr);
-
-So without a warning. My hypothesis is that if we create a page in the
-same way as syzcaller then any getsockopt that does a copy_to_user()
-(pretty much all of them I guess) will get this warning. I have not
-tried this, so I might be wrong. If this is true, then the question is
-what to do about it. One possible fix would be just to remove the
-warning to get the same behavior as before. But it was probably put
-there for a reason. Maybe some MM person could please comment on the
-best way forward.
-
-
-/Magnus
-
-> > > ------------[ cut here ]------------
-> > > WARNING: CPU: 0 PID: 9104 at mm/memory.c:2229 cow_user_page mm/memory.c:2229
-> > > [inline]
-> > > WARNING: CPU: 0 PID: 9104 at mm/memory.c:2229 wp_page_copy+0x10b7/0x1560
-> > > mm/memory.c:2414
-> > > Kernel panic - not syncing: panic_on_warn set ...
-> > > CPU: 0 PID: 9104 Comm: syz-executor.0 Not tainted 5.5.0-rc1-syzkaller #0
-> > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > > Google 01/01/2011
-> > > Call Trace:
-> > >  __dump_stack lib/dump_stack.c:77 [inline]
-> > >  dump_stack+0x197/0x210 lib/dump_stack.c:118
-> > >  panic+0x2e3/0x75c kernel/panic.c:221
-> > >  __warn.cold+0x2f/0x3e kernel/panic.c:582
-> > >  report_bug+0x289/0x300 lib/bug.c:195
-> > >  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-> > >  fixup_bug arch/x86/kernel/traps.c:169 [inline]
-> > >  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
-> > >  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
-> > >  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-> > > RIP: 0010:cow_user_page mm/memory.c:2229 [inline]
-> > > RIP: 0010:wp_page_copy+0x10b7/0x1560 mm/memory.c:2414
-> > > Code: 4c 89 f7 ba 00 10 00 00 48 81 e6 00 f0 ff ff e8 0f e6 22 06 31 ff 41
-> > > 89 c7 89 c6 e8 23 03 d3 ff 45 85 ff 74 0f e8 99 01 d3 ff <0f> 0b 4c 89 f7 e8
-> > > 3f d8 22 06 e8 8a 01 d3 ff 65 4c 8b 34 25 c0 1e
-> > > RSP: 0018:ffffc90002267668 EFLAGS: 00010293
-> > > RAX: ffff8880a04c6140 RBX: ffffc90002267918 RCX: ffffffff81a22a0d
-> > > RDX: 0000000000000000 RSI: ffffffff81a22a17 RDI: 0000000000000005
-> > > RBP: ffffc900022677a8 R08: ffff8880a04c6140 R09: 0000000000000000
-> > > R10: ffffed101125cfff R11: ffff8880892e7fff R12: ffff88809e403108
-> > > R13: ffffea000224b9c0 R14: ffff8880892e7000 R15: 0000000000001000
-> > >  do_wp_page+0x543/0x1540 mm/memory.c:2724
-> > >  handle_pte_fault mm/memory.c:3961 [inline]
-> > >  __handle_mm_fault+0x327b/0x3da0 mm/memory.c:4075
-> > >  handle_mm_fault+0x3b2/0xa50 mm/memory.c:4112
-> > >  do_user_addr_fault arch/x86/mm/fault.c:1441 [inline]
-> > >  __do_page_fault+0x536/0xd80 arch/x86/mm/fault.c:1506
-> > >  do_page_fault+0x38/0x590 arch/x86/mm/fault.c:1530
-> > >  page_fault+0x39/0x40 arch/x86/entry/entry_64.S:1203
-> > > RIP: 0010:copy_user_generic_unrolled+0x89/0xc0
-> > > arch/x86/lib/copy_user_64.S:91
-> > > Code: 38 4c 89 47 20 4c 89 4f 28 4c 89 57 30 4c 89 5f 38 48 8d 76 40 48 8d
-> > > 7f 40 ff c9 75 b6 89 d1 83 e2 07 c1 e9 03 74 12 4c 8b 06 <4c> 89 07 48 8d 76
-> > > 08 48 8d 7f 08 ff c9 75 ee 21 d2 74 10 89 d1 8a
-> > > RSP: 0018:ffffc90002267bb8 EFLAGS: 00010206
-> > > RAX: 0000000000000001 RBX: 0000000000000018 RCX: 0000000000000003
-> > > RDX: 0000000000000000 RSI: ffffc90002267c58 RDI: 0000000020001300
-> > > RBP: ffffc90002267bf0 R08: 0000000000000000 R09: fffff5200044cf8e
-> > > R10: fffff5200044cf8d R11: ffffc90002267c6f R12: 0000000020001300
-> > > R13: ffffc90002267c58 R14: 0000000020001318 R15: 00007ffffffff000
-> > >  copy_to_user include/linux/uaccess.h:152 [inline]
-> > >  xsk_getsockopt+0x575/0x6c0 net/xdp/xsk.c:898
-> > >  __sys_getsockopt+0x16d/0x310 net/socket.c:2174
-> > >  __do_sys_getsockopt net/socket.c:2189 [inline]
-> > >  __se_sys_getsockopt net/socket.c:2186 [inline]
-> > >  __x64_sys_getsockopt+0xbe/0x150 net/socket.c:2186
-> > >  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-> > >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > > RIP: 0033:0x45a909
-> > > Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7
-> > > 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff
-> > > 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> > > RSP: 002b:00007f0ec9e9ec78 EFLAGS: 00000246 ORIG_RAX: 0000000000000037
-> > > RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 000000000045a909
-> > > RDX: 0000000000000007 RSI: 000000000000011b RDI: 000000000000000a
-> > > RBP: 000000000075bf20 R08: 0000000020000100 R09: 0000000000000000
-> > > R10: 0000000020001300 R11: 0000000000000246 R12: 00007f0ec9e9f6d4
-> > > R13: 00000000004c1ab5 R14: 00000000004d5f60 R15: 00000000ffffffff
-> > > Kernel Offset: disabled
-> > > Rebooting in 86400 seconds..
-> > >
+> Can we use max() here ? Something like
+>
+> top_phys_addr = max(base + size, top_phys_addr);
+>
+>>   	}
+>>   }
+>>   
+>> @@ -613,6 +637,8 @@ static void __init early_reserve_mem_dt(void)
+>>   static void __init early_reserve_mem(void)
+>>   {
+>>   	__be64 *reserve_map;
+>> +	phys_addr_t kasan_shadow_start;
+>> +	phys_addr_t kasan_memory_size;
+>>   
+>>   	reserve_map = (__be64 *)(((unsigned long)initial_boot_params) +
+>>   			fdt_off_mem_rsvmap(initial_boot_params));
+>> @@ -651,6 +677,42 @@ static void __init early_reserve_mem(void)
+>>   		return;
+>>   	}
+>>   #endif
+>> +
+>> +	if (IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_PPC_BOOK3S_64)) {
+>> +		kasan_memory_size =
+>> +			((phys_addr_t)CONFIG_PHYS_MEM_SIZE_FOR_KASAN << 20);
+>> +
+>> +		if (top_phys_addr < kasan_memory_size) {
+>> +			/*
+>> +			 * We are doomed. We shouldn't even be able to get this
+>> +			 * far, but we do in qemu. If we continue and turn
+>> +			 * relocations on, we'll take fatal page faults for
+>> +			 * memory that's not physically present. Instead,
+>> +			 * panic() here: it will be saved to __log_buf even if
+>> +			 * it doesn't get printed to the console.
+>> +			 */
+>> +			panic("Tried to book a KASAN kernel configured for %u MB with only %llu MB! Aborting.",
+>
+> book ==> boot ?
+>
+>> +			      CONFIG_PHYS_MEM_SIZE_FOR_KASAN,
+>> +			      (u64)(top_phys_addr >> 20));
+>> +		} else if (top_phys_addr > kasan_memory_size) {
+>> +			/* print a biiiig warning in hopes people notice */
+>> +			pr_err("===========================================\n"
+>> +				"Physical memory exceeds compiled-in maximum!\n"
+>> +				"This kernel was compiled for KASAN with %u MB physical memory.\n"
+>> +				"The physical memory detected is at least %llu MB.\n"
+>> +				"Memory above the compiled limit will not be used!\n"
+>> +				"===========================================\n",
+>> +				CONFIG_PHYS_MEM_SIZE_FOR_KASAN,
+>> +				(u64)(top_phys_addr >> 20));
+>> +		}
+>> +
+>> +		kasan_shadow_start = _ALIGN_DOWN(kasan_memory_size * 7 / 8,
+>> +						 PAGE_SIZE);
+>
+> Can't this fit on a single line ? powerpc allows 90 chars.
+>
+>> +		DBG("reserving %llx -> %llx for KASAN",
+>> +		    kasan_shadow_start, top_phys_addr);
+>> +		memblock_reserve(kasan_shadow_start,
+>> +				 top_phys_addr - kasan_shadow_start);
+>
+> Same ?
+>
+>> +	}
+>>   }
+>>   
+>>   #ifdef CONFIG_PPC_TRANSACTIONAL_MEM
+>> diff --git a/arch/powerpc/mm/kasan/Makefile b/arch/powerpc/mm/kasan/Makefile
+>> index 6577897673dd..f02b15c78e4d 100644
+>> --- a/arch/powerpc/mm/kasan/Makefile
+>> +++ b/arch/powerpc/mm/kasan/Makefile
+>> @@ -2,4 +2,5 @@
+>>   
+>>   KASAN_SANITIZE := n
+>>   
+>> -obj-$(CONFIG_PPC32)           += kasan_init_32.o
+>> +obj-$(CONFIG_PPC32)           += init_32.o
+>
+> Shouldn't we do ppc32 name change in another patch ?
+>
+>> +obj-$(CONFIG_PPC_BOOK3S_64)   += init_book3s_64.o
+>> diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/init_32.c
+>> similarity index 100%
+>> rename from arch/powerpc/mm/kasan/kasan_init_32.c
+>> rename to arch/powerpc/mm/kasan/init_32.c
+>> diff --git a/arch/powerpc/mm/kasan/init_book3s_64.c b/arch/powerpc/mm/kasan/init_book3s_64.c
+>> new file mode 100644
+>> index 000000000000..f961e96be136
+>> --- /dev/null
+>> +++ b/arch/powerpc/mm/kasan/init_book3s_64.c
+>> @@ -0,0 +1,72 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * KASAN for 64-bit Book3S powerpc
+>> + *
+>> + * Copyright (C) 2019 IBM Corporation
+>> + * Author: Daniel Axtens <dja@axtens.net>
+>> + */
+>> +
+>> +#define DISABLE_BRANCH_PROFILING
+>> +
+>> +#include <linux/kasan.h>
+>> +#include <linux/printk.h>
+>> +#include <linux/sched/task.h>
+>> +#include <asm/pgalloc.h>
+>> +
+>> +void __init kasan_init(void)
+>> +{
+>> +	int i;
+>> +	void *k_start = kasan_mem_to_shadow((void *)RADIX_KERN_VIRT_START);
+>> +	void *k_end = kasan_mem_to_shadow((void *)RADIX_VMEMMAP_END);
+>> +
+>> +	pte_t pte = __pte(__pa(kasan_early_shadow_page) |
+>> +			  pgprot_val(PAGE_KERNEL) | _PAGE_PTE);
+>
+> Can't we do something with existing helpers ? Something like:
+>
+> pte = pte_mkpte(pfn_pte(virt_to_pfn(kasan_early_shadow_page), PAGE_KERNEL));
+>
+>> +
+>> +	if (!early_radix_enabled())
+>> +		panic("KASAN requires radix!");
+>> +
+>> +	for (i = 0; i < PTRS_PER_PTE; i++)
+>> +		__set_pte_at(&init_mm, (unsigned long)kasan_early_shadow_page,
+>> +			     &kasan_early_shadow_pte[i], pte, 0);
+>> +
+>> +	for (i = 0; i < PTRS_PER_PMD; i++)
+>> +		pmd_populate_kernel(&init_mm, &kasan_early_shadow_pmd[i],
+>> +				    kasan_early_shadow_pte);
+>> +
+>> +	for (i = 0; i < PTRS_PER_PUD; i++)
+>> +		pud_populate(&init_mm, &kasan_early_shadow_pud[i],
+>> +			     kasan_early_shadow_pmd);
+>> +
+>> +	memset(kasan_mem_to_shadow((void *)PAGE_OFFSET), KASAN_SHADOW_INIT,
+>> +	       KASAN_SHADOW_SIZE);
+>> +
+>> +	kasan_populate_early_shadow(
+>> +		kasan_mem_to_shadow((void *)RADIX_KERN_VIRT_START),
+>> +		kasan_mem_to_shadow((void *)RADIX_VMALLOC_START));
+>> +
+>> +	/* leave a hole here for vmalloc */
+>> +
+>> +	kasan_populate_early_shadow(
+>> +		kasan_mem_to_shadow((void *)RADIX_VMALLOC_END),
+>> +		kasan_mem_to_shadow((void *)RADIX_VMEMMAP_END));
+>> +
+>> +	flush_tlb_kernel_range((unsigned long)k_start, (unsigned long)k_end);
+>> +
+>> +	/* mark early shadow region as RO and wipe */
+>> +	pte = __pte(__pa(kasan_early_shadow_page) |
+>> +		    pgprot_val(PAGE_KERNEL_RO) | _PAGE_PTE);
+>
+> Same comment as above, use helpers ?
+>
+>> +	for (i = 0; i < PTRS_PER_PTE; i++)
+>> +		__set_pte_at(&init_mm, (unsigned long)kasan_early_shadow_page,
+>> +			     &kasan_early_shadow_pte[i], pte, 0);
+>> +
+>> +	/*
+>> +	 * clear_page relies on some cache info that hasn't been set up yet.
+>> +	 * It ends up looping ~forever and blows up other data.
+>> +	 * Use memset instead.
+>> +	 */
+>> +	memset(kasan_early_shadow_page, 0, PAGE_SIZE);
+>> +
+>> +	/* Enable error messages */
+>> +	init_task.kasan_depth = 0;
+>> +	pr_info("KASAN init done (64-bit Book3S heavyweight mode)\n");
+>> +}
+>> 
+>
+> Christophe
