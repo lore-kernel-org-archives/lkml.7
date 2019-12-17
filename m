@@ -2,51 +2,121 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA4FC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 033B1C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:14:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 945D52072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7373206D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:14:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727434AbfLQKOA (ORCPT
+        id S1727484AbfLQKOx convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 05:14:00 -0500
-Received: from 8bytes.org ([81.169.241.247]:57680 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727262AbfLQKOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 05:14:00 -0500
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 14A50286; Tue, 17 Dec 2019 11:13:59 +0100 (CET)
-Date:   Tue, 17 Dec 2019 11:13:57 +0100
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Xiaotao Yin <xiaotao.yin@windriver.com>
-Cc:     robin.murphy@arm.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Kexin.Hao@windriver.com
-Subject: Re: [PATCH V3] iommu/iova: Init the struct iova to fix the possible
- memleak
-Message-ID: <20191217101357.GK8689@8bytes.org>
-References: <20191210042704.14693-1-xiaotao.yin@windriver.com>
+        Tue, 17 Dec 2019 05:14:53 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:32553 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727412AbfLQKOw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 05:14:52 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-154-AvZdXMAZPQGpt4vWLobGDQ-1; Tue, 17 Dec 2019 10:14:49 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 17 Dec 2019 10:14:48 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 17 Dec 2019 10:14:48 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Aleksa Sarai' <asarai@suse.de>
+CC:     'Aleksa Sarai' <cyphar@cyphar.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Jeff Layton" <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        "Shuah Khan" <shuah@kernel.org>,
+        "dev@opencontainers.org" <dev@opencontainers.org>,
+        "containers@lists.linux-foundation.org" 
+        <containers@lists.linux-foundation.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
+Subject: RE: [PATCH] openat2: switch to __attribute__((packed)) for open_how
+Thread-Topic: [PATCH] openat2: switch to __attribute__((packed)) for open_how
+Thread-Index: AQHVs0QYCtoODE3sD0awPNQRMi+YuKe8+0pQgADpsgCAADgwUA==
+Date:   Tue, 17 Dec 2019 10:14:48 +0000
+Message-ID: <6630d0573b5b40da8efc58fc20ac445e@AcuMS.aculab.com>
+References: <20191213222351.14071-1-cyphar@cyphar.com>
+ <a328b91d-fd8f-4f27-b3c2-91a9c45f18c0@rasmusvillemoes.dk>
+ <20191215123443.jmfnrtgbscdwfohc@yavin.dot.cyphar.com>
+ <b26ef210ec5b42009cf09b1015065768@AcuMS.aculab.com>
+ <20191217064650.cd4bfb5d2koe6j7h@yavin.dot.cyphar.com>
+In-Reply-To: <20191217064650.cd4bfb5d2koe6j7h@yavin.dot.cyphar.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191210042704.14693-1-xiaotao.yin@windriver.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MC-Unique: AvZdXMAZPQGpt4vWLobGDQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 12:27:04PM +0800, Xiaotao Yin wrote:
-> Fixes: bb68b2fbfbd6 ("iommu/iova: Add rbtree anchor node")
-> Signed-off-by: Xiaotao Yin <xiaotao.yin@windriver.com>
-> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-> ---
->  drivers/iommu/iova.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+From Aleksa Sarai
+> Sent: 17 December 2019 06:47
+...
+> > Just use u64 for all the fields.
+> 
+> That is an option (and is the one that clone3 went with), but it's a bit
+> awkward because umode_t is a u16 -- and it would be a waste of 6 bytes
+> to store it as a u64. Arguably it could be extended but I personally
+> find that to be very unlikely (and lots of other syscalls would need be
+> updated).
 
-Okay, missed that. Replaced the previous patch by this one. Thanks.
+6 bytes on interface structure will make almost no difference.
+There is no reason to save more than 16 bits anywhere else.
+You could error values with high bits set.
+
+> I'm just going to move the padding to the end and change the error for
+> non-zero padding to -E2BIG.
+
+The padding had to be after the u16 field.
+
+> > Use 'flags' bits to indicate whether the additional fields should be looked at.
+> > Error if a 'flags' bit requires a value that isn't passed in the structure.
+> >
+> > Then you can add an extra field and old source code recompiled with the
+> > new headers will still work - because the 'junk' value isn't looked at.
+> 
+> This problem is already handled entirely by copy_struct_from_user().
+> 
+> It is true that for some new fields it will be necessary to add a new
+> flag (such as passing fds -- where 0 is a valid value) but for most new
+> fields (especially pointer or flag fields) it will not be necessary
+> because the 0 value is equivalent to the old behaviour. It also allows
+> us to entirely avoid accepting junk from userspace.
+
+Only if userspace is guaranteed to memset the entire structure
+before making the call - rather than just fill in all the fields it knows about.
+If it doesn't use memset() then recompiling old code with new headers
+will pass garbage to the kernel.
+copy_struct_from_user() cannot solve that problem.
+You'll never be able to guarantee that all code actually clears the
+entire structure - so at some point extending it will break recompilations
+of old code - annoying.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
