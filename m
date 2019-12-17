@@ -2,143 +2,170 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECEEC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 02:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A174C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 02:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 754DD2082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 02:00:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tm1I36Oi"
+	by mail.kernel.org (Postfix) with ESMTP id D28E02082E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 02:02:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbfLQCAa (ORCPT
+        id S1726681AbfLQCCj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 21:00:30 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47312 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726180AbfLQCAa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 21:00:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576548029;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:in-reply-to:in-reply-to:  references:references;
-        bh=rPjKUP3c5OBgFxjGzOJRPYxmS5qHOOKhkgjmkw+YN2I=;
-        b=Tm1I36OiIFq/QZzccKweDyHULLc1YkRbaknYVBgtMkYQApd5VUVWV0WIzC3o4o1oQnDvi/
-        GqEFE5k1WTjj7z0bd/Xb4MR+UPN3dLGCfLjfi2a3P9fD2aa4k/JqVueKvYFikFvIjAsAQr
-        cibYedeZEGGqEpCH2L5EFg3FLLHUjIE=
-Received: from mail-yw1-f70.google.com (mail-yw1-f70.google.com
- [209.85.161.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-363-0F2LHWcmNpa0xjdqwvduhw-1; Mon, 16 Dec 2019 21:00:26 -0500
-X-MC-Unique: 0F2LHWcmNpa0xjdqwvduhw-1
-Received: by mail-yw1-f70.google.com with SMTP id 16so6992485ywz.5
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 18:00:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=rPjKUP3c5OBgFxjGzOJRPYxmS5qHOOKhkgjmkw+YN2I=;
-        b=DjjxEcJnQ888D/IVoC4LJngedSINLBNO2ZhQ4IEBwghtKHViVGAeozV05AeEgGWavE
-         uxDDCpwlGn0UVcwjxMR0iO8IfJnroKW0yektjhGdps8NoKaugTZxDTg3NiS0v6RY5D2b
-         K6LVcarstJPh4eULOxFPvShqKxCBZsGSSAQO4K4UkhWba/C50pP/1ZFRO9Fq1UyGI1Co
-         VoOLy6eg1mY0/UB9qEXAK4wTIO6lki4sKEtvUR4EOQ817Wz3EvkbXTK4qUvA4NKtMYfI
-         o8CBnNOcgLnhG1e22myXDdU0TROAN+zaesHYNzLyDpRSbN4xexzc4NPSnIpdITSmZons
-         ATew==
-X-Gm-Message-State: APjAAAUhtud0JSeSFO8DdFAKWQApJf3+QXbYqA3QN9TgzTwYFFkaDqDI
-        lmPvdFcr5rRSxc3alF6ua9+29dAGqddMXYQKBTObWkJ2v/+Hqg4rDqncldGRkEYHGjh4OckuAKr
-        Ttjw5kRSIe3SI7LsMbhx9ZsJN
-X-Received: by 2002:a25:8c9:: with SMTP id 192mr4617222ybi.328.1576548025512;
-        Mon, 16 Dec 2019 18:00:25 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzSHXlqGOcOwe8mrQawvzd98LxvqAZaVnHrkCZ/xB8ek5ZKZOwysxZHuTASPJ2GCZv3Avp1zw==
-X-Received: by 2002:a25:8c9:: with SMTP id 192mr4617202ybi.328.1576548025222;
-        Mon, 16 Dec 2019 18:00:25 -0800 (PST)
-Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
-        by smtp.gmail.com with ESMTPSA id n1sm2256975ywe.78.2019.12.16.18.00.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 18:00:24 -0800 (PST)
-Date:   Mon, 16 Dec 2019 19:00:22 -0700
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christian Bundy <christianbundy@fraction.io>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        stable <stable@vger.kernel.org>, linux-integrity@vger.kernel.org
-Subject: Re: [PATCH v2] tpm_tis: reserve chip for duration of
- tpm_tis_core_init
-Message-ID: <20191217020022.knh7uxt4pn77wk5m@cantor>
-Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
-Mail-Followup-To: Dan Williams <dan.j.williams@intel.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christian Bundy <christianbundy@fraction.io>,
-        Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        stable <stable@vger.kernel.org>, linux-integrity@vger.kernel.org
-References: <20191211231758.22263-1-jsnitsel@redhat.com>
- <20191211235455.24424-1-jsnitsel@redhat.com>
- <5aef0fbe28ed23b963c53d61445b0bac6f108642.camel@linux.intel.com>
- <CAPcyv4h60z889bfbiwvVhsj6MxmOPiPY8ZuPB_skxkZx-N+OGw@mail.gmail.com>
+        Mon, 16 Dec 2019 21:02:39 -0500
+Received: from smtp.h3c.com ([60.191.123.50]:47924 "EHLO h3cspam02-ex.h3c.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726133AbfLQCCj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 21:02:39 -0500
+Received: from DAG2EX10-IDC.srv.huawei-3com.com ([10.8.0.73])
+        by h3cspam02-ex.h3c.com with ESMTPS id xBH22396048138
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 17 Dec 2019 10:02:03 +0800 (GMT-8)
+        (envelope-from li.kai4@h3c.com)
+Received: from DAG2EX10-IDC.srv.huawei-3com.com (10.8.0.73) by
+ DAG2EX10-IDC.srv.huawei-3com.com (10.8.0.73) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 17 Dec 2019 10:02:04 +0800
+Received: from BJHUB01-EX.srv.huawei-3com.com (10.63.20.169) by
+ DAG2EX10-IDC.srv.huawei-3com.com (10.8.0.73) with Microsoft SMTP Server
+ (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.1.1713.5
+ via Frontend Transport; Tue, 17 Dec 2019 10:02:04 +0800
+Received: from RDVDI-L14391V.h3c.huawei-3com.com (10.125.108.72) by
+ rndsmtp.h3c.com (10.63.20.174) with Microsoft SMTP Server id 14.3.408.0; Tue,
+ 17 Dec 2019 10:01:52 +0800
+From:   Kai Li <li.kai4@h3c.com>
+To:     <mark@fasheh.com>, <jlbec@evilplan.org>,
+        <joseph.qi@linux.alibaba.com>, <chge@linux.alibaba.com>
+CC:     <ocfs2-devel@oss.oracle.com>, <linux-kernel@vger.kernel.org>,
+        Kai Li <li.kai4@h3c.com>
+Subject: [PATCH v3] ocfs2: call journal flush to mark journal as empty after journal recovery when mount
+Date:   Tue, 17 Dec 2019 10:01:40 +0800
+Message-ID: <20191217020140.2197-1-li.kai4@h3c.com>
+X-Mailer: git-send-email 2.24.0.windows.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4h60z889bfbiwvVhsj6MxmOPiPY8ZuPB_skxkZx-N+OGw@mail.gmail.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.125.108.72]
+X-DNSRBL: 
+X-MAIL: h3cspam02-ex.h3c.com xBH22396048138
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon Dec 16 19, Dan Williams wrote:
->On Mon, Dec 16, 2019 at 4:59 PM Jarkko Sakkinen
-><jarkko.sakkinen@linux.intel.com> wrote:
->>
->> On Wed, 2019-12-11 at 16:54 -0700, Jerry Snitselaar wrote:
->> > Instead of repeatedly calling tpm_chip_start/tpm_chip_stop when
->> > issuing commands to the tpm during initialization, just reserve the
->> > chip after wait_startup, and release it when we are ready to call
->> > tpm_chip_register.
->> >
->> > Cc: Christian Bundy <christianbundy@fraction.io>
->> > Cc: Dan Williams <dan.j.williams@intel.com>
->> > Cc: Peter Huewe <peterhuewe@gmx.de>
->> > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
->> > Cc: Jason Gunthorpe <jgg@ziepe.ca>
->> > Cc: Stefan Berger <stefanb@linux.vnet.ibm.com>
->> > Cc: stable@vger.kernel.org
->> > Cc: linux-integrity@vger.kernel.org
->> > Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of tpm_transmit()")
->> > Fixes: 5b359c7c4372 ("tpm_tis_core: Turn on the TPM before probing IRQ's")
->> > Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
->>
->> I pushed to my master with minor tweaks and added my tags.
->>
->> Please check before I put it to linux-next.
->
->I don't see it yet here:
->
->http://git.infradead.org/users/jjs/linux-tpmdd.git/shortlog/refs/heads/master
->
->However, I wanted to make sure you captured that this does *not* fix
->the interrupt issue. I.e. make sure you remove the "Fixes:
->5b359c7c4372 ("tpm_tis_core: Turn on the TPM before probing IRQ's")"
->tag.
->
->With that said, are you going to include the revert of:
->
->1ea32c83c699 tpm_tis_core: Set TPM_CHIP_FLAG_IRQ before probing for interrupts
+If journal is dirty when mount, it will be replayed but jbd2 sb
+log tail cannot be updated to mark a new start because
+journal->j_flag has already been set with JBD2_ABORT first
+in journal_init_common. When a new transaction is committed, it
+will be recored in block 1 first(journal->j_tail is set to 1 in
+journal_reset).If emergency restart happens again before journal
+super block is updated unfortunately, the new recorded trans will
+not be replayed in the next mount.
 
-Dan, with the above reverted do you still get the screaming interrupt?
+The following steps describe this procedure in detail.
+1. mount and touch some files
+2. these transactions are committed to journal area but not checkpointed
+3. emergency restart
+4. mount again and its journals are replayed
+5. journal super block's first s_start is 1, but its s_seq is not updated
+6. touch a new file and its trans is committed but not checkpointed
+7. emergency restart again
+8. mount and journal is dirty, but trans committed in 6 will not be
+replayed.
 
->5b359c7c4372 tpm_tis_core: Turn on the TPM before probing IRQ's
->
->...in your -rc3 pull?
->
+This exception happens easily when this lun is used by only one node. If it
+is used by multi-nodes, other node will replay its journal and its
+journal super block will be updated after recovery like what this patch
+does.
+
+ocfs2_recover_node->ocfs2_replay_journal.
+
+The following jbd2 journal can be generated by touching a new file after
+journal is replayed, and seq 15 is the first valid commit, but first seq
+is 13 in journal super block.
+logdump:
+Block 0: Journal Superblock
+Seq: 0   Type: 4 (JBD2_SUPERBLOCK_V2)
+Blocksize: 4096   Total Blocks: 32768   First Block: 1
+First Commit ID: 13   Start Log Blknum: 1
+Error: 0
+Feature Compat: 0
+Feature Incompat: 2 block64
+Feature RO compat: 0
+Journal UUID: 4ED3822C54294467A4F8E87D2BA4BC36
+FS Share Cnt: 1   Dynamic Superblk Blknum: 0
+Per Txn Block Limit    Journal: 0    Data: 0
+
+Block 1: Journal Commit Block
+Seq: 14   Type: 2 (JBD2_COMMIT_BLOCK)
+
+Block 2: Journal Descriptor
+Seq: 15   Type: 1 (JBD2_DESCRIPTOR_BLOCK)
+No. Blocknum        Flags
+ 0. 587             none
+UUID: 00000000000000000000000000000000
+ 1. 8257792         JBD2_FLAG_SAME_UUID
+ 2. 619             JBD2_FLAG_SAME_UUID
+ 3. 24772864        JBD2_FLAG_SAME_UUID
+ 4. 8257802         JBD2_FLAG_SAME_UUID
+ 5. 513             JBD2_FLAG_SAME_UUID JBD2_FLAG_LAST_TAG
+...
+Block 7: Inode
+Inode: 8257802   Mode: 0640   Generation: 57157641 (0x3682809)
+FS Generation: 2839773110 (0xa9437fb6)
+CRC32: 00000000   ECC: 0000
+Type: Regular   Attr: 0x0   Flags: Valid
+Dynamic Features: (0x1) InlineData
+User: 0 (root)   Group: 0 (root)   Size: 7
+Links: 1   Clusters: 0
+ctime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
+atime: 0x5de5d870 0x113181a1 -- Tue Dec  3 11:37:20.288457121 2019
+mtime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
+dtime: 0x0 -- Thu Jan  1 08:00:00 1970
+...
+Block 9: Journal Commit Block
+Seq: 15   Type: 2 (JBD2_COMMIT_BLOCK)
+
+The following is jouranl recovery log when recovering the upper jbd2
+journal when mount again.
+syslog:
+[ 2265.648622] ocfs2: File system on device (252,1) was not unmounted cleanly, recovering it.
+[ 2265.649695] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 0
+[ 2265.650407] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 1
+[ 2265.650409] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 2
+[ 2265.650410] fs/jbd2/recovery.c:(jbd2_journal_recover, 278): JBD2: recovery, exit status 0, recovered transactions 13 to 13
+
+Due to first commit seq 13 recorded in journal super is not consistent
+with the value recorded in block 1(seq is 14), journal recovery will be
+terminated before seq 15 even though it is an unbroken commit, inode
+8257802 is a new file and it will be lost.
+
+Signed-off-by: Kai Li <li.kai4@h3c.com>
+---
+ fs/ocfs2/journal.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/fs/ocfs2/journal.c b/fs/ocfs2/journal.c
+index 1afe57f425a0..68ba354cf361 100644
+--- a/fs/ocfs2/journal.c
++++ b/fs/ocfs2/journal.c
+@@ -1066,6 +1066,14 @@ int ocfs2_journal_load(struct ocfs2_journal *journal, int local, int replayed)
+ 
+ 	ocfs2_clear_journal_error(osb->sb, journal->j_journal, osb->slot_num);
+ 
++	if (replayed) {
++		jbd2_journal_lock_updates(journal->j_journal);
++		status = jbd2_journal_flush(journal->j_journal);
++		jbd2_journal_unlock_updates(journal->j_journal);
++		if (status < 0)
++			mlog_errno(status);
++	}
++
+ 	status = ocfs2_journal_toggle_dirty(osb, 1, replayed);
+ 	if (status < 0) {
+ 		mlog_errno(status);
+-- 
+2.24.0.windows.2
 
