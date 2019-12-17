@@ -2,116 +2,143 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E7E6C2D0C5
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B4CBC2D0C5
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:14:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 460602176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:13:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576556030;
-	bh=TQMMeBBZrVKYEy0YvA+gnlD3IzbyNHER3EDmj07O190=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ll4YC/wGIHLxqzJ0Ztezy71tW8/gK9TlcQ4OCwtgvsY+VYKuuA6HI6ObWug76ME66
-	 4O0oncJ9116xFeCqJAITFEARwa9oiIYHvdoD9qC1EMyPrtKC0/zr6FQjBjTEMlSoeA
-	 JxgZKW/Y2jdoAoo6w71YBGEB5i73u39PNIcKoxxo=
+	by mail.kernel.org (Postfix) with ESMTP id CD0F4206E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:14:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="DTVF5TAP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbfLQENt (ORCPT
+        id S1727565AbfLQEOA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 23:13:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35914 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725836AbfLQENt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 23:13:49 -0500
-Received: from localhost (unknown [171.61.91.91])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95A23206E6;
-        Tue, 17 Dec 2019 04:13:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576556028;
-        bh=TQMMeBBZrVKYEy0YvA+gnlD3IzbyNHER3EDmj07O190=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xJmHkIQcN4IiGutvhNuTe5LhQqWgs03XXk8b1vSQECWNfA31QEDiw7XQ2/6Omsx+L
-         N3Ne/OmncLMpEHBBhuRJ82BZkKTT5/xa3O8cO6H5Fl9aYEjvFfC4ZmAy6ZhgmY/V+A
-         Uurc8yJvr+4ET0UVLz/jET1qyN23Kv7XeGPf4dz0=
-Date:   Tue, 17 Dec 2019 09:43:42 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     cang@codeaurora.org
-Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, asutoshd@codeaurora.org,
-        nguyenb@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com,
-        Andy Gross <agross@kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 2/7] scsi: ufs-qcom: Add reset control support for
- host controller
-Message-ID: <20191217041342.GM2536@vkoul-mobl>
-References: <1573798172-20534-1-git-send-email-cang@codeaurora.org>
- <1573798172-20534-3-git-send-email-cang@codeaurora.org>
- <20191216190415.GL2536@vkoul-mobl>
- <CAOCk7NpAp+DHBp-owyKGgJFLRajfSQR6ff1XMmAj6A4nM3VnMQ@mail.gmail.com>
- <091562cbe7d88ca1c30638bc10197074@codeaurora.org>
+        Mon, 16 Dec 2019 23:14:00 -0500
+Received: from mail-eopbgr680070.outbound.protection.outlook.com ([40.107.68.70]:51681
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727404AbfLQEOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 23:14:00 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XXMqrjGRpmmrj4EiDTXwH2N311OPoG/IIiEYNM5hocPiaHI/P8F+F4i8W1gT3yCwj1D/ROZc90+FkIEAksFt8Z+hZkqOe+TY7IzVjUlh573SmZvtwFlKAgo2NeDyUKnZ4ThHmQiIHkwbbD9smRge/bix7dOxdAlWPa8LddtoXU2W7M66DiHTlgbXb38eWF33GvoIUa/n7GeNNVjVU0RT4VGqsAMl4D6BhruS1EPcvWf1q5qwQzNUz+z9yB1dAs7HrPb9sNXtpwJHAmUEBEsFsCJAdKlidjK24BzYh2h4V5Jbb/TIbPK3MS0gCkjnrB06Zv5RWBquL4JB2CyAq/pvJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W27erezjQteOZFuVTOP2dSh8eBcNx32M2EwpBX8/oVc=;
+ b=MK9TpxRWWZROXJHa2ue3rp6ELSl+E64Ks00gXRAbl/6KASoi7z5mWkcflfe324GiNrSpIrl7wJVPbJ1I6fP8y8s9zO8XGla2C0T0F4y6iOaPV6xgtDI4zKFOTrBlh3p6ODLh9xDeJ21hY25NZ7yBOIyFSE2iU2dpFckBWkOlbJy3AFdT1Mc20/iLn30W5ys91t9a2LK4WtrGZgiwo/hkNaimix0zC5Lw2FpeHI7FMie+LfQKpZSpLXZT/g2boGsuLLP7IKr1Nmd+jGs4ytmxiO/XBIHUDxbNecb9TO1G2igzSl2Zv8gi4OqKUywvpHSlB5HAM/cLjuwgenDbPw+7Xw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
+ dkim=pass header.d=vmware.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W27erezjQteOZFuVTOP2dSh8eBcNx32M2EwpBX8/oVc=;
+ b=DTVF5TAPCg9C+HeHOKvh6eN5AK9tYU0MTPxRJG4sBm1d0TFrUkkjmXN3mZeKnJ1plGUkM7EAsd6UvMHY5dPNgSV2nUKaMWIU2t0PUKfNtEngvOei0VAjO0fXcGZ/GH2QNiKfdvlSxA0bndvlnFwh+RSDfhEJqJ+peYWiZrbNoD0=
+Received: from MN2PR05MB6208.namprd05.prod.outlook.com (20.178.241.91) by
+ MN2PR05MB6464.namprd05.prod.outlook.com (20.178.246.202) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2559.12; Tue, 17 Dec 2019 04:13:57 +0000
+Received: from MN2PR05MB6208.namprd05.prod.outlook.com
+ ([fe80::ed0d:9029:720c:1459]) by MN2PR05MB6208.namprd05.prod.outlook.com
+ ([fe80::ed0d:9029:720c:1459%2]) with mapi id 15.20.2559.012; Tue, 17 Dec 2019
+ 04:13:57 +0000
+From:   Ajay Kaher <akaher@vmware.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "punit.agrawal@arm.com" <punit.agrawal@arm.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        "willy@infradead.org" <willy@infradead.org>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "mszeredi@redhat.com" <mszeredi@redhat.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Srivatsa Bhat <srivatsab@vmware.com>,
+        "srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>,
+        Alexey Makhalov <amakhalov@vmware.com>,
+        Srinidhi Rao <srinidhir@vmware.com>,
+        Vikash Bansal <bvikas@vmware.com>,
+        Anish Swaminathan <anishs@vmware.com>,
+        Vasavi Sirnapalli <vsirnapalli@vmware.com>,
+        Steven Rostedt <srostedt@vmware.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v3 8/8] x86, mm, gup: prevent get_page() race with munmap
+ in paravirt guest
+Thread-Topic: [PATCH v3 8/8] x86, mm, gup: prevent get_page() race with munmap
+ in paravirt guest
+Thread-Index: AQHVtA8fuh6znFRRV0qqDxHv/b6uMqe8uqWAgAAHRQCAAASqgIAAF2sAgAAQAgCAASbBAA==
+Date:   Tue, 17 Dec 2019 04:13:55 +0000
+Message-ID: <DDB0E6FC-1338-4E38-BD79-3325399C3E81@vmware.com>
+References: <1576529149-14269-1-git-send-email-akaher@vmware.com>
+ <1576529149-14269-9-git-send-email-akaher@vmware.com>
+ <20191216130443.GN2844@hirez.programming.kicks-ass.net>
+ <87lfrc9z3v.fsf@vitty.brq.redhat.com>
+ <20191216134725.GE2827@hirez.programming.kicks-ass.net>
+ <1aacc7ac-87b0-e22e-a265-ea175506844d@suse.cz>
+ <87immg9rsv.fsf@vitty.brq.redhat.com>
+In-Reply-To: <87immg9rsv.fsf@vitty.brq.redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=akaher@vmware.com; 
+x-originating-ip: [103.19.212.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0bd35fc9-e913-4fe7-8fdc-08d782a7894c
+x-ms-traffictypediagnostic: MN2PR05MB6464:|MN2PR05MB6464:|MN2PR05MB6464:
+x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR05MB64644D62614B7FF310B915F4BB500@MN2PR05MB6464.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 02543CD7CD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(396003)(346002)(376002)(39860400002)(43544003)(199004)(189003)(33656002)(4744005)(966005)(8936002)(5660300002)(316002)(86362001)(81156014)(71200400001)(81166006)(6486002)(2616005)(91956017)(76116006)(66476007)(66946007)(66556008)(64756008)(66446008)(2906002)(6506007)(7416002)(36756003)(110136005)(54906003)(8676002)(478600001)(186003)(6512007)(4326008)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR05MB6464;H:MN2PR05MB6208.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Lwipi+0FLjWKowyPcdLkbMj89UFHRc2VVoev8wbZsYz1+zwOuf1CwlsPnavyn7D/VbkXOq7xRuJFTrHYVgiSCy8DF6kpLrt+ROFZS8jQFLQKD7x+JXOGSDfgZg8rI9RTW54KBVr4vI8cDfI5lMXT0vtl7i4gqFfd3vOfIuXm0n9IS9CCzzIYPJgqS7ltoujuwCdR76YRL36zogmRkmQSSb9WA4Jla3//PFxOkkUQet1LarX9mGz6F9xtYZe5BxjiKkcGGHKwZML38YUVgyG2QBCwHwWeEOI0j64YCwHWlv8fkx6AeF4mJoKucGQA1TyxCA3KCqBSumtNxfGAj4iOuIy2ynET87Y/agMAw1XDUeLthe+ON8oEbj1NAQxSuErafnT7JfxP2f4BRGF5JuyEKhkSMV14wyBU/7ViDoOTkADKvW8sQ3UnKKdt4pDjlfOUazGDKvjBMSfU6FAIcyeOBKMyFADvMXVjtfI9CAM7yl0Q+6KuqgtmxhLkJ7P7jabNJDeXRbrz3SwEouv3DwNm9antb2o70I8Y/LwZ76hLFD0=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5634395AAEA93349A97693DA064689AB@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <091562cbe7d88ca1c30638bc10197074@codeaurora.org>
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0bd35fc9-e913-4fe7-8fdc-08d782a7894c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Dec 2019 04:13:56.7431
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1gUNXjJRpcBoUROM72QMwCq476uGvolsx43KVNO+VbCLTUblKoQQWn1kraV8cRp/ChlS4SuTh31FdK4rGUcMoA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR05MB6464
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Can,
-
-On 17-12-19, 08:37, cang@codeaurora.org wrote:
-> On 2019-12-17 03:12, Jeffrey Hugo wrote:
-> > On Mon, Dec 16, 2019 at 12:05 PM Vinod Koul <vkoul@kernel.org> wrote:
-> > > 
-> > > Hi Can,
-> > > 
-> > > On 14-11-19, 22:09, Can Guo wrote:
-> > > > Add reset control for host controller so that host controller can be reset
-> > > > as required in its power up sequence.
-> > > 
-> > > I am seeing a regression on UFS on SM8150-mtp with this patch. I think
-> > > Jeff is seeing same one lenove laptop on 8998.
-> > 
-> > Confirmed.
-> > 
-> > > 
-> > > 845 does not seem to have this issue and only thing I can see is
-> > > that on
-> > > sm8150 and 8998 we define reset as:
-> > > 
-> > >                         resets = <&gcc GCC_UFS_BCR>;
-> > >                         reset-names = "rst";
-> > > 
-> 
-> Hi Jeffrey and Vinod,
-> 
-> Thanks for reporting this. May I know what kind of regression do you see on
-> 8150 and 8998?
-> BTW, do you have reset control for UFS PHY in your DT?
-> See 71278b058a9f8752e51030e363b7a7306938f64e.
-> 
-> FYI, we use reset control on all of our platforms and it is
-> a must during our power up sequence.
-
-Yes we do have this and additionally both the DTS describe a 'rst' reset
-and this patch tries to use this.
-
-Can you please tell me which platform this was tested on how the reset
-was described in DT
-
-Thanks
--- 
-~Vinod
+DQoNCu+7v09uIDE2LzEyLzE5LCA5OjM4IFBNLCAiVml0YWx5IEt1em5ldHNvdiIgPHZrdXpuZXRz
+QHJlZGhhdC5jb20+IHdyb3RlOg0KDQo+IChJIGFsc28gZGlzbGlrZSByZWNlaXZpbmcgb25seSB0
+aGlzIHBhdGNoIG9mIHRoZSBzZXJpZXMsIG5leHQgdGltZQ0KPiBwbGVhc2Ugc2VuZCB0aGUgd2hv
+bGUgdGhpbmcsIGl0J3Mgb25seSA4IHBhdGNoZXMsIG91ciBtYWlsZm9sZGVycyB3aWxsDQo+IHN1
+cnZpdmUgdGhhdCkNCg0KVGhhbmtzIGZvciBwb2ludGluZyB0aGlzLCBJIHdpbGwgdGFrZSBjYXJl
+LiANCg0KPiBJJ20gbm90IHN1cmUgd2hpY2ggc3RhYmxlIGtlcm5lbCB5b3UncmUgdGFyZ2V0aW5n
+IChhbmQgaWYgeW91IGFkZHJlc3NlZCB0aGlzDQo+IHdpdGggb3RoZXIgcGF0Y2hlcyBpbiB0aGUg
+c2VyaWVzLCBpZiB0aGlzIGlzIG5lZWRlZCwuLi4pIHNvIEpGWUkuDQoNClRoaXMgc2VyaWVzIGlz
+IGZvciA0LjQueSwgcGxlYXNlIHJlZmVyIGZvbGxvd2luZyBsaW5rIGZvciBjb21wbGV0ZSBzZXJp
+ZXM6DQpodHRwczovL2xvcmUua2VybmVsLm9yZy9zdGFibGUvMTU3NjUyOTE0OS0xNDI2OS0xLWdp
+dC1zZW5kLWVtYWlsLWFrYWhlckB2bXdhcmUuY29tLw0KDQpZZXMsIHRoaXMgJ1BhdGNoIHYzIDgv
+OCcgY291bGQgYmUgbWVyZ2VkIHNlcGFyYXRlbHksIGlmIGl0J3MgdW5zYWZlIHRvIG1lcmdlIGF0
+IHRoaXMgbW92ZW1lbnQuICANCg0KLSBBamF5DQogICAgDQogICAgDQoNCg==
