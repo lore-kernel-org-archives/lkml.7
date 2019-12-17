@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3997C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67816C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B652924673
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:58:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A99024673
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:58:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728017AbfLQA6k (ORCPT
+        id S1728019AbfLQA6n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:58:40 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34822 "EHLO
+        Mon, 16 Dec 2019 19:58:43 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34808 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726757AbfLQAvi (ORCPT
+        by vger.kernel.org with ESMTP id S1726747AbfLQAvh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 19:51:38 -0500
+        Mon, 16 Dec 2019 19:51:37 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15I-0003Kl-1m; Tue, 17 Dec 2019 00:51:32 +0000
+        id 1ih15I-0003Ku-3F; Tue, 17 Dec 2019 00:51:32 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15H-0005Wf-OX; Tue, 17 Dec 2019 00:51:31 +0000
+        id 1ih15H-0005Wa-Nj; Tue, 17 Dec 2019 00:51:31 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,12 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jeff Layton" <jlayton@kernel.org>,
-        "Ilya Dryomov" <idryomov@gmail.com>
-Date:   Tue, 17 Dec 2019 00:46:39 +0000
-Message-ID: <lsq.1576543535.764911256@decadent.org.uk>
+        "Max Filippov" <jcmvbkbc@gmail.com>
+Date:   Tue, 17 Dec 2019 00:46:38 +0000
+Message-ID: <lsq.1576543535.181663094@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 065/136] ceph: just skip unrecognized info in
- ceph_reply_info_extra
+Subject: [PATCH 3.16 064/136] xtensa: drop EXPORT_SYMBOL for outs*/ins*
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,77 +54,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jeff Layton <jlayton@kernel.org>
+From: Max Filippov <jcmvbkbc@gmail.com>
 
-commit 1d3f87233e26362fc3d4e59f0f31a71b570f90b9 upstream.
+commit 8b39da985194aac2998dd9e3a22d00b596cebf1e upstream.
 
-In the future, we're going to want to extend the ceph_reply_info_extra
-for create replies. Currently though, the kernel code doesn't accept an
-extra blob that is larger than the expected data.
+Custom outs*/ins* implementations are long gone from the xtensa port,
+remove matching EXPORT_SYMBOLs.
+This fixes the following build warnings issued by modpost since commit
+15bfc2348d54 ("modpost: check for static EXPORT_SYMBOL* functions"):
 
-Change the code to skip over any unrecognized fields at the end of the
-extra blob, rather than returning -EIO.
+  WARNING: "insb" [vmlinux] is a static EXPORT_SYMBOL
+  WARNING: "insw" [vmlinux] is a static EXPORT_SYMBOL
+  WARNING: "insl" [vmlinux] is a static EXPORT_SYMBOL
+  WARNING: "outsb" [vmlinux] is a static EXPORT_SYMBOL
+  WARNING: "outsw" [vmlinux] is a static EXPORT_SYMBOL
+  WARNING: "outsl" [vmlinux] is a static EXPORT_SYMBOL
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
-[bwh: Backported to 3.16: adjust context]
+Fixes: d38efc1f150f ("xtensa: adopt generic io routines")
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/ceph/mds_client.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ arch/xtensa/kernel/xtensa_ksyms.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -199,8 +199,8 @@ static int parse_reply_info_dir(void **p
- 	}
+--- a/arch/xtensa/kernel/xtensa_ksyms.c
++++ b/arch/xtensa/kernel/xtensa_ksyms.c
+@@ -114,13 +114,6 @@ EXPORT_SYMBOL(__invalidate_icache_range)
+ // FIXME EXPORT_SYMBOL(screen_info);
+ #endif
  
- done:
--	if (*p != end)
--		goto bad;
-+	/* Skip over any unrecognized fields */
-+	*p = end;
- 	return 0;
- 
- bad:
-@@ -221,12 +221,10 @@ static int parse_reply_info_filelock(voi
- 		goto bad;
- 
- 	info->filelock_reply = *p;
--	*p += sizeof(*info->filelock_reply);
- 
--	if (unlikely(*p != end))
--		goto bad;
-+	/* Skip over any unrecognized fields */
-+	*p = end;
- 	return 0;
+-EXPORT_SYMBOL(outsb);
+-EXPORT_SYMBOL(outsw);
+-EXPORT_SYMBOL(outsl);
+-EXPORT_SYMBOL(insb);
+-EXPORT_SYMBOL(insw);
+-EXPORT_SYMBOL(insl);
 -
- bad:
- 	return -EIO;
- }
-@@ -239,18 +237,21 @@ static int parse_reply_info_create(void
- 				  u64 features)
- {
- 	if (features & CEPH_FEATURE_REPLY_CREATE_INODE) {
-+		/* Malformed reply? */
- 		if (*p == end) {
- 			info->has_create_ino = false;
- 		} else {
- 			info->has_create_ino = true;
--			info->ino = ceph_decode_64(p);
-+			ceph_decode_64_safe(p, end, info->ino, bad);
- 		}
-+	} else {
-+		if (*p != end)
-+			goto bad;
- 	}
+ extern long common_exception_return;
+ EXPORT_SYMBOL(common_exception_return);
  
--	if (unlikely(*p != end))
--		goto bad;
-+	/* Skip over any unrecognized fields */
-+	*p = end;
- 	return 0;
--
- bad:
- 	return -EIO;
- }
 
