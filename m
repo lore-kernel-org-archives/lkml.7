@@ -2,84 +2,134 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4847EC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8649BC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E7E620716
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:17:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CAE020717
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:17:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="VTL5CDPz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nBJBDRwV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728276AbfLQNRF (ORCPT
+        id S1728175AbfLQNRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 08:17:05 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:45119 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727152AbfLQNRD (ORCPT
+        Tue, 17 Dec 2019 08:17:23 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:32847 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbfLQNRW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 08:17:03 -0500
-X-UUID: 29d7776f26054b5184dffc385b15fbcb-20191217
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=aC80HxRMBV0tY5Zddqx1ty1wteHBFoyprQsy+llvVXw=;
-        b=VTL5CDPz2OeBi8/qtDysQEzNHNs7TC0Fc9RMhdi1zN9Bw0KEsZJX4KdqHQGooADrQavzoyfrVW4C+6eFlg1CUGYrqahLnS+E5O/H5X5lpv+5eTWbcfRD2Wu7yPNjiu/QcMPzEV+HfUWGQZmz9w3YcmNz9nIO+lNQgX0iNK0ICW8=;
-X-UUID: 29d7776f26054b5184dffc385b15fbcb-20191217
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <sam.shih@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 763470494; Tue, 17 Dec 2019 21:16:58 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 17 Dec 2019 21:16:39 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 17 Dec 2019 21:16:32 +0800
-From:   Sam Shih <sam.shih@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Sam Shih <sam.shih@mediatek.com>
-Subject: [v2,1/1] arm: dts: mediatek: add mt7629 pwm support
-Date:   Tue, 17 Dec 2019 21:16:53 +0800
-Message-ID: <1576588613-11530-2-git-send-email-sam.shih@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1576588613-11530-1-git-send-email-sam.shih@mediatek.com>
-References: <1576588613-11530-1-git-send-email-sam.shih@mediatek.com>
+        Tue, 17 Dec 2019 08:17:22 -0500
+Received: by mail-pg1-f196.google.com with SMTP id 6so5682403pgk.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 05:17:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=q7HMsQPCoGg7Kj9u51JEhABe48pFo2CGzQTfPBf3p5Q=;
+        b=nBJBDRwVA66xUHFjL5+fvgO8NsgGXXyQCATNhRjftbI1Stk6F7lCQePQG5cVVTlmOu
+         PLgj5P2Xft+2WP8RWyy9iGpctLbmTmIKyIXgI0b2xW453G4zgK2OTMqXpDWQspAn6YOL
+         XosRlp531XGMFHE/fpftV3wsb7z7MCct7BuPOev8HZwuR91jUjtQnA//3Y+/N0nRFYiA
+         RNRa2RhvlTuye/ADUPlj4EdME77TTT5+eFl/pfFIa5aPmgYAxAGz33Q0228ws+tJk1sS
+         oPmHhRfxywvaJwHc0k7wyNN3wLGNsYN2Z+kuWLtyxjZrjyuV1BuVxWi7mkZNPVgNC9nb
+         DNhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=q7HMsQPCoGg7Kj9u51JEhABe48pFo2CGzQTfPBf3p5Q=;
+        b=ESSVh0/j5UsVUYJCJfzB+DxNr9uGkg8fDhHT4no/mvtqNdFHDVkoyBQMrLP5J4Qd3v
+         /cpU801hinTrLHs9s/0GTy/s9slYRNCEhSb5I0W3T/RRjd5IAHnG02t/AOWGTyatuf3A
+         j3yAXk5B+OI1GabC8XEJ2UVG0FE8H+FiY89cwYZUAQPLJoiw1gHYZI+NtbwxLwbxra9O
+         CLQiZqqKx64v38f8y8guxkzIQ34isiPf+leY0owxdKZby9NHS5BYerN3PW5oOTWMKfTm
+         jaKl17pVBDvDMgHVvMVfMuVk0yJflkAACRJkII5RmV5GVbyxj3I9rc3rN5Ou9LleuxRz
+         VNTw==
+X-Gm-Message-State: APjAAAVxpKvA0USRgRDAvyiikWraPrXy4XpE8rzoPyDNQLa6FWJaC/qE
+        RqGkDpDj3rrqIdXu1kZ4B3hvjyqvO4M=
+X-Google-Smtp-Source: APXvYqwBH6hBJIYjycnHHvGJPN234J5g5Qq6WtQHOOJcPmNeQsHMljjBOlwtg21ARB+eKY8Nyt+2ug==
+X-Received: by 2002:a63:551a:: with SMTP id j26mr24686778pgb.370.1576588642061;
+        Tue, 17 Dec 2019 05:17:22 -0800 (PST)
+Received: from ?IPv6:2402:f000:1:1501:200:5efe:166.111.139.134? ([2402:f000:1:1501:200:5efe:a66f:8b86])
+        by smtp.gmail.com with ESMTPSA id g25sm1213966pfo.110.2019.12.17.05.17.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 17 Dec 2019 05:17:21 -0800 (PST)
+Subject: Re: [BUG] kernel: kcov: a possible sleep-in-atomic-context bug in
+ kcov_ioctl()
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Hans Liljestrand <ishkamiel@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Reshetova, Elena" <elena.reshetova@intel.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <3c4608bc-9c84-d79b-de76-b1a1a2a4fb6d@gmail.com>
+ <CACT4Y+b3nvFAgM32SF0Bv46EOO4UFEK3M99pqYzEwmsmLvmhTQ@mail.gmail.com>
+ <e0305f5c-ae52-c144-fe50-00f3f815ad82@gmail.com>
+ <CACT4Y+YLxmFTkDT88z9y5yH75bAi42-Hqatv9z2-EyufTtKHRw@mail.gmail.com>
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+Message-ID: <bc4569a3-19f8-ca5f-7e59-29bacdbc7955@gmail.com>
+Date:   Tue, 17 Dec 2019 21:17:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <CACT4Y+YLxmFTkDT88z9y5yH75bAi42-Hqatv9z2-EyufTtKHRw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhpcyBhZGRzIHB3bSBzdXBwb3J0IGZvciBNVDc2MjkuDQpVc2VkOg0KaHR0cHM6Ly9wYXRjaHdv
-cmsua2VybmVsLm9yZy9wYXRjaC8xMTE2MDg1MS8NCg0KQ2hhbmdlIHNpbmNlIHYxOg0KcmVtb3Zl
-IHVudXNlZCBwcm9wZXJ0eSBudW0tcHdtDQoNClNpZ25lZC1vZmYtYnk6IFNhbSBTaGloIDxzYW0u
-c2hpaEBtZWRpYXRlay5jb20+DQotLS0NCiBhcmNoL2FybS9ib290L2R0cy9tdDc2MjkuZHRzaSB8
-IDE0ICsrKysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDE0IGluc2VydGlvbnMoKykNCg0K
-ZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL210NzYyOS5kdHNpIGIvYXJjaC9hcm0vYm9v
-dC9kdHMvbXQ3NjI5LmR0c2kNCmluZGV4IDg2N2I4ODEwM2I5ZC4uY2UyYTMwYTI0MDE3IDEwMDY0
-NA0KLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvbXQ3NjI5LmR0c2kNCisrKyBiL2FyY2gvYXJtL2Jv
-b3QvZHRzL210NzYyOS5kdHNpDQpAQCAtMjQxLDYgKzI0MSwyMCBAQA0KIAkJCXN0YXR1cyA9ICJk
-aXNhYmxlZCI7DQogCQl9Ow0KIA0KKwkJcHdtOiBwd21AMTEwMDYwMDAgew0KKwkJCWNvbXBhdGli
-bGUgPSAibWVkaWF0ZWssbXQ3NjI5LXB3bSI7DQorCQkJcmVnID0gPDB4MTEwMDYwMDAgMHgxMDAw
-PjsNCisJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgNzcgSVJRX1RZUEVfTEVWRUxfTE9XPjsNCisJ
-CQljbG9ja3MgPSA8JnRvcGNrZ2VuIENMS19UT1BfUFdNX1NFTD4sDQorCQkJCSA8JnBlcmljZmcg
-Q0xLX1BFUklfUFdNX1BEPiwNCisJCQkJIDwmcGVyaWNmZyBDTEtfUEVSSV9QV00xX1BEPjsNCisJ
-CQljbG9jay1uYW1lcyA9ICJ0b3AiLCAibWFpbiIsICJwd20xIjsNCisJCQlhc3NpZ25lZC1jbG9j
-a3MgPSA8JnRvcGNrZ2VuIENMS19UT1BfUFdNX1NFTD47DQorCQkJYXNzaWduZWQtY2xvY2stcGFy
-ZW50cyA9DQorCQkJCQk8JnRvcGNrZ2VuIENMS19UT1BfVU5JVlBMTDJfRDQ+Ow0KKwkJCXN0YXR1
-cyA9ICJkaXNhYmxlZCI7DQorCQl9Ow0KKw0KIAkJaTJjOiBpMmNAMTEwMDcwMDAgew0KIAkJCWNv
-bXBhdGlibGUgPSAibWVkaWF0ZWssbXQ3NjI5LWkyYyIsDQogCQkJCSAgICAgIm1lZGlhdGVrLG10
-MjcxMi1pMmMiOw0KLS0gDQoyLjE3LjENCg==
 
+
+On 2019/12/17 21:13, Dmitry Vyukov wrote:
+> On Tue, Dec 17, 2019 at 2:11 PM Jia-Ju Bai <baijiaju1990@gmail.com> wrote:
+>> On 2019/12/17 21:02, Dmitry Vyukov wrote:
+>>> On Tue, Dec 17, 2019 at 1:56 PM Jia-Ju Bai <baijiaju1990@gmail.com> wrote:
+>>>> The kernel may sleep while holding a spinlock.
+>>>> The function call path (from bottom to top) in Linux 4.19 is:
+>>>>
+>>>> kernel/kcov.c, 237:
+>>>>        vfree in kcov_put
+>>>> kernel/kcov.c, 413:
+>>>>        kcov_put in kcov_ioctl_locked
+>>>> kernel/kcov.c, 427:
+>>>>        kcov_ioctl_locked in kcov_ioctl
+>>>> kernel/kcov.c, 426:
+>>>>        spin_lock in kcov_ioctl
+>>>>
+>>>> vfree() can sleep at runtime.
+>>>>
+>>>> I am not sure how to properly fix this possible bug, so I only report it.
+>>>> A possible way is to replace vfree() with kfree(), and replace related
+>>>> calls to vmalloc() with kmalloc().
+>>>>
+>>>> This bug is found by a static analysis tool STCheck written by myself.
+>>> Hi Jia-Ju,
+>>>
+>>> Are you sure kcov_ioctl_locked can really release the descriptor? It
+>>> happens in the context of ioctl, which means there is an open
+>>> reference for the file descriptor. So ioctl should not do vfree I
+>>> would assume.
+>> Thanks for the reply :)
+>> I am not sure, because I am not familiar with kcov.
+>> But looking at the code, if the reference count of kcov is 1, vfree()
+>> could be called.
+> That kcov_put should never call vfree. We still hold reference
+> associated with the file, which will be released in kcov_close.
+
+Okay, thanks for the explanation :)
+My static analysis tool does not know this fact, so it reports the false 
+bug, sorry...
+
+
+Best wishes,
+Jia-Ju Bai
