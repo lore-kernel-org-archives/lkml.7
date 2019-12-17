@@ -2,105 +2,119 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A5AC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CBBC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36979206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59BDA206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:22:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="X1AHChLg"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bM70QIlp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727715AbfLQMWE (ORCPT
+        id S1727783AbfLQMWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:22:04 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:54514 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726747AbfLQMWC (ORCPT
+        Tue, 17 Dec 2019 07:22:50 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:41264 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726747AbfLQMWu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 07:22:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=N1JQnboObYcGyU2KHzFTvs4Z7NiQgmWjANexPDMj0po=; b=X1AHChLgCe51o7IT8s4OgQBIg
-        jIC8YyPRjwjBFzVxm0DrV4UqidK+zCVv6+gwWWN+Q54JaBH+6pi6vHygdimesUQ8pujtCYQOAA0ZL
-        PUiQzRCHI5S4M0LivWykaxg+Lz6NZPrp8XDDaa71KiI9AGcmcL+PQq4020/dk1w+2ieCZiIxZFZNh
-        mQt8FIGi8iOAXmkQzFkSkoafeLiJ570gwm5+t27li7bzvJ9zi5Go3dR2TSzGMcqHilUXB1iwL7rEM
-        v7p56EXCCv9PBzZln927KVYciSRpeQoJmjSPjGshCBpDEJ5o1AxR3f6r4vL5R766c4VAxCEg3TRck
-        XM1XKo4cQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ihBrP-0002vq-8S; Tue, 17 Dec 2019 12:21:56 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 32AAC3007F2;
-        Tue, 17 Dec 2019 13:20:30 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C486420213E1A; Tue, 17 Dec 2019 13:21:52 +0100 (CET)
-Date:   Tue, 17 Dec 2019 13:21:52 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] perf/core: Add SRCU annotation for pmus list walk
-Message-ID: <20191217122152.GE2844@hirez.programming.kicks-ass.net>
-References: <20191119121429.zhcubzdhm672zasg@linutronix.de>
+        Tue, 17 Dec 2019 07:22:50 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBHCMgIe018636;
+        Tue, 17 Dec 2019 06:22:42 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576585362;
+        bh=qM9xJdxmrDLNaME/gOYVTnReJwrGrvAeNa92VYltRFM=;
+        h=From:To:CC:Subject:Date;
+        b=bM70QIlptkcNkidobo0JsKJTMLt21guPkDWa1gj2BY6HTH+1KGrOAEr/fwTXy4xe/
+         rtwCTbOCi79rEhbnrtlKk76ZFwkUUSaEcSX1ISRsoX/bqY8KKw6FF46rXmAvVIHm3j
+         6+We98QHhTHmX/cwOhwWvnYfRARygw8FcETyZ3rs=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBHCMgmr017727
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 17 Dec 2019 06:22:42 -0600
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
+ Dec 2019 06:22:42 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 17 Dec 2019 06:22:42 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBHCMcZh054542;
+        Tue, 17 Dec 2019 06:22:39 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <ulf.hansson@linaro.org>, <f.fainelli@gmail.com>,
+        <rjui@broadcom.com>, <sbranden@broadcom.com>,
+        <nsaenzjulienne@suse.de>
+CC:     <vkoul@kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <bcm-kernel-feedback-list@broadcom.com>,
+        <linux-rpi-kernel@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v2] mmc: bcm2835: Use dma_request_chan() instead dma_request_slave_channel()
+Date:   Tue, 17 Dec 2019 14:22:54 +0200
+Message-ID: <20191217122254.7103-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191119121429.zhcubzdhm672zasg@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 01:14:29PM +0100, Sebastian Andrzej Siewior wrote:
-> Since commit
->    28875945ba98d ("rcu: Add support for consolidated-RCU reader checking")
-> 
-> there is an additional check to ensure that a RCU related lock is held
-> while the RCU list is iterated.
-> This section holds the SRCU reader lock instead.
-> 
-> Add annotation to list_for_each_entry_rcu() that pmus_srcu must be
-> acquired during the list traversal.
-> 
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> ---
-> 
-> I see the warning in in v5.4-rc during boot. For some reason I don't see
-> it in tip/master during boot but "perf stat w" triggers it again (among
-> other things).
-> 
->  kernel/events/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 5224388872069..dbb3b26a55612 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -10497,7 +10497,7 @@ static struct pmu *perf_init_event(struct perf_event *event)
->  		goto unlock;
->  	}
->  
-> -	list_for_each_entry_rcu(pmu, &pmus, entry) {
-> +	list_for_each_entry_rcu(pmu, &pmus, entry, lockdep_is_held(&pmus_srcu)) {
+dma_request_slave_channel() is a wrapper on top of dma_request_chan()
+eating up the error code.
 
-That's a bit obnoxious, but ok, I suppose.
+By using dma_request_chan() directly the driver can support deferred
+probing against DMA.
+
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+Hi,
+
+Changes since v1:
+- instead of returning jump to err: to free up resources
+
+Regards,
+Peter
+
+ drivers/mmc/host/bcm2835.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/mmc/host/bcm2835.c b/drivers/mmc/host/bcm2835.c
+index 99f61fd2a658..c3d949847cbd 100644
+--- a/drivers/mmc/host/bcm2835.c
++++ b/drivers/mmc/host/bcm2835.c
+@@ -1393,7 +1393,17 @@ static int bcm2835_probe(struct platform_device *pdev)
+ 	host->dma_chan = NULL;
+ 	host->dma_desc = NULL;
+ 
+-	host->dma_chan_rxtx = dma_request_slave_channel(dev, "rx-tx");
++	host->dma_chan_rxtx = dma_request_chan(dev, "rx-tx");
++	if (IS_ERR(host->dma_chan_rxtx)) {
++		ret = PTR_ERR(host->dma_chan_rxtx);
++		host->dma_chan_rxtx = NULL;
++
++		if (ret == -EPROBE_DEFER)
++			goto err;
++
++		/* Ignore errors to fall back to PIO mode */
++	}
++
+ 
+ 	clk = devm_clk_get(dev, NULL);
+ 	if (IS_ERR(clk)) {
+-- 
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
