@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41767C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A57C6C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11C1024679
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:55:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8374C206D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:56:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728097AbfLQAzn (ORCPT
+        id S1728271AbfLQA4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:55:43 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35306 "EHLO
+        Mon, 16 Dec 2019 19:56:04 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35282 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727050AbfLQAvn (ORCPT
+        by vger.kernel.org with ESMTP id S1727035AbfLQAvn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 19:51:43 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15L-0003Ms-9t; Tue, 17 Dec 2019 00:51:35 +0000
+        id 1ih15I-0003LX-Kg; Tue, 17 Dec 2019 00:51:32 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15L-0005e9-0z; Tue, 17 Dec 2019 00:51:35 +0000
+        id 1ih15H-0005VN-9R; Tue, 17 Dec 2019 00:51:31 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "Kevin Hao" <haokexin@gmail.com>
-Date:   Tue, 17 Dec 2019 00:47:36 +0000
-Message-ID: <lsq.1576543535.283326510@decadent.org.uk>
+        "Jing Xiangfeng" <jingxiangfeng@huawei.com>,
+        "Russell King" <rmk+kernel@armlinux.org.uk>
+Date:   Tue, 17 Dec 2019 00:46:25 +0000
+Message-ID: <lsq.1576543535.681330910@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 122/136] dump_stack: avoid the livelock of the dump_lock
+Subject: [PATCH 3.16 051/136] ARM: mm: fix alignment handler faults under
+ memory pressure
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,44 +56,105 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Kevin Hao <haokexin@gmail.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-commit 5cbf2fff3bba8d3c6a4d47c1754de1cf57e2b01f upstream.
+commit 67e15fa5b487adb9b78a92789eeff2d6ec8f5cee upstream.
 
-In the current code, we use the atomic_cmpxchg() to serialize the output
-of the dump_stack(), but this implementation suffers the thundering herd
-problem.  We have observed such kind of livelock on a Marvell cn96xx
-board(24 cpus) when heavily using the dump_stack() in a kprobe handler.
-Actually we can let the competitors to wait for the releasing of the
-lock before jumping to atomic_cmpxchg().  This will definitely mitigate
-the thundering herd problem.  Thanks Linus for the suggestion.
+When the system has high memory pressure, the page containing the
+instruction may be paged out.  Using probe_kernel_address() means that
+if the page is swapped out, the resulting page fault will not be
+handled because page faults are disabled by this function.
 
-[akpm@linux-foundation.org: fix comment]
-Link: http://lkml.kernel.org/r/20191030031637.6025-1-haokexin@gmail.com
-Fixes: b58d977432c8 ("dump_stack: serialize the output from dump_stack()")
-Signed-off-by: Kevin Hao <haokexin@gmail.com>
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Use get_user() to read the instruction instead.
+
+Reported-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
+Fixes: b255188f90e2 ("ARM: fix scheduling while atomic warning in alignment handling code")
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- lib/dump_stack.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ arch/arm/mm/alignment.c | 44 +++++++++++++++++++++++++++++++++--------
+ 1 file changed, 36 insertions(+), 8 deletions(-)
 
---- a/lib/dump_stack.c
-+++ b/lib/dump_stack.c
-@@ -44,7 +44,12 @@ retry:
- 		was_locked = 1;
+--- a/arch/arm/mm/alignment.c
++++ b/arch/arm/mm/alignment.c
+@@ -746,6 +746,36 @@ do_alignment_t32_to_handler(unsigned lon
+ 	return NULL;
+ }
+ 
++static int alignment_get_arm(struct pt_regs *regs, u32 *ip, unsigned long *inst)
++{
++	u32 instr = 0;
++	int fault;
++
++	if (user_mode(regs))
++		fault = get_user(instr, ip);
++	else
++		fault = probe_kernel_address(ip, instr);
++
++	*inst = __mem_to_opcode_arm(instr);
++
++	return fault;
++}
++
++static int alignment_get_thumb(struct pt_regs *regs, u16 *ip, u16 *inst)
++{
++	u16 instr = 0;
++	int fault;
++
++	if (user_mode(regs))
++		fault = get_user(instr, ip);
++	else
++		fault = probe_kernel_address(ip, instr);
++
++	*inst = __mem_to_opcode_thumb16(instr);
++
++	return fault;
++}
++
+ static int
+ do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+ {
+@@ -753,10 +783,10 @@ do_alignment(unsigned long addr, unsigne
+ 	unsigned long instr = 0, instrptr;
+ 	int (*handler)(unsigned long addr, unsigned long instr, struct pt_regs *regs);
+ 	unsigned int type;
+-	unsigned int fault;
+ 	u16 tinstr = 0;
+ 	int isize = 4;
+ 	int thumb2_32b = 0;
++	int fault;
+ 
+ 	if (interrupts_enabled(regs))
+ 		local_irq_enable();
+@@ -765,15 +795,14 @@ do_alignment(unsigned long addr, unsigne
+ 
+ 	if (thumb_mode(regs)) {
+ 		u16 *ptr = (u16 *)(instrptr & ~1);
+-		fault = probe_kernel_address(ptr, tinstr);
+-		tinstr = __mem_to_opcode_thumb16(tinstr);
++
++		fault = alignment_get_thumb(regs, ptr, &tinstr);
+ 		if (!fault) {
+ 			if (cpu_architecture() >= CPU_ARCH_ARMv7 &&
+ 			    IS_T32(tinstr)) {
+ 				/* Thumb-2 32-bit */
+-				u16 tinst2 = 0;
+-				fault = probe_kernel_address(ptr + 1, tinst2);
+-				tinst2 = __mem_to_opcode_thumb16(tinst2);
++				u16 tinst2;
++				fault = alignment_get_thumb(regs, ptr + 1, &tinst2);
+ 				instr = __opcode_thumb32_compose(tinstr, tinst2);
+ 				thumb2_32b = 1;
+ 			} else {
+@@ -782,8 +811,7 @@ do_alignment(unsigned long addr, unsigne
+ 			}
+ 		}
  	} else {
- 		local_irq_restore(flags);
--		cpu_relax();
-+		/*
-+		 * Wait for the lock to release before jumping to
-+		 * atomic_cmpxchg() in order to mitigate the thundering herd
-+		 * problem.
-+		 */
-+		do { cpu_relax(); } while (atomic_read(&dump_lock) != -1);
- 		goto retry;
+-		fault = probe_kernel_address(instrptr, instr);
+-		instr = __mem_to_opcode_arm(instr);
++		fault = alignment_get_arm(regs, (void *)instrptr, &instr);
  	}
  
+ 	if (fault) {
 
