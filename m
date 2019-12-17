@@ -2,142 +2,141 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8876AC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE9FC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ABDC20733
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:46:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 780BA20733
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:47:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c+EXtC01"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="nI3U8DK6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbfLQSqw (ORCPT
+        id S1727918AbfLQSro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 13:46:52 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:24734 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726723AbfLQSqw (ORCPT
+        Tue, 17 Dec 2019 13:47:44 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:28366 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727162AbfLQSro (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 13:46:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576608411;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=IZjRKmHuvnoVKMirbirXU2qUqtR+sRTFhW7hH7QT1ZU=;
-        b=c+EXtC01uaiDmLgSiPdMZ1WD7rzCMIC3BwHAv80wuyuq2Kh+s7yTnqpk4ijuylT6aie3d5
-        hAskQHZstkO3r3K7zrXW3wyJdqiVIfltMKe/o21iSk6drls9MpZOhj9d3kOVHb+gbMlEnB
-        EQZQH8noZRRjJplLBEc7I4FHNmru9t0=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-215-IK3AMFylOKmYKKjbMqy-Rw-1; Tue, 17 Dec 2019 13:46:49 -0500
-X-MC-Unique: IK3AMFylOKmYKKjbMqy-Rw-1
-Received: by mail-wm1-f70.google.com with SMTP id l11so1058829wmi.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 10:46:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=IZjRKmHuvnoVKMirbirXU2qUqtR+sRTFhW7hH7QT1ZU=;
-        b=N0+KV4X4BTKl28KeynSdkXW4Nj3roy4xh5GoL0WhubZXhgX1A8WlhaW7ru3BFMqH6M
-         xlA4Jh/aVzyRGsiTx9M5UNPvfDUrUBg27sBNS2udA7dZ5u9PH+va3DUT0m51CY4c0UeD
-         KXuZCIg6YtdI19VVoDVEyWVRTzg/do3xtDb6kZ811Ear4rlArCFtuWHSe60Al4xoa6ow
-         n95m4qlnSQtqDj7mBy4m7eRC4fnqy+GnZUL6jQdJ2kHovSreAh4cX64Waauc31/rZAWT
-         F8LfBFeEEWKRub8G5UflyGwfKiho64G880nVuAwCJK+etJDj/c6mJNnMvPx/bQ4ISLBF
-         pWoQ==
-X-Gm-Message-State: APjAAAVuh2sV7kcg/ruhNuYa7fzerNk7KAPKd0GOi5CiYLq1p7bpxRNy
-        GStJhH7K9RzLfo8c/1Fstp0G3N5Mm7RBPfAarZqCSMuzxU4rCjeJk22pyaY6nWn1rC30VBvs1CK
-        4rbiRggzPsJPszYGkrlFlVHFu
-X-Received: by 2002:a5d:6708:: with SMTP id o8mr39021277wru.296.1576608408737;
-        Tue, 17 Dec 2019 10:46:48 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwPvlk+TwbhCe+kHYv7eZKZShKxj66b/JxKprHybJXtulfbUtBwnBztokfND3OEGYr34Cq8KA==
-X-Received: by 2002:a5d:6708:: with SMTP id o8mr39021257wru.296.1576608408527;
-        Tue, 17 Dec 2019 10:46:48 -0800 (PST)
-Received: from [192.168.3.122] (p5B0C64F3.dip0.t-ipconnect.de. [91.12.100.243])
-        by smtp.gmail.com with ESMTPSA id g25sm3943341wmh.3.2019.12.17.10.46.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Dec 2019 10:46:47 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   David Hildenbrand <david@redhat.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v15 3/7] mm: Add function __putback_isolated_page
-Date:   Tue, 17 Dec 2019 19:46:47 +0100
-Message-Id: <08EFF184-E727-4A79-ABEF-52F2463860C3@redhat.com>
-References: <1a6e4646f570bf193924e099557841eb6e77a80d.camel@linux.intel.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, mgorman@techsingularity.net,
-        vbabka@suse.cz, yang.zhang.wz@gmail.com, nitesh@redhat.com,
-        konrad.wilk@oracle.com, pagupta@redhat.com, riel@surriel.com,
-        lcapitulino@redhat.com, dave.hansen@intel.com,
-        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com, osalvador@suse.de
-In-Reply-To: <1a6e4646f570bf193924e099557841eb6e77a80d.camel@linux.intel.com>
-To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>
-X-Mailer: iPhone Mail (17A878)
+        Tue, 17 Dec 2019 13:47:44 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576608463; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=7tr+0eWTIFsfDOZs6HQbFrliTffvsYr/ED6xJGRQVJ4=;
+ b=nI3U8DK6iX86gTlVgd1nwv/mRaX3hvJIYJ4s6V6bmKiOBzqxnu1IYJLmcFuo52prp6H9g7n1
+ 6yUT0B/g7MyNnP4igdBNULQRTLPr5KenORFf50vYs76zjA9Y/iEy/dVtl70WSYTh9IKeOqMD
+ XHUIbFsRqFw1gTakl0DuZP+uaVQ=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5df922c8.7fe3f2712b90-smtp-out-n03;
+ Tue, 17 Dec 2019 18:47:36 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 7F61CC447AD; Tue, 17 Dec 2019 18:47:34 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 49523C43383;
+        Tue, 17 Dec 2019 18:47:33 +0000 (UTC)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 18 Dec 2019 02:47:33 +0800
+From:   cang@codeaurora.org
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Evan Green <evgreen@chromium.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/3] scsi: ufs: Modulize ufs-bsg
+In-Reply-To: <f6e458e2-5be6-0bc0-a612-4a8bf9aae8bd@acm.org>
+References: <1576054123-16417-1-git-send-email-cang@codeaurora.org>
+ <0101016ef425ef65-5c4508cc-5e76-4107-bb27-270f66acaa9a-000000@us-west-2.amazonses.com>
+ <20191212045357.GA415177@yoga>
+ <0101016ef8b2e2f8-72260b08-e6ad-42fc-bd4b-4a0a72c5c9b3-000000@us-west-2.amazonses.com>
+ <20191212063703.GC415177@yoga>
+ <5691bfa1-42e5-3c5f-2497-590bcc0cb2b1@acm.org>
+ <926dd55d8d0dc762b1f6461495fc747a@codeaurora.org>
+ <62933901-fcdf-b5ae-431d-e1fbfc897128@acm.org>
+ <b3fee6ea02c4c3c46eeba81b0bdcf7c4@codeaurora.org>
+ <f6e458e2-5be6-0bc0-a612-4a8bf9aae8bd@acm.org>
+Message-ID: <04309f46208b6aa26c989a2cfcfa38b6@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019-12-18 02:19, Bart Van Assche wrote:
+> On 12/17/19 12:56 AM, cang@codeaurora.org wrote:
+>> Even in the current ufs_bsg.c, it creates two devices, one is ufs-bsg,
+>> one is the char dev node under /dev/bsg. Why this becomes a problem
+>> after make it a module?
+>> 
+>> I took a look into the pci_driver, it is no different than making 
+>> ufs-bsg
+>> a plain device. The only special place about pci_driver is that it has 
+>> its
+>> own probe() and remove(), and the probe() in its bus_type calls the
+>> probe() in pci_driver. Meaning the bus->probe() is an intermediate 
+>> call
+>> used to pass whatever needed by pci_driver->probe().
+>> 
+>> Of course we can also do this, but isn't it too much for ufs-bsg?
+>> For our case, calling set_dev_drvdata(bsg_dev, hba) to pass hba to
+>> ufs_bsg.c would be enough.
+>> 
+>> If you take a look at the V3 patch, the change makes the ufs_bsg.c
+>> much conciser. platform_device_register_data() does everything for us,
+>> initialize the device, set device name, provide the match func,
+>> bus type and release func.
+>> 
+>> Since ufs-bsg is somewhat not a platform device, we can still add it
+>> as a plain device, just need a few more lines to get it initialized.
+>> This allows us leverage kernel's device driver model. Just like Greg
+>> commented, we don't need to re-implement the mechanism again.
+> 
+> Hi Can,
+> 
+> Since ufs-bsg is not a platform device I think it would be wrong to
+> model ufs-bsg devices as platform devices.
+> 
+> Please have a look at the bus_register() and bus_unregister()
+> functions as Greg KH asked. Using the bus abstraction is not that
+> hard. An example is e.g. available in the scsi_debug driver, namely
+> the pseudo_lld_bus.
+> 
+> Thanks,
+> 
+> Bart.
 
+Hi Bart,
 
-> Am 17.12.2019 um 19:25 schrieb Alexander Duyck <alexander.h.duyck@linux.in=
-tel.com>:
->=20
-> =EF=BB=BFOn Tue, 2019-12-17 at 18:24 +0100, David Hildenbrand wrote:
->>>>> Also there are some scenarios where __page_to_pfn is not that simple a=
+Yes, I am talking the same here. Since platform device is not an option
+for ufs-bsg, to make it a plain device we would need to do 
+bus_register()
+and bus_unregister(). And also do device_initialize() and device_add().
 
->>>>> call with us having to get the node ID so we can find the pgdat struct=
-ure
->>>>> to perform the calculation. I'm not sure the compiler would be ble to
->>>>> figure out that the result is the same for both calls, so it is better=
- to
->>>>> make it explicit.
->>>>=20
->>>> Only in case of CONFIG_SPARSEMEM we have to go via the section - but I
->>>> doubt this is really worth optimizing here.
->>>>=20
->>>> But yeah, I'm fine with this change, only "IMHO
->>>> get_pageblock_migratetype() would be nicer" :)
->>>=20
->>> Aren't most distros running with CONFIG_SPARSEMEM enabled? If that is th=
-e
->>> case why not optimize for it?
->>=20
->> Because I tend to dislike micro-optimizations without performance
->> numbers for code that is not on a hot path. But I mean in this case, as
->> you said, you need the pfn either way, so it's completely fine with.
->>=20
->> I do wonder, however, if you should just pass in the migratetype from
->> the caller. That would be even faster ;)
->=20
-> The problem is page isolation. We can end up with a page being moved to an=
-
-> isolate pageblock while we aren't holding the zone lock, and as such we
-> likely need to test it again anyway. So there isn't value in storing and
-> reusing the value for cases like page reporting.
->=20
-> In addition, the act of isolating the page can cause the migratetype to
-> change as __isolate_free_page will attempt to change the migratetype to
-> movable if it is one of the standard percpu types and we are pulling at
-> least half a pageblock out. So storing the value before we isolate it
-> would be problematic as well.
->=20
-> Undoing page isolation is the exception to the issues pointed out above,
-> but in that case we are overwriting the pageblock migratetype anyway so
-> the cache lines involved should all be warm from having just set the
-> value.
-
-Nothing would speak against querying the migratetype in the caller and passi=
-ng it on. After all you=E2=80=98re holding the zone lock, so it can=E2=80=98=
-t change.
->=20
-
+Thanks,
+Can Guo.
