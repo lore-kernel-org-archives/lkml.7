@@ -4,76 +4,242 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB432C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A605DC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CB2120733
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CCA220733
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:11:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbfLQMLH (ORCPT
+        id S1727753AbfLQMLH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 17 Dec 2019 07:11:07 -0500
-Received: from imap2.colo.codethink.co.uk ([78.40.148.184]:37388 "EHLO
-        imap2.colo.codethink.co.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726383AbfLQMLG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+Received: from mga12.intel.com ([192.55.52.136]:27783 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727152AbfLQMLG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 17 Dec 2019 07:11:06 -0500
-Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
-        by imap2.colo.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
-        id 1ihBgt-00062E-Iw; Tue, 17 Dec 2019 12:11:03 +0000
-Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.3)
-        (envelope-from <ben@rainbowdash.codethink.co.uk>)
-        id 1ihBgt-008xPS-Aj; Tue, 17 Dec 2019 12:11:03 +0000
-From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
-To:     ben.dooks@codethink.co.uk
-Cc:     Boris Brezillon <bbrezillon@kernel.org>,
-        linux-i3c@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] i3c: make 'i3c_bus_set_mode' static
-Date:   Tue, 17 Dec 2019 12:01:50 +0000
-Message-Id: <20191217120150.2134326-1-ben.dooks@codethink.co.uk>
-X-Mailer: git-send-email 2.24.0
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 04:11:05 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,325,1571727600"; 
+   d="scan'208";a="247444961"
+Received: from cvg-ubt08.iil.intel.com ([143.185.152.138])
+  by fmsmga002.fm.intel.com with ESMTP; 17 Dec 2019 04:11:04 -0800
+From:   Vladimir Kondratiev <vladimir.kondratiev@intel.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Vladimir Kondratiev <vladimir.kondratiev@intel.com>,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] mmc: sdhci-cadence: tune multi-block read gap
+Date:   Tue, 17 Dec 2019 14:11:02 +0200
+Message-Id: <20191217121102.11213-1-vladimir.kondratiev@intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191217115502.5590-1-vladimir.kondratiev@intel.com>
+References: <20191217115502.5590-1-vladimir.kondratiev@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function i3c_bus_set_mode() is not declared or
-exported, so make it static to avoid the following
-warning:
+Additional tuning required for multi-block read command.
+Implement it accordingly to Cadence recommendation.
 
-drivers/i3c/master.c:530:5: warning: symbol 'i3c_bus_set_mode' was not declared. Should it be static?
+2 registers used: HRS37 and HRS38. To HRS37, SD interface mode programmed,
+this selects HRS38 slot - there is separate slot for every SD interface
+mode. HRS38 contains gap parameter,
+it is selected by starting with gap=0 and sending multi-block read command.
+gap incremented until multi-block read succeeds.
 
-If it is needed in the future, then it should be declared
-and suitably exported.
+As of now, this tuning executed for HS200 only
 
-Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
+Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@intel.com>
 ---
-Cc: Boris Brezillon <bbrezillon@kernel.org>
-Cc: linux-i3c@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/i3c/master.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/mmc/host/sdhci-cadence.c | 137 ++++++++++++++++++++++++++++++-
+ 1 file changed, 136 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
-index 043691656245..7f8f896fa0c3 100644
---- a/drivers/i3c/master.c
-+++ b/drivers/i3c/master.c
-@@ -527,8 +527,8 @@ static const struct device_type i3c_masterdev_type = {
- 	.groups	= i3c_masterdev_groups,
- };
+diff --git a/drivers/mmc/host/sdhci-cadence.c b/drivers/mmc/host/sdhci-cadence.c
+index ae0ec27dd7cc..d0bed1932b6c 100644
+--- a/drivers/mmc/host/sdhci-cadence.c
++++ b/drivers/mmc/host/sdhci-cadence.c
+@@ -34,6 +34,23 @@
+ #define   SDHCI_CDNS_HRS06_MODE_MMC_HS400	0x5
+ #define   SDHCI_CDNS_HRS06_MODE_MMC_HS400ES	0x6
  
--int i3c_bus_set_mode(struct i3c_bus *i3cbus, enum i3c_bus_mode mode,
--		     unsigned long max_i2c_scl_rate)
-+static int i3c_bus_set_mode(struct i3c_bus *i3cbus, enum i3c_bus_mode mode,
-+			    unsigned long max_i2c_scl_rate)
++/* Read block gap */
++#define SDHCI_CDNS_HRS37		0x94	/* interface mode select */
++#define   SDHCI_CDNS_HRS37_MODE_DS		0x0
++#define   SDHCI_CDNS_HRS37_MODE_HS		0x1
++#define   SDHCI_CDNS_HRS37_MODE_UDS_SDR12	0x8
++#define   SDHCI_CDNS_HRS37_MODE_UDS_SDR25	0x9
++#define   SDHCI_CDNS_HRS37_MODE_UDS_SDR50	0xa
++#define   SDHCI_CDNS_HRS37_MODE_UDS_SDR104	0xb
++#define   SDHCI_CDNS_HRS37_MODE_UDS_DDR50	0xc
++#define   SDHCI_CDNS_HRS37_MODE_MMC_LEGACY	0x20
++#define   SDHCI_CDNS_HRS37_MODE_MMC_SDR		0x21
++#define   SDHCI_CDNS_HRS37_MODE_MMC_DDR		0x22
++#define   SDHCI_CDNS_HRS37_MODE_MMC_HS200	0x23
++#define   SDHCI_CDNS_HRS37_MODE_MMC_HS400	0x24
++#define   SDHCI_CDNS_HRS37_MODE_MMC_HS400ES	0x25
++#define SDHCI_CDNS_HRS38		0x98	/* Read block gap coefficient */
++#define   SDHCI_CDNS_HRS38_BLKGAP_MAX		0xf
+ /* SRS - Slot Register Set (SDHCI-compatible) */
+ #define SDHCI_CDNS_SRS_BASE		0x200
+ 
+@@ -272,6 +289,118 @@ static int sdhci_cdns_set_tune_val(struct sdhci_host *host, unsigned int val)
+ 	return 0;
+ }
+ 
++/**
++ * mmc_send_mb_read() - send multi-block read command
++ * @host: MMC host
++ *
++ * Sends multi-block read command, CMD23/CMD18/CMD12, ignore read data
++ *
++ * Return: error code
++ */
++static int mmc_send_mb_read(struct mmc_host *host)
++{
++	const int blksz = 512;
++	const int blocks = 32;
++	struct scatterlist sg;
++	struct mmc_command sbc = {
++		.opcode = MMC_SET_BLOCK_COUNT,
++		.arg = blocks,
++		.flags = MMC_RSP_R1 | MMC_CMD_AC,
++	};
++	struct mmc_command cmd = {
++		.opcode = MMC_READ_MULTIPLE_BLOCK,
++		.arg = 0,
++		.flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_ADTC,
++	};
++	struct mmc_command stop = {
++		.opcode = MMC_STOP_TRANSMISSION,
++		.arg = 0,
++		.flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_AC,
++	};
++	struct mmc_data data = {
++		.flags = MMC_DATA_READ,
++		.blksz = blksz,
++		.blocks = blocks,
++		.blk_addr = 0,
++		.timeout_ns =  800000000,	/* 800ms */
++		.timeout_clks = 1000,
++		.sg = &sg,
++		.sg_len = 1,
++	};
++	struct mmc_request mrq = {
++		.sbc = &sbc,
++		.cmd = &cmd,
++		.data = &data,
++		.stop = &stop,
++	};
++	int size = blksz * blocks, err = 0;
++	u8 *data_buf;
++
++	data_buf = kzalloc(size, GFP_KERNEL);
++	if (!data_buf)
++		return -ENOMEM;
++
++	sg_init_one(&sg, data_buf, size);
++
++	mmc_wait_for_req(host, &mrq);
++
++	if (cmd.error) {
++		err = cmd.error;
++		goto out;
++	}
++
++	if (data.error) {
++		err = data.error;
++		goto out;
++	}
++
++out:
++	kfree(data_buf);
++	return err;
++}
++
++/**
++ * sdhci_cdns_tune_blkgap() - tune multi-block read gap
++ * @mmc: MMC host
++ *
++ * Tune delay used in multi block read. To do so,
++ * try sending multi-block read command with incremented gap, unless
++ * it succeeds.
++ *
++ * Return: error code
++ */
++static int sdhci_cdns_tune_blkgap(struct mmc_host *mmc)
++{
++	struct sdhci_host *host = mmc_priv(mmc);
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	struct sdhci_cdns_priv *priv = sdhci_pltfm_priv(pltfm_host);
++	void __iomem *hrs37_reg = priv->hrs_addr + SDHCI_CDNS_HRS37;
++	void __iomem *hrs38_reg = priv->hrs_addr + SDHCI_CDNS_HRS38;
++	bool tuned = false;
++	u8 gap;
++	u8 hrs37_mode;
++
++	switch (host->timing) {
++	case MMC_TIMING_MMC_HS200:
++		hrs37_mode = SDHCI_CDNS_HRS37_MODE_MMC_HS200;
++		break;
++	default:
++		return 0; /* no tuning in this mode */
++	}
++
++	writel(hrs37_mode, hrs37_reg);
++
++	for (gap = 0; gap <= SDHCI_CDNS_HRS38_BLKGAP_MAX; gap++) {
++		writel(gap, hrs38_reg);
++		tuned = !mmc_send_mb_read(mmc);
++		if (tuned)
++			break;
++	}
++	dev_dbg(mmc_dev(mmc), "read block gap tune %s, gap %d\n",
++		tuned ? "OK" : "failed", gap);
++	return tuned ? 0 : -EIO;
++}
++
+ static int sdhci_cdns_execute_tuning(struct mmc_host *mmc, u32 opcode)
  {
- 	struct i3c_master_controller *master = i3c_bus_to_i3c_master(i3cbus);
+ 	struct sdhci_host *host = mmc_priv(mmc);
+@@ -279,6 +408,7 @@ static int sdhci_cdns_execute_tuning(struct mmc_host *mmc, u32 opcode)
+ 	int max_streak = 0;
+ 	int end_of_streak = 0;
+ 	int i;
++	int ret;
  
+ 	/*
+ 	 * This handler only implements the eMMC tuning that is specific to
+@@ -308,7 +438,12 @@ static int sdhci_cdns_execute_tuning(struct mmc_host *mmc, u32 opcode)
+ 		return -EIO;
+ 	}
+ 
+-	return sdhci_cdns_set_tune_val(host, end_of_streak - max_streak / 2);
++	ret = sdhci_cdns_set_tune_val(host, end_of_streak - max_streak / 2);
++
++	if (!ret)
++		ret = sdhci_cdns_tune_blkgap(mmc);
++
++	return ret;
+ }
+ 
+ static void sdhci_cdns_hs400_enhanced_strobe(struct mmc_host *mmc,
 -- 
-2.24.0
+2.20.1
+
+---------------------------------------------------------------------
+Intel Israel (74) Limited
+
+This e-mail and any attachments may contain confidential material for
+the sole use of the intended recipient(s). Any review or distribution
+by others is strictly prohibited. If you are not the intended
+recipient, please contact the sender and delete all copies.
 
