@@ -2,110 +2,96 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39663C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C93C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04F092176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:59:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="IpUKUVmy"
+	by mail.kernel.org (Postfix) with ESMTP id 57532218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:00:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576594801;
+	bh=lhuF5SdNJFPeYCFB/zIMrntW3mcXP5Pb5b/AvPYM/Qo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GWszhOsn58ILNA1ZVe7wIKfI+gMt2Tp0zJy6gad1zch6SRhgTGlDH1SNr8LLIZeTG
+	 ykfP89ctSkUrzivre4+0/q4PxxsYxrb1kooHNJMhhN/jbBOvG1pERU/yTenzlRbA1Q
+	 bKZumWsEEiEQdkHfp1zflNdjgU6B5NzCoBz05Poo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728035AbfLQO7c (ORCPT
+        id S1727862AbfLQPAA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:59:32 -0500
-Received: from nbd.name ([46.4.11.11]:44488 "EHLO nbd.name"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726560AbfLQO7b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:59:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
-         s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=+8L1lSnnK7nL4n5raeEmDmK4NyWmLIl9WA4sSDwK8jc=; b=IpUKUVmyJkWbdN9lK7cDmd9D4J
-        QR4qMW/VReCCQfTHbjgaPcsUzxxYz+T46GgnyWeKD0w5m5vrH1Klt3reSte6ZWql86dJ3rxtqKIr3
-        HRHjaJhOOvjL1diFYWZyDISzzpCSmt60vCl3xRwEPVWUtMoljzJjjWSN3WDl0r5AfPuA=;
-Received: from [178.162.209.142] (helo=nf.local)
-        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <nbd@nbd.name>)
-        id 1ihEJm-00046H-Vc; Tue, 17 Dec 2019 15:59:23 +0100
-Subject: Re: [PATCH] mt76: fix LED link time failure
-To:     Kalle Valo <kvalo@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>
-Cc:     Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Roy Luo <royluo@google.com>,
-        Stanislaw Gruszka <sgruszka@redhat.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191216131902.3251040-1-arnd@arndb.de>
- <87lfrbaull.fsf@kamboji.qca.qualcomm.com>
-From:   Felix Fietkau <nbd@nbd.name>
-Autocrypt: addr=nbd@nbd.name; prefer-encrypt=mutual; keydata=
- xsDiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
- ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
- Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
- AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
- vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
- wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
- TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
- l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwc0cRmVsaXggRmll
- dGthdSA8bmJkQG5iZC5uYW1lPsJgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
- HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
- VrwYTIThkTlQzsFNBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
- CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
- VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
- Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
- DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
- wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
- f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
- aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
- FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
- TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabwkkE
- GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCfTKx80VvCR/PvsUlrvdOLsIgeRGAAn1ee
- RjMaxwtSdaCKMw3j33ZbsWS4
-Message-ID: <c029f35a-6fd9-fc69-aa8f-16b66235f71e@nbd.name>
-Date:   Tue, 17 Dec 2019 15:59:22 +0100
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.3.0
+        Tue, 17 Dec 2019 10:00:00 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41274 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726560AbfLQO77 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 09:59:59 -0500
+Received: by mail-wr1-f66.google.com with SMTP id c9so840404wrw.8
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 06:59:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2RPvkS3wiyM/cXFFWnnKAmIdzbhl6b/6rYSNRYDRpP8=;
+        b=g1BWMS+p2nxhx3Mjb9k5TfnQZ0eeq6TkI4Oc1s8hHQl9D2xJX9i5xWhtcAdtW7THvh
+         Y5cBtcFW1/lsydm3Hix0M1w6YLrzvvUrHXQ5UkkppfeP2OvrIX13rQosFcc3YlI9CvO4
+         bOBkcTWaMtBEhzErWm60NB8dH6hjhAVYg2HizVozxd5elAMtV68wMgpxLdaoTjNMNZYL
+         iJH5LXdqMNdun3128+xJe1YshHCHOFntUBINycsTyv5lSmIKWDdQBJyoLP/2c/erGgXh
+         ZBEAj+c56n3k7LR9ip2rR/kqxP4TiabEyegTEAPlKb96QHeYRYNsp30exO3Rxcb3vjoA
+         v3dw==
+X-Gm-Message-State: APjAAAVvmGe6A6TpIAcU7AdhE2gWBvf72Zu2N65xnnqJ6ckLXdOeHNtI
+        wF5EvHiuSs6BK5ZDoJWCj50=
+X-Google-Smtp-Source: APXvYqwToPCZf/hfVwtsEh/E6+vprZwTG2iGnaekZ116daSVUTobkTHQ+iBS7F0gfpLxiRWdwBWXFw==
+X-Received: by 2002:a5d:6144:: with SMTP id y4mr37413605wrt.15.1576594797705;
+        Tue, 17 Dec 2019 06:59:57 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id f1sm25682801wro.85.2019.12.17.06.59.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 06:59:56 -0800 (PST)
+Date:   Tue, 17 Dec 2019 15:59:56 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Matthew Wilcox <willy@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Subject: Re: [PATCH v2] mm/hugetlb: Defer freeing of huge pages if in
+ non-task context
+Message-ID: <20191217145956.GB7272@dhcp22.suse.cz>
+References: <20191217012508.31495-1-longman@redhat.com>
+ <20191217093143.GC31063@dhcp22.suse.cz>
+ <4bb217ac-d80a-12b8-839f-2db9ced2636b@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <87lfrbaull.fsf@kamboji.qca.qualcomm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4bb217ac-d80a-12b8-839f-2db9ced2636b@redhat.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-17 15:35, Kalle Valo wrote:
-> Arnd Bergmann <arnd@arndb.de> writes:
+On Tue 17-12-19 09:06:31, Waiman Long wrote:
+> On 12/17/19 4:31 AM, Michal Hocko wrote:
+> > On Mon 16-12-19 20:25:08, Waiman Long wrote:
+[...]
+> >> +	pr_debug("HugeTLB: free_hpage_workfn() frees %d huge page(s)\n", cnt);
+> > Why do we need the debugging message here?
 > 
->> The mt76_led_cleanup() function is called unconditionally, which
->> leads to a link error when CONFIG_LEDS is a loadable module or
->> disabled but mt76 is built-in:
->>
->> drivers/net/wireless/mediatek/mt76/mac80211.o: In function `mt76_unregister_device':
->> mac80211.c:(.text+0x2ac): undefined reference to `led_classdev_unregister'
->>
->> Use the same trick that is guarding the registration, using an
->> IS_ENABLED() check for the CONFIG_MT76_LEDS symbol that indicates
->> whether LEDs can be used or not.
->>
->> Fixes: 36f7e2b2bb1d ("mt76: do not use devm API for led classdev")
->> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> 
-> Felix, as this is a regression in v5.5-rc1 can I take this directly to
-> wireless-drivers?
-Yes. Please add:
-Acked-by: Felix Fietkau <nbd@nbd.name>
+> It is there just to verify that the workfn is properly activated and
+> frees the huge page. This message won't be printed by default. I can
+> remove it if you guys don't really want a debug statement here.
 
-- Felix
+Yes, drop it please. We are not adding debugging messages unless they
+are really actionable. If this is a sign of a bug then put a WARN_ONCE or
+somethin like that. But with a simple code like this it doesn't really
+seem to be suitable IMHO.
+
+Thanks!
+-- 
+Michal Hocko
+SUSE Labs
