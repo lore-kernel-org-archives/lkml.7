@@ -2,88 +2,141 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE930C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0647C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C01621739
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:12:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576591923;
-	bh=sJ9ZcIroVoAcSdgRNeq0MYynqRKM5xhE4GjqRLXnliA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AWchB9LNk4O1kTXbC6ssKVTSfEC1ZiS+vjxSrnOCK7hNHKoc+E0yz1m758FtI0jHm
-	 0Mgm1n/VBYljsc7j21sPyugxMzBWxEvTy9iAvSfQxrGAgdpoI2QFE1DHRrxcJdvJ1/
-	 Ds27RCy3G3WSm7zVC2F7CK0811epBzO+F+uHKCRU=
+	by mail.kernel.org (Postfix) with ESMTP id D22C421739
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:14:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728791AbfLQOMC (ORCPT
+        id S1728806AbfLQOOP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:12:02 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34460 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728575AbfLQOMC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:12:02 -0500
-Received: by mail-ot1-f66.google.com with SMTP id a15so919899otf.1;
-        Tue, 17 Dec 2019 06:12:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7rqOZSsecbL2UhtBa4fx6RNVQTfn4hGMuYHOIPPf+Vg=;
-        b=fb0I30PDXz6XyrKKiCrSrS98AXGcnwj5kzborhjfcEF+JuCbdA8rGVCuECur1w938L
-         7yY4XX2uHmQm7ZpokrWq9SeMyO/bhgErbE3YPh9F5npHtoSbNdr9RftaShI0kEdgXvW8
-         PHpN3PUKJKBHip5gdBgkjNNAKmeMWZBHBWQfgJ9t3IwlDcqa1rAZMmIVL+LMGcCVWxoj
-         yeql20Xqrh6hjk6p6kPVGoGmWuA/TfvEY34qIK+U0XnBSqqj0Wne6yeg/dVPFoZ/3o/e
-         yTP0JmjzdiOvfKYCoIc4KpuUBWWGxYRUlG17FfXQmEo7qkfwklX0dLvKxQ0LQ1dglimG
-         s5mA==
-X-Gm-Message-State: APjAAAVpystEA5NA7jOx/1z7WepZBseHhc+RL3E30d4q3jQxSSOrwXMk
-        S2SyNtDN/ijJPK0m9Rr7gQ==
-X-Google-Smtp-Source: APXvYqzpVlXg5lD8QaRZoYczlzBvb9EV2OaM1vk2lbqIALkgqhWBspcL5MF3P9ytTEuLdP0Xt2oy1Q==
-X-Received: by 2002:a9d:1d02:: with SMTP id m2mr35624006otm.45.1576591921370;
-        Tue, 17 Dec 2019 06:12:01 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id v25sm8050659otk.51.2019.12.17.06.12.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 06:12:00 -0800 (PST)
-Date:   Tue, 17 Dec 2019 08:11:59 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     sboyd@kernel.org, dmitry.torokhov@gmail.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, agross@kernel.org,
-        bjorn.andersson@linaro.org, mturquette@baylibre.com,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: Re: [PATCH 2/7] dt-bindings: Input: drop msm-vibrator in favor of
- clk-vibrator
-Message-ID: <20191217141159.GA21795@bogus>
-References: <20191205002503.13088-1-masneyb@onstation.org>
- <20191205002503.13088-3-masneyb@onstation.org>
+        Tue, 17 Dec 2019 09:14:15 -0500
+Received: from relay.sw.ru ([185.231.240.75]:46658 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728695AbfLQOOO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 09:14:14 -0500
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1ihDbP-0005Tm-9c; Tue, 17 Dec 2019 17:13:31 +0300
+Subject: Re: [PATCH v2] mm/hugetlb: Defer freeing of huge pages if in non-task
+ context
+To:     Waiman Long <longman@redhat.com>, Michal Hocko <mhocko@kernel.org>
+Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Matthew Wilcox <willy@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+References: <20191217012508.31495-1-longman@redhat.com>
+ <20191217093143.GC31063@dhcp22.suse.cz>
+ <87c2ff49-999e-3196-791f-36e3d42ad79c@virtuozzo.com>
+ <0b8a59a0-517f-1387-ad00-cb47fb5fc50c@redhat.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <99caa26d-e14d-ed38-f56a-e6aee203251a@virtuozzo.com>
+Date:   Tue, 17 Dec 2019 17:13:31 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191205002503.13088-3-masneyb@onstation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <0b8a59a0-517f-1387-ad00-cb47fb5fc50c@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  4 Dec 2019 19:24:58 -0500, Brian Masney wrote:
-> Let's drop the msm-vibrator bindings so that the more generic
-> clk-vibrator can be used instead. No one is currently using these
-> bindings so this won't affect any users.
-> 
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> ---
->  .../bindings/input/msm-vibrator.txt           | 36 -------------------
->  1 file changed, 36 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/input/msm-vibrator.txt
-> 
+On 17.12.2019 17:00, Waiman Long wrote:
+> On 12/17/19 5:50 AM, Kirill Tkhai wrote:
+>> On 17.12.2019 12:31, Michal Hocko wrote:
+>>> On Mon 16-12-19 20:25:08, Waiman Long wrote:
+>>> [...]
+>>>> Both the hugetbl_lock and the subpool lock can be acquired in
+>>>> free_huge_page(). One way to solve the problem is to make both locks
+>>>> irq-safe.
+>>> Please document why we do not take this, quite natural path and instead
+>>> we have to come up with an elaborate way instead. I believe the primary
+>>> motivation is that some operations under those locks are quite
+>>> expensive. Please add that to the changelog and ideally to the code as
+>>> well. We probably want to fix those anyway and then this would be a
+>>> temporary workaround.
+>>>
+>>>> Another alternative is to defer the freeing to a workqueue job.
+>>>>
+>>>> This patch implements the deferred freeing by adding a
+>>>> free_hpage_workfn() work function to do the actual freeing. The
+>>>> free_huge_page() call in a non-task context saves the page to be freed
+>>>> in the hpage_freelist linked list in a lockless manner.
+>>> Do we need to over complicate this (presumably) rare event by a lockless
+>>> algorithm? Why cannot we use a dedicated spin lock for for the linked
+>>> list manipulation? This should be really a trivial code without an
+>>> additional burden of all the lockless subtleties.
+>> Why not llist_add()/llist_del_all() ?
+>>
+> The llist_add() and llist_del_all() are just simple helpers. Because
+> this lockless case involve synchronization of two variables, the llist
+> helpers do not directly apply here. So the rests cannot be used. It will
+> look awkward it is partially converted to use the helpers. If we convert
+> to use a lock as suggested by Michal, using the helpers will be an
+> overkill as xchg() will not be needed.
 
-Acked-by: Rob Herring <robh@kernel.org>
+I don't understand you. What are two variables?
+
+Why can't you simply do the below?
+
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index ac65bb5e38ac..e8ec753f3d92 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -1136,7 +1136,7 @@ static inline void ClearPageHugeTemporary(struct page *page)
+ 	page[2].mapping = NULL;
+ }
+ 
+-void free_huge_page(struct page *page)
++static void __free_huge_page(struct page *page)
+ {
+ 	/*
+ 	 * Can't pass hstate in here because it is called from the
+@@ -1199,6 +1199,35 @@ void free_huge_page(struct page *page)
+ 	spin_unlock(&hugetlb_lock);
+ }
+ 
++static struct llist_head hpage_freelist = LLIST_HEAD_INIT;
++
++static void free_hpage_workfn(struct work_struct *work)
++{
++	struct llist_node *node;
++	struct page *page;
++
++	node = llist_del_all(&hpage_freelist);
++
++	while (node) {
++		page = container_of(node, struct page, mapping);
++		node = node->next;
++		__free_huge_page(page);
++	}
++}
++
++static DECLARE_WORK(free_hpage_work, free_hpage_workfn);
++
++void free_huge_page(struct page *page)
++{
++	if (!in_task()) {
++		if (llist_add((struct llist_node *)&page->mapping, &hpage_freelist))
++			schedule_work(&free_hpage_work);
++		return;
++	}
++
++	__free_huge_page(page);
++}
++
+ static void prep_new_huge_page(struct hstate *h, struct page *page, int nid)
+ {
+ 	INIT_LIST_HEAD(&page->lru);
+
