@@ -2,125 +2,88 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D5DC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61BDBC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC12A20CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:31:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aF+YMJON"
+	by mail.kernel.org (Postfix) with ESMTP id 2D34B2176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:32:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576546329;
+	bh=SfSH52QMrn2wkEA/8SYXmONPZSZmO7J+FDuIHq3JUA0=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=Mexe8aFaP9mBexnL8s52G6ZtuSl9mDqigEQEYEWrb5+dMXN0jUxrsOaRTvSZkGOfS
+	 M8v1qw+RPXC0Hi5AWKbbGdKQAK4LUlGies/KJbu4SnEoVwThGSX3zwc6Zt4gwscrNj
+	 vccjhniMl4+PN4IBA9NX2NDfVeezSntVNjAqJ7gA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbfLQBbS (ORCPT
+        id S1726671AbfLQBcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 20:31:18 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:42937 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726281AbfLQBbS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 20:31:18 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576546277; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=rtNLx7+QI8vJ9iMXYE4MF2d+y/lbnqAVplnH0gmdM2o=;
- b=aF+YMJONqugGysPzA5wMcMfnuAfFXuqnq+0uMjop9QiLngLuzGFJ4mQOC1jNUrT18/5ylhOX
- EfCooLNTTgr70y+gr8w9gn/e4zVWKA2+HwhsxeH8tjkZhunJNAoXaTc9ItQv/g9rfghjtc7z
- 3MP/7+Izsood6Esn6WLBkX1TyfI=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5df82fde.7f2d8aa31110-smtp-out-n03;
- Tue, 17 Dec 2019 01:31:10 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B1969C447A5; Tue, 17 Dec 2019 01:31:09 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Mon, 16 Dec 2019 20:32:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58762 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726016AbfLQBcI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 20:32:08 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B284EC447A5;
-        Tue, 17 Dec 2019 01:31:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB4A120CC7;
+        Tue, 17 Dec 2019 01:32:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576546327;
+        bh=SfSH52QMrn2wkEA/8SYXmONPZSZmO7J+FDuIHq3JUA0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=tiZPj5j10+W9Zx+3PXYitH1VhaC+ShULa9m/X0gvw25mPd76MlPUBtCLIYOyE694e
+         jK0oEpSq3c2FgNWhORBwVZfjtXt2ARRiIsGTFDDFLyelEu5FPD5LsWx5Q1KlCZ6VSQ
+         lY4DbnTmdMzzZVcvm3lwhj7MsXr4UK7Y1K434MMw=
+Subject: Re: [PATCH 4.14 000/267] 4.14.159-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20191216174848.701533383@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <8939f7f3-1931-7b31-a092-7c3e36d33d97@kernel.org>
+Date:   Mon, 16 Dec 2019 18:32:06 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Tue, 17 Dec 2019 09:31:08 +0800
-From:   cang@codeaurora.org
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] scsi: ufs: Put SCSI host after remove it
-In-Reply-To: <ecef25b7-44c0-6b94-c429-6ee5f9508caf@acm.org>
-References: <1576328616-30404-1-git-send-email-cang@codeaurora.org>
- <1576328616-30404-2-git-send-email-cang@codeaurora.org>
- <85475247-efd5-732e-ae74-6d9a11e1bdf2@acm.org>
- <cd6dc7c90d43b8ca8254a43da48334fc@codeaurora.org>
- <cf4915df-5ae4-0dfd-5d44-1fe959d141e2@acm.org>
- <0343644f49adee06e6b2f3f631fe1637@codeaurora.org>
- <ecef25b7-44c0-6b94-c429-6ee5f9508caf@acm.org>
-Message-ID: <d9d18f050ec2d2c86943fa76f73719a1@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+In-Reply-To: <20191216174848.701533383@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-17 09:15, Bart Van Assche wrote:
-> On 12/16/19 4:46 PM, cang@codeaurora.org wrote:
->> On 2019-12-17 01:39, Bart Van Assche wrote:
->>> Apparently some UFS drivers call ufshcd_remove() only and others
->>> (PCIe) call both ufshcd_remove() and ufshcd_dealloc_host(). I think
->>> that the above change will cause trouble for the PCIe driver unless
->>> the ufshcd_dealloc_host() call is removed from ufshcd_pci_remove().
->> 
->> You may get me wrong. I mean we should do like what ufshcd-pci.c does.
->> As driver probe routine allocates SCSI host, then driver remove() 
->> should
->> de-allocate it. Meaning ufs_qcom_remove() should call both 
->> ufshcd_remove()
->> and ufshcd_dealloc_host().
->> 
->> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
->> index 3d4582e..ea45756 100644
->> --- a/drivers/scsi/ufs/ufs-qcom.c
->> +++ b/drivers/scsi/ufs/ufs-qcom.c
->> @@ -3239,6 +3239,7 @@ static int ufs_qcom_remove(struct 
->> platform_device *pdev)
->> 
->>            pm_runtime_get_sync(&(pdev)->dev);
->>            ufshcd_remove(hba);
->>   +       ufshcd_dealloc_host(hba);
->>            return 0;
->>     }
+On 12/16/19 10:45 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.159 release.
+> There are 267 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Hi Can,
+> Responses should be made by Wed, 18 Dec 2019 17:41:25 +0000.
+> Anything received after that time might be too late.
 > 
-> If it is possible to move the ufshcd_dealloc_host() into
-> ufshcd_remove() then I would prefer to do that. If all UFS transport
-> drivers need that call then I think that call should happen from the
-> UFS core instead of from the transport drivers.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.159-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+> and the diffstat can be found below.
 > 
-> Thanks,
+> thanks,
 > 
-> Bart.
+> greg k-h
+> 
 
-Yeah, that is an once for all solution, but I not sure if PCI folks are
-OK if I remove the ufshcd_dealloc_host() call from their driver.
-In next version, I will try to make such change and see.
+Compiled and booted on my test system. No dmesg regressions.
 
-Thanks,
-Can Guo.
+thanks,
+-- Shuah
+
