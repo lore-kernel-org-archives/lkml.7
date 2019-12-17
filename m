@@ -2,146 +2,158 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DB6C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C355BC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4719C207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:03:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E24021739
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:04:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576569792;
-	bh=25HsI9t+Bqog4y9A5SHa9MC0k7uJ8M9CNTOiEeQd6Js=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=IFLZ9EulJXHQ4Bew+94GQCIVmr7ulFyGXDc8c2ThpgFQDtFUj8eEIcMMI54Vv9qSy
-	 74rNnW3O7pBZoIDU5HqdMKti08Yp9OvUmCOhMy6vuzIYsnJheki8yjVNFGs/fUFqES
-	 30mv2JnE9XkgWwMdEQMjO25igE18TW0IRtA1ffF4=
+	s=default; t=1576569850;
+	bh=Y+8NIgqGUB5GGoVAmC1QyodloTkHrKNoE9BJ1KDgc0I=;
+	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
+	b=ahnwPfQgDUceqvpMW4W4nGsGL7hnIgnkOzax3X/ZvqUIS/WjC50PQuzwvJCzTJjt7
+	 3Puigq32A/uL+2x2BqLw4nFXkcV2obH+cROU/Nau3CbEsv9miusPD1vbn4gBGCXB9U
+	 eZOF/KVKg4WdboSUl3Z5xyN5SRc+2hbHxGyI+jh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbfLQIDL (ORCPT
+        id S1727036AbfLQIEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 03:03:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57606 "EHLO mail.kernel.org"
+        Tue, 17 Dec 2019 03:04:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726281AbfLQIDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 03:03:08 -0500
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725975AbfLQIEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 03:04:09 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 672EA21D7D;
-        Tue, 17 Dec 2019 08:03:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E805207FF;
+        Tue, 17 Dec 2019 08:04:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576569787;
-        bh=25HsI9t+Bqog4y9A5SHa9MC0k7uJ8M9CNTOiEeQd6Js=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=DvMpZbB7IMXqeX4QWcO8IidCczC9xn9mkLwwqoYLgM5vsug6dsyrsPkNlUjElcdjj
-         o7hy5AimWrV23+EW+uPpkq77mQ7qWPhxDGeFqm4k5dgwaFkhibUekR6YfYCfhrZZsp
-         wyJwXhekHJQfP01vpqFUQkUgm9WV1sjfrFo2bYIw=
-Received: by mail-wr1-f49.google.com with SMTP id w15so10224332wru.4;
-        Tue, 17 Dec 2019 00:03:07 -0800 (PST)
-X-Gm-Message-State: APjAAAVVrMW1Qcj9xvbCUQF6/3K0eGjAVTxKjKexu0rU+MxL14AMcRAE
-        X7cDs/r0MjYy4zzfPJb/Tk/cE4tEAxnNYpbq4SE=
-X-Google-Smtp-Source: APXvYqzf3OsaJa9aVxYfyxYMjeroNjRrzOjIIzFzUrGof8GRCCHuk/JVJP69n/Ph+I/wKcqIgvXDGi2L7XlZJ9tfLAY=
-X-Received: by 2002:a05:6000:11c6:: with SMTP id i6mr36083863wrx.178.1576569785910;
- Tue, 17 Dec 2019 00:03:05 -0800 (PST)
+        s=default; t=1576569848;
+        bh=Y+8NIgqGUB5GGoVAmC1QyodloTkHrKNoE9BJ1KDgc0I=;
+        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
+        b=NtCUV3NXdw3uz6E3WWDJ/f8avNB+JW3MgzuhyTbvTeFVozCkBMA1VlwHv2Z3SNFi6
+         RfLW0D/1wbdJ8NsGI6PG+SW7IFEhnDvWvYJ0QAE1crrChc0U0DyFDqJna8T8DTxc+U
+         fFlOb8qoGap3jmz9IyfKyLMKNHRAW2V9WYKcDVp4=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20191217052328.25633-1-wens@kernel.org> <7f2be28d-9bf5-79a8-8720-4615a4e9f463@linaro.org>
-In-Reply-To: <7f2be28d-9bf5-79a8-8720-4615a4e9f463@linaro.org>
-From:   Chen-Yu Tsai <wens@kernel.org>
-Date:   Tue, 17 Dec 2019 16:02:53 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65TA0patyNO_xw0gpWR62N4Q_40amFW9OUh7jat3f9J8g@mail.gmail.com>
-Message-ID: <CAGb2v65TA0patyNO_xw0gpWR62N4Q_40amFW9OUh7jat3f9J8g@mail.gmail.com>
-Subject: Re: [PATCH] thermal: rockchip: enable hwmon
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Chen-Yu Tsai <wens@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191216220555.245089-4-brendanhiggins@google.com>
+References: <20191216220555.245089-1-brendanhiggins@google.com> <20191216220555.245089-4-brendanhiggins@google.com>
+Cc:     gregkh@linuxfoundation.org, logang@deltatee.com, mcgrof@kernel.org,
+        knut.omang@oracle.com, linux-um@lists.infradead.org,
+        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        Brendan Higgins <brendanhiggins@google.com>
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        akpm@linux-foundation.org, alan.maguire@oracle.com,
+        anton.ivanov@cambridgegreys.com, arnd@arndb.de,
+        davidgow@google.com, jdike@addtoit.com, keescook@chromium.org,
+        richard@nod.at, rppt@linux.ibm.com, skhan@linuxfoundation.org,
+        yzaikin@google.com
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [RFC v1 3/6] kunit: test: create a single centralized executor for all tests
+User-Agent: alot/0.8.1
+Date:   Tue, 17 Dec 2019 00:04:07 -0800
+Message-Id: <20191217080408.0E805207FF@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 4:01 PM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
->
-> Hi Chen-Yu,
->
-> On 17/12/2019 06:23, Chen-Yu Tsai wrote:
-> > From: Chen-Yu Tsai <wens@csie.org>
-> >
-> > By default of-based thermal driver do not have hwmon entries registered=
-.
-> >
-> > Do this explicitly so users can use standard hwmon interfaces and tools
-> > to read the temperature.
-> >
-> > This is based on similar changes for bcm2835_thermal in commit
-> > d56c19d07e0b ("thermal: bcm2835: enable hwmon explicitly").
->
-> Thanks for submitting this patch, but it is duplicate with:
->
-> https://lore.kernel.org/linux-arm-kernel/20191212061702.BFE2D6E85603@coro=
-na.crabdance.com/
->
-> which I picked up.
+Quoting Brendan Higgins (2019-12-16 14:05:52)
+> diff --git a/include/kunit/test.h b/include/kunit/test.h
+> index dba48304b3bd3..c070798ebb765 100644
+> --- a/include/kunit/test.h
+> +++ b/include/kunit/test.h
+> @@ -217,11 +217,8 @@ int kunit_run_tests(struct kunit_suite *suite);
+>   * everything else is definitely initialized.
+>   */
+>  #define kunit_test_suite(suite)                                         =
+              \
+> -       static int kunit_suite_init##suite(void)                         =
+      \
 
-No problem. Thanks for the pointer.
+Oh this should have been __init before.
 
-ChenYu
+> -       {                                                                =
+      \
+> -               return kunit_run_tests(&suite);                          =
+      \
+> -       }                                                                =
+      \
+> -       late_initcall(kunit_suite_init##suite)
+> +       static struct kunit_suite *__kunit_suite_##suite                 =
+      \
+> +       __used __aligned(8) __section(.kunit_test_suites) =3D &suite
+> =20
+>  /*
+>   * Like kunit_alloc_resource() below, but returns the struct kunit_resou=
+rce
+> diff --git a/lib/kunit/executor.c b/lib/kunit/executor.c
+> new file mode 100644
+> index 0000000000000..978086cfd257d
+> --- /dev/null
+> +++ b/lib/kunit/executor.c
+> @@ -0,0 +1,43 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Base unit test (KUnit) API.
+> + *
+> + * Copyright (C) 2019, Google LLC.
+> + * Author: Brendan Higgins <brendanhiggins@google.com>
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/printk.h>
+> +#include <kunit/test.h>
+> +
+> +/*
+> + * These symbols point to the .kunit_test_suites section and are defined=
+ in
+> + * include/asm-generic/vmlinux.lds.h, and consequently must be extern.
+> + */
+> +extern struct kunit_suite *__kunit_suites_start[];
+> +extern struct kunit_suite *__kunit_suites_end[];
+> +
+> +static bool kunit_run_all_tests(void)
 
->   -- Daniel
->
->
-> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> > ---
-> >  drivers/thermal/rockchip_thermal.c | 8 +++++++-
-> >  1 file changed, 7 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockc=
-hip_thermal.c
-> > index 9ed8085bb792..d53ba7dabf16 100644
-> > --- a/drivers/thermal/rockchip_thermal.c
-> > +++ b/drivers/thermal/rockchip_thermal.c
-> > @@ -19,6 +19,8 @@
-> >  #include <linux/mfd/syscon.h>
-> >  #include <linux/pinctrl/consumer.h>
-> >
-> > +#include "thermal_hwmon.h"
-> > +
-> >  /*
-> >   * If the temperature over a period of time High,
-> >   * the resulting TSHUT gave CRU module,let it reset the entire chip,
-> > @@ -1210,7 +1212,11 @@ rockchip_thermal_register_sensor(struct platform=
-_device *pdev,
-> >               return error;
-> >       }
-> >
-> > -     return 0;
-> > +     /* thermal_zone doesn't enable hwmon as default, enable it here *=
-/
-> > +     sensor->tzd->tzp->no_hwmon =3D false;
-> > +     error =3D thermal_add_hwmon_sysfs(sensor->tzd);
-> > +
-> > +     return error;
-> >  }
-> >
-> >  /**
-> >
->
->
-> --
->  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
-RM SoCs
->
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
->
+Should be __init?
+
+> +{
+> +       struct kunit_suite **suite;
+
+Can this be const? And the linker references above too?
+
+> +       bool has_test_failed =3D false;
+> +
+> +       for (suite =3D __kunit_suites_start;
+> +            suite < __kunit_suites_end;
+> +            ++suite) {
+> +               if (kunit_run_tests(*suite))
+> +                       has_test_failed =3D true;
+> +       }
+> +
+> +       return !has_test_failed;
+> +}
+> +
+> +static int kunit_executor_init(void)
+
+Should be __init?
+
+> +{
+> +       if (kunit_run_all_tests())
+> +               return 0;
+> +       else
+> +               return -EFAULT;
+
+Why two functions instead of just one that is the target of the
+late_initcall? Nitpick: deindent that last return and take it out of the
+else.
+
+> +}
+> +
+> +late_initcall(kunit_executor_init);
