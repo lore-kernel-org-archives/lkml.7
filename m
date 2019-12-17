@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0B8C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC607C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C7AA24679
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:52:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B9C524679
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:52:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727610AbfLQAwH (ORCPT
+        id S1727571AbfLQAwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:52:07 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35498 "EHLO
+        Mon, 16 Dec 2019 19:52:04 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35396 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727160AbfLQAvo (ORCPT
+        by vger.kernel.org with ESMTP id S1727099AbfLQAvo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 19:51:44 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15N-0003P6-JF; Tue, 17 Dec 2019 00:51:37 +0000
+        id 1ih15L-0003N2-8e; Tue, 17 Dec 2019 00:51:35 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15L-0005eS-4V; Tue, 17 Dec 2019 00:51:35 +0000
+        id 1ih15K-0005dD-PJ; Tue, 17 Dec 2019 00:51:34 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jens Axboe" <axboe@kernel.dk>,
-        "Dan Carpenter" <dan.carpenter@oracle.com>
-Date:   Tue, 17 Dec 2019 00:47:38 +0000
-Message-ID: <lsq.1576543535.970054131@decadent.org.uk>
+        "Stephane Grosjean" <s.grosjean@peak-system.com>,
+        "Marc Kleine-Budde" <mkl@pengutronix.de>
+Date:   Tue, 17 Dec 2019 00:47:32 +0000
+Message-ID: <lsq.1576543535.503556634@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 124/136] block: drbd: remove a stray unlock in
- __drbd_send_protocol()
+Subject: [PATCH 3.16 118/136] can: peak_usb: fix a potential out-of-sync
+ while decoding packets
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,29 +56,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Stephane Grosjean <s.grosjean@peak-system.com>
 
-commit 8e9c523016cf9983b295e4bc659183d1fa6ef8e0 upstream.
+commit de280f403f2996679e2607384980703710576fed upstream.
 
-There are two callers of this function and they both unlock the mutex so
-this ends up being a double unlock.
+When decoding a buffer received from PCAN-USB, the first timestamp read in
+a packet is a 16-bit coded time base, and the next ones are an 8-bit
+offset to this base, regardless of the type of packet read.
 
-Fixes: 44ed167da748 ("drbd: rcu_read_lock() and rcu_dereference() for tconn->net_conf")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+This patch corrects a potential loss of synchronization by using a
+timestamp index read from the buffer, rather than an index of received
+data packets, to determine on the sizeof the timestamp to be read from the
+packet being decoded.
+
+Signed-off-by: Stephane Grosjean <s.grosjean@peak-system.com>
+Fixes: 46be265d3388 ("can: usb: PEAK-System Technik PCAN-USB specific part")
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/block/drbd/drbd_main.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/net/can/usb/peak_usb/pcan_usb.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
---- a/drivers/block/drbd/drbd_main.c
-+++ b/drivers/block/drbd/drbd_main.c
-@@ -786,7 +786,6 @@ int __drbd_send_protocol(struct drbd_con
+--- a/drivers/net/can/usb/peak_usb/pcan_usb.c
++++ b/drivers/net/can/usb/peak_usb/pcan_usb.c
+@@ -108,7 +108,7 @@ struct pcan_usb_msg_context {
+ 	u8 *end;
+ 	u8 rec_cnt;
+ 	u8 rec_idx;
+-	u8 rec_data_idx;
++	u8 rec_ts_idx;
+ 	struct net_device *netdev;
+ 	struct pcan_usb *pdev;
+ };
+@@ -551,10 +551,15 @@ static int pcan_usb_decode_status(struct
+ 	mc->ptr += PCAN_USB_CMD_ARGS;
  
- 	if (nc->tentative && connection->agreed_pro_version < 92) {
- 		rcu_read_unlock();
--		mutex_unlock(&sock->mutex);
- 		drbd_err(connection, "--dry-run is not supported by peer");
- 		return -EOPNOTSUPP;
+ 	if (status_len & PCAN_USB_STATUSLEN_TIMESTAMP) {
+-		int err = pcan_usb_decode_ts(mc, !mc->rec_idx);
++		int err = pcan_usb_decode_ts(mc, !mc->rec_ts_idx);
+ 
+ 		if (err)
+ 			return err;
++
++		/* Next packet in the buffer will have a timestamp on a single
++		 * byte
++		 */
++		mc->rec_ts_idx++;
  	}
+ 
+ 	switch (f) {
+@@ -637,10 +642,13 @@ static int pcan_usb_decode_data(struct p
+ 
+ 	cf->can_dlc = get_can_dlc(rec_len);
+ 
+-	/* first data packet timestamp is a word */
+-	if (pcan_usb_decode_ts(mc, !mc->rec_data_idx))
++	/* Only first packet timestamp is a word */
++	if (pcan_usb_decode_ts(mc, !mc->rec_ts_idx))
+ 		goto decode_failed;
+ 
++	/* Next packet in the buffer will have a timestamp on a single byte */
++	mc->rec_ts_idx++;
++
+ 	/* read data */
+ 	memset(cf->data, 0x0, sizeof(cf->data));
+ 	if (status_len & PCAN_USB_STATUSLEN_RTR) {
+@@ -695,7 +703,6 @@ static int pcan_usb_decode_msg(struct pe
+ 		/* handle normal can frames here */
+ 		} else {
+ 			err = pcan_usb_decode_data(&mc, sl);
+-			mc.rec_data_idx++;
+ 		}
+ 	}
+ 
 
