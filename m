@@ -2,383 +2,566 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B800C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 326EFC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 292122465E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:22:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576592526;
-	bh=mtrsyyIAZOkWqfybw4q+QIgMkdDDHmkNmWzEgkUsmI4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wvOuf0+0lPx9UIgu+fiKXU6oEw1hne6DJbe7mQDxAJqtQX4yWFGmna06SYVTmvL+c
-	 78kOJVoVrdMcvbTJAj9NC9mIVlrT6BEba/40Jii3VX5ULRqFEHvKdqE5UfZ5swAXUa
-	 ykW8h1OqqAHuIGMLjl7NkkxTxq4zaqeK4FBgYgYo=
+	by mail.kernel.org (Postfix) with ESMTP id EB2AD21D7D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:23:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728965AbfLQOWF (ORCPT
+        id S1728966AbfLQOXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:22:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57234 "EHLO mail.kernel.org"
+        Tue, 17 Dec 2019 09:23:19 -0500
+Received: from foss.arm.com ([217.140.110.172]:38682 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728953AbfLQOWD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:22:03 -0500
-Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D199A21775;
-        Tue, 17 Dec 2019 14:21:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576592522;
-        bh=mtrsyyIAZOkWqfybw4q+QIgMkdDDHmkNmWzEgkUsmI4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x/8FUHsOcgoKdoXeQ27g/lV4MiCPsBwkRpINuemPsE2Uff3SoRota1gUIlFp4f+YS
-         77vJCBgo89z/OPQWv6Z8tIUxqS35kHEKdV/cWbkPA3gHRZYnw6V1emFDcLuyjsbxWx
-         1WE6pVjJfXiaU8AQP0HkVajAcJk7zVdvDI8rU9CY=
-From:   Mike Rapoport <rppt@kernel.org>
-To:     linux-sh@vger.kernel.org
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH 2/2] sh: add support for folded p4d page tables
-Date:   Tue, 17 Dec 2019 16:21:50 +0200
-Message-Id: <20191217142150.10392-3-rppt@kernel.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191217142150.10392-1-rppt@kernel.org>
-References: <20191217142150.10392-1-rppt@kernel.org>
+        id S1728763AbfLQOXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 09:23:19 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B47681FB;
+        Tue, 17 Dec 2019 06:23:17 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 033D53F719;
+        Tue, 17 Dec 2019 06:23:16 -0800 (PST)
+Date:   Tue, 17 Dec 2019 14:23:15 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org
+Subject: Re: [PATCH 11/13] PCI: j721e: Add TI J721E PCIe driver
+Message-ID: <20191217142314.GA8074@e119886-lin.cambridge.arm.com>
+References: <20191209092147.22901-1-kishon@ti.com>
+ <20191209092147.22901-12-kishon@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191209092147.22901-12-kishon@ti.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+On Mon, Dec 09, 2019 at 02:51:45PM +0530, Kishon Vijay Abraham I wrote:
+> Add support for PCIe controller in J721E SoC. The controller uses the
+> Cadence PCIe core programmed by pcie-cadence*.c. The PCIe controller
+> will work in both host mode and device mode.
+> Some of the features of the controller are:
+>   *) Supports both RC mode and EP mode
+>   *) Supports MSI and MSI-X support
+>   *) Supports upto GEN3 speed mode
+>   *) Supports SR-IOV capability
+>   *) Ability to route all transactions via SMMU (support will be added
+>      in a later patch).
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  drivers/pci/controller/cadence/Kconfig     |  23 ++
+>  drivers/pci/controller/cadence/Makefile    |   1 +
+>  drivers/pci/controller/cadence/pci-j721e.c | 430 +++++++++++++++++++++
+>  3 files changed, 454 insertions(+)
+>  create mode 100644 drivers/pci/controller/cadence/pci-j721e.c
+> 
+> diff --git a/drivers/pci/controller/cadence/Kconfig b/drivers/pci/controller/cadence/Kconfig
+> index b76b3cf55ce5..5d30564190e1 100644
+> --- a/drivers/pci/controller/cadence/Kconfig
+> +++ b/drivers/pci/controller/cadence/Kconfig
+> @@ -42,4 +42,27 @@ config PCIE_CADENCE_PLAT_EP
+>  	  endpoint mode. This PCIe controller may be embedded into many
+>  	  different vendors SoCs.
+>  
+> +config PCI_J721E
+> +	bool
+> +
+> +config PCI_J721E_HOST
+> +	bool "TI J721E PCIe platform host controller"
+> +	depends on OF
+> +	select PCIE_CADENCE_HOST
+> +	select PCI_J721E
+> +	help
+> +	  Say Y here if you want to support the TI J721E PCIe platform
+> +	  controller in host mode. TI J721E PCIe controller uses Cadence PCIe
+> +	  core.
+> +
+> +config PCI_J721E_EP
+> +	bool "TI J721E PCIe platform endpoint controller"
+> +	depends on OF
+> +	depends on PCI_ENDPOINT
+> +	select PCIE_CADENCE_EP
+> +	select PCI_J721E
+> +	help
+> +	  Say Y here if you want to support the TI J721E PCIe platform
+> +	  controller in endpoint mode. TI J721E PCIe controller uses Cadence PCIe
+> +	  core.
+>  endmenu
+> diff --git a/drivers/pci/controller/cadence/Makefile b/drivers/pci/controller/cadence/Makefile
+> index 232a3f20876a..9bac5fb2f13d 100644
+> --- a/drivers/pci/controller/cadence/Makefile
+> +++ b/drivers/pci/controller/cadence/Makefile
+> @@ -3,3 +3,4 @@ obj-$(CONFIG_PCIE_CADENCE) += pcie-cadence.o
+>  obj-$(CONFIG_PCIE_CADENCE_HOST) += pcie-cadence-host.o
+>  obj-$(CONFIG_PCIE_CADENCE_EP) += pcie-cadence-ep.o
+>  obj-$(CONFIG_PCIE_CADENCE_PLAT) += pcie-cadence-plat.o
+> +obj-$(CONFIG_PCI_J721E) += pci-j721e.o
 
-Implement primitives necessary for the 4th level folding, add walks of p4d
-level where appropriate and remove usage of __ARCH_USE_5LEVEL_HACK.
+Why pci-j721e and not pcie-j721e? Especially given that many of the structures
+in the file use pcie (e.g. j721e_pcie_ep_data)
 
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
- arch/sh/include/asm/pgtable-2level.h |  1 -
- arch/sh/include/asm/pgtable-3level.h |  1 -
- arch/sh/kernel/io_trapped.c          |  7 ++++++-
- arch/sh/mm/cache-sh4.c               |  4 +++-
- arch/sh/mm/cache-sh5.c               |  7 ++++++-
- arch/sh/mm/fault.c                   | 26 +++++++++++++++++++++++---
- arch/sh/mm/hugetlbpage.c             | 28 ++++++++++++++++++----------
- arch/sh/mm/init.c                    |  9 ++++++++-
- arch/sh/mm/kmap.c                    |  2 +-
- arch/sh/mm/tlbex_32.c                |  6 +++++-
- arch/sh/mm/tlbex_64.c                |  7 ++++++-
- 11 files changed, 76 insertions(+), 22 deletions(-)
 
-diff --git a/arch/sh/include/asm/pgtable-2level.h b/arch/sh/include/asm/pgtable-2level.h
-index bf1eb51c3ee5..08bff93927ff 100644
---- a/arch/sh/include/asm/pgtable-2level.h
-+++ b/arch/sh/include/asm/pgtable-2level.h
-@@ -2,7 +2,6 @@
- #ifndef __ASM_SH_PGTABLE_2LEVEL_H
- #define __ASM_SH_PGTABLE_2LEVEL_H
- 
--#define __ARCH_USE_5LEVEL_HACK
- #include <asm-generic/pgtable-nopmd.h>
- 
- /*
-diff --git a/arch/sh/include/asm/pgtable-3level.h b/arch/sh/include/asm/pgtable-3level.h
-index 779260b721ca..0f80097e5c9c 100644
---- a/arch/sh/include/asm/pgtable-3level.h
-+++ b/arch/sh/include/asm/pgtable-3level.h
-@@ -2,7 +2,6 @@
- #ifndef __ASM_SH_PGTABLE_3LEVEL_H
- #define __ASM_SH_PGTABLE_3LEVEL_H
- 
--#define __ARCH_USE_5LEVEL_HACK
- #include <asm-generic/pgtable-nopud.h>
- 
- /*
-diff --git a/arch/sh/kernel/io_trapped.c b/arch/sh/kernel/io_trapped.c
-index 60c828a2b8a2..037aab2708b7 100644
---- a/arch/sh/kernel/io_trapped.c
-+++ b/arch/sh/kernel/io_trapped.c
-@@ -136,6 +136,7 @@ EXPORT_SYMBOL_GPL(match_trapped_io_handler);
- static struct trapped_io *lookup_tiop(unsigned long address)
- {
- 	pgd_t *pgd_k;
-+	p4d_t *p4d_k;
- 	pud_t *pud_k;
- 	pmd_t *pmd_k;
- 	pte_t *pte_k;
-@@ -145,7 +146,11 @@ static struct trapped_io *lookup_tiop(unsigned long address)
- 	if (!pgd_present(*pgd_k))
- 		return NULL;
- 
--	pud_k = pud_offset(pgd_k, address);
-+	p4d_k = p4d_offset(pgd_k, address);
-+	if (!p4d_present(*p4d_k))
-+		return NULL;
-+
-+	pud_k = pud_offset(p4d_k, address);
- 	if (!pud_present(*pud_k))
- 		return NULL;
- 
-diff --git a/arch/sh/mm/cache-sh4.c b/arch/sh/mm/cache-sh4.c
-index eee911422cf9..45943bcb7042 100644
---- a/arch/sh/mm/cache-sh4.c
-+++ b/arch/sh/mm/cache-sh4.c
-@@ -209,6 +209,7 @@ static void sh4_flush_cache_page(void *args)
- 	unsigned long address, pfn, phys;
- 	int map_coherent = 0;
- 	pgd_t *pgd;
-+	p4d_t *p4d;
- 	pud_t *pud;
- 	pmd_t *pmd;
- 	pte_t *pte;
-@@ -224,7 +225,8 @@ static void sh4_flush_cache_page(void *args)
- 		return;
- 
- 	pgd = pgd_offset(vma->vm_mm, address);
--	pud = pud_offset(pgd, address);
-+	p4d = p4d_offset(pgd, address);
-+	pud = pud_offset(p4d, address);
- 	pmd = pmd_offset(pud, address);
- 	pte = pte_offset_kernel(pmd, address);
- 
-diff --git a/arch/sh/mm/cache-sh5.c b/arch/sh/mm/cache-sh5.c
-index 445b5e69b73c..442a77cc2957 100644
---- a/arch/sh/mm/cache-sh5.c
-+++ b/arch/sh/mm/cache-sh5.c
-@@ -383,6 +383,7 @@ static void sh64_dcache_purge_user_pages(struct mm_struct *mm,
- 				unsigned long addr, unsigned long end)
- {
- 	pgd_t *pgd;
-+	p4d_t *p4d;
- 	pud_t *pud;
- 	pmd_t *pmd;
- 	pte_t *pte;
-@@ -397,7 +398,11 @@ static void sh64_dcache_purge_user_pages(struct mm_struct *mm,
- 	if (pgd_bad(*pgd))
- 		return;
- 
--	pud = pud_offset(pgd, addr);
-+	p4d = p4d_offset(pgd, addr);
-+	if (p4d_none(*p4d) || p4d_bad(*p4d))
-+		return;
-+
-+	pud = pud_offset(p4d, addr);
- 	if (pud_none(*pud) || pud_bad(*pud))
- 		return;
- 
-diff --git a/arch/sh/mm/fault.c b/arch/sh/mm/fault.c
-index 5f51456f4fc7..001c9c23aa56 100644
---- a/arch/sh/mm/fault.c
-+++ b/arch/sh/mm/fault.c
-@@ -53,6 +53,7 @@ static void show_pte(struct mm_struct *mm, unsigned long addr)
- 	       (u32)(sizeof(*pgd) * 2), (u64)pgd_val(*pgd));
- 
- 	do {
-+		p4d_t *p4d;
- 		pud_t *pud;
- 		pmd_t *pmd;
- 		pte_t *pte;
-@@ -65,7 +66,20 @@ static void show_pte(struct mm_struct *mm, unsigned long addr)
- 			break;
- 		}
- 
--		pud = pud_offset(pgd, addr);
-+		p4d = p4d_offset(pgd, addr);
-+		if (PTRS_PER_P4D != 1)
-+			printk(", *p4d=%0*Lx", (u32)(sizeof(*p4d) * 2),
-+			       (u64)p4d_val(*p4d));
-+
-+		if (p4d_none(*p4d))
-+			break;
-+
-+		if (p4d_bad(*p4d)) {
-+			printk("(bad)");
-+			break;
-+		}
-+
-+		pud = pud_offset(p4d, addr);
- 		if (PTRS_PER_PUD != 1)
- 			printk(", *pud=%0*Lx", (u32)(sizeof(*pud) * 2),
- 			       (u64)pud_val(*pud));
-@@ -107,6 +121,7 @@ static inline pmd_t *vmalloc_sync_one(pgd_t *pgd, unsigned long address)
- {
- 	unsigned index = pgd_index(address);
- 	pgd_t *pgd_k;
-+	p4d_t *p4d, *p4d_k;
- 	pud_t *pud, *pud_k;
- 	pmd_t *pmd, *pmd_k;
- 
-@@ -116,8 +131,13 @@ static inline pmd_t *vmalloc_sync_one(pgd_t *pgd, unsigned long address)
- 	if (!pgd_present(*pgd_k))
- 		return NULL;
- 
--	pud = pud_offset(pgd, address);
--	pud_k = pud_offset(pgd_k, address);
-+	p4d = p4d_offset(pgd, address);
-+	p4d_k = p4d_offset(pgd_k, address);
-+	if (!p4d_present(*p4d_k))
-+		return NULL;
-+
-+	pud = pud_offset(p4d, address);
-+	pud_k = pud_offset(p4d_k, address);
- 	if (!pud_present(*pud_k))
- 		return NULL;
- 
-diff --git a/arch/sh/mm/hugetlbpage.c b/arch/sh/mm/hugetlbpage.c
-index 960deb1f24a1..acd5652a0de3 100644
---- a/arch/sh/mm/hugetlbpage.c
-+++ b/arch/sh/mm/hugetlbpage.c
-@@ -26,17 +26,21 @@ pte_t *huge_pte_alloc(struct mm_struct *mm,
- 			unsigned long addr, unsigned long sz)
- {
- 	pgd_t *pgd;
-+	p4d_t *p4d;
- 	pud_t *pud;
- 	pmd_t *pmd;
- 	pte_t *pte = NULL;
- 
- 	pgd = pgd_offset(mm, addr);
- 	if (pgd) {
--		pud = pud_alloc(mm, pgd, addr);
--		if (pud) {
--			pmd = pmd_alloc(mm, pud, addr);
--			if (pmd)
--				pte = pte_alloc_map(mm, pmd, addr);
-+		p4d = p4d_alloc(mm, pgd, addr);
-+		if (p4d) {
-+			pud = pud_alloc(mm, p4d, addr);
-+			if (pud) {
-+				pmd = pmd_alloc(mm, pud, addr);
-+				if (pmd)
-+					pte = pte_alloc_map(mm, pmd, addr);
-+			}
- 		}
- 	}
- 
-@@ -47,17 +51,21 @@ pte_t *huge_pte_offset(struct mm_struct *mm,
- 		       unsigned long addr, unsigned long sz)
- {
- 	pgd_t *pgd;
-+	p4d_t *p4d;
- 	pud_t *pud;
- 	pmd_t *pmd;
- 	pte_t *pte = NULL;
- 
- 	pgd = pgd_offset(mm, addr);
- 	if (pgd) {
--		pud = pud_offset(pgd, addr);
--		if (pud) {
--			pmd = pmd_offset(pud, addr);
--			if (pmd)
--				pte = pte_offset_map(pmd, addr);
-+		p4d = p4d_offset(pgd, addr);
-+		if (p4d) {
-+			pud = pud_offset(p4d, addr);
-+			if (pud) {
-+				pmd = pmd_offset(pud, addr);
-+				if (pmd)
-+					pte = pte_offset_map(pmd, addr);
-+			}
- 		}
- 	}
- 
-diff --git a/arch/sh/mm/init.c b/arch/sh/mm/init.c
-index 4bce5fc4b63e..ed3fc4e5ded7 100644
---- a/arch/sh/mm/init.c
-+++ b/arch/sh/mm/init.c
-@@ -45,6 +45,7 @@ void __init __weak plat_mem_setup(void)
- static pte_t *__get_pte_phys(unsigned long addr)
- {
- 	pgd_t *pgd;
-+	p4d_t *p4d;
- 	pud_t *pud;
- 	pmd_t *pmd;
- 
-@@ -54,7 +55,13 @@ static pte_t *__get_pte_phys(unsigned long addr)
- 		return NULL;
- 	}
- 
--	pud = pud_alloc(NULL, pgd, addr);
-+	p4d = p4d_alloc(NULL, pgd, addr);
-+	if (unlikely(!p4d)) {
-+		p4d_ERROR(*p4d);
-+		return NULL;
-+	}
-+
-+	pud = pud_alloc(NULL, p4d, addr);
- 	if (unlikely(!pud)) {
- 		pud_ERROR(*pud);
- 		return NULL;
-diff --git a/arch/sh/mm/kmap.c b/arch/sh/mm/kmap.c
-index 9e6b38b03cf7..0e7039137f5a 100644
---- a/arch/sh/mm/kmap.c
-+++ b/arch/sh/mm/kmap.c
-@@ -15,7 +15,7 @@
- #include <asm/cacheflush.h>
- 
- #define kmap_get_fixmap_pte(vaddr)                                     \
--	pte_offset_kernel(pmd_offset(pud_offset(pgd_offset_k(vaddr), (vaddr)), (vaddr)), (vaddr))
-+	pte_offset_kernel(pmd_offset(pud_offset(p4d_offset(pgd_offset_k(vaddr), (vaddr)), (vaddr)), (vaddr)), vaddr)
- 
- static pte_t *kmap_coherent_pte;
- 
-diff --git a/arch/sh/mm/tlbex_32.c b/arch/sh/mm/tlbex_32.c
-index 382262dc0c4b..1c53868632ee 100644
---- a/arch/sh/mm/tlbex_32.c
-+++ b/arch/sh/mm/tlbex_32.c
-@@ -23,6 +23,7 @@ handle_tlbmiss(struct pt_regs *regs, unsigned long error_code,
- 	       unsigned long address)
- {
- 	pgd_t *pgd;
-+	p4d_t *p4d;
- 	pud_t *pud;
- 	pmd_t *pmd;
- 	pte_t *pte;
-@@ -42,7 +43,10 @@ handle_tlbmiss(struct pt_regs *regs, unsigned long error_code,
- 		pgd = pgd_offset(current->mm, address);
- 	}
- 
--	pud = pud_offset(pgd, address);
-+	p4d = p4d_offset(pgd, address);
-+	if (p4d_none_or_clear_bad(p4d))
-+		return 1;
-+	pud = pud_offset(p4d, address);
- 	if (pud_none_or_clear_bad(pud))
- 		return 1;
- 	pmd = pmd_offset(pud, address);
-diff --git a/arch/sh/mm/tlbex_64.c b/arch/sh/mm/tlbex_64.c
-index 8ff966dd0c74..0d015f7556fa 100644
---- a/arch/sh/mm/tlbex_64.c
-+++ b/arch/sh/mm/tlbex_64.c
-@@ -44,6 +44,7 @@ static int handle_tlbmiss(unsigned long long protection_flags,
- 			  unsigned long address)
- {
- 	pgd_t *pgd;
-+	p4d_t *p4d;
- 	pud_t *pud;
- 	pmd_t *pmd;
- 	pte_t *pte;
-@@ -58,7 +59,11 @@ static int handle_tlbmiss(unsigned long long protection_flags,
- 		pgd = pgd_offset(current->mm, address);
- 	}
- 
--	pud = pud_offset(pgd, address);
-+	p4d = p4d_offset(pgd, address);
-+	if (p4d_none(*p4d) || !p4d_present(*p4d))
-+		return 1;
-+
-+	pud = pud_offset(p4d, address);
- 	if (pud_none(*pud) || !pud_present(*pud))
- 		return 1;
- 
--- 
-2.24.0
+> diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+> new file mode 100644
+> index 000000000000..9ffb7e88c739
+> --- /dev/null
+> +++ b/drivers/pci/controller/cadence/pci-j721e.c
+> @@ -0,0 +1,430 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/**
+> + * pci-j721e - PCIe controller driver for TI's J721E SoCs
+> + *
+> + * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
+> + * Author: Kishon Vijay Abraham I <kishon@ti.com>
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/io.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/pci.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/regmap.h>
+> +
+> +#include "../../pci.h"
+> +#include "pcie-cadence.h"
+> +
+> +#define J721E_PCIE_USER_CMD_STATUS	0x4
+> +#define LINK_TRAINING_ENABLE		BIT(0)
+> +
+> +#define J721E_PCIE_USER_LINKSTATUS	0x14
+> +#define LINK_STATUS			GENMASK(1, 0)
+> +
+> +enum link_status {
+> +	NO_RECIEVERS_DETECTED,
+> +	LINK_TRAINING_IN_PROGRESS,
+> +	LINK_UP_DL_IN_PROGRESS,
+> +	LINK_UP_DL_COMPLETED,
+> +};
+> +
+> +#define J721E_MODE_RC			BIT(7)
+> +#define LANE_COUNT_MASK			BIT(8)
+> +#define LANE_COUNT(n)			((n) << 8)
+> +
+> +#define GENERATION_SEL_MASK		GENMASK(1, 0)
+> +
+> +#define MAX_LANES			2
+> +
+> +struct j721e_pcie {
+> +	struct device		*dev;
+> +	struct device_node	*node;
+> +	u32			mode;
+> +	u32			num_lanes;
+> +	struct cdns_pcie	*cdns_pcie;
+> +	void __iomem		*user_cfg_base;
+> +};
+> +
+> +enum j721e_pcie_mode {
+> +	PCI_MODE_RC,
+> +	PCI_MODE_EP,
+> +};
+> +
+> +struct j721e_pcie_data {
+> +	enum j721e_pcie_mode	mode;
+> +};
+> +
+> +static inline u32 j721e_pcie_user_readl(struct j721e_pcie *pcie, u32 offset)
+> +{
+> +	return readl(pcie->user_cfg_base + offset);
+> +}
+> +
+> +static inline void j721e_pcie_user_writel(struct j721e_pcie *pcie, u32 offset,
+> +					  u32 value)
+> +{
+> +	writel(value, pcie->user_cfg_base + offset);
+> +}
+> +
+> +static int j721e_pcie_start_link(struct cdns_pcie *cdns_pcie, bool start)
+> +{
+> +	struct j721e_pcie *pcie = dev_get_drvdata(cdns_pcie->dev);
+> +	u32 reg;
+> +
+> +	reg = j721e_pcie_user_readl(pcie, J721E_PCIE_USER_CMD_STATUS);
+> +	if (start)
+> +		reg |= LINK_TRAINING_ENABLE;
+> +	else
+> +		reg &= ~LINK_TRAINING_ENABLE;
+> +	j721e_pcie_user_writel(pcie, J721E_PCIE_USER_CMD_STATUS, reg);
+> +
+> +	return 0;
+> +}
+> +
+> +static bool j721e_pcie_is_link_up(struct cdns_pcie *cdns_pcie)
+> +{
+> +	struct j721e_pcie *pcie = dev_get_drvdata(cdns_pcie->dev);
+> +	u32 reg;
+> +
+> +	reg = j721e_pcie_user_readl(pcie, J721E_PCIE_USER_LINKSTATUS);
+> +	reg &= LINK_STATUS;
+> +	if (reg == LINK_UP_DL_COMPLETED)
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+> +static const struct cdns_pcie_ops j721e_ops_ops = {
+> +	.read = cdns_pcie_read32,
+> +	.write = cdns_pcie_write32,
+> +	.start_link = j721e_pcie_start_link,
+> +	.is_link_up = j721e_pcie_is_link_up,
+> +};
+> +
+> +static int j721e_pcie_set_mode(struct j721e_pcie *pcie, struct regmap *syscon)
+> +{
+> +	struct device *dev = pcie->dev;
+> +	u32 mask = J721E_MODE_RC;
+> +	u32 mode = pcie->mode;
+> +	u32 val = 0;
+> +	int ret = 0;
+> +
+> +	if (mode == PCI_MODE_RC)
+> +		val = J721E_MODE_RC;
+> +
+> +	ret = regmap_update_bits(syscon, 0, mask, val);
+> +	if (ret)
+> +		dev_err(dev, "failed to set pcie mode\n");
+> +
+> +	return ret;
+> +}
+> +
+> +static int j721e_pcie_set_link_speed(struct j721e_pcie *pcie,
+> +				     struct regmap *syscon)
+> +{
+> +	struct device *dev = pcie->dev;
+> +	struct device_node *np = dev->of_node;
+> +	int link_speed;
+> +	u32 val = 0;
+> +	int ret;
+> +
+> +	link_speed = of_pci_get_max_link_speed(np);
+> +	if (link_speed < 2)
+> +		link_speed = 2;
+> +
+> +	val = link_speed - 1;
+> +	ret = regmap_update_bits(syscon, 0, GENERATION_SEL_MASK, val);
+> +	if (ret)
+> +		dev_err(dev, "failed to set link speed\n");
+> +
+> +	return ret;
+> +}
+> +
+> +static int j721e_pcie_set_lane_count(struct j721e_pcie *pcie,
+> +				     struct regmap *syscon)
+> +{
+> +	struct device *dev = pcie->dev;
+> +	u32 lanes = pcie->num_lanes;
+> +	u32 val = 0;
+> +	int ret;
+> +
+> +	val = LANE_COUNT(lanes - 1);
+> +	ret = regmap_update_bits(syscon, 0, LANE_COUNT_MASK, val);
+> +	if (ret)
+> +		dev_err(dev, "failed to set link count\n");
+> +
+> +	return ret;
+> +}
+> +
+> +static int j721e_pcie_ctrl_init(struct j721e_pcie *pcie)
+> +{
+> +	struct device *dev = pcie->dev;
+> +	struct device_node *node = dev->of_node;
+> +	struct regmap *syscon;
+> +	int ret;
+> +
+> +	syscon = syscon_regmap_lookup_by_phandle(node, "ti,syscon-pcie-ctrl");
+> +	if (IS_ERR(syscon)) {
+> +		dev_err(dev, "Unable to get ti,syscon-pcie-ctrl regmap\n");
+> +		return PTR_ERR(syscon);
+> +	}
+> +
+> +	ret = j721e_pcie_set_mode(pcie, syscon);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to set pci mode\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = j721e_pcie_set_link_speed(pcie, syscon);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to set link speed\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = j721e_pcie_set_lane_count(pcie, syscon);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to set num-lanes\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int cdns_ti_pcie_config_read(struct pci_bus *bus, unsigned int devfn,
+> +				    int where, int size, u32 *value)
+> +{
+> +	struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
+> +	struct cdns_pcie_rc *rc = pci_host_bridge_priv(bridge);
+> +	unsigned int busn = bus->number;
+> +
+> +	if (busn == rc->bus_range->start)
+> +		return pci_generic_config_read32(bus, devfn, where, size,
+> +						 value);
+> +
+> +	return pci_generic_config_read(bus, devfn, where, size, value);
+> +}
+> +
+> +static int cdns_ti_pcie_config_write(struct pci_bus *bus, unsigned int devfn,
+> +				     int where, int size, u32 value)
+> +{
+> +	struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
+> +	struct cdns_pcie_rc *rc = pci_host_bridge_priv(bridge);
+> +	unsigned int busn = bus->number;
+> +
+> +	if (busn == rc->bus_range->start)
+> +		return pci_generic_config_write32(bus, devfn, where, size,
+> +						  value);
+> +
+> +	return pci_generic_config_write(bus, devfn, where, size, value);
+> +}
+> +
+> +static struct pci_ops cdns_ti_pcie_host_ops = {
+> +	.map_bus	= cdns_pci_map_bus,
+> +	.read		= cdns_ti_pcie_config_read,
+> +	.write		= cdns_ti_pcie_config_write,
+> +};
+> +
+> +static const struct j721e_pcie_data j721e_pcie_rc_data = {
+> +	.mode = PCI_MODE_RC,
+> +};
+> +
+> +static const struct j721e_pcie_data j721e_pcie_ep_data = {
+> +	.mode = PCI_MODE_EP,
+> +};
+> +
+> +static const struct of_device_id of_j721e_pcie_match[] = {
+> +	{
+> +		.compatible = "ti,j721e-pcie-host",
+> +		.data = &j721e_pcie_rc_data,
+> +	},
+> +	{
+> +		.compatible = "ti,j721e-pcie-ep",
+> +		.data = &j721e_pcie_ep_data,
+> +	},
+> +	{},
+> +};
+> +
+> +static int j721e_pcie_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *node = dev->of_node;
+> +	const struct of_device_id *match;
+> +	struct pci_host_bridge *bridge;
+> +	struct j721e_pcie_data *data;
+> +	struct cdns_pcie *cdns_pcie;
+> +	struct j721e_pcie *pcie;
+> +	struct cdns_pcie_rc *rc;
+> +	struct cdns_pcie_ep *ep;
+> +	struct gpio_desc *gpiod;
+> +	struct resource *res;
+> +	void __iomem *base;
+> +	u32 num_lanes;
+> +	u32 mode;
+> +	int ret;
+> +
+> +	match = of_match_device(of_match_ptr(of_j721e_pcie_match), dev);
+> +	if (!match)
+> +		return -EINVAL;
+> +
+> +	data = (struct j721e_pcie_data *)match->data;
 
+I think you can use of_device_get_match_data(dev) here instead.
+
+
+> +	mode = (u32)data->mode;
+> +
+> +	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+> +	if (!pcie)
+> +		return -ENOMEM;
+> +
+> +	pcie->dev = dev;
+> +	pcie->node = node;
+> +	pcie->mode = mode;
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "user_cfg");
+> +	base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
+> +	pcie->user_cfg_base = base;
+> +
+> +	ret = of_property_read_u32(node, "num-lanes", &num_lanes);
+> +	if (ret || num_lanes > MAX_LANES)
+> +		num_lanes = 1;
+> +	pcie->num_lanes = num_lanes;
+> +
+> +	dev_set_drvdata(dev, pcie);
+> +	pm_runtime_enable(dev);
+> +	ret = pm_runtime_get_sync(dev);
+> +	if (ret < 0) {
+> +		dev_err(dev, "pm_runtime_get_sync failed\n");
+> +		goto err_get_sync;
+
+This means we'll call pm_runtime_put - are you sure you want to do that?
+
+Thanks,
+
+Andrew Murray
+
+
+> +	}
+> +
+> +	ret = j721e_pcie_ctrl_init(pcie);
+> +	if (ret < 0) {
+> +		dev_err(dev, "pm_runtime_get_sync failed\n");
+> +		goto err_get_sync;
+> +	}
+> +
+> +	switch (mode) {
+> +	case PCI_MODE_RC:
+> +		if (!IS_ENABLED(CONFIG_PCIE_CADENCE_HOST)) {
+> +			ret = -ENODEV;
+> +			goto err_get_sync;
+> +		}
+> +
+> +		bridge = devm_pci_alloc_host_bridge(dev, sizeof(*rc));
+> +		if (!bridge) {
+> +			ret = -ENOMEM;
+> +			goto err_get_sync;
+> +		}
+> +
+> +		bridge->ops = &cdns_ti_pcie_host_ops;
+> +		rc = pci_host_bridge_priv(bridge);
+> +
+> +		cdns_pcie = &rc->pcie;
+> +		cdns_pcie->dev = dev;
+> +		cdns_pcie->ops = &j721e_ops_ops;
+> +		pcie->cdns_pcie = cdns_pcie;
+> +
+> +		gpiod = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
+> +		if (IS_ERR(gpiod)) {
+> +			ret = PTR_ERR(gpiod);
+> +			if (ret != -EPROBE_DEFER)
+> +				dev_err(dev, "Failed to get reset GPIO\n");
+> +			goto err_get_sync;
+> +		}
+> +
+> +		ret = cdns_pcie_init_phy(dev, cdns_pcie);
+> +		if (ret) {
+> +			dev_err(dev, "Failed to init phy\n");
+> +			goto err_get_sync;
+> +		}
+> +
+> +		/*
+> +		 * "Power Sequencing and Reset Signal Timings" table in
+> +		 * PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION, REV. 3.0
+> +		 * indicates PERST# should be deasserted after minimum of 100us
+> +		 * once REFCLK is stable. The REFCLK to the connector in RC
+> +		 * mode is selected while enabling the PHY. So deassert PERST#
+> +		 * after 100 us.
+> +		 */
+> +		if (gpiod) {
+> +			usleep_range(100, 200);
+> +			gpiod_set_value_cansleep(gpiod, 1);
+> +		}
+> +
+> +		ret = cdns_pcie_host_setup(rc);
+> +		if (ret < 0)
+> +			goto err_pcie_setup;
+> +
+> +		break;
+> +	case PCI_MODE_EP:
+> +		if (!IS_ENABLED(CONFIG_PCIE_CADENCE_EP)) {
+> +			ret = -ENODEV;
+> +			goto err_get_sync;
+> +		}
+> +
+> +		ep = devm_kzalloc(dev, sizeof(*ep), GFP_KERNEL);
+> +		if (!ep) {
+> +			ret = -ENOMEM;
+> +			goto err_get_sync;
+> +		}
+> +
+> +		cdns_pcie = &ep->pcie;
+> +		cdns_pcie->dev = dev;
+> +		cdns_pcie->ops = &j721e_ops_ops;
+> +		pcie->cdns_pcie = cdns_pcie;
+> +
+> +		ret = cdns_pcie_init_phy(dev, cdns_pcie);
+> +		if (ret) {
+> +			dev_err(dev, "Failed to init phy\n");
+> +			goto err_get_sync;
+> +		}
+> +
+> +		ret = cdns_pcie_ep_setup(ep);
+> +		if (ret < 0)
+> +			goto err_pcie_setup;
+> +
+> +		break;
+> +	default:
+> +		dev_err(dev, "INVALID device type %d\n", mode);
+> +	}
+> +
+> +	return 0;
+> +
+> +err_pcie_setup:
+> +	cdns_pcie_disable_phy(cdns_pcie);
+> +
+> +err_get_sync:
+> +	pm_runtime_put(dev);
+> +	pm_runtime_disable(dev);
+> +
+> +	return ret;
+> +}
+> +
+> +static int j721e_pcie_remove(struct platform_device *pdev)
+> +{
+> +	struct j721e_pcie *pcie = platform_get_drvdata(pdev);
+> +	struct cdns_pcie *cdns_pcie = pcie->cdns_pcie;
+> +	struct device *dev = &pdev->dev;
+> +
+> +	cdns_pcie_disable_phy(cdns_pcie);
+> +	pm_runtime_put(dev);
+> +	pm_runtime_disable(dev);
+> +	of_platform_depopulate(dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver j721e_pcie_driver = {
+> +	.probe  = j721e_pcie_probe,
+> +	.remove = j721e_pcie_remove,
+> +	.driver = {
+> +		.name	= "j721e-pcie",
+> +		.of_match_table = of_j721e_pcie_match,
+> +		.suppress_bind_attrs = true,
+> +	},
+> +};
+> +builtin_platform_driver(j721e_pcie_driver);
+> -- 
+> 2.17.1
+> 
