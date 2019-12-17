@@ -7,46 +7,43 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01AA9C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F72C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2F6624655
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7528824655
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727682AbfLQMkK (ORCPT
+        id S1728320AbfLQMkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:40:10 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55291 "EHLO
+        Tue, 17 Dec 2019 07:40:14 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55303 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728286AbfLQMkH (ORCPT
+        with ESMTP id S1728306AbfLQMkL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 07:40:07 -0500
+        Tue, 17 Dec 2019 07:40:11 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ihC8p-0001qb-16; Tue, 17 Dec 2019 13:39:55 +0100
+        id 1ihC8s-0001pj-BH; Tue, 17 Dec 2019 13:39:58 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D5ED51C2A3B;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6C3D11C2A41;
         Tue, 17 Dec 2019 13:39:52 +0100 (CET)
 Date:   Tue, 17 Dec 2019 12:39:52 -0000
-From:   "tip-bot2 for Oleg Nesterov" <tip-bot2@linutronix.de>
+From:   "tip-bot2 for Cheng Jian" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/wait: fix ___wait_var_event(exclusive)
-Cc:     Oleg Nesterov <oleg@redhat.com>,
+Subject: [tip: sched/core] sched/fair: Optimize select_idle_cpu
+Cc:     Cheng Jian <cj.chengjian@huawei.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
         Vincent Guittot <vincent.guittot@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Juri Lelli <juri.lelli@redhat.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191210191902.GB14449@redhat.com>
-References: <20191210191902.GB14449@redhat.com>
+        Valentin Schneider <valentin.schneider@arm.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20191213024530.28052-1-cj.chengjian@huawei.com>
+References: <20191213024530.28052-1-cj.chengjian@huawei.com>
 MIME-Version: 1.0
-Message-ID: <157658639276.30329.909563738680417721.tip-bot2@tip-bot2>
+Message-ID: <157658639229.30329.254182650055773886.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -62,41 +59,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     cde65194502778665c1b52afc5722cf7dbfaa399
-Gitweb:        https://git.kernel.org/tip/cde65194502778665c1b52afc5722cf7dbfaa399
-Author:        Oleg Nesterov <oleg@redhat.com>
-AuthorDate:    Tue, 10 Dec 2019 20:19:03 +01:00
+Commit-ID:     60588bfa223ff675b95f866249f90616613fbe31
+Gitweb:        https://git.kernel.org/tip/60588bfa223ff675b95f866249f90616613fbe31
+Author:        Cheng Jian <cj.chengjian@huawei.com>
+AuthorDate:    Fri, 13 Dec 2019 10:45:30 +08:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Tue, 17 Dec 2019 13:32:50 +01:00
+CommitterDate: Tue, 17 Dec 2019 13:32:51 +01:00
 
-sched/wait: fix ___wait_var_event(exclusive)
+sched/fair: Optimize select_idle_cpu
 
-init_wait_var_entry() forgets to initialize wq_entry->flags.
+select_idle_cpu() will scan the LLC domain for idle CPUs,
+it's always expensive. so the next commit :
 
-Currently not a problem, we don't have wait_var_event_exclusive().
+	1ad3aaf3fcd2 ("sched/core: Implement new approach to scale select_idle_cpu()")
 
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+introduces a way to limit how many CPUs we scan.
+
+But it consume some CPUs out of 'nr' that are not allowed
+for the task and thus waste our attempts. The function
+always return nr_cpumask_bits, and we can't find a CPU
+which our task is allowed to run.
+
+Cpumask may be too big, similar to select_idle_core(), use
+per_cpu_ptr 'select_idle_mask' to prevent stack overflow.
+
+Fixes: 1ad3aaf3fcd2 ("sched/core: Implement new approach to scale select_idle_cpu()")
+Signed-off-by: Cheng Jian <cj.chengjian@huawei.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Miklos Szeredi <miklos@szeredi.hu>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Link: https://lkml.kernel.org/r/20191210191902.GB14449@redhat.com
+Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Link: https://lkml.kernel.org/r/20191213024530.28052-1-cj.chengjian@huawei.com
 ---
- kernel/sched/wait_bit.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/sched/fair.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/sched/wait_bit.c b/kernel/sched/wait_bit.c
-index 45eba18..02ce292 100644
---- a/kernel/sched/wait_bit.c
-+++ b/kernel/sched/wait_bit.c
-@@ -179,6 +179,7 @@ void init_wait_var_entry(struct wait_bit_queue_entry *wbq_entry, void *var, int 
- 			.bit_nr = -1,
- 		},
- 		.wq_entry = {
-+			.flags	 = flags,
- 			.private = current,
- 			.func	 = var_wake_function,
- 			.entry	 = LIST_HEAD_INIT(wbq_entry->wq_entry.entry),
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 846f50b..280d54c 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -5828,6 +5828,7 @@ static inline int select_idle_smt(struct task_struct *p, int target)
+  */
+ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int target)
+ {
++	struct cpumask *cpus = this_cpu_cpumask_var_ptr(select_idle_mask);
+ 	struct sched_domain *this_sd;
+ 	u64 avg_cost, avg_idle;
+ 	u64 time, cost;
+@@ -5859,11 +5860,11 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
+ 
+ 	time = cpu_clock(this);
+ 
+-	for_each_cpu_wrap(cpu, sched_domain_span(sd), target) {
++	cpumask_and(cpus, sched_domain_span(sd), p->cpus_ptr);
++
++	for_each_cpu_wrap(cpu, cpus, target) {
+ 		if (!--nr)
+ 			return si_cpu;
+-		if (!cpumask_test_cpu(cpu, p->cpus_ptr))
+-			continue;
+ 		if (available_idle_cpu(cpu))
+ 			break;
+ 		if (si_cpu == -1 && sched_idle_cpu(cpu))
