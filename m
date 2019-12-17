@@ -2,81 +2,49 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44774C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 093CEC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DED2206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:15:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="tf3Q7OgN"
+	by mail.kernel.org (Postfix) with ESMTP id DF709206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:17:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbfLQSPi (ORCPT
+        id S1727939AbfLQSRb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 13:15:38 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:45807 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727726AbfLQSPh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 13:15:37 -0500
-Received: by mail-il1-f193.google.com with SMTP id p8so9136644iln.12
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 10:15:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=vbw5CKL4CuxmghTAEu89nJMJ7GBT8QILyPuP8AESCZ0=;
-        b=tf3Q7OgNZOPZ4NDDsUxqjoaRcpTtJDgOZYTvcOxAY8UnzPsci2cILboXMjiIqdNhpW
-         VZa6PWPVRuTZDlnt86t7iSC2XGzbSO6QTLdfl4QE7hPH9Gi/0i2ergax5BYIr6cAQPH8
-         MFYq2vcHA6qc8mdjdEZReyhMKCgcJldcBzJh+x8KpK+P13kPG29IRReN9OlUcHTvsYlV
-         K2/x8m7RHf60TqQbQHOQQZkpTVkTeiWIElgip7Lu1EZuIuF3g/kjsp2THSZge0uE0af2
-         9tjWECj4HJI1WqeHnzVxAtsIJdhrV3F1VPAkUYVwfXBdgrS/IlByZnxV4EfH9FvrgQK0
-         QZow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vbw5CKL4CuxmghTAEu89nJMJ7GBT8QILyPuP8AESCZ0=;
-        b=H0aag/4WKhcoG2nFFF7zCK2iZoaQ1c71ZaWy4CH6mG2c3pUH2UI/Xrvlk7m/1UppNL
-         wRxOPxP0CupfzS5Ce2LDv7Uny4D+NYi9Tw76LExA3M4ydWF6i/Em0Z0zPtCH5n9/AAOv
-         aJ3kY3fChmGUZE6qsNe5L+sixxIV7ud7hZr4qTxyLKUsxsPtB6j7HN21d1sxNx3l7Y1l
-         zO0NHocnM/8wDjfY05pOd+edp1pKzQoQl0SGXKhM0jMgvPx829REY1FZToQsXEyTAT+o
-         G/BimCkMlz6flPzMs+URaVrYQzWSLCPyMA5Hi4WqnqnW6yD7390LKEsrOA1uJPJAQoIM
-         ppUA==
-X-Gm-Message-State: APjAAAWPwjB2grZ6WIBQGSJBBxPZTj6YCX1ghC2TENOw4/Hr8TgZiiSz
-        /4FSzid6x8cK35yRqQ6mR+QJcOOLZN4QfA==
-X-Google-Smtp-Source: APXvYqyCKqstdVdqsEJn1eduTswJB3O6bkzviOdb5G48axJzjFdv/+/LjwLGFULY9U6NBy22rHLqQQ==
-X-Received: by 2002:a92:499b:: with SMTP id k27mr18755063ilg.25.1576606536408;
-        Tue, 17 Dec 2019 10:15:36 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id f72sm5076794ilg.84.2019.12.17.10.15.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Dec 2019 10:15:35 -0800 (PST)
-Subject: Re: [PATCH 3/3] io_uring: move *queue_link_head() from common path
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1576538176.git.asml.silence@gmail.com>
- <eda17f0736faff0876c580f1cd841b61c92d7e39.1576538176.git.asml.silence@gmail.com>
- <17f7900c-385f-0dfa-11bf-af99d080f894@gmail.com>
- <76917820-052d-9597-133d-424fee3edade@kernel.dk>
- <5d4af2f6-26a2-b241-5131-3a0155cbbf22@kernel.dk>
- <3b5100a7-2922-a9f2-e4e2-76252318959d@gmail.com>
- <7edd6631-326c-ac9c-7c5b-fa4bab3932d3@kernel.dk>
- <4f3f9b65-6e9f-b650-65b8-1e0844321697@gmail.com>
- <69cb864c-9fa9-2d5a-7b75-f72633cb32f5@kernel.dk>
- <e7bb74e8-0cbe-40f8-9d10-192a8512e1f7@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <812da023-1ebe-fa5c-cd1c-266c9708b881@kernel.dk>
-Date:   Tue, 17 Dec 2019 11:15:35 -0700
+        Tue, 17 Dec 2019 13:17:31 -0500
+Received: from mail.bugwerft.de ([46.23.86.59]:41202 "EHLO mail.bugwerft.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726722AbfLQSRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 13:17:30 -0500
+Received: from [192.168.178.106] (pD95EF574.dip0.t-ipconnect.de [217.94.245.116])
+        by mail.bugwerft.de (Postfix) with ESMTPSA id 6E681281A97;
+        Tue, 17 Dec 2019 18:11:03 +0000 (UTC)
+Subject: Re: [PATCH 07/10] i2c: Add driver for AD242x bus controller
+To:     Luca Ceresoli <luca@lucaceresoli.net>,
+        Wolfram Sang <wsa@the-dreams.de>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        broonie@kernel.org, lee.jones@linaro.org, lars@metafoo.de,
+        pascal.huerst@gmail.com
+References: <20191209183511.3576038-1-daniel@zonque.org>
+ <20191209183511.3576038-9-daniel@zonque.org>
+ <64adf5d7-754a-f1da-aa9b-11579c5a2780@lucaceresoli.net>
+ <20191212163315.GA3932@kunai>
+ <482316ef-775a-cb7b-015e-e00463503e6b@zonque.org>
+ <4f2e1332-eac3-e54d-5de8-b84a76cb1a34@lucaceresoli.net>
+From:   Daniel Mack <daniel@zonque.org>
+Message-ID: <a55f7642-3ea1-e762-b5fc-8ff10b83ccc7@zonque.org>
+Date:   Tue, 17 Dec 2019 19:17:26 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <e7bb74e8-0cbe-40f8-9d10-192a8512e1f7@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <4f2e1332-eac3-e54d-5de8-b84a76cb1a34@lucaceresoli.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -84,92 +52,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/17/19 11:12 AM, Pavel Begunkov wrote:
-> On 17/12/2019 21:07, Jens Axboe wrote:
->> On 12/17/19 11:05 AM, Pavel Begunkov wrote:
->>> On 17/12/2019 21:01, Jens Axboe wrote:
->>>> On 12/17/19 10:52 AM, Pavel Begunkov wrote:
->>>>> On 17/12/2019 20:37, Jens Axboe wrote:
->>>>>> On 12/17/19 9:45 AM, Jens Axboe wrote:
->>>>>>> On 12/16/19 4:38 PM, Pavel Begunkov wrote:
->>>>>>>> On 17/12/2019 02:22, Pavel Begunkov wrote:
->>>>>>>>> -	} else if (req->sqe->flags & (IOSQE_IO_LINK|IOSQE_IO_HARDLINK)) {
->>>>>>>>> +
->>>>>>>>> +		/* last request of a link, enqueue the link */
->>>>>>>>> +		if (!(sqe_flags & IOSQE_IO_LINK)) {
->>>>>>>>
->>>>>>>> This looks suspicious (as well as in the current revision). Returning back
->>>>>>>> to my questions a few days ago can sqe->flags have IOSQE_IO_HARDLINK, but not
->>>>>>>> IOSQE_IO_LINK? I don't find any check.
->>>>>>>>
->>>>>>>> In other words, should it be as follows?
->>>>>>>> !(sqe_flags & (IOSQE_IO_LINK|IOSQE_IO_HARDLINK))
->>>>>>>
->>>>>>> Yeah, I think that should check for both. I'm fine with either approach
->>>>>>> in general:
->>>>>>>
->>>>>>> - IOSQE_IO_HARDLINK must have IOSQE_IO_LINK set
->>>>>>>
->>>>>>> or
->>>>>>>
->>>>>>> - IOSQE_IO_HARDLINK implies IOSQE_IO_LINK
->>>>>>>
->>>>>>> Seems like the former is easier to verify in terms of functionality,
->>>>>>> since we can rest easy if we check this early and -EINVAL if that isn't
->>>>>>> the case.
->>>>>>>
->>>>>>> What do you think?
->>>>>>
->>>>>> If you agree, want to send in a patch for that for 5.5? Then I can respin
->>>>>> for-5.6/io_uring on top of that, and we can apply your cleanups there.
->>>>>>
->>>>> Yes, that's the idea. Already got a patch, if you haven't done it yet.
->>>>
->>>> I haven't.
->>>>
->>>>> Just was thinking, whether to add a check for not setting both flags
->>>>> at the same moment in the "imply" case. Would give us 1 state in 2 bits
->>>>> for future use.
->>>>
->>>> Not sure I follow what you're saying here, can you elaborate?
->>>>
->>>
->>> Sure
->>>
->>> #define IOSQE_IO_LINK		(1U << 2)	/* links next sqe */
->>> #define IOSQE_IO_HARDLINK	(1U << 3)	/* like LINK, but stronger */
->>>
->>> That's 2 consequent bits, so 4 states:
->>> 0,0 -> not a link
->>> 1,0 -> common link
->>> 0,1 -> hard link
->>> 1,1 -> reserved, space for another link-quirk type
->>>
->>> But that would require additional check, i.e.
->>>
->>> if (flags&(LINK|HARDLINK) == (LINK|HARDLINK)) ...
->>
->> Ah, I see. In terms of usability, I think it makes more sense to have
->>
->> IOSQE_LINK | IOSQE_HARDLINK
->>
->> be the same as just IOSQE_LINK. It would be nice to retain that for
-> 
-> Probably, you meant it to be the same as __IOSQE_HARDLINK__
-> 
->> something else, but I think it'll be more confusing to users.
->>
-> 
-> Yeah, and it's easier for something like:
-> 
-> sqe->flags |= IOSQE_LINK;
-> [some code]
-> if (timer_or_whatever())
-> 	sqe->flags |= IOSQE_HARDLINK;
+Hi Luca,
 
-Precisely. So let's keep it as-is.
+On 12/17/19 9:35 AM, Luca Ceresoli wrote:
+> On 15/12/19 21:27, Daniel Mack wrote:
+
+>> The a2b code has to tell the 'master node' the final destination of the
+>> payload by programming registers on its primary i2c address, and then
+>> forwards the messages to its secondary i2c address. The layout of the
+>> messages don't change, and neither do the flags; i2c messages are being
+>> sent as i2c messages, except their addresses are changed, a bit like NAT
+>> in networking. That procedure is described on page 3-4 of the TRM,
+>> "Remote Peripheral I2C Accesses".
+>>
+>> The 'real' i2c master that handles the hardware bus is responsible for
+>> adding start conditions, and as the messages as such are untouched, I
+>> believe it should do the right thing. The code in my xfer functions
+>> merely suppresses reprogramming remote addresses by remembering the last
+>> one that was used, but that is independent of the start conditions on
+>> the wire.
+> 
+> My concern is not about the start condition, it's about the *repeated*
+> start condition.
+> 
+> The first question is whether the A2B chips can do it. What if the host
+> processor sets a slave chip address and then issues two messages
+> separated by a repeated start condition? Will the slave transceiver emit
+> a repeated start condition too?
+
+Ah, alright. Thanks for taking the time to explain. I'll have to do some 
+measurements with a hardware analyzer. Will revisit this then, and 
+either provide an implementation that handles such cases correctly, or a 
+comment to explain that the hardware can't do it.
 
 
--- 
-Jens Axboe
-
+Best regards,
+Daniel
