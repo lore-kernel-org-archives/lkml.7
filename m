@@ -2,146 +2,83 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87ED0C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76C17C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F505218AC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:59:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GbGZzaEh"
+	by mail.kernel.org (Postfix) with ESMTP id 4D3E121739
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:00:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728756AbfLQN7v (ORCPT
+        id S1728773AbfLQOAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 08:59:51 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:15008 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728539AbfLQN7u (ORCPT
+        Tue, 17 Dec 2019 09:00:02 -0500
+Received: from out28-53.mail.aliyun.com ([115.124.28.53]:56526 "EHLO
+        out28-53.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728546AbfLQOAA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 08:59:50 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5df8df4b0000>; Tue, 17 Dec 2019 05:59:40 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 17 Dec 2019 05:59:49 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 17 Dec 2019 05:59:49 -0800
-Received: from [10.2.165.11] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 17 Dec
- 2019 13:59:48 +0000
-Subject: Re: [RFC PATCH] mm/gup: try_pin_compound_head() can be static
-To:     kbuild test robot <lkp@intel.com>
-CC:     <kbuild-all@lists.01.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-References: <20191211025318.457113-24-jhubbard@nvidia.com>
- <20191217080358.q3k57ta62txvip5h@4978f4969bb8>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <7828a101-e422-8e2a-ef9b-9c0285065ed5@nvidia.com>
-Date:   Tue, 17 Dec 2019 05:56:56 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Tue, 17 Dec 2019 09:00:00 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.3617134|-1;CH=green;DM=SPAM|CONTINUE|true|0.912045-0.000889018-0.087066;DS=CONTINUE|ham_system_inform|0.0175439-0.000412785-0.982043;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16367;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=15;RT=15;SR=0;TI=SMTPD_---.GJ3eyQr_1576591147;
+Received: from zhouyanjie-virtual-machine.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GJ3eyQr_1576591147)
+          by smtp.aliyun-inc.com(10.147.41.137);
+          Tue, 17 Dec 2019 21:59:35 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        paul.burton@mips.com, paulburton@kernel.org, mark.rutland@arm.com,
+        paul@crapouillou.net, vkoul@kernel.org, Zubair.Kakakhel@imgtec.com,
+        dan.j.williams@intel.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com, 2374286503@qq.com
+Subject: [PATCH 2/2] dmaengine: JZ4780: Add support for the X1830.
+Date:   Tue, 17 Dec 2019 21:59:00 +0800
+Message-Id: <1576591140-125668-4-git-send-email-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1576591140-125668-1-git-send-email-zhouyanjie@wanyeetech.com>
+References: <1576591140-125668-1-git-send-email-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-In-Reply-To: <20191217080358.q3k57ta62txvip5h@4978f4969bb8>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576591180; bh=+kY6WrbKA7lSfaR6JiJsMhpW0kY3DW4edAlAk5Ve1Ws=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=GbGZzaEh7giluV7bpN/IIAOj3Mc18AXcjLeuEGsTgM8/schRNFGUqCq00YAc4ARRK
-         0PVe1s7+qdvFmh1Ttru614AJtLodM6wJzZ2UNnA1jIm2+JCvQssDVh7rwrwji91hSp
-         Dmomrx8a2mkRdKDi+zuehTjS+cK+ceZUGuV2qS+Q00TgS6unnj2J/spZ+jPwNEGl3X
-         xJTAKof+O0alRzDH3cC7VTlXjNJwIWhcBZya8mbb62MvfcrAHYE78VekfobHefcZXx
-         ueLyg5p/jxUNWHBbbcLlFxuQBAi3TiHxhM/GsO23RipjSLUTZwruxA+61/WfeUhUby
-         xcvllM2I0K27A==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/17/19 12:03 AM, kbuild test robot wrote:
-> 
-> Fixes: 8086d1c61970 ("mm/gup: track FOLL_PIN pages")
-> Signed-off-by: kbuild test robot <lkp@intel.com>
-> ---
->   gup.c |    2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 038b71165a761..849a6f55938e6 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -75,7 +75,7 @@ static inline struct page *try_get_compound_head(struct page *page, int refs)
->    * @Return:	the compound head page, with ref appropriately incremented,
->    * or NULL upon failure.
->    */
-> -__must_check struct page *try_pin_compound_head(struct page *page, int refs)
-> +static __must_check struct page *try_pin_compound_head(struct page *page, int refs)
->   {
->   	struct page *head = try_get_compound_head(page,
->   						  GUP_PIN_COUNTING_BIAS * refs);
-> 
+Add support for probing the dma-jz4780 driver on the X1830 Soc.
 
-Yes, it should have been declared static. And this also applies to the latest version
-(v11). The preferred fix would stay within 80 columns, like this:
+Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+---
+ drivers/dma/dma-jz4780.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/mm/gup.c b/mm/gup.c
-index c2793a86450e..39b2f683bd2e 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -75,7 +75,8 @@ static inline struct page *try_get_compound_head(struct page *page, int refs)
-   * @Return:    the compound head page, with ref appropriately incremented,
-   * or NULL upon failure.
-   */
--__must_check struct page *try_pin_compound_head(struct page *page, int refs)
-+static __must_check struct page *try_pin_compound_head(struct page *page,
-+                                                      int refs)
-  {
-         struct page *head = try_get_compound_head(page,
-                                                   GUP_PIN_COUNTING_BIAS * refs);
-
-
-thanks,
+diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
+index fa626ac..f8ee4b7 100644
+--- a/drivers/dma/dma-jz4780.c
++++ b/drivers/dma/dma-jz4780.c
+@@ -1020,12 +1020,19 @@ static const struct jz4780_dma_soc_data x1000_dma_soc_data = {
+ 	.flags = JZ_SOC_DATA_PROGRAMMABLE_DMA,
+ };
+ 
++static const struct jz4780_dma_soc_data x1830_dma_soc_data = {
++	.nb_channels = 32,
++	.transfer_ord_max = 7,
++	.flags = JZ_SOC_DATA_PROGRAMMABLE_DMA,
++};
++
+ static const struct of_device_id jz4780_dma_dt_match[] = {
+ 	{ .compatible = "ingenic,jz4740-dma", .data = &jz4740_dma_soc_data },
+ 	{ .compatible = "ingenic,jz4725b-dma", .data = &jz4725b_dma_soc_data },
+ 	{ .compatible = "ingenic,jz4770-dma", .data = &jz4770_dma_soc_data },
+ 	{ .compatible = "ingenic,jz4780-dma", .data = &jz4780_dma_soc_data },
+ 	{ .compatible = "ingenic,x1000-dma", .data = &x1000_dma_soc_data },
++	{ .compatible = "ingenic,x1830-dma", .data = &x1830_dma_soc_data },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, jz4780_dma_dt_match);
 -- 
-John Hubbard
-NVIDIA
+2.7.4
+
