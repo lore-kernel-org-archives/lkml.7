@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A13C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B41C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8E292067C
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:54:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2FCD206D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:54:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727981AbfLQAyo (ORCPT
+        id S1728194AbfLQAyr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:54:44 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35294 "EHLO
+        Mon, 16 Dec 2019 19:54:47 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35420 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727046AbfLQAvo (ORCPT
+        by vger.kernel.org with ESMTP id S1727114AbfLQAvo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 19:51:44 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15K-0003Ms-PJ; Tue, 17 Dec 2019 00:51:34 +0000
+        id 1ih15L-0003Mv-Dk; Tue, 17 Dec 2019 00:51:35 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15I-0005Zr-Pl; Tue, 17 Dec 2019 00:51:32 +0000
+        id 1ih15J-0005at-DG; Tue, 17 Dec 2019 00:51:33 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Giuseppe Scrivano" <gscrivan@redhat.com>,
-        "Miklos Szeredi" <mszeredi@redhat.com>
-Date:   Tue, 17 Dec 2019 00:46:59 +0000
-Message-ID: <lsq.1576543535.205728246@decadent.org.uk>
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Johan Hovold" <johan@kernel.org>
+Date:   Tue, 17 Dec 2019 00:47:12 +0000
+Message-ID: <lsq.1576543535.643931912@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 085/136] fuse: flush dirty data/metadata before
- non-truncate setattr
+Subject: [PATCH 3.16 098/136] USB: ldusb: fix ring-buffer locking
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,54 +55,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit b24e7598db62386a95a3c8b9c75630c5d56fe077 upstream.
+commit d98ee2a19c3334e9343df3ce254b496f1fc428eb upstream.
 
-If writeback cache is enabled, then writes might get reordered with
-chmod/chown/utimes.  The problem with this is that performing the write in
-the fuse daemon might itself change some of these attributes.  In such case
-the following sequence of operations will result in file ending up with the
-wrong mode, for example:
+The custom ring-buffer implementation was merged without any locking or
+explicit memory barriers, but a spinlock was later added by commit
+9d33efd9a791 ("USB: ldusb bugfix").
 
-  int fd = open ("suid", O_WRONLY|O_CREAT|O_EXCL);
-  write (fd, "1", 1);
-  fchown (fd, 0, 0);
-  fchmod (fd, 04755);
-  close (fd);
+The lock did not cover the update of the tail index once the entry had
+been processed, something which could lead to memory corruption on
+weakly ordered architectures or due to compiler optimisations.
 
-This patch fixes this by flushing pending writes before performing
-chown/chmod/utimes.
+Specifically, a completion handler running on another CPU might observe
+the incremented tail index and update the entry before ld_usb_read() is
+done with it.
 
-Reported-by: Giuseppe Scrivano <gscrivan@redhat.com>
-Tested-by: Giuseppe Scrivano <gscrivan@redhat.com>
-Fixes: 4d99ff8f12eb ("fuse: Turn writeback cache on")
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Fixes: 2824bd250f0b ("[PATCH] USB: add ldusb driver")
+Fixes: 9d33efd9a791 ("USB: ldusb bugfix")
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191022143203.5260-2-johan@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/fuse/dir.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/usb/misc/ldusb.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/fuse/dir.c
-+++ b/fs/fuse/dir.c
-@@ -1751,6 +1751,19 @@ int fuse_do_setattr(struct dentry *dentr
- 	if (IS_ERR(req))
- 		return PTR_ERR(req);
+--- a/drivers/usb/misc/ldusb.c
++++ b/drivers/usb/misc/ldusb.c
+@@ -509,11 +509,11 @@ static ssize_t ld_usb_read(struct file *
+ 		retval = -EFAULT;
+ 		goto unlock_exit;
+ 	}
+-	dev->ring_tail = (dev->ring_tail+1) % ring_buffer_size;
+-
+ 	retval = bytes_to_read;
  
-+	/* Flush dirty data/metadata before non-truncate SETATTR */
-+	if (is_wb && S_ISREG(inode->i_mode) &&
-+	    attr->ia_valid &
-+			(ATTR_MODE | ATTR_UID | ATTR_GID | ATTR_MTIME_SET |
-+			 ATTR_TIMES_SET)) {
-+		err = write_inode_now(inode, true);
-+		if (err)
-+			return err;
+ 	spin_lock_irq(&dev->rbsl);
++	dev->ring_tail = (dev->ring_tail + 1) % ring_buffer_size;
 +
-+		fuse_set_nowrite(inode);
-+		fuse_release_nowrite(inode);
-+	}
-+
- 	if (is_truncate) {
- 		fuse_set_nowrite(inode);
- 		set_bit(FUSE_I_SIZE_UNSTABLE, &fi->state);
+ 	if (dev->buffer_overflow) {
+ 		dev->buffer_overflow = 0;
+ 		spin_unlock_irq(&dev->rbsl);
 
