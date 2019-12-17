@@ -2,115 +2,70 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD0EC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 971F2C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51FC62082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:05:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576584320;
-	bh=b7idOAhKkeMMLcy66bx1nIPNb7SOC12CKcpdNoBbzrQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=K7PEFGLM8w1UlFKeE8CuNWeNcMG73jZFhIjADtQVuKHWxrypcKGZb/MZaCH5JyiEB
-	 Mk9yJvFEEtqdJfv5AubGQPmGaayKYbKy6JqnPJMFwb62Xn2NJCTgTMaPZfPWzc5ZM0
-	 h/o7N1js1OC41VhlZ7gwgh8OlO3hFY4gusZShuaA=
+	by mail.kernel.org (Postfix) with ESMTP id 77A2A20733
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:06:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727749AbfLQMFT (ORCPT
+        id S1727764AbfLQMG2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:05:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36100 "EHLO mail.kernel.org"
+        Tue, 17 Dec 2019 07:06:28 -0500
+Received: from mga18.intel.com ([134.134.136.126]:46177 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727656AbfLQMFS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 07:05:18 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 941B7207FF;
-        Tue, 17 Dec 2019 12:05:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576584318;
-        bh=b7idOAhKkeMMLcy66bx1nIPNb7SOC12CKcpdNoBbzrQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ha9fregj8WHmJhnFO1fnhqZ7phuKEyTTasFGOHha+PtGCSFPbynTGWmCOcEAmtdmM
-         r8Xav1LFqxbiT5VwJQS6pLNp6LA+kSdnXKkOWDpsOYg9XiU/jQyTavISQYFS4iefWs
-         rnhT0UiSC4znajoS8KNZeR6EgTXbjXiUv+/A4qzU=
-Date:   Tue, 17 Dec 2019 13:05:15 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Cc:     Jiri Slaby <jslaby@suse.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] tty: use tty_init_dev_retry() to workaround a
- race condition
-Message-ID: <20191217120515.GA3156341@kroah.com>
-References: <20191121152239.28405-1-sudipm.mukherjee@gmail.com>
- <20191121152239.28405-2-sudipm.mukherjee@gmail.com>
- <20191121164138.GD651886@kroah.com>
- <20191121210155.limd7v6cpd5yz2e7@debian>
- <eef58b47-f208-2ac5-6e02-a87f9568c70f@suse.com>
- <20191210114147.ivple4ccr4bj6c4h@debian>
- <20191212111519.GA1534818@kroah.com>
- <CADVatmMK=dCaAzdHbmQ6Qj5gqcvSiL3BRZDL6jnEM2G_C3pUpw@mail.gmail.com>
+        id S1726747AbfLQMG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 07:06:28 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 04:06:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,325,1571727600"; 
+   d="scan'208";a="221746459"
+Received: from pbroex-mobl1.ger.corp.intel.com ([10.251.85.107])
+  by fmsmga001.fm.intel.com with ESMTP; 17 Dec 2019 04:06:24 -0800
+Message-ID: <9991700815c02b3227a5902e4cae1afe5200b0ff.camel@linux.intel.com>
+Subject: Re: [PATCH V3] tpm_tis_spi: use new 'delay' structure for SPI
+ transfer delays
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, peterhuewe@gmx.de, jgg@ziepe.ca,
+        arnd@arndb.de
+In-Reply-To: <20191217091615.12764-1-alexandru.ardelean@analog.com>
+References: <20191204080049.32701-1-alexandru.ardelean@analog.com>
+         <20191217091615.12764-1-alexandru.ardelean@analog.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160
+ Espoo
+Content-Type: text/plain; charset="UTF-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADVatmMK=dCaAzdHbmQ6Qj5gqcvSiL3BRZDL6jnEM2G_C3pUpw@mail.gmail.com>
+Date:   Tue, 17 Dec 2019 14:04:29 +0200
+User-Agent: Evolution 3.34.1-2 
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 11:47:25AM +0000, Sudip Mukherjee wrote:
-> Hi Greg,
+On Tue, 2019-12-17 at 11:16 +0200, Alexandru Ardelean wrote:
+> In a recent change to the SPI subsystem [1], a new 'delay' struct was added
+> to replace the 'delay_usecs'. This change replaces the current
+> 'delay_usecs' with 'delay' for this driver.
 > 
-> On Thu, Dec 12, 2019 at 11:15 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Tue, Dec 10, 2019 at 11:41:47AM +0000, Sudip Mukherjee wrote:
-> > > Hi Jiri,
-> > >
-> > > On Fri, Nov 22, 2019 at 10:05:09AM +0100, Jiri Slaby wrote:
-> > > > On 21. 11. 19, 22:01, Sudip Mukherjee wrote:
-> > > > > Hi Greg,
-> > > > >
-> > > > > On Thu, Nov 21, 2019 at 05:41:38PM +0100, Greg Kroah-Hartman wrote:
-> > > > >> On Thu, Nov 21, 2019 at 03:22:39PM +0000, Sudip Mukherjee wrote:
-> > > > >>> There seems to be a race condition in tty drivers and I could see on
-> > > > >>> many boot cycles a NULL pointer dereference as tty_init_dev() tries to
-> > > > >>> do 'tty->port->itty = tty' even though tty->port is NULL.
-> > > <snip>
-> > > > >>>
-> > > > >>> uart_add_one_port() registers the console, as soon as it registers, the
-> > > > >>> userspace tries to use it and that leads to tty_open() but
-> > > > >>> uart_add_one_port() has not yet done tty_port_link_device() and so
-> > > > >>> tty->port is not yet configured when control reaches tty_init_dev().
-> > > > >>
-> > > > >> Shouldn't we do tty_port_link_device() before uart_add_one_port() to
-> > > > >> remove that race?  Once you register the console, yes, tty_open() can
-> > > > >> happen, so the driver had better be ready to go at that point in time.
-> > > > >>
-> > > > >
-> > > > > But tty_port_link_device() is done by uart_add_one_port() itself.
-> > > > > After registering the console uart_add_one_port() will call
-> > > > > tty_port_register_device_attr_serdev() and tty_port_link_device() is
-> > > > > called from this. Thats still tty core.
-> > > >
-> > > > Interferences of console vs tty code are ugly. Does it help to simply
-> > > > put tty_port_link_device to uart_add_one_port before uart_configure_port?
-> > >
-> > > sorry for the late response, got busy with an out-of-tree driver.
-> > >
-> > > It fixes the problem if I put tty_port_link_device() before
-> > > uart_configure_port(). Please check the attached patch and that
-> > > completely fixes the problem. Do you want me to send a proper patch for
-> > > it or do you want me to check more into it?
-> >
-> > This looks a lot more sane to me, can you resend it in proper format so
-> > that I can apply it?
+> The 'spi_transfer_delay_exec()' function [in the SPI framework] makes sure
+> that both 'delay_usecs' & 'delay' are used (in this order to preserve
+> backwards compatibility).
 > 
-> https://lore.kernel.org/lkml/20191212131602.29504-1-sudipm.mukherjee@gmail.com/
+> [1] commit bebcfd272df6485 ("spi: introduce `delay` field for
+> `spi_transfer` + spi_transfer_delay_exec()")
+> 
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-It's in my "to review" queue, don't worry, not lost :)
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+
+/Jarkko
+
