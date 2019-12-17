@@ -6,18 +6,18 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFAFC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 536CFC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5322921582
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:32:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D41321582
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:32:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbfLQVcw (ORCPT
+        id S1728451AbfLQVc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 16:32:52 -0500
-Received: from mga04.intel.com ([192.55.52.120]:17440 "EHLO mga04.intel.com"
+        Tue, 17 Dec 2019 16:32:58 -0500
+Received: from mga04.intel.com ([192.55.52.120]:17437 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728325AbfLQVcq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728318AbfLQVcq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 17 Dec 2019 16:32:46 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -25,7 +25,7 @@ Received: from orsmga002.jf.intel.com ([10.7.209.21])
   by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 13:32:43 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,326,1571727600"; 
-   d="scan'208";a="227639455"
+   d="scan'208";a="227639445"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
   by orsmga002.jf.intel.com with ESMTP; 17 Dec 2019 13:32:42 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -36,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/5] KVM: x86: Expand build-time assertion on reverse CPUID usage
-Date:   Tue, 17 Dec 2019 13:32:41 -0800
-Message-Id: <20191217213242.11712-5-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 1/5] KVM: x86: Add dedicated emulator helpers for querying CPUID features
+Date:   Tue, 17 Dec 2019 13:32:38 -0800
+Message-Id: <20191217213242.11712-2-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191217213242.11712-1-sean.j.christopherson@intel.com>
 References: <20191217213242.11712-1-sean.j.christopherson@intel.com>
@@ -49,87 +49,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add build-time checks to ensure KVM isn't trying to do a reverse CPUID
-lookup on Linux-defined feature bits, along with comments to explain
-the gory details of X86_FEATUREs and bit().
+Add feature-specific helpers for querying guest CPUID support from the
+emulator instead of having the emulator do a full CPUID and perform its
+own bit tests.  The primary motivation is to eliminate the emulator's
+usage of bit() so that future patches can add more extensive build-time
+assertions on the usage of bit() without having to expose yet more code
+to the emulator.
+
+Note, providing a generic guest_cpuid_has() to the emulator doesn't work
+due to the existing built-time assertions in guest_cpuid_has(), which
+require the feature being checked to be a compile-time constant.
 
 No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/cpuid.c |  3 ++-
- arch/x86/kvm/cpuid.h | 39 +++++++++++++++++++++++++++++++--------
- 2 files changed, 33 insertions(+), 9 deletions(-)
+ arch/x86/include/asm/kvm_emulate.h |  4 ++++
+ arch/x86/kvm/emulate.c             | 21 +++------------------
+ arch/x86/kvm/x86.c                 | 18 ++++++++++++++++++
+ 3 files changed, 25 insertions(+), 18 deletions(-)
 
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index cfafa320a8cf..a3b41e87e810 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -281,8 +281,9 @@ int kvm_vcpu_ioctl_get_cpuid2(struct kvm_vcpu *vcpu,
- 	return r;
+diff --git a/arch/x86/include/asm/kvm_emulate.h b/arch/x86/include/asm/kvm_emulate.h
+index 77cf6c11f66b..03946eb3e2b9 100644
+--- a/arch/x86/include/asm/kvm_emulate.h
++++ b/arch/x86/include/asm/kvm_emulate.h
+@@ -222,6 +222,10 @@ struct x86_emulate_ops {
+ 
+ 	bool (*get_cpuid)(struct x86_emulate_ctxt *ctxt, u32 *eax, u32 *ebx,
+ 			  u32 *ecx, u32 *edx, bool check_limit);
++	bool (*guest_has_long_mode)(struct x86_emulate_ctxt *ctxt);
++	bool (*guest_has_movbe)(struct x86_emulate_ctxt *ctxt);
++	bool (*guest_has_fxsr)(struct x86_emulate_ctxt *ctxt);
++
+ 	void (*set_nmi_mask)(struct x86_emulate_ctxt *ctxt, bool masked);
+ 
+ 	unsigned (*get_hflags)(struct x86_emulate_ctxt *ctxt);
+diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
+index 952d1a4f4d7e..e9833e345a5c 100644
+--- a/arch/x86/kvm/emulate.c
++++ b/arch/x86/kvm/emulate.c
+@@ -2348,12 +2348,7 @@ static int em_lseg(struct x86_emulate_ctxt *ctxt)
+ static int emulator_has_longmode(struct x86_emulate_ctxt *ctxt)
+ {
+ #ifdef CONFIG_X86_64
+-	u32 eax, ebx, ecx, edx;
+-
+-	eax = 0x80000001;
+-	ecx = 0;
+-	ctxt->ops->get_cpuid(ctxt, &eax, &ebx, &ecx, &edx, false);
+-	return edx & bit(X86_FEATURE_LM);
++	return ctxt->ops->guest_has_long_mode(ctxt);
+ #else
+ 	return false;
+ #endif
+@@ -3618,18 +3613,11 @@ static int em_mov(struct x86_emulate_ctxt *ctxt)
+ 	return X86EMUL_CONTINUE;
  }
  
--static void cpuid_mask(u32 *word, int wordnum)
-+static __always_inline void cpuid_mask(u32 *word, int wordnum)
+-#define FFL(x) bit(X86_FEATURE_##x)
+-
+ static int em_movbe(struct x86_emulate_ctxt *ctxt)
  {
-+	reverse_cpuid_check(wordnum);
- 	*word &= boot_cpu_data.x86_capability[wordnum];
+-	u32 ebx, ecx, edx, eax = 1;
+ 	u16 tmp;
+ 
+-	/*
+-	 * Check MOVBE is set in the guest-visible CPUID leaf.
+-	 */
+-	ctxt->ops->get_cpuid(ctxt, &eax, &ebx, &ecx, &edx, false);
+-	if (!(ecx & FFL(MOVBE)))
++	if (!ctxt->ops->guest_has_movbe(ctxt))
+ 		return emulate_ud(ctxt);
+ 
+ 	switch (ctxt->op_bytes) {
+@@ -4027,10 +4015,7 @@ static int em_movsxd(struct x86_emulate_ctxt *ctxt)
+ 
+ static int check_fxsr(struct x86_emulate_ctxt *ctxt)
+ {
+-	u32 eax = 1, ebx, ecx = 0, edx;
+-
+-	ctxt->ops->get_cpuid(ctxt, &eax, &ebx, &ecx, &edx, false);
+-	if (!(edx & FFL(FXSR)))
++	if (!ctxt->ops->guest_has_fxsr(ctxt))
+ 		return emulate_ud(ctxt);
+ 
+ 	if (ctxt->ops->get_cr(ctxt, 0) & (X86_CR0_TS | X86_CR0_EM))
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 8bb2fb1705ff..6bca14071d30 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -6184,6 +6184,21 @@ static bool emulator_get_cpuid(struct x86_emulate_ctxt *ctxt,
+ 	return kvm_cpuid(emul_to_vcpu(ctxt), eax, ebx, ecx, edx, check_limit);
  }
  
-diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
-index 8c77d829e27d..fc5a4cde260b 100644
---- a/arch/x86/kvm/cpuid.h
-+++ b/arch/x86/kvm/cpuid.h
-@@ -56,18 +56,41 @@ static const struct cpuid_reg reverse_cpuid[] = {
- 	[CPUID_7_1_EAX]       = {         7, 1, CPUID_EAX},
- };
- 
--static inline u32 bit(int bitno)
-+/*
-+ * Reverse CPUID and its derivatives can only be used for hardware-defined
-+ * feature words, i.e. words whose bits directly correspond to a CPUID leaf.
-+ * Retrieving a feature bit or masking guest CPUID from a Linux-defined word
-+ * is nonsensical as the bit number/mask is an arbitrary software-defined value
-+ * and can't be used by KVM to query/control guest capabilities.  And obviously
-+ * the leaf being queried must have an entry in the lookup table.
-+ */
-+static __always_inline void reverse_cpuid_check(unsigned x86_leaf)
- {
--	return BIT(bitno & 31);
--}
--
--static __always_inline struct cpuid_reg x86_feature_cpuid(unsigned x86_feature)
--{
--	unsigned x86_leaf = x86_feature / 32;
--
-+	BUILD_BUG_ON(x86_leaf == CPUID_LNX_1);
-+	BUILD_BUG_ON(x86_leaf == CPUID_LNX_2);
-+	BUILD_BUG_ON(x86_leaf == CPUID_LNX_3);
-+	BUILD_BUG_ON(x86_leaf == CPUID_LNX_4);
- 	BUILD_BUG_ON(x86_leaf >= ARRAY_SIZE(reverse_cpuid));
- 	BUILD_BUG_ON(reverse_cpuid[x86_leaf].function == 0);
-+}
- 
-+/*
-+ * Retrieve the bit mask from an X86_FEATURE_* definition.  Features contain
-+ * the hardware defined bit number (stored in bits 4:0) and a software defined
-+ * "word" (stored in bits 31:5).  The word is used to index into arrays of
-+ * bit masks that hold the per-cpu feature capabilities, e.g. this_cpu_has().
-+ */
-+static __always_inline u32 bit(int x86_feature)
++static bool emulator_guest_has_long_mode(struct x86_emulate_ctxt *ctxt)
 +{
-+	reverse_cpuid_check(x86_feature / 32);
-+	return 1 << (x86_feature & 31);
++	return guest_cpuid_has(emul_to_vcpu(ctxt), X86_FEATURE_LM);
 +}
 +
-+static __always_inline struct cpuid_reg x86_feature_cpuid(unsigned x86_feature)
++static bool emulator_guest_has_movbe(struct x86_emulate_ctxt *ctxt)
 +{
-+	unsigned x86_leaf = x86_feature / 32;
++	return guest_cpuid_has(emul_to_vcpu(ctxt), X86_FEATURE_MOVBE);
++}
 +
-+	reverse_cpuid_check(x86_leaf);
- 	return reverse_cpuid[x86_leaf];
- }
- 
++static bool emulator_guest_has_fxsr(struct x86_emulate_ctxt *ctxt)
++{
++	return guest_cpuid_has(emul_to_vcpu(ctxt), X86_FEATURE_FXSR);
++}
++
+ static ulong emulator_read_gpr(struct x86_emulate_ctxt *ctxt, unsigned reg)
+ {
+ 	return kvm_register_read(emul_to_vcpu(ctxt), reg);
+@@ -6261,6 +6276,9 @@ static const struct x86_emulate_ops emulate_ops = {
+ 	.fix_hypercall       = emulator_fix_hypercall,
+ 	.intercept           = emulator_intercept,
+ 	.get_cpuid           = emulator_get_cpuid,
++	.guest_has_long_mode = emulator_guest_has_long_mode,
++	.guest_has_movbe     = emulator_guest_has_movbe,
++	.guest_has_fxsr      = emulator_guest_has_fxsr,
+ 	.set_nmi_mask        = emulator_set_nmi_mask,
+ 	.get_hflags          = emulator_get_hflags,
+ 	.set_hflags          = emulator_set_hflags,
 -- 
 2.24.1
 
