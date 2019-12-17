@@ -2,212 +2,118 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB6FC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85967C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3782E2176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:41:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 501FA2146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:44:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MpUX5ha5"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="DAfDeiI9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728111AbfLQTlW (ORCPT
+        id S1728004AbfLQTom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 14:41:22 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40067 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727620AbfLQTlV (ORCPT
+        Tue, 17 Dec 2019 14:44:42 -0500
+Received: from mta-p7.oit.umn.edu ([134.84.196.207]:48434 "EHLO
+        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727722AbfLQTol (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 14:41:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576611679;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+ys+mrut5WcWzjWDhyLUE00+KWwlntzvJusLfHvDvH8=;
-        b=MpUX5ha5J+Jj2p+Hk3ULG00g99rgHqUZglyrUyJ4SSZXJygysfbzmgQOTKdsFzMmA3WpuO
-        eLa2D1y4WXaeB6mHVAAdCmGiXJNTyFwYa+84BbqW10Hu+5LqPJqBS3Mf0nVMPSommbDSmH
-        zGxdooROTRtMXHTENYM4z0MyMrx41MA=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-86-LuHP_VQSNz21eboJk8tXmg-1; Tue, 17 Dec 2019 14:41:18 -0500
-X-MC-Unique: LuHP_VQSNz21eboJk8tXmg-1
-Received: by mail-qt1-f198.google.com with SMTP id l4so7620496qte.18
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 11:41:18 -0800 (PST)
+        Tue, 17 Dec 2019 14:44:41 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 47cpWF1NmTz9vklN
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 19:44:41 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p7.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id WjxUqYrm_4yz for <linux-kernel@vger.kernel.org>;
+        Tue, 17 Dec 2019 13:44:41 -0600 (CST)
+Received: from mail-yw1-f71.google.com (mail-yw1-f71.google.com [209.85.161.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id 47cpWF08FHz9vklB
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 13:44:41 -0600 (CST)
+Received: by mail-yw1-f71.google.com with SMTP id q187so8934344ywg.12
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 11:44:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=R1nYMTu3Wf2YneM8vgiZKJG+c743nMdOxOT93hCjzzs=;
+        b=DAfDeiI9HtOxukTLIYKgQmkpkKUv7J7YaGh692J9VOk0jzsLoQqUlE5fAUcdFsMR4Y
+         Xns2iJygS4mABqaeC/J+xVsaEyeDGyiK1fRpm4SFCGS16TXbnPr0qiQNpL/hiANdaXDI
+         A9zrev0buQQs2T0isEDR4B0nbdPu4jRQ3K4U5FQJS5bSOCl3gt3ek8HXY1LNc3TTNzIZ
+         cV2Iye4xX9pW6Xa/c4yxQopgjl2nvYQa7xvJEVqD1BF416uU0jgisubF0awK9vpGd2jK
+         9y4lzRZnLQ/DLt1VN/6oMlmVMQpMXlES1Ca4gXM2E98tcJSCqmu27SRw6PyoZfwDKVAb
+         7ABw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+ys+mrut5WcWzjWDhyLUE00+KWwlntzvJusLfHvDvH8=;
-        b=bWOlZB3Gaxl6RfRuzSfmNvMRJwM7g7dite6tEPbQASvClVaGOw4jqSCWxAP6YKGVwz
-         6aIUeBanP4aTiWv2TDBjLyVXZmlt5FRrAJZ1KVqD8at0XtUx+bNcIjSW0Cu0XP5yN+Yx
-         x6K0NrArRcWnY2htwYO+OASozmMndlUAusyaoMbBT+Hgt5x26dp6U2Bnebee/lPAVE/e
-         JiUWPKAmXtjk4LWNhKHRmbsOPK+Ip2TnURlXQjhQl22zt51FBGl5y5uLXjXLXvilGMsW
-         IoanmV+THAU0wSAC2z5c//iDKgAzzFoT4oArsqxPU8HdFv6Yy8XQQsLa0Z3mdZv2WDAC
-         VtGQ==
-X-Gm-Message-State: APjAAAV2LsNRjfjvchLCpzffMipnMA1fKzQ9cyBUZxsGAUIZh5iCKFEN
-        69aGu1FWRooQt3XU6XWOXJRRWqu8rHSHsX2c/AYlQv+FxBTsvuC4SzLHTTldTCi7y6sCTp+cnkc
-        4XRg4C1Zx+Q7dZWcM4+DA+PEx
-X-Received: by 2002:a37:61ce:: with SMTP id v197mr6737119qkb.467.1576611677576;
-        Tue, 17 Dec 2019 11:41:17 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzlQH+E4ia1GvPTRBNNHwmHqDWiHQ0fb1iTJLOyLRTOtENiFlxKcenXhuaXSVJDpj2tAvshlQ==
-X-Received: by 2002:a37:61ce:: with SMTP id v197mr6737081qkb.467.1576611677193;
-        Tue, 17 Dec 2019 11:41:17 -0800 (PST)
-Received: from xz-x1 ([104.156.64.74])
-        by smtp.gmail.com with ESMTPSA id v4sm3461251qtd.24.2019.12.17.11.41.15
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=R1nYMTu3Wf2YneM8vgiZKJG+c743nMdOxOT93hCjzzs=;
+        b=kRscFFFm53Vnkcko31lJBwcWdxJsqqdCRwxdCeQzDxoHCNcsmMPEe+c7vNKkldieHp
+         oFd9dVL+NDScvgqQWsv+il8721cdCGLSlB5Be5RGTimiRzflPhvEvfGT7mSpD8iut0qh
+         I63TqS+Ty9tPgBJ4OUkr5eqXbtKtyhWSDpr97QPluBzhEOoKchv1YLbdkVDJApBndmD4
+         xOjaZlb8V5sGxBsnkLjqvMnlaCdkvMziz0kOEnBQqOiwoXYdeFCpD+WICti0Yy8phfbt
+         T2Yk1F9K70p4Dp8VvtEbT4HdCmXXkl64BSe6Q0Y18PVF/cL9uO5kJrV5Rc3h++6m4+pe
+         tskw==
+X-Gm-Message-State: APjAAAW+7mMoCU54e5MICi0xBrrAWsbSO9cjyPy6IFSyZY7R1DLJNio7
+        P2+7cDfsr/4VTdn1kdowt3re4ZQl/BnxRBAsiA/kZi90vYD7MRSaXo6VTsvEUxXgwoQZ3p6Bdq8
+        Yg6vHcwulbCQl5tCm45X4MPSpgTqu
+X-Received: by 2002:a81:4685:: with SMTP id t127mr261857ywa.280.1576611880205;
+        Tue, 17 Dec 2019 11:44:40 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwG27ef4T4PwFlqhO7GpbzcsqqrakfJavePAIbgiH1x+hqfmQDxFACpa97lZJlVnTx0c9xA7Q==
+X-Received: by 2002:a81:4685:: with SMTP id t127mr261838ywa.280.1576611879986;
+        Tue, 17 Dec 2019 11:44:39 -0800 (PST)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id i72sm10195197ywg.49.2019.12.17.11.44.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 11:41:16 -0800 (PST)
-Date:   Tue, 17 Dec 2019 14:41:14 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Christophe de Dinechin <dinechin@redhat.com>,
-        Christophe de Dinechin <christophe.de.dinechin@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Subject: Re: [PATCH RFC 04/15] KVM: Implement ring-based dirty memory tracking
-Message-ID: <20191217194114.GG7258@xz-x1>
-References: <20191129213505.18472-5-peterx@redhat.com>
- <m1lfrihj2n.fsf@dinechin.org>
- <20191213202324.GI16429@xz-x1>
- <bc15650b-df59-f508-1090-21dafc6e8ad1@redhat.com>
- <E167A793-B42A-422D-8D46-B992CB6EBE69@redhat.com>
- <d59ac0eb-e65a-a46f-886e-6df80a2b142f@redhat.com>
- <20191217153837.GC7258@xz-x1>
- <ecb949d1-4539-305f-0a84-1704834e37ba@redhat.com>
- <20191217164244.GE7258@xz-x1>
- <c6d00ced-64ff-34af-99dd-abbcbac67836@redhat.com>
+        Tue, 17 Dec 2019 11:44:39 -0800 (PST)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, Bart Van Assche <bvanassche@acm.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] scsi: RDMA/srpt: remove unnecessary assertion in srpt_queue_response
+Date:   Tue, 17 Dec 2019 13:44:37 -0600
+Message-Id: <20191217194437.25568-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <c6d00ced-64ff-34af-99dd-abbcbac67836@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 05:48:58PM +0100, Paolo Bonzini wrote:
-> On 17/12/19 17:42, Peter Xu wrote:
-> > 
-> > However I just noticed something... Note that we still didn't read
-> > into non-x86 archs, I think it's the same question as when I asked
-> > whether we can unify the kvm[_vcpu]_write() interfaces and you'd like
-> > me to read the non-x86 archs - I think it's time I read them, because
-> > it's still possible that non-x86 archs will still need the per-vm
-> > ring... then that could be another problem if we want to at last
-> > spread the dirty ring idea outside of x86.
-> 
-> We can take a look, but I think based on x86 experience it's okay if we
-> restrict dirty ring to arches that do no VM-wide accesses.
+Currently, BUG_ON in srpt_queue_response, is used as an assertion for
+empty rdma channel. However, if the channel is NULL, the call trace
+on console is sufficient for diagnosis.
 
-Here it is - a quick update on callers of mark_page_dirty_in_slot().
-The same reverse trace, but ignoring all common and x86 code path
-(which I covered in the other thread):
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+---
+v1: Avoid potential NULL pointer derefernce of ch. Current fix
+suggested by Bart Van Assche
+---
+ drivers/infiniband/ulp/srpt/ib_srpt.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-==================================
-
-   mark_page_dirty_in_slot (non-x86)
-        mark_page_dirty
-            kvm_write_guest_page
-                kvm_write_guest
-                    kvm_write_guest_lock
-                        vgic_its_save_ite [?]
-                        vgic_its_save_dte [?]
-                        vgic_its_save_cte [?]
-                        vgic_its_save_collection_table [?]
-                        vgic_v3_lpi_sync_pending_status [?]
-                        vgic_v3_save_pending_tables [?]
-                    kvmppc_rtas_hcall [&]
-                    kvmppc_st [&]
-                    access_guest [&]
-                    put_guest_lc [&]
-                    write_guest_lc [&]
-                    write_guest_abs [&]
-            mark_page_dirty
-                _kvm_mips_map_page_fast [&]
-                kvm_mips_map_page [&]
-                kvmppc_mmu_map_page [&]
-                kvmppc_copy_guest
-                    kvmppc_h_page_init [&]
-                kvmppc_xive_native_vcpu_eq_sync [&]
-                adapter_indicators_set [?] (from kvm_set_irq)
-                kvm_s390_sync_dirty_log [?]
-                unpin_guest_page
-                    unpin_blocks [&]
-                    unpin_scb [&]
-
-Cases with [*]: should not matter much
-           [&]: should be able to change to per-vcpu context
-           [?]: uncertain...
-
-==================================
-
-This time we've got 8 leaves with "[?]".
-
-I'm starting with these:
-
-        vgic_its_save_ite [?]
-        vgic_its_save_dte [?]
-        vgic_its_save_cte [?]
-        vgic_its_save_collection_table [?]
-        vgic_v3_lpi_sync_pending_status [?]
-        vgic_v3_save_pending_tables [?]
-
-These come from ARM specific ioctls like KVM_DEV_ARM_ITS_SAVE_TABLES,
-KVM_DEV_ARM_ITS_RESTORE_TABLES, KVM_DEV_ARM_VGIC_SAVE_PENDING_TABLES.
-IIUC ARM needed these to allow proper migration which indeed does not
-have a vcpu context.
-
-(Though I'm a bit curious why ARM didn't simply migrate these
- information explicitly from userspace, instead it seems to me that
- ARM guests will dump something into guest ram and then tries to
- recover from that which seems to be a bit weird)
+diff --git a/drivers/infiniband/ulp/srpt/ib_srpt.c b/drivers/infiniband/ulp/srpt/ib_srpt.c
+index 23c782e3d49a..98552749d71c 100644
+--- a/drivers/infiniband/ulp/srpt/ib_srpt.c
++++ b/drivers/infiniband/ulp/srpt/ib_srpt.c
+@@ -2810,8 +2810,6 @@ static void srpt_queue_response(struct se_cmd *cmd)
+ 	int resp_len, ret, i;
+ 	u8 srp_tm_status;
  
-Then it's this:
-
-        adapter_indicators_set [?]
-
-This is s390 specific, which should come from kvm_set_irq.  I'm not
-sure whether we can remove the mark_page_dirty() call of this, if it's
-applied from another kernel structure (which should be migrated
-properly IIUC).  But I might be completely wrong.
-
-        kvm_s390_sync_dirty_log [?]
-        
-This is also s390 specific, should be collecting from the hardware
-PGSTE_UC_BIT bit.  No vcpu context for sure.
-
-(I'd be glad too if anyone could hint me why x86 cannot use page table
- dirty bits for dirty tracking, if there's short answer...)
-
-I think my conclusion so far...
-
-  - for s390 I don't think we even need this dirty ring buffer thing,
-    because I think hardware trackings should be more efficient, then
-    we don't need to care much on that either from design-wise of
-    dirty ring,
-
-  - for ARM, those no-vcpu-context dirty tracking probably needs to be
-    considered, but hopefully that's a very special path so it rarely
-    happen.  The bad thing is I didn't dig how many pages will be
-    dirtied when ARM guest starts to dump all these things so it could
-    be a burst...  If it is, then there's risk to trigger the ring
-    full condition (which we wanted to avoid..)
-
-I'm CCing Eric for ARM, Conny&David for s390, just in case there're
-further inputs.
-
-Thanks,
-
+-	BUG_ON(!ch);
+-
+ 	state = ioctx->state;
+ 	switch (state) {
+ 	case SRPT_STATE_NEW:
 -- 
-Peter Xu
+2.20.1
 
