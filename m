@@ -2,108 +2,314 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D51C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D401AC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56FA920716
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:53:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A62C2067C
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:54:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lTG+PpfF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728638AbfLQNxL (ORCPT
+        id S1728653AbfLQNye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 08:53:11 -0500
-Received: from mail1.bemta25.messagelabs.com ([195.245.230.69]:41569 "EHLO
-        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728388AbfLQNxK (ORCPT
+        Tue, 17 Dec 2019 08:54:34 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35852 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728593AbfLQNyd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 08:53:10 -0500
-Received: from [46.226.52.196] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-5.bemta.az-b.eu-west-1.aws.symcld.net id F5/18-19908-4CDD8FD5; Tue, 17 Dec 2019 13:53:08 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPKsWRWlGSWpSXmKPExsVyU+ECq+6Ruz9
-  iDb7P0ba4vGsOmwOjx+dNcgGMUayZeUn5FQmsGS8/72EruMlXca/7J0sD4wG+LkZODiGBfYwS
-  pztVIeyzjBLNG8tBbDYBLYkZW6cygtgiAhoSL4/eYuli5OJgFuhklLj9+gBYQljAW+JRwzE2i
-  CIfifb5X6EarCSW9k0Hs1kEVCXeN29kAbF5BXwl5nf2M4IMEhLoZ5TYcaeJFSTBKWAosf3bRi
-  YQm1FAVuLRyl/sIDazgLjErSfzweISAgISS/acZ4awRSVePv7HCmEbSGxduo8FwlaUuLH6BFC
-  cA8i2lrjxgB/EZBbQlFi/Sx9ioqLElO6H7BDnCEqcnPmEZQKj2Cwky2YhdMxC0jELSccCRpZV
-  jOZJRZnpGSW5iZk5uoYGBrqGhka6hpYWukYWeolVukl6qaW65anFJbqGeonlxXrFlbnJOSl6e
-  aklmxiB8ZVScExmB2PHp7d6hxglOZiURHnf7vwRK8SXlJ9SmZFYnBFfVJqTWnyIUYaDQ0mCN+
-  sOUE6wKDU9tSItMwcY6zBpCQ4eJRFefZA0b3FBYm5xZjpE6hSjJceEl3MXMXMcPDoPSB6Zu3Q
-  RsxBLXn5eqpQ470mQBgGQhozSPLhxsHR0iVFWSpiXkYGBQYinILUoN7MEVf4VozgHo5IwbzvI
-  FJ7MvBK4ra+ADmICOsjI7xvIQSWJCCmpBqa5q0/ucjvqHHxHP6Jpk/nnRedj/+zR2dy/sbDE6
-  cuvX4XMWi80PsxMa6/46fj6v5b0nHnOIYzSz3jubEvRW8nCsNIi6E78EQNt++e7esS8DX8963
-  f/9jQ7SCR7w9efPXv7q1zs/lXlLJjGuDpkR98ay00RH1dc9ZuR+yyjznPFXOs5e08J/zxSaXB
-  2e4GIwtZHaadZ+v9Kr3Q232V4cvr/NM+LWb2P503hszqUtMk70UWq+/mER8rSh54LPb15gMNw
-  q7wVX/arJPUP0xSag6Yf39t5nO/v7d4Twt/sniQtjz8tufPfCfduLfMfm/8VWO9/9PzzewbjX
-  nnB6IinK/quFf3hZrk0b8q+h1K9l9aXK7EUZyQaajEXFScCAM9uV6fCAwAA
-X-Env-Sender: david.kim@ncipher.com
-X-Msg-Ref: server-33.tower-284.messagelabs.com!1576590788!695443!2
-X-Originating-IP: [217.32.208.5]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.44.22; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 22366 invoked from network); 17 Dec 2019 13:53:08 -0000
-Received: from unknown (HELO exukdagfar01.INTERNAL.ROOT.TES) (217.32.208.5)
-  by server-33.tower-284.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 17 Dec 2019 13:53:08 -0000
-Received: from exukdagfar01.INTERNAL.ROOT.TES (10.194.2.70) by
- exukdagfar01.INTERNAL.ROOT.TES (10.194.2.70) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 17 Dec 2019 13:53:07 +0000
-Received: from exukdagfar01.INTERNAL.ROOT.TES ([fe80::48de:aa33:fc4c:d1f5]) by
- exukdagfar01.INTERNAL.ROOT.TES ([fe80::48de:aa33:fc4c:d1f5%14]) with mapi id
- 15.00.1497.000; Tue, 17 Dec 2019 13:53:07 +0000
-From:   "Kim, David" <david.kim@ncipher.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     "arnd@arndb.de" <arnd@arndb.de>,
+        Tue, 17 Dec 2019 08:54:33 -0500
+Received: by mail-wr1-f66.google.com with SMTP id z3so3858742wru.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 05:54:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=oA8lLtw5+Ki0rvk2E5DHDZT8Xzrj3ly5MFjUCZJfvp4=;
+        b=lTG+PpfFsBwem7LWNxasDI84APR3q/FRpiSMZtA97AEzPrTw2ZyGUJQg/2FxOcmzPj
+         mR8fMTv8VyALWzwIWUVsBn08FAh1PZukJmgC3lBgktyX0rejOrHDGoS+brxtqiakPnkw
+         +Lp5ryB6ZwG4GA7LfhEGedR1eicJaEWe+LMu4udE1xyaJyW9uUIpiZsMoP6UMmVWXSTX
+         pa5+4HCL7T03BoJ5cUrNB0Dol/uKTrsHHawoIZQSQ9Tgj1fhu8JpdmCFKDMsIeTjeWop
+         bSBopk1rH/KXWuS/YL9zR1B30nDVAx0UFUfY375pnL/CKYQhEI+hIlOXnU5xyuBlv5uz
+         bVfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=oA8lLtw5+Ki0rvk2E5DHDZT8Xzrj3ly5MFjUCZJfvp4=;
+        b=gF1amulKW8zwM7KY4UyLdZiibmtirquZkEmqjrowcgawOE3ngaddqpivt+cRUgT1eu
+         m5RUiIA9tEDSUYUs+3MzCw6u+UL7XeioD9JXwB01uy/sPSEbOZbmjLIC5GgmCd9TBv1O
+         wgpibqRzSdL36WCMcbZoTSyxC1VW2PrYLvQWLUlx1EEFWIWCbKm2uH4iDKPsw1ixt9iR
+         liaO0aZLeMhDWpWQVQC/ArnE4LabaB5K9fJ0BtVkTDDFf2+VVQSwpWl2Uw2JENARO3sF
+         H11KydDR4pEBfcfWqfpYqQZNIRNQA3cCwzauXoU0grK4m6UX2FZjq1Shsje0orVDoUYa
+         iBHA==
+X-Gm-Message-State: APjAAAVVEbPOYcQ6o5yOcuqS9vMTH6d5DuQWbcmAbul2CEwn3MM1C0OQ
+        11yTrPepIMYPgkqh9dJQTo7ybA==
+X-Google-Smtp-Source: APXvYqwHiX7Jsxay7dET6g2LF2XE9E9hwjKYARcptPGb5BljEooR+jLCasy9A33y/rTtfMlkvAcXww==
+X-Received: by 2002:adf:f80c:: with SMTP id s12mr36904115wrp.1.1576590871292;
+        Tue, 17 Dec 2019 05:54:31 -0800 (PST)
+Received: from dell ([2.27.35.132])
+        by smtp.gmail.com with ESMTPSA id x10sm25415862wrp.58.2019.12.17.05.54.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 05:54:30 -0800 (PST)
+Date:   Tue, 17 Dec 2019 13:54:30 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "corbet@lwn.net" <corbet@lwn.net>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Magee, Tim" <tim.magee@ncipher.com>
-Subject: Re: [PATCH 1/1] drivers: misc: Add support for nCipher HSM devices
-Thread-Topic: [PATCH 1/1] drivers: misc: Add support for nCipher HSM devices
-Thread-Index: AQHVtN0iUtD2ObauYk2ExPz0BKUZFqe+UyYAgAAAZ/Y=
-Date:   Tue, 17 Dec 2019 13:53:06 +0000
-Message-ID: <823cb0c0263c441aaaf256169de5a816@exukdagfar01.INTERNAL.ROOT.TES>
-References: <20191217132244.14768-1-david.kim@ncipher.com>
- <20191217132244.14768-2-david.kim@ncipher.com>,<20191217133234.GB3362771@kroah.com>
-In-Reply-To: <20191217133234.GB3362771@kroah.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.194.37.115]
-x-exclaimer-md-config: 7ae4f661-56ee-4cc7-9363-621ce9eeb65f
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "noralf@tronnes.org" <noralf@tronnes.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>
+Subject: Re: [PATCH v6 05/15] mfd: bd71828: Support ROHM BD71828 PMIC - core
+Message-ID: <20191217135430.GM18955@dell>
+References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+ <252de5646fedfec7c575269843a47091fe199c79.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+ <20191216164641.GC18955@dell>
+ <5593db6b3328c0a1a7069d839f5c777b4b3822b6.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5593db6b3328c0a1a7069d839f5c777b4b3822b6.camel@fi.rohmeurope.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgR3JlZywNCg0KVGhhbmtzIGZvciB0aGUgc3BlZWR5IHJlcGxpZXMuIFllcywgSSB3aWxsIGFk
-ZCBtb3JlIGJhY2tncm91bmQgaW5mb3JtYXRpb24gYW5kIG1ha2UgdGhlIHF1aWNrIGZvcm1hdHRp
-bmcgY2hhbmdlcyBmb3IgYSB2Mi4gV2UnbGwgcmVwbHkgdG8geW91ciBvdGhlciBlbWFpbCBjb21t
-ZW50cyBhbmQgZ2V0IHRob3NlIHJlc29sdmVkIGFzIHdlbGwuIEkgd2FzIHRyeWluZyB0byBiZSB0
-ZXJzZSBidXQgbG9va3MgbGlrZSBJIHdhcyB0b28gdGVyc2UuIEkgdGhvdWdodCB0aGUgY2hhbmdl
-bG9nIHRleHQgc2hvdWxkIGJlIGJyaWVmIGFuZCB0aGUgY292ZXIgbGV0dGVyIHdvdWxkIGJlIG1v
-cmUgdmVyYm9zZT8NCg0KUmVnYXJkcywNCkRhdmUNCg0KX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXw0KRnJvbTogR3JlZyBLSCA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5v
-cmc+DQpTZW50OiBUdWVzZGF5LCBEZWNlbWJlciAxNywgMjAxOSAxOjMyIFBNDQpUbzogS2ltLCBE
-YXZpZA0KQ2M6IGFybmRAYXJuZGIuZGU7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IE1h
-Z2VlLCBUaW0NClN1YmplY3Q6IFJlOiBbUEFUQ0ggMS8xXSBkcml2ZXJzOiBtaXNjOiBBZGQgc3Vw
-cG9ydCBmb3IgbkNpcGhlciBIU00gZGV2aWNlcw0KDQpPbiBUdWUsIERlYyAxNywgMjAxOSBhdCAw
-MToyMjo0NFBNICswMDAwLCBEYXZlIEtpbSB3cm90ZToNCj4g77u/RnJvbTogRGF2aWQgS2ltIDxk
-YXZpZC5raW1AbmNpcGhlci5jb20+DQo+DQo+IEludHJvZHVjZSB0aGUgZHJpdmVyIGZvciBuQ2lw
-aGVyJ3MgU29sbyBhbmQgU29sbyBYQyByYW5nZSBvZiBQQ0llIGhhcmR3YXJlDQo+IHNlY3VyaXR5
-IG1vZHVsZXMgKEhTTSksIHdoaWNoIHByb3ZpZGUga2V5IGNyZWF0aW9uL21hbmFnZW1lbnQgYW5k
-DQo+IGNyeXB0b2dyYXBoeSBzZXJ2aWNlcy4NCg0KQSBiaXQgbW9yZSBkZXNjcmlwdGlvbiBvZiBl
-eGFjdGx5IF93aGF0XyB0aGVzZSBkZXZpY2VzIGRvIHdvdWxkIGJlDQpoZWxwZnVsLg0KDQpBbHNv
-LCBob3cgZG9lcyB1c2Vyc3BhY2UgaW50ZXJhY3Qgd2l0aCB0aGUgZHJpdmVyPyAgV2hhdCBhcGko
-cykgYXJlIHlvdQ0KdXNpbmcvY3JlYXRpbmc/ICBXaGF0IHVzZXJzcGFjZSB0b29scyB3b3JrIHdp
-dGggdGhlIGRldmljZT8NCg0KSW4gc2hvcnQsIHdlIG5lZWQgbW9yZSB0aGFuIGp1c3QgYSBvbmUg
-c2VudGFuY2UgZGVzY3JpcHRpb24gdG8gYmUgYWJsZQ0KdG8gcHJvcGVybHkgcmV2aWV3IHRoZSBj
-b2RlIGFuZCBwcm92aWRlIHRleHQgZm9yIGEgdXNlciB0byBrbm93IHdoYXQgdG8NCmRvIHdpdGgg
-dGhpcyBkcml2ZXIuDQoNCkNhbiB5b3UgZml4IGFsbCB0aGF0IHVwIGFuZCBzZW5kIGEgdjI/DQoN
-CnRoYW5rcywNCg0KZ3JlZyBrLWgNCg==
+On Tue, 17 Dec 2019, Vaittinen, Matti wrote:
+
+> Hello Lee,
+> 
+> On Mon, 2019-12-16 at 16:46 +0000, Lee Jones wrote:
+> > On Wed, 11 Dec 2019, Matti Vaittinen wrote:
+> > 
+> > > BD71828GW is a single-chip power management IC for battery-powered
+> > > portable
+> > > devices. The IC integrates 7 buck converters, 7 LDOs, and a 1500 mA
+> > > single-cell linear charger. Also included is a Coulomb counter, a
+> > > real-time
+> > > clock (RTC), 3 GPO/regulator control pins, HALL input and a 32.768
+> > > kHz
+> > > clock gate.
+> > > 
+> > > Add MFD core driver providing interrupt controller facilities and
+> > > i2c
+> > > access to sub device drivers.
+> > > 
+> > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> > > ---
+> > > 
+> > > Changes since v5:
+> > > - No changes
+> > > 
+> > >  drivers/mfd/Kconfig              |  15 ++
+> > >  drivers/mfd/Makefile             |   2 +-
+> > >  drivers/mfd/rohm-bd71828.c       | 319 +++++++++++++++++++++++
+> > >  include/linux/mfd/rohm-bd71828.h | 425
+> > > +++++++++++++++++++++++++++++++
+> > >  include/linux/mfd/rohm-generic.h |   1 +
+> > >  5 files changed, 761 insertions(+), 1 deletion(-)
+> > >  create mode 100644 drivers/mfd/rohm-bd71828.c
+> > >  create mode 100644 include/linux/mfd/rohm-bd71828.h
+> > 
+> > Couple of small nits.  Once fixed, please apply my:
+> > 
+> > For my own reference:
+> >   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> > 
+> > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> > > index 420900852166..c3c9432ef51c 100644
+> > > --- a/drivers/mfd/Kconfig
+> > > +++ b/drivers/mfd/Kconfig
+> > > @@ -1906,6 +1906,21 @@ config MFD_ROHM_BD70528
+> > >  	  10 bits SAR ADC for battery temperature monitor and 1S
+> > > battery
+> > >  	  charger.
+> > >  
+> > > +config MFD_ROHM_BD71828
+> > > +	tristate "ROHM BD71828 Power Management IC"
+> > > +	depends on I2C=y
+> > > +	depends on OF
+> > > +	select REGMAP_I2C
+> > > +	select REGMAP_IRQ
+> > > +	select MFD_CORE
+> > > +	help
+> > > +	  Select this option to get support for the ROHM BD71828 Power
+> > > +	  Management IC. BD71828GW is a single-chip power management IC
+> > > for
+> > > +	  battery-powered portable devices. The IC integrates 7 buck
+> > > +	  converters, 7 LDOs, and a 1500 mA single-cell linear charger.
+> > > +	  Also included is a Coulomb counter, a real-time clock (RTC),
+> > > and
+> > > +	  a 32.768 kHz clock gate.
+> > > +
+> > >  config MFD_STM32_LPTIMER
+> > >  	tristate "Support for STM32 Low-Power Timer"
+> > >  	depends on (ARCH_STM32 && OF) || COMPILE_TEST
+> > > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> > > index aed99f08739f..ca2d55c679c5 100644
+> > > --- a/drivers/mfd/Makefile
+> > > +++ b/drivers/mfd/Makefile
+> > > @@ -252,6 +252,6 @@ obj-$(CONFIG_MFD_MXS_LRADC)     += mxs-lradc.o
+> > >  obj-$(CONFIG_MFD_SC27XX_PMIC)	+= sprd-sc27xx-spi.o
+> > >  obj-$(CONFIG_RAVE_SP_CORE)	+= rave-sp.o
+> > >  obj-$(CONFIG_MFD_ROHM_BD70528)	+= rohm-bd70528.o
+> > > +obj-$(CONFIG_MFD_ROHM_BD71828)	+= rohm-bd71828.o
+> > >  obj-$(CONFIG_MFD_ROHM_BD718XX)	+= rohm-bd718x7.o
+> > >  obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
+> > > -
+> > 
+> > Nit: This is an unrelated change and should not really be in this
+> > patch.
+> 
+> Ok. Will get rid of it.
+> 
+> > 
+> > > diff --git a/drivers/mfd/rohm-bd71828.c b/drivers/mfd/rohm-
+> > > bd71828.c
+> > > new file mode 100644
+> > > index 000000000000..7f445d699fd9
+> > > --- /dev/null
+> > > +++ b/drivers/mfd/rohm-bd71828.c
+> > > @@ -0,0 +1,319 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > +//
+> > > +// Copyright (C) 2019 ROHM Semiconductors
+> > > +//
+> > > +// ROHM BD71828 PMIC driver
+> > > +
+> 
+> //snip
+> 
+> > > +
+> > > +static struct i2c_driver bd71828_drv = {
+> > > +	.driver = {
+> > > +		.name = "rohm-bd71828",
+> > > +		.of_match_table = bd71828_of_match,
+> > > +	},
+> > > +	.probe_new = &bd71828_i2c_probe,
+> > > +};
+> > > +
+> > 
+> > Nit: You can remove this line.
+> 
+> Will do.
+> 
+> > 
+> > > +module_i2c_driver(bd71828_drv);
+> > > +
+> > > +MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> > > ");
+> > > +MODULE_DESCRIPTION("ROHM BD71828 Power Management IC driver");
+> > > +MODULE_LICENSE("GPL");
+> > 
+> > This does not match the header.
+> 
+> How is that? This is what is stated in module.h for the 
+> MODULE_LICENSE:
+> 
+> /*
+>  * The following license idents are currently accepted as indicating
+> free
+>  * software modules
+>  *
+>  *	"GPL"				[GNU Public License v2]
+>  *	"GPL v2"			[GNU Public License v2]
+>  *	"GPL and additional rights"	[GNU Public License v2 rights
+> and more]
+>  *	"Dual BSD/GPL"			[GNU Public License v2
+>  *					 or BSD license choice]
+>  *	"Dual MIT/GPL"			[GNU Public License v2
+>  *					 or MIT license choice]
+>  *	"Dual MPL/GPL"			[GNU Public License v2
+>  *					 or Mozilla license choice]
+>  *
+>  * The following other idents are available
+>  *
+>  *	"Proprietary"			[Non free products]
+>  *
+>  * Both "GPL v2" and "GPL" (the latter also in dual licensed strings)
+> are
+>  * merely stating that the module is licensed under the GPL v2, but are
+> not
+>  * telling whether "GPL v2 only" or "GPL v2 or later". The reason why
+> there
+>  * are two variants is a historic and failed attempt to convey more
+>  * information in the MODULE_LICENSE string. For module loading the
+>  * "only/or later" distinction is completely irrelevant and does
+> neither
+>  * replace the proper license identifiers in the corresponding source
+> file
+>  * nor amends them in any way. The sole purpose is to make the
+>  * 'Proprietary' flagging work and to refuse to bind symbols which are
+>  * exported with EXPORT_SYMBOL_GPL when a non free module is loaded.
+>  *
+>  * In the same way "BSD" is not a clear license information. It merely
+>  * states, that the module is licensed under one of the compatible BSD
+>  * license variants. The detailed and correct license information is
+> again
+>  * to be found in the corresponding source files.
+>  *
+>  * There are dual licensed components, but when running with Linux it
+> is the
+>  * GPL that is relevant so this is a non issue. Similarly LGPL linked
+> with GPL
+>  * is a GPL combined work.
+>  *
+>  * This exists for several reasons
+>  * 1.	So modinfo can show license info for users wanting to vet their
+> setup
+>  *	is free
+>  * 2.	So the community can ignore bug reports including proprietary
+> modules
+>  * 3.	So vendors can do likewise based on their own policies
+>  */
+> #define MODULE_LICENSE(_license) MODULE_INFO(license, _license)
+> 
+> I have no objections on changing the license if needed but can you
+> please tell me what is Ok combos then - I am having hard time when
+> trying to select licenses which are acceptable for all.
+
+If you have this in your header:
+
+  GPL-2.0-only
+
+Your MODULE tags should read:
+
+MODULE_LICENSE("GPL v2");
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
