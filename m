@@ -2,128 +2,156 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AFFFC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F0DCC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F27F6205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:52:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 030E6205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:52:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Hl2Y8hGQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="alSVTcLl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbfLQWwA (ORCPT
+        id S1726774AbfLQWwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 17:52:00 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43869 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725886AbfLQWv7 (ORCPT
+        Tue, 17 Dec 2019 17:52:11 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35103 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbfLQWwK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 17:51:59 -0500
-Received: by mail-ot1-f68.google.com with SMTP id p8so15543140oth.10
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 14:51:59 -0800 (PST)
+        Tue, 17 Dec 2019 17:52:10 -0500
+Received: by mail-pf1-f196.google.com with SMTP id b19so65202pfo.2;
+        Tue, 17 Dec 2019 14:52:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Bgj6GFgx8VThztK4Gu3+BzeDA/NznFDz/pSO11pXhjg=;
-        b=Hl2Y8hGQ+0lrr5/hQEqaf+/gbjNx2pyfaxEIghm4QuR3Hf/M3f7QA527VoNpOkY9fo
-         4kv2KeUY085H4H0ll6Hu44CmNk5yWK9kQ6RaeIBkekZDmxTOGIMcXisQhW3IJk9o47XG
-         1ieCEaj2RGguaP15oOZ0sl1hYp4v9vJyI3dgw=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=43dL0S1+ZbpbhxK/aXB66QvsZ6ZYsRiAxB07/k7CzJg=;
+        b=alSVTcLlBYiwu1/uz/4koQUlH+z2+YU570VCDe7gACD+8FkvyL9E14y0BOQ6Lg0wZt
+         5HlcSpVkFGXcvCFAGPrI1Hx9cahhwFOOCB187578naBLPt+5WAc8Su3jgYJ0zUMV2Sj8
+         4r8YQzKspY4x1si+XNmUgJp76KXkPB8xTySWfe9Wkyh/i+YGitS9brLZ+eEZ23U6ntvb
+         /g5/AyfE/WjDpSuqYFy4PE2jwzs6JkdVa2ZivGHbzoDCMphM3WFJTHWK/2Ueq7Iw/GAA
+         /iSaSz2pX0uvfTqB90XIW9FtPShF+zzmY2BnoNPrzR8WqboPZWcb2AKaYJc3o9CCYsd5
+         OAtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Bgj6GFgx8VThztK4Gu3+BzeDA/NznFDz/pSO11pXhjg=;
-        b=QUId7Ju6DxiqgCNryJQn8WRlr44RucQ+GvNM5pikJ6A0kTfiSyEIFRG+Rr1DvHurFq
-         1DeGlmP04hPeSfDsf5ouvxNp8PcZosZIKHyA9NG3w7T07Ntb7QfAQ40+pJQtXNLHQTbW
-         ObG+SDidLQoEYKXHV+Z7J06apTWAOOxchWwREbIVPkENAavp7WQIZXbWQDC1b+C4PYGu
-         +9lU0Nb4/rJCNVcMxLl3z25inbbvqZtW1VxMiN8uz9QQLXDf6gzrsAtgSr7AnPoXWmzW
-         rxKs50kt9gmWmrxfJkC2R3GOyWubC/aI6jc+MpzCQxkuOJOAQiumXEIi4QYVCQXBzVm4
-         g8Xg==
-X-Gm-Message-State: APjAAAW352eZEvQfRZS1ueTOHF95OGVsyM6cykm8S6DimnTnTlXPZ5h5
-        9Fcos8beJapH7UyLHvnDb3VzsSJt8stmYUCCCLHGqA==
-X-Google-Smtp-Source: APXvYqx+R5wFvTkSiUO0y6MYgmRmL50Cn5ck4GRTtls7IdGYcsg8QD5heARFegvJ+0lTn3tHAVoDp2cT7t3IUAtvC8o=
-X-Received: by 2002:a05:6830:1415:: with SMTP id v21mr41903346otp.188.1576623118725;
- Tue, 17 Dec 2019 14:51:58 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=43dL0S1+ZbpbhxK/aXB66QvsZ6ZYsRiAxB07/k7CzJg=;
+        b=T3fgC9clUKU+OVyaCKGKSIjhyzooXkKt2HdmNWhb3yW4DqYJ44zxC8E5hQZsapfD3N
+         Gw5LDjQzxlBKTAwIkmTt8/lqBVxYt9TtSSJcttGOdF9C6dQTx8wAtR5A1hp0m5Nbx2h0
+         MEbH7b9JDgNoulc7fZ1Yux6YEuWjYVEii3fq0daZWRR/poHRRlSznbEmUSSLd1gtzXJ0
+         EpEWoKmXA82Rxhe4vE+5psKfx4EeeNR1Rd9UCFW52dydbuTHbVJ2cYgoBW8Z+EZr/BJA
+         d3oj1GA+nowN1ddQ0QfIV0Z5eePvxl9bo72SskckcGpEhjRKZ6n8ZLWVMZHuhd2OQ4bS
+         La2g==
+X-Gm-Message-State: APjAAAWxghTRfulQIKHoN95+ob9zNDqQ/81FX2qzlFZkNlbec3aTswd5
+        LMqyYhtoMAjMbdEcy7OcXLkLNyRM
+X-Google-Smtp-Source: APXvYqypKxsddQba+a9CY+gMEud33YEWDdVtSg9vuKaEkUs1MpWIURcQ5MT3SK38fh1ORaM/yll19g==
+X-Received: by 2002:a63:66c6:: with SMTP id a189mr26057698pgc.401.1576623129476;
+        Tue, 17 Dec 2019 14:52:09 -0800 (PST)
+Received: from [10.67.50.53] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id s1sm14796pgv.87.2019.12.17.14.52.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Dec 2019 14:52:09 -0800 (PST)
+Subject: Re: [PATCH net-next 3/8] net: bcmgenet: use CHECKSUM_COMPLETE for
+ NETIF_F_RXCSUM
+To:     David Miller <davem@davemloft.net>, opendmb@gmail.com
+Cc:     bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1576616549-39097-1-git-send-email-opendmb@gmail.com>
+ <1576616549-39097-4-git-send-email-opendmb@gmail.com>
+ <20191217.131631.2246524906428878009.davem@davemloft.net>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
+Message-ID: <042fad13-f6a2-6d1b-ba7a-61c60e394115@gmail.com>
+Date:   Tue, 17 Dec 2019 14:52:07 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <f947d821-8e67-dcc7-d753-5b04d099792d@gmail.com>
-In-Reply-To: <f947d821-8e67-dcc7-d753-5b04d099792d@gmail.com>
-From:   Yuqing Shen <yuqing.shen@broadcom.com>
-Date:   Tue, 17 Dec 2019 15:51:47 -0700
-Message-ID: <CALqpNLdtWdrQKyH2DEcnW6vq_pwAEcsve=id0sysddNTE6hVpg@mail.gmail.com>
-Subject: Re: [PATCH v7 1/2] dt-bindings: edac: arm-dmc520.txt
-To:     Shiping Ji <shiping.linux@gmail.com>
-Cc:     bp@alien8.de, james.morse@arm.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mchehab@kernel.org,
-        linux-edac@vger.kernel.org, sashal@kernel.org,
-        Hang Li <hangl@microsoft.com>, lewan@microsoft.com,
-        ruizhao@microsoft.com, Scott Branden <scott.branden@broadcom.com>,
-        Ray Jui <ray.jui@broadcom.com>, shji@microsoft.com,
-        wangglei@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191217.131631.2246524906428878009.davem@davemloft.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Shiping
-This commit looks good to me.
-Yuqing
+On 12/17/19 1:16 PM, David Miller wrote:
+> From: Doug Berger <opendmb@gmail.com>
+> Date: Tue, 17 Dec 2019 13:02:24 -0800
+> 
+>> This commit updates the Rx checksum offload behavior of the driver
+>> to use the more generic CHECKSUM_COMPLETE method that supports all
+>> protocols over the CHECKSUM_UNNECESSARY method that only applies
+>> to some protocols known by the hardware.
+>>
+>> This behavior is perceived to be superior.
+>>
+>> Signed-off-by: Doug Berger <opendmb@gmail.com>
+> 
+> This has to be done in the same patch that you change to use
+> the NETIF_F_HW_CSUM feature flag.
 
-On Sun, Nov 17, 2019 at 7:10 PM Shiping Ji <shiping.linux@gmail.com> wrote:
->
-> This is the device tree bindings for new EDAC driver dmc520_edac.c.
->
-> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
-> Reviewed-by: James Morse <james.morse@arm.com>
-> Reviewed-by: Yuqing Shen <yuqing.shen@broadcom.com>
->  Tested-by: Yuqing Shen <yuqing.shen@broadcom.com>
-> ---
->      Changes in v7:
->          - Added arm prefix to the interrupt-config property
->
-> ---
->  .../devicetree/bindings/edac/arm-dmc520.txt   | 26 +++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/edac/arm-dmc520.txt
->
-> diff --git a/Documentation/devicetree/bindings/edac/arm-dmc520.txt b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
-> new file mode 100644
-> index 000000000000..476cf8b76f2a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
-> @@ -0,0 +1,26 @@
-> +* ARM DMC-520 EDAC node
-> +
-> +Required properties:
-> +- compatible  : "brcm,dmc-520", "arm,dmc-520".
-> +- reg   : Address range of the DMC-520 registers.
-> +- interrupts  : DMC-520 interrupt numbers. The example below specifies
-> +     two interrupt lines for dram_ecc_errc_int and
-> +     dram_ecc_errd_int.
-> +- arm,interrupt-config : This is an array of interrupt masks. For each of the
-> +     above interrupt line, add one interrupt mask element to
-> +     it. That is, there is a 1:1 mapping from each interrupt
-> +     line to an interrupt mask. An interrupt mask can represent
-> +     multiple interrupts being enabled. Refer to interrupt_control
-> +     register in DMC-520 TRM for interrupt mapping. In the example
-> +     below, the interrupt configuration enables dram_ecc_errc_int
-> +     and dram_ecc_errd_int. And each interrupt is connected to
-> +     a separate interrupt line.
-> +
-> +Example:
-> +
-> +dmc0: dmc@200000 {
-> + compatible = "brcm,dmc-520", "arm,dmc-520";
-> + reg = <0x200000 0x80000>;
-> + interrupts = <0x0 0x349 0x4>, <0x0 0x34B 0x4>;
-> + arm,interrupt-config = <0x4>, <0x8>;
-> +};
-> --
-> 2.17.1
->
+Even if we were already advertising support for NETIF_F_RXCSUM before
+patch #2? Not questioning your comment, just trying to understand why
+this is deemed necessary here since it does not affect the same "direction".
+-- 
+Florian
