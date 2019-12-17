@@ -2,104 +2,67 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 217F7C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 915CDC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3FFC2082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:39:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60D8421582
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:40:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576618815;
+	bh=Wc14UeokW5LvLYjVQcbtcF+Eacw8mOVXMJiT1hUDrzA=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=w5vFiJjvkW0D7tujg+IpHTEnnRa5Nrl1D/LDN4anN7xcb/FC2f8JK5LreOMHx3TS7
+	 aCuvBXVyxnhfE+ZDrynGUhf89nF0X32KhlsWp8+k+IRmdeOfmaHK4BoRzIx/6BovJi
+	 TcAZ/Eq3UvrzRLrolC1juRKh+09AVTIW1GTPVeaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbfLQVjS (ORCPT
+        id S1728272AbfLQVkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 16:39:18 -0500
-Received: from mout.kundenserver.de ([212.227.17.13]:36295 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727704AbfLQVjS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 16:39:18 -0500
-Received: from mail-qv1-f45.google.com ([209.85.219.45]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1Ma1HG-1iDcVb3Zzw-00W0BJ; Tue, 17 Dec 2019 22:39:16 +0100
-Received: by mail-qv1-f45.google.com with SMTP id f16so2612778qvi.4;
-        Tue, 17 Dec 2019 13:39:15 -0800 (PST)
-X-Gm-Message-State: APjAAAVvUpkNX47bVY7y7BA/xiOxNSKSS5O5IGPIs3A9SzgbGtpy4xua
-        /DbJIJnN03/RHY+/Gu49dbRDQCeT7mLCLi42a08=
-X-Google-Smtp-Source: APXvYqwLgTq/5K3B2a0Kv5JqoIJuNjoXwcTS39ZAj3UFgfd+yZoCWCBdOxFZcsSuuLqlG8YzlR2R9O/gYJsSc823Fwo=
-X-Received: by 2002:ad4:4021:: with SMTP id q1mr6532445qvp.211.1576618754626;
- Tue, 17 Dec 2019 13:39:14 -0800 (PST)
-MIME-Version: 1.0
-References: <20191211204306.1207817-1-arnd@arndb.de> <20191211204306.1207817-11-arnd@arndb.de>
- <f0e7384f3eb6203eb72b36433b0666150cf560ff.camel@codethink.co.uk>
-In-Reply-To: <f0e7384f3eb6203eb72b36433b0666150cf560ff.camel@codethink.co.uk>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 17 Dec 2019 22:38:58 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a0evGt++XO5dCx5u_0oyyoYGRVVPi4vo9FUdDS68G-4+g@mail.gmail.com>
-Message-ID: <CAK8P3a0evGt++XO5dCx5u_0oyyoYGRVVPi4vo9FUdDS68G-4+g@mail.gmail.com>
-Subject: Re: [Y2038] [PATCH 10/24] compat_ioctl: cdrom: handle CDROM_LAST_WRITTEN
-To:     Ben Hutchings <ben.hutchings@codethink.co.uk>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-block <linux-block@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Diego_Elio_Petten=C3=B2?= <flameeyes@flameeyes.com>,
-        Hannes Reinecke <hare@suse.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Martin Wilck <mwilck@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:oQkrP4ALT6kCEbxBi5aycouamEEcuDaXShQq86/XRr34366WmAl
- +DW2uaAOthFXbkEcpxuI/QOIRgD77+iMZL/EA06p4h382KSE8IGCju8xX6DHTfd3yT+L5m2
- kTgVQc83W5eKgHt+Re0YZ0oZf192kXKv0i8NtN77bnOPS3MASWKtapRiOcIfJi9/lljyVO4
- 7rGeSgtf+yyOeFZ4+Thqw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Nx6byoREsV4=:RAU+LI+4bt7lUL72KS/rFh
- qiOCyFU9GwISJ+5srjJpSMjiSIh6d6ebpQA/3G1N3aklya9dU+hlu18nX8PP7bCTHcPWjzG0u
- UAMTZQr/BzK+rLwg5e5cYkpz/DHn0fxRTi7qaRR7zL1wrUsWVU6PsE4+8jQzog7rHBVZULKWY
- 1FDdyFlBOUb/nZixVzK+2UN7mtEy+/eofM+T23bV7ZwZuHXxuyfGOrMiQRTtR8hqtt/eVTAgX
- +pgV3uOLuNnCcWkAPrNNpbTiKtE2cM+hMzFEjyI6JJA6YWmee2zJGIKWz97Xd1dZiQJ3wU9K9
- X2cmvABgK3T0qgyMWyIGuoaq7c9fyyjO/rSzbhY7ywmS3xwrZxoKB7y7XJ/TaRyW7ffH1Ok55
- HQroNEat7CRxQN62V22pYwq04uoQQpNkwveI5FfU7dJLDSA7N70RFV0NBiaOIz1V17Nqx4buV
- lgPhKW3ED5DXc4biumpRPwXUsBX08o1ZfqGjKY72YwD8rONj01CiHxGJj7qORaxBELShli7xX
- JasNwsMY+JQJCwn/F4ki4xmLQCR/alcqdYwn0ZnuriHz52ic+M/VvqHwGMtyFtA66dabrefAH
- cZVQELEzslDJCzaVAw3JvSxg3A1WD29EKBxxnXjWMljE5NAnlXRiC/omLggTc/Ad+C4GQOd6T
- 5ufq3VstTLtq3d99zdeKZLibs6ukCqznuFrLgKrllZJFJHPpWGr1xiK5cYomzjmJ4+7/h++zY
- hV0gzpa4E0+98gVwjtDwzKo7raW9o13ZYoPP+QwON29RVkayNtcL9qZarDKuoLGqvwTKws3ST
- 0zc+ZctmGhQlUetxy0kQDdldDndacx8QWMK7wlaVs4hAnzRxEHjMHnpDh7S/+B2TKAHyw87Mp
- 7+dSKSH3xwL2vn6Zr38g==
+        Tue, 17 Dec 2019 16:40:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40678 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727988AbfLQVkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 16:40:13 -0500
+Subject: Re: [GIT PULL] Btrfs fixes for 5.5-rc3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576618813;
+        bh=Wc14UeokW5LvLYjVQcbtcF+Eacw8mOVXMJiT1hUDrzA=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=BnCVo0vvUOyrOS9YgeYat1dwueR3FS68EiBbAhTwLvAtCeLHwkWCYrAy1gU8wOzhY
+         CZMD8tqXPwWKZe/b+XlYKhB1a+iMVmtiUmAZhNPCyM61XPkdFnlrVNWUvrrA/AmXxx
+         pW6WGiJdMPFVgWECfqNFm875oWGKbyYS6HjU3F/M=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <cover.1576601647.git.dsterba@suse.com>
+References: <cover.1576601647.git.dsterba@suse.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <cover.1576601647.git.dsterba@suse.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.5-rc2-tag
+X-PR-Tracked-Commit-Id: fbd542971aa1e9ec33212afe1d9b4f1106cd85a1
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 2187f215ebaac73ddbd814696d7c7fa34f0c3de0
+Message-Id: <157661881317.22679.5708312827036168575.pr-tracker-bot@kernel.org>
+Date:   Tue, 17 Dec 2019 21:40:13 +0000
+To:     David Sterba <dsterba@suse.com>
+Cc:     torvalds@linux-foundation.org, David Sterba <dsterba@suse.com>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 4:20 PM Ben Hutchings
-<ben.hutchings@codethink.co.uk> wrote:
->
-> On Wed, 2019-12-11 at 21:42 +0100, Arnd Bergmann wrote:
-> > This is the only ioctl command that does not have a proper
-> > compat handler. Making the normal implementation do the
-> > right thing is actually very simply, so just do that by
-> > using an in_compat_syscall() check to avoid the special
-> > case in the pkcdvd driver.
-> [...]
->
-> Since this uses blkdev_compat_ptr_ioctl() it needs to be moved after
-> the following patch.
->
+The pull request you sent on Tue, 17 Dec 2019 18:08:16 +0100:
 
-Ah right, I obviously reshuffled my patches too much to end up
-with the most reasonable order and avoid introducing something
-that would be removed again later.
+> git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.5-rc2-tag
 
-I'll split out the addition of blkdev_compat_ptr_ioctl() into a separate
-patch and move that all in front, as I'm no longer sure if there
-was another dependency in the other way.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/2187f215ebaac73ddbd814696d7c7fa34f0c3de0
 
-Thanks!
+Thank you!
 
-        Arnd
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
