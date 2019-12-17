@@ -2,79 +2,168 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51867C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE0D2C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CDDB206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A22FE2082E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:52:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576583536;
+	bh=1AdLHnqErijx33avBgn6nsFRo0kuqiryDUYljqP/3jI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Gp2IkcN4G4H43m5OVUjVPjSMDEW09jiQlTo4DXYirBitmMeQWLXaxPqyJLHY0ZQ8u
+	 k4EhQIfyp9TVMTwx5FmTkeqWau1hdPFHuAE2bPI9lERZzpZxb7UZsi+K7TNW/Bs6NI
+	 6VYuIkEZyj7YP7oQAao4hc5BaEW1k4E3CCA8g3As=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727704AbfLQLt6 (ORCPT
+        id S1727628AbfLQLwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 06:49:58 -0500
-Received: from mx2.suse.de ([195.135.220.15]:39104 "EHLO mx2.suse.de"
+        Tue, 17 Dec 2019 06:52:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727241AbfLQLt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 06:49:57 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 5504DACA7;
-        Tue, 17 Dec 2019 11:49:56 +0000 (UTC)
-Subject: Re: [PATCH] lib: crc64: include <linux/crc64.h> for 'crc64_be'
-To:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-References: <20191217112633.2108845-1-ben.dooks@codethink.co.uk>
-From:   Coly Li <colyli@suse.de>
-Organization: SUSE Labs
-Message-ID: <2a06908d-8dc4-5c7f-a40c-e9fb9ec96e70@suse.de>
-Date:   Tue, 17 Dec 2019 19:49:40 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.3.0
+        id S1726275AbfLQLwP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 06:52:15 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 964BD207FF;
+        Tue, 17 Dec 2019 11:52:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576583534;
+        bh=1AdLHnqErijx33avBgn6nsFRo0kuqiryDUYljqP/3jI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KTtQaTC/9A/+UYJTjNm3BKoz9PLTc8myT9PNS/FYN7LSu4JsYJDP2ltvueBK0w6rc
+         yxndCMGngKSXhzv06wtzw8UjHs1/yNA8WXQjrhvtK+nji3vEJ3ls89BRi8SNut+HVq
+         p0r6ZeH2YWmEqBMfpHYJhKqOZvoirlRWTfVlWayo=
+Date:   Tue, 17 Dec 2019 12:52:11 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     =?iso-8859-1?B?Suly9G1l?= Pouiller <Jerome.Pouiller@silabs.com>
+Cc:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: Re: [PATCH 01/55] staging: wfx: fix the cache of rate policies on
+ interface reset
+Message-ID: <20191217115211.GA3141324@kroah.com>
+References: <20191216170302.29543-1-Jerome.Pouiller@silabs.com>
+ <20191216170302.29543-2-Jerome.Pouiller@silabs.com>
 MIME-Version: 1.0
-In-Reply-To: <20191217112633.2108845-1-ben.dooks@codethink.co.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191216170302.29543-2-Jerome.Pouiller@silabs.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/12/17 7:26 ä¸‹åˆ, Ben Dooks (Codethink) wrote:
-> The crc64_be() is declared in <linux/crc64.h> so include
-> this where the symbol is defined to avoid the following
-> warning:
+On Mon, Dec 16, 2019 at 05:03:33PM +0000, Jérôme Pouiller wrote:
+> From: Jérôme Pouiller <jerome.pouiller@silabs.com>
 > 
-> lib/crc64.c:43:12: warning: symbol 'crc64_be' was not declared. Should it be static?
+> Device and driver maintain a cache of rate policies (aka.
+> tx_retry_policy in hardware API).
 > 
-> Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
-
-It is good to me. Added to my for-test patches. Thanks.
-
-Coly Li
-
+> When hif_reset() is sent to hardware, device resets its cache of rate
+> policies. In order to keep driver in sync, it is necessary to do the
+> same on driver.
+> 
+> Note, when driver tries to use a rate policy that has not been defined
+> on device, data is sent at 1Mbps. So, this patch should fix abnormal
+> throughput observed sometime after a reset of the interface.
+> 
+> Signed-off-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
 > ---
-> Cc: Coly Li <colyli@suse.de>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  lib/crc64.c | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/staging/wfx/data_tx.c | 3 +--
+>  drivers/staging/wfx/data_tx.h | 1 +
+>  drivers/staging/wfx/sta.c     | 6 +++++-
+>  3 files changed, 7 insertions(+), 3 deletions(-)
 > 
-> diff --git a/lib/crc64.c b/lib/crc64.c
-> index 0ef8ae6ac047..f8928ce28280 100644
-> --- a/lib/crc64.c
-> +++ b/lib/crc64.c
-> @@ -28,6 +28,7 @@
+> diff --git a/drivers/staging/wfx/data_tx.c b/drivers/staging/wfx/data_tx.c
+> index b722e9773232..02f001dab62b 100644
+> --- a/drivers/staging/wfx/data_tx.c
+> +++ b/drivers/staging/wfx/data_tx.c
+> @@ -249,7 +249,7 @@ static int wfx_tx_policy_upload(struct wfx_vif *wvif)
+>  	return 0;
+>  }
 >  
->  #include <linux/module.h>
->  #include <linux/types.h>
-> +#include <linux/crc64.h>
->  #include "crc64table.h"
+> -static void wfx_tx_policy_upload_work(struct work_struct *work)
+> +void wfx_tx_policy_upload_work(struct work_struct *work)
+>  {
+>  	struct wfx_vif *wvif =
+>  		container_of(work, struct wfx_vif, tx_policy_upload_work);
+> @@ -270,7 +270,6 @@ void wfx_tx_policy_init(struct wfx_vif *wvif)
+>  	spin_lock_init(&cache->lock);
+>  	INIT_LIST_HEAD(&cache->used);
+>  	INIT_LIST_HEAD(&cache->free);
+> -	INIT_WORK(&wvif->tx_policy_upload_work, wfx_tx_policy_upload_work);
 >  
->  MODULE_DESCRIPTION("CRC64 calculations");
-> 
+>  	for (i = 0; i < HIF_MIB_NUM_TX_RATE_RETRY_POLICIES; ++i)
+>  		list_add(&cache->cache[i].link, &cache->free);
+> diff --git a/drivers/staging/wfx/data_tx.h b/drivers/staging/wfx/data_tx.h
+> index 29faa5640516..a0f9ae69baf5 100644
+> --- a/drivers/staging/wfx/data_tx.h
+> +++ b/drivers/staging/wfx/data_tx.h
+> @@ -61,6 +61,7 @@ struct wfx_tx_priv {
+>  } __packed;
+>  
+>  void wfx_tx_policy_init(struct wfx_vif *wvif);
+> +void wfx_tx_policy_upload_work(struct work_struct *work);
+>  
+>  void wfx_tx(struct ieee80211_hw *hw, struct ieee80211_tx_control *control,
+>  	    struct sk_buff *skb);
+> diff --git a/drivers/staging/wfx/sta.c b/drivers/staging/wfx/sta.c
+> index 29848a202ab4..471dd15b227f 100644
+> --- a/drivers/staging/wfx/sta.c
+> +++ b/drivers/staging/wfx/sta.c
+> @@ -592,6 +592,7 @@ static void wfx_do_unjoin(struct wfx_vif *wvif)
+>  	wfx_tx_flush(wvif->wdev);
+>  	hif_keep_alive_period(wvif, 0);
+>  	hif_reset(wvif, false);
+> +	wfx_tx_policy_init(wvif);
+>  	hif_set_output_power(wvif, wvif->wdev->output_power * 10);
+>  	wvif->dtim_period = 0;
+>  	hif_set_macaddr(wvif, wvif->vif->addr);
+> @@ -880,8 +881,10 @@ static int wfx_update_beaconing(struct wfx_vif *wvif)
+>  		if (wvif->state != WFX_STATE_AP ||
+>  		    wvif->beacon_int != conf->beacon_int) {
+>  			wfx_tx_lock_flush(wvif->wdev);
+> -			if (wvif->state != WFX_STATE_PASSIVE)
+> +			if (wvif->state != WFX_STATE_PASSIVE) {
+>  				hif_reset(wvif, false);
+> +				wfx_tx_policy_init(wvif);
+> +			}
+>  			wvif->state = WFX_STATE_PASSIVE;
+>  			wfx_start_ap(wvif);
+>  			wfx_tx_unlock(wvif->wdev);
+> @@ -1567,6 +1570,7 @@ int wfx_add_interface(struct ieee80211_hw *hw, struct ieee80211_vif *vif)
+>  	INIT_WORK(&wvif->set_cts_work, wfx_set_cts_work);
+>  	INIT_WORK(&wvif->unjoin_work, wfx_unjoin_work);
+>  
+> +	INIT_WORK(&wvif->tx_policy_upload_work, wfx_tx_policy_upload_work);
+>  	mutex_unlock(&wdev->conf_mutex);
+>  
+>  	hif_set_macaddr(wvif, vif->addr);
+
+Meta-comment here.
+
+I've been having to hand-edit your patches to get them to be able to
+apply so far, which is fine for 1-10 patches at a time, but when staring
+down a 55-patch series, that's not ok for my end.
+
+The problem is that your email client is turning everything into base64
+text.  On it's own, that's fine, but when doing so it turns the
+line-ends from unix ones, into dos line-ends.  So, when git decodes the
+base64 text into "plain text" the patch obviously does not apply due to
+the line-ends not matching up.
+
+Any chance you can fix your email client to not convert the line-ends?
+
+thanks,
+
+greg k-h
