@@ -2,134 +2,78 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA89EC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BBDC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C043920716
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:02:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VufgDlRL"
+	by mail.kernel.org (Postfix) with ESMTP id 0897E2176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:05:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576591510;
+	bh=C8BgYT65KP1euTX67Gol+mm6YX0OWA84EmlCkC+xxTw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qB4MJGkzCKOGdHaDEokCEJbrflP6dYoY2AFLIEG5wuCcEibGmkCB1aLNRAG1st2XA
+	 50iM61tqj78Wn8XfkWjfnSZ9oeTCJDO/JQhuH3iewYw1jSadN1Nahsfww1l2q+Y3/e
+	 8hHUdw5IQuwJ265lI1phgZF/b2FMfGTx4ORf/4jo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728740AbfLQOCn (ORCPT
+        id S1728766AbfLQOFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:02:43 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35982 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728546AbfLQOCn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:02:43 -0500
-Received: by mail-pf1-f194.google.com with SMTP id x184so7619236pfb.3;
-        Tue, 17 Dec 2019 06:02:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SZbdI1oTJhgNR2q16NaU/ih7Yhw7j92Blaz0d9EbKf0=;
-        b=VufgDlRLvUqcDhaN+aqsmpUSpMUEO+5eGXxtaMmiB+cLPuEIANj2BqRFbg41NZStda
-         ek5yjrcLaHyy6fz0j9cGKpRd4ZmWrpCKP8qZLrN4FkIi40zDb+URhQt10vXmZR204wHk
-         ondoEsn1mZAMYuC5XDdYhlta4Uq6iJsN+AiE8auO3rrkbiB9gdE4nKWlovMytl4nXsaR
-         NOwmYv23kXk9CYciQVrLVYxBP1vKQdJW4aD0S+zwQytPQxLPqaibsXwhZ1aLwBRs/Txl
-         5NNofTyb1ZdA9my8h0kjpZatEPUICBMzHatfFSJHhhCkyKuPlQunIAukKI/FfzCMnIPd
-         U3iA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SZbdI1oTJhgNR2q16NaU/ih7Yhw7j92Blaz0d9EbKf0=;
-        b=SUfP/pceyuO5zCNtT8VpTsJITh8zYeduroweIfbR+NGGL9TNsDDgONz6qGhuA+byil
-         CB+aPiIMZTOSBse5ENsY360wmDhdI+p0O8DCqN1H35NavndFP7ktfsh4PNlpu5GpmEBl
-         6Gv3C3sMNAGUtGvgRVkcZJj7/5ShbXFek4JhaAevbSCUPRjoJQK04XXFw18+SBshsHSp
-         FwtPL26Jw8HZFJSJiCWxYzqYDvWRmvQO7dia/CW8IfLp3gwBlXOn+iw4QWM5Lk8PZBx4
-         QdYqMcqBQAI/AHdVFRCweQ2p3ZybV5InMy6qEivJ85rsWacIrdgq4W5bWHeEQcCjOHoi
-         T9AQ==
-X-Gm-Message-State: APjAAAXiYekgz6kKrkaOQTQx1W2uAR5wKrpJFkT80YJYq14ZpYBGJ2Wx
-        EXgp7XhUlc5Q2IipsjEkhDGepIPpIbbPapKLo8k=
-X-Google-Smtp-Source: APXvYqy/xM6reHHq0RiuWT+LpcRLnjrMc7GzR7AnrNUS1AegdjlgvuOx6jBTvvKmZlo6TyMcdNVND3QExbOT1QWstfI=
-X-Received: by 2002:a62:7590:: with SMTP id q138mr21861326pfc.241.1576591362762;
- Tue, 17 Dec 2019 06:02:42 -0800 (PST)
+        Tue, 17 Dec 2019 09:05:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49840 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728546AbfLQOFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 09:05:08 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CFE12072D;
+        Tue, 17 Dec 2019 14:05:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576591508;
+        bh=C8BgYT65KP1euTX67Gol+mm6YX0OWA84EmlCkC+xxTw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ghaJEtR9mZWoLMAQJGYZqGTpf7VBflZJlnjo/KcPR3vAqiBKwMl53Q3EnOUMEEx52
+         51uDkpL1ZFFsKLgzP/qZmw+GY9ym09r+6AtYXOLgtu8thn3nBaNT6/5eCDDa0viDim
+         zzuR8h7YNRi3la7wgBYaMqlIdu19FyAs9MmF3RSU=
+Date:   Tue, 17 Dec 2019 15:05:05 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Kim, David" <david.kim@ncipher.com>
+Cc:     "arnd@arndb.de" <arnd@arndb.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Magee, Tim" <tim.magee@ncipher.com>
+Subject: Re: [PATCH 1/1] drivers: misc: Add support for nCipher HSM devices
+Message-ID: <20191217140505.GB3489463@kroah.com>
+References: <20191217132244.14768-1-david.kim@ncipher.com>
+ <20191217132244.14768-2-david.kim@ncipher.com>
+ <20191217133234.GB3362771@kroah.com>
+ <823cb0c0263c441aaaf256169de5a816@exukdagfar01.INTERNAL.ROOT.TES>
 MIME-Version: 1.0
-References: <20191216162209.5b5256dd@canb.auug.org.au> <d92bec2a-62cb-004e-7f8c-01fc12a53a74@infradead.org>
- <20191217054255.GA26868@ravnborg.org> <65c9dc7b-3c61-8204-07da-212632732791@infradead.org>
- <aede39a0-3469-130d-f416-0e9426ebcec9@arm.com>
-In-Reply-To: <aede39a0-3469-130d-f416-0e9426ebcec9@arm.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 17 Dec 2019 16:02:32 +0200
-Message-ID: <CAHp75VfmGo1LzsHiq_UvWbhvRGovtaLVnRPZJ=40arrJWq6HvA@mail.gmail.com>
-Subject: Re: linux-next: Tree for Dec 16 (drm_panel & intel_panel)
-To:     Steven Price <steven.price@arm.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <823cb0c0263c441aaaf256169de5a816@exukdagfar01.INTERNAL.ROOT.TES>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 1:56 PM Steven Price <steven.price@arm.com> wrote:
-> On 17/12/2019 06:37, Randy Dunlap wrote:
-> > On 12/16/19 9:42 PM, Sam Ravnborg wrote:
-> >> On Mon, Dec 16, 2019 at 08:25:11AM -0800, Randy Dunlap wrote:
-> >>> On 12/15/19 9:22 PM, Stephen Rothwell wrote:
+On Tue, Dec 17, 2019 at 01:53:06PM +0000, Kim, David wrote:
+> Hi Greg,
+> 
+> Thanks for the speedy replies. Yes, I will add more background
+> information and make the quick formatting changes for a v2. We'll
+> reply to your other email comments and get those resolved as well. I
+> was trying to be terse but looks like I was too terse. I thought the
+> changelog text should be brief and the cover letter would be more
+> verbose?
 
-> >>> on x86_64:
-> >>>
-> >>> ld: drivers/gpu/drm/drm_panel.o: in function `drm_panel_of_backlight':
-> >>> (.text+0x2ee): undefined reference to `devm_of_find_backlight'
-> >>>
-> >>> ld: drivers/gpu/drm/i915/display/intel_panel.o: in function `intel_backlight_device_register':
-> >>> intel_panel.c:(.text+0x593e): undefined reference to `backlight_device_register'
-> >>> ld: drivers/gpu/drm/i915/display/intel_panel.o: in function `intel_backlight_device_unregister':
-> >>> intel_panel.c:(.text+0x5a04): undefined reference to `backlight_device_unregister'
-> >>>
-> >>> CONFIG_DRM_PANEL=y
-> >>> CONFIG_BACKLIGHT_CLASS_DEVICE=m
-> >>> CONFIG_DRM_I915=y
-> >>>
-> >>> Full randconfig file is attached.
-> >>
-> >> Can you please verify if you have:
-> >> 907aa265fde6589b8059dc51649c6d1f49ade2f3
-> >> ("drm/drm_panel: fix EXPORT of drm_panel_of_backlight")
-> >>
-> >> This commit is supposed to fix it.
-> >>
-> >>      Sam
-> >>
-> >
-> > Hi Sam,
-> > I don't have the linux-next.git tree so I can't check that.
-> > I just built whatever is in linux-next of 20191216.
-> >
->
-> 907aa265fde6589b8059dc51649c6d1f49ade2f3 ("drm/drm_panel: fix EXPORT of
-> drm_panel_of_backlight") is fixing drm_panel_of_backlight(), but the
-> error above is for backlight_device_register().
->
-> From what I can tell, that commit is actually the cause of the error -
-> now intel_backlight_device_register() is being included in the kernel
-> even though it calls backlight_device_register() which is in a module.
-> Of course it also fixed the original error, so reverting it isn't any
-> use.
->
-> The below Kconfig change fixes the build for me, but I've no idea
-> whether this is the correct fix.
+cover letters do not end up in the kernel changelog.
 
-I think the proper one is to have s/IS_ENABLED/IS_REACHABLE/.
-It fixes issue for me.
+And there's no need for a cover letter for a 1 patch series.  Only for
+multiple patches if it's not obvious what is going on here.
 
-Should I send a patch?
+thanks,
 
--- 
-With Best Regards,
-Andy Shevchenko
+greg k-h
