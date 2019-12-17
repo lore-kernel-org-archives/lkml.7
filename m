@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 519D4C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE4BC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A28D206D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:00:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CFE2206D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:00:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbfLQBAj (ORCPT
+        id S1727986AbfLQBAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 20:00:39 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34620 "EHLO
+        Mon, 16 Dec 2019 20:00:38 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34626 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726587AbfLQAvd (ORCPT
+        by vger.kernel.org with ESMTP id S1726591AbfLQAvd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 19:51:33 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15G-0003Jr-DK; Tue, 17 Dec 2019 00:51:30 +0000
+        id 1ih15G-0003Jp-8H; Tue, 17 Dec 2019 00:51:30 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15F-0005Sg-I0; Tue, 17 Dec 2019 00:51:29 +0000
+        id 1ih15F-0005Sl-KB; Tue, 17 Dec 2019 00:51:29 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        syzbot+5630ca7c3b2be5c9da5e@syzkaller.appspotmail.com,
         "Johan Hovold" <johan@kernel.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Oliver Neukum" <oneukum@suse.com>
-Date:   Tue, 17 Dec 2019 00:45:52 +0000
-Message-ID: <lsq.1576543535.617134764@decadent.org.uk>
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Date:   Tue, 17 Dec 2019 00:45:53 +0000
+Message-ID: <lsq.1576543535.907728721@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 018/136] USB: microtek: fix info-leak at probe
+Subject: [PATCH 3.16 019/136] USB: adutux: fix NULL-derefs on disconnect
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,34 +57,105 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Hovold <johan@kernel.org>
 
-commit 177238c3d47d54b2ed8f0da7a4290db492f4a057 upstream.
+commit b2fa7baee744fde746c17bc1860b9c6f5c2eebb7 upstream.
 
-Add missing bulk-in endpoint sanity check to prevent uninitialised stack
-data from being reported to the system log and used as endpoint
-addresses.
+The driver was using its struct usb_device pointer as an inverted
+disconnected flag, but was setting it to NULL before making sure all
+completion handlers had run. This could lead to a NULL-pointer
+dereference in a number of dev_dbg statements in the completion handlers
+which relies on said pointer.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: syzbot+5630ca7c3b2be5c9da5e@syzkaller.appspotmail.com
+The pointer was also dereferenced unconditionally in a dev_dbg statement
+release() something which would lead to a NULL-deref whenever a device
+was disconnected before the final character-device close if debugging
+was enabled.
+
+Fix this by unconditionally stopping all I/O and preventing
+resubmissions by poisoning the interrupt URBs at disconnect and using a
+dedicated disconnected flag.
+
+This also makes sure that all I/O has completed by the time the
+disconnect callback returns.
+
+Fixes: 1ef37c6047fe ("USB: adutux: remove custom debug macro and module parameter")
+Fixes: 66d4bc30d128 ("USB: adutux: remove custom debug macro")
 Signed-off-by: Johan Hovold <johan@kernel.org>
-Acked-by: Oliver Neukum <oneukum@suse.com>
-Link: https://lore.kernel.org/r/20191003070931.17009-1-johan@kernel.org
+Link: https://lore.kernel.org/r/20190925092913.8608-2-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/image/microtek.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/usb/misc/adutux.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
---- a/drivers/usb/image/microtek.c
-+++ b/drivers/usb/image/microtek.c
-@@ -727,6 +727,10 @@ static int mts_usb_probe(struct usb_inte
+--- a/drivers/usb/misc/adutux.c
++++ b/drivers/usb/misc/adutux.c
+@@ -80,6 +80,7 @@ struct adu_device {
+ 	char			serial_number[8];
  
+ 	int			open_count; /* number of times this port has been opened */
++	unsigned long		disconnected:1;
+ 
+ 	char		*read_buffer_primary;
+ 	int			read_buffer_length;
+@@ -121,7 +122,7 @@ static void adu_abort_transfers(struct a
+ {
+ 	unsigned long flags;
+ 
+-	if (dev->udev == NULL)
++	if (dev->disconnected)
+ 		return;
+ 
+ 	/* shutdown transfer */
+@@ -244,7 +245,7 @@ static int adu_open(struct inode *inode,
  	}
  
-+	if (ep_in_current != &ep_in_set[2]) {
-+		MTS_WARNING("couldn't find two input bulk endpoints. Bailing out.\n");
-+		return -ENODEV;
-+	}
+ 	dev = usb_get_intfdata(interface);
+-	if (!dev || !dev->udev) {
++	if (!dev) {
+ 		retval = -ENODEV;
+ 		goto exit_no_device;
+ 	}
+@@ -327,7 +328,7 @@ static int adu_release(struct inode *ino
+ 	}
  
- 	if ( ep_out == -1 ) {
- 		MTS_WARNING( "couldn't find an output bulk endpoint. Bailing out.\n" );
+ 	adu_release_internal(dev);
+-	if (dev->udev == NULL) {
++	if (dev->disconnected) {
+ 		/* the device was unplugged before the file was released */
+ 		if (!dev->open_count)	/* ... and we're the last user */
+ 			adu_delete(dev);
+@@ -356,7 +357,7 @@ static ssize_t adu_read(struct file *fil
+ 		return -ERESTARTSYS;
+ 
+ 	/* verify that the device wasn't unplugged */
+-	if (dev->udev == NULL) {
++	if (dev->disconnected) {
+ 		retval = -ENODEV;
+ 		pr_err("No device or device unplugged %d\n", retval);
+ 		goto exit;
+@@ -521,7 +522,7 @@ static ssize_t adu_write(struct file *fi
+ 		goto exit_nolock;
+ 
+ 	/* verify that the device wasn't unplugged */
+-	if (dev->udev == NULL) {
++	if (dev->disconnected) {
+ 		retval = -ENODEV;
+ 		pr_err("No device or device unplugged %d\n", retval);
+ 		goto exit;
+@@ -801,11 +802,14 @@ static void adu_disconnect(struct usb_in
+ 
+ 	usb_deregister_dev(interface, &adu_class);
+ 
++	usb_poison_urb(dev->interrupt_in_urb);
++	usb_poison_urb(dev->interrupt_out_urb);
++
+ 	mutex_lock(&adutux_mutex);
+ 	usb_set_intfdata(interface, NULL);
+ 
+ 	mutex_lock(&dev->mtx);	/* not interruptible */
+-	dev->udev = NULL;	/* poison */
++	dev->disconnected = 1;
+ 	mutex_unlock(&dev->mtx);
+ 
+ 	/* if the device is not opened, then we clean up right now */
 
