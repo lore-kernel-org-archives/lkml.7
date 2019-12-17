@@ -2,124 +2,209 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90269C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0124C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 626CD24676
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:21:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="KkAT6gxC"
+	by mail.kernel.org (Postfix) with ESMTP id BC33B21582
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:23:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729240AbfLQQVV (ORCPT
+        id S1728371AbfLQQXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 11:21:21 -0500
-Received: from mail-eopbgr680046.outbound.protection.outlook.com ([40.107.68.46]:59543
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728350AbfLQQOh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 11:14:37 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lg2F233jN7e/Nvj7z3Xeih1hNcn02p0hffpv+1+decB792Wap9GhTjwUyeyCh3liwMU3M9UBxf+J6YKU5efsWJzHlXUguYaEHPT5Kb1+KTGJgcjdPSwCb/0+LklwS3JHdeh1NYu+eS6h60JN1j3xV7VzrXPhe7ZQKqFE7YANarXY95O+fUa0jaZweGaZVTPLvVclao5fPSY8J7aSnbXR88GJny+vd+JQ2EdHB+UWXufbVadr4KGf3m78Djl0psTBQApR9elAMg7O4b7F7SCC5Cq+MG9LHc6HTeOnYGv8hI5PNPxaJ1+CNTt5VmZ9bW4iOD7Yfk5AJo44IOlb+HobgQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EW+GlCwGU1KRrlIvF9xBKI5A21F8qEf1xA0yRpPIjx0=;
- b=NdNTTak5Ift9Wu+nAeYwQerEQI7hgXE3fSdbZ98V2jSd6zuODUaQzAHNo6e7Yx8AE/OjeJD+pmwEKLaTUQf7cR1rm2Yub2HximzekvzPgbGJ7gxiJyvd7FmJ3eOYnpvUQcXXuiNlIan2CYNba6EfTcveKd5Xh1Ug7AXchnxbvNnQFu6bWJSY3V7NaU1LkiYm/31F7oqX99a0MmQEb8goiY7n9W0TUHUIaxVUiIOe+AITrMO9NQD+koFxAMuUZo8Llf2d+wdd2oaEfeTgVxDVZ8wekkWEuITda8fvckxvgqQxSZNwnPYZSsuho2aAj9jn7o0xgKWERsI1QKzlbZu3lg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EW+GlCwGU1KRrlIvF9xBKI5A21F8qEf1xA0yRpPIjx0=;
- b=KkAT6gxCoKdPUg/I67aicmcIn9oWvOQCsZbYHbf3CHCriErnwwrwqtHbOOPRNjL5G7ytOZVbtdIl0vhxWcQ4uwaAwhZZwo38nd5u4Im+oN4bLCBFFMjTfq9mvhMO2CmYLUqoA5sdtqyI3rZbSEBYq6tTq9SPjOJJTQVDljGOf20=
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com (10.255.180.22) by
- MN2PR11MB3791.namprd11.prod.outlook.com (20.178.254.78) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.18; Tue, 17 Dec 2019 16:14:34 +0000
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::f46c:e5b4:2a85:f0bf]) by MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::f46c:e5b4:2a85:f0bf%4]) with mapi id 15.20.2538.019; Tue, 17 Dec 2019
- 16:14:34 +0000
-From:   =?utf-8?B?SsOpcsO0bWUgUG91aWxsZXI=?= <Jerome.Pouiller@silabs.com>
-To:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        =?utf-8?B?SsOpcsO0bWUgUG91aWxsZXI=?= <Jerome.Pouiller@silabs.com>
-Subject: [PATCH v2 05/55] staging: wfx: firmware does not support more than 32
- total retries
-Thread-Topic: [PATCH v2 05/55] staging: wfx: firmware does not support more
- than 32 total retries
-Thread-Index: AQHVtPURB57vyPfkUU6483afGqAOTA==
-Date:   Tue, 17 Dec 2019 16:14:33 +0000
-Message-ID: <20191217161318.31402-6-Jerome.Pouiller@silabs.com>
-References: <20191217161318.31402-1-Jerome.Pouiller@silabs.com>
-In-Reply-To: <20191217161318.31402-1-Jerome.Pouiller@silabs.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: PR0P264CA0174.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:100:1c::18) To MN2PR11MB4063.namprd11.prod.outlook.com
- (2603:10b6:208:13f::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Jerome.Pouiller@silabs.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.24.0
-x-originating-ip: [37.71.187.125]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ecce136a-c2dc-4e10-3ad6-08d7830c340d
-x-ms-traffictypediagnostic: MN2PR11MB3791:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR11MB3791193D3335CFE1E25FD33593500@MN2PR11MB3791.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3383;
-x-forefront-prvs: 02543CD7CD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(366004)(346002)(136003)(39860400002)(189003)(199004)(2906002)(52116002)(107886003)(2616005)(86362001)(478600001)(6486002)(4326008)(64756008)(66556008)(66476007)(81156014)(66946007)(6506007)(1076003)(316002)(66446008)(8936002)(71200400001)(81166006)(5660300002)(36756003)(26005)(186003)(8676002)(85202003)(4744005)(66574012)(85182001)(110136005)(54906003)(6512007);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3791;H:MN2PR11MB4063.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: silabs.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ScudY5cvDHLk30lVWIsq+ARx710hANedTRRlm+/N3+mfcP/QV5vieohs3sWq4sHlnxiaMGZ2G/KjtWbk5IptYoKFHR/yhV9Hm+PoqgBCFOv54g7AVjfMXSmvP/x/CBK0JQ97ZgjZISil7X19DGXMXPUNe3M+V+hikDfaEcM69Olpbp/KWZhfuyHFDMwgRqk5QTLCmvMjPTmLwI8NM7BdxyCVWMO9lCe083GYN/Ev0x4HqG9L3BRQ30Wq422w9XDKIYDUWCV5jnQaJ6RwCG8uvLHbkw6Wp1FWb3VqsqLbVIG+jSwiEUMbjLcJ1SedMzRoYYyPH+KdPMNi5wMCVvQyqR7b74A2HqnBanx32+oxVf35ut4d8O/m2EMvxGV3axFvZYsa1cgWxwRfSHre7LS+v7XD84b9ySXAFdfQJPz9ICmqefXKXKLKUHzTF5VwyqGL
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1CF8296E4FBC304E90F47CD27C471D6B@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 17 Dec 2019 11:23:21 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:41009 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728188AbfLQQXV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 11:23:21 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ihFcw-0008Ua-NX; Tue, 17 Dec 2019 17:23:14 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ihFcv-0000T1-8r; Tue, 17 Dec 2019 17:23:13 +0100
+Date:   Tue, 17 Dec 2019 17:23:13 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Jiri Slaby <jslaby@suse.com>, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] leds: trigger: implement a tty trigger
+Message-ID: <20191217162313.5n3v7va5nw5lxloh@pengutronix.de>
+References: <20191217150736.1479-1-u.kleine-koenig@pengutronix.de>
+ <20191217150736.1479-4-u.kleine-koenig@pengutronix.de>
+ <20191217152724.GA3667595@kroah.com>
 MIME-Version: 1.0
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ecce136a-c2dc-4e10-3ad6-08d7830c340d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Dec 2019 16:14:33.4901
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: QzIPpPKqduTNn2Fb8Ai0nL0chjiUJhXLdJh+OqtQr8iq4ZFLa6gy7DM3CNBKSDF7wA9FNPNUGkubB6ZoG5RBog==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3791
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191217152724.GA3667595@kroah.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSsOpcsO0bWUgUG91aWxsZXIgPGplcm9tZS5wb3VpbGxlckBzaWxhYnMuY29tPgoKVGhl
-IHN1bSBvZiBhbGwgcmV0cmllcyBmb3IgYSBUeCBmcmFtZSBjYW5ub3QgYmUgc3VwZXJpb3IgdG8g
-MzIuCgpUaGVyZSBhcmUgNCByYXRlcyBhdCBtb3N0LiBTbyB0aGlzIHBhdGNoIGxpbWl0cyBudW1i
-ZXIgb2YgcmV0cmllcyBwZXIKcmF0ZSB0byA4LgoKU2lnbmVkLW9mZi1ieTogSsOpcsO0bWUgUG91
-aWxsZXIgPGplcm9tZS5wb3VpbGxlckBzaWxhYnMuY29tPgotLS0KIGRyaXZlcnMvc3RhZ2luZy93
-ZngvbWFpbi5jIHwgMiArLQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0
-aW9uKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9zdGFnaW5nL3dmeC9tYWluLmMgYi9kcml2ZXJz
-L3N0YWdpbmcvd2Z4L21haW4uYwppbmRleCA5ODZhMmVmNjc4YjkuLjNiNDdiNmMyMWVhMSAxMDA2
-NDQKLS0tIGEvZHJpdmVycy9zdGFnaW5nL3dmeC9tYWluLmMKKysrIGIvZHJpdmVycy9zdGFnaW5n
-L3dmeC9tYWluLmMKQEAgLTI4OSw3ICsyODksNyBAQCBzdHJ1Y3Qgd2Z4X2RldiAqd2Z4X2luaXRf
-Y29tbW9uKHN0cnVjdCBkZXZpY2UgKmRldiwKIAlody0+c3RhX2RhdGFfc2l6ZSA9IHNpemVvZihz
-dHJ1Y3Qgd2Z4X3N0YV9wcml2KTsKIAlody0+cXVldWVzID0gNDsKIAlody0+bWF4X3JhdGVzID0g
-ODsKLQlody0+bWF4X3JhdGVfdHJpZXMgPSAxNTsKKwlody0+bWF4X3JhdGVfdHJpZXMgPSA4Owog
-CWh3LT5leHRyYV90eF9oZWFkcm9vbSA9IHNpemVvZihzdHJ1Y3QgaGlmX3NsX21zZ19oZHIpICsK
-IAkJCQlzaXplb2Yoc3RydWN0IGhpZl9tc2cpCiAJCQkJKyBzaXplb2Yoc3RydWN0IGhpZl9yZXFf
-dHgpCi0tIAoyLjI0LjAKCg==
+On Tue, Dec 17, 2019 at 04:27:24PM +0100, Greg Kroah-Hartman wrote:
+> On Tue, Dec 17, 2019 at 04:07:36PM +0100, Uwe Kleine-König wrote:
+> > Usage is as follows:
+> > 
+> > 	myled=ledname
+> > 	tty=ttyS0
+> > 
+> > 	echo tty > /sys/class/leds/$myled/trigger
+> > 	cat /sys/class/tty/$tty/dev > /sys/class/leds/$myled/dev
+> 
+> Is this the correct instructions?  Aren't you looking for a major/minor
+> number instead in your sysfs file?
+
+This is correct, yes, at least it works as intended on my machine.
+
+/sys/class/tty/$tty/dev produces $major:$minor and that's what the
+led-trigger consumes.
+
+> > . When this new trigger is active it periodically checks the tty's
+> > statistics and when it changed since the last check the led is flashed
+> > once.
+> > 
+> > Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > ---
+> >  drivers/leds/trigger/Kconfig       |   7 ++
+> >  drivers/leds/trigger/Makefile      |   1 +
+> >  drivers/leds/trigger/ledtrig-tty.c | 159 +++++++++++++++++++++++++++++
+> >  3 files changed, 167 insertions(+)
+> >  create mode 100644 drivers/leds/trigger/ledtrig-tty.c
+> > 
+> > diff --git a/drivers/leds/trigger/Kconfig b/drivers/leds/trigger/Kconfig
+> > index ce9429ca6dde..40ff08c93f56 100644
+> > --- a/drivers/leds/trigger/Kconfig
+> > +++ b/drivers/leds/trigger/Kconfig
+> > @@ -144,4 +144,11 @@ config LEDS_TRIGGER_AUDIO
+> >  	  the audio mute and mic-mute changes.
+> >  	  If unsure, say N
+> >  
+> > +config LEDS_TRIGGER_TTY
+> > +	tristate "LED Trigger for TTY devices"
+> > +	depends on TTY
+> > +	help
+> > +	  This allows LEDs to be controlled by activity on ttys which includes
+> > +	  serial devices like /dev/ttyS0.
+> > +
+> >  endif # LEDS_TRIGGERS
+> > diff --git a/drivers/leds/trigger/Makefile b/drivers/leds/trigger/Makefile
+> > index 733a83e2a718..25c4db97cdd4 100644
+> > --- a/drivers/leds/trigger/Makefile
+> > +++ b/drivers/leds/trigger/Makefile
+> > @@ -15,3 +15,4 @@ obj-$(CONFIG_LEDS_TRIGGER_PANIC)	+= ledtrig-panic.o
+> >  obj-$(CONFIG_LEDS_TRIGGER_NETDEV)	+= ledtrig-netdev.o
+> >  obj-$(CONFIG_LEDS_TRIGGER_PATTERN)	+= ledtrig-pattern.o
+> >  obj-$(CONFIG_LEDS_TRIGGER_AUDIO)	+= ledtrig-audio.o
+> > +obj-$(CONFIG_LEDS_TRIGGER_TTY)		+= ledtrig-tty.o
+> > diff --git a/drivers/leds/trigger/ledtrig-tty.c b/drivers/leds/trigger/ledtrig-tty.c
+> > new file mode 100644
+> > index 000000000000..0157aa0b2ce3
+> > --- /dev/null
+> > +++ b/drivers/leds/trigger/ledtrig-tty.c
+> > @@ -0,0 +1,159 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +
+> > +#include <linux/leds.h>
+> > +#include <linux/module.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/tty.h>
+> > +#include <uapi/linux/serial.h>
+> > +
+> > +struct ledtrig_tty_data {
+> > +	struct led_classdev *led_cdev;
+> > +	struct delayed_work dwork;
+> > +	struct tty_struct *tty;
+> > +	dev_t device;
+> > +	int rx, tx;
+> > +};
+> > +
+> > +static void ledtrig_tty_halt(struct ledtrig_tty_data *trigger_data)
+> > +{
+> > +	cancel_delayed_work_sync(&trigger_data->dwork);
+> > +}
+> > +
+> > +static void ledtrig_tty_restart(struct ledtrig_tty_data *trigger_data)
+> > +{
+> > +	if (!trigger_data->tty)
+> > +		return;
+> > +
+> > +	schedule_delayed_work(&trigger_data->dwork, 0);
+> > +}
+> > +
+> > +static ssize_t dev_show(struct device *dev,
+> > +			struct device_attribute *attr, char *buf)
+> > +{
+> > +	struct ledtrig_tty_data *trigger_data = led_trigger_get_drvdata(dev);
+> > +	ssize_t len = 0;
+> > +
+> > +	if (trigger_data->tty)
+> > +		len = sprintf(buf, "%u\n", trigger_data->device);
+> 
+> Will that print a dev_t in a format that userspace can make sense of it?
+> Should you split it up with MAJOR:MINOR instead?
+
+Ah, yes, this needs fixing to match the format that is used in .store.
+
+> > +
+> > +	return len;
+> > +}
+> > +
+> > +static ssize_t dev_store(struct device *dev,
+> > +			 struct device_attribute *attr, const char *buf,
+> > +			 size_t size)
+> > +{
+> > +	struct ledtrig_tty_data *trigger_data = led_trigger_get_drvdata(dev);
+> > +	struct tty_struct *tty;
+> > +	unsigned major, minor;
+> > +	int ret;
+> > +
+> > +	if (size == 0 || (size == 1 && buf[0] == '\n')) {
+> > +		tty = NULL;
+> > +	} else {
+> > +		ret = sscanf(buf, "%u:%u", &major, &minor);
+> > +		if (ret < 2) {
+> > +			dev_err(dev, "invalid value\n");
+> 
+> Can I DoS the syslog with this?  :)
+
+Only if you can write to the sysfs file in which case you can DoS the
+syslog anyhow :-)
+
+> > +			return -EINVAL;
+> > +		}
+> > +
+> > +		tty = tty_kopen_shared(MKDEV(major, minor));
+> > +		if (IS_ERR(tty)) {
+> > +			dev_err(dev, "failed to open tty: %pe\n", tty);
+> 
+> Same here, dev_dbg() perhaps?
+> 
+> Other than these minor things, looks good to me.
+> 
+> Your tty changes are fine, if I can get an ack from the led maintainers
+> about a working patch 3, I'll be glad to take all 3 in my tree.
+
+You'll get a v4 in a moment. Thanks for your prompt reviews.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
