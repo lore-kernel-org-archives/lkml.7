@@ -2,132 +2,117 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 614B4C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B135C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FB9821739
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:56:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D510E20716
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:58:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iREclmrU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728657AbfLQN4d (ORCPT
+        id S1728674AbfLQN6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 08:56:33 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8134 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726164AbfLQN4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 08:56:32 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 5E5388D9205F537191E2;
-        Tue, 17 Dec 2019 21:56:30 +0800 (CST)
-Received: from DESKTOP-1NISPDV.china.huawei.com (10.173.221.248) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 17 Dec 2019 21:56:22 +0800
-From:   <yezengruan@huawei.com>
-To:     <yezengruan@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>,
-        <virtualization@lists.linux-foundation.org>
-CC:     <maz@kernel.org>, <james.morse@arm.com>, <linux@armlinux.org.uk>,
-        <suzuki.poulose@arm.com>, <julien.thierry.kdev@gmail.com>,
-        <catalin.marinas@arm.com>, <mark.rutland@arm.com>,
-        <will@kernel.org>, <steven.price@arm.com>,
-        <daniel.lezcano@linaro.org>
-Subject: [PATCH 2/5] KVM: arm64: Implement PV_LOCK_FEATURES call
-Date:   Tue, 17 Dec 2019 21:55:46 +0800
-Message-ID: <20191217135549.3240-3-yezengruan@huawei.com>
-X-Mailer: git-send-email 2.23.0.windows.1
-In-Reply-To: <20191217135549.3240-1-yezengruan@huawei.com>
-References: <20191217135549.3240-1-yezengruan@huawei.com>
+        Tue, 17 Dec 2019 08:58:32 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36398 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728345AbfLQN6c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 08:58:32 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z3so3872170wru.3;
+        Tue, 17 Dec 2019 05:58:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=THIo9+Njw2AjrCPqK5WUOyXgr+Ut9xXnH2Hdz6HGu/Q=;
+        b=iREclmrUHnzVezvv+UEMvsy4Ds/03128d2oU76dT9jS4PRgwxPmLsodlsALIFH1se8
+         4Vf0QgEC+iKEhlMyNkiEYm7pu6Toe9QnCxZAVfXZYhy61alyMBcCji6Xr3qxLT5nd+2s
+         j4WC1S//1X/IPF09eDUYw6jWuF2tVbRQYfcRzQ6LWTKlKp/elleACcGU+a/8f5cvDeW/
+         McwTRUfjy2OZrb6OQ6+ERHnMp/k1CzeILhe+//7WML0hYRfcfh6pgv7t0K1yyFHYqY0E
+         x/3G7CP0ksE1AMbZkGxlAX907SWzNn7W/Qy78GW1GGKlz0Gscd+Uo8d+lKKtTeO+IJvu
+         UQug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=THIo9+Njw2AjrCPqK5WUOyXgr+Ut9xXnH2Hdz6HGu/Q=;
+        b=DTjI2JsnHvi4dJXbWi/u7CR2OC5aquw5gAKWxrK5e80FwzqE4a7CpVUEZ/WH0jCW1U
+         oRCEIH8ZIXKy0s7LVN0z82OMIdJ1PVJN6eBCkB1+tSG3qeIAh2gSxV39RhkH6AK87o9d
+         4z15ofaAY8sbF7Vx95tiCcABPetdkKrnvXzyK1SjFF6EokO9v3Ub8SVaBM+yHf55FdvJ
+         16GI3r5ROnuq/oaiw88xdTgyv1Fg74GFthuubA66e2CUk7UF01tjijS9A1Hbeu4j6q5E
+         YwkumXh6dcbQLqKyE8smUW9XIYEiOG9eNdtJC6Udwb9ZrHC5pKiuHPt9CIGxqV2R4j3A
+         Lvcg==
+X-Gm-Message-State: APjAAAVP4JyQnzX+CW2LzuGkVCQqRWJP3bYcTi3BqWYg1YmJIjYip7IA
+        z18TnWtaFZZ2PNYA8eZ60S0=
+X-Google-Smtp-Source: APXvYqxwbzUOvuz0ARMygmrZLqxEyZcyyT8nPw+81ozxGV30TcNmk5KwGqg5QrdwtrQFXV7x/DASdw==
+X-Received: by 2002:adf:f606:: with SMTP id t6mr35770657wrp.85.1576591110424;
+        Tue, 17 Dec 2019 05:58:30 -0800 (PST)
+Received: from localhost ([185.85.220.194])
+        by smtp.gmail.com with ESMTPSA id a1sm3007098wmj.40.2019.12.17.05.58.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 17 Dec 2019 05:58:29 -0800 (PST)
+Date:   Tue, 17 Dec 2019 15:00:57 +0100
+From:   Dmitry Dolgov <9erthalion6@gmail.com>
+To:     Pavel Begunkov <asml.silence@gmail.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] io_uring: move *queue_link_head() from common path
+Message-ID: <20191217140057.vswyslavkmrbcebz@localhost>
+References: <cover.1576538176.git.asml.silence@gmail.com>
+ <eda17f0736faff0876c580f1cd841b61c92d7e39.1576538176.git.asml.silence@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.173.221.248]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eda17f0736faff0876c580f1cd841b61c92d7e39.1576538176.git.asml.silence@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zengruan Ye <yezengruan@huawei.com>
+> On Tue, Dec 17, 2019 at 02:22:09AM +0300, Pavel Begunkov wrote:
+>
+> Move io_queue_link_head() to links handling code in io_submit_sqe(),
+> so it wouldn't need extra checks and would have better data locality.
+>
+> ---
+>  fs/io_uring.c | 32 ++++++++++++++------------------
+>  1 file changed, 14 insertions(+), 18 deletions(-)
+>
+> diff --git a/fs/io_uring.c b/fs/io_uring.c
+> index bac9e711e38d..a880ed1409cb 100644
+> --- a/fs/io_uring.c
+> +++ b/fs/io_uring.c
+> @@ -3373,13 +3373,15 @@ static bool io_submit_sqe(struct io_kiocb *req, struct io_submit_state *state,
+>  			  struct io_kiocb **link)
+>  {
+>  	struct io_ring_ctx *ctx = req->ctx;
+> +	unsigned int sqe_flags;
+>  	int ret;
+>
+> +	sqe_flags = READ_ONCE(req->sqe->flags);
 
-This provides a mechanism for querying which paravirtualized lock
-features are available in this hypervisor.
+Just out of curiosity, why READ_ONCE it necessary here? I though, that
+since io_submit_sqes happens within a uring_lock, it's already
+protected. Do I miss something?
 
-Also add the header file which defines the ABI for the paravirtualized
-lock features we're about to add.
+> @@ -3421,9 +3423,15 @@ static bool io_submit_sqe(struct io_kiocb *req, struct io_submit_state *state,
+>  		}
+>  		trace_io_uring_link(ctx, req, head);
+>  		list_add_tail(&req->link_list, &head->link_list);
+> -	} else if (req->sqe->flags & (IOSQE_IO_LINK|IOSQE_IO_HARDLINK)) {
+> +
+> +		/* last request of a link, enqueue the link */
+> +		if (!(sqe_flags & IOSQE_IO_LINK)) {
 
-Signed-off-by: Zengruan Ye <yezengruan@huawei.com>
----
- arch/arm64/include/asm/pvlock-abi.h | 16 ++++++++++++++++
- include/linux/arm-smccc.h           | 13 +++++++++++++
- virt/kvm/arm/hypercalls.c           |  3 +++
- 3 files changed, 32 insertions(+)
- create mode 100644 arch/arm64/include/asm/pvlock-abi.h
+Yes, as you mentioned in the previous email, it seems correct that if
+IOSQE_IO_HARDLINK imply IOSQE_IO_LINK, then here we need to check both.
 
-diff --git a/arch/arm64/include/asm/pvlock-abi.h b/arch/arm64/include/asm/pvlock-abi.h
-new file mode 100644
-index 000000000000..06e0c3d7710a
---- /dev/null
-+++ b/arch/arm64/include/asm/pvlock-abi.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright(c) 2019 Huawei Technologies Co., Ltd
-+ * Author: Zengruan Ye <yezengruan@huawei.com>
-+ */
-+
-+#ifndef __ASM_PVLOCK_ABI_H
-+#define __ASM_PVLOCK_ABI_H
-+
-+struct pvlock_vcpu_state {
-+	__le64 preempted;
-+	/* Structure must be 64 byte aligned, pad to that size */
-+	u8 padding[56];
-+} __packed;
-+
-+#endif
-diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
-index 59494df0f55b..59e65a951959 100644
---- a/include/linux/arm-smccc.h
-+++ b/include/linux/arm-smccc.h
-@@ -377,5 +377,18 @@ asmlinkage void __arm_smccc_hvc(unsigned long a0, unsigned long a1,
- 			   ARM_SMCCC_OWNER_STANDARD_HYP,	\
- 			   0x21)
- 
-+/* Paravirtualised lock calls */
-+#define ARM_SMCCC_HV_PV_LOCK_FEATURES				\
-+	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,			\
-+			   ARM_SMCCC_SMC_64,			\
-+			   ARM_SMCCC_OWNER_STANDARD_HYP,	\
-+			   0x40)
-+
-+#define ARM_SMCCC_HV_PV_LOCK_PREEMPTED				\
-+	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,			\
-+			   ARM_SMCCC_SMC_64,			\
-+			   ARM_SMCCC_OWNER_STANDARD_HYP,	\
-+			   0x41)
-+
- #endif /*__ASSEMBLY__*/
- #endif /*__LINUX_ARM_SMCCC_H*/
-diff --git a/virt/kvm/arm/hypercalls.c b/virt/kvm/arm/hypercalls.c
-index 550dfa3e53cd..ff13871fd85a 100644
---- a/virt/kvm/arm/hypercalls.c
-+++ b/virt/kvm/arm/hypercalls.c
-@@ -52,6 +52,9 @@ int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)
- 		case ARM_SMCCC_HV_PV_TIME_FEATURES:
- 			val = SMCCC_RET_SUCCESS;
- 			break;
-+		case ARM_SMCCC_HV_PV_LOCK_FEATURES:
-+			val = SMCCC_RET_SUCCESS;
-+			break;
- 		}
- 		break;
- 	case ARM_SMCCC_HV_PV_TIME_FEATURES:
--- 
-2.19.1
-
-
+> +			io_queue_link_head(head);
+> +			*link = NULL;
+> +		}
+> +	} else if (sqe_flags & (IOSQE_IO_LINK|IOSQE_IO_HARDLINK)) {
