@@ -2,52 +2,51 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95924C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71CD6C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54EA821775
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:10:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B63F24650
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:10:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576613423;
-	bh=F9UxPNzfijaEV/9O4g94GpUVDjefee+3I76XvOFza1Q=;
+	s=default; t=1576613427;
+	bh=UnxPyVZWcdHcA4xxA331J3tmJFEO7E0CCQedSIkvStA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bc/uVG3TsMboklY4yfOQwLjJgT36B9WEOpKUWyPUKLw7uBu1LpBL7U6HmGk+cQbRi
-	 nc0quqw1I7YnmMbE1uQySlQUU6XeekJdkA8Q8a3lgmR1ZAcrPspEhMOWx6+ID4g9wC
-	 5oOVckTr7XIY5Sx7x+irB52r4saqOi5hUz5H8b4U=
+	b=HIKYOzwIEQG353sVWQ6dv8W5ZDcJhr7E3jdlfzV6P34VZXOHif+QiPLkGNTc1N3J7
+	 9sLkmoPcvBZUePNx3LzbCiWtbV1j+9x82xRLCsOR3zp3zYUXiSgx/U6huK66DTRc4q
+	 hdyXhYgdGJPYwQff8TYsRx9kvbtk1XzcEQQEvlHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728171AbfLQUKW (ORCPT
+        id S1728225AbfLQUKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 15:10:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36430 "EHLO mail.kernel.org"
+        Tue, 17 Dec 2019 15:10:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728047AbfLQUKT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 15:10:19 -0500
+        id S1728146AbfLQUKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 15:10:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8A7421775;
-        Tue, 17 Dec 2019 20:10:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE28E206D7;
+        Tue, 17 Dec 2019 20:10:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576613417;
-        bh=F9UxPNzfijaEV/9O4g94GpUVDjefee+3I76XvOFza1Q=;
+        s=default; t=1576613422;
+        bh=UnxPyVZWcdHcA4xxA331J3tmJFEO7E0CCQedSIkvStA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LqAuKyOhr6rizzXLdOQqKaydtJ26+8B4Bo1IJircTco2zOFgJuqM+wiVj16XM/gNr
-         mR/vSy2lgJaTTidkceWuS34zxDaOg+Oplgk75+o3lmkqPCAB48k8BlAfztUHRrFL6w
-         ao6mmQqZHiBjdOwAWNTqrOn+UYlJCEHH4qcx+aoU=
+        b=ggm4yg4eVt8J2GSolGbYpr4ineqWOwRe0NrDHABfkyRytK0GZpTb0J1BIGeXnHM/c
+         ZADv7VcnRJp65GqHgNM06M/rmDIbO5zHasm3NxyJ3YHGUp26BwX/uX/ygJjQ2l12Rv
+         S2Ug0jaC2M9Xyy3H/b824XOPs2rUg1NgKzGMigTE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        Jon Maloy <jon.maloy@ericsson.com>,
+        stable@vger.kernel.org, Sabrina Dubroca <sd@queasysnail.net>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 13/37] tipc: fix ordering of tipc module init and exit routine
-Date:   Tue, 17 Dec 2019 21:09:34 +0100
-Message-Id: <20191217200726.363319668@linuxfoundation.org>
+Subject: [PATCH 5.4 15/37] net: ipv6: add net argument to ip6_dst_lookup_flow
+Date:   Tue, 17 Dec 2019 21:09:36 +0100
+Message-Id: <20191217200726.655188176@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191217200721.741054904@linuxfoundation.org>
 References: <20191217200721.741054904@linuxfoundation.org>
@@ -60,159 +59,220 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Sabrina Dubroca <sd@queasysnail.net>
 
-[ Upstream commit 9cf1cd8ee3ee09ef2859017df2058e2f53c5347f ]
+[ Upstream commit c4e85f73afb6384123e5ef1bba3315b2e3ad031e ]
 
-In order to set/get/dump, the tipc uses the generic netlink
-infrastructure. So, when tipc module is inserted, init function
-calls genl_register_family().
-After genl_register_family(), set/get/dump commands are immediately
-allowed and these callbacks internally use the net_generic.
-net_generic is allocated by register_pernet_device() but this
-is called after genl_register_family() in the __init function.
-So, these callbacks would use un-initialized net_generic.
+This will be used in the conversion of ipv6_stub to ip6_dst_lookup_flow,
+as some modules currently pass a net argument without a socket to
+ip6_dst_lookup. This is equivalent to commit 343d60aada5a ("ipv6: change
+ipv6_stub_impl.ipv6_dst_lookup to take net argument").
 
-Test commands:
-    #SHELL1
-    while :
-    do
-        modprobe tipc
-        modprobe -rv tipc
-    done
-
-    #SHELL2
-    while :
-    do
-        tipc link list
-    done
-
-Splat looks like:
-[   59.616322][ T2788] kasan: CONFIG_KASAN_INLINE enabled
-[   59.617234][ T2788] kasan: GPF could be caused by NULL-ptr deref or user memory access
-[   59.618398][ T2788] general protection fault: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
-[   59.619389][ T2788] CPU: 3 PID: 2788 Comm: tipc Not tainted 5.4.0+ #194
-[   59.620231][ T2788] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[   59.621428][ T2788] RIP: 0010:tipc_bcast_get_broadcast_mode+0x131/0x310 [tipc]
-[   59.622379][ T2788] Code: c7 c6 ef 8b 38 c0 65 ff 0d 84 83 c9 3f e8 d7 a5 f2 e3 48 8d bb 38 11 00 00 48 b8 00 00 00 00
-[   59.622550][ T2780] NET: Registered protocol family 30
-[   59.624627][ T2788] RSP: 0018:ffff88804b09f578 EFLAGS: 00010202
-[   59.624630][ T2788] RAX: dffffc0000000000 RBX: 0000000000000011 RCX: 000000008bc66907
-[   59.624631][ T2788] RDX: 0000000000000229 RSI: 000000004b3cf4cc RDI: 0000000000001149
-[   59.624633][ T2788] RBP: ffff88804b09f588 R08: 0000000000000003 R09: fffffbfff4fb3df1
-[   59.624635][ T2788] R10: fffffbfff50318f8 R11: ffff888066cadc18 R12: ffffffffa6cc2f40
-[   59.624637][ T2788] R13: 1ffff11009613eba R14: ffff8880662e9328 R15: ffff8880662e9328
-[   59.624639][ T2788] FS:  00007f57d8f7b740(0000) GS:ffff88806cc00000(0000) knlGS:0000000000000000
-[   59.624645][ T2788] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   59.625875][ T2780] tipc: Started in single node mode
-[   59.626128][ T2788] CR2: 00007f57d887a8c0 CR3: 000000004b140002 CR4: 00000000000606e0
-[   59.633991][ T2788] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   59.635195][ T2788] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   59.636478][ T2788] Call Trace:
-[   59.637025][ T2788]  tipc_nl_add_bc_link+0x179/0x1470 [tipc]
-[   59.638219][ T2788]  ? lock_downgrade+0x6e0/0x6e0
-[   59.638923][ T2788]  ? __tipc_nl_add_link+0xf90/0xf90 [tipc]
-[   59.639533][ T2788]  ? tipc_nl_node_dump_link+0x318/0xa50 [tipc]
-[   59.640160][ T2788]  ? mutex_lock_io_nested+0x1380/0x1380
-[   59.640746][ T2788]  tipc_nl_node_dump_link+0x4fd/0xa50 [tipc]
-[   59.641356][ T2788]  ? tipc_nl_node_reset_link_stats+0x340/0x340 [tipc]
-[   59.642088][ T2788]  ? __skb_ext_del+0x270/0x270
-[   59.642594][ T2788]  genl_lock_dumpit+0x85/0xb0
-[   59.643050][ T2788]  netlink_dump+0x49c/0xed0
-[   59.643529][ T2788]  ? __netlink_sendskb+0xc0/0xc0
-[   59.644044][ T2788]  ? __netlink_dump_start+0x190/0x800
-[   59.644617][ T2788]  ? __mutex_unlock_slowpath+0xd0/0x670
-[   59.645177][ T2788]  __netlink_dump_start+0x5a0/0x800
-[   59.645692][ T2788]  genl_rcv_msg+0xa75/0xe90
-[   59.646144][ T2788]  ? __lock_acquire+0xdfe/0x3de0
-[   59.646692][ T2788]  ? genl_family_rcv_msg_attrs_parse+0x320/0x320
-[   59.647340][ T2788]  ? genl_lock_dumpit+0xb0/0xb0
-[   59.647821][ T2788]  ? genl_unlock+0x20/0x20
-[   59.648290][ T2788]  ? genl_parallel_done+0xe0/0xe0
-[   59.648787][ T2788]  ? find_held_lock+0x39/0x1d0
-[   59.649276][ T2788]  ? genl_rcv+0x15/0x40
-[   59.649722][ T2788]  ? lock_contended+0xcd0/0xcd0
-[   59.650296][ T2788]  netlink_rcv_skb+0x121/0x350
-[   59.650828][ T2788]  ? genl_family_rcv_msg_attrs_parse+0x320/0x320
-[   59.651491][ T2788]  ? netlink_ack+0x940/0x940
-[   59.651953][ T2788]  ? lock_acquire+0x164/0x3b0
-[   59.652449][ T2788]  genl_rcv+0x24/0x40
-[   59.652841][ T2788]  netlink_unicast+0x421/0x600
-[ ... ]
-
-Fixes: 7e4369057806 ("tipc: fix a slab object leak")
-Fixes: a62fbccecd62 ("tipc: make subscriber server support net namespace")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Acked-by: Jon Maloy <jon.maloy@ericsson.com>
+Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/tipc/core.c |   29 +++++++++++++++--------------
- 1 file changed, 15 insertions(+), 14 deletions(-)
+ include/net/ipv6.h               |    2 +-
+ net/dccp/ipv6.c                  |    6 +++---
+ net/ipv6/af_inet6.c              |    2 +-
+ net/ipv6/datagram.c              |    2 +-
+ net/ipv6/inet6_connection_sock.c |    4 ++--
+ net/ipv6/ip6_output.c            |    8 ++++----
+ net/ipv6/raw.c                   |    2 +-
+ net/ipv6/syncookies.c            |    2 +-
+ net/ipv6/tcp_ipv6.c              |    4 ++--
+ net/l2tp/l2tp_ip6.c              |    2 +-
+ net/sctp/ipv6.c                  |    4 ++--
+ 11 files changed, 19 insertions(+), 19 deletions(-)
 
---- a/net/tipc/core.c
-+++ b/net/tipc/core.c
-@@ -125,14 +125,6 @@ static int __init tipc_init(void)
- 	sysctl_tipc_rmem[1] = RCVBUF_DEF;
- 	sysctl_tipc_rmem[2] = RCVBUF_MAX;
+--- a/include/net/ipv6.h
++++ b/include/net/ipv6.h
+@@ -1017,7 +1017,7 @@ static inline struct sk_buff *ip6_finish
  
--	err = tipc_netlink_start();
--	if (err)
--		goto out_netlink;
--
--	err = tipc_netlink_compat_start();
--	if (err)
--		goto out_netlink_compat;
--
- 	err = tipc_register_sysctl();
- 	if (err)
- 		goto out_sysctl;
-@@ -153,8 +145,21 @@ static int __init tipc_init(void)
- 	if (err)
- 		goto out_bearer;
+ int ip6_dst_lookup(struct net *net, struct sock *sk, struct dst_entry **dst,
+ 		   struct flowi6 *fl6);
+-struct dst_entry *ip6_dst_lookup_flow(const struct sock *sk, struct flowi6 *fl6,
++struct dst_entry *ip6_dst_lookup_flow(struct net *net, const struct sock *sk, struct flowi6 *fl6,
+ 				      const struct in6_addr *final_dst);
+ struct dst_entry *ip6_sk_dst_lookup_flow(struct sock *sk, struct flowi6 *fl6,
+ 					 const struct in6_addr *final_dst,
+--- a/net/dccp/ipv6.c
++++ b/net/dccp/ipv6.c
+@@ -210,7 +210,7 @@ static int dccp_v6_send_response(const s
+ 	final_p = fl6_update_dst(&fl6, rcu_dereference(np->opt), &final);
+ 	rcu_read_unlock();
  
-+	err = tipc_netlink_start();
-+	if (err)
-+		goto out_netlink;
-+
-+	err = tipc_netlink_compat_start();
-+	if (err)
-+		goto out_netlink_compat;
-+
- 	pr_info("Started in single node mode\n");
- 	return 0;
-+
-+out_netlink_compat:
-+	tipc_netlink_stop();
-+out_netlink:
-+	tipc_bearer_cleanup();
- out_bearer:
- 	unregister_pernet_device(&tipc_topsrv_net_ops);
- out_pernet_topsrv:
-@@ -164,22 +169,18 @@ out_socket:
- out_pernet:
- 	tipc_unregister_sysctl();
- out_sysctl:
--	tipc_netlink_compat_stop();
--out_netlink_compat:
--	tipc_netlink_stop();
--out_netlink:
- 	pr_err("Unable to start in single node mode\n");
- 	return err;
- }
+-	dst = ip6_dst_lookup_flow(sk, &fl6, final_p);
++	dst = ip6_dst_lookup_flow(sock_net(sk), sk, &fl6, final_p);
+ 	if (IS_ERR(dst)) {
+ 		err = PTR_ERR(dst);
+ 		dst = NULL;
+@@ -282,7 +282,7 @@ static void dccp_v6_ctl_send_reset(const
+ 	security_skb_classify_flow(rxskb, flowi6_to_flowi(&fl6));
  
- static void __exit tipc_exit(void)
+ 	/* sk = NULL, but it is safe for now. RST socket required. */
+-	dst = ip6_dst_lookup_flow(ctl_sk, &fl6, NULL);
++	dst = ip6_dst_lookup_flow(sock_net(ctl_sk), ctl_sk, &fl6, NULL);
+ 	if (!IS_ERR(dst)) {
+ 		skb_dst_set(skb, dst);
+ 		ip6_xmit(ctl_sk, skb, &fl6, 0, NULL, 0, 0);
+@@ -912,7 +912,7 @@ static int dccp_v6_connect(struct sock *
+ 	opt = rcu_dereference_protected(np->opt, lockdep_sock_is_held(sk));
+ 	final_p = fl6_update_dst(&fl6, opt, &final);
+ 
+-	dst = ip6_dst_lookup_flow(sk, &fl6, final_p);
++	dst = ip6_dst_lookup_flow(sock_net(sk), sk, &fl6, final_p);
+ 	if (IS_ERR(dst)) {
+ 		err = PTR_ERR(dst);
+ 		goto failure;
+--- a/net/ipv6/af_inet6.c
++++ b/net/ipv6/af_inet6.c
+@@ -765,7 +765,7 @@ int inet6_sk_rebuild_header(struct sock
+ 					 &final);
+ 		rcu_read_unlock();
+ 
+-		dst = ip6_dst_lookup_flow(sk, &fl6, final_p);
++		dst = ip6_dst_lookup_flow(sock_net(sk), sk, &fl6, final_p);
+ 		if (IS_ERR(dst)) {
+ 			sk->sk_route_caps = 0;
+ 			sk->sk_err_soft = -PTR_ERR(dst);
+--- a/net/ipv6/datagram.c
++++ b/net/ipv6/datagram.c
+@@ -85,7 +85,7 @@ int ip6_datagram_dst_update(struct sock
+ 	final_p = fl6_update_dst(&fl6, opt, &final);
+ 	rcu_read_unlock();
+ 
+-	dst = ip6_dst_lookup_flow(sk, &fl6, final_p);
++	dst = ip6_dst_lookup_flow(sock_net(sk), sk, &fl6, final_p);
+ 	if (IS_ERR(dst)) {
+ 		err = PTR_ERR(dst);
+ 		goto out;
+--- a/net/ipv6/inet6_connection_sock.c
++++ b/net/ipv6/inet6_connection_sock.c
+@@ -48,7 +48,7 @@ struct dst_entry *inet6_csk_route_req(co
+ 	fl6->flowi6_uid = sk->sk_uid;
+ 	security_req_classify_flow(req, flowi6_to_flowi(fl6));
+ 
+-	dst = ip6_dst_lookup_flow(sk, fl6, final_p);
++	dst = ip6_dst_lookup_flow(sock_net(sk), sk, fl6, final_p);
+ 	if (IS_ERR(dst))
+ 		return NULL;
+ 
+@@ -103,7 +103,7 @@ static struct dst_entry *inet6_csk_route
+ 
+ 	dst = __inet6_csk_dst_check(sk, np->dst_cookie);
+ 	if (!dst) {
+-		dst = ip6_dst_lookup_flow(sk, fl6, final_p);
++		dst = ip6_dst_lookup_flow(sock_net(sk), sk, fl6, final_p);
+ 
+ 		if (!IS_ERR(dst))
+ 			ip6_dst_store(sk, dst, NULL, NULL);
+--- a/net/ipv6/ip6_output.c
++++ b/net/ipv6/ip6_output.c
+@@ -1144,19 +1144,19 @@ EXPORT_SYMBOL_GPL(ip6_dst_lookup);
+  *	It returns a valid dst pointer on success, or a pointer encoded
+  *	error code.
+  */
+-struct dst_entry *ip6_dst_lookup_flow(const struct sock *sk, struct flowi6 *fl6,
++struct dst_entry *ip6_dst_lookup_flow(struct net *net, const struct sock *sk, struct flowi6 *fl6,
+ 				      const struct in6_addr *final_dst)
  {
-+	tipc_netlink_compat_stop();
-+	tipc_netlink_stop();
- 	tipc_bearer_cleanup();
- 	unregister_pernet_device(&tipc_topsrv_net_ops);
- 	tipc_socket_stop();
- 	unregister_pernet_device(&tipc_net_ops);
--	tipc_netlink_stop();
--	tipc_netlink_compat_stop();
- 	tipc_unregister_sysctl();
+ 	struct dst_entry *dst = NULL;
+ 	int err;
  
- 	pr_info("Deactivated\n");
+-	err = ip6_dst_lookup_tail(sock_net(sk), sk, &dst, fl6);
++	err = ip6_dst_lookup_tail(net, sk, &dst, fl6);
+ 	if (err)
+ 		return ERR_PTR(err);
+ 	if (final_dst)
+ 		fl6->daddr = *final_dst;
+ 
+-	return xfrm_lookup_route(sock_net(sk), dst, flowi6_to_flowi(fl6), sk, 0);
++	return xfrm_lookup_route(net, dst, flowi6_to_flowi(fl6), sk, 0);
+ }
+ EXPORT_SYMBOL_GPL(ip6_dst_lookup_flow);
+ 
+@@ -1188,7 +1188,7 @@ struct dst_entry *ip6_sk_dst_lookup_flow
+ 	if (dst)
+ 		return dst;
+ 
+-	dst = ip6_dst_lookup_flow(sk, fl6, final_dst);
++	dst = ip6_dst_lookup_flow(sock_net(sk), sk, fl6, final_dst);
+ 	if (connected && !IS_ERR(dst))
+ 		ip6_sk_dst_store_flow(sk, dst_clone(dst), fl6);
+ 
+--- a/net/ipv6/raw.c
++++ b/net/ipv6/raw.c
+@@ -925,7 +925,7 @@ static int rawv6_sendmsg(struct sock *sk
+ 
+ 	fl6.flowlabel = ip6_make_flowinfo(ipc6.tclass, fl6.flowlabel);
+ 
+-	dst = ip6_dst_lookup_flow(sk, &fl6, final_p);
++	dst = ip6_dst_lookup_flow(sock_net(sk), sk, &fl6, final_p);
+ 	if (IS_ERR(dst)) {
+ 		err = PTR_ERR(dst);
+ 		goto out;
+--- a/net/ipv6/syncookies.c
++++ b/net/ipv6/syncookies.c
+@@ -235,7 +235,7 @@ struct sock *cookie_v6_check(struct sock
+ 		fl6.flowi6_uid = sk->sk_uid;
+ 		security_req_classify_flow(req, flowi6_to_flowi(&fl6));
+ 
+-		dst = ip6_dst_lookup_flow(sk, &fl6, final_p);
++		dst = ip6_dst_lookup_flow(sock_net(sk), sk, &fl6, final_p);
+ 		if (IS_ERR(dst))
+ 			goto out_free;
+ 	}
+--- a/net/ipv6/tcp_ipv6.c
++++ b/net/ipv6/tcp_ipv6.c
+@@ -275,7 +275,7 @@ static int tcp_v6_connect(struct sock *s
+ 
+ 	security_sk_classify_flow(sk, flowi6_to_flowi(&fl6));
+ 
+-	dst = ip6_dst_lookup_flow(sk, &fl6, final_p);
++	dst = ip6_dst_lookup_flow(sock_net(sk), sk, &fl6, final_p);
+ 	if (IS_ERR(dst)) {
+ 		err = PTR_ERR(dst);
+ 		goto failure;
+@@ -906,7 +906,7 @@ static void tcp_v6_send_response(const s
+ 	 * Underlying function will use this to retrieve the network
+ 	 * namespace
+ 	 */
+-	dst = ip6_dst_lookup_flow(ctl_sk, &fl6, NULL);
++	dst = ip6_dst_lookup_flow(sock_net(ctl_sk), ctl_sk, &fl6, NULL);
+ 	if (!IS_ERR(dst)) {
+ 		skb_dst_set(buff, dst);
+ 		ip6_xmit(ctl_sk, buff, &fl6, fl6.flowi6_mark, NULL, tclass,
+--- a/net/l2tp/l2tp_ip6.c
++++ b/net/l2tp/l2tp_ip6.c
+@@ -615,7 +615,7 @@ static int l2tp_ip6_sendmsg(struct sock
+ 
+ 	fl6.flowlabel = ip6_make_flowinfo(ipc6.tclass, fl6.flowlabel);
+ 
+-	dst = ip6_dst_lookup_flow(sk, &fl6, final_p);
++	dst = ip6_dst_lookup_flow(sock_net(sk), sk, &fl6, final_p);
+ 	if (IS_ERR(dst)) {
+ 		err = PTR_ERR(dst);
+ 		goto out;
+--- a/net/sctp/ipv6.c
++++ b/net/sctp/ipv6.c
+@@ -275,7 +275,7 @@ static void sctp_v6_get_dst(struct sctp_
+ 	final_p = fl6_update_dst(fl6, rcu_dereference(np->opt), &final);
+ 	rcu_read_unlock();
+ 
+-	dst = ip6_dst_lookup_flow(sk, fl6, final_p);
++	dst = ip6_dst_lookup_flow(sock_net(sk), sk, fl6, final_p);
+ 	if (!asoc || saddr)
+ 		goto out;
+ 
+@@ -328,7 +328,7 @@ static void sctp_v6_get_dst(struct sctp_
+ 		fl6->saddr = laddr->a.v6.sin6_addr;
+ 		fl6->fl6_sport = laddr->a.v6.sin6_port;
+ 		final_p = fl6_update_dst(fl6, rcu_dereference(np->opt), &final);
+-		bdst = ip6_dst_lookup_flow(sk, fl6, final_p);
++		bdst = ip6_dst_lookup_flow(sock_net(sk), sk, fl6, final_p);
+ 
+ 		if (IS_ERR(bdst))
+ 			continue;
 
 
