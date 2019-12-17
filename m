@@ -2,166 +2,162 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E051C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 17:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7079FC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 17:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65E9824655
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 17:28:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39DC62465E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 17:37:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cXjCCWzN"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="TVtMpeeW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbfLQR2J (ORCPT
+        id S1727692AbfLQRhz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 12:28:09 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33811 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbfLQR2J (ORCPT
+        Tue, 17 Dec 2019 12:37:55 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44810 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726885AbfLQRhy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 12:28:09 -0500
-Received: by mail-wr1-f65.google.com with SMTP id t2so12240286wrr.1;
-        Tue, 17 Dec 2019 09:28:06 -0800 (PST)
+        Tue, 17 Dec 2019 12:37:54 -0500
+Received: by mail-io1-f68.google.com with SMTP id b10so11893807iof.11
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 09:37:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version:in-reply-to
-         :content-transfer-encoding;
-        bh=vXn2Yu4RkHlP1Gh90RCX44u/DnD2AY3PkGZLCTXZShY=;
-        b=cXjCCWzNHoaJgyu5OIAhA2JSISeRLzdsicjh5w4b9kGXxlnUazSpdYDlnZrlOSqKE4
-         Ku04u/hnECWcv8Y62FEoFKtozKEyoaUrlIob2NUiMoaDQuy+mQYBNbbQLLaGBX/6O9KM
-         pbFLYKyC38pfyCzXVwRPSwRsGTpVPoGxUJhbKQTbFnZMurl84obSvskY5a47FNc769Ap
-         uz2SdvgyiFK88ICAM8PCOcgHRVOBNvnyiRZuqtfMJcjCgOEv/69SRvYPtLPsZwWZ4J0v
-         BoWDMp/T+459syiNlholtJWR/jErBI1rTo4wYsVMRwAdYWCKbuYQ9xIyZnw46lSWOI3I
-         jNIw==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:references:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=8P1gg2/SVE7adxEfp76dGsrvehA08bIlQpwD76iBBJg=;
+        b=TVtMpeeW4hjALTDDh1OaBLJyixg5HJImE+kOINgHxXVU1v3w5itUXkD6Rroed8iQ83
+         rg8b+KyCrBnwaKe3Uxr7EsZhvhE4152RlOj10RCihsSGJyAfhu8OU3KsYOl8sYGGhWFy
+         kVKD5qex6CkrX4rniyqrzvTxiIgjbN52gtjQ2LJwKYu4PhwgSlyWeSHoVOmWsmjHqqsN
+         7DDmdHyLuxft19iyqsqOGgrU72OsY/Vxjn3HFV6M0YwGvDJ+JRa3kN0CuRgfdAbYoAY2
+         +iuYxL0acQI6WJ+bOamT3lFtvwE5M2tnzTNwHROSDxEWqHfajmWFqdu46B4RhAmsgRx2
+         gBDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :in-reply-to:content-transfer-encoding;
-        bh=vXn2Yu4RkHlP1Gh90RCX44u/DnD2AY3PkGZLCTXZShY=;
-        b=LnxMsWBjXWTktTX7EzIQTDAmdvQICUwIzId+ewKOswhWq5lsHZWDrvaagCtMBNd0Wq
-         etDxrJQFCQPzMgvWyw3WJI6BsyBX0HGZNaGzCbdb6wdYGzbXb4I0Xq6p6gSynRjFWBsD
-         wGbKkrfqalORVPg1SzFS7TP3uVDh5N90dj4H74dPohQe65c27JVjeqXzQaaOHc53suwv
-         8VCbFdjbmHIiEpgKogJyGsn9bwuG4NthEsd8YkTiezNkDE5w7xousqnSzwKxXlNemsph
-         cJfuuIkJ2+hJq9GuTQOE7XT2av+DiDT/gnrSB9DPDUJxFBg4V5Z33l2rkaQVD34P35wk
-         qcQg==
-X-Gm-Message-State: APjAAAUnVjaqS8zkopL3GgMxX85Ar5la1h0tfIbV65oGLtWyfyY/w1Lp
-        Udcb5/HkUVVGzglu0lSHSGw=
-X-Google-Smtp-Source: APXvYqxWnHbAUaxerL55jC58SIZbNR5PNO5hY231h8MMtPhz29c3VbD89coH273KvyzCzv+FPtZxKQ==
-X-Received: by 2002:a5d:4687:: with SMTP id u7mr38050795wrq.176.1576603685895;
-        Tue, 17 Dec 2019 09:28:05 -0800 (PST)
-Received: from localhost.localdomain ([2a02:2450:10d2:194d:5015:4c4c:42e9:e517])
-        by smtp.gmail.com with ESMTPSA id 188sm3875074wmd.1.2019.12.17.09.28.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 17 Dec 2019 09:28:05 -0800 (PST)
-From:   SeongJae Park <sj38.park@gmail.com>
-To:     =?UTF-8?q?J=C3=BCrgen=20Gro=C3=9F?= <jgross@suse.com>
-Cc:     SeongJae Park <sjpark@amazon.com>, axboe@kernel.dk,
-        sj38.park@gmail.com, konrad.wilk@oracle.com, pdurrant@amazon.com,
-        SeongJae Park <sjpark@amazon.de>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, xen-devel@lists.xenproject.org,
-        roger.pau@citrix.com
-Subject: Re: Re: [Xen-devel] [PATCH v11 2/6] xenbus/backend: Protect xenbus callback with lock
-Date:   Tue, 17 Dec 2019 18:27:38 +0100
-Message-Id: <20191217172738.20787-1-sj38.park@gmail.com>
-X-Mailer: git-send-email 2.17.2
+        h=x-gm-message-state:subject:from:to:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8P1gg2/SVE7adxEfp76dGsrvehA08bIlQpwD76iBBJg=;
+        b=qx69gNANSz8ifzyqeT+IDyF2YqxiL0CE9W9Gb/ZhsPu6RsAL3Q9XtUYURaG78vLGtf
+         eqcY6eZwsvXgCDRNp1pSGauaHSrl8jR8fR66zG3uhuKwCuZ4lBmgQvVqWdRtsNv0lJTp
+         y6icva6Zr07Qo87NEEj2nO8FJKMQL9LmhH9pmSQSpfwXki3Cz4M7so7SKzdJjczWNu5l
+         /Ko4jjTnE0uZRIxVHiFEWKAiLM5wWqqYyjoQLQr3OWTfvbvHM+p4Kl36KLAg/4EUuw62
+         oG/DY6mVZeTwfg7Bz5KjlaEhn/lwgotQeZbfAnHoLUztG2Nvj1FHHQfmTHDM9BKJmQNd
+         XavQ==
+X-Gm-Message-State: APjAAAWTbKoLuxNC1QjhWMG3+mjbk5prvOoMnt8e1ZPlqhvT7nHqafH1
+        3r9TReEI0HLuAR5nHz5PgUr8KHQ+yaVvqQ==
+X-Google-Smtp-Source: APXvYqyP1BewXPWRAtZxAvGN1SOVITkN4rH5poM8YZHLd6Y8yMdFjqL0V2jjstyf4RJSlS9aRazguA==
+X-Received: by 2002:a02:778d:: with SMTP id g135mr18645902jac.115.1576604273401;
+        Tue, 17 Dec 2019 09:37:53 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id l22sm3566400ilh.37.2019.12.17.09.37.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Dec 2019 09:37:52 -0800 (PST)
+Subject: Re: [PATCH 3/3] io_uring: move *queue_link_head() from common path
+From:   Jens Axboe <axboe@kernel.dk>
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1576538176.git.asml.silence@gmail.com>
+ <eda17f0736faff0876c580f1cd841b61c92d7e39.1576538176.git.asml.silence@gmail.com>
+ <17f7900c-385f-0dfa-11bf-af99d080f894@gmail.com>
+ <76917820-052d-9597-133d-424fee3edade@kernel.dk>
+Message-ID: <5d4af2f6-26a2-b241-5131-3a0155cbbf22@kernel.dk>
+Date:   Tue, 17 Dec 2019 10:37:52 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <f9a601af-4413-ed1d-f7f4-89343118a2f1@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <76917820-052d-9597-133d-424fee3edade@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Dec 2019 18:10:19 +0100 "Jürgen Groß" <jgross@suse.com> wrote:
+On 12/17/19 9:45 AM, Jens Axboe wrote:
+> On 12/16/19 4:38 PM, Pavel Begunkov wrote:
+>> On 17/12/2019 02:22, Pavel Begunkov wrote:
+>>> Move io_queue_link_head() to links handling code in io_submit_sqe(),
+>>> so it wouldn't need extra checks and would have better data locality.
+>>>
+>>> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+>>> ---
+>>>  fs/io_uring.c | 32 ++++++++++++++------------------
+>>>  1 file changed, 14 insertions(+), 18 deletions(-)
+>>>
+>>> diff --git a/fs/io_uring.c b/fs/io_uring.c
+>>> index bac9e711e38d..a880ed1409cb 100644
+>>> --- a/fs/io_uring.c
+>>> +++ b/fs/io_uring.c
+>>> @@ -3373,13 +3373,15 @@ static bool io_submit_sqe(struct io_kiocb *req, struct io_submit_state *state,
+>>>  			  struct io_kiocb **link)
+>>>  {
+>>>  	struct io_ring_ctx *ctx = req->ctx;
+>>> +	unsigned int sqe_flags;
+>>>  	int ret;
+>>>  
+>>> +	sqe_flags = READ_ONCE(req->sqe->flags);
+>>>  	req->user_data = READ_ONCE(req->sqe->user_data);
+>>>  	trace_io_uring_submit_sqe(ctx, req->user_data, true, req->in_async);
+>>>  
+>>>  	/* enforce forwards compatibility on users */
+>>> -	if (unlikely(req->sqe->flags & ~SQE_VALID_FLAGS)) {
+>>> +	if (unlikely(sqe_flags & ~SQE_VALID_FLAGS)) {
+>>>  		ret = -EINVAL;
+>>>  		goto err_req;
+>>>  	}
+>>> @@ -3402,10 +3404,10 @@ static bool io_submit_sqe(struct io_kiocb *req, struct io_submit_state *state,
+>>>  	if (*link) {
+>>>  		struct io_kiocb *head = *link;
+>>>  
+>>> -		if (req->sqe->flags & IOSQE_IO_DRAIN)
+>>> +		if (sqe_flags & IOSQE_IO_DRAIN)
+>>>  			head->flags |= REQ_F_DRAIN_LINK | REQ_F_IO_DRAIN;
+>>>  
+>>> -		if (req->sqe->flags & IOSQE_IO_HARDLINK)
+>>> +		if (sqe_flags & IOSQE_IO_HARDLINK)
+>>>  			req->flags |= REQ_F_HARDLINK;
+>>>  
+>>>  		if (io_alloc_async_ctx(req)) {
+>>> @@ -3421,9 +3423,15 @@ static bool io_submit_sqe(struct io_kiocb *req, struct io_submit_state *state,
+>>>  		}
+>>>  		trace_io_uring_link(ctx, req, head);
+>>>  		list_add_tail(&req->link_list, &head->link_list);
+>>> -	} else if (req->sqe->flags & (IOSQE_IO_LINK|IOSQE_IO_HARDLINK)) {
+>>> +
+>>> +		/* last request of a link, enqueue the link */
+>>> +		if (!(sqe_flags & IOSQE_IO_LINK)) {
+>>
+>> This looks suspicious (as well as in the current revision). Returning back
+>> to my questions a few days ago can sqe->flags have IOSQE_IO_HARDLINK, but not
+>> IOSQE_IO_LINK? I don't find any check.
+>>
+>> In other words, should it be as follows?
+>> !(sqe_flags & (IOSQE_IO_LINK|IOSQE_IO_HARDLINK))
+> 
+> Yeah, I think that should check for both. I'm fine with either approach
+> in general:
+> 
+> - IOSQE_IO_HARDLINK must have IOSQE_IO_LINK set
+> 
+> or
+> 
+> - IOSQE_IO_HARDLINK implies IOSQE_IO_LINK
+> 
+> Seems like the former is easier to verify in terms of functionality,
+> since we can rest easy if we check this early and -EINVAL if that isn't
+> the case.
+> 
+> What do you think?
 
-> On 17.12.19 17:24, SeongJae Park wrote:
-> > On Tue, 17 Dec 2019 17:13:42 +0100 "Jürgen Groß" <jgross@suse.com> wrote:
-> > 
-> >> On 17.12.19 17:07, SeongJae Park wrote:
-> >>> From: SeongJae Park <sjpark@amazon.de>
-> >>>
-> >>> 'reclaim_memory' callback can race with a driver code as this callback
-> >>> will be called from any memory pressure detected context.  To deal with
-> >>> the case, this commit adds a spinlock in the 'xenbus_device'.  Whenever
-> >>> 'reclaim_memory' callback is called, the lock of the device which passed
-> >>> to the callback as its argument is locked.  Thus, drivers registering
-> >>> their 'reclaim_memory' callback should protect the data that might race
-> >>> with the callback with the lock by themselves.
-> >>>
-> >>> Signed-off-by: SeongJae Park <sjpark@amazon.de>
-> >>> ---
-> >>>    drivers/xen/xenbus/xenbus_probe.c         |  1 +
-> >>>    drivers/xen/xenbus/xenbus_probe_backend.c | 10 ++++++++--
-> >>>    include/xen/xenbus.h                      |  2 ++
-> >>>    3 files changed, 11 insertions(+), 2 deletions(-)
-> >>>
-> >>> diff --git a/drivers/xen/xenbus/xenbus_probe.c b/drivers/xen/xenbus/xenbus_probe.c
-> >>> index 5b471889d723..b86393f172e6 100644
-> >>> --- a/drivers/xen/xenbus/xenbus_probe.c
-> >>> +++ b/drivers/xen/xenbus/xenbus_probe.c
-> >>> @@ -472,6 +472,7 @@ int xenbus_probe_node(struct xen_bus_type *bus,
-> >>>    		goto fail;
-> >>>    
-> >>>    	dev_set_name(&xendev->dev, "%s", devname);
-> >>> +	spin_lock_init(&xendev->reclaim_lock);
-> >>>    
-> >>>    	/* Register with generic device framework. */
-> >>>    	err = device_register(&xendev->dev);
-> >>> diff --git a/drivers/xen/xenbus/xenbus_probe_backend.c b/drivers/xen/xenbus/xenbus_probe_backend.c
-> >>> index 7e78ebef7c54..516aa64b9967 100644
-> >>> --- a/drivers/xen/xenbus/xenbus_probe_backend.c
-> >>> +++ b/drivers/xen/xenbus/xenbus_probe_backend.c
-> >>> @@ -251,12 +251,18 @@ static int backend_probe_and_watch(struct notifier_block *notifier,
-> >>>    static int backend_reclaim_memory(struct device *dev, void *data)
-> >>>    {
-> >>>    	const struct xenbus_driver *drv;
-> >>> +	struct xenbus_device *xdev;
-> >>> +	unsigned long flags;
-> >>>    
-> >>>    	if (!dev->driver)
-> >>>    		return 0;
-> >>>    	drv = to_xenbus_driver(dev->driver);
-> >>> -	if (drv && drv->reclaim_memory)
-> >>> -		drv->reclaim_memory(to_xenbus_device(dev));
-> >>> +	if (drv && drv->reclaim_memory) {
-> >>> +		xdev = to_xenbus_device(dev);
-> >>> +		spin_trylock_irqsave(&xdev->reclaim_lock, flags);
-> >>
-> >> You need spin_lock_irqsave() here. Or maybe spin_lock() would be fine,
-> >> too? I can't see a reason why you'd want to disable irqs here.
-> > 
-> > I needed to diable irq here as this is called from the memory shrinker context.
-> 
-> Okay.
-> 
-> > 
-> > Also, used 'trylock' because the 'probe()' and 'remove()' code of the driver
-> > might include memory allocation.  And the xen-blkback actually does.  If the
-> > allocation shows a memory pressure during the allocation, it will trigger this
-> > shrinker callback again and then deadlock.
-> 
-> In that case you need to either return when you didn't get the lock or
+If you agree, want to send in a patch for that for 5.5? Then I can respin
+for-5.6/io_uring on top of that, and we can apply your cleanups there.
 
-Yes, it should.  Cannot believe how I posted this code.  Seems I made some
-terrible mistake while formatting patches.  Anyway, will return if fail to
-acquire the lock, in the next version.
+-- 
+Jens Axboe
 
-
-Thanks,
-SeongJae Park
-
-> 
-> - when obtaining the lock during probe() and remove() set a variable
->    containing the current cpu number
-> - and reset that to e.g NR_CPUS before releasing the lock again
-> - in the shrinker callback do trylock, and if you didn't get the lock
->    test whether the cpu-variable above is set to your current cpu and
->    continue only if yes; if not, redo the the trylock
-> 
-> 
-> Juergen
