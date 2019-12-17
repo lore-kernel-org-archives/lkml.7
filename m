@@ -2,127 +2,242 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D65C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D6BC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:55:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EE852176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02E40207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:55:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727498AbfLQLzK (ORCPT
+        id S1727510AbfLQLzT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 06:55:10 -0500
-Received: from olimex.com ([184.105.72.32]:57858 "EHLO olimex.com"
+        Tue, 17 Dec 2019 06:55:19 -0500
+Received: from mga05.intel.com ([192.55.52.43]:2032 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725940AbfLQLzK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 06:55:10 -0500
-Received: from 94.155.250.134 ([94.155.250.134])
-        by olimex.com with ESMTPSA (ECDHE-RSA-AES128-GCM-SHA256:TLSv1.2:Kx=ECDH:Au=RSA:Enc=AESGCM(128):Mac=AEAD) (SMTP-AUTH username stefan@olimex.com, mechanism PLAIN)
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 03:54:59 -0800
-Subject: Re: [PATCH 1/1] drm/sun4i: hdmi: Check for null pointer before
- cleanup
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Stefan Mavrodiev <stefan@olimex.com>, Chen-Yu Tsai <wens@csie.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVERS FOR ALLWINNER A10" 
-        <dri-devel@lists.freedesktop.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-sunxi@googlegroups.com
-References: <20191216144348.7540-1-stefan@olimex.com>
- <20191216161258.lmkq2ersfm746t7q@gilmour.lan>
- <cebda755-2649-79a1-fd08-79b13edef1a5@olimex.com>
- <20191217114603.6cyrfx3sekn6uwmp@gilmour.lan>
- <20191217114906.lrjup35tngrjhwuj@gilmour.lan>
-From:   Stefan Mavrodiev <stefan@olimex.com>
-Message-ID: <83088170-1753-6a2f-aa25-c4f6f54462d6@olimex.com>
-Date:   Tue, 17 Dec 2019 13:54:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        id S1725940AbfLQLzS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 06:55:18 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 03:55:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,325,1571727600"; 
+   d="scan'208";a="217761205"
+Received: from cvg-ubt08.iil.intel.com ([143.185.152.138])
+  by orsmga003.jf.intel.com with ESMTP; 17 Dec 2019 03:55:15 -0800
+From:   Vladimir Kondratiev <vladimir.kondratiev@intel.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Vladimir Kondratiev <vladimir.kondratiev@intel.com>,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] mmc: sdhci-cadence: tune multi-block read gap
+Date:   Tue, 17 Dec 2019 13:55:02 +0200
+Message-Id: <20191217115502.5590-1-vladimir.kondratiev@intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20191217114906.lrjup35tngrjhwuj@gilmour.lan>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Additional tuning required for multi-block read command.
+Implement it accordingly to Cadence recommendation.
 
-On 12/17/19 1:49 PM, Maxime Ripard wrote:
-> On Tue, Dec 17, 2019 at 12:46:03PM +0100, Maxime Ripard wrote:
->> On Tue, Dec 17, 2019 at 08:45:07AM +0200, Stefan Mavrodiev wrote:
->>> Hi,
->>>
->>> On 12/16/19 6:12 PM, Maxime Ripard wrote:
->>>> Hi,
->>>>
->>>> On Mon, Dec 16, 2019 at 04:43:48PM +0200, Stefan Mavrodiev wrote:
->>>>> It's possible hdmi->connector and hdmi->encoder divices to be NULL.
->>>>> This can happen when building as kernel module and you try to remove
->>>>> the module.
->>>>>
->>>>> This patch make simple null check, before calling the cleanup functions.
->>>>>
->>>>> Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
->>>>> ---
->>>>>    drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c | 6 ++++--
->>>>>    1 file changed, 4 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
->>>>> index a7c4654445c7..b61e00f2ecb8 100644
->>>>> --- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
->>>>> +++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
->>>>> @@ -685,8 +685,10 @@ static void sun4i_hdmi_unbind(struct device *dev, struct device *master,
->>>>>    	struct sun4i_hdmi *hdmi = dev_get_drvdata(dev);
->>>>>
->>>>>    	cec_unregister_adapter(hdmi->cec_adap);
->>>>> -	drm_connector_cleanup(&hdmi->connector);
->>>>> -	drm_encoder_cleanup(&hdmi->encoder);
->>>>> +	if (hdmi->connector.dev)
->>>>> +		drm_connector_cleanup(&hdmi->connector);
->>>>> +	if (hdmi->encoder.dev)
->>>>> +		drm_encoder_cleanup(&hdmi->encoder);
->>>> Hmmm, this doesn't look right. Do you have more information on how you
->>>> can reproduce it?
->>> Just build sun4i_drm_hdmi as module (CONFIG_DRM_SUN4I_HDMI=m). Then try to
->>> unload the module:
->>>
->>> # rmmod sun4i_drm_hdmi
->>>
->>> And you get this:
->>>
->>> Unable to handle kernel NULL pointer dereference at virtual address 00000000
->>> pgd = 6b032436
->>> [00000000] *pgd=00000000
->>> Internal error: Oops: 5 [#1] SMP ARM
->>> Modules linked in: sun4i_drm_hdmi(-)
->>> CPU: 0 PID: 1081 Comm: rmmod Not tainted 5.5.0-rc1-00030-g6ec417030d93 #33
->>> Hardware name: Allwinner sun7i (A20) Family
->>> PC is at drm_connector_cleanup+0x40/0x208
->>> LR is at sun4i_hdmi_unbind+0x10/0x54 [sun4i_drm_hdmi]
->>> ...
->>>
->>>
->>> I've tested that with sunxi/for-next branch on A20-OLinuXino board.
->> Yeah, you detailed the symptoms nicely in the commit log, but my point
->> was that we shouldn't end up in that situation in the first place.
->>
->> Your patch works around it, but it doesn't fix the underlying
->> issue. Is drm_connector_cleanup (or the encoder variant) called twice?
-> Answering myself, yes it is. It's both the destroy call back and
-> called in unbind. We should just remove the one in the unbind then.
+2 registers used: HRS37 and HRS38. To HRS37, SD interface mode programmed,
+this selects HRS38 slot - there is separate slot for every SD interface
+mode. HRS38 contains gap parameter,
+it is selected by starting with gap=0 and sending multi-block read command.
+gap incremented until multi-block read succeeds.
 
-Should I do this or leave it to you?
+As of now, this tuning executed for HS200 only
 
-Stefan
+Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@intel.com>
+---
+ drivers/mmc/host/sdhci-cadence.c | 137 ++++++++++++++++++++++++++++++-
+ 1 file changed, 136 insertions(+), 1 deletion(-)
 
->
-> Maxime
+diff --git a/drivers/mmc/host/sdhci-cadence.c b/drivers/mmc/host/sdhci-cadence.c
+index ae0ec27dd7cc..d0bed1932b6c 100644
+--- a/drivers/mmc/host/sdhci-cadence.c
++++ b/drivers/mmc/host/sdhci-cadence.c
+@@ -34,6 +34,23 @@
+ #define   SDHCI_CDNS_HRS06_MODE_MMC_HS400	0x5
+ #define   SDHCI_CDNS_HRS06_MODE_MMC_HS400ES	0x6
+ 
++/* Read block gap */
++#define SDHCI_CDNS_HRS37		0x94	/* interface mode select */
++#define   SDHCI_CDNS_HRS37_MODE_DS		0x0
++#define   SDHCI_CDNS_HRS37_MODE_HS		0x1
++#define   SDHCI_CDNS_HRS37_MODE_UDS_SDR12	0x8
++#define   SDHCI_CDNS_HRS37_MODE_UDS_SDR25	0x9
++#define   SDHCI_CDNS_HRS37_MODE_UDS_SDR50	0xa
++#define   SDHCI_CDNS_HRS37_MODE_UDS_SDR104	0xb
++#define   SDHCI_CDNS_HRS37_MODE_UDS_DDR50	0xc
++#define   SDHCI_CDNS_HRS37_MODE_MMC_LEGACY	0x20
++#define   SDHCI_CDNS_HRS37_MODE_MMC_SDR		0x21
++#define   SDHCI_CDNS_HRS37_MODE_MMC_DDR		0x22
++#define   SDHCI_CDNS_HRS37_MODE_MMC_HS200	0x23
++#define   SDHCI_CDNS_HRS37_MODE_MMC_HS400	0x24
++#define   SDHCI_CDNS_HRS37_MODE_MMC_HS400ES	0x25
++#define SDHCI_CDNS_HRS38		0x98	/* Read block gap coefficient */
++#define   SDHCI_CDNS_HRS38_BLKGAP_MAX		0xf
+ /* SRS - Slot Register Set (SDHCI-compatible) */
+ #define SDHCI_CDNS_SRS_BASE		0x200
+ 
+@@ -272,6 +289,118 @@ static int sdhci_cdns_set_tune_val(struct sdhci_host *host, unsigned int val)
+ 	return 0;
+ }
+ 
++/**
++ * mmc_send_mb_read() - send multi-block read command
++ * @host: MMC host
++ *
++ * Sends multi-block read command, CMD23/CMD18/CMD12, ignore read data
++ *
++ * Return: error code
++ */
++int mmc_send_mb_read(struct mmc_host *host)
++{
++	const int blksz = 512;
++	const int blocks = 32;
++	struct scatterlist sg;
++	struct mmc_command sbc = {
++		.opcode = MMC_SET_BLOCK_COUNT,
++		.arg = blocks,
++		.flags = MMC_RSP_R1 | MMC_CMD_AC,
++	};
++	struct mmc_command cmd = {
++		.opcode = MMC_READ_MULTIPLE_BLOCK,
++		.arg = 0,
++		.flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_ADTC,
++	};
++	struct mmc_command stop = {
++		.opcode = MMC_STOP_TRANSMISSION,
++		.arg = 0,
++		.flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_AC,
++	};
++	struct mmc_data data = {
++		.flags = MMC_DATA_READ,
++		.blksz = blksz,
++		.blocks = blocks,
++		.blk_addr = 0,
++		.timeout_ns =  800000000,	/* 800ms */
++		.timeout_clks = 1000,
++		.sg = &sg,
++		.sg_len = 1,
++	};
++	struct mmc_request mrq = {
++		.sbc = &sbc,
++		.cmd = &cmd,
++		.data = &data,
++		.stop = &stop,
++	};
++	int size = blksz * blocks, err = 0;
++	u8 *data_buf;
++
++	data_buf = kzalloc(size, GFP_KERNEL);
++	if (!data_buf)
++		return -ENOMEM;
++
++	sg_init_one(&sg, data_buf, size);
++
++	mmc_wait_for_req(host, &mrq);
++
++	if (cmd.error) {
++		err = cmd.error;
++		goto out;
++	}
++
++	if (data.error) {
++		err = data.error;
++		goto out;
++	}
++
++out:
++	kfree(data_buf);
++	return err;
++}
++
++/**
++ * sdhci_cdns_tune_blkgap() - tune multi-block read gap
++ * @mmc: MMC host
++ *
++ * Tune delay used in multi block read. To do so,
++ * try sending multi-block read command with incremented gap, unless
++ * it succeeds.
++ *
++ * Return: error code
++ */
++static int sdhci_cdns_tune_blkgap(struct mmc_host *mmc)
++{
++	struct sdhci_host *host = mmc_priv(mmc);
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	struct sdhci_cdns_priv *priv = sdhci_pltfm_priv(pltfm_host);
++	void __iomem *hrs37_reg = priv->hrs_addr + SDHCI_CDNS_HRS37;
++	void __iomem *hrs38_reg = priv->hrs_addr + SDHCI_CDNS_HRS38;
++	bool tuned = false;
++	u8 gap;
++	u8 hrs37_mode;
++
++	switch (host->timing) {
++	case MMC_TIMING_MMC_HS200:
++		hrs37_mode = SDHCI_CDNS_HRS37_MODE_MMC_HS200;
++		break;
++	default:
++		return 0; /* no tuning in this mode */
++	}
++
++	writel(hrs37_mode, hrs37_reg);
++
++	for (gap = 0; gap <= SDHCI_CDNS_HRS38_BLKGAP_MAX; gap++) {
++		writel(gap, hrs38_reg);
++		tuned = !mmc_send_mb_read(mmc);
++		if (tuned)
++			break;
++	}
++	dev_dbg(mmc_dev(mmc), "read block gap tune %s, gap %d\n",
++		tuned ? "OK" : "failed", gap);
++	return tuned ? 0 : -EIO;
++}
++
+ static int sdhci_cdns_execute_tuning(struct mmc_host *mmc, u32 opcode)
+ {
+ 	struct sdhci_host *host = mmc_priv(mmc);
+@@ -279,6 +408,7 @@ static int sdhci_cdns_execute_tuning(struct mmc_host *mmc, u32 opcode)
+ 	int max_streak = 0;
+ 	int end_of_streak = 0;
+ 	int i;
++	int ret;
+ 
+ 	/*
+ 	 * This handler only implements the eMMC tuning that is specific to
+@@ -308,7 +438,12 @@ static int sdhci_cdns_execute_tuning(struct mmc_host *mmc, u32 opcode)
+ 		return -EIO;
+ 	}
+ 
+-	return sdhci_cdns_set_tune_val(host, end_of_streak - max_streak / 2);
++	ret = sdhci_cdns_set_tune_val(host, end_of_streak - max_streak / 2);
++
++	if (!ret)
++		ret = sdhci_cdns_tune_blkgap(mmc);
++
++	return ret;
+ }
+ 
+ static void sdhci_cdns_hs400_enhanced_strobe(struct mmc_host *mmc,
+-- 
+2.20.1
+
+---------------------------------------------------------------------
+Intel Israel (74) Limited
+
+This e-mail and any attachments may contain confidential material for
+the sole use of the intended recipient(s). Any review or distribution
+by others is strictly prohibited. If you are not the intended
+recipient, please contact the sender and delete all copies.
+
