@@ -2,124 +2,221 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC01C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DC0C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0A452467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:32:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 434E720716
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:33:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727904AbfLQMct (ORCPT
+        id S1728020AbfLQMdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:32:49 -0500
-Received: from foss.arm.com ([217.140.110.172]:35370 "EHLO foss.arm.com"
+        Tue, 17 Dec 2019 07:33:52 -0500
+Received: from mga14.intel.com ([192.55.52.115]:21400 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727427AbfLQMcs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 07:32:48 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 053A531B;
-        Tue, 17 Dec 2019 04:32:48 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6FF5B3F718;
-        Tue, 17 Dec 2019 04:32:47 -0800 (PST)
-Date:   Tue, 17 Dec 2019 12:32:44 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org
-Subject: Re: [PATCH 06/13] PCI: cadence: Allow pci_host_bridge to have custom
- pci_ops
-Message-ID: <20191217123243.GC24359@e119886-lin.cambridge.arm.com>
-References: <20191209092147.22901-1-kishon@ti.com>
- <20191209092147.22901-7-kishon@ti.com>
+        id S1727576AbfLQMdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 07:33:50 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 04:33:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,325,1571727600"; 
+   d="scan'208";a="266565415"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by FMSMGA003.fm.intel.com with ESMTP; 17 Dec 2019 04:33:46 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 79DE5217; Tue, 17 Dec 2019 14:33:45 +0200 (EET)
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     linux-usb@vger.kernel.org
+Cc:     Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Rajmohan Mani <rajmohan.mani@intel.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Lukas Wunner <lukas@wunner.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Mario.Limonciello@dell.com,
+        Anthony Wong <anthony.wong@canonical.com>,
+        Oliver Neukum <oneukum@suse.com>,
+        Christian Kellner <ckellner@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/9] thunderbolt: Call tb_eeprom_get_drom_offset() from tb_eeprom_read_n()
+Date:   Tue, 17 Dec 2019 15:33:38 +0300
+Message-Id: <20191217123345.31850-3-mika.westerberg@linux.intel.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191217123345.31850-1-mika.westerberg@linux.intel.com>
+References: <20191217123345.31850-1-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191209092147.22901-7-kishon@ti.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 02:51:40PM +0530, Kishon Vijay Abraham I wrote:
-> Certain platforms like TI's J721E allows only 32-bit configuration
-> space access. In such cases pci_generic_config_read and
-> pci_generic_config_write cannot be used. Add support in Cadence core
-> to let pci_host_bridge have custom pci_ops.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/pci/controller/cadence/pcie-cadence-host.c | 7 ++++---
->  drivers/pci/controller/cadence/pcie-cadence.h      | 8 ++++++++
->  2 files changed, 12 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> index 0929554f5a81..2efc33b1cade 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> @@ -12,8 +12,8 @@
->  
->  #include "pcie-cadence.h"
->  
-> -static void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
-> -				      int where)
-> +void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
-> +			       int where)
->  {
->  	struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
->  	struct cdns_pcie_rc *rc = pci_host_bridge_priv(bridge);
-> @@ -289,7 +289,8 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->  	list_splice_init(&resources, &bridge->windows);
->  	bridge->dev.parent = dev;
->  	bridge->busnr = pcie->bus;
-> -	bridge->ops = &cdns_pcie_host_ops;
-> +	if (!bridge->ops)
-> +		bridge->ops = &cdns_pcie_host_ops;
->  	bridge->map_irq = of_irq_parse_and_map_pci;
->  	bridge->swizzle_irq = pci_common_swizzle;
->  
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-> index 5171d0da37da..c879dd3d2893 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence.h
-> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
-> @@ -472,11 +472,19 @@ static inline bool cdns_pcie_is_link_up(struct cdns_pcie *pcie)
->  
->  #ifdef CONFIG_PCIE_CADENCE_HOST
->  int cdns_pcie_host_setup(struct cdns_pcie_rc *rc);
-> +void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
-> +			       int where);
+We are going to re-use tb_drom_read() for USB4 DROM reading as well.
+USB4 has separate router operations for this which does not need the
+drom_offset. Therefore we move call to tb_eeprom_get_drom_offset() into
+tb_eeprom_read_n() where it is needed.
 
-The commit message doesn't explain why this change in visibility is needed).
+While there change return -ENOSYS to -ENODEV because the former is only
+supposed to be used with system calls (invalid syscall nr).
 
->  #else
->  static inline int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->  {
->  	return 0;
->  }
-> +
-> +static inline void __iomem *cdns_pci_map_bus(struct pci_bus *bus,
-> +					     unsigned int devfn,
-> +					     int where)
-> +{
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+---
+ drivers/thunderbolt/eeprom.c | 88 ++++++++++++++++++------------------
+ 1 file changed, 43 insertions(+), 45 deletions(-)
 
-This still needs to return something right?
+diff --git a/drivers/thunderbolt/eeprom.c b/drivers/thunderbolt/eeprom.c
+index 8dd7de0cc826..540e0105bcc0 100644
+--- a/drivers/thunderbolt/eeprom.c
++++ b/drivers/thunderbolt/eeprom.c
+@@ -130,13 +130,52 @@ static int tb_eeprom_in(struct tb_switch *sw, u8 *val)
+ 	return 0;
+ }
+ 
++/**
++ * tb_eeprom_get_drom_offset - get drom offset within eeprom
++ */
++static int tb_eeprom_get_drom_offset(struct tb_switch *sw, u16 *offset)
++{
++	struct tb_cap_plug_events cap;
++	int res;
++
++	if (!sw->cap_plug_events) {
++		tb_sw_warn(sw, "no TB_CAP_PLUG_EVENTS, cannot read eeprom\n");
++		return -ENODEV;
++	}
++	res = tb_sw_read(sw, &cap, TB_CFG_SWITCH, sw->cap_plug_events,
++			     sizeof(cap) / 4);
++	if (res)
++		return res;
++
++	if (!cap.eeprom_ctl.present || cap.eeprom_ctl.not_present) {
++		tb_sw_warn(sw, "no NVM\n");
++		return -ENODEV;
++	}
++
++	if (cap.drom_offset > 0xffff) {
++		tb_sw_warn(sw, "drom offset is larger than 0xffff: %#x\n",
++				cap.drom_offset);
++		return -ENXIO;
++	}
++	*offset = cap.drom_offset;
++	return 0;
++}
++
+ /**
+  * tb_eeprom_read_n - read count bytes from offset into val
+  */
+ static int tb_eeprom_read_n(struct tb_switch *sw, u16 offset, u8 *val,
+ 		size_t count)
+ {
++	u16 drom_offset;
+ 	int i, res;
++
++	res = tb_eeprom_get_drom_offset(sw, &drom_offset);
++	if (res)
++		return res;
++
++	offset += drom_offset;
++
+ 	res = tb_eeprom_active(sw, true);
+ 	if (res)
+ 		return res;
+@@ -238,36 +277,6 @@ struct tb_drom_entry_port {
+ } __packed;
+ 
+ 
+-/**
+- * tb_eeprom_get_drom_offset - get drom offset within eeprom
+- */
+-static int tb_eeprom_get_drom_offset(struct tb_switch *sw, u16 *offset)
+-{
+-	struct tb_cap_plug_events cap;
+-	int res;
+-	if (!sw->cap_plug_events) {
+-		tb_sw_warn(sw, "no TB_CAP_PLUG_EVENTS, cannot read eeprom\n");
+-		return -ENOSYS;
+-	}
+-	res = tb_sw_read(sw, &cap, TB_CFG_SWITCH, sw->cap_plug_events,
+-			     sizeof(cap) / 4);
+-	if (res)
+-		return res;
+-
+-	if (!cap.eeprom_ctl.present || cap.eeprom_ctl.not_present) {
+-		tb_sw_warn(sw, "no NVM\n");
+-		return -ENOSYS;
+-	}
+-
+-	if (cap.drom_offset > 0xffff) {
+-		tb_sw_warn(sw, "drom offset is larger than 0xffff: %#x\n",
+-				cap.drom_offset);
+-		return -ENXIO;
+-	}
+-	*offset = cap.drom_offset;
+-	return 0;
+-}
+-
+ /**
+  * tb_drom_read_uid_only - read uid directly from drom
+  *
+@@ -277,17 +286,11 @@ static int tb_eeprom_get_drom_offset(struct tb_switch *sw, u16 *offset)
+ int tb_drom_read_uid_only(struct tb_switch *sw, u64 *uid)
+ {
+ 	u8 data[9];
+-	u16 drom_offset;
+ 	u8 crc;
+-	int res = tb_eeprom_get_drom_offset(sw, &drom_offset);
+-	if (res)
+-		return res;
+-
+-	if (drom_offset == 0)
+-		return -ENODEV;
++	int res;
+ 
+ 	/* read uid */
+-	res = tb_eeprom_read_n(sw, drom_offset, data, 9);
++	res = tb_eeprom_read_n(sw, 0, data, 9);
+ 	if (res)
+ 		return res;
+ 
+@@ -489,7 +492,6 @@ static int tb_drom_copy_nvm(struct tb_switch *sw, u16 *size)
+  */
+ int tb_drom_read(struct tb_switch *sw)
+ {
+-	u16 drom_offset;
+ 	u16 size;
+ 	u32 crc;
+ 	struct tb_drom_header *header;
+@@ -517,11 +519,7 @@ int tb_drom_read(struct tb_switch *sw)
+ 		return 0;
+ 	}
+ 
+-	res = tb_eeprom_get_drom_offset(sw, &drom_offset);
+-	if (res)
+-		return res;
+-
+-	res = tb_eeprom_read_n(sw, drom_offset + 14, (u8 *) &size, 2);
++	res = tb_eeprom_read_n(sw, 14, (u8 *) &size, 2);
+ 	if (res)
+ 		return res;
+ 	size &= 0x3ff;
+@@ -535,7 +533,7 @@ int tb_drom_read(struct tb_switch *sw)
+ 	sw->drom = kzalloc(size, GFP_KERNEL);
+ 	if (!sw->drom)
+ 		return -ENOMEM;
+-	res = tb_eeprom_read_n(sw, drom_offset, sw->drom, size);
++	res = tb_eeprom_read_n(sw, 0, sw->drom, size);
+ 	if (res)
+ 		goto err;
+ 
+-- 
+2.24.0
 
-Thanks,
-
-Andrew Murray
-
-> +}
->  #endif
->  
->  #ifdef CONFIG_PCIE_CADENCE_EP
-> -- 
-> 2.17.1
-> 
