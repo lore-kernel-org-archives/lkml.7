@@ -2,163 +2,175 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E9BAC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9150AC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DDBA24676
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:16:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QFWhJc01"
+	by mail.kernel.org (Postfix) with ESMTP id 5CBF024676
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:16:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576613815;
+	bh=OEvynMEFFVCG5lK6SaM6XL2MAZtVXdMkIKHNuUEahfI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2cwNSHf+MrvQY61czlf3QRxO4KrzYPZtrqCXYqxXeg0P2IiTeZA8l+hNMpHr52XT9
+	 5PfTJo784SP5Fc9zexJhopojH3Gth/+UkHhh0LI96Zv/WdX8tCFYWep+GxgRvhlmRj
+	 pM98hjIbmiwX8mK+AvtO7upYGSWjRz1zUWHEgC4U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728511AbfLQUQw (ORCPT
+        id S1728536AbfLQUQy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 17 Dec 2019 15:16:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41118 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728482AbfLQUQw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 17 Dec 2019 15:16:52 -0500
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:45479 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728387AbfLQUQq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 15:16:46 -0500
-Received: by mail-yw1-f67.google.com with SMTP id d7so3771139ywl.12
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 12:16:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SLo3YgqfZWpHDaMVADfGw84K9zVEXzo6Zsavpri7aPQ=;
-        b=QFWhJc01yHhJRElEVrRbuDSLdYLW4e/DomuRGPS7+TgiAG5tLiXXQUd/gKy6INrIm1
-         TceSyMUKrXEjyizJCqxZmzNEF8EOat0RoJMdEVuQmRhuIyLzm1PdAR/oQhli8xOdCPGl
-         SZZlYfr3z085wEbaubUcyq3IiE9SV0w4Hn6fpKJEyQcojS22MmB3usam/KPc3bNNGGOS
-         sNCIyFMBVHcyq2fOQWJlhsRU7mzW3BmCx8/rJ6IoDaaIGvWeYOZ4dVyyfsxIZBXiYxej
-         K18acyzqbO9fzfoVZe48a92pt0Dxym3cC1eqVxICQGpYwPOlP1Xp//s7NzTshYTEvu0W
-         FgYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SLo3YgqfZWpHDaMVADfGw84K9zVEXzo6Zsavpri7aPQ=;
-        b=Ef+eX52Tg4VTOs1Q++xWesPPHa9moRb316FFIDk1FGiZRH0UGq9YfTAFTYFMcx2orZ
-         w1E3evbeqJoF04kPo5Mv7ViNgYyLbfM1S+XWa25u6AiM8SkBFzAqPCCYitMbMeaU74A5
-         Z3x5IZ0/UaQHZL6IpR28gYQm+n4CrWOqzlE7dqE/1AO8Tn6Sba7oybGMG9g86I7AyNTN
-         doxWEAc/Dw2RrPn82rbwr466/aHldX0/GThRGd6cEt4cxkQE48SQs7IFRAPdC9I/D+ot
-         FNhIcfWIjXlz/OYg3iP8h2aHqnVN3PmhVaY1sLqVtYblaVJ+m9LmmKxKTyyYXzktzGN3
-         zV2w==
-X-Gm-Message-State: APjAAAWbYFsEfMQXYfvIeqi+Y/2GueJW6RAoT3h7Gk8pqCpr58J4+Rtz
-        4FhkCBYl0gdtAgRfBPWnPBV0kc29v8g8z768z591JA==
-X-Google-Smtp-Source: APXvYqygLxcZT4RRwxuu51o/BOxORqqsBOLQuavkikYPkbT2Lo7OhQ82WGBQRolJvBB2ad6h5lw4tsI3/fmzZu2zgFI=
-X-Received: by 2002:a81:2708:: with SMTP id n8mr357745ywn.437.1576613804857;
- Tue, 17 Dec 2019 12:16:44 -0800 (PST)
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33B2B21775;
+        Tue, 17 Dec 2019 20:16:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576613810;
+        bh=OEvynMEFFVCG5lK6SaM6XL2MAZtVXdMkIKHNuUEahfI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=G7oeGM3SqpnhaLhbomNKhHT4r0kaED8jiUqRRpUWyD4IQYXtcy1J/FQ7lVI7QIKAn
+         bvrmkCZrEUtDj4M8pPZsDavEDYkwTtiYwgPXEuxClMrv0kggSXKWBUmJ8CRGAoSNny
+         ltFceiJG+o0fGvPEWALhQ/nFw6/zoVmZI+DbifNs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.3 16/25] tcp: fix rejected syncookies due to stale timestamps
+Date:   Tue, 17 Dec 2019 21:16:15 +0100
+Message-Id: <20191217200909.418030245@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191217200903.179327435@linuxfoundation.org>
+References: <20191217200903.179327435@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20191128125100.14291-1-patrick.rudolph@9elements.com>
- <20191128125100.14291-2-patrick.rudolph@9elements.com> <CAODwPW8Koy1BvKGJU6PKexYx+PNE+WY7+m69gcxT689vBy+AoQ@mail.gmail.com>
- <CAOxpaSXUgNXaZ40ScZKZQ+iDEQ=vqPytLgicBx==hxp5uL_+dA@mail.gmail.com>
- <CAL_quvScPUuocogrghzH_vNb2uxyBupBKYikG0Bwf4OcfSRWsQ@mail.gmail.com> <5df87d6e.1c69fb81.f0643.a6b6@mx.google.com>
-In-Reply-To: <5df87d6e.1c69fb81.f0643.a6b6@mx.google.com>
-From:   Mat King <mathewk@google.com>
-Date:   Tue, 17 Dec 2019 13:16:33 -0700
-Message-ID: <CAL_quvS_3o7UNmqP+QDCcHosw8JkQ03Kx5NjgUxFhO5FO=_-Mg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] firmware: google: Expose CBMEM over sysfs
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Julius Werner <jwerner@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Samuel Holland <samuel@sholland.org>,
-        heikki.krogerus@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 12:02 AM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Mat King (2019-12-13 13:31:46)
-> > On Mon, Dec 9, 2019 at 11:57 PM Julius Werner <jwerner@chromium.org> wrote:
-> > > > +static int cbmem_probe(struct coreboot_device *cdev)
-> > > > +{
-> > > > +       struct device *dev = &cdev->dev;
-> > > > +       struct cb_priv *priv;
-> > > > +       int err;
-> > > > +
-> > > > +       priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-> > > > +       if (!priv)
-> > > > +               return -ENOMEM;
-> > > > +
-> > > > +       memcpy(&priv->entry, &cdev->cbmem_entry, sizeof(priv->entry));
-> > > > +
-> > > > +       priv->remap = memremap(priv->entry.address,
-> > > > +                              priv->entry.entry_size, MEMREMAP_WB);
-> > >
-> > > We've just been discussing some problems with CBMEM areas and memory
-> > > mapping types in Chrome OS. CBMEM is not guaranteed to be page-aligned
-> > > (at least not the "small" entries), but the kernel can only assign
-> > > memory attributes for a page at a time (and refuses to map the same
-> > > area twice with two different memory types, for good reason). So if
-> > > CBMEM entries sharing a page are mapped as writeback by one driver but
-> > > uncached by the other, things break.
-> > >
-> > > There are some CBMEM entries that need to be mapped uncached (e.g. the
-> > > ACPI UCSI table, which isn't even handled by anything using this CBMEM
-> > > code) and others for which it would make more sense (e.g. the memory
-> > > console, where firmware may add more lines at runtime), but I don't
-> > > think there are any regions that really *need* to be writeback. None
-> > > of the stuff accessing these areas should access them often enough
-> > > that caching matters, and I think it's generally more common to map
-> > > firmware memory areas as uncached anyway. So how about we standardize
-> > > on mapping it all uncached to avoid any attribute clashes? (That would
-> > > mean changing the existing VPD and memconsole drivers to use
-> > > ioremap(), too.)
-> >
-> > I don't think that uncached would work here either because the acpi
-> > driver will have already mapped some of these regions as write-back
-> > before this driver is loaded so the mapping will fail.
->
-> Presumably the ucsi driver is drivers/usb/typec/ucsi/ucsi_acpi.c? Is
-> that right? And on ACPI based systems is this I/O memory or just some
-> carved out memory region that is used to communicate something to the
-> ACPI firmware? From looking at the ucsi driver it seems like it should
-> be mapped with memremap() instead of ioremap() given that it's not
-> actual I/O memory that has any sort of memory barrier or access width
-> constraints. It looks more like some sort of memory region that is being
-> copied into and out of while triggering some DSM. Can it at least be
-> memremap()ed with MEMREMAP_WT?
+From: Guillaume Nault <gnault@redhat.com>
 
-Yes this is the ucsi_acpi.c driver that has caused this issue to come
-up. It does just use a region of memory carved in the BIOS out for the
-purpose of this device. The kernel can write to this memory and call a
-_DSM to push data to an EC or call the _DSM to pull from the EC into
-this memory region. See
-https://www.intel.com/content/dam/www/public/us/en/documents/white-papers/bios-implementation-of-ucsi.pdf
-. The driver is very explicit about using uncached memory and I
-suspect that is why memremap() was not used, but I am not sure why
-uncahed memory is needed. The only consumers of this memory are the
-driver itself and the ACPI asl code in the _DSM which as far as I know
-is being exectued by the kernel directly. Are there any other reasons
-to use uncached memory when dealing with ACPI asl code?
+[ Upstream commit 04d26e7b159a396372646a480f4caa166d1b6720 ]
 
->
-> It also looks like this sort of problem has come up before, see commit
-> 1f9f9d168ce6 ("usb: typec: ucsi: acpi: Workaround for cache mode
-> issue"). Ugh.
->
-> >
-> > Perhaps the best way to make this work is to not call memremap at all
-> > in the probe function but instead call memremap and memunmap every
-> > time that data_read is called. memremap can take multiple caching mode
-> > flags and will try each until one succeeds. So if you call it with
-> > MEMREMAP_WB | MEMREMAP_WT in data_read it should succeed no matter how
-> > it has been mapped by other drivers which should already be loaded
-> > when it is called.
->
-> I've been wanting to change memremap() to be a "just give me memory"
-> type of API but haven't finished that task. It got hung up on mapping
-> memory specially for UEFI framebuffers to match whatever the UEFI mmap
-> table tells us.
->
+If no synflood happens for a long enough period of time, then the
+synflood timestamp isn't refreshed and jiffies can advance so much
+that time_after32() can't accurately compare them any more.
+
+Therefore, we can end up in a situation where time_after32(now,
+last_overflow + HZ) returns false, just because these two values are
+too far apart. In that case, the synflood timestamp isn't updated as
+it should be, which can trick tcp_synq_no_recent_overflow() into
+rejecting valid syncookies.
+
+For example, let's consider the following scenario on a system
+with HZ=1000:
+
+  * The synflood timestamp is 0, either because that's the timestamp
+    of the last synflood or, more commonly, because we're working with
+    a freshly created socket.
+
+  * We receive a new SYN, which triggers synflood protection. Let's say
+    that this happens when jiffies == 2147484649 (that is,
+    'synflood timestamp' + HZ + 2^31 + 1).
+
+  * Then tcp_synq_overflow() doesn't update the synflood timestamp,
+    because time_after32(2147484649, 1000) returns false.
+    With:
+      - 2147484649: the value of jiffies, aka. 'now'.
+      - 1000: the value of 'last_overflow' + HZ.
+
+  * A bit later, we receive the ACK completing the 3WHS. But
+    cookie_v[46]_check() rejects it because tcp_synq_no_recent_overflow()
+    says that we're not under synflood. That's because
+    time_after32(2147484649, 120000) returns false.
+    With:
+      - 2147484649: the value of jiffies, aka. 'now'.
+      - 120000: the value of 'last_overflow' + TCP_SYNCOOKIE_VALID.
+
+    Of course, in reality jiffies would have increased a bit, but this
+    condition will last for the next 119 seconds, which is far enough
+    to accommodate for jiffie's growth.
+
+Fix this by updating the overflow timestamp whenever jiffies isn't
+within the [last_overflow, last_overflow + HZ] range. That shouldn't
+have any performance impact since the update still happens at most once
+per second.
+
+Now we're guaranteed to have fresh timestamps while under synflood, so
+tcp_synq_no_recent_overflow() can safely use it with time_after32() in
+such situations.
+
+Stale timestamps can still make tcp_synq_no_recent_overflow() return
+the wrong verdict when not under synflood. This will be handled in the
+next patch.
+
+For 64 bits architectures, the problem was introduced with the
+conversion of ->tw_ts_recent_stamp to 32 bits integer by commit
+cca9bab1b72c ("tcp: use monotonic timestamps for PAWS").
+The problem has always been there on 32 bits architectures.
+
+Fixes: cca9bab1b72c ("tcp: use monotonic timestamps for PAWS")
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Guillaume Nault <gnault@redhat.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ include/linux/time.h |   13 +++++++++++++
+ include/net/tcp.h    |    5 +++--
+ 2 files changed, 16 insertions(+), 2 deletions(-)
+
+--- a/include/linux/time.h
++++ b/include/linux/time.h
+@@ -96,4 +96,17 @@ static inline bool itimerspec64_valid(co
+  */
+ #define time_after32(a, b)	((s32)((u32)(b) - (u32)(a)) < 0)
+ #define time_before32(b, a)	time_after32(a, b)
++
++/**
++ * time_between32 - check if a 32-bit timestamp is within a given time range
++ * @t:	the time which may be within [l,h]
++ * @l:	the lower bound of the range
++ * @h:	the higher bound of the range
++ *
++ * time_before32(t, l, h) returns true if @l <= @t <= @h. All operands are
++ * treated as 32-bit integers.
++ *
++ * Equivalent to !(time_before32(@t, @l) || time_after32(@t, @h)).
++ */
++#define time_between32(t, l, h) ((u32)(h) - (u32)(l) >= (u32)(t) - (u32)(l))
+ #endif
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -484,14 +484,15 @@ static inline void tcp_synq_overflow(con
+ 		reuse = rcu_dereference(sk->sk_reuseport_cb);
+ 		if (likely(reuse)) {
+ 			last_overflow = READ_ONCE(reuse->synq_overflow_ts);
+-			if (time_after32(now, last_overflow + HZ))
++			if (!time_between32(now, last_overflow,
++					    last_overflow + HZ))
+ 				WRITE_ONCE(reuse->synq_overflow_ts, now);
+ 			return;
+ 		}
+ 	}
+ 
+ 	last_overflow = tcp_sk(sk)->rx_opt.ts_recent_stamp;
+-	if (time_after32(now, last_overflow + HZ))
++	if (!time_between32(now, last_overflow, last_overflow + HZ))
+ 		tcp_sk(sk)->rx_opt.ts_recent_stamp = now;
+ }
+ 
+
+
