@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 829B9C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 860C4C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 535F424673
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 661A824673
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:55:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbfLQAzX (ORCPT
+        id S1727685AbfLQAzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:55:23 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35214 "EHLO
+        Mon, 16 Dec 2019 19:55:41 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35332 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726992AbfLQAvn (ORCPT
+        by vger.kernel.org with ESMTP id S1727063AbfLQAvn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 19:51:43 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15K-0003Ml-IZ; Tue, 17 Dec 2019 00:51:34 +0000
+        id 1ih15K-0003MU-Vj; Tue, 17 Dec 2019 00:51:35 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15I-0005ZX-Jk; Tue, 17 Dec 2019 00:51:32 +0000
+        id 1ih15K-0005c7-85; Tue, 17 Dec 2019 00:51:34 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Jakub Kicinski" <jakub.kicinski@netronome.com>,
-        "Simon Horman" <simon.horman@netronome.com>
-Date:   Tue, 17 Dec 2019 00:46:55 +0000
-Message-ID: <lsq.1576543535.451851386@decadent.org.uk>
+        "Takashi Iwai" <tiwai@suse.de>
+Date:   Tue, 17 Dec 2019 00:47:23 +0000
+Message-ID: <lsq.1576543535.499499175@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 081/136] net: netem: correct the parent's backlog
- when corrupted packet was dropped
+Subject: [PATCH 3.16 109/136] ALSA: timer: Fix incorrectly assigned timer
+ instance
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,33 +55,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jakub Kicinski <jakub.kicinski@netronome.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit e0ad032e144731a5928f2d75e91c2064ba1a764c upstream.
+commit e7af6307a8a54f0b873960b32b6a644f2d0fbd97 upstream.
 
-If packet corruption failed we jump to finish_segs and return
-NET_XMIT_SUCCESS. Seeing success will make the parent qdisc
-increment its backlog, that's incorrect - we need to return
-NET_XMIT_DROP.
+The clean up commit 41672c0c24a6 ("ALSA: timer: Simplify error path in
+snd_timer_open()") unified the error handling code paths with the
+standard goto, but it introduced a subtle bug: the timer instance is
+stored in snd_timer_open() incorrectly even if it returns an error.
+This may eventually lead to UAF, as spotted by fuzzer.
 
-Fixes: 6071bd1aa13e ("netem: Segment GSO packets on enqueue")
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The culprit is the snd_timer_open() code checks the
+SNDRV_TIMER_IFLG_EXCLUSIVE flag with the common variable timeri.
+This variable is supposed to be the newly created instance, but we
+(ab-)used it for a temporary check before the actual creation of a
+timer instance.  After that point, there is another check for the max
+number of instances, and it bails out if over the threshold.  Before
+the refactoring above, it worked fine because the code returned
+directly from that point.  After the refactoring, however, it jumps to
+the unified error path that stores the timeri variable in return --
+even if it returns an error.  Unfortunately this stored value is kept
+in the caller side (snd_timer_user_tselect()) in tu->timeri.  This
+causes inconsistency later, as if the timer was successfully
+assigned.
+
+In this patch, we fix it by not re-using timeri variable but a
+temporary variable for testing the exclusive connection, so timeri
+remains NULL at that point.
+
+Fixes: 41672c0c24a6 ("ALSA: timer: Simplify error path in snd_timer_open()")
+Reported-and-tested-by: Tristan Madani <tristmd@gmail.com>
+Link: https://lore.kernel.org/r/20191106165547.23518-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/sched/sch_netem.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/core/timer.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/net/sched/sch_netem.c
-+++ b/net/sched/sch_netem.c
-@@ -599,6 +599,8 @@ finish_segs:
- 		}
- 		/* Parent qdiscs accounted for 1 skb of size @prev_len */
- 		qdisc_tree_reduce_backlog(sch, -(nb - 1), -(len - prev_len));
-+	} else if (!skb) {
-+		return NET_XMIT_DROP;
+--- a/sound/core/timer.c
++++ b/sound/core/timer.c
+@@ -297,11 +297,11 @@ int snd_timer_open(struct snd_timer_inst
+ 		goto unlock;
  	}
- 	return NET_XMIT_SUCCESS;
- }
+ 	if (!list_empty(&timer->open_list_head)) {
+-		timeri = list_entry(timer->open_list_head.next,
++		struct snd_timer_instance *t =
++			list_entry(timer->open_list_head.next,
+ 				    struct snd_timer_instance, open_list);
+-		if (timeri->flags & SNDRV_TIMER_IFLG_EXCLUSIVE) {
++		if (t->flags & SNDRV_TIMER_IFLG_EXCLUSIVE) {
+ 			err = -EBUSY;
+-			timeri = NULL;
+ 			goto unlock;
+ 		}
+ 	}
 
