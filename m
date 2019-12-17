@@ -2,153 +2,255 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2AEDC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5FEC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 935EA206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:16:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBBD52072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:17:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726275AbfLQIQx (ORCPT
+        id S1726487AbfLQIRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 03:16:53 -0500
-Received: from mx2.suse.de ([195.135.220.15]:60828 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725805AbfLQIQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 03:16:53 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D3A47ACD9;
-        Tue, 17 Dec 2019 08:16:50 +0000 (UTC)
-Subject: Re: [Xen-devel] [PATCH v10 2/4] xen/blkback: Squeeze page pools if a
- memory pressure is detected
-To:     SeongJae Park <sjpark@amazon.com>
-Cc:     SeongJae Park <sj38.park@gmail.com>, axboe@kernel.dk,
-        konrad.wilk@oracle.com, pdurrant@amazon.com,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        xen-devel@lists.xenproject.org, roger.pau@citrix.com
-References: <20191217075932.4516-1-sjpark@amazon.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <f9f686ce-aeca-0947-5b2b-91e1d0c183dd@suse.com>
-Date:   Tue, 17 Dec 2019 09:16:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 17 Dec 2019 03:17:51 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:53093 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbfLQIRv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 03:17:51 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ih839-0000yJ-68; Tue, 17 Dec 2019 09:17:47 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ih838-0002Ib-Cu; Tue, 17 Dec 2019 09:17:46 +0100
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>
+Cc:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-serial@vger.kernel.org, kernel@pengutronix.de
+Subject: [PATCH v2 3/3] leds: trigger: implement a tty trigger
+Date:   Tue, 17 Dec 2019 09:17:18 +0100
+Message-Id: <20191217081718.23807-4-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191217081718.23807-1-u.kleine-koenig@pengutronix.de>
+References: <20191217081718.23807-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20191217075932.4516-1-sjpark@amazon.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.12.19 08:59, SeongJae Park wrote:
-> On Tue, 17 Dec 2019 07:23:12 +0100 "Jürgen Groß" <jgross@suse.com> wrote:
-> 
->> On 16.12.19 20:48, SeongJae Park wrote:
->>> On on, 16 Dec 2019 17:23:44 +0100, Jürgen Groß wrote:
->>>
->>>> On 16.12.19 17:15, SeongJae Park wrote:
->>>>> On Mon, 16 Dec 2019 15:37:20 +0100 SeongJae Park <sjpark@amazon.com> wrote:
->>>>>
->>>>>> On Mon, 16 Dec 2019 13:45:25 +0100 SeongJae Park <sjpark@amazon.com> wrote:
->>>>>>
->>>>>>> From: SeongJae Park <sjpark@amazon.de>
->>>>>>>
->>>>> [...]
->>>>>>> --- a/drivers/block/xen-blkback/xenbus.c
->>>>>>> +++ b/drivers/block/xen-blkback/xenbus.c
->>>>>>> @@ -824,6 +824,24 @@ static void frontend_changed(struct xenbus_device *dev,
->>>>>>>     }
->>>>>>>     
->>>>>>>     
->>>>>>> +/* Once a memory pressure is detected, squeeze free page pools for a while. */
->>>>>>> +static unsigned int buffer_squeeze_duration_ms = 10;
->>>>>>> +module_param_named(buffer_squeeze_duration_ms,
->>>>>>> +		buffer_squeeze_duration_ms, int, 0644);
->>>>>>> +MODULE_PARM_DESC(buffer_squeeze_duration_ms,
->>>>>>> +"Duration in ms to squeeze pages buffer when a memory pressure is detected");
->>>>>>> +
->>>>>>> +/*
->>>>>>> + * Callback received when the memory pressure is detected.
->>>>>>> + */
->>>>>>> +static void reclaim_memory(struct xenbus_device *dev)
->>>>>>> +{
->>>>>>> +	struct backend_info *be = dev_get_drvdata(&dev->dev);
->>>>>>> +
->>>>>>> +	be->blkif->buffer_squeeze_end = jiffies +
->>>>>>> +		msecs_to_jiffies(buffer_squeeze_duration_ms);
->>>>>>
->>>>>> This callback might race with 'xen_blkbk_probe()'.  The race could result in
->>>>>> __NULL dereferencing__, as 'xen_blkbk_probe()' sets '->blkif' after it links
->>>>>> 'be' to the 'dev'.  Please _don't merge_ this patch now!
->>>>>>
->>>>>> I will do more test and share results.  Meanwhile, if you have any opinion,
->>>>>> please let me know.
->>>
->>> I reduced system memory and attached bunch of devices in short time so that
->>> memory pressure occurs while device attachments are ongoing.  Under this
->>> circumstance, I was able to see the race.
->>>
->>>>>
->>>>> Not only '->blkif', but 'be' itself also coule be a NULL.  As similar
->>>>> concurrency issues could be in other drivers in their way, I suggest to change
->>>>> the reclaim callback ('->reclaim_memory') to be called for each driver instead
->>>>> of each device.  Then, each driver could be able to deal with its concurrency
->>>>> issues by itself.
->>>>
->>>> Hmm, I don't like that. This would need to be changed back in case we
->>>> add per-guest quota.
->>>
->>> Extending this callback in that way would be still not too hard.  We could use
->>> the argument to the callback.  I would keep the argument of the callback to
->>> 'struct device *' as is, and will add a comment saying 'NULL' value of the
->>> argument means every devices.  As an example, xenbus would pass NULL-ending
->>> array of the device pointers that need to free its resources.
->>>
->>> After seeing this race, I am now also thinking it could be better to delegate
->>> detailed control of each device to its driver, as some drivers have some
->>> complicated and unique relation with its devices.
->>>
->>>>
->>>> Wouldn't a get_device() before calling the callback and a put_device()
->>>> afterwards avoid that problem?
->>>
->>> I didn't used the reference count manipulation operations because other similar
->>> parts also didn't.  But, if there is no implicit reference count guarantee, it
->>> seems those operations are indeed necessary.
->>>
->>> That said, as get/put operations only adjust the reference count, those will
->>> not make the callback to wait until the linking of the 'backend' and 'blkif' to
->>> the device (xen_blkbk_probe()) is finished.  Thus, the race could still happen.
->>> Or, am I missing something?
->>
->> No, I think we need a xenbus lock per device which will need to be
->> taken in xen_blkbk_probe(), xenbus_dev_remove() and while calling the
->> callback.
-> 
-> I also agree that locking should be used at last.  But, as each driver manages
-> its devices and resources in their way, it could have its unique race
-> conditions.  And, each unique race condition might have its unique efficient
-> way to synchronize it.  Therefore, I think the synchronization should be done
-> by each driver, not by xenbus and thus we should make the callback to be called
-> per-driver.
+Usage is as follows:
 
-xenbus controls creation and removing of devices, so applying locking
-at xenbus level is the right thing to do in order to avoid races with
-device removal.
+	myled=ledname
+	tty=ttyS0
 
-In case a backend has further synchronization requirements those have to
-be handled at backend level, of course.
+	echo tty > /sys/class/led/$myled/trigger
+	cat /sys/class/tty/$tty/dev > /sys/class/led/$myled/dev
 
-In the end you'll need the xenbus level locking anyway in order to avoid
-a race when the last backend specific device is just being removed when
-the callback is about to be called for that device. Or you'd need to
-call try_get_module() before calling into each backend...
+. When this new trigger is active it periodically checks the tty's
+statistics and when it changed since the last check the led is flashed
+once.
 
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/leds/trigger/Kconfig       |   7 ++
+ drivers/leds/trigger/Makefile      |   1 +
+ drivers/leds/trigger/ledtrig-tty.c | 146 +++++++++++++++++++++++++++++
+ 3 files changed, 154 insertions(+)
+ create mode 100644 drivers/leds/trigger/ledtrig-tty.c
 
-Juergen
+diff --git a/drivers/leds/trigger/Kconfig b/drivers/leds/trigger/Kconfig
+index ce9429ca6dde..40ff08c93f56 100644
+--- a/drivers/leds/trigger/Kconfig
++++ b/drivers/leds/trigger/Kconfig
+@@ -144,4 +144,11 @@ config LEDS_TRIGGER_AUDIO
+ 	  the audio mute and mic-mute changes.
+ 	  If unsure, say N
+ 
++config LEDS_TRIGGER_TTY
++	tristate "LED Trigger for TTY devices"
++	depends on TTY
++	help
++	  This allows LEDs to be controlled by activity on ttys which includes
++	  serial devices like /dev/ttyS0.
++
+ endif # LEDS_TRIGGERS
+diff --git a/drivers/leds/trigger/Makefile b/drivers/leds/trigger/Makefile
+index 733a83e2a718..25c4db97cdd4 100644
+--- a/drivers/leds/trigger/Makefile
++++ b/drivers/leds/trigger/Makefile
+@@ -15,3 +15,4 @@ obj-$(CONFIG_LEDS_TRIGGER_PANIC)	+= ledtrig-panic.o
+ obj-$(CONFIG_LEDS_TRIGGER_NETDEV)	+= ledtrig-netdev.o
+ obj-$(CONFIG_LEDS_TRIGGER_PATTERN)	+= ledtrig-pattern.o
+ obj-$(CONFIG_LEDS_TRIGGER_AUDIO)	+= ledtrig-audio.o
++obj-$(CONFIG_LEDS_TRIGGER_TTY)		+= ledtrig-tty.o
+diff --git a/drivers/leds/trigger/ledtrig-tty.c b/drivers/leds/trigger/ledtrig-tty.c
+new file mode 100644
+index 000000000000..3f3197366700
+--- /dev/null
++++ b/drivers/leds/trigger/ledtrig-tty.c
+@@ -0,0 +1,146 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/leds.h>
++#include <linux/module.h>
++#include <linux/slab.h>
++#include <linux/tty.h>
++#include <uapi/linux/serial.h>
++
++struct ledtrig_tty_data {
++	struct led_classdev *led_cdev;
++	struct delayed_work dwork;
++	struct tty_struct *tty;
++	dev_t device;
++	struct serial_icounter_struct icount;
++};
++
++static void ledtrig_tty_halt(struct ledtrig_tty_data *trigger_data)
++{
++	cancel_delayed_work_sync(&trigger_data->dwork);
++}
++
++static void ledtrig_tty_restart(struct ledtrig_tty_data *trigger_data)
++{
++	if (!trigger_data->tty)
++		return;
++
++	schedule_delayed_work(&trigger_data->dwork, 0);
++}
++
++static ssize_t dev_show(struct device *dev,
++			struct device_attribute *attr, char *buf)
++{
++	struct ledtrig_tty_data *trigger_data = led_trigger_get_drvdata(dev);
++	ssize_t len = 0;
++
++	if (trigger_data->tty)
++		len = sprintf(buf, "%u\n", trigger_data->device);
++
++	return len;
++}
++
++static ssize_t dev_store(struct device *dev,
++			 struct device_attribute *attr, const char *buf,
++			 size_t size)
++{
++	struct ledtrig_tty_data *trigger_data = led_trigger_get_drvdata(dev);
++	struct tty_struct *tty;
++	unsigned major, minor;
++	int ret;
++
++	if (size == 0 || (size == 1 && buf[0] == '\n')) {
++		tty = NULL;
++	} else {
++		ret = sscanf(buf, "%u:%u", &major, &minor);
++		if (ret < 2) {
++			dev_err(dev, "invalid value\n");
++			return -EINVAL;
++		}
++
++		tty = tty_kopen_shared(MKDEV(major, minor));
++		if (IS_ERR(tty)) {
++			dev_err(dev, "failed to open tty: %pe\n", tty);
++			return PTR_ERR(tty);
++		}
++	}
++
++	ledtrig_tty_halt(trigger_data);
++
++	tty_kref_put(trigger_data->tty);
++	trigger_data->tty = tty;
++	trigger_data->device = MKDEV(major, minor);
++
++	ledtrig_tty_restart(trigger_data);
++
++	return size;
++}
++static DEVICE_ATTR_RW(dev);
++
++static void ledtrig_tty_work(struct work_struct *work)
++{
++	struct ledtrig_tty_data *trigger_data =
++		container_of(work, struct ledtrig_tty_data, dwork.work);
++	struct serial_icounter_struct icount;
++	int ret;
++
++	if (!trigger_data->tty) {
++		led_set_brightness(trigger_data->led_cdev, LED_OFF);
++		return;
++	}
++
++	ret = tty_get_icount(trigger_data->tty, &icount);
++	if (icount.rx > trigger_data->icount.rx ||
++	    icount.tx > trigger_data->icount.tx) {
++		unsigned long delay_on = 100, delay_off = 100;
++
++		led_blink_set_oneshot(trigger_data->led_cdev,
++				      &delay_on, &delay_off, 0);
++
++		trigger_data->icount = icount;
++	}
++
++	schedule_delayed_work(&trigger_data->dwork, msecs_to_jiffies(100));
++}
++
++static struct attribute *ledtrig_tty_attrs[] = {
++	&dev_attr_dev.attr,
++	NULL
++};
++ATTRIBUTE_GROUPS(ledtrig_tty);
++
++static int ledtrig_tty_activate(struct led_classdev *led_cdev)
++{
++	struct ledtrig_tty_data *trigger_data;
++
++	trigger_data = kzalloc(sizeof(*trigger_data), GFP_KERNEL);
++	if (!trigger_data)
++		return -ENOMEM;
++
++	led_set_trigger_data(led_cdev, trigger_data);
++
++	INIT_DELAYED_WORK(&trigger_data->dwork, ledtrig_tty_work);
++	trigger_data->led_cdev = led_cdev;
++
++	return 0;
++}
++
++static void ledtrig_tty_deactivate(struct led_classdev *led_cdev)
++{
++	struct ledtrig_tty_data *trigger_data = led_get_trigger_data(led_cdev);
++
++	cancel_delayed_work_sync(&trigger_data->dwork);
++
++	kfree(trigger_data);
++}
++
++struct led_trigger ledtrig_tty = {
++	.name = "tty",
++	.activate = ledtrig_tty_activate,
++	.deactivate = ledtrig_tty_deactivate,
++	.groups = ledtrig_tty_groups,
++};
++module_led_trigger(ledtrig_tty);
++
++MODULE_AUTHOR("Uwe Kleine-König <u.kleine-koenig@pengutronix.de>");
++MODULE_DESCRIPTION("UART LED trigger");
++MODULE_LICENSE("GPL v2");
+-- 
+2.24.0
+
