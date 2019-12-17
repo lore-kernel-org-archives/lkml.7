@@ -7,41 +7,38 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 076C2C43603
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8911C2D0CD
 	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D59C121835
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 893A124685
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:39:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728236AbfLQMj4 (ORCPT
+        id S1728247AbfLQMj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:39:56 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55226 "EHLO
+        Tue, 17 Dec 2019 07:39:57 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55235 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727519AbfLQMj4 (ORCPT
+        with ESMTP id S1727975AbfLQMj5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 07:39:56 -0500
+        Tue, 17 Dec 2019 07:39:57 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ihC8l-0001nm-6A; Tue, 17 Dec 2019 13:39:51 +0100
+        id 1ihC8l-0001o6-L9; Tue, 17 Dec 2019 13:39:51 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 55FB31C2A3B;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id F35531C2A3E;
         Tue, 17 Dec 2019 13:39:50 +0100 (CET)
 Date:   Tue, 17 Dec 2019 12:39:50 -0000
-From:   "tip-bot2 for Sebastian Andrzej Siewior" <tip-bot2@linutronix.de>
+From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf/core: Add SRCU annotation for pmus list walk
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+Subject: [tip: perf/urgent] perf/x86: Fix potential out-of-bounds access
+Cc:     Meelis Roos <mroos@linux.ee>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191119121429.zhcubzdhm672zasg@linutronix.de>
-References: <20191119121429.zhcubzdhm672zasg@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <157658639017.30329.2861654231460722207.tip-bot2@tip-bot2>
+Message-ID: <157658639085.30329.2905901089064836333.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,43 +54,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     9f0bff1180efc9ea988fed3fd93da7647151ac8b
-Gitweb:        https://git.kernel.org/tip/9f0bff1180efc9ea988fed3fd93da7647151ac8b
-Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate:    Tue, 19 Nov 2019 13:14:29 +01:00
+Commit-ID:     1e69a0efc0bd0e02b8327e7186fbb4a81878ea0b
+Gitweb:        https://git.kernel.org/tip/1e69a0efc0bd0e02b8327e7186fbb4a81878ea0b
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Fri, 06 Dec 2019 12:50:16 +01:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
 CommitterDate: Tue, 17 Dec 2019 13:32:46 +01:00
 
-perf/core: Add SRCU annotation for pmus list walk
+perf/x86: Fix potential out-of-bounds access
 
-Since commit
-   28875945ba98d ("rcu: Add support for consolidated-RCU reader checking")
+UBSAN reported out-of-bound accesses for x86_pmu.event_map(), it's
+arguments should be < x86_pmu.max_events. Make sure all users observe
+this constraint.
 
-there is an additional check to ensure that a RCU related lock is held
-while the RCU list is iterated.
-This section holds the SRCU reader lock instead.
-
-Add annotation to list_for_each_entry_rcu() that pmus_srcu must be
-acquired during the list traversal.
-
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Reported-by: Meelis Roos <mroos@linux.ee>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Link: https://lkml.kernel.org/r/20191119121429.zhcubzdhm672zasg@linutronix.de
+Tested-by: Meelis Roos <mroos@linux.ee>
 ---
- kernel/events/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/events/core.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 4ff86d5..a1f8bde 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -10523,7 +10523,7 @@ again:
- 		goto unlock;
- 	}
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 9a89d98..84fe1be 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -1642,9 +1642,12 @@ static struct attribute_group x86_pmu_format_group __ro_after_init = {
  
--	list_for_each_entry_rcu(pmu, &pmus, entry) {
-+	list_for_each_entry_rcu(pmu, &pmus, entry, lockdep_is_held(&pmus_srcu)) {
- 		ret = perf_try_init_event(pmu, event);
- 		if (!ret)
- 			goto unlock;
+ ssize_t events_sysfs_show(struct device *dev, struct device_attribute *attr, char *page)
+ {
+-	struct perf_pmu_events_attr *pmu_attr = \
++	struct perf_pmu_events_attr *pmu_attr =
+ 		container_of(attr, struct perf_pmu_events_attr, attr);
+-	u64 config = x86_pmu.event_map(pmu_attr->id);
++	u64 config = 0;
++
++	if (pmu_attr->id < x86_pmu.max_events)
++		config = x86_pmu.event_map(pmu_attr->id);
+ 
+ 	/* string trumps id */
+ 	if (pmu_attr->event_str)
+@@ -1713,6 +1716,9 @@ is_visible(struct kobject *kobj, struct attribute *attr, int idx)
+ {
+ 	struct perf_pmu_events_attr *pmu_attr;
+ 
++	if (idx >= x86_pmu.max_events)
++		return 0;
++
+ 	pmu_attr = container_of(attr, struct perf_pmu_events_attr, attr.attr);
+ 	/* str trumps id */
+ 	return pmu_attr->event_str || x86_pmu.event_map(idx) ? attr->mode : 0;
