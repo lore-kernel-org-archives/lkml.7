@@ -2,110 +2,427 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF240C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7737C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94D202176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65A252176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:16:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="m74aC3Vp"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p5KnOfjN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbfLQXNk (ORCPT
+        id S1726494AbfLQXQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 18:13:40 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:57004 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725886AbfLQXNk (ORCPT
+        Tue, 17 Dec 2019 18:16:22 -0500
+Received: from mail-pj1-f73.google.com ([209.85.216.73]:36428 "EHLO
+        mail-pj1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725946AbfLQXQW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 18:13:40 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 30CFF9BF;
-        Wed, 18 Dec 2019 00:13:37 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1576624417;
-        bh=loGlm2GALdXkOP7aBKcUxaV4CZCsrT/O78e9GgH3Fbk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=m74aC3VpDStlxe4k7vlEhV8fmJzy7FKpyxdq71JexpbnciQhui4m2BiVDxmN30UiT
-         Igf/piW79jze0Z/hcNWc0zmZm4VmLF5B0u9JFGw3FO8bhCVU4/JLNpbCQTVvqeTHEl
-         P/LIgmJjRHryaX1dldKgyLGNOGMudqcASE7+Rs2c=
-Date:   Wed, 18 Dec 2019 01:13:26 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        ebiharaml@si-linux.co.jp
-Subject: Re: [PATCH v6 0/6] Add dual-LVDS panel support to EK874
-Message-ID: <20191217231326.GG4874@pendragon.ideasonboard.com>
-References: <1576590361-28244-1-git-send-email-fabrizio.castro@bp.renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1576590361-28244-1-git-send-email-fabrizio.castro@bp.renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 17 Dec 2019 18:16:22 -0500
+Received: by mail-pj1-f73.google.com with SMTP id m61so747164pjb.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 15:16:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=fmLWS4dpNb8jVS/5rqZ+CA53CnOvDXqWOpoeGQV32Ag=;
+        b=p5KnOfjN2Kg63lvMZFKcPGppbKabQqibMQRoKLLiUoAAN1evAjms2mnlhpjdXb9Dxc
+         MstH/ZY7Azx+odQEaPkxQZjcTs9s/rYK6UEIN1TYXatKGZy8AOoWVJDzMTInk5gAUPo+
+         WPoIphgmUCopcaI1kF22ByxXHlNqUvygiPaEjShY18ATbgICW/zw4eYXrafHsEYrrjjb
+         4aFUHm2jPzAbhn3Kp91g39LezIXwFWDM6LYP0b1S1Zm81pi9Z9iKtbkwQVfQHhq/Hxhk
+         X41fe0U3UYcaBCZfOHsGVJpYbl9eWfWeZLfkPK4xDW4wNL5raypfGuSTqJBjT6M8kMyR
+         UjKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=fmLWS4dpNb8jVS/5rqZ+CA53CnOvDXqWOpoeGQV32Ag=;
+        b=FHOzs+pNONxCSYw1KY3gApxVVlVxOQfm3TmcnZN0L0UiFnIkZaF1RzIReydHfoolSn
+         WoYLV414x1b+JDxOmIFop2RgboBn/bcpLK/sxzviQKpNnXurHT1L9havhCmdDEZWFybZ
+         61MDccbHL6IPv+x8l1jD7tJiVLlyf56ZhnPCPHawrHUMUyKabTzm99TaDN78GCHTYMuW
+         6QldoAImS8HibRAxYfIlbkLsE3z9Tw5kb702zVy+3CJH6g49W3jQ3d1PkIMS7jyhmrqQ
+         tKgvfawkoV8kkydhtRzEiV/r4DOVPqycCjrJx1F3SNYw7tUP1QeTD+min0Vzv7aF1EzZ
+         vKmA==
+X-Gm-Message-State: APjAAAWk2DLp2wcF3zOlsyPergb8uFJhQtkuVeCKpazaAFhLnYO8UeOt
+        RmCikZV70DhOYbF91AvIK8BEFnEHaQYLDmc/9Q==
+X-Google-Smtp-Source: APXvYqy6LGLg4J345RdtxC9kXceokOdVJlSCDkT1URc+HdngUscxhaAs3i4vQ4BAaSQqdbyj5g7f5AwCbAXWRkkDrw==
+X-Received: by 2002:a63:31d0:: with SMTP id x199mr28553183pgx.286.1576624579364;
+ Tue, 17 Dec 2019 15:16:19 -0800 (PST)
+Date:   Tue, 17 Dec 2019 15:16:08 -0800
+Message-Id: <20191217231615.164161-1-almasrymina@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+Subject: [PATCH v9 1/8] hugetlb_cgroup: Add hugetlb_cgroup reservation counter
+From:   Mina Almasry <almasrymina@google.com>
+To:     mike.kravetz@oracle.com
+Cc:     shuah@kernel.org, almasrymina@google.com, rientjes@google.com,
+        shakeelb@google.com, gthelen@google.com, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org,
+        aneesh.kumar@linux.vnet.ibm.com, mkoutny@suse.com,
+        Hillf Danton <hdanton@sina.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fabrizio,
+These counters will track hugetlb reservations rather than hugetlb
+memory faulted in. This patch only adds the counter, following patches
+add the charging and uncharging of the counter.
 
-Thank you for the patch.
+This is patch 1 of an 8 patch series.
 
-On Tue, Dec 17, 2019 at 01:45:55PM +0000, Fabrizio Castro wrote:
-> Dear All,
-> 
-> this series adds support for dual-LVDS panel IDK-2121WR
-> from Advantech:
-> https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model-IDK-2121WR-K2FHA2E.htm
-> 
-> V6 reworks patch "drm: rcar-du: lvds: Allow for even and odd pixels swap",
-> and rebases the series on top of patch:
-> https://patchwork.kernel.org/patch/11295991/
+Problem:
+Currently tasks attempting to allocate more hugetlb memory than is available get
+a failure at mmap/shmget time. This is thanks to Hugetlbfs Reservations [1].
+However, if a task attempts to allocate hugetlb memory only more than its
+hugetlb_cgroup limit allows, the kernel will allow the mmap/shmget call,
+but will SIGBUS the task when it attempts to fault the memory in.
 
-I've taken patch 1/6 to 4/6 in my tree. I expect Geert to take 6/6. For
-5/6, I'll give Rob a chance to review the patch. Sam, could you handle
-it afterwards ?
+We have developers interested in using hugetlb_cgroups, and they have expressed
+dissatisfaction regarding this behavior. We'd like to improve this
+behavior such that tasks violating the hugetlb_cgroup limits get an error on
+mmap/shmget time, rather than getting SIGBUS'd when they try to fault
+the excess memory in.
 
-> Fabrizio Castro (6):
->   drm: of: Add drm_of_lvds_get_dual_link_pixel_order
->   drm: rcar-du: lvds: Improve identification of panels
->   drm: rcar-du: lvds: Get dual link configuration from DT
->   drm: rcar-du: lvds: Allow for even and odd pixels swap
->   dt-bindings: display: Add idk-2121wr binding
->   arm64: dts: renesas: Add EK874 board with idk-2121wr display support
-> 
->  .../display/panel/advantech,idk-2121wr.yaml        | 128 +++++++++++++++
->  arch/arm64/boot/dts/renesas/Makefile               |   3 +-
->  .../boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts | 116 +++++++++++++
->  drivers/gpu/drm/drm_of.c                           | 116 +++++++++++++
->  drivers/gpu/drm/rcar-du/rcar_lvds.c                | 180 ++++++++++++---------
->  include/drm/drm_of.h                               |  20 +++
->  6 files changed, 483 insertions(+), 80 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
->  create mode 100644 arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts
+The underlying problem is that today's hugetlb_cgroup accounting happens
+at hugetlb memory *fault* time, rather than at *reservation* time.
+Thus, enforcing the hugetlb_cgroup limit only happens at fault time, and
+the offending task gets SIGBUS'd.
 
--- 
-Regards,
+Proposed Solution:
+A new page counter named hugetlb.xMB.reservation_[limit|usage]_in_bytes. This
+counter has slightly different semantics than
+hugetlb.xMB.[limit|usage]_in_bytes:
 
-Laurent Pinchart
+- While usage_in_bytes tracks all *faulted* hugetlb memory,
+reservation_usage_in_bytes tracks all *reserved* hugetlb memory and
+hugetlb memory faulted in without a prior reservation.
+
+- If a task attempts to reserve more memory than limit_in_bytes allows,
+the kernel will allow it to do so. But if a task attempts to reserve
+more memory than reservation_limit_in_bytes, the kernel will fail this
+reservation.
+
+This proposal is implemented in this patch series, with tests to verify
+functionality and show the usage. We also added cgroup-v2 support to
+hugetlb_cgroup so that the new use cases can be extended to v2.
+
+Alternatives considered:
+1. A new cgroup, instead of only a new page_counter attached to
+   the existing hugetlb_cgroup. Adding a new cgroup seemed like a lot of code
+   duplication with hugetlb_cgroup. Keeping hugetlb related page counters under
+   hugetlb_cgroup seemed cleaner as well.
+
+2. Instead of adding a new counter, we considered adding a sysctl that modifies
+   the behavior of hugetlb.xMB.[limit|usage]_in_bytes, to do accounting at
+   reservation time rather than fault time. Adding a new page_counter seems
+   better as userspace could, if it wants, choose to enforce different cgroups
+   differently: one via limit_in_bytes, and another via
+   reservation_limit_in_bytes. This could be very useful if you're
+   transitioning how hugetlb memory is partitioned on your system one
+   cgroup at a time, for example. Also, someone may find usage for both
+   limit_in_bytes and reservation_limit_in_bytes concurrently, and this
+   approach gives them the option to do so.
+
+Testing:
+- Added tests passing.
+- Used libhugetlbfs for regression testing.
+
+[1]: https://www.kernel.org/doc/html/latest/vm/hugetlbfs_reserv.html
+
+Signed-off-by: Mina Almasry <almasrymina@google.com>
+Acked-by: Hillf Danton <hdanton@sina.com>
+
+---
+ include/linux/hugetlb.h |   4 +-
+ mm/hugetlb_cgroup.c     | 116 +++++++++++++++++++++++++++++++++++-----
+ 2 files changed, 106 insertions(+), 14 deletions(-)
+
+diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+index 1e897e4168ac1..dea6143aa0685 100644
+--- a/include/linux/hugetlb.h
++++ b/include/linux/hugetlb.h
+@@ -432,8 +432,8 @@ struct hstate {
+ 	unsigned int surplus_huge_pages_node[MAX_NUMNODES];
+ #ifdef CONFIG_CGROUP_HUGETLB
+ 	/* cgroup control files */
+-	struct cftype cgroup_files_dfl[5];
+-	struct cftype cgroup_files_legacy[5];
++	struct cftype cgroup_files_dfl[7];
++	struct cftype cgroup_files_legacy[9];
+ #endif
+ 	char name[HSTATE_NAME_LEN];
+ };
+diff --git a/mm/hugetlb_cgroup.c b/mm/hugetlb_cgroup.c
+index e434b05416c68..35415af9ed26f 100644
+--- a/mm/hugetlb_cgroup.c
++++ b/mm/hugetlb_cgroup.c
+@@ -36,6 +36,11 @@ struct hugetlb_cgroup {
+ 	 */
+ 	struct page_counter hugepage[HUGE_MAX_HSTATE];
+
++	/*
++	 * the counter to account for hugepage reservations from hugetlb.
++	 */
++	struct page_counter reserved_hugepage[HUGE_MAX_HSTATE];
++
+ 	atomic_long_t events[HUGE_MAX_HSTATE][HUGETLB_NR_MEMORY_EVENTS];
+ 	atomic_long_t events_local[HUGE_MAX_HSTATE][HUGETLB_NR_MEMORY_EVENTS];
+
+@@ -55,6 +60,14 @@ struct hugetlb_cgroup {
+
+ static struct hugetlb_cgroup *root_h_cgroup __read_mostly;
+
++static inline struct page_counter *
++hugetlb_cgroup_get_counter(struct hugetlb_cgroup *h_cg, int idx, bool reserved)
++{
++	if (reserved)
++		return &h_cg->reserved_hugepage[idx];
++	return &h_cg->hugepage[idx];
++}
++
+ static inline
+ struct hugetlb_cgroup *hugetlb_cgroup_from_css(struct cgroup_subsys_state *s)
+ {
+@@ -295,28 +308,42 @@ void hugetlb_cgroup_uncharge_cgroup(int idx, unsigned long nr_pages,
+
+ enum {
+ 	RES_USAGE,
++	RES_RESERVATION_USAGE,
+ 	RES_LIMIT,
++	RES_RESERVATION_LIMIT,
+ 	RES_MAX_USAGE,
++	RES_RESERVATION_MAX_USAGE,
+ 	RES_FAILCNT,
++	RES_RESERVATION_FAILCNT,
+ };
+
+ static u64 hugetlb_cgroup_read_u64(struct cgroup_subsys_state *css,
+ 				   struct cftype *cft)
+ {
+ 	struct page_counter *counter;
++	struct page_counter *reserved_counter;
+ 	struct hugetlb_cgroup *h_cg = hugetlb_cgroup_from_css(css);
+
+ 	counter = &h_cg->hugepage[MEMFILE_IDX(cft->private)];
++	reserved_counter = &h_cg->reserved_hugepage[MEMFILE_IDX(cft->private)];
+
+ 	switch (MEMFILE_ATTR(cft->private)) {
+ 	case RES_USAGE:
+ 		return (u64)page_counter_read(counter) * PAGE_SIZE;
++	case RES_RESERVATION_USAGE:
++		return (u64)page_counter_read(reserved_counter) * PAGE_SIZE;
+ 	case RES_LIMIT:
+ 		return (u64)counter->max * PAGE_SIZE;
++	case RES_RESERVATION_LIMIT:
++		return (u64)reserved_counter->max * PAGE_SIZE;
+ 	case RES_MAX_USAGE:
+ 		return (u64)counter->watermark * PAGE_SIZE;
++	case RES_RESERVATION_MAX_USAGE:
++		return (u64)reserved_counter->watermark * PAGE_SIZE;
+ 	case RES_FAILCNT:
+ 		return counter->failcnt;
++	case RES_RESERVATION_FAILCNT:
++		return reserved_counter->failcnt;
+ 	default:
+ 		BUG();
+ 	}
+@@ -338,10 +365,16 @@ static int hugetlb_cgroup_read_u64_max(struct seq_file *seq, void *v)
+ 			   1 << huge_page_order(&hstates[idx]));
+
+ 	switch (MEMFILE_ATTR(cft->private)) {
++	case RES_RESERVATION_USAGE:
++		counter = &h_cg->reserved_hugepage[idx];
++		/* Fall through. */
+ 	case RES_USAGE:
+ 		val = (u64)page_counter_read(counter);
+ 		seq_printf(seq, "%llu\n", val * PAGE_SIZE);
+ 		break;
++	case RES_RESERVATION_LIMIT:
++		counter = &h_cg->reserved_hugepage[idx];
++		/* Fall through. */
+ 	case RES_LIMIT:
+ 		val = (u64)counter->max;
+ 		if (val == limit)
+@@ -365,6 +398,7 @@ static ssize_t hugetlb_cgroup_write(struct kernfs_open_file *of,
+ 	int ret, idx;
+ 	unsigned long nr_pages;
+ 	struct hugetlb_cgroup *h_cg = hugetlb_cgroup_from_css(of_css(of));
++	bool reserved = false;
+
+ 	if (hugetlb_cgroup_is_root(h_cg)) /* Can't set limit on root */
+ 		return -EINVAL;
+@@ -378,9 +412,14 @@ static ssize_t hugetlb_cgroup_write(struct kernfs_open_file *of,
+ 	nr_pages = round_down(nr_pages, 1 << huge_page_order(&hstates[idx]));
+
+ 	switch (MEMFILE_ATTR(of_cft(of)->private)) {
++	case RES_RESERVATION_LIMIT:
++		reserved = true;
++		/* Fall through. */
+ 	case RES_LIMIT:
+ 		mutex_lock(&hugetlb_limit_mutex);
+-		ret = page_counter_set_max(&h_cg->hugepage[idx], nr_pages);
++		ret = page_counter_set_max(hugetlb_cgroup_get_counter(h_cg, idx,
++								      reserved),
++					   nr_pages);
+ 		mutex_unlock(&hugetlb_limit_mutex);
+ 		break;
+ 	default:
+@@ -406,18 +445,26 @@ static ssize_t hugetlb_cgroup_reset(struct kernfs_open_file *of,
+ 				    char *buf, size_t nbytes, loff_t off)
+ {
+ 	int ret = 0;
+-	struct page_counter *counter;
++	struct page_counter *counter, *reserved_counter;
+ 	struct hugetlb_cgroup *h_cg = hugetlb_cgroup_from_css(of_css(of));
+
+ 	counter = &h_cg->hugepage[MEMFILE_IDX(of_cft(of)->private)];
++	reserved_counter =
++		&h_cg->reserved_hugepage[MEMFILE_IDX(of_cft(of)->private)];
+
+ 	switch (MEMFILE_ATTR(of_cft(of)->private)) {
+ 	case RES_MAX_USAGE:
+ 		page_counter_reset_watermark(counter);
+ 		break;
++	case RES_RESERVATION_MAX_USAGE:
++		page_counter_reset_watermark(reserved_counter);
++		break;
+ 	case RES_FAILCNT:
+ 		counter->failcnt = 0;
+ 		break;
++	case RES_RESERVATION_FAILCNT:
++		reserved_counter->failcnt = 0;
++		break;
+ 	default:
+ 		ret = -EINVAL;
+ 		break;
+@@ -472,7 +519,7 @@ static void __init __hugetlb_cgroup_file_dfl_init(int idx)
+ 	struct hstate *h = &hstates[idx];
+
+ 	/* format the size */
+-	mem_fmt(buf, 32, huge_page_size(h));
++	mem_fmt(buf, sizeof(buf), huge_page_size(h));
+
+ 	/* Add the limit file */
+ 	cft = &h->cgroup_files_dfl[0];
+@@ -482,15 +529,30 @@ static void __init __hugetlb_cgroup_file_dfl_init(int idx)
+ 	cft->write = hugetlb_cgroup_write_dfl;
+ 	cft->flags = CFTYPE_NOT_ON_ROOT;
+
+-	/* Add the current usage file */
++	/* Add the reservation limit file */
+ 	cft = &h->cgroup_files_dfl[1];
++	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.reservation_max", buf);
++	cft->private = MEMFILE_PRIVATE(idx, RES_RESERVATION_LIMIT);
++	cft->seq_show = hugetlb_cgroup_read_u64_max;
++	cft->write = hugetlb_cgroup_write_dfl;
++	cft->flags = CFTYPE_NOT_ON_ROOT;
++
++	/* Add the current usage file */
++	cft = &h->cgroup_files_dfl[2];
+ 	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.current", buf);
+ 	cft->private = MEMFILE_PRIVATE(idx, RES_USAGE);
+ 	cft->seq_show = hugetlb_cgroup_read_u64_max;
+ 	cft->flags = CFTYPE_NOT_ON_ROOT;
+
++	/* Add the current reservation usage file */
++	cft = &h->cgroup_files_dfl[3];
++	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.reservation_current", buf);
++	cft->private = MEMFILE_PRIVATE(idx, RES_RESERVATION_USAGE);
++	cft->seq_show = hugetlb_cgroup_read_u64_max;
++	cft->flags = CFTYPE_NOT_ON_ROOT;
++
+ 	/* Add the events file */
+-	cft = &h->cgroup_files_dfl[2];
++	cft = &h->cgroup_files_dfl[4];
+ 	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.events", buf);
+ 	cft->private = MEMFILE_PRIVATE(idx, 0);
+ 	cft->seq_show = hugetlb_events_show;
+@@ -498,7 +560,7 @@ static void __init __hugetlb_cgroup_file_dfl_init(int idx)
+ 	cft->flags = CFTYPE_NOT_ON_ROOT;
+
+ 	/* Add the events.local file */
+-	cft = &h->cgroup_files_dfl[3];
++	cft = &h->cgroup_files_dfl[5];
+ 	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.events.local", buf);
+ 	cft->private = MEMFILE_PRIVATE(idx, 0);
+ 	cft->seq_show = hugetlb_events_local_show;
+@@ -507,7 +569,7 @@ static void __init __hugetlb_cgroup_file_dfl_init(int idx)
+ 	cft->flags = CFTYPE_NOT_ON_ROOT;
+
+ 	/* NULL terminate the last cft */
+-	cft = &h->cgroup_files_dfl[4];
++	cft = &h->cgroup_files_dfl[6];
+ 	memset(cft, 0, sizeof(*cft));
+
+ 	WARN_ON(cgroup_add_dfl_cftypes(&hugetlb_cgrp_subsys,
+@@ -530,28 +592,58 @@ static void __init __hugetlb_cgroup_file_legacy_init(int idx)
+ 	cft->read_u64 = hugetlb_cgroup_read_u64;
+ 	cft->write = hugetlb_cgroup_write_legacy;
+
+-	/* Add the usage file */
++	/* Add the reservation limit file */
+ 	cft = &h->cgroup_files_legacy[1];
++	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.reservation_limit_in_bytes",
++		 buf);
++	cft->private = MEMFILE_PRIVATE(idx, RES_RESERVATION_LIMIT);
++	cft->read_u64 = hugetlb_cgroup_read_u64;
++	cft->write = hugetlb_cgroup_write_legacy;
++
++	/* Add the usage file */
++	cft = &h->cgroup_files_legacy[2];
+ 	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.usage_in_bytes", buf);
+ 	cft->private = MEMFILE_PRIVATE(idx, RES_USAGE);
+ 	cft->read_u64 = hugetlb_cgroup_read_u64;
+
++	/* Add the reservation usage file */
++	cft = &h->cgroup_files_legacy[3];
++	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.reservation_usage_in_bytes",
++		 buf);
++	cft->private = MEMFILE_PRIVATE(idx, RES_RESERVATION_USAGE);
++	cft->read_u64 = hugetlb_cgroup_read_u64;
++
+ 	/* Add the MAX usage file */
+-	cft = &h->cgroup_files_legacy[2];
++	cft = &h->cgroup_files_legacy[4];
+ 	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.max_usage_in_bytes", buf);
+ 	cft->private = MEMFILE_PRIVATE(idx, RES_MAX_USAGE);
+ 	cft->write = hugetlb_cgroup_reset;
+ 	cft->read_u64 = hugetlb_cgroup_read_u64;
+
++	/* Add the MAX reservation usage file */
++	cft = &h->cgroup_files_legacy[5];
++	snprintf(cft->name, MAX_CFTYPE_NAME,
++		 "%s.reservation_max_usage_in_bytes", buf);
++	cft->private = MEMFILE_PRIVATE(idx, RES_RESERVATION_MAX_USAGE);
++	cft->write = hugetlb_cgroup_reset;
++	cft->read_u64 = hugetlb_cgroup_read_u64;
++
+ 	/* Add the failcntfile */
+-	cft = &h->cgroup_files_legacy[3];
++	cft = &h->cgroup_files_legacy[6];
+ 	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.failcnt", buf);
+-	cft->private  = MEMFILE_PRIVATE(idx, RES_FAILCNT);
++	cft->private = MEMFILE_PRIVATE(idx, RES_FAILCNT);
++	cft->write = hugetlb_cgroup_reset;
++	cft->read_u64 = hugetlb_cgroup_read_u64;
++
++	/* Add the reservation failcntfile */
++	cft = &h->cgroup_files_legacy[7];
++	snprintf(cft->name, MAX_CFTYPE_NAME, "%s.reservation_failcnt", buf);
++	cft->private = MEMFILE_PRIVATE(idx, RES_RESERVATION_FAILCNT);
+ 	cft->write = hugetlb_cgroup_reset;
+ 	cft->read_u64 = hugetlb_cgroup_read_u64;
+
+ 	/* NULL terminate the last cft */
+-	cft = &h->cgroup_files_legacy[4];
++	cft = &h->cgroup_files_legacy[8];
+ 	memset(cft, 0, sizeof(*cft));
+
+ 	WARN_ON(cgroup_add_legacy_cftypes(&hugetlb_cgrp_subsys,
+--
+2.24.1.735.g03f4e72817-goog
