@@ -2,131 +2,152 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC45C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:35:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A394C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03E8321739
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:35:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12D44207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:37:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qa6ECd+J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbfLQIfq (ORCPT
+        id S1726633AbfLQIg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 03:35:46 -0500
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:46783 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726520AbfLQIfp (ORCPT
+        Tue, 17 Dec 2019 03:36:59 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:41675 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbfLQIg6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 03:35:45 -0500
-Received: from [37.163.141.23] (port=40521 helo=[192.168.43.3])
-        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1ih8KT-0002cv-Fc; Tue, 17 Dec 2019 09:35:41 +0100
-Subject: Re: [PATCH 07/10] i2c: Add driver for AD242x bus controller
-To:     Daniel Mack <daniel@zonque.org>, Wolfram Sang <wsa@the-dreams.de>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        broonie@kernel.org, lee.jones@linaro.org, lars@metafoo.de,
-        pascal.huerst@gmail.com
-References: <20191209183511.3576038-1-daniel@zonque.org>
- <20191209183511.3576038-9-daniel@zonque.org>
- <64adf5d7-754a-f1da-aa9b-11579c5a2780@lucaceresoli.net>
- <20191212163315.GA3932@kunai>
- <482316ef-775a-cb7b-015e-e00463503e6b@zonque.org>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <4f2e1332-eac3-e54d-5de8-b84a76cb1a34@lucaceresoli.net>
-Date:   Tue, 17 Dec 2019 09:35:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 17 Dec 2019 03:36:58 -0500
+Received: by mail-qk1-f195.google.com with SMTP id x129so141942qke.8
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 00:36:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mbVfzTZcn3hSbLHjEmH7XZDjdG326YJ/AJHbF11uFvQ=;
+        b=qa6ECd+JDm1z6s1gjbpEd22S+ojuuw8S9puxlRQdrmHhabYyQja5qHCOCyj381FSG4
+         m9y9AJ9tfOzIh0HwUJd8N8L+qG+tHHvjedslcYJdUVloAiETiJIJvG3EH6+KhdbMJzkh
+         XFDsAMsWSEg2uZQC8oeBjuMN0xH2obKG5c49BFfbPOKeVmweT46DglAd08yao9EfYl/L
+         1Zy2Yfi3hEaxbUswl90dmqjzTl3j6ZG4OXN6zkDd2PvbVvxw1og1EngoJjh917VcuYxU
+         kqurn0j9OuGk8UjM4i/rxoO8OhTp/nGG+NAkMfWgmp9gte0F012GtWTwndT/HcWSB+ko
+         z0xA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mbVfzTZcn3hSbLHjEmH7XZDjdG326YJ/AJHbF11uFvQ=;
+        b=edoW4RUMaegzuDq5AlxmCPGAKHcbjjAv79Q1ziLQNro97hHssSkNu/+VKKXmp59E/O
+         izoU9LYIRVbvdTA6Wyl/6HoNIwwDPhyli3cERIxVTKbEsFB4E7lg/BLBaTVRAcJRwzZF
+         urbh4a0i9C7D+O8i32YITa1SfUI0O6oKilJZJIzEP/czDkTi4NlO5Vxw3QHBqC/TReXp
+         ZaLPGb2pFWVBlYCBha+vZLtmyQJq4n/Xwk75FWubkm0fXCPbNWBXIRJkP5j5Wwf5c6sH
+         0S01/7Q+bHVHDkN6yWo+k5aVKwRQcY7rSLiz0EQxaxuQNHt47C4oYliKPKB9Z5VXxf26
+         W77Q==
+X-Gm-Message-State: APjAAAW7GNRpnMdt+xOH9eFLvXbC2kEkDhiPzQxwi/pvvV1tCdUC7y2k
+        1q6oEw7qqtJ0uvXhs7ZHHmUGtc/3KEgVWOK8EajtaQ==
+X-Google-Smtp-Source: APXvYqwMrU+6JevF5OMgLsyF5Ym+c6BW+KDr+ndyJmGhamtDLe9VN/a2g5bRv//EPoX9J6ifQ229wfuCrAZCDiRe6tA=
+X-Received: by 2002:ae9:eb48:: with SMTP id b69mr3679145qkg.43.1576571815571;
+ Tue, 17 Dec 2019 00:36:55 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <482316ef-775a-cb7b-015e-e00463503e6b@zonque.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+References: <20191216095955.9886-1-penguin-kernel@I-love.SAKURA.ne.jp>
+ <20191216114636.GB1515069@kroah.com> <ce36371b-0ca6-5819-2604-65627ce58fc8@i-love.sakura.ne.jp>
+ <20191216201834.GA785904@mit.edu> <46e8f6b3-46ac-6600-ba40-9545b7e44016@i-love.sakura.ne.jp>
+In-Reply-To: <46e8f6b3-46ac-6600-ba40-9545b7e44016@i-love.sakura.ne.jp>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 17 Dec 2019 09:36:43 +0100
+Message-ID: <CACT4Y+ZLaR=GR2nssb_buGC0ULNpQW6jvX0p8NAE-vReDY5fPA@mail.gmail.com>
+Subject: Re: [PATCH] kconfig: Add kernel config option for fuzz testing.
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Andi Kleen <ak@linux.intel.com>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jiri Slaby <jslaby@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+On Mon, Dec 16, 2019 at 10:07 PM Tetsuo Handa
+<penguin-kernel@i-love.sakura.ne.jp> wrote:
+>
+> On 2019/12/17 5:18, Theodore Y. Ts'o wrote:
+> >> this case was too hard to blacklist, as explained at
+> >> https://lore.kernel.org/lkml/4d1a4b51-999b-63c6-5ce3-a704013cecb6@i-love.sakura.ne.jp/ .
+> >> syz_execute_func() can find deeper bug by executing arbitrary binary code, but
+> >> we cannot blacklist specific syscalls/arguments for syz_execute_func() testcases.
+> >> Unless we guard on the kernel side, we won't be able to re-enable syz_execute_func()
+> >> testcases.
+> >
+> > I looked at the reference, but I didn't see the explanation in the
+> > above link about why it was "too hard to blacklist".  In fact, it
+> > looks like a bit earlier in the thread, Dmitry stated that adding this
+> > find of blacklist "is not hard"?
+> >
+> > https://lore.kernel.org/lkml/CACT4Y+Z_+H09iOPzSzJfs=_D=dczk22gL02FjuZ6HXO+p0kRyA@mail.gmail.com/
+> >
+>
+> That thread handled two bugs which disabled console output.
+>
+> The former bug (March 2019) was that fuzzer was calling syslog(SYSLOG_ACTION_CONSOLE_LEVEL) and
+> was fixed by blacklisting syslog(SYSLOG_ACTION_CONSOLE_LEVEL). This case was easy to blacklist.
+>
+> The latter bug (May 2019) was that fuzzer was calling binary code (via syz_execute_func()) which
+> emdebbed a system call that changes console loglevel. Since it was too difficult to blacklist,
+> syzkaller gave up use of syz_execute_func().
 
-On 15/12/19 21:27, Daniel Mack wrote:
-> Hi,
-> 
-> Thanks for the review!
-> 
-> On 12/12/2019 5:33 pm, Wolfram Sang wrote:
->> Hi Luca,
->>
->> thanks for the review!
->>
->>> good, but I think there's a problem in this function. A "normal"
->>> master_xfer function issues a repeated start between one msg and the
->>> next one, at least in the typical case where all msgs have the same
->>> slave address. Your implementation breaks repeated start. At first sight
->>> we might need more complex code here to coalesce all consecutive msgs
->>> with the same address into a single i2c_transfer() call.
->>
->> Note that it is by far the standard case that all messages in a transfer
->> have the same client address (99,999%?). But technically, this is not a
->> requirement and the repeated start on the bus is totally independent of
->> the addresses used. It is just a master wanting to send without being
->> interrupted by another master.
-> 
-> I'm not quite sure I understand.
-> 
-> Let's assume the following setup. An i2c client (some driver code) is
-> sending a list of messages to the a2b xfer function, which in turn is
-> logically connected to a 'real' i2c bus master that'll put the data on
-> the wire.
-> 
-> The a2b code has to tell the 'master node' the final destination of the
-> payload by programming registers on its primary i2c address, and then
-> forwards the messages to its secondary i2c address. The layout of the
-> messages don't change, and neither do the flags; i2c messages are being
-> sent as i2c messages, except their addresses are changed, a bit like NAT
-> in networking. That procedure is described on page 3-4 of the TRM,
-> "Remote Peripheral I2C Accesses".
-> 
-> The 'real' i2c master that handles the hardware bus is responsible for
-> adding start conditions, and as the messages as such are untouched, I
-> believe it should do the right thing. The code in my xfer functions
-> merely suppresses reprogramming remote addresses by remembering the last
-> one that was used, but that is independent of the start conditions on
-> the wire.
 
-My concern is not about the start condition, it's about the *repeated*
-start condition.
+Yes, what Tetsuo says. Only syscall numbers and top-level arguments to
+syscalls are easy to filter out. When indirect memory is passed to
+kernel or (fd,ioctl) pairs are involved it boils down to solving the
+halting problem.
 
-The first question is whether the A2B chips can do it. What if the host
-processor sets a slave chip address and then issues two messages
-separated by a repeated start condition? Will the slave transceiver emit
-a repeated start condition too?
+There are some nice benefits of doing this in some form in kernel:
+1. It makes reported crashes more trustworthy for kernel developers.
+Currently you receive a crash and you don't know if it's a bug, or
+working as intended (as turned out with serial console). It also
+happened with syzkaller learning interesting ways to reach /dev/mem,
+which was directly prohibited, but it managed to reach it via some
+mounts and corrupted file names. Disabling the DEVMEM config in the
+end reliably solved it once and for all.
 
-If the answer is "yes", then the issue moves to the driver code. A
-master xfer function receives a set of messages that are normally
-emitted with a repeated start between each other. But ad242x_i2c_xfer()
-splits the msgs and calls i2c_transfer_buffer_flags() with one msg at a
-time. i2c_transfer_buffer_flags() then will emit a stop condition.
+2. It avoids duplication across test systems. Doing this in each test
+system is again makes kernel testing hard and imposes duplication.
+Tomorrow somebody runs new version of trinity, triforce, afl, perf
+fuzzer and they hit the same issues, you get the same reports, and
+have the same discussions and they slowly build the same list.
 
-This is not necessarily a problem, unless multi-master is used, but if
-there are limitations or deviations from the standard they should at
-least be well known and documented.
+I like the idea of runtime knob that Andi proposed, and in fact this
+looks quite similar to lockdown needs. And in fact it already have
+LOCKDOWN_TIOCSSERIAL (does it does exactly the same as what we need?
+if not, it may be something to improve in lockdown). It seems that any
+fuzzing needs at least LOCKDOWN_INTEGRITY_MAX.
 
--- 
-Luca
+Could we incorporate some of the checks in this patch into lockdown?
+FWIW we've just disabled sysrq entirely:
+https://github.com/google/syzkaller/blob/master/dashboard/config/bits-syzbot.config#L182
+because random packets over usb can trigger a panic sysrq (again
+almost impossible to reliably filter these out on fuzzer side).
+
+Not sure why lockdown prohibits parts of TIOCSSERIAL. Does it want to
+prevent memory corruption, or also prevent turning off console output
+(hiding traces)? If the latter then it may be reasonable to lockdown
+lowering of console_loglevel.
+
+But looks at some of the chunks here, it seems that we want something
+slightly orthogonal to lockdown integrity/confidentiality, which
+liveness/dos-prevention (can't accidentally bring down the whole
+machine). E.g. FIFREEZE or bad SYSRQs.
+
+There was some reason I did not enable lockdown when it was merged.
+Now looking at the list again: LOCKDOWN_DEBUGFS is a no-go for us...
