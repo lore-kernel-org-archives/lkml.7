@@ -7,195 +7,191 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF16C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB18C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:47:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B611F2176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85E692176D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:47:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="r/1lkVaJ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pCXlz3kE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbfLQXru (ORCPT
+        id S1726620AbfLQXrx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 18:47:50 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:52394 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbfLQXrt (ORCPT
+        Tue, 17 Dec 2019 18:47:53 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:33450 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbfLQXrv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 18:47:49 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBHNllFL031994;
-        Tue, 17 Dec 2019 17:47:47 -0600
+        Tue, 17 Dec 2019 18:47:51 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBHNlnfP123650;
+        Tue, 17 Dec 2019 17:47:49 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576626467;
-        bh=K/zgbiWOtXqQ9vevxL61UQfd+KZVNoS3lO85fhB6OJY=;
+        s=ti-com-17Q1; t=1576626469;
+        bh=re/C+bXpcoUGmF2JqTDnflHMpRaVHjKxu+dZCyPnmPc=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=r/1lkVaJvrVCrV4y6xHvKJBnNBzNvxKhBXrXUrbjGZb1+XDWjEv3PuTh0jhkRux2Z
-         oMJv0mXtdtHMqlHWEJum/EePHEeNgFxDw/ROtYC3ojxE3W+rxjSphQTF587J/uuRUn
-         /lZQghrdiQHk/uof6OLELjtTdsejE7yyU2Oydc1M=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBHNllm4047816
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 17 Dec 2019 17:47:47 -0600
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+        b=pCXlz3kENi6nHKF4SkVRar32MKAnEmwQbR9CifeONdz1H/3YSfleKaGeb9j5Lbpxs
+         2rnTfIqk1wm8LpaGZeRsLz10aBtWkzbZl9jxjnjMYnJRj6rXh65V8P+WpVARTwlBfi
+         CToshbx21Q1J4L5R4k4gYJdB6Wb6YmklwfDjbelU=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBHNlnEp007607;
+        Tue, 17 Dec 2019 17:47:49 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
- Dec 2019 17:47:47 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ Dec 2019 17:47:49 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 17 Dec 2019 17:47:47 -0600
+ Frontend Transport; Tue, 17 Dec 2019 17:47:48 -0600
 Received: from legion.dal.design.ti.com (legion.dal.design.ti.com [128.247.22.53])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBHNllGh126881;
-        Tue, 17 Dec 2019 17:47:47 -0600
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBHNlmwi126910;
+        Tue, 17 Dec 2019 17:47:49 -0600
 Received: from localhost ([10.250.79.55])
-        by legion.dal.design.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id xBHNlku27112;
-        Tue, 17 Dec 2019 17:47:46 -0600 (CST)
+        by legion.dal.design.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id xBHNlmu27132;
+        Tue, 17 Dec 2019 17:47:48 -0600 (CST)
 From:   "Andrew F. Davis" <afd@ti.com>
 To:     Tony Lindgren <tony@atomide.com>
 CC:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         "Andrew F . Davis" <afd@ti.com>
-Subject: [PATCH v2 1/3] ARM: OMAP2+: Add omap_secure_init callback hook for secure initialization
-Date:   Tue, 17 Dec 2019 18:47:43 -0500
-Message-ID: <20191217234745.4434-2-afd@ti.com>
+Subject: [PATCH v2 3/3] ARM: OMAP2+: Use ARM SMC Calling Convention when OP-TEE is available
+Date:   Tue, 17 Dec 2019 18:47:45 -0500
+Message-ID: <20191217234745.4434-4-afd@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191217234745.4434-1-afd@ti.com>
 References: <20191217234745.4434-1-afd@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This can be used for detecting secure features or making early device
-init sequence changes based on device security type.
+On High-Security(HS) OMAP2+ class devices a couple actions must be
+performed from the ARM TrustZone during boot. These traditionally can be
+performed by calling into the secure ROM code resident in this secure
+world using legacy SMC calls. Optionally OP-TEE can replace this secure
+world functionality by replacing the ROM after boot. ARM recommends a
+standard calling convention is used for this interaction (SMC Calling
+Convention). We check for the presence of OP-TEE and use this type of
+call to perform the needed actions, falling back to the legacy OMAP ROM
+call if OP-TEE is not available.
 
 Signed-off-by: Andrew F. Davis <afd@ti.com>
 ---
- arch/arm/mach-omap2/io.c          | 11 +++++++++++
- arch/arm/mach-omap2/omap-secure.c |  4 ++++
- arch/arm/mach-omap2/omap-secure.h |  2 ++
- 3 files changed, 17 insertions(+)
+ arch/arm/mach-omap2/common.h      |  2 +-
+ arch/arm/mach-omap2/omap-secure.c | 23 +++++++++++++++++++++++
+ arch/arm/mach-omap2/omap-secure.h |  1 +
+ arch/arm/mach-omap2/omap-smc.S    |  6 +++---
+ 4 files changed, 28 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/mach-omap2/io.c b/arch/arm/mach-omap2/io.c
-index 349e48042982..f28047233665 100644
---- a/arch/arm/mach-omap2/io.c
-+++ b/arch/arm/mach-omap2/io.c
-@@ -51,6 +51,7 @@
- #include "prm33xx.h"
- #include "prm44xx.h"
- #include "opp2xxx.h"
-+#include "omap-secure.h"
- 
- /*
-  * omap_clk_soc_init: points to a function that does the SoC-specific
-@@ -430,6 +431,7 @@ void __init omap2420_init_early(void)
- 	omap_hwmod_init_postsetup();
- 	omap_clk_soc_init = omap2420_dt_clk_init;
- 	rate_table = omap2420_rate_table;
-+	omap_secure_init();
- }
- 
- void __init omap2420_init_late(void)
-@@ -454,6 +456,7 @@ void __init omap2430_init_early(void)
- 	omap_hwmod_init_postsetup();
- 	omap_clk_soc_init = omap2430_dt_clk_init;
- 	rate_table = omap2430_rate_table;
-+	omap_secure_init();
- }
- 
- void __init omap2430_init_late(void)
-@@ -481,6 +484,7 @@ void __init omap3_init_early(void)
- 	omap3xxx_clockdomains_init();
- 	omap3xxx_hwmod_init();
- 	omap_hwmod_init_postsetup();
-+	omap_secure_init();
- }
- 
- void __init omap3430_init_early(void)
-@@ -533,6 +537,7 @@ void __init ti814x_init_early(void)
- 	dm814x_hwmod_init();
- 	omap_hwmod_init_postsetup();
- 	omap_clk_soc_init = dm814x_dt_clk_init;
-+	omap_secure_init();
- }
- 
- void __init ti816x_init_early(void)
-@@ -549,6 +554,7 @@ void __init ti816x_init_early(void)
- 	dm816x_hwmod_init();
- 	omap_hwmod_init_postsetup();
- 	omap_clk_soc_init = dm816x_dt_clk_init;
-+	omap_secure_init();
- }
- #endif
- 
-@@ -566,6 +572,7 @@ void __init am33xx_init_early(void)
- 	am33xx_hwmod_init();
- 	omap_hwmod_init_postsetup();
- 	omap_clk_soc_init = am33xx_dt_clk_init;
-+	omap_secure_init();
- }
- 
- void __init am33xx_init_late(void)
-@@ -589,6 +596,7 @@ void __init am43xx_init_early(void)
- 	omap_hwmod_init_postsetup();
- 	omap_l2_cache_init();
- 	omap_clk_soc_init = am43xx_dt_clk_init;
-+	omap_secure_init();
- }
- 
- void __init am43xx_init_late(void)
-@@ -617,6 +625,7 @@ void __init omap4430_init_early(void)
- 	omap_hwmod_init_postsetup();
- 	omap_l2_cache_init();
- 	omap_clk_soc_init = omap4xxx_dt_clk_init;
-+	omap_secure_init();
- }
- 
- void __init omap4430_init_late(void)
-@@ -643,6 +652,7 @@ void __init omap5_init_early(void)
- 	omap54xx_hwmod_init();
- 	omap_hwmod_init_postsetup();
- 	omap_clk_soc_init = omap5xxx_dt_clk_init;
-+	omap_secure_init();
- }
- 
- void __init omap5_init_late(void)
-@@ -666,6 +676,7 @@ void __init dra7xx_init_early(void)
- 	dra7xx_hwmod_init();
- 	omap_hwmod_init_postsetup();
- 	omap_clk_soc_init = dra7xx_dt_clk_init;
-+	omap_secure_init();
- }
- 
- void __init dra7xx_init_late(void)
+diff --git a/arch/arm/mach-omap2/common.h b/arch/arm/mach-omap2/common.h
+index 223b37c48389..3b1fd8e7d705 100644
+--- a/arch/arm/mach-omap2/common.h
++++ b/arch/arm/mach-omap2/common.h
+@@ -255,7 +255,7 @@ extern void gic_dist_disable(void);
+ extern void gic_dist_enable(void);
+ extern bool gic_dist_disabled(void);
+ extern void gic_timer_retrigger(void);
+-extern void omap_smc1(u32 fn, u32 arg);
++extern void _omap_smc1(u32 fn, u32 arg);
+ extern void omap4_sar_ram_init(void);
+ extern void __iomem *omap4_get_sar_ram_base(void);
+ extern void omap4_mpuss_early_init(void);
 diff --git a/arch/arm/mach-omap2/omap-secure.c b/arch/arm/mach-omap2/omap-secure.c
-index 24298e47b9f1..e936732cdc4f 100644
+index 39d8070aede6..6c6ff128c68e 100644
 --- a/arch/arm/mach-omap2/omap-secure.c
 +++ b/arch/arm/mach-omap2/omap-secure.c
-@@ -163,3 +163,7 @@ u32 rx51_secure_rng_call(u32 ptr, u32 count, u32 flag)
- 				      NO_FLAG,
- 				      3, ptr, count, flag, 0);
- }
+@@ -8,6 +8,7 @@
+  * Copyright (C) 2013 Pali Rohár <pali.rohar@gmail.com>
+  */
+ 
++#include <linux/arm-smccc.h>
+ #include <linux/kernel.h>
+ #include <linux/init.h>
+ #include <linux/io.h>
+@@ -17,12 +18,17 @@
+ #include <asm/cacheflush.h>
+ #include <asm/memblock.h>
+ 
++#include "common.h"
+ #include "omap-secure.h"
+ 
+ static phys_addr_t omap_secure_memblock_base;
+ 
+ bool optee_available;
+ 
++#define OMAP_SIP_SMC_STD_CALL_VAL(func_num) \
++	ARM_SMCCC_CALL_VAL(ARM_SMCCC_STD_CALL, ARM_SMCCC_SMC_32, \
++	ARM_SMCCC_OWNER_SIP, (func_num))
 +
-+void __init omap_secure_init(void)
+ static void __init omap_optee_init_check(void)
+ {
+ 	struct device_node *np;
+@@ -66,6 +72,23 @@ u32 omap_secure_dispatcher(u32 idx, u32 flag, u32 nargs, u32 arg1, u32 arg2,
+ 	return ret;
+ }
+ 
++void omap_smc1(u32 fn, u32 arg)
 +{
++	/*
++	 * If this platform has OP-TEE installed we use ARM SMC calls
++	 * otherwise fall back to the OMAP ROM style calls.
++	 */
++	if (optee_available) {
++		struct arm_smccc_res res;
++
++		arm_smccc_smc(OMAP_SIP_SMC_STD_CALL_VAL(fn), arg,
++			      0, 0, 0, 0, 0, 0, &res);
++		WARN(res.a0, "Secure function call 0x%08x failed\n", fn);
++	} else {
++		_omap_smc1(fn, arg);
++	}
 +}
++
+ /* Allocate the memory to save secure ram */
+ int __init omap_secure_ram_reserve_memblock(void)
+ {
 diff --git a/arch/arm/mach-omap2/omap-secure.h b/arch/arm/mach-omap2/omap-secure.h
-index 20046e8f8ecb..9aeeb236a224 100644
+index 78a1c4f04bbe..349101b3c771 100644
 --- a/arch/arm/mach-omap2/omap-secure.h
 +++ b/arch/arm/mach-omap2/omap-secure.h
-@@ -72,6 +72,8 @@ extern u32 rx51_secure_dispatcher(u32 idx, u32 process, u32 flag, u32 nargs,
- extern u32 rx51_secure_update_aux_cr(u32 set_bits, u32 clear_bits);
- extern u32 rx51_secure_rng_call(u32 ptr, u32 count, u32 flag);
+@@ -62,6 +62,7 @@
  
-+void omap_secure_init(void);
-+
- #ifdef CONFIG_SOC_HAS_REALTIME_COUNTER
- void set_cntfreq(void);
- #else
+ extern u32 omap_secure_dispatcher(u32 idx, u32 flag, u32 nargs,
+ 				u32 arg1, u32 arg2, u32 arg3, u32 arg4);
++extern void omap_smc1(u32 fn, u32 arg);
+ extern u32 omap_smc2(u32 id, u32 falg, u32 pargs);
+ extern u32 omap_smc3(u32 id, u32 process, u32 flag, u32 pargs);
+ extern phys_addr_t omap_secure_ram_mempool_base(void);
+diff --git a/arch/arm/mach-omap2/omap-smc.S b/arch/arm/mach-omap2/omap-smc.S
+index fd2bcd91f4a1..d4832845a4e8 100644
+--- a/arch/arm/mach-omap2/omap-smc.S
++++ b/arch/arm/mach-omap2/omap-smc.S
+@@ -18,18 +18,18 @@
+  * the monitor API number. It uses few CPU registers
+  * internally and hence they need be backed up including
+  * link register "lr".
+- * Function signature : void omap_smc1(u32 fn, u32 arg)
++ * Function signature : void _omap_smc1(u32 fn, u32 arg)
+  */
+ 	.arch armv7-a
+ 	.arch_extension sec
+-ENTRY(omap_smc1)
++ENTRY(_omap_smc1)
+ 	stmfd   sp!, {r2-r12, lr}
+ 	mov	r12, r0
+ 	mov 	r0, r1
+ 	dsb
+ 	smc	#0
+ 	ldmfd   sp!, {r2-r12, pc}
+-ENDPROC(omap_smc1)
++ENDPROC(_omap_smc1)
+ 
+ /**
+  * u32 omap_smc2(u32 id, u32 falg, u32 pargs)
 -- 
 2.17.1
 
