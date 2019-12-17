@@ -2,172 +2,95 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 194EEC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9094C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBFBA21775
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:17:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576613866;
-	bh=kU/g2d6zDLkg2lDHlxUGE+KJKoOB9BR28nfUxunsxVo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YJMH74sEzQfuIZ9jTZvYJgurDb/Aan1f6j6onnIkRU459sG+wIEqDbVWATPrsckJc
-	 MlFKIe0qoUktd4hjKoCPSQNPpI3E2EGzpnfWYrADDiQKUrSCA58Z3YNlzDBNq4tKI4
-	 Di+ufylC9rupq0bGPYJDHIPQB3saO6A4BbZQKgno=
+	by mail.kernel.org (Postfix) with ESMTP id 7190D21775
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:17:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lw1Y5Ehl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728910AbfLQURp (ORCPT
+        id S1728093AbfLQURw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 15:17:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41822 "EHLO mail.kernel.org"
+        Tue, 17 Dec 2019 15:17:52 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:54939 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728793AbfLQURV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 15:17:21 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728753AbfLQURQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 15:17:16 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F0D0206D8;
-        Tue, 17 Dec 2019 20:17:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576613840;
-        bh=kU/g2d6zDLkg2lDHlxUGE+KJKoOB9BR28nfUxunsxVo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lyOjwhqjPLYV2DyD+qHPVlIZb8aQyxYJkBOpgXImLIQu41Us7vRegN8i99olzcmYD
-         fCzObSLf7VbiliuV8pSoXHWSogv4A9oUutYeK6eRpR8j4sm1e1/ONEnQpRTa5vMyTR
-         yjrkGbXp/vXTlGojzDaB+GOyFoRSVlUFZuK53w7A=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Lobakin <alobakin@dlink.ru>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 04/25] net: dsa: fix flow dissection on Tx path
-Date:   Tue, 17 Dec 2019 21:16:03 +0100
-Message-Id: <20191217200905.191919415@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191217200903.179327435@linuxfoundation.org>
-References: <20191217200903.179327435@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47cqDl6MQVz9sRM;
+        Wed, 18 Dec 2019 07:17:11 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1576613834;
+        bh=to3nAIMJMhJTiwo/9pBgTcO1nHmn5+b/bWSIpM3ItcM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=lw1Y5EhldrOoOxqSZgOHnSNQg2+ApiWHLuF5q8KtPhhpBI0ZDXKLdLtS6AvATKnuF
+         EBABxHtaDz4PFxQEFaPA2vYRupsa6GqzoGqOBGvJSwtFd9T8u0QyeWgEvnL5iXB8KE
+         PmszQwUBp7TyDC1H7gq4WKpoM5CvyOoJ+cI60hxY8GxDb00hI+tZAU21mfWYjNTSGx
+         Fkd16yVuE6zTTP1QHdSEKCtDKBoAalC/89walxTXnJMDHUEwkf1IQA1QcuRe1JlAwl
+         XZTosMKoTjU9syOvgQJpaLRNxdAvsCNKadvwfdsdwismu6DaO0X0r3Y1ks2zDunX6T
+         8nSkHlwa6ySDw==
+Date:   Wed, 18 Dec 2019 07:17:10 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Zhengyuan Liu <liuzhengyuan@kylinos.cn>
+Subject: linux-next: Fixes tag needs some work in the pm tree
+Message-ID: <20191218071710.61602251@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/ip44PrA7z9g_nx5J8I_SBQB";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@dlink.ru>
+--Sig_/ip44PrA7z9g_nx5J8I_SBQB
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-[ Upstream commit 8bef0af09a5415df761b04fa487a6c34acae74bc ]
-
-Commit 43e665287f93 ("net-next: dsa: fix flow dissection") added an
-ability to override protocol and network offset during flow dissection
-for DSA-enabled devices (i.e. controllers shipped as switch CPU ports)
-in order to fix skb hashing for RPS on Rx path.
-
-However, skb_hash() and added part of code can be invoked not only on
-Rx, but also on Tx path if we have a multi-queued device and:
- - kernel is running on UP system or
- - XPS is not configured.
-
-The call stack in this two cases will be like: dev_queue_xmit() ->
-__dev_queue_xmit() -> netdev_core_pick_tx() -> netdev_pick_tx() ->
-skb_tx_hash() -> skb_get_hash().
-
-The problem is that skbs queued for Tx have both network offset and
-correct protocol already set up even after inserting a CPU tag by DSA
-tagger, so calling tag_ops->flow_dissect() on this path actually only
-breaks flow dissection and hashing.
-
-This can be observed by adding debug prints just before and right after
-tag_ops->flow_dissect() call to the related block of code:
-
-Before the patch:
-
-Rx path (RPS):
-
-[   19.240001] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
-[   19.244271] tag_ops->flow_dissect()
-[   19.247811] Rx: proto: 0x0800, nhoff: 8	/* ETH_P_IP */
-
-[   19.215435] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
-[   19.219746] tag_ops->flow_dissect()
-[   19.223241] Rx: proto: 0x0806, nhoff: 8	/* ETH_P_ARP */
-
-[   18.654057] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
-[   18.658332] tag_ops->flow_dissect()
-[   18.661826] Rx: proto: 0x8100, nhoff: 8	/* ETH_P_8021Q */
-
-Tx path (UP system):
-
-[   18.759560] Tx: proto: 0x0800, nhoff: 26	/* ETH_P_IP */
-[   18.763933] tag_ops->flow_dissect()
-[   18.767485] Tx: proto: 0x920b, nhoff: 34	/* junk */
-
-[   22.800020] Tx: proto: 0x0806, nhoff: 26	/* ETH_P_ARP */
-[   22.804392] tag_ops->flow_dissect()
-[   22.807921] Tx: proto: 0x920b, nhoff: 34	/* junk */
-
-[   16.898342] Tx: proto: 0x86dd, nhoff: 26	/* ETH_P_IPV6 */
-[   16.902705] tag_ops->flow_dissect()
-[   16.906227] Tx: proto: 0x920b, nhoff: 34	/* junk */
-
-After:
-
-Rx path (RPS):
-
-[   16.520993] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
-[   16.525260] tag_ops->flow_dissect()
-[   16.528808] Rx: proto: 0x0800, nhoff: 8	/* ETH_P_IP */
-
-[   15.484807] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
-[   15.490417] tag_ops->flow_dissect()
-[   15.495223] Rx: proto: 0x0806, nhoff: 8	/* ETH_P_ARP */
-
-[   17.134621] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
-[   17.138895] tag_ops->flow_dissect()
-[   17.142388] Rx: proto: 0x8100, nhoff: 8	/* ETH_P_8021Q */
-
-Tx path (UP system):
-
-[   15.499558] Tx: proto: 0x0800, nhoff: 26	/* ETH_P_IP */
-
-[   20.664689] Tx: proto: 0x0806, nhoff: 26	/* ETH_P_ARP */
-
-[   18.565782] Tx: proto: 0x86dd, nhoff: 26	/* ETH_P_IPV6 */
-
-In order to fix that we can add the check 'proto == htons(ETH_P_XDSA)'
-to prevent code from calling tag_ops->flow_dissect() on Tx.
-I also decided to initialize 'offset' variable so tagger callbacks can
-now safely leave it untouched without provoking a chaos.
-
-Fixes: 43e665287f93 ("net-next: dsa: fix flow dissection")
-Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/core/flow_dissector.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
---- a/net/core/flow_dissector.c
-+++ b/net/core/flow_dissector.c
-@@ -853,9 +853,10 @@ bool __skb_flow_dissect(const struct net
- 		nhoff = skb_network_offset(skb);
- 		hlen = skb_headlen(skb);
- #if IS_ENABLED(CONFIG_NET_DSA)
--		if (unlikely(skb->dev && netdev_uses_dsa(skb->dev))) {
-+		if (unlikely(skb->dev && netdev_uses_dsa(skb->dev) &&
-+			     proto == htons(ETH_P_XDSA))) {
- 			const struct dsa_device_ops *ops;
--			int offset;
-+			int offset = 0;
- 
- 			ops = skb->dev->dsa_ptr->tag_ops;
- 			if (ops->flow_dissect &&
+Hi all,
 
 
+  78d3e7c19e2d ("tools/power/acpi: fix compilation error")
+
+Fixes tag
+
+  Fixes: d5a4b1a540b ("tools/power/acpi: Remove direct kernel source includ=
+e reference")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/ip44PrA7z9g_nx5J8I_SBQB
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl35N8YACgkQAVBC80lX
+0Gz8MAf9FEzIt9+SX7HvQSQA3T+1g4qEpxARPRfUwkPaGy0g+VmgTY+h0C1T50UR
+ZjXjYRrrQCA0KjTxcXnqrXm8uOpfyCxSMmg1VYq2up8ZP+ooj9Nm6SxfhPCjvL5x
+kgWDXGwk6jufo5NSJW0VMmaEQuvhnAPrSHvFpBwxTzw8JRElyJmX7DsGzqhlSh6V
+M7sTZgN33SVGA55Q/NmgOgvCJLc1d0lcd41jglWHlzy0zM2HGFYzSm7g/7XYcrWZ
+SG/JdUrYYFm+frWDh/hEOV9+KZgHHzOiSuaxpzn6QMiI/DzUvSbOb/uKdc55y6/Y
+KiZKX4geU/WYs6+90ujDKzn937TQWg==
+=Kutr
+-----END PGP SIGNATURE-----
+
+--Sig_/ip44PrA7z9g_nx5J8I_SBQB--
