@@ -2,74 +2,101 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AEB2C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8057C2D0C5
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AF0A21D7D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:43:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3721206D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:45:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ocdDM+0+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727197AbfLQHnK convert rfc822-to-8bit (ORCPT
+        id S1726840AbfLQHpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 02:43:10 -0500
-Received: from coyote.holtmann.net ([212.227.132.17]:54973 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725868AbfLQHnK (ORCPT
+        Tue, 17 Dec 2019 02:45:01 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:54872 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725868AbfLQHpB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 02:43:10 -0500
-Received: from marcel-macbook.fritz.box (p4FF9F0D1.dip0.t-ipconnect.de [79.249.240.209])
-        by mail.holtmann.org (Postfix) with ESMTPSA id D2372CED3F;
-        Tue, 17 Dec 2019 08:52:19 +0100 (CET)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
-Subject: Re: [PATCH v5 2/2] bluetooth: hci_bcm: enable IRQ capability from
- devicetree
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <7ho8wc87vy.fsf@baylibre.com>
-Date:   Tue, 17 Dec 2019 08:43:07 +0100
-Cc:     Guillaume La Roque <glaroque@baylibre.com>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org, nsaenzjulienne@suse.de,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <18AAF11E-26CA-4753-8F16-C90DCBC15D38@holtmann.org>
-References: <20191213150622.14162-1-glaroque@baylibre.com>
- <20191213150622.14162-3-glaroque@baylibre.com> <7ho8wc87vy.fsf@baylibre.com>
-To:     Kevin Hilman <khilman@baylibre.com>
-X-Mailer: Apple Mail (2.3608.40.2.2.4)
+        Tue, 17 Dec 2019 02:45:01 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBH7irHs010018;
+        Tue, 17 Dec 2019 01:44:53 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576568693;
+        bh=b5wBk0F+R2tKX9Jfr0hu+FEeVGuPCo3CtdCMf1Fl6z0=;
+        h=From:To:CC:Subject:Date;
+        b=ocdDM+0+2oMtaIT2PjYA5ioIOdbnnk2y5S/OFwISnRwof5f8o5YTEYoBbI4+pXlSg
+         iRLP3L2fcUFgREHp0QgEnZmNr5fpMTr5f6vAGxN8BO1fKCAUZYb+BIYZ3jZUDnbYxE
+         PcK5OBT4wq87fxA48ONBEUB7B7ZjrAvQUsrA6Kfo=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBH7ir5s017765;
+        Tue, 17 Dec 2019 01:44:53 -0600
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
+ Dec 2019 01:44:52 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 17 Dec 2019 01:44:52 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBH7iopt102141;
+        Tue, 17 Dec 2019 01:44:50 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <shawnguo@kernel.org>, <s.hauer@pengutronix.de>
+CC:     <vkoul@kernel.org>, <linux-i2c@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] i2c: mxs: Use dma_request_chan() instead dma_request_slave_channel()
+Date:   Tue, 17 Dec 2019 09:45:05 +0200
+Message-ID: <20191217074505.22527-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.24.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guillaume,
+dma_request_slave_channel() is a wrapper on top of dma_request_chan()
+eating up the error code.
 
->> Actually IRQ can be found from GPIO but all platforms don't support
->> gpiod_to_irq, it's the case on amlogic chip.
->> so to have possibility to use interrupt mode we need to add interrupts
->> property in devicetree and support it in driver.
-> 
-> I would reword this slightly (leaving out the amlogic specifics):
-> 
-> """
-> Add support for getting IRQ directly from DT instead of relying on
-> converting a GPIO to IRQ. This is needed for platforms with GPIO
-> controllers that that do not support gpiod_to_irq().
-> """
-> 
-> Other than that, this looks good to me and now it's clear that it only
-> affects the DT path.
-> 
-> Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+By using dma_request_chan() directly the driver can support deferred
+probing against DMA.
 
-I reverted the broken patch and now I am waiting for v6 with proper reviewed-by or acked-by tags.
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ drivers/i2c/busses/i2c-mxs.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Regards
+diff --git a/drivers/i2c/busses/i2c-mxs.c b/drivers/i2c/busses/i2c-mxs.c
+index 89224913f578..03f5eee9883a 100644
+--- a/drivers/i2c/busses/i2c-mxs.c
++++ b/drivers/i2c/busses/i2c-mxs.c
+@@ -836,10 +836,10 @@ static int mxs_i2c_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	/* Setup the DMA */
+-	i2c->dmach = dma_request_slave_channel(dev, "rx-tx");
+-	if (!i2c->dmach) {
++	i2c->dmach = dma_request_chan(dev, "rx-tx");
++	if (IS_ERR(i2c->dmach)) {
+ 		dev_err(dev, "Failed to request dma\n");
+-		return -ENODEV;
++		return PTR_ERR(i2c->dmach);
+ 	}
+ 
+ 	platform_set_drvdata(pdev, i2c);
+-- 
+Peter
 
-Marcel
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
