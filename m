@@ -2,105 +2,114 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C61EC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC6D6C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4B1920716
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:58:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m6cRBpaD"
+	by mail.kernel.org (Postfix) with ESMTP id B51C120716
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:00:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727595AbfLQT6k (ORCPT
+        id S1727609AbfLQUAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 14:58:40 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:39904 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726742AbfLQT6k (ORCPT
+        Tue, 17 Dec 2019 15:00:44 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:51754 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726967AbfLQUAo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 14:58:40 -0500
-Received: by mail-qt1-f194.google.com with SMTP id e5so8413601qtm.6
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 11:58:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tYpIdpOiYgT7YABZMBUVi67PMv1hgfpKwI/wpxaTacE=;
-        b=m6cRBpaDvz9tOeWbO2fsQxnxrt9Vn1dx9HXLEVDsE6wcamkzk29SFwF+bDkNrGMD8s
-         W8YvksQPx8HNXubuCQDtfzL2mcTDyp+Ou5/4A5GsnhYzaCBlbwzICa/40dja5PQ3cgqo
-         x4ICttKdfw1eoaSYnNOAHvArBsaWnNIakTFpPpqBTuJ9pylELxkrTCCWMlHql7WvH/XR
-         bZscXDu97ct+mnSatyr0KnK04gy13fOp1GHv1qe5k5beoky6gxgU6Vlm26GhLyQ9d6LW
-         yuBNxP6hheOAsgr/5i39wNpHpxteytjnGgF2czeOOSRkcoO45rsGdQmaxvbYIyM7LdJe
-         v7BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tYpIdpOiYgT7YABZMBUVi67PMv1hgfpKwI/wpxaTacE=;
-        b=FGaYor/uwzsxB44YeuPcuM5jiawRi4p2+GcpXP7pc+Bu5bH1l53xD475Wkv2XANqRF
-         k4jNL1ifW8CrizWzZbo6X2mdrGh8qrKT6fW0hdlRm/QkvDQtgbItAT1ROpMKUdvTQgzf
-         0/3RSyGHt5VrsRhAKp9F30AUiZwVxErWN47AQ7KIOd/K0AIQTBxuUCmpdBFGrYwtvL1K
-         jQp9yVm1a3NEa447F3Zegp6gNCfCwHncOWqWhn4zcox7yRuce0tw/wAOZwoVqUlNN8Y4
-         gfmGk4zrrpB96bVFVHBSKxUkiuAFOfOU4gyMbozMHbr9ucxbRoSw2bnQYMy3LJFUFiJP
-         Epaw==
-X-Gm-Message-State: APjAAAVrfjKfpIlXMtzeA597G7LLcbxllpTEqFoGJ/C2veIIk2q0SeKa
-        9y587l/U5hhtRw/111rF1s2AKoikK6tVUI228sBiaw==
-X-Google-Smtp-Source: APXvYqxIhLNEjgJvec+Qn4qoV4ymCiJa4bYCuhFfS95jZ4mtrlZxnKh6hRW9zBdVP3eoHJjlkw34TnaQfZQL1P//WEE=
-X-Received: by 2002:ac8:2b29:: with SMTP id 38mr6124609qtu.238.1576612719148;
- Tue, 17 Dec 2019 11:58:39 -0800 (PST)
+        Tue, 17 Dec 2019 15:00:44 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id B206E28D001
+From:   Helen Koike <helen.koike@collabora.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     hverkuil-cisco@xs4all.nl, lkcamp@lists.libreplanetbr.org,
+        kernel@collabora.com, Helen Koike <helen.koike@collabora.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+Subject: [PATCH] media: v4l2-rect.h: fix v4l2_rect_map_inside() top/left adjustments
+Date:   Tue, 17 Dec 2019 17:00:22 -0300
+Message-Id: <20191217200022.2075972-1-helen.koike@collabora.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <20191204200623.198897-1-joshdon@google.com> <CAKfTPtBZUUtJ=ZvQOWmKx_1zUXtNoqcS0M85ouQmgi36xzfM2A@mail.gmail.com>
- <CABk29NsCjgMVf-xrhpyzFBTpyTvyWxZc4RJSarnHVzdOXyVPMw@mail.gmail.com> <CAKfTPtCJGT0axT5=E=hLWtMav_kLGVFrSvjZS8+cfvjYS72vqQ@mail.gmail.com>
-In-Reply-To: <CAKfTPtCJGT0axT5=E=hLWtMav_kLGVFrSvjZS8+cfvjYS72vqQ@mail.gmail.com>
-From:   Josh Don <joshdon@google.com>
-Date:   Tue, 17 Dec 2019 11:58:28 -0800
-Message-ID: <CABk29Ntp5eRFn2otK2o5Fe=uYOvKpjHgKRSw0_er45CVC025Pg@mail.gmail.com>
-Subject: Re: [PATCH v2] sched/fair: Do not set skip buddy up the sched hierarchy
-To:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Paul Turner <pjt@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 12:05 AM Vincent Guittot
-<vincent.guittot@linaro.org> wrote:
->
-> Hi Josh,
->
-> On Fri, 6 Dec 2019 at 23:13, Josh Don <joshdon@google.com> wrote:
-> >
-> > Hi Vincent,
-> >
-> > Thanks for taking a look.
-> >
-> > > There is a mismatch between the author Venkatesh Pallipadi and the
-> > > signoff Josh Don
-> > > If Venkatesh is the original author and you have then done some
-> > > modifications, your both signed-off should be there
-> >
-> > Venkatesh no longer works at Google, so I don't have a way to get in
-> > touch with him.  Is my signed-off insufficient for this case?
->
-> Maybe you can add a Co-developed-by tag to reflect your additional changes
-> I guess that as long as you agree with the DCO, it's ok :
-> https://www.kernel.org/doc/html/v5.4/process/submitting-patches.html#sign-your-work-the-developer-s-certificate-of-origin
->
-> Ingo, Peter, what do you think ?
+boundary->width and boundary->height are sizes relative to
+boundary->left and boundary->top coordinates, but they were not being
+taken into consideration to adjust r->left and r->top, leading to the
+following error:
 
-I could add the Co-developed-by tag if that would be sufficient here.
-As a side note, I'm also looking at upstreaming our other sched
-fixes/patches, and some of these have the same issue with respect to
-the original author.  How would you prefer I handle these in general?
+Consider the follow as initial values for boundary and r:
+
+struct v4l2_rect boundary = {
+	.left = 100,
+	.top = 100,
+	.width = 800,
+	.height = 600,
+}
+
+struct v4l2_rect r = {
+	.left = 0,
+	.top = 0,
+	.width = 1920,
+	.height = 960,
+}
+
+calling v4l2_rect_map_inside(&r, &boundary) was modifying r to:
+
+r = {
+	.left = 0,
+	.top = 0,
+	.width = 800,
+	.height = 600,
+}
+
+Which is wrongly outside the boundary rectangle, because:
+
+	v4l2_rect_set_max_size(r, boundary); // r->width = 800, r->height = 600
+	...
+	if (r->left + r->width > boundary->width) // true
+		r->left = boundary->width - r->width; // r->left = 800 - 800
+	if (r->top + r->height > boundary->height) // true
+		r->top = boundary->height - r->height; // r->height = 600 - 600
+
+Fix this by considering top/left coordinates from boundary.
+
+Fixes: ac49de8c49d7 ("[media] v4l2-rect.h: new header with struct v4l2_rect helper functions")
+
+Signed-off-by: Helen Koike <helen.koike@collabora.com>
+
+---
+
+ include/media/v4l2-rect.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/include/media/v4l2-rect.h b/include/media/v4l2-rect.h
+index c86474dc7b55..8800a640c224 100644
+--- a/include/media/v4l2-rect.h
++++ b/include/media/v4l2-rect.h
+@@ -63,10 +63,10 @@ static inline void v4l2_rect_map_inside(struct v4l2_rect *r,
+ 		r->left = boundary->left;
+ 	if (r->top < boundary->top)
+ 		r->top = boundary->top;
+-	if (r->left + r->width > boundary->width)
+-		r->left = boundary->width - r->width;
+-	if (r->top + r->height > boundary->height)
+-		r->top = boundary->height - r->height;
++	if (r->left + r->width > boundary->left + boundary->width)
++		r->left = boundary->left + boundary->width - r->width;
++	if (r->top + r->height > boundary->top + boundary->height)
++		r->top = boundary->top + boundary->height - r->height;
+ }
+ 
+ /**
+-- 
+2.24.0
+
