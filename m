@@ -2,140 +2,121 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BFE9C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A48DC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AAF020CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E5AF20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:59:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="Em+fHxRi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbfLQA7F (ORCPT
+        id S1727671AbfLQA7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:59:05 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34760 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726402AbfLQAvh (ORCPT
+        Mon, 16 Dec 2019 19:59:04 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:41477 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727483AbfLQA6s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 19:51:37 -0500
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1ih15H-0003Ky-J7; Tue, 17 Dec 2019 00:51:31 +0000
-Received: from ben by deadeye with local (Exim 4.93-RC7)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1ih15G-0005UJ-MJ; Tue, 17 Dec 2019 00:51:30 +0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+        Mon, 16 Dec 2019 19:58:48 -0500
+Received: by mail-io1-f68.google.com with SMTP id c16so9137882ioo.8
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 16:58:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sargun.me; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=WiC/tVMR8NsdCbTV/Ood/vOmHz4f4snd++QrFmS9AGU=;
+        b=Em+fHxRi0S9GiNiOxsOH/NxZWK2QKDW/iJBLB2E3WezC1UpRDI3rFiRGNoHh351jFd
+         hq6tCNOQE97TLgWaCC/1l5XKDDdosLf9KAISFCJaqz0xg6OZ/KamL8otukuHe+07m/1T
+         MKZJTV56gyq54ZknBIn4la06vRrdqqvlbMq1k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=WiC/tVMR8NsdCbTV/Ood/vOmHz4f4snd++QrFmS9AGU=;
+        b=tPCqaQEFoujRFCtesei/oVxZcu3QpiaVhbB1GoKVbVl6MUuMRGHOlQxI/D352J7ud9
+         SXVsFRmEixiBL+NDYxmdazb45guhJR6rr8JlFU04oVTvbWQT0+9FnPtG4m9B0458AK03
+         TlYMgWCTbAJn0JjjjaI9KFryJLcAqn/11SUOLyj85ugD9Kikz/9qeCM+uD1VgFNvr1eQ
+         yrL2K/orFGjRKtQB72YaGOBjacORHib+7ukHE4aPuEPhmBnTtThh+O/2lOBCtgXIivuo
+         rvyhuuJZYnM4A2FkibKk7YtOd+jljNJMzZ6HA6rH7nM9zsW+zjFLtMeidxQoKUqqXt8V
+         l3iQ==
+X-Gm-Message-State: APjAAAVxYjkItj59Ut+5LzrhySg7WMbjZRuqrP+Dueg3opsz36hJSCav
+        gxyrBTg2bAXDPnuWnbSscImllij0dBc=
+X-Google-Smtp-Source: APXvYqwT6sRXLv/Jw7cnhk1CTUzXUyCspDTW0zUOfg4w/uYtX65PErXp6pg3Db4EgPtUhZpb0tV91Q==
+X-Received: by 2002:a5d:8d10:: with SMTP id p16mr1621703ioj.21.1576544327254;
+        Mon, 16 Dec 2019 16:58:47 -0800 (PST)
+Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
+        by smtp.gmail.com with ESMTPSA id u29sm2890493ill.62.2019.12.16.16.58.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 16 Dec 2019 16:58:46 -0800 (PST)
+Date:   Tue, 17 Dec 2019 00:58:45 +0000
+From:   Sargun Dhillon <sargun@sargun.me>
+To:     linux-kernel@vger.kernel.org,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Cc:     tycho@tycho.ws, jannh@google.com, cyphar@cyphar.com,
+        christian.brauner@ubuntu.com, oleg@redhat.com, luto@amacapital.net,
+        viro@zeniv.linux.org.uk, gpascutto@mozilla.com,
+        ealvarez@mozilla.com, fweimer@redhat.com, jld@mozilla.com
+Subject: [PATCH v3 0/4] Add pidfd getfd ioctl (Was Add ptrace get_fd request)
+Message-ID: <20191217005842.GA14379@ircssh-2.c.rugged-nimbus-611.internal>
 MIME-Version: 1.0
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Lorenzo Bianconi" <lorenzo.bianconi@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Date:   Tue, 17 Dec 2019 00:46:12 +0000
-Message-ID: <lsq.1576543535.858518471@decadent.org.uk>
-X-Mailer: LinuxStableQueue (scripts by bwh)
-X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 038/136] net: ipv4: use a dedicated counter for
- icmp_v4 redirect packets
-In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-3.16.80-rc1 review patch.  If anyone has any objections, please let me know.
+This patchset introduces a mechanism to capture file descriptors from other
+processes by pidfd and ioctl. Although this can be achieved using
+SCM_RIGHTS, and parasitic code injection, this offers a more
+straightforward mechanism.
 
-------------------
+It has a flags mechanism that's only usable to set CLOEXEC on the fd,
+but I'm thinking that it could be extended to other aspects. For example,
+for sockets, one could want to scrub the cgroup information.
 
-From: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Changes since v2:
+ * Move to ioctl on pidfd instead of ptrace function
+ * Add security check before moving file descriptor
 
-commit c09551c6ff7fe16a79a42133bcecba5fc2fc3291 upstream.
+Changes since the RFC v1:
+ * Introduce a new helper to fs/file.c to fetch a file descriptor from
+   any process. It largely uses the code suggested by Oleg, with a few
+   changes to fix locking
+ * It uses an extensible options struct to supply the FD, and option.
+ * I added a sample, using the code from the user-ptrace sample
 
-According to the algorithm described in the comment block at the
-beginning of ip_rt_send_redirect, the host should try to send
-'ip_rt_redirect_number' ICMP redirect packets with an exponential
-backoff and then stop sending them at all assuming that the destination
-ignores redirects.
-If the device has previously sent some ICMP error packets that are
-rate-limited (e.g TTL expired) and continues to receive traffic,
-the redirect packets will never be transmitted. This happens since
-peer->rate_tokens will be typically greater than 'ip_rt_redirect_number'
-and so it will never be reset even if the redirect silence timeout
-(ip_rt_redirect_silence) has elapsed without receiving any packet
-requiring redirects.
+Sargun Dhillon (4):
+  vfs, fdtable: Add get_task_file helper
+  pid: Add PIDFD_IOCTL_GETFD to fetch file descriptors from processes
+  samples: split generalized user-trap code into helper file
+  samples: Add example of using pidfd getfd in conjunction with user
+    trap
 
-Fix it by using a dedicated counter for the number of ICMP redirect
-packets that has been sent by the host
+ Documentation/ioctl/ioctl-number.rst |   1 +
+ fs/file.c                            |  22 +++-
+ include/linux/file.h                 |   2 +
+ include/linux/pid.h                  |   1 +
+ include/uapi/linux/pid.h             |  26 ++++
+ kernel/fork.c                        |  72 ++++++++++
+ samples/seccomp/.gitignore           |   1 +
+ samples/seccomp/Makefile             |  15 ++-
+ samples/seccomp/user-trap-helper.c   |  84 ++++++++++++
+ samples/seccomp/user-trap-helper.h   |  13 ++
+ samples/seccomp/user-trap-pidfd.c    | 190 +++++++++++++++++++++++++++
+ samples/seccomp/user-trap.c          |  85 +-----------
+ 12 files changed, 424 insertions(+), 88 deletions(-)
+ create mode 100644 include/uapi/linux/pid.h
+ create mode 100644 samples/seccomp/user-trap-helper.c
+ create mode 100644 samples/seccomp/user-trap-helper.h
+ create mode 100644 samples/seccomp/user-trap-pidfd.c
 
-I have not been able to identify a given commit that introduced the
-issue since ip_rt_send_redirect implements the same rate-limiting
-algorithm from commit 1da177e4c3f4 ("Linux-2.6.12-rc2")
-
-Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[bwh: Backported to 3.16: adjust context, indentation]
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
----
- include/net/inetpeer.h | 1 +
- net/ipv4/inetpeer.c    | 1 +
- net/ipv4/route.c       | 7 +++++--
- 3 files changed, 7 insertions(+), 2 deletions(-)
-
---- a/include/net/inetpeer.h
-+++ b/include/net/inetpeer.h
-@@ -35,6 +35,7 @@ struct inet_peer {
- 
- 	u32			metrics[RTAX_MAX];
- 	u32			rate_tokens;	/* rate limiting for ICMP */
-+	u32			n_redirects;
- 	unsigned long		rate_last;
- 	union {
- 		struct list_head	gc_list;
---- a/net/ipv4/inetpeer.c
-+++ b/net/ipv4/inetpeer.c
-@@ -485,6 +485,7 @@ relookup:
- 		atomic_set(&p->rid, 0);
- 		p->metrics[RTAX_LOCK-1] = INETPEER_METRICS_NEW;
- 		p->rate_tokens = 0;
-+		p->n_redirects = 0;
- 		/* 60*HZ is arbitrary, but chosen enough high so that the first
- 		 * calculation of tokens is at its maximum.
- 		 */
---- a/net/ipv4/route.c
-+++ b/net/ipv4/route.c
-@@ -872,13 +872,15 @@ void ip_rt_send_redirect(struct sk_buff
- 	/* No redirected packets during ip_rt_redirect_silence;
- 	 * reset the algorithm.
- 	 */
--	if (time_after(jiffies, peer->rate_last + ip_rt_redirect_silence))
-+	if (time_after(jiffies, peer->rate_last + ip_rt_redirect_silence)) {
- 		peer->rate_tokens = 0;
-+		peer->n_redirects = 0;
-+	}
- 
- 	/* Too many ignored redirects; do not send anything
- 	 * set dst.rate_last to the last seen redirected packet.
- 	 */
--	if (peer->rate_tokens >= ip_rt_redirect_number) {
-+	if (peer->n_redirects >= ip_rt_redirect_number) {
- 		peer->rate_last = jiffies;
- 		goto out_put_peer;
- 	}
-@@ -895,6 +897,7 @@ void ip_rt_send_redirect(struct sk_buff
- 		icmp_send(skb, ICMP_REDIRECT, ICMP_REDIR_HOST, gw);
- 		peer->rate_last = jiffies;
- 		++peer->rate_tokens;
-+		++peer->n_redirects;
- #ifdef CONFIG_IP_ROUTE_VERBOSE
- 		if (log_martians &&
- 		    peer->rate_tokens == ip_rt_redirect_number)
+-- 
+2.20.1
 
