@@ -2,44 +2,87 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C73DC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A39DAC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 786ED2176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:05:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E00521582
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:06:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="KBmfJyYo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727628AbfLQVDT (ORCPT
+        id S1728409AbfLQVGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 16:03:19 -0500
-Received: from mga04.intel.com ([192.55.52.120]:15620 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726634AbfLQVDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 16:03:19 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 13:03:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,326,1571727600"; 
-   d="scan'208";a="240560928"
-Received: from smcdonal-mobl2.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.255.83.42])
-  by fmsmga004.fm.intel.com with ESMTP; 17 Dec 2019 13:03:17 -0800
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
-        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: [PATCH v5 00/17] soundwire: intel: implement new ASoC interfaces
-Date:   Tue, 17 Dec 2019 15:02:57 -0600
-Message-Id: <20191217210314.20410-1-pierre-louis.bossart@linux.intel.com>
+        Tue, 17 Dec 2019 16:06:25 -0500
+Received: from mta-p5.oit.umn.edu ([134.84.196.205]:34940 "EHLO
+        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbfLQVGZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 16:06:25 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 47crKX2v95z9vbXw
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 21:06:24 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p5.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id IWvmopA0X948 for <linux-kernel@vger.kernel.org>;
+        Tue, 17 Dec 2019 15:06:24 -0600 (CST)
+Received: from mail-yw1-f72.google.com (mail-yw1-f72.google.com [209.85.161.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 47crKX1k2Hz9vbY8
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 15:06:24 -0600 (CST)
+Received: by mail-yw1-f72.google.com with SMTP id 199so8742954ywe.20
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 13:06:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RVnukGaiui+du4+M3rktd/RcuLA80ABz3WVIbi2xHtI=;
+        b=KBmfJyYowdx1h9k2Ktvy/CuZa7KBLKl+kv2WSWq4E1LLh/iGH1BZ2uKtukY/W2uzVo
+         TpOpE0M/TjXJBydFNILe7JcWTtYgiVQq2UeznWuReLZCjbu5K78i6Cls+VL3XtsWT2fQ
+         XqEb708qgSlCd/b2D+Rd3w2WrFn4lkITSTNECAMlkziteLnFv3NCZJMSGRpMZxt7LFwz
+         qrHA64qCQ192u2heFfyU9uhQM/LWbb68NUezxaKZnEDdVrKoyC2KtmnmQWcdvb07iARW
+         PMlTvvt7+lbf30tRWppvhTekxCkugnWrCjXMRCIrRGISPvcs/vncRp/4eZWU732GnxE0
+         U0gA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RVnukGaiui+du4+M3rktd/RcuLA80ABz3WVIbi2xHtI=;
+        b=q9HYqJafwG1JemueSNhiFNxATNZSDONNZ6ayhlZPDRha5mt2lvMC5+isKUvU60G25G
+         yvQd6eeuSJivP+IPJ5sVRZEioOn24Xa/iYzX42qGKeOVqeFJ4NMBcp5V5xG58jFrk4KW
+         Zg+ndPCxuH4dasNTkC0vtDubV8zPHHFV6oJih43+pRmbtlOCoB+CfeYafeLIu9eYeCS3
+         655+rD8UlYlE/p5L0Rr3aTLSTEKpGMSLLIZfBYFzoV9x2m4d8yuFT+Xr82DpnIw2Ivpe
+         V/R135rxWyW3ZSaBLGROVLyfgWd1FWbcQUs8SfCgjCVHG62+q2eBOPq2BO+GBkMI3I4U
+         g42A==
+X-Gm-Message-State: APjAAAU/TwiRT4LQ3e8zhHvRUnpR8uZwgKQxSwXJKbjZZfncnNCyum3Y
+        FD4gIFmVojUwMsFtbPyS99bNacju7M4rMxD8s/qk2N58r7Yd1c0BoD3ftjcsipUwORFbTEhdjZH
+        2+jABXwrtkBMCov6kV2/7WXU0aguK
+X-Received: by 2002:a0d:dbd5:: with SMTP id d204mr640591ywe.22.1576616783709;
+        Tue, 17 Dec 2019 13:06:23 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxobVgJolFCbVUp/qKSoQ1G1fQbOomuh913hWdYuOGTVfl6p/BvJ6GamqZF59q/3T4hYM6AfA==
+X-Received: by 2002:a0d:dbd5:: with SMTP id d204mr640571ywe.22.1576616783505;
+        Tue, 17 Dec 2019 13:06:23 -0800 (PST)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id w138sm6913670ywd.89.2019.12.17.13.06.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 13:06:23 -0800 (PST)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Markus Elfring <elfring@users.sourceforge.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] hdlcdrv: replace unnecessary assertion in hdlcdrv_register
+Date:   Tue, 17 Dec 2019 15:06:19 -0600
+Message-Id: <20191217210620.29775-1-pakki001@umn.edu>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -48,93 +91,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset applies on top of soundwire/next, now that the interface
-definitions are merged.
+In hdlcdrv_register, failure to register the driver causes a crash.
+The three callers of hdlcdrv_register all pass valid pointers and
+do not fail. The patch eliminates the unnecessary BUG_ON assertion.
 
-The changes are essentially a removal of the platform devices,
-replaced by explicit device(s)/driver for the SoundWire Master(s), and
-the implementation of the new interfaces required to scan the ACPI
-tables, probe the links and start them.
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+---
+v1: Changed from returning -EINVAL to deleting BUG_ON as identified
+by Stephen Hemminger.
+---
+ drivers/net/hamradio/hdlcdrv.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-The missing prepare, trigger and setup ASoC callbacks are also
-implemented. The hw_params and free callbacks use the new interfaces
-as well.
-
-While there are quite a few lines of code changed, this is mostly
-about interface changes. The next series will contain more functional
-changes and deal with race conditions on probe, enumeration and
-suspend/resume issues.
-
-Thanks to Vinod Kould and GregKH for the reviews on previous versions,
-much appreciated.
-
-Changes since v4: (feedback from GregKH except last point flagged by
-Intel validation)
-
-Clarified error handling with uevents
-Added better commit messages and rationale behind exposing a Master Device.
-Used 'master_device' instead of 'md' when possible (kept the shortcut
-with really long function names)
-Added namespace check support for Intel code (the Cadence and core
-stuff should be done in a separate patchset).
-Fixed GPLv2 license/EXPORT_SYMBOL_GPL error for the Master Device code.
-Fixed missing error handling in sdw_md_add
-Added kerneldoc comments for sdw_md_driver structure (with explanation
-on what 'md' stands for)
-Fixed NULL pointer assignment leading to issues with driver_unregister
-
-Changes since v3:
-One line change to re-add EXPORT_SYMBOL
-Add missing driver_registration 
-
-Changes since v2:
-moved uevent handling to slave_type (Vinod)
-
-Changes since v1:
-fix typo (Vinod)
-removed uevent open for Master (Vinod)
-clarified commit messages (Cezary)
-no functionality change
-
-Bard Liao (1):
-  soundwire: register master device driver
-
-Pierre-Louis Bossart (13):
-  soundwire: renames to prepare support for master drivers/devices
-  soundwire: rename dev_to_sdw_dev macro
-  soundwire: rename drv_to_sdw_slave_driver macro
-  soundwire: bus_type: rename sdw_drv_ to sdw_slave_drv
-  soundwire: intel: rename res field as link_res
-  soundwire: add support for sdw_slave_type
-  soundwire: slave: move uevent handling to slave device level
-  soundwire: add initial definitions for sdw_master_device
-  soundwire: intel: remove platform devices and use 'Master Devices'
-    instead
-  soundwire: intel: free all resources on hw_free()
-  soundwire: intel_init: add implementation of sdw_intel_enable_irq()
-  soundwire: intel_init: use EXPORT_SYMBOL_NS
-  soundwire: intel: use EXPORT_SYMBOL_NS
-
-Rander Wang (3):
-  soundwire: intel: add prepare support in sdw dai driver
-  soundwire: intel: add trigger support in sdw dai driver
-  soundwire: intel: add sdw_stream_setup helper for .startup callback
-
- drivers/base/regmap/regmap-sdw.c   |   4 +-
- drivers/soundwire/Makefile         |   2 +-
- drivers/soundwire/bus.c            |   2 +-
- drivers/soundwire/bus.h            |   2 +
- drivers/soundwire/bus_type.c       |  70 ++++---
- drivers/soundwire/intel.c          | 281 +++++++++++++++++++++-----
- drivers/soundwire/intel.h          |   8 +-
- drivers/soundwire/intel_init.c     | 312 ++++++++++++++++++++++-------
- drivers/soundwire/master.c         |  64 ++++++
- drivers/soundwire/slave.c          |  10 +-
- include/linux/soundwire/sdw.h      |  42 +++-
- include/linux/soundwire/sdw_type.h |  34 +++-
- 12 files changed, 668 insertions(+), 163 deletions(-)
- create mode 100644 drivers/soundwire/master.c
-
+diff --git a/drivers/net/hamradio/hdlcdrv.c b/drivers/net/hamradio/hdlcdrv.c
+index df495b5595f5..e7413a643929 100644
+--- a/drivers/net/hamradio/hdlcdrv.c
++++ b/drivers/net/hamradio/hdlcdrv.c
+@@ -687,8 +687,6 @@ struct net_device *hdlcdrv_register(const struct hdlcdrv_ops *ops,
+ 	struct hdlcdrv_state *s;
+ 	int err;
+ 
+-	BUG_ON(ops == NULL);
+-
+ 	if (privsize < sizeof(struct hdlcdrv_state))
+ 		privsize = sizeof(struct hdlcdrv_state);
+ 
 -- 
 2.20.1
 
