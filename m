@@ -2,113 +2,137 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47468C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F4CC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15B2B206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:14:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E860C206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:14:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BybHCU4A"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fCf3+rQC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728148AbfLQNOF (ORCPT
+        id S1728179AbfLQNOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 08:14:05 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:37905 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727202AbfLQNOE (ORCPT
+        Tue, 17 Dec 2019 08:14:19 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:46674 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727202AbfLQNOS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 08:14:04 -0500
-Received: by mail-qt1-f195.google.com with SMTP id n15so1002169qtp.5
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 05:14:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5hxHSznfGSxmFv1YcCaQUB87Luggj5Op/zVMd6ctM0Q=;
-        b=BybHCU4AaS6uGhJ9v2cwyHNDrNPFgB3wBQP2+U74AQULalxmshgSnKjbFLaBBywatb
-         MfjhCV/seKEtfdfgJO1wlfZmNLl9RciSue2tiZbfDghrYfWu00KuuTIDe/kajZRVSpBv
-         GbTcbcPCOl//Ku1pAn/R8UulYUnTL1ffddG0pKo49KOYswTDxOWPzyz73XEoOuouHwAF
-         HOrFQm9DsoNPLW306DZa0OwZdT358FY49k6XARlMPrsfCZZnBR6e0Nb5bNiCU15gg0lr
-         yxJypLM1121j7GU7LIF0gyBdCcv6ioPnSahtCBZXcveKafU5seT1vGu1z2b/HhqjPNxR
-         J3hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5hxHSznfGSxmFv1YcCaQUB87Luggj5Op/zVMd6ctM0Q=;
-        b=VNWPql507sRZrAZo7FOD8aSi+OYjTSWPUCcTjgz8F/9SNRs1CnwIaIfRAloSFS0FUR
-         uKehTCExcprIv4kcVCObNOhEMNUW2QnC0aIA2Giu3banP0zZpqLfVbp1nUxREAzU32l/
-         9I52f8cnevRqIYlkHQCwa3eXqap8jXTjbMUCNug+3LnVgfmPEWSQzDujunDWUvjtBUIZ
-         FbtepPUDkBQA/KTdMv7p7SkeOzg+5hijrEHpDu0JTnllO0t5AE11w6cSUszmdau+sQkJ
-         NfeJn4ehCu2QHkfhiX4V5vErCQsH6+rHGEMrGe+xFoX+b6UYH9t8WhnJuJe1Lbe9vFS6
-         4TPw==
-X-Gm-Message-State: APjAAAWi4FSixpG0aLjahYeQ6PTyLZJul0UBXgQUhxX7wGXwh8v02q6T
-        LH78+PknE7Q6bURYxAezthsKLQ68VxsWrda6x4GkNw==
-X-Google-Smtp-Source: APXvYqz5Jx0MFPW0vC7/p0drF+0gKehqljZHBUo1H2aq8mFouh6mTzEkafP3B772ZeLCvgYgQU+ECJlvVmXTGFD2vhY=
-X-Received: by 2002:ac8:71d7:: with SMTP id i23mr4484869qtp.50.1576588443442;
- Tue, 17 Dec 2019 05:14:03 -0800 (PST)
+        Tue, 17 Dec 2019 08:14:18 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBHDECDD035600;
+        Tue, 17 Dec 2019 07:14:12 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576588452;
+        bh=vV44X6DKUE88PgxfEZq2hgsou+dqVy3bJZRsCUIl+xU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=fCf3+rQCCiVfi/8tZAE1VfSWUiJHg1AjCXwo39J+xwacAHTOi3fjR6H5ubvgXNzb8
+         kpsvJUYYftIyjrO8AfCobR9OsW9MKGpetMIgUgFBcAqvauPrL+kl5z24JwDjCTn8p5
+         xVLKCbfN8uBC/CV2NHECMpv/VOvcw4jle6WbCHCk=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBHDECsk009710
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 17 Dec 2019 07:14:12 -0600
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
+ Dec 2019 07:14:11 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 17 Dec 2019 07:14:12 -0600
+Received: from [10.250.79.55] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBHDEBUU010091;
+        Tue, 17 Dec 2019 07:14:11 -0600
+Subject: Re: [PATCH] ARM: OMAP: Use ARM SMC Calling Convention when OP-TEE is
+ available
+To:     Tony Lindgren <tony@atomide.com>
+CC:     Mark Rutland <mark.rutland@arm.com>, <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <a351461a-f6a1-334b-6bdd-a56626914fb3@ti.com>
+ <20191119190721.GO35479@atomide.com>
+ <7fa11037-8d33-2274-c8cc-80e9630b38b0@ti.com>
+ <20191119192029.GP35479@atomide.com>
+ <0ad31b32-712e-5bef-5645-0336dfec99cc@ti.com>
+ <20191119194425.GQ35479@atomide.com>
+ <f2f53e5e-6c95-e32f-d67a-284bb88e73e0@ti.com>
+ <1ff8ae4b-5de3-4fdf-7318-d33398dc7fc8@ti.com>
+ <20191216210407.GR35479@atomide.com>
+ <9adad579-98b4-f228-caf3-f4996dcaecda@ti.com>
+ <20191216224105.GS35479@atomide.com>
+From:   "Andrew F. Davis" <afd@ti.com>
+Message-ID: <35e4b682-0d2f-23b1-6df4-428c6bcb4d59@ti.com>
+Date:   Tue, 17 Dec 2019 08:14:11 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <3c4608bc-9c84-d79b-de76-b1a1a2a4fb6d@gmail.com>
- <CACT4Y+b3nvFAgM32SF0Bv46EOO4UFEK3M99pqYzEwmsmLvmhTQ@mail.gmail.com> <e0305f5c-ae52-c144-fe50-00f3f815ad82@gmail.com>
-In-Reply-To: <e0305f5c-ae52-c144-fe50-00f3f815ad82@gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 17 Dec 2019 14:13:52 +0100
-Message-ID: <CACT4Y+YLxmFTkDT88z9y5yH75bAi42-Hqatv9z2-EyufTtKHRw@mail.gmail.com>
-Subject: Re: [BUG] kernel: kcov: a possible sleep-in-atomic-context bug in kcov_ioctl()
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Hans Liljestrand <ishkamiel@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191216224105.GS35479@atomide.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 2:11 PM Jia-Ju Bai <baijiaju1990@gmail.com> wrote:
-> On 2019/12/17 21:02, Dmitry Vyukov wrote:
-> > On Tue, Dec 17, 2019 at 1:56 PM Jia-Ju Bai <baijiaju1990@gmail.com> wrote:
-> >> The kernel may sleep while holding a spinlock.
-> >> The function call path (from bottom to top) in Linux 4.19 is:
-> >>
-> >> kernel/kcov.c, 237:
-> >>       vfree in kcov_put
-> >> kernel/kcov.c, 413:
-> >>       kcov_put in kcov_ioctl_locked
-> >> kernel/kcov.c, 427:
-> >>       kcov_ioctl_locked in kcov_ioctl
-> >> kernel/kcov.c, 426:
-> >>       spin_lock in kcov_ioctl
-> >>
-> >> vfree() can sleep at runtime.
-> >>
-> >> I am not sure how to properly fix this possible bug, so I only report it.
-> >> A possible way is to replace vfree() with kfree(), and replace related
-> >> calls to vmalloc() with kmalloc().
-> >>
-> >> This bug is found by a static analysis tool STCheck written by myself.
-> > Hi Jia-Ju,
-> >
-> > Are you sure kcov_ioctl_locked can really release the descriptor? It
-> > happens in the context of ioctl, which means there is an open
-> > reference for the file descriptor. So ioctl should not do vfree I
-> > would assume.
->
-> Thanks for the reply :)
-> I am not sure, because I am not familiar with kcov.
-> But looking at the code, if the reference count of kcov is 1, vfree()
-> could be called.
+On 12/16/19 5:41 PM, Tony Lindgren wrote:
+> * Andrew F. Davis <afd@ti.com> [191216 22:34]:
+>> On 12/16/19 4:04 PM, Tony Lindgren wrote:
+>>> * Andrew F. Davis <afd@ti.com> [191216 20:57]:
+>>>> Looks like the TI quirk idea is not moving forward, even the QCOM quirk
+>>>> looks like it may get kicked out. arm_smccc_smc() will remain only for
+>>>> SMCCC compliant calls, but it looks like a generic arm_smc() wouldn't be
+>>>> too opposed upstream.
+>>>
+>>> Yes so it seems.
+>>>
+>>>> Either way this patch would still be valid as when OP-TEE is present
+>>>> then arm_smccc_smc() will be the right call to make, how we handle the
+>>>> legacy calls can be sorted out later if a generic SMC call is implemented.
+>>>
+>>> Please see my comment regarding this patch earlier in this thread
+>>> pasted below for convenience:
+>>>
+>>> * Tony Lindgren <tony@atomide.com> [191119 16:22]:
+>>>> In any case, you should do the necessary checks for HAVE_ARM_SMCCC
+>>>> only once during init. I'm not sure how much checking for
+>>>> "/firmware/optee" helps here, sounds like we have a broken system
+>>>> if the firmware is not there while the arm_smccc_smc() should
+>>>> still work just fine :)
+>>>
+>>> So only check once during init. And during init, you should probably
+>>> also check that arm_smccc_smc() actually infd optee if
+>>> "/firmware/optee" is set, and only then set set the right function
+>>> pointer or some flag.
+>>>
+>>
+>> Okay, I'll check only once and make sure the node is "okay".
+> 
+> Yes we don't want to parse the dts over and over.
+> 
+>> I'll do the check during the first call to an SMC caller, I wouldn't
+>> want to pollute the OMAP generic init code for something that is only
+>> called on HS platforms, plus these SMC calls are rare (only 3 calls
+>> during boot of AM57x for instance) so performance is not critical, so I
+>> don't want to do anything fancy like code patching :), I'll just use a flag.
+> 
+> Please just add omap_early_initcall() to omap-secure.c while at it
+> to deal with this.
+> 
 
-That kcov_put should never call vfree. We still hold reference
-associated with the file, which will be released in kcov_close.
+
+omap_early_initcall()s are not called until after all the SMC calls have
+already happened.
+
+Andrew
+
+
+> Regards,
+> 
+> Tony
+> 
