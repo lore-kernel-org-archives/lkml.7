@@ -2,76 +2,139 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C38C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BAD1C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 976F620663
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2364F20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:58:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576587517;
+	bh=qyUt/davjLvtK3mavReoj0jtmhbwGyLG7WloreATmv0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vSwfv2JDBL+UOYWJ2d10BgKWrc8V74sE9Ll4+ebTdmuNLKBp6vVXfZoODuVFIfCbT
+	 B/itlXoxv7FNG+TmAeUvE/2shzTTbWdt5tnGRQSGL+iv9h3v7ZpEiqv3ZvRtZAAQHL
+	 MS7U9yR0RRpMUQmNWAoozus/Y21guFGHUk09nFy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbfLQM5k (ORCPT
+        id S1727854AbfLQM6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:57:40 -0500
-Received: from foss.arm.com ([217.140.110.172]:36312 "EHLO foss.arm.com"
+        Tue, 17 Dec 2019 07:58:36 -0500
+Received: from foss.arm.com ([217.140.110.172]:36344 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726141AbfLQM5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 07:57:40 -0500
+        id S1726141AbfLQM6f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 07:58:35 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 661C131B;
-        Tue, 17 Dec 2019 04:57:39 -0800 (PST)
-Received: from [192.168.0.9] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 759FF3F719;
-        Tue, 17 Dec 2019 04:57:37 -0800 (PST)
-Subject: Re: [Patch v6 4/7] sched/fair: Enable periodic update of average
- thermal pressure
-To:     Quentin Perret <qperret@google.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Thara Gopinath <thara.gopinath@linaro.org>, mingo@redhat.com,
-        ionela.voinescu@arm.com, vincent.guittot@linaro.org,
-        rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        viresh.kumar@linaro.org, linux-kernel@vger.kernel.org,
-        amit.kachhap@gmail.com, javi.merino@kernel.org,
-        amit.kucheria@verdurent.com
-References: <1576123908-12105-1-git-send-email-thara.gopinath@linaro.org>
- <1576123908-12105-5-git-send-email-thara.gopinath@linaro.org>
- <20191216143932.GT2844@hirez.programming.kicks-ass.net>
- <20191216175901.GA157313@google.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <78b0f8a6-462b-acca-7682-f5269fea17c5@arm.com>
-Date:   Tue, 17 Dec 2019 13:57:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B54A331B;
+        Tue, 17 Dec 2019 04:58:34 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 34EF33F719;
+        Tue, 17 Dec 2019 04:58:33 -0800 (PST)
+Date:   Tue, 17 Dec 2019 12:58:32 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "andrew@aj.id.au" <andrew@aj.id.au>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
+ selection documentation
+Message-ID: <20191217125832.GF4755@sirena.org.uk>
+References: <20191204134631.GT1998@sirena.org.uk>
+ <20191210094144.mxximpuouchy3fqu@pengutronix.de>
+ <AM5PR1001MB099497419E4DCA69D424EC35805A0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
+ <20191212161019.GF4310@sirena.org.uk>
+ <20191212162152.5uu3feacduetysq7@pengutronix.de>
+ <20191212165124.GJ4310@sirena.org.uk>
+ <20191216085525.csr2aglm5md4vtsw@pengutronix.de>
+ <20191216114454.GB4161@sirena.org.uk>
+ <20191217073533.GC31182@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20191216175901.GA157313@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="0hHDr/TIsw4o3iPK"
+Content-Disposition: inline
+In-Reply-To: <20191217073533.GC31182@pengutronix.de>
+X-Cookie: Thufir's a Harkonnen now.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/12/2019 18:59, Quentin Perret wrote:
-> On Monday 16 Dec 2019 at 15:39:32 (+0100), Peter Zijlstra wrote:
->>> @@ -10274,6 +10281,7 @@ static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
->>>  
->>>  	update_misfit_status(curr, rq);
->>>  	update_overutilized_status(task_rq(curr));
->>> +	update_thermal_load_avg(rq_clock_task(rq), rq, thermal_pressure);
->>>  }
->>
->> My objection here is that when the arch does not have support for it,
->> there is still code generated and runtime overhead associated with it.
-> 
-> I guess this function could be stubbed for CONFIG_CPU_THERMAL=n ?
-> That is, reflecting the thermal pressure in the scheduler only makes
-> sense when the thermal infrastructure is enabled to begin with (which is
-> indeed not the case for most archs).
 
-Makes sense to me. If we can agree that 'CPU cooling' is the only actor
-for thermal (CPU capacity) capping.
+--0hHDr/TIsw4o3iPK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-thermal_sys-$(CONFIG_CPU_THERMAL)       += cpu_cooling.o
+On Tue, Dec 17, 2019 at 08:35:33AM +0100, Marco Felsch wrote:
+> On 19-12-16 11:44, Mark Brown wrote:
+
+> > What I'm saying is that I think the binding needs to explicitly talk
+> > about that since at the minute it's really confusing reading it as it
+> > is, it sounds very much like it's trying to override that in a chip
+> > specific fashion as using gpiolib and the GPIO bindings for pinmuxing is
+> > really quite unusual.
+
+> Hm.. I still think that we don't mux the pin to some special function.
+> It is still a gpio input pin and if we don't request the pin we could
+> read the input from user-space too and get a 'valid' value. Muxing would
+> happen if we change the pad to so called _alternate_ function. Anyway,
+> lets find a binding description:
+
+I don't think any of this makes much difference from a user point of
+view.
+
+> IMHO this is very descriptive and needs no update.
+
+> description:
+>  - A GPIO reference to a local general purpose input, [1] calls it GPI.
+>    The DA9062 regulators can select between voltage-a/-b settings.
+>    Each regulator has a VBUCK*_GPI or VLDO*_GPI input to determine the
+>    active setting. In front of the VBUCK*_GPI/VLDO*_GPI input is a mux
+>    to select between different signal sources, valid sources are: the
+>    internal sequencer, GPI1, GPI2 and GPI3. See [1] table 63 for more
+>    information. Most the time the internal sequencer is fine but
+>    sometimes it is necessary to use the signal from the DA9062 GPI
+>    pads. This binding covers the second use case.
+>    Attention: Sharing the same GPI for other purposes or across multiple
+>    regulators is possible but the polarity setting must equal.
+
+This doesn't say anything about how the GPIO input is expected to be
+controlled, for voltage setting any runtime control would need to be
+done by the driver and it sounds like that's all that can be controlled.
+The way this reads I'd expect one use of this to be for fast voltage
+setting for example (you could even combine that with suspend sequencing
+using the internal sequencer if you mux back to the sequencer during
+suspend).
+
+--0hHDr/TIsw4o3iPK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl340PcACgkQJNaLcl1U
+h9BQJwf/ZRW2Sc0sN6zR4aGO1ekytPGFqpZCQbZG5T5CX9CTgmD+QldwXmP9gB0A
+fAa98/pWCJQHoEVQQxbrVMEpfoFKUTONO5xv+/jA8lq5MTxo9/s9U4mZcVulaCEk
+uiWXoDvSF6LrgQvsJpkFooRbdrUDHxwF73qd+qfxGkDknsayb7XPPt1O2AWzLFCN
+dezSJXFa8Xw+qa+y3H6r1W9+siNEIGYp2qjNlUWFtltrZav2ys2TxITxYXlQundv
+9iX5+AIzFWeAMsMdoMp17Q49QWW5bYCQ4p3d3M8jtRvGN7LpZflN79S4sWYEuhQe
+XYgXLKaDfjer7VeQkopSdft+oAo3Pg==
+=iy8V
+-----END PGP SIGNATURE-----
+
+--0hHDr/TIsw4o3iPK--
