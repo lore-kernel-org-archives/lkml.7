@@ -2,126 +2,89 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 451ABC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13EF5C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1734C2146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:56:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TUW/RU8Q"
+	by mail.kernel.org (Postfix) with ESMTP id E5FA12146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:56:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728126AbfLQO4Z (ORCPT
+        id S1728437AbfLQO4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:56:25 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42817 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726560AbfLQO4Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:56:24 -0500
-Received: by mail-pf1-f196.google.com with SMTP id 4so7679026pfz.9
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 06:56:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6meippeJPq3V/6dFbe3SNBZG6CocNU6mEMezHWgZAnI=;
-        b=TUW/RU8QNy/fmc3Um1W4OXw9FEsshRo5S7hPpVF2jBHXiU7gAiSpW8OwcqgFWW21Sv
-         3LrqFgpNeQljP9sVmJC8bprFtyjC8VYakcsKjsZNooDMViS6aXlMSZLcJMdjaGyTLOvD
-         y0eOiRT/lEvJvIVGvi7NR0POyQK5YKRuS+pi6iyTLTYe6rq+vqsTzmqDmcIuivr5HE1S
-         dr9hZ+BnTzUDN7wNJ5oG0lfd5RThr5Og906BOjdBOI7JD9nre+eh6MNjV1WmyXMETnO0
-         hDltlSX54Ahs7slNK9bcy3zdF9eXz2oYLZa5ZHadANUmJj2W3/uvgZnJ6rqjB+OwvXJm
-         oWQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6meippeJPq3V/6dFbe3SNBZG6CocNU6mEMezHWgZAnI=;
-        b=K38LsCH5hliy+QZI3SkIdNxzPiDYRMKDNbQ9p03L4TIeva5n+rXBagxBuisLzLM7C/
-         7nstP65LgsnqspA4vLovej1QevZrBXvBob964x161Ya0t7bqc71RVNVoX5VKGNW5riVv
-         7h27o55ot3AGB87yE3SISzFsR8ZEAM/8ebrHAjW4j91XkBfRGWSGXJ64e/RaI/oEtbSr
-         ySExLIOdA5bdM+fV6JGhA3uFusqbOq8S2DmqW50A7k/raRr1/aoYBn7waBZX0eQgnEWy
-         sx2yR/7PlKspXSEPz7ktByzWu5CsTBOTIFKq7u1UtW6cJhVXvLNpv70kksW8GPzvS40m
-         u9iw==
-X-Gm-Message-State: APjAAAXzrR6Oiu6ue67N2PxOE5JfxquNKsBTsQal/TcjskZ050hU6mw6
-        5uzu9kGBPNxVgGM8JE5NXEc=
-X-Google-Smtp-Source: APXvYqxQCOIMrmWSrXbDmjUz1OOxBLovYcpHFXOpdP1mRiJzqZH2SCvLHU48HDogJ7yPqULTXFd6yA==
-X-Received: by 2002:aa7:9ab6:: with SMTP id x22mr22317876pfi.260.1576594584275;
-        Tue, 17 Dec 2019 06:56:24 -0800 (PST)
-Received: from localhost ([43.224.245.179])
-        by smtp.gmail.com with ESMTPSA id z13sm3856186pjz.15.2019.12.17.06.56.23
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Tue, 17 Dec 2019 06:56:23 -0800 (PST)
-Date:   Tue, 17 Dec 2019 22:56:20 +0800
-From:   chenqiwu <qiwuchen55@gmail.com>
-To:     Oleg Nesterov <oleg@redhat.com>, christian.brauner@ubuntu.com,
-        peterz@infradead.org, mingo@kernel.org
-Cc:     kernel-team@android.com, linux-kernel@vger.kernel.org,
-        chenqiwu@xiaomi.com
-Subject: Re: [PATCH v2] kernel/exit: do panic earlier to get coredump if
- global init task exit
-Message-ID: <20191217145620.GA26585@cqw-OptiPlex-7050>
-References: <1576466324-6067-1-git-send-email-qiwuchen55@gmail.com>
- <20191216172841.GA10466@redhat.com>
- <20191216174410.xiqurqnqyipbuy4e@wittgenstein>
- <20191217105042.GA21784@cqw-OptiPlex-7050>
- <20191217142515.GB23152@redhat.com>
+        Tue, 17 Dec 2019 09:56:39 -0500
+Received: from mga12.intel.com ([192.55.52.136]:40919 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726560AbfLQO4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 09:56:39 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 06:56:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,325,1571727600"; 
+   d="scan'208";a="221779419"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 17 Dec 2019 06:56:33 -0800
+Received: by lahna (sSMTP sendmail emulation); Tue, 17 Dec 2019 16:56:32 +0200
+Date:   Tue, 17 Dec 2019 16:56:32 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-usb@vger.kernel.org,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Rajmohan Mani <rajmohan.mani@intel.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Lukas Wunner <lukas@wunner.de>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Mario.Limonciello@dell.com,
+        Anthony Wong <anthony.wong@canonical.com>,
+        Oliver Neukum <oneukum@suse.com>,
+        Christian Kellner <ckellner@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/9] thunderbolt: Populate PG field in hot plug
+ acknowledgment packet
+Message-ID: <20191217145632.GM2913417@lahna.fi.intel.com>
+References: <20191217123345.31850-1-mika.westerberg@linux.intel.com>
+ <20191217123345.31850-4-mika.westerberg@linux.intel.com>
+ <20191217124745.GC3175457@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191217142515.GB23152@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20191217124745.GC3175457@kroah.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 03:25:15PM +0100, Oleg Nesterov wrote:
-> On 12/17, chenqiwu wrote:
-> >
-> > @@ -728,6 +724,15 @@ void __noreturn do_exit(long code)
-> >                 panic("Attempted to kill the idle task!");
-> >
-> >         /*
-> > +        * If all threads of global init have exited, do panic imeddiately
-> > +        * to get the coredump to find any clue for init task in userspace.
-> > +        */
-> > +       if (unlikely(is_global_init(tsk) &&
-> > +               (atomic_read(&tsk->signal->live) == 1)))
+On Tue, Dec 17, 2019 at 01:47:45PM +0100, Greg Kroah-Hartman wrote:
+> On Tue, Dec 17, 2019 at 03:33:39PM +0300, Mika Westerberg wrote:
+> > USB4 1.0 section 6.4.2.7 specifies a new field (PG) in notification
+> > packet that is sent as response of hot plug/unplug events. This field
+> > tells whether the acknowledgment is for plug or unplug event. This needs
+> > to be set accordingly in order the router to send further hot plug
+> > notifications.
+> > 
+> > To make it simpler we fill the field unconditionally. Legacy devices do
+> > not look at this field so there should be no problems with them.
+> > 
+> > While there rename tb_cfg_error() to tb_cfg_ack_plug() and update the
+> > log message accordingly. The function is only used to ack plug/unplug
+> > events.
+> > 
+> > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 > 
-> Well, I guess this will work in practice, but in theory this is racy.
-> 
-> Suppose that signal->live == 2 and both threads exit in parallel. They
-> both can see tsk->signal->live == 2 before atomic_dec_and_test().
-> 
-> If you are fine with this race I won't object, but please add a comment.
-> 
-> But why can't you simply do
-> 
-> 	--- x/kernel/exit.c
-> 	+++ x/kernel/exit.c
-> 	@@ -786,6 +786,8 @@ void __noreturn do_exit(long code)
-> 		acct_update_integrals(tsk);
-> 		group_dead = atomic_dec_and_test(&tsk->signal->live);
-> 		if (group_dead) {
-> 	+		if (unlikely(is_global_init(tsk)
-> 	+			panic(...);
-> 	 #ifdef CONFIG_POSIX_TIMERS
-> 			hrtimer_cancel(&tsk->signal->real_timer);
-> 			exit_itimers(tsk->signal);
-> 
-> ?
-> 
-> Oleg.
->
+> First 3 patches look "trivial" enough for me to take right now, any
+> objection to that?
 
-Oh, yeah, thanks for your reminds! But in fact, I think atomic_read()
-can avoid the racy even if both threads exit in parallel, since it is
-an atomic operation forever. I agree your simply modify, is there any
-other questions?
+No objections from my side :)
 
+> Should I be using my usb tree for this?
 
+Yes, I think it makes sense now that this is also under USB IF umbrella.
