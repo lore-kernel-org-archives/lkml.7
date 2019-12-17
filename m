@@ -2,222 +2,358 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BDB7C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F8D2C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1949521582
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:35:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 326B820674
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:39:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="VolFhCqg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbfLQQfF (ORCPT
+        id S1728474AbfLQQjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 11:35:05 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:50102 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728009AbfLQQfF (ORCPT
+        Tue, 17 Dec 2019 11:39:31 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:3557 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727766AbfLQQja (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 11:35:05 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 022D929240D
-Message-ID: <f867543cf5d0fc3fdd0534749326411bcfc5e363.camel@collabora.com>
-Subject: Re: Warnings in DRM code when removing/unbinding a driver
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     John Garry <john.garry@huawei.com>,
-        xinliang <z.liuxinliang@hisilicon.com>,
-        "kongxinwei (A)" <kong.kongxinwei@hisilicon.com>,
-        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
-        "airlied@linux.ie" <airlied@linux.ie>, daniel@ffwll.ch
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-Date:   Tue, 17 Dec 2019 13:34:52 -0300
-In-Reply-To: <07899bd5-e9a5-cff0-395f-b4fb3f0f7f6c@huawei.com>
-References: <07899bd5-e9a5-cff0-395f-b4fb3f0f7f6c@huawei.com>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-2 
+        Tue, 17 Dec 2019 11:39:30 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5df904b80000>; Tue, 17 Dec 2019 08:39:20 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 17 Dec 2019 08:39:29 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 17 Dec 2019 08:39:29 -0800
+Received: from [10.2.174.101] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 17 Dec
+ 2019 16:39:27 +0000
+Subject: Re: [PATCH v3 08/15] ASoC: tegra: Add audio mclk control through
+ clk_out_1 and extern1
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <mperttunen@nvidia.com>, <sboyd@kernel.org>
+CC:     <gregkh@linuxfoundation.org>, <tglx@linutronix.de>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <allison@lohutok.net>, <pdeschrijver@nvidia.com>,
+        <pgaikwad@nvidia.com>, <mturquette@baylibre.com>,
+        <horms+renesas@verge.net.au>, <Jisheng.Zhang@synaptics.com>,
+        <krzk@kernel.org>, <arnd@arndb.de>, <spujar@nvidia.com>,
+        <josephl@nvidia.com>, <vidyas@nvidia.com>,
+        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
+        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <lgirdwood@gmail.com>,
+        <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
+        <alexios.zavras@intel.com>, <alsa-devel@alsa-project.org>
+References: <1575600535-26877-1-git-send-email-skomatineni@nvidia.com>
+ <1575600535-26877-9-git-send-email-skomatineni@nvidia.com>
+ <0ce2e83b-800c-da1e-7a3c-3cf1427cfe20@gmail.com>
+ <2eeceabe-b5f0-6f9e-ff8c-4ac6167b7cc3@nvidia.com>
+ <41a7325c-9bb9-f681-4d30-d19079869d12@nvidia.com>
+ <d8f158cd-3bf5-383a-c9fe-650f6d7ac178@gmail.com>
+ <fc491006-a316-5910-acb1-659c768b1038@nvidia.com>
+ <225860bb-38e0-75ea-c08f-6090b2fc16b0@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <8fabffb2-f03a-dccb-94b6-4db16604f57d@nvidia.com>
+Date:   Tue, 17 Dec 2019 08:39:26 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <225860bb-38e0-75ea-c08f-6090b2fc16b0@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1576600760; bh=Uoy41gK6j7qnrZ+HKxo+C9rlMKnZ4kbXsWorJjjJfvI=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=VolFhCqgeT5n05KtTwfj45cuPVUJ5ZzjaBwOKAuY5L3d2Dv75EtLvNIHJ9fX3WBHF
+         6SOJMCa5xfydvlGUGYMTMYpwtfA3mF1OPRHx0GZKUqmHJLgSPXlafXKDOU4urC3Nrc
+         qxmKam44KuBU3Bj29m36zl8IpkRHyngmimCcsH0H3zP/OBLcFbMdrmD4ZbG9ACwpFH
+         0yUYWFgMV/nS4zJrIRnv9BKISoT/to4GUb/s0ot1hhpjRnSpuIK/WXXjfwtGHhmpBf
+         q1+qQ++Ry/NeE3f3MW2lc4eqf3YELrC6H3jDGWHcAE2BpEU9NYFGtT8GQRmLLXSll9
+         PhsErkaDtv1Tw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
 
-On Mon, 2019-12-16 at 17:23 +0000, John Garry wrote:
-> Hi all,
-> 
-> Enabling CONFIG_DEBUG_TEST_DRIVER_REMOVE causes many warns on a system 
-> with the HIBMC hw:
-> 
-> [   27.788806] WARNING: CPU: 24 PID: 1 at 
-> drivers/gpu/drm/drm_gem_vram_helper.c:564 bo_driver_move_notify+0x8c/0x98
+On 12/17/19 8:16 AM, Dmitry Osipenko wrote:
+> 17.12.2019 19:12, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 12/17/19 7:36 AM, Dmitry Osipenko wrote:
+>>> 17.12.2019 04:29, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> On 12/7/19 11:20 AM, Sowjanya Komatineni wrote:
+>>>>> On 12/7/19 6:58 AM, Dmitry Osipenko wrote:
+>>>>>> 06.12.2019 05:48, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82=
+:
+>>>>>>> Current ASoC driver uses extern1 as cdev1 clock from Tegra30 onward=
+s
+>>>>>>> through device tree.
+>>>>>>>
+>>>>>>> Actual audio mclk is clk_out_1 and to use PLLA for mclk rate contro=
+l,
+>>>>>>> need to clk_out_1_mux parent to extern1 and extern1 parent to
+>>>>>>> PLLA_OUT0.
+>>>>>>>
+>>>>>>> Currently Tegra clock driver init sets the parents and enables both
+>>>>>>> clk_out_1 and extern1 clocks. But these clocks parent and enables
+>>>>>>> should
+>>>>>>> be controlled by ASoC driver.
+>>>>>>>
+>>>>>>> Clock parents can be specified in device tree using assigned-clocks
+>>>>>>> and assigned-clock-parents.
+>>>>>>>
+>>>>>>> To enable audio mclk, both clk_out_1 and extern1 clocks need to be
+>>>>>>> enabled.
+>>>>>>>
+>>>>>>> This patch configures parents for clk_out_1 and extern1 clocks if
+>>>>>>> device
+>>>>>>> tree does not specify clock parents inorder to support old device
+>>>>>>> tree
+>>>>>>> and controls mclk using both clk_out_1 and extern1 clocks.
+>>>>>>>
+>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>>>> ---
+>>>>>>>  =C2=A0=C2=A0 sound/soc/tegra/tegra_asoc_utils.c | 66
+>>>>>>> ++++++++++++++++++++++++++++++++++++++
+>>>>>>>  =C2=A0=C2=A0 sound/soc/tegra/tegra_asoc_utils.h |=C2=A0 1 +
+>>>>>>>  =C2=A0=C2=A0 2 files changed, 67 insertions(+)
+>>>>>>>
+>>>>>>> diff --git a/sound/soc/tegra/tegra_asoc_utils.c
+>>>>>>> b/sound/soc/tegra/tegra_asoc_utils.c
+>>>>>>> index 536a578e9512..8e3a3740df7c 100644
+>>>>>>> --- a/sound/soc/tegra/tegra_asoc_utils.c
+>>>>>>> +++ b/sound/soc/tegra/tegra_asoc_utils.c
+>>>>>>> @@ -60,6 +60,7 @@ int tegra_asoc_utils_set_rate(struct
+>>>>>>> tegra_asoc_utils_data *data, int srate,
+>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->set_mclk =3D 0;
+>>>>>>>  =C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_disable_unprepare(=
+data->clk_cdev1);
+>>>>>>> +=C2=A0=C2=A0=C2=A0 clk_disable_unprepare(data->clk_extern1);
+>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_disable_unprepare(data->c=
+lk_pll_a_out0);
+>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_disable_unprepare(data->c=
+lk_pll_a);
+>>>>>>>  =C2=A0=C2=A0 @@ -89,6 +90,14 @@ int tegra_asoc_utils_set_rate(stru=
+ct
+>>>>>>> tegra_asoc_utils_data *data, int srate,
+>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 retur=
+n err;
+>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>>>>  =C2=A0=C2=A0 +=C2=A0=C2=A0=C2=A0 if (!IS_ERR_OR_NULL(data->clk_ext=
+ern1)) {
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err =3D clk_prepare_ena=
+ble(data->clk_extern1);
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (err) {
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ dev_err(data->dev, "Can't enable extern1: %d\n", err);
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ return err;
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>>>> +=C2=A0=C2=A0=C2=A0 }
+>>>>>>> +
+>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err =3D clk_prepare_enable(da=
+ta->clk_cdev1);
+>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (err) {
+>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_e=
+rr(data->dev, "Can't enable cdev1: %d\n", err);
+>>>>>>> @@ -109,6 +118,7 @@ int tegra_asoc_utils_set_ac97_rate(struct
+>>>>>>> tegra_asoc_utils_data *data)
+>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int err;
+>>>>>>>  =C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_disable_unprepare(=
+data->clk_cdev1);
+>>>>>>> +=C2=A0=C2=A0=C2=A0 clk_disable_unprepare(data->clk_extern1);
+>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_disable_unprepare(data->c=
+lk_pll_a_out0);
+>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_disable_unprepare(data->c=
+lk_pll_a);
+>>>>>>>  =C2=A0=C2=A0 @@ -142,6 +152,14 @@ int tegra_asoc_utils_set_ac97_ra=
+te(struct
+>>>>>>> tegra_asoc_utils_data *data)
+>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 retur=
+n err;
+>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>>>>  =C2=A0=C2=A0 +=C2=A0=C2=A0=C2=A0 if (!IS_ERR_OR_NULL(data->clk_ext=
+ern1)) {
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err =3D clk_prepare_ena=
+ble(data->clk_extern1);
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (err) {
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ dev_err(data->dev, "Can't enable extern1: %d\n", err);
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ return err;
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>>>> +=C2=A0=C2=A0=C2=A0 }
+>>>>>> Why this is needed given that clk_extern1 is either a child of MCLK =
+or
+>>>>>> MCLK itself (on T20)? The child clocks are enabled when the parent i=
+s
+>>>>>> enabled.
+>>>>> For T30 and later, clk_extern1 is one of the source for clk_out_1_mux=
+.
+>>>>> clk_extern1 is in CAR and it has its own gate and mux.
+>>>>>
+>>>>> As audio mclk related clocks (clk_out_1, clk_out_1_mux, and extern1)
+>>>>> are moved into ASoC driver from clock driver
+>>>>>
+>>>>> need to enable extern1 gate as well along with clk_out1 for T30
+>>>>> through T210.
+>>>>>
+>>>>> Just FYI, extern1 enable here happens only when data->clk_extern1 is
+>>>>> available which is for T30 onwards.
+>>>>>
+>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err =3D clk_prepare_enable(da=
+ta->clk_cdev1);
+>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (err) {
+>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_e=
+rr(data->dev, "Can't enable cdev1: %d\n", err);
+>>>>>>> @@ -158,6 +176,7 @@
+>>>>>>> EXPORT_SYMBOL_GPL(tegra_asoc_utils_set_ac97_rate);
+>>>>>>>  =C2=A0=C2=A0 int tegra_asoc_utils_init(struct tegra_asoc_utils_dat=
+a *data,
+>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct device *dev)
+>>>>>>>  =C2=A0=C2=A0 {
+>>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk *clk_out_1_mux;
+>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int ret;
+>>>>>>>  =C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->dev =3D dev;
+>>>>>>> @@ -196,6 +215,51 @@ int tegra_asoc_utils_init(struct
+>>>>>>> tegra_asoc_utils_data *data,
+>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto =
+err_put_pll_a_out0;
+>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>>> In a previous patch you added fallback to EXTPERIPH when clk_get(MCL=
+K)
+>>>>>> fails. This will work perfectly fine for the older kernels which hav=
+e
+>>>>>> all clocks in the same single CaR driver, but this may not work that
+>>>>>> great for the newer kernels because PMC driver isn't registered earl=
+y
+>>>>>> during boot and thus it is possible to get a legit -EPROBE_DEFER whi=
+ch
+>>>>>> shouldn't be ignored. In other words, you need to add into this
+>>>>>> patch a
+>>>>>> check for the error code returned by clk_get(MCLK) and fallback
+>>>>>> only for
+>>>>>> -EINVAL.
+>>>>> yeah right, will add check in next version.
+>>>>>>> +=C2=A0=C2=A0=C2=A0 /*
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * If clock parents are not set in DT, con=
+figure here to use
+>>>>>>> clk_out_1
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * as mclk and extern1 as parent for Tegra=
+30 and higher.
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 */
+>>>>>>> +=C2=A0=C2=A0=C2=A0 if (!of_find_property(dev->of_node, "assigned-c=
+lock-parents",
+>>>>>>> NULL) &&
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->soc > TEGRA_ASOC_=
+UTILS_SOC_TEGRA20) {
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->clk_extern1 =3D c=
+lk_get_sys("clk_out_1", "extern1");
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (IS_ERR(data->clk_ex=
+tern1)) {
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ dev_err(data->dev, "Can't retrieve clk extern1\n");
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ ret =3D PTR_ERR(data->clk_extern1);
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ goto err_put_cdev1;
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>>>> +
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D clk_set_parent(=
+data->clk_extern1,
+>>>>>>> data->clk_pll_a_out0);
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0) {
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ dev_err(data->dev,
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 "Set parent failed for clk extern1: %d\n",
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 ret);
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ goto err_put_cdev1;
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>>>> +
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_out_1_mux =3D clk_g=
+et_sys(NULL, "clk_out_1_mux");
+>>>>>> Note1: clk_get(dev, "clk_out_1_mux") should work here by letting clk
+>>>>>> core to fall back to the clk_get_sys() by itself. Either way should
+>>>>>> be good.
+>>>> clk_get uses device rather and dev_id will be name of this device and
+>>>> when clk_get fall back to __clk_get_sys() it still will use dev id of
+>>>> this device rather than actual dev_id that pmc clocks are added to the
+>>>> lookup. So clk_get_sys() seems to be correct to use as we can specify
+>>>> exact dev_id and con_id.
+>>> It should be better to use something "resource managed", thus
+>>> devm_clk_get() should be a better choice.
+>>>
+>>>> Also, clk_find retrieves clock from lookup only when it finds matching
+>>>> clock with both dev_id and con_id as pmc clocks are registered with bo=
+th
+>>>> dev_id and con_id.
+>>>>
+>>>> I see existing clock driver adds both extern and pmc clocks (clk_out) =
+to
+>>>> lookup with same dev_id of clk_out_1/2/3 and con_id of extern1/2/3 and
+>>>> with this always extern clock will be retrieved and this is probably
+>>>> because old DT and audio driver always uses extern1 rather than actual
+>>>> clk_out_1
+>>>>
+>>>> But this need to be fixed now as we changed to use clk_out directly
+>>>> rather than extern (even for other pmc clocks) to match actual hw
+>>>> design.
+>>>>
+>>>> Will fix this as well to register pmc clocks using con_id as
+>>>> clk_out_1/2/3 in pmc driver and extern clocks using con_id of
+>>>> extern1/2/3 with dev_id being NULL so we can retrieve these clocks by
+>>>> just using con_id only using clk_get_sys as we switched to use clk_out=
+_1
+>>>> directly as pmc clock rather than extern from DT and no longer need to
+>>>> pair pmc clocks to extern clocks.
+>>> I'm not sure it's worth the effort to care about con_ids if implicit
+>>> fallback to clk_get_sys(NULL, "...") does the right thing for the audio
+>>> driver.
+>>>
+>>> IIRC, CCF uses variant of matching clocks by names, although I'm not
+>>> sure whether that applies to older stable kernels.
+>>>
+>>> [snip]
+>> Current clock driver adds EXTERN clock to lookup with dev_id as
+>> clk_out_1/2/3 and con_id as extern_1/2/3
+>>
+>> With this we can retrieve clock from lookup only with clk_get_sys where
+>> we can pass dev_id as clk_out_1/2/3 and con_id as extern_1/2/3.
+>>
+>> We cant use devm_clk_get() or clk_get() for retrieving clocks from
+>> lookup by passing device object from sound driver as dev_id will be diff
+>> and clk_find will return NULL.
+> Have you actually tried to test that it fails? I think it's a false
+> assumption.
 
-A total shot in the dark. This might make no sense,
-but it's worth a try:
+Yes I tried and looking at devm_clk_get it falls back to __clk_get_sys=20
+which uses dev_id as dev_name of the device we pass from audio driver.
 
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-index 2fd4ca91a62d..69bb0e29da88 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-+++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-@@ -247,9 +247,8 @@ static int hibmc_unload(struct drm_device *dev)
- {
-        struct hibmc_drm_private *priv = dev->dev_private;
- 
--       hibmc_fbdev_fini(priv);
--
-        drm_atomic_helper_shutdown(dev);
-+       hibmc_fbdev_fini(priv);
- 
-        if (dev->irq_enabled)
-                drm_irq_uninstall(dev);
-
-Hope it helps,
-Ezequiel
-
-> [   27.798969] Modules linked in:
-> [   27.802018] CPU: 24 PID: 1 Comm: swapper/0 Tainted: G    B 
->   5.5.0-rc1-dirty #565
-> [   27.810358] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI 
-> RC0 - V1.16.01 03/15/2019
-> [   27.818872] pstate: 20c00009 (nzCv daif +PAN +UAO)
-> [   27.823654] pc : bo_driver_move_notify+0x8c/0x98
-> [   27.828262] lr : bo_driver_move_notify+0x40/0x98
-> [   27.832868] sp : ffff00236f0677e0
-> [   27.836173] x29: ffff00236f0677e0 x28: ffffa0001454e5e0
-> [   27.841476] x27: ffff002366e52128 x26: ffffa000149e67b0
-> [   27.846779] x25: ffff002366e523e0 x24: ffff002336936120
-> [   27.852082] x23: ffff0023346f4010 x22: ffff002336936128
-> [   27.857385] x21: ffffa000149c15c0 x20: ffff0023369361f8
-> [   27.862687] x19: ffff002336936000 x18: 0000000000001258
-> [   27.867989] x17: 0000000000001190 x16: 00000000000011d0
-> [   27.873292] x15: 0000000000001348 x14: ffffa00012d68190
-> [   27.878595] x13: 0000000000000006 x12: 1ffff40003241f91
-> [   27.883897] x11: ffff940003241f91 x10: dfffa00000000000
-> [   27.889200] x9 : ffff940003241f92 x8 : 0000000000000001
-> [   27.894502] x7 : ffffa0001920fc88 x6 : ffff940003241f92
-> [   27.899804] x5 : ffff940003241f92 x4 : ffff0023369363a0
-> [   27.905107] x3 : ffffa00010c104b8 x2 : dfffa00000000000
-> [   27.910409] x1 : 0000000000000003 x0 : 0000000000000001
-> [   27.915712] Call trace:
-> [   27.918151]  bo_driver_move_notify+0x8c/0x98
-> [   27.922412]  ttm_bo_cleanup_memtype_use+0x54/0x100
-> [   27.927194]  ttm_bo_put+0x3a0/0x5d0
-> [   27.930673]  drm_gem_vram_object_free+0xc/0x18
-> [   27.935109]  drm_gem_object_free+0x34/0xd0
-> [   27.939196]  drm_gem_object_put_unlocked+0xc8/0xf0
-> [   27.943978]  hibmc_user_framebuffer_destroy+0x20/0x40
-> [   27.949020]  drm_framebuffer_free+0x48/0x58
-> [   27.953194]  drm_mode_object_put.part.1+0x90/0xe8
-> [   27.957889]  drm_mode_object_put+0x28/0x38
-> [   27.961976]  hibmc_fbdev_fini+0x54/0x78
-> [   27.965802]  hibmc_unload+0x2c/0xd0
-> [   27.969281]  hibmc_pci_remove+0x2c/0x40
-> [   27.973109]  pci_device_remove+0x6c/0x140
-> [   27.977110]  really_probe+0x174/0x548
-> [   27.980763]  driver_probe_device+0x7c/0x148
-> [   27.984936]  device_driver_attach+0x94/0xa0
-> [   27.989109]  __driver_attach+0xa8/0x110
-> [   27.992935]  bus_for_each_dev+0xe8/0x158
-> [   27.996849]  driver_attach+0x30/0x40
-> [   28.000415]  bus_add_driver+0x234/0x2f0
-> [   28.004241]  driver_register+0xbc/0x1d0
-> [   28.008067]  __pci_register_driver+0xbc/0xd0
-> [   28.012329]  hibmc_pci_driver_init+0x20/0x28
-> [   28.016590]  do_one_initcall+0xb4/0x254
-> [   28.020417]  kernel_init_freeable+0x27c/0x328
-> [   28.024765]  kernel_init+0x10/0x118
-> [   28.028245]  ret_from_fork+0x10/0x18
-> [   28.031813] ---[ end trace 35a83b71b657878d ]---
-> [   28.036503] ------------[ cut here ]------------
-> [   28.041115] WARNING: CPU: 24 PID: 1 at 
-> drivers/gpu/drm/drm_gem_vram_helper.c:40 ttm_buffer_object_destroy+0x4c/0x80
-> [   28.051537] Modules linked in:
-> [   28.054585] CPU: 24 PID: 1 Comm: swapper/0 Tainted: G    B   W 
->   5.5.0-rc1-dirty #565
-> [   28.062924] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI 
-> RC0 - V1.16.01 03/15/2019
-> 
-> [snip]
-> 
-> Indeed, simply unbinding the device from the driver causes the same sort 
-> of issue:
-> 
-> root@(none)$ cd ./bus/pci/drivers/hibmc-drm/
-> root@(none)$ ls
-> 0000:05:00.0  bind          new_id        remove_id     uevent        unbind
-> root@(none)$ echo 0000\:05\:00.0 > unbind
-> [  116.074352] ------------[ cut here ]------------
-> [  116.078978] WARNING: CPU: 17 PID: 1178 at 
-> drivers/gpu/drm/drm_gem_vram_helper.c:40 ttm_buffer_object_destroy+0x4c/0x80
-> [  116.089661] Modules linked in:
-> [  116.092711] CPU: 17 PID: 1178 Comm: sh Tainted: G    B   W 
-> 5.5.0-rc1-dirty #565
-> [  116.100704] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI 
-> RC0 - V1.16.01 03/15/2019
-> [  116.109218] pstate: 20400009 (nzCv daif +PAN -UAO)
-> [  116.114001] pc : ttm_buffer_object_destroy+0x4c/0x80
-> [  116.118956] lr : ttm_buffer_object_destroy+0x18/0x80
-> [  116.123910] sp : ffff0022e6cef8e0
-> [  116.127215] x29: ffff0022e6cef8e0 x28: ffff00231b1fb000
-> [  116.132519] x27: 0000000000000000 x26: ffff00231b1fb000
-> [  116.137821] x25: ffff0022e6cefdc0 x24: 0000000000002480
-> [  116.143124] x23: ffff0023682b6ab0 x22: ffff0023682b6800
-> [  116.148427] x21: ffff0023682b6800 x20: 0000000000000000
-> [  116.153730] x19: ffff0023682b6800 x18: 0000000000000000
-> [  116.159032] x17: 000000000000000000000000001
-> [  116.185545] x7 : ffff0023682b6b07 x6 : ffff80046d056d61
-> [  116.190848] x5 : ffff80046d056d61 x4 : ffff0023682b6ba0
-> [  116.196151] x3 : ffffa00010197338 x2 : dfffa00000000000
-> [  116.201453] x1 : 0000000000000003 x0 : 0000000000000001
-> [  116.206756] Call trace:
-> [  116.209195]  ttm_buffer_object_destroy+0x4c/0x80
-> [  116.213803]  ttm_bo_release_list+0x184/0x220
-> [  116.218064]  ttm_bo_put+0x410/0x5d0
-> [  116.221544]  drm_gem_vram_object_free+0xc/0x18
-> [  116.225979]  drm_gem_object_free+0x34/0xd0
-> [  116.230066]  drm_gem_object_put_unlocked+0xc8/0xf0
-> [  116.234848]  hibmc_user_framebuffer_destroy+0x20/0x40
-> [  116.239890]  drm_framebuffer_free+0x48/0x58
-> [  116.244064]  drm_mode_object_put.part.1+0x90/0xe8
-> [  116.248759]  drm_mode_object_put+0x28/0x38
-> [  116.252846]  hibmc_fbdev_fini+0x54/0x78
-> [  116.256672]  hibmc_unload+0x2c/0xd0
-> [  116.260151]  hibmc_pci_remove+0x2c/0x40
-> [  116.263979]  pci_device_remove+0x6c/0x140
-> [  116.267980]  device_release_driver_internal+0x134/0x250
-> [  116.273196]  device_driver_detach+0x28/0x38
-> [  116.277369]  unbind_store+0xfc/0x150
-> [  116.280934]  drv_attr_store+0x48/0x60
-> [  116.284589]  sysfs_kf_write+0x80/0xb0
-> [  116.288241]  kernfs_fop_write+0x1d4/0x320
-> [  116.292243]  __vfs_write+0x54/0x98
-> [  116.295635]  vfs_write+0xe8/0x270
-> [  116.298940]  ksys_write+0xc8/0x180
-> [  116.302333]  __arm64_sys_write+0x40/0x50
-> [  116.306248]  el0_svc_common.constprop.0+0xa4/0x1f8
-> [  116.311029]  el0_svc_handler+0x34/0xb0
-> [  116.314770]  el0_sync_handler+0x10c/0x1c8
-> [  116.318769]  el0_sync+0x140/0x180
-> [  116.322074] ---[ end trace e60e43d0e316b5c8 ]---
-> [  116.326868] ------------[ cut here ]------------
-> 
-> 
-> dmesg and .config is here:
-> https://pastebin.com/4P5yaZBS
-> 
-> I'm not sure if this is a HIBMC driver issue or issue with the framework.
-> 
-> john
-> 
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+looking into clk_find API implementation it doesn't find the clock from=20
+lookup unless both dev_id and con_id matches if a clock is added to=20
+lookup with both dev_id and clk_id
 
 
+>> But with the fix of having dev_id as NULL and use only con_id to add to
+>> lookup, we can use resource managed APIs devm_clk_get.
+>>
+>> So was saying will fix this in clock driver as part of removing
+>> clk_out_1/2/3 ids and pmc init from clock driver so we can use
+>> devm_clk_get API in audio driver.
+>>
