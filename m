@@ -2,147 +2,95 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6105C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B4BC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B99C621775
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:13:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="DNYpCwjR"
+	by mail.kernel.org (Postfix) with ESMTP id B40A0218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:17:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbfLQWM7 (ORCPT
+        id S1726526AbfLQWRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 17:12:59 -0500
-Received: from mta-p5.oit.umn.edu ([134.84.196.205]:38942 "EHLO
-        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726333AbfLQWM6 (ORCPT
+        Tue, 17 Dec 2019 17:17:36 -0500
+Received: from mout.kundenserver.de ([212.227.17.13]:43261 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725886AbfLQWRf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 17:12:58 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 47cspL2g6wz9vhYW
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 22:12:58 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p5.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 0lgM2ZmSJHYb for <linux-kernel@vger.kernel.org>;
-        Tue, 17 Dec 2019 16:12:58 -0600 (CST)
-Received: from mail-yb1-f197.google.com (mail-yb1-f197.google.com [209.85.219.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 47cspL1ThZz9vhYD
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 16:12:58 -0600 (CST)
-Received: by mail-yb1-f197.google.com with SMTP id a5so10463298ybo.8
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 14:12:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0uFNmttIbgEixEQfkRt9NeBoHzK1PNMtttJQCP/z7Fk=;
-        b=DNYpCwjR4shJbOjgE5YrLYW9gmNiz47YdUF4F7UbbW9oBFc09y8TVTxyj/xXSZQTbG
-         tu5JjDveGOXqvFB61cbxl9ZzOq6e4VRFkS/pEtJahwRbdZ0YeEePl7U5W5sSYaI4IgUv
-         GdwmxCk5eRzjDP6jCoTOxk36kGaPiy6tFTNFBXBmJMCYS16H6HVa/61UWdqCI/zt1wG2
-         INPelGTZVqVpAcdbScirJLJJ2VJVjgO6pXfH33nGuJcyOxQlK9MUOytCZKXqV5qVF4oN
-         syd0FmIBTHcc7IfmR5i2QuQn9im2LV0s7jPkS12KT5Ej3vohnDCXd7J+EZyyTdmCakRT
-         PAkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0uFNmttIbgEixEQfkRt9NeBoHzK1PNMtttJQCP/z7Fk=;
-        b=fuVQRDr3onA+DvzMDBW5H9rJwXHeOiHebdK6nYkaKK2Yv7BWox699Q3GhaKawnaVVO
-         AmeGhdNGeyztE0F10hUfRlIgflSZ1/WcJ6TVkCJpYUpyws6EWlE5N4rbrXsETR+bLOFy
-         8NCmiMETArEMA95UFAXXshsOrjNS0fwBDTVKBA7vlbqWYPt9A/itvblBMFhiKHGMXMf0
-         enM+x33GB2NTpCoyZFMLyTURr7jTosVVBtFsQl3MpzkWIwU3uQxP2z6pJ4wPfY+Dq93m
-         yEA+xQ9yU9QcBrJFvoY71kKoJaDyIrE/9L7A1hIA9TV0wD7PFW8y1ra6iEjzQastbclb
-         Gg5g==
-X-Gm-Message-State: APjAAAUEfT81ULKpvBpShIIw4LTTtdZbPQtm+Mm5RD9TyvkQrJou2h+z
-        4SAeNoRewocqeqi/ffWa3JCTB+Axl0e3x5r46tdIMP0p7gqqyIp0nhjpdWTYbT9PWspRWDu0Y0V
-        XICgmP85Mec0VAcv/bTLCJb6zSgbu
-X-Received: by 2002:a25:6044:: with SMTP id u65mr282115ybb.520.1576620777654;
-        Tue, 17 Dec 2019 14:12:57 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzPAFKcOJX5u8YbRerKIyVLj2u2RXfboLCHwoqIDad4F/tedwfp2jbvHuUfyo1GEJGTU7X68A==
-X-Received: by 2002:a25:6044:: with SMTP id u65mr282093ybb.520.1576620777428;
-        Tue, 17 Dec 2019 14:12:57 -0800 (PST)
-Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
-        by smtp.gmail.com with ESMTPSA id l74sm80859ywc.45.2019.12.17.14.12.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 14:12:57 -0800 (PST)
-From:   Aditya Pakki <pakki001@umn.edu>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] media: davinci/vpfe_capture.c: Avoid BUG_ON for register failure
-Date:   Tue, 17 Dec 2019 16:12:54 -0600
-Message-Id: <20191217221254.1078-1-pakki001@umn.edu>
-X-Mailer: git-send-email 2.20.1
+        Tue, 17 Dec 2019 17:17:35 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1Ma1sQ-1iDauk3LgC-00W0Di; Tue, 17 Dec 2019 23:17:22 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
+        y2038@lists.linaro.org, linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux-doc@vger.kernel.org, corbet@lwn.net, viro@zeniv.linux.org.uk,
+        linux-fsdevel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v2 01/27] pktcdvd: fix regression on 64-bit architectures
+Date:   Tue, 17 Dec 2019 23:16:42 +0100
+Message-Id: <20191217221708.3730997-2-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20191217221708.3730997-1-arnd@arndb.de>
+References: <20191217221708.3730997-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:QMSOPeED49s201CoV/Q/8aHXf5yX2aoiUQkXnT4FSnobAR1P+ZS
+ AjHcXURC1TcBRJslcM0go+hX9iCUkxwOPBvAe3WaNg3lqMqQFjSIfMlrLToOT1N/tCw6hO2
+ zOwEghWIgnPEe89YRhjL6pmHZYOlIxHRc6VqAA5VLAnaxIqc9epmlzoZE2W28a+I11/E1T8
+ eN7v7rzsLAL52VPep87VA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:q3r9egq/gLI=:eaRnFNzwV13WGZeABhyoCa
+ kG6pSxM3N1jBbw3ItFcU5G6gCoLl6A20jd6nWRhp35jlLNyqBxWhRYZ8QIRjtnoL5Qk8vjNQm
+ hDtQSpTngcgQO89psiQHtXxIsxlggGZOlPf2yawlOrfLb/SvakZpuY7BQCrV0WRG0LTyw4gvy
+ afJx3VGKecnLAuvMQaV22cGRGlyz9pZfPQG0ygZVSYZV1FiyYh5ZQSX+mer5k6mfvHmkUn+3T
+ YzHfUa+OyIC/Mamfdnu/bjuJG52WXGYFay1onrbGSNYms13077RIudBaIaWiHWBIh+3LJAIHS
+ pKIe4/iNUYIIiYdcFx/p/jkg0JYMmWMKOB++MhNCdcsCKvcboEVQyzF2580ni2QV9L79sfSpp
+ f3M4Cg7b9wWO9696JpTfpFoSCF7L6Ojt2W5tFp+nAn4i7ZHtyNgKpE2PxoI9zyMdm8/88wo5o
+ Ir0gAKQcWJCyrIh461fpNETWT9UdaCZPt5J/vI3O9R4hzGIzm9nS4z55DqcTBmqWc8KQxS+5u
+ xpUha18j3X3Tvf/Ckcq0vJ7SnSm4QOI1m9Hk7Roul2tz5+HL9bXEaJ6O4aBACvZiBAK0NQfO2
+ 55iUqzA2Do9ZUxr07cSZOMz6j2VB80hXlCcQKu0g8HWsp73LJmFQ5VlD7Vm3DZ9R1M+w72zX2
+ bhQFI10kiVC9sGNSOIemMXU5lYjvDynxia/KafBznmGNhDIkQ5P8QyElg37HCZVjQuxzmKiw9
+ 5U/sNmQG2oheV7assA7oI62z+vjrg2xZC6KBoiGsoM1iB4lNjM9ql5Y7ZR9Ulz5ZtDhCqMlxd
+ ihoE9fwLKdX3XySzRDbM3JoPdOb04RmsNAiVkkeIasEjWfw6dgd8mdLqt5JWldxd3/cM/tc61
+ af5LnUUHqowZxtUs87eg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In vpfe_register_ccdc_device(), failure to allocate dev->hw_ops
-fields calls BUG_ON(). This patch returns the error to callers
-instead of crashing. The issue was identified by a static
-analysis tool.
+The support for the compat ioctl did not actually do what it was
+supposed to do because of a typo, instead it broke native support for
+CDROM_LAST_WRITTEN and CDROM_SEND_PACKET on all architectures with
+CONFIG_COMPAT enabled.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Fixes: 1b114b0817cc ("pktcdvd: add compat_ioctl handler")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+----
+Please apply for v5.5, I just noticed the regression while
+rebasing some of the patches I created on top.
 ---
-v1: Fixed the type to a regular variable instead of a pointer,
-also added fixes suggested by Ezequiel Garcia.
----
- drivers/media/platform/davinci/vpfe_capture.c | 31 ++++++++++---------
- 1 file changed, 16 insertions(+), 15 deletions(-)
+ drivers/block/pktcdvd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/davinci/vpfe_capture.c b/drivers/media/platform/davinci/vpfe_capture.c
-index 916ed743d716..a3838a2e173f 100644
---- a/drivers/media/platform/davinci/vpfe_capture.c
-+++ b/drivers/media/platform/davinci/vpfe_capture.c
-@@ -168,21 +168,22 @@ int vpfe_register_ccdc_device(const struct ccdc_hw_device *dev)
- 	int ret = 0;
- 	printk(KERN_NOTICE "vpfe_register_ccdc_device: %s\n", dev->name);
- 
--	BUG_ON(!dev->hw_ops.open);
--	BUG_ON(!dev->hw_ops.enable);
--	BUG_ON(!dev->hw_ops.set_hw_if_params);
--	BUG_ON(!dev->hw_ops.configure);
--	BUG_ON(!dev->hw_ops.set_buftype);
--	BUG_ON(!dev->hw_ops.get_buftype);
--	BUG_ON(!dev->hw_ops.enum_pix);
--	BUG_ON(!dev->hw_ops.set_frame_format);
--	BUG_ON(!dev->hw_ops.get_frame_format);
--	BUG_ON(!dev->hw_ops.get_pixel_format);
--	BUG_ON(!dev->hw_ops.set_pixel_format);
--	BUG_ON(!dev->hw_ops.set_image_window);
--	BUG_ON(!dev->hw_ops.get_image_window);
--	BUG_ON(!dev->hw_ops.get_line_length);
--	BUG_ON(!dev->hw_ops.getfid);
-+	if (!dev->hw_ops.open ||
-+			!dev->hw_ops.enable ||
-+			!dev->hw_ops.set_hw_if_params ||
-+			!dev->hw_ops.configure ||
-+			!dev->hw_ops.set_buftype ||
-+			!dev->hw_ops.get_buftype ||
-+			!dev->hw_ops.enum_pix ||
-+			!dev->hw_ops.set_frame_format ||
-+			!dev->hw_ops.get_frame_format ||
-+			!dev->hw_ops.get_pixel_format ||
-+			!dev->hw_ops.set_pixel_format ||
-+			!dev->hw_ops.set_image_window ||
-+			!dev->hw_ops.get_image_window ||
-+			!dev->hw_ops.get_line_length ||
-+			!dev->hw_ops.getfid)
-+		return -EINVAL;
- 
- 	mutex_lock(&ccdc_lock);
- 	if (!ccdc_cfg) {
+diff --git a/drivers/block/pktcdvd.c b/drivers/block/pktcdvd.c
+index ee67bf929fac..861fc65a1b75 100644
+--- a/drivers/block/pktcdvd.c
++++ b/drivers/block/pktcdvd.c
+@@ -2707,7 +2707,7 @@ static const struct block_device_operations pktcdvd_ops = {
+ 	.release =		pkt_close,
+ 	.ioctl =		pkt_ioctl,
+ #ifdef CONFIG_COMPAT
+-	.ioctl =		pkt_compat_ioctl,
++	.compat_ioctl =		pkt_compat_ioctl,
+ #endif
+ 	.check_events =		pkt_check_events,
+ };
 -- 
-2.20.1
+2.20.0
 
