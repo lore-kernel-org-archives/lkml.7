@@ -2,123 +2,51 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A512C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA4FC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D40DF2072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:11:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jV/Myl5v"
+	by mail.kernel.org (Postfix) with ESMTP id 945D52072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:14:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727433AbfLQKLy (ORCPT
+        id S1727434AbfLQKOA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 05:11:54 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:63867 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727161AbfLQKLx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 05:11:53 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576577513; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=r90I13kSoefNFl8RNN/BDOH31yaeXpjEEpvv+Q+aZmI=;
- b=jV/Myl5vBDm+gwcC+SrGr9GaKBFz5pXduxW8vi/v5iEzbqoleE6ydGd2fhuNvg3oj/pQulRL
- labTP0dyKs8UZIid9KvuzePmGUq/0ZvEVVqXaxna5a+vIE9KfD42qFZPfpvQgMLNeQ8RUETP
- LE0ild2cVZKJsZ/PVUU3j5vJx1Y=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5df8a9e2.7fa583cba8b8-smtp-out-n02;
- Tue, 17 Dec 2019 10:11:46 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E2885C4479C; Tue, 17 Dec 2019 10:11:44 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3CBACC43383;
-        Tue, 17 Dec 2019 10:11:44 +0000 (UTC)
+        Tue, 17 Dec 2019 05:14:00 -0500
+Received: from 8bytes.org ([81.169.241.247]:57680 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727262AbfLQKOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 05:14:00 -0500
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 14A50286; Tue, 17 Dec 2019 11:13:59 +0100 (CET)
+Date:   Tue, 17 Dec 2019 11:13:57 +0100
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Xiaotao Yin <xiaotao.yin@windriver.com>
+Cc:     robin.murphy@arm.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Kexin.Hao@windriver.com
+Subject: Re: [PATCH V3] iommu/iova: Init the struct iova to fix the possible
+ memleak
+Message-ID: <20191217101357.GK8689@8bytes.org>
+References: <20191210042704.14693-1-xiaotao.yin@windriver.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 17 Dec 2019 15:41:44 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     bjorn.andersson@linaro.org, rnayak@codeaurora.org,
-        robh+dt@kernel.org, agross@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, mark.rutland@arm.com,
-        dianders@chromium.org, linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: power: rpmpd: Convert rpmpd bindings to
- yaml
-In-Reply-To: <5df7dc77.1c69fb81.9e37f.16a5@mx.google.com>
-References: <20191216115531.17573-1-sibis@codeaurora.org>
- <20191216115531.17573-2-sibis@codeaurora.org>
- <5df7dc77.1c69fb81.9e37f.16a5@mx.google.com>
-Message-ID: <51f73b85b2a9a9f3d72f2776617be9c9@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191210042704.14693-1-xiaotao.yin@windriver.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-17 01:05, Stephen Boyd wrote:
-> Quoting Sibi Sankar (2019-12-16 03:55:30)
->> Convert RPM/RPMH power-domain bindings to yaml.
->> 
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> 
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> 
-> One nitpick below!
-> 
->> diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml 
->> b/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
->> new file mode 100644
->> index 0000000000000..4aebf024e4427
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
->> @@ -0,0 +1,170 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/power/qcom,rpmpd.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm RPM/RPMh Power domains
->> +
->> +maintainers:
->> +  - Rajendra Nayak <rnayak@codeaurora.org>
->> +
->> +description:
->> +  For RPM/RPMh Power domains, we communicate a performance state to 
->> RPM/RPMh
->> +  which then translates it into a corresponding voltage on a rail
-> 
-> Add a full-stop here to make it a true sentence?
+On Tue, Dec 10, 2019 at 12:27:04PM +0800, Xiaotao Yin wrote:
+> Fixes: bb68b2fbfbd6 ("iommu/iova: Add rbtree anchor node")
+> Signed-off-by: Xiaotao Yin <xiaotao.yin@windriver.com>
+> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+> ---
+>  drivers/iommu/iova.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-sure I'll re-spin it
+Okay, missed that. Replaced the previous patch by this one. Thanks.
 
-> 
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - qcom,msm8976-rpmpd
->> +      - qcom,msm8996-rpmpd
->> +      - qcom,msm8998-rpmpd
->> +      - qcom,qcs404-rpmpd
->> +      - qcom,sc7180-rpmhpd
->> +      - qcom,sdm845-rpmhpd
->> +      - qcom,sm8150-rpmhpd
->> +
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
