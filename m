@@ -2,95 +2,109 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B03E1C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B69A0C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87CE5206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FCE0206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:12:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nO9uy19t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbfLQNLg (ORCPT
+        id S1728129AbfLQNMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 08:11:36 -0500
-Received: from mout.kundenserver.de ([212.227.126.187]:45603 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726962AbfLQNLg (ORCPT
+        Tue, 17 Dec 2019 08:12:33 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33693 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726858AbfLQNMd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 08:11:36 -0500
-Received: from [192.168.1.155] ([95.114.21.161]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1McpW6-1i8PmK0D1G-00a12l; Tue, 17 Dec 2019 14:11:22 +0100
-Subject: Re: [PATCH v7 01/13] exfat: add in-memory and on-disk structures and
- headers
-To:     Namjae Jeon <namjae.jeon@samsung.com>,
-        'Markus Elfring' <Markus.Elfring@web.de>
-Cc:     linux-kernel@vger.kernel.org, 'Christoph Hellwig' <hch@lst.de>,
-        'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>,
-        'Sungjong Seo' <sj1557.seo@samsung.com>,
-        =?UTF-8?Q?=27Valdis_Kl=c4=93tnieks=27?= <valdis.kletnieks@vt.edu>,
-        linux-fsdevel@vger.kernel.org
-References: <20191213055028.5574-2-namjae.jeon@samsung.com>
- <CGME20191216135033epcas5p3f2ec096506b1a48535ce0796fef23b9e@epcas5p3.samsung.com>
- <088a50ad-dc67-4ff6-624d-a1ac2008b420@web.de>
- <002401d5b46d$543f7ee0$fcbe7ca0$@samsung.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <c6698d0c-d909-c9dc-5608-0b986d63a471@metux.net>
-Date:   Tue, 17 Dec 2019 14:10:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <002401d5b46d$543f7ee0$fcbe7ca0$@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: tl
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:mh372I7jZZSLHn3TFj2C4vjsq8xUP2bJNTgyJkEC5Ux0+Q+dvGX
- xduxo7XdAI059eJX9/44Yq1irmLdP5UBBY+ObsaLvHjYn95DPmiz+YTuxxHDBmv6SCQv55G
- U4uujJDDY6ac+c4b+1mjOokJtGGEX++sEOpJyzMJPrbHHZqDKy48brfkVNi21uuE8m906G5
- omOFg0/1HD//Avp3Jp33w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:yv7qDD8T/Ss=:C85R98w7NY3LaLz4fH72+J
- CO+BMGRbLbJDjY5Qga2WpvOMLY6UgQ4UYeqy33ixeCYRvRjnIaOdbHwDFoJOdJm5Pdm2VsFn3
- zWh3DNIIRqL7Xxj4sINX4W3BBKXUvdlwx10/jJVucKdSA0sJtckKA46mw8xu/AlR04f1htgyG
- 7hlQv8gg3AIfxTg1RFVJwG9DjF7ZumWA2eIEXg7v6Jc1qYT7XgsDhTuxkl37gtPpMbUgm5vLc
- 9QyVbWaIEg6j+WA1asbMiRM/0o2yif70shJk2UUl4nwAlRqsgZToERDMJS6rSeNLJfhnE/vnx
- ISWWxLubVufrIw9SL5ve5Ap6DkikkqAcI1yP+gYHyLvTIZPhmjZ0SI7r9xUYwTE5Bs2zxvDoW
- GJhhG+QskV7GFVX1Gw/McK66cWz6+SLrnHgoIdSKpw6zXl/IXurqUxPdaEQK28Fd2vmT7ZP6O
- PNok5eT2CzxlZFGvlBzl1QByynWUMve0PVV3SYx0cZomauHCotpfRizVrLyQvgLsSRiCU09ay
- M9r/VFccNmwmc4hgwwZUYqLAlcWYk+aXbFw4EaPGKqLoqeMVi40neS8AJVWVd9UgU1rVI+dP3
- mpMnPWJ+Uu/cbOQ7e5N/TrTctlcgDWT1CGnlBHlnakHAtEVEUrPSvOX+47HX0T310S6HgP2gp
- jouZliDWWxccY4D4zrktZshUO/bZaEkEJeS0Po9biAY4C7k1Rr/94iyPwTMW8Tq9BtWiNFchW
- L2ZD+2uO4Q9OOnsh7pyaOQvN1pEgqQNUr8jJJ88+tOUzfYNi6J3wF5+ejcjL6yV5txECnYAW8
- cqlKSewU9wHqvFFBbH8AR52mTyd7ss4xyJjq5CLtmnLgNCLteSP1RNGrI/mh4OGemypiI/W1u
- 0sNQoSx5ojcEPZs5MYBg==
+        Tue, 17 Dec 2019 08:12:33 -0500
+Received: by mail-pf1-f196.google.com with SMTP id z16so678901pfk.0;
+        Tue, 17 Dec 2019 05:12:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=u2gQDT9BoTQYVHqNCMfqXHowcwkXNSs7eSdPihh5x8o=;
+        b=nO9uy19tNhfxpeeBf/iDyu4FWIypmIRyX0nL/adv0kaGPEML1CYXZXAe8S9ZM2wR2G
+         8L6RcsIatBQL70rieRCJdUOqTtXoNhji++FOIyb3dj/GoB5bmQt32nDsXD2KtDP/7Yec
+         SQboHy3m+Yx3zW/Agk4/FXvGmS8NjqTeUVDp6eya2szKDT6QEV7mQoX3la/crsa/wphL
+         uKOZRPiaPmjux3ajd03e9eU0q+mfQDRqucRwIODUwz5KVbFm/nYgnpmglUtnfVPsSpKY
+         uj3GH2UOKrFY30hGoaBK8MgJi4Pb5jTYO5BFHQCTTPJ7ZgJ9P+apfipdNMflaonm57US
+         2RwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=u2gQDT9BoTQYVHqNCMfqXHowcwkXNSs7eSdPihh5x8o=;
+        b=MDGzYIVId3EDEAKiq0WZt+1h9VcN1FNPTD1lGpjcNmQIuXbH4OdavmesJud8ucKjXE
+         U8zcNax8H90z1+YqMmIRr6zVzTcQfwUsKCqAKH25M3glC5mGhoJzeWsUBVLSmRt4WPT0
+         8WI/BiqzS6GfTuSOvwhW4G7TjU6OuiIMlaXYJ2i5KxMhDYz8kfN62H/lV1LIAdI91OHj
+         FfXUTCBnJlRbi/e0g7xHc3ty0tG7BwdKP5fq+HSjg609Qu84lTFbCjZm35/YODXgRraW
+         oZ5lAEUpuWYxHIcS4kmHTxq8haK9fNHb3TSSRejt2KdVDnJ3o+Ru0YlIbeMyeDQa6WXz
+         bQtA==
+X-Gm-Message-State: APjAAAWC3KEgHvQhYM3OYYy1FQEIB0FUqR2NeX6bKS7GivfZ3UrXPMsM
+        Jf2H9ubXomPG26bO4qpt6+bmZnfXQjY=
+X-Google-Smtp-Source: APXvYqzio5b7ZVeoF3ExORkr9Hku+099pWaUmc1E6m+Q6GSUqSLcjZQxaaFX0f9Yazz6ZWr3wGOUDQ==
+X-Received: by 2002:a63:e84d:: with SMTP id a13mr25871781pgk.274.1576588352680;
+        Tue, 17 Dec 2019 05:12:32 -0800 (PST)
+Received: from oslab.tsinghua.edu.cn ([166.111.139.172])
+        by smtp.gmail.com with ESMTPSA id r6sm26720976pfh.91.2019.12.17.05.12.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 05:12:32 -0800 (PST)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     john.johansen@canonical.com, jmorris@namei.org, serge@hallyn.com
+Cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH] security: apparmor: Fix a possible sleep-in-atomic-context bug in find_attach()
+Date:   Tue, 17 Dec 2019 21:12:20 +0800
+Message-Id: <20191217131220.11613-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.12.19 01:02, Namjae Jeon wrote:
->> 2. Which source file should provide the corresponding implementation?
->>    (I did not find it in the update step “[PATCH v7 06/13] exfat: add exfat
->>    entry operations” so far.)
-> Good catch, I will move it on next version.
+The kernel may sleep while holding a RCU lock.
+The function call path (from bottom to top) in Linux 4.19 is:
 
-By the way: do you think the driver is already stable enough for
-production use ? Are there any limitations we have to consider ?
+security/apparmor/domain.c, 331: 
+	vfs_getxattr_alloc(GFP_KERNEL) in aa_xattrs_match
+security/apparmor/domain.c, 425: 
+	aa_xattrs_match in __attach_match
+security/apparmor/domain.c, 485: 
+	__attach_match in find_attach
+security/apparmor/domain.c, 484:
+    rcu_read_lock in find_attach
 
-I just have a client, who wants to use it in a semi-embedded (telemetry)
-device, for recording to an external USB drive.
+vfs_getxattr_alloc(GFP_KERNEL) can sleep at runtime.
 
+To fix this possible bug, GFP_KERNEL is replaced with GFP_ATOMIC for
+vfs_getxattr_alloc().
 
---mtx
+This bug is found by a static analysis tool STCheck written by myself. 
 
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+ security/apparmor/domain.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/security/apparmor/domain.c b/security/apparmor/domain.c
+index 9be7ccb8379e..60b54ce57d1f 100644
+--- a/security/apparmor/domain.c
++++ b/security/apparmor/domain.c
+@@ -325,7 +325,7 @@ static int aa_xattrs_match(const struct linux_binprm *bprm,
+ 
+ 	for (i = 0; i < profile->xattr_count; i++) {
+ 		size = vfs_getxattr_alloc(d, profile->xattrs[i], &value,
+-					  value_size, GFP_KERNEL);
++					  value_size, GFP_ATOMIC);
+ 		if (size >= 0) {
+ 			u32 perm;
+ 
 -- 
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+2.17.1
+
