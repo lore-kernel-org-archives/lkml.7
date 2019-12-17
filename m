@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B385C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB2A4C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E2312465E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:49:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C85A24672
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:49:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576594166;
-	bh=qv0FE+X7y1l73CIdYQMONHC/WmO6ji+ZmEbbhkhwMsw=;
+	s=default; t=1576594170;
+	bh=iKIf0usHFHKJI7gfXJ7jOaAskW3xJI1wYNSUP+7sim8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=11yiGbzneFRr+4Tb4elDC2djkSRLXN6UZ5kcMN9qwnJm/m0731rFjmwdt3kgzHgoe
-	 JzJJY/iGrZQp3aiLfz9NPvu7JZA+KBSGyGBG9xwo1GVdHazZhihlF8zcj3t4PEf6yA
-	 mi8eSqZ7IE6lonWiQjDAyP+KQqruv4XWNZXOq1dc=
+	b=zL6IJACFoaJGoyaKZ9R6LNrcinLYR9vh90QO7RER0iOzwEoJaT+BB84svHAgM5B0Y
+	 P24TrMA2So6jwxZADdWvJSoAEOZXvey7XfzDZv3mThInAW4SezbmIbCytntiykWYWf
+	 FwpCmFO0BRxb6ruQNboGs/DtA5kN30FeYa+5MwTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729341AbfLQOtY (ORCPT
+        id S1729349AbfLQOt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:49:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41478 "EHLO mail.kernel.org"
+        Tue, 17 Dec 2019 09:49:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727941AbfLQOtW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:49:22 -0500
+        id S1727941AbfLQOt0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 09:49:26 -0500
 Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0971624684;
-        Tue, 17 Dec 2019 14:49:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89EED2072D;
+        Tue, 17 Dec 2019 14:49:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576594162;
-        bh=qv0FE+X7y1l73CIdYQMONHC/WmO6ji+ZmEbbhkhwMsw=;
+        s=default; t=1576594165;
+        bh=iKIf0usHFHKJI7gfXJ7jOaAskW3xJI1wYNSUP+7sim8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RqUSCMYnr3kG1uhAHvTpLScirysncLBjSsE2p2MCrWVeWWZY+xkvLNEdZ1jPHpyiX
-         TKnOPCFS30AdMj3pdwiyQqvvjcoaMVFpeDLgtvWoRD7+HCsSTjh3znCIW8LaanRdPi
-         EpwFy9/I+FaHdox1wXUb+HY+vBCKAtF5yizwlC/Q=
+        b=Y6G5C0lK1Au0t8VhIK77tupqcDqxzR5M3kFjvCcRf/X3XVqSddJNuIxfPUy5cDyzo
+         NyK3sGJjCrTsrcCFmZmPHhH7WmZUe1BAU/9gwaPltsQciqHRzG+tqW5esf3UvIX5fG
+         PYsBcuyhYqWoDQiX4Uqg6zKpqcl6V+z85OWbZC6w=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
 Cc:     Ingo Molnar <mingo@kernel.org>,
@@ -51,9 +51,9 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Jin Yao <yao.jin@linux.intel.com>,
         Kan Liang <kan.liang@intel.com>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 09/12] perf report/top: Allow pressing hotkeys in the options popup menu
-Date:   Tue, 17 Dec 2019 11:48:25 -0300
-Message-Id: <20191217144828.2460-10-acme@kernel.org>
+Subject: [PATCH 10/12] perf report/top: Do not offer annotation for symbols without samples
+Date:   Tue, 17 Dec 2019 11:48:26 -0300
+Message-Id: <20191217144828.2460-11-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191217144828.2460-1-acme@kernel.org>
 References: <20191217144828.2460-1-acme@kernel.org>
@@ -66,16 +66,16 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-When the users presses ENTER in the main 'perf report/top' screen a
-popup menu is presented, in it some hotkeys are suggested as
-alternatives to using the menu, or for additional features.
+This can happen in the --children mode, i.e. the default mode when
+callchains are present, where one of the main entries may be a callchain
+entry with no samples.
 
-At that point the user may try those hotkeys, so allow for that by
-recording the key used and exiting, the caller then can check for that
-possibility and process the hotkey.
+So far we were not providing any information about why an annotation
+couldn't be provided even offering the Annotation option in the popup
+menu.
 
-I.e. try pressing ENTER, and then 'k' to exit and zoom into the kernel
-map, using ESC then zooms out, etc.
+Work is needed to allow for no-samples "annotation', i.e. to show the
+disassembly anyway and allow for navigation, etc.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
@@ -84,50 +84,41 @@ Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Kan Liang <kan.liang@intel.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-ujfq3fw44kf6qrtfajl5dcsp@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-0hhzj2de15o88cguy7h66zre@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/browsers/hists.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ tools/perf/ui/browsers/hists.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index da7de49b3553..7f653b9f5cd8 100644
+index 7f653b9f5cd8..3f10e1a070c5 100644
 --- a/tools/perf/ui/browsers/hists.c
 +++ b/tools/perf/ui/browsers/hists.c
-@@ -2991,12 +2991,13 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
- 	while (1) {
- 		struct thread *thread = NULL;
- 		struct map *map = NULL;
--		int choice = 0;
-+		int choice;
- 		int socked_id = -1;
+@@ -2461,7 +2461,8 @@ add_annotate_opt(struct hist_browser *browser __maybe_unused,
+ 		 struct popup_action *act, char **optstr,
+ 		 struct map_symbol *ms)
+ {
+-	if (ms->sym == NULL || ms->map->dso->annotate_warned)
++	if (ms->sym == NULL || ms->map->dso->annotate_warned ||
++	    symbol__annotation(ms->sym)->src == NULL)
+ 		return 0;
  
--		nr_options = 0;
--
--		key = hist_browser__run(browser, helpline, warn_lost_event, 0);
-+		key = 0; // reset key
-+do_hotkey:		 // key came straight from options ui__popup_menu()
-+		choice = nr_options = 0;
-+		key = hist_browser__run(browser, helpline, warn_lost_event, key);
+ 	if (asprintf(optstr, "Annotate %s", ms->sym->name) < 0)
+@@ -3027,6 +3028,14 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
+ 			    browser->selection->map->dso->annotate_warned)
+ 				continue;
  
- 		if (browser->he_selection != NULL) {
- 			thread = hist_browser__selected_thread(browser);
-@@ -3275,10 +3276,13 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
- 		do {
- 			struct popup_action *act;
- 
--			choice = ui__popup_menu(nr_options, options, NULL);
--			if (choice == -1 || choice >= nr_options)
-+			choice = ui__popup_menu(nr_options, options, &key);
-+			if (choice == -1)
- 				break;
- 
-+			if (choice == nr_options)
-+				goto do_hotkey;
++			if (symbol__annotation(browser->selection->sym)->src == NULL) {
++				ui_browser__warning(&browser->b, delay_secs * 2,
++						    "No samples for the \"%s\" symbol.\n\n"
++						    "Probably appeared just in a callchain",
++						    browser->selection->sym->name);
++				continue;
++			}
 +
- 			act = &actions[choice];
- 			key = act->fn(browser, act);
- 		} while (key == 1);
+ 			actions->ms.map = browser->selection->map;
+ 			actions->ms.sym = browser->selection->sym;
+ 			do_annotate(browser, actions);
 -- 
 2.21.0
 
