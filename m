@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64332C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A744C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A0552467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:59:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6CC4206D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:59:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728235AbfLQA7m (ORCPT
+        id S1728295AbfLQA7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:59:42 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34700 "EHLO
+        Mon, 16 Dec 2019 19:59:50 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34684 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726401AbfLQAvf (ORCPT
+        by vger.kernel.org with ESMTP id S1726692AbfLQAvf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 19:51:35 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15G-0003KK-PD; Tue, 17 Dec 2019 00:51:30 +0000
+        id 1ih15G-0003Jx-Hx; Tue, 17 Dec 2019 00:51:30 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15G-0005TZ-84; Tue, 17 Dec 2019 00:51:30 +0000
+        id 1ih15F-0005Sp-Oy; Tue, 17 Dec 2019 00:51:29 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Philipp Zabel" <p.zabel@pengutronix.de>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Mathias Nyman" <mathias.nyman@linux.intel.com>,
-        "Jan Schmidt" <jan@centricular.com>
-Date:   Tue, 17 Dec 2019 00:46:03 +0000
-Message-ID: <lsq.1576543535.312597439@decadent.org.uk>
+        "Tomoki Sekiyama" <tomoki.sekiyama@gmail.com>,
+        "Alan Stern" <stern@rowland.harvard.edu>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Date:   Tue, 17 Dec 2019 00:45:54 +0000
+Message-ID: <lsq.1576543535.478659069@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 029/136] xhci: Check all endpoints for LPM timeout
+Subject: [PATCH 3.16 020/136] USB: yurex: Don't retry on unexpected errors
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,44 +56,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jan Schmidt <jan@centricular.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit d500c63f80f2ea08ee300e57da5f2af1c13875f5 upstream.
+commit 32a0721c6620b77504916dac0cea8ad497c4878a upstream.
 
-If an endpoint is encountered that returns USB3_LPM_DEVICE_INITIATED, keep
-checking further endpoints, as there might be periodic endpoints later
-that return USB3_LPM_DISABLED due to shorter service intervals.
+According to Greg KH, it has been generally agreed that when a USB
+driver encounters an unknown error (or one it can't handle directly),
+it should just give up instead of going into a potentially infinite
+retry loop.
 
-Without this, the code can set too high a maximum-exit-latency and
-prevent the use of multiple USB3 cameras that should be able to work.
+The three codes -EPROTO, -EILSEQ, and -ETIME fall into this category.
+They can be caused by bus errors such as packet loss or corruption,
+attempting to communicate with a disconnected device, or by malicious
+firmware.  Nowadays the extent of packet loss or corruption is
+negligible, so it should be safe for a driver to give up whenever one
+of these errors occurs.
 
-Signed-off-by: Jan Schmidt <jan@centricular.com>
-Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/1570190373-30684-4-git-send-email-mathias.nyman@linux.intel.com
+Although the yurex driver handles -EILSEQ errors in this way, it
+doesn't do the same for -EPROTO (as discovered by the syzbot fuzzer)
+or other unrecognized errors.  This patch adjusts the driver so that
+it doesn't log an error message for -EPROTO or -ETIME, and it doesn't
+retry after any errors.
+
+Reported-and-tested-by: syzbot+b24d736f18a1541ad550@syzkaller.appspotmail.com
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: Tomoki Sekiyama <tomoki.sekiyama@gmail.com>
+
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.1909171245410.1590-100000@iolanthe.rowland.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/host/xhci.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/usb/misc/yurex.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -4503,12 +4503,12 @@ static int xhci_update_timeout_for_endpo
- 	alt_timeout = xhci_call_host_update_timeout_for_endpoint(xhci, udev,
- 		desc, state, timeout);
- 
--	/* If we found we can't enable hub-initiated LPM, or
-+	/* If we found we can't enable hub-initiated LPM, and
- 	 * the U1 or U2 exit latency was too high to allow
--	 * device-initiated LPM as well, just stop searching.
-+	 * device-initiated LPM as well, then we will disable LPM
-+	 * for this device, so stop searching any further.
- 	 */
--	if (alt_timeout == USB3_LPM_DISABLED ||
--			alt_timeout == USB3_LPM_DEVICE_INITIATED) {
-+	if (alt_timeout == USB3_LPM_DISABLED) {
- 		*timeout = alt_timeout;
- 		return -E2BIG;
+--- a/drivers/usb/misc/yurex.c
++++ b/drivers/usb/misc/yurex.c
+@@ -136,6 +136,7 @@ static void yurex_interrupt(struct urb *
+ 	switch (status) {
+ 	case 0: /*success*/
+ 		break;
++	/* The device is terminated or messed up, give up */
+ 	case -EOVERFLOW:
+ 		dev_err(&dev->interface->dev,
+ 			"%s - overflow with length %d, actual length is %d\n",
+@@ -144,12 +145,13 @@ static void yurex_interrupt(struct urb *
+ 	case -ENOENT:
+ 	case -ESHUTDOWN:
+ 	case -EILSEQ:
+-		/* The device is terminated, clean up */
++	case -EPROTO:
++	case -ETIME:
+ 		return;
+ 	default:
+ 		dev_err(&dev->interface->dev,
+ 			"%s - unknown status received: %d\n", __func__, status);
+-		goto exit;
++		return;
  	}
+ 
+ 	/* handle received message */
+@@ -181,7 +183,6 @@ static void yurex_interrupt(struct urb *
+ 		break;
+ 	}
+ 
+-exit:
+ 	retval = usb_submit_urb(dev->urb, GFP_ATOMIC);
+ 	if (retval) {
+ 		dev_err(&dev->interface->dev, "%s - usb_submit_urb failed: %d\n",
 
