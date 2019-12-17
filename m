@@ -2,117 +2,164 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED8D2C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1680DC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C488C20733
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D647820733
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:16:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="AqJbXtcM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbfLQJP5 (ORCPT
+        id S1726840AbfLQJQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 04:15:57 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:50236 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726571AbfLQJP5 (ORCPT
+        Tue, 17 Dec 2019 04:16:40 -0500
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:15788 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726191AbfLQJQk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 04:15:57 -0500
-X-AuditID: c0a8fbf4-183ff70000001fa6-67-5df89cca770e
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 46.55.08102.ACC98FD5; Tue, 17 Dec 2019 10:15:54 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Tue, 17 Dec 2019 10:15:49 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "broonie@kernel.org" <broonie@kernel.org>
-CC:     "corbet@lwn.net" <corbet@lwn.net>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "noralf@tronnes.org" <noralf@tronnes.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>
-Subject: Re: [PATCH v6 09/15] regulator: bd71828: Basic support for ROHM
- bd71828 PMIC regulators
-Thread-Topic: [PATCH v6 09/15] regulator: bd71828: Basic support for ROHM
- bd71828 PMIC regulators
-Thread-Index: AQHVsAfYI3uVDvKcOUypO4bwmJ45Qqe80OIAgAEzbYA=
-Date:   Tue, 17 Dec 2019 09:15:48 +0000
-Message-ID: <f56acdc65ab341f9c4ec0709fbfcc32b9f16d6ae.camel@fi.rohmeurope.com>
-References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
-         <5b1c4a22c7945e97ff2a7924abfeb3239043f8eb.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
-         <20191216145528.GE4161@sirena.org.uk>
-In-Reply-To: <20191216145528.GE4161@sirena.org.uk>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D46A00866A9A2D4495284B4D77EF2287@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Tue, 17 Dec 2019 04:16:40 -0500
+Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBH9F18q025947;
+        Tue, 17 Dec 2019 04:16:30 -0500
+Received: from nam04-co1-obe.outbound.protection.outlook.com (mail-co1nam04lp2050.outbound.protection.outlook.com [104.47.45.50])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2wxf1msjvy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Dec 2019 04:16:30 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iWbNAQUj/l8qjYCc576TUTZQWIZ/74GwL24KN1KmpTdyIrVcnvFimnT5s77SIEy+L+jfkU0DErJ/NWUJbuUh9o/90Tw8SsannhcBHPsJcXOYuSnDFgp7xNdhPvnBSB3cISQJ9YYTWwQEsj8+Wn6rskomli3CX4HO5NZYZJd3yUM8Uxzx27YpLCPVVfJIcco0Bt5HLq9J6BNHpDgjDtkILL3XLJLw9qKNMkuXyqfVnxUwxY9tcnX8jhMROXrozz+3ZlhcwZrXGq2rMC9KO+Y1YlHkb0wCe8XL3ZW1HFc/G/kDwR/qvs11gzie67zV1ObnWWFEIIJbXjt5inVpAHHX7Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=w4EDPQGvqtAh2MZR79VceHLjyLBXcLiY/Wb2uIqDhBM=;
+ b=BPxnb6hz44IvJeGCWKXGfhSSaG9lCH9FSfzbVAdwrn/cx4Y+E5vIcMjM+roiuH/8eBMw/R9+yxVHCt8Ae8ZVtTH2bp4dqybxhMFzQAO/Y9F49Sf2sASYmP8zMYv7o5qLCr43LH60m4m9eTrequNcgnp7TOZr9cC1HT5fvBQNbb6C8e9v9qYZfECvXGTIO9BCX0zbnIwmatwW1YKGwB+6nb8Gwa09BQKRD45BGmVwuXGRYJ2hCvvsltt05fkNSNefygZvK6cN6wM+SsmXzFYmSW+ayDfALHHknQ5FsvuIGuFYHwPTAzm7mFPS+085gQ4jyzGU4dOU2G/NnwgNfcLehA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.55) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
+ dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=w4EDPQGvqtAh2MZR79VceHLjyLBXcLiY/Wb2uIqDhBM=;
+ b=AqJbXtcMIEx2bvAwifDYAAFdgU9CIv+r7UHHowu6FQE6Qf0g1f2CJmxEAZGsF5B3Y6mHrh3h3klhjrlIdIQVxmwfJKMv46K/Zyn7NjjKHnkZ7GcCG0JmT5N2E9AShcrguQoiNqlrhHlEZZqNJAFtom/ERs+hwTgciD7d/5sVx3M=
+Received: from SN6PR04CA0095.namprd04.prod.outlook.com (2603:10b6:805:f2::36)
+ by DM6PR03MB5306.namprd03.prod.outlook.com (2603:10b6:5:243::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2538.15; Tue, 17 Dec
+ 2019 09:16:29 +0000
+Received: from SN1NAM02FT011.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:805:f2:cafe::4b) by SN6PR04CA0095.outlook.office365.com
+ (2603:10b6:805:f2::36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2538.17 via Frontend
+ Transport; Tue, 17 Dec 2019 09:16:28 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
+Received: from nwd2mta1.analog.com (137.71.25.55) by
+ SN1NAM02FT011.mail.protection.outlook.com (10.152.72.82) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2538.14
+ via Frontend Transport; Tue, 17 Dec 2019 09:16:28 +0000
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id xBH9GQeM019258
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
+        Tue, 17 Dec 2019 01:16:27 -0800
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Tue, 17 Dec
+ 2019 01:16:25 -0800
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 17 Dec 2019 04:16:25 -0500
+Received: from saturn.ad.analog.com ([10.48.65.123])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id xBH9GMb8025878;
+        Tue, 17 Dec 2019 04:16:22 -0500
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <gregkh@linuxfoundation.org>, <peterhuewe@gmx.de>,
+        <jarkko.sakkinen@linux.intel.com>, <jgg@ziepe.ca>, <arnd@arndb.de>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH V3] tpm_tis_spi: use new 'delay' structure for SPI transfer delays
+Date:   Tue, 17 Dec 2019 11:16:15 +0200
+Message-ID: <20191217091615.12764-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191204080049.32701-1-alexandru.ardelean@analog.com>
+References: <20191204080049.32701-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Tf0wTZxj2u7veHT/OHRXks07jurjNLSgYtnxuSojxx5k4ssRky1ywPeSk
-        HaXFa1lk/iGRqQMVC0gMpUWlMIkQKwWiokZSKmpnWBpPrEFdmMTfAaYMUFB356nw1/d87/M+
-        z/P+8b40rvVSOtpsdQiilbfoyWiis3GiJSnkHs9MvnJpLqoPX6fQnsE/KPSyoptCI54Qgar6
-        B0g00LkHoMPBHg3a+2ebBhV7fSTqaz9JoL//uwjQqPQ7hg5OHsPQv/vuaNDR3fUEaj08CdC1
-        DjeJ2p+cAKi7SSJRw40whtwNlwk09LQEQ+HQalQVGqTQ7dBFEhWHIzjadT5IoVe9LQQq61mb
-        Po9rrm0G3MSLCsANRXZRXG3zdu6M6zbF+Y+XkNyt3nMkd8HTTHHeskoNN3q1nODuHfUR3KXI
-        KYw7VPsc43z7goBrbBqjuGf++d+xG2OWZ/GOXzaYc6xL0owxplppR35F9LZjrl6iCAxHlYIo
-        GrKp8FC3pCkF0bSWvQ5gl/M+pX4uA7j/SRsoBTRNssth6U1KEcSzSbDqhZdUMM5KMbDm7E8K
-        nsVmQV/Xbkzt2QwvPPC+xV9D6YgHVzDBLoTOcORNnWEz4F23D1ezrgLYJ1W+MY1il8J/HncS
-        CgbsPFhSNIipYYnQf29Mo07Nwvpzf+EqToAP7756W9fD88/7CWVmnF0EfR1LVJgOD3R+orp8
-        BA/u7afUEeLgleoBwglmu6YFuKbErimxa5rYNU18BGiOA5jHmy05vENIWSwKBYtFmylPfjbb
-        8vxAXbqR0+B1YF0AYDQIgDk0pk9gYteOZ2pnZtmyC0283WQQCyyCPQAgjevjmdMLxjK1TDZf
-        +Ksg2t5Rc2lCn8h82l+eqWWVrFxByBfEd+yHNK2HzNNq2TROFHKEbVvMFscUjdFRinm0Lt4u
-        WLMFkS9wmAzKchjs8nYoVKyc+7F8GVrGns/nyVVVGgJf0M6HnjqcDnoa6nAtYbVZBV0iU1gj
-        t7JKq6nA+j7oEUikgX4W43TJbKx8ee99HskRmByxNGNUiXDwU5SuCPx2c8V48k7jB8XSluRy
-        5kZ225dMwFDT2lXcdG3FHXvEGZizJtyzMc1rzm1YPzEjddmGnw2tPa/9kVWNzPBnYzMQPBEb
-        nL1y/mSTbXLolGRMivvq+/Tq1APg2+HKReVp7bqtt9adTW2xGEt2/liRe3I0oWPE/XjrJulZ
-        30Jja9kPKd/oCbuJT/kcF+38/5X8RXI2BAAA
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(376002)(136003)(346002)(39860400002)(54534003)(199004)(189003)(4326008)(107886003)(478600001)(7696005)(8936002)(5660300002)(426003)(336012)(7636002)(8676002)(86362001)(2616005)(186003)(6666004)(356004)(2906002)(70206006)(70586007)(54906003)(110136005)(44832011)(246002)(316002)(26005)(36756003)(1076003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB5306;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 4b0691f0-4646-4bcd-d4b1-08d782d1cc50
+X-MS-TrafficTypeDiagnostic: DM6PR03MB5306:
+X-Microsoft-Antispam-PRVS: <DM6PR03MB5306E592135F81B890A6C6B3F9500@DM6PR03MB5306.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1388;
+X-Forefront-PRVS: 02543CD7CD
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: qeUcg+K+hkqniABFuOBZUMidTLIIXidRdWEGhryA9HDMXRqkvd5FoZ7SQp/e3gvQLnr9YRv1QAun0GeCJraOAvaWiwB02f/RxouzaJ+y5DvDnTgAQnmSNUT6Xb5Hix0gN258TaisIwFe+i3RUypw6+TDZ8j5Crg3LhdFiqbmjnweeRUo/3QOeBekTAkDHRtb4NaxmSnLl92Ft9pkSl+0MoWT+Rg27yEHSQZA1RmDHoZ5IxSqZSOdUd9GJROvzCM6WXNcz7HYiGzL/jnNf2GpQXb333bjyrif51pNev9qRLKJfRyQW7u58/jMtO05cwbAYkfGf57IJfDmVXuJAuf29OBbd0GN7w80KwoNBezIomLRXhiibsabto96kek6rlkw7YQ7kZLcXeSx+U3Jld1ZpS45IeCFGMFLelS1eboTsThgNREj7oFRadWBfZDOzDNz/fv4dkNTbRx4Z50YMmxfqGeauUVMOuu3i/RHOS4KVHs0VqTTMkG3QOfGse2BurKY
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Dec 2019 09:16:28.2648
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4b0691f0-4646-4bcd-d4b1-08d782d1cc50
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB5306
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-17_01:2019-12-16,2019-12-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ adultscore=0 suspectscore=0 impostorscore=0 malwarescore=0 mlxlogscore=999
+ clxscore=1015 mlxscore=0 priorityscore=1501 bulkscore=0 spamscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912170081
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gTWFyaywNCg0KT24gTW9uLCAyMDE5LTEyLTE2IGF0IDE0OjU1ICswMDAwLCBNYXJrIEJy
-b3duIHdyb3RlOg0KPiBPbiBXZWQsIERlYyAxMSwgMjAxOSBhdCAxMTo0NjoxMUFNICswMjAwLCBN
-YXR0aSBWYWl0dGluZW4gd3JvdGU6DQo+IA0KPiA+ICtzdGF0aWMgaW50IGJkNzE4MjhfbGRvNl9n
-ZXRfdm9sdGFnZShzdHJ1Y3QgcmVndWxhdG9yX2RldiAqcmRldikNCj4gPiArew0KPiA+ICsJcmV0
-dXJuIEJENzE4MjhfTERPXzZfVk9MVEFHRTsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIGNv
-bnN0IHN0cnVjdCByZWd1bGF0b3Jfb3BzIGJkNzE4MjhfbGRvNl9vcHMgPSB7DQo+ID4gKwkuZW5h
-YmxlID0gcmVndWxhdG9yX2VuYWJsZV9yZWdtYXAsDQo+ID4gKwkuZGlzYWJsZSA9IHJlZ3VsYXRv
-cl9kaXNhYmxlX3JlZ21hcCwNCj4gPiArCS5nZXRfdm9sdGFnZSA9IGJkNzE4MjhfbGRvNl9nZXRf
-dm9sdGFnZSwNCj4gDQo+IFlvdSBjYW4ganVzdCBzZXQgZml4ZWRfdVYgaW4gdGhlIHJlZ3VsYXRv
-cl9kZXNjLCB5b3UgZG9uJ3QgbmVlZCBhDQo+IGdldF92b2x0YWdlKCkgb3BlcmF0aW9uIGhlcmUu
-ICBPdGhlcndpc2UgdGhpcyBsb29rcyBnb29kLCBJJ2xsIGFwcGx5DQo+IGl0DQo+IGFuZCBwbGVh
-c2Ugc2VuZCBhbiBpbmNyZW1lbnRhbCBmaXggZm9yIHRoaXMuDQoNCkp1c3QgdG8gY29uZmlybSAt
-IGFyZSB5b3UgYWxzbyB0YWtpbmcgaW4gdGhlDQpbUEFUQ0ggdjYgMDgvMTVdIHJlZ3VsYXRvcjog
-YmQ3MTh4NzogU3BsaXQgZHJpdmVyIHRvIGNvbW1vbiBhbmQgYmQ3MTh4Nw0Kc3BlY2lmaWMgcGFy
-dHMNCg0KSSB0aGluayB0aGVyZSBpcyBhIGRlcGVuZGVuY3kuIChJIGFtIHByZXBhcmluZyBuZXh0
-IHZlcnNpb24gb2YgdGhlDQpzZXJpZXMgc28gSSdsbCBkcm9wIHRoZSBhbHJlYWR5IGFwcGxpZWQg
-cGF0Y2hlcy4pDQoNCkJyLA0KCU1hdHRpIFZhaXR0aW5lbg0K
+In a recent change to the SPI subsystem [1], a new 'delay' struct was added
+to replace the 'delay_usecs'. This change replaces the current
+'delay_usecs' with 'delay' for this driver.
+
+The 'spi_transfer_delay_exec()' function [in the SPI framework] makes sure
+that both 'delay_usecs' & 'delay' are used (in this order to preserve
+backwards compatibility).
+
+[1] commit bebcfd272df6485 ("spi: introduce `delay` field for
+`spi_transfer` + spi_transfer_delay_exec()")
+
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+
+Changelog v2 -> v3:
+* replaced symbol ` with ' ; did not change it for title of
+  commit bebcfd272df6485 , since that one has been commited with
+  symbol ` in the commit title
+
+ drivers/char/tpm/tpm_tis_spi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/char/tpm/tpm_tis_spi.c b/drivers/char/tpm/tpm_tis_spi.c
+index d1754fd6c573..d96755935529 100644
+--- a/drivers/char/tpm/tpm_tis_spi.c
++++ b/drivers/char/tpm/tpm_tis_spi.c
+@@ -110,7 +110,8 @@ int tpm_tis_spi_transfer(struct tpm_tis_data *data, u32 addr, u16 len,
+ 
+ 		spi_xfer.cs_change = 0;
+ 		spi_xfer.len = transfer_len;
+-		spi_xfer.delay_usecs = 5;
++		spi_xfer.delay.value = 5;
++		spi_xfer.delay.unit = SPI_DELAY_UNIT_USECS;
+ 
+ 		if (in) {
+ 			spi_xfer.tx_buf = NULL;
+-- 
+2.20.1
+
