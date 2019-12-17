@@ -2,199 +2,96 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B3EC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8F1C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:08:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B2D4206D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:04:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576544656;
-	bh=vsROhXTeH6yGnokmLA2lNaytalJ5COJ84GfSAtpzhY8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=c2YT2SfMXptn+Uo2B28uZnkU25SFaMN+nFOYMFv63o1ET8CCmEI4XtRMR7B1DYzyP
-	 +5YtG2KCk00PEIpY19/b9odcQHbThcQJloepvxMkVuDqUieC/RZDJmDc+Uw/1Z2KIj
-	 Bu+Loo/2aGSr0CV4ZGA3WEc36+JS6QIqtRkzPsNk=
+	by mail.kernel.org (Postfix) with ESMTP id 5544020CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:08:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cCJVMt1j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbfLQBEP (ORCPT
+        id S1726401AbfLQBIh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 20:04:15 -0500
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:26519 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726016AbfLQBEP (ORCPT
+        Mon, 16 Dec 2019 20:08:37 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:41791 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbfLQBIh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 20:04:15 -0500
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id xBH1419o018538;
-        Tue, 17 Dec 2019 10:04:02 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com xBH1419o018538
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1576544642;
-        bh=2OnRthpOwSo522anatNV+uWjOKMmK1+KveEbc/gDwOI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=mfd5l/TuUCyr6QW+mysB6/yg/8dhv6xZzGeqKLIK9bgIuyBcYE6RrzHpFViC/ZfZ/
-         nQAaStInEQYW/U+VbqNfKysdv+g4ejRu6574aU+eM6Iy+vqQmJM2nDo1XphEgLtwHE
-         18nyqs1bAMZffmlnE96BIBpyxHAz1iaiPFPJff1EKfhQVRSI/EadU9u7LBh1all/hm
-         EQz5ZRzV/zD4t5bSHpHlWT23WX7S1Fuk/ZpBmztB/6l4fjJRsSLWpJ5D6BxuX+btOj
-         6vLv6i+vLz+0OmFotglH7oPI1S4Zz6Ef4h2olhKac2fEdeVa8YYEGLrkHs2GRBW3/g
-         uKmAeX0VVqqEw==
-X-Nifty-SrcIP: [209.85.221.179]
-Received: by mail-vk1-f179.google.com with SMTP id o187so2219247vka.2;
-        Mon, 16 Dec 2019 17:04:02 -0800 (PST)
-X-Gm-Message-State: APjAAAWEVb5cJ8SWwy9fZqwBtLVJMEp2iEPPUccfp75QOw83tEvQ2b58
-        FwUXDk8v43yOCXvlThv0f4YO64Z4cLE/BUT4pVE=
-X-Google-Smtp-Source: APXvYqw8SOsqcXAe0bfHk2zMem79fKTNwrDNACKWGXoX9M7Y4DjQi//2YVgNo58T16JPzJPetJFr+CpIkPJ5Ft8FkMY=
-X-Received: by 2002:a1f:72c3:: with SMTP id n186mr1543259vkc.12.1576544640779;
- Mon, 16 Dec 2019 17:04:00 -0800 (PST)
+        Mon, 16 Dec 2019 20:08:37 -0500
+Received: by mail-oi1-f196.google.com with SMTP id i1so4837441oie.8
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 17:08:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YyJkwouu9RSE47M+yfsZJ8PNOfGB08WYfNp0ketBqVg=;
+        b=cCJVMt1jq9fH/UR15P7MH7JzO8+xJaYU8d4QbKLu7A2kNB19e/Sf5mMHA5zHYjyB+z
+         trbQH55bFAjcj99d4aV4JJtwWIUKtbwq9QAdRo6ZFF27rieeqPjGAOy0i/CGTKD9egKz
+         BS/f09F5WphJju6WlCvqleeHLn8p9il1g3KN6Hx6h4HiSf7hga8ROvqfw9zpQyNF3t/L
+         PN2BIdZ9eZCd2SIpN53NkSNW7fWIwwgzmx4lHR/iwVM37ZKG+nHXDSAxmbTjYpSzJ4Ej
+         6Zju9x525MRNRNOVmbS5R57lvq+R44PWJrvxWu/zSj+zChqJmayPHQ9dmCi+iOFnJxqf
+         sEFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YyJkwouu9RSE47M+yfsZJ8PNOfGB08WYfNp0ketBqVg=;
+        b=anioUg+eragybtsXYopJ/Z3iRdbAWqmP2Lmke4qsPJKMvZHyKd0yTjVH+bMvZ5lEuO
+         dvgLrLoz8qvgt/Wuuc/mYt4jHjsCn7FfxRAyxOy+jrldplrjp3Rzc5wc7Zrykh4kyopb
+         HeFEP7KjFosSuC7bk0IXqw3BX1MqGWGqsP0X6RapdMVZA7W2iTmoCP/mfwbM025f1jw4
+         fp0kzxfUXWPtKnHZxKjBwTLWAuFec88cj9FxufZaa3AXZKHH2Yese0A1vogMXaQXksF0
+         ps2pr+tRhKQX/0JlSIhA3TuZA49236njLhen4RDimr6jrqLnv4Znqlpb5t4XtnXvuUKV
+         pLqw==
+X-Gm-Message-State: APjAAAWLLl4ypUm+wQk9MXHxpDd+vWbAfRwYbG1GCU0UyJ9VOjWiBCFA
+        tqQVM9Jk8POIBIMEGvFMDvM0momPk+trSkMrk9GpQvss
+X-Google-Smtp-Source: APXvYqx5ujUJfxUQ0LoYehL9Cvx+BBetWa88h4Ofzlrg+C3knklrqmlkYwG6HsBUrD6tpYf+aVGVB+JCmZP8L2tUtgM=
+X-Received: by 2002:aca:4cc7:: with SMTP id z190mr1135206oia.10.1576544916265;
+ Mon, 16 Dec 2019 17:08:36 -0800 (PST)
 MIME-Version: 1.0
-References: <5a473c6c-cc1f-6648-31ec-3b40e415a836@infradead.org>
- <20191207014238.5507-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <CAK7LNATj5RBHov_w05q1XSiOPN7fYQCKhVMDzHNwHSB1Eq2rmQ@mail.gmail.com> <cedbe416-844e-2bb8-5d05-4cd34eae8619@i-love.sakura.ne.jp>
-In-Reply-To: <cedbe416-844e-2bb8-5d05-4cd34eae8619@i-love.sakura.ne.jp>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 17 Dec 2019 10:03:23 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATpAbRVbCuHQjq2e493aP0p1F9=Nd8+goQm-JnHzMEesw@mail.gmail.com>
-Message-ID: <CAK7LNATpAbRVbCuHQjq2e493aP0p1F9=Nd8+goQm-JnHzMEesw@mail.gmail.com>
-Subject: Re: [PATCH v2] kconfig: Add yes2modconfig and mod2yesconfig targets.
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>
+References: <1575483700-22153-1-git-send-email-vincent.guittot@linaro.org>
+In-Reply-To: <1575483700-22153-1-git-send-email-vincent.guittot@linaro.org>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Mon, 16 Dec 2019 17:08:25 -0800
+Message-ID: <CALAqxLXt25qVC+fqdx3rpRMkYwinVKO-Kqw_5B0v=xa01b_AUQ@mail.gmail.com>
+Subject: Re: [PATCH] sched/fair: fix find_idlest_group() to handle CPU affinity
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>, bsegall@google.com,
+        "mgorman@suse.de" <mgorman@suse.de>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Qais Yousef <qais.yousef@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 9:59 PM Tetsuo Handa
-<penguin-kernel@i-love.sakura.ne.jp> wrote:
+On Wed, Dec 4, 2019 at 10:21 AM Vincent Guittot
+<vincent.guittot@linaro.org> wrote:
 >
-> Thank you for reviewing.
+> Because of CPU affinity, the local group can be skipped which breaks the
+> assumption that statistics are always collected for local group. With
+> uninitialized local_sgs, the comparison is meaningless and the behavior
+> unpredictable. This can even end up to use local pointer which is to
+> NULL in this case.
 >
-> On 2019/12/16 20:10, Masahiro Yamada wrote:
-> > BTW, I have never contributed to the syzbot bug shooting.
-> > So, please teach me if you know this:
-> > Is there a a specific reason why the config set for syzbot
-> > is close to allyesconfig instead of allmodconfig?
+> If the local group has been skipped because of CPU affinity, we return
+> the idlest group.
 >
-> I don't know. But I guess that all-in-one vmlinux file is easier to use
-> (e.g. no need to copy .ko files into initramfs nor /lib/modules/ directory
-> in the root filesystem image, no need to fetch .ko files when calculating
-> locations in the source code from kernel addresses, no need to worry about
-> availability of .ko loader program and request_module() dependency).
+> Fixes: 57abff067a08 ("sched/fair: Rework find_idlest_group()")
+> Reported-by: John Stultz <john.stultz@linaro.org>
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> Tested-by: John Stultz <john.stultz@linaro.org>
 
-OK.
-I just thought allmodconfig would be more convenient to trim
-unrelated code without switching yes/mod back and forth.
-Anyway...
+Just wanted to follow up on this, as its seemed to have missed -rc2?
 
-> >> @@ -669,6 +684,8 @@ int main(int ac, char **av)
-> >>         case listnewconfig:
-> >>         case helpnewconfig:
-> >>         case syncconfig:
-> >> +       case yes2modconfig:
-> >> +       case mod2yesconfig:
-> >
-> > This looks like
-> > yes2mod/mod2yesconfig are interactive modes.
-> > Why do you need this?
-> >
-> > I believe yes2mod/mod2yesconfig
-> > should work non-interactively.
->
-> I worried that simple s/=y$/=m/ or s/=m$/=y/ on tristate config fails to satisfy
-> requirement/dependency.
-
-conf_write() calls sym_calc_value() for every symbol
-before writing them to the .config file.
-
-
-> And I assumed that
->
->   /* Update until a loop caused no more changes */
->   do {
->         conf_cnt = 0;
->         check_conf(&rootmenu);
->   } while (conf_cnt);
->
-> is the location to make modifications in order to adjust requirement/dependency.
-
-This is not the place to meet requirement/dependency.
-
-This loop requires the user to input his/her preference
-for all visible symbols.
-
-oldaskconfig, oldconfig and syncconfig are meant to be
-interactive  (it shows a prompt for every new symbol),
-that is why they runs this loop.
-
-
-
-> But I might be wrong. I just assumed that we should behave as if "make oldconfig"
-> after doing simple s/=y$/=m/ or s/=m$/=y/ on tristate config.
-> Does some later function automatically adjust requirement/dependency ?
-
-Yes, conf_write().
-
-Thanks.
-
-
-
-> If yes,
->
-> >> @@ -638,6 +648,11 @@ int main(int ac, char **av)
-> >>                 }
-> >>         }
-> >>
-> >> +       if (input_mode == yes2modconfig)
-> >> +               conf_rewrite_mod_or_yes(def_y2m);
-> >> +       else if (input_mode == mod2yesconfig)
-> >> +               conf_rewrite_mod_or_yes(def_m2y);
-> >> +
-> >
-> > For consistency, why not put these lines into the switch statement below?
->
-> conf_rewrite_mod_or_yes() should be put into the switch statement.
->
-> >> diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
-> >> index 3569d2dec37c..6832a04a1aa4 100644
-> >> --- a/scripts/kconfig/confdata.c
-> >> +++ b/scripts/kconfig/confdata.c
-> >> @@ -1362,3 +1362,29 @@ bool conf_set_all_new_symbols(enum conf_def_mode mode)
-> >>
-> >>         return has_changed;
-> >>  }
-> >> +
-> >> +bool conf_rewrite_mod_or_yes(enum conf_def_mode mode)
-> >
-> > If you do not use the return value of this function,
-> > could you make it into a void function?
->
-> OK.
->
-> >> +{
-> >> +       struct symbol *sym;
-> >> +       int i;
-> >> +       bool has_changed = false;
-> >> +
-> >> +       if (mode == def_y2m) {
-> >> +               for_all_symbols(i, sym) {
-> >> +                       if (sym_get_type(sym) == S_TRISTATE &&
-> >> +                           sym->def[S_DEF_USER].tri == yes) {
-> >> +                               sym->def[S_DEF_USER].tri = mod;
-> >> +                               has_changed = true;
-> >
-> > sym_add_change_count(1); seems the convention way
-> > to inform kconfig of some options being updated.
->
-> Then, we can do "sym_add_change_count(1);" instead of "return has_changed;".
->
-
-
---
-Best Regards
-Masahiro Yamada
+thanks
+-john
