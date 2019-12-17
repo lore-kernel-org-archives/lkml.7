@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7BDC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54109C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8FE921775
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25484206D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:17:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576613825;
-	bh=hCfYOICVQJtSmvDtFvD4zB7rBm7v96AeRD9UugTEBwk=;
+	s=default; t=1576613829;
+	bh=Aeftx0RiFoltP/GkP5iTSbFpXgr6WT6c5XhRqiw+aR0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WQFS+rxMg0DRiIJfk1CmZjygHw7LBnnkkfljAyty7kYiBvUmsUGsuQv6kGFsJUrhL
-	 KmglxD1HSGPXDEWH4oXHmfiWCw/hcycKC8d0RvrjgeW2R2SLHeHsqzaabZ7xrPXXoL
-	 I8YcugvSuobYczfh6ooyJXYJ3hqd9EG3d3b5+Ogs=
+	b=mQsXaATJiRZ+u98M/CxWWmPaE7IwBGe2Fh8oZRq7RsupydxLN7iwFDDOUR0yhQRGB
+	 PQxaSM7PP3/t6S2M2x9OmfrMJf2cSG15G7nwO1HMKa4g/kizV8pQXhGSXK1H+Hp99F
+	 v0I1ufhzGqNFj8eqpDyhHZiv5wekiMpFu8quzAd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728657AbfLQURF (ORCPT
+        id S1728693AbfLQURI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 15:17:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41270 "EHLO mail.kernel.org"
+        Tue, 17 Dec 2019 15:17:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728581AbfLQUQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 15:16:59 -0500
+        id S1728581AbfLQURG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 15:17:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 930572465E;
-        Tue, 17 Dec 2019 20:16:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0C97206D8;
+        Tue, 17 Dec 2019 20:17:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576613817;
-        bh=hCfYOICVQJtSmvDtFvD4zB7rBm7v96AeRD9UugTEBwk=;
+        s=default; t=1576613825;
+        bh=Aeftx0RiFoltP/GkP5iTSbFpXgr6WT6c5XhRqiw+aR0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AqTRl3hzxu2CE1bR8izRHptT35uhtvapgrg8NbttfHeWb67s8FXlA26nz/qPcMmjk
-         JXd0S94wdQNXV+YCyHDBGb/2ON3cDlt8V/V51L/ww3dC4Crv+f+3hfPNPhlfdj2o9V
-         jTosB6DUC9Ptf3IS5Xd5doLFAS2B0Oq+LtEtHjwA=
+        b=LlBdg9UPVUMGDsHWAuFrGjJboqiJUfF22KiMZELC4Qs/E7KGLlPZNUtUnQtrEPWEv
+         283XdOG0VF9okIVVfX+aWrgWcsIWvKXqQ1zS6fAqAZuZ4Vb+roJqI4DdRqh0OjU9G/
+         5s0JI1+FUyU84opyDcYh9B+7twfV8qk3/tgMiDSI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        William Tu <u9012063@gmail.com>,
-        Simon Horman <simon.horman@netronome.com>,
+        stable@vger.kernel.org, Cong Wang <xiyou.wangcong@gmail.com>,
+        Taehee Yoo <ap420073@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 19/25] gre: refetch erspan header from skb->data after pskb_may_pull()
-Date:   Tue, 17 Dec 2019 21:16:18 +0100
-Message-Id: <20191217200910.543887598@linuxfoundation.org>
+Subject: [PATCH 5.3 21/25] hsr: fix a NULL pointer dereference in hsr_dev_xmit()
+Date:   Tue, 17 Dec 2019 21:16:20 +0100
+Message-Id: <20191217200911.827121033@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191217200903.179327435@linuxfoundation.org>
 References: <20191217200903.179327435@linuxfoundation.org>
@@ -63,41 +60,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 0e4940928c26527ce8f97237fef4c8a91cd34207 ]
+[ Upstream commit df95467b6d2bfce49667ee4b71c67249b01957f7 ]
 
-After pskb_may_pull() we should always refetch the header
-pointers from the skb->data in case it got reallocated.
+hsr_dev_xmit() calls hsr_port_get_hsr() to find master node and that would
+return NULL if master node is not existing in the list.
+But hsr_dev_xmit() doesn't check return pointer so a NULL dereference
+could occur.
 
-In gre_parse_header(), the erspan header is still fetched
-from the 'options' pointer which is fetched before
-pskb_may_pull().
+Test commands:
+    ip netns add nst
+    ip link add veth0 type veth peer name veth1
+    ip link add veth2 type veth peer name veth3
+    ip link set veth1 netns nst
+    ip link set veth3 netns nst
+    ip link set veth0 up
+    ip link set veth2 up
+    ip link add hsr0 type hsr slave1 veth0 slave2 veth2
+    ip a a 192.168.100.1/24 dev hsr0
+    ip link set hsr0 up
+    ip netns exec nst ip link set veth1 up
+    ip netns exec nst ip link set veth3 up
+    ip netns exec nst ip link add hsr1 type hsr slave1 veth1 slave2 veth3
+    ip netns exec nst ip a a 192.168.100.2/24 dev hsr1
+    ip netns exec nst ip link set hsr1 up
+    hping3 192.168.100.2 -2 --flood &
+    modprobe -rv hsr
 
-Found this during code review of a KMSAN bug report.
+Splat looks like:
+[  217.351122][ T1635] kasan: CONFIG_KASAN_INLINE enabled
+[  217.352969][ T1635] kasan: GPF could be caused by NULL-ptr deref or user memory access
+[  217.354297][ T1635] general protection fault: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
+[  217.355507][ T1635] CPU: 1 PID: 1635 Comm: hping3 Not tainted 5.4.0+ #192
+[  217.356472][ T1635] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+[  217.357804][ T1635] RIP: 0010:hsr_dev_xmit+0x34/0x90 [hsr]
+[  217.373010][ T1635] Code: 48 8d be 00 0c 00 00 be 04 00 00 00 48 83 ec 08 e8 21 be ff ff 48 8d 78 10 48 ba 00 b
+[  217.376919][ T1635] RSP: 0018:ffff8880cd8af058 EFLAGS: 00010202
+[  217.377571][ T1635] RAX: 0000000000000000 RBX: ffff8880acde6840 RCX: 0000000000000002
+[  217.379465][ T1635] RDX: dffffc0000000000 RSI: 0000000000000004 RDI: 0000000000000010
+[  217.380274][ T1635] RBP: ffff8880acde6840 R08: ffffed101b440d5d R09: 0000000000000001
+[  217.381078][ T1635] R10: 0000000000000001 R11: ffffed101b440d5c R12: ffff8880bffcc000
+[  217.382023][ T1635] R13: ffff8880bffcc088 R14: 0000000000000000 R15: ffff8880ca675c00
+[  217.383094][ T1635] FS:  00007f060d9d1740(0000) GS:ffff8880da000000(0000) knlGS:0000000000000000
+[  217.384289][ T1635] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  217.385009][ T1635] CR2: 00007faf15381dd0 CR3: 00000000d523c001 CR4: 00000000000606e0
+[  217.385940][ T1635] Call Trace:
+[  217.386544][ T1635]  dev_hard_start_xmit+0x160/0x740
+[  217.387114][ T1635]  __dev_queue_xmit+0x1961/0x2e10
+[  217.388118][ T1635]  ? check_object+0xaf/0x260
+[  217.391466][ T1635]  ? __alloc_skb+0xb9/0x500
+[  217.392017][ T1635]  ? init_object+0x6b/0x80
+[  217.392629][ T1635]  ? netdev_core_pick_tx+0x2e0/0x2e0
+[  217.393175][ T1635]  ? __alloc_skb+0xb9/0x500
+[  217.393727][ T1635]  ? rcu_read_lock_sched_held+0x90/0xc0
+[  217.394331][ T1635]  ? rcu_read_lock_bh_held+0xa0/0xa0
+[  217.395013][ T1635]  ? kasan_unpoison_shadow+0x30/0x40
+[  217.395668][ T1635]  ? __kasan_kmalloc.constprop.4+0xa0/0xd0
+[  217.396280][ T1635]  ? __kmalloc_node_track_caller+0x3a8/0x3f0
+[  217.399007][ T1635]  ? __kasan_kmalloc.constprop.4+0xa0/0xd0
+[  217.400093][ T1635]  ? __kmalloc_reserve.isra.46+0x2e/0xb0
+[  217.401118][ T1635]  ? memset+0x1f/0x40
+[  217.402529][ T1635]  ? __alloc_skb+0x317/0x500
+[  217.404915][ T1635]  ? arp_xmit+0xca/0x2c0
+[ ... ]
 
-Fixes: cb73ee40b1b3 ("net: ip_gre: use erspan key field for tunnel lookup")
-Cc: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Acked-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-Acked-by: William Tu <u9012063@gmail.com>
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
+Fixes: 311633b60406 ("hsr: switch ->dellink() to ->ndo_uninit()")
+Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/gre_demux.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/hsr/hsr_device.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/net/ipv4/gre_demux.c
-+++ b/net/ipv4/gre_demux.c
-@@ -127,7 +127,7 @@ int gre_parse_header(struct sk_buff *skb
- 		if (!pskb_may_pull(skb, nhs + hdr_len + sizeof(*ershdr)))
- 			return -EINVAL;
+--- a/net/hsr/hsr_device.c
++++ b/net/hsr/hsr_device.c
+@@ -227,8 +227,13 @@ static int hsr_dev_xmit(struct sk_buff *
+ 	struct hsr_port *master;
  
--		ershdr = (struct erspan_base_hdr *)options;
-+		ershdr = (struct erspan_base_hdr *)(skb->data + nhs + hdr_len);
- 		tpi->key = cpu_to_be32(get_session_id(ershdr));
- 	}
+ 	master = hsr_port_get_hsr(hsr, HSR_PT_MASTER);
+-	skb->dev = master->dev;
+-	hsr_forward_skb(skb, master);
++	if (master) {
++		skb->dev = master->dev;
++		hsr_forward_skb(skb, master);
++	} else {
++		atomic_long_inc(&dev->tx_dropped);
++		dev_kfree_skb_any(skb);
++	}
+ 	return NETDEV_TX_OK;
+ }
  
 
 
