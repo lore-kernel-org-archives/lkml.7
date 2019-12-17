@@ -2,152 +2,91 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71DB2C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E67AC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4479121D7D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:50:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FbimDjNU"
+	by mail.kernel.org (Postfix) with ESMTP id D2DBC24673
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:51:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbfLQAuQ (ORCPT
+        id S1726730AbfLQAvg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:50:16 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:16612 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726556AbfLQAuQ (ORCPT
+        Mon, 16 Dec 2019 19:51:36 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34494 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726402AbfLQAva (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 19:50:16 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576543815; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=qLNr/gHCAFeczYVPQATrRfokdlGVpsfEFr/rEsngAro=;
- b=FbimDjNUVnBbnY+p7ZHU24MzZ+remt7fYn5j1OUZGzHTAxNtaE3/Kj/yQ8DiuS9q9mZkE95d
- PaMDT2YFsv4DiJItDWNE1Z3P10Uv1KssrtaC/yRTmG7s3UF51UiV1VwvY8y9id8i8zLd1/V/
- ac5PBIby/41EK49ZKCOK9nk23eA=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5df82641.7f84f811cf10-smtp-out-n02;
- Tue, 17 Dec 2019 00:50:09 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C7E1FC447A2; Tue, 17 Dec 2019 00:50:09 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AF84DC433CB;
-        Tue, 17 Dec 2019 00:50:08 +0000 (UTC)
+        Mon, 16 Dec 2019 19:51:30 -0500
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1ih15E-0003If-Nr; Tue, 17 Dec 2019 00:51:28 +0000
+Received: from ben by deadeye with local (Exim 4.93-RC7)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1ih15D-0005Ro-N9; Tue, 17 Dec 2019 00:51:27 +0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 17 Dec 2019 08:50:08 +0800
-From:   cang@codeaurora.org
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Bart Van Assche <bvanassche@acm.org>, asutoshd@codeaurora.org,
-        nguyenb@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] scsi: ufs: Put SCSI host after remove it
-In-Reply-To: <20191216180502.GA2404915@kroah.com>
-References: <1576328616-30404-1-git-send-email-cang@codeaurora.org>
- <1576328616-30404-2-git-send-email-cang@codeaurora.org>
- <85475247-efd5-732e-ae74-6d9a11e1bdf2@acm.org>
- <cd6dc7c90d43b8ca8254a43da48334fc@codeaurora.org>
- <20191216180502.GA2404915@kroah.com>
-Message-ID: <bd900a0b3fdb8dd8b2cdb42a039f938b@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Larry Finger" <Larry.Finger@lwfinger.net>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Denis Efremov" <efremov@linux.com>,
+        "Michael Straube" <straube.linux@gmail.com>
+Date:   Tue, 17 Dec 2019 00:45:41 +0000
+Message-ID: <lsq.1576543535.761050065@decadent.org.uk>
+X-Mailer: LinuxStableQueue (scripts by bwh)
+X-Patchwork-Hint: ignore
+Subject: [PATCH 3.16 007/136] staging: rtl8188eu: fix HighestRate check in
+ odm_ARFBRefresh_8188E()
+In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-17 02:05, Greg KH wrote:
-> On Mon, Dec 16, 2019 at 10:31:29PM +0800, cang@codeaurora.org wrote:
->> On 2019-12-15 02:32, Bart Van Assche wrote:
->> > On 12/14/19 8:03 AM, Can Guo wrote:
->> > > In ufshcd_remove(), after SCSI host is removed, put it once so that
->> > > its
->> > > resources can be released.
->> > >
->> > > Signed-off-by: Can Guo <cang@codeaurora.org>
->> > >
->> > > diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
->> > > index b5966fa..a86b0fd 100644
->> > > --- a/drivers/scsi/ufs/ufshcd.c
->> > > +++ b/drivers/scsi/ufs/ufshcd.c
->> > > @@ -8251,6 +8251,7 @@ void ufshcd_remove(struct ufs_hba *hba)
->> > >   	ufs_bsg_remove(hba);
->> > >   	ufs_sysfs_remove_nodes(hba->dev);
->> > >   	scsi_remove_host(hba->host);
->> > > +	scsi_host_put(hba->host);
->> > >   	/* disable interrupts */
->> > >   	ufshcd_disable_intr(hba, hba->intr_mask);
->> > >   	ufshcd_hba_stop(hba, true);
->> >
->> > Hi Can,
->> >
->> > The UFS driver may queue work asynchronously and that asynchronous
->> > work may refer to the SCSI host, e.g. ufshcd_err_handler(). Is it
->> > guaranteed that all that asynchronous work has finished before
->> > scsi_host_put() is called?
->> >
->> > Thanks,
->> >
->> > Bart.
->> 
->> Hi Bart,
->> 
->> As SCSI host is allocated in ufshcd_platform_init() during platform
->> drive probe, it is much more appropriate if platform driver calls
->> ufshcd_dealloc_host() in their own drv->remove() path. How do you
->> think if I change it as below? If it is OK to you, please ignore my
->> previous mails.
->> 
->> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
->> index 3d4582e..ea45756 100644
->> --- a/drivers/scsi/ufs/ufs-qcom.c
->> +++ b/drivers/scsi/ufs/ufs-qcom.c
->> @@ -3239,6 +3239,7 @@ static int ufs_qcom_remove(struct 
->> platform_device
->> *pdev)
->> 
->>         pm_runtime_get_sync(&(pdev)->dev);
->>         ufshcd_remove(hba);
->> +       ufshcd_dealloc_host(hba);
->>         return 0;
->>  }
-> 
-> Wait, why is this a platform device?  Don't you hang off of a pci
-> device?  Or am I missing something earlier in this patchset?
-> 
-> thanks,
-> 
-> greg k-h
+3.16.80-rc1 review patch.  If anyone has any objections, please let me know.
 
-Hi Greg,
+------------------
 
-I am not saying someone is a platform device here. My point is
-whoever allocates the SCSI host in its drv->probe(), should
-de-allocate it in its own drv->remove(), just like what ufshcd-pci.c
-does.
+From: Denis Efremov <efremov@linux.com>
 
-Thanks,
+commit 22d67a01d8d89552b989c9651419824bb4111200 upstream.
 
-Can Guo.
+It's incorrect to compare HighestRate with 0x0b twice in the following
+manner "if (HighestRate > 0x0b) ... else if (HighestRate > 0x0b) ...". The
+"else if" branch is constantly false. The second comparision should be
+with 0x03 according to the max_rate_idx in ODM_RAInfo_Init().
+
+Cc: Michael Straube <straube.linux@gmail.com>
+Signed-off-by: Denis Efremov <efremov@linux.com>
+Acked-by: Larry Finger <Larry.Finger@lwfinger.net>
+Link: https://lore.kernel.org/r/20190926073138.12109-1-efremov@linux.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[bwh: Backported to 3.16: adjust filename, indentation]
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+---
+ drivers/staging/rtl8188eu/hal/Hal8188ERateAdaptive.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/staging/rtl8188eu/hal/Hal8188ERateAdaptive.c
++++ b/drivers/staging/rtl8188eu/hal/Hal8188ERateAdaptive.c
+@@ -403,7 +403,7 @@ static int odm_ARFBRefresh_8188E(struct
+ 			pRaInfo->PTModeSS = 3;
+ 		else if (pRaInfo->HighestRate > 0x0b)
+ 			pRaInfo->PTModeSS = 2;
+-		else if (pRaInfo->HighestRate > 0x0b)
++		else if (pRaInfo->HighestRate > 0x03)
+ 			pRaInfo->PTModeSS = 1;
+ 		else
+ 			pRaInfo->PTModeSS = 0;
+
