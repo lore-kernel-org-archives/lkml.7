@@ -2,179 +2,94 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E64DC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7944C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F5C02465E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:41:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C6F12467B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:45:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576597539;
+	bh=d7eBLm0I/s6DFoeNSrPqJMhc9kKOaXOaEqRZCmy2Vmo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dEn4MGS/rhkhU6oqWaYcxoTYQuIa5T7B84xlZpDU8d958zdCpBf4j8lPP56FiavzW
+	 cYCVkUIaXIfVvaDWuf/zuTwh2ZuW4mF1n6EZDslDNFKgNESGPoYHsXb/m1VurUUEtJ
+	 +ZvwVMBNbOt4vJjQLiqAGyUChr1qA0q164eM358k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728083AbfLQPlK (ORCPT
+        id S1727901AbfLQPpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 10:41:10 -0500
-Received: from honk.sigxcpu.org ([24.134.29.49]:43352 "EHLO honk.sigxcpu.org"
+        Tue, 17 Dec 2019 10:45:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727415AbfLQPlK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 10:41:10 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id B7084FB03;
-        Tue, 17 Dec 2019 16:41:07 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id MCiGb_lMcUkK; Tue, 17 Dec 2019 16:41:06 +0100 (CET)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 01E8B498AE; Tue, 17 Dec 2019 16:40:59 +0100 (CET)
-Date:   Tue, 17 Dec 2019 16:40:59 +0100
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] leds: lm3692x: Allow to set ovp and brigthness mode
-Message-ID: <20191217154059.GA3929@bogon.m.sigxcpu.org>
-References: <cover.1576499103.git.agx@sigxcpu.org>
- <9c87a17aefbf758d58f199f7046114ee7505a1fa.1576499103.git.agx@sigxcpu.org>
- <3d66b07d-b4c5-43e6-4378-d63cc84b8d43@ti.com>
+        id S1727161AbfLQPpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 10:45:38 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F21DA2465E;
+        Tue, 17 Dec 2019 15:45:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576597537;
+        bh=d7eBLm0I/s6DFoeNSrPqJMhc9kKOaXOaEqRZCmy2Vmo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=X4CsLVd0lOXz/T69EzqjaRx4hpxWylyCBLDEOxoWCqpBcgv0AQoJgp/WzvAF0Uv2C
+         1oy4/yMfmBWnFF0OYpXtlKw52w3N3F8G42BsTSkH4bxP52b59/nA/4nX81hzQ/gr5b
+         a8Dc+Hlb2npc3p/dnY0NONQD2QCl9sMekBmCVMps=
+Date:   Tue, 17 Dec 2019 16:45:35 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Alexey Brodkin <alexey.brodkin@synopsys.com>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     Rafael Wysocki <rjw@rjwysocki.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Alexey Brodkin <alexey.brodkin@synopsys.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Tejun Heo <tj@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [RFC PATCH v1] devres: align devres.data strictly only for
+ devm_kmalloc()
+Message-ID: <20191217154535.GA3718632@kroah.com>
+References: <74ae22cd-08c1-d846-3e1d-cbc38db87442@free.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3d66b07d-b4c5-43e6-4378-d63cc84b8d43@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <74ae22cd-08c1-d846-3e1d-cbc38db87442@free.fr>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dan,
-On Tue, Dec 17, 2019 at 06:53:45AM -0600, Dan Murphy wrote:
-> Guido
+On Tue, Dec 17, 2019 at 04:30:54PM +0100, Marc Gonzalez wrote:
+> Commit a66d972465d15 ("devres: Align data[] to ARCH_KMALLOC_MINALIGN")
+> increased the alignment of devres.data unconditionally.
 > 
-> On 12/16/19 6:28 AM, Guido Günther wrote:
-> > Overvoltage protection and brightness mode are currently hardcoded
-> > as disabled in the driver. Make these configurable via DT.
+> Some platforms have very strict alignment requirements for DMA-safe
+> addresses, e.g. 128 bytes on arm64. There, struct devres amounts to:
+> 	3 pointers + pad_to_128 + data + pad_to_256
+> i.e. ~220 bytes of padding.
 > 
-> Can we split these up to two separate patch series?
+> Let's enforce the alignment only for devm_kmalloc().
+> 
+> Suggested-by: Robin Murphy <robin.murphy@arm.com>
+> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> ---
+> I had not been aware that dynamic allocation granularity on arm64 was
+> 128 bytes. This means there's a lot of waste on small allocations.
+> I suppose there's no easy solution, though.
+> ---
+>  drivers/base/devres.c | 23 +++++++++++++----------
+>  1 file changed, 13 insertions(+), 10 deletions(-)
 
-Sure, should the binding doc updates be split as well?
+You need to get Alexey to agree with this, he's the one that hit this on
+ARC :)
 
-> We are adding 2 separate features and if something is incorrect with one of
-> the changes it is a bit hard to debug.
-> 
-> > 
-> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> > ---
-> >   drivers/leds/leds-lm3692x.c | 43 +++++++++++++++++++++++++++++++------
-> >   1 file changed, 37 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/leds/leds-lm3692x.c b/drivers/leds/leds-lm3692x.c
-> > index 8b408102e138..2c084b333628 100644
-> > --- a/drivers/leds/leds-lm3692x.c
-> > +++ b/drivers/leds/leds-lm3692x.c
-> > @@ -114,6 +114,7 @@ struct lm3692x_led {
-> >   	struct regulator *regulator;
-> >   	int led_enable;
-> >   	int model_id;
-> > +	u8 boost_ctrl, brightness_ctrl;
-> >   };
-> >   static const struct reg_default lm3692x_reg_defs[] = {
-> > @@ -249,10 +250,7 @@ static int lm3692x_init(struct lm3692x_led *led)
-> >   	if (ret)
-> >   		goto out;
-> > -	ret = regmap_write(led->regmap, LM3692X_BOOST_CTRL,
-> > -			LM3692X_BOOST_SW_1MHZ |
-> > -			LM3692X_BOOST_SW_NO_SHIFT |
-> > -			LM3692X_OCP_PROT_1_5A);
-> > +	ret = regmap_write(led->regmap, LM3692X_BOOST_CTRL, led->boost_ctrl);
-> >   	if (ret)
-> >   		goto out;
-> 
-> regmap_update_bits
-> 
-> 
-> > @@ -268,8 +266,7 @@ static int lm3692x_init(struct lm3692x_led *led)
-> >   	if (ret)
-> >   		goto out;
-> > -	ret = regmap_write(led->regmap, LM3692X_BRT_CTRL,
-> > -			LM3692X_BL_ADJ_POL | LM3692X_RAMP_EN);
-> > +	ret = regmap_write(led->regmap, LM3692X_BRT_CTRL, led->brightness_ctrl);
-> >   	if (ret)
-> >   		goto out;
-> regmap_update_bits
-> > @@ -326,6 +323,8 @@ static int lm3692x_probe_dt(struct lm3692x_led *led)
-> >   {
-> >   	struct fwnode_handle *child = NULL;
-> >   	struct led_init_data init_data = {};
-> > +	u32 ovp = 0;
-> > +	bool exp_mode;
-> >   	int ret;
-> >   	led->enable_gpio = devm_gpiod_get_optional(&led->client->dev,
-> > @@ -350,6 +349,38 @@ static int lm3692x_probe_dt(struct lm3692x_led *led)
-> >   		led->regulator = NULL;
-> >   	}
-> > +	led->boost_ctrl = LM3692X_BOOST_SW_1MHZ |
-> > +		LM3692X_BOOST_SW_NO_SHIFT |
-> > +		LM3692X_OCP_PROT_1_5A;
-> Make this a #define and then it can be reused as a mask for
-> regmap_update_bits
-> > +	ret = device_property_read_u32(&led->client->dev,
-> > +				       "ti,overvoltage-volts", &ovp);
-> > +	if (!ret) {
-> 
-> if (ret)
-> 
->     set boost_ctrl to default value since the default is not 0
-> 
-> led->boost_ctrl |= LM3692X_OVP_29V;
-> 
-> else
-> 
->      do case
-> 
-> > +		switch (ovp) {
-> > +		case 0:
-> > +			break;
-> > +		case 22:
-> If the value is 21v why is this case 22?  DT binding says 21 is the first
-> value
-> > +			led->boost_ctrl |= LM3692X_OVP_21V;
-> > +			break;
-> > +		case 25:
-> > +			led->boost_ctrl |= LM3692X_OVP_25V;
-> > +			break;
-> > +		case 29:
-> > +			led->boost_ctrl |= LM3692X_OVP_29V;
-> > +			break;
-> > +		default:
-> > +			dev_err(&led->client->dev, "Invalid OVP %d\n", ovp);
-> > +			return -EINVAL;
-> > +		}
-> > +	}
-> > +	dev_dbg(&led->client->dev, "OVP: %dV", ovp);
-> > +
-> extra debug statement
-> > +	led->brightness_ctrl = LM3692X_BL_ADJ_POL | LM3692X_RAMP_EN;
-> Same comment as before on the #define
-> > +	exp_mode = device_property_read_bool(&led->client->dev,
-> > +				     "ti,brightness-mapping-exponential");
-> > +	dev_dbg(&led->client->dev, "Exponential brightness: %d", exp_mode);
-> 
-> extra debug statement
+thanks,
 
-They're not extra but meant to ease debugging the driver long therm but
-i can drop these if that's not wanted. The rest makes a lot of sense.
-Thanks a lot for having a look so promptly!
-
-Cheers,
- -- Guido
-
-> 
-> Dan
-> 
-> 
+greg k-h
