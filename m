@@ -2,106 +2,88 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BEFC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F661C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87F6A24655
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:01:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39D4F24655
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 01:01:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576544481;
+	bh=9w62K0UKyiXdwL4U8Q/U1rsX79B+muliGsAlRM5Fr1I=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=qAk0ieyx0lVqTMjNTXisyZZM7gdtR00VSDIF7R0qSpqC4wtd76q24pzVAPbpOZn2A
+	 CRsISx/4V8SjfNd10wflTu7LHWf9KIk/opKu42yNNKE8qwuJH6IuqFAM+1RUojvnac
+	 gvSeSP9UBjE/czwVpbBumz38BmkSP5SmBvvC1aGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728383AbfLQBBP (ORCPT
+        id S1728388AbfLQBBU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 20:01:15 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34500 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726436AbfLQAva (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 19:51:30 -0500
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1ih15F-0003Iv-B9; Tue, 17 Dec 2019 00:51:29 +0000
-Received: from ben by deadeye with local (Exim 4.93-RC7)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1ih15E-0005S7-BP; Tue, 17 Dec 2019 00:51:28 +0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+        Mon, 16 Dec 2019 20:01:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49024 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728376AbfLQBBO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 20:01:14 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4683E206D3;
+        Tue, 17 Dec 2019 01:01:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576544473;
+        bh=9w62K0UKyiXdwL4U8Q/U1rsX79B+muliGsAlRM5Fr1I=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=JRfZMJLmDN6p0cBuwNy5nEujixhmJX5KOD8OlGLI+2KH9xS/HKby8J5wc/mFAOjU2
+         qEsyQgR4LRcLRKCv5N+nLguUu6AZi/NidTHKR70j9HIKWngYyrMTJktj1ukvagegry
+         xIQyYjNImmJt0F7u2DScchNaogwVThuDNkj9e+lA=
+Subject: Re: [PATCH 4.19 000/140] 4.19.90-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20191216174747.111154704@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <5246b725-c736-992f-c5d7-35627adf4a52@kernel.org>
+Date:   Mon, 16 Dec 2019 18:01:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Johan Hovold" <johan@kernel.org>
-Date:   Tue, 17 Dec 2019 00:45:45 +0000
-Message-ID: <lsq.1576543535.387106597@decadent.org.uk>
-X-Mailer: LinuxStableQueue (scripts by bwh)
-X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 011/136] hso: fix NULL-deref on tty open
-In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-3.16.80-rc1 review patch.  If anyone has any objections, please let me know.
+On 12/16/19 10:47 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.90 release.
+> There are 140 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed, 18 Dec 2019 17:41:25 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.90-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-------------------
+Compiled and booted on my test system. No dmesg regressions.
 
-From: Johan Hovold <johan@kernel.org>
-
-commit 8353da9fa69722b54cba82b2ec740afd3d438748 upstream.
-
-Fix NULL-pointer dereference on tty open due to a failure to handle a
-missing interrupt-in endpoint when probing modem ports:
-
-	BUG: kernel NULL pointer dereference, address: 0000000000000006
-	...
-	RIP: 0010:tiocmget_submit_urb+0x1c/0xe0 [hso]
-	...
-	Call Trace:
-	hso_start_serial_device+0xdc/0x140 [hso]
-	hso_serial_open+0x118/0x1b0 [hso]
-	tty_open+0xf1/0x490
-
-Fixes: 542f54823614 ("tty: Modem functions for the HSO driver")
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
----
- drivers/net/usb/hso.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
-
---- a/drivers/net/usb/hso.c
-+++ b/drivers/net/usb/hso.c
-@@ -2637,14 +2637,18 @@ static struct hso_device *hso_create_bul
- 		 */
- 		if (serial->tiocmget) {
- 			tiocmget = serial->tiocmget;
-+			tiocmget->endp = hso_get_ep(interface,
-+						    USB_ENDPOINT_XFER_INT,
-+						    USB_DIR_IN);
-+			if (!tiocmget->endp) {
-+				dev_err(&interface->dev, "Failed to find INT IN ep\n");
-+				goto exit;
-+			}
-+
- 			tiocmget->urb = usb_alloc_urb(0, GFP_KERNEL);
- 			if (tiocmget->urb) {
- 				mutex_init(&tiocmget->mutex);
- 				init_waitqueue_head(&tiocmget->waitq);
--				tiocmget->endp = hso_get_ep(
--					interface,
--					USB_ENDPOINT_XFER_INT,
--					USB_DIR_IN);
- 			} else
- 				hso_free_tiomget(serial);
- 		}
+thanks,
+-- Shuah
 
