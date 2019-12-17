@@ -2,134 +2,114 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8649BC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE078C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CAE020717
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:17:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F66A20716
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:17:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nBJBDRwV"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hVc1G40w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728175AbfLQNRX (ORCPT
+        id S1728294AbfLQNRr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 08:17:23 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:32847 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726411AbfLQNRW (ORCPT
+        Tue, 17 Dec 2019 08:17:47 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:44466 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbfLQNRr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 08:17:22 -0500
-Received: by mail-pg1-f196.google.com with SMTP id 6so5682403pgk.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 05:17:22 -0800 (PST)
+        Tue, 17 Dec 2019 08:17:47 -0500
+Received: by mail-qt1-f196.google.com with SMTP id t3so1344157qtr.11
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 05:17:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=q7HMsQPCoGg7Kj9u51JEhABe48pFo2CGzQTfPBf3p5Q=;
-        b=nBJBDRwVA66xUHFjL5+fvgO8NsgGXXyQCATNhRjftbI1Stk6F7lCQePQG5cVVTlmOu
-         PLgj5P2Xft+2WP8RWyy9iGpctLbmTmIKyIXgI0b2xW453G4zgK2OTMqXpDWQspAn6YOL
-         XosRlp531XGMFHE/fpftV3wsb7z7MCct7BuPOev8HZwuR91jUjtQnA//3Y+/N0nRFYiA
-         RNRa2RhvlTuye/ADUPlj4EdME77TTT5+eFl/pfFIa5aPmgYAxAGz33Q0228ws+tJk1sS
-         oPmHhRfxywvaJwHc0k7wyNN3wLGNsYN2Z+kuWLtyxjZrjyuV1BuVxWi7mkZNPVgNC9nb
-         DNhQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jrOhow0LERvVTgRWMw8HjxYHfftJQbyUzenQeDRKpNw=;
+        b=hVc1G40wmuN29e/V1ueLNufDTB45hvOZ5AF9oM1WAvEa/QR/fTBSORPWG6C+ygzNaV
+         rThxGsF56pUYCA76xBVQl0426ovktTX6Sn0HtZkugW/EqsBY7b1ZIINrUcC46kGWzJ9d
+         PDqZSdpqX0CPn+d57OdicAvLhKDRLrEkLBonFp9s8EvYcnaspQbo8li69dmaxHH8JFew
+         YvvT9sjg8WXmfOCSqaQTb9AKsaCpt3JgAnCL66dKflhei7iJj1z7g3K7tJpoG573SIgF
+         uGkJtLGqVbnkyNGFkKIBWK9hMx0rgpwRnU65W964t8po8Smp4nHg9TFZ1lMIsfFgT/Cp
+         1Qsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=q7HMsQPCoGg7Kj9u51JEhABe48pFo2CGzQTfPBf3p5Q=;
-        b=ESSVh0/j5UsVUYJCJfzB+DxNr9uGkg8fDhHT4no/mvtqNdFHDVkoyBQMrLP5J4Qd3v
-         /cpU801hinTrLHs9s/0GTy/s9slYRNCEhSb5I0W3T/RRjd5IAHnG02t/AOWGTyatuf3A
-         j3yAXk5B+OI1GabC8XEJ2UVG0FE8H+FiY89cwYZUAQPLJoiw1gHYZI+NtbwxLwbxra9O
-         CLQiZqqKx64v38f8y8guxkzIQ34isiPf+leY0owxdKZby9NHS5BYerN3PW5oOTWMKfTm
-         jaKl17pVBDvDMgHVvMVfMuVk0yJflkAACRJkII5RmV5GVbyxj3I9rc3rN5Ou9LleuxRz
-         VNTw==
-X-Gm-Message-State: APjAAAVxpKvA0USRgRDAvyiikWraPrXy4XpE8rzoPyDNQLa6FWJaC/qE
-        RqGkDpDj3rrqIdXu1kZ4B3hvjyqvO4M=
-X-Google-Smtp-Source: APXvYqwBH6hBJIYjycnHHvGJPN234J5g5Qq6WtQHOOJcPmNeQsHMljjBOlwtg21ARB+eKY8Nyt+2ug==
-X-Received: by 2002:a63:551a:: with SMTP id j26mr24686778pgb.370.1576588642061;
-        Tue, 17 Dec 2019 05:17:22 -0800 (PST)
-Received: from ?IPv6:2402:f000:1:1501:200:5efe:166.111.139.134? ([2402:f000:1:1501:200:5efe:a66f:8b86])
-        by smtp.gmail.com with ESMTPSA id g25sm1213966pfo.110.2019.12.17.05.17.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 17 Dec 2019 05:17:21 -0800 (PST)
-Subject: Re: [BUG] kernel: kcov: a possible sleep-in-atomic-context bug in
- kcov_ioctl()
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Hans Liljestrand <ishkamiel@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <3c4608bc-9c84-d79b-de76-b1a1a2a4fb6d@gmail.com>
- <CACT4Y+b3nvFAgM32SF0Bv46EOO4UFEK3M99pqYzEwmsmLvmhTQ@mail.gmail.com>
- <e0305f5c-ae52-c144-fe50-00f3f815ad82@gmail.com>
- <CACT4Y+YLxmFTkDT88z9y5yH75bAi42-Hqatv9z2-EyufTtKHRw@mail.gmail.com>
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-Message-ID: <bc4569a3-19f8-ca5f-7e59-29bacdbc7955@gmail.com>
-Date:   Tue, 17 Dec 2019 21:17:19 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jrOhow0LERvVTgRWMw8HjxYHfftJQbyUzenQeDRKpNw=;
+        b=AZHozFJep6zG1/PslB0gOs9/wEWbhB1JKcW8ZOPybOaNBdbleuCMo8XGKXR9wSNqXR
+         kwccAzKBUEHO5np1I73zanD9zFj1rhGWqxIssdNGb5tqtO3/3qLlZ+/si39RdILG3uby
+         soQ/udIfdAm7CHk721q16c1pvBDGWKNdkRG32XoVYu/ioZh2sV26bFMGyK7TzQQ9SMaD
+         cJWxMrwKF+MSk9WT2hOfvMTVHmSa5brDHeUBGGvgBKM6Iuhwmns68ATK1QC1921JjrT0
+         7BrA86DzDNQGYSgFDrZ73JMLpOv5zh+pXqQrgCf2X3+/2fFW4RS0rXv4KpUhcJO6sDhN
+         hSZg==
+X-Gm-Message-State: APjAAAXm8+ltiZpmux5cUuacURfDC34bBHL/I4DUc+LX4ESiKc6R/UDE
+        BmAp73mw/UfPGoiev4ZWyhCW9DcA+u/UbpyJx09viA==
+X-Google-Smtp-Source: APXvYqxwtGuGXBWkQlbdxv1qeyjlfPK7XOWDAqVQbUNaEvZbhMfR/yIMHD1HskM9LCBNZgFWCmDonw5xqZVQRSIuCnE=
+X-Received: by 2002:aed:2465:: with SMTP id s34mr4450549qtc.158.1576588665910;
+ Tue, 17 Dec 2019 05:17:45 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CACT4Y+YLxmFTkDT88z9y5yH75bAi42-Hqatv9z2-EyufTtKHRw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <CAAeHK+yz3dtfx0Jfd4sbOcN8tSxp8+qAvW609sP_yJC5q6vq8A@mail.gmail.com>
+ <Pine.LNX.4.44L0.1912161002080.1406-100000@iolanthe.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.1912161002080.1406-100000@iolanthe.rowland.org>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 17 Dec 2019 14:17:34 +0100
+Message-ID: <CACT4Y+ZpJ9a8hw4vStUJZDZLh0kvphAKOXCSCYjXxgX4CYmD_g@mail.gmail.com>
+Subject: Re: Re: general protection fault in usb_set_interface
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        syzbot <syzbot+7fa38a608b1075dfd634@syzkaller.appspotmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>, mans@mansr.com,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Dec 16, 2019 at 4:05 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+>
+> On Mon, 16 Dec 2019, Andrey Konovalov wrote:
+>
+> > On Fri, Dec 13, 2019 at 8:51 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+> > >
+> > > On Fri, 13 Dec 2019, Andrey Konovalov wrote:
+> > >
+> > > > > > Let's retry here:
+> > > > >
+> > > > > > #syz test: https://github.com/google/kasan.git f0df5c1b
+> > > > >
+> > > > > This bug is already marked as fixed. No point in testing.
+> > > > >
+> > > >
+> > > > Hm, that explains some of the weirdness. It doesn't explain though
+> > > > neither why the patch was actually tested when Alan requested it nor
+> > > > why syzbot sent no reply.
+> > >
+> > > In the meantime, is there any way to get syzbot to test the new patch
+> > > with the old reproducer?  Perhaps tell it to re-open this bug?
+> >
+> > No, we can only test this manually now. I can run the reproducer for
+> > you. Should I revert the fix for this bug and then apply your patch?
+> > What's the expected result?
+>
+> Please simply run the patch as it is, with no other changes.  The
+> expected result is a use-after-free Read in usbvision_v4l2_open, just
+> as with c7b0ec009a216143df30.
 
+I can't figure this out now.
+According to the database, there was a test job for that bug from you
+on Dec 10, it finished with some error and the result was mailed. But
+I can't find it anywhere as well.
 
-On 2019/12/17 21:13, Dmitry Vyukov wrote:
-> On Tue, Dec 17, 2019 at 2:11 PM Jia-Ju Bai <baijiaju1990@gmail.com> wrote:
->> On 2019/12/17 21:02, Dmitry Vyukov wrote:
->>> On Tue, Dec 17, 2019 at 1:56 PM Jia-Ju Bai <baijiaju1990@gmail.com> wrote:
->>>> The kernel may sleep while holding a spinlock.
->>>> The function call path (from bottom to top) in Linux 4.19 is:
->>>>
->>>> kernel/kcov.c, 237:
->>>>        vfree in kcov_put
->>>> kernel/kcov.c, 413:
->>>>        kcov_put in kcov_ioctl_locked
->>>> kernel/kcov.c, 427:
->>>>        kcov_ioctl_locked in kcov_ioctl
->>>> kernel/kcov.c, 426:
->>>>        spin_lock in kcov_ioctl
->>>>
->>>> vfree() can sleep at runtime.
->>>>
->>>> I am not sure how to properly fix this possible bug, so I only report it.
->>>> A possible way is to replace vfree() with kfree(), and replace related
->>>> calls to vmalloc() with kmalloc().
->>>>
->>>> This bug is found by a static analysis tool STCheck written by myself.
->>> Hi Jia-Ju,
->>>
->>> Are you sure kcov_ioctl_locked can really release the descriptor? It
->>> happens in the context of ioctl, which means there is an open
->>> reference for the file descriptor. So ioctl should not do vfree I
->>> would assume.
->> Thanks for the reply :)
->> I am not sure, because I am not familiar with kcov.
->> But looking at the code, if the reference count of kcov is 1, vfree()
->> could be called.
-> That kcov_put should never call vfree. We still hold reference
-> associated with the file, which will be released in kcov_close.
-
-Okay, thanks for the explanation :)
-My static analysis tool does not know this fact, so it reports the false 
-bug, sorry...
-
-
-Best wishes,
-Jia-Ju Bai
+I've filed https://github.com/google/syzkaller/issues/1547
+"dashboard/app: show jobs on bug page", which I think will be useful
+and will shed some light on such cases and make it more transparent
+for you, it will also show the result even if you did not receive it
+over email.
+Thanks
