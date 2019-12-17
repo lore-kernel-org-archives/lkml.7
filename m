@@ -2,94 +2,126 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7944C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BECF5C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C6F12467B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:45:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92B4B2465E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:46:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576597539;
-	bh=d7eBLm0I/s6DFoeNSrPqJMhc9kKOaXOaEqRZCmy2Vmo=;
+	s=default; t=1576597598;
+	bh=4rs0lmRSTGNyaDVp8rZ0QHqyZgvvyoEYGzImTT2MZ30=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dEn4MGS/rhkhU6oqWaYcxoTYQuIa5T7B84xlZpDU8d958zdCpBf4j8lPP56FiavzW
-	 cYCVkUIaXIfVvaDWuf/zuTwh2ZuW4mF1n6EZDslDNFKgNESGPoYHsXb/m1VurUUEtJ
-	 +ZvwVMBNbOt4vJjQLiqAGyUChr1qA0q164eM358k=
+	b=Xw9VY1Gu+y4j0c3aSRkHttTlnl9vcinwkmUTPBNC63IEfYW/OLuslgxtvePY85IeK
+	 O09JvzxTTKV/SasWVoL15PNs+vZ9tdhTFbCASbKgCoCLb2YctW7RvcKLFCPbR2NphR
+	 1EH6ID3nqJfCs8fNhkwXp6JzL83yYlQMVWvUwePA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbfLQPpi (ORCPT
+        id S1728006AbfLQPqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 10:45:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35562 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727161AbfLQPpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 10:45:38 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F21DA2465E;
-        Tue, 17 Dec 2019 15:45:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576597537;
-        bh=d7eBLm0I/s6DFoeNSrPqJMhc9kKOaXOaEqRZCmy2Vmo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=X4CsLVd0lOXz/T69EzqjaRx4hpxWylyCBLDEOxoWCqpBcgv0AQoJgp/WzvAF0Uv2C
-         1oy4/yMfmBWnFF0OYpXtlKw52w3N3F8G42BsTSkH4bxP52b59/nA/4nX81hzQ/gr5b
-         a8Dc+Hlb2npc3p/dnY0NONQD2QCl9sMekBmCVMps=
-Date:   Tue, 17 Dec 2019 16:45:35 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Alexey Brodkin <alexey.brodkin@synopsys.com>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc:     Rafael Wysocki <rjw@rjwysocki.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Alexey Brodkin <alexey.brodkin@synopsys.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Tejun Heo <tj@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [RFC PATCH v1] devres: align devres.data strictly only for
- devm_kmalloc()
-Message-ID: <20191217154535.GA3718632@kroah.com>
-References: <74ae22cd-08c1-d846-3e1d-cbc38db87442@free.fr>
+        Tue, 17 Dec 2019 10:46:37 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46560 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbfLQPqh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 10:46:37 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z7so11789153wrl.13;
+        Tue, 17 Dec 2019 07:46:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TuQqZHZA7F8zrUioSoTgrl1c8FOUxjce+qXhdDt9T1Q=;
+        b=AxubpVzRcqYzO7BrUu3OqNk1eBOT7Cj+ci/3E5dMeMz276EcjSYNagr5/yfUPyh/Ze
+         rG9A2JiltDk5it4ZI2OBm6Je4UucyaJbWs2SJUQdtroCIk063fPinJSb8xZNhqRSyvFq
+         9dCDHs3hwJcTJb7y/Exzzkajbsz0WLVUK/6CWoRU2Ypa9MJFABSQE7BYl6b4XxAvg4um
+         vITqTiwPYbGASobeL1OeQZb+oMgvLJ8w/l1pVqgzETuCOpjwal8h+tvTghnaHDFkcx4X
+         uGPMGWJ6eU9bQ2fn14YEq0yesGQIpn086/io/XFMwgo6ilv0mbQirzTWWkkPKuDbC20f
+         HF+Q==
+X-Gm-Message-State: APjAAAVuf+1O6w1NoOz536FnS2lUgK7RJc3St7oaGqlQrLQGQpHznSHY
+        NMsHXguU2CGBdfObs9J5UI4=
+X-Google-Smtp-Source: APXvYqyaLlXC8wOzGI//HEchY8EnBI7KhMkSmqaaisJZeWL/y3zxtl1RZBwyNF+AYAa4cVtyJryIXw==
+X-Received: by 2002:adf:f2d0:: with SMTP id d16mr36372586wrp.110.1576597595052;
+        Tue, 17 Dec 2019 07:46:35 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id z8sm26075799wrq.22.2019.12.17.07.46.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 07:46:34 -0800 (PST)
+Date:   Tue, 17 Dec 2019 16:46:33 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Qian Cai <cai@lca.pw>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: memcontrol.c: move mem_cgroup_id_get_many under
+ CONFIG_MMU
+Message-ID: <20191217154633.GE7272@dhcp22.suse.cz>
+References: <20191217135440.GB58496@chrisdown.name>
+ <392D7C59-5538-4A9B-8974-DB0B64880C2C@lca.pw>
+ <20191217144652.GA7272@dhcp22.suse.cz>
+ <20191217150921.GA136178@chrisdown.name>
+ <20191217151931.GD7272@dhcp22.suse.cz>
+ <20191217152814.GB136178@chrisdown.name>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <74ae22cd-08c1-d846-3e1d-cbc38db87442@free.fr>
+In-Reply-To: <20191217152814.GB136178@chrisdown.name>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 04:30:54PM +0100, Marc Gonzalez wrote:
-> Commit a66d972465d15 ("devres: Align data[] to ARCH_KMALLOC_MINALIGN")
-> increased the alignment of devres.data unconditionally.
+On Tue 17-12-19 15:28:14, Chris Down wrote:
+> Michal Hocko writes:
+> > On Tue 17-12-19 15:09:21, Chris Down wrote:
+> > [...]
+> > > (Side note: I'm moderately baffled that a tightly scoped __maybe_unused is
+> > > considered sinister but somehow disabling -Wunused-function is on the table
+> > > :-))
+> > 
+> > Well, I usually do not like to see __maybe_unused because that is prone
+> > to bit-rot and loses its usefulness. Looking into the recent git logs
+> > most -Wunused-function led to the code removal (which is really good
+> > but the compiler is likely to do that already so the overall impact is
+> > not that large) or more ifdefery. I do not really see many instance of
+> > __maybe_unused.
 > 
-> Some platforms have very strict alignment requirements for DMA-safe
-> addresses, e.g. 128 bytes on arm64. There, struct devres amounts to:
-> 	3 pointers + pad_to_128 + data + pad_to_256
-> i.e. ~220 bytes of padding.
-> 
-> Let's enforce the alignment only for devm_kmalloc().
-> 
-> Suggested-by: Robin Murphy <robin.murphy@arm.com>
-> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> ---
-> I had not been aware that dynamic allocation granularity on arm64 was
-> 128 bytes. This means there's a lot of waste on small allocations.
-> I suppose there's no easy solution, though.
-> ---
->  drivers/base/devres.c | 23 +++++++++++++----------
->  1 file changed, 13 insertions(+), 10 deletions(-)
+> Hmm, but __maybe_unused is easy to find and document the reasons behind
+> nearby, and then reevaluate at some later time. On the other hand, it's much
+> *harder* to reevaluate which functions actually are unused in the long term
+> if we remove -Wunused-function, because enabling it to find candidates will
+> result in an incredibly amount of noise from those who have missed unused
+> functions previously due to the lack of the warning.
 
-You need to get Alexey to agree with this, he's the one that hit this on
-ARC :)
+I usually git grep for the function and that covers many cases. But
+realistically, I am more than skeptical people are going to do a regular
+cleanup like that. And that is the biggest deal with this annotation.
+Once it gets marked it will just stay that way and potentially get
+really unused eventually. So the overall benefit is close the zero in
+that case.
 
-thanks,
+Maybe dropping -Wunused-function is an overreaction. Git log shows there
+has been some code removed which is probably the most viable reaction to
+those reports. Maybe we just want to add those for W=1 or something like
+that.
 
-greg k-h
+> Maybe Qian is right and we should just ignore such patches, but I think that
+> comes with its own risks that we will alienate perfectly well intentioned
+> new contributors to mm without them having any idea why we did that.
+
+I believe that both possitive and negative reaction to _any_ patch has
+to be properly justified - same applies to the patch itself. A warning
+report/fix is not an expcetion. In this particular case it has been pointed
+out that the reported function is a general purpose one which just
+happens to be used only for CONFIG_SWAP (rather than CONFIG_MMU) and
+using additional ifdeferry is likely not going to help long term.
+-- 
+Michal Hocko
+SUSE Labs
