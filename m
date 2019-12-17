@@ -2,145 +2,119 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC59C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E8BC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1110320733
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:19:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 482D320733
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:19:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="r4xyi05Z"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QLR1VOQ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbfLQLTt (ORCPT
+        id S1726164AbfLQLT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 06:19:49 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34065 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727397AbfLQLTq (ORCPT
+        Tue, 17 Dec 2019 06:19:56 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35716 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727557AbfLQLTy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 06:19:46 -0500
-Received: by mail-wr1-f65.google.com with SMTP id t2so10893058wrr.1
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 03:19:44 -0800 (PST)
+        Tue, 17 Dec 2019 06:19:54 -0500
+Received: by mail-pl1-f196.google.com with SMTP id g6so3343978plt.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 03:19:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Q8VsecRt+zfmEiQATRM3jixSlKuyuB/bDX0OonY2El4=;
-        b=r4xyi05Z0qWvrnPsw0oetund2ec5x63QF9JMKUGqjuGRCPP/hY6McWKa3X6zDdvono
-         ZWjSxLQQtLNkGZ+ct4x843+eT4sxgb1QgwdLMX83Mzmuh4Xj98lX0BggikOBpFwk9leQ
-         hlfSzXTvzpWzz0+tIdxtafXKJfZa4eFa/QcamwaFxVwiKyFGNsGJarDxJlQ1Yt5TTUHk
-         d/+0KjrBaBVa0RnEr/gLOYSf6d9tdfI2a3tSnwNvUd6kvjrtuRRIFEvagiv/vWp6BXnm
-         KB2YAAZrb67IoP6B8X4o1DlZQhrEQv+3AARAsdM1SXwmhWsCJzKXQbBhoOuyo4qNDmhy
-         0rgA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=StuVP0ZBIouB1KOtrgMy9y/jalCgg++uQ38qlkw46go=;
+        b=QLR1VOQ++vE+Qz44q+jn1va7nnY8ffJhae00URWMzxxO1pUdlQ0qNbwEpuNVpFgGVH
+         VPFLFHsD8valnT0JOX1tF3f3UPY0mIUF6K1YsrylkNxaLAlnWrRFo7rtHitUagXncs1N
+         +nXh6MLIEaXHbmzQ8eMrqjHpdEF2kFH+SMjocTWst/2i1nfaA74n/K39V9gJF9VwHZ9i
+         ksYWLsk6w8FLCh+ZQvBMs6JYnWACzECNIagVZ7y9RHE9wqcm0OnCVJR197nFltPRY3rT
+         5gLgMkAySUt2ktyPIx2Skxpt+PlSbiF+cZtOWn+SPcNFur7tnYzUuaiXYHWU5nmhHGFS
+         eWaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Q8VsecRt+zfmEiQATRM3jixSlKuyuB/bDX0OonY2El4=;
-        b=cT80yOcVYB0iKW0wg+k0QYNNa+EVzB3knJRY2fPpx70ew0hMzBTTAZO1OetBy2KnQq
-         ZftQgKdb2nW6lh6sbArQbbmy2KJHKUXv3L/CoYXRGPBRCuV/dohB/c6mmmw5PgBSYw0c
-         VbNlMsQJI3YXLBcXQ6oicYyVXVdePz3rdH3jnuUe6yiUFpi0oOPKczzMbCpX9MH0wsLS
-         seZvKSrA3Cgm2F4/Q2TcfCIRYYSF/SPso1N8PBju6shxxwfnnCUpJ0qGD59IZz4ncNG/
-         Cakoc6QVNWVcVJunifVCpyc69CBqgKGgP4H+tQzi0qc3QkAi2NEa9rRhFREaJ8t6DHh/
-         nsGA==
-X-Gm-Message-State: APjAAAV6Y0jr7z4Qkxkez619YfZ4H6vuFJOZ2ZEgLDwMXVV3zpDyYXUX
-        7Z6reu74r04xgWTDZDZdFnT+Fw==
-X-Google-Smtp-Source: APXvYqzANxopZZDEUqRVRjmMrW4GDF1rSth1AhKzw2hBAkcpYmorJqw3yZKxPiKlZofK2y8ICgKTQA==
-X-Received: by 2002:adf:fe50:: with SMTP id m16mr34832312wrs.217.1576581583518;
-        Tue, 17 Dec 2019 03:19:43 -0800 (PST)
-Received: from bender.baylibre.local (lfbn-nic-1-505-157.w90-116.abo.wanadoo.fr. [90.116.92.157])
-        by smtp.gmail.com with ESMTPSA id a184sm2713113wmf.29.2019.12.17.03.19.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 03:19:43 -0800 (PST)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     mchehab@kernel.org, hans.verkuil@cisco.com
-Cc:     Maxime Jourdan <mjourdan@baylibre.com>,
-        linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 2/5] media: meson: vdec: add helpers for lossless framebuffer compression buffers
-Date:   Tue, 17 Dec 2019 12:19:36 +0100
-Message-Id: <20191217111939.10387-3-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20191217111939.10387-1-narmstrong@baylibre.com>
-References: <20191217111939.10387-1-narmstrong@baylibre.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=StuVP0ZBIouB1KOtrgMy9y/jalCgg++uQ38qlkw46go=;
+        b=rZdhlBDyI5xirCiaRy8UPAwES/2PiqWgvekbwXA6swo7OzdxyX46Vt9MWu1MFsuEyr
+         Ey3/8ahZ/jApdZUI64fWfJgWSqX+TA4fSjSVPqww5fQrbtJuErL2xEgNnSSZSOCxQB2V
+         /lFtusGvSWikAf9Q20kOmA1t7jmfBCXltX7AQg4xTOhvGlpWlamBjMZA/Mrh6ix73hjw
+         9SmtiPKHAWLueStZoTKYKLFq0KUcWT4QKjsh9xqKWa3nXwaXfB2fBtDC9C5DEz8bXaa8
+         bo18/ZyUcAhYl5gmRbfdJLWcg+h9jOV1z1oDS/8FTUc5B3IAqceEdFGwtYc01t+IYEJV
+         vgEw==
+X-Gm-Message-State: APjAAAWTNV5hEnARyz3dAu9d1rhZ+pXnvIfLwTtvD1bqkw9DrndUoOAM
+        4kyaMzUa2H+IFiM8afuVfbjYHA==
+X-Google-Smtp-Source: APXvYqx5xfK0/s9Ru/ZE4AeeQAoahh8g/WaVYmAIike6weLBOZzRcuiHWrLBeuR9IBG/qvZH6xD9Fg==
+X-Received: by 2002:a17:902:fe10:: with SMTP id g16mr21654536plj.66.1576581593510;
+        Tue, 17 Dec 2019 03:19:53 -0800 (PST)
+Received: from localhost ([122.171.234.168])
+        by smtp.gmail.com with ESMTPSA id k88sm3134508pjb.15.2019.12.17.03.19.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 17 Dec 2019 03:19:52 -0800 (PST)
+Date:   Tue, 17 Dec 2019 16:49:50 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     vireshk@kernel.org, b.zolnierkie@samsung.com, axboe@kernel.dk,
+        vkoul@kernel.org, linux-ide@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ata: pata_arasam_cf: Use dma_request_chan() instead
+ dma_request_slave_channel()
+Message-ID: <20191217111950.vzuww3ov4ub45ros@vireshk-i7>
+References: <20191217105048.25327-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191217105048.25327-1-peter.ujfalusi@ti.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxime Jourdan <mjourdan@baylibre.com>
+On 17-12-19, 12:50, Peter Ujfalusi wrote:
+> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
+> eating up the error code.
+> 
+> By using dma_request_chan() directly the driver can support deferred
+> probing against DMA.
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+>  drivers/ata/pata_arasan_cf.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/ata/pata_arasan_cf.c b/drivers/ata/pata_arasan_cf.c
+> index 135173c8d138..69b555d83f68 100644
+> --- a/drivers/ata/pata_arasan_cf.c
+> +++ b/drivers/ata/pata_arasan_cf.c
+> @@ -526,9 +526,10 @@ static void data_xfer(struct work_struct *work)
+>  
+>  	/* request dma channels */
+>  	/* dma_request_channel may sleep, so calling from process context */
+> -	acdev->dma_chan = dma_request_slave_channel(acdev->host->dev, "data");
+> -	if (!acdev->dma_chan) {
+> +	acdev->dma_chan = dma_request_chan(acdev->host->dev, "data");
+> +	if (IS_ERR(acdev->dma_chan)) {
+>  		dev_err(acdev->host->dev, "Unable to get dma_chan\n");
+> +		acdev->dma_chan = NULL;
+>  		goto chan_request_fail;
+>  	}
+>  
+> @@ -539,6 +540,7 @@ static void data_xfer(struct work_struct *work)
+>  	}
+>  
+>  	dma_release_channel(acdev->dma_chan);
+> +	acdev->dma_chan = NULL;
+>  
+>  	/* data xferred successfully */
+>  	if (!ret) {
 
-Add helpers to support the lossless framebuffer compression format that
-will be used in HEVC & VP9 decoders when decoding 10bit content for
-downsampling to 8bit NV12 and later proper compressed buffer support.
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- .../staging/media/meson/vdec/vdec_helpers.c   | 27 +++++++++++++++++++
- .../staging/media/meson/vdec/vdec_helpers.h   |  4 +++
- 2 files changed, 31 insertions(+)
-
-diff --git a/drivers/staging/media/meson/vdec/vdec_helpers.c b/drivers/staging/media/meson/vdec/vdec_helpers.c
-index fc59d8801643..818064b6b4d0 100644
---- a/drivers/staging/media/meson/vdec/vdec_helpers.c
-+++ b/drivers/staging/media/meson/vdec/vdec_helpers.c
-@@ -50,6 +50,33 @@ void amvdec_write_parser(struct amvdec_core *core, u32 reg, u32 val)
- }
- EXPORT_SYMBOL_GPL(amvdec_write_parser);
- 
-+/* 4 KiB per 64x32 block */
-+u32 amvdec_am21c_body_size(u32 width, u32 height)
-+{
-+	u32 width_64 = ALIGN(width, 64) / 64;
-+	u32 height_32 = ALIGN(height, 32) / 32;
-+
-+	return SZ_4K * width_64 * height_32;
-+}
-+EXPORT_SYMBOL_GPL(amvdec_am21c_body_size);
-+
-+/* 32 bytes per 128x64 block */
-+u32 amvdec_am21c_head_size(u32 width, u32 height)
-+{
-+	u32 width_128 = ALIGN(width, 128) / 128;
-+	u32 height_64 = ALIGN(height, 64) / 64;
-+
-+	return 32 * width_128 * height_64;
-+}
-+EXPORT_SYMBOL_GPL(amvdec_am21c_head_size);
-+
-+u32 amvdec_am21c_size(u32 width, u32 height)
-+{
-+	return ALIGN(amvdec_am21c_body_size(width, height) +
-+		     amvdec_am21c_head_size(width, height), SZ_64K);
-+}
-+EXPORT_SYMBOL_GPL(amvdec_am21c_size);
-+
- static int canvas_alloc(struct amvdec_session *sess, u8 *canvas_id)
- {
- 	int ret;
-diff --git a/drivers/staging/media/meson/vdec/vdec_helpers.h b/drivers/staging/media/meson/vdec/vdec_helpers.h
-index 165e6293ffba..cfaed52ab526 100644
---- a/drivers/staging/media/meson/vdec/vdec_helpers.h
-+++ b/drivers/staging/media/meson/vdec/vdec_helpers.h
-@@ -27,6 +27,10 @@ void amvdec_clear_dos_bits(struct amvdec_core *core, u32 reg, u32 val);
- u32 amvdec_read_parser(struct amvdec_core *core, u32 reg);
- void amvdec_write_parser(struct amvdec_core *core, u32 reg, u32 val);
- 
-+u32 amvdec_am21c_body_size(u32 width, u32 height);
-+u32 amvdec_am21c_head_size(u32 width, u32 height);
-+u32 amvdec_am21c_size(u32 width, u32 height);
-+
- /**
-  * amvdec_dst_buf_done_idx() - Signal that a buffer is done decoding
-  *
 -- 
-2.22.0
-
+viresh
