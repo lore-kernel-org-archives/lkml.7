@@ -2,93 +2,106 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6BBDC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5917DC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61D292082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:09:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26AAF24676
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:12:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nigauri-org.20150623.gappssmtp.com header.i=@nigauri-org.20150623.gappssmtp.com header.b="TOSQLO1X"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LJHEfkeH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727291AbfLQLJ5 (ORCPT
+        id S1727173AbfLQLMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 06:09:57 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44828 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727238AbfLQLJ4 (ORCPT
+        Tue, 17 Dec 2019 06:12:05 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36146 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725940AbfLQLME (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 06:09:56 -0500
-Received: by mail-ot1-f68.google.com with SMTP id x3so13295833oto.11
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 03:09:55 -0800 (PST)
+        Tue, 17 Dec 2019 06:12:04 -0500
+Received: by mail-pl1-f193.google.com with SMTP id d15so5954770pll.3;
+        Tue, 17 Dec 2019 03:12:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=nigauri-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=nVzIKMbyQOWBmftW8nOv0LkBV6uzN+IV8y0INVEMg7U=;
-        b=TOSQLO1X4QvPMmfGDIiO+LZkG5QiJNiusi82hDUIQF8xNwV8tiKqY22Sub/zsjEU4U
-         r3JRp5EcDGLickznpSIivneZSTmrPgUlSPHwX45DCqkpy5KNFn0D+U4orndQW6KQk5N4
-         Nl9Yy35IQDnRM0gjGX4ZGncKoh2orR6TR1yJ9oKxsH5agHmfUvyppiJ6qCVmtySdT55Z
-         7UnwHnUw9DraZmHqlORXPclEtlm+fFlMM86xnRH1NYQ07t2r5OejOnMmr7OdmTy0JDa5
-         8Op/AYbpghlqBLs9+e6rgFN2/hMTiXCnjtQNMzInsTuCn5Sqariv5V3Dm84oT7HH3nHH
-         3HzQ==
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kY9iDk6ujSVpRSx3i8FBNKdQ/NwXC042Gb3HxrCWJLI=;
+        b=LJHEfkeHlzDWQISdNkdrI92FgGwmERgCSamdNW4XzU3/X5rhVo6Ql0AIjDaRtztLU8
+         N+muQJe0kRVDscjaowPmrETQd3W4qztJv+0JxglpXEY0wcX4Hagklla/7+5W1emK3KFf
+         a4zrRkFOZevNjOn/mMeRhlnBhUkpcJWR76f1RdqXZ/g2w9hNh/TcN+0phaaw2UDgubcq
+         /DBbJOW9UsHjUdmWBIeu3P3jEBP+FpWL8YEOmVjBucaj51PF0/ud50/p+i7fHXWy5zjv
+         kNSMEuATK1ze7pCxM1wbbcJZ3+CGMIy0WiTQnPAa8cC9YbKsgu91CW7RJ62j0PrsmpcV
+         z9Eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=nVzIKMbyQOWBmftW8nOv0LkBV6uzN+IV8y0INVEMg7U=;
-        b=p3DpFWuqeoijqvf6vHgxFRDwV/rHdhCOKW9mdq4AjBuXYKjFGCGQL0RO61foDzSEAT
-         dZk6mFD/q3xnC8BM6FeNLXldMF2jeS2SmHq78ujfSH0Msry2GYOZulLDpoDDszFhSwsM
-         Cziog+qMgb8E9kF0fLgM/oGnEG973rPTFxIFh0tCTKVkG86OViv6CLQ+SNnRq+79cqTp
-         ibmjnNmkKOQUtvox44uyOAe0h2OunX5RgF11yVqxFqzpoPCSMp7gY4FDFljV7pzNvq7c
-         xqizoEGamTumPKBDaEbawpZUQpxnJCjRHRE//DbTgmsMb08ns5A6f8kR1DdGQvfJs9+n
-         xwSA==
-X-Gm-Message-State: APjAAAW+lGMoKcx04ylkMF9ymlRBLzS1NfB/2sFFviwa+OWFXFTFPNYZ
-        7wEFiSMkKjqMMOzMvRva756SfFfqDvC5+XtTVXKC
-X-Google-Smtp-Source: APXvYqwQqf9jsdBYNmOWh+PDrU4h6gB34yQI1B7iHCi2PtLDl7KQ2gOq+gJ6BUzASyVRwQmUcc5sU1rzbWwe7YM86eM=
-X-Received: by 2002:a9d:6654:: with SMTP id q20mr36639354otm.284.1576580995068;
- Tue, 17 Dec 2019 03:09:55 -0800 (PST)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kY9iDk6ujSVpRSx3i8FBNKdQ/NwXC042Gb3HxrCWJLI=;
+        b=DOLRVRt9evdiNSpy0ztv3FkgVYJsFi829wCrFFsphVomD8FVq/p+gDqHafDZn7Nvjq
+         dzKOHe7mGdWJbH/J2G8sD/+GhFnOHSvtzjvV/76gNcjjnhs6Uposb9JZGUQ10pYeeukg
+         BGJluFTa/nGfbnFOfjZTLWlKOpOzXRNnw+v9NrKhuhsWEO6V4SM4GvAT41da3RT+YMQa
+         gXs6EJEDt9cwXL2it41jF1vNTko1nsdGGVOcp62B5t8SktoEiSqMENKA/PRjPvXrYBT9
+         Pldo1WrzKzMil7pqtkuJ8ULa93aLwMg7rMYF+3fFc6rhWKpJVLEG79N5FOfk1+yNlKf2
+         y+sQ==
+X-Gm-Message-State: APjAAAVNjyD/eDKrUS64JUvDRzz4+GcSqMynazN/h8lRFXehwF36xCtz
+        Ojne3I30MO1ovF2kEw85mO0=
+X-Google-Smtp-Source: APXvYqxYw3VATrq7dAAcXPBZqzaZ6RSACsCYh+aRAb7KVwc9VY/UVgXlAFtChl7rZGp+DiAVZl0UXQ==
+X-Received: by 2002:a17:90b:f06:: with SMTP id br6mr5194967pjb.125.1576581124196;
+        Tue, 17 Dec 2019 03:12:04 -0800 (PST)
+Received: from brcpsddjunho-l.padtec.com.br (apolo.padtec.com.br. [200.228.158.130])
+        by smtp.gmail.com with ESMTPSA id 81sm25855190pfx.73.2019.12.17.03.12.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 03:12:03 -0800 (PST)
+From:   Daniel Junho <djunho@gmail.com>
+To:     "Jonathan Cameron" <jic23@kernel.org>,
+        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
+        "lkcamp@lists.libreplanetbr.org" <lkcamp@lists.libreplanetbr.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "lars@metafoo.de" <lars@metafoo.de>
+Subject: [PATCH v3 0/4] Add support for the ad7908/ad7918/ad7928
+Date:   Tue, 17 Dec 2019 08:11:54 -0300
+Message-Id: <20191217111158.30888-1-djunho@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-References: <201912170716.3GlRTKMw%lkp@intel.com> <20191216230421.swtokuadkid666sd@4978f4969bb8>
-In-Reply-To: <20191216230421.swtokuadkid666sd@4978f4969bb8>
-From:   Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
-Date:   Tue, 17 Dec 2019 20:09:28 +0900
-Message-ID: <CABMQnVKDSZc7pE9y78kWtGYkq4FJbgfO_8JGb4nsgj9fZcmJbQ@mail.gmail.com>
-Subject: Re: [PATCH] rtc: pcf8523: fix ptr_ret.cocci warnings
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        linux-rtc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This patch adds support to AD7928 family on the implementation of the
+AD7923.
 
-2019=E5=B9=B412=E6=9C=8817=E6=97=A5(=E7=81=AB) 8:04 kbuild test robot <lkp@=
-intel.com>:
->
-> From: kbuild test robot <lkp@intel.com>
->
-> drivers/rtc/rtc-pcf8523.c:361:1-3: WARNING: PTR_ERR_OR_ZERO can be used
->
->
->  Use PTR_ERR_OR_ZERO rather than if(IS_ERR(...)) + PTR_ERR
->
-> Generated by: scripts/coccinelle/api/ptr_ret.cocci
->
-> Fixes: 93966243cf90 ("rtc: pcf8523: Remove struct pcf8523")
-> CC: Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
-> Signed-off-by: kbuild test robot <lkp@intel.com>
-Acked-by: Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
+The ad7928 is software compatible with the ad7923.
+The ad7908 and ad7918 are the 8 and 10-bit versions of the ad7928.
 
-Best regards,
-  Nobuhiro
+Change log v1 -> v2
+- Split the v1 into 4 commits.
+- Removes a buggy line committed unintentionally.
+
+Change log v2 -> v3
+- Added a comment about the last channel of this driver.
+- Changed some macros that are used only on AD7908/AD7918/AD7928 to AD7908_*
+- Simplified the MODULE_DESCRIPTION
+
+Daniel Junho (4):
+  iio: adc: ad7923: Remove the unused defines
+  iio: adc: ad7923: Fix checkpatch warning
+  iio: adc: ad7923: Add of_device_id table
+  iio: adc: ad7923: Add support for the ad7908/ad7918/ad7928
+
+ drivers/iio/adc/ad7923.c | 73 +++++++++++++++++++++++++++++++++-------
+ 1 file changed, 61 insertions(+), 12 deletions(-)
+
+-- 
+2.24.1
+
