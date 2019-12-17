@@ -2,130 +2,113 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D1FDC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47468C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22826206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:13:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15B2B206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:14:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="PlsYyESZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BybHCU4A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728144AbfLQNNo (ORCPT
+        id S1728148AbfLQNOF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 08:13:44 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35439 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726858AbfLQNNn (ORCPT
+        Tue, 17 Dec 2019 08:14:05 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:37905 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727202AbfLQNOE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 08:13:43 -0500
-Received: by mail-wr1-f66.google.com with SMTP id g17so11256273wro.2
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 05:13:42 -0800 (PST)
+        Tue, 17 Dec 2019 08:14:04 -0500
+Received: by mail-qt1-f195.google.com with SMTP id n15so1002169qtp.5
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 05:14:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UiukVznUb6RbaIEpjFFv8iLF7eFYnMmkDknHSlpOQhc=;
-        b=PlsYyESZ7nq7NH2yQgpIg73rAVA/3twGoT+E2NgINMQNBJj9SII/0t0E3mNu+DlLjK
-         xPgazXwMdXB5f6rBGo9Dpykj917jG9QlTUR7XCydqHYMBKHEZFcd+IuZE9kR2W45V78z
-         5EP/LWRnFSNYjCs43rvicFPIjboFM3Elx0SyM=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5hxHSznfGSxmFv1YcCaQUB87Luggj5Op/zVMd6ctM0Q=;
+        b=BybHCU4AaS6uGhJ9v2cwyHNDrNPFgB3wBQP2+U74AQULalxmshgSnKjbFLaBBywatb
+         MfjhCV/seKEtfdfgJO1wlfZmNLl9RciSue2tiZbfDghrYfWu00KuuTIDe/kajZRVSpBv
+         GbTcbcPCOl//Ku1pAn/R8UulYUnTL1ffddG0pKo49KOYswTDxOWPzyz73XEoOuouHwAF
+         HOrFQm9DsoNPLW306DZa0OwZdT358FY49k6XARlMPrsfCZZnBR6e0Nb5bNiCU15gg0lr
+         yxJypLM1121j7GU7LIF0gyBdCcv6ioPnSahtCBZXcveKafU5seT1vGu1z2b/HhqjPNxR
+         J3hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=UiukVznUb6RbaIEpjFFv8iLF7eFYnMmkDknHSlpOQhc=;
-        b=IJUETIpTRbkK2XIAazb81sPw0gsp2gCDXhwfI1qwSreNUGDUqLjvQl/ACLNM03CraN
-         QHDviPPfavUseCfnrDTbs3GnGiFsBPQTIAJQ/IZq//2Ql3wZqe6Wh8K0Z8DNXpyo0mNq
-         pFk8s6F3CJLeAnK5hu0otMqXSQiGBXheObHVOJrdiY++bmk3Ptw7RyjlkhZRr4hjAqzC
-         w0rITsOSd4BTiMOJTDhjMX49DiZLWgbnGZeiI+2clhtGBfpLb6bEorxWRo8YBJ5C082A
-         1LePwoL0SOZMWcdjYgvQaknPdGQfD4jzLGf9ftfN8xpxxl2UqAxk6yqiLn/p1ykG4ubV
-         5W8w==
-X-Gm-Message-State: APjAAAXrY9TT1xY71oLa7+nNGsohVumWxvJD+wtnOoHuEa45DzFTEXIw
-        O2wj/QmIp0TQ4wB7fbdPYbQ5Nw==
-X-Google-Smtp-Source: APXvYqxPRzCnT2gvRTsWttk3WXMlk8T7TgZ6vhGyRieUqp/P2hbZfco1H9nFMdnqRHYZ6d+Dbu/kbg==
-X-Received: by 2002:a5d:640d:: with SMTP id z13mr37251617wru.181.1576588421585;
-        Tue, 17 Dec 2019 05:13:41 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:564b:0:7567:bb67:3d7f:f863])
-        by smtp.gmail.com with ESMTPSA id x26sm2925754wmc.30.2019.12.17.05.13.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 05:13:40 -0800 (PST)
-Date:   Tue, 17 Dec 2019 14:13:38 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Aditya Pakki <pakki001@umn.edu>
-Cc:     kjlu@umn.edu,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm: remove duplicate check on parent and avoid BUG_ON
-Message-ID: <20191217131338.GY624164@phenom.ffwll.local>
-Mail-Followup-To: Aditya Pakki <pakki001@umn.edu>, kjlu@umn.edu,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-References: <20191215194345.4679-1-pakki001@umn.edu>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5hxHSznfGSxmFv1YcCaQUB87Luggj5Op/zVMd6ctM0Q=;
+        b=VNWPql507sRZrAZo7FOD8aSi+OYjTSWPUCcTjgz8F/9SNRs1CnwIaIfRAloSFS0FUR
+         uKehTCExcprIv4kcVCObNOhEMNUW2QnC0aIA2Giu3banP0zZpqLfVbp1nUxREAzU32l/
+         9I52f8cnevRqIYlkHQCwa3eXqap8jXTjbMUCNug+3LnVgfmPEWSQzDujunDWUvjtBUIZ
+         FbtepPUDkBQA/KTdMv7p7SkeOzg+5hijrEHpDu0JTnllO0t5AE11w6cSUszmdau+sQkJ
+         NfeJn4ehCu2QHkfhiX4V5vErCQsH6+rHGEMrGe+xFoX+b6UYH9t8WhnJuJe1Lbe9vFS6
+         4TPw==
+X-Gm-Message-State: APjAAAWi4FSixpG0aLjahYeQ6PTyLZJul0UBXgQUhxX7wGXwh8v02q6T
+        LH78+PknE7Q6bURYxAezthsKLQ68VxsWrda6x4GkNw==
+X-Google-Smtp-Source: APXvYqz5Jx0MFPW0vC7/p0drF+0gKehqljZHBUo1H2aq8mFouh6mTzEkafP3B772ZeLCvgYgQU+ECJlvVmXTGFD2vhY=
+X-Received: by 2002:ac8:71d7:: with SMTP id i23mr4484869qtp.50.1576588443442;
+ Tue, 17 Dec 2019 05:14:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191215194345.4679-1-pakki001@umn.edu>
-X-Operating-System: Linux phenom 5.3.0-2-amd64 
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <3c4608bc-9c84-d79b-de76-b1a1a2a4fb6d@gmail.com>
+ <CACT4Y+b3nvFAgM32SF0Bv46EOO4UFEK3M99pqYzEwmsmLvmhTQ@mail.gmail.com> <e0305f5c-ae52-c144-fe50-00f3f815ad82@gmail.com>
+In-Reply-To: <e0305f5c-ae52-c144-fe50-00f3f815ad82@gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 17 Dec 2019 14:13:52 +0100
+Message-ID: <CACT4Y+YLxmFTkDT88z9y5yH75bAi42-Hqatv9z2-EyufTtKHRw@mail.gmail.com>
+Subject: Re: [BUG] kernel: kcov: a possible sleep-in-atomic-context bug in kcov_ioctl()
+To:     Jia-Ju Bai <baijiaju1990@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Hans Liljestrand <ishkamiel@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Reshetova, Elena" <elena.reshetova@intel.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 15, 2019 at 01:43:44PM -0600, Aditya Pakki wrote:
-> In drm_dev_init, parent is checked for NULL via assert after
-> checked in devm_drm_dev_init(). The patch removes the duplicate
-> check and replaces the assertion with WARN_ON. Further, it returns
-> -EINVAL consistent with the usage in devm_drm_dev_init.
-> 
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+On Tue, Dec 17, 2019 at 2:11 PM Jia-Ju Bai <baijiaju1990@gmail.com> wrote:
+> On 2019/12/17 21:02, Dmitry Vyukov wrote:
+> > On Tue, Dec 17, 2019 at 1:56 PM Jia-Ju Bai <baijiaju1990@gmail.com> wrote:
+> >> The kernel may sleep while holding a spinlock.
+> >> The function call path (from bottom to top) in Linux 4.19 is:
+> >>
+> >> kernel/kcov.c, 237:
+> >>       vfree in kcov_put
+> >> kernel/kcov.c, 413:
+> >>       kcov_put in kcov_ioctl_locked
+> >> kernel/kcov.c, 427:
+> >>       kcov_ioctl_locked in kcov_ioctl
+> >> kernel/kcov.c, 426:
+> >>       spin_lock in kcov_ioctl
+> >>
+> >> vfree() can sleep at runtime.
+> >>
+> >> I am not sure how to properly fix this possible bug, so I only report it.
+> >> A possible way is to replace vfree() with kfree(), and replace related
+> >> calls to vmalloc() with kmalloc().
+> >>
+> >> This bug is found by a static analysis tool STCheck written by myself.
+> > Hi Jia-Ju,
+> >
+> > Are you sure kcov_ioctl_locked can really release the descriptor? It
+> > happens in the context of ioctl, which means there is an open
+> > reference for the file descriptor. So ioctl should not do vfree I
+> > would assume.
+>
+> Thanks for the reply :)
+> I am not sure, because I am not familiar with kcov.
+> But looking at the code, if the reference count of kcov is 1, vfree()
+> could be called.
 
-Makes sense, patch applied to drm-misc-next.
-
-Thanks, Daniel
-
-> ---
->  drivers/gpu/drm/drm_drv.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_drv.c b/drivers/gpu/drm/drm_drv.c
-> index 1b9b40a1c7c9..7c18a980cd4b 100644
-> --- a/drivers/gpu/drm/drm_drv.c
-> +++ b/drivers/gpu/drm/drm_drv.c
-> @@ -622,7 +622,8 @@ int drm_dev_init(struct drm_device *dev,
->  		return -ENODEV;
->  	}
->  
-> -	BUG_ON(!parent);
-> +	if (WARN_ON(!parent))
-> +		return -EINVAL;
->  
->  	kref_init(&dev->ref);
->  	dev->dev = get_device(parent);
-> @@ -725,7 +726,7 @@ int devm_drm_dev_init(struct device *parent,
->  {
->  	int ret;
->  
-> -	if (WARN_ON(!parent || !driver->release))
-> +	if (WARN_ON(!driver->release))
->  		return -EINVAL;
->  
->  	ret = drm_dev_init(dev, driver, parent);
-> -- 
-> 2.20.1
-> 
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+That kcov_put should never call vfree. We still hold reference
+associated with the file, which will be released in kcov_close.
