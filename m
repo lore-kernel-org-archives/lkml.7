@@ -7,41 +7,44 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D132FC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C0EC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1969218AC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBA1724679
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728342AbfLQMk2 (ORCPT
+        id S1728352AbfLQMkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:40:28 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55284 "EHLO
+        Tue, 17 Dec 2019 07:40:33 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55286 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728264AbfLQMkF (ORCPT
+        with ESMTP id S1728269AbfLQMkE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 07:40:05 -0500
+        Tue, 17 Dec 2019 07:40:04 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ihC8q-0001pe-Ce; Tue, 17 Dec 2019 13:39:56 +0100
+        id 1ihC8l-0001o4-Cg; Tue, 17 Dec 2019 13:39:51 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 36EE71C2A3D;
-        Tue, 17 Dec 2019 13:39:52 +0100 (CET)
-Date:   Tue, 17 Dec 2019 12:39:52 -0000
-From:   "tip-bot2 for Peng Wang" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id BC1451C2A3D;
+        Tue, 17 Dec 2019 13:39:50 +0100 (CET)
+Date:   Tue, 17 Dec 2019 12:39:50 -0000
+From:   "tip-bot2 for Alexander Shishkin" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] schied/fair: Skip calculating @contrib without load
-Cc:     Peng Wang <rocking@linux.alibaba.com>,
+Subject: [tip: perf/urgent] perf/x86/intel/bts: Fix the use of page_private()
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <1576208740-35609-1-git-send-email-rocking@linux.alibaba.com>
-References: <1576208740-35609-1-git-send-email-rocking@linux.alibaba.com>
+In-Reply-To: <20191205142853.28894-2-alexander.shishkin@linux.intel.com>
+References: <20191205142853.28894-2-alexander.shishkin@linux.intel.com>
 MIME-Version: 1.0
-Message-ID: <157658639209.30329.5550277285445533985.tip-bot2@tip-bot2>
+Message-ID: <157658639063.30329.9964492624988033137.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -55,109 +58,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/core branch of tip:
+The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     d040e0734fb3dedfe24c3d94f5a32b4812eca610
-Gitweb:        https://git.kernel.org/tip/d040e0734fb3dedfe24c3d94f5a32b4812eca610
-Author:        Peng Wang <rocking@linux.alibaba.com>
-AuthorDate:    Fri, 13 Dec 2019 11:45:40 +08:00
+Commit-ID:     ff61541cc6c1962957758ba433c574b76f588d23
+Gitweb:        https://git.kernel.org/tip/ff61541cc6c1962957758ba433c574b76f588d23
+Author:        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+AuthorDate:    Thu, 05 Dec 2019 17:28:52 +03:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Tue, 17 Dec 2019 13:32:51 +01:00
+CommitterDate: Tue, 17 Dec 2019 13:32:46 +01:00
 
-schied/fair: Skip calculating @contrib without load
+perf/x86/intel/bts: Fix the use of page_private()
 
-Because of the:
+Commit
 
-	if (!load)
-		runnable = running = 0;
+  8062382c8dbe2 ("perf/x86/intel/bts: Add BTS PMU driver")
 
-clause in ___update_load_sum(), all the actual users of @contrib in
-accumulate_sum():
+brought in a warning with the BTS buffer initialization
+that is easily tripped with (assuming KPTI is disabled):
 
-	if (load)
-		sa->load_sum += load * contrib;
-	if (runnable)
-		sa->runnable_load_sum += runnable * contrib;
-	if (running)
-		sa->util_sum += contrib << SCHED_CAPACITY_SHIFT;
+instantly throwing:
 
-don't happen, and therefore we don't care what @contrib actually is and
-calculating it is pointless.
+> ------------[ cut here ]------------
+> WARNING: CPU: 2 PID: 326 at arch/x86/events/intel/bts.c:86 bts_buffer_setup_aux+0x117/0x3d0
+> Modules linked in:
+> CPU: 2 PID: 326 Comm: perf Not tainted 5.4.0-rc8-00291-gceb9e77324fa #904
+> RIP: 0010:bts_buffer_setup_aux+0x117/0x3d0
+> Call Trace:
+>  rb_alloc_aux+0x339/0x550
+>  perf_mmap+0x607/0xc70
+>  mmap_region+0x76b/0xbd0
+...
 
-If we count the times when @load equals zero and not as below:
+It appears to assume (for lost raisins) that PagePrivate() is set,
+while later it actually tests for PagePrivate() before using
+page_private().
 
-	if (load) {
-		load_is_not_zero_count++;
-		contrib = __accumulate_pelt_segments(periods,
-				1024 - sa->period_contrib,delta);
-	} else
-		load_is_zero_count++;
+Make it consistent and always check PagePrivate() before using
+page_private().
 
-As we can see, load_is_zero_count is much bigger than
-load_is_zero_count, and the gap is gradually widening:
-
-	load_is_zero_count:            6016044 times
-	load_is_not_zero_count:         244316 times
-	19:50:43 up 1 min,  1 user,  load average: 0.09, 0.06, 0.02
-
-	load_is_zero_count:            7956168 times
-	load_is_not_zero_count:         261472 times
-	19:51:42 up 2 min,  1 user,  load average: 0.03, 0.05, 0.01
-
-	load_is_zero_count:           10199896 times
-	load_is_not_zero_count:         278364 times
-	19:52:51 up 3 min,  1 user,  load average: 0.06, 0.05, 0.01
-
-	load_is_zero_count:           14333700 times
-	load_is_not_zero_count:         318424 times
-	19:54:53 up 5 min,  1 user,  load average: 0.01, 0.03, 0.00
-
-Perhaps we can gain some performance advantage by saving these
-unnecessary calculation.
-
-Signed-off-by: Peng Wang <rocking@linux.alibaba.com>
+Fixes: 8062382c8dbe2 ("perf/x86/intel/bts: Add BTS PMU driver")
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Vincent Guittot < vincent.guittot@linaro.org>
-Link: https://lkml.kernel.org/r/1576208740-35609-1-git-send-email-rocking@linux.alibaba.com
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Link: https://lkml.kernel.org/r/20191205142853.28894-2-alexander.shishkin@linux.intel.com
 ---
- kernel/sched/pelt.c | 20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+ arch/x86/events/intel/bts.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
-index a96db50..bd006b7 100644
---- a/kernel/sched/pelt.c
-+++ b/kernel/sched/pelt.c
-@@ -129,8 +129,20 @@ accumulate_sum(u64 delta, struct sched_avg *sa,
- 		 * Step 2
- 		 */
- 		delta %= 1024;
--		contrib = __accumulate_pelt_segments(periods,
--				1024 - sa->period_contrib, delta);
-+		if (load) {
-+			/*
-+			 * This relies on the:
-+			 *
-+			 * if (!load)
-+			 *	runnable = running = 0;
-+			 *
-+			 * clause from ___update_load_sum(); this results in
-+			 * the below usage of @contrib to dissapear entirely,
-+			 * so no point in calculating it.
-+			 */
-+			contrib = __accumulate_pelt_segments(periods,
-+					1024 - sa->period_contrib, delta);
-+		}
- 	}
- 	sa->period_contrib = delta;
+diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
+index 38de4a7..6a3b599 100644
+--- a/arch/x86/events/intel/bts.c
++++ b/arch/x86/events/intel/bts.c
+@@ -63,9 +63,17 @@ struct bts_buffer {
  
-@@ -205,7 +217,9 @@ ___update_load_sum(u64 now, struct sched_avg *sa,
- 	 * This means that weight will be 0 but not running for a sched_entity
- 	 * but also for a cfs_rq if the latter becomes idle. As an example,
- 	 * this happens during idle_balance() which calls
--	 * update_blocked_averages()
-+	 * update_blocked_averages().
-+	 *
-+	 * Also see the comment in accumulate_sum().
- 	 */
- 	if (!load)
- 		runnable = running = 0;
+ static struct pmu bts_pmu;
+ 
++static int buf_nr_pages(struct page *page)
++{
++	if (!PagePrivate(page))
++		return 1;
++
++	return 1 << page_private(page);
++}
++
+ static size_t buf_size(struct page *page)
+ {
+-	return 1 << (PAGE_SHIFT + page_private(page));
++	return buf_nr_pages(page) * PAGE_SIZE;
+ }
+ 
+ static void *
+@@ -83,9 +91,7 @@ bts_buffer_setup_aux(struct perf_event *event, void **pages,
+ 	/* count all the high order buffers */
+ 	for (pg = 0, nbuf = 0; pg < nr_pages;) {
+ 		page = virt_to_page(pages[pg]);
+-		if (WARN_ON_ONCE(!PagePrivate(page) && nr_pages > 1))
+-			return NULL;
+-		pg += 1 << page_private(page);
++		pg += buf_nr_pages(page);
+ 		nbuf++;
+ 	}
+ 
+@@ -109,7 +115,7 @@ bts_buffer_setup_aux(struct perf_event *event, void **pages,
+ 		unsigned int __nr_pages;
+ 
+ 		page = virt_to_page(pages[pg]);
+-		__nr_pages = PagePrivate(page) ? 1 << page_private(page) : 1;
++		__nr_pages = buf_nr_pages(page);
+ 		buf->buf[nbuf].page = page;
+ 		buf->buf[nbuf].offset = offset;
+ 		buf->buf[nbuf].displacement = (pad ? BTS_RECORD_SIZE - pad : 0);
