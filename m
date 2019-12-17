@@ -2,70 +2,97 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 971F2C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AECCC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77A2A20733
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:06:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1658020733
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:06:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576584394;
+	bh=RjgUGBgUy2NtgHKCHL8YjSlU/UigZOy/kWLUuA6Wlvg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VIdHHyCfUDKJVkxGATTfX4Ffv83iA9z+HYkZksZWLk+7BNkjxdqpwo9UXc4FtDO8n
+	 Zya9w8lP4IqsYxOsMv+vpWagmNlcNJ7tJL7XAFXluoWukeQZKiu4nrNSoD/R53vKhh
+	 gYQqZLhmB82VBsDFtwMHGfJgO+vEcXOBLBByz7yg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727764AbfLQMG2 (ORCPT
+        id S1727787AbfLQMGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:06:28 -0500
-Received: from mga18.intel.com ([134.134.136.126]:46177 "EHLO mga18.intel.com"
+        Tue, 17 Dec 2019 07:06:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726747AbfLQMG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 07:06:28 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 04:06:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,325,1571727600"; 
-   d="scan'208";a="221746459"
-Received: from pbroex-mobl1.ger.corp.intel.com ([10.251.85.107])
-  by fmsmga001.fm.intel.com with ESMTP; 17 Dec 2019 04:06:24 -0800
-Message-ID: <9991700815c02b3227a5902e4cae1afe5200b0ff.camel@linux.intel.com>
-Subject: Re: [PATCH V3] tpm_tis_spi: use new 'delay' structure for SPI
- transfer delays
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, peterhuewe@gmx.de, jgg@ziepe.ca,
-        arnd@arndb.de
-In-Reply-To: <20191217091615.12764-1-alexandru.ardelean@analog.com>
-References: <20191204080049.32701-1-alexandru.ardelean@analog.com>
-         <20191217091615.12764-1-alexandru.ardelean@analog.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160
- Espoo
-Content-Type: text/plain; charset="UTF-8"
+        id S1726747AbfLQMGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 07:06:32 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A63D320733;
+        Tue, 17 Dec 2019 12:06:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576584392;
+        bh=RjgUGBgUy2NtgHKCHL8YjSlU/UigZOy/kWLUuA6Wlvg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1yJ8sG97LN0NIiNu9Hk8z3/RMqM+OlEITld/tX3epwroZWk4DUSpp5MiyjUvq49ri
+         kg7MNf0XhB5pxm6XKqNcDyy7yWHWircN4HSzyl04vUk24Mh+noQ56QYOWHxDdSK0WS
+         lLzCS5dNj3ZD0EvMurad/ivvDDVfuj7fU0nBXrcw=
+Date:   Tue, 17 Dec 2019 13:06:29 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Ammy Yi <ammy.yi@intel.com>, stable@vger.kernel.org
+Subject: Re: [GIT PULL 4/4] intel_th: msu: Fix window switching without
+ windows
+Message-ID: <20191217120629.GB3156341@kroah.com>
+References: <20191217115527.74383-1-alexander.shishkin@linux.intel.com>
+ <20191217115527.74383-5-alexander.shishkin@linux.intel.com>
 MIME-Version: 1.0
-Date:   Tue, 17 Dec 2019 14:04:29 +0200
-User-Agent: Evolution 3.34.1-2 
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191217115527.74383-5-alexander.shishkin@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-12-17 at 11:16 +0200, Alexandru Ardelean wrote:
-> In a recent change to the SPI subsystem [1], a new 'delay' struct was added
-> to replace the 'delay_usecs'. This change replaces the current
-> 'delay_usecs' with 'delay' for this driver.
-> 
-> The 'spi_transfer_delay_exec()' function [in the SPI framework] makes sure
-> that both 'delay_usecs' & 'delay' are used (in this order to preserve
-> backwards compatibility).
-> 
-> [1] commit bebcfd272df6485 ("spi: introduce `delay` field for
-> `spi_transfer` + spi_transfer_delay_exec()")
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+On Tue, Dec 17, 2019 at 01:55:27PM +0200, Alexander Shishkin wrote:
+> Commit 6cac7866c2741 ("intel_th: msu: Add a sysfs attribute to trigger
+> window switch") adds a NULL pointer dereference in the case when there are
+> no windows allocated:
 
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Commit ids should only be specified in 12 digits, not 13 :)
 
-/Jarkko
+
+> 
+> > BUG: kernel NULL pointer dereference, address: 0000000000000000
+> > #PF: supervisor read access in kernel mode
+> > #PF: error_code(0x0000) - not-present page
+> > PGD 0 P4D 0
+> > Oops: 0000 1 SMP
+> > CPU: 5 PID: 1110 Comm: bash Not tainted 5.5.0-rc1+ #1
+> > RIP: 0010:msc_win_switch+0xa/0x80 [intel_th_msu]
+> > Call Trace:
+> > ? win_switch_store+0x9b/0xc0 [intel_th_msu]
+> > dev_attr_store+0x17/0x30
+> > sysfs_kf_write+0x3e/0x50
+> > kernfs_fop_write+0xda/0x1b0
+> > __vfs_write+0x1b/0x40
+> > vfs_write+0xb9/0x1a0
+> > ksys_write+0x67/0xe0
+> > __x64_sys_write+0x1a/0x20
+> > do_syscall_64+0x57/0x1d0
+> > entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> Fix that by disallowing window switching with multiwindow buffers without
+> windows.
+> 
+> Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Fixes: 6cac7866c2741 ("intel_th: msu: Add a sysfs attribute to trigger window switch")
+
+Same here.
+
+I can go edit it by hand...
 
