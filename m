@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23400C2D0C5
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B81C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9B56206E6
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:14:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7AAD206E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:14:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576556095;
-	bh=cOk6IIlH6PebtbSxCJ8oriLNKUaqEMp/IBEKTp999QU=;
+	s=default; t=1576556099;
+	bh=9bevpXRJo8YKeMzq83BvUn+kDrNbs/iGWmKyRFqTmig=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hi58dsoSd36DqUZc/Z8wK0gsoQZ/rd6ZuD9k+/jl+IpxRwIDQNhrPu8PemanaMFeN
-	 Wu/Iuz9xzZrRArAaCyhSgTEAJalNEjOQWBxp0KXTm1A1j4SrQvYSJyc1BvFEwNigl8
-	 I5initAI8gHkBPDd68onMdt+Bn7D9bU1l9jowgtE=
+	b=IbHQcDD+ZzjZsmDovrYJ9BQgk2phbpnrODKc24ZTXKdFH9kePSNyntbJmYl0QsrQn
+	 mudxSfGQp72oAb43PyQr8FqgE9VFK1bMRD4MrJKLbzI1ynFduKCaZ6g2uS6O6sWwcy
+	 BrGAH28+BlYt1zeqbkg140l78rzcp08/xPFH1uqY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727751AbfLQEOy (ORCPT
+        id S1727804AbfLQEO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 23:14:54 -0500
-Received: from conuserg-12.nifty.com ([210.131.2.79]:49416 "EHLO
+        Mon, 16 Dec 2019 23:14:58 -0500
+Received: from conuserg-12.nifty.com ([210.131.2.79]:49419 "EHLO
         conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727683AbfLQEOw (ORCPT
+        with ESMTP id S1727687AbfLQEOw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 23:14:52 -0500
 Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id xBH4EPAF024524;
-        Tue, 17 Dec 2019 13:14:29 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com xBH4EPAF024524
+        by conuserg-12.nifty.com with ESMTP id xBH4EPAE024524;
+        Tue, 17 Dec 2019 13:14:28 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com xBH4EPAE024524
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1576556069;
-        bh=zTfsz4q4N5zqvuqTxH8EVK2Vwep22Qgk0oB4uevhHXM=;
+        s=dec2015msa; t=1576556068;
+        bh=An5jhCMPBE3WXglnz3cPdiHBZ9YvliinUc141cReA9Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LdvTRScsLP6hfOvy61kc3+9uLpg3c0hbsdIBe+3gew4wfgJvCrAljsUdiU8TyQDUt
-         SC82+xqVm9kmodzGUADghrVn8JNR3MwJd1go3b9kv1Vs1WhFlhXAwrzITP/W2SqYGd
-         Bhzm4TOM39+pcdSPF5+vxXtgxNHuN0SQ63SBfvDwjQFo+Slo82viULRbp4lx4S2K+G
-         O175ZhHxQVfGAXg1IqvWv/Ac6L9mmLjb71WtEdzcHC5/13PVbjdmZebUatBuunXpv5
-         ILJrfBAR616w0Rc+ZZ/8pWb9TJ6G53AqUVdzUR1BlEWMhOnREk3jq+XOtQ8fMp6YyA
-         CpG90L5J8s2eA==
+        b=LIwEzAcDb9tAP/VfggJbke3KYC4/YcOSFeZ/GKCrvmffj+LyH+EaV7PIgAU1v5MB7
+         cNfNIqGJQoeRbT8/fFAQTIa0TVonMmumZlhsbch304tUGLleN2aEuIGeRN6Ki3KOjD
+         NTfqbXXrPenilsFd+x9WBO5DW8HcV+tb3018Lad80hUfnKasMO431JJdHitZ0dDHrY
+         mM26zSIjzsDSrdMJ5tAMTcm3I81LRnZ7pLysrjRAqELdKKb6tB8zfUrbrABie48mvu
+         03A7IO7Tg+DRPK7t3n1Dx2l91vXrGfOTi8p4G69Q9xR5iu53+HjS6o0FOWEyEydPw3
+         Xjt2/3cvQoSMw==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
 Cc:     Ulf Magnusson <ulfalizer@gmail.com>,
         Masahiro Yamada <masahiroy@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 5/8] kconfig: move prompt handling to menu_add_prompt() from menu_add_prop()
-Date:   Tue, 17 Dec 2019 13:14:20 +0900
-Message-Id: <20191217041424.29285-6-masahiroy@kernel.org>
+Subject: [PATCH 4/8] kconfig: remove 'prompt' symbol
+Date:   Tue, 17 Dec 2019 13:14:19 +0900
+Message-Id: <20191217041424.29285-5-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191217041424.29285-1-masahiroy@kernel.org>
 References: <20191217041424.29285-1-masahiroy@kernel.org>
@@ -59,110 +59,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-menu_add_prompt() is the only function that calls menu_add_prop() with
-non-NULL prompt.
-
-So, the code inside the if-conditional block of menu_add_prop() can be
-moved to menu_add_prompt().
+Now that 'prompt' is only reduced from T_WORD_QUOTE without any action,
+use T_WORD_QUOTE directly.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- scripts/kconfig/menu.c | 70 ++++++++++++++++++++----------------------
- 1 file changed, 34 insertions(+), 36 deletions(-)
+ scripts/kconfig/parser.y | 17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
 
-diff --git a/scripts/kconfig/menu.c b/scripts/kconfig/menu.c
-index bbabf0a59ac4..45daece8d983 100644
---- a/scripts/kconfig/menu.c
-+++ b/scripts/kconfig/menu.c
-@@ -132,53 +132,51 @@ static struct property *menu_add_prop(enum prop_type type, char *prompt, struct
- 	prop->expr = expr;
- 	prop->visible.expr = dep;
+diff --git a/scripts/kconfig/parser.y b/scripts/kconfig/parser.y
+index 80585f04f590..40e46996e6a5 100644
+--- a/scripts/kconfig/parser.y
++++ b/scripts/kconfig/parser.y
+@@ -93,7 +93,6 @@ static struct menu *current_choice_menu;
+ %left T_LESS T_LESS_EQUAL T_GREATER T_GREATER_EQUAL
+ %nonassoc T_NOT
  
--	if (prompt) {
--		if (isspace(*prompt)) {
--			prop_warn(prop, "leading whitespace ignored");
--			while (isspace(*prompt))
--				prompt++;
--		}
--		if (current_entry->prompt)
--			prop_warn(prop, "prompt redefined");
-+	return prop;
-+}
+-%type <string> prompt
+ %type <symbol> nonconst_symbol
+ %type <symbol> symbol
+ %type <type> type logic_type default
+@@ -116,7 +115,7 @@ input: mainmenu_stmt stmt_list | stmt_list;
  
--		/* Apply all upper menus' visibilities to actual prompts. */
--		if(type == P_PROMPT) {
--			struct menu *menu = current_entry;
-+struct property *menu_add_prompt(enum prop_type type, char *prompt,
-+				 struct expr *dep)
-+{
-+	struct property *prop = menu_add_prop(type, prompt, NULL, dep);
+ /* mainmenu entry */
  
--			while ((menu = menu->parent) != NULL) {
--				struct expr *dup_expr;
-+	if (isspace(*prompt)) {
-+		prop_warn(prop, "leading whitespace ignored");
-+		while (isspace(*prompt))
-+			prompt++;
-+	}
-+	if (current_entry->prompt)
-+		prop_warn(prop, "prompt redefined");
- 
--				if (!menu->visibility)
--					continue;
--				/*
--				 * Do not add a reference to the
--				 * menu's visibility expression but
--				 * use a copy of it.  Otherwise the
--				 * expression reduction functions
--				 * will modify expressions that have
--				 * multiple references which can
--				 * cause unwanted side effects.
--				 */
--				dup_expr = expr_copy(menu->visibility);
-+	/* Apply all upper menus' visibilities to actual prompts. */
-+	if (type == P_PROMPT) {
-+		struct menu *menu = current_entry;
- 
--				prop->visible.expr
--					= expr_alloc_and(prop->visible.expr,
--							 dup_expr);
--			}
--		}
-+		while ((menu = menu->parent) != NULL) {
-+			struct expr *dup_expr;
- 
--		current_entry->prompt = prop;
-+			if (!menu->visibility)
-+				continue;
-+			/*
-+			 * Do not add a reference to the menu's visibility
-+			 * expression but use a copy of it. Otherwise the
-+			 * expression reduction functions will modify
-+			 * expressions that have multiple references which
-+			 * can cause unwanted side effects.
-+			 */
-+			dup_expr = expr_copy(menu->visibility);
-+
-+			prop->visible.expr = expr_alloc_and(prop->visible.expr,
-+							    dup_expr);
-+		}
- 	}
-+
-+	current_entry->prompt = prop;
- 	prop->text = prompt;
- 
- 	return prop;
- }
- 
--struct property *menu_add_prompt(enum prop_type type, char *prompt, struct expr *dep)
--{
--	return menu_add_prop(type, prompt, NULL, dep);
--}
--
- void menu_add_visibility(struct expr *expr)
+-mainmenu_stmt: T_MAINMENU prompt T_EOL
++mainmenu_stmt: T_MAINMENU T_WORD_QUOTE T_EOL
  {
- 	current_entry->visibility = expr_alloc_and(current_entry->visibility,
+ 	menu_add_prompt(P_MENU, $2, NULL);
+ };
+@@ -184,7 +183,7 @@ config_option: type prompt_stmt_opt T_EOL
+ 		$1);
+ };
+ 
+-config_option: T_PROMPT prompt if_expr T_EOL
++config_option: T_PROMPT T_WORD_QUOTE if_expr T_EOL
+ {
+ 	menu_add_prompt(P_PROMPT, $2, $3);
+ 	printd(DEBUG_PARSE, "%s:%d:prompt\n", zconf_curname(), zconf_lineno());
+@@ -276,7 +275,7 @@ choice_option_list:
+ 	| choice_option_list help
+ ;
+ 
+-choice_option: T_PROMPT prompt if_expr T_EOL
++choice_option: T_PROMPT T_WORD_QUOTE if_expr T_EOL
+ {
+ 	menu_add_prompt(P_PROMPT, $2, $3);
+ 	printd(DEBUG_PARSE, "%s:%d:prompt\n", zconf_curname(), zconf_lineno());
+@@ -345,7 +344,7 @@ if_stmt: if_entry stmt_list if_end
+ 
+ /* menu entry */
+ 
+-menu: T_MENU prompt T_EOL
++menu: T_MENU T_WORD_QUOTE T_EOL
+ {
+ 	menu_add_entry(NULL);
+ 	menu_add_prompt(P_MENU, $2, NULL);
+@@ -374,7 +373,7 @@ menu_option_list:
+ 	| menu_option_list depends
+ ;
+ 
+-source_stmt: T_SOURCE prompt T_EOL
++source_stmt: T_SOURCE T_WORD_QUOTE T_EOL
+ {
+ 	printd(DEBUG_PARSE, "%s:%d:source %s\n", zconf_curname(), zconf_lineno(), $2);
+ 	zconf_nextfile($2);
+@@ -383,7 +382,7 @@ source_stmt: T_SOURCE prompt T_EOL
+ 
+ /* comment entry */
+ 
+-comment: T_COMMENT prompt T_EOL
++comment: T_COMMENT T_WORD_QUOTE T_EOL
+ {
+ 	menu_add_entry(NULL);
+ 	menu_add_prompt(P_COMMENT, $2, NULL);
+@@ -440,13 +439,11 @@ visible: T_VISIBLE if_expr T_EOL
+ 
+ prompt_stmt_opt:
+ 	  /* empty */
+-	| prompt if_expr
++	| T_WORD_QUOTE if_expr
+ {
+ 	menu_add_prompt(P_PROMPT, $1, $2);
+ };
+ 
+-prompt:	  T_WORD_QUOTE
+-
+ end:	  T_ENDMENU T_EOL	{ $$ = "menu"; }
+ 	| T_ENDCHOICE T_EOL	{ $$ = "choice"; current_choice_menu = NULL; }
+ 	| T_ENDIF T_EOL		{ $$ = "if"; }
 -- 
 2.17.1
 
