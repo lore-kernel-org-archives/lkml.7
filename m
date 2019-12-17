@@ -2,103 +2,120 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A10C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDB7C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9412421582
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:04:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MintjkZC"
+	by mail.kernel.org (Postfix) with ESMTP id 1052821582
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:04:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728535AbfLQVDq (ORCPT
+        id S1728659AbfLQVEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 16:03:46 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:34872 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728371AbfLQVDd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 16:03:33 -0500
-Received: by mail-wm1-f65.google.com with SMTP id p17so4730364wmb.0;
-        Tue, 17 Dec 2019 13:03:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=EKxVNnjdcW7UqI1MnLHXmGc5PlnuEhB2TmXteUbCxgg=;
-        b=MintjkZCoOxXDI0mGNQAdwBfJv9iqgmx55CfHoaCIQtJXFeK234R6HUHkkV0Bo8qzy
-         eDz8cPGNc8ic9PQfRFE0gj7TSOAxfdCPn9XUX+uQA6+k0tO0m5PwoNBjVgQEA6JZK0zW
-         OrcKasR5i9sBs0Na2zm7/gqTBI1K+Mp4g9KWbXTvN9MK5ObIVGvApy42K+Rwx5GIimP2
-         Aoh5dehLEqOFNJusdiNEXvrm3xmdbXHjQoEfYwY7XpBeDfJ2Ea0953pnP2AePUBw1sjs
-         ulfMqarNBdgL8xTlAweCyu+m7y40J6lp45523aMNKNLbH9SOPPeY/XZd9Jodme1lPR2Y
-         R+kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=EKxVNnjdcW7UqI1MnLHXmGc5PlnuEhB2TmXteUbCxgg=;
-        b=s6+olEvymldMuBe1q+90V6DMfpv3Y6B0vVvnWRi+BepKEMW+jqKmRbnpedmR2EaJBS
-         QMpgBwIzl01i8pWTVK7CU7HVq8wTR4rPeMiue6WH5KynJHmfahIuwuI61cE6V2OgmoeO
-         KnL9Fo4K3VzHMJaE7u8IhOruIjPf3iV0QIJl356lN+fTLX7ZGVew3GRAB8BuDFB02bVe
-         rzSl7fgzcYSLS5S0szYOnxR3TOb4mR3VyIrNiqDK90yQqlfEN1gAWSufEUQttwKFUEV9
-         FnS8DMv62syKc5pdwjkeW0vmUxNw41BkRT0fQkNQSYubhi60uOXaaMqeSevQRKIcxpO7
-         lIeg==
-X-Gm-Message-State: APjAAAVtntoMuydmYwW6xq6A3bJFJXsRWCBxj+jNUiKGplPG3SPnqT/8
-        Z4xv2P7bHdhVRg4IPRfqyFY=
-X-Google-Smtp-Source: APXvYqxuuRtB5b7Haj82wQnvqoMmLrAwjbw31GxEqNwQjrkFp/Jcsq7AShDUpTeK0l3PgOiWlsi7qg==
-X-Received: by 2002:a1c:9a52:: with SMTP id c79mr7645826wme.127.1576616611180;
-        Tue, 17 Dec 2019 13:03:31 -0800 (PST)
-Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id i5sm37856wml.31.2019.12.17.13.03.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 17 Dec 2019 13:03:30 -0800 (PST)
-From:   Doug Berger <opendmb@gmail.com>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>
-Subject: [PATCH net-next 7/8] net: bcmgenet: Be drop monitor friendly while re-allocating headroom
-Date:   Tue, 17 Dec 2019 13:02:28 -0800
-Message-Id: <1576616549-39097-8-git-send-email-opendmb@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576616549-39097-1-git-send-email-opendmb@gmail.com>
-References: <1576616549-39097-1-git-send-email-opendmb@gmail.com>
+        Tue, 17 Dec 2019 16:04:06 -0500
+Received: from mga04.intel.com ([192.55.52.120]:15675 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728527AbfLQVDp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 16:03:45 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 13:03:44 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,326,1571727600"; 
+   d="scan'208";a="240561082"
+Received: from smcdonal-mobl2.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.255.83.42])
+  by fmsmga004.fm.intel.com with ESMTP; 17 Dec 2019 13:03:43 -0800
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: [PATCH v5 16/17] soundwire: intel_init: use EXPORT_SYMBOL_NS
+Date:   Tue, 17 Dec 2019 15:03:13 -0600
+Message-Id: <20191217210314.20410-17-pierre-louis.bossart@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191217210314.20410-1-pierre-louis.bossart@linux.intel.com>
+References: <20191217210314.20410-1-pierre-louis.bossart@linux.intel.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During bcmgenet_put_tx_csum() make sure we differentiate a SKB
-headroom re-allocation failure from the normal swap and replace
-path.
+Make sure all symbols in this soundwire-intel-init module are exported
+with a namespace.
 
-Signed-off-by: Doug Berger <opendmb@gmail.com>
+The MODULE_IMPORT_NS will be used in Intel/SOF HDaudio modules to be
+posted in a separate series.
+
+Namespaces are only introduced for the Intel parts of the SoundWire
+code at this time, in future patches we should also add namespaces for
+Cadence parts and the SoundWire core.
+
+Suggested-by: Greg KH <gregkh@linuxfoundation.org>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 ---
- drivers/net/ethernet/broadcom/genet/bcmgenet.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/soundwire/intel_init.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index b751fa76d0b0..0280e76bb60f 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -1499,11 +1499,12 @@ static struct sk_buff *bcmgenet_put_tx_csum(struct net_device *dev,
- 		 * enough headroom for us to insert 64B status block.
- 		 */
- 		new_skb = skb_realloc_headroom(skb, sizeof(*status));
--		dev_kfree_skb(skb);
- 		if (!new_skb) {
-+			dev_kfree_skb_any(skb);
- 			dev->stats.tx_dropped++;
- 			return NULL;
- 		}
-+		dev_consume_skb_any(skb);
- 		skb = new_skb;
- 	}
+diff --git a/drivers/soundwire/intel_init.c b/drivers/soundwire/intel_init.c
+index 391e8763638f..0f83907e1bc7 100644
+--- a/drivers/soundwire/intel_init.c
++++ b/drivers/soundwire/intel_init.c
+@@ -159,7 +159,7 @@ void sdw_intel_enable_irq(void __iomem *mmio_base, bool enable)
  
+ 	writel(val, mmio_base + HDA_DSP_REG_ADSPIC2);
+ }
+-EXPORT_SYMBOL(sdw_intel_enable_irq);
++EXPORT_SYMBOL_NS(sdw_intel_enable_irq, SOUNDWIRE_INTEL_INIT);
+ 
+ static struct sdw_intel_ctx
+ *sdw_intel_probe_controller(struct sdw_intel_res *res)
+@@ -346,7 +346,7 @@ int sdw_intel_acpi_scan(acpi_handle *parent_handle,
+ 
+ 	return sdw_intel_scan_controller(info);
+ }
+-EXPORT_SYMBOL(sdw_intel_acpi_scan);
++EXPORT_SYMBOL_NS(sdw_intel_acpi_scan, SOUNDWIRE_INTEL_INIT);
+ 
+ /**
+  * sdw_intel_probe() - SoundWire Intel probe routine
+@@ -362,7 +362,7 @@ struct sdw_intel_ctx
+ {
+ 	return sdw_intel_probe_controller(res);
+ }
+-EXPORT_SYMBOL(sdw_intel_probe);
++EXPORT_SYMBOL_NS(sdw_intel_probe, SOUNDWIRE_INTEL_INIT);
+ 
+ /**
+  * sdw_intel_startup() - SoundWire Intel startup
+@@ -373,7 +373,7 @@ int sdw_intel_startup(struct sdw_intel_ctx *ctx)
+ {
+ 	return sdw_intel_startup_controller(ctx);
+ }
+-EXPORT_SYMBOL(sdw_intel_startup);
++EXPORT_SYMBOL_NS(sdw_intel_startup, SOUNDWIRE_INTEL_INIT);
+ /**
+  * sdw_intel_exit() - SoundWire Intel exit
+  * @ctx: SoundWire context allocated in the probe
+@@ -386,7 +386,7 @@ void sdw_intel_exit(struct sdw_intel_ctx *ctx)
+ 	driver_unregister(&intel_sdw_driver.driver);
+ 	kfree(ctx);
+ }
+-EXPORT_SYMBOL(sdw_intel_exit);
++EXPORT_SYMBOL_NS(sdw_intel_exit, SOUNDWIRE_INTEL_INIT);
+ 
+ MODULE_LICENSE("Dual BSD/GPL");
+ MODULE_DESCRIPTION("Intel Soundwire Init Library");
 -- 
-2.7.4
+2.20.1
 
