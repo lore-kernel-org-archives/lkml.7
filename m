@@ -2,105 +2,173 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A03C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:26:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 258E0C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FE59207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:26:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDF302082E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:26:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WnSGRRC0"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="b1/Epmkc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727462AbfLQL0r (ORCPT
+        id S1727498AbfLQL0x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 06:26:47 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:53884 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbfLQL0r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 06:26:47 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBHBQh7t095669;
-        Tue, 17 Dec 2019 05:26:43 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576582003;
-        bh=UcXYwCK20UsHhTPz8x7aYSI30oLjPmwYTl2MyT+hcGE=;
-        h=From:To:CC:Subject:Date;
-        b=WnSGRRC0w7Smlfn1eNmhbWeevy4dBEcqHLZznmKghrdmTZza8ERysPrvPnOXkBz6q
-         JRr/ff/Vl+C9g/d66j6+IJDCYui1N6Ps1cS2HxWFpF33DkbpD9seLxx1b7DQ1SPoWA
-         PjgUIUFM1uOLnVtu7CMJuZ8ZNl7ozSk3MIuweCLA=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBHBQh2S066437
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 17 Dec 2019 05:26:43 -0600
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
- Dec 2019 05:26:42 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 17 Dec 2019 05:26:42 -0600
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBHBQetu104681;
-        Tue, 17 Dec 2019 05:26:41 -0600
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <ulf.hansson@linaro.org>, <jh80.chung@samsung.com>
-CC:     <vkoul@kernel.org>, <linux-mmc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] mmc: dw_mmc: Use dma_request_chan() instead dma_request_slave_channel()
-Date:   Tue, 17 Dec 2019 13:26:56 +0200
-Message-ID: <20191217112656.30860-1-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.24.0
+        Tue, 17 Dec 2019 06:26:53 -0500
+Received: from mail.andi.de1.cc ([85.214.55.253]:33838 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726487AbfLQL0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 06:26:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
+        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/wfbz1AV7kpzq1k5a+twp8p7YU9BRi32n2mrSQtAFC0=; b=b1/EpmkcGl18jMSXshd7kdkGx
+        Qvo0SjjcRJcNtAqAgRtOrvridnm2QMIQ4bOkVLY1KUgfM/bC4PieQ1bIO9t38ZcU43q4+Fvk0S0xf
+        HwGonddVj1xOIqLMiz51EKQd1FqAEEH/hRcQdw4z6k5fAmdU7AKIABl1sPhuoMTzcG2Hg=;
+Received: from [2a02:790:ff:919:7ee9:d3ff:fe1f:a246] (helo=localhost)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1ihAzz-0007Ji-BQ; Tue, 17 Dec 2019 12:26:44 +0100
+Received: from [::1] (helo=localhost)
+        by eeepc with esmtp (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1ihAys-0001qH-56; Tue, 17 Dec 2019 12:25:34 +0100
+Date:   Tue, 17 Dec 2019 12:25:26 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
+        stefan@agner.ch, b.galvani@gmail.com, phh@phh.me,
+        letux-kernel@openphoenux.org
+Subject: Re: [PATCH v4 4/5] mfd: rn5t618: add more subdevices
+Message-ID: <20191217122526.7da85553@kemnade.info>
+In-Reply-To: <20191217080146.GE18955@dell>
+References: <20191211215409.32764-1-andreas@kemnade.info>
+        <20191211215409.32764-5-andreas@kemnade.info>
+        <20191216153106.GK2369@dell>
+        <20191216170000.022a4c31@kemnade.info>
+        <20191217080146.GE18955@dell>
+X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; i686-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/N9qDnK+quarkvTFp.jEyjS="; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dma_request_slave_channel() is a wrapper on top of dma_request_chan()
-eating up the error code.
+--Sig_/N9qDnK+quarkvTFp.jEyjS=
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-By using dma_request_chan() directly the driver can support deferred
-probing against DMA.
+On Tue, 17 Dec 2019 08:01:46 +0000
+Lee Jones <lee.jones@linaro.org> wrote:
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- drivers/mmc/host/dw_mmc.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+> On Mon, 16 Dec 2019, Andreas Kemnade wrote:
+>=20
+> > On Mon, 16 Dec 2019 15:31:06 +0000
+> > Lee Jones <lee.jones@linaro.org> wrote:
+> >  =20
+> > > On Wed, 11 Dec 2019, Andreas Kemnade wrote:
+> > >  =20
+> > > > The RC5T619 has a RTC which is missing in the
+> > > > RN5T618. Add it as subdevice to prepare for their implementation
+> > > >=20
+> > > > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> > > > ---
+> > > > Changes in v3:
+> > > > - alignment cleanup
+> > > >  drivers/mfd/rn5t618.c | 16 ++++++++++++++--
+> > > >  1 file changed, 14 insertions(+), 2 deletions(-)
+> > > >=20
+> > > > diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
+> > > > index d78eb29b94a4..18d56a732b20 100644
+> > > > --- a/drivers/mfd/rn5t618.c
+> > > > +++ b/drivers/mfd/rn5t618.c
+> > > > @@ -22,6 +22,12 @@ static const struct mfd_cell rn5t618_cells[] =3D=
+ {
+> > > >  	{ .name =3D "rn5t618-wdt" },
+> > > >  };
+> > > > =20
+> > > > +static const struct mfd_cell rc5t619_cells[] =3D {
+> > > > +	{ .name =3D "rn5t618-regulator" },
+> > > > +	{ .name =3D "rc5t619-rtc" },
+> > > > +	{ .name =3D "rn5t618-wdt" },
+> > > > +};
+> > > > +
+> > > >  static bool rn5t618_volatile_reg(struct device *dev, unsigned int =
+reg)
+> > > >  {
+> > > >  	switch (reg) {
+> > > > @@ -173,8 +179,14 @@ static int rn5t618_i2c_probe(struct i2c_client=
+ *i2c,
+> > > >  		return ret;
+> > > >  	}
+> > > > =20
+> > > > -	ret =3D devm_mfd_add_devices(&i2c->dev, -1, rn5t618_cells,
+> > > > -				   ARRAY_SIZE(rn5t618_cells), NULL, 0, NULL);
+> > > > +	if (priv->variant =3D=3D RC5T619)
+> > > > +		ret =3D devm_mfd_add_devices(&i2c->dev, -1, rc5t619_cells,   =20
+> > >=20
+> > > Ref: The "-1", please use this as an opportunity to use the defines.
+> > >  =20
+BTW: of course I can clean that up.
 
-diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-index fc9d4d000f97..bc5278ab5707 100644
---- a/drivers/mmc/host/dw_mmc.c
-+++ b/drivers/mmc/host/dw_mmc.c
-@@ -833,12 +833,14 @@ static int dw_mci_edmac_init(struct dw_mci *host)
- 	if (!host->dms)
- 		return -ENOMEM;
- 
--	host->dms->ch = dma_request_slave_channel(host->dev, "rx-tx");
--	if (!host->dms->ch) {
-+	host->dms->ch = dma_request_chan(host->dev, "rx-tx");
-+	if (IS_ERR(host->dms->ch)) {
-+		int ret = PTR_ERR(host->dms->ch);
-+
- 		dev_err(host->dev, "Failed to get external DMA channel.\n");
- 		kfree(host->dms);
- 		host->dms = NULL;
--		return -ENXIO;
-+		return ret;
- 	}
- 
- 	return 0;
--- 
-Peter
+> > > > +					   ARRAY_SIZE(rc5t619_cells),
+> > > > +					   NULL, 0, NULL);
+> > > > +	else   =20
+> > >=20
+> > > Are you sure it's not possible for 'variant' to be an unsupported
+> > > device?
+> > >  =20
+> > Well, does it change the behavior for devices other than the rc5t619?
+> > I do not think so. If the mfd driver is bound to unsupported devices,
+> > rn5t618_of_match is wrong. =20
+>=20
+> Right, and can you catch that?
+>=20
+Well, maybe we don't get each other. RC5T619 has an RTC.
+If I understand the code right, priv->variant is set to RC5T619.
+if there is compatible =3D "ricoh,rc5t619" in the device tree.
+So in that and only in that case I have an extended subdevice list,
+which includes the RTC subdevice instead of only regulator and wdt.
+For everything else I do not touch it.
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+So now you have doubts wether the existing regulator and watchdog subdevice
+drivers (which I do not touch) works with the other two variants (RN5T618=20
+and RN5T567) and want me to check that again as part of my work to get
+RTC support for RC5T619 in?=20
 
+Regards,
+Andreas
+
+--Sig_/N9qDnK+quarkvTFp.jEyjS=
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl34uyYACgkQl4jFM1s/
+ye+6kQ//Y2nQnAR5//z75aAA5b+jYm0Axk1msKCd9ScF1cndhaTE2V8I4yRLG3ox
+jhvRoxk9N5wWGV3Db4vR6DJlUJPmqNpwuLndyJiiBYbTxU2nuY2EthwPmyYh0xf9
+ByzDyU7nrUabU5dSPNVpm+nGj4iwAQZZbNUtDpbhAe7v47REgLkMPUs4Y7oQk+S/
+nRoZRcrZfArQvxu2sbqSvghDuakESjMXLO8suMROxH5JaJuM0X8JhpHbY+AhcPYb
+eTHLs0nVA8zHqYCDfKgTJYg1DztHzg1nz1M+XVysVvz0U4CGkBnatBqkSb/LFtcl
+DsW9jCX2p0km162vsbEEcV0MAaFGHhNOlsiIm4VjIcPgIg7iT+poy0EXf/2vmwPl
+qeaTCb6aPtWjnRiAGn34i9RmoSauz/a2TlBLlgRY/bS4ivu79GpfgU3+uA4C1Rqo
+puyOsgKkk8nZsRLtNrkLLScbrg91bkL56BpDERhOn8CWqPL/9ygh+OEwpGYYhNeM
+wpVbUD/2iK6qF3hXQPk/k7Ljxn2PibJJ7iYOavTFCHT06f8mDgodUYm6zhbm4t8S
+QgJ2mrS5Uw7322cQyMFJe1F2VeEMjuU2wV3I8z/1dy9gBoDVt/oWpGZf6KzBiXvV
+BvQ0fJHirPfYXKiM0PHrlFMt2dgYxM++MdVIEZ5DB5jzGcyBomQ=
+=Aicg
+-----END PGP SIGNATURE-----
+
+--Sig_/N9qDnK+quarkvTFp.jEyjS=--
