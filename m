@@ -2,181 +2,162 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B10C2D0C5
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30DA6C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B2B52176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F17D0207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:59:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=openedev.com header.i=@openedev.com header.b="gBTyf2nP"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="HcfQwS/g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbfLQH7S (ORCPT
+        id S1726801AbfLQH7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 02:59:18 -0500
-Received: from se15e.web-hosting.com ([198.54.122.209]:59635 "EHLO
-        se15e.web-hosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbfLQH7R (ORCPT
+        Tue, 17 Dec 2019 02:59:42 -0500
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:48474 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726072AbfLQH7l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 02:59:17 -0500
-Received: from [68.65.123.203] (helo=server153.web-hosting.com)
-        by se15.registrar-servers.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <akash@openedev.com>)
-        id 1ih7l4-0002DN-R6; Mon, 16 Dec 2019 23:59:09 -0800
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=openedev.com; s=default; h=References:In-Reply-To:Message-Id:Date:Subject:
-        Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=diOgM+1bEFTCStq0UeCQsuK8N2c5AS/suGJiaKd7qsU=; b=gBTyf2nP2LL9YXnxdGBwJQCDY
-        rUG9U4ZtV2zu5fEnIaDyZSCWJewbmuOjZm+77bZxtWH0peTGJlsfIG7v46+eGsLUCk+303YmG8EFH
-        YQb8VB/UDqcbETISz5g/TpY010Iu+GYMR0tp2fqZsztVIfcRRrGbwBO6FmbZ/D6X7Lq/H6MWhKbvL
-        uBguk72zOaKAdMionpcrnd4qBYtUg7eRMYDA8dQ/1wMUmlEah0PxbjqbeLSll2W8PIGC3I2ysgzlK
-        qBTMUSHNBak1pDeZFxHkP1lMm8xWldrGDgC6Qtze810vzVY9YhaRACBORzf7s7B9+8TIsC4bqjzI9
-        U2icuvKtA==;
-Received: from nat-inn.mentorg.com ([192.94.34.34]:44656 helo=akash-vm.inn-wifi.mentorg.com)
-        by server153.web-hosting.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <akash@openedev.com>)
-        id 1ih7kz-003CWq-MW; Tue, 17 Dec 2019 02:59:06 -0500
-From:   Akash Gajjar <akash@openedev.com>
-To:     heiko@sntech.de
-Cc:     jagan@openedev.com, tom@radxa.com, kever.yang@rock-chips.com,
-        Akash Gajjar <akash@openedev.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH 2/2] phy: phy-rockchip-inno-usb2: add usb2-phy support for RK3308 SoC
-Date:   Tue, 17 Dec 2019 13:27:15 +0530
-Message-Id: <20191217075722.11646-3-akash@openedev.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191217075722.11646-1-akash@openedev.com>
-References: <20191217075722.11646-1-akash@openedev.com>
-X-OutGoing-Spam-Status: No, score=-1.0
-X-Originating-IP: 68.65.123.203
-X-SpamExperts-Domain: nctest.net
-X-SpamExperts-Username: whmcalls3
-Authentication-Results: registrar-servers.com; auth=pass (login) smtp.auth=whmcalls3@nctest.net
-X-SpamExperts-Outgoing-Class: ham
-X-SpamExperts-Outgoing-Evidence: Combined (0.02)
-X-Recommended-Action: accept
-X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0c2Pj46HODYmpAMVAv0J1pOpSDasLI4SayDByyq9LIhV5dqwct359/CV
- xZICQFYJSkTNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3Kk502M/hntTzIKfCMISdhHQGg
- t7nAtP8WjkKKy9v/mXRkty7kshl0qfjNTiHz6D+lTs1OFZCJnqICuBP35KwNAmisedSHrV8USIJy
- ZKu4Q0eBPJf4fBJswECxJoMRbkC3SF2DuTVJlHUR2BtY80W8dG60QfvEMzMeJ6Rw9B2oZpcFefeT
- nKVTea+Z7pU/97kaMRINxtYvoDPmxBEirO18GFgbEtxGbfWvsckv3Tqu01KJGGjsNnBvKhksFPgp
- Ju7VRAUaZyvXYsGqun+gsnRrw40vpN++k/mRssszRiW/L+aVL5CXNSk/AzmiJysF8dLHRyryw85/
- rAZb27+VZ3biGtaW8qQvbDNe5IP3ZP124DrwHHYNWMFQ3rxmq0HUMfG+c6Hob6r/eV86ndcww4rw
- IzAvtpjiIeRlwI+LpEJwnKenvHgTJm4rUod0ueKDsCR8lJjuWToZaiaFIvhnz77Y+k6uhs/Q2KE1
- Lby4XA9T8Bmj3saNZ0eUp3kqVmG1d7Vk0NCCILyLLaQ9eQTOszvxQTkjHv8L1XCo8f/lClCdnQEw
- egH725V8o9NmtwsOgq00IT3zX/Zzh6cpDYUl6c6Y0/5r1yWIc3jXLVN/s8cHerYtW55yLfDen/wr
- oS11FXNac8XwfSk5a6wPi3PS+6vBhpISIqK1GdyQE0WyMBODOy30v1Op0AWqhD2stjbU32pojN4X
- 8zAZfIZ8CjT9GInTMPN38Uyq3PQ8yDScr+8662B3D4UT/bdQYZMqtJwVgGaPV8GdcLPofFI165s+
- Fi8oQNCwxvxuh+xtfMocbqMn/Qow8uvbAccZ4WWjZTIX9MhLKTjECb0PwpN4olPuA0AI93gbcx8Z
- jKXXCSz+ofgapDj5Myrxgk8zlzkZR8hg4/tjCwvQy21RlJtzRtySOaj2KPqMwd2r4+trrKXkWu7f
- x8D6z8uZdl1/53Cf3G9hN76KRnxfIvD0xWRSasqqxNnWfwc3A8r6JfNzxEm+Adh5Il9bsJFhaqar
- dOLrAnCsmfJ3HSl/Lt1pDXWpU9yav05pkiyHpQ9cOADsvE/xCV8jXdQF5Hew752uew/O2uwTJhUB
- Z3+qi/5h4DZCfPGWm7MoPBOavov9A2tPRpxsJ/Ez2OT1H/aAwarQpYDOYx/6JtUOkfNK1xk8kTd1
- Ny+HuiOkN2mAdCO+RVfxIo7mcAZ9GMPEl9B+0hmmdOnbSMz7Y9ZIgfFrL3927nPLXidUYhzTL/6b
- zJY8ZLbVls9GTjTyP2j0DLjHCOlbYrvqvTn3lmAWHSgj8REt1LPAYpi/k8cuog==
-X-Report-Abuse-To: spam@se16.registrar-servers.com
+        Tue, 17 Dec 2019 02:59:41 -0500
+Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
+  Eugen.Hristev@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="Eugen.Hristev@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa5.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa5.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: cyMCWzrN6h2l6bDxjeHh/cByJ3EWmOy/j+coNbeXZ8Kd/kZWcQumwNRDLc7vds1KaRZs/X8JBf
+ ZenltYZFh4IJvCp9wHgX/JRthUBEF2MbM+Btd/iYHGh95tD80EGR2Zg4qDK4nusNL3neE902qh
+ zjA/eNkWumZ+KX1mG8xA16fv48ZfdMks7q1k1NbOZyBIc4xhNHgOVhVWDuOoYtyRCwvOqasNZE
+ bKlUJ0YxcqXbXcxGEFbqJrVuuYTsnGDU+UUn16ptI2dhaZ70FLzmuGwqZhJT9edqjQraSyeSaQ
+ I3A=
+X-IronPort-AV: E=Sophos;i="5.69,324,1571727600"; 
+   d="scan'208";a="59239123"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 17 Dec 2019 00:59:40 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 17 Dec 2019 00:59:42 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Tue, 17 Dec 2019 00:59:39 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BUl751Zgh5RhWX5CXiZb+k1d6d4PCpqE5t57MkOZuP9jUhsn1M9ikZxeLsg8JZ4kEI2JTDrf9qHf7B/yJLM5hoAgiviHq3x45+WEn52ean2AHh9QDuqoDz2cytMp+mzr1w5Uy2DZ9A9kwiORsZl0bPQkVYDQBjVHSISUVblRy2Ui6YbmgPxPeEA4G8zWZBu631u5sHoexeLg3mmnu/DsN5gTCTlj7SP+Ojd1a19Uh7eATXSYv2PTse8aj6suM+s49I6Tu/GrTRDHPDBWjEx/XpnYcM4i8bs24GJn38ElEdP26PCqSsiH/xJuxoez2tma3mA/mGkLaPdHIwBOkYYxyA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BltOCjsnQ+CYpVZ1XekLJqThIT44rFTQB2ZX/wHBjoY=;
+ b=cAsoBu6fO+GNZpZR6wVtOwU7GUUWJJHJos1jBMdeKLLGjyJpR6L94MQrEo3qE/L+GZkeUseS0O2AsE9m7mwNBjrfuGYwNDPXKhLA9yzdoz2PE2nBN8TKlx7LR14/MNSC1uDEp+GeMM+hTzYElZZM7SnIJrWhD/UzmN846VebC8bTQTtPiFtFZGMUPRDia5XXpjoT6yWkBfCnht6RVo2Zl0Q3WHG9mS0bMBjSBftWr/C/j6568mQb25mNkWyT5mrGf87U531UrhHe2Bcp/5ScXcQHRTPGAtK9+6GXbbHZkOhZgQnW9vrJ6S/tHlxSf2VkhepZ3nAvLXAZig8M1cLPdg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BltOCjsnQ+CYpVZ1XekLJqThIT44rFTQB2ZX/wHBjoY=;
+ b=HcfQwS/gvXSR9YLSoLzb9+o+Nt2i8G9ZmRnYlxokeLdgGIf9b65QcSQSq/OI5ABSY+W7DI58XTXVhWJC7MxKHDFayxz28+rLiEGz3cYb+T9Z3kpcrkOijbmht1pRBYK1cOwUvRG2BDxQATw6f1T6+tWvzl+lkSdFYQIXQ5Gvk5c=
+Received: from DM5PR11MB1242.namprd11.prod.outlook.com (10.168.108.8) by
+ DM5PR11MB1993.namprd11.prod.outlook.com (10.168.107.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.17; Tue, 17 Dec 2019 07:59:35 +0000
+Received: from DM5PR11MB1242.namprd11.prod.outlook.com
+ ([fe80::9039:e0e8:9032:20c1]) by DM5PR11MB1242.namprd11.prod.outlook.com
+ ([fe80::9039:e0e8:9032:20c1%12]) with mapi id 15.20.2538.019; Tue, 17 Dec
+ 2019 07:59:34 +0000
+From:   <Eugen.Hristev@microchip.com>
+To:     <peter.ujfalusi@ti.com>, <jic23@kernel.org>
+CC:     <vkoul@kernel.org>, <Ludovic.Desroches@microchip.com>,
+        <linux-iio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iio: adc: at91: Use dma_request_chan() instead
+ dma_request_slave_channel()
+Thread-Topic: [PATCH] iio: adc: at91: Use dma_request_chan() instead
+ dma_request_slave_channel()
+Thread-Index: AQHVtK62ARE9EHW0SkuabQ9x+H8R5Ke99mWA
+Date:   Tue, 17 Dec 2019 07:59:34 +0000
+Message-ID: <102e71da-8b9c-8528-3bec-b4a22895fb44@microchip.com>
+References: <20191217075043.23539-1-peter.ujfalusi@ti.com>
+In-Reply-To: <20191217075043.23539-1-peter.ujfalusi@ti.com>
+Accept-Language: en-US, ro-RO
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 20bab96c-8d2c-4511-1abe-08d782c70e86
+x-ms-traffictypediagnostic: DM5PR11MB1993:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR11MB19930214EE9715101DB2DC69E8500@DM5PR11MB1993.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 02543CD7CD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(136003)(396003)(346002)(376002)(189003)(199004)(66446008)(64756008)(66946007)(66556008)(66476007)(36756003)(76116006)(316002)(54906003)(26005)(110136005)(71200400001)(81166006)(2906002)(6512007)(86362001)(6506007)(2616005)(53546011)(31696002)(5660300002)(478600001)(31686004)(186003)(8936002)(91956017)(8676002)(81156014)(4326008)(6486002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB1993;H:DM5PR11MB1242.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: rlqCXOo33f6YZlH18pxM005qbLsOmxdEQbbAQ3Mv6IrmhCOBhJ57yb3ttfUUJka6d8MUgyduv0lnRE1K0svHOIKSRyGncBMBCpYaoOxTMnvcyCqAaQb0puO2kL1B1kyWKsZ1wpIV8g+ACfLrcrUTl7i+R1u7IASLfxIgLvLOfyJL3ufKSgBoBkK/ks2CNzB/kkZuH1+sbAIMh5U9av4p/zCxN9qqpOtOI2kSwY2W4KLYv7k9Ge4iB1qRDa4e6aJkjNeDsr/l/8ENvj95C+bOGoLKU/4fdY6tpnUIokTHwiQQp32CQ+GugsNTTuSKbEt3dXb4cvHui4pAPmnOEC50t9eJmwL3/JXRdGjkR7uOJNIGcDzObPCcruivYaiSxbpUEFKv/vqfHcvRWoycTdZd5ijiL8fwZvSiKlAcC1cXWK+F/vwqcVxi3FUBhQ1U6u0a
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D2D76EEC08250F4591517B12BACDF2B7@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 20bab96c-8d2c-4511-1abe-08d782c70e86
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Dec 2019 07:59:34.8887
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Wryc3MqQY86XP5M3g3avWNnG72BjcoOLPqDf9kGkLHtnKj0ApRefMCDv0pGyCLtb5SemxOOtDH7cdG0e5AqTyc02k+3p+GlrwDMUEqSMxAE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1993
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds usb2-phy support for RK3308 SoCs and amend phy Documentation.
-
-Signed-off-by: Akash Gajjar <akash@openedev.com>
----
- .../bindings/phy/phy-rockchip-inno-usb2.txt   |  1 +
- drivers/phy/rockchip/phy-rockchip-inno-usb2.c | 44 +++++++++++++++++++
- 2 files changed, 45 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-index 541f5298827c..e978aad34d3f 100644
---- a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-+++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-@@ -5,6 +5,7 @@ Required properties (phy (parent) node):
- 	* "rockchip,px30-usb2phy"
- 	* "rockchip,rk3228-usb2phy"
- 	* "rockchip,rk3328-usb2phy"
-+	* "rockchip,rk3308-usb2phy"
- 	* "rockchip,rk3366-usb2phy"
- 	* "rockchip,rk3399-usb2phy"
- 	* "rockchip,rv1108-usb2phy"
-diff --git a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
-index 680cc0c8825c..9fe817486ea1 100644
---- a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
-+++ b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
-@@ -1256,6 +1256,49 @@ static const struct rockchip_usb2phy_cfg rk3228_phy_cfgs[] = {
- 	{ /* sentinel */ }
- };
- 
-+static const struct rockchip_usb2phy_cfg rk3308_phy_cfgs[] = {
-+	{
-+		.reg = 0x100,
-+		.num_ports	= 2,
-+		.clkout_ctl	= { 0x0108, 4, 4, 1, 0 },
-+		.port_cfgs	= {
-+			[USB2PHY_PORT_OTG] = {
-+				.phy_sus	= { 0x0100, 8, 0, 0, 0x1d1 },
-+				.bvalid_det_en	= { 0x3020, 2, 2, 0, 1 },
-+				.bvalid_det_st	= { 0x3024, 2, 2, 0, 1 },
-+				.bvalid_det_clr = { 0x3028, 2, 2, 0, 1 },
-+				.ls_det_en	= { 0x3020, 0, 0, 0, 1 },
-+				.ls_det_st	= { 0x3024, 0, 0, 0, 1 },
-+				.ls_det_clr	= { 0x3028, 0, 0, 0, 1 },
-+				.utmi_avalid	= { 0x0120, 10, 10, 0, 1 },
-+				.utmi_bvalid	= { 0x0120, 9, 9, 0, 1 },
-+				.utmi_ls	= { 0x0120, 5, 4, 0, 1 },
-+			},
-+			[USB2PHY_PORT_HOST] = {
-+				.phy_sus	= { 0x0104, 8, 0, 0, 0x1d1 },
-+				.ls_det_en	= { 0x3020, 1, 1, 0, 1 },
-+				.ls_det_st	= { 0x3024, 1, 1, 0, 1 },
-+				.ls_det_clr	= { 0x3028, 1, 1, 0, 1 },
-+				.utmi_ls	= { 0x120, 17, 16, 0, 1 },
-+				.utmi_hstdet	= { 0x120, 19, 19, 0, 1 }
-+			}
-+		},
-+		.chg_det = {
-+			.opmode		= { 0x0100, 3, 0, 5, 1 },
-+			.cp_det		= { 0x0120, 24, 24, 0, 1 },
-+			.dcp_det	= { 0x0120, 23, 23, 0, 1 },
-+			.dp_det		= { 0x0120, 25, 25, 0, 1 },
-+			.idm_sink_en	= { 0x0108, 8, 8, 0, 1 },
-+			.idp_sink_en	= { 0x0108, 7, 7, 0, 1 },
-+			.idp_src_en	= { 0x0108, 9, 9, 0, 1 },
-+			.rdm_pdwn_en	= { 0x0108, 10, 10, 0, 1 },
-+			.vdm_src_en	= { 0x0108, 12, 12, 0, 1 },
-+			.vdp_src_en	= { 0x0108, 11, 11, 0, 1 },
-+		},
-+	},
-+	{ /* sentinel */ }
-+};
-+
- static const struct rockchip_usb2phy_cfg rk3328_phy_cfgs[] = {
- 	{
- 		.reg = 0x100,
-@@ -1425,6 +1468,7 @@ static const struct rockchip_usb2phy_cfg rv1108_phy_cfgs[] = {
- static const struct of_device_id rockchip_usb2phy_dt_match[] = {
- 	{ .compatible = "rockchip,px30-usb2phy", .data = &rk3328_phy_cfgs },
- 	{ .compatible = "rockchip,rk3228-usb2phy", .data = &rk3228_phy_cfgs },
-+	{ .compatible = "rockchip,rk3308-usb2phy", .data = &rk3308_phy_cfgs },
- 	{ .compatible = "rockchip,rk3328-usb2phy", .data = &rk3328_phy_cfgs },
- 	{ .compatible = "rockchip,rk3366-usb2phy", .data = &rk3366_phy_cfgs },
- 	{ .compatible = "rockchip,rk3399-usb2phy", .data = &rk3399_phy_cfgs },
--- 
-2.17.1
-
+DQoNCk9uIDE3LjEyLjIwMTkgMDk6NTAsIFBldGVyIFVqZmFsdXNpIHdyb3RlOg0KDQo+IGRtYV9y
+ZXF1ZXN0X3NsYXZlX2NoYW5uZWwoKSBpcyBhIHdyYXBwZXIgb24gdG9wIG9mIGRtYV9yZXF1ZXN0
+X2NoYW4oKQ0KPiBlYXRpbmcgdXAgdGhlIGVycm9yIGNvZGUuDQo+IA0KPiBCeSB1c2luZyBkbWFf
+cmVxdWVzdF9jaGFuKCkgZGlyZWN0bHkgdGhlIGRyaXZlciBjYW4gc3VwcG9ydCBkZWZlcnJlZA0K
+PiBwcm9iaW5nIGFnYWluc3QgRE1BLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogUGV0ZXIgVWpmYWx1
+c2kgPHBldGVyLnVqZmFsdXNpQHRpLmNvbT4NCj4gLS0tDQo+ICAgZHJpdmVycy9paW8vYWRjL2F0
+OTEtc2FtYTVkMl9hZGMuYyB8IDYgKysrLS0tDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0
+aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCg0KSGkgUGV0ZXIsDQoNClRoYW5rIHlvdSBmb3IgdGhl
+IHBhdGNoLg0KTml0cGljayA6IGF0OTEgaXMgYW5vdGhlciBkcml2ZXIgKG9sZCBvbmUgZm9yIGRp
+ZmZlcmVudCBwbGF0Zm9ybXMpLCBzbyANCmNhbiB5b3UgcGxlYXNlIGNoYW5nZSB0aGUgY29tbWl0
+IG9uZWxpbmUgdG8gaWlvOiBhZGM6IGF0OTEtc2FtYTVkMl9hZGM6IA0KdG8gbm90IGJlIGNvbmZ1
+c2VkIGFib3V0IHdoaWNoIGRyaXZlciBpcyBhZmZlY3RlZC4NCg0KVGhhbmtzICENCkV1Z2VuDQoN
+Cj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lpby9hZGMvYXQ5MS1zYW1hNWQyX2FkYy5jIGIv
+ZHJpdmVycy9paW8vYWRjL2F0OTEtc2FtYTVkMl9hZGMuYw0KPiBpbmRleCBlMTg1MGYzZDVjZjMu
+LmE1Yzc3NzEyMjdkNSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9paW8vYWRjL2F0OTEtc2FtYTVk
+Ml9hZGMuYw0KPiArKysgYi9kcml2ZXJzL2lpby9hZGMvYXQ5MS1zYW1hNWQyX2FkYy5jDQo+IEBA
+IC0xNDQ0LDEwICsxNDQ0LDEwIEBAIHN0YXRpYyB2b2lkIGF0OTFfYWRjX2RtYV9pbml0KHN0cnVj
+dCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICAgICAgICAgIGlmIChzdC0+ZG1hX3N0LmRtYV9j
+aGFuKQ0KPiAgICAgICAgICAgICAgICAgIHJldHVybjsNCj4gDQo+IC0gICAgICAgc3QtPmRtYV9z
+dC5kbWFfY2hhbiA9IGRtYV9yZXF1ZXN0X3NsYXZlX2NoYW5uZWwoJnBkZXYtPmRldiwgInJ4Iik7
+DQo+IC0NCj4gLSAgICAgICBpZiAoIXN0LT5kbWFfc3QuZG1hX2NoYW4pICB7DQo+ICsgICAgICAg
+c3QtPmRtYV9zdC5kbWFfY2hhbiA9IGRtYV9yZXF1ZXN0X2NoYW4oJnBkZXYtPmRldiwgInJ4Iik7
+DQo+ICsgICAgICAgaWYgKElTX0VSUihzdC0+ZG1hX3N0LmRtYV9jaGFuKSkgIHsNCj4gICAgICAg
+ICAgICAgICAgICBkZXZfaW5mbygmcGRldi0+ZGV2LCAiY2FuJ3QgZ2V0IERNQSBjaGFubmVsXG4i
+KTsNCj4gKyAgICAgICAgICAgICAgIHN0LT5kbWFfc3QuZG1hX2NoYW4gPSBOVUxMOw0KPiAgICAg
+ICAgICAgICAgICAgIGdvdG8gZG1hX2V4aXQ7DQo+ICAgICAgICAgIH0NCj4gDQo+IC0tDQo+IFBl
+dGVyDQo+IA0KPiBUZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIy
+LCAwMDE4MCBIZWxzaW5raS4NCj4gWS10dW5udXMvQnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290
+aXBhaWtrYS9Eb21pY2lsZTogSGVsc2lua2kNCj4gDQo+IA==
