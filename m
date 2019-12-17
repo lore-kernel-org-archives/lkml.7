@@ -2,123 +2,145 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45246C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D99B5C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 170FE2067C
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:58:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B97221582
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:00:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="VYt6Pe/i"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lpg5ySFz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfLQW6l (ORCPT
+        id S1726638AbfLQXAw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 17:58:41 -0500
-Received: from mta-p5.oit.umn.edu ([134.84.196.205]:53184 "EHLO
-        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbfLQW6k (ORCPT
+        Tue, 17 Dec 2019 18:00:52 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:46775 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725886AbfLQXAw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 17:58:40 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 47ctq41Rhvz9vKZK
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 22:58:40 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p5.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 7Tl8U5ki2QpB for <linux-kernel@vger.kernel.org>;
-        Tue, 17 Dec 2019 16:58:40 -0600 (CST)
-Received: from mail-yw1-f69.google.com (mail-yw1-f69.google.com [209.85.161.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 47ctq40Br3z9vBrd
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 16:58:40 -0600 (CST)
-Received: by mail-yw1-f69.google.com with SMTP id r189so4470731ywf.13
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 14:58:40 -0800 (PST)
+        Tue, 17 Dec 2019 18:00:52 -0500
+Received: by mail-ed1-f66.google.com with SMTP id m8so9372903edi.13;
+        Tue, 17 Dec 2019 15:00:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=o+DniVWRQRuuRULTt2ujrzvnukyX1kBCOSc7XPdFvCE=;
-        b=VYt6Pe/ibVhF8EwUqqP2ezD/BN0JKQLt50DbeCujZ7gLON92O9gMCRaGKpaSWEaTP4
-         GDDDjBBmQya7oN/wrQsp0uvpjtB74TjKXWiyU5x9Y12zN1fRY7ndAes0zEZ3GuEQB3qD
-         Gw3WWShH2yyJ9Q8U+Lro+3tdvjMWdxwQYJoMtY+X4jhTmNIBnhu4ObdUTDVYXoU7dJ4i
-         bQF331CLPi5BBk4MOOXSwDyG0t40V+Fy5hjshWeCbNJ+x8/bh2DJHus1DbvqeEFv59+/
-         Em05MaPtSXOI2qbLmg7T9U9aN0iaJxjsH7F/kAaIOP/UWyw+JwtLC92Vs1zb/yn4UbIU
-         WjIA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uKab++1jquwTpkqEiE5OldyM/+qvtHDYf7xzh93P2+s=;
+        b=Lpg5ySFzelJX55IDGnKbLQcNmqqT1F7WGvYkcp+yiVtwQA6MMj0rS998D4sRJomjsW
+         QWspWA7+UoQ8XOdSTfL9WocYFx7oUabDiNdlAnQEWAj8AFdoLG0F/N7H48MvlgxXRK8d
+         NguKwj9QkyygQsG2sjOJUH3MgqKqXrli4UR9Bw+7qkzQ+71/xGcDlIiHsGfKoLyJLgHe
+         lodUcKYQQeSsbObCUyalV4WQ0D7SxV5U/KCGVeS/9OeqFDxzfkx6zZOKfQc3cieFlvTb
+         tF03Y6zRk6VDXJWcELr2rLWra+5vSLXGLPsD9cElbKpSp7Hiza1MoCTx476A1qmTuC08
+         KITg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=o+DniVWRQRuuRULTt2ujrzvnukyX1kBCOSc7XPdFvCE=;
-        b=eJTKv2hwQeR5deZ6SGbfZQF/N92uggR3Z4h+oO9WY0K1Tzdnktou0iKOdCrHYg47vC
-         mVmbmPc9jYSNozZLceb8wUCTKdapeq7NM7nefuxNrE7A7NgQig3hh9MRY0FkhY7aMlTz
-         82m5O5hsgGRGTf8wOnvv5yu+PLAdwldFoVQQWHTp2c8tOal+9y85hQBduvDdcVpAtE0y
-         YJ+K2ZU4/hdfSMt5wuwMLeUfpkBi3752dap5iiHEbrL6ZyzJUFLa+9xc9y9Ip1vMRHPd
-         ZhjHN7lY2YFvlT2V6QVwgh7V3hPJVISt7Oz0vgyONmWT2iXkRB+Sz/GlzXA9Hco0q+fX
-         QW7Q==
-X-Gm-Message-State: APjAAAXSDLbE01a++vMde1YeGVWA8Qxbe4mWC2YiGSIt0pNvQDsOQUzZ
-        TUcmDkkymEERunG5a/u0T5gEurUt4uPuC6UWDdC5Hf7e04+Q34EUS0lAjV1ofJyMn2xhawxE5Wf
-        RAL9HmIsOlWtXQzD9JI063LCxXVXa
-X-Received: by 2002:a0d:d58d:: with SMTP id x135mr1006460ywd.3.1576623519535;
-        Tue, 17 Dec 2019 14:58:39 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzmX6D7gn9+9Ql2XJypQv6Pffkm1nQ5KJROMUeXRvP4hpQREmfGhm2eszWNkQ688r6A4W3lPQ==
-X-Received: by 2002:a0d:d58d:: with SMTP id x135mr1006450ywd.3.1576623519311;
-        Tue, 17 Dec 2019 14:58:39 -0800 (PST)
-Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
-        by smtp.gmail.com with ESMTPSA id e76sm140926ywe.25.2019.12.17.14.58.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 14:58:39 -0800 (PST)
-From:   Aditya Pakki <pakki001@umn.edu>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Vandana BN <bnvandana@gmail.com>,
-        =?UTF-8?q?Simon=20Sandstr=C3=B6m?= <simon@nikanor.nu>,
-        Madhumitha Prabakaran <madhumithabiw@gmail.com>,
-        Matt Sickler <Matt.Sickler@daktronics.com>,
-        Jeremy Sowden <jeremy@azazel.net>,
-        Bharath Vedartham <linux.bhar@gmail.com>,
-        Harsh Jain <harshjain32@gmail.com>, devel@driverdev.osuosl.org,
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=uKab++1jquwTpkqEiE5OldyM/+qvtHDYf7xzh93P2+s=;
+        b=A7PHiTDLKuhpHZ3zsfMz6uemK4zZiZEusop5p+HU+15MqCWQ26iivDQ/2lZ4mDl15n
+         IwoqMtSQRCLG4D0ninjt8R/zhZ+LlDifPcBxQmj3f3aZ+DnlrGf9N9B/j+DR/mFly28+
+         HSJD0efcOTeaefjZzCuElEuF+/hiGNLA64INF3AjxzS6n/4CqcG06q/MRhP2swoAWpjD
+         QugPV5z9MM4lmsZ6l2HCT1pkPE/g/07PqnAG5JTgCvqgU69dxLV4FAC/e1fFDSw0+ryB
+         +28V0BmqtAB6QLBIkViDMLZ7AhsBOXKEgn2lT9IqIFX+rQLccvYM6uxtug31pmKA85Um
+         Z3ZQ==
+X-Gm-Message-State: APjAAAV6t/25nukmVzofD8X46Xbya+N3sqO3yD8sb1ZZ8X01q/O1kl/J
+        qZsJJ5AGrYA9Yvv/V87wAJzpYzTi
+X-Google-Smtp-Source: APXvYqycOd7y+rvh8I73toqHYUSe8lA6sgDXzPp1y9cJvGce/xIhTdyKhQllrhYWoR+oSOS2lWhgmQ==
+X-Received: by 2002:a50:ed94:: with SMTP id h20mr195228edr.17.1576623649290;
+        Tue, 17 Dec 2019 15:00:49 -0800 (PST)
+Received: from [10.67.50.53] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id h16sm12858ejc.89.2019.12.17.15.00.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Dec 2019 15:00:48 -0800 (PST)
+Subject: Re: [PATCH net-next 8/8] net: bcmgenet: Add software counters to
+ track reallocations
+To:     Doug Berger <opendmb@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2] staging: kpc2000: remove unnecessary assertion on priv
-Date:   Tue, 17 Dec 2019 16:58:24 -0600
-Message-Id: <20191217225830.4018-1-pakki001@umn.edu>
-X-Mailer: git-send-email 2.20.1
+References: <1576616549-39097-1-git-send-email-opendmb@gmail.com>
+ <1576616549-39097-9-git-send-email-opendmb@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
+Message-ID: <393c61ac-9c79-ad14-52dc-2edcccc28fa9@gmail.com>
+Date:   Tue, 17 Dec 2019 15:00:46 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1576616549-39097-9-git-send-email-opendmb@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In kpc_dma_transfer(), the assertion that priv is NULL is never
-satisfied. The two callers of the function, dereference the priv
-pointer before the call is executed. This patch removes the
-unnecessary BUG_ON call.
+On 12/17/19 1:02 PM, Doug Berger wrote:
+> When inserting the TSB, keep track of how many times we had to do
+> it and if there was a failure in doing so, this helps profile the
+> driver for possibly incorrect headroom settings.
+> 
+> Signed-off-by: Doug Berger <opendmb@gmail.com>
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
----
-v1: Replace the recovery code by removing the assertion, as suggested
-by Greg Kroah-Hartman.
----
- drivers/staging/kpc2000/kpc_dma/fileops.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/staging/kpc2000/kpc_dma/fileops.c b/drivers/staging/kpc2000/kpc_dma/fileops.c
-index cb52bd9a6d2f..61d762535823 100644
---- a/drivers/staging/kpc2000/kpc_dma/fileops.c
-+++ b/drivers/staging/kpc2000/kpc_dma/fileops.c
-@@ -49,7 +49,6 @@ static int kpc_dma_transfer(struct dev_private_data *priv,
- 	u64 dma_addr;
- 	u64 user_ctl;
- 
--	BUG_ON(priv == NULL);
- 	ldev = priv->ldev;
- 	BUG_ON(ldev == NULL);
- 
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-2.20.1
-
+Florian
