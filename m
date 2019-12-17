@@ -5,54 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD0CC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 03:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C4AC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 03:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6256A2176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 03:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF20D2072B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 03:21:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TkZntt8f"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D6qNRxrN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727614AbfLQDVZ (ORCPT
+        id S1727654AbfLQDV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 22:21:25 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35054 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727592AbfLQDVW (ORCPT
+        Mon, 16 Dec 2019 22:21:29 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:40048 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727592AbfLQDV0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 22:21:22 -0500
-Received: by mail-pl1-f196.google.com with SMTP id g6so2794727plt.2
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 19:21:21 -0800 (PST)
+        Mon, 16 Dec 2019 22:21:26 -0500
+Received: by mail-pj1-f68.google.com with SMTP id s35so3904609pjb.7
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 19:21:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=sKpso3dYUpegkM+13TDZVLSc9HejGiHeDBGlLaBiNPU=;
-        b=TkZntt8fEmKw6hceaNO9bkAbi74L8qrJ0OFAzLrKVD5utQiR4HzeU6o/8ucDhZlH6C
-         njwJ21Q3JOKkRMBoXxWeV7/7ldlqmM0rmhMo04rGOIdrl9khww28BnfekRpilL/aLP2C
-         0FYhDqxL1CKVQmJc7ifSPfMbTo+ybynMjgdK8=
+        bh=w7BgC38Q++csLgKFC6p+4OJvyrlb3C/SOyZ7s22Frw0=;
+        b=D6qNRxrNiByaYF3P2krgxc9qaMsAGuWOVyPKI+3IaZScIOd1bmthdyxh6cUySj7BoJ
+         Gt7WM70dDxw55NQLonwaLHDv5sAiNSlwcxBtiFYufj7u47QEpb+59IChUhHUkRgUS5ku
+         +IedKtqVE5v5xywRdfu1HByIpKnlv1C6JO1ao=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=sKpso3dYUpegkM+13TDZVLSc9HejGiHeDBGlLaBiNPU=;
-        b=JnpH/SgioILw4BZcYm1p0F6Cwyvo2V2vJI6mYp2Hlp2h8pDqk7T1etX/EBHVrxKLpZ
-         Fr03Dwym7iYhu6ofsdgXKdOfqazrkMMIP14jBLiU4RIC99N6RMzDY0C8VrGC2+tUy6cj
-         Q/zfEBLovKnCWBjoqG4FNV3f/NZnJvp5jYGE9eQY0M4tdMbM25J85Q5CVw1JhymyjrLO
-         efhE2VdZYrZkodHhFDdgsxGopldPkJe1QSq/LbLJTirm2xOOit7ESFFQXln6xibP+yY+
-         EB+Ilck4HTwggNuiVyAixUzP261Y2LzAiGoh5eKw8UeC0+R4xxy8EKjr7UuuOVxChlY1
-         ctkg==
-X-Gm-Message-State: APjAAAW/bm3a3dpx61OXkip1eLIERmYX4BDp238dwqOhjL83Po5ztl54
-        HK85iuSMLhYV4QonIKoNYvM7uQ==
-X-Google-Smtp-Source: APXvYqxPugT4hclwDVA+EXjf2wIQk1iSgic+RebeA058Lav/MO7sUXve5wYCEQ0D7qGywpjHfB61Nw==
-X-Received: by 2002:a17:90a:c790:: with SMTP id gn16mr3487094pjb.76.1576552881605;
-        Mon, 16 Dec 2019 19:21:21 -0800 (PST)
+        bh=w7BgC38Q++csLgKFC6p+4OJvyrlb3C/SOyZ7s22Frw0=;
+        b=OjeVO2DaEynCdXfYtXASw7GPrFaLavkxPRgp3eK+/czREs149aavlStKbxrhNeoEjb
+         LRUu76Wbr8vZawLTdkF5UB7y88SpbVjzQqgDKe6GGv8RgyQmHILm4pJRbdvc7zhKhNfD
+         RLLomu+oYHVZghSQVeKhH8x4zS8xIh6OHlSTBPXImUqUCxDnx7AFZa7PDXDRk5ZpsOeO
+         tA6Gi3D2zRo/M5wG8E3vTjXyIGgOMrZJ4CQ2cGyXg+9Zdew8vmqCjBhXo8nhyBs84Q8k
+         qADscdiob7Z/rETXHINyIYa9+7l/uKMryRMb7yugCASGByyjGk9KpWE+umB039r8z+Nb
+         rEOA==
+X-Gm-Message-State: APjAAAVx10K6ecVKsYc1gPGJzWUadDAGDsmO9G80MtpZ4rvmKUV5yRHI
+        aqgRKMHP4wTBrM17joLPmoVbbRGXauI=
+X-Google-Smtp-Source: APXvYqzG2MAqV6YaHs0r4AKBZp8nz4G5wu16YR6deYslM0U/r044lJfXdUNlSJk7wL5nlXggt+GmlQ==
+X-Received: by 2002:a17:902:b418:: with SMTP id x24mr20126099plr.85.1576552885537;
+        Mon, 16 Dec 2019 19:21:25 -0800 (PST)
 Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:250d:e71d:5a0a:9afe])
-        by smtp.gmail.com with ESMTPSA id j3sm24387455pfi.8.2019.12.16.19.21.18
+        by smtp.gmail.com with ESMTPSA id j3sm24387455pfi.8.2019.12.16.19.21.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 19:21:21 -0800 (PST)
+        Mon, 16 Dec 2019 19:21:25 -0800 (PST)
 From:   Sergey Senozhatsky <senozhatsky@chromium.org>
 To:     Hans Verkuil <hans.verkuil@cisco.com>,
         Tomasz Figa <tfiga@chromium.org>,
@@ -64,9 +64,9 @@ Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
         Pawel Osciak <posciak@chromium.org>,
         linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [RFC][PATCH 11/15] videobuf2: add begin/end cpu_access callbacks to dma-contig
-Date:   Tue, 17 Dec 2019 12:20:30 +0900
-Message-Id: <20191217032034.54897-12-senozhatsky@chromium.org>
+Subject: [RFC][PATCH 12/15] videobuf2: add begin/end cpu_access callbacks to dma-sg
+Date:   Tue, 17 Dec 2019 12:20:31 +0900
+Message-Id: <20191217032034.54897-13-senozhatsky@chromium.org>
 X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
 In-Reply-To: <20191217032034.54897-1-senozhatsky@chromium.org>
 References: <20191217032034.54897-1-senozhatsky@chromium.org>
@@ -77,76 +77,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide begin_cpu_access() and end_cpu_access() callbacks for
-cache synchronisation on exported buffers.
-
-The patch also adds a new helper function - vb2_dc_buffer_consistent(),
-which returns true is if the buffer is consistent (DMA_ATTR_NON_CONSISTENT
-bit cleared), so then we don't need to sync anything.
+Provide begin_cpu_access() and end_cpu_access() dma_buf_ops
+callbacks for cache synchronisation on exported buffers.
 
 Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
 ---
- .../common/videobuf2/videobuf2-dma-contig.c   | 33 +++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ .../media/common/videobuf2/videobuf2-dma-sg.c | 22 +++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/drivers/media/common/videobuf2/videobuf2-dma-contig.c b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-index d0c9dffe49e5..a387260fb321 100644
---- a/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-+++ b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-@@ -42,6 +42,11 @@ struct vb2_dc_buf {
- 	struct dma_buf_attachment	*db_attach;
- };
- 
-+static inline bool vb2_dc_buffer_consistent(unsigned long attr)
-+{
-+	return !(attr & DMA_ATTR_NON_CONSISTENT);
-+}
-+
- /*********************************************/
- /*        scatterlist table functions        */
- /*********************************************/
-@@ -335,6 +340,32 @@ static void vb2_dc_dmabuf_ops_release(struct dma_buf *dbuf)
- 	vb2_dc_put(dbuf->priv);
+diff --git a/drivers/media/common/videobuf2/videobuf2-dma-sg.c b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
+index 6db60e9d5183..bfc99a0cb7b9 100644
+--- a/drivers/media/common/videobuf2/videobuf2-dma-sg.c
++++ b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
+@@ -470,6 +470,26 @@ static void vb2_dma_sg_dmabuf_ops_release(struct dma_buf *dbuf)
+ 	vb2_dma_sg_put(dbuf->priv);
  }
  
-+static int vb2_dc_dmabuf_ops_begin_cpu_access(struct dma_buf *dbuf,
-+					      enum dma_data_direction direction)
++static int vb2_dma_sg_dmabuf_ops_begin_cpu_access(struct dma_buf *dbuf,
++					enum dma_data_direction direction)
 +{
-+	struct vb2_dc_buf *buf = dbuf->priv;
++	struct vb2_dma_sg_buf *buf = dbuf->priv;
 +	struct sg_table *sgt = buf->dma_sgt;
-+
-+	if (vb2_dc_buffer_consistent(buf->attrs))
-+		return 0;
 +
 +	dma_sync_sg_for_cpu(buf->dev, sgt->sgl, sgt->nents, buf->dma_dir);
 +	return 0;
 +}
 +
-+static int vb2_dc_dmabuf_ops_end_cpu_access(struct dma_buf *dbuf,
-+					    enum dma_data_direction direction)
++static int vb2_dma_sg_dmabuf_ops_end_cpu_access(struct dma_buf *dbuf,
++					enum dma_data_direction direction)
 +{
-+	struct vb2_dc_buf *buf = dbuf->priv;
++	struct vb2_dma_sg_buf *buf = dbuf->priv;
 +	struct sg_table *sgt = buf->dma_sgt;
-+
-+	if (vb2_dc_buffer_consistent(buf->attrs))
-+		return 0;
 +
 +	dma_sync_sg_for_device(buf->dev, sgt->sgl, sgt->nents, buf->dma_dir);
 +	return 0;
 +}
 +
- static void *vb2_dc_dmabuf_ops_vmap(struct dma_buf *dbuf)
+ static void *vb2_dma_sg_dmabuf_ops_vmap(struct dma_buf *dbuf)
  {
- 	struct vb2_dc_buf *buf = dbuf->priv;
-@@ -353,6 +384,8 @@ static const struct dma_buf_ops vb2_dc_dmabuf_ops = {
- 	.detach = vb2_dc_dmabuf_ops_detach,
- 	.map_dma_buf = vb2_dc_dmabuf_ops_map,
- 	.unmap_dma_buf = vb2_dc_dmabuf_ops_unmap,
-+	.begin_cpu_access = vb2_dc_dmabuf_ops_begin_cpu_access,
-+	.end_cpu_access = vb2_dc_dmabuf_ops_end_cpu_access,
- 	.vmap = vb2_dc_dmabuf_ops_vmap,
- 	.mmap = vb2_dc_dmabuf_ops_mmap,
- 	.release = vb2_dc_dmabuf_ops_release,
+ 	struct vb2_dma_sg_buf *buf = dbuf->priv;
+@@ -488,6 +508,8 @@ static const struct dma_buf_ops vb2_dma_sg_dmabuf_ops = {
+ 	.detach = vb2_dma_sg_dmabuf_ops_detach,
+ 	.map_dma_buf = vb2_dma_sg_dmabuf_ops_map,
+ 	.unmap_dma_buf = vb2_dma_sg_dmabuf_ops_unmap,
++	.begin_cpu_access = vb2_dma_sg_dmabuf_ops_begin_cpu_access,
++	.end_cpu_access = vb2_dma_sg_dmabuf_ops_end_cpu_access,
+ 	.vmap = vb2_dma_sg_dmabuf_ops_vmap,
+ 	.mmap = vb2_dma_sg_dmabuf_ops_mmap,
+ 	.release = vb2_dma_sg_dmabuf_ops_release,
 -- 
 2.24.1.735.g03f4e72817-goog
 
