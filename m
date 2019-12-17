@@ -2,122 +2,137 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2CA7C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 055F6C2D0C5
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD7952082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:27:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ELlAvSoF"
+	by mail.kernel.org (Postfix) with ESMTP id DADB72082E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:28:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727746AbfLQH1e (ORCPT
+        id S1727874AbfLQH2i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 02:27:34 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:47009 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725802AbfLQH1e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 02:27:34 -0500
-Received: by mail-lf1-f65.google.com with SMTP id f15so6175519lfl.13
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 23:27:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kUuj8ktJfIrmR7FZT0cIqqoclUKcXuEIFZ2/fzt7Vt0=;
-        b=ELlAvSoFULYLV2YY7DKSTwdBDeIDXmHV4cSrX+Ae2nq2buWIrvz3Le9LXe+of/c4bS
-         WaHLFoPwll4yf7HQjMcNft2328L4u7WaHxb3vpPsGrT1ZQDDR+kW+aQsXscmO9/4nzDZ
-         aTqCkHL9wAmFugCGudp5E/gUbofHfqa9DUBhOzhmpkfmXmdtrDtMhT4B6A6yLt4XLdp9
-         AMur1eGXTeQbhT09EBx9ub1aFRfpQhkX4cBeHBmAoDwyjN8IHle8dcXwFtWGhmWpQB4c
-         8CMH0aWvoNJZohdjnA5uGM81JplDFvJtMEEpZEpr7M3oHZFKZ/g0VOT2eLwIWt+KFtnr
-         m3VQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kUuj8ktJfIrmR7FZT0cIqqoclUKcXuEIFZ2/fzt7Vt0=;
-        b=dH9jHLBj/SBvEaVy8xQ/5gch4Q30ZZ8703Rt8swJ5SeFinpl32NMB/MAvZFv4mHFlY
-         53P3BtGQsXqfkHLBe5K1epHAXQCSmimEnTJzVPTwVAQW60ZZjmtcW2N7i/VW5SYGByLb
-         ZXDAWRMJ2GanXaTxnBN+6YV02Tjbb9Y8f6nK9fJQYPm5lIpglpdU/eW7hKp8pREs9mSu
-         SDRyAPlcEosUDBqof0yZEsHEL6C6eISfHqgP/aSPCNrTh2MFdVzam+NCr0j8jlPrMySR
-         aRH4x5YEfeTHkmMimW4rzkj7ESkpgO2J5vo2DuOYFwZRsn1eEPWlmQKT6VMpOiw3pKEU
-         oqEA==
-X-Gm-Message-State: APjAAAVua/ihINLzoBVLXl/frOLHwKZUyqa8Upo/qQISQTW0q7H0Pb7s
-        iMkbMLWm1nZyNu2a3H5ZhUpZHw==
-X-Google-Smtp-Source: APXvYqwOHZqJdY4XpnGy7NipdYvDsVdAOfTXW5cphY/LRA2IhvYVItFMdNaQA8q2UwVW2i1t7G0H1Q==
-X-Received: by 2002:ac2:5503:: with SMTP id j3mr1862369lfk.104.1576567652233;
-        Mon, 16 Dec 2019 23:27:32 -0800 (PST)
-Received: from jax (h-249-223.A175.priv.bahnhof.se. [98.128.249.223])
-        by smtp.gmail.com with ESMTPSA id c12sm10231185lfp.58.2019.12.16.23.27.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 16 Dec 2019 23:27:31 -0800 (PST)
-Date:   Tue, 17 Dec 2019 08:27:29 +0100
-From:   Jens Wiklander <jens.wiklander@linaro.org>
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     tee-dev@lists.linaro.org, Volodymyr_Babchuk@epam.com,
-        jerome@forissier.org, etienne.carriere@linaro.org,
-        vincent.t.cao@intel.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] optee: Fix multi page dynamic shm pool alloc
-Message-ID: <20191217072729.GA9507@jax>
-References: <1574147666-19356-1-git-send-email-sumit.garg@linaro.org>
+        Tue, 17 Dec 2019 02:28:38 -0500
+Received: from mx2.suse.de ([195.135.220.15]:40812 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726411AbfLQH2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 02:28:37 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id D8EAEAC0C;
+        Tue, 17 Dec 2019 07:28:34 +0000 (UTC)
+Subject: Re: [PATCH 1/2] fs: New zonefs file system
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Johannes Thumshirn <jth@kernel.org>,
+        Naohiro Aota <Naohiro.Aota@wdc.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>
+References: <20191212183816.102402-1-damien.lemoal@wdc.com>
+ <20191212183816.102402-2-damien.lemoal@wdc.com>
+ <c7f17b54-8f90-3dd3-98f7-cf540d70333d@suse.de>
+ <BYAPR04MB5816D17D0A14D5651E37F700E7500@BYAPR04MB5816.namprd04.prod.outlook.com>
+From:   Hannes Reinecke <hare@suse.de>
+Message-ID: <32e3418b-727e-3018-1b8a-0530608fb34d@suse.de>
+Date:   Tue, 17 Dec 2019 08:28:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1574147666-19356-1-git-send-email-sumit.garg@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <BYAPR04MB5816D17D0A14D5651E37F700E7500@BYAPR04MB5816.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sumit,
-
-On Tue, Nov 19, 2019 at 12:44:26PM +0530, Sumit Garg wrote:
-> optee_shm_register() expected pages to be passed as an array of page
-> pointers rather than as an array of contiguous pages. So fix that via
-> correctly passing pages as per expectation.
+On 12/17/19 1:20 AM, Damien Le Moal wrote:
+> On 2019/12/16 17:36, Hannes Reinecke wrote:
+> [...]
+>>> +static int zonefs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
+>>> +			      unsigned int flags, struct iomap *iomap,
+>>> +			      struct iomap *srcmap)
+>>> +{
+>>> +	struct zonefs_sb_info *sbi = ZONEFS_SB(inode->i_sb);
+>>> +	struct zonefs_inode_info *zi = ZONEFS_I(inode);
+>>> +	loff_t max_isize = zi->i_max_size;
+>>> +	loff_t isize;
+>>> +
+>>> +	/*
+>>> +	 * For sequential zones, enforce direct IO writes. This is already
+>>> +	 * checked when writes are issued, so warn about this here if we
+>>> +	 * get buffered write to a sequential file inode.
+>>> +	 */
+>>> +	if (WARN_ON_ONCE(zi->i_ztype == ZONEFS_ZTYPE_SEQ &&
+>>> +			 (flags & IOMAP_WRITE) && !(flags & IOMAP_DIRECT)))
+>>> +		return -EIO;
+>>> +
+>>> +	/*
+>>> +	 * For all zones, all blocks are always mapped. For sequential zones,
+>>> +	 * all blocks after the write pointer (inode size) are always unwritten.
+>>> +	 */
+>>> +	mutex_lock(&zi->i_truncate_mutex);
+>>> +	isize = i_size_read(inode);
+>>> +	if (offset >= isize) {
+>>> +		length = min(length, max_isize - offset);
+>>> +		if (zi->i_ztype == ZONEFS_ZTYPE_CNV)
+>>> +			iomap->type = IOMAP_MAPPED;
+>>> +		else
+>>> +			iomap->type = IOMAP_UNWRITTEN;
+>>> +	} else {
+>>> +		length = min(length, isize - offset);
+>>> +		iomap->type = IOMAP_MAPPED;
+>>> +	}
+>>> +	mutex_unlock(&zi->i_truncate_mutex);
+>>> +
+>>> +	iomap->offset = offset & (~sbi->s_blocksize_mask);
+>>> +	iomap->length = ((offset + length + sbi->s_blocksize_mask) &
+>>> +			 (~sbi->s_blocksize_mask)) - iomap->offset;
+>>> +	iomap->bdev = inode->i_sb->s_bdev;
+>>> +	iomap->addr = (zi->i_zsector << SECTOR_SHIFT) + iomap->offset;
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static const struct iomap_ops zonefs_iomap_ops = {
+>>> +	.iomap_begin	= zonefs_iomap_begin,
+>>> +};
+>>> +
+>> This probably shows my complete ignorance, but what is the effect on
+>> enforcing the direct I/O writes on the pagecache?
+>> IE what happens for buffered reads? Will the pages be invalidated when a
+>> write has been issued?
 > 
-> Fixes: a249dd200d03 ("tee: optee: Fix dynamic shm pool allocations")
-> Reported-by: Vincent Cao <vincent.t.cao@intel.com>
-> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> Tested-by: Vincent Cao <vincent.t.cao@intel.com>
-> ---
->  drivers/tee/optee/shm_pool.c | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
+> Yes, a direct write issued to a file range that has cached pages result
+> in these pages to be invalidated. But note that in the case of zonefs,
+> this can happen only in the case of conventional zones. For sequential
+> zones, this does not happen: reads can be buffered and cache pages but
+> only for pages below the write pointer. And writes can only be issued at
+> the write pointer. So there is never any possible overlap between
+> buffered reads and direct writes.
 > 
-> diff --git a/drivers/tee/optee/shm_pool.c b/drivers/tee/optee/shm_pool.c
-> index 0332a53..85aa5bb 100644
-> --- a/drivers/tee/optee/shm_pool.c
-> +++ b/drivers/tee/optee/shm_pool.c
-> @@ -28,8 +28,20 @@ static int pool_op_alloc(struct tee_shm_pool_mgr *poolm,
->  	shm->size = PAGE_SIZE << order;
->  
->  	if (shm->flags & TEE_SHM_DMA_BUF) {
-> +		unsigned int nr_pages = 1 << order, i;
-> +		struct page **pages;
-> +
-> +		pages = kcalloc(nr_pages, sizeof(pages), GFP_KERNEL);
-> +		if (!pages)
-> +			return -ENOMEM;
-> +
-> +		for (i = 0; i < nr_pages; i++) {
-> +			pages[i] = page;
-> +			page++;
-> +		}
-> +
->  		shm->flags |= TEE_SHM_REGISTER;
-> -		rc = optee_shm_register(shm->ctx, shm, &page, 1 << order,
-> +		rc = optee_shm_register(shm->ctx, shm, pages, nr_pages,
->  					(unsigned long)shm->kaddr);
->  	}
+Oh, indeed, you are correct. That's indeed easy then.
 
-Apoligies for the later reply. It seems that this will leak memory.
-The pointer pages isn't freed after the call to optee_shm_register().
+>> Or do we simply rely on upper layers to ensure no concurrent buffered
+>> and direct I/O is being made?
+> 
+> Nope. VFS, or the file system specific implementation, takes care of
+> that. See generic_file_direct_write() and its call to
+> invalidate_inode_pages2_range().
+> 
+Of course.
+One could even say: not applicable, as it won't happen.
 
-Thanks,
-Jens
+Cheers,
+
+Hannes
+-- 
+Dr. Hannes Reinecke            Teamlead Storage & Networking
+hare@suse.de                               +49 911 74053 688
+SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
