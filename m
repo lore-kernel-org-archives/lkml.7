@@ -2,113 +2,249 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04283C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 332F1C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB79121775
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE1C02146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:58:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IDP9RvcA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727402AbfLQKyd (ORCPT
+        id S1727406AbfLQK6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 05:54:33 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41320 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725940AbfLQKyd (ORCPT
+        Tue, 17 Dec 2019 05:58:31 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22467 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725940AbfLQK6b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 05:54:33 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBHAqoQx069666
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 05:54:31 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wwe2qg1pd-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 05:54:31 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 17 Dec 2019 10:54:29 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 17 Dec 2019 10:54:26 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBHAsPtf45810072
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 17 Dec 2019 10:54:26 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DCE554C046;
-        Tue, 17 Dec 2019 10:54:25 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BA88F4C050;
-        Tue, 17 Dec 2019 10:54:24 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.199.191])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 17 Dec 2019 10:54:24 +0000 (GMT)
-Subject: Re: [PATCH v4 1/2] IMA: Define workqueue for early boot "key"
- measurements
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
-        sashal@kernel.org, jamorris@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-Date:   Tue, 17 Dec 2019 05:54:24 -0500
-In-Reply-To: <0223b52e-50d6-ebce-840c-0364b24b1b30@linux.microsoft.com>
-References: <20191213171827.28657-1-nramas@linux.microsoft.com>
-         <20191213171827.28657-2-nramas@linux.microsoft.com>
-         <1576499400.4579.305.camel@linux.ibm.com>
-         <0223b52e-50d6-ebce-840c-0364b24b1b30@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19121710-0016-0000-0000-000002D5BC41
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19121710-0017-0000-0000-00003337F4C9
-Message-Id: <1576580064.4579.374.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-17_02:2019-12-16,2019-12-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 phishscore=0 bulkscore=0 mlxscore=0 adultscore=0
- priorityscore=1501 suspectscore=0 spamscore=0 impostorscore=0
- mlxlogscore=940 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-1912170094
+        Tue, 17 Dec 2019 05:58:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576580309;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=gnDnyB2jtO59Y8NkYIvH0FNcLlZM59GdQIgIToL5nhQ=;
+        b=IDP9RvcA8txYqo4DN24GgGk5wjs2hO3uJ3eBqoDaCg2vpGa1jGdkOyyx+edSWo1wH2fxn5
+        v9gZU7+DAqwCX8wOn5cO0PR6y4vu1C0WjSKV3A6GDcaOksjsssFhEmDqW3XnHkIwwmoBAf
+        7FdgufyLLAAPF6ou2rHR0StpLoQr4hM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-75-Cif9SJ0kNVaETmQD8Yl4Mg-1; Tue, 17 Dec 2019 05:58:28 -0500
+X-MC-Unique: Cif9SJ0kNVaETmQD8Yl4Mg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B5763107ACC7;
+        Tue, 17 Dec 2019 10:58:25 +0000 (UTC)
+Received: from [10.36.118.8] (unknown [10.36.118.8])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 185FF620A7;
+        Tue, 17 Dec 2019 10:58:13 +0000 (UTC)
+Subject: Re: [PATCH v15 3/7] mm: Add function __putback_isolated_page
+To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
+        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, mgorman@techsingularity.net,
+        vbabka@suse.cz
+Cc:     yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
+        pagupta@redhat.com, riel@surriel.com, lcapitulino@redhat.com,
+        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com, osalvador@suse.de
+References: <20191205161928.19548.41654.stgit@localhost.localdomain>
+ <20191205162230.19548.70198.stgit@localhost.localdomain>
+ <cb49bbc7-b0c0-65cc-1d9d-a3aaef075650@redhat.com>
+ <9eb9173278370dd604c4cefd30ed10be36600854.camel@linux.intel.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABtCREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT6JAlgEEwEIAEICGwMFCQlmAYAGCwkIBwMCBhUI
+ AgkKCwQWAgMBAh4BAheAFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl3pImkCGQEACgkQTd4Q
+ 9wD/g1o+VA//SFvIHUAvul05u6wKv/pIR6aICPdpF9EIgEU448g+7FfDgQwcEny1pbEzAmiw
+ zAXIQ9H0NZh96lcq+yDLtONnXk/bEYWHHUA014A1wqcYNRY8RvY1+eVHb0uu0KYQoXkzvu+s
+ Dncuguk470XPnscL27hs8PgOP6QjG4jt75K2LfZ0eAqTOUCZTJxA8A7E9+XTYuU0hs7QVrWJ
+ jQdFxQbRMrYz7uP8KmTK9/Cnvqehgl4EzyRaZppshruKMeyheBgvgJd5On1wWq4ZUV5PFM4x
+ II3QbD3EJfWbaJMR55jI9dMFa+vK7MFz3rhWOkEx/QR959lfdRSTXdxs8V3zDvChcmRVGN8U
+ Vo93d1YNtWnA9w6oCW1dnDZ4kgQZZSBIjp6iHcA08apzh7DPi08jL7M9UQByeYGr8KuR4i6e
+ RZI6xhlZerUScVzn35ONwOC91VdYiQgjemiVLq1WDDZ3B7DIzUZ4RQTOaIWdtXBWb8zWakt/
+ ztGhsx0e39Gvt3391O1PgcA7ilhvqrBPemJrlb9xSPPRbaNAW39P8ws/UJnzSJqnHMVxbRZC
+ Am4add/SM+OCP0w3xYss1jy9T+XdZa0lhUvJfLy7tNcjVG/sxkBXOaSC24MFPuwnoC9WvCVQ
+ ZBxouph3kqc4Dt5X1EeXVLeba+466P1fe1rC8MbcwDkoUo65Ag0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAGJAiUEGAECAA8FAlXLn5ECGwwFCQlmAYAACgkQTd4Q
+ 9wD/g1qA6w/+M+ggFv+JdVsz5+ZIc6MSyGUozASX+bmIuPeIecc9UsFRatc91LuJCKMkD9Uv
+ GOcWSeFpLrSGRQ1Z7EMzFVU//qVs6uzhsNk0RYMyS0B6oloW3FpyQ+zOVylFWQCzoyyf227y
+ GW8HnXunJSC+4PtlL2AY4yZjAVAPLK2l6mhgClVXTQ/S7cBoTQKP+jvVJOoYkpnFxWE9pn4t
+ H5QIFk7Ip8TKr5k3fXVWk4lnUi9MTF/5L/mWqdyIO1s7cjharQCstfWCzWrVeVctpVoDfJWp
+ 4LwTuQ5yEM2KcPeElLg5fR7WB2zH97oI6/Ko2DlovmfQqXh9xWozQt0iGy5tWzh6I0JrlcxJ
+ ileZWLccC4XKD1037Hy2FLAjzfoWgwBLA6ULu0exOOdIa58H4PsXtkFPrUF980EEibUp0zFz
+ GotRVekFAceUaRvAj7dh76cToeZkfsjAvBVb4COXuhgX6N4pofgNkW2AtgYu1nUsPAo+NftU
+ CxrhjHtLn4QEBpkbErnXQyMjHpIatlYGutVMS91XTQXYydCh5crMPs7hYVsvnmGHIaB9ZMfB
+ njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
+ FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
+Organization: Red Hat GmbH
+Message-ID: <8a4b0337-0bad-2978-32e8-6f90c7365f00@redhat.com>
+Date:   Tue, 17 Dec 2019 11:58:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <9eb9173278370dd604c4cefd30ed10be36600854.camel@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-12-16 at 15:44 -0800, Lakshmi Ramasubramanian wrote:
-> On 12/16/2019 4:30 AM, Mimi Zohar wrote:
-> 
-> >> +
-> >> +		if (!list_empty(&ima_keys)) {
-> >> +			list_for_each_entry_safe(entry, tmp, &ima_keys, list)
-> >> +				list_move_tail(&entry->list, &temp_ima_keys);
-> >> +			process = true;
-> >> +		}
-> >> +	}
-> >> +
-> >> +	mutex_unlock(&ima_keys_mutex);
-> >> +
-> >> +	if (!process)
-> >> +		return;
-> > 
-> > The new changes - checking if the list is empty and this test - are
-> > unnecessary, as you implied earlier.
-> > 
-> > Mimi
-> 
-> Do you want me to remove this check? I feel it is safer to have this 
-> check - use a local flag "process" to return if no keys were moved to 
-> the temp list. Would like to leave it as is - if you don't mind.
+On 16.12.19 17:22, Alexander Duyck wrote:
+> On Mon, 2019-12-16 at 12:36 +0100, David Hildenbrand wrote:
+>> [...]
+>>> +/**
+>>> + * __putback_isolated_page - Return a now-isolated page back where w=
+e got it
+>>> + * @page: Page that was isolated
+>>> + * @order: Order of the isolated page
+>>> + *
+>>> + * This function is meant to return a page pulled from the free list=
+s via
+>>> + * __isolate_free_page back to the free lists they were pulled from.
+>>> + */
+>>> +void __putback_isolated_page(struct page *page, unsigned int order)
+>>> +{
+>>> +	struct zone *zone =3D page_zone(page);
+>>> +	unsigned long pfn;
+>>> +	unsigned int mt;
+>>> +
+>>> +	/* zone lock should be held when this function is called */
+>>> +	lockdep_assert_held(&zone->lock);
+>>> +
+>>> +	pfn =3D page_to_pfn(page);
+>>> +	mt =3D get_pfnblock_migratetype(page, pfn);
+>>
+>> IMHO get_pageblock_migratetype() would be nicer - I guess the compiler
+>> will optimize out the double page_to_pfn().
+>=20
+> The thing is I need the page_to_pfn call already in order to pass the
+> value to __free_one_page. With that being the case why not juse use
+> get_pfnblock_migratetype?
 
-Sure
-  
+I was reading
+	set_pageblock_migratetype(page, migratetype);
+And wondered why we don't use straight forward
+	get_pageblock_migratetype()
+but instead something that looks like a micro-optimization
+
+>=20
+> Also there are some scenarios where __page_to_pfn is not that simple a
+> call with us having to get the node ID so we can find the pgdat structu=
+re
+> to perform the calculation. I'm not sure the compiler would be ble to
+> figure out that the result is the same for both calls, so it is better =
+to
+> make it explicit.
+
+Only in case of CONFIG_SPARSEMEM we have to go via the section - but I
+doubt this is really worth optimizing here.
+
+But yeah, I'm fine with this change, only "IMHO
+get_pageblock_migratetype() would be nicer" :)
+
+>=20
+>>> +
+>>> +	/* Return isolated page to tail of freelist. */
+>>> +	__free_one_page(page, pfn, zone, order, mt);
+>>> +}
+>>> +
+>>>  /*
+>>>   * Update NUMA hit/miss statistics
+>>>   *
+>>> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+>>> index 04ee1663cdbe..d93d2be0070f 100644
+>>> --- a/mm/page_isolation.c
+>>> +++ b/mm/page_isolation.c
+>>> @@ -134,13 +134,11 @@ static void unset_migratetype_isolate(struct pa=
+ge *page, unsigned migratetype)
+>>>  		__mod_zone_freepage_state(zone, nr_pages, migratetype);
+>>>  	}
+>>>  	set_pageblock_migratetype(page, migratetype);
+>>> +	if (isolated_page)
+>>> +		__putback_isolated_page(page, order);
+>>>  	zone->nr_isolate_pageblock--;
+>>>  out:
+>>>  	spin_unlock_irqrestore(&zone->lock, flags);
+>>> -	if (isolated_page) {
+>>> -		post_alloc_hook(page, order, __GFP_MOVABLE);
+>>> -		__free_pages(page, order);
+>>> -	}
+>>
+>> So If I get it right:
+>>
+>> post_alloc_hook() does quite some stuff like
+>> - arch_alloc_page(page, order);
+>> - kernel_map_pages(page, 1 << order, 1)
+>> - kasan_alloc_pages()
+>> - kernel_poison_pages(1)
+>> - set_page_owner()
+>>
+>> Which free_pages_prepare() will undo, like
+>> - reset_page_owner()
+>> - kernel_poison_pages(0)
+>> - arch_free_page()
+>> - kernel_map_pages()
+>> - kasan_free_nondeferred_pages()
+>>
+>> Both would be skipped now - which sounds like the right thing to do IM=
+HO
+>> (and smells like quite a performance improvement). I haven't verified =
+if
+>> actually everything we skip in free_pages_prepare() is safe (I think i=
+t
+>> is, it seems to be mostly relevant for actually used/allocated pages).
+>=20
+> That was kind of my thought on this. Basically the logic I was followin=
+g
+> was that the code path will call move_freepages_block that bypasses all=
+ of
+> the above mentioned calls if the pages it is moving will not be merged.=
+ If
+> it is safe in that case my assumption is that it should be safe to just
+> call __putback_isolated_page in such a case as it also bypasses the blo=
+ck
+> above, but it supports merging the page with other pages that are alrea=
+dy
+> on the freelist.
+
+Makes sense to me
+
+Acked-by: David Hildenbrand <david@redhat.com>
+
+
+--=20
+Thanks,
+
+David / dhildenb
 
