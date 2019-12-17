@@ -2,80 +2,127 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B9BCC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:32:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF01C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12C8121835
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:32:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576589560;
-	bh=mvCghyXyT3m3xPpZSVWQxeClciJdGR78AaD6vID+Tts=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Kt83uqCjq8Jd/85MjNhg+PQeKFnBVNv8L+sFh75DFBIm9NtsbaLQL9m8/t3qinJ0b
-	 zFsHLWJhcFrPz/NgM0ViFrsnrofzlyTJbCPlPkmrnJDEoG+AhQUk92I3XpGeqRsF6T
-	 QucmGbaCkgRQjO2Q7Qj3zBXD/iYwuZhXdwYaqQNY=
+	by mail.kernel.org (Postfix) with ESMTP id 1E2C7218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:32:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="PiiAW0Et"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728331AbfLQNcj (ORCPT
+        id S1728386AbfLQNcs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 08:32:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36588 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728242AbfLQNch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 08:32:37 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50BAC21835;
-        Tue, 17 Dec 2019 13:32:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576589556;
-        bh=mvCghyXyT3m3xPpZSVWQxeClciJdGR78AaD6vID+Tts=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZQ0YjU90nud327u6aB8jE146D/+Jk8jT9bx3SwCTJZpTwBKeebYauC4RlOP5DHK44
-         wlca5fmMVgSz3FjFDcacqR2bF9iJ7idEJoto9C4fgyx4DL8BLCI/AX0FJd+6NepfZt
-         RcE+pVXSal7VmL88qyU5MKlj5WHYDUC84I+WxvUc=
-Date:   Tue, 17 Dec 2019 14:32:34 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Dave Kim <david.kim@ncipher.com>
-Cc:     arnd@arndb.de, linux-kernel@vger.kernel.org,
-        Tim Magee <tim.magee@ncipher.com>
-Subject: Re: [PATCH 1/1] drivers: misc: Add support for nCipher HSM devices
-Message-ID: <20191217133234.GB3362771@kroah.com>
-References: <20191217132244.14768-1-david.kim@ncipher.com>
- <20191217132244.14768-2-david.kim@ncipher.com>
+        Tue, 17 Dec 2019 08:32:48 -0500
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:59273 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728109AbfLQNcf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 08:32:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1576589556; x=1608125556;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=FAYXJj84UoQTVVBnxHAl8dNCc4arpYx+KqB8fudTUbg=;
+  b=PiiAW0EtyhJXfOREs8KkOhK5iL92X7OegSkgIGdtwRPDOs6rj/4ecZL2
+   9BPVGqlsSCPK26kSiopvqca/C8KLEhhIbGYZjA5WfzAk5kcwCa02rMnus
+   ausazFBePldpv9XfrBQMLdITd1RoRDPa2GpdS7a+ak0fTI2mXXeEUyOqe
+   g=;
+IronPort-SDR: FzkCJqPLkG3ZjnmxE5thsvs7TUTJE/iTfT8QiWibj+CfSjnm/tx4FJL13ae/9AZAkjY69DAtnI
+ V9tBGVig7/oQ==
+X-IronPort-AV: E=Sophos;i="5.69,325,1571702400"; 
+   d="scan'208";a="15379907"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 17 Dec 2019 13:32:29 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com (Postfix) with ESMTPS id B7154281EA1;
+        Tue, 17 Dec 2019 13:32:27 +0000 (UTC)
+Received: from EX13D32EUC004.ant.amazon.com (10.43.164.121) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1236.3; Tue, 17 Dec 2019 13:32:27 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
+ EX13D32EUC004.ant.amazon.com (10.43.164.121) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 17 Dec 2019 13:32:26 +0000
+Received: from u2f063a87eabd5f.cbg10.amazon.com (10.125.106.135) by
+ mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP Server id
+ 15.0.1367.3 via Frontend Transport; Tue, 17 Dec 2019 13:32:24 +0000
+From:   Paul Durrant <pdurrant@amazon.com>
+To:     <xen-devel@lists.xenproject.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Paul Durrant <pdurrant@amazon.com>, Wei Liu <wei.liu@kernel.org>,
+        "Paul Durrant" <paul@xen.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH net-next 2/3] xen-netback: switch state to InitWait at the end of netback_probe()...
+Date:   Tue, 17 Dec 2019 13:32:17 +0000
+Message-ID: <20191217133218.27085-3-pdurrant@amazon.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191217133218.27085-1-pdurrant@amazon.com>
+References: <20191217133218.27085-1-pdurrant@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191217132244.14768-2-david.kim@ncipher.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 01:22:44PM +0000, Dave Kim wrote:
-> ﻿From: David Kim <david.kim@ncipher.com>
-> 
-> Introduce the driver for nCipher's Solo and Solo XC range of PCIe hardware
-> security modules (HSM), which provide key creation/management and
-> cryptography services.
+...as the comment above the function states.
 
-A bit more description of exactly _what_ these devices do would be
-helpful.
+The switch to Initialising at the start of the function is somewhat bogus
+as the toolstack will have set that initial state anyway. To behave
+correctly, a backend should switch to InitWait once it has set up all
+xenstore values that may be required by a initialising frontend. This
+patch calls backend_switch_state() to make the transition at the
+appropriate point.
 
-Also, how does userspace interact with the driver?  What api(s) are you
-using/creating?  What userspace tools work with the device?
+NOTE: backend_switch_state() ignores errors from xenbus_switch_state()
+      and so this patch removes an error path from netback_probe(). This
+      means a failure to change state at this stage (in the absence of
+      other failures) will leave the device instantiated. This is highly
+      unlikley to happen as a failure to change state would indicate a
+      failure to write to xenstore, and that will trigger other error
+      paths. Also, a 'stuck' device can still be cleaned up using 'unbind'
+      in any case.
 
-In short, we need more than just a one sentance description to be able
-to properly review the code and provide text for a user to know what to
-do with this driver.
+Signed-off-by: Paul Durrant <pdurrant@amazon.com>
+---
+Cc: Wei Liu <wei.liu@kernel.org>
+Cc: Paul Durrant <paul@xen.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+---
+ drivers/net/xen-netback/xenbus.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-Can you fix all that up and send a v2?
+diff --git a/drivers/net/xen-netback/xenbus.c b/drivers/net/xen-netback/xenbus.c
+index bb61316d79de..682e5e20971b 100644
+--- a/drivers/net/xen-netback/xenbus.c
++++ b/drivers/net/xen-netback/xenbus.c
+@@ -992,11 +992,6 @@ static int netback_probe(struct xenbus_device *dev,
+ 	be->dev = dev;
+ 	dev_set_drvdata(&dev->dev, be);
+ 
+-	be->state = XenbusStateInitialising;
+-	err = xenbus_switch_state(dev, XenbusStateInitialising);
+-	if (err)
+-		goto fail;
+-
+ 	sg = 1;
+ 
+ 	do {
+@@ -1098,6 +1093,8 @@ static int netback_probe(struct xenbus_device *dev,
+ 	if (err)
+ 		pr_debug("Error writing feature-ctrl-ring\n");
+ 
++	backend_switch_state(be, XenbusStateInitWait);
++
+ 	script = xenbus_read(XBT_NIL, dev->nodename, "script", NULL);
+ 	if (IS_ERR(script)) {
+ 		err = PTR_ERR(script);
+-- 
+2.20.1
 
-thanks,
-
-greg k-h
