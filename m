@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 431E1C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C074C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1930D206D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:59:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 614A2206D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:59:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbfLQA71 (ORCPT
+        id S1728076AbfLQA7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:59:27 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34724 "EHLO
+        Mon, 16 Dec 2019 19:59:33 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34696 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726719AbfLQAvg (ORCPT
+        by vger.kernel.org with ESMTP id S1726698AbfLQAvg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 19:51:36 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15H-0003KU-BF; Tue, 17 Dec 2019 00:51:31 +0000
+        id 1ih15G-0003KQ-VA; Tue, 17 Dec 2019 00:51:31 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15G-0005Tl-CK; Tue, 17 Dec 2019 00:51:30 +0000
+        id 1ih15G-0005Tg-8l; Tue, 17 Dec 2019 00:51:30 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Yoshihiro Shimoda" <yoshihiro.shimoda.uh@renesas.com>
-Date:   Tue, 17 Dec 2019 00:46:05 +0000
-Message-ID: <lsq.1576543535.764434134@decadent.org.uk>
+        "Rick Tseng" <rtseng@nvidia.com>,
+        "Mathias Nyman" <mathias.nyman@linux.intel.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Date:   Tue, 17 Dec 2019 00:46:04 +0000
+Message-ID: <lsq.1576543535.505452823@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 031/136] usb: renesas_usbhs: gadget: Do not discard
- queues in usb_ep_set_{halt,wedge}()
+Subject: [PATCH 3.16 030/136] usb: xhci: wait for CNR controller not ready
+ bit in xhci resume
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,34 +57,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+From: Rick Tseng <rtseng@nvidia.com>
 
-commit 1aae1394294cb71c6aa0bc904a94a7f2f1e75936 upstream.
+commit a70bcbc322837eda1ab5994d12db941dc9733a7d upstream.
 
-The commit 97664a207bc2 ("usb: renesas_usbhs: shrink spin lock area")
-had added a usbhsg_pipe_disable() calling into
-__usbhsg_ep_set_halt_wedge() accidentally. But, this driver should
-not call the usbhsg_pipe_disable() because the function discards
-all queues. So, this patch removes it.
+NVIDIA 3.1 xHCI card would lose power when moving power state into D3Cold.
+Thus we need to wait for CNR bit to clear in xhci resume, just as in
+xhci init.
 
-Fixes: 97664a207bc2 ("usb: renesas_usbhs: shrink spin lock area")
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Link: https://lore.kernel.org/r/1569924633-322-2-git-send-email-yoshihiro.shimoda.uh@renesas.com
+[Minor changes to comment and commit message -Mathias]
+Signed-off-by: Rick Tseng <rtseng@nvidia.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/1570190373-30684-6-git-send-email-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[bwh: Backported to 3.16: Add xhci as parameter to xhci_handshake()]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/renesas_usbhs/mod_gadget.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/usb/host/xhci.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
---- a/drivers/usb/renesas_usbhs/mod_gadget.c
-+++ b/drivers/usb/renesas_usbhs/mod_gadget.c
-@@ -705,8 +705,6 @@ static int __usbhsg_ep_set_halt_wedge(st
- 	struct device *dev = usbhsg_gpriv_to_dev(gpriv);
- 	unsigned long flags;
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -1029,6 +1029,18 @@ int xhci_resume(struct xhci_hcd *xhci, b
+ 		hibernated = true;
  
--	usbhsg_pipe_disable(uep);
--
- 	dev_dbg(dev, "set halt %d (pipe %d)\n",
- 		halt, usbhs_pipe_number(pipe));
- 
+ 	if (!hibernated) {
++		/*
++		 * Some controllers might lose power during suspend, so wait
++		 * for controller not ready bit to clear, just as in xHC init.
++		 */
++		retval = xhci_handshake(xhci, &xhci->op_regs->status,
++					STS_CNR, 0, 10 * 1000 * 1000);
++		if (retval) {
++			xhci_warn(xhci, "Controller not ready at resume %d\n",
++				  retval);
++			spin_unlock_irq(&xhci->lock);
++			return retval;
++		}
+ 		/* step 1: restore register */
+ 		xhci_restore_registers(xhci);
+ 		/* step 2: initialize command ring buffer */
 
