@@ -7,42 +7,46 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA60C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01AA9C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B8B621775
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2F6624655
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728281AbfLQMkF (ORCPT
+        id S1727682AbfLQMkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:40:05 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55269 "EHLO
+        Tue, 17 Dec 2019 07:40:10 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55291 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728250AbfLQMkB (ORCPT
+        with ESMTP id S1728286AbfLQMkH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 07:40:01 -0500
+        Tue, 17 Dec 2019 07:40:07 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ihC8r-0001sK-8T; Tue, 17 Dec 2019 13:39:57 +0100
+        id 1ihC8p-0001qb-16; Tue, 17 Dec 2019 13:39:55 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5F2631C2A42;
-        Tue, 17 Dec 2019 13:39:53 +0100 (CET)
-Date:   Tue, 17 Dec 2019 12:39:53 -0000
-From:   "tip-bot2 for Frederic Weisbecker" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D5ED51C2A3B;
+        Tue, 17 Dec 2019 13:39:52 +0100 (CET)
+Date:   Tue, 17 Dec 2019 12:39:52 -0000
+From:   "tip-bot2 for Oleg Nesterov" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched: Spare resched IPI when prio changes on a
- single fair task
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
+Subject: [tip: sched/core] sched/wait: fix ___wait_var_event(exclusive)
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Juri Lelli <juri.lelli@redhat.com>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191203160106.18806-2-frederic@kernel.org>
-References: <20191203160106.18806-2-frederic@kernel.org>
+In-Reply-To: <20191210191902.GB14449@redhat.com>
+References: <20191210191902.GB14449@redhat.com>
 MIME-Version: 1.0
-Message-ID: <157658639317.30329.4178285376901273238.tip-bot2@tip-bot2>
+Message-ID: <157658639276.30329.909563738680417721.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,41 +62,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     7c2e8bbd87db661122e92d71a394dd7bb3ada4d3
-Gitweb:        https://git.kernel.org/tip/7c2e8bbd87db661122e92d71a394dd7bb3ada4d3
-Author:        Frederic Weisbecker <frederic@kernel.org>
-AuthorDate:    Tue, 03 Dec 2019 17:01:05 +01:00
+Commit-ID:     cde65194502778665c1b52afc5722cf7dbfaa399
+Gitweb:        https://git.kernel.org/tip/cde65194502778665c1b52afc5722cf7dbfaa399
+Author:        Oleg Nesterov <oleg@redhat.com>
+AuthorDate:    Tue, 10 Dec 2019 20:19:03 +01:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
 CommitterDate: Tue, 17 Dec 2019 13:32:50 +01:00
 
-sched: Spare resched IPI when prio changes on a single fair task
+sched/wait: fix ___wait_var_event(exclusive)
 
-The runqueue of a fair task being remotely reniced is going to get a
-resched IPI in order to reassess which task should be the current
-running on the CPU. However that evaluation is useless if the fair task
-is running alone, in which case we can spare that IPI, preventing
-nohz_full CPUs from being disturbed.
+init_wait_var_entry() forgets to initialize wq_entry->flags.
 
-Reported-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+Currently not a problem, we don't have wait_var_event_exclusive().
+
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
 Cc: Ingo Molnar <mingo@kernel.org>
-Link: https://lkml.kernel.org/r/20191203160106.18806-2-frederic@kernel.org
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Link: https://lkml.kernel.org/r/20191210191902.GB14449@redhat.com
 ---
- kernel/sched/fair.c | 3 +++
- 1 file changed, 3 insertions(+)
+ kernel/sched/wait_bit.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 08a233e..846f50b 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -10322,6 +10322,9 @@ prio_changed_fair(struct rq *rq, struct task_struct *p, int oldprio)
- 	if (!task_on_rq_queued(p))
- 		return;
- 
-+	if (rq->cfs.nr_running == 1)
-+		return;
-+
- 	/*
- 	 * Reschedule if we are currently running on this runqueue and
- 	 * our priority decreased, or if we are not currently running on
+diff --git a/kernel/sched/wait_bit.c b/kernel/sched/wait_bit.c
+index 45eba18..02ce292 100644
+--- a/kernel/sched/wait_bit.c
++++ b/kernel/sched/wait_bit.c
+@@ -179,6 +179,7 @@ void init_wait_var_entry(struct wait_bit_queue_entry *wbq_entry, void *var, int 
+ 			.bit_nr = -1,
+ 		},
+ 		.wq_entry = {
++			.flags	 = flags,
+ 			.private = current,
+ 			.func	 = var_wake_function,
+ 			.entry	 = LIST_HEAD_INIT(wbq_entry->wq_entry.entry),
