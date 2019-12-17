@@ -2,147 +2,170 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4FBC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76015C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED95621835
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A7EB2146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728365AbfLQMkm (ORCPT
+        id S1728373AbfLQMkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:40:42 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55241 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727029AbfLQMj6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 07:39:58 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1ihC8n-0001pd-8A; Tue, 17 Dec 2019 13:39:53 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 057C41C2A3E;
-        Tue, 17 Dec 2019 13:39:52 +0100 (CET)
-Date:   Tue, 17 Dec 2019 12:39:51 -0000
-From:   "tip-bot2 for Yangtao Li" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] stop_machine: remove try_stop_cpus helper
-Cc:     Yangtao Li <tiny.windzz@gmail.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191214195107.26480-1-tiny.windzz@gmail.com>
-References: <20191214195107.26480-1-tiny.windzz@gmail.com>
+        Tue, 17 Dec 2019 07:40:55 -0500
+Received: from foss.arm.com ([217.140.110.172]:35756 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727029AbfLQMky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 07:40:54 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 02C0C31B;
+        Tue, 17 Dec 2019 04:40:54 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7057C3F718;
+        Tue, 17 Dec 2019 04:40:53 -0800 (PST)
+Date:   Tue, 17 Dec 2019 12:40:51 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org
+Subject: Re: [PATCH 07/13] PCI: cadence: Add new *ops* for CPU addr fixup
+Message-ID: <20191217124050.GD24359@e119886-lin.cambridge.arm.com>
+References: <20191209092147.22901-1-kishon@ti.com>
+ <20191209092147.22901-8-kishon@ti.com>
 MIME-Version: 1.0
-Message-ID: <157658639188.30329.17994429919156860695.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191209092147.22901-8-kishon@ti.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/core branch of tip:
+On Mon, Dec 09, 2019 at 02:51:41PM +0530, Kishon Vijay Abraham I wrote:
+> Cadence driver uses "mem" memory resource to obtain the offset of
+> configuration space address region, memory space address region and
+> message space address region. The obtained offset is used to program
+> the Address Translation Unit (ATU). However certain platforms like TI's
+> J721E SoC require the absolute address to be programmed in the ATU and not
+> just the offset.
+> 
+> The same problem was solved in designware driver using a platform specific
+> ops for CPU addr fixup in commit a660083eb06c5bb0 ("PCI: dwc: designware:
 
-Commit-ID:     a5e37de90e67ac1072a9a44bd0cec9f5e98ded08
-Gitweb:        https://git.kernel.org/tip/a5e37de90e67ac1072a9a44bd0cec9f5e98ded08
-Author:        Yangtao Li <tiny.windzz@gmail.com>
-AuthorDate:    Sat, 14 Dec 2019 19:51:07 
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Tue, 17 Dec 2019 13:32:51 +01:00
+Thanks for this reference, though this doesn't need to be in the commit
+log, please put such comments underneath a ---.
 
-stop_machine: remove try_stop_cpus helper
+> Add new *ops* for CPU addr fixup"). Follow a similar mechanism in
+> Cadence too instead of directly using "mem" memory resource in Cadence
+> PCIe core.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  .../pci/controller/cadence/pcie-cadence-host.c    | 15 ++++-----------
+>  drivers/pci/controller/cadence/pcie-cadence.c     |  8 ++++++--
+>  drivers/pci/controller/cadence/pcie-cadence.h     |  1 +
+>  3 files changed, 11 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> index 2efc33b1cade..cf817be237af 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> @@ -105,15 +105,14 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+>  static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
+>  {
+>  	struct cdns_pcie *pcie = &rc->pcie;
+> -	struct resource *mem_res = pcie->mem_res;
+>  	struct resource *bus_range = rc->bus_range;
+>  	struct resource *cfg_res = rc->cfg_res;
+>  	struct device *dev = pcie->dev;
+>  	struct device_node *np = dev->of_node;
+>  	struct of_pci_range_parser parser;
+> +	u64 cpu_addr = cfg_res->start;
+>  	struct of_pci_range range;
+>  	u32 addr0, addr1, desc1;
+> -	u64 cpu_addr;
+>  	int r, err;
+>  
+>  	/*
+> @@ -126,7 +125,9 @@ static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
+>  	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_PCI_ADDR1(0), addr1);
+>  	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_DESC1(0), desc1);
+>  
+> -	cpu_addr = cfg_res->start - mem_res->start;
+> +	if (pcie->ops->cpu_addr_fixup)
+> +		cpu_addr = pcie->ops->cpu_addr_fixup(pcie, cpu_addr);
+> +
 
-try_stop_cpus is not used after this:
+Won't this patch cause a breakage for existing users that won't have defined a
+cpu_addr_fixup? The offset isn't being calculated and so cpu_addr will be wrong?
 
-commit c190c3b16c0f ("rcu: Switch synchronize_sched_expedited() to
-stop_one_cpu()")
+Thanks,
 
-So remove it.
+Andrew Murray
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20191214195107.26480-1-tiny.windzz@gmail.com
----
- include/linux/stop_machine.h |  7 -------
- kernel/stop_machine.c        | 30 ------------------------------
- 2 files changed, 37 deletions(-)
-
-diff --git a/include/linux/stop_machine.h b/include/linux/stop_machine.h
-index f9a0c61..648298f 100644
---- a/include/linux/stop_machine.h
-+++ b/include/linux/stop_machine.h
-@@ -33,7 +33,6 @@ int stop_two_cpus(unsigned int cpu1, unsigned int cpu2, cpu_stop_fn_t fn, void *
- bool stop_one_cpu_nowait(unsigned int cpu, cpu_stop_fn_t fn, void *arg,
- 			 struct cpu_stop_work *work_buf);
- int stop_cpus(const struct cpumask *cpumask, cpu_stop_fn_t fn, void *arg);
--int try_stop_cpus(const struct cpumask *cpumask, cpu_stop_fn_t fn, void *arg);
- void stop_machine_park(int cpu);
- void stop_machine_unpark(int cpu);
- void stop_machine_yield(const struct cpumask *cpumask);
-@@ -90,12 +89,6 @@ static inline int stop_cpus(const struct cpumask *cpumask,
- 	return -ENOENT;
- }
- 
--static inline int try_stop_cpus(const struct cpumask *cpumask,
--				cpu_stop_fn_t fn, void *arg)
--{
--	return stop_cpus(cpumask, fn, arg);
--}
--
- #endif	/* CONFIG_SMP */
- 
- /*
-diff --git a/kernel/stop_machine.c b/kernel/stop_machine.c
-index 1fe34a9..5d68ec4 100644
---- a/kernel/stop_machine.c
-+++ b/kernel/stop_machine.c
-@@ -453,36 +453,6 @@ int stop_cpus(const struct cpumask *cpumask, cpu_stop_fn_t fn, void *arg)
- 	return ret;
- }
- 
--/**
-- * try_stop_cpus - try to stop multiple cpus
-- * @cpumask: cpus to stop
-- * @fn: function to execute
-- * @arg: argument to @fn
-- *
-- * Identical to stop_cpus() except that it fails with -EAGAIN if
-- * someone else is already using the facility.
-- *
-- * CONTEXT:
-- * Might sleep.
-- *
-- * RETURNS:
-- * -EAGAIN if someone else is already stopping cpus, -ENOENT if
-- * @fn(@arg) was not executed at all because all cpus in @cpumask were
-- * offline; otherwise, 0 if all executions of @fn returned 0, any non
-- * zero return value if any returned non zero.
-- */
--int try_stop_cpus(const struct cpumask *cpumask, cpu_stop_fn_t fn, void *arg)
--{
--	int ret;
--
--	/* static works are used, process one request at a time */
--	if (!mutex_trylock(&stop_cpus_mutex))
--		return -EAGAIN;
--	ret = __stop_cpus(cpumask, fn, arg);
--	mutex_unlock(&stop_cpus_mutex);
--	return ret;
--}
--
- static int cpu_stop_should_run(unsigned int cpu)
- {
- 	struct cpu_stopper *stopper = &per_cpu(cpu_stopper, cpu);
+>  	addr0 = CDNS_PCIE_AT_OB_REGION_CPU_ADDR0_NBITS(12) |
+>  		(lower_32_bits(cpu_addr) & GENMASK(31, 8));
+>  	addr1 = upper_32_bits(cpu_addr);
+> @@ -264,14 +265,6 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>  	}
+>  	rc->cfg_res = res;
+>  
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mem");
+> -	if (!res) {
+> -		dev_err(dev, "missing \"mem\"\n");
+> -		return -EINVAL;
+> -	}
+> -
+> -	pcie->mem_res = res;
+> -
+>  	ret = cdns_pcie_start_link(pcie, true);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to start link\n");
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence.c b/drivers/pci/controller/cadence/pcie-cadence.c
+> index de5b3b06f2d0..bd93d0f92f55 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence.c
+> @@ -113,7 +113,9 @@ void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 fn,
+>  	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_DESC1(r), desc1);
+>  
+>  	/* Set the CPU address */
+> -	cpu_addr -= pcie->mem_res->start;
+> +	if (pcie->ops->cpu_addr_fixup)
+> +		cpu_addr = pcie->ops->cpu_addr_fixup(pcie, cpu_addr);
+> +
+>  	addr0 = CDNS_PCIE_AT_OB_REGION_CPU_ADDR0_NBITS(nbits) |
+>  		(lower_32_bits(cpu_addr) & GENMASK(31, 8));
+>  	addr1 = upper_32_bits(cpu_addr);
+> @@ -140,7 +142,9 @@ void cdns_pcie_set_outbound_region_for_normal_msg(struct cdns_pcie *pcie, u8 fn,
+>  	}
+>  
+>  	/* Set the CPU address */
+> -	cpu_addr -= pcie->mem_res->start;
+> +	if (pcie->ops->cpu_addr_fixup)
+> +		cpu_addr = pcie->ops->cpu_addr_fixup(pcie, cpu_addr);
+> +
+>  	addr0 = CDNS_PCIE_AT_OB_REGION_CPU_ADDR0_NBITS(17) |
+>  		(lower_32_bits(cpu_addr) & GENMASK(31, 8));
+>  	addr1 = upper_32_bits(cpu_addr);
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+> index c879dd3d2893..ffa8b9f78ff8 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence.h
+> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
+> @@ -233,6 +233,7 @@ struct cdns_pcie_ops {
+>  	void	(*write)(void __iomem *addr, int size, u32 value);
+>  	int	(*start_link)(struct cdns_pcie *pcie, bool start);
+>  	bool	(*is_link_up)(struct cdns_pcie *pcie);
+> +	u64     (*cpu_addr_fixup)(struct cdns_pcie *pcie, u64 cpu_addr);
+>  };
+>  
+>  /**
+> -- 
+> 2.17.1
+> 
