@@ -2,45 +2,47 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DDFC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 02:51:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF7BC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 02:52:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEFE02176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 02:51:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D7D5206D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 02:52:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OqothzBS"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ANgepo85"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbfLQCvY (ORCPT
+        id S1726863AbfLQCwS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 21:51:24 -0500
+        Mon, 16 Dec 2019 21:52:18 -0500
 Received: from mail25.static.mailgun.info ([104.130.122.25]:38898 "EHLO
         mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726834AbfLQCvX (ORCPT
+        by vger.kernel.org with ESMTP id S1726616AbfLQCwR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 21:51:23 -0500
+        Mon, 16 Dec 2019 21:52:17 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576551083; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=RI6hFTXW5A6mYS/cai6mDSEfFJSEvJbNcxniuS3AFR4=; b=OqothzBSDSu9+m//fwMRa9EIehpGNd2324vVziqTQWXPRalveqbiA3XWvQ0xuE1EQ6nDtwjx
- QlVTsiziZSIHrBFQFyVCNq0746UO0P3EQq0oDg6ajscNx5U9856PHqAdxdP8oBZz4j1di7Im
- MSsxQoHJHt/zyTFtxwy8bp7fpGA=
+ s=smtp; t=1576551137; h=References: In-Reply-To: References:
+ In-Reply-To: Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=XqcWpfP2FAYmwHb7ctixO6eLZe+tGA9sizqXcSh3r3w=; b=ANgepo85CZZeFC2qd43XTMqMeA1dAstjCAOtBG4qGCZMnsg81fHYkb+jjbY9soE1EMrK6zbh
+ 925Gkz5yEH9fonxuQLCwBBkeC6uWGAbGKuXlzLyOhBBJoWhGvfKm/S0F8PQtsDF+oINAw85+
+ geYf9oDKiwQwqJ1cbmoZnt5FtMQ=
 X-Mailgun-Sending-Ip: 104.130.122.25
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5df842a9.7fca66562e30-smtp-out-n01;
- Tue, 17 Dec 2019 02:51:21 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5df842de.7f2d92f3cea0-smtp-out-n03;
+ Tue, 17 Dec 2019 02:52:14 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CD73AC4479C; Tue, 17 Dec 2019 02:51:20 +0000 (UTC)
+        id 5857EC433A2; Tue, 17 Dec 2019 02:52:13 +0000 (UTC)
 Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: nguyenb)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 417C1C433A2;
-        Tue, 17 Dec 2019 02:51:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 417C1C433A2
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B3A0AC43383;
+        Tue, 17 Dec 2019 02:52:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B3A0AC43383
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=nguyenb@codeaurora.org
 From:   "Bao D. Nguyen" <nguyenb@codeaurora.org>
@@ -48,53 +50,41 @@ To:     ulf.hansson@linaro.org, robh+dt@kernel.org
 Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
         asutoshd@codeaurora.org, cang@codeaurora.org,
         "Bao D. Nguyen" <nguyenb@codeaurora.org>
-Subject: [<PATCH v1> 0/9] SD card bug fixes
-Date:   Mon, 16 Dec 2019 18:50:33 -0800
-Message-Id: <cover.1576540906.git.nguyenb@codeaurora.org>
+Subject: [<PATCH v1> 1/9] mmc: core: Add a cap to use long discard size
+Date:   Mon, 16 Dec 2019 18:50:34 -0800
+Message-Id: <628141610bd44235b0cea04ff110dd4c67027aba.1576540907.git.nguyenb@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <cover.1576540906.git.nguyenb@codeaurora.org>
+References: <cover.1576540906.git.nguyenb@codeaurora.org>
+In-Reply-To: <cover.1576540906.git.nguyenb@codeaurora.org>
+References: <cover.1576540906.git.nguyenb@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These patches include SD card genernal bug fixes.
+Add MMC_CAP2_MAX_DISCARD_SIZE cap which allows setting the max
+discard size value if needed.
+Setting a high value for the max discard size is to fix an issue where
+some SD cards take a long time to perform the card format.
 
-Bao D. Nguyen (2):
-  mmc: core: Add a cap to use long discard size
-  mmc: sd: Fix trivial SD card issues
+Signed-off-by: Bao D. Nguyen <nguyenb@codeaurora.org>
+---
+ include/linux/mmc/host.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-Can Guo (2):
-  mmc: core: fix SD card request queue refcount underflow during
-    shutdown
-  mmc: core: fix one NULL pointer dereference after SD card is removed
-
-Sahitya Tummala (1):
-  mmc: sdhci-msm: Ignore data timeout error for R1B commands
-
-Subhash Jadavani (1):
-  mmc: core: remove shutdown handler
-
-Sujith Reddy Thumma (1):
-  mmc: core: Skip frequency retries for SDCC slots
-
-Vijay Viswanath (1):
-  mmc: host: Add device_prepare pm for mmc_host
-
-Ziqi Chen (1):
-  mmc: core: allow hosts to specify a large discard size
-
- drivers/mmc/core/block.c |  4 ++--
- drivers/mmc/core/bus.c   | 13 +++++++++++++
- drivers/mmc/core/core.c  | 26 +++++++++++++-------------
- drivers/mmc/core/host.c  | 19 +++++++++++++++++++
- drivers/mmc/core/mmc.c   | 22 ----------------------
- drivers/mmc/core/queue.c | 10 +++++++---
- drivers/mmc/core/sd.c    | 10 ++++++----
- drivers/mmc/host/sdhci.c | 15 +++++++++------
- drivers/mmc/host/sdhci.h |  7 +++++++
- include/linux/mmc/host.h |  1 +
- 10 files changed, 77 insertions(+), 50 deletions(-)
-
+diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
+index ba70338..f1a767d 100644
+--- a/include/linux/mmc/host.h
++++ b/include/linux/mmc/host.h
+@@ -348,6 +348,7 @@ struct mmc_host {
+ #define MMC_CAP2_FULL_PWR_CYCLE	(1 << 2)	/* Can do full power cycle */
+ #define MMC_CAP2_HS200_1_8V_SDR	(1 << 5)        /* can support */
+ #define MMC_CAP2_HS200_1_2V_SDR	(1 << 6)        /* can support */
++#define MMC_CAP2_MAX_DISCARD_SIZE (1 << 8)      /* use max discard, ignoring max_busy_timeout parameter */
+ #define MMC_CAP2_HS200		(MMC_CAP2_HS200_1_8V_SDR | \
+ 				 MMC_CAP2_HS200_1_2V_SDR)
+ #define MMC_CAP2_CD_ACTIVE_HIGH	(1 << 10)	/* Card-detect signal active high */
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
