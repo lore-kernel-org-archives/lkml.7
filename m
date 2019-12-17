@@ -2,160 +2,179 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FBFC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E64DC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:41:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16E0A24655
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F5C02465E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:41:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727825AbfLQPki (ORCPT
+        id S1728083AbfLQPlK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 10:40:38 -0500
-Received: from foss.arm.com ([217.140.110.172]:40798 "EHLO foss.arm.com"
+        Tue, 17 Dec 2019 10:41:10 -0500
+Received: from honk.sigxcpu.org ([24.134.29.49]:43352 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727415AbfLQPkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 10:40:37 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C29281FB;
-        Tue, 17 Dec 2019 07:40:36 -0800 (PST)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0D4A73F67D;
-        Tue, 17 Dec 2019 07:40:33 -0800 (PST)
-Date:   Tue, 17 Dec 2019 15:40:31 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Magnus Karlsson <magnus.karlsson@gmail.com>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        kirill.shutemov@linux.intel.com, justin.he@arm.com,
-        linux-mm@kvack.org,
-        syzbot <syzbot+9301f2f33873407d5b33@syzkaller.appspotmail.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        bpf <bpf@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>, hawk@kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        linux-kernel@vger.kernel.org,
-        "Karlsson, Magnus" <magnus.karlsson@intel.com>,
-        Network Development <netdev@vger.kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        syzkaller-bugs@googlegroups.com, Yonghong Song <yhs@fb.com>
-Subject: Re: WARNING in wp_page_copy
-Message-ID: <20191217154031.GI5624@arrakis.emea.arm.com>
-References: <000000000000a6f2030598bbe38c@google.com>
- <0000000000000e32950599ac5a96@google.com>
- <20191216150017.GA27202@linux.fritz.box>
- <CAJ8uoz3nCxcmnPonNunYhswskidn=PnN8=4_jXW4B=Xu4k_DoQ@mail.gmail.com>
- <CAJ8uoz312gDBGpqOJiKqrXn456sy6u+Gnvcvv_+0=EimasRoUw@mail.gmail.com>
+        id S1727415AbfLQPlK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 10:41:10 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id B7084FB03;
+        Tue, 17 Dec 2019 16:41:07 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id MCiGb_lMcUkK; Tue, 17 Dec 2019 16:41:06 +0100 (CET)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 01E8B498AE; Tue, 17 Dec 2019 16:40:59 +0100 (CET)
+Date:   Tue, 17 Dec 2019 16:40:59 +0100
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] leds: lm3692x: Allow to set ovp and brigthness mode
+Message-ID: <20191217154059.GA3929@bogon.m.sigxcpu.org>
+References: <cover.1576499103.git.agx@sigxcpu.org>
+ <9c87a17aefbf758d58f199f7046114ee7505a1fa.1576499103.git.agx@sigxcpu.org>
+ <3d66b07d-b4c5-43e6-4378-d63cc84b8d43@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAJ8uoz312gDBGpqOJiKqrXn456sy6u+Gnvcvv_+0=EimasRoUw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3d66b07d-b4c5-43e6-4378-d63cc84b8d43@ti.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Magnus,
-
-Thanks for investigating this. I have more questions below rather than a
-solution.
-
-On Tue, Dec 17, 2019 at 02:27:22PM +0100, Magnus Karlsson wrote:
-> On Mon, Dec 16, 2019 at 4:10 PM Magnus Karlsson
-> <magnus.karlsson@gmail.com> wrote:
-> > On Mon, Dec 16, 2019 at 4:00 PM Daniel Borkmann <daniel@iogearbox.net> wrote:
-> > >
-> > > On Sat, Dec 14, 2019 at 08:20:07AM -0800, syzbot wrote:
-> > > > syzbot has found a reproducer for the following crash on:
-> > > >
-> > > > HEAD commit:    1d1997db Revert "nfp: abm: fix memory leak in nfp_abm_u32_..
-> > > > git tree:       net-next
-> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=1029f851e00000
-> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=cef1fd5032faee91
-> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=9301f2f33873407d5b33
-> > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=119d9fb1e00000
-> > > >
-> > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > > Reported-by: syzbot+9301f2f33873407d5b33@syzkaller.appspotmail.com
-> > >
-> > > Bjorn / Magnus, given xsk below, PTAL, thanks!
-> >
-> > Thanks. I will take a look at it right away.
-> >
-> > /Magnus
+Hi Dan,
+On Tue, Dec 17, 2019 at 06:53:45AM -0600, Dan Murphy wrote:
+> Guido
 > 
-> After looking through the syzcaller report, I have the following
-> hypothesis that would dearly need some comments from MM-savy people
-> out there. Syzcaller creates, using mmap, a memory area that is
-
-I guess that's not an anonymous mmap() since we don't seem to have a
-struct page for src in cow_user_page() (the WARN_ON_ONCE path). Do you
-have more information on the mmap() call?
-
-> write-only and supplies this to a getsockopt call (in this case
-> XDP_STATISTICS, but probably does not matter really) as the area where
-> it wants the values to be stored. When the getsockopt implementation
-> gets to copy_to_user() to write out the values to user space, it
-> encounters a page fault when accessing this write-only page. When
-> servicing this, it gets to the following piece of code that triggers
-> the warning that syzcaller reports:
+> On 12/16/19 6:28 AM, Guido Günther wrote:
+> > Overvoltage protection and brightness mode are currently hardcoded
+> > as disabled in the driver. Make these configurable via DT.
 > 
-> static inline bool cow_user_page(struct page *dst, struct page *src,
->                                  struct vm_fault *vmf)
-> {
-> ....
-> snip
-> ....
->        /*
->          * This really shouldn't fail, because the page is there
->          * in the page tables. But it might just be unreadable,
->          * in which case we just give up and fill the result with
->          * zeroes.
->          */
->         if (__copy_from_user_inatomic(kaddr, uaddr, PAGE_SIZE)) {
->                 /*
->                  * Give a warn in case there can be some obscure
->                  * use-case
->                  */
->                 WARN_ON_ONCE(1);
->                 clear_page(kaddr);
->         }
+> Can we split these up to two separate patch series?
 
-So on x86, a PROT_WRITE-only private page is mapped as non-readable? I
-had the impression that write-only still allows reading by looking at
-the __P010 definition.
+Sure, should the binding doc updates be split as well?
 
-Anyway, if it's not an anonymous mmap(), whoever handled the mapping may
-have changed the permissions (e.g. some device).
+> We are adding 2 separate features and if something is incorrect with one of
+> the changes it is a bit hard to debug.
+> 
+> > 
+> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> > ---
+> >   drivers/leds/leds-lm3692x.c | 43 +++++++++++++++++++++++++++++++------
+> >   1 file changed, 37 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/leds/leds-lm3692x.c b/drivers/leds/leds-lm3692x.c
+> > index 8b408102e138..2c084b333628 100644
+> > --- a/drivers/leds/leds-lm3692x.c
+> > +++ b/drivers/leds/leds-lm3692x.c
+> > @@ -114,6 +114,7 @@ struct lm3692x_led {
+> >   	struct regulator *regulator;
+> >   	int led_enable;
+> >   	int model_id;
+> > +	u8 boost_ctrl, brightness_ctrl;
+> >   };
+> >   static const struct reg_default lm3692x_reg_defs[] = {
+> > @@ -249,10 +250,7 @@ static int lm3692x_init(struct lm3692x_led *led)
+> >   	if (ret)
+> >   		goto out;
+> > -	ret = regmap_write(led->regmap, LM3692X_BOOST_CTRL,
+> > -			LM3692X_BOOST_SW_1MHZ |
+> > -			LM3692X_BOOST_SW_NO_SHIFT |
+> > -			LM3692X_OCP_PROT_1_5A);
+> > +	ret = regmap_write(led->regmap, LM3692X_BOOST_CTRL, led->boost_ctrl);
+> >   	if (ret)
+> >   		goto out;
+> 
+> regmap_update_bits
+> 
+> 
+> > @@ -268,8 +266,7 @@ static int lm3692x_init(struct lm3692x_led *led)
+> >   	if (ret)
+> >   		goto out;
+> > -	ret = regmap_write(led->regmap, LM3692X_BRT_CTRL,
+> > -			LM3692X_BL_ADJ_POL | LM3692X_RAMP_EN);
+> > +	ret = regmap_write(led->regmap, LM3692X_BRT_CTRL, led->brightness_ctrl);
+> >   	if (ret)
+> >   		goto out;
+> regmap_update_bits
+> > @@ -326,6 +323,8 @@ static int lm3692x_probe_dt(struct lm3692x_led *led)
+> >   {
+> >   	struct fwnode_handle *child = NULL;
+> >   	struct led_init_data init_data = {};
+> > +	u32 ovp = 0;
+> > +	bool exp_mode;
+> >   	int ret;
+> >   	led->enable_gpio = devm_gpiod_get_optional(&led->client->dev,
+> > @@ -350,6 +349,38 @@ static int lm3692x_probe_dt(struct lm3692x_led *led)
+> >   		led->regulator = NULL;
+> >   	}
+> > +	led->boost_ctrl = LM3692X_BOOST_SW_1MHZ |
+> > +		LM3692X_BOOST_SW_NO_SHIFT |
+> > +		LM3692X_OCP_PROT_1_5A;
+> Make this a #define and then it can be reused as a mask for
+> regmap_update_bits
+> > +	ret = device_property_read_u32(&led->client->dev,
+> > +				       "ti,overvoltage-volts", &ovp);
+> > +	if (!ret) {
+> 
+> if (ret)
+> 
+>     set boost_ctrl to default value since the default is not 0
+> 
+> led->boost_ctrl |= LM3692X_OVP_29V;
+> 
+> else
+> 
+>      do case
+> 
+> > +		switch (ovp) {
+> > +		case 0:
+> > +			break;
+> > +		case 22:
+> If the value is 21v why is this case 22?  DT binding says 21 is the first
+> value
+> > +			led->boost_ctrl |= LM3692X_OVP_21V;
+> > +			break;
+> > +		case 25:
+> > +			led->boost_ctrl |= LM3692X_OVP_25V;
+> > +			break;
+> > +		case 29:
+> > +			led->boost_ctrl |= LM3692X_OVP_29V;
+> > +			break;
+> > +		default:
+> > +			dev_err(&led->client->dev, "Invalid OVP %d\n", ovp);
+> > +			return -EINVAL;
+> > +		}
+> > +	}
+> > +	dev_dbg(&led->client->dev, "OVP: %dV", ovp);
+> > +
+> extra debug statement
+> > +	led->brightness_ctrl = LM3692X_BL_ADJ_POL | LM3692X_RAMP_EN;
+> Same comment as before on the #define
+> > +	exp_mode = device_property_read_bool(&led->client->dev,
+> > +				     "ti,brightness-mapping-exponential");
+> > +	dev_dbg(&led->client->dev, "Exponential brightness: %d", exp_mode);
+> 
+> extra debug statement
 
-> So without a warning. My hypothesis is that if we create a page in the
-> same way as syzcaller then any getsockopt that does a copy_to_user()
-> (pretty much all of them I guess) will get this warning.
+They're not extra but meant to ease debugging the driver long therm but
+i can drop these if that's not wanted. The rest makes a lot of sense.
+Thanks a lot for having a look so promptly!
 
-The copy_to_user() only triggers the do_wp_page() fault handling. If
-this is a CoW page (private read-only presumably, or at least not
-writeable), the kernel tries to copy the original page given to
-getsockopt into a new page and restart the copy_to_user(). Since the
-kernel doesn't have a struct page for this (e.g. PFN mapping), it uses
-__copy_from_user_inatomic() which fails because of the read permission.
+Cheers,
+ -- Guido
 
-> I have not tried this, so I might be wrong. If this is true, then the
-> question is what to do about it. One possible fix would be just to
-> remove the warning to get the same behavior as before. But it was
-> probably put there for a reason.
-
-It was there for some obscure cases, as the comment says ;). If the
-above is a valid scenario that the user can trigger, we should probably
-remove the WARN_ON.
-
--- 
-Catalin
+> 
+> Dan
+> 
+> 
