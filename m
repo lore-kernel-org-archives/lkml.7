@@ -2,76 +2,46 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 143DDC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:16:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D38DC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7D9521739
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:16:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pNerajbJ"
+	by mail.kernel.org (Postfix) with ESMTP id F1B3420663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:17:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbfLQOQr (ORCPT
+        id S1728868AbfLQORb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:16:47 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:40046 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728554AbfLQOQr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:16:47 -0500
-Received: by mail-lf1-f65.google.com with SMTP id i23so7068822lfo.7;
-        Tue, 17 Dec 2019 06:16:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xlRkPJ2SEXs8vMsht2fGp1KJqPki3AeywUT3STRcBqE=;
-        b=pNerajbJfMbMciD+1btyom7lLX1CPk4VtH9PLBldrb/4MWc+pFhws6C8JRCjwOem3B
-         1xmxBvdXdmyxGrAl7ML9tWNAMI3i6omtt7Fb+ksrOs6u9VER5hAJnO0fOl6JDmHDyO2p
-         0Ito47Affr4qm7yUNkNbQmbiFwi+al+6aL429a1O773bP6KKve4Sl0qGTf3pvtImL2Od
-         3SkxVThHn8nqxPajDFmhylmcfSAbXn+yMU7YBRTw0HmXZomQdduDZpjXsK2o3eHKcO0w
-         cywyK95ghbpNCoU/xxz3CF+2QYF1bWunxgZ2B0cbH6zP0wQZcDNL5OYDzLAbnYGFqbfF
-         qxtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xlRkPJ2SEXs8vMsht2fGp1KJqPki3AeywUT3STRcBqE=;
-        b=PFTAmBI5Ac7DaTG7en+j5qiMdsRU/15pcN+cHHQAuWAsaAE65PKaycIWoVn2k+PNxR
-         iEQR+gBKcxgjxIt4/PNlg+rtASY3ysg3VYB1d9UsDVhLtp3gq4MzLYW1XANgizmeQyBm
-         ThYwbrW8vP9B2qSstERgKYM7JhZY49LWT+Y/vXT2MxRDWPbJpEoGe+Gub+URQX+CWUNe
-         VW1zXS/tU3PbKfeUSQgxyHalVcTfTtfY3mmWVWr9SBMOu2Drbhiu0CL2CapgfBbVyJ78
-         bDO9aZ21C1nJnj6OTXn8l1Q3PwKJOWUH1wzlZyEZo7VEp2116hsnh/tOep9uL8pVJ8pq
-         EzBg==
-X-Gm-Message-State: APjAAAVCdR+Us3U6+qNZItMUMqtaWFnBVkBBEv2DmI8ozyP/3Wrwdsi5
-        iUWCJjSw4s6D1o7nmNaFOYfaVnMVcPo=
-X-Google-Smtp-Source: APXvYqzZmO0QaN360MRudjlIAma561Iv+ukGoVeX405aX62AZOqAfm4KOdQWEx2sa3SkZdPmUapC0w==
-X-Received: by 2002:a19:7015:: with SMTP id h21mr2839860lfc.68.1576592204973;
-        Tue, 17 Dec 2019 06:16:44 -0800 (PST)
-Received: from [172.31.190.83] ([86.57.146.226])
-        by smtp.gmail.com with ESMTPSA id h10sm1562537ljc.39.2019.12.17.06.16.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 17 Dec 2019 06:16:44 -0800 (PST)
-Subject: Re: [PATCH 3/3] io_uring: move *queue_link_head() from common path
-To:     Dmitry Dolgov <9erthalion6@gmail.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1576538176.git.asml.silence@gmail.com>
- <eda17f0736faff0876c580f1cd841b61c92d7e39.1576538176.git.asml.silence@gmail.com>
- <20191217140057.vswyslavkmrbcebz@localhost>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Message-ID: <3d59d0ed-50c0-2308-7b6d-c3f5d4459638@gmail.com>
-Date:   Tue, 17 Dec 2019 17:16:43 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Tue, 17 Dec 2019 09:17:31 -0500
+Received: from relay.sw.ru ([185.231.240.75]:46920 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728554AbfLQORa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 09:17:30 -0500
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1ihDeB-0005aE-AS; Tue, 17 Dec 2019 17:16:23 +0300
+Subject: Re: [PATCH RFC 0/3] block,ext4: Introduce REQ_OP_ASSIGN_RANGE to
+ reflect extents allocation in block device internals
+To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, axboe@kernel.dk
+Cc:     tytso@mit.edu, adilger.kernel@dilger.ca, ming.lei@redhat.com,
+        osandov@fb.com, jthumshirn@suse.de, minwoo.im.dev@gmail.com,
+        damien.lemoal@wdc.com, andrea.parri@amarulasolutions.com,
+        hare@suse.com, tj@kernel.org, ajay.joshi@wdc.com, sagi@grimberg.me,
+        dsterba@suse.com, chaitanya.kulkarni@wdc.com, bvanassche@acm.org,
+        dhowells@redhat.com, asml.silence@gmail.com
+References: <157599668662.12112.10184894900037871860.stgit@localhost.localdomain>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <750538f7-33af-d98d-47d1-9753fd87e8fd@virtuozzo.com>
+Date:   Tue, 17 Dec 2019 17:16:22 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191217140057.vswyslavkmrbcebz@localhost>
+In-Reply-To: <157599668662.12112.10184894900037871860.stgit@localhost.localdomain>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -80,52 +50,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/17/2019 5:00 PM, Dmitry Dolgov wrote:
->> On Tue, Dec 17, 2019 at 02:22:09AM +0300, Pavel Begunkov wrote:
->>
->> Move io_queue_link_head() to links handling code in io_submit_sqe(),
->> so it wouldn't need extra checks and would have better data locality.
->>
->> ---
->>  fs/io_uring.c | 32 ++++++++++++++------------------
->>  1 file changed, 14 insertions(+), 18 deletions(-)
->>
->> diff --git a/fs/io_uring.c b/fs/io_uring.c
->> index bac9e711e38d..a880ed1409cb 100644
->> --- a/fs/io_uring.c
->> +++ b/fs/io_uring.c
->> @@ -3373,13 +3373,15 @@ static bool io_submit_sqe(struct io_kiocb *req, struct io_submit_state *state,
->>  			  struct io_kiocb **link)
->>  {
->>  	struct io_ring_ctx *ctx = req->ctx;
->> +	unsigned int sqe_flags;
->>  	int ret;
->>
->> +	sqe_flags = READ_ONCE(req->sqe->flags);
-> 
-> Just out of curiosity, why READ_ONCE it necessary here? I though, that
-> since io_submit_sqes happens within a uring_lock, it's already
-> protected. Do I miss something?
-> 
-SQEs are rw-shared with the userspace, that's it. Probably, there are
-more places where proper READ_ONCE() annotations have been lost.
+Hi!
 
->> @@ -3421,9 +3423,15 @@ static bool io_submit_sqe(struct io_kiocb *req, struct io_submit_state *state,
->>  		}
->>  		trace_io_uring_link(ctx, req, head);
->>  		list_add_tail(&req->link_list, &head->link_list);
->> -	} else if (req->sqe->flags & (IOSQE_IO_LINK|IOSQE_IO_HARDLINK)) {
->> +
->> +		/* last request of a link, enqueue the link */
->> +		if (!(sqe_flags & IOSQE_IO_LINK)) {
-> 
-> Yes, as you mentioned in the previous email, it seems correct that if
-> IOSQE_IO_HARDLINK imply IOSQE_IO_LINK, then here we need to check both.
-> 
->> +			io_queue_link_head(head);
->> +			*link = NULL;
->> +		}
->> +	} else if (sqe_flags & (IOSQE_IO_LINK|IOSQE_IO_HARDLINK)) {
+Any comments on this?
 
--- 
-Pavel Begunkov
+Thanks
+
+On 10.12.2019 19:56, Kirill Tkhai wrote:
+> Information about continuous extent placement may be useful
+> for some block devices. Say, distributed network filesystems,
+> which provide block device interface, may use this information
+> for better blocks placement over the nodes in their cluster,
+> and for better performance. Block devices, which map a file
+> on another filesystem (loop), may request the same length extent
+> on underlining filesystem for less fragmentation and for batching
+> allocation requests. Also, hypervisors like QEMU may use this
+> information for optimization of cluster allocations.
+> 
+> This patchset introduces REQ_OP_ASSIGN_RANGE, which is going
+> to be used for forwarding user's fallocate(0) requests into
+> block device internals. It rather similar to existing
+> REQ_OP_DISCARD, REQ_OP_WRITE_ZEROES, etc. The corresponding
+> exported primitive is called blkdev_issue_assign_range().
+> See [1/3] for the details.
+> 
+> Patch [2/3] teaches loop driver to handle REQ_OP_ASSIGN_RANGE
+> requests by calling fallocate(0).
+> 
+> Patch [3/3] makes ext4 to notify a block device about fallocate(0).
+> 
+> Here is a simple test I did:
+> https://gist.github.com/tkhai/5b788651cdb74c1dbff3500745878856
+> 
+> I attached a file on ext4 to loop. Then, created ext4 partition
+> on loop device and started the test in the partition. Direct-io
+> is enabled on loop.
+> 
+> The test fallocates 4G file and writes from some offset with
+> given step, then it chooses another offset and repeats. After
+> the test all the blocks in the file become written.
+> 
+> The results shows that batching extents-assigning requests improves
+> the performance:
+> 
+> Before patchset: real ~ 1min 27sec
+> After patchset:  real ~ 1min 16sec (18% better)
+> 
+> Ordinary fallocate() before writes improves the performance
+> by batching the requests. These results just show, the same
+> is in case of forwarding extents information to underlining
+> filesystem.
+> ---
+> 
+> Kirill Tkhai (3):
+>       block: Add support for REQ_OP_ASSIGN_RANGE operation
+>       loop: Forward REQ_OP_ASSIGN_RANGE into fallocate(0)
+>       ext4: Notify block device about fallocate(0)-assigned blocks
+> 
+> 
+>  block/blk-core.c          |    4 +++
+>  block/blk-lib.c           |   70 +++++++++++++++++++++++++++++++++++++++++++++
+>  block/blk-merge.c         |   21 ++++++++++++++
+>  block/bounce.c            |    1 +
+>  drivers/block/loop.c      |    5 +++
+>  fs/ext4/ext4.h            |    1 +
+>  fs/ext4/extents.c         |   11 ++++++-
+>  include/linux/bio.h       |    3 ++
+>  include/linux/blk_types.h |    2 +
+>  include/linux/blkdev.h    |   29 +++++++++++++++++++
+>  10 files changed, 145 insertions(+), 2 deletions(-)
+> 
+> --
+> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+> 
+
