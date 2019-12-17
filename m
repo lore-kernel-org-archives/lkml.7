@@ -2,98 +2,107 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01534C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7859EC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5A1C2072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:44:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F21C24655
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:45:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="KzqHlTMn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729184AbfLQOop (ORCPT
+        id S1729040AbfLQOp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:44:45 -0500
-Received: from mout.kundenserver.de ([212.227.126.130]:36969 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728573AbfLQOoo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:44:44 -0500
-Received: from [192.168.1.155] ([95.114.21.161]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MuUvS-1hqm5e2k0Q-00rXXn; Tue, 17 Dec 2019 15:44:28 +0100
-Subject: Re: [PATCH] RFC: platform driver registering via initcall tables
-To:     Greg KH <greg@kroah.com>
-Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, dmitry.torokhov@gmail.com,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com,
-        arnd@arndb.de, masahiroy@kernel.org, michal.lkml@markovi.net,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        linux-gpio@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-References: <20191217102219.29223-1-info@metux.net>
- <20191217103152.GB2914497@kroah.com>
- <6422bc88-6d0a-7b51-aaa7-640c6961b177@metux.net>
- <20191217140646.GC3489463@kroah.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <d938b8e1-d9ce-9ad6-4178-86219e99d4df@metux.net>
-Date:   Tue, 17 Dec 2019 15:43:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 17 Dec 2019 09:45:57 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:35976 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728573AbfLQOp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 09:45:56 -0500
+Received: from zn.tnic (p200300EC2F0BBF00B1FF9AA6AAA46E12.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:bf00:b1ff:9aa6:aaa4:6e12])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 53EF31EC0C98;
+        Tue, 17 Dec 2019 15:45:55 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1576593955;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=4Z3n2EH/Q0VRUKMKsCjrgjVpECFcgut+s/l07f0q4KQ=;
+        b=KzqHlTMnAxbxCs4KE/SDF5ei56nQeE+tLbIS3dTJN7rDw1vGM3hz6vyYTX8HdiUSntYNG6
+        TBze4+Fy7qr6GDN20idaL3ly5eYL1IqNv7ekgn3Dqw0UshJMok7GIj8z4Mis1UNsHR+Y6O
+        pgmSPsocd1sn6GhNrFCczQafMRXNFbU=
+Date:   Tue, 17 Dec 2019 15:45:48 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, sean.j.christopherson@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
+        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
+        puiterwijk@redhat.com
+Subject: Re: [PATCH v24 06/24] x86/sgx: Add wrappers for ENCLS leaf functions
+Message-ID: <20191217144548.GF28788@zn.tnic>
+References: <20191129231326.18076-1-jarkko.sakkinen@linux.intel.com>
+ <20191129231326.18076-7-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20191217140646.GC3489463@kroah.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: tl
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:w0io69mBkaf+1h5xS2clNhiKVEe0x4xPMiO1d6eDOgUuj5grIk6
- So0gw1+GpivSUVTFQR/DDSbg+QPfwUh7WmxUQSwRGfkUPGn5UuLFc7ZXrVgMiGCWcvV7EnZ
- YcouJJBHv4s14A2UoTWwsoWv1v7AXM1bV8eKUMEFutfAUA0OO6kYs7L0qW0jC11eMqimXtO
- a6XJNpIUDfbJJ14c1ttfw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:sYdPWCf9KOc=:0AdzDPaTOQKhydTgTxPD3i
- 7vxT1r6DXk1q3sntultkN3yeyfwZO1L5/I1tey9mzWV4VA+QtLhy8j/GxOIkVoro6LseGlci6
- W12X0KPN6zHyzUFSEN+WudCDKhMSlfHeKZFry+8utzzVh6X9+igOSGELwhRWwdqQJiZOcu0oO
- QZ05ieWKgwvl2Uh/MTg3RL2rBdrdsEAyemNTcVIECVbSPuHPq8auHKLK93V7iegjvA0alhL1U
- /WaxrxT+hXtjLC5Y831LJC9pTnymxqwddhRor0yitiemCO20+Mt4kNnapMMvBDlgit3U9kCWQ
- ghGaWfk2sB8r7OhNMqgF4AcETtelNyx8ZQjuxDdhj3ikLhlIf4dSz/5U1KyusXwnJ7lk0EX8V
- dPLRb30N/xbIpSx44Lhd6/rgXBKpZ7FH12J/8gAAyWIKwO+w0pwFu8U8MTiUnCLlpDB7s67q8
- Tq14Jj4cBz5vzTEHK1X6ZMsayDQl4Lm9NCbf+JrbqipltyHENFei9Roxzr27MBzuTGO7qSiT+
- IDmX9O+smuMCUheOjOxXAWdsli6m+5yHIx4jWjyt9GNlGerF+YvMktccX/fSzS+5MhHH9zJqy
- DgtqxPSJhnAd5M/YSfD7Ivsjhoxx6G5V2BHwwGwEhVxZWIK6leQxc9x7ntbA+ploa4GgA/8Mv
- AOdgb5DGJbfqvDiIjJyE3Kq6vR97PhyIOT4HY9flUCSa1gKkPC5p/WvWC6mpXlfXCRgzt3IF+
- 3oVArTRk9F1Kc+K0wuTuPBtt4Kgs+Un9XjZUDiZdMnIqH1J2Ed29wURCgNhD6S8guCL7jAL7I
- Z0z8+jHTBIU3qT6HA9SqRQtKynKLt5/00XkPx6phElHcm7JrtRgFPVAz1gTlfHSQr6qUSFbrz
- q03NkMAgx3EPRvOQwR7w==
+Content-Disposition: inline
+In-Reply-To: <20191129231326.18076-7-jarkko.sakkinen@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.12.19 15:06, Greg KH wrote:
+On Sat, Nov 30, 2019 at 01:13:08AM +0200, Jarkko Sakkinen wrote:
+> +/**
+> + * encls_failed() - Check if an ENCLS leaf function failed
+> + * @ret:	the return value of an ENCLS leaf function call
+> + *
+> + * Check if an ENCLS leaf function failed. This happens when the leaf function
+> + * causes a fault that is not caused by an EPCM conflict or when the leaf
+> + * function returns a non-zero value.
+> + */
+> +static inline bool encls_failed(int ret)
+> +{
+> +	int epcm_trapnr =
+> +		boot_cpu_has(X86_FEATURE_SGX2) ? X86_TRAP_PF : X86_TRAP_GP;
+> +	bool fault = ret & ENCLS_FAULT_FLAG;
+> +
+> +	return (fault && ENCLS_TRAPNR(ret) != epcm_trapnr) || (!fault && ret);
+> +}
 
-> That's not needed, and you are going to break the implicit ordering we
-> already have with link order.  
+Can we make this function more readable?
 
-Ups, 10 points for you - I didn't consider that.
+static inline bool encls_failed(int ret)
+{
+        int epcm_trapnr;
 
-> You are going to have to figure out what
-> bus type the driver is, to determine what segment it was in, to figure
-> out what was loaded before what.
+        if (boot_cpu_has(X86_FEATURE_SGX2))
+                epcm_trapnr = X86_TRAP_PF;
+        else
+                epcm_trapnr = X86_TRAP_GP;
 
-hmm, if it's just the ordering by bus type (but not within one bus
-type), then it shouldn't be the big deal to fix, as I'll need one table
-and register-loop per bus-type anyways.
+        if (ret & ENCLS_FAULT_FLAG)
+                return ENCLS_TRAPNR(ret) != epcm_trapnr;
 
-By the way: how is there init order ensured with dynamically loaded
-modules ? (for cases where there aren't explicit symbol dependencies)
+        return !!ret;
+}
 
+I hope I've converted it correctly but I might've missed some corner
+case...
 
---mtx
+Thx.
 
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
