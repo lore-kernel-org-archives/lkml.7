@@ -5,65 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB59C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C65C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F828206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0D4C21582
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 21:04:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UW7u8lc4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pyfnlm1M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728241AbfLQVD1 (ORCPT
+        id S1728801AbfLQVEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 16:03:27 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38766 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727906AbfLQVDW (ORCPT
+        Tue, 17 Dec 2019 16:04:52 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:33380 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728208AbfLQVD0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 16:03:22 -0500
-Received: by mail-wr1-f68.google.com with SMTP id y17so12834201wrh.5;
-        Tue, 17 Dec 2019 13:03:21 -0800 (PST)
+        Tue, 17 Dec 2019 16:03:26 -0500
+Received: by mail-wm1-f65.google.com with SMTP id d139so3121143wmd.0;
+        Tue, 17 Dec 2019 13:03:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=UEz81YOfOgBDrXB7OBw3GPro4KGLJ3XN1bscFo4nSHA=;
-        b=UW7u8lc4UrnlQsYqvTM5O8wp4aApvF3HHuSPVVE8kShJFzS9keNU+nrzSJ/OIakMz7
-         fCrtDfUlR1zsDjKHEIpaVvTNeM3vjeypRhfqoKgIHZ2gTcqzrhFCN9tqiKsZFAtxLS6T
-         h8Z2uh3tmJTwO6zMVd5R/k65XLu+Nav5giW9RrR84PT6KD8qcfvm5YzgyzC20naOrRb5
-         AHrMMr5+D/m5l81BkzXcmZqnfTMrViHbyjCFdeHM+7D8BCCxel0sXOzzQ0WCv25XcVcG
-         jXBV1E9s5D5Wjy/7XoCmLLTgVX68T7ucxh+yo2aztUUQ/dvzLUvfDMwHdXrGhyr0KKB6
-         EyQQ==
+        bh=fSUWXakASxcG8jM5XmWMHJ/oz4Kt5+UVWCiun2B1998=;
+        b=Pyfnlm1MgePaptkY5iNr5orCz+53W7l4S0FaB/OcdJ4Ytc8zlPvzu2axf8pUzLn5WM
+         NSeJWGaPDOJcgvAt9jdxB9E5Tryhv+AhpjfR5+9S4HfE9X0I3ICCTRlHfUotnV5jRyp0
+         CozbyCwcQVir1sWSqPU3N4iE3x3R4En2VPLkayuItmYnHH0xrmrktZ52MIYNftnK2snT
+         GxIRqCTQ+9Unq1yEEQPalZt+AOvl01+6DaRx31MUlXISqffaQpjNzTFCfpzVxE84w07p
+         ddOsrTq2ix6okP3LbaihhcKD8uyK2tyw3BZQniUt2qheSiZ5WOK406PcYa/+HcL7rdx9
+         FwhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=UEz81YOfOgBDrXB7OBw3GPro4KGLJ3XN1bscFo4nSHA=;
-        b=LXErbKSA4RmbMJ1BKYKI0hvhRZMZJJW9PP4tDy5o1BywPiY1Pqxe0DfIbblyBK5vQ/
-         DhU+YqfedgLhYOdull+erHwFmQlYH5GcrjDim/QyB2yx0037zH3d1CZoAbb6+dwAph0L
-         kP5R+qKUdtb4BgyItj+9mt3/pJH2et+aobnfiFdFiv8VlasemWlX39s8D6VWZ5yQ0Dd2
-         QnaqsOa2zUPUy8wcpa280Ty+pbyCnwrxB7a7L8qLU4dpSWyrsYaESr8bLaBaLuFsYbO7
-         KSg+PNEuqvgZlkZeKiBK62DOG8clijrq80pij4xG0AO7c4SqEX/mTwNbYyTK5bojxjha
-         GHDw==
-X-Gm-Message-State: APjAAAU6GV67p56s0scNgirpQgAYhD03KOhYu5bFopetz+AmbiqzuBfl
-        uwYzKqt7aD3ygxdmqiBzEXg=
-X-Google-Smtp-Source: APXvYqwkOwdxPepwdqVfFroGEWL76TWFApWlfrJJioALoFLCcNgqmUhPw1gYUlzqbe8/6KUp+pULmg==
-X-Received: by 2002:adf:bc87:: with SMTP id g7mr40599814wrh.121.1576616600781;
-        Tue, 17 Dec 2019 13:03:20 -0800 (PST)
+        bh=fSUWXakASxcG8jM5XmWMHJ/oz4Kt5+UVWCiun2B1998=;
+        b=LRfxh5mEx79iu6dto5pxYif6yRo3o3ZzcqgoljZh2mJVEJfm7h+R5Ave6E1zMxbKgQ
+         4pOY4Iua7/AKGACraTztz7A6/YZL8f4ndTh0iJMNcOfmkF9KvFmgQAFVu8AkKOySl8MR
+         DZUE/8I+Nj6X+Ov69ay7HlVrB5EyXM+pnDXAlAw8EmoP7Y4QaoUEsZVdnqbungWG99B+
+         gng7jZvaCuX/Q0oOiQSqWUsL61OElM/cIaubQGxvzGrxvW0xW2lOdEUrcOn5y4fNSNt5
+         zixGxfkSn22RWBYXcCm6Xy/CKeQKKw5KfSYfAxfPpIxvTUYvfUr9Y3I5+m/rHaRcDJna
+         tjtg==
+X-Gm-Message-State: APjAAAXB7d6BP1N4sQaFx/ieiisQNzzECEfMltw5ULf7JLHHt6R2P6VB
+        1zlXzG7Q4Lyj11KxaGfN4EzqK8PJ
+X-Google-Smtp-Source: APXvYqwWbkWnoF+qAPy1RDpUSqSNPuqhzf1UIsscW57ZV0Bi/8Qk6Ygl5GQ9shfP6iFVebsjV7dQmA==
+X-Received: by 2002:a7b:ca4c:: with SMTP id m12mr7454394wml.176.1576616604786;
+        Tue, 17 Dec 2019 13:03:24 -0800 (PST)
 Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id i5sm37856wml.31.2019.12.17.13.03.18
+        by smtp.gmail.com with ESMTPSA id i5sm37856wml.31.2019.12.17.13.03.22
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 17 Dec 2019 13:03:20 -0800 (PST)
+        Tue, 17 Dec 2019 13:03:24 -0800 (PST)
 From:   Doug Berger <opendmb@gmail.com>
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>
-Subject: [PATCH net-next 2/8] net: bcmgenet: enable NETIF_F_HW_CSUM feature
-Date:   Tue, 17 Dec 2019 13:02:23 -0800
-Message-Id: <1576616549-39097-3-git-send-email-opendmb@gmail.com>
+Subject: [PATCH net-next 4/8] net: bcmgenet: Refactor bcmgenet_set_features()
+Date:   Tue, 17 Dec 2019 13:02:25 -0800
+Message-Id: <1576616549-39097-5-git-send-email-opendmb@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1576616549-39097-1-git-send-email-opendmb@gmail.com>
 References: <1576616549-39097-1-git-send-email-opendmb@gmail.com>
@@ -72,81 +72,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The GENET hardware should be capable of generating IP checksums
-using the NETIF_F_HW_CSUM feature, so switch to using that feature
-instead of the depricated NETIF_F_IP_CSUM and NETIF_F_IPV6_CSUM.
+In preparation for unconditionally enabling TX and RX checksum
+offloads, refactor bcmgenet_set_features() a bit such that
+__netdev_update_features() during register_netdev() can make sure
+that features are correctly programmed during network device
+registration.
+
+Since we can now be called during register_netdev() with clocks
+gated, we need to temporarily turn them on/off in order to have a
+successful register programming.
+
+We also move the CRC forward setting read into
+bcmgenet_set_features() since priv->crc_fwd_en matters while
+turning on RX checksum offload, that way we are guaranteed they
+are in sync in case we ever add support for NETIF_F_RXFCS at some
+point in the future.
 
 Signed-off-by: Doug Berger <opendmb@gmail.com>
 ---
- drivers/net/ethernet/broadcom/genet/bcmgenet.c | 29 +++++++++++---------------
- 1 file changed, 12 insertions(+), 17 deletions(-)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c | 38 +++++++++++++-------------
+ 1 file changed, 19 insertions(+), 19 deletions(-)
 
 diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index d9defb8b1e5f..cd07b3ad1d53 100644
+index 5674dc304032..8afa675b45da 100644
 --- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
 +++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -549,7 +549,7 @@ static int bcmgenet_set_tx_csum(struct net_device *dev,
- 	tbuf_ctrl = bcmgenet_tbuf_ctrl_get(priv);
- 	rbuf_ctrl = bcmgenet_rbuf_readl(priv, RBUF_CTRL);
+@@ -508,8 +508,8 @@ static int bcmgenet_set_link_ksettings(struct net_device *dev,
+ 	return phy_ethtool_ksettings_set(dev->phydev, cmd);
+ }
  
--	desc_64b_en = !!(wanted & (NETIF_F_IP_CSUM | NETIF_F_IPV6_CSUM));
-+	desc_64b_en = !!(wanted & NETIF_F_HW_CSUM);
+-static int bcmgenet_set_rx_csum(struct net_device *dev,
+-				netdev_features_t wanted)
++static void bcmgenet_set_rx_csum(struct net_device *dev,
++				 netdev_features_t wanted)
+ {
+ 	struct bcmgenet_priv *priv = netdev_priv(dev);
+ 	u32 rbuf_chk_ctrl;
+@@ -535,12 +535,10 @@ static int bcmgenet_set_rx_csum(struct net_device *dev,
+ 		rbuf_chk_ctrl &= ~RBUF_SKIP_FCS;
  
- 	/* enable 64 bytes descriptor in both directions (RBUF and TBUF) */
- 	if (desc_64b_en) {
-@@ -574,7 +574,7 @@ static int bcmgenet_set_features(struct net_device *dev,
- 	netdev_features_t wanted = dev->wanted_features;
- 	int ret = 0;
+ 	bcmgenet_rbuf_writel(priv, rbuf_chk_ctrl, RBUF_CHK_CTRL);
+-
+-	return 0;
+ }
  
--	if (changed & (NETIF_F_IP_CSUM | NETIF_F_IPV6_CSUM))
-+	if (changed & NETIF_F_HW_CSUM)
- 		ret = bcmgenet_set_tx_csum(dev, wanted);
- 	if (changed & (NETIF_F_RXCSUM))
- 		ret = bcmgenet_set_rx_csum(dev, wanted);
-@@ -1516,24 +1516,19 @@ static struct sk_buff *bcmgenet_put_tx_csum(struct net_device *dev,
- 			ip_proto = ipv6_hdr(skb)->nexthdr;
- 			break;
- 		default:
--			return skb;
-+			/* don't use UDP flag */
-+			ip_proto = 0;
-+			break;
- 		}
+-static int bcmgenet_set_tx_csum(struct net_device *dev,
+-				netdev_features_t wanted)
++static void bcmgenet_set_tx_csum(struct net_device *dev,
++				 netdev_features_t wanted)
+ {
+ 	struct bcmgenet_priv *priv = netdev_priv(dev);
+ 	bool desc_64b_en;
+@@ -563,21 +561,27 @@ static int bcmgenet_set_tx_csum(struct net_device *dev,
  
- 		offset = skb_checksum_start_offset(skb) - sizeof(*status);
- 		tx_csum_info = (offset << STATUS_TX_CSUM_START_SHIFT) |
--				(offset + skb->csum_offset);
-+				(offset + skb->csum_offset) |
-+				STATUS_TX_CSUM_LV;
+ 	bcmgenet_tbuf_ctrl_set(priv, tbuf_ctrl);
+ 	bcmgenet_rbuf_writel(priv, rbuf_ctrl, RBUF_CTRL);
+-
+-	return 0;
+ }
  
--		/* Set the length valid bit for TCP and UDP and just set
--		 * the special UDP flag for IPv4, else just set to 0.
--		 */
--		if (ip_proto == IPPROTO_TCP || ip_proto == IPPROTO_UDP) {
--			tx_csum_info |= STATUS_TX_CSUM_LV;
--			if (ip_proto == IPPROTO_UDP &&
--			    ip_ver == htons(ETH_P_IP))
--				tx_csum_info |= STATUS_TX_CSUM_PROTO_UDP;
--		} else {
--			tx_csum_info = 0;
--		}
-+		/* Set the special UDP flag for UDP */
-+		if (ip_proto == IPPROTO_UDP)
-+			tx_csum_info |= STATUS_TX_CSUM_PROTO_UDP;
+ static int bcmgenet_set_features(struct net_device *dev,
+ 				 netdev_features_t features)
+ {
+-	netdev_features_t changed = features ^ dev->features;
+-	netdev_features_t wanted = dev->wanted_features;
+-	int ret = 0;
++	struct bcmgenet_priv *priv = netdev_priv(dev);
++	u32 reg;
++	int ret;
++
++	ret = clk_prepare_enable(priv->clk);
++	if (ret)
++		return ret;
++
++	/* Make sure we reflect the value of CRC_CMD_FWD */
++	reg = bcmgenet_umac_readl(priv, UMAC_CMD);
++	priv->crc_fwd_en = !!(reg & CMD_CRC_FWD);
  
- 		status->tx_csum_info = tx_csum_info;
- 	}
-@@ -3536,8 +3531,8 @@ static int bcmgenet_probe(struct platform_device *pdev)
- 	priv->msg_enable = netif_msg_init(-1, GENET_MSG_DEFAULT);
+-	if (changed & NETIF_F_HW_CSUM)
+-		ret = bcmgenet_set_tx_csum(dev, wanted);
+-	if (changed & (NETIF_F_RXCSUM))
+-		ret = bcmgenet_set_rx_csum(dev, wanted);
++	bcmgenet_set_tx_csum(dev, features);
++	bcmgenet_set_rx_csum(dev, features);
++
++	clk_disable_unprepare(priv->clk);
  
- 	/* Set hardware features */
--	dev->hw_features |= NETIF_F_SG | NETIF_F_IP_CSUM |
--		NETIF_F_IPV6_CSUM | NETIF_F_HIGHDMA | NETIF_F_RXCSUM;
-+	dev->hw_features |= NETIF_F_SG | NETIF_F_HIGHDMA | NETIF_F_HW_CSUM |
-+		NETIF_F_RXCSUM;
+ 	return ret;
+ }
+@@ -2878,10 +2882,6 @@ static int bcmgenet_open(struct net_device *dev)
  
- 	/* Request the WOL interrupt and advertise suspend if available */
- 	priv->wol_irq_disabled = true;
+ 	init_umac(priv);
+ 
+-	/* Make sure we reflect the value of CRC_CMD_FWD */
+-	reg = bcmgenet_umac_readl(priv, UMAC_CMD);
+-	priv->crc_fwd_en = !!(reg & CMD_CRC_FWD);
+-
+ 	bcmgenet_set_hw_addr(priv, dev->dev_addr);
+ 
+ 	if (priv->internal_phy) {
 -- 
 2.7.4
 
