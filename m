@@ -2,107 +2,139 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99CAEC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E313EC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64FD62467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:54:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA75B206D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:59:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LZ0ndjGX"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y+ELDO3K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbfLQUy0 (ORCPT
+        id S1727726AbfLQU71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 15:54:26 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:58086 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727402AbfLQUy0 (ORCPT
+        Tue, 17 Dec 2019 15:59:27 -0500
+Received: from mail-wr1-f74.google.com ([209.85.221.74]:53804 "EHLO
+        mail-wr1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbfLQU70 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 15:54:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=XUsRpc5ei9NN7Lxdkonngt/t8AjkaZ5bnNlv1WXUG/s=; b=LZ0ndjGXusiCWS1b21+k60uAt
-        PhRQw0iNxJLA612DqqmdT2EHOj+NQN7nSqp1x5STFbwLIjuUTR1loFCxT+vi6QheIxpGk8scGfFEy
-        S0jzrdh5gagfe13LqnMZKoyhpFQQockRa0kymaeM3sRp9Cbwkqp8VI4x12c+uQHSSMjoZgUzJ9Xjh
-        5IHrAAeuQQhtrSeiJuHE9hO8v54wI+lvMpL0l/HKKkpzxTDlb/AOCDyNZ6y9zdImts2IVquFTww8j
-        IeCCU5LJV14iFkUh04aTbzSsaKOUZ8pHwx27dmEF3VAF925KGC2/i53SXqe2X/hCohn9gLMybYHA1
-        lvTPK/kmQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ihJrK-0006Qa-Hp; Tue, 17 Dec 2019 20:54:22 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 376613035D4;
-        Tue, 17 Dec 2019 21:52:58 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id F1F042B2CEC3D; Tue, 17 Dec 2019 21:54:20 +0100 (CET)
-Date:   Tue, 17 Dec 2019 21:54:20 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>
-Subject: Re: [GIT PULL] timer fixes
-Message-ID: <20191217205420.GK2844@hirez.programming.kicks-ass.net>
-References: <20191217115547.GA68104@gmail.com>
- <CAHk-=wiVZMU69qB7nmkkyvjtDenQ+89V94V=3mmdY88uWYrZiQ@mail.gmail.com>
- <20191217193039.GF2844@hirez.programming.kicks-ass.net>
- <CAHk-=wgH8bSsgxnUAjuoUyDwHPKZwdVirH__=mJQu7RCFfCwZA@mail.gmail.com>
- <20191217203506.GI2844@hirez.programming.kicks-ass.net>
- <CAHk-=whccvKaB-Fezv9w9XuZx4JDz4jDiJd+dATTj7yErhvpKQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whccvKaB-Fezv9w9XuZx4JDz4jDiJd+dATTj7yErhvpKQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 17 Dec 2019 15:59:26 -0500
+Received: by mail-wr1-f74.google.com with SMTP id j13so5862115wrr.20
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 12:59:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=drhjbWi362ZPL2jymMGntSOHybVCzJNeZtCFMfpFyxs=;
+        b=Y+ELDO3KGSRorAJkeLAJTZ67TdFDt0M7KESM+sDUkGVOvXjYps0m8RDflG80Bcr7Na
+         RKEdq4eYe0D5oOxOWUDkglm1J2jQg9WJ6d8b9XDvWYUnIyV1CV33SQdSEzoPfXczO8CD
+         2Y2z3FHXQi6+zujtoiUPjny9jLMztYcy3ERpVibPWzrIImov2AJ0WA9fWF6h3+MkuvmQ
+         /4mhNvIEJ5/sA80AsqoOvvcwYFb1XtiwOcS45OMRIu237pWElOXb3q6p/y0xRfPAaVx/
+         kPqWj+V5EkvaX5GCtPYAunVGFOoB85M4hoJkNTl26knt6FZsjSjFr/FfNLlc4iL44cMZ
+         Bdqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=drhjbWi362ZPL2jymMGntSOHybVCzJNeZtCFMfpFyxs=;
+        b=Fviw+Jp+quVIBpxHtPQST3UUjStKxj8vNgPoi9047Y4BJKbtNpefTI1zNQ45ADy/vg
+         edNVmu7K2a8kyvqnilQBZQQk93Yl5mBYGX0nuvqt/HRYysKpoODgzpM6XALzGf2LVGxg
+         OjI215NZUxRtdUtcUockM2R1EzAjJ/t6hF0gieelOluBO8fIhxOv52jO+nYzqaHE2vYP
+         l7jPdgKiiUo8q2NNneoC4Ed8d9sB550BJoa5FXTAZULE5wQBn2JKCO3G5FUmKHFVREt7
+         PGNx42nZvSCAX+tr0uwnmsKDcJfxz6TXsp17d63660us6CbWU3WUcSNd0AfHLQBWYeed
+         Yp3A==
+X-Gm-Message-State: APjAAAU5UZRTr8jET17/qvnKFFYU1uY+PRQqBk3bPH9H8211G0faHROu
+        WHe1XY9dTkEvd90F3P8nNmFsyRdwWg==
+X-Google-Smtp-Source: APXvYqxdIyn5yj4Gg5oz56LVq9Ope/jAFLIew4nktYBg5gdxWTy6T6csKnnBLxDG/s3suhkMZuO9qd4Q6g==
+X-Received: by 2002:adf:8bde:: with SMTP id w30mr38303761wra.124.1576616364426;
+ Tue, 17 Dec 2019 12:59:24 -0800 (PST)
+Date:   Tue, 17 Dec 2019 21:59:05 +0100
+In-Reply-To: <00000000000031cefb0599ec600b@google.com>
+Message-Id: <20191217205905.205682-1-elver@google.com>
+Mime-Version: 1.0
+References: <00000000000031cefb0599ec600b@google.com>
+X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+Subject: [PATCH] fs/select: Fix data races to pwq->triggered
+From:   Marco Elver <elver@google.com>
+To:     elver@google.com
+Cc:     linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
+        linux-fsdevel@vger.kernel.org,
+        syzbot+bd0076c6e839503096b5@syzkaller.appspotmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 12:43:46PM -0800, Linus Torvalds wrote:
-> On Tue, Dec 17, 2019 at 12:35 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > Pray.. the TSC MSR is still writable from SMM, so BIOS monkeys could
-> > still do what they've been doing for decades.
-> 
-> Sure. And the HPET is unreliable, so the checking causes issues.
-> 
-> Which one should we worry about?
+Fix data races to pwq->triggered by using READ_ONCE. These accesses are
+expected to race per comment and already provided memory barriers
+surrounding the accesses.
 
-I'm just waiting for the system that messes up the TSC and doesn't have
-HPET/PIT _at_all_ :-/
+Original KCSAN report:
 
-But yes, I get your point.
+write to 0xffffc90001043c30 of 4 bytes by task 17695 on cpu 0:
+ __pollwake fs/select.c:197 [inline]
+ pollwake+0xe3/0x140 fs/select.c:217
+ __wake_up_common+0x7b/0x180 kernel/sched/wait.c:93
+ __wake_up_common_lock+0x77/0xb0 kernel/sched/wait.c:123
+ __wake_up+0xe/0x10 kernel/sched/wait.c:142
+ signalfd_notify include/linux/signalfd.h:22 [inline]
+ signalfd_notify include/linux/signalfd.h:19 [inline]
+ __send_signal+0x70e/0x870 kernel/signal.c:1158
+ send_signal+0x224/0x2b0 kernel/signal.c:1236
+ __group_send_sig_info kernel/signal.c:1275 [inline]
+ do_notify_parent+0x55b/0x5e0 kernel/signal.c:1992
+ exit_notify kernel/exit.c:670 [inline]
+ do_exit+0x16ef/0x18c0 kernel/exit.c:818
+ do_group_exit+0xb4/0x1c0 kernel/exit.c:895
+ __do_sys_exit_group kernel/exit.c:906 [inline]
+ __se_sys_exit_group kernel/exit.c:904 [inline]
+ __x64_sys_exit_group+0x2e/0x30 kernel/exit.c:904
+ do_syscall_64+0xcc/0x3a0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-> > Also, what consititutes a 'modern' CPU?
-> 
-> I think anything that has TSC_STABLE set should likely be considered
-> more reliable than HPET.
-> 
-> Or whatever the bit is called. The "doesn't stop in idle" thing.
+read to 0xffffc90001043c30 of 4 bytes by task 15995 on cpu 1:
+ poll_schedule_timeout.constprop.0+0x50/0xc0 fs/select.c:242
+ do_poll fs/select.c:951 [inline]
+ do_sys_poll+0x66d/0x990 fs/select.c:1001
+ __do_sys_poll fs/select.c:1059 [inline]
+ __se_sys_poll fs/select.c:1047 [inline]
+ __x64_sys_poll+0x10f/0x250 fs/select.c:1047
+ do_syscall_64+0xcc/0x3a0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-The doesn't stop on idle thing is CONSTANT_TSC, and that has been set
-since Nehalem, and there are a metric ton of systems still failing due
-to the described SMM 'feature'.
+Reported-by: syzbot+bd0076c6e839503096b5@syzkaller.appspotmail.com
+Signed-off-by: Marco Elver <elver@google.com>
+---
+ fs/select.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Perhaps we can go with TSC_KNOWN_FREQ, which relies on CPUID.15h to tell
-us the actual TSC frequency, but I'm not sure all modern systems
-actually fill out that leaf :/
+diff --git a/fs/select.c b/fs/select.c
+index 11d0285d46b7..152987ddf40e 100644
+--- a/fs/select.c
++++ b/fs/select.c
+@@ -194,7 +194,7 @@ static int __pollwake(wait_queue_entry_t *wait, unsigned mode, int sync, void *k
+ 	 * and is paired with smp_store_mb() in poll_schedule_timeout.
+ 	 */
+ 	smp_wmb();
+-	pwq->triggered = 1;
++	WRITE_ONCE(pwq->triggered, 1);
+ 
+ 	/*
+ 	 * Perform the default wake up operation using a dummy
+@@ -239,7 +239,7 @@ static int poll_schedule_timeout(struct poll_wqueues *pwq, int state,
+ 	int rc = -EINTR;
+ 
+ 	set_current_state(state);
+-	if (!pwq->triggered)
++	if (!READ_ONCE(pwq->triggered))
+ 		rc = schedule_hrtimeout_range(expires, slack, HRTIMER_MODE_ABS);
+ 	__set_current_state(TASK_RUNNING);
+ 
+-- 
+2.24.1.735.g03f4e72817-goog
 
-The systems that completely got rid of the HPET/PIT pretty much must
-fill that out, otherwise there's just no way we can recover the TSC
-frequency.
-
-I'm going to have to wait for Thomas to chime in though; I only
-occasionally poke at this stuff ;-)
