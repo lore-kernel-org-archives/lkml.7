@@ -2,112 +2,174 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2016C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 06:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B678C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 06:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E6DE2067C
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 06:45:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F14CA2067C
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 06:47:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727265AbfLQGpM (ORCPT
+        id S1727197AbfLQGrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 01:45:12 -0500
-Received: from olimex.com ([184.105.72.32]:36342 "EHLO olimex.com"
+        Tue, 17 Dec 2019 01:47:09 -0500
+Received: from mx2.suse.de ([195.135.220.15]:53408 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726704AbfLQGpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 01:45:11 -0500
-Received: from 94.155.250.134 ([94.155.250.134])
-        by olimex.com with ESMTPSA (ECDHE-RSA-AES128-GCM-SHA256:TLSv1.2:Kx=ECDH:Au=RSA:Enc=AESGCM(128):Mac=AEAD) (SMTP-AUTH username stefan@olimex.com, mechanism PLAIN)
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 22:45:11 -0800
-Subject: Re: [PATCH 1/1] drm/sun4i: hdmi: Check for null pointer before
- cleanup
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Stefan Mavrodiev <stefan@olimex.com>, Chen-Yu Tsai <wens@csie.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVERS FOR ALLWINNER A10" 
-        <dri-devel@lists.freedesktop.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-sunxi@googlegroups.com
-References: <20191216144348.7540-1-stefan@olimex.com>
- <20191216161258.lmkq2ersfm746t7q@gilmour.lan>
-From:   Stefan Mavrodiev <stefan@olimex.com>
-Message-ID: <cebda755-2649-79a1-fd08-79b13edef1a5@olimex.com>
-Date:   Tue, 17 Dec 2019 08:45:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        id S1726704AbfLQGrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 01:47:08 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 39B42AC53;
+        Tue, 17 Dec 2019 06:47:05 +0000 (UTC)
+Date:   Tue, 17 Dec 2019 17:46:50 +1100
+From:   Aleksa Sarai <asarai@suse.de>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     'Aleksa Sarai' <cyphar@cyphar.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Shuah Khan <shuah@kernel.org>,
+        "dev@opencontainers.org" <dev@opencontainers.org>,
+        "containers@lists.linux-foundation.org" 
+        <containers@lists.linux-foundation.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH] openat2: switch to __attribute__((packed)) for open_how
+Message-ID: <20191217064650.cd4bfb5d2koe6j7h@yavin.dot.cyphar.com>
+References: <20191213222351.14071-1-cyphar@cyphar.com>
+ <a328b91d-fd8f-4f27-b3c2-91a9c45f18c0@rasmusvillemoes.dk>
+ <20191215123443.jmfnrtgbscdwfohc@yavin.dot.cyphar.com>
+ <b26ef210ec5b42009cf09b1015065768@AcuMS.aculab.com>
 MIME-Version: 1.0
-In-Reply-To: <20191216161258.lmkq2ersfm746t7q@gilmour.lan>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="pxbkdztdbvo4kssd"
+Content-Disposition: inline
+In-Reply-To: <b26ef210ec5b42009cf09b1015065768@AcuMS.aculab.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 12/16/19 6:12 PM, Maxime Ripard wrote:
-> Hi,
->
-> On Mon, Dec 16, 2019 at 04:43:48PM +0200, Stefan Mavrodiev wrote:
->> It's possible hdmi->connector and hdmi->encoder divices to be NULL.
->> This can happen when building as kernel module and you try to remove
->> the module.
->>
->> This patch make simple null check, before calling the cleanup functions.
->>
->> Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
->> ---
->>   drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c | 6 ++++--
->>   1 file changed, 4 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
->> index a7c4654445c7..b61e00f2ecb8 100644
->> --- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
->> +++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
->> @@ -685,8 +685,10 @@ static void sun4i_hdmi_unbind(struct device *dev, struct device *master,
->>   	struct sun4i_hdmi *hdmi = dev_get_drvdata(dev);
->>
->>   	cec_unregister_adapter(hdmi->cec_adap);
->> -	drm_connector_cleanup(&hdmi->connector);
->> -	drm_encoder_cleanup(&hdmi->encoder);
->> +	if (hdmi->connector.dev)
->> +		drm_connector_cleanup(&hdmi->connector);
->> +	if (hdmi->encoder.dev)
->> +		drm_encoder_cleanup(&hdmi->encoder);
-> Hmmm, this doesn't look right. Do you have more information on how you
-> can reproduce it?
+--pxbkdztdbvo4kssd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Just build sun4i_drm_hdmi as module (CONFIG_DRM_SUN4I_HDMI=m). Then try 
-to unload the module:
+On 2019-12-16, David Laight <David.Laight@ACULAB.COM> wrote:
+> From:  Aleksa Sarai
+> > Sent: 15 December 2019 12:35
+> > On 2019-12-14, Rasmus Villemoes <linux@rasmusvillemoes.dk> wrote:
+> > > On 13/12/2019 23.23, Aleksa Sarai wrote:
+> > > > The design of the original open_how struct layout was such that it
+> > > > ensured that there would be no un-labelled (and thus potentially
+> > > > non-zero) padding to avoid issues with struct expansion, as well as
+> > > > providing a uniform representation on all architectures (to avoid
+> > > > complications with OPEN_HOW_SIZE versioning).
+> > > >
+> > > > However, there were a few other desirable features which were not
+> > > > fulfilled by the previous struct layout:
+> > > >
+> > > >  * Adding new features (other than new flags) should always result =
+in
+> > > >    the struct getting larger. However, by including a padding field=
+, it
+> > > >    was possible for new fields to be added without expanding the
+> > > >    structure. This would somewhat complicate version-number based
+> > > >    checking of feature support.
+> > > >
+> > > >  * A non-zero bit in __padding yielded -EINVAL when it should argua=
+bly
+> > > >    have been -E2BIG (because the padding bits are effectively
+> > > >    yet-to-be-used fields). However, the semantics are not entirely =
+clear
+> > > >    because userspace may expect -E2BIG to only signify that the
+> > > >    structure is too big. It's much simpler to just provide the guar=
+antee
+> > > >    that new fields will always result in a struct size increase, and
+> > > >    -E2BIG indicates you're using a field that's too recent for an o=
+lder
+> > > >    kernel.
+> > >
+> > > And when the first extension adds another u64 field, that padding has=
+ to
+> > > be added back in and checked for being 0, at which point the padding =
+is
+> > > again yet-to-be-used fields.
+> >=20
+> > Maybe I'm missing something, but what is the issue with
+> >=20
+> >   struct open_how {
+> >     u64 flags;
+> >     u64 resolve;
+> >     u16 mode;
+> > 	u64 next_extension;
+> >   } __attribute__((packed));
+>=20
+> Compile anything that accesses it for (say) sparc and look at the object =
+code.
+> You really, really, REALLY, don't want to EVER use 'packed'.
 
-# rmmod sun4i_drm_hdmi
+Right, so it's related to the "garbage code" problem. As mentioned
+above, I wasn't aware it was as bad as folks in this thread have
+mentioned.
 
-And you get this:
+> Just use u64 for all the fields.
 
-Unable to handle kernel NULL pointer dereference at virtual address 00000000
-pgd = 6b032436
-[00000000] *pgd=00000000
-Internal error: Oops: 5 [#1] SMP ARM
-Modules linked in: sun4i_drm_hdmi(-)
-CPU: 0 PID: 1081 Comm: rmmod Not tainted 5.5.0-rc1-00030-g6ec417030d93 #33
-Hardware name: Allwinner sun7i (A20) Family
-PC is at drm_connector_cleanup+0x40/0x208
-LR is at sun4i_hdmi_unbind+0x10/0x54 [sun4i_drm_hdmi]
-...
+That is an option (and is the one that clone3 went with), but it's a bit
+awkward because umode_t is a u16 -- and it would be a waste of 6 bytes
+to store it as a u64. Arguably it could be extended but I personally
+find that to be very unlikely (and lots of other syscalls would need be
+updated).
 
+I'm just going to move the padding to the end and change the error for
+non-zero padding to -E2BIG.
 
-I've tested that with sunxi/for-next branch on A20-OLinuXino board.
+> Use 'flags' bits to indicate whether the additional fields should be look=
+ed at.
+> Error if a 'flags' bit requires a value that isn't passed in the structur=
+e.
+>=20
+> Then you can add an extra field and old source code recompiled with the
+> new headers will still work - because the 'junk' value isn't looked at.
 
-Best regards,
-Stefan
+This problem is already handled entirely by copy_struct_from_user().
 
->
-> Maxime
+It is true that for some new fields it will be necessary to add a new
+flag (such as passing fds -- where 0 is a valid value) but for most new
+fields (especially pointer or flag fields) it will not be necessary
+because the 0 value is equivalent to the old behaviour. It also allows
+us to entirely avoid accepting junk from userspace.
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--pxbkdztdbvo4kssd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEXzbGxhtUYBJKdfWmnhiqJn3bjbQFAl34edcACgkQnhiqJn3b
+jbTUrQ/9EWPnCZlGMHHPgxyUQUwaE4kajhGnTsBLapKhdtsAfzkyJNqUPdSnipqB
+oAAFeriC/RGN9ktSBHM60IBnwk3nv70W3SNm8/GUVaXGmWHrkBFkuhujOSn22awm
+3jSxRKt+89I6NKoFBJPkxe9WQv6DecF8B9GWCn2sru2e/r105OHTe28EnPFqzBpQ
+XZ/f7D7729GVAIITr5H6NQfvM8P/Sf/ne1gzDxf6cFTrF734aGNF+AhpTgSA2uxz
+DVw1oQ6+HAcMdL6AixtdZgsN9Bm2nV9C4ndOEenV3rN6mG1Kn5ecz2RInuqKmmj9
+/9ETSRo9ZZpl6WGpbfDMRB+/6vsSXAwHv06LO2YXEIeoHnPN7Y8/0deB4KNBoQ3S
+jDzVHOKU2MToxsAkBPvyZ6UsKXJWLOT4QeiyOQeoExwzzu6K61pxtcHaXnKebheF
+2hCF6h0NaAtBCcO3/MrN5PEkZliY+KcpM5BCsefzfM3cAEuqSEx1LqShw0G+3dV2
+sGKHM0cfunvVas/8yawfs4qfEALCJR5Tnb2Kfveo/xd1qfT4+K54gPjkQqFvrkph
+pV7c6P2lyJrNFraB5uDb5UYFWXrxTXgZ3ZUpDoI7MfLSEGCTT2nL9n7IXuoEfX4W
+jj7ipubi5ZdNDgXiSACHJHYzwIVJBPHiNq4mzoQjNKNb8kj1VTQ=
+=sK1O
+-----END PGP SIGNATURE-----
+
+--pxbkdztdbvo4kssd--
