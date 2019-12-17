@@ -2,169 +2,98 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A24C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E70C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5770C206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:29:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KxSSHezq"
+	by mail.kernel.org (Postfix) with ESMTP id 9CA4A2146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:34:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbfLQU33 (ORCPT
+        id S1727966AbfLQUer (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 15:29:29 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:49998 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727497AbfLQU32 (ORCPT
+        Tue, 17 Dec 2019 15:34:47 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:47057 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727231AbfLQUer (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 15:29:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576614567;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:in-reply-to:in-reply-to:  references:references;
-        bh=B6w85va6Ncayok+cnMrvDbJmyUfEY5Z0K1FVwp3qaqg=;
-        b=KxSSHezq0MCw6bbq1OOCO64kHFGaLFwilm82fZC8U2ap9YZrVeMzWSlndXnhkpIHO9QQis
-        Qcfd89HDOOl+xxqvddFWaXGUN9k42rQD1+2gQu6tBwnRe+hliQgq15Xstbu9LjGEUCpObZ
-        w7v9d3HMNDz7ropdcJPBzTZ1Su9E6ng=
-Received: from mail-yb1-f197.google.com (mail-yb1-f197.google.com
- [209.85.219.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-3-P9M6dNEON7GJ2tm_iP5olQ-1; Tue, 17 Dec 2019 15:29:23 -0500
-X-MC-Unique: P9M6dNEON7GJ2tm_iP5olQ-1
-Received: by mail-yb1-f197.google.com with SMTP id y204so7934056yby.18
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 12:29:22 -0800 (PST)
+        Tue, 17 Dec 2019 15:34:47 -0500
+Received: by mail-pf1-f195.google.com with SMTP id y14so8190454pfm.13;
+        Tue, 17 Dec 2019 12:34:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=B6w85va6Ncayok+cnMrvDbJmyUfEY5Z0K1FVwp3qaqg=;
-        b=OLAejK/noJJCelyi/ne+DsGmkPqdHjAjn18HkZQ+oRN2uySRVhTxxvyESWKqqXC+Np
-         ClfYBf+MVfkpSlS7cFlFTVY/cpYS7UyxLpoaAKENCWwOPurs7xQCcip3ZI2IapyYj2v4
-         dZ+jD8uNLGTsMq8t7iUHj1B44DsMDVmjYZffp6nHLoGCVE3DH1RT+KF/zZskLHxwokZz
-         BwVtGuvAA85DieA8Ffsdv6oPY4U15OnikJskuOiFihQgjg9rsC6y+e5pUaajNYOVlrMn
-         lJNcQaHUmxX4nsRMV8gsEpnoRDaX68nlGawJGW/1T5Cu8hoiUuTCXowzx/vpo8eVl4W8
-         JYWQ==
-X-Gm-Message-State: APjAAAXW2avrtKIG4BJb4ZJRKb+7uvA7Lh+LVSojBkYkOYnXQSkVwxcW
-        2GUGLFcyOfRYRkCBUs5dFgofulbNY/iGVpoCdKTQTZqhLjAgxDd6r8W2XKIYiZr8zomdXo7aW3W
-        zeSv4UOcRWXorZljVjVJjpZbv
-X-Received: by 2002:a81:9a45:: with SMTP id r66mr459335ywg.446.1576614562497;
-        Tue, 17 Dec 2019 12:29:22 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyb258eJuuP+T1u1y5+GiE/8HF1tUR9cT2lsn7QBU6PYjGyZyQQefMkbh0UG51ut1kkWocH2A==
-X-Received: by 2002:a81:9a45:: with SMTP id r66mr459312ywg.446.1576614562236;
-        Tue, 17 Dec 2019 12:29:22 -0800 (PST)
-Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
-        by smtp.gmail.com with ESMTPSA id g29sm10511291ywk.31.2019.12.17.12.29.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 12:29:21 -0800 (PST)
-Date:   Tue, 17 Dec 2019 13:29:20 -0700
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christian Bundy <christianbundy@fraction.io>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        stable <stable@vger.kernel.org>, linux-integrity@vger.kernel.org
-Subject: Re: [PATCH v2] tpm_tis: reserve chip for duration of
- tpm_tis_core_init
-Message-ID: <20191217202920.kktuk3q3qrnuvscd@cantor>
-Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
-Mail-Followup-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christian Bundy <christianbundy@fraction.io>,
-        Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        stable <stable@vger.kernel.org>, linux-integrity@vger.kernel.org
-References: <20191211231758.22263-1-jsnitsel@redhat.com>
- <20191211235455.24424-1-jsnitsel@redhat.com>
- <5aef0fbe28ed23b963c53d61445b0bac6f108642.camel@linux.intel.com>
- <CAPcyv4h60z889bfbiwvVhsj6MxmOPiPY8ZuPB_skxkZx-N+OGw@mail.gmail.com>
- <20191217020022.knh7uxt4pn77wk5m@cantor>
- <CAPcyv4iepQup4bwMuWzq6r5gdx83hgYckUWFF7yF=rszjz3dtQ@mail.gmail.com>
- <5d0763334def7d7ae1e7cf931ef9b14184dce238.camel@linux.intel.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wSq9UbcGgrIcyy3/grTcN0ygIwYk8X1gs2WW24q9oC0=;
+        b=lMD0ScupWcjKNnbYN13LhCm9VscP5bWyv7WXGD6i+z065FfB1RJhNegwwViuIKtoup
+         gvhWKL5RmgvLNUtFGmK4zJi0tQxyF/m8XvP2sR8jKHUTnEznqP+BxIaNN9oQcq6ihm0p
+         c4k3Us7VrVkvoZ6YimESfmbwnT4XGejbVsFRTj7FY4grn25eJlpjZNMq3zjyBXTv3BXR
+         /eE6V0OsvsOGlCyhdGaBgorcHrsbMHHsCFUWm0R1XUN4VkRs/nxI+3+Rexws9e+ZkrlP
+         vgjP8okFGFYMckVcO0lne2myenOYUB/CL7CdtRRxEtBSEQNY3+0uas0ddzPhwQnEKciM
+         FB0Q==
+X-Gm-Message-State: APjAAAV8oPW23w0stumBM3uJEz9IEG28Mqc2HM7Rvp1FwdXyd7Tph8wa
+        7gyTlVo0Pgv/OIQSGZfxQ1aMDK/e
+X-Google-Smtp-Source: APXvYqyj04KjYuMr2anPYYyDvo+WXIBzNftZyx76p4OnHJyZYgCmLdczh5pSK40fCAxyDOkQqY/R4w==
+X-Received: by 2002:a62:3045:: with SMTP id w66mr25058374pfw.122.1576614886243;
+        Tue, 17 Dec 2019 12:34:46 -0800 (PST)
+Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
+        by smtp.gmail.com with ESMTPSA id v29sm27184456pgl.88.2019.12.17.12.34.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Dec 2019 12:34:45 -0800 (PST)
+Subject: Re: [PATCH v2] scsi: RDMA/srpt: remove unnecessary assertion in
+ srpt_queue_response
+To:     Aditya Pakki <pakki001@umn.edu>
+Cc:     kjlu@umn.edu, Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191217194437.25568-1-pakki001@umn.edu>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <d497d620-9aff-616c-67ae-bfb93f39b926@acm.org>
+Date:   Tue, 17 Dec 2019 12:34:44 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
+In-Reply-To: <20191217194437.25568-1-pakki001@umn.edu>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <5d0763334def7d7ae1e7cf931ef9b14184dce238.camel@linux.intel.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue Dec 17 19, Jarkko Sakkinen wrote:
->On Mon, 2019-12-16 at 18:14 -0800, Dan Williams wrote:
->> On Mon, Dec 16, 2019 at 6:00 PM Jerry Snitselaar <jsnitsel@redhat.com> wrote:
->> > On Mon Dec 16 19, Dan Williams wrote:
->> > > On Mon, Dec 16, 2019 at 4:59 PM Jarkko Sakkinen
->> > > <jarkko.sakkinen@linux.intel.com> wrote:
->> > > > On Wed, 2019-12-11 at 16:54 -0700, Jerry Snitselaar wrote:
->> > > > > Instead of repeatedly calling tpm_chip_start/tpm_chip_stop when
->> > > > > issuing commands to the tpm during initialization, just reserve the
->> > > > > chip after wait_startup, and release it when we are ready to call
->> > > > > tpm_chip_register.
->> > > > >
->> > > > > Cc: Christian Bundy <christianbundy@fraction.io>
->> > > > > Cc: Dan Williams <dan.j.williams@intel.com>
->> > > > > Cc: Peter Huewe <peterhuewe@gmx.de>
->> > > > > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
->> > > > > Cc: Jason Gunthorpe <jgg@ziepe.ca>
->> > > > > Cc: Stefan Berger <stefanb@linux.vnet.ibm.com>
->> > > > > Cc: stable@vger.kernel.org
->> > > > > Cc: linux-integrity@vger.kernel.org
->> > > > > Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of tpm_transmit()")
->> > > > > Fixes: 5b359c7c4372 ("tpm_tis_core: Turn on the TPM before probing IRQ's")
->> > > > > Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
->> > > >
->> > > > I pushed to my master with minor tweaks and added my tags.
->> > > >
->> > > > Please check before I put it to linux-next.
->> > >
->> > > I don't see it yet here:
->> > >
->> > > http://git.infradead.org/users/jjs/linux-tpmdd.git/shortlog/refs/heads/master
->> > >
->> > > However, I wanted to make sure you captured that this does *not* fix
->> > > the interrupt issue. I.e. make sure you remove the "Fixes:
->> > > 5b359c7c4372 ("tpm_tis_core: Turn on the TPM before probing IRQ's")"
->> > > tag.
->> > >
->> > > With that said, are you going to include the revert of:
->> > >
->> > > 1ea32c83c699 tpm_tis_core: Set TPM_CHIP_FLAG_IRQ before probing for interrupts
->> >
->> > Dan, with the above reverted do you still get the screaming interrupt?
->>
->> Yes, the screaming interrupt goes away, although it is replaced by
->> these messages when the driver starts:
->>
->> [    3.725131] tpm_tis IFX0740:00: 2.0 TPM (device-id 0x1B, rev-id 16)
->> [    3.725358] tpm tpm0: tpm_try_transmit: send(): error -5
->> [    3.725359] tpm tpm0: [Firmware Bug]: TPM interrupt not working,
->> polling instead
->>
->> If the choice is "error message + polled-mode" vs "pinning a cpu with
->> interrupts" I'd accept the former, but wanted Jarkko with his
->> maintainer hat to weigh in.
->>
->> Is there a simple sanity check I can run to see if the TPM is still
->> operational in this state?
->
->What about T490S?
->
->/Jarkko
->
+On 12/17/19 11:44 AM, Aditya Pakki wrote:
+> Currently, BUG_ON in srpt_queue_response, is used as an assertion for
+> empty rdma channel. However, if the channel is NULL, the call trace
+> on console is sufficient for diagnosis.
+> 
+> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+> ---
+> v1: Avoid potential NULL pointer derefernce of ch. Current fix
+> suggested by Bart Van Assche
+> ---
+>   drivers/infiniband/ulp/srpt/ib_srpt.c | 2 --
+>   1 file changed, 2 deletions(-)
+> 
+> diff --git a/drivers/infiniband/ulp/srpt/ib_srpt.c b/drivers/infiniband/ulp/srpt/ib_srpt.c
+> index 23c782e3d49a..98552749d71c 100644
+> --- a/drivers/infiniband/ulp/srpt/ib_srpt.c
+> +++ b/drivers/infiniband/ulp/srpt/ib_srpt.c
+> @@ -2810,8 +2810,6 @@ static void srpt_queue_response(struct se_cmd *cmd)
+>   	int resp_len, ret, i;
+>   	u8 srp_tm_status;
+>   
+> -	BUG_ON(!ch);
+> -
+>   	state = ioctx->state;
+>   	switch (state) {
+>   	case SRPT_STATE_NEW:
 
-I just heard back from the t490s user, and as expected the problem still exists
-there with this patch.
+I think the description of this patch should also mention that this 
+patch removes a check of a pointer after it has already been 
+dereferenced. Anyway:
 
-Regards,
-Jerry
-
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
