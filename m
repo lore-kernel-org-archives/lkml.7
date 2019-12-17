@@ -2,165 +2,116 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE48C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FBD3C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:34:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C2D52176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:34:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6639A20716
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:34:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576586069;
+	bh=rL8JfWqXzBOWl3XO68vyPd1QOVL9AsvgUYPDJ39ORnk=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=AIvr1hzgS4ZWICJb/mRwf4xS/RPTWAoX9Hz2AvStL5g1n6R/mBKPkoSPKBDHDLltS
+	 1sOD7XfY3apBl8MNGbCHa3Olsu5mVd4fK8ads/7WQjD+P9MIjXm4Aae7MVMJax4Wue
+	 8Rq0G763afJrLQ0Fc2P9bEszjzqhCQzr6uvEf6Lg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728099AbfLQMd7 (ORCPT
+        id S1728172AbfLQMe2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:33:59 -0500
-Received: from mga18.intel.com ([134.134.136.126]:47966 "EHLO mga18.intel.com"
+        Tue, 17 Dec 2019 07:34:28 -0500
+Received: from foss.arm.com ([217.140.110.172]:35402 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728037AbfLQMdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 07:33:55 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 04:33:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,325,1571727600"; 
-   d="scan'208";a="389811702"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga005.jf.intel.com with ESMTP; 17 Dec 2019 04:33:50 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 9A4473A0; Tue, 17 Dec 2019 14:33:45 +0200 (EET)
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     linux-usb@vger.kernel.org
-Cc:     Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Lukas Wunner <lukas@wunner.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Mario.Limonciello@dell.com,
-        Anthony Wong <anthony.wong@canonical.com>,
-        Oliver Neukum <oneukum@suse.com>,
-        Christian Kellner <ckellner@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/9] thunderbolt: Update Kconfig entries to USB4
-Date:   Tue, 17 Dec 2019 15:33:41 +0300
-Message-Id: <20191217123345.31850-6-mika.westerberg@linux.intel.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191217123345.31850-1-mika.westerberg@linux.intel.com>
-References: <20191217123345.31850-1-mika.westerberg@linux.intel.com>
+        id S1728015AbfLQMdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 07:33:52 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0756D328;
+        Tue, 17 Dec 2019 04:33:52 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7BE303F718;
+        Tue, 17 Dec 2019 04:33:51 -0800 (PST)
+Date:   Tue, 17 Dec 2019 12:33:49 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>
+Subject: [GIT PULL] regulator fixes for v5.5
+Message-ID: <20191217123349.GE4755@sirena.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="xJK8B5Wah2CMJs8h"
+Content-Disposition: inline
+X-Cookie: Thufir's a Harkonnen now.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the driver now supports USB4 which is the standard going forward,
-update the Kconfig entry to mention this and rename the entry from
-CONFIG_THUNDERBOLT to CONFIG_USB4 instead to help people to find the
-correct option if they want to enable USB4.
 
-Also do the same for Thunderbolt network driver.
+--xJK8B5Wah2CMJs8h
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: David S. Miller <davem@davemloft.net>
----
- drivers/Makefile             |  2 +-
- drivers/net/Kconfig          | 10 +++++-----
- drivers/net/Makefile         |  2 +-
- drivers/thunderbolt/Kconfig  | 11 ++++++-----
- drivers/thunderbolt/Makefile |  2 +-
- 5 files changed, 14 insertions(+), 13 deletions(-)
+The following changes since commit c15d5a645875bc9b89f68f5d3fb608f691ac78d7:
 
-diff --git a/drivers/Makefile b/drivers/Makefile
-index aaef17cc6512..31cf17dee252 100644
---- a/drivers/Makefile
-+++ b/drivers/Makefile
-@@ -171,7 +171,7 @@ obj-$(CONFIG_POWERCAP)		+= powercap/
- obj-$(CONFIG_MCB)		+= mcb/
- obj-$(CONFIG_PERF_EVENTS)	+= perf/
- obj-$(CONFIG_RAS)		+= ras/
--obj-$(CONFIG_THUNDERBOLT)	+= thunderbolt/
-+obj-$(CONFIG_USB4)		+= thunderbolt/
- obj-$(CONFIG_CORESIGHT)		+= hwtracing/coresight/
- obj-y				+= hwtracing/intel_th/
- obj-$(CONFIG_STM)		+= hwtracing/stm/
-diff --git a/drivers/net/Kconfig b/drivers/net/Kconfig
-index d02f12a5254e..d1c84d47779d 100644
---- a/drivers/net/Kconfig
-+++ b/drivers/net/Kconfig
-@@ -489,12 +489,12 @@ config FUJITSU_ES
- 	  This driver provides support for Extended Socket network device
- 	  on Extended Partitioning of FUJITSU PRIMEQUEST 2000 E2 series.
- 
--config THUNDERBOLT_NET
--	tristate "Networking over Thunderbolt cable"
--	depends on THUNDERBOLT && INET
-+config USB4_NET
-+	tristate "Networking over USB4 and Thunderbolt cables"
-+	depends on USB4 && INET
- 	help
--	  Select this if you want to create network between two
--	  computers over a Thunderbolt cable. The driver supports Apple
-+	  Select this if you want to create network between two computers
-+	  over a USB4 and Thunderbolt cables. The driver supports Apple
- 	  ThunderboltIP protocol and allows communication with any host
- 	  supporting the same protocol including Windows and macOS.
- 
-diff --git a/drivers/net/Makefile b/drivers/net/Makefile
-index 0d3ba056cda3..29e83e9f545e 100644
---- a/drivers/net/Makefile
-+++ b/drivers/net/Makefile
-@@ -76,6 +76,6 @@ obj-$(CONFIG_NTB_NETDEV) += ntb_netdev.o
- obj-$(CONFIG_FUJITSU_ES) += fjes/
- 
- thunderbolt-net-y += thunderbolt.o
--obj-$(CONFIG_THUNDERBOLT_NET) += thunderbolt-net.o
-+obj-$(CONFIG_USB4_NET) += thunderbolt-net.o
- obj-$(CONFIG_NETDEVSIM) += netdevsim/
- obj-$(CONFIG_NET_FAILOVER) += net_failover.o
-diff --git a/drivers/thunderbolt/Kconfig b/drivers/thunderbolt/Kconfig
-index fd9adca898ff..1eb757e8df3b 100644
---- a/drivers/thunderbolt/Kconfig
-+++ b/drivers/thunderbolt/Kconfig
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0-only
--menuconfig THUNDERBOLT
--	tristate "Thunderbolt support"
-+menuconfig USB4
-+	tristate "Unified support for USB4 and Thunderbolt"
- 	depends on PCI
- 	depends on X86 || COMPILE_TEST
- 	select APPLE_PROPERTIES if EFI_STUB && X86
-@@ -9,9 +9,10 @@ menuconfig THUNDERBOLT
- 	select CRYPTO_HASH
- 	select NVMEM
- 	help
--	  Thunderbolt Controller driver. This driver is required if you
--	  want to hotplug Thunderbolt devices on Apple hardware or on PCs
--	  with Intel Falcon Ridge or newer.
-+	  USB4 and Thunderbolt driver. USB4 is the public speficiation
-+	  based on Thunderbolt 3 protocol. This driver is required if
-+	  you want to hotplug Thunderbolt and USB4 compliant devices on
-+	  Apple hardware or on PCs with Intel Falcon Ridge or newer.
- 
- 	  To compile this driver a module, choose M here. The module will be
- 	  called thunderbolt.
-diff --git a/drivers/thunderbolt/Makefile b/drivers/thunderbolt/Makefile
-index c0b2fd73dfbd..102e9529ee66 100644
---- a/drivers/thunderbolt/Makefile
-+++ b/drivers/thunderbolt/Makefile
-@@ -1,4 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
--obj-${CONFIG_THUNDERBOLT} := thunderbolt.o
-+obj-${CONFIG_USB4} := thunderbolt.o
- thunderbolt-objs := nhi.o nhi_ops.o ctl.o tb.o switch.o cap.o path.o tunnel.o eeprom.o
- thunderbolt-objs += domain.o dma_port.o icm.o property.o xdomain.o lc.o usb4.o
--- 
-2.24.0
+  regulator: da9062: Return REGULATOR_MODE_INVALID for invalid mode (2019-11-22 19:52:42 +0000)
 
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/regulator-fix-v5.5-rc2
+
+for you to fetch changes up to 62a1923cc8fe095912e6213ed5de27abbf1de77e:
+
+  regulator: rn5t618: fix module aliases (2019-12-16 11:53:37 +0000)
+
+----------------------------------------------------------------
+regulator: Fixes for v5.5
+
+A small set of fixes for mostly minor issues here, the only real code
+ones are Wen Yang's fixes for error handling in the core and Christian
+Marussi's list_voltage() change which is a fix for disruptively bad
+performance for regulators with continuous voltage control (which are
+rare).
+
+----------------------------------------------------------------
+Andreas Kemnade (1):
+      regulator: rn5t618: fix module aliases
+
+Bartosz Golaszewski (1):
+      regulator: max77650: add of_match table
+
+Christophe JAILLET (1):
+      regulator: s5m8767: Fix a warning message
+
+Cristian Marussi (1):
+      regulator: core: avoid unneeded .list_voltage calls
+
+Wen Yang (2):
+      regulator: fix use after free issue
+      regulator: core: fix regulator_register() error paths to properly release rdev
+
+ drivers/regulator/core.c               | 16 ++++++++++++----
+ drivers/regulator/max77650-regulator.c |  7 +++++++
+ drivers/regulator/rn5t618-regulator.c  |  1 +
+ drivers/regulator/s5m8767.c            |  2 +-
+ 4 files changed, 21 insertions(+), 5 deletions(-)
+
+--xJK8B5Wah2CMJs8h
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl34yy0ACgkQJNaLcl1U
+h9ARAgf+JowpR10+rAafrIw0nGTLnzWltpA2O6BcVDR//4AX6H1DKy4gzxu9VHUQ
+0qJ3Vm5uoGg3Od/QhU7lTFo/H5+iO+aMl+xJFdoDlGkHwP0cAmoZk35bEuAu6hJu
+biKih5HvRg00QLuAg4SPBgt7+GqbMW1nUraHEBAuzUrzwBLObihQzE2+EwOv1tQU
+EwKDNsOO94bstv8bjbyNSTmCHUO4Mxwf9p+339REc/04Lj4Wg7fQ73NEtk4Tl/T9
+umOHOMqBttU1UhAhNFQLCiPruJr/s8XlAX00LDnvTs0b6TID8kvLy09u5lb4lP+D
+3uiCEZO5wFIpnV1CHYDKrzmEdnSegg==
+=LBpn
+-----END PGP SIGNATURE-----
+
+--xJK8B5Wah2CMJs8h--
