@@ -2,153 +2,101 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68962C2D0C5
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A3DC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:00:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 483212072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34CBB2146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:00:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576573259;
+	bh=xAX0PRZHP/FMnReTRbQbZgrSB/CF9jeXgcinFfc+AGc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1k5s7OO5w7IfXIYrYjDaEJkBhxRhaQs/k3J5iubCR9t0i2Anhb9fQqVIFKXSUtJ3v
+	 lYcd+iMljdbC8e0J5OlKWm0UqgDVmwcXgY/HSdMJseQDoRgS+XABCwZyCDUKdIazUl
+	 CODWAb8FLt4a0Ih2Lyc1jEstXSeC9VxHRNK+XfZo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbfLQJAw (ORCPT
+        id S1727160AbfLQJA6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 04:00:52 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:34009 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726760AbfLQJAw (ORCPT
+        Tue, 17 Dec 2019 04:00:58 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35563 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726743AbfLQJA5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 04:00:52 -0500
-Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1ih8ib-0005JE-7E; Tue, 17 Dec 2019 10:00:37 +0100
-Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1ih8iY-0002ZB-4H; Tue, 17 Dec 2019 10:00:34 +0100
-Date:   Tue, 17 Dec 2019 10:00:34 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "andrew@aj.id.au" <andrew@aj.id.au>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
- selection documentation
-Message-ID: <20191217090034.GD31182@pengutronix.de>
-References: <20191129172537.31410-4-m.felsch@pengutronix.de>
- <20191204134631.GT1998@sirena.org.uk>
- <20191210094144.mxximpuouchy3fqu@pengutronix.de>
- <AM5PR1001MB099497419E4DCA69D424EC35805A0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
- <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
- <20191212161019.GF4310@sirena.org.uk>
- <20191212162152.5uu3feacduetysq7@pengutronix.de>
- <20191212165124.GJ4310@sirena.org.uk>
- <20191216085525.csr2aglm5md4vtsw@pengutronix.de>
- <AM5PR1001MB09941005A47B603805D3C53280510@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+        Tue, 17 Dec 2019 04:00:57 -0500
+Received: by mail-wm1-f67.google.com with SMTP id p17so2163534wmb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 01:00:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mZx7PX3XtfO3qJUEKG2W3+v5puR8ZcOAgW53SrnG1Rc=;
+        b=BZyxkIZHzoTIAZb7PkiiOhGGWtt9Orwc8Jtj2XpELuPFEX5DptGuQ/duSIZ1o1RyA3
+         9iexUq/FGwRN82fakhPjdSjoJgzTWOgpsSt4wai03y2Oox7qE29AAJJXNWPqn0vs/CeP
+         rO7CD+Ly4lhtwBoGRg0PXRiBsL/Df7Gn7aToLmEohb+1FweqmgipDFh7m0e8i6L+jU+w
+         8S8s7fQ7Rn0lU9MeEfmCrD/BNbXVpmxhGA1sTlPhPIjiO7ZjEXd2et8EBCJqSgy3TNqF
+         dq5b9mSmhRL4FrhoRIIsu535Ew5N+3esockKGRBzmY64PU5wzcdzQWszYCtGzMuedwkd
+         q59w==
+X-Gm-Message-State: APjAAAVXx02PamZvYZAGpDmHQ1K7R7qbtQr2bokdM6GHSU/bfeqjokMq
+        Nfm1VXXUGWHSaVfT/2PkOs4hN/qo
+X-Google-Smtp-Source: APXvYqz1ZPSuW692DjIqgtNqoG0fDxuqI/SuDMEZDBxv1n/Z46mQVepJF+UcqZ/1r3GQHv7ofaTjbQ==
+X-Received: by 2002:a7b:c934:: with SMTP id h20mr4044497wml.103.1576573255589;
+        Tue, 17 Dec 2019 01:00:55 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id b68sm2311610wme.6.2019.12.17.01.00.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 01:00:54 -0800 (PST)
+Date:   Tue, 17 Dec 2019 10:00:54 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Mike Kravetz <mike.kravetz@oracle.com>,
+        Waiman Long <longman@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        aneesh.kumar@linux.ibm.com, Jarod Wilson <jarod@redhat.com>
+Subject: Re: [PATCH v2] mm/hugetlb: defer free_huge_page() to a workqueue
+Message-ID: <20191217090054.GA31063@dhcp22.suse.cz>
+References: <32d2d4f2-83b9-2e40-05e2-71cd07e01b80@redhat.com>
+ <0fcce71f-bc20-0ea3-b075-46592c8d533d@oracle.com>
+ <20191212060650.ftqq27ftutxpc5hq@linux-p48b>
+ <20191212063050.ufrpij6s6jkv7g7j@linux-p48b>
+ <20191212190427.ouyohviijf5inhur@linux-p48b>
+ <d6b9743c-776c-d740-73af-a600f15b910a@oracle.com>
+ <79d3a7e1-384b-b759-cd84-56253fb9ed40@redhat.com>
+ <20191216132658.GG30281@dhcp22.suse.cz>
+ <98ac628d-f8be-270d-80bc-bf2373299caf@redhat.com>
+ <21a92649-bb9f-b024-e52b-4ce9355f973b@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <AM5PR1001MB09941005A47B603805D3C53280510@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:06:18 up 109 days, 20:20, 84 users,  load average: 0.31, 0.48,
- 0.52
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <21a92649-bb9f-b024-e52b-4ce9355f973b@redhat.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-12-16 16:32, Adam Thomson wrote:
-> On 16 December 2019 08:55, Marco Felsch wrote:
+On Mon 16-12-19 13:44:53, Waiman Long wrote:
+> On 12/16/19 10:38 AM, Waiman Long wrote:
+[...]
+> >> Can you extract guts of the testcase and integrate them into hugetlb
+> >> test suite?
 > 
-> > On 19-12-12 16:51, Mark Brown wrote:
-> > > On Thu, Dec 12, 2019 at 05:21:53PM +0100, Marco Felsch wrote:
-> > >
-> > > > "... what's driving the input ..":
-> > > > Sorry I didn't get you here. What did you mean? The input is driven by
-> > > > the host. This can be any gpio line and in my case it is a gpio line
-> > > > driven by the soc-hw during a suspend operation.
-> > >
-> > > Something needs to say what that thing is, especially if it's runtime
-> > > controllable.  In your case from the point of view of software there is
-> > > actually no enable control so we shouldn't be providing an enable
-> > > operation to the framework.
-> > 
-> > The enabel control signal is always available, please check [1] table
-> > 63. There is a mux in front of the enable pin so:
-> > 
-> >              +-------------
-> >  Seq. |\     |   Regulator
-> >  GPI1 | \    |
-> >  GPI2 | | -- > Enable
-> >  GPI3 | /    |
-> >       |/     .
-> >              .
-> >              .
-> > 
-> > Adam please correct me if this is wrong.
-> 
-> Yes the register can always be configured regardless of the associated pin
-> configuration, but if say GPIO1 was configured as a GPO but a regulator was
-> configured to use GPIO1 as its GPI control mechanism, the output signal from
-> GPIO1 would be ignored, the sequencer control would not have any effect and
-> you're simply left with manual I2C control. Really we shouldn't be getting into
-> that situation though. If a GPIO is to be used as a regulator control signal
-> then it should be marked as such and I don't think we should be able to use that
-> pin for anything other than regulator control.
+> BTW, what hugetlb test suite are you talking about?
 
-I see, so we have to guarantee that the requested gpio is configured as
-input. This can be done by:
+I was using tests from libhugetlbfs package in the past. There are few
+tests in LTP project but the libhugetlbfs coverage used to cover the
+largest part of the functionality.
 
-  if (gpi->flags & FLAG_IS_OUT)
-  	return -EINVAL;
+Is there any newer home for the package than [1], Mike? Btw. would it
+mak sense to migrate those tests to a more common place, LTP or kernel
+selftests?
 
-Regards,
-  Marco
-
-> > 
-> > [1] https://www.dialog-
-> > semiconductor.com/sites/default/files/da9062_datasheet_3v6.pdf
-> > 
-> > Regards,
-> >   Marco
-> > 
-> > > _______________________________________________
-> > > linux-arm-kernel mailing list
-> > > linux-arm-kernel@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-
+[1] https://github.com/libhugetlbfs/libhugetlbfs/tree/master/tests
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Michal Hocko
+SUSE Labs
