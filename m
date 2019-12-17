@@ -2,53 +2,98 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE9DC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD8AC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E11D320733
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46C492053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:24:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbfLQSX5 (ORCPT
+        id S1727974AbfLQSYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 13:23:57 -0500
-Received: from muru.com ([72.249.23.125]:49024 "EHLO muru.com"
+        Tue, 17 Dec 2019 13:24:47 -0500
+Received: from mga12.intel.com ([192.55.52.136]:58527 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726646AbfLQSX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 13:23:56 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 0DD098116;
-        Tue, 17 Dec 2019 18:24:35 +0000 (UTC)
-Date:   Tue, 17 Dec 2019 10:23:53 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH 0/3] AM57xx: Fix bugs in device tree files
-Message-ID: <20191217182353.GC35479@atomide.com>
-References: <20191217085124.22480-1-kishon@ti.com>
+        id S1726813AbfLQSYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 13:24:47 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 10:24:46 -0800
+X-IronPort-AV: E=Sophos;i="5.69,326,1571727600"; 
+   d="scan'208";a="209789792"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 10:24:46 -0800
+Message-ID: <1a6e4646f570bf193924e099557841eb6e77a80d.camel@linux.intel.com>
+Subject: Re: [PATCH v15 3/7] mm: Add function __putback_isolated_page
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     David Hildenbrand <david@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
+        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, mgorman@techsingularity.net,
+        vbabka@suse.cz
+Cc:     yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
+        pagupta@redhat.com, riel@surriel.com, lcapitulino@redhat.com,
+        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com, osalvador@suse.de
+Date:   Tue, 17 Dec 2019 10:24:46 -0800
+In-Reply-To: <1fc997cf-b1f3-3fe6-b699-efb9ef7f17cf@redhat.com>
+References: <20191205161928.19548.41654.stgit@localhost.localdomain>
+         <20191205162230.19548.70198.stgit@localhost.localdomain>
+         <cb49bbc7-b0c0-65cc-1d9d-a3aaef075650@redhat.com>
+         <9eb9173278370dd604c4cefd30ed10be36600854.camel@linux.intel.com>
+         <8a4b0337-0bad-2978-32e8-6f90c7365f00@redhat.com>
+         <753e2991e3e632b9c179c45197bfb05669625e9a.camel@linux.intel.com>
+         <1fc997cf-b1f3-3fe6-b699-efb9ef7f17cf@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191217085124.22480-1-kishon@ti.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Kishon Vijay Abraham I <kishon@ti.com> [191217 00:50]:
-> This series
->  *) Removes gpio property from endpoint device tree node (since it's
->     used for driving PERST# line)
->  *) Fix gpio used for driving PERST# line in AM571x IDK
->  *) Model 5V0 regulator which is used for deriving the regulator
->     connected to COMQ port in beagle x15
+On Tue, 2019-12-17 at 18:24 +0100, David Hildenbrand wrote:
+>  >>> Also there are some scenarios where __page_to_pfn is not that simple a
+> > > > call with us having to get the node ID so we can find the pgdat structure
+> > > > to perform the calculation. I'm not sure the compiler would be ble to
+> > > > figure out that the result is the same for both calls, so it is better to
+> > > > make it explicit.
+> > > 
+> > > Only in case of CONFIG_SPARSEMEM we have to go via the section - but I
+> > > doubt this is really worth optimizing here.
+> > > 
+> > > But yeah, I'm fine with this change, only "IMHO
+> > > get_pageblock_migratetype() would be nicer" :)
+> > 
+> > Aren't most distros running with CONFIG_SPARSEMEM enabled? If that is the
+> > case why not optimize for it?
+> 
+> Because I tend to dislike micro-optimizations without performance
+> numbers for code that is not on a hot path. But I mean in this case, as
+> you said, you need the pfn either way, so it's completely fine with.
+> 
+> I do wonder, however, if you should just pass in the migratetype from
+> the caller. That would be even faster ;)
 
-Thanks applying all into fixes.
+The problem is page isolation. We can end up with a page being moved to an
+isolate pageblock while we aren't holding the zone lock, and as such we
+likely need to test it again anyway. So there isn't value in storing and
+reusing the value for cases like page reporting.
 
-Tony
+In addition, the act of isolating the page can cause the migratetype to
+change as __isolate_free_page will attempt to change the migratetype to
+movable if it is one of the standard percpu types and we are pulling at
+least half a pageblock out. So storing the value before we isolate it
+would be problematic as well.
+
+Undoing page isolation is the exception to the issues pointed out above,
+but in that case we are overwriting the pageblock migratetype anyway so
+the cache lines involved should all be warm from having just set the
+value.
+
