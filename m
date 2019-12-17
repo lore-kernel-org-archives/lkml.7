@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E01A9C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C646C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:52:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEE1124676
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:52:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09A6A24676
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:52:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727473AbfLQAv4 (ORCPT
+        id S1727427AbfLQAvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:51:56 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35070 "EHLO
+        Mon, 16 Dec 2019 19:51:54 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34996 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726931AbfLQAvl (ORCPT
+        by vger.kernel.org with ESMTP id S1726869AbfLQAvl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 19:51:41 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15K-0003MU-KT; Tue, 17 Dec 2019 00:51:34 +0000
+        id 1ih15I-0003LF-7F; Tue, 17 Dec 2019 00:51:32 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15K-0005cC-9F; Tue, 17 Dec 2019 00:51:34 +0000
+        id 1ih15H-0005Ut-07; Tue, 17 Dec 2019 00:51:31 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Takashi Iwai" <tiwai@suse.de>
-Date:   Tue, 17 Dec 2019 00:47:24 +0000
-Message-ID: <lsq.1576543535.963027911@decadent.org.uk>
+        "Nakajima Akira" <nakajima.akira@nttcom.co.jp>,
+        "Steve French" <smfrench@gmail.com>,
+        "Shirish Pargaonkar" <shirishpargaonkar@gmail.com>
+Date:   Tue, 17 Dec 2019 00:46:19 +0000
+Message-ID: <lsq.1576543535.172974899@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 110/136] ALSA: timer: Fix mutex deadlock at releasing
- card
+Subject: [PATCH 3.16 045/136] Fix to check Unique id and FileType when
+ client refer file directly.
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,126 +57,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Nakajima Akira <nakajima.akira@nttcom.co.jp>
 
-commit a39331867335d4a94b6165e306265c9e24aca073 upstream.
+commit 7196ac113a4f38b7ca1a3282fd9edf328bd22287 upstream.
 
-When a card is disconnected while in use, the system waits until all
-opened files are closed then releases the card.  This is done via
-put_device() of the card device in each device release code.
+When you refer file directly on cifs client,
+ (e.g. ls -li <filename>, cd <dir>, stat <filename>)
+ the function return old inode number and filetype from old inode cache,
+ though server has different inode number or filetype.
 
-The recently reported mutex deadlock bug happens in this code path;
-snd_timer_close() for the timer device deals with the global
-register_mutex and it calls put_device() there.  When this timer
-device is the last one, the card gets freed and it eventually calls
-snd_timer_free(), which has again the protection with the global
-register_mutex -- boom.
+When server is Windows, cifs client has same problem.
+When Server is Windows
+, This patch fixes bug in different filetype,
+  but does not fix bug in different inode number.
+Because QUERY_PATH_INFO response by Windows does not include inode number(Index Number) .
 
-Basically put_device() call itself is race-free, so a relative simple
-workaround is to move this put_device() call out of the mutex.  For
-achieving that, in this patch, snd_timer_close_locked() got a new
-argument to store the card device pointer in return, and each caller
-invokes put_device() with the returned object after the mutex unlock.
+BUG INFO
+https://bugzilla.kernel.org/show_bug.cgi?id=90021
+https://bugzilla.kernel.org/show_bug.cgi?id=90031
 
-Reported-and-tested-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Reported-by: Nakajima Akira <nakajima.akira@nttcom.co.jp>
+Signed-off-by: Nakajima Akira <nakajima.akira@nttcom.co.jp>
+Reviewed-by: Shirish Pargaonkar <shirishpargaonkar@gmail.com>
+Signed-off-by: Steve French <smfrench@gmail.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- sound/core/timer.c | 24 +++++++++++++++++-------
- 1 file changed, 17 insertions(+), 7 deletions(-)
+ fs/cifs/inode.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
---- a/sound/core/timer.c
-+++ b/sound/core/timer.c
-@@ -241,7 +241,8 @@ static int snd_timer_check_master(struct
- 	return 0;
- }
- 
--static int snd_timer_close_locked(struct snd_timer_instance *timeri);
-+static int snd_timer_close_locked(struct snd_timer_instance *timeri,
-+				  struct device **card_devp_to_put);
- 
- /*
-  * open a timer instance
-@@ -253,6 +254,7 @@ int snd_timer_open(struct snd_timer_inst
- {
- 	struct snd_timer *timer;
- 	struct snd_timer_instance *timeri = NULL;
-+	struct device *card_dev_to_put = NULL;
- 	int err;
- 
- 	mutex_lock(&register_mutex);
-@@ -276,7 +278,7 @@ int snd_timer_open(struct snd_timer_inst
- 		list_add_tail(&timeri->open_list, &snd_timer_slave_list);
- 		err = snd_timer_check_slave(timeri);
- 		if (err < 0) {
--			snd_timer_close_locked(timeri);
-+			snd_timer_close_locked(timeri, &card_dev_to_put);
- 			timeri = NULL;
- 		}
- 		goto unlock;
-@@ -328,7 +330,7 @@ int snd_timer_open(struct snd_timer_inst
- 			timeri = NULL;
- 
- 			if (timer->card)
--				put_device(&timer->card->card_dev);
-+				card_dev_to_put = &timer->card->card_dev;
- 			module_put(timer->module);
- 			goto unlock;
- 		}
-@@ -338,12 +340,15 @@ int snd_timer_open(struct snd_timer_inst
- 	timer->num_instances++;
- 	err = snd_timer_check_master(timeri);
- 	if (err < 0) {
--		snd_timer_close_locked(timeri);
-+		snd_timer_close_locked(timeri, &card_dev_to_put);
- 		timeri = NULL;
+--- a/fs/cifs/inode.c
++++ b/fs/cifs/inode.c
+@@ -401,9 +401,25 @@ int cifs_get_inode_info_unix(struct inod
+ 			rc = -ENOMEM;
+ 	} else {
+ 		/* we already have inode, update it */
++
++		/* if uniqueid is different, return error */
++		if (unlikely(cifs_sb->mnt_cifs_flags & CIFS_MOUNT_SERVER_INUM &&
++		    CIFS_I(*pinode)->uniqueid != fattr.cf_uniqueid)) {
++			rc = -ESTALE;
++			goto cgiiu_exit;
++		}
++
++		/* if filetype is different, return error */
++		if (unlikely(((*pinode)->i_mode & S_IFMT) !=
++		    (fattr.cf_mode & S_IFMT))) {
++			rc = -ESTALE;
++			goto cgiiu_exit;
++		}
++
+ 		cifs_fattr_to_inode(*pinode, &fattr);
  	}
  
-  unlock:
- 	mutex_unlock(&register_mutex);
-+	/* put_device() is called after unlock for avoiding deadlock */
-+	if (card_dev_to_put)
-+		put_device(card_dev_to_put);
- 	*ti = timeri;
- 	return err;
++cgiiu_exit:
+ 	return rc;
  }
-@@ -352,7 +357,8 @@ int snd_timer_open(struct snd_timer_inst
-  * close a timer instance
-  * call this with register_mutex down.
-  */
--static int snd_timer_close_locked(struct snd_timer_instance *timeri)
-+static int snd_timer_close_locked(struct snd_timer_instance *timeri,
-+				  struct device **card_devp_to_put)
- {
- 	struct snd_timer *timer = NULL;
- 	struct snd_timer_instance *slave, *tmp;
-@@ -404,7 +410,7 @@ static int snd_timer_close_locked(struct
- 			timer->hw.close(timer);
- 		/* release a card refcount for safe disconnection */
- 		if (timer->card)
--			put_device(&timer->card->card_dev);
-+			*card_devp_to_put = &timer->card->card_dev;
- 		module_put(timer->module);
+ 
+@@ -839,6 +855,15 @@ cifs_get_inode_info(struct inode **inode
+ 		if (!*inode)
+ 			rc = -ENOMEM;
+ 	} else {
++		/* we already have inode, update it */
++
++		/* if filetype is different, return error */
++		if (unlikely(((*inode)->i_mode & S_IFMT) !=
++		    (fattr.cf_mode & S_IFMT))) {
++			rc = -ESTALE;
++			goto cgii_exit;
++		}
++
+ 		cifs_fattr_to_inode(*inode, &fattr);
  	}
- 
-@@ -416,14 +422,18 @@ static int snd_timer_close_locked(struct
-  */
- int snd_timer_close(struct snd_timer_instance *timeri)
- {
-+	struct device *card_dev_to_put = NULL;
- 	int err;
- 
- 	if (snd_BUG_ON(!timeri))
- 		return -ENXIO;
- 
- 	mutex_lock(&register_mutex);
--	err = snd_timer_close_locked(timeri);
-+	err = snd_timer_close_locked(timeri, &card_dev_to_put);
- 	mutex_unlock(&register_mutex);
-+	/* put_device() is called after unlock for avoiding deadlock */
-+	if (card_dev_to_put)
-+		put_device(card_dev_to_put);
- 	return err;
- }
  
 
