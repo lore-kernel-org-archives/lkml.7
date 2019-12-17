@@ -2,133 +2,157 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 383A3C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EC7C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15FDF21582
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:32:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D495E21582
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:33:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728781AbfLQQcB (ORCPT
+        id S1728519AbfLQQdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 11:32:01 -0500
-Received: from mga06.intel.com ([134.134.136.31]:56872 "EHLO mga06.intel.com"
+        Tue, 17 Dec 2019 11:33:39 -0500
+Received: from mga02.intel.com ([134.134.136.20]:8478 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728415AbfLQQcA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 11:32:00 -0500
+        id S1728241AbfLQQdi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 11:33:38 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 08:32:00 -0800
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 08:33:38 -0800
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,326,1571727600"; 
-   d="scan'208";a="205526225"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 08:32:00 -0800
-Message-ID: <03e1e95c2cc8d6e3206212df48a971e9696d3b20.camel@linux.intel.com>
-Subject: Re: [PATCH v15 4/7] mm: Introduce Reported pages
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, mgorman@techsingularity.net,
-        vbabka@suse.cz
-Cc:     yang.zhang.wz@gmail.com, konrad.wilk@oracle.com, david@redhat.com,
-        pagupta@redhat.com, riel@surriel.com, lcapitulino@redhat.com,
-        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com, osalvador@suse.de
-Date:   Tue, 17 Dec 2019 08:31:59 -0800
-In-Reply-To: <06ca452e-90b3-c1b5-f2c0-e8da2444bcfe@redhat.com>
-References: <20191205161928.19548.41654.stgit@localhost.localdomain>
-         <20191205162238.19548.68238.stgit@localhost.localdomain>
-         <0bb29ec2-9dcb-653c-dda5-0825aea7d4b0@redhat.com>
-         <537e970f062e0c7f89723f63fc1f3ec6e53614a5.camel@linux.intel.com>
-         <06ca452e-90b3-c1b5-f2c0-e8da2444bcfe@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+   d="scan'208";a="221792307"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by fmsmga001.fm.intel.com with ESMTP; 17 Dec 2019 08:33:37 -0800
+Subject: Re: [PATCH 5/5] dmaengine: ioat: Support in-use unbind
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        Kit Chow <kchow@gigaio.com>
+References: <20191216190120.21374-1-logang@deltatee.com>
+ <20191216190120.21374-6-logang@deltatee.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <9cc20739-2a02-b4e1-b5e6-9578fe9314ef@intel.com>
+Date:   Tue, 17 Dec 2019 09:33:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
+In-Reply-To: <20191216190120.21374-6-logang@deltatee.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-12-17 at 03:55 -0500, Nitesh Narayan Lal wrote:
-> On 12/16/19 11:28 AM, Alexander Duyck wrote:
-> > On Mon, 2019-12-16 at 05:17 -0500, Nitesh Narayan Lal wrote:
-> > > On 12/5/19 11:22 AM, Alexander Duyck wrote:
-> > > > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > > > 
-> > > > In order to pave the way for free page reporting in virtualized
-> > > > environments we will need a way to get pages out of the free lists and
-> > > > identify those pages after they have been returned. To accomplish this,
-> > > > this patch adds the concept of a Reported Buddy, which is essentially
-> > > > meant to just be the Uptodate flag used in conjunction with the Buddy
-> > > > page type.
-> > > [...]
-> > > 
-> > > > +enum {
-> > > > +	PAGE_REPORTING_IDLE = 0,
-> > > > +	PAGE_REPORTING_REQUESTED,
-> > > > +	PAGE_REPORTING_ACTIVE
-> > > > +};
-> > > > +
-> > > > +/* request page reporting */
-> > > > +static void
-> > > > +__page_reporting_request(struct page_reporting_dev_info *prdev)
-> > > > +{
-> > > > +	unsigned int state;
-> > > > +
-> > > > +	/* Check to see if we are in desired state */
-> > > > +	state = atomic_read(&prdev->state);
-> > > > +	if (state == PAGE_REPORTING_REQUESTED)
-> > > > +		return;
-> > > > +
-> > > > +	/*
-> > > > +	 *  If reporting is already active there is nothing we need to do.
-> > > > +	 *  Test against 0 as that represents PAGE_REPORTING_IDLE.
-> > > > +	 */
-> > > > +	state = atomic_xchg(&prdev->state, PAGE_REPORTING_REQUESTED);
-> > > > +	if (state != PAGE_REPORTING_IDLE)
-> > > > +		return;
-> > > > +
-> > > > +	/*
-> > > > +	 * Delay the start of work to allow a sizable queue to build. For
-> > > > +	 * now we are limiting this to running no more than once every
-> > > > +	 * couple of seconds.
-> > > > +	 */
-> > > > +	schedule_delayed_work(&prdev->work, PAGE_REPORTING_DELAY);
-> > > > +}
-> > > > +
-> > > I think you recently switched to using an atomic variable for maintaining page
-> > > reporting status as I was doing in v12.
-> > > Which is good, as we will not have a disagreement on it now.
-> > There is still some differences between our approaches if I am not
-> > mistaken. Specifically I have code in place so that any requests to report
-> > while we are actively working on reporting will trigger another pass being
-> > scheduled after we completed. I still believe you were lacking any logic
-> > like that as I recall.
-> > 
+
+
+On 12/16/19 12:01 PM, Logan Gunthorpe wrote:
+> Don't allocate memory using the devm infrastructure and instead call
+> kfree with the new dmaengine device_release call back. This ensures
+> the structures are available until the last reference is dropped.
 > 
-> Yes, I was specifically referring to the atomic state variable.
-> Though I am wondering if having an atomic variable to track page reporting state
-> is better than having a page reporting specific unsigned long flag, which we can
-> manipulate via __set_bit() and __clear_bit().
+> We also need to ensure we call ioat_shutdown() in ioat_remove() so
+> that all the channels are quiesced and further transaction fails.
+> 
+> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Acked-by: Dave Jiang <dave.jiang@intel.com>
 
-So the reason for using an atomic state variable is because I only really
-have 3 possible states; idle, active, and requested. It allows for a
-pretty simple state machine as any transition from idle indicates that we
-need to schedule the worker, transition from requested to active when the
-worker starts, and if at the end of a pass if we are still in the active
-state it means we can transition back to idle, otherwise we reschedule the
-worker.
-
-In order to do the same sort of thing using the bitops would require at
-least 2 bits. In addition with the requirement that I cannot use the zone
-lock for protection of the state I cannot use the non-atomic versions of
-things such as __set_bit and __clear_bit so they would require additional
-locking protections.
-
+> ---
+>   drivers/dma/ioat/init.c | 38 ++++++++++++++++++++++++++------------
+>   1 file changed, 26 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/dma/ioat/init.c b/drivers/dma/ioat/init.c
+> index a6a6dc432db8..60e9afbb896c 100644
+> --- a/drivers/dma/ioat/init.c
+> +++ b/drivers/dma/ioat/init.c
+> @@ -556,10 +556,6 @@ static void ioat_dma_remove(struct ioatdma_device *ioat_dma)
+>   	ioat_kobject_del(ioat_dma);
+>   
+>   	dma_async_device_unregister(dma);
+> -
+> -	dma_pool_destroy(ioat_dma->completion_pool);
+> -
+> -	INIT_LIST_HEAD(&dma->channels);
+>   }
+>   
+>   /**
+> @@ -589,7 +585,7 @@ static void ioat_enumerate_channels(struct ioatdma_device *ioat_dma)
+>   	dev_dbg(dev, "%s: xfercap = %d\n", __func__, 1 << xfercap_log);
+>   
+>   	for (i = 0; i < dma->chancnt; i++) {
+> -		ioat_chan = devm_kzalloc(dev, sizeof(*ioat_chan), GFP_KERNEL);
+> +		ioat_chan = kzalloc(sizeof(*ioat_chan), GFP_KERNEL);
+>   		if (!ioat_chan)
+>   			break;
+>   
+> @@ -624,12 +620,16 @@ static void ioat_free_chan_resources(struct dma_chan *c)
+>   		return;
+>   
+>   	ioat_stop(ioat_chan);
+> -	ioat_reset_hw(ioat_chan);
+>   
+> -	/* Put LTR to idle */
+> -	if (ioat_dma->version >= IOAT_VER_3_4)
+> -		writeb(IOAT_CHAN_LTR_SWSEL_IDLE,
+> -			ioat_chan->reg_base + IOAT_CHAN_LTR_SWSEL_OFFSET);
+> +	if (!test_bit(IOAT_CHAN_DOWN, &ioat_chan->state)) {
+> +		ioat_reset_hw(ioat_chan);
+> +
+> +		/* Put LTR to idle */
+> +		if (ioat_dma->version >= IOAT_VER_3_4)
+> +			writeb(IOAT_CHAN_LTR_SWSEL_IDLE,
+> +			       ioat_chan->reg_base +
+> +			       IOAT_CHAN_LTR_SWSEL_OFFSET);
+> +	}
+>   
+>   	spin_lock_bh(&ioat_chan->cleanup_lock);
+>   	spin_lock_bh(&ioat_chan->prep_lock);
+> @@ -1322,16 +1322,28 @@ static struct pci_driver ioat_pci_driver = {
+>   	.err_handler	= &ioat_err_handler,
+>   };
+>   
+> +static void release_ioatdma(struct dma_device *device)
+> +{
+> +	struct ioatdma_device *d = to_ioatdma_device(device);
+> +	int i;
+> +
+> +	for (i = 0; i < IOAT_MAX_CHANS; i++)
+> +		kfree(d->idx[i]);
+> +
+> +	dma_pool_destroy(d->completion_pool);
+> +	kfree(d);
+> +}
+> +
+>   static struct ioatdma_device *
+>   alloc_ioatdma(struct pci_dev *pdev, void __iomem *iobase)
+>   {
+> -	struct device *dev = &pdev->dev;
+> -	struct ioatdma_device *d = devm_kzalloc(dev, sizeof(*d), GFP_KERNEL);
+> +	struct ioatdma_device *d = kzalloc(sizeof(*d), GFP_KERNEL);
+>   
+>   	if (!d)
+>   		return NULL;
+>   	d->pdev = pdev;
+>   	d->reg_base = iobase;
+> +	d->dma_dev.device_release = release_ioatdma;
+>   	return d;
+>   }
+>   
+> @@ -1400,6 +1412,8 @@ static void ioat_remove(struct pci_dev *pdev)
+>   	if (!device)
+>   		return;
+>   
+> +	ioat_shutdown(pdev);
+> +
+>   	dev_err(&pdev->dev, "Removing dma and dca services\n");
+>   	if (device->dca) {
+>   		unregister_dca_provider(device->dca, &pdev->dev);
+> 
