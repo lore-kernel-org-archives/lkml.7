@@ -2,158 +2,137 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA7C3C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF7BC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC00120716
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:32:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8555C2082E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:32:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KmFEP4Em"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Qie8fWb/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727333AbfLQKcC (ORCPT
+        id S1727335AbfLQKcj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 05:32:02 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:52916 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725940AbfLQKcA (ORCPT
+        Tue, 17 Dec 2019 05:32:39 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:48144 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbfLQKcj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 05:32:00 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576578719; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=xFFX4wMybPgYg/kJCtbV3gnzPuYvr9ckt/7D10fLnN0=; b=KmFEP4EmSAppqc2ByN4M4KESfZRHmBdGZ0hlzT7U+uBFEy7phFjIEeaXxynXdsUME4SYMHIC
- jxIw6boBqBVIyb5yB0HKYqTHFJ+Fu96hMw4fyhMpI/fKFy/Omc1vXG/M82yyzxSrux7CqXmG
- L8MJggJJ6ImQzjd/k5e4bdBRclM=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5df8ae9f.7fe28a4e5228-smtp-out-n02;
- Tue, 17 Dec 2019 10:31:59 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 16896C447A0; Tue, 17 Dec 2019 10:31:59 +0000 (UTC)
-Received: from [10.131.117.127] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AB9FCC433CB;
-        Tue, 17 Dec 2019 10:31:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AB9FCC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: sc7180: Add rpmh power-domain node
-To:     Sibi Sankar <sibis@codeaurora.org>, bjorn.andersson@linaro.org,
-        robh+dt@kernel.org
-Cc:     agross@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        mark.rutland@arm.com, swboyd@chromium.org, dianders@chromium.org
-References: <20191216115531.17573-1-sibis@codeaurora.org>
- <20191216115531.17573-3-sibis@codeaurora.org>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <fe28c214-f86b-b849-78e8-f879185269f7@codeaurora.org>
-Date:   Tue, 17 Dec 2019 16:01:53 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Tue, 17 Dec 2019 05:32:39 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBHAWWme076204;
+        Tue, 17 Dec 2019 04:32:32 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576578752;
+        bh=5z22DOMxe9ERTYZQN4IPLEVBrsRz70Mah/Vov2vIbjk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Qie8fWb/48AlIMLVc4ts4LqusyY3F1qPGN4b+o4Xz+bvUjmFuqFw87c+FzZvh9Wm2
+         DzvpAJhd9MKV/aRrzCMtXmmv6cF2iXKwF53uu8+poYhTX6tpcaMcU6Jbk3D8+Lqwnw
+         lk8QhnMz1yOvOLvhm2CrO6PBPB1F4tuJdnzJPqRw=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBHAWV93068770
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 17 Dec 2019 04:32:31 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
+ Dec 2019 04:32:30 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 17 Dec 2019 04:32:30 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBHAWSwp012173;
+        Tue, 17 Dec 2019 04:32:29 -0600
+Subject: Re: [PATCH] iio: adc: at91: Use dma_request_chan() instead
+ dma_request_slave_channel()
+To:     <Eugen.Hristev@microchip.com>, <jic23@kernel.org>
+CC:     <vkoul@kernel.org>, <Ludovic.Desroches@microchip.com>,
+        <linux-iio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20191217075043.23539-1-peter.ujfalusi@ti.com>
+ <102e71da-8b9c-8528-3bec-b4a22895fb44@microchip.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <d4885bc6-4e3b-42ee-1cf6-c782fa70d3cb@ti.com>
+Date:   Tue, 17 Dec 2019 12:32:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191216115531.17573-3-sibis@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <102e71da-8b9c-8528-3bec-b4a22895fb44@microchip.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/16/2019 5:25 PM, Sibi Sankar wrote:
-> Add the DT node for the rpmhpd power controller on SC7180 SoCs.
-> 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
+Hi Eugen,
 
-Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
-
->   arch/arm64/boot/dts/qcom/sc7180.dtsi | 55 ++++++++++++++++++++++++++++
->   1 file changed, 55 insertions(+)
+On 17/12/2019 9.59, Eugen.Hristev@microchip.com wrote:
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index 01bbb58ae5160..fb17dc62d7ab1 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -9,6 +9,7 @@
->   #include <dt-bindings/clock/qcom,rpmh.h>
->   #include <dt-bindings/interrupt-controller/arm-gic.h>
->   #include <dt-bindings/phy/phy-qcom-qusb2.h>
-> +#include <dt-bindings/power/qcom-rpmpd.h>
->   #include <dt-bindings/soc/qcom,rpmh-rsc.h>
->   
->   / {
-> @@ -1284,6 +1285,60 @@
->   				clock-names = "xo";
->   				#clock-cells = <1>;
->   			};
-> +
-> +			rpmhpd: power-controller {
-> +				compatible = "qcom,sc7180-rpmhpd";
-> +				#power-domain-cells = <1>;
-> +				operating-points-v2 = <&rpmhpd_opp_table>;
-> +
-> +				rpmhpd_opp_table: opp-table {
-> +					compatible = "operating-points-v2";
-> +
-> +					rpmhpd_opp_ret: opp1 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_RETENTION>;
-> +					};
-> +
-> +					rpmhpd_opp_min_svs: opp2 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
-> +					};
-> +
-> +					rpmhpd_opp_low_svs: opp3 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
-> +					};
-> +
-> +					rpmhpd_opp_svs: opp4 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
-> +					};
-> +
-> +					rpmhpd_opp_svs_l1: opp5 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
-> +					};
-> +
-> +					rpmhpd_opp_svs_l2: opp6 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_SVS_L2>;
-> +					};
-> +
-> +					rpmhpd_opp_nom: opp7 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
-> +					};
-> +
-> +					rpmhpd_opp_nom_l1: opp8 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
-> +					};
-> +
-> +					rpmhpd_opp_nom_l2: opp9 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_NOM_L2>;
-> +					};
-> +
-> +					rpmhpd_opp_turbo: opp10 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
-> +					};
-> +
-> +					rpmhpd_opp_turbo_l1: opp11 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
-> +					};
-> +				};
-> +			};
->   		};
->   
->   		cpufreq_hw: cpufreq@18323000 {
 > 
+> On 17.12.2019 09:50, Peter Ujfalusi wrote:
+> 
+>> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
+>> eating up the error code.
+>>
+>> By using dma_request_chan() directly the driver can support deferred
+>> probing against DMA.
+>>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>> ---
+>>   drivers/iio/adc/at91-sama5d2_adc.c | 6 +++---
+>>   1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> Hi Peter,
+> 
+> Thank you for the patch.
+> Nitpick : at91 is another driver (old one for different platforms), so 
+> can you please change the commit oneline to iio: adc: at91-sama5d2_adc: 
+> to not be confused about which driver is affected.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Sorry, just sent v2 with the correct subject prefix.
+By mistake I looked at the git log of at91_adc.c and picked the wrong
+prefix.
+
+> 
+> Thanks !
+> Eugen
+> 
+>>
+>> diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
+>> index e1850f3d5cf3..a5c7771227d5 100644
+>> --- a/drivers/iio/adc/at91-sama5d2_adc.c
+>> +++ b/drivers/iio/adc/at91-sama5d2_adc.c
+>> @@ -1444,10 +1444,10 @@ static void at91_adc_dma_init(struct platform_device *pdev)
+>>          if (st->dma_st.dma_chan)
+>>                  return;
+>>
+>> -       st->dma_st.dma_chan = dma_request_slave_channel(&pdev->dev, "rx");
+>> -
+>> -       if (!st->dma_st.dma_chan)  {
+>> +       st->dma_st.dma_chan = dma_request_chan(&pdev->dev, "rx");
+>> +       if (IS_ERR(st->dma_st.dma_chan))  {
+>>                  dev_info(&pdev->dev, "can't get DMA channel\n");
+>> +               st->dma_st.dma_chan = NULL;
+>>                  goto dma_exit;
+>>          }
+>>
+>> --
+>> Peter
+>>
+>> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+>> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>>
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
