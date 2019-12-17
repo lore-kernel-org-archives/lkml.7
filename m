@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E098C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 055BCC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A78CD20733
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:19:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B64272146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:20:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="110t1kwG"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="SvtKJNc6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727565AbfLQLTy (ORCPT
+        id S1727590AbfLQLUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 06:19:54 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39575 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727393AbfLQLTw (ORCPT
+        Tue, 17 Dec 2019 06:20:02 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41230 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727420AbfLQLTs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 06:19:52 -0500
-Received: by mail-wr1-f66.google.com with SMTP id y11so10856887wrt.6
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 03:19:48 -0800 (PST)
+        Tue, 17 Dec 2019 06:19:48 -0500
+Received: by mail-wr1-f67.google.com with SMTP id c9so55256wrw.8
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 03:19:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=HJorV3BZrxrXDxA3dsX2CndOAaRtusWDOGvtBFdaiC4=;
-        b=110t1kwGyulVj3j5fE7RpJ+VvRFsfNe46Q55yKrIW/Xv9gmJrn7ah6WsHgqNdlwCnI
-         +vFynOrRDOWfBxSrIt1OmfVkNC/PYcKoi1tDFqXhIKTrgaGS5NnI+WIZRgCTneCRdGgo
-         D5yNylIdbByFhV21Ua9JQ+8Ddh9bMq9JPb7nZSULBtSK01DwNHfhTdUQixmCdm9b8SFk
-         kmDXQEkiOz1aV9Yt+nkQOQNYZgmZeQOObJRqMYtOPpWUSLzNsBkIRRBO/koDToTorQbS
-         MhYDRDHgVQJwR737eWH7JbmyuJE7a4Gc4oYZUaANq2/2zr2SCuswERLogwAp4OQkJtPA
-         he0g==
+        bh=BguqgoE1jCQbIijD1jHMDagjNNEXrcQaeP9djSbm+K4=;
+        b=SvtKJNc6r1GG44d5xrZ4xDYR1WZQqRn+g81q3r/AotIwGQ0pl2v2ZHhUSgfLnGHN6u
+         HpZpfZ1VCGxttxYBjaKIL+4X2oJeBIoT09od7IsCOWwGjq4/nd0p+JnskCl7jnCj2jGZ
+         My9IZG7D+CS7RakwaUPLkLw/h04YQDQv1rQF/rJ13lxgUP8Ik7ZW2fxbdvddH4vThbLO
+         YWxporn92gms4A1QS6UGRVw171UUKTRa3uTo3I/19PqAzUrpubFFP8AnZMEQVKwur3eC
+         aYPtVG+osEltFgFtt22IKsEXOonELnmQcp5iSMHg7pZFdMHnbKcZlkGnB5AbkI/DBehm
+         7lbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=HJorV3BZrxrXDxA3dsX2CndOAaRtusWDOGvtBFdaiC4=;
-        b=M9Lxovt2uHiQFc7ssIa5reKGkBoNKK9ROSf3zyrNlnQ1FhhNuNynKPKBAFxKoRD+rY
-         /pZaQdkWIq6HyjJyGh+itsY1BJVYx8O5YhyUr4lD3bWwnjXYmt6Y/PNhqbjUmgChZ3Oi
-         hqYjFMc5d0WnT4c3gBjLdFcYBiZuuz2472nYe3vZlC0b6d1PYmpkIKi4fb+OcEcAtcai
-         LUEQfFfabXB+7aZVgrLgXBzyQEeQvgOiERZmSHPbLaiqIqyumhRBSIH+2CNSsyj8I8l7
-         f2Lgujmcqe1L8YytI/FSAtm1k8AJAgms2qNLiKJuE+pMpRrgduPaF5GKUyQJN+pLYNUV
-         YOSw==
-X-Gm-Message-State: APjAAAX3YbiaBbprrbUvYcf0gBjwRR3dROsmr7SqQCq8wuHpyEgBFgw3
-        jsINHKo8ilEkrnpeTVsBwn4s0A==
-X-Google-Smtp-Source: APXvYqxvN8dvnxQmJSYmSHiNTCxjsFi79Pgcxy8VzxRj7A3ZNZVfW9TsmQTyHVRZWgnX1RRguwcVvQ==
-X-Received: by 2002:adf:ea4e:: with SMTP id j14mr37534251wrn.101.1576581586429;
-        Tue, 17 Dec 2019 03:19:46 -0800 (PST)
+        bh=BguqgoE1jCQbIijD1jHMDagjNNEXrcQaeP9djSbm+K4=;
+        b=KP6t7Y4BFJDRNAcM4AOKOiABhd+VkkZ4AbNWdR5Dgbf+BSWxuUgFqwpJ+8W2H5dKOI
+         jzjk4OwzBTHHLBBIlcfQqFQIsOb2BrRB8QYVUNU1jOE5P9Y9J7vvlLJbqVO3p9jywZrc
+         rBSVfKkdCYBUMjwnCt9z0UtfFUVJaOdL7rrGHJXxaamjaDnrRPRlvwnjUngThkWgSsVt
+         NIDFeL7cQnXuHux7y7zVVuWzdMF+pBD2LpvtNKzo9mMJtJZqRyGMjt5NW1z+L7U3ZfTL
+         bzTEYn0yNbm7C115Hc9htQLny8IRc6001xzqv6A/EOR3W+8gqXs1G1OCOXCPdAuQvDoY
+         vx1w==
+X-Gm-Message-State: APjAAAVgYV+17blToE+fFhC9OpGeOKWiTmrvDgUvBtzD+uxG39ADry+z
+        y62QlynXjF2ZYueRey+XBddJ4g==
+X-Google-Smtp-Source: APXvYqzWyUMvYWHtFIyiR18ZJs9wN04gxbqbkiASSK9XRBY7AnNYSaxdICZJBB5kKA7i6MWwEs2vcg==
+X-Received: by 2002:a5d:4d4a:: with SMTP id a10mr36814333wru.220.1576581584525;
+        Tue, 17 Dec 2019 03:19:44 -0800 (PST)
 Received: from bender.baylibre.local (lfbn-nic-1-505-157.w90-116.abo.wanadoo.fr. [90.116.92.157])
-        by smtp.gmail.com with ESMTPSA id a184sm2713113wmf.29.2019.12.17.03.19.45
+        by smtp.gmail.com with ESMTPSA id a184sm2713113wmf.29.2019.12.17.03.19.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 03:19:45 -0800 (PST)
+        Tue, 17 Dec 2019 03:19:43 -0800 (PST)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     mchehab@kernel.org, hans.verkuil@cisco.com
 Cc:     Maxime Jourdan <mjourdan@baylibre.com>,
         linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 5/5] media: meson: vdec: add VP9 decoder support
-Date:   Tue, 17 Dec 2019 12:19:39 +0100
-Message-Id: <20191217111939.10387-6-narmstrong@baylibre.com>
+Subject: [PATCH v2 3/5] media: meson: vdec: add common HEVC decoder support
+Date:   Tue, 17 Dec 2019 12:19:37 +0100
+Message-Id: <20191217111939.10387-4-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20191217111939.10387-1-narmstrong@baylibre.com>
 References: <20191217111939.10387-1-narmstrong@baylibre.com>
@@ -77,2347 +77,889 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Maxime Jourdan <mjourdan@baylibre.com>
 
-This adds VP9 decoding for the Amlogic GXL, G12A & SM1 SoCs, using
-the commong "HEVC" HW decoder.
+Add support for the HEVC & VP9 common decoder support, handling
+Amlogic GXBB, GXL, G12A and SM1 platforms.
 
-For G12A & SM1, it uses the IOMMU support from the firmware.
-
-For 10bit decoding, the firmware can only decode in the proprietary
-Amlogic Framebuffer Compression format, but can output in 8bit NV12
-buffer while writing the decoded frame.
+This handles the "HEVC" hw decoder used for HEVC and VP9, and will be
+using in the new H264 multi-instance decoder for G12A & SM1 platforms.
 
 Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/staging/media/meson/vdec/Makefile     |    2 +-
- drivers/staging/media/meson/vdec/codec_vp9.c  | 2139 +++++++++++++++++
- drivers/staging/media/meson/vdec/codec_vp9.h  |   13 +
- drivers/staging/media/meson/vdec/hevc_regs.h  |    7 +
- drivers/staging/media/meson/vdec/vdec.c       |    5 +
- .../staging/media/meson/vdec/vdec_helpers.c   |    4 +
- .../staging/media/meson/vdec/vdec_platform.c  |   38 +
- 7 files changed, 2207 insertions(+), 1 deletion(-)
- create mode 100644 drivers/staging/media/meson/vdec/codec_vp9.c
- create mode 100644 drivers/staging/media/meson/vdec/codec_vp9.h
+ drivers/staging/media/meson/vdec/Makefile     |   4 +-
+ .../media/meson/vdec/codec_hevc_common.c      | 285 ++++++++++++++++++
+ .../media/meson/vdec/codec_hevc_common.h      |  77 +++++
+ drivers/staging/media/meson/vdec/hevc_regs.h  | 211 +++++++++++++
+ drivers/staging/media/meson/vdec/vdec_hevc.c  | 231 ++++++++++++++
+ drivers/staging/media/meson/vdec/vdec_hevc.h  |  13 +
+ 6 files changed, 819 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/staging/media/meson/vdec/codec_hevc_common.c
+ create mode 100644 drivers/staging/media/meson/vdec/codec_hevc_common.h
+ create mode 100644 drivers/staging/media/meson/vdec/hevc_regs.h
+ create mode 100644 drivers/staging/media/meson/vdec/vdec_hevc.c
+ create mode 100644 drivers/staging/media/meson/vdec/vdec_hevc.h
 
 diff --git a/drivers/staging/media/meson/vdec/Makefile b/drivers/staging/media/meson/vdec/Makefile
-index f55b6e625034..6e726af84ac9 100644
+index 711d990c760e..f55b6e625034 100644
 --- a/drivers/staging/media/meson/vdec/Makefile
 +++ b/drivers/staging/media/meson/vdec/Makefile
-@@ -3,6 +3,6 @@
+@@ -2,7 +2,7 @@
+ # Makefile for Amlogic meson video decoder driver
  
  meson-vdec-objs = esparser.o vdec.o vdec_helpers.o vdec_platform.o
- meson-vdec-objs += vdec_1.o vdec_hevc.o
--meson-vdec-objs += codec_mpeg12.o codec_h264.o codec_hevc_common.o
-+meson-vdec-objs += codec_mpeg12.o codec_h264.o codec_hevc_common.o codec_vp9.o
+-meson-vdec-objs += vdec_1.o
+-meson-vdec-objs += codec_mpeg12.o codec_h264.o
++meson-vdec-objs += vdec_1.o vdec_hevc.o
++meson-vdec-objs += codec_mpeg12.o codec_h264.o codec_hevc_common.o
  
  obj-$(CONFIG_VIDEO_MESON_VDEC) += meson-vdec.o
-diff --git a/drivers/staging/media/meson/vdec/codec_vp9.c b/drivers/staging/media/meson/vdec/codec_vp9.c
+diff --git a/drivers/staging/media/meson/vdec/codec_hevc_common.c b/drivers/staging/media/meson/vdec/codec_hevc_common.c
 new file mode 100644
-index 000000000000..9e23ccbb7cc0
+index 000000000000..72a4e38a42dc
 --- /dev/null
-+++ b/drivers/staging/media/meson/vdec/codec_vp9.c
-@@ -0,0 +1,2139 @@
++++ b/drivers/staging/media/meson/vdec/codec_hevc_common.c
+@@ -0,0 +1,285 @@
 +// SPDX-License-Identifier: GPL-2.0+
 +/*
 + * Copyright (C) 2018 Maxime Jourdan <mjourdan@baylibre.com>
-+ * Copyright (C) 2015 Amlogic, Inc. All rights reserved.
 + */
 +
 +#include <media/v4l2-mem2mem.h>
 +#include <media/videobuf2-dma-contig.h>
 +
-+#include "dos_regs.h"
-+#include "hevc_regs.h"
-+#include "vdec_helpers.h"
 +#include "codec_hevc_common.h"
++#include "vdec_helpers.h"
++#include "hevc_regs.h"
 +
-+/* HEVC reg mapping */
-+#define VP9_DEC_STATUS_REG	HEVC_ASSIST_SCRATCH_0
-+	#define VP9_10B_DECODE_SLICE	5
-+	#define VP9_HEAD_PARSER_DONE	0xf0
-+#define VP9_RPM_BUFFER		HEVC_ASSIST_SCRATCH_1
-+#define VP9_SHORT_TERM_RPS	HEVC_ASSIST_SCRATCH_2
-+#define VP9_ADAPT_PROB_REG	HEVC_ASSIST_SCRATCH_3
-+#define VP9_MMU_MAP_BUFFER	HEVC_ASSIST_SCRATCH_4
-+#define VP9_PPS_BUFFER		HEVC_ASSIST_SCRATCH_5
-+#define VP9_SAO_UP		HEVC_ASSIST_SCRATCH_6
-+#define VP9_STREAM_SWAP_BUFFER	HEVC_ASSIST_SCRATCH_7
-+#define VP9_STREAM_SWAP_BUFFER2 HEVC_ASSIST_SCRATCH_8
-+#define VP9_PROB_SWAP_BUFFER	HEVC_ASSIST_SCRATCH_9
-+#define VP9_COUNT_SWAP_BUFFER	HEVC_ASSIST_SCRATCH_A
-+#define VP9_SEG_MAP_BUFFER	HEVC_ASSIST_SCRATCH_B
-+#define VP9_SCALELUT		HEVC_ASSIST_SCRATCH_D
-+#define VP9_WAIT_FLAG		HEVC_ASSIST_SCRATCH_E
-+#define LMEM_DUMP_ADR		HEVC_ASSIST_SCRATCH_F
-+#define NAL_SEARCH_CTL		HEVC_ASSIST_SCRATCH_I
-+#define VP9_DECODE_MODE		HEVC_ASSIST_SCRATCH_J
-+	#define DECODE_MODE_SINGLE 0
-+#define DECODE_STOP_POS		HEVC_ASSIST_SCRATCH_K
-+#define HEVC_DECODE_COUNT	HEVC_ASSIST_SCRATCH_M
-+#define HEVC_DECODE_SIZE	HEVC_ASSIST_SCRATCH_N
++#define MMU_COMPRESS_HEADER_SIZE 0x48000
++#define MMU_MAP_SIZE 0x4800
 +
-+/* VP9 Constants */
-+#define LCU_SIZE		64
-+#define MAX_REF_PIC_NUM		24
-+#define REFS_PER_FRAME		3
-+#define REF_FRAMES		8
-+#define MV_MEM_UNIT		0x240
-+#define ADAPT_PROB_SIZE		0xf80
++/* Configure decode head read mode */
++void codec_hevc_setup_decode_head(struct amvdec_session *sess, int is_10bit)
++{
++	struct amvdec_core *core = sess->core;
++	u32 body_size = amvdec_am21c_body_size(sess->width, sess->height);
++	u32 head_size = amvdec_am21c_head_size(sess->width, sess->height);
 +
-+enum FRAME_TYPE {
-+	KEY_FRAME = 0,
-+	INTER_FRAME = 1,
-+	FRAME_TYPES,
-+};
++	if (!codec_hevc_use_fbc(sess->pixfmt_cap, is_10bit)) {
++		/* Enable 2-plane reference read mode */
++		amvdec_write_dos(core, HEVCD_MPP_DECOMP_CTL1, BIT(31));
++		return;
++	}
 +
-+/* VP9 Workspace layout */
-+#define MPRED_MV_BUF_SIZE 0x120000
++	if (codec_hevc_use_mmu(core->platform->revision,
++			       sess->pixfmt_cap, is_10bit))
++		amvdec_write_dos(core, HEVCD_MPP_DECOMP_CTL1, BIT(4));
++	else
++		amvdec_write_dos(core, HEVCD_MPP_DECOMP_CTL1, 0);
 +
-+#define IPP_SIZE	0x4000
-+#define SAO_ABV_SIZE	0x30000
-+#define SAO_VB_SIZE	0x30000
-+#define SH_TM_RPS_SIZE	0x800
-+#define VPS_SIZE	0x800
-+#define SPS_SIZE	0x800
-+#define PPS_SIZE	0x2000
-+#define SAO_UP_SIZE	0x2800
-+#define SWAP_BUF_SIZE	0x800
-+#define SWAP_BUF2_SIZE	0x800
-+#define SCALELUT_SIZE	0x8000
-+#define DBLK_PARA_SIZE	0x80000
-+#define DBLK_DATA_SIZE	0x80000
-+#define SEG_MAP_SIZE	0xd800
-+#define PROB_SIZE	0x5000
-+#define COUNT_SIZE	0x3000
-+#define MMU_VBH_SIZE	0x5000
-+#define MPRED_ABV_SIZE	0x10000
-+#define MPRED_MV_SIZE	(MPRED_MV_BUF_SIZE * MAX_REF_PIC_NUM)
-+#define RPM_BUF_SIZE	0x100
-+#define LMEM_SIZE	0x800
++	amvdec_write_dos(core, HEVCD_MPP_DECOMP_CTL2, body_size / 32);
++	amvdec_write_dos(core, HEVC_CM_BODY_LENGTH, body_size);
++	amvdec_write_dos(core, HEVC_CM_HEADER_OFFSET, body_size);
++	amvdec_write_dos(core, HEVC_CM_HEADER_LENGTH, head_size);
++}
++EXPORT_SYMBOL_GPL(codec_hevc_setup_decode_head);
 +
-+#define IPP_OFFSET       0x00
-+#define SAO_ABV_OFFSET   (IPP_OFFSET + IPP_SIZE)
-+#define SAO_VB_OFFSET    (SAO_ABV_OFFSET + SAO_ABV_SIZE)
-+#define SH_TM_RPS_OFFSET (SAO_VB_OFFSET + SAO_VB_SIZE)
-+#define VPS_OFFSET       (SH_TM_RPS_OFFSET + SH_TM_RPS_SIZE)
-+#define SPS_OFFSET       (VPS_OFFSET + VPS_SIZE)
-+#define PPS_OFFSET       (SPS_OFFSET + SPS_SIZE)
-+#define SAO_UP_OFFSET    (PPS_OFFSET + PPS_SIZE)
-+#define SWAP_BUF_OFFSET  (SAO_UP_OFFSET + SAO_UP_SIZE)
-+#define SWAP_BUF2_OFFSET (SWAP_BUF_OFFSET + SWAP_BUF_SIZE)
-+#define SCALELUT_OFFSET  (SWAP_BUF2_OFFSET + SWAP_BUF2_SIZE)
-+#define DBLK_PARA_OFFSET (SCALELUT_OFFSET + SCALELUT_SIZE)
-+#define DBLK_DATA_OFFSET (DBLK_PARA_OFFSET + DBLK_PARA_SIZE)
-+#define SEG_MAP_OFFSET   (DBLK_DATA_OFFSET + DBLK_DATA_SIZE)
-+#define PROB_OFFSET      (SEG_MAP_OFFSET + SEG_MAP_SIZE)
-+#define COUNT_OFFSET     (PROB_OFFSET + PROB_SIZE)
-+#define MMU_VBH_OFFSET   (COUNT_OFFSET + COUNT_SIZE)
-+#define MPRED_ABV_OFFSET (MMU_VBH_OFFSET + MMU_VBH_SIZE)
-+#define MPRED_MV_OFFSET  (MPRED_ABV_OFFSET + MPRED_ABV_SIZE)
-+#define RPM_OFFSET       (MPRED_MV_OFFSET + MPRED_MV_SIZE)
-+#define LMEM_OFFSET      (RPM_OFFSET + RPM_BUF_SIZE)
++static void codec_hevc_setup_buffers_gxbb(struct amvdec_session *sess,
++					  struct codec_hevc_common *comm,
++					  int is_10bit)
++{
++	struct amvdec_core *core = sess->core;
++	struct v4l2_m2m_buffer *buf;
++	u32 buf_num = v4l2_m2m_num_dst_bufs_ready(sess->m2m_ctx);
++	dma_addr_t buf_y_paddr = 0;
++	dma_addr_t buf_uv_paddr = 0;
++	u32 idx = 0;
++	u32 val;
++	int i;
 +
-+#define SIZE_WORKSPACE	ALIGN(LMEM_OFFSET + LMEM_SIZE, 64 * SZ_1K)
++	amvdec_write_dos(core, HEVCD_MPP_ANC2AXI_TBL_CONF_ADDR, 0);
 +
-+#define NONE           -1
-+#define INTRA_FRAME     0
-+#define LAST_FRAME      1
-+#define GOLDEN_FRAME    2
-+#define ALTREF_FRAME    3
-+#define MAX_REF_FRAMES  4
++	v4l2_m2m_for_each_dst_buf(sess->m2m_ctx, buf) {
++		struct vb2_buffer *vb = &buf->vb.vb2_buf;
 +
++		idx = vb->index;
++
++		if (codec_hevc_use_downsample(sess->pixfmt_cap, is_10bit))
++			buf_y_paddr = comm->fbc_buffer_paddr[idx];
++		else
++			buf_y_paddr = vb2_dma_contig_plane_dma_addr(vb, 0);
++
++		if (codec_hevc_use_fbc(sess->pixfmt_cap, is_10bit)) {
++			val = buf_y_paddr | (idx << 8) | 1;
++			amvdec_write_dos(core, HEVCD_MPP_ANC2AXI_TBL_CMD_ADDR,
++					 val);
++		} else {
++			buf_uv_paddr = vb2_dma_contig_plane_dma_addr(vb, 1);
++			val = buf_y_paddr | ((idx * 2) << 8) | 1;
++			amvdec_write_dos(core, HEVCD_MPP_ANC2AXI_TBL_CMD_ADDR,
++					 val);
++			val = buf_uv_paddr | ((idx * 2 + 1) << 8) | 1;
++			amvdec_write_dos(core, HEVCD_MPP_ANC2AXI_TBL_CMD_ADDR,
++					 val);
++		}
++	}
++
++	if (codec_hevc_use_fbc(sess->pixfmt_cap, is_10bit))
++		val = buf_y_paddr | (idx << 8) | 1;
++	else
++		val = buf_y_paddr | ((idx * 2) << 8) | 1;
++
++	/* Fill the remaining unused slots with the last buffer's Y addr */
++	for (i = buf_num; i < MAX_REF_PIC_NUM; ++i)
++		amvdec_write_dos(core, HEVCD_MPP_ANC2AXI_TBL_CMD_ADDR, val);
++
++	amvdec_write_dos(core, HEVCD_MPP_ANC2AXI_TBL_CONF_ADDR, 1);
++	amvdec_write_dos(core, HEVCD_MPP_ANC_CANVAS_ACCCONFIG_ADDR, 1);
++	for (i = 0; i < 32; ++i)
++		amvdec_write_dos(core, HEVCD_MPP_ANC_CANVAS_DATA_ADDR, 0);
++}
++
++static void codec_hevc_setup_buffers_gxl(struct amvdec_session *sess,
++					 struct codec_hevc_common *comm,
++					 int is_10bit)
++{
++	struct amvdec_core *core = sess->core;
++	struct v4l2_m2m_buffer *buf;
++	u32 revision = core->platform->revision;
++	u32 pixfmt_cap = sess->pixfmt_cap;
++	int i;
++
++	amvdec_write_dos(core, HEVCD_MPP_ANC2AXI_TBL_CONF_ADDR,
++			 BIT(2) | BIT(1));
++
++	v4l2_m2m_for_each_dst_buf(sess->m2m_ctx, buf) {
++		struct vb2_buffer *vb = &buf->vb.vb2_buf;
++		dma_addr_t buf_y_paddr = 0;
++		dma_addr_t buf_uv_paddr = 0;
++		u32 idx = vb->index;
++
++		if (codec_hevc_use_mmu(revision, pixfmt_cap, is_10bit))
++			buf_y_paddr = comm->mmu_header_paddr[idx];
++		else if (codec_hevc_use_downsample(pixfmt_cap, is_10bit))
++			buf_y_paddr = comm->fbc_buffer_paddr[idx];
++		else
++			buf_y_paddr = vb2_dma_contig_plane_dma_addr(vb, 0);
++
++		amvdec_write_dos(core, HEVCD_MPP_ANC2AXI_TBL_DATA,
++				 buf_y_paddr >> 5);
++
++		if (!codec_hevc_use_fbc(pixfmt_cap, is_10bit)) {
++			buf_uv_paddr = vb2_dma_contig_plane_dma_addr(vb, 1);
++			amvdec_write_dos(core, HEVCD_MPP_ANC2AXI_TBL_DATA,
++					 buf_uv_paddr >> 5);
++		}
++	}
++
++	amvdec_write_dos(core, HEVCD_MPP_ANC2AXI_TBL_CONF_ADDR, 1);
++	amvdec_write_dos(core, HEVCD_MPP_ANC_CANVAS_ACCCONFIG_ADDR, 1);
++	for (i = 0; i < 32; ++i)
++		amvdec_write_dos(core, HEVCD_MPP_ANC_CANVAS_DATA_ADDR, 0);
++}
++
++void codec_hevc_free_fbc_buffers(struct amvdec_session *sess,
++				 struct codec_hevc_common *comm)
++{
++	struct device *dev = sess->core->dev;
++	u32 am21_size = amvdec_am21c_size(sess->width, sess->height);
++	int i;
++
++	for (i = 0; i < MAX_REF_PIC_NUM; ++i) {
++		if (comm->fbc_buffer_vaddr[i]) {
++			dma_free_coherent(dev, am21_size,
++					  comm->fbc_buffer_vaddr[i],
++					  comm->fbc_buffer_paddr[i]);
++			comm->fbc_buffer_vaddr[i] = NULL;
++		}
++	}
++}
++EXPORT_SYMBOL_GPL(codec_hevc_free_fbc_buffers);
++
++static int codec_hevc_alloc_fbc_buffers(struct amvdec_session *sess,
++					struct codec_hevc_common *comm)
++{
++	struct device *dev = sess->core->dev;
++	struct v4l2_m2m_buffer *buf;
++	u32 am21_size = amvdec_am21c_size(sess->width, sess->height);
++
++	v4l2_m2m_for_each_dst_buf(sess->m2m_ctx, buf) {
++		u32 idx = buf->vb.vb2_buf.index;
++		dma_addr_t paddr;
++		void *vaddr = dma_alloc_coherent(dev, am21_size, &paddr,
++						 GFP_KERNEL);
++		if (!vaddr) {
++			dev_err(dev, "Couldn't allocate FBC buffer %u\n", idx);
++			codec_hevc_free_fbc_buffers(sess, comm);
++			return -ENOMEM;
++		}
++
++		comm->fbc_buffer_vaddr[idx] = vaddr;
++		comm->fbc_buffer_paddr[idx] = paddr;
++	}
++
++	return 0;
++}
++
++void codec_hevc_free_mmu_headers(struct amvdec_session *sess,
++				 struct codec_hevc_common *comm)
++{
++	struct device *dev = sess->core->dev;
++	int i;
++
++	for (i = 0; i < MAX_REF_PIC_NUM; ++i) {
++		if (comm->mmu_header_vaddr[i]) {
++			dma_free_coherent(dev, MMU_COMPRESS_HEADER_SIZE,
++					  comm->mmu_header_vaddr[i],
++					  comm->mmu_header_paddr[i]);
++			comm->mmu_header_vaddr[i] = NULL;
++		}
++	}
++
++	if (comm->mmu_map_vaddr) {
++		dma_free_coherent(dev, MMU_MAP_SIZE,
++				  comm->mmu_map_vaddr,
++				  comm->mmu_map_paddr);
++		comm->mmu_map_vaddr = NULL;
++	}
++}
++EXPORT_SYMBOL_GPL(codec_hevc_free_mmu_headers);
++
++static int codec_hevc_alloc_mmu_headers(struct amvdec_session *sess,
++					struct codec_hevc_common *comm)
++{
++	struct device *dev = sess->core->dev;
++	struct v4l2_m2m_buffer *buf;
++
++	comm->mmu_map_vaddr = dma_alloc_coherent(dev, MMU_MAP_SIZE,
++						 &comm->mmu_map_paddr,
++						 GFP_KERNEL);
++	if (!comm->mmu_map_vaddr)
++		return -ENOMEM;
++
++	v4l2_m2m_for_each_dst_buf(sess->m2m_ctx, buf) {
++		u32 idx = buf->vb.vb2_buf.index;
++		dma_addr_t paddr;
++		void *vaddr = dma_alloc_coherent(dev, MMU_COMPRESS_HEADER_SIZE,
++						 &paddr, GFP_KERNEL);
++		if (!vaddr) {
++			dev_err(dev, "Couldn't allocate MMU header %u\n", idx);
++			codec_hevc_free_mmu_headers(sess, comm);
++			return -ENOMEM;
++		}
++
++		comm->mmu_header_vaddr[idx] = vaddr;
++		comm->mmu_header_paddr[idx] = paddr;
++	}
++
++	return 0;
++}
++
++int codec_hevc_setup_buffers(struct amvdec_session *sess,
++			     struct codec_hevc_common *comm,
++			     int is_10bit)
++{
++	struct amvdec_core *core = sess->core;
++	int ret;
++
++	if (codec_hevc_use_downsample(sess->pixfmt_cap, is_10bit)) {
++		ret = codec_hevc_alloc_fbc_buffers(sess, comm);
++		if (ret)
++			return ret;
++	}
++
++	if (codec_hevc_use_mmu(core->platform->revision,
++			       sess->pixfmt_cap, is_10bit)) {
++		ret = codec_hevc_alloc_mmu_headers(sess, comm);
++		if (ret) {
++			codec_hevc_free_fbc_buffers(sess, comm);
++			return ret;
++		}
++	}
++
++	if (core->platform->revision == VDEC_REVISION_GXBB)
++		codec_hevc_setup_buffers_gxbb(sess, comm, is_10bit);
++	else
++		codec_hevc_setup_buffers_gxl(sess, comm, is_10bit);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(codec_hevc_setup_buffers);
++
++void codec_hevc_fill_mmu_map(struct amvdec_session *sess,
++			     struct codec_hevc_common *comm,
++			     struct vb2_buffer *vb)
++{
++	u32 size = amvdec_am21c_size(sess->width, sess->height);
++	u32 nb_pages = size / PAGE_SIZE;
++	u32 *mmu_map = comm->mmu_map_vaddr;
++	u32 first_page;
++	u32 i;
++
++	if (sess->pixfmt_cap == V4L2_PIX_FMT_NV12M)
++		first_page = comm->fbc_buffer_paddr[vb->index] >> PAGE_SHIFT;
++	else
++		first_page = vb2_dma_contig_plane_dma_addr(vb, 0) >> PAGE_SHIFT;
++
++	for (i = 0; i < nb_pages; ++i)
++		mmu_map[i] = first_page + i;
++}
++EXPORT_SYMBOL_GPL(codec_hevc_fill_mmu_map);
+diff --git a/drivers/staging/media/meson/vdec/codec_hevc_common.h b/drivers/staging/media/meson/vdec/codec_hevc_common.h
+new file mode 100644
+index 000000000000..de16d2e43061
+--- /dev/null
++++ b/drivers/staging/media/meson/vdec/codec_hevc_common.h
+@@ -0,0 +1,77 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
 +/*
-+ * Defines, declarations, sub-functions for vp9 de-block loop
-+	filter Thr/Lvl table update
-+ * - struct segmentation is for loop filter only (removed something)
-+ * - function "vp9_loop_filter_init" and "vp9_loop_filter_frame_init" will
-+	be instantiated in C_Entry
-+ * - vp9_loop_filter_init run once before decoding start
-+ * - vp9_loop_filter_frame_init run before every frame decoding start
-+ * - set video format to VP9 is in vp9_loop_filter_init
++ * Copyright (C) 2018 BayLibre, SAS
++ * Author: Maxime Jourdan <mjourdan@baylibre.com>
 + */
-+#define MAX_LOOP_FILTER		63
-+#define MAX_REF_LF_DELTAS	4
-+#define MAX_MODE_LF_DELTAS	2
-+#define SEGMENT_DELTADATA	0
-+#define SEGMENT_ABSDATA		1
-+#define MAX_SEGMENTS		8
 +
-+/* VP9 PROB processing defines */
-+#define VP9_PARTITION_START      0
-+#define VP9_PARTITION_SIZE_STEP  (3 * 4)
-+#define VP9_PARTITION_ONE_SIZE   (4 * VP9_PARTITION_SIZE_STEP)
-+#define VP9_PARTITION_KEY_START  0
-+#define VP9_PARTITION_P_START    VP9_PARTITION_ONE_SIZE
-+#define VP9_PARTITION_SIZE       (2 * VP9_PARTITION_ONE_SIZE)
-+#define VP9_SKIP_START           (VP9_PARTITION_START + VP9_PARTITION_SIZE)
-+#define VP9_SKIP_SIZE            4 /* only use 3*/
-+#define VP9_TX_MODE_START        (VP9_SKIP_START + VP9_SKIP_SIZE)
-+#define VP9_TX_MODE_8_0_OFFSET   0
-+#define VP9_TX_MODE_8_1_OFFSET   1
-+#define VP9_TX_MODE_16_0_OFFSET  2
-+#define VP9_TX_MODE_16_1_OFFSET  4
-+#define VP9_TX_MODE_32_0_OFFSET  6
-+#define VP9_TX_MODE_32_1_OFFSET  9
-+#define VP9_TX_MODE_SIZE         12
-+#define VP9_COEF_START           (VP9_TX_MODE_START + VP9_TX_MODE_SIZE)
-+#define VP9_COEF_BAND_0_OFFSET   0
-+#define VP9_COEF_BAND_1_OFFSET   (VP9_COEF_BAND_0_OFFSET + 3 * 3 + 1)
-+#define VP9_COEF_BAND_2_OFFSET   (VP9_COEF_BAND_1_OFFSET + 6 * 3)
-+#define VP9_COEF_BAND_3_OFFSET   (VP9_COEF_BAND_2_OFFSET + 6 * 3)
-+#define VP9_COEF_BAND_4_OFFSET   (VP9_COEF_BAND_3_OFFSET + 6 * 3)
-+#define VP9_COEF_BAND_5_OFFSET   (VP9_COEF_BAND_4_OFFSET + 6 * 3)
-+#define VP9_COEF_SIZE_ONE_SET    100 /* ((3 + 5 * 6) * 3 + 1 padding)*/
-+#define VP9_COEF_4X4_START       (VP9_COEF_START + 0 * VP9_COEF_SIZE_ONE_SET)
-+#define VP9_COEF_8X8_START       (VP9_COEF_START + 4 * VP9_COEF_SIZE_ONE_SET)
-+#define VP9_COEF_16X16_START     (VP9_COEF_START + 8 * VP9_COEF_SIZE_ONE_SET)
-+#define VP9_COEF_32X32_START     (VP9_COEF_START + 12 * VP9_COEF_SIZE_ONE_SET)
-+#define VP9_COEF_SIZE_PLANE      (2 * VP9_COEF_SIZE_ONE_SET)
-+#define VP9_COEF_SIZE            (4 * 2 * 2 * VP9_COEF_SIZE_ONE_SET)
-+#define VP9_INTER_MODE_START     (VP9_COEF_START + VP9_COEF_SIZE)
-+#define VP9_INTER_MODE_SIZE      24 /* only use 21 (# * 7)*/
-+#define VP9_INTERP_START         (VP9_INTER_MODE_START + VP9_INTER_MODE_SIZE)
-+#define VP9_INTERP_SIZE          8
-+#define VP9_INTRA_INTER_START    (VP9_INTERP_START + VP9_INTERP_SIZE)
-+#define VP9_INTRA_INTER_SIZE     4
-+#define VP9_INTERP_INTRA_INTER_START  VP9_INTERP_START
-+#define VP9_INTERP_INTRA_INTER_SIZE   (VP9_INTERP_SIZE + VP9_INTRA_INTER_SIZE)
-+#define VP9_COMP_INTER_START     \
-+		(VP9_INTERP_INTRA_INTER_START + VP9_INTERP_INTRA_INTER_SIZE)
-+#define VP9_COMP_INTER_SIZE      5
-+#define VP9_COMP_REF_START       (VP9_COMP_INTER_START + VP9_COMP_INTER_SIZE)
-+#define VP9_COMP_REF_SIZE        5
-+#define VP9_SINGLE_REF_START     (VP9_COMP_REF_START + VP9_COMP_REF_SIZE)
-+#define VP9_SINGLE_REF_SIZE      10
-+#define VP9_REF_MODE_START       VP9_COMP_INTER_START
-+#define VP9_REF_MODE_SIZE        \
-+		(VP9_COMP_INTER_SIZE + VP9_COMP_REF_SIZE + VP9_SINGLE_REF_SIZE)
-+#define VP9_IF_Y_MODE_START      (VP9_REF_MODE_START + VP9_REF_MODE_SIZE)
-+#define VP9_IF_Y_MODE_SIZE       36
-+#define VP9_IF_UV_MODE_START     (VP9_IF_Y_MODE_START + VP9_IF_Y_MODE_SIZE)
-+#define VP9_IF_UV_MODE_SIZE      92 /* only use 90*/
-+#define VP9_MV_JOINTS_START      (VP9_IF_UV_MODE_START + VP9_IF_UV_MODE_SIZE)
-+#define VP9_MV_JOINTS_SIZE       3
-+#define VP9_MV_SIGN_0_START      (VP9_MV_JOINTS_START + VP9_MV_JOINTS_SIZE)
-+#define VP9_MV_SIGN_0_SIZE       1
-+#define VP9_MV_CLASSES_0_START   (VP9_MV_SIGN_0_START + VP9_MV_SIGN_0_SIZE)
-+#define VP9_MV_CLASSES_0_SIZE    10
-+#define VP9_MV_CLASS0_0_START    \
-+		(VP9_MV_CLASSES_0_START + VP9_MV_CLASSES_0_SIZE)
-+#define VP9_MV_CLASS0_0_SIZE     1
-+#define VP9_MV_BITS_0_START      (VP9_MV_CLASS0_0_START + VP9_MV_CLASS0_0_SIZE)
-+#define VP9_MV_BITS_0_SIZE       10
-+#define VP9_MV_SIGN_1_START      (VP9_MV_BITS_0_START + VP9_MV_BITS_0_SIZE)
-+#define VP9_MV_SIGN_1_SIZE       1
-+#define VP9_MV_CLASSES_1_START   \
-+			(VP9_MV_SIGN_1_START + VP9_MV_SIGN_1_SIZE)
-+#define VP9_MV_CLASSES_1_SIZE    10
-+#define VP9_MV_CLASS0_1_START    \
-+			(VP9_MV_CLASSES_1_START + VP9_MV_CLASSES_1_SIZE)
-+#define VP9_MV_CLASS0_1_SIZE     1
-+#define VP9_MV_BITS_1_START      \
-+			(VP9_MV_CLASS0_1_START + VP9_MV_CLASS0_1_SIZE)
-+#define VP9_MV_BITS_1_SIZE       10
-+#define VP9_MV_CLASS0_FP_0_START \
-+			(VP9_MV_BITS_1_START + VP9_MV_BITS_1_SIZE)
-+#define VP9_MV_CLASS0_FP_0_SIZE  9
-+#define VP9_MV_CLASS0_FP_1_START \
-+			(VP9_MV_CLASS0_FP_0_START + VP9_MV_CLASS0_FP_0_SIZE)
-+#define VP9_MV_CLASS0_FP_1_SIZE  9
-+#define VP9_MV_CLASS0_HP_0_START \
-+			(VP9_MV_CLASS0_FP_1_START + VP9_MV_CLASS0_FP_1_SIZE)
-+#define VP9_MV_CLASS0_HP_0_SIZE  2
-+#define VP9_MV_CLASS0_HP_1_START \
-+			(VP9_MV_CLASS0_HP_0_START + VP9_MV_CLASS0_HP_0_SIZE)
-+#define VP9_MV_CLASS0_HP_1_SIZE  2
-+#define VP9_MV_START             VP9_MV_JOINTS_START
-+#define VP9_MV_SIZE              72 /*only use 69*/
++#ifndef __MESON_VDEC_HEVC_COMMON_H_
++#define __MESON_VDEC_HEVC_COMMON_H_
 +
-+#define VP9_TOTAL_SIZE           (VP9_MV_START + VP9_MV_SIZE)
++#include "vdec.h"
 +
-+/* VP9 COUNT mem processing defines */
-+#define VP9_COEF_COUNT_START           0
-+#define VP9_COEF_COUNT_BAND_0_OFFSET   0
-+#define VP9_COEF_COUNT_BAND_1_OFFSET   \
-+			(VP9_COEF_COUNT_BAND_0_OFFSET + 3 * 5)
-+#define VP9_COEF_COUNT_BAND_2_OFFSET   \
-+			(VP9_COEF_COUNT_BAND_1_OFFSET + 6 * 5)
-+#define VP9_COEF_COUNT_BAND_3_OFFSET   \
-+			(VP9_COEF_COUNT_BAND_2_OFFSET + 6 * 5)
-+#define VP9_COEF_COUNT_BAND_4_OFFSET   \
-+			(VP9_COEF_COUNT_BAND_3_OFFSET + 6 * 5)
-+#define VP9_COEF_COUNT_BAND_5_OFFSET   \
-+			(VP9_COEF_COUNT_BAND_4_OFFSET + 6 * 5)
-+#define VP9_COEF_COUNT_SIZE_ONE_SET    165 /* ((3 + 5 * 6) * 5 */
-+#define VP9_COEF_COUNT_4X4_START       \
-+		(VP9_COEF_COUNT_START + 0 * VP9_COEF_COUNT_SIZE_ONE_SET)
-+#define VP9_COEF_COUNT_8X8_START       \
-+		(VP9_COEF_COUNT_START + 4 * VP9_COEF_COUNT_SIZE_ONE_SET)
-+#define VP9_COEF_COUNT_16X16_START     \
-+		(VP9_COEF_COUNT_START + 8 * VP9_COEF_COUNT_SIZE_ONE_SET)
-+#define VP9_COEF_COUNT_32X32_START     \
-+		(VP9_COEF_COUNT_START + 12 * VP9_COEF_COUNT_SIZE_ONE_SET)
-+#define VP9_COEF_COUNT_SIZE_PLANE      (2 * VP9_COEF_COUNT_SIZE_ONE_SET)
-+#define VP9_COEF_COUNT_SIZE            (4 * 2 * 2 * VP9_COEF_COUNT_SIZE_ONE_SET)
-+
-+#define VP9_INTRA_INTER_COUNT_START    \
-+		(VP9_COEF_COUNT_START + VP9_COEF_COUNT_SIZE)
-+#define VP9_INTRA_INTER_COUNT_SIZE     (4 * 2)
-+#define VP9_COMP_INTER_COUNT_START     \
-+		(VP9_INTRA_INTER_COUNT_START + VP9_INTRA_INTER_COUNT_SIZE)
-+#define VP9_COMP_INTER_COUNT_SIZE      (5 * 2)
-+#define VP9_COMP_REF_COUNT_START       \
-+		(VP9_COMP_INTER_COUNT_START + VP9_COMP_INTER_COUNT_SIZE)
-+#define VP9_COMP_REF_COUNT_SIZE        (5 * 2)
-+#define VP9_SINGLE_REF_COUNT_START     \
-+		(VP9_COMP_REF_COUNT_START + VP9_COMP_REF_COUNT_SIZE)
-+#define VP9_SINGLE_REF_COUNT_SIZE      (10 * 2)
-+#define VP9_TX_MODE_COUNT_START        \
-+		(VP9_SINGLE_REF_COUNT_START + VP9_SINGLE_REF_COUNT_SIZE)
-+#define VP9_TX_MODE_COUNT_SIZE         (12 * 2)
-+#define VP9_SKIP_COUNT_START           \
-+		(VP9_TX_MODE_COUNT_START + VP9_TX_MODE_COUNT_SIZE)
-+#define VP9_SKIP_COUNT_SIZE            (3 * 2)
-+#define VP9_MV_SIGN_0_COUNT_START      \
-+		(VP9_SKIP_COUNT_START + VP9_SKIP_COUNT_SIZE)
-+#define VP9_MV_SIGN_0_COUNT_SIZE       (1 * 2)
-+#define VP9_MV_SIGN_1_COUNT_START      \
-+		(VP9_MV_SIGN_0_COUNT_START + VP9_MV_SIGN_0_COUNT_SIZE)
-+#define VP9_MV_SIGN_1_COUNT_SIZE       (1 * 2)
-+#define VP9_MV_BITS_0_COUNT_START      \
-+		(VP9_MV_SIGN_1_COUNT_START + VP9_MV_SIGN_1_COUNT_SIZE)
-+#define VP9_MV_BITS_0_COUNT_SIZE       (10 * 2)
-+#define VP9_MV_BITS_1_COUNT_START      \
-+		(VP9_MV_BITS_0_COUNT_START + VP9_MV_BITS_0_COUNT_SIZE)
-+#define VP9_MV_BITS_1_COUNT_SIZE       (10 * 2)
-+#define VP9_MV_CLASS0_HP_0_COUNT_START \
-+		(VP9_MV_BITS_1_COUNT_START + VP9_MV_BITS_1_COUNT_SIZE)
-+#define VP9_MV_CLASS0_HP_0_COUNT_SIZE  (2 * 2)
-+#define VP9_MV_CLASS0_HP_1_COUNT_START \
-+		(VP9_MV_CLASS0_HP_0_COUNT_START + VP9_MV_CLASS0_HP_0_COUNT_SIZE)
-+#define VP9_MV_CLASS0_HP_1_COUNT_SIZE  (2 * 2)
-+
-+/* Start merge_tree */
-+#define VP9_INTER_MODE_COUNT_START     \
-+		(VP9_MV_CLASS0_HP_1_COUNT_START + VP9_MV_CLASS0_HP_1_COUNT_SIZE)
-+#define VP9_INTER_MODE_COUNT_SIZE      (7 * 4)
-+#define VP9_IF_Y_MODE_COUNT_START      \
-+		(VP9_INTER_MODE_COUNT_START + VP9_INTER_MODE_COUNT_SIZE)
-+#define VP9_IF_Y_MODE_COUNT_SIZE       (10 * 4)
-+#define VP9_IF_UV_MODE_COUNT_START     \
-+		(VP9_IF_Y_MODE_COUNT_START + VP9_IF_Y_MODE_COUNT_SIZE)
-+#define VP9_IF_UV_MODE_COUNT_SIZE      (10 * 10)
-+#define VP9_PARTITION_P_COUNT_START    \
-+		(VP9_IF_UV_MODE_COUNT_START + VP9_IF_UV_MODE_COUNT_SIZE)
-+#define VP9_PARTITION_P_COUNT_SIZE     (4 * 4 * 4)
-+#define VP9_INTERP_COUNT_START         \
-+		(VP9_PARTITION_P_COUNT_START + VP9_PARTITION_P_COUNT_SIZE)
-+#define VP9_INTERP_COUNT_SIZE          (4 * 3)
-+#define VP9_MV_JOINTS_COUNT_START      \
-+		(VP9_INTERP_COUNT_START + VP9_INTERP_COUNT_SIZE)
-+#define VP9_MV_JOINTS_COUNT_SIZE       (1 * 4)
-+#define VP9_MV_CLASSES_0_COUNT_START   \
-+		(VP9_MV_JOINTS_COUNT_START + VP9_MV_JOINTS_COUNT_SIZE)
-+#define VP9_MV_CLASSES_0_COUNT_SIZE    (1 * 11)
-+#define VP9_MV_CLASS0_0_COUNT_START    \
-+		(VP9_MV_CLASSES_0_COUNT_START + VP9_MV_CLASSES_0_COUNT_SIZE)
-+#define VP9_MV_CLASS0_0_COUNT_SIZE     (1 * 2)
-+#define VP9_MV_CLASSES_1_COUNT_START   \
-+		(VP9_MV_CLASS0_0_COUNT_START + VP9_MV_CLASS0_0_COUNT_SIZE)
-+#define VP9_MV_CLASSES_1_COUNT_SIZE    (1 * 11)
-+#define VP9_MV_CLASS0_1_COUNT_START    \
-+		(VP9_MV_CLASSES_1_COUNT_START + VP9_MV_CLASSES_1_COUNT_SIZE)
-+#define VP9_MV_CLASS0_1_COUNT_SIZE     (1 * 2)
-+#define VP9_MV_CLASS0_FP_0_COUNT_START \
-+		(VP9_MV_CLASS0_1_COUNT_START + VP9_MV_CLASS0_1_COUNT_SIZE)
-+#define VP9_MV_CLASS0_FP_0_COUNT_SIZE  (3 * 4)
-+#define VP9_MV_CLASS0_FP_1_COUNT_START \
-+		(VP9_MV_CLASS0_FP_0_COUNT_START + VP9_MV_CLASS0_FP_0_COUNT_SIZE)
-+#define VP9_MV_CLASS0_FP_1_COUNT_SIZE  (3 * 4)
-+
-+#define DC_PRED    0	/* Average of above and left pixels */
-+#define V_PRED     1	/* Vertical */
-+#define H_PRED     2	/* Horizontal */
-+#define D45_PRED   3	/* Directional 45 deg = round(arctan(1/1) * 180/pi) */
-+#define D135_PRED  4	/* Directional 135 deg = 180 - 45 */
-+#define D117_PRED  5	/* Directional 117 deg = 180 - 63 */
-+#define D153_PRED  6	/* Directional 153 deg = 180 - 27 */
-+#define D207_PRED  7	/* Directional 207 deg = 180 + 27 */
-+#define D63_PRED   8	/* Directional 63 deg = round(arctan(2/1) * 180/pi) */
-+#define TM_PRED    9	/* True-motion */
-+
-+#define ROUND_POWER_OF_TWO(value, num) (((value) + (1 << ((num) - 1))) >> (num))
-+
-+#define MODE_MV_COUNT_SAT 20
-+static const int count_to_update_factor[MODE_MV_COUNT_SAT + 1] = {
-+	0, 6, 12, 19, 25, 32, 38, 44, 51, 57, 64,
-+	70, 76, 83, 89, 96, 102, 108, 115, 121, 128
++#define PARSER_CMD_SKIP_CFG_0 0x0000090b
++#define PARSER_CMD_SKIP_CFG_1 0x1b14140f
++#define PARSER_CMD_SKIP_CFG_2 0x001b1910
++static const u16 vdec_hevc_parser_cmd[] = {
++	0x0401,	0x8401,	0x0800,	0x0402,
++	0x9002,	0x1423,	0x8CC3,	0x1423,
++	0x8804,	0x9825,	0x0800,	0x04FE,
++	0x8406,	0x8411,	0x1800,	0x8408,
++	0x8409,	0x8C2A,	0x9C2B,	0x1C00,
++	0x840F,	0x8407,	0x8000,	0x8408,
++	0x2000,	0xA800,	0x8410,	0x04DE,
++	0x840C,	0x840D,	0xAC00,	0xA000,
++	0x08C0,	0x08E0,	0xA40E,	0xFC00,
++	0x7C00
 +};
 +
-+union rpm_param {
-+	struct {
-+		u16 data[RPM_BUF_SIZE];
-+	} l;
-+	struct {
-+		u16 profile;
-+		u16 show_existing_frame;
-+		u16 frame_to_show_idx;
-+		u16 frame_type; /*1 bit*/
-+		u16 show_frame; /*1 bit*/
-+		u16 error_resilient_mode; /*1 bit*/
-+		u16 intra_only; /*1 bit*/
-+		u16 display_size_present; /*1 bit*/
-+		u16 reset_frame_context;
-+		u16 refresh_frame_flags;
-+		u16 width;
-+		u16 height;
-+		u16 display_width;
-+		u16 display_height;
-+		u16 ref_info;
-+		u16 same_frame_size;
-+		u16 mode_ref_delta_enabled;
-+		u16 ref_deltas[4];
-+		u16 mode_deltas[2];
-+		u16 filter_level;
-+		u16 sharpness_level;
-+		u16 bit_depth;
-+		u16 seg_quant_info[8];
-+		u16 seg_enabled;
-+		u16 seg_abs_delta;
-+		/* bit 15: feature enabled; bit 8, sign; bit[5:0], data */
-+		u16 seg_lf_info[8];
-+	} p;
-+};
++#define MAX_REF_PIC_NUM	24
 +
-+enum SEG_LVL_FEATURES {
-+	SEG_LVL_ALT_Q = 0,	/* Use alternate Quantizer */
-+	SEG_LVL_ALT_LF = 1,	/* Use alternate loop filter value */
-+	SEG_LVL_REF_FRAME = 2,	/* Optional Segment reference frame */
-+	SEG_LVL_SKIP = 3,	/* Optional Segment (0,0) + skip mode */
-+	SEG_LVL_MAX = 4		/* Number of features supported */
-+};
-+
-+struct segmentation {
-+	u8 enabled;
-+	u8 update_map;
-+	u8 update_data;
-+	u8 abs_delta;
-+	u8 temporal_update;
-+	s16 feature_data[MAX_SEGMENTS][SEG_LVL_MAX];
-+	unsigned int feature_mask[MAX_SEGMENTS];
-+};
-+
-+struct loop_filter_thresh {
-+	u8 mblim;
-+	u8 lim;
-+	u8 hev_thr;
-+};
-+
-+struct loop_filter_info_n {
-+	struct loop_filter_thresh lfthr[MAX_LOOP_FILTER + 1];
-+	u8 lvl[MAX_SEGMENTS][MAX_REF_FRAMES][MAX_MODE_LF_DELTAS];
-+};
-+
-+struct loopfilter {
-+	int filter_level;
-+
-+	int sharpness_level;
-+	int last_sharpness_level;
-+
-+	u8 mode_ref_delta_enabled;
-+	u8 mode_ref_delta_update;
-+
-+	/*0 = Intra, Last, GF, ARF*/
-+	signed char ref_deltas[MAX_REF_LF_DELTAS];
-+	signed char last_ref_deltas[MAX_REF_LF_DELTAS];
-+
-+	/*0 = ZERO_MV, MV*/
-+	signed char mode_deltas[MAX_MODE_LF_DELTAS];
-+	signed char last_mode_deltas[MAX_MODE_LF_DELTAS];
-+};
-+
-+struct vp9_frame {
-+	struct list_head list;
-+	struct vb2_v4l2_buffer *vbuf;
-+	int index;
-+	int intra_only;
-+	int show;
-+	int type;
-+	int done;
-+	unsigned int width;
-+	unsigned int height;
-+};
-+
-+struct codec_vp9 {
-+	/* VP9 context lock */
-+	struct mutex lock;
-+
-+	/* Common part with the HEVC decoder */
-+	struct codec_hevc_common common;
-+
-+	/* Buffer for the VP9 Workspace */
-+	void      *workspace_vaddr;
-+	dma_addr_t workspace_paddr;
-+
-+	/* Contains many information parsed from the bitstream */
-+	union rpm_param rpm_param;
-+
-+	/* Whether we detected the bitstream as 10-bit */
-+	int is_10bit;
-+
-+	/* Coded resolution reported by the hardware */
-+	u32 width, height;
-+
-+	/* All ref frames used by the HW at a given time */
-+	struct list_head ref_frames_list;
-+	u32 frames_num;
-+
-+	/* In case of downsampling (decoding with FBC but outputting in NV12M),
-+	 * we need to allocate additional buffers for FBC.
-+	 */
++struct codec_hevc_common {
 +	void      *fbc_buffer_vaddr[MAX_REF_PIC_NUM];
 +	dma_addr_t fbc_buffer_paddr[MAX_REF_PIC_NUM];
 +
-+	int ref_frame_map[REF_FRAMES];
-+	int next_ref_frame_map[REF_FRAMES];
-+	struct vp9_frame *frame_refs[REFS_PER_FRAME];
++	void      *mmu_header_vaddr[MAX_REF_PIC_NUM];
++	dma_addr_t mmu_header_paddr[MAX_REF_PIC_NUM];
 +
-+	u32 lcu_total;
-+
-+	/* loop filter */
-+	int default_filt_lvl;
-+	struct loop_filter_info_n lfi;
-+	struct loopfilter lf;
-+	struct segmentation seg_4lf;
-+
-+	struct vp9_frame *cur_frame;
-+	struct vp9_frame *prev_frame;
++	void      *mmu_map_vaddr;
++	dma_addr_t mmu_map_paddr;
 +};
 +
-+static int div_r32(s64 m, int n)
++/* Returns 1 if we must use framebuffer compression */
++static inline int codec_hevc_use_fbc(u32 pixfmt, int is_10bit)
 +{
-+	s64 qu = div_s64(m, n);
-+
-+	return (int)qu;
++	/* TOFIX: Handle Amlogic Compressed buffer for 8bit also */
++	return is_10bit;
 +}
 +
-+static int clip_prob(int p)
++/* Returns 1 if we are decoding 10-bit but outputting 8-bit NV12 */
++static inline int codec_hevc_use_downsample(u32 pixfmt, int is_10bit)
 +{
-+	return clamp_val(p, 1, 255);
++	return is_10bit;
 +}
 +
-+static int segfeature_active(struct segmentation *seg, int segment_id,
-+			     enum SEG_LVL_FEATURES feature_id)
++/* Returns 1 if we are decoding using the IOMMU */
++static inline int codec_hevc_use_mmu(u32 revision, u32 pixfmt, int is_10bit)
 +{
-+	return seg->enabled &&
-+		(seg->feature_mask[segment_id] & (1 << feature_id));
-+}
-+
-+static int get_segdata(struct segmentation *seg, int segment_id,
-+		       enum SEG_LVL_FEATURES feature_id)
-+{
-+	return seg->feature_data[segment_id][feature_id];
-+}
-+
-+static void vp9_update_sharpness(struct loop_filter_info_n *lfi,
-+				 int sharpness_lvl)
-+{
-+	int lvl;
-+
-+	/* For each possible value for the loop filter fill out limits*/
-+	for (lvl = 0; lvl <= MAX_LOOP_FILTER; lvl++) {
-+		/* Set loop filter parameters that control sharpness.*/
-+		int block_inside_limit = lvl >> ((sharpness_lvl > 0) +
-+					(sharpness_lvl > 4));
-+
-+		if (sharpness_lvl > 0) {
-+			if (block_inside_limit > (9 - sharpness_lvl))
-+				block_inside_limit = (9 - sharpness_lvl);
-+		}
-+
-+		if (block_inside_limit < 1)
-+			block_inside_limit = 1;
-+
-+		lfi->lfthr[lvl].lim = (u8)block_inside_limit;
-+		lfi->lfthr[lvl].mblim = (u8)(2 * (lvl + 2) +
-+				block_inside_limit);
-+	}
-+}
-+
-+/* Instantiate this function once when decode is started */
-+static void
-+vp9_loop_filter_init(struct amvdec_core *core, struct codec_vp9 *vp9)
-+{
-+	struct loop_filter_info_n *lfi = &vp9->lfi;
-+	struct loopfilter *lf = &vp9->lf;
-+	struct segmentation *seg_4lf = &vp9->seg_4lf;
-+	int i;
-+
-+	memset(lfi, 0, sizeof(struct loop_filter_info_n));
-+	memset(lf, 0, sizeof(struct loopfilter));
-+	memset(seg_4lf, 0, sizeof(struct segmentation));
-+	lf->sharpness_level = 0;
-+	vp9_update_sharpness(lfi, lf->sharpness_level);
-+	lf->last_sharpness_level = lf->sharpness_level;
-+
-+	for (i = 0; i < 32; i++) {
-+		unsigned int thr;
-+
-+		thr = ((lfi->lfthr[i * 2 + 1].lim & 0x3f) << 8) |
-+			(lfi->lfthr[i * 2 + 1].mblim & 0xff);
-+		thr = (thr << 16) | ((lfi->lfthr[i * 2].lim & 0x3f) << 8) |
-+			(lfi->lfthr[i * 2].mblim & 0xff);
-+
-+		amvdec_write_dos(core, HEVC_DBLK_CFG9, thr);
-+	}
-+
-+	if (core->platform->revision >= VDEC_REVISION_G12A)
-+		/* VP9 video format */
-+		amvdec_write_dos(core, HEVC_DBLK_CFGB, (0x54 << 8) | BIT(0));
-+	else if (core->platform->revision >= VDEC_REVISION_SM1)
-+		amvdec_write_dos(core, HEVC_DBLK_CFGB,
-+				 (0x3 << 14) | /* dw fifo thres r and b */
-+				 (0x3 << 12) | /* dw fifo thres r or b */
-+				 (0x3 << 10) | /* dw fifo thres not r/b */
-+				 BIT(0)); /* VP9 video format */
-+	else
-+		amvdec_write_dos(core, HEVC_DBLK_CFGB, 0x40400001);
-+}
-+
-+static void
-+vp9_loop_filter_frame_init(struct amvdec_core *core, struct segmentation *seg,
-+			   struct loop_filter_info_n *lfi,
-+			   struct loopfilter *lf, int default_filt_lvl)
-+{
-+	int i;
-+	int seg_id;
-+
-+	/*
-+	 * n_shift is the multiplier for lf_deltas
-+	 * the multiplier is:
-+	 * - 1 for when filter_lvl is between 0 and 31
-+	 * - 2 when filter_lvl is between 32 and 63
-+	 */
-+	const int scale = 1 << (default_filt_lvl >> 5);
-+
-+	/* update limits if sharpness has changed */
-+	if (lf->last_sharpness_level != lf->sharpness_level) {
-+		vp9_update_sharpness(lfi, lf->sharpness_level);
-+		lf->last_sharpness_level = lf->sharpness_level;
-+
-+		/* Write to register */
-+		for (i = 0; i < 32; i++) {
-+			unsigned int thr;
-+
-+			thr = ((lfi->lfthr[i * 2 + 1].lim & 0x3f) << 8) |
-+			      (lfi->lfthr[i * 2 + 1].mblim & 0xff);
-+			thr = (thr << 16) |
-+			      ((lfi->lfthr[i * 2].lim & 0x3f) << 8) |
-+			      (lfi->lfthr[i * 2].mblim & 0xff);
-+
-+			amvdec_write_dos(core, HEVC_DBLK_CFG9, thr);
-+		}
-+	}
-+
-+	for (seg_id = 0; seg_id < MAX_SEGMENTS; seg_id++) {
-+		int lvl_seg = default_filt_lvl;
-+
-+		if (segfeature_active(seg, seg_id, SEG_LVL_ALT_LF)) {
-+			const int data = get_segdata(seg, seg_id,
-+						SEG_LVL_ALT_LF);
-+			lvl_seg = clamp_t(int,
-+					  seg->abs_delta == SEGMENT_ABSDATA ?
-+						data : default_filt_lvl + data,
-+					  0, MAX_LOOP_FILTER);
-+		}
-+
-+		if (!lf->mode_ref_delta_enabled) {
-+			/*
-+			 * We could get rid of this if we assume that deltas
-+			 * are set to zero when not in use.
-+			 * encoder always uses deltas
-+			 */
-+			memset(lfi->lvl[seg_id], lvl_seg,
-+			       sizeof(lfi->lvl[seg_id]));
-+		} else {
-+			int ref, mode;
-+			const int intra_lvl =
-+				lvl_seg + lf->ref_deltas[INTRA_FRAME] * scale;
-+			lfi->lvl[seg_id][INTRA_FRAME][0] =
-+				clamp_val(intra_lvl, 0, MAX_LOOP_FILTER);
-+
-+			for (ref = LAST_FRAME; ref < MAX_REF_FRAMES; ++ref) {
-+				for (mode = 0; mode < MAX_MODE_LF_DELTAS;
-+				     ++mode) {
-+					const int inter_lvl =
-+						lvl_seg +
-+						lf->ref_deltas[ref] * scale +
-+						lf->mode_deltas[mode] * scale;
-+					lfi->lvl[seg_id][ref][mode] =
-+						clamp_val(inter_lvl, 0,
-+							  MAX_LOOP_FILTER);
-+				}
-+			}
-+		}
-+	}
-+
-+	for (i = 0; i < 16; i++) {
-+		unsigned int level;
-+
-+		level = ((lfi->lvl[i >> 1][3][i & 1] & 0x3f) << 24) |
-+			((lfi->lvl[i >> 1][2][i & 1] & 0x3f) << 16) |
-+			((lfi->lvl[i >> 1][1][i & 1] & 0x3f) << 8) |
-+			(lfi->lvl[i >> 1][0][i & 1] & 0x3f);
-+		if (!default_filt_lvl)
-+			level = 0;
-+
-+		amvdec_write_dos(core, HEVC_DBLK_CFGA, level);
-+	}
-+}
-+
-+static void codec_vp9_flush_output(struct amvdec_session *sess)
-+{
-+	struct codec_vp9 *vp9 = sess->priv;
-+	struct vp9_frame *tmp, *n;
-+
-+	mutex_lock(&vp9->lock);
-+	list_for_each_entry_safe(tmp, n, &vp9->ref_frames_list, list) {
-+		if (!tmp->done) {
-+			if (tmp->show)
-+				amvdec_dst_buf_done(sess, tmp->vbuf,
-+						    V4L2_FIELD_NONE);
-+			else
-+				v4l2_m2m_buf_queue(sess->m2m_ctx, tmp->vbuf);
-+
-+			vp9->frames_num--;
-+		}
-+
-+		list_del(&tmp->list);
-+		kfree(tmp);
-+	}
-+	mutex_unlock(&vp9->lock);
-+}
-+
-+static u32 codec_vp9_num_pending_bufs(struct amvdec_session *sess)
-+{
-+	struct codec_vp9 *vp9 = sess->priv;
-+
-+	if (!vp9)
-+		return 0;
-+
-+	return vp9->frames_num;
-+}
-+
-+static int codec_vp9_alloc_workspace(struct amvdec_core *core,
-+				     struct codec_vp9 *vp9)
-+{
-+	/* Allocate some memory for the VP9 decoder's state */
-+	vp9->workspace_vaddr = dma_alloc_coherent(core->dev, SIZE_WORKSPACE,
-+						  &vp9->workspace_paddr,
-+						  GFP_KERNEL);
-+	if (!vp9->workspace_vaddr) {
-+		dev_err(core->dev, "Failed to allocate VP9 Workspace\n");
-+		return -ENOMEM;
-+	}
-+
-+	memset(vp9->workspace_vaddr, 0, SIZE_WORKSPACE);
-+
-+	return 0;
-+}
-+
-+static void codec_vp9_setup_workspace(struct amvdec_session *sess,
-+				      struct codec_vp9 *vp9)
-+{
-+	struct amvdec_core *core = sess->core;
-+	u32 revision = core->platform->revision;
-+	dma_addr_t wkaddr = vp9->workspace_paddr;
-+
-+	amvdec_write_dos(core, HEVCD_IPP_LINEBUFF_BASE, wkaddr + IPP_OFFSET);
-+	amvdec_write_dos(core, VP9_RPM_BUFFER, wkaddr + RPM_OFFSET);
-+	amvdec_write_dos(core, VP9_SHORT_TERM_RPS, wkaddr + SH_TM_RPS_OFFSET);
-+	amvdec_write_dos(core, VP9_PPS_BUFFER, wkaddr + PPS_OFFSET);
-+	amvdec_write_dos(core, VP9_SAO_UP, wkaddr + SAO_UP_OFFSET);
-+
-+	amvdec_write_dos(core, VP9_STREAM_SWAP_BUFFER,
-+			 wkaddr + SWAP_BUF_OFFSET);
-+	amvdec_write_dos(core, VP9_STREAM_SWAP_BUFFER2,
-+			 wkaddr + SWAP_BUF2_OFFSET);
-+	amvdec_write_dos(core, VP9_SCALELUT, wkaddr + SCALELUT_OFFSET);
-+
-+	if (core->platform->revision >= VDEC_REVISION_G12A)
-+		amvdec_write_dos(core, HEVC_DBLK_CFGE,
-+				 wkaddr + DBLK_PARA_OFFSET);
-+
-+	amvdec_write_dos(core, HEVC_DBLK_CFG4, wkaddr + DBLK_PARA_OFFSET);
-+	amvdec_write_dos(core, HEVC_DBLK_CFG5, wkaddr + DBLK_DATA_OFFSET);
-+	amvdec_write_dos(core, VP9_SEG_MAP_BUFFER, wkaddr + SEG_MAP_OFFSET);
-+	amvdec_write_dos(core, VP9_PROB_SWAP_BUFFER, wkaddr + PROB_OFFSET);
-+	amvdec_write_dos(core, VP9_COUNT_SWAP_BUFFER, wkaddr + COUNT_OFFSET);
-+	amvdec_write_dos(core, LMEM_DUMP_ADR, wkaddr + LMEM_OFFSET);
-+
-+	if (codec_hevc_use_mmu(revision, sess->pixfmt_cap, vp9->is_10bit)) {
-+		amvdec_write_dos(core, HEVC_SAO_MMU_VH0_ADDR,
-+				 wkaddr + MMU_VBH_OFFSET);
-+		amvdec_write_dos(core, HEVC_SAO_MMU_VH1_ADDR,
-+				 wkaddr + MMU_VBH_OFFSET + (MMU_VBH_SIZE / 2));
-+
-+		if (revision >= VDEC_REVISION_G12A)
-+			amvdec_write_dos(core, HEVC_ASSIST_MMU_MAP_ADDR,
-+					 vp9->common.mmu_map_paddr);
-+		else
-+			amvdec_write_dos(core, VP9_MMU_MAP_BUFFER,
-+					 vp9->common.mmu_map_paddr);
-+	}
-+}
-+
-+static int codec_vp9_start(struct amvdec_session *sess)
-+{
-+	struct amvdec_core *core = sess->core;
-+	struct codec_vp9 *vp9;
-+	u32 val;
-+	int i;
-+	int ret;
-+
-+	vp9 = kzalloc(sizeof(*vp9), GFP_KERNEL);
-+	if (!vp9)
-+		return -ENOMEM;
-+
-+	ret = codec_vp9_alloc_workspace(core, vp9);
-+	if (ret)
-+		goto free_vp9;
-+
-+	codec_vp9_setup_workspace(sess, vp9);
-+	amvdec_write_dos_bits(core, HEVC_STREAM_CONTROL, BIT(0));
-+	/* stream_fifo_hole */
-+	if (core->platform->revision >= VDEC_REVISION_G12A)
-+		amvdec_write_dos_bits(core, HEVC_STREAM_FIFO_CTL, BIT(29));
-+
-+	val = amvdec_read_dos(core, HEVC_PARSER_INT_CONTROL) & 0x7fffffff;
-+	val |= (3 << 29) | BIT(24) | BIT(22) | BIT(7) | BIT(4) | BIT(0);
-+	amvdec_write_dos(core, HEVC_PARSER_INT_CONTROL, val);
-+	amvdec_write_dos_bits(core, HEVC_SHIFT_STATUS, BIT(0));
-+	amvdec_write_dos(core, HEVC_SHIFT_CONTROL, BIT(10) | BIT(9) |
-+			 (3 << 6) | BIT(5) | BIT(2) | BIT(1) | BIT(0));
-+	amvdec_write_dos(core, HEVC_CABAC_CONTROL, BIT(0));
-+	amvdec_write_dos(core, HEVC_PARSER_CORE_CONTROL, BIT(0));
-+	amvdec_write_dos(core, HEVC_SHIFT_STARTCODE, 0x00000001);
-+
-+	amvdec_write_dos(core, VP9_DEC_STATUS_REG, 0);
-+
-+	amvdec_write_dos(core, HEVC_PARSER_CMD_WRITE, BIT(16));
-+	for (i = 0; i < ARRAY_SIZE(vdec_hevc_parser_cmd); ++i)
-+		amvdec_write_dos(core, HEVC_PARSER_CMD_WRITE,
-+				 vdec_hevc_parser_cmd[i]);
-+
-+	amvdec_write_dos(core, HEVC_PARSER_CMD_SKIP_0, PARSER_CMD_SKIP_CFG_0);
-+	amvdec_write_dos(core, HEVC_PARSER_CMD_SKIP_1, PARSER_CMD_SKIP_CFG_1);
-+	amvdec_write_dos(core, HEVC_PARSER_CMD_SKIP_2, PARSER_CMD_SKIP_CFG_2);
-+	amvdec_write_dos(core, HEVC_PARSER_IF_CONTROL,
-+			 BIT(5) | BIT(2) | BIT(0));
-+
-+	amvdec_write_dos(core, HEVCD_IPP_TOP_CNTL, BIT(0));
-+	amvdec_write_dos(core, HEVCD_IPP_TOP_CNTL, BIT(1));
-+
-+	amvdec_write_dos(core, VP9_WAIT_FLAG, 1);
-+
-+	/* clear mailbox interrupt */
-+	amvdec_write_dos(core, HEVC_ASSIST_MBOX1_CLR_REG, 1);
-+	/* enable mailbox interrupt */
-+	amvdec_write_dos(core, HEVC_ASSIST_MBOX1_MASK, 1);
-+	/* disable PSCALE for hardware sharing */
-+	amvdec_write_dos(core, HEVC_PSCALE_CTRL, 0);
-+	/* Let the uCode do all the parsing */
-+	amvdec_write_dos(core, NAL_SEARCH_CTL, 0x8);
-+
-+	amvdec_write_dos(core, DECODE_STOP_POS, 0);
-+	amvdec_write_dos(core, VP9_DECODE_MODE, DECODE_MODE_SINGLE);
-+
-+	pr_debug("decode_count: %u; decode_size: %u\n",
-+		 amvdec_read_dos(core, HEVC_DECODE_COUNT),
-+		 amvdec_read_dos(core, HEVC_DECODE_SIZE));
-+
-+	vp9_loop_filter_init(core, vp9);
-+
-+	INIT_LIST_HEAD(&vp9->ref_frames_list);
-+	mutex_init(&vp9->lock);
-+	memset(&vp9->ref_frame_map, -1, sizeof(vp9->ref_frame_map));
-+	memset(&vp9->next_ref_frame_map, -1, sizeof(vp9->next_ref_frame_map));
-+	for (i = 0; i < REFS_PER_FRAME; ++i)
-+		vp9->frame_refs[i] = NULL;
-+	sess->priv = vp9;
-+
-+	return 0;
-+
-+free_vp9:
-+	kfree(vp9);
-+	return ret;
-+}
-+
-+static int codec_vp9_stop(struct amvdec_session *sess)
-+{
-+	struct amvdec_core *core = sess->core;
-+	struct codec_vp9 *vp9 = sess->priv;
-+
-+	mutex_lock(&vp9->lock);
-+	if (vp9->workspace_vaddr)
-+		dma_free_coherent(core->dev, SIZE_WORKSPACE,
-+				  vp9->workspace_vaddr,
-+				  vp9->workspace_paddr);
-+
-+	codec_hevc_free_fbc_buffers(sess, &vp9->common);
-+	mutex_unlock(&vp9->lock);
-+
-+	return 0;
-+}
-+
-+static void codec_vp9_set_sao(struct amvdec_session *sess,
-+			      struct vb2_buffer *vb)
-+{
-+	struct amvdec_core *core = sess->core;
-+	struct codec_vp9 *vp9 = sess->priv;
-+
-+	dma_addr_t buf_y_paddr;
-+	dma_addr_t buf_u_v_paddr;
-+	u32 val;
-+
-+	if (codec_hevc_use_downsample(sess->pixfmt_cap, vp9->is_10bit))
-+		buf_y_paddr =
-+			vp9->common.fbc_buffer_paddr[vb->index];
-+	else
-+		buf_y_paddr =
-+		       vb2_dma_contig_plane_dma_addr(vb, 0);
-+
-+	if (codec_hevc_use_fbc(sess->pixfmt_cap, vp9->is_10bit)) {
-+		val = amvdec_read_dos(core, HEVC_SAO_CTRL5) & ~0xff0200;
-+		amvdec_write_dos(core, HEVC_SAO_CTRL5, val);
-+		amvdec_write_dos(core, HEVC_CM_BODY_START_ADDR, buf_y_paddr);
-+	}
-+
-+	if (sess->pixfmt_cap == V4L2_PIX_FMT_NV12M) {
-+		buf_y_paddr =
-+		       vb2_dma_contig_plane_dma_addr(vb, 0);
-+		buf_u_v_paddr =
-+		       vb2_dma_contig_plane_dma_addr(vb, 1);
-+		amvdec_write_dos(core, HEVC_SAO_Y_START_ADDR, buf_y_paddr);
-+		amvdec_write_dos(core, HEVC_SAO_C_START_ADDR, buf_u_v_paddr);
-+		amvdec_write_dos(core, HEVC_SAO_Y_WPTR, buf_y_paddr);
-+		amvdec_write_dos(core, HEVC_SAO_C_WPTR, buf_u_v_paddr);
-+	}
-+
-+	if (codec_hevc_use_mmu(core->platform->revision, sess->pixfmt_cap,
-+			       vp9->is_10bit)) {
-+		amvdec_write_dos(core, HEVC_CM_HEADER_START_ADDR,
-+				 vp9->common.mmu_header_paddr[vb->index]);
-+		/* use HEVC_CM_HEADER_START_ADDR */
-+		amvdec_write_dos_bits(core, HEVC_SAO_CTRL5, BIT(10));
-+	}
-+
-+	amvdec_write_dos(core, HEVC_SAO_Y_LENGTH,
-+			 amvdec_get_output_size(sess));
-+	amvdec_write_dos(core, HEVC_SAO_C_LENGTH,
-+			 (amvdec_get_output_size(sess) / 2));
-+
-+	if (core->platform->revision >= VDEC_REVISION_G12A) {
-+		amvdec_clear_dos_bits(core, HEVC_DBLK_CFGB,
-+				      BIT(4) | BIT(5) | BIT(8) | BIT(9));
-+		/* enable first, compressed write */
-+		if (codec_hevc_use_fbc(sess->pixfmt_cap, vp9->is_10bit))
-+			amvdec_write_dos_bits(core, HEVC_DBLK_CFGB, BIT(8));
-+
-+		/* enable second, uncompressed write */
-+		if (sess->pixfmt_cap == V4L2_PIX_FMT_NV12M)
-+			amvdec_write_dos_bits(core, HEVC_DBLK_CFGB, BIT(9));
-+
-+		/* dblk pipeline mode=1 for performance */
-+		if (sess->width >= 1280)
-+			amvdec_write_dos_bits(core, HEVC_DBLK_CFGB, BIT(4));
-+
-+		pr_debug("HEVC_DBLK_CFGB: %08X\n",
-+			 amvdec_read_dos(core, HEVC_DBLK_CFGB));
-+	}
-+
-+	val = amvdec_read_dos(core, HEVC_SAO_CTRL1) & ~0x3ff0;
-+	val |= 0xff0; /* Set endianness for 2-bytes swaps (nv12) */
-+	if (core->platform->revision < VDEC_REVISION_G12A) {
-+		val &= ~0x3;
-+		if (!codec_hevc_use_fbc(sess->pixfmt_cap, vp9->is_10bit))
-+			val |= BIT(0); /* disable cm compression */
-+		/* TOFIX: Handle Amlogic Framebuffer compression */
-+	}
-+
-+	amvdec_write_dos(core, HEVC_SAO_CTRL1, val);
-+	pr_debug("HEVC_SAO_CTRL1: %08X\n", val);
-+
-+	/* no downscale for NV12 */
-+	val = amvdec_read_dos(core, HEVC_SAO_CTRL5) & ~0xff0000;
-+	amvdec_write_dos(core, HEVC_SAO_CTRL5, val);
-+
-+	val = amvdec_read_dos(core, HEVCD_IPP_AXIIF_CONFIG) & ~0x30;
-+	val |= 0xf;
-+	val &= ~BIT(12); /* NV12 */
-+	amvdec_write_dos(core, HEVCD_IPP_AXIIF_CONFIG, val);
-+}
-+
-+static dma_addr_t codec_vp9_get_frame_mv_paddr(struct codec_vp9 *vp9,
-+					       struct vp9_frame *frame)
-+{
-+	return vp9->workspace_paddr + MPRED_MV_OFFSET +
-+	       (frame->index * MPRED_MV_BUF_SIZE);
-+}
-+
-+static void codec_vp9_set_mpred_mv(struct amvdec_core *core,
-+				   struct codec_vp9 *vp9)
-+{
-+	int mpred_mv_rd_end_addr;
-+	int use_prev_frame_mvs = vp9->prev_frame->width ==
-+					vp9->cur_frame->width &&
-+				 vp9->prev_frame->height ==
-+					vp9->cur_frame->height &&
-+				 !vp9->prev_frame->intra_only &&
-+				 vp9->prev_frame->show &&
-+				 vp9->prev_frame->type != KEY_FRAME;
-+
-+	amvdec_write_dos(core, HEVC_MPRED_CTRL3, 0x24122412);
-+	amvdec_write_dos(core, HEVC_MPRED_ABV_START_ADDR,
-+			 vp9->workspace_paddr + MPRED_ABV_OFFSET);
-+
-+	amvdec_clear_dos_bits(core, HEVC_MPRED_CTRL4, BIT(6));
-+	if (use_prev_frame_mvs)
-+		amvdec_write_dos_bits(core, HEVC_MPRED_CTRL4, BIT(6));
-+
-+	amvdec_write_dos(core, HEVC_MPRED_MV_WR_START_ADDR,
-+			 codec_vp9_get_frame_mv_paddr(vp9, vp9->cur_frame));
-+	amvdec_write_dos(core, HEVC_MPRED_MV_WPTR,
-+			 codec_vp9_get_frame_mv_paddr(vp9, vp9->cur_frame));
-+
-+	amvdec_write_dos(core, HEVC_MPRED_MV_RD_START_ADDR,
-+			 codec_vp9_get_frame_mv_paddr(vp9, vp9->prev_frame));
-+	amvdec_write_dos(core, HEVC_MPRED_MV_RPTR,
-+			 codec_vp9_get_frame_mv_paddr(vp9, vp9->prev_frame));
-+
-+	mpred_mv_rd_end_addr =
-+			codec_vp9_get_frame_mv_paddr(vp9, vp9->prev_frame) +
-+			(vp9->lcu_total * MV_MEM_UNIT);
-+	amvdec_write_dos(core, HEVC_MPRED_MV_RD_END_ADDR, mpred_mv_rd_end_addr);
-+}
-+
-+static void codec_vp9_update_next_ref(struct codec_vp9 *vp9)
-+{
-+	union rpm_param *param = &vp9->rpm_param;
-+	u32 buf_idx = vp9->cur_frame->index;
-+	int ref_index = 0;
-+	int refresh_frame_flags;
-+	int mask;
-+
-+	refresh_frame_flags = vp9->cur_frame->type == KEY_FRAME ?
-+				0xff : param->p.refresh_frame_flags;
-+
-+	for (mask = refresh_frame_flags; mask; mask >>= 1) {
-+		pr_debug("mask=%08X; ref_index=%d\n", mask, ref_index);
-+		if (mask & 1)
-+			vp9->next_ref_frame_map[ref_index] = buf_idx;
-+		else
-+			vp9->next_ref_frame_map[ref_index] =
-+				vp9->ref_frame_map[ref_index];
-+
-+		++ref_index;
-+	}
-+
-+	for (; ref_index < REF_FRAMES; ++ref_index)
-+		vp9->next_ref_frame_map[ref_index] =
-+			vp9->ref_frame_map[ref_index];
-+}
-+
-+static void codec_vp9_save_refs(struct codec_vp9 *vp9)
-+{
-+	union rpm_param *param = &vp9->rpm_param;
-+	int i;
-+
-+	for (i = 0; i < REFS_PER_FRAME; ++i) {
-+		const int ref = (param->p.ref_info >>
-+				 (((REFS_PER_FRAME - i - 1) * 4) + 1)) & 0x7;
-+
-+		if (vp9->ref_frame_map[ref] < 0)
-+			continue;
-+
-+		pr_warn("%s: FIXME, would need to save ref %d\n",
-+			__func__, vp9->ref_frame_map[ref]);
-+	}
-+}
-+
-+static void codec_vp9_update_ref(struct codec_vp9 *vp9)
-+{
-+	union rpm_param *param = &vp9->rpm_param;
-+	int ref_index = 0;
-+	int mask;
-+	int refresh_frame_flags;
-+
-+	if (!vp9->cur_frame)
-+		return;
-+
-+	refresh_frame_flags = vp9->cur_frame->type == KEY_FRAME ?
-+				0xff : param->p.refresh_frame_flags;
-+
-+	for (mask = refresh_frame_flags; mask; mask >>= 1) {
-+		vp9->ref_frame_map[ref_index] =
-+			vp9->next_ref_frame_map[ref_index];
-+		++ref_index;
-+	}
-+
-+	if (param->p.show_existing_frame)
-+		return;
-+
-+	for (; ref_index < REF_FRAMES; ++ref_index)
-+		vp9->ref_frame_map[ref_index] =
-+			vp9->next_ref_frame_map[ref_index];
-+}
-+
-+static struct vp9_frame *codec_vp9_get_frame_by_idx(struct codec_vp9 *vp9,
-+						    int idx)
-+{
-+	struct vp9_frame *frame;
-+
-+	list_for_each_entry(frame, &vp9->ref_frames_list, list) {
-+		if (frame->index == idx)
-+			return frame;
-+	}
-+
-+	return NULL;
-+}
-+
-+static void codec_vp9_sync_ref(struct codec_vp9 *vp9)
-+{
-+	union rpm_param *param = &vp9->rpm_param;
-+	int i;
-+
-+	for (i = 0; i < REFS_PER_FRAME; ++i) {
-+		const int ref = (param->p.ref_info >>
-+				 (((REFS_PER_FRAME - i - 1) * 4) + 1)) & 0x7;
-+		const int idx = vp9->ref_frame_map[ref];
-+
-+		vp9->frame_refs[i] = codec_vp9_get_frame_by_idx(vp9, idx);
-+		if (!vp9->frame_refs[i])
-+			pr_warn("%s: couldn't find VP9 ref %d\n", __func__,
-+				idx);
-+	}
-+}
-+
-+static void codec_vp9_set_refs(struct amvdec_session *sess,
-+			       struct codec_vp9 *vp9)
-+{
-+	struct amvdec_core *core = sess->core;
-+	int i;
-+
-+	for (i = 0; i < REFS_PER_FRAME; ++i) {
-+		struct vp9_frame *frame = vp9->frame_refs[i];
-+		int id_y;
-+		int id_u_v;
-+
-+		if (!frame)
-+			continue;
-+
-+		if (codec_hevc_use_fbc(sess->pixfmt_cap, vp9->is_10bit)) {
-+			id_y = frame->index;
-+			id_u_v = id_y;
-+		} else {
-+			id_y = frame->index * 2;
-+			id_u_v = id_y + 1;
-+		}
-+
-+		amvdec_write_dos(core, HEVCD_MPP_ANC_CANVAS_DATA_ADDR,
-+				 (id_u_v << 16) | (id_u_v << 8) | id_y);
-+	}
-+}
-+
-+static void codec_vp9_set_mc(struct amvdec_session *sess,
-+			     struct codec_vp9 *vp9)
-+{
-+	struct amvdec_core *core = sess->core;
-+	u32 scale = 0;
-+	u32 sz;
-+	int i;
-+
-+	amvdec_write_dos(core, HEVCD_MPP_ANC_CANVAS_ACCCONFIG_ADDR, 1);
-+	codec_vp9_set_refs(sess, vp9);
-+	amvdec_write_dos(core, HEVCD_MPP_ANC_CANVAS_ACCCONFIG_ADDR,
-+			 (16 << 8) | 1);
-+	codec_vp9_set_refs(sess, vp9);
-+
-+	amvdec_write_dos(core, VP9D_MPP_REFINFO_TBL_ACCCONFIG, BIT(2));
-+	for (i = 0; i < REFS_PER_FRAME; ++i) {
-+		if (!vp9->frame_refs[i])
-+			continue;
-+
-+		if (vp9->frame_refs[i]->width != vp9->width ||
-+		    vp9->frame_refs[i]->height != vp9->height)
-+			scale = 1;
-+
-+		sz = amvdec_am21c_body_size(vp9->frame_refs[i]->width,
-+					    vp9->frame_refs[i]->height);
-+
-+		amvdec_write_dos(core, VP9D_MPP_REFINFO_DATA,
-+				 vp9->frame_refs[i]->width);
-+		amvdec_write_dos(core, VP9D_MPP_REFINFO_DATA,
-+				 vp9->frame_refs[i]->height);
-+		amvdec_write_dos(core, VP9D_MPP_REFINFO_DATA,
-+				 (vp9->frame_refs[i]->width << 14) /
-+				 vp9->width);
-+		amvdec_write_dos(core, VP9D_MPP_REFINFO_DATA,
-+				 (vp9->frame_refs[i]->height << 14) /
-+				 vp9->height);
-+		amvdec_write_dos(core, VP9D_MPP_REFINFO_DATA, sz >> 5);
-+	}
-+
-+	amvdec_write_dos(core, VP9D_MPP_REF_SCALE_ENBL, scale);
-+}
-+
-+static struct vp9_frame *codec_vp9_get_new_frame(struct amvdec_session *sess)
-+{
-+	struct codec_vp9 *vp9 = sess->priv;
-+	union rpm_param *param = &vp9->rpm_param;
-+	struct vb2_v4l2_buffer *vbuf;
-+	struct vp9_frame *new_frame;
-+
-+	new_frame = kzalloc(sizeof(*new_frame), GFP_KERNEL);
-+	if (!new_frame)
-+		return NULL;
-+
-+	vbuf = v4l2_m2m_dst_buf_remove(sess->m2m_ctx);
-+	if (!vbuf) {
-+		dev_err(sess->core->dev, "No dst buffer available\n");
-+		kfree(new_frame);
-+		return NULL;
-+	}
-+
-+	while (codec_vp9_get_frame_by_idx(vp9, vbuf->vb2_buf.index)) {
-+		struct vb2_v4l2_buffer *old_vbuf = vbuf;
-+
-+		vbuf = v4l2_m2m_dst_buf_remove(sess->m2m_ctx);
-+		v4l2_m2m_buf_queue(sess->m2m_ctx, old_vbuf);
-+		if (!vbuf) {
-+			dev_err(sess->core->dev, "No dst buffer available\n");
-+			kfree(new_frame);
-+			return NULL;
-+		}
-+	}
-+
-+	new_frame->vbuf = vbuf;
-+	new_frame->index = vbuf->vb2_buf.index;
-+	new_frame->intra_only = param->p.intra_only;
-+	new_frame->show = param->p.show_frame;
-+	new_frame->type = param->p.frame_type;
-+	new_frame->width = vp9->width;
-+	new_frame->height = vp9->height;
-+	list_add_tail(&new_frame->list, &vp9->ref_frames_list);
-+	vp9->frames_num++;
-+
-+	return new_frame;
-+}
-+
-+static void codec_vp9_show_existing_frame(struct codec_vp9 *vp9)
-+{
-+	union rpm_param *param = &vp9->rpm_param;
-+
-+	if (!param->p.show_existing_frame)
-+		return;
-+
-+	pr_debug("showing frame %u\n", param->p.frame_to_show_idx);
-+}
-+
-+static void codec_vp9_rm_noshow_frame(struct amvdec_session *sess)
-+{
-+	struct codec_vp9 *vp9 = sess->priv;
-+	struct vp9_frame *tmp;
-+
-+	list_for_each_entry(tmp, &vp9->ref_frames_list, list) {
-+		if (tmp->show)
-+			continue;
-+
-+		pr_debug("rm noshow: %u\n", tmp->index);
-+		v4l2_m2m_buf_queue(sess->m2m_ctx, tmp->vbuf);
-+		list_del(&tmp->list);
-+		kfree(tmp);
-+		vp9->frames_num--;
-+		return;
-+	}
-+}
-+
-+static void codec_vp9_process_frame(struct amvdec_session *sess)
-+{
-+	struct amvdec_core *core = sess->core;
-+	struct codec_vp9 *vp9 = sess->priv;
-+	union rpm_param *param = &vp9->rpm_param;
-+	int intra_only;
-+
-+	if (!param->p.show_frame)
-+		codec_vp9_rm_noshow_frame(sess);
-+
-+	vp9->cur_frame = codec_vp9_get_new_frame(sess);
-+	if (!vp9->cur_frame)
-+		return;
-+
-+	pr_debug("frame %d: type: %08X; show_exist: %u; show: %u, intra_only: %u\n",
-+		 vp9->cur_frame->index,
-+		 param->p.frame_type, param->p.show_existing_frame,
-+		 param->p.show_frame, param->p.intra_only);
-+
-+	if (param->p.frame_type != KEY_FRAME)
-+		codec_vp9_sync_ref(vp9);
-+	codec_vp9_update_next_ref(vp9);
-+	codec_vp9_show_existing_frame(vp9);
-+
-+	if (codec_hevc_use_mmu(core->platform->revision, sess->pixfmt_cap,
-+			       vp9->is_10bit))
-+		codec_hevc_fill_mmu_map(sess, &vp9->common,
-+					&vp9->cur_frame->vbuf->vb2_buf);
-+
-+	intra_only = param->p.show_frame ? 0 : param->p.intra_only;
-+
-+	/* clear mpred (for keyframe only) */
-+	if (param->p.frame_type != KEY_FRAME && !intra_only) {
-+		codec_vp9_set_mc(sess, vp9);
-+		codec_vp9_set_mpred_mv(core, vp9);
-+	} else {
-+		amvdec_clear_dos_bits(core, HEVC_MPRED_CTRL4, BIT(6));
-+	}
-+
-+	amvdec_write_dos(core, HEVC_PARSER_PICTURE_SIZE,
-+			 (vp9->height << 16) | vp9->width);
-+	codec_vp9_set_sao(sess, &vp9->cur_frame->vbuf->vb2_buf);
-+
-+	vp9_loop_filter_frame_init(core, &vp9->seg_4lf,
-+				   &vp9->lfi, &vp9->lf,
-+				   vp9->default_filt_lvl);
-+
-+	/* ask uCode to start decoding */
-+	amvdec_write_dos(core, VP9_DEC_STATUS_REG, VP9_10B_DECODE_SLICE);
-+}
-+
-+static void codec_vp9_process_lf(struct codec_vp9 *vp9)
-+{
-+	union rpm_param *param = &vp9->rpm_param;
-+	int i;
-+
-+	vp9->lf.mode_ref_delta_enabled = param->p.mode_ref_delta_enabled;
-+	vp9->lf.sharpness_level = param->p.sharpness_level;
-+	vp9->default_filt_lvl = param->p.filter_level;
-+	vp9->seg_4lf.enabled = param->p.seg_enabled;
-+	vp9->seg_4lf.abs_delta = param->p.seg_abs_delta;
-+
-+	for (i = 0; i < 4; i++)
-+		vp9->lf.ref_deltas[i] = param->p.ref_deltas[i];
-+
-+	for (i = 0; i < 2; i++)
-+		vp9->lf.mode_deltas[i] = param->p.mode_deltas[i];
-+
-+	for (i = 0; i < MAX_SEGMENTS; i++)
-+		vp9->seg_4lf.feature_mask[i] =
-+			(param->p.seg_lf_info[i] & 0x8000) ?
-+				(1 << SEG_LVL_ALT_LF) : 0;
-+
-+	for (i = 0; i < MAX_SEGMENTS; i++)
-+		vp9->seg_4lf.feature_data[i][SEG_LVL_ALT_LF] =
-+			(param->p.seg_lf_info[i] & 0x100) ?
-+				-(param->p.seg_lf_info[i] & 0x3f)
-+				: (param->p.seg_lf_info[i] & 0x3f);
-+}
-+
-+static void codec_vp9_resume(struct amvdec_session *sess)
-+{
-+	struct codec_vp9 *vp9 = sess->priv;
-+
-+	mutex_lock(&vp9->lock);
-+
-+	if (codec_hevc_setup_buffers(sess, &vp9->common, vp9->is_10bit)) {
-+		mutex_unlock(&vp9->lock);
-+		amvdec_abort(sess);
-+		return;
-+	}
-+
-+	codec_vp9_setup_workspace(sess, vp9);
-+	codec_hevc_setup_decode_head(sess, vp9->is_10bit);
-+	codec_vp9_process_lf(vp9);
-+	codec_vp9_process_frame(sess);
-+
-+	mutex_unlock(&vp9->lock);
++	return revision >= VDEC_REVISION_G12A &&
++	       codec_hevc_use_fbc(pixfmt, is_10bit);
 +}
 +
 +/**
-+ * The RPM section within the workspace contains
-+ * many information regarding the parsed bitstream
++ * Configure decode head read mode
 + */
-+static void codec_vp9_fetch_rpm(struct amvdec_session *sess)
-+{
-+	struct codec_vp9 *vp9 = sess->priv;
-+	u16 *rpm_vaddr = vp9->workspace_vaddr + RPM_OFFSET;
-+	int i, j;
-+
-+	for (i = 0; i < RPM_BUF_SIZE; i += 4)
-+		for (j = 0; j < 4; j++)
-+			vp9->rpm_param.l.data[i + j] = rpm_vaddr[i + 3 - j];
-+}
-+
-+static int codec_vp9_process_rpm(struct codec_vp9 *vp9)
-+{
-+	union rpm_param *param = &vp9->rpm_param;
-+	int src_changed = 0;
-+	int is_10bit = 0;
-+	int pic_width_64 = ALIGN(param->p.width, 64);
-+	int pic_height_32 = ALIGN(param->p.height, 32);
-+	int pic_width_lcu  = (pic_width_64 % LCU_SIZE) ?
-+				pic_width_64 / LCU_SIZE  + 1
-+				: pic_width_64 / LCU_SIZE;
-+	int pic_height_lcu = (pic_height_32 % LCU_SIZE) ?
-+				pic_height_32 / LCU_SIZE + 1
-+				: pic_height_32 / LCU_SIZE;
-+	vp9->lcu_total = pic_width_lcu * pic_height_lcu;
-+
-+	if (param->p.bit_depth == 10)
-+		is_10bit = 1;
-+
-+	if (vp9->width != param->p.width || vp9->height != param->p.height ||
-+	    vp9->is_10bit != is_10bit)
-+		src_changed = 1;
-+
-+	vp9->width = param->p.width;
-+	vp9->height = param->p.height;
-+	vp9->is_10bit = is_10bit;
-+
-+	pr_debug("width: %u; height: %u; is_10bit: %d; src_changed: %d\n",
-+		 vp9->width, vp9->height, is_10bit, src_changed);
-+
-+	return src_changed;
-+}
-+
-+static bool codec_vp9_is_ref(struct codec_vp9 *vp9, struct vp9_frame *frame)
-+{
-+	int i;
-+
-+	for (i = 0; i < REF_FRAMES; ++i)
-+		if (vp9->ref_frame_map[i] == frame->index)
-+			return true;
-+
-+	return false;
-+}
-+
-+static void codec_vp9_show_frame(struct amvdec_session *sess)
-+{
-+	struct codec_vp9 *vp9 = sess->priv;
-+	struct vp9_frame *tmp, *n;
-+
-+	list_for_each_entry_safe(tmp, n, &vp9->ref_frames_list, list) {
-+		if (!tmp->show || tmp == vp9->cur_frame)
-+			continue;
-+
-+		if (!tmp->done) {
-+			pr_debug("Doning %u\n", tmp->index);
-+			amvdec_dst_buf_done(sess, tmp->vbuf, V4L2_FIELD_NONE);
-+			tmp->done = 1;
-+			vp9->frames_num--;
-+		}
-+
-+		if (codec_vp9_is_ref(vp9, tmp) || tmp == vp9->prev_frame)
-+			continue;
-+
-+		pr_debug("deleting %d\n", tmp->index);
-+		list_del(&tmp->list);
-+		kfree(tmp);
-+	}
-+}
-+
-+static void vp9_tree_merge_probs(unsigned int *prev_prob,
-+				 unsigned int *cur_prob,
-+				 int coef_node_start, int tree_left,
-+				 int tree_right,
-+				 int tree_i, int node)
-+{
-+	int prob_32, prob_res, prob_shift;
-+	int pre_prob, new_prob;
-+	int den, m_count, get_prob, factor;
-+
-+	prob_32 = prev_prob[coef_node_start / 4 * 2];
-+	prob_res = coef_node_start & 3;
-+	prob_shift = prob_res * 8;
-+	pre_prob = (prob_32 >> prob_shift) & 0xff;
-+
-+	den = tree_left + tree_right;
-+
-+	if (den == 0) {
-+		new_prob = pre_prob;
-+	} else {
-+		m_count = den < MODE_MV_COUNT_SAT ? den : MODE_MV_COUNT_SAT;
-+		get_prob =
-+			clip_prob(div_r32(((int64_t)tree_left * 256 +
-+					   (den >> 1)),
-+					  den));
-+
-+		/* weighted_prob */
-+		factor = count_to_update_factor[m_count];
-+		new_prob = ROUND_POWER_OF_TWO(pre_prob * (256 - factor) +
-+					      get_prob * factor, 8);
-+	}
-+
-+	cur_prob[coef_node_start / 4 * 2] =
-+		(cur_prob[coef_node_start / 4 * 2] & (~(0xff << prob_shift))) |
-+		(new_prob << prob_shift);
-+}
-+
-+static void adapt_coef_probs_cxt(unsigned int *prev_prob,
-+				 unsigned int *cur_prob,
-+				 unsigned int *count,
-+				 int update_factor,
-+				 int cxt_num,
-+				 int coef_cxt_start,
-+				 int coef_count_cxt_start)
-+{
-+	int prob_32, prob_res, prob_shift;
-+	int pre_prob, new_prob;
-+	int num, den, m_count, get_prob, factor;
-+	int node, coef_node_start;
-+	int count_sat = 24;
-+	int cxt;
-+
-+	for (cxt = 0; cxt < cxt_num; cxt++) {
-+		const int n0 = count[coef_count_cxt_start];
-+		const int n1 = count[coef_count_cxt_start + 1];
-+		const int n2 = count[coef_count_cxt_start + 2];
-+		const int neob = count[coef_count_cxt_start + 3];
-+		const int nneob = count[coef_count_cxt_start + 4];
-+		const unsigned int branch_ct[3][2] = {
-+			{ neob, nneob },
-+			{ n0, n1 + n2 },
-+			{ n1, n2 }
-+		};
-+
-+		coef_node_start = coef_cxt_start;
-+		for (node = 0 ; node < 3 ; node++) {
-+			prob_32 = prev_prob[coef_node_start / 4 * 2];
-+			prob_res = coef_node_start & 3;
-+			prob_shift = prob_res * 8;
-+			pre_prob = (prob_32 >> prob_shift) & 0xff;
-+
-+			/* get binary prob */
-+			num = branch_ct[node][0];
-+			den = branch_ct[node][0] + branch_ct[node][1];
-+			m_count = den < count_sat ? den : count_sat;
-+
-+			get_prob = (den == 0) ?
-+					128u :
-+					clip_prob(div_r32(((int64_t)num * 256 +
-+							  (den >> 1)), den));
-+
-+			factor = update_factor * m_count / count_sat;
-+			new_prob =
-+				ROUND_POWER_OF_TWO(pre_prob * (256 - factor) +
-+						   get_prob * factor, 8);
-+
-+			cur_prob[coef_node_start / 4 * 2] =
-+				(cur_prob[coef_node_start / 4 * 2] &
-+				 (~(0xff << prob_shift))) |
-+				(new_prob << prob_shift);
-+
-+			coef_node_start += 1;
-+		}
-+
-+		coef_cxt_start = coef_cxt_start + 3;
-+		coef_count_cxt_start = coef_count_cxt_start + 5;
-+	}
-+}
-+
-+static void adapt_coef_probs(int prev_kf, int cur_kf, int pre_fc,
-+			     unsigned int *prev_prob, unsigned int *cur_prob,
-+			     unsigned int *count)
-+{
-+	int tx_size, coef_tx_size_start, coef_count_tx_size_start;
-+	int plane, coef_plane_start, coef_count_plane_start;
-+	int type, coef_type_start, coef_count_type_start;
-+	int band, coef_band_start, coef_count_band_start;
-+	int cxt_num;
-+	int coef_cxt_start, coef_count_cxt_start;
-+	int node, coef_node_start, coef_count_node_start;
-+
-+	int tree_i, tree_left, tree_right;
-+	int mvd_i;
-+
-+	int update_factor = cur_kf ? 112 : (prev_kf ? 128 : 112);
-+
-+	int prob_32;
-+	int prob_res;
-+	int prob_shift;
-+	int pre_prob;
-+
-+	int den;
-+	int get_prob;
-+	int m_count;
-+	int factor;
-+
-+	int new_prob;
-+
-+	for (tx_size = 0 ; tx_size < 4 ; tx_size++) {
-+		coef_tx_size_start = VP9_COEF_START +
-+				tx_size * 4 * VP9_COEF_SIZE_ONE_SET;
-+		coef_count_tx_size_start = VP9_COEF_COUNT_START +
-+				tx_size * 4 * VP9_COEF_COUNT_SIZE_ONE_SET;
-+		coef_plane_start = coef_tx_size_start;
-+		coef_count_plane_start = coef_count_tx_size_start;
-+
-+		for (plane = 0 ; plane < 2 ; plane++) {
-+			coef_type_start = coef_plane_start;
-+			coef_count_type_start = coef_count_plane_start;
-+
-+			for (type = 0 ; type < 2 ; type++) {
-+				coef_band_start = coef_type_start;
-+				coef_count_band_start = coef_count_type_start;
-+
-+				for (band = 0 ; band < 6 ; band++) {
-+					if (band == 0)
-+						cxt_num = 3;
-+					else
-+						cxt_num = 6;
-+					coef_cxt_start = coef_band_start;
-+					coef_count_cxt_start =
-+						coef_count_band_start;
-+
-+					adapt_coef_probs_cxt(prev_prob,
-+							     cur_prob,
-+							     count,
-+							     update_factor,
-+							     cxt_num,
-+							     coef_cxt_start,
-+							coef_count_cxt_start);
-+
-+					if (band == 0) {
-+						coef_band_start += 10;
-+						coef_count_band_start += 15;
-+					} else {
-+						coef_band_start += 18;
-+						coef_count_band_start += 30;
-+					}
-+				}
-+				coef_type_start += VP9_COEF_SIZE_ONE_SET;
-+				coef_count_type_start +=
-+					VP9_COEF_COUNT_SIZE_ONE_SET;
-+			}
-+
-+			coef_plane_start += 2 * VP9_COEF_SIZE_ONE_SET;
-+			coef_count_plane_start +=
-+				2 * VP9_COEF_COUNT_SIZE_ONE_SET;
-+		}
-+	}
-+
-+	if (cur_kf == 0) {
-+		/* mode_mv_merge_probs - merge_intra_inter_prob */
-+		for (coef_count_node_start = VP9_INTRA_INTER_COUNT_START;
-+		     coef_count_node_start < (VP9_MV_CLASS0_HP_1_COUNT_START +
-+					      VP9_MV_CLASS0_HP_1_COUNT_SIZE);
-+		     coef_count_node_start += 2) {
-+			if (coef_count_node_start ==
-+					VP9_INTRA_INTER_COUNT_START)
-+				coef_node_start = VP9_INTRA_INTER_START;
-+			else if (coef_count_node_start ==
-+					VP9_COMP_INTER_COUNT_START)
-+				coef_node_start = VP9_COMP_INTER_START;
-+			else if (coef_count_node_start ==
-+					VP9_TX_MODE_COUNT_START)
-+				coef_node_start = VP9_TX_MODE_START;
-+			else if (coef_count_node_start ==
-+					VP9_SKIP_COUNT_START)
-+				coef_node_start = VP9_SKIP_START;
-+			else if (coef_count_node_start ==
-+					VP9_MV_SIGN_0_COUNT_START)
-+				coef_node_start = VP9_MV_SIGN_0_START;
-+			else if (coef_count_node_start ==
-+					VP9_MV_SIGN_1_COUNT_START)
-+				coef_node_start = VP9_MV_SIGN_1_START;
-+			else if (coef_count_node_start ==
-+					VP9_MV_BITS_0_COUNT_START)
-+				coef_node_start = VP9_MV_BITS_0_START;
-+			else if (coef_count_node_start ==
-+					VP9_MV_BITS_1_COUNT_START)
-+				coef_node_start = VP9_MV_BITS_1_START;
-+			else if (coef_count_node_start ==
-+					VP9_MV_CLASS0_HP_0_COUNT_START)
-+				coef_node_start = VP9_MV_CLASS0_HP_0_START;
-+
-+			den = count[coef_count_node_start] +
-+			      count[coef_count_node_start + 1];
-+
-+			prob_32 = prev_prob[coef_node_start / 4 * 2];
-+			prob_res = coef_node_start & 3;
-+			prob_shift = prob_res * 8;
-+			pre_prob = (prob_32 >> prob_shift) & 0xff;
-+
-+			if (den == 0) {
-+				new_prob = pre_prob;
-+			} else {
-+				m_count = den < MODE_MV_COUNT_SAT ?
-+						den : MODE_MV_COUNT_SAT;
-+				get_prob =
-+				clip_prob(div_r32(((int64_t)
-+					count[coef_count_node_start] * 256 +
-+					(den >> 1)),
-+					den));
-+
-+				/* weighted prob */
-+				factor = count_to_update_factor[m_count];
-+				new_prob =
-+					ROUND_POWER_OF_TWO(pre_prob *
-+							   (256 - factor) +
-+							   get_prob * factor,
-+							   8);
-+			}
-+
-+			cur_prob[coef_node_start / 4 * 2] =
-+				(cur_prob[coef_node_start / 4 * 2] &
-+				 (~(0xff << prob_shift))) |
-+				(new_prob << prob_shift);
-+
-+			coef_node_start = coef_node_start + 1;
-+		}
-+
-+		coef_node_start = VP9_INTER_MODE_START;
-+		coef_count_node_start = VP9_INTER_MODE_COUNT_START;
-+		for (tree_i = 0 ; tree_i < 7 ; tree_i++) {
-+			for (node = 0 ; node < 3 ; node++) {
-+				unsigned int start = coef_count_node_start;
-+
-+				switch (node) {
-+				case 2:
-+					tree_left = count[start + 1];
-+					tree_right = count[start + 3];
-+					break;
-+				case 1:
-+					tree_left = count[start + 0];
-+					tree_right = count[start + 1] +
-+						     count[start + 3];
-+					break;
-+				default:
-+					tree_left = count[start + 2];
-+					tree_right = count[start + 0] +
-+						     count[start + 1] +
-+						     count[start + 3];
-+					break;
-+				}
-+
-+				vp9_tree_merge_probs(prev_prob, cur_prob,
-+						     coef_node_start,
-+						     tree_left, tree_right,
-+						     tree_i, node);
-+
-+				coef_node_start = coef_node_start + 1;
-+			}
-+
-+			coef_count_node_start = coef_count_node_start + 4;
-+		}
-+
-+		coef_node_start = VP9_IF_Y_MODE_START;
-+		coef_count_node_start = VP9_IF_Y_MODE_COUNT_START;
-+		for (tree_i = 0 ; tree_i < 14 ; tree_i++) {
-+			for (node = 0 ; node < 9 ; node++) {
-+				unsigned int start = coef_count_node_start;
-+
-+				switch (node) {
-+				case 8:
-+					tree_left =
-+						count[start + D153_PRED];
-+					tree_right =
-+						count[start + D207_PRED];
-+					break;
-+				case 7:
-+					tree_left =
-+						count[start + D63_PRED];
-+					tree_right =
-+						count[start + D207_PRED] +
-+						count[start + D153_PRED];
-+					break;
-+				case 6:
-+					tree_left =
-+						count[start + D45_PRED];
-+					tree_right =
-+						count[start + D207_PRED] +
-+						count[start + D153_PRED] +
-+						count[start + D63_PRED];
-+					break;
-+				case 5:
-+					tree_left =
-+						count[start + D135_PRED];
-+					tree_right =
-+						count[start + D117_PRED];
-+					break;
-+				case 4:
-+					tree_left =
-+						count[start + H_PRED];
-+					tree_right =
-+						count[start + D117_PRED] +
-+						count[start + D135_PRED];
-+					break;
-+				case 3:
-+					tree_left =
-+						count[start + H_PRED] +
-+						count[start + D117_PRED] +
-+						count[start + D135_PRED];
-+					tree_right =
-+						count[start + D45_PRED] +
-+						count[start + D207_PRED] +
-+						count[start + D153_PRED] +
-+						count[start + D63_PRED];
-+					break;
-+				case 2:
-+					tree_left =
-+						count[start + V_PRED];
-+					tree_right =
-+						count[start + H_PRED] +
-+						count[start + D117_PRED] +
-+						count[start + D135_PRED] +
-+						count[start + D45_PRED] +
-+						count[start + D207_PRED] +
-+						count[start + D153_PRED] +
-+						count[start + D63_PRED];
-+					break;
-+				case 1:
-+					tree_left =
-+						count[start + TM_PRED];
-+					tree_right =
-+						count[start + V_PRED] +
-+						count[start + H_PRED] +
-+						count[start + D117_PRED] +
-+						count[start + D135_PRED] +
-+						count[start + D45_PRED] +
-+						count[start + D207_PRED] +
-+						count[start + D153_PRED] +
-+						count[start + D63_PRED];
-+					break;
-+				default:
-+					tree_left =
-+						count[start + DC_PRED];
-+					tree_right =
-+						count[start + TM_PRED] +
-+						count[start + V_PRED] +
-+						count[start + H_PRED] +
-+						count[start + D117_PRED] +
-+						count[start + D135_PRED] +
-+						count[start + D45_PRED] +
-+						count[start + D207_PRED] +
-+						count[start + D153_PRED] +
-+						count[start + D63_PRED];
-+					break;
-+				}
-+
-+				vp9_tree_merge_probs(prev_prob, cur_prob,
-+						     coef_node_start,
-+						     tree_left, tree_right,
-+						     tree_i, node);
-+
-+				coef_node_start = coef_node_start + 1;
-+			}
-+			coef_count_node_start = coef_count_node_start + 10;
-+		}
-+
-+		coef_node_start = VP9_PARTITION_P_START;
-+		coef_count_node_start = VP9_PARTITION_P_COUNT_START;
-+		for (tree_i = 0 ; tree_i < 16 ; tree_i++) {
-+			for (node = 0 ; node < 3 ; node++) {
-+				unsigned int start = coef_count_node_start;
-+
-+				switch (node) {
-+				case 2:
-+					tree_left = count[start + 2];
-+					tree_right = count[start + 3];
-+					break;
-+				case 1:
-+					tree_left = count[start + 1];
-+					tree_right = count[start + 2] +
-+						     count[start + 3];
-+					break;
-+				default:
-+					tree_left = count[start + 0];
-+					tree_right = count[start + 1] +
-+						     count[start + 2] +
-+						     count[start + 3];
-+					break;
-+				}
-+
-+				vp9_tree_merge_probs(prev_prob, cur_prob,
-+						     coef_node_start,
-+						     tree_left, tree_right,
-+						     tree_i, node);
-+
-+				coef_node_start = coef_node_start + 1;
-+			}
-+
-+			coef_count_node_start = coef_count_node_start + 4;
-+		}
-+
-+		coef_node_start = VP9_INTERP_START;
-+		coef_count_node_start = VP9_INTERP_COUNT_START;
-+		for (tree_i = 0 ; tree_i < 4 ; tree_i++) {
-+			for (node = 0 ; node < 2 ; node++) {
-+				unsigned int start = coef_count_node_start;
-+
-+				switch (node) {
-+				case 1:
-+					tree_left = count[start + 1];
-+					tree_right = count[start + 2];
-+					break;
-+				default:
-+					tree_left = count[start + 0];
-+					tree_right = count[start + 1] +
-+						     count[start + 2];
-+					break;
-+				}
-+
-+				vp9_tree_merge_probs(prev_prob, cur_prob,
-+						     coef_node_start,
-+						     tree_left, tree_right,
-+						     tree_i, node);
-+
-+				coef_node_start = coef_node_start + 1;
-+			}
-+			coef_count_node_start = coef_count_node_start + 3;
-+		}
-+
-+		coef_node_start = VP9_MV_JOINTS_START;
-+		coef_count_node_start = VP9_MV_JOINTS_COUNT_START;
-+		for (tree_i = 0 ; tree_i < 1 ; tree_i++) {
-+			for (node = 0 ; node < 3 ; node++) {
-+				unsigned int start = coef_count_node_start;
-+
-+				switch (node) {
-+				case 2:
-+					tree_left = count[start + 2];
-+					tree_right = count[start + 3];
-+					break;
-+				case 1:
-+					tree_left = count[start + 1];
-+					tree_right = count[start + 2] +
-+						     count[start + 3];
-+					break;
-+				default:
-+					tree_left = count[start + 0];
-+					tree_right = count[start + 1] +
-+						     count[start + 2] +
-+						     count[start + 3];
-+					break;
-+				}
-+
-+				vp9_tree_merge_probs(prev_prob, cur_prob,
-+						     coef_node_start,
-+						     tree_left, tree_right,
-+						     tree_i, node);
-+
-+				coef_node_start = coef_node_start + 1;
-+			}
-+			coef_count_node_start = coef_count_node_start + 4;
-+		}
-+
-+		for (mvd_i = 0 ; mvd_i < 2 ; mvd_i++) {
-+			coef_node_start = mvd_i ? VP9_MV_CLASSES_1_START :
-+						  VP9_MV_CLASSES_0_START;
-+			coef_count_node_start = mvd_i ?
-+					VP9_MV_CLASSES_1_COUNT_START :
-+					VP9_MV_CLASSES_0_COUNT_START;
-+			tree_i = 0;
-+			for (node = 0; node < 10; node++) {
-+				unsigned int start = coef_count_node_start;
-+
-+				switch (node) {
-+				case 9:
-+					tree_left = count[start + 9];
-+					tree_right = count[start + 10];
-+					break;
-+				case 8:
-+					tree_left = count[start + 7];
-+					tree_right = count[start + 8];
-+					break;
-+				case 7:
-+					tree_left = count[start + 7] +
-+						     count[start + 8];
-+					tree_right = count[start + 9] +
-+						     count[start + 10];
-+					break;
-+				case 6:
-+					tree_left = count[start + 6];
-+					tree_right = count[start + 7] +
-+						     count[start + 8] +
-+						     count[start + 9] +
-+						     count[start + 10];
-+					break;
-+				case 5:
-+					tree_left = count[start + 4];
-+					tree_right = count[start + 5];
-+					break;
-+				case 4:
-+					tree_left = count[start + 4] +
-+						    count[start + 5];
-+					tree_right = count[start + 6] +
-+						     count[start + 7] +
-+						     count[start + 8] +
-+						     count[start + 9] +
-+						     count[start + 10];
-+					break;
-+				case 3:
-+					tree_left = count[start + 2];
-+					tree_right = count[start + 3];
-+					break;
-+				case 2:
-+					tree_left = count[start + 2] +
-+						    count[start + 3];
-+					tree_right = count[start + 4] +
-+						     count[start + 5] +
-+						     count[start + 6] +
-+						     count[start + 7] +
-+						     count[start + 8] +
-+						     count[start + 9] +
-+						     count[start + 10];
-+					break;
-+				case 1:
-+					tree_left = count[start + 1];
-+					tree_right = count[start + 2] +
-+						     count[start + 3] +
-+						     count[start + 4] +
-+						     count[start + 5] +
-+						     count[start + 6] +
-+						     count[start + 7] +
-+						     count[start + 8] +
-+						     count[start + 9] +
-+						     count[start + 10];
-+					break;
-+				default:
-+					tree_left = count[start + 0];
-+					tree_right = count[start + 1] +
-+						     count[start + 2] +
-+						     count[start + 3] +
-+						     count[start + 4] +
-+						     count[start + 5] +
-+						     count[start + 6] +
-+						     count[start + 7] +
-+						     count[start + 8] +
-+						     count[start + 9] +
-+						     count[start + 10];
-+					break;
-+				}
-+
-+				vp9_tree_merge_probs(prev_prob, cur_prob,
-+						     coef_node_start,
-+						     tree_left, tree_right,
-+						     tree_i, node);
-+
-+				coef_node_start = coef_node_start + 1;
-+			}
-+
-+			coef_node_start = mvd_i ? VP9_MV_CLASS0_1_START :
-+						  VP9_MV_CLASS0_0_START;
-+			coef_count_node_start =	mvd_i ?
-+						VP9_MV_CLASS0_1_COUNT_START :
-+						VP9_MV_CLASS0_0_COUNT_START;
-+			tree_i = 0;
-+			node = 0;
-+			tree_left = count[coef_count_node_start + 0];
-+			tree_right = count[coef_count_node_start + 1];
-+
-+			vp9_tree_merge_probs(prev_prob, cur_prob,
-+					     coef_node_start,
-+					     tree_left, tree_right,
-+					     tree_i, node);
-+			coef_node_start = mvd_i ? VP9_MV_CLASS0_FP_1_START :
-+						  VP9_MV_CLASS0_FP_0_START;
-+			coef_count_node_start =	mvd_i ?
-+					VP9_MV_CLASS0_FP_1_COUNT_START :
-+					VP9_MV_CLASS0_FP_0_COUNT_START;
-+
-+			for (tree_i = 0; tree_i < 3; tree_i++) {
-+				for (node = 0; node < 3; node++) {
-+					unsigned int start =
-+						coef_count_node_start;
-+					switch (node) {
-+					case 2:
-+						tree_left = count[start + 2];
-+						tree_right = count[start + 3];
-+						break;
-+					case 1:
-+						tree_left = count[start + 1];
-+						tree_right = count[start + 2] +
-+							     count[start + 3];
-+						break;
-+					default:
-+						tree_left = count[start + 0];
-+						tree_right = count[start + 1] +
-+							     count[start + 2] +
-+							     count[start + 3];
-+						break;
-+					}
-+
-+					vp9_tree_merge_probs(prev_prob,
-+							     cur_prob,
-+							     coef_node_start,
-+							     tree_left,
-+							     tree_right,
-+							     tree_i, node);
-+
-+					coef_node_start = coef_node_start + 1;
-+				}
-+				coef_count_node_start =
-+					coef_count_node_start + 4;
-+			}
-+		}
-+	}
-+}
-+
-+static irqreturn_t codec_vp9_threaded_isr(struct amvdec_session *sess)
++void codec_hevc_setup_decode_head(struct amvdec_session *sess, int is_10bit);
++
++void codec_hevc_free_fbc_buffers(struct amvdec_session *sess,
++				 struct codec_hevc_common *comm);
++
++int codec_hevc_setup_buffers(struct amvdec_session *sess,
++			     struct codec_hevc_common *comm,
++			     int is_10bit);
++
++void codec_hevc_fill_mmu_map(struct amvdec_session *sess,
++			     struct codec_hevc_common *comm,
++			     struct vb2_buffer *vb);
++
++#endif
+diff --git a/drivers/staging/media/meson/vdec/hevc_regs.h b/drivers/staging/media/meson/vdec/hevc_regs.h
+new file mode 100644
+index 000000000000..55c1a80b955a
+--- /dev/null
++++ b/drivers/staging/media/meson/vdec/hevc_regs.h
+@@ -0,0 +1,211 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++/*
++ * Copyright (C) 2015 Amlogic, Inc. All rights reserved.
++ */
++
++#ifndef __MESON_VDEC_HEVC_REGS_H_
++#define __MESON_VDEC_HEVC_REGS_H_
++
++#define HEVC_ASSIST_MMU_MAP_ADDR 0xc024
++
++#define HEVC_ASSIST_MBOX1_CLR_REG 0xc1d4
++#define HEVC_ASSIST_MBOX1_MASK 0xc1d8
++
++#define HEVC_ASSIST_SCRATCH_0 0xc300
++#define HEVC_ASSIST_SCRATCH_1 0xc304
++#define HEVC_ASSIST_SCRATCH_2 0xc308
++#define HEVC_ASSIST_SCRATCH_3 0xc30c
++#define HEVC_ASSIST_SCRATCH_4 0xc310
++#define HEVC_ASSIST_SCRATCH_5 0xc314
++#define HEVC_ASSIST_SCRATCH_6 0xc318
++#define HEVC_ASSIST_SCRATCH_7 0xc31c
++#define HEVC_ASSIST_SCRATCH_8 0xc320
++#define HEVC_ASSIST_SCRATCH_9 0xc324
++#define HEVC_ASSIST_SCRATCH_A 0xc328
++#define HEVC_ASSIST_SCRATCH_B 0xc32c
++#define HEVC_ASSIST_SCRATCH_C 0xc330
++#define HEVC_ASSIST_SCRATCH_D 0xc334
++#define HEVC_ASSIST_SCRATCH_E 0xc338
++#define HEVC_ASSIST_SCRATCH_F 0xc33c
++#define HEVC_ASSIST_SCRATCH_G 0xc340
++#define HEVC_ASSIST_SCRATCH_H 0xc344
++#define HEVC_ASSIST_SCRATCH_I 0xc348
++#define HEVC_ASSIST_SCRATCH_J 0xc34c
++#define HEVC_ASSIST_SCRATCH_K 0xc350
++#define HEVC_ASSIST_SCRATCH_L 0xc354
++#define HEVC_ASSIST_SCRATCH_M 0xc358
++#define HEVC_ASSIST_SCRATCH_N 0xc35c
++
++#define HEVC_PARSER_VERSION 0xc400
++#define HEVC_STREAM_CONTROL 0xc404
++#define HEVC_STREAM_START_ADDR 0xc408
++#define HEVC_STREAM_END_ADDR 0xc40c
++#define HEVC_STREAM_WR_PTR 0xc410
++#define HEVC_STREAM_RD_PTR 0xc414
++#define HEVC_STREAM_LEVEL 0xc418
++#define HEVC_STREAM_FIFO_CTL 0xc41c
++#define HEVC_SHIFT_CONTROL 0xc420
++#define HEVC_SHIFT_STARTCODE 0xc424
++#define HEVC_SHIFT_EMULATECODE 0xc428
++#define HEVC_SHIFT_STATUS 0xc42c
++#define HEVC_SHIFTED_DATA 0xc430
++#define HEVC_SHIFT_BYTE_COUNT 0xc434
++#define HEVC_SHIFT_COMMAND 0xc438
++#define HEVC_ELEMENT_RESULT 0xc43c
++#define HEVC_CABAC_CONTROL 0xc440
++#define HEVC_PARSER_SLICE_INFO 0xc444
++#define HEVC_PARSER_CMD_WRITE 0xc448
++#define HEVC_PARSER_CORE_CONTROL 0xc44c
++#define HEVC_PARSER_CMD_FETCH 0xc450
++#define HEVC_PARSER_CMD_STATUS 0xc454
++#define HEVC_PARSER_LCU_INFO 0xc458
++#define HEVC_PARSER_HEADER_INFO 0xc45c
++#define HEVC_PARSER_INT_CONTROL 0xc480
++#define HEVC_PARSER_INT_STATUS 0xc484
++#define HEVC_PARSER_IF_CONTROL 0xc488
++#define HEVC_PARSER_PICTURE_SIZE 0xc48c
++#define HEVC_PARSER_LCU_START 0xc490
++#define HEVC_PARSER_HEADER_INFO2 0xc494
++#define HEVC_PARSER_QUANT_READ 0xc498
++#define HEVC_PARSER_RESERVED_27 0xc49c
++#define HEVC_PARSER_CMD_SKIP_0 0xc4a0
++#define HEVC_PARSER_CMD_SKIP_1 0xc4a4
++#define HEVC_PARSER_CMD_SKIP_2 0xc4a8
++#define HEVC_SAO_IF_STATUS 0xc4c0
++#define HEVC_SAO_IF_DATA_Y 0xc4c4
++#define HEVC_SAO_IF_DATA_U 0xc4c8
++#define HEVC_SAO_IF_DATA_V 0xc4cc
++#define HEVC_STREAM_SWAP_ADDR 0xc4d0
++#define HEVC_STREAM_SWAP_CTRL 0xc4d4
++#define HEVC_IQIT_IF_WAIT_CNT 0xc4d8
++#define HEVC_MPRED_IF_WAIT_CNT 0xc4dc
++#define HEVC_SAO_IF_WAIT_CNT 0xc4e0
++
++#define HEVC_MPRED_VERSION 0xc800
++#define HEVC_MPRED_CTRL0 0xc804
++	#define MPRED_CTRL0_NEW_PIC	BIT(2)
++	#define MPRED_CTRL0_NEW_TILE	BIT(3)
++	#define MPRED_CTRL0_NEW_SLI_SEG	BIT(4)
++	#define MPRED_CTRL0_TMVP	BIT(5)
++	#define MPRED_CTRL0_LDC		BIT(6)
++	#define MPRED_CTRL0_COL_FROM_L0	BIT(7)
++	#define MPRED_CTRL0_ABOVE_EN	BIT(9)
++	#define MPRED_CTRL0_MV_WR_EN	BIT(10)
++	#define MPRED_CTRL0_MV_RD_EN	BIT(11)
++	#define MPRED_CTRL0_BUF_LINEAR	BIT(13)
++#define HEVC_MPRED_CTRL1 0xc808
++#define HEVC_MPRED_INT_EN 0xc80c
++#define HEVC_MPRED_INT_STATUS 0xc810
++#define HEVC_MPRED_PIC_SIZE 0xc814
++#define HEVC_MPRED_PIC_SIZE_LCU 0xc818
++#define HEVC_MPRED_TILE_START 0xc81c
++#define HEVC_MPRED_TILE_SIZE_LCU 0xc820
++#define HEVC_MPRED_REF_NUM 0xc824
++#define HEVC_MPRED_REF_EN_L0 0xc830
++#define HEVC_MPRED_REF_EN_L1 0xc834
++#define HEVC_MPRED_COLREF_EN_L0 0xc838
++#define HEVC_MPRED_COLREF_EN_L1 0xc83c
++#define HEVC_MPRED_AXI_WCTRL 0xc840
++#define HEVC_MPRED_AXI_RCTRL 0xc844
++#define HEVC_MPRED_ABV_START_ADDR 0xc848
++#define HEVC_MPRED_MV_WR_START_ADDR 0xc84c
++#define HEVC_MPRED_MV_RD_START_ADDR 0xc850
++#define HEVC_MPRED_MV_WPTR 0xc854
++#define HEVC_MPRED_MV_RPTR 0xc858
++#define HEVC_MPRED_MV_WR_ROW_JUMP 0xc85c
++#define HEVC_MPRED_MV_RD_ROW_JUMP 0xc860
++#define HEVC_MPRED_CURR_LCU 0xc864
++#define HEVC_MPRED_ABV_WPTR 0xc868
++#define HEVC_MPRED_ABV_RPTR 0xc86c
++#define HEVC_MPRED_CTRL2 0xc870
++#define HEVC_MPRED_CTRL3 0xc874
++#define HEVC_MPRED_L0_REF00_POC 0xc880
++#define HEVC_MPRED_L1_REF00_POC 0xc8c0
++
++#define HEVC_MPRED_CUR_POC 0xc980
++#define HEVC_MPRED_COL_POC 0xc984
++#define HEVC_MPRED_MV_RD_END_ADDR 0xc988
++
++#define HEVC_MSP 0xcc00
++#define HEVC_MPSR 0xcc04
++#define HEVC_MCPU_INTR_MSK 0xcc10
++#define HEVC_MCPU_INTR_REQ 0xcc14
++#define HEVC_CPSR 0xcc84
++
++#define HEVC_IMEM_DMA_CTRL 0xcd00
++#define HEVC_IMEM_DMA_ADR 0xcd04
++#define HEVC_IMEM_DMA_COUNT 0xcd08
++
++#define HEVCD_IPP_TOP_CNTL 0xd000
++#define HEVCD_IPP_LINEBUFF_BASE 0xd024
++#define HEVCD_IPP_AXIIF_CONFIG 0xd02c
++
++#define HEVCD_MPP_ANC2AXI_TBL_CONF_ADDR 0xd180
++#define HEVCD_MPP_ANC2AXI_TBL_CMD_ADDR 0xd184
++#define HEVCD_MPP_ANC2AXI_TBL_DATA 0xd190
++
++#define HEVCD_MPP_ANC_CANVAS_ACCCONFIG_ADDR 0xd300
++#define HEVCD_MPP_ANC_CANVAS_DATA_ADDR 0xd304
++#define HEVCD_MPP_DECOMP_CTL1 0xd308
++#define HEVCD_MPP_DECOMP_CTL2 0xd30c
++#define HEVCD_MCRCC_CTL1 0xd3c0
++#define HEVCD_MCRCC_CTL2 0xd3c4
++#define HEVCD_MCRCC_CTL3 0xd3c8
++
++#define HEVC_DBLK_CFG0 0xd400
++#define HEVC_DBLK_CFG1 0xd404
++#define HEVC_DBLK_CFG2 0xd408
++#define HEVC_DBLK_CFG3 0xd40c
++#define HEVC_DBLK_CFG4 0xd410
++#define HEVC_DBLK_CFG5 0xd414
++#define HEVC_DBLK_CFG6 0xd418
++#define HEVC_DBLK_CFG7 0xd41c
++#define HEVC_DBLK_CFG8 0xd420
++#define HEVC_DBLK_CFG9 0xd424
++#define HEVC_DBLK_CFGA 0xd428
++#define HEVC_DBLK_STS0 0xd42c
++#define HEVC_DBLK_STS1 0xd430
++#define HEVC_DBLK_CFGE 0xd438
++
++#define HEVC_SAO_VERSION 0xd800
++#define HEVC_SAO_CTRL0 0xd804
++#define HEVC_SAO_CTRL1 0xd808
++#define HEVC_SAO_PIC_SIZE 0xd814
++#define HEVC_SAO_PIC_SIZE_LCU 0xd818
++#define HEVC_SAO_TILE_START 0xd81c
++#define HEVC_SAO_TILE_SIZE_LCU 0xd820
++#define HEVC_SAO_Y_START_ADDR 0xd82c
++#define HEVC_SAO_Y_LENGTH 0xd830
++#define HEVC_SAO_C_START_ADDR 0xd834
++#define HEVC_SAO_C_LENGTH 0xd838
++#define HEVC_SAO_Y_WPTR 0xd83c
++#define HEVC_SAO_C_WPTR 0xd840
++#define HEVC_SAO_ABV_START_ADDR 0xd844
++#define HEVC_SAO_VB_WR_START_ADDR 0xd848
++#define HEVC_SAO_VB_RD_START_ADDR 0xd84c
++#define HEVC_SAO_ABV_WPTR 0xd850
++#define HEVC_SAO_ABV_RPTR 0xd854
++#define HEVC_SAO_VB_WPTR 0xd858
++#define HEVC_SAO_VB_RPTR 0xd85c
++#define HEVC_SAO_CTRL2 0xd880
++#define HEVC_SAO_CTRL3 0xd884
++#define HEVC_SAO_CTRL4 0xd888
++#define HEVC_SAO_CTRL5 0xd88c
++#define HEVC_SAO_CTRL6 0xd890
++#define HEVC_SAO_CTRL7 0xd894
++#define HEVC_CM_BODY_START_ADDR 0xd898
++#define HEVC_CM_BODY_LENGTH 0xd89c
++#define HEVC_CM_HEADER_START_ADDR 0xd8a0
++#define HEVC_CM_HEADER_LENGTH 0xd8a4
++#define HEVC_CM_HEADER_OFFSET 0xd8ac
++#define HEVC_SAO_MMU_VH0_ADDR 0xd8e8
++#define HEVC_SAO_MMU_VH1_ADDR 0xd8ec
++
++#define HEVC_IQIT_CLK_RST_CTRL 0xdc00
++#define HEVC_IQIT_SCALELUT_WR_ADDR 0xdc08
++#define HEVC_IQIT_SCALELUT_RD_ADDR 0xdc0c
++#define HEVC_IQIT_SCALELUT_DATA 0xdc10
++
++#define HEVC_PSCALE_CTRL 0xe444
++
++#endif
+diff --git a/drivers/staging/media/meson/vdec/vdec_hevc.c b/drivers/staging/media/meson/vdec/vdec_hevc.c
+new file mode 100644
+index 000000000000..af41215e106c
+--- /dev/null
++++ b/drivers/staging/media/meson/vdec/vdec_hevc.c
+@@ -0,0 +1,231 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Copyright (C) 2018 Maxime Jourdan <maxi.jourdan@wanadoo.fr>
++ *
++ * VDEC_HEVC is a video decoding block that allows decoding of
++ * HEVC, VP9
++ */
++
++#include <linux/firmware.h>
++#include <linux/clk.h>
++
++#include "vdec_1.h"
++#include "vdec_helpers.h"
++#include "hevc_regs.h"
++#include "dos_regs.h"
++
++/* AO Registers */
++#define AO_RTI_GEN_PWR_SLEEP0	0xe8
++#define AO_RTI_GEN_PWR_ISO0	0xec
++	#define GEN_PWR_VDEC_HEVC (BIT(7) | BIT(6))
++	#define GEN_PWR_VDEC_HEVC_SM1 (BIT(2))
++
++#define MC_SIZE	(4096 * 4)
++
++static int vdec_hevc_load_firmware(struct amvdec_session *sess,
++				   const char *fwname)
 +{
 +	struct amvdec_core *core = sess->core;
-+	struct codec_vp9 *vp9 = sess->priv;
-+	u32 dec_status = amvdec_read_dos(core, VP9_DEC_STATUS_REG);
-+	u32 prob_status = amvdec_read_dos(core, VP9_ADAPT_PROB_REG);
-+	int i;
++	struct device *dev = core->dev_dec;
++	const struct firmware *fw;
++	static void *mc_addr;
++	static dma_addr_t mc_addr_map;
++	int ret;
++	u32 i = 100;
 +
-+	if (!vp9)
-+		return IRQ_HANDLED;
-+
-+	mutex_lock(&vp9->lock);
-+	if (dec_status != VP9_HEAD_PARSER_DONE) {
-+		dev_err(core->dev_dec, "Unrecognized dec_status: %08X\n",
-+			dec_status);
-+		amvdec_abort(sess);
-+		goto unlock;
++	ret = request_firmware(&fw, fwname, dev);
++	if (ret < 0)  {
++		dev_err(dev, "Unable to request firmware %s\n", fwname);
++		return ret;
 +	}
 +
-+	pr_debug("ISR: %08X;%08X\n", dec_status, prob_status);
-+	sess->keyframe_found = 1;
-+
-+	if ((prob_status & 0xff) == 0xfd && vp9->cur_frame) {
-+		/* VP9_REQ_ADAPT_PROB */
-+		u8 *prev_prob_b = ((u8 *)vp9->workspace_vaddr +
-+					 PROB_OFFSET) +
-+					((prob_status >> 8) * 0x1000);
-+		u8 *cur_prob_b = ((u8 *)vp9->workspace_vaddr +
-+					 PROB_OFFSET) + 0x4000;
-+		u8 *count_b = (u8 *)vp9->workspace_vaddr +
-+				   COUNT_OFFSET;
-+		int last_frame_type = vp9->prev_frame ?
-+						vp9->prev_frame->type :
-+						KEY_FRAME;
-+
-+		adapt_coef_probs(last_frame_type == KEY_FRAME,
-+				 vp9->cur_frame->type == KEY_FRAME ? 1 : 0,
-+				 prob_status >> 8,
-+				 (unsigned int *)prev_prob_b,
-+				 (unsigned int *)cur_prob_b,
-+				 (unsigned int *)count_b);
-+
-+		memcpy(prev_prob_b, cur_prob_b, ADAPT_PROB_SIZE);
-+		amvdec_write_dos(core, VP9_ADAPT_PROB_REG, 0);
++	if (fw->size < MC_SIZE) {
++		dev_err(dev, "Firmware size %zu is too small. Expected %u.\n",
++			fw->size, MC_SIZE);
++		ret = -EINVAL;
++		goto release_firmware;
 +	}
 +
-+	/* Invalidate first 3 refs */
-+	for (i = 0; i < REFS_PER_FRAME ; ++i)
-+		vp9->frame_refs[i] = NULL;
-+
-+	vp9->prev_frame = vp9->cur_frame;
-+	codec_vp9_update_ref(vp9);
-+
-+	codec_vp9_fetch_rpm(sess);
-+	if (codec_vp9_process_rpm(vp9)) {
-+		amvdec_src_change(sess, vp9->width, vp9->height, 16);
-+
-+		/* No frame is actually processed */
-+		vp9->cur_frame = NULL;
-+
-+		/* Show the remaining frame */
-+		codec_vp9_show_frame(sess);
-+
-+		/* FIXME: Save refs for resized frame */
-+		if (vp9->frames_num)
-+			codec_vp9_save_refs(vp9);
-+
-+		goto unlock;
++	mc_addr = dma_alloc_coherent(core->dev, MC_SIZE, &mc_addr_map,
++				     GFP_KERNEL);
++	if (!mc_addr) {
++		dev_err(dev, "Failed allocating memory for firmware loading\n");
++		ret = -ENOMEM;
++		goto release_firmware;
 +	}
 +
-+	codec_vp9_process_lf(vp9);
-+	codec_vp9_process_frame(sess);
-+	codec_vp9_show_frame(sess);
++	memcpy(mc_addr, fw->data, MC_SIZE);
 +
-+unlock:
-+	mutex_unlock(&vp9->lock);
-+	return IRQ_HANDLED;
++	amvdec_write_dos(core, HEVC_MPSR, 0);
++	amvdec_write_dos(core, HEVC_CPSR, 0);
++
++	amvdec_write_dos(core, HEVC_IMEM_DMA_ADR, mc_addr_map);
++	amvdec_write_dos(core, HEVC_IMEM_DMA_COUNT, MC_SIZE / 4);
++	amvdec_write_dos(core, HEVC_IMEM_DMA_CTRL, (0x8000 | (7 << 16)));
++
++	while (i && (readl(core->dos_base + HEVC_IMEM_DMA_CTRL) & 0x8000))
++		i--;
++
++	if (i == 0) {
++		dev_err(dev, "Firmware load fail (DMA hang?)\n");
++		ret = -ENODEV;
++	}
++
++	dma_free_coherent(core->dev, MC_SIZE, mc_addr, mc_addr_map);
++release_firmware:
++	release_firmware(fw);
++	return ret;
 +}
 +
-+static irqreturn_t codec_vp9_isr(struct amvdec_session *sess)
++static void vdec_hevc_stbuf_init(struct amvdec_session *sess)
 +{
-+	return IRQ_WAKE_THREAD;
++	struct amvdec_core *core = sess->core;
++
++	amvdec_write_dos(core, HEVC_STREAM_CONTROL,
++			 amvdec_read_dos(core, HEVC_STREAM_CONTROL) & ~1);
++	amvdec_write_dos(core, HEVC_STREAM_START_ADDR, sess->vififo_paddr);
++	amvdec_write_dos(core, HEVC_STREAM_END_ADDR,
++			 sess->vififo_paddr + sess->vififo_size);
++	amvdec_write_dos(core, HEVC_STREAM_RD_PTR, sess->vififo_paddr);
++	amvdec_write_dos(core, HEVC_STREAM_WR_PTR, sess->vififo_paddr);
 +}
 +
-+struct amvdec_codec_ops codec_vp9_ops = {
-+	.start = codec_vp9_start,
-+	.stop = codec_vp9_stop,
-+	.isr = codec_vp9_isr,
-+	.threaded_isr = codec_vp9_threaded_isr,
-+	.num_pending_bufs = codec_vp9_num_pending_bufs,
-+	.drain = codec_vp9_flush_output,
-+	.resume = codec_vp9_resume,
++/* VDEC_HEVC specific ESPARSER configuration */
++static void vdec_hevc_conf_esparser(struct amvdec_session *sess)
++{
++	struct amvdec_core *core = sess->core;
++
++	/* set vififo_vbuf_rp_sel=>vdec_hevc */
++	amvdec_write_dos(core, DOS_GEN_CTRL0, 3 << 1);
++	amvdec_write_dos(core, HEVC_STREAM_CONTROL,
++			 amvdec_read_dos(core, HEVC_STREAM_CONTROL) | BIT(3));
++	amvdec_write_dos(core, HEVC_STREAM_CONTROL,
++			 amvdec_read_dos(core, HEVC_STREAM_CONTROL) | 1);
++	amvdec_write_dos(core, HEVC_STREAM_FIFO_CTL,
++			 amvdec_read_dos(core, HEVC_STREAM_FIFO_CTL) | BIT(29));
++}
++
++static u32 vdec_hevc_vififo_level(struct amvdec_session *sess)
++{
++	return readl_relaxed(sess->core->dos_base + HEVC_STREAM_LEVEL);
++}
++
++static int vdec_hevc_stop(struct amvdec_session *sess)
++{
++	struct amvdec_core *core = sess->core;
++	struct amvdec_codec_ops *codec_ops = sess->fmt_out->codec_ops;
++
++	/* Disable interrupt */
++	amvdec_write_dos(core, HEVC_ASSIST_MBOX1_MASK, 0);
++	/* Disable firmware processor */
++	amvdec_write_dos(core, HEVC_MPSR, 0);
++
++	if (sess->priv)
++		codec_ops->stop(sess);
++
++	/* Enable VDEC_HEVC Isolation */
++	if (core->platform->revision == VDEC_REVISION_SM1)
++		regmap_update_bits(core->regmap_ao, AO_RTI_GEN_PWR_ISO0,
++				   GEN_PWR_VDEC_HEVC_SM1,
++				   GEN_PWR_VDEC_HEVC_SM1);
++	else
++		regmap_update_bits(core->regmap_ao, AO_RTI_GEN_PWR_ISO0,
++				   0xc00, 0xc00);
++
++	/* VDEC_HEVC Memories */
++	amvdec_write_dos(core, DOS_MEM_PD_HEVC, 0xffffffffUL);
++
++	if (core->platform->revision == VDEC_REVISION_SM1)
++		regmap_update_bits(core->regmap_ao, AO_RTI_GEN_PWR_SLEEP0,
++				   GEN_PWR_VDEC_HEVC_SM1,
++				   GEN_PWR_VDEC_HEVC_SM1);
++	else
++		regmap_update_bits(core->regmap_ao, AO_RTI_GEN_PWR_SLEEP0,
++				   GEN_PWR_VDEC_HEVC, GEN_PWR_VDEC_HEVC);
++
++	clk_disable_unprepare(core->vdec_hevc_clk);
++	if (core->platform->revision == VDEC_REVISION_G12A ||
++	    core->platform->revision == VDEC_REVISION_SM1)
++		clk_disable_unprepare(core->vdec_hevcf_clk);
++
++	return 0;
++}
++
++static int vdec_hevc_start(struct amvdec_session *sess)
++{
++	int ret;
++	struct amvdec_core *core = sess->core;
++	struct amvdec_codec_ops *codec_ops = sess->fmt_out->codec_ops;
++
++	if (core->platform->revision == VDEC_REVISION_G12A ||
++	    core->platform->revision == VDEC_REVISION_SM1) {
++		clk_set_rate(core->vdec_hevcf_clk, 666666666);
++		ret = clk_prepare_enable(core->vdec_hevcf_clk);
++		if (ret)
++			return ret;
++	}
++
++	clk_set_rate(core->vdec_hevc_clk, 666666666);
++	ret = clk_prepare_enable(core->vdec_hevc_clk);
++	if (ret)
++		return ret;
++
++	if (core->platform->revision == VDEC_REVISION_SM1)
++		regmap_update_bits(core->regmap_ao, AO_RTI_GEN_PWR_SLEEP0,
++				   GEN_PWR_VDEC_HEVC_SM1, 0);
++	else
++		regmap_update_bits(core->regmap_ao, AO_RTI_GEN_PWR_SLEEP0,
++				   GEN_PWR_VDEC_HEVC, 0);
++	udelay(10);
++
++	/* Reset VDEC_HEVC*/
++	amvdec_write_dos(core, DOS_SW_RESET3, 0xffffffff);
++	amvdec_write_dos(core, DOS_SW_RESET3, 0x00000000);
++
++	amvdec_write_dos(core, DOS_GCLK_EN3, 0xffffffff);
++
++	/* VDEC_HEVC Memories */
++	amvdec_write_dos(core, DOS_MEM_PD_HEVC, 0x00000000);
++
++	/* Remove VDEC_HEVC Isolation */
++	if (core->platform->revision == VDEC_REVISION_SM1)
++		regmap_update_bits(core->regmap_ao, AO_RTI_GEN_PWR_ISO0,
++				   GEN_PWR_VDEC_HEVC_SM1, 0);
++	else
++		regmap_update_bits(core->regmap_ao, AO_RTI_GEN_PWR_ISO0,
++				   0xc00, 0);
++
++	amvdec_write_dos(core, DOS_SW_RESET3, 0xffffffff);
++	amvdec_write_dos(core, DOS_SW_RESET3, 0x00000000);
++
++	vdec_hevc_stbuf_init(sess);
++
++	ret = vdec_hevc_load_firmware(sess, sess->fmt_out->firmware_path);
++	if (ret)
++		goto stop;
++
++	ret = codec_ops->start(sess);
++	if (ret)
++		goto stop;
++
++	amvdec_write_dos(core, DOS_SW_RESET3, BIT(12) | BIT(11));
++	amvdec_write_dos(core, DOS_SW_RESET3, 0);
++	amvdec_read_dos(core, DOS_SW_RESET3);
++
++	amvdec_write_dos(core, HEVC_MPSR, 1);
++	/* Let the firmware settle */
++	udelay(10);
++
++	return 0;
++
++stop:
++	vdec_hevc_stop(sess);
++	return ret;
++}
++
++struct amvdec_ops vdec_hevc_ops = {
++	.start = vdec_hevc_start,
++	.stop = vdec_hevc_stop,
++	.conf_esparser = vdec_hevc_conf_esparser,
++	.vififo_level = vdec_hevc_vififo_level,
 +};
-diff --git a/drivers/staging/media/meson/vdec/codec_vp9.h b/drivers/staging/media/meson/vdec/codec_vp9.h
+diff --git a/drivers/staging/media/meson/vdec/vdec_hevc.h b/drivers/staging/media/meson/vdec/vdec_hevc.h
 new file mode 100644
-index 000000000000..62db65a2b939
+index 000000000000..cd576a73a966
 --- /dev/null
-+++ b/drivers/staging/media/meson/vdec/codec_vp9.h
++++ b/drivers/staging/media/meson/vdec/vdec_hevc.h
 @@ -0,0 +1,13 @@
 +/* SPDX-License-Identifier: GPL-2.0+ */
 +/*
 + * Copyright (C) 2018 Maxime Jourdan <maxi.jourdan@wanadoo.fr>
 + */
 +
-+#ifndef __MESON_VDEC_CODEC_VP9_H_
-+#define __MESON_VDEC_CODEC_VP9_H_
++#ifndef __MESON_VDEC_VDEC_HEVC_H_
++#define __MESON_VDEC_VDEC_HEVC_H_
 +
 +#include "vdec.h"
 +
-+extern struct amvdec_codec_ops codec_vp9_ops;
++extern struct amvdec_ops vdec_hevc_ops;
 +
 +#endif
-diff --git a/drivers/staging/media/meson/vdec/hevc_regs.h b/drivers/staging/media/meson/vdec/hevc_regs.h
-index 55c1a80b955a..0392f41a1eed 100644
---- a/drivers/staging/media/meson/vdec/hevc_regs.h
-+++ b/drivers/staging/media/meson/vdec/hevc_regs.h
-@@ -122,6 +122,8 @@
- #define HEVC_MPRED_L0_REF00_POC 0xc880
- #define HEVC_MPRED_L1_REF00_POC 0xc8c0
- 
-+#define HEVC_MPRED_CTRL4 0xc930
-+
- #define HEVC_MPRED_CUR_POC 0xc980
- #define HEVC_MPRED_COL_POC 0xc984
- #define HEVC_MPRED_MV_RD_END_ADDR 0xc988
-@@ -140,6 +142,10 @@
- #define HEVCD_IPP_LINEBUFF_BASE 0xd024
- #define HEVCD_IPP_AXIIF_CONFIG 0xd02c
- 
-+#define VP9D_MPP_REF_SCALE_ENBL		0xd104
-+#define VP9D_MPP_REFINFO_TBL_ACCCONFIG	0xd108
-+#define VP9D_MPP_REFINFO_DATA		0xd10c
-+
- #define HEVCD_MPP_ANC2AXI_TBL_CONF_ADDR 0xd180
- #define HEVCD_MPP_ANC2AXI_TBL_CMD_ADDR 0xd184
- #define HEVCD_MPP_ANC2AXI_TBL_DATA 0xd190
-@@ -164,6 +170,7 @@
- #define HEVC_DBLK_CFG9 0xd424
- #define HEVC_DBLK_CFGA 0xd428
- #define HEVC_DBLK_STS0 0xd42c
-+#define HEVC_DBLK_CFGB 0xd42c
- #define HEVC_DBLK_STS1 0xd430
- #define HEVC_DBLK_CFGE 0xd438
- 
-diff --git a/drivers/staging/media/meson/vdec/vdec.c b/drivers/staging/media/meson/vdec/vdec.c
-index bd59d32b92ae..1be67b122546 100644
---- a/drivers/staging/media/meson/vdec/vdec.c
-+++ b/drivers/staging/media/meson/vdec/vdec.c
-@@ -393,6 +393,7 @@ static void vdec_reset_bufs_recycle(struct amvdec_session *sess)
- static void vdec_stop_streaming(struct vb2_queue *q)
- {
- 	struct amvdec_session *sess = vb2_get_drv_priv(q);
-+	struct amvdec_codec_ops *codec_ops = sess->fmt_out->codec_ops;
- 	struct amvdec_core *core = sess->core;
- 	struct vb2_v4l2_buffer *buf;
- 
-@@ -421,6 +422,10 @@ static void vdec_stop_streaming(struct vb2_queue *q)
- 
- 		sess->streamon_out = 0;
- 	} else {
-+		/* Drain remaining refs if was still running */
-+		if (sess->status >= STATUS_RUNNING && codec_ops->drain)
-+			codec_ops->drain(sess);
-+
- 		while ((buf = v4l2_m2m_dst_buf_remove(sess->m2m_ctx)))
- 			v4l2_m2m_buf_done(buf, VB2_BUF_STATE_ERROR);
- 
-diff --git a/drivers/staging/media/meson/vdec/vdec_helpers.c b/drivers/staging/media/meson/vdec/vdec_helpers.c
-index 818064b6b4d0..a4f62b892188 100644
---- a/drivers/staging/media/meson/vdec/vdec_helpers.c
-+++ b/drivers/staging/media/meson/vdec/vdec_helpers.c
-@@ -299,6 +299,10 @@ static void dst_buf_done(struct amvdec_session *sess,
- 			sess->sequence_cap - 1);
- 		v4l2_event_queue_fh(&sess->fh, &ev);
- 		vbuf->flags |= V4L2_BUF_FLAG_LAST;
-+	} else if (sess->status == STATUS_NEEDS_RESUME) {
-+		/* Mark LAST for drained show frames during a source change */
-+		vbuf->flags |= V4L2_BUF_FLAG_LAST;
-+		sess->sequence_cap = 0;
- 	} else if (sess->should_stop)
- 		dev_dbg(dev, "should_stop, %u bufs remain\n",
- 			atomic_read(&sess->esparser_queued_bufs));
-diff --git a/drivers/staging/media/meson/vdec/vdec_platform.c b/drivers/staging/media/meson/vdec/vdec_platform.c
-index e9356a46828f..72a833b1cebd 100644
---- a/drivers/staging/media/meson/vdec/vdec_platform.c
-+++ b/drivers/staging/media/meson/vdec/vdec_platform.c
-@@ -8,8 +8,10 @@
- #include "vdec.h"
- 
- #include "vdec_1.h"
-+#include "vdec_hevc.h"
- #include "codec_mpeg12.h"
- #include "codec_h264.h"
-+#include "codec_vp9.h"
- 
- static const struct amvdec_format vdec_formats_gxbb[] = {
- 	{
-@@ -51,6 +53,18 @@ static const struct amvdec_format vdec_formats_gxbb[] = {
- 
- static const struct amvdec_format vdec_formats_gxl[] = {
- 	{
-+		.pixfmt = V4L2_PIX_FMT_VP9,
-+		.min_buffers = 16,
-+		.max_buffers = 24,
-+		.max_width = 3840,
-+		.max_height = 2160,
-+		.vdec_ops = &vdec_hevc_ops,
-+		.codec_ops = &codec_vp9_ops,
-+		.firmware_path = "meson/vdec/gxl_vp9.bin",
-+		.pixfmts_cap = { V4L2_PIX_FMT_NV12M, 0 },
-+		.flags = V4L2_FMT_FLAG_COMPRESSED |
-+			 V4L2_FMT_FLAG_DYN_RESOLUTION,
-+	}, {
- 		.pixfmt = V4L2_PIX_FMT_H264,
- 		.min_buffers = 2,
- 		.max_buffers = 24,
-@@ -127,6 +141,18 @@ static const struct amvdec_format vdec_formats_gxm[] = {
- 
- static const struct amvdec_format vdec_formats_g12a[] = {
- 	{
-+		.pixfmt = V4L2_PIX_FMT_VP9,
-+		.min_buffers = 16,
-+		.max_buffers = 24,
-+		.max_width = 3840,
-+		.max_height = 2160,
-+		.vdec_ops = &vdec_hevc_ops,
-+		.codec_ops = &codec_vp9_ops,
-+		.firmware_path = "meson/vdec/g12a_vp9.bin",
-+		.pixfmts_cap = { V4L2_PIX_FMT_NV12M, 0 },
-+		.flags = V4L2_FMT_FLAG_COMPRESSED |
-+			 V4L2_FMT_FLAG_DYN_RESOLUTION,
-+	}, {
- 		.pixfmt = V4L2_PIX_FMT_H264,
- 		.min_buffers = 2,
- 		.max_buffers = 24,
-@@ -165,6 +191,18 @@ static const struct amvdec_format vdec_formats_g12a[] = {
- 
- static const struct amvdec_format vdec_formats_sm1[] = {
- 	{
-+		.pixfmt = V4L2_PIX_FMT_VP9,
-+		.min_buffers = 16,
-+		.max_buffers = 24,
-+		.max_width = 3840,
-+		.max_height = 2160,
-+		.vdec_ops = &vdec_hevc_ops,
-+		.codec_ops = &codec_vp9_ops,
-+		.firmware_path = "meson/vdec/g12a_vp9.bin",
-+		.pixfmts_cap = { V4L2_PIX_FMT_NV12M, 0 },
-+		.flags = V4L2_FMT_FLAG_COMPRESSED |
-+			 V4L2_FMT_FLAG_DYN_RESOLUTION,
-+	}, {
- 		.pixfmt = V4L2_PIX_FMT_H264,
- 		.min_buffers = 2,
- 		.max_buffers = 24,
 -- 
 2.22.0
 
