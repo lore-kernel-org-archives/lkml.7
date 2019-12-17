@@ -2,152 +2,250 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76DDEC2D0C5
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D5FC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F87620733
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:10:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PekGDKsT"
+	by mail.kernel.org (Postfix) with ESMTP id 92A0420733
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:16:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727545AbfLQHKj (ORCPT
+        id S1727509AbfLQHQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 02:10:39 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:10783 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727140AbfLQHKj (ORCPT
+        Tue, 17 Dec 2019 02:16:34 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18496 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726710AbfLQHQd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 02:10:39 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576566638; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=d2doW9x45on2agTH9ruVafj9CaYtMfz8Ep8KJlG7+0w=;
- b=PekGDKsTsfsrySlbvjHw/jmwt8D6RIpdX2P/G5juAV292OlMAdl1ojYDriLwNQmuQPzlB8AN
- bQYUEiuFXj11UIrR2I44mNmoTVmEZpzxkk2daDalFG1gQ3Ot6ae93AkwcGzu0+7oYVwbAVf6
- zLBD/7QR0p+I8/BIVedrr9vH9AA=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5df87f68.7f6224590c38-smtp-out-n03;
- Tue, 17 Dec 2019 07:10:32 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7DAFDC447B0; Tue, 17 Dec 2019 07:10:30 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6E922C43383;
-        Tue, 17 Dec 2019 07:10:29 +0000 (UTC)
+        Tue, 17 Dec 2019 02:16:33 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBH77sh2019172;
+        Tue, 17 Dec 2019 02:16:20 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wxpvwdvw8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Dec 2019 02:16:20 -0500
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xBH78CB6020883;
+        Tue, 17 Dec 2019 02:16:19 -0500
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wxpvwdvvr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Dec 2019 02:16:19 -0500
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xBH7FL57022144;
+        Tue, 17 Dec 2019 07:16:18 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma02wdc.us.ibm.com with ESMTP id 2wvqc6a6d8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Dec 2019 07:16:18 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBH7GHgc52953590
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 Dec 2019 07:16:17 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B246913605D;
+        Tue, 17 Dec 2019 07:16:17 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 60DB0136055;
+        Tue, 17 Dec 2019 07:16:14 +0000 (GMT)
+Received: from skywalker.in.ibm.com (unknown [9.204.201.20])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 17 Dec 2019 07:16:13 +0000 (GMT)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     akpm@linux-foundation.org, npiggin@gmail.com, mpe@ellerman.id.au
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Subject: [RFC PATCH 1/2] mm/mmu_gather: Invalidate TLB correctly on batch allocation failure and flush
+Date:   Tue, 17 Dec 2019 12:46:00 +0530
+Message-Id: <20191217071601.93141-1-aneesh.kumar@linux.ibm.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 17 Dec 2019 15:10:29 +0800
-From:   cang@codeaurora.org
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, asutoshd@codeaurora.org,
-        nguyenb@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com,
-        Andy Gross <agross@kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 2/7] scsi: ufs-qcom: Add reset control support for host
- controller
-In-Reply-To: <20191217041342.GM2536@vkoul-mobl>
-References: <1573798172-20534-1-git-send-email-cang@codeaurora.org>
- <1573798172-20534-3-git-send-email-cang@codeaurora.org>
- <20191216190415.GL2536@vkoul-mobl>
- <CAOCk7NpAp+DHBp-owyKGgJFLRajfSQR6ff1XMmAj6A4nM3VnMQ@mail.gmail.com>
- <091562cbe7d88ca1c30638bc10197074@codeaurora.org>
- <20191217041342.GM2536@vkoul-mobl>
-Message-ID: <763d7b30593b31646f3c198c2be99671@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-17_01:2019-12-16,2019-12-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ phishscore=0 mlxlogscore=999 impostorscore=0 priorityscore=1501
+ spamscore=0 lowpriorityscore=0 malwarescore=0 suspectscore=2 clxscore=1015
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912170062
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-17 12:13, Vinod Koul wrote:
-> Hi Can,
-> 
-> On 17-12-19, 08:37, cang@codeaurora.org wrote:
->> On 2019-12-17 03:12, Jeffrey Hugo wrote:
->> > On Mon, Dec 16, 2019 at 12:05 PM Vinod Koul <vkoul@kernel.org> wrote:
->> > >
->> > > Hi Can,
->> > >
->> > > On 14-11-19, 22:09, Can Guo wrote:
->> > > > Add reset control for host controller so that host controller can be reset
->> > > > as required in its power up sequence.
->> > >
->> > > I am seeing a regression on UFS on SM8150-mtp with this patch. I think
->> > > Jeff is seeing same one lenove laptop on 8998.
->> >
->> > Confirmed.
->> >
->> > >
->> > > 845 does not seem to have this issue and only thing I can see is
->> > > that on
->> > > sm8150 and 8998 we define reset as:
->> > >
->> > >                         resets = <&gcc GCC_UFS_BCR>;
->> > >                         reset-names = "rst";
->> > >
->> 
->> Hi Jeffrey and Vinod,
->> 
->> Thanks for reporting this. May I know what kind of regression do you 
->> see on
->> 8150 and 8998?
->> BTW, do you have reset control for UFS PHY in your DT?
->> See 71278b058a9f8752e51030e363b7a7306938f64e.
->> 
->> FYI, we use reset control on all of our platforms and it is
->> a must during our power up sequence.
-> 
-> Yes we do have this and additionally both the DTS describe a 'rst' 
-> reset
-> and this patch tries to use this.
-> 
-> Can you please tell me which platform this was tested on how the reset
-> was described in DT
-> 
-> Thanks
+Architectures for which we have hardware walkers of Linux page table should
+flush TLB on mmu gather batch allocation failures and batch flush. Some
+architectures like POWER supports multiple translation modes (hash and radix)
+and in the case of POWER only radix translation mode needs the above TLBI.
+This is because for hash translation mode kernel wants to avoid this extra
+flush since there are no hardware walkers of linux page table. With radix
+translation, the hardware also walks linux page table and with that, kernel
+needs to make sure to TLB invalidate page walk cache before page table pages are
+freed.
 
-Hi Vinod,
+More details in
+commit: d86564a2f085 ("mm/tlb, x86/mm: Support invalidating TLB caches for RCU_TABLE_FREE")
 
-If you are using the 8998's DT present on upstream, you may also need to 
-enable
-device reset on your platform. (We usually do a device reset before call 
-ufshcd_hba_enable())
-Given that 845 works fine, it may be the difference you have with 845. 
-845 has device
-reset support ready in upstream code, you can check sdm845-mtp.dts.
-It is same for 8150, which is a lack of device reset support in upstream 
-code base.
+Based on changes from Peter Zijlstra <peterz@infradead.org>
 
-To enable UFS device reset, please see
-1. 
-https://lore.kernel.org/linux-arm-msm/20190828191756.24312-4-bjorn.andersson@linaro.org/
-2. 53a5372ce326116f3e3d3f1d701113b2542509f4
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+---
+ arch/Kconfig                    |  3 ---
+ arch/powerpc/Kconfig            |  1 -
+ arch/powerpc/include/asm/tlb.h  |  4 ++++
+ arch/sparc/Kconfig              |  1 -
+ arch/sparc/include/asm/tlb_64.h |  9 +++++++++
+ include/asm-generic/tlb.h       | 22 +++++++++++++++-------
+ mm/mmu_gather.c                 | 16 ++++++++--------
+ 7 files changed, 36 insertions(+), 20 deletions(-)
 
-FYI, I tested the patch on 8250 and its family platforms. In my build, I 
-ported
-change in #2 to my code base (in your case, make change to
-drivers/pinctrl/qcom/pinctrl-msm8998.c) and enable the GPIO in DT like 
-sdm845-mtp.dts
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 48b5e103bdb0..208aad121630 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -396,9 +396,6 @@ config HAVE_ARCH_JUMP_LABEL_RELATIVE
+ config HAVE_RCU_TABLE_FREE
+ 	bool
+ 
+-config HAVE_RCU_TABLE_NO_INVALIDATE
+-	bool
+-
+ config HAVE_MMU_GATHER_PAGE_SIZE
+ 	bool
+ 
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 1ec34e16ed65..a15f5584b0de 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -223,7 +223,6 @@ config PPC
+ 	select HAVE_PERF_REGS
+ 	select HAVE_PERF_USER_STACK_DUMP
+ 	select HAVE_RCU_TABLE_FREE		if SMP
+-	select HAVE_RCU_TABLE_NO_INVALIDATE	if HAVE_RCU_TABLE_FREE
+ 	select HAVE_MMU_GATHER_PAGE_SIZE
+ 	select HAVE_REGS_AND_STACK_ACCESS_API
+ 	select HAVE_RELIABLE_STACKTRACE		if PPC_BOOK3S_64 && CPU_LITTLE_ENDIAN
+diff --git a/arch/powerpc/include/asm/tlb.h b/arch/powerpc/include/asm/tlb.h
+index b2c0be93929d..feea1a09bbce 100644
+--- a/arch/powerpc/include/asm/tlb.h
++++ b/arch/powerpc/include/asm/tlb.h
+@@ -27,6 +27,10 @@
+ #define tlb_flush tlb_flush
+ extern void tlb_flush(struct mmu_gather *tlb);
+ 
++#ifdef CONFIG_HAVE_RCU_TABLE_FREE
++#define tlb_needs_table_invalidate()	radix_enabled()
++#endif
++
+ /* Get the generic bits... */
+ #include <asm-generic/tlb.h>
+ 
+diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
+index eb24cb1afc11..18e9fb6fcf1b 100644
+--- a/arch/sparc/Kconfig
++++ b/arch/sparc/Kconfig
+@@ -65,7 +65,6 @@ config SPARC64
+ 	select HAVE_KRETPROBES
+ 	select HAVE_KPROBES
+ 	select HAVE_RCU_TABLE_FREE if SMP
+-	select HAVE_RCU_TABLE_NO_INVALIDATE if HAVE_RCU_TABLE_FREE
+ 	select HAVE_MEMBLOCK_NODE_MAP
+ 	select HAVE_ARCH_TRANSPARENT_HUGEPAGE
+ 	select HAVE_DYNAMIC_FTRACE
+diff --git a/arch/sparc/include/asm/tlb_64.h b/arch/sparc/include/asm/tlb_64.h
+index a2f3fa61ee36..8cb8f3833239 100644
+--- a/arch/sparc/include/asm/tlb_64.h
++++ b/arch/sparc/include/asm/tlb_64.h
+@@ -28,6 +28,15 @@ void flush_tlb_pending(void);
+ #define __tlb_remove_tlb_entry(tlb, ptep, address) do { } while (0)
+ #define tlb_flush(tlb)	flush_tlb_pending()
+ 
++/*
++ * SPARC64's hardware TLB fill does not use the Linux page-tables
++ * and therefore we don't need a TLBI when freeing page-table pages.
++ */
++
++#ifdef CONFIG_HAVE_RCU_TABLE_FREE
++#define tlb_needs_table_invalidate()	(false)
++#endif
++
+ #include <asm-generic/tlb.h>
+ 
+ #endif /* _SPARC64_TLB_H */
+diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
+index 2b10036fefd0..dcdf13fc0a0b 100644
+--- a/include/asm-generic/tlb.h
++++ b/include/asm-generic/tlb.h
+@@ -137,13 +137,6 @@
+  *  When used, an architecture is expected to provide __tlb_remove_table()
+  *  which does the actual freeing of these pages.
+  *
+- *  HAVE_RCU_TABLE_NO_INVALIDATE
+- *
+- *  This makes HAVE_RCU_TABLE_FREE avoid calling tlb_flush_mmu_tlbonly() before
+- *  freeing the page-table pages. This can be avoided if you use
+- *  HAVE_RCU_TABLE_FREE and your architecture does _NOT_ use the Linux
+- *  page-tables natively.
+- *
+  *  MMU_GATHER_NO_RANGE
+  *
+  *  Use this if your architecture lacks an efficient flush_tlb_range().
+@@ -189,8 +182,23 @@ struct mmu_table_batch {
+ 
+ extern void tlb_remove_table(struct mmu_gather *tlb, void *table);
+ 
++/*
++ * This allows an architecture that does not use the linux page-tables for
++ * hardware to skip the TLBI when freeing page tables.
++ */
++#ifndef tlb_needs_table_invalidate
++#define tlb_needs_table_invalidate() (true)
++#endif
++
++#else
++
++#ifdef tlb_needs_table_invalidate
++#error tlb_needs_table_invalidate() requires MMU_GATHER_RCU_TABLE_FREE
+ #endif
+ 
++#endif /* CONFIG_HAVE_RCU_TABLE_FREE */
++
++
+ #ifndef CONFIG_HAVE_MMU_GATHER_NO_GATHER
+ /*
+  * If we can't allocate a page to make a big batch of page pointers
+diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
+index 7d70e5c78f97..7c1b8f67af7b 100644
+--- a/mm/mmu_gather.c
++++ b/mm/mmu_gather.c
+@@ -102,14 +102,14 @@ bool __tlb_remove_page_size(struct mmu_gather *tlb, struct page *page, int page_
+  */
+ static inline void tlb_table_invalidate(struct mmu_gather *tlb)
+ {
+-#ifndef CONFIG_HAVE_RCU_TABLE_NO_INVALIDATE
+-	/*
+-	 * Invalidate page-table caches used by hardware walkers. Then we still
+-	 * need to RCU-sched wait while freeing the pages because software
+-	 * walkers can still be in-flight.
+-	 */
+-	tlb_flush_mmu_tlbonly(tlb);
+-#endif
++	if (tlb_needs_table_invalidate()) {
++		/*
++		 * Invalidate page-table caches used by hardware walkers. Then
++		 * we still need to RCU-sched wait while freeing the pages
++		 * because software walkers can still be in-flight.
++		 */
++		tlb_flush_mmu_tlbonly(tlb);
++	}
+ }
+ 
+ static void tlb_remove_table_smp_sync(void *arg)
+-- 
+2.23.0
 
-         reset-gpios = <&tlmm 150 GPIO_ACTIVE_LOW>;
-
-Thanks
