@@ -2,66 +2,99 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13182C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C66B8C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E324220716
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:44:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3BB420716
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 09:45:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbfLQJoK (ORCPT
+        id S1727096AbfLQJp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 04:44:10 -0500
-Received: from helcar.hmeau.com ([216.24.177.18]:42584 "EHLO deadmen.hmeau.com"
+        Tue, 17 Dec 2019 04:45:29 -0500
+Received: from mga04.intel.com ([192.55.52.120]:31364 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725870AbfLQJoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 04:44:10 -0500
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1ih9Oj-0005f7-9C; Tue, 17 Dec 2019 17:44:09 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1ih9Od-0007In-7f; Tue, 17 Dec 2019 17:44:03 +0800
-Date:   Tue, 17 Dec 2019 17:44:03 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     "Thomas, Rijo-john" <Rijo-john.Thomas@amd.com>
-Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
-        Gary Hook <gary.hook@amd.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        Nimesh Easow <Nimesh.Easow@amd.com>,
-        Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: Re: [RFC PATCH v3 0/6] Add TEE interface support to AMD Secure
- Processor driver
-Message-ID: <20191217094403.xxefstm5gdamwdvp@gondor.apana.org.au>
-References: <cover.1575438845.git.Rijo-john.Thomas@amd.com>
- <26cb9589-8774-897b-4d1e-919e7ad2200f@amd.com>
+        id S1725870AbfLQJp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 04:45:28 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 01:45:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,325,1571727600"; 
+   d="scan'208";a="217719255"
+Received: from gorris-mobl2.ger.corp.intel.com (HELO [10.249.34.224]) ([10.249.34.224])
+  by orsmga003.jf.intel.com with ESMTP; 17 Dec 2019 01:45:20 -0800
+Subject: Re: [Intel-gfx] [PATCH v3 4/7] drm/i915/perf: open access for
+ CAP_SYS_PERFMON privileged process
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Serge Hallyn <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Casey Schaufler <casey@schaufler-ca.com>
+Cc:     songliubraving@fb.com, Andi Kleen <ak@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        Jann Horn <jannh@google.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        intel-gfx@lists.freedesktop.org,
+        Igor Lubashev <ilubashe@akamai.com>,
+        linux-kernel@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Brendan Gregg <bgregg@netflix.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
+References: <b175f283-d256-e37e-f447-6ba4ab4f3d3a@linux.intel.com>
+ <bc5b2a0d-a185-91b6-5deb-a4b6e1dc3d3e@linux.intel.com>
+From:   Lionel Landwerlin <lionel.g.landwerlin@intel.com>
+Organization: Intel Corporation (UK) Ltd. - Co. Reg. #1134945 - Pipers Way,
+ Swindon SN3 1RJ
+Message-ID: <503ad40c-d94e-df1d-1541-730c002ad3b7@intel.com>
+Date:   Tue, 17 Dec 2019 11:45:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <26cb9589-8774-897b-4d1e-919e7ad2200f@amd.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <bc5b2a0d-a185-91b6-5deb-a4b6e1dc3d3e@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas:
+On 16/12/2019 22:03, Alexey Budankov wrote:
+> Open access to i915_perf monitoring for CAP_SYS_PERFMON privileged processes.
+> For backward compatibility reasons access to i915_perf subsystem remains open
+> for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage for secure
+> i915_perf monitoring is discouraged with respect to CAP_SYS_PERFMON capability.
+>
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 
-On Thu, Dec 12, 2019 at 06:03:20PM +0530, Thomas, Rijo-john wrote:
-> 
-> Please let me know if you have any comment for this patch series.
-> Request you to consider these patches for next merge cycle.
 
-They look fine to me.
+Assuming people are fine with this new cap, I like this idea of a 
+lighter privilege for i915-perf.
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+
+-Lionel
+
+
