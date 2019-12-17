@@ -2,64 +2,129 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 546FEC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF92C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30843206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:18:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B29B2067C
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:21:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576578112;
+	bh=64KbV8JmiqTqZvggTz3omkdzMWsqgJVbvseKGzbEcak=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=c4BKV7AQ+Mm4HiyCBavYKc1L+p5dbnwr2yUCxKbiWFAHb2Gl88azWueLSp5aEf16J
+	 TVbcA9Iv4uG/ZYTAZvTLTqXAncrvVCxVMyW9ECH+HMzpdKNjUoLXzrOgFztoHrMrjL
+	 /2ONXyNHG2BaR6CtuZFcBuLKEPUjVbyHUBsGwd+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727462AbfLQKSE (ORCPT
+        id S1727483AbfLQKVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 05:18:04 -0500
-Received: from 8bytes.org ([81.169.241.247]:57688 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726947AbfLQKSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 05:18:03 -0500
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 1B698286; Tue, 17 Dec 2019 11:18:02 +0100 (CET)
-Date:   Tue, 17 Dec 2019 11:18:00 +0100
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        stephan@gerhold.net, natechancellor@gmail.com,
-        nsaenzjulienne@suse.de, arnd@arndb.de
-Subject: Re: [PATCH v2] iommu/dma: Rationalise types for DMA masks
-Message-ID: <20191217101800.GL8689@8bytes.org>
-References: <00d1ddf9439a8c79fb561b0fc740bddf9e6fe6b1.1576089015.git.robin.murphy@arm.com>
- <20191211190235.GA17854@lst.de>
+        Tue, 17 Dec 2019 05:21:51 -0500
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:32844 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726947AbfLQKVu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 05:21:50 -0500
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id xBHALS5P006121;
+        Tue, 17 Dec 2019 19:21:29 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com xBHALS5P006121
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1576578089;
+        bh=9AVqNVwy4Es+S+p9hplMl9r61nXCqDt523hIMebfq1E=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=PMre/qKj+ZWusxltuueMOpTZepF6gb1u+weP808yPVRoVqkca8Ks6SlPWPc9yVRsk
+         haiO+lk8oWtVn2a50Nr35iZ6dkl/ZLD1S0kq38Y8bgVxymmXGeCMilPVq2xYYkXj2h
+         Zm70dz59eotJ9KxcPN1C9dlO+1NZo0PJm8vQeadj0idIhbkRjjVlNVr9557zvAmI4f
+         C6Du1TtjIT6OekkzGMoSRQDSYs+jKXqjiR1/9HDwWMWSXgN5a3qYMV6+lJbUGuqq5C
+         GXrkrO24084iKVB6A2KNUx4Lg2K8tgKuz6mp2DoKvcM828wkW0S7ob3d7JWNGNFekH
+         hDT8We5RndWlg==
+X-Nifty-SrcIP: [209.85.221.170]
+Received: by mail-vk1-f170.google.com with SMTP id i78so2519202vke.0;
+        Tue, 17 Dec 2019 02:21:29 -0800 (PST)
+X-Gm-Message-State: APjAAAUjfomv3ShL3R0Yqcd4lhH6Ke0ZUPFd0Uo+pAc0K/wuTfQNEg5u
+        vC7BBXeuRWi/ptJzbnWmjd4NQ6/bdZVi3QI6J7Y=
+X-Google-Smtp-Source: APXvYqyxhqLd0jmKjhPYPvFRleqdFANg0jNp9RGDF9A7B/pR95Q24+2OcgrbTiaFQ/ECYIxy5NqaPG3ZUBLwu1u0NN0=
+X-Received: by 2002:a1f:72c3:: with SMTP id n186mr2708835vkc.12.1576578088101;
+ Tue, 17 Dec 2019 02:21:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211190235.GA17854@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1575879069.git.tommyhebb@gmail.com> <2f42719235f9250ed10209982543f99f4fd41d61.1575879069.git.tommyhebb@gmail.com>
+In-Reply-To: <2f42719235f9250ed10209982543f99f4fd41d61.1575879069.git.tommyhebb@gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 17 Dec 2019 19:20:51 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAT8+y8HD9Kui-nVXL=fHkTeUVnEqDrTtLniWZBULFvu2A@mail.gmail.com>
+Message-ID: <CAK7LNAT8+y8HD9Kui-nVXL=fHkTeUVnEqDrTtLniWZBULFvu2A@mail.gmail.com>
+Subject: Re: [PATCH 2/4] kconfig: don't crash on NULL expressions in expr_eq()
+To:     Thomas Hebb <tommyhebb@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 08:02:35PM +0100, Christoph Hellwig wrote:
-> On Wed, Dec 11, 2019 at 06:33:26PM +0000, Robin Murphy wrote:
-> > Since iommu_dma_alloc_iova() combines incoming masks with the u64 bus
-> > limit, it makes more sense to pass them around in their native u64
-> > rather than converting to dma_addr_t early. Do that, and resolve the
-> > remaining type discrepancy against the domain geometry with a cheeky
-> > cast to keep things simple.
-> > 
-> > Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> 
-> Looks good to me:
-> 
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> 
-> Joerg, let me know if you want to pick this up through the iommu tree as
-> it touches the iommu code, or through the dma-mapping tree that
-> introduced the warning.
+On Mon, Dec 9, 2019 at 5:19 PM Thomas Hebb <tommyhebb@gmail.com> wrote:
+>
+> NULL expressions are taken to always be true, as implemented by the
+> expr_is_yes() macro and by several other functions in expr.c. As such,
+> they ought to be valid inputs to expr_eq(), which compares two
+> expressions.
+>
+> Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
+> ---
 
-I'll take it through my tree, as I am about to collect fixes anyway.
+I applied this patch.
+I fixed up the block comment style. Thanks.
 
-Patch is now applied, thanks everyone.
+
+diff --git a/scripts/kconfig/expr.c b/scripts/kconfig/expr.c
+index 8284444cc3fa..9f1de58e9f0c 100644
+--- a/scripts/kconfig/expr.c
++++ b/scripts/kconfig/expr.c
+@@ -254,8 +254,10 @@ static int expr_eq(struct expr *e1, struct expr *e2)
+ {
+        int res, old_count;
+
+-       /* A NULL expr is taken to be yes, but there's also a different way to
+-        * represent yes. expr_is_yes() checks for either representation. */
++       /*
++        * A NULL expr is taken to be yes, but there's also a different way to
++        * represent yes. expr_is_yes() checks for either representation.
++        */
+        if (!e1 || !e2)
+                return expr_is_yes(e1) && expr_is_yes(e2);
+
+
+
+
+
+>  scripts/kconfig/expr.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/scripts/kconfig/expr.c b/scripts/kconfig/expr.c
+> index 77ffff3a053c..8284444cc3fa 100644
+> --- a/scripts/kconfig/expr.c
+> +++ b/scripts/kconfig/expr.c
+> @@ -254,6 +254,11 @@ static int expr_eq(struct expr *e1, struct expr *e2)
+>  {
+>         int res, old_count;
+>
+> +       /* A NULL expr is taken to be yes, but there's also a different way to
+> +        * represent yes. expr_is_yes() checks for either representation. */
+> +       if (!e1 || !e2)
+> +               return expr_is_yes(e1) && expr_is_yes(e2);
+> +
+>         if (e1->type != e2->type)
+>                 return 0;
+>         switch (e1->type) {
+> --
+> 2.24.0
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
