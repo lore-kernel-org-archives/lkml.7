@@ -2,101 +2,92 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AF8C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1472C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D454320733
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:31:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576607502;
-	bh=QQuu8iUQ+/oSXmkk5ps5rHx88lLLo8CtbBy55ldroWQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oDNszlKYQFUAlhJH+HUipcD9TwVBbXe8Nrucgd2KZjwPfSwsTc3eT2QHuYMyvZzwg
-	 ha/PJC1r9s/AjtpktxrjvSyoJFNOp6Fx/7SZO8jHGc3M5oJSkCWiXSVdx3Z56+Bcok
-	 oaCpd51y+xFBQR9FV2ILXktv21YGUyrZDj0c1XfM=
+	by mail.kernel.org (Postfix) with ESMTP id 798062072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:32:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N7LjdDas"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbfLQSbm (ORCPT
+        id S1728066AbfLQScC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 13:31:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33370 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727005AbfLQSbl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 13:31:41 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0905F2072D;
-        Tue, 17 Dec 2019 18:31:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576607501;
-        bh=QQuu8iUQ+/oSXmkk5ps5rHx88lLLo8CtbBy55ldroWQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qlucZe0w0YjDK//g9ld4Rw7+gYrjYw3SZiQQpOWLkAbx1LQcJarwHA+QvhSXv4N75
-         TCI3VahKrrPOp9xiqSB77sZ/DeOQjTFyl3AF3ljc2Y5djHXQhRaPvlMuAQHPVWRZp1
-         O8sKuIA7PoyPalcNR5l8uY59jF0zbCJ5LMnzt+CA=
-Date:   Tue, 17 Dec 2019 18:31:35 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Daniel Axtens <dja@axtens.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: Re: READ_ONCE() + STACKPROTECTOR_STRONG == :/ (was Re: [GIT PULL]
- Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops))
-Message-ID: <20191217183135.GA3944@willie-the-truck>
-References: <20191212100756.GA11317@willie-the-truck>
- <20191212104610.GW2827@hirez.programming.kicks-ass.net>
- <CAHk-=wjUBsH0BYDBv=q36482G-U7c=9bC89L_BViSciTfb8fhA@mail.gmail.com>
- <20191212180634.GA19020@willie-the-truck>
- <CAHk-=whRxB0adkz+V7SQC8Ac_rr_YfaPY8M2mFDfJP2FFBNz8A@mail.gmail.com>
- <20191212193401.GB19020@willie-the-truck>
- <CAHk-=wiMuHmWzQ7-CRQB6o+SHtA-u-Rp6VZwPcqDbjAaug80rQ@mail.gmail.com>
- <20191217170719.GA869@willie-the-truck>
- <CAHk-=whBnZBVNwu8aVVp205EKk7xtsnQgSjs38a5=y9HyheXzQ@mail.gmail.com>
- <CAHk-=wgsbrq6sFOSd9QrjR-fCamgzqCtFuO2_8qvJANA1+Jm6g@mail.gmail.com>
+        Tue, 17 Dec 2019 13:32:02 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:40922 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726813AbfLQScC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 13:32:02 -0500
+Received: by mail-pl1-f193.google.com with SMTP id g6so6479854plp.7;
+        Tue, 17 Dec 2019 10:32:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Jt9igp/vb3Q4imVycGHAIChk8Rd9kKBHmsaYFmp6Y7o=;
+        b=N7LjdDasH4+CqBepfgfMlE44vLxYadjQ67o+oL4zFoXyrMfU7okw0uW4mSe5x3Htfo
+         UkAiTrsYVYfxgqDvIuH+2KQyQ0ERJKbUJx5/5bWr+b+lXGSCx1rVdWnGJBdDVZ23dVpS
+         mmk87XHA+7PvbKmkqc8uLcer8HcL6Slcn1s00QmAZxR8kyIXOyVuI7dxt0PBMJu9mkp6
+         z30iHL3T8qBoYehiyo3jaI9+BmLori12ZbIKe2V+oHALmcQQa2Yz/P94/yKIM2DNShrw
+         6P+KLDPEVLWXEsRU4GxUsQdM5z8KWnFklXH09NBSEb7OjR6g1xfLQTFGnWLfe6dXpMme
+         oUwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Jt9igp/vb3Q4imVycGHAIChk8Rd9kKBHmsaYFmp6Y7o=;
+        b=ef4ez/MgN/NnuNB1UHV6o0Op7es+4Q3vWzgQQMjcXurDThv5VfXST/R4zM5k8iYfdn
+         s2vGXzon9WErEmnTGo4Brmt4qXxxgj1T6NbtJft29K6QMShtl/tP+TfASSSq5qzfQOca
+         SM4bdeSU3X72HePKRLrBrvUtv5H7ma+O0ZFoCWoYYnXD4NZMaA77I8A8NgrRVfNVWfP0
+         qbiqbNbkiw3OxRy+mMrUmpTehzPc45rnSprIJoIxhZi5wz/W1QbzO/fmAw2EABDrU9yk
+         EyO6Yd9talPfEmiR+/SByl1vIs6tZhNwdVrMxrcd4oCkG7A07gh0/4GuJDTdx3Ohkn1V
+         Dk2w==
+X-Gm-Message-State: APjAAAXbEn6UOuiwoAn55xacAyZEKAk99yQys1xF/O3GU35Jsfionc5A
+        X3aEyIFnQw72iJSgwq7052679/3C
+X-Google-Smtp-Source: APXvYqytROhdFNm7gtHFIYzQThGI9Cm4KPk4pN7Lte39uDB9Dpss2233RTNPTm5a05S1YiowJ/D9Fw==
+X-Received: by 2002:a17:90a:6587:: with SMTP id k7mr7540210pjj.40.1576607521697;
+        Tue, 17 Dec 2019 10:32:01 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id r6sm27579405pfh.91.2019.12.17.10.32.00
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 17 Dec 2019 10:32:00 -0800 (PST)
+Date:   Tue, 17 Dec 2019 10:31:59 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.4 000/177] 5.4.4-stable review
+Message-ID: <20191217183159.GB29679@roeck-us.net>
+References: <20191216174811.158424118@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wgsbrq6sFOSd9QrjR-fCamgzqCtFuO2_8qvJANA1+Jm6g@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191216174811.158424118@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 10:05:53AM -0800, Linus Torvalds wrote:
-> On Tue, Dec 17, 2019 at 10:04 AM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > Let me think about it.
+On Mon, Dec 16, 2019 at 06:47:36PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.4 release.
+> There are 177 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> .. and in the short term, maybe for code generation, the right thing
-> is to just do the cast in the bitops, where we can just cast to
-> "unsigned long *" and remove the volatile that way.
+> Responses should be made by Wed, 18 Dec 2019 17:41:25 +0000.
+> Anything received after that time might be too late.
+> 
 
-Yeah, I think I'll spin that patch series tomorrow anyway, since I don't
-think we need to hold it up.
+Build results:
+	total: 158 pass: 158 fail: 0
+Qemu test results:
+	total: 387 pass: 387 fail: 0
 
-> I'm still hoping there's a trick, but..
-
-Well, there's always Peter's awful hack [1] but it's really gross. FWIW,
-I've pushed the handful of patches I have to [2], which drop the GCC 4.8
-workaround and introduce a non-atomic version instead of the
-'__builtin_memcpy()'.
-
-Will
-
-[1] https://lore.kernel.org/lkml/20191213125618.GD2844@hirez.programming.kicks-ass.net
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/log/?h=rwonce/cleanup
+Guenter
