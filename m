@@ -2,90 +2,134 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA239C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF45C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:16:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB77D20716
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:14:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DE6220733
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:16:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vhLu684V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727281AbfLQLOa (ORCPT
+        id S1727324AbfLQLQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 06:14:30 -0500
-Received: from mga07.intel.com ([134.134.136.100]:22879 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726487AbfLQLOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 06:14:30 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 03:14:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,325,1571727600"; 
-   d="scan'208";a="298015511"
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
-  by orsmga001.jf.intel.com with ESMTP; 17 Dec 2019 03:14:27 -0800
-Subject: Re: [PATCH v2 2/2] USB: core: Attempt power cycle port when it's in
- eSS.Disabled state
-To:     Alan Stern <stern@rowland.harvard.edu>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Mathias Nyman <mathias.nyman@intel.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-References: <Pine.LNX.4.44L0.1912111006280.1549-100000@iolanthe.rowland.org>
-From:   Mathias Nyman <mathias.nyman@linux.intel.com>
-Message-ID: <c8fc54db-9037-3635-f6a7-d6220e5d02cb@linux.intel.com>
-Date:   Tue, 17 Dec 2019 13:16:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 17 Dec 2019 06:16:03 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33247 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726730AbfLQLQC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 06:16:02 -0500
+Received: by mail-pl1-f193.google.com with SMTP id c13so5970981pls.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 03:16:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+awUKio9p4Gf8NY2FGLOxx315Fg31QJAQkkFLDdf2qk=;
+        b=vhLu684VYkAnZb2xIOi86+7krc1q5YZ391ygeuZ9ZFGk8CW9UIuDfYWehfwbeiDZJs
+         zE8jqRSy1XKVmGfPq3vfOcQRs72krLoF9Ph8WhX9lmNXeq70KSxDB7TthL4yy0iJg2oT
+         2wfVzqz0V6Hv95ZE2bceCFg06TNpytRoAdLARpOfOHgM4MD+jWg64x7Gwp5vw9P+ge6K
+         AXguuUV8/aAHK7qC5AO4XjFMnxSuqzcC+tNIBYFrKESHtXVtd7fjxGWcWe1orSEY1KAQ
+         XEH9KzcETJBV6kmE4rdCGYaLK69z0UhCnNjlv3v3cT6zgX5DYuVfaY1EItVtJvaFF093
+         HY1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+awUKio9p4Gf8NY2FGLOxx315Fg31QJAQkkFLDdf2qk=;
+        b=DAOAVq+LSyOHEVC3LsOZtePBDy1syiNE/0bJ2XJ8uH8+lTmsZvczMzCIvO5nVtLsHp
+         dH3WJv2jR6wR4cfB2S+P5DA8jGKrKw9Ejpn3J4gbSkgeXUgi04d+Kd99+ceeGKnaVX2z
+         VpfsdSdc53qSRv8avblsbFUOfk6fDATtkwLmCUkEFv2Qg+z/GugwfphPkCrS6qh28RRC
+         qPUnqpLG1TTfk1ZaiITOlgSz+aI9b9ig1idqUg5UFBNstO0DMAl7IpglvgzxRJGSWXID
+         AwDTzKmQvYxIWvvkxgx7fyp/KJfrkiK7YN0D+9JXtY9cmTD2nPcF4rsQl+ZW5YIDvssz
+         0hfw==
+X-Gm-Message-State: APjAAAUh8FDUY7MZfE7x1ShcIO74i7IpzWH0IakPqN0A19QMqrLEbwGx
+        q3/zo1CdHPO5RloBLvd6iJ5YNvzSOjq9A8OqlxG8Uw==
+X-Google-Smtp-Source: APXvYqw1BghZmCWqP60myjxjEs6YuRq3Mo3lYtfOqhdxaPe8CxHGvSNj0WzKtKxsdl9oPTsLP3S4j8Jna1S2/v9ahic=
+X-Received: by 2002:a17:90b:150:: with SMTP id em16mr5195492pjb.123.1576581361710;
+ Tue, 17 Dec 2019 03:16:01 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <Pine.LNX.4.44L0.1912111006280.1549-100000@iolanthe.rowland.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <95e7a12ac909e7de584133772efc7ef982a16bbb.1576170740.git.andreyknvl@google.com>
+ <Pine.LNX.4.44L0.1912121313030.1352-100000@iolanthe.rowland.org>
+ <CAAeHK+yOBcNz_iopRs6PEu=1-rZn6Gkm+Urq+iVBFQeSjSXqNA@mail.gmail.com> <CACT4Y+aN20NXxXhe9qv_WRLntAHbL98Shj8NAvg0WafDw8C=jA@mail.gmail.com>
+In-Reply-To: <CACT4Y+aN20NXxXhe9qv_WRLntAHbL98Shj8NAvg0WafDw8C=jA@mail.gmail.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Tue, 17 Dec 2019 12:15:50 +0100
+Message-ID: <CAAeHK+xyVh6QkbUp6z+fLrv5f9sODkgFuvmBU1jB8borQ9M65g@mail.gmail.com>
+Subject: Re: [PATCH RFC 1/2] kcov: collect coverage from interrupts
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.12.2019 17.08, Alan Stern wrote:
-> On Wed, 11 Dec 2019, Kai-Heng Feng wrote:
-> 
->>
->>
->>> On Nov 30, 2019, at 01:41, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
->>>
->>> On Dell TB16, Realtek USB ethernet (r8152) connects to an SMSC hub which
->>> then connects to ASMedia xHCI's root hub:
->>>
->>> /:  Bus 04.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/2p, 5000M
->>>     |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/7p, 5000M
->>>             |__ Port 2: Dev 3, If 0, Class=Vendor Specific Class, Driver=r8152, 5000M
->>>
->>> Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
->>> Bus 004 Device 002: ID 0424:5537 Standard Microsystems Corp. USB5537B
->>> Bus 004 Device 003: ID 0bda:8153 Realtek Semiconductor Corp. RTL8153 Gigabit Ethernet Adapter
->>>
->>> The SMSC hub may disconnect after system resume from suspend. When this
->>> happens, the reset resume attempt fails, and the last resort to disable
->>> the port and see something comes up later, also fails.
->>>
->>> When the issue occurs, the link state stays in eSS.Disabled state
->>> despite the warm reset attempts. Accoding to spec this can be caused by
->>> invalid VBus, after some expiremets, the SMSC hub can be brought back
->>> after a powercycle.
+On Tue, Dec 17, 2019 at 12:00 PM Dmitry Vyukov <dvyukov@google.com> wrote:
+>
+> On Fri, Dec 13, 2019 at 1:09 PM Andrey Konovalov <andreyknvl@google.com> wrote:
+> >
+> > On Thu, Dec 12, 2019 at 7:15 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+> > >
+> > > On Thu, 12 Dec 2019, Andrey Konovalov wrote:
+> > >
+> > > > This change extends kcov remote coverage support to allow collecting
+> > > > coverage from interrupts in addition to kernel background threads.
+> > > >
+> > > > To collect coverage from code that is executed in interrupt context, a
+> > > > part of that code has to be annotated with kcov_remote_start/stop() in a
+> > > > similar way as how it is done for global kernel background threads. Then
+> > > > the handle used for the annotations has to be passed to the
+> > > > KCOV_REMOTE_ENABLE ioctl.
+> > > >
+> > > > Internally this patch adjusts the __sanitizer_cov_trace_pc() compiler
+> > > > inserted callback to not bail out when called from interrupt context.
+> > > > kcov_remote_start/stop() are updated to save/restore the current per
+> > > > task kcov state in a per-cpu area (in case the interrupt came when the
+> > > > kernel was already collecting coverage in task context). Coverage from
+> > > > interrupts is collected into pre-allocated per-cpu areas, whose size is
+> > > > controlled by the new CONFIG_KCOV_IRQ_AREA_SIZE.
+> > > >
+> > > > This patch also cleans up some of kcov debug messages.
+> > > >
+> > > > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> > > > ---
+> > >
+> > > > diff --git a/drivers/usb/gadget/udc/dummy_hcd.c b/drivers/usb/gadget/udc/dummy_hcd.c
+> > > > index 4c9d1e49d5ed..faf84ada71a5 100644
+> > > > --- a/drivers/usb/gadget/udc/dummy_hcd.c
+> > > > +++ b/drivers/usb/gadget/udc/dummy_hcd.c
+> > > > @@ -38,6 +38,7 @@
+> > > >  #include <linux/usb/gadget.h>
+> > > >  #include <linux/usb/hcd.h>
+> > > >  #include <linux/scatterlist.h>
+> > > > +#include <linux/kcov.h>
+> > > >
+> > > >  #include <asm/byteorder.h>
+> > > >  #include <linux/io.h>
+> > >
+> > > That's the only change to this driver.  As such, it doesn't appear to
+> > > be needed, judging by the patch description.
+> >
+> > Right, will fix in the next version, thanks!
+>
+> Please also post a github or gerrit link. These small scraps of
+> changes without context and better visualisation are extremely hard to
+> review meaningfully.
 
-Could you open up a bit more how this happens, mainly codepaths how the
-USB3 port ends up in eSS.Disabled state
+The link is in the cover letter:
 
-There might be something else wrong here.
-My impression is that port should only end up in eSS.Disabled when directed
-to with a Set_Port_Feature(PORT_LINK_STATE, eSS.Disabled) Request.
-After this we shouldn't attempt warm resets, they won't work for USB3 ports in
-ss.Disabled state.
-
--Mathias
+https://linux-review.googlesource.com/c/linux/kernel/git/torvalds/linux/+/2224/1
