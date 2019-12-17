@@ -4,25 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B71B1C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30690C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 869E820716
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:18:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00DAF2465E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:18:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbfLQWSD (ORCPT
+        id S1726897AbfLQWSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 17:18:03 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:42985 "EHLO
+        Tue, 17 Dec 2019 17:18:05 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:49789 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726704AbfLQWRw (ORCPT
+        with ESMTP id S1726795AbfLQWR4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 17:17:52 -0500
+        Tue, 17 Dec 2019 17:17:56 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MPGNn-1iJtNn3lVt-00PeZf; Tue, 17 Dec 2019 23:17:31 +0100
+ 1M9WmQ-1ie1lZ0nQ4-005V7i; Tue, 17 Dec 2019 23:17:33 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Jens Axboe <axboe@kernel.dk>,
         "James E.J. Bottomley" <jejb@linux.ibm.com>,
@@ -33,177 +33,231 @@ Cc:     linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
         Ben Hutchings <ben.hutchings@codethink.co.uk>,
         linux-doc@vger.kernel.org, corbet@lwn.net, viro@zeniv.linux.org.uk,
         linux-fsdevel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v2 17/27] compat_ioctl: ide: floppy: add handler
-Date:   Tue, 17 Dec 2019 23:16:58 +0100
-Message-Id: <20191217221708.3730997-18-arnd@arndb.de>
+Subject: [PATCH v2 22/27] compat_ioctl: scsi: handle HDIO commands from drivers
+Date:   Tue, 17 Dec 2019 23:17:03 +0100
+Message-Id: <20191217221708.3730997-23-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191217221708.3730997-1-arnd@arndb.de>
 References: <20191217221708.3730997-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:YnQrSz5O/D2DBGfbF3Cxsk8pwEEUjT589STUMJGh3yzpShzGnbO
- UtKl0ZGJsAHThUjdm9r51gvC9l545WINo2a5prkFBHzM+9RQY3Arloots1Xrir/7jn058ZY
- lY3dvFXWkGkgFTV1afb9NJTxv07jjMP3/LZ84ITxMj0bnoBEEePtmNtjq9iMjF1weBFG1TC
- CVXMzbb5iVF+fqWiS0O2w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:O/6PR2RnMp8=:5roBt3plMVSEraB1jz2O5h
- p/M30legg9XR/Y/Kt/C/cwvJgImxkhqYbhnmDZ2jTM2ic2roOHdDCBbJwfOURYUFv0qGwYzWa
- B2qWZx8aF/jNGciRRonzsvtzrevrh8kgSm8SKRw4Z6HWilgQGzNa0JD2cygphpSkBHxjjTPe0
- H6R4AoSx5K3lxdgReJ5SvYGUxJbJUFdmlDojMI8lu4Tix3nugJN5mv6/AeZWrgBiEL+NG06x2
- SgnQ2R/DcJgY4NErD0D7vRfFy8nqvisRhkpns9431tOEz0o3rDBPRYcIgj+gshSq2sOxzJo2z
- h7k/r2KY1WXGuAc75gUQhqPjJKOm2k6nybp1HZs/+ZBZt7R26M699R/3vHkZACKON1XGl+aKr
- LvnRY6PJsnz4ob7wlAJmOaNdU2cazFj72pim9W9C/KJIazWpDqXAo4BNI11sjQQdRf2fRBuZI
- NJ/EqqAIZ9wL9g9N0iwnpBrRZy3dHYY4DFnVeu2s3VceoZerOn19nvm43OnFQhc1AkcPHlSmn
- 5Ba+6ALgh7JeJNL8swznKcGRFu9oSkIixiuTNlJBhb1sr7lI0YaFAkyb2Ut6mRPAOx2Sj2EjE
- pFuCkh94PX3JIrwC96rcvZOvq400csat6sR/PyNWbUIDzTIjhvN8JQKpi4J8/RmkC1IUh8Htt
- XXtazTi9tD12OGpO4CotDAU1RxMk7FJ88cSUhUsvMRFvCL4La2Qgh1BiXbZm/PKI53oQA+VqW
- 2QOEW2x5t7BuvU3oX6EOs0f++xF8S0/BtDzSGXrMNi5xQKnOR6mQVrtiTtrKsGPBvlVOxqZew
- XHitJ7G+1QtWOXxgkURun9rL+6BVtR84ilhBgmhg/13As5Oka/Y11NCk5RSLTqrNCesFbIn5D
- Ju2TSq0UrO3DiZI9eDkA==
+X-Provags-ID: V03:K1:pSOIrqA4qJmN8oxuhXgjjmKQ4BKDNp8za+fcHrSHtYc7EmHxMCJ
+ ttBmqAyhcKzs6ALP6XaKjK1eJRepY36qUdiG1Ymlv2tcIEYRshLq2jDytMfphz3+jMw7eED
+ id44i00bAoVEZGiADfmkRWGK5ysYfQDl/ODvN/WylYpI/Cktg36r4HXzmChOoQKwPNw7hC/
+ O3MQzKNY2II5A2Xp9GQdg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Xn6+UU1gPkE=:Bv08/Fta262/hxm73yaJG7
+ y492BZ90Db600sYHwNqoIUQnWSm/atwksEsV1xp4NNp+CuzOfClXWkCfHdzavBqpGJCXYsADl
+ vsmudpY7oDIEyFAjmwugJe7iYi4PjkrHdo5qZkpsN8w1DKViflSW2rPR2e5voJyJ9rox3y7iN
+ plV4XfZj1mR3aln6NxFOC1UypUU90Ai+Cb6ebfnlEtP2XU6jXiXSJURAAK2v1MIUWklgOS+93
+ zfO79A0IX1aK6C0kywszdTyW8pWLpkHrMHazzve/V23DJfGKpYm/he8UEA0WHkmJYk8GuYHt4
+ kQxgpRdDZ7qUhlolIqv4eHS0sJ6gCxZb+xys2yDg3btFd+ZCKP2KXfpl1CPzp7MDxtQg0UQjo
+ lKszOsvC3Q3ebmbqqaGdKnNmL+twKhlgxfXxc/kfcwIJ3xdo2j81H5rL0+fySEJrkup0JhbBc
+ V9sX9uZEwtJxBF0KiPsIEmU7b2TJya1sdrM3dhSEriIPs0ATUHlFQerrOAYD8MoEbfcoMlcgz
+ CeS7mhMKIjLCtQiyeOl4ZHCycZ5y4wVJJD/IXMu+J8tPrVU3F+6UeGGxgjukY6zzcK/CwUy9s
+ AuB708Q3h1gujO3R0e0382zazvQo+ZbVSzds+5y6Mp5DgXoXRnjaSHH2w0sT6RP5iZMYOwlNe
+ VS9VHsWdnczFV8kUE5ATZeyFAVeYgyjqQ5ptFuFU00D7Y1Tt7pyJE2f+3FEX26n40HkD/eivx
+ xV4aJqVGW+KCy4QWKcu49XXy8bUUPvMiBKyWbdVFQCO3a9iGlYg9bSJaA7BeGjPCfdHTW7fgl
+ CpIl21r4ov345QUtxFOnW8wJaGmk2O1kY3SohSN4rBQibpmDdrMyaZUAn81EfAk6wWFFR3TrJ
+ SXCRbLBNlUDixrQa7A5Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rather than relying on fs/compat_ioctl.c, this adds support
-for a compat_ioctl() callback in the ide-floppy driver directly,
-which lets it translate the scsi commands.
+The ata_sas_scsi_ioctl() function implements a number of HDIO_* commands
+for SCSI devices, it is used by all libata drivers as well as a few
+drivers that support SAS attached SATA drives.
+
+The only command that is not safe for compat ioctls here is
+HDIO_GET_32BIT. Change the implementation to check for in_compat_syscall()
+in order to do both cases correctly, and change all callers to use it
+as both native and compat callback pointers, including the indirect
+callers through sas_ioctl and ata_scsi_ioctl.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/ide/ide-floppy.c       |  4 ++++
- drivers/ide/ide-floppy.h       |  2 ++
- drivers/ide/ide-floppy_ioctl.c | 36 ++++++++++++++++++++++++++++++++++
- drivers/ide/ide-gd.c           | 14 +++++++++++++
- include/linux/ide.h            |  2 ++
- 5 files changed, 58 insertions(+)
+ drivers/ata/libata-scsi.c              | 9 +++++++++
+ drivers/scsi/aic94xx/aic94xx_init.c    | 3 +++
+ drivers/scsi/hisi_sas/hisi_sas_v1_hw.c | 3 +++
+ drivers/scsi/hisi_sas/hisi_sas_v2_hw.c | 3 +++
+ drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 3 +++
+ drivers/scsi/ipr.c                     | 3 +++
+ drivers/scsi/isci/init.c               | 3 +++
+ drivers/scsi/mvsas/mv_init.c           | 3 +++
+ drivers/scsi/pm8001/pm8001_init.c      | 3 +++
+ include/linux/libata.h                 | 6 ++++++
+ 10 files changed, 39 insertions(+)
 
-diff --git a/drivers/ide/ide-floppy.c b/drivers/ide/ide-floppy.c
-index 1ea2f9e82bf8..1fe1f9d37a51 100644
---- a/drivers/ide/ide-floppy.c
-+++ b/drivers/ide/ide-floppy.c
-@@ -19,6 +19,7 @@
- #include <linux/types.h>
- #include <linux/string.h>
- #include <linux/kernel.h>
+diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
+index 58e09ffe8b9c..eb2eb599e602 100644
+--- a/drivers/ata/libata-scsi.c
++++ b/drivers/ata/libata-scsi.c
+@@ -17,6 +17,7 @@
+  *  - http://www.t13.org/
+  */
+ 
 +#include <linux/compat.h>
- #include <linux/delay.h>
- #include <linux/timer.h>
- #include <linux/mm.h>
-@@ -546,4 +547,7 @@ const struct ide_disk_ops ide_atapi_disk_ops = {
- 	.set_doorlock	= ide_set_media_lock,
- 	.do_request	= ide_floppy_do_request,
- 	.ioctl		= ide_floppy_ioctl,
-+#ifdef CONFIG_COMPAT
-+	.compat_ioctl	= ide_floppy_compat_ioctl,
-+#endif
- };
-diff --git a/drivers/ide/ide-floppy.h b/drivers/ide/ide-floppy.h
-index 13c9b4b6d75e..8505a5f58f4e 100644
---- a/drivers/ide/ide-floppy.h
-+++ b/drivers/ide/ide-floppy.h
-@@ -26,6 +26,8 @@ void ide_floppy_create_read_capacity_cmd(struct ide_atapi_pc *);
- /* ide-floppy_ioctl.c */
- int ide_floppy_ioctl(ide_drive_t *, struct block_device *, fmode_t,
- 		     unsigned int, unsigned long);
-+int ide_floppy_compat_ioctl(ide_drive_t *, struct block_device *, fmode_t,
-+			    unsigned int, unsigned long);
- 
- #ifdef CONFIG_IDE_PROC_FS
- /* ide-floppy_proc.c */
-diff --git a/drivers/ide/ide-floppy_ioctl.c b/drivers/ide/ide-floppy_ioctl.c
-index 40a2ebe34e1d..4fd70f804d6f 100644
---- a/drivers/ide/ide-floppy_ioctl.c
-+++ b/drivers/ide/ide-floppy_ioctl.c
-@@ -5,6 +5,7 @@
- 
+ #include <linux/slab.h>
  #include <linux/kernel.h>
- #include <linux/ide.h>
-+#include <linux/compat.h>
- #include <linux/cdrom.h>
- #include <linux/mutex.h>
- 
-@@ -302,3 +303,38 @@ int ide_floppy_ioctl(ide_drive_t *drive, struct block_device *bdev,
- 	mutex_unlock(&ide_floppy_ioctl_mutex);
- 	return err;
- }
-+
-+#ifdef CONFIG_COMPAT
-+int ide_floppy_compat_ioctl(ide_drive_t *drive, struct block_device *bdev,
-+			    fmode_t mode, unsigned int cmd, unsigned long arg)
-+{
-+	struct ide_atapi_pc pc;
-+	void __user *argp = compat_ptr(arg);
-+	int err;
-+
-+	mutex_lock(&ide_floppy_ioctl_mutex);
-+	if (cmd == CDROMEJECT || cmd == CDROM_LOCKDOOR) {
-+		err = ide_floppy_lockdoor(drive, &pc, arg, cmd);
-+		goto out;
-+	}
-+
-+	err = ide_floppy_format_ioctl(drive, &pc, mode, cmd, argp);
-+	if (err != -ENOTTY)
-+		goto out;
-+
-+	/*
-+	 * skip SCSI_IOCTL_SEND_COMMAND (deprecated)
-+	 * and CDROM_SEND_PACKET (legacy) ioctls
-+	 */
-+	if (cmd != CDROM_SEND_PACKET && cmd != SCSI_IOCTL_SEND_COMMAND)
-+		err = scsi_cmd_blk_ioctl(bdev, mode, cmd, argp);
-+
-+	/*
-+	 * there is no generic_ide_compat_ioctl(), that is handled
-+	 * through compat_blkdev_ioctl().
-+	 */
-+out:
-+	mutex_unlock(&ide_floppy_ioctl_mutex);
-+	return err;
-+}
-+#endif
-diff --git a/drivers/ide/ide-gd.c b/drivers/ide/ide-gd.c
-index dba9ad5c97b3..1b0270efcce2 100644
---- a/drivers/ide/ide-gd.c
-+++ b/drivers/ide/ide-gd.c
-@@ -341,11 +341,25 @@ static int ide_gd_ioctl(struct block_device *bdev, fmode_t mode,
- 	return drive->disk_ops->ioctl(drive, bdev, mode, cmd, arg);
+ #include <linux/blkdev.h>
+@@ -761,6 +762,10 @@ static int ata_ioc32(struct ata_port *ap)
+ 	return 0;
  }
  
++/*
++ * This handles both native and compat commands, so anything added
++ * here must have a compatible argument, or check in_compat_syscall()
++ */
+ int ata_sas_scsi_ioctl(struct ata_port *ap, struct scsi_device *scsidev,
+ 		     unsigned int cmd, void __user *arg)
+ {
+@@ -773,6 +778,10 @@ int ata_sas_scsi_ioctl(struct ata_port *ap, struct scsi_device *scsidev,
+ 		spin_lock_irqsave(ap->lock, flags);
+ 		val = ata_ioc32(ap);
+ 		spin_unlock_irqrestore(ap->lock, flags);
 +#ifdef CONFIG_COMPAT
-+static int ide_gd_compat_ioctl(struct block_device *bdev, fmode_t mode,
-+			       unsigned int cmd, unsigned long arg)
-+{
-+	struct ide_disk_obj *idkp = ide_drv_g(bdev->bd_disk, ide_disk_obj);
-+	ide_drive_t *drive = idkp->drive;
-+
-+	return drive->disk_ops->compat_ioctl(drive, bdev, mode, cmd, arg);
-+}
++		if (in_compat_syscall())
++			return put_user(val, (compat_ulong_t __user *)arg);
 +#endif
-+
- static const struct block_device_operations ide_gd_ops = {
- 	.owner			= THIS_MODULE,
- 	.open			= ide_gd_unlocked_open,
- 	.release		= ide_gd_release,
- 	.ioctl			= ide_gd_ioctl,
+ 		return put_user(val, (unsigned long __user *)arg);
+ 
+ 	case HDIO_SET_32BIT:
+diff --git a/drivers/scsi/aic94xx/aic94xx_init.c b/drivers/scsi/aic94xx/aic94xx_init.c
+index f5781e31f57c..d022407e5645 100644
+--- a/drivers/scsi/aic94xx/aic94xx_init.c
++++ b/drivers/scsi/aic94xx/aic94xx_init.c
+@@ -54,6 +54,9 @@ static struct scsi_host_template aic94xx_sht = {
+ 	.eh_target_reset_handler	= sas_eh_target_reset_handler,
+ 	.target_destroy		= sas_target_destroy,
+ 	.ioctl			= sas_ioctl,
 +#ifdef CONFIG_COMPAT
-+	.ioctl			= ide_gd_compat_ioctl,
++	.compat_ioctl		= sas_ioctl,
 +#endif
- 	.getgeo			= ide_gd_getgeo,
- 	.check_events		= ide_gd_check_events,
- 	.unlock_native_capacity	= ide_gd_unlock_native_capacity,
-diff --git a/include/linux/ide.h b/include/linux/ide.h
-index 46b771d6999e..06dae6438557 100644
---- a/include/linux/ide.h
-+++ b/include/linux/ide.h
-@@ -413,6 +413,8 @@ struct ide_disk_ops {
- 				      sector_t);
- 	int		(*ioctl)(struct ide_drive_s *, struct block_device *,
- 				 fmode_t, unsigned int, unsigned long);
-+	int		(*compat_ioctl)(struct ide_drive_s *, struct block_device *,
-+					fmode_t, unsigned int, unsigned long);
+ 	.track_queue_depth	= 1,
  };
  
- /* ATAPI device flags */
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
+index 3af53cc42bd6..fa25766502a2 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
+@@ -1772,6 +1772,9 @@ static struct scsi_host_template sht_v1_hw = {
+ 	.eh_target_reset_handler = sas_eh_target_reset_handler,
+ 	.target_destroy		= sas_target_destroy,
+ 	.ioctl			= sas_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl		= sas_ioctl,
++#endif
+ 	.shost_attrs		= host_attrs_v1_hw,
+ 	.host_reset             = hisi_sas_host_reset,
+ };
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
+index 61b1e2693b08..545eaff5f3ee 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
+@@ -3551,6 +3551,9 @@ static struct scsi_host_template sht_v2_hw = {
+ 	.eh_target_reset_handler = sas_eh_target_reset_handler,
+ 	.target_destroy		= sas_target_destroy,
+ 	.ioctl			= sas_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl		= sas_ioctl,
++#endif
+ 	.shost_attrs		= host_attrs_v2_hw,
+ 	.host_reset		= hisi_sas_host_reset,
+ };
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+index bf5d5f138437..fa05e612d85a 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+@@ -3075,6 +3075,9 @@ static struct scsi_host_template sht_v3_hw = {
+ 	.eh_target_reset_handler = sas_eh_target_reset_handler,
+ 	.target_destroy		= sas_target_destroy,
+ 	.ioctl			= sas_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl		= sas_ioctl,
++#endif
+ 	.shost_attrs		= host_attrs_v3_hw,
+ 	.tag_alloc_policy	= BLK_TAG_ALLOC_RR,
+ 	.host_reset             = hisi_sas_host_reset,
+diff --git a/drivers/scsi/ipr.c b/drivers/scsi/ipr.c
+index 079c04bc448a..ae45cbe98ae2 100644
+--- a/drivers/scsi/ipr.c
++++ b/drivers/scsi/ipr.c
+@@ -6727,6 +6727,9 @@ static struct scsi_host_template driver_template = {
+ 	.name = "IPR",
+ 	.info = ipr_ioa_info,
+ 	.ioctl = ipr_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl = ipr_ioctl,
++#endif
+ 	.queuecommand = ipr_queuecommand,
+ 	.eh_abort_handler = ipr_eh_abort,
+ 	.eh_device_reset_handler = ipr_eh_dev_reset,
+diff --git a/drivers/scsi/isci/init.c b/drivers/scsi/isci/init.c
+index 1727d0c71b12..b48aac8dfcb8 100644
+--- a/drivers/scsi/isci/init.c
++++ b/drivers/scsi/isci/init.c
+@@ -168,6 +168,9 @@ static struct scsi_host_template isci_sht = {
+ 	.eh_target_reset_handler        = sas_eh_target_reset_handler,
+ 	.target_destroy			= sas_target_destroy,
+ 	.ioctl				= sas_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl			= sas_ioctl,
++#endif
+ 	.shost_attrs			= isci_host_attrs,
+ 	.track_queue_depth		= 1,
+ };
+diff --git a/drivers/scsi/mvsas/mv_init.c b/drivers/scsi/mvsas/mv_init.c
+index da719b0694dc..7af9173c4925 100644
+--- a/drivers/scsi/mvsas/mv_init.c
++++ b/drivers/scsi/mvsas/mv_init.c
+@@ -47,6 +47,9 @@ static struct scsi_host_template mvs_sht = {
+ 	.eh_target_reset_handler = sas_eh_target_reset_handler,
+ 	.target_destroy		= sas_target_destroy,
+ 	.ioctl			= sas_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl		= sas_ioctl,
++#endif
+ 	.shost_attrs		= mvst_host_attrs,
+ 	.track_queue_depth	= 1,
+ };
+diff --git a/drivers/scsi/pm8001/pm8001_init.c b/drivers/scsi/pm8001/pm8001_init.c
+index ff618ad80ebd..3c6076e4c6d2 100644
+--- a/drivers/scsi/pm8001/pm8001_init.c
++++ b/drivers/scsi/pm8001/pm8001_init.c
+@@ -101,6 +101,9 @@ static struct scsi_host_template pm8001_sht = {
+ 	.eh_target_reset_handler = sas_eh_target_reset_handler,
+ 	.target_destroy		= sas_target_destroy,
+ 	.ioctl			= sas_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl		= sas_ioctl,
++#endif
+ 	.shost_attrs		= pm8001_host_attrs,
+ 	.track_queue_depth	= 1,
+ };
+diff --git a/include/linux/libata.h b/include/linux/libata.h
+index d3bbfddf616a..e68d05febe5a 100644
+--- a/include/linux/libata.h
++++ b/include/linux/libata.h
+@@ -1109,6 +1109,11 @@ extern void ata_host_init(struct ata_host *, struct device *, struct ata_port_op
+ extern int ata_scsi_detect(struct scsi_host_template *sht);
+ extern int ata_scsi_ioctl(struct scsi_device *dev, unsigned int cmd,
+ 			  void __user *arg);
++#ifdef CONFIG_COMPAT
++#define ATA_SCSI_COMPAT_IOCTL .compat_ioctl = ata_scsi_ioctl,
++#else
++#define ATA_SCSI_COMPAT_IOCTL /* empty */
++#endif
+ extern int ata_scsi_queuecmd(struct Scsi_Host *h, struct scsi_cmnd *cmd);
+ extern int ata_sas_scsi_ioctl(struct ata_port *ap, struct scsi_device *dev,
+ 			    unsigned int cmd, void __user *arg);
+@@ -1340,6 +1345,7 @@ extern struct device_attribute *ata_common_sdev_attrs[];
+ 	.module			= THIS_MODULE,			\
+ 	.name			= drv_name,			\
+ 	.ioctl			= ata_scsi_ioctl,		\
++	ATA_SCSI_COMPAT_IOCTL					\
+ 	.queuecommand		= ata_scsi_queuecmd,		\
+ 	.can_queue		= ATA_DEF_QUEUE,		\
+ 	.tag_alloc_policy	= BLK_TAG_ALLOC_RR,		\
 -- 
 2.20.0
 
