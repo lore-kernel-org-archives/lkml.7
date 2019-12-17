@@ -2,92 +2,154 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 123CAC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C33C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1F642176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:11:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50CEF206E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 04:13:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727484AbfLQELq (ORCPT
+        id S1727323AbfLQENk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 23:11:46 -0500
-Received: from ybironout4.netvigator.com ([210.87.250.77]:63575 "EHLO
-        ybironout4.netvigator.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbfLQELq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 23:11:46 -0500
-X-Greylist: delayed 612 seconds by postgrey-1.27 at vger.kernel.org; Mon, 16 Dec 2019 23:11:44 EST
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0DoBgDqUvhd/5YXxstkHgELHIFzC4Igg?=
- =?us-ascii?q?UEgEhoQlTuOeoUShSiBewkBAQE7AgEBgy2BEwKCFCQ1CA4CEAEBBAEBAQIBBQR?=
- =?us-ascii?q?thGtYhVYJBidSEBgIJgtXGVuCRwGCdgavfjMaAoo3gTaHP4RZFAY/gUGBR4Ioc?=
- =?us-ascii?q?4dtgkoEl1CXMQqCNJYIAhmOZwOLXi2oZoIAATaBWIEFgVkKgURQEY0yFxWOGzQ?=
- =?us-ascii?q?zgQSRZgE?=
-X-IronPort-AV: E=Sophos;i="5.69,324,1571673600"; 
-   d="scan'208";a="170931205"
-Received: from unknown (HELO ybironoah03.netvigator.com) ([203.198.23.150])
-  by ybironout4v1.netvigator.com with ESMTP; 17 Dec 2019 12:01:29 +0800
-Received: from unknown (HELO rhel76.localdomain) ([42.200.157.25])
-  by ybironoah03.netvigator.com with ESMTP; 17 Dec 2019 12:01:29 +0800
-From:   "Chan Shu Tak, Alex" <alexchan@task.com.hk>
-Cc:     "Chan Shu Tak, Alex" <alexchan@task.com.hk>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] llc2: Remove the condition operator in llc_stat_ev_rx_null_dsap_xid_c and llc_stat_ev_rx_null_dsap_test_c.
-Date:   Tue, 17 Dec 2019 12:00:36 +0800
-Message-Id: <1576555237-4037-1-git-send-email-alexchan@task.com.hk>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1576340820-4929-1-git-send-email-alexchan@task.com.hk>
-References: <1576340820-4929-1-git-send-email-alexchan@task.com.hk>
-To:     unlisted-recipients:; (no To-header on input)
+        Mon, 16 Dec 2019 23:13:40 -0500
+Received: from mga14.intel.com ([192.55.52.115]:45244 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725836AbfLQENk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Dec 2019 23:13:40 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 20:13:37 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,324,1571727600"; 
+   d="scan'208";a="227349930"
+Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.215.47]) ([10.254.215.47])
+  by orsmga002.jf.intel.com with ESMTP; 16 Dec 2019 20:13:36 -0800
+Subject: Re: [PATCH v3 5/6] iommu/vt-d: Flush PASID-based iotlb for iova over
+ first level
+To:     "Liu, Yi L" <yi.l.liu@intel.com>, Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+Cc:     "Raj, Ashok" <ashok.raj@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>, Peter Xu <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20191211021219.8997-1-baolu.lu@linux.intel.com>
+ <20191211021219.8997-6-baolu.lu@linux.intel.com>
+ <A2975661238FB949B60364EF0F2C25743A130C08@SHSMSX104.ccr.corp.intel.com>
+ <f1e5cfea-8b11-6d72-8e57-65daea51c050@linux.intel.com>
+ <A2975661238FB949B60364EF0F2C25743A132C50@SHSMSX104.ccr.corp.intel.com>
+ <6a5f6695-d1fd-e7d1-3ea3-f222a1ef0e54@linux.intel.com>
+ <b4a879b2-a5c7-b0bf-8cd4-7397aeebc381@linux.intel.com>
+ <A2975661238FB949B60364EF0F2C25743A135CAB@SHSMSX104.ccr.corp.intel.com>
+ <A2975661238FB949B60364EF0F2C25743A135D05@SHSMSX104.ccr.corp.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <e6ba7689-92a9-e332-d364-24e324bdad38@linux.intel.com>
+Date:   Tue, 17 Dec 2019 12:13:35 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <A2975661238FB949B60364EF0F2C25743A135D05@SHSMSX104.ccr.corp.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Chan Shu Tak, Alex" <alexchan@task.com.hk>
+Hi,
 
-When a frame with NULL DSAP is received, llc_station_rcv is called.
-In turn, llc_stat_ev_rx_null_dsap_xid_c is called to check if it is a NULL
-XID frame. The original condition operator returns 1 when the incoming
-frame is not a NULL XID frame and 0 otherwise. As a result, an incoming
-NULL TEST frame would trigger an XID response instead.
+On 2019/12/17 10:36, Liu, Yi L wrote:
+>> From: Liu, Yi L <yi.l.liu@intel.com>
+>> Sent: Tuesday, December 17, 2019 10:26 AM
+>> To: Lu Baolu <baolu.lu@linux.intel.com>; Joerg Roedel <joro@8bytes.org>; David
+>> Woodhouse <dwmw2@infradead.org>; Alex Williamson
+>> <alex.williamson@redhat.com>
+>> Subject: RE: [PATCH v3 5/6] iommu/vt-d: Flush PASID-based iotlb for iova over first
+>> level
+>>
+>>> From: Lu Baolu [mailto:baolu.lu@linux.intel.com]
+>>> Sent: Tuesday, December 17, 2019 9:37 AM
+>>> To: Liu, Yi L <yi.l.liu@intel.com>; Joerg Roedel <joro@8bytes.org>; David
+>>> Woodhouse <dwmw2@infradead.org>; Alex Williamson
+>>> <alex.williamson@redhat.com>
+>>> Subject: Re: [PATCH v3 5/6] iommu/vt-d: Flush PASID-based iotlb for iova over first
+>>> level
+>>>
+>>> Hi again,
+>>>
+>>> On 12/17/19 9:19 AM, Lu Baolu wrote:
+>>>> Hi Yi,
+>>>>
+>>>> On 12/15/19 5:22 PM, Liu, Yi L wrote:
+>>>>> Ok, let me explain more... default pasid is meaningful only when
+>>>>> the domain has been attached to a device as an aux-domain. right?
+>>>> No exactly. Each domain has a specific default pasid, no matter normal
+>>>> domain (RID based) or aux-domain (PASID based). The difference is for a
+>>>> normal domain RID2PASID value is used, for an aux-domain the pasid is
+>>>> allocated from a global pool.
+>>>>
+>>>> The same concept used in VT-d 3.x scalable mode. For RID based DMA
+>>>> translation RID2PASID value is used when walking the tables; For PASID
+>>>> based DMA translation a real pasid in the transaction is used.
+>>>>
+>>>>> If a domain only has one device, and it is attached to this device as
+>>>>> normal domain (normal domain means non aux-domain here). Then
+>>>>> you should flush cache with domain-id and RID2PASID value.
+>>>>> If a domain has one device, and it is attached to this device as
+>>>>> aux-domain. Then you may want to flush cache with domain-id
+>>>>> and default pasid. right?
+>>>> A domain's counterpart is IOMMU group. So we say attach/detach domain
+>>>> to/from devices in a group. We don't allow devices with different
+>>>> default pasid sitting in a same group, right?
+>>>>
+>>>>> Then let's come to the case I mentioned in previous email. a mdev
+>>>>> and another device assigned to a single VM. In host, you will have
+>>>>> a domain which has two devices, one device(deva) is attached as
+>>>> No. We will have two IOMMU groups and two domains. Correct me if my
+>>>> understanding is not right.
+>>> Reconsidered this. Unfortunately, my understanding is not right. :-(
+>>>
+>>> A single domain could be attached to multiple IOMMU groups. So it
+>>> comes to the issue you concerned. Do I understand it right?
+>> yes. Device within the same group has no such issue since such
+>> devices are not able to enabled aux-domain. Now our understanding
+>> are aligned. :-)
+>>
+>>>>> normal domain, another one (devB) is attached as aux-domain. Then
+>>>>> which pasid should be used when the mapping in IOVA page table is
+>>>>> modified? RID2PASID or default pasid? I think both should be used
+>>>>> since the domain means differently to the two devices. If you just
+>>>>> use default pasid, then deva may still be able to use stale caches.
+>>> You are right. I will change it accordingly. The logic should look
+>>> like:
+>>>
+>>> if (domain attached to physical device)
+>>> 	flush_piotlb_with_RID2PASID()
+>>> else if (domain_attached_to_mdev_device)
+>>> 	flush_piotlb_with_default_pasid()
+>>>
+>>> Does this work for you? Thanks for catching this!
+>> If no else, it would work for scalable mode. ^_^ I noticed you've
+>> already corrected by yourself in another reply. :-) Look forward to
+>> your next version.
+> BTW. The discussion in this thread may apply to other cache flush
+> in your series. Please have a check. At least, there are two places which
+> need to be updated in this single patch.
 
-To fix the error, we just need to remove the condition operator.
+Sure. I will.
 
-The same error is found in llc_stat_ev_rx_null_dsap_test_c and fixed.
+Best regards,
 
-Signed-off-by: Chan Shu Tak, Alex <alexchan@task.com.hk>
----
- net/llc/llc_station.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/net/llc/llc_station.c b/net/llc/llc_station.c
-index 90955d7..c29170e 100644
---- a/net/llc/llc_station.c
-+++ b/net/llc/llc_station.c
-@@ -32,7 +32,7 @@ static int llc_stat_ev_rx_null_dsap_xid_c(struct sk_buff *skb)
- 	return LLC_PDU_IS_CMD(pdu) &&			/* command PDU */
- 	       LLC_PDU_TYPE_IS_U(pdu) &&		/* U type PDU */
- 	       LLC_U_PDU_CMD(pdu) == LLC_1_PDU_CMD_XID &&
--	       !pdu->dsap ? 1 : 0;			/* NULL DSAP value */
-+	       !pdu->dsap;				/* NULL DSAP value */
- }
- 
- static int llc_stat_ev_rx_null_dsap_test_c(struct sk_buff *skb)
-@@ -42,7 +42,7 @@ static int llc_stat_ev_rx_null_dsap_test_c(struct sk_buff *skb)
- 	return LLC_PDU_IS_CMD(pdu) &&			/* command PDU */
- 	       LLC_PDU_TYPE_IS_U(pdu) &&		/* U type PDU */
- 	       LLC_U_PDU_CMD(pdu) == LLC_1_PDU_CMD_TEST &&
--	       !pdu->dsap ? 1 : 0;			/* NULL DSAP */
-+	       !pdu->dsap;				/* NULL DSAP */
- }
- 
- static int llc_station_ac_send_xid_r(struct sk_buff *skb)
--- 
-1.8.3.1
-
+baolu
+>   
+> Regards,
+> Yi Liu
