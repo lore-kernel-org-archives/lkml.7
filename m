@@ -2,102 +2,60 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 620A7C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 457D4C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2848221775
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:51:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FEDg76Bk"
+	by mail.kernel.org (Postfix) with ESMTP id 1F60D20729
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 23:54:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbfLQXvT (ORCPT
+        id S1726487AbfLQXyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 18:51:19 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:46597 "EHLO ozlabs.org"
+        Tue, 17 Dec 2019 18:54:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725946AbfLQXvS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 18:51:18 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725940AbfLQXyD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 18:54:03 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47cvzl1j8Rz9sR1;
-        Wed, 18 Dec 2019 10:51:15 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1576626676;
-        bh=GnAUl3PzTD6UAywDYOK5oZBCRdCtb1Q1Fvz2NZyJwW4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=FEDg76Bk1tsPQeXr3u1NZQNYOZrA6PbRIZKko1PfFko37HZicLFhauEfRY7pHiBNN
-         3AVfAzKjEUUp9gYrPHXlmgFtC4aPw6SC5MvoVyS7MAbAWKoQIpqiwD3GXW/bk03fOR
-         mlXrg5vlq4J/raXu+fL5edfZPAoRt0ekqBMQoOClyw6fpUlOe1Imd+JbvCYUNb4Tsm
-         aQBmggN2jrYso14Eajag2u2xFfj5WPXpXy9+saXwLt2FFl+996ZlIrL06yNCgzR7Pe
-         FOmSmaqe0QkmjX650wK9PNkqZFHe2e2h1rL5OQOpEuTXzdAAg/VPTEY+AQMGzONakF
-         hWwzNe+RsImng==
-Date:   Wed, 18 Dec 2019 10:51:13 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Ammy Yi <ammy.yi@intel.com>, stable@vger.kernel.org
-Subject: Re: [GIT PULL 4/4] intel_th: msu: Fix window switching without
- windows
-Message-ID: <20191218105113.21cc94fb@canb.auug.org.au>
-In-Reply-To: <20191217120629.GB3156341@kroah.com>
-References: <20191217115527.74383-1-alexander.shishkin@linux.intel.com>
-        <20191217115527.74383-5-alexander.shishkin@linux.intel.com>
-        <20191217120629.GB3156341@kroah.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id ADCE621775;
+        Tue, 17 Dec 2019 23:54:02 +0000 (UTC)
+Date:   Tue, 17 Dec 2019 18:54:01 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Subject: Re: ftrace trace_raw_pipe format
+Message-ID: <20191217185401.30824f2c@gandalf.local.home>
+In-Reply-To: <20191217183641.1729b821@gandalf.local.home>
+References: <e8f9744ddffc4527b222ce72d41c61a1@AcuMS.aculab.com>
+        <20191217173403.61f4e2d8@gandalf.local.home>
+        <20191217183641.1729b821@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/UIwpCo_nVWJXHjBngfC9MRi";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/UIwpCo_nVWJXHjBngfC9MRi
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, 17 Dec 2019 18:36:41 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Hi Greg,
+> Also note, once you are here, you don't need to use the
+> tep_print_event() to print out the fields of record. You can also
+> extract the data from the event directly. Or you could register a
+> handler that will get called via the tep_print_event().
 
-On Tue, 17 Dec 2019 13:06:29 +0100 Greg Kroah-Hartman <gregkh@linuxfoundati=
-on.org> wrote:
->
-> On Tue, Dec 17, 2019 at 01:55:27PM +0200, Alexander Shishkin wrote:
-> > Commit 6cac7866c2741 ("intel_th: msu: Add a sysfs attribute to trigger
-> > window switch") adds a NULL pointer dereference in the case when there =
-are
-> > no windows allocated: =20
->=20
-> Commit ids should only be specified in 12 digits, not 13 :)
+And of course, if you are unaware, trace-cmd does all this for you too:
 
-It is possible that 13 digits may be necessary to be unambiguous within
-a git repo.  In fact, as we continue with a single git repo (Linus'), at
-some point 13 digits will become normal.
+ http://www.trace-cmd.org
 
---=20
-Cheers,
-Stephen Rothwell
+;-)
 
---Sig_/UIwpCo_nVWJXHjBngfC9MRi
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl35afEACgkQAVBC80lX
-0Gyn5gf9EbgzxPiJZyCJewP+YFS3xms6a67yK8sbNVizB+qvdjP0YmGOdYwYll/u
-sKqhu2CLRiTcZrzsqCYR0sGPm5BJ/0K2z7T0ZRvOZzulAS0N+WKilLqdRmsaYuFJ
-EC9p+i2Exr4aJldLUDNbLmzcPaXTAHXGEPbzUwgrOAD/edV3CIEydM1/c+HliD9N
-ap/6mYV181HvYOG3poYi4E0aGOvk1nWUtMPLubXnRg/2xT7F3bHD+cMGi0zYFJ4T
-R+S/lPvWRaCtBcmVnNFI2vpdj1ZkAq+uB07hgVfCAJ2ZRdJHi2KEIaA0XuV+nExC
-8peLAA0uvQs1X03M39e2fY1o/z45hQ==
-=lBmi
------END PGP SIGNATURE-----
-
---Sig_/UIwpCo_nVWJXHjBngfC9MRi--
+-- Steve
