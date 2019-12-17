@@ -2,106 +2,142 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EFD6C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA6EC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E62F120716
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4B2D21835
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:31:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbfLQMb2 (ORCPT
+        id S1727933AbfLQMbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 17 Dec 2019 07:31:31 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:45657 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727859AbfLQMb2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 17 Dec 2019 07:31:28 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7697 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727807AbfLQMb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 07:31:27 -0500
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 09230FE37AC8A720409F;
-        Tue, 17 Dec 2019 20:31:26 +0800 (CST)
-Received: from [127.0.0.1] (10.177.251.225) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Tue, 17 Dec 2019
- 20:31:20 +0800
-Subject: Re: [PATCH] x86/process: remove unused variable in __switch_to_xtra()
-To:     Borislav Petkov <bp@alien8.de>
-CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <hpa@zytor.com>,
-        <x86@kernel.org>, <luto@kernel.org>, <riel@surriel.com>,
-        <dave.hansen@intel.com>, <longman@redhat.com>,
-        <mtosatti@redhat.com>, <linux-kernel@vger.kernel.org>,
-        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
-        "linfeilong@huawei.com" <linfeilong@huawei.com>
-References: <0efac42a-1631-d93d-d8a2-e6cf65cdf16b@huawei.com>
- <20191217122922.GD28788@zn.tnic>
-From:   Yunfeng Ye <yeyunfeng@huawei.com>
-Message-ID: <b6d29107-473e-15d2-4eab-3b081dadf6cd@huawei.com>
-Date:   Tue, 17 Dec 2019 20:30:58 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ihC0V-0005OG-Hy; Tue, 17 Dec 2019 13:31:19 +0100
+Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ihC0S-0006OI-I9; Tue, 17 Dec 2019 13:31:16 +0100
+Date:   Tue, 17 Dec 2019 13:31:16 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "andrew@aj.id.au" <andrew@aj.id.au>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
+ selection documentation
+Message-ID: <20191217123116.GB29666@pengutronix.de>
+References: <20191210094144.mxximpuouchy3fqu@pengutronix.de>
+ <AM5PR1001MB099497419E4DCA69D424EC35805A0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
+ <20191212161019.GF4310@sirena.org.uk>
+ <20191212162152.5uu3feacduetysq7@pengutronix.de>
+ <20191212165124.GJ4310@sirena.org.uk>
+ <20191216085525.csr2aglm5md4vtsw@pengutronix.de>
+ <AM5PR1001MB09941005A47B603805D3C53280510@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191217090034.GD31182@pengutronix.de>
+ <AM5PR1001MB099460B2D291644F088707BA80500@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-In-Reply-To: <20191217122922.GD28788@zn.tnic>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.177.251.225]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM5PR1001MB099460B2D291644F088707BA80500@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 13:21:27 up 110 days, 35 min, 93 users,  load average: 0.98, 1.01,
+ 1.03
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/12/17 20:29, Borislav Petkov wrote:
-> On Tue, Dec 17, 2019 at 08:09:08PM +0800, Yunfeng Ye wrote:
->> After the commit ecc7e37d4dad ("x86/io: Speedup schedule out of I/O
->> bitmap user") and commit 22fe5b0439dd ("x86/ioperm: Move TSS bitmap
->> update to exit to user work"), warning is found:
->>
->> arch/x86/kernel/process.c: In function ‘__switch_to_xtra’:
->> arch/x86/kernel/process.c:618:31: warning: variable ‘next’ set but not
->> used [-Wunused-but-set-variable]
->>   struct thread_struct *prev, *next;
->>                                ^~~~
->> arch/x86/kernel/process.c:618:24: warning: variable ‘prev’ set but not
->> used [-Wunused-but-set-variable]
->>   struct thread_struct *prev, *next;
->>                         ^~~~
->> Fix this by removing the unused variable @prev and @next;
->>
->> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
->> ---
->>  arch/x86/kernel/process.c | 4 ----
->>  1 file changed, 4 deletions(-)
->>
->> diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
->> index 61e93a318983..839b5244e3b7 100644
->> --- a/arch/x86/kernel/process.c
->> +++ b/arch/x86/kernel/process.c
->> @@ -615,12 +615,8 @@ void speculation_ctrl_update_current(void)
->>
->>  void __switch_to_xtra(struct task_struct *prev_p, struct task_struct *next_p)
->>  {
->> -	struct thread_struct *prev, *next;
->>  	unsigned long tifp, tifn;
->>
->> -	prev = &prev_p->thread;
->> -	next = &next_p->thread;
->> -
->>  	tifn = READ_ONCE(task_thread_info(next_p)->flags);
->>  	tifp = READ_ONCE(task_thread_info(prev_p)->flags);
->>
->> -- 
+On 19-12-17 09:53, Adam Thomson wrote:
+> On 17 December 2019 09:01, Marco Felsch wrote:
 > 
-> Let me introduce you to your colleague yu kuai:
+> > > > The enabel control signal is always available, please check [1] table
+> > > > 63. There is a mux in front of the enable pin so:
+> > > >
+> > > >              +-------------
+> > > >  Seq. |\     |   Regulator
+> > > >  GPI1 | \    |
+> > > >  GPI2 | | -- > Enable
+> > > >  GPI3 | /    |
+> > > >       |/     .
+> > > >              .
+> > > >              .
+> > > >
+> > > > Adam please correct me if this is wrong.
+> > >
+> > > Yes the register can always be configured regardless of the associated pin
+> > > configuration, but if say GPIO1 was configured as a GPO but a regulator was
+> > > configured to use GPIO1 as its GPI control mechanism, the output signal from
+> > > GPIO1 would be ignored, the sequencer control would not have any effect and
+> > > you're simply left with manual I2C control. Really we shouldn't be getting into
+> > > that situation though. If a GPIO is to be used as a regulator control signal
+> > > then it should be marked as such and I don't think we should be able to use that
+> > > pin for anything other than regulator control.
+> > 
+> > I see, so we have to guarantee that the requested gpio is configured as
+> > input. This can be done by:
 > 
-ok, thanks.
+> This is one of the reasons I thought this was better suited to being done in the
+> pinctrl/pinmux side. If you configure the GPIO as for regulator control then
+> the code can automatically configure the GPIO for input. That doesn't then need
+> to be in the regulator driver.
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=x86/cleanups&id=27353d5785bca61bb49cfd7c78e14f1d21e66ec5
+I still don't prefer that way.. pls check my arguments I already made
+and I don't wanna repeat it again.
+
+> But yes we wouldn't really want to configure a regulator to be controlled via a
+> GPI when it's configured as a GPO as it makes no sense.
+
+Okay, so the check is all we need to hardening the driver against wrong
+usage :)
+
+Regards,
+  Marco
+
 > 
-> :-)
+> > 
+> >   if (gpi->flags & FLAG_IS_OUT)
+> >   	return -EINVAL;
+> > 
+> > Regards,
+> >   Marco
 > 
 
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
