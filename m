@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD99C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B901C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA25D24679
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8C70206D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:58:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728029AbfLQA6B (ORCPT
+        id S1727613AbfLQA6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:58:01 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34874 "EHLO
+        Mon, 16 Dec 2019 19:58:15 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34916 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726773AbfLQAvj (ORCPT
+        by vger.kernel.org with ESMTP id S1726794AbfLQAvj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 19:51:39 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15I-0003LE-5R; Tue, 17 Dec 2019 00:51:32 +0000
+        id 1ih15I-0003LC-Ad; Tue, 17 Dec 2019 00:51:32 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15G-0005Uo-VR; Tue, 17 Dec 2019 00:51:30 +0000
+        id 1ih15H-0005Vc-Ct; Tue, 17 Dec 2019 00:51:31 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        syzbot+31c16aa4202dace3812e@syzkaller.appspotmail.com,
-        "Jakub Kicinski" <jakub.kicinski@netronome.com>,
-        syzbot+6bf095f9becf5efef645@syzkaller.appspotmail.com,
-        "Eric Biggers" <ebiggers@google.com>
-Date:   Tue, 17 Dec 2019 00:46:18 +0000
-Message-ID: <lsq.1576543535.462168066@decadent.org.uk>
+        "Johan Hovold" <johan@kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Date:   Tue, 17 Dec 2019 00:46:28 +0000
+Message-ID: <lsq.1576543535.682851003@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 044/136] llc: fix sk_buff leak in llc_sap_state_process()
+Subject: [PATCH 3.16 054/136] USB: ldusb: fix NULL-derefs on driver unbind
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,129 +55,129 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Biggers <ebiggers@google.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit c6ee11c39fcc1fb55130748990a8f199e76263b4 upstream.
+commit 58ecf131e74620305175a7aa103f81350bb37570 upstream.
 
-syzbot reported:
+The driver was using its struct usb_interface pointer as an inverted
+disconnected flag, but was setting it to NULL before making sure all
+completion handlers had run. This could lead to a NULL-pointer
+dereference in a number of dev_dbg, dev_warn and dev_err statements in
+the completion handlers which relies on said pointer.
 
-    BUG: memory leak
-    unreferenced object 0xffff888116270800 (size 224):
-       comm "syz-executor641", pid 7047, jiffies 4294947360 (age 13.860s)
-       hex dump (first 32 bytes):
-         00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-         00 20 e1 2a 81 88 ff ff 00 40 3d 2a 81 88 ff ff  . .*.....@=*....
-       backtrace:
-         [<000000004d41b4cc>] kmemleak_alloc_recursive  include/linux/kmemleak.h:55 [inline]
-         [<000000004d41b4cc>] slab_post_alloc_hook mm/slab.h:439 [inline]
-         [<000000004d41b4cc>] slab_alloc_node mm/slab.c:3269 [inline]
-         [<000000004d41b4cc>] kmem_cache_alloc_node+0x153/0x2a0 mm/slab.c:3579
-         [<00000000506a5965>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
-         [<000000001ba5a161>] alloc_skb include/linux/skbuff.h:1058 [inline]
-         [<000000001ba5a161>] alloc_skb_with_frags+0x5f/0x250  net/core/skbuff.c:5327
-         [<0000000047d9c78b>] sock_alloc_send_pskb+0x269/0x2a0  net/core/sock.c:2225
-         [<000000003828fe54>] sock_alloc_send_skb+0x32/0x40 net/core/sock.c:2242
-         [<00000000e34d94f9>] llc_ui_sendmsg+0x10a/0x540 net/llc/af_llc.c:933
-         [<00000000de2de3fb>] sock_sendmsg_nosec net/socket.c:652 [inline]
-         [<00000000de2de3fb>] sock_sendmsg+0x54/0x70 net/socket.c:671
-         [<000000008fe16e7a>] __sys_sendto+0x148/0x1f0 net/socket.c:1964
-	 [...]
+Fix this by unconditionally stopping all I/O and preventing
+resubmissions by poisoning the interrupt URBs at disconnect and using a
+dedicated disconnected flag.
 
-The bug is that llc_sap_state_process() always takes an extra reference
-to the skb, but sometimes neither llc_sap_next_state() nor
-llc_sap_state_process() itself drops this reference.
+This also makes sure that all I/O has completed by the time the
+disconnect callback returns.
 
-Fix it by changing llc_sap_next_state() to never consume a reference to
-the skb, rather than sometimes do so and sometimes not.  Then remove the
-extra skb_get() and kfree_skb() from llc_sap_state_process().
-
-Reported-by: syzbot+6bf095f9becf5efef645@syzkaller.appspotmail.com
-Reported-by: syzbot+31c16aa4202dace3812e@syzkaller.appspotmail.com
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Fixes: 2824bd250f0b ("[PATCH] USB: add ldusb driver")
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191009153848.8664-4-johan@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/llc/llc_s_ac.c | 12 +++++++++---
- net/llc/llc_sap.c  | 23 ++++++++---------------
- 2 files changed, 17 insertions(+), 18 deletions(-)
+ drivers/usb/misc/ldusb.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
---- a/net/llc/llc_s_ac.c
-+++ b/net/llc/llc_s_ac.c
-@@ -58,8 +58,10 @@ int llc_sap_action_send_ui(struct llc_sa
- 			    ev->daddr.lsap, LLC_PDU_CMD);
- 	llc_pdu_init_as_ui_cmd(skb);
- 	rc = llc_mac_hdr_init(skb, ev->saddr.mac, ev->daddr.mac);
--	if (likely(!rc))
-+	if (likely(!rc)) {
-+		skb_get(skb);
- 		rc = dev_queue_xmit(skb);
-+	}
- 	return rc;
- }
+--- a/drivers/usb/misc/ldusb.c
++++ b/drivers/usb/misc/ldusb.c
+@@ -168,6 +168,7 @@ MODULE_PARM_DESC(min_interrupt_out_inter
+ struct ld_usb {
+ 	struct mutex		mutex;		/* locks this structure */
+ 	struct usb_interface*	intf;		/* save off the usb interface pointer */
++	unsigned long		disconnected:1;
  
-@@ -81,8 +83,10 @@ int llc_sap_action_send_xid_c(struct llc
- 			    ev->daddr.lsap, LLC_PDU_CMD);
- 	llc_pdu_init_as_xid_cmd(skb, LLC_XID_NULL_CLASS_2, 0);
- 	rc = llc_mac_hdr_init(skb, ev->saddr.mac, ev->daddr.mac);
--	if (likely(!rc))
-+	if (likely(!rc)) {
-+		skb_get(skb);
- 		rc = dev_queue_xmit(skb);
-+	}
- 	return rc;
- }
+ 	int			open_count;	/* number of times this port has been opened */
  
-@@ -135,8 +139,10 @@ int llc_sap_action_send_test_c(struct ll
- 			    ev->daddr.lsap, LLC_PDU_CMD);
- 	llc_pdu_init_as_test_cmd(skb);
- 	rc = llc_mac_hdr_init(skb, ev->saddr.mac, ev->daddr.mac);
--	if (likely(!rc))
-+	if (likely(!rc)) {
-+		skb_get(skb);
- 		rc = dev_queue_xmit(skb);
-+	}
- 	return rc;
- }
- 
---- a/net/llc/llc_sap.c
-+++ b/net/llc/llc_sap.c
-@@ -197,29 +197,22 @@ out:
-  *	After executing actions of the event, upper layer will be indicated
-  *	if needed(on receiving an UI frame). sk can be null for the
-  *	datalink_proto case.
-+ *
-+ *	This function always consumes a reference to the skb.
-  */
- static void llc_sap_state_process(struct llc_sap *sap, struct sk_buff *skb)
- {
- 	struct llc_sap_state_ev *ev = llc_sap_ev(skb);
- 
--	/*
--	 * We have to hold the skb, because llc_sap_next_state
--	 * will kfree it in the sending path and we need to
--	 * look at the skb->cb, where we encode llc_sap_state_ev.
--	 */
--	skb_get(skb);
- 	ev->ind_cfm_flag = 0;
- 	llc_sap_next_state(sap, skb);
--	if (ev->ind_cfm_flag == LLC_IND) {
--		if (skb->sk->sk_state == TCP_LISTEN)
--			kfree_skb(skb);
--		else {
--			llc_save_primitive(skb->sk, skb, ev->prim);
- 
--			/* queue skb to the user. */
--			if (sock_queue_rcv_skb(skb->sk, skb))
--				kfree_skb(skb);
--		}
-+	if (ev->ind_cfm_flag == LLC_IND && skb->sk->sk_state != TCP_LISTEN) {
-+		llc_save_primitive(skb->sk, skb, ev->prim);
-+
-+		/* queue skb to the user. */
-+		if (sock_queue_rcv_skb(skb->sk, skb) == 0)
-+			return;
+@@ -207,12 +208,10 @@ static void ld_usb_abort_transfers(struc
+ 	/* shutdown transfer */
+ 	if (dev->interrupt_in_running) {
+ 		dev->interrupt_in_running = 0;
+-		if (dev->intf)
+-			usb_kill_urb(dev->interrupt_in_urb);
++		usb_kill_urb(dev->interrupt_in_urb);
  	}
- 	kfree_skb(skb);
+ 	if (dev->interrupt_out_busy)
+-		if (dev->intf)
+-			usb_kill_urb(dev->interrupt_out_urb);
++		usb_kill_urb(dev->interrupt_out_urb);
  }
+ 
+ /**
+@@ -220,8 +219,6 @@ static void ld_usb_abort_transfers(struc
+  */
+ static void ld_usb_delete(struct ld_usb *dev)
+ {
+-	ld_usb_abort_transfers(dev);
+-
+ 	/* free data structures */
+ 	usb_free_urb(dev->interrupt_in_urb);
+ 	usb_free_urb(dev->interrupt_out_urb);
+@@ -277,7 +274,7 @@ static void ld_usb_interrupt_in_callback
+ 
+ resubmit:
+ 	/* resubmit if we're still running */
+-	if (dev->interrupt_in_running && !dev->buffer_overflow && dev->intf) {
++	if (dev->interrupt_in_running && !dev->buffer_overflow) {
+ 		retval = usb_submit_urb(dev->interrupt_in_urb, GFP_ATOMIC);
+ 		if (retval) {
+ 			dev_err(&dev->intf->dev,
+@@ -406,7 +403,7 @@ static int ld_usb_release(struct inode *
+ 		retval = -ENODEV;
+ 		goto unlock_exit;
+ 	}
+-	if (dev->intf == NULL) {
++	if (dev->disconnected) {
+ 		/* the device was unplugged before the file was released */
+ 		mutex_unlock(&dev->mutex);
+ 		/* unlock here as ld_usb_delete frees dev */
+@@ -437,7 +434,7 @@ static unsigned int ld_usb_poll(struct f
+ 
+ 	dev = file->private_data;
+ 
+-	if (!dev->intf)
++	if (dev->disconnected)
+ 		return POLLERR | POLLHUP;
+ 
+ 	poll_wait(file, &dev->read_wait, wait);
+@@ -476,7 +473,7 @@ static ssize_t ld_usb_read(struct file *
+ 	}
+ 
+ 	/* verify that the device wasn't unplugged */
+-	if (dev->intf == NULL) {
++	if (dev->disconnected) {
+ 		retval = -ENODEV;
+ 		printk(KERN_ERR "ldusb: No device or device unplugged %d\n", retval);
+ 		goto unlock_exit;
+@@ -556,7 +553,7 @@ static ssize_t ld_usb_write(struct file
+ 	}
+ 
+ 	/* verify that the device wasn't unplugged */
+-	if (dev->intf == NULL) {
++	if (dev->disconnected) {
+ 		retval = -ENODEV;
+ 		printk(KERN_ERR "ldusb: No device or device unplugged %d\n", retval);
+ 		goto unlock_exit;
+@@ -792,6 +789,9 @@ static void ld_usb_disconnect(struct usb
+ 	/* give back our minor */
+ 	usb_deregister_dev(intf, &ld_usb_class);
+ 
++	usb_poison_urb(dev->interrupt_in_urb);
++	usb_poison_urb(dev->interrupt_out_urb);
++
+ 	mutex_lock(&dev->mutex);
+ 
+ 	/* if the device is not opened, then we clean up right now */
+@@ -799,7 +799,7 @@ static void ld_usb_disconnect(struct usb
+ 		mutex_unlock(&dev->mutex);
+ 		ld_usb_delete(dev);
+ 	} else {
+-		dev->intf = NULL;
++		dev->disconnected = 1;
+ 		/* wake up pollers */
+ 		wake_up_interruptible_all(&dev->read_wait);
+ 		wake_up_interruptible_all(&dev->write_wait);
 
