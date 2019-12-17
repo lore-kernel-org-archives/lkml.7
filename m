@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76EB1C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A13C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D9612067C
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:54:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8E292067C
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:54:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbfLQAyl (ORCPT
+        id S1727981AbfLQAyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:54:41 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35410 "EHLO
+        Mon, 16 Dec 2019 19:54:44 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35294 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727105AbfLQAvo (ORCPT
+        by vger.kernel.org with ESMTP id S1727046AbfLQAvo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 19:51:44 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15N-0003PC-Lh; Tue, 17 Dec 2019 00:51:37 +0000
+        id 1ih15K-0003Ms-PJ; Tue, 17 Dec 2019 00:51:34 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15L-0005ey-98; Tue, 17 Dec 2019 00:51:35 +0000
+        id 1ih15I-0005Zr-Pl; Tue, 17 Dec 2019 00:51:32 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Al Viro" <viro@zeniv.linux.org.uk>
-Date:   Tue, 17 Dec 2019 00:47:40 +0000
-Message-ID: <lsq.1576543535.985489010@decadent.org.uk>
+        "Giuseppe Scrivano" <gscrivan@redhat.com>,
+        "Miklos Szeredi" <mszeredi@redhat.com>
+Date:   Tue, 17 Dec 2019 00:46:59 +0000
+Message-ID: <lsq.1576543535.205728246@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 126/136] ecryptfs_lookup_interpose(): lower_dentry->d_inode
- is not stable
+Subject: [PATCH 3.16 085/136] fuse: flush dirty data/metadata before
+ non-truncate setattr
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,51 +56,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Miklos Szeredi <mszeredi@redhat.com>
 
-commit e72b9dd6a5f17d0fb51f16f8685f3004361e83d0 upstream.
+commit b24e7598db62386a95a3c8b9c75630c5d56fe077 upstream.
 
-lower_dentry can't go from positive to negative (we have it pinned),
-but it *can* go from negative to positive.  So fetching ->d_inode
-into a local variable, doing a blocking allocation, checking that
-now ->d_inode is non-NULL and feeding the value we'd fetched
-earlier to a function that won't accept NULL is not a good idea.
+If writeback cache is enabled, then writes might get reordered with
+chmod/chown/utimes.  The problem with this is that performing the write in
+the fuse daemon might itself change some of these attributes.  In such case
+the following sequence of operations will result in file ending up with the
+wrong mode, for example:
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-[bwh: Backported to 3.16:
- - Use ACCESS_ONCE() instead of READ_ONCE()
- - Adjust context]
+  int fd = open ("suid", O_WRONLY|O_CREAT|O_EXCL);
+  write (fd, "1", 1);
+  fchown (fd, 0, 0);
+  fchmod (fd, 04755);
+  close (fd);
+
+This patch fixes this by flushing pending writes before performing
+chown/chmod/utimes.
+
+Reported-by: Giuseppe Scrivano <gscrivan@redhat.com>
+Tested-by: Giuseppe Scrivano <gscrivan@redhat.com>
+Fixes: 4d99ff8f12eb ("fuse: Turn writeback cache on")
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/ecryptfs/inode.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ fs/fuse/dir.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
---- a/fs/ecryptfs/inode.c
-+++ b/fs/ecryptfs/inode.c
-@@ -341,7 +341,7 @@ static int ecryptfs_lookup_interpose(str
- 				     struct dentry *lower_dentry,
- 				     struct inode *dir_inode)
- {
--	struct inode *inode, *lower_inode = lower_dentry->d_inode;
-+	struct inode *inode, *lower_inode;
- 	struct ecryptfs_dentry_info *dentry_info;
- 	struct vfsmount *lower_mnt;
- 	int rc = 0;
-@@ -363,7 +363,15 @@ static int ecryptfs_lookup_interpose(str
- 	dentry_info->lower_path.mnt = lower_mnt;
- 	dentry_info->lower_path.dentry = lower_dentry;
+--- a/fs/fuse/dir.c
++++ b/fs/fuse/dir.c
+@@ -1751,6 +1751,19 @@ int fuse_do_setattr(struct dentry *dentr
+ 	if (IS_ERR(req))
+ 		return PTR_ERR(req);
  
--	if (!lower_dentry->d_inode) {
-+	/*
-+	 * negative dentry can go positive under us here - its parent is not
-+	 * locked.  That's OK and that could happen just as we return from
-+	 * ecryptfs_lookup() anyway.  Just need to be careful and fetch
-+	 * ->d_inode only once - it's not stable here.
-+	 */
-+	lower_inode = ACCESS_ONCE(lower_dentry->d_inode);
++	/* Flush dirty data/metadata before non-truncate SETATTR */
++	if (is_wb && S_ISREG(inode->i_mode) &&
++	    attr->ia_valid &
++			(ATTR_MODE | ATTR_UID | ATTR_GID | ATTR_MTIME_SET |
++			 ATTR_TIMES_SET)) {
++		err = write_inode_now(inode, true);
++		if (err)
++			return err;
 +
-+	if (!lower_inode) {
- 		/* We want to add because we couldn't find in lower */
- 		d_add(dentry, NULL);
- 		return 0;
++		fuse_set_nowrite(inode);
++		fuse_release_nowrite(inode);
++	}
++
+ 	if (is_truncate) {
+ 		fuse_set_nowrite(inode);
+ 		set_bit(FUSE_I_SIZE_UNSTABLE, &fi->state);
 
