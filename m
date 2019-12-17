@@ -2,103 +2,106 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B4E4C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89481C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5CB221D7D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:51:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576601483;
-	bh=K6gvibBp8HobEh4jPXKTMkLuxd3eXZz7tl4ehWvFF/Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=0+b5+c8Dhrl4Hh5U1tSNF974ylfu0GdnldNm3GetYwSmlnr3YpnKvdE7Rz8hAsARE
-	 1OdRQAiaUZ5jtoEsw+InVElXTS+WsB910VZ121MYHeB0nXIdanXE3w/nPMCSNhoyWK
-	 IPkJDhqscnYIREkEXBARmn6e9BgmNGHf0Esez3JA=
+	by mail.kernel.org (Postfix) with ESMTP id 5B9E12465E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:54:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CHeMb+GA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727628AbfLQQvV (ORCPT
+        id S1727711AbfLQQyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 11:51:21 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:46062 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727161AbfLQQvV (ORCPT
+        Tue, 17 Dec 2019 11:54:13 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:39095 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbfLQQyN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 11:51:21 -0500
-Received: by mail-oi1-f196.google.com with SMTP id v10so5867082oiv.12;
-        Tue, 17 Dec 2019 08:51:20 -0800 (PST)
+        Tue, 17 Dec 2019 11:54:13 -0500
+Received: by mail-pf1-f193.google.com with SMTP id q10so1011854pfs.6;
+        Tue, 17 Dec 2019 08:54:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=UqAALhbJUctlAt3Rayrh/HqASiW433RXhLjAxX/LchI=;
+        b=CHeMb+GAK3Gs7iOFr2CN0dWpnuZNG1f514VN72zNLF7RdYkYTRzNVP5e8QnLocKguz
+         nlMQl0OUGSSVPh/OKrl3TQoMlmrNqGnFFtXgqi+xMq5obRx/6zKjKEuviqAMaD7DnU5g
+         c2325fu/9Wal14/7+j7KDtmAFKDYuvjACJOWfISQSNlOkKTJk6L93U+ZCycPELYsF/vY
+         Xv1TGFUZizkza1ZfkdwE+zeajvlxIx6BbNBzRrHnL3wGv3n1VVcHLdLG0G9Moyb+rxvw
+         xi4Hhr9irF0cmQUm9yreJ9mchqc7XKsjiQRf2KTUr0Sv2YHLCCARKhGdmP/c2XiIgzXP
+         gjOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fcVtd0PQXwawV2kFABB1V3X1mbUitghtCZjt3Z3mtPs=;
-        b=lWC6UtxSoWLH+yUKo3hRs7a9kzsOvEh/n2qjLLWBCQZlr820zoa5IDQhY013Wdgeyr
-         nYYI0gN01hsGekfo7ylo/d0fD3SXGG2/SdwVnWsTYcRQ39utxTTnR8AY6uuA+tZPfcrg
-         5R/TADPMRwvaGOuGM8262sBrfoLYMKpSAijP6WJk36ViUvTUCPgN5bJZzaicOGg6TkXs
-         Py1Y1rD/wSxRAVMQsp9dY1vdV8cPytEW4fOXOQRxAtpDDIIeZjIYQ0i54HOHV0SdSRwn
-         5FrQ5mJoid5MegJFA9XqDGfWJjqaVOUVvYHATu4fqnTdsZZ6k1vrBC9XKYsNYP9Rfcwx
-         byvw==
-X-Gm-Message-State: APjAAAWDvswZIxFaH/JS7hwIqRUUGLtqtZL1MdaiyLD+Wai7ZiFLVdz3
-        phPKM/T98zuUtaBpCj56NBaZZoNDmhDuI/scnGg=
-X-Google-Smtp-Source: APXvYqxDoKJO/my3WhR6r0OHazOflJZTa5BuhPVYLFlrsFtii/atvi20YYByN9lvFhU35WIAryD5o7GaShaSfmcDBZI=
-X-Received: by 2002:aca:d6c8:: with SMTP id n191mr1000217oig.103.1576601480290;
- Tue, 17 Dec 2019 08:51:20 -0800 (PST)
-MIME-Version: 1.0
-References: <20191217143834.19797-1-huntbag@linux.vnet.ibm.com>
-In-Reply-To: <20191217143834.19797-1-huntbag@linux.vnet.ibm.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 17 Dec 2019 17:51:09 +0100
-Message-ID: <CAJZ5v0jmMwRGDY70EV3sqpw7uJ4R+VomoWtJ9rWzNTVuV3AUxQ@mail.gmail.com>
-Subject: Re: [RFC] cpuidle : Add debugfs support for cpuidle core
-To:     Abhishek Goel <huntbag@linux.vnet.ibm.com>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>, svaidy@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=UqAALhbJUctlAt3Rayrh/HqASiW433RXhLjAxX/LchI=;
+        b=J92R6i07KiSGsD+uWb3QqYjVtkbtQQlRGhsujQZvOfMezKFEcsSDP+8D4+pRhZkC7W
+         5YHy1fuwH2lDrMx07U/BGqTig9LZuuXfPtleaQSCb8NOXIjyd/0H1Dg7jjqLVLRSjKDS
+         +E6AdcabUbv16lXlrsk2F5KdlnLeQgF9ZwBUmWhGQnXHn8T/Hhynr/rh7x7tQDuS1+LM
+         5VZbeS2DwzyNbyTWRYbFhYCrOI2M5zErNeQS7AYqkXJVLxsBK1PTPSSIb3Dm1+1PVTNy
+         XPZgz76sAl8N2CxNwLBiRDGIyho0eqxpFSD19SADMWPUneDUMuZ/2uWFvXX803AyesDd
+         p4KQ==
+X-Gm-Message-State: APjAAAXrDrD2NVJYCZdD/cavl1bWgE41OTabgSAUvTA6GLuq6xon/ISE
+        p04eCtpoRlOHh0+E6p7UNLU=
+X-Google-Smtp-Source: APXvYqyYabh+3GFRO9Qpf0Ga8UhH0LczUeqATaOub5FWvAvtoLRKCpBPsnvqVfvGdwlGhTm9esZngg==
+X-Received: by 2002:a63:1106:: with SMTP id g6mr26017569pgl.13.1576601652689;
+        Tue, 17 Dec 2019 08:54:12 -0800 (PST)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id v72sm4082803pjb.25.2019.12.17.08.54.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 08:54:12 -0800 (PST)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     mturquette@baylibre.com, sboyd@kernel.org
+Cc:     andy.gross@linaro.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH] clk: qcom: smd: Add missing bimc clock
+Date:   Tue, 17 Dec 2019 08:54:09 -0800
+Message-Id: <20191217165409.4919-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 3:42 PM Abhishek Goel
-<huntbag@linux.vnet.ibm.com> wrote:
->
-> Up until now, we did not have a way to tune cpuidle attribute like
-> residency in kernel. This patch adds support for debugfs in cpuidle core.
-> Thereby providing support for tuning cpuidle attributes like residency in
-> kernel at runtime.
+It turns out booting the modem is dependent on a bimc vote from Linux on
+msm8998.  To make the modem happy, add the bimc clock to rely on the
+default vote from rpmcc.  Once we have interconnect support, bimc should
+be controlled properly.
 
-This is not a good idea in my view, for a couple of reasons.
+Fixes: 6131dc81211c ("clk: qcom: smd: Add support for MSM8998 rpm clocks")
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+ drivers/clk/qcom/clk-smd-rpm.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-First off, if the target residency of an idle state is changed, it
-effectively becomes a different one and all of the statistics
-regarding it become outdated at that point.  Synchronizing that would
-be a pain.
+diff --git a/drivers/clk/qcom/clk-smd-rpm.c b/drivers/clk/qcom/clk-smd-rpm.c
+index 930fa4a4c52a..e5c3db11bf26 100644
+--- a/drivers/clk/qcom/clk-smd-rpm.c
++++ b/drivers/clk/qcom/clk-smd-rpm.c
+@@ -648,6 +648,7 @@ static const struct rpm_smd_clk_desc rpm_clk_qcs404 = {
+ };
+ 
+ /* msm8998 */
++DEFINE_CLK_SMD_RPM(msm8998, bimc_clk, bimc_a_clk, QCOM_SMD_RPM_MEM_CLK, 0);
+ DEFINE_CLK_SMD_RPM(msm8998, pcnoc_clk, pcnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 0);
+ DEFINE_CLK_SMD_RPM(msm8998, snoc_clk, snoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 1);
+ DEFINE_CLK_SMD_RPM(msm8998, cnoc_clk, cnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 2);
+@@ -671,6 +672,8 @@ DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8998, rf_clk2_pin, rf_clk2_a_pin, 5);
+ DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, rf_clk3, rf_clk3_a, 6);
+ DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8998, rf_clk3_pin, rf_clk3_a_pin, 6);
+ static struct clk_smd_rpm *msm8998_clks[] = {
++	[RPM_SMD_BIMC_CLK] = &msm8998_bimc_clk,
++	[RPM_SMD_BIMC_A_CLK] = &msm8998_bimc_a_clk,
+ 	[RPM_SMD_PCNOC_CLK] = &msm8998_pcnoc_clk,
+ 	[RPM_SMD_PCNOC_A_CLK] = &msm8998_pcnoc_a_clk,
+ 	[RPM_SMD_SNOC_CLK] = &msm8998_snoc_clk,
+-- 
+2.17.1
 
-Next, governors may get confused if idle state parameters are changed
-on the fly.  In particular, the statistics collected by the teo
-governor depend on the target residencies of idle states, so if one of
-them changes, the governor needs to be reloaded.
-
-Next, idle states are expected to be ordered by the target residency
-(and by the exit latency), so their parameters cannot be allowed to
-change freely anyway.
-
-Finally, the idle state parameters are expected to reflect the
-properties of the hardware, which wouldn't hold any more if they were
-allowed to change at any time.
-
-> For example: Tuning residency at runtime can be used to quantify governors
-> decision making as governor uses residency as one of the parameter to
-> take decision about the state that needs to be entered while idling.
-
-IMO it would be better to introduce a testing cpuidle driver with an
-artificial set of idle states (or even such that the set of idle
-states to be used by it can be defined by the user e.g. via module
-parameters) for this purpose.
