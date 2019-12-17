@@ -2,87 +2,101 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD7B3C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AF8C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ACBA2467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D454320733
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 18:31:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576607502;
+	bh=QQuu8iUQ+/oSXmkk5ps5rHx88lLLo8CtbBy55ldroWQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oDNszlKYQFUAlhJH+HUipcD9TwVBbXe8Nrucgd2KZjwPfSwsTc3eT2QHuYMyvZzwg
+	 ha/PJC1r9s/AjtpktxrjvSyoJFNOp6Fx/7SZO8jHGc3M5oJSkCWiXSVdx3Z56+Bcok
+	 oaCpd51y+xFBQR9FV2ILXktv21YGUyrZDj0c1XfM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbfLQS2C (ORCPT
+        id S1727909AbfLQSbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 13:28:02 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:37239 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbfLQS2C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 13:28:02 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ihHZb-0004GW-Ap; Tue, 17 Dec 2019 19:27:55 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ihHZa-0007ij-7F; Tue, 17 Dec 2019 19:27:54 +0100
-Date:   Tue, 17 Dec 2019 19:27:54 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH v4 1/3] tty: rename tty_kopen() and add new function
- tty_kopen_shared()
-Message-ID: <20191217182754.rji5p3npzc2z4gv3@pengutronix.de>
-References: <20191217165816.19324-1-u.kleine-koenig@pengutronix.de>
- <20191217165816.19324-2-u.kleine-koenig@pengutronix.de>
- <c83b364b-3494-cf3d-0429-61ec3b502be0@gmail.com>
+        Tue, 17 Dec 2019 13:31:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33370 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727005AbfLQSbl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 13:31:41 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0905F2072D;
+        Tue, 17 Dec 2019 18:31:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576607501;
+        bh=QQuu8iUQ+/oSXmkk5ps5rHx88lLLo8CtbBy55ldroWQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qlucZe0w0YjDK//g9ld4Rw7+gYrjYw3SZiQQpOWLkAbx1LQcJarwHA+QvhSXv4N75
+         TCI3VahKrrPOp9xiqSB77sZ/DeOQjTFyl3AF3ljc2Y5djHXQhRaPvlMuAQHPVWRZp1
+         O8sKuIA7PoyPalcNR5l8uY59jF0zbCJ5LMnzt+CA=
+Date:   Tue, 17 Dec 2019 18:31:35 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Daniel Axtens <dja@axtens.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: Re: READ_ONCE() + STACKPROTECTOR_STRONG == :/ (was Re: [GIT PULL]
+ Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops))
+Message-ID: <20191217183135.GA3944@willie-the-truck>
+References: <20191212100756.GA11317@willie-the-truck>
+ <20191212104610.GW2827@hirez.programming.kicks-ass.net>
+ <CAHk-=wjUBsH0BYDBv=q36482G-U7c=9bC89L_BViSciTfb8fhA@mail.gmail.com>
+ <20191212180634.GA19020@willie-the-truck>
+ <CAHk-=whRxB0adkz+V7SQC8Ac_rr_YfaPY8M2mFDfJP2FFBNz8A@mail.gmail.com>
+ <20191212193401.GB19020@willie-the-truck>
+ <CAHk-=wiMuHmWzQ7-CRQB6o+SHtA-u-Rp6VZwPcqDbjAaug80rQ@mail.gmail.com>
+ <20191217170719.GA869@willie-the-truck>
+ <CAHk-=whBnZBVNwu8aVVp205EKk7xtsnQgSjs38a5=y9HyheXzQ@mail.gmail.com>
+ <CAHk-=wgsbrq6sFOSd9QrjR-fCamgzqCtFuO2_8qvJANA1+Jm6g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c83b364b-3494-cf3d-0429-61ec3b502be0@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <CAHk-=wgsbrq6sFOSd9QrjR-fCamgzqCtFuO2_8qvJANA1+Jm6g@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Jacek,
-
-On Tue, Dec 17, 2019 at 07:08:47PM +0100, Jacek Anaszewski wrote:
-> I wanted to test the set but unfortunately this
-> patch does not apply. See below for the apparent reason.
->
-> > [...]
-> > -struct tty_struct *tty_kopen(dev_t device)
-> > +static struct tty_struct *tty_kopen(dev_t device, int shared)
-> >  {
-> >  	struct tty_struct *tty;
-> >  	struct tty_driver *driver;
+On Tue, Dec 17, 2019 at 10:05:53AM -0800, Linus Torvalds wrote:
+> On Tue, Dec 17, 2019 at 10:04 AM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > Let me think about it.
 > 
-> In mainline, even in v5.5-rc2 we have here NULL assignment:
-> 
-> struct tty_driver *driver = NULL;
+> .. and in the short term, maybe for code generation, the right thing
+> is to just do the cast in the bitops, where we can just cast to
+> "unsigned long *" and remove the volatile that way.
 
-Yeah, if you don't want to wait for Greg's tree to appear in next, this
-is the patch you're missing:
+Yeah, I think I'll spin that patch series tomorrow anyway, since I don't
+think we need to hold it up.
 
-	https://lkml.org/lkml/2019/12/17/101
+> I'm still hoping there's a trick, but..
 
-Best regards
-Uwe
+Well, there's always Peter's awful hack [1] but it's really gross. FWIW,
+I've pushed the handful of patches I have to [2], which drop the GCC 4.8
+workaround and introduce a non-atomic version instead of the
+'__builtin_memcpy()'.
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Will
+
+[1] https://lore.kernel.org/lkml/20191213125618.GD2844@hirez.programming.kicks-ass.net
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/log/?h=rwonce/cleanup
