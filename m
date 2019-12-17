@@ -2,98 +2,99 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C31C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E561C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75DD52082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:06:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CE+hrIYo"
+	by mail.kernel.org (Postfix) with ESMTP id 6179D2082E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:06:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576609583;
+	bh=EufUm8Rlv07vlIaR75IoqVXFe8iiNhL6VCsyeR53rwI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=trMvBqD7iFpyZ0caGAimpqkpiBrP+PlrmGBJTMPjCJzS+wkqL14+F/DoFGJp3uxd8
+	 IQ4GSEj7HL1J3Hc3iyZeYOb0MJePuuDbp//jcxAw4gPs8d6FZmJmZY8u3geUghzG86
+	 FPwFwOtqfI/bGjgJZ5yN4RVcWPfaZpwwaEY5D/L0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727711AbfLQTGP (ORCPT
+        id S1727794AbfLQTGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 14:06:15 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38151 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726731AbfLQTGO (ORCPT
+        Tue, 17 Dec 2019 14:06:22 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:44161 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726731AbfLQTGW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 14:06:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576609573;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=b0zxRRtx431jc/y/uldsiCxJPFBL7PynAZnho2SH+cY=;
-        b=CE+hrIYol8R+OYGv/be3oeOCE25DhjbEdbhAIqVNRQJfLuQripdra+wECRK42cZFB5SMRs
-        s2eUHpKAVYfIihGhjxAl+pB6lP1LiOFXQz7e440MlaV+7I33DVLCEG6IkM47RbTC6LIcZ7
-        T1J/AlOaHCMXXrswiFkMealoX5274qM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-200-_Bi380WDNKqpTK94Ahy16A-1; Tue, 17 Dec 2019 14:06:08 -0500
-X-MC-Unique: _Bi380WDNKqpTK94Ahy16A-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A25F910866FE;
-        Tue, 17 Dec 2019 19:06:07 +0000 (UTC)
-Received: from shalem.localdomain.com (ovpn-116-227.ams2.redhat.com [10.36.116.227])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 623C319C58;
-        Tue, 17 Dec 2019 19:06:06 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: [PATCH] platform/x86: hp-wmi: Make buffer for HPWMI_FEATURE2_QUERY 128 bytes
-Date:   Tue, 17 Dec 2019 20:06:04 +0100
-Message-Id: <20191217190604.638467-1-hdegoede@redhat.com>
+        Tue, 17 Dec 2019 14:06:22 -0500
+Received: by mail-lf1-f68.google.com with SMTP id v201so7720537lfa.11
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 11:06:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0Ot2v/dbw1SUHMmXwBLstSNPNheDv1TXN9bQInDFN7E=;
+        b=LTuQlJ5r8Jxu7pBZudU42TBMrRjt9vba2RyiTlgEfs36AOeEsEcToirt9lzqXpJwKh
+         kwPnYF5aIgWiX6r9iBjqyUsufjqF7AkbUnXay/VfQbQGzwitZsz3FB3tL2AZAcLKOymc
+         rn+4WGCrGxe0+9+fX6GzLSyaGP36uj9m4k+0w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0Ot2v/dbw1SUHMmXwBLstSNPNheDv1TXN9bQInDFN7E=;
+        b=C2jUHuXAbl9zIpgyt2oWjDx+uOTy1+iA7DiGopOoZqYINoHzDSYoW6ZGAUNfrl1bD2
+         p5i3Xpps521EUElKrD8zLdvrOCzYmqKfK9Glkam0uTkm6qxHFWGpKRQDx+MINyCyD2l8
+         cBxyzXhB/o33+mejjUPkn+I5+RXNwFQqgbJDdw1TfNlVqAOdHfogw/FUpfFY3iY7ztIh
+         PgJd5bo4Y7sP2v7cB5/3v50B3Fpx8LnQa8p1d5spb85F2QBdmff4gnNa5ZEnG/fJaQ2+
+         ifYhX9sg7/XWiqbUJVentoDEziyleZIjZGWS8et9asfhFrCaILAwtXPfeMHBKVtMCZwH
+         SZUg==
+X-Gm-Message-State: APjAAAWcXdZXls11KFV+hFTyV3dNwcPaYMcHuaquyvL0OnoJTu8n0IqK
+        eTTnsh76o7KN+/u6ca5HzV134K+EQ8k=
+X-Google-Smtp-Source: APXvYqyP+Q7ZsGhVDzVURr9L/ZmM/LONZs+zO7Vuljv6SRatB8ccEJI5i+EZJU/L8UoDsqQLDxDBJg==
+X-Received: by 2002:a19:4351:: with SMTP id m17mr3819181lfj.61.1576609579566;
+        Tue, 17 Dec 2019 11:06:19 -0800 (PST)
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
+        by smtp.gmail.com with ESMTPSA id r21sm2624609ljn.64.2019.12.17.11.06.17
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Dec 2019 11:06:17 -0800 (PST)
+Received: by mail-lf1-f46.google.com with SMTP id 15so7770615lfr.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 11:06:17 -0800 (PST)
+X-Received: by 2002:ac2:4946:: with SMTP id o6mr3733141lfi.170.1576609577028;
+ Tue, 17 Dec 2019 11:06:17 -0800 (PST)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+References: <20191217113425.GA78787@gmail.com>
+In-Reply-To: <20191217113425.GA78787@gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 17 Dec 2019 11:06:00 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgO0KzB-j8_1GAwkM68nLiWNsK6s1FBXKqKj_62VtDMMQ@mail.gmail.com>
+Message-ID: <CAHk-=wgO0KzB-j8_1GAwkM68nLiWNsK6s1FBXKqKj_62VtDMMQ@mail.gmail.com>
+Subject: Re: [GIT PULL] perf fixes
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@infradead.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At least on the HP Envy x360 15-cp0xxx model the WMI interface
-for HPWMI_FEATURE2_QUERY requires an outsize of at least 128 bytes,
-otherwise it fails with an error code 5 (HPWMI_RET_INVALID_PARAMETERS):
+On Tue, Dec 17, 2019 at 3:34 AM Ingo Molnar <mingo@kernel.org> wrote:
+>
+> Note that the large CPU count related fixes go beyond regression fixes -
+> but the IPI-flood symptoms are severe enough that I think justifies their
+> inclusion. If it's too much we'll redo the branch.
 
-Dec 06 00:59:38 kernel: hp_wmi: query 0xd returned error 0x5
+I'm much less sensitive to the perf _tooling_ changes than I am to
+actual kernel code changes.
 
-We do not care about the contents of the buffer, we just want to know
-if the HPWMI_FEATURE2_QUERY command is supported.
+Of course, if you start having a history of breaking things during the
+rc kernels, that may change, but at least for now, I tend to look at
+diffstats and go "oh, this is perf tooling", and not worry too much
+about it...
 
-This commits bumps the buffer size, fixing the error.
-
-Cc: stable@vger.kernel.org
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=3D1520703
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/hp-wmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.=
-c
-index 9579a706fc08..a881b709af25 100644
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -300,7 +300,7 @@ static int __init hp_wmi_bios_2008_later(void)
-=20
- static int __init hp_wmi_bios_2009_later(void)
- {
--	int state =3D 0;
-+	u8 state[128];
- 	int ret =3D hp_wmi_perform_query(HPWMI_FEATURE2_QUERY, HPWMI_READ, &sta=
-te,
- 				       sizeof(state), sizeof(state));
- 	if (!ret)
---=20
-2.23.0
-
+                     Linus
