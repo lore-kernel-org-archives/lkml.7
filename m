@@ -2,506 +2,299 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E113C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60256C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4586721582
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AC0421739
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:08:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576591696;
+	bh=ms+aXOE3EdejqpGn+s3s9ci5ddw4kV2jIv1YOjsFUks=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ye3Jm62+8xkS4tonDkJSBXS4kjtUhwxb6q2a33apVwS/jgO52uJ+Y6tArWwy72GDM
+	 BLbIkzmLGyfrTcBm/E+EpA6TKT6rCuMvCR+FurMjSgJAJU6ZtF33t/jwsHKRY+7wlz
+	 wLqFdqWhezCC+yUpDj0Muvhz9+z+AKVqEgdidgxY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728826AbfLQOH0 (ORCPT
+        id S1728771AbfLQOIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:07:26 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:44360 "EHLO gloria.sntech.de"
+        Tue, 17 Dec 2019 09:08:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728722AbfLQOHX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:07:23 -0500
-Received: from ip5f5a5f74.dynamic.kabel-deutschland.de ([95.90.95.116] helo=phil.sntech)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1ihDVJ-0007SU-PO; Tue, 17 Dec 2019 15:07:13 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     dri-devel@lists.freedesktop.org
-Cc:     thierry.reding@gmail.com, sam@ravnborg.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, heiko@sntech.de,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: [PATCH v3 3/3] drm/panel: add panel driver for Xinpeng XPP055C272 panels
-Date:   Tue, 17 Dec 2019 15:07:03 +0100
-Message-Id: <20191217140703.23867-3-heiko@sntech.de>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191217140703.23867-1-heiko@sntech.de>
-References: <20191217140703.23867-1-heiko@sntech.de>
+        id S1728575AbfLQOIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 09:08:14 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9702D21582;
+        Tue, 17 Dec 2019 14:08:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576591693;
+        bh=ms+aXOE3EdejqpGn+s3s9ci5ddw4kV2jIv1YOjsFUks=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IZf3rYkXbIEYiApuYswptT8vlxYzci3pkhoMeBz5u/K9mft/ZYrtxZBRrciWm/exV
+         LH7MUCTS4pevFSn6oMbLL1kmud09E3YGeBKdzxP/ZBH14EbCSwwTX7zC4J5uBXh3BY
+         u1UKy/m0ucZPyTm1RdNmqD73DNVtlwqeqah80uDM=
+Date:   Tue, 17 Dec 2019 15:08:10 +0100
+From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "noralf@tronnes.org" <noralf@tronnes.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>
+Subject: Re: [PATCH v6 05/15] mfd: bd71828: Support ROHM BD71828 PMIC - core
+Message-ID: <20191217140810.GD3489463@kroah.com>
+References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+ <252de5646fedfec7c575269843a47091fe199c79.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+ <20191216164641.GC18955@dell>
+ <5593db6b3328c0a1a7069d839f5c777b4b3822b6.camel@fi.rohmeurope.com>
+ <20191217135430.GM18955@dell>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191217135430.GM18955@dell>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+On Tue, Dec 17, 2019 at 01:54:30PM +0000, Lee Jones wrote:
+> On Tue, 17 Dec 2019, Vaittinen, Matti wrote:
+> 
+> > Hello Lee,
+> > 
+> > On Mon, 2019-12-16 at 16:46 +0000, Lee Jones wrote:
+> > > On Wed, 11 Dec 2019, Matti Vaittinen wrote:
+> > > 
+> > > > BD71828GW is a single-chip power management IC for battery-powered
+> > > > portable
+> > > > devices. The IC integrates 7 buck converters, 7 LDOs, and a 1500 mA
+> > > > single-cell linear charger. Also included is a Coulomb counter, a
+> > > > real-time
+> > > > clock (RTC), 3 GPO/regulator control pins, HALL input and a 32.768
+> > > > kHz
+> > > > clock gate.
+> > > > 
+> > > > Add MFD core driver providing interrupt controller facilities and
+> > > > i2c
+> > > > access to sub device drivers.
+> > > > 
+> > > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> > > > ---
+> > > > 
+> > > > Changes since v5:
+> > > > - No changes
+> > > > 
+> > > >  drivers/mfd/Kconfig              |  15 ++
+> > > >  drivers/mfd/Makefile             |   2 +-
+> > > >  drivers/mfd/rohm-bd71828.c       | 319 +++++++++++++++++++++++
+> > > >  include/linux/mfd/rohm-bd71828.h | 425
+> > > > +++++++++++++++++++++++++++++++
+> > > >  include/linux/mfd/rohm-generic.h |   1 +
+> > > >  5 files changed, 761 insertions(+), 1 deletion(-)
+> > > >  create mode 100644 drivers/mfd/rohm-bd71828.c
+> > > >  create mode 100644 include/linux/mfd/rohm-bd71828.h
+> > > 
+> > > Couple of small nits.  Once fixed, please apply my:
+> > > 
+> > > For my own reference:
+> > >   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> > > 
+> > > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> > > > index 420900852166..c3c9432ef51c 100644
+> > > > --- a/drivers/mfd/Kconfig
+> > > > +++ b/drivers/mfd/Kconfig
+> > > > @@ -1906,6 +1906,21 @@ config MFD_ROHM_BD70528
+> > > >  	  10 bits SAR ADC for battery temperature monitor and 1S
+> > > > battery
+> > > >  	  charger.
+> > > >  
+> > > > +config MFD_ROHM_BD71828
+> > > > +	tristate "ROHM BD71828 Power Management IC"
+> > > > +	depends on I2C=y
+> > > > +	depends on OF
+> > > > +	select REGMAP_I2C
+> > > > +	select REGMAP_IRQ
+> > > > +	select MFD_CORE
+> > > > +	help
+> > > > +	  Select this option to get support for the ROHM BD71828 Power
+> > > > +	  Management IC. BD71828GW is a single-chip power management IC
+> > > > for
+> > > > +	  battery-powered portable devices. The IC integrates 7 buck
+> > > > +	  converters, 7 LDOs, and a 1500 mA single-cell linear charger.
+> > > > +	  Also included is a Coulomb counter, a real-time clock (RTC),
+> > > > and
+> > > > +	  a 32.768 kHz clock gate.
+> > > > +
+> > > >  config MFD_STM32_LPTIMER
+> > > >  	tristate "Support for STM32 Low-Power Timer"
+> > > >  	depends on (ARCH_STM32 && OF) || COMPILE_TEST
+> > > > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> > > > index aed99f08739f..ca2d55c679c5 100644
+> > > > --- a/drivers/mfd/Makefile
+> > > > +++ b/drivers/mfd/Makefile
+> > > > @@ -252,6 +252,6 @@ obj-$(CONFIG_MFD_MXS_LRADC)     += mxs-lradc.o
+> > > >  obj-$(CONFIG_MFD_SC27XX_PMIC)	+= sprd-sc27xx-spi.o
+> > > >  obj-$(CONFIG_RAVE_SP_CORE)	+= rave-sp.o
+> > > >  obj-$(CONFIG_MFD_ROHM_BD70528)	+= rohm-bd70528.o
+> > > > +obj-$(CONFIG_MFD_ROHM_BD71828)	+= rohm-bd71828.o
+> > > >  obj-$(CONFIG_MFD_ROHM_BD718XX)	+= rohm-bd718x7.o
+> > > >  obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
+> > > > -
+> > > 
+> > > Nit: This is an unrelated change and should not really be in this
+> > > patch.
+> > 
+> > Ok. Will get rid of it.
+> > 
+> > > 
+> > > > diff --git a/drivers/mfd/rohm-bd71828.c b/drivers/mfd/rohm-
+> > > > bd71828.c
+> > > > new file mode 100644
+> > > > index 000000000000..7f445d699fd9
+> > > > --- /dev/null
+> > > > +++ b/drivers/mfd/rohm-bd71828.c
+> > > > @@ -0,0 +1,319 @@
+> > > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > > +//
+> > > > +// Copyright (C) 2019 ROHM Semiconductors
+> > > > +//
+> > > > +// ROHM BD71828 PMIC driver
+> > > > +
+> > 
+> > //snip
+> > 
+> > > > +
+> > > > +static struct i2c_driver bd71828_drv = {
+> > > > +	.driver = {
+> > > > +		.name = "rohm-bd71828",
+> > > > +		.of_match_table = bd71828_of_match,
+> > > > +	},
+> > > > +	.probe_new = &bd71828_i2c_probe,
+> > > > +};
+> > > > +
+> > > 
+> > > Nit: You can remove this line.
+> > 
+> > Will do.
+> > 
+> > > 
+> > > > +module_i2c_driver(bd71828_drv);
+> > > > +
+> > > > +MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> > > > ");
+> > > > +MODULE_DESCRIPTION("ROHM BD71828 Power Management IC driver");
+> > > > +MODULE_LICENSE("GPL");
+> > > 
+> > > This does not match the header.
+> > 
+> > How is that? This is what is stated in module.h for the 
+> > MODULE_LICENSE:
+> > 
+> > /*
+> >  * The following license idents are currently accepted as indicating
+> > free
+> >  * software modules
+> >  *
+> >  *	"GPL"				[GNU Public License v2]
+> >  *	"GPL v2"			[GNU Public License v2]
+> >  *	"GPL and additional rights"	[GNU Public License v2 rights
+> > and more]
+> >  *	"Dual BSD/GPL"			[GNU Public License v2
+> >  *					 or BSD license choice]
+> >  *	"Dual MIT/GPL"			[GNU Public License v2
+> >  *					 or MIT license choice]
+> >  *	"Dual MPL/GPL"			[GNU Public License v2
+> >  *					 or Mozilla license choice]
+> >  *
+> >  * The following other idents are available
+> >  *
+> >  *	"Proprietary"			[Non free products]
+> >  *
+> >  * Both "GPL v2" and "GPL" (the latter also in dual licensed strings)
+> > are
+> >  * merely stating that the module is licensed under the GPL v2, but are
+> > not
+> >  * telling whether "GPL v2 only" or "GPL v2 or later". The reason why
+> > there
+> >  * are two variants is a historic and failed attempt to convey more
+> >  * information in the MODULE_LICENSE string. For module loading the
+> >  * "only/or later" distinction is completely irrelevant and does
+> > neither
+> >  * replace the proper license identifiers in the corresponding source
+> > file
+> >  * nor amends them in any way. The sole purpose is to make the
+> >  * 'Proprietary' flagging work and to refuse to bind symbols which are
+> >  * exported with EXPORT_SYMBOL_GPL when a non free module is loaded.
+> >  *
+> >  * In the same way "BSD" is not a clear license information. It merely
+> >  * states, that the module is licensed under one of the compatible BSD
+> >  * license variants. The detailed and correct license information is
+> > again
+> >  * to be found in the corresponding source files.
+> >  *
+> >  * There are dual licensed components, but when running with Linux it
+> > is the
+> >  * GPL that is relevant so this is a non issue. Similarly LGPL linked
+> > with GPL
+> >  * is a GPL combined work.
+> >  *
+> >  * This exists for several reasons
+> >  * 1.	So modinfo can show license info for users wanting to vet their
+> > setup
+> >  *	is free
+> >  * 2.	So the community can ignore bug reports including proprietary
+> > modules
+> >  * 3.	So vendors can do likewise based on their own policies
+> >  */
+> > #define MODULE_LICENSE(_license) MODULE_INFO(license, _license)
+> > 
+> > I have no objections on changing the license if needed but can you
+> > please tell me what is Ok combos then - I am having hard time when
+> > trying to select licenses which are acceptable for all.
+> 
+> If you have this in your header:
+> 
+>   GPL-2.0-only
+> 
+> Your MODULE tags should read:
+> 
+> MODULE_LICENSE("GPL v2");
 
-Base on the somewhat similar Rocktech driver but adapted for
-panel-specific init of the XPP055C272.
+Nope, as per module.h, which is quoted here, either:
+	MODULE_LICENSE("GPL");
+or:
+	MODULE_LICENSE("GPL v2");
+mean the exact same thing.
 
-changes in v3:
-- remove wrong negative sync flags from display-mode to fix a display
-  artifact of the output getting move a tiny bit to the right
-changes in v2:
-- move to drm-panel-internal backlight handling (Sam)
-- adapt to changes that happened to drm_panel structs+functions (Sam)
-- sort includes (Sam)
-- drop unnecessary DRV_NAME constant (Sam)
-- do mipi_dsi_dcs_exit_sleep_mode and mipi_dsi_dcs_set_display_on
-  in panel prepare (not init_sequence) to keep symmetric (Sam)
+thanks,
 
-Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
----
- drivers/gpu/drm/panel/Kconfig                 |  10 +
- drivers/gpu/drm/panel/Makefile                |   1 +
- .../gpu/drm/panel/panel-xinpeng-xpp055c272.c  | 400 ++++++++++++++++++
- 3 files changed, 411 insertions(+)
- create mode 100644 drivers/gpu/drm/panel/panel-xinpeng-xpp055c272.c
-
-diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-index f152bc4eeb53..fb1ded47677e 100644
---- a/drivers/gpu/drm/panel/Kconfig
-+++ b/drivers/gpu/drm/panel/Kconfig
-@@ -355,4 +355,14 @@ config DRM_PANEL_TRULY_NT35597_WQXGA
- 	help
- 	  Say Y here if you want to enable support for Truly NT35597 WQXGA Dual DSI
- 	  Video Mode panel
-+
-+config DRM_PANEL_XINPENG_XPP055C272
-+	tristate "Xinpeng XPP055C272 panel driver"
-+	depends on OF
-+	depends on DRM_MIPI_DSI
-+	depends on BACKLIGHT_CLASS_DEVICE
-+	help
-+	  Say Y here if you want to enable support for the Xinpeng
-+	  XPP055C272 controller for 720x1280 LCD panels with MIPI/RGB/SPI
-+	  system interfaces.
- endmenu
-diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-index b6cd39fe0f20..71d7722146a7 100644
---- a/drivers/gpu/drm/panel/Makefile
-+++ b/drivers/gpu/drm/panel/Makefile
-@@ -38,3 +38,4 @@ obj-$(CONFIG_DRM_PANEL_TPO_TD028TTEC1) += panel-tpo-td028ttec1.o
- obj-$(CONFIG_DRM_PANEL_TPO_TD043MTEA1) += panel-tpo-td043mtea1.o
- obj-$(CONFIG_DRM_PANEL_TPO_TPG110) += panel-tpo-tpg110.o
- obj-$(CONFIG_DRM_PANEL_TRULY_NT35597_WQXGA) += panel-truly-nt35597.o
-+obj-$(CONFIG_DRM_PANEL_XINPENG_XPP055C272) += panel-xinpeng-xpp055c272.o
-diff --git a/drivers/gpu/drm/panel/panel-xinpeng-xpp055c272.c b/drivers/gpu/drm/panel/panel-xinpeng-xpp055c272.c
-new file mode 100644
-index 000000000000..1a7ded012344
---- /dev/null
-+++ b/drivers/gpu/drm/panel/panel-xinpeng-xpp055c272.c
-@@ -0,0 +1,400 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Xinpeng xpp055c272 5.5" MIPI-DSI panel driver
-+ * Copyright (C) 2019 Theobroma Systems Design und Consulting GmbH
-+ *
-+ * based on
-+ *
-+ * Rockteck jh057n00900 5.5" MIPI-DSI panel driver
-+ * Copyright (C) Purism SPC 2019
-+ */
-+
-+#include <drm/drm_mipi_dsi.h>
-+#include <drm/drm_modes.h>
-+#include <drm/drm_panel.h>
-+#include <drm/drm_print.h>
-+
-+#include <video/display_timing.h>
-+#include <video/mipi_display.h>
-+
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/media-bus-format.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/regulator/consumer.h>
-+
-+/* Manufacturer specific Commands send via DSI */
-+#define XPP055C272_CMD_ALL_PIXEL_OFF	0x22
-+#define XPP055C272_CMD_ALL_PIXEL_ON	0x23
-+#define XPP055C272_CMD_SETDISP		0xb2
-+#define XPP055C272_CMD_SETRGBIF		0xb3
-+#define XPP055C272_CMD_SETCYC		0xb4
-+#define XPP055C272_CMD_SETBGP		0xb5
-+#define XPP055C272_CMD_SETVCOM		0xb6
-+#define XPP055C272_CMD_SETOTP		0xb7
-+#define XPP055C272_CMD_SETPOWER_EXT	0xb8
-+#define XPP055C272_CMD_SETEXTC		0xb9
-+#define XPP055C272_CMD_SETMIPI		0xbA
-+#define XPP055C272_CMD_SETVDC		0xbc
-+#define XPP055C272_CMD_SETPCR		0xbf
-+#define XPP055C272_CMD_SETSCR		0xc0
-+#define XPP055C272_CMD_SETPOWER		0xc1
-+#define XPP055C272_CMD_SETECO		0xc6
-+#define XPP055C272_CMD_SETPANEL		0xcc
-+#define XPP055C272_CMD_SETGAMMA		0xe0
-+#define XPP055C272_CMD_SETEQ		0xe3
-+#define XPP055C272_CMD_SETGIP1		0xe9
-+#define XPP055C272_CMD_SETGIP2		0xea
-+
-+struct xpp055c272 {
-+	struct device *dev;
-+	struct drm_panel panel;
-+	struct gpio_desc *reset_gpio;
-+	struct regulator *vci;
-+	struct regulator *iovcc;
-+	bool prepared;
-+};
-+
-+static inline struct xpp055c272 *panel_to_xpp055c272(struct drm_panel *panel)
-+{
-+	return container_of(panel, struct xpp055c272, panel);
-+}
-+
-+#define dsi_generic_write_seq(dsi, cmd, seq...) do {			\
-+		static const u8 d[] = { seq };				\
-+		int ret;						\
-+		ret = mipi_dsi_dcs_write(dsi, cmd, d, ARRAY_SIZE(d));	\
-+		if (ret < 0)						\
-+			return ret;					\
-+	} while (0)
-+
-+static int xpp055c272_init_sequence(struct xpp055c272 *ctx)
-+{
-+	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
-+	struct device *dev = ctx->dev;
-+
-+	/*
-+	 * Init sequence was supplied by the panel vendor without much
-+	 * documentation.
-+	 */
-+	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETEXTC, 0xf1, 0x12, 0x83);
-+	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETMIPI,
-+			      0x33, 0x81, 0x05, 0xf9, 0x0e, 0x0e, 0x00, 0x00,
-+			      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x44, 0x25,
-+			      0x00, 0x91, 0x0a, 0x00, 0x00, 0x02, 0x4f, 0x01,
-+			      0x00, 0x00, 0x37);
-+	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETPOWER_EXT, 0x25);
-+	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETPCR, 0x02, 0x11, 0x00);
-+	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETRGBIF,
-+			      0x0c, 0x10, 0x0a, 0x50, 0x03, 0xff, 0x00, 0x00,
-+			      0x00, 0x00);
-+	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETSCR,
-+			      0x73, 0x73, 0x50, 0x50, 0x00, 0x00, 0x08, 0x70,
-+			      0x00);
-+	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETVDC, 0x46);
-+	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETPANEL, 0x0b);
-+	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETCYC, 0x80);
-+	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETDISP, 0xc8, 0x12, 0x30);
-+	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETEQ,
-+			      0x07, 0x07, 0x0B, 0x0B, 0x03, 0x0B, 0x00, 0x00,
-+			      0x00, 0x00, 0xFF, 0x00, 0xC0, 0x10);
-+	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETPOWER,
-+			      0x53, 0x00, 0x1e, 0x1e, 0x77, 0xe1, 0xcc, 0xdd,
-+			      0x67, 0x77, 0x33, 0x33);
-+	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETECO, 0x00, 0x00, 0xff,
-+			      0xff, 0x01, 0xff);
-+	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETBGP, 0x09, 0x09);
-+	msleep(20);
-+
-+	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETVCOM, 0x87, 0x95);
-+	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETGIP1,
-+			      0xc2, 0x10, 0x05, 0x05, 0x10, 0x05, 0xa0, 0x12,
-+			      0x31, 0x23, 0x3f, 0x81, 0x0a, 0xa0, 0x37, 0x18,
-+			      0x00, 0x80, 0x01, 0x00, 0x00, 0x00, 0x00, 0x80,
-+			      0x01, 0x00, 0x00, 0x00, 0x48, 0xf8, 0x86, 0x42,
-+			      0x08, 0x88, 0x88, 0x80, 0x88, 0x88, 0x88, 0x58,
-+			      0xf8, 0x87, 0x53, 0x18, 0x88, 0x88, 0x81, 0x88,
-+			      0x88, 0x88, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00,
-+			      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
-+	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETGIP2,
-+			      0x00, 0x1a, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00,
-+			      0x00, 0x00, 0x00, 0x00, 0x1f, 0x88, 0x81, 0x35,
-+			      0x78, 0x88, 0x88, 0x85, 0x88, 0x88, 0x88, 0x0f,
-+			      0x88, 0x80, 0x24, 0x68, 0x88, 0x88, 0x84, 0x88,
-+			      0x88, 0x88, 0x23, 0x10, 0x00, 0x00, 0x1c, 0x00,
-+			      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+			      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x30, 0x05,
-+			      0xa0, 0x00, 0x00, 0x00, 0x00);
-+	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETGAMMA,
-+			      0x00, 0x06, 0x08, 0x2a, 0x31, 0x3f, 0x38, 0x36,
-+			      0x07, 0x0c, 0x0d, 0x11, 0x13, 0x12, 0x13, 0x11,
-+			      0x18, 0x00, 0x06, 0x08, 0x2a, 0x31, 0x3f, 0x38,
-+			      0x36, 0x07, 0x0c, 0x0d, 0x11, 0x13, 0x12, 0x13,
-+			      0x11, 0x18);
-+
-+	msleep(60);
-+
-+	DRM_DEV_DEBUG_DRIVER(dev, "Panel init sequence done\n");
-+	return 0;
-+}
-+
-+static int xpp055c272_unprepare(struct drm_panel *panel)
-+{
-+	struct xpp055c272 *ctx = panel_to_xpp055c272(panel);
-+	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
-+	int ret;
-+
-+	if (!ctx->prepared)
-+		return 0;
-+
-+	ret = mipi_dsi_dcs_set_display_off(dsi);
-+	if (ret < 0)
-+		DRM_DEV_ERROR(ctx->dev, "failed to set display off: %d\n",
-+			      ret);
-+
-+	mipi_dsi_dcs_enter_sleep_mode(dsi);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(ctx->dev, "failed to enter sleep mode: %d\n",
-+			      ret);
-+		return ret;
-+	}
-+
-+	regulator_disable(ctx->iovcc);
-+	regulator_disable(ctx->vci);
-+
-+	ctx->prepared = false;
-+
-+	return 0;
-+}
-+
-+static int xpp055c272_prepare(struct drm_panel *panel)
-+{
-+	struct xpp055c272 *ctx = panel_to_xpp055c272(panel);
-+	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
-+	int ret;
-+
-+	if (ctx->prepared)
-+		return 0;
-+
-+	DRM_DEV_DEBUG_DRIVER(ctx->dev, "Resetting the panel\n");
-+	ret = regulator_enable(ctx->vci);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(ctx->dev,
-+			      "Failed to enable vci supply: %d\n", ret);
-+		return ret;
-+	}
-+	ret = regulator_enable(ctx->iovcc);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(ctx->dev,
-+			      "Failed to enable iovcc supply: %d\n", ret);
-+		goto disable_vci;
-+	}
-+
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-+	/* T6: 10us */
-+	usleep_range(10, 20);
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-+
-+	/* T8: 20ms */
-+	msleep(20);
-+
-+	ret = xpp055c272_init_sequence(ctx);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(ctx->dev, "Panel init sequence failed: %d\n",
-+			      ret);
-+		goto disable_iovcc;
-+	}
-+
-+	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(ctx->dev, "Failed to exit sleep mode: %d\n", ret);
-+		goto disable_iovcc;
-+	}
-+
-+	/* T9: 120ms */
-+	msleep(120);
-+
-+	ret = mipi_dsi_dcs_set_display_on(dsi);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(ctx->dev, "Failed to set display on: %d\n", ret);
-+		goto disable_iovcc;
-+	}
-+
-+	msleep(50);
-+
-+	ctx->prepared = true;
-+
-+	return 0;
-+
-+disable_iovcc:
-+	regulator_disable(ctx->iovcc);
-+disable_vci:
-+	regulator_disable(ctx->vci);
-+	return ret;
-+}
-+
-+static const struct drm_display_mode default_mode = {
-+	.hdisplay	= 720,
-+	.hsync_start	= 720 + 40,
-+	.hsync_end	= 720 + 40 + 10,
-+	.htotal		= 720 + 40 + 10 + 40,
-+	.vdisplay	= 1280,
-+	.vsync_start	= 1280 + 22,
-+	.vsync_end	= 1280 + 22 + 4,
-+	.vtotal		= 1280 + 22 + 4 + 11,
-+	.vrefresh	= 60,
-+	.clock		= 64000,
-+	.width_mm	= 68,
-+	.height_mm	= 121,
-+};
-+
-+static int xpp055c272_get_modes(struct drm_panel *panel,
-+				struct drm_connector *connector)
-+{
-+	struct xpp055c272 *ctx = panel_to_xpp055c272(panel);
-+	struct drm_display_mode *mode;
-+
-+	mode = drm_mode_duplicate(connector->dev, &default_mode);
-+	if (!mode) {
-+		DRM_DEV_ERROR(ctx->dev, "Failed to add mode %ux%u@%u\n",
-+			      default_mode.hdisplay, default_mode.vdisplay,
-+			      default_mode.vrefresh);
-+		return -ENOMEM;
-+	}
-+
-+	drm_mode_set_name(mode);
-+
-+	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
-+	connector->display_info.width_mm = mode->width_mm;
-+	connector->display_info.height_mm = mode->height_mm;
-+	drm_mode_probed_add(connector, mode);
-+
-+	return 1;
-+}
-+
-+static const struct drm_panel_funcs xpp055c272_funcs = {
-+	.unprepare	= xpp055c272_unprepare,
-+	.prepare	= xpp055c272_prepare,
-+	.get_modes	= xpp055c272_get_modes,
-+};
-+
-+static int xpp055c272_probe(struct mipi_dsi_device *dsi)
-+{
-+	struct device *dev = &dsi->dev;
-+	struct xpp055c272 *ctx;
-+	int ret;
-+
-+	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	ctx->reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
-+	if (IS_ERR(ctx->reset_gpio)) {
-+		DRM_DEV_ERROR(dev, "cannot get reset gpio\n");
-+		return PTR_ERR(ctx->reset_gpio);
-+	}
-+
-+	ctx->vci = devm_regulator_get(dev, "vci");
-+	if (IS_ERR(ctx->vci)) {
-+		ret = PTR_ERR(ctx->vci);
-+		if (ret != -EPROBE_DEFER)
-+			DRM_DEV_ERROR(dev,
-+				      "Failed to request vci regulator: %d\n",
-+				      ret);
-+		return ret;
-+	}
-+
-+	ctx->iovcc = devm_regulator_get(dev, "iovcc");
-+	if (IS_ERR(ctx->iovcc)) {
-+		ret = PTR_ERR(ctx->iovcc);
-+		if (ret != -EPROBE_DEFER)
-+			DRM_DEV_ERROR(dev,
-+				      "Failed to request iovcc regulator: %d\n",
-+				      ret);
-+		return ret;
-+	}
-+
-+	mipi_dsi_set_drvdata(dsi, ctx);
-+
-+	ctx->dev = dev;
-+
-+	dsi->lanes = 4;
-+	dsi->format = MIPI_DSI_FMT_RGB888;
-+	dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_BURST |
-+			  MIPI_DSI_MODE_LPM | MIPI_DSI_MODE_EOT_PACKET;
-+
-+	drm_panel_init(&ctx->panel, &dsi->dev, &xpp055c272_funcs,
-+		       DRM_MODE_CONNECTOR_DSI);
-+
-+	ret = drm_panel_of_backlight(&ctx->panel);
-+	if (ret) {
-+		DRM_DEV_ERROR(dev, "Failed to find backlight: %d\n", ret);
-+		return ret;
-+	}
-+
-+	drm_panel_add(&ctx->panel);
-+
-+	ret = mipi_dsi_attach(dsi);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(dev, "mipi_dsi_attach failed: %d\n", ret);
-+		drm_panel_remove(&ctx->panel);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static void xpp055c272_shutdown(struct mipi_dsi_device *dsi)
-+{
-+	struct xpp055c272 *ctx = mipi_dsi_get_drvdata(dsi);
-+	int ret;
-+
-+	ret = drm_panel_unprepare(&ctx->panel);
-+	if (ret < 0)
-+		DRM_DEV_ERROR(&dsi->dev, "Failed to unprepare panel: %d\n",
-+			      ret);
-+
-+	ret = drm_panel_disable(&ctx->panel);
-+	if (ret < 0)
-+		DRM_DEV_ERROR(&dsi->dev, "Failed to disable panel: %d\n",
-+			      ret);
-+}
-+
-+static int xpp055c272_remove(struct mipi_dsi_device *dsi)
-+{
-+	struct xpp055c272 *ctx = mipi_dsi_get_drvdata(dsi);
-+	int ret;
-+
-+	xpp055c272_shutdown(dsi);
-+
-+	ret = mipi_dsi_detach(dsi);
-+	if (ret < 0)
-+		DRM_DEV_ERROR(&dsi->dev, "Failed to detach from DSI host: %d\n",
-+			      ret);
-+
-+	drm_panel_remove(&ctx->panel);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id xpp055c272_of_match[] = {
-+	{ .compatible = "xinpeng,xpp055c272" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, xpp055c272_of_match);
-+
-+static struct mipi_dsi_driver xpp055c272_driver = {
-+	.driver = {
-+		.name = "panel-xinpeng-xpp055c272",
-+		.of_match_table = xpp055c272_of_match,
-+	},
-+	.probe	= xpp055c272_probe,
-+	.remove = xpp055c272_remove,
-+	.shutdown = xpp055c272_shutdown,
-+};
-+module_mipi_dsi_driver(xpp055c272_driver);
-+
-+MODULE_AUTHOR("Heiko Stuebner <heiko.stuebner@theobroma-systems.com>");
-+MODULE_DESCRIPTION("DRM driver for Xinpeng xpp055c272 MIPI DSI panel");
-+MODULE_LICENSE("GPL v2");
--- 
-2.24.0
-
+greg k-h
