@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C36B7C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD99C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3D6524685
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:58:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA25D24679
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:58:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbfLQA6D (ORCPT
+        id S1728029AbfLQA6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:58:03 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34880 "EHLO
+        Mon, 16 Dec 2019 19:58:01 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34874 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726774AbfLQAvj (ORCPT
+        by vger.kernel.org with ESMTP id S1726773AbfLQAvj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Dec 2019 19:51:39 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15H-0003L6-O4; Tue, 17 Dec 2019 00:51:31 +0000
+        id 1ih15I-0003LE-5R; Tue, 17 Dec 2019 00:51:32 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15G-0005UV-PL; Tue, 17 Dec 2019 00:51:30 +0000
+        id 1ih15G-0005Uo-VR; Tue, 17 Dec 2019 00:51:30 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Eric Dumazet" <edumazet@google.com>,
-        "syzbot" <syzkaller@googlegroups.com>
-Date:   Tue, 17 Dec 2019 00:46:14 +0000
-Message-ID: <lsq.1576543535.132377422@decadent.org.uk>
+        syzbot+31c16aa4202dace3812e@syzkaller.appspotmail.com,
+        "Jakub Kicinski" <jakub.kicinski@netronome.com>,
+        syzbot+6bf095f9becf5efef645@syzkaller.appspotmail.com,
+        "Eric Biggers" <ebiggers@google.com>
+Date:   Tue, 17 Dec 2019 00:46:18 +0000
+Message-ID: <lsq.1576543535.462168066@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 040/136] sch_dsmark: fix potential NULL deref in
- dsmark_init()
+Subject: [PATCH 3.16 044/136] llc: fix sk_buff leak in llc_sap_state_process()
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,72 +57,129 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Dumazet <edumazet@google.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 474f0813a3002cb299bb73a5a93aa1f537a80ca8 upstream.
+commit c6ee11c39fcc1fb55130748990a8f199e76263b4 upstream.
 
-Make sure TCA_DSMARK_INDICES was provided by the user.
+syzbot reported:
 
-syzbot reported :
+    BUG: memory leak
+    unreferenced object 0xffff888116270800 (size 224):
+       comm "syz-executor641", pid 7047, jiffies 4294947360 (age 13.860s)
+       hex dump (first 32 bytes):
+         00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+         00 20 e1 2a 81 88 ff ff 00 40 3d 2a 81 88 ff ff  . .*.....@=*....
+       backtrace:
+         [<000000004d41b4cc>] kmemleak_alloc_recursive  include/linux/kmemleak.h:55 [inline]
+         [<000000004d41b4cc>] slab_post_alloc_hook mm/slab.h:439 [inline]
+         [<000000004d41b4cc>] slab_alloc_node mm/slab.c:3269 [inline]
+         [<000000004d41b4cc>] kmem_cache_alloc_node+0x153/0x2a0 mm/slab.c:3579
+         [<00000000506a5965>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
+         [<000000001ba5a161>] alloc_skb include/linux/skbuff.h:1058 [inline]
+         [<000000001ba5a161>] alloc_skb_with_frags+0x5f/0x250  net/core/skbuff.c:5327
+         [<0000000047d9c78b>] sock_alloc_send_pskb+0x269/0x2a0  net/core/sock.c:2225
+         [<000000003828fe54>] sock_alloc_send_skb+0x32/0x40 net/core/sock.c:2242
+         [<00000000e34d94f9>] llc_ui_sendmsg+0x10a/0x540 net/llc/af_llc.c:933
+         [<00000000de2de3fb>] sock_sendmsg_nosec net/socket.c:652 [inline]
+         [<00000000de2de3fb>] sock_sendmsg+0x54/0x70 net/socket.c:671
+         [<000000008fe16e7a>] __sys_sendto+0x148/0x1f0 net/socket.c:1964
+	 [...]
 
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 8799 Comm: syz-executor235 Not tainted 5.3.0+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:nla_get_u16 include/net/netlink.h:1501 [inline]
-RIP: 0010:dsmark_init net/sched/sch_dsmark.c:364 [inline]
-RIP: 0010:dsmark_init+0x193/0x640 net/sched/sch_dsmark.c:339
-Code: 85 db 58 0f 88 7d 03 00 00 e8 e9 1a ac fb 48 8b 9d 70 ff ff ff 48 b8 00 00 00 00 00 fc ff df 48 8d 7b 04 48 89 fa 48 c1 ea 03 <0f> b6 14 02 48 89 f8 83 e0 07 83 c0 01 38 d0 7c 08 84 d2 0f 85 ca
-RSP: 0018:ffff88809426f3b8 EFLAGS: 00010247
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff85c6eb09
-RDX: 0000000000000000 RSI: ffffffff85c6eb17 RDI: 0000000000000004
-RBP: ffff88809426f4b0 R08: ffff88808c4085c0 R09: ffffed1015d26159
-R10: ffffed1015d26158 R11: ffff8880ae930ac7 R12: ffff8880a7e96940
-R13: dffffc0000000000 R14: ffff88809426f8c0 R15: 0000000000000000
-FS:  0000000001292880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000080 CR3: 000000008ca1b000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- qdisc_create+0x4ee/0x1210 net/sched/sch_api.c:1237
- tc_modify_qdisc+0x524/0x1c50 net/sched/sch_api.c:1653
- rtnetlink_rcv_msg+0x463/0xb00 net/core/rtnetlink.c:5223
- netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
- rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5241
- netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
- netlink_unicast+0x531/0x710 net/netlink/af_netlink.c:1328
- netlink_sendmsg+0x8a5/0xd60 net/netlink/af_netlink.c:1917
- sock_sendmsg_nosec net/socket.c:637 [inline]
- sock_sendmsg+0xd7/0x130 net/socket.c:657
- ___sys_sendmsg+0x803/0x920 net/socket.c:2311
- __sys_sendmsg+0x105/0x1d0 net/socket.c:2356
- __do_sys_sendmsg net/socket.c:2365 [inline]
- __se_sys_sendmsg net/socket.c:2363 [inline]
- __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2363
- do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x440369
+The bug is that llc_sap_state_process() always takes an extra reference
+to the skb, but sometimes neither llc_sap_next_state() nor
+llc_sap_state_process() itself drops this reference.
 
-Fixes: 758cc43c6d73 ("[PKT_SCHED]: Fix dsmark to apply changes consistent")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fix it by changing llc_sap_next_state() to never consume a reference to
+the skb, rather than sometimes do so and sometimes not.  Then remove the
+extra skb_get() and kfree_skb() from llc_sap_state_process().
+
+Reported-by: syzbot+6bf095f9becf5efef645@syzkaller.appspotmail.com
+Reported-by: syzbot+31c16aa4202dace3812e@syzkaller.appspotmail.com
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/sched/sch_dsmark.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/llc/llc_s_ac.c | 12 +++++++++---
+ net/llc/llc_sap.c  | 23 ++++++++---------------
+ 2 files changed, 17 insertions(+), 18 deletions(-)
 
---- a/net/sched/sch_dsmark.c
-+++ b/net/sched/sch_dsmark.c
-@@ -359,6 +359,8 @@ static int dsmark_init(struct Qdisc *sch
- 		goto errout;
+--- a/net/llc/llc_s_ac.c
++++ b/net/llc/llc_s_ac.c
+@@ -58,8 +58,10 @@ int llc_sap_action_send_ui(struct llc_sa
+ 			    ev->daddr.lsap, LLC_PDU_CMD);
+ 	llc_pdu_init_as_ui_cmd(skb);
+ 	rc = llc_mac_hdr_init(skb, ev->saddr.mac, ev->daddr.mac);
+-	if (likely(!rc))
++	if (likely(!rc)) {
++		skb_get(skb);
+ 		rc = dev_queue_xmit(skb);
++	}
+ 	return rc;
+ }
  
- 	err = -EINVAL;
-+	if (!tb[TCA_DSMARK_INDICES])
-+		goto errout;
- 	indices = nla_get_u16(tb[TCA_DSMARK_INDICES]);
+@@ -81,8 +83,10 @@ int llc_sap_action_send_xid_c(struct llc
+ 			    ev->daddr.lsap, LLC_PDU_CMD);
+ 	llc_pdu_init_as_xid_cmd(skb, LLC_XID_NULL_CLASS_2, 0);
+ 	rc = llc_mac_hdr_init(skb, ev->saddr.mac, ev->daddr.mac);
+-	if (likely(!rc))
++	if (likely(!rc)) {
++		skb_get(skb);
+ 		rc = dev_queue_xmit(skb);
++	}
+ 	return rc;
+ }
  
- 	if (hweight32(indices) != 1)
+@@ -135,8 +139,10 @@ int llc_sap_action_send_test_c(struct ll
+ 			    ev->daddr.lsap, LLC_PDU_CMD);
+ 	llc_pdu_init_as_test_cmd(skb);
+ 	rc = llc_mac_hdr_init(skb, ev->saddr.mac, ev->daddr.mac);
+-	if (likely(!rc))
++	if (likely(!rc)) {
++		skb_get(skb);
+ 		rc = dev_queue_xmit(skb);
++	}
+ 	return rc;
+ }
+ 
+--- a/net/llc/llc_sap.c
++++ b/net/llc/llc_sap.c
+@@ -197,29 +197,22 @@ out:
+  *	After executing actions of the event, upper layer will be indicated
+  *	if needed(on receiving an UI frame). sk can be null for the
+  *	datalink_proto case.
++ *
++ *	This function always consumes a reference to the skb.
+  */
+ static void llc_sap_state_process(struct llc_sap *sap, struct sk_buff *skb)
+ {
+ 	struct llc_sap_state_ev *ev = llc_sap_ev(skb);
+ 
+-	/*
+-	 * We have to hold the skb, because llc_sap_next_state
+-	 * will kfree it in the sending path and we need to
+-	 * look at the skb->cb, where we encode llc_sap_state_ev.
+-	 */
+-	skb_get(skb);
+ 	ev->ind_cfm_flag = 0;
+ 	llc_sap_next_state(sap, skb);
+-	if (ev->ind_cfm_flag == LLC_IND) {
+-		if (skb->sk->sk_state == TCP_LISTEN)
+-			kfree_skb(skb);
+-		else {
+-			llc_save_primitive(skb->sk, skb, ev->prim);
+ 
+-			/* queue skb to the user. */
+-			if (sock_queue_rcv_skb(skb->sk, skb))
+-				kfree_skb(skb);
+-		}
++	if (ev->ind_cfm_flag == LLC_IND && skb->sk->sk_state != TCP_LISTEN) {
++		llc_save_primitive(skb->sk, skb, ev->prim);
++
++		/* queue skb to the user. */
++		if (sock_queue_rcv_skb(skb->sk, skb) == 0)
++			return;
+ 	}
+ 	kfree_skb(skb);
+ }
 
