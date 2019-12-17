@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C074C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B6F0C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 614A2206D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 670CE206D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:59:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728076AbfLQA7d (ORCPT
+        id S1727491AbfLQA7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:59:33 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34696 "EHLO
+        Mon, 16 Dec 2019 19:59:36 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34706 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726698AbfLQAvg (ORCPT
+        by vger.kernel.org with ESMTP id S1726704AbfLQAvf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 19:51:36 -0500
+        Mon, 16 Dec 2019 19:51:35 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15G-0003KQ-VA; Tue, 17 Dec 2019 00:51:31 +0000
+        id 1ih15G-0003KD-Pm; Tue, 17 Dec 2019 00:51:30 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15G-0005Tg-8l; Tue, 17 Dec 2019 00:51:30 +0000
+        id 1ih15G-0005TH-2G; Tue, 17 Dec 2019 00:51:30 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Rick Tseng" <rtseng@nvidia.com>,
-        "Mathias Nyman" <mathias.nyman@linux.intel.com>,
+        syzbot+f9549f5ee8a5416f0b95@syzkaller.appspotmail.com,
+        "Johan Hovold" <johan@kernel.org>,
         "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Date:   Tue, 17 Dec 2019 00:46:04 +0000
-Message-ID: <lsq.1576543535.505452823@decadent.org.uk>
+Date:   Tue, 17 Dec 2019 00:45:59 +0000
+Message-ID: <lsq.1576543535.698689005@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 030/136] usb: xhci: wait for CNR controller not ready
- bit in xhci resume
+Subject: [PATCH 3.16 025/136] USB: legousbtower: fix deadlock on disconnect
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,44 +56,123 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Rick Tseng <rtseng@nvidia.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit a70bcbc322837eda1ab5994d12db941dc9733a7d upstream.
+commit 33a7813219f208f4952ece60ee255fd983272dec upstream.
 
-NVIDIA 3.1 xHCI card would lose power when moving power state into D3Cold.
-Thus we need to wait for CNR bit to clear in xhci resume, just as in
-xhci init.
+Fix a potential deadlock if disconnect races with open.
 
-[Minor changes to comment and commit message -Mathias]
-Signed-off-by: Rick Tseng <rtseng@nvidia.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/1570190373-30684-6-git-send-email-mathias.nyman@linux.intel.com
+Since commit d4ead16f50f9 ("USB: prevent char device open/deregister
+race") core holds an rw-semaphore while open is called and when
+releasing the minor number during deregistration. This can lead to an
+ABBA deadlock if a driver takes a lock in open which it also holds
+during deregistration.
+
+This effectively reverts commit 78663ecc344b ("USB: disconnect open race
+in legousbtower") which needlessly introduced this issue after a generic
+fix for this race had been added to core by commit d4ead16f50f9 ("USB:
+prevent char device open/deregister race").
+
+Fixes: 78663ecc344b ("USB: disconnect open race in legousbtower")
+Reported-by: syzbot+f9549f5ee8a5416f0b95@syzkaller.appspotmail.com
+Tested-by: syzbot+f9549f5ee8a5416f0b95@syzkaller.appspotmail.com
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20190919083039.30898-3-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-[bwh: Backported to 3.16: Add xhci as parameter to xhci_handshake()]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/host/xhci.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/usb/misc/legousbtower.c | 19 ++-----------------
+ 1 file changed, 2 insertions(+), 17 deletions(-)
 
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -1029,6 +1029,18 @@ int xhci_resume(struct xhci_hcd *xhci, b
- 		hibernated = true;
+--- a/drivers/usb/misc/legousbtower.c
++++ b/drivers/usb/misc/legousbtower.c
+@@ -185,7 +185,6 @@ static const struct usb_device_id tower_
+ };
  
- 	if (!hibernated) {
-+		/*
-+		 * Some controllers might lose power during suspend, so wait
-+		 * for controller not ready bit to clear, just as in xHC init.
-+		 */
-+		retval = xhci_handshake(xhci, &xhci->op_regs->status,
-+					STS_CNR, 0, 10 * 1000 * 1000);
-+		if (retval) {
-+			xhci_warn(xhci, "Controller not ready at resume %d\n",
-+				  retval);
-+			spin_unlock_irq(&xhci->lock);
-+			return retval;
-+		}
- 		/* step 1: restore register */
- 		xhci_restore_registers(xhci);
- 		/* step 2: initialize command ring buffer */
+ MODULE_DEVICE_TABLE (usb, tower_table);
+-static DEFINE_MUTEX(open_disc_mutex);
+ 
+ #define LEGO_USB_TOWER_MINOR_BASE	160
+ 
+@@ -338,18 +337,14 @@ static int tower_open (struct inode *ino
+ 		goto exit;
+ 	}
+ 
+-	mutex_lock(&open_disc_mutex);
+ 	dev = usb_get_intfdata(interface);
+-
+ 	if (!dev) {
+-		mutex_unlock(&open_disc_mutex);
+ 		retval = -ENODEV;
+ 		goto exit;
+ 	}
+ 
+ 	/* lock this device */
+ 	if (mutex_lock_interruptible(&dev->lock)) {
+-		mutex_unlock(&open_disc_mutex);
+ 	        retval = -ERESTARTSYS;
+ 		goto exit;
+ 	}
+@@ -357,12 +352,10 @@ static int tower_open (struct inode *ino
+ 
+ 	/* allow opening only once */
+ 	if (dev->open_count) {
+-		mutex_unlock(&open_disc_mutex);
+ 		retval = -EBUSY;
+ 		goto unlock_exit;
+ 	}
+ 	dev->open_count = 1;
+-	mutex_unlock(&open_disc_mutex);
+ 
+ 	/* reset the tower */
+ 	result = usb_control_msg (dev->udev,
+@@ -429,10 +422,9 @@ static int tower_release (struct inode *
+ 
+ 	if (dev == NULL) {
+ 		retval = -ENODEV;
+-		goto exit_nolock;
++		goto exit;
+ 	}
+ 
+-	mutex_lock(&open_disc_mutex);
+ 	if (mutex_lock_interruptible(&dev->lock)) {
+ 	        retval = -ERESTARTSYS;
+ 		goto exit;
+@@ -462,10 +454,7 @@ static int tower_release (struct inode *
+ 
+ unlock_exit:
+ 	mutex_unlock(&dev->lock);
+-
+ exit:
+-	mutex_unlock(&open_disc_mutex);
+-exit_nolock:
+ 	return retval;
+ }
+ 
+@@ -944,7 +933,6 @@ static int tower_probe (struct usb_inter
+ 	if (retval) {
+ 		/* something prevented us from registering this driver */
+ 		dev_err(idev, "Not able to get a minor for this device.\n");
+-		usb_set_intfdata (interface, NULL);
+ 		goto error;
+ 	}
+ 	dev->minor = interface->minor;
+@@ -976,16 +964,13 @@ static void tower_disconnect (struct usb
+ 	int minor;
+ 
+ 	dev = usb_get_intfdata (interface);
+-	mutex_lock(&open_disc_mutex);
+-	usb_set_intfdata (interface, NULL);
+ 
+ 	minor = dev->minor;
+ 
+-	/* give back our minor */
++	/* give back our minor and prevent further open() */
+ 	usb_deregister_dev (interface, &tower_class);
+ 
+ 	mutex_lock(&dev->lock);
+-	mutex_unlock(&open_disc_mutex);
+ 
+ 	/* if the device is not opened, then we clean up right now */
+ 	if (!dev->open_count) {
 
