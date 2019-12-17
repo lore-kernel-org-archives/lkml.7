@@ -2,119 +2,227 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A785C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA2BC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D5FA21D7D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A39C821D7D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:37:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a7jgwxe1"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FoLn2yxc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727897AbfLQAhW (ORCPT
+        id S1727933AbfLQAhZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:37:22 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41021 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726556AbfLQAhV (ORCPT
+        Mon, 16 Dec 2019 19:37:25 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:40416 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726556AbfLQAhY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 19:37:21 -0500
-Received: by mail-pg1-f193.google.com with SMTP id x8so4667425pgk.8;
-        Mon, 16 Dec 2019 16:37:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=SQFSETw4Xz7lWLspxui/apQzjaLDfPbcy6MZjlbtiaM=;
-        b=a7jgwxe1nhIp6NjFKACWFYKSUaDd5K/NaobbNo4SeOYQBLQyLYFBFzH9liVIuntz1T
-         gi9liv7HNbn7EoSdP/ZAT9hHin3eI7h08yrrYNAAMKIu7uyAA6+urmZn9a2FlB+ZiOlq
-         iLyLWnP43Laof2vnMBAUzeI9JqqvzY/dnGECZHCQU6hIOPr0C0nbe//V9gRX/L7XDQVx
-         yDyHmoFOSQ0EoVR6u1amsp62Ds1zYwqSl6ZPSurG049nR5h2W2qjhBDsy8p3E/zImDMq
-         XkDEWaNFDuN2MHj3qtLb0TG8CcSpWvN0ts2CXeFpEJGqOSK4dyqNKx098z41zAecUrQI
-         kCpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SQFSETw4Xz7lWLspxui/apQzjaLDfPbcy6MZjlbtiaM=;
-        b=glLV316JObYHAHZjX/48ScbZOUDrtFSWA7UR/nClVCyZoaS2oNgmj5hu/R78GbdyRO
-         kYFJKgXyQBxNYX5rYK0Dw9MEfWwJff1BY3FPsKNY4JN9nBvi5sb3HI0gDjLU0N/P+gkn
-         fjYaMiVjjD6IYgG0y/j9tDIdhhISSnUv6yly4lZDIYiS/BE4S+CljODEqdM8UAlYZUY9
-         tMjcoTJ7qHiKAj9lFoVCm2XEZjRHGppCqcVkfFvj18OORY2sWRreFS6huX0/i3ZSlfwx
-         8cArBufzE5nD30GvhfjDp4eupl9kzJQGDs+mlGylN36yfrMK9mR8MMwAQ6R6hpPQYcMX
-         ogeQ==
-X-Gm-Message-State: APjAAAVKThFg7loTkfe8mA/Nn55mMs/cWyZel1Wo8qNtJJdUcOcPqGKY
-        t6e4E7k+rvLD1tFZSWemDQUqp8Mcp+g=
-X-Google-Smtp-Source: APXvYqyqEit9pkliF11YU1baCODG9ekGu7JsQSrq0svaqH/0LxGNlo0f2+t6EKcLHYniDch+iG0Ckw==
-X-Received: by 2002:a62:5243:: with SMTP id g64mr19192407pfb.101.1576543040666;
-        Mon, 16 Dec 2019 16:37:20 -0800 (PST)
-Received: from localhost.localdomain ([177.220.172.83])
-        by smtp.gmail.com with ESMTPSA id in19sm713725pjb.11.2019.12.16.16.37.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 16:37:19 -0800 (PST)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id F0DEDC0DB9; Mon, 16 Dec 2019 21:37:16 -0300 (-03)
-Date:   Mon, 16 Dec 2019 21:37:16 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     Neil Horman <nhorman@tuxdriver.com>
-Cc:     syzbot <syzbot+772d9e36c490b18d51d1@syzkaller.appspotmail.com>,
-        davem@davemloft.net, linux-kernel@vger.kernel.org,
-        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, vyasevich@gmail.com
-Subject: Re: memory leak in sctp_stream_init
-Message-ID: <20191217003716.GC5058@localhost.localdomain>
-References: <000000000000f531080599c4073c@google.com>
- <20191216114828.GA20281@hmswarspite.think-freely.org>
- <20191216145638.GB5058@localhost.localdomain>
+        Mon, 16 Dec 2019 19:37:24 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576543043; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=qRX079jE/itaclnaKIpdviMGMfL0EtHGbhwevzdypMU=;
+ b=FoLn2yxcdM71sY6lPtTRhv9E7U+dkkcIqCM8lXAm5HEXJMwPWCuibINhdjx9zYv84e9x0oNC
+ 9Rxj6sidPHle8saqBI/MQOWuXnQdBWpvKhoUs5sJGw7+GVunBUHFiu49EKbwyzlCT+ENiuH6
+ KNi16SEiDjSiI3oO9pcPw//dd7o=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5df8233d.7fe30a3131b8-smtp-out-n03;
+ Tue, 17 Dec 2019 00:37:17 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 9BD36C4479F; Tue, 17 Dec 2019 00:37:15 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6DE4BC43383;
+        Tue, 17 Dec 2019 00:37:14 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191216145638.GB5058@localhost.localdomain>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 17 Dec 2019 08:37:14 +0800
+From:   cang@codeaurora.org
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, asutoshd@codeaurora.org,
+        nguyenb@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com,
+        Andy Gross <agross@kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 2/7] scsi: ufs-qcom: Add reset control support for host
+ controller
+In-Reply-To: <CAOCk7NpAp+DHBp-owyKGgJFLRajfSQR6ff1XMmAj6A4nM3VnMQ@mail.gmail.com>
+References: <1573798172-20534-1-git-send-email-cang@codeaurora.org>
+ <1573798172-20534-3-git-send-email-cang@codeaurora.org>
+ <20191216190415.GL2536@vkoul-mobl>
+ <CAOCk7NpAp+DHBp-owyKGgJFLRajfSQR6ff1XMmAj6A4nM3VnMQ@mail.gmail.com>
+Message-ID: <091562cbe7d88ca1c30638bc10197074@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 11:56:38AM -0300, Marcelo Ricardo Leitner wrote:
-...
-> Considering that genradix_prealloc() failure is not fatal, seems the
-> fix here is to just ignore the failure in sctp_stream_alloc_out() and
-> let genradix try again later on.
+On 2019-12-17 03:12, Jeffrey Hugo wrote:
+> On Mon, Dec 16, 2019 at 12:05 PM Vinod Koul <vkoul@kernel.org> wrote:
+>> 
+>> Hi Can,
+>> 
+>> On 14-11-19, 22:09, Can Guo wrote:
+>> > Add reset control for host controller so that host controller can be reset
+>> > as required in its power up sequence.
+>> 
+>> I am seeing a regression on UFS on SM8150-mtp with this patch. I think
+>> Jeff is seeing same one lenove laptop on 8998.
+> 
+> Confirmed.
+> 
+>> 
+>> 845 does not seem to have this issue and only thing I can see is that 
+>> on
+>> sm8150 and 8998 we define reset as:
+>> 
+>>                         resets = <&gcc GCC_UFS_BCR>;
+>>                         reset-names = "rst";
+>> 
+>> Thanks
+>> 
+>> >
+>> > Signed-off-by: Can Guo <cang@codeaurora.org>
+>> > ---
+>> >  drivers/scsi/ufs/ufs-qcom.c | 53 +++++++++++++++++++++++++++++++++++++++++++++
+>> >  drivers/scsi/ufs/ufs-qcom.h |  3 +++
+>> >  2 files changed, 56 insertions(+)
+>> >
+>> > diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+>> > index a5b7148..c69c29a1c 100644
+>> > --- a/drivers/scsi/ufs/ufs-qcom.c
+>> > +++ b/drivers/scsi/ufs/ufs-qcom.c
+>> > @@ -246,6 +246,44 @@ static void ufs_qcom_select_unipro_mode(struct ufs_qcom_host *host)
+>> >       mb();
+>> >  }
+>> >
+>> > +/**
+>> > + * ufs_qcom_host_reset - reset host controller and PHY
+>> > + */
+>> > +static int ufs_qcom_host_reset(struct ufs_hba *hba)
+>> > +{
+>> > +     int ret = 0;
+>> > +     struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+>> > +
+>> > +     if (!host->core_reset) {
+>> > +             dev_warn(hba->dev, "%s: reset control not set\n", __func__);
+>> > +             goto out;
+>> > +     }
+>> > +
+>> > +     ret = reset_control_assert(host->core_reset);
+>> > +     if (ret) {
+>> > +             dev_err(hba->dev, "%s: core_reset assert failed, err = %d\n",
+>> > +                              __func__, ret);
+>> > +             goto out;
+>> > +     }
+>> > +
+>> > +     /*
+>> > +      * The hardware requirement for delay between assert/deassert
+>> > +      * is at least 3-4 sleep clock (32.7KHz) cycles, which comes to
+>> > +      * ~125us (4/32768). To be on the safe side add 200us delay.
+>> > +      */
+>> > +     usleep_range(200, 210);
+>> > +
+>> > +     ret = reset_control_deassert(host->core_reset);
+>> > +     if (ret)
+>> > +             dev_err(hba->dev, "%s: core_reset deassert failed, err = %d\n",
+>> > +                              __func__, ret);
+>> > +
+>> > +     usleep_range(1000, 1100);
+>> > +
+>> > +out:
+>> > +     return ret;
+>> > +}
+>> > +
+>> >  static int ufs_qcom_power_up_sequence(struct ufs_hba *hba)
+>> >  {
+>> >       struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+>> > @@ -254,6 +292,12 @@ static int ufs_qcom_power_up_sequence(struct ufs_hba *hba)
+>> >       bool is_rate_B = (UFS_QCOM_LIMIT_HS_RATE == PA_HS_MODE_B)
+>> >                                                       ? true : false;
+>> >
+>> > +     /* Reset UFS Host Controller and PHY */
+>> > +     ret = ufs_qcom_host_reset(hba);
+>> > +     if (ret)
+>> > +             dev_warn(hba->dev, "%s: host reset returned %d\n",
+>> > +                               __func__, ret);
+>> > +
+>> >       if (is_rate_B)
+>> >               phy_set_mode(phy, PHY_MODE_UFS_HS_B);
+>> >
+>> > @@ -1101,6 +1145,15 @@ static int ufs_qcom_init(struct ufs_hba *hba)
+>> >       host->hba = hba;
+>> >       ufshcd_set_variant(hba, host);
+>> >
+>> > +     /* Setup the reset control of HCI */
+>> > +     host->core_reset = devm_reset_control_get(hba->dev, "rst");
+>> > +     if (IS_ERR(host->core_reset)) {
+>> > +             err = PTR_ERR(host->core_reset);
+>> > +             dev_warn(dev, "Failed to get reset control %d\n", err);
+>> > +             host->core_reset = NULL;
+>> > +             err = 0;
+>> > +     }
+>> > +
+>> >       /* Fire up the reset controller. Failure here is non-fatal. */
+>> >       host->rcdev.of_node = dev->of_node;
+>> >       host->rcdev.ops = &ufs_qcom_reset_ops;
+>> > diff --git a/drivers/scsi/ufs/ufs-qcom.h b/drivers/scsi/ufs/ufs-qcom.h
+>> > index d401f17..2d95e7c 100644
+>> > --- a/drivers/scsi/ufs/ufs-qcom.h
+>> > +++ b/drivers/scsi/ufs/ufs-qcom.h
+>> > @@ -6,6 +6,7 @@
+>> >  #define UFS_QCOM_H_
+>> >
+>> >  #include <linux/reset-controller.h>
+>> > +#include <linux/reset.h>
+>> >
+>> >  #define MAX_UFS_QCOM_HOSTS   1
+>> >  #define MAX_U32                 (~(u32)0)
+>> > @@ -233,6 +234,8 @@ struct ufs_qcom_host {
+>> >       u32 dbg_print_en;
+>> >       struct ufs_qcom_testbus testbus;
+>> >
+>> > +     /* Reset control of HCI */
+>> > +     struct reset_control *core_reset;
+>> >       struct reset_controller_dev rcdev;
+>> >
+>> >       struct gpio_desc *device_reset;
+>> > --
+>> > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+>> > a Linux Foundation Collaborative Project
+>> 
+>> --
+>> ~Vinod
 
-Better yet, this fixes it here:
+Hi Jeffrey and Vinod,
 
----8<---
+Thanks for reporting this. May I know what kind of regression do you see 
+on
+8150 and 8998?
+BTW, do you have reset control for UFS PHY in your DT?
+See 71278b058a9f8752e51030e363b7a7306938f64e.
 
-diff --git a/net/sctp/stream.c b/net/sctp/stream.c
-index df60b5ef24cb..e0b01bf912b3 100644
---- a/net/sctp/stream.c
-+++ b/net/sctp/stream.c
-@@ -84,8 +84,10 @@ static int sctp_stream_alloc_out(struct sctp_stream *stream, __u16 outcnt,
- 		return 0;
- 
- 	ret = genradix_prealloc(&stream->out, outcnt, gfp);
--	if (ret)
-+	if (ret) {
-+		genradix_free(&stream->out);
- 		return ret;
-+	}
- 
- 	stream->outcnt = outcnt;
- 	return 0;
-@@ -100,8 +102,10 @@ static int sctp_stream_alloc_in(struct sctp_stream *stream, __u16 incnt,
- 		return 0;
- 
- 	ret = genradix_prealloc(&stream->in, incnt, gfp);
--	if (ret)
-+	if (ret) {
-+		genradix_free(&stream->in);
- 		return ret;
-+	}
- 
- 	stream->incnt = incnt;
- 	return 0;
+FYI, we use reset control on all of our platforms and it is
+a must during our power up sequence.
+
+Thanks,
+Can Guo.
