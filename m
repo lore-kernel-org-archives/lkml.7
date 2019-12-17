@@ -2,226 +2,133 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D02C2D0C5
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CB9C2D0C5
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F4BF2072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:32:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576571536;
-	bh=nRpxsLlEtYzXfsLUlkFlfMcpYSphvB4WowK0VqldUl8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yCTKPmsj3huanXTdhS47r9Jjtmq6jGVR1OD/8JvID/TiVgnsTklWmu1SKn2YDM8E8
-	 jIFjBVAPuXcd6KcBmYGR8sCczxWa5PFIr99VUagFAcC2tLvNwweT/ZDHhClPSTqxT8
-	 pc9h6PEti76lMakNO6lqAP/GOxeq/3DEGoPnuAys=
+	by mail.kernel.org (Postfix) with ESMTP id 5F38D20717
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 08:32:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s4cUqU7z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbfLQIcP (ORCPT
+        id S1726709AbfLQIcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 03:32:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38192 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725893AbfLQIcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 03:32:15 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DFD420717;
-        Tue, 17 Dec 2019 08:32:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576571533;
-        bh=nRpxsLlEtYzXfsLUlkFlfMcpYSphvB4WowK0VqldUl8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=t7e+Ax2+ZBspLksQYG7uPv3E2ZuiHHVhZiWcC9k2OFlLuRvjCehtSpYeVkpgrizny
-         66uoSCuiife3CR+OL9t6tcSjnU/86K+DcFkRZHa7yihQtM17ThoVX27LxwhbyZiJ3u
-         fEidIXxt4NNSFvETfD7dsC3++zPuWJDiB2UaurNA=
-Date:   Tue, 17 Dec 2019 09:32:11 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-serial@vger.kernel.org,
-        kernel@pengutronix.de
-Subject: Re: [PATCH v2 3/3] leds: trigger: implement a tty trigger
-Message-ID: <20191217083211.GC2672708@kroah.com>
-References: <20191217081718.23807-1-u.kleine-koenig@pengutronix.de>
- <20191217081718.23807-4-u.kleine-koenig@pengutronix.de>
+        Tue, 17 Dec 2019 03:32:50 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35112 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbfLQIcu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 03:32:50 -0500
+Received: by mail-wr1-f66.google.com with SMTP id g17so10300010wro.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 00:32:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=R52GCiHJK3v0MVwNFwQLeAJ4rzyKsEn4BdptyWy4AqA=;
+        b=s4cUqU7z5DxsmuduvpFWzEYurebM7Q6vMPcgppHlChAw3Vs91NrCpXn33JuKSVS5Hc
+         Ta9w3XdFEwU43agc49krlQx+SLg/q+tbM/YUc0HpuNA2YzoB9WN0Ut0+EPpuby+/fXcl
+         r+RG/BOj9wuqdXNIbfpjWVzYLu4Dxt+bq8vSauNM32L27vleJtqlZdLGDNpGvD37JVcP
+         K6SzSmV/zSvgw4qT6qFrtQ8lJ8yzHPd4xb4HOABQBSOdlyMLv/hW9F7PNWc+XQceBwfo
+         zuelU9UMLMHqGQb8sJR+UT83XbCiSNm0C4aEcAEUyGDfQixXC37ZCOqIwhwf5Vpol2q7
+         hffg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=R52GCiHJK3v0MVwNFwQLeAJ4rzyKsEn4BdptyWy4AqA=;
+        b=WsA/XE8xDhOShALiDjah3dFcGfQSlwZR7Ll0bfvYBfcSxT2DeKA+7inNAzmXZMiavZ
+         9/I1FOn/gNoehgcL3L40vPpMrvw5f/IN9bzlbX28ZRO6XXmjUjBBe704uITrPx/bYZh2
+         sYpaMtl3W1tQSZhI0ORycFdOs6vAIOmy0TdpEYsA8Vb8n8jlSmSBIOcAxvRroYl/h6S0
+         X7Ow/MTfnkHPjHHR3kfSGJcPOu3JkhCRhtzcoLoDtH81qJIbQVgH2MoAMJqww1zJa6dl
+         A942SHmw4foeOIcju/3wa2otAERkuVS+/1IeA+HwV3wKWl2TUz08O8JF3CF5NUKS3ahj
+         EQbg==
+X-Gm-Message-State: APjAAAVo9xQFbcWa/689rv/Qaom75g6nBEO5LeDs+OjeGD5zEkNRxrAD
+        kLZmEQ++3vY9rYFuVwwlY/+WyI8dHSRN/n7LYG7GkA==
+X-Google-Smtp-Source: APXvYqwQEyk2xHApao080Ej8fa/PLzVHPCsQb1w8HIAU4PKswqdlVBFdjiXoAMVnJnp9bNAXWzs6xzijUyn1oFV4ec0=
+X-Received: by 2002:a5d:46c1:: with SMTP id g1mr34763145wrs.200.1576571567865;
+ Tue, 17 Dec 2019 00:32:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191217081718.23807-4-u.kleine-koenig@pengutronix.de>
+References: <20191214175735.22518-1-ardb@kernel.org> <20191214175735.22518-11-ardb@kernel.org>
+ <20191215193054.GA2187004@rani.riverdale.lan>
+In-Reply-To: <20191215193054.GA2187004@rani.riverdale.lan>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Tue, 17 Dec 2019 08:32:39 +0000
+Message-ID: <CAKv+Gu9Ycs8JRvimxfFMRy=tQ0SqX3MYnv0VfUPVAE_Q1S0y1A@mail.gmail.com>
+Subject: Re: [PATCH 10/10] efi/libstub/x86: avoid thunking for native firmware calls
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 09:17:18AM +0100, Uwe Kleine-König wrote:
-> Usage is as follows:
-> 
-> 	myled=ledname
-> 	tty=ttyS0
-> 
-> 	echo tty > /sys/class/led/$myled/trigger
-> 	cat /sys/class/tty/$tty/dev > /sys/class/led/$myled/dev
-> 
-> . When this new trigger is active it periodically checks the tty's
-> statistics and when it changed since the last check the led is flashed
-> once.
-> 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> ---
->  drivers/leds/trigger/Kconfig       |   7 ++
->  drivers/leds/trigger/Makefile      |   1 +
->  drivers/leds/trigger/ledtrig-tty.c | 146 +++++++++++++++++++++++++++++
->  3 files changed, 154 insertions(+)
->  create mode 100644 drivers/leds/trigger/ledtrig-tty.c
-> 
-> diff --git a/drivers/leds/trigger/Kconfig b/drivers/leds/trigger/Kconfig
-> index ce9429ca6dde..40ff08c93f56 100644
-> --- a/drivers/leds/trigger/Kconfig
-> +++ b/drivers/leds/trigger/Kconfig
-> @@ -144,4 +144,11 @@ config LEDS_TRIGGER_AUDIO
->  	  the audio mute and mic-mute changes.
->  	  If unsure, say N
->  
-> +config LEDS_TRIGGER_TTY
-> +	tristate "LED Trigger for TTY devices"
-> +	depends on TTY
-> +	help
-> +	  This allows LEDs to be controlled by activity on ttys which includes
-> +	  serial devices like /dev/ttyS0.
-> +
->  endif # LEDS_TRIGGERS
-> diff --git a/drivers/leds/trigger/Makefile b/drivers/leds/trigger/Makefile
-> index 733a83e2a718..25c4db97cdd4 100644
-> --- a/drivers/leds/trigger/Makefile
-> +++ b/drivers/leds/trigger/Makefile
-> @@ -15,3 +15,4 @@ obj-$(CONFIG_LEDS_TRIGGER_PANIC)	+= ledtrig-panic.o
->  obj-$(CONFIG_LEDS_TRIGGER_NETDEV)	+= ledtrig-netdev.o
->  obj-$(CONFIG_LEDS_TRIGGER_PATTERN)	+= ledtrig-pattern.o
->  obj-$(CONFIG_LEDS_TRIGGER_AUDIO)	+= ledtrig-audio.o
-> +obj-$(CONFIG_LEDS_TRIGGER_TTY)		+= ledtrig-tty.o
-> diff --git a/drivers/leds/trigger/ledtrig-tty.c b/drivers/leds/trigger/ledtrig-tty.c
-> new file mode 100644
-> index 000000000000..3f3197366700
-> --- /dev/null
-> +++ b/drivers/leds/trigger/ledtrig-tty.c
-> @@ -0,0 +1,146 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <linux/leds.h>
-> +#include <linux/module.h>
-> +#include <linux/slab.h>
-> +#include <linux/tty.h>
-> +#include <uapi/linux/serial.h>
-> +
-> +struct ledtrig_tty_data {
-> +	struct led_classdev *led_cdev;
-> +	struct delayed_work dwork;
-> +	struct tty_struct *tty;
-> +	dev_t device;
-> +	struct serial_icounter_struct icount;
-> +};
-> +
-> +static void ledtrig_tty_halt(struct ledtrig_tty_data *trigger_data)
-> +{
-> +	cancel_delayed_work_sync(&trigger_data->dwork);
-> +}
-> +
-> +static void ledtrig_tty_restart(struct ledtrig_tty_data *trigger_data)
-> +{
-> +	if (!trigger_data->tty)
-> +		return;
-> +
-> +	schedule_delayed_work(&trigger_data->dwork, 0);
-> +}
-> +
-> +static ssize_t dev_show(struct device *dev,
-> +			struct device_attribute *attr, char *buf)
-> +{
-> +	struct ledtrig_tty_data *trigger_data = led_trigger_get_drvdata(dev);
-> +	ssize_t len = 0;
-> +
-> +	if (trigger_data->tty)
-> +		len = sprintf(buf, "%u\n", trigger_data->device);
-> +
-> +	return len;
-> +}
-> +
-> +static ssize_t dev_store(struct device *dev,
-> +			 struct device_attribute *attr, const char *buf,
-> +			 size_t size)
-> +{
-> +	struct ledtrig_tty_data *trigger_data = led_trigger_get_drvdata(dev);
-> +	struct tty_struct *tty;
-> +	unsigned major, minor;
-> +	int ret;
-> +
-> +	if (size == 0 || (size == 1 && buf[0] == '\n')) {
-> +		tty = NULL;
-> +	} else {
-> +		ret = sscanf(buf, "%u:%u", &major, &minor);
-> +		if (ret < 2) {
-> +			dev_err(dev, "invalid value\n");
-> +			return -EINVAL;
-> +		}
-> +
-> +		tty = tty_kopen_shared(MKDEV(major, minor));
-> +		if (IS_ERR(tty)) {
-> +			dev_err(dev, "failed to open tty: %pe\n", tty);
-> +			return PTR_ERR(tty);
-> +		}
-> +	}
-> +
-> +	ledtrig_tty_halt(trigger_data);
-> +
-> +	tty_kref_put(trigger_data->tty);
-> +	trigger_data->tty = tty;
-> +	trigger_data->device = MKDEV(major, minor);
-> +
-> +	ledtrig_tty_restart(trigger_data);
-> +
-> +	return size;
-> +}
-> +static DEVICE_ATTR_RW(dev);
-> +
-> +static void ledtrig_tty_work(struct work_struct *work)
-> +{
-> +	struct ledtrig_tty_data *trigger_data =
-> +		container_of(work, struct ledtrig_tty_data, dwork.work);
-> +	struct serial_icounter_struct icount;
-> +	int ret;
-> +
-> +	if (!trigger_data->tty) {
-> +		led_set_brightness(trigger_data->led_cdev, LED_OFF);
-> +		return;
-> +	}
-> +
-> +	ret = tty_get_icount(trigger_data->tty, &icount);
-> +	if (icount.rx > trigger_data->icount.rx ||
-> +	    icount.tx > trigger_data->icount.tx) {
+On Sun, 15 Dec 2019 at 21:31, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> On Sat, Dec 14, 2019 at 06:57:35PM +0100, Ard Biesheuvel wrote:
+> >
+> > @@ -232,7 +232,7 @@ static inline bool efi_is_native(void)
+> >  #define efi_table_attr(table, attr, instance) ({                     \
+> >       __typeof__(((table##_t *)0)->attr) __ret;                       \
+> >       if (efi_is_native()) {                                          \
+> > -             __ret = ((table##_t *)instance)->attr;                  \
+> > +             __ret = instance->attr;                                 \
+> >       } else {                                                        \
+> >               __typeof__(((table##_32_t *)0)->attr) at;               \
+> >               at = (((table##_32_t *)(unsigned long)instance)->attr); \
+>
+> Is there a reason we didn't remove this cast for native-mode earlier in
+> the series?
+>
 
-What happens when icount.rx and/or icount.tx wraps?  It's "only" an int.
+Yes. In patch 9/10, I fix a couple of occurrences where the protocol
+pointer is a void*, so without the cast, things break.
 
-> +		unsigned long delay_on = 100, delay_off = 100;
-> +
-> +		led_blink_set_oneshot(trigger_data->led_cdev,
-> +				      &delay_on, &delay_off, 0);
-> +
-> +		trigger_data->icount = icount;
+> > @@ -242,19 +242,25 @@ static inline bool efi_is_native(void)
+> >  })
+> >
+> >  #define efi_call_proto(protocol, f, instance, ...)                   \
+> > -     __efi_early()->call((unsigned long)                             \
+> > +     efi_is_native()                                                 \
+> > +             ? instance->f(instance, ##__VA_ARGS__)                  \
+> > +             : efi64_thunk((unsigned long)                           \
+> >                               efi_table_attr(protocol, f, instance),  \
+> > -             instance, ##__VA_ARGS__)
+> > +                     instance, ##__VA_ARGS__)
+> >
+> >  #define efi_call_early(f, ...)                                               \
+> > -     __efi_early()->call((unsigned long)                             \
+> > +     efi_is_native()                                                 \
+> > +             ? __efi_early()->boot_services->f(__VA_ARGS__)          \
+> > +             : efi64_thunk((unsigned long)                           \
+> >                               efi_table_attr(efi_boot_services, f,    \
+> > -             __efi_early()->boot_services), __VA_ARGS__)
+> > +                     __efi_early()->boot_services), __VA_ARGS__)
+> >
+> >  #define efi_call_runtime(f, ...)                                     \
+> > -     __efi_early()->call((unsigned long)                             \
+> > +     efi_is_native()                                                 \
+> > +             ? __efi_early()->runtime_services->f(__VA_ARGS__)       \
+> > +             : efi64_thunk((unsigned long)                           \
+> >                               efi_table_attr(efi_runtime_services, f, \
+> > -             __efi_early()->runtime_services), __VA_ARGS__)
+> > +                     __efi_early()->runtime_services), __VA_ARGS__)
+> >
+> >  extern bool efi_reboot_required(void);
+> >  extern bool efi_is_table_address(unsigned long phys_addr);
+>
+> For the efi_call macros, their definition should be enclosed in
+> parentheses now that it's a ternary operator.
 
-Implicit memcpy of a structure?  Ick.
-
-All you care about are the two integers, why not just track them instead
-of the whole thing?
-
-thanks,
-
-greg k-h
+Ack
