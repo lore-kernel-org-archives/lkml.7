@@ -2,124 +2,95 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7937DC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BAF4C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 593162146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:52:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F8D82146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:52:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576583555;
+	bh=2KLjY2PC8OEP1cb9zx5vw/10F7yacFmlG/xMHTer+ms=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=hnSXtmYXwOECNU4N6mXWTx365h59iwYmkRXPmH1K8vIvpRp6PGUm7BXEj+R+AQIJg
+	 g8aLmaddPjKueaXZEaHdvQHCYxA3oe0fskOFMThSHS6gXNetjw2fgU7myj6dJdZHfN
+	 p8reUQRZjKfhR6jJU5y0HmgoIvcf2HtvE0EurWKo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727723AbfLQLwc (ORCPT
+        id S1727750AbfLQLwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 17 Dec 2019 06:52:34 -0500
+Received: from conuserg-09.nifty.com ([210.131.2.76]:29448 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726141AbfLQLwc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 17 Dec 2019 06:52:32 -0500
-Received: from foss.arm.com ([217.140.110.172]:34378 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbfLQLwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 06:52:32 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 91CC631B;
-        Tue, 17 Dec 2019 03:52:31 -0800 (PST)
-Received: from [10.1.196.56] (e112269-lin.cambridge.arm.com [10.1.196.56])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7E8ED3F6CF;
-        Tue, 17 Dec 2019 03:52:30 -0800 (PST)
-From:   Steven Price <steven.price@arm.com>
-Subject: Re: linux-next: Tree for Dec 16 (drm_panel & intel_panel)
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Sam Ravnborg <sam@ravnborg.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-References: <20191216162209.5b5256dd@canb.auug.org.au>
- <d92bec2a-62cb-004e-7f8c-01fc12a53a74@infradead.org>
- <20191217054255.GA26868@ravnborg.org>
- <65c9dc7b-3c61-8204-07da-212632732791@infradead.org>
-Message-ID: <aede39a0-3469-130d-f416-0e9426ebcec9@arm.com>
-Date:   Tue, 17 Dec 2019 11:52:29 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <65c9dc7b-3c61-8204-07da-212632732791@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id xBHBpwpM016333;
+        Tue, 17 Dec 2019 20:51:59 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com xBHBpwpM016333
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1576583519;
+        bh=a+hfI4JORzXhpsCVcvfC7LTXQBulUva6+4DpZgrovXU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=lrEFZnVSRjXeMh9fEwvw/xmNHZpuarjJTBDtaj2Wc8veQzxEUncv1CToyU4pGugnv
+         v9hef7f0ewG04UQoIKzE121VfJbNB42/3FvbJsCCTb3qfMDQ36x1+bEUqLpsG4Gqud
+         FxBaYqL9sHa5ekvFU7kqpXP9zORpsPjPIcZPz3r2UHRHsfF8eU260cpdGFB4XBJ48l
+         DMMDfBGIn3P0FSoGriBNxtCH0fKNETcl54A7DiyMHgNKfwOV/aaO+LPQIco1yui6eZ
+         F9fLyif0n2NbZuQ8ELzSYaPyhw7YvVWhc56r3aIRibk7qz7xF7FKcmN7NAECJq3E4x
+         R2M8nilKL0x4Q==
+X-Nifty-SrcIP: [126.93.102.113]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Ulf Magnusson <ulfalizer@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] kconfig: remove ---help--- from documentation
+Date:   Tue, 17 Dec 2019 20:51:51 +0900
+Message-Id: <20191217115151.12465-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/12/2019 06:37, Randy Dunlap wrote:
-> On 12/16/19 9:42 PM, Sam Ravnborg wrote:
->> Hi Randy.
->>
->> On Mon, Dec 16, 2019 at 08:25:11AM -0800, Randy Dunlap wrote:
->>> On 12/15/19 9:22 PM, Stephen Rothwell wrote:
->>>> Hi all,
->>>>
->>>> Changes since 20191213:
->>>>
->>>
->>> on x86_64:
->>>
->>> ld: drivers/gpu/drm/drm_panel.o: in function `drm_panel_of_backlight':
->>> (.text+0x2ee): undefined reference to `devm_of_find_backlight'
->>>
->>> ld: drivers/gpu/drm/i915/display/intel_panel.o: in function `intel_backlight_device_register':
->>> intel_panel.c:(.text+0x593e): undefined reference to `backlight_device_register'
->>> ld: drivers/gpu/drm/i915/display/intel_panel.o: in function `intel_backlight_device_unregister':
->>> intel_panel.c:(.text+0x5a04): undefined reference to `backlight_device_unregister'
->>>
->>> CONFIG_DRM_PANEL=y
->>> CONFIG_BACKLIGHT_CLASS_DEVICE=m
->>> CONFIG_DRM_I915=y
->>>
->>> Full randconfig file is attached.
->>
->> Can you please verify if you have:
->> 907aa265fde6589b8059dc51649c6d1f49ade2f3
->> ("drm/drm_panel: fix EXPORT of drm_panel_of_backlight")
->>
->> This commit is supposed to fix it.
->>
->> 	Sam
->>
-> 
-> Hi Sam,
-> I don't have the linux-next.git tree so I can't check that.
-> I just built whatever is in linux-next of 20191216.
-> 
+Commit 84af7a6194e4 ("checkpatch: kconfig: prefer 'help' over
+'---help---'"), scripts/checkpatch.pl warns the use of ---help---.
 
-907aa265fde6589b8059dc51649c6d1f49ade2f3 ("drm/drm_panel: fix EXPORT of
-drm_panel_of_backlight") is fixing drm_panel_of_backlight(), but the
-error above is for backlight_device_register().
+This still exists, but new code should avoid using it.
+Let's stop advertising it in documentation.
 
-From what I can tell, that commit is actually the cause of the error -
-now intel_backlight_device_register() is being included in the kernel
-even though it calls backlight_device_register() which is in a module.
-Of course it also fixed the original error, so reverting it isn't any
-use.
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
-The below Kconfig change fixes the build for me, but I've no idea
-whether this is the correct fix.
+ Documentation/kbuild/kconfig-language.rst | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-Steve
+diff --git a/Documentation/kbuild/kconfig-language.rst b/Documentation/kbuild/kconfig-language.rst
+index 74bef19f69f0..231e6a64957f 100644
+--- a/Documentation/kbuild/kconfig-language.rst
++++ b/Documentation/kbuild/kconfig-language.rst
+@@ -196,14 +196,11 @@ applicable everywhere (see syntax).
+   or equal to the first symbol and smaller than or equal to the second
+   symbol.
+ 
+-- help text: "help" or "---help---"
++- help text: "help"
+ 
+   This defines a help text. The end of the help text is determined by
+   the indentation level, this means it ends at the first line which has
+   a smaller indentation than the first line of the help text.
+-  "---help---" and "help" do not differ in behaviour, "---help---" is
+-  used to help visually separate configuration logic from help within
+-  the file as an aid to developers.
+ 
+ - misc options: "option" <symbol>[=<value>]
+ 
+-- 
+2.17.1
 
-----8<-----
-diff --git a/drivers/gpu/drm/i915/Kconfig b/drivers/gpu/drm/i915/Kconfig
-index ba9595960bbe..6b69dab683ae 100644
---- a/drivers/gpu/drm/i915/Kconfig
-+++ b/drivers/gpu/drm/i915/Kconfig
-@@ -16,7 +16,7 @@ config DRM_I915
- 	select IRQ_WORK
- 	# i915 depends on ACPI_VIDEO when ACPI is enabled
- 	# but for select to work, need to select ACPI_VIDEO's dependencies, ick
--	select BACKLIGHT_CLASS_DEVICE if ACPI
-+	select BACKLIGHT_CLASS_DEVICE
- 	select INPUT if ACPI
- 	select ACPI_VIDEO if ACPI
- 	select ACPI_BUTTON if ACPI
