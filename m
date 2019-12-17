@@ -2,100 +2,91 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 129A3C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 17:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA63C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 17:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4E6721582
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 17:19:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vi8EBTAo"
+	by mail.kernel.org (Postfix) with ESMTP id 9407224655
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 17:21:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576603267;
+	bh=M03ToXVlhxaSn1s14N+p+KZe5B0/dADmOYgSMKETlNs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sO57GjicxrV3riwrGss66fT8la1N9mSfzafdN6h8GAiojToBEas8wzhdBmypbEtoy
+	 I25brSLFBWLhs3rr8Zrwol2NMEwaGj89POh6aXHowXgEMnfPxusew+jB1F5yF/YPNw
+	 Xpa9R3bEXZO0pvpUi7mKXfJEjPk0tjbccV01aUsQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbfLQRTL (ORCPT
+        id S1727007AbfLQRVG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 12:19:11 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36419 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726887AbfLQRTK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 12:19:10 -0500
-Received: by mail-pl1-f196.google.com with SMTP id d15so6401742pll.3;
-        Tue, 17 Dec 2019 09:19:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=0+bQNPLFRgrOnjruSTJiPHn1ioRUh4JUplPIt6H3zco=;
-        b=Vi8EBTAoHCx//m8jY8MWHk9Vg8SHJeRdd1m0Ml2k+7DWhHfGxEcgfIHoOFlJ0NSx+D
-         dc7BKSbdC8cMwVuhQbKtaU2EmJuc+tuu+WgWNZ2w6ZvnYbumIdEwDvxAHyEU7G73XvRJ
-         okJv4BSKIxvJDi4Tu69sQam902T1DqYebrd79Tk0rTOEbB7ZHiVy8Ok7R4K5MHqk+3UM
-         UcK+bj0waHefluq+SYUG/OKHNuFbvGtCSXgg9PPy0W6H7Od6PbNaHvST2K0lQjcF5QAv
-         bKn3P6ImNT9rgus2QO0b+kD5zrUk+7VPMHuUqQOecrZcVTWN4Opyn5qOOhu/yA6uIl5z
-         9LIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=0+bQNPLFRgrOnjruSTJiPHn1ioRUh4JUplPIt6H3zco=;
-        b=rwesFq1yHY/GhXivC1DX4IkL0fYu7G170jNmUNyn/88UnBOfS43oThmtwQ7scPPMzG
-         ALVBSaOyzsd7NmET3oZaRSTl4+wpnu5zF8CfyPtTDqBmw6YNlbuafpjxmugD9EXJ0JAQ
-         Cf7zjhGVVtuwSQQo26zX8XEof68LaOCktKm9NMSI+pz37Y013cmHqqiV5B5NuiMYmqqG
-         I0bxyC/SnWFCFCGdQ1Bvu0Bh2W8MSSJ4LAfhAshpvPnnDyus/d4f3RYdk9r00hSCl0Dm
-         GuupyeKrsOvLnUoWzlJjwfDDUyQCF2bCnK/bLTX1OCZVmCq3TsBiFv4ygT17zPW+TXyF
-         eH2A==
-X-Gm-Message-State: APjAAAXriezdBCFuDKW/V282sZ3KLmloCVgKJkCOD9+rU9Mofxvuz273
-        1ezai3kW6Duu+n2SMvqVbBk=
-X-Google-Smtp-Source: APXvYqzU5Jj/4ldH9kbwaYhFB+jis5t+pdYif2vfndTq3mRrNah3880ddnF/9HXmy3biZkqqq4ZSkQ==
-X-Received: by 2002:a17:902:bb8c:: with SMTP id m12mr24410091pls.320.1576603149784;
-        Tue, 17 Dec 2019 09:19:09 -0800 (PST)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id w66sm27618721pfw.102.2019.12.17.09.19.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 09:19:09 -0800 (PST)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     mturquette@baylibre.com, sboyd@kernel.org
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH] clk: qcom: Avoid SMMU/cx gdsc corner cases
-Date:   Tue, 17 Dec 2019 09:19:05 -0800
-Message-Id: <20191217171905.5619-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 17 Dec 2019 12:21:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58286 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726191AbfLQRVG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 12:21:06 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6490F21582;
+        Tue, 17 Dec 2019 17:21:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576603265;
+        bh=M03ToXVlhxaSn1s14N+p+KZe5B0/dADmOYgSMKETlNs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TkHRnpSBunkxmidMGP8NjEIv8AikT24N46ZYxcKbI4BtwHE2DzWKFve1hoVg3Wv/b
+         vsDrp9eWvubSOm7EOKqAcUc3RPmDSRKRz30qa6fOxYorMrW5N3969gi2Nl+FVi/bZk
+         +mxUJFk5EMHhzhywXR7RMzyAtUP5HQH1xTQgJjPM=
+Date:   Tue, 17 Dec 2019 18:21:02 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Jiri Slaby <jslaby@suse.com>, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] leds: trigger: implement a tty trigger
+Message-ID: <20191217172102.GB3829986@kroah.com>
+References: <20191217150736.1479-1-u.kleine-koenig@pengutronix.de>
+ <20191217150736.1479-4-u.kleine-koenig@pengutronix.de>
+ <20191217152724.GA3667595@kroah.com>
+ <20191217162313.5n3v7va5nw5lxloh@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191217162313.5n3v7va5nw5lxloh@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark the msm8998 cpu CX gdsc as votable and use the hw control to avoid
-corner cases with SMMU per hardware documentation.
+On Tue, Dec 17, 2019 at 05:23:13PM +0100, Uwe Kleine-König wrote:
+> On Tue, Dec 17, 2019 at 04:27:24PM +0100, Greg Kroah-Hartman wrote:
+> > On Tue, Dec 17, 2019 at 04:07:36PM +0100, Uwe Kleine-König wrote:
+> > > Usage is as follows:
+> > > 
+> > > 	myled=ledname
+> > > 	tty=ttyS0
+> > > 
+> > > 	echo tty > /sys/class/leds/$myled/trigger
+> > > 	cat /sys/class/tty/$tty/dev > /sys/class/leds/$myled/dev
+> > 
+> > Is this the correct instructions?  Aren't you looking for a major/minor
+> > number instead in your sysfs file?
+> 
+> This is correct, yes, at least it works as intended on my machine.
+> 
+> /sys/class/tty/$tty/dev produces $major:$minor and that's what the
+> led-trigger consumes.
 
-Fixes: 3f7df5baa259 ("clk: qcom: Add MSM8998 GPU Clock Controller (GPUCC) driver")
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
----
- drivers/clk/qcom/gpucc-msm8998.c | 2 ++
- 1 file changed, 2 insertions(+)
+Ugh, nevermind, I totally read that wrong, I was thinking "echo" instead
+of cat.  My fault, what you wrote is correct.  Should that be documented
+somewhere in a Documentation/ABI/ file so that people know how to use
+this new sysfs file?  How are led triggers documented?
 
-diff --git a/drivers/clk/qcom/gpucc-msm8998.c b/drivers/clk/qcom/gpucc-msm8998.c
-index e5e2492b20c5..9b3923af02a1 100644
---- a/drivers/clk/qcom/gpucc-msm8998.c
-+++ b/drivers/clk/qcom/gpucc-msm8998.c
-@@ -242,10 +242,12 @@ static struct clk_branch gfx3d_isense_clk = {
- 
- static struct gdsc gpu_cx_gdsc = {
- 	.gdscr = 0x1004,
-+	.gds_hw_ctrl = 0x1008,
- 	.pd = {
- 		.name = "gpu_cx",
- 	},
- 	.pwrsts = PWRSTS_OFF_ON,
-+	.flags = VOTABLE,
- };
- 
- static struct gdsc gpu_gx_gdsc = {
--- 
-2.17.1
+thanks,
 
+greg k-h
