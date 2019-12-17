@@ -2,99 +2,129 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC14C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C49C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EB2621775
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A57B621D7D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 22:37:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hpI+f7SS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BatrOPaV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbfLQWgG (ORCPT
+        id S1726571AbfLQWhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 17:36:06 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41896 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725940AbfLQWgG (ORCPT
+        Tue, 17 Dec 2019 17:37:40 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40882 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726072AbfLQWhj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 17:36:06 -0500
-Received: by mail-pf1-f196.google.com with SMTP id w62so28730pfw.8
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 14:36:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yUR3VGXqcEyFpDj03ashPmu0D0HK7H7Djn3POx5wsk8=;
-        b=hpI+f7SS3jE6F9WghLjeR6FFfhRaI/Dl0bjq4N1UHVAwzEa0E+35JRO9yCK2LtqHDE
-         8XBHKDEf33L2oT3cbE+2OoqgsEUn+kmBgb4ORJqXy8USwnbqd97H9gayACgUHc4qMMqL
-         XIxJX9Y7YV0LYpNPa7HtcL7PvCgjumxAhTcmY=
+        Tue, 17 Dec 2019 17:37:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576622257;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=4AxsEtCek/f0aziPe+wCZz9Hjxg7TgpaT9NrNyuqheA=;
+        b=BatrOPaVjML0/vaIPnEkp6q+ChBwlBt4lQKCInNdJperUZtLuZKH3e+IGO/aOb4JGDTUb/
+        8A8OQ9tB99uCQOnbu3obUhIceDOcQp/5P9xNWeO8+dpKgr4EDQePoWVem3fyxHEr0xmF0e
+        ZqnNh/QtFVLVwayavNNDOgM5a4SYFGU=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-253-FyzInRNGNDKi_456FIsQIw-1; Tue, 17 Dec 2019 17:37:36 -0500
+X-MC-Unique: FyzInRNGNDKi_456FIsQIw-1
+Received: by mail-qt1-f200.google.com with SMTP id 69so185226qtb.15
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 14:37:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yUR3VGXqcEyFpDj03ashPmu0D0HK7H7Djn3POx5wsk8=;
-        b=Qwcskf4qLqWvoYdkVCEuGJKXd0QIRRblMa4p9mXIHwGQY1Px2OdG7tT0MDEPaQZb1X
-         oanf2YLYZ8vIwNIj96n5KNDaFvM48PNzYsZjOvEWDm+ykjpCS5fDSoAv+ENtpTLGH3Jz
-         /63EVVvoer+636DuGIWrc+4Cfkda3Bipf1AzGHebydWH3IoXD64HJk+lXN/uJ8Hh4bH+
-         aogk9td3zFmg1n6UvPzUItpKPh8ZA156FEKTQULcskjl3+/AWpl5lx2DeYxZslP9w9FB
-         EB0hSoHMMf9pJM3FHSlBHQXm1Afv3N9UWSrE1IAD2h+FkL+p5GttPyB0C8gRWfBjYat/
-         NG1A==
-X-Gm-Message-State: APjAAAU9se98eeZDqnjqCS/MvlLl5/aWfTm/MJkroVWaXw6nmXakx5+z
-        7Ft0UCJOBEymD0WR4mQGgoBMhQ==
-X-Google-Smtp-Source: APXvYqyse3yodh4Y8GBmMY60C4nZ1Ex8BE7BiinQNGmJIpqd+FR49bz6zBoTrFGG9uLrMKjtWT07ag==
-X-Received: by 2002:a63:1908:: with SMTP id z8mr28108344pgl.350.1576622165581;
-        Tue, 17 Dec 2019 14:36:05 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id 189sm35588pfw.73.2019.12.17.14.36.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Dec 2019 14:36:05 -0800 (PST)
-Date:   Tue, 17 Dec 2019 14:36:03 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linus.walleij@linaro.org, Rajendra Nayak <rnayak@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-msm@vger.kernel.org,
-        Roja Rani Yarubandi <rojay@codeaurora.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Fix I2C/UART numbers 2, 4, 7,
- and 9
-Message-ID: <20191217223603.GX228856@google.com>
-References: <20191217130352.1.Id8562de45e8441cac34699047e25e7424281e9d4@changeid>
+        bh=4AxsEtCek/f0aziPe+wCZz9Hjxg7TgpaT9NrNyuqheA=;
+        b=SBXsgRLLwcd7hDzDBIfPqYAg2kXv8Bl3wUI3nr/dtKJb78PyxFPeWaEq9GnrwTNdFJ
+         ndZnUseBeuG36kjCdg+9w3oCWGG1z8KWFbx3IYtkHdVFWuByxKQunZnvUx+gfr+dXxxS
+         gkwkF1EqIfIC6iGFQDqdOQ5hymftaRhGTkh7VtGWGvGCxAq5nDR2sxQjmsWMCbyQJY5j
+         RgAz4zNFGDfnks76Nkh9hUvJ5QH8d/a3IQ4KfnlGgNb2+HAjZugUjerlE1PKAvZmU9d4
+         GtwLGxuo2ielbmkUeJBOLbHAHz8JipdKl9dIj7rMru/j4rknyEBA88p6NDD2ZkxDtd+s
+         bGzQ==
+X-Gm-Message-State: APjAAAWlNgzTuwq/DLJZuezxtgwxBqLKm+x0XdihlbtTmvERq7N52tgT
+        1WE+TbFf5j88gskAbFesvDup9WQmTJt5lyEr1gxcaLuXudKMworvkvLkfNqlA+tgAvxQ4tRBBp/
+        Cg4p7MBdRSLoxixyrFfwKIwAG
+X-Received: by 2002:a37:4d45:: with SMTP id a66mr374444qkb.65.1576622256394;
+        Tue, 17 Dec 2019 14:37:36 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxl93uuG9B4gn7WP+rric6T9Je7Dj1Ol6DxMKHs7+zQRPC1qeoFeX2QtpGDhXhtHyWXATL+iw==
+X-Received: by 2002:a37:4d45:: with SMTP id a66mr374408qkb.65.1576622256150;
+        Tue, 17 Dec 2019 14:37:36 -0800 (PST)
+Received: from xz-x1 ([104.156.64.74])
+        by smtp.gmail.com with ESMTPSA id g62sm11961qkd.25.2019.12.17.14.37.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 14:37:35 -0800 (PST)
+Date:   Tue, 17 Dec 2019 17:37:34 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     James Hogan <jhogan@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
+        kvm@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Cornelia Huck <cohuck@redhat.com>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        kvmarm@lists.cs.columbia.edu, Jim Mattson <jmattson@google.com>,
+        David Gibson <david@gibson.dropbear.id.au>
+Subject: Re: [PATCH v4 01/19] KVM: x86: Allocate new rmap and large page
+ tracking when moving memslot
+Message-ID: <20191217223734.GL7258@xz-x1>
+References: <20191217204041.10815-1-sean.j.christopherson@intel.com>
+ <20191217204041.10815-2-sean.j.christopherson@intel.com>
+ <20191217215640.GI7258@xz-x1>
+ <20191217222058.GD11771@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191217130352.1.Id8562de45e8441cac34699047e25e7424281e9d4@changeid>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191217222058.GD11771@linux.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 01:04:07PM -0800, Douglas Anderson wrote:
-> Commit f4a73f5e2633 ("pinctrl: qcom: sc7180: Add new qup functions")
-> has landed which means that we absolutely need to use the proper names
-> for the pinmuxing for I2C/UART numbers 2, 4, 7, and 9.  Let's do it.
+On Tue, Dec 17, 2019 at 02:20:59PM -0800, Sean Christopherson wrote:
+> > For example, I see PPC has this:
+> > 
+> > struct kvm_arch_memory_slot {
+> > #ifdef CONFIG_KVM_BOOK3S_HV_POSSIBLE
+> > 	unsigned long *rmap;
+> > #endif /* CONFIG_KVM_BOOK3S_HV_POSSIBLE */
+> > };
+> > 
+> > I started to look into HV code of it a bit, then I see...
+> > 
+> >  - kvm_arch_create_memslot(kvmppc_core_create_memslot_hv) init slot->arch.rmap,
+> >  - kvm_arch_flush_shadow_memslot(kvmppc_core_flush_memslot_hv) didn't free it,
+> >  - kvm_arch_prepare_memory_region(kvmppc_core_prepare_memory_region_hv) is nop.
+> > 
+> > So Does it have similar issue?
 > 
-> For reference:
-> - If you get only one of this commit and the pinctrl commit then none
->   of I2C/UART 2, 4, 7, and 9 will work.
-> - If you get neither of these commits then I2C 2, 4, 7, and 9 will
->   work but not UART.
-> 
-> ...but despite the above it should be fine for this commit to land in
-> the Qualcomm tree because sc7180.dtsi only exists there (it hasn't
-> made it to mainline).
-> 
-> Fixes: ba3fc6496366 ("arm64: dts: sc7180: Add qupv3_0 and qupv3_1")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> No, KVM doesn't allow a memslot's size to be changed, and PPC's rmap
+> allocation is directly tied to the size of the memslot.  The x86 bug exists
+> because the size of its metadata arrays varies based on the alignment of
+> the base gfn.
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Yes, I was actually thinking those rmap would be invalid rather than
+the size after the move.  But I think kvm_arch_flush_shadow_memslot()
+will flush all of them anyways... So yes it seems fine.
+
+Thanks,
+
+-- 
+Peter Xu
+
