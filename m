@@ -2,102 +2,76 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C22CC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C38C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9C7520663
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:56:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dkv8qqiZ"
+	by mail.kernel.org (Postfix) with ESMTP id 976F620663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:57:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727842AbfLQM45 (ORCPT
+        id S1727843AbfLQM5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:56:57 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:38945 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726141AbfLQM44 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 07:56:56 -0500
-Received: by mail-pj1-f65.google.com with SMTP id v11so625654pjb.6
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 04:56:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:message-id:date:user-agent:mime-version
-         :content-transfer-encoding:content-language;
-        bh=X9/NLTUkChqvclbQ38iR/7hGAt02+C8gSePlUjQQync=;
-        b=dkv8qqiZaOVovvRnI3DMw7u2fi2CceV6E/ZiD+WEmz74Soagbo4fldXFD3Ua3Vv2KX
-         jTAIQeDSATPVmsI8/I0dGyDc3s1a1hQVsNZYP+YAJIlpM32l+ZV9+ODgC2lGd+bw4R3I
-         bWEvzVneJ7tesajNdHGYV1xWTZeFDGWAm/kK143VomWCMQvuJ3oTE1eJqJAg1JZltHbM
-         wnK7rVCFL2jWV0JstndDsh5RMEkwE4kQIUnS9voGwuh+549AYC6LFBv4xJjhj9Pa9jyC
-         wwonGvIL14DUcWb/iPHZGsAfKp+Z1boFAbCENiWdHQW9QRsl1QT76g46+h9Fv4iIeLU4
-         Wkyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
-         :mime-version:content-transfer-encoding:content-language;
-        bh=X9/NLTUkChqvclbQ38iR/7hGAt02+C8gSePlUjQQync=;
-        b=CARiZ8tp2S1B0fG6ugUUuSU9uTbHv0GDvGlmiVcpT91MgXsg5+g6zL9K5fxz+BpzyS
-         m8RepWfJPk4hKqaqOwCOvKrg/bPwfydytRrszpdOYB/pZKsYmKqHUxtwgEZsDPRrl2qV
-         Vn2yB/TVgebLg5+jEoFes3i4o7BBLppuFv8jvaHrG5YVKAxEs6zvOfaPf+9aWT+wrwaQ
-         qKxGFnZjnlOiMJcx2zqhT/exX5dhbNyOKt0/Lz8ZvvhNp4hkvU/kb3Dc7IdOWcWkoU9z
-         m+zldnQyyjS0Fo+L6PNqc7aoe1DJByvcSuAYSxi/eo52+QrRcfTzBcT1Xdck0KN1AATM
-         sQeQ==
-X-Gm-Message-State: APjAAAVg8mOTYkvYm/EU/mFOlDZTzkgS9Nf+WdpkDK7LeJ8Sk6wmEqtP
-        IADFTwkg5YTqwGyoYIqPXrQ6HQPKmzc=
-X-Google-Smtp-Source: APXvYqw0RkAEXV2858CQpGVKDiwqHaYuSviWh4xOEA6Upc0QTzkadicjMaBY+aA1KAlDoIFzc/Ft5A==
-X-Received: by 2002:a17:902:6b09:: with SMTP id o9mr12905855plk.209.1576587415901;
-        Tue, 17 Dec 2019 04:56:55 -0800 (PST)
-Received: from ?IPv6:2402:f000:1:1501:200:5efe:166.111.139.134? ([2402:f000:1:1501:200:5efe:a66f:8b86])
-        by smtp.gmail.com with ESMTPSA id 23sm26458702pfj.148.2019.12.17.04.56.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 17 Dec 2019 04:56:54 -0800 (PST)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [BUG] kernel: kcov: a possible sleep-in-atomic-context bug in
- kcov_ioctl()
-To:     akpm@linux-foundation.org, ishkamiel@gmail.com,
-        rostedt@goodmis.org, dvyukov@google.com,
-        andrea.parri@amarulasolutions.com, anders.roxell@linaro.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        elena.reshetova@intel.com, andreyknvl@google.com
-Cc:     linux-kernel@vger.kernel.org
-Message-ID: <3c4608bc-9c84-d79b-de76-b1a1a2a4fb6d@gmail.com>
-Date:   Tue, 17 Dec 2019 20:56:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Tue, 17 Dec 2019 07:57:40 -0500
+Received: from foss.arm.com ([217.140.110.172]:36312 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726141AbfLQM5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 07:57:40 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 661C131B;
+        Tue, 17 Dec 2019 04:57:39 -0800 (PST)
+Received: from [192.168.0.9] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 759FF3F719;
+        Tue, 17 Dec 2019 04:57:37 -0800 (PST)
+Subject: Re: [Patch v6 4/7] sched/fair: Enable periodic update of average
+ thermal pressure
+To:     Quentin Perret <qperret@google.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Thara Gopinath <thara.gopinath@linaro.org>, mingo@redhat.com,
+        ionela.voinescu@arm.com, vincent.guittot@linaro.org,
+        rui.zhang@intel.com, daniel.lezcano@linaro.org,
+        viresh.kumar@linaro.org, linux-kernel@vger.kernel.org,
+        amit.kachhap@gmail.com, javi.merino@kernel.org,
+        amit.kucheria@verdurent.com
+References: <1576123908-12105-1-git-send-email-thara.gopinath@linaro.org>
+ <1576123908-12105-5-git-send-email-thara.gopinath@linaro.org>
+ <20191216143932.GT2844@hirez.programming.kicks-ass.net>
+ <20191216175901.GA157313@google.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <78b0f8a6-462b-acca-7682-f5269fea17c5@arm.com>
+Date:   Tue, 17 Dec 2019 13:57:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191216175901.GA157313@google.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kernel may sleep while holding a spinlock.
-The function call path (from bottom to top) in Linux 4.19 is:
+On 16/12/2019 18:59, Quentin Perret wrote:
+> On Monday 16 Dec 2019 at 15:39:32 (+0100), Peter Zijlstra wrote:
+>>> @@ -10274,6 +10281,7 @@ static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
+>>>  
+>>>  	update_misfit_status(curr, rq);
+>>>  	update_overutilized_status(task_rq(curr));
+>>> +	update_thermal_load_avg(rq_clock_task(rq), rq, thermal_pressure);
+>>>  }
+>>
+>> My objection here is that when the arch does not have support for it,
+>> there is still code generated and runtime overhead associated with it.
+> 
+> I guess this function could be stubbed for CONFIG_CPU_THERMAL=n ?
+> That is, reflecting the thermal pressure in the scheduler only makes
+> sense when the thermal infrastructure is enabled to begin with (which is
+> indeed not the case for most archs).
 
-kernel/kcov.c, 237:
-     vfree in kcov_put
-kernel/kcov.c, 413:
-     kcov_put in kcov_ioctl_locked
-kernel/kcov.c, 427:
-     kcov_ioctl_locked in kcov_ioctl
-kernel/kcov.c, 426:
-     spin_lock in kcov_ioctl
+Makes sense to me. If we can agree that 'CPU cooling' is the only actor
+for thermal (CPU capacity) capping.
 
-vfree() can sleep at runtime.
-
-I am not sure how to properly fix this possible bug, so I only report it.
-A possible way is to replace vfree() with kfree(), and replace related 
-calls to vmalloc() with kmalloc().
-
-This bug is found by a static analysis tool STCheck written by myself.
-
-
-Best wishes,
-Jia-Ju Bai
+thermal_sys-$(CONFIG_CPU_THERMAL)       += cpu_cooling.o
