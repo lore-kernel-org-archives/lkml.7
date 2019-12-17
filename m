@@ -2,127 +2,96 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8811C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9CC6C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF2072082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:00:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8136E2064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 11:00:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZKi2ffTW"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hN2EmYI6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbfLQLAQ (ORCPT
+        id S1726937AbfLQLAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 06:00:16 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:39151 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726383AbfLQLAQ (ORCPT
+        Tue, 17 Dec 2019 06:00:20 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:49000 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbfLQLAT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 06:00:16 -0500
-Received: by mail-qk1-f196.google.com with SMTP id c16so4129444qko.6
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 03:00:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mG99GA6/Xiwz9qwjNacdCgRQBNUN/DJm+EdzhM5zdJk=;
-        b=ZKi2ffTW6CKhiLlUehhNua4oR+IQVrnfldGgSCvYobXyaxf4QGLMGV1ZZ6p4OBl2tI
-         FkPzuoOceoPyusSCU5xvdzfD0Jr7XdnBsgcW7GlTB8qKVhWCSKtCBYlgVotmWsyfUHm2
-         GL9Y+50K4eb6Wx3TwS6+mOVTAmbDmPtwNFU0USc1pvW0N98+98OXqgU/O1e0K/WRt0Hj
-         q+4ovQ8zbfrAtOkcQotudiZmC2nGxboSBOmLjkpvV5f2Qu9PixHe4hYSngMd6J3ELeNH
-         8pgdbSEjSs7FVMvOEIbXJ+gOTGPRFEGOfa1bVyhCWL92V8E5Moi4UQ7aOev0/NGOIhLz
-         1ayg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mG99GA6/Xiwz9qwjNacdCgRQBNUN/DJm+EdzhM5zdJk=;
-        b=KY3Oz0qtVg/ZpZywbG+5uUnbQazjKxUbzeqiorNRxJHcooM9Tnom3rPFAHWmje34M1
-         YmBD0q1XsQUe3qXeIRePe0zOIeQ6inv0bd0UX4385bbCXYGvMsI+kM9TNIi5PdkRtdfd
-         LGznWJEHv4zpxplMFntBi0Lkm++zkAsdt/k7ITVuxveIzoeDCc69AFhqXOuD9J29nTlj
-         TjcYqMpcJ31NI4cuECP2bP/pQzFkhnnHnce4TUjNlSaLsYaSqYrLrdaoh8L+d72t5bUw
-         ij8z4k3Snl9t1rk4LeM76tCToK3/QfaLxnGgDfYg4i7NoEM4x1WoJ2DsIiAGwd+5KAeu
-         a/nw==
-X-Gm-Message-State: APjAAAVHaKeOk6NTrZ4m1emDleQRr1O0sq1vwbpafjml41YNFK1VIZ2P
-        H6C39z75QBM8e/ngzujehXmN/3FDPl8Nu3+hpZICcQ==
-X-Google-Smtp-Source: APXvYqywDIx8QZijrqsCgnbP1i8WSjZej+2z1QKYbvCx4iGWrKY4auHMIOJEyC9uciCsefBQ0G4vqX+E02yg22qADrU=
-X-Received: by 2002:ae9:eb48:: with SMTP id b69mr4157084qkg.43.1576580415093;
- Tue, 17 Dec 2019 03:00:15 -0800 (PST)
+        Tue, 17 Dec 2019 06:00:19 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBHB0IeJ024842;
+        Tue, 17 Dec 2019 05:00:18 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576580418;
+        bh=WFu2bhCsbcS8Ji82jkf6TOz+cf1OP42p/0gNDCCLLiE=;
+        h=From:To:CC:Subject:Date;
+        b=hN2EmYI6fo8B+cctFerAaiz7Y/5cT2kRgVpERx3LSNeWW4epYL0YwV/pZMYGwr4TJ
+         Mwv4wO71mEDxsAefEvsP2Svv9lFkUNKEOxi9goTj9YJ5hL3WRWDzWl85p6GcPrqZgq
+         LnmWA8VrF0W8LG9Xz4YULh2hPMrH2W+MSfU3Mufc=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBHB0I3D080597
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 17 Dec 2019 05:00:18 -0600
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
+ Dec 2019 05:00:17 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 17 Dec 2019 05:00:17 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBHB0F7x038240;
+        Tue, 17 Dec 2019 05:00:16 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <b-liu@ti.com>, <gregkh@linuxfoundation.org>
+CC:     <vkoul@kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] usb: musb/ux500: Use dma_request_chan() instead dma_request_slave_channel()
+Date:   Tue, 17 Dec 2019 13:00:30 +0200
+Message-ID: <20191217110030.26887-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <95e7a12ac909e7de584133772efc7ef982a16bbb.1576170740.git.andreyknvl@google.com>
- <Pine.LNX.4.44L0.1912121313030.1352-100000@iolanthe.rowland.org> <CAAeHK+yOBcNz_iopRs6PEu=1-rZn6Gkm+Urq+iVBFQeSjSXqNA@mail.gmail.com>
-In-Reply-To: <CAAeHK+yOBcNz_iopRs6PEu=1-rZn6Gkm+Urq+iVBFQeSjSXqNA@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 17 Dec 2019 12:00:03 +0100
-Message-ID: <CACT4Y+aN20NXxXhe9qv_WRLntAHbL98Shj8NAvg0WafDw8C=jA@mail.gmail.com>
-Subject: Re: [PATCH RFC 1/2] kcov: collect coverage from interrupts
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 1:09 PM Andrey Konovalov <andreyknvl@google.com> wrote:
->
-> On Thu, Dec 12, 2019 at 7:15 PM Alan Stern <stern@rowland.harvard.edu> wrote:
-> >
-> > On Thu, 12 Dec 2019, Andrey Konovalov wrote:
-> >
-> > > This change extends kcov remote coverage support to allow collecting
-> > > coverage from interrupts in addition to kernel background threads.
-> > >
-> > > To collect coverage from code that is executed in interrupt context, a
-> > > part of that code has to be annotated with kcov_remote_start/stop() in a
-> > > similar way as how it is done for global kernel background threads. Then
-> > > the handle used for the annotations has to be passed to the
-> > > KCOV_REMOTE_ENABLE ioctl.
-> > >
-> > > Internally this patch adjusts the __sanitizer_cov_trace_pc() compiler
-> > > inserted callback to not bail out when called from interrupt context.
-> > > kcov_remote_start/stop() are updated to save/restore the current per
-> > > task kcov state in a per-cpu area (in case the interrupt came when the
-> > > kernel was already collecting coverage in task context). Coverage from
-> > > interrupts is collected into pre-allocated per-cpu areas, whose size is
-> > > controlled by the new CONFIG_KCOV_IRQ_AREA_SIZE.
-> > >
-> > > This patch also cleans up some of kcov debug messages.
-> > >
-> > > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> > > ---
-> >
-> > > diff --git a/drivers/usb/gadget/udc/dummy_hcd.c b/drivers/usb/gadget/udc/dummy_hcd.c
-> > > index 4c9d1e49d5ed..faf84ada71a5 100644
-> > > --- a/drivers/usb/gadget/udc/dummy_hcd.c
-> > > +++ b/drivers/usb/gadget/udc/dummy_hcd.c
-> > > @@ -38,6 +38,7 @@
-> > >  #include <linux/usb/gadget.h>
-> > >  #include <linux/usb/hcd.h>
-> > >  #include <linux/scatterlist.h>
-> > > +#include <linux/kcov.h>
-> > >
-> > >  #include <asm/byteorder.h>
-> > >  #include <linux/io.h>
-> >
-> > That's the only change to this driver.  As such, it doesn't appear to
-> > be needed, judging by the patch description.
->
-> Right, will fix in the next version, thanks!
+dma_request_slave_channel() is a wrapper on top of dma_request_chan()
+eating up the error code.
 
-Please also post a github or gerrit link. These small scraps of
-changes without context and better visualisation are extremely hard to
-review meaningfully.
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ drivers/usb/musb/ux500_dma.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/usb/musb/ux500_dma.c b/drivers/usb/musb/ux500_dma.c
+index d19bb3e89da6..d5cf5e8bb1ca 100644
+--- a/drivers/usb/musb/ux500_dma.c
++++ b/drivers/usb/musb/ux500_dma.c
+@@ -310,9 +310,9 @@ static int ux500_dma_controller_start(struct ux500_dma_controller *controller)
+ 			dma_channel->max_len = SZ_16M;
+ 
+ 			ux500_channel->dma_chan =
+-				dma_request_slave_channel(dev, chan_names[ch_num]);
++				dma_request_chan(dev, chan_names[ch_num]);
+ 
+-			if (!ux500_channel->dma_chan)
++			if (IS_ERR(ux500_channel->dma_chan))
+ 				ux500_channel->dma_chan =
+ 					dma_request_channel(mask,
+ 							    data ?
+-- 
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
