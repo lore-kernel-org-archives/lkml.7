@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA95EC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 194EEC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A33822176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:17:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBFBA21775
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 20:17:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576613861;
-	bh=CX09ACSy+ujDPWvoi8qHy2pMKluoG/nigOQ/yiAg414=;
+	s=default; t=1576613866;
+	bh=kU/g2d6zDLkg2lDHlxUGE+KJKoOB9BR28nfUxunsxVo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zcec+PmdnD7HAev3UWpJDrXYKbJqtKyceLVyu8fs4GNJJMSOmhNr0lC0xbEpXXIdo
-	 2Wt9qytUWfaSwWlNdDaZDWFqDoZvTp930ZJU/uChH8+rGt9tnnXs64uk70OHE67WiU
-	 itC0dHLTEzahbstLrGEVOmr7ghVK8KCP9fcaVB3I=
+	b=YJMH74sEzQfuIZ9jTZvYJgurDb/Aan1f6j6onnIkRU459sG+wIEqDbVWATPrsckJc
+	 MlFKIe0qoUktd4hjKoCPSQNPpI3E2EGzpnfWYrADDiQKUrSCA58Z3YNlzDBNq4tKI4
+	 Di+ufylC9rupq0bGPYJDHIPQB3saO6A4BbZQKgno=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbfLQURk (ORCPT
+        id S1728910AbfLQURp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 15:17:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42052 "EHLO mail.kernel.org"
+        Tue, 17 Dec 2019 15:17:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728856AbfLQURa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 15:17:30 -0500
+        id S1728793AbfLQURV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 15:17:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C6CD21D7D;
-        Tue, 17 Dec 2019 20:17:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F0D0206D8;
+        Tue, 17 Dec 2019 20:17:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576613849;
-        bh=CX09ACSy+ujDPWvoi8qHy2pMKluoG/nigOQ/yiAg414=;
+        s=default; t=1576613840;
+        bh=kU/g2d6zDLkg2lDHlxUGE+KJKoOB9BR28nfUxunsxVo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mXO229rkGouvSi3HxJUDWbnj/qVCiiUqPEXf/zyLv4LoMQXDoKXLbnmlcAGMgzEmC
-         2PwCnJUHkqI8Z8JvrPXtGAMioANiZpTUlm9MPYuERJiFIy0ZiQXAdCPyej8ggegORD
-         /As5ywQy0B7U57lLBOxVNaSvTDvvyFZrlKIUbZ9k=
+        b=lyOjwhqjPLYV2DyD+qHPVlIZb8aQyxYJkBOpgXImLIQu41Us7vRegN8i99olzcmYD
+         fCzObSLf7VbiliuV8pSoXHWSogv4A9oUutYeK6eRpR8j4sm1e1/ONEnQpRTa5vMyTR
+         yjrkGbXp/vXTlGojzDaB+GOyFoRSVlUFZuK53w7A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mian Yousaf Kaukab <ykaukab@suse.de>,
-        Andrew Lunn <andrew@lunn.ch>,
+        stable@vger.kernel.org, Alexander Lobakin <alobakin@dlink.ru>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 08/25] net: thunderx: start phy before starting autonegotiation
-Date:   Tue, 17 Dec 2019 21:16:07 +0100
-Message-Id: <20191217200907.200839480@linuxfoundation.org>
+Subject: [PATCH 5.3 04/25] net: dsa: fix flow dissection on Tx path
+Date:   Tue, 17 Dec 2019 21:16:03 +0100
+Message-Id: <20191217200905.191919415@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191217200903.179327435@linuxfoundation.org>
 References: <20191217200903.179327435@linuxfoundation.org>
@@ -60,39 +60,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mian Yousaf Kaukab <ykaukab@suse.de>
+From: Alexander Lobakin <alobakin@dlink.ru>
 
-[ Upstream commit a350d2e7adbb57181d33e3aa6f0565632747feaa ]
+[ Upstream commit 8bef0af09a5415df761b04fa487a6c34acae74bc ]
 
-Since commit 2b3e88ea6528 ("net: phy: improve phy state checking")
-phy_start_aneg() expects phy state to be >= PHY_UP. Call phy_start()
-before calling phy_start_aneg() during probe so that autonegotiation
-is initiated.
+Commit 43e665287f93 ("net-next: dsa: fix flow dissection") added an
+ability to override protocol and network offset during flow dissection
+for DSA-enabled devices (i.e. controllers shipped as switch CPU ports)
+in order to fix skb hashing for RPS on Rx path.
 
-As phy_start() takes care of calling phy_start_aneg(), drop the explicit
-call to phy_start_aneg().
+However, skb_hash() and added part of code can be invoked not only on
+Rx, but also on Tx path if we have a multi-queued device and:
+ - kernel is running on UP system or
+ - XPS is not configured.
 
-Network fails without this patch on Octeon TX.
+The call stack in this two cases will be like: dev_queue_xmit() ->
+__dev_queue_xmit() -> netdev_core_pick_tx() -> netdev_pick_tx() ->
+skb_tx_hash() -> skb_get_hash().
 
-Fixes: 2b3e88ea6528 ("net: phy: improve phy state checking")
-Signed-off-by: Mian Yousaf Kaukab <ykaukab@suse.de>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+The problem is that skbs queued for Tx have both network offset and
+correct protocol already set up even after inserting a CPU tag by DSA
+tagger, so calling tag_ops->flow_dissect() on this path actually only
+breaks flow dissection and hashing.
+
+This can be observed by adding debug prints just before and right after
+tag_ops->flow_dissect() call to the related block of code:
+
+Before the patch:
+
+Rx path (RPS):
+
+[   19.240001] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
+[   19.244271] tag_ops->flow_dissect()
+[   19.247811] Rx: proto: 0x0800, nhoff: 8	/* ETH_P_IP */
+
+[   19.215435] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
+[   19.219746] tag_ops->flow_dissect()
+[   19.223241] Rx: proto: 0x0806, nhoff: 8	/* ETH_P_ARP */
+
+[   18.654057] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
+[   18.658332] tag_ops->flow_dissect()
+[   18.661826] Rx: proto: 0x8100, nhoff: 8	/* ETH_P_8021Q */
+
+Tx path (UP system):
+
+[   18.759560] Tx: proto: 0x0800, nhoff: 26	/* ETH_P_IP */
+[   18.763933] tag_ops->flow_dissect()
+[   18.767485] Tx: proto: 0x920b, nhoff: 34	/* junk */
+
+[   22.800020] Tx: proto: 0x0806, nhoff: 26	/* ETH_P_ARP */
+[   22.804392] tag_ops->flow_dissect()
+[   22.807921] Tx: proto: 0x920b, nhoff: 34	/* junk */
+
+[   16.898342] Tx: proto: 0x86dd, nhoff: 26	/* ETH_P_IPV6 */
+[   16.902705] tag_ops->flow_dissect()
+[   16.906227] Tx: proto: 0x920b, nhoff: 34	/* junk */
+
+After:
+
+Rx path (RPS):
+
+[   16.520993] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
+[   16.525260] tag_ops->flow_dissect()
+[   16.528808] Rx: proto: 0x0800, nhoff: 8	/* ETH_P_IP */
+
+[   15.484807] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
+[   15.490417] tag_ops->flow_dissect()
+[   15.495223] Rx: proto: 0x0806, nhoff: 8	/* ETH_P_ARP */
+
+[   17.134621] Rx: proto: 0x00f8, nhoff: 0	/* ETH_P_XDSA */
+[   17.138895] tag_ops->flow_dissect()
+[   17.142388] Rx: proto: 0x8100, nhoff: 8	/* ETH_P_8021Q */
+
+Tx path (UP system):
+
+[   15.499558] Tx: proto: 0x0800, nhoff: 26	/* ETH_P_IP */
+
+[   20.664689] Tx: proto: 0x0806, nhoff: 26	/* ETH_P_ARP */
+
+[   18.565782] Tx: proto: 0x86dd, nhoff: 26	/* ETH_P_IPV6 */
+
+In order to fix that we can add the check 'proto == htons(ETH_P_XDSA)'
+to prevent code from calling tag_ops->flow_dissect() on Tx.
+I also decided to initialize 'offset' variable so tagger callbacks can
+now safely leave it untouched without provoking a chaos.
+
+Fixes: 43e665287f93 ("net-next: dsa: fix flow dissection")
+Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/cavium/thunder/thunder_bgx.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/core/flow_dissector.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
-+++ b/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
-@@ -1115,7 +1115,7 @@ static int bgx_lmac_enable(struct bgx *b
- 				       phy_interface_mode(lmac->lmac_type)))
- 			return -ENODEV;
+--- a/net/core/flow_dissector.c
++++ b/net/core/flow_dissector.c
+@@ -853,9 +853,10 @@ bool __skb_flow_dissect(const struct net
+ 		nhoff = skb_network_offset(skb);
+ 		hlen = skb_headlen(skb);
+ #if IS_ENABLED(CONFIG_NET_DSA)
+-		if (unlikely(skb->dev && netdev_uses_dsa(skb->dev))) {
++		if (unlikely(skb->dev && netdev_uses_dsa(skb->dev) &&
++			     proto == htons(ETH_P_XDSA))) {
+ 			const struct dsa_device_ops *ops;
+-			int offset;
++			int offset = 0;
  
--		phy_start_aneg(lmac->phydev);
-+		phy_start(lmac->phydev);
- 		return 0;
- 	}
- 
+ 			ops = skb->dev->dsa_ptr->tag_ops;
+ 			if (ops->flow_dissect &&
 
 
