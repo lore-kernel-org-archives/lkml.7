@@ -2,144 +2,93 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 364EBC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14258C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C8BA2146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:17:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="IgvRwOM0"
+	by mail.kernel.org (Postfix) with ESMTP id D463E206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 15:19:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576595975;
+	bh=EJtK6aAQJGztLShvbadWFyoB03ck7Av3zqUu4jtmUcI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CqAYHYXRYjC9nDODfpQz58Abillkn+7eZvvLc1lfqPAKavpOpw9B4BPlyx2Af2b9/
+	 ZKt16UJEcb438rEdpouS0Pcw7sGPzd4g1qM16aPkbfW9SQsiGo3tQOvpNeqd5BK+me
+	 jlVU0sgOxzm1yQamibjrzZg4R3MYC7u5sbr+JQVk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728308AbfLQPRz (ORCPT
+        id S1728196AbfLQPTe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 10:17:55 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:40798 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726560AbfLQPRy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 10:17:54 -0500
-Received: from zn.tnic (p200300EC2F0BBF00B1FF9AA6AAA46E12.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:bf00:b1ff:9aa6:aaa4:6e12])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3E7211EC0ABC;
-        Tue, 17 Dec 2019 16:17:53 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1576595873;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=eMPRb1cz3Nt28bOIAgvze0vVdLfDNbhPiLCjieiXvPg=;
-        b=IgvRwOM0qg8wEd4JMvkhf5NcFcChnH2T+nAaI8DilOhfGUq/o51WiLa8tL5G3bV7q7eDZj
-        YN3wzHwN3uisJTfNImBcWCzTgf7LymqJflfElCgg1g6+v3SuE6of3/fouMnEPaPsYQsNbr
-        E/0wOJ3MIYeFtXVSrxFfD8e/Z2HFiVc=
-Date:   Tue, 17 Dec 2019 16:17:44 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, sean.j.christopherson@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
-        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
-        puiterwijk@redhat.com
-Subject: Re: [PATCH v24 07/24] x86/cpu/intel: Detect SGX supprt
-Message-ID: <20191217151744.GG28788@zn.tnic>
-References: <20191129231326.18076-1-jarkko.sakkinen@linux.intel.com>
- <20191129231326.18076-8-jarkko.sakkinen@linux.intel.com>
+        Tue, 17 Dec 2019 10:19:34 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38499 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727459AbfLQPTe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 10:19:34 -0500
+Received: by mail-wm1-f66.google.com with SMTP id u2so3596394wmc.3;
+        Tue, 17 Dec 2019 07:19:33 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4zEQ83F2qGoC/F92fA9F7HDEhihvKc7tNEjbPfQsODw=;
+        b=LuZJfxArESzZXf0+Bf4L3MVHeODbImPQkqXtlzdqkAYhsBJJITn5s6d+jeXXNRGrGB
+         EnG23JzgKmw9+SFlw73blctygtExI2+lUZffXvyus+EuKQuC1d8X8TbTHCl2m9pLz2T5
+         YEWmE0VVKY0m8EFnya4pO6yjzUh0X3/HSY5ETPRYkC/1vrhj8M6Kcy35eGgNok7IdB6Q
+         +9nkCa6NOCN5X9ozE9FC5CnIG9XRRstLZATia1LUNBMhQN89Pn0dQ7n7+qlmCJqaEaJU
+         1Ohi23/kkUh2fZ6yrlwh2c1ViAS4iqQAJohkkBBHoUGEDFXPSuGZ1V+GXV2DxEvVI3VU
+         ic0A==
+X-Gm-Message-State: APjAAAVRpOAlsUkF1uKF4u7IHLVO2k6PmWOxDB3SYeiQefJZnuGteGXd
+        MKRHkIWhX7Q8s5naoS9fS9Q=
+X-Google-Smtp-Source: APXvYqztX/vQknATUnJPGuoDhEQMMAkKQ4QrJJ9k4b4XynST/j+I8Qhac3CMutXvlAw3+85wIvzcjA==
+X-Received: by 2002:a1c:ddc5:: with SMTP id u188mr5787814wmg.83.1576595972595;
+        Tue, 17 Dec 2019 07:19:32 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id a9sm3347964wmm.15.2019.12.17.07.19.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 07:19:31 -0800 (PST)
+Date:   Tue, 17 Dec 2019 16:19:31 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Qian Cai <cai@lca.pw>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: memcontrol.c: move mem_cgroup_id_get_many under
+ CONFIG_MMU
+Message-ID: <20191217151931.GD7272@dhcp22.suse.cz>
+References: <20191217135440.GB58496@chrisdown.name>
+ <392D7C59-5538-4A9B-8974-DB0B64880C2C@lca.pw>
+ <20191217144652.GA7272@dhcp22.suse.cz>
+ <20191217150921.GA136178@chrisdown.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191129231326.18076-8-jarkko.sakkinen@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191217150921.GA136178@chrisdown.name>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 30, 2019 at 01:13:09AM +0200, Jarkko Sakkinen wrote:
+On Tue 17-12-19 15:09:21, Chris Down wrote:
+[...]
+> (Side note: I'm moderately baffled that a tightly scoped __maybe_unused is
+> considered sinister but somehow disabling -Wunused-function is on the table
+> :-))
 
-Typo in the subject:
-
-Subject: Re: [PATCH v24 07/24] x86/cpu/intel: Detect SGX supprt
-							 ^^^^^^
-> From: Sean Christopherson <sean.j.christopherson@intel.com>
-> 
-> When the CPU supports SGX, check that the BIOS has enabled SGX and SGX1
-> opcodes are available. Otherwise, all the SGX related capabilities.
-> 
-> In addition, clear X86_FEATURE_SGX_LC also in the case when the launch
-> enclave are read-only. This way the feature bit reflects the level that
-> Linux supports the launch control.
-> 
-> The check is done for every CPU, not just BSP, in order to verify that
-> MSR_IA32_FEATURE_CONTROL is correctly configured on all CPUs. The other
-> parts of the kernel, like the enclave driver, expect the same
-> configuration from all CPUs.
-> 
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Co-developed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> ---
->  arch/x86/kernel/cpu/intel.c | 41 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
-
-...
-
-> @@ -761,6 +797,11 @@ static void init_intel(struct cpuinfo_x86 *c)
->  	if (cpu_has(c, X86_FEATURE_TME))
->  		detect_tme(c);
->  
-> +#ifdef CONFIG_INTEL_SGX
-> +	if (cpu_has(c, X86_FEATURE_SGX))
-> +		detect_sgx(c);
-> +#endif
-
-You can remove the ifdeffery here and put the ifdef around the function
-body and drop the __maybe_unused tag:
-
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index ef41431b3f70..2f3414eff99d 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -624,8 +624,9 @@ static void detect_tme(struct cpuinfo_x86 *c)
- 	c->x86_phys_bits -= keyid_bits;
- }
- 
--static void __maybe_unused detect_sgx(struct cpuinfo_x86 *c)
-+static void detect_sgx(struct cpuinfo_x86 *c)
- {
-+#ifdef CONFIG_INTEL_SGX
- 	unsigned long long fc;
- 
- 	rdmsrl(MSR_IA32_FEATURE_CONTROL, fc);
-@@ -658,6 +659,7 @@ static void __maybe_unused detect_sgx(struct cpuinfo_x86 *c)
- 
- err_msrs_rdonly:
- 	setup_clear_cpu_cap(X86_FEATURE_SGX_LC);
-+#endif
- }
- 
- static void init_cpuid_fault(struct cpuinfo_x86 *c)
-@@ -797,10 +799,8 @@ static void init_intel(struct cpuinfo_x86 *c)
- 	if (cpu_has(c, X86_FEATURE_TME))
- 		detect_tme(c);
- 
--#ifdef CONFIG_INTEL_SGX
- 	if (cpu_has(c, X86_FEATURE_SGX))
- 		detect_sgx(c);
--#endif
- 
- 	init_intel_misc_features(c);
- 
+Well, I usually do not like to see __maybe_unused because that is prone
+to bit-rot and loses its usefulness. Looking into the recent git logs
+most -Wunused-function led to the code removal (which is really good
+but the compiler is likely to do that already so the overall impact is
+not that large) or more ifdefery. I do not really see many instance of
+__maybe_unused.
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Michal Hocko
+SUSE Labs
