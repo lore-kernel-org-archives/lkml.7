@@ -2,99 +2,83 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35071C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0557C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08869218AC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 648EC20733
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:30:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hmFyP9Yp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="I0yTPH9P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727681AbfLQT27 (ORCPT
+        id S1727722AbfLQTav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 14:28:59 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:42780 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727402AbfLQT26 (ORCPT
+        Tue, 17 Dec 2019 14:30:51 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:57272 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727346AbfLQTav (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 14:28:58 -0500
-Received: by mail-pg1-f193.google.com with SMTP id s64so6196759pgb.9
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 11:28:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=i/zpLv8lE1Uei6Q5Sx7cAmMDb3bT/fGYajv7dIvOKeE=;
-        b=hmFyP9YpwXdycSUewYe/UXs3bnMml8U1T7bYOZ707V0rFHcuCRD2nLhbeYGTE8+QE6
-         YeODZNO4iHpY74xxfg8h3QIrN5+e2rmLTf4zCWzmdD8QLQkKIYPfRFr3uRQXAPXdjMOO
-         FV5KcXU4rccMrDCxXAkxmXOOwEkYKu3j6Agfc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=i/zpLv8lE1Uei6Q5Sx7cAmMDb3bT/fGYajv7dIvOKeE=;
-        b=JBUNdD5ZjWjrqJ5UlT4W7L3TeTt1ItO8BcbcyCHiqZcs8cK1inpYvL05qJ67o6fyb/
-         p5Y90m6xQjwoHuQHDoE2fogeW899FQAAm7zTT44zW/BOhkKm00C9GnaV85eKVWdkeZjt
-         GvT0ng8j65PxZ5PLDpyLSQXYSJGx2VuWq/U8UtJUXsT+EiQnRG6kF8v9IoZMTD74mAaM
-         ZhYAFgO4g69IWYxLZscgrJEodRoZX5YTKgDR5nfczssCXlMJ7fTrkwIdIUXf2pb9nkCt
-         Ld9lROqrafx64JLxDvfEVqaiHKdq6r6hhsY3QSuuLawassRqJPzOxHt2kCQnIOjyLZgt
-         DvLw==
-X-Gm-Message-State: APjAAAVPjxRGKmK0n0wLyJCp4MYQy+5EOpqQ4Uq8t3Ax3cPbSZoB9qvX
-        H1Mz1nlsTo3oQVXxVEN3Z9gbHxxNJAxNWg==
-X-Google-Smtp-Source: APXvYqxiTyHBI09mSIZ7WxUE/kaAZ+419iXHJeFYLdYs35fJkGC4N7ohu7jcUgy7taZPaKRwKqVlBQ==
-X-Received: by 2002:a63:d041:: with SMTP id s1mr27414886pgi.363.1576610938241;
-        Tue, 17 Dec 2019 11:28:58 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id k1sm18812089pgq.70.2019.12.17.11.28.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Dec 2019 11:28:57 -0800 (PST)
-Date:   Tue, 17 Dec 2019 11:28:56 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Dikshita Agarwal <dikshita@codeaurora.org>
-Cc:     andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        vgarodia@codeaurora.org
-Subject: Re: [PATCH] arm64: dts: sc7180: Enable video node
-Message-ID: <20191217192856.GV228856@google.com>
-References: <1576569218-24817-1-git-send-email-dikshita@codeaurora.org>
+        Tue, 17 Dec 2019 14:30:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=4Y+l+qhRX82wNX6+96r8AekxTBZHO3NyqH8i08v//ic=; b=I0yTPH9PqNzkbnYw5oHkxqfZV
+        JShDIrdEjFa2vyW56mqcBkjoxXZmlp3Cd3M8TYaYvtHfhL2gVdYE0LiFWRmpRg/0imbuVu5ohetcG
+        cP56HrseOQ+UaH6aHigkFXz4evsNqGfsnVOW7xIrdL+rT68le4kMC4Jq5UWh1oC48nitMXbwb1Usg
+        Kqd2Jn7ZJ15UqomNZLHNkkeEXCkD0EbLhWYzGA+vqg02SqTsBDagb9aDECM5izb5f6jQ2QNIRDPCt
+        n/ooyQejYP5zQCmMRY8CAtWQODh04RFhtYYGLrW5f7fhPkHa54zCyPhuHDANJ82mcmLye+z44XXLm
+        pDgz6jGgQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ihIYL-00054y-Oa; Tue, 17 Dec 2019 19:30:42 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5DC5630038D;
+        Tue, 17 Dec 2019 20:29:16 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0EEE22B2B0509; Tue, 17 Dec 2019 20:30:39 +0100 (CET)
+Date:   Tue, 17 Dec 2019 20:30:39 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [GIT PULL] timer fixes
+Message-ID: <20191217193039.GF2844@hirez.programming.kicks-ass.net>
+References: <20191217115547.GA68104@gmail.com>
+ <CAHk-=wiVZMU69qB7nmkkyvjtDenQ+89V94V=3mmdY88uWYrZiQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1576569218-24817-1-git-send-email-dikshita@codeaurora.org>
+In-Reply-To: <CAHk-=wiVZMU69qB7nmkkyvjtDenQ+89V94V=3mmdY88uWYrZiQ@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 01:23:38PM +0530, Dikshita Agarwal wrote:
-> This is a preparation gerrit to enable video node for sc7180.
-> This change depends on patch series Venus new features.
+On Tue, Dec 17, 2019 at 11:14:48AM -0800, Linus Torvalds wrote:
+> On Tue, Dec 17, 2019 at 3:55 AM Ingo Molnar <mingo@kernel.org> wrote:
+> >
+> > Add HPET quirks for the Intel "Coffee Lake H" and "Ice Lake" platforms.
 > 
-> Signed-off-by: Dikshita Agarwal <dikshita@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 28 ++++++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index 52a5861..ccf9ef5 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -1297,6 +1297,34 @@
->  
->  			#freq-domain-cells = <1>;
->  		};
-> +
-> +		venus: video-codec@aa00000 {
+> Is there any reason we don't force-disable HPET by default if there
+> are alternatives?
 
-Per convention nodes should be sorted by address, so this one
-should be between system-cache-controller@9200000 and
-thermal-sensor@c263000. If new nodes are always added to the
-end conflicts are virtually guaranteed, especially in the early
-phase of adding support for a SoC.
+What alternatives are there? That is, we normally only use HPET to
+double check nobody messed up the TSC.
+
+Now it (fingers crossed) seems to be getting better in that more recent
+firmware is less likely to wreck TSC, but we're still running this on
+plenty of old machines where TSC really isn't all that sane.
+
+We can't just blindly trust TSC across everything x86.
