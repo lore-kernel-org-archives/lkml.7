@@ -2,170 +2,80 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76015C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 870D4C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A7EB2146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5466C2146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 12:42:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576586539;
+	bh=fn0Mzuac6XWWX/lbHquGjs8c6za1aC4Yj8JI7MDkpHw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=pDU+cHOdPeK6xseyl3fG/eIWVpaZmuZIjZhM2oermoqaJaX6NNoiXkcNsUwo5Cpef
+	 9llT5s0IgY4StMnY0A6mI6ZQ59KqptReGGiKT9DSZ5JzejAUxf2yIXhv9MoKZKNqGW
+	 /65GFZhn0Pr1j5RSlRnibXIzuvjQqlKMWRVmzOCc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728373AbfLQMkz (ORCPT
+        id S1728074AbfLQMmS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 07:40:55 -0500
-Received: from foss.arm.com ([217.140.110.172]:35756 "EHLO foss.arm.com"
+        Tue, 17 Dec 2019 07:42:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727029AbfLQMky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 07:40:54 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 02C0C31B;
-        Tue, 17 Dec 2019 04:40:54 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7057C3F718;
-        Tue, 17 Dec 2019 04:40:53 -0800 (PST)
-Date:   Tue, 17 Dec 2019 12:40:51 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org
-Subject: Re: [PATCH 07/13] PCI: cadence: Add new *ops* for CPU addr fixup
-Message-ID: <20191217124050.GD24359@e119886-lin.cambridge.arm.com>
-References: <20191209092147.22901-1-kishon@ti.com>
- <20191209092147.22901-8-kishon@ti.com>
+        id S1727029AbfLQMmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 07:42:18 -0500
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C48B2146E;
+        Tue, 17 Dec 2019 12:42:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576586538;
+        bh=fn0Mzuac6XWWX/lbHquGjs8c6za1aC4Yj8JI7MDkpHw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=dbnFyqnyj2HrknsdSsFIT4Ye6BcJGISFdWg2Cq9UMN6cMktzCIM7a6ys2i4IebeeM
+         JTrHctRXis+Fq3Tqe1+CAkWQ4ZHIp5i5QNS5BgWOy4TWs/mpWAux4s8ZgT14NG3UxO
+         DxwWZboV7QSJ4aBjEBER0zmVIn+RuQM7p9YUq7tQ=
+Received: by mail-lj1-f174.google.com with SMTP id p8so4126731ljg.0;
+        Tue, 17 Dec 2019 04:42:17 -0800 (PST)
+X-Gm-Message-State: APjAAAUcBf4x7Iriw5p2HgzG9nDIoApZ8B/kb8pbPC3y8fXNNLQntwzS
+        0cJ5pV+BB22N6QS+4hVcz3wZkIUV4lDWKDKCiyY=
+X-Google-Smtp-Source: APXvYqwkp8CWsEFyEekYy1CYPaxi/8JkVNoBZdvgkoMYBa+yBWdKEK/4Pd+Lr0BWIJi5vIveL7uxDcLnWXady9cM+rQ=
+X-Received: by 2002:a2e:b0db:: with SMTP id g27mr3138848ljl.74.1576586535875;
+ Tue, 17 Dec 2019 04:42:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191209092147.22901-8-kishon@ti.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+References: <20191214152755.25138-1-angus@akkea.ca> <20191214152755.25138-2-angus@akkea.ca>
+In-Reply-To: <20191214152755.25138-2-angus@akkea.ca>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Tue, 17 Dec 2019 13:42:04 +0100
+X-Gmail-Original-Message-ID: <CAJKOXPfYYFthdwn5XeJ_Meo-12vsCKQKhjG8kc+R-vTEzjp9nw@mail.gmail.com>
+Message-ID: <CAJKOXPfYYFthdwn5XeJ_Meo-12vsCKQKhjG8kc+R-vTEzjp9nw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] power: supply: max17042: add MAX17055 support
+To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
+Cc:     Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kernel@puri.sm
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 02:51:41PM +0530, Kishon Vijay Abraham I wrote:
-> Cadence driver uses "mem" memory resource to obtain the offset of
-> configuration space address region, memory space address region and
-> message space address region. The obtained offset is used to program
-> the Address Translation Unit (ATU). However certain platforms like TI's
-> J721E SoC require the absolute address to be programmed in the ATU and not
-> just the offset.
-> 
-> The same problem was solved in designware driver using a platform specific
-> ops for CPU addr fixup in commit a660083eb06c5bb0 ("PCI: dwc: designware:
-
-Thanks for this reference, though this doesn't need to be in the commit
-log, please put such comments underneath a ---.
-
-> Add new *ops* for CPU addr fixup"). Follow a similar mechanism in
-> Cadence too instead of directly using "mem" memory resource in Cadence
-> PCIe core.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+On Sat, 14 Dec 2019 at 16:28, Angus Ainslie (Purism) <angus@akkea.ca> wrote:
+>
+> The MAX17055 is very similar to the MAX17042 so extend the driver.
+>
+> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
 > ---
->  .../pci/controller/cadence/pcie-cadence-host.c    | 15 ++++-----------
->  drivers/pci/controller/cadence/pcie-cadence.c     |  8 ++++++--
->  drivers/pci/controller/cadence/pcie-cadence.h     |  1 +
->  3 files changed, 11 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> index 2efc33b1cade..cf817be237af 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> @@ -105,15 +105,14 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
->  static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
->  {
->  	struct cdns_pcie *pcie = &rc->pcie;
-> -	struct resource *mem_res = pcie->mem_res;
->  	struct resource *bus_range = rc->bus_range;
->  	struct resource *cfg_res = rc->cfg_res;
->  	struct device *dev = pcie->dev;
->  	struct device_node *np = dev->of_node;
->  	struct of_pci_range_parser parser;
-> +	u64 cpu_addr = cfg_res->start;
->  	struct of_pci_range range;
->  	u32 addr0, addr1, desc1;
-> -	u64 cpu_addr;
->  	int r, err;
->  
->  	/*
-> @@ -126,7 +125,9 @@ static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
->  	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_PCI_ADDR1(0), addr1);
->  	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_DESC1(0), desc1);
->  
-> -	cpu_addr = cfg_res->start - mem_res->start;
-> +	if (pcie->ops->cpu_addr_fixup)
-> +		cpu_addr = pcie->ops->cpu_addr_fixup(pcie, cpu_addr);
-> +
+>  drivers/power/supply/max17042_battery.c | 17 +++++++--
+>  include/linux/power/max17042_battery.h  | 48 ++++++++++++++++++++++++-
+>  2 files changed, 61 insertions(+), 4 deletions(-)
 
-Won't this patch cause a breakage for existing users that won't have defined a
-cpu_addr_fixup? The offset isn't being calculated and so cpu_addr will be wrong?
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Thanks,
-
-Andrew Murray
-
->  	addr0 = CDNS_PCIE_AT_OB_REGION_CPU_ADDR0_NBITS(12) |
->  		(lower_32_bits(cpu_addr) & GENMASK(31, 8));
->  	addr1 = upper_32_bits(cpu_addr);
-> @@ -264,14 +265,6 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->  	}
->  	rc->cfg_res = res;
->  
-> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mem");
-> -	if (!res) {
-> -		dev_err(dev, "missing \"mem\"\n");
-> -		return -EINVAL;
-> -	}
-> -
-> -	pcie->mem_res = res;
-> -
->  	ret = cdns_pcie_start_link(pcie, true);
->  	if (ret) {
->  		dev_err(dev, "Failed to start link\n");
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence.c b/drivers/pci/controller/cadence/pcie-cadence.c
-> index de5b3b06f2d0..bd93d0f92f55 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence.c
-> @@ -113,7 +113,9 @@ void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 fn,
->  	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_DESC1(r), desc1);
->  
->  	/* Set the CPU address */
-> -	cpu_addr -= pcie->mem_res->start;
-> +	if (pcie->ops->cpu_addr_fixup)
-> +		cpu_addr = pcie->ops->cpu_addr_fixup(pcie, cpu_addr);
-> +
->  	addr0 = CDNS_PCIE_AT_OB_REGION_CPU_ADDR0_NBITS(nbits) |
->  		(lower_32_bits(cpu_addr) & GENMASK(31, 8));
->  	addr1 = upper_32_bits(cpu_addr);
-> @@ -140,7 +142,9 @@ void cdns_pcie_set_outbound_region_for_normal_msg(struct cdns_pcie *pcie, u8 fn,
->  	}
->  
->  	/* Set the CPU address */
-> -	cpu_addr -= pcie->mem_res->start;
-> +	if (pcie->ops->cpu_addr_fixup)
-> +		cpu_addr = pcie->ops->cpu_addr_fixup(pcie, cpu_addr);
-> +
->  	addr0 = CDNS_PCIE_AT_OB_REGION_CPU_ADDR0_NBITS(17) |
->  		(lower_32_bits(cpu_addr) & GENMASK(31, 8));
->  	addr1 = upper_32_bits(cpu_addr);
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-> index c879dd3d2893..ffa8b9f78ff8 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence.h
-> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
-> @@ -233,6 +233,7 @@ struct cdns_pcie_ops {
->  	void	(*write)(void __iomem *addr, int size, u32 value);
->  	int	(*start_link)(struct cdns_pcie *pcie, bool start);
->  	bool	(*is_link_up)(struct cdns_pcie *pcie);
-> +	u64     (*cpu_addr_fixup)(struct cdns_pcie *pcie, u64 cpu_addr);
->  };
->  
->  /**
-> -- 
-> 2.17.1
-> 
+Best regards,
+Krzysztof
