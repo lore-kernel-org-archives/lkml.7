@@ -2,143 +2,351 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 086C9C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE96EC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C61072067C
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:38:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EB6E206D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 07:38:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="ThsSsJ5u";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="pNOxsnou"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CyxZ01f0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728138AbfLQHiN (ORCPT
+        id S1728151AbfLQHie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 02:38:13 -0500
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:32230 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbfLQHiM (ORCPT
+        Tue, 17 Dec 2019 02:38:34 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:39493 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726494AbfLQHid (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 02:38:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1576568292; x=1608104292;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=plvsS3EbFtnT2jEj+CKpl0ADN0AY/rYgqgK33djc6Jc=;
-  b=ThsSsJ5und/hITRwoVsfTpDLbvdP3KUiOyQ74saiUGNSlmjdnBSiNTbY
-   cL+BfTDFNPusQpEvNSWOzn3RD1co5v4MB4bQ059R11yLrg7kz4UWYL4Dj
-   JCuY18P4CNK2GwDuV2pMgIh6HlgtQVfEhJ1HrdRGe5roSBDWcLyOdtkiH
-   5BFt8U77RPPuZ98qY33W5q/6b5lU+UKZjOtlmlbAkjNPH4uZO366Xa7g6
-   BMQWFIcBpmcSOzfGwX1+vhULctbhYqy9afupIHcBV1hSzCRlgWiP1uGeb
-   5sIXW+zAtO5v7pg+5PQVTVPpWWb6ko5pJdUtXPqj8iU+UYM2R1CCIzYvA
-   g==;
-IronPort-SDR: hW5mPVhkRRnuUCvCMhZL/pkSWE9B3p0F9jZF9DArTQFAjqkvOlkIJcFfSEt0CDDiO+7XPhfQ6s
- SETxKEFCzNuZsMw/FaiWhKIV88koHQiYNdasuiLRS7Mhu5UtmH0HjKneVU6I5zpKG0XoGtrePy
- aaO8WcV8MGrz1odPB4HTd5nQ7jlX5ZEWB+/JVMoc3x30HyAcz2kyUA0emeU2U69frZ61yS3yIy
- HErVqu5nMfz0fiJC7m42NDyBOdxixbTvQGwQGpYxv60myGW/qVtlGMZ+tGiVpjl59coyfFx+//
- XEM=
-X-IronPort-AV: E=Sophos;i="5.69,324,1571673600"; 
-   d="scan'208";a="126294481"
-Received: from mail-bn3nam04lp2055.outbound.protection.outlook.com (HELO NAM04-BN3-obe.outbound.protection.outlook.com) ([104.47.46.55])
-  by ob1.hgst.iphmx.com with ESMTP; 17 Dec 2019 15:38:11 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=i5cM0ttULvWSEHlr1Xb4SsZ96clZCL1mKfMLunYK1ff6gxqyivvNkT3JF7Yb9PVlcCL+DEa1CXB05JNYQMGrYcjon/EGO54mkfwNnl20wHgFRR3XLbxja0+bsoXX111Gfigs1T7a0w49C9YW04iGjZQSgrQV3sGLeh0diAeVwYsD5uB9c1bZWhjkhZCfCEzjYsz7PDx6pCGRMASAqpwn11j23aW4YS5+LG2vsoAFAdHJIrWaiyT6KnRbYEQwNLYCwz/fE1YblhPBjZ7ijIZdDo6Ak6QND+IIruQ5C94u36knzPSSgyVEbr75gL0T5RFNAFP913skhO1TF3Vqcv+uOg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=plvsS3EbFtnT2jEj+CKpl0ADN0AY/rYgqgK33djc6Jc=;
- b=C5M2sFfb6KrcgkkZxgNVRmq/mfsNSREATxBK2wfgVEJ+kkLJqOLeZmjCdBlXLIvYfw8mDRoB8X1Zi1039r6C+EG6GVTb6erVXtPcippXL+r4dMmEGyZODOePktcd9XJd5S79V+yROzuZUNcFRGG/TeljyznWBPgIDnj6WOy8DlUwPmh9UgWfLyfgNWzK66jifzqXw48xBHPJXAtU+gaw+xKJ1hD+wDmE+rqiCWmYMQO5xbAbRFMgnGRmxzrGxzCqbR92QKgm2bdA1HeopfQlHrvVysU0qJW1rkHQvGFqTKnHctzFzwxMLStBE/dmoWgFqXBGP6UwxIfyWLKJ+/oC5Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Tue, 17 Dec 2019 02:38:33 -0500
+Received: by mail-pj1-f68.google.com with SMTP id v11so264105pjb.6
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 23:38:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=plvsS3EbFtnT2jEj+CKpl0ADN0AY/rYgqgK33djc6Jc=;
- b=pNOxsnoucfZuVGYer8avxZbKK3LtETglXa49mUYZhjo3Haumx8gsFpShMp00s/IWs5PF7vwCU+hXQFiG0976qc56HiD54OL06jUPAqo/BgST1tkJ9IAmeiJIHvsV/YwG1H6tnb6QeRtQey++6+/GJEfgAvUYSkQOTerVIC2M3Ts=
-Received: from MN2PR04MB6991.namprd04.prod.outlook.com (10.186.144.209) by
- MN2PR04MB7104.namprd04.prod.outlook.com (10.186.147.212) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.16; Tue, 17 Dec 2019 07:38:09 +0000
-Received: from MN2PR04MB6991.namprd04.prod.outlook.com
- ([fe80::9447:fa71:53df:f866]) by MN2PR04MB6991.namprd04.prod.outlook.com
- ([fe80::9447:fa71:53df:f866%3]) with mapi id 15.20.2538.019; Tue, 17 Dec 2019
- 07:38:09 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Stanley Chu <stanley.chu@mediatek.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "pedrom.sousa@synopsys.com" <pedrom.sousa@synopsys.com>
-CC:     "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
-        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
-        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
-        "andy.teng@mediatek.com" <andy.teng@mediatek.com>
-Subject: RE: [PATCH v1 0/2] scsi: ufs: fixup active period of ufshcd interrupt
-Thread-Topic: [PATCH v1 0/2] scsi: ufs: fixup active period of ufshcd
- interrupt
-Thread-Index: AQHVsV/LOTQTZ9v6wk2kTdk6DisVqqe99tMg
-Date:   Tue, 17 Dec 2019 07:38:09 +0000
-Message-ID: <MN2PR04MB6991F22FCFF3BDEB0EC7713EFC500@MN2PR04MB6991.namprd04.prod.outlook.com>
-References: <1575721321-8071-1-git-send-email-stanley.chu@mediatek.com>
- <1576205295.12066.5.camel@mtkswgap22>
-In-Reply-To: <1576205295.12066.5.camel@mtkswgap22>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Avri.Altman@wdc.com; 
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ccca7b09-5bc0-46f4-ef1c-08d782c41040
-x-ms-traffictypediagnostic: MN2PR04MB7104:
-x-microsoft-antispam-prvs: <MN2PR04MB710445C8B9E42A0CA8B38E98FC500@MN2PR04MB7104.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:3968;
-x-forefront-prvs: 02543CD7CD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(376002)(396003)(39860400002)(136003)(366004)(199004)(189003)(8676002)(5660300002)(54906003)(66946007)(186003)(8936002)(81156014)(81166006)(26005)(33656002)(9686003)(66476007)(66556008)(64756008)(55016002)(66446008)(52536014)(7696005)(71200400001)(86362001)(4326008)(110136005)(7416002)(2906002)(316002)(6506007)(478600001)(4744005)(76116006);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB7104;H:MN2PR04MB6991.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ihigtQ1DYwDR+CVbkxOumRW1C62PStKncC5mtDeRoTaXBfCXqEx3fwyTBIxRHDXyXOnShO26A76CmaO3deaemoF0hDFZnDtf2Ooe/Ta9xeNUYmFWPA9bbIoCShg03cpffrC7qJM2L73f1/7YjOfHi+48E4QaKji/4i8VDlgMGgVWnngAW7haY0APAcJEWPQ60Dw77PeNM8pUGnZcFjR0GdfYZzqUC7/6K/rV/+3jeeNYvImWnNknhGmEpOFklEyhkMwpUPW+y24yARvd6+hQwPQW5r+AaeIzRq2nlduJY34jROjpqe7FwmeE0lfO2a70Ji8KMS5XgcCyMg+pzVUBvj7fLpP2/103KYSLiSeYxY9no5Pmlz5vfxx0JXiIDqYwJAPbZsyAwLccrZ5OCSpo1qzw2zw1ko1pAMHosvBYc7YZPFSCtBJbS5YY3209sjlP
-x-ms-exchange-transport-forked: True
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:to:from:subject:user-agent:date;
+        bh=DHaDrl235NuvgBUSyAOzbDvsPHKRkOLqxkSTI0CukQc=;
+        b=CyxZ01f02VTK5G8Vitp+PG429XCf+O+Ei1G40C/SnnuTw1FRTmLd6yJTwaI7RF7A3M
+         40KmHdWXDQ4uIP+fNeOTbVZFQM5SJWqlCr3Da0EI3V7XINwJvaTH5OZAIcplLWy1Jkgb
+         TNGKsMkNgob2xMihaZXgT3ImbKK02SfsUxWSQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:to:from:subject
+         :user-agent:date;
+        bh=DHaDrl235NuvgBUSyAOzbDvsPHKRkOLqxkSTI0CukQc=;
+        b=msW1X5vES7gFApkEj19lOictjTh9/RKgLEYZj5UMDf1m/akvzzXCDgnYhm3M+Kn6CZ
+         NjX5WU+MQrhtwf5Imq7a4NRkAcV10VeImhHbRLkvBKomn5lPHNMiGG4V8FOKVJPQ1EWN
+         QOIaQqiEH7ve/99VXT4Rb1yVsQNAjZUWriQY77crEWZizAU3jz82utPmml15rjcAv/Po
+         oR3eetSKWjHBM5gO4+uIOkvJPgS55WDmPlLUx0byT/4SsSSKjVg3aCdUjjJT+KqKMpTO
+         Nmb35/J7XGYonjj5o+fawarhrfWdoNj6MPua+RGMtyQFMX+t8BLmC6oLYLuIF8gyPmKR
+         rDdg==
+X-Gm-Message-State: APjAAAUo1wnoqWBH6NiME0QaZaYIiCh5gfCQWgbKl3vqW4LNjyeYwDBf
+        A+joIm5CfJuO8aShmEjJKVcYHA==
+X-Google-Smtp-Source: APXvYqxTyWnLbL8Y+krBRTsiWE+3UHBS6mTkqx6KkZPX4L5wRLVKLlrkHlo5Gqzt6XJRgZzP2XT4kA==
+X-Received: by 2002:a17:902:27:: with SMTP id 36mr21061539pla.270.1576568312863;
+        Mon, 16 Dec 2019 23:38:32 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id p185sm1010654pfg.61.2019.12.16.23.38.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 23:38:32 -0800 (PST)
+Message-ID: <5df885f8.1c69fb81.13dda.20bb@mx.google.com>
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ccca7b09-5bc0-46f4-ef1c-08d782c41040
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Dec 2019 07:38:09.2184
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 3Q0t5ia0HS0vCL+itKWgQ1qRbyfOzN4kaGkNSi8GwR6rUvjdLPSDjMJ0hITVMdzgk2y6WXcUSdDD7X1JkIl+Gw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB7104
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191128125100.14291-2-patrick.rudolph@9elements.com>
+References: <20191128125100.14291-1-patrick.rudolph@9elements.com> <20191128125100.14291-2-patrick.rudolph@9elements.com>
+Cc:     Patrick Rudolph <patrick.rudolph@9elements.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Julius Werner <jwerner@chromium.org>
+To:     linux-kernel@vger.kernel.org, patrick.rudolph@9elements.com
+From:   Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v3 1/2] firmware: google: Expose CBMEM over sysfs
+User-Agent: alot/0.8.1
+Date:   Mon, 16 Dec 2019 23:38:31 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TG9va3MgZ29vZCB0byBtZS4NClJldmlld2VkLWJ5OiBBdnJpIEFsdG1hbiA8YXZyaS5hbHRtYW5A
-d2RjLmNvbT4NCg0KPiANCj4gT24gU2F0LCAyMDE5LTEyLTA3IGF0IDIwOjIxICswODAwLCBTdGFu
-bGV5IENodSB3cm90ZToNCj4gPiBUaGlzIHBhdGNoc2V0IGZpeGVzIHVwIGFjdGl2ZSBkdXJhdGlv
-biBvZiB1ZnNoY2QgaW50ZXJydXB0IHRvIGF2b2lkIHBvdGVudGlhbA0KPiBzeXN0ZW0gaGFuZyBp
-c3N1ZXMuDQo+ID4NCj4gPiBTdGFubGV5IENodSAoMik6DQo+ID4gICBzY3NpOiB1ZnM6IGRpc2Fi
-bGUgaXJxIGJlZm9yZSBkaXNhYmxpbmcgY2xvY2tzDQo+ID4gICBzY3NpOiB1ZnM6IGRpc2FibGUg
-aW50ZXJydXB0IGR1cmluZyBjbG9jay1nYXRpbmcNCj4gPg0KPiA+ICBkcml2ZXJzL3Njc2kvdWZz
-L3Vmc2hjZC5jIHwgMTUgKysrKysrKysrKy0tLS0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxMCBp
-bnNlcnRpb25zKCspLCA1IGRlbGV0aW9ucygtKQ0KPiA+DQo+IA0KPiBUaGFua3MsDQo+IFN0YW5s
-ZXkNCg0K
+Quoting patrick.rudolph@9elements.com (2019-11-28 04:50:50)
+> diff --git a/Documentation/ABI/stable/sysfs-bus-coreboot b/Documentation/=
+ABI/stable/sysfs-bus-coreboot
+> new file mode 100644
+> index 000000000000..1b04b8abc858
+> --- /dev/null
+> +++ b/Documentation/ABI/stable/sysfs-bus-coreboot
+> @@ -0,0 +1,43 @@
+> +What:          /sys/bus/coreboot/devices/.../cbmem_attributes/id
+> +Date:          Nov 2019
+> +KernelVersion: 5.5
+> +Contact:       Patrick Rudolph <patrick.rudolph@9elements.com>
+> +Description:
+> +               coreboot device directory can contain a file named
+> +               cbmem_attributes/id if the device corresponds to a CBMEM
+> +               buffer.
+> +               The file holds an ASCII representation of the CBMEM ID in=
+ hex
+> +               (e.g. 0xdeadbeef).
+> +
+> +What:          /sys/bus/coreboot/devices/.../cbmem_attributes/size
+> +Date:          Nov 2019
+> +KernelVersion: 5.5
+> +Contact:       Patrick Rudolph <patrick.rudolph@9elements.com>
+> +Description:
+> +               coreboot device directory can contain a file named
+> +               cbmem_attributes/size if the device corresponds to a CBMEM
+> +               buffer.
+> +               The file holds an representation as decimal number of the
+> +               CBMEM buffer size (e.g. 64).
+> +
+> +What:          /sys/bus/coreboot/devices/.../cbmem_attributes/address
+> +Date:          Nov 2019
+> +KernelVersion: 5.5
+> +Contact:       Patrick Rudolph <patrick.rudolph@9elements.com>
+> +Description:
+> +               coreboot device directory can contain a file named
+> +               cbmem_attributes/address if the device corresponds to a C=
+BMEM
+> +               buffer.
+> +               The file holds an ASCII representation of the physical ad=
+dress
+> +               of the CBMEM buffer in hex (e.g. 0x000000008000d000).
+
+What is the purpose of this field? Can't userspace read the 'data'
+attribute to get the data out?
+
+> +
+> +What:          /sys/bus/coreboot/devices/.../cbmem_attributes/data
+> +Date:          Nov 2019
+> +KernelVersion: 5.5
+> +Contact:       Patrick Rudolph <patrick.rudolph@9elements.com>
+> +Description:
+> +               coreboot device directory can contain a file named
+> +               cbmem_attributes/data if the device corresponds to a CBMEM
+> +               buffer.
+> +               The file holds a read-only binary representation of the C=
+BMEM
+> +               buffer.
+> diff --git a/drivers/firmware/google/cbmem-coreboot.c b/drivers/firmware/=
+google/cbmem-coreboot.c
+> new file mode 100644
+> index 000000000000..c67651a9c287
+> --- /dev/null
+> +++ b/drivers/firmware/google/cbmem-coreboot.c
+> @@ -0,0 +1,159 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * fmap-coreboot.c
+> + *
+> + * Exports CBMEM as attributes in sysfs.
+> + *
+> + * Copyright 2012-2013 David Herrmann <dh.herrmann@gmail.com>
+> + * Copyright 2017 Google Inc.
+> + * Copyright 2019 9elements Agency GmbH
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/kernel.h>
+> +#include <linux/string.h>
+> +#include <linux/module.h>
+> +#include <linux/io.h>
+
+Is this include used? Should probably include linux/memremap.h instead.
+
+> +#include <linux/slab.h>
+> +
+> +#include "coreboot_table.h"
+> +
+> +#define CB_TAG_CBMEM_ENTRY 0x31
+> +
+> +struct cb_priv {
+> +       void *remap;
+> +       struct lb_cbmem_entry entry;
+> +};
+> +
+> +static ssize_t id_show(struct device *dev,
+> +                      struct device_attribute *attr, char *buffer)
+> +{
+> +       const struct cb_priv *priv;
+> +
+> +       priv =3D (const struct cb_priv *)dev_get_platdata(dev);
+
+Please drop useless casts from void *.
+
+> +
+> +       return sprintf(buffer, "0x%08x\n", priv->entry.id);
+
+Use %#08x. Also not sure we need newlines but I guess it's OK.
+
+> +}
+> +
+> +static ssize_t size_show(struct device *dev,
+> +                        struct device_attribute *attr, char *buffer)
+> +{
+> +       const struct cb_priv *priv;
+> +
+> +       priv =3D (const struct cb_priv *)dev_get_platdata(dev);
+> +
+> +       return sprintf(buffer, "%u\n", priv->entry.size);
+> +}
+> +
+> +static ssize_t address_show(struct device *dev,
+> +                           struct device_attribute *attr, char *buffer)
+> +{
+> +       const struct cb_priv *priv;
+> +
+> +       priv =3D (const struct cb_priv *)dev_get_platdata(dev);
+> +
+> +       return sprintf(buffer, "0x%016llx\n", priv->entry.address);
+> +}
+> +
+> +static DEVICE_ATTR_RO(id);
+> +static DEVICE_ATTR_RO(size);
+> +static DEVICE_ATTR_RO(address);
+> +
+> +static struct attribute *cb_mem_attrs[] =3D {
+> +       &dev_attr_address.attr,
+> +       &dev_attr_id.attr,
+> +       &dev_attr_size.attr,
+> +       NULL
+> +};
+> +
+> +static ssize_t data_read(struct file *filp, struct kobject *kobj,
+> +                        struct bin_attribute *bin_attr,
+> +                        char *buffer, loff_t offset, size_t count)
+> +{
+> +       struct device *dev =3D kobj_to_dev(kobj);
+> +       const struct cb_priv *priv;
+> +
+> +       priv =3D (const struct cb_priv *)dev_get_platdata(dev);
+> +
+> +       return memory_read_from_buffer(buffer, count, &offset,
+> +                                      priv->remap, priv->entry.size);
+> +}
+> +
+> +static BIN_ATTR_RO(data, 0);
+> +
+> +static struct bin_attribute *cb_mem_bin_attrs[] =3D {
+> +       &bin_attr_data,
+> +       NULL
+> +};
+> +
+> +static struct attribute_group cb_mem_attr_group =3D {
+
+Can it be const?
+
+> +       .name =3D "cbmem_attributes",
+> +       .attrs =3D cb_mem_attrs,
+> +       .bin_attrs =3D cb_mem_bin_attrs,
+> +};
+> +
+> +static int cbmem_probe(struct coreboot_device *cdev)
+> +{
+> +       struct device *dev =3D &cdev->dev;
+> +       struct cb_priv *priv;
+> +       int err;
+> +
+> +       priv =3D kzalloc(sizeof(*priv), GFP_KERNEL);
+> +       if (!priv)
+> +               return -ENOMEM;
+> +
+> +       memcpy(&priv->entry, &cdev->cbmem_entry, sizeof(priv->entry));
+> +
+> +       priv->remap =3D memremap(priv->entry.address,
+> +                              priv->entry.entry_size, MEMREMAP_WB);
+> +       if (!priv->remap) {
+> +               err =3D -ENOMEM;
+> +               goto failure;
+> +       }
+> +
+> +       err =3D sysfs_create_group(&dev->kobj, &cb_mem_attr_group);
+> +       if (err) {
+> +               dev_err(dev, "failed to create sysfs attributes: %d\n", e=
+rr);
+> +               memunmap(priv->remap);
+> +               goto failure;
+> +       }
+> +
+> +       dev->platform_data =3D priv;
+
+Can we use dev_{set,get}_drvdata() instead?
+
+> +
+> +       return 0;
+> +failure:
+> +       kfree(priv);
+> +       return err;
+> +}
+> +
+> +static int cbmem_remove(struct coreboot_device *cdev)
+> +{
+> +       struct device *dev =3D &cdev->dev;
+> +       const struct cb_priv *priv;
+> +
+> +       priv =3D (const struct cb_priv *)dev_get_platdata(dev);
+> +
+> +       sysfs_remove_group(&dev->kobj, &cb_mem_attr_group);
+> +
+> +       if (priv)
+> +               memunmap(priv->remap);
+> +       kfree(priv);
+> +
+> +       dev->platform_data =3D NULL;
+
+This shouldn't be necessary if the driver_data APIs are used instead.
+The driver core does it for us then.
+
+> +
+> +       return 0;
+> +}
+> +
+> +static struct coreboot_driver cbmem_driver =3D {
+> +       .probe =3D cbmem_probe,
+> +       .remove =3D cbmem_remove,
+> +       .drv =3D {
+> +               .name =3D "cbmem",
+> +       },
+> +       .tag =3D CB_TAG_CBMEM_ENTRY,
+> +};
+> +
+> +module_coreboot_driver(cbmem_driver);
+> +
+> +MODULE_AUTHOR("9elements Agency GmbH");
+> +MODULE_LICENSE("GPL");
+> diff --git a/drivers/firmware/google/coreboot_table.h b/drivers/firmware/=
+google/coreboot_table.h
+> index 7b7b4a6eedda..506048c724d8 100644
+> --- a/drivers/firmware/google/coreboot_table.h
+> +++ b/drivers/firmware/google/coreboot_table.h
+> @@ -59,6 +59,18 @@ struct lb_framebuffer {
+>         u8  reserved_mask_size;
+>  };
+> =20
+> +/* There can be more than one of these records as there is one per cbmem=
+ entry.
+
+Please add a bare /* for multi-line comments.
+
+> + * Describes a buffer in memory containing runtime data.
+> + */
+> +struct lb_cbmem_entry {
+> +       u32 tag;
+> +       u32 size;
+> +
+> +       u64 address;
+> +       u32 entry_size;
+> +       u32 id;
+> +};
+> +
+>  /* A device, additionally with information from coreboot. */
+>  struct coreboot_device {
+>         struct device dev;
