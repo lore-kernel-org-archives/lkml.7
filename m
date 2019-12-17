@@ -2,273 +2,106 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6D2C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE9AC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7353124655
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B6DE24655
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 14:42:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="m0TtVy0h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728757AbfLQOki (ORCPT
+        id S1728789AbfLQOm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 09:40:38 -0500
-Received: from foss.arm.com ([217.140.110.172]:39214 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728532AbfLQOki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 09:40:38 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 474501FB;
-        Tue, 17 Dec 2019 06:40:37 -0800 (PST)
-Received: from arm.com (e112269-lin.cambridge.arm.com [10.1.196.56])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4B9183F67D;
-        Tue, 17 Dec 2019 06:40:35 -0800 (PST)
-Date:   Tue, 17 Dec 2019 14:40:33 +0000
-From:   Steven Price <steven.price@arm.com>
-To:     "yezengruan@huawei.com" <yezengruan@huawei.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "maz@kernel.org" <maz@kernel.org>,
-        James Morse <James.Morse@arm.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        "julien.thierry.kdev@gmail.com" <julien.thierry.kdev@gmail.com>,
-        Catalin Marinas <Catalin.Marinas@arm.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH 5/5] KVM: arm64: Support the vcpu preemption check
-Message-ID: <20191217144032.GD38811@arm.com>
-References: <20191217135549.3240-1-yezengruan@huawei.com>
- <20191217135549.3240-6-yezengruan@huawei.com>
+        Tue, 17 Dec 2019 09:42:57 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:60648 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728532AbfLQOm4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 09:42:56 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBHEgliP008098;
+        Tue, 17 Dec 2019 08:42:47 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576593767;
+        bh=NJtBk/dGuHmYEJrEP7nO7ApfX+m+JO+r6K26fO3v6j4=;
+        h=Date:From:To:Subject:References:In-Reply-To;
+        b=m0TtVy0hw+Hujrbk70nHOmcfaSOfowMCUglRNHSpq9q5cpT4nB61sJOkJUiKRJ4sv
+         8wQb+XHg/vxqZ5axZAnltjb9pfAsj9rGFIY0cFSvKD0OEMQNRXjDJ+fd9QPcf3IPix
+         RiVtsIkgsrv9QDnozLM4vw8H/S+u8w94bbw4bWb0=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBHEglYi044197
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 17 Dec 2019 08:42:47 -0600
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
+ Dec 2019 08:42:47 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 17 Dec 2019 08:42:47 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBHEgli2041553;
+        Tue, 17 Dec 2019 08:42:47 -0600
+Date:   Tue, 17 Dec 2019 08:42:06 -0600
+From:   Bin Liu <b-liu@ti.com>
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>, <od@zcrc.me>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Artur Rojek <contact@artur-rojek.eu>
+Subject: Re: [PATCH v3 2/7] usb: musb: dma: Add support for shared IRQ
+Message-ID: <20191217144206.GM16429@iaqt7>
+Mail-Followup-To: Bin Liu <b-liu@ti.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>, od@zcrc.me,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Artur Rojek <contact@artur-rojek.eu>
+References: <20191210171110.62141-1-paul@crapouillou.net>
+ <20191210171110.62141-2-paul@crapouillou.net>
+ <20191211185224.GD16429@iaqt7>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20191217135549.3240-6-yezengruan@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191211185224.GD16429@iaqt7>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 01:55:49PM +0000, yezengruan@huawei.com wrote:
-> From: Zengruan Ye <yezengruan@huawei.com>
-> 
-> Support the vcpu_is_preempted() functionality under KVM/arm64. This will
-> enhance lock performance on overcommitted hosts (more runnable vcpus
-> than physical cpus in the system) as doing busy waits for preempted
-> vcpus will hurt system performance far worse than early yielding.
-> 
-> unix benchmark result:
->   host:  kernel 5.5.0-rc1, HiSilicon Kunpeng920, 8 cpus
->   guest: kernel 5.5.0-rc1, 16 vcpus
-> 
->                test-case                |    after-patch    |   before-patch
-> ----------------------------------------+-------------------+------------------
->  Dhrystone 2 using register variables   | 334600751.0 lps   | 335319028.3 lps
->  Double-Precision Whetstone             |     32856.1 MWIPS |     32849.6 MWIPS
->  Execl Throughput                       |      3662.1 lps   |      2718.0 lps
->  File Copy 1024 bufsize 2000 maxblocks  |    432906.4 KBps  |    158011.8 KBps
->  File Copy 256 bufsize 500 maxblocks    |    116023.0 KBps  |     37664.0 KBps
->  File Copy 4096 bufsize 8000 maxblocks  |   1432769.8 KBps  |    441108.8 KBps
->  Pipe Throughput                        |   6405029.6 lps   |   6021457.6 lps
->  Pipe-based Context Switching           |    185872.7 lps   |    184255.3 lps
->  Process Creation                       |      4025.7 lps   |      3706.6 lps
->  Shell Scripts (1 concurrent)           |      6745.6 lpm   |      6436.1 lpm
->  Shell Scripts (8 concurrent)           |       998.7 lpm   |       931.1 lpm
->  System Call Overhead                   |   3913363.1 lps   |   3883287.8 lps
-> ----------------------------------------+-------------------+------------------
->  System Benchmarks Index Score          |      1835.1       |      1327.6
-> 
-> Signed-off-by: Zengruan Ye <yezengruan@huawei.com>
-> ---
->  arch/arm64/include/asm/paravirt.h |  3 +
->  arch/arm64/kernel/paravirt.c      | 91 +++++++++++++++++++++++++++++++
->  arch/arm64/kernel/setup.c         |  2 +
->  include/linux/cpuhotplug.h        |  1 +
->  4 files changed, 97 insertions(+)
-> 
-> diff --git a/arch/arm64/include/asm/paravirt.h b/arch/arm64/include/asm/paravirt.h
-> index 7b1c81b544bb..a2cd0183bbef 100644
-> --- a/arch/arm64/include/asm/paravirt.h
-> +++ b/arch/arm64/include/asm/paravirt.h
-> @@ -29,6 +29,8 @@ static inline u64 paravirt_steal_clock(int cpu)
->  
->  int __init pv_time_init(void);
->  
-> +int __init kvm_guest_init(void);
-> +
+Hi Paul,
 
-This is a *very* generic name - I suggest something like pv_lock_init()
-so it's clear what the function actually does.
+On Wed, Dec 11, 2019 at 12:52:24PM -0600, Bin Liu wrote:
+> On Tue, Dec 10, 2019 at 06:11:05PM +0100, Paul Cercueil wrote:
+> > The implementation of the Inventra IP in some of the Ingenic JZ47xx SoCs
+> > does not use a separate IRQ line for DMA transfers.
+> > 
+> > Allow these SoCs to be supported by adding a flag 'dma_share_usb_irq'
+> > in the struct musb. If set, no extra IRQ line is required, and the musb
+> > glue will need to call the API function musbhs_dma_controller_irq()
+> > within its interrupt handler.
+> > 
+> > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> > Tested-by: Artur Rojek <contact@artur-rojek.eu>
+> > ---
+>  
+> Queued for usb-next. Thanks.
 
->  __visible bool __native_vcpu_is_preempted(int cpu);
->  
->  static inline bool pv_vcpu_is_preempted(int cpu)
-> @@ -39,6 +41,7 @@ static inline bool pv_vcpu_is_preempted(int cpu)
->  #else
->  
->  #define pv_time_init() do {} while (0)
-> +#define kvm_guest_init() do {} while (0)
->  
->  #endif // CONFIG_PARAVIRT
->  
-> diff --git a/arch/arm64/kernel/paravirt.c b/arch/arm64/kernel/paravirt.c
-> index d8f1ba8c22ce..a86dead40473 100644
-> --- a/arch/arm64/kernel/paravirt.c
-> +++ b/arch/arm64/kernel/paravirt.c
-> @@ -22,6 +22,7 @@
->  #include <asm/paravirt.h>
->  #include <asm/pvclock-abi.h>
->  #include <asm/smp_plat.h>
-> +#include <asm/pvlock-abi.h>
->  
->  struct static_key paravirt_steal_enabled;
->  struct static_key paravirt_steal_rq_enabled;
-> @@ -158,3 +159,93 @@ int __init pv_time_init(void)
->  
->  	return 0;
->  }
-> +
-> +DEFINE_PER_CPU(struct pvlock_vcpu_state, pvlock_vcpu_region) __aligned(64);
-> +EXPORT_PER_CPU_SYMBOL(pvlock_vcpu_region);
-> +
-> +static int pvlock_vcpu_state_dying_cpu(unsigned int cpu)
-> +{
-> +	struct pvlock_vcpu_state *reg;
-> +
-> +	reg = this_cpu_ptr(&pvlock_vcpu_region);
-> +	if (!reg)
-> +		return -EFAULT;
-> +
-> +	memset(reg, 0, sizeof(*reg));
+I removed this and the next patch [3/7] in this series from my queue.
+Sorry. Ming Guo has posted a series "Add MediaTek MUSB Controller
+Driver" which has done the similar implementation [1] but without adding
+the flag in struct musb. Can you please check if you can use Ming's
+implementation instead? The patch of his musb glue driver which uses the
+implementation is [2], just for your reference.
 
-I might be missing something obvious here - but I don't see the point of
-this. The hypervisor might immediately overwrite the structure again.
-Indeed you should conside a mechanism for the guest to "unregister" the
-region - otherwise you will face issues with the likes of kexec.
+[1] https://marc.info/?l=linux-usb&m=157602930627195&w=2
+[2] https://marc.info/?l=linux-usb&m=157602932427210&w=2
 
-For pv_time the memory is allocated by the hypervisor not the guest to
-avoid lifetime issues about kexec.
-
-> +
-> +	return 0;
-> +}
-> +
-> +static int init_pvlock_vcpu_state(unsigned int cpu)
-> +{
-> +	struct pvlock_vcpu_state *reg;
-> +	struct arm_smccc_res res;
-> +
-> +	reg = this_cpu_ptr(&pvlock_vcpu_region);
-> +	if (!reg)
-> +		return -EFAULT;
-> +
-> +	/* Pass the memory address to host via hypercall */
-> +	arm_smccc_1_1_invoke(ARM_SMCCC_HV_PV_LOCK_PREEMPTED,
-> +			     virt_to_phys(reg), &res);
-> +
-> +	return 0;
-> +}
-> +
-> +static bool kvm_vcpu_is_preempted(int cpu)
-> +{
-> +	struct pvlock_vcpu_state *reg = &per_cpu(pvlock_vcpu_region, cpu);
-> +
-> +	if (reg)
-> +		return !!(reg->preempted & 1);
-> +
-> +	return false;
-> +}
-> +
-> +static int kvm_arm_init_pvlock(void)
-> +{
-> +	int ret;
-> +
-> +	ret = cpuhp_setup_state(CPUHP_AP_ARM_KVM_PVLOCK_STARTING,
-> +				"hypervisor/arm/pvlock:starting",
-> +				init_pvlock_vcpu_state,
-> +				pvlock_vcpu_state_dying_cpu);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	pv_ops.lock.vcpu_is_preempted = kvm_vcpu_is_preempted;
-> +
-> +	pr_info("using PV-lock preempted\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static bool has_kvm_pvlock(void)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	/* To detect the presence of PV lock support we require SMCCC 1.1+ */
-> +	if (psci_ops.smccc_version < SMCCC_VERSION_1_1)
-> +		return false;
-> +
-> +	arm_smccc_1_1_invoke(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
-> +			     ARM_SMCCC_HV_PV_LOCK_FEATURES, &res);
-> +
-> +	if (res.a0 != SMCCC_RET_SUCCESS)
-> +		return false;
-> +
-> +	return true;
-> +}
-> +
-> +int __init kvm_guest_init(void)
-> +{
-> +	if (is_hyp_mode_available())
-> +		return 0;
-> +
-> +	if (!has_kvm_pvlock())
-> +		return 0;
-> +
-> +	kvm_arm_init_pvlock();
-
-Consider reporting errors from kvm_arm_init_pvlock()? At the moment
-it's impossible to tell the difference between pvlock not being
-supported and something failing in the setup.
-
-Steve
-
-> +
-> +	return 0;
-> +}
-> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-> index 56f664561754..64c4d515ba2d 100644
-> --- a/arch/arm64/kernel/setup.c
-> +++ b/arch/arm64/kernel/setup.c
-> @@ -341,6 +341,8 @@ void __init setup_arch(char **cmdline_p)
->  	smp_init_cpus();
->  	smp_build_mpidr_hash();
->  
-> +	kvm_guest_init();
-> +
->  	/* Init percpu seeds for random tags after cpus are set up. */
->  	kasan_init_tags();
->  
-> diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-> index e51ee772b9f5..f72ff95ab63a 100644
-> --- a/include/linux/cpuhotplug.h
-> +++ b/include/linux/cpuhotplug.h
-> @@ -138,6 +138,7 @@ enum cpuhp_state {
->  	CPUHP_AP_DUMMY_TIMER_STARTING,
->  	CPUHP_AP_ARM_XEN_STARTING,
->  	CPUHP_AP_ARM_KVMPV_STARTING,
-> +	CPUHP_AP_ARM_KVM_PVLOCK_STARTING,
->  	CPUHP_AP_ARM_CORESIGHT_STARTING,
->  	CPUHP_AP_ARM64_ISNDEP_STARTING,
->  	CPUHP_AP_SMPCFD_DYING,
-> -- 
-> 2.19.1
-> 
-> 
+Thanks,
+-Bin.
