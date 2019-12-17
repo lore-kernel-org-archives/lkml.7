@@ -2,171 +2,105 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F32C3C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C61EC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B396920716
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4B1920716
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 19:58:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fBwZPynx"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m6cRBpaD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbfLQT4z (ORCPT
+        id S1727595AbfLQT6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 14:56:55 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28289 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727695AbfLQT4y (ORCPT
+        Tue, 17 Dec 2019 14:58:40 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:39904 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726742AbfLQT6k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 14:56:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576612612;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ks+9jOg6WosaTbY/DW1qcEpy6fxxVpo+gqRHRHONdG8=;
-        b=fBwZPynxCJ6IC8QuP+EwxpwmfdzNM9hHyN4WtAoE0iei05Ni6WUiZukccalSwDeLr1WIiQ
-        4uABmt2LaquzYNqEtvJUQs7VQEMFjU2OpAcCiVq2YStaRMpzHIBvriV7K64Se9IfVeWQH4
-        ekeoIMdkQ46PwkI9ttMTA1Ye7MQXxFY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-220-nAprwtMoPe2ZGt8zyirPRw-1; Tue, 17 Dec 2019 14:56:49 -0500
-X-MC-Unique: nAprwtMoPe2ZGt8zyirPRw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E85C48024D7;
-        Tue, 17 Dec 2019 19:56:46 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-28.phx2.redhat.com [10.3.112.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7331C5C548;
-        Tue, 17 Dec 2019 19:56:34 +0000 (UTC)
-Date:   Tue, 17 Dec 2019 14:56:31 -0500
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Steve Grubb <sgrubb@redhat.com>
-Cc:     Paul Moore <paul@paul-moore.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
-        Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        Dan Walsh <dwalsh@redhat.com>, mpatel@redhat.com
-Subject: Re: [PATCH ghak90 V7 06/21] audit: contid limit of 32k imposed to
- avoid DoS
-Message-ID: <20191217195631.3obqll4nf5poe7cz@madcap2.tricolour.ca>
-References: <cover.1568834524.git.rgb@redhat.com>
- <CAHC9VhTrKVQNvTPoX5xdx-TUX_ukpMv2tNFFqLa2Njs17GuQMg@mail.gmail.com>
- <20191217184541.tagssqt4zujbanf6@madcap2.tricolour.ca>
- <2318345.msVmMTmnKu@x2>
+        Tue, 17 Dec 2019 14:58:40 -0500
+Received: by mail-qt1-f194.google.com with SMTP id e5so8413601qtm.6
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 11:58:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tYpIdpOiYgT7YABZMBUVi67PMv1hgfpKwI/wpxaTacE=;
+        b=m6cRBpaDvz9tOeWbO2fsQxnxrt9Vn1dx9HXLEVDsE6wcamkzk29SFwF+bDkNrGMD8s
+         W8YvksQPx8HNXubuCQDtfzL2mcTDyp+Ou5/4A5GsnhYzaCBlbwzICa/40dja5PQ3cgqo
+         x4ICttKdfw1eoaSYnNOAHvArBsaWnNIakTFpPpqBTuJ9pylELxkrTCCWMlHql7WvH/XR
+         bZscXDu97ct+mnSatyr0KnK04gy13fOp1GHv1qe5k5beoky6gxgU6Vlm26GhLyQ9d6LW
+         yuBNxP6hheOAsgr/5i39wNpHpxteytjnGgF2czeOOSRkcoO45rsGdQmaxvbYIyM7LdJe
+         v7BQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tYpIdpOiYgT7YABZMBUVi67PMv1hgfpKwI/wpxaTacE=;
+        b=FGaYor/uwzsxB44YeuPcuM5jiawRi4p2+GcpXP7pc+Bu5bH1l53xD475Wkv2XANqRF
+         k4jNL1ifW8CrizWzZbo6X2mdrGh8qrKT6fW0hdlRm/QkvDQtgbItAT1ROpMKUdvTQgzf
+         0/3RSyGHt5VrsRhAKp9F30AUiZwVxErWN47AQ7KIOd/K0AIQTBxuUCmpdBFGrYwtvL1K
+         jQp9yVm1a3NEa447F3Zegp6gNCfCwHncOWqWhn4zcox7yRuce0tw/wAOZwoVqUlNN8Y4
+         gfmGk4zrrpB96bVFVHBSKxUkiuAFOfOU4gyMbozMHbr9ucxbRoSw2bnQYMy3LJFUFiJP
+         Epaw==
+X-Gm-Message-State: APjAAAVrfjKfpIlXMtzeA597G7LLcbxllpTEqFoGJ/C2veIIk2q0SeKa
+        9y587l/U5hhtRw/111rF1s2AKoikK6tVUI228sBiaw==
+X-Google-Smtp-Source: APXvYqxIhLNEjgJvec+Qn4qoV4ymCiJa4bYCuhFfS95jZ4mtrlZxnKh6hRW9zBdVP3eoHJjlkw34TnaQfZQL1P//WEE=
+X-Received: by 2002:ac8:2b29:: with SMTP id 38mr6124609qtu.238.1576612719148;
+ Tue, 17 Dec 2019 11:58:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2318345.msVmMTmnKu@x2>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <20191204200623.198897-1-joshdon@google.com> <CAKfTPtBZUUtJ=ZvQOWmKx_1zUXtNoqcS0M85ouQmgi36xzfM2A@mail.gmail.com>
+ <CABk29NsCjgMVf-xrhpyzFBTpyTvyWxZc4RJSarnHVzdOXyVPMw@mail.gmail.com> <CAKfTPtCJGT0axT5=E=hLWtMav_kLGVFrSvjZS8+cfvjYS72vqQ@mail.gmail.com>
+In-Reply-To: <CAKfTPtCJGT0axT5=E=hLWtMav_kLGVFrSvjZS8+cfvjYS72vqQ@mail.gmail.com>
+From:   Josh Don <joshdon@google.com>
+Date:   Tue, 17 Dec 2019 11:58:28 -0800
+Message-ID: <CABk29Ntp5eRFn2otK2o5Fe=uYOvKpjHgKRSw0_er45CVC025Pg@mail.gmail.com>
+Subject: Re: [PATCH v2] sched/fair: Do not set skip buddy up the sched hierarchy
+To:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Paul Turner <pjt@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-17 14:25, Steve Grubb wrote:
-> On Tuesday, December 17, 2019 1:45:41 PM EST Richard Guy Briggs wrote:
-> > On 2019-11-08 12:49, Paul Moore wrote:
-> > > On Thu, Oct 24, 2019 at 5:23 PM Richard Guy Briggs <rgb@redhat.com> 
-> wrote:
-> > > > On 2019-10-10 20:38, Paul Moore wrote:
-> > > > > On Fri, Sep 27, 2019 at 8:52 AM Neil Horman <nhorman@tuxdriver.com> 
-> wrote:
-> > > > > > On Wed, Sep 18, 2019 at 09:22:23PM -0400, Richard Guy Briggs wrote:
-> > > > > > > Set an arbitrary limit on the number of audit container
-> > > > > > > identifiers to
-> > > > > > > limit abuse.
-> > > > > > > 
-> > > > > > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > > > > > > ---
-> > > > > > > kernel/audit.c | 8 ++++++++
-> > > > > > > kernel/audit.h | 4 ++++
-> > > > > > > 2 files changed, 12 insertions(+)
-> > > > > > > 
-> > > > > > > diff --git a/kernel/audit.c b/kernel/audit.c
-> > > > > > > index 53d13d638c63..329916534dd2 100644
-> > > > > > > --- a/kernel/audit.c
-> > > > > > > +++ b/kernel/audit.c
-> > > > > 
-> > > > > ...
-> > > > > 
-> > > > > > > @@ -2465,6 +2472,7 @@ int audit_set_contid(struct task_struct
-> > > > > > > *task, u64 contid) newcont->owner = current;
-> > > > > > > refcount_set(&newcont->refcount, 1);
-> > > > > > > list_add_rcu(&newcont->list, &audit_contid_hash[h]);
-> > > > > > > +                             audit_contid_count++;
-> > > > > > > } else {
-> > > > > > > rc = -ENOMEM;
-> > > > > > > goto conterror;
-> > > > > > > diff --git a/kernel/audit.h b/kernel/audit.h
-> > > > > > > index 162de8366b32..543f1334ba47 100644
-> > > > > > > --- a/kernel/audit.h
-> > > > > > > +++ b/kernel/audit.h
-> > > > > > > @@ -219,6 +219,10 @@ static inline int audit_hash_contid(u64
-> > > > > > > contid)
-> > > > > > > return (contid & (AUDIT_CONTID_BUCKETS-1));
-> > > > > > > }
-> > > > > > > 
-> > > > > > > +extern int audit_contid_count;
-> > > > > > > +
-> > > > > > > +#define AUDIT_CONTID_COUNT   1 << 16
-> > > > > > > +
-> > > > > > 
-> > > > > > Just to ask the question, since it wasn't clear in the changelog,
-> > > > > > what
-> > > > > > abuse are you avoiding here?  Ostensibly you should be able to
-> > > > > > create as
-> > > > > > many container ids as you have space for, and the simple creation
-> > > > > > of
-> > > > > > container ids doesn't seem like the resource strain I would be
-> > > > > > concerned
-> > > > > > about here, given that an orchestrator can still create as many
-> > > > > > containers as the system will otherwise allow, which will consume
-> > > > > > significantly more ram/disk/etc.
-> > > > > 
-> > > > > I've got a similar question.  Up to this point in the patchset, there
-> > > > > is a potential issue of hash bucket chain lengths and traversing them
-> > > > > with a spinlock held, but it seems like we shouldn't be putting an
-> > > > > arbitrary limit on audit container IDs unless we have a good reason
-> > > > > for it.  If for some reason we do want to enforce a limit, it should
-> > > > > probably be a tunable value like a sysctl, or similar.
-> > > > 
-> > > > Can you separate and clarify the concerns here?
-> > > 
-> > > "Why are you doing this?" is about as simple as I can pose the question.
-> > 
-> > It was more of a concern for total system resources, primarily memory,
-> > but this is self-limiting and an arbitrary concern.
-> > 
-> > The other limit of depth of nesting has different concerns that arise
-> > depending on how reporting is done.
-> 
-> Well, there is a limit on the audit record size. So, whatever is being sent 
-> in the record plus the size of the timestamp deducted from 
-> MAX_AUDIT_MESSAGE_LENGTH (8970) is the limit. That can be divided by however 
-> many ID's fit in that space and you have the real limit.
+On Thu, Dec 12, 2019 at 12:05 AM Vincent Guittot
+<vincent.guittot@linaro.org> wrote:
+>
+> Hi Josh,
+>
+> On Fri, 6 Dec 2019 at 23:13, Josh Don <joshdon@google.com> wrote:
+> >
+> > Hi Vincent,
+> >
+> > Thanks for taking a look.
+> >
+> > > There is a mismatch between the author Venkatesh Pallipadi and the
+> > > signoff Josh Don
+> > > If Venkatesh is the original author and you have then done some
+> > > modifications, your both signed-off should be there
+> >
+> > Venkatesh no longer works at Google, so I don't have a way to get in
+> > touch with him.  Is my signed-off insufficient for this case?
+>
+> Maybe you can add a Co-developed-by tag to reflect your additional changes
+> I guess that as long as you agree with the DCO, it's ok :
+> https://www.kernel.org/doc/html/v5.4/process/submitting-patches.html#sign-your-work-the-developer-s-certificate-of-origin
+>
+> Ingo, Peter, what do you think ?
 
-This will be addressed in the v8 patch set.
-
-> -Steve
-
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
-
+I could add the Co-developed-by tag if that would be sufficient here.
+As a side note, I'm also looking at upstreaming our other sched
+fixes/patches, and some of these have the same issue with respect to
+the original author.  How would you prefer I handle these in general?
