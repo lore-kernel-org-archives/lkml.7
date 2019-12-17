@@ -2,199 +2,120 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2679CC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 642E2C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E766221582
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:18:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 365AE21582
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 16:18:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Qgw5V+G4"
+	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="WftvVjyq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729353AbfLQQR6 (ORCPT
+        id S1729045AbfLQQPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 11:17:58 -0500
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:43915 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728952AbfLQQRu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 11:17:50 -0500
+        Tue, 17 Dec 2019 11:15:54 -0500
+Received: from mail-bn8nam11on2041.outbound.protection.outlook.com ([40.107.236.41]:6164
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728985AbfLQQPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 11:15:49 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cc5woHWIBU1vVGxoCPShMpjuvN+dZMDzVjG/UZOHnomc6FVk022YIkQoWMwV90w8BIq+Mzl8bI4mSoU/6z3bvJ6J7Vc0N/C0CYQPqBn7Pyj/GeKSq6PbAV8vEij+FZWlPp7fJDA2mT6eqeTt48gb03SBWutfoY8cShkND/oZCs5Kw1SoFYsNAmVFmm1a/x9TVyhwhaNMcr1jn+yuhn3O+JbgsXwMFZq0Ab7gVokOATX2GkebFvmgrM+48vXUw3XVCaG27UvX98hwS+fc0FLKpae5DCVOmNDrI8mPa0TkCTzmg3Wp9Nh2tip2Esl3/3f0Ns0LKTrl+qs7YGORhuJDaQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fBtnj1bNQTnGGhOpk3jCRHj24nG0onADt+L/8QwqKtM=;
+ b=WTrGBJD5fkei/w0qMvp7QqMXmzgat3iG5553q22oKs97DkvtffTlXZTFOn+f/w4ZDr6C6Q3Ix2lfaRidsZ6ZqddRyh/gl+4px3o3Rcw352NO1iaaai3Mp3LuE95oV+qqdBVa9otRxw56ezxm862/v+aLj5ZjTGlJHoC8jOEdM812GEPUhur1cYOaEi5qRTPON+5tyAy1Rj2MRAxO+NYPEMK6FXlreGDbLUnBu+rWbngljFzcqpThkMH/D2OGJ+UO8SBcNbG4fFPY0dgy5l7nKgzg3X6n0JSjTzJ2xd0RhzmbWlhGajGALyp/aoYQoOU7MvBJgm4I/FgvwsUYzpj8OA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
+ dkim=pass header.d=silabs.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1576599470; x=1608135470;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   in-reply-to:content-transfer-encoding;
-  bh=cXvLi4yNQxt3p65AJ8lZq7BOonBnO1ATPy+SuVrgHOI=;
-  b=Qgw5V+G4nw8D2NrShzEM+ip/dbLpYy2Ggw8ILbE/QN2aJoVf7Z0BSQy8
-   7s1V77I8tTJ8fcXF9rcX841hJD6Bnl3xCvQFnAfSbznyQ76Q277Hio+7z
-   VRFnH2TweOQhwLSveIQWv2KurvGQnbAUJwAnyGpOxX8vEVkG/baDBOnj1
-   Q=;
-IronPort-SDR: SloTP35ntItl/SfHlYTc4zaNzogpagd/+j5Ygf9NYQzdLPnKww+k+nyZ6yb2Y5MwjvPTpmav48
- mXrbXNg6QeAg==
-X-IronPort-AV: E=Sophos;i="5.69,326,1571702400"; 
-   d="scan'208";a="14052216"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-67b371d8.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 17 Dec 2019 16:17:49 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1a-67b371d8.us-east-1.amazon.com (Postfix) with ESMTPS id 7BD78A2122;
-        Tue, 17 Dec 2019 16:17:46 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 17 Dec 2019 16:17:45 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.179) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 17 Dec 2019 16:17:40 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     SeongJae Park <sjpark@amazon.com>
-CC:     =?UTF-8?q?J=C3=BCrgen=20Gro=C3=9F?= <jgross@suse.com>,
-        <axboe@kernel.dk>, SeongJae Park <sj38.park@gmail.com>,
-        <konrad.wilk@oracle.com>, <pdurrant@amazon.com>,
-        <linux-kernel@vger.kernel.org>, <linux-block@vger.kernel.org>,
-        <xen-devel@lists.xenproject.org>, <roger.pau@citrix.com>
-Subject: Re: Re: [Xen-devel] [PATCH v10 2/4] xen/blkback: Squeeze page pools if a memory pressure is detected
-Date:   Tue, 17 Dec 2019 17:17:24 +0100
-Message-ID: <20191217161724.3478-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
+ d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fBtnj1bNQTnGGhOpk3jCRHj24nG0onADt+L/8QwqKtM=;
+ b=WftvVjyqZnei0p8O4OmcEjKk2S5ArJaLVkOa83oJ6/UbsX4OVKtd1rh8+vtvNHdgAo7JhRJlmS9Pe+J3STdJu03SqlfWucdH1/0Gelnt3Emv/Cn2nhPS/grexXd7SxRokyL/Xwph8lWtGPbAt/D75P9JNdqkDk4iNlg/ZC0nKFI=
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com (10.255.180.22) by
+ MN2PR11MB4208.namprd11.prod.outlook.com (52.135.36.80) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.20; Tue, 17 Dec 2019 16:15:43 +0000
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::f46c:e5b4:2a85:f0bf]) by MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::f46c:e5b4:2a85:f0bf%4]) with mapi id 15.20.2538.019; Tue, 17 Dec 2019
+ 16:15:43 +0000
+From:   =?utf-8?B?SsOpcsO0bWUgUG91aWxsZXI=?= <Jerome.Pouiller@silabs.com>
+To:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        =?utf-8?B?SsOpcsO0bWUgUG91aWxsZXI=?= <Jerome.Pouiller@silabs.com>
+Subject: [PATCH v2 36/55] staging: wfx: fix pm_mode timeout
+Thread-Topic: [PATCH v2 36/55] staging: wfx: fix pm_mode timeout
+Thread-Index: AQHVtPUsDpz282pF+Eq5j4+Emd0k5w==
+Date:   Tue, 17 Dec 2019 16:15:17 +0000
+Message-ID: <20191217161318.31402-37-Jerome.Pouiller@silabs.com>
+References: <20191217161318.31402-1-Jerome.Pouiller@silabs.com>
+In-Reply-To: <20191217161318.31402-1-Jerome.Pouiller@silabs.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: PR0P264CA0174.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:100:1c::18) To MN2PR11MB4063.namprd11.prod.outlook.com
+ (2603:10b6:208:13f::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jerome.Pouiller@silabs.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.24.0
+x-originating-ip: [37.71.187.125]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 61fabd90-d3f8-49cb-4329-08d7830c4e7e
+x-ms-traffictypediagnostic: MN2PR11MB4208:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR11MB4208185799B768E2AF9C2D1393500@MN2PR11MB4208.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-forefront-prvs: 02543CD7CD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39850400004)(396003)(366004)(136003)(376002)(346002)(199004)(189003)(5660300002)(316002)(6506007)(85182001)(478600001)(71200400001)(2906002)(36756003)(186003)(26005)(81166006)(54906003)(1076003)(110136005)(66574012)(4326008)(8676002)(86362001)(6486002)(6666004)(52116002)(6512007)(64756008)(85202003)(66946007)(66476007)(66446008)(66556008)(8936002)(107886003)(2616005)(4744005)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4208;H:MN2PR11MB4063.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: silabs.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ND5P8JeLMI8X8Ol8TjkyJW4dltFse2Bu/0KieFDyB5/4FCO+m0f83+S1LLU4t8FMVlLEhCf8AZSxvkgw2wzwjqK2Ub3JbmBPQv6YPkBTfCLe79h4UMTTiGKoHOmB7hMeydqigvKCI9s+Dit0WFBH6c03GZbz6900ADVZO15QapCRZ8nvVQgkt703tsrZxaaBkcmrm3Go7a14OkyQwERPqECF0+gNmoOtZGMKgGLZOUcOGTIS8jxXW3zpVs6o7LU6JsWkJeGX+nMTh6k29GNwI6FibT+r6u730NvaK95hDGgwSjX7a5eOFA4F7anqtyMpx3aAMerWLCl+7MJ98ea4PR1J8mQJX7chyHVyUYguUkfgnvUU7RLe4brhabs2SwMla3bUCUwYqjS9VO7IMDid6w1ElCNp4Iwj7pjo5mOg80oeZ/W27vhdgH0LhQETmv+N
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <44BBF00B9B784E40BA7A13590F05A826@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20191217083032.19400-1-sjpark@amazon.com> (raw)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.43.161.179]
-X-ClientProxiedBy: EX13D23UWC002.ant.amazon.com (10.43.162.22) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+X-OriginatorOrg: silabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 61fabd90-d3f8-49cb-4329-08d7830c4e7e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Dec 2019 16:15:17.8756
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: AmDam+g1ibTXobGEfQ1M2c/dUYPXF8Ipp5ryuK6Xw/hICx2PBC8s6/x8MuUWwsUIV4F2wfNAHWzzhQ7RZRsVjg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4208
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Dec 2019 09:30:32 +0100 SeongJae Park <sjpark@amazon.com> wrote:
-
-> On Tue, 17 Dec 2019 09:16:47 +0100 "Jürgen Groß" <jgross@suse.com> wrote:
-> 
-> > On 17.12.19 08:59, SeongJae Park wrote:
-> > > On Tue, 17 Dec 2019 07:23:12 +0100 "Jürgen Groß" <jgross@suse.com> wrote:
-> > > 
-> > >> On 16.12.19 20:48, SeongJae Park wrote:
-> > >>> On on, 16 Dec 2019 17:23:44 +0100, Jürgen Groß wrote:
-> > >>>
-> > >>>> On 16.12.19 17:15, SeongJae Park wrote:
-> > >>>>> On Mon, 16 Dec 2019 15:37:20 +0100 SeongJae Park <sjpark@amazon.com> wrote:
-> > >>>>>
-> > >>>>>> On Mon, 16 Dec 2019 13:45:25 +0100 SeongJae Park <sjpark@amazon.com> wrote:
-> > >>>>>>
-> > >>>>>>> From: SeongJae Park <sjpark@amazon.de>
-> > >>>>>>>
-> > >>>>> [...]
-> > >>>>>>> --- a/drivers/block/xen-blkback/xenbus.c
-> > >>>>>>> +++ b/drivers/block/xen-blkback/xenbus.c
-> > >>>>>>> @@ -824,6 +824,24 @@ static void frontend_changed(struct xenbus_device *dev,
-> > >>>>>>>     }
-> > >>>>>>>     
-> > >>>>>>>     
-> > >>>>>>> +/* Once a memory pressure is detected, squeeze free page pools for a while. */
-> > >>>>>>> +static unsigned int buffer_squeeze_duration_ms = 10;
-> > >>>>>>> +module_param_named(buffer_squeeze_duration_ms,
-> > >>>>>>> +		buffer_squeeze_duration_ms, int, 0644);
-> > >>>>>>> +MODULE_PARM_DESC(buffer_squeeze_duration_ms,
-> > >>>>>>> +"Duration in ms to squeeze pages buffer when a memory pressure is detected");
-> > >>>>>>> +
-> > >>>>>>> +/*
-> > >>>>>>> + * Callback received when the memory pressure is detected.
-> > >>>>>>> + */
-> > >>>>>>> +static void reclaim_memory(struct xenbus_device *dev)
-> > >>>>>>> +{
-> > >>>>>>> +	struct backend_info *be = dev_get_drvdata(&dev->dev);
-> > >>>>>>> +
-> > >>>>>>> +	be->blkif->buffer_squeeze_end = jiffies +
-> > >>>>>>> +		msecs_to_jiffies(buffer_squeeze_duration_ms);
-> > >>>>>>
-> > >>>>>> This callback might race with 'xen_blkbk_probe()'.  The race could result in
-> > >>>>>> __NULL dereferencing__, as 'xen_blkbk_probe()' sets '->blkif' after it links
-> > >>>>>> 'be' to the 'dev'.  Please _don't merge_ this patch now!
-> > >>>>>>
-> > >>>>>> I will do more test and share results.  Meanwhile, if you have any opinion,
-> > >>>>>> please let me know.
-> > >>>
-> > >>> I reduced system memory and attached bunch of devices in short time so that
-> > >>> memory pressure occurs while device attachments are ongoing.  Under this
-> > >>> circumstance, I was able to see the race.
-> > >>>
-> > >>>>>
-> > >>>>> Not only '->blkif', but 'be' itself also coule be a NULL.  As similar
-> > >>>>> concurrency issues could be in other drivers in their way, I suggest to change
-> > >>>>> the reclaim callback ('->reclaim_memory') to be called for each driver instead
-> > >>>>> of each device.  Then, each driver could be able to deal with its concurrency
-> > >>>>> issues by itself.
-> > >>>>
-> > >>>> Hmm, I don't like that. This would need to be changed back in case we
-> > >>>> add per-guest quota.
-> > >>>
-> > >>> Extending this callback in that way would be still not too hard.  We could use
-> > >>> the argument to the callback.  I would keep the argument of the callback to
-> > >>> 'struct device *' as is, and will add a comment saying 'NULL' value of the
-> > >>> argument means every devices.  As an example, xenbus would pass NULL-ending
-> > >>> array of the device pointers that need to free its resources.
-> > >>>
-> > >>> After seeing this race, I am now also thinking it could be better to delegate
-> > >>> detailed control of each device to its driver, as some drivers have some
-> > >>> complicated and unique relation with its devices.
-> > >>>
-> > >>>>
-> > >>>> Wouldn't a get_device() before calling the callback and a put_device()
-> > >>>> afterwards avoid that problem?
-> > >>>
-> > >>> I didn't used the reference count manipulation operations because other similar
-> > >>> parts also didn't.  But, if there is no implicit reference count guarantee, it
-> > >>> seems those operations are indeed necessary.
-> > >>>
-> > >>> That said, as get/put operations only adjust the reference count, those will
-> > >>> not make the callback to wait until the linking of the 'backend' and 'blkif' to
-> > >>> the device (xen_blkbk_probe()) is finished.  Thus, the race could still happen.
-> > >>> Or, am I missing something?
-> > >>
-> > >> No, I think we need a xenbus lock per device which will need to be
-> > >> taken in xen_blkbk_probe(), xenbus_dev_remove() and while calling the
-> > >> callback.
-> > > 
-> > > I also agree that locking should be used at last.  But, as each driver manages
-> > > its devices and resources in their way, it could have its unique race
-> > > conditions.  And, each unique race condition might have its unique efficient
-> > > way to synchronize it.  Therefore, I think the synchronization should be done
-> > > by each driver, not by xenbus and thus we should make the callback to be called
-> > > per-driver.
-> > 
-> > xenbus controls creation and removing of devices, so applying locking
-> > at xenbus level is the right thing to do in order to avoid races with
-> > device removal.
-> > 
-> > In case a backend has further synchronization requirements those have to
-> > be handled at backend level, of course.
-> > 
-> > In the end you'll need the xenbus level locking anyway in order to avoid
-> > a race when the last backend specific device is just being removed when
-> > the callback is about to be called for that device. Or you'd need to
-> > call try_get_module() before calling into each backend...
-> 
-> Agreed.  Thank you for your kind explanation of your concerns.
-
-Just posted the v11 patchset[1], which is based on your idea and passed my
-test.
-
-[1] https://lore.kernel.org/xen-devel/20191217160748.693-1-sjpark@amazon.com/
-
-
-Thanks,
-SeongJae Park
-
-> 
-> 
-> Thanks,
-> SeongJae Park
-> 
-> > 
-> > 
-> > Juergen
+RnJvbTogSsOpcsO0bWUgUG91aWxsZXIgPGplcm9tZS5wb3VpbGxlckBzaWxhYnMuY29tPgoKTWF4
+aW11bSByZXF1ZXN0IHRpbWUgKGhvdyBsb25nIGEgcmVxdWVzdCB3YWl0IGZvciB0aGUgbWVkaXVt
+KSBpcyBzZXQgaW4KZmlybXdhcmUgdG8gNTEyVFUKClNpZ25lZC1vZmYtYnk6IErDqXLDtG1lIFBv
+dWlsbGVyIDxqZXJvbWUucG91aWxsZXJAc2lsYWJzLmNvbT4KLS0tCiBkcml2ZXJzL3N0YWdpbmcv
+d2Z4L3N0YS5jIHwgMiArLQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0
+aW9uKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9zdGFnaW5nL3dmeC9zdGEuYyBiL2RyaXZlcnMv
+c3RhZ2luZy93Zngvc3RhLmMKaW5kZXggZGNiNDY5M2VjOTgwLi40MmIwZDAxZDg1Y2MgMTAwNjQ0
+Ci0tLSBhL2RyaXZlcnMvc3RhZ2luZy93Zngvc3RhLmMKKysrIGIvZHJpdmVycy9zdGFnaW5nL3dm
+eC9zdGEuYwpAQCAtMzU5LDcgKzM1OSw3IEBAIHN0YXRpYyBpbnQgd2Z4X3VwZGF0ZV9wbShzdHJ1
+Y3Qgd2Z4X3ZpZiAqd3ZpZikKIAl9CiAKIAlpZiAoIXdhaXRfZm9yX2NvbXBsZXRpb25fdGltZW91
+dCgmd3ZpZi0+c2V0X3BtX21vZGVfY29tcGxldGUsCi0JCQkJCSBtc2Vjc190b19qaWZmaWVzKDMw
+MCkpKQorCQkJCQkgVFVfVE9fSklGRklFUyg1MTIpKSkKIAkJZGV2X3dhcm4od3ZpZi0+d2Rldi0+
+ZGV2LAogCQkJICJ0aW1lb3V0IHdoaWxlIHdhaXRpbmcgb2Ygc2V0X3BtX21vZGVfY29tcGxldGVc
+biIpOwogCXJldHVybiBoaWZfc2V0X3BtKHd2aWYsICZwbSk7Ci0tIAoyLjI0LjAKCg==
