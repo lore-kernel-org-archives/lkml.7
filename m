@@ -2,116 +2,157 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42EE4C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 010F8C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18BB32072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:48:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZdEizmhc"
+	by mail.kernel.org (Postfix) with ESMTP id CE3D12072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 10:49:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727381AbfLQKsz (ORCPT
+        id S1727407AbfLQKtB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 05:48:55 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:35608 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726655AbfLQKsw (ORCPT
+        Tue, 17 Dec 2019 05:49:01 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50766 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726655AbfLQKtB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 05:48:52 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBHAmihR056883;
-        Tue, 17 Dec 2019 04:48:44 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576579724;
-        bh=T3CMfOvjx9ecvb9eaAPNLrofr0AxqpXdmnvNE+n/PCk=;
-        h=From:To:CC:Subject:Date;
-        b=ZdEizmhcKA80AK6pc8WJjjoNy3fSuXzf8i++I4jbHgq1HHWRXqEdxgdLfu1dtlJh4
-         4KiziI+4GZldQWBj2WmDohVEKZ/oJVA3Mx4xalCh4JlnozmbfkcS5nGkx5OThfHwuG
-         WbfdStAR4Zc/AdhYOEmWp10bSHfwrbOj/5Yrt8+Y=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBHAmijj093336
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 17 Dec 2019 04:48:44 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
- Dec 2019 04:48:43 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 17 Dec 2019 04:48:43 -0600
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBHAmfcv016608;
-        Tue, 17 Dec 2019 04:48:42 -0600
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <rjw@rjwysocki.net>, <lenb@kernel.org>
-CC:     <vkoul@kernel.org>, <linux-acpi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] docs: firmware-guide: acpi: Change dma_request_slave_channel to dma_request_chan
-Date:   Tue, 17 Dec 2019 12:48:56 +0200
-Message-ID: <20191217104856.24987-1-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.24.0
+        Tue, 17 Dec 2019 05:49:01 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBHAldWZ145136;
+        Tue, 17 Dec 2019 05:48:46 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wwdvndmjd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Dec 2019 05:48:46 -0500
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xBHAmj1j004044;
+        Tue, 17 Dec 2019 05:48:45 -0500
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wwdvndmhf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Dec 2019 05:48:45 -0500
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xBHAe7Df006118;
+        Tue, 17 Dec 2019 10:48:44 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma03wdc.us.ibm.com with ESMTP id 2wvqc6bj7h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Dec 2019 10:48:44 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBHAmiY115073728
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 Dec 2019 10:48:44 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E0690AE06A;
+        Tue, 17 Dec 2019 10:48:43 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8D85AAE05F;
+        Tue, 17 Dec 2019 10:48:41 +0000 (GMT)
+Received: from [9.204.201.20] (unknown [9.204.201.20])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 17 Dec 2019 10:48:41 +0000 (GMT)
+Subject: Re: [RFC PATCH 1/2] mm/mmu_gather: Invalidate TLB correctly on batch
+ allocation failure and flush
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     akpm@linux-foundation.org, npiggin@gmail.com, mpe@ellerman.id.au,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+References: <20191217071713.93399-1-aneesh.kumar@linux.ibm.com>
+ <20191217090914.GX2844@hirez.programming.kicks-ass.net>
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Message-ID: <3d250b04-a78d-20a7-d41e-50e48e08d1cb@linux.ibm.com>
+Date:   Tue, 17 Dec 2019 16:18:40 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20191217090914.GX2844@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-17_02:2019-12-16,2019-12-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=999 lowpriorityscore=0 malwarescore=0 spamscore=0 bulkscore=0
+ suspectscore=2 clxscore=1015 phishscore=0 impostorscore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912170093
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dma_request_chan() is the preferred API to request slave channels.
+On 12/17/19 2:39 PM, Peter Zijlstra wrote:
+> On Tue, Dec 17, 2019 at 12:47:12PM +0530, Aneesh Kumar K.V wrote:
+>> Architectures for which we have hardware walkers of Linux page table should
+>> flush TLB on mmu gather batch allocation failures and batch flush. Some
+>> architectures like POWER supports multiple translation modes (hash and radix)
+>> and in the case of POWER only radix translation mode needs the above TLBI.
+>> This is because for hash translation mode kernel wants to avoid this extra
+>> flush since there are no hardware walkers of linux page table. With radix
+>> translation, the hardware also walks linux page table and with that, kernel
+>> needs to make sure to TLB invalidate page walk cache before page table pages are
+>> freed.
+> 
+>> Based on changes from Peter Zijlstra <peterz@infradead.org>
+> 
+> AFAICT it is all my patch ;-)
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- .../firmware-guide/acpi/enumeration.rst          | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+Yes. I moved the changes you had to upstream. I can update the From: in 
+the next version if you are ok with that?
 
-diff --git a/Documentation/firmware-guide/acpi/enumeration.rst b/Documentation/firmware-guide/acpi/enumeration.rst
-index 0a72b6321f5f..c13fee8b02ba 100644
---- a/Documentation/firmware-guide/acpi/enumeration.rst
-+++ b/Documentation/firmware-guide/acpi/enumeration.rst
-@@ -71,8 +71,8 @@ DMA support
- DMA controllers enumerated via ACPI should be registered in the system to
- provide generic access to their resources. For example, a driver that would
- like to be accessible to slave devices via generic API call
--dma_request_slave_channel() must register itself at the end of the probe
--function like this::
-+dma_request_chan() must register itself at the end of the probe function like
-+this::
- 
- 	err = devm_acpi_dma_controller_register(dev, xlate_func, dw);
- 	/* Handle the error if it's not a case of !CONFIG_ACPI */
-@@ -112,15 +112,15 @@ could look like::
- 	}
- 	#endif
- 
--dma_request_slave_channel() will call xlate_func() for each registered DMA
--controller. In the xlate function the proper channel must be chosen based on
-+dma_request_chan() will call xlate_func() for each registered DMA controller.
-+In the xlate function the proper channel must be chosen based on
- information in struct acpi_dma_spec and the properties of the controller
- provided by struct acpi_dma.
- 
--Clients must call dma_request_slave_channel() with the string parameter that
--corresponds to a specific FixedDMA resource. By default "tx" means the first
--entry of the FixedDMA resource array, "rx" means the second entry. The table
--below shows a layout::
-+Clients must call dma_request_chan() with the string parameter that corresponds
-+to a specific FixedDMA resource. By default "tx" means the first entry of the
-+FixedDMA resource array, "rx" means the second entry. The table below shows a
-+layout::
- 
- 	Device (I2C0)
- 	{
--- 
-Peter
+> 
+> Anyway, this commit:
+> 
+>> More details in
+>> commit: d86564a2f085 ("mm/tlb, x86/mm: Support invalidating TLB caches for RCU_TABLE_FREE")
+> 
+> states that you do an explicit invalidate in __p*_free_tlb(), which, if
+> I'm not mistaken is still there:
+> 
+>    arch/powerpc/include/asm/nohash/pgalloc.h:      tlb_flush_pgtable(tlb, address);
+> 
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+nohash is not really radix. So we still do the tlb flush from the 
+pte_free_tlb for nohash and for PPC-radix, we let tlb_table_invalidate 
+to flush that.
 
+
+> Or am I reading this wrong? I'm thinking you can remove that now.
+> 
+>> diff --git a/arch/powerpc/include/asm/tlb.h b/arch/powerpc/include/asm/tlb.h
+>> index b2c0be93929d..feea1a09bbce 100644
+>> --- a/arch/powerpc/include/asm/tlb.h
+>> +++ b/arch/powerpc/include/asm/tlb.h
+>> @@ -27,6 +27,10 @@
+>>   #define tlb_flush tlb_flush
+>>   extern void tlb_flush(struct mmu_gather *tlb);
+>>   
+>> +#ifdef CONFIG_HAVE_RCU_TABLE_FREE
+> /*
+>   * PPC-Hash does not use the linux page-tables, so we can avoid
+>   * the TLBI for page-table freeing, PPC-Radix otoh does use the
+>   * page-tables and needs the TLBI.
+>   */
+>> +#define tlb_needs_table_invalidate()	radix_enabled()
+>> +#endif
+> 
+> Also, are you really sure about the !SMP case? Esp. on Radix I'm
+> thinking that the PWC (page-walk-cache) can give trouble even on UP,
+> when we get preempted in the middle of mmu_gather. Hmm?
+> 
+
+Yes, looking at !SMP I guess we do have issue there. we do free the 
+pagetable pages directly in __p*_free_tlb() with the current code. That 
+will definitely not work. Are you suggesting we enable 
+HAVE_RCU_TABLE_FREE even for !SMP?
+
+>>   /* Get the generic bits... */
+>>   #include <asm-generic/tlb.h>
+> 
+> 
+
+-aneesh
