@@ -2,104 +2,95 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D140C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A681C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CFE220733
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:45:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F19E520733
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 13:46:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728520AbfLQNpb (ORCPT
+        id S1728535AbfLQNqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 08:45:31 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:50523 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726164AbfLQNpa (ORCPT
+        Tue, 17 Dec 2019 08:46:11 -0500
+Received: from relmlor2.renesas.com ([210.160.252.172]:47589 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726164AbfLQNqL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 08:45:30 -0500
-Received: from [192.168.1.155] ([95.114.21.161]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MfYgC-1i1FZn1CtU-00fzgB; Tue, 17 Dec 2019 14:45:11 +0100
-Subject: Re: [PATCH] RFC: platform driver registering via initcall tables
-To:     Greg KH <greg@kroah.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, dmitry.torokhov@gmail.com,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com,
-        arnd@arndb.de, masahiroy@kernel.org, michal.lkml@markovi.net,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        linux-gpio@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-References: <20191217102219.29223-1-info@metux.net>
- <20191217103152.GB2914497@kroah.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <6422bc88-6d0a-7b51-aaa7-640c6961b177@metux.net>
-Date:   Tue, 17 Dec 2019 14:44:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191217103152.GB2914497@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: tl
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:UIxsKeF+t4AJ8q6DRnqSCsifxsav8JqTSzPbvflDT49nTCN38N2
- kn8QUDipr/KlL5RzF2fLtyOuCzxNjxUSI4UZqAlp6xIsJjV2bywjnE+BMyjssnPF9+oH6ww
- j5NFvhGrB1pzGK+XoSpXibonoL3JFM9dGJqe8hfLnfeBH94z62AKKyID1MFmz2D/kfr9ua1
- +I6P+xiT9RjL5BBgRigTg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:nhzDFcqFHhI=:Tt4Fe7MEEtN81vc41C7AoZ
- wctLg7SjkItjTD1J3EE0wIIRp68zGRkICb7akDkm7TzGVY/Jv10cHWbbYxhEfiW4whMmm7gx1
- calgbAvlJfzZju7vWqVRx24cZKnsPXbGGNQI6AltrredEl0JuONWHGFccnaBRDzW2rH1MKxpx
- 7guijvh0tF+MuaZMsUVm1dIggOl4cQFDElahLOqvviCWwKyID5OeS4sL9WhPMRRYqxAHM9q5O
- uPRf4lICI04o5CkAW0vu/jJU2fDAqqn8VRS8aZfQZtuRhCtoDTvZTEoOMN/icN7ljMBCxrxzO
- jKVvHCAs/ZD0+MWmVOPS6sdGZYhKGJfOrGUMZTIo07lGNMYuMdb6Mvx7qAuFP3Yttazz361XR
- WOiEbrlEia6jOwJTx0JGQiUkJqwUMutPSCYqHT+ZlswBl3PcXs2kTDeEimiMTkTWcs6cnQ5YJ
- 0Ev+Ibgd1aJ5uVBqPmFfJs821dyrQ/nj2kpivSX944s+JlT5J79FdHn3yG5tlk4NsXcGYZpDb
- +Su81EDqspIcaHEsqNYqm4wHR4C4MRln/yQ/qEtoFPV/rx6N17k0IIo+d/DbjDUJ5PoLA6scG
- u5HIncBDs/JHZGLSftyL04NMt7m/WCxdQ6vh4pOOgJ+pBlIOtaNs/sr2RGvaMd1drejh8xN8T
- oVqTHasq/lYf0bopjmsmrUnoodoESr4GakdnC5EivRzMSeLiz11uVTbijiJ6z5hpZxZEUXDoy
- GSj9nLs8W6dvwEJKDzhLDRZdwjHLl6WE/XxOcwxG3eQ2N/ab5WauSh8y5djcp7H16KpJZ6A69
- pcY7K1TMdNUlig8lhlUX+Ij4IEaClVQj0yKqknPNhhHZTCef462eFxVdARrJ0sbaH1PRWpIfH
- buhiRZ+mDZotLHFEAKJ93oZ2o67FNflSKVDFquVEZb6lab6XoEveVJVdH6nxtOBexbBLcxxXW
- ARVod/u0vtgm8aj0oa/n+a8Xz6kwOYwTrei/SbYDwnKT6YuTO5xQd
+        Tue, 17 Dec 2019 08:46:11 -0500
+X-IronPort-AV: E=Sophos;i="5.69,325,1571670000"; 
+   d="scan'208";a="34441850"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 17 Dec 2019 22:46:09 +0900
+Received: from fabrizio-dev.ree.adwin.renesas.com (unknown [10.226.36.196])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 01A824841A48;
+        Tue, 17 Dec 2019 22:46:03 +0900 (JST)
+From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+To:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>,
+        Andrzej Hajda <a.hajda@samsung.com>
+Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        ebiharaml@si-linux.co.jp
+Subject: [PATCH v6 0/6] Add dual-LVDS panel support to EK874
+Date:   Tue, 17 Dec 2019 13:45:55 +0000
+Message-Id: <1576590361-28244-1-git-send-email-fabrizio.castro@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.12.19 11:31, Greg KH wrote:
+Dear All,
 
-Hi,
+this series adds support for dual-LVDS panel IDK-2121WR
+from Advantech:
+https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model-IDK-2121WR-K2FHA2E.htm
 
-> No, what is so "special" about platform drivers that they require this?
+V6 reworks patch "drm: rcar-du: lvds: Allow for even and odd pixels swap",
+and rebases the series on top of patch:
+https://patchwork.kernel.org/patch/11295991/
 
-Nothing, of course ;-)
+Thanks,
+Fab
 
-It's the the starting point for this PoC. The idea actually is doing
-this for all other driver types, too (eg. spi, pci, usb, ...). But
-they'll need their own tables, as different *_register() functions have
-to be called - just haven't implemented that yet.
+Fabrizio Castro (6):
+  drm: of: Add drm_of_lvds_get_dual_link_pixel_order
+  drm: rcar-du: lvds: Improve identification of panels
+  drm: rcar-du: lvds: Get dual link configuration from DT
+  drm: rcar-du: lvds: Allow for even and odd pixels swap
+  dt-bindings: display: Add idk-2121wr binding
+  arm64: dts: renesas: Add EK874 board with idk-2121wr display support
 
-> If anything, we should be moving _AWAY_ from platform drivers and use
-> real bus drivers instead.
+ .../display/panel/advantech,idk-2121wr.yaml        | 128 +++++++++++++++
+ arch/arm64/boot/dts/renesas/Makefile               |   3 +-
+ .../boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts | 116 +++++++++++++
+ drivers/gpu/drm/drm_of.c                           | 116 +++++++++++++
+ drivers/gpu/drm/rcar-du/rcar_lvds.c                | 180 ++++++++++++---------
+ include/drm/drm_of.h                               |  20 +++
+ 6 files changed, 483 insertions(+), 80 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts
 
-That would be nice, but, unfortunately, we have lots of devices which
-aren't attached to any (probing-capable) bus. That's why we have things
-like oftree, etc.
+-- 
+2.7.4
 
-> Please no, I don't see why this is even needed.
-
-The idea is getting rid of all the init code, which all just does the
-same, just calls some *_register() function.
-
-
---mtx
-
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
