@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B2A7C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FCC4C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:57:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D244820CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:57:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BC0220CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 00:57:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbfLQA5I (ORCPT
+        id S1727590AbfLQA5P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Dec 2019 19:57:08 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:35014 "EHLO
+        Mon, 16 Dec 2019 19:57:15 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34980 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726880AbfLQAvl (ORCPT
+        by vger.kernel.org with ESMTP id S1726863AbfLQAvk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Dec 2019 19:51:41 -0500
+        Mon, 16 Dec 2019 19:51:40 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15I-0003LR-H8; Tue, 17 Dec 2019 00:51:32 +0000
+        id 1ih15I-0003LI-HJ; Tue, 17 Dec 2019 00:51:32 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC7)
         (envelope-from <ben@decadent.org.uk>)
-        id 1ih15H-0005VD-6d; Tue, 17 Dec 2019 00:51:31 +0000
+        id 1ih15H-0005Ux-21; Tue, 17 Dec 2019 00:51:31 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Christophe JAILLET" <christophe.jaillet@wanadoo.fr>,
-        "Ulf Hansson" <ulf.hansson@linaro.org>
-Date:   Tue, 17 Dec 2019 00:46:23 +0000
-Message-ID: <lsq.1576543535.52329631@decadent.org.uk>
+        "Steve French" <smfrench@gmail.com>,
+        "Ross Lagerwall" <ross.lagerwall@citrix.com>
+Date:   Tue, 17 Dec 2019 00:46:20 +0000
+Message-ID: <lsq.1576543535.883584702@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 049/136] memstick: jmb38x_ms: Fix an error handling
- path in 'jmb38x_ms_probe()'
+Subject: [PATCH 3.16 046/136] cifs: Check uniqueid for SMB2+ and return
+ -ESTALE if necessary
 In-Reply-To: <lsq.1576543534.33060804@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,32 +56,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Ross Lagerwall <ross.lagerwall@citrix.com>
 
-commit 28c9fac09ab0147158db0baeec630407a5e9b892 upstream.
+commit a108471b5730b52017e73b58c9f486319d2ac308 upstream.
 
-If 'jmb38x_ms_count_slots()' returns 0, we must undo the previous
-'pci_request_regions()' call.
+Commit 7196ac113a4f ("Fix to check Unique id and FileType when client
+refer file directly.") checks whether the uniqueid of an inode has
+changed when getting the inode info, but only when using the UNIX
+extensions. Add a similar check for SMB2+, since this can be done
+without an extra network roundtrip.
 
-Goto 'err_out_int' to fix it.
-
-Fixes: 60fdd931d577 ("memstick: add support for JMicron jmb38x MemoryStick host controller")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
+Signed-off-by: Steve French <smfrench@gmail.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/memstick/host/jmb38x_ms.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/cifs/inode.c | 24 ++++++++++++++++++++++--
+ 1 file changed, 22 insertions(+), 2 deletions(-)
 
---- a/drivers/memstick/host/jmb38x_ms.c
-+++ b/drivers/memstick/host/jmb38x_ms.c
-@@ -947,7 +947,7 @@ static int jmb38x_ms_probe(struct pci_de
- 	if (!cnt) {
- 		rc = -ENODEV;
- 		pci_dev_busy = 1;
--		goto err_out;
-+		goto err_out_int;
- 	}
+--- a/fs/cifs/inode.c
++++ b/fs/cifs/inode.c
+@@ -815,8 +815,21 @@ cifs_get_inode_info(struct inode **inode
+ 			}
+ 		} else
+ 			fattr.cf_uniqueid = iunique(sb, ROOT_I);
+-	} else
+-		fattr.cf_uniqueid = CIFS_I(*inode)->uniqueid;
++	} else {
++		if ((cifs_sb->mnt_cifs_flags & CIFS_MOUNT_SERVER_INUM) &&
++		    validinum == false && server->ops->get_srv_inum) {
++			/*
++			 * Pass a NULL tcon to ensure we don't make a round
++			 * trip to the server. This only works for SMB2+.
++			 */
++			tmprc = server->ops->get_srv_inum(xid,
++				NULL, cifs_sb, full_path,
++				&fattr.cf_uniqueid, data);
++			if (tmprc)
++				fattr.cf_uniqueid = CIFS_I(*inode)->uniqueid;
++		} else
++			fattr.cf_uniqueid = CIFS_I(*inode)->uniqueid;
++	}
  
- 	jm = kzalloc(sizeof(struct jmb38x_ms)
+ 	/* query for SFU type info if supported and needed */
+ 	if (fattr.cf_cifsattrs & ATTR_SYSTEM &&
+@@ -857,6 +870,13 @@ cifs_get_inode_info(struct inode **inode
+ 	} else {
+ 		/* we already have inode, update it */
+ 
++		/* if uniqueid is different, return error */
++		if (unlikely(cifs_sb->mnt_cifs_flags & CIFS_MOUNT_SERVER_INUM &&
++		    CIFS_I(*inode)->uniqueid != fattr.cf_uniqueid)) {
++			rc = -ESTALE;
++			goto cgii_exit;
++		}
++
+ 		/* if filetype is different, return error */
+ 		if (unlikely(((*inode)->i_mode & S_IFMT) !=
+ 		    (fattr.cf_mode & S_IFMT))) {
 
