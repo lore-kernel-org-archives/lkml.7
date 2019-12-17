@@ -2,172 +2,175 @@ Return-Path: <SRS0=vnTL=2H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39395C2D0C5
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 06:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C041C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 06:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 084A721739
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 06:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 534C8206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Dec 2019 06:41:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zj+Ixevz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbfLQGke (ORCPT
+        id S1727198AbfLQGlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 01:40:34 -0500
-Received: from mout-p-101.mailbox.org ([80.241.56.151]:53806 "EHLO
-        mout-p-101.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726875AbfLQGkc (ORCPT
+        Tue, 17 Dec 2019 01:41:00 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:42572 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725886AbfLQGk7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 01:40:32 -0500
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 47cT6M2DP7zKmbN;
-        Tue, 17 Dec 2019 07:40:27 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter06.heinlein-hosting.de (spamfilter06.heinlein-hosting.de [80.241.56.125]) (amavisd-new, port 10030)
-        with ESMTP id AVgNK5XsT0lw; Tue, 17 Dec 2019 07:40:19 +0100 (CET)
-Date:   Tue, 17 Dec 2019 17:39:50 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-ia64@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-api@vger.kernel.org,
-        Jiri Olsa <jolsa@redhat.com>, linux-arch@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        David Drysdale <drysdale@google.com>,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, linuxppc-dev@lists.ozlabs.org,
-        dev@opencontainers.org, Andy Lutomirski <luto@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        libc-alpha@sourceware.org, linux-parisc@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, netdev@vger.kernel.org,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        linux-alpha@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        bpf@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org
-Subject: Re: [PATCH v18 11/13] open: introduce openat2(2) syscall
-Message-ID: <20191217063950.5oqwwqz5p3bu7t2x@yavin.dot.cyphar.com>
-References: <20191206141338.23338-1-cyphar@cyphar.com>
- <20191206141338.23338-12-cyphar@cyphar.com>
- <20191216192158.B9F19832924A@oldenburg2.str.redhat.com>
+        Tue, 17 Dec 2019 01:40:59 -0500
+Received: by mail-lf1-f68.google.com with SMTP id y19so6096394lfl.9
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Dec 2019 22:40:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ZzbVgb0Dsc1MnhDpYFuAmdtYBehM6wFQjI2gRgSINqU=;
+        b=Zj+IxevzHy0cniNQF1XM329WmC/mEHJ6bVqLYiolS6BCzCQYIS80V0Ay+zq45WAEq1
+         /d+PM7m7EM/K9JqGTbV+hYCbCruQkT3CIvMhhFYmaLutNBtiZCyXoHO88vjFHBD8Vc4Z
+         V6UXm7oOMsl5k1i8WL4bUXrjCBwJ4Lg0nYN3Yo7DRae1Ir3gow+mS8VSRK9R8TRErr1P
+         PRpsuqYr3TmH29WlF3asaFmJUnApFdH5K4dYVgDC9MLbtiVJ0FnCHcJ+FYC5iAl7VeMK
+         m9RxKdGx7/zzW31Q1bpDQj60G3FLz+ROuOHomzHvS8Sll++BN9chP0sqneCFmTg+Jfe3
+         evxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ZzbVgb0Dsc1MnhDpYFuAmdtYBehM6wFQjI2gRgSINqU=;
+        b=KcUCnXgHUDd4wSt92CVpbl4FgXwu5V3vLkWOJXVxfjvl0jAL5/dvAj8pUcyVSG4VDm
+         oduu+K/L/2U8Mkel+Gzt/z9Ndwt5ciGAW2w1V+tXXjlCT10ftYYHAqrilRaRmf2XgjKV
+         weveTla99hbCUlvLW9kgOb5P1bLKMhNtBHsj6KuJzoWD67VhDrOGAeDlhIs6UDxCTHsp
+         lLQQtvgjpUWQVhFLHPptf19GjuApNYaZP2zhy5nsegnF7fW9yqH+j5QuNzt+geCo80fW
+         mddW03JITvLeKHcB6QMYZVeS/3o+6rWfsAJonywGQaexbR8CB2cgsF1Sk/bt1hjt62E3
+         fN9w==
+X-Gm-Message-State: APjAAAWD3mnkizBu7m3Z6zd9zP6nqI2J7dUyD2W+cWnMJLfhXbqp7Jq3
+        zy8t2squKwosAtxToseASmE2zgFu/HOK1m6d56dVQg==
+X-Google-Smtp-Source: APXvYqyb73zwNv3ziW7+e9hRPvnZdExviQMYWdITo3G7CKWq6hPnOC6EIBQlYWoq/vh+8BOBYsy23JgHCyUPJ0f7tdY=
+X-Received: by 2002:ac2:5337:: with SMTP id f23mr1690949lfh.192.1576564857544;
+ Mon, 16 Dec 2019 22:40:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vzwczu2ztdefrrfu"
-Content-Disposition: inline
-In-Reply-To: <20191216192158.B9F19832924A@oldenburg2.str.redhat.com>
+References: <20191216174747.111154704@linuxfoundation.org>
+In-Reply-To: <20191216174747.111154704@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 17 Dec 2019 12:10:46 +0530
+Message-ID: <CA+G9fYtyVeFfOGAPcCPCwDKayFLc2_niPJfi=5-x+hbwHg3UVg@mail.gmail.com>
+Subject: Re: [PATCH 4.19 000/140] 4.19.90-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 16 Dec 2019 at 23:31, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.19.90 release.
+> There are 140 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed, 18 Dec 2019 17:41:25 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.19.90-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.19.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
---vzwczu2ztdefrrfu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-On 2019-12-16, Florian Weimer <fweimer@redhat.com> wrote:
-> > diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
-> > index 1d338357df8a..58c3a0e543c6 100644
-> > --- a/include/uapi/linux/fcntl.h
-> > +++ b/include/uapi/linux/fcntl.h
-> > @@ -93,5 +93,40 @@
-> > =20
-> >  #define AT_RECURSIVE		0x8000	/* Apply to the entire subtree */
-> > =20
-> > +/*
-> > + * Arguments for how openat2(2) should open the target path. If @resol=
-ve is
-> > + * zero, then openat2(2) operates very similarly to openat(2).
-> > + *
-> > + * However, unlike openat(2), unknown bits in @flags result in -EINVAL=
- rather
-> > + * than being silently ignored. @mode must be zero unless one of {O_CR=
-EAT,
-> > + * O_TMPFILE} are set.
-> > + *
-> > + * @flags: O_* flags.
-> > + * @mode: O_CREAT/O_TMPFILE file mode.
-> > + * @resolve: RESOLVE_* flags.
-> > + */
-> > +struct open_how {
-> > +	__aligned_u64 flags;
-> > +	__u16 mode;
-> > +	__u16 __padding[3]; /* must be zeroed */
-> > +	__aligned_u64 resolve;
-> > +};
-> > +
-> > +#define OPEN_HOW_SIZE_VER0	24 /* sizeof first published struct */
-> > +#define OPEN_HOW_SIZE_LATEST	OPEN_HOW_SIZE_VER0
-> > +
-> > +/* how->resolve flags for openat2(2). */
-> > +#define RESOLVE_NO_XDEV		0x01 /* Block mount-point crossings
-> > +					(includes bind-mounts). */
-> > +#define RESOLVE_NO_MAGICLINKS	0x02 /* Block traversal through procfs-s=
-tyle
-> > +					"magic-links". */
-> > +#define RESOLVE_NO_SYMLINKS	0x04 /* Block traversal through all symlin=
-ks
-> > +					(implies OEXT_NO_MAGICLINKS) */
-> > +#define RESOLVE_BENEATH		0x08 /* Block "lexical" trickery like
-> > +					"..", symlinks, and absolute
-> > +					paths which escape the dirfd. */
-> > +#define RESOLVE_IN_ROOT		0x10 /* Make all jumps to "/" and ".."
-> > +					be scoped inside the dirfd
-> > +					(similar to chroot(2)). */
-> > =20
-> >  #endif /* _UAPI_LINUX_FCNTL_H */
->=20
-> Would it be possible to move these to a new UAPI header?
->=20
-> In glibc, we currently do not #include <linux/fcntl.h>.  We need some of
-> the AT_* constants in POSIX mode, and the header is not necessarily
-> namespace-clean.  If there was a separate header for openat2 support, we
-> could use that easily, and we would only have to maintain the baseline
-> definitions (which never change).
+Summary
+------------------------------------------------------------------------
 
-Sure, (assuming nobody objects) I can move it to "linux/openat2.h".
+kernel: 4.19.90-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.19.y
+git commit: 9cc8b117a9932aaa067980374b1de1145afc4645
+git describe: v4.19.89-140-g9cc8b117a993
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
+ild/v4.19.89-140-g9cc8b117a993
+
+No regressions (compared to build v4.19.89)
+
+No fixes (compared to build v4.19.89)
+
+Ran 22793 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* linux-log-parser
+* ltp-containers-tests
+* ltp-cve-tests
+* ltp-hugetlb-tests
+* ltp-mm-tests
+* spectre-meltdown-checker-test
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-cpuhotplug-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* perf
+* v4l2-compliance
+* ltp-open-posix-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* ssuite
 
 --=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---vzwczu2ztdefrrfu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXfh4MQAKCRCdlLljIbnQ
-EvJ/AP9e+RbEhnKlfXeue8RftgpgyUu8To5+ZOcmuoKfUFVefgEAmch0tDU0glq6
-a0g2iw25N8tzxhAIzQpE/p2HRuzcPgo=
-=p/bo
------END PGP SIGNATURE-----
-
---vzwczu2ztdefrrfu--
+Linaro LKFT
+https://lkft.linaro.org
