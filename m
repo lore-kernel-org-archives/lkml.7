@@ -2,121 +2,105 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D143C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47330C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:13:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A70421582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:11:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576692673;
-	bh=xpO8sxy0GcqSsp0Qt7Kh/TkeVXsXU+WoPhma+gWNuEY=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=hgo/oEJ+4yJeGwAQ0x39NrVy7Tl6uR4M9ktmiHl9R4xFEPmyJQ5z2sR79CHMT2Kky
-	 KI9oF6uOpQT6VsfIOrNETsUMysnqhfoYVMln9nwDIxvBCX5m1iCh1SYIVGY6cc692q
-	 +D3Sle0g0Z1eF6PdVPVP5cU+9BD47Iu2a2zKmTrw=
+	by mail.kernel.org (Postfix) with ESMTP id 2180921582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:13:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="UW4z10ZF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727367AbfLRSLM (ORCPT
+        id S1727335AbfLRSNN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 13:11:12 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:44619 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726960AbfLRSLM (ORCPT
+        Wed, 18 Dec 2019 13:13:13 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46081 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727110AbfLRSNM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 13:11:12 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1ihdmZ-0007pw-8W; Wed, 18 Dec 2019 19:10:47 +0100
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [PATCH v4 00/19] KVM: Dynamically size memslot arrays
-X-PHP-Originating-Script: 0:main.inc
+        Wed, 18 Dec 2019 13:13:12 -0500
+Received: by mail-wr1-f66.google.com with SMTP id z7so3283975wrl.13
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 10:13:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=s6pr6X3YZWixb8igAL5ZzP135162lw6kkNkrAE5nvDY=;
+        b=UW4z10ZFcOooL2c6GdzIvB9hmP5SseKfAI01lmvsAEbvOsrbWRmG8k+UDXtTLgnaM9
+         gm2KqSYCyAOdc4YVMUZe4K319U183tNcXM872/5G0/gAs1i+iaUHQKiMKr747n6P7H1A
+         YHXU6qxJ3oy4K+nWuCo6q0/101Zo9ssfrjX2grmDbtYOxTZkVGyQ+qH6dRHobBqWxa1M
+         nIIVB01E33kFsHgdbAF+OVbVhtPJBpgERrJzzZG7WXk1APl7JNGY2Fp/gqFhtL2W7/LP
+         Z/+75Nq94y6KhsbiFMDLZB1RmH3ScSQQX3cQaFbNa3OaQN7mg5QU2gqXUUQP/vSOqS5w
+         ezMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=s6pr6X3YZWixb8igAL5ZzP135162lw6kkNkrAE5nvDY=;
+        b=KPGnddGT25YwzZQKNjD/HajTnDJNdJDSgHwJSLAFQ28GnqRBRz6fZCdU/YiLCPrujX
+         MtQVz2GRP9MWk4jGPz/FnoqephuHcmEMubAC5FibIsu1qpJgeCbm3jJBmNTS+W5rhTJ5
+         maayHbvh/+A06ttHlW7J8t7zX6LMAKVCDd+3GCr4m1DF0cKEdQQI/petyM3r5cITIN3o
+         ePE3AX0vDV7J1WNgD9648+/zB0UtF/9qrhdVKGWoRuzQc3elpxdlfwPEaklr5Esl6+IC
+         cP60nTLHLTzBlteaQNNJsbdjARsvzsJNJco4Ewy3ZTVrgqJxBUDkEgG/QlE2joIqb3Ij
+         7Mjw==
+X-Gm-Message-State: APjAAAWny6m6ItRnmFj1T0tMtevpnD4vSVntUbXu9JrmJWDCzQylUbfu
+        p5DzzeTYSxbR2RowudsNTM6EDQ==
+X-Google-Smtp-Source: APXvYqwzBRl3g+BhMlJHg5Zu4pGS3x1Uk52GVE05baVV87Pi+U0SnH3/RibUeAZUwELOwUZoc+WBQQ==
+X-Received: by 2002:a5d:5273:: with SMTP id l19mr4372382wrc.175.1576692790684;
+        Wed, 18 Dec 2019 10:13:10 -0800 (PST)
+Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id h2sm3396271wrv.66.2019.12.18.10.13.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 10:13:09 -0800 (PST)
+References: <20191218172420.1199117-1-jbrunet@baylibre.com> <20191218172420.1199117-3-jbrunet@baylibre.com> <20191218175031.GM3219@sirena.org.uk>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 2/4] ASoC: meson: axg-fifo: add fifo depth to the bindings documentation
+In-reply-to: <20191218175031.GM3219@sirena.org.uk>
+Date:   Wed, 18 Dec 2019 19:13:08 +0100
+Message-ID: <1jimmdbiyz.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 18 Dec 2019 18:10:47 +0000
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     James Hogan <jhogan@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        <linux-mips@vger.kernel.org>, <kvm-ppc@vger.kernel.org>,
-        <kvm@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <f4bug@amsat.org>
-In-Reply-To: <20191217204041.10815-1-sean.j.christopherson@intel.com>
-References: <20191217204041.10815-1-sean.j.christopherson@intel.com>
-Message-ID: <3a6b03cc1300bc3cffd3904e22c09478@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: sean.j.christopherson@intel.com, jhogan@kernel.org, paulus@ozlabs.org, borntraeger@de.ibm.com, frankja@linux.ibm.com, pbonzini@redhat.com, david@redhat.com, cohuck@redhat.com, vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org, kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, christoffer.dall@arm.com, f4bug@amsat.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-17 20:40, Sean Christopherson wrote:
-> The end goal of this series is to dynamically size the memslot array 
-> so
-> that KVM allocates memory based on the number of memslots in use, as
-> opposed to unconditionally allocating memory for the maximum number 
-> of
-> memslots.  On x86, each memslot consumes 88 bytes, and so with 2 
-> address
-> spaces of 512 memslots, each VM consumes ~90k bytes for the memslots.
-> E.g. given a VM that uses a total of 30 memslots, dynamic sizing 
-> reduces
-> the memory footprint from 90k to ~2.6k bytes.
->
-> The changes required to support dynamic sizing are relatively small,
-> e.g. are essentially contained in patches 17/19 and 18/19.
->
-> Patches 2-16 clean up the memslot code, which has gotten quite 
-> crusty,
-> especially __kvm_set_memory_region().  The clean up is likely not 
-> strictly
-> necessary to switch to dynamic sizing, but I didn't have a remotely
-> reasonable level of confidence in the correctness of the dynamic 
-> sizing
-> without first doing the clean up.
->
-> The only functional change in v4 is the addition of an x86-specific 
-> bug
-> fix in x86's handling of KVM_MR_MOVE.  The bug fix is not directly 
-> related
-> to dynamically allocating memslots, but it has subtle and hidden 
-> conflicts
-> with the cleanup patches, and the fix is higher priority than 
-> anything
-> else in the series, i.e. should be merged first.
->
-> On non-x86 architectures, v3 and v4 should be functionally 
-> equivalent,
-> the only non-x86 change in v4 is the dropping of a "const" in
-> kvm_arch_commit_memory_region().
 
-Gave it another go on top of 5.5-rc2 on an arm64 box, and nothing
-exploded. So thumbs up from me.
+On Wed 18 Dec 2019 at 18:50, Mark Brown <broonie@kernel.org> wrote:
 
-Thanks,
+> On Wed, Dec 18, 2019 at 06:24:18PM +0100, Jerome Brunet wrote:
+>
+>> Add a new property with the depth of the fifo in bytes. This is useful
+>> since some instance of the fifo, even on the same SoC, may have different
+>> depth. The depth is useful is set some parameters of the fifo.
+>
+> Can't we figure this out from the compatible strings?  They look SoC
+> specific (which is good).  That means we don't need to add new
+> properties for each quirk that separates the variants.
 
-        M.
--- 
-Jazz is not dead. It just smells funny...
+I don't think it would be appropriate in this case:
+
+If I take the example of TODDR fifos on the SM1 SoC;
+All the TODDR fifo on this SoC are compatible with the same driver and use:
+
+compatible = "amlogic,sm1-toddr", "amlogic,axg-toddr";
+
+However instance A on this SoC has a 8192B fifo while instance B, C and D
+have 256B fifo. Same goes for the other SoC and also FRDDR fifos.
+
+To store this difference using compatible I would have to add 1 compatible
+string for each "A" instance of each FRDDR and TODDR of each SoC. At the
+moment this would be 6 more compatible string for something that is really a
+parameter ... This also shows that fifo depth is something the HW
+manufacturer can tweak easily for each instances.
+
+It would not scale which is why I went for a property.
