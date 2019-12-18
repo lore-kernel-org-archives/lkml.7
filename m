@@ -2,95 +2,137 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF957C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E818C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B29EC2072B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:07:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576692442;
-	bh=zFUKM6MBVYmBIkYzY/9B8HkGPuiQRuCZxM4Y4aVu3n8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l7UN0jhgR8gubq7IcvIhaEEqNvLSmTcVYOpIdlAXrum5HnG89/8AO/ieR8KsE1WMw
-	 rkja+EJJLmKcER/K9WGJTAIVDLGXk6cYjbBClAZ2knWyxYJ+6/VgZB+ums7WejbTH5
-	 JrkZyAF54bW4IigJyPW6gh6ijMsvpwGVw9EoxO/s=
+	by mail.kernel.org (Postfix) with ESMTP id 483F82072B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:07:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VmpakIWa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727297AbfLRSHW (ORCPT
+        id S1727472AbfLRSH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 13:07:22 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:34599 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726939AbfLRSHV (ORCPT
+        Wed, 18 Dec 2019 13:07:28 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:21820 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727347AbfLRSHY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 13:07:21 -0500
-Received: by mail-oi1-f196.google.com with SMTP id l136so1565257oig.1;
-        Wed, 18 Dec 2019 10:07:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4NsV+0i4sLKWS34I+3p5qC+dqlp/B6BNrXIBm9D5E/4=;
-        b=VnhwQGJdzTnR0FEwQdVDEuAOshRrfkJEKEs/vO3qyU5Rt/iwaxK3KGXFokfjziGop+
-         rKXF88R8EA2MCLefs77SapPTgLA5atIxLFg5N4c0Ahi+yJQ0dwuon+/1fisebt/bPSRI
-         OVXPX2T2lpPsb6TvoCO0sR/8kxheb8okEb2ftf17QdMwMEh4IRk6hH6NGoIbuNcThP/Q
-         9S4K0cfYU2cPUfyMpTRc5dASbrBtS4oeJv1nQ7Tt5EspkPbrLsaOm38VneLfqqKwIMTP
-         h0lzlw+n1If8q+vv47jpg/k9apdvxJnxzr5aaYtxXPoA+ckwihugSG60JZDZXA+ivA3G
-         3/wg==
-X-Gm-Message-State: APjAAAXKY6PQGzpnlsWPgTlNO9eILlS5IzG0T3eUNBBIZUgI1DK9hhpn
-        1PhqO033+T9NlyCSJTMkNg==
-X-Google-Smtp-Source: APXvYqxoWVD8AHiJQbQ2N6vogRNydi3o+JC1XPpaw53Kjs5P5sBy4Aso3UY61GCTHHJ/dNNtST7ksw==
-X-Received: by 2002:a05:6808:6cd:: with SMTP id m13mr1194390oih.95.1576692439993;
-        Wed, 18 Dec 2019 10:07:19 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m2sm1021880oim.13.2019.12.18.10.07.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 10:07:19 -0800 (PST)
-Date:   Wed, 18 Dec 2019 12:07:18 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v6 02/15] dt-bindings: leds: ROHM BD71282 PMIC LED driver
-Message-ID: <20191218180718.GA4978@bogus>
-References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
- <697ae4380150cbd08a963de0942b8218868d924b.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+        Wed, 18 Dec 2019 13:07:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576692443;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Ak7zDmp1/cfdOQnn19i2bAKVAQPiklhpPuuaiXWuaLc=;
+        b=VmpakIWa/jcrYN620jT3HHVjYB/8IVFpU9v95zWIy4/XsMolDr4DSEHSyFN8t5DcUPHXjy
+        0bIvgcTl4ysMykcCtIR0y59SrhPVj4fMbRxarX2hf0cWRxpqn7IUMzCpc8mZlaV4ZsEdVk
+        lEnf6NZQAFHLzFbsa9Du5EZSy+kqBUU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-411-WFFPBcoKMuGlKOSiuW5jFg-1; Wed, 18 Dec 2019 13:07:20 -0500
+X-MC-Unique: WFFPBcoKMuGlKOSiuW5jFg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 896C6100726C;
+        Wed, 18 Dec 2019 18:07:18 +0000 (UTC)
+Received: from steredhat.redhat.com (ovpn-117-218.ams2.redhat.com [10.36.117.218])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6E5F45D9E2;
+        Wed, 18 Dec 2019 18:07:16 +0000 (UTC)
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     davem@davemloft.net
+Cc:     Jorgen Hansen <jhansen@vmware.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Dexuan Cui <decui@microsoft.com>, netdev@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Stefano Garzarella <sgarzare@redhat.com>
+Subject: [PATCH net-next v3 01/11] VSOCK: fix header include in vsock_diag_test
+Date:   Wed, 18 Dec 2019 19:06:58 +0100
+Message-Id: <20191218180708.120337-2-sgarzare@redhat.com>
+In-Reply-To: <20191218180708.120337-1-sgarzare@redhat.com>
+References: <20191218180708.120337-1-sgarzare@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <697ae4380150cbd08a963de0942b8218868d924b.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Dec 2019 11:36:51 +0200, Matti Vaittinen wrote:
-> Document ROHM BD71828 PMIC LED driver device tree bindings.
-> 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
-> 
-> Changes since v5:
-> - Change SPDX to dual lisence
-> - added select: false
-> - replace oneOf + const by enum
-> 
->  .../bindings/leds/rohm,bd71828-leds.yaml      | 52 +++++++++++++++++++
->  1 file changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/rohm,bd71828-leds.yaml
-> 
+From: Stefan Hajnoczi <stefanha@redhat.com>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+The vsock_diag_test program directly included ../../../include/uapi/
+headers from the source tree.  Tests are supposed to use the
+usr/include/linux/ headers that have been prepared with make
+headers_install instead.
+
+Suggested-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+---
+ tools/testing/vsock/Makefile          | 2 +-
+ tools/testing/vsock/README            | 2 +-
+ tools/testing/vsock/vsock_diag_test.c | 5 ++---
+ 3 files changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/tools/testing/vsock/Makefile b/tools/testing/vsock/Makefile
+index 5be687b1e16c..d41a4e13960a 100644
+--- a/tools/testing/vsock/Makefile
++++ b/tools/testing/vsock/Makefile
+@@ -3,7 +3,7 @@ all: test
+ test: vsock_diag_test
+ vsock_diag_test: vsock_diag_test.o timeout.o control.o
+=20
+-CFLAGS +=3D -g -O2 -Werror -Wall -I. -I../../include/uapi -I../../includ=
+e -Wno-pointer-sign -fno-strict-overflow -fno-strict-aliasing -fno-common=
+ -MMD -U_FORTIFY_SOURCE -D_GNU_SOURCE
++CFLAGS +=3D -g -O2 -Werror -Wall -I. -I../../include -I../../../usr/incl=
+ude -Wno-pointer-sign -fno-strict-overflow -fno-strict-aliasing -fno-comm=
+on -MMD -U_FORTIFY_SOURCE -D_GNU_SOURCE
+ .PHONY: all test clean
+ clean:
+ 	${RM} *.o *.d vsock_diag_test
+diff --git a/tools/testing/vsock/README b/tools/testing/vsock/README
+index 2cc6d7302db6..cf7dc64273bf 100644
+--- a/tools/testing/vsock/README
++++ b/tools/testing/vsock/README
+@@ -10,7 +10,7 @@ The following tests are available:
+ The following prerequisite steps are not automated and must be performed=
+ prior
+ to running tests:
+=20
+-1. Build the kernel and these tests.
++1. Build the kernel, make headers_install, and build these tests.
+ 2. Install the kernel and tests on the host.
+ 3. Install the kernel and tests inside the guest.
+ 4. Boot the guest and ensure that the AF_VSOCK transport is enabled.
+diff --git a/tools/testing/vsock/vsock_diag_test.c b/tools/testing/vsock/=
+vsock_diag_test.c
+index c481101364a4..fc391e041954 100644
+--- a/tools/testing/vsock/vsock_diag_test.c
++++ b/tools/testing/vsock/vsock_diag_test.c
+@@ -21,12 +21,11 @@
+ #include <linux/list.h>
+ #include <linux/net.h>
+ #include <linux/netlink.h>
++#include <linux/vm_sockets.h>
+ #include <linux/sock_diag.h>
++#include <linux/vm_sockets_diag.h>
+ #include <netinet/tcp.h>
+=20
+-#include "../../../include/uapi/linux/vm_sockets.h"
+-#include "../../../include/uapi/linux/vm_sockets_diag.h"
+-
+ #include "timeout.h"
+ #include "control.h"
+=20
+--=20
+2.24.1
+
