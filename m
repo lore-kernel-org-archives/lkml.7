@@ -2,407 +2,112 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA91AC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65926C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B66BB21582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:30:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4665D21D7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:32:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbfLRLaM (ORCPT
+        id S1726787AbfLRLcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 06:30:12 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63100 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725930AbfLRLaM (ORCPT
+        Wed, 18 Dec 2019 06:32:11 -0500
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:44147 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726551AbfLRLcK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 06:30:12 -0500
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBIBMCSF053489
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 06:30:09 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wyj6payu7-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 06:30:09 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Wed, 18 Dec 2019 11:30:07 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 18 Dec 2019 11:29:59 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBIBTxSR53608522
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Dec 2019 11:29:59 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0564D4C046;
-        Wed, 18 Dec 2019 11:29:59 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4FE024C044;
-        Wed, 18 Dec 2019 11:29:58 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.152.224.119])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 18 Dec 2019 11:29:58 +0000 (GMT)
-Subject: Re: [PATCH v4 19/19] KVM: selftests: Add test for
- KVM_SET_USER_MEMORY_REGION
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>
-References: <20191217204041.10815-1-sean.j.christopherson@intel.com>
- <20191217204041.10815-20-sean.j.christopherson@intel.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Wed, 18 Dec 2019 12:29:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Wed, 18 Dec 2019 06:32:10 -0500
+X-IronPort-AV: E=Sophos;i="5.69,329,1571695200"; 
+   d="scan'208";a="420838389"
+Received: from nat-inria-bordeaux-52-gw-01-bso.bordeaux.inria.fr (HELO [10.204.4.154]) ([194.199.1.52])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/AES128-SHA; 18 Dec 2019 12:32:06 +0100
+Subject: Re: [PATCH V6 0/7] ACPI: Support Generic Initiator proximity domains
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-mm@kvack.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, x86@kernel.org
+Cc:     Keith Busch <keith.busch@intel.com>, jglisse@redhat.com,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>, linuxarm@huawei.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tao Xu <tao3.xu@intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+References: <20191216153809.105463-1-Jonathan.Cameron@huawei.com>
+From:   Brice Goglin <brice.goglin@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=brice.goglin@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <dc5f5502-09c6-d476-db0e-0af3412bb031@gmail.com>
+Date:   Wed, 18 Dec 2019 12:32:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191217204041.10815-20-sean.j.christopherson@intel.com>
+In-Reply-To: <20191216153809.105463-1-Jonathan.Cameron@huawei.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19121811-0028-0000-0000-000003C9DCC7
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19121811-0029-0000-0000-0000248D28FA
-Message-Id: <028948db-b59c-08bf-b2ce-29d8745ab9c7@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-18_03:2019-12-17,2019-12-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- mlxscore=0 malwarescore=0 suspectscore=2 phishscore=0 mlxlogscore=999
- priorityscore=1501 lowpriorityscore=0 impostorscore=0 clxscore=1015
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912180095
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Le 16/12/2019 à 16:38, Jonathan Cameron a écrit :
+> Introduces a new type of NUMA node for cases where we want to represent
+> the access characteristics of a non CPU initiator of memory requests,
+> as these differ from all those for existing nodes containing CPUs and/or
+> memory.
+>
+> These Generic Initiators are presented by the node access0 class in
+> sysfs in the same way as a CPU.   It seems likely that there will be
+> usecases in which the best 'CPU' is desired and Generic Initiators
+> should be ignored.  The final few patches in this series introduced
+> access1 which is a new performance class in the sysfs node description
+> which presents only CPU to memory relationships.  Test cases for this
+> are described below.
 
 
-On 17.12.19 21:40, Sean Christopherson wrote:
-> Add a KVM selftest to test moving the base gfn of a userspace memory
-> region.  The test is primarily targeted at x86 to verify its memslot
-> metadata is correctly updated, but also provides basic functionality
-> coverage on other architectures.
+Hello Jonathan
 
-This fails to build on s390 (and probably others)
+If I want to test this with a fake GI, what are the minimal set of
+changes I should put in my ACPI tables? Can I just specify a dummy GI in
+SRAT? What handle should I use there?
 
-set_memory_region_test.c: In function ‘test_move_memory_region’:
-set_memory_region_test.c:78:2: warning: implicit declaration of function ‘vcpu_set_cpuid’ [-Wimplicit-function-declaration]
-   78 |  vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
-      |  ^~~~~~~~~~~~~~
-set_memory_region_test.c:78:30: warning: implicit declaration of function ‘kvm_get_supported_cpuid’ [-Wimplicit-function-declaration]
-   78 |  vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
-      |                              ^~~~~~~~~~~~~~~~~~~~~~~
+Thanks
 
+Brice
 
-> 
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  tools/testing/selftests/kvm/.gitignore        |   1 +
->  tools/testing/selftests/kvm/Makefile          |   3 +
->  .../testing/selftests/kvm/include/kvm_util.h  |   1 +
->  tools/testing/selftests/kvm/lib/kvm_util.c    |  30 ++++
->  .../selftests/kvm/set_memory_region_test.c    | 142 ++++++++++++++++++
->  5 files changed, 177 insertions(+)
->  create mode 100644 tools/testing/selftests/kvm/set_memory_region_test.c
-> 
-> diff --git a/tools/testing/selftests/kvm/.gitignore b/tools/testing/selftests/kvm/.gitignore
-> index 30072c3f52fb..6f60ceb81440 100644
-> --- a/tools/testing/selftests/kvm/.gitignore
-> +++ b/tools/testing/selftests/kvm/.gitignore
-> @@ -17,3 +17,4 @@
->  /clear_dirty_log_test
->  /dirty_log_test
->  /kvm_create_max_vcpus
-> +/set_memory_region_test
-> diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-> index 3138a916574a..01c79e02c5b7 100644
-> --- a/tools/testing/selftests/kvm/Makefile
-> +++ b/tools/testing/selftests/kvm/Makefile
-> @@ -29,15 +29,18 @@ TEST_GEN_PROGS_x86_64 += x86_64/xss_msr_test
->  TEST_GEN_PROGS_x86_64 += clear_dirty_log_test
->  TEST_GEN_PROGS_x86_64 += dirty_log_test
->  TEST_GEN_PROGS_x86_64 += kvm_create_max_vcpus
-> +TEST_GEN_PROGS_x86_64 += set_memory_region_test
->  
->  TEST_GEN_PROGS_aarch64 += clear_dirty_log_test
->  TEST_GEN_PROGS_aarch64 += dirty_log_test
->  TEST_GEN_PROGS_aarch64 += kvm_create_max_vcpus
-> +TEST_GEN_PROGS_aarch64 += set_memory_region_test
->  
->  TEST_GEN_PROGS_s390x = s390x/memop
->  TEST_GEN_PROGS_s390x += s390x/sync_regs_test
->  TEST_GEN_PROGS_s390x += dirty_log_test
->  TEST_GEN_PROGS_s390x += kvm_create_max_vcpus
-> +TEST_GEN_PROGS_s390x += set_memory_region_test
->  
->  TEST_GEN_PROGS += $(TEST_GEN_PROGS_$(UNAME_M))
->  LIBKVM += $(LIBKVM_$(UNAME_M))
-> diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
-> index 29cccaf96baf..15d3b8690ffb 100644
-> --- a/tools/testing/selftests/kvm/include/kvm_util.h
-> +++ b/tools/testing/selftests/kvm/include/kvm_util.h
-> @@ -100,6 +100,7 @@ int _vcpu_ioctl(struct kvm_vm *vm, uint32_t vcpuid, unsigned long ioctl,
->  		void *arg);
->  void vm_ioctl(struct kvm_vm *vm, unsigned long ioctl, void *arg);
->  void vm_mem_region_set_flags(struct kvm_vm *vm, uint32_t slot, uint32_t flags);
-> +void vm_mem_region_move(struct kvm_vm *vm, uint32_t slot, uint64_t new_gpa);
->  void vm_vcpu_add(struct kvm_vm *vm, uint32_t vcpuid);
->  vm_vaddr_t vm_vaddr_alloc(struct kvm_vm *vm, size_t sz, vm_vaddr_t vaddr_min,
->  			  uint32_t data_memslot, uint32_t pgd_memslot);
-> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-> index 41cf45416060..464a75ce9843 100644
-> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
-> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-> @@ -756,6 +756,36 @@ void vm_mem_region_set_flags(struct kvm_vm *vm, uint32_t slot, uint32_t flags)
->  		ret, errno, slot, flags);
->  }
->  
-> +/*
-> + * VM Memory Region Move
-> + *
-> + * Input Args:
-> + *   vm - Virtual Machine
-> + *   slot - Slot of the memory region to move
-> + *   flags - Starting guest physical address
-> + *
-> + * Output Args: None
-> + *
-> + * Return: None
-> + *
-> + * Change the gpa of a memory region.
-> + */
-> +void vm_mem_region_move(struct kvm_vm *vm, uint32_t slot, uint64_t new_gpa)
-> +{
-> +	struct userspace_mem_region *region;
-> +	int ret;
-> +
-> +	region = memslot2region(vm, slot);
-> +
-> +	region->region.guest_phys_addr = new_gpa;
-> +
-> +	ret = ioctl(vm->fd, KVM_SET_USER_MEMORY_REGION, &region->region);
-> +
-> +	TEST_ASSERT(!ret, "KVM_SET_USER_MEMORY_REGION failed\n"
-> +		    "ret: %i errno: %i slot: %u flags: 0x%x",
-> +		    ret, errno, slot, new_gpa);
-> +}
-> +
->  /*
->   * VCPU mmap Size
->   *
-> diff --git a/tools/testing/selftests/kvm/set_memory_region_test.c b/tools/testing/selftests/kvm/set_memory_region_test.c
-> new file mode 100644
-> index 000000000000..c9603b95ccf7
-> --- /dev/null
-> +++ b/tools/testing/selftests/kvm/set_memory_region_test.c
-> @@ -0,0 +1,142 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#define _GNU_SOURCE /* for program_invocation_short_name */
-> +#include <fcntl.h>
-> +#include <pthread.h>
-> +#include <sched.h>
-> +#include <signal.h>
-> +#include <stdio.h>
-> +#include <stdlib.h>
-> +#include <string.h>
-> +#include <sys/ioctl.h>
-> +
-> +#include <linux/compiler.h>
-> +
-> +#include <test_util.h>
-> +#include <kvm_util.h>
-> +#include <processor.h>
-> +
-> +#define VCPU_ID 0
-> +
-> +/*
-> + * Somewhat arbitrary location and slot, intended to not overlap anything.  The
-> + * location and size are specifically 2mb sized/aligned so that the initial
-> + * region corresponds to exactly one large page (on x86 and arm64).
-> + */
-> +#define MEM_REGION_GPA		0xc0000000
-> +#define MEM_REGION_SIZE		0x200000
-> +#define MEM_REGION_SLOT		10
-> +
-> +static void guest_code(void)
-> +{
-> +	uint64_t val;
-> +
-> +	do {
-> +		val = READ_ONCE(*((uint64_t *)MEM_REGION_GPA));
-> +	} while (!val);
-> +
-> +	if (val != 1)
-> +		ucall(UCALL_ABORT, 1, val);
-> +
-> +	GUEST_DONE();
-> +}
-> +
-> +static void *vcpu_worker(void *data)
-> +{
-> +	struct kvm_vm *vm = data;
-> +	struct kvm_run *run;
-> +	struct ucall uc;
-> +	uint64_t cmd;
-> +
-> +	/*
-> +	 * Loop until the guest is done.  Re-enter the guest on all MMIO exits,
-> +	 * which will occur if the guest attempts to access a memslot while it
-> +	 * is being moved.
-> +	 */
-> +	run = vcpu_state(vm, VCPU_ID);
-> +	do {
-> +		vcpu_run(vm, VCPU_ID);
-> +	} while (run->exit_reason == KVM_EXIT_MMIO);
-> +
-> +	TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
-> +		    "Unexpected exit reason = %d", run->exit_reason);
-> +
-> +	cmd = get_ucall(vm, VCPU_ID, &uc);
-> +	TEST_ASSERT(cmd == UCALL_DONE, "Unexpected val in guest = %llu",
-> +		    uc.args[0]);
-> +	return NULL;
-> +}
-> +
-> +static void test_move_memory_region(void)
-> +{
-> +	pthread_t vcpu_thread;
-> +	struct kvm_vm *vm;
-> +	uint64_t *hva;
-> +	uint64_t gpa;
-> +
-> +	vm = vm_create_default(VCPU_ID, 0, guest_code);
-> +
-> +	vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
-> +
-> +	vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS_THP,
-> +				    MEM_REGION_GPA, MEM_REGION_SLOT,
-> +				    MEM_REGION_SIZE / getpagesize(), 0);
-> +
-> +	/*
-> +	 * Allocate and map two pages so that the GPA accessed by guest_code()
-> +	 * stays valid across the memslot move.
-> +	 */
-> +	gpa = vm_phy_pages_alloc(vm, 2, MEM_REGION_GPA, MEM_REGION_SLOT);
-> +	TEST_ASSERT(gpa == MEM_REGION_GPA, "Failed vm_phy_pages_alloc\n");
-> +
-> +	virt_map(vm, MEM_REGION_GPA, MEM_REGION_GPA, 2 * 4096, 0);
-> +
-> +	/* Ditto for the host mapping so that both pages can be zeroed. */
-> +	hva = addr_gpa2hva(vm, MEM_REGION_GPA);
-> +	memset(hva, 0, 2 * 4096);
-> +
-> +	pthread_create(&vcpu_thread, NULL, vcpu_worker, vm);
-> +
-> +	/* Ensure the guest thread is spun up. */
-> +	usleep(100000);
-> +
-> +	/*
-> +	 * Shift the region's base GPA.  The guest should not see "2" as the
-> +	 * hva->gpa translation is misaligned, i.e. the guest is accessing a
-> +	 * different host pfn.
-> +	 */
-> +	vm_mem_region_move(vm, MEM_REGION_SLOT, MEM_REGION_GPA - 4096);
-> +	WRITE_ONCE(*hva, 2);
-> +
-> +	usleep(100000);
-> +
-> +	/*
-> +	 * Note, value in memory needs to be changed *before* restoring the
-> +	 * memslot, else the guest could race the update and see "2".
-> +	 */
-> +	WRITE_ONCE(*hva, 1);
-> +
-> +	/* Restore the original base, the guest should see "1". */
-> +	vm_mem_region_move(vm, MEM_REGION_SLOT, MEM_REGION_GPA);
-> +
-> +	pthread_join(vcpu_thread, NULL);
-> +
-> +	kvm_vm_free(vm);
-> +}
-> +
-> +int main(int argc, char *argv[])
-> +{
-> +	int i, loops;
-> +
-> +	/* Tell stdout not to buffer its content */
-> +	setbuf(stdout, NULL);
-> +
-> +	if (argc > 1)
-> +		loops = atoi(argv[1]);
-> +	else
-> +		loops = 10;
-> +
-> +	for (i = 0; i < loops; i++)
-> +		test_move_memory_region();
-> +
-> +	return 0;
-> +}
-> 
 
