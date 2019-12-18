@@ -2,185 +2,125 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D118FC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF90C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5049206D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:52:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 629B52176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:52:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ij4UyBP0"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FofQNljN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726205AbfLRAwF (ORCPT
+        id S1726930AbfLRAwh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 19:52:05 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34646 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726668AbfLRAv3 (ORCPT
+        Tue, 17 Dec 2019 19:52:37 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:35366 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbfLRAwh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 19:51:29 -0500
-Received: by mail-pg1-f194.google.com with SMTP id r11so274721pgf.1;
-        Tue, 17 Dec 2019 16:51:29 -0800 (PST)
+        Tue, 17 Dec 2019 19:52:37 -0500
+Received: by mail-io1-f67.google.com with SMTP id v18so170132iol.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 16:52:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=bC8xpGTpq9fn64v8maHj0PUZzceljBSRagYcgY19Ysc=;
-        b=Ij4UyBP0+yncgWMhW9jTEDQ5mISHpRzjJO2lz81cDjg/apiem84HH34uKP6hpRent5
-         hC1yVOH/oQE7I1y4PjlLqB8YUwg7cRUlYXprIxZ87QA94eF28TSaEmSBQdxSq/59wUH8
-         wWgtubRYo5aOR+pBcbwuIZOULF1VpnD1pin3aN55JsSYbkvEk8GLf4NLtpdm2uIDu63n
-         K/uKjzX7MHvGxRlynUjMsjSF+fbKo032g+0AdcWDIwOIwCo5E9YyppyTkBbXPcy3LrLU
-         P4N99/emBUSmkrWQx2h+e/JUa8kK5WRl/E03XYlwN+0yorpugzr2N1cX4okVusAWg0PH
-         agkQ==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=AYVMcfsYQ7/My9/CMSR2wcI0dgtFvQ4q3wHm6ZJbP7A=;
+        b=FofQNljNG3XnDs6PJ7xFcBeDlHTzYOtvZ01PQExhZPG6io6qRbCyfSDgrfJus9w+RY
+         EUKujDmdEuxs/2PL/yBZHnD0GDVJoKMAHnu8p4swz9hLkIom6X/4WAiA38KgIBg9eSPm
+         LuXAOqwZ0wpbfJx4OFtWnU3nUhr2MWfrpndIc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=bC8xpGTpq9fn64v8maHj0PUZzceljBSRagYcgY19Ysc=;
-        b=UjaiwkTrreR/8wt0DKJMKH3srLCvFXIYrugszv9+DK9WjYld0sy7bdzwcdtUsMKc1x
-         LggjJV3V+Dks6D2QnvCd2juEzM0Aqk5XJhxQUFjNb0Bm1rF/WGe6shFN736y10rRx/8n
-         Dwg4+mplKMaL7dYJUUoLeXuO2PHmFkz8bYnD3P+/z8ZoII5w8ZBsWSs5yv5+IuiQqFQU
-         IXvLVZHLwbkdIFUbi0IMMrAV1WxYEQNC8OL7Sk73vOxoSwObRAiECMJXMV11MbAGojAQ
-         Aj0Ek4JNT2N7I8o4jBcmlehf/E7sdAcRQ9nnxbECz+sqk49FjfpVMLDCTErp/REgAzJg
-         ApMw==
-X-Gm-Message-State: APjAAAVkc8MBvcivrsYCMV3K330qpqZlk8T0xcgsj/O43g448vBcxSne
-        83Y/FEEFb1O8j8bq/Ufcf5k=
-X-Google-Smtp-Source: APXvYqyqTWoFY8MRxUvPLlKkbLUkYwGc5QFw+1oM53gP0bvANui5aMPMfsh4NEBZGwOW0t/dROls0w==
-X-Received: by 2002:a62:788a:: with SMTP id t132mr719812pfc.134.1576630288887;
-        Tue, 17 Dec 2019 16:51:28 -0800 (PST)
-Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 81sm274819pfx.30.2019.12.17.16.51.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 17 Dec 2019 16:51:28 -0800 (PST)
-From:   Doug Berger <opendmb@gmail.com>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>
-Subject: [PATCH net-next v2 3/8] net: bcmgenet: use CHECKSUM_COMPLETE for NETIF_F_RXCSUM
-Date:   Tue, 17 Dec 2019 16:51:10 -0800
-Message-Id: <1576630275-17591-4-git-send-email-opendmb@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576630275-17591-1-git-send-email-opendmb@gmail.com>
-References: <1576630275-17591-1-git-send-email-opendmb@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=AYVMcfsYQ7/My9/CMSR2wcI0dgtFvQ4q3wHm6ZJbP7A=;
+        b=MFDeJi8yUOQyOuz2p4srIKpyyekND2enf3UJWbQpl5RDZEKxYosr2iZhBJfc0q0Oq8
+         pM0IT6yu37ziVNiEBg43QYXpUkuAtRStlrxh1NOx6ThnzP+aakC7B3KO8nvvDOJ3de/4
+         EMgz6y91RBbE9H0dYi9tfsQSCRnMWzfW7d9PYdslSg/NhQejlApNwilOSLm5L/s5XuhJ
+         ZeEMgPoixffkNxEAMo5vxpibR/cz45evDKqptsl2ghL5MxKiyzqfskhK6jOearmSxYmS
+         JDPsPqHOwhK5LrT7kDoVULEVWLgxH4ksNtXA6OOY5to+S3vmJyj9al5VdALjHnq12KOu
+         jYBQ==
+X-Gm-Message-State: APjAAAWfcUlc9Sr7FW9pQXdgcewmQjCI0Q9CJNdSbSXlgt5NtayvVXHg
+        E24OB2oE2jaZLZolTacHa22KfEtmp9w=
+X-Google-Smtp-Source: APXvYqx/uazvrCP2TxAZOxsp82aJmXmxaXovvmGJOBegwGuMXzGyaoD/Dox/mazWI4I7ORa85gwUjA==
+X-Received: by 2002:a6b:c9c6:: with SMTP id z189mr527724iof.285.1576630356084;
+        Tue, 17 Dec 2019 16:52:36 -0800 (PST)
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com. [209.85.166.48])
+        by smtp.gmail.com with ESMTPSA id l4sm102638ioa.9.2019.12.17.16.52.33
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Dec 2019 16:52:34 -0800 (PST)
+Received: by mail-io1-f48.google.com with SMTP id r13so166420ioa.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 16:52:33 -0800 (PST)
+X-Received: by 2002:a6b:be84:: with SMTP id o126mr546930iof.269.1576630353286;
+ Tue, 17 Dec 2019 16:52:33 -0800 (PST)
+MIME-Version: 1.0
+References: <20191213154448.8.I251add713bc5c97225200894ab110ea9183434fd@changeid>
+ <20191215200459.1018893-1-robdclark@gmail.com>
+In-Reply-To: <20191215200459.1018893-1-robdclark@gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 17 Dec 2019 16:52:21 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=U_trS6U4wTRMnW0_7xCjxqdTkTV5vmhyMC=vGbNAhQdw@mail.gmail.com>
+Message-ID: <CAD=FV=U_trS6U4wTRMnW0_7xCjxqdTkTV5vmhyMC=vGbNAhQdw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] fixup! drm/bridge: ti-sn65dsi86: Train at faster
+ rates if slower ones fail
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        David Airlie <airlied@linux.ie>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit updates the Rx checksum offload behavior of the driver
-to use the more generic CHECKSUM_COMPLETE method that supports all
-protocols over the CHECKSUM_UNNECESSARY method that only applies
-to some protocols known by the hardware.
+Hi,
 
-This behavior is perceived to be superior.
+On Sun, Dec 15, 2019 at 12:05 PM Rob Clark <robdclark@gmail.com> wrote:
+>
+> From: Rob Clark <robdclark@chromium.org>
+>
+> Fixes:
+>
+> In file included from ../drivers/gpu/drm/bridge/ti-sn65dsi86.c:25:
+> ../drivers/gpu/drm/bridge/ti-sn65dsi86.c: In function =E2=80=98ti_sn_brid=
+ge_enable=E2=80=99:
+> ../include/drm/drm_print.h:339:2: warning: =E2=80=98last_err_str=E2=80=99=
+ may be used uninitialized in this function [-Wmaybe-uninitialized]
+>   339 |  drm_dev_printk(dev, KERN_ERR, "*ERROR* " fmt, ##__VA_ARGS__)
+>       |  ^~~~~~~~~~~~~~
+> ../drivers/gpu/drm/bridge/ti-sn65dsi86.c:650:14: note: =E2=80=98last_err_=
+str=E2=80=99 was declared here
+>   650 |  const char *last_err_str;
+>       |              ^~~~~~~~~~~~
+> In file included from ../drivers/gpu/drm/bridge/ti-sn65dsi86.c:25:
+> ../include/drm/drm_print.h:339:2: warning: =E2=80=98ret=E2=80=99 may be u=
+sed uninitialized in this function [-Wmaybe-uninitialized]
+>   339 |  drm_dev_printk(dev, KERN_ERR, "*ERROR* " fmt, ##__VA_ARGS__)
+>       |  ^~~~~~~~~~~~~~
+> ../drivers/gpu/drm/bridge/ti-sn65dsi86.c:654:6: note: =E2=80=98ret=E2=80=
+=99 was declared here
+>   654 |  int ret;
+>       |      ^~~
+>   Building modules, stage 2.
+> ---
+>  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Signed-off-by: Doug Berger <opendmb@gmail.com>
----
- drivers/net/ethernet/broadcom/genet/bcmgenet.c | 19 +++++++------------
- drivers/net/ethernet/broadcom/genet/bcmgenet.h |  2 +-
- 2 files changed, 8 insertions(+), 13 deletions(-)
+Thanks!  I have rolled this into my v2.
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index cd07b3ad1d53..13cbe5828adb 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -521,7 +521,7 @@ static int bcmgenet_set_rx_csum(struct net_device *dev,
- 
- 	/* enable rx checksumming */
- 	if (rx_csum_en)
--		rbuf_chk_ctrl |= RBUF_RXCHK_EN;
-+		rbuf_chk_ctrl |= RBUF_RXCHK_EN | RBUF_L3_PARSE_DIS;
- 	else
- 		rbuf_chk_ctrl &= ~RBUF_RXCHK_EN;
- 	priv->desc_rxchk_en = rx_csum_en;
-@@ -1739,7 +1739,6 @@ static unsigned int bcmgenet_desc_rx(struct bcmgenet_rx_ring *ring,
- 	unsigned int bytes_processed = 0;
- 	unsigned int p_index, mask;
- 	unsigned int discards;
--	unsigned int chksum_ok = 0;
- 
- 	/* Clear status before servicing to reduce spurious interrupts */
- 	if (ring->index == DESC_INDEX) {
-@@ -1790,9 +1789,15 @@ static unsigned int bcmgenet_desc_rx(struct bcmgenet_rx_ring *ring,
- 				dmadesc_get_length_status(priv, cb->bd_addr);
- 		} else {
- 			struct status_64 *status;
-+			__be16 rx_csum;
- 
- 			status = (struct status_64 *)skb->data;
- 			dma_length_status = status->length_status;
-+			rx_csum = (__force __be16)(status->rx_csum & 0xffff);
-+			if (priv->desc_rxchk_en) {
-+				skb->csum = (__force __wsum)ntohs(rx_csum);
-+				skb->ip_summed = CHECKSUM_COMPLETE;
-+			}
- 		}
- 
- 		/* DMA flags and length are still valid no matter how
-@@ -1835,18 +1840,12 @@ static unsigned int bcmgenet_desc_rx(struct bcmgenet_rx_ring *ring,
- 			goto next;
- 		} /* error packet */
- 
--		chksum_ok = (dma_flag & priv->dma_rx_chk_bit) &&
--			     priv->desc_rxchk_en;
--
- 		skb_put(skb, len);
- 		if (priv->desc_64b_en) {
- 			skb_pull(skb, 64);
- 			len -= 64;
- 		}
- 
--		if (likely(chksum_ok))
--			skb->ip_summed = CHECKSUM_UNNECESSARY;
--
- 		/* remove hardware 2bytes added for IP alignment */
- 		skb_pull(skb, 2);
- 		len -= 2;
-@@ -3322,19 +3321,15 @@ static void bcmgenet_set_hw_params(struct bcmgenet_priv *priv)
- 	if (GENET_IS_V5(priv) || GENET_IS_V4(priv)) {
- 		bcmgenet_dma_regs = bcmgenet_dma_regs_v3plus;
- 		genet_dma_ring_regs = genet_dma_ring_regs_v4;
--		priv->dma_rx_chk_bit = DMA_RX_CHK_V3PLUS;
- 	} else if (GENET_IS_V3(priv)) {
- 		bcmgenet_dma_regs = bcmgenet_dma_regs_v3plus;
- 		genet_dma_ring_regs = genet_dma_ring_regs_v123;
--		priv->dma_rx_chk_bit = DMA_RX_CHK_V3PLUS;
- 	} else if (GENET_IS_V2(priv)) {
- 		bcmgenet_dma_regs = bcmgenet_dma_regs_v2;
- 		genet_dma_ring_regs = genet_dma_ring_regs_v123;
--		priv->dma_rx_chk_bit = DMA_RX_CHK_V12;
- 	} else if (GENET_IS_V1(priv)) {
- 		bcmgenet_dma_regs = bcmgenet_dma_regs_v1;
- 		genet_dma_ring_regs = genet_dma_ring_regs_v123;
--		priv->dma_rx_chk_bit = DMA_RX_CHK_V12;
- 	}
- 
- 	/* enum genet_version starts at 1 */
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.h b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-index a5659197598f..d33c0d093f82 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-@@ -251,6 +251,7 @@ struct bcmgenet_mib_counters {
- #define RBUF_CHK_CTRL			0x14
- #define  RBUF_RXCHK_EN			(1 << 0)
- #define  RBUF_SKIP_FCS			(1 << 4)
-+#define  RBUF_L3_PARSE_DIS		(1 << 5)
- 
- #define RBUF_ENERGY_CTRL		0x9c
- #define  RBUF_EEE_EN			(1 << 0)
-@@ -663,7 +664,6 @@ struct bcmgenet_priv {
- 	bool desc_rxchk_en;
- 	bool crc_fwd_en;
- 
--	unsigned int dma_rx_chk_bit;
- 	u32 dma_max_burst_length;
- 
- 	u32 msg_enable;
--- 
-2.7.4
-
+-Doug
