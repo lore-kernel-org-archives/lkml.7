@@ -2,114 +2,117 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A873FC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC392C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 848F0227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CE312176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:01:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbfLROBf (ORCPT
+        id S1727181AbfLROBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 09:01:35 -0500
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:42865 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726825AbfLROBf (ORCPT
+        Wed, 18 Dec 2019 09:01:39 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:59018 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726942AbfLROBg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 09:01:35 -0500
-X-Originating-IP: 90.76.143.236
-Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
-        (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id D6355FF811;
-        Wed, 18 Dec 2019 14:01:31 +0000 (UTC)
-Date:   Wed, 18 Dec 2019 15:01:31 +0100
-From:   Antoine Tenart <antoine.tenart@bootlin.com>
-To:     Igor Russkikh <irusskikh@marvell.com>
-Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "sd@queasysnail.net" <sd@queasysnail.net>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
+        Wed, 18 Dec 2019 09:01:36 -0500
+X-AuditID: c0a8fbf4-199ff70000001fa6-87-5dfa313d1e2b
+Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id DE.4F.08102.D313AFD5; Wed, 18 Dec 2019 15:01:33 +0100 (CET)
+Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
+ WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
+ 14.03.0439.000; Wed, 18 Dec 2019 15:01:27 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "broonie@kernel.org" <broonie@kernel.org>
+CC:     "corbet@lwn.net" <corbet@lwn.net>,
+        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
         "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "allan.nielsen@microchip.com" <allan.nielsen@microchip.com>,
-        "camelia.groza@nxp.com" <camelia.groza@nxp.com>,
-        "Simon.Edelhaus@aquantia.com" <Simon.Edelhaus@aquantia.com>,
-        Dmitry Bogdanov <dbogdanov@marvell.com>,
-        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
-        Igor Russkikh <Igor.Russkikh@aquantia.com>
-Subject: Re: [EXT] [PATCH net-next v3 05/15] net: macsec: hardware offloading
- infrastructure
-Message-ID: <20191218140131.GA3325@kwain>
-References: <20191213154844.635389-1-antoine.tenart@bootlin.com>
- <20191213154844.635389-6-antoine.tenart@bootlin.com>
- <BYAPR18MB2630684FD194F179E718E198B7530@BYAPR18MB2630.namprd18.prod.outlook.com>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "noralf@tronnes.org" <noralf@tronnes.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
+        "pavel@ucw.cz" <pavel@ucw.cz>
+Subject: Re: Applied "regulator: bd71828: Basic support for ROHM bd71828
+ PMIC regulators" to the regulator tree
+Thread-Topic: Applied "regulator: bd71828: Basic support for ROHM bd71828
+ PMIC regulators" to the regulator tree
+Thread-Index: AQHVtNcCPO+Kt0OMfE2l+CzrBWADfqe/eY8AgABW2wCAAAxsgA==
+Date:   Wed, 18 Dec 2019 14:01:27 +0000
+Message-ID: <b72cd22df0bbbb159cda08e556037f1ccf490b3d.camel@fi.rohmeurope.com>
+References: <applied-5b1c4a22c7945e97ff2a7924abfeb3239043f8eb.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+         <de7424126e285d9bbd21a70945415d78203c2ba7.camel@fi.rohmeurope.com>
+         <20191218131700.GB42175@sirena.org.uk>
+In-Reply-To: <20191218131700.GB42175@sirena.org.uk>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0EC2AB5390333649B5FA8FB87510E416@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <BYAPR18MB2630684FD194F179E718E198B7530@BYAPR18MB2630.namprd18.prod.outlook.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Te0wUVxTGc2dmZy7gNOMK3du1mjhtbWzDK5p4E221bYhDjMTEtCaNhI7u
+        lCHCLs4uKjVGjAFlwdcCtW5dWHnVCBVZBBUhpRsW7NZCiKAoPrKWkoBmadVKAB+dYarw1/3u
+        +c7vfuePcyFprGXMMMPqkBSrmMnTkVTHmenG2E8Sp1ITvv9jFa7uG2DwwXAtg1+4uhj81BOk
+        cFlomMbDHQcBrujsMeCi3y8Y8IGqBhoPNZ+n8P1/AwA/6z9E4NLnPxH4n+J7Bny6oJrCTRXP
+        Ab7eeorGzY/OAdxV10/jmpt9BD5Vc5XC448LCdwXTMJlwTCD7wYDND7QN0ji/PZOBr+80Ujh
+        Iz3r1i4S6svrgTA95QLC+GA+I5TX7xEuu+8ygu9sIS3cudFGC7946hmh6kiJQXh27TgljJxu
+        oITuwYuEcKJ8khAaijuBcKZughGe+BZv5L6OWr1VdOzclJFujf/0myi5IJyQ7Yrc3dLiA3ng
+        7wgniICIW4HyTnTTThAJjdwAQOdK7hn0y1WAwj/UASeAkOZWI+ctRgOiuVhUNlU1A5BcfxSq
+        7C8hNWMBtwMdbgqSepOCbr8YpXT9OSryjczUKe4DVPRXKdA0y6Wgh12XgB52HyBP6yODZkRw
+        y9HtWtdMGuAWocK8MKFpkjMh38iEQR+bQ9VtvaSuY9Dony//r/OofTJEaUOT3DLU0Bqvo2tR
+        S8kgqeslqLQoxOgzzEe/nRymjoG33XMS3LO0ew7tnkO759BeYDgLUJaYkZkuOqTEOEXKiVNs
+        cpZ6bLNl+YC+d08vgVf+ZD8gIPCDdyDBx7C8PJlqfGurzZIri3Y5TcnJlOx+gCDJR7NDh1SP
+        tYi530mK7bW1EFK8if0wdDzVyGlZ2yUpW1Jeu+9CyCO2LXYq1ThfkdKl3d9mZDpmbQJGaI9H
+        mqPtktUiKWKOQ07T9iPNri6IZs1Tcy3xKs7as8UstaqjQfAxPDbqqSRhp6emkjRSVptVMptY
+        dqnaymmtco71TdAYMEHAL2D3J6juPPXzvXlnTI0g1Ai4bCbCIc5a5jwQPz6R25HUIl45umFs
+        DdW78uTi5PdSVvUcnf7isEJXVMlG/2Pf5t73cSDmq33XU27+6vU++PLVBdeuQNM+rxFZNz+J
+        cbvOr9gY8rLFS4RmJm6vybS/wBy482P79oWNQ9tqNjUnr3FeLF0/kFQ3vOXyuh3lll74cLzr
+        s4H8K065+9rPPGWXxcSPSMUu/gfQRcVfOQQAAA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Igor,
-
-On Wed, Dec 18, 2019 at 01:40:39PM +0000, Igor Russkikh wrote:
-> > @@ -2922,7 +3300,27 @@ static int macsec_changelink(struct net_device
-> > *dev, struct nlattr *tb[],
-> >  	    data[IFLA_MACSEC_PORT])
-> >  		return -EINVAL;
-> >  
-> > -	return macsec_changelink_common(dev, data);
-> > +	/* If h/w offloading is available, propagate to the device */
-> > +	if (macsec_is_offloaded(macsec)) {
-> > +		const struct macsec_ops *ops;
-> > +		struct macsec_context ctx;
-> > +		int ret;
-> > +
-> > +		ops = macsec_get_ops(netdev_priv(dev), &ctx);
-> > +		if (!ops)
-> > +			return -EOPNOTSUPP;
-> > +
-> > +		ctx.secy = &macsec->secy;
-> > +		ret = macsec_offload(ops->mdo_upd_secy, &ctx);
-> > +		if (ret)
-> > +			return ret;
-> > +	}
-> > +
-> > +	ret = macsec_changelink_common(dev, data);
-> 
-> In our mac driver verification we see that propagating upd_secy to
-> device before doing macsec_changelink_common is actually useless,
-> since in this case underlying device can't fetch any of the updated
-> parameters from the macsec structures.
-> 
-> Isn't it logical first doing `macsec_changelink_common` and then
-> propagate the event?
-
-Doing the macsec_changelink_common after propagating the event to the
-device driver was done to ease the fail case scenario (it's quite hard
-to revert macsec_changelink_common). But then you're right that many
-parameters are set by macsec_changelink_common, which means it must be
-performed before the propagation of the upd_secy event.
-
-I think the solution is to keep a copy of unmodified secy and tx_sc, and
-in case of failure to revert the operation by copying the whole
-structures back. That would allow to move macsec_changelink_common up.
-Would that work for you?
-
-Thanks for spotting this!
-Antoine
-
--- 
-Antoine Ténart, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+DQpPbiBXZWQsIDIwMTktMTItMTggYXQgMTM6MTcgKzAwMDAsIE1hcmsgQnJvd24gd3JvdGU6DQo+
+IE9uIFdlZCwgRGVjIDE4LCAyMDE5IGF0IDA4OjA2OjA0QU0gKzAwMDAsIFZhaXR0aW5lbiwgTWF0
+dGkgd3JvdGU6DQo+IA0KPiA+IEkgdGhpbmsgeW91IG1pc3NlZCB0aGUgW1BBVENIIHY2IDA4LzE1
+XSByZWd1bGF0b3I6IGJkNzE4eDc6IFNwbGl0DQo+ID4gZHJpdmVyIHRvIGNvbW1vbiBhbmQgYmQ3
+MTh4NyBzcGVjaWZpYyBwYXJ0cw0KPiANCj4gSSBkaWRuJ3QgbWlzcyBpdCwgaXQgd2FzIHF1ZXVl
+ZCBidXQgaXQgZG9lc24ndCBhcHBseS4NClJpZ2h0LiBUaGUgcm9obS1nZW5lcmljLmggaXMgY2hh
+bmdlZCBieQ0KW1BBVENIIHY2IDA0LzE1XSBtZmQ6IHJvaG0gUE1JQ3MgLSB1c2UgcGxhdGZvcm1f
+ZGV2aWNlX2lkIHRvIG1hdGNoIE1GRA0Kc3ViLWRldmljZXMNCg0KZGlmZiAtLWdpdCBhL2luY2x1
+ZGUvbGludXgvbWZkL3JvaG0tZ2VuZXJpYy5oIGIvaW5jbHVkZS9saW51eC9tZmQvcm9obS0NCmdl
+bmVyaWMuaA0KaW5kZXggYmZmMTVhYzI2ZjJjLi45MjJmODgwMDgyMzIgMTAwNjQ0DQotLS0gYS9p
+bmNsdWRlL2xpbnV4L21mZC9yb2htLWdlbmVyaWMuaA0KKysrIGIvaW5jbHVkZS9saW51eC9tZmQv
+cm9obS1nZW5lcmljLmgNCkBAIC00LDcgKzQsNyBAQA0KICNpZm5kZWYgX19MSU5VWF9NRkRfUk9I
+TV9IX18NCiAjZGVmaW5lIF9fTElOVVhfTUZEX1JPSE1fSF9fDQogDQotZW51bSB7DQorZW51bSBy
+b2htX2NoaXBfdHlwZSB7DQoNCg0KSSB0aGluayB0aGlzIGlzIHRoZSByb290IG9mIHRoZSBjb25m
+bGljdCBoZXJlIGFzIFtQQVRDSCB2NiAwNC8xNV0gaXMNCm5vdCBpbiByZWd1bGF0b3IgdHJlZS4g
+SG93IHNob3VsZCBJIGhhbmRsZSB0aGlzIHNvIHRoYXQgaXQgd29uJ3QNCmNvbmZsaWN0IGluIHlv
+dXIgYW5kIExlZSdzIHRyZWVzPw0KDQpCciwNCglNYXR0aQ0K
