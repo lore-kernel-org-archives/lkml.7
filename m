@@ -4,121 +4,113 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2334C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70926C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7AAF218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:02:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43B662465E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:02:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UIoDOfee"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m/1MFWtJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbfLROCS (ORCPT
+        id S1727324AbfLROCV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 09:02:18 -0500
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:43178 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727270AbfLROCS (ORCPT
+        Wed, 18 Dec 2019 09:02:21 -0500
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:36503 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727049AbfLROCU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 09:02:18 -0500
-Received: by mail-ua1-f67.google.com with SMTP id o42so652244uad.10
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 06:02:17 -0800 (PST)
+        Wed, 18 Dec 2019 09:02:20 -0500
+Received: by mail-vs1-f66.google.com with SMTP id u14so1440743vsu.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 06:02:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=XWfYBni5NvApXaQAN+Sc8AcAyWYbtB1RtpsTw1gA/Ig=;
-        b=UIoDOfeeFGo8xJL7UOOA5AiHtOnoVYYX8uWUVSYGlN91z4GJFaIV3YUvfPbrkK6EaC
-         kN+uw1xgypetPlU+ZEfU9QyIYqJy3XnYRf1RjpOeMfmO0rhb4J0O1iYnvCySqhlJ67hG
-         pBmkr43dD5CdHdXH67Lr6LhaWtSPujA60xbFz71VAA7xD00Bmx0f37SXneXyo/tMTZnY
-         wAokPjmzQ2ays98bjhWAL12sbuwFo4dkwmpPPg/isp7TCJVtyOcPNZXgOGZt6mQMSVPZ
-         HLFnwFCGNYsQscjiVRnnABGHWMqY5ytLEZAzpE+/8TNkGb9R5VQhp9NsjuRb+GCX8Bq5
-         Zfxw==
+        bh=4MqcWC72NUw+7l3vLDUFuLwA4CNEK5ETyQbLNfZ8gAU=;
+        b=m/1MFWtJ9qkM4vsp7ohIEThRlvk6ZbPuvXTTO+TzCFT35SkOz9gpZrTkOI4gmh73KG
+         i7RhOw4zo0NoUjZ6abErqTwSHcZpSi6gnDYP+SKhD03HNJMMG75qRDdPNmksyojGd2Rc
+         jO+udWWP5Ek9Awy7Wmk5iHj80wE4Xj280OTJZHn7JRRYjMmh0XDpjlPP9g4wtQgfDVIv
+         7Oo7kL3FqKiIUvGr/4h+J7ZniDo/TdhXH8Yu5A7iMhTJPyUEa2QRQVIYydA+4WbxsdTd
+         XSPthcfGdzYAfrDScp8bLX9GH+Y2tx+8vnm7GXHxxzdaWpjPzF2ElmQlnNqx1UiGU9Qk
+         BUBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=XWfYBni5NvApXaQAN+Sc8AcAyWYbtB1RtpsTw1gA/Ig=;
-        b=ijWCcJz3KQpB+YR9xZKNq4M3+pLdJhzN/8QZU9lz2oCKxXJ2NcmRzMgLvIWw/wGuN+
-         yAq/MP3cfUsHbgWF0+E+lDbiOk6roR7owTDngYeFbOJ8x2U7fTdXpVfhDuKk7DVih8Rj
-         qMV2sIHbQ5heck76f3FNJxyvQikup+d5ob6dZ6tC7zppferFsTlMTUjf5uBFPP0cluuq
-         y+u+C7xH1Fayw1ry1jG/zSNqceKqSdSjUj255eba8xcjw1pZa8P3joAcQEVzPf0mjHZy
-         A+IoJx5wu3kynaaDJfCRF/qvSGzyobLJpGo7xvmJZn6b6hd1fFL6w9xxMk6c7cXuIv1l
-         mnew==
-X-Gm-Message-State: APjAAAU81lxxkAos+Mcvz6GKFhAPCLJvLqp7OM8heCef/iw0WlzbE1dU
-        hIPuAsN7UCsmmYc+nnHX66AZ5MbkM73/3kXitUuJnV7v
-X-Google-Smtp-Source: APXvYqzlW10cgVZlH4+ozp+d38GOPO+fFsjnBu+gNNFWD1IskWWWrLnsiB7uOFCa5PBl7aGksxtQ4pSl6TsVj61svpo=
-X-Received: by 2002:ab0:5510:: with SMTP id t16mr1519430uaa.15.1576677736310;
- Wed, 18 Dec 2019 06:02:16 -0800 (PST)
+        bh=4MqcWC72NUw+7l3vLDUFuLwA4CNEK5ETyQbLNfZ8gAU=;
+        b=ZP8PbBvobovd7QqC7a3q45IWDYbQwl1kwNUebIiVN9YNyJdh2aCPIoc+R63a0PMaRx
+         CiEnwWudluxQRpSUbZEwr+S+ciaqBvvCgLF4ODaqbs8d3L48itKvSNAsd6nIF4MAi07y
+         ga8N5bDFOwMa1vNXMxatODkahsIz1wxEDP3pj0pWx98HyMnK7nlbheKjpL9Kmwd8k4Cd
+         N14QGhaWwcBsRC7R7qNd2Xl6HKxaeipiVbOCHTQs8hw47VQQYUMmhTaMqyhH+9tMM8up
+         u/oACbollCB/GaTcS1mxjrk2zwKi9qejTep1AG6d6EooGfioeekaB3e+/m5qX+Sco0/c
+         lEsQ==
+X-Gm-Message-State: APjAAAXY45gHoWo/Fba/NhISB+P7acDbw+OlGI9Gmb76hCc04UkVV9en
+        asBvWoDlMBpesLXLckmZTIDYxA8xgYW9INBxlb8p7g==
+X-Google-Smtp-Source: APXvYqwbv5IQL8XJXtfep+5acQSTXE9WY6jnE1UQqvQJm139MKvuv03QqH0bG3ly4Lq7DRnIKxQW2Dt+JMtOBKR7rf4=
+X-Received: by 2002:a05:6102:5d1:: with SMTP id v17mr1386372vsf.200.1576677739978;
+ Wed, 18 Dec 2019 06:02:19 -0800 (PST)
 MIME-Version: 1.0
-References: <20191215175120.3290-1-tiny.windzz@gmail.com> <20191215175120.3290-10-tiny.windzz@gmail.com>
- <20191218063028.GC3755841@builder>
-In-Reply-To: <20191218063028.GC3755841@builder>
+References: <20191215175120.3290-1-tiny.windzz@gmail.com> <20191215175120.3290-13-tiny.windzz@gmail.com>
+In-Reply-To: <20191215175120.3290-13-tiny.windzz@gmail.com>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 18 Dec 2019 15:01:40 +0100
-Message-ID: <CAPDyKFrNXqwHuTNkT-Q9=jswXyPXkNNg9eTWfzv-Rwd1P5JqEA@mail.gmail.com>
-Subject: Re: [PATCH 10/13] mmc: sdhci-msm: convert to devm_platform_ioremap_resource
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Yangtao Li <tiny.windzz@gmail.com>
+Date:   Wed, 18 Dec 2019 15:01:43 +0100
+Message-ID: <CAPDyKFqeoefkTy7prJ=nKKh4NVdhtHfawxfsEYGyYZd6b3igrA@mail.gmail.com>
+Subject: Re: [PATCH 13/13] mmc: au1xmmc: switch to platform_get_irq
+To:     Yangtao Li <tiny.windzz@gmail.com>
 Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andy Gross <agross@kernel.org>
+        Manuel Lauss <manuel.lauss@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
--trimmed cc list
+- trimmed cc list (please do that also for any future submissions).
 
-On Wed, 18 Dec 2019 at 07:30, Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
+On Sun, 15 Dec 2019 at 18:51, Yangtao Li <tiny.windzz@gmail.com> wrote:
 >
-> On Sun 15 Dec 09:51 PST 2019, Yangtao Li wrote:
+> platform_get_resource(pdev, IORESOURCE_IRQ) is not recommended for
+> requesting IRQ's resources, as they can be not ready yet. Using
+> platform_get_irq() instead is preferred for getting IRQ even if it
+> was not retrieved earlier.
 >
-> > Use devm_platform_ioremap_resource() to simplify code.
-> >
-> > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> > ---
-> >  drivers/mmc/host/sdhci-msm.c | 5 +----
-> >  1 file changed, 1 insertion(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> > index 3d0bb5e2e09b..6daacef4ceec 100644
-> > --- a/drivers/mmc/host/sdhci-msm.c
-> > +++ b/drivers/mmc/host/sdhci-msm.c
-> > @@ -1746,7 +1746,6 @@ static int sdhci_msm_probe(struct platform_device *pdev)
-> >       struct sdhci_host *host;
-> >       struct sdhci_pltfm_host *pltfm_host;
-> >       struct sdhci_msm_host *msm_host;
-> > -     struct resource *core_memres;
-> >       struct clk *clk;
-> >       int ret;
-> >       u16 host_version, core_minor;
-> > @@ -1847,9 +1846,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
-> >       }
-> >
-> >       if (!msm_host->mci_removed) {
-> > -             core_memres = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> > -             msm_host->core_mem = devm_ioremap_resource(&pdev->dev,
-> > -                             core_memres);
-> > +             msm_host->core_mem = devm_platform_ioremap_resource(pdev, 1);
-> >
->
-> This would now look better without this empty line.
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 
-Good point, I fixed it when applying. No actions needed.
+Patch 1->13 applied for next, thanks!
 
->
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->
-
-[...]
+Next time, please use a cover-letter when you send a series.
 
 Kind regards
 Uffe
+
+
+> ---
+>  drivers/mmc/host/au1xmmc.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/mmc/host/au1xmmc.c b/drivers/mmc/host/au1xmmc.c
+> index bc8aeb47a7b4..8823680ca42c 100644
+> --- a/drivers/mmc/host/au1xmmc.c
+> +++ b/drivers/mmc/host/au1xmmc.c
+> @@ -984,12 +984,9 @@ static int au1xmmc_probe(struct platform_device *pdev)
+>                 goto out2;
+>         }
+>
+> -       r = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+> -       if (!r) {
+> -               dev_err(&pdev->dev, "no IRQ defined\n");
+> +       host->irq = platform_get_irq(pdev, 0);
+> +       if (host->irq < 0)
+>                 goto out3;
+> -       }
+> -       host->irq = r->start;
+>
+>         mmc->ops = &au1xmmc_ops;
+>
+> --
+> 2.17.1
+>
