@@ -2,256 +2,134 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 145BBC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0056BC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD1C62176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE62B2082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:47:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f/6pSghd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b+Vk/lkF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbfLRHov (ORCPT
+        id S1726652AbfLRHrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 02:44:51 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:33248 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726683AbfLRHou (ORCPT
+        Wed, 18 Dec 2019 02:47:21 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55753 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725882AbfLRHrV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 02:44:50 -0500
+        Wed, 18 Dec 2019 02:47:21 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576655089;
+        s=mimecast20190719; t=1576655239;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=tBFoNfgLpzA13A7RXBcD4HAk6sSXm851mZwQvJWaQR0=;
-        b=f/6pSghdmAn75C8ObuSqHQDh88gK6HoINqLp6GTaZ5pi20Hbr0AnghaTk32mSXTNv90FqL
-        5S1g1SlfzG3tIrCTCdUVi/wCmkMzK0mJHV/jEkhpv2F1PbMCrmDHjrenivHfaTJcVV3QGP
-        767oqzNcJn0yVb9rUAgQw7S/LCJG04E=
+        bh=A/EVIVhLsM644wxvKDnAAovHD5Ty6dbVPaLFVmZnGNI=;
+        b=b+Vk/lkF6wfMEsv7jykNr8EgqWgb2EqKDSbgeBWiRvHG5Z463qgKFFI3fvBmYQMFujaVBa
+        mVQDHDAXA/fb7x+AId7djf2LyunJF4wy4k3zKJbGhH8QQIiEEri2FLvwfgucSFfcDkROm8
+        tUsVsu7oWF2sg3e+4gtwswXefCBpLig=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-150-9kVKGSAtMXSZtOJrBo4M_Q-1; Wed, 18 Dec 2019 02:44:45 -0500
-X-MC-Unique: 9kVKGSAtMXSZtOJrBo4M_Q-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ us-mta-368-iDO63b2MPP2BBcWRRT0vug-1; Wed, 18 Dec 2019 02:47:15 -0500
+X-MC-Unique: iDO63b2MPP2BBcWRRT0vug-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 109FC800D48;
-        Wed, 18 Dec 2019 07:44:44 +0000 (UTC)
-Received: from carbon (ovpn-200-37.brq.redhat.com [10.40.200.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AF571610E0;
-        Wed, 18 Dec 2019 07:44:38 +0000 (UTC)
-Date:   Wed, 18 Dec 2019 08:44:37 +0100
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     lirongqing@baidu.com, linyunsheng@huawei.com,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Saeed Mahameed <saeedm@mellanox.com>, mhocko@kernel.org,
-        peterz@infradead.org, linux-kernel@vger.kernel.org,
-        brouer@redhat.com
-Subject: Re: [net-next v3 PATCH] page_pool: handle page recycle for
- NUMA_NO_NODE condition
-Message-ID: <20191218084437.6db92d32@carbon>
-In-Reply-To: <157662465670.141017.5588210646574716982.stgit@firesoul>
-References: <157662465670.141017.5588210646574716982.stgit@firesoul>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 39415800D48;
+        Wed, 18 Dec 2019 07:47:14 +0000 (UTC)
+Received: from krava (ovpn-204-177.brq.redhat.com [10.40.204.177])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BDCA868882;
+        Wed, 18 Dec 2019 07:47:11 +0000 (UTC)
+Date:   Wed, 18 Dec 2019 08:47:08 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Jin Yao <yao.jin@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH v4 3/3] perf report: support hotkey to let user select
+ any event for sorting
+Message-ID: <20191218074708.GC19062@krava>
+References: <20191218022443.18958-1-yao.jin@linux.intel.com>
+ <20191218022443.18958-3-yao.jin@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191218022443.18958-3-yao.jin@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Dec 2019 00:17:36 +0100
-Jesper Dangaard Brouer <brouer@redhat.com> wrote:
-
-> The check in pool_page_reusable (page_to_nid(page) == pool->p.nid) is
-> not valid if page_pool was configured with pool->p.nid = NUMA_NO_NODE.
+On Wed, Dec 18, 2019 at 10:24:43AM +0800, Jin Yao wrote:
+> When performing "perf report --group", it shows the event group information
+> together. In previous patch, we have supported a new option "--group-sort-idx"
+> to sort the output by the event at the index n in event group.
 > 
-> The goal of the NUMA changes in commit d5394610b1ba ("page_pool: Don't
-> recycle non-reusable pages"), were to have RX-pages that belongs to the
-> same NUMA node as the CPU processing RX-packet during softirq/NAPI. As
-> illustrated by the performance measurements.
+> It would be nice if we can use a hotkey in browser to select a event
+> to sort.
 > 
-> This patch moves the NAPI checks out of fast-path, and at the same time
-> solves the NUMA_NO_NODE issue.
+> For example,
 > 
-> First realize that alloc_pages_node() with pool->p.nid = NUMA_NO_NODE
-> will lookup current CPU nid (Numa ID) via numa_mem_id(), which is used
-> as the the preferred nid.  It is only in rare situations, where
-> e.g. NUMA zone runs dry, that page gets doesn't get allocated from
-> preferred nid.  The page_pool API allows drivers to control the nid
-> themselves via controlling pool->p.nid.
+>   # perf report --group
 > 
-> This patch moves the NAPI check to when alloc cache is refilled, via
-> dequeuing/consuming pages from the ptr_ring. Thus, we can allow placing
-> pages from remote NUMA into the ptr_ring, as the dequeue/consume step
-> will check the NUMA node. All current drivers using page_pool will
-> alloc/refill RX-ring from same CPU running softirq/NAPI process.
+>  Samples: 12K of events 'cpu/instructions,period=2000003/, cpu/cpu-cycles,period=200003/, ...
+>                         Overhead  Command    Shared Object            Symbol
+>   92.19%  98.68%   0.00%  93.30%  mgen       mgen                     [.] LOOP1
+>    3.12%   0.29%   0.00%   0.16%  gsd-color  libglib-2.0.so.0.5600.4  [.] 0x0000000000049515
+>    1.56%   0.03%   0.00%   0.04%  gsd-color  libglib-2.0.so.0.5600.4  [.] 0x00000000000494b7
+>    1.56%   0.01%   0.00%   0.00%  gsd-color  libglib-2.0.so.0.5600.4  [.] 0x00000000000494ce
+>    1.56%   0.00%   0.00%   0.00%  mgen       [kernel.kallsyms]        [k] task_tick_fair
+>    0.00%   0.15%   0.00%   0.04%  perf       [kernel.kallsyms]        [k] smp_call_function_single
+>    0.00%   0.13%   0.00%   6.08%  swapper    [kernel.kallsyms]        [k] intel_idle
+>    0.00%   0.03%   0.00%   0.00%  gsd-color  libglib-2.0.so.0.5600.4  [.] g_main_context_check
+>    0.00%   0.03%   0.00%   0.00%  swapper    [kernel.kallsyms]        [k] apic_timer_interrupt
+>    0.00%   0.03%   0.00%   0.00%  swapper    [kernel.kallsyms]        [k] check_preempt_curr
 > 
-> Drivers that control the nid explicitly, also use page_pool_update_nid
-> when changing nid runtime.  To speed up transision to new nid the alloc
-> cache is now flushed on nid changes.  This force pages to come from
-> ptr_ring, which does the appropate nid check.
+> When user press hotkey '3' (event index, starting from 0), it indicates
+> to sort output by the forth event in group.
 > 
-> For the NUMA_NO_NODE case, when a NIC IRQ is moved to another NUMA
-> node, then ptr_ring will be emptied in 65 (PP_ALLOC_CACHE_REFILL+1)
-> chunks per allocation and allocation fall-through to the real
-> page-allocator with the new nid derived from numa_mem_id(). We accept
-> that transitioning the alloc cache doesn't happen immediately.
-> 
-> Fixes: d5394610b1ba ("page_pool: Don't recycle non-reusable pages")
-> Reported-by: Li RongQing <lirongqing@baidu.com>
-> Reported-by: Yunsheng Lin <linyunsheng@huawei.com>
-> Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
-> ---
->  net/core/page_pool.c |   64 ++++++++++++++++++++++++++++++++++++++------------
->  1 file changed, 49 insertions(+), 15 deletions(-)
+>   Samples: 12K of events 'cpu/instructions,period=2000003/, cpu/cpu-cycles,period=200003/, ...
+>                         Overhead  Command    Shared Object            Symbol
+>   92.19%  98.68%   0.00%  93.30%  mgen       mgen                     [.] LOOP1
+>    0.00%   0.13%   0.00%   6.08%  swapper    [kernel.kallsyms]        [k] intel_idle
+>    3.12%   0.29%   0.00%   0.16%  gsd-color  libglib-2.0.so.0.5600.4  [.] 0x0000000000049515
+>    0.00%   0.00%   0.00%   0.06%  swapper    [kernel.kallsyms]        [k] hrtimer_start_range_ns
+>    1.56%   0.03%   0.00%   0.04%  gsd-color  libglib-2.0.so.0.5600.4  [.] 0x00000000000494b7
+>    0.00%   0.15%   0.00%   0.04%  perf       [kernel.kallsyms]        [k] smp_call_function_single
+>    0.00%   0.00%   0.00%   0.02%  mgen       [kernel.kallsyms]        [k] update_curr
+>    0.00%   0.00%   0.00%   0.02%  mgen       [kernel.kallsyms]        [k] apic_timer_interrupt
+>    0.00%   0.00%   0.00%   0.02%  mgen       [kernel.kallsyms]        [k] native_apic_msr_eoi_write
+>    0.00%   0.00%   0.00%   0.02%  mgen       [kernel.kallsyms]        [k] __update_load_avg_se
 
-I'm going to send a V4, because GCC doesn't generate the optimal ASM
-code for the fast-path (details below).
+when I press 0...9 I'm getting extra columns:
 
-> diff --git a/net/core/page_pool.c b/net/core/page_pool.c
-> index a6aefe989043..37316ea66937 100644
-> --- a/net/core/page_pool.c
-> +++ b/net/core/page_pool.c
-> @@ -96,19 +96,22 @@ struct page_pool *page_pool_create(const struct page_pool_params *params)
->  }
->  EXPORT_SYMBOL(page_pool_create);
->  
-> +static void __page_pool_return_page(struct page_pool *pool, struct page *page);
-> +
->  /* fast path */
->  static struct page *__page_pool_get_cached(struct page_pool *pool)
->  {
->  	struct ptr_ring *r = &pool->ring;
-> +	struct page *first_page, *page;
->  	bool refill = false;
-> -	struct page *page;
-> +	int i, curr_nid;
->  
->  	/* Test for safe-context, caller should provide this guarantee */
->  	if (likely(in_serving_softirq())) {
->  		if (likely(pool->alloc.count)) {
->  			/* Fast-path */
-> -			page = pool->alloc.cache[--pool->alloc.count];
-> -			return page;
-> +			first_page = pool->alloc.cache[--pool->alloc.count];
-> +			return first_page;
->  		}
->  		refill = true;
->  	}
-
-The compiler (gcc (GCC) 9.2.1 20190827 (Red Hat 9.2.1-1)) doesn't
-generate optimal ASM code for the likely fast-path of pool->alloc.cache
-containing an element.  It does "isolate" it and return (retq) early in
-this likely case, BUT it chooses to use %r15 (a call-preserved
-register, aka callee-saved register).  Later other call-preserved
-registers are used, which leads to pushing all the registers (%rbx,
-%rbp, and %r12-r15) on the stack.
-
-000000000000af0 <page_pool_alloc_pages>:
-{
- af0:   e8 00 00 00 00          callq  af5 <page_pool_alloc_pages+0x5>
-                        af1: R_X86_64_PLT32     __fentry__-0x4
- af5:   41 57                   push   %r15
- af7:   41 56                   push   %r14
- af9:   41 89 f6                mov    %esi,%r14d
- afc:   41 55                   push   %r13
- afe:   41 54                   push   %r12
- b00:   55                      push   %rbp
- b01:   48 89 fd                mov    %rdi,%rbp
- b04:   53                      push   %rbx
- b05:   48 83 ec 08             sub    $0x8,%rsp
- b09:   65 8b 05 00 00 00 00    mov    %gs:0x0(%rip),%eax        # b10 <page_pool_alloc_pages+
-0x20>
-                        b0c: R_X86_64_PC32      __preempt_count-0x4
-        if (likely(in_serving_softirq())) {
- b10:   f6 c4 01                test   $0x1,%ah
- b13:   74 60                   je     b75 <page_pool_alloc_pages+0x85>
-                if (likely(pool->alloc.count)) {
- b15:   8b 87 c0 00 00 00       mov    0xc0(%rdi),%eax
- b1b:   85 c0                   test   %eax,%eax
- b1d:   0f 84 94 01 00 00       je     cb7 <page_pool_alloc_pages+0x1c7>
-                        first_page = pool->alloc.cache[--pool->alloc.count];
- b23:   83 e8 01                sub    $0x1,%eax
- b26:   89 87 c0 00 00 00       mov    %eax,0xc0(%rdi)
- b2c:   4c 8b bc c7 c8 00 00    mov    0xc8(%rdi,%rax,8),%r15
- b33:   00 
-        if (page)
- b34:   4d 85 ff                test   %r15,%r15
- b37:   74 23                   je     b5c <page_pool_alloc_pages+0x6c>
-}
- b39:   48 83 c4 08             add    $0x8,%rsp
- b3d:   4c 89 f8                mov    %r15,%rax
- b40:   5b                      pop    %rbx
- b41:   5d                      pop    %rbp
- b42:   41 5c                   pop    %r12
- b44:   41 5d                   pop    %r13
- b46:   41 5e                   pop    %r14
- b48:   41 5f                   pop    %r15
- b4a:   c3                      retq   
- [...]
+Samples: 134  of events 'anon group { cycles:u, instructions:u, cache-misses:u, cycles:u, instructions:u }', Event count (approx.): 7107344
+                                Overhead  Command  Shared Object     Symbol                                                                  Self
+  17.95%  41.20%   0.00%  12.44%  41.30%  ls       libc-2.29.so      [.] __strcoll_l                       17.95%  41.20%   0.00%  12.44%  41.30%       N/A
+   0.00%  13.22%   0.00%   0.00%   0.00%  ls       ls                [.] 0x000000000000871c                 0.00%  13.22%   0.00%   0.00%   0.00%       N/A
+   8.32%  11.49%   0.00%   2.62%   9.34%  ls       ld-2.29.so        [.] do_lookup_x                        8.32%  11.49%   0.00%   2.62%   9.34%       N/A
+   0.00%   8.29%  31.18%  13.34%   3.05%  ls       ld-2.29.so        [.] _dl_lookup_symbol_x                0.00%   8.29%  31.18%  13.34%   3.05%       N/A
+   0.00%   6.47%   0.00%   0.00%   0.00%  ls       libc-2.29.so      [.] __strlen_avx2                      0.00%   6.47%   0.00%   0.00%   0.00%       N/A
+   0.00%   5.97%   0.00%   0.00%   0.00%  ls       ls                [.] 0x0000000000014001                 0.00%   5.97%   0.00%   0.00%   0.00%       N/A
+   5.77%   5.83%   7.79%   4.78%   5.04%  ls       ld-2.29.so        [.] strcmp                             5.77%   5.83%   7.79%   4.78%   5.04%       N/A
+   2.31%   4.35%   8.30%   0.00%   0.00%  ls       ld-2.29.so        [.] _dl_map_object_from_fd             2.31%   4.35%   8.30%   0.00%   0.00%       N/A
+   0.00%   2.96%   0.00%   1.30%   2.22%  ls       ld-2.29.so        [.] __GI___tunables_init               0.00%   2.96%   0.00%   1.30%   2.22%       N/A
+   0.66%   0.22%   0.68%   0.00%   0.21%  ls       ld-2.29.so        [.] _dl_start                          0.66%   0.22%   0.68%   0.00%   0.21%       N/A
+   2.42%   0.00%   0.02%   3.16%   0.00%  ls       [unknown]         [k] 0xffffffffa2a012b0                 2.42%   0.00%   0.02%   3.16%   0.00%       N/A
+   0.16%   0.00%   0.01%   0.20%   0.00%  ls       ld-2.29.so        [.] _start                             0.16%   0.00%   0.01%   0.20%   0.00%       N/A
+   0.00%   0.00%  11.47%   0.00%   0.00%  ls       libcap.so.2.26    [.] 0x0000000000002420                 0.00%   0.00%  11.47%   0.00%   0.00%       N/A
+   0.00%   0.00%  10.50%   0.00%   0.00%  ls       libc-2.29.so      [.] __GI___tcgetattr                   0.00%   0.00%  10.50%   0.00%   0.00%       N/A
+   0.00%   0.00%   9.14%   0.00%   0.00%  ls       ls                [.] 0x000000000000767a                 0.00%   0.00%   9.14%   0.00%   0.00%       N/A
+  13.60%   0.00%   7.14%   2.31%   0.00%  ls       ld-2.29.so        [.] _dl_relocate_object               13.60%   0.00%   7.14%   2.31%   0.00%       N/A
+   2.13%   0.00%   6.14%   0.00%   0.00%  ls       ld-2.29.so        [.] _dl_map_object_deps                2.13%   0.00%   6.14%   0.00%   0.00%       N/A
+   0.00%   0.00%   5.27%   0.00%   0.00%  ls       ld-2.29.so        [.] strlen                             0.00%   0.00%   5.27%   0.00%   0.00%       N/A
+   1.31%   0.00%   2.37%   1.08%   0.00%  ls       ld-2.29.so        [.] _dl_sysdep_start                   1.31%   0.00%   2.37%   1.08%   0.00%       N/A
 
 
-> @@ -117,17 +120,42 @@ static struct page *__page_pool_get_cached(struct page_pool *pool)
->  	if (__ptr_ring_empty(r))
->  		return NULL;
->  
-> -	/* Slow-path: Get page from locked ring queue,
-> -	 * refill alloc array if requested.
-> +	/* Softirq guarantee CPU and thus NUMA node is stable. This,
-> +	 * assumes CPU refilling driver RX-ring will also run RX-NAPI.
->  	 */
-> +	curr_nid = numa_mem_id();
-> +
-> +	/* Slower-path: Get pages from locked ring queue */
->  	spin_lock(&r->consumer_lock);
-> -	page = __ptr_ring_consume(r);
-> -	if (refill)
-> -		pool->alloc.count = __ptr_ring_consume_batched(r,
-> -							pool->alloc.cache,
-> -							PP_ALLOC_CACHE_REFILL);
-> +	first_page = __ptr_ring_consume(r);
-> +
-> +	/* Fallback to page-allocator if NUMA node doesn't match */
-> +	if (first_page && unlikely(!(page_to_nid(first_page) == curr_nid))) {
-> +		__page_pool_return_page(pool, first_page);
-> +		first_page = NULL;
-> +	}
-> +
-> +	if (unlikely(!refill))
-> +		goto out;
-> +
-> +	/* Refill alloc array, but only if NUMA node match */
-> +	for (i = 0; i < PP_ALLOC_CACHE_REFILL; i++) {
-> +		page = __ptr_ring_consume(r);
-> +		if (unlikely(!page))
-> +			break;
-> +
-> +		if (likely(page_to_nid(page) == curr_nid)) {
-> +			pool->alloc.cache[pool->alloc.count++] = page;
-> +		} else {
-> +			/* Release page to page-allocator, assume
-> +			 * refcnt == 1 invariant of cached pages
-> +			 */
-> +			__page_pool_return_page(pool, page);
-> +		}
-> +	}
-> +out:
->  	spin_unlock(&r->consumer_lock);
-> -	return page;
-> +	return first_page;
->  }
-
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
+jirka
 
