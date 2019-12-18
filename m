@@ -5,63 +5,63 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA65C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE2BC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53D4E218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:05:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E17192176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:06:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BvA2rhnV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uITl8L2D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbfLROFz (ORCPT
+        id S1727183AbfLROGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 09:05:55 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42019 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726984AbfLROFw (ORCPT
+        Wed, 18 Dec 2019 09:06:06 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38140 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727144AbfLROGE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 09:05:52 -0500
-Received: by mail-pg1-f195.google.com with SMTP id s64so1338431pgb.9;
-        Wed, 18 Dec 2019 06:05:52 -0800 (PST)
+        Wed, 18 Dec 2019 09:06:04 -0500
+Received: by mail-pf1-f194.google.com with SMTP id x185so1276941pfc.5
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 06:06:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=J6f5xYI4KlUAbvPOJoxwLTZuEXjHnRNlJlqnINEBy4U=;
-        b=BvA2rhnV9eLXjSxjNeZ8tR4yH2wCfe3I66ybOkQBEPOkkVCH/rhBfbVRXoVj8Mp7FX
-         JOVJe23q3Q7v3UgYafTUiOLTTWjLvZLoHMi3k8lZ2G/zjBWwQdU5b34WcT5ogFgzgMwD
-         sJ8uJVE6P/7M1DoO9vWBCCq+zNofGV1qDczgQUII9t/jwgKZrRS7KZsBX4fLzt7d6IuC
-         8R3kLP9oVfauBPESPKBs9GE1BuvzcP6s5w8To1gaFo0VdYyT1qbo6/VP1J1fPEre+viW
-         ybR+9w3rFKSAbBkrrsXYCffm0NJR7y+cInv/6Nasfz1U9wv9YDZEJF1X2WV+9u17RHnW
-         nBQg==
+        bh=uV9emrToibtOtd5PwV/QEFcEzg9NL+MgjlxJNDfEwL8=;
+        b=uITl8L2DI2aQzJ+jPqTvx8o8bwqNQZzz9yIa4VZjCTy+rXuhJrdcGB1QhFsFeE4FHo
+         baT1rLDOQFTP8OkqTuMQt5Dnt+YP8Ec6aMKejz98kCxMvnF3131NU0iinnzWy0DkxhaE
+         fGa+cv4Pur7BJUWH1N+e4BJOtoPCEQ1yjl1qkzdKzf0MrvpLYDDBLftlbUKdAL9/Kxwk
+         l+8XYK9FGO4htM4pYNRIrA04KYP57bmN2hsc8sLM0jRPU08lOyBYZSG+MWUcyIfHPk+D
+         H4vmxLeBaO2Hxcsl98RVzGTz3/HaJeVdTE6/rEPHKTzK1owIWlRTetcxaJK8EWfw3RLp
+         sK/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=J6f5xYI4KlUAbvPOJoxwLTZuEXjHnRNlJlqnINEBy4U=;
-        b=Gn2QxDhRrPd+ZxbcNMR5hRNWWqPfJeiJR82Z1qHLBftmkm3ZXFYf+XYakVqNN1/oAQ
-         B+vnNGMWT9M4iCwDLEcrvulodFY2VwGROgdp0p9XVPkS3Lakgki9y7s2EXUFaqtfaY84
-         oVKe0DMxGoJT2/vwhlq8MByqUy/2/QeBnhQz+m9A8Vor1H1dlsbmArHkSnZwcmngA2Fg
-         lOl/aJHVRwkZwqddjYwOWNpKN3rkOtvpwfMMkQ+GGOMkqIMzx3I9wth21+dNdH8KBSZR
-         uOu53zcJs0magfM1StvpUqQ97pL90kcHVM7WRv0LrSrSpVBHjLJ6xoKy5wQW8lOzUWRv
-         /egA==
-X-Gm-Message-State: APjAAAWQVHekkykj1tkhgwtJTV5hnLi3EvTI15S2m4edjS4TveWlTFey
-        mfqVyurVr6LoIZXaNa4gLWg=
-X-Google-Smtp-Source: APXvYqy9mCJ0Bt2Wal/jaz9Q3BlLuXvlrMD8d29l21eB19dPiO8efKDrht+gz95REMSOMYkNn5tCng==
-X-Received: by 2002:a62:4d87:: with SMTP id a129mr3209793pfb.116.1576677952011;
-        Wed, 18 Dec 2019 06:05:52 -0800 (PST)
+        bh=uV9emrToibtOtd5PwV/QEFcEzg9NL+MgjlxJNDfEwL8=;
+        b=LDsNHkaryvTGN6BjDSQ5RglHCSS73sBdWR2dKGNlBPWxS7X66/0O9stuP++boY/Vwa
+         qcq9J1LucrMsyaipuwuzM7DOInVhTOiaHtSvOsBqa5Gb5DeRPy3TjmkmvlIPovKxSHBb
+         2BkBSV9To3XvdG44WydI28Vk+X26MdPF9ph2HHS7OYjDldhDH1zPTEeqOPO/E6od9okD
+         v6mZ+ur0WHO4gO9SnbRWxC/aBVLLJN2JfSN5r6UW4knz4xTp86mOIUk+CxhN7r+ddZjN
+         phB/5gVf5+u0tAU9eh86K3lElYD258WRtAAiew0CoWp7Q5qiB52oA+r6vSd2718nJbmS
+         1GhQ==
+X-Gm-Message-State: APjAAAXkPZyVZ2/e4s3DGfzzjNnRCAQuRgekht99YuChjTcgToJKYTe6
+        fC6fKtt3QrAlVFXCJ5Y4Afk=
+X-Google-Smtp-Source: APXvYqxT3fV1Ulz6tWQI94WjXrxyeWnJup5zp9HZWBIwe5+NxmlgbPxwEI2ELaAbchfM5lx2V5LeRw==
+X-Received: by 2002:a63:e30a:: with SMTP id f10mr3188567pgh.331.1576677964039;
+        Wed, 18 Dec 2019 06:06:04 -0800 (PST)
 Received: from oslab.tsinghua.edu.cn ([166.111.139.172])
-        by smtp.gmail.com with ESMTPSA id 17sm3611488pfv.142.2019.12.18.06.05.48
+        by smtp.gmail.com with ESMTPSA id o184sm3390758pgo.62.2019.12.18.06.05.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 06:05:51 -0800 (PST)
+        Wed, 18 Dec 2019 06:06:03 -0800 (PST)
 From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     fabien.dessenne@st.com, mchehab@kernel.org
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com
+Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
         Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] media: sti: bdisp: fix a possible sleep-in-atomic-context bug in bdisp_device_run()
-Date:   Wed, 18 Dec 2019 22:05:37 +0800
-Message-Id: <20191218140537.12193-1-baijiaju1990@gmail.com>
+Subject: [PATCH] mtd: maps: pcmciamtd: fix possible sleep-in-atomic-context bugs in pcmciamtd_set_vpp()
+Date:   Wed, 18 Dec 2019 22:05:52 +0800
+Message-Id: <20191218140552.12249-1-baijiaju1990@gmail.com>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -71,35 +71,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 The driver may sleep while holding a spinlock.
 The function call path (from bottom to top) in Linux 4.19 is:
 
-drivers/media/platform/sti/bdisp/bdisp-hw.c, 385: 
-	msleep in bdisp_hw_reset
-drivers/media/platform/sti/bdisp/bdisp-v4l2.c, 341: 
-	bdisp_hw_reset in bdisp_device_run
-drivers/media/platform/sti/bdisp/bdisp-v4l2.c, 317:
-	_raw_spin_lock_irqsave in bdisp_device_run
+drivers/pcmcia/pcmcia_resource.c, 312:
+	mutex_lock in pcmcia_fixup_vpp
+drivers/mtd/maps/pcmciamtd.c, 309: 
+	pcmcia_fixup_vpp in pcmciamtd_set_vpp
+drivers/mtd/maps/pcmciamtd.c, 306: 
+	_raw_spin_lock_irqsave in pcmciamtd_set_vpp
 
-To fix this bug, msleep() is replaced with mdelay().
+drivers/pcmcia/pcmcia_resource.c, 312:
+	mutex_lock in pcmcia_fixup_vpp
+drivers/mtd/maps/pcmciamtd.c, 312: 
+	pcmcia_fixup_vpp in pcmciamtd_set_vpp
+drivers/mtd/maps/pcmciamtd.c, 306: 
+	_raw_spin_lock_irqsave in pcmciamtd_set_vp
 
-This bug is found by a static analysis tool STCheck written by myself.
+mutex_lock() may sleep at runtime.
+
+To fix these bugs, pcmcia_fixup_vpp() is called without holding the
+spinlock.
+
+These bugs are found by a static analysis tool STCheck written by
+myself.
 
 Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
 ---
- drivers/media/platform/sti/bdisp/bdisp-hw.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mtd/maps/pcmciamtd.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/sti/bdisp/bdisp-hw.c b/drivers/media/platform/sti/bdisp/bdisp-hw.c
-index 4372abbb5950..1a56348805a2 100644
---- a/drivers/media/platform/sti/bdisp/bdisp-hw.c
-+++ b/drivers/media/platform/sti/bdisp/bdisp-hw.c
-@@ -382,7 +382,7 @@ int bdisp_hw_reset(struct bdisp_dev *bdisp)
- 	for (i = 0; i < POLL_RST_MAX; i++) {
- 		if (readl(bdisp->regs + BLT_STA1) & BLT_STA1_IDLE)
- 			break;
--		msleep(POLL_RST_DELAY_MS);
-+		mdelay(POLL_RST_DELAY_MS);
+diff --git a/drivers/mtd/maps/pcmciamtd.c b/drivers/mtd/maps/pcmciamtd.c
+index 70bb403f69f7..d2cd1708aa49 100644
+--- a/drivers/mtd/maps/pcmciamtd.c
++++ b/drivers/mtd/maps/pcmciamtd.c
+@@ -301,17 +301,23 @@ static void pcmciamtd_set_vpp(struct map_info *map, int on)
+ 	struct pcmciamtd_dev *dev = (struct pcmciamtd_dev *)map->map_priv_1;
+ 	struct pcmcia_device *link = dev->p_dev;
+ 	unsigned long flags;
++	int fixup_flag = 0;
+ 
+ 	pr_debug("dev = %p on = %d vpp = %d\n\n", dev, on, dev->vpp);
+ 	spin_lock_irqsave(&pcmcia_vpp_lock, flags);
+ 	if (on) {
+ 		if (++pcmcia_vpp_refcnt == 1)   /* first nested 'on' */
+-			pcmcia_fixup_vpp(link, dev->vpp);
++			fixup_flag = 1;
+ 	} else {
+ 		if (--pcmcia_vpp_refcnt == 0)   /* last nested 'off' */
+-			pcmcia_fixup_vpp(link, 0);
++			fixup_flag = 2;
  	}
- 	if (i == POLL_RST_MAX)
- 		dev_err(bdisp->dev, "Reset timeout\n");
+ 	spin_unlock_irqrestore(&pcmcia_vpp_lock, flags);
++
++	if (fixup_flag == 1)
++		pcmcia_fixup_vpp(link, dev->vpp);
++	else if (fixup_flag == 2)
++		pcmcia_fixup_vpp(link, 0);
+ }
+ 
+ 
 -- 
 2.17.1
 
