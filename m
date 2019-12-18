@@ -2,152 +2,135 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E078EC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44310C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CF6321582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82FB12067C
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:15:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="oDT0ivPp"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PbJQMj6s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbfLRAJI (ORCPT
+        id S1726446AbfLRAO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 19:09:08 -0500
-Received: from mailout1.samsung.com ([203.254.224.24]:30210 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbfLRAJI (ORCPT
+        Tue, 17 Dec 2019 19:14:59 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38843 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbfLRAO7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 19:09:08 -0500
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20191218000905epoutp01b818f5a5442e3026a6e22ffc08333041~hTpTGQ2Ld1037310373epoutp01Z
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 00:09:05 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20191218000905epoutp01b818f5a5442e3026a6e22ffc08333041~hTpTGQ2Ld1037310373epoutp01Z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1576627745;
-        bh=ZN9xUok03wojfck5X29qiSCp6pV0bXbuVMqbinHqCFw=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=oDT0ivPpbDExZir+X6rmdg7ndbCtIbH7saBg4Z64/lhNVpvV3A/8gtdROrqf+JF4n
-         oocimbnGnSAhLaZMIr3KZmpbNrK8gVaps+Podv3Igfbr1AIocMF0igcrMXEMiKmbCP
-         Pk2Gj5EG8s1oo1l0AHQ8qezd1NN2KFrJ1tiP5h3c=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20191218000905epcas1p351524d8a92065fe9994033b3551333c5~hTpSzMG3y2959629596epcas1p3h;
-        Wed, 18 Dec 2019 00:09:05 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.162]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 47cwNJ1pKpzMqYkf; Wed, 18 Dec
-        2019 00:09:04 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        C3.7C.48498.F1E69FD5; Wed, 18 Dec 2019 09:09:03 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20191218000903epcas1p4dac913df29b69ad4bb7b10ab7c5f3ed9~hTpRSNClN0750607506epcas1p4S;
-        Wed, 18 Dec 2019 00:09:03 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191218000903epsmtrp2dbf53d8f6e910a02fcb199bbe380db8a~hTpRRfGPK2559725597epsmtrp2N;
-        Wed, 18 Dec 2019 00:09:03 +0000 (GMT)
-X-AuditID: b6c32a36-a3dff7000001bd72-cb-5df96e1f3fca
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        0D.12.06569.F1E69FD5; Wed, 18 Dec 2019 09:09:03 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20191218000903epsmtip1c8cbf3f94ca6a37a6cadfe3048133823~hTpRHGy3F1844618446epsmtip1T;
-        Wed, 18 Dec 2019 00:09:03 +0000 (GMT)
-From:   =?UTF-8?Q?=EC=A0=84=EB=82=A8=EC=9E=AC/S/W_Platform_Lab=28VD=29/Staff_E?=
-         =?UTF-8?Q?ngineer/=EC=82=BC=EC=84=B1=EC=A0=84=EC=9E=90?= 
-        <namjae.jeon@samsung.com>
-To:     "'Enrico Weigelt, metux IT consult'" <lkml@metux.net>
-Cc:     <linux-kernel@vger.kernel.org>, "'Christoph Hellwig'" <hch@lst.de>,
-        "'Greg Kroah-Hartman'" <gregkh@linuxfoundation.org>,
-        "'Sungjong Seo'" <sj1557.seo@samsung.com>,
-        =?UTF-8?Q?'Valdis_Kl=C4=93tnieks'?= <valdis.kletnieks@vt.edu>,
-        <linux-fsdevel@vger.kernel.org>
-In-Reply-To: <c6698d0c-d909-c9dc-5608-0b986d63a471@metux.net>
-Subject: RE: [PATCH v7 01/13] exfat: add in-memory and on-disk structures
- and headers
-Date:   Wed, 18 Dec 2019 09:09:03 +0900
-Message-ID: <000701d5b537$5b196f80$114c4e80$@samsung.com>
+        Tue, 17 Dec 2019 19:14:59 -0500
+Received: by mail-pf1-f194.google.com with SMTP id x185so165926pfc.5
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 16:14:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=QySu5AL4vmDfm5xadll7zClUUSNeDPk2VDOL+wriQso=;
+        b=PbJQMj6s8UDceq4fX78w3HBESE1jt/gjDcTA/IbIMqODLk2ua2SYiUyZtq6Lgqdqk5
+         zhAH2Jg3Sh4ZeZ/U25OQSHTCh0eJnSGdSkvkDZ9Ce57bW/sXnq3Iub9gk05mEDiAPP4b
+         41gSu+EOMa/I+Pdj3yAubRsaeeeS/fGyTdbxE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=QySu5AL4vmDfm5xadll7zClUUSNeDPk2VDOL+wriQso=;
+        b=P+PWCpVa6Uif1j9J6z6gFjwULcdpGdT0czZzXcZIInKooGF6O8wdNJ7iGc5nKZPLLe
+         jror3Z+eHZu8tZoFwkW8S3fRXMc7pdq9hGgzyqoe1n/PnpMY8lFgVnddTg8dWIeL4QKV
+         aE4Z9iEkxPfNG4Ab+3Cracp5rKnLtILBOoCcSQcrVaTj3o6I+u4S4MCYjTKm/pjcCze1
+         q/lxL2L16YvGe+77O9FFw+JFr9NJMonxgG/Zsb7eiln8rissPUjKBQgKZ6pnlDuYD7Zq
+         t2kQwXBhYdIrjLsaVu9IS+BbjgVz5GBTYqSkFI7UytTrodsO/XbxTvG1uMQFSPhjGqjD
+         w6sA==
+X-Gm-Message-State: APjAAAX9J966TxKhvBMqdf2h8NpRFiAwH12T0FhZgFT6ShvTaas/u6Xf
+        m5WyH6Ic/ZMEn6BlT9r4ufhjMw==
+X-Google-Smtp-Source: APXvYqzXKaqFrpOCj80Rh9+nv8sotyqQ0zkCmoXkrbR2mi1RSKnpa0m7As9aDsEhoUgKHuvXX2uBeA==
+X-Received: by 2002:a63:941:: with SMTP id 62mr101267pgj.203.1576628098553;
+        Tue, 17 Dec 2019 16:14:58 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id g10sm157229pgh.35.2019.12.17.16.14.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 16:14:57 -0800 (PST)
+Date:   Tue, 17 Dec 2019 16:14:56 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
+        linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
+        davidgow@google.com, arnd@arndb.de, gregkh@linuxfoundation.org
+Subject: Re: [PATCH v1] lkdtm/bugs: fix build error in lkdtm_UNSET_SMEP
+Message-ID: <201912171613.454319D@keescook>
+References: <20191213003522.66450-1-brendanhiggins@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQFm2LC/h6nQOwj4JCuWUtKX9oQxIwE+vU/YAbPr/rABlbE1VAIBAPMfqGhx/ZA=
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SbUhTYRTu3b27u1qL61p2MMp1oaBktrm2buX6IIlRK6x+BNmwm95U2he7
-        W6T90IxsipWRFNoH2SjQPpy5/Kr1sSlmQmplOcR+REmfakmZBNXmXeS/5znvc85zznkPiclq
-        iQQyz+rkHFbWTBOxeFNwqVKZaJ00qRp/KpmjnnqCqb3eIWLu+btw5nnbBYLxe5oljO93u5h5
-        NjqGr5cYHly8ITHcDRURhoqxL4ThpK8OGcZvLzQEmj8T6cRuc2oux2ZzDgVnzbJl51lz9PSW
-        nZkbM7U6lVqpXsWspBVW1sLp6TRjunJTnjncC604yJpd4VA6y/P08rWpDpvLySlybbxTT3P2
-        bLNdrbIn86yFd1lzkrNsltVqlSpFG1buNec2hI4Q9gB5qLjyjKQIeSRlKIYEagUM33siLkOx
-        pIxqQXBq4FaUfEPQG3wTJT/CpLUK/UvxTj6UCA9+BD8G6nGBfEAQvNkoihCCuoqgcvQFHkmR
-        U6vgcWMrFsEYVS6CmpdxERxD6aG7uHhKM4faBadKO6YwTi2Gjj/DYQuSlIZz71clRcJSKg66
-        qt7iQpkkuFbzCRM6UsDku2viiFxObYMT7XMFiRzOl5ZgkXaAmiCgpaE/OkEadF5qj+I58LHT
-        F11GAoyP+IlIHaAOw9cH0fJuBO8n9ALWQKjeO2WFUUuhvm25EF4Erb8uIsF2Nox8LxcLVaTg
-        LpEJksVw8llQJOD5UHZ8TFKB6Oppc1VPm6t62gDV/80uI7wOxXN23pLD8Wp7yvS/vo2mznSZ
-        rgVdeWoMIIpE9CypasakSSZmD/L5lgACEqPl0hbFhEkmzWbzCziHLdPhMnN8AGnDWz+NJczN
-        soWP3urMVGtTNBoNs0K3UqfV0POk5M8+k4zKYZ3cAY6zc45/eSIyJqEI3ZG/WKeYaQn6ffs3
-        GTVXxre+aXVPZLjdSyoKjfnipJ7QZ08edF0ddSVl7H0UJHoponeHN44Xq+wZjnML2poKywsy
-        zm5ucIeae74XjOxpN4aGLr16HT+o6wuNDJiODx1h1mzobnLG9A9+KrVsVyuTC33eworEY/sS
-        g7dm1Xg/0Dify6qXYQ6e/QtSr4/YvAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprKIsWRmVeSWpSXmKPExsWy7bCSnK583s9YgzvTJCyaF69ns1i5+iiT
-        xZ69J1ksLu+aw2axd/F2dost/46wWlx6/4HFgd1j/9w17B67bzaweUz48JbNo2/LKkaPz5vk
-        PA5tf8MWwBbFZZOSmpNZllqkb5fAlXHp3CGmgqvsFbc2rGJuYOxg62Lk5JAQMJHY8PMAexcj
-        F4eQwG5GiVnf3jBDJKQljp04A2RzANnCEocPF0PUPGeUmLp3GjOIwyawmFGirecOE0iDiICl
-        xInNO8ESzAITmCQ2TepkhmiZxSRx8N5PsLGcArYSp5uaWEBsYYFQiRWHH4HdwSKgKnH0/zN2
-        kHW8QJP2zdQGCfMKCEqcnPkErJxZQFui92ErI4y9bOFrqEsVJH4+XcYK0ioi4CfRe0QUokRE
-        YnZnG/MERuFZSCbNQjJpFpJJs5C0LGBkWcUomVpQnJueW2xYYJSXWq5XnJhbXJqXrpecn7uJ
-        ERxZWlo7GE+ciD/EKMDBqMTDe+Pvj1gh1sSy4srcQ4wSHMxKIrw7FL7HCvGmJFZWpRblxxeV
-        5qQWH2KU5mBREueVzz8WKSSQnliSmp2aWpBaBJNl4uCUamBUeGFxaEdB0bOWb4UfWkVXHkpn
-        mFXlav3PZOc7ma+ieusLZuVMnGxtsObc/wPvrhyJ/3Tl2AWHBwEWqewH/qx8v/PMhLlH63aH
-        /JpWfG2W1skHXuZfalO6QvzUd3z5bSWiOalRjlPU5cDmQ8/7pef5u+zkuPkib76yhwPvCV62
-        v6u/fXLMKJbpUmIpzkg01GIuKk4EAMle7fqoAgAA
-X-CMS-MailID: 20191218000903epcas1p4dac913df29b69ad4bb7b10ab7c5f3ed9
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191216135033epcas5p3f2ec096506b1a48535ce0796fef23b9e
-References: <20191213055028.5574-2-namjae.jeon@samsung.com>
-        <CGME20191216135033epcas5p3f2ec096506b1a48535ce0796fef23b9e@epcas5p3.samsung.com>
-        <088a50ad-dc67-4ff6-624d-a1ac2008b420@web.de>
-        <002401d5b46d$543f7ee0$fcbe7ca0$@samsung.com>
-        <c6698d0c-d909-c9dc-5608-0b986d63a471@metux.net>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191213003522.66450-1-brendanhiggins@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> By the way: do you think the driver is already stable enough for
-> production use ?
-Yes, I think it's stable enough. Our exfat has been in our products for yea=
-rs
-and many issues have been fixed.
-If you find any issue, Let me know it.
+On Thu, Dec 12, 2019 at 04:35:22PM -0800, Brendan Higgins wrote:
+> When building ARCH=um with CONFIG_UML_X86=y and CONFIG_64BIT=y we get
+> the build errors:
+> 
+> drivers/misc/lkdtm/bugs.c: In function ‘lkdtm_UNSET_SMEP’:
+> drivers/misc/lkdtm/bugs.c:288:8: error: implicit declaration of function ‘native_read_cr4’ [-Werror=implicit-function-declaration]
+>   cr4 = native_read_cr4();
+>         ^~~~~~~~~~~~~~~
+> drivers/misc/lkdtm/bugs.c:290:13: error: ‘X86_CR4_SMEP’ undeclared (first use in this function); did you mean ‘X86_FEATURE_SMEP’?
+>   if ((cr4 & X86_CR4_SMEP) != X86_CR4_SMEP) {
+>              ^~~~~~~~~~~~
+>              X86_FEATURE_SMEP
+> drivers/misc/lkdtm/bugs.c:290:13: note: each undeclared identifier is reported only once for each function it appears in
+> drivers/misc/lkdtm/bugs.c:297:2: error: implicit declaration of function ‘native_write_cr4’; did you mean ‘direct_write_cr4’? [-Werror=implicit-function-declaration]
+>   native_write_cr4(cr4);
+>   ^~~~~~~~~~~~~~~~
+>   direct_write_cr4
+> 
+> So specify that this block of code should only build when
+> CONFIG_X86_64=y *AND* CONFIG_UML is unset.
+> 
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
 
-> Are there any limitations we have to consider ?
-Well, I think that there is currently no proper mkfs(format), fsck(repair) =
-tool for linux-exfat.
-I am working on it and will announce it here as soon as possible.
+Thanks for catching this! Is a similar marking needed for the recently
+added lkdtm_DOUBLE_FAULT() when using UML on 32-bit?
 
-> I just have a client, who wants to use it in a semi-embedded (telemetry)
-> device, for recording to an external USB drive.
->=20
->=20
-> --mtx
->=20
->=20
-> --
+Acked-by: Kees Cook <keescook@chromium.org>
+
+-Kees
+
 > ---
-> Hinweis: unverschl=C3=BCsselte=20E-Mails=20k=C3=B6nnen=20leicht=20abgeh=
-=C3=B6rt=20und=20manipuliert=0D=0A>=20werden=20=21=20F=C3=BCr=20eine=20vert=
-rauliche=20Kommunikation=20senden=20Sie=20bitte=20ihren=0D=0A>=20GPG/PGP-Sc=
-hl=C3=BCssel=20zu.=0D=0A>=20---=0D=0A>=20Enrico=20Weigelt,=20metux=20IT=20c=
-onsult=0D=0A>=20Free=20software=20and=20Linux=20embedded=20engineering=20in=
-fo=40metux.net=20--=20+49-151-=0D=0A>=2027565287=0D=0A=0D=0A
+> 
+> This patch is part of my larger effort to get allyesconfig closer to
+> working for ARCH=um. For more information about that, checkout the cover
+> letter for a related patchset here:
+> 
+> https://lore.kernel.org/lkml/20191211192742.95699-1-brendanhiggins@google.com/
+> 
+> ---
+>  drivers/misc/lkdtm/bugs.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
+> index a4fdad04809a9..6c1aab177fced 100644
+> --- a/drivers/misc/lkdtm/bugs.c
+> +++ b/drivers/misc/lkdtm/bugs.c
+> @@ -278,7 +278,7 @@ void lkdtm_STACK_GUARD_PAGE_TRAILING(void)
+>  
+>  void lkdtm_UNSET_SMEP(void)
+>  {
+> -#ifdef CONFIG_X86_64
+> +#if IS_ENABLED(CONFIG_X86_64) && !IS_ENABLED(CONFIG_UML)
+>  #define MOV_CR4_DEPTH	64
+>  	void (*direct_write_cr4)(unsigned long val);
+>  	unsigned char *insn;
+> -- 
+> 2.24.1.735.g03f4e72817-goog
+> 
+
+-- 
+Kees Cook
