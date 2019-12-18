@@ -2,191 +2,158 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE97C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5143AC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71C44227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:09:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576688942;
-	bh=GompXIE0cj3C+W+UlkGCwEj92r91EaYr2dP2rHkr9c8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zKrK/XEOZh9gKcuK3IfMbywEMAy67N4t4zhqlZ8VRx1sdaU15Gpm0LnUl0xQ8r1bB
-	 lrbfra7uM5ZxgXENB24XVBOjp3IJkaLCV+3QqldN7eaUwOdXFu0O9xJoUh2RlcNWe/
-	 zTNlsqvQTj/eHnP2f25pbte4ej9QhicpSOcOWNNc=
+	by mail.kernel.org (Postfix) with ESMTP id 27FE22082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:16:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lHIItX6f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbfLRRJB (ORCPT
+        id S1727121AbfLRRQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 12:09:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56192 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727025AbfLRRJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 12:09:01 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1918A2146E;
-        Wed, 18 Dec 2019 17:08:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576688940;
-        bh=GompXIE0cj3C+W+UlkGCwEj92r91EaYr2dP2rHkr9c8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vmhOjpb5TK6fnKKJkIbI2aggZpflRmoh/VhNnR9embcLisFrdcQTB8TNbDbeEvnez
-         aKv/3WEjO4KqAlKTXTOVYrzdBgRff3EwDZiYkJj2uo4BXtyGc1SFZTyQADrw0aCDaQ
-         4RBNbhFdri4gXdPEcr5gnQCt5rr2S+5phhvfM+og=
-Date:   Wed, 18 Dec 2019 17:08:55 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     syzbot <syzbot+82defefbbd8527e1c2cb@syzkaller.appspotmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        hdanton@sina.com, akpm@linux-foundation.org
-Subject: Re: WARNING: refcount bug in cdev_get
-Message-ID: <20191218170854.GC18440@willie-the-truck>
-References: <000000000000bf410005909463ff@google.com>
- <20191204115055.GA24783@willie-the-truck>
- <20191204123148.GA3626092@kroah.com>
- <20191210114444.GA17673@willie-the-truck>
+        Wed, 18 Dec 2019 12:16:16 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45776 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727024AbfLRRQP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 12:16:15 -0500
+Received: by mail-pg1-f193.google.com with SMTP id b9so1587973pgk.12
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 09:16:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=rsgLsLg/wxtAj9kO60kIoIvi8Gvu9M5kT2kkH8nAkwg=;
+        b=lHIItX6fuQmi0XhrOTbnRwTehxKFE1FN1sEZ7rdOae4VBHmNGUVQOn2gyjtOyFklAr
+         gqKuvEZeJzngwhbMGoFTfkbZb6WE0VfIzvVfkWthnU7FX2JVq0XmJZzl1zVaP9gIIriL
+         Gyp2tfl1CeCw2U/LzXGQqnTHGL1VlOaK8W7bs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=rsgLsLg/wxtAj9kO60kIoIvi8Gvu9M5kT2kkH8nAkwg=;
+        b=YsZK56ocoSfy90AHGOARtZVrP9aIBIl2dizI5IH3W1lNhPKZTyTogmdApMYwebeKg0
+         DMxPIPKahsjbky4N8wUMaVBg8KrjA1JI3gA/RSGmYxVt3nGnk88v9rnXPmQhEKToieEO
+         mzQVItWZ/BnjstR7HDnHfHlehPq8ZdFr7e50Qp8o3eSvD2MNM1OygzfYu1x7jW5/5sI4
+         NRfsIwaGrzEfFIp1jwEgkFGiATo/nlasUAkUxqPFg2mCVEmeWDfaoGkMqJ1G1npmFEaI
+         DGqN4Of4W7bKe669NhX3OdiDxi/Dc5W5qPKYjJzgHPu7AvAj386eNIWdSerUWW0yrbu1
+         XIxQ==
+X-Gm-Message-State: APjAAAUs0xODRApKpPhfna9/rD+IkS5/7dnB6MQLLY8eEEvKxK/NH1SL
+        V6dqC/WNbriFuVDmSqpL0Fv+pA==
+X-Google-Smtp-Source: APXvYqxDCuD9IVb9t3S3rGH4Y9Oz7ptzoyvBZqNsgpOzpElb+EU0ZowiBrYWJ5I1PdvNnIBlRp+7nw==
+X-Received: by 2002:aa7:93c1:: with SMTP id y1mr2894684pff.200.1576689374963;
+        Wed, 18 Dec 2019 09:16:14 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id t30sm3894117pgl.75.2019.12.18.09.16.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 09:16:13 -0800 (PST)
+Date:   Wed, 18 Dec 2019 09:16:12 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Paul Burton <paulburton@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
+Subject: [PATCH] MIPS: BPF: Use sizeof_field() instead of FIELD_SIZEOF()
+Message-ID: <201912180915.9878694B@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191210114444.GA17673@willie-the-truck>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+The FIELD_SIZEOF() macro was redundant, and is being removed from the
+kernel. Since commit c593642c8be0 ("treewide: Use sizeof_field() macro")
+this is one of the last users of the old macro, so replace it.
 
-On Tue, Dec 10, 2019 at 11:44:45AM +0000, Will Deacon wrote:
-> On Wed, Dec 04, 2019 at 01:31:48PM +0100, Greg KH wrote:
-> > But I thought we had a lock in play here, so why would changing this
-> > actually fix anything?
-> 
-> I don't think the lock is always used. For example, look at chrdev_open(),
-> which appears in the backtrace; the locked code is:
-> 
-> 	spin_lock(&cdev_lock);
-> 	p = inode->i_cdev;
-> 	if (!p) {
-> 		struct kobject *kobj;
-> 		int idx;
-> 		spin_unlock(&cdev_lock);
-> 		kobj = kobj_lookup(cdev_map, inode->i_rdev, &idx);
-> 		if (!kobj)
-> 			return -ENXIO;
-> 		new = container_of(kobj, struct cdev, kobj);
-> 		spin_lock(&cdev_lock);
-> 		/* Check i_cdev again in case somebody beat us to it while
-> 		   we dropped the lock. */
-> 		p = inode->i_cdev;
-> 		if (!p) {
-> 			inode->i_cdev = p = new;
-> 			list_add(&inode->i_devices, &p->list);
-> 			new = NULL;
-> 		} else if (!cdev_get(p))
-> 			ret = -ENXIO;
-> 	} else if (!cdev_get(p))
-> 		ret = -ENXIO;
-> 	spin_unlock(&cdev_lock);
-> 	cdev_put(new);
-> 
-> So the idea is that multiple threads serialise on the 'cdev_lock' and then
-> check 'inode->i_cdev' to figure out if the device has already been probed,
-> taking a reference to it if it's available or probing it via kobj_lookup()
-> otherwise. I think that's backwards with respect to things like cdev_put(),
-> where the refcount is dropped *before* 'inode->i_cdev' is cleared to NULL.
-> In which case, if a concurrent call to cdev_put() can drop the refcount
-> to zero without 'cdev_lock' held, then you could get a use-after-free on
-> this path thanks to a dangling pointer in 'inode->i_cdev'..
-> 
-> Looking slightly ahead in this same function, there are error paths which
-> appear to do exactly that:
-> 
-> 	fops = fops_get(p->ops);
-> 	if (!fops)
-> 		goto out_cdev_put;
-> 
-> 	replace_fops(filp, fops);
-> 	if (filp->f_op->open) {
-> 		ret = filp->f_op->open(inode, filp);
-> 		if (ret)
-> 			goto out_cdev_put;
-> 	}
-> 
-> 	return 0;
-> 
->  out_cdev_put:
-> 	cdev_put(p);
-> 	return ret;
-> 
-> In which case the thread which installed 'inode->i_cdev' earlier on can
-> now drop its refcount to zero without the lock held if, for example, the
-> filp->f_op->open() call fails.
-> 
-> But note, this is purely based on code inspection -- the C reproducer from
-> syzkaller doesn't work for me, so I've not been able to test any fixes either.
-> It's also worth noting that cdev_put() is called from __fput(), but I think the
-> reference counting on the file means we're ok there.
-> 
-> > This code hasn't changed in 15+ years, what suddenly changed that causes
-> > problems here?
-> 
-> I suppose one thing to consider is that the refcount code is relatively new,
-> so it could be that the actual use-after-free is extremely rare, but we're
-> now seeing that it's at least potentially an issue.
-> 
-> Thoughts?
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ arch/mips/net/bpf_jit.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-FWIW, I added some mdelay()s to make this race more likely, and I can now
-trigger it reasonably reliably. See below.
+diff --git a/arch/mips/net/bpf_jit.c b/arch/mips/net/bpf_jit.c
+index 3a0e34f4e615..0af88622c619 100644
+--- a/arch/mips/net/bpf_jit.c
++++ b/arch/mips/net/bpf_jit.c
+@@ -689,7 +689,7 @@ static int build_body(struct jit_ctx *ctx)
+ 			emit_load_imm(r_A, k, ctx);
+ 			break;
+ 		case BPF_LD | BPF_W | BPF_LEN:
+-			BUILD_BUG_ON(FIELD_SIZEOF(struct sk_buff, len) != 4);
++			BUILD_BUG_ON(sizeof_field(struct sk_buff, len) != 4);
+ 			/* A <- len ==> lw r_A, offset(skb) */
+ 			ctx->flags |= SEEN_SKB | SEEN_A;
+ 			off = offsetof(struct sk_buff, len);
+@@ -1093,7 +1093,7 @@ static int build_body(struct jit_ctx *ctx)
+ 		case BPF_ANC | SKF_AD_PROTOCOL:
+ 			/* A = ntohs(skb->protocol */
+ 			ctx->flags |= SEEN_SKB | SEEN_OFF | SEEN_A;
+-			BUILD_BUG_ON(FIELD_SIZEOF(struct sk_buff,
++			BUILD_BUG_ON(sizeof_field(struct sk_buff,
+ 						  protocol) != 2);
+ 			off = offsetof(struct sk_buff, protocol);
+ 			emit_half_load(r_A, r_skb, off, ctx);
+@@ -1118,7 +1118,7 @@ static int build_body(struct jit_ctx *ctx)
+ 		case BPF_ANC | SKF_AD_CPU:
+ 			ctx->flags |= SEEN_A | SEEN_OFF;
+ 			/* A = current_thread_info()->cpu */
+-			BUILD_BUG_ON(FIELD_SIZEOF(struct thread_info,
++			BUILD_BUG_ON(sizeof_field(struct thread_info,
+ 						  cpu) != 4);
+ 			off = offsetof(struct thread_info, cpu);
+ 			/* $28/gp points to the thread_info struct */
+@@ -1137,30 +1137,30 @@ static int build_body(struct jit_ctx *ctx)
+ 				   b_imm(prog->len, ctx), ctx);
+ 			emit_reg_move(r_ret, r_zero, ctx);
+ 			if (code == (BPF_ANC | SKF_AD_IFINDEX)) {
+-				BUILD_BUG_ON(FIELD_SIZEOF(struct net_device, ifindex) != 4);
++				BUILD_BUG_ON(sizeof_field(struct net_device, ifindex) != 4);
+ 				off = offsetof(struct net_device, ifindex);
+ 				emit_load(r_A, r_s0, off, ctx);
+ 			} else { /* (code == (BPF_ANC | SKF_AD_HATYPE) */
+-				BUILD_BUG_ON(FIELD_SIZEOF(struct net_device, type) != 2);
++				BUILD_BUG_ON(sizeof_field(struct net_device, type) != 2);
+ 				off = offsetof(struct net_device, type);
+ 				emit_half_load_unsigned(r_A, r_s0, off, ctx);
+ 			}
+ 			break;
+ 		case BPF_ANC | SKF_AD_MARK:
+ 			ctx->flags |= SEEN_SKB | SEEN_A;
+-			BUILD_BUG_ON(FIELD_SIZEOF(struct sk_buff, mark) != 4);
++			BUILD_BUG_ON(sizeof_field(struct sk_buff, mark) != 4);
+ 			off = offsetof(struct sk_buff, mark);
+ 			emit_load(r_A, r_skb, off, ctx);
+ 			break;
+ 		case BPF_ANC | SKF_AD_RXHASH:
+ 			ctx->flags |= SEEN_SKB | SEEN_A;
+-			BUILD_BUG_ON(FIELD_SIZEOF(struct sk_buff, hash) != 4);
++			BUILD_BUG_ON(sizeof_field(struct sk_buff, hash) != 4);
+ 			off = offsetof(struct sk_buff, hash);
+ 			emit_load(r_A, r_skb, off, ctx);
+ 			break;
+ 		case BPF_ANC | SKF_AD_VLAN_TAG:
+ 			ctx->flags |= SEEN_SKB | SEEN_A;
+-			BUILD_BUG_ON(FIELD_SIZEOF(struct sk_buff,
++			BUILD_BUG_ON(sizeof_field(struct sk_buff,
+ 						  vlan_tci) != 2);
+ 			off = offsetof(struct sk_buff, vlan_tci);
+ 			emit_half_load_unsigned(r_A, r_skb, off, ctx);
+@@ -1186,7 +1186,7 @@ static int build_body(struct jit_ctx *ctx)
+ 			break;
+ 		case BPF_ANC | SKF_AD_QUEUE:
+ 			ctx->flags |= SEEN_SKB | SEEN_A;
+-			BUILD_BUG_ON(FIELD_SIZEOF(struct sk_buff,
++			BUILD_BUG_ON(sizeof_field(struct sk_buff,
+ 						  queue_mapping) != 2);
+ 			BUILD_BUG_ON(offsetof(struct sk_buff,
+ 					      queue_mapping) > 0xff);
+-- 
+2.17.1
 
-Will
 
---->8
-
-[   89.512353] ------------[ cut here ]------------
-[   89.513350] refcount_t: addition on 0; use-after-free.
-[   89.513977] WARNING: CPU: 2 PID: 6385 at lib/refcount.c:25 refcount_warn_saturate+0x6d/0xf0
-[   89.514943] Modules linked in:
-[   89.515307] CPU: 2 PID: 6385 Comm: repro Not tainted 5.5.0-rc2+ #22
-[   89.516039] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-[   89.517047] RIP: 0010:refcount_warn_saturate+0x6d/0xf0
-[   89.517647] Code: 05 55 9a 15 01 01 e8 9d aa c8 ff 0f 0b c3 80 3d 45 9a 15 01 00 75 ce 48 c7 c7 00 9c 62 b3 c6 08
-[   89.519749] RSP: 0018:ffffb524c1b9bc70 EFLAGS: 00010282
-[   89.520353] RAX: 0000000000000000 RBX: ffff9e9da1f71390 RCX: 0000000000000000
-[   89.521184] RDX: ffff9e9dbbd27618 RSI: ffff9e9dbbd18798 RDI: ffff9e9dbbd18798
-[   89.522020] RBP: 0000000000000000 R08: 000000000000095f R09: 0000000000000039
-[   89.522854] R10: 0000000000000000 R11: ffffb524c1b9bb20 R12: ffff9e9da1e8c700
-[   89.523689] R13: ffffffffb25ee8b0 R14: 0000000000000000 R15: ffff9e9da1e8c700
-[   89.524512] FS:  00007f3b87d26700(0000) GS:ffff9e9dbbd00000(0000) knlGS:0000000000000000
-[   89.525439] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   89.526105] CR2: 00007fc16909c000 CR3: 000000012df9c000 CR4: 00000000000006e0
-[   89.526937] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   89.527759] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   89.528587] Call Trace:
-[   89.528889]  kobject_get+0x5c/0x60
-[   89.529290]  cdev_get+0x2b/0x60
-[   89.529656]  chrdev_open+0x55/0x220
-[   89.530060]  ? cdev_put.part.3+0x20/0x20
-[   89.530515]  do_dentry_open+0x13a/0x390
-[   89.530961]  path_openat+0x2c8/0x1470
-[   89.531383]  do_filp_open+0x93/0x100
-[   89.531797]  ? selinux_file_ioctl+0x17f/0x220
-[   89.532297]  do_sys_open+0x186/0x220
-[   89.532708]  do_syscall_64+0x48/0x150
-[   89.533129]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[   89.533704] RIP: 0033:0x7f3b87efcd0e
-[   89.534115] Code: 89 54 24 08 e8 a3 f4 ff ff 8b 74 24 0c 48 8b 3c 24 41 89 c0 44 8b 54 24 08 b8 01 01 00 00 89 f4
-[   89.536227] RSP: 002b:00007f3b87d259f0 EFLAGS: 00000293 ORIG_RAX: 0000000000000101
-[   89.537085] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f3b87efcd0e
-[   89.537891] RDX: 0000000000000000 RSI: 00007f3b87d25a80 RDI: 00000000ffffff9c
-[   89.538693] RBP: 00007f3b87d25e90 R08: 0000000000000000 R09: 0000000000000000
-[   89.539493] R10: 0000000000000000 R11: 0000000000000293 R12: 00007ffe188f504e
-[   89.540291] R13: 00007ffe188f504f R14: 00007f3b87d26700 R15: 0000000000000000
-[   89.541090] ---[ end trace 24f53ca58db8180a ]---
+-- 
+Kees Cook
