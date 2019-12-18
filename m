@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA9E8C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ADE0C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9506420716
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:27:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 800282465E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:27:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727536AbfLRS1U (ORCPT
+        id S1727555AbfLRS1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 13:27:20 -0500
-Received: from foss.arm.com ([217.140.110.172]:56616 "EHLO foss.arm.com"
+        Wed, 18 Dec 2019 13:27:23 -0500
+Received: from foss.arm.com ([217.140.110.172]:56636 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727024AbfLRS1U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 13:27:20 -0500
+        id S1727395AbfLRS1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 13:27:23 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4693B1FB;
-        Wed, 18 Dec 2019 10:27:19 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9863931B;
+        Wed, 18 Dec 2019 10:27:22 -0800 (PST)
 Received: from e108754-lin.cambridge.arm.com (unknown [10.1.198.81])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4B8033F67D;
-        Wed, 18 Dec 2019 10:27:17 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9DE453F67D;
+        Wed, 18 Dec 2019 10:27:20 -0800 (PST)
 From:   Ionela Voinescu <ionela.voinescu@arm.com>
 To:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
         maz@kernel.org, suzuki.poulose@arm.com, sudeep.holla@arm.com,
@@ -32,10 +32,10 @@ To:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
 Cc:     peterz@infradead.org, mingo@redhat.com, ggherdovich@suse.cz,
         vincent.guittot@linaro.org, linux-arm-kernel@lists.infradead.org,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v2 4/6] Documentation: arm64: document support for the AMU extension
-Date:   Wed, 18 Dec 2019 18:26:05 +0000
-Message-Id: <20191218182607.21607-5-ionela.voinescu@arm.com>
+        Juri Lelli <juri.lelli@redhat.com>
+Subject: [PATCH v2 5/6] TEMP: sched: add interface for counter-based frequency invariance
+Date:   Wed, 18 Dec 2019 18:26:06 +0000
+Message-Id: <20191218182607.21607-6-ionela.voinescu@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191218182607.21607-1-ionela.voinescu@arm.com>
 References: <20191218182607.21607-1-ionela.voinescu@arm.com>
@@ -44,189 +44,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The activity monitors extension is an optional extension introduced
-by the ARMv8.4 CPU architecture.
+To be noted that this patch is a temporary one. It introduces the
+interface added by the patches at [1] to allow update of the frequency
+invariance scale factor based on counters. If [1] is merged there is
+not need for this patch.
 
-Add initial documentation for the AMUv1 extension:
- - arm64/amu.txt: AMUv1 documentation
- - arm64/booting.txt: system registers initialisation
- - arm64/cpu-feature-registers.txt: visibility to userspace
+For platforms that support counters (x86 - APERF/MPERF, arm64 - AMU
+counters) the frequency invariance correction factor can be obtained
+using a core counter and a fixed counter to get information on the
+performance (frequency based only) obtained in a period of time. This
+will more accurately reflect the actual current frequency of the CPU,
+compared with the alternative implementation that reflects the request
+of a performance level from the OS through the cpufreq framework
+(arch_set_freq_scale).
 
+Therefore, introduce an interface - arch_scale_freq_tick, to be
+implemented by each architecture and called for each CPU on the tick
+to update the scale factor based on the delta in the counter values,
+if counter support is present on the CPU.
+
+Either because reading counters is expensive or because reading
+counters from remote CPUs is not possible or is expensive, only
+update the counter based frequency scale factor on the tick for
+now. A tick based update will definitely be necessary either due to
+it being the only point of update for certain architectures or in
+order to cache the counter values for a particular CPU, if a
+further update from that CPU is not possible.
+
+[1]
+https://lore.kernel.org/lkml/20191113124654.18122-1-ggherdovich@suse.cz/
+
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Suggested-by: Giovanni Gherdovich <ggherdovich@suse.cz>
 Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
 ---
- Documentation/arm64/amu.rst                   | 107 ++++++++++++++++++
- Documentation/arm64/booting.rst               |  14 +++
- Documentation/arm64/cpu-feature-registers.rst |   2 +
- Documentation/arm64/index.rst                 |   1 +
- 4 files changed, 124 insertions(+)
- create mode 100644 Documentation/arm64/amu.rst
+ kernel/sched/core.c  | 1 +
+ kernel/sched/sched.h | 7 +++++++
+ 2 files changed, 8 insertions(+)
 
-diff --git a/Documentation/arm64/amu.rst b/Documentation/arm64/amu.rst
-new file mode 100644
-index 000000000000..62a6635522e1
---- /dev/null
-+++ b/Documentation/arm64/amu.rst
-@@ -0,0 +1,107 @@
-+=======================================================
-+Activity Monitors Unit (AMU) extension in AArch64 Linux
-+=======================================================
-+
-+Author: Ionela Voinescu <ionela.voinescu@arm.com>
-+
-+Date: 2019-09-10
-+
-+This document briefly describes the provision of Activity Monitors Unit
-+support in AArch64 Linux.
-+
-+
-+Architecture overview
-+---------------------
-+
-+The activity monitors extension is an optional extension introduced by the
-+ARMv8.4 CPU architecture.
-+
-+The activity monitors unit, implemented in each CPU, provides performance
-+counters intended for system management use. The AMU extension provides a
-+system register interface to the counter registers and also supports an
-+optional external memory-mapped interface.
-+
-+Version 1 of the Activity Monitors architecture implements a counter group
-+of four fixed and architecturally defined 64-bit event counters.
-+  - CPU cycle counter: increments at the frequency of the CPU.
-+  - Constant counter: increments at the fixed frequency of the system
-+    clock.
-+  - Instructions retired: increments with every architecturally executed
-+    instruction.
-+  - Memory stall cycles: counts instruction dispatch stall cycles caused by
-+    misses in the last level cache within the clock domain.
-+
-+When in WFI or WFE these counters do not increment.
-+
-+The Activity Monitors architecture provides space for up to 16 architected
-+event counters. Future versions of the architecture may use this space to
-+implement additional architected event counters.
-+
-+Additionally, version 1 implements a counter group of up to 16 auxiliary
-+64-bit event counters.
-+
-+On cold reset all counters reset to 0.
-+
-+
-+Basic support
-+-------------
-+
-+The kernel can safely run a mix of CPUs with and without support for the
-+activity monitors extension. Therefore, when CONFIG_ARM64_AMU_EXTN is
-+selected we unconditionally enable the capability to allow any late CPU
-+(secondary or hotplugged) to detect and use the feature.
-+
-+When the feature is detected on a CPU, a per-CPU variable (amu_feat) is
-+set, but this does not guarantee the correct functionality of the
-+counters, only the presence of the extension.
-+
-+Firmware (code running at higher exception levels, e.g. arm-tf) support is
-+needed to:
-+ - Enable access for lower exception levels (EL2 and EL1) to the AMU
-+   registers.
-+ - Enable the counters. If not enabled these will read as 0.
-+ - Save/restore the counters before/after the CPU is being put/brought up
-+   from the 'off' power state.
-+
-+When using kernels that have this configuration enabled but boot with
-+broken firmware the user may experience panics or lockups when accessing
-+the counter registers. Even if these symptoms are not observed, the
-+values returned by the register reads might not correctly reflect reality.
-+Most commonly, the counters will read as 0, indicating that they are not
-+enabled. If proper support is not provided in firmware it's best to disable
-+CONFIG_ARM64_AMU_EXTN.
-+
-+The fixed counters of AMUv1 are accessible though the following system
-+register definitions:
-+ - SYS_AMEVCNTR0_CORE_EL0
-+ - SYS_AMEVCNTR0_CONST_EL0
-+ - SYS_AMEVCNTR0_INST_RET_EL0
-+ - SYS_AMEVCNTR0_MEM_STALL_EL0
-+
-+Auxiliary platform specific counters can be accessed using
-+SYS_AMEVCNTR1_EL0(n), where n is a value between 0 and 15.
-+
-+Details can be found in: arch/arm64/include/asm/sysreg.h.
-+
-+
-+Userspace access
-+----------------
-+
-+Currently, access from userspace to the AMU registers is disabled due to:
-+ - Security reasons: they might expose information about code executed in
-+   secure mode.
-+ - Purpose: AMU counters are intended for system management use.
-+
-+Also, the presence of the feature is not visible to userspace.
-+
-+
-+Virtualization
-+--------------
-+
-+Currently, access from userspace (EL0) and kernelspace (EL1) on the KVM
-+guest side is disabled due to:
-+ - Security reasons: they might expose information about code executed
-+   by other guests or the host.
-+
-+Any attempt to access the AMU registers will result in an UNDEFINED
-+exception being injected into the guest.
-diff --git a/Documentation/arm64/booting.rst b/Documentation/arm64/booting.rst
-index 5d78a6f5b0ae..a3f1a47b6f1c 100644
---- a/Documentation/arm64/booting.rst
-+++ b/Documentation/arm64/booting.rst
-@@ -248,6 +248,20 @@ Before jumping into the kernel, the following conditions must be met:
-     - HCR_EL2.APK (bit 40) must be initialised to 0b1
-     - HCR_EL2.API (bit 41) must be initialised to 0b1
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 90e4b00ace89..e0b70b9fb5cc 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3594,6 +3594,7 @@ void scheduler_tick(void)
+ 	struct task_struct *curr = rq->curr;
+ 	struct rq_flags rf;
  
-+  For CPUs with Activity Monitors Unit v1 (AMUv1) extension present:
-+  - If EL3 is present:
-+    CPTR_EL3.TAM (bit 30) must be initialised to 0b0
-+    CPTR_EL2.TAM (bit 30) must be initialised to 0b0
-+    AMCNTENSET0_EL0 must be initialised to 0b1111
-+    AMCNTENSET1_EL0 must be initialised to a platform specific value
-+    having 0b1 set for the corresponding bit for each of the auxiliary
-+    counters present.
-+  - If the kernel is entered at EL1:
-+    AMCNTENSET0_EL0 must be initialised to 0b1111
-+    AMCNTENSET1_EL0 must be initialised to a platform specific value
-+    having 0b1 set for the corresponding bit for each of the auxiliary
-+    counters present.
-+
- The requirements described above for CPU mode, caches, MMUs, architected
- timers, coherency and system registers apply to all CPUs.  All CPUs must
- enter the kernel in the same exception level.
-diff --git a/Documentation/arm64/cpu-feature-registers.rst b/Documentation/arm64/cpu-feature-registers.rst
-index b6e44884e3ad..4770ae54032b 100644
---- a/Documentation/arm64/cpu-feature-registers.rst
-+++ b/Documentation/arm64/cpu-feature-registers.rst
-@@ -150,6 +150,8 @@ infrastructure:
-      +------------------------------+---------+---------+
-      | DIT                          | [51-48] |    y    |
-      +------------------------------+---------+---------+
-+     | AMU                          | [47-44] |    n    |
-+     +------------------------------+---------+---------+
-      | SVE                          | [35-32] |    y    |
-      +------------------------------+---------+---------+
-      | GIC                          | [27-24] |    n    |
-diff --git a/Documentation/arm64/index.rst b/Documentation/arm64/index.rst
-index 5c0c69dc58aa..09cbb4ed2237 100644
---- a/Documentation/arm64/index.rst
-+++ b/Documentation/arm64/index.rst
-@@ -6,6 +6,7 @@ ARM64 Architecture
-     :maxdepth: 1
++	arch_scale_freq_tick();
+ 	sched_clock_tick();
  
-     acpi_object_usage
-+    amu
-     arm-acpi
-     booting
-     cpu-feature-registers
+ 	rq_lock(rq, &rf);
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 280a3c735935..afdafcf7f9da 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -1771,6 +1771,13 @@ static inline void set_next_task(struct rq *rq, struct task_struct *next)
+ 	next->sched_class->set_next_task(rq, next, false);
+ }
+ 
++#ifndef arch_scale_freq_tick
++static __always_inline
++void arch_scale_freq_tick(void)
++{
++}
++#endif
++
+ #ifdef CONFIG_SMP
+ #define sched_class_highest (&stop_sched_class)
+ #else
 -- 
 2.17.1
 
