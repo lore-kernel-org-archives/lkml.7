@@ -2,119 +2,112 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-1.2 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC51C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 05:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F81C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 05:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8B6F20715
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 05:23:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3223124676
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 05:25:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=jonmasters-org.20150623.gappssmtp.com header.i=@jonmasters-org.20150623.gappssmtp.com header.b="zNU9URTp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbfLRFXY (ORCPT
+        id S1726569AbfLRFZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 00:23:24 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52832 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725797AbfLRFXY (ORCPT
+        Wed, 18 Dec 2019 00:25:06 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:46300 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbfLRFZF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 00:23:24 -0500
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBI5JZ4U124022;
-        Wed, 18 Dec 2019 00:23:03 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wy90nyumd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Dec 2019 00:23:02 -0500
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xBI5K0Rf139517;
-        Wed, 18 Dec 2019 00:23:02 -0500
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wy90nyuky-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Dec 2019 00:23:02 -0500
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xBI5CBIU020780;
-        Wed, 18 Dec 2019 05:23:01 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma01dal.us.ibm.com with ESMTP id 2wvqc6uau9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Dec 2019 05:23:00 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBI5Mxoj65536450
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Dec 2019 05:22:59 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4CD74136055;
-        Wed, 18 Dec 2019 05:22:59 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B021D13604F;
-        Wed, 18 Dec 2019 05:22:56 +0000 (GMT)
-Received: from skywalker.linux.ibm.com (unknown [9.199.35.117])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 18 Dec 2019 05:22:56 +0000 (GMT)
-X-Mailer: emacs 26.3 (via feedmail 11-beta-1 I)
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     akpm@linux-foundation.org, npiggin@gmail.com, mpe@ellerman.id.au,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [RFC PATCH 1/2] mm/mmu_gather: Invalidate TLB correctly on batch allocation failure and flush
-In-Reply-To: <20191217123544.GI2827@hirez.programming.kicks-ass.net>
-References: <20191217071713.93399-1-aneesh.kumar@linux.ibm.com> <20191217090914.GX2844@hirez.programming.kicks-ass.net> <3d250b04-a78d-20a7-d41e-50e48e08d1cb@linux.ibm.com> <20191217123544.GI2827@hirez.programming.kicks-ass.net>
-Date:   Wed, 18 Dec 2019 10:52:53 +0530
-Message-ID: <874kxymclu.fsf@linux.ibm.com>
+        Wed, 18 Dec 2019 00:25:05 -0500
+Received: by mail-qt1-f194.google.com with SMTP id 38so970847qtb.13
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 21:25:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jonmasters-org.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uIMTyYXR3nXqdy95e1OaQ4blqi70Uo0OIJA0JwHv2YQ=;
+        b=zNU9URTpXbNk0H+bfxQuplRFAZ/+QuFZ6Yd096coCKdylsucVnKFkkww084LxKN7G6
+         ulzFsZdIg6SVR4tgU5cDYYlo0CXtfCmJPQycPblX0FFaYBE+cL5OKLuhei9teC6wUmmK
+         Oc84j0+Vw2gcCS4XC4WrHqz+fOgW/0CdiGR1dfMf/HODZ23IlHU7H1OJ2CmQoBfC4Z94
+         f3LbaBfhZ7wGluYaje4wnjvDGbcUfG9nrco1qf0kRn8/Ks0eSGsFKNjKDm+D7ZY8tNEi
+         OLH5Ejd9W1dUkuKA9ZRRYIkpvVpXSQKY6b9y3iYGtMQQIKB/nk3glaiVf+nHotXjSwF/
+         CilQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=uIMTyYXR3nXqdy95e1OaQ4blqi70Uo0OIJA0JwHv2YQ=;
+        b=pzMtmIAyGbHn3S2ESG2Dsu9XS+WZdDkv/6+8CxGbT1smY44BQ8bKtBHo5gOj4mfaIu
+         UtSxnPcUcU1Y4WLL8tRBUbaaSAFRVx2uLGA1yrbqFW37OxEDgXR6iBtFynQzXgWB2nOn
+         hY+Gu0KyYMgr8DusfgCP0TZLbk263My7w4Q4W3rV31oecm2n9/1DS7rzR8Hru7LKthvY
+         YOaeohYGFdzGrk2Xl3mb8JF0jw1AwQECiBtGZQnJExnmWIRBE6e1zavX9014WGKzJ4rK
+         xV+afSbWgxt4HSAiMZBtHUNHkHmgZiOWOiLqaWkVwJTO0S8F2QIztvDOSgltlMl2f2fg
+         oyTA==
+X-Gm-Message-State: APjAAAVxQ7b3HVAGTHR1SBQx3NeZ0AV3lZU6dhjW2v0TriRDvz8DgL7E
+        l0lbPFoYDlCNLS4sCDVz0gpbgk4d8cmL0A==
+X-Google-Smtp-Source: APXvYqw0LJ2pIxnufMfbafewC8CwiqT+EqKHOTuPpD18gUxiTVv4YVZQUuZHJ8Y4ZurUv0V5JwW/og==
+X-Received: by 2002:ac8:2af4:: with SMTP id c49mr659933qta.367.1576646704962;
+        Tue, 17 Dec 2019 21:25:04 -0800 (PST)
+Received: from independence.bos.jonmasters.org (Boston.jonmasters.org. [50.195.43.97])
+        by smtp.gmail.com with ESMTPSA id t7sm315351qkm.136.2019.12.17.21.25.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Dec 2019 21:25:04 -0800 (PST)
+Subject: Re: [PATCH] pcie: Add quirk for the Arm Neoverse N1SDP platform
+To:     Will Deacon <will@kernel.org>,
+        Andre Przywara <andre.przywara@arm.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org
+References: <20191209160638.141431-1-andre.przywara@arm.com>
+ <20191209162645.GA7489@willie-the-truck>
+From:   Jon Masters <jcm@jonmasters.org>
+Organization: World Organi{s,z}ation of Broken Dreams
+Message-ID: <dacfd8bf-0f68-f2af-9238-4b0fadfbdfe3@jonmasters.org>
+Date:   Tue, 17 Dec 2019 21:21:17 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-18_01:2019-12-17,2019-12-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- priorityscore=1501 clxscore=1015 malwarescore=0 suspectscore=2
- adultscore=0 mlxlogscore=999 impostorscore=0 mlxscore=0 bulkscore=0
- spamscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-1912180041
+In-Reply-To: <20191209162645.GA7489@willie-the-truck>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter Zijlstra <peterz@infradead.org> writes:
+On 12/9/19 11:26 AM, Will Deacon wrote:
+> On Mon, Dec 09, 2019 at 04:06:38PM +0000, Andre Przywara wrote:
+>> From: Deepak Pandey <Deepak.Pandey@arm.com>
+>>
+>> The Arm N1SDP SoC suffers from some PCIe integration issues, most
+>> prominently config space accesses to not existing BDFs being answered
+>> with a bus abort, resulting in an SError.
+> 
+> "Do as I say, not as I do"?
 
-> On Tue, Dec 17, 2019 at 04:18:40PM +0530, Aneesh Kumar K.V wrote:
->> On 12/17/19 2:39 PM, Peter Zijlstra wrote:
->> > On Tue, Dec 17, 2019 at 12:47:12PM +0530, Aneesh Kumar K.V wrote:
->> > > Architectures for which we have hardware walkers of Linux page table should
->> > > flush TLB on mmu gather batch allocation failures and batch flush. Some
->> > > architectures like POWER supports multiple translation modes (hash and radix)
->> > > and in the case of POWER only radix translation mode needs the above TLBI.
->> > > This is because for hash translation mode kernel wants to avoid this extra
->> > > flush since there are no hardware walkers of linux page table. With radix
->> > > translation, the hardware also walks linux page table and with that, kernel
->> > > needs to make sure to TLB invalidate page walk cache before page table pages are
->> > > freed.
->> > 
->> > > Based on changes from Peter Zijlstra <peterz@infradead.org>
->> > 
->> > AFAICT it is all my patch ;-)
->> 
->> Yes. I moved the changes you had to upstream. I can update the From: in the
->> next version if you are ok with that?
->
-> Well, since PPC isn't broken per finding the invalidate in
-> __p*_free_tlb(), lets do these things on top of the patches I proposed
-> here. Also, you mnight want to run benchmarks to see if the movement of
-> that TLBI actually helps (I'm thinking the cost of the PTESYNC might add
-> up).
+In my former role I asked nicely that these patches not be posted 
+upstream, but I see that they ended up being posted anyway. Hacking up 
+upstream Linux to cover for the fact that a (reference) platform is 
+non-standard is not only not good form but it actively harms the community.
 
-Upstream ppc64 is broken after the commit: a46cc7a90fd8
-("powerpc/mm/radix: Improve TLB/PWC flushes").
+You'll have people consume this platform and not realize that it's 
+broken, IP won't get fixed, and generally it'll be a mess. Yes, it's 
+unfortunate, but so was taping out that platform without working PCI. We 
+all know what should have happened, and what the right move ahead is.
 
-Also the patches are not adding any extra TLBI on either radix or hash.
+Jon.
 
-Considering we need to backport this to stable and other distributions,
-how about we do this early patches in your series before the Kconfig rename?
-This should enable stable to pick them up with less dependencies. 
-
--aneesh
+-- 
+Computer Architect
