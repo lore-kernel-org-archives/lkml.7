@@ -2,177 +2,265 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3165AC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 06:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32485C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 073A92176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 06:59:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rDsZ6ehi"
+	by mail.kernel.org (Postfix) with ESMTP id 06526218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:00:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfLRG7t (ORCPT
+        id S1726705AbfLRHAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 01:59:49 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:45112 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725797AbfLRG7s (ORCPT
+        Wed, 18 Dec 2019 02:00:33 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:48539 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725797AbfLRHAd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 01:59:48 -0500
-Received: by mail-lj1-f193.google.com with SMTP id j26so845719ljc.12;
-        Tue, 17 Dec 2019 22:59:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=CmCrYGkB4ZFug6o70e5mM5AN8jxFdIYj78bBkf6cS9E=;
-        b=rDsZ6ehiV/VaCkyEJyidCLuuzIViJSA3fU06nnxchbnNcHLsWg6FC2rbu2cp4g2nCZ
-         GjdMQHKvGXBnvWiXKj1hKGsMMqGjHMiA0HMp0rzkxDuYMtBvcDt1quK0DzEdDnzPgmIZ
-         dH08cWPlt89V0876fScd0Mm8G4m9KL5O8CeLvfn8TwxwEFQ8KYz+SEguLitgvhJapHUf
-         HdME4jEDXQTOIG4X/x3HXBQwNhgg4iqZ0NBINB68g/dotSJdBVK81dNQ2aRPL/0irAGc
-         5ESQPo37s3ez1Td2wk7GcTHZcfP/xofmgHS8DKphXoH4JIvU0Oo7SOvncl2+IOLJ2kj7
-         9M/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=CmCrYGkB4ZFug6o70e5mM5AN8jxFdIYj78bBkf6cS9E=;
-        b=meIIYNZ2kUX2OzNAYmpI6d2qfZCu0Gl+PJnW8Fb3nmx1YfwL0jIvYOsPy8DdK0+/wl
-         kdyjNz1uz0sKftW6IT/ry35W2svXq+f0rHMT16l/XKDZzXPWE4IJH2V7Kxr3vL9DxvHJ
-         XPEXsOUYpB/cnfrSMZuLqHbZENy4t/OCgNz7qxAqY4RZnPmeiqj8Ln1MsXY0z1+HWL4q
-         PMTq8hkPDhtyzPmBnkATLGEFOLTqY87GxoeG2b97/83NwsRlOXvTyyg4JHagDBF19/hK
-         L88895plqb3NTyvdrW+71O0CKH87odrJ8LQqA5hiEFnLFNKf437k3D9IHthApWJHX0qX
-         QISA==
-X-Gm-Message-State: APjAAAW0/wfA4TK3vasSm0QeebkslNCjJpL6QliayddcfBliknjp/r0v
-        jLXe8IYQtIJ9y7+uGUjWOQoj8zlD
-X-Google-Smtp-Source: APXvYqzT48RPafMiESaVyT/lGCGTlQ1gd/eTB1+JM+yWuja4CpotaFHQ4sjej153gQh/Yj/H0wT0Dw==
-X-Received: by 2002:a2e:978d:: with SMTP id y13mr558306lji.103.1576652384997;
-        Tue, 17 Dec 2019 22:59:44 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id p4sm517158lji.107.2019.12.17.22.59.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Dec 2019 22:59:44 -0800 (PST)
-Subject: Re: [PATCH v4 13/19] ASoC: tegra: Add fallback implementation for
- audio mclk
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, spujar@nvidia.com,
-        josephl@nvidia.com, daniel.lezcano@linaro.org,
-        mmaddireddy@nvidia.com, markz@nvidia.com,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1576613046-17159-1-git-send-email-skomatineni@nvidia.com>
- <1576613046-17159-14-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <e2f96102-33fa-cbe5-f488-666b7b7ffb06@gmail.com>
-Date:   Wed, 18 Dec 2019 09:59:43 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 18 Dec 2019 02:00:33 -0500
+Received: from [10.28.39.99] (10.28.39.99) by mail-sz.amlogic.com (10.28.11.5)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 18 Dec
+ 2019 15:00:53 +0800
+Subject: Re: [PATCH v4 5/6] dt-bindings: clock: meson: add A1 peripheral clock
+ controller bindings
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+CC:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Chandle Zou <chandle.zou@amlogic.com>,
+        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20191206074052.15557-1-jian.hu@amlogic.com>
+ <20191206074052.15557-6-jian.hu@amlogic.com>
+ <1ja77xlv9c.fsf@starbuckisacylon.baylibre.com>
+From:   Jian Hu <jian.hu@amlogic.com>
+Message-ID: <1538849d-34eb-c5bc-0663-a3e4fded3bc7@amlogic.com>
+Date:   Wed, 18 Dec 2019 15:00:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <1576613046-17159-14-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <1ja77xlv9c.fsf@starbuckisacylon.baylibre.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.28.39.99]
+X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
+ (10.28.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-17.12.2019 23:04, Sowjanya Komatineni пишет:
-> mclk is from clk_out_1 which is part of Tegra PMC block and pmc clocks
-> are moved to Tegra PMC driver with pmc as clock provider and using pmc
-> clock ids.
-> 
-> New device tree uses clk_out_1 from pmc clock provider.
-> 
-> So, this patch adds implementation for mclk fallback to extern1 when
-> retrieving mclk returns -ENOENT to be backward compatible of new device
-> tree with older kernels.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  sound/soc/tegra/tegra_asoc_utils.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/sound/soc/tegra/tegra_asoc_utils.c b/sound/soc/tegra/tegra_asoc_utils.c
-> index fe9ca8acd0fb..1b88c6043082 100644
-> --- a/sound/soc/tegra/tegra_asoc_utils.c
-> +++ b/sound/soc/tegra/tegra_asoc_utils.c
-> @@ -191,7 +191,16 @@ int tegra_asoc_utils_init(struct tegra_asoc_utils_data *data,
->  	data->clk_cdev1 = devm_clk_get(dev, "mclk");
->  	if (IS_ERR(data->clk_cdev1)) {
->  		dev_err(data->dev, "Can't retrieve clk cdev1\n");
-> -		return PTR_ERR(data->clk_cdev1);
-> +		if (PTR_ERR(data->clk_cdev1) != -ENOENT)
-> +			return PTR_ERR(data->clk_cdev1);
-> +		/* Fall back to extern1 */
-> +		data->clk_cdev1 = devm_clk_get(dev, "extern1");
-> +		if (IS_ERR(data->clk_cdev1)) {
-> +			dev_err(data->dev, "Can't retrieve clk extern1\n");
-> +			return PTR_ERR(data->clk_cdev1);
-> +		}
-> +
-> +		dev_err(data->dev, "Falling back to extern1\n");
->  	}
->  
->  	/*
-> 
 
-[    1.769091] ------------[ cut here ]------------
-[    1.769249] WARNING: CPU: 2 PID: 1 at drivers/clk/clk.c:954
-clk_core_disable+0xa5/0x1d4
-[    1.769330] clk_out_1 already disabled
-[    1.769459] Modules linked in:
-[    1.769541] CPU: 2 PID: 1 Comm: swapper/0 Not tainted
-5.5.0-rc1-next-20191213-00167-g6b9fbcdac8f3-dirty #266
-[    1.769676] Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
-[    1.769775] [<c010e4bd>] (unwind_backtrace) from [<c010a0fd>]
-(show_stack+0x11/0x14)
-[    1.769918] [<c010a0fd>] (show_stack) from [<c09a37b1>]
-(dump_stack+0x85/0x94)
-[    1.770061] [<c09a37b1>] (dump_stack) from [<c011f3d1>]
-(__warn+0xc1/0xc4)
-[    1.770144] [<c011f3d1>] (__warn) from [<c011f691>]
-(warn_slowpath_fmt+0x61/0x78)
-[    1.770285] [<c011f691>] (warn_slowpath_fmt) from [<c04a0e7d>]
-(clk_core_disable+0xa5/0x1d4)
-[    1.770427] [<c04a0e7d>] (clk_core_disable) from [<c04a0fc3>]
-(clk_core_disable_lock+0x17/0x20)
-[    1.770516] [<c04a0fc3>] (clk_core_disable_lock) from [<c07792bb>]
-(tegra_asoc_utils_set_rate+0x53/0x208)
-[    1.770662] [<c07792bb>] (tegra_asoc_utils_set_rate) from
-[<c077b8c5>] (tegra_rt5640_probe+0xd5/0x128)
-[    1.770808] [<c077b8c5>] (tegra_rt5640_probe) from [<c0555eb7>]
-(platform_drv_probe+0x33/0x68)
-[    1.770958] [<c0555eb7>] (platform_drv_probe) from [<c055471d>]
-(really_probe+0x14d/0x240)
-[    1.771099] [<c055471d>] (really_probe) from [<c055493f>]
-(driver_probe_device+0x43/0x11c)
-[    1.771187] [<c055493f>] (driver_probe_device) from [<c0554b25>]
-(device_driver_attach+0x3d/0x40)
-[    1.771328] [<c0554b25>] (device_driver_attach) from [<c0554b5f>]
-(__driver_attach+0x37/0x78)
-[    1.771469] [<c0554b5f>] (__driver_attach) from [<c05532fb>]
-(bus_for_each_dev+0x43/0x6c)
-[    1.771609] [<c05532fb>] (bus_for_each_dev) from [<c0553e0f>]
-(bus_add_driver+0xe3/0x148)
-[    1.771692] [<c0553e0f>] (bus_add_driver) from [<c055531d>]
-(driver_register+0x39/0xa0)
-[    1.771833] [<c055531d>] (driver_register) from [<c0102c2f>]
-(do_one_initcall+0x43/0x1bc)
-[    1.771979] [<c0102c2f>] (do_one_initcall) from [<c1000ce5>]
-(kernel_init_freeable+0x121/0x194)
-[    1.772129] [<c1000ce5>] (kernel_init_freeable) from [<c09b40e9>]
-(kernel_init+0xd/0xd0)
-[    1.772215] [<c09b40e9>] (kernel_init) from [<c01010bd>]
-(ret_from_fork+0x11/0x34)
-[    1.772349] Exception stack(0xde907fb0 to 0xde907ff8)
 
+On 2019/12/12 17:59, Jerome Brunet wrote:
+> 
+> On Fri 06 Dec 2019 at 08:40, Jian Hu <jian.hu@amlogic.com> wrote:
+> 
+>> Add the documentation to support Amlogic A1 peripheral clock driver,
+>> and add A1 peripheral clock controller bindings.
+>>
+>> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+>> ---
+>>   .../bindings/clock/amlogic,a1-clkc.yaml       | 70 +++++++++++++
+>>   include/dt-bindings/clock/a1-clkc.h           | 98 +++++++++++++++++++
+>>   2 files changed, 168 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
+>>   create mode 100644 include/dt-bindings/clock/a1-clkc.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
+>> new file mode 100644
+>> index 000000000000..dd3ce071834e
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
+>> @@ -0,0 +1,70 @@
+>> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+> 
+> Same Here, Either take Rob's suggestion from v1 or reply to his comment.
+> 
+OK, I will change it.
+>> +/*
+>> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
+>> + */
+>> +%YAML 1.2
+>> +---
+>> +$id: "http://devicetree.org/schemas/clock/amlogic,a1-clkc.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: Amlogic Meson A/C serials Peripheral Clock Control Unit Device Tree Bindings
+>> +
+>> +maintainers:
+>> +  - Neil Armstrong <narmstrong@baylibre.com>
+>> +  - Jerome Brunet <jbrunet@baylibre.com>
+>> +  - Jian Hu <jian.hu@jian.hu.com>
+>> +
+>> +properties:
+>> +  "#clock-cells":
+>> +    const: 1
+>> +  compatible:
+>> +    - enum:
+>> +        - amlogic,a1-periphs-clkc
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    minItems: 6
+>> +    maxItems: 6
+>> +    items:
+>> +      - description: Input fixed pll div2
+>> +      - description: Input fixed pll div3
+>> +      - description: Input fixed pll div5
+>> +      - description: Input fixed pll div7
+>> +      - description: HIFI PLL
+>> +      - description: Input Oscillator (usually at 24MHz)
+>> +
+>> +  clock-names:
+>> +    minItems: 6
+>> +    maxItems: 6
+>> +    items:
+>> +      - const: fclk_div2
+>> +      - const: fclk_div3
+>> +      - const: fclk_div5
+>> +      - const: fclk_div7
+>> +      - const: hifi_pll
+>> +      - const: xtal
+>> +
+>> +required:
+>> +  - "#clock-cells"
+>> +  - compatible
+>> +  - reg
+>> +  - clocks
+>> +  - clock-names
+>> +
+>> +examples:
+>> +  - |
+>> +    clkc_periphs: periphs-clock-controller {
+>> +        compatible = "amlogic,a1-periphs-clkc";
+>> +        reg = <0 0x800 0 0x104>;
+>> +        #clock-cells = <1>;
+>> +        clocks = <&clkc_pll CLKID_FCLK_DIV2>,
+>> +                <&clkc_pll CLKID_FCLK_DIV3>,
+>> +                <&clkc_pll CLKID_FCLK_DIV5>,
+>> +                <&clkc_pll CLKID_FCLK_DIV7>,
+>> +                <&clkc_pll CLKID_HIFI_PLL>,
+>> +                <&xtal>;
+>> +        clock-names = "fclk_div2", "fclk_div3", "fclk_div5",
+>> +                      "fclk_div7", "hifi_pll", "xtal";
+>> +   };
+>> diff --git a/include/dt-bindings/clock/a1-clkc.h b/include/dt-bindings/clock/a1-clkc.h
+>> new file mode 100644
+>> index 000000000000..1ba01122457c
+>> --- /dev/null
+>> +++ b/include/dt-bindings/clock/a1-clkc.h
+>> @@ -0,0 +1,98 @@
+>> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+>> +/*
+>> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
+>> + */
+>> +
+>> +#ifndef __A1_CLKC_H
+>> +#define __A1_CLKC_H
+>> +
+>> +#define CLKID_XTAL_FIXPLL			1
+>> +#define CLKID_XTAL_USB_PHY			2
+>> +#define CLKID_XTAL_USB_CTRL			3
+>> +#define CLKID_XTAL_HIFIPLL			4
+>> +#define CLKID_XTAL_SYSPLL			5
+>> +#define CLKID_XTAL_DDS				6
+>> +#define CLKID_SYS_CLK				7
+>> +#define CLKID_CLKTREE				8
+>> +#define CLKID_RESET_CTRL			9
+>> +#define CLKID_ANALOG_CTRL			10
+>> +#define CLKID_PWR_CTRL				11
+>> +#define CLKID_PAD_CTRL				12
+>> +#define CLKID_SYS_CTRL				13
+>> +#define CLKID_TEMP_SENSOR			14
+>> +#define CLKID_AM2AXI_DIV			15
+>> +#define CLKID_SPICC_B				16
+>> +#define CLKID_SPICC_A				17
+>> +#define CLKID_CLK_MSR				18
+>> +#define CLKID_AUDIO				19
+>> +#define CLKID_JTAG_CTRL				20
+>> +#define CLKID_SARADC				21
+>> +#define CLKID_PWM_EF				22
+>> +#define CLKID_PWM_CD				23
+>> +#define CLKID_PWM_AB				24
+>> +#define CLKID_CEC				25
+>> +#define CLKID_I2C_S				26
+>> +#define CLKID_IR_CTRL				27
+>> +#define CLKID_I2C_M_D				28
+>> +#define CLKID_I2C_M_C				29
+>> +#define CLKID_I2C_M_B				30
+>> +#define CLKID_I2C_M_A				31
+>> +#define CLKID_ACODEC				32
+>> +#define CLKID_OTP				33
+>> +#define CLKID_SD_EMMC_A				34
+>> +#define CLKID_USB_PHY				35
+>> +#define CLKID_USB_CTRL				36
+>> +#define CLKID_SYS_DSPB				37
+>> +#define CLKID_SYS_DSPA				38
+>> +#define CLKID_DMA				39
+>> +#define CLKID_IRQ_CTRL				40
+>> +#define CLKID_NIC				41
+>> +#define CLKID_GIC				42
+>> +#define CLKID_UART_C				43
+>> +#define CLKID_UART_B				44
+>> +#define CLKID_UART_A				45
+>> +#define CLKID_SYS_PSRAM				46
+>> +#define CLKID_RSA				47
+>> +#define CLKID_CORESIGHT				48
+>> +#define CLKID_AM2AXI_VAD			49
+>> +#define CLKID_AUDIO_VAD				50
+>> +#define CLKID_AXI_DMC				51
+>> +#define CLKID_AXI_PSRAM				52
+>> +#define CLKID_RAMB				53
+>> +#define CLKID_RAMA				54
+>> +#define CLKID_AXI_SPIFC				55
+>> +#define CLKID_AXI_NIC				56
+>> +#define CLKID_AXI_DMA				57
+>> +#define CLKID_CPU_CTRL				58
+>> +#define CLKID_ROM				59
+>> +#define CLKID_PROC_I2C				60
+>> +#define CLKID_DSPA_SEL				61
+>> +#define CLKID_DSPB_SEL				62
+>> +#define CLKID_DSPA_EN_DSPA			63
+>> +#define CLKID_DSPA_EN_NIC			64
+>> +#define CLKID_DSPB_EN_DSPB			65
+>> +#define CLKID_DSPB_EN_NIC			66
+>> +#define CLKID_RTC_CLK				67
+>> +#define CLKID_CECA_32K				68
+>> +#define CLKID_CECB_32K				69
+>> +#define CLKID_24M				70
+>> +#define CLKID_12M				71
+>> +#define CLKID_FCLK_DIV2_DIVN			72
+>> +#define CLKID_GEN				73
+>> +#define CLKID_SARADC_SEL			74
+>> +#define CLKID_SARADC_CLK			75
+>> +#define CLKID_PWM_A				76
+>> +#define CLKID_PWM_B				77
+>> +#define CLKID_PWM_C				78
+>> +#define CLKID_PWM_D				79
+>> +#define CLKID_PWM_E				80
+>> +#define CLKID_PWM_F				81
+>> +#define CLKID_SPICC				82
+>> +#define CLKID_TS				83
+>> +#define CLKID_SPIFC				84
+>> +#define CLKID_USB_BUS				85
+>> +#define CLKID_SD_EMMC				86
+>> +#define CLKID_PSRAM				87
+>> +#define CLKID_DMC				88
+>> +
+>> +#endif /* __A1_CLKC_H */
+> 
+> .
+> 
