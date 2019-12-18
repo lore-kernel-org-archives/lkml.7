@@ -2,108 +2,94 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE736C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B26C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD324218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7CBA218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:03:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QWOnSco1"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Gnla2HU3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbfLRNBK (ORCPT
+        id S1726963AbfLRND4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 08:01:10 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35309 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726743AbfLRNBK (ORCPT
+        Wed, 18 Dec 2019 08:03:56 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:35372 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726921AbfLRND4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 08:01:10 -0500
-Received: by mail-pl1-f196.google.com with SMTP id g6so958869plt.2;
-        Wed, 18 Dec 2019 05:01:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mZptkc+GxTuIJF+XEs6PYuaFq609ei0Ww4tW+wMvzUM=;
-        b=QWOnSco1vUEci+FTu/ERgDd5ODTU1yRgJ5CFxyks7cwHl4SPTSh9BiEBSYQLctIy7R
-         cRmFSdGo/gBlsCkZ1WJxCKDU5HyanPNu1/gD0TC6OLlNz3TBAgta8qVs/n1bSsBwpEA6
-         mshJNtOTuralAKZB6982zhyzKUWGjIh8RlZILaaJ3eMDWu8fUggnpcLL2ubQBjbQFQwB
-         HZ4ZPiBvqXI3wIkCkm7YcKINTxqm3Rdu9YM5HO8nWzzn3XQN5JvyfuPlzDUZmMRlvwEv
-         r4bW1w+4UHmLAtrYhdH+ENS1Yn/ZDipN+quvGMFCSQXxWaskH1ljD71DSio+gNpJEcOm
-         n+6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mZptkc+GxTuIJF+XEs6PYuaFq609ei0Ww4tW+wMvzUM=;
-        b=uh3kjctHD5+/YoqgQkvxCBNuKAOVxfmZ6xSdpWQA7qOA7UYMIYeI6eDB44+tG4s4hu
-         PtN39IPEGVlJJvcxJuqAR/85DrgpMgSQYVGti9hjHhQM7emZtpgKD89PZKi8wo+q5Y7d
-         84E/QWbGI0GZw6HqI/1vgfw6LpvKa5KUBD5wxbQwjt/4uHVvjWG0MFDXfjcpHHdM0wwy
-         vtZc8KvMOmFA03OcBUvT3EjpV5YDZ2D8gRTaKa6ZVmXwskPi5T/82e9/F7T5qocuQJFw
-         oft+yKjWPIO77X1GG9xUGBbdcfsrOKhl6Z6oAuaIykdAfGc6DLAkwAej8fcYRtf7vWv3
-         Bjig==
-X-Gm-Message-State: APjAAAXPR9gl5cCc75cT8YfQV//OjePMQuEYpx8z8MD4FWXVcMmtv7Pg
-        vM82caRgnZP56+c7Db04/2K+mNXn7zlqZGqk4Ek=
-X-Google-Smtp-Source: APXvYqwFa1VVOox0bgLP/ZaV5eFPyn9nZy4cqLbzhsgajI+6QuOaRSW6NB+26LHIswhsE7DftaQPinQ0v/uyPNAg+vs=
-X-Received: by 2002:a17:90b:3109:: with SMTP id gc9mr2702457pjb.30.1576674069386;
- Wed, 18 Dec 2019 05:01:09 -0800 (PST)
+        Wed, 18 Dec 2019 08:03:56 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2691FB23;
+        Wed, 18 Dec 2019 14:03:54 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1576674234;
+        bh=kyFycWv/ep3sHlhQaqKtpvighq+LaycJHVfyeOlcXww=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Gnla2HU3Ub2gF4AYSAgQ+mL+s9ruk/qmL+BnCX5rSEDX5HJojek9/hdknZIEJj/j+
+         Ue5NaibnYQm7ik1aa7tVB9iubMhkhSj9s4tlNjESU005Q55iSobpRmKYS1O+cDGrZ+
+         ZoYoAc6/MJUCcQMNi90hpnIe+HePzFtU6B1T9d1g=
+Date:   Wed, 18 Dec 2019 15:03:43 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        dri-devel@lists.freedesktop.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH] drm/bridge: panel: Fix typo in drm_panel_bridge_add docs
+Message-ID: <20191218130343.GB4863@pendragon.ideasonboard.com>
+References: <20191218121223.30181-1-enric.balletbo@collabora.com>
 MIME-Version: 1.0
-References: <94727fab054309cd98c876748fd27b130ce5031f.1575918870.git.lsun@mellanox.com>
- <1576250484-27291-1-git-send-email-lsun@mellanox.com>
-In-Reply-To: <1576250484-27291-1-git-send-email-lsun@mellanox.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 18 Dec 2019 15:00:59 +0200
-Message-ID: <CAHp75VfVL8fs_VXQgL85QPnW2N+zsLq4dWYkhs3xdMAjcfRgTg@mail.gmail.com>
-Subject: Re: [PATCH v2] platform/mellanox: fix the mlx-bootctl sysfs
-To:     Liming Sun <lsun@mellanox.com>
-Cc:     Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Vadim Pasternak <vadimp@mellanox.com>,
-        David Woods <dwoods@mellanox.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191218121223.30181-1-enric.balletbo@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 5:21 PM Liming Sun <lsun@mellanox.com> wrote:
+Hi Enric,
 
-> +       ret = sysfs_create_group(&dev->kobj, &mlxbf_bootctl_group);
-> +       if (ret) {
-> +               dev_err(dev, "failed to create attributes, err=%d\n", ret);
-> +               return ret;
-> +       }
-> +
->         /* Ensure we have the UUID we expect for this service. */
->         arm_smccc_smc(MLXBF_BOOTCTL_SIP_SVC_UID, 0, 0, 0, 0, 0, 0, 0, &res);
->         guid_parse(mlxbf_bootctl_svc_uuid_str, &guid);
-> @@ -305,8 +312,16 @@ static int mlxbf_bootctl_probe(struct platform_device *pdev)
->         return 0;
->  }
->
-> +static int mlxbf_bootctl_remove(struct platform_device *pdev)
-> +{
-> +       sysfs_remove_group(&pdev->dev.kobj, &mlxbf_bootctl_group);
-> +
-> +       return 0;
-> +}
-> +
->  static struct platform_driver mlxbf_bootctl_driver = {
->         .probe = mlxbf_bootctl_probe,
-> +       .remove = mlxbf_bootctl_remove,
->         .driver = {
->                 .name = "mlxbf-bootctl",
->                 .groups = mlxbf_bootctl_groups,
+Thank you for the patch.
 
-Please, use dev_groups member of the struct driver instead of above approach.
+On Wed, Dec 18, 2019 at 01:12:23PM +0100, Enric Balletbo i Serra wrote:
+> Fix the 'manged' typo with 'managed' in the drm_panel_bridge_add
+> kernel-doc documentation.
+> 
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> ---
+> 
+>  drivers/gpu/drm/bridge/panel.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/panel.c b/drivers/gpu/drm/bridge/panel.c
+> index f4e293e7cf64..fcda954bbfec 100644
+> --- a/drivers/gpu/drm/bridge/panel.c
+> +++ b/drivers/gpu/drm/bridge/panel.c
+> @@ -151,7 +151,7 @@ static const struct drm_bridge_funcs panel_bridge_bridge_funcs = {
+>   * known type. Calling this function with a panel whose connector type is
+>   * DRM_MODE_CONNECTOR_Unknown will return NULL.
+>   *
+> - * See devm_drm_panel_bridge_add() for an automatically manged version of this
+> + * See devm_drm_panel_bridge_add() for an automatically managed version of this
+>   * function.
+>   */
+>  struct drm_bridge *drm_panel_bridge_add(struct drm_panel *panel)
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards,
+
+Laurent Pinchart
