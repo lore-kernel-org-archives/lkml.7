@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F40DC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A88C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F71824672
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:24:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14B7C227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:24:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727683AbfLRQYa (ORCPT
+        id S1727695AbfLRQYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 11:24:30 -0500
-Received: from foss.arm.com ([217.140.110.172]:51878 "EHLO foss.arm.com"
+        Wed, 18 Dec 2019 11:24:33 -0500
+Received: from foss.arm.com ([217.140.110.172]:51906 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727646AbfLRQY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 11:24:27 -0500
+        id S1727682AbfLRQYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 11:24:30 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0DEBC113E;
-        Wed, 18 Dec 2019 08:24:27 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 071BA31B;
+        Wed, 18 Dec 2019 08:24:30 -0800 (PST)
 Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.56])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 64A423F719;
-        Wed, 18 Dec 2019 08:24:24 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 43CE03F719;
+        Wed, 18 Dec 2019 08:24:27 -0800 (PST)
 From:   Steven Price <steven.price@arm.com>
 To:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
 Cc:     Steven Price <steven.price@arm.com>,
@@ -43,10 +43,11 @@ Cc:     Steven Price <steven.price@arm.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Mark Rutland <Mark.Rutland@arm.com>,
         "Liang, Kan" <kan.liang@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH v17 01/23] mm: Add generic p?d_leaf() macros
-Date:   Wed, 18 Dec 2019 16:23:40 +0000
-Message-Id: <20191218162402.45610-2-steven.price@arm.com>
+        Vineet Gupta <vgupta@synopsys.com>,
+        linux-snps-arc@lists.infradead.org
+Subject: [PATCH v17 02/23] arc: mm: Add p?d_leaf() definitions
+Date:   Wed, 18 Dec 2019 16:23:41 +0000
+Message-Id: <20191218162402.45610-3-steven.price@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191218162402.45610-1-steven.price@arm.com>
 References: <20191218162402.45610-1-steven.price@arm.com>
@@ -57,57 +58,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Exposing the pud/pgd levels of the page tables to walk_page_range() means
-we may come across the exotic large mappings that come with large areas
-of contiguous memory (such as the kernel's linear map).
+walk_page_range() is going to be allowed to walk page tables other than
+those of user space. For this it needs to know when it has reached a
+'leaf' entry in the page tables. This information will be provided by the
+p?d_leaf() functions/macros.
 
-For architectures that don't provide all p?d_leaf() macros, provide
-generic do nothing default that are suitable where there cannot be leaf
-pages at that level. Futher patches will add implementations for
-individual architectures.
+For arc, we only have two levels, so only pmd_leaf() is needed.
 
-The name p?d_leaf() is chosen to minimize the confusion with existing
-uses of "large" pages and "huge" pages which do not necessary mean that
-the entry is a leaf (for example it may be a set of contiguous entries
-that only take 1 TLB slot). For the purpose of walking the page tables
-we don't need to know how it will be represented in the TLB, but we do
-need to know for sure if it is a leaf of the tree.
-
+CC: Vineet Gupta <vgupta@synopsys.com>
+CC: linux-snps-arc@lists.infradead.org
+Acked-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Steven Price <steven.price@arm.com>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
 ---
- include/asm-generic/pgtable.h | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ arch/arc/include/asm/pgtable.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
-index 798ea36a0549..e2e2bef07dd2 100644
---- a/include/asm-generic/pgtable.h
-+++ b/include/asm-generic/pgtable.h
-@@ -1238,4 +1238,24 @@ static inline bool arch_has_pfn_modify_check(void)
- #define mm_pmd_folded(mm)	__is_defined(__PAGETABLE_PMD_FOLDED)
- #endif
+diff --git a/arch/arc/include/asm/pgtable.h b/arch/arc/include/asm/pgtable.h
+index 9019ed9f9c94..12be7e1b7cc0 100644
+--- a/arch/arc/include/asm/pgtable.h
++++ b/arch/arc/include/asm/pgtable.h
+@@ -273,6 +273,7 @@ static inline void pmd_set(pmd_t *pmdp, pte_t *ptep)
+ #define pmd_none(x)			(!pmd_val(x))
+ #define	pmd_bad(x)			((pmd_val(x) & ~PAGE_MASK))
+ #define pmd_present(x)			(pmd_val(x))
++#define pmd_leaf(x)			(pmd_val(x) & _PAGE_HW_SZ)
+ #define pmd_clear(xp)			do { pmd_val(*(xp)) = 0; } while (0)
  
-+/*
-+ * p?d_leaf() - true if this entry is a final mapping to a physical address.
-+ * This differs from p?d_huge() by the fact that they are always available (if
-+ * the architecture supports large pages at the appropriate level) even
-+ * if CONFIG_HUGETLB_PAGE is not defined.
-+ * Only meaningful when called on a valid entry.
-+ */
-+#ifndef pgd_leaf
-+#define pgd_leaf(x)	0
-+#endif
-+#ifndef p4d_leaf
-+#define p4d_leaf(x)	0
-+#endif
-+#ifndef pud_leaf
-+#define pud_leaf(x)	0
-+#endif
-+#ifndef pmd_leaf
-+#define pmd_leaf(x)	0
-+#endif
-+
- #endif /* _ASM_GENERIC_PGTABLE_H */
+ #define pte_page(pte)		pfn_to_page(pte_pfn(pte))
 -- 
 2.20.1
 
