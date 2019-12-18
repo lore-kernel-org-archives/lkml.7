@@ -5,62 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D70C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3964FC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98D0A218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:06:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1068E2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:06:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k7GOlgqx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gAtIS8Y4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbfLRNG3 (ORCPT
+        id S1727029AbfLRNGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 08:06:29 -0500
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:34771 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726591AbfLRNG3 (ORCPT
+        Wed, 18 Dec 2019 08:06:33 -0500
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:33274 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726591AbfLRNGb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 08:06:29 -0500
-Received: by mail-yw1-f67.google.com with SMTP id b186so733194ywc.1;
-        Wed, 18 Dec 2019 05:06:28 -0800 (PST)
+        Wed, 18 Dec 2019 08:06:31 -0500
+Received: by mail-yb1-f196.google.com with SMTP id n66so708463ybg.0;
+        Wed, 18 Dec 2019 05:06:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LLIjdUM214rts+QdFmLT0qdowpwm43aLvVt9JtuWnSI=;
-        b=k7GOlgqxBrb7DrpjWzIRp+jbycjd5MM/XzKtDlUMxHwrUIXuBXNcVEDICBqRGEJtPs
-         lS0/nCcvc1fRc0JI+PfYd+v/L1SoiwfhttrM7O+4gXbSI55qZkJpOQZf+XhF0jes4YXk
-         8Pq7nmCmI1wZgSbmlPdn+aLh3W8SqwV1MdiiNMN4ye6CwjFBu6cWQzT2D/+3nUeJg48O
-         /G2xqSbfH0pczNadzW+gfMhW40fV/8Cz2PFtRoWPatMgYbnMWWlRthAv3ao1Ft1ytePU
-         PTSeq/oFPE08p59UWxEsxEk0PkvWeTSOk2IsdBR+Mv5yyfviPNmC29W87cPPPdyvwAQp
-         1WtA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=u7mxG5yAwNcZ8Cq1r7PPlmVBfCoyrOeHrNys7o6+Upg=;
+        b=gAtIS8Y40e2CtCol5C3ukspjDFRT53f8NQhU8u8alkLhXE+ez5VdZHRuadEUjYHKHe
+         rK9QHYE1vhmRuMP090hZ4WVIf4ufpzGOlPOF/WSWZ8DCEm1EJ+gJJ0v6QgyMmNaqk/Ug
+         lScZRUMllfrRTJLQgHziR6DaVqVqSVdbkhnU742Wm4LPhliy3NMGvm1zhTxo26P2CYDK
+         Jf8ckgX9dnss2E56V4pBDBhrnQkJZYC/W7N3aFVaY0VDYY/BlQYRMjSbXTJ/UV7xeM27
+         8gpb1jaRUoe/6KHOfMrQ0KvItWucHwBv/Yo6dO+JpOE/OiD2HGFGnhfHWIhmSM/+CTJt
+         VpAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LLIjdUM214rts+QdFmLT0qdowpwm43aLvVt9JtuWnSI=;
-        b=hu8k7rwGiXic+dF0OiRF2EMTXuTaEpGR8Yz63r27j13fjI/WzxjicQA2RqcfIqg5vw
-         NSM2wzQCSH0/ZC0RvuAyusYs8o5A5nMltA/4AWkIaWiHDUJOAqyaz3XtHVR5/rrc9kZv
-         Ag1VP4B4WmfBrSy2xQovwrePRlbvEcrDfNFuIp4748TM0lEgLC26euBhGRFH1OeK7F2u
-         p5KFb5i3paN3z7wyMkuHYcZDx0d8q9L13ooUdtDvkKSduJVZbdiC0px2ejESWhN/m/15
-         eM84KW2sTELgvKIZMkc3gLWwV9Nv5UEBONoJ2rDP7MYMgeKxKTpGBFjuwmMjPqkqwzTY
-         9lwQ==
-X-Gm-Message-State: APjAAAWb34WkJ8CCVepVQtCf1wuhFftPpgvWZCtLzW2uhG8Dmm5SYfAp
-        wdGHOatW1ineuVNPJgkHEEo=
-X-Google-Smtp-Source: APXvYqzBCz5/Y3IeMZDESTHiuAl8EZLblP3IJZCPORJ/K5z1qkW5EVc4+ZaGd3Qy/EH9AeRJOGyGQw==
-X-Received: by 2002:a81:b60d:: with SMTP id u13mr1834559ywh.382.1576674388055;
-        Wed, 18 Dec 2019 05:06:28 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=u7mxG5yAwNcZ8Cq1r7PPlmVBfCoyrOeHrNys7o6+Upg=;
+        b=DNl+cdKISTt9QGrB6nCtfzWo/3URtzsNaJ7jtOmtB76qxbuTGvaUJidOymUIxPLDpF
+         3rkbhTe5JvxINm+2ENjUFB0Auwg2KYvcNPeAxATCwVHj+zaA25Aq0npE4r10LndKhFC8
+         NKte7kEcVSpT5sRjzhSlqH3buAB3H9WNkez9bXyt9Y9YAj/yNWxyFgvnOiKHoDsSYqwv
+         tMJvQM8LY18MPpuCq0Qlk/bh88ADywXOW8uFXQgI8epFQseGIQwrO8JK5eu8g5lSA6CC
+         JL7r6Z37BN3loC3dAfkgOGeAtUXntye/OsYA8yGv6uKez1/sI0s8OUbsw1OoALsrr5Kc
+         F1Hg==
+X-Gm-Message-State: APjAAAUQ3ceNCQl1l/IvnlZre6QsDS+2Z3fdW86pQZEA3j0CJQbMGMuz
+        aU37a7q/MZzj1wtMTTK8u4ju2t5JfEo=
+X-Google-Smtp-Source: APXvYqz95pC6V0l8GBRfWqEiASGWI8aAKkIuqVpJZnPm3TZNYHLJeElu5fGmJrutxOzi6ru9Cj9WVA==
+X-Received: by 2002:a25:7557:: with SMTP id q84mr1755022ybc.76.1576674390127;
+        Wed, 18 Dec 2019 05:06:30 -0800 (PST)
 Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
-        by smtp.gmail.com with ESMTPSA id r64sm909603ywg.84.2019.12.18.05.06.25
+        by smtp.gmail.com with ESMTPSA id r64sm909603ywg.84.2019.12.18.05.06.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 05:06:27 -0800 (PST)
+        Wed, 18 Dec 2019 05:06:29 -0800 (PST)
 From:   Adam Ford <aford173@gmail.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Adam Ford <aford173@gmail.com>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
         =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -76,10 +75,12 @@ Cc:     Adam Ford <aford173@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-crypto@vger.kernel.org
-Subject: [PATCH V3 1/3] crypto: caam: Add support for i.MX8M Mini
-Date:   Wed, 18 Dec 2019 07:06:14 -0600
-Message-Id: <20191218130616.13860-1-aford173@gmail.com>
+Subject: [PATCH V3 2/3] arm64: dts: imx8mm: Add Crypto CAAM support
+Date:   Wed, 18 Dec 2019 07:06:15 -0600
+Message-Id: <20191218130616.13860-2-aford173@gmail.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191218130616.13860-1-aford173@gmail.com>
+References: <20191218130616.13860-1-aford173@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -88,43 +89,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The i.MX8M Mini uses the same crypto engine as the i.MX8MQ, but
-the driver is restricting the check to just the i.MX8MQ.
+The i.MX8M Mini supports the same crypto engine as what is in
+the i.MX8MQ, but it is not currently present in the device tree.
 
-This patch expands the check for either i.MX8MQ or i.MX8MM.
+This patch places it into the device tree.
 
 Signed-off-by: Adam Ford <aford173@gmail.com>
-Tested-by: Iuliana Prodan <iuliana.prodan@nxp.com>
-Reviewed-by: Iuliana Prodan <iuliana.prodan@nxp.com>
 Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
 ---
-V3:  No Change
-V2:  Expand the check that forces the setting on imx8mq to also be true for imx8mm
-     Explictly state imx8mm compatiblity instead of making it generic to all imx8m*
-      this is mostly due to lack of other hardware to test
+V3:  Fix typo in commit message.  no code changes
+V2:  Don't disable it by default
 
-diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
-index d7c3c3805693..c01dda692ecc 100644
---- a/drivers/crypto/caam/ctrl.c
-+++ b/drivers/crypto/caam/ctrl.c
-@@ -102,7 +102,8 @@ static inline int run_descriptor_deco0(struct device *ctrldev, u32 *desc,
- 	     * Apparently on i.MX8MQ it doesn't matter if virt_en == 1
- 	     * and the following steps should be performed regardless
- 	     */
--	    of_machine_is_compatible("fsl,imx8mq")) {
-+	    of_machine_is_compatible("fsl,imx8mq") ||
-+	    of_machine_is_compatible("fsl,imx8mm")) {
- 		clrsetbits_32(&ctrl->deco_rsr, 0, DECORSR_JR0);
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+index 6edbdfe2d0d7..cbe80a3f048c 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+@@ -641,6 +641,36 @@
+ 				status = "disabled";
+ 			};
  
- 		while (!(rd_reg32(&ctrl->deco_rsr) & DECORSR_VALID) &&
-@@ -509,6 +510,7 @@ static const struct soc_device_attribute caam_imx_soc_table[] = {
- 	{ .soc_id = "i.MX6*",  .data = &caam_imx6_data },
- 	{ .soc_id = "i.MX7*",  .data = &caam_imx7_data },
- 	{ .soc_id = "i.MX8MQ", .data = &caam_imx7_data },
-+	{ .soc_id = "i.MX8MM", .data = &caam_imx7_data },
- 	{ .family = "Freescale i.MX" },
- 	{ /* sentinel */ }
- };
++			crypto: crypto@30900000 {
++				compatible = "fsl,sec-v4.0";
++				#address-cells = <1>;
++				#size-cells = <1>;
++				reg = <0x30900000 0x40000>;
++				ranges = <0 0x30900000 0x40000>;
++				interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_AHB>,
++					 <&clk IMX8MM_CLK_IPG_ROOT>;
++				clock-names = "aclk", "ipg";
++
++				sec_jr0: jr@1000 {
++					compatible = "fsl,sec-v4.0-job-ring";
++					reg = <0x1000 0x1000>;
++					interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
++				};
++
++				sec_jr1: jr@2000 {
++					compatible = "fsl,sec-v4.0-job-ring";
++					reg = <0x2000 0x1000>;
++					interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
++				};
++
++				sec_jr2: jr@3000 {
++					compatible = "fsl,sec-v4.0-job-ring";
++					reg = <0x3000 0x1000>;
++					interrupts = <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
++				};
++			};
++
+ 			i2c1: i2c@30a20000 {
+ 				compatible = "fsl,imx8mm-i2c", "fsl,imx21-i2c";
+ 				#address-cells = <1>;
 -- 
 2.20.1
 
