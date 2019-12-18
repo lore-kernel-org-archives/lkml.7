@@ -2,89 +2,126 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D779C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 06:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECF9C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 06:04:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E550B21582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 06:00:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51E842053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 06:04:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576649091;
+	bh=KwPuZdR5lSwje+uhKXoVIKve1o6Gk5r5nmvl/M3/epw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nJFepKFka/KMV+78yeJU6QimYRi9v14ySqt0RBbxuvpCswiveyueNXjmmZj5H7QF5
+	 b08R+/qeQ/fFdLIYkzDqfvS61xSfnYoX+2GG4XdUFcvwWn9Ik3G+Vn2E2mMqY7iCQu
+	 r2GpudJUOIFz/diWKBt6D+knXvO3UK8W2QFGs0X4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbfLRGAs (ORCPT
+        id S1726616AbfLRGEu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 01:00:48 -0500
-Received: from smtp25.cstnet.cn ([159.226.251.25]:34570 "EHLO cstnet.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725930AbfLRGAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 01:00:47 -0500
-Received: from localhost.localdomain (unknown [159.226.5.100])
-        by APP-05 (Coremail) with SMTP id zQCowACHcKBnwPldBQYSAw--.4719S3;
-        Wed, 18 Dec 2019 14:00:09 +0800 (CST)
-From:   Xu Wang <vulab@iscas.ac.cn>
-To:     sschaeck@cisco.com, bp@alien8.de, mchehab@kernel.org,
-        tony.luck@intel.com, james.morse@arm.com, rrichter@marvell.com,
-        joel@jms.id.au, andrew@aj.id.au
-Cc:     linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] EDAC: aspeed: Remove unneeded semicolon
-Date:   Wed, 18 Dec 2019 06:00:06 +0000
-Message-Id: <1576648806-1114-1-git-send-email-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: zQCowACHcKBnwPldBQYSAw--.4719S3
-X-Coremail-Antispam: 1UD129KBjvdXoWrZF45ZrWktFWkGr1fGr1UGFg_yoWftrb_CF
-        40kF4fWryDtr1xC397AwnrAF9IvFyDu3W0gF92ga4akF1UXr17XryDuFWUWr4fu3yUuFyD
-        Gr1UtrW7uw47KjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb4AYjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I
-        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
-        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0
-        cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
-        C2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
-        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACI402YVCY1x02628vn2kI
-        c2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
-        v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
-        c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-        0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_
-        Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8fwID
-        UUUUU==
-X-Originating-IP: [159.226.5.100]
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBAEIA102SzegqQAAsQ
+        Wed, 18 Dec 2019 01:04:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48388 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725799AbfLRGEt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 01:04:49 -0500
+Received: from localhost (unknown [27.59.34.83])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C964F2053B;
+        Wed, 18 Dec 2019 06:04:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576649088;
+        bh=KwPuZdR5lSwje+uhKXoVIKve1o6Gk5r5nmvl/M3/epw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pXJ1+uJZuO0XEHpCJzw3AQzS4Rs73Qj7rxAOEamLyGimaDZMncGbiWAayRsRlenV1
+         w9i5x9W+6uHFtAtvAenxYSOr5+czXfp/IeJB40mwltaWuNkPoM+Eow5gaMKvdDkFgi
+         mq0lNCxtdL4ERtTibmjQV+kf1VjEdVX1mscciTw0=
+Date:   Wed, 18 Dec 2019 11:34:37 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Radhey Shyam Pandey <radheys@xilinx.com>
+Cc:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        Michal Simek <michals@xilinx.com>,
+        "nick.graumann@gmail.com" <nick.graumann@gmail.com>,
+        "andrea.merello@gmail.com" <andrea.merello@gmail.com>,
+        Appana Durga Kedareswara Rao <appanad@xilinx.com>,
+        "mcgrof@kernel.org" <mcgrof@kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        git <git@xilinx.com>
+Subject: Re: [PATCH] dmaengine: xilinx_dma: Reset DMA channel in
+ dma_terminate_all
+Message-ID: <20191218060437.GQ2536@vkoul-mobl>
+References: <1574664121-13451-1-git-send-email-radhey.shyam.pandey@xilinx.com>
+ <20191210060113.GP82508@vkoul-mobl>
+ <CH2PR02MB70009D78EA8C487BFFA54964C75A0@CH2PR02MB7000.namprd02.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CH2PR02MB70009D78EA8C487BFFA54964C75A0@CH2PR02MB7000.namprd02.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unneeded semicolon reported by coccinelle.
+On 11-12-19, 14:46, Radhey Shyam Pandey wrote:
+> > -----Original Message-----
+> > From: Vinod Koul <vkoul@kernel.org>
+> > Sent: Tuesday, December 10, 2019 11:31 AM
+> > To: Radhey Shyam Pandey <radheys@xilinx.com>
+> > Cc: dan.j.williams@intel.com; Michal Simek <michals@xilinx.com>;
+> > nick.graumann@gmail.com; andrea.merello@gmail.com; Appana Durga
+> > Kedareswara Rao <appanad@xilinx.com>; mcgrof@kernel.org;
+> > dmaengine@vger.kernel.org; linux-kernel@vger.kernel.org; git
+> > <git@xilinx.com>
+> > Subject: Re: [PATCH] dmaengine: xilinx_dma: Reset DMA channel in
+> > dma_terminate_all
+> > 
+> > On 25-11-19, 12:12, Radhey Shyam Pandey wrote:
+> > > Reset DMA channel after stop to ensure that pending transfers and
+> > > FIFOs in the datapath are flushed or completed. It fixes intermittent
+> > > data verification failure reported by xilinx dma test client.
+> > >
+> > > Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+> > > ---
+> > >  drivers/dma/xilinx/xilinx_dma.c | 17 +++++++++--------
+> > >  1 file changed, 9 insertions(+), 8 deletions(-)
+> > >
+> > > diff --git a/drivers/dma/xilinx/xilinx_dma.c
+> > > b/drivers/dma/xilinx/xilinx_dma.c index a9c5d5c..6f1539c 100644
+> > > --- a/drivers/dma/xilinx/xilinx_dma.c
+> > > +++ b/drivers/dma/xilinx/xilinx_dma.c
+> > > @@ -2404,16 +2404,17 @@ static int xilinx_dma_terminate_all(struct
+> > dma_chan *dchan)
+> > >  	u32 reg;
+> > >  	int err;
+> > >
+> > > -	if (chan->cyclic)
+> > > -		xilinx_dma_chan_reset(chan);
+> > 
+> > So reset is required for non cyclic cases as well now?
+> 
+> Yes. In absence of reset in non-cyclic case, when dmatest client
+> driver is stressed and loaded/unloaded multiple times we see dma 
+> data comparison failures. Possibly IP is prefetching/holding the
+> previous state and reset ensures a clean state on each iteration.
+> > 
+> > > -
+> > > -	err = chan->stop_transfer(chan);
+> > > -	if (err) {
+> > > -		dev_err(chan->dev, "Cannot stop channel %p: %x\n",
+> > > -			chan, dma_ctrl_read(chan,
+> > XILINX_DMA_REG_DMASR));
+> > > -		chan->err = true;
+> > > +	if (!chan->cyclic) {
+> > > +		err = chan->stop_transfer(chan);
+> > 
+> > no stop for cyclic now..?
+> After reset stop is not needed, so for the cyclic mode we only do reset.
 
-Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
----
- drivers/edac/aspeed_edac.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Okay makes sense, can you please add these as comments, down the line
+these will be very useful for you & others to debug!
 
-diff --git a/drivers/edac/aspeed_edac.c b/drivers/edac/aspeed_edac.c
-index 09a9e3d..b194658b 100644
---- a/drivers/edac/aspeed_edac.c
-+++ b/drivers/edac/aspeed_edac.c
-@@ -243,7 +243,7 @@ static int init_csrows(struct mem_ctl_info *mci)
- 	if (!np) {
- 		dev_err(mci->pdev, "dt: missing /memory node\n");
- 		return -ENODEV;
--	};
-+	}
- 
- 	rc = of_address_to_resource(np, 0, &r);
- 
-@@ -252,7 +252,7 @@ static int init_csrows(struct mem_ctl_info *mci)
- 	if (rc) {
- 		dev_err(mci->pdev, "dt: failed requesting resource for /memory node\n");
- 		return rc;
--	};
-+	}
- 
- 	dev_dbg(mci->pdev, "dt: /memory node resources: first page r.start=0x%x, resource_size=0x%x, PAGE_SHIFT macro=0x%x\n",
- 		r.start, resource_size(&r), PAGE_SHIFT);
 -- 
-2.7.4
-
+~Vinod
