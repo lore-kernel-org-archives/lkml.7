@@ -2,74 +2,259 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3892C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8EDC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A489020717
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DF632072B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:56:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbfLRJxG (ORCPT
+        id S1726701AbfLRJ4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 04:53:06 -0500
-Received: from mail.bugwerft.de ([46.23.86.59]:46500 "EHLO mail.bugwerft.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725799AbfLRJxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 04:53:05 -0500
-Received: from [10.10.222.226] (unknown [194.162.236.226])
-        by mail.bugwerft.de (Postfix) with ESMTPSA id 3A811281DF4;
-        Wed, 18 Dec 2019 09:46:38 +0000 (UTC)
-Subject: Re: [alsa-devel] [PATCH 00/10] mfd: Add support for Analog Devices
- A2B transceiver
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org
-Cc:     lars@metafoo.de, sboyd@kernel.org, mturquette@baylibre.com,
-        robh+dt@kernel.org, broonie@kernel.org, pascal.huerst@gmail.com,
-        lee.jones@linaro.org
-References: <20191209183511.3576038-1-daniel@zonque.org>
- <cb86a793-014a-1acf-c144-f9014ac0a0ac@linux.intel.com>
-From:   Daniel Mack <daniel@zonque.org>
-Message-ID: <22803ea0-0c4a-b096-ec11-5e8f5c27d8d3@zonque.org>
-Date:   Wed, 18 Dec 2019 10:53:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 18 Dec 2019 04:56:24 -0500
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:65300 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725799AbfLRJ4Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 04:56:24 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0TlGZ7-i_1576662981;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TlGZ7-i_1576662981)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 18 Dec 2019 17:56:22 +0800
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Harry Wei <harryxiyou@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] docs/zh_CN: add kernel driver statement
+Date:   Wed, 18 Dec 2019 17:56:19 +0800
+Message-Id: <1576662980-103843-1-git-send-email-alex.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-In-Reply-To: <cb86a793-014a-1acf-c144-f9014ac0a0ac@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+To spread the right message to more vendors by Chinese.
 
-On 12/17/19 8:29 PM, Pierre-Louis Bossart wrote:
->> Transceivers can both receive and provide audio, and streams can be
->> routed from one node to any other, including many others. The tricky
->> bit is how to expose the audio routing in DT in a sane way.
->> The way it is implemented here, the slave nodes specify the number of
->> slots they each consume and generate, and which thereof they forward
->> from one side to the other. This mimics the internal register
->> structure and should allow for even exotic setups.
-> 
-> It was my understanding that the A2B bus is bidirectional but with
-> separate time windows allocated for host->device and device->host
-> transmission. The wording seems to hint at device-to-device
-> communication but I wonder if this is really what you meant.
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Harry Wei <harryxiyou@gmail.com> 
+Cc: Jonathan Corbet <corbet@lwn.net> 
+Cc: linux-doc@vger.kernel.org 
+Cc: linux-kernel@vger.kernel.org 
+---
+ .../zh_CN/process/kernel-driver-statement.rst      | 194 +++++++++++++++++++++
+ 1 file changed, 194 insertions(+)
+ create mode 100644 Documentation/translations/zh_CN/process/kernel-driver-statement.rst
 
-Yes, audio frames can be exchanged between two slave nodes without
-interaction by the master node. I'm not sure what the best way is to
-describe that in DT really, but as the hardware is capable of doing it,
-there must be a way to enable such setups.
-
-
-Thanks,
-Daniel
+diff --git a/Documentation/translations/zh_CN/process/kernel-driver-statement.rst b/Documentation/translations/zh_CN/process/kernel-driver-statement.rst
+new file mode 100644
+index 000000000000..eb029ed79ef7
+--- /dev/null
++++ b/Documentation/translations/zh_CN/process/kernel-driver-statement.rst
+@@ -0,0 +1,194 @@
++.. _cn_process_statement_driver:
++
++内核驱动声明
++------------
++
++关于Linux内核模块的立场声明
++===========================
++
++我们，以下署名的Linux内核开发人员，认为任何封闭源Linux内核模块或驱动程序都是
++有害的和不可取的。我们已经一再发现它们对Linux用户，企业和更大的Linux生态系统
++有害。这样的模块否定了Linux开发模型的开放性，稳定性，灵活性和可维护性，并使
++他们的用户无法使用Linux社区的专业知识。提供闭源内核模块的供应商迫使其客户
++放弃Linux的主要优势或选择新的供应商。因此，为了充分利用开源所提供的成本节省和
++共享支持优势，我们敦促供应商采取措施，以开源内核代码在Linux上为其客户提供支持。
++
++我们只为自己说话，而不是我们今天可能会为之工作，过去或将来会为之工作的任何公司。
++
++ - Dave Airlie
++ - Nick Andrew
++ - Jens Axboe
++ - Ralf Baechle
++ - Felipe Balbi
++ - Ohad Ben-Cohen
++ - Muli Ben-Yehuda
++ - Jiri Benc
++ - Arnd Bergmann
++ - Thomas Bogendoerfer
++ - Vitaly Bordug
++ - James Bottomley
++ - Josh Boyer
++ - Neil Brown
++ - Mark Brown
++ - David Brownell
++ - Michael Buesch
++ - Franck Bui-Huu
++ - Adrian Bunk
++ - François Cami
++ - Ralph Campbell
++ - Luiz Fernando N. Capitulino
++ - Mauro Carvalho Chehab
++ - Denis Cheng
++ - Jonathan Corbet
++ - Glauber Costa
++ - Alan Cox
++ - Magnus Damm
++ - Ahmed S. Darwish
++ - Robert P. J. Day
++ - Hans de Goede
++ - Arnaldo Carvalho de Melo
++ - Helge Deller
++ - Jean Delvare
++ - Mathieu Desnoyers
++ - Sven-Thorsten Dietrich
++ - Alexey Dobriyan
++ - Daniel Drake
++ - Alex Dubov
++ - Randy Dunlap
++ - Michael Ellerman
++ - Pekka Enberg
++ - Jan Engelhardt
++ - Mark Fasheh
++ - J. Bruce Fields
++ - Larry Finger
++ - Jeremy Fitzhardinge
++ - Mike Frysinger
++ - Kumar Gala
++ - Robin Getz
++ - Liam Girdwood
++ - Jan-Benedict Glaw
++ - Thomas Gleixner
++ - Brice Goglin
++ - Cyrill Gorcunov
++ - Andy Gospodarek
++ - Thomas Graf
++ - Krzysztof Halasa
++ - Harvey Harrison
++ - Stephen Hemminger
++ - Michael Hennerich
++ - Tejun Heo
++ - Benjamin Herrenschmidt
++ - Kristian Høgsberg
++ - Henrique de Moraes Holschuh
++ - Marcel Holtmann
++ - Mike Isely
++ - Takashi Iwai
++ - Olof Johansson
++ - Dave Jones
++ - Jesper Juhl
++ - Matthias Kaehlcke
++ - Kenji Kaneshige
++ - Jan Kara
++ - Jeremy Kerr
++ - Russell King
++ - Olaf Kirch
++ - Roel Kluin
++ - Hans-Jürgen Koch
++ - Auke Kok
++ - Peter Korsgaard
++ - Jiri Kosina
++ - Aaro Koskinen
++ - Mariusz Kozlowski
++ - Greg Kroah-Hartman
++ - Michael Krufky
++ - Aneesh Kumar
++ - Clemens Ladisch
++ - Christoph Lameter
++ - Gunnar Larisch
++ - Anders Larsen
++ - Grant Likely
++ - John W. Linville
++ - Yinghai Lu
++ - Tony Luck
++ - Pavel Machek
++ - Matt Mackall
++ - Paul Mackerras
++ - Roland McGrath
++ - Patrick McHardy
++ - Kyle McMartin
++ - Paul Menage
++ - Thierry Merle
++ - Eric Miao
++ - Akinobu Mita
++ - Ingo Molnar
++ - James Morris
++ - Andrew Morton
++ - Paul Mundt
++ - Oleg Nesterov
++ - Luca Olivetti
++ - S.Çağlar Onur
++ - Pierre Ossman
++ - Keith Owens
++ - Venkatesh Pallipadi
++ - Nick Piggin
++ - Nicolas Pitre
++ - Evgeniy Polyakov
++ - Richard Purdie
++ - Mike Rapoport
++ - Sam Ravnborg
++ - Gerrit Renker
++ - Stefan Richter
++ - David Rientjes
++ - Luis R. Rodriguez
++ - Stefan Roese
++ - Francois Romieu
++ - Rami Rosen
++ - Stephen Rothwell
++ - Maciej W. Rozycki
++ - Mark Salyzyn
++ - Yoshinori Sato
++ - Deepak Saxena
++ - Holger Schurig
++ - Amit Shah
++ - Yoshihiro Shimoda
++ - Sergei Shtylyov
++ - Kay Sievers
++ - Sebastian Siewior
++ - Rik Snel
++ - Jes Sorensen
++ - Alexey Starikovskiy
++ - Alan Stern
++ - Timur Tabi
++ - Hirokazu Takata
++ - Eliezer Tamir
++ - Eugene Teo
++ - Doug Thompson
++ - FUJITA Tomonori
++ - Dmitry Torokhov
++ - Marcelo Tosatti
++ - Steven Toth
++ - Theodore Tso
++ - Matthias Urlichs
++ - Geert Uytterhoeven
++ - Arjan van de Ven
++ - Ivo van Doorn
++ - Rik van Riel
++ - Wim Van Sebroeck
++ - Hans Verkuil
++ - Horst H. von Brand
++ - Dmitri Vorobiev
++ - Anton Vorontsov
++ - Daniel Walker
++ - Johannes Weiner
++ - Harald Welte
++ - Matthew Wilcox
++ - Dan J. Williams
++ - Darrick J. Wong
++ - David Woodhouse
++ - Chris Wright
++ - Bryan Wu
++ - Rafael J. Wysocki
++ - Herbert Xu
++ - Vlad Yasevich
++ - Peter Zijlstra
++ - Bartlomiej Zolnierkiewicz
+-- 
+1.8.3.1
 
