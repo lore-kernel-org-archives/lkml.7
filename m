@@ -4,66 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CEAC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4970C2D0D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9468C2176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAFF82146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:24:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TP/W6hrW"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jFgeMvSD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727256AbfLRNYA (ORCPT
+        id S1727281AbfLRNYG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 08:24:00 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:45370 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726749AbfLRNX7 (ORCPT
+        Wed, 18 Dec 2019 08:24:06 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:46777 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726749AbfLRNYC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 08:23:59 -0500
-Received: by mail-lf1-f65.google.com with SMTP id 203so1663682lfa.12
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 05:23:57 -0800 (PST)
+        Wed, 18 Dec 2019 08:24:02 -0500
+Received: by mail-lf1-f67.google.com with SMTP id f15so1661373lfl.13
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 05:24:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=NVL5+pBVbAL5rpEkMW1hQcPnra9m/vRP70pZvH2RbgM=;
-        b=TP/W6hrWPtyhXCnkJ/M9rO3u+zLh3YW8407ypXPQ0jPTnR218QRgcQEVS8vVPruxsJ
-         b5iwm5Q3gQnNMqIY88TBmzVs2o3mwbIN+y+oXlF7OuTSeTHfB1isqtaI4Ln9XLACWMZm
-         NPzC9Mh4i89TNToP9uCHGuInBM9Ec6CGNNt7ZG/AMWhruQEkhnQgpDzIA1IDfpSVCFuF
-         TmKl2ATKudd2O2B4a3xB+L696oTUIm0K0e2jqliW3KMsB3heYCGcDZzCuA/+e34tMaZX
-         +AmSE8c3El6Pb3H7UGz8qauHmaIKIkkawsaTaYVE9wXgB62Xk/Jyi2ilR2Qki6i9Tvi7
-         ZbQA==
+        bh=fdnv5G54kjVyBGm0/gl9gu7nvtpvFPt8yg5pxAgrcmE=;
+        b=jFgeMvSDcZBktiP6w0iUj7kL8k5sQjm6mg9k/ps8khr63J+cX9pqqKQmBDnUrdI9gu
+         OCDqRaWaj9TWeCld9YrmKJeFymYAvdTB+DMOFSYGWOT1lKPPM7PNz1+mL46/Oqo/zjec
+         2cQXB8kZqYvTvrRCRPTBbhecOeMDUyEG5ZQ6IhQVfhTDh4jd2+eqTBs0ska9ydwcQ2/g
+         yb+sLpOS+M8i3V+i7FOHlvRywr1cc3y/66aqcbOg6LzLpc+o16HtsbWjAB2fNrLK2HMC
+         3Kobzz7C/Ljj7tZR6xXs/0wdvfzY0t8oZVh5uZib95O8vY3MDYE0V5pBEI7yG92n2z0A
+         dCUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=NVL5+pBVbAL5rpEkMW1hQcPnra9m/vRP70pZvH2RbgM=;
-        b=aPNt8y6epFhmA2y2MIuj0Cr3bU+/AyaKeBxVWG9tWybhWrp7czZDQAesiR2f8vhw4t
-         1Z3swzddlHzpKEpxeKUh2iRpEbDwqiUo+t08bUFOviQZocwX5+wvAf9p4tW02xqA/w8L
-         8MaUwCR/JPmWrP7LL8lYreMhd8ZDuF/6+jupsK4ETkIDl0LCZhPITIu+fbaF3z35aFhc
-         EyyyJGqZdvImxljkIH/FCZ+b//2aHXceHaWyjGknlrQA6IMHTTpc0lKhrRISoKjY94XT
-         YTkr+ZXScIZOsuFf0JFyWWfCeAmkVEP2re//bYacyY9jx3Pcec57hTOjUqqjuZEyY/O2
-         17ew==
-X-Gm-Message-State: APjAAAVx/pJv/9t4x+wamrM+HaVwbWctfWmnE6vetNCUBrgBTM86pKal
-        shiC9IiFl3o8kyaVO5SAAzm7Vw==
-X-Google-Smtp-Source: APXvYqyEV2zH52TJucpVEAfjbOlJ0yPikw57AriZ+ObO+Ogbx38H64kV+wagfc75Q8ubHSaVt/OKTw==
-X-Received: by 2002:ac2:5c4b:: with SMTP id s11mr1699990lfp.133.1576675436728;
-        Wed, 18 Dec 2019 05:23:56 -0800 (PST)
+        bh=fdnv5G54kjVyBGm0/gl9gu7nvtpvFPt8yg5pxAgrcmE=;
+        b=WKKTdzxpjRgew4jn2WmjULBhcuf62A9M79+FqL3yaLgxQzlwQPG8DuKtN8wSQkxENT
+         rFHVeHuMeTI8am9wE2843EV3U+5/G+M5emRGwkyItCkJcDydbyCwiho6a5Q07A9hFhQs
+         oSAJSxR16q/UaRlTaUtSA0n4Gr67tJnMUko2M/NIbF+VywFhm+U27BYOB00vaSCXzIz+
+         V/cZt5L/6GZE8ZoaPi9hexJTsn8y9WlwiYB6wM7juMFz+/+nVtO60QZuNvmb1n4ep/NP
+         UnJnpcM/CMZI0Az4/GXprP0NeIZDDEwyDcMNQ/uEqEyR7S6T+Tjz37SK6jWaH6W1Dv43
+         R1yQ==
+X-Gm-Message-State: APjAAAWC8FwLb9KRbHI4zWcvmuwPwm8QC3c9MAstj14j1cvqDxo/aQ2v
+        wm18tMZSEfiV43iU2TWY9N6Q2g==
+X-Google-Smtp-Source: APXvYqzqLzR+5orlUlMv3SgEe06Bkjy+mExbqQ1hrTsMjm2qdbczM8yt5qontFf1NTSwaNHUYQlyMA==
+X-Received: by 2002:a19:f006:: with SMTP id p6mr1719027lfc.94.1576675440344;
+        Wed, 18 Dec 2019 05:24:00 -0800 (PST)
 Received: from localhost.localdomain ([37.157.136.193])
-        by smtp.gmail.com with ESMTPSA id z7sm1440667lfa.81.2019.12.18.05.23.55
+        by smtp.gmail.com with ESMTPSA id z7sm1440667lfa.81.2019.12.18.05.23.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 05:23:56 -0800 (PST)
+        Wed, 18 Dec 2019 05:23:59 -0800 (PST)
 From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
 To:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-media@vger.kernel.org, devicetree@vger.kernel.org
 Cc:     Vikash Garodia <vgarodia@codeaurora.org>, dikshita@codeaurora.org,
-        Aniket Masule <amasule@codeaurora.org>,
         Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH v2 02/12] media: venus: introduce core selection
-Date:   Wed, 18 Dec 2019 15:22:41 +0200
-Message-Id: <20191218132251.24161-3-stanimir.varbanov@linaro.org>
+Subject: [PATCH v2 04/12] v4l: Add source event change for bit-depth
+Date:   Wed, 18 Dec 2019 15:22:43 +0200
+Message-Id: <20191218132251.24161-5-stanimir.varbanov@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191218132251.24161-1-stanimir.varbanov@linaro.org>
 References: <20191218132251.24161-1-stanimir.varbanov@linaro.org>
@@ -72,462 +71,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aniket Masule <amasule@codeaurora.org>
+This event indicate that the source color bit-depth is changed
+during run-time. The client must get the new format and re-allocate
+buffers for it. This can usually happens with video decoder (encoders)
+when the bit-stream color bit-depth is changed from 8 to 10bits
+or vice versa.
 
-Presently the core (vcodec pipelines) assignment is static. Here we
-introduce dynamic load balancing across the cores depending on the
-current session load. The load on earch core is calculated and core
-with minimum load is assigned to given instance. This will be
-applicable on Venus v4 with more than one vcodec cores.
-
-Signed-off-by: Aniket Masule <amasule@codeaurora.org>
-Co-developed-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 ---
- drivers/media/platform/qcom/venus/core.h      |   3 +
- drivers/media/platform/qcom/venus/helpers.c   |  17 +-
- drivers/media/platform/qcom/venus/helpers.h   |   1 -
- .../media/platform/qcom/venus/hfi_helper.h    |   1 +
- .../media/platform/qcom/venus/hfi_parser.h    |   5 +
- .../media/platform/qcom/venus/pm_helpers.c    | 183 ++++++++++++++++--
- .../media/platform/qcom/venus/pm_helpers.h    |  26 +++
- drivers/media/platform/qcom/venus/vdec.c      |  11 +-
- drivers/media/platform/qcom/venus/venc.c      |  10 +-
- 9 files changed, 221 insertions(+), 36 deletions(-)
+ Documentation/media/uapi/v4l/vidioc-dqevent.rst | 8 +++++++-
+ Documentation/media/videodev2.h.rst.exceptions  | 1 +
+ include/uapi/linux/videodev2.h                  | 1 +
+ 3 files changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
-index c66763e1b8f1..bfbd4a1ba089 100644
---- a/drivers/media/platform/qcom/venus/core.h
-+++ b/drivers/media/platform/qcom/venus/core.h
-@@ -181,6 +181,8 @@ struct venus_core {
- 	struct delayed_work work;
- 	struct venus_caps caps[MAX_CODEC_NUM];
- 	unsigned int codecs_count;
-+	unsigned int core0_usage_count;
-+	unsigned int core1_usage_count;
+diff --git a/Documentation/media/uapi/v4l/vidioc-dqevent.rst b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+index 42659a3d1705..fad853d440cf 100644
+--- a/Documentation/media/uapi/v4l/vidioc-dqevent.rst
++++ b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+@@ -402,7 +402,13 @@ call.
+ 	that many Video Capture devices are not able to recover from a temporary
+ 	loss of signal and so restarting streaming I/O is required in order for
+ 	the hardware to synchronize to the video signal.
+-
++    * - ``V4L2_EVENT_SRC_CH_COLOR_DEPTH``
++      - 0x0002
++      - This event gets triggered when color bit-depth change is detected
++	from a video decoder. Applications will have to query the new pixel
++	format and re-negotiate the queue. In most cases the streaming must be
++	stopped and restarted (:ref:`VIDIOC_STREAMOFF <VIDIOC_STREAMON>`
++	followed by :ref:`VIDIOC_STREAMON <VIDIOC_STREAMON>`).
+ 
+ Return Value
+ ============
+diff --git a/Documentation/media/videodev2.h.rst.exceptions b/Documentation/media/videodev2.h.rst.exceptions
+index cb6ccf91776e..209709114378 100644
+--- a/Documentation/media/videodev2.h.rst.exceptions
++++ b/Documentation/media/videodev2.h.rst.exceptions
+@@ -490,6 +490,7 @@ replace define V4L2_EVENT_CTRL_CH_FLAGS ctrl-changes-flags
+ replace define V4L2_EVENT_CTRL_CH_RANGE ctrl-changes-flags
+ 
+ replace define V4L2_EVENT_SRC_CH_RESOLUTION src-changes-flags
++replace define V4L2_EVENT_SRC_CH_COLOR_DEPTH src-changes-flags
+ 
+ replace define V4L2_EVENT_MD_FL_HAVE_FRAME_SEQ :c:type:`v4l2_event_motion_det`
+ 
+diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+index 04481c717fee..2a5138ac6d25 100644
+--- a/include/uapi/linux/videodev2.h
++++ b/include/uapi/linux/videodev2.h
+@@ -2307,6 +2307,7 @@ struct v4l2_event_frame_sync {
  };
  
- struct vdec_controls {
-@@ -379,6 +381,7 @@ struct venus_inst {
- 	const struct hfi_inst_ops *ops;
- 	u32 session_type;
- 	union hfi_get_property hprop;
-+	unsigned int core_acquired: 1;
- };
+ #define V4L2_EVENT_SRC_CH_RESOLUTION		(1 << 0)
++#define V4L2_EVENT_SRC_CH_COLOR_DEPTH		(1 << 1)
  
- #define IS_V1(core)	((core)->res->hfi_version == HFI_VERSION_1XX)
-diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
-index cbeeaf6077e0..043e0d8705a8 100644
---- a/drivers/media/platform/qcom/venus/helpers.c
-+++ b/drivers/media/platform/qcom/venus/helpers.c
-@@ -723,21 +723,6 @@ int venus_helper_set_work_mode(struct venus_inst *inst, u32 mode)
- }
- EXPORT_SYMBOL_GPL(venus_helper_set_work_mode);
- 
--int venus_helper_set_core_usage(struct venus_inst *inst, u32 usage)
--{
--	const u32 ptype = HFI_PROPERTY_CONFIG_VIDEOCORES_USAGE;
--	struct hfi_videocores_usage_type cu;
--
--	inst->clk_data.core_id = usage;
--	if (!IS_V4(inst->core))
--		return 0;
--
--	cu.video_core_enable_mask = usage;
--
--	return hfi_session_set_property(inst, ptype, &cu);
--}
--EXPORT_SYMBOL_GPL(venus_helper_set_core_usage);
--
- int venus_helper_init_codec_freq_data(struct venus_inst *inst)
- {
- 	const struct codec_freq_data *data;
-@@ -1101,6 +1086,8 @@ void venus_helper_vb2_stop_streaming(struct vb2_queue *q)
- 	else
- 		inst->streamon_cap = 0;
- 
-+	venus_pm_release_core(inst);
-+
- 	mutex_unlock(&inst->lock);
- }
- EXPORT_SYMBOL_GPL(venus_helper_vb2_stop_streaming);
-diff --git a/drivers/media/platform/qcom/venus/helpers.h b/drivers/media/platform/qcom/venus/helpers.h
-index 44b50914cd12..b64875564064 100644
---- a/drivers/media/platform/qcom/venus/helpers.h
-+++ b/drivers/media/platform/qcom/venus/helpers.h
-@@ -34,7 +34,6 @@ int venus_helper_set_output_resolution(struct venus_inst *inst,
- 				       u32 buftype);
- int venus_helper_set_work_mode(struct venus_inst *inst, u32 mode);
- int venus_helper_init_codec_freq_data(struct venus_inst *inst);
--int venus_helper_set_core_usage(struct venus_inst *inst, u32 usage);
- int venus_helper_set_num_bufs(struct venus_inst *inst, unsigned int input_bufs,
- 			      unsigned int output_bufs,
- 			      unsigned int output2_bufs);
-diff --git a/drivers/media/platform/qcom/venus/hfi_helper.h b/drivers/media/platform/qcom/venus/hfi_helper.h
-index b70551e296b7..2a47f6c0a07a 100644
---- a/drivers/media/platform/qcom/venus/hfi_helper.h
-+++ b/drivers/media/platform/qcom/venus/hfi_helper.h
-@@ -550,6 +550,7 @@ struct hfi_bitrate {
- #define HFI_CAPABILITY_LCU_SIZE				0x14
- #define HFI_CAPABILITY_HIER_P_HYBRID_NUM_ENH_LAYERS	0x15
- #define HFI_CAPABILITY_MBS_PER_SECOND_POWERSAVE		0x16
-+#define HFI_CAPABILITY_MAX_VIDEOCORES			0x2b
- 
- struct hfi_capability {
- 	u32 capability_type;
-diff --git a/drivers/media/platform/qcom/venus/hfi_parser.h b/drivers/media/platform/qcom/venus/hfi_parser.h
-index 3e931c747e19..264e6dd2415f 100644
---- a/drivers/media/platform/qcom/venus/hfi_parser.h
-+++ b/drivers/media/platform/qcom/venus/hfi_parser.h
-@@ -107,4 +107,9 @@ static inline u32 frate_step(struct venus_inst *inst)
- 	return cap_step(inst, HFI_CAPABILITY_FRAMERATE);
- }
- 
-+static inline u32 core_num_max(struct venus_inst *inst)
-+{
-+	return cap_max(inst, HFI_CAPABILITY_MAX_VIDEOCORES);
-+}
-+
- #endif
-diff --git a/drivers/media/platform/qcom/venus/pm_helpers.c b/drivers/media/platform/qcom/venus/pm_helpers.c
-index 9531c01f067b..46d9d2fb5e23 100644
---- a/drivers/media/platform/qcom/venus/pm_helpers.c
-+++ b/drivers/media/platform/qcom/venus/pm_helpers.c
-@@ -14,6 +14,7 @@
- #include <media/v4l2-mem2mem.h>
- 
- #include "core.h"
-+#include "hfi_parser.h"
- #include "hfi_venus_io.h"
- #include "pm_helpers.h"
- 
-@@ -480,6 +481,173 @@ static int poweron_coreid(struct venus_core *core, unsigned int coreid_mask)
- 	return 0;
- }
- 
-+static void
-+min_loaded_core(struct venus_inst *inst, u32 *min_coreid, u32 *min_load)
-+{
-+	u32 mbs_per_sec, load, core1_load = 0, core2_load = 0;
-+	u32 cores_max = core_num_max(inst);
-+	struct venus_core *core = inst->core;
-+	struct venus_inst *inst_pos;
-+	unsigned long vpp_freq;
-+	u32 coreid;
-+
-+	mutex_lock(&core->lock);
-+
-+	list_for_each_entry(inst_pos, &core->instances, list) {
-+		if (inst_pos == inst)
-+			continue;
-+		vpp_freq = inst_pos->clk_data.codec_freq_data->vpp_freq;
-+		coreid = inst_pos->clk_data.core_id;
-+
-+		mbs_per_sec = load_per_instance(inst_pos);
-+		load = mbs_per_sec * vpp_freq;
-+
-+		if ((coreid & VIDC_CORE_ID_3) == VIDC_CORE_ID_3) {
-+			core1_load += load / 2;
-+			core2_load += load / 2;
-+		} else if (coreid & VIDC_CORE_ID_1) {
-+			core1_load += load;
-+		} else if (coreid & VIDC_CORE_ID_2) {
-+			core2_load += load;
-+		}
-+	}
-+
-+	*min_coreid = core1_load <= core2_load ?
-+			VIDC_CORE_ID_1 : VIDC_CORE_ID_2;
-+	*min_load = min(core1_load, core2_load);
-+
-+	if (cores_max < VIDC_CORE_ID_2 || core->res->vcodec_num < 2) {
-+		*min_coreid = VIDC_CORE_ID_1;
-+		*min_load = core1_load;
-+	}
-+
-+	mutex_unlock(&core->lock);
-+}
-+
-+static int decide_core(struct venus_inst *inst)
-+{
-+	const u32 ptype = HFI_PROPERTY_CONFIG_VIDEOCORES_USAGE;
-+	struct venus_core *core = inst->core;
-+	u32 min_coreid, min_load, inst_load;
-+	struct hfi_videocores_usage_type cu;
-+	unsigned long max_freq;
-+
-+	if (legacy_binding) {
-+		if (inst->session_type == VIDC_SESSION_TYPE_DEC)
-+			cu.video_core_enable_mask = VIDC_CORE_ID_1;
-+		else
-+			cu.video_core_enable_mask = VIDC_CORE_ID_2;
-+
-+		goto done;
-+	}
-+
-+	if (inst->clk_data.core_id != VIDC_CORE_ID_DEFAULT)
-+		return 0;
-+
-+	inst_load = load_per_instance(inst);
-+	inst_load *= inst->clk_data.codec_freq_data->vpp_freq;
-+	max_freq = core->res->freq_tbl[0].freq;
-+
-+	min_loaded_core(inst, &min_coreid, &min_load);
-+
-+	if ((inst_load + min_load) > max_freq) {
-+		dev_warn(core->dev, "HW is overloaded, needed: %u max: %lu\n",
-+			 inst_load, max_freq);
-+		return -EINVAL;
-+	}
-+
-+	inst->clk_data.core_id = min_coreid;
-+	cu.video_core_enable_mask = min_coreid;
-+
-+done:
-+	return hfi_session_set_property(inst, ptype, &cu);
-+}
-+
-+static int acquire_core(struct venus_inst *inst)
-+{
-+	struct venus_core *core = inst->core;
-+	unsigned int coreid_mask = 0;
-+
-+	if (inst->core_acquired)
-+		return 0;
-+
-+	inst->core_acquired = true;
-+
-+	if (inst->clk_data.core_id & VIDC_CORE_ID_1) {
-+		if (core->core0_usage_count++)
-+			return 0;
-+
-+		coreid_mask = VIDC_CORE_ID_1;
-+	}
-+
-+	if (inst->clk_data.core_id & VIDC_CORE_ID_2) {
-+		if (core->core1_usage_count++)
-+			return 0;
-+
-+		coreid_mask |= VIDC_CORE_ID_2;
-+	}
-+
-+	return poweron_coreid(core, coreid_mask);
-+}
-+
-+static int release_core(struct venus_inst *inst)
-+{
-+	struct venus_core *core = inst->core;
-+	unsigned int coreid_mask = 0;
-+	int ret;
-+
-+	if (!inst->core_acquired)
-+		return 0;
-+
-+	if (inst->clk_data.core_id & VIDC_CORE_ID_1) {
-+		if (--core->core0_usage_count)
-+			goto done;
-+
-+		coreid_mask = VIDC_CORE_ID_1;
-+	}
-+
-+	if (inst->clk_data.core_id & VIDC_CORE_ID_2) {
-+		if (--core->core1_usage_count)
-+			goto done;
-+
-+		coreid_mask |= VIDC_CORE_ID_2;
-+	}
-+
-+	ret = poweroff_coreid(core, coreid_mask);
-+	if (ret)
-+		return ret;
-+
-+done:
-+	inst->clk_data.core_id = VIDC_CORE_ID_DEFAULT;
-+	inst->core_acquired = false;
-+	return 0;
-+}
-+
-+static int coreid_power_v4(struct venus_inst *inst, int on)
-+{
-+	struct venus_core *core = inst->core;
-+	int ret;
-+
-+	if (legacy_binding)
-+		return 0;
-+
-+	if (on == POWER_ON) {
-+		ret = decide_core(inst);
-+		if (ret)
-+			return ret;
-+
-+		mutex_lock(&core->lock);
-+		ret = acquire_core(inst);
-+		mutex_unlock(&core->lock);
-+	} else {
-+		mutex_lock(&core->lock);
-+		ret = release_core(inst);
-+		mutex_unlock(&core->lock);
-+	}
-+
-+	return ret;
-+}
-+
- static int vdec_get_v4(struct device *dev)
- {
- 	struct venus_core *core = dev_get_drvdata(dev);
-@@ -661,22 +829,12 @@ static void core_put_v4(struct device *dev)
- static int core_power_v4(struct device *dev, int on)
- {
- 	struct venus_core *core = dev_get_drvdata(dev);
--	const unsigned int coreid_mask = VIDC_CORE_ID_1 | VIDC_CORE_ID_2;
- 	int ret = 0;
- 
--	if (on == POWER_ON) {
-+	if (on == POWER_ON)
- 		ret = core_clks_enable(core);
--		if (ret)
--			return ret;
--
--		if (!legacy_binding)
--			ret = poweron_coreid(core, coreid_mask);
--	} else {
--		if (!legacy_binding)
--			ret = poweroff_coreid(core, coreid_mask);
--
-+	else
- 		core_clks_disable(core);
--	}
- 
- 	return ret;
- }
-@@ -786,6 +944,7 @@ static const struct venus_pm_ops pm_ops_v4 = {
- 	.venc_get = venc_get_v4,
- 	.venc_put = venc_put_v4,
- 	.venc_power = venc_power_v4,
-+	.coreid_power = coreid_power_v4,
- 	.load_scale = load_scale_v4,
- };
- 
-diff --git a/drivers/media/platform/qcom/venus/pm_helpers.h b/drivers/media/platform/qcom/venus/pm_helpers.h
-index d98b6dc20740..aa2f6afa2354 100644
---- a/drivers/media/platform/qcom/venus/pm_helpers.h
-+++ b/drivers/media/platform/qcom/venus/pm_helpers.h
-@@ -21,6 +21,8 @@ struct venus_pm_ops {
- 	void (*venc_put)(struct device *dev);
- 	int (*venc_power)(struct device *dev, int on);
- 
-+	int (*coreid_power)(struct venus_inst *inst, int on);
-+
- 	int (*load_scale)(struct venus_inst *inst);
- };
- 
-@@ -36,4 +38,28 @@ static inline int venus_pm_load_scale(struct venus_inst *inst)
- 	return core->pm_ops->load_scale(inst);
- }
- 
-+static inline int venus_pm_acquire_core(struct venus_inst *inst)
-+{
-+	struct venus_core *core = inst->core;
-+	const struct venus_pm_ops *pm_ops = core->pm_ops;
-+	int ret = 0;
-+
-+	if (pm_ops && pm_ops->coreid_power)
-+		ret = pm_ops->coreid_power(inst, POWER_ON);
-+
-+	return ret;
-+}
-+
-+static inline int venus_pm_release_core(struct venus_inst *inst)
-+{
-+	struct venus_core *core = inst->core;
-+	const struct venus_pm_ops *pm_ops = core->pm_ops;
-+	int ret = 0;
-+
-+	if (pm_ops && pm_ops->coreid_power)
-+		ret = pm_ops->coreid_power(inst, POWER_OFF);
-+
-+	return ret;
-+}
-+
- #endif
-diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
-index 83ce30516591..7b7a4f3377cf 100644
---- a/drivers/media/platform/qcom/venus/vdec.c
-+++ b/drivers/media/platform/qcom/venus/vdec.c
-@@ -579,10 +579,6 @@ static int vdec_output_conf(struct venus_inst *inst)
- 	if (ret)
- 		return ret;
- 
--	ret = venus_helper_set_core_usage(inst, VIDC_CORE_ID_1);
--	if (ret)
--		return ret;
--
- 	if (core->res->hfi_version == HFI_VERSION_1XX) {
- 		ptype = HFI_PROPERTY_PARAM_VDEC_CONTINUE_DATA_TRANSFER;
- 		ret = hfi_session_set_property(inst, ptype, &en);
-@@ -951,6 +947,10 @@ static int vdec_start_streaming(struct vb2_queue *q, unsigned int count)
- 
- 	mutex_lock(&inst->lock);
- 
-+	ret = venus_pm_acquire_core(inst);
-+	if (ret)
-+		return ret;
-+
- 	if (q->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE)
- 		ret = vdec_start_capture(inst);
- 	else
-@@ -1078,6 +1078,7 @@ static void vdec_session_release(struct venus_inst *inst)
- 
- 	venus_helper_free_dpb_bufs(inst);
- 	venus_pm_load_scale(inst);
-+	venus_pm_release_core(inst);
- 	INIT_LIST_HEAD(&inst->registeredbufs);
- 
- 	mutex_unlock(&inst->lock);
-@@ -1337,6 +1338,8 @@ static int vdec_open(struct file *file)
- 	inst->num_output_bufs = 1;
- 	inst->codec_state = VENUS_DEC_STATE_DEINIT;
- 	inst->buf_count = 0;
-+	inst->clk_data.core_id = VIDC_CORE_ID_DEFAULT;
-+	inst->core_acquired = false;
- 	init_waitqueue_head(&inst->reconf_wait);
- 	venus_helper_init_instance(inst);
- 
-diff --git a/drivers/media/platform/qcom/venus/venc.c b/drivers/media/platform/qcom/venus/venc.c
-index 5fa1724cb537..4f594fe4b661 100644
---- a/drivers/media/platform/qcom/venus/venc.c
-+++ b/drivers/media/platform/qcom/venus/venc.c
-@@ -656,10 +656,6 @@ static int venc_set_properties(struct venus_inst *inst)
- 	if (ret)
- 		return ret;
- 
--	ret = venus_helper_set_core_usage(inst, VIDC_CORE_ID_2);
--	if (ret)
--		return ret;
--
- 	ptype = HFI_PROPERTY_CONFIG_FRAME_RATE;
- 	frate.buffer_type = HFI_BUFFER_OUTPUT;
- 	frate.framerate = inst->fps * (1 << 16);
-@@ -992,6 +988,10 @@ static int venc_start_streaming(struct vb2_queue *q, unsigned int count)
- 	if (ret)
- 		goto bufs_done;
- 
-+	ret = venus_pm_acquire_core(inst);
-+	if (ret)
-+		goto deinit_sess;
-+
- 	ret = venc_set_properties(inst);
- 	if (ret)
- 		goto deinit_sess;
-@@ -1160,6 +1160,8 @@ static int venc_open(struct file *file)
- 
- 	inst->core = core;
- 	inst->session_type = VIDC_SESSION_TYPE_ENC;
-+	inst->clk_data.core_id = VIDC_CORE_ID_DEFAULT;
-+	inst->core_acquired = false;
- 
- 	venus_helper_init_instance(inst);
- 
+ struct v4l2_event_src_change {
+ 	__u32 changes;
 -- 
 2.17.1
 
