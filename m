@@ -7,102 +7,79 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE11C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D28DAC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BA0F2146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97E1F2146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:05:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576685087;
-	bh=qTEsBsDu0y2A0R3L//1tT98nBKeDO6qkP6f0YDgD8xU=;
+	s=default; t=1576685126;
+	bh=+7tHJ6QZmfUIzfMtuMxIBcZU+naEgNPoO45RqFlSlcc=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=XOGxQmvOcneersL0Gq7gfBO88zwGri+lCd0CcIh9wKKLXhKcoO6KmFYHdUCQ9zJxI
-	 gTHHvpcb92Ihr8c4LHcwLA7Z6esX/dTqdHDXsBMVyM1+0yw0Cizm7w/+tpVaIs9viK
-	 pny7aNfHKPZghJqfn4VRju1GbiApC0opK/a3olH4=
+	b=xyO5Mk4XhJMmzDgy3PhvJcoZslGxeNTDiZ6W0OpqBc04VHnRWAMXLl8Z6Wf4GhnG9
+	 JJlX79WzWqS+4+ps6IN3QcFlgIolMHjawnpXPyyP8pao5o9v+IEWBfW7YALgdV0gCg
+	 CKVJuIVIFeQX8gPs2+6TFDuNqTm3m/QsSXEXeQQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727491AbfLRQEq (ORCPT
+        id S1727499AbfLRQFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 11:04:46 -0500
-Received: from conuserg-10.nifty.com ([210.131.2.77]:18802 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727433AbfLRQEq (ORCPT
+        Wed, 18 Dec 2019 11:05:25 -0500
+Received: from conuserg-11.nifty.com ([210.131.2.78]:58511 "EHLO
+        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727031AbfLRQFZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 11:04:46 -0500
+        Wed, 18 Dec 2019 11:05:25 -0500
 Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id xBIG4UKY017304;
-        Thu, 19 Dec 2019 01:04:31 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com xBIG4UKY017304
+        by conuserg-11.nifty.com with ESMTP id xBIG5G85012778;
+        Thu, 19 Dec 2019 01:05:16 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com xBIG5G85012778
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1576685071;
-        bh=saSiP/xPDPqvCq5reN9vtTnXEtm3fq2NXsWmjG2ByB0=;
+        s=dec2015msa; t=1576685117;
+        bh=XrkgTceMdTMZIA8b6RjoQ0zRm2jj2UWUD7J1SCrikgA=;
         h=From:To:Cc:Subject:Date:From;
-        b=PPmuH/jLYJLhXiMCjfhTIs3O7XPEQoMZkQjlBhymsL9o87psERPn9ly6D/Q4d7ReF
-         ND3PE2HcLFWXKihYFn4oXXF/HF6ay45aSYkSp/UOhTKF3QqtptpKphgczY+Qzpn9lB
-         qW7ThNRejOCEdIZ8r3GpCYT369NtxLPDJdYTaLIBpGYU/5Y2nED3qk7/zAoplhjFlj
-         KmbcaXt0UFPvynu9ckt8FpXNOeSIHX4H9UtMijQDEmVlmxQ3yfZRlbtCsYYzMhM+j5
-         NdTax6uEU6gW3Sef5Mj0chnC3ksE1AUa8feBy1jvap41/pDa0XRAjOUWpBPNRprJlU
-         4wMRgz3HNsh0Q==
+        b=zWlZwmo/tyoQg0BXA5fF/PKnJl8PDDgMOOZOyK+Wus7yaWZEX8aKK6zkfCnrVBrHR
+         J92p3QowD9zzKcWmnCjKxum/ZMeMZqqFEy8LcZ+QOdldB6TjqBcLaMMCBuhW1LuWj+
+         bPO2yVBgia/KZWVybAla4UL62h8/1MrDG+0eb5/PmPTt2WtxQIljXMigLDW/gt09SN
+         7pumjvPix9+2qHIFkZziXxoksqg/z1tFP9X5U1o2zAWzw8Ggt4KVLZ7mLdq/uyEz4o
+         CXwPJ2Wm77oX2bw5AahUAJvcaMqF9CIBizXF0VGI4LufStxJuko4CYTfIvhBIyAJHS
+         EKj/2aGLEHLzA==
 X-Nifty-SrcIP: [126.93.102.113]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
 Cc:     Masahiro Yamada <masahiroy@kernel.org>,
         Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] kbuild: do not create orphan built-in.a or obj-y objects
-Date:   Thu, 19 Dec 2019 01:04:28 +0900
-Message-Id: <20191218160428.27934-1-masahiroy@kernel.org>
+Subject: [PATCH] kbuild: use pattern rule for building built-in.a in sub-directories
+Date:   Thu, 19 Dec 2019 01:05:14 +0900
+Message-Id: <20191218160514.28124-1-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Both 'obj-y += foo/' and 'obj-m += foo/' request Kbuild to visit the
-sub-directory foo/, but the difference is that only the former combines
-foo/built-in.a into the built-in.a of the current directory because
-everything in sub-directories visited by obj-m is supposed to be modular.
-
-So, it makes sense to create built-in.a only if that sub-directory is
-reachable by the chain of obj-y. Otherwise, built-in.a will not be
-linked into vmlinux anyway. For the same reason, it is pointless to
-compile obj-y objects in the directory visited by obj-m.
+The built-in.a in a sub-directory is created by descending into that
+directory. It does not depend on the other sub-directories. Loosen
+the dependency.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
  scripts/Makefile.build | 2 +-
- scripts/Makefile.lib   | 4 ++++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index b734ac8a654e..e46b4ee9a120 100644
+index e46b4ee9a120..a562d695f0fa 100644
 --- a/scripts/Makefile.build
 +++ b/scripts/Makefile.build
-@@ -66,7 +66,7 @@ lib-target := $(obj)/lib.a
- real-obj-y += $(obj)/lib-ksyms.o
- endif
+@@ -372,7 +372,7 @@ $(obj)/%.asn1.c $(obj)/%.asn1.h: $(src)/%.asn1 $(objtree)/scripts/asn1_compiler
+ # ---------------------------------------------------------------------------
  
--ifneq ($(strip $(real-obj-y) $(need-builtin)),)
-+ifdef need-builtin
- builtin-target := $(obj)/built-in.a
- endif
+ # To build objects in subdirs, we need to descend into the directories
+-$(sort $(subdir-obj-y)): $(subdir-ym) ;
++$(obj)/%/built-in.a: $(obj)/% ;
  
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index b51144f271f2..ee930e09d198 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -35,7 +35,11 @@ __subdir-y	:= $(patsubst %/,%,$(filter %/, $(obj-y)))
- subdir-y	+= $(__subdir-y)
- __subdir-m	:= $(patsubst %/,%,$(filter %/, $(obj-m)))
- subdir-m	+= $(__subdir-m)
-+ifdef need-builtin
- obj-y		:= $(patsubst %/, %/built-in.a, $(obj-y))
-+else
-+obj-y		:= $(filter-out %/, $(obj-y))
-+endif
- obj-m		:= $(filter-out %/, $(obj-m))
- 
- # Subdirectories we need to descend into
+ #
+ # Rule to compile a set of .o files into one .a file (without symbol table)
 -- 
 2.17.1
 
