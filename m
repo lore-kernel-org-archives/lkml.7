@@ -2,89 +2,171 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1167C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0D9C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADA2521582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:15:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E51A5218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:19:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576692902;
-	bh=2vYlIkVsIcKX9Zr8k9KbSq97jYsgj8PKkbMfNtKo3n4=;
+	s=default; t=1576693168;
+	bh=W1YWBiNPG9jNM5SC4jK0qOOMJ4yVd5QREeChUcP7gUM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Kv83TBpE2yf+bjZTPLoFBrB+bUyJMXXDFIkW77Ts/z8mdq6fIAoVeNvwklC8h5NtM
-	 ek8EEfcQNYiUbrZ2Rwmg+esVLAHf3erZuWi8oBTrDMWePffeba+4wDsxG1uKP5w796
-	 hQO2s8CTWIrgHzwimfL2PPv76VueUBoLIOIbaZLg=
+	b=H9jCD6rlermfcz7BiLF7YhelKELpm3yiLoLF1/DBlYMCDl4iyjl+4qVRN2hGh2dv4
+	 kZRJWZDBPwEbWfgXJedCsrjP2jHVLk3jy6cPX3+sCPtwn1QrwWkEmPG9oDez6L78uh
+	 789VL29bBbTW4t26t2LaFIPSXH/QBtTNJu13eWi8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbfLRSPB (ORCPT
+        id S1727205AbfLRST1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 13:15:01 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:42774 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727341AbfLRSPB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 13:15:01 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 66so3531021otd.9;
-        Wed, 18 Dec 2019 10:15:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Joaw7/XAOOveu1GS58tOvSo24yLU2Vq2eez0hj0oxxI=;
-        b=InUP9nsTzmlFIiCN6b86zG4A/PqSGnWE91tsI4HBG8weXa20RWogHEHuFT9aJyg+ZE
-         XYiv20AA3iNiiPXWqzkzBg9wx0DmnNiNToZBmuCD3VbUzomLl5h+1hjVHtWkJyB5frxK
-         iu3wMZTOo59yobdKUuWVgz8msIM7Ls1x0dFjCp4qzCZz5qwTGeSIDEtMJPbnbvb/GMae
-         4RVSaJwf3dU+bi/JzPVNqNTXi4HXM9JweK63VfC+1GF8TfLiClPgV54Hhk5gmC/IRwVY
-         GEjVKLPqsP2xv2BLuYYHFb9l4BL6wpCrJTJOReqWt2xWHdaGag9PqYgi5p8S+NQeaQtz
-         QwGg==
-X-Gm-Message-State: APjAAAWFIJb6O/YL2g3/zlqb1qn4yN/m14/7DbcQkevbqND/vhWcLqfM
-        RiYqBo8+FIsqixrJl13IfQ==
-X-Google-Smtp-Source: APXvYqyoQd/upD6YD3POKyWidARuJplw8nUXBR63avEydvr3JAGmT9UWeuqxABxXovlfVreAUCvwWA==
-X-Received: by 2002:a9d:5e9a:: with SMTP id f26mr3967611otl.307.1576692895673;
-        Wed, 18 Dec 2019 10:14:55 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t196sm802325oie.11.2019.12.18.10.14.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 10:14:55 -0800 (PST)
-Date:   Wed, 18 Dec 2019 12:14:54 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jiaxin Yu <jiaxin.yu@mediatek.com>
-Cc:     yong.liang@mediatek.com, wim@linux-watchdog.org,
-        linux@roeck-us.net, p.zabel@pengutronix.de, matthias.bgg@gmail.com,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        sboyd@kernel.org, yingjoe.chen@mediatek.com
-Subject: Re: [PATCH v6 1/2] dt-bindings: mediatek: mt8183: Add #reset-cells
-Message-ID: <20191218181454.GA15293@bogus>
-References: <1576081356-18298-1-git-send-email-jiaxin.yu@mediatek.com>
- <1576081356-18298-2-git-send-email-jiaxin.yu@mediatek.com>
+        Wed, 18 Dec 2019 13:19:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37900 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726960AbfLRST0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 13:19:26 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAF3121582;
+        Wed, 18 Dec 2019 18:19:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576693165;
+        bh=W1YWBiNPG9jNM5SC4jK0qOOMJ4yVd5QREeChUcP7gUM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jg0sVF1DOJgtcVcgvECKp5Bby4K4KZq4fXFM0Ugp4ExeyeYtY6K0RG/r/GnDwgUkk
+         gO+8zzfaR7cioH3OBXAYcEA8NHAEc0a2CSWAOQkg16aVQ6eFeVbGssN8z5f1+TWHxk
+         IR9KaDFiaTIv5J8KF8v8fqzX1KGFXUSWv/zl7iuE=
+Date:   Wed, 18 Dec 2019 19:19:21 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     USB list <linux-usb@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Felipe Balbi <balbi@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>
+Subject: Re: [PATCH v3 1/1] usb: gadget: add raw-gadget interface
+Message-ID: <20191218181921.GA882018@kroah.com>
+References: <cover.1576087039.git.andreyknvl@google.com>
+ <f45a20db3e5b01002ae8c91b3a8ea58e38b7bb65.1576087039.git.andreyknvl@google.com>
+ <20191218132328.GA121143@kroah.com>
+ <CAAeHK+zXegV1GmSKD8Y3-hTbKUQceWdfo+GJPxSSzYr0zQTYKw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1576081356-18298-2-git-send-email-jiaxin.yu@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAAeHK+zXegV1GmSKD8Y3-hTbKUQceWdfo+GJPxSSzYr0zQTYKw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Dec 2019 00:22:35 +0800, Jiaxin Yu wrote:
-> From: "yong.liang" <yong.liang@mediatek.com>
+On Wed, Dec 18, 2019 at 06:28:19PM +0100, Andrey Konovalov wrote:
+> On Wed, Dec 18, 2019 at 2:23 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Wed, Dec 11, 2019 at 07:02:41PM +0100, Andrey Konovalov wrote:
+> > > USB Raw Gadget is a kernel module that provides a userspace interface for
+> > > the USB Gadget subsystem. Essentially it allows to emulate USB devices
+> > > from userspace. Enabled with CONFIG_USB_RAW_GADGET. Raw Gadget is
+> > > currently a strictly debugging feature and shouldn't be used in
+> > > production.
+> > >
+> > > Raw Gadget is similar to GadgetFS, but provides a more low-level and
+> > > direct access to the USB Gadget layer for the userspace. The key
+> > > differences are:
+> > >
+> > > 1. Every USB request is passed to the userspace to get a response, while
+> > >    GadgetFS responds to some USB requests internally based on the provided
+> > >    descriptors. However note, that the UDC driver might respond to some
+> > >    requests on its own and never forward them to the Gadget layer.
+> > >
+> > > 2. GadgetFS performs some sanity checks on the provided USB descriptors,
+> > >    while Raw Gadget allows you to provide arbitrary data as responses to
+> > >    USB requests.
+> > >
+> > > 3. Raw Gadget provides a way to select a UDC device/driver to bind to,
+> > >    while GadgetFS currently binds to the first available UDC.
+> > >
+> > > 4. Raw Gadget uses predictable endpoint names (handles) across different
+> > >    UDCs (as long as UDCs have enough endpoints of each required transfer
+> > >    type).
+> > >
+> > > 5. Raw Gadget has ioctl-based interface instead of a filesystem-based one.
+> >
+> > Looks good to me, only minor comments below.
 > 
-> Add #reset-cells property and update example
+> Great, thanks!
 > 
-> Signed-off-by: yong.liang <yong.liang@mediatek.com>
-> ---
->  .../devicetree/bindings/watchdog/mtk-wdt.txt  | 10 ++++++---
->  .../reset-controller/mt2712-resets.h          | 22 +++++++++++++++++++
->  .../reset-controller/mt8183-resets.h          | 17 ++++++++++++++
->  3 files changed, 46 insertions(+), 3 deletions(-)
->  create mode 100644 include/dt-bindings/reset-controller/mt2712-resets.h
-> 
+> About reworking the logging to use dev_err/dbg(): can I pass the
+> global miscdevice struct into those macros? Or should I pass a pointer
+> to this struct into all of the functions that print log messages? The
+> latter seems unnecessarily complex, unless there's a reason to do
+> that.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Ah, you are right, you only have one misc device here.  No, that's not
+good, but you can use it for some messages (your ioctl errors), but
+ideally you will have a struct device somewhere for each of the
+"instances" you create, right?  That is what you should use for that.
+
+> > > +struct raw_dev {
+> > > +     struct kref                     count;
+> > > +     spinlock_t                      lock;
+> > > +
+> > > +     const char                      *udc_name;
+> > > +     struct usb_gadget_driver        driver;
+> >
+> > A dev embeds a driver?
+> >
+> > Not a pointer?
+> >
+> > But you have a kref, so the reference count of this object is there,
+> > right?
+> 
+> I didn't get this comment, could you elaborate? I can make it a
+> pointer, but for each raw_dev we have a unique usb_gadget_driver
+> instance, so embedding it as is is simpler.
+
+Ok, that's fine.  But it feels odd creating a driver dynamically to me,
+but it should work (as you show.)  It doesn't give you something to use
+for the dev_* messages directly, ah, but you do have something:
+
+> > > +
+> > > +     /* Protected by lock: */
+> > > +     enum dev_state                  state;
+> > > +     bool                            gadget_registered;
+> > > +     struct usb_gadget               *gadget;
+
+There, use that pointer for your dev_* messages, and you should be fine.
+
+> > > +static void gadget_unbind(struct usb_gadget *gadget)
+> > > +{
+> > > +     struct raw_dev *dev = get_gadget_data(gadget);
+> > > +     unsigned long flags;
+> > > +
+> > > +     spin_lock_irqsave(&dev->lock, flags);
+> > > +     set_gadget_data(gadget, NULL);
+> > > +     spin_unlock_irqrestore(&dev->lock, flags);
+> > > +     /* Matches kref_get() in gadget_bind(). */
+> > > +     kref_put(&dev->count, dev_free);
+> >
+> > What protects the kref from being called 'put' twice on the same
+> > pointer at the same time?  There should be some lock somewhere, right?
+> 
+> Hm, kref_put() does refcount_dec_and_test(), which in turns calls
+> atomic_dec_and_test(), so this is protected against concurrent puts
+> (which is the whole idea of kref?), and no locking is needed. Unless I
+> misunderstand something.
+
+It's late, but there should be some lock somewhere to prevent a race
+around this type of thing.  That's why we have kref_put_mutex() and
+kref_put_lock().
+
+Odds are you are fine here, but just something to be aware of...
+
+thanks,
+
+greg k-h
