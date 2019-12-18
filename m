@@ -2,118 +2,88 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA8DC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 01:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41561C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 01:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F33ED21582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 01:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1006621582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 01:28:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CAiLpUlA"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="LN64OzUR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbfLRB2B (ORCPT
+        id S1726558AbfLRB2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 20:28:01 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:46333 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726383AbfLRB2B (ORCPT
+        Tue, 17 Dec 2019 20:28:07 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:46129 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbfLRB2G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 20:28:01 -0500
-Received: by mail-oi1-f194.google.com with SMTP id p67so231882oib.13;
-        Tue, 17 Dec 2019 17:28:00 -0800 (PST)
+        Tue, 17 Dec 2019 20:28:06 -0500
+Received: by mail-il1-f195.google.com with SMTP id t17so217968ilm.13
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 17:28:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oac13lDHKPYhqdCSX7cOIT1M4QFi8+B0sBEHAI2Jyb0=;
-        b=CAiLpUlAcqhkJYOyzG2FNvyOtSmgY5rytLGp4VL64ePmQEappZeDDq5Y8eqa9tJruO
-         594P8okBQLzfihNxZX2screRRl06LsJkCnXhU2ZY+m5l0maF5P4hmCcwqO9PdfCtwsk3
-         cRquaPcuB9bXChiIsFTcJ8LsKi+24iBnc/vqiKaZrzs/LobA0bNqVorVE7ph14l1BOFb
-         BIRQ9e1PPaJNGPQ9/2wj1JtiUtHZrui6FFekY+nuvokxg2etia754w1ATvwomsqAbRxd
-         dApJWoxZGIW0lm7Ax6MYCvk5cGBMljvR7XTdxTCMFSYORNv7zukkCxkYSolxKZUf5E6h
-         I7UA==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=rsdijfwxXIxEdfTf0BJ4NmtNQn2EATypQJ6GWjnlpeA=;
+        b=LN64OzUR0PK6WuZ1fEl4fu8/YArhpB0cNXjvLjDyVu4uSbb1wZHaJI8pdSOrfCaAqt
+         Je1XxbdQjFviM1dg0yITmdQcncyA9VHiL2PYu9cSm9o5LO1ByfFpaXGx26MECSkeYjef
+         C9KJXeSU78bQwI4zGaNwJ6Tq0wCp7Zncnv7esvgYC48tD/qA1k0GF/RiDC94FV+uRlUp
+         Mvzyzq6WWkigWT3qBTJFetlWPdXCO2NR4xmIB8dkyRcmivmTtTl6jo39EWNBxI67bFU8
+         7mIKH/oIIoCo2Y6j7HdvZ6DH5GkQbIaei8i8njuBAwsfZ7fmNqBKpLgDU55yjpsQ6n87
+         f1MA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=oac13lDHKPYhqdCSX7cOIT1M4QFi8+B0sBEHAI2Jyb0=;
-        b=KDf6V1Y/GzpZRC7SlXwxv27oXBiYVRJSAf0ADyecYMZWCL8DQjHThK4wPDl2LF7IWA
-         OvQfxShtwreDfVBUd5DVtFGirP0VwBO2IRog2jINh50G5FIXgtsDw0Ax9pHTbukcrg4p
-         nUBb+eq81rPITAtnfrde4u4ImnYomEG6Ic0zjE3RAWZt2ysmk2qXy+OwP0gSTqypL+mt
-         /MDzws/ukSTFTPe5zE00KU1viLFqgyioczKtNUCdK+mspeoPLnwTaJT2gDKJFjWiuZQH
-         msikKt7Kil731oSyYFlY1VBrajXYnPRNOWkxXt46c/qK3I31TTk+ZHxI51PnJskzaaei
-         CDCg==
-X-Gm-Message-State: APjAAAUqqCZNhaG81Z/LxTt84spySNhjKvHsFof3a+TIjWK74i41n4v8
-        3jqXpfeW5PlBYhYd4xkR46m+Q+vX
-X-Google-Smtp-Source: APXvYqziaXBRz5W6ed4dD2X8sjQS+yEEugK2smhVHUjAC8lVQ+Jc2/7gca7deShKApoYt+WelMwJnA==
-X-Received: by 2002:aca:d985:: with SMTP id q127mr66396oig.132.1576632479968;
-        Tue, 17 Dec 2019 17:27:59 -0800 (PST)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id 91sm227827otb.7.2019.12.17.17.27.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 17:27:59 -0800 (PST)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Ley Foon Tan <lftan@altera.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Andrew Murray <andrew.murray@arm.com>, rfi@lists.rocketboards.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] PCI: altera: Adjust indentation in altera_pcie_valid_device
-Date:   Tue, 17 Dec 2019 18:27:52 -0700
-Message-Id: <20191218012752.47054-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        bh=rsdijfwxXIxEdfTf0BJ4NmtNQn2EATypQJ6GWjnlpeA=;
+        b=ek2mK3VIvx37O/2IzDRuNctwyQDb9bl5Edeg4l+Bo5kebl/v9gN5/yBA/gQdrkGIl6
+         Nfr5rhIH8cVMyzZCGGSArndXzi1rxE5xkZtW9iR/+faCnmXH2giUEhxHS6oTRsjpaHXI
+         tChe++So765yUPbZOuBCR/N3bXKrFSVpM7rhvrI9qNUdoi/3M08PGfOasZrtP/NLiVum
+         AaoT3Pwyn+H61ucs5tuC349H4mxCny1y7Mv/d7w/Q/HvsdZjdK4oO04xEBAjyqfRsKOd
+         p5eh8SyynokpyQgKooV/3Q5CDxLkFIjos6Jy1Prk3Ul5yrEXgJtQHXNFnGYVWli6l4sB
+         B5rg==
+X-Gm-Message-State: APjAAAUWb5YOzFbtMmERuJ67t6ckjFx/BxynSTCVx8KaqLMzfJHk64gP
+        yY9+1PbAPJ1JZjXQ/sPJKa6NgmMoTljBIA==
+X-Google-Smtp-Source: APXvYqxMoNlpt/TC/axYgAFYjxnhzrkeZChcmx0aIRqCHbKGd9YPVayHYz3Z+3XrRumsEypM7n7L1Q==
+X-Received: by 2002:a92:45d2:: with SMTP id z79mr386262ilj.76.1576632485203;
+        Tue, 17 Dec 2019 17:28:05 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id e5sm146581ilq.77.2019.12.17.17.28.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Dec 2019 17:28:04 -0800 (PST)
+Subject: Re: [PATCH] block: make the io_ticks counter more accurate
+To:     Wen Yang <wenyang@linux.alibaba.com>
+Cc:     Joseph Qi <joseph.qi@linux.alibaba.com>, xlpang@linux.alibaba.com,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191217142828.79295-1-wenyang@linux.alibaba.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <658ba1d9-45b3-db85-250d-7a1a9328e9ff@kernel.dk>
+Date:   Tue, 17 Dec 2019 18:28:03 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191217142828.79295-1-wenyang@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang warns:
+On 12/17/19 7:28 AM, Wen Yang wrote:
+> Instead of the jiffies, we should update the io_ticks counter
+> with the passed in parameter 'now'.
 
-../drivers/pci/controller/pcie-altera.c:196:3: warning: misleading
-indentation; statement is not part of the previous 'if'
-[-Wmisleading-indentation]
-         return true;
-         ^
-../drivers/pci/controller/pcie-altera.c:193:2: note: previous statement
-is here
-        if (bus->number == pcie->root_bus_nr && dev > 0)
-        ^
-1 warning generated.
+But they are not the same clock source...
 
-This warning occurs because there is a space after the tab on this line.
-Remove it so that the indentation is consistent with the Linux kernel
-coding style and clang no longer warns.
-
-Fixes: eaa6111b70a7 ("PCI: altera: Add Altera PCIe host controller driver")
-Link: https://github.com/ClangBuiltLinux/linux/issues/815
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- drivers/pci/controller/pcie-altera.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
-index b447c3e4abad..24cb1c331058 100644
---- a/drivers/pci/controller/pcie-altera.c
-+++ b/drivers/pci/controller/pcie-altera.c
-@@ -193,7 +193,7 @@ static bool altera_pcie_valid_device(struct altera_pcie *pcie,
- 	if (bus->number == pcie->root_bus_nr && dev > 0)
- 		return false;
- 
--	 return true;
-+	return true;
- }
- 
- static int tlp_read_packet(struct altera_pcie *pcie, u32 *value)
 -- 
-2.24.1
+Jens Axboe
 
