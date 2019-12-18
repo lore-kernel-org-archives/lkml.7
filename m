@@ -2,115 +2,116 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9134DC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C9B6C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6378224650
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:21:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flawful.org header.i=@flawful.org header.b="Xg93ZJD1"
+	by mail.kernel.org (Postfix) with ESMTP id 3308E227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:22:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576671721;
+	bh=mwUG7T4wiluvDMoa+8uM1MTApMMhiYa8/vECsa8OAxE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aMCyLKzHLv7aWC58805t90YTSfhQOX5VyWa8UlrBwX2REr3W1GYctUCVnuIj6Irmc
+	 WTntPVy7GiCOU299Y9ukSvOLpqXNz/GcK22EuDBulXUsOxvuDPnRt6cfkEJjfkPQdk
+	 5HGWpjYALC8FbRBYUBzTsKsHFYcObeSgRrM7WyHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfLRMVx (ORCPT
+        id S1726937AbfLRMWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 07:21:53 -0500
-Received: from ste-pvt-msa2.bahnhof.se ([213.80.101.71]:64698 "EHLO
-        ste-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725930AbfLRMVx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 07:21:53 -0500
-X-Greylist: delayed 339 seconds by postgrey-1.27 at vger.kernel.org; Wed, 18 Dec 2019 07:21:51 EST
-Received: from localhost (localhost [127.0.0.1])
-        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 003D53F4E2;
-        Wed, 18 Dec 2019 13:16:10 +0100 (CET)
-Authentication-Results: ste-pvt-msa2.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=flawful.org header.i=@flawful.org header.b=Xg93ZJD1;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Authentication-Results: ste-ftg-msa2.bahnhof.se (amavisd-new);
-        dkim=pass (1024-bit key) header.d=flawful.org
-Received: from ste-pvt-msa2.bahnhof.se ([127.0.0.1])
-        by localhost (ste-ftg-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id S8UUBs6IQdRp; Wed, 18 Dec 2019 13:16:09 +0100 (CET)
-Received: from flawful.org (ua-84-217-220-205.bbcust.telenor.se [84.217.220.205])
-        (Authenticated sender: mb274189)
-        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id DD3363F3BA;
-        Wed, 18 Dec 2019 13:16:08 +0100 (CET)
-Received: by flawful.org (Postfix, from userid 1001)
-        id E3946E50; Wed, 18 Dec 2019 13:16:07 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flawful.org; s=mail;
-        t=1576671368; bh=tDgQ8Hd7X2DMLFKWDPV38ouTSnh9qudUss4S+7QTdhc=;
+        Wed, 18 Dec 2019 07:22:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44428 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725930AbfLRMWA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 07:22:00 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D114121582;
+        Wed, 18 Dec 2019 12:21:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576671719;
+        bh=mwUG7T4wiluvDMoa+8uM1MTApMMhiYa8/vECsa8OAxE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Xg93ZJD1Xo4idJjy5M2BapnXGYA2U/a5Ejjo3qQjPm/B97aFFjq/73mWy1iGtyuhN
-         NGNIe8OkbS2NvfLHbteFPSdHYcNxK/2MR+kxTunx7t89lmQfQ2NwujCZ264jx6cfRV
-         +fkGbppgVjYEqm3txWXU+N5tk+nkzxFZCJ3cKtL4=
-Date:   Wed, 18 Dec 2019 13:16:07 +0100
-From:   Niklas Cassel <nks@flawful.org>
-To:     sboyd@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org,
-        sboyd@kernel.org, bjorn.andersson@linaro.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, niklas.cassel@linaro.org
-Subject: Re: [PATCH v3 0/7] Clock changes to support cpufreq on QCS404
-Message-ID: <20191218121607.djwnxkrsgpdcf5k3@flawful.org>
-References: <20191125135910.679310-1-niklas.cassel@linaro.org>
+        b=Ucr2Uf3eUh2mEBA62plUWANWmrqEmolSuEx8tTmm+okxdOQ13Aeegy8KhfAVwjKp9
+         72hB7zUnKvDuzwQM06zyPIoAuoX9th/aNWWQ1jnQ/LKYlqo0XUvfLfN1NQiqBZK23l
+         qiG/XbRV18woNVgm8AnBtPO7Ztxa3rOPd3wJs3EA=
+Date:   Wed, 18 Dec 2019 13:21:57 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Siddharth Kapoor <ksiddharth@google.com>, lee.jones@linaro.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: Kernel panic on Google Pixel devices due to regulator patch
+Message-ID: <20191218122157.GA17086@kroah.com>
+References: <CAJRo92+eD9F6Q60yVY2PfwaPWO_8Dts8QwH7mhpJaem7SpLihg@mail.gmail.com>
+ <20191218113458.GA3219@sirena.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191125135910.679310-1-niklas.cassel@linaro.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20191218113458.GA3219@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 02:59:02PM +0100, Niklas Cassel wrote:
-> The following clock changes are required to enable cpufreq support on
-> the QCS404.
+On Wed, Dec 18, 2019 at 11:34:58AM +0000, Mark Brown wrote:
+> On Tue, Dec 17, 2019 at 11:51:55PM +0800, Siddharth Kapoor wrote:
 > 
-> Changes since v2:
-> -Addressed Stephen Boyd's comment regarding apcs-msm8916
-> should use new way of specifying clock parents.
-> -DT binding now has "pll" as first clock, in order to
-> not break DT backwards compatibility (in case no clock-names
-> are given).
-> -Moved EPROBE_DEFER error handling to its own patch.
+> > I would like to share a concern with the regulator patch which is part of
+> > 4.9.196 LTS kernel.
 > 
-> Jorge Ramirez-Ortiz (6):
->   dt-bindings: mailbox: qcom: Add clock-name optional property
->   clk: qcom: gcc: limit GPLL0_AO_OUT operating frequency
->   clk: qcom: hfpll: register as clock provider
->   clk: qcom: hfpll: CLK_IGNORE_UNUSED
->   clk: qcom: hfpll: use clk_parent_data to specify the parent
->   clk: qcom: apcs-msm8916: silently error out on EPROBE_DEFER
-> 
-> Niklas Cassel (1):
->   clk: qcom: apcs-msm8916: use clk_parent_data to specify the parent
-> 
->  .../mailbox/qcom,apcs-kpss-global.txt         | 24 ++++++++++++++---
->  drivers/clk/qcom/apcs-msm8916.c               | 26 ++++++++++++++-----
->  drivers/clk/qcom/clk-alpha-pll.c              |  8 ++++++
->  drivers/clk/qcom/clk-alpha-pll.h              |  1 +
->  drivers/clk/qcom/gcc-qcs404.c                 |  2 +-
->  drivers/clk/qcom/hfpll.c                      | 21 +++++++++++++--
->  6 files changed, 70 insertions(+), 12 deletions(-)
-> 
-> -- 
-> 2.23.0
-> 
+> That's an *extremely* old kernel.
 
-Hello Stephen,
+It is, but it's the latest stable kernel (well close to), and your patch
+was tagged by you to be backported to here, so if there's a problem with
+a stable branch, I want to know about it as I don't want to see
+regressions happen in it.
 
-I have adressed your review comments
-on the previous patch series version.
+> > https://lore.kernel.org/lkml/20190904124250.25844-1-broonie@kernel.org/
+> 
+> That's the patch "[PATCH] regulator: Defer init completion for a while
+> after late_initcall" which defers disabling of idle regulators for a
+> while.
+> 
+> Please include human readable descriptions of things like commits and
+> issues being discussed in e-mail in your mails, this makes them much
+> easier for humans to read especially when they have no internet access.
+> I do frequently catch up on my mail on flights or while otherwise
+> travelling so this is even more pressing for me than just being about
+> making things a bit easier to read.
+> 
+> > We have reverted the patch in Pixel kernels and would like you to look into
+> > this and consider reverting it upstream as well.
+> 
+> I've got nothing to do with the stable kernels so there's nothing I can
+> do here, sorry.
 
-Could you please have a look?
+Should I revert it everywhere?  This patch reads as it should be fixing
+problems, not causing them :)
 
-If it looks good, could you please
-consider taking them via your tree?
+> However if this is triggering anything it's almost
+> certainly some kind of timing issue (this code isn't new, it's just
+> being run a bit later) and is only currently working through luck so I
+> do strongly recommend trying to figure out the actual problem since it's
+> liable to come back and bite you later - we did find one buggy driver in
+> mainline as a result of this change, it's possible you've got another
+> one.  
+> 
+> Possibly your GPU supplies need to be flagged as always on, possibly
+> your GPU driver is forgetting to enable some supplies it needs, or
+> possibly there's a missing always-on constraint on one of the regulators
+> depending on how the driver expects this to work (if it's a proprietary
+> driver it shouldn't be using the regulator API itself).  I'm quite
+> surprised you've not seen any issue before given that the supplies would
+> still be being disabled earlier.
 
-Kind regards,
-Niklas
+Timing "luck" is probably something we shouldn't be messing with in
+stable kernels.  How about I revert this for the 4.14 and older releases
+and let new devices deal with the timing issues when they are brought up
+on new hardware?
+
+thanks,
+
+greg k-h
