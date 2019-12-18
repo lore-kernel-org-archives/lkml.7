@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D77C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE04C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA9E62176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED87A2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:50:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727549AbfLRUtT (ORCPT
+        id S1727841AbfLRUuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 15:49:19 -0500
-Received: from mail.windriver.com ([147.11.1.11]:47822 "EHLO
+        Wed, 18 Dec 2019 15:50:06 -0500
+Received: from mail.windriver.com ([147.11.1.11]:47839 "EHLO
         mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727282AbfLRUtR (ORCPT
+        with ESMTP id S1727548AbfLRUtT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 15:49:17 -0500
+        Wed, 18 Dec 2019 15:49:19 -0500
 Received: from yow-cube1.wrs.com (yow-cube1.wrs.com [128.224.56.98])
-        by mail.windriver.com (8.15.2/8.15.2) with ESMTP id xBIKn0ib000214;
-        Wed, 18 Dec 2019 12:49:12 -0800 (PST)
+        by mail.windriver.com (8.15.2/8.15.2) with ESMTP id xBIKn0id000214;
+        Wed, 18 Dec 2019 12:49:14 -0800 (PST)
 From:   Paul Gortmaker <paul.gortmaker@windriver.com>
 To:     Lee Jones <lee.jones@linaro.org>
 Cc:     linux-kernel@vger.kernel.org,
         Paul Gortmaker <paul.gortmaker@windriver.com>,
-        Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org
-Subject: [PATCH 09/18] mfd: twl4030-power: Make it explicitly non-modular
-Date:   Wed, 18 Dec 2019 15:48:48 -0500
-Message-Id: <1576702137-25905-10-git-send-email-paul.gortmaker@windriver.com>
+        Ian Molton <spyro@f2s.com>
+Subject: [PATCH 11/18] mfd: t7l66xb: Make it explicitly non-modular
+Date:   Wed, 18 Dec 2019 15:48:50 -0500
+Message-Id: <1576702137-25905-12-git-send-email-paul.gortmaker@windriver.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1576702137-25905-1-git-send-email-paul.gortmaker@windriver.com>
 References: <1576702137-25905-1-git-send-email-paul.gortmaker@windriver.com>
@@ -41,8 +41,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The Kconfig currently controlling compilation of this code is:
 
-drivers/mfd/Kconfig:config TWL4030_POWER
-drivers/mfd/Kconfig:    bool "TI TWL4030 power resources"
+drivers/mfd/Kconfig:config MFD_T7L66XB
+drivers/mfd/Kconfig:    bool "Toshiba T7L66XB"
 
 ...meaning that it currently is not being built as a module by anyone.
 
@@ -51,74 +51,81 @@ when reading the driver there is no doubt it is builtin-only.
 
 We explicitly disallow a driver unbind, since that doesn't have a
 sensible use case anyway, and it allows us to drop the ".remove"
-code for non-modular drivers.  The remove function here was clearly a
-no-op anyway, so no unbind functionality could possibly be impacted.
+code for non-modular drivers.
 
 Since module_platform_driver() uses the same init level priority as
 builtin_platform_driver() the init ordering remains unchanged with
 this commit.
 
-Also note that MODULE_DEVICE_TABLE is a no-op for non-modular code.
-
 We also delete the MODULE_LICENSE tag etc. since all that information
 is already contained at the top of the file in the comments.
 
-Cc: Tony Lindgren <tony@atomide.com>
 Cc: Lee Jones <lee.jones@linaro.org>
-Cc: linux-omap@vger.kernel.org
+Cc: Ian Molton <spyro@f2s.com>
 Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
 ---
- drivers/mfd/twl4030-power.c | 19 +++----------------
- 1 file changed, 3 insertions(+), 16 deletions(-)
+ drivers/mfd/t7l66xb.c | 37 ++++---------------------------------
+ 1 file changed, 4 insertions(+), 33 deletions(-)
 
-diff --git a/drivers/mfd/twl4030-power.c b/drivers/mfd/twl4030-power.c
-index 6b36932263ba..5655218b2552 100644
---- a/drivers/mfd/twl4030-power.c
-+++ b/drivers/mfd/twl4030-power.c
-@@ -23,7 +23,7 @@
-  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+diff --git a/drivers/mfd/t7l66xb.c b/drivers/mfd/t7l66xb.c
+index 70da0c4ae457..636b9c8dc96d 100644
+--- a/drivers/mfd/t7l66xb.c
++++ b/drivers/mfd/t7l66xb.c
+@@ -20,7 +20,7 @@
   */
  
+ #include <linux/kernel.h>
 -#include <linux/module.h>
 +#include <linux/init.h>
- #include <linux/pm.h>
- #include <linux/mfd/twl.h>
- #include <linux/platform_device.h>
-@@ -876,7 +876,6 @@ static const struct of_device_id twl4030_power_of_match[] = {
- 	},
- 	{ },
- };
--MODULE_DEVICE_TABLE(of, twl4030_power_of_match);
- #endif	/* CONFIG_OF */
- 
- static int twl4030_power_probe(struct platform_device *pdev)
-@@ -953,24 +952,12 @@ static int twl4030_power_probe(struct platform_device *pdev)
- 	return err;
+ #include <linux/err.h>
+ #include <linux/io.h>
+ #include <linux/slab.h>
+@@ -403,42 +403,13 @@ static int t7l66xb_probe(struct platform_device *dev)
+ 	return ret;
  }
  
--static int twl4030_power_remove(struct platform_device *pdev)
+-static int t7l66xb_remove(struct platform_device *dev)
 -{
--	return 0;
+-	struct t7l66xb_platform_data *pdata = dev_get_platdata(&dev->dev);
+-	struct t7l66xb *t7l66xb = platform_get_drvdata(dev);
+-	int ret;
+-
+-	ret = pdata->disable(dev);
+-	clk_disable_unprepare(t7l66xb->clk48m);
+-	clk_put(t7l66xb->clk48m);
+-	clk_disable_unprepare(t7l66xb->clk32k);
+-	clk_put(t7l66xb->clk32k);
+-	t7l66xb_detach_irq(dev);
+-	iounmap(t7l66xb->scr);
+-	release_resource(&t7l66xb->rscr);
+-	mfd_remove_devices(&dev->dev);
+-	kfree(t7l66xb);
+-
+-	return ret;
+-
 -}
 -
- static struct platform_driver twl4030_power_driver = {
+ static struct platform_driver t7l66xb_platform_driver = {
  	.driver = {
- 		.name	= "twl4030_power",
- 		.of_match_table = of_match_ptr(twl4030_power_of_match),
-+		.suppress_bind_attrs = true,
+-		.name	= "t7l66xb",
++		.name			= "t7l66xb",
++		.suppress_bind_attrs	= true,
  	},
- 	.probe		= twl4030_power_probe,
--	.remove		= twl4030_power_remove,
+ 	.suspend	= t7l66xb_suspend,
+ 	.resume		= t7l66xb_resume,
+ 	.probe		= t7l66xb_probe,
+-	.remove		= t7l66xb_remove,
  };
 -
--module_platform_driver(twl4030_power_driver);
+-/*--------------------------------------------------------------------------*/
 -
--MODULE_AUTHOR("Nokia Corporation");
--MODULE_AUTHOR("Texas Instruments, Inc.");
--MODULE_DESCRIPTION("Power management for TWL4030");
--MODULE_LICENSE("GPL");
--MODULE_ALIAS("platform:twl4030_power");
-+builtin_platform_driver(twl4030_power_driver);
+-module_platform_driver(t7l66xb_platform_driver);
+-
+-MODULE_DESCRIPTION("Toshiba T7L66XB core driver");
+-MODULE_LICENSE("GPL v2");
+-MODULE_AUTHOR("Ian Molton");
+-MODULE_ALIAS("platform:t7l66xb");
++builtin_platform_driver(t7l66xb_platform_driver);
 -- 
 2.7.4
 
