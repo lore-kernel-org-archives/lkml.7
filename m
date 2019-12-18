@@ -2,130 +2,174 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 158AFC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B25DC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D603124650
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:40:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jqWjyfLG"
+	by mail.kernel.org (Postfix) with ESMTP id 22E3B206CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:40:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727205AbfLRPkP (ORCPT
+        id S1727262AbfLRPk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 10:40:15 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:39214 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726932AbfLRPkO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 10:40:14 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBIFdlqg019044;
-        Wed, 18 Dec 2019 09:39:47 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576683588;
-        bh=isrbKoX0G9x5SGR0XS8wE9i8c+JE3gadbxb2pKknm08=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=jqWjyfLGeRvQwwgyrIyyIvTziBUpN2dqqj6Bi1/V1jtOCGUovSziMNs1rjtKnYANl
-         6tp84BGjaIAUgO4cdONFX9lAJPIOErBgldm5agnsqfH4gED+dWDnaVXO+VvYBQGFd/
-         W1AAVeyJHO2FbWB09mgavO/6WOHXq+9d/kUL9aUM=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBIFdldB099895
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 18 Dec 2019 09:39:47 -0600
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 18
- Dec 2019 09:39:47 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 18 Dec 2019 09:39:47 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBIFdl01079424;
-        Wed, 18 Dec 2019 09:39:47 -0600
-Date:   Wed, 18 Dec 2019 09:39:05 -0600
-From:   Bin Liu <b-liu@ti.com>
-To:     <min.guo@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
+        Wed, 18 Dec 2019 10:40:26 -0500
+Received: from ns.iliad.fr ([212.27.33.1]:60876 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726932AbfLRPkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 10:40:25 -0500
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 1A7FE20425;
+        Wed, 18 Dec 2019 16:40:23 +0100 (CET)
+Received: from [192.168.108.51] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id F3C5D202EC;
+        Wed, 18 Dec 2019 16:40:22 +0100 (CET)
+Subject: Re: [RFC PATCH v1] devres: align devres.data strictly only for
+ devm_kmalloc()
+To:     Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Tejun Heo <tj@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        <chunfeng.yun@mediatek.com>, <linux-usb@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <tony@atomide.com>,
-        <hdegoede@redhat.com>
-Subject: Re: [PATCH v9 2/6] arm: dts: mt2701: Add usb2 device nodes
-Message-ID: <20191218153905.GN16429@iaqt7>
-Mail-Followup-To: Bin Liu <b-liu@ti.com>, min.guo@mediatek.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>, chunfeng.yun@mediatek.com,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, tony@atomide.com,
-        hdegoede@redhat.com
-References: <20191211015446.11477-1-min.guo@mediatek.com>
- <20191211015446.11477-3-min.guo@mediatek.com>
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        arcml <linux-snps-arc@lists.infradead.org>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+References: <74ae22cd-08c1-d846-3e1d-cbc38db87442@free.fr>
+ <CY4PR1201MB012059FF6735C3EDB7E1F8E9A1530@CY4PR1201MB0120.namprd12.prod.outlook.com>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <bff4c4ad-de8f-7229-1d16-7ea67e066f65@free.fr>
+Date:   Wed, 18 Dec 2019 16:40:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191211015446.11477-3-min.guo@mediatek.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <CY4PR1201MB012059FF6735C3EDB7E1F8E9A1530@CY4PR1201MB0120.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Wed Dec 18 16:40:23 2019 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
+On 18/12/2019 15:20, Alexey Brodkin wrote:
 
-On Wed, Dec 11, 2019 at 09:54:42AM +0800, min.guo@mediatek.com wrote:
-> From: Min Guo <min.guo@mediatek.com>
+> On 17/12/2019 16:30, Marc Gonzalez wrote:
 > 
-> Add musb nodes and usb2 phy nodes for MT2701
+>> Commit a66d972465d15 ("devres: Align data[] to ARCH_KMALLOC_MINALIGN")
+>> increased the alignment of devres.data unconditionally.
+>>
+>> Some platforms have very strict alignment requirements for DMA-safe
+>> addresses, e.g. 128 bytes on arm64. There, struct devres amounts to:
+>> 	3 pointers + pad_to_128 + data + pad_to_256
+>> i.e. ~220 bytes of padding.
 > 
-> Signed-off-by: Min Guo <min.guo@mediatek.com>
-> ---
-> changes in v9:
-> 1. Add usb-role-switch
-> 2. Remove label of usb connector child node
-> 3. Change usb connector child node compatible as "gpio-usb-b-connector", "usb-b-connector";
-> 
-> changes in v8:
-> 1. no changes
-> 
-> changes in v7:
-> 1. Change usb connector child node compatible as "gpio-usb-b-connector" 
-> 
-> changes in v6:
-> 1. Modify usb connector child node
-> 
-> changes in v5:
-> 1. Add usb connector child node
-> 
-> changes in v4:
-> 1. no changes
-> 
-> changes in v3:
-> 1. no changes
-> 
-> changes in v2:
-> 1. Remove phy-names
-> ---
->  arch/arm/boot/dts/mt2701-evb.dts | 21 ++++++++++++++++++++
->  arch/arm/boot/dts/mt2701.dtsi    | 33 ++++++++++++++++++++++++++++++++
->  2 files changed, 54 insertions(+)
+> Could you please elaborate a bit on mentioned paddings?
+> I may understand the first one for 128 bytes but where does the
+> second one for 256 bytes come from?
 
-Can I have your ACK so I can queue this? or please let me know if you
-want to take it in your tree. Thanks.
+Sure thing.
 
--Bin.
+struct devres {
+	struct devres_node node;
+	u8 __aligned(ARCH_KMALLOC_MINALIGN) data[];
+};
+
+struct devres_node = 3 pointers
+kmalloc dishes out memory in multiples of ARCH_KMALLOC_MINALIGN bytes.
+On arm64, ARCH_KMALLOC_MINALIGN = 128
+(Everything written below assumes ARCH_KMALLOC_MINALIGN = 128)
+
+In alloc_dr() we request sizeof(struct devres) + sizeof(data) from kmalloc.
+sizeof(struct devres) = 128 because of the alignment directive.
+I.e. the 'data' field is automatically padded to 128 by the compiler.
+
+For most devm allocs (non-devm_kmalloc allocs), data is just 1 or 2 pointers.
+So kmalloc(128 + 16) allocates 256 bytes.
+
+>> Let's enforce the alignment only for devm_kmalloc().
+> 
+> Ok so for devm_kmalloc() we don't change anything, right?
+> We still add the same padding before real data array.
+
+(My commit message probably requires improvement & refining.)
+
+Yes, the objective of my patch is to keep the same behavior for
+devm_kmalloc() while reverting to the old behavior for all other
+uses of struct devres.
+
+
+>> I had not been aware that dynamic allocation granularity on arm64 was
+>> 128 bytes. This means there's a lot of waste on small allocations.
+> 
+> Now probably I'm missing something but when do you expect to save something?
+> If those smaller allocations are done with devm_kmalloc() you aren't
+> saving anything.
+
+With my patch, a "non-kmalloc" struct devres would take 128 bytes, instead
+of 256.
+
+>> I suppose there's no easy solution, though.
+> 
+> Right! It took a while till I was able to propose something
+> people [almost silently] agreed with.
+
+I meant the wider subject of dynamic allocation granularity.
+
+The 128-byte requirement is only for DMA. Some (most?) uses of kmalloc
+are not for DMA. If the user could provide a flag ("this is to be used
+for DMA") we could save lots of memory for small non-DMA allocs.
+
+
+>> +#define DEVM_KMALLOC_PADDING_SIZE \
+>> +	(ARCH_KMALLOC_MINALIGN - sizeof(struct devres) % ARCH_KMALLOC_MINALIGN)
+> 
+> Even given your update with:
+> ------------------------------->8--------------------------------
+> #define DEVM_KMALLOC_PADDING_SIZE \
+>   ((ARCH_KMALLOC_MINALIGN - sizeof(struct devres)) % ARCH_KMALLOC_MINALIGN)
+> ------------------------------->8--------------------------------
+> I don't think I understand why do you need that "% ARCH_KMALLOC_MINALIGN" part?
+
+To handle the case where sizeof(struct devres) > ARCH_KMALLOC_MINALIGN
+
+e.g ARCH_KMALLOC_MINALIGN = 8 and sizeof(struct devres) = 12
+
+
+>> +	/* Add enough padding to provide a DMA-safe address */
+>> +	size += DEVM_KMALLOC_PADDING_SIZE;
+> 
+> This implementation gets ugly and potentially will lead to problems later
+> when people will start changing code here. Compared to that initially aligned by
+> the compiler dr->data looks much more foolproof.
+
+Yes, it's better to let the compiler handle the padding... But, we don't
+want any padding in the non-devm_kmalloc use-case.
+
+We could add a pointer to the data field, but arches with small ARCH_KMALLOC_MINALIGN
+will have to pay the size increase, which doesn't seem fair to them (x86, amd64).
+
+
+>> @@ -822,7 +825,7 @@ void * devm_kmalloc(struct device *dev, size_t size, gfp_t gfp)
+>>  	 */
+>>  	set_node_dbginfo(&dr->node, "devm_kzalloc_release", size);
+>>  	devres_add(dev, dr->data);
+>> -	return dr->data;
+>> +	return dr->data + DEVM_KMALLOC_PADDING_SIZE;
+> 
+> Ditto. But first I'd like to understand what are you trying to really do
+> with your change and then we'll see if there could be any better implementation.
+
+Basically, every call to devres_alloc() or devm_add_action() allocates
+256 bytes instead of 128. A typical arm64 system will call these
+thousands of times during driver probe.
+
+Regards.
