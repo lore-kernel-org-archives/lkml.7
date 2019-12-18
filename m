@@ -2,138 +2,116 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 835D9C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 117CDC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59FE02146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:17:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AUgHnCwj"
+	by mail.kernel.org (Postfix) with ESMTP id DB915227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:17:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576678637;
+	bh=CbTM/XWLgQMskf8QEYlrwd6uyfR0NyMnsxmItpMtX70=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=vjjvSf5/mEyaEPiqWqIWkdFzkvd9Uj5STvZ9qztOPyXXKzv2RBmebxd6ziFqJ+uWb
+	 FImP+wLMdwcGr/UI0ujwTkpJf9O9CWG4ilQPjESaU7RGf3QmEPoOHkjUfRwKcerMEa
+	 sOMPrZGalJbHTUWy4PP96lqa2QZVOMcg04zWN4dw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbfLRORJ (ORCPT
+        id S1727173AbfLRORR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 09:17:09 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36910 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727001AbfLRORG (ORCPT
+        Wed, 18 Dec 2019 09:17:17 -0500
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:17557 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726932AbfLRORQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 09:17:06 -0500
-Received: by mail-pl1-f196.google.com with SMTP id c23so1040575plz.4;
-        Wed, 18 Dec 2019 06:17:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=L3jQPTQ2R5MiyMCuFQ28/QWm5v0842TnhDYDEhmSL3A=;
-        b=AUgHnCwjrq2NwEEG1Av211jYafr70uh5ebuUs9nuRl2qxREry4BoHzgTAYFsMv3wmB
-         a5YHGLTtY98yx+j9Q8b0+FfGt3JAt9UXBE5Tc2ZKcoONX9VI2nvpvdLs3RQVZ0ZWg3D/
-         wGNTH8LtR+5ExwolcnWmnJPdNKSBdOlHYInW34Z4F1Q+/IjyVPyQbqT6/6epI1U9qcjK
-         hIq0wWqyQAIsz3YtV0XUhJMTjyxbmzkECW3oVzbsKmYy5ylphCqEF7EEeRZ5ip1KDtCF
-         7fKH461scRZnfR6yLog37fd6vf7hZU9n927npHCGxC1sOUrPpxn197u0alXAG8w6IXUR
-         tr8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=L3jQPTQ2R5MiyMCuFQ28/QWm5v0842TnhDYDEhmSL3A=;
-        b=V/eXzXEvfyC4+NyQrTdwAlkV2OagB+tyo1iBpGNyDeNQ5KKLUYgLxlK4ciOYm4sCsw
-         vJJaJYV8exYQzvIxxaNhI58j0Z/7Z6yXie/dsgWrR5lJwUUo6WvJGFVug7AxpxwpPuxV
-         H4yNCqXLBKFwLI7dh2haYQOOiwXbIpDl4qlprDoHKDMbBVuiZg1UScT97esbu2+LDvGP
-         NrKz/W35LjVgAnrurPLlORTc0SFxjtlHqWhPG0V8THL2PHoG2ShDiGJyPVPhauTz3pij
-         fEysX0kuanQZaebyxe5vmdzBXc57iwmm2FG67Ycks2w9u7SL+/QholjXEcPUEh73J7V9
-         N6TA==
-X-Gm-Message-State: APjAAAXLYeteL9b53VWxaTVVCXUTI8DrmqXwFo98JJsPicpvTpkwMq7O
-        k5JEcqRGeNYIGwsLNaFaVk0=
-X-Google-Smtp-Source: APXvYqxrumjb/MCyv+nqkhnIWzKh4Ue6ATLhMTvMUn7j3d3USRqbMhKU5djbDU374OD2VrPmFbBudQ==
-X-Received: by 2002:a17:90a:a386:: with SMTP id x6mr3205472pjp.116.1576678625582;
-        Wed, 18 Dec 2019 06:17:05 -0800 (PST)
-Received: from oslab.tsinghua.edu.cn ([166.111.139.172])
-        by smtp.gmail.com with ESMTPSA id t187sm3546560pfd.21.2019.12.18.06.17.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 06:17:05 -0800 (PST)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     jeffrey.t.kirsher@intel.com, davem@davemloft.net
-Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] net: intel: e1000e: fix possible sleep-in-atomic-context bugs in e1000e_get_hw_semaphore()
-Date:   Wed, 18 Dec 2019 22:16:56 +0800
-Message-Id: <20191218141656.12416-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 18 Dec 2019 09:17:16 -0500
+X-Greylist: delayed 95084 seconds by postgrey-1.27 at vger.kernel.org; Wed, 18 Dec 2019 09:17:15 EST
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id xBIEGjfI021877;
+        Wed, 18 Dec 2019 23:16:45 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com xBIEGjfI021877
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1576678606;
+        bh=qmHvB4juxMPU3zIuVI2Brd26weLsZ6/2g5Iqv2+p7W0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=PlMB2e7Pe4segIaQQANKREfkxM4abkGhBdOT9ubs8R2TAUALxN2Dd2c2kWGllC8YU
+         MJs6+wUTYcQGGc3suk0E1jrf+uEoDLbiHLN26mW9SHtAL0/KMSXvdvfZw6bFChsfLk
+         dFgvfGp9lOhvuZ/BmmZWAKENRX/qh0+Id4EHKXCppJoQ4hbYpKEpa3slfLdnqTigpI
+         aUtLAx0BmzGvMpn6gIPLPKfjibEq0xDmEa/PjWSLDmXEeCEQci7jci/YGBk/mZEso7
+         vCajyN8Ij6WBMF9HFdKZo6DxG9ADiG5y5mT09r8F/Jb6T9YITyTsJQmQuXU9yqio/+
+         s6WyCTNcrK4Ew==
+X-Nifty-SrcIP: [209.85.217.53]
+Received: by mail-vs1-f53.google.com with SMTP id u14so1474134vsu.3;
+        Wed, 18 Dec 2019 06:16:45 -0800 (PST)
+X-Gm-Message-State: APjAAAWBwFtBwiez2OLd2S7Xb6D3g+UfTejFCa2xjHrV8d+u22ekKQEk
+        sCrXLIs8hWepwZcQBmxh6Nj7+gCq6XBjMaHwakE=
+X-Google-Smtp-Source: APXvYqxMRyzTjfqlEpXcNMIZydJI68nPt3I8yfvImlkDJE7pX8UDC+Xba8CQeMVSUXXDVjStScD7bmst/DsXb6G7tx8=
+X-Received: by 2002:a05:6102:3102:: with SMTP id e2mr1515570vsh.179.1576678604346;
+ Wed, 18 Dec 2019 06:16:44 -0800 (PST)
+MIME-Version: 1.0
+References: <20191217115151.12465-1-masahiroy@kernel.org>
+In-Reply-To: <20191217115151.12465-1-masahiroy@kernel.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 18 Dec 2019 23:16:08 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQj3Hsv7Nbd3qVj-ie2z+DsPmBseh4tS9hfk+6mg4PpYw@mail.gmail.com>
+Message-ID: <CAK7LNAQj3Hsv7Nbd3qVj-ie2z+DsPmBseh4tS9hfk+6mg4PpYw@mail.gmail.com>
+Subject: Re: [PATCH] kconfig: remove ---help--- from documentation
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Ulf Magnusson <ulfalizer@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver may sleep while holding a spinlock.
-The function call path (from bottom to top) in Linux 4.19 is:
+On Tue, Dec 17, 2019 at 8:52 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> Commit 84af7a6194e4 ("checkpatch: kconfig: prefer 'help' over
+> '---help---'"), scripts/checkpatch.pl warns the use of ---help---.
+>
+> This still exists, but new code should avoid using it.
+> Let's stop advertising it in documentation.
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
 
-drivers/net/ethernet/intel/e1000e/mac.c, 1366: 
-	usleep_range in e1000e_get_hw_semaphore
-drivers/net/ethernet/intel/e1000e/80003es2lan.c, 322:
-	e1000e_get_hw_semaphore in e1000_release_swfw_sync_80003es2lan
-drivers/net/ethernet/intel/e1000e/80003es2lan.c, 197:
-	e1000_release_swfw_sync_80003es2lan in e1000_release_phy_80003es2lan
-drivers/net/ethernet/intel/e1000e/netdev.c, 4883: 
-	(FUNC_PTR) e1000_release_phy_80003es2lan in e1000e_update_phy_stats
-drivers/net/ethernet/intel/e1000e/netdev.c, 4917:
-	e1000e_update_phy_stats in e1000e_update_stats
-drivers/net/ethernet/intel/e1000e/netdev.c, 5945: 
-	e1000e_update_stats in e1000e_get_stats64
-drivers/net/ethernet/intel/e1000e/netdev.c, 5944: 
-	spin_lock in e1000e_get_stats64
+Applied to linux-kbuild.
 
-drivers/net/ethernet/intel/e1000e/mac.c, 1384: 
-	usleep_range in e1000e_get_hw_semaphore
-drivers/net/ethernet/intel/e1000e/80003es2lan.c, 322:
-	e1000e_get_hw_semaphore in e1000_release_swfw_sync_80003es2lan
-drivers/net/ethernet/intel/e1000e/80003es2lan.c, 197:
-	e1000_release_swfw_sync_80003es2lan in e1000_release_phy_80003es2lan
-drivers/net/ethernet/intel/e1000e/netdev.c, 4883: 
-	(FUNC_PTR) e1000_release_phy_80003es2lan in e1000e_update_phy_stats
-drivers/net/ethernet/intel/e1000e/netdev.c, 4917:
-	e1000e_update_phy_stats in e1000e_update_stats
-drivers/net/ethernet/intel/e1000e/netdev.c, 5945: 
-	e1000e_update_stats in e1000e_get_stats64
-drivers/net/ethernet/intel/e1000e/netdev.c, 5944: 
-	spin_lock in e1000e_get_stats64
+>
+>  Documentation/kbuild/kconfig-language.rst | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+>
+> diff --git a/Documentation/kbuild/kconfig-language.rst b/Documentation/kbuild/kconfig-language.rst
+> index 74bef19f69f0..231e6a64957f 100644
+> --- a/Documentation/kbuild/kconfig-language.rst
+> +++ b/Documentation/kbuild/kconfig-language.rst
+> @@ -196,14 +196,11 @@ applicable everywhere (see syntax).
+>    or equal to the first symbol and smaller than or equal to the second
+>    symbol.
+>
+> -- help text: "help" or "---help---"
+> +- help text: "help"
+>
+>    This defines a help text. The end of the help text is determined by
+>    the indentation level, this means it ends at the first line which has
+>    a smaller indentation than the first line of the help text.
+> -  "---help---" and "help" do not differ in behaviour, "---help---" is
+> -  used to help visually separate configuration logic from help within
+> -  the file as an aid to developers.
+>
+>  - misc options: "option" <symbol>[=<value>]
+>
+> --
+> 2.17.1
+>
 
-(FUNC_PTR) means a function pointer is called.
 
-To fix these bugs, usleep_range() is replaced with udelay().
-
-These bugs are found by a static analysis tool STCheck written by myself.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
----
- drivers/net/ethernet/intel/e1000e/mac.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/e1000e/mac.c b/drivers/net/ethernet/intel/e1000e/mac.c
-index e531976f8a67..51512a73fdd0 100644
---- a/drivers/net/ethernet/intel/e1000e/mac.c
-+++ b/drivers/net/ethernet/intel/e1000e/mac.c
-@@ -1363,7 +1363,7 @@ s32 e1000e_get_hw_semaphore(struct e1000_hw *hw)
- 		if (!(swsm & E1000_SWSM_SMBI))
- 			break;
- 
--		usleep_range(50, 100);
-+		udelay(100);
- 		i++;
- 	}
- 
-@@ -1381,7 +1381,7 @@ s32 e1000e_get_hw_semaphore(struct e1000_hw *hw)
- 		if (er32(SWSM) & E1000_SWSM_SWESMBI)
- 			break;
- 
--		usleep_range(50, 100);
-+		udelay(100);
- 	}
- 
- 	if (i == timeout) {
 -- 
-2.17.1
-
+Best Regards
+Masahiro Yamada
