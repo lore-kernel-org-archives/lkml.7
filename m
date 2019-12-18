@@ -2,117 +2,144 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC392C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E28C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CE312176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:01:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 224E92176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:01:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d+j2Q3gM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727181AbfLROBj (ORCPT
+        id S1727192AbfLROBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 09:01:39 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:59018 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbfLROBg (ORCPT
+        Wed, 18 Dec 2019 09:01:47 -0500
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:44767 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726963AbfLROBr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 09:01:36 -0500
-X-AuditID: c0a8fbf4-199ff70000001fa6-87-5dfa313d1e2b
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id DE.4F.08102.D313AFD5; Wed, 18 Dec 2019 15:01:33 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Wed, 18 Dec 2019 15:01:27 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "broonie@kernel.org" <broonie@kernel.org>
-CC:     "corbet@lwn.net" <corbet@lwn.net>,
-        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "noralf@tronnes.org" <noralf@tronnes.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "pavel@ucw.cz" <pavel@ucw.cz>
-Subject: Re: Applied "regulator: bd71828: Basic support for ROHM bd71828
- PMIC regulators" to the regulator tree
-Thread-Topic: Applied "regulator: bd71828: Basic support for ROHM bd71828
- PMIC regulators" to the regulator tree
-Thread-Index: AQHVtNcCPO+Kt0OMfE2l+CzrBWADfqe/eY8AgABW2wCAAAxsgA==
-Date:   Wed, 18 Dec 2019 14:01:27 +0000
-Message-ID: <b72cd22df0bbbb159cda08e556037f1ccf490b3d.camel@fi.rohmeurope.com>
-References: <applied-5b1c4a22c7945e97ff2a7924abfeb3239043f8eb.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
-         <de7424126e285d9bbd21a70945415d78203c2ba7.camel@fi.rohmeurope.com>
-         <20191218131700.GB42175@sirena.org.uk>
-In-Reply-To: <20191218131700.GB42175@sirena.org.uk>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0EC2AB5390333649B5FA8FB87510E416@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Wed, 18 Dec 2019 09:01:47 -0500
+Received: by mail-ua1-f66.google.com with SMTP id d6so652519uam.11
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 06:01:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=c0JG9FsmPpOoD5GBiRIPhJrj1c4tEf6Dk1qUflCL1l8=;
+        b=d+j2Q3gMVEtDTZjx1PNLgfsbE6Px+yOzGhY1xmsvXfcSM6QKcgkr2gXBoMNBcDMz7w
+         OzsoFt6Gp647NxbZU7y0+wMgrGuU5fLA08daq08/VS5L/KwKS6a32BFmscI3WhomjQ4A
+         RzUZJwp0kUOAMobVS6mQZNG/dAk1Z9UOVOGlXul7tP2u9saMls+iXSfeIM251sRQUffl
+         EgN0ErbWqJ4YFlfl/2Sub+Bmtcs/U0DbGMV030EHMNqetRXno8uTGZpxRvSMb3voA10m
+         3Mnn8YvCisimpKMIaZe9I57gTUQ2ZKwomfL2oSKfVTi2r3G9oa5KAsIzYdM1JA5uR9rT
+         +MZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c0JG9FsmPpOoD5GBiRIPhJrj1c4tEf6Dk1qUflCL1l8=;
+        b=VtSXM6prm1btpF6TWroNArz3k+ufoY7YypUtxW7r0mtwghOzOee1TChiRnEKnqPCju
+         ga7hROFTLNJkzk/qLoNES/pIIXFmfg8hNIzG1CfL3iDhIdZ9SvgOXoQf0Rsp+v+TE+zb
+         aKW9fw3FctJTNyU12RR2FQWJHKM6FCnZ8ePRuGcl6RdhWWdg5Gqhzsw6fogy1Bwxy07H
+         gyY+xOt4sOJ7j6ZFet1ngkwhzUosEzW+Pb1pWEv6c7gOZU/TUZt2KXXdkxn6VeiKFqw7
+         lkwjTJp2mJTkPU3CAjUuWEwcOpG40V6yPNpLZB98lyeG4eLEPDAJ8yXZn9OJw8OdtVjf
+         quKQ==
+X-Gm-Message-State: APjAAAUiOL/k00WzUSp7ACLBaysydgHti+G+k7SakyjzV71hS+Cl9FGs
+        ytDhKVkfQGKLJATVB5HSIXRyyHKM+RB9R3ApdpMBnA==
+X-Google-Smtp-Source: APXvYqz9r2dN0C3+Bqwu22rtfMOoZJ3AuiEMR41kI//837m0N3aIJdrC3qBt5RrNMLJKSN7EjFvCzPXStXBx/AV2eUQ=
+X-Received: by 2002:ab0:2759:: with SMTP id c25mr1395424uap.104.1576677705884;
+ Wed, 18 Dec 2019 06:01:45 -0800 (PST)
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Te0wUVxTGc2dmZy7gNOMK3du1mjhtbWzDK5p4E221bYhDjMTEtCaNhI7u
-        lCHCLs4uKjVGjAFlwdcCtW5dWHnVCBVZBBUhpRsW7NZCiKAoPrKWkoBmadVKAB+dYarw1/3u
-        +c7vfuePcyFprGXMMMPqkBSrmMnTkVTHmenG2E8Sp1ITvv9jFa7uG2DwwXAtg1+4uhj81BOk
-        cFlomMbDHQcBrujsMeCi3y8Y8IGqBhoPNZ+n8P1/AwA/6z9E4NLnPxH4n+J7Bny6oJrCTRXP
-        Ab7eeorGzY/OAdxV10/jmpt9BD5Vc5XC448LCdwXTMJlwTCD7wYDND7QN0ji/PZOBr+80Ujh
-        Iz3r1i4S6svrgTA95QLC+GA+I5TX7xEuu+8ygu9sIS3cudFGC7946hmh6kiJQXh27TgljJxu
-        oITuwYuEcKJ8khAaijuBcKZughGe+BZv5L6OWr1VdOzclJFujf/0myi5IJyQ7Yrc3dLiA3ng
-        7wgniICIW4HyTnTTThAJjdwAQOdK7hn0y1WAwj/UASeAkOZWI+ctRgOiuVhUNlU1A5BcfxSq
-        7C8hNWMBtwMdbgqSepOCbr8YpXT9OSryjczUKe4DVPRXKdA0y6Wgh12XgB52HyBP6yODZkRw
-        y9HtWtdMGuAWocK8MKFpkjMh38iEQR+bQ9VtvaSuY9Dony//r/OofTJEaUOT3DLU0Bqvo2tR
-        S8kgqeslqLQoxOgzzEe/nRymjoG33XMS3LO0ew7tnkO759BeYDgLUJaYkZkuOqTEOEXKiVNs
-        cpZ6bLNl+YC+d08vgVf+ZD8gIPCDdyDBx7C8PJlqfGurzZIri3Y5TcnJlOx+gCDJR7NDh1SP
-        tYi530mK7bW1EFK8if0wdDzVyGlZ2yUpW1Jeu+9CyCO2LXYq1ThfkdKl3d9mZDpmbQJGaI9H
-        mqPtktUiKWKOQ07T9iPNri6IZs1Tcy3xKs7as8UstaqjQfAxPDbqqSRhp6emkjRSVptVMptY
-        dqnaymmtco71TdAYMEHAL2D3J6juPPXzvXlnTI0g1Ai4bCbCIc5a5jwQPz6R25HUIl45umFs
-        DdW78uTi5PdSVvUcnf7isEJXVMlG/2Pf5t73cSDmq33XU27+6vU++PLVBdeuQNM+rxFZNz+J
-        cbvOr9gY8rLFS4RmJm6vybS/wBy482P79oWNQ9tqNjUnr3FeLF0/kFQ3vOXyuh3lll74cLzr
-        s4H8K065+9rPPGWXxcSPSMUu/gfQRcVfOQQAAA==
+References: <20191206075408.18355-1-hslester96@gmail.com>
+In-Reply-To: <20191206075408.18355-1-hslester96@gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 18 Dec 2019 15:01:09 +0100
+Message-ID: <CAPDyKFqsNpgGiDEH42Mo_fJ3jGjSO+y3tP45DpJA7vH-696yYg@mail.gmail.com>
+Subject: Re: [PATCH] mmc: cavium: Add missed pci_release_regions
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     Jan Glauber <jglauber@cavium.com>,
+        David Daney <david.daney@cavium.com>,
+        "Steven J . Hill" <Steven.Hill@cavium.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiBXZWQsIDIwMTktMTItMTggYXQgMTM6MTcgKzAwMDAsIE1hcmsgQnJvd24gd3JvdGU6DQo+
-IE9uIFdlZCwgRGVjIDE4LCAyMDE5IGF0IDA4OjA2OjA0QU0gKzAwMDAsIFZhaXR0aW5lbiwgTWF0
-dGkgd3JvdGU6DQo+IA0KPiA+IEkgdGhpbmsgeW91IG1pc3NlZCB0aGUgW1BBVENIIHY2IDA4LzE1
-XSByZWd1bGF0b3I6IGJkNzE4eDc6IFNwbGl0DQo+ID4gZHJpdmVyIHRvIGNvbW1vbiBhbmQgYmQ3
-MTh4NyBzcGVjaWZpYyBwYXJ0cw0KPiANCj4gSSBkaWRuJ3QgbWlzcyBpdCwgaXQgd2FzIHF1ZXVl
-ZCBidXQgaXQgZG9lc24ndCBhcHBseS4NClJpZ2h0LiBUaGUgcm9obS1nZW5lcmljLmggaXMgY2hh
-bmdlZCBieQ0KW1BBVENIIHY2IDA0LzE1XSBtZmQ6IHJvaG0gUE1JQ3MgLSB1c2UgcGxhdGZvcm1f
-ZGV2aWNlX2lkIHRvIG1hdGNoIE1GRA0Kc3ViLWRldmljZXMNCg0KZGlmZiAtLWdpdCBhL2luY2x1
-ZGUvbGludXgvbWZkL3JvaG0tZ2VuZXJpYy5oIGIvaW5jbHVkZS9saW51eC9tZmQvcm9obS0NCmdl
-bmVyaWMuaA0KaW5kZXggYmZmMTVhYzI2ZjJjLi45MjJmODgwMDgyMzIgMTAwNjQ0DQotLS0gYS9p
-bmNsdWRlL2xpbnV4L21mZC9yb2htLWdlbmVyaWMuaA0KKysrIGIvaW5jbHVkZS9saW51eC9tZmQv
-cm9obS1nZW5lcmljLmgNCkBAIC00LDcgKzQsNyBAQA0KICNpZm5kZWYgX19MSU5VWF9NRkRfUk9I
-TV9IX18NCiAjZGVmaW5lIF9fTElOVVhfTUZEX1JPSE1fSF9fDQogDQotZW51bSB7DQorZW51bSBy
-b2htX2NoaXBfdHlwZSB7DQoNCg0KSSB0aGluayB0aGlzIGlzIHRoZSByb290IG9mIHRoZSBjb25m
-bGljdCBoZXJlIGFzIFtQQVRDSCB2NiAwNC8xNV0gaXMNCm5vdCBpbiByZWd1bGF0b3IgdHJlZS4g
-SG93IHNob3VsZCBJIGhhbmRsZSB0aGlzIHNvIHRoYXQgaXQgd29uJ3QNCmNvbmZsaWN0IGluIHlv
-dXIgYW5kIExlZSdzIHRyZWVzPw0KDQpCciwNCglNYXR0aQ0K
+On Fri, 6 Dec 2019 at 08:54, Chuhong Yuan <hslester96@gmail.com> wrote:
+>
+> The driver forgets to call pci_release_regions() in probe failure
+> and remove.
+> Add the missed calls to fix it.
+>
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+
+Applied for next, thanks!
+
+Kind regards
+Uffe
+
+
+> ---
+>  drivers/mmc/host/cavium-thunderx.c | 16 +++++++++++-----
+>  1 file changed, 11 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/mmc/host/cavium-thunderx.c b/drivers/mmc/host/cavium-thunderx.c
+> index eee08d81b242..76013bbbcff3 100644
+> --- a/drivers/mmc/host/cavium-thunderx.c
+> +++ b/drivers/mmc/host/cavium-thunderx.c
+> @@ -76,8 +76,10 @@ static int thunder_mmc_probe(struct pci_dev *pdev,
+>                 return ret;
+>
+>         host->base = pcim_iomap(pdev, 0, pci_resource_len(pdev, 0));
+> -       if (!host->base)
+> -               return -EINVAL;
+> +       if (!host->base) {
+> +               ret = -EINVAL;
+> +               goto error;
+> +       }
+>
+>         /* On ThunderX these are identical */
+>         host->dma_base = host->base;
+> @@ -86,12 +88,14 @@ static int thunder_mmc_probe(struct pci_dev *pdev,
+>         host->reg_off_dma = 0x160;
+>
+>         host->clk = devm_clk_get(dev, NULL);
+> -       if (IS_ERR(host->clk))
+> -               return PTR_ERR(host->clk);
+> +       if (IS_ERR(host->clk)) {
+> +               ret = PTR_ERR(host->clk);
+> +               goto error;
+> +       }
+>
+>         ret = clk_prepare_enable(host->clk);
+>         if (ret)
+> -               return ret;
+> +               goto error;
+>         host->sys_freq = clk_get_rate(host->clk);
+>
+>         spin_lock_init(&host->irq_handler_lock);
+> @@ -157,6 +161,7 @@ static int thunder_mmc_probe(struct pci_dev *pdev,
+>                 }
+>         }
+>         clk_disable_unprepare(host->clk);
+> +       pci_release_regions(pdev);
+>         return ret;
+>  }
+>
+> @@ -175,6 +180,7 @@ static void thunder_mmc_remove(struct pci_dev *pdev)
+>         writeq(dma_cfg, host->dma_base + MIO_EMM_DMA_CFG(host));
+>
+>         clk_disable_unprepare(host->clk);
+> +       pci_release_regions(pdev);
+>  }
+>
+>  static const struct pci_device_id thunder_mmc_id_table[] = {
+> --
+> 2.24.0
+>
