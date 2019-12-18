@@ -2,145 +2,105 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D42E2C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 268E6C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB2B02176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:53:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576677188;
-	bh=fsWdrwga1XtnWZmUgqG+6Km/8DfBHsKLh9AzdWqAnNk=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=FvXK6VtB2zOUnHynzzg2YleQpY7mbslpDEhyoCcYWA3ZwVuWgwEykBfXMC7X3+Jpy
-	 ALNevrK9YcHbEZ+fRxkxBXNORWuh2YfJKObxA17NH6FexqFO8C3w3EqcBsEFK0LkFh
-	 sebQfQ4ysi+7pxnBYhassTin9/X0LgY2zPiLRuJ4=
+	by mail.kernel.org (Postfix) with ESMTP id 02A992176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:54:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbfLRNxH (ORCPT
+        id S1727066AbfLRNyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 08:53:07 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:51038 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726710AbfLRNxH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 08:53:07 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1ihZl9-0001g7-Pf; Wed, 18 Dec 2019 14:53:03 +0100
-To:     Andre Przywara <andre.przywara@arm.com>
-Subject: Re: [PATCH] pcie: Add quirk for the Arm Neoverse N1SDP platform
-X-PHP-Originating-Script: 0:main.inc
+        Wed, 18 Dec 2019 08:54:07 -0500
+Received: from mga11.intel.com ([192.55.52.93]:5017 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726856AbfLRNyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 08:54:07 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 05:54:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,329,1571727600"; 
+   d="scan'208";a="390195126"
+Received: from unknown (HELO localhost) ([10.239.159.128])
+  by orsmga005.jf.intel.com with ESMTP; 18 Dec 2019 05:54:04 -0800
+Date:   Wed, 18 Dec 2019 21:55:13 +0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
+        jmattson@google.com, yu.c.zhang@linux.intel.com,
+        yu-cheng.yu@intel.com
+Subject: Re: [PATCH v8 3/7] KVM: VMX: Pass through CET related MSRs
+Message-ID: <20191218135513.GB7926@local-michael-cet-test>
+References: <20191101085222.27997-1-weijiang.yang@intel.com>
+ <20191101085222.27997-4-weijiang.yang@intel.com>
+ <20191210211821.GL15758@linux.intel.com>
+ <20191216021816.GA10764@local-michael-cet-test>
+ <20191218003455.GP11771@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 18 Dec 2019 13:53:02 +0000
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     Jon Masters <jcm@jonmasters.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        <linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Will Deacon <will@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, Len Brown <lenb@kernel.org>
-In-Reply-To: <20191218102203.4078b011@donnerap.cambridge.arm.com>
-References: <20191209160638.141431-1-andre.przywara@arm.com>
- <20191209162645.GA7489@willie-the-truck>
- <dacfd8bf-0f68-f2af-9238-4b0fadfbdfe3@jonmasters.org>
- <20191218102203.4078b011@donnerap.cambridge.arm.com>
-Message-ID: <68c0c1e31ce72ab26eab7f1b077a302c@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: andre.przywara@arm.com, jcm@jonmasters.org, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, rjw@rjwysocki.net, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, andrew.murray@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, lenb@kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191218003455.GP11771@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-18 10:22, Andre Przywara wrote:
-> On Tue, 17 Dec 2019 21:21:17 -0500
-> Jon Masters <jcm@jonmasters.org> wrote:
+On Tue, Dec 17, 2019 at 04:34:55PM -0800, Sean Christopherson wrote:
+> On Mon, Dec 16, 2019 at 10:18:16AM +0800, Yang Weijiang wrote:
+> > On Tue, Dec 10, 2019 at 01:18:21PM -0800, Sean Christopherson wrote:
+> > > On Fri, Nov 01, 2019 at 04:52:18PM +0800, Yang Weijiang wrote:
+> > > > CET MSRs pass through Guest directly to enhance performance.
+> > > > CET runtime control settings are stored in MSR_IA32_{U,S}_CET,
+> > > > Shadow Stack Pointer(SSP) are stored in MSR_IA32_PL{0,1,2,3}_SSP,
+> > > > SSP table base address is stored in MSR_IA32_INT_SSP_TAB,
+> > > > these MSRs are defined in kernel and re-used here.
+> > > > 
+> >  > +
+> > > >  static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
+> > > >  {
+> > > >  	struct vcpu_vmx *vmx = to_vmx(vcpu);
+> > > > @@ -7025,6 +7087,9 @@ static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
+> > > >  	if (boot_cpu_has(X86_FEATURE_INTEL_PT) &&
+> > > >  			guest_cpuid_has(vcpu, X86_FEATURE_INTEL_PT))
+> > > >  		update_intel_pt_cfg(vcpu);
+> > > > +
+> > > > +	if (!is_guest_mode(vcpu))
+> > > > +		vmx_pass_cet_msrs(vcpu);
+> > > 
+> > > Hmm, this looks insufficent, e.g. deliberately toggling CET from on->off
+> > > while in guest mode would put KVM in a weird state as the msr bitmap for
+> > > L1 would still allow L1 to access the CET MSRs.
+> > >
+> > Hi, Sean,
+> > I don't get you, there's guest mode check before access CET msrs, it'll
+> > fail if it's in guest mode.
+> 
+> KVM can exit to userspae while L2 is active.  If userspace then did a
+> KVM_SET_CPUID2, e.g. instead of KVM_RUN, vmx_cpuid_update() would skip
+> vmx_pass_cet_msrs() and KVM would never update L1's MSR bitmaps.
 >
-> Hi Jon,
->
->> On 12/9/19 11:26 AM, Will Deacon wrote:
->> > On Mon, Dec 09, 2019 at 04:06:38PM +0000, Andre Przywara wrote:
->> >> From: Deepak Pandey <Deepak.Pandey@arm.com>
->> >>
->> >> The Arm N1SDP SoC suffers from some PCIe integration issues, most
->> >> prominently config space accesses to not existing BDFs being 
->> answered
->> >> with a bus abort, resulting in an SError.
->> >
->> > "Do as I say, not as I do"?
->>
->> In my former role I asked nicely that these patches not be posted
->> upstream, but I see that they ended up being posted anyway. Hacking 
->> up
->> upstream Linux to cover for the fact that a (reference) platform is
->> non-standard is not only not good form but it actively harms the 
->> community.
->
-> Please keep in mind that this platform was designed to be standards
-> compliant, it is just due to an integration problem that this is not
-> the case with this silicon. So we end up with the usual hardware
-> errata, which the kernel can fix up. I agree it's not nice, and I 
-> also
-> want it fixed in hardware, but I guess that's the usual software 
-> guy's
-> pipe dream.
->
->> You'll have people consume this platform and not realize that it's
->> broken, IP won't get fixed, and generally it'll be a mess.
->
-> I don't see how yet another ACPI quirk in the ACPI quirk framework(!)
-> will make a mess.
-> Actually the rest of the system is standards compliant (it even uses
-> ACPI from the very beginning ;-), so it's just this problem that
-> prevents us from using the system in the proper, standards compliant
-> way. Effectively we are back to the embedded times with compiling 
-> your
-> own kernel and somehow getting a root filesystem on the hard drive.
-> If there would be mainline kernel support, all of this would go away
-> and would could use standard distro installers (given they backport
-> the patch).
->
->> Yes, it's
->> unfortunate, but so was taping out that platform without working 
->> PCI. We
->> all know what should have happened, and what the right move ahead 
->> is.
->
-> That may come as a surprise to some, but Arm Ltd. is actually not
-> really in the business of *producing silicon*, so a respin of the 
-> chip
-> was and is not an option. I too wish it would be different, but 
-> that's
-> how it is.
+Thanks, it makes sense to me. Given current implementation, how about
+removing above check and adding it in CET CPUID
+enumeration for L2 so that no CET msrs passed through to L2 when
+is_guest_mode() is true?
 
-In all honesty, I really wonder why we are even having this discussion:
+> > > Allowing KVM_SET_CPUID{2} while running a nested guest seems bogus, can we
+> > > kill that path entirely with -EINVAL?
+> > >
+> > Do you mean don't expose CET cpuids to L2 guest?
+> 
+> I mean completely disallow KVM_SET_CPUID and KVM_SET_CPUID2 if
+> is_guest_mode() is true.  My question is mostly directed at Paolo and
+> anyone else that has an opinion on whether we can massage the ABI to
+> retroactively change KVM_SET_CPUID{2} behavior.
+This sounds like something deserving an individual patch after get
+agreement in community. I'll put it aside right now.
 
-- The HW is unavailable to the mere mortal. And even most superheroes
-   cannot get their hands on it
-
-- Even with this terrible son of a hack, essential PCIe features cannot
-   work (and yes, I do consider SR-IOV as an essential feature)
-
-- If we take this hack and somehow get this thing to run with mainline,
-   we will never be able to say "no" to this kind of unfinished,
-   *prototype* implementations ever again
-
-To sum it up: a hack that doesn't really work for a prototype that you
-can't really buy? Why should we even care?
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
