@@ -2,112 +2,90 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=DATE_IN_PAST_03_06,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F81C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 05:25:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B9EC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 05:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3223124676
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 05:25:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C908421582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 05:29:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=jonmasters-org.20150623.gappssmtp.com header.i=@jonmasters-org.20150623.gappssmtp.com header.b="zNU9URTp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="lAF6+cSc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbfLRFZG (ORCPT
+        id S1726634AbfLRF3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 00:25:06 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:46300 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbfLRFZF (ORCPT
+        Wed, 18 Dec 2019 00:29:25 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:15025 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725797AbfLRF3Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 00:25:05 -0500
-Received: by mail-qt1-f194.google.com with SMTP id 38so970847qtb.13
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 21:25:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jonmasters-org.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uIMTyYXR3nXqdy95e1OaQ4blqi70Uo0OIJA0JwHv2YQ=;
-        b=zNU9URTpXbNk0H+bfxQuplRFAZ/+QuFZ6Yd096coCKdylsucVnKFkkww084LxKN7G6
-         ulzFsZdIg6SVR4tgU5cDYYlo0CXtfCmJPQycPblX0FFaYBE+cL5OKLuhei9teC6wUmmK
-         Oc84j0+Vw2gcCS4XC4WrHqz+fOgW/0CdiGR1dfMf/HODZ23IlHU7H1OJ2CmQoBfC4Z94
-         f3LbaBfhZ7wGluYaje4wnjvDGbcUfG9nrco1qf0kRn8/Ks0eSGsFKNjKDm+D7ZY8tNEi
-         OLH5Ejd9W1dUkuKA9ZRRYIkpvVpXSQKY6b9y3iYGtMQQIKB/nk3glaiVf+nHotXjSwF/
-         CilQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=uIMTyYXR3nXqdy95e1OaQ4blqi70Uo0OIJA0JwHv2YQ=;
-        b=pzMtmIAyGbHn3S2ESG2Dsu9XS+WZdDkv/6+8CxGbT1smY44BQ8bKtBHo5gOj4mfaIu
-         UtSxnPcUcU1Y4WLL8tRBUbaaSAFRVx2uLGA1yrbqFW37OxEDgXR6iBtFynQzXgWB2nOn
-         hY+Gu0KyYMgr8DusfgCP0TZLbk263My7w4Q4W3rV31oecm2n9/1DS7rzR8Hru7LKthvY
-         YOaeohYGFdzGrk2Xl3mb8JF0jw1AwQECiBtGZQnJExnmWIRBE6e1zavX9014WGKzJ4rK
-         xV+afSbWgxt4HSAiMZBtHUNHkHmgZiOWOiLqaWkVwJTO0S8F2QIztvDOSgltlMl2f2fg
-         oyTA==
-X-Gm-Message-State: APjAAAVxQ7b3HVAGTHR1SBQx3NeZ0AV3lZU6dhjW2v0TriRDvz8DgL7E
-        l0lbPFoYDlCNLS4sCDVz0gpbgk4d8cmL0A==
-X-Google-Smtp-Source: APXvYqw0LJ2pIxnufMfbafewC8CwiqT+EqKHOTuPpD18gUxiTVv4YVZQUuZHJ8Y4ZurUv0V5JwW/og==
-X-Received: by 2002:ac8:2af4:: with SMTP id c49mr659933qta.367.1576646704962;
-        Tue, 17 Dec 2019 21:25:04 -0800 (PST)
-Received: from independence.bos.jonmasters.org (Boston.jonmasters.org. [50.195.43.97])
-        by smtp.gmail.com with ESMTPSA id t7sm315351qkm.136.2019.12.17.21.25.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Dec 2019 21:25:04 -0800 (PST)
-Subject: Re: [PATCH] pcie: Add quirk for the Arm Neoverse N1SDP platform
-To:     Will Deacon <will@kernel.org>,
-        Andre Przywara <andre.przywara@arm.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org
-References: <20191209160638.141431-1-andre.przywara@arm.com>
- <20191209162645.GA7489@willie-the-truck>
-From:   Jon Masters <jcm@jonmasters.org>
-Organization: World Organi{s,z}ation of Broken Dreams
-Message-ID: <dacfd8bf-0f68-f2af-9238-4b0fadfbdfe3@jonmasters.org>
-Date:   Tue, 17 Dec 2019 21:21:17 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20191209162645.GA7489@willie-the-truck>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        Wed, 18 Dec 2019 00:29:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1576646962;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=4MfOYdK0kNe3iT6Mf6IFJeefHPNu6zhom3oMosGYjO0=;
+        b=lAF6+cSc5Q+hElnQoR9+1keOStZNSkX6klJBnVlK4TqlhsoUfrxJ5B7dXDRY/zRUP+
+        qs0IIguOWVEJRUd5bccUWrLPmWz3Ob9cbdHuYu5dt8UnsFA35qeUf9scalAhQ8iMksJf
+        DfK8BQ9sBAGxSiTfjhMGAtXzGfN35cPL0oAxcW2cHqn/EPw1hxCj0s8xQz8FZYa8iLK+
+        1cpfZBn0VZwxfjudZhdaKUhtWbp9dRE82D6t0o9EgjQydjw7MY8eHl18GMb3A6XK10+d
+        Z3bIZNEpHYoVLAnah7sneMbe+WIblKNWpFbb96n/LtiyUf9rldrn8SBUtB1sffVStLs9
+        sBMg==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/vrwDarcQ=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.0.7 SBL|AUTH)
+        with ESMTPSA id q020e2vBI5TB42y
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Wed, 18 Dec 2019 06:29:11 +0100 (CET)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [PATCH v2 1/2] DTS: bindings: wl1251: mark ti,power-gpio as optional
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20191218024450.GA5993@bogus>
+Date:   Wed, 18 Dec 2019 06:29:10 +0100
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
 Content-Transfer-Encoding: 7bit
+Message-Id: <B4283D7C-6B42-4C59-8B44-CFC7599E510B@goldelico.com>
+References: <cover.1576606020.git.hns@goldelico.com> <de42cdd5c5d2c46978c15cd2f27b49fa144ae6a7.1576606020.git.hns@goldelico.com> <20191218024450.GA5993@bogus>
+To:     Rob Herring <robh@kernel.org>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/9/19 11:26 AM, Will Deacon wrote:
-> On Mon, Dec 09, 2019 at 04:06:38PM +0000, Andre Przywara wrote:
->> From: Deepak Pandey <Deepak.Pandey@arm.com>
->>
->> The Arm N1SDP SoC suffers from some PCIe integration issues, most
->> prominently config space accesses to not existing BDFs being answered
->> with a bus abort, resulting in an SError.
+
+> Am 18.12.2019 um 03:44 schrieb Rob Herring <robh@kernel.org>:
 > 
-> "Do as I say, not as I do"?
+> On Tue, 17 Dec 2019 19:06:59 +0100, "H. Nikolaus Schaller" wrote:
+>> It is now only useful for SPI interface.
+>> Power control of SDIO mode is done through mmc core.
+>> 
+>> Suggested by: Ulf Hansson <ulf.hansson@linaro.org>
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>> ---
+>> Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt | 3 ++-
+>> 1 file changed, 2 insertions(+), 1 deletion(-)
+>> 
+> 
+> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
+> 
+> If a tag was not added on purpose, please state why and what changed.
 
-In my former role I asked nicely that these patches not be posted 
-upstream, but I see that they ended up being posted anyway. Hacking up 
-upstream Linux to cover for the fact that a (reference) platform is 
-non-standard is not only not good form but it actively harms the community.
+Sorry, I just forgot to add. There was no change.
 
-You'll have people consume this platform and not realize that it's 
-broken, IP won't get fixed, and generally it'll be a mess. Yes, it's 
-unfortunate, but so was taping out that platform without working PCI. We 
-all know what should have happened, and what the right move ahead is.
 
-Jon.
-
--- 
-Computer Architect
