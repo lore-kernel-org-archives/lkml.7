@@ -2,149 +2,80 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C38C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8691CC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C57921D7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:01:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52CBF21D7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:01:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YYPnf0N7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cEjAIefo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbfLRJBE (ORCPT
+        id S1726718AbfLRJBo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 04:01:04 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:21139 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725828AbfLRJBD (ORCPT
+        Wed, 18 Dec 2019 04:01:44 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:34734 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbfLRJBo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 04:01:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576659662;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=1eycg2yERzujKFpPYCwGMSuR3n+nTi+QKzgvFBZvcz4=;
-        b=YYPnf0N7hVE+2AU8CT9Ck+x9GJ0O83sS1ybVPrxCanfY5+shk2qz4mplmGXfbT5elllA3S
-        /qIyCuma+TQ25g9ZxtxOw/+DX3wYo5f5iakgvi77a7Z4/zMh0jOoKulCDJq0C02SHZqr2C
-        RWMudqw7P+CYWp1Rz8S1qoshbxp13nU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-248-eSqUs3Y2PwixrQaxgQ0OWA-1; Wed, 18 Dec 2019 04:00:53 -0500
-X-MC-Unique: eSqUs3Y2PwixrQaxgQ0OWA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 33FF810054E3;
-        Wed, 18 Dec 2019 09:00:52 +0000 (UTC)
-Received: from [10.36.117.171] (ovpn-117-171.ams2.redhat.com [10.36.117.171])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4E3935C545;
-        Wed, 18 Dec 2019 09:00:50 +0000 (UTC)
-Subject: Re: [PATCH v3] drivers/base/memory.c: cache blocks in radix tree to
- accelerate lookup
-To:     Scott Cheloha <cheloha@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     nathanl@linux.ibm.com, ricklind@linux.vnet.ibm.com
-References: <20191121195952.3728-1-cheloha@linux.vnet.ibm.com>
- <20191217193238.3098-1-cheloha@linux.vnet.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <ac56b850-adab-0801-e583-f1e76949aa2b@redhat.com>
-Date:   Wed, 18 Dec 2019 10:00:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 18 Dec 2019 04:01:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=t9//2RqMFCl0kVnQJETmKMopzrjo3RCGeRkT7almLNk=; b=cEjAIefo00+LZGzxc9G92MeGD
+        /zw7RWEJqTZ6iKP1NsqYFTn/YCaU86ieVZypvpzSRQ31hLIK35Cn131sWUl44or7N+QUSgNBg8py6
+        P04oRIA2Bw4yOol9yYQtdFW5k1aeogAlwU7HIuftzS3fog2rsMt+AKP7WyAON6seOpgKIMSxMt9VM
+        rId7rHci0daivY3k911WQ1FM5FE9gMVEPsh9VfQuKrA+fdMnvD3T2Lij4X1O/o+cPRwYKwwMtnL71
+        BvN2lCH/7kETpQkyJXIgphrfyF3spc17K4nlir8F+gmmxlsW4RY1yFc/ndOdE6yeO4L76JF7HbtjE
+        I3QDGBDKw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ihVD6-0007aW-B6; Wed, 18 Dec 2019 09:01:36 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E6738300F29;
+        Wed, 18 Dec 2019 10:00:10 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6010B2B2CECE0; Wed, 18 Dec 2019 10:01:33 +0100 (CET)
+Date:   Wed, 18 Dec 2019 10:01:33 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc:     akpm@linux-foundation.org, npiggin@gmail.com, mpe@ellerman.id.au,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [RFC PATCH 1/2] mm/mmu_gather: Invalidate TLB correctly on batch
+ allocation failure and flush
+Message-ID: <20191218090133.GM2844@hirez.programming.kicks-ass.net>
+References: <20191217071713.93399-1-aneesh.kumar@linux.ibm.com>
+ <20191217090914.GX2844@hirez.programming.kicks-ass.net>
+ <3d250b04-a78d-20a7-d41e-50e48e08d1cb@linux.ibm.com>
+ <20191217123544.GI2827@hirez.programming.kicks-ass.net>
+ <874kxymclu.fsf@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20191217193238.3098-1-cheloha@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <874kxymclu.fsf@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.12.19 20:32, Scott Cheloha wrote:
-> Searching for a particular memory block by id is slow because each block
-> device is kept in an unsorted linked list on the subsystem bus.
+On Wed, Dec 18, 2019 at 10:52:53AM +0530, Aneesh Kumar K.V wrote:
+> Upstream ppc64 is broken after the commit: a46cc7a90fd8
+> ("powerpc/mm/radix: Improve TLB/PWC flushes").
 > 
-> Lookup is much faster if we cache the blocks in a radix tree.  Memory
-> subsystem initialization and hotplug/hotunplug is at least a little faster
-> for any machine with more than ~100 blocks, and the speedup grows with
-> the block count.
+> Also the patches are not adding any extra TLBI on either radix or hash.
 > 
-> Signed-off-by: Scott Cheloha <cheloha@linux.vnet.ibm.com>
-> Acked-by: David Hildenbrand <david@redhat.com>
-> ---
-> v2 incorporates suggestions from David Hildenbrand.
-> 
-> v3 changes:
->   - Rebase atop "drivers/base/memory.c: drop the mem_sysfs_mutex"
-> 
->   - Be conservative: don't use radix_tree_for_each_slot() in
->     walk_memory_blocks() yet.  It introduces RCU which could
->     change behavior.  Walking the tree "by hand" with
->     find_memory_block_by_id() is slower but keeps the patch
->     simple.
+> Considering we need to backport this to stable and other distributions,
+> how about we do this early patches in your series before the Kconfig rename?
+> This should enable stable to pick them up with less dependencies. 
 
-Fine with me (splitting it out, e.g., into an addon patch), however, as
-readers/writers run mutually exclusive, there is nothing to worry about
-here. RCU will not make a difference.
-
-Thanks!
-
--- 
-Thanks,
-
-David / dhildenb
-
+OK I suppose. Will you send a new series?
