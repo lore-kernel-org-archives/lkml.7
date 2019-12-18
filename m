@@ -6,84 +6,96 @@ X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF4FC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E73AEC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:57:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 220AD2082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8B3F2082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:57:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Uqobc6qV"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NNIWEWMX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727491AbfLRSzr (ORCPT
+        id S1727395AbfLRS57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 13:55:47 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:15211 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726824AbfLRSzq (ORCPT
+        Wed, 18 Dec 2019 13:57:59 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:61797 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726824AbfLRS56 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 13:55:46 -0500
+        Wed, 18 Dec 2019 13:57:58 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576695345; h=Date: Message-Id: Cc: To: References:
+ s=smtp; t=1576695477; h=Date: Message-Id: Cc: To: References:
  In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=Q129bDfo2EZNxP4oLnfzWOAYnwh3z0vJrKECLwqtVj8=;
- b=Uqobc6qViprbGEh/gFeHEW+3Ib5gQ19RcmMLHZYRE+X4jAtpm5Ysrv6VZ2kfBOTa9xemQvAM
- HVZ2gyMebJrGhiZjZGbBudSasmNPW+xXr4/eXJVW4E327krKBdEmceIXWeLD2/CQYdoQUSgH
- hIygRDd2PVdyDaVsBGw0zeDMx38=
-X-Mailgun-Sending-Ip: 104.130.122.25
+ Content-Type: Sender; bh=zTaMZ3kQXu+Ya8E5RyL/aG69wJByyfY1IdXqZNDCwxM=;
+ b=NNIWEWMXws0S7APVfAP1YOe0L6tmKyE7oM3iY4Tz0QpdGRKTU/ZXsRos/kt0zkDD7B5zSuft
+ do6Rl4yD1Bqvg2uUjcv10H7OcnWuyK9B20MmV5QglxEB2GZOc/p60JNgbbKV2JBcwIIreIq3
+ stOdDUHgrk47DdXRKlCyANIU15Q=
+X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5dfa762d.7fb6080f2848-smtp-out-n01;
- Wed, 18 Dec 2019 18:55:41 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5dfa76b3.7faa08d38228-smtp-out-n02;
+ Wed, 18 Dec 2019 18:57:55 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9F335C447B1; Wed, 18 Dec 2019 18:55:41 +0000 (UTC)
+        id 0D780C4479F; Wed, 18 Dec 2019 18:57:55 +0000 (UTC)
 Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 10886C43383;
-        Wed, 18 Dec 2019 18:55:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 10886C43383
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6DAFFC433CB;
+        Wed, 18 Dec 2019 18:57:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6DAFFC433CB
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] bcma: remove set but not used variable 'sizel'
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH 1/5] rsi: fix use-after-free on failed probe and unbind
 From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20191127124433.34301-1-yukuai3@huawei.com>
-References: <20191127124433.34301-1-yukuai3@huawei.com>
-To:     yu kuai <yukuai3@huawei.com>
-Cc:     <zajec5@gmail.com>, <linville@tuxdriver.com>,
-        <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <yukuai3@huawei.com>, <yi.zhang@huawei.com>,
-        <zhengbin13@huawei.com>
+In-Reply-To: <20191128172204.26600-2-johan@kernel.org>
+References: <20191128172204.26600-2-johan@kernel.org>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Siva Rebbagondla <siva8118@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        Johan Hovold <johan@kernel.org>,
+        syzbot+b563b7f8dbe8223a51e8@syzkaller.appspotmail.com,
+        stable <stable@vger.kernel.org>,
+        Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>,
+        Prameela Rani Garnepudi <prameela.j04cs@gmail.com>,
+        Amitkumar Karwar <amit.karwar@redpinesignals.com>,
+        Fariya Fatima <fariyaf@gmail.com>
 User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20191218185541.9F335C447B1@smtp.codeaurora.org>
-Date:   Wed, 18 Dec 2019 18:55:41 +0000 (UTC)
+Message-Id: <20191218185755.0D780C4479F@smtp.codeaurora.org>
+Date:   Wed, 18 Dec 2019 18:57:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-yu kuai <yukuai3@huawei.com> wrote:
+Johan Hovold <johan@kernel.org> wrote:
 
-> Fixes gcc '-Wunused-but-set-variable' warning:
+> Make sure to stop both URBs before returning after failed probe as well
+> as on disconnect to avoid use-after-free in the completion handler.
 > 
-> drivers/bcma/scan.c: In function ‘bcma_erom_get_addr_desc’:
-> 
-> drivers/bcma/scan.c:222:20: warning: variable ‘sizel’ set but
-> not used [-Wunused-but-set-variable]
-> 
-> It is never used, and so can be removed.
-> 
-> Fixes: 8369ae33b705 ("bcma: add Broadcom specific AMBA bus driver")
-> Signed-off-by: yu kuai <yukuai3@huawei.com>
+> Reported-by: syzbot+b563b7f8dbe8223a51e8@syzkaller.appspotmail.com
+> Fixes: a4302bff28e2 ("rsi: add bluetooth rx endpoint")
+> Fixes: dad0d04fa7ba ("rsi: Add RS9113 wireless driver")
+> Cc: stable <stable@vger.kernel.org>     # 3.15
+> Cc: Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>
+> Cc: Prameela Rani Garnepudi <prameela.j04cs@gmail.com>
+> Cc: Amitkumar Karwar <amit.karwar@redpinesignals.com>
+> Cc: Fariya Fatima <fariyaf@gmail.com>
+> Signed-off-by: Johan Hovold <johan@kernel.org>
 
-Patch applied to wireless-drivers-next.git, thanks.
+5 patches applied to wireless-drivers-next.git, thanks.
 
-f427939391f2 bcma: remove set but not used variable 'sizel'
+e93cd35101b6 rsi: fix use-after-free on failed probe and unbind
+92aafe77123a rsi: fix use-after-free on probe errors
+477682974811 rsi: fix memory leak on failed URB submission
+b9b9f9fea218 rsi: fix non-atomic allocation in completion handler
+960da557f435 rsi: add missing endpoint sanity checks
 
 -- 
-https://patchwork.kernel.org/patch/11263913/
+https://patchwork.kernel.org/patch/11266455/
 
 https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
