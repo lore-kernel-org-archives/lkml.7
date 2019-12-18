@@ -5,54 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5B1C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F74C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3E1324682
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:36:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2C662176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:36:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FkUP63X0"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J6WJV0wa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbfLRWgM (ORCPT
+        id S1726944AbfLRWgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 17:36:12 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:40143 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726813AbfLRWgF (ORCPT
+        Wed, 18 Dec 2019 17:36:15 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:37911 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726869AbfLRWgI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 17:36:05 -0500
-Received: by mail-pj1-f68.google.com with SMTP id bg7so1047418pjb.5
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 14:36:04 -0800 (PST)
+        Wed, 18 Dec 2019 17:36:08 -0500
+Received: by mail-pj1-f66.google.com with SMTP id l35so1544196pje.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 14:36:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=HWLrCBmbQYNUzFqSBsWhDuxG2CTjfW4UctSr9zQlrcM=;
-        b=FkUP63X0pjdoYGeSCmX+sTsW3UjT9Iz4YMXkcnYAADSytPIkCdf3qU+AXOzHvbSTIT
-         4YHXU58YEBKhpv87PiKXMPiSl3b5z9J71lpbY4YRBDpBtgH+BoYKzHUa6v/unmJRZk3J
-         zR76WEhs7n5zByU++Zj9kBjfUSflVwowSoOnY=
+        bh=zh2WONlL2QLylOiG7Lvfb6u/MwNz9xzHSH4c0Q9q478=;
+        b=J6WJV0wasg+kqIVXBNMlns+IsbVKKG4AQ9LpSOrPAkgwihNdILN9tQK+U0O+k1PbA5
+         gxrpCN5/+F+L12BahYXVgWPU2kvlNARg4aWNfXFBEE8fs57buniyOA7+tb9PlCnVhWlO
+         oORfvcQ/MB164pAjKE7Ps0YfSw8EwFdXoDDtY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=HWLrCBmbQYNUzFqSBsWhDuxG2CTjfW4UctSr9zQlrcM=;
-        b=RhCCyrT6CiC2HX3l5gKK3h9oO/Zg573eIE0n+NoCHcqrDeRr8ycrPl0eTHSRDSxYc9
-         hTEX2M7S4BPHa/yDhmrqRsngNiX1+QWFU/sA6OyKobVnRDcPo5OalNrn8x5eH/HOgtMj
-         iZTL9wz4RpT+7A9oqlnUfXdJL1BoJ87F0bEVKDHfZ1mNXhRjv6Mw3rDugrTgbyjFkeI2
-         9ZWVAVFVlLJUzkE2IsYNCMxes3Zrsjy5769C50lhKYdV9QlMR+fMWXHa1iU3wBmlgnLB
-         HKkQlAMtBUV0rvv3xBFU6B1ehHDrwPbrWHJGnyylw+shGFk4bElMykeEzAcH9PPMJBjK
-         QB6A==
-X-Gm-Message-State: APjAAAXmQJ/p1TR/LDdlQrS1M0XLgurFrbCszaSohM6mgFTd1yoxoFq0
-        H+OZi9fBlYrHU1cW0+porvh5fQ==
-X-Google-Smtp-Source: APXvYqyqdXK6Wz2oJpw/C/l5gEu2n1oknYoDT7ccWZpYVnogGsdlgyyemkDssR3QaspTP99E71UUgw==
-X-Received: by 2002:a17:90a:c24b:: with SMTP id d11mr5970581pjx.128.1576708564377;
-        Wed, 18 Dec 2019 14:36:04 -0800 (PST)
+        bh=zh2WONlL2QLylOiG7Lvfb6u/MwNz9xzHSH4c0Q9q478=;
+        b=eNrPqrhbw9zaMYQmoaPF9Jg3v7T/gabSMHI36wy85Xsc88o7sSd6UCp54HtGXKbc5M
+         9GN7NTKxlMNK+8dDNlzwUYW+Z2ljC26/N4znDhvxADpNeAlvGSpb2b72GjW12Eg628Kn
+         90mhsyyalw7wQ7zheURTi6aUr0UXV3OTjIg6MtUkPunr8zTOnYHlyq/wnkiowV0iSkLF
+         i3uGxXQsundb96+7tNrgOGoszbk+NePS8AZkC2z2T+FviGaT98ak8Bjy6H2DkS1l2k3C
+         V/E8U3TC97VQ6pyznUpuFpR9+f3pkogktgvTIyTDrAQAidV0MAkPTsSWe8yr88+fR02P
+         WMtQ==
+X-Gm-Message-State: APjAAAX+z2c0RyGEkCuQXht/kawp0LVo1scdFn1RYrmnWD6dxZyFByuN
+        i/7cEWV33cwn5ZT2YTdU/5WKhQ==
+X-Google-Smtp-Source: APXvYqyvRh+2bjRGA1ph9HJJL+8k25OE8VeJdeu2JybP6jBo2txzOTS7qsQDIK4g9KIBEugQQcE0mA==
+X-Received: by 2002:a17:902:8f85:: with SMTP id z5mr5552213plo.43.1576708567454;
+        Wed, 18 Dec 2019 14:36:07 -0800 (PST)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id i9sm4709919pfk.24.2019.12.18.14.36.03
+        by smtp.gmail.com with ESMTPSA id i9sm4709919pfk.24.2019.12.18.14.36.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 14:36:04 -0800 (PST)
+        Wed, 18 Dec 2019 14:36:07 -0800 (PST)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Andrzej Hajda <a.hajda@samsung.com>,
         Neil Armstrong <narmstrong@baylibre.com>
@@ -61,14 +61,13 @@ Cc:     robdclark@chromium.org, linux-arm-msm@vger.kernel.org,
         Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
         Daniel Vetter <daniel@ffwll.ch>,
         Douglas Anderson <dianders@chromium.org>,
-        Rob Clark <robdclark@gmail.com>,
         Jonas Karlman <jonas@kwiboo.se>, linux-kernel@vger.kernel.org,
         dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
         Jernej Skrabec <jernej.skrabec@siol.net>,
         Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Subject: [PATCH v3 6/9] drm/bridge: ti-sn65dsi86: Use 18-bit DP if we can
-Date:   Wed, 18 Dec 2019 14:35:27 -0800
-Message-Id: <20191218143416.v3.6.Iaf8d698f4e5253d658ae283d2fd07268076a7c27@changeid>
+Subject: [PATCH v3 9/9] drm/bridge: ti-sn65dsi86: Avoid invalid rates
+Date:   Wed, 18 Dec 2019 14:35:30 -0800
+Message-Id: <20191218143416.v3.9.Ib59207b66db377380d13748752d6fce5596462c5@changeid>
 X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
 In-Reply-To: <20191218223530.253106-1-dianders@chromium.org>
 References: <20191218223530.253106-1-dianders@chromium.org>
@@ -79,94 +78,175 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current bridge driver always forced us to use 24 bits per pixel
-over the DP link.  This is a waste if you are hooked up to a panel
-that only supports 6 bits per color or fewer, since in that case you
-ran run at 18 bits per pixel and thus end up at a lower DP clock rate.
+Based on work by Bjorn Andersson <bjorn.andersson@linaro.org>,
+Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, and
+Rob Clark <robdclark@chromium.org>.
 
-Let's support this.
+Let's read the SUPPORTED_LINK_RATES and/or MAX_LINK_RATE (depending on
+the eDP version of the sink) to figure out what eDP rates are
+supported and pick the ideal one.
 
-While at it, let's clean up the math in the function to avoid rounding
-errors (and round in the correct direction when we have to round).
-Numbers are sufficiently small (because mode->clock is in kHz) that we
-don't need to worry about integer overflow.
+NOTE: I have only personally tested this code on eDP panels that are
+1.3 or older.  Code reading SUPPORTED_LINK_RATES for DP 1.4+ was
+tested by hacking the code to pretend that a table was there.
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Tested-by: Rob Clark <robdclark@gmail.com>
-Reviewed-by: Rob Clark <robdclark@gmail.com>
 ---
 
-Changes in v3: None
-Changes in v2: None
+Changes in v3:
+- Init rate_valid table, don't rely on stack being 0 (oops).
+- Rename rate_times_200khz to rate_per_200khz.
+- Loop over the ti_sn_bridge_dp_rate_lut table, making code smaller.
+- Use 'true' instead of 1 for bools.
+- Added note to commit message noting DP 1.4+ isn't well tested.
 
- drivers/gpu/drm/bridge/ti-sn65dsi86.c | 27 ++++++++++++++++++---------
- 1 file changed, 18 insertions(+), 9 deletions(-)
+Changes in v2:
+- Patch ("Avoid invalid rates") replaces ("Skip non-standard DP rates")
+
+ drivers/gpu/drm/bridge/ti-sn65dsi86.c | 100 +++++++++++++++++++-------
+ 1 file changed, 75 insertions(+), 25 deletions(-)
 
 diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-index 0fc9e97b2d98..d5990a0947b9 100644
+index e1b817ccd9c7..a57c6108cb1f 100644
 --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
 +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-@@ -51,6 +51,7 @@
- #define SN_ENH_FRAME_REG			0x5A
- #define  VSTREAM_ENABLE				BIT(3)
- #define SN_DATA_FORMAT_REG			0x5B
-+#define  BPP_18_RGB				BIT(0)
- #define SN_HPD_DISABLE_REG			0x5C
- #define  HPD_DISABLE				BIT(0)
- #define SN_AUX_WDATA_REG(x)			(0x64 + (x))
-@@ -436,6 +437,14 @@ static void ti_sn_bridge_set_dsi_rate(struct ti_sn_bridge *pdata)
- 	regmap_write(pdata->regmap, SN_DSIA_CLK_FREQ_REG, val);
+@@ -475,39 +475,85 @@ static int ti_sn_bridge_calc_min_dp_rate_idx(struct ti_sn_bridge *pdata)
+ 	return i;
  }
  
-+static unsigned int ti_sn_bridge_get_bpp(struct ti_sn_bridge *pdata)
-+{
-+	if (pdata->connector.display_info.bpc <= 6)
-+		return 18;
-+	else
-+		return 24;
-+}
-+
- /**
-  * LUT index corresponds to register value and
-  * LUT values corresponds to dp data rate supported
-@@ -447,21 +456,17 @@ static const unsigned int ti_sn_bridge_dp_rate_lut[] = {
- 
- static void ti_sn_bridge_set_dp_rate(struct ti_sn_bridge *pdata)
+-static int ti_sn_bridge_get_max_dp_rate_idx(struct ti_sn_bridge *pdata)
++static void ti_sn_bridge_read_valid_rates(struct ti_sn_bridge *pdata,
++					  bool rate_valid[])
  {
--	unsigned int bit_rate_mhz, dp_rate_mhz;
-+	unsigned int bit_rate_khz, dp_rate_mhz;
- 	unsigned int i;
- 	struct drm_display_mode *mode =
- 		&pdata->bridge.encoder->crtc->state->adjusted_mode;
+-	u8 data;
++	unsigned int rate_per_200khz;
++	unsigned int rate_mhz;
++	u8 dpcd_val;
+ 	int ret;
++	int i, j;
++
++	ret = drm_dp_dpcd_readb(&pdata->aux, DP_EDP_DPCD_REV, &dpcd_val);
++	if (ret != 1) {
++		DRM_DEV_ERROR(pdata->dev,
++			      "Can't read eDP rev (%d), assuming 1.1\n", ret);
++		dpcd_val = DP_EDP_11;
++	}
++
++	if (dpcd_val >= DP_EDP_14) {
++		/* eDP 1.4 devices must provide a custom table */
++		__le16 sink_rates[DP_MAX_SUPPORTED_RATES];
++
++		ret = drm_dp_dpcd_read(&pdata->aux, DP_SUPPORTED_LINK_RATES,
++				       sink_rates, sizeof(sink_rates));
++
++		if (ret != sizeof(sink_rates)) {
++			DRM_DEV_ERROR(pdata->dev,
++				"Can't read supported rate table (%d)\n", ret);
++
++			/* By zeroing we'll fall back to DP_MAX_LINK_RATE. */
++			memset(sink_rates, 0, sizeof(sink_rates));
++		}
++
++		for (i = 0; i < ARRAY_SIZE(sink_rates); i++) {
++			rate_per_200khz = le16_to_cpu(sink_rates[i]);
++
++			if (!rate_per_200khz)
++				break;
++
++			rate_mhz = rate_per_200khz * 200 / 1000;
++			for (j = 0;
++			     j < ARRAY_SIZE(ti_sn_bridge_dp_rate_lut);
++			     j++) {
++				if (ti_sn_bridge_dp_rate_lut[j] == rate_mhz)
++					rate_valid[j] = true;
++			}
++		}
++
++		for (i = 0; i < ARRAY_SIZE(ti_sn_bridge_dp_rate_lut); i++) {
++			if (rate_valid[i])
++				return;
++		}
++		DRM_DEV_ERROR(pdata->dev,
++			      "No matching eDP rates in table; falling back\n");
++	}
+ 
+-	ret = drm_dp_dpcd_readb(&pdata->aux, DP_MAX_LINK_RATE, &data);
++	/* On older versions best we can do is use DP_MAX_LINK_RATE */
++	ret = drm_dp_dpcd_readb(&pdata->aux, DP_MAX_LINK_RATE, &dpcd_val);
+ 	if (ret != 1) {
+ 		DRM_DEV_ERROR(pdata->dev,
+ 			      "Can't read max rate (%d); assuming 5.4 GHz\n",
+ 			      ret);
+-		return ARRAY_SIZE(ti_sn_bridge_dp_rate_lut) - 1;
++		dpcd_val = DP_LINK_BW_5_4;
+ 	}
  
 -	/*
--	 * Calculate minimum bit rate based on our pixel clock.  At
--	 * the moment this driver never sets the DP_18BPP_EN bit in
--	 * register 0x5b so we hardcode 24bpp.
+-	 * Return an index into ti_sn_bridge_dp_rate_lut.  Just hardcode
+-	 * these indicies since it's not like the register spec is ever going
+-	 * to change and a loop would just be more complicated.  Apparently
+-	 * the DP sink can only return these few rates as supported even
+-	 * though the bridge allows some rates in between.
 -	 */
--	bit_rate_mhz = (mode->clock / 1000) * 24;
-+	/* Calculate minimum bit rate based on our pixel clock. */
-+	bit_rate_khz = mode->clock * ti_sn_bridge_get_bpp(pdata);
+-	switch (data) {
+-	case DP_LINK_BW_1_62:
+-		return 1;
+-	case DP_LINK_BW_2_7:
+-		return 4;
++	switch (dpcd_val) {
++	default:
++		DRM_DEV_ERROR(pdata->dev,
++			      "Unexpected max rate (%#x); assuming 5.4 GHz\n",
++			      (int)dpcd_val);
++		/* fall through */
+ 	case DP_LINK_BW_5_4:
+-		return 7;
++		rate_valid[7] = 1;
++		/* fall through */
++	case DP_LINK_BW_2_7:
++		rate_valid[4] = 1;
++		/* fall through */
++	case DP_LINK_BW_1_62:
++		rate_valid[1] = 1;
++		break;
+ 	}
+-
+-	DRM_DEV_ERROR(pdata->dev,
+-		      "Unexpected max data rate (%#x); assuming 5.4 GHz\n",
+-		      (int)data);
+-	return ARRAY_SIZE(ti_sn_bridge_dp_rate_lut) - 1;
+ }
  
- 	/* Calculate minimum DP data rate, taking 80% as per DP spec */
--	dp_rate_mhz = ((bit_rate_mhz / pdata->dp_lanes) * DP_CLK_FUDGE_NUM) /
--							DP_CLK_FUDGE_DEN;
-+	dp_rate_mhz = DIV_ROUND_UP(bit_rate_khz * DP_CLK_FUDGE_NUM,
-+				   1000 * pdata->dp_lanes * DP_CLK_FUDGE_DEN);
+ static void ti_sn_bridge_set_video_timings(struct ti_sn_bridge *pdata)
+@@ -609,9 +655,9 @@ static int ti_sn_link_training(struct ti_sn_bridge *pdata, int dp_rate_idx,
+ static void ti_sn_bridge_enable(struct drm_bridge *bridge)
+ {
+ 	struct ti_sn_bridge *pdata = bridge_to_ti_sn_bridge(bridge);
++	bool rate_valid[ARRAY_SIZE(ti_sn_bridge_dp_rate_lut)] = { };
+ 	const char *last_err_str = "No supported DP rate";
+ 	int dp_rate_idx;
+-	int max_dp_rate_idx;
+ 	unsigned int val;
+ 	int ret = -EINVAL;
  
- 	for (i = 1; i < ARRAY_SIZE(ti_sn_bridge_dp_rate_lut) - 1; i++)
- 		if (ti_sn_bridge_dp_rate_lut[i] > dp_rate_mhz)
-@@ -550,6 +555,10 @@ static void ti_sn_bridge_enable(struct drm_bridge *bridge)
- 	regmap_update_bits(pdata->regmap, SN_DSI_LANES_REG,
- 			   CHA_DSI_LANES_MASK, val);
- 
-+	/* Set the DP output format (18 bpp or 24 bpp) */
-+	val = (ti_sn_bridge_get_bpp(pdata) == 18) ? BPP_18_RGB : 0;
-+	regmap_update_bits(pdata->regmap, SN_DATA_FORMAT_REG, BPP_18_RGB, val);
-+
- 	/* DP lane config */
- 	val = DP_NUM_LANES(min(pdata->dp_lanes, 3));
+@@ -655,11 +701,15 @@ static void ti_sn_bridge_enable(struct drm_bridge *bridge)
  	regmap_update_bits(pdata->regmap, SN_SSC_CONFIG_REG, DP_NUM_LANES_MASK,
+ 			   val);
+ 
++	ti_sn_bridge_read_valid_rates(pdata, rate_valid);
++
+ 	/* Train until we run out of rates */
+-	max_dp_rate_idx = ti_sn_bridge_get_max_dp_rate_idx(pdata);
+ 	for (dp_rate_idx = ti_sn_bridge_calc_min_dp_rate_idx(pdata);
+-	     dp_rate_idx <= max_dp_rate_idx;
++	     dp_rate_idx < ARRAY_SIZE(ti_sn_bridge_dp_rate_lut);
+ 	     dp_rate_idx++) {
++		if (!rate_valid[dp_rate_idx])
++			continue;
++
+ 		ret = ti_sn_link_training(pdata, dp_rate_idx, &last_err_str);
+ 		if (!ret)
+ 			break;
 -- 
 2.24.1.735.g03f4e72817-goog
 
