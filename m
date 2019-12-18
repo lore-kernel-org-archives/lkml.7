@@ -7,93 +7,80 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1982CC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B5FC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3C4721582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:24:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC28821582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:28:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576711450;
-	bh=ELpSmsD1lPtk3Ij3+xXINr0PJWkLmLhnUKZaeIdtJ1Q=;
+	s=default; t=1576711685;
+	bh=2MOG2KfC4U6x0joOC/5pJ1zLsq2eNUecCyOu3VFK71M=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CuBdMtuvs947McPXv5++blePdUiWJ009ErLt8KUXn7WHOA/o+byiR30SvORpY0D0K
-	 3gMojkcymdMCcRMybbbm5h4CfooeAjpFREK5I9uHsIsRGrE3owx6YwEhLlbhwkyb/L
-	 8r6uUQGE6RS5Q8Hoj0Kj+OXCeGtNfr4uu+xjmSIw=
+	b=a2DbaIGKINUCLweN48mS4Gxb9hAr/SiwLl/tVlVlbsQ7QswZ2HXYExoRHP2PVfwov
+	 3BZB7uhA1UkYim4d4Wi754rrEKTWpdgZpdi+cycII9A+dplB0QDpubbl8QpUFiNoAy
+	 GRiHtY48bk4CDWO199CyVM6+9DeDk2r0MHXPExDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbfLRXYJ (ORCPT
+        id S1726652AbfLRX2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 18:24:09 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36134 "EHLO
+        Wed, 18 Dec 2019 18:28:04 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:42446 "EHLO
         mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726561AbfLRXYI (ORCPT
+        with ESMTP id S1725948AbfLRX2D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 18:24:08 -0500
-Received: by mail-ot1-f66.google.com with SMTP id w1so4569060otg.3;
-        Wed, 18 Dec 2019 15:24:08 -0800 (PST)
+        Wed, 18 Dec 2019 18:28:03 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 66so4554074otd.9;
+        Wed, 18 Dec 2019 15:28:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ETUxOpgQ7F0pLVm01ESXed5S9gdzK8r7fuHrkhEgfqk=;
-        b=o5/kvao9waI4YPTxXhoocFJ5jHWlk+Xy7x7zBHoVSNOGea73bgdfahw+oGkHpnhmlm
-         6qoFzJY48EON0Ms9hFirGCYo/60S4LLPw5pZ4TMT4cbWG7+Tcse93tGo+fJATmp/czlp
-         kGc4mNEjMxEZgXQoEzz4GECpS8RBCZnnZAq5o65o37w7oh4hZA/ROdO5++yy3mw9LdJD
-         phMCLbi7PMHlJ2PxAI0do/6Gk6vzbbKhjRuf1V1hu81jUOwK63CzmaC2obQQs0WPIA2a
-         94IRE2y6duLXKcc/7GfPu3JMLn9oRIawmgbFleWmghcIyVmMsBi/Va9ssTQBJhgPrtj5
-         K6yw==
-X-Gm-Message-State: APjAAAX91fSNwq8f5kWzQE0NmDs5UEHCutGYKRXkuviQDoNEXf2rjHHP
-        6TO1Rj5EdHg1hXPfdw21aw==
-X-Google-Smtp-Source: APXvYqyPUOqnsp5Fq28ymg4AaPaisJ5viFWYBbVO4iBHtqnXMTnenHiKbGkM5hdcGBGGYAVNQXwpKQ==
-X-Received: by 2002:a05:6830:1208:: with SMTP id r8mr5372896otp.105.1576711447577;
-        Wed, 18 Dec 2019 15:24:07 -0800 (PST)
+        bh=/ZyKu0j0L9P7EvNBTxpXXf5dLPtT7NxrO5TJj8pvG5Y=;
+        b=hagH+WzcPCj5kQRzJkjSsDBJnAZ/8sDX4zQp2MbznxGTBL5dBiKdyTL2bhj/vVz67r
+         rL7fvtQ6l4l6c7D2BIwYuzw/lswe7WDPTNUXs1i91koDMMKOGvgfkDGi8JXl/LknXQuE
+         8KS+zSW/0VtccllfqnZOLFMuBOZiky7NjQFBx0oSLqiVcBOSEDLlR+HKWsUZLGCdDZDN
+         4+AcvxImpEAFcvb6vCbmjwnQb6tpeCdLQAgJ6EPk1/LWeHMl1J3ijSu4QE8wqotHVtuD
+         GP93pfS7VV8Qbeo5hOYuoYRPdBfMCzRX2migc6XrAKAi5OcdNySJpuAJxCFSarjHm/6f
+         0lDw==
+X-Gm-Message-State: APjAAAX2FnoHyrdDfhScWEU53eMrpOW/HaxIFa24EqjqflJ1Uw/7qnuJ
+        vwW7IRullOVFVLF19DBUbg==
+X-Google-Smtp-Source: APXvYqwFPAhcuE93trHjiCLFU7ouah/UBbc6dMZe8ceDZG28OQ30K7jW48tVS8UqkME+NAqnpXd6Vw==
+X-Received: by 2002:a05:6830:1248:: with SMTP id s8mr5388885otp.202.1576711682987;
+        Wed, 18 Dec 2019 15:28:02 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j130sm1339912oia.34.2019.12.18.15.24.06
+        by smtp.gmail.com with ESMTPSA id w203sm1369927oia.12.2019.12.18.15.28.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 15:24:06 -0800 (PST)
-Date:   Wed, 18 Dec 2019 17:24:06 -0600
+        Wed, 18 Dec 2019 15:28:02 -0800 (PST)
+Date:   Wed, 18 Dec 2019 17:28:01 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Nagarjuna Kristam <nkristam@nvidia.com>
-Cc:     balbi@kernel.org, gregkh@linuxfoundation.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        mark.rutland@arm.com, kishon@ti.com, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Patch V2 02/18] dt-bindings: usb: Add NVIDIA Tegra XUSB device
- mode controller binding
-Message-ID: <20191218232406.GA19924@bogus>
-References: <1576660591-10383-1-git-send-email-nkristam@nvidia.com>
- <1576660591-10383-3-git-send-email-nkristam@nvidia.com>
+To:     James Tai <james.tai@realtek.com>
+Cc:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        linux-realtek-soc@lists.infradead.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2] dt-bindings: arm: realtek: Document RTD1319 and
+ Realtek PymParticle EVB
+Message-ID: <20191218232801.GA28835@bogus>
+References: <20191205082555.22633-1-james.tai@realtek.com>
+ <20191205082555.22633-2-james.tai@realtek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1576660591-10383-3-git-send-email-nkristam@nvidia.com>
+In-Reply-To: <20191205082555.22633-2-james.tai@realtek.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 02:46:15PM +0530, Nagarjuna Kristam wrote:
-> Add device-tree binding documentation for the XUSB device mode controller
-> present on Tegra210 and Tegra186 SoC. This controller supports the USB 3.0
-> specification.
+On Thu, 5 Dec 2019 16:25:54 +0800, James Tai wrote:
+> Define compatible strings for Realtek RTD1319 SoC and Realtek PymParticle
+> EVB.
 > 
-> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+> Signed-off-by: James Tai <james.tai@realtek.com>
 > ---
-> V2:
->  - used enum instead of oneOf and const.
->  - Moved reg, reg-names, clocks, clock-names to property section from allOf.
->  - Limited allOf to min and max items based on soc.
->  - Updated description for power-domains.
->  - Added V1 reference
-> ---
-> V1
->  - This document is yaml version of [1], with difference of usb-role-switch
->    removal.
-> [1] https://patchwork.kernel.org/patch/11156253/ 
-> ---
->  .../devicetree/bindings/usb/nvidia,tegra-xudc.yaml | 190 +++++++++++++++++++++
->  1 file changed, 190 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.yaml
+>  Documentation/devicetree/bindings/arm/realtek.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
