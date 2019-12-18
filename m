@@ -2,234 +2,180 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB3AC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 06:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 521C6C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 06:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 774E02465E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 06:40:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ftcitIAs"
+	by mail.kernel.org (Postfix) with ESMTP id 1EA75218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 06:45:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbfLRGkn (ORCPT
+        id S1726613AbfLRGpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 01:40:43 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:45683 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725810AbfLRGkn (ORCPT
+        Wed, 18 Dec 2019 01:45:10 -0500
+Received: from mail-io1-f70.google.com ([209.85.166.70]:37275 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbfLRGpJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 01:40:43 -0500
-Received: by mail-qk1-f196.google.com with SMTP id x1so665247qkl.12
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 22:40:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HtVF41M8LwEzuhthLZBV0egNx7nncp9w0m3QgjRzMjM=;
-        b=ftcitIAsdZI+nlA4BqFqNkBPJzrg8DwjtT2poCp3qrFd5PLcLXSH4vTGOiLeVshlBw
-         5biNL14Xbgg0EQ87LO8PFV8VSpddSfLpAneyHJNUVuaZIus5bf3b/iqNYAf15/WjWfUR
-         g4vF6si4Bwj+sfYe3djdUN7OIpQygCuZm3SInAr3fSGJlosShc6vPJuNqzAfLHqWLp2b
-         SNMn25r/zvgkXBB/UY4VBLsJ/Xvdi8gUtLxC735iQ2ikjcMgLh11zu7WAqRjloITShbK
-         HguY9fxv+MQHVgVtZtwceHOElv094mFs4axGDtUm/dwauuQsu/XV7ofngK7hnouu+Wz8
-         a6QQ==
+        Wed, 18 Dec 2019 01:45:09 -0500
+Received: by mail-io1-f70.google.com with SMTP id t70so746317iof.4
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 22:45:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HtVF41M8LwEzuhthLZBV0egNx7nncp9w0m3QgjRzMjM=;
-        b=ARp31xi+zTvsXwxRJkCaf5jcDlRehrFWTEegUVxdsv1R8Wc4654ykILwsHLSJIDEvS
-         imwlTdQnDDQyuEstBxlW+LELbCoqr4a92ATfM7kQOzf8mJPwnWqIdIHwsRhf2VlrupA0
-         a/IQL5cv4B9A0bHCI3Kp/2Jecz/4y/EFFaD4lsH3yKCZZ4GNJ9Ka4SlEmATMGKdZjpZU
-         mjc1m8w2ANuUFbDjDOLqn/lrvsX+1vY56QYMHDx3iAZjx0JhH1EeXdKETjQa4R1cHiRA
-         Q86XFYsaE3M6NK1K0Xa3wxhZWkpHoj79kWC6njkcxvqvjwnyJb/qQezUVxMydeblGbJz
-         cVXw==
-X-Gm-Message-State: APjAAAVBr9SH21F0gHiKNCHnHSkhxkF9fLtoWgH5AM6n18sVPyUoU0M0
-        dH82pWvM5iAWXrrskqMjgFTRwlfrPD/4STkTqtHSMQ==
-X-Google-Smtp-Source: APXvYqxXtXap1NJSvBZPhvqHSnufwDzezPsZXliJ4dXGie2gHbjm3BmY60CHaXPYT+D0U0g++azwjl2iPPSy5r5HpBM=
-X-Received: by 2002:a37:e312:: with SMTP id y18mr976595qki.250.1576651241550;
- Tue, 17 Dec 2019 22:40:41 -0800 (PST)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=XM4VHZZxDNQDC/kIQ5AODC3T43vl8f+astb44lDm/ek=;
+        b=TvxRTtZCHFJXjcEDTe729Z5zQUosIb8pDGby8fA+bwIxe0zQMwECeEjnDV0H78GevY
+         mPewl1FNXp4V58v+tHz6MevspveFanUf+kdxZHI/TYjWXfhYGl2I1FK6ATML55wA9OoY
+         aVRdDHGub3RFSuKwmxvZroy8DVxCsq9nHe7nxOKd/GIlZuTTQgGBPQgowrcXd7AP/uQ8
+         F7Yql+3+qYitUF3kHH5YK0bguracKQsp7oKwFv8EC9KaM6zJLxMkOGVVm7xvb1gW4EaL
+         806BDqyuXIeROMV8IPhJrlNrGH0e+prf3QUJ0YMOx3HImEY1KeDcvNxVZOq6Lrf3oAW0
+         T01w==
+X-Gm-Message-State: APjAAAUKFfNz+KEY411qaeIhaZH1W3ZRpUq7sOHyU9BHpxp0dnjdwCvn
+        ZZnMvEIljAWnh3Ltb0V1BwCzTOZ2ul4nazdfZaMaleWDZErD
+X-Google-Smtp-Source: APXvYqyC8J+B8Rj5TDfbhYgaGQN6Fm/JA1N0Pe0qCc84I5RYprAZT7sEAc2G807/efvhb1WzEXk8e0AWPRvcKq0K+1UAoqkFgvOe
 MIME-Version: 1.0
-References: <0000000000003cffc30599d3d1a0@google.com> <20191218005518.GQ11771@linux.intel.com>
-In-Reply-To: <20191218005518.GQ11771@linux.intel.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 18 Dec 2019 07:40:30 +0100
-Message-ID: <CACT4Y+bcGqby633WuFOQoZ-22H6OzX4foyZpfM91h33+MwM-rA@mail.gmail.com>
-Subject: Re: kernel BUG at arch/x86/kvm/mmu/mmu.c:LINE!
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     syzbot <syzbot+c9d1fb51ac9d0d10c39d@syzkaller.appspotmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, KVM list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>, wanpengli@tencent.com,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a05:6638:a2c:: with SMTP id 12mr1017068jao.60.1576651509244;
+ Tue, 17 Dec 2019 22:45:09 -0800 (PST)
+Date:   Tue, 17 Dec 2019 22:45:09 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000024aa520599f4c933@google.com>
+Subject: KASAN: slab-out-of-bounds Write in watch_queue_ioctl
+From:   syzbot <syzbot+5a774ffe70862ca9ebc7@syzkaller.appspotmail.com>
+To:     arnd@arndb.de, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 1:55 AM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> On Mon, Dec 16, 2019 at 07:25:11AM -0800, syzbot wrote:
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    ae4b064e Merge tag 'afs-fixes-20191211' of git://git.kerne..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=149c0cfae00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=79f79de2a27d3e3d
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=c9d1fb51ac9d0d10c39d
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17a97b7ee00000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15128396e00000
->
-> Looks like the crash is basically 100% reproducible in syzkaller's
-> environment, but bisection went off into the weeds because it hit a random
-> unrelated failure.
->
-> I've tried the C reproducer without "success".  Is it possible to adjust
-> the bisection for this crash so that it can home in on the actual bug?
+Hello,
 
-Hi Sean,
+syzbot found the following crash on:
 
-No, unfortunately it's not possible at the moment.
+HEAD commit:    fca4fe89 Add linux-next specific files for 20191217
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=13447c71e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=634b7ce01f79423d
+dashboard link: https://syzkaller.appspot.com/bug?extid=5a774ffe70862ca9ebc7
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13df92fee00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1003cafee00000
 
-But we have something like 1/32-th of v4.17..v4.18. Perhaps there are
-not many changes left that may be possibly related.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+5a774ffe70862ca9ebc7@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: slab-out-of-bounds in watch_queue_set_filter  
+drivers/misc/watch_queue.c:516 [inline]
+BUG: KASAN: slab-out-of-bounds in watch_queue_ioctl+0x15ed/0x16e0  
+drivers/misc/watch_queue.c:555
+Write of size 4 at addr ffff8880a9b31ddc by task syz-executor545/9097
+
+CPU: 1 PID: 9097 Comm: syz-executor545 Not tainted  
+5.5.0-rc2-next-20191217-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+  kasan_report+0x12/0x20 mm/kasan/common.c:639
+  __asan_report_store4_noabort+0x17/0x20 mm/kasan/generic_report.c:139
+  watch_queue_set_filter drivers/misc/watch_queue.c:516 [inline]
+  watch_queue_ioctl+0x15ed/0x16e0 drivers/misc/watch_queue.c:555
+  vfs_ioctl fs/ioctl.c:47 [inline]
+  file_ioctl fs/ioctl.c:545 [inline]
+  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
+  __do_sys_ioctl fs/ioctl.c:756 [inline]
+  __se_sys_ioctl fs/ioctl.c:754 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4401e9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffe295d2878 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004401e9
+RDX: 0000000020000240 RSI: 0000000000005761 RDI: 0000000000000003
+RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401a70
+R13: 0000000000401b00 R14: 0000000000000000 R15: 0000000000000000
+
+Allocated by task 9097:
+  save_stack+0x23/0x90 mm/kasan/common.c:72
+  set_track mm/kasan/common.c:80 [inline]
+  __kasan_kmalloc mm/kasan/common.c:513 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:486
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:527
+  __do_kmalloc mm/slab.c:3656 [inline]
+  __kmalloc+0x163/0x770 mm/slab.c:3665
+  kmalloc include/linux/slab.h:561 [inline]
+  kzalloc include/linux/slab.h:670 [inline]
+  watch_queue_set_filter drivers/misc/watch_queue.c:505 [inline]
+  watch_queue_ioctl+0xf57/0x16e0 drivers/misc/watch_queue.c:555
+  vfs_ioctl fs/ioctl.c:47 [inline]
+  file_ioctl fs/ioctl.c:545 [inline]
+  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
+  __do_sys_ioctl fs/ioctl.c:756 [inline]
+  __se_sys_ioctl fs/ioctl.c:754 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 8821:
+  save_stack+0x23/0x90 mm/kasan/common.c:72
+  set_track mm/kasan/common.c:80 [inline]
+  kasan_set_free_info mm/kasan/common.c:335 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:474
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:483
+  __cache_free mm/slab.c:3426 [inline]
+  kfree+0x10a/0x2c0 mm/slab.c:3757
+  single_release+0x95/0xc0 fs/seq_file.c:609
+  __fput+0x2ff/0x890 fs/file_table.c:280
+  ____fput+0x16/0x20 fs/file_table.c:313
+  task_work_run+0x145/0x1c0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:164
+  prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
+  do_syscall_64+0x676/0x790 arch/x86/entry/common.c:304
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8880a9b31dc0
+  which belongs to the cache kmalloc-32 of size 32
+The buggy address is located 28 bytes inside of
+  32-byte region [ffff8880a9b31dc0, ffff8880a9b31de0)
+The buggy address belongs to the page:
+page:ffffea0002a6cc40 refcount:1 mapcount:0 mapping:ffff8880aa4001c0  
+index:0xffff8880a9b31fc1
+raw: 00fffe0000000200 ffffea00029efd48 ffffea0002a6d4c8 ffff8880aa4001c0
+raw: ffff8880a9b31fc1 ffff8880a9b31000 000000010000003b 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff8880a9b31c80: 00 fc fc fc fc fc fc fc 00 fc fc fc fc fc fc fc
+  ffff8880a9b31d00: 00 03 fc fc fc fc fc fc 00 fc fc fc fc fc fc fc
+> ffff8880a9b31d80: 00 fc fc fc fc fc fc fc 00 00 00 fc fc fc fc fc
+                                                     ^
+  ffff8880a9b31e00: 00 fc fc fc fc fc fc fc 00 fc fc fc fc fc fc fc
+  ffff8880a9b31e80: 00 fc fc fc fc fc fc fc 00 fc fc fc fc fc fc fc
+==================================================================
 
 
->   kernel signature: 77bc4f2c8b034884ef0b5f4a64115ae7447012ed
->   run #0: crashed: kernel BUG at arch/x86/kvm/mmu.c:LINE!
->   run #1: crashed: kernel BUG at arch/x86/kvm/mmu.c:LINE!
->   run #2: crashed: kernel BUG at arch/x86/kvm/mmu.c:LINE!
->   run #3: crashed: kernel BUG at arch/x86/kvm/mmu.c:LINE!
->   run #4: crashed: kernel BUG at arch/x86/kvm/mmu.c:LINE!
->   run #5: crashed: kernel BUG at arch/x86/kvm/mmu.c:LINE!
->   run #6: crashed: kernel BUG at arch/x86/kvm/mmu.c:LINE!
->   run #7: boot failed: KASAN: use-after-free Write in call_usermodehelper_exec_work
->   run #8: boot failed: KASAN: use-after-free Write in call_usermodehelper_exec_work
->   run #9: boot failed: KASAN: use-after-free Write in call_usermodehelper_exec_work
->   # git bisect bad f39c6b29ae1d3727d9c65a4ab99d5150b558be5e
->   Bisecting: 901 revisions left to test after this (roughly 10 steps)
->   [7d6541fba19c970cf5ebbc2c56b0fb04eab89f98] Merge tag 'mlx5e-updates-2018-05-14'
->   testing commit 7d6541fba19c970cf5ebbc2c56b0fb04eab89f98 with gcc (GCC) 8.1.0
->   kernel signature: 6d4fcd644552059ed7f799240ae8f63e4634fa35
->   all runs: OK
->   # git bisect good 7d6541fba19c970cf5ebbc2c56b0fb04eab89f98
->   Bisecting: 450 revisions left to test after this (roughly 9 steps)
->   [73bf1fc58dc4376d0111a4c1c9eab27e2759f468] Merge branch 'net-ipv6-Fix-route'
->   testing commit 73bf1fc58dc4376d0111a4c1c9eab27e2759f468 with gcc (GCC) 8.1.0
->   kernel signature: b651b65951b60c06906f2717756395fc5176e7b5
->   run #0: OK
->   run #1: OK
->   run #2: OK
->   run #3: OK
->   run #4: OK
->   run #5: OK
->   run #6: OK
->   run #7: OK
->   run #8: OK
->   run #9: crashed: WARNING in __static_key_slow_dec_cpuslocked
->   # git bisect bad 73bf1fc58dc4376d0111a4c1c9eab27e2759f468
->
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+c9d1fb51ac9d0d10c39d@syzkaller.appspotmail.com
-> >
-> > ------------[ cut here ]------------
-> > kernel BUG at arch/x86/kvm/mmu/mmu.c:3416!
-> > invalid opcode: 0000 [#1] PREEMPT SMP KASAN
-> > CPU: 0 PID: 9988 Comm: syz-executor218 Not tainted 5.5.0-rc1-syzkaller #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > Google 01/01/2011
-> > RIP: 0010:transparent_hugepage_adjust+0x4c8/0x550
-> > arch/x86/kvm/mmu/mmu.c:3416
-> > Code: ff ff e8 eb 5d 5e 00 48 8b 45 b8 48 83 e8 01 48 89 45 c8 e9 a3 fd ff
-> > ff 48 89 df e8 c2 f8 9b 00 e9 7b fb ff ff e8 c8 5d 5e 00 <0f> 0b 48 8b 7d c8
-> > e8 ad f8 9b 00 e9 ba fc ff ff 49 8d 7f 30 e8 7f
-> > RSP: 0018:ffffc90001f27678 EFLAGS: 00010293
-> > RAX: ffff8880a875a200 RBX: ffffc90001f27768 RCX: ffffffff8116cc87
-> > RDX: 0000000000000000 RSI: ffffffff8116cdc8 RDI: 0000000000000007
-> > RBP: ffffc90001f276c0 R08: ffff8880a875a200 R09: ffffed1010d79682
-> > R10: ffffed1010d79681 R11: ffff888086bcb40b R12: 00000000000001d3
-> > R13: 0000000000094dd3 R14: 0000000000094dd1 R15: 0000000000000000
-> > FS:  0000000000fff880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: 0000000000000000 CR3: 000000009af1b000 CR4: 00000000001426f0
-> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > Call Trace:
-> >  tdp_page_fault+0x580/0x6a0 arch/x86/kvm/mmu/mmu.c:4315
-> >  kvm_mmu_page_fault+0x1dd/0x1800 arch/x86/kvm/mmu/mmu.c:5539
-> >  handle_ept_violation+0x259/0x560 arch/x86/kvm/vmx/vmx.c:5163
-> >  vmx_handle_exit+0x29f/0x1730 arch/x86/kvm/vmx/vmx.c:5921
-> >  vcpu_enter_guest+0x334f/0x6110 arch/x86/kvm/x86.c:8290
-> >  vcpu_run arch/x86/kvm/x86.c:8354 [inline]
-> >  kvm_arch_vcpu_ioctl_run+0x430/0x17b0 arch/x86/kvm/x86.c:8561
-> >  kvm_vcpu_ioctl+0x4dc/0xfc0 arch/x86/kvm/../../../virt/kvm/kvm_main.c:2847
-> >  vfs_ioctl fs/ioctl.c:47 [inline]
-> >  file_ioctl fs/ioctl.c:545 [inline]
-> >  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
-> >  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
-> >  __do_sys_ioctl fs/ioctl.c:756 [inline]
-> >  __se_sys_ioctl fs/ioctl.c:754 [inline]
-> >  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
-> >  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-> >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > RIP: 0033:0x440359
-> > Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7
-> > 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff
-> > 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-> > RSP: 002b:00007ffc16334278 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> > RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440359
-> > RDX: 0000000000000000 RSI: 000000000000ae80 RDI: 0000000000000006
-> > RBP: 00000000006ca018 R08: 00000000004002c8 R09: 00000000004002c8
-> > R10: 00000000004002c8 R11: 0000000000000246 R12: 0000000000401be0
-> > R13: 0000000000401c70 R14: 0000000000000000 R15: 0000000000000000
-> > Modules linked in:
-> > ---[ end trace e1a5b9c09fef2e33 ]---
-> > RIP: 0010:transparent_hugepage_adjust+0x4c8/0x550
-> > arch/x86/kvm/mmu/mmu.c:3416
-> > Code: ff ff e8 eb 5d 5e 00 48 8b 45 b8 48 83 e8 01 48 89 45 c8 e9 a3 fd ff
-> > ff 48 89 df e8 c2 f8 9b 00 e9 7b fb ff ff e8 c8 5d 5e 00 <0f> 0b 48 8b 7d c8
-> > e8 ad f8 9b 00 e9 ba fc ff ff 49 8d 7f 30 e8 7f
-> > RSP: 0018:ffffc90001f27678 EFLAGS: 00010293
-> > RAX: ffff8880a875a200 RBX: ffffc90001f27768 RCX: ffffffff8116cc87
-> > RDX: 0000000000000000 RSI: ffffffff8116cdc8 RDI: 0000000000000007
-> > RBP: ffffc90001f276c0 R08: ffff8880a875a200 R09: ffffed1010d79682
-> > R10: ffffed1010d79681 R11: ffff888086bcb40b R12: 00000000000001d3
-> > R13: 0000000000094dd3 R14: 0000000000094dd1 R15: 0000000000000000
-> > FS:  0000000000fff880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: 0000000000000000 CR3: 000000009af1b000 CR4: 00000000001426f0
-> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> >
-> >
-> > ---
-> > This bug is generated by a bot. It may contain errors.
-> > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> >
-> > syzbot will keep track of this bug report. See:
-> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> > syzbot can test patches for this bug, for details see:
-> > https://goo.gl/tpsmEJ#testing-patches
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/20191218005518.GQ11771%40linux.intel.com.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
