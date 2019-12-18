@@ -2,116 +2,172 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C196AC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C66C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96D0B21582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:45:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 866B721582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:50:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Dd8yzJbf"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="u8nG0qQA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbfLRNpQ (ORCPT
+        id S1727024AbfLRNuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 08:45:16 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:38800 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726774AbfLRNpQ (ORCPT
+        Wed, 18 Dec 2019 08:50:54 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:55418 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726913AbfLRNuy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 08:45:16 -0500
-Received: by mail-qk1-f194.google.com with SMTP id k6so1569823qki.5
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 05:45:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=C4ntQvciQzVGbr4/WEhkSDFzmYZWWBqD5uxngUjOBow=;
-        b=Dd8yzJbfYhuzey0d0UWujCUQkz0PCjyl+HSrTDFSBJVPYv9jrH4IP3eKn0xaWYwE4C
-         au/dkZzJoc8xHC7T64qBT/VyV6Hfo0O3sq1FaLwvrTxeKAAfiNFX043RhLwb0GRkhU9a
-         xhXpLjuiFo2Fafci4oS2ibyur5E6hetSYnwf01xTJdjgSg9g+kjZcASPSvrGvANmzJN3
-         NGB45DkJ5QmhtWHfC5HGtZWBylowj3VK8bKla7TckqbI6HfxEuaLB7u3Bu2F5zRfEoMc
-         qll3sMQMy+TrhTRl57jjm8savvbPzL1JC6MPxeBIuybiHX2u/GkiNWUSXHoHB/ixTExX
-         onpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=C4ntQvciQzVGbr4/WEhkSDFzmYZWWBqD5uxngUjOBow=;
-        b=I1PI+RK5QEs+P2w4I2Lx5IIJc9wN2TjBXAWpXq2iRHFRI5a4yYiQAbGJgRydVkxAhR
-         KFpxuPm1W+0QZ6jDhOtXaTNJ4ztyIlFoLp+AcQYYTVmCVvtjwQymN1xeNtr69IHfCz/k
-         k+AYjrPLrhG0TE6ZUfDGPPR3UwHU7f9VdMg/QROfnsQXSoDjnX52ryjR5v+DDkXT7HW+
-         pZlX2iONh7JY7cmPglh3h+R5TYoUdy+sK0zBLc0PV+dzGw+mUHt64qXDDrbmcz4qzwJL
-         DqzQ5woUWDnJ14VLLbDJCjieogOJ78dSvx3axLpjMDj+y/NrqFX8F3XwfpMScvGOeS5S
-         Iz7Q==
-X-Gm-Message-State: APjAAAXSpTzYCQ4vO5pxFMdouC7L3gxzFxW7eIrIJgPlws6V4d215cDm
-        Frk4OYFbgQc8Ri0DL9FXAwA8pQ==
-X-Google-Smtp-Source: APXvYqxKR+OvOVDgF3lNL/dBSAkb0u6QiN+0z3MaDkJ/DaaeoIYdHPk2y5sfSExH2I8XHxhlWtvQmw==
-X-Received: by 2002:a37:a18b:: with SMTP id k133mr2560191qke.83.1576676714706;
-        Wed, 18 Dec 2019 05:45:14 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id i90sm736223qtd.49.2019.12.18.05.45.14
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 18 Dec 2019 05:45:14 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1ihZdZ-0007bb-Ls; Wed, 18 Dec 2019 09:45:13 -0400
-Date:   Wed, 18 Dec 2019 09:45:13 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Aditya Pakki <pakki001@umn.edu>
-Cc:     kjlu@umn.edu, Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tpm/ppi: replace assertion code with recovery in
- tpm_eval_dsm
-Message-ID: <20191218134513.GE17227@ziepe.ca>
-References: <20191215182314.32208-1-pakki001@umn.edu>
+        Wed, 18 Dec 2019 08:50:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=PiWeqrIt+S44LIMrxgiyyghsdY0UJX/1eQ83LvdJTak=; b=u8nG0qQAaWNMQ+y3KRcsyjiIK
+        DzQlYM5b9uejlBdB10+BLH4CACkrGs/Xs4HGnsOn0AegmhjXWuIegVBdKl4ZI5MNbKFwV08zE4Jxu
+        qWnNjSDIcAli84W4goCLHPfRc6CFYaWvL2vt52ZaSONl/b5uzmAYkB7V8tQIo9Lqcie4Z/P1+krLq
+        k73wWe4Vzlez6rKYcvLrOoJ6zde70Iw6q/pQaIokxzLsyxShbKy61Gzl/xtFERz/J00i/iFtBcwkg
+        1TLqG0TLLQI/58UC3U3c09ZddMevBkHDRQ0mOFIPTCH6jvJPyduG5y2RiHKUVuvqJaoIgLV1F/f5z
+        3dFgiz9QQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ihZj0-0004dV-DC; Wed, 18 Dec 2019 13:50:50 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C2D5430038D;
+        Wed, 18 Dec 2019 14:49:24 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D9A792B0D9745; Wed, 18 Dec 2019 14:50:47 +0100 (CET)
+Date:   Wed, 18 Dec 2019 14:50:47 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     linux-afs@lists.infradead.org, Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] rxrpc: struct mutex cannot be used for
+ rxrpc_call::user_mutex
+Message-ID: <20191218135047.GS2844@hirez.programming.kicks-ass.net>
+References: <157659672074.19580.11641288666811539040.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191215182314.32208-1-pakki001@umn.edu>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <157659672074.19580.11641288666811539040.stgit@warthog.procyon.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 15, 2019 at 12:23:14PM -0600, Aditya Pakki wrote:
-> In tpm_eval_dsm, BUG_ON on ppi_handle is used as an assertion.
-> By returning NULL to the callers, instead of crashing, the error
-> can be better handled.
+On Tue, Dec 17, 2019 at 03:32:00PM +0000, David Howells wrote:
+> Standard kernel mutexes cannot be used in any way from interrupt or softirq
+> context, so the user_mutex which manages access to a call cannot be a mutex
+> since on a new call the mutex must start off locked and be unlocked within
+> the softirq handler to prevent userspace interfering with a call we're
+> setting up.
 > 
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
->  drivers/char/tpm/tpm_ppi.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/char/tpm/tpm_ppi.c b/drivers/char/tpm/tpm_ppi.c
-> index b2dab941cb7f..4b6f6a9c0b48 100644
-> +++ b/drivers/char/tpm/tpm_ppi.c
-> @@ -42,7 +42,9 @@ static inline union acpi_object *
->  tpm_eval_dsm(acpi_handle ppi_handle, int func, acpi_object_type type,
->  	     union acpi_object *argv4, u64 rev)
->  {
-> -	BUG_ON(!ppi_handle);
-> +	if (!ppi_handle)
-> +		return NULL;
+> Commit a0855d24fc22d49cdc25664fb224caee16998683 ("locking/mutex: Complain
+> upon mutex API misuse in IRQ contexts") causes big warnings to be splashed
+> in dmesg for each a new call that comes in from the server.
 
-If it can't happen the confusing if should either be omitted entirely
-or written as 
+FYI that patch has currently been reverted.
 
-if (WARN_ON(!ppi_handle))
-       return NULL;
+commit c571b72e2b845ca0519670cb7c4b5fe5f56498a5 (tip/locking/urgent, tip/locking-urgent-for-linus)
 
-Leaving it as apparently operational code just creates confusion for
-the reader that now has the task to figure out why ppi_handle can be
-null.
+> Whilst it *seems* like it should be okay, since the accept path
+> trylocks the mutex when no one else can see it and drops the mutex
+> before it leaves softirq context, unlocking the mutex causes scheduler
+> magic to happen.
 
-I favour not including tests for impossible conditions. The kernel
-will crash immediately if ppi_handle is null anyhow.
+Not quite. The problem is that trylock still sets the owner task of the
+mutex, and a contending mutex_lock() could end up PI boosting that
+owner.
 
-Jason
+The problem happens when that owner is the idle task, this can happen
+when the irq/softirq hits the idle task, in that case the contending
+mutex_lock() will try and PI boost the idle task, and that is a big
+no-no.
+
+> Fix this by switching to using a locking bit and a waitqueue instead.
+
+So the problem with this approach is that it will create priority
+inversions between the sites that had mutex_lock().
+
+Suppose some FIFO-99 task does rxrpc_user_lock_call() and gets to block
+because some FIFO-1 task has it. Then an unrelated FIFO-50 task comes
+and preempts our FIFO-1 owner, now the FIFO-99 task has unbounded
+response time (classic priority inversion).
+
+This is what the PI magic is supposed to fix, it would boost the FIFO-1
+owner to FIFO-99 for the duration of the lock, which avoids the FIFO-50
+task from being elegible to run and ruin the day.
+
+Anyway, regarding your question on IRC, the lockdep bits look OK.
+
+But looking at this code, reminded me of our earlier discussion, where
+you said:
+
+  "I could actually mvoe the rxrpc_send_ping() and the mutex_unlock()
+  into rxrpc_new_incoming_call() which would make it clearer to see as
+  the lock and unlock would then be in the same function."
+
+Which I think still has merrit; it would make reading this code a whole
+lot easier.
+
+Back to the actual problem; how come the rxrpc_call thing can be
+accessed before it is 'complete'? Is there something we can possibly do
+there?
+
+The comment with the mutex_trylock() in rxrpc_new_incoming_call() has:
+
+	/* Lock the call to prevent rxrpc_kernel_send/recv_data() and
+	 * sendmsg()/recvmsg() inconveniently stealing the mutex once the
+	 * notification is generated.
+	 *
+	 * The BUG should never happen because the kernel should be well
+	 * behaved enough not to access the call before the first notification
+	 * event and userspace is prevented from doing so until the state is
+	 * appropriate.
+	 */
+
+Why do we have to send this notification so early? Is there anything
+else we can do avoid these other users from wanting to prod at our
+object for a little while? I'm still properly lost in this code.
+
+
+---
+diff --git a/net/rxrpc/call_accept.c b/net/rxrpc/call_accept.c
+index 135bf5cd8dd5..3fec99cc2e4d 100644
+--- a/net/rxrpc/call_accept.c
++++ b/net/rxrpc/call_accept.c
+@@ -435,6 +435,10 @@ struct rxrpc_call *rxrpc_new_incoming_call(struct rxrpc_local *local,
+ 	_leave(" = %p{%d}", call, call->debug_id);
+ out:
+ 	spin_unlock(&rx->incoming_lock);
++	if (call) {
++		rxrpc_send_ping(call, skb);
++		mutex_unlock(&call->user_mutex);
++	}
+ 	return call;
+ }
+ 
+diff --git a/net/rxrpc/input.c b/net/rxrpc/input.c
+index 157be1ff8697..665a0532a221 100644
+--- a/net/rxrpc/input.c
++++ b/net/rxrpc/input.c
+@@ -1396,8 +1396,6 @@ int rxrpc_input_packet(struct sock *udp_sk, struct sk_buff *skb)
+ 		call = rxrpc_new_incoming_call(local, rx, skb);
+ 		if (!call)
+ 			goto reject_packet;
+-		rxrpc_send_ping(call, skb);
+-		mutex_unlock(&call->user_mutex);
+ 	}
+ 
+ 	/* Process a call packet; this either discards or passes on the ref
