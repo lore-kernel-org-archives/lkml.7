@@ -8,90 +8,84 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1FDC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9714C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A5F72176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:35:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD1AC2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:35:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Q6e5cOL0"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="fe2soDgP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbfLRWfs (ORCPT
+        id S1726725AbfLRWfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 17:35:48 -0500
-Received: from mout.web.de ([217.72.192.78]:47691 "EHLO mout.web.de"
+        Wed, 18 Dec 2019 17:35:51 -0500
+Received: from mout.web.de ([217.72.192.78]:43107 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726387AbfLRWfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 17:35:48 -0500
+        id S1726387AbfLRWft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 17:35:49 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1576708539;
-        bh=dWWWJ56z1+3McYaTHm68m10tWxr+xp0Nfa2r5nT/XzM=;
+        s=dbaedf251592; t=1576708540;
+        bh=8ZRx4y81hHZJO5QcZ9dH2x8e4A8ig8L8U4hPDWTL4Fk=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=Q6e5cOL09ofwA4pprMspntmwlHo2cj3FfkHb+T+fo+Hokc0pgbhwlsaLXBuFqCQFP
-         LUhDsQfBaIFzGK5VnIh/Wsy83NQ3qofTSflXxMyqdGVF+qCCaYhhFdu+YNIkDhIZYd
-         OeMpota4U8gq4SgV8yG+/SR5WuWOoNu0++IohITQ=
+        b=fe2soDgPKrDPbLobU0YHjkE1t5sDoCYUJEGoHfb/g/2Z7KqElN/UdgAHwRZmDiREc
+         PcaTYrxfy/Ijwr3D/A6W8IqwtR4Fne5eNZq6ahFYtX5L5vQkbX+dufqJIjfaOpwwzj
+         TBpG+e7BY1l0lhVCEa1ldJhF7XRL47qOfuMn1hF4=
 X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
 Received: from localhost.localdomain ([89.204.137.218]) by smtp.web.de
  (mrweb103 [213.165.67.124]) with ESMTPSA (Nemesis) id
- 0LeLSr-1huKBy0mzt-00qDza; Wed, 18 Dec 2019 23:35:39 +0100
+ 0LkyEb-1i9kXm43q1-00andm; Wed, 18 Dec 2019 23:35:40 +0100
 From:   Soeren Moch <smoch@web.de>
 To:     Heiko Stuebner <heiko@sntech.de>
 Cc:     Soeren Moch <smoch@web.de>, Robin Murphy <robin.murphy@arm.com>,
         linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/2] arm64: dts: rockchip: RockPro64: enable wifi module at sdio0
-Date:   Wed, 18 Dec 2019 23:35:22 +0100
-Message-Id: <20191218223523.30154-2-smoch@web.de>
+Subject: [PATCH v3 2/2] arm64: dts: rockchip: RockPro64: hook up bluetooth at uart0
+Date:   Wed, 18 Dec 2019 23:35:23 +0100
+Message-Id: <20191218223523.30154-3-smoch@web.de>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191218223523.30154-1-smoch@web.de>
 References: <20191218223523.30154-1-smoch@web.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:ROAhb4S5HnA8zC1UxSpS35h6K1uYG1iZNFj0qH1Upg0Ypl38cVT
- KHwIZnhcqQFTHjIGJmcOSDo6GPae4t640XYWTwIfcSeErvbBsWzKrA5Qv5gYv9XLQTqWrKE
- xk4sf/ZpyVe4B5+FhRhNGodEQ0RLFB4O/o7+kTwDkPgjAJRf2GV4c7Tt60eL8DnnnIk0UfH
- 2Z4sU/Ore3JwH8bCkj75A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:WjCFWLClYzs=:sfZYTqTROrpebhd/C8nXmJ
- QulDk9vDBdJGdA9icQsumC87GMwKHlCewB1YaAeB/4yGhAoVIvE91PEDjHkacHNfN+Bt8R3+K
- atOp8SKjNYkowSZcUOwc1b7LitlCwTSPRjbDbqIQp+yWzBqQ+jlaKKFxnElosmf5nXpdv2FxR
- 1bUmSUdFPdtw03UFMVvGH/H3jYTMpG4zdUZdbWEvwgT+zpbAhTz8oLMPxjUHkxMpIl3bc/1L3
- q9Dk3PaKyAuEuMFTsQG+a3S4tTXE1ovS4Jr6Blb3XvjTn8LyqWA2dN2wMxMWan8JNByZoVSOe
- E9elEXDngX2dXKdyqftHY81xCwKE7vY1gG2qj7IIPScoGK6IPilciBjtaDjyY1YrxcbhgAsoO
- FuSrPuyS0znVddHgKsWPcOvIhDKVaDykCQOo6E7HYTUVzPLOFrwTj8Pld6nMaQWDz47rNE8IZ
- wgCnJjq+HJkf9BmZCSalPxaQOugPc/fITL3rM1L94vf015E1W+FkN2qFZBUislon64M1XaW3M
- acFP+tF7VON/3QJPH0OUwBYtqU/ua8iOqmBeBobDc43xotypdP9pXKe1v5mDc4xQcMNbtYZ+C
- jmsIWc1mlcBd9S2g0hdkm9VN0cV79Qlw6JRhbsMoOBEcRd8B6aPzUsMLkgSW5j6S/Hbtfqvwf
- 1BV03R9cWgWsh9L8tmnep9B1Jx4wIZItyguUNzl62Z8OUUYOhwj7F7Iic3HywHcAGTpFk3zA6
- ntcMz+JJLNnm1FdOf64UPFxEiRr9pQdHsmFMlEYuNuKIXhO93s7Ow2EZiwIi5KEI92fv7gKrx
- eLQavYqLH9qjjPPm/tAUGPrdqp7qH4xc+jDTTPhhiyxwMJ3JvUZEW/dflmO1JIGZKu+DNmqrI
- 0i5JbqtMYkwxlYRIgYAvcw9p63JNxiQ/IVkITm8rFBzVmgpzfef/AphctNC4+5yjWqlQ4Frrc
- JvDGeYgoK4bpUEabFOBKrGz+WqntDCxeVE2I56n5iJebZ7HOK9lohhDxfB+pbgELZZbFfXQZ/
- GG8qPZhbXUm4ToWK9poMYdSha2RjgtAIi501cPT0B7/Dz2ynI2PptER2Osw90hTJuLd9MJMvQ
- TANrT+8fuMoqRxsdvbHkOo+SDnhLpKWpyZecFVda9fbObLZZXxtYkX2fa2V+4Car8IxPNA8PY
- EAcffdHrDmVOBNdda6W+/5Gj1E6Qv9wLTTP6y9UyRMF29esf1ajk4/D5EAGrOwGl9aNbKwxTh
- sXjd8HgAYpVU2uYZMzWZZgWBFJ8lP5pX3Quo/iw==
+X-Provags-ID: V03:K1:l+ItjJlDtrlJ5iojY1W0IyP/csk5hm2m8TkpvkslsWVninqUkpA
+ ipZrdB6978T9oj9RLdlqMYhKf0Qbh8NeKm8W+z/MQkNBVQ/XpiFWMvsaA/4wbaR/xTEVvc9
+ sFRkTUen1CfyoiWXVNXvtuAHlGOSSJjDIsW3od43x49M26JZsQT7SnbNo1KkW3NL/L6l5Tm
+ w2M9Q9ABcjb9MQvpperqA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:CbjWo1dqzEg=:Hbg+q57jVTLeibDUB3tmYB
+ eRtooKn3Rjj28azAkhZ5O1P9Y2+u3I8PLA7rCufMqYwuli8FdZA4Psktiak87x2+2xvtmCA6N
+ Zdlgn/pC+p3wNYQOOEFhHRJwbFn6ObVOyxVjQZ4zKf8zz/bVtHFVdQeS4mbZgnBFOV9cqdDfA
+ THGLaa9bIF8iB9O+Nn7Gd5tOg3z3PNB1eT2uGNKCSc+T4JoaTjiiwQUx/TLWBTpI6S6gWLpAO
+ u7BErTwJ868JilKT5usTdVMOchGIUIQI21+iJ2/Zmua0zUvwSphemKVrNpjX/RNajQOLqcBpD
+ EPZvSm6pb4CFiSDUxaEs+3CwDlvQGnU5KajQeo8CSUlf14QyJlnWSjeREcq+6mh6+W3fh1MCC
+ +wQzpfNnglBRgYJ/sbyWD7U/fUIly4Aq2G3O1hXptrtLCDCZNOkhotw6+XmrE3fS1IilIROZS
+ S/SsBiYWysdO97ZUlETBuPWGslruHPv9h2c3/KQGltXOLy/Q4KEudxg8BRqm/7XLWr+vIW+uq
+ f7EGWCGNB711qBhqccfwXGdlD3ti3OD0Fxrcsxu1xsebbDvs4SNj5C4aJPVpDa06d9R3cM7Sq
+ WMfSgG5WQK02zxb8FuXInHm0bXsOO+sKB1sjE9DcmqyjE6y5odGVtWDVcdBnoyqNYVcmw5MX0
+ JT+2ntrWifF0nQgNXpZPcct0bomAbpRPJecXxFOdWD8FxTVBEYR7FnjKAI34G6Bci5veqrFqa
+ T3/dEhFQKrwXx1vT7bDPY7eR5PB2GSUqO6CEH5rgTVnvXr/BoJNOMi+AUHfIJe0lhilw4Tl9B
+ 252vNQPyhXqTD0vRK+CvSMXVcus4ot7K0eRc2bZvPCbtJBrJTgvqOSXg7viw0XNG0gmB70SCI
+ 0yT6GzmVyXavOd8OSdIAcD7o56xVFwQshJkV+AMEIN/00VMFYyNZBwLFVm5QMZzwNA6iQn1md
+ Jt7VUNzNuf1S4ztJfDIF4+TLogciV/69b/NpsHmyDwRPLWr3He7vJ1DmK0yn0NcPCZ5lvQjAC
+ d/YJht5XNvSGJYg2JIXFAueYDSSC7juWdMSFs2y5wOOYNjIx5ozXyeMScssdZ6mZOM9jZ7m5f
+ PSYgsDqE/D3rFE1f9tnER+wA5Lsmbv4yfG5/btl3/fCF4d1l6lhBOh27T7Vv+JVxccSXPpz8N
+ x5Bbjct/VQLe8X9u6Aj7xsbfMc8ewlogHEQLLIIoXcqnYtOHKbV2jAE8HuITHZdkn14fIHsqB
+ eiceuuOwQXnJkqUFlSiBIHXtjXZHzO1gBdd81uQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RockPro64 supports an Ampak AP6359SA based wifi/bt combo module.
-The BCM4359/9 wifi controller in this module is connected to sdio0,
-enable this interface.
+With enabled wifi support (required for firmware loading) for the
+Ampak AP6359SA based wifi/bt combo module we now also can enable
+the bluetooth part.
 
-Use the in-band sdio irq instead of the out-of-band wifi_host_wake_l
-signal since the latter is not working reliably on this board (probably
-due to it's PCIe WAKE# connection).
-
+Suggested-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Soeren Moch <smoch@web.de>
 =2D--
 changes in v3:
-- none
+- fix bluetooth clock name as reported by Robin Murphy
 changes in v2:
-- add comment about irq in commit message
-
-Not sure where to place exactly the sdio0 node in the dts because
-existing sd nodes are not sorted alphabetically.
+- new patch
 
 Cc: Heiko Stuebner <heiko@sntech.de>
 Cc: Robin Murphy <robin.murphy@arm.com>
@@ -99,49 +93,58 @@ Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-rockchip@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 =2D--
- .../boot/dts/rockchip/rk3399-rockpro64.dts    | 21 ++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+ .../boot/dts/rockchip/rk3399-rockpro64.dts    | 29 ++++++++++++++++++-
+ 1 file changed, 28 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm6=
 4/boot/dts/rockchip/rk3399-rockpro64.dts
-index 7f4b2eba31d4..9fa92790d6e0 100644
+index 9fa92790d6e0..d9206730c88c 100644
 =2D-- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
 +++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-@@ -71,13 +71,6 @@
- 		clock-names =3D "ext_clock";
- 		pinctrl-names =3D "default";
- 		pinctrl-0 =3D <&wifi_enable_h>;
--
--		/*
--		 * On the module itself this is one of these (depending
--		 * on the actual card populated):
--		 * - SDIO_RESET_L_WL_REG_ON
--		 * - PDN (power down when low)
--		 */
- 		reset-gpios =3D <&gpio0 RK_PB2 GPIO_ACTIVE_LOW>;
- 	};
-
-@@ -650,6 +643,20 @@
- 	status =3D "okay";
+@@ -561,6 +561,20 @@
  };
 
-+&sdio0 {
-+	bus-width =3D <4>;
-+	cap-sd-highspeed;
-+	cap-sdio-irq;
-+	disable-wp;
-+	keep-power-in-suspend;
-+	mmc-pwrseq =3D <&sdio_pwrseq>;
-+	non-removable;
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&sdio0_bus4 &sdio0_cmd &sdio0_clk>;
-+	sd-uhs-sdr104;
-+	status =3D "okay";
-+};
+ &pinctrl {
++	bt {
++		bt_enable_h: bt-enable-h {
++			rockchip,pins =3D <0 RK_PB1 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
 +
- &sdmmc {
- 	bus-width =3D <4>;
- 	cap-sd-highspeed;
++		bt_host_wake_l: bt-host-wake-l {
++			rockchip,pins =3D <0 RK_PA4 RK_FUNC_GPIO &pcfg_pull_down>;
++		};
++
++		bt_wake_l: bt-wake-l {
++			rockchip,pins =3D <2 RK_PD3 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
+ 	buttons {
+ 		pwrbtn: pwrbtn {
+ 			rockchip,pins =3D <0 RK_PA5 RK_FUNC_GPIO &pcfg_pull_up>;
+@@ -729,8 +743,21 @@
+
+ &uart0 {
+ 	pinctrl-names =3D "default";
+-	pinctrl-0 =3D <&uart0_xfer &uart0_cts>;
++	pinctrl-0 =3D <&uart0_xfer &uart0_cts &uart0_rts>;
+ 	status =3D "okay";
++
++	bluetooth {
++		compatible =3D "brcm,bcm43438-bt";
++		clocks =3D <&rk808 1>;
++		clock-names =3D "lpo";
++		device-wakeup-gpios =3D <&gpio2 RK_PD3 GPIO_ACTIVE_HIGH>;
++		host-wakeup-gpios =3D <&gpio0 RK_PA4 GPIO_ACTIVE_HIGH>;
++		shutdown-gpios =3D <&gpio0 RK_PB1 GPIO_ACTIVE_HIGH>;
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&bt_host_wake_l &bt_wake_l &bt_enable_h>;
++		vbat-supply =3D <&vcc3v3_sys>;
++		vddio-supply =3D <&vcc_1v8>;
++	};
+ };
+
+ &uart2 {
 =2D-
 2.17.1
 
