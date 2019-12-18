@@ -2,120 +2,400 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC5DC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81544C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 810262082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:55:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 432942082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:55:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="kINv+vSp"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ELz/clEA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727216AbfLRSzI (ORCPT
+        id S1727417AbfLRSzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 13:55:08 -0500
-Received: from mail-mw2nam10on2061.outbound.protection.outlook.com ([40.107.94.61]:6032
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726699AbfLRSzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 13:55:07 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Zn0bjfsAGoH/GhWoOUlawZ1kR2S+3n6LVlWTaqHdykz0Nbx6CeEdwpk5tAtAXS0DLGsrTKuQYWblXIStDMfx3P9PHeTSQ7QTXUDl67MVAnM1A1H+8O5cPMrTQTm8WZa0LLfuZPORNrQ0qIaRdYU+WUpYomG43yfdz+haEx864faDPfbDdLG652HHh3zV4JvjffJN1Q+LVDsiZ35t4QIh/LxmFbzzSfrSVKX8+T8Sk0jVi0AQe7EIIr4VjpYDLLEeRDMy+QbcYAjf5nTWsaih+ENPAGn7yvCpem2KlT7us7+3eKt8EAlkT3BOeueT1dxqvIbaHXDcnUR/wKKuephapA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VcLECkgkjf7cB/I+ofnXtZcouX6EuE1gzGSTJmRR5JE=;
- b=Ed7T2ck2/740jdmA8iCvN5o8LkinIGitK4C+vma0aj2uDRJnCrsd+391JPzL1mVOs8XNNluHib9f5Bt7tKlMx6z5jItZbc5YScB1bk1sOTm7yaRP6IgFWU8RM3E8KneSNBjw/HVBNZigG6p0DBgLQZYagVrfa5GImR97wgFJZ0PMbhVRdvjvPze19OLF1+XzhK0nNHt9eNAmNM0wmaN8QKrRac4pCEN28fQrKYPkYazRZKQG7WnUk516MUuApIcl5xSthDF7aDQt0FA1jqsrX3+kkrS/5/zFZZZ0SaQaNf/2ioZslXjFzwjKhgMObaepa+uMBOafO19bnw8d3k4ogA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VcLECkgkjf7cB/I+ofnXtZcouX6EuE1gzGSTJmRR5JE=;
- b=kINv+vSpgWD64A+VNb0LIY1v7h8FbHHfuI9ln7u/GUEzDV8qKEiJOizBS1nW5gQkiudwTj22bk6+isCmNDVrlln54gTSVGGAsi7RlnaQIDbIONOhQAMfwbx5jHvkEerSAAvfYcZc11heW7A7Mqd1JJYk/Xfp4Zo37rscHT7rIYw=
-Received: from SN6PR11MB3312.namprd11.prod.outlook.com (52.135.113.78) by
- SN6PR11MB2861.namprd11.prod.outlook.com (52.135.96.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.20; Wed, 18 Dec 2019 18:55:05 +0000
-Received: from SN6PR11MB3312.namprd11.prod.outlook.com
- ([fe80::ada0:e35e:7c5e:58d]) by SN6PR11MB3312.namprd11.prod.outlook.com
- ([fe80::ada0:e35e:7c5e:58d%5]) with mapi id 15.20.2538.019; Wed, 18 Dec 2019
- 18:55:04 +0000
-From:   Brant Merryman <Brant.Merryman@silabs.com>
-To:     Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Brant Merryman <Brant.Merryman@silabs.com>,
-        Richard Hendricks <Richard.Hendricks@silabs.com>
-Subject: [PATCH] USB: serial: cp210x: Enables usb generic functions for
-  throttle/unthrottle to prevent USB data loss.
-Thread-Topic: [PATCH] USB: serial: cp210x: Enables usb generic functions for
-  throttle/unthrottle to prevent USB data loss.
-Thread-Index: AQHVtdSo6upqSA09J0e+8oJWtcPRUQ==
-Date:   Wed, 18 Dec 2019 18:55:04 +0000
-Message-ID: <D6486D05-4E0F-4CDF-B178-C386A9075032@silabs.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Brant.Merryman@silabs.com; 
-x-originating-ip: [207.207.39.84]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a1af8aaf-682d-4d4d-890a-08d783ebcb55
-x-ms-traffictypediagnostic: SN6PR11MB2861:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR11MB28617108825E9CA2C408F8A6E5530@SN6PR11MB2861.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1388;
-x-forefront-prvs: 0255DF69B9
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(346002)(39850400004)(396003)(136003)(199004)(189003)(33656002)(64756008)(66556008)(66446008)(6512007)(81166006)(81156014)(4744005)(107886003)(76116006)(2616005)(316002)(6506007)(54906003)(8676002)(478600001)(2906002)(26005)(71200400001)(5660300002)(4326008)(66476007)(86362001)(110136005)(36756003)(6486002)(66946007)(186003)(8936002)(41533002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR11MB2861;H:SN6PR11MB3312.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: silabs.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: VKO9U2Vn1s6OfNKzleXlK810Tv2A5+dOfqyzUaIvsSI9D6srtqIbH9uHQE9tLU4WSCKfp3hpFE37VvOlzGEK5YnkglbTgY9OW3B3Biuia5ukaJAAcLMmms1iojwEA41orkEMBY46Qj0D/pE6gYiKnuLABDbKuBZy6PI3jI1fvVISSFBfvdNYn2EoSbVWhfJj2GFQpugzbRBP8iXIu+yQcFErFWz81m3ytOpO09saAcszedgTj75o2MNmR/Yk15H/43HETuR1XdDFyqrRyLEIWiRgiw8XbMKeQAyCDbX+x7+MgT03W1nGHc7GH/C4yWsyqD/an/6wMMDyEGrC4DfmfZ/8r1inhj3e0Z5AMH9c31OgYqyFcmk/gsmAJlsVdV61zDC1PyewH/wSsI5g599B6OuyA8Gx4jfCxvh8L8+AxlLDRcSjQG4Q8RySfjbx+uJUJhJnsob4iCg9mC9nSNR/bEZ7oh+2p3pAAIjIzDQS1Qx73hW9ONvyggfz3A8OCJWl
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <370361CCC0F6A74A949155A1893A6B80@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 18 Dec 2019 13:55:16 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:57922 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726699AbfLRSzQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 13:55:16 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBIIiMQY080836;
+        Wed, 18 Dec 2019 18:54:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=jBIZv3Obh2bm8oWIM2O16fH9l347odaFWmn/ffMsKpQ=;
+ b=ELz/clEAaWG23okusxYylIUkIN9femY0HWn08fOFri8bbISEKszYi+6KPQP48mlRa+6R
+ vxDZu5dhbjjhJgEmpCdQqH3E32aqHQkrKfnZ6yjAjveRbyD2g/7VqRQQU8aeUu+DubaI
+ cN6mw+42d4HsJenLQmLiunQOGw72QK3DZ88vq+bAlKafVuaV1Zw/iKPxCOFVc+TsKhEQ
+ 2Y01Uo0k9fblKbuZQJV2oQATUG3mCk4Af0kY6Jo17ywBlYE4iCaZ+uIwSP0iwrkZHYbF
+ PZwnUbPbU+hJ/Wr6sfEjRhOIA8In5bWaxeXXFxLUsjPWXwbn7otDBtGMtzEknKRd8ko2 AQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2wvrcrffan-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Dec 2019 18:54:26 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBIIiOwi059875;
+        Wed, 18 Dec 2019 18:52:26 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2wyk3bmbw6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Dec 2019 18:52:26 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBIIqKwZ023431;
+        Wed, 18 Dec 2019 18:52:20 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 18 Dec 2019 10:52:19 -0800
+Date:   Wed, 18 Dec 2019 10:52:16 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Andreas Gruenbacher <agruenba@redhat.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
+        Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Richard Weinberger <richard@nod.at>,
+        Artem Bityutskiy <dedekind1@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        ceph-devel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-mtd@lists.infradead.org, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH v3] fs: Fix page_mkwrite off-by-one errors
+Message-ID: <20191218185216.GA7497@magnolia>
+References: <20191218130935.32402-1-agruenba@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a1af8aaf-682d-4d4d-890a-08d783ebcb55
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Dec 2019 18:55:04.7298
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xK7LU5iLR20y7eObX4p0WjQV1MEP0nHEErpVJl2QkDsn5qc2QHwKvrB/QzWuFnKxtWjksyIAKbvFdCjYhjGqXw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB2861
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191218130935.32402-1-agruenba@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9475 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912180147
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9475 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912180147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-USB: serial: cp210x: Enables usb generic functions for
- throttle/unthrottle to prevent USB data loss.
+On Wed, Dec 18, 2019 at 02:09:35PM +0100, Andreas Gruenbacher wrote:
+> Hi Darrick,
+> 
+> can this fix go in via the xfs tree?
 
-Signed-off-by: Brant Merryman <brant.merryman@silabs.com>
----
- drivers/usb/serial/cp210x.c | 2 ++
- 1 file changed, 2 insertions(+)
+Er, I'd rather not touch five other filesystems via the XFS tree.
+However, a more immediate problem that I think I see is...
 
-diff --git a/drivers/usb/serial/cp210x.c b/drivers/usb/serial/cp210x.c
-index f5143eedbc48..bcceb4ad8be0 100644
---- a/drivers/usb/serial/cp210x.c
-+++ b/drivers/usb/serial/cp210x.c
-@@ -272,6 +272,8 @@ static struct usb_serial_driver cp210x_device =3D {
- 	.break_ctl		=3D cp210x_break_ctl,
- 	.set_termios		=3D cp210x_set_termios,
- 	.tx_empty		=3D cp210x_tx_empty,
-+	.throttle		=3D usb_serial_generic_throttle,
-+	.unthrottle		=3D usb_serial_generic_unthrottle,
- 	.tiocmget		=3D cp210x_tiocmget,
- 	.tiocmset		=3D cp210x_tiocmset,
- 	.attach			=3D cp210x_attach,
---=20
+> Thanks,
+> Andreas
+> 
+> --
+> 
+> The check in block_page_mkwrite that is meant to determine whether an
+> offset is within the inode size is off by one.  This bug has been copied
+> into iomap_page_mkwrite and several filesystems (ubifs, ext4, f2fs,
+> ceph).
+> 
+> Fix that by introducing a new page_mkwrite_check_truncate helper that
+> checks for truncate and computes the bytes in the page up to EOF.  Use
+> the helper in the above mentioned filesystems.
+> 
+> In addition, use the new helper in btrfs as well.
+> 
+> Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+> Acked-by: David Sterba <dsterba@suse.com> (btrfs part)
+> Acked-by: Richard Weinberger <richard@nod.at> (ubifs part)
+> ---
+>  fs/btrfs/inode.c        | 15 ++++-----------
+>  fs/buffer.c             | 16 +++-------------
+>  fs/ceph/addr.c          |  2 +-
+>  fs/ext4/inode.c         | 14 ++++----------
+>  fs/f2fs/file.c          | 19 +++++++------------
+>  fs/iomap/buffered-io.c  | 18 +++++-------------
+>  fs/ubifs/file.c         |  3 +--
+>  include/linux/pagemap.h | 28 ++++++++++++++++++++++++++++
+>  8 files changed, 53 insertions(+), 62 deletions(-)
+> 
+> diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+> index 56032c518b26..86c6fcd8139d 100644
+> --- a/fs/btrfs/inode.c
+> +++ b/fs/btrfs/inode.c
+> @@ -9016,13 +9016,11 @@ vm_fault_t btrfs_page_mkwrite(struct vm_fault *vmf)
+>  	ret = VM_FAULT_NOPAGE; /* make the VM retry the fault */
+>  again:
+>  	lock_page(page);
+> -	size = i_size_read(inode);
+>  
+> -	if ((page->mapping != inode->i_mapping) ||
+> -	    (page_start >= size)) {
+> -		/* page got truncated out from underneath us */
+> +	ret2 = page_mkwrite_check_truncate(page, inode);
+> +	if (ret2 < 0)
+>  		goto out_unlock;
+
+...here we try to return -EFAULT as vm_fault_t.  Notice how btrfs returns
+VM_FAULT_* values directly and never calls block_page_mkwrite_return?  I
+know dsterba acked this, but I cannot see how this is correct?
+
+--D
+
+> -	}
+> +	zero_start = ret2;
+>  	wait_on_page_writeback(page);
+>  
+>  	lock_extent_bits(io_tree, page_start, page_end, &cached_state);
+> @@ -9043,6 +9041,7 @@ vm_fault_t btrfs_page_mkwrite(struct vm_fault *vmf)
+>  		goto again;
+>  	}
+>  
+> +	size = i_size_read(inode);
+>  	if (page->index == ((size - 1) >> PAGE_SHIFT)) {
+>  		reserved_space = round_up(size - page_start,
+>  					  fs_info->sectorsize);
+> @@ -9075,12 +9074,6 @@ vm_fault_t btrfs_page_mkwrite(struct vm_fault *vmf)
+>  	}
+>  	ret2 = 0;
+>  
+> -	/* page is wholly or partially inside EOF */
+> -	if (page_start + PAGE_SIZE > size)
+> -		zero_start = offset_in_page(size);
+> -	else
+> -		zero_start = PAGE_SIZE;
+> -
+>  	if (zero_start != PAGE_SIZE) {
+>  		kaddr = kmap(page);
+>  		memset(kaddr + zero_start, 0, PAGE_SIZE - zero_start);
+> diff --git a/fs/buffer.c b/fs/buffer.c
+> index d8c7242426bb..53aabde57ca7 100644
+> --- a/fs/buffer.c
+> +++ b/fs/buffer.c
+> @@ -2499,23 +2499,13 @@ int block_page_mkwrite(struct vm_area_struct *vma, struct vm_fault *vmf,
+>  	struct page *page = vmf->page;
+>  	struct inode *inode = file_inode(vma->vm_file);
+>  	unsigned long end;
+> -	loff_t size;
+>  	int ret;
+>  
+>  	lock_page(page);
+> -	size = i_size_read(inode);
+> -	if ((page->mapping != inode->i_mapping) ||
+> -	    (page_offset(page) > size)) {
+> -		/* We overload EFAULT to mean page got truncated */
+> -		ret = -EFAULT;
+> +	ret = page_mkwrite_check_truncate(page, inode);
+> +	if (ret < 0)
+>  		goto out_unlock;
+> -	}
+> -
+> -	/* page is wholly or partially inside EOF */
+> -	if (((page->index + 1) << PAGE_SHIFT) > size)
+> -		end = size & ~PAGE_MASK;
+> -	else
+> -		end = PAGE_SIZE;
+> +	end = ret;
+>  
+>  	ret = __block_write_begin(page, 0, end, get_block);
+>  	if (!ret)
+> diff --git a/fs/ceph/addr.c b/fs/ceph/addr.c
+> index 7ab616601141..ef958aa4adb4 100644
+> --- a/fs/ceph/addr.c
+> +++ b/fs/ceph/addr.c
+> @@ -1575,7 +1575,7 @@ static vm_fault_t ceph_page_mkwrite(struct vm_fault *vmf)
+>  	do {
+>  		lock_page(page);
+>  
+> -		if ((off > size) || (page->mapping != inode->i_mapping)) {
+> +		if (page_mkwrite_check_truncate(page, inode) < 0) {
+>  			unlock_page(page);
+>  			ret = VM_FAULT_NOPAGE;
+>  			break;
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index 28f28de0c1b6..51ab1d2cac80 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -5871,7 +5871,6 @@ vm_fault_t ext4_page_mkwrite(struct vm_fault *vmf)
+>  {
+>  	struct vm_area_struct *vma = vmf->vma;
+>  	struct page *page = vmf->page;
+> -	loff_t size;
+>  	unsigned long len;
+>  	int err;
+>  	vm_fault_t ret;
+> @@ -5907,18 +5906,13 @@ vm_fault_t ext4_page_mkwrite(struct vm_fault *vmf)
+>  	}
+>  
+>  	lock_page(page);
+> -	size = i_size_read(inode);
+> -	/* Page got truncated from under us? */
+> -	if (page->mapping != mapping || page_offset(page) > size) {
+> +	err = page_mkwrite_check_truncate(page, inode);
+> +	if (err < 0) {
+>  		unlock_page(page);
+> -		ret = VM_FAULT_NOPAGE;
+> -		goto out;
+> +		goto out_ret;
+>  	}
+> +	len = err;
+>  
+> -	if (page->index == size >> PAGE_SHIFT)
+> -		len = size & ~PAGE_MASK;
+> -	else
+> -		len = PAGE_SIZE;
+>  	/*
+>  	 * Return if we have all the buffers mapped. This avoids the need to do
+>  	 * journal_start/journal_stop which can block and take a long time
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index 85af112e868d..0e77b2e6f873 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -51,7 +51,7 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
+>  	struct inode *inode = file_inode(vmf->vma->vm_file);
+>  	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+>  	struct dnode_of_data dn = { .node_changed = false };
+> -	int err;
+> +	int offset, err;
+>  
+>  	if (unlikely(f2fs_cp_error(sbi))) {
+>  		err = -EIO;
+> @@ -70,13 +70,14 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
+>  	file_update_time(vmf->vma->vm_file);
+>  	down_read(&F2FS_I(inode)->i_mmap_sem);
+>  	lock_page(page);
+> -	if (unlikely(page->mapping != inode->i_mapping ||
+> -			page_offset(page) > i_size_read(inode) ||
+> -			!PageUptodate(page))) {
+> +	err = -EFAULT;
+> +	if (likely(PageUptodate(page)))
+> +		err = page_mkwrite_check_truncate(page, inode);
+> +	if (unlikely(err < 0)) {
+>  		unlock_page(page);
+> -		err = -EFAULT;
+>  		goto out_sem;
+>  	}
+> +	offset = err;
+>  
+>  	/* block allocation */
+>  	__do_map_lock(sbi, F2FS_GET_BLOCK_PRE_AIO, true);
+> @@ -101,14 +102,8 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
+>  	if (PageMappedToDisk(page))
+>  		goto out_sem;
+>  
+> -	/* page is wholly or partially inside EOF */
+> -	if (((loff_t)(page->index + 1) << PAGE_SHIFT) >
+> -						i_size_read(inode)) {
+> -		loff_t offset;
+> -
+> -		offset = i_size_read(inode) & ~PAGE_MASK;
+> +	if (offset != PAGE_SIZE)
+>  		zero_user_segment(page, offset, PAGE_SIZE);
+> -	}
+>  	set_page_dirty(page);
+>  	if (!PageUptodate(page))
+>  		SetPageUptodate(page);
+> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+> index d33c7bc5ee92..1aaf157fd6e9 100644
+> --- a/fs/iomap/buffered-io.c
+> +++ b/fs/iomap/buffered-io.c
+> @@ -1062,24 +1062,16 @@ vm_fault_t iomap_page_mkwrite(struct vm_fault *vmf, const struct iomap_ops *ops)
+>  	struct page *page = vmf->page;
+>  	struct inode *inode = file_inode(vmf->vma->vm_file);
+>  	unsigned long length;
+> -	loff_t offset, size;
+> +	loff_t offset;
+>  	ssize_t ret;
+>  
+>  	lock_page(page);
+> -	size = i_size_read(inode);
+> -	offset = page_offset(page);
+> -	if (page->mapping != inode->i_mapping || offset > size) {
+> -		/* We overload EFAULT to mean page got truncated */
+> -		ret = -EFAULT;
+> +	ret = page_mkwrite_check_truncate(page, inode);
+> +	if (ret < 0)
+>  		goto out_unlock;
+> -	}
+> -
+> -	/* page is wholly or partially inside EOF */
+> -	if (offset > size - PAGE_SIZE)
+> -		length = offset_in_page(size);
+> -	else
+> -		length = PAGE_SIZE;
+> +	length = ret;
+>  
+> +	offset = page_offset(page);
+>  	while (length > 0) {
+>  		ret = iomap_apply(inode, offset, length,
+>  				IOMAP_WRITE | IOMAP_FAULT, ops, page,
+> diff --git a/fs/ubifs/file.c b/fs/ubifs/file.c
+> index cd52585c8f4f..91f7a1f2db0d 100644
+> --- a/fs/ubifs/file.c
+> +++ b/fs/ubifs/file.c
+> @@ -1563,8 +1563,7 @@ static vm_fault_t ubifs_vm_page_mkwrite(struct vm_fault *vmf)
+>  	}
+>  
+>  	lock_page(page);
+> -	if (unlikely(page->mapping != inode->i_mapping ||
+> -		     page_offset(page) > i_size_read(inode))) {
+> +	if (unlikely(page_mkwrite_check_truncate(page, inode) < 0)) {
+>  		/* Page got truncated out from underneath us */
+>  		goto sigbus;
+>  	}
+> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+> index 37a4d9e32cd3..ccb14b6a16b5 100644
+> --- a/include/linux/pagemap.h
+> +++ b/include/linux/pagemap.h
+> @@ -636,4 +636,32 @@ static inline unsigned long dir_pages(struct inode *inode)
+>  			       PAGE_SHIFT;
+>  }
+>  
+> +/**
+> + * page_mkwrite_check_truncate - check if page was truncated
+> + * @page: the page to check
+> + * @inode: the inode to check the page against
+> + *
+> + * Returns the number of bytes in the page up to EOF,
+> + * or -EFAULT if the page was truncated.
+> + */
+> +static inline int page_mkwrite_check_truncate(struct page *page,
+> +					      struct inode *inode)
+> +{
+> +	loff_t size = i_size_read(inode);
+> +	pgoff_t index = size >> PAGE_SHIFT;
+> +	int offset = offset_in_page(size);
+> +
+> +	if (page->mapping != inode->i_mapping)
+> +		return -EFAULT;
+> +
+> +	/* page is wholly inside EOF */
+> +	if (page->index < index)
+> +		return PAGE_SIZE;
+> +	/* page is wholly past EOF */
+> +	if (page->index > index || !offset)
+> +		return -EFAULT;
+> +	/* page is partially inside EOF */
+> +	return offset;
+> +}
+> +
+>  #endif /* _LINUX_PAGEMAP_H */
+> -- 
+> 2.20.1
+> 
