@@ -2,116 +2,119 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A83C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A25A4C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11204206D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76135227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:53:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="V4cUClr1"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Kknc+xgp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfLRMxA (ORCPT
+        id S1726998AbfLRMxk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 07:53:00 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:40172 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbfLRMw7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 07:52:59 -0500
-Received: by mail-qk1-f195.google.com with SMTP id c17so1424508qkg.7
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 04:52:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=b+CCGksXD0vuDKfmVp0tkHiA2uWnVRsyUsg9W47Em0w=;
-        b=V4cUClr1kHNL9cE/3hnbLIPHpTlNhp+WtY4uxMwUV+5JpJW2ZkRU/U2kLhqFzz1Cb7
-         /6jIEZjMyCvlYCe4JbT1Mh6uH4++6hoygmRC5fDbvFGRZ05jI+NWTdo/u6g5O8Q6zBqL
-         FycUbuQdsTBjDLiDIwi1aSJaUvU9OUxVZaLUftubjgFli8Hxx04lNuXEjWrTYvHBgQDu
-         +CeDQJIlzU1f5VErJatobGIzIy5/kPrwvGC8+B/zoYX+60m+ukJ5fG22X5JIKmfL8WpS
-         IdI54cOJmFZ/47PZih3TuNKxgQ8S+JlYPvFqHCpBcp6oSFw7YFK2nxGgZ1NqAJH2dBpG
-         OWXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=b+CCGksXD0vuDKfmVp0tkHiA2uWnVRsyUsg9W47Em0w=;
-        b=VMTPrzhXCFLodq2l39uYrzn4O4s/XxQdKO3C19dGh5nWlgscajgnAL53/IBFxzT6DM
-         HBH0HaFQYmaA+YoRs9Fttz3V4mUxap+jpGWjypMrxintu1CNEP/ZDS6kxMalqoUK98tT
-         3/5OmjhGuMNZxyVxKgugsG+3sYLwzOMg5Q8Xy2ntbPBVkOl6eOiqpldKY2FCld2T9el4
-         TrEO/6Ch0R7WR/IKoxAN4hYZKSsPaPMlPvTag+TJXZyVSva/SRjZ9rHPM/m+wSqSdZ6Z
-         h4SkIlHi2Sy5EhWF4zITDsr6IvBDCHrS27ENuMHZaruFx1QTHVel6f9Q1W5rfVzwTfIF
-         QIXA==
-X-Gm-Message-State: APjAAAXUnzxpcov2mySVqWZkHRnPhwlWneXsm+pfq8qM20+9UaIv/aFr
-        rUi6fuLiKUz4MN+Nb17PJAs1FA==
-X-Google-Smtp-Source: APXvYqwXxvLIXwbnaU0pbtUaahmQsTY4WJgvs7cvIfEp9WJEolUF/3Lr4p9rKDGIxgul5lRhDBUKSg==
-X-Received: by 2002:a05:620a:109c:: with SMTP id g28mr2275683qkk.0.1576673578884;
-        Wed, 18 Dec 2019 04:52:58 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id l49sm709602qtk.7.2019.12.18.04.52.58
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 18 Dec 2019 04:52:58 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1ihYoz-0006wl-U1; Wed, 18 Dec 2019 08:52:57 -0400
-Date:   Wed, 18 Dec 2019 08:52:57 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Max Hirsch <max.hirsch@gmail.com>
-Cc:     Doug Ledford <dledford@redhat.com>,
-        Parav Pandit <parav@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Steve Wise <swise@opengridcomputing.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Danit Goldberg <danitg@mellanox.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Dag Moxnes <dag.moxnes@oracle.com>,
-        Myungho Jung <mhjungk@gmail.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] RDMA/cma: Fix checkpatch error
-Message-ID: <20191218125257.GD17227@ziepe.ca>
-References: <20191211111628.2955-1-max.hirsch@gmail.com>
- <20191211162654.GD6622@ziepe.ca>
- <CADgTo880aSn++fcf_rt0+8DCE4Y=xgXtZxFx9B0nzM_M1HdWPw@mail.gmail.com>
+        Wed, 18 Dec 2019 07:53:40 -0500
+Received: from mail-eopbgr150077.outbound.protection.outlook.com ([40.107.15.77]:10724
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726545AbfLRMxk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 07:53:40 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Yjg6WyTJoTnuPchLTtCvPGuMibDf6QWrNwkh41yC0+b6Sxdl9594nt2cEsDs1GtWiuD6UzjIOqSFGeZ6OXqT8u19TCmOWy/ZiizsOfvfDVtzQPl132DBkm80uKT15vK5tWncDHvxug3sCZQMaZUfzQ0nVNqh+zpn/wQSb//YcKJWMELNnLq4/Q29jwhLafwjxzS180+67BquHC947bEMAol3CjDF+K0JmdjK5UJZ6rZYVDVXb1r9vlSNpUSFqKcftzhuael6ofkg30Ryi5FwTC4U87cK5CnxnigQ7ZACSqfxUGjlPadazlEO5uuuYBIjb2Y6kam38FvD/ud7jpsrYA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9sYiC5a53T12wfqXA/aZn15QyMiCp+e1OKZWyrsR/ok=;
+ b=hrrsxG2OJHhpsWynb6VvWjCgC0eYEakSNAA/noUf3U5o7P89XMcJ6RqI8O3Ecrj1a8DUoY7l4hWnNJbiUa0Xp29pI9OURML6qZteCD8B0AIgKAGfdrSsu4IoAC+q1hFkFQASUpOaqy8Y6avBn6sAgjJlUT9E82iyztg72ZqDbM6MG9GkJZESNgEt+L2i6r0Y5f/rKuF99CJuT0N4pJ8lXvAu61Chq/imYCJgd+Pn78NOUQ7iLo30O/WirKg1zpZnEBDhwmYlSRiIKRMXf2JxtlQMUpPwcUxJ0IPtSecWP0mebOmS3ajjI2MvBvpZUO/+w7EtoS4o8lDc/VbDx+hfdw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9sYiC5a53T12wfqXA/aZn15QyMiCp+e1OKZWyrsR/ok=;
+ b=Kknc+xgpFS4L7gUXeMeitU56jCfTVX0Q7SbTgUoAIZyL8O/yjqPK2I7wmEMrRFXKlOsmeiHJWIU8fLkMpa2ZjQ7VkcKSm5oFjInMUVC5QlbljovyMCyoRdpNKV5OMr0TbrikJN6R9KS7Rl6AVgMvQdy2IVmHvQCGC2H99ovDNLU=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB7091.eurprd04.prod.outlook.com (10.186.129.137) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.14; Wed, 18 Dec 2019 12:53:37 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::505:87e7:6b49:3d29]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::505:87e7:6b49:3d29%7]) with mapi id 15.20.2559.012; Wed, 18 Dec 2019
+ 12:53:36 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Fabio Estevam <festevam@gmail.com>
+CC:     "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
+        "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "mripard@kernel.org" <mripard@kernel.org>,
+        "wens@csie.org" <wens@csie.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH 1/2] pinctrl: mvebu: armada-37xx: use use platform api
+Thread-Topic: [PATCH 1/2] pinctrl: mvebu: armada-37xx: use use platform api
+Thread-Index: AQHVtaDOy35Q6KpKLESPO8UEr8sdH6e/17qAgAAA/vA=
+Date:   Wed, 18 Dec 2019 12:53:36 +0000
+Message-ID: <AM0PR04MB4481B3EAB2DDC42A137E8AAB88530@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1576672860-14420-1-git-send-email-peng.fan@nxp.com>
+ <CAOMZO5DeA24EUjr-E=V=tGNaZ7UkOEi+F5-kEBqEB288DSNSoA@mail.gmail.com>
+In-Reply-To: <CAOMZO5DeA24EUjr-E=V=tGNaZ7UkOEi+F5-kEBqEB288DSNSoA@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 76324939-dc25-4b05-19c2-08d783b94c24
+x-ms-traffictypediagnostic: AM0PR04MB7091:
+x-microsoft-antispam-prvs: <AM0PR04MB70913FF7763FFC57C128806288530@AM0PR04MB7091.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:335;
+x-forefront-prvs: 0255DF69B9
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(39860400002)(136003)(346002)(376002)(199004)(189003)(71200400001)(76116006)(33656002)(81156014)(7416002)(54906003)(55016002)(7696005)(2906002)(66946007)(8676002)(4326008)(66556008)(6506007)(64756008)(66476007)(478600001)(186003)(53546011)(66446008)(81166006)(9686003)(86362001)(52536014)(44832011)(8936002)(4744005)(966005)(316002)(6916009)(5660300002)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB7091;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: SIrZViJ2jxbZM5BBOGLXOoirDxWp8lYLeFOY9Cuvile6R/S/AreLoehXmcTA3U2icbGPxaz++SoRSBLOWdzBUnuqmju8YbUEPFS/WloNl7sG6DywH208Q45UonM7sVCBw8jGVS2bjlhpPwNwIGgbuz4tLqBosRW8LR68/uASbM4ACYx9kizdm6afeKap+gpa484a3yr+3XDNOKvJIiuim2doWPLzF/pZl4Ic6pqfV0Kq8uEuuLGaPK4odPlC2jHKEoEKdXaxVQL8x3gDUucC5izEHRAj2MOQ0j16zUWjU19FFdqfwnv+4LPhZCkDoHbb46NVmz4f2VKjov7jpkXgrUFTP/bJlDqRsjAEPTEfa3uqmlgt0MeB29U8PO8A+kfFQcvxH1yantOMzIVsV3mlROWbbnsvn8Bt7SKK7FidJJJ7S8t69KppzQQIJC6gkAd1PYvkgFHCcibVv7okG+YZrCujtT7PinFRniDW3InLfGY=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADgTo880aSn++fcf_rt0+8DCE4Y=xgXtZxFx9B0nzM_M1HdWPw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 76324939-dc25-4b05-19c2-08d783b94c24
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Dec 2019 12:53:36.5287
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: lnqqyORTYksBrcpyXL8zTP48+wOs04Q1krplR5U1YWnKkNVrHIfBnXh9exgQ8I2uDAZmImkqlzSZkexan0l36A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB7091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 08:33:10PM -0500, Max Hirsch wrote:
-> Thanks for the quick response. This is my first patch, so I want to
-> follow the correct protocol. I reran checkpatch after making the
-> changes and there were no errors or warnings in the region I changed.
-
-You are supposed to run the patch itself through checkpatch:
-
-$ git format-patch HEAD^!
-0001-RDMA-cma-Fix-checkpatch-error.patch
-$ scripts/checkpatch.pl 0001-RDMA-cma-Fix-checkpatch-error.patch
-WARNING: A patch subject line should describe the change not the tool that found it
-#4: 
-Subject: [PATCH] RDMA/cma: Fix checkpatch error
-
-WARNING: Possible unwrapped commit description (prefer a maximum 75 chars per line)
-#12: 
-This patch moves the assignment of ret to the previous line. The if statement then checks the value of ret assigned on the previous line. The assigned value of ret is not changed. Testing involved recompiling and loading the kernel. After the changes checkpatch does not report this the error in cma.c.
-
-total: 0 errors, 2 warnings, 9 lines checked
-
-NOTE: For some of the reported defects, checkpatch may be able to
-      mechanically convert to the typical style using --fix or --fix-inplace.
-
-0001-RDMA-cma-Fix-checkpatch-error.patch has style problems, please review.
-
-NOTE: If any of the errors are false positives, please report
-      them to the maintainer, see CHECKPATCH in MAINTAINERS.
-
-Jason
+PiBTdWJqZWN0OiBSZTogW1BBVENIIDEvMl0gcGluY3RybDogbXZlYnU6IGFybWFkYS0zN3h4OiB1
+c2UgdXNlIHBsYXRmb3JtIGFwaQ0KPiANCj4gT24gV2VkLCBEZWMgMTgsIDIwMTkgYXQgOTo0NCBB
+TSBQZW5nIEZhbiA8cGVuZy5mYW5AbnhwLmNvbT4gd3JvdGU6DQo+IA0KPiA+IC0gICAgICAgbnJf
+aXJxX3BhcmVudCA9IG9mX2lycV9jb3VudChucCk7DQo+ID4gKyAgICAgICBucl9pcnFfcGFyZW50
+ID0gcGxhdGZvcm1faXJxX2NvdW50KHBkZXYpOw0KPiA+ICsgICAgICAgaWYgKG5yX2lycV9wYXJl
+bnQgPCAwKSB7DQo+ID4gKyAgICAgICAgICAgICAgIGlmIChucl9pcnFfcGFyZW50ICE9IC1FUFJP
+QkVfREVGRVIpDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZGV2X2VycihkZXYsICJDb3Vs
+ZG4ndCBkZXRlcm1pbmUgaXJxDQo+IGNvdW50OiAlcGVcbiIsDQo+ID4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICBFUlJfUFRSKG5yX2lycV9wYXJlbnQpKTsNCj4gDQo+IFdoeSBkbyB5
+b3UgcmV0dXJuIEVSUl9QVFIobnJfaXJxX3BhcmVudCkgaW5zdGVhZCBvZiBzaW1wbHkgbnJfaXJx
+X3BhcmVudD8NCg0KUGxlYXNlIHNlZToNCmh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE5LzEyLzQv
+NjQNCg0KYW5kIHRoZSBwYXRjaCBpbiB0cmVlOg0KaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIv
+c2NtL2xpbnV4L2tlcm5lbC9naXQvbmV4dC9saW51eC1uZXh0LmdpdC8NCmNvbW1pdC8/aWQ9Y2Zk
+Y2ExNGM0NGE3OWI5YzljNDkxMjM1YTM5YjlmYzFlNTIwODIwYg0KDQpUaGFua3MsDQpQZW5nLg0K
