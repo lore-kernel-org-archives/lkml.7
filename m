@@ -2,109 +2,58 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D563EC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DC2C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5D0B2465E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65A8524676
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:19:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbfLRPPL (ORCPT
+        id S1727034AbfLRPTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 10:15:11 -0500
-Received: from mail-il1-f197.google.com ([209.85.166.197]:35253 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726996AbfLRPPL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 10:15:11 -0500
-Received: by mail-il1-f197.google.com with SMTP id t15so2008833ilh.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 07:15:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=jSdukNVKN1rb2lDU57Ar/9GWwm2qqaJhHtnd5Wdgw+4=;
-        b=ljax6Oebx9o9hYv9M/92bPvOtFXQPcNnvaIb97y1yx2yz2Wcvq9uvli/SFMGo5GGIa
-         p4aLj9CPLUCaH54KY6hNjRXa200XUFndHN6py8x5vBzCfKLG2jed0cXcPzzTeEQy3CpS
-         YVCxbWLlNt/Sx+3uraxzRyermKd4IbtsnkUxi01DTVC+x1pmU8lJog5OGAlb14RTJcWl
-         usZTVXfF0HE3Kfg05xYPfVjTFcD9Ttd3vQ+f6aq1NpCoc/QIwxBWUurenFg9IhqkNUBM
-         dFxaKoHA7pKhCsbAUr/kw2oii4hpfbOVIon3OtYF9fpQ9izO2kg2aDhYcfYMuAnxn6QW
-         WucA==
-X-Gm-Message-State: APjAAAXICQPesvO4OlLYs5t5C1ZctMaB+KnOgg2tK8xegFPUOxFpnhU+
-        epXbWL2IUEtGodf60IIriTMi68/2E6ZUSfgMej2hmT+kLO7B
-X-Google-Smtp-Source: APXvYqzX8BiTDcFwWOoADIUa/C/W1aNUeW4q5RhSf7rp5KnkYx2nF+BA95bYW/QdzsdpbaLu0DFYyyFA+RBPWauGFLBsYsRahBlT
+        Wed, 18 Dec 2019 10:19:03 -0500
+Received: from 8bytes.org ([81.169.241.247]:57878 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726913AbfLRPTD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 10:19:03 -0500
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 0C4EF258; Wed, 18 Dec 2019 16:19:00 +0100 (CET)
+Date:   Wed, 18 Dec 2019 16:18:57 +0100
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>, ashok.raj@intel.com,
+        jacob.jun.pan@intel.com, kevin.tian@intel.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: Re: [PATCH 1/1] iommu/vt-d: Remove incorrect PSI capability check
+Message-ID: <20191218151856.GA2995@8bytes.org>
+References: <20191120061016.31386-1-baolu.lu@linux.intel.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:4616:: with SMTP id t22mr2292795ila.186.1576682109244;
- Wed, 18 Dec 2019 07:15:09 -0800 (PST)
-Date:   Wed, 18 Dec 2019 07:15:09 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000b9e820599fbe9a7@google.com>
-Subject: KASAN: use-after-free Read in hidinput_hid_event
-From:   syzbot <syzbot+c961cb836a707f66e2f8@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, benjamin.tissoires@redhat.com,
-        jikos@kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        rydberg@bitmath.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191120061016.31386-1-baolu.lu@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Nov 20, 2019 at 02:10:16PM +0800, Lu Baolu wrote:
+> The PSI (Page Selective Invalidation) bit in the capability register
+> is only valid for second-level translation. Intel IOMMU supporting
+> scalable mode must support page/address selective IOTLB invalidation
+> for first-level translation. Remove the PSI capability check in SVA
+> cache invalidation code.
+> 
+> Fixes: 8744daf4b0699 ("iommu/vt-d: Remove global page flush support")
+> Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> ---
+>  drivers/iommu/intel-svm.c | 6 +-----
+>  1 file changed, 1 insertion(+), 5 deletions(-)
 
-syzbot found the following crash on:
+Applied for v5.5, thanks.
 
-HEAD commit:    d533c992 usb: core: kcov: collect coverage from usb comple..
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=100798b9e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=743b91162e9f9496
-dashboard link: https://syzkaller.appspot.com/bug?extid=c961cb836a707f66e2f8
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15519951e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=166f72fee00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+c961cb836a707f66e2f8@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: use-after-free in test_bit  
-include/asm-generic/bitops/instrumented-non-atomic.h:110 [inline]
-BUG: KASAN: use-after-free in hidinput_hid_event+0x1111/0x15d3  
-drivers/hid/hid-input.c:1381
-Read of size 8 at addr ffff8881cfb19738 by task swapper/0/0
-
-CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.5.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  <IRQ>
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xef/0x16e lib/dump_stack.c:118
-  print_address_description.constprop.0+0x16/0x200 mm/kasan/report.c:374
-  __kasan_report.cold+0x37/0x7f mm/kasan/report.c:506
-  kasan_report+0xe/0x20 mm/kasan/common.c:639
-  check_memory_region_inline mm/kasan/generic.c:185 [inline]
-  check_memory_region+0x152/0x1c0 mm/kasan/generic.c:192
-  test_bit include/asm-generic/bitops/instrumented-non-atomic.h:110 [inline]
-  hidinput_hid_event+0x1111/0x15d3 drivers/hid/hid-input.c:1381
-  hid_process_event+0x4a0/0x580 drivers/hid/hid-core.c:1506
-  hid_input_field drivers/hid/hid-core.c:1550 [inline]
-  hid_report_raw_event+0xabb/0xed0 drivers/hid/hid-core.c:1757
-  hid_input_report+0x315/0x3f0 drivers/hid/hid-core.c:1824
-  hid_irq_in+0x50e/0x690 drivers/hid/usbhid/hid-core.c:284
-  __usb_hcd_giveback
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
