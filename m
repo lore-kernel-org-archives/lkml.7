@@ -2,117 +2,184 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E2DC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D236C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03BD6206D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:51:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="OeidzQts"
+	by mail.kernel.org (Postfix) with ESMTP id 54DD3206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:51:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbfLRSvP (ORCPT
+        id S1727185AbfLRSvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 13:51:15 -0500
-Received: from mta-p7.oit.umn.edu ([134.84.196.207]:47536 "EHLO
-        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbfLRSvP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 13:51:15 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 47dPH60n2Wz9vZKK
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 18:51:14 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p7.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id gLR4nof4-LQn for <linux-kernel@vger.kernel.org>;
-        Wed, 18 Dec 2019 12:51:14 -0600 (CST)
-Received: from mail-yb1-f197.google.com (mail-yb1-f197.google.com [209.85.219.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id 47dPH56pMSz9vYy1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 12:51:13 -0600 (CST)
-Received: by mail-yb1-f197.google.com with SMTP id f75so2079494ybg.13
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 10:51:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rd6UJcISaPgTLxWAEQqv3WsIVtgS/8v211iCZDbirks=;
-        b=OeidzQtsDhPqS8rXFpiUUv+POzrIjF6I80/LtumbihVUO1dW/A0GVNTp2YD9Mvwfbl
-         +2nhIhLtOaWSE5H0DuaWh9fHiNPdNmT++hhI7fuHIl9K+0tqjNawsXfmK1BGw/05SXd8
-         jgWQpxpTQwHMnVjJc0DQmpFKE7mh6Vgsd6n5fJDns8mH4LPJSTw7MKRZWcwhPdzZ5kQR
-         3CEaRrsye4tpRXSbg60TG3qpfLIUrNJhKGFM6n1viFEtE0CsaqYkh4sc/6MqF6PvpLbp
-         OKlLq4poZKpOizq9iPMVrtQ0L01hf1Lae/gCeP9X4JreL/QwXZSoFJoB7XlOeU58nky1
-         77kA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rd6UJcISaPgTLxWAEQqv3WsIVtgS/8v211iCZDbirks=;
-        b=mrbyF0ncOTM7HKrjY9+Zao6GMF0iGr1lDDrdRSAfetsb0wTsWj1wcTtrQCP7sXi5dr
-         DoDlVlNsmRZTxJrQ2MXqF+8EWnn4p3k+awq8e4lm0jvFyThDXwAObb8OipgkCyg6+ib1
-         5JzPqNbBiZCx29ZseOR8o3hlHMJRgwMTw4Rsph5wvUsTz1/JVzFaDIDaGCHDLQUzzl8j
-         9bbblZ9UUkkfEJ1VoU4HBIFLeFrwuXwATkK/fGH94/4Cze233UD6yefL3E+T/r6tZ1x2
-         xgY3yneFaMmWYTkMOB+qVCGOFmpqVTMcggnXAIg3TZyyTPxTVWTRarxmSU/PBHZDalBE
-         YRVQ==
-X-Gm-Message-State: APjAAAVq13teV4+aGRsDkccITgC4Svj/OV/EOv62WksGSfFAYlsCxhJx
-        LGINKnmrPeqOD3Bd+1ouRWLtqBY7C6sEspa5BCXy2FX064zoGdqqRdBY4tYZ9ikF+9dKj41QjVx
-        NHIUPkBEKOV7G5auPzjjkTdmUFnsn
-X-Received: by 2002:a0d:d4d6:: with SMTP id w205mr3137291ywd.366.1576695072488;
-        Wed, 18 Dec 2019 10:51:12 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwsZKX/RL+tjcXAqAVDUPxweVVSpnSIWxCrF+ZgDct/WJffKYv83avuE0gaxi/NmW2sUHifJg==
-X-Received: by 2002:a0d:d4d6:: with SMTP id w205mr3137281ywd.366.1576695072283;
-        Wed, 18 Dec 2019 10:51:12 -0800 (PST)
-Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
-        by smtp.gmail.com with ESMTPSA id g65sm1202882ywd.109.2019.12.18.10.51.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 10:51:11 -0800 (PST)
-From:   Aditya Pakki <pakki001@umn.edu>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu,
-        VMware Graphics <linux-graphics-maintainer@vmware.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/vmwgfx: remove unnecessary assertion in vmw_resource_alloc_id
-Date:   Wed, 18 Dec 2019 12:51:09 -0600
-Message-Id: <20191218185109.23671-1-pakki001@umn.edu>
-X-Mailer: git-send-email 2.20.1
+        Wed, 18 Dec 2019 13:51:19 -0500
+Received: from foss.arm.com ([217.140.110.172]:57352 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727049AbfLRSvQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 13:51:16 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3BB7B31B;
+        Wed, 18 Dec 2019 10:51:15 -0800 (PST)
+Received: from [192.168.42.50] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9F5E23F67D;
+        Wed, 18 Dec 2019 10:51:13 -0800 (PST)
+Subject: Re: [PATCH] sched, fair: Allow a small degree of load imbalance
+ between SD_NUMA domains
+To:     Mel Gorman <mgorman@techsingularity.net>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, pauld@redhat.com,
+        srikar@linux.vnet.ibm.com, quentin.perret@arm.com,
+        dietmar.eggemann@arm.com, Morten.Rasmussen@arm.com,
+        hdanton@sina.com, parth@linux.ibm.com, riel@surriel.com,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20191218154402.GF3178@techsingularity.net>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <8f049805-3e97-09bb-2d32-0718be1dec9b@arm.com>
+Date:   Wed, 18 Dec 2019 18:50:52 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191218154402.GF3178@techsingularity.net>
+Content-Type: text/plain; charset=iso-8859-15
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Every caller of vmw_resource_alloc_id checks if id is not -1. The
-assertion in the said function is thus redundant and can be removed.
-The patch removes the check.
+Hi Mel,
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+On 18/12/2019 15:44, Mel Gorman wrote:
+> The CPU load balancer balances between different domains to spread load
+> and strives to have equal balance everywhere. Communicating tasks can
+> migrate so they are topologically close to each other but these decisions
+> are independent. On a lightly loaded NUMA machine, two communicating tasks
+> pulled together at wakeup time can be pushed apart by the load balancer.
+> In isolation, the load balancer decision is fine but it ignores the tasks
+> data locality and the wakeup/LB paths continually conflict. NUMA balancing
+> is also a factor but it also simply conflicts with the load balancer.
+> 
+> This patch allows a degree of imbalance to exist between NUMA domains
+> based on the imbalance_pct defined by the scheduler domain to take into
+> account that data locality is also important. This slight imbalance is
+> allowed until the scheduler domain reaches almost 50% utilisation at which
+> point other factors like HT utilisation and memory bandwidth come into
+> play. While not commented upon in the code, the cutoff is important for
+> memory-bound parallelised non-communicating workloads that do not fully
+> utilise the entire machine. This is not necessarily the best universal
+> cut-off point but it appeared appropriate for a variety of workloads
+> and machines.
+> 
+> The most obvious impact is on netperf TCP_STREAM -- two simple
+> communicating tasks with some softirq offloaded depending on the
+> transmission rate.
+> 
+
+<snip>
+
+> In general, the patch simply seeks to avoid unnecessarily cross-node
+> migrations when a machine is lightly loaded but shows benefits for other
+> workloads. While tests are still running, so far it seems to benefit
+> light-utilisation smaller workloads on large machines and does not appear
+> to do any harm to larger or parallelised workloads.
+> 
+
+Thanks for the detailed testing, I haven't digested it entirely yet but I
+appreciate the effort.
+
+> @@ -8690,6 +8686,38 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
+>  		env->migration_type = migrate_task;
+>  		env->imbalance = max_t(long, 0, (local->idle_cpus -
+>  						 busiest->idle_cpus) >> 1);
+> +
+> +out_spare:
+> +		/*
+> +		 * Whether balancing the number of running tasks or the number
+> +		 * of idle CPUs, consider allowing some degree of imbalance if
+> +		 * migrating between NUMA domains.
+> +		 */
+> +		if (env->sd->flags & SD_NUMA) {
+> +			unsigned int imbalance_adj, imbalance_max;
+> +
+> +			/*
+> +			 * imbalance_adj is the allowable degree of imbalance
+> +			 * to exist between two NUMA domains. It's calculated
+> +			 * relative to imbalance_pct with a minimum of two
+> +			 * tasks or idle CPUs.
+> +			 */
+> +			imbalance_adj = (busiest->group_weight *
+> +				(env->sd->imbalance_pct - 100) / 100) >> 1;
+
+IIRC imbalance_pct for NUMA domains uses the default 125, so I read this as
+"allow an imbalance of 1 task per 8 CPU in the source group" (just making
+sure I follow).
+
+> +			imbalance_adj = max(imbalance_adj, 2U);
+> +
+> +			/*
+> +			 * Ignore imbalance unless busiest sd is close to 50%
+> +			 * utilisation. At that point balancing for memory
+> +			 * bandwidth and potentially avoiding unnecessary use
+> +			 * of HT siblings is as relevant as memory locality.
+> +			 */
+> +			imbalance_max = (busiest->group_weight >> 1) - imbalance_adj;
+> +			if (env->imbalance <= imbalance_adj &&
+> +			    busiest->sum_nr_running < imbalance_max) {
+
+The code does "unless busiest group has half as many runnable tasks (or more)
+as it has CPUs (modulo the adj thing)", is that what you mean by "unless
+busiest sd is close to 50% utilisation" in the comment? It's somewhat
+different IMO.
+
+> +				env->imbalance = 0;
+> +			}
+> +		}
+>  		return;
+>  	}
+>  
+> 
+I'm quite sure you have reasons to have written it that way, but I was
+hoping we could squash it down to something like:
 ---
- drivers/gpu/drm/vmwgfx/vmwgfx_resource.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_resource.c b/drivers/gpu/drm/vmwgfx/vmwgfx_resource.c
-index c8441030637a..50c8eb8012fd 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_resource.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_resource.c
-@@ -183,8 +183,6 @@ int vmw_resource_alloc_id(struct vmw_resource *res)
- 	int ret;
- 	struct idr *idr = &dev_priv->res_idr[res->func->res_type];
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 08a233e97a01..f05d09a8452e 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -8680,16 +8680,27 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
+ 			env->migration_type = migrate_task;
+ 			lsub_positive(&nr_diff, local->sum_nr_running);
+ 			env->imbalance = nr_diff >> 1;
+-			return;
++		} else {
++
++			/*
++			 * If there is no overload, we just want to even the number of
++			 * idle cpus.
++			 */
++			env->migration_type = migrate_task;
++			env->imbalance = max_t(long, 0, (local->idle_cpus -
++							 busiest->idle_cpus) >> 1);
+ 		}
  
--	BUG_ON(res->id != -1);
--
- 	idr_preload(GFP_KERNEL);
- 	spin_lock(&dev_priv->resource_lock);
+ 		/*
+-		 * If there is no overload, we just want to even the number of
+-		 * idle cpus.
++		 * Allow for a small imbalance between NUMA groups; don't do any
++		 * of it if there is at least half as many tasks / busy CPUs as
++		 * there are available CPUs in the busiest group
+ 		 */
+-		env->migration_type = migrate_task;
+-		env->imbalance = max_t(long, 0, (local->idle_cpus -
+-						 busiest->idle_cpus) >> 1);
++		if (env->sd->flags & SD_NUMA &&
++		    (busiest->sum_nr_running < busiest->group_weight >> 1) &&
++		    (env->imbalance < busiest->group_weight * (env->sd->imbalance_pct - 100) / 100))
++				env->imbalance = 0;
++
+ 		return;
+ 	}
  
--- 
-2.20.1
-
