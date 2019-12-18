@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 234F8C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C04FEC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0CF82465E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 813592465E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:09:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbfLRHJA (ORCPT
+        id S1726777AbfLRHJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 02:09:00 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8141 "EHLO huawei.com"
+        Wed, 18 Dec 2019 02:09:02 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8143 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726730AbfLRHI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 02:08:58 -0500
+        id S1726729AbfLRHJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 02:09:00 -0500
 Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 39D1FE6113E38FE085BB;
+        by Forcepoint Email with ESMTP id 2C9FCAB5AB31D5D3ABDB;
         Wed, 18 Dec 2019 15:08:56 +0800 (CST)
 Received: from huawei.com (10.175.102.38) by DGGEMS410-HUB.china.huawei.com
  (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Wed, 18 Dec 2019
- 15:08:49 +0800
+ 15:08:46 +0800
 From:   Tan Xiaojun <tanxiaojun@huawei.com>
 To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
@@ -38,9 +38,9 @@ CC:     <gengdongjiu@huawei.com>, <wxf.wang@hisilicon.com>,
         <liwei391@huawei.com>, <tanxiaojun@huawei.com>,
         <liuqi115@hisilicon.com>, <huawei.libin@huawei.com>,
         <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
-Subject: [PATCH 4/6] perf tools: Support "branch-misses:pp" on arm64
-Date:   Wed, 18 Dec 2019 15:54:53 +0800
-Message-ID: <20191218075455.5106-5-tanxiaojun@huawei.com>
+Subject: [PATCH 2/6] perf tools: Add support for "report" for some spe events
+Date:   Wed, 18 Dec 2019 15:54:51 +0800
+Message-ID: <20191218075455.5106-3-tanxiaojun@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191218075455.5106-1-tanxiaojun@huawei.com>
 References: <20191218075455.5106-1-tanxiaojun@huawei.com>
@@ -53,152 +53,1420 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At the suggestion of James Clark, use spe to support the precise
-ip of some events. Currently its support event is:
-branch-misses.
+After the commit ffd3d18c20b8 ("perf tools: Add ARM Statistical
+Profiling Extensions (SPE) support") is merged, "perf record" and
+"perf report --dump-raw-trace" have been supported. However, the
+raw data that is dumped cannot be used without parsing.
+
+This patch is to improve the "perf report" support for spe, and
+further process the data. Currently, support for the four events
+of llc-miss, tlb-miss, branch-miss, and remote-access is added.
 
 Example usage:
 
-$ ./perf record -e branch-misses:pp dd if=/dev/zero of=/dev/null count=10000
-(:p/pp/ppp is same for this case.)
+$ ./perf record -c 1024 -e arm_spe_0/branch_filter=1,ts_enable=1,pct_enable=1,pa_enable=1,load_filter=1,jitter=1,store_filter=1,min_latency=0/ -o perf-armspe-dd.data dd if=/dev/zero of=/dev/null count=10000
 
-$ ./perf report --stdio
-("--stdio is not necessary")
-
+$ ./perf report -i perf-armspe-dd.data --stdio
 --------------------------------------------------------------------
 ...
- # Samples: 14  of event 'branch-misses:pp'
- # Event count (approx.): 14
- #
- # Children      Self  Command  Shared Object      Symbol
- # ........  ........  .......  .................  ..........................
- #
-    14.29%    14.29%  dd       [kernel.kallsyms]  [k] __arch_copy_from_user
-    14.29%    14.29%  dd       libc-2.28.so       [.] _dl_addr
-     7.14%     7.14%  dd       [kernel.kallsyms]  [k] __free_pages
-     7.14%     7.14%  dd       [kernel.kallsyms]  [k] __pi_memcpy
-     7.14%     7.14%  dd       [kernel.kallsyms]  [k] pagecache_get_page
-     7.14%     7.14%  dd       [kernel.kallsyms]  [k] unmap_single_vma
-     7.14%     7.14%  dd       dd                 [.] 0x00000000000025ec
-     7.14%     7.14%  dd       ld-2.28.so         [.] _dl_lookup_symbol_x
-     7.14%     7.14%  dd       ld-2.28.so         [.] check_match
-     7.14%     7.14%  dd       libc-2.28.so       [.] __mpn_rshift
-     7.14%     7.14%  dd       libc-2.28.so       [.] _nl_intern_locale_data
-     7.14%     7.14%  dd       libc-2.28.so       [.] read_alias_file
+ # Samples: 23  of event 'llc-miss'
+ # Event count (approx.): 23
 ...
+    33.33%    33.33%  dd       [kernel.kallsyms]  [k] perf_iterate_ctx.constprop.64
+    12.12%    12.12%  dd       [kernel.kallsyms]  [k] perf_event_mmap
+     6.06%     6.06%  dd       [kernel.kallsyms]  [k] copy_page
+     6.06%     6.06%  dd       ld-2.28.so         [.] _dl_relocate_object
+     3.03%     3.03%  dd       [kernel.kallsyms]  [k] change_protection_range
+     3.03%     3.03%  dd       [kernel.kallsyms]  [k] filemap_map_pages
+     3.03%     3.03%  dd       [kernel.kallsyms]  [k] free_pages_and_swap_cache
+     3.03%     3.03%  dd       [kernel.kallsyms]  [k] generic_permission
+     3.03%     3.03%  dd       [kernel.kallsyms]  [k] kmem_cache_alloc
+     3.03%     3.03%  dd       [kernel.kallsyms]  [k] lookup_fast
+     3.03%     3.03%  dd       [kernel.kallsyms]  [k] perf_event_exec
+     3.03%     3.03%  dd       [kernel.kallsyms]  [k] radix_tree_next_chunk
+     3.03%     3.03%  dd       [kernel.kallsyms]  [k] ring_buffer_record_is_on
+     3.03%     3.03%  dd       ld-2.28.so         [.] _dl_lookup_symbol_x
+     3.03%     3.03%  dd       ld-2.28.so         [.] _dl_start
+     3.03%     3.03%  dd       ld-2.28.so         [.] dl_main
+     3.03%     3.03%  dd       ld-2.28.so         [.] strcmp
+     3.03%     3.03%  dd       libc-2.28.so       [.] _dl_addr
+...
+ # Samples: 3  of event 'tlb-miss'
+ # Event count (approx.): 3
+...
+    33.33%    33.33%  dd       [kernel.kallsyms]  [k] filemap_map_pages
+    33.33%    33.33%  dd       ld-2.28.so         [.] _dl_start
+    33.33%    33.33%  dd       ld-2.28.so         [.] dl_main
+...
+ # Samples: 20  of event 'branch-miss'
+ # Event count (approx.): 20
+...
+    15.38%    15.38%  dd       [kernel.kallsyms]  [k] __fput
+     7.69%     7.69%  dd       [kernel.kallsyms]  [k] do_el0_ia_bp_hardening
+     7.69%     7.69%  dd       [kernel.kallsyms]  [k] filemap_map_pages
+     7.69%     7.69%  dd       [kernel.kallsyms]  [k] pagevec_lru_move_fn
+     7.69%     7.69%  dd       [kernel.kallsyms]  [k] perf_event_mmap_output
+     7.69%     7.69%  dd       [kernel.kallsyms]  [k] task_work_run
+     7.69%     7.69%  dd       [kernel.kallsyms]  [k] unmap_single_vma
+     7.69%     7.69%  dd       libc-2.28.so       [.] _IO_flush_all_lockp
+     7.69%     7.69%  dd       libc-2.28.so       [.] __memcpy_generic
+     7.69%     7.69%  dd       libc-2.28.so       [.] _dl_addr
+     7.69%     7.69%  dd       libc-2.28.so       [.] msort_with_tmp.part.0
+     7.69%     7.69%  dd       libc-2.28.so       [.] read_alias_file
+...
+ # Samples: 5  of event 'remote-access'
+ # Event count (approx.): 5
+...
+    27.78%    27.78%  dd       [kernel.kallsyms]  [k] perf_iterate_ctx.constprop.64
+    16.67%    16.67%  dd       [kernel.kallsyms]  [k] perf_event_mmap
+     5.56%     5.56%  dd       [kernel.kallsyms]  [k] change_protection_range
+     5.56%     5.56%  dd       [kernel.kallsyms]  [k] filemap_map_pages
+     5.56%     5.56%  dd       [kernel.kallsyms]  [k] free_pages_and_swap_cache
+     5.56%     5.56%  dd       [kernel.kallsyms]  [k] generic_permission
+     5.56%     5.56%  dd       [kernel.kallsyms]  [k] lookup_fast
+     5.56%     5.56%  dd       [kernel.kallsyms]  [k] perf_event_exec
+     5.56%     5.56%  dd       [kernel.kallsyms]  [k] radix_tree_next_chunk
+     5.56%     5.56%  dd       ld-2.28.so         [.] _dl_relocate_object
+     5.56%     5.56%  dd       ld-2.28.so         [.] _dl_start
+     5.56%     5.56%  dd       ld-2.28.so         [.] dl_main
+
 --------------------------------------------------------------------
+After that, more analysis and processing of the raw data of spe
+will be done.
 
 Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
-Suggested-by: James Clark <James.Clark@arm.com>
 Tested-by: Qi Liu <liuqi115@hisilicon.com>
 ---
- tools/perf/util/arm-spe.c | 41 +++++++++++++++++++++++++++++++++++++++
- tools/perf/util/arm-spe.h |  3 +++
- tools/perf/util/evlist.c  |  2 ++
- 3 files changed, 46 insertions(+)
+ tools/perf/builtin-report.c                   |   5 +
+ tools/perf/util/arm-spe-decoder/Build         |   2 +-
+ .../util/arm-spe-decoder/arm-spe-decoder.c    | 225 ++++++
+ .../util/arm-spe-decoder/arm-spe-decoder.h    |  66 ++
+ .../arm-spe-decoder/arm-spe-pkt-decoder.h     |   2 +
+ tools/perf/util/arm-spe.c                     | 745 +++++++++++++++++-
+ tools/perf/util/auxtrace.c                    |  49 ++
+ tools/perf/util/auxtrace.h                    |  29 +
+ tools/perf/util/session.h                     |   2 +
+ 9 files changed, 1087 insertions(+), 38 deletions(-)
+ create mode 100644 tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+ create mode 100644 tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
 
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 387311c67264..107b08551358 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -1073,6 +1073,7 @@ int cmd_report(int argc, const char **argv)
+ {
+ 	struct perf_session *session;
+ 	struct itrace_synth_opts itrace_synth_opts = { .set = 0, };
++	struct arm_spe_synth_opts arm_spe_synth_opts = { .set = 0, };
+ 	struct stat st;
+ 	bool has_br_stack = false;
+ 	int branch_mode = -1;
+@@ -1231,6 +1232,9 @@ int cmd_report(int argc, const char **argv)
+ 	OPT_CALLBACK_OPTARG(0, "itrace", &itrace_synth_opts, NULL, "opts",
+ 			    "Instruction Tracing options\n" ITRACE_HELP,
+ 			    itrace_parse_synth_opts),
++	OPT_CALLBACK_OPTARG(0, "spe", &arm_spe_synth_opts, NULL, "spe opts",
++			    "ARM SPE Tracing options",
++			    arm_spe_parse_synth_opts),
+ 	OPT_BOOLEAN(0, "full-source-path", &srcline_full_filename,
+ 			"Show full source file name path for source lines"),
+ 	OPT_BOOLEAN(0, "show-ref-call-graph", &symbol_conf.show_ref_callgraph,
+@@ -1339,6 +1343,7 @@ int cmd_report(int argc, const char **argv)
+ 	}
+ 
+ 	session->itrace_synth_opts = &itrace_synth_opts;
++	session->arm_spe_synth_opts = &arm_spe_synth_opts;
+ 
+ 	report.session = session;
+ 
+diff --git a/tools/perf/util/arm-spe-decoder/Build b/tools/perf/util/arm-spe-decoder/Build
+index 16efbc245028..f8dae13fc876 100644
+--- a/tools/perf/util/arm-spe-decoder/Build
++++ b/tools/perf/util/arm-spe-decoder/Build
+@@ -1 +1 @@
+-perf-$(CONFIG_AUXTRACE) += arm-spe-pkt-decoder.o
++perf-$(CONFIG_AUXTRACE) += arm-spe-pkt-decoder.o arm-spe-decoder.o
+diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+new file mode 100644
+index 000000000000..50e796b89a95
+--- /dev/null
++++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+@@ -0,0 +1,225 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * arm_spe_decoder.c: ARM SPE support
++ */
++
++#ifndef _GNU_SOURCE
++#define _GNU_SOURCE
++#endif
++#include <stdlib.h>
++#include <stdbool.h>
++#include <string.h>
++#include <errno.h>
++#include <stdint.h>
++#include <inttypes.h>
++#include <linux/compiler.h>
++#include <linux/zalloc.h>
++
++#include "../util.h"
++#include "../debug.h"
++#include "../auxtrace.h"
++
++#include "arm-spe-pkt-decoder.h"
++#include "arm-spe-decoder.h"
++
++#ifndef BIT
++#define BIT(n)		(1UL << (n))
++#endif
++
++struct arm_spe_decoder {
++	int (*get_trace)(struct arm_spe_buffer *buffer, void *data);
++	void *data;
++	struct arm_spe_state state;
++	const unsigned char *buf;
++	size_t len;
++	uint64_t pos;
++	struct arm_spe_pkt packet;
++	int pkt_step;
++	int pkt_len;
++	int last_packet_type;
++
++	uint64_t last_ip;
++	uint64_t ip;
++	uint64_t timestamp;
++	uint64_t sample_timestamp;
++	const unsigned char *next_buf;
++	size_t next_len;
++	unsigned char temp_buf[ARM_SPE_PKT_MAX_SZ];
++};
++
++static uint64_t arm_spe_calc_ip(uint64_t payload)
++{
++	uint64_t ip = (payload & ~(0xffULL << 56));
++
++	/* fill high 8 bits for kernel virtual address */
++	/* In Armv8 Architecture Reference Manual: Xn[55] determines
++	 * whether the address lies in the upper or lower address range
++	 * for the purpose of determining whether address tagging is
++	 * used */
++	if (ip & BIT(55))
++		ip |= (uint64_t)(0xffULL << 56);
++
++	return ip;
++}
++
++struct arm_spe_decoder *arm_spe_decoder_new(struct arm_spe_params *params)
++{
++	struct arm_spe_decoder *decoder;
++
++	if (!params->get_trace)
++		return NULL;
++
++	decoder = zalloc(sizeof(struct arm_spe_decoder));
++	if (!decoder)
++		return NULL;
++
++	decoder->get_trace          = params->get_trace;
++	decoder->data               = params->data;
++
++	return decoder;
++}
++
++void arm_spe_decoder_free(struct arm_spe_decoder *decoder)
++{
++	free(decoder);
++}
++
++static int arm_spe_bad_packet(struct arm_spe_decoder *decoder)
++{
++	decoder->pkt_len = 1;
++	decoder->pkt_step = 1;
++	pr_debug("ERROR: Bad packet\n");
++
++	return -EBADMSG;
++}
++
++
++static int arm_spe_get_data(struct arm_spe_decoder *decoder)
++{
++	struct arm_spe_buffer buffer = { .buf = 0, };
++	int ret;
++
++	decoder->pkt_step = 0;
++
++	pr_debug("Getting more data\n");
++	ret = decoder->get_trace(&buffer, decoder->data);
++	if (ret)
++		return ret;
++
++	decoder->buf = buffer.buf;
++	decoder->len = buffer.len;
++	if (!decoder->len) {
++		pr_debug("No more data\n");
++		return -ENODATA;
++	}
++
++	return 0;
++}
++
++static int arm_spe_get_next_data(struct arm_spe_decoder *decoder)
++{
++	return arm_spe_get_data(decoder);
++}
++
++static int arm_spe_get_next_packet(struct arm_spe_decoder *decoder)
++{
++	int ret;
++
++	decoder->last_packet_type = decoder->packet.type;
++
++	do {
++		decoder->pos += decoder->pkt_step;
++		decoder->buf += decoder->pkt_step;
++		decoder->len -= decoder->pkt_step;
++
++
++		if (!decoder->len) {
++			ret = arm_spe_get_next_data(decoder);
++			if (ret)
++				return ret;
++		}
++
++		ret = arm_spe_get_packet(decoder->buf, decoder->len,
++				&decoder->packet);
++		if (ret <= 0)
++			return arm_spe_bad_packet(decoder);
++
++		decoder->pkt_len = ret;
++		decoder->pkt_step = ret;
++	} while (decoder->packet.type == ARM_SPE_PAD);
++
++	return 0;
++}
++
++static int arm_spe_walk_trace(struct arm_spe_decoder *decoder)
++{
++	int err;
++	int idx;
++	uint64_t payload;
++
++	while (1) {
++		err = arm_spe_get_next_packet(decoder);
++		if (err)
++			return err;
++
++		idx = decoder->packet.index;
++		payload = decoder->packet.payload;
++
++		switch (decoder->packet.type) {
++		case ARM_SPE_TIMESTAMP:
++			decoder->sample_timestamp = payload;
++			return 0;
++		case ARM_SPE_END:
++			decoder->sample_timestamp = 0;
++			return 0;
++		case ARM_SPE_ADDRESS:
++			decoder->ip = arm_spe_calc_ip(payload);
++			if (idx == 0)
++				decoder->state.from_ip = decoder->ip;
++			else if (idx == 1)
++				decoder->state.to_ip = decoder->ip;
++			break;
++		case ARM_SPE_COUNTER:
++			break;
++		case ARM_SPE_CONTEXT:
++			break;
++		case ARM_SPE_OP_TYPE:
++			break;
++		case ARM_SPE_EVENTS:
++			if (payload & BIT(EV_TLB_REFILL))
++				decoder->state.type |= ARM_SPE_TLB_MISS;
++			if (payload & BIT(EV_MISPRED))
++				decoder->state.type |= ARM_SPE_BRANCH_MISS;
++			if (idx > 1 && (payload & BIT(EV_LLC_REFILL)))
++				decoder->state.type |= ARM_SPE_LLC_MISS;
++			if (idx > 1 && (payload & BIT(EV_REMOTE_ACCESS)))
++				decoder->state.type |= ARM_SPE_REMOTE_ACCESS;
++
++			break;
++		case ARM_SPE_DATA_SOURCE:
++			break;
++		case ARM_SPE_BAD:
++			break;
++		case ARM_SPE_PAD:
++			break;
++		default:
++			pr_err("Get Packet Error!\n");
++			return -ENOSYS;
++		}
++	}
++}
++
++const struct arm_spe_state *arm_spe_decode(struct arm_spe_decoder *decoder)
++{
++	int err;
++
++	decoder->state.type = 0;
++
++	err = arm_spe_walk_trace(decoder);
++	if (err)
++		decoder->state.err = err;
++
++	decoder->state.timestamp = decoder->sample_timestamp;
++
++	return &decoder->state;
++}
+diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+new file mode 100644
+index 000000000000..330f9e1e71ab
+--- /dev/null
++++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+@@ -0,0 +1,66 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * arm_spe_decoder.c: ARM SPE support
++ */
++
++#ifndef INCLUDE__ARM_SPE_DECODER_H__
++#define INCLUDE__ARM_SPE_DECODER_H__
++
++#include <stdint.h>
++#include <stddef.h>
++#include <stdbool.h>
++
++enum arm_spe_events {
++	EV_EXCEPTION_GEN,
++	EV_RETIRED,
++	EV_L1D_ACCESS,
++	EV_L1D_REFILL,
++	EV_TLB_ACCESS,
++	EV_TLB_REFILL,
++	EV_NOT_TAKEN,
++	EV_MISPRED,
++	EV_LLC_ACCESS,
++	EV_LLC_REFILL,
++	EV_REMOTE_ACCESS,
++};
++
++enum arm_spe_sample_type {
++	ARM_SPE_LLC_MISS	= 1 << 0,
++	ARM_SPE_TLB_MISS	= 1 << 1,
++	ARM_SPE_BRANCH_MISS	= 1 << 2,
++	ARM_SPE_REMOTE_ACCESS	= 1 << 3,
++	ARM_SPE_EX_STOP		= 1 << 6,
++};
++
++struct arm_spe_state {
++	enum arm_spe_sample_type type;
++	int err;
++	uint64_t from_ip;
++	uint64_t to_ip;
++	uint64_t timestamp;
++};
++
++struct arm_spe_insn;
++
++struct arm_spe_buffer {
++	const unsigned char *buf;
++	size_t len;
++	u64 offset;
++	bool consecutive;
++	uint64_t ref_timestamp;
++	uint64_t trace_nr;
++};
++
++struct arm_spe_params {
++	int (*get_trace)(struct arm_spe_buffer *buffer, void *data);
++	void *data;
++};
++
++struct arm_spe_decoder;
++
++struct arm_spe_decoder *arm_spe_decoder_new(struct arm_spe_params *params);
++void arm_spe_decoder_free(struct arm_spe_decoder *decoder);
++
++const struct arm_spe_state *arm_spe_decode(struct arm_spe_decoder *decoder);
++
++#endif
+diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
+index d786ef65113f..865d1e35b401 100644
+--- a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
++++ b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
+@@ -15,6 +15,8 @@
+ #define ARM_SPE_NEED_MORE_BYTES		-1
+ #define ARM_SPE_BAD_PACKET		-2
+ 
++#define ARM_SPE_PKT_MAX_SZ		16
++
+ enum arm_spe_pkt_type {
+ 	ARM_SPE_BAD,
+ 	ARM_SPE_PAD,
 diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index c99814c58745..0fcaefd386a6 100644
+index f3382a38d48e..c99814c58745 100644
 --- a/tools/perf/util/arm-spe.c
 +++ b/tools/perf/util/arm-spe.c
-@@ -35,6 +35,19 @@
+@@ -16,34 +16,68 @@
+ #include <linux/log2.h>
+ #include <linux/zalloc.h>
  
- #define MAX_TIMESTAMP (~0ULL)
- 
-+#define SPE_ATTR_TS_ENABLE		BIT(0)
-+#define SPE_ATTR_PA_ENABLE		BIT(1)
-+#define SPE_ATTR_PCT_ENABLE		BIT(2)
-+#define SPE_ATTR_JITTER			BIT(16)
-+#define SPE_ATTR_BRANCH_FILTER		BIT(32)
-+#define SPE_ATTR_LOAD_FILTER		BIT(33)
-+#define SPE_ATTR_STORE_FILTER		BIT(34)
++#include "auxtrace.h"
+ #include "color.h"
++#include "debug.h"
+ #include "evsel.h"
++#include "evlist.h"
+ #include "machine.h"
+ #include "session.h"
+-#include "debug.h"
+-#include "auxtrace.h"
++#include "symbol.h"
++#include "thread.h"
++#include "thread-stack.h"
++#include "tool.h"
++#include "util/synthetic-events.h"
 +
-+#define SPE_ATTR_EV_RETIRED		BIT(1)
-+#define SPE_ATTR_EV_CACHE		BIT(3)
-+#define SPE_ATTR_EV_TLB			BIT(5)
-+#define SPE_ATTR_EV_BRANCH		BIT(7)
+ #include "arm-spe.h"
++#include "arm-spe-decoder/arm-spe-decoder.h"
+ #include "arm-spe-decoder/arm-spe-pkt-decoder.h"
+ 
++#define MAX_TIMESTAMP (~0ULL)
 +
  struct arm_spe {
  	struct auxtrace			auxtrace;
  	struct auxtrace_queues		queues;
-@@ -778,6 +791,15 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
- 	attr.sample_id_all = evsel->core.attr.sample_id_all;
- 	attr.read_format = evsel->core.attr.read_format;
- 
-+	/* If it is in the precise ip mode, there is no need to
-+	 * synthesize new events. */
-+	if (!strncmp(evsel->name, "branch-misses", 13)) {
-+		spe->sample_branch_miss = true;
-+		spe->branch_miss_id = evsel->core.id[0];
+ 	struct auxtrace_heap		heap;
++	struct arm_spe_synth_opts	synth_opts;
+ 	u32				auxtrace_type;
+ 	struct perf_session		*session;
+ 	struct machine			*machine;
+ 	u32				pmu_type;
 +
++	u8				timeless_decoding;
++	u8				data_queued;
++
++	u8				sample_llc_miss;
++	u8				sample_tlb_miss;
++	u8				sample_branch_miss;
++	u8				sample_remote_access;
++	u64				llc_miss_id;
++	u64				tlb_miss_id;
++	u64				branch_miss_id;
++	u64				remote_access_id;
++	u64				kernel_start;
++
++	unsigned long			num_events;
+ };
+ 
+ struct arm_spe_queue {
+-	struct arm_spe		*spe;
+-	unsigned int		queue_nr;
+-	struct auxtrace_buffer	*buffer;
+-	bool			on_heap;
+-	bool			done;
+-	pid_t			pid;
+-	pid_t			tid;
+-	int			cpu;
++	struct arm_spe			*spe;
++	unsigned int			queue_nr;
++	struct auxtrace_buffer		*buffer;
++	struct auxtrace_buffer		*old_buffer;
++	union perf_event		*event_buf;
++	bool				on_heap;
++	bool				done;
++	pid_t				pid;
++	pid_t				tid;
++	int				cpu;
++	void				*decoder;
++	const struct arm_spe_state	*state;
++	u64				time;
++	u64				timestamp;
++	struct thread			*thread;
++	bool				have_sample;
+ };
+ 
+ static void arm_spe_dump(struct arm_spe *spe __maybe_unused,
+@@ -92,44 +126,494 @@ static void arm_spe_dump_event(struct arm_spe *spe, unsigned char *buf,
+ 	arm_spe_dump(spe, buf, len);
+ }
+ 
+-static int arm_spe_process_event(struct perf_session *session __maybe_unused,
+-				 union perf_event *event __maybe_unused,
+-				 struct perf_sample *sample __maybe_unused,
+-				 struct perf_tool *tool __maybe_unused)
++static int arm_spe_get_trace(struct arm_spe_buffer *b, void *data)
++{
++	struct arm_spe_queue *speq = data;
++	struct auxtrace_buffer *buffer = speq->buffer;
++	struct auxtrace_buffer *old_buffer = speq->old_buffer;
++	struct auxtrace_queue *queue;
++
++	queue = &speq->spe->queues.queue_array[speq->queue_nr];
++
++	buffer = auxtrace_buffer__next(queue, buffer);
++	/* If no more data, drop the previous auxtrace_buffer and return */
++	if (!buffer) {
++		if (old_buffer)
++			auxtrace_buffer__drop_data(old_buffer);
++		b->len = 0;
 +		return 0;
 +	}
 +
- 	/* create new id val to be a fixed offset from evsel id */
- 	id = evsel->core.id[0] + 1000000000;
- 
-@@ -899,3 +921,22 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
- 	free(spe);
- 	return err;
- }
++	speq->buffer = buffer;
 +
-+void arm_spe_precise_ip_support(struct evlist *evlist, struct evsel *evsel)
++	/* If the aux_buffer doesn't have data associated, try to load it */
++	if (!buffer->data) {
++		/* get the file desc associated with the perf data file */
++		int fd = perf_data__fd(speq->spe->session->data);
++
++		buffer->data = auxtrace_buffer__get_data(buffer, fd);
++		if (!buffer->data)
++			return -ENOMEM;
++	}
++
++	if (buffer->use_data) {
++		b->len = buffer->use_size;
++		b->buf = buffer->use_data;
++	} else {
++		b->len = buffer->size;
++		b->buf = buffer->data;
++	}
++
++	b->ref_timestamp = buffer->reference;
++
++	if (b->len) {
++		if (old_buffer)
++			auxtrace_buffer__drop_data(old_buffer);
++		speq->old_buffer = buffer;
++	} else {
++		auxtrace_buffer__drop_data(buffer);
++		return arm_spe_get_trace(b, data);
++	}
++
++	return 0;
++}
++
++static struct arm_spe_queue *arm_spe__alloc_queue(struct arm_spe *spe,
++		unsigned int queue_nr)
 +{
-+	struct perf_pmu *pmu;
++	struct arm_spe_params params = { .get_trace = 0, };
++	struct arm_spe_queue *speq;
 +
-+	/* Currently only supports precise_ip for branch-misses on arm64 */
-+	if (!strcmp(perf_env__arch(evlist->env), "arm64")
-+			&& evsel->core.attr.config == PERF_COUNT_HW_BRANCH_MISSES
-+			&& evsel->core.attr.precise_ip) {
-+		pmu = perf_pmu__find("arm_spe_0");
-+		if (pmu) {
-+			evsel->pmu_name = pmu->name;
-+			evsel->core.attr.type = pmu->type;
-+			evsel->core.attr.config = SPE_ATTR_TS_ENABLE
-+						| SPE_ATTR_BRANCH_FILTER;
-+			evsel->core.attr.config1 = SPE_ATTR_EV_BRANCH;
++	speq = zalloc(sizeof(*speq));
++	if (!speq)
++		return NULL;
++
++	speq->event_buf = malloc(PERF_SAMPLE_MAX_SIZE);
++	if (!speq->event_buf)
++		goto out_free;
++
++	speq->spe = spe;
++	speq->queue_nr = queue_nr;
++	speq->pid = -1;
++	speq->tid = -1;
++	speq->cpu = -1;
++
++	/* params set */
++	params.get_trace = arm_spe_get_trace;
++	params.data = speq;
++
++	/* create new decoder */
++	speq->decoder = arm_spe_decoder_new(&params);
++	if (!speq->decoder)
++		goto out_free;
++
++	return speq;
++
++out_free:
++	zfree(&speq->event_buf);
++	free(speq);
++
++	return NULL;
++}
++
++static inline u8 arm_spe_cpumode(struct arm_spe *spe, uint64_t ip)
++{
++	return ip >= spe->kernel_start ?
++		PERF_RECORD_MISC_KERNEL :
++		PERF_RECORD_MISC_USER;
++}
++
++static void arm_spe_prep_sample(struct arm_spe *spe,
++				struct arm_spe_queue *speq,
++				union perf_event *event,
++				struct perf_sample *sample)
++{
++	if (!spe->timeless_decoding)
++		sample->time = speq->timestamp;
++
++	sample->ip = speq->state->from_ip;
++	sample->cpumode = arm_spe_cpumode(spe, sample->ip);
++	sample->pid = speq->pid;
++	sample->tid = speq->tid;
++	sample->addr = speq->state->to_ip;
++	sample->period = 1;
++	sample->cpu = speq->cpu;
++
++	event->sample.header.type = PERF_RECORD_SAMPLE;
++	event->sample.header.misc = sample->cpumode;
++	event->sample.header.size = sizeof(struct perf_event_header);
++}
++
++static inline int
++arm_spe_deliver_synth_event(struct arm_spe *spe,
++			    struct arm_spe_queue *speq __maybe_unused,
++			    union perf_event *event,
++			    struct perf_sample *sample)
++{
++	int ret;
++
++	ret = perf_session__deliver_synth_event(spe->session, event, sample);
++	if (ret)
++		pr_err("ARM SPE: failed to deliver event, error %d\n", ret);
++
++	return ret;
++}
++
++static int
++arm_spe_synth_spe_events_sample(struct arm_spe_queue *speq,
++				u64 spe_events_id)
++{
++	struct arm_spe *spe = speq->spe;
++	union perf_event *event = speq->event_buf;
++	struct perf_sample sample = { .ip = 0, };
++
++	arm_spe_prep_sample(spe, speq, event, &sample);
++
++	sample.id = spe_events_id;
++	sample.stream_id = spe_events_id;
++
++	return arm_spe_deliver_synth_event(spe, speq, event, &sample);
++}
++
++static int arm_spe_sample(struct arm_spe_queue *speq)
++{
++	const struct arm_spe_state *state = speq->state;
++	struct arm_spe *spe = speq->spe;
++	int err;
++
++	if (!speq->have_sample)
++		return 0;
++
++	speq->have_sample = false;
++
++	if (spe->sample_llc_miss && (state->type & ARM_SPE_LLC_MISS)) {
++		err = arm_spe_synth_spe_events_sample(speq, spe->llc_miss_id);
++		if (err)
++			return err;
++	}
++
++	if (spe->sample_tlb_miss && (state->type & ARM_SPE_TLB_MISS)) {
++		err = arm_spe_synth_spe_events_sample(speq, spe->tlb_miss_id);
++		if (err)
++			return err;
++	}
++
++	if (spe->sample_branch_miss && (state->type & ARM_SPE_BRANCH_MISS)) {
++		err = arm_spe_synth_spe_events_sample(speq,
++						      spe->branch_miss_id);
++		if (err)
++			return err;
++	}
++
++	if (spe->sample_remote_access && (state->type & ARM_SPE_REMOTE_ACCESS)) {
++		err = arm_spe_synth_spe_events_sample(speq, spe->remote_access_id);
++		if (err)
++			return err;
++	}
++
++	return 0;
++}
++
++static int arm_spe_run_decoder(struct arm_spe_queue *speq, u64 *timestamp)
++{
++	const struct arm_spe_state *state = speq->state;
++	struct arm_spe *spe = speq->spe;
++	int err;
++
++	if (!spe->kernel_start)
++		spe->kernel_start = machine__kernel_start(spe->machine);
++
++	while (1) {
++		err = arm_spe_sample(speq);
++		if (err)
++			return err;
++
++		state = arm_spe_decode(speq->decoder);
++		if (state->err) {
++			if (state->err == -ENODATA) {
++				pr_debug("No data or all data has been processed.\n");
++				return 1;
++			}
++			continue;
++		}
++
++		speq->state = state;
++		speq->have_sample = true;
++
++		if (!spe->timeless_decoding && speq->timestamp >= *timestamp) {
++			*timestamp = speq->timestamp;
++			return 0;
++		}
++	}
++
++	return 0;
++}
++
++static int arm_spe__setup_queue(struct arm_spe *spe,
++			       struct auxtrace_queue *queue,
++			       unsigned int queue_nr)
++{
++	struct arm_spe_queue *speq = queue->priv;
++
++	if (list_empty(&queue->head) || speq)
++		return 0;
++
++	speq = arm_spe__alloc_queue(spe, queue_nr);
++
++	if (!speq)
++		return -ENOMEM;
++
++	queue->priv = speq;
++
++	if (queue->cpu != -1)
++		speq->cpu = queue->cpu;
++
++	if (!speq->on_heap) {
++		const struct arm_spe_state *state;
++		int ret;
++
++		if (spe->timeless_decoding)
++			return 0;
++
++retry:
++		state = arm_spe_decode(speq->decoder);
++		if (state->err) {
++			if (state->err == -ENODATA) {
++				pr_debug("queue %u has no timestamp\n",
++						queue_nr);
++				return 0;
++			}
++			goto retry;
++		}
++
++		speq->timestamp = state->timestamp;
++		speq->state = state;
++		speq->have_sample = true;
++		ret = auxtrace_heap__add(&spe->heap, queue_nr, speq->timestamp);
++		if (ret)
++			return ret;
++		speq->on_heap = true;
++	}
++
++	return 0;
++}
++
++static int arm_spe__setup_queues(struct arm_spe *spe)
+ {
++	unsigned int i;
++	int ret;
++
++	for (i = 0; i < spe->queues.nr_queues; i++) {
++		ret = arm_spe__setup_queue(spe, &spe->queues.queue_array[i], i);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
++static int arm_spe__update_queues(struct arm_spe *spe)
++{
++	if (spe->queues.new_data) {
++		spe->queues.new_data = false;
++		return arm_spe__setup_queues(spe);
++	}
++
+ 	return 0;
+ }
+ 
++static bool arm_spe__is_timeless_decoding(struct arm_spe *spe)
++{
++	struct evsel *evsel;
++	struct evlist *evlist = spe->session->evlist;
++	bool timeless_decoding = true;
++
++	/*
++	 * Circle through the list of event and complain if we find one
++	 * with the time bit set.
++	 */
++	evlist__for_each_entry(evlist, evsel) {
++		if ((evsel->core.attr.sample_type & PERF_SAMPLE_TIME))
++			timeless_decoding = false;
++	}
++
++	return timeless_decoding;
++}
++
++static void arm_spe_set_pid_tid_cpu(struct arm_spe *spe,
++				    struct auxtrace_queue *queue)
++{
++	struct arm_spe_queue *speq = queue->priv;
++	pid_t tid;
++
++	tid = machine__get_current_tid(spe->machine, speq->cpu);
++	if (tid != -1) {
++		speq->tid = tid;
++		thread__zput(speq->thread);
++	} else
++		speq->tid = queue->tid;
++
++	if ((!speq->thread) && (speq->tid != -1)) {
++		speq->thread = machine__find_thread(spe->machine, -1,
++						    speq->tid);
++	}
++
++	if (speq->thread) {
++		speq->pid = speq->thread->pid_;
++		if (queue->cpu == -1)
++			speq->cpu = speq->thread->cpu;
++	}
++}
++
++static int arm_spe_process_queues(struct arm_spe *spe, u64 timestamp)
++{
++	unsigned int queue_nr;
++	u64 ts;
++	int ret;
++
++	while (1) {
++		struct auxtrace_queue *queue;
++		struct arm_spe_queue *speq;
++
++		if (!spe->heap.heap_cnt)
++			return 0;
++
++		if (spe->heap.heap_array[0].ordinal >= timestamp)
++			return 0;
++
++		queue_nr = spe->heap.heap_array[0].queue_nr;
++		queue = &spe->queues.queue_array[queue_nr];
++		speq = queue->priv;
++
++		auxtrace_heap__pop(&spe->heap);
++
++		if (spe->heap.heap_cnt) {
++			ts = spe->heap.heap_array[0].ordinal + 1;
++			if (ts > timestamp)
++				ts = timestamp;
++		} else {
++			ts = timestamp;
++		}
++
++		arm_spe_set_pid_tid_cpu(spe, queue);
++
++		ret = arm_spe_run_decoder(speq, &ts);
++		if (ret < 0) {
++			auxtrace_heap__add(&spe->heap, queue_nr, ts);
++			return ret;
++		}
++
++		if (!ret) {
++			ret = auxtrace_heap__add(&spe->heap, queue_nr, ts);
++			if (ret < 0)
++				return ret;
++		} else {
++			speq->on_heap = false;
++		}
++	}
++
++	return 0;
++}
++
++static int arm_spe_process_timeless_queues(struct arm_spe *spe, pid_t tid,
++					    u64 time_)
++{
++	struct auxtrace_queues *queues = &spe->queues;
++	unsigned int i;
++	u64 ts = 0;
++
++	for (i = 0; i < queues->nr_queues; i++) {
++		struct auxtrace_queue *queue = &spe->queues.queue_array[i];
++		struct arm_spe_queue *speq = queue->priv;
++
++		if (speq && (tid == -1 || speq->tid == tid)) {
++			speq->time = time_;
++			arm_spe_set_pid_tid_cpu(spe, queue);
++			arm_spe_run_decoder(speq, &ts);
++		}
++	}
++	return 0;
++}
++
++static int arm_spe_process_event(struct perf_session *session,
++				 union perf_event *event,
++				 struct perf_sample *sample,
++				 struct perf_tool *tool)
++{
++	int err = 0;
++	u64 timestamp;
++	struct arm_spe *spe = container_of(session->auxtrace,
++			struct arm_spe, auxtrace);
++
++	if (dump_trace)
++		return 0;
++
++	if (!tool->ordered_events) {
++		pr_err("CoreSight SPE Trace requires ordered events\n");
++		return -EINVAL;
++	}
++
++	if (sample->time && (sample->time != (u64) -1))
++		timestamp = sample->time;
++	else
++		timestamp = 0;
++
++	if (timestamp || spe->timeless_decoding) {
++		err = arm_spe__update_queues(spe);
++		if (err)
++			return err;
++	}
++
++	if (spe->timeless_decoding) {
++		if (event->header.type == PERF_RECORD_EXIT) {
++			err = arm_spe_process_timeless_queues(spe,
++					event->fork.tid,
++					sample->time);
++		}
++	} else if (timestamp) {
++		if (event->header.type == PERF_RECORD_EXIT) {
++			err = arm_spe_process_queues(spe, timestamp);
++			if (err)
++				return err;
++		}
++	}
++
++	return err;
++}
++
+ static int arm_spe_process_auxtrace_event(struct perf_session *session,
+ 					  union perf_event *event,
+ 					  struct perf_tool *tool __maybe_unused)
+ {
+ 	struct arm_spe *spe = container_of(session->auxtrace, struct arm_spe,
+ 					     auxtrace);
+-	struct auxtrace_buffer *buffer;
+-	off_t data_offset;
+-	int fd = perf_data__fd(session->data);
+-	int err;
+ 
+-	if (perf_data__is_pipe(session->data)) {
+-		data_offset = 0;
+-	} else {
+-		data_offset = lseek(fd, 0, SEEK_CUR);
+-		if (data_offset == -1)
+-			return -errno;
+-	}
++	if (!spe->data_queued) {
++		struct auxtrace_buffer *buffer;
++		off_t data_offset;
++		int fd = perf_data__fd(session->data);
++		int err;
+ 
+-	err = auxtrace_queues__add_event(&spe->queues, session, event,
+-					 data_offset, &buffer);
+-	if (err)
+-		return err;
+-
+-	/* Dump here now we have copied a piped trace out of the pipe */
+-	if (dump_trace) {
+-		if (auxtrace_buffer__get_data(buffer, fd)) {
+-			arm_spe_dump_event(spe, buffer->data,
+-					     buffer->size);
+-			auxtrace_buffer__put_data(buffer);
++		if (perf_data__is_pipe(session->data)) {
++			data_offset = 0;
++		} else {
++			data_offset = lseek(fd, 0, SEEK_CUR);
++			if (data_offset == -1)
++				return -errno;
++		}
++
++		err = auxtrace_queues__add_event(&spe->queues, session, event,
++				data_offset, &buffer);
++		if (err)
++			return err;
++
++		/* Dump here now we have copied a piped trace out of the pipe */
++		if (dump_trace) {
++			if (auxtrace_buffer__get_data(buffer, fd)) {
++				arm_spe_dump_event(spe, buffer->data,
++						buffer->size);
++				auxtrace_buffer__put_data(buffer);
++			}
+ 		}
+ 	}
+ 
+@@ -139,7 +623,25 @@ static int arm_spe_process_auxtrace_event(struct perf_session *session,
+ static int arm_spe_flush(struct perf_session *session __maybe_unused,
+ 			 struct perf_tool *tool __maybe_unused)
+ {
+-	return 0;
++	struct arm_spe *spe = container_of(session->auxtrace, struct arm_spe,
++			auxtrace);
++	int ret;
++
++	if (dump_trace)
++		return 0;
++
++	if (!tool->ordered_events)
++		return -EINVAL;
++
++	ret = arm_spe__update_queues(spe);
++	if (ret < 0)
++		return ret;
++
++	if (spe->timeless_decoding)
++		return arm_spe_process_timeless_queues(spe, -1,
++				MAX_TIMESTAMP - 1);
++
++	return arm_spe_process_queues(spe, MAX_TIMESTAMP);
+ }
+ 
+ static void arm_spe_free_queue(void *priv)
+@@ -148,6 +650,9 @@ static void arm_spe_free_queue(void *priv)
+ 
+ 	if (!speq)
+ 		return;
++	thread__zput(speq->thread);
++	arm_spe_decoder_free(speq->decoder);
++	zfree(&speq->event_buf);
+ 	free(speq);
+ }
+ 
+@@ -188,6 +693,149 @@ static void arm_spe_print_info(__u64 *arr)
+ 	fprintf(stdout, arm_spe_info_fmts[ARM_SPE_PMU_TYPE], arr[ARM_SPE_PMU_TYPE]);
+ }
+ 
++struct arm_spe_synth {
++	struct perf_tool dummy_tool;
++	struct perf_session *session;
++};
++
++static int arm_spe_event_synth(struct perf_tool *tool,
++			       union perf_event *event,
++			       struct perf_sample *sample __maybe_unused,
++			       struct machine *machine __maybe_unused)
++{
++	struct arm_spe_synth *arm_spe_synth =
++		      container_of(tool, struct arm_spe_synth, dummy_tool);
++
++	return perf_session__deliver_synth_event(arm_spe_synth->session,
++						 event, NULL);
++}
++
++static int arm_spe_synth_event(struct perf_session *session,
++			       struct perf_event_attr *attr, u64 id)
++{
++	struct arm_spe_synth arm_spe_synth;
++
++	memset(&arm_spe_synth, 0, sizeof(struct arm_spe_synth));
++	arm_spe_synth.session = session;
++
++	return perf_event__synthesize_attr(&arm_spe_synth.dummy_tool, attr, 1,
++					   &id, arm_spe_event_synth);
++}
++
++static void arm_spe_set_event_name(struct evlist *evlist, u64 id,
++				    const char *name)
++{
++	struct evsel *evsel;
++
++	evlist__for_each_entry(evlist, evsel) {
++		if (evsel->core.id && evsel->core.id[0] == id) {
++			if (evsel->name)
++				zfree(&evsel->name);
++			evsel->name = strdup(name);
++			break;
 +		}
 +	}
 +}
-diff --git a/tools/perf/util/arm-spe.h b/tools/perf/util/arm-spe.h
-index 98d3235781c3..8b1fb191d03a 100644
---- a/tools/perf/util/arm-spe.h
-+++ b/tools/perf/util/arm-spe.h
-@@ -20,6 +20,8 @@ enum {
- union perf_event;
- struct perf_session;
- struct perf_pmu;
-+struct evlist;
-+struct evsel;
++
++static int
++arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
++{
++	struct evlist *evlist = session->evlist;
++	struct evsel *evsel;
++	struct perf_event_attr attr;
++	bool found = false;
++	u64 id;
++	int err;
++
++	evlist__for_each_entry(evlist, evsel) {
++		if (evsel->core.attr.type == spe->pmu_type) {
++			found = true;
++			break;
++		}
++	}
++
++	if (!found) {
++		pr_debug("No selected events with CoreSight Trace data\n");
++		return 0;
++	}
++
++	memset(&attr, 0, sizeof(struct perf_event_attr));
++	attr.size = sizeof(struct perf_event_attr);
++	attr.type = PERF_TYPE_HARDWARE;
++	attr.sample_type = evsel->core.attr.sample_type & PERF_SAMPLE_MASK;
++	attr.sample_type |= PERF_SAMPLE_IP | PERF_SAMPLE_TID |
++		PERF_SAMPLE_PERIOD;
++	if (spe->timeless_decoding)
++		attr.sample_type &= ~(u64)PERF_SAMPLE_TIME;
++	else
++		attr.sample_type |= PERF_SAMPLE_TIME;
++
++	attr.exclude_user = evsel->core.attr.exclude_user;
++	attr.exclude_kernel = evsel->core.attr.exclude_kernel;
++	attr.exclude_hv = evsel->core.attr.exclude_hv;
++	attr.exclude_host = evsel->core.attr.exclude_host;
++	attr.exclude_guest = evsel->core.attr.exclude_guest;
++	attr.sample_id_all = evsel->core.attr.sample_id_all;
++	attr.read_format = evsel->core.attr.read_format;
++
++	/* create new id val to be a fixed offset from evsel id */
++	id = evsel->core.id[0] + 1000000000;
++
++	if (!id)
++		id = 1;
++
++	/* spe events set */
++	if (spe->synth_opts.llc_miss) {
++		spe->sample_llc_miss = true;
++
++		/* llc-miss */
++		err = arm_spe_synth_event(session, &attr, id);
++		if (err)
++			return err;
++		spe->llc_miss_id = id;
++		arm_spe_set_event_name(evlist, id, "llc-miss");
++		id += 1;
++	}
++
++	if (spe->synth_opts.tlb_miss) {
++		spe->sample_tlb_miss = true;
++
++		/* tlb-miss */
++		err = arm_spe_synth_event(session, &attr, id);
++		if (err)
++			return err;
++		spe->tlb_miss_id = id;
++		arm_spe_set_event_name(evlist, id, "tlb-miss");
++		id += 1;
++	}
++
++	if (spe->synth_opts.branch_miss) {
++		spe->sample_branch_miss = true;
++
++		/* branch-miss */
++		err = arm_spe_synth_event(session, &attr, id);
++		if (err)
++			return err;
++		spe->branch_miss_id = id;
++		arm_spe_set_event_name(evlist, id, "branch-miss");
++		id += 1;
++	}
++
++	if (spe->synth_opts.remote_access) {
++		spe->sample_remote_access = true;
++
++		/* remote-access */
++		err = arm_spe_synth_event(session, &attr, id);
++		if (err)
++			return err;
++		spe->remote_access_id = id;
++		arm_spe_set_event_name(evlist, id, "remote-access");
++		id += 1;
++	}
++
++	return 0;
++}
++
+ int arm_spe_process_auxtrace_info(union perf_event *event,
+ 				  struct perf_session *session)
+ {
+@@ -213,6 +861,7 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
+ 	spe->auxtrace_type = auxtrace_info->type;
+ 	spe->pmu_type = auxtrace_info->priv[ARM_SPE_PMU_TYPE];
  
- struct auxtrace_record *arm_spe_recording_init(int *err,
- 					       struct perf_pmu *arm_spe_pmu);
-@@ -28,4 +30,5 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
- 				  struct perf_session *session);
++	spe->timeless_decoding = arm_spe__is_timeless_decoding(spe);
+ 	spe->auxtrace.process_event = arm_spe_process_event;
+ 	spe->auxtrace.process_auxtrace_event = arm_spe_process_auxtrace_event;
+ 	spe->auxtrace.flush_events = arm_spe_flush;
+@@ -222,8 +871,30 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
  
- struct perf_event_attr *arm_spe_pmu_default_config(struct perf_pmu *arm_spe_pmu);
-+void arm_spe_precise_ip_support(struct evlist *evlist, struct evsel *evsel);
- #endif
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 1548237b6558..b9c7e5271611 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -9,6 +9,7 @@
- #include <errno.h>
- #include <inttypes.h>
- #include <poll.h>
-+#include "arm-spe.h"
- #include "cpumap.h"
- #include "util/mmap.h"
- #include "thread_map.h"
-@@ -179,6 +180,7 @@ void perf_evlist__splice_list_tail(struct evlist *evlist,
- 	struct evsel *evsel, *temp;
+ 	arm_spe_print_info(&auxtrace_info->priv[0]);
  
- 	__evlist__for_each_entry_safe(list, temp, evsel) {
-+		arm_spe_precise_ip_support(evlist, evsel);
- 		list_del_init(&evsel->core.node);
- 		evlist__add(evlist, evsel);
- 	}
++	if (dump_trace)
++		return 0;
++
++	if (session->arm_spe_synth_opts && session->arm_spe_synth_opts->set)
++		spe->synth_opts = *session->arm_spe_synth_opts;
++	else
++		arm_spe_synth_opts__set_default(&spe->synth_opts);
++
++	err = arm_spe_synth_events(spe, session);
++	if (err)
++		goto err_free_queues;
++
++	err = auxtrace_queues__process_index(&spe->queues, session);
++	if (err)
++		goto err_free_queues;
++
++	if (spe->queues.populated)
++		spe->data_queued = true;
++
+ 	return 0;
+ 
++err_free_queues:
++	auxtrace_queues__free(&spe->queues);
++	session->auxtrace = NULL;
+ err_free:
+ 	free(spe);
+ 	return err;
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index eb087e7df6f4..eea038591453 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -1454,6 +1454,55 @@ int itrace_parse_synth_opts(const struct option *opt, const char *str,
+ 	return -EINVAL;
+ }
+ 
++void arm_spe_synth_opts__set_default(struct arm_spe_synth_opts *synth_opts)
++{
++	synth_opts->llc_miss = true;
++	synth_opts->tlb_miss = true;
++	synth_opts->branch_miss = true;
++	synth_opts->remote_access = true;
++}
++
++int arm_spe_parse_synth_opts(const struct option *opt, const char *str,
++			    int unset __maybe_unused)
++{
++	struct arm_spe_synth_opts *synth_opts = opt->value;
++	const char *p;
++
++	synth_opts->set = true;
++
++	if (!str) {
++		arm_spe_synth_opts__set_default(synth_opts);
++		return 0;
++	}
++
++	for (p = str; *p;) {
++		switch (*p++) {
++		case 'l':
++			synth_opts->llc_miss = true;
++			break;
++		case 't':
++			synth_opts->tlb_miss = true;
++			break;
++		case 'b':
++			synth_opts->branch_miss = true;
++			break;
++		case 'r':
++			synth_opts->remote_access = true;
++			break;
++		case ' ':
++		case ',':
++			break;
++		default:
++			goto out_err;
++		}
++	}
++
++	return 0;
++
++out_err:
++	pr_err("Bad ARM SPE Tracing options '%s'\n", str);
++	return -EINVAL;
++}
+ static const char * const auxtrace_error_type_name[] = {
+ 	[PERF_AUXTRACE_ERROR_ITRACE] = "instruction trace",
+ };
+diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+index 749d72cd9c7b..b47108599280 100644
+--- a/tools/perf/util/auxtrace.h
++++ b/tools/perf/util/auxtrace.h
+@@ -111,6 +111,22 @@ struct itrace_synth_opts {
+ 	int			range_num;
+ };
+ 
++/**
++ * struct arm_spe_synth_opts - ARM SPE tracing synthesis options.
++ * @set: indicates whether or not options have been set
++ * @llc_miss: whether to synthesize last level cache miss events
++ * @tlb_miss: whether to synthesize TLB miss events
++ * @branch_miss: whether to synthesize Branch miss events
++ * @remote_access: whether to synthesize Remote access events
++ */
++struct arm_spe_synth_opts {
++	bool			set;
++	bool			llc_miss;
++	bool			tlb_miss;
++	bool			branch_miss;
++	bool			remote_access;
++};
++
+ /**
+  * struct auxtrace_index_entry - indexes a AUX area tracing event within a
+  *                               perf.data file.
+@@ -560,6 +576,10 @@ int itrace_parse_synth_opts(const struct option *opt, const char *str,
+ void itrace_synth_opts__set_default(struct itrace_synth_opts *synth_opts,
+ 				    bool no_sample);
+ 
++int arm_spe_parse_synth_opts(const struct option *opt, const char *str,
++			    int unset);
++void arm_spe_synth_opts__set_default(struct arm_spe_synth_opts *synth_opts);
++
+ size_t perf_event__fprintf_auxtrace_error(union perf_event *event, FILE *fp);
+ void perf_session__auxtrace_error_inc(struct perf_session *session,
+ 				      union perf_event *event);
+@@ -662,6 +682,15 @@ int itrace_parse_synth_opts(const struct option *opt __maybe_unused,
+ 	return -EINVAL;
+ }
+ 
++static inline
++int arm_spe_parse_synth_opts(const struct option *opt __maybe_unused,
++			    const char *str __maybe_unused,
++			    int unset __maybe_unused)
++{
++	pr_err("ARM SPE area tracing not supported\n");
++	return -EINVAL;
++}
++
+ static inline
+ int auxtrace_parse_snapshot_options(struct auxtrace_record *itr __maybe_unused,
+ 				    struct record_opts *opts __maybe_unused,
+diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
+index f76480166d38..cee134d7643f 100644
+--- a/tools/perf/util/session.h
++++ b/tools/perf/util/session.h
+@@ -19,6 +19,7 @@ struct thread;
+ 
+ struct auxtrace;
+ struct itrace_synth_opts;
++struct arm_spe_synth_opts;
+ 
+ struct perf_session {
+ 	struct perf_header	header;
+@@ -26,6 +27,7 @@ struct perf_session {
+ 	struct evlist	*evlist;
+ 	struct auxtrace		*auxtrace;
+ 	struct itrace_synth_opts *itrace_synth_opts;
++	struct arm_spe_synth_opts *arm_spe_synth_opts;
+ 	struct list_head	auxtrace_index;
+ 	struct trace_event	tevent;
+ 	struct perf_record_time_conv	time_conv;
 -- 
 2.17.1
 
