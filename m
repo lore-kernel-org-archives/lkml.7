@@ -2,379 +2,240 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C770EC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2008C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90E3F2176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 609DB218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:10:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YcdlH4pD"
+	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="k6mS+Bu1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbfLRNJy (ORCPT
+        id S1727021AbfLRNKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 08:09:54 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:39056 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726858AbfLRNJy (ORCPT
+        Wed, 18 Dec 2019 08:10:20 -0500
+Received: from rcdn-iport-9.cisco.com ([173.37.86.80]:45182 "EHLO
+        rcdn-iport-9.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbfLRNKU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 08:09:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576674592;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=g5Ox4SHhc2xo2sY+PCKlmfIwG02oA4188ugvQugMGko=;
-        b=YcdlH4pDb90tH1AU8byozWMg8zmiplQG8bqmvUWb1rjT4kLbsIN/pMOimhx0kkIqJ1/BGZ
-        gsAM67IymtKinjM5CaNfDbbFGRArDCRRaDZoqqHOtFMI6cn24d/MkwCgHZqln8UcN4iX8S
-        u9wZnhLIggIS4ATlmAznPf505Mct7P4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-34-RjePyPrbN4iiCFi_W_pbZA-1; Wed, 18 Dec 2019 08:09:51 -0500
-X-MC-Unique: RjePyPrbN4iiCFi_W_pbZA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DB92A10054E3;
-        Wed, 18 Dec 2019 13:09:46 +0000 (UTC)
-Received: from max.com (ovpn-204-101.brq.redhat.com [10.40.204.101])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E01D760C18;
-        Wed, 18 Dec 2019 13:09:37 +0000 (UTC)
-From:   Andreas Gruenbacher <agruenba@redhat.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
-        Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Richard Weinberger <richard@nod.at>,
-        Artem Bityutskiy <dedekind1@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        ceph-devel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-mtd@lists.infradead.org, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        Jan Kara <jack@suse.cz>
-Subject: [PATCH v3] fs: Fix page_mkwrite off-by-one errors
-Date:   Wed, 18 Dec 2019 14:09:35 +0100
-Message-Id: <20191218130935.32402-1-agruenba@redhat.com>
+        Wed, 18 Dec 2019 08:10:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=cisco.com; i=@cisco.com; l=7048; q=dns/txt; s=iport;
+  t=1576674619; x=1577884219;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=V4xmCH2W65CuvTemSyJC+V7F+s2/tndy7rKO/DG0Qtc=;
+  b=k6mS+Bu1dcReicx2wK2GT8VAPCI5nHgRrx5X5F0qmtufPfeP5sXnng9H
+   UgMI4NC+/zyAGh3s/rdF2YbDyrBRCzaNDgcDhlzLUa5wYgqttyHfiLg52
+   onBefKgBfmyI/FRK+OHM+CAu6SrQhbNepKdzqxHHvkPtWXU+7z0XAyifw
+   8=;
+X-IronPort-AV: E=Sophos;i="5.69,329,1571702400"; 
+   d="scan'208";a="598697311"
+Received: from rcdn-core-3.cisco.com ([173.37.93.154])
+  by rcdn-iport-9.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 18 Dec 2019 13:10:19 +0000
+Received: from sjc-ads-7483.cisco.com (sjc-ads-7483.cisco.com [10.30.221.19])
+        by rcdn-core-3.cisco.com (8.15.2/8.15.2) with ESMTP id xBIDAIpu019601;
+        Wed, 18 Dec 2019 13:10:18 GMT
+Received: by sjc-ads-7483.cisco.com (Postfix, from userid 838444)
+        id 95C50141D; Wed, 18 Dec 2019 05:10:18 -0800 (PST)
+From:   Aviraj CJ <acj@cisco.com>
+To:     peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        gregkh@linuxfoundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, xe-linux-external@cisco.com,
+        acj@cisco.com
+Subject: [PATCH stable v4.9 1/2] net: stmmac: use correct DMA buffer size in the RX descriptor
+Date:   Wed, 18 Dec 2019 05:10:08 -0800
+Message-Id: <20191218131009.10968-1-acj@cisco.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Auto-Response-Suppress: DR, OOF, AutoReply
+X-Outbound-SMTP-Client: 10.30.221.19, sjc-ads-7483.cisco.com
+X-Outbound-Node: rcdn-core-3.cisco.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Darrick,
+upstream 583e6361414903c5206258a30e5bd88cb03c0254 commit
 
-can this fix go in via the xfs tree?
+We always program the maximum DMA buffer size into the receive descriptor,
+although the allocated size may be less. E.g. with the default MTU size
+we allocate only 1536 bytes. If somebody sends us a bigger frame, then
+memory may get corrupted.
 
-Thanks,
-Andreas
+Program DMA using exact buffer sizes.
 
---
-
-The check in block_page_mkwrite that is meant to determine whether an
-offset is within the inode size is off by one.  This bug has been copied
-into iomap_page_mkwrite and several filesystems (ubifs, ext4, f2fs,
-ceph).
-
-Fix that by introducing a new page_mkwrite_check_truncate helper that
-checks for truncate and computes the bytes in the page up to EOF.  Use
-the helper in the above mentioned filesystems.
-
-In addition, use the new helper in btrfs as well.
-
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-Acked-by: David Sterba <dsterba@suse.com> (btrfs part)
-Acked-by: Richard Weinberger <richard@nod.at> (ubifs part)
+Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+[acj: backport to v4.9 -stable :
+- adjust context
+- skipped the section modifying non-existent functions in dwxgmac2_descs.c and
+hwif.h ]
+Signed-off-by: Aviraj CJ <acj@cisco.com>
 ---
- fs/btrfs/inode.c        | 15 ++++-----------
- fs/buffer.c             | 16 +++-------------
- fs/ceph/addr.c          |  2 +-
- fs/ext4/inode.c         | 14 ++++----------
- fs/f2fs/file.c          | 19 +++++++------------
- fs/iomap/buffered-io.c  | 18 +++++-------------
- fs/ubifs/file.c         |  3 +--
- include/linux/pagemap.h | 28 ++++++++++++++++++++++++++++
- 8 files changed, 53 insertions(+), 62 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/common.h  |  2 +-
+ .../net/ethernet/stmicro/stmmac/descs_com.h   | 23 ++++++++++++-------
+ .../ethernet/stmicro/stmmac/dwmac4_descs.c    |  2 +-
+ .../net/ethernet/stmicro/stmmac/enh_desc.c    | 10 +++++---
+ .../net/ethernet/stmicro/stmmac/norm_desc.c   | 10 +++++---
+ .../net/ethernet/stmicro/stmmac/stmmac_main.c |  6 ++---
+ 6 files changed, 34 insertions(+), 19 deletions(-)
 
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index 56032c518b26..86c6fcd8139d 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -9016,13 +9016,11 @@ vm_fault_t btrfs_page_mkwrite(struct vm_fault *vm=
-f)
- 	ret =3D VM_FAULT_NOPAGE; /* make the VM retry the fault */
- again:
- 	lock_page(page);
--	size =3D i_size_read(inode);
-=20
--	if ((page->mapping !=3D inode->i_mapping) ||
--	    (page_start >=3D size)) {
--		/* page got truncated out from underneath us */
-+	ret2 =3D page_mkwrite_check_truncate(page, inode);
-+	if (ret2 < 0)
- 		goto out_unlock;
--	}
-+	zero_start =3D ret2;
- 	wait_on_page_writeback(page);
-=20
- 	lock_extent_bits(io_tree, page_start, page_end, &cached_state);
-@@ -9043,6 +9041,7 @@ vm_fault_t btrfs_page_mkwrite(struct vm_fault *vmf)
- 		goto again;
- 	}
-=20
-+	size =3D i_size_read(inode);
- 	if (page->index =3D=3D ((size - 1) >> PAGE_SHIFT)) {
- 		reserved_space =3D round_up(size - page_start,
- 					  fs_info->sectorsize);
-@@ -9075,12 +9074,6 @@ vm_fault_t btrfs_page_mkwrite(struct vm_fault *vmf=
-)
- 	}
- 	ret2 =3D 0;
-=20
--	/* page is wholly or partially inside EOF */
--	if (page_start + PAGE_SIZE > size)
--		zero_start =3D offset_in_page(size);
--	else
--		zero_start =3D PAGE_SIZE;
--
- 	if (zero_start !=3D PAGE_SIZE) {
- 		kaddr =3D kmap(page);
- 		memset(kaddr + zero_start, 0, PAGE_SIZE - zero_start);
-diff --git a/fs/buffer.c b/fs/buffer.c
-index d8c7242426bb..53aabde57ca7 100644
---- a/fs/buffer.c
-+++ b/fs/buffer.c
-@@ -2499,23 +2499,13 @@ int block_page_mkwrite(struct vm_area_struct *vma=
-, struct vm_fault *vmf,
- 	struct page *page =3D vmf->page;
- 	struct inode *inode =3D file_inode(vma->vm_file);
- 	unsigned long end;
--	loff_t size;
- 	int ret;
-=20
- 	lock_page(page);
--	size =3D i_size_read(inode);
--	if ((page->mapping !=3D inode->i_mapping) ||
--	    (page_offset(page) > size)) {
--		/* We overload EFAULT to mean page got truncated */
--		ret =3D -EFAULT;
-+	ret =3D page_mkwrite_check_truncate(page, inode);
-+	if (ret < 0)
- 		goto out_unlock;
--	}
--
--	/* page is wholly or partially inside EOF */
--	if (((page->index + 1) << PAGE_SHIFT) > size)
--		end =3D size & ~PAGE_MASK;
--	else
--		end =3D PAGE_SIZE;
-+	end =3D ret;
-=20
- 	ret =3D __block_write_begin(page, 0, end, get_block);
- 	if (!ret)
-diff --git a/fs/ceph/addr.c b/fs/ceph/addr.c
-index 7ab616601141..ef958aa4adb4 100644
---- a/fs/ceph/addr.c
-+++ b/fs/ceph/addr.c
-@@ -1575,7 +1575,7 @@ static vm_fault_t ceph_page_mkwrite(struct vm_fault=
- *vmf)
- 	do {
- 		lock_page(page);
-=20
--		if ((off > size) || (page->mapping !=3D inode->i_mapping)) {
-+		if (page_mkwrite_check_truncate(page, inode) < 0) {
- 			unlock_page(page);
- 			ret =3D VM_FAULT_NOPAGE;
- 			break;
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index 28f28de0c1b6..51ab1d2cac80 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -5871,7 +5871,6 @@ vm_fault_t ext4_page_mkwrite(struct vm_fault *vmf)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
+index 6d2de4e01f6d..e11920d12774 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/common.h
++++ b/drivers/net/ethernet/stmicro/stmmac/common.h
+@@ -354,7 +354,7 @@ struct dma_features {
+ struct stmmac_desc_ops {
+ 	/* DMA RX descriptor ring initialization */
+ 	void (*init_rx_desc) (struct dma_desc *p, int disable_rx_ic, int mode,
+-			      int end);
++			      int end, int bfsize);
+ 	/* DMA TX descriptor ring initialization */
+ 	void (*init_tx_desc) (struct dma_desc *p, int mode, int end);
+ 
+diff --git a/drivers/net/ethernet/stmicro/stmmac/descs_com.h b/drivers/net/ethernet/stmicro/stmmac/descs_com.h
+index 1d181e205d6e..f9cbba2d2cc0 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/descs_com.h
++++ b/drivers/net/ethernet/stmicro/stmmac/descs_com.h
+@@ -33,11 +33,14 @@
+ /* Specific functions used for Ring mode */
+ 
+ /* Enhanced descriptors */
+-static inline void ehn_desc_rx_set_on_ring(struct dma_desc *p, int end)
++static inline void ehn_desc_rx_set_on_ring(struct dma_desc *p, int end,
++					   int bfsize)
  {
- 	struct vm_area_struct *vma =3D vmf->vma;
- 	struct page *page =3D vmf->page;
--	loff_t size;
- 	unsigned long len;
- 	int err;
- 	vm_fault_t ret;
-@@ -5907,18 +5906,13 @@ vm_fault_t ext4_page_mkwrite(struct vm_fault *vmf=
-)
- 	}
-=20
- 	lock_page(page);
--	size =3D i_size_read(inode);
--	/* Page got truncated from under us? */
--	if (page->mapping !=3D mapping || page_offset(page) > size) {
-+	err =3D page_mkwrite_check_truncate(page, inode);
-+	if (err < 0) {
- 		unlock_page(page);
--		ret =3D VM_FAULT_NOPAGE;
--		goto out;
-+		goto out_ret;
- 	}
-+	len =3D err;
-=20
--	if (page->index =3D=3D size >> PAGE_SHIFT)
--		len =3D size & ~PAGE_MASK;
--	else
--		len =3D PAGE_SIZE;
- 	/*
- 	 * Return if we have all the buffers mapped. This avoids the need to do
- 	 * journal_start/journal_stop which can block and take a long time
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 85af112e868d..0e77b2e6f873 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -51,7 +51,7 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault =
-*vmf)
- 	struct inode *inode =3D file_inode(vmf->vma->vm_file);
- 	struct f2fs_sb_info *sbi =3D F2FS_I_SB(inode);
- 	struct dnode_of_data dn =3D { .node_changed =3D false };
--	int err;
-+	int offset, err;
-=20
- 	if (unlikely(f2fs_cp_error(sbi))) {
- 		err =3D -EIO;
-@@ -70,13 +70,14 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_faul=
-t *vmf)
- 	file_update_time(vmf->vma->vm_file);
- 	down_read(&F2FS_I(inode)->i_mmap_sem);
- 	lock_page(page);
--	if (unlikely(page->mapping !=3D inode->i_mapping ||
--			page_offset(page) > i_size_read(inode) ||
--			!PageUptodate(page))) {
-+	err =3D -EFAULT;
-+	if (likely(PageUptodate(page)))
-+		err =3D page_mkwrite_check_truncate(page, inode);
-+	if (unlikely(err < 0)) {
- 		unlock_page(page);
--		err =3D -EFAULT;
- 		goto out_sem;
- 	}
-+	offset =3D err;
-=20
- 	/* block allocation */
- 	__do_map_lock(sbi, F2FS_GET_BLOCK_PRE_AIO, true);
-@@ -101,14 +102,8 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fau=
-lt *vmf)
- 	if (PageMappedToDisk(page))
- 		goto out_sem;
-=20
--	/* page is wholly or partially inside EOF */
--	if (((loff_t)(page->index + 1) << PAGE_SHIFT) >
--						i_size_read(inode)) {
--		loff_t offset;
--
--		offset =3D i_size_read(inode) & ~PAGE_MASK;
-+	if (offset !=3D PAGE_SIZE)
- 		zero_user_segment(page, offset, PAGE_SIZE);
--	}
- 	set_page_dirty(page);
- 	if (!PageUptodate(page))
- 		SetPageUptodate(page);
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index d33c7bc5ee92..1aaf157fd6e9 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -1062,24 +1062,16 @@ vm_fault_t iomap_page_mkwrite(struct vm_fault *vm=
-f, const struct iomap_ops *ops)
- 	struct page *page =3D vmf->page;
- 	struct inode *inode =3D file_inode(vmf->vma->vm_file);
- 	unsigned long length;
--	loff_t offset, size;
-+	loff_t offset;
- 	ssize_t ret;
-=20
- 	lock_page(page);
--	size =3D i_size_read(inode);
--	offset =3D page_offset(page);
--	if (page->mapping !=3D inode->i_mapping || offset > size) {
--		/* We overload EFAULT to mean page got truncated */
--		ret =3D -EFAULT;
-+	ret =3D page_mkwrite_check_truncate(page, inode);
-+	if (ret < 0)
- 		goto out_unlock;
--	}
--
--	/* page is wholly or partially inside EOF */
--	if (offset > size - PAGE_SIZE)
--		length =3D offset_in_page(size);
--	else
--		length =3D PAGE_SIZE;
-+	length =3D ret;
-=20
-+	offset =3D page_offset(page);
- 	while (length > 0) {
- 		ret =3D iomap_apply(inode, offset, length,
- 				IOMAP_WRITE | IOMAP_FAULT, ops, page,
-diff --git a/fs/ubifs/file.c b/fs/ubifs/file.c
-index cd52585c8f4f..91f7a1f2db0d 100644
---- a/fs/ubifs/file.c
-+++ b/fs/ubifs/file.c
-@@ -1563,8 +1563,7 @@ static vm_fault_t ubifs_vm_page_mkwrite(struct vm_f=
-ault *vmf)
- 	}
-=20
- 	lock_page(page);
--	if (unlikely(page->mapping !=3D inode->i_mapping ||
--		     page_offset(page) > i_size_read(inode))) {
-+	if (unlikely(page_mkwrite_check_truncate(page, inode) < 0)) {
- 		/* Page got truncated out from underneath us */
- 		goto sigbus;
- 	}
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index 37a4d9e32cd3..ccb14b6a16b5 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -636,4 +636,32 @@ static inline unsigned long dir_pages(struct inode *=
-inode)
- 			       PAGE_SHIFT;
+-	p->des1 |= cpu_to_le32(((BUF_SIZE_8KiB - 1)
+-			<< ERDES1_BUFFER2_SIZE_SHIFT)
+-		   & ERDES1_BUFFER2_SIZE_MASK);
++	if (bfsize == BUF_SIZE_16KiB)
++		p->des1 |= cpu_to_le32((BUF_SIZE_8KiB
++				<< ERDES1_BUFFER2_SIZE_SHIFT)
++                & ERDES1_BUFFER2_SIZE_MASK);
++
+ 
+ 	if (end)
+ 		p->des1 |= cpu_to_le32(ERDES1_END_RING);
+@@ -63,11 +66,15 @@ static inline void enh_set_tx_desc_len_on_ring(struct dma_desc *p, int len)
  }
-=20
-+/**
-+ * page_mkwrite_check_truncate - check if page was truncated
-+ * @page: the page to check
-+ * @inode: the inode to check the page against
-+ *
-+ * Returns the number of bytes in the page up to EOF,
-+ * or -EFAULT if the page was truncated.
-+ */
-+static inline int page_mkwrite_check_truncate(struct page *page,
-+					      struct inode *inode)
-+{
-+	loff_t size =3D i_size_read(inode);
-+	pgoff_t index =3D size >> PAGE_SHIFT;
-+	int offset =3D offset_in_page(size);
+ 
+ /* Normal descriptors */
+-static inline void ndesc_rx_set_on_ring(struct dma_desc *p, int end)
++static inline void ndesc_rx_set_on_ring(struct dma_desc *p, int end, int bfsize)
+ {
+-	p->des1 |= cpu_to_le32(((BUF_SIZE_2KiB - 1)
+-				<< RDES1_BUFFER2_SIZE_SHIFT)
+-		    & RDES1_BUFFER2_SIZE_MASK);
++	if (bfsize >= BUF_SIZE_2KiB) {
++		int bfsize2;
 +
-+	if (page->mapping !=3D inode->i_mapping)
-+		return -EFAULT;
++		bfsize2 = min(bfsize - BUF_SIZE_2KiB + 1, BUF_SIZE_2KiB - 1);
++		p->des1 |= cpu_to_le32((bfsize2 << RDES1_BUFFER2_SIZE_SHIFT)
++			    & RDES1_BUFFER2_SIZE_MASK);
++	}
+ 
+ 	if (end)
+ 		p->des1 |= cpu_to_le32(RDES1_END_RING);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.c
+index 3f5056858535..a90b02926e4d 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.c
+@@ -289,7 +289,7 @@ static int dwmac4_wrback_get_rx_timestamp_status(void *desc, u32 ats)
+ }
+ 
+ static void dwmac4_rd_init_rx_desc(struct dma_desc *p, int disable_rx_ic,
+-				   int mode, int end)
++				   int mode, int end, int bfsize)
+ {
+ 	p->des3 = cpu_to_le32(RDES3_OWN | RDES3_BUFFER1_VALID_ADDR);
+ 
+diff --git a/drivers/net/ethernet/stmicro/stmmac/enh_desc.c b/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
+index 77dc5842bd0b..47f4fe50c848 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
++++ b/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
+@@ -269,15 +269,19 @@ static int enh_desc_get_rx_status(void *data, struct stmmac_extra_stats *x,
+ }
+ 
+ static void enh_desc_init_rx_desc(struct dma_desc *p, int disable_rx_ic,
+-				  int mode, int end)
++				  int mode, int end, int bfsize)
+ {
++	int bfsize1;
 +
-+	/* page is wholly inside EOF */
-+	if (page->index < index)
-+		return PAGE_SIZE;
-+	/* page is wholly past EOF */
-+	if (page->index > index || !offset)
-+		return -EFAULT;
-+	/* page is partially inside EOF */
-+	return offset;
-+}
+ 	p->des0 |= cpu_to_le32(RDES0_OWN);
+-	p->des1 |= cpu_to_le32((BUF_SIZE_8KiB - 1) & ERDES1_BUFFER1_SIZE_MASK);
 +
- #endif /* _LINUX_PAGEMAP_H */
---=20
-2.20.1
++	bfsize1 = min(bfsize, BUF_SIZE_8KiB);
++	p->des1 |= cpu_to_le32(bfsize1 & ERDES1_BUFFER1_SIZE_MASK);
+ 
+ 	if (mode == STMMAC_CHAIN_MODE)
+ 		ehn_desc_rx_set_on_chain(p);
+ 	else
+-		ehn_desc_rx_set_on_ring(p, end);
++		ehn_desc_rx_set_on_ring(p, end, bfsize);
+ 
+ 	if (disable_rx_ic)
+ 		p->des1 |= cpu_to_le32(ERDES1_DISABLE_IC);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/norm_desc.c b/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
+index 01f8f2e94c0f..5a06a5a1f6ea 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
++++ b/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
+@@ -137,15 +137,19 @@ static int ndesc_get_rx_status(void *data, struct stmmac_extra_stats *x,
+ }
+ 
+ static void ndesc_init_rx_desc(struct dma_desc *p, int disable_rx_ic, int mode,
+-			       int end)
++			       int end, int bfsize)
+ {
++	int bfsize1;
++
+ 	p->des0 |= cpu_to_le32(RDES0_OWN);
+-	p->des1 |= cpu_to_le32((BUF_SIZE_2KiB - 1) & RDES1_BUFFER1_SIZE_MASK);
++
++	bfsize1 = min(bfsize, BUF_SIZE_2KiB - 1);
++	p->des1 |= cpu_to_le32(bfsize1 & RDES1_BUFFER1_SIZE_MASK);
+ 
+ 	if (mode == STMMAC_CHAIN_MODE)
+ 		ndesc_rx_set_on_chain(p, end);
+ 	else
+-		ndesc_rx_set_on_ring(p, end);
++		ndesc_rx_set_on_ring(p, end, bfsize);
+ 
+ 	if (disable_rx_ic)
+ 		p->des1 |= cpu_to_le32(RDES1_DISABLE_IC);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 2c04a0739fd6..f1844367ca5b 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -956,11 +956,11 @@ static void stmmac_clear_descriptors(struct stmmac_priv *priv)
+ 		if (priv->extend_desc)
+ 			priv->hw->desc->init_rx_desc(&priv->dma_erx[i].basic,
+ 						     priv->use_riwt, priv->mode,
+-						     (i == DMA_RX_SIZE - 1));
++						     (i == DMA_RX_SIZE - 1), priv->dma_buf_sz);
+ 		else
+ 			priv->hw->desc->init_rx_desc(&priv->dma_rx[i],
+ 						     priv->use_riwt, priv->mode,
+-						     (i == DMA_RX_SIZE - 1));
++						     (i == DMA_RX_SIZE - 1), priv->dma_buf_sz);
+ 	for (i = 0; i < DMA_TX_SIZE; i++)
+ 		if (priv->extend_desc)
+ 			priv->hw->desc->init_tx_desc(&priv->dma_etx[i].basic,
+@@ -2479,7 +2479,7 @@ static inline void stmmac_rx_refill(struct stmmac_priv *priv)
+ 		wmb();
+ 
+ 		if (unlikely(priv->synopsys_id >= DWMAC_CORE_4_00))
+-			priv->hw->desc->init_rx_desc(p, priv->use_riwt, 0, 0);
++			priv->hw->desc->init_rx_desc(p, priv->use_riwt, 0, 0, priv->dma_buf_sz);
+ 		else
+ 			priv->hw->desc->set_rx_owner(p);
+ 
+-- 
+2.19.1
 
