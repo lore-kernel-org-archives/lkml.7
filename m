@@ -7,84 +7,83 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB58C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:38:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34017C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0CCF24650
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:38:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1D2421582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:39:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576705117;
-	bh=UdORDKHOG3d6v5x8MPfcWJix8XZwqmjcnOp6XUDV/4Y=;
+	s=default; t=1576705167;
+	bh=5U99pIQGHxWEneXBslwwBchIytDB/yGCxvdrUJzmLO4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ea5KONTfJo/zUHJmGp7XMywt/7ztxnW7mTHMb33YTvOZ4jPhmABsYOTe8sQO8XpIe
-	 vMaIYDty4xtlnXu3FD2UT+MfqlZlsvs1v1r0qK65sXtUGeXES3E+FsKU7RwciR42RT
-	 7nfZIzR/qt2YQ/57EhihWcM5lfV/+i0FYUL7tHEM=
+	b=T975uqsDntMfSFP0kVVmshswy11LXmMTeazYi25sZL0Cm5fmZs6nIM6LRdiuYp9An
+	 8+Rc8BKMTTsnNVbwVodhmWN7sGEsVd4WYVdFXUXwb/pjXNsWjht5SPZTa/s9Qwzu/f
+	 /S5i/bgG5zDScA950s6f18z8LvLsLiA+ooiixnoc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbfLRVig (ORCPT
+        id S1726705AbfLRVj0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 16:38:36 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:43055 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbfLRVig (ORCPT
+        Wed, 18 Dec 2019 16:39:26 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:45228 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbfLRVjZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 16:38:36 -0500
-Received: by mail-ot1-f67.google.com with SMTP id p8so4219451oth.10;
-        Wed, 18 Dec 2019 13:38:35 -0800 (PST)
+        Wed, 18 Dec 2019 16:39:25 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 59so4214647otp.12;
+        Wed, 18 Dec 2019 13:39:25 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CThMgyYb2HnX5NohwkeG2dpFbHpKjSmonT0Rqkls07k=;
-        b=XWNKE/Y1Px3I8pTCVkXXVcDifLN74rTnDkaDur5/HbZ1zGKPcyYl44PoWxeQ7i2/Uy
-         /24MWtVCh5bf97PzAIRfx7H8zwW2sSzfe81W7ZnUIAp+4uyz04sEnbL4vjQdemTWOb/J
-         hwCVAlH9W9Zr7ZDDD/2gvQ2DOXO8j6VYIngePF7jmuJX5xxNWOG7gfqlRWOMrPa5ICCC
-         AyIEM6qmH8pXGCD9w4TDYBmsyIscbEDauzXMOazQuyhtF84AByp3f7wcjj+KdiHp4Qsk
-         7dm9tQeRWh5MlXN+Det+wc7kDlMgl/Vzi3SUbuYLVaXlSJ9ineJk9ZGVniuasyA334j8
-         OoOQ==
-X-Gm-Message-State: APjAAAXB5FI5k7qErDJZUfSrEU9sNJUoRoOQSjqs0pAaMn7qMSryS5Ch
-        RSAwUojBLI37p7EHvne+QA==
-X-Google-Smtp-Source: APXvYqwWpZuMh04y4KOGVf0MBo6cIU6JiMjeV6XpwUI31E4EaD+zXg6UWvuBkSQBgYrW/Vmwdi89Ag==
-X-Received: by 2002:a9d:600e:: with SMTP id h14mr4732216otj.113.1576705115480;
-        Wed, 18 Dec 2019 13:38:35 -0800 (PST)
+        bh=dBFxRKaaedwkP1g5MLnNuhRSUqWUfU6XqL2o6viIQT8=;
+        b=BIOxK6iR1YsJFkwFlOyxBKfatH0+Xt2LE4pcwkASXhQMD1ys81ozBnvwhRekaixNqV
+         5KV9RHj21rUT7ZST/gtuvURfgMnwYQIxVlMJTWr0+Hx7dLHM3ofK3Q7fKAaJKVxMQ2Id
+         Ovh1oUsxwrp7o+MSb9niSmY7lJE5ZzUI58jy8/b6GEQgEh7inURsHd1nCHlCg+oyXbgm
+         2J9YAc9LyeaSm9gtJSHhln/8QLPP5JGGzfWTROWBwUPwDnWv5vV7euPG5h8ivgDrwvq6
+         zrXcS5N9y4a7WaRzUyddsNdR2gVb5pLPx90vNalkDXGBE+mb4GR+XW5Eu/oD3ZMOH8ct
+         QS6A==
+X-Gm-Message-State: APjAAAXk0gGTkt7gIfq/xnkk3908DXcSgIKC/X1bIfaHb177IaKjjOcw
+        a/UrIkCotUhxkcQfq+jhNIaJm6+hKA==
+X-Google-Smtp-Source: APXvYqzDK7aog7i/C+mHwCkZW9atlbt2uwA+8aK1TlTW6VE80Vfah9nRZR9WuFj1CWR1TaUMDGZefg==
+X-Received: by 2002:a9d:21f4:: with SMTP id s107mr2532318otb.102.1576705165023;
+        Wed, 18 Dec 2019 13:39:25 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 101sm1284059otj.55.2019.12.18.13.38.34
+        by smtp.gmail.com with ESMTPSA id c12sm1244305oic.27.2019.12.18.13.39.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 13:38:34 -0800 (PST)
-Date:   Wed, 18 Dec 2019 15:38:34 -0600
+        Wed, 18 Dec 2019 13:39:23 -0800 (PST)
+Date:   Wed, 18 Dec 2019 15:39:23 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Hanna Hawa <hhhawa@amazon.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, tsahee@annapurnalabs.com,
-        antoine.tenart@bootlin.com, hhhawa@amazon.com,
-        mchehab+samsung@kernel.org, davem@davemloft.net,
-        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
-        tglx@linutronix.de, khilman@baylibre.com, chanho.min@lge.com,
-        heiko@sntech.de, nm@ti.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com,
-        talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com,
-        barakw@amazon.com
-Subject: Re: [PATCH v2 5/6] dt-bindings: arm: amazon: add Amazon Annapurna
- Labs Alpine V3
-Message-ID: <20191218213834.GA662@bogus>
-References: <20191209161341.29607-1-hhhawa@amazon.com>
- <20191209161341.29607-6-hhhawa@amazon.com>
+To:     Faiz Abbas <faiz_abbas@ti.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mmc@vger.kernel.org, kishon@ti.com, adrian.hunter@intel.com,
+        mark.rutland@arm.com, robh+dt@kernel.org, ulf.hansson@linaro.org,
+        zhang.chunyan@linaro.org, tony@atomide.com
+Subject: Re: [PATCH v3 1/7] dt-bindings: sdhci-omap: Add properties for using
+ external dma
+Message-ID: <20191218213923.GA1879@bogus>
+References: <20191210095151.15441-1-faiz_abbas@ti.com>
+ <20191210095151.15441-2-faiz_abbas@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191209161341.29607-6-hhhawa@amazon.com>
+In-Reply-To: <20191210095151.15441-2-faiz_abbas@ti.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 9 Dec 2019 16:13:40 +0000, Hanna Hawa wrote:
-> This patch adds DT bindings info for Amazon Annapurna Labs Alpine V3.
+On Tue, 10 Dec 2019 15:21:45 +0530, Faiz Abbas wrote:
+> From: Chunyan Zhang <zhang.chunyan@linaro.org>
 > 
-> Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
+> sdhci-omap can support both external dma controller via dmaengine
+> framework as well as ADMA which standard SD host controller
+> provides. Add binding documentation for these external dma properties.
+> 
+> Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
+> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
 > ---
->  Documentation/devicetree/bindings/arm/amazon,al.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  Documentation/devicetree/bindings/mmc/sdhci-omap.txt | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
