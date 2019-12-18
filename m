@@ -2,166 +2,167 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E25C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:29:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B3AC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0C0B21582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:29:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69AE921582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:31:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="aADuHTHV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbfLRX3C (ORCPT
+        id S1726674AbfLRXbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 18:29:02 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:26834 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726518AbfLRX3B (ORCPT
+        Wed, 18 Dec 2019 18:31:36 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:36744 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbfLRXbg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 18:29:01 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBINMbSA133681;
-        Wed, 18 Dec 2019 18:28:47 -0500
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wykb75681-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Dec 2019 18:28:47 -0500
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xBINAJPX010147;
-        Wed, 18 Dec 2019 23:28:46 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma05wdc.us.ibm.com with ESMTP id 2wvqc6hfx7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Dec 2019 23:28:46 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBINSjXT45285854
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Dec 2019 23:28:45 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5D2F778060;
-        Wed, 18 Dec 2019 23:28:45 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id ABD637805C;
-        Wed, 18 Dec 2019 23:28:42 +0000 (GMT)
-Received: from LeoBras (unknown [9.85.190.169])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 18 Dec 2019 23:28:42 +0000 (GMT)
-Message-ID: <0c598160a866318e1fa672afdb07d3ee762c2ac1.camel@linux.ibm.com>
-Subject: Re: [PATCH 1/1] kvm/book3s_64: Fixes crash caused by not cleaning
- vhost IOTLB
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, farosas@linux.ibm.com,
-        David Gibson <david@gibson.dropbear.id.au>
-Date:   Wed, 18 Dec 2019 20:28:37 -0300
-In-Reply-To: <be0c0f8f-3c8e-acd1-c6a2-479f6bd3c373@ozlabs.ru>
-References: <20191217210658.73144-1-leonardo@linux.ibm.com>
-         <be0c0f8f-3c8e-acd1-c6a2-479f6bd3c373@ozlabs.ru>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-7xFj9Ce0+bnxIEdC6hQc"
-User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
+        Wed, 18 Dec 2019 18:31:36 -0500
+Received: by mail-oi1-f196.google.com with SMTP id c16so2144542oic.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 15:31:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fUytKbh3fxwQeY78Sh0bP3Ypu5vGalHc1spY/K/2hYw=;
+        b=aADuHTHVDgDJIjYoRrFQtvCtQgjeTd6MHEuYXKaMBoChVpakmW017w1NLtNmg/nZ4l
+         H5v1X8hB8CMByDOWpfXPWHofB+iJSW9nDapGGfjLokjZE5hOW31GOpyjEraT6a1DZeal
+         W8GRIKnqG1PnBIys7m7zgJ0N6urSMEDsbWhgefJGgzaKP2bVaW181BgoAPKVD3VlNpRh
+         V/S9GeauYsL1CSHx6ZScqAWAPCiRrRdVqfD8wGeoepbfxNi3EZSoK8QPz2hpkJEffPiC
+         FMAz8yU4Zkloy5zq2XEwBj4Ht0LLW3Wc8GNqBQuwiFisiPGIeWod2EcIsTsENymsc+97
+         NtoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fUytKbh3fxwQeY78Sh0bP3Ypu5vGalHc1spY/K/2hYw=;
+        b=ArCqc7yMmjZ2lvdedFktBWAILdOEnIcdVzS+pBTanzXHIVT/t/KqArBACb7MrgMc9M
+         fiLD7tH5MuJ3WKlK9/8r3RTupXVe1ZvKQTfaqGRTaRBpdpMzEHH/1qkBKxFJMi6UrZCV
+         l6U31rS4I+yJgQQ1cFUip/52hvuEvQgn3JrkCIWzdJze9idFTPRXkA+z2aTUHxa2XFSn
+         TQVPt5EZhi292hTE4egTx8KFSDLuCjEqgB9AWroezmim82302kLBuGp/q69wWPNhnCKA
+         TtfPioxz3113X65ayb8pSbnOdt7rZihiOJhoIHCx5+/hZaHNbwXSuq06o3HUu3IkUAx3
+         BGAg==
+X-Gm-Message-State: APjAAAWttNu5l3CsDjjnOS6Xbh7pfdv+7CGjtwa9S9IKyUMQYqRmswtV
+        1G5i40QjIVMOfdk5PN9HHB472NcfKnDSGgis/DWgbg==
+X-Google-Smtp-Source: APXvYqzEXrvpAjwiv2G/9Vv+SQnMlU3rni98xmIEIgWEgRhXsiBl5svGAoocWfD5bq9Vmw3xbgHM/CcuxdesXarEq8Q=
+X-Received: by 2002:aca:4850:: with SMTP id v77mr1569292oia.70.1576711894829;
+ Wed, 18 Dec 2019 15:31:34 -0800 (PST)
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-18_08:2019-12-17,2019-12-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
- clxscore=1015 bulkscore=0 phishscore=0 malwarescore=0 mlxlogscore=999
- mlxscore=0 suspectscore=1 priorityscore=1501 lowpriorityscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912180173
+References: <20191211231758.22263-1-jsnitsel@redhat.com> <20191211235455.24424-1-jsnitsel@redhat.com>
+ <5aef0fbe28ed23b963c53d61445b0bac6f108642.camel@linux.intel.com>
+ <CAPcyv4h60z889bfbiwvVhsj6MxmOPiPY8ZuPB_skxkZx-N+OGw@mail.gmail.com>
+ <20191217020022.knh7uxt4pn77wk5m@cantor> <CAPcyv4iepQup4bwMuWzq6r5gdx83hgYckUWFF7yF=rszjz3dtQ@mail.gmail.com>
+ <5d0763334def7d7ae1e7cf931ef9b14184dce238.camel@linux.intel.com>
+ <20191217171844.huqlj5csr262zkkk@cantor> <37f4ed0d6145dbe1e8724a5d05d0da82b593bf9c.camel@linux.intel.com>
+In-Reply-To: <37f4ed0d6145dbe1e8724a5d05d0da82b593bf9c.camel@linux.intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 18 Dec 2019 15:31:23 -0800
+Message-ID: <CAPcyv4h8sK+geVvBb1534V9CgdvOnkpPeStV3B8Q1Qdve3is0A@mail.gmail.com>
+Subject: Re: [PATCH v2] tpm_tis: reserve chip for duration of tpm_tis_core_init
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christian Bundy <christianbundy@fraction.io>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        stable <stable@vger.kernel.org>, linux-integrity@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Dec 18, 2019 at 3:07 PM Jarkko Sakkinen
+<jarkko.sakkinen@linux.intel.com> wrote:
+>
+> On Tue, 2019-12-17 at 10:18 -0700, Jerry Snitselaar wrote:
+> > On Tue Dec 17 19, Jarkko Sakkinen wrote:
+> > > On Mon, 2019-12-16 at 18:14 -0800, Dan Williams wrote:
+> > > > On Mon, Dec 16, 2019 at 6:00 PM Jerry Snitselaar <jsnitsel@redhat.com> wrote:
+> > > > > On Mon Dec 16 19, Dan Williams wrote:
+> > > > > > On Mon, Dec 16, 2019 at 4:59 PM Jarkko Sakkinen
+> > > > > > <jarkko.sakkinen@linux.intel.com> wrote:
+> > > > > > > On Wed, 2019-12-11 at 16:54 -0700, Jerry Snitselaar wrote:
+> > > > > > > > Instead of repeatedly calling tpm_chip_start/tpm_chip_stop when
+> > > > > > > > issuing commands to the tpm during initialization, just reserve the
+> > > > > > > > chip after wait_startup, and release it when we are ready to call
+> > > > > > > > tpm_chip_register.
+> > > > > > > >
+> > > > > > > > Cc: Christian Bundy <christianbundy@fraction.io>
+> > > > > > > > Cc: Dan Williams <dan.j.williams@intel.com>
+> > > > > > > > Cc: Peter Huewe <peterhuewe@gmx.de>
+> > > > > > > > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > > > > > > > Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> > > > > > > > Cc: Stefan Berger <stefanb@linux.vnet.ibm.com>
+> > > > > > > > Cc: stable@vger.kernel.org
+> > > > > > > > Cc: linux-integrity@vger.kernel.org
+> > > > > > > > Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of tpm_transmit()")
+> > > > > > > > Fixes: 5b359c7c4372 ("tpm_tis_core: Turn on the TPM before probing IRQ's")
+> > > > > > > > Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
+> > > > > > >
+> > > > > > > I pushed to my master with minor tweaks and added my tags.
+> > > > > > >
+> > > > > > > Please check before I put it to linux-next.
+> > > > > >
+> > > > > > I don't see it yet here:
+> > > > > >
+> > > > > > http://git.infradead.org/users/jjs/linux-tpmdd.git/shortlog/refs/heads/master
+> > > > > >
+> > > > > > However, I wanted to make sure you captured that this does *not* fix
+> > > > > > the interrupt issue. I.e. make sure you remove the "Fixes:
+> > > > > > 5b359c7c4372 ("tpm_tis_core: Turn on the TPM before probing IRQ's")"
+> > > > > > tag.
+> > > > > >
+> > > > > > With that said, are you going to include the revert of:
+> > > > > >
+> > > > > > 1ea32c83c699 tpm_tis_core: Set TPM_CHIP_FLAG_IRQ before probing for interrupts
+> > > > >
+> > > > > Dan, with the above reverted do you still get the screaming interrupt?
+> > > >
+> > > > Yes, the screaming interrupt goes away, although it is replaced by
+> > > > these messages when the driver starts:
+> > > >
+> > > > [    3.725131] tpm_tis IFX0740:00: 2.0 TPM (device-id 0x1B, rev-id 16)
+> > > > [    3.725358] tpm tpm0: tpm_try_transmit: send(): error -5
+> > > > [    3.725359] tpm tpm0: [Firmware Bug]: TPM interrupt not working,
+> > > > polling instead
+> > > >
+> > > > If the choice is "error message + polled-mode" vs "pinning a cpu with
+> > > > interrupts" I'd accept the former, but wanted Jarkko with his
+> > > > maintainer hat to weigh in.
+> > > >
+> > > > Is there a simple sanity check I can run to see if the TPM is still
+> > > > operational in this state?
+> > >
+> > > What about T490S?
+> > >
+> > > /Jarkko
+> > >
+> >
+> > Hi Jarkko, I'm waiting to hear back from the t490s user, but I imagine
+> > it still has the problem as well.
+> >
+> > Christian, were you able to try this patch and verify it still
+> > resolves the issue you were having with the kernel failing to get the
+> > timeouts and durations from the tpm?
+>
+> Including those reverts would be a bogus change at this point.
 
---=-7xFj9Ce0+bnxIEdC6hQc
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I'm failing to see how you arrived at that conclusion.
 
-On Wed, 2019-12-18 at 15:53 +1100, Alexey Kardashevskiy wrote:
-> H_STUFF_TCE is always called with 0. Well, may be some AIX somewhere
-> calls it with a value other than zero, and I probably saw some other
-> value somewhere but in QEMU/KVM case it is 0 so you effectively disable
-> in-kernel acceleration of H_STUFF_TCE which is
-> undesirable.
->=20
+> The fix that I already applied obviously fixes an issue even if
+> it does not fix all the issues.
 
-Thanks for the feedback!
+These patches take a usable system and make it unusable:
 
-> For now we should disable in-kernel H_STUFF_TCE/... handlers in QEMU
-> just like we do for VFIO for older host kernels:
->=20
-> https://git.qemu.org/?p=3Dqemu.git;a=3Dblob;f=3Dhw/ppc/spapr_iommu.c;h=3D=
-3d3bcc86496a5277d62f7855fbb09c013c015f27;hb=3DHEAD#l208
-=20
-I am still reading into this temporary solution, I could still not
-understand how it works.
+1ea32c83c699 tpm_tis_core: Set TPM_CHIP_FLAG_IRQ before probing for interrupts
+5b359c7c4372 tpm_tis_core: Turn on the TPM before probing IRQ's
 
-> I am not sure what a proper solution would be, something like an eventfd
-> and KVM's kvmppc_h_stuff_tce() signaling vhost that the latter needs to
-> invalidate iotlbs. Or we can just say that we do not allow KVM
-> acceleration if there is vhost+iommu on the same liobn (=3D=3D vPHB, pret=
-ty
-> much). Thanks,
-
-I am not used to eventfd, but i agree it's a valid solution to talk to
-QEMU and then use it to send a message via /dev/vhost.
-KVM -> QEMU -> vhost
-
-But I can't get my mind out of another solution: doing it in
-kernelspace.  I am not sure how that would work, though.
-
-If I could understand correctly, there is a vhost IOTLB per vhost_dev,
-and H_STUFF_TCE is not called in 64-bit DMA case (for tce_value =3D=3D 0
-case, at least), which makes sense, given it doesn't need to invalidate
-entries on IOTLB.
-
-So, we would need to somehow replace `return H_TOO_HARD` in this patch
-with code that could call vhost_process_iotlb_msg() with
-VHOST_IOTLB_INVALIDATE.
-
-For that, I would need to know what are the vhost_dev's of that
-process, which I don't know if it's possible to do currently (or safe
-at all).
-
-I am thinking of linking all vhost_dev's with a list (list.h) that
-could be searched, comparing `mm_struct *` of the calling task with all
-vhost_dev's, and removing the entry of all IOTLB that hits.
-
-Not sure if that's the best approach to find the related vhost_dev's.
-
-What do you think?
-
-Best regards,
-Leonardo Bras
-
---=-7xFj9Ce0+bnxIEdC6hQc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl36tiUACgkQlQYWtz9S
-ttTP1w//e4LZi8WJKQ814uoxRAOq1LVfp4j8iZy9f5bV+gvWnAcfGMEi89Pk2fZq
-97NUYgmJ/LJqeD+01bNGB4B2F8PNJ5iO4ZYZCcWJqGiXfqFrn1TMSvoZSuDvmzkm
-1B19T7cd+kIVRLDNgNqM7dEdRhgX4rERFRCPgp9V5HJ7DS4WegqpYB0jXxjIRsmL
-9G++y4Fi6aJwN3IavQCDzf9CYiOZnjSCV3uC9mCfJb2Bn1JDRK+JdL4FZaIU7X4Q
-zmLsEZBC5NpdOPdFqzchW1r9fDxvY5hYRXlWPXk+V4e2CNczM9dZ/5nkr+YAXB9X
-A72IBFHoz0yKXtP2D2x5gKvRYBeCJL9/2Ts3zNebEwT3xhjVEo76TXBj7TeEX03c
-pEgxZNlpgGU9IIaHCvmxNni3EXBheNvY6T2PkQD4CIsLZo6OukotKhix4TUJ/XZu
-iVeK5DWo1IGzFxPxFoePYojrUb0PopQv2h60yfvk0L2nVoVPN9qQ0d4q67jqOtWo
-+2El4ZX7OE79UXJEv12TsbjGTiAKq7m0QIZDfibiVjCr7u8YoL4j4b7RvC9iTMkI
-NnY0emDEW9HSuJ0SaS1aM7Tr9aCcBAHHYt09A5ChL0Mz0dy1NJdEYPgno/gxVAgQ
-22IRaYQnKz/LPxNirU7Nz2TYl0CwH/l04f1n2osJEa+aWmeph94=
-=pl8Q
------END PGP SIGNATURE-----
-
---=-7xFj9Ce0+bnxIEdC6hQc--
-
+...they need to be reverted, or the regression needs to be fixed, but
+asserting that you fixed something else unrelated does not help.
