@@ -2,112 +2,151 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D96D9C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1813DC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A92112176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E24CE206D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:51:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vx3Y1O6S"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t97yb1vx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbfLRAv1 (ORCPT
+        id S1726752AbfLRAvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 19:51:27 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38052 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbfLRAv1 (ORCPT
+        Tue, 17 Dec 2019 19:51:31 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34408 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726622AbfLRAv2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 19:51:27 -0500
-Received: by mail-pg1-f195.google.com with SMTP id a33so263475pgm.5;
-        Tue, 17 Dec 2019 16:51:26 -0800 (PST)
+        Tue, 17 Dec 2019 19:51:28 -0500
+Received: by mail-pf1-f195.google.com with SMTP id l127so220821pfl.1;
+        Tue, 17 Dec 2019 16:51:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=ABUqdUxFYplY8BOM3XuA0Fxd42dzU9oSNOiYz1wYZWw=;
-        b=Vx3Y1O6ScfLrpSWCK/33PwA3zlcJ/DSmCtNdk/rmt2/WpGRMag8BAyub98wTfHFGXu
-         zj0YsO1gZYyVtgUs/A9v6sZmUqaELNkSeoFfbhGEpAk7WzXN8RwFq5kBxmbS/hQ0IO4X
-         JPWbaWim2Fg7ac6/wWGNSYB7rv8cgOV1YOWZTHSKtFNlHW8UL0H04USkll402+AmzIeM
-         KGlQ+GDAHucv81ZSzdJIulIEe70E61vXYLZ79DsHMNG/c00vgWdXahjsXZf/x3zJ/UQ+
-         xjBQWK7ic3K/aabtFlwQWrrNy0wdepk5GHhCl8EGSvKy28Rp2G0BID+dztXLvHN6yYic
-         3qcg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=UEz81YOfOgBDrXB7OBw3GPro4KGLJ3XN1bscFo4nSHA=;
+        b=t97yb1vxXkG/djwdLbRKjohBeoTRhDeleTGCVfTIsT66NGa7/Hj6kggSMaDYkEkLZE
+         gm0vNCjv9LrCx24Y+RcpcmWZgEgllgLic6S2qC1J54vgW+Ps2O/sGYXjVc5RBgig7rFq
+         sRZZ828iU512CrFzwP2+7wCQVzkpiZ2AptC1kaNwoYmLtpiwvyzuwEWKR8Bwu1RLsxgr
+         96ecoDCxx2yESbCKafJb9jI+phvMIMM0DRSPI850zIVsCFpPXwC9fEmBaKFuCf9ffIiA
+         ZygVILRlS0om3jTk2eYfmVlR3XfhRZ0ibbfpEW+E2T445UcqfjK8erDFtUdTBH438OCE
+         nMyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ABUqdUxFYplY8BOM3XuA0Fxd42dzU9oSNOiYz1wYZWw=;
-        b=Ol/Sf5eXPG4q0V3n3AU0ksp/0gynzLMbZLBA0j2sFQ9QELF5+V/+yszBsdBDSRfRws
-         5lDJ91mnsbip1XyxW2M2iRP3XzYmfqUiy5+oW/ZmRGRCFLm6eehJxQ9WpAd2hX8ZcmSc
-         emwwzNlXpBfvThLOZ05ZOupuYl2qDZrkciolBAxSuozRVImc+WRRFpTo3ekNmsRb90Fa
-         YDA6hzcv38g+sZy99+Knb3OZOdT1Al8TIa2R96BNhI3eu17Z2ZajFWNWZEKAhl0cUeJu
-         SR4Z/7i1mVPgoti1jwEJtls1+cV0UhQeGKGrIW+TZJsnv2CwtaDn0O2bH+cFDvxVxCYG
-         wOog==
-X-Gm-Message-State: APjAAAVUOluj7z9+tg2UXvXJy0ZTK+dxVBOckDkj1ldiV0YiODecQ6fX
-        7ZzD1pAeS42JYtnYZHv6hC4=
-X-Google-Smtp-Source: APXvYqxmIdnASO50yRj1nIyrySbT6BD8ZMksmKjKuo+BwantJGO+PFuePHgW2CcNE/ZBpq4w3KnbtA==
-X-Received: by 2002:aa7:8d4d:: with SMTP id s13mr730354pfe.18.1576630286445;
-        Tue, 17 Dec 2019 16:51:26 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=UEz81YOfOgBDrXB7OBw3GPro4KGLJ3XN1bscFo4nSHA=;
+        b=bh+JNt2uNg36v0vFWQHImM7kRnzYJ8+v5wyEfeZpPePfwidejxeGI18QsBtsHh+BNE
+         Jb8lZxVDA5okG6Oa9ZEtI2kCo2Ypd8vaYNoJ8mT7sLcEIIL9ppVznh28p6MFaODTxsKh
+         wAYMzaiJwSBu6QlmNsB7uj1EU/qyXA+yZ85w4uLb5vDJMNbYR7dpUFQqZioi2sfMEymM
+         3LFTlSvvgmUyjGjfFT0s25f9OOTp4SxhR/ddkTgBiuS6IAT8WuYtA9Zni/EeWuHmsXjl
+         FvWkUpTRE/jPlLHXxh4E51YIjvyrgOxXDYa/Gx2Ftd4ztsgbhDoOWu5BLQacJfr+xlL9
+         Xm1g==
+X-Gm-Message-State: APjAAAVDwdm0BhgD1wseD0Y8V+VxT7kcQ4yqB3hXanQbU8PoHPvITxxP
+        xpi56nrgeOmIKAr2nG61IJk=
+X-Google-Smtp-Source: APXvYqy1SksUaSH0FAzwZ+sGR52I7r4GRshE/GnUS0YdrVHXPt78pgU4IGx7cz0x/uA2W5uOwCGQKA==
+X-Received: by 2002:a62:1c88:: with SMTP id c130mr668902pfc.195.1576630288050;
+        Tue, 17 Dec 2019 16:51:28 -0800 (PST)
 Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 81sm274819pfx.30.2019.12.17.16.51.25
+        by smtp.gmail.com with ESMTPSA id 81sm274819pfx.30.2019.12.17.16.51.27
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 17 Dec 2019 16:51:25 -0800 (PST)
+        Tue, 17 Dec 2019 16:51:27 -0800 (PST)
 From:   Doug Berger <opendmb@gmail.com>
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>
-Subject: [PATCH net-next v2 0/8] net: bcmgenet: Turn on offloads by default
-Date:   Tue, 17 Dec 2019 16:51:07 -0800
-Message-Id: <1576630275-17591-1-git-send-email-opendmb@gmail.com>
+Subject: [PATCH net-next v2 2/8] net: bcmgenet: enable NETIF_F_HW_CSUM feature
+Date:   Tue, 17 Dec 2019 16:51:09 -0800
+Message-Id: <1576630275-17591-3-git-send-email-opendmb@gmail.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1576630275-17591-1-git-send-email-opendmb@gmail.com>
+References: <1576630275-17591-1-git-send-email-opendmb@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit stack is based on Florian's commit 4e8aedfe78c7 ("net: 
-systemport: Turn on offloads by default") and enables the offloads for
-the bcmgenet driver by default.
+The GENET hardware should be capable of generating IP checksums
+using the NETIF_F_HW_CSUM feature, so switch to using that feature
+instead of the depricated NETIF_F_IP_CSUM and NETIF_F_IPV6_CSUM.
 
-The first commit adds support for the HIGHDMA feature to the driver.
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+---
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c | 29 +++++++++++---------------
+ 1 file changed, 12 insertions(+), 17 deletions(-)
 
-The second converts the Tx checksum implementation to use the generic
-hardware logic rather than the deprecated IP centric methods.
-
-The third modifies the Rx checksum implementation to use the hardware
-offload to compute the complete checksum rather than filtering out bad
-packets detected by the hardware's IP centric implementation. This may
-increase processing load by passing bad packets to the network stack,
-but it provides for more flexible handling of packets by the network
-stack without requiring software computation of the checksum.
-
-The remaining commits mirror the extensions Florian made to the sysport
-driver to retain symmetry with that driver and to make the benefits of
-the hardware offloads more ubiquitous.
-
-Doug Berger (8):
-  net: bcmgenet: enable NETIF_F_HIGHDMA flag
-  net: bcmgenet: enable NETIF_F_HW_CSUM feature
-  net: bcmgenet: use CHECKSUM_COMPLETE for NETIF_F_RXCSUM
-  net: bcmgenet: Refactor bcmgenet_set_features()
-  net: bcmgenet: Utilize bcmgenet_set_features() during resume/open
-  net: bcmgenet: Turn on offloads by default
-  net: bcmgenet: Be drop monitor friendly while re-allocating headroom
-  net: bcmgenet: Add software counters to track reallocations
-
- drivers/net/ethernet/broadcom/genet/bcmgenet.c | 113 ++++++++++++++-----------
- drivers/net/ethernet/broadcom/genet/bcmgenet.h |   4 +-
- 2 files changed, 67 insertions(+), 50 deletions(-)
-
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+index d9defb8b1e5f..cd07b3ad1d53 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -549,7 +549,7 @@ static int bcmgenet_set_tx_csum(struct net_device *dev,
+ 	tbuf_ctrl = bcmgenet_tbuf_ctrl_get(priv);
+ 	rbuf_ctrl = bcmgenet_rbuf_readl(priv, RBUF_CTRL);
+ 
+-	desc_64b_en = !!(wanted & (NETIF_F_IP_CSUM | NETIF_F_IPV6_CSUM));
++	desc_64b_en = !!(wanted & NETIF_F_HW_CSUM);
+ 
+ 	/* enable 64 bytes descriptor in both directions (RBUF and TBUF) */
+ 	if (desc_64b_en) {
+@@ -574,7 +574,7 @@ static int bcmgenet_set_features(struct net_device *dev,
+ 	netdev_features_t wanted = dev->wanted_features;
+ 	int ret = 0;
+ 
+-	if (changed & (NETIF_F_IP_CSUM | NETIF_F_IPV6_CSUM))
++	if (changed & NETIF_F_HW_CSUM)
+ 		ret = bcmgenet_set_tx_csum(dev, wanted);
+ 	if (changed & (NETIF_F_RXCSUM))
+ 		ret = bcmgenet_set_rx_csum(dev, wanted);
+@@ -1516,24 +1516,19 @@ static struct sk_buff *bcmgenet_put_tx_csum(struct net_device *dev,
+ 			ip_proto = ipv6_hdr(skb)->nexthdr;
+ 			break;
+ 		default:
+-			return skb;
++			/* don't use UDP flag */
++			ip_proto = 0;
++			break;
+ 		}
+ 
+ 		offset = skb_checksum_start_offset(skb) - sizeof(*status);
+ 		tx_csum_info = (offset << STATUS_TX_CSUM_START_SHIFT) |
+-				(offset + skb->csum_offset);
++				(offset + skb->csum_offset) |
++				STATUS_TX_CSUM_LV;
+ 
+-		/* Set the length valid bit for TCP and UDP and just set
+-		 * the special UDP flag for IPv4, else just set to 0.
+-		 */
+-		if (ip_proto == IPPROTO_TCP || ip_proto == IPPROTO_UDP) {
+-			tx_csum_info |= STATUS_TX_CSUM_LV;
+-			if (ip_proto == IPPROTO_UDP &&
+-			    ip_ver == htons(ETH_P_IP))
+-				tx_csum_info |= STATUS_TX_CSUM_PROTO_UDP;
+-		} else {
+-			tx_csum_info = 0;
+-		}
++		/* Set the special UDP flag for UDP */
++		if (ip_proto == IPPROTO_UDP)
++			tx_csum_info |= STATUS_TX_CSUM_PROTO_UDP;
+ 
+ 		status->tx_csum_info = tx_csum_info;
+ 	}
+@@ -3536,8 +3531,8 @@ static int bcmgenet_probe(struct platform_device *pdev)
+ 	priv->msg_enable = netif_msg_init(-1, GENET_MSG_DEFAULT);
+ 
+ 	/* Set hardware features */
+-	dev->hw_features |= NETIF_F_SG | NETIF_F_IP_CSUM |
+-		NETIF_F_IPV6_CSUM | NETIF_F_HIGHDMA | NETIF_F_RXCSUM;
++	dev->hw_features |= NETIF_F_SG | NETIF_F_HIGHDMA | NETIF_F_HW_CSUM |
++		NETIF_F_RXCSUM;
+ 
+ 	/* Request the WOL interrupt and advertise suspend if available */
+ 	priv->wol_irq_disabled = true;
 -- 
-
-Changes in v2:
-  - Added "Reviewed-by" where given
-  - Removed no longer used private structure member dma_rx_chk_bit
-  - Used __force casting to remove sparse warnings
-
 2.7.4
 
