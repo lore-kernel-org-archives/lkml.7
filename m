@@ -2,103 +2,119 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B901BC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A172C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99195206E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4DD021582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:25:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="QxUj7/YJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbfLRLVD convert rfc822-to-8bit (ORCPT
+        id S1726793AbfLRLZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 06:21:03 -0500
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:47269 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726676AbfLRLVC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 06:21:02 -0500
-Received: from [37.162.94.155] (port=27596 helo=[192.168.43.3])
-        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1ihXNz-00B31J-Q6; Wed, 18 Dec 2019 12:20:59 +0100
-Subject: Re: [PATCH 06/10] mfd: Add core driver for AD242x A2B transceivers
-To:     Daniel Mack <daniel@zonque.org>, Lee Jones <lee.jones@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        broonie@kernel.org, lars@metafoo.de, pascal.huerst@gmail.com
-References: <20191209183511.3576038-1-daniel@zonque.org>
- <20191209183511.3576038-8-daniel@zonque.org> <20191217133952.GJ18955@dell>
- <ce6e0b19-ec40-c17b-cee6-05eca52d5df3@zonque.org>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <e288a6e1-a967-d7cd-72fc-d190819953e3@lucaceresoli.net>
-Date:   Wed, 18 Dec 2019 12:20:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 18 Dec 2019 06:25:21 -0500
+Received: from nbd.name ([46.4.11.11]:59968 "EHLO nbd.name"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725930AbfLRLZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 06:25:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
+         s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ahKETmSCdf4Aufhf/pe09Jyk6OW5gLzkRqCRss+g1CU=; b=QxUj7/YJsLaThVaFFFbPdWLy+e
+        N+MGkOb+ZWgYVK2o6d/98gsDkGi88LZhVIcZUnnq7R4I2eW2PHO0OTZ8JoND/aE31GYuYdX+0fMPr
+        isRSUxPE27n+xsx0BjYIThpxFZwSLU3pcJ3DpI2SPQ06I3RTjwF272Ff1/ExetHEQvz0=;
+Received: from [80.255.7.118] (helo=nf.local)
+        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <nbd@nbd.name>)
+        id 1ihXS3-0004br-Cs; Wed, 18 Dec 2019 12:25:11 +0100
+Subject: Re: [PATCH 07/55] staging: wfx: ensure that retry policy always
+ fallbacks to MCS0 / 1Mbps
+To:     =?UTF-8?B?SsOpcsO0bWUgUG91aWxsZXI=?= <Jerome.Pouiller@silabs.com>
+Cc:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Alban Jeantheau <Alban.Jeantheau@silabs.com>
+References: <20191216170302.29543-1-Jerome.Pouiller@silabs.com>
+ <3755885.sodJc2dsoe@pc-42> <f5a6b1b4-6000-04c9-f3a6-c2be8e5dcc61@nbd.name>
+ <3099559.gv3Q75KnN1@pc-42>
+From:   Felix Fietkau <nbd@nbd.name>
+Autocrypt: addr=nbd@nbd.name; prefer-encrypt=mutual; keydata=
+ xsDiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
+ ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
+ Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
+ AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
+ vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
+ wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
+ TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
+ l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwc0cRmVsaXggRmll
+ dGthdSA8bmJkQG5iZC5uYW1lPsJgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
+ HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
+ VrwYTIThkTlQzsFNBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
+ CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
+ VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
+ Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
+ DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
+ wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
+ f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
+ aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
+ FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
+ TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabwkkE
+ GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCfTKx80VvCR/PvsUlrvdOLsIgeRGAAn1ee
+ RjMaxwtSdaCKMw3j33ZbsWS4
+Message-ID: <220d3638-f500-eee8-8e00-2abd44282310@nbd.name>
+Date:   Wed, 18 Dec 2019 12:25:10 +0100
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <ce6e0b19-ec40-c17b-cee6-05eca52d5df3@zonque.org>
+In-Reply-To: <3099559.gv3Q75KnN1@pc-42>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8BIT
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
-
-On 17/12/19 20:24, Daniel Mack wrote:
->>> +++ b/drivers/mfd/ad242x-bus.c
->>> @@ -0,0 +1,42 @@
->>> +// SPDX-License-Identifier: GPL-2.0-only
->>> +
->>> +#include <linux/i2c.h>
->>> +#include <linux/init.h>
->>> +#include <linux/mfd/ad242x.h>
->>> +#include <linux/module.h>
->>> +#include <linux/of.h>
->>> +
->>> +static int ad242x_bus_i2c_probe(struct i2c_client *i2c,
->>> +                const struct i2c_device_id *id)
->>> +{
->>> +    dev_set_drvdata(&i2c->dev, i2c);
->>> +    i2c_set_clientdata(i2c, &i2c->dev);
->>
->> Please explain to me what you think is happening here.
->>
->>> +    return 0;
->>> +}
->>
->> What does this driver do?  Seems kinda pointless?
+On 2019-12-17 16:15, Jérôme Pouiller wrote:
+> On Tuesday 17 December 2019 12:20:40 CET Felix Fietkau wrote:
+> [...]
+>> Instead of using per-packet rate info, implement the
+>> .sta_rate_tbl_update callback to maintain a primary tx policy used for
+>> all non-probing non-fixed-rate packets, which you can alter while
+>> packets using it are queued already.
+>> The existing approach using per-packet tx_info data should then be used
+>> only for probing or fixed-rate packets.
+>> You then probably have to be a bit clever in the tx status path for
+>> figuring out what rates were actually used.
 > 
-> As explained in the commit log, these devices expose two addresses on
-> the i2c bus, and each of which exists for a distinct purpose. The
-> primary one is used to access registers on the master node itself, the
-> second one is proxying traffic to remote nodes.
+> Indeed, I have noticed that we are are to react to any changes on the
+> link quality. Your idea may helps a lot. Thank you.
 > 
-> Now, the question is how to support that, and the approach chosen here
-> is to have a dummy driver sitting on the 2nd address, and to reach out
-> to it via a DT phandle from the master node. I don't like that much
-> either, but I'm not aware of a cleaner way to bind two addresses with
-> one driver. If there is any, I'd be happy to change that.
+> Do you know if I can safely rely on IEEE80211_TX_CTL_RATE_CTRL_PROBE and
+> IEEE80211_TX_CTL_USE_MINRATE to detect probing and fixed-rate packets?
+Set the hw flag SUPPORTS_RC_TABLE. That way the skb tx_info will only
+have control->rates set for if there are overrides, probing rate, fixed
+rate, etc.
+That way you can use the default policy if info->control.rates[0].idx == -1
 
-Have a look at i2c_new_dummy_device(), perhaps it is what you need here.
+> I currently work on others parts, but I think I will try your suggestion
+> in January.
+> 
+> One last thing, do you know why minstrel appends the lowest rate and
+> minstrel_ht don't? They should be identical, not?
+The minstrel_ht algorithm is newer and minstrel just hasn't been updated
+for a number of algorithm changes yet.
 
--- 
-Luca
-
+- Felix
