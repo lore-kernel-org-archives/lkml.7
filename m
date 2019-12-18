@@ -2,118 +2,83 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56BF1C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B3CDC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25ABD227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:11:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="aaCfR0uO"
+	by mail.kernel.org (Postfix) with ESMTP id 4E522227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:13:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbfLRLLG (ORCPT
+        id S1726764AbfLRLM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 06:11:06 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33423 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726729AbfLRLLF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 06:11:05 -0500
-Received: by mail-wr1-f65.google.com with SMTP id b6so1849371wrq.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 03:11:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=IiFtSfDjWGdjcVj/Cig3gW5ylZi2W/jVaaneb1ETE7o=;
-        b=aaCfR0uOJKRxlZ0/X60eJqXxOjxofImtpit3PnZQuo2PmTiNAoDqoqUZ1rnr7eEMyL
-         nyKXD3Wo0nCOQr8TT/Qk1yhUsS3YtZ/AKFs4peQWK+HLYscjC8dUwWuMGoSjCgHgu43c
-         2y1N1rYGSvDo4F9T7VwOtMlQ5DP0whuL3x1A2cO6fipPV/+TDZM6r0mfGyr/MbIE6ygB
-         0lNrgijd7PNF+JcJAfXu8EUUxgNu0zkCRx11SYoAIKVfkuApVrIEE3IzjZZFASZDSkxQ
-         evSXUVQNVQePgtXbCmbeQKr6P0l7FmnxbWSOZTwQuXciYUwu9foOR7sc+39guYR0Jzan
-         atrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=IiFtSfDjWGdjcVj/Cig3gW5ylZi2W/jVaaneb1ETE7o=;
-        b=hCZt5TaKOXvfKvSn3QrH88BCsZqoEOGMk2qx2YyjoMgmvwlAQfzOnlLsHNz22ZXVlr
-         CdjJheZWQmShLqVkuIaARoUmZLUZNwOoiRN4Yo9Bl1PRSMhbLG4NPM62w4KSJGqR2oQ7
-         08NCVmifSLJqZdFgUaytrgFcki5n4kB92qJF0fJpothnAFKoHeK3D+nbaeY3KoEdjOUA
-         dnwP0wd0pTnArgAGokHjJUZddxecwI2ak8/sXnMC/jVDbW1UReS1Mj842UOpsYrHTRL5
-         4rRiEQmbCC66OouNp1lQlDxe6pJTqFJm9PnmRSlj4dXw3o61qY4zScyDGYltuouf88xv
-         lj/w==
-X-Gm-Message-State: APjAAAWCUOsOObSuDbt4gsfh3CvbFKKCihdtBL53qjydY3V/KYG5fPVx
-        fVwJXP+sgPPTjn7ksrff7flVG0n1K4SHM9AT6s4TrQ==
-X-Google-Smtp-Source: APXvYqwv8hPq5nxjZHQ3sCNBeqM/+re1zUes66iqhNu796cSmk/vhcWdcgcKguzrf+023UauKjSE5fCBEw8iKR5QFe8=
-X-Received: by 2002:a5d:6350:: with SMTP id b16mr2245437wrw.132.1576667463555;
- Wed, 18 Dec 2019 03:11:03 -0800 (PST)
+        Wed, 18 Dec 2019 06:12:59 -0500
+Received: from mx2.suse.de ([195.135.220.15]:55134 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725930AbfLRLM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 06:12:59 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 274E8B1A1;
+        Wed, 18 Dec 2019 11:12:56 +0000 (UTC)
+Subject: Re: [PATCH] scsi: libfc: remove unnecessary assertion on ep variable
+To:     Aditya Pakki <pakki001@umn.edu>
+Cc:     kjlu@umn.edu, "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191217212214.30722-1-pakki001@umn.edu>
+From:   Hannes Reinecke <hare@suse.de>
+Message-ID: <ca12f639-2ee0-55eb-c927-c1ce97208c00@suse.de>
+Date:   Wed, 18 Dec 2019 12:12:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-References: <20191210154157.21930-1-ktouil@baylibre.com> <20191210154157.21930-2-ktouil@baylibre.com>
- <CACRpkdZb6OppcdCcaQ9abdkDJMk4escyyEm1TMB75rRxoN5e2A@mail.gmail.com>
-In-Reply-To: <CACRpkdZb6OppcdCcaQ9abdkDJMk4escyyEm1TMB75rRxoN5e2A@mail.gmail.com>
-From:   Khouloud Touil <ktouil@baylibre.com>
-Date:   Wed, 18 Dec 2019 12:10:52 +0100
-Message-ID: <CALL1Z1xwd5+HeCWWG5DQ8XMph=v=UmpW+P9vG4Lg_vVvzySjiQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: nvmem: new optional property write-protect-gpios
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        baylibre-upstreaming@groups.io,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191217212214.30722-1-pakki001@umn.edu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le lun. 16 d=C3=A9c. 2019 =C3=A0 09:08, Linus Walleij <linus.walleij@linaro=
-.org> a =C3=A9crit :
->
-> On Tue, Dec 10, 2019 at 4:42 PM Khouloud Touil <ktouil@baylibre.com> wrot=
-e:
->
-> > +  wp-gpios:
-> > +    description:
-> > +      GPIO to which the write-protect pin of the chip is connected.
-> > +      The write-protect GPIO is asserted, when it's driven high
-> > +      (logical '1') to block the write operation. It's deasserted,
-> > +      when it's driven low (logical '0') to allow writing.
-> > +    maxItems: 1
->
-> OK I guess we can't get it less convoluted. This section is consistent.
->
-> >  patternProperties:
-> >    "^.*@[0-9a-f]+$":
-> >      type: object
-> > @@ -66,6 +74,7 @@ examples:
-> >        qfprom: eeprom@700000 {
-> >            #address-cells =3D <1>;
-> >            #size-cells =3D <1>;
-> > +          wp-gpios =3D <&gpio1 3 0>;
->
-> In the example please use the include for GPIO:
->
-> #include <dt-bindings/gpio/gpio.h>
->
-> wp-gpios =3D <&gpio1 3 GPIO_ACTIVE_HIGH>;
->
-> You can just put the #include directive right before the
-> example, it should work fine.
+On 12/17/19 10:22 PM, Aditya Pakki wrote:
+> In ft_recv_write_data(), the pointer ep is dereferenced first and
+> then asserts for NULL. The patch removes the unnecessary assertion.
+> 
+> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+> ---
+>   drivers/target/tcm_fc/tfc_io.c | 1 -
+>   1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/target/tcm_fc/tfc_io.c b/drivers/target/tcm_fc/tfc_io.c
+> index 1354a157e9af..6a38ff936389 100644
+> --- a/drivers/target/tcm_fc/tfc_io.c
+> +++ b/drivers/target/tcm_fc/tfc_io.c
+> @@ -221,7 +221,6 @@ void ft_recv_write_data(struct ft_cmd *cmd, struct fc_frame *fp)
+>   	ep = fc_seq_exch(seq);
+>   	lport = ep->lp;
+>   	if (cmd->was_ddp_setup) {
+> -		BUG_ON(!ep);
+>   		BUG_ON(!lport);
+>   		/*
+>   		 * Since DDP (Large Rx offload) was setup for this request,
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-Yes sure will fix that.
-Thanks for your reviews.
+Cheers,
 
-Best regards,
-Khouloud
->
-> Yours,
-> Linus Walleij
+Hannes
+-- 
+Dr. Hannes Reinecke            Teamlead Storage & Networking
+hare@suse.de                               +49 911 74053 688
+SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
