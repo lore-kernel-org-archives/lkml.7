@@ -2,280 +2,433 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F20DAC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB39FC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:08:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD0202072B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7783421582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:08:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cGXORTIz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727767AbfLRSI0 (ORCPT
+        id S1727535AbfLRSHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 13:08:26 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2207 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727650AbfLRSIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 13:08:21 -0500
-Received: from lhreml705-cah.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 1D71896BD28CD8A35F4B;
-        Wed, 18 Dec 2019 18:08:19 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml705-cah.china.huawei.com (10.201.108.46) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 18 Dec 2019 18:08:18 +0000
-Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 18 Dec
- 2019 18:08:18 +0000
-Subject: Re: Warnings in DRM code when removing/unbinding a driver
-From:   John Garry <john.garry@huawei.com>
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        "kongxinwei (A)" <kong.kongxinwei@hisilicon.com>,
-        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>, <tzimmermann@suse.de>
-CC:     Linuxarm <linuxarm@huawei.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <kraxel@redhat.com>, <dbueso@suse.de>
-References: <07899bd5-e9a5-cff0-395f-b4fb3f0f7f6c@huawei.com>
- <f867543cf5d0fc3fdd0534749326411bcfc5e363.camel@collabora.com>
- <c2e5f5a5-5839-42a9-2140-903e99e166db@huawei.com>
-Message-ID: <fde72f73-d678-2b77-3950-d465f0afe904@huawei.com>
-Date:   Wed, 18 Dec 2019 18:08:17 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Wed, 18 Dec 2019 13:07:39 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:21734 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727517AbfLRSHg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 13:07:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576692455;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=R0baLjp0RSWLGyQbUMoUgnF3ovbGuvh5LnfEYrDFhNM=;
+        b=cGXORTIz4X61GYBm1nlcmgdLh6SDrlGpxTKqE0RgZA6frwkJbCqRFUPIkJ3tVoem3halCO
+        T2uyIWATb1nNEIxmlrTJ3QVnUJ2/giVfhsLfsNQNHKuQbLVTKSkpNMOBVHQGigykrU5e3e
+        Fn75SBrFdXkyufpI0KTp4+gY2qbH9f0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-54-C1YMcPs6PlGhC4zeAksxFA-1; Wed, 18 Dec 2019 13:07:30 -0500
+X-MC-Unique: C1YMcPs6PlGhC4zeAksxFA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C8A7A1856A64;
+        Wed, 18 Dec 2019 18:07:27 +0000 (UTC)
+Received: from steredhat.redhat.com (ovpn-117-218.ams2.redhat.com [10.36.117.218])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 70EB85D9E2;
+        Wed, 18 Dec 2019 18:07:23 +0000 (UTC)
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     davem@davemloft.net
+Cc:     Jorgen Hansen <jhansen@vmware.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Dexuan Cui <decui@microsoft.com>, netdev@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Stefano Garzarella <sgarzare@redhat.com>
+Subject: [PATCH net-next v3 03/11] VSOCK: extract utility functions from vsock_diag_test.c
+Date:   Wed, 18 Dec 2019 19:07:00 +0100
+Message-Id: <20191218180708.120337-4-sgarzare@redhat.com>
+In-Reply-To: <20191218180708.120337-1-sgarzare@redhat.com>
+References: <20191218180708.120337-1-sgarzare@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <c2e5f5a5-5839-42a9-2140-903e99e166db@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.202.226.46]
-X-ClientProxiedBy: lhreml712-chm.china.huawei.com (10.201.108.63) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Stefan Hajnoczi <stefanha@redhat.com>
+
+Move useful functions into a separate file in preparation for more
+vsock test programs.
+
+Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+---
+v2:
+ * aligned with the current SPDX [Stefano]
+---
+ tools/testing/vsock/Makefile          |  2 +-
+ tools/testing/vsock/util.c            | 66 +++++++++++++++++++
+ tools/testing/vsock/util.h            | 36 +++++++++++
+ tools/testing/vsock/vsock_diag_test.c | 92 +++++++--------------------
+ 4 files changed, 125 insertions(+), 71 deletions(-)
+ create mode 100644 tools/testing/vsock/util.c
+ create mode 100644 tools/testing/vsock/util.h
+
+diff --git a/tools/testing/vsock/Makefile b/tools/testing/vsock/Makefile
+index d41a4e13960a..a916878a2d8c 100644
+--- a/tools/testing/vsock/Makefile
++++ b/tools/testing/vsock/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ all: test
+ test: vsock_diag_test
+-vsock_diag_test: vsock_diag_test.o timeout.o control.o
++vsock_diag_test: vsock_diag_test.o timeout.o control.o util.o
+=20
+ CFLAGS +=3D -g -O2 -Werror -Wall -I. -I../../include -I../../../usr/incl=
+ude -Wno-pointer-sign -fno-strict-overflow -fno-strict-aliasing -fno-comm=
+on -MMD -U_FORTIFY_SOURCE -D_GNU_SOURCE
+ .PHONY: all test clean
+diff --git a/tools/testing/vsock/util.c b/tools/testing/vsock/util.c
+new file mode 100644
+index 000000000000..f40f45b36d2f
+--- /dev/null
++++ b/tools/testing/vsock/util.c
+@@ -0,0 +1,66 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * vsock test utilities
++ *
++ * Copyright (C) 2017 Red Hat, Inc.
++ *
++ * Author: Stefan Hajnoczi <stefanha@redhat.com>
++ */
 +
-
-So the v5.4 kernel does not have this issue.
-
-I have bisected the initial occurrence to:
-
-commit 37a48adfba6cf6e87df9ba8b75ab85d514ed86d8
-Author: Thomas Zimmermann <tzimmermann@suse.de>
-Date:   Fri Sep 6 14:20:53 2019 +0200
-
-     drm/vram: Add kmap ref-counting to GEM VRAM objects
-
-     The kmap and kunmap operations of GEM VRAM buffers can now be called
-     in interleaving pairs. The first call to drm_gem_vram_kmap() maps the
-     buffer's memory to kernel address space and the final call to
-     drm_gem_vram_kunmap() unmaps the memory. Intermediate calls to these
-     functions increment or decrement a reference counter.
-
-So this either exposes or creates the issue.
-
-John
-
->> On Mon, 2019-12-16 at 17:23 +0000, John Garry wrote:
->>> Hi all,
->>>
->>> Enabling CONFIG_DEBUG_TEST_DRIVER_REMOVE causes many warns on a system
->>> with the HIBMC hw:
->>>
->>> [   27.788806] WARNING: CPU: 24 PID: 1 at
->>> drivers/gpu/drm/drm_gem_vram_helper.c:564 
->>> bo_driver_move_notify+0x8c/0x98
->>
->> A total shot in the dark. This might make no sense,
->> but it's worth a try:
-> 
-> Thanks for the suggestion, but still the same splat.
-> 
-> I haven't had a chance to analyze the problem myself. But perhaps we 
-> should just change over the device-managed interface, as Daniel mentioned.
-> 
->>
->> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c 
->> b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
->> index 2fd4ca91a62d..69bb0e29da88 100644
->> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
->> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
->> @@ -247,9 +247,8 @@ static int hibmc_unload(struct drm_device *dev)
->>   {
->>          struct hibmc_drm_private *priv = dev->dev_private;
->> -       hibmc_fbdev_fini(priv);
->> -
->>          drm_atomic_helper_shutdown(dev);
->> +       hibmc_fbdev_fini(priv);
->>          if (dev->irq_enabled)
->>                  drm_irq_uninstall(dev);
->>
->> Hope it helps,
->> Ezequiel
->>
-> 
-> Thanks,
-> John
-> 
-> [EOM]
-> 
->>> [   27.798969] Modules linked in:
->>> [   27.802018] CPU: 24 PID: 1 Comm: swapper/0 Tainted: G    B
->>>    5.5.0-rc1-dirty #565
->>> [   27.810358] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI
->>> RC0 - V1.16.01 03/15/2019
->>> [   27.818872] pstate: 20c00009 (nzCv daif +PAN +UAO)
->>> [   27.823654] pc : bo_driver_move_notify+0x8c/0x98
->>> [   27.828262] lr : bo_driver_move_notify+0x40/0x98
->>> [   27.832868] sp : ffff00236f0677e0
->>> [   27.836173] x29: ffff00236f0677e0 x28: ffffa0001454e5e0
->>> [   27.841476] x27: ffff002366e52128 x26: ffffa000149e67b0
->>> [   27.846779] x25: ffff002366e523e0 x24: ffff002336936120
->>> [   27.852082] x23: ffff0023346f4010 x22: ffff002336936128
->>> [   27.857385] x21: ffffa000149c15c0 x20: ffff0023369361f8
->>> [   27.862687] x19: ffff002336936000 x18: 0000000000001258
->>> [   27.867989] x17: 0000000000001190 x16: 00000000000011d0
->>> [   27.873292] x15: 0000000000001348 x14: ffffa00012d68190
->>> [   27.878595] x13: 0000000000000006 x12: 1ffff40003241f91
->>> [   27.883897] x11: ffff940003241f91 x10: dfffa00000000000
->>> [   27.889200] x9 : ffff940003241f92 x8 : 0000000000000001
->>> [   27.894502] x7 : ffffa0001920fc88 x6 : ffff940003241f92
->>> [   27.899804] x5 : ffff940003241f92 x4 : ffff0023369363a0
->>> [   27.905107] x3 : ffffa00010c104b8 x2 : dfffa00000000000
->>> [   27.910409] x1 : 0000000000000003 x0 : 0000000000000001
->>> [   27.915712] Call trace:
->>> [   27.918151]  bo_driver_move_notify+0x8c/0x98
->>> [   27.922412]  ttm_bo_cleanup_memtype_use+0x54/0x100
->>> [   27.927194]  ttm_bo_put+0x3a0/0x5d0
->>> [   27.930673]  drm_gem_vram_object_free+0xc/0x18
->>> [   27.935109]  drm_gem_object_free+0x34/0xd0
->>> [   27.939196]  drm_gem_object_put_unlocked+0xc8/0xf0
->>> [   27.943978]  hibmc_user_framebuffer_destroy+0x20/0x40
->>> [   27.949020]  drm_framebuffer_free+0x48/0x58
->>> [   27.953194]  drm_mode_object_put.part.1+0x90/0xe8
->>> [   27.957889]  drm_mode_object_put+0x28/0x38
->>> [   27.961976]  hibmc_fbdev_fini+0x54/0x78
->>> [   27.965802]  hibmc_unload+0x2c/0xd0
->>> [   27.969281]  hibmc_pci_remove+0x2c/0x40
->>> [   27.973109]  pci_device_remove+0x6c/0x140
->>> [   27.977110]  really_probe+0x174/0x548
->>> [   27.980763]  driver_probe_device+0x7c/0x148
->>> [   27.984936]  device_driver_attach+0x94/0xa0
->>> [   27.989109]  __driver_attach+0xa8/0x110
->>> [   27.992935]  bus_for_each_dev+0xe8/0x158
->>> [   27.996849]  driver_attach+0x30/0x40
->>> [   28.000415]  bus_add_driver+0x234/0x2f0
->>> [   28.004241]  driver_register+0xbc/0x1d0
->>> [   28.008067]  __pci_register_driver+0xbc/0xd0
->>> [   28.012329]  hibmc_pci_driver_init+0x20/0x28
->>> [   28.016590]  do_one_initcall+0xb4/0x254
->>> [   28.020417]  kernel_init_freeable+0x27c/0x328
->>> [   28.024765]  kernel_init+0x10/0x118
->>> [   28.028245]  ret_from_fork+0x10/0x18
->>> [   28.031813] ---[ end trace 35a83b71b657878d ]---
->>> [   28.036503] ------------[ cut here ]------------
->>> [   28.041115] WARNING: CPU: 24 PID: 1 at
->>> drivers/gpu/drm/drm_gem_vram_helper.c:40 
->>> ttm_buffer_object_destroy+0x4c/0x80
->>> [   28.051537] Modules linked in:
->>> [   28.054585] CPU: 24 PID: 1 Comm: swapper/0 Tainted: G    B   W
->>>    5.5.0-rc1-dirty #565
->>> [   28.062924] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI
->>> RC0 - V1.16.01 03/15/2019
->>>
->>> [snip]
->>>
->>> Indeed, simply unbinding the device from the driver causes the same sort
->>> of issue:
->>>
->>> root@(none)$ cd ./bus/pci/drivers/hibmc-drm/
->>> root@(none)$ ls
->>> 0000:05:00.0  bind          new_id        remove_id     uevent        
->>> unbind
->>> root@(none)$ echo 0000\:05\:00.0 > unbind
->>> [  116.074352] ------------[ cut here ]------------
->>> [  116.078978] WARNING: CPU: 17 PID: 1178 at
->>> drivers/gpu/drm/drm_gem_vram_helper.c:40 
->>> ttm_buffer_object_destroy+0x4c/0x80
->>> [  116.089661] Modules linked in:
->>> [  116.092711] CPU: 17 PID: 1178 Comm: sh Tainted: G    B   W
->>> 5.5.0-rc1-dirty #565
->>> [  116.100704] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI
->>> RC0 - V1.16.01 03/15/2019
->>> [  116.109218] pstate: 20400009 (nzCv daif +PAN -UAO)
->>> [  116.114001] pc : ttm_buffer_object_destroy+0x4c/0x80
->>> [  116.118956] lr : ttm_buffer_object_destroy+0x18/0x80
->>> [  116.123910] sp : ffff0022e6cef8e0
->>> [  116.127215] x29: ffff0022e6cef8e0 x28: ffff00231b1fb000
->>> [  116.132519] x27: 0000000000000000 x26: ffff00231b1fb000
->>> [  116.137821] x25: ffff0022e6cefdc0 x24: 0000000000002480
->>> [  116.143124] x23: ffff0023682b6ab0 x22: ffff0023682b6800
->>> [  116.148427] x21: ffff0023682b6800 x20: 0000000000000000
->>> [  116.153730] x19: ffff0023682b6800 x18: 0000000000000000
->>> [  116.159032] x17: 000000000000000000000000001
->>> [  116.185545] x7 : ffff0023682b6b07 x6 : ffff80046d056d61
->>> [  116.190848] x5 : ffff80046d056d61 x4 : ffff0023682b6ba0
->>> [  116.196151] x3 : ffffa00010197338 x2 : dfffa00000000000
->>> [  116.201453] x1 : 0000000000000003 x0 : 0000000000000001
->>> [  116.206756] Call trace:
->>> [  116.209195]  ttm_buffer_object_destroy+0x4c/0x80
->>> [  116.213803]  ttm_bo_release_list+0x184/0x220
->>> [  116.218064]  ttm_bo_put+0x410/0x5d0
->>> [  116.221544]  drm_gem_vram_object_free+0xc/0x18
->>> [  116.225979]  drm_gem_object_free+0x34/0xd0
->>> [  116.230066]  drm_gem_object_put_unlocked+0xc8/0xf0
->>> [  116.234848]  hibmc_user_framebuffer_destroy+0x20/0x40
->>> [  116.239890]  drm_framebuffer_free+0x48/0x58
->>> [  116.244064]  drm_mode_object_put.part.1+0x90/0xe8
->>> [  116.248759]  drm_mode_object_put+0x28/0x38
->>> [  116.252846]  hibmc_fbdev_fini+0x54/0x78
->>> [  116.256672]  hibmc_unload+0x2c/0xd0
->>> [  116.260151]  hibmc_pci_remove+0x2c/0x40
->>> [  116.263979]  pci_device_remove+0x6c/0x140
->>> [  116.267980]  device_release_driver_internal+0x134/0x250
->>> [  116.273196]  device_driver_detach+0x28/0x38
->>> [  116.277369]  unbind_store+0xfc/0x150
->>> [  116.280934]  drv_attr_store+0x48/0x60
->>> [  116.284589]  sysfs_kf_write+0x80/0xb0
->>> [  116.288241]  kernfs_fop_write+0x1d4/0x320
->>> [  116.292243]  __vfs_write+0x54/0x98
->>> [  116.295635]  vfs_write+0xe8/0x270
->>> [  116.298940]  ksys_write+0xc8/0x180
->>> [  116.302333]  __arm64_sys_write+0x40/0x50
->>> [  116.306248]  el0_svc_common.constprop.0+0xa4/0x1f8
->>> [  116.311029]  el0_svc_handler+0x34/0xb0
->>> [  116.314770]  el0_sync_handler+0x10c/0x1c8
->>> [  116.318769]  el0_sync+0x140/0x180
->>> [  116.322074] ---[ end trace e60e43d0e316b5c8 ]---
->>> [  116.326868] ------------[ cut here ]------------
->>>
->>>
->>> dmesg and .config is here:
->>> https://pastebin.com/4P5yaZBS
->>>
->>> I'm not sure if this is a HIBMC driver issue or issue with the 
->>> framework.
->>>
->>> john
->>>
->>>
->>> _______________________________________________
->>> dri-devel mailing list
->>> dri-devel@lists.freedesktop.org
->>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
->>
->>
-> 
-> _______________________________________________
-> Linuxarm mailing list
-> Linuxarm@huawei.com
-> http://hulk.huawei.com/mailman/listinfo/linuxarm
-> .
++#include <errno.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <signal.h>
++
++#include "timeout.h"
++#include "util.h"
++
++/* Install signal handlers */
++void init_signals(void)
++{
++	struct sigaction act =3D {
++		.sa_handler =3D sigalrm,
++	};
++
++	sigaction(SIGALRM, &act, NULL);
++	signal(SIGPIPE, SIG_IGN);
++}
++
++/* Parse a CID in string representation */
++unsigned int parse_cid(const char *str)
++{
++	char *endptr =3D NULL;
++	unsigned long n;
++
++	errno =3D 0;
++	n =3D strtoul(str, &endptr, 10);
++	if (errno || *endptr !=3D '\0') {
++		fprintf(stderr, "malformed CID \"%s\"\n", str);
++		exit(EXIT_FAILURE);
++	}
++	return n;
++}
++
++/* Run test cases.  The program terminates if a failure occurs. */
++void run_tests(const struct test_case *test_cases,
++	       const struct test_opts *opts)
++{
++	int i;
++
++	for (i =3D 0; test_cases[i].name; i++) {
++		void (*run)(const struct test_opts *opts);
++
++		printf("%s...", test_cases[i].name);
++		fflush(stdout);
++
++		if (opts->mode =3D=3D TEST_MODE_CLIENT)
++			run =3D test_cases[i].run_client;
++		else
++			run =3D test_cases[i].run_server;
++
++		if (run)
++			run(opts);
++
++		printf("ok\n");
++	}
++}
+diff --git a/tools/testing/vsock/util.h b/tools/testing/vsock/util.h
+new file mode 100644
+index 000000000000..033e7d59a42a
+--- /dev/null
++++ b/tools/testing/vsock/util.h
+@@ -0,0 +1,36 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++#ifndef UTIL_H
++#define UTIL_H
++
++/* Tests can either run as the client or the server */
++enum test_mode {
++	TEST_MODE_UNSET,
++	TEST_MODE_CLIENT,
++	TEST_MODE_SERVER
++};
++
++/* Test runner options */
++struct test_opts {
++	enum test_mode mode;
++	unsigned int peer_cid;
++};
++
++/* A test case definition.  Test functions must print failures to stderr=
+ and
++ * terminate with exit(EXIT_FAILURE).
++ */
++struct test_case {
++	const char *name; /* human-readable name */
++
++	/* Called when test mode is TEST_MODE_CLIENT */
++	void (*run_client)(const struct test_opts *opts);
++
++	/* Called when test mode is TEST_MODE_SERVER */
++	void (*run_server)(const struct test_opts *opts);
++};
++
++void init_signals(void);
++unsigned int parse_cid(const char *str);
++void run_tests(const struct test_case *test_cases,
++	       const struct test_opts *opts);
++
++#endif /* UTIL_H */
+diff --git a/tools/testing/vsock/vsock_diag_test.c b/tools/testing/vsock/=
+vsock_diag_test.c
+index fc391e041954..944c8a72eed7 100644
+--- a/tools/testing/vsock/vsock_diag_test.c
++++ b/tools/testing/vsock/vsock_diag_test.c
+@@ -9,12 +9,10 @@
+=20
+ #include <getopt.h>
+ #include <stdio.h>
+-#include <stdbool.h>
+ #include <stdlib.h>
+ #include <string.h>
+ #include <errno.h>
+ #include <unistd.h>
+-#include <signal.h>
+ #include <sys/socket.h>
+ #include <sys/stat.h>
+ #include <sys/types.h>
+@@ -28,12 +26,7 @@
+=20
+ #include "timeout.h"
+ #include "control.h"
+-
+-enum test_mode {
+-	TEST_MODE_UNSET,
+-	TEST_MODE_CLIENT,
+-	TEST_MODE_SERVER
+-};
++#include "util.h"
+=20
+ /* Per-socket status */
+ struct vsock_stat {
+@@ -334,7 +327,7 @@ static void free_sock_stat(struct list_head *sockets)
+ 		free(st);
+ }
+=20
+-static void test_no_sockets(unsigned int peer_cid)
++static void test_no_sockets(const struct test_opts *opts)
+ {
+ 	LIST_HEAD(sockets);
+=20
+@@ -345,7 +338,7 @@ static void test_no_sockets(unsigned int peer_cid)
+ 	free_sock_stat(&sockets);
+ }
+=20
+-static void test_listen_socket_server(unsigned int peer_cid)
++static void test_listen_socket_server(const struct test_opts *opts)
+ {
+ 	union {
+ 		struct sockaddr sa;
+@@ -383,7 +376,7 @@ static void test_listen_socket_server(unsigned int pe=
+er_cid)
+ 	free_sock_stat(&sockets);
+ }
+=20
+-static void test_connect_client(unsigned int peer_cid)
++static void test_connect_client(const struct test_opts *opts)
+ {
+ 	union {
+ 		struct sockaddr sa;
+@@ -392,7 +385,7 @@ static void test_connect_client(unsigned int peer_cid=
+)
+ 		.svm =3D {
+ 			.svm_family =3D AF_VSOCK,
+ 			.svm_port =3D 1234,
+-			.svm_cid =3D peer_cid,
++			.svm_cid =3D opts->peer_cid,
+ 		},
+ 	};
+ 	int fd;
+@@ -429,7 +422,7 @@ static void test_connect_client(unsigned int peer_cid=
+)
+ 	free_sock_stat(&sockets);
+ }
+=20
+-static void test_connect_server(unsigned int peer_cid)
++static void test_connect_server(const struct test_opts *opts)
+ {
+ 	union {
+ 		struct sockaddr sa;
+@@ -481,9 +474,9 @@ static void test_connect_server(unsigned int peer_cid=
+)
+ 			clientaddr.sa.sa_family);
+ 		exit(EXIT_FAILURE);
+ 	}
+-	if (clientaddr.svm.svm_cid !=3D peer_cid) {
++	if (clientaddr.svm.svm_cid !=3D opts->peer_cid) {
+ 		fprintf(stderr, "expected peer CID %u from accept(2), got %u\n",
+-			peer_cid, clientaddr.svm.svm_cid);
++			opts->peer_cid, clientaddr.svm.svm_cid);
+ 		exit(EXIT_FAILURE);
+ 	}
+=20
+@@ -502,11 +495,7 @@ static void test_connect_server(unsigned int peer_ci=
+d)
+ 	free_sock_stat(&sockets);
+ }
+=20
+-static struct {
+-	const char *name;
+-	void (*run_client)(unsigned int peer_cid);
+-	void (*run_server)(unsigned int peer_cid);
+-} test_cases[] =3D {
++static struct test_case test_cases[] =3D {
+ 	{
+ 		.name =3D "No sockets",
+ 		.run_server =3D test_no_sockets,
+@@ -523,30 +512,6 @@ static struct {
+ 	{},
+ };
+=20
+-static void init_signals(void)
+-{
+-	struct sigaction act =3D {
+-		.sa_handler =3D sigalrm,
+-	};
+-
+-	sigaction(SIGALRM, &act, NULL);
+-	signal(SIGPIPE, SIG_IGN);
+-}
+-
+-static unsigned int parse_cid(const char *str)
+-{
+-	char *endptr =3D NULL;
+-	unsigned long int n;
+-
+-	errno =3D 0;
+-	n =3D strtoul(str, &endptr, 10);
+-	if (errno || *endptr !=3D '\0') {
+-		fprintf(stderr, "malformed CID \"%s\"\n", str);
+-		exit(EXIT_FAILURE);
+-	}
+-	return n;
+-}
+-
+ static const char optstring[] =3D "";
+ static const struct option longopts[] =3D {
+ 	{
+@@ -601,9 +566,10 @@ int main(int argc, char **argv)
+ {
+ 	const char *control_host =3D NULL;
+ 	const char *control_port =3D NULL;
+-	int mode =3D TEST_MODE_UNSET;
+-	unsigned int peer_cid =3D VMADDR_CID_ANY;
+-	int i;
++	struct test_opts opts =3D {
++		.mode =3D TEST_MODE_UNSET,
++		.peer_cid =3D VMADDR_CID_ANY,
++	};
+=20
+ 	init_signals();
+=20
+@@ -619,16 +585,16 @@ int main(int argc, char **argv)
+ 			break;
+ 		case 'm':
+ 			if (strcmp(optarg, "client") =3D=3D 0)
+-				mode =3D TEST_MODE_CLIENT;
++				opts.mode =3D TEST_MODE_CLIENT;
+ 			else if (strcmp(optarg, "server") =3D=3D 0)
+-				mode =3D TEST_MODE_SERVER;
++				opts.mode =3D TEST_MODE_SERVER;
+ 			else {
+ 				fprintf(stderr, "--mode must be \"client\" or \"server\"\n");
+ 				return EXIT_FAILURE;
+ 			}
+ 			break;
+ 		case 'p':
+-			peer_cid =3D parse_cid(optarg);
++			opts.peer_cid =3D parse_cid(optarg);
+ 			break;
+ 		case 'P':
+ 			control_port =3D optarg;
+@@ -641,35 +607,21 @@ int main(int argc, char **argv)
+=20
+ 	if (!control_port)
+ 		usage();
+-	if (mode =3D=3D TEST_MODE_UNSET)
++	if (opts.mode =3D=3D TEST_MODE_UNSET)
+ 		usage();
+-	if (peer_cid =3D=3D VMADDR_CID_ANY)
++	if (opts.peer_cid =3D=3D VMADDR_CID_ANY)
+ 		usage();
+=20
+ 	if (!control_host) {
+-		if (mode !=3D TEST_MODE_SERVER)
++		if (opts.mode !=3D TEST_MODE_SERVER)
+ 			usage();
+ 		control_host =3D "0.0.0.0";
+ 	}
+=20
+-	control_init(control_host, control_port, mode =3D=3D TEST_MODE_SERVER);
+-
+-	for (i =3D 0; test_cases[i].name; i++) {
+-		void (*run)(unsigned int peer_cid);
++	control_init(control_host, control_port,
++		     opts.mode =3D=3D TEST_MODE_SERVER);
+=20
+-		printf("%s...", test_cases[i].name);
+-		fflush(stdout);
+-
+-		if (mode =3D=3D TEST_MODE_CLIENT)
+-			run =3D test_cases[i].run_client;
+-		else
+-			run =3D test_cases[i].run_server;
+-
+-		if (run)
+-			run(peer_cid);
+-
+-		printf("ok\n");
+-	}
++	run_tests(test_cases, &opts);
+=20
+ 	control_cleanup();
+ 	return EXIT_SUCCESS;
+--=20
+2.24.1
 
