@@ -2,142 +2,124 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3143AC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 295BEC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 039BF21582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:48:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LsfhdNno"
+	by mail.kernel.org (Postfix) with ESMTP id F282C21582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:49:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576669760;
+	bh=D0KfWFKQnsh0M2Jg4/pnIgGfmjwpAKhCm83TzxKKh54=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=d6O2SdoqaF8fKBv2BZ9sdVyJ+CnH3Ey1XwRQ36xJbCcoylWDiNMQzNS+r88hdc4H1
+	 uVDzFCNr6FNIdPY+syquezq16G9a87O4BI3Doe44esFommgi2JXDIYhIHNNittNB2y
+	 isFoWlLxKhKDGbrSJWo7Cke2kSVnnSlGnAYpZLFQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbfLRLs6 (ORCPT
+        id S1726921AbfLRLtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 06:48:58 -0500
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:34143 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726141AbfLRLs5 (ORCPT
+        Wed, 18 Dec 2019 06:49:19 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:41229 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726141AbfLRLtT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 06:48:57 -0500
-Received: by mail-vs1-f65.google.com with SMTP id g15so1201121vsf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 03:48:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=p1mHuB8yUnmQS9SpnJEkcOHQjoqYysF0srh4TVk8yKQ=;
-        b=LsfhdNnomA+RaZ39fgqS0Kqnx6OFiMGTmVA4ehQ0EOYu8i0rslntCqfKIY7CrpQqo8
-         HqGKZ1twIJXoKgwNOtSQJq1HL1yu4BwTpMsQc55gl3AbreV4pTzxmBuiwrc6crVj2+0z
-         ekCAL5nmr9Q3SRYlkRy4hL77GC8q8UgK1+aGc9oZTPjAS/4mNfVZBEMLtrG+JrLNJcTW
-         N2H/Yxt/tPlj9glYmnASKFo7T/V7ImuuBvRQLFQWGIrVPE47ZguZPpZLYNeaOkg1bdId
-         BXorMRB6S8WwnyywnTkuYyms4ak0SvxJnzsNyXLThU/1f7lZjqW1a1CEq1i5Eg8XS+8t
-         uv6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p1mHuB8yUnmQS9SpnJEkcOHQjoqYysF0srh4TVk8yKQ=;
-        b=hRnl2Va3bC1+KAjl1JKQ3wF2xf6rd+DgGYVrEd14/78gbgEkLDwWoLPdaHsVYbISla
-         LRgEloY+L2n8j1UFzIVpVPcW9cfoF9ki7dcu+RP8Y+vyBkitI/Y6clY2G/68tl16V7XW
-         rWIncYetgts056sNeZThBWA27dadK6fd6xYsIpn6Kc8nigrJKetqZFs9U+UxcF2oTPW/
-         QVidicwPUzp0uNvgecK73HWfSldSqI7ls1p7H6IZprBlekxunugdwQ/aDVgmaepoWnLU
-         zyC+OV7MlvWtizqyobmllOol1OdnVOAPQtStVDVpMpT356B4ui4yvmQYcugVbnuQEyXK
-         scUw==
-X-Gm-Message-State: APjAAAWr+ommPZ8qDT1ZR7/KBlAr7MhMqxcWFRu7p35CH7pnUtBswkeo
-        OrNLDfbqFQOZdUEaIh38AugZTm0vAZd2UmgXw/1FQlCD
-X-Google-Smtp-Source: APXvYqyH0GBNeyTrGXQVb1OsOS5eB50xXlLvgb2rhAYmaBmDtlHg3pf7emYk+wUfgtEKJoE+sCeQkyONMe1gbqIh4w4=
-X-Received: by 2002:a67:b649:: with SMTP id e9mr1082793vsm.34.1576669736873;
- Wed, 18 Dec 2019 03:48:56 -0800 (PST)
+        Wed, 18 Dec 2019 06:49:19 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1ihXpI-0007MK-JJ; Wed, 18 Dec 2019 12:49:12 +0100
+To:     Joakim Zhang <qiangqing.zhang@nxp.com>
+Subject: RE: [PATCH 1/3] dt-bindings/irq: add binding for NXP INTMUX  interrupt multiplexer
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-References: <cover.1576540906.git.nguyenb@codeaurora.org> <68b936a67e67cd25597915cbd76b73ed046d1ce4.1576540908.git.nguyenb@codeaurora.org>
- <20191218083448.GE1554871@kroah.com>
-In-Reply-To: <20191218083448.GE1554871@kroah.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 18 Dec 2019 12:48:20 +0100
-Message-ID: <CAPDyKFr2t3w1wXY+DD27vHF23mSjnUwCh7iZyuQ=ua=s+KvyVA@mail.gmail.com>
-Subject: Re: [<PATCH v1> 7/9] mmc: core: Skip frequency retries for SDCC slots
-To:     "Bao D. Nguyen" <nguyenb@codeaurora.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Asutosh Das <asutoshd@codeaurora.org>, cang@codeaurora.org,
-        Sujith Reddy Thumma <sthumma@codeaurora.org>,
-        Subhash Jadavani <subhashj@codeaurora.org>,
-        Xiaonian Wang <xiaonian@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Wed, 18 Dec 2019 11:49:12 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     <tglx@linutronix.de>, <jason@lakedaemon.net>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <shawnguo@kernel.org>,
+        <s.hauer@pengutronix.de>, "S.j. Wang" <shengjiu.wang@nxp.com>,
+        <kernel@pengutronix.de>, <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Andy Duan <fugang.duan@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>
+In-Reply-To: <DB7PR04MB4618957D7423FFBAECD1EC7EE6530@DB7PR04MB4618.eurprd04.prod.outlook.com>
+References: <1576653615-27954-1-git-send-email-qiangqing.zhang@nxp.com>
+ <1576653615-27954-2-git-send-email-qiangqing.zhang@nxp.com>
+ <254925e345493019c3e1e558b37e46f2@www.loen.fr>
+ <DB7PR04MB4618048D025D094618C6F99FE6530@DB7PR04MB4618.eurprd04.prod.outlook.com>
+ <DB7PR04MB4618957D7423FFBAECD1EC7EE6530@DB7PR04MB4618.eurprd04.prod.outlook.com>
+Message-ID: <796eb027cbecbdc9dbc01b417d196a44@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: qiangqing.zhang@nxp.com, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, shengjiu.wang@nxp.com, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, fugang.duan@nxp.com, aisheng.dong@nxp.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Dec 2019 at 09:34, Greg KH <gregkh@linuxfoundation.org> wrote:
+On 2019-12-18 11:34, Joakim Zhang wrote:
+>> -----Original Message-----
+>> From: Joakim Zhang <qiangqing.zhang@nxp.com>
+>> Sent: 2019年12月18日 18:22
+>> To: Marc Zyngier <maz@kernel.org>
+>> Cc: tglx@linutronix.de; jason@lakedaemon.net; robh+dt@kernel.org;
+>> mark.rutland@arm.com; shawnguo@kernel.org; s.hauer@pengutronix.de; 
+>> S.j.
+>> Wang <shengjiu.wang@nxp.com>; kernel@pengutronix.de;
+>> festevam@gmail.com; dl-linux-imx <linux-imx@nxp.com>;
+>> linux-kernel@vger.kernel.org; devicetree@vger.kernel.org;
+>> linux-arm-kernel@lists.infradead.org; Andy Duan 
+>> <fugang.duan@nxp.com>;
+>> Aisheng Dong <aisheng.dong@nxp.com>
+>> Subject: RE: [PATCH 1/3] dt-bindings/irq: add binding for NXP INTMUX 
+>> interrupt
+>> multiplexer
+
+[...]
+
+>> > What I don't understand is how the interrupt descriptor can 
+>> indicate
+>> > which channel it is multiplexed on. The driver doesn't makes this
+>> > clear either, and I strongly suspect that it was never tested with 
+>> more than a
+>> single channel...
+>>
+>> Yes, to be frank, I tested with a signle channel, I will take this 
+>> into
+>> consideration. Thanks.
+> Hi Marc,
 >
-> On Mon, Dec 16, 2019 at 06:50:40PM -0800, Bao D. Nguyen wrote:
-> > From: Sujith Reddy Thumma <sthumma@codeaurora.org>
-> >
-> > Qualcomm SDCC controller supports minimum SD clock frequency
-> > which is required for card initialization. This information is
-> > exported through platform data for each SDCC controller. There is
-> > no need of retrying higher frequencies than the minimum supported
-> > by controller for Qualcomm chipsets which inturn add delay in
-> > detection process if there is no card during suspend/resume cycles.
-> > Hence, skip multiple frequency retries.
-> >
-> > Signed-off-by: Sujith Reddy Thumma <sthumma@codeaurora.org>
-> > Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
-> > Signed-off-by: Xiaonian Wang <xiaonian@codeaurora.org>
-> > Signed-off-by: Bao D. Nguyen <nguyenb@codeaurora.org>
-> > ---
-> >  drivers/mmc/core/core.c | 9 +--------
-> >  1 file changed, 1 insertion(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
-> > index 1e37f78..38b0cec 100644
-> > --- a/drivers/mmc/core/core.c
-> > +++ b/drivers/mmc/core/core.c
-> > @@ -2281,7 +2281,6 @@ void mmc_rescan(struct work_struct *work)
-> >  {
-> >       struct mmc_host *host =
-> >               container_of(work, struct mmc_host, detect.work);
-> > -     int i;
-> >
-> >       if (host->rescan_disable)
-> >               return;
-> > @@ -2332,13 +2331,7 @@ void mmc_rescan(struct work_struct *work)
-> >               mmc_release_host(host);
-> >               goto out;
-> >       }
-> > -
-> > -     for (i = 0; i < ARRAY_SIZE(freqs); i++) {
-> > -             if (!mmc_rescan_try_freq(host, max(freqs[i], host->f_min)))
-> > -                     break;
-> > -             if (freqs[i] <= host->f_min)
-> > -                     break;
-> > -     }
-> > +     mmc_rescan_try_freq(host, host->f_min);
+> I tested channels from 1 to 8, and no issue found.
 >
-> What about for non-qualcomm controllers?  Did this just break their
-> functionality?
+> We register irq handler with irq_set_chained_handler_and_data(), so
+> the interrupt descriptor could find the controller's private data, 
+> and
+> channel index is one part of private data.
+> I think this can explain the interrupt descriptor how to indicate
+> which channel it is multiplexed.
 
-Yes it does, obviously.
+But that doesn't explain how the driver can find which channel a given
+interrupts is wired to. Nothing in your binding shows how you can 
+extract
+the channel number from the interrupt descriptor. Nothing in the driver
+even *computes* a channel number.
 
-Greg, thanks for providing some valuable feedback for Bao for a couple
-of the patches in this series.
+As far as I can see, you register a bunch of domains, all with the same
+OF node, so all your interrupts end-up with the same domain. Is it 
+really
+what you expect?
 
-I have also browsed through the series, but stopped providing feedback
-after patch1, when I realized that these are all just downstream
-vendor specific hacks.
+This driver looks terribly wrong.
 
-Sure, I guess most of the patches can be reworked as upstreamable
-solutions, but rather than looking at them all at once, please post
-them separately. Additionally, in general I would appreciate more
-details in the changelogs to fully understand the problems your are
-solving.
-
-Kind regards
-Uffe
+         M.
+-- 
+Jazz is not dead. It just smells funny...
