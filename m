@@ -2,79 +2,199 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D2DC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD9E7C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E9902176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:18:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94A7A2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:19:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="mB6F5CRI"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="14CMCeLA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727476AbfLRQS3 (ORCPT
+        id S1727507AbfLRQTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 11:18:29 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:43134 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726955AbfLRQS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 11:18:28 -0500
-Received: from zn.tnic (p200300EC2F0B8B009D1D67E59157F47A.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:8b00:9d1d:67e5:9157:f47a])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 640811EC05B0;
-        Wed, 18 Dec 2019 17:18:27 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1576685907;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=mYgMkr+bARNjL6EZJiJMKopGv36OxLWLBBdhBNmcynU=;
-        b=mB6F5CRI3SPwmtL9swsspuLi/U1OMA8fOzm10p2XewVSTpv6+f1wTPhPrtzbQQ1sZFdPoH
-        7vNT/CCa4IuLTlJoxWFTaMdR78PXSQO+ccx/x4lFkxHrjvHyD+khwE+6mrK43Hjf0lTFTI
-        QdR8UTJ+AGBCLT2fehDS6SoQb8JGg7M=
-Date:   Wed, 18 Dec 2019 17:18:21 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com, puiterwijk@redhat.com
-Subject: Re: [PATCH v24 08/24] x86/sgx: Enumerate and track EPC sections
-Message-ID: <20191218161821.GG24886@zn.tnic>
-References: <20191129231326.18076-1-jarkko.sakkinen@linux.intel.com>
- <20191129231326.18076-9-jarkko.sakkinen@linux.intel.com>
- <20191218091856.GA24886@zn.tnic>
- <20191218151944.GA25201@linux.intel.com>
+        Wed, 18 Dec 2019 11:19:11 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35525 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726987AbfLRQTL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 11:19:11 -0500
+Received: by mail-lj1-f194.google.com with SMTP id j6so2806217lja.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 08:19:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1DGAjM55vpYX9DGiWQ7jC+BuPBEROaJ1QWpfbgzGOAs=;
+        b=14CMCeLAINpm3ZV8MtR1RG8xV/J5WqHqe0M9oWFTC4pD19UGdVdMY13F8IIsMksm4W
+         kTSNndEmcYcPmybyvjsTv6xtEW7+tkkinAcC1MDXkXKoNmZ1SK85nBC+tIiOZGHxYiSE
+         ErROILC6IQXrJTMN8gfAw4y8jZgbQsFPr7JEAK4l0hFz0/VKc6BkApPPjq40gufHusUR
+         6UvR7LXBYwDS6pUFn7B3nlXBgDLzdcTNFffWkV/qNFz0/kIOhSYmssrziSjQPxEtyx0c
+         rJwD1MmUSyQUt9cbhZNcLHY8CW2D/VtVF58ATc7Qb2ieL8bMuLSSx8+04+/1y1quw4DP
+         qbvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1DGAjM55vpYX9DGiWQ7jC+BuPBEROaJ1QWpfbgzGOAs=;
+        b=hE09N6ErB6p07Z7+Qt1KRaNNnIOH8q4tNAUGBwYm/AE7OOTwSumKJCezkq5w0+Jptg
+         wrxKsEe1hqkcX8k1dglMQ0ne2XlFS0wmXNPjop0ogM+oucohxv5sB7XKC4YXFtxATT/a
+         hnsW53PIMUx1MdxdRxeq4avMCkd3oih8yTBPQOq37XNdQFne+hPCoJOIlKbNNXY/pyBl
+         zD4knZAGuDDqpMZjvB7hsbnXIFhq18+Dn3NLHRYT/CCUtKowy7Si4GcaQzySEXqVg124
+         pibwNmmUDkm6v2KzVO4LZRbG6MZpYilEypQjdIJxMbnK2/YafcgIvNMPVEowOgRpl4qn
+         Fd2Q==
+X-Gm-Message-State: APjAAAUpZVM/6watXAkvlNocaA6Tk82Asa2K1g87YuvaGnhZy9s7rvcQ
+        C8N5ogayMA6GyxWdSAZSntH+7w==
+X-Google-Smtp-Source: APXvYqy8ptrsSDx1m4BazaV2cUqif19xWrwH+lZkkh3fZ2X5vIkCH+jyW+1oGFguRAmcQm5RYV3mLw==
+X-Received: by 2002:a2e:b4e7:: with SMTP id s7mr2195072ljm.58.1576685948274;
+        Wed, 18 Dec 2019 08:19:08 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id 2sm1412292ljq.38.2019.12.18.08.19.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 08:19:07 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id E28BB1012CF; Wed, 18 Dec 2019 19:19:07 +0300 (+03)
+Date:   Wed, 18 Dec 2019 19:19:07 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: Re: [PATCH v11 06/25] mm: fix get_user_pages_remote()'s handling of
+ FOLL_LONGTERM
+Message-ID: <20191218161907.yczbijr3ngm7wwnj@box>
+References: <20191216222537.491123-1-jhubbard@nvidia.com>
+ <20191216222537.491123-7-jhubbard@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191218151944.GA25201@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191216222537.491123-7-jhubbard@nvidia.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 07:19:44AM -0800, Sean Christopherson wrote:
-> Yes, EPC pages are architecturally defined to be 4k sized and aligned.
+On Mon, Dec 16, 2019 at 02:25:18PM -0800, John Hubbard wrote:
+> As it says in the updated comment in gup.c: current FOLL_LONGTERM
+> behavior is incompatible with FAULT_FLAG_ALLOW_RETRY because of the
+> FS DAX check requirement on vmas.
 > 
->   36.5 Enclave Page Cache
+> However, the corresponding restriction in get_user_pages_remote() was
+> slightly stricter than is actually required: it forbade all
+> FOLL_LONGTERM callers, but we can actually allow FOLL_LONGTERM callers
+> that do not set the "locked" arg.
 > 
->   The EPC is divided into EPC pages. An EPC page is 4KB in size and always
->   aligned on a 4KB boundary.
+> Update the code and comments to loosen the restriction, allowing
+> FOLL_LONGTERM in some cases.
+> 
+> Also, copy the DAX check ("if a VMA is DAX, don't allow long term
+> pinning") from the VFIO call site, all the way into the internals
+> of get_user_pages_remote() and __gup_longterm_locked(). That is:
+> get_user_pages_remote() calls __gup_longterm_locked(), which in turn
+> calls check_dax_vmas(). This check will then be removed from the VFIO
+> call site in a subsequent patch.
+> 
+> Thanks to Jason Gunthorpe for pointing out a clean way to fix this,
+> and to Dan Williams for helping clarify the DAX refactoring.
+> 
+> Tested-by: Alex Williamson <alex.williamson@redhat.com>
+> Acked-by: Alex Williamson <alex.williamson@redhat.com>
+> Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> Suggested-by: Jason Gunthorpe <jgg@ziepe.ca>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Jerome Glisse <jglisse@redhat.com>
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> ---
+>  mm/gup.c | 27 ++++++++++++++++++++++-----
+>  1 file changed, 22 insertions(+), 5 deletions(-)
+> 
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 3ecce297a47f..c0c56888e7cc 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -29,6 +29,13 @@ struct follow_page_context {
+>  	unsigned int page_mask;
+>  };
+>  
+> +static __always_inline long __gup_longterm_locked(struct task_struct *tsk,
+> +						  struct mm_struct *mm,
+> +						  unsigned long start,
+> +						  unsigned long nr_pages,
+> +						  struct page **pages,
+> +						  struct vm_area_struct **vmas,
+> +						  unsigned int flags);
 
-Aha, thx!
+Any particular reason for the forward declaration? Maybe move
+get_user_pages_remote() down?
+
+>  /*
+>   * Return the compound head page with ref appropriately incremented,
+>   * or NULL if that failed.
+> @@ -1179,13 +1186,23 @@ long get_user_pages_remote(struct task_struct *tsk, struct mm_struct *mm,
+>  		struct vm_area_struct **vmas, int *locked)
+>  {
+>  	/*
+> -	 * FIXME: Current FOLL_LONGTERM behavior is incompatible with
+> +	 * Parts of FOLL_LONGTERM behavior are incompatible with
+>  	 * FAULT_FLAG_ALLOW_RETRY because of the FS DAX check requirement on
+> -	 * vmas.  As there are no users of this flag in this call we simply
+> -	 * disallow this option for now.
+> +	 * vmas. However, this only comes up if locked is set, and there are
+> +	 * callers that do request FOLL_LONGTERM, but do not set locked. So,
+> +	 * allow what we can.
+>  	 */
+> -	if (WARN_ON_ONCE(gup_flags & FOLL_LONGTERM))
+> -		return -EINVAL;
+> +	if (gup_flags & FOLL_LONGTERM) {
+> +		if (WARN_ON_ONCE(locked))
+> +			return -EINVAL;
+> +		/*
+> +		 * This will check the vmas (even if our vmas arg is NULL)
+> +		 * and return -ENOTSUPP if DAX isn't allowed in this case:
+> +		 */
+> +		return __gup_longterm_locked(tsk, mm, start, nr_pages, pages,
+> +					     vmas, gup_flags | FOLL_TOUCH |
+> +					     FOLL_REMOTE);
+> +	}
+>  
+>  	return __get_user_pages_locked(tsk, mm, start, nr_pages, pages, vmas,
+>  				       locked,
+> -- 
+> 2.24.1
+> 
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+ Kirill A. Shutemov
