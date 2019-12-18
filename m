@@ -2,68 +2,157 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED83C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 01:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B5CCC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 02:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B5BF21775
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 01:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1161921775
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 02:01:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="r9SWdWgP";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="r9SWdWgP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbfLRB4j (ORCPT
+        id S1726530AbfLRCBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 20:56:39 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7701 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726167AbfLRB4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 20:56:39 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id C3CF5B2E1C3F523A1ADA;
-        Wed, 18 Dec 2019 09:56:35 +0800 (CST)
-Received: from [127.0.0.1] (10.67.103.228) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Wed, 18 Dec 2019
- 09:56:28 +0800
-Subject: Re: [PATCH] net: hisilicon: Fix a BUG trigered by wrong bytes_compl
-To:     David Miller <davem@davemloft.net>
-References: <1576308182-121147-1-git-send-email-xiaojiangfeng@huawei.com>
- <20191217.134228.92517242104749153.davem@davemloft.net>
- <161c304b-46bd-0340-e0e3-3fb8b5a7cd5e@huawei.com>
-CC:     <yisen.zhuang@huawei.com>, <salil.mehta@huawei.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <leeyou.li@huawei.com>, <nixiaoming@huawei.com>
-From:   Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-Message-ID: <825f153c-be8b-6d43-1235-85b3cc353f74@huawei.com>
-Date:   Wed, 18 Dec 2019 09:56:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
-MIME-Version: 1.0
-In-Reply-To: <161c304b-46bd-0340-e0e3-3fb8b5a7cd5e@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
+        Tue, 17 Dec 2019 21:01:47 -0500
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:38146 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725975AbfLRCBq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 21:01:46 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id CDFA28EE18E;
+        Tue, 17 Dec 2019 18:01:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1576634504;
+        bh=T6tjpNiUMryOoxPh3ySPhu8SFS4EjI3JRGspCsj/mY8=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=r9SWdWgPZAriNlUwRheZsGDyXOg8N1lSFivMjwZvcs+ophIOapruPvRXsEhfmMfEN
+         qRrH1AOGW67qWCDaoCu2AZBnv1IcjS6yhEjrafby6sDYBnZjsvVFVDyu3nDs81t1iO
+         0YBwnvhYd9O4QvJW+y11boi+fVFl7OcJJIXQub/0=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id lww0zsdnfplq; Tue, 17 Dec 2019 18:01:44 -0800 (PST)
+Received: from [172.20.1.149] (s138.GtokyoFL8.vectant.ne.jp [222.228.122.138])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id E1E998EE0DF;
+        Tue, 17 Dec 2019 18:01:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1576634504;
+        bh=T6tjpNiUMryOoxPh3ySPhu8SFS4EjI3JRGspCsj/mY8=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=r9SWdWgPZAriNlUwRheZsGDyXOg8N1lSFivMjwZvcs+ophIOapruPvRXsEhfmMfEN
+         qRrH1AOGW67qWCDaoCu2AZBnv1IcjS6yhEjrafby6sDYBnZjsvVFVDyu3nDs81t1iO
+         0YBwnvhYd9O4QvJW+y11boi+fVFl7OcJJIXQub/0=
+Message-ID: <1576634499.14900.10.camel@HansenPartnership.com>
+Subject: Re: [PATCH v4 2/2] IMA: Call workqueue functions to measure queued
+ keys
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        zohar@linux.ibm.com, linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
+        sashal@kernel.org, jamorris@linux.microsoft.com,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
+Date:   Wed, 18 Dec 2019 11:01:39 +0900
+In-Reply-To: <152580f3-2a1f-fa33-cc25-f25747a470a5@linux.microsoft.com>
+References: <20191213171827.28657-1-nramas@linux.microsoft.com>
+         <20191213171827.28657-3-nramas@linux.microsoft.com>
+         <1576257955.8504.20.camel@HansenPartnership.com>
+         <39624b97-245c-ed05-27c5-588787aacc00@linux.microsoft.com>
+         <1576423353.3343.3.camel@HansenPartnership.com>
+         <1568ff14-316f-f2c4-84d4-7ca4c0a1936a@linux.microsoft.com>
+         <1576479187.3784.1.camel@HansenPartnership.com>
+         <8844a360-6d1e-1435-db7c-fd7739487168@linux.microsoft.com>
+         <1576531022.3365.6.camel@HansenPartnership.com>
+         <35a6c241-9a46-2657-51d1-0c04d32a9fae@linux.microsoft.com>
+         <f25b7299-1530-2e43-cdf4-2208c82fc768@linux.microsoft.com>
+         <152580f3-2a1f-fa33-cc25-f25747a470a5@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.103.228]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/12/18 9:40, Jiangfeng Xiao wrote:
+On Tue, 2019-12-17 at 14:22 -0800, Lakshmi Ramasubramanian wrote:
+> Hi James,
 > 
+> > > > 
+> > > > This is the problem: in the race case you may still be adding
+> > > > keys to
+> > > > the queue after the other thread has processed it. Those keys
+> > > > won't get
+> > > > processed because the flag is now false in the post check so
+> > > > the
+> > > > current thread won't process them either.
+> > > > 
+> > > > James
+> > > > 
 > 
-> On 2019/12/18 5:42, David Miller wrote:
->> From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
->> Date: Sat, 14 Dec 2019 15:23:02 +0800
->>
->>> In addition, I adjusted the position of "count++;"
->>> to make the code more readable.
->>
->> This is an unrelated cleanup and should not be done in the same change
->> as your bug fix, submit this if you like for net-next after net has next
->> been merged into net-next.
->>
-I'm so sorry. I didn't notice this issue in v2. Please ignore my v2. I will fix this issue in v3.
+> Please let me know if you still think there is a race condition.
+> 
+> If yes, please explain how a key would be added to the queue after 
+> ima_process_queued_keys() has processed queued keys.
+> ima_process_keys flag will be true when queued keys have been
+> processed.
+
+This code is confusing me:
+
++       /*
++        * To avoid holding the mutex when processing queued keys,
++        * transfer the queued keys with the mutex held to a temp list,
++        * release the mutex, and then process the queued keys from
++        * the temp list.
++        *
++        * Since ima_process_keys is set to true, any new key will be
++        * processed immediately and not be queued.
++        */
++       INIT_LIST_HEAD(&temp_ima_keys);
++
++       mutex_lock(&ima_keys_mutex);
++
++       if (!ima_process_keys) {
++               ima_process_keys = true;
++
++               if (!list_empty(&ima_keys)) {
++                       list_for_each_entry_safe(entry, tmp, &ima_keys, list)
++                               list_move_tail(&entry->list, &temp_ima_keys);
++                       process = true;
++               }
++       }
++
++       mutex_unlock(&ima_keys_mutex);
++
++       if (!process)
++               return;
++
++       list_for_each_entry_safe(entry, tmp, &temp_ima_keys, list) {
++               process_buffer_measurement(entry->payload, entry->payload_len,
++                                          entry->keyring_name, KEY_CHECK, 0,
++                                          entry->keyring_name);
++               list_del(&entry->list);
++               ima_free_key_entry(entry);
++       }
++}
++
+
+The direct implication of the comment and the lock dance with the
+temporary list and the processed flag is that stuff can be added to the
+ima_keys list after you drop the mutex.  Your explanation in the prior
+couple of emails says that nothing can be added because the
+ima_process_keys flag setting prevents it.  If the latter is true, you
+can simply drop the lock after setting the flag and rely on ima_keys
+not changing to run it through process_buffer_measurement without
+needing any of the intermediate list or the processed flag.  If the
+latter isn't true then any key added to ima_keys after the mutex is
+dropped is never processed.
+
+James
 
