@@ -2,182 +2,112 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B373C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 02:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B50C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 02:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1383F21775
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 02:46:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="RjHnSpf0"
+	by mail.kernel.org (Postfix) with ESMTP id 06E1F21835
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 02:47:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576637222;
+	bh=EN9XGbtCVFK944Al0uckJBpC3fwAtS4+X+y3O5WYLdA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=CLgF3eVrLtTYtNlReQ2DDEchzvZgW3PrVBp2e0P1aX5ZtwWZFuMq1I7urEIyMwjiG
+	 BdYuDXpdWmlyLS7cfYzWfHR8unRbDBhphuIH4mGsni5KcmmFX9irqrDeA4iv5kuQxY
+	 ZYB3SccNqsQvFS+nfAMt4/l7KbYIEenljsvB2l4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbfLRCq2 (ORCPT
+        id S1726708AbfLRCrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 21:46:28 -0500
-Received: from mail-eopbgr40087.outbound.protection.outlook.com ([40.107.4.87]:58569
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726496AbfLRCq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 21:46:28 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ekcepr6SZf18xiQYFPsgVz6vlFLG19yttotG+gRt2IbovdhhikqO9AMnbWtCbgZdMtCDypM/p5U3N+30024Fzr1m0kuckw3qv/0afHHGzeIaxIaL7RngrL7qBlb1GjO4wkQVuk2CPM/wL2i4ROlyyGHbxY+Xo+ZSuEO2bRUca32MK/Xv418gyOw+9eVLSJEIvMyFegIgryuYt30yxF3MfsrKGhH+ZV6tTYo3l77Ozq6Bt+mLZBHugpgcjEnLoUaCx+liLVjlhDXw/kiiYYVPm+rgoeq0OeJi4O3yPjO2Yd4zZArjQhMu+hHxariP9x+0IbhYazbyCrOK31PGCs9OiA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C4nsnySAbjuSRT02GZR66zDBPoFelcxVMeS+O5MNmOs=;
- b=gr8s1p4aODF6X6rmNJjpwpCxF8GK3ZKtcNHXSpzBzcU3zX4EhSiycM/eFaFPPRJP3B/WJ1HrWgABC2jka8QydLCJzQjPZ0Pn6d2wY4xzwKVi7bmxwpEbnsJ8vkWi9UnO6Swzps9ZBN7rbsLG1Bp8QF/WWpf1cqWKnVbOeV5p9OWe6CZRsxtopx6KMu6e9FoC0QDNklT9Fyh+z3jvdKW4jiEL3QuYElY4gMXMcaa5DpZ0/qUtOyzs91zIqQM4XoRFHA70XmzLcCWlEk8Fa+R+hC+wd8JDuQ02LCFfYsJsOHgOUnUnjUlK8ObgpjO6XipPMr7MCNeouJTe8237X6a/1Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C4nsnySAbjuSRT02GZR66zDBPoFelcxVMeS+O5MNmOs=;
- b=RjHnSpf0D+K0LTHfVlXFQOfGq7FrbzxI77X2ZJ5+Ss0TpkKBkaDYYQ57OOUjabVsHnEBc5ZywwJPnw4mB+UccWl+HDr8ahvHuqo2r/+K2FcUk87XX301jlp2SUmzxO6vHY2aloCE4vxc7sF8MSXDoqTZ364B4ac8l+/KlGgNIEA=
-Received: from VI1PR04MB5327.eurprd04.prod.outlook.com (20.177.51.23) by
- VI1PR04MB5792.eurprd04.prod.outlook.com (20.178.204.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.18; Wed, 18 Dec 2019 02:46:20 +0000
-Received: from VI1PR04MB5327.eurprd04.prod.outlook.com
- ([fe80::cd33:501f:b25:51a9]) by VI1PR04MB5327.eurprd04.prod.outlook.com
- ([fe80::cd33:501f:b25:51a9%7]) with mapi id 15.20.2538.019; Wed, 18 Dec 2019
- 02:46:20 +0000
-From:   Peter Chen <peter.chen@nxp.com>
-To:     Paul Cercueil <paul@crapouillou.net>
-CC:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "od@zcrc.me" <od@zcrc.me>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-Subject: RE: [PATCH v2 3/3] power/supply: Add generic USB charger driver
-Thread-Topic: [PATCH v2 3/3] power/supply: Add generic USB charger driver
-Thread-Index: AQHVsDrKPWSbvY6T+0OJ94dLsbCA8qe2ObMAgAJTXYCAA3BKkIAAn/jzgAD0ddCAAU6BzYAAWE8A
-Date:   Wed, 18 Dec 2019 02:46:20 +0000
-Message-ID: <VI1PR04MB53273342340E350BFFFDE12F8B530@VI1PR04MB5327.eurprd04.prod.outlook.com>
-References: <20191211155032.167032-1-paul@crapouillou.net>
-        <20191211155032.167032-3-paul@crapouillou.net>
-        <20191212091814.GA7035@b29397-desktop> <1576270147.3.0@crapouillou.net>
-        <VI1PR04MB5327401FFD2D32E937548DD48B510@VI1PR04MB5327.eurprd04.prod.outlook.com>
-        <1576493525.3.0@crapouillou.net>
-        <VI1PR04MB5327B8EF35340FC4B2D02DE88B500@VI1PR04MB5327.eurprd04.prod.outlook.com>
- <1576617863.3.1@crapouillou.net>
-In-Reply-To: <1576617863.3.1@crapouillou.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peter.chen@nxp.com; 
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 6eb970f5-20f8-43e1-d793-08d7836476aa
-x-ms-traffictypediagnostic: VI1PR04MB5792:
-x-microsoft-antispam-prvs: <VI1PR04MB5792D8DD23B35B6E16A0871D8B530@VI1PR04MB5792.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0255DF69B9
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(376002)(396003)(39860400002)(136003)(189003)(199004)(71200400001)(4326008)(86362001)(478600001)(54906003)(186003)(316002)(6506007)(33656002)(26005)(7696005)(8676002)(81156014)(8936002)(81166006)(64756008)(55016002)(7416002)(6916009)(66556008)(66476007)(66446008)(5660300002)(66946007)(2906002)(9686003)(44832011)(52536014)(76116006)(41533002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5792;H:VI1PR04MB5327.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ISqJbviy5Nbi16dfdLcfbV3YCEowNII5cuk4hmXGjAzsVSK0xXjTKWieWqnKFgctXgacoxQefMP4NTHPQlNHNjKIDRgWE+VMzVANQnuAo8kQegdYMapiqFJpYwVQ+BR3WftPoUbO8zYKHNL202rHm2mUKXPKxcLqiZ49xeuKAaGZqyZvObRxWEm6Qebm6SpvlkoTlz5RGaXpWpIS2wOTHHqJoxZ955IZeI5UwQfogbDgLdW7RKFJ0+swEeM00xzSdHZBl/5QEZ1OyZAojRNMYQuxL/Yv4Q6BXs5uzyFS2u9G62J+PolRed+5qHk7DwvPMT4ITCn4/n2ENNNOfYTFMOGFrpHLGGW1h52fPbpxyN+zPi9wakp/Ne/sogcoqShBYmUIsM/pb8PUZLjmlFomiTj2fP7Ou6a4WXcarNOx7UFktYmMS+Hzq9mKDPepV8FocQph+fDmyqX7ERtx5uWJopbjp1OnD0kpO4/pxjBElZQ7ceTJNdHWwe8THqlR+/p5
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 17 Dec 2019 21:47:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55532 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726518AbfLRCrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 21:47:00 -0500
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F37924679
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 02:47:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576637220;
+        bh=EN9XGbtCVFK944Al0uckJBpC3fwAtS4+X+y3O5WYLdA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=W8gElQ6oUB4T3v7WLZo0xo/RWlXTJ4G1338qddAWGZocy4sQqcExFpivqsupYWXw9
+         /ez6h5tkCZx9ba0610UE/DI1i4tgrsUycRKdOiENqXqww6Q0OXbHnweB1/hYYQAhrs
+         QvkVbsingA+2bcvptfW18RFWZ4ILB/e70Otx2yqY=
+Received: by mail-wr1-f41.google.com with SMTP id c14so591608wrn.7
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 18:47:00 -0800 (PST)
+X-Gm-Message-State: APjAAAWkZ72bfyfWUxGswrFQeaY4bMN18HJspKX2vKSP0tUIzrO9BnDt
+        8hL/ybr0F13z8uDis2VzukN+1XaDxlqgnlkIXQU=
+X-Google-Smtp-Source: APXvYqysa4a+4xeUb9YQTX1Eh4yJtSOADgVQZkRKpq63DrhasVdvKDjwwOKDppLi9wiOP9XubpNTkYeEip1VsbgqxhI=
+X-Received: by 2002:adf:cf12:: with SMTP id o18mr1139856wrj.361.1576637218572;
+ Tue, 17 Dec 2019 18:46:58 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6eb970f5-20f8-43e1-d793-08d7836476aa
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Dec 2019 02:46:20.5501
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zJzEJ13i8Eh239lTEVpAfS61MCfPqMeb3vvtBNA2hbF8x1kpL3XK9e1ruu4lIWMXagSOyGUiiGl9OE7XrKfhnA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5792
+References: <20191210203149.7115-1-tiny.windzz@gmail.com> <20191210203149.7115-2-tiny.windzz@gmail.com>
+In-Reply-To: <20191210203149.7115-2-tiny.windzz@gmail.com>
+From:   Chen-Yu Tsai <wens@kernel.org>
+Date:   Wed, 18 Dec 2019 10:46:47 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65vb0HOHS18-z2dzu=icQGssKtSNWGKa9Uy5dYREURheg@mail.gmail.com>
+Message-ID: <CAGb2v65vb0HOHS18-z2dzu=icQGssKtSNWGKa9Uy5dYREURheg@mail.gmail.com>
+Subject: Re: [PATCH 1/5] nvmem: sunxi_sid: convert to devm_platform_ioremap_resource
+To:     Yangtao Li <tiny.windzz@gmail.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Maxime Ripard <mripard@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>, rafael@kernel.org,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mans Rullgard <mans@mansr.com>,
+        Thierry Reding <treding@nvidia.com>, suzuki.poulose@arm.com,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=20
-> >>  >
-> >>  >>  >>  +
-> >>  >>  >>  +	desc =3D &charger->desc;
-> >>  >>  >>  +	desc->name =3D "usb-charger";
-> >>  >>  >>  +	desc->properties =3D usb_charger_properties;
-> >>  >>  >>  +	desc->num_properties =3D ARRAY_SIZE(usb_charger_properties)=
-;
-> >>  >>  >>  +	desc->get_property =3D usb_charger_get_property;
-> >>  >>  >>  +	desc->type =3D POWER_SUPPLY_TYPE_USB;
-> >>  >>  >
-> >>  >>  > What's your further plan for this generic USB charger?
-> >>  >>  > To support BC1.2, we need to know charger type, and how we
-> >> could  >> get  > it?
-> >>  >>  >
-> >>  >>  > Peter
-> >>  >>
-> >>  >>  Well I don't really know. The USB role framework does not give
-> >> any  >> info about  what's plugged.
-> >>  >>
-> >>  >
-> >>  > What's the use case for this patch set? How it be used?
-> >>
-> >>  My devicetree:
-> >>
-> >>  usb_otg: usb@13440000 {
-> >>  	compatible =3D "ingenic,jz4770-musb", "simple-mfd";
-> >>  	reg =3D <0x13440000 0x10000>;
-> >>  	[...]
-> >>
-> >>  	usb-role-switch;
-> >>
-> >>  	connector {
-> >>  		compatible =3D "gpio-usb-b-connector", "usb-b-connector";
-> >>  		label =3D "mini-USB";
-> >>  		type =3D "mini";
-> >>
-> >>  		id-gpios =3D <&gpf 18 GPIO_ACTIVE_HIGH>;
-> >>  		vbus-gpios =3D <&gpb 5 GPIO_ACTIVE_HIGH>;
-> >>  		[...]
-> >>  	};
-> >>
-> >>  	usb_charger: usb-charger {
-> >>  		compatible =3D "usb-charger";
-> >>  	};
-> >>  };
-> >>
-> >>  The new gpio-usb-connector driver uses the ID/VBUS GPIOs to detect
-> >> in  which state (device, host, unconnected) a OTG connector is.
-> >> However,  that means I cannot use the standard gpio-charger driver to
-> >> detect the  presence of a charger based on the state of the VBUS
-> >> gpio, since it's  already requested here. So the point of this
-> >> patchset is to provide an  alternative to gpio-charger that works
-> >> with OTG controllers compatible  with 'usb-role-switch'.
-> >>
-> >
-> > Thanks for explaining it.
-> >
-> > What's the user for this USB charger,  PMIC or what else? How the user
-> > uses this USB charger interface?
->=20
-> It's exported as a standard charger, so it can be passed to client driver=
-s through
-> devicetree, and its online status can be retrieved from sysfs.
->=20
-=20
-Hi Paul,
+On Wed, Dec 11, 2019 at 4:32 AM Yangtao Li <tiny.windzz@gmail.com> wrote:
+>
+> Use devm_platform_ioremap_resource() to simplify code.
+>
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 
-If you would like to get role from usb-role-switch, the udc driver may prob=
-ably have already worked.
-There is a 'state' entry under the udc device to indicate USB Ch9 state. Tr=
-y to see if it could
-satisfy your requirement.
+Acked-by: Chen-Yu Tsai <wens@csie.org>
 
-Peter
+> ---
+>  drivers/nvmem/sunxi_sid.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>
+> diff --git a/drivers/nvmem/sunxi_sid.c b/drivers/nvmem/sunxi_sid.c
+> index e26ef1bbf198..c54adf60b155 100644
+> --- a/drivers/nvmem/sunxi_sid.c
+> +++ b/drivers/nvmem/sunxi_sid.c
+> @@ -112,7 +112,6 @@ static int sun8i_sid_read_by_reg(void *context, unsigned int offset,
+>  static int sunxi_sid_probe(struct platform_device *pdev)
+>  {
+>         struct device *dev = &pdev->dev;
+> -       struct resource *res;
+>         struct nvmem_config *nvmem_cfg;
+>         struct nvmem_device *nvmem;
+>         struct sunxi_sid *sid;
+> @@ -129,8 +128,7 @@ static int sunxi_sid_probe(struct platform_device *pdev)
+>                 return -EINVAL;
+>         sid->value_offset = cfg->value_offset;
+>
+> -       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -       sid->base = devm_ioremap_resource(dev, res);
+> +       sid->base = devm_platform_ioremap_resource(pdev, 0);
+>         if (IS_ERR(sid->base))
+>                 return PTR_ERR(sid->base);
+>
+> --
+> 2.17.1
+>
