@@ -2,182 +2,212 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0AA9C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F37C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B51D02176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 292D3218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:12:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="D4G0itlD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="im2fMc8A"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cTTdgQH0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfLRXKm (ORCPT
+        id S1726704AbfLRXML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 18:10:42 -0500
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:44553 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726463AbfLRXKm (ORCPT
+        Wed, 18 Dec 2019 18:12:11 -0500
+Received: from mail-wr1-f74.google.com ([209.85.221.74]:35150 "EHLO
+        mail-wr1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbfLRXMK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 18:10:42 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 3A31C21EE9;
-        Wed, 18 Dec 2019 18:10:41 -0500 (EST)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Wed, 18 Dec 2019 18:10:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm1; bh=bP1o2RXoO7tNFb5/kJZExnnM5a2fcbt
-        SPdIvkcQJXyA=; b=D4G0itlDbAPubKY5LU9mOuPyKcoHeft5nHCiCeUvrxboapZ
-        dA4ln/pXiG26nX2Ib/RW0MzQoNz1P5GwUeb9HXJraR41akyamzEUG/aNc30GIzYA
-        Kh82Y9hf9GHk9EWD04n51CR70RkfogOjfVLyfwkdWhKc9BflHLCYepKjRmFivsYo
-        sbpOqUqTdrSU0WiqXF3dO0qg7ILD7zfzaT2S/C955/Xz3/sUlWVKFngtSvuTPJ5y
-        L2xhGViM0EiOpvGdn3/BJLkNk4uf7naJjtH8+rkDbooZc4tvHAR5H3CXMHJgCGMW
-        afvx24Vc9vOKyNjK200kHX/HsfLuB9yWrqYSg6w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=bP1o2R
-        XoO7tNFb5/kJZExnnM5a2fcbtSPdIvkcQJXyA=; b=im2fMc8AC7tOloKDP0z5Ec
-        12FXgnlAcqB8dc/Y2PbGLETB1tR+1Q8v/kAaW7fJjWikCt2Hhec0sjEiSOaROHt2
-        iJi41qCIX/zWo3THTp4mu1n6XU8ScMZRtnrXWwTILTcrMPGBY9FYpjV5pCbSTvqu
-        EzLZZZmeAgB496JdYCFS4P1FVNWjmDXrYok4cJ0qtw/khj2VJjcJbAPhowlmUCmY
-        1y7u00HcrCiWjtFzol1DCfQ3wB9hV2jUP5562OByiT/0Zj7pNDM0q/cqTvfnGvIC
-        +SZzlR/UJU2HzhXJcXWgpDelwm4zuI1X3Hsruxrdv07ZPX0vGBx2vNYGn5AvA1eA
-        ==
-X-ME-Sender: <xms:8bH6Xf5qSXAyWkTXvrieMhm4NMNijt1vNGVnBYVuPVPGs2UbBwD6dw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddutddgtdehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
-    rhfuihiivgepud
-X-ME-Proxy: <xmx:8bH6XZK3r0wLqMk_E4OLHVw7DiOQhloyQkGJF29idIq7b2azROMgnw>
-    <xmx:8bH6XRdCAR5BQEy0cqpKis92i3X2W7pEvO20lYUzY-Lff6EM-wfPWA>
-    <xmx:8bH6XUfXHNaY9EcFsW88V8iDB2ce0krMd7MwQm_4ww3R1MW_JVBoHQ>
-    <xmx:8bH6XfB1hjKxNCcUrzw86FzEVzB2D39nOicQ30v_bqqeGsovLU73eQ>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 0BC88E00A2; Wed, 18 Dec 2019 18:10:41 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-694-gd5bab98-fmstable-20191218v1
+        Wed, 18 Dec 2019 18:12:10 -0500
+Received: by mail-wr1-f74.google.com with SMTP id f15so1525828wrr.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 15:12:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=XROsw98/jioxNmwaFa5qgGIGTXokTI7dQ4xiPx1pCR8=;
+        b=cTTdgQH0MvqJtv3XgkF7BwJ0fhE1oQf8dNov06qeFTb90oP+3wyb92mfnHER/86ku4
+         au5i8n2NYtj/JgXC5iRJLoE36b3cqdGhdGlvXnn7j6JsWwM9ref6fkAET06M3ItdqnM2
+         QYZ7AE6tVQ31gYQcpTDhRCDD4mYpGhfqElSC1DxchrgjN+iPu6xsJXOvhqnlwoIh8ZWx
+         fV4Yk0Y+E+T9hRWuUa4i9m4DF3s83Giyr4O6hMIzoEwOp7mlYCYBcjvlE447HQcAO7zB
+         GPyORKpggMHDSSgH5SWYKiBxrVM52lKmUqegO+xJa6GWBqSKteZD38PjPGvaR/QDwu+G
+         ViMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=XROsw98/jioxNmwaFa5qgGIGTXokTI7dQ4xiPx1pCR8=;
+        b=nWudpooBsKX9HrNExHgKaCBzXeuM1JfYNHArt2Z4HzfX01bdr0YEJJu3P8JW9cx8ig
+         DxhDu+9KpH1NEtUFC5ZUCuBtLbbTJ7/C1juqr5LIXSBjbKp1itV3zrEyEMmXkFpCVT6T
+         +7e8Po7CGaN5GGbHaabBX2gGjAxwcl6s9+hm1O0Pkg+ghKr4cdTJxL4yMyrH98K5pNAj
+         kIwrf4zEJm7c3LeEtEkyMRkPxhio6e6f2lARg7S4Vw10q6M05XEfuzOBKhyiJk2qQ2uM
+         zIX3ghhTHoYJ2XFg4J6gmn+7wnaX6Bh9a5wCJgUdhGhkgyKb0pxXyFGrSocaghdApt4W
+         h3yQ==
+X-Gm-Message-State: APjAAAVRTF6bzExsnzIB/f+tk9DFuqaijLEJIdr/9AnFyWPDC4lfhAV9
+        1oKgKihdh6HGBBnEYQr60KBioS8Fwg==
+X-Google-Smtp-Source: APXvYqxoPij0nnAS8v6D2DsSQ+4qDQ1m6ZB8u3SVZ565Xa2k6xMp3WfPH21sRHSEo0wj+iuxoSRvNvy7OQ==
+X-Received: by 2002:a5d:62d0:: with SMTP id o16mr5452607wrv.197.1576710725585;
+ Wed, 18 Dec 2019 15:12:05 -0800 (PST)
+Date:   Thu, 19 Dec 2019 00:11:47 +0100
+Message-Id: <20191218231150.12139-1-jannh@google.com>
 Mime-Version: 1.0
-Message-Id: <73cbffea-89f1-4212-99af-10c32968cf15@www.fastmail.com>
-In-Reply-To: <1576681778-18737-6-git-send-email-eajames@linux.ibm.com>
-References: <1576681778-18737-1-git-send-email-eajames@linux.ibm.com>
- <1576681778-18737-6-git-send-email-eajames@linux.ibm.com>
-Date:   Thu, 19 Dec 2019 09:42:10 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Eddie James" <eajames@linux.ibm.com>,
-        linux-aspeed@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        mark.rutland@arm.com, "Jason Cooper" <jason@lakedaemon.net>,
-        "Marc Zyngier" <maz@kernel.org>,
-        "Rob Herring" <robh+dt@kernel.org>, tglx@linutronix.de,
-        "Joel Stanley" <joel@jms.id.au>
-Subject: Re: [PATCH v3 05/12] dt-bindings: soc: Add Aspeed XDMA Engine
-Content-Type: text/plain
+X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+Subject: [PATCH v7 1/4] x86/insn-eval: Add support for 64-bit kernel mode
+From:   Jann Horn <jannh@google.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+        jannh@google.com
+Cc:     linux-kernel@vger.kernel.org,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+To support evaluating 64-bit kernel mode instructions:
 
+Replace existing checks for user_64bit_mode() with a new helper that
+checks whether code is being executed in either 64-bit kernel mode or
+64-bit user mode.
 
-On Thu, 19 Dec 2019, at 01:39, Eddie James wrote:
-> Document the bindings for the Aspeed AST25XX and AST26XX XDMA engine.
-> 
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> Changes since v2:
->  - Remove 'sdmc', rename 'vga-mem' to 'memory'
-> 
->  .../devicetree/bindings/soc/aspeed/xdma.txt   | 40 +++++++++++++++++++
->  MAINTAINERS                                   |  6 +++
->  2 files changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/aspeed/xdma.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/aspeed/xdma.txt 
-> b/Documentation/devicetree/bindings/soc/aspeed/xdma.txt
-> new file mode 100644
-> index 000000000000..58253ea1587b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/aspeed/xdma.txt
-> @@ -0,0 +1,40 @@
-> +Aspeed AST25XX and AST26XX XDMA Engine
-> +
-> +The XDMA Engine embedded in the AST2500 and AST2600 SOCs can perform 
-> automatic
-> +DMA operations over PCI between the SOC (acting as a BMC) and a host 
-> processor.
-> +
-> +Required properties:
-> + - compatible		: must be "aspeed,ast2500-xdma" or
-> +			  "aspeed,ast2600-xdma"
-> + - reg			: contains the address and size of the memory region
-> +			  associated with the XDMA engine registers
-> + - clocks		: clock specifier for the clock associated with the
-> +			  XDMA engine
-> + - resets		: reset specifier for the syscon reset associated with
-> +			  the XDMA engine
-> + - interrupts-extended	: two interrupt cells; the first specifies the 
-> global
-> +			  interrupt for the XDMA engine and the second
-> +			  specifies the PCI-E reset or PERST interrupt.
-> + - scu			: a phandle to the syscon node for the system control
-> +			  unit of the SOC
+Select the GS base depending on whether the instruction is being
+evaluated in kernel mode.
 
-I think this should be aspeed,scu.
+Signed-off-by: Jann Horn <jannh@google.com>
+---
 
-> + - memory		: contains the address and size of the memory area to
-> +			  be used by the XDMA engine for DMA operations
+Notes:
+    v2-v7:
+      no changes
 
-Hmm, I was thinking more like a phandle to a reserved memory region,
-like we have in the aspeed-lpc-ctrl binding.
+ arch/x86/include/asm/ptrace.h | 13 +++++++++++++
+ arch/x86/lib/insn-eval.c      | 26 +++++++++++++++-----------
+ 2 files changed, 28 insertions(+), 11 deletions(-)
 
-> +
-> +Optional properties:
-> + - pcie-device		: should be either "bmc" or "vga", corresponding to
-> +			  which device should be used by the XDMA engine for
-> +			  DMA operations. If this property is not set, the XDMA
-> +			  engine will use the BMC PCI-E device.
-> +
-> +Example:
-> +
-> +    xdma@1e6e7000 {
-> +        compatible = "aspeed,ast2500-xdma";
-> +        reg = <0x1e6e7000 0x100>;
-> +        clocks = <&syscon ASPEED_CLK_GATE_BCLK>;
-> +        resets = <&syscon ASPEED_RESET_XDMA>;
-> +        interrupts-extended = <&vic 6>, <&scu_ic 
-> ASPEED_AST2500_SCU_IC_PCIE_RESET_LO_TO_HI>;
-> +        scu = <&syscon>;
-> +        pcie-device = "bmc";
-> +        memory = <0x9f000000 0x01000000>;
-> +    };
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ac9c120d192b..8a14d4268bdc 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2708,6 +2708,12 @@ S:	Maintained
->  F:	drivers/media/platform/aspeed-video.c
->  F:	Documentation/devicetree/bindings/media/aspeed-video.txt
->  
-> +ASPEED XDMA ENGINE DRIVER
-> +M:	Eddie James <eajames@linux.ibm.com>
-> +L:	linux-aspeed@lists.ozlabs.org (moderated for non-subscribers)
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/soc/aspeed/xdma.txt
-> +
->  ASUS NOTEBOOKS AND EEEPC ACPI/WMI EXTRAS DRIVERS
->  M:	Corentin Chary <corentin.chary@gmail.com>
->  L:	acpi4asus-user@lists.sourceforge.net
-> -- 
-> 2.24.0
-> 
->
+diff --git a/arch/x86/include/asm/ptrace.h b/arch/x86/include/asm/ptrace.h
+index 5057a8ed100b..ac45b06941a5 100644
+--- a/arch/x86/include/asm/ptrace.h
++++ b/arch/x86/include/asm/ptrace.h
+@@ -159,6 +159,19 @@ static inline bool user_64bit_mode(struct pt_regs *regs)
+ #endif
+ }
+ 
++/*
++ * Determine whether the register set came from any context that is running in
++ * 64-bit mode.
++ */
++static inline bool any_64bit_mode(struct pt_regs *regs)
++{
++#ifdef CONFIG_X86_64
++	return !user_mode(regs) || user_64bit_mode(regs);
++#else
++	return false;
++#endif
++}
++
+ #ifdef CONFIG_X86_64
+ #define current_user_stack_pointer()	current_pt_regs()->sp
+ #define compat_user_stack_pointer()	current_pt_regs()->sp
+diff --git a/arch/x86/lib/insn-eval.c b/arch/x86/lib/insn-eval.c
+index 306c3a0902ba..31600d851fd8 100644
+--- a/arch/x86/lib/insn-eval.c
++++ b/arch/x86/lib/insn-eval.c
+@@ -155,7 +155,7 @@ static bool check_seg_overrides(struct insn *insn, int regoff)
+  */
+ static int resolve_default_seg(struct insn *insn, struct pt_regs *regs, int off)
+ {
+-	if (user_64bit_mode(regs))
++	if (any_64bit_mode(regs))
+ 		return INAT_SEG_REG_IGNORE;
+ 	/*
+ 	 * Resolve the default segment register as described in Section 3.7.4
+@@ -266,7 +266,7 @@ static int resolve_seg_reg(struct insn *insn, struct pt_regs *regs, int regoff)
+ 	 * which may be invalid at this point.
+ 	 */
+ 	if (regoff == offsetof(struct pt_regs, ip)) {
+-		if (user_64bit_mode(regs))
++		if (any_64bit_mode(regs))
+ 			return INAT_SEG_REG_IGNORE;
+ 		else
+ 			return INAT_SEG_REG_CS;
+@@ -289,7 +289,7 @@ static int resolve_seg_reg(struct insn *insn, struct pt_regs *regs, int regoff)
+ 	 * In long mode, segment override prefixes are ignored, except for
+ 	 * overrides for FS and GS.
+ 	 */
+-	if (user_64bit_mode(regs)) {
++	if (any_64bit_mode(regs)) {
+ 		if (idx != INAT_SEG_REG_FS &&
+ 		    idx != INAT_SEG_REG_GS)
+ 			idx = INAT_SEG_REG_IGNORE;
+@@ -646,23 +646,27 @@ unsigned long insn_get_seg_base(struct pt_regs *regs, int seg_reg_idx)
+ 		 */
+ 		return (unsigned long)(sel << 4);
+ 
+-	if (user_64bit_mode(regs)) {
++	if (any_64bit_mode(regs)) {
+ 		/*
+ 		 * Only FS or GS will have a base address, the rest of
+ 		 * the segments' bases are forced to 0.
+ 		 */
+ 		unsigned long base;
+ 
+-		if (seg_reg_idx == INAT_SEG_REG_FS)
++		if (seg_reg_idx == INAT_SEG_REG_FS) {
+ 			rdmsrl(MSR_FS_BASE, base);
+-		else if (seg_reg_idx == INAT_SEG_REG_GS)
++		} else if (seg_reg_idx == INAT_SEG_REG_GS) {
+ 			/*
+ 			 * swapgs was called at the kernel entry point. Thus,
+ 			 * MSR_KERNEL_GS_BASE will have the user-space GS base.
+ 			 */
+-			rdmsrl(MSR_KERNEL_GS_BASE, base);
+-		else
++			if (user_mode(regs))
++				rdmsrl(MSR_KERNEL_GS_BASE, base);
++			else
++				rdmsrl(MSR_GS_BASE, base);
++		} else {
+ 			base = 0;
++		}
+ 		return base;
+ 	}
+ 
+@@ -703,7 +707,7 @@ static unsigned long get_seg_limit(struct pt_regs *regs, int seg_reg_idx)
+ 	if (sel < 0)
+ 		return 0;
+ 
+-	if (user_64bit_mode(regs) || v8086_mode(regs))
++	if (any_64bit_mode(regs) || v8086_mode(regs))
+ 		return -1L;
+ 
+ 	if (!sel)
+@@ -948,7 +952,7 @@ static int get_eff_addr_modrm(struct insn *insn, struct pt_regs *regs,
+ 	 * following instruction.
+ 	 */
+ 	if (*regoff == -EDOM) {
+-		if (user_64bit_mode(regs))
++		if (any_64bit_mode(regs))
+ 			tmp = regs->ip + insn->length;
+ 		else
+ 			tmp = 0;
+@@ -1250,7 +1254,7 @@ static void __user *get_addr_ref_32(struct insn *insn, struct pt_regs *regs)
+ 	 * After computed, the effective address is treated as an unsigned
+ 	 * quantity.
+ 	 */
+-	if (!user_64bit_mode(regs) && ((unsigned int)eff_addr > seg_limit))
++	if (!any_64bit_mode(regs) && ((unsigned int)eff_addr > seg_limit))
+ 		goto out;
+ 
+ 	/*
+-- 
+2.24.1.735.g03f4e72817-goog
+
