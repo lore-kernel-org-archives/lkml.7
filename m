@@ -2,82 +2,116 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E2BC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B43C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:05:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C49D3206D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B6B6218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:05:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="hj8S/NLn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aBKakUm1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbfLRNFT (ORCPT
+        id S1726977AbfLRNFp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 08:05:19 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:41408 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726591AbfLRNFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 08:05:19 -0500
-Received: from zn.tnic (p200300EC2F0B8B004C237F05E7CC242C.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:8b00:4c23:7f05:e7cc:242c])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 294541EC0591;
-        Wed, 18 Dec 2019 14:05:18 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1576674318;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=epS/Q4CPQrHIq8og5sJ81MAlwOHLeJ852bCwbKG3HlE=;
-        b=hj8S/NLnZgwgxQAGDp/qAmGctiufUh18t5TnnCY6L4gAsr1LBBIlVd0tGYHE7kW+3qUYsv
-        0t8Y64bxA6pVY1QqbyejtVI21mw8HyIP6JUfyAzl95KSKemN7hvqOgw+cHm3+3zi+EdPmO
-        qLcZwlLs4e9bhyrOiqnpSXlwNHOTsfE=
-Date:   Wed, 18 Dec 2019 14:05:10 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     John Garry <john.garry@huawei.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] EDAC/mc: Fix use-after-free and memleaks during device
- removal
-Message-ID: <20191218130510.GF24886@zn.tnic>
-References: <20191218062129.7400-1-rrichter@marvell.com>
- <0c7da2d7-1cab-f518-2309-f740d7ef36fa@huawei.com>
- <20191218125456.kkqfuq7crshwwc7q@rric.localdomain>
+        Wed, 18 Dec 2019 08:05:45 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:33077 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726591AbfLRNFo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 08:05:44 -0500
+Received: by mail-io1-f65.google.com with SMTP id z8so1907791ioh.0;
+        Wed, 18 Dec 2019 05:05:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jtI02BX3MhKCqZlbqoLQVhWQvEfC77FuEIUpdmy5BAY=;
+        b=aBKakUm1IyTAdGLznrQ6P38rhuzcxBW8hJbBt9thj/VSUe8BS8U0qZy/3JTsM0Wp64
+         Ii5UVUHm2seUE3Y1eaIaUMpTuUD//dQYSwn20SzwEzodAiRoBBt5e9lglOEp6KvpDZBd
+         Z9MWT9BmNI1ajGsK4hdZXFA+fk647WBQ/Ib8JfWCviAS8HU8x65mfiGcR4cRK5KzjA/Q
+         7nEdlAWQvd7mxEHiT8k+Gc5E6N961zRtsBOdkLVM4rsfWPnccC8AedWQr6mHlwSy6vX4
+         MXIELFiacE6NpVIALXsUMDis5oTwELtouxvJPgQZT1G2zfX6e/xz/SArpHtdd1jC+YcU
+         T5iA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jtI02BX3MhKCqZlbqoLQVhWQvEfC77FuEIUpdmy5BAY=;
+        b=Iizzo/jPPXK+xuf55zItT4AAPur3V3IvSzXcNSe51tbxkLZ7vsQ433pOSBwhgdjVOP
+         QxUMBESVgMNZitLg9l2uSncjmRQmhPb22GTDhr/dVxNsmTx6j06dPOmzXMrRCVfWiylN
+         kq1181Rncvi9GYbqgs8W1bBRfC/dnCE75LE+TriVS+PPndlM8+8kFBYyN+ZhqVdjfvpb
+         LWgQbrk4iiGi0A6pl0N+Hak+XCBoMHX7rsdCAHxzQ2pPVxIjnLwYHG4oWiw0MS7FHDT2
+         jt9nOzajdtA1ntcuNnlvFHKpDgkgLU+wtPIsXJAZ9q2u0GSo0mwWZMBgaWmdcI4l7PJ2
+         vHwg==
+X-Gm-Message-State: APjAAAXi7vqFg+9jz3wMq13lowW910dbVd0NZTJWRouPTvaVcRgB+8Hx
+        ovGzgm6g5g8JbE5l/bksEoUGW51eqRkUorsD5OA=
+X-Google-Smtp-Source: APXvYqyNAwsARVArObXF0VfIKgBdiiW7WvQbMsAZzjqiVlMZu9krh0jZyV/7Nf2jXTjMZEovn1moXOEZSFAYxGNAIPg=
+X-Received: by 2002:a6b:ee07:: with SMTP id i7mr1121712ioh.78.1576674343420;
+ Wed, 18 Dec 2019 05:05:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191218125456.kkqfuq7crshwwc7q@rric.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191213153910.11235-1-aford173@gmail.com> <20191213153910.11235-3-aford173@gmail.com>
+ <VI1PR0402MB3485AB1908AD6B6617CFC08C98500@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+ <CAHCN7xLrX0R7Uag2vc1qMp4z=1r3haCWrcp4qJT0H0eC3RiA4Q@mail.gmail.com> <CAOMZO5B_CCEf_cdAWs_FDC1c6t0RG1KjRjGidoDPmPmgxY=ebg@mail.gmail.com>
+In-Reply-To: <CAOMZO5B_CCEf_cdAWs_FDC1c6t0RG1KjRjGidoDPmPmgxY=ebg@mail.gmail.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Wed, 18 Dec 2019 07:05:32 -0600
+Message-ID: <CAHCN7xLoScZ=b=eZHXnWt4U_Tr-N3XdNg6f9DHejQNc0kYvZUA@mail.gmail.com>
+Subject: Re: [PATCH V2 3/3] arm64: defconfig: Enable CRYPTO_DEV_FSL_CAAM
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Horia Geanta <horia.geanta@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 12:55:04PM +0000, Robert Richter wrote:
-> I leave that to the maintainer as he is editing the SOB chain anyway.
-> The patch would be sent to the stable list already which may cause
-> confusion.
+On Tue, Dec 17, 2019 at 12:25 PM Fabio Estevam <festevam@gmail.com> wrote:
+>
+> Hi Adam,
+>
+> On Tue, Dec 17, 2019 at 10:07 AM Adam Ford <aford173@gmail.com> wrote:
+>
+> > Out of curiosity, what is the rule for when things are 'm' vs 'y'?
+> >
+> > In the Code Aurora repo, it is set to 'y' and the mainline kernel for
+> > the i.MX6/7, the imx_v6_v7_defconfig is also set to 'y' which is why I
+> > used 'y' here.
+> >
+> > I can do a V3 to address the other items you noted, but I want to
+> > understand the rules about the defconfig so I don't make the same
+> > mistake again.
+>
+> In arch/arm64/configs/defconfig we try to select modules whenever possible.
+>
+> The exceptions are drivers that are vital for boot such as PMIC,
+> pinctrl, clks, etc.
+>
+> The CAAM driver does not fall into this category, so selecting it as
+> module is preferred here.
 
-I haven't looked at it yet but I'd prefer if this patch went the normal
-way and landed in stable only eventually so that it gets some testing by
-people in linux-next first.
+That makes sense.  Thank you for the clarification.  I'll keep that in
+mind if I submit future updates.
 
-It is not a trivial patch and we did break EDAC with recent rework so
-I'd prefer if we take it slowly here and do more extensive testing
-before we expose it to the world.
-
-Also, how does this patch play with your cleanup? I'm guessing this
-patch goes first and then the cleanup...
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+adam
+>
+> Thanks
