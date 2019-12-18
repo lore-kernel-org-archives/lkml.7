@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90219C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0415C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:57:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E6CA2146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:57:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C33B24650
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:57:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727526AbfLRV5M (ORCPT
+        id S1727563AbfLRV5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 16:57:12 -0500
-Received: from mga01.intel.com ([192.55.52.88]:56971 "EHLO mga01.intel.com"
+        Wed, 18 Dec 2019 16:57:19 -0500
+Received: from mga02.intel.com ([134.134.136.20]:54847 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726992AbfLRVzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 16:55:48 -0500
+        id S1726948AbfLRVzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 16:55:47 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 13:55:47 -0800
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 13:55:44 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
-   d="scan'208";a="222108147"
+   d="scan'208";a="222108120"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga001.fm.intel.com with ESMTP; 18 Dec 2019 13:55:47 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 18 Dec 2019 13:55:44 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
         Paul Mackerras <paulus@ozlabs.org>,
@@ -48,9 +48,9 @@ Cc:     James Morse <james.morse@arm.com>,
         linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
         kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Greg Kurz <groug@kaod.org>
-Subject: [PATCH v2 33/45] KVM: x86: Move guts of kvm_arch_vcpu_setup() into kvm_arch_vcpu_create()
-Date:   Wed, 18 Dec 2019 13:55:18 -0800
-Message-Id: <20191218215530.2280-34-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 26/45] KVM: s390: Invoke kvm_vcpu_init() before allocating sie_page
+Date:   Wed, 18 Dec 2019 13:55:11 -0800
+Message-Id: <20191218215530.2280-27-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191218215530.2280-1-sean.j.christopherson@intel.com>
 References: <20191218215530.2280-1-sean.j.christopherson@intel.com>
@@ -61,47 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fold setup() into create() now that the two are called back-to-back by
-common KVM code.  This paves the way for removing kvm_arch_vcpu_setup().
+Now that s390's implementation of kvm_arch_vcpu_init() is empty, move
+the call to kvm_vcpu_init() above the allocation of the sie_page.  This
+paves the way for moving vcpu allocation and initialization into common
+KVM code without any associated functional change.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/x86.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ arch/s390/kvm/kvm-s390.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index c04b24719b28..0ab96dc3dd08 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -9100,11 +9100,12 @@ int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
+diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+index 0049b621e56a..1f8ba074cbd6 100644
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -3027,10 +3027,16 @@ struct kvm_vcpu *kvm_arch_vcpu_create(struct kvm *kvm,
+ 	if (!vcpu)
+ 		goto out;
  
- int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
- {
--	return kvm_x86_ops->vcpu_create(vcpu);
--}
-+	int ret;
++	rc = kvm_vcpu_init(vcpu, kvm, id);
++	if (rc)
++		goto out_free_cpu;
 +
-+	ret = kvm_x86_ops->vcpu_create(vcpu);
-+	if (ret)
-+		return ret;
- 
--int kvm_arch_vcpu_setup(struct kvm_vcpu *vcpu)
--{
- 	vcpu->arch.arch_capabilities = kvm_get_arch_capabilities();
- 	vcpu->arch.msr_platform_info = MSR_PLATFORM_INFO_CPUID_FAULT;
- 	kvm_vcpu_mtrr_init(vcpu);
-@@ -9115,6 +9116,11 @@ int kvm_arch_vcpu_setup(struct kvm_vcpu *vcpu)
- 	return 0;
- }
- 
-+int kvm_arch_vcpu_setup(struct kvm_vcpu *vcpu)
-+{
-+	return 0;
-+}
++	rc = -ENOMEM;
 +
- void kvm_arch_vcpu_postcreate(struct kvm_vcpu *vcpu)
- {
- 	struct msr_data msr;
+ 	BUILD_BUG_ON(sizeof(struct sie_page) != 4096);
+ 	sie_page = (struct sie_page *) get_zeroed_page(GFP_KERNEL);
+ 	if (!sie_page)
+-		goto out_free_cpu;
++		goto out_uninit_vcpu;
+ 
+ 	vcpu->arch.sie_block = &sie_page->sie_block;
+ 	vcpu->arch.sie_block->itdba = (unsigned long) &sie_page->itdb;
+@@ -3046,10 +3052,6 @@ struct kvm_vcpu *kvm_arch_vcpu_create(struct kvm *kvm,
+ 		vcpu->arch.sie_block->gd |= GISA_FORMAT1;
+ 	seqcount_init(&vcpu->arch.cputm_seqcount);
+ 
+-	rc = kvm_vcpu_init(vcpu, kvm, id);
+-	if (rc)
+-		goto out_free_sie_block;
+-
+ 	vcpu->arch.pfault_token = KVM_S390_PFAULT_TOKEN_INVALID;
+ 	kvm_clear_async_pf_completion_queue(vcpu);
+ 	vcpu->run->kvm_valid_regs = KVM_SYNC_PREFIX |
+@@ -3078,7 +3080,7 @@ struct kvm_vcpu *kvm_arch_vcpu_create(struct kvm *kvm,
+ 	if (kvm_is_ucontrol(vcpu->kvm)) {
+ 		rc = __kvm_ucontrol_vcpu_init(vcpu);
+ 		if (rc)
+-			goto out_uninit_vcpu;
++			goto out_free_sie_block;
+ 	}
+ 
+ 	VM_EVENT(kvm, 3, "create cpu %d at 0x%pK, sie block at 0x%pK", id, vcpu,
+@@ -3086,10 +3088,10 @@ struct kvm_vcpu *kvm_arch_vcpu_create(struct kvm *kvm,
+ 	trace_kvm_s390_create_vcpu(id, vcpu, vcpu->arch.sie_block);
+ 
+ 	return vcpu;
+-out_uninit_vcpu:
+-	kvm_vcpu_uninit(vcpu);
+ out_free_sie_block:
+ 	free_page((unsigned long)(vcpu->arch.sie_block));
++out_uninit_vcpu:
++	kvm_vcpu_uninit(vcpu);
+ out_free_cpu:
+ 	kmem_cache_free(kvm_vcpu_cache, vcpu);
+ out:
 -- 
 2.24.1
 
