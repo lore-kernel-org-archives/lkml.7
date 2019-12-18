@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D889C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C08C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BC51227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18965227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:09:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576699793;
-	bh=W2uMCJVpanpiKWXRI26gL3PaRjh3Wk4iqNVcFWlQmck=;
+	s=default; t=1576699796;
+	bh=hyyMtYEKhxzSeADhWhVSPTwVw+0j/nVaT1nPanMj+j4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eLCpOd5u4FJ+8LUebDrJtUrbCgcdgWzl0WKfnbwoWwQ+7rHjZB4vKA0kHvQu7HS3x
-	 GQ2TjkOpiP16qJq1HHMbCXusADma8iYShxaMD0ygpo0BzHeKR+tnxGBbWVZjTlCUQL
-	 HB7HCAdoVXw7gX7mG4NTh+Zuc2gKJff5AQJXavN4=
+	b=ROK6QS9nH0HYyH9EHfI2gfNa5oNBwoUWKfcCECmlpYhBq0FJZ03NURb5VcH82YeTj
+	 HLG4BrKOQDUeyLRgXMvkj2/2akZy6Hb7DAoqOvrN7xxZO85V5sPCiLGMAlKVtc7kTd
+	 7enjt7/oTI9P+D3536ocUQUo7fG0xWladsG/o4co=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727145AbfLRUJw (ORCPT
+        id S1727324AbfLRUJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 15:09:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47584 "EHLO mail.kernel.org"
+        Wed, 18 Dec 2019 15:09:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726757AbfLRUJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1725818AbfLRUJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 18 Dec 2019 15:09:50 -0500
 Received: from localhost (unknown [104.132.0.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D46424650;
-        Wed, 18 Dec 2019 20:09:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41EFE24672;
+        Wed, 18 Dec 2019 20:09:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576699789;
-        bh=W2uMCJVpanpiKWXRI26gL3PaRjh3Wk4iqNVcFWlQmck=;
+        s=default; t=1576699790;
+        bh=hyyMtYEKhxzSeADhWhVSPTwVw+0j/nVaT1nPanMj+j4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WVjdznsmLsk/6M4cPCUDn12ivFAgiZtOffllkTOac3FUEK7TFFywLr1VDRClqt9+w
-         1YzwlwVqy7o22UsjdZ8ZDAwei9fYhCoiu671cqccIBcH6I6VbzT0l/BO2ZGuc1ju2L
-         ciRzz/1K9crParmMGPVjXxrFj+19geCADZpNzZwg=
+        b=Pw3vmYA+s18rEXrjuBlxEtKHDmWBLGot+yMUmzX1vltxYqXmdP9LE9ZXMnAONhUKI
+         kAQRDgOKhw4WVPYJ5gR9KKQwDHyCmK5y0RxS3GK2CybT2lu2OxXVk/g9TO6wRM2KV4
+         4aSZLiyzX+mSHDidM7Fy5kwFoplid5QqPTHO54Rg=
 From:   Jaegeuk Kim <jaegeuk@kernel.org>
 To:     linux-kernel@vger.kernel.org,
         linux-f2fs-devel@lists.sourceforge.net
 Cc:     Jaegeuk Kim <jaegeuk@kernel.org>
-Subject: [PATCH 3/4] f2fs: declare nested quota_sem and remove unnecessary sems
-Date:   Wed, 18 Dec 2019 12:09:46 -0800
-Message-Id: <20191218200947.20445-3-jaegeuk@kernel.org>
+Subject: [PATCH 4/4] f2fs: free sysfs kobject
+Date:   Wed, 18 Dec 2019 12:09:47 -0800
+Message-Id: <20191218200947.20445-4-jaegeuk@kernel.org>
 X-Mailer: git-send-email 2.24.0.525.g8f36a354ae-goog
 In-Reply-To: <20191218200947.20445-1-jaegeuk@kernel.org>
 References: <20191218200947.20445-1-jaegeuk@kernel.org>
@@ -56,94 +56,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1.
-f2fs_quota_sync
- -> down_read(&sbi->quota_sem)
- -> dquot_writeback_dquots
-  -> f2fs_dquot_commit
-   -> down_read(&sbi->quota_sem)
-
-2.
-f2fs_quota_sync
- -> down_read(&sbi->quota_sem)
-  -> f2fs_write_data_pages
-   -> f2fs_write_single_data_page
-    -> down_write(&F2FS_I(inode)->i_sem)
-
-f2fs_mkdir
- -> f2fs_do_add_link
-   -> down_write(&F2FS_I(inode)->i_sem)
-   -> f2fs_init_inode_metadata
-    -> f2fs_new_node_page
-     -> dquot_alloc_inode
-      -> f2fs_dquot_mark_dquot_dirty
-       -> down_read(&sbi->quota_sem)
+Detected kmemleak.
 
 Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 ---
- fs/f2fs/super.c | 18 ++++--------------
- 1 file changed, 4 insertions(+), 14 deletions(-)
+ fs/f2fs/sysfs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 9e85894d12c9..e6fb4b52eb91 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -2158,7 +2158,7 @@ static int f2fs_dquot_commit(struct dquot *dquot)
- 	struct f2fs_sb_info *sbi = F2FS_SB(dquot->dq_sb);
- 	int ret;
- 
--	down_read(&sbi->quota_sem);
-+	down_read_nested(&sbi->quota_sem, SINGLE_DEPTH_NESTING);
- 	ret = dquot_commit(dquot);
- 	if (ret < 0)
- 		set_sbi_flag(sbi, SBI_QUOTA_NEED_REPAIR);
-@@ -2182,13 +2182,10 @@ static int f2fs_dquot_acquire(struct dquot *dquot)
- static int f2fs_dquot_release(struct dquot *dquot)
- {
- 	struct f2fs_sb_info *sbi = F2FS_SB(dquot->dq_sb);
--	int ret;
-+	int ret = dquot_release(dquot);
- 
--	down_read(&sbi->quota_sem);
--	ret = dquot_release(dquot);
- 	if (ret < 0)
- 		set_sbi_flag(sbi, SBI_QUOTA_NEED_REPAIR);
--	up_read(&sbi->quota_sem);
- 	return ret;
+diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
+index 70945ceb9c0c..5963316f391a 100644
+--- a/fs/f2fs/sysfs.c
++++ b/fs/f2fs/sysfs.c
+@@ -786,4 +786,5 @@ void f2fs_unregister_sysfs(struct f2fs_sb_info *sbi)
+ 		remove_proc_entry(sbi->sb->s_id, f2fs_proc_root);
+ 	}
+ 	kobject_del(&sbi->s_kobj);
++	kobject_put(&sbi->s_kobj);
  }
- 
-@@ -2196,29 +2193,22 @@ static int f2fs_dquot_mark_dquot_dirty(struct dquot *dquot)
- {
- 	struct super_block *sb = dquot->dq_sb;
- 	struct f2fs_sb_info *sbi = F2FS_SB(sb);
--	int ret;
--
--	down_read(&sbi->quota_sem);
--	ret = dquot_mark_dquot_dirty(dquot);
-+	int ret = dquot_mark_dquot_dirty(dquot);
- 
- 	/* if we are using journalled quota */
- 	if (is_journalled_quota(sbi))
- 		set_sbi_flag(sbi, SBI_QUOTA_NEED_FLUSH);
- 
--	up_read(&sbi->quota_sem);
- 	return ret;
- }
- 
- static int f2fs_dquot_commit_info(struct super_block *sb, int type)
- {
- 	struct f2fs_sb_info *sbi = F2FS_SB(sb);
--	int ret;
-+	int ret = dquot_commit_info(sb, type);
- 
--	down_read(&sbi->quota_sem);
--	ret = dquot_commit_info(sb, type);
- 	if (ret < 0)
- 		set_sbi_flag(sbi, SBI_QUOTA_NEED_REPAIR);
--	up_read(&sbi->quota_sem);
- 	return ret;
- }
- 
 -- 
 2.24.0.525.g8f36a354ae-goog
 
