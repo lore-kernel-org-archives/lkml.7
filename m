@@ -2,240 +2,285 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 795FDC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6660FC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 402D32176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:06:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uP96Nmt2"
+	by mail.kernel.org (Postfix) with ESMTP id 2A80A21D7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:06:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576699605;
+	bh=VionLeziLSqSkOhBktGW5qfeNHkf3vY+NSxtF/mKhAs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=vJxZrtNuEDx5fgY9mXk3L4K75DI3prxPS1/yGc2Et17wWEmeRbfZT3Z9yNe6p1nLO
+	 Hx1N4eBOBoF3osKBoR0FvVb6BN8EgAa6HL46Sq/OsElie+y7ddV7Izta/K0KHIMDTi
+	 DeSlpYGjoRPvhavrUu+Hw/PfxHaXhCQPj9Td3IDM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727723AbfLRUGj (ORCPT
+        id S1727732AbfLRUGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 15:06:39 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:34068 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727555AbfLRUGg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 15:06:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=9rC2lluhWmst6sPoNa1SifEs6p/w43BDs1gIkal0A94=; b=uP96Nmt2mIS6jVz44ULow1++Z
-        uMaPwxNRhr16G++pXzw634K3bHHTzhlB5V81DznjL6xTzstcJNHAV4S+jFru2GNSoyxI+NVf/rBsQ
-        SeBCyyp2aROSulVjYk2pxG37fDzCaGE2/ZDH5bz1vR7j9Y133q1xGDqbXmuXzGlg3lZHMwDqC6iOs
-        x3x8BcPQ3Uad9jgOXJ627YSnbjoRAVYmrZ7punGyQil000cQonTNvU262y5OghDYu0CGU+iZ4445R
-        HZgsxQr7i6AyNobzJCWk2zObwcTQRhERypEE8iK1FLX4Z6gK0kefIJzfbDhjj7SUirz5F0T4S8I9N
-        O47ytvwZg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ihfaU-0006rf-MK; Wed, 18 Dec 2019 20:06:26 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 54C49980E35; Wed, 18 Dec 2019 21:06:24 +0100 (CET)
-Date:   Wed, 18 Dec 2019 21:06:24 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Giovanni Gherdovich <ggherdovich@suse.cz>
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@suse.de>,
-        Len Brown <lenb@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>, x86@kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Paul Turner <pjt@google.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Quentin Perret <qperret@qperret.net>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Doug Smythies <dsmythies@telus.net>
-Subject: Re: [PATCH v4 2/6] x86,sched: Add support for frequency invariance
- on SKYLAKE_X
-Message-ID: <20191218200624.GI11457@worktop.programming.kicks-ass.net>
-References: <20191113124654.18122-1-ggherdovich@suse.cz>
- <20191113124654.18122-3-ggherdovich@suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191113124654.18122-3-ggherdovich@suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 18 Dec 2019 15:06:44 -0500
+Received: from foss.arm.com ([217.140.110.172]:59542 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726831AbfLRUGn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 15:06:43 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E419D1FB;
+        Wed, 18 Dec 2019 12:06:42 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5FE5D3F67D;
+        Wed, 18 Dec 2019 12:06:42 -0800 (PST)
+Date:   Wed, 18 Dec 2019 20:06:40 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     alexandre.torgue@st.com, Amelie Delaunay <amelie.delaunay@st.com>,
+        broonie@kernel.org, devicetree@vger.kernel.org,
+        Erwan Leray <erwan.leray@st.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Mark Brown <broonie@kernel.org>, mark.rutland@arm.com,
+        robh+dt@kernel.org
+Subject: Applied "dt-bindings: spi: Convert stm32 spi bindings to json-schema" to the spi tree
+In-Reply-To: <20191217090715.13334-1-benjamin.gaignard@st.com>
+Message-Id: <applied-20191217090715.13334-1-benjamin.gaignard@st.com>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 01:46:50PM +0100, Giovanni Gherdovich wrote:
-> The scheduler needs the ratio freq_curr/freq_max for frequency-invariant
-> accounting. On SKYLAKE_X CPUs set freq_max to the highest frequency that can
-> be sustained by a group of at least 4 cores.
-> 
-> From the changelog of commit 31e07522be56 ("tools/power turbostat: fix
-> decoding for GLM, DNV, SKX turbo-ratio limits"):
-> 
-> >   Newer processors do not hard-code the the number of cpus in each bin
-> >   to {1, 2, 3, 4, 5, 6, 7, 8}  Rather, they can specify any number
-> >   of CPUS in each of the 8 bins:
-> >
-> >   eg.
-> >
-> >   ...
-> >   37 * 100.0 = 3600.0 MHz max turbo 4 active cores
-> >   38 * 100.0 = 3700.0 MHz max turbo 3 active cores
-> >   39 * 100.0 = 3800.0 MHz max turbo 2 active cores
-> >   39 * 100.0 = 3900.0 MHz max turbo 1 active cores
-> >
-> >   could now look something like this:
-> >
-> >   ...
-> >   37 * 100.0 = 3600.0 MHz max turbo 16 active cores
-> >   38 * 100.0 = 3700.0 MHz max turbo 8 active cores
-> >   39 * 100.0 = 3800.0 MHz max turbo 4 active cores
-> >   39 * 100.0 = 3900.0 MHz max turbo 2 active cores
-> 
-> This encoding of turbo levels applies to both SKYLAKE_X and GOLDMONT/GOLDMONT_D,
-> but we treat these two classes in separate commits because their freq_max
-> values need to be different. For SKX we prefer a lower freq_max in the ratio
-> freq_curr/freq_max, allowing load and utilization to overshoot and the
-> schedutil governor to be more performance-oriented. Models from the Atom
-> series (such as GOLDMONT*) are handled in a forthcoming commit as they have to
-> favor power-efficiency over performance.
+The patch
 
-Can we at least use a single function to decode both? A little like the
-below. I'm not married to the naming, but I think it is a little silly
-to have 2 different functions to decode the exact same MSRs.
+   dt-bindings: spi: Convert stm32 spi bindings to json-schema
 
-(one could even go as far as to make a boot param to override the {1,4}
-default core count for these things)
+has been applied to the spi tree at
 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.6
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From ef32b63bf13e531479a3b1ef6eb2daaf4fcf787a Mon Sep 17 00:00:00 2001
+From: Benjamin Gaignard <benjamin.gaignard@st.com>
+Date: Tue, 17 Dec 2019 10:07:15 +0100
+Subject: [PATCH] dt-bindings: spi: Convert stm32 spi bindings to json-schema
+
+Convert the STM32 spi binding to DT schema format using json-schema
+
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+CC: Erwan Leray <erwan.leray@st.com>
+CC: Fabrice Gasnier <fabrice.gasnier@st.com>
+CC: Amelie Delaunay <amelie.delaunay@st.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Link: https://lore.kernel.org/r/20191217090715.13334-1-benjamin.gaignard@st.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
+ .../devicetree/bindings/spi/spi-stm32.txt     |  62 -----------
+ .../devicetree/bindings/spi/st,stm32-spi.yaml | 105 ++++++++++++++++++
+ 2 files changed, 105 insertions(+), 62 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/spi/spi-stm32.txt
+ create mode 100644 Documentation/devicetree/bindings/spi/st,stm32-spi.yaml
 
-Index: linux-2.6/arch/x86/kernel/smpboot.c
-===================================================================
---- linux-2.6.orig/arch/x86/kernel/smpboot.c
-+++ linux-2.6/arch/x86/kernel/smpboot.c
-@@ -1863,27 +1863,6 @@ static const struct x86_cpu_id has_glm_t
- 	{}
- };
-
--static bool glm_set_cpu_max_freq(u64 *ratio, u64 *turbo_ratio)
--{
--	int err;
+diff --git a/Documentation/devicetree/bindings/spi/spi-stm32.txt b/Documentation/devicetree/bindings/spi/spi-stm32.txt
+deleted file mode 100644
+index d82755c63eaf..000000000000
+--- a/Documentation/devicetree/bindings/spi/spi-stm32.txt
++++ /dev/null
+@@ -1,62 +0,0 @@
+-STMicroelectronics STM32 SPI Controller
 -
--	if (!x86_match_cpu(has_glm_turbo_ratio_limits))
--		return false;
+-The STM32 SPI controller is used to communicate with external devices using
+-the Serial Peripheral Interface. It supports full-duplex, half-duplex and
+-simplex synchronous serial communication with external devices. It supports
+-from 4 to 32-bit data size. Although it can be configured as master or slave,
+-only master is supported by the driver.
 -
--	err = rdmsrl_safe(MSR_PLATFORM_INFO, ratio);
--	if (err)
--		return false;
+-Required properties:
+-- compatible: Should be one of:
+-  "st,stm32h7-spi"
+-  "st,stm32f4-spi"
+-- reg: Offset and length of the device's register set.
+-- interrupts: Must contain the interrupt id.
+-- clocks: Must contain an entry for spiclk (which feeds the internal clock
+-	  generator).
+-- #address-cells:  Number of cells required to define a chip select address.
+-- #size-cells: Should be zero.
 -
--	err = rdmsrl_safe(MSR_TURBO_RATIO_LIMIT, turbo_ratio);
--	if (err)
--		return false;
+-Optional properties:
+-- resets: Must contain the phandle to the reset controller.
+-- A pinctrl state named "default" may be defined to set pins in mode of
+-  operation for SPI transfer.
+-- dmas: DMA specifiers for tx and rx dma. DMA fifo mode must be used. See the
+-  STM32 DMA bindings, Documentation/devicetree/bindings/dma/stm32-dma.txt.
+-- dma-names: DMA request names should include "tx" and "rx" if present.
+-- cs-gpios: list of GPIO chip selects. See the SPI bus bindings,
+-  Documentation/devicetree/bindings/spi/spi-bus.txt
 -
--	*ratio = (*ratio >> 8) & 0xFF;        /* max P state ratio */
--	*turbo_ratio = *turbo_ratio & 0xFF;   /* highest turbo ratio */
 -
--	return true;
--}
+-Child nodes represent devices on the SPI bus
+-  See ../spi/spi-bus.txt
 -
- static int get_knl_turbo_ratio(u64 *turbo_ratio)
- {
- 	u64 msr;
-@@ -1933,53 +1912,35 @@ static bool knl_set_cpu_max_freq(u64 *ra
- 	return true;
- }
-
--static int get_turbo_ratio_group(u64 *turbo_ratio)
-+static bool skx_set_cpu_max_freq(u64 *ratio, u64 *turbo_ratio, int size)
- {
--	u64 ratio, core_counts;
--	u32 group_size = 0;
--	int err, i, found = 0;
-+	u64 ratios, counts;
-+	u32 group_size;
-+	int err, i;
-
--	err = rdmsrl_safe(MSR_TURBO_RATIO_LIMIT, &ratio);
--	if (err)
--		return err;
+-Optional properties:
+-- st,spi-midi-ns: Only for STM32H7, (Master Inter-Data Idleness) minimum time
+-		  delay in nanoseconds inserted between two consecutive data
+-		  frames.
 -
--	err = rdmsrl_safe(MSR_TURBO_RATIO_LIMIT1, &core_counts);
-+	err = rdmsrl_safe(MSR_PLATFORM_INFO, ratio);
- 	if (err)
--		return err;
 -
--	for (i = 0; i < 64; i += 8) {
--		group_size = (core_counts >> i) & 0xFF;
--		if (group_size >= 4) {
--			*turbo_ratio = (ratio >> i) & 0xFF;
--			found = 1;
--			break;
--		}
--	}
+-Example:
+-	spi2: spi@40003800 {
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-		compatible = "st,stm32h7-spi";
+-		reg = <0x40003800 0x400>;
+-		interrupts = <36>;
+-		clocks = <&rcc SPI2_CK>;
+-		resets = <&rcc 1166>;
+-		dmas = <&dmamux1 0 39 0x400 0x01>,
+-		       <&dmamux1 1 40 0x400 0x01>;
+-		dma-names = "rx", "tx";
+-		pinctrl-0 = <&spi2_pins_b>;
+-		pinctrl-names = "default";
+-		cs-gpios = <&gpioa 11 0>;
 -
--	if (!found)
--		return 1;
--
--	return 0;
--}
--
--static bool skx_set_cpu_max_freq(u64 *ratio, u64 *turbo_ratio)
--{
--	int err;
--
--	if (!x86_match_cpu(has_skx_turbo_ratio_limits))
- 		return false;
-
--	err = rdmsrl_safe(MSR_PLATFORM_INFO, ratio);
-+	*ratio = (*ratio >> 8) & 0xFF;                /* max P state ratio */
+-		aardvark@0 {
+-			compatible = "totalphase,aardvark";
+-			reg = <0>;
+-			spi-max-frequency = <4000000>;
+-			st,spi-midi-ns = <4000>;
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml b/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml
+new file mode 100644
+index 000000000000..f0d979664f07
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml
+@@ -0,0 +1,105 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/spi/st,stm32-spi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	err = rdmsrl_safe(MSR_TURBO_RATIO_LIMIT, &ratios);
- 	if (err)
- 		return false;
-
--	err = get_turbo_ratio_group(turbo_ratio);  /* 4C (circa) turbo ratio */
-+	err = rdmsrl_safe(MSR_TURBO_RATIO_LIMIT1, &counts);
- 	if (err)
- 		return false;
-
--	*ratio = (*ratio >> 8) & 0xFF;                /* max P state ratio */
-+	for (i = 0; i < 64; i += 8) {
-+		group_size = (counts >> i) & 0xFF;
-+		if (group_size >= size) {
-+			*turbo_ratio = (ratios >> i) & 0xFF;
-+			return true;
-+		}
-+	}
-
--	return true;
-+	return false;
- }
-
- static bool core_set_cpu_max_freq(u64 *ratio, u64 *turbo_ratio)
-@@ -2010,13 +1971,15 @@ static void intel_set_cpu_max_freq(void)
- 	if (slv_set_cpu_max_freq(&ratio, &turbo_ratio))
- 		goto set_value;
-
--	if (glm_set_cpu_max_freq(&ratio, &turbo_ratio))
-+	if (x86_match_cpu(has_glm_turbo_ratio_limits) &&
-+	    skx_set_cpu_max_freq(&ratio, &turbo_ratio, 1))
- 		goto set_value;
-
- 	if (knl_set_cpu_max_freq(&ratio, &turbo_ratio))
- 		goto set_value;
-
--	if (skx_set_cpu_max_freq(&ratio, &turbo_ratio))
-+	if (x86_match_cpu(has_skx_turbo_ratio_limits) &&
-+	    skx_set_cpu_max_freq(&ratio, &turbo_ratio, 4))
- 		goto set_value;
-
- 	core_set_cpu_max_freq(&ratio, &turbo_ratio);
++title: STMicroelectronics STM32 SPI Controller bindings
++
++description: |
++  The STM32 SPI controller is used to communicate with external devices using
++  the Serial Peripheral Interface. It supports full-duplex, half-duplex and
++  simplex synchronous serial communication with external devices. It supports
++  from 4 to 32-bit data size.
++
++maintainers:
++  - Erwan Leray <erwan.leray@st.com>
++  - Fabrice Gasnier <fabrice.gasnier@st.com>
++
++allOf:
++  - $ref: "spi-controller.yaml#"
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: st,stm32f4-spi
++
++    then:
++      properties:
++        st,spi-midi-ns: false
++
++properties:
++  compatible:
++    enum:
++      - st,stm32f4-spi
++      - st,stm32h7-spi
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++  dmas:
++    description: |
++      DMA specifiers for tx and rx dma. DMA fifo mode must be used. See
++      the STM32 DMA bindings Documentation/devicetree/bindings/dma/stm32-dma.txt.
++    items:
++      - description: rx DMA channel
++      - description: tx DMA channel
++
++  dma-names:
++    items:
++      - const: rx
++      - const: tx
++
++patternProperties:
++  "^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}@[0-9a-f]+$":
++    type: object
++    # SPI slave nodes must be children of the SPI master node and can
++    # contain the following properties.
++    properties:
++      st,spi-midi-ns:
++        description: |
++          Only for STM32H7, (Master Inter-Data Idleness) minimum time
++          delay in nanoseconds inserted between two consecutive data frames.
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - interrupts
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++    #include <dt-bindings/reset/stm32mp1-resets.h>
++    spi@4000b000 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++      compatible = "st,stm32h7-spi";
++      reg = <0x4000b000 0x400>;
++      interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
++      clocks = <&rcc SPI2_K>;
++      resets = <&rcc SPI2_R>;
++      dmas = <&dmamux1 0 39 0x400 0x05>,
++             <&dmamux1 1 40 0x400 0x05>;
++      dma-names = "rx", "tx";
++      cs-gpios = <&gpioa 11 0>;
++
++      aardvark@0 {
++        compatible = "totalphase,aardvark";
++        reg = <0>;
++        spi-max-frequency = <4000000>;
++        st,spi-midi-ns = <4000>;
++      };
++    };
++
++...
+-- 
+2.20.1
 
