@@ -2,126 +2,137 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE17EC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F60C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 919282146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:34:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="jgCkmWKs"
+	by mail.kernel.org (Postfix) with ESMTP id EB4602146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:34:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbfLRNez (ORCPT
+        id S1727046AbfLRNe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 08:34:55 -0500
-Received: from mail-eopbgr680076.outbound.protection.outlook.com ([40.107.68.76]:23364
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726710AbfLRNez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 08:34:55 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aZS5k9QUFGUYnNuxA498he9d+DWpP5QGfkQkeS626lguheHMpDsaDEqrlp3ezuj1t4/3sWVnuA9wOlOmEr5b3r5mySI02rRUph63amMPAA88PPVDBUDPeqG7ZaSufE1V6iSCVCokMd97KzNTkLTwOVzpiqC/2HYa1/2tZIXthB8mgM72pBZJn4RoFgUynaR5pZIgaYh/6pTOyLVRhDZ1UTa9GusqigGUco4OUHYBxjwJB6IhnwZ6I5QxbZsSRvv31r6copK3V7UteAI3rmItUJ4Xv1Laj/6l13Zvabn1PGrFxMh8B1dgTNs/oF9vtocTZgWfQc0ZoSBoXlZPnWQA8A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WRCkxkSeAlEZ+IpDcwbYjkqEqMjcZs4FSpuv3vinLGo=;
- b=CsM8C7OPcFmUeSs+I9IEHvWwqeo0zAOuhGtCZh2WstUr4f8Gj8kUGDH2FDb+gN7OSYwQSBzXl+4YWF2csmkboxVudviTZhbsmLmaYmju+QoiH9BTsNw2o7vLEvZrJB4hIKnHrZ2p0YJV1fpIV1Rc5QbXopgFCF4Oovydzo2p82LRkfyLdc/lr+9rcqNRMUFGoYs1UCnIs8jh25eqXUwz3GekB8D8jCGbesoXgi3conH5QWrWit/X/86qXr8tupYiQSkevBGDhmmfGptqQdD931qIDdiFPTyIEiMaXr9GKBSJWq2PD9gYRyamY3mWcT9bPJyf+HClab8+2wI+qa2L+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WRCkxkSeAlEZ+IpDcwbYjkqEqMjcZs4FSpuv3vinLGo=;
- b=jgCkmWKsueg0QZAg0o2NnjglaG2WZH1EvxEAT+n453TorK7QwHhlcyzSS3WrEj6YqF4XIlwUftmm4a5V0HNlZwVqJ0I0aq8asKzSDh2Ay7FpFwuPe9qxEhVpYdxuy7GDuGyoybva8TX40vJ6QkAu/oFoFZRbzXeYl7D5UjLrQCI=
-Received: from CH2PR02MB7000.namprd02.prod.outlook.com (20.180.9.216) by
- CH2PR02MB6421.namprd02.prod.outlook.com (52.132.231.17) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.14; Wed, 18 Dec 2019 13:34:51 +0000
-Received: from CH2PR02MB7000.namprd02.prod.outlook.com
- ([fe80::969:436f:b4b8:4899]) by CH2PR02MB7000.namprd02.prod.outlook.com
- ([fe80::969:436f:b4b8:4899%7]) with mapi id 15.20.2559.012; Wed, 18 Dec 2019
- 13:34:51 +0000
-From:   Radhey Shyam Pandey <radheys@xilinx.com>
-To:     David Miller <davem@davemloft.net>
-CC:     Michal Simek <michals@xilinx.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        git <git@xilinx.com>
-Subject: RE: [PATCH net-next 1/3] net: emaclite: Fix coding style
-Thread-Topic: [PATCH net-next 1/3] net: emaclite: Fix coding style
-Thread-Index: AQHVtAmigeW+a78/0E2rrUrIsSbtOqe+4eCAgAEC3CA=
-Date:   Wed, 18 Dec 2019 13:34:50 +0000
-Message-ID: <CH2PR02MB700048BB28C0D3625B1B7AC3C7530@CH2PR02MB7000.namprd02.prod.outlook.com>
-References: <1576498090-1277-1-git-send-email-radhey.shyam.pandey@xilinx.com>
-        <1576498090-1277-2-git-send-email-radhey.shyam.pandey@xilinx.com>
- <20191217.135729.173497629676380262.davem@davemloft.net>
-In-Reply-To: <20191217.135729.173497629676380262.davem@davemloft.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=radheys@xilinx.com; 
-x-originating-ip: [149.199.50.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 5ee4ea42-c942-418d-7b2e-08d783bf0f11
-x-ms-traffictypediagnostic: CH2PR02MB6421:|CH2PR02MB6421:
-x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR02MB6421ACB0AD05743D835575F9C7530@CH2PR02MB6421.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:499;
-x-forefront-prvs: 0255DF69B9
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(136003)(366004)(396003)(39860400002)(13464003)(51914003)(199004)(189003)(9686003)(86362001)(26005)(64756008)(66446008)(52536014)(7696005)(5660300002)(478600001)(55016002)(4326008)(33656002)(107886003)(316002)(71200400001)(186003)(66946007)(66556008)(66476007)(76116006)(6506007)(53546011)(4744005)(81156014)(54906003)(81166006)(8936002)(8676002)(6916009)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6421;H:CH2PR02MB7000.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: G+9CqJBmxIkJSG+FXytzM7ZGM0ix62KuGib+yt+5O7dqIQDG6+fqVolg+fm2JJm8cC+HJvrxKAIdPt3p9EfO9dZe4ZTKub2tMUfN9b/nyPdZhokbKb/fCk2PcHnFPXhBVTXDXQHV5xrdxxKyn5kNSoHlFYwX1gR3c06yAM5dHZA9+ZlHXgV9MYdgW5zNDAnnkBVZvs9+g7jl92yatTGZ0dDlSkFQwe6bfiBEMTtQ9HjCUVKELjvL+Sqo0mu2fQEVnMMZ4hq3vfIpv6EuEyIuL2QwUy/0kZSITqa3WCScotz0Ac+tte7XSP9zRrkXpnZ7t5998G146OIj+T8uZOvY5nRkxs5wxNvRzr6qXVBYPKyC62im9Da04iPeGK8XQglu7munNMUWlbUVHPb1kzpOsvNJNX1Kcu2qvEF/LBDW/4JFQICFECs3SuLQbfsXPxiKEAQJKWm3KwBYVd0hv2EEWinmxeAylTCTFWFwxPn8JJ/zjylqezSZs78nf0313TggsVF0RmoW7oYHM92CGuKleQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5ee4ea42-c942-418d-7b2e-08d783bf0f11
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Dec 2019 13:34:50.9995
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Y+GUkKY3XIDiQhuQf2+bOwLy5eercbmZ/M2Z1qfDdhxbirgNuzzWdPMzz4cNyJaFfAH7UHbfYL1VDCQzE61Gig==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6421
+        Wed, 18 Dec 2019 08:34:59 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57254 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726710AbfLRNe5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 08:34:57 -0500
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBIDXW9S137589
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 08:34:55 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2wykb7c9dx-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 08:34:55 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 18 Dec 2019 13:34:53 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 18 Dec 2019 13:34:50 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBIDYnFY57409696
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Dec 2019 13:34:50 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DDC7652054;
+        Wed, 18 Dec 2019 13:34:49 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.206.168])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 980A152050;
+        Wed, 18 Dec 2019 13:34:48 +0000 (GMT)
+Subject: Re: [PATCH] integrity: Expose data structures required for
+ include/linux/integrity.h
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Florent Revest <revest@chromium.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-integrity@vger.kernel.org
+Cc:     jmorris@namei.org, serge@hallyn.com, revest@google.com,
+        allison@lohutok.net, armijn@tjaldur.nl, bauerman@linux.ibm.com,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, kpsingh@chromium.org
+Date:   Wed, 18 Dec 2019 08:34:47 -0500
+In-Reply-To: <2ae5127d76cbf78140fb2d6108c9ec70c7d8ae5d.camel@chromium.org>
+References: <20191217134748.198011-1-revest@chromium.org>
+         <e9e366d3-6c5d-743b-ffde-6b95b85884a2@schaufler-ca.com>
+         <1576624105.4579.379.camel@linux.ibm.com>
+         <2ae5127d76cbf78140fb2d6108c9ec70c7d8ae5d.camel@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19121813-0020-0000-0000-0000039983FD
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19121813-0021-0000-0000-000021F0A6CD
+Message-Id: <1576676087.4579.396.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-18_03:2019-12-17,2019-12-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ mlxscore=0 adultscore=0 mlxlogscore=946 phishscore=0 malwarescore=0
+ bulkscore=0 priorityscore=1501 impostorscore=0 lowpriorityscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912180112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: David Miller <davem@davemloft.net>
-> Sent: Wednesday, December 18, 2019 3:27 AM
-> To: Radhey Shyam Pandey <radheys@xilinx.com>
-> Cc: Michal Simek <michals@xilinx.com>; netdev@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; linux-kernel@vger.kernel.org; git
-> <git@xilinx.com>
-> Subject: Re: [PATCH net-next 1/3] net: emaclite: Fix coding style
->=20
-> From: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-> Date: Mon, 16 Dec 2019 17:38:08 +0530
->=20
-> > -	spinlock_t reset_lock;
-> > +	spinlock_t reset_lock; /* lock used for synchronization */
->=20
-> If you're just going to put the comment there to shut up the warnings,
-> I'm not applying your patches.
->=20
-> You have to write a thoughtful comment which explains what this lock
-> actually protects.
-Thanks for the review. Sure, will fix reset_lock comment
-and also its kernel-doc description in v2.
+On Wed, 2019-12-18 at 12:03 +0100, Florent Revest wrote:
+> On Tue, 2019-12-17 at 18:08 -0500, Mimi Zohar wrote:
+> > On Tue, 2019-12-17 at 08:25 -0800, Casey Schaufler wrote:
+> > > On 12/17/2019 5:47 AM, Florent Revest wrote:
+> > > > From: Florent Revest <revest@google.com>
+> > > > 
+> > > > include/linux/integrity.h exposes the prototype of
+> > > > integrity_inode_get().
+> > > > However, it relies on struct integrity_iint_cache which is
+> > > > currently
+> > > > defined in an internal header, security/integrity/integrity.h.
+> > > > 
+> > > > To allow the rest of the kernel to use integrity_inode_get,
+> > > 
+> > > Why do you want to do this?
+> > 
+> > ditto
+> 
+> My team works on KRSI (eBPF MAC policies presented at LSS by KP Singh).
+> https://lkml.org/lkml/2019/9/10/393 We identified file hashes gathered
+> from the integrity subsystem as an interesting field that we could
+> potentially someday expose to eBPF programs through helpers.
+> 
+> One of the reason behind writing KRSI is to replace a custom kernel
+> auditing module that currently needs to redefine those structures to
+> access them. I imagine other kernel modules could benefit from a file
+> hash API too.
+> 
+> This is the least intrusive patch I could come up with that allows us
+> to lookup a hash from an inode. I was surprised to find that
+> integrity_inode_get was exposed but not the structures it returns.
+> 
+> If the community is interested in a different file hash API, I'd be
+> happy to iterate on this patch based on your feedback.
+
+There's a major difference between returning just the file hash and
+making the integrity_iint_cache structure public.  Peter Moody's
+original code queried the cache[1].  Why do you need access to the
+structure itself?
+
+FYI, if/when we get to IMA namespacing, the cache structure will
+change.
+
+Mimi
+
+[1] ima: add the ability to query ima for the hash of a given file.
+
+> 
+> > > >  this patch
+> > > > moves the definition of the necessary structures from a private
+> > > > header
+> > > > to a global kernel header.
+> 
 
