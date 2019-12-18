@@ -2,157 +2,166 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABD4C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 199D9C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E400021582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D780021582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:53:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="xT1nyXIQ"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bmvBQTxr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfLRXxd (ORCPT
+        id S1726733AbfLRXxo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 18:53:33 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:46645 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726696AbfLRXxb (ORCPT
+        Wed, 18 Dec 2019 18:53:44 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:48741 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726599AbfLRXxo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 18:53:31 -0500
-Received: by mail-il1-f195.google.com with SMTP id t17so3212645ilm.13
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 15:53:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sargun.me; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=CX/EMM8AnWfaI4rNz03pFAf5OWqiTpv8JaYTV9Mz/lc=;
-        b=xT1nyXIQt4g7KeMROF00XdFlDcMJlPPSB0k5I3q3zaze+uv9zHWUzpmF+Objzre2bE
-         vj6o+i17XYxtdKTLbME0YHvc9u+93nCtPJgQvPOZ+HLlV8cTOfn1j4COrnt5tSc+hgVm
-         YiVFjIW1ovFnH0ZdJLDUwO3b6oyVDhCnjPrSk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=CX/EMM8AnWfaI4rNz03pFAf5OWqiTpv8JaYTV9Mz/lc=;
-        b=InLjoLXW8KFB9yzCR3zC1RIIFGcZ4IJednrEa/Q7zS9eIZh1K+w1v0T80DKjNP+v5C
-         13dOIUzgVVk7uQnricGbrHmbVrFqOEj+B387M0vKAP49ZUPhZPjUtmqyTVUv4urZbPvw
-         fjhVT4aMBYopEZ3t9wX84xDSaHNKZQPF2g9nXtRIn8lPlUgWV+vtspXmGlZEBWCOnkuV
-         3O6Y1frUsg6DmhvtBDdiQh0Ct9u0jlwOVzRleGq46VQmcON/JRQSfccB9+/NxYgYEY5Y
-         3DSBRxO4iB/c45aQO4W+8kmgAd2T5rlil2YB1q4z6eq9h4YxskX2jCV6Ynot6c04Gq+M
-         ZebA==
-X-Gm-Message-State: APjAAAWF7wfYvSgzeTTZJeWiyrJmFFiXtuj6C8RRwCjoFoacOmnmBvrG
-        m3IplJZ9Onh+5/+GiFJYQGP3/0UKsvT8fQ==
-X-Google-Smtp-Source: APXvYqyDAcI9Qp/Mf2NvtcZBmoftpN5CG8w3ekpYEYJZnQufCnCSCNtzHl+YOdbrHP7vL+XPt9RsIw==
-X-Received: by 2002:a92:8307:: with SMTP id f7mr4208307ild.183.1576713210234;
-        Wed, 18 Dec 2019 15:53:30 -0800 (PST)
-Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
-        by smtp.gmail.com with ESMTPSA id h6sm789370iom.43.2019.12.18.15.53.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 18 Dec 2019 15:53:30 -0800 (PST)
-Date:   Wed, 18 Dec 2019 23:53:28 +0000
-From:   Sargun Dhillon <sargun@sargun.me>
-To:     linux-kernel@vger.kernel.org,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Cc:     tycho@tycho.ws, jannh@google.com, cyphar@cyphar.com,
-        christian.brauner@ubuntu.com, oleg@redhat.com, luto@amacapital.net,
-        viro@zeniv.linux.org.uk, gpascutto@mozilla.com,
-        ealvarez@mozilla.com, fweimer@redhat.com, jld@mozilla.com,
-        arnd@arndb.de
-Subject: [PATCH v4 1/5] vfs, fdtable: Add get_task_file helper
-Message-ID: <20191218235326.GA17265@ircssh-2.c.rugged-nimbus-611.internal>
+        Wed, 18 Dec 2019 18:53:44 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576713223; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=+dFcC2QCZE4EMyWiuaOLbaCWdMrLQF93LI0XXqLXM9Q=; b=bmvBQTxrxQyWxx8kMA5url77p7X1lp2MNwy6F2lKl3AlcLcm9wiVMBSaYnWMmbfqfy/BVD9c
+ XJkpreSkCnDvrvu6YLkyBaUBMZK+ENDj04gVXN+oBW/vdD1GK59SzAo+V2/lPTqhkO8HTuyo
+ 8MEqqxvngDv5cs9YTRvCvezUFO8=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5dfabc03.7f8ab9da1148-smtp-out-n01;
+ Wed, 18 Dec 2019 23:53:39 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D2FE3C447A0; Wed, 18 Dec 2019 23:53:39 +0000 (UTC)
+Received: from [10.46.161.159] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: asutoshd)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 090F0C433A2;
+        Wed, 18 Dec 2019 23:53:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 090F0C433A2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
+Subject: Re: [PATCH v1 2/4] scsi: ufs: export ufshcd_auto_hibern8_update for
+ vendor usage
+To:     Stanley Chu <stanley.chu@mediatek.com>, linux-scsi@vger.kernel.org,
+        martin.petersen@oracle.com, avri.altman@wdc.com,
+        alim.akhtar@samsung.com, pedrom.sousa@synopsys.com,
+        jejb@linux.ibm.com, matthias.bgg@gmail.com
+Cc:     linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        beanhuo@micron.com, kuohong.wang@mediatek.com,
+        peter.wang@mediatek.com, chun-hung.wu@mediatek.com,
+        andy.teng@mediatek.com
+References: <1576224695-22657-1-git-send-email-stanley.chu@mediatek.com>
+ <1576224695-22657-3-git-send-email-stanley.chu@mediatek.com>
+From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
+Message-ID: <ad0153db-93ad-0ecf-c2f3-1b76dda778d3@codeaurora.org>
+Date:   Wed, 18 Dec 2019 15:53:37 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1576224695-22657-3-git-send-email-stanley.chu@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This introduces a function which can be used to fetch a file, given an
-arbitrary task. As long as the user holds a reference (refcnt) to the
-task_struct it is safe to call, and will either return NULL on failure,
-or a pointer to the file, with a refcnt.
+On 12/13/2019 12:11 AM, Stanley Chu wrote:
+> Export ufshcd_auto_hibern8_update to allow vendors to use common
+> interface to customize auto-hibernate timer.
+> 
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+> ---
+>   drivers/scsi/ufs/ufs-sysfs.c | 20 --------------------
+>   drivers/scsi/ufs/ufshcd.c    | 18 ++++++++++++++++++
+>   drivers/scsi/ufs/ufshcd.h    |  1 +
+>   3 files changed, 19 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/scsi/ufs/ufs-sysfs.c b/drivers/scsi/ufs/ufs-sysfs.c
+> index ad2abc96c0f1..720be3f64be7 100644
+> --- a/drivers/scsi/ufs/ufs-sysfs.c
+> +++ b/drivers/scsi/ufs/ufs-sysfs.c
+> @@ -118,26 +118,6 @@ static ssize_t spm_target_link_state_show(struct device *dev,
+>   				ufs_pm_lvl_states[hba->spm_lvl].link_state));
+>   }
+>   
+> -static void ufshcd_auto_hibern8_update(struct ufs_hba *hba, u32 ahit)
+> -{
+> -	unsigned long flags;
+> -
+> -	if (!ufshcd_is_auto_hibern8_supported(hba))
+> -		return;
+> -
+> -	spin_lock_irqsave(hba->host->host_lock, flags);
+> -	if (hba->ahit != ahit)
+> -		hba->ahit = ahit;
+> -	spin_unlock_irqrestore(hba->host->host_lock, flags);
+> -	if (!pm_runtime_suspended(hba->dev)) {
+> -		pm_runtime_get_sync(hba->dev);
+> -		ufshcd_hold(hba, false);
+> -		ufshcd_auto_hibern8_enable(hba);
+> -		ufshcd_release(hba);
+> -		pm_runtime_put(hba->dev);
+> -	}
+> -}
+> -
+>   /* Convert Auto-Hibernate Idle Timer register value to microseconds */
+>   static int ufshcd_ahit_to_us(u32 ahit)
+>   {
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index b5966faf3e98..589f519316aa 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -3956,6 +3956,24 @@ static int ufshcd_uic_hibern8_exit(struct ufs_hba *hba)
+>   	return ret;
+>   }
+>   
+> +void ufshcd_auto_hibern8_update(struct ufs_hba *hba, u32 ahit)
+> +{
+> +	unsigned long flags;
+> +
+> +	if (!(hba->capabilities & MASK_AUTO_HIBERN8_SUPPORT))
+> +		return;
+> +
+> +	spin_lock_irqsave(hba->host->host_lock, flags);
+> +	if (hba->ahit == ahit)
+> +		goto out_unlock;
+> +	hba->ahit = ahit;
+> +	if (!pm_runtime_suspended(hba->dev))
+> +		ufshcd_writel(hba, hba->ahit, REG_AUTO_HIBERNATE_IDLE_TIMER);
+> +out_unlock:
+> +	spin_unlock_irqrestore(hba->host->host_lock, flags);
+> +}
+> +EXPORT_SYMBOL_GPL(ufshcd_auto_hibern8_update);
+> +
+>   void ufshcd_auto_hibern8_enable(struct ufs_hba *hba)
+>   {
+>   	unsigned long flags;
+> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+> index 2740f6941ec6..86586a0b9aa5 100644
+> --- a/drivers/scsi/ufs/ufshcd.h
+> +++ b/drivers/scsi/ufs/ufshcd.h
+> @@ -927,6 +927,7 @@ int ufshcd_query_flag(struct ufs_hba *hba, enum query_opcode opcode,
+>   	enum flag_idn idn, bool *flag_res);
+>   
+>   void ufshcd_auto_hibern8_enable(struct ufs_hba *hba);
+> +void ufshcd_auto_hibern8_update(struct ufs_hba *hba, u32 ahit);
+>   
+>   #define SD_ASCII_STD true
+>   #define SD_RAW false
+> 
 
-Signed-off-by: Sargun Dhillon <sargun@sargun.me>
----
- fs/file.c            | 22 ++++++++++++++++++++--
- include/linux/file.h |  2 ++
- 2 files changed, 22 insertions(+), 2 deletions(-)
+Looks good to me.
 
-diff --git a/fs/file.c b/fs/file.c
-index 2f4fcf985079..0ceeb046f4f3 100644
---- a/fs/file.c
-+++ b/fs/file.c
-@@ -706,9 +706,9 @@ void do_close_on_exec(struct files_struct *files)
- 	spin_unlock(&files->file_lock);
- }
- 
--static struct file *__fget(unsigned int fd, fmode_t mask, unsigned int refs)
-+static struct file *__fget_files(struct files_struct *files, unsigned int fd,
-+				 fmode_t mask, unsigned int refs)
- {
--	struct files_struct *files = current->files;
- 	struct file *file;
- 
- 	rcu_read_lock();
-@@ -729,6 +729,11 @@ static struct file *__fget(unsigned int fd, fmode_t mask, unsigned int refs)
- 	return file;
- }
- 
-+static struct file *__fget(unsigned int fd, fmode_t mask, unsigned int refs)
-+{
-+	return __fget_files(current->files, fd, mask, refs);
-+}
-+
- struct file *fget_many(unsigned int fd, unsigned int refs)
- {
- 	return __fget(fd, FMODE_PATH, refs);
-@@ -746,6 +751,19 @@ struct file *fget_raw(unsigned int fd)
- }
- EXPORT_SYMBOL(fget_raw);
- 
-+struct file *fget_task(struct task_struct *task, unsigned int fd)
-+{
-+	struct file *file = NULL;
-+
-+	task_lock(task);
-+	if (task->files)
-+		file = __fget_files(task->files, fd, 0, 1);
-+
-+	task_unlock(task);
-+
-+	return file;
-+}
-+
- /*
-  * Lightweight file lookup - no refcnt increment if fd table isn't shared.
-  *
-diff --git a/include/linux/file.h b/include/linux/file.h
-index 3fcddff56bc4..c6c7b24ea9f7 100644
---- a/include/linux/file.h
-+++ b/include/linux/file.h
-@@ -16,6 +16,7 @@ extern void fput(struct file *);
- extern void fput_many(struct file *, unsigned int);
- 
- struct file_operations;
-+struct task_struct;
- struct vfsmount;
- struct dentry;
- struct inode;
-@@ -47,6 +48,7 @@ static inline void fdput(struct fd fd)
- extern struct file *fget(unsigned int fd);
- extern struct file *fget_many(unsigned int fd, unsigned int refs);
- extern struct file *fget_raw(unsigned int fd);
-+extern struct file *fget_task(struct task_struct *task, unsigned int fd);
- extern unsigned long __fdget(unsigned int fd);
- extern unsigned long __fdget_raw(unsigned int fd);
- extern unsigned long __fdget_pos(unsigned int fd);
+Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+
 -- 
-2.20.1
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+Linux Foundation Collaborative Project
