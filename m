@@ -2,260 +2,272 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70801C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A61C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:21:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 311922064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D249C2082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:21:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UBk74vsk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="om9dPwAj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727216AbfLRRUQ (ORCPT
+        id S1727231AbfLRRVW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 12:20:16 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:42596 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726939AbfLRRUP (ORCPT
+        Wed, 18 Dec 2019 12:21:22 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:45616 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727030AbfLRRVV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 12:20:15 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBIHJOOR034038;
-        Wed, 18 Dec 2019 17:19:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=r3/Nxdgw7C9i3Ps59Nix06XSuTi4MWt2cP5VOrIiwCU=;
- b=UBk74vskXkgoq8ER+tkG3c6lpQdMTtYJqBlWkhoRUgnSO61j/YHqQe6xHYy9KyzXxIma
- xed7RROU/HWJB5M9yNpphvTQ3LNd0g84kKVVkWDso1qggLct7eBY8ZgPMTkYiIi5wc/c
- k5ok6SvH6LgXgFiBUztRUTfwSPi8jOOBFx2wo1qlgxm+9OF3UUsTwJ57iQ0emSNSGKWH
- 0OCnrmnamrM3oicXX9iy8k9/RkfXAEXblwmN0lBoAuMkgkhXS5uihia8djUZMPkx2Nxq
- qCPyHmLQvZvhf1EDOi7G3CC2camhTJGNt1V5VQS3bPEzg00kz+auMZeiSP+UxYEpGNE2 6g== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2wvq5uq5yq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Dec 2019 17:19:33 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBIHJMVD191361;
-        Wed, 18 Dec 2019 17:19:32 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2wyp4xcs8v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Dec 2019 17:19:32 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBIHIoZk025082;
-        Wed, 18 Dec 2019 17:18:50 GMT
-Received: from dhcp-10-154-159-47.vpn.oracle.com (/10.154.159.47)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 18 Dec 2019 09:18:50 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
-Subject: Re: [PATCH v6 0/4] support reserving crashkernel above 4G on arm64
- kdump
-From:   John Donnelly <john.p.donnelly@oracle.com>
-In-Reply-To: <2a97b296-59e7-0a26-84fa-e2ddcd7987b6@huawei.com>
-Date:   Wed, 18 Dec 2019 11:18:48 -0600
-Cc:     tglx@linutronix.de, mingo@redhat.com, catalin.marinas@arm.com,
-        will@kernel.org, james.morse@arm.com, dyoung@redhat.com,
-        bhsharma@redhat.com, horms@verge.net.au, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        guohanjun@huawei.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <11E080AF-28F1-481A-BF16-9C062091D900@oracle.com>
-References: <20190830071200.56169-1-chenzhou10@huawei.com>
- <2a97b296-59e7-0a26-84fa-e2ddcd7987b6@huawei.com>
-To:     Chen Zhou <chenzhou10@huawei.com>
-X-Mailer: Apple Mail (2.3445.9.1)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9475 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912180141
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9475 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912180141
+        Wed, 18 Dec 2019 12:21:21 -0500
+Received: by mail-oi1-f196.google.com with SMTP id v10so1419905oiv.12
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 09:21:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qhOjO/1gjiU66/m8Xa5+Rrg7RA8so1GtC0PAJud5ghg=;
+        b=om9dPwAjIU47ga82gy5KKpWBDVfzap35dWTr/XUPxPDlU0FIPA0gef7eEJjUfEO67V
+         rylx2xY1hU7ziHnwS6iVDY1TPgy+YUxJXCFXAHILLXwgp1kjmNEUNX2he+bTOHIs9NPU
+         CEoMjKwIy/542tQba6lQr/s+0piM6M7vYCSlvbhMKyoOneH65NmIYmFEdKSLM6DRfuSt
+         MSVQPWoqJpJZ38kI+GJbmLVNyI8Rf7uMDQPrEcHuO6b11Vjc5vUaTK02U/Fcs8zQjPLs
+         0c9ygZaABIGAOOfO3gIDQS0gGfYe71PnX/vekinxRV3DVP8VT4wyvMjl+hNrGkUkWxV7
+         5M5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qhOjO/1gjiU66/m8Xa5+Rrg7RA8so1GtC0PAJud5ghg=;
+        b=SwRdCOItDVMS/jMFmvWX0nFj2+W1TTEvMWxqq4Ff8Y2fecKwdpI3t14/kDYNYzqNgV
+         8aPM1kQCbV15wrYViM4eYqOizwf4xjssJGaGXKCBh9XUOKkayZadR9qSBuJ286PnxdsV
+         AAKBlz+7nghAZilS+Z2inHJAFKyjroBlGjHH8b95bKfd5lBfLDhvyyti+w1duFcrh1yQ
+         7qwDcvK7FSXqBnSXkSZSikZtx67BeJQ2hB3rpsoJuT00HrgfMQgvwpWlcSrPUt1nXXd3
+         HuiYKWguIsASyByGHbym2KwK7r7rMO7ZlBipAEteXZL7HryeaZg/WMoNa/WEV8Z4pSwI
+         rbjw==
+X-Gm-Message-State: APjAAAVd3Yn0e25ymhW45QQLH2CKhdqyFQ+beawpeWTDMHprnllXTKXK
+        1GSZpJxpG0/Gow7ZFyhougz8jMrHHlHJp/+XhMeJwQ==
+X-Google-Smtp-Source: APXvYqy9yB9O2gc/s3TvIPq5EZergrpBAODzTElqm/0+LfSrgIdkX4baam98niE2ZGYKR0djgev3Q1jmksxw8X7Z49o=
+X-Received: by 2002:aca:c551:: with SMTP id v78mr1055611oif.161.1576689680623;
+ Wed, 18 Dec 2019 09:21:20 -0800 (PST)
+MIME-Version: 1.0
+References: <20191212014233.32799-1-john.stultz@linaro.org>
+ <20191212014233.32799-8-john.stultz@linaro.org> <20191218163738.GA12358@bogus>
+In-Reply-To: <20191218163738.GA12358@bogus>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Wed, 18 Dec 2019 09:21:05 -0800
+Message-ID: <CALAqxLU=KPJoPKHP14BWcLYJdBoK8DC5+7hRtqCvE2-HZHWxZA@mail.gmail.com>
+Subject: Re: [PATCH v7 7/8] dt-bindings: misc: Add bindings for HiSilicon usb
+ hub and data role switch functionality on HiKey960
+To:     Rob Herring <robh@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        ShuFan Lee <shufan_lee@richtek.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jun Li <lijun.kernel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Guillaume Gardet <Guillaume.Gardet@arm.com>,
+        Jack Pham <jackp@codeaurora.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HI=20
+On Wed, Dec 18, 2019 at 8:37 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Thu, Dec 12, 2019 at 01:42:32AM +0000, John Stultz wrote:
+> > From: Yu Chen <chenyu56@huawei.com>
+> >
+> > This patch adds binding documentation to support usb hub and usb
+> > data role switch of Hisilicon HiKey960 Board.
+> >
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > CC: ShuFan Lee <shufan_lee@richtek.com>
+> > Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> > Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > Cc: Yu Chen <chenyu56@huawei.com>
+> > Cc: Felipe Balbi <balbi@kernel.org>
+> > Cc: Hans de Goede <hdegoede@redhat.com>
+> > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > Cc: Jun Li <lijun.kernel@gmail.com>
+> > Cc: Valentin Schneider <valentin.schneider@arm.com>
+> > Cc: Guillaume Gardet <Guillaume.Gardet@arm.com>
+> > Cc: Jack Pham <jackp@codeaurora.org>
+> > Cc: linux-usb@vger.kernel.org
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: Yu Chen <chenyu56@huawei.com>
+> > Signed-off-by: John Stultz <john.stultz@linaro.org>
+> > ---
+> > v3: Reworked as usb-role-switch intermediary
+> >
+> > v7: Switched over to YAML dt binding description
+> > ---
+> >  .../bindings/misc/hisilicon-hikey-usb.yaml    | 85 +++++++++++++++++++
+> >  1 file changed, 85 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.yaml b/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.yaml
+> > new file mode 100644
+> > index 000000000000..1fc3b198ef73
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.yaml
+> > @@ -0,0 +1,85 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +# Copyright 2019 Linaro Ltd.
+> > +%YAML 1.2
+> > +---
+> > +$id: "http://devicetree.org/schemas/misc/hisilicon-hikey-usb.yaml#"
+> > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> > +
+> > +title: HiKey960 onboard USB GPIO Hub
+> > +
+> > +maintainers:
+> > +  - John Stultz <john.stultz@linaro.org>
+> > +
+> > +description: |
+> > +  Supports the onboard HiKey960 USB GPIO hub, which acts as a
+> > +  role-switch intermediary to detect the state of the USB-C
+> > +  port, to switch the hub into dual-role USB-C or host mode,
+> > +  which enables the onboard USB-A host ports.
+>
+> Honestly I'm torn between whatever works for you because this is pretty
+> "special" dev board design and it should more accurately match the
+> hardware design. I think we can do the later and it doesn't really need
+> anything new.
+>
+> > +
+> > +  Schematics about the hub can be found here:
+> > +    https://github.com/96boards/documentation/raw/master/consumer/hikey/hikey960/hardware-docs/HiKey960_Schematics.pdf
+> > +
+> > +properties:
+> > +  compatible:
+> > +    items:
+> > +      - const: hisilicon,gpio_hubv1
+>
+> As a whole this is HiSilicon specific, but really it is not. It's really
+> just a hub, a mux, and connectors for which we have bindings for. I
+> think you need to model the actual hub in DT. We have 2 ways already to
+> describe hubs in DT: a I2C device or USB device.
+>
+> AIUI, the board looks something like this:
+>
+> ctrl -> mux --> hub -> type-a connector
+>             +-> type-c connector
+>
+> If the hub I2C is not used, then you could do something like this:
+>
+> ctrl {
+>     mux-controls = <&usb_gpio_mux>;
+>     connector@0 {
+>         // type C connector binding
+>     };
+>     hub@1 {
+>         // USB device binding
+>     };
+> };
 
-SEE INLINE ON A QUESTION :
-
-> On Dec 17, 2019, at 8:07 PM, Chen Zhou <chenzhou10@huawei.com> wrote:
->=20
-> Hi all,
->=20
-> Friendly ping...
->=20
-> On 2019/8/30 15:11, Chen Zhou wrote:
->> I am busy with other things, so it was a long time before this =
-version was
->> released.
->>=20
->> This patch series enable reserving crashkernel above 4G in arm64.
->>=20
->> There are following issues in arm64 kdump:
->> 1. We use crashkernel=3DX to reserve crashkernel below 4G, which will =
-fail
->> when there is no enough low memory.
->> 2. Currently, crashkernel=3DY@X can be used to reserve crashkernel =
-above 4G,
->> in this case, if swiotlb or DMA buffers are requierd, crash dump =
-kernel
->> will boot failure because there is no low memory available for =
-allocation.
-
- =20
-      Can you elaborate when the boot failures may fail due to lacking  =
-swiotlb or DMA buffers ? Are these related to certain adapters or =
-specific  platforms  ?=20
-
-     I have not seen this when using   crashkernel=3D2024M@35GB .=20
+I can't say I totally grok all this, but I'll go digging to try to
+better understand it.
+I don't believe there is any I2C involved here, so I'll try the
+approach you outline above.
 
 
->>=20
->> To solve these issues, introduce crashkernel=3DX,low to reserve =
-specified
->> size low memory.
->> Crashkernel=3DX tries to reserve memory for the crash dump kernel =
-under
->> 4G. If crashkernel=3DY,low is specified simultaneously, reserve =
-spcified
->> size low memory for crash kdump kernel devices firstly and then =
-reserve
->> memory above 4G.
->>=20
->> When crashkernel is reserved above 4G in memory, that is, =
-crashkernel=3DX,low
->> is specified simultaneously, kernel should reserve specified size low =
-memory
->> for crash dump kernel devices. So there may be two crash kernel =
-regions, one
->> is below 4G, the other is above 4G.
->> In order to distinct from the high region and make no effect to the =
-use of
->> kexec-tools, rename the low region as "Crash kernel (low)", and add =
-DT property
->> "linux,low-memory-range" to crash dump kernel's dtb to pass the low =
-region.
->>=20
->> Besides, we need to modify kexec-tools:
->> arm64: kdump: add another DT property to crash dump kernel's dtb(see =
-[1])
->>=20
->> The previous changes and discussions can be retrieved from:
->>=20
->> Changes since [v5]
->> - Move reserve_crashkernel_low() into kernel/crash_core.c.
->> - Delete crashkernel=3DX,high.
->> - Modify crashkernel=3DX,low.
->> If crashkernel=3DX,low is specified simultaneously, reserve spcified =
-size low
->> memory for crash kdump kernel devices firstly and then reserve memory =
-above 4G.
->> In addition, rename crashk_low_res as "Crash kernel (low)" for arm64, =
-and then
->> pass to crash dump kernel by DT property "linux,low-memory-range".
->> - Update Documentation/admin-guide/kdump/kdump.rst.
->>=20
->> Changes since [v4]
->> - Reimplement memblock_cap_memory_ranges for multiple ranges by Mike.
->>=20
->> Changes since [v3]
->> - Add memblock_cap_memory_ranges back for multiple ranges.
->> - Fix some compiling warnings.
->>=20
->> Changes since [v2]
->> - Split patch "arm64: kdump: support reserving crashkernel above 4G" =
-as
->> two. Put "move reserve_crashkernel_low() into kexec_core.c" in a =
-separate
->> patch.
->>=20
->> Changes since [v1]:
->> - Move common reserve_crashkernel_low() code into =
-kernel/kexec_core.c.
->> - Remove memblock_cap_memory_ranges() i added in v1 and implement =
-that
->> in fdt_enforce_memory_region().
->> There are at most two crash kernel regions, for two crash kernel =
-regions
->> case, we cap the memory range [min(regs[*].start), max(regs[*].end)]
->> and then remove the memory range in the middle.
->>=20
->> [1]: =
-https://urldefense.proofpoint.com/v2/url?u=3Dhttp-3A__lists.infradead.org_=
-pipermail_kexec_2019-2DAugust_023569.html&d=3DDwICAg&c=3DRoP1YumCXCgaWHvlZ=
-YR8PZh8Bv7qIrMUB65eapI_JnE&r=3Dt2fPg9D87F7D8jm0_3CG9yoiIKdRg4qc_thBw4bzMhc=
-&m=3DZAC6UYbT-3qLR3Dvevd09m6neWWzGWSphuvXXlXow68&s=3D9tn9kUBabiuYhVtXauANS=
-DGaISnCnHLYcAUQgsPBFxs&e=3D=20
->> [v1]: =
-https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lkml.org_lkml_2019_=
-4_2_1174&d=3DDwICAg&c=3DRoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=3Dt2=
-fPg9D87F7D8jm0_3CG9yoiIKdRg4qc_thBw4bzMhc&m=3DZAC6UYbT-3qLR3Dvevd09m6neWWz=
-GWSphuvXXlXow68&s=3DF-lM7II2cuMF_sK3b6-QhSbWM3X-pI_WZEs0sZitS7A&e=3D=20
->> [v2]: =
-https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lkml.org_lkml_2019_=
-4_9_86&d=3DDwICAg&c=3DRoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=3Dt2fP=
-g9D87F7D8jm0_3CG9yoiIKdRg4qc_thBw4bzMhc&m=3DZAC6UYbT-3qLR3Dvevd09m6neWWzGW=
-SphuvXXlXow68&s=3D5Y-S6sqMTklHkOQsNtjTX3C7pV05BjKLGhJVfMHEvDs&e=3D=20
->> [v3]: =
-https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lkml.org_lkml_2019_=
-4_9_306&d=3DDwICAg&c=3DRoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=3Dt2f=
-Pg9D87F7D8jm0_3CG9yoiIKdRg4qc_thBw4bzMhc&m=3DZAC6UYbT-3qLR3Dvevd09m6neWWzG=
-WSphuvXXlXow68&s=3DcWn4zSRQupaZ3jjz4eDvD-pNkoLyL_hsZoRx4yJoD0c&e=3D=20
->> [v4]: =
-https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lkml.org_lkml_2019_=
-4_15_273&d=3DDwICAg&c=3DRoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=3Dt2=
-fPg9D87F7D8jm0_3CG9yoiIKdRg4qc_thBw4bzMhc&m=3DZAC6UYbT-3qLR3Dvevd09m6neWWz=
-GWSphuvXXlXow68&s=3DNslk4RJKIyIuT0IoQoolXNjupEDXplPhQQwnTSoXNWE&e=3D=20
->> [v5]: =
-https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lkml.org_lkml_2019_=
-5_6_1360&d=3DDwICAg&c=3DRoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=3Dt2=
-fPg9D87F7D8jm0_3CG9yoiIKdRg4qc_thBw4bzMhc&m=3DZAC6UYbT-3qLR3Dvevd09m6neWWz=
-GWSphuvXXlXow68&s=3DHJVAM6sCxV2DnNg5d4pw8WPqtkmQnKvztEmkSIgtQ5M&e=3D=20
->>=20
->> Chen Zhou (4):
->>  x86: kdump: move reserve_crashkernel_low() into crash_core.c
->>  arm64: kdump: reserve crashkenel above 4G for crash dump kernel
->>  arm64: kdump: add memory for devices by DT property, =
-low-memory-range
->>  kdump: update Documentation about crashkernel on arm64
->>=20
->> Documentation/admin-guide/kdump/kdump.rst       | 13 ++++-
->> Documentation/admin-guide/kernel-parameters.txt | 12 ++++-
->> arch/arm64/include/asm/kexec.h                  |  3 ++
->> arch/arm64/kernel/setup.c                       |  8 ++-
->> arch/arm64/mm/init.c                            | 61 =
-+++++++++++++++++++++--
->> arch/x86/include/asm/kexec.h                    |  3 ++
->> arch/x86/kernel/setup.c                         | 65 =
-+++----------------------
->> include/linux/crash_core.h                      |  4 ++
->> include/linux/kexec.h                           |  1 -
->> kernel/crash_core.c                             | 65 =
-+++++++++++++++++++++++++
->> 10 files changed, 168 insertions(+), 67 deletions(-)
->>=20
->=20
->=20
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> =
-https://urldefense.proofpoint.com/v2/url?u=3Dhttp-3A__lists.infradead.org_=
-mailman_listinfo_kexec&d=3DDwICAg&c=3DRoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65e=
-apI_JnE&r=3Dt2fPg9D87F7D8jm0_3CG9yoiIKdRg4qc_thBw4bzMhc&m=3DZAC6UYbT-3qLR3=
-Dvevd09m6neWWzGWSphuvXXlXow68&s=3DXMcFx61B_QPg-FUfG_-t88DKCnGm4grqu6zRguiH=
-YrU&e=3D=20
 
+> Or if I2C is used and the hub is under the I2C controller:
+>
+> ctrl {
+>     port@0 {
+>         mux-controls = <&usb_gpio_mux>;
+>         endpoint@0 { // mux state 0
+>                 remote-endpoint = <&usb_c_connector_port>;
+>         };
+>         endpoint@1 { // mux state 1
+>                 remote-endpoint = <&usb_hub_port>;
+>         };
+> };
+>
+> The only new bindings you really need are adding 'mux-controls' to the
+> USB host controller and the hub binding (we already have a few).
+>
+> If the USB2 and USB3 signals come from 2 different host controller
+> nodes, then I think it will need to look like the 2nd case regardless
+> of I2C. (It's strange that USB3 was not routed to Type-C connector. Can
+> you do USB2 on Type-C and USB3 on hub simultaneously? You need USB2 to
+> enumerate, right?)
+
+Yea, it is strange, and I unfortunately don't know why only USB2 was
+exported to the type-c connector.
+And to my knowledge, you cannot use both the type-c and hub simultaneously.
+
+
+> > +
+> > +  typec-vbus-gpios:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > +    description: phandle to the typec-vbus gpio
+>
+> This should be modeled as a GPIO regulator, and belongs as part of a
+> connector node. See bindings/connector/usb-connector.txt.
+>
+> > +
+> > +  otg-switch-gpios:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > +    description: phandle to the otg-switch gpio
+>
+> This would be the gpio-mux binding instead.
+>
+> > +
+> > +  hub-vdd33-en-gpios:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > +    description: phandle to the hub 3.3v power enablement gpio
+>
+> This should be modeled as a GPIO regulator.
+>
+> What about the reset line on the hub?
+
+Unknown. I don't have any details on that.
+
+
+> > +
+> > +  usb-role-switch:
+> > +    $ref: /schemas/types.yaml#/definitions/flag
+> > +    description: Support role switch.
+>
+> This normally is a controller property. Role switch is foreign to the
+> hub, so doesn't really belong there for sure.
+
+So this part was critical to being able to get role switch
+notification from the connector and to properly switch modes without
+adding extra notifier gunk from the previous patch that folks didn't
+like.
+
+Trying to understand further,  your suggestion here is to re-model the
+binding, as gpio regulators and gpio muxes, and use a usb-connector
+node to describe them,  but I'm missing how I connect that to the
+driver implementation I have? Is the idea to extend the rt1711h and
+dwc3 drivers further to support the mux/hub bit (this part is fairly
+foggy to me), completely removing the need for the misc driver?
+
+I did take an attempt at something similar with an earlier iteration
+of the patch set, where I was trying to move the vbus-gpio as a
+gpio-regulator to be controlled by the rt1711h/tpcm core, but that
+approach didn't work properly and Hans suggested I just go back to the
+approach submitted here:
+  https://lkml.org/lkml/2019/10/22/42
+
+thanks
+-john
