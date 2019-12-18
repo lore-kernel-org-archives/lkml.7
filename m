@@ -2,49 +2,47 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB39FC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA534C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7783421582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:08:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B129521582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:08:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cGXORTIz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UaOg8v0Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727535AbfLRSHj (ORCPT
+        id S1727434AbfLRSH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 13:07:39 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:21734 "EHLO
+        Wed, 18 Dec 2019 13:07:26 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:44274 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727517AbfLRSHg (ORCPT
+        by vger.kernel.org with ESMTP id S1727368AbfLRSHZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 13:07:36 -0500
+        Wed, 18 Dec 2019 13:07:25 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576692455;
+        s=mimecast20190719; t=1576692444;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=R0baLjp0RSWLGyQbUMoUgnF3ovbGuvh5LnfEYrDFhNM=;
-        b=cGXORTIz4X61GYBm1nlcmgdLh6SDrlGpxTKqE0RgZA6frwkJbCqRFUPIkJ3tVoem3halCO
-        T2uyIWATb1nNEIxmlrTJ3QVnUJ2/giVfhsLfsNQNHKuQbLVTKSkpNMOBVHQGigykrU5e3e
-        Fn75SBrFdXkyufpI0KTp4+gY2qbH9f0=
+         content-transfer-encoding:content-transfer-encoding;
+        bh=nmdGUwTvoHp9zBzsfUh31MNBzW9ZhcHvi1/dZfx3TSc=;
+        b=UaOg8v0QtzadQldEogCOhNqNeoUxnrLvQxx631DrXamp5YXFFsNw5fjx73DiEZd3r2BUdG
+        p2wS29Q20kx6psKB8ykqxNliGkqcL5xEsjkh3Y+YlL36kWSmTWfsjrBbJv9v+ur/F1aBAg
+        bk9kgoDsS/jotUbvPjLxpzhGJNfPpAU=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-54-C1YMcPs6PlGhC4zeAksxFA-1; Wed, 18 Dec 2019 13:07:30 -0500
-X-MC-Unique: C1YMcPs6PlGhC4zeAksxFA-1
+ us-mta-50-bjYQnByeNymkKKOVYrH73A-1; Wed, 18 Dec 2019 13:07:17 -0500
+X-MC-Unique: bjYQnByeNymkKKOVYrH73A-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C8A7A1856A64;
-        Wed, 18 Dec 2019 18:07:27 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1626E1088381;
+        Wed, 18 Dec 2019 18:07:16 +0000 (UTC)
 Received: from steredhat.redhat.com (ovpn-117-218.ams2.redhat.com [10.36.117.218])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 70EB85D9E2;
-        Wed, 18 Dec 2019 18:07:23 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1592E5D9E2;
+        Wed, 18 Dec 2019 18:07:08 +0000 (UTC)
 From:   Stefano Garzarella <sgarzare@redhat.com>
 To:     davem@davemloft.net
 Cc:     Jorgen Hansen <jhansen@vmware.com>, kvm@vger.kernel.org,
@@ -53,11 +51,9 @@ Cc:     Jorgen Hansen <jhansen@vmware.com>, kvm@vger.kernel.org,
         Dexuan Cui <decui@microsoft.com>, netdev@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Stefano Garzarella <sgarzare@redhat.com>
-Subject: [PATCH net-next v3 03/11] VSOCK: extract utility functions from vsock_diag_test.c
-Date:   Wed, 18 Dec 2019 19:07:00 +0100
-Message-Id: <20191218180708.120337-4-sgarzare@redhat.com>
-In-Reply-To: <20191218180708.120337-1-sgarzare@redhat.com>
-References: <20191218180708.120337-1-sgarzare@redhat.com>
+Subject: [PATCH net-next v3 00/11] VSOCK: add vsock_test test suite
+Date:   Wed, 18 Dec 2019 19:06:57 +0100
+Message-Id: <20191218180708.120337-1-sgarzare@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Content-Transfer-Encoding: quoted-printable
@@ -66,369 +62,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Hajnoczi <stefanha@redhat.com>
+The vsock_diag.ko module already has a test suite but the core AF_VSOCK
+functionality has no tests. This patch series adds several test cases tha=
+t
+exercise AF_VSOCK SOCK_STREAM socket semantics (send/recv, connect/accept=
+,
+half-closed connections, simultaneous connections).
 
-Move useful functions into a separate file in preparation for more
-vsock test programs.
+The v1 of this series was originally sent by Stefan.
 
-Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
----
-v2:
- * aligned with the current SPDX [Stefano]
----
- tools/testing/vsock/Makefile          |  2 +-
- tools/testing/vsock/util.c            | 66 +++++++++++++++++++
- tools/testing/vsock/util.h            | 36 +++++++++++
- tools/testing/vsock/vsock_diag_test.c | 92 +++++++--------------------
- 4 files changed, 125 insertions(+), 71 deletions(-)
+v3:
+- Patch 6:
+  * check the byte received in the recv_byte()
+  * use send(2)/recv(2) instead of write(2)/read(2) to test also flags
+    (e.g. MSG_PEEK)
+- Patch 8:
+  * removed unnecessary control_expectln("CLOSED") [Stefan].
+- removed patches 9,10,11 added in the v2
+- new Patch 9 add parameters to list and skip tests (e.g. useful for vmci
+  that doesn't support half-closed socket in the host)
+- new Patch 10 prints a list of options in the help
+- new Patch 11 tests MSG_PEEK flags of recv(2)
+
+v2: https://patchwork.ozlabs.org/cover/1140538/
+v1: https://patchwork.ozlabs.org/cover/847998/
+
+Stefan Hajnoczi (7):
+  VSOCK: fix header include in vsock_diag_test
+  VSOCK: add SPDX identifiers to vsock tests
+  VSOCK: extract utility functions from vsock_diag_test.c
+  VSOCK: extract connect/accept functions from vsock_diag_test.c
+  VSOCK: add full barrier between test cases
+  VSOCK: add send_byte()/recv_byte() test utilities
+  VSOCK: add AF_VSOCK test cases
+
+Stefano Garzarella (4):
+  vsock_test: wait for the remote to close the connection
+  testing/vsock: add parameters to list and skip tests
+  testing/vsock: print list of options and description
+  vsock_test: add SOCK_STREAM MSG_PEEK test
+
+ tools/testing/vsock/.gitignore        |   1 +
+ tools/testing/vsock/Makefile          |   9 +-
+ tools/testing/vsock/README            |   3 +-
+ tools/testing/vsock/control.c         |  15 +-
+ tools/testing/vsock/control.h         |   2 +
+ tools/testing/vsock/timeout.h         |   1 +
+ tools/testing/vsock/util.c            | 376 +++++++++++++++++++++++++
+ tools/testing/vsock/util.h            |  49 ++++
+ tools/testing/vsock/vsock_diag_test.c | 202 ++++----------
+ tools/testing/vsock/vsock_test.c      | 379 ++++++++++++++++++++++++++
+ 10 files changed, 883 insertions(+), 154 deletions(-)
  create mode 100644 tools/testing/vsock/util.c
  create mode 100644 tools/testing/vsock/util.h
+ create mode 100644 tools/testing/vsock/vsock_test.c
 
-diff --git a/tools/testing/vsock/Makefile b/tools/testing/vsock/Makefile
-index d41a4e13960a..a916878a2d8c 100644
---- a/tools/testing/vsock/Makefile
-+++ b/tools/testing/vsock/Makefile
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- all: test
- test: vsock_diag_test
--vsock_diag_test: vsock_diag_test.o timeout.o control.o
-+vsock_diag_test: vsock_diag_test.o timeout.o control.o util.o
-=20
- CFLAGS +=3D -g -O2 -Werror -Wall -I. -I../../include -I../../../usr/incl=
-ude -Wno-pointer-sign -fno-strict-overflow -fno-strict-aliasing -fno-comm=
-on -MMD -U_FORTIFY_SOURCE -D_GNU_SOURCE
- .PHONY: all test clean
-diff --git a/tools/testing/vsock/util.c b/tools/testing/vsock/util.c
-new file mode 100644
-index 000000000000..f40f45b36d2f
---- /dev/null
-+++ b/tools/testing/vsock/util.c
-@@ -0,0 +1,66 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * vsock test utilities
-+ *
-+ * Copyright (C) 2017 Red Hat, Inc.
-+ *
-+ * Author: Stefan Hajnoczi <stefanha@redhat.com>
-+ */
-+
-+#include <errno.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <signal.h>
-+
-+#include "timeout.h"
-+#include "util.h"
-+
-+/* Install signal handlers */
-+void init_signals(void)
-+{
-+	struct sigaction act =3D {
-+		.sa_handler =3D sigalrm,
-+	};
-+
-+	sigaction(SIGALRM, &act, NULL);
-+	signal(SIGPIPE, SIG_IGN);
-+}
-+
-+/* Parse a CID in string representation */
-+unsigned int parse_cid(const char *str)
-+{
-+	char *endptr =3D NULL;
-+	unsigned long n;
-+
-+	errno =3D 0;
-+	n =3D strtoul(str, &endptr, 10);
-+	if (errno || *endptr !=3D '\0') {
-+		fprintf(stderr, "malformed CID \"%s\"\n", str);
-+		exit(EXIT_FAILURE);
-+	}
-+	return n;
-+}
-+
-+/* Run test cases.  The program terminates if a failure occurs. */
-+void run_tests(const struct test_case *test_cases,
-+	       const struct test_opts *opts)
-+{
-+	int i;
-+
-+	for (i =3D 0; test_cases[i].name; i++) {
-+		void (*run)(const struct test_opts *opts);
-+
-+		printf("%s...", test_cases[i].name);
-+		fflush(stdout);
-+
-+		if (opts->mode =3D=3D TEST_MODE_CLIENT)
-+			run =3D test_cases[i].run_client;
-+		else
-+			run =3D test_cases[i].run_server;
-+
-+		if (run)
-+			run(opts);
-+
-+		printf("ok\n");
-+	}
-+}
-diff --git a/tools/testing/vsock/util.h b/tools/testing/vsock/util.h
-new file mode 100644
-index 000000000000..033e7d59a42a
---- /dev/null
-+++ b/tools/testing/vsock/util.h
-@@ -0,0 +1,36 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef UTIL_H
-+#define UTIL_H
-+
-+/* Tests can either run as the client or the server */
-+enum test_mode {
-+	TEST_MODE_UNSET,
-+	TEST_MODE_CLIENT,
-+	TEST_MODE_SERVER
-+};
-+
-+/* Test runner options */
-+struct test_opts {
-+	enum test_mode mode;
-+	unsigned int peer_cid;
-+};
-+
-+/* A test case definition.  Test functions must print failures to stderr=
- and
-+ * terminate with exit(EXIT_FAILURE).
-+ */
-+struct test_case {
-+	const char *name; /* human-readable name */
-+
-+	/* Called when test mode is TEST_MODE_CLIENT */
-+	void (*run_client)(const struct test_opts *opts);
-+
-+	/* Called when test mode is TEST_MODE_SERVER */
-+	void (*run_server)(const struct test_opts *opts);
-+};
-+
-+void init_signals(void);
-+unsigned int parse_cid(const char *str);
-+void run_tests(const struct test_case *test_cases,
-+	       const struct test_opts *opts);
-+
-+#endif /* UTIL_H */
-diff --git a/tools/testing/vsock/vsock_diag_test.c b/tools/testing/vsock/=
-vsock_diag_test.c
-index fc391e041954..944c8a72eed7 100644
---- a/tools/testing/vsock/vsock_diag_test.c
-+++ b/tools/testing/vsock/vsock_diag_test.c
-@@ -9,12 +9,10 @@
-=20
- #include <getopt.h>
- #include <stdio.h>
--#include <stdbool.h>
- #include <stdlib.h>
- #include <string.h>
- #include <errno.h>
- #include <unistd.h>
--#include <signal.h>
- #include <sys/socket.h>
- #include <sys/stat.h>
- #include <sys/types.h>
-@@ -28,12 +26,7 @@
-=20
- #include "timeout.h"
- #include "control.h"
--
--enum test_mode {
--	TEST_MODE_UNSET,
--	TEST_MODE_CLIENT,
--	TEST_MODE_SERVER
--};
-+#include "util.h"
-=20
- /* Per-socket status */
- struct vsock_stat {
-@@ -334,7 +327,7 @@ static void free_sock_stat(struct list_head *sockets)
- 		free(st);
- }
-=20
--static void test_no_sockets(unsigned int peer_cid)
-+static void test_no_sockets(const struct test_opts *opts)
- {
- 	LIST_HEAD(sockets);
-=20
-@@ -345,7 +338,7 @@ static void test_no_sockets(unsigned int peer_cid)
- 	free_sock_stat(&sockets);
- }
-=20
--static void test_listen_socket_server(unsigned int peer_cid)
-+static void test_listen_socket_server(const struct test_opts *opts)
- {
- 	union {
- 		struct sockaddr sa;
-@@ -383,7 +376,7 @@ static void test_listen_socket_server(unsigned int pe=
-er_cid)
- 	free_sock_stat(&sockets);
- }
-=20
--static void test_connect_client(unsigned int peer_cid)
-+static void test_connect_client(const struct test_opts *opts)
- {
- 	union {
- 		struct sockaddr sa;
-@@ -392,7 +385,7 @@ static void test_connect_client(unsigned int peer_cid=
-)
- 		.svm =3D {
- 			.svm_family =3D AF_VSOCK,
- 			.svm_port =3D 1234,
--			.svm_cid =3D peer_cid,
-+			.svm_cid =3D opts->peer_cid,
- 		},
- 	};
- 	int fd;
-@@ -429,7 +422,7 @@ static void test_connect_client(unsigned int peer_cid=
-)
- 	free_sock_stat(&sockets);
- }
-=20
--static void test_connect_server(unsigned int peer_cid)
-+static void test_connect_server(const struct test_opts *opts)
- {
- 	union {
- 		struct sockaddr sa;
-@@ -481,9 +474,9 @@ static void test_connect_server(unsigned int peer_cid=
-)
- 			clientaddr.sa.sa_family);
- 		exit(EXIT_FAILURE);
- 	}
--	if (clientaddr.svm.svm_cid !=3D peer_cid) {
-+	if (clientaddr.svm.svm_cid !=3D opts->peer_cid) {
- 		fprintf(stderr, "expected peer CID %u from accept(2), got %u\n",
--			peer_cid, clientaddr.svm.svm_cid);
-+			opts->peer_cid, clientaddr.svm.svm_cid);
- 		exit(EXIT_FAILURE);
- 	}
-=20
-@@ -502,11 +495,7 @@ static void test_connect_server(unsigned int peer_ci=
-d)
- 	free_sock_stat(&sockets);
- }
-=20
--static struct {
--	const char *name;
--	void (*run_client)(unsigned int peer_cid);
--	void (*run_server)(unsigned int peer_cid);
--} test_cases[] =3D {
-+static struct test_case test_cases[] =3D {
- 	{
- 		.name =3D "No sockets",
- 		.run_server =3D test_no_sockets,
-@@ -523,30 +512,6 @@ static struct {
- 	{},
- };
-=20
--static void init_signals(void)
--{
--	struct sigaction act =3D {
--		.sa_handler =3D sigalrm,
--	};
--
--	sigaction(SIGALRM, &act, NULL);
--	signal(SIGPIPE, SIG_IGN);
--}
--
--static unsigned int parse_cid(const char *str)
--{
--	char *endptr =3D NULL;
--	unsigned long int n;
--
--	errno =3D 0;
--	n =3D strtoul(str, &endptr, 10);
--	if (errno || *endptr !=3D '\0') {
--		fprintf(stderr, "malformed CID \"%s\"\n", str);
--		exit(EXIT_FAILURE);
--	}
--	return n;
--}
--
- static const char optstring[] =3D "";
- static const struct option longopts[] =3D {
- 	{
-@@ -601,9 +566,10 @@ int main(int argc, char **argv)
- {
- 	const char *control_host =3D NULL;
- 	const char *control_port =3D NULL;
--	int mode =3D TEST_MODE_UNSET;
--	unsigned int peer_cid =3D VMADDR_CID_ANY;
--	int i;
-+	struct test_opts opts =3D {
-+		.mode =3D TEST_MODE_UNSET,
-+		.peer_cid =3D VMADDR_CID_ANY,
-+	};
-=20
- 	init_signals();
-=20
-@@ -619,16 +585,16 @@ int main(int argc, char **argv)
- 			break;
- 		case 'm':
- 			if (strcmp(optarg, "client") =3D=3D 0)
--				mode =3D TEST_MODE_CLIENT;
-+				opts.mode =3D TEST_MODE_CLIENT;
- 			else if (strcmp(optarg, "server") =3D=3D 0)
--				mode =3D TEST_MODE_SERVER;
-+				opts.mode =3D TEST_MODE_SERVER;
- 			else {
- 				fprintf(stderr, "--mode must be \"client\" or \"server\"\n");
- 				return EXIT_FAILURE;
- 			}
- 			break;
- 		case 'p':
--			peer_cid =3D parse_cid(optarg);
-+			opts.peer_cid =3D parse_cid(optarg);
- 			break;
- 		case 'P':
- 			control_port =3D optarg;
-@@ -641,35 +607,21 @@ int main(int argc, char **argv)
-=20
- 	if (!control_port)
- 		usage();
--	if (mode =3D=3D TEST_MODE_UNSET)
-+	if (opts.mode =3D=3D TEST_MODE_UNSET)
- 		usage();
--	if (peer_cid =3D=3D VMADDR_CID_ANY)
-+	if (opts.peer_cid =3D=3D VMADDR_CID_ANY)
- 		usage();
-=20
- 	if (!control_host) {
--		if (mode !=3D TEST_MODE_SERVER)
-+		if (opts.mode !=3D TEST_MODE_SERVER)
- 			usage();
- 		control_host =3D "0.0.0.0";
- 	}
-=20
--	control_init(control_host, control_port, mode =3D=3D TEST_MODE_SERVER);
--
--	for (i =3D 0; test_cases[i].name; i++) {
--		void (*run)(unsigned int peer_cid);
-+	control_init(control_host, control_port,
-+		     opts.mode =3D=3D TEST_MODE_SERVER);
-=20
--		printf("%s...", test_cases[i].name);
--		fflush(stdout);
--
--		if (mode =3D=3D TEST_MODE_CLIENT)
--			run =3D test_cases[i].run_client;
--		else
--			run =3D test_cases[i].run_server;
--
--		if (run)
--			run(peer_cid);
--
--		printf("ok\n");
--	}
-+	run_tests(test_cases, &opts);
-=20
- 	control_cleanup();
- 	return EXIT_SUCCESS;
 --=20
 2.24.1
 
