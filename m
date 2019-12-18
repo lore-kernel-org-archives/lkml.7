@@ -2,95 +2,270 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A66C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64471C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DA4721D7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:59:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36E4F21D7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:00:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576706442;
+	bh=BHrAQFIGbbIvTg9mW+NwpWTBkboWudvsPo35DCHjyKU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ncUoSs8FbaIX9E4AQF4pDqdHUs1CHE25/HbpOXgvJDoSJnw6AbGoOEE0L2zBnZKu1
+	 iRaN1Cfv4xG2W0MU2tQ7rZFLmajUxe0PNB20UiwxkdRCLucRwZeSM8yftm9QSMgWk3
+	 Db6xcFK21N3eVSsnrWboYD4AdaoycU8JIb+cFJoM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727604AbfLRV7z (ORCPT
+        id S1726741AbfLRWAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 16:59:55 -0500
-Received: from mga02.intel.com ([134.134.136.20]:54823 "EHLO mga02.intel.com"
+        Wed, 18 Dec 2019 17:00:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726387AbfLRVze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 16:55:34 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 13:55:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
-   d="scan'208";a="222108011"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga001.fm.intel.com with ESMTP; 18 Dec 2019 13:55:32 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Greg Kurz <groug@kaod.org>
-Subject: [PATCH v2 02/45] KVM: PPC: Book3S PR: Free shared page if mmu initialization fails
-Date:   Wed, 18 Dec 2019 13:54:47 -0800
-Message-Id: <20191218215530.2280-3-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191218215530.2280-1-sean.j.christopherson@intel.com>
-References: <20191218215530.2280-1-sean.j.christopherson@intel.com>
+        id S1726598AbfLRWAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 17:00:40 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C43E2146E;
+        Wed, 18 Dec 2019 22:00:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576706439;
+        bh=BHrAQFIGbbIvTg9mW+NwpWTBkboWudvsPo35DCHjyKU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aUiiz0YBKuuTNqGtZUBFxpAtyAvA7wMfZV6DH+GQ/h96SUDYnp49gpjr195CweqU8
+         jR/OTEUynai/TzIMVUvyBnqfuvp4CYlm2PzeJtATAsKDvbY8YeAkhkMIJxjWsgpe+z
+         YWT6uZAFFiGY72eQYemkOy+F2LVxbpBfyKJMQbGE=
+Date:   Wed, 18 Dec 2019 23:00:37 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Vasily Khoruzhick <anarsoul@gmail.com>
+Cc:     Yangtao Li <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 2/7] dt-bindings: thermal: add YAML schema for
+ sun8i-thermal driver bindings
+Message-ID: <20191218220037.4g6pzdvrhroaj4qu@gilmour.lan>
+References: <20191218042121.1471954-1-anarsoul@gmail.com>
+ <20191218042121.1471954-3-anarsoul@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="nfb3broi25z4qfbb"
+Content-Disposition: inline
+In-Reply-To: <20191218042121.1471954-3-anarsoul@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Explicitly free the shared page if kvmppc_mmu_init() fails during
-kvmppc_core_vcpu_create(), as the page is freed only in
-kvmppc_core_vcpu_free(), which is not reached via kvm_vcpu_uninit().
 
-Fixes: 96bc451a15329 ("KVM: PPC: Introduce shared page")
-Cc: stable@vger.kernel.org
-Reviewed-by: Greg Kurz <groug@kaod.org>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/powerpc/kvm/book3s_pr.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+--nfb3broi25z4qfbb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/powerpc/kvm/book3s_pr.c b/arch/powerpc/kvm/book3s_pr.c
-index ce4fcf76e53e..26ca62b6d773 100644
---- a/arch/powerpc/kvm/book3s_pr.c
-+++ b/arch/powerpc/kvm/book3s_pr.c
-@@ -1806,10 +1806,12 @@ static struct kvm_vcpu *kvmppc_core_vcpu_create_pr(struct kvm *kvm,
- 
- 	err = kvmppc_mmu_init(vcpu);
- 	if (err < 0)
--		goto uninit_vcpu;
-+		goto free_shared_page;
- 
- 	return vcpu;
- 
-+free_shared_page:
-+	free_page((unsigned long)vcpu->arch.shared);
- uninit_vcpu:
- 	kvm_vcpu_uninit(vcpu);
- free_shadow_vcpu:
--- 
-2.24.1
+Hi,
 
+On Tue, Dec 17, 2019 at 08:21:16PM -0800, Vasily Khoruzhick wrote:
+> From: Yangtao Li <tiny.windzz@gmail.com>
+>
+> sun8i-thermal driver supports thermal sensor in wide range of Allwinner
+> SoCs. Add YAML schema for its bindings.
+>
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> ---
+>  .../thermal/allwinner,sun8i-a83t-ths.yaml     | 146 ++++++++++++++++++
+>  1 file changed, 146 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
+> new file mode 100644
+> index 000000000000..8768c2450633
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
+> @@ -0,0 +1,146 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/thermal/allwinner,sun8i-a83t-ths.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Allwinner SUN8I Thermal Controller Device Tree Bindings
+> +
+> +maintainers:
+> +  - Yangtao Li <tiny.windzz@gmail.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - allwinner,sun8i-a83t-ths
+> +      - allwinner,sun8i-h3-ths
+> +      - allwinner,sun8i-r40-ths
+> +      - allwinner,sun50i-a64-ths
+> +      - allwinner,sun50i-h5-ths
+> +      - allwinner,sun50i-h6-ths
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  nvmem-cells:
+> +    maxItems: 1
+> +    description: Calibration data for thermal sensors
+> +
+> +  nvmem-cell-names:
+> +    const: calibration
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: allwinner,sun50i-h6-ths
+> +
+> +    then:
+> +      properties:
+> +        clocks:
+> +          minItems: 1
+> +          maxItems: 1
+
+When minItems and maxItems are equal, you can only set one, the other
+will be filled automatically.
+
+> +
+> +        clock-names:
+> +          minItems: 1
+> +          maxItems: 1
+> +          items:
+> +            - const: bus
+
+And this can even be just
+
+clock-names:
+  const: bus
+
+> +
+> +    else:
+> +      properties:
+> +        clocks:
+> +          minItems: 1
+> +          maxItems: 2
+> +
+> +        clock-names:
+> +          minItems: 1
+> +          maxItems: 2
+> +          items:
+> +            - const: bus
+> +            - const: mod
+
+I'm not sure why you need the minItems set to 1 here though?
+
+it's always 2 for the !H6 case, right?
+
+if so, then we should even do something like:
+
+properties:
+  ...
+
+  # This is needed because we will need to check both the H6 and !H6
+  # case, and it must validate. So we make sure we match against the
+  # union of both cases.
+  clocks:
+    minItems: 1
+    maxItems: 2
+    items:
+      - description: Bus Clock
+      - description: Module Clock
+
+  # Same story here
+  clock-names:
+    minItems: 1
+    maxItems: 2
+    items:
+      - const: bus
+      - const: mod
+
+allOf:
+  - if:
+    properties:
+      compatible:
+        contains:
+	  const: allwinner,sun50i-h6-ths
+
+    # Here we validate in the H6 case we only have one clock
+    then:
+      properties:
+        clocks:
+	  maxItems: 1
+
+        clock-names:
+	  maxItems: 1
+
+    # and here that in the other case we have two clocks, the names
+    # being validated by the schema above
+    else:
+      properties:
+        clocks:
+	  maxItems: 2
+
+        clock-names:
+	  maxItems: 2
+
+# And now we can set this since all our properties will have been
+# expressed in the upper level schema
+additionalProperties: false
+
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: allwinner,sun8i-h3-ths
+> +
+> +    then:
+> +      properties:
+> +        "#thermal-sensor-cells":
+> +          const: 0
+> +
+> +    else:
+> +      properties:
+> +        "#thermal-sensor-cells":
+> +          const: 1
+
+Same thing here, you should have an enum accepting both values in the
+upper schema, the condition here only making further checks. Also, in
+the case where #thermal-sensor-cells is one, then you need to document
+what that argument is.
+
+Thanks!
+Maxime
+
+--nfb3broi25z4qfbb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfqhhQAKCRDj7w1vZxhR
+xWvSAQCi6mjrJCTS8SWPU7PcgNEc6pA17UBJm2Xk4XKoLO7m6wD9EPOHRneAtdBr
+BtJRS/RwZk8fGlXI46Xa48uRjngLqw4=
+=F0Nc
+-----END PGP SIGNATURE-----
+
+--nfb3broi25z4qfbb--
