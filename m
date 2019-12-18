@@ -2,244 +2,292 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D92BDC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DCB5C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0C3924672
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:17:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C27EC24680
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:17:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="eqPfRq6+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbfLRJRL (ORCPT
+        id S1726887AbfLRJRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 04:17:11 -0500
-Received: from mga18.intel.com ([134.134.136.126]:60669 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725955AbfLRJRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 04:17:10 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 01:17:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,328,1571727600"; 
-   d="scan'208";a="205782211"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 18 Dec 2019 01:17:08 -0800
-Received: from [10.125.252.219] (abudanko-mobl.ccr.corp.intel.com [10.125.252.219])
-        by linux.intel.com (Postfix) with ESMTP id 0400D5802C9;
-        Wed, 18 Dec 2019 01:16:59 -0800 (PST)
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: [PATCH v4 0/7] Introduce CAP_SYS_PERFMON to secure system performance
- monitoring and observability
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
-        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "james.bottomley@hansenpartnership.com" 
-        <james.bottomley@hansenpartnership.com>,
-        Serge Hallyn <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Robert Richter <rric@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org, oprofile-list@lists.sf.net
-Organization: Intel Corp.
-Message-ID: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
-Date:   Wed, 18 Dec 2019 12:16:58 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Wed, 18 Dec 2019 04:17:14 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:19096 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbfLRJRM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 04:17:12 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5df9ee800002>; Wed, 18 Dec 2019 01:16:48 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 18 Dec 2019 01:16:58 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 18 Dec 2019 01:16:58 -0800
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Dec
+ 2019 09:16:57 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 18 Dec 2019 09:16:57 +0000
+Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.64.167]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5df9ee860000>; Wed, 18 Dec 2019 01:16:57 -0800
+From:   Nagarjuna Kristam <nkristam@nvidia.com>
+To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <mark.rutland@arm.com>, <robh+dt@kernel.org>, <kishon@ti.com>
+CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Nagarjuna Kristam <nkristam@nvidia.com>
+Subject: [Patch V2 02/18] dt-bindings: usb: Add NVIDIA Tegra XUSB device mode controller binding
+Date:   Wed, 18 Dec 2019 14:46:15 +0530
+Message-ID: <1576660591-10383-3-git-send-email-nkristam@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1576660591-10383-1-git-send-email-nkristam@nvidia.com>
+References: <1576660591-10383-1-git-send-email-nkristam@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1576660609; bh=mYwRPWnyhCQFlyL7sjl0nFhTLWFj81eUNp9Fi6fmk/Q=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=eqPfRq6+Qdjp1zrIk5oGjjmtc45UqGIsqX6pQqt0MWGk3K/3a2ZhYdoGArA9lhAm8
+         ITqgv0GR5COQNx7rV9pLsICR4tVwXRINqUMz/AVJH5Xbq+8P6EP6fz3HGh64OGY8P3
+         00AgXLTk/lrIaqs4IrFZYjnjyYMufuiS4LDLmxIyfQw32lQ6bVo8PtfHApXK4irdzO
+         lejgtg+VEAQp/RRYTEWEIJXcMYwVuidjTFPNW3L3bnlO1HExbL5scJSV/sJeK2JTDo
+         kTw9IIua77AtZeyPMjh3wl9/ouVZgaAjZd0K52eiv/RUHOCCwnRN/Yn5exjoYoebS6
+         fYPJLrHoaJQXA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add device-tree binding documentation for the XUSB device mode controller
+present on Tegra210 and Tegra186 SoC. This controller supports the USB 3.0
+specification.
 
-Currently access to perf_events, i915_perf and other performance monitoring and
-observability subsystems of the kernel is open for a privileged process [1] with
-CAP_SYS_ADMIN capability enabled in the process effective set [2].
-
-This patch set introduces CAP_SYS_PERFMON capability devoted to secure system
-performance monitoring and observability operations so that CAP_SYS_PERFMON would
-assist CAP_SYS_ADMIN capability in its governing role for perf_events, i915_perf
-and other performance monitoring and observability subsystems of the kernel.
-
-CAP_SYS_PERFMON intends to meet the demand to secure system performance monitoring
-and observability operations in security sensitive, restricted, production
-environments (e.g. HPC clusters, cloud and virtual compute environments) where root
-or CAP_SYS_ADMIN credentials are not available to mass users of a system because
-of security considerations.
-
-CAP_SYS_PERFMON intends to harden system security and integrity during system
-performance monitoring and observability operations by decreasing attack surface
-that is available to CAP_SYS_ADMIN privileged processes [2].
-
-CAP_SYS_PERFMON intends to take over CAP_SYS_ADMIN credentials related to system
-performance monitoring and observability operations and balance amount of
-CAP_SYS_ADMIN credentials following the recommendations in the capabilities man
-page [2] for CAP_SYS_ADMIN: "Note: this capability is overloaded; see Notes to
-kernel developers, below."
-
-For backward compatibility reasons access to system performance monitoring and
-observability subsystems of the kernel remains open for CAP_SYS_ADMIN privileged
-processes but CAP_SYS_ADMIN capability usage for secure system performance
-monitoring and observability operations is discouraged with respect to the
-introduced CAP_SYS_PERFMON capability.
-
-The patch set is for tip perf/core repository:
-git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip perf/core
-sha1: ceb9e77324fa661b1001a0ae66f061b5fcb4e4e6
-
+Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
 ---
-Changes in v4:
-- converted perfmon_capable() into an inline function
-- made perf_events kprobes, uprobes, hw breakpoints and namespaces data available
-  to CAP_SYS_PERFMON privileged processes
-- applied perfmon_capable() to drivers/perf and drivers/oprofile
-- extended __cmd_ftrace() with support of CAP_SYS_PERFMON
-Changes in v3:
-- implemented perfmon_capable() macros aggregating required capabilities checks
-Changes in v2:
-- made perf_events trace points available to CAP_SYS_PERFMON privileged processes
-- made perf_event_paranoid_check() treat CAP_SYS_PERFMON equally to CAP_SYS_ADMIN
-- applied CAP_SYS_PERFMON to i915_perf, bpf_trace, powerpc and parisc system
-  performance monitoring and observability related subsystems
-
+V2:
+ - used enum instead of oneOf and const.
+ - Moved reg, reg-names, clocks, clock-names to property section from allOf.
+ - Limited allOf to min and max items based on soc.
+ - Updated description for power-domains.
+ - Added V1 reference
 ---
-Alexey Budankov (9):
-  capabilities: introduce CAP_SYS_PERFMON to kernel and user space
-  perf/core: open access for CAP_SYS_PERFMON privileged process
-  perf tool: extend Perf tool with CAP_SYS_PERFMON capability support
-  drm/i915/perf: open access for CAP_SYS_PERFMON privileged process
-  trace/bpf_trace: open access for CAP_SYS_PERFMON privileged process
-  powerpc/perf: open access for CAP_SYS_PERFMON privileged process
-  parisc/perf: open access for CAP_SYS_PERFMON privileged process
-  drivers/perf: open access for CAP_SYS_PERFMON privileged process
-  drivers/oprofile: open access for CAP_SYS_PERFMON privileged process
-
- arch/parisc/kernel/perf.c           |  2 +-
- arch/powerpc/perf/imc-pmu.c         |  4 ++--
- drivers/gpu/drm/i915/i915_perf.c    | 13 ++++++-------
- drivers/oprofile/event_buffer.c     |  2 +-
- drivers/perf/arm_spe_pmu.c          |  4 ++--
- include/linux/capability.h          |  4 ++++
- include/linux/perf_event.h          |  6 +++---
- include/uapi/linux/capability.h     |  8 +++++++-
- kernel/events/core.c                |  6 +++---
- kernel/trace/bpf_trace.c            |  2 +-
- security/selinux/include/classmap.h |  4 ++--
- tools/perf/builtin-ftrace.c         |  5 +++--
- tools/perf/design.txt               |  3 ++-
- tools/perf/util/cap.h               |  4 ++++
- tools/perf/util/evsel.c             | 10 +++++-----
- tools/perf/util/util.c              |  1 +
- 16 files changed, 47 insertions(+), 31 deletions(-)
-
+V1
+ - This document is yaml version of [1], with difference of usb-role-switch
+   removal.
+[1] https://patchwork.kernel.org/patch/11156253/ 
 ---
-Testing and validation (Intel Skylake, 8 cores, Fedora 29, 5.4.0-rc8+, x86_64):
+ .../devicetree/bindings/usb/nvidia,tegra-xudc.yaml | 190 +++++++++++++++++++++
+ 1 file changed, 190 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.yaml
 
-libcap library [3], [4] and Perf tool can be used to apply CAP_SYS_PERFMON 
-capability for secure system performance monitoring and observability beyond the
-scope permitted by the system wide perf_event_paranoid kernel setting [5] and
-below are the steps for evaluation:
-
-  - patch, build and boot the kernel
-  - patch, build Perf tool e.g. to /home/user/perf
-  ...
-  # git clone git://git.kernel.org/pub/scm/libs/libcap/libcap.git libcap
-  # pushd libcap
-  # patch libcap/include/uapi/linux/capabilities.h with [PATCH 1]
-  # make
-  # pushd progs
-  # ./setcap "cap_sys_perfmon,cap_sys_ptrace,cap_syslog=ep" /home/user/perf
-  # ./setcap -v "cap_sys_perfmon,cap_sys_ptrace,cap_syslog=ep" /home/user/perf
-  /home/user/perf: OK
-  # ./getcap /home/user/perf
-  /home/user/perf = cap_sys_ptrace,cap_syslog,cap_sys_perfmon+ep
-  # echo 2 > /proc/sys/kernel/perf_event_paranoid
-  # cat /proc/sys/kernel/perf_event_paranoid 
-  2
-  ...
-  $ /home/user/perf top
-    ... works as expected ...
-  $ cat /proc/`pidof perf`/status
-  Name:	perf
-  Umask:	0002
-  State:	S (sleeping)
-  Tgid:	2958
-  Ngid:	0
-  Pid:	2958
-  PPid:	9847
-  TracerPid:	0
-  Uid:	500	500	500	500
-  Gid:	500	500	500	500
-  FDSize:	256
-  ...
-  CapInh:	0000000000000000
-  CapPrm:	0000004400080000
-  CapEff:	0000004400080000 => 01000100 00000000 00001000 00000000 00000000
-                                     cap_sys_perfmon,cap_sys_ptrace,cap_syslog
-  CapBnd:	0000007fffffffff
-  CapAmb:	0000000000000000
-  NoNewPrivs:	0
-  Seccomp:	0
-  Speculation_Store_Bypass:	thread vulnerable
-  Cpus_allowed:	ff
-  Cpus_allowed_list:	0-7
-  ...
-
-Usage of cap_sys_perfmon effectively avoids unused credentials excess:
-
-- with cap_sys_admin:
-  CapEff:	0000007fffffffff => 01111111 11111111 11111111 11111111 11111111
-
-- with cap_sys_perfmon:
-  CapEff:	0000004400080000 => 01000100 00000000 00001000 00000000 00000000
-                                    38   34               19
-                           sys_perfmon   syslog           sys_ptrace
-
----
-
-[1] https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
-[2] http://man7.org/linux/man-pages/man7/capabilities.7.html
-[3] http://man7.org/linux/man-pages/man8/setcap.8.html
-[4] https://git.kernel.org/pub/scm/libs/libcap/libcap.git
-[5] http://man7.org/linux/man-pages/man2/perf_event_open.2.html
-[6] https://sites.google.com/site/fullycapable/, posix_1003.1e-990310.pdf
-
+diff --git a/Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.yaml b/Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.yaml
+new file mode 100644
+index 0000000..b84ed8e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.yaml
+@@ -0,0 +1,190 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/usb/nvidia,tegra-xudc.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Device tree binding for NVIDIA Tegra XUSB device mode controller (XUDC)
++
++description:
++  The Tegra XUDC controller supports both USB 2.0 HighSpeed/FullSpeed and
++  USB 3.0 SuperSpeed protocols.
++
++maintainers:
++  - Nagarjuna Kristam <nkristam@nvidia.com>
++  - JC Kuo <jckuo@nvidia.com>
++  - Thierry Reding <treding@nvidia.com>
++
++properties:
++  compatible:
++    items:
++      - enum:
++          - nvidia,tegra210-xudc # For Tegra210
++          - nvidia,tegra186-xudc # For Tegra186
++
++  reg:
++    minItems: 2
++    maxItems: 3
++    items:
++      - description: XUSB device controller registers
++      - description: XUSB device PCI Config registers
++      - description: XUSB device registers.
++
++  reg-names:
++    minItems: 2
++    maxItems: 3
++    items:
++      - const: base
++      - const: fpci
++      - const: ipfs
++
++  interrupts:
++    maxItems: 1
++    description: Must contain the XUSB device interrupt.
++
++  clocks:
++    minItems: 4
++    maxItems: 5
++    items:
++      - description: Clock to enable core XUSB dev clock.
++      - description: Clock to enable XUSB super speed clock.
++      - description: Clock to enable XUSB super speed dev clock.
++      - description: Clock to enable XUSB high speed dev clock.
++      - description: Clock to enable XUSB full speed dev clock.
++
++  clock-names:
++    minItems: 4
++    maxItems: 5
++    items:
++     - const: dev
++     - const: ss
++     - const: ss_src
++     - const: fs_src
++     - const: hs_src
++
++  power-domains:
++    maxItems: 2
++    items:
++      - description: XUSBB(device) power-domain
++      - description: XUSBA(superspeed) power-domain
++
++  power-domain-names:
++    maxItems: 2
++    items:
++      - const: dev
++      - const: ss
++
++  nvidia,xusb-padctl:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description:
++      phandle to the XUSB pad controller that is used to configure the USB pads
++      used by the XUDC controller.
++
++  phys:
++    minItems: 1
++    description:
++      Must contain an entry for each entry in phy-names.
++      See ../phy/phy-bindings.txt for details.
++
++  phy-names:
++    minItems: 1
++    items:
++      - const: usb2-0
++      - const: usb2-1
++      - const: usb2-2
++      - const: usb2-3
++      - const: usb3-0
++      - const: usb3-1
++      - const: usb3-2
++      - const: usb3-3
++
++  avddio-usb-supply:
++    description: PCIe/USB3 analog logic power supply. Must supply 1.05 V.
++
++  hvdd-usb-supply:
++    description: USB controller power supply. Must supply 3.3 V.
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - interrupts
++  - clocks
++  - clock-names
++  - power-domains
++  - power-domain-names
++  - nvidia,xusb-padctl
++  - phys
++  - phy-names
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - nvidia,tegra210-xudc
++    then:
++      properties:
++        reg:
++          minItems: 3
++        reg-names:
++          minItems: 3
++        clocks:
++          minItems: 5
++        clock-names:
++          minItems: 5
++      required:
++        - avddio-usb-supply
++        - hvdd-usb-supply
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - nvidia,tegra186-xudc
++    then:
++      properties:
++        reg:
++          maxItems: 2
++        reg-names:
++          maxItems: 2
++        clocks:
++          maxItems: 4
++        clock-names:
++          maxItems: 4
++
++examples:
++  - |
++    #include <dt-bindings/clock/tegra210-car.h>
++    #include <dt-bindings/gpio/tegra-gpio.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    usb@700d0000 {
++        compatible = "nvidia,tegra210-xudc";
++        reg = <0x0 0x700d0000 0x0 0x8000>,
++              <0x0 0x700d8000 0x0 0x1000>,
++              <0x0 0x700d9000 0x0 0x1000>;
++        reg-names = "base", "fpci", "ipfs";
++
++        interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
++
++        clocks = <&tegra_car TEGRA210_CLK_XUSB_DEV>,
++                 <&tegra_car TEGRA210_CLK_XUSB_SS>,
++                 <&tegra_car TEGRA210_CLK_XUSB_SSP_SRC>,
++                 <&tegra_car TEGRA210_CLK_XUSB_FS_SRC>,
++                 <&tegra_car TEGRA210_CLK_XUSB_HS_SRC>;
++        clock-names = "dev", "ss", "ss_src", "fs_src", "hs_src";
++
++        power-domains = <&pd_xusbdev>, <&pd_xusbss>;
++        power-domain-names = "dev", "ss";
++
++        nvidia,xusb-padctl = <&padctl>;
++
++        phys = <&micro_b>;
++        phy-names = "usb2-0";
++
++        avddio-usb-supply = <&vdd_pex_1v05>;
++        hvdd-usb-supply = <&vdd_3v3_sys>;
++    };
 -- 
-2.20.1
+2.7.4
 
