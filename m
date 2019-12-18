@@ -2,135 +2,219 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D846C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EFF7C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73EFF218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:12:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 673362146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:16:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576703765;
+	bh=JAhpmKdY0BCS7MWOvYPyHGXWF3fuQ13HP/Op0t3lcI8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ntQi2fw3lXhKe6g6iewYDxG8IUQMl45lYds1fjRvmNKZCUfYKAKMi720pMmgxib+9
+	 X+qN1ioraTho3UOnwXQd72LzPW6vTpxrrIMBBLFqmLqXuw3oN9vY3JXl0vrZ0MmbTe
+	 iDz2skT4tK+6cA7AwPRvW/zgnZWKTW0UIGxiiBTc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbfLRVMp (ORCPT
+        id S1726518AbfLRVQE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 16:12:45 -0500
-Received: from mga03.intel.com ([134.134.136.65]:34672 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726387AbfLRVMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 16:12:44 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 13:12:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
-   d="scan'208";a="210223283"
-Received: from yyu32-desk.sc.intel.com ([143.183.136.51])
-  by orsmga008.jf.intel.com with ESMTP; 18 Dec 2019 13:12:43 -0800
-Message-ID: <587463c4e5fa82dff8748e5f753890ac390e993e.camel@intel.com>
-Subject: Re: [PATCH v2 3/3] x86/fpu/xstate: Invalidate fpregs when
- __fpu_restore_sig() fails
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Rik van Riel <riel@surriel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Date:   Wed, 18 Dec 2019 12:53:59 -0800
-In-Reply-To: <20191218155449.sk4gjabtynh67jqb@linutronix.de>
-References: <20191212210855.19260-1-yu-cheng.yu@intel.com>
-         <20191212210855.19260-4-yu-cheng.yu@intel.com>
-         <20191218155449.sk4gjabtynh67jqb@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Wed, 18 Dec 2019 16:16:04 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38848 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725990AbfLRVQE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 16:16:04 -0500
+Received: by mail-ot1-f67.google.com with SMTP id h20so4180664otn.5;
+        Wed, 18 Dec 2019 13:16:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VfRpHq+kS/2gCphHVcGTyf5xHe3uvLTiFdpuwlwHK/I=;
+        b=aVfK+sdGJEctKueujyLknlYnApVTuFuUYb+5WkaodXSoACDUjBnMk0BdJrbLwtWS7J
+         ttd2IzZe3LFfPskRc0K5/ylhXJD5vNWNoVvDcTI6RM+pCsl7AOtNeQvCMeI41c1oEz57
+         6s1YbvyFcymLEoVSeHRq8Cfb9WgU5Y9YtCJt//37DqL9Ffvd69k0Xx7R10+e1tC9atZy
+         ng7enARzIcgWeWl4HGVOHB8ZHaIRj04gs4et5gUlfGnS1ZgBhOVvKuwLMvPoeUJhWRvH
+         ohj6+LBiIzPoEhUkpTpFNcZe9lAqQroHB1cTk301kDobeIjW5q0+e1FRbyQb+GFg+rlA
+         S9kQ==
+X-Gm-Message-State: APjAAAVMfwb0I7VVOb0dxlhNO6U7RWQ0COsW7M0I5lc9cDlbaH68egxf
+        OoyUk2gS71nuKi1M0zVp7g==
+X-Google-Smtp-Source: APXvYqxbO7jTCnsX1zsL+WZp6+wZtSheMGnt7JACGcjSdKYJsIBRWBi5EqsXahLBqZf8vvk48VBQaA==
+X-Received: by 2002:a9d:784b:: with SMTP id c11mr4658325otm.246.1576703762925;
+        Wed, 18 Dec 2019 13:16:02 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id q5sm1216343oia.21.2019.12.18.13.16.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 13:16:02 -0800 (PST)
+Date:   Wed, 18 Dec 2019 15:16:01 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, linux-mips@vger.kernel.org
+Subject: Re: [PATCH v4 1/8] dt-bindings: add img,pvrsgx.yaml for Imagination
+ GPUs
+Message-ID: <20191218211601.GA11411@bogus>
+References: <cover.1576605726.git.hns@goldelico.com>
+ <aedc895985d966cf709d153d5b0bed07f59bdcfd.1576605726.git.hns@goldelico.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aedc895985d966cf709d153d5b0bed07f59bdcfd.1576605726.git.hns@goldelico.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-12-18 at 16:54 +0100, Sebastian Andrzej Siewior wrote:
-> On 2019-12-12 13:08:55 [-0800], Yu-cheng Yu wrote:
-> > In __fpu_restore_sig(),'init_fpstate.xsave' and part of 'fpu->state.xsave'
-> > are restored separately to xregs.  However, as stated in __cpu_invalidate_
-> > fpregs_state(),
-> > 
-> >   Any code that clobbers the FPU registers or updates the in-memory
-> >   FPU state for a task MUST let the rest of the kernel know that the
-> >   FPU registers are no longer valid for this task.
-> > 
-> > and this code violates that rule.  Should the restoration fail, the other
-> > task's context is corrupted.
-> > 
-> > This problem does not occur very often because copy_*_to_xregs() succeeds
-> > most of the time.  
+On Tue, Dec 17, 2019 at 07:01:59PM +0100, H. Nikolaus Schaller wrote:
+> The Imagination PVR/SGX GPU is part of several SoC from
+> multiple vendors, e.g. TI OMAP, Ingenic JZ4780, Intel Poulsbo
+> and others.
 > 
-> why "most of the time"? It should always succeed. We talk here about
-> __fpu__restore_sig() correct? Using init_fpstate as part of restore
-> process isn't the "default" case. If the restore _here_ fails then it
-> fails.
+> With this binding, we describe how the SGX processor is
+> interfaced to the SoC (registers, interrupt etc.).
 > 
-> >                    It occurs, for instance, in copy_user_to_fpregs_
-> > zeroing() when the first half of the restoration succeeds and the other
-> > half fails.  This can be triggered by running glibc tests, where a non-
-> > present user stack page causes the XRSTOR to fail.
+> In most cases, Clock, Reset and power management is handled
+> by a parent node or elsewhere.
 > 
-> So if copy_user_to_fpregs_zeroing() fails then we go to the slowpath.
-> Then we load the FPU register with copy_kernel_to_xregs_err().
-> In the end they are either enabled (fpregs_mark_activate()) or cleared
-> if it failed (fpu__clear()). Don't see here a problem.
+> Tested by make dt_binding_check dtbs_check
 
-I could have explained this better, sorry!  I will explain the first
-case below; other cases are similar.
-
-In copy_user_to_fpregs_zeroing(), we have:
-
-    if (user_xsave()) {
-        ...
-        if (unlikely(init_bv))
-            copy_kernel_to_xregs(&init_fpstate.xsave, init_bv);
-        return copy_user_to_xregs(buf, xbv);
-        ...
-    }
-
-The copy_user_to_xregs() may fail, and when that happens, before going to
-the slow path, there is fpregs_unlock() and context switches may happen.
-However, at this point, fpu_fpregs_owner_ctx has not been changed; it could
-still be another task's FPU.  For this to happen and to be detected, the user
-stack page needs to be non-present, fpu_fpregs_owner_ctx need to be another task,
-and that other task needs to be able to detect its registers are modified.
-The last factor is not easy to reproduce, and a CET control-protection fault
-helps.
+I'm surprised that worked... (Not for long if it did).
 
 > 
-> Can you tell me which glibc test? I would like to reproduce this.
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> ---
+>  .../devicetree/bindings/gpu/img,pvrsgx.yaml   | 80 +++++++++++++++++++
+>  1 file changed, 80 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
 > 
-> > The introduction of supervisor xstates and CET, while not contributing to
-> > the problem, makes it more detectable.  After init_fpstate and the Shadow
-> > Stack pointer have been restored to xregs, the XRSTOR from user stack
-> > fails and fpu_fpregs_owner_ctx is not updated.  The task currently owning
-> > fpregs then uses the corrupted Shadow Stack pointer and triggers a control-
-> > protection fault.
+> diff --git a/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
+> new file mode 100644
+> index 000000000000..44799774e34d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
+> @@ -0,0 +1,80 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpu/img,pvrsgx.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Imagination PVR/SGX GPU
+> +
+> +maintainers:
+> +  - H. Nikolaus Schaller <hns@goldelico.com>
+> +
+> +description: |+
+> +  This binding describes the Imagination SGX5 series of 3D accelerators which
+> +  are found in several different SoC like TI OMAP, Sitara, Ingenic JZ4780,
+> +  Allwinner A83, and Intel Poulsbo and CedarView and more.
+> +
+> +  For an almost complete list see: https://en.wikipedia.org/wiki/PowerVR#Implementations
+> +  
+> +  Only the Imagination SGX530, SGX540 and SGX544 GPUs are currently covered by
+> +  this binding but the extension of the pattern is straightforward.
+> +  
+> +  The SGX node is usually a child node of some DT node belonging to the SoC
+> +  which handles clocks, reset and general address space mapping of the SGX
+> +  register area.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +    # Example: BeagleBoard A/B/C, OpenPandora 600MHz
+> +      - ti,omap3-sgx530-121, img,sgx530-121, img,sgx530
+
+Didn't I comment before this is not valid. You are defining the 
+compatible string is: 'ti,omap3-sgx530-121, img,sgx530-121, img,sgx530'
+
+You need:
+
+compatible:
+  oneOf:
+    - description: BeagleBoard A/B/C, OpenPandora 600MHz
+      items:
+        - const: ti,omap3-sgx530-121
+        - const: img,sgx530-121
+        - const: img,sgx530
+
+And so on for each of the rest.
+
+> +    # Example: BeagleBoard XM, GTA04, OpenPandora 1GHz
+> +      - ti,omap3-sgx530-125, img,sgx530-125, img,sgx530
+> +    # Example: BeagleBone Black
+> +      - ti,am3352-sgx530-125, img,sgx530-125, img,sgx530
+
+These 2 could be combined using 'enum' for the first item. Basically, 
+you can group ones where the last 2 strings are the same.
+
+> +    # Example: Pandaboard, Pandaboard ES
+> +      - ti,omap4-sgx540-120, img,sgx540-120, img,sgx540
+> +      - ti,omap4-sgx544-112, img,sgx544-112, img,sgx544
+> +    # Example: OMAP5 UEVM, Pyra Handheld
+> +      - ti,omap5-sgx544-116, img,sgx544-116, img,sgx544
+> +      - ti,dra7-sgx544-116, img,sgx544-116, img,sgx544
+> +    # Example: CI20
+> +      - ingenic,jz4780-sgx540-120, img,sgx540-120, img,sgx540
+> +    # the following entries are not validated with real hardware
+
+What am I supposed to do with that? You're just defining some strings. 
+If you're not sure they are okay, then don't define them.
+
+> +    # more TI SoC
+> +      - ti,am3517-sgx530-125, img,sgx530-125, img,sgx530
+> +      - ti,am4-sgx530-125, img,sgx530-125, img,sgx530
+> +      - ti,ti81xx-sgx530-125, img,sgx530-125, img,sgx530
+> +    # Example: Banana-Pi-M3 (Allwinner A83T)
+> +      - allwinner,sun8i-a83t-sgx544-116, img,sgx544-116, img,sgx544
+> +    # Example: Atom Z5xx
+> +      - intel,poulsbo-gma500-sgx535, img,sgx535-116, img,sgx535
+> +    # Example: Atom Z24xx
+> +      - intel,medfield-gma-sgx540, img,sgx540-116, img,sgx540
+> +    # Example: Atom N2600, D2500
+> +      - intel,cedarview-gma3600-sgx545, img,sgx545-116, img,sgx545
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |+
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    gpu@fe00 {
+> +      compatible = "ti,omap-omap5-sgx544-116", "img,sgx544-116", "img,sgx544", "img,sgx5";
+
+Doesn't match the schema.
+
+> +      reg = <0xfe00 0x200>;
+> +      interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
+> +    };
+> +
+> +...
+> -- 
+> 2.23.0
 > 
-> So I don't need new HW with supervisor and CET? A plain KVM box with
-> SSE2 and so should be enough?
-
-What I do is, clone the whole glibc source, and run mutiple copies of
-"make check".  In about 40 minutes or so, there are unexplained seg faults,
-or a few control-protection faults (if you enable CET).  Please let me
-know if more clarification is needed.
-
-Thanks,
-Yu-cheng
-
-
