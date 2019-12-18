@@ -2,81 +2,90 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CAAAC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C57C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28D392146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:45:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="fBUPT53I"
+	by mail.kernel.org (Postfix) with ESMTP id 86ECD20717
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:47:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727652AbfLRQp6 (ORCPT
+        id S1727524AbfLRQrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 11:45:58 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:48168 "EHLO mail.skyhub.de"
+        Wed, 18 Dec 2019 11:47:10 -0500
+Received: from mx2.suse.de ([195.135.220.15]:56874 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727334AbfLRQp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 11:45:57 -0500
-Received: from zn.tnic (p200300EC2F0B8B009D1D67E59157F47A.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:8b00:9d1d:67e5:9157:f47a])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 79A931EC09F1;
-        Wed, 18 Dec 2019 17:45:56 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1576687556;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=veM79yV+cFFmEZLqNeH8K6a+RQqwXlPU3rmWJpTwMAc=;
-        b=fBUPT53IBka5z+KEVntYJcp7wP7qQ54cuPs5kQAraLooNx6fq5wjTyKSH0eiAUSHdDQ1+G
-        fpdc81ctMpM6X7VTsRs8eitVE/G7pe4KbfRLNC4VSx/2MN3Nx5BUFW7T1KT/ThFYRm+sCa
-        0TJ3xDKmODWlqfF7szBdTWqtsny89pw=
-Date:   Wed, 18 Dec 2019 17:45:43 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Thomas Garnier <thgarnie@chromium.org>
-Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v10 01/11] x86/crypto: Adapt assembly for PIE support
-Message-ID: <20191218164543.GH24886@zn.tnic>
-References: <20191205000957.112719-1-thgarnie@chromium.org>
- <20191205000957.112719-2-thgarnie@chromium.org>
- <20191218124604.GE24886@zn.tnic>
- <CAJcbSZE56E_JqWpxvpHd194SAVn0fGJRiJWmLy=zfOyTthsGCg@mail.gmail.com>
+        id S1726987AbfLRQrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 11:47:10 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 69696AD31;
+        Wed, 18 Dec 2019 16:47:08 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 6C271DA791; Wed, 18 Dec 2019 17:47:06 +0100 (CET)
+Date:   Wed, 18 Dec 2019 17:47:06 +0100
+From:   David Sterba <dsterba@suse.cz>
+To:     Josef Bacik <josef@toxicpanda.com>
+Cc:     Aditya Pakki <pakki001@umn.edu>, kjlu@umn.edu,
+        Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] btrfs: remove BUG_ON used as assertions
+Message-ID: <20191218164706.GP3929@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Josef Bacik <josef@toxicpanda.com>,
+        Aditya Pakki <pakki001@umn.edu>, kjlu@umn.edu,
+        Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191215171237.27482-1-pakki001@umn.edu>
+ <2f9d6549-47cf-fb71-3bff-50b51093e757@toxicpanda.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJcbSZE56E_JqWpxvpHd194SAVn0fGJRiJWmLy=zfOyTthsGCg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <2f9d6549-47cf-fb71-3bff-50b51093e757@toxicpanda.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 08:35:32AM -0800, Thomas Garnier wrote:
-> In the last discussion, we mentioned Ingo (and other people) asked us
+On Wed, Dec 18, 2019 at 11:38:18AM -0500, Josef Bacik wrote:
+> On 12/15/19 12:12 PM, Aditya Pakki wrote:
+> > alloc_extent_state_atomic() allocates extents via GFP_ATOMIC flag
+> > and cannot fail. There are multiple invocations of BUG_ON on the
+> > return value to check for failure. The patch replaces certain
+> > invocations of BUG_ON by returning the error upstream.
+> > 
+> > Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+> 
+> I already tried this a few months ago and gave up.  There are a few things if 
+> you want to tackle something like this
+> 
+> 1) use bpf's error injection thing to make sure you handle every path that can 
+> error out.  This is the script I wrote to do just that
+> 
+> https://github.com/josefbacik/debug-scripts/blob/master/error-injection-stress.py
+> 
+> 2) We actually can't fail here.  We would need to go back and make _all_ callers 
+> of lock_extent_bits() handle the allocation error.  This is theoretically 
+> possible, but a giant pain in the ass.  In general we can make allocations here 
+> and we need to be able to make them.
+> 
+> 3) We should probably mark this path with __GFP_NOFAIL because again, this is 
+> locking and we need locking to succeed.
 
-The last discussion ended up with:
+NOFAIL can introduce loops that could lead to deadlocks, if not used
+carefully. __set_extent_bit is not just locking, so if one thread wants
+to set bits, allocate, wait, allocator goes to write some memory
 
-https://lkml.kernel.org/r/CAJcbSZEnPeCnkpc%2BuHmBWRJeaaw4TPy9HPkSGeriDb6mN6HR1g@mail.gmail.com
+eg.
 
-which I read as, you'll remove that silly sentence from every commit
-message.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+set_extent_bit on some range
+  alloc state (NOFAIL)
+    allocator wants to flush dome dirty data
+                   ------------------------------>
+		                               set_extent_bit
+					         alloc state (NOFAIL)
+						 (wait)
