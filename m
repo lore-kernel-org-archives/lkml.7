@@ -2,119 +2,219 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1DAC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD02CC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:01:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E94D7218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:01:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79E68218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:01:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tVAIlo8S"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BQV2Pwjm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbfLROBz (ORCPT
+        id S1726996AbfLROB6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 09:01:55 -0500
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:35471 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727215AbfLROBy (ORCPT
+        Wed, 18 Dec 2019 09:01:58 -0500
+Received: from mail-vk1-f195.google.com ([209.85.221.195]:37732 "EHLO
+        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727241AbfLROB5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 09:01:54 -0500
-Received: by mail-vs1-f67.google.com with SMTP id x123so1446656vsc.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 06:01:54 -0800 (PST)
+        Wed, 18 Dec 2019 09:01:57 -0500
+Received: by mail-vk1-f195.google.com with SMTP id b129so657468vka.4
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 06:01:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=nWpZ8hAd7FUovUz3VnEeC9jKUVwXFStq4OLlcUe32fk=;
-        b=tVAIlo8SBCEWTUL6sbCZVxY5xl1m14gicgIkuld11jK7G5ONmMleDzHNwIK33DUi70
-         cDk/Y7PgO0/R6yhq9tXzGNeXH4Q1M0Ajamh5wxpIPfCDcbCDgcLD+Djq15Dl72Ad0k9z
-         CLmEBpXHiEQjd/SzN4W4f9JIPcclme1w1+YgVTL8QY7czFHk2tn9I27FU2xBoKSid3wb
-         TxVYK/9aj9dD+ZjTG7IXhPPoO99FTRYhGBYdTMEcj+VE4lYTQn1gtCYRSdf2P49X68kx
-         9f0rXjru96p+slgnvel8TE/JtCATu38U6xMPWipb6hM1LLjo89QNsPF3xC3YVQ2PwSGP
-         K+/g==
+         :cc;
+        bh=iDDXhiVTyjttx83CIWs0F1XonSq49Z4FwKDL4AKSMZ0=;
+        b=BQV2PwjmbtuoWSC6pu036LkQ2z7jmrFW6qlzts/aZDJynU93TGkLUhBp1tK0JsTFaT
+         S2b+dwMSp+ypQMOMXdOs9LFVYT7fgaSnIF6v4Fdpd6rCw36hFZjNVJQq/ePUT36d7n1n
+         D1ffm2D1fhMhbjnIctBnD8i0BiNqyl8E/ruo7fbsOjIVAw+HRNjyOX3tha/u9SsSNIk6
+         IB11YGyhc9yROsqDogYMqWIf3e3tv6zde8cexBNY7mOtar629cjEidMYs9B3ROwqzBLd
+         /nM+061/J2VcBtRQ7dKOpHAiXKfXghjHS7RiWirp6/pETZAB1yRLXPv0Fhv0nw2+IMsu
+         UnwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=nWpZ8hAd7FUovUz3VnEeC9jKUVwXFStq4OLlcUe32fk=;
-        b=AX+api41JJ2iZBin93SIlZSDOuqseAJCH4j7tgpXrypVL9fPiFiE0whdBdFvYpkKOU
-         PqoQDHR/gN8BAleqK7utqgZFklLo5beAA0ZvPioFBeURLwijSE2Lo6Xn2kEX9LFFVIAz
-         XURRovhol67D8X73vbNbPZ6NaHhQAMlB8zQd9X8NDzyTupVoBZskaCxiHnFJu9k7W5EN
-         +7g+TECgF5YraaskjTwsJx7Qvp7XZ90A6fFqXsMwtZJh+HhNCHATbBPC3ZW6RF6r8aan
-         WyBxS2HJhLq0rU7fFtKApa6c0IwG2wGvpYJCTTHJlbXxgQXJIBjhMfXGRIxQHuyiM9k0
-         9V3w==
-X-Gm-Message-State: APjAAAVNN1sIbVAsnDWRvBVuxAoZvX1qTOGkKUlrbMjK8R6NMZLQVb5q
-        G3QZzVQGkixC3laO7HbgVNfh2y9miQzER1UfZd/iIQ==
-X-Google-Smtp-Source: APXvYqzkFH1g+PqryFVGtuG+lac1yFJaK7FtgFUUP582cfTjMgRsbmSAikWTkyPuUzV8Z+ThYeg5wJ031sxAgsbSxkM=
-X-Received: by 2002:a67:ff82:: with SMTP id v2mr1450518vsq.35.1576677713314;
- Wed, 18 Dec 2019 06:01:53 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=iDDXhiVTyjttx83CIWs0F1XonSq49Z4FwKDL4AKSMZ0=;
+        b=L/yW67x5qWBxB78sP7fTZ/+NzM0pSPukwvLaZ/LhbUIabRBDuXcBa8lb1Mdo/5YBMl
+         PMN2QnkOagswf2OxHhgih2KpzV/FkaXacA63a9t7bKjRg4wLI9uV3C6iwzCCwS++/Vaq
+         H9HqcliuW92CHqLXkyk6tuewJ548WX/MgfZipHo381vrTWvw4T5ZzqTm2iEU1Q1jXpqN
+         5jQhIIvX00oyAwqyUfDVxSqmnFwNX6B7kT+KcO74TYYXhequ6ET798ZmLqXnCk/2MOW8
+         6uDvD8mKlwLTrm5nAnKcd9e+Mr4d42+w3XbNCpEhOcXdf+g0x2np7vkZ3xPmysc2AkpY
+         Prig==
+X-Gm-Message-State: APjAAAXRyN2BdCjFZTWWQpRHRJjc/DnEtsy65Ql2OzXGaN17tkGFMTp5
+        BvOYzv0c9vYOzz3rhWUel967IfaJeGpAII1T1ZrRUA==
+X-Google-Smtp-Source: APXvYqwKppPVSkF/tgQZTFhbMXTfr2S4Ix4tS00kAV6zskzWPozXs1ppIIQpeKIDB7d8k+f5RedW4PwJL7fcueb9+8I=
+X-Received: by 2002:a1f:4541:: with SMTP id s62mr1807754vka.59.1576677716241;
+ Wed, 18 Dec 2019 06:01:56 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1576031636.git.mirq-linux@rere.qmqm.pl>
-In-Reply-To: <cover.1576031636.git.mirq-linux@rere.qmqm.pl>
+References: <20191211133934.16932-1-ludovic.Barre@st.com>
+In-Reply-To: <20191211133934.16932-1-ludovic.Barre@st.com>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 18 Dec 2019 15:01:17 +0100
-Message-ID: <CAPDyKFp62ZVzNeReNmk3NWeqjWVoOVFj9BYQza9nU=E-iDvvVg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] mmc: simplify WP/CD GPIO handling
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Wed, 18 Dec 2019 15:01:20 +0100
+Message-ID: <CAPDyKFpoqEXO1JvjF=0hX97PiwP=2c1eWORsacb8QvZM=1Tvjw@mail.gmail.com>
+Subject: Re: [PATCH V2] mmc: mmci: add threaded irq to abort DPSM of
+ non-functional state
+To:     Ludovic Barre <ludovic.Barre@st.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Dec 2019 at 03:40, Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qm=
-qm.pl> wrote:
+On Wed, 11 Dec 2019 at 14:40, Ludovic Barre <ludovic.Barre@st.com> wrote:
 >
-> This series removes convoluted handling of inverted CD and WP lines in
-> SD/MMC host drivers when using GPIOs.
+> From: Ludovic Barre <ludovic.barre@st.com>
 >
-> First patch adds an API: gpiod_toggle_active_low() that switches line
-> inversion flag in the gpiod structure. Next two patches modify MMC
-> host's WP and CD initialization to apply all the inversions onto
-> gpiod's active-low flag. Final patch removes now-unused argument from
-> init functions.
+> If datatimeout occurs on R1B request, the Data Path State Machine stays
+> in busy and is non-functional. Only a reset aborts the DPSM.
 >
-> x86 allyesconfig build-tested.
+> Like a reset must be outside of critical section, this patch adds
+> threaded irq function to release state machine. In this case,
+> the mmc_request_done is called at the end of threaded irq and
+> skipped into irq handler.
 >
-> v2: move argument removal in sdhci-esdhc-imx.c to last patch
->
-> Micha=C5=82 Miros=C5=82aw (4):
->   gpio: add gpiod_toggle_active_low()
->   mmc: rework wp-gpio handling
->   mmc: rework cd-gpio handling
->   mmc: remove mmc_gpiod_request_*(invert_gpio)
->
->  drivers/gpio/gpiolib-of.c          | 21 -------------------
->  drivers/gpio/gpiolib.c             | 11 ++++++++++
->  drivers/mmc/core/host.c            | 33 ++++++++----------------------
->  drivers/mmc/core/slot-gpio.c       | 31 ++++++++++------------------
->  drivers/mmc/host/davinci_mmc.c     |  4 ++--
->  drivers/mmc/host/mmc_spi.c         |  4 ++--
->  drivers/mmc/host/mmci.c            |  4 ++--
->  drivers/mmc/host/pxamci.c          | 12 +++++------
->  drivers/mmc/host/s3cmci.c          |  4 ++--
->  drivers/mmc/host/sdhci-acpi.c      |  2 +-
->  drivers/mmc/host/sdhci-esdhc-imx.c | 15 +++++++-------
->  drivers/mmc/host/sdhci-pci-core.c  |  4 ++--
->  drivers/mmc/host/sdhci-sirf.c      |  2 +-
->  drivers/mmc/host/sdhci-spear.c     |  2 +-
->  drivers/mmc/host/tmio_mmc_core.c   |  2 +-
->  include/linux/gpio/consumer.h      |  7 +++++++
->  include/linux/mmc/slot-gpio.h      |  5 ++---
->  17 files changed, 67 insertions(+), 96 deletions(-)
->
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 
 Applied for next, thanks!
 
+I took the liberty of doing some minor updates (changelog/comment),
+please have a look and let me know if there is something you want me
+to change.
+
+And again, apologize for the delays!
+
 Kind regards
 Uffe
+
+
+> ---
+> change V2:
+>  -check IRQ_WAKE_THREAD only in mmci_cmd_irq error part,
+>   to avoid this test in mmci_request_end.
+>
+> ---
+>  drivers/mmc/host/mmci.c | 46 +++++++++++++++++++++++++++++++++++------
+>  drivers/mmc/host/mmci.h |  1 +
+>  2 files changed, 41 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+> index 40e72c30ea84..2b91757e3e84 100644
+> --- a/drivers/mmc/host/mmci.c
+> +++ b/drivers/mmc/host/mmci.c
+> @@ -1321,6 +1321,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+>         } else if (host->variant->busy_timeout && busy_resp &&
+>                    status & MCI_DATATIMEOUT) {
+>                 cmd->error = -ETIMEDOUT;
+> +               host->irq_action = IRQ_WAKE_THREAD;
+>         } else {
+>                 cmd->resp[0] = readl(base + MMCIRESPONSE0);
+>                 cmd->resp[1] = readl(base + MMCIRESPONSE1);
+> @@ -1339,7 +1340,10 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+>                                 return;
+>                         }
+>                 }
+> -               mmci_request_end(host, host->mrq);
+> +
+> +               if (host->irq_action != IRQ_WAKE_THREAD)
+> +                       mmci_request_end(host, host->mrq);
+> +
+>         } else if (sbc) {
+>                 mmci_start_command(host, host->mrq->cmd, 0);
+>         } else if (!host->variant->datactrl_first &&
+> @@ -1532,9 +1536,9 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
+>  {
+>         struct mmci_host *host = dev_id;
+>         u32 status;
+> -       int ret = 0;
+>
+>         spin_lock(&host->lock);
+> +       host->irq_action = IRQ_HANDLED;
+>
+>         do {
+>                 status = readl(host->base + MMCISTATUS);
+> @@ -1574,12 +1578,41 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
+>                 if (host->variant->busy_detect_flag)
+>                         status &= ~host->variant->busy_detect_flag;
+>
+> -               ret = 1;
+>         } while (status);
+>
+>         spin_unlock(&host->lock);
+>
+> -       return IRQ_RETVAL(ret);
+> +       return host->irq_action;
+> +}
+> +
+> +/*
+> + * mmci_irq_threaded is call if the mmci host need to release state machines
+> + * before to terminate the request.
+> + * If datatimeout occurs on R1B request, the Data Path State Machine stays
+> + * in busy and is non-functional. Only a reset can to abort the DPSM.
+> + */
+> +static irqreturn_t mmci_irq_threaded(int irq, void *dev_id)
+> +{
+> +       struct mmci_host *host = dev_id;
+> +       unsigned long flags;
+> +
+> +       if (host->rst) {
+> +               reset_control_assert(host->rst);
+> +               udelay(2);
+> +               reset_control_deassert(host->rst);
+> +       }
+> +
+> +       spin_lock_irqsave(&host->lock, flags);
+> +       writel(host->clk_reg, host->base + MMCICLOCK);
+> +       writel(host->pwr_reg, host->base + MMCIPOWER);
+> +       writel(MCI_IRQENABLE | host->variant->start_err,
+> +              host->base + MMCIMASK0);
+> +
+> +       host->irq_action = IRQ_HANDLED;
+> +       mmci_request_end(host, host->mrq);
+> +       spin_unlock_irqrestore(&host->lock, flags);
+> +
+> +       return host->irq_action;
+>  }
+>
+>  static void mmci_request(struct mmc_host *mmc, struct mmc_request *mrq)
+> @@ -2071,8 +2104,9 @@ static int mmci_probe(struct amba_device *dev,
+>                         goto clk_disable;
+>         }
+>
+> -       ret = devm_request_irq(&dev->dev, dev->irq[0], mmci_irq, IRQF_SHARED,
+> -                       DRIVER_NAME " (cmd)", host);
+> +       ret = devm_request_threaded_irq(&dev->dev, dev->irq[0], mmci_irq,
+> +                                       mmci_irq_threaded, IRQF_SHARED,
+> +                                       DRIVER_NAME " (cmd)", host);
+>         if (ret)
+>                 goto clk_disable;
+>
+> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+> index 158e1231aa23..5e63c0596364 100644
+> --- a/drivers/mmc/host/mmci.h
+> +++ b/drivers/mmc/host/mmci.h
+> @@ -412,6 +412,7 @@ struct mmci_host {
+>
+>         struct timer_list       timer;
+>         unsigned int            oldstat;
+> +       u32                     irq_action;
+>
+>         /* pio stuff */
+>         struct sg_mapping_iter  sg_miter;
+> --
+> 2.17.1
+>
