@@ -2,123 +2,117 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D114C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8057CC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E6AA2176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 537012176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:03:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="YfMz2eXY"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U2faBm6Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbfLRLCm (ORCPT
+        id S1726860AbfLRLDO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 06:02:42 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:47357 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726141AbfLRLCl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 06:02:41 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47dBtQ3mHmz9sRv;
-        Wed, 18 Dec 2019 22:02:38 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1576666959;
-        bh=FWlAjNM6cmTI+9Vit59LLCQZ6i+spyEjv7d/aZR81VA=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=YfMz2eXYxZdO8Wm8veuFf9IU7mF9LyzoX4KVXYDjvPFDtpb8Ogrf3H2FiPowFSIDR
-         ad5k7V9s+DndepXK9fOd/Ln4IuytMJ/1GWUaXHRLf02gCeZlO8FWv2a9cvEZBj9jv/
-         iGmTiTQ4e9KOdspMX1dzYDrdT7QNc5P0/GhXtYYQoY7h0Mu183rMtWvHx7Kb9zUUPZ
-         tGVedghPFNXaDxiDgIhnDYQlqhqvPHgVp8B2EqTzct11UEe76IuwRhgrybe/Q2l9ST
-         Qo+x79Fqyi/6Smi/zsqiCMAgrfhD3AZDBjzqCFFGBJMUuS3nsugek6U1Juu2rBru/6
-         97/GJw+nsU7eQ==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Chen Zhou <chenzhou10@huawei.com>, benh@kernel.crashing.org,
-        paulus@samba.org
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        chenzhou10@huawei.com, Nicolai Stange <nicstange@gmail.com>,
-        Julia Lawall <Julia.Lawall@lip6.fr>
-Subject: Re: [PATCH] powerpc/setup_64: use DEFINE_DEBUGFS_ATTRIBUTE to define fops_rfi_flush
-In-Reply-To: <20191218020842.186446-1-chenzhou10@huawei.com>
-References: <20191218020842.186446-1-chenzhou10@huawei.com>
-Date:   Wed, 18 Dec 2019 22:02:36 +1100
-Message-ID: <8736dhoq0j.fsf@mpe.ellerman.id.au>
+        Wed, 18 Dec 2019 06:03:14 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55075 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726756AbfLRLDN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 06:03:13 -0500
+Received: by mail-wm1-f66.google.com with SMTP id b19so1352209wmj.4
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 03:03:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=VaysA7IlqDXPOxdOsGsKdFEXVpxF1pTwFbagFkrgqas=;
+        b=U2faBm6YN6xKP04YNzJdCmz51sgXVZJdXiGPwmZIfoea9S2p56z2XfJkwcCH5vv8LI
+         +LoL/NJii26fgLloWu/qa9bF+t5ZyO+2iYLRDh7972llndvkCQdO0AnZ72/esc+eb2uW
+         4U9W/MqrU5Tc7sEGC1R1i0Wp8VSdrw3qE9GzQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=VaysA7IlqDXPOxdOsGsKdFEXVpxF1pTwFbagFkrgqas=;
+        b=BBPWiyMFv6aeAqvmIOctmu8QGRTcS15GOiYTq9E5JHuIiYabWhPNgQGLBDi/pQD59Z
+         CsWCtEYXXbGUfGMGQq2zjYGG/Y1Y5AANkoIY+IuvE1h/ccvXwnpaEhihLsVqo0ZZqOyN
+         g+mANxeIYRjarvHf1hcq8sbYsHJwvyzmK8dMwG8zut1Szb2AEDLlj+VZbQo9znVwkvYw
+         hwhuG8mYXEr+YpXa268R8IfKj3tem6ELyKs7PBwspS9CC2S0ddOzEhBHduhZxaN1V+C/
+         K3PNHNZG329j7+MX8KTaB1fN0Nwe7tHjfZrZYjfothn1rhwqVwUdfSPzM1y7C3ZO4CVI
+         mA2Q==
+X-Gm-Message-State: APjAAAWmskJaluk4DEFiHVNnZ4bRaXrE7aw5Ckv3vZU7PB6r15dIg2io
+        bATprVKB3bMoGboYTGxe5vcx2Q==
+X-Google-Smtp-Source: APXvYqwEDw33xSM9dXOl1KdYfEr2bPMTWkcfxRl2JYVvpLiSuj3PN1cLzNAr2b8ZKPibkIXBg/Q/Ug==
+X-Received: by 2002:a05:600c:2148:: with SMTP id v8mr2628992wml.111.1576666991755;
+        Wed, 18 Dec 2019 03:03:11 -0800 (PST)
+Received: from ?IPv6:2620:0:105f:304:c29:4454:35de:5c04? ([2620:0:105f:304:c29:4454:35de:5c04])
+        by smtp.gmail.com with ESMTPSA id 16sm2050765wmi.0.2019.12.18.03.03.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 03:03:10 -0800 (PST)
+Message-ID: <2ae5127d76cbf78140fb2d6108c9ec70c7d8ae5d.camel@chromium.org>
+Subject: Re: [PATCH] integrity: Expose data structures required for
+ include/linux/integrity.h
+From:   Florent Revest <revest@chromium.org>
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-integrity@vger.kernel.org
+Cc:     jmorris@namei.org, serge@hallyn.com, revest@google.com,
+        allison@lohutok.net, armijn@tjaldur.nl, bauerman@linux.ibm.com,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, kpsingh@chromium.org
+Date:   Wed, 18 Dec 2019 12:03:09 +0100
+In-Reply-To: <1576624105.4579.379.camel@linux.ibm.com>
+References: <20191217134748.198011-1-revest@chromium.org>
+         <e9e366d3-6c5d-743b-ffde-6b95b85884a2@schaufler-ca.com>
+         <1576624105.4579.379.camel@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Chen Zhou <chenzhou10@huawei.com> writes:
-> Use DEFINE_DEBUGFS_ATTRIBUTE rather than DEFINE_SIMPLE_ATTRIBUTE for
-> debugfs files.
->
-> Semantic patch information:
-> Rationale: DEFINE_SIMPLE_ATTRIBUTE + debugfs_create_file()
-> imposes some significant overhead as compared to
-> DEFINE_DEBUGFS_ATTRIBUTE + debugfs_create_file_unsafe().
+On Tue, 2019-12-17 at 18:08 -0500, Mimi Zohar wrote:
+> On Tue, 2019-12-17 at 08:25 -0800, Casey Schaufler wrote:
+> > On 12/17/2019 5:47 AM, Florent Revest wrote:
+> > > From: Florent Revest <revest@google.com>
+> > > 
+> > > include/linux/integrity.h exposes the prototype of
+> > > integrity_inode_get().
+> > > However, it relies on struct integrity_iint_cache which is
+> > > currently
+> > > defined in an internal header, security/integrity/integrity.h.
+> > > 
+> > > To allow the rest of the kernel to use integrity_inode_get,
+> > 
+> > Why do you want to do this?
+> 
+> ditto
 
-I know you didn't write this text, but these change logs are not great.
-It doesn't really explain why you're doing it. And it is alarming that
-you're converting *to* a function with "unsafe" in the name.
+My team works on KRSI (eBPF MAC policies presented at LSS by KP Singh).
+https://lkml.org/lkml/2019/9/10/393 We identified file hashes gathered
+from the integrity subsystem as an interesting field that we could
+potentially someday expose to eBPF programs through helpers.
 
-The commit that added the script:
+One of the reason behind writing KRSI is to replace a custom kernel
+auditing module that currently needs to redefine those structures to
+access them. I imagine other kernel modules could benefit from a file
+hash API too.
 
-  5103068eaca2 ("debugfs, coccinelle: check for obsolete DEFINE_SIMPLE_ATTRIBUTE() usage")
+This is the least intrusive patch I could come up with that allows us
+to lookup a hash from an inode. I was surprised to find that
+integrity_inode_get was exposed but not the structures it returns.
 
-Has a bit more explanation.
+If the community is interested in a different file hash API, I'd be
+happy to iterate on this patch based on your feedback.
 
-Maybe something like this:
+> > >  this patch
+> > > moves the definition of the necessary structures from a private
+> > > header
+> > > to a global kernel header.
 
-  In order to protect against file removal races, debugfs files created via
-  debugfs_create_file() are wrapped by a struct file_operations at their
-  opening.
-  
-  If the original struct file_operations is known to be safe against removal
-  races already, the proxy creation may be bypassed by creating the files
-  using DEFINE_DEBUGFS_ATTRIBUTE() and debugfs_create_file_unsafe().
-
-
-The part that's not explained is why this file is "known to be safe
-against removal races already"?
-
-It also seems this conversion will make the file no longer seekable,
-because DEFINE_SIMPLE_ATTRIBUTE() uses generic_file_llseek() whereas
-DEFINE_DEBUGFS_ATTRIBUTE() uses no_llseek.
-
-That is probably fine, but should be mentioned.
-
-cheers
-
-> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-> ---
->  arch/powerpc/kernel/setup_64.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/powerpc/kernel/setup_64.c b/arch/powerpc/kernel/setup_64.c
-> index 6104917..4b9fbb2 100644
-> --- a/arch/powerpc/kernel/setup_64.c
-> +++ b/arch/powerpc/kernel/setup_64.c
-> @@ -956,11 +956,11 @@ static int rfi_flush_get(void *data, u64 *val)
->  	return 0;
->  }
->  
-> -DEFINE_SIMPLE_ATTRIBUTE(fops_rfi_flush, rfi_flush_get, rfi_flush_set, "%llu\n");
-> +DEFINE_DEBUGFS_ATTRIBUTE(fops_rfi_flush, rfi_flush_get, rfi_flush_set, "%llu\n");
->  
->  static __init int rfi_flush_debugfs_init(void)
->  {
-> -	debugfs_create_file("rfi_flush", 0600, powerpc_debugfs_root, NULL, &fops_rfi_flush);
-> +	debugfs_create_file_unsafe("rfi_flush", 0600, powerpc_debugfs_root, NULL, &fops_rfi_flush);
->  	return 0;
->  }
->  device_initcall(rfi_flush_debugfs_init);
-> -- 
-> 2.7.4
