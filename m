@@ -2,95 +2,91 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 980F7C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27444C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73E19218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECE642176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:32:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576704769;
+	bh=bld35zTZcRXiD+j1dhIsJWuS7BmU8XOEkgifMLzAO38=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=K1zHJhlzHyb8yKOTARSFcYrx/VFe2NMRJU5hy+QAAGUv7yw/t8aWEM/1WshT0APAa
+	 KNvNw3MroSQ1C4YrL+PylVih6pUw2dHezZL3m86PTaNa8w4YN1CqUUHRPXdSm7UyCz
+	 pL9L/P/vBWNm/H/eUy138cWtYz6BgmxgfpJkUko4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbfLRVcl (ORCPT
+        id S1726717AbfLRVcs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 16:32:41 -0500
-Received: from sender4-op-o11.zoho.com ([136.143.188.11]:17135 "EHLO
-        sender4-op-o11.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726212AbfLRVcl (ORCPT
+        Wed, 18 Dec 2019 16:32:48 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:34410 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726591AbfLRVcr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 16:32:41 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1576704740; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=fopuKl6X7nwuqbKIN0NWl80XmS0rVH50syK5VUYsTWgIZWPZ0fVWF6s8hwOO4Ev6JbB4Ut/rIIkrEq9J0PQMYp9v3T3j5wbYPPRX0mLCxxR37QruJoTMzM26A+jgY6IDn1xxd9AH9cdL5m9hCfJSH08u185LyDBVm2jJ9gTOGG4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1576704740; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=ZuWivZQNCjEIQTE0UeXySpEi24grBZCVk2N664VkHcE=; 
-        b=HUEvAW1jikIq/hgWeBdAhP0UpwG6NiQFCeyR2RDdRPSR24encSMn7GwYu+rlNKhqCP3tDhymZpw+c39Hse4jSvNPDR+1RtNqEcTi17b3LnD3WGAY8P4fgMjgLTdQVbvA/SlpK29SswZEoGL/KPtiChi40BeFg+AGKMClXG+QLOM=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=dlrobertson.com;
-        spf=pass  smtp.mailfrom=dan@dlrobertson.com;
-        dmarc=pass header.from=<dan@dlrobertson.com> header.from=<dan@dlrobertson.com>
-Received: from nessie (pool-173-73-58-202.washdc.fios.verizon.net [173.73.58.202]) by mx.zohomail.com
-        with SMTPS id 1576704738019713.1804762581256; Wed, 18 Dec 2019 13:32:18 -0800 (PST)
-Date:   Wed, 18 Dec 2019 21:16:48 +0000
-From:   Dan Robertson <dan@dlrobertson.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v6 1/2] dt-bindings: iio: accel: bma400: add bindings
-Message-ID: <20191218211648.GA4664@nessie>
-References: <20191211010308.1525-1-dan@dlrobertson.com>
- <20191211010308.1525-2-dan@dlrobertson.com>
- <CACRpkdb9O7RjpXdUPCtN1M+PLC+2hPomhsw2Q5Ehhg4pEVOStQ@mail.gmail.com>
- <20191218170515.GA18325@bogus>
+        Wed, 18 Dec 2019 16:32:47 -0500
+Received: by mail-oi1-f193.google.com with SMTP id l136so1991141oig.1;
+        Wed, 18 Dec 2019 13:32:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ExRyZF/HT35yVWV944MHnvHyOox+9HKzQszoyRT+kgo=;
+        b=A3qDz8WjfPOxcRhh4aTDV0wfsLxCmyVw3sz92sK5g4vyhoPnlMGAiVkGC6wpz0QZ0f
+         Ieh1Qrv4Q4sCL7QzkMnD2SnzZjc6qJIUMlxWHBKONyStEhrdlS66csD9pkWftR39odqy
+         V4I8lhUrvdkJ+vSOa/11ZOsIPp+/AmUGPd7SFZz0OXd0PNqnOWA7RZOF5E69kJIigz57
+         gFZKAF0teQHAyEyh3A/P2nL+nGK+Llw4O1BVOXx03huqOcaVsORpEXeLIh9o3bJVxECQ
+         b4R0p1DY8nPO4taskDcl3ScNUhQYAQh7jJE8x5ZRXQyicr5WL+bB6ys1W5+uB/gyhnLj
+         xPhg==
+X-Gm-Message-State: APjAAAXbwLwEJIkN4fMVfoRUmWAVa+wjw7pn2/qDDD8RdfiQBu+GlHan
+        etCuDHg+VSOy3qM63org4w==
+X-Google-Smtp-Source: APXvYqwM8S9+AzrNrHA74otnIP6JBmDMXRocmfVFFFcvwlrOBmtc64wp73828FrIwJ04oiTPlEJDMQ==
+X-Received: by 2002:aca:b7c5:: with SMTP id h188mr1533371oif.100.1576704766553;
+        Wed, 18 Dec 2019 13:32:46 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id a74sm1255077oii.37.2019.12.18.13.32.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 13:32:46 -0800 (PST)
+Date:   Wed, 18 Dec 2019 15:32:45 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     skomatineni@nvidia.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, digetx@gmail.com, mperttunen@nvidia.com,
+        gregkh@linuxfoundation.org, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        spujar@nvidia.com, josephl@nvidia.com, daniel.lezcano@linaro.org,
+        mmaddireddy@nvidia.com, markz@nvidia.com,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 19/19] ASoC: nau8825: change Tegra clk_out_2 provider
+ from tegra_car to pmc
+Message-ID: <20191218213245.GA23867@bogus>
+References: <1576613046-17159-1-git-send-email-skomatineni@nvidia.com>
+ <1576613046-17159-20-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191218170515.GA18325@bogus>
-X-ZohoMailClient: External
+In-Reply-To: <1576613046-17159-20-git-send-email-skomatineni@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 11:05:15AM -0600, Rob Herring wrote:
-> On Thu, Dec 12, 2019 at 11:16:47AM +0100, Linus Walleij wrote:
-> > Hi Dan,
-> > 
-> > thanks for your patch!
-> > 
-> > On Wed, Dec 11, 2019 at 2:20 AM Dan Robertson <dan@dlrobertson.com> wrote:
-> > 
-> > > Add devicetree binding for the Bosch BMA400 3-axes ultra-low power
-> > > accelerometer sensor.
-> > >
-> > > Signed-off-by: Dan Robertson <dan@dlrobertson.com>
-> > (...)
-> > 
-> > > +  Specifications about the sensor can be found at:
-> > > +    https://ae-bst.resource.bosch.com/media/_tech/media/datasheets/BST-BMA400-DS000.pdf
-> > 
-> > As can be seen in page 113 in the manual this component
-> > has VDD and VDDIO supplies and sooner or later someone
-> > is going to have to model that so I'd say add vdd-supply and
-> > vddio-supply regulator phandles as optional to the component
-> > already from start.
+On Tue, 17 Dec 2019 12:04:06 -0800, Sowjanya Komatineni wrote:
+> Tegra clk_out_1, clk_out_2, and clk_out_3 are part of PMC block and
+> these clocks are moved from clock drvier to pmc driver with pmc as
+> a provider for these clocks.
 > 
-> And interrupts too. Doesn't matter what the driver currently uses.
+> Update bindings document to use pmc as clock provider for clk_out_2 and
+> change id to pmc clock id.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  Documentation/devicetree/bindings/sound/nau8825.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-Will do. I plan to work on adding support for interrupts in a follow-up patchset,
-but I'll add this to the devicetree documentation.
-
-Cheers,
-
- - Dan
-
+Acked-by: Rob Herring <robh@kernel.org>
