@@ -2,181 +2,156 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD15C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFEACC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA87224676
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C7712176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:12:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="puQWPhQC"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="BqBne9ZL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfLRKME (ORCPT
+        id S1726774AbfLRKMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 05:12:04 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:62582 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726682AbfLRKMD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 05:12:03 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576663922; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=tN/KCchgbZQfHxxDD/+zhjRj7E2mjeMd2UuL8i3v9A0=; b=puQWPhQC443thSfAcjM06owcGYw1/5HuyMnrWjxQ+2VMTic47VLiOGl0OKD6VLc3rH1zU6PY
- Dv05fexQE2mwYGetLyL723WLAxMPNmI5ICtgkTnG3h1clIqfLgm+wgvv0Jvy5Bv5dML3AfN5
- 1dDe9kQHW9XrvCw4oDyu9hFYHfI=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5df9fb71.7f18d1439bc8-smtp-out-n03;
- Wed, 18 Dec 2019 10:12:01 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8D754C433A2; Wed, 18 Dec 2019 10:12:00 +0000 (UTC)
-Received: from [192.168.0.106] (unknown [106.51.28.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C0526C433CB;
-        Wed, 18 Dec 2019 10:11:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C0526C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Fix I2C/UART numbers 2, 4, 7,
- and 9
-To:     Douglas Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linus.walleij@linaro.org, mka@chromium.org,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-msm@vger.kernel.org,
-        Roja Rani Yarubandi <rojay@codeaurora.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-References: <20191217130352.1.Id8562de45e8441cac34699047e25e7424281e9d4@changeid>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <15313fe9-87bc-c0f4-f97c-fd21a964471e@codeaurora.org>
-Date:   Wed, 18 Dec 2019 15:41:48 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-MIME-Version: 1.0
-In-Reply-To: <20191217130352.1.Id8562de45e8441cac34699047e25e7424281e9d4@changeid>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Wed, 18 Dec 2019 05:12:13 -0500
+Received: from mail-eopbgr10056.outbound.protection.outlook.com ([40.107.1.56]:47694
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725799AbfLRKMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 05:12:13 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SxR5O5ULccggwOigjVMKLVNQcVgvmXd2OVY7Cdl9OmuP6WvyqVuwL/ZXcTT29CvuHTAyDHrh87h6FmnDgsMX5BKR7pGPUcWHpLjo3LoXrOHRTTHl3Exz0qL0gLdpxkrWb6ljhurf9n8oy50ihdEXbAML3uC+DlL0Csi98/h1/t+Xve1u2Z+EOpjz+fJwCxpb44xtmatzQkBB6zcCpcd5P7Pwx8NBICi6VTZsB2a9AneM9evpy+dD+U8X7i2JP511fh92nas+rUuuVqjP+Rl5sAL4/DPalqSYXyGU3PYXXhx33tcXTu997xmUCKKr4m4K+VG9ZbM7eDDRZLWhuU7Dug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6A60Gvs7hBdHaRkLWhE3/EMikJbkQmArwW2aWL2i0II=;
+ b=ZszzRNE+10kc6omA0jW+bOoyuPGT2XccGQpHCllccHHD5DQ4Gy51BJeAQScJ7TUV8TgNw6k3+pWL3rBf0oOiH+LCcIzoYSi58qLEZRU1XgzBFu3fHU3e5cqjxV68TJAcJfeBrG9nECr/VrGNhdjOTsBbynC+jQn/omjPMw2i+naDCmzzqLeDcIbQ4FUyAvPg/XPCCO76/5/F/iQ76L7etNCX9AhBX6xAYBSzbrIv186NmEpkBOesHrwGid/ub48BEOMoH9oJ6CJ2zzaTF0G3a14vslzhwyHvQxElsvsATkDEJ4hvKIjM7LQLLUXCldNP6yV4mdbEsewZe4NP8jXibw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6A60Gvs7hBdHaRkLWhE3/EMikJbkQmArwW2aWL2i0II=;
+ b=BqBne9ZLjuEUGyoq9auqdYIMubB0IJkr5aBQvemMFQIp7EJU/zF3J85xpBs5r41jk7zLnSfAZB/hPGPx52TTldkuP8LE7TrtWnOTmTp8kmA95lbX9cSQ3AeYYJtdjWinNeLgNeL35ZYFNTdPzKA6FiUoNEmLez/xzQQhyzAiX9g=
+Received: from DB7PR04MB4618.eurprd04.prod.outlook.com (52.135.139.151) by
+ DB7PR04MB5273.eurprd04.prod.outlook.com (20.176.236.93) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2559.13; Wed, 18 Dec 2019 10:11:55 +0000
+Received: from DB7PR04MB4618.eurprd04.prod.outlook.com
+ ([fe80::b40b:46af:9458:f2df]) by DB7PR04MB4618.eurprd04.prod.outlook.com
+ ([fe80::b40b:46af:9458:f2df%6]) with mapi id 15.20.2538.019; Wed, 18 Dec 2019
+ 10:11:55 +0000
+From:   Joakim Zhang <qiangqing.zhang@nxp.com>
+To:     Marc Zyngier <maz@kernel.org>
+CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Andy Duan <fugang.duan@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH 3/3] drivers/irqchip: enable INTMUX interrupt controller
+  driver
+Thread-Topic: [PATCH 3/3] drivers/irqchip: enable INTMUX interrupt controller
+  driver
+Thread-Index: AQHVtYdHjZa8N9ppNUCqvlRyulzgtae/q99g
+Date:   Wed, 18 Dec 2019 10:11:55 +0000
+Message-ID: <DB7PR04MB46185212999B2EFB6D68DDE9E6530@DB7PR04MB4618.eurprd04.prod.outlook.com>
+References: <1576653615-27954-1-git-send-email-qiangqing.zhang@nxp.com>
+ <1576653615-27954-4-git-send-email-qiangqing.zhang@nxp.com>
+ <30431cce4c9e59ab11043c991493c368@www.loen.fr>
+In-Reply-To: <30431cce4c9e59ab11043c991493c368@www.loen.fr>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=qiangqing.zhang@nxp.com; 
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 8c4d6edd-2966-4986-dfdf-08d783a2b5e1
+x-ms-traffictypediagnostic: DB7PR04MB5273:|DB7PR04MB5273:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB7PR04MB52730953D05663AE1AECD0C9E6530@DB7PR04MB5273.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:590;
+x-forefront-prvs: 0255DF69B9
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(376002)(346002)(366004)(136003)(199004)(189003)(13464003)(9686003)(6916009)(8676002)(71200400001)(33656002)(478600001)(53546011)(6506007)(52536014)(316002)(81156014)(2906002)(8936002)(7696005)(7416002)(4326008)(4001150100001)(54906003)(81166006)(26005)(186003)(86362001)(5660300002)(64756008)(66476007)(66556008)(66446008)(66946007)(76116006)(55016002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB5273;H:DB7PR04MB4618.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: /RnV+uI5tax0rKD+Z0Bmrh5MFBwWwSIHsO75nAXgfFOTe2dKWodA15Nw9OJCD0QwFOWIGVHdQEmyCWD8+0ikQO3M7hQUPO24GcK/pSMCDGGerURGkjkCXgCIWUDIOvCodI+CdLZuwYB1CMuw2ydnUgVsPDFW9SIDUAFOdM6e3A/OmNtTZnpIOyRnGP3um9Y1nNc59XWI2qeiZYXg5mGKnKGdQ74i9rJi3ufGvX9v8L8wHSBF9Ij1FuNW/iLgt6WGMYrn+RkLt0pGVlwbv6PRO0lGMbt/TDN1C6yQVC+JJTc9GvJiHVxwpVds0tY5RXs6mlWGEaFuQS7eaIN/Iez5wnpNTvzqAzSIunseep6BuYmk0S5chOz+lg3yuvnjCXM0QNvYoK6d3m4tCvZh+5CCi0bkuCiW97a3TimnF4TL5Sm6Amrty5o9Vo0hwGEm3UpYmOmr/bZ0r0hNuxRUdSXs6Hb3WHoX+0U31E3LsIre/0YYepAbMrS9RED3nBz4lkk8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8c4d6edd-2966-4986-dfdf-08d783a2b5e1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Dec 2019 10:11:55.4624
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JkEUsTRbxITwwHb6frnLFNF7F/ZhpMv+UH3BbnYzHTwU6Zme4Zk6hwuBtt8lLeRaWEV7tn/bTWca34ucxzPm/Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5273
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 12/18/2019 2:34 AM, Douglas Anderson wrote:
-> Commit f4a73f5e2633 ("pinctrl: qcom: sc7180: Add new qup functions")
-> has landed which means that we absolutely need to use the proper names
-> for the pinmuxing for I2C/UART numbers 2, 4, 7, and 9.  Let's do it.
-> 
-> For reference:
-> - If you get only one of this commit and the pinctrl commit then none
->    of I2C/UART 2, 4, 7, and 9 will work.
-> - If you get neither of these commits then I2C 2, 4, 7, and 9 will
->    work but not UART.
-> 
-> ...but despite the above it should be fine for this commit to land in
-> the Qualcomm tree because sc7180.dtsi only exists there (it hasn't
-> made it to mainline).
-> 
-> Fixes: ba3fc6496366 ("arm64: dts: sc7180: Add qupv3_0 and qupv3_1")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-
-Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
-
-> 
->   arch/arm64/boot/dts/qcom/sc7180.dtsi | 16 ++++++++--------
->   1 file changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index 52a58615ec06..faa9ef733204 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -717,7 +717,7 @@ pinmux {
->   			qup_i2c2_default: qup-i2c2-default {
->   				pinmux {
->   					pins = "gpio15", "gpio16";
-> -					function = "qup02";
-> +					function = "qup02_i2c";
->   				};
->   			};
->   
-> @@ -731,7 +731,7 @@ pinmux {
->   			qup_i2c4_default: qup-i2c4-default {
->   				pinmux {
->   					pins = "gpio115", "gpio116";
-> -					function = "qup04";
-> +					function = "qup04_i2c";
->   				};
->   			};
->   
-> @@ -752,7 +752,7 @@ pinmux {
->   			qup_i2c7_default: qup-i2c7-default {
->   				pinmux {
->   					pins = "gpio6", "gpio7";
-> -					function = "qup11";
-> +					function = "qup11_i2c";
->   				};
->   			};
->   
-> @@ -766,7 +766,7 @@ pinmux {
->   			qup_i2c9_default: qup-i2c9-default {
->   				pinmux {
->   					pins = "gpio46", "gpio47";
-> -					function = "qup13";
-> +					function = "qup13_i2c";
->   				};
->   			};
->   
-> @@ -867,7 +867,7 @@ pinmux {
->   			qup_uart2_default: qup-uart2-default {
->   				pinmux {
->   					pins = "gpio15", "gpio16";
-> -					function = "qup02";
-> +					function = "qup02_uart";
->   				};
->   			};
->   
-> @@ -882,7 +882,7 @@ pinmux {
->   			qup_uart4_default: qup-uart4-default {
->   				pinmux {
->   					pins = "gpio115", "gpio116";
-> -					function = "qup04";
-> +					function = "qup04_uart";
->   				};
->   			};
->   
-> @@ -905,7 +905,7 @@ pinmux {
->   			qup_uart7_default: qup-uart7-default {
->   				pinmux {
->   					pins = "gpio6", "gpio7";
-> -					function = "qup11";
-> +					function = "qup11_uart";
->   				};
->   			};
->   
-> @@ -919,7 +919,7 @@ pinmux {
->   			qup_uart9_default: qup-uart9-default {
->   				pinmux {
->   					pins = "gpio46", "gpio47";
-> -					function = "qup13";
-> +					function = "qup13_uart";
->   				};
->   			};
->   
-> 
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IE1hcmMgWnluZ2llciA8bWF6
+QGtlcm5lbC5vcmc+DQo+IFNlbnQ6IDIwMTnlubQxMuaciDE45pelIDE3OjQxDQo+IFRvOiBKb2Fr
+aW0gWmhhbmcgPHFpYW5ncWluZy56aGFuZ0BueHAuY29tPg0KPiBDYzogdGdseEBsaW51dHJvbml4
+LmRlOyBqYXNvbkBsYWtlZGFlbW9uLm5ldDsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiBtYXJrLnJ1
+dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsgcy5oYXVlckBwZW5ndXRyb25peC5k
+ZTsgUy5qLg0KPiBXYW5nIDxzaGVuZ2ppdS53YW5nQG54cC5jb20+OyBrZXJuZWxAcGVuZ3V0cm9u
+aXguZGU7DQo+IGZlc3RldmFtQGdtYWlsLmNvbTsgZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhw
+LmNvbT47DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5r
+ZXJuZWwub3JnOw0KPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IEFuZHkg
+RHVhbiA8ZnVnYW5nLmR1YW5AbnhwLmNvbT47DQo+IEFpc2hlbmcgRG9uZyA8YWlzaGVuZy5kb25n
+QG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMy8zXSBkcml2ZXJzL2lycWNoaXA6IGVu
+YWJsZSBJTlRNVVggaW50ZXJydXB0IGNvbnRyb2xsZXINCj4gZHJpdmVyDQo+IA0KPiBPbiAyMDE5
+LTEyLTE4IDA3OjIwLCBKb2FraW0gWmhhbmcgd3JvdGU6DQo+ID4gRW5hYmxlIElOVE1VWCBpbnRl
+cnJ1cHQgY29udHJvbGxlciBkcml2ZXIgZm9yIGkuTVggcGxhdGZvcm1zLg0KPiA+DQo+ID4gU2ln
+bmVkLW9mZi1ieTogSm9ha2ltIFpoYW5nIDxxaWFuZ3FpbmcuemhhbmdAbnhwLmNvbT4NCj4gPiAt
+LS0NCj4gPiAgZHJpdmVycy9pcnFjaGlwL0tjb25maWcgIHwgNiArKysrKysNCj4gPiAgZHJpdmVy
+cy9pcnFjaGlwL01ha2VmaWxlIHwgMSArDQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgNyBpbnNlcnRp
+b25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pcnFjaGlwL0tjb25maWcgYi9k
+cml2ZXJzL2lycWNoaXAvS2NvbmZpZyBpbmRleA0KPiA+IGJhMTUyOTU0MzI0Yi4uN2UyYjFlOWQw
+YjQ1IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvaXJxY2hpcC9LY29uZmlnDQo+ID4gKysrIGIv
+ZHJpdmVycy9pcnFjaGlwL0tjb25maWcNCj4gPiBAQCAtNDU3LDYgKzQ1NywxMiBAQCBjb25maWcg
+SU1YX0lSUVNURUVSDQo+ID4gIAloZWxwDQo+ID4gIAkgIFN1cHBvcnQgZm9yIHRoZSBpLk1YIElS
+UVNURUVSIGludGVycnVwdCBtdWx0aXBsZXhlci9yZW1hcHBlci4NCj4gPg0KPiA+ICtjb25maWcg
+SU1YX0lOVE1VWA0KPiA+ICsJZGVmX2Jvb2wgeSBpZiBBUkNIX01YQw0KPiA+ICsJc2VsZWN0IElS
+UV9ET01BSU4NCj4gPiArCWhlbHANCj4gPiArCSAgU3VwcG9ydCBmb3IgdGhlIGkuTVggSU5UTVVY
+IGludGVycnVwdCBtdWx0aXBsZXhlci4NCj4gPiArDQo+ID4gIGNvbmZpZyBMUzFYX0lSUQ0KPiA+
+ICAJYm9vbCAiTG9vbmdzb24tMSBJbnRlcnJ1cHQgQ29udHJvbGxlciINCj4gPiAgCWRlcGVuZHMg
+b24gTUFDSF9MT09OR1NPTjMyDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaXJxY2hpcC9NYWtl
+ZmlsZSBiL2RyaXZlcnMvaXJxY2hpcC9NYWtlZmlsZSBpbmRleA0KPiA+IGU4MDZkZGE2OTBlYS4u
+YWY5NzZhNzlkMWZiIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvaXJxY2hpcC9NYWtlZmlsZQ0K
+PiA+ICsrKyBiL2RyaXZlcnMvaXJxY2hpcC9NYWtlZmlsZQ0KPiA+IEBAIC0xMDAsNiArMTAwLDcg
+QEAgb2JqLSQoQ09ORklHX0NTS1lfTVBJTlRDKQkJKz0NCj4gaXJxLWNza3ktbXBpbnRjLm8NCj4g
+PiAgb2JqLSQoQ09ORklHX0NTS1lfQVBCX0lOVEMpCQkrPSBpcnEtY3NreS1hcGItaW50Yy5vDQo+
+ID4gIG9iai0kKENPTkZJR19TSUZJVkVfUExJQykJCSs9IGlycS1zaWZpdmUtcGxpYy5vDQo+ID4g
+IG9iai0kKENPTkZJR19JTVhfSVJRU1RFRVIpCQkrPSBpcnEtaW14LWlycXN0ZWVyLm8NCj4gPiAr
+b2JqLSQoQ09ORklHX0lNWF9JTlRNVVgpCQkrPSBpcnEtaW14LWludG11eC5vDQo+ID4gIG9iai0k
+KENPTkZJR19NQURFUkFfSVJRKQkJKz0gaXJxLW1hZGVyYS5vDQo+ID4gIG9iai0kKENPTkZJR19M
+UzFYX0lSUSkJCQkrPSBpcnEtbHMxeC5vDQo+ID4gIG9iai0kKENPTkZJR19USV9TQ0lfSU5UUl9J
+UlFDSElQKQkrPSBpcnEtdGktc2NpLWludHIubw0KPiANCj4gUGxlYXNlIG1lcmdlIHRoaXMgd2l0
+aCB0aGUgcHJldmlvdXMgcGF0Y2gsIGl0IGRvZXNuJ3QgcmVhbGx5IHdhcnJhbnQgYSBzZXBhcmF0
+ZQ0KPiBwYXRjaC4NCj4gDQo+IFRoYW5rcywNCg0KR290IGl0LiBUaGFua3MuDQoNCkJlc3QgUmVn
+YXJkcywNCkpvYWtpbSBaaGFuZw0KPiAgICAgICAgICBNLg0KPiAtLQ0KPiBKYXp6IGlzIG5vdCBk
+ZWFkLiBJdCBqdXN0IHNtZWxscyBmdW5ueS4uLg0K
