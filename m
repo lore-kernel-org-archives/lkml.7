@@ -2,94 +2,102 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D866C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC8FC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37D11206EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7947D24672
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:35:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V4b7gCmT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbfLRAe4 (ORCPT
+        id S1726591AbfLRAfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 19:34:56 -0500
-Received: from mga09.intel.com ([134.134.136.24]:49459 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725940AbfLRAez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 19:34:55 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 16:34:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,327,1571727600"; 
-   d="scan'208";a="205662246"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga007.jf.intel.com with ESMTP; 17 Dec 2019 16:34:55 -0800
-Date:   Tue, 17 Dec 2019 16:34:55 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, jmattson@google.com,
-        yu.c.zhang@linux.intel.com, yu-cheng.yu@intel.com
-Subject: Re: [PATCH v8 3/7] KVM: VMX: Pass through CET related MSRs
-Message-ID: <20191218003455.GP11771@linux.intel.com>
-References: <20191101085222.27997-1-weijiang.yang@intel.com>
- <20191101085222.27997-4-weijiang.yang@intel.com>
- <20191210211821.GL15758@linux.intel.com>
- <20191216021816.GA10764@local-michael-cet-test>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191216021816.GA10764@local-michael-cet-test>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Tue, 17 Dec 2019 19:35:20 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46156 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbfLRAfU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 19:35:20 -0500
+Received: by mail-wr1-f66.google.com with SMTP id z7so362623wrl.13;
+        Tue, 17 Dec 2019 16:35:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=DBUq5EnVFqtnsDMr8VZJJ/QiTMGM16+brSy6lgi8AcA=;
+        b=V4b7gCmTjHhacC7eRsl3tBh8pyxCxhzeD9tfHyXhQdWlK2NHqjUIeW08cVlCV2PRWX
+         V9C2cI1qPSvF80gvkzDX47xc9+yznKBOEc9+In0CIY5cAcKOVAqOEXeuZRAtoD0SuaK4
+         hBxNnc6MXi+BfZwS1tC5NXk1+gUwIZSybUDoUwdJIY+ctx0PQ7uj+aYWb4DJv3BMTjGh
+         Zb+e13ZOiwkchU1moBJYryfs5W/fMjs2h+5MVtUhX3A9Jciy1IKIB7iUnzowWoO41xjZ
+         TCGKzWXHQyHPOdVk1CMn+PwE770JiZxCCBEeXp2jKiKbSwS8fgcPECTKvHXnAfXnsy4N
+         6heg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=DBUq5EnVFqtnsDMr8VZJJ/QiTMGM16+brSy6lgi8AcA=;
+        b=atN1AVGsv3bFQddgqSHjA2bUMR8ArcO8jRmPecktkmTYmXDtSmVBedF+NmbiWrdhg8
+         DSDaq7/EkYOIEtLq/yKy9ntRBwkwZhOnzqAJNIRGocgLHcJRNfEm8M0p4oJLwau9RkSU
+         veF9zrjlKnTJ10kjj7rNRIHN/T95ux34ig/ZixA4IvP3k2ANQWsqDW6tK4/Z3sBk/kES
+         yQOr7v6MH8bE5ce0KWoTu+ug9NnHmsEaMjHji4+YPPUUKc+tjkNEegphqifKZLgSpSBb
+         ZO/8V/8mXfWVKXmsKkgPgkDQjql6SKK7pWmtMBggTd87zZeAjBMuFA2zdsg/1hlJx+/S
+         cS2Q==
+X-Gm-Message-State: APjAAAVW0hIz4G5/AoJaN51Tjc+SKlrBt9iOQdgcTlm1JHsTJNcaLHDz
+        PpUaIBBJ3xdG+v1jm0DiOxxGYyEu
+X-Google-Smtp-Source: APXvYqz1pmukxUADdnQaos/gzxB8lCVwkK7WqXOV/I0+jI+2k8K2M4z1giqWrmse8KfGKZ7GX4MmWQ==
+X-Received: by 2002:adf:f052:: with SMTP id t18mr548266wro.192.1576629317810;
+        Tue, 17 Dec 2019 16:35:17 -0800 (PST)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id s82sm567395wms.28.2019.12.17.16.35.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 16:35:17 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     jakub.kicinski@netronome.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        bcm-kernel-feedback-list@broadcom.com (open list:BROADCOM SYSTEMPORT
+        ETHERNET DRIVER), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net-next] net: systemport: Set correct DMA mask
+Date:   Tue, 17 Dec 2019 16:29:50 -0800
+Message-Id: <20191218002950.2125-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 10:18:16AM +0800, Yang Weijiang wrote:
-> On Tue, Dec 10, 2019 at 01:18:21PM -0800, Sean Christopherson wrote:
-> > On Fri, Nov 01, 2019 at 04:52:18PM +0800, Yang Weijiang wrote:
-> > > CET MSRs pass through Guest directly to enhance performance.
-> > > CET runtime control settings are stored in MSR_IA32_{U,S}_CET,
-> > > Shadow Stack Pointer(SSP) are stored in MSR_IA32_PL{0,1,2,3}_SSP,
-> > > SSP table base address is stored in MSR_IA32_INT_SSP_TAB,
-> > > these MSRs are defined in kernel and re-used here.
-> > > 
->  > +
-> > >  static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
-> > >  {
-> > >  	struct vcpu_vmx *vmx = to_vmx(vcpu);
-> > > @@ -7025,6 +7087,9 @@ static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
-> > >  	if (boot_cpu_has(X86_FEATURE_INTEL_PT) &&
-> > >  			guest_cpuid_has(vcpu, X86_FEATURE_INTEL_PT))
-> > >  		update_intel_pt_cfg(vcpu);
-> > > +
-> > > +	if (!is_guest_mode(vcpu))
-> > > +		vmx_pass_cet_msrs(vcpu);
-> > 
-> > Hmm, this looks insufficent, e.g. deliberately toggling CET from on->off
-> > while in guest mode would put KVM in a weird state as the msr bitmap for
-> > L1 would still allow L1 to access the CET MSRs.
-> >
-> Hi, Sean,
-> I don't get you, there's guest mode check before access CET msrs, it'll
-> fail if it's in guest mode.
+SYSTEMPORT is capabable of doing up to 40-bit of physical addresses, set
+an appropriate DMA mask to permit that.
 
-KVM can exit to userspae while L2 is active.  If userspace then did a
-KVM_SET_CPUID2, e.g. instead of KVM_RUN, vmx_cpuid_update() would skip
-vmx_pass_cet_msrs() and KVM would never update L1's MSR bitmaps.
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ drivers/net/ethernet/broadcom/bcmsysport.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> > Allowing KVM_SET_CPUID{2} while running a nested guest seems bogus, can we
-> > kill that path entirely with -EINVAL?
-> >
-> Do you mean don't expose CET cpuids to L2 guest?
+diff --git a/drivers/net/ethernet/broadcom/bcmsysport.c b/drivers/net/ethernet/broadcom/bcmsysport.c
+index 8e3152779a61..1907e47fd0af 100644
+--- a/drivers/net/ethernet/broadcom/bcmsysport.c
++++ b/drivers/net/ethernet/broadcom/bcmsysport.c
+@@ -2427,6 +2427,14 @@ static int bcm_sysport_probe(struct platform_device *pdev)
+ 	if (!of_id || !of_id->data)
+ 		return -EINVAL;
+ 
++	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(40));
++	if (ret)
++		ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
++	if (ret) {
++		dev_err(&pdev->dev, "unable to set DMA mask: %d\n", ret);
++		return ret;
++	}
++
+ 	/* Fairly quickly we need to know the type of adapter we have */
+ 	params = of_id->data;
+ 
+-- 
+2.17.1
 
-I mean completely disallow KVM_SET_CPUID and KVM_SET_CPUID2 if
-is_guest_mode() is true.  My question is mostly directed at Paolo and
-anyone else that has an opinion on whether we can massage the ABI to
-retroactively change KVM_SET_CPUID{2} behavior.
