@@ -2,90 +2,54 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 472F2C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84DECC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CB0121D7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:34:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HHNAemO2"
+	by mail.kernel.org (Postfix) with ESMTP id 6222D2082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:38:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbfLRTeo (ORCPT
+        id S1727406AbfLRTiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 14:34:44 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:53344 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727417AbfLRTeo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 14:34:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=F0qw+ZgAxUoSNUdtsCy/4y9ChBD5n/nHwz3C1MaWdgs=; b=HHNAemO2hQMNhgUhEnLcMkVsR
-        iSxylsO6FhuzfM+X/t9mAWu3giItRNswznlmDgzqRYiN+xmGhY3vq9TxT4Ht8xNDIAYMVcjQzup8+
-        0RJ2E+mYGLRezrOlBUNuYHxJ+wh5Oeev0LT4/vyTlWSkJZ1MJOMrDRdiAhDbLPV7xoF8rsmqjic7s
-        Vw+FLSPx+1wgmWM24nDkNJzGJw9xkE+4L+iy1uu4eVVY8G2RnvuWuNlre++qoN4bXrFvekH9YvGFm
-        Z8VRyHEhCU69fJjtNwWt862jCce2fhGupp/sOl/O/CodhTWkju1VuOkZJSWsStwbfZ/o3kborZ7iJ
-        Yv5Pb5HRg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ihf5b-0002JF-32; Wed, 18 Dec 2019 19:34:31 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 20D5D980E35; Wed, 18 Dec 2019 20:34:29 +0100 (CET)
-Date:   Wed, 18 Dec 2019 20:34:29 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Giovanni Gherdovich <ggherdovich@suse.cz>
-Cc:     Ionela Voinescu <ionela.voinescu@arm.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@suse.de>,
-        Len Brown <lenb@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>, x86@kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Paul Turner <pjt@google.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Quentin Perret <qperret@qperret.net>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Doug Smythies <dsmythies@telus.net>
-Subject: Re: [PATCH v4 1/6] x86,sched: Add support for frequency invariance
-Message-ID: <20191218193429.GH11457@worktop.programming.kicks-ass.net>
-References: <20191113124654.18122-1-ggherdovich@suse.cz>
- <20191113124654.18122-2-ggherdovich@suse.cz>
- <20191202162232.GA9777@arm.com>
- <4d1b776d8e797224e92952a4d590a625@suse.cz>
+        Wed, 18 Dec 2019 14:38:46 -0500
+Received: from ms.lwn.net ([45.79.88.28]:50936 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726698AbfLRTiq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 14:38:46 -0500
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 76CE32ED;
+        Wed, 18 Dec 2019 19:38:45 +0000 (UTC)
+Date:   Wed, 18 Dec 2019 12:38:44 -0700
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     "Frank A. Cancio Bello" <frank@generalsoftwareinc.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
+        nachukannan@gmail.com, saiprakash.ranjan@outlook.com
+Subject: Re: [PATCH v2] docs: ftrace: Specifies when buffers get clear
+Message-ID: <20191218123844.768e18c8@lwn.net>
+In-Reply-To: <20191218143351.03a34e00@gandalf.local.home>
+References: <20191218191553.q4lwyxmquvtjzjfz@frank-laptop>
+        <20191218143351.03a34e00@gandalf.local.home>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4d1b776d8e797224e92952a4d590a625@suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 12:57:46PM +0100, Giovanni Gherdovich wrote:
-> > On Wednesday 13 Nov 2019 at 13:46:49 (+0100), Giovanni Gherdovich wrote:
-> > I see above that you enable the static key (and therefore frequency
-> > invariance before setting the max frequency ratio (if possible) and
-> > before you initialise the counter references. Is there any reason for
-> > doing this?
+On Wed, 18 Dec 2019 14:33:51 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> This is a fair point; mine was a deliberate choice but you're the second
-> person making this remark (Peter Zijlstra also suggested I find the max
-> frequency before I set the static key), so it appears this design is
-> unpopular
-> enough to warrant a change in v5.
+> Jon, do you want to take this?
 
-You actually 'fix' this in the next patch. I thought it was a patch
-management 'fail' that it didn't end up in this patch.
+Sure, will do.
+
+jon
