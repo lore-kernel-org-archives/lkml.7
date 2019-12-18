@@ -2,92 +2,175 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D42C47409
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E023C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AC1A21D7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:00:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="RPUI1b+a"
+	by mail.kernel.org (Postfix) with ESMTP id 1F49F227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:00:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbfLRIAO (ORCPT
+        id S1726682AbfLRIAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 03:00:14 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:41727 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725797AbfLRIAM (ORCPT
+        Wed, 18 Dec 2019 03:00:11 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:30607 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbfLRIAL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 03:00:12 -0500
-X-UUID: ac71a844ec244869b2a8472310dabc50-20191218
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=aNiLrGJZwK0lvEyneiSTQQEeAe5Qvk/0jbjSDQ3VN2c=;
-        b=RPUI1b+aKYkqYxlxBVt65fXuDdhXfdF/maf7zJ6L0bciqcu7iis8vuM2Ih7e+vA7WboexmR9qy0/ysYZMLx63ZoYn3PISoparTcxqqGjXgGAqBOPW/j4rpYPRayXKuLjBK8w59SdXXg3UmnK3seFdvqYH13lvU+XNPvF31FgJ80=;
-X-UUID: ac71a844ec244869b2a8472310dabc50-20191218
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <dennis-yc.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1564332786; Wed, 18 Dec 2019 16:00:07 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 18 Dec 2019 15:59:48 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 18 Dec 2019 15:59:38 +0800
-Message-ID: <1576656006.5933.3.camel@mtkswgap22>
-Subject: Re: [PATCH v2 06/14] soc: mediatek: cmdq: return send msg error code
-From:   Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>, CK Hu <ck.hu@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Wed, 18 Dec 2019 16:00:06 +0800
-In-Reply-To: <1575604966.6151.1.camel@mtksdaap41>
-References: <1574819937-6246-1-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <1574819937-6246-8-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <1575604966.6151.1.camel@mtksdaap41>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Wed, 18 Dec 2019 03:00:11 -0500
+Received: from [10.28.39.99] (10.28.39.99) by mail-sz.amlogic.com (10.28.11.5)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 18 Dec
+ 2019 16:00:21 +0800
+Subject: Re: [PATCH v4 1/6] dt-bindings: clock: meson: add A1 PLL clock
+ controller bindings
+To:     Maxime Ripard <maxime@cerno.tech>
+CC:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Rob Herring <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Chandle Zou <chandle.zou@amlogic.com>,
+        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20191206074052.15557-1-jian.hu@amlogic.com>
+ <20191206074052.15557-2-jian.hu@amlogic.com>
+ <20191213103856.qo7vlnuk4ajz3vq5@gilmour.lan>
+From:   Jian Hu <jian.hu@amlogic.com>
+Message-ID: <ba16b846-1d5f-3d1e-e8e2-420687d11e8a@amlogic.com>
+Date:   Wed, 18 Dec 2019 16:00:20 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20191213103856.qo7vlnuk4ajz3vq5@gilmour.lan>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.28.39.99]
+X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
+ (10.28.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQmliYnksDQoNCk9uIEZyaSwgMjAxOS0xMi0wNiBhdCAxMjowMiArMDgwMCwgQmliYnkgSHNp
-ZWggd3JvdGU6DQo+IE9uIFdlZCwgMjAxOS0xMS0yNyBhdCAwOTo1OCArMDgwMCwgRGVubmlzIFlD
-IEhzaWVoIHdyb3RlOg0KPiA+IFJldHVybiBlcnJvciBjb2RlIHRvIGNsaWVudCBpZiBzZW5kIG1l
-c3NhZ2UgZmFpbCwNCj4gPiBzbyB0aGF0IGNsaWVudCBoYXMgY2hhbmNlIHRvIGVycm9yIGhhbmRs
-aW5nLg0KPiA+IA0KPiBUaGlzIHBhdGNoZXMgc2VlbXMgbGlrZSBhIGZpeCBwYXRjaC4NCj4gUGxl
-YXNlIGFkZCBmaXhlcywgdGhhbmtzLg0KPiANCj4gQmliYnkNCg0KRG8geW91IG1lYW4gYWRkICpm
-aXhlcyogaW4gdGl0bGU/DQpIb3cgYWJvdXQgKmZpeGVzIGZsdXNoIGFzeW5jIGZ1bmN0aW9uIHJl
-dHVybiBlcnJvciB3aGVuIHNlbmQgZmFpbCogPw0KDQoNClJlZ2FyZHMsDQpEZW5uaXMNCg0KPiA+
-IFNpZ25lZC1vZmYtYnk6IERlbm5pcyBZQyBIc2llaCA8ZGVubmlzLXljLmhzaWVoQG1lZGlhdGVr
-LmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVy
-LmMgfCA0ICsrLS0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxl
-dGlvbnMoLSkNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRr
-LWNtZHEtaGVscGVyLmMgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYw0K
-PiA+IGluZGV4IDI3NGY2ZjMxMWQwNS4uODQyMWI0MDkwMzA0IDEwMDY0NA0KPiA+IC0tLSBhL2Ry
-aXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+ID4gKysrIGIvZHJpdmVycy9z
-b2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMNCj4gPiBAQCAtMzUzLDExICszNTMsMTEgQEAg
-aW50IGNtZHFfcGt0X2ZsdXNoX2FzeW5jKHN0cnVjdCBjbWRxX3BrdCAqcGt0LCBjbWRxX2FzeW5j
-X2ZsdXNoX2NiIGNiLA0KPiA+ICAJCXNwaW5fdW5sb2NrX2lycXJlc3RvcmUoJmNsaWVudC0+bG9j
-aywgZmxhZ3MpOw0KPiA+ICAJfQ0KPiA+ICANCj4gPiAtCW1ib3hfc2VuZF9tZXNzYWdlKGNsaWVu
-dC0+Y2hhbiwgcGt0KTsNCj4gPiArCWVyciA9IG1ib3hfc2VuZF9tZXNzYWdlKGNsaWVudC0+Y2hh
-biwgcGt0KTsNCj4gPiAgCS8qIFdlIGNhbiBzZW5kIG5leHQgcGFja2V0IGltbWVkaWF0ZWx5LCBz
-byBqdXN0IGNhbGwgdHhkb25lLiAqLw0KPiA+ICAJbWJveF9jbGllbnRfdHhkb25lKGNsaWVudC0+
-Y2hhbiwgMCk7DQo+ID4gIA0KPiA+IC0JcmV0dXJuIDA7DQo+ID4gKwlyZXR1cm4gZXJyOw0KPiA+
-ICB9DQo+ID4gIEVYUE9SVF9TWU1CT0woY21kcV9wa3RfZmx1c2hfYXN5bmMpOw0KPiA+ICANCj4g
-DQo+IA0KDQo=
+Hi Maxime
 
+Thanks for your review
+
+On 2019/12/13 18:38, Maxime Ripard wrote:
+> Hi,
+> 
+> On Fri, Dec 06, 2019 at 03:40:47PM +0800, Jian Hu wrote:
+>> Add the documentation to support Amlogic A1 PLL clock driver,
+>> and add A1 PLL clock controller bindings.
+>>
+>> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+>> ---
+>>   .../bindings/clock/amlogic,a1-pll-clkc.yaml   | 59 +++++++++++++++++++
+>>   include/dt-bindings/clock/a1-pll-clkc.h       | 16 +++++
+>>   2 files changed, 75 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+>>   create mode 100644 include/dt-bindings/clock/a1-pll-clkc.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+>> new file mode 100644
+>> index 000000000000..7feeef5abf1b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+>> @@ -0,0 +1,59 @@
+>> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+>> +/*
+>> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
+>> + */
+>> +%YAML 1.2
+>> +---
+>> +$id: "http://devicetree.org/schemas/clock/amlogic,a1-pll-clkc.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: Amlogic Meson A/C serials PLL Clock Control Unit Device Tree Bindings
+>> +
+>> +maintainers:
+>> +  - Neil Armstrong <narmstrong@baylibre.com>
+>> +  - Jerome Brunet <jbrunet@baylibre.com>
+>> +  - Jian Hu <jian.hu@jian.hu.com>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    - enum:
+>> +        - amlogic,a1-pll-clkc
+> 
+> I'm not sure this works, compatible shouldn't contain a list.
+> 
+I refered to 
+Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ccu.yaml.
+
+I have used 'dt-doc-validate' tools to check, it will report something 
+wrong below.
+
+properties:compatible: [{'enum': ['amlogic,a1-pll-clkc']}] is not of 
+type 'object', 'boolean'
+
+Refer to
+https://github.com/robherring/dt-schema/blob/master/example-schema.yaml
+
+I will change it like this:
+
+properties:
+   compatible:
+     oneOf:
+       - enum:
+          - amlogic,a1-pll-clkc
+
+And It has been passed by 'dt-doc-validate' tools.
+
+Is it right?
+
+> You can write this like:
+> compatible:
+>    const: amlogic,a1-pll-clkc
+> 
+>> +  "#clock-cells":
+>> +    const: 1
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +clocks:
+>> +  minItems: 2
+>> +  maxItems: 2
+> 
+> This is redundant, it will be added automatically by the tools ...
+If I remove the minItems, it will pass by dt-doc-validate.
+
+Would please tell how to use dt-schema to generate automatically it?
+
+> 
+>> +  items:
+>> +   - description: Input xtal_fixpll
+>> +   - description: Input xtal_hifipll
+> 
+> ... When you have a list of items :)
+> 
+>> +
+>> +clock-names:
+>> +  minItems: 2
+>> +  maxItems: 2
+>> +  items:
+>> +     - const: xtal_fixpll
+>> +     - const: xtal_hifipll
+> 
+> Same story here
+OK, I will change it when I find the right way.
+> 
+> Maxime
+> 
