@@ -6,56 +6,43 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 172ACC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D528C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E126B24650
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D0D121D7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:42:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbfLRIlM (ORCPT
+        id S1726707AbfLRImA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 03:41:12 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:57240 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbfLRIlL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 03:41:11 -0500
-Received: from [10.28.39.99] (10.28.39.99) by mail-sz.amlogic.com (10.28.11.5)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 18 Dec
- 2019 16:37:50 +0800
-Subject: Re: [PATCH v4 2/6] clk: meson: add support for A1 PLL clock ops
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-CC:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20191206074052.15557-1-jian.hu@amlogic.com>
- <20191206074052.15557-3-jian.hu@amlogic.com>
- <1j8snhluhg.fsf@starbuckisacylon.baylibre.com>
- <741284be-2ae8-1102-22bc-c510e822c883@amlogic.com>
- <1jk16vb8qm.fsf@starbuckisacylon.baylibre.com>
-From:   Jian Hu <jian.hu@amlogic.com>
-Message-ID: <0bc6176f-c0b8-5c31-4c6b-d3686eefe56e@amlogic.com>
-Date:   Wed, 18 Dec 2019 16:37:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Wed, 18 Dec 2019 03:42:00 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:35240 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726526AbfLRImA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 03:42:00 -0500
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 9772F88D824058336E49;
+        Wed, 18 Dec 2019 16:41:57 +0800 (CST)
+Received: from [127.0.0.1] (10.184.52.56) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Wed, 18 Dec 2019
+ 16:41:47 +0800
+Subject: Re: [PATCH v2] PCI: Add quirk for HiSilicon NP 5896 devices
+To:     <andrew.murray@arm.com>, <bhelgaas@google.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <wangkefeng.wang@huawei.com>, <huawei.libin@huawei.com>,
+        <guohanjun@huawei.com>
+References: <1575615705-30716-1-git-send-email-wangxiongfeng2@huawei.com>
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Message-ID: <60c0001e-3753-6e3f-b114-ddc62e5d50ac@huawei.com>
+Date:   Wed, 18 Dec 2019 16:41:46 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.6.0
 MIME-Version: 1.0
-In-Reply-To: <1jk16vb8qm.fsf@starbuckisacylon.baylibre.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <1575615705-30716-1-git-send-email-wangxiongfeng2@huawei.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.28.39.99]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.52.56]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -63,184 +50,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 2019/12/17 17:29, Jerome Brunet wrote:
+On 2019/12/6 15:01, Xiongfeng Wang wrote:
+> HiSilicon PCI Network Processor 5896 devices misreport the class type as
+> 'NOT_DEFINED', but it is actually a network device. Also the size of
+> BAR3 is reported as 265T, but this BAR is actually unused.
+> This patch modify the class type to 'CLASS_NETWORK' and disable the
+> unused BAR3.
 > 
-> On Tue 17 Dec 2019 at 09:41, Jian Hu <jian.hu@amlogic.com> wrote:
+> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+> ---
+>  drivers/pci/quirks.c    | 29 +++++++++++++++++++++++++++++
+>  include/linux/pci_ids.h |  1 +
+>  2 files changed, 30 insertions(+)
 > 
->> On 2019/12/12 18:16, Jerome Brunet wrote:
->>>
->>> On Fri 06 Dec 2019 at 08:40, Jian Hu <jian.hu@amlogic.com> wrote:
->>>
->>>> The A1 PLL design is different with previous SoCs. The PLL
->>>> internal analog modules Power-on sequence is different
->>>> with previous, and thus requires a strict register sequence to
->>>> enable the PLL.
->>>>
->>>> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
->>>> ---
->>>>    drivers/clk/meson/clk-pll.c | 21 +++++++++++++++++++++
->>>>    drivers/clk/meson/clk-pll.h |  1 +
->>>>    drivers/clk/meson/parm.h    |  1 +
->>>>    3 files changed, 23 insertions(+)
->>>>
->>>> diff --git a/drivers/clk/meson/clk-pll.c b/drivers/clk/meson/clk-pll.c
->>>> index ddb1e5634739..4aff31a51589 100644
->>>> --- a/drivers/clk/meson/clk-pll.c
->>>> +++ b/drivers/clk/meson/clk-pll.c
->>>> @@ -318,6 +318,23 @@ static int meson_clk_pll_enable(struct clk_hw *hw)
->>>>    	struct clk_regmap *clk = to_clk_regmap(hw);
->>>>    	struct meson_clk_pll_data *pll = meson_clk_pll_data(clk);
->>>>    +	/*
->>>> +	 * The A1 design is different with previous SoCs.The PLL
->>>> +	 * internal analog modules Power-on sequence is different with
->>>> +	 * previous, and thus requires a strict register sequence to
->>>> +	 * enable the PLL.
->>>
->>> The code does something more, not completly different. This comment is
->>> not aligned with what the code does
->> ok, I will correct the comment.
->>>
->>>> +	 */
->>>> +	if (MESON_PARM_APPLICABLE(&pll->current_en)) {
->>>> +		/* Enable the pll */
->>>> +		meson_parm_write(clk->map, &pll->en, 1);
->>>> +		udelay(10);
->>>> +		/* Enable the pll self-adaption module current */
->>>> +		meson_parm_write(clk->map, &pll->current_en, 1);
->>>> +		udelay(40);
->>>> +		meson_parm_write(clk->map, &pll->rst, 1);
->>>> +		meson_parm_write(clk->map, &pll->rst, 0);
->>>
->>> Here you enable the PLL and self adaptation module then reset the PLL.
->>> However:
->>> #1 when you enter this function, the PLL should already by in reset
->>> and disabled
->>> #2 the code after that will reset the PLL again
->> For A1 PLLs, There is no reset bit, It will not reset the PLL.
->> And in V2, you mentioned PARM 'rst' can be used for one toggling, And 'rst'
->> is used for BIT(6) in CTRL2.
->>
-> 
-> oh my ! What is it then ? Why do you need to toggle it ? What does is do ?
-> 
-The PLL enable flow:
-      step1: enable the PLL
-      step2: enable the self adaptation module
-      step3: reset the lock detect module, let the lock detect module 
-            work，And then the PLL will work.
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 4937a08..b9adebb 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -5431,3 +5431,32 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
+>  DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
+>  			      PCI_CLASS_DISPLAY_VGA, 8,
+>  			      quirk_reset_lenovo_thinkpad_p50_nvgpu);
+> +
+> +static void quirk_hisi_fixup_np_class(struct pci_dev *pdev)
+> +{
+> +	u32 class = pdev->class;
+> +
+> +	pdev->class = PCI_BASE_CLASS_NETWORK << 8;
 
-Toggle the bit 6 in CTRL2 can reset the lock detect module.
->> Quote V2 the HIFI PLL init_regs definition：
->>
->>
->> +static const struct reg_sequence a1_hifi_init_regs[] = {
->> +	{ .reg = ANACTRL_HIFIPLL_CTRL1, .def = 0x01800000 },
->> +	{ .reg = ANACTRL_HIFIPLL_CTRL2, .def = 0x00001100 },
->> +	{ .reg = ANACTRL_HIFIPLL_CTRL3, .def = 0x100a1100 },
->> +	{ .reg = ANACTRL_HIFIPLL_CTRL4, .def = 0x00302000 },
->> +	{ .reg = ANACTRL_HIFIPLL_CTRL0, .def = 0x01f18440 },
->> +	{ .reg = ANACTRL_HIFIPLL_CTRL0, .def = 0x11f18440, .delay_us = 10 },
->> +	{ .reg = ANACTRL_HIFIPLL_CTRL0, .def = 0x15f18440, .delay_us = 40 },
->> +	{ .reg = ANACTRL_HIFIPLL_CTRL2, .def = 0x00001140 },
->> +	{ .reg = ANACTRL_HIFIPLL_CTRL2, .def = 0x00001100 },
->> +};
->>
->> So maybe another new PARM should be defined to avoid the ambiguity.
->> What do you think about it?
+It should be  pdev->class = PCI_CLASS_NETWORK_ETHERNET << 8;
+I will change it in the next version.
+
+> +	pci_info(pdev, "PCI class overriden (%#08x -> %#08x)\n",
+> +		 class, pdev->class);
+> +}
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HISI_5896,
+> +			quirk_hisi_fixup_np_class);
+> +
+> +/*
+> + * HiSilicon NP 5896 devices BAR3 size is reported as 256T and causes problem
+> + * when assigning the resources. But this BAR is actually unused by the driver,
+> + * so let's disable it.
+> + */
+> +static void quirk_hisi_fixup_np_bar(struct pci_dev *pdev)
+> +{
+> +	struct resource *r = &pdev->resource[3];
+> +
+> +	r->start = 0;
+> +	r->end = 0;
+> +	r->flags = 0;
+> +
+> +	pci_info(pdev, "Disabling invalid BAR 3\n");
+> +}
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HISI_5896,
+> +			 quirk_hisi_fixup_np_bar);
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 2302d133..f21cd8b 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -2558,6 +2558,7 @@
+>  #define PCI_DEVICE_ID_KORENIX_JETCARDF3	0x17ff
+>  
+>  #define PCI_VENDOR_ID_HUAWEI		0x19e5
+> +#define PCI_DEVICE_ID_HISI_5896        0x5896 /* HiSilicon NP 5896 devices */
+>  
+>  #define PCI_VENDOR_ID_NETRONOME		0x19ee
+>  #define PCI_DEVICE_ID_NETRONOME_NFP4000	0x4000
 > 
-> This is not the point of my comment Jian !
-> 
-> I'm assuming here that you have tested your v4 before sending and that
-> it work (hopefully)
-> 
-Yes, it works wells. I have tested the drivers before sending every 
-patchset version.
-> The fact is that with this code, when disabled the bit behind rst
-> (whatever it is) is set. So when you get to enable the bit is already set.
-> The code you sent does the same as the snip I gave you in the reply.
-> 
-> Now, if your PLL is THAT different, maybe it would be best if you could
-> clearly explain how it works, what bit should be set and why. Then we
-> will be able to figure out how the driver has to be restructured.
-> 
-the same as 'The PLL enable flow' above
->>
->>>
->>> So if what you submited works, inserting the following should accomplish
->>> the same thing:
->>>
->>> ---8<---
->>> diff --git a/drivers/clk/meson/clk-pll.c b/drivers/clk/meson/clk-pll.c
->>> index 489092dde3a6..9b38df0a7682 100644
->>> --- a/drivers/clk/meson/clk-pll.c
->>> +++ b/drivers/clk/meson/clk-pll.c
->>> @@ -330,6 +330,13 @@ static int meson_clk_pll_enable(struct clk_hw *hw)
->>>           /* Enable the pll */
->>>           meson_parm_write(clk->map, &pll->en, 1);
->>>
->>> +       if (MESON_PARM_APPLICABLE(&pll->current_en)) {
->>> +               udelay(10);
->>> +               /* Enable the pll self-adaption module current */
->>> +               meson_parm_write(clk->map, &pll->current_en, 1);
->>> +               udelay(40);
->>> +       }
->>> +
->>>           /* Take the pll out reset */
->>>           meson_parm_write(clk->map, &pll->rst, 0);
->>> --->8---
->>>
->>>
->>>
->>>
->>>> +	}
->>>> +
->>>>    	/* do nothing if the PLL is already enabled */
->>>>    	if (clk_hw_is_enabled(hw))
->>>>    		return 0;
->>>
->>> In any case, nothing should be done on the clock before this check
->>> otherwise you might just break the clock
->>>
->> OK, I will put the enabled check ahead.
->>>> @@ -347,6 +364,10 @@ static void meson_clk_pll_disable(struct clk_hw *hw)
->>>>      	/* Disable the pll */
->>>>    	meson_parm_write(clk->map, &pll->en, 0);
->>>> +
->>>> +	/* Disable PLL internal self-adaption module current */
->>>> +	if (MESON_PARM_APPLICABLE(&pll->current_en))
->>>> +		meson_parm_write(clk->map, &pll->current_en, 0);
->>>>    }
->>>>      static int meson_clk_pll_set_rate(struct clk_hw *hw, unsigned long
->>>> rate,
->>>> diff --git a/drivers/clk/meson/clk-pll.h b/drivers/clk/meson/clk-pll.h
->>>> index 367efd0f6410..30f039242a65 100644
->>>> --- a/drivers/clk/meson/clk-pll.h
->>>> +++ b/drivers/clk/meson/clk-pll.h
->>>> @@ -36,6 +36,7 @@ struct meson_clk_pll_data {
->>>>    	struct parm frac;
->>>>    	struct parm l;
->>>>    	struct parm rst;
->>>> +	struct parm current_en;
->>>>    	const struct reg_sequence *init_regs;
->>>>    	unsigned int init_count;
->>>>    	const struct pll_params_table *table;
->>>> diff --git a/drivers/clk/meson/parm.h b/drivers/clk/meson/parm.h
->>>> index 3c9ef1b505ce..c53fb26577e3 100644
->>>> --- a/drivers/clk/meson/parm.h
->>>> +++ b/drivers/clk/meson/parm.h
->>>> @@ -20,6 +20,7 @@
->>>>    	(((reg) & CLRPMASK(width, shift)) | ((val) << (shift)))
->>>>      #define MESON_PARM_APPLICABLE(p)		(!!((p)->width))
->>>> +#define MESON_PARM_CURRENT(p)			(!!((p)->width))
->>>
->>> Why do we need that ?
->> OK, I will remove it ,and use 'MESON_PARM_APPLICABLE' instead
->>>
->>>>      struct parm {
->>>>    	u16	reg_off;
->>>
->>> .
->>>
-> 
-> .
-> 
+
