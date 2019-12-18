@@ -2,118 +2,112 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5084AC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F40DC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27615227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:24:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576686270;
-	bh=Q4e5j7/4SLJOPMSxB0NtqZ2Ns2coqYzN2mxr/D2rKHM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LQmRPuGeYeSWzjU1/uXOQS2xsZYmWh/IEtB72AGkC8qEBhObTH5LtpIsX3auG6X5p
-	 neh7Yv3VUhUFzrKQTvzE4nvBGHCbCtwXXtIVqvMf9GK9/BAh0mDYuj80HCfqPq2ErB
-	 zotoJG6zjyDmidaiRRQhQkTF4L33DY5XjZ0xkG1Y=
+	by mail.kernel.org (Postfix) with ESMTP id 5F71824672
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:24:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727671AbfLRQY3 (ORCPT
+        id S1727683AbfLRQYa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 11:24:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57508 "EHLO mail.kernel.org"
+        Wed, 18 Dec 2019 11:24:30 -0500
+Received: from foss.arm.com ([217.140.110.172]:51878 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727640AbfLRQY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727646AbfLRQY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 18 Dec 2019 11:24:27 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1B90227BF;
-        Wed, 18 Dec 2019 16:24:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576686266;
-        bh=Q4e5j7/4SLJOPMSxB0NtqZ2Ns2coqYzN2mxr/D2rKHM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NfbBJ5mVaBqNsDOFvJFJkcmF3fQO8TrBQspcO7Db7utJfSe19fPU5IRiGdvVpveEk
-         xkcb5e3vuftjSycAgRkp0JKOt/wqbA9GRoTxKCeSa/drLrd7CeJpvrenGvjQgDbfLj
-         vi8UnC5pD+mNa7zBxmLob/dNS8kWJ2lFkx0g2nz8=
-Date:   Wed, 18 Dec 2019 17:24:24 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Siddharth Kapoor <ksiddharth@google.com>, lee.jones@linaro.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: Kernel panic on Google Pixel devices due to regulator patch
-Message-ID: <20191218162424.GA482612@kroah.com>
-References: <CAJRo92+eD9F6Q60yVY2PfwaPWO_8Dts8QwH7mhpJaem7SpLihg@mail.gmail.com>
- <20191218113458.GA3219@sirena.org.uk>
- <20191218122157.GA17086@kroah.com>
- <20191218131114.GD3219@sirena.org.uk>
- <20191218142219.GB234539@kroah.com>
- <20191218161806.GF3219@sirena.org.uk>
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0DEBC113E;
+        Wed, 18 Dec 2019 08:24:27 -0800 (PST)
+Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.56])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 64A423F719;
+        Wed, 18 Dec 2019 08:24:24 -0800 (PST)
+From:   Steven Price <steven.price@arm.com>
+To:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
+Cc:     Steven Price <steven.price@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH v17 01/23] mm: Add generic p?d_leaf() macros
+Date:   Wed, 18 Dec 2019 16:23:40 +0000
+Message-Id: <20191218162402.45610-2-steven.price@arm.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191218162402.45610-1-steven.price@arm.com>
+References: <20191218162402.45610-1-steven.price@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191218161806.GF3219@sirena.org.uk>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 04:18:06PM +0000, Mark Brown wrote:
-> On Wed, Dec 18, 2019 at 03:22:19PM +0100, Greg KH wrote:
-> > On Wed, Dec 18, 2019 at 01:11:14PM +0000, Mark Brown wrote:
-> > > On Wed, Dec 18, 2019 at 01:21:57PM +0100, Greg KH wrote:
-> 
-> > > > It is, but it's the latest stable kernel (well close to), and your patch
-> > > > was tagged by you to be backported to here, so if there's a problem with
-> > > > a stable branch, I want to know about it as I don't want to see
-> > > > regressions happen in it.
-> 
-> > > I don't track what's in older stable kernels, it wanted to go back at
-> > > least one kernel revision but the issue has been around since forever.
-> 
-> > Ok, you can always mark patches that way if you want to :)
-> 
-> That's what a tag to stable with no particular revision attached to it
-> is isn't it?
+Exposing the pud/pgd levels of the page tables to walk_page_range() means
+we may come across the exotic large mappings that come with large areas
+of contiguous memory (such as the kernel's linear map).
 
-No, that means "drag it as far back as Greg can easily do it" :)
+For architectures that don't provide all p?d_leaf() macros, provide
+generic do nothing default that are suitable where there cannot be leaf
+pages at that level. Futher patches will add implementations for
+individual architectures.
 
-> > > If you don't want to be messing with timing luck then you probably want
-> > > to be having a look at what Sasha's bot is doing, it's picking up a lot
-> > > of things that are *well* into this sort of territory (and the bad
-> > > interactions with out of tree code territory).  I personally would not
-> > > be using stable these days if I wasn't prepared to be digging into
-> > > something like this.
-> 
-> > I watch what his bot is doing, and we have tons of testing happening as
-> > well, which is reflected by the fact that THIS WAS CAUGHT HERE.  This is
-> 
-> You don't have anywhere near the level of testing that you'd need to
-> cover what the bot is trying to pull in, the subsystem and driver
-> coverage is extremely thin relative to the enthusiasm with which things
-> are being picked up.  All the pushback I see in review is on me for 
-> being conservative about what gets pulled into stable and worrying about
-> interactions with out of tree code.
-> 
-> > a sign that things are working, it's just that some SoC trees are slower
-> > than mainline by a few months, and that's fine.  It's worlds better than
-> > the SoC trees that are no where close to mainline, and as such, totally
-> > insecure :)
-> 
-> What you appear to have caught here is an interaction with some
-> unreviewed vendor code - how much of that is going on in the vendor
-> trees you're not testing?  If we want to encourage people to pull in
-> stable we should be paying attention to that sort of stuff.
+The name p?d_leaf() is chosen to minimize the confusion with existing
+uses of "large" pages and "huge" pages which do not necessary mean that
+the entry is a leaf (for example it may be a set of contiguous entries
+that only take 1 TLB slot). For the purpose of walking the page tables
+we don't need to know how it will be represented in the TLB, but we do
+need to know for sure if it is a leaf of the tree.
 
-I get weekly merge reports from all of the major SoC vendors when they
-pull these releases into their tree and run through their full suite of
-tests.  So I am paying attention to this type of thing.
+Signed-off-by: Steven Price <steven.price@arm.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+---
+ include/asm-generic/pgtable.h | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-What I need to figure out here is what is going wrong and why the SoC's
-testing did not catch this.  That's going to take a bit longer...
+diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
+index 798ea36a0549..e2e2bef07dd2 100644
+--- a/include/asm-generic/pgtable.h
++++ b/include/asm-generic/pgtable.h
+@@ -1238,4 +1238,24 @@ static inline bool arch_has_pfn_modify_check(void)
+ #define mm_pmd_folded(mm)	__is_defined(__PAGETABLE_PMD_FOLDED)
+ #endif
+ 
++/*
++ * p?d_leaf() - true if this entry is a final mapping to a physical address.
++ * This differs from p?d_huge() by the fact that they are always available (if
++ * the architecture supports large pages at the appropriate level) even
++ * if CONFIG_HUGETLB_PAGE is not defined.
++ * Only meaningful when called on a valid entry.
++ */
++#ifndef pgd_leaf
++#define pgd_leaf(x)	0
++#endif
++#ifndef p4d_leaf
++#define p4d_leaf(x)	0
++#endif
++#ifndef pud_leaf
++#define pud_leaf(x)	0
++#endif
++#ifndef pmd_leaf
++#define pmd_leaf(x)	0
++#endif
++
+ #endif /* _ASM_GENERIC_PGTABLE_H */
+-- 
+2.20.1
 
-thanks,
-
-greg k-h
