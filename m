@@ -2,177 +2,128 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20471C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1CE6C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8EB321582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:22:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B472E21582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:23:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JQ6dvlDd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bLfkBhvM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727192AbfLROWa (ORCPT
+        id S1727191AbfLROXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 09:22:30 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37217 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726921AbfLROWa (ORCPT
+        Wed, 18 Dec 2019 09:23:31 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:32846 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726856AbfLROXb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 09:22:30 -0500
-Received: by mail-lj1-f194.google.com with SMTP id u17so2346143lja.4
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 06:22:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=jo+R1TTGcJsYMxa30YVdwmew5sMvUZiUlEnGrV31yCE=;
-        b=JQ6dvlDdRFkUHfxe7bDgR/HwyZHKQawwKU5h/usfGR+z0tmdf0N+WEuwareRcJBKG+
-         zWuN/AU7jxTxpqCxgIdqiWobxX2nTseZQQuZjiNyzhiSXoNJXhJrZklqINXBBcr7gM12
-         ovaR6dKx4AU3Qv+q9JY5avY0p8lqri1/UC0We4ybcTAozHk6vkbUWw3YmfdxOrFNM5qG
-         57gZF+/cajeH9YF4Mi9Svxztjgd9j9Du6sMJ+lMnS6CtdRyennjQXVS2UV/2v8anlzQE
-         rgJjexXnIewRHQs0s4akShqXawNn18f8j88EyJjYFbEkMvemOKthl9OkrkZPdJSZBron
-         5UMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=jo+R1TTGcJsYMxa30YVdwmew5sMvUZiUlEnGrV31yCE=;
-        b=Ik5/QJsCUfXX7dv+SCwBRMeDxVMYeNmpTqr0Q83NVnIuJl5aGzmq29oh6VHSNTziCa
-         OCujnUREBF7OF/5L9pmMFziBxsTCN3VqOZb7jr0RtiXj7k0YW2K75gZKOtg6RwWkJUND
-         jkSFQYhCTAlwuPdFtzr8+aegm1p9BGiQC9XAR8uAT5w2u2optCA0sZHwuLb8D2Hx5pTk
-         GGtzwd6jGNUEEc84saOu/+GjqPF99HUZLR+E9fU3eWFxcqlT1hOSWOxDPdS30kXcW6t7
-         pRCr+PcLQF8EHxsYhDv5y2gEPH1EYLVfM5B/Gvpw0Yu72uNgL3u0ahtdh4ElPf4OiMSJ
-         Tw9g==
-X-Gm-Message-State: APjAAAWnKkypO8XKpdPDztTvAki1OSSTUuP4Sr6/YebIjzbn/89iCEte
-        ssG9TslDioNsP4QJb7jXa0tMkDl0z/uVaFwKNF9y5A==
-X-Google-Smtp-Source: APXvYqxZUykIjq2r+Uz2bfp+KNP93UjcNLW94m1QYYV29xTP7mlTFZYzPUAyNYsD8Ar+PLZ+ox+HvrDJUyLLy0IthQg=
-X-Received: by 2002:a2e:854c:: with SMTP id u12mr1893548ljj.135.1576678948187;
- Wed, 18 Dec 2019 06:22:28 -0800 (PST)
+        Wed, 18 Dec 2019 09:23:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576679010;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=F8DAOnka08/eWgaxUayF0MAJKUEDXSpMRv4M3rbs3l4=;
+        b=bLfkBhvMsuS8sApzu+Uq6c4Fc5fTkD6blD4nYKcSyK0x0yjT0gZabv9mG3rAUOAmgUnpMo
+        Uc0kQ8IwjehoTEgpNvoM31VlbKHIyZuXhpTx9FFUSHlDS+PzN85ZFXOajWpZ7gNJZcrnh6
+        P5r7bS//q26ZyuCoM6vRKkIvFReeOC8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-261-8mOqFvCoPRulkvAwBskqVg-1; Wed, 18 Dec 2019 09:23:28 -0500
+X-MC-Unique: 8mOqFvCoPRulkvAwBskqVg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9E34B102312A;
+        Wed, 18 Dec 2019 14:23:26 +0000 (UTC)
+Received: from krava (unknown [10.43.17.106])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0833F6888E;
+        Wed, 18 Dec 2019 14:23:23 +0000 (UTC)
+Date:   Wed, 18 Dec 2019 15:23:21 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 07/12] perf hists browser: Allow passing an initial hotkey
+Message-ID: <20191218142321.GB15571@krava>
+References: <20191217144828.2460-1-acme@kernel.org>
+ <20191217144828.2460-8-acme@kernel.org>
+ <20191218080818.GD19062@krava>
+ <20191218140831.GC13395@kernel.org>
 MIME-Version: 1.0
-References: <20191217200721.741054904@linuxfoundation.org>
-In-Reply-To: <20191217200721.741054904@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 18 Dec 2019 19:52:16 +0530
-Message-ID: <CA+G9fYur78nMLo8=PkcTJ5LP+UY54RH9cTDmk9m2RR0h+4Mqug@mail.gmail.com>
-Subject: Re: [PATCH 5.4 00/37] 5.4.5-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191218140831.GC13395@kernel.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Dec 2019 at 01:40, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.4.5 release.
-> There are 37 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 19 Dec 2019 20:06:21 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.4.5-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Wed, Dec 18, 2019 at 11:08:31AM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Wed, Dec 18, 2019 at 09:08:18AM +0100, Jiri Olsa escreveu:
+> > On Tue, Dec 17, 2019 at 11:48:23AM -0300, Arnaldo Carvalho de Melo wrote:
+> > 
+> > SNIP
+> > 
+> > > diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+> > > index 6dfdd8d5a743..3b7af5a8d101 100644
+> > > --- a/tools/perf/ui/browsers/hists.c
+> > > +++ b/tools/perf/ui/browsers/hists.c
+> > > @@ -673,9 +673,8 @@ static int hist_browser__title(struct hist_browser *browser, char *bf, size_t si
+> > >  }
+> > >  
+> > >  int hist_browser__run(struct hist_browser *browser, const char *help,
+> > > -		      bool warn_lost_event)
+> > > +		      bool warn_lost_event, int key)
+> > >  {
+> > > -	int key;
+> > >  	char title[160];
+> > >  	struct hist_browser_timer *hbt = browser->hbt;
+> > >  	int delay_secs = hbt ? hbt->refresh : 0;
+> > > @@ -688,9 +687,12 @@ int hist_browser__run(struct hist_browser *browser, const char *help,
+> > >  	if (ui_browser__show(&browser->b, title, "%s", help) < 0)
+> > >  		return -1;
+> > >  
+> > > +	if (key)
+> > > +		goto do_hotkey;
+> > > +
+> > >  	while (1) {
+> > >  		key = ui_browser__run(&browser->b, delay_secs);
+> > > -
+> > > +do_hotkey:
+> > 
+> > or we could switch the 'swtich' and ui_browser__run, and get rid of the goto, like:
+> > 
+> > 	while (1) {
+> >   		switch (key) {
+> > 		...
+> > 		}
+> > 
+> > 		key = ui_browser__run(&browser->b, delay_secs);
+> > 	}
+> 
+> I think those are equivalent and having the test like I did is more
+> clear, i.e. "has this key been provided" instead of going to the switch
+> just to hit the default case for the zero in key and call
+> ui_browser__run().
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+sure, I just don't like goto other than for error handling,
+looks too hacky to me ;-) but of course it's your call
 
-Summary
-------------------------------------------------------------------------
+jirka
 
-kernel: 5.4.5-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.4.y
-git commit: 280ed91cba5bf8a58ecacd658d388388bf630512
-git describe: v5.4.3-219-g280ed91cba5b
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
-ld/v5.4.3-219-g280ed91cba5b
-
-
-No regressions (compared to build v5.4.3)
-
-No fixes (compared to build v5.4.3)
-
-Ran 21153 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* libhugetlbfs
-* ltp-mm-tests
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* ssuite
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
