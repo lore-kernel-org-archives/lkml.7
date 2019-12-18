@@ -2,106 +2,113 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A725C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 01:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA224C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 01:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F99D2176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 01:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5F672146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 01:21:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fJCOQs/G"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ewGSI+bn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbfLRBTP (ORCPT
+        id S1726556AbfLRBV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 20:19:15 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:36398 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbfLRBTP (ORCPT
+        Tue, 17 Dec 2019 20:21:57 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:42110 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726072AbfLRBV5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 20:19:15 -0500
-Received: by mail-pj1-f66.google.com with SMTP id n59so78299pjb.1;
-        Tue, 17 Dec 2019 17:19:14 -0800 (PST)
+        Tue, 17 Dec 2019 20:21:57 -0500
+Received: by mail-oi1-f196.google.com with SMTP id j22so236638oij.9;
+        Tue, 17 Dec 2019 17:21:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=WRq9F02fSNyPBB5Kef/fJ+j1yBJctEoYq/MCWx6Ov/Y=;
-        b=fJCOQs/G2GwXu9Tw+ZPeO/cO19LFkQnaJmRBLvLvqkjS+Z9RnrD2AJVp+9Ybfc1Tqy
-         kq+2uvn3OmIbRSREWEiTm4iM0JjrALFy2ifJe5HwMoxuZamtNZYxsnmzIvCQSLrDkplW
-         8WyIvF+WGcQkwPIKERUZ7ifgz57tTDMCVfhMA4kw0hg1HiFP3Haf/6PjnL2NDyOMFWz0
-         WhY9DrgJzs2u9BJz3ShVSLCpSM6zDQf6qUCBBFp3SPn9gZjGxdx1l6UR8V4xv+1zVQAj
-         vqo+2+w9WqS2342VjOvnFBsKdz/z0juflgoC95kNuMQcQqCTcmC1VWrONbP0vKu5G7U8
-         X65A==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZcjIbQOSWhikOPzlHM6ZEWQw/5oRTb6+fvho9ILg6nc=;
+        b=ewGSI+bn9pFKrQB/G1ML4P5eLVhHbyWN3IAJc1iIjVNte/l8Xk634f6ODBfxTQJWDg
+         /dpQLpULVFho3Q5K7J66qDov9VlHj1zbn/Uv8oH6gGwYXP0ziIL/WfCIuMKCk0hQnuFG
+         Gty1scprHPFs+kP7bZ9iNvszjusD9ZrzF562jC/JaGXQi1EZERcIvOHCyCkr9uaQuhmu
+         4dCW0zwNl7UViiHfNuXaT4ozLzMTEBZ06EISOYbWfGaCeaVrnKMTQ+FbP8iiFLeJlz51
+         dwWrAUqbqtI9tSsa6f2Q8WkRyfDj4yZx+ytkAHwOoc3X5csrBLpB0DZZel/z50580oWj
+         g6ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=WRq9F02fSNyPBB5Kef/fJ+j1yBJctEoYq/MCWx6Ov/Y=;
-        b=UGX7xX/mORGtFSFb/sZeyPhY6EbDW0fwBumbYUc63zTCdynhBi/Ktg2o9X0osUevPY
-         BT6nz1Aemc1VnOl2TNQe2WRzbwNiPYcgnVjdQAsHKHbjzTYk2LnJAXdNgGt51otyD2Ja
-         e7eM/hqDNg0ElQqkGVNEq/W7nqx1vZZgOSsTyZtrJmEF5qtZ9nQ97auPOi+XvHvCPLez
-         byFIBVOkp28/Z3D6Xrar7TWXTrl/Rct8T2BYqN1hFE8v2agOwt+5QtbdEPGM0rZFPLDy
-         Z3rmA9zhUY9VXPjsFhV7LE4rKKeWjyq0ElJsfcI6Vggv5S+dOTifGJPVgYKPhkpQUmnt
-         QMpg==
-X-Gm-Message-State: APjAAAXIh1DSdH/DmEGRwqJ27+nk6x8sl0qY1AkXG6+MROaggdVQALWD
-        kmnb/lrlIXPCzSc3+uBkwkY90+NB
-X-Google-Smtp-Source: APXvYqyuU+DpeC/NKkkzJGfNjsLzfVmRLBror3wABxQqoaMBHiaAt5WNoCqjaOSxZ9Ylrkz+e9Apkg==
-X-Received: by 2002:a17:902:48:: with SMTP id 66mr520374pla.182.1576631954521;
-        Tue, 17 Dec 2019 17:19:14 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id x18sm324398pfr.26.2019.12.17.17.19.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 17 Dec 2019 17:19:13 -0800 (PST)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>,
-        Henry Lin <henryl@nvidia.com>, stable@vger.kernel.org
-Subject: [PATCH] usb: xhci: Fix build warning seen with CONFIG_PM=n
-Date:   Tue, 17 Dec 2019 17:19:11 -0800
-Message-Id: <20191218011911.6907-1-linux@roeck-us.net>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZcjIbQOSWhikOPzlHM6ZEWQw/5oRTb6+fvho9ILg6nc=;
+        b=Cr+iVZqTcBbtt0SM9oocmHXiAXQTE+k+2NkYbSUDruS3zoybHsLZCbxcLNWxsjAY3p
+         zbYz0xKFZ2WJzZREE5O6vLQxwVc5rYPrDS6nqvlWXHI/pwqsCPoZB12PzdfGDNaOUoZ6
+         V9VVJrDY3WWqNYfjnG44+EELz6VFGHZJbPRyw8QGew2EjZg8GIpQEgGZo93BJ0MvlBOb
+         k2urZ0JxQyG/WBxNo26tZQqRrVHpEXyX96E04clxkWKV2fODAyktl2cYPLzxMwQ3rGOg
+         a0Em2bjSx7iBwD3KcGaeFMt4gzBkeEYA41nqHjNHTgbHLkyr/70Lg8wysdjE6OSoJ5X8
+         UU7A==
+X-Gm-Message-State: APjAAAWlOksQLg2B5pQevFTBFBuQXAL/k6B0OL0muUj7gDw5L3hwb5ag
+        uglXr72YfwKPFC5SI6qnKHY=
+X-Google-Smtp-Source: APXvYqxKuwWlc4EgT7EUo1OnCAvhDkLBWgjLMkVF0EAZhWLUsyOxyHlwf/0zGrCbLyZQeythINshIA==
+X-Received: by 2002:aca:c415:: with SMTP id u21mr34515oif.49.1576632116439;
+        Tue, 17 Dec 2019 17:21:56 -0800 (PST)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id p184sm240395oic.40.2019.12.17.17.21.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 17:21:55 -0800 (PST)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] NFC: pn544: Adjust indentation in pn544_hci_check_presence
+Date:   Tue, 17 Dec 2019 18:21:52 -0700
+Message-Id: <20191218012152.15570-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following build warning is seen if CONFIG_PM is disabled.
+Clang warns
 
-drivers/usb/host/xhci-pci.c:498:13: warning:
-	unused function 'xhci_pci_shutdown'
+../drivers/nfc/pn544/pn544.c:696:4: warning: misleading indentation;
+statement is not part of the previous 'if' [-Wmisleading-indentation]
+                 return nfc_hci_send_cmd(hdev, NFC_HCI_RF_READER_A_GATE,
+                 ^
+../drivers/nfc/pn544/pn544.c:692:3: note: previous statement is here
+                if (target->nfcid1_len != 4 && target->nfcid1_len != 7 &&
+                ^
+1 warning generated.
 
-Fixes: f2c710f7dca8 ("usb: xhci: only set D3hot for pci device")
-Cc: Henry Lin <henryl@nvidia.com>
-Cc: stable@vger.kernel.org	# all stable releases with 2f23dc86c3f8
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+This warning occurs because there is a space after the tab on this line.
+Remove it so that the indentation is consistent with the Linux kernel
+coding style and clang no longer warns.
+
+Fixes: da052850b911 ("NFC: Add pn544 presence check for different targets")
+Link: https://github.com/ClangBuiltLinux/linux/issues/814
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 ---
- drivers/usb/host/xhci-pci.c | 2 +-
+ drivers/nfc/pn544/pn544.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-index 2907fe4d78dd..4917c5b033fa 100644
---- a/drivers/usb/host/xhci-pci.c
-+++ b/drivers/usb/host/xhci-pci.c
-@@ -519,7 +519,6 @@ static int xhci_pci_resume(struct usb_hcd *hcd, bool hibernated)
- 	retval = xhci_resume(xhci, hibernated);
- 	return retval;
- }
--#endif /* CONFIG_PM */
+diff --git a/drivers/nfc/pn544/pn544.c b/drivers/nfc/pn544/pn544.c
+index cda996f6954e..2b83156efe3f 100644
+--- a/drivers/nfc/pn544/pn544.c
++++ b/drivers/nfc/pn544/pn544.c
+@@ -693,7 +693,7 @@ static int pn544_hci_check_presence(struct nfc_hci_dev *hdev,
+ 		    target->nfcid1_len != 10)
+ 			return -EOPNOTSUPP;
  
- static void xhci_pci_shutdown(struct usb_hcd *hcd)
- {
-@@ -532,6 +531,7 @@ static void xhci_pci_shutdown(struct usb_hcd *hcd)
- 	if (xhci->quirks & XHCI_SPURIOUS_WAKEUP)
- 		pci_set_power_state(pdev, PCI_D3hot);
- }
-+#endif /* CONFIG_PM */
- 
- /*-------------------------------------------------------------------------*/
- 
+-		 return nfc_hci_send_cmd(hdev, NFC_HCI_RF_READER_A_GATE,
++		return nfc_hci_send_cmd(hdev, NFC_HCI_RF_READER_A_GATE,
+ 				     PN544_RF_READER_CMD_ACTIVATE_NEXT,
+ 				     target->nfcid1, target->nfcid1_len, NULL);
+ 	} else if (target->supported_protocols & (NFC_PROTO_JEWEL_MASK |
 -- 
-2.17.1
+2.24.1
 
