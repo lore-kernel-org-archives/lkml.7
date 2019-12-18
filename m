@@ -2,100 +2,100 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BE3C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E919C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C40821582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:24:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 556E021582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:25:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="acpLNKNb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C1lvp6e1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbfLRMYI (ORCPT
+        id S1726902AbfLRMZo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 07:24:08 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:35676 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725930AbfLRMYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 07:24:08 -0500
-Received: from zn.tnic (p200300EC2F0B8B004C237F05E7CC242C.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:8b00:4c23:7f05:e7cc:242c])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8ABC21EC09F1;
-        Wed, 18 Dec 2019 13:24:06 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1576671846;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=UiM+8XumZBdoz0qNl0ALJoBvPFnS5D4pGA0A+utY/Uw=;
-        b=acpLNKNbaipKSO7XhMBc5JuHyj6nHt8dOKUivxSqkGVwoBL+kvH0mE3tlN6Sv0xJbtRf22
-        gyf8pqnV+xTSS1e94qq2I/JlgDe1QOPkg+E5dpr0imr7oeHJ1YvD82t1zopFMRKTSid6bj
-        W8XuEzLC2Lnd1S/IFGUdRzMY1cW8bPs=
-Date:   Wed, 18 Dec 2019 13:24:00 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH] KVM: x86: fix out-of-bounds write in
- KVM_GET_EMULATED_CPUID (CVE-2019-19332)
-Message-ID: <20191218122400.GD24886@zn.tnic>
-References: <1575458412-10241-1-git-send-email-pbonzini@redhat.com>
+        Wed, 18 Dec 2019 07:25:44 -0500
+Received: from mail-pj1-f52.google.com ([209.85.216.52]:34241 "EHLO
+        mail-pj1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbfLRMZn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 07:25:43 -0500
+Received: by mail-pj1-f52.google.com with SMTP id s94so1205804pjc.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 04:25:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:from:subject:cc:message-id:date:user-agent:mime-version
+         :content-transfer-encoding:content-language;
+        bh=5X2o0mtDaERgT2mi7QtDjqxir4Hltz6BheIiDggcalE=;
+        b=C1lvp6e1959g84uBTVL9ZEeOP3twcpBoXR1aBegCslQX3dQTehr1X8RgrlPR6fqSI+
+         gSJRj+dwhgzYLtJvWQwZxBPxyhoPq4K6yXQ6hxr/i7MgLw2bWv7Lj3K7hZUfh2Ce9xZF
+         sHveRKWXluiVMfnQr1pThWf2cssgtcWAMF3eIcTirAOxRmONLiI+xKsGiPXbVQdz4KfB
+         9jtzDRdtjiOSzHrMsDvI82k28SgmtfZhAdNgIfnop7jD5BsvhpxUyW70o9qeC6EtGqmQ
+         Z/Hkj0twHrFPcwNb37HZtQIEVhvcTx1yFGQgFtSdCLvhzTvbdglPoFUMroEheCr7nM12
+         6VAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:from:subject:cc:message-id:date:user-agent
+         :mime-version:content-transfer-encoding:content-language;
+        bh=5X2o0mtDaERgT2mi7QtDjqxir4Hltz6BheIiDggcalE=;
+        b=UpQlHlUT0aRQMu7O8P0diGnC6JeaxgBZJZV+m+/A3mUDfuwzj9CQTobmBihkilH4WB
+         UGOkZbhMnbpbFrHxd8WBgHMoWsBJKIyrZHnizsxJoRrjQ5Oois7cMBjMRrWeZkUPHiRD
+         BkBZvx8N/NV8WTNvgyvpgBb0e4E8px9YIo+93qAaiRIAG3zzP1hJ1/D94FXGglidj/Q9
+         iAAcxR6mg89x3yNsJz3lQB78PBvgsUmcLfEkwyQ8OJSBxzQ321nWiuj1SR7IKt1d8YKr
+         DWXArP+GN4B/E0lN+NUEzPlFCTXBffboct3hCGKp20Khpw3iNdjQU0+B2gblDWAvs2ON
+         gf0Q==
+X-Gm-Message-State: APjAAAUcC7RUdSzirNNHv8nsTC3dYT3AB74rIbwNxuKfal4/wS9JnCqu
+        VqjlfTJoaFx4B4FF3sxJtumjm8+0LWEgNg==
+X-Google-Smtp-Source: APXvYqwbC1IbmRPDA7MJjUt4vm4EWmMotYWecwAI3UiaYVbgeJ2IHzaMRJUsXUkN30ZyxejyzmfAlg==
+X-Received: by 2002:a17:902:aa96:: with SMTP id d22mr2499281plr.218.1576671942944;
+        Wed, 18 Dec 2019 04:25:42 -0800 (PST)
+Received: from ?IPv6:2402:f000:1:1501:200:5efe:166.111.139.103? ([2402:f000:1:1501:200:5efe:a66f:8b67])
+        by smtp.gmail.com with ESMTPSA id g18sm3115695pfo.123.2019.12.18.04.25.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 18 Dec 2019 04:25:42 -0800 (PST)
+To:     perex@perex.cz, tiwai@suse.com, allison@lohutok.net,
+        rfontana@redhat.com, tglx@linutronix.de
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [BUG] ALSA: ice1712: a possible sleep-in-atomic-context bug in
+ snd_vt1724_set_pro_rate()
+Cc:     alsa-devel@alsa-project.org, LKML <linux-kernel@vger.kernel.org>
+Message-ID: <5d43135e-73b9-a46a-2155-9e91d0dcdf83@gmail.com>
+Date:   Wed, 18 Dec 2019 20:25:42 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1575458412-10241-1-git-send-email-pbonzini@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 12:20:12PM +0100, Paolo Bonzini wrote:
-> The bounds check was present in KVM_GET_SUPPORTED_CPUID but not
-> KVM_GET_EMULATED_CPUID.
-> 
-> Reported-by: syzbot+e3f4897236c4eeb8af4f@syzkaller.appspotmail.com
-> Fixes: 84cffe499b94 ("kvm: Emulate MOVBE", 2013-10-29)
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->  arch/x86/kvm/cpuid.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index 813a4d2e5c0c..cfafa320a8cf 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -504,7 +504,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
->  
->  	r = -E2BIG;
->  
-> -	if (*nent >= maxnent)
-> +	if (WARN_ON(*nent >= maxnent))
->  		goto out;
->  
->  	do_host_cpuid(entry, function, 0);
-> @@ -815,6 +815,9 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
->  static int do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 func,
->  			 int *nent, int maxnent, unsigned int type)
->  {
-> +	if (*nent >= maxnent)
-> +		return -E2BIG;
-> +
->  	if (type == KVM_GET_EMULATED_CPUID)
->  		return __do_cpuid_func_emulated(entry, func, nent, maxnent);
->  
-> -- 
+The driver may sleep while holding a read lock.
+The function call path (from bottom to top) in Linux 4.19 is:
 
-Whoops. ;-\
+sound/pci/ice1712/quartet.c, 414:
+     mutex_lock in reg_write
+sound/pci/ice1712/quartet.c, 485:
+     reg_write in set_cpld
+sound/pci/ice1712/quartet.c, 876:
+     set_cpld in qtet_set_rate
+sound/pci/ice1712/ice1724.c, 687:
+     (FUNC_PTR) qtet_set_rate in snd_vt1724_set_pro_rate
+sound/pci/ice1712/ice1724.c, 668:
+     _raw_spin_lock_irqsave in snd_vt1724_set_pro_rate
 
-Thanks for the fix Paolo!
+(FUNC_PTR) means a function pointer is called.
+mutex_lock() can sleep at runtime.
 
--- 
-Regards/Gruss,
-    Boris.
+I am not sure how to properly fix this possible bug, so I only report it.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+This bug is found by a static analysis tool STCheck written by myself.
+
+
+Best wishes,
+Jia-Ju Bai
