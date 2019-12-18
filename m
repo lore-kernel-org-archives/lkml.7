@@ -2,125 +2,70 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3BB4C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A779C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85C6C218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:12:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sQqbD3Mz"
+	by mail.kernel.org (Postfix) with ESMTP id BFBF1218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:15:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727535AbfLRTMf (ORCPT
+        id S1727451AbfLRTPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 14:12:35 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:44020 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727031AbfLRTMf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 14:12:35 -0500
-Received: by mail-lj1-f195.google.com with SMTP id a13so3370282ljm.10;
-        Wed, 18 Dec 2019 11:12:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=imHiZexO5gB1oYoKS2la2qSlq4WlB0r7VycYXAA4s/o=;
-        b=sQqbD3Mz+RZ6Z1MUd7DPSgWvdfSGAk51I/o6rzFjc+Xv632r5ibELypjtoSqTdVWDh
-         GEJWdHR5XWNPbx/iHVRGBNblyhXADWI4OKYdkHjfrLPfC4+eSY1S+8QYBKq3i3Mw+s4j
-         iLtrdc+r0n0ypO33q/4d4pOd0hFvhsU8VaqDMmawJ9zf0U5byvU9V7AfDwf9zbwTqvWl
-         lSQUzYAbksIdxR3UZGaP4Usqs0CL3c0bf5L215ke9+1vf2vtSTWyhwAf/8ud1ScLNJLc
-         XquOmAtVL4f+SB9MKreLyJMNWEij6T9Ucuvfz6K2YXwC5l/yHxh0gIp28NoS/krB+O+7
-         q36Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=imHiZexO5gB1oYoKS2la2qSlq4WlB0r7VycYXAA4s/o=;
-        b=HS1H6FKrqgyG/6w8h3eVkNlXsS1zBZ+SWa7sjZlKJNZ7lXZPkPtQAZcwioA2+LQeQ0
-         QDOFJvgkDUsRBQthDsKWLF0P1pD3G07QFfyO3P71GzdbCCDA4Xel7AZs7plMorgKJta+
-         kiI+U7n6jTej+f1j35EBgiHXU4mxYBG8xVvuj3iihCjscxQayTG1JaBbHhMQkawcX3cK
-         ERWyHGTM3ZdrEv+O+4oGewGyE4ewsLjemrTnvAyQB6SXk413fEZxmDvXjSJ+dubrK09+
-         k15wqcXTBdM54VvQxaqR1VZephCaBkpUXhcsBwrzmRBnG1N/TuVEUIEcys06HBfeLZ0R
-         04sA==
-X-Gm-Message-State: APjAAAW6KwQDIG29o3/ZIsEUtydtDaWDqp4X03VQj5IpHPqs1GOzzGsQ
-        MbAqcPwcR2GuyUhhiGTBpcldt7wVboI0a4bS0C8=
-X-Google-Smtp-Source: APXvYqxn5bDtvU5FDUKdrFEaDxvDh2DKt212ij5keCSeXMtaOLOnCu2OROZYjJXHxP7p2tHwqXaTHgSEk0Ip9J22DII=
-X-Received: by 2002:a2e:9ad1:: with SMTP id p17mr3084567ljj.26.1576696352864;
- Wed, 18 Dec 2019 11:12:32 -0800 (PST)
+        Wed, 18 Dec 2019 14:15:07 -0500
+Received: from mx2.suse.de ([195.135.220.15]:33030 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727145AbfLRTPG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 14:15:06 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id C5471AC3E;
+        Wed, 18 Dec 2019 19:15:04 +0000 (UTC)
+Date:   Wed, 18 Dec 2019 11:08:33 -0800
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     David Howells <dhowells@redhat.com>, linux-afs@lists.infradead.org,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] rxrpc: struct mutex cannot be used for
+ rxrpc_call::user_mutex
+Message-ID: <20191218190833.ufpxjrvin5jvp3m5@linux-p48b>
+References: <157659672074.19580.11641288666811539040.stgit@warthog.procyon.org.uk>
+ <20191218135047.GS2844@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20191213203512.8250-1-makiftasova@gmail.com>
-In-Reply-To: <20191213203512.8250-1-makiftasova@gmail.com>
-From:   Roman Gilg <subdiff@gmail.com>
-Date:   Wed, 18 Dec 2019 20:12:37 +0100
-Message-ID: <CAJcyoyusgtw0++KsEHK-t=EFGx2v9GKv7+BSViUCaB3nyDr2Jw@mail.gmail.com>
-Subject: Re: [PATCH] Revert "iwlwifi: mvm: fix scan config command size"
-To:     Mehmet Akif Tasova <makiftasova@gmail.com>
-Cc:     Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Shahar S Matityahu <shahar.s.matityahu@intel.com>,
-        Tova Mussai <tova.mussai@intel.com>,
-        Ayala Beker <ayala.beker@intel.com>,
-        Sara Sharon <sara.sharon@intel.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20191218135047.GS2844@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 9:36 PM Mehmet Akif Tasova
-<makiftasova@gmail.com> wrote:
->
-> Since Linux 5.4.1 released, iwlwifi could not initialize Intel(R) Dual Band
-> Wireless AC 9462 firmware, failing with following error in dmesg:
->
-> iwlwifi 0000:00:14.3: FW error in SYNC CMD SCAN_CFG_CMD
->
-> whole dmesg output of error can be found at:
-> https://gist.github.com/makiftasova/354e46439338f4ab3fba0b77ad5c19ec
->
-> also bug report from ArchLinux bug tracker (contains more info):
-> https://bugs.archlinux.org/task/64703
+On Wed, 18 Dec 2019, Peter Zijlstra wrote:
 
-Since this bug report is about the Dell XPS 13 2-in1: I tested your
-revert with this device, but the issue persists at least on this
-device. So these might be two different issues, one for your device
-and another one for the XPS.
+>On Tue, Dec 17, 2019 at 03:32:00PM +0000, David Howells wrote:
+>> Standard kernel mutexes cannot be used in any way from interrupt or softirq
+>> context, so the user_mutex which manages access to a call cannot be a mutex
+>> since on a new call the mutex must start off locked and be unlocked within
+>> the softirq handler to prevent userspace interfering with a call we're
+>> setting up.
+>>
+>> Commit a0855d24fc22d49cdc25664fb224caee16998683 ("locking/mutex: Complain
+>> upon mutex API misuse in IRQ contexts") causes big warnings to be splashed
+>> in dmesg for each a new call that comes in from the server.
+>
+>FYI that patch has currently been reverted.
+>
+>commit c571b72e2b845ca0519670cb7c4b5fe5f56498a5 (tip/locking/urgent, tip/locking-urgent-for-linus)
 
-> Reverting commit 06eb547c4ae4 ("iwlwifi: mvm: fix scan config command
-> size") seems to fix this issue  until proper solution is found.
->
-> This reverts commit 06eb547c4ae4382e70d556ba213d13c95ca1801b.
->
-> Signed-off-by: Mehmet Akif Tasova <makiftasova@gmail.com>
-> ---
->  drivers/net/wireless/intel/iwlwifi/mvm/scan.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/scan.c b/drivers/net/wireless/intel/iwlwifi/mvm/scan.c
-> index a046ac9fa852..a5af8f4128b1 100644
-> --- a/drivers/net/wireless/intel/iwlwifi/mvm/scan.c
-> +++ b/drivers/net/wireless/intel/iwlwifi/mvm/scan.c
-> @@ -1213,7 +1213,7 @@ static int iwl_mvm_legacy_config_scan(struct iwl_mvm *mvm)
->                 cmd_size = sizeof(struct iwl_scan_config_v2);
->         else
->                 cmd_size = sizeof(struct iwl_scan_config_v1);
-> -       cmd_size += num_channels;
-> +       cmd_size += mvm->fw->ucode_capa.n_scan_channels;
->
->         cfg = kzalloc(cmd_size, GFP_KERNEL);
->         if (!cfg)
-> --
-> 2.24.1
->
+Will we ever want to re-add this warning (along with writer rwsems) at some point?
+
+It seems that having it actually prompts things getting fixed, as opposed to
+just sitting there forever borken (at least in -rt).
+
+Thanks,
+Davidlohr
