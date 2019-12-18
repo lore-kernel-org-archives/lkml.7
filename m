@@ -2,164 +2,325 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B7AC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 05:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83318C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 05:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B01320733
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 05:09:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50B27206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 05:15:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pOJCEraL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L4ZhOowT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726188AbfLRFJ0 (ORCPT
+        id S1726454AbfLRFPv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 00:09:26 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37194 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725797AbfLRFJ0 (ORCPT
+        Wed, 18 Dec 2019 00:15:51 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:45262 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725797AbfLRFPu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 00:09:26 -0500
-Received: by mail-wr1-f66.google.com with SMTP id w15so815628wru.4
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 21:09:24 -0800 (PST)
+        Wed, 18 Dec 2019 00:15:50 -0500
+Received: by mail-lf1-f65.google.com with SMTP id 203so675165lfa.12;
+        Tue, 17 Dec 2019 21:15:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DMFLnH21NJeulxobc8jd+JOZHWZhD/TqTEQSCvvfO5g=;
-        b=pOJCEraLG6sj/m+Q+Cg1f/ZNeRPDCD9xsVbILF16rOjhjZtRMD/NLReS1hljov2VBn
-         QDuy6ImonyoJVqkDUSkvlZkd6HzzSu5aAKAhBEfTpkKqdTaBgGwubR695w8qHW4BA4OQ
-         htIk7KvDBfgJEd8c6Mj5M4bZ/zOjuHYAIJX9vpOCHrtpvQCwRE+s/5bdlDx6SJCNh/MK
-         3nSXWVjnC4fusP8UGiwgDvZjrBcfCxXL3w3Pf8htbgz0mI+IlhQ5eyE0zTOijPT5p+ld
-         UvsSE4uWeOzq4NEMF5sZv6QNE0A4DbfF9HIYVTJJ9NJGDUrEb2nAwJb3vJBS1I4weZMs
-         HAsA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Muu5q8Fps2+SKFxVklBGeC5/MVx/Fov2oo+BdZqlLjg=;
+        b=L4ZhOowTQpZdtmeCPOjp0Sl/kuNotYeKtNtPZQUmNBaWSaSko1SGQVK9McyzRx5jpK
+         EVuPOvuhHw/Qayem+7mKKWll22hEyM3nN5rab4WIL+3BVVl/0950htgVwcdQz0uNRAV0
+         pZe7wx6lGhavyjEksHHn3WG0bNCoe9jQke4kZAySDpsbaFgi62fIrAsDA/KXwk06wENv
+         CXlYwGs99ZF1bgVcW6JKPnFbgflY30/tHbmMWJhLsYSiHq84zRx255XqUHY+CLu1NCRF
+         qG3emucrvNEc5hCBhedF6IK3qb8QTiwyCclYfu7I8846utKRwvBQOXckxRtdq1OJYfee
+         tYaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DMFLnH21NJeulxobc8jd+JOZHWZhD/TqTEQSCvvfO5g=;
-        b=DCr5o6nu9dYA7alFA+MuBv7A+gTf9T81GPcb+Wk14Sc8UZHUcr71TMm3NOJN3Po7Rb
-         nXys1+QT8P8tLO0ONGVXubxGQZg8eaKYIFjSgK7Tfi5x1ZWJ3Kf5HJsb+tofnrAVPocW
-         0hOMYqyLJ6cWgaCBm9lJPK6OOq265CDdMoSfbbwnl4c032Dlpy25icRFMxriBh+NyzxG
-         p6Af8xGyXviIaNkD6RLqHqvHoSzxrk341enavL0dV0BXW2//GkhtXk346Cv/vHZpj4Fd
-         C1mx0tXAQaBH3sKnGCWo0KvEi7wWhVDpcBlpa/6ubdHD3A8+vqVVLQh/Yh/mQha/VYU9
-         SP4w==
-X-Gm-Message-State: APjAAAUCV2Iocd5nO6xvikfKOuCTZc13Opta7s40kZX/bbiqZKc1QnpM
-        ZkJ0730wE0BzlsOj/NNmtBc5tvrQrmjDR5lT3Hs=
-X-Google-Smtp-Source: APXvYqymmBZJ8ipE4muhBx7w/9ro17xjwTEBDtEd8pQpMmt0+M/PkTNH1ms/vTESSvgKX1xaz5BZOBdef15tASHOn9o=
-X-Received: by 2002:adf:e74a:: with SMTP id c10mr301019wrn.386.1576645763875;
- Tue, 17 Dec 2019 21:09:23 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Muu5q8Fps2+SKFxVklBGeC5/MVx/Fov2oo+BdZqlLjg=;
+        b=gNs0iKwPXc1v6CTCY6FQBlTjvz1ObQD8utSvuzHV9wWH5B1skgeaoih2rQA8k0BPdd
+         edeHWk7YJ31cKdX40fd8HcLCwk6UxIPQVgkG4Wvy7tt0jHpC9hvRmCDRzF977tvsCLr3
+         AhNRfWqtE8y4Pv2FjiWlPiwuV1oPGI1NWkfHXJ53ZXLYxAk9dUCTiMmS5yQNE//dyEz+
+         7CWqJLUefJ7R5BkKsS8hd8sTHjeh1eVbJHSsT3124ZhObkl9qe/bMjg9iF5VnQ4XEXKk
+         yapeqYNkpotX71/IbayW2sNlkZe2D1eiiKRBe2TF6pQslYAh7QMM717C6vZFcrrtatsr
+         29sw==
+X-Gm-Message-State: APjAAAXNWhZa+YXgJOqjCfMzJE81046zjK59Qk54YYqn/n+3HcPOPvMh
+        yWQf9Y3ZDvlYloUTTUDhRQwHh58l
+X-Google-Smtp-Source: APXvYqxUpZwUFVyWk7q3cYBXx7sJpOFPMix6TwEawFTqUljubYnlDHGvWcpU69oxSeKohmNsmtX5Jw==
+X-Received: by 2002:a19:22cc:: with SMTP id i195mr436477lfi.148.1576645696280;
+        Tue, 17 Dec 2019 21:08:16 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id p15sm385752lfo.88.2019.12.17.21.08.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Dec 2019 21:08:15 -0800 (PST)
+Subject: Re: [PATCH v4 08/19] soc: tegra: Add support for 32KHz blink clock
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
+        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, spujar@nvidia.com,
+        josephl@nvidia.com, daniel.lezcano@linaro.org,
+        mmaddireddy@nvidia.com, markz@nvidia.com,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1576613046-17159-1-git-send-email-skomatineni@nvidia.com>
+ <1576613046-17159-9-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <b3f79e55-2104-c571-5d2a-27f4d549a404@gmail.com>
+Date:   Wed, 18 Dec 2019 08:08:13 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-References: <20191217131530.513096-1-david.abdurachmanov@sifive.com> <CAAhSdy1pz5Zmrdm6hBxugjbBiw3d25XZJ47rpKgVk7fHaoEr6Q@mail.gmail.com>
-In-Reply-To: <CAAhSdy1pz5Zmrdm6hBxugjbBiw3d25XZJ47rpKgVk7fHaoEr6Q@mail.gmail.com>
-From:   David Abdurachmanov <david.abdurachmanov@gmail.com>
-Date:   Wed, 18 Dec 2019 07:08:47 +0200
-Message-ID: <CAEn-LTpvd3=qR8X91JpE6Or3aEH9=F3jz7_N4Y3fA+CgMu+wJg@mail.gmail.com>
-Subject: Re: [PATCH] define vmemmap before pfn_to_page calls
-To:     Anup Patel <anup@brainfault.org>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        David Abdurachmanov <david.abdurachmanov@sifive.com>,
-        Yash Shah <yash.shah@sifive.com>,
-        Alexandre Ghiti <alex@ghiti.fr>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1576613046-17159-9-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 5:46 AM Anup Patel <anup@brainfault.org> wrote:
->
-> On Tue, Dec 17, 2019 at 6:45 PM David Abdurachmanov
-> <david.abdurachmanov@gmail.com> wrote:
-> >
-> > pfn_to_page call depends on `vmemmap` being available before the call.
-> > This caused compilation errors in Fedora/RISCV with 5.5-rc2 and was caused
-> > by NOMMU changes which moved declarations after functions definitions.
-> >
-> > Signed-off-by: David Abdurachmanov <david.abdurachmanov@sifive.com>
-> > Fixes: 6bd33e1ece52 ("riscv: add nommu support")
-> > ---
-> >  arch/riscv/include/asm/pgtable.h | 34 ++++++++++++++++----------------
-> >  1 file changed, 17 insertions(+), 17 deletions(-)
-> >
-> > diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-> > index 7ff0ed4f292e..d8c89e6e6b3d 100644
-> > --- a/arch/riscv/include/asm/pgtable.h
-> > +++ b/arch/riscv/include/asm/pgtable.h
-> > @@ -90,6 +90,23 @@ extern pgd_t swapper_pg_dir[];
-> >  #define __S110 PAGE_SHARED_EXEC
-> >  #define __S111 PAGE_SHARED_EXEC
-> >
-> > +#define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
-> > +#define VMALLOC_END      (PAGE_OFFSET - 1)
-> > +#define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
-> > +
-> > +/*
-> > + * Roughly size the vmemmap space to be large enough to fit enough
-> > + * struct pages to map half the virtual address space. Then
-> > + * position vmemmap directly below the VMALLOC region.
-> > + */
-> > +#define VMEMMAP_SHIFT \
-> > +       (CONFIG_VA_BITS - PAGE_SHIFT - 1 + STRUCT_PAGE_MAX_SHIFT)
-> > +#define VMEMMAP_SIZE   BIT(VMEMMAP_SHIFT)
-> > +#define VMEMMAP_END    (VMALLOC_START - 1)
-> > +#define VMEMMAP_START  (VMALLOC_START - VMEMMAP_SIZE)
-> > +
-> > +#define vmemmap                ((struct page *)VMEMMAP_START)
-> > +
-> >  static inline int pmd_present(pmd_t pmd)
-> >  {
-> >         return (pmd_val(pmd) & (_PAGE_PRESENT | _PAGE_PROT_NONE));
-> > @@ -400,23 +417,6 @@ static inline int ptep_clear_flush_young(struct vm_area_struct *vma,
-> >  #define __pte_to_swp_entry(pte)        ((swp_entry_t) { pte_val(pte) })
-> >  #define __swp_entry_to_pte(x)  ((pte_t) { (x).val })
-> >
-> > -#define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
-> > -#define VMALLOC_END      (PAGE_OFFSET - 1)
-> > -#define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
-> > -
-> > -/*
-> > - * Roughly size the vmemmap space to be large enough to fit enough
-> > - * struct pages to map half the virtual address space. Then
-> > - * position vmemmap directly below the VMALLOC region.
-> > - */
-> > -#define VMEMMAP_SHIFT \
-> > -       (CONFIG_VA_BITS - PAGE_SHIFT - 1 + STRUCT_PAGE_MAX_SHIFT)
-> > -#define VMEMMAP_SIZE   BIT(VMEMMAP_SHIFT)
-> > -#define VMEMMAP_END    (VMALLOC_START - 1)
-> > -#define VMEMMAP_START  (VMALLOC_START - VMEMMAP_SIZE)
-> > -
-> > -#define vmemmap                ((struct page *)VMEMMAP_START)
-> > -
-> >  #define PCI_IO_SIZE      SZ_16M
-> >  #define PCI_IO_END       VMEMMAP_START
-> >  #define PCI_IO_START     (PCI_IO_END - PCI_IO_SIZE)
-> > --
-> > 2.23.0
-> >
->
-> Can you add a comment for "#define vmemmap" about your findings ?
+17.12.2019 23:03, Sowjanya Komatineni пишет:
+> Tegra PMC has blink control to output 32 Khz clock out to Tegra
+> blink pin. Blink pad DPD state and enable controls are part of
+> Tegra PMC register space.
+> 
+> Currently Tegra clock driver registers blink control by passing
+> PMC address and register offset to clk_register_gate which performs
+> direct PMC access during clk_ops and with this when PMC is in secure
+> mode, any access from non-secure world does not go through.
+> 
+> This patch adds blink control registration to the Tegra PMC driver
+> using PMC specific clock gate operations that use tegra_pmc_readl
+> and tegra_pmc_writel to support both secure mode and non-secure
+> mode PMC register access.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/soc/tegra/pmc.c | 107 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 107 insertions(+)
+> 
+> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+> index 6d65194a6e71..19996c21c60d 100644
+> --- a/drivers/soc/tegra/pmc.c
+> +++ b/drivers/soc/tegra/pmc.c
+> @@ -61,12 +61,15 @@
+>  #define  PMC_CNTRL_SYSCLK_OE		BIT(11) /* system clock enable */
+>  #define  PMC_CNTRL_SYSCLK_POLARITY	BIT(10) /* sys clk polarity */
+>  #define  PMC_CNTRL_PWRREQ_POLARITY	BIT(8)
+> +#define  PMC_CNTRL_BLINK_EN		7
+>  #define  PMC_CNTRL_MAIN_RST		BIT(4)
+>  
+>  #define PMC_WAKE_MASK			0x0c
+>  #define PMC_WAKE_LEVEL			0x10
+>  #define PMC_WAKE_STATUS			0x14
+>  #define PMC_SW_WAKE_STATUS		0x18
+> +#define PMC_DPD_PADS_ORIDE		0x1c
+> +#define  PMC_DPD_PADS_ORIDE_BLINK	20
+>  
+>  #define DPD_SAMPLE			0x020
+>  #define  DPD_SAMPLE_ENABLE		BIT(0)
+> @@ -79,6 +82,7 @@
+>  
+>  #define PWRGATE_STATUS			0x38
+>  
+> +#define PMC_BLINK_TIMER			0x40
+>  #define PMC_IMPL_E_33V_PWR		0x40
+>  
+>  #define PMC_PWR_DET			0x48
+> @@ -170,6 +174,14 @@ struct pmc_clk {
+>  
+>  #define to_pmc_clk(_hw) container_of(_hw, struct pmc_clk, hw)
+>  
+> +struct pmc_clk_gate {
+> +	struct clk_hw	hw;
+> +	unsigned long	offs;
+> +	u32		shift;
+> +};
+> +
+> +#define to_pmc_clk_gate(_hw) container_of(_hw, struct pmc_clk_gate, hw)
+> +
+>  struct pmc_clk_init_data {
+>  	char *name;
+>  	const char *const *parents;
+> @@ -320,6 +332,7 @@ struct tegra_pmc_soc {
+>  
+>  	const struct pmc_clk_init_data *pmc_clks_data;
+>  	unsigned int num_pmc_clks;
+> +	bool has_blink_output;
+>  };
+>  
+>  static const char * const tegra186_reset_sources[] = {
+> @@ -2330,6 +2343,60 @@ tegra_pmc_clk_out_register(const struct pmc_clk_init_data *data,
+>  	return clk_register(NULL, &pmc_clk->hw);
+>  }
+>  
+> +static int pmc_clk_gate_is_enabled(struct clk_hw *hw)
+> +{
+> +	struct pmc_clk_gate *gate = to_pmc_clk_gate(hw);
+> +
+> +	return tegra_pmc_readl(pmc, gate->offs) & BIT(gate->shift) ? 1 : 0;
+> +}
+> +
+> +static int pmc_clk_gate_enable(struct clk_hw *hw)
+> +{
+> +	struct pmc_clk_gate *gate = to_pmc_clk_gate(hw);
+> +
+> +	pmc_clk_set_state(gate->offs, gate->shift, 1);
+> +
+> +	return 0;
+> +}
+> +
+> +static void pmc_clk_gate_disable(struct clk_hw *hw)
+> +{
+> +	struct pmc_clk_gate *gate = to_pmc_clk_gate(hw);
+> +
+> +	pmc_clk_set_state(gate->offs, gate->shift, 0);
+> +}
+> +
+> +static const struct clk_ops pmc_clk_gate_ops = {
+> +	.is_enabled = pmc_clk_gate_is_enabled,
+> +	.enable = pmc_clk_gate_enable,
+> +	.disable = pmc_clk_gate_disable,
+> +};
+> +
+> +static struct clk *
+> +tegra_pmc_clk_gate_register(const char *name, const char *parent_name,
+> +			    unsigned long flags, unsigned long offset,
+> +			    u32 shift)
+> +{
+> +	struct clk_init_data init;
+> +	struct pmc_clk_gate *gate;
+> +
+> +	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
+> +	if (!gate)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	init.name = name;
+> +	init.ops = &pmc_clk_gate_ops;
+> +	init.parent_names = &parent_name;
+> +	init.num_parents = 1;
+> +	init.flags = flags;
 
-I send v2 in a few hours with extra comment. I will mention that this
-is needed if CONFIG_SPARSEMEM_VMEMMAP=y
-See https://github.com/torvalds/linux/blob/master/include/asm-generic/memory_model.h
+What about "init.flags = 0"?
 
->
-> Otherwise looks good to me.
->
-> Reviewed-by: Anup Patel <anup@brainfault.org>
->
-> Regards,
-> Anup
+> +	gate->hw.init = &init;
+> +	gate->offs = offset;
+> +	gate->shift = shift;
+> +
+> +	return clk_register(NULL, &gate->hw);
+> +}
+> +
+>  static void tegra_pmc_clock_register(struct tegra_pmc *pmc,
+>  				     struct device_node *np)
+>  {
+> @@ -2339,6 +2406,8 @@ static void tegra_pmc_clock_register(struct tegra_pmc *pmc,
+>  	int i, err = -ENOMEM;
+>  
+>  	num_clks = pmc->soc->num_pmc_clks;
+> +	if (pmc->soc->has_blink_output)
+> +		num_clks += 1;
+>  
+>  	if (!num_clks)
+>  		return;
+> @@ -2380,6 +2449,37 @@ static void tegra_pmc_clock_register(struct tegra_pmc *pmc,
+>  		}
+>  	}
+>  
+> +	if (pmc->soc->has_blink_output) {
+> +		tegra_pmc_writel(pmc, 0x0, PMC_BLINK_TIMER);
+> +		clk = tegra_pmc_clk_gate_register("blink_override",
+> +						  "clk_32k", 0,
+> +						  PMC_DPD_PADS_ORIDE,
+> +						  PMC_DPD_PADS_ORIDE_BLINK);
+> +		if (IS_ERR(clk)) {
+> +			dev_err(pmc->dev, "unable to register blink_override\n");
+> +			err = PTR_ERR(clk);
+> +			goto free_clks;
+> +		}
+> +
+> +		clk = tegra_pmc_clk_gate_register("blink",
+> +						  "blink_override", 0,
+> +						  PMC_CNTRL,
+> +						  PMC_CNTRL_BLINK_EN);
+> +		if (IS_ERR(clk)) {
+> +			dev_err(pmc->dev, "unable to register blink\n");
+> +			err = PTR_ERR(clk);
+> +			goto free_clks;
+> +		}
+> +
+> +		clk_data->clks[TEGRA_PMC_CLK_BLINK] = clk;
+> +		err = clk_register_clkdev(clk, "blink", NULL);
+> +		if (err) {
+> +			dev_err(pmc->dev,
+> +				"unable to register blink clock lookup\n");
+> +			goto free_clks;
+> +		}
+> +	}
+> +
+>  	err = of_clk_add_provider(np, of_clk_src_onecell_get, clk_data);
+>  	if (err) {
+>  		dev_err(pmc->dev, "failed to add pmc clk provider\n");
+> @@ -2658,6 +2758,7 @@ static const struct tegra_pmc_soc tegra20_pmc_soc = {
+>  	.num_reset_levels = 0,
+>  	.pmc_clks_data = NULL,
+>  	.num_pmc_clks = 0,
+> +	.has_blink_output = true,
+>  };
+>  
+>  static const char * const tegra30_powergates[] = {
+> @@ -2707,6 +2808,7 @@ static const struct tegra_pmc_soc tegra30_pmc_soc = {
+>  	.num_reset_levels = 0,
+>  	.pmc_clks_data = tegra_pmc_clks_data,
+>  	.num_pmc_clks = ARRAY_SIZE(tegra_pmc_clks_data),
+> +	.has_blink_output = true,
+>  };
+>  
+>  static const char * const tegra114_powergates[] = {
+> @@ -2760,6 +2862,7 @@ static const struct tegra_pmc_soc tegra114_pmc_soc = {
+>  	.num_reset_levels = 0,
+>  	.pmc_clks_data = tegra_pmc_clks_data,
+>  	.num_pmc_clks = ARRAY_SIZE(tegra_pmc_clks_data),
+> +	.has_blink_output = true,
+>  };
+>  
+>  static const char * const tegra124_powergates[] = {
+> @@ -2873,6 +2976,7 @@ static const struct tegra_pmc_soc tegra124_pmc_soc = {
+>  	.num_reset_levels = 0,
+>  	.pmc_clks_data = tegra_pmc_clks_data,
+>  	.num_pmc_clks = ARRAY_SIZE(tegra_pmc_clks_data),
+> +	.has_blink_output = true,
+>  };
+>  
+>  static const char * const tegra210_powergates[] = {
+> @@ -2989,6 +3093,7 @@ static const struct tegra_pmc_soc tegra210_pmc_soc = {
+>  	.wake_events = tegra210_wake_events,
+>  	.pmc_clks_data = tegra_pmc_clks_data,
+>  	.num_pmc_clks = ARRAY_SIZE(tegra_pmc_clks_data),
+> +	.has_blink_output = true,
+>  };
+>  
+>  #define TEGRA186_IO_PAD_TABLE(_pad)					     \
+> @@ -3120,6 +3225,7 @@ static const struct tegra_pmc_soc tegra186_pmc_soc = {
+>  	.wake_events = tegra186_wake_events,
+>  	.pmc_clks_data = NULL,
+>  	.num_pmc_clks = 0,
+> +	.has_blink_output = false,
+>  };
+>  
+>  static const struct tegra_io_pad_soc tegra194_io_pads[] = {
+> @@ -3239,6 +3345,7 @@ static const struct tegra_pmc_soc tegra194_pmc_soc = {
+>  	.wake_events = tegra194_wake_events,
+>  	.pmc_clks_data = NULL,
+>  	.num_pmc_clks = 0,
+> +	.has_blink_output = false,
+>  };
+>  
+>  static const struct of_device_id tegra_pmc_match[] = {
+> 
+
