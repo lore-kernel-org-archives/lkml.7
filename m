@@ -2,285 +2,123 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B25FCC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A57C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CE69206D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:43:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C74FD21582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:46:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="S11HT2eU"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="sL1fbY+j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfLRTnc (ORCPT
+        id S1727497AbfLRTqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 14:43:32 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:36458 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbfLRTnc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 14:43:32 -0500
-Received: by mail-il1-f194.google.com with SMTP id b15so2722707iln.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 11:43:31 -0800 (PST)
+        Wed, 18 Dec 2019 14:46:02 -0500
+Received: from mail-dm6nam11on2076.outbound.protection.outlook.com ([40.107.223.76]:1696
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726698AbfLRTqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 14:46:02 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FaKPSLHHdOEjgF92ZsOF/iejUXz8fudf8NbtloxDDbz2RoLp1HP4qiWoE4OnH1/aGXs3wWH1E9ZdV3S4mIRCzC3akNj5YHGEIdn+y3gYJ2sG12ixs4eWR2XAGfOi8opynr/xxYE6/RLFmTnmFYuyBNDeP6FYblmrW+2a+6scI5WFQEEhtklam6A73xBVUPFe5eAU4nGnMma16gNIxaolz3Z1aIOqu2KtCrZcZ8UFwshe9f8EumtfeGZgerjYRC5A2dLz3Q9zLRW0eE2J6BXWkE06daepJMn8uzRI+YIZrB7a3nIJjKmcXK9xv7SFRT8IT6y774rYp2y9v2zclQXkhw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DS+wd211c5GVgPTI+LzvYI11OAw8vaK7Oez/K1s08lE=;
+ b=jPz+T1zGgSxoyGM4QFzisFI9x137SMldqaCZc8h+O5Fu3TnV8sLj5m/PvwH9XRcpLqMDB6X5sbP5dFP/F8bNDjAhDvthIcn4phU3GdsSl28kwosKYTgVZYbrO0gyeejKle3KjnSrNTZ5jsrVWZp2bHnbYyvfeo6Y8STpdCAUTzeA8QWmOtFMrVtnTuUp+dDqG0Bzs0gXMEMHJcRPs8UhHD3hYBUVZMbzA/v0OUsapPy8iUUasnTHUXBs52BxWGNKbcdpoSnzTY/+tB1H0mRsPqf/EDxFQTw2zK/5NLeXW3pOH2D0bAKD6jBftlzkN8BbVDuRfCIuqIVXi5z3/J9+tA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ufzqu5SYStGRmDjFW6F6AuBJEpv9SjyFBEIc9hkxT84=;
-        b=S11HT2eUHvh6PNlKlTpHPZHdyyA7ZFbOnQfOmMSkW3r4g+s3386CSdYkBDEjraYC+C
-         01//sKB8p7le9qAzIs9k8Q+mey74hWohMpW14NcSlZngQodcuohASzfNofHRG7fxcVsN
-         HKcYiNg5dlesgXTkt+vbVXbNfUzHUz1xM3QTg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ufzqu5SYStGRmDjFW6F6AuBJEpv9SjyFBEIc9hkxT84=;
-        b=FckQPkTt7JqBsjK3ZI4inGN3dM1bg8ohdjmDbD+072mVjrLLoP4qUoFUqe4XIgq+oJ
-         XcyxG5xS5/ba8S0VqX3H+UBMPnE2AQKv9n6bzTlwkTpaFzvQf+Fid/znxS981MAGBimI
-         P1pjUO3MLmJHTsG+SC8+KUsLOKcrucaEO0nx26F3vFIkXH/ZyPj0jIjK2EPdwkOvAT/x
-         eXAjA4MrHr2gplPJXuMR19s4UlhpODlMAoVGp4djXqpenIe5qEwvS3l8wKJPRLdujs6g
-         GbUtW6X1YaIbMP/g6EZaE1/IhJzR5vnAXDTO63IjGFP2+B4wgMnoz9Lt0ti0T6rBs0GV
-         c0Hg==
-X-Gm-Message-State: APjAAAV1gJA4vZISgw9wBJcHa5Ud9x5RxRJe/FtOTGS7VVE1LDNZMGFm
-        1lIq77rSqWqOsTH5KZSunKiaRrHztMs=
-X-Google-Smtp-Source: APXvYqxSBjoNasx1/lYXHl6jhNxRHkZZD8UsIySSnkMJYTdVWY3HNQE/lV1crzoJFwWtXbm9hEgk2Q==
-X-Received: by 2002:a05:6e02:beb:: with SMTP id d11mr3449141ilu.220.1576698210947;
-        Wed, 18 Dec 2019 11:43:30 -0800 (PST)
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com. [209.85.166.172])
-        by smtp.gmail.com with ESMTPSA id g79sm964238ilf.10.2019.12.18.11.43.30
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Dec 2019 11:43:30 -0800 (PST)
-Received: by mail-il1-f172.google.com with SMTP id v69so2700478ili.10
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 11:43:30 -0800 (PST)
-X-Received: by 2002:a92:cc90:: with SMTP id x16mr3541709ilo.269.1576698209663;
- Wed, 18 Dec 2019 11:43:29 -0800 (PST)
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DS+wd211c5GVgPTI+LzvYI11OAw8vaK7Oez/K1s08lE=;
+ b=sL1fbY+jxRVinSN84mkWd62KNRD5zPkyECzGIjipHGRXuQfTOsuvzToKbLSqaPGEIa+Ke0PSGDFzrXhDzGXEArMYbyYhFX/y/yz9ZnthhdihMLT1JnmFjKBp8SEePYD9UdqdT0qAdX/lPmaKODAlQvm+O1ShcKmkKac/tohbQe4=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Thomas.Lendacky@amd.com; 
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.71.154) by
+ DM6PR12MB2876.namprd12.prod.outlook.com (20.179.71.85) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2559.14; Wed, 18 Dec 2019 19:46:00 +0000
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::a0cd:463:f444:c270]) by DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::a0cd:463:f444:c270%7]) with mapi id 15.20.2538.019; Wed, 18 Dec 2019
+ 19:45:59 +0000
+From:   Tom Lendacky <thomas.lendacky@amd.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Brijesh Singh <brijesh.singh@amd.com>
+Subject: [PATCH v1 0/2] MMIO mask fix for AMD memory encryption support
+Date:   Wed, 18 Dec 2019 13:45:45 -0600
+Message-Id: <cover.1576698347.git.thomas.lendacky@amd.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: DM6PR21CA0007.namprd21.prod.outlook.com
+ (2603:10b6:5:174::17) To DM6PR12MB3163.namprd12.prod.outlook.com
+ (2603:10b6:5:15e::26)
 MIME-Version: 1.0
-References: <1575520881-31458-1-git-send-email-sanm@codeaurora.org> <1575520881-31458-3-git-send-email-sanm@codeaurora.org>
-In-Reply-To: <1575520881-31458-3-git-send-email-sanm@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 18 Dec 2019 11:43:18 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=UiPXYMsw=t7Sw7YaEFRxSfgzUXYZA3J1enV8zd+Pa9OA@mail.gmail.com>
-Message-ID: <CAD=FV=UiPXYMsw=t7Sw7YaEFRxSfgzUXYZA3J1enV8zd+Pa9OA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] dt-bindings: phy: qcom-qusb2: Convert QUSB2 phy
- bindings to yaml
-To:     Sandeep Maheswaram <sanm@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Manu Gautam <mgautam@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: dbc974ea-6371-42d4-e631-08d783f2e80d
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2876:|DM6PR12MB2876:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB287694F5BE2052A70D22CB00EC530@DM6PR12MB2876.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:203;
+X-Forefront-PRVS: 0255DF69B9
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(376002)(346002)(39860400002)(366004)(189003)(199004)(478600001)(5660300002)(81156014)(66946007)(81166006)(6486002)(6512007)(186003)(52116002)(54906003)(36756003)(86362001)(6666004)(4326008)(8676002)(66476007)(8936002)(4744005)(66556008)(2616005)(966005)(6506007)(2906002)(26005)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2876;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: m38ao21HFNkExqLhnmzcqELXjFMk3YYT+u1jZ4Bmyqc/5woQ/wD7KO2747fBlMeWZPYiqAqr+u8MpETNgaXA4aOtfFKBPL8V2qfPsoy1ihvg5BX8ymJnHMVWB8R7o+5lZXmZIZvwRASdLt6Dbf/RF6ldMMAO1yuFC568NHviT2mkXRGfihS8tBwKVc5OKF5fMsT5raYfjbNs2QbZFUy1xPIy/WkF2My+GuNzJB7gW1ZIZ17O5rKMD5DgXWfXwrs6/F0D3Jdx2wsS/fBbtFvjGRW/9zDVzdeFFaFLNtjixx1G/G5WnXZl37CTQlheZMcL04pkGmscO/1WS0yepeM99hJepdhsh8AMhvZGENPIwsZ5pO//NJm4TAx1E/VCOUyWOXxDfATt3FxDN0Onp/11TVIZAwy9hY/wru23FsH1FCWBRTCn9mg89hq8cGwJom4ljzWCacccNhdmKSiPEqnOfi7/1Np1pnIi957Q92CpmkM=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dbc974ea-6371-42d4-e631-08d783f2e80d
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Dec 2019 19:45:59.7392
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nke1CMjiGZRQPYgxxaexU2yOwN0qjWBJgSPIBGf/FQrv9rqxrSjcbIW7dkoaaI2SnobPPRXCPPeoHc5W+SIkOg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2876
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This patch series ensures that a valid MMIO SPTE mask can be generated
+under SVM when memory encryption is enabled.
 
-On Wed, Dec 4, 2019 at 8:43 PM Sandeep Maheswaram <sanm@codeaurora.org> wrote:
->
-> diff --git a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.yaml b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.yaml
+The patchset includes:
+- Add an optional callback to return a reserved bit(s) mask
+- Implement the callback in SVM
 
-Hrm.  Probably should have given this same comment on the USB3 yaml
-bindings too, but I think the file name should be:
+---
 
-qcom,qusb2-phy.yaml
+Patches based on https://git.kernel.org/pub/scm/virt/kvm/kvm.git next
+commit:
+  7d73710d9ca2 ("kvm: vmx: Stop wasting a page for guest_msrs")
 
-Specifically I think that's what Rob H has been requesting elsewhere.
+Tom Lendacky (2):
+  KVM: x86/mmu: Allow for overriding MMIO SPTE mask
+  KVM: SVM: Implement reserved bit callback to set MMIO SPTE mask
 
+ arch/x86/include/asm/kvm_host.h |  4 ++-
+ arch/x86/kvm/mmu/mmu.c          | 54 +++++++++++++++++++++------------
+ arch/x86/kvm/svm.c              | 42 +++++++++++++++++++++++++
+ arch/x86/kvm/x86.c              |  2 +-
+ 4 files changed, 80 insertions(+), 22 deletions(-)
 
+-- 
+2.17.1
 
-> new file mode 100644
-> index 0000000..3ef94bc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.yaml
-> @@ -0,0 +1,129 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/phy/qcom-qusb2-phy.yaml#"
-
-If you change the name to add the comma (as per above), don't forget
-to update your ID.
-
-
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Qualcomm QUSB2 phy controller
-> +
-> +maintainers:
-> +  - Manu Gautam <mgautam@codeaurora.org>
-> +
-> +description: |
-
-nit: don't need the "|" unless carriage returns are important.
-
-
-> +  QUSB2 controller supports LS/FS/HS usb connectivity on Qualcomm chipsets.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,msm8996-qusb2-phy
-> +      - qcom,msm8998-qusb2-phy
-> +      - qcom,sdm845-qusb2-phy
-> +
-> +  reg:
-> +    description:
-> +        offset and length of the PHY register set.
-
-No description, just maxItems: 1 I think.  This seemed to be what Rob
-H suggested in USB3 bindings with regards to resets where the
-description was just generic [1].
-
-
-> +  "#phy-cells":
-> +    const: 0
-> +
-> +  clocks:
-> +    maxItems: 3
-> +    description:
-> +        a list of phandles and clock-specifier pairs,
-> +        one for each entry in clock-names.
-> +
-> +  clock-names:
-> +    items:
-> +      - const: cfg_ahb #phy config clock
-> +      - const: ref #19.2 MHz ref clk
-> +      - const: iface #phy interface clock (Optional)
-
-Please take the same type of feedback you got for the USB3 bindings
-with regards to clocks / clock-names.
-
-
-> +  vdda-pll-supply:
-> +     description:
-> +       Phandle to 1.8V regulator supply to PHY refclk pll block.
-> +
-> +  vdda-phy-dpdm-supply:
-> +     description:
-> +       Phandle to 3.1V regulator supply to Dp/Dm port signals.
-> +
-> +  resets:
-> +    description:
-> +       Phandle to reset to phy block.
-
-No description, just maxItems: 1 I think [1].
-
-
-> +  nvmem-cells:
-> +    description:
-> +        Phandle to nvmem cell that contains 'HS Tx trim'
-> +        tuning parameter value for qusb2 phy.
-
-Add maxItems: 1 ?
-
-
-> +  qcom,tcsr-syscon:
-> +    description:
-> +        Phandle to TCSR syscon register region.
-> +    $ref: /schemas/types.yaml#/definitions/cell
-> +
-> +  qcom,imp-res-offset-value:
-> +    description:
-> +        It is a 6 bit value that specifies offset to be
-> +        added to PHY refgen RESCODE via IMP_CTRL1 register. It is a PHY
-> +        tuning parameter that may vary for different boards of same SOC.
-> +        This property is applicable to only QUSB2 v2 PHY (sdm845).
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-minimum: 0
-maximum: 63
-
-...and, I think:
-default: 0
-
-
-> +  qcom,hstx-trim-value:
-> +    description:
-> +        It is a 4 bit value that specifies tuning for HSTX
-> +        output current.
-> +        Possible range is - 15mA to 24mA (stepsize of 600 uA).
-> +        See dt-bindings/phy/phy-qcom-qusb2.h for applicable values.
-> +        This property is applicable to only QUSB2 v2 PHY (sdm845).
-> +        Default value is 22.2mA for sdm845.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-minimum: 0
-maximum: 15
-default: 3
-
-
-> +  qcom,preemphasis-level:
-> +    description:
-> +        It is a 2 bit value that specifies pre-emphasis level.
-> +        Possible range is 0 to 15% (stepsize of 5%).
-> +        See dt-bindings/phy/phy-qcom-qusb2.h for applicable values.
-> +        This property is applicable to only QUSB2 v2 PHY (sdm845).
-> +        Default value is 10% for sdm845.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-minimum: 0
-maximum: 3
-default: 2
-
-
-> +  qcom,preemphasis-width:
-> +    description:
-> +        It is a 1 bit value that specifies how long the HSTX
-> +        pre-emphasis (specified using qcom,preemphasis-level) must be in
-> +        effect. Duration could be half-bit of full-bit.
-> +        See dt-bindings/phy/phy-qcom-qusb2.h for applicable values.
-> +        This property is applicable to only QUSB2 v2 PHY (sdm845).
-> +        Default value is full-bit width for sdm845.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-minimum: 0
-maximum: 1
-default: 0
-
-
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#phy-cells"
-> +  - clocks
-> +  - clock-names
-> +  - vdda-pll-supply
-> +  - vdda-phy-dpdm-supply
-> +  - resets
-> +
-> +
-> +examples:
-> +  - |
-
-#include <dt-bindings/clock/qcom,gcc-msm8996.h>
-
-
-> +    hsusb_phy: phy@7411000 {
-> +        compatible = "qcom,msm8996-qusb2-phy";
-> +        reg = <0x7411000 0x180>;
-> +        #phy-cells = <0>;
-> +
-> +        clocks = <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
-> +                <&gcc GCC_RX1_USB2_CLKREF_CLK>,
-
-The comma at the end is a syntax error.
-
-make dt_binding_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/qcom-qusb2-phy.yaml
-
-[1] https://lore.kernel.org/r/20191213212313.GA21092@bogus
-
-
--Doug
