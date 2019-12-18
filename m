@@ -2,144 +2,536 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF51DC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 01:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A78AC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 01:52:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B44B7206A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 01:49:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C10E2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 01:52:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hn3nzRYq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nh0NFryB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbfLRBtz (ORCPT
+        id S1726539AbfLRBwy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 20:49:55 -0500
-Received: from ozlabs.org ([203.11.71.1]:55783 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726227AbfLRBtz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 20:49:55 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47cycb3Cf5z9sRl;
-        Wed, 18 Dec 2019 12:49:51 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1576633792;
-        bh=ZcJpEE/LW6yidBtEURZ9Qct9Sjqoy5Q5D49PzzegYYw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hn3nzRYq8lj9JWQawr871mfiZKSImBrOH13z3vrRieuxFf7cW08h6LyHFwMSJni/+
-         d1c7/oqQKJdr3KlhQZuBxI67G6yctEhto4jSxta6Zs2ty+GW9a0YSO/Pyye4uqjFcK
-         t9D4m7bKSEmlv61Y8SdOKTYoobgJ/04mQ49kuEzUe8MYfRN7ZvjOMmx/ndMwE2o5se
-         HOguamfTohhbvy/0ejT5O1KPybRY5eGn7wDc8l6Yrh+NxLxigKHg+nYxaPBVhozZq4
-         o6ylEVS+21zff9u1D3SvvQafU9sfArrTcXd1kcvQnrUaSMPh88IsCWxn74dzY5JWm4
-         TM+YlIYR64myg==
-Date:   Wed, 18 Dec 2019 12:49:50 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the generic-ioremap tree with the
- nvdimm-fixes tree
-Message-ID: <20191218124950.191d9df4@canb.auug.org.au>
-In-Reply-To: <20191218123205.3fb9c793@canb.auug.org.au>
-References: <20191218123205.3fb9c793@canb.auug.org.au>
+        Tue, 17 Dec 2019 20:52:54 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:32898 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbfLRBwx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 20:52:53 -0500
+Received: by mail-pg1-f193.google.com with SMTP id 6so354386pgk.0;
+        Tue, 17 Dec 2019 17:52:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding;
+        bh=8ZYXwbCjtNWqJIDLbVMFamCAEZvutQ9SIc/nE46X/mE=;
+        b=Nh0NFryBhtZo1eAvzgTF8PQKYiR3qMHJ8GBAoAjeeg/EFbUy1g3ZJkpITVMHwwq9x6
+         MyWNboOWs/+wx+L5vIFls2ldq2kpHnfKF3tM1576oxBSosyQmHaRCGw2fxFuHI6eNICX
+         t3AN6rPt7sZ9IZYuj39xcctJF4uoFB1pvkOP426T05UvNZfKQr+UpKRm27EDfaR+Cr90
+         q6a5fY+2HwkbwRlr4Pr1uzQz3k6nZbNVnnbTD3BxoJ1Gy9jGiZBwVQ/5jBhYBoZa+cqd
+         s3LFXL6xmZq2KxKXwTO6ylzacso1kA7NF5mZBrGw20O0OU4nNRXF3hB78z2RF2DqecVZ
+         Ndmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=8ZYXwbCjtNWqJIDLbVMFamCAEZvutQ9SIc/nE46X/mE=;
+        b=HFsjClA1lFYCctfAg/8VpEFebvbdRi14CYJ8QfEdrpEkFdnAfGGwn1T+RBCYGxNHMS
+         PfB+0wq4kkmWgvBIu23fN2ehpah51gx6/s2jvEli5SAUNChu5OkWPiwu8yfK0zDabhEQ
+         05XYZZ4YMM8v3Ls2hXmObshvF8rmp6Bqj0P/o8H9K4SYOzZrFTN7wNXNwUrFzDmkG32s
+         G0sC0F5YXg3gUz/IQkCF/BPT53BvReiZuiq2gP2xlrXejYTwbWtB4ZMLIUXQ4S26vrD4
+         M0efODLiekiC2xHfIGZgyzQ4+tC/FR47uz7EILteD2lCgvM7LNAoThs6OkiINRZ1sFch
+         zVOA==
+X-Gm-Message-State: APjAAAUhOLSVzrANBBO98Ry7bFixcK6te2J3b6auf5vME/nSt3L5UZDS
+        9Fukm/5qS4/N5ML9waHVJu/Tip+x
+X-Google-Smtp-Source: APXvYqx5iEIQz9QzHWP385uYyw3YA/fQl3U99HT+gyUp/y/5U1+Q3gI99i3mnQZ3RBv9T1d0N5EDeA==
+X-Received: by 2002:a63:a555:: with SMTP id r21mr1168013pgu.158.1576633972249;
+        Tue, 17 Dec 2019 17:52:52 -0800 (PST)
+Received: from [0.0.0.0] ([103.103.128.212])
+        by smtp.gmail.com with ESMTPSA id o184sm316873pgo.62.2019.12.17.17.52.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Dec 2019 17:52:51 -0800 (PST)
+Subject: Re: [PATCH v2 1/2] iio: chemical: add support for Dynament Premier
+ series single gas sensor
+To:     Matt Ranostay <matt.ranostay@konsulko.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Tomasz Duszynski <tduszyns@gmail.com>, mike.looijmans@topic.nl,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20191217102433.24192-1-mtwget@gmail.com>
+ <CAJCx=gm1SC5i6=vAMFdetRAfLg3_s+Wn7rYULy6a=WG8tj6G2A@mail.gmail.com>
+From:   ruantu <mtwget@gmail.com>
+Message-ID: <3a17c9e1-f916-0cde-3296-70066dccb2b3@gmail.com>
+Date:   Wed, 18 Dec 2019 09:52:42 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/4pMxf38BhyndScEGHZObhr0";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <CAJCx=gm1SC5i6=vAMFdetRAfLg3_s+Wn7rYULy6a=WG8tj6G2A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/4pMxf38BhyndScEGHZObhr0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-On Wed, 18 Dec 2019 12:32:05 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
+On Tue, Dec 17, 2019 at 2:24 AM YuDong Zhang <mtwget@gmail.com> wrote:
+>> Add support for Dynament Premier series single gas sensor.
+>>
+> Just looking the Dynament site and I assume this is for the OEM-1
+> Development kit? If so you probably should
+> note that in the documentation because the sensors themselves are
+> likely to be used in other end products (and not
+> always the dev kit)
 >
-> Today's linux-next merge of the generic-ioremap tree got a conflict in:
->=20
->   tools/testing/nvdimm/Kbuild
->=20
-> between commit:
->=20
->   c14685547762 ("tools/testing/nvdimm: Fix mock support for ioremap")
->=20
-> from the nvdimm-fixes tree and commit:
->=20
->   1188dd7d3fbd ("remove ioremap_nocache and devm_ioremap_nocache")
->=20
-> from the generic-ioremap tree.
->=20
-> I fixed it up (the latter is a superset of the former) and can carry the
-> fix as necessary. This is now fixed as far as linux-next is concerned,
-> but any non trivial conflicts should be mentioned to your upstream
-> maintainer when your tree is submitted for merging.  You may also want
-> to consider cooperating with the maintainer of the conflicting tree to
-> minimise any particularly complex conflicts.
-
-The merge also needed this fixup (since both trees logically added the
-same small function):
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Wed, 18 Dec 2019 12:46:03 +1100
-Subject: [PATCH] generic_ioremap: merge fix for "tools/testing/nvdimm: Fix
- mock support for ioremap"
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- tools/testing/nvdimm/test/iomap.c | 6 ------
- 1 file changed, 6 deletions(-)
-
-diff --git a/tools/testing/nvdimm/test/iomap.c b/tools/testing/nvdimm/test/=
-iomap.c
-index 27a9c5f3fcd0..03e40b3b0106 100644
---- a/tools/testing/nvdimm/test/iomap.c
-+++ b/tools/testing/nvdimm/test/iomap.c
-@@ -193,12 +193,6 @@ void __iomem *__wrap_ioremap(resource_size_t offset, u=
-nsigned long size)
- }
- EXPORT_SYMBOL(__wrap_ioremap);
-=20
--void __iomem *__wrap_ioremap(resource_size_t offset, unsigned long size)
--{
--	return __nfit_test_ioremap(offset, size, ioremap);
--}
--EXPORT_SYMBOL(__wrap_ioremap);
--
- void __iomem *__wrap_ioremap_wc(resource_size_t offset, unsigned long size)
- {
- 	return __nfit_test_ioremap(offset, size, ioremap_wc);
---=20
-2.24.0
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/4pMxf38BhyndScEGHZObhr0
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl35hb4ACgkQAVBC80lX
-0GzoXAgAoXbi+dWnJ7w0/CnZZwYttJZoV859vZFTpUZr1iJCVLNdZPiO8CLWhXeb
-xHjYDypvgh9szRghT5zIL5YylWKVH71ArYoNrE97dwkUzIHkIeXk/KkxB6V5aM7a
-dN8qxaTVE5v2BGtVxJmAs6wwqvXTDKpVNdbjK29wg8BQeJpwr8YL970jmSypVseQ
-yxK8gWkZ/SNhSjayM6R93IqsZeKvu0pdUKTVnimrPBdQYYvupWm90+ejPuOX9QGl
-g+iZSONCUSucuGdsIuWi3D1lTxNYb7asXhu5+Cv5YQoBECAurSNM0o4rGBMUFaGx
-q4NhaA6z4Gj8gVlRX5UIJRNQm9jkWg==
-=IKTW
------END PGP SIGNATURE-----
-
---Sig_/4pMxf38BhyndScEGHZObhr0--
+> Also bit of silly question this is an UART device so why not do
+> processing in userspace? :)
+>
+> - Matt
+This is a driver implemented according to the <Dynamization Sensor 
+Communications protocol>. I think the protocol is standard. This is the 
+idea that emerged after the iio subsystem used serial_bus.
+>> Signed-off-by: YuDong Zhang <mtwget@gmail.com>
+>> ---
+>>   MAINTAINERS                    |   5 +
+>>   drivers/iio/chemical/Kconfig   |  10 +
+>>   drivers/iio/chemical/Makefile  |   1 +
+>>   drivers/iio/chemical/premier.c | 366 +++++++++++++++++++++++++++++++++
+>>   4 files changed, 382 insertions(+)
+>>   create mode 100644 drivers/iio/chemical/premier.c
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index a049abccaa26..ae228ac7adc9 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -5792,6 +5792,11 @@ S:       Maintained
+>>   F:     drivers/media/usb/dvb-usb-v2/dvb_usb*
+>>   F:     drivers/media/usb/dvb-usb-v2/usb_urb.c
+>>
+>> +DYNAMENT PREMIER SERIES SINGLE GAS SENSOR DRIVER
+>> +M:     YuDong Zhang <mtwget@gmail.com>
+>> +S:     Maintained
+>> +F:     drivers/iio/chemical/premier.c
+>> +
+>>   DYNAMIC DEBUG
+>>   M:     Jason Baron <jbaron@akamai.com>
+>>   S:     Maintained
+>> diff --git a/drivers/iio/chemical/Kconfig b/drivers/iio/chemical/Kconfig
+>> index fa4586037bb8..93c0c108245b 100644
+>> --- a/drivers/iio/chemical/Kconfig
+>> +++ b/drivers/iio/chemical/Kconfig
+>> @@ -62,6 +62,16 @@ config IAQCORE
+>>            iAQ-Core Continuous/Pulsed VOC (Volatile Organic Compounds)
+>>            sensors
+>>
+>> +config PREMIER
+>> +       tristate "Dynament Premier series sensor"
+>> +       depends on SERIAL_DEV_BUS
+>> +       help
+>> +         Say Y here to build support for the Dynament Premier
+>> +         series sensor.
+>> +
+>> +         To compile this driver as a module, choose M here: the module will
+>> +         be called premier.
+>> +
+>>   config PMS7003
+>>          tristate "Plantower PMS7003 particulate matter sensor"
+>>          depends on SERIAL_DEV_BUS
+>> diff --git a/drivers/iio/chemical/Makefile b/drivers/iio/chemical/Makefile
+>> index f97270bc4034..c8e779d7cf4a 100644
+>> --- a/drivers/iio/chemical/Makefile
+>> +++ b/drivers/iio/chemical/Makefile
+>> @@ -10,6 +10,7 @@ obj-$(CONFIG_BME680_I2C) += bme680_i2c.o
+>>   obj-$(CONFIG_BME680_SPI) += bme680_spi.o
+>>   obj-$(CONFIG_CCS811)           += ccs811.o
+>>   obj-$(CONFIG_IAQCORE)          += ams-iaq-core.o
+>> +obj-$(CONFIG_PREMIER)          += premier.o
+>>   obj-$(CONFIG_PMS7003) += pms7003.o
+>>   obj-$(CONFIG_SENSIRION_SGP30)  += sgp30.o
+>>   obj-$(CONFIG_SPS30) += sps30.o
+>> diff --git a/drivers/iio/chemical/premier.c b/drivers/iio/chemical/premier.c
+>> new file mode 100644
+>> index 000000000000..a226dd9d78cb
+>> --- /dev/null
+>> +++ b/drivers/iio/chemical/premier.c
+>> @@ -0,0 +1,366 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Dynament Premier series single gas sensor driver
+>> + *
+>> + * Copyright (c) YuDong Zhang <mtwget@gmail.com>
+>> + */
+>> +
+>> +#include <asm/unaligned.h>
+>> +#include <linux/completion.h>
+>> +#include <linux/device.h>
+>> +#include <linux/errno.h>
+>> +#include <linux/iio/iio.h>
+>> +#include <linux/jiffies.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/mod_devicetable.h>
+>> +#include <linux/module.h>
+>> +#include <linux/mutex.h>
+>> +#include <linux/of.h>
+>> +#include <linux/regulator/consumer.h>
+>> +#include <linux/serdev.h>
+>> +
+>> +#define PREMIER_DRIVER_NAME "dynament-premier"
+>> +
+>> +#define PREMIER_DLE (0x10)
+>> +#define PREMIER_CMD_RD (0x13)
+>> +#define PREMIER_CMD_NAK (0x19)
+>> +#define PREMIER_CMD_DAT (0x1a)
+>> +#define PREMIER_EOF (0x1f)
+>> +
+>> +#define PREMIER_TIMEOUT msecs_to_jiffies(6000)
+>> +
+>> +/*
+>> + * commands have following format:
+>> + *
+>> + * +-----+-----+---------+-----+-----+-----------+-----------+
+>> + * | DLE | CMD | PAYLOAD | DLE | EOF | CKSUM MSB | CKSUM LSB |
+>> + * +-----+-----+---------+-----+-----+-----------+-----------+
+>> + */
+>> +static const u8 premier_cmd_read_live_data_simple[] = { 0x10, 0x13, 0x06, 0x10,
+>> +                                                       0x1F, 0x00, 0x58 };
+>> +
+>> +struct premier_frame {
+>> +       u8 state;
+>> +       u8 is_dat;
+>> +       u8 is_nak;
+>> +       u8 data_len;
+>> +       u8 vi, si, gi, gj;
+>> +       u8 gas[4];
+>> +       u8 byte_stuffing;
+>> +       u8 checksum_received[2];
+>> +       u16 checksum_calculated;
+>> +};
+>> +
+>> +struct premier_data {
+>> +       struct serdev_device *serdev;
+>> +       struct premier_frame frame;
+>> +       struct completion frame_ready;
+>> +       struct mutex lock; /* must be held whenever state gets touched */
+>> +       struct regulator *vcc;
+>> +};
+>> +
+>> +static int premier_do_cmd_read_live_data(struct premier_data *state)
+>> +{
+>> +       int ret;
+>> +
+>> +       ret = serdev_device_write(state->serdev,
+>> +                                 premier_cmd_read_live_data_simple,
+>> +                                 sizeof(premier_cmd_read_live_data_simple),
+>> +                                 PREMIER_TIMEOUT);
+>> +       if (ret < sizeof(premier_cmd_read_live_data_simple))
+>> +               return ret < 0 ? ret : -EIO;
+>> +
+>> +       ret = wait_for_completion_interruptible_timeout(&state->frame_ready,
+>> +                                                       PREMIER_TIMEOUT);
+>> +
+>> +       if (!ret)
+>> +               ret = -ETIMEDOUT;
+>> +
+>> +       return ret < 0 ? ret : 0;
+>> +}
+>> +
+>> +static s32 premier_float_to_int_clamped(const u8 *fp)
+>> +{
+>> +       int val = get_unaligned_le32(fp);
+>> +       int mantissa = val & GENMASK(22, 0);
+>> +       /* this is fine since passed float is always non-negative */
+>> +       int exp = val >> 23;
+>> +       int fraction, shift;
+>> +
+>> +       /* special case 0 */
+>> +       if (!exp && !mantissa)
+>> +               return 0;
+>> +
+>> +       exp -= 127;
+>> +       if (exp < 0) {
+>> +               /* return values ranging from 1 to 99 */
+>> +               return ((((1 << 23) + mantissa) * 100) >> 23) >> (-exp);
+>> +       }
+>> +
+>> +       /* return values ranging from 100 to int_max */
+>> +       shift = 23 - exp;
+>> +       val = (1 << exp) + (mantissa >> shift);
+>> +
+>> +       fraction = mantissa & GENMASK(shift - 1, 0);
+>> +
+>> +       return val * 100 + ((fraction * 100) >> shift);
+>> +}
+>> +
+>> +static int premier_read_raw(struct iio_dev *indio_dev,
+>> +                           struct iio_chan_spec const *chan, int *val,
+>> +                           int *val2, long mask)
+>> +{
+>> +       struct premier_data *state = iio_priv(indio_dev);
+>> +       struct premier_frame *frame = &state->frame;
+>> +       int ret;
+>> +       s32 val_tmp;
+>> +
+>> +       switch (mask) {
+>> +       case IIO_CHAN_INFO_PROCESSED:
+>> +
+>> +               mutex_lock(&state->lock);
+>> +               ret = premier_do_cmd_read_live_data(state);
+>> +               if (ret) {
+>> +                       mutex_unlock(&state->lock);
+>> +                       return ret;
+>> +               }
+>> +               val_tmp = premier_float_to_int_clamped(frame->gas);
+>> +               mutex_unlock(&state->lock);
+>> +
+>> +               *val = val_tmp / 100;
+>> +               *val2 = (val_tmp % 100) * 10000;
+>> +               return IIO_VAL_INT_PLUS_MICRO;
+>> +       default:
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       return -EINVAL;
+>> +}
+>> +
+>> +static const struct iio_info premier_info = {
+>> +       .read_raw = premier_read_raw,
+>> +};
+>> +
+>> +static const struct iio_chan_spec premier_channels[] = {
+>> +       {
+>> +               .type = IIO_MASSCONCENTRATION,
+>> +               .channel = 1,
+>> +               .channel2 = IIO_MOD_CO2,
+>> +               .scan_index = -1,
+>> +               .info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED),
+>> +               .modified = 1,
+>> +       },
+>> +       IIO_CHAN_SOFT_TIMESTAMP(0),
+>> +};
+>> +
+>> +static int premier_receive_buf(struct serdev_device *serdev,
+>> +                              const unsigned char *buf, size_t size)
+>> +{
+>> +       struct iio_dev *indio_dev = serdev_device_get_drvdata(serdev);
+>> +       struct premier_data *state = iio_priv(indio_dev);
+>> +       struct premier_frame *frame = &state->frame;
+>> +       int i;
+>> +
+>> +       for (i = 0; i < size; i++) {
+>> +               if (frame->state > 0 && frame->state <= 7)
+>> +                       frame->checksum_calculated += buf[i];
+>> +
+>> +               switch (frame->state) {
+>> +               case 0:
+>> +                       if (buf[i] == PREMIER_DLE) {
+>> +                               frame->is_dat = 0;
+>> +                               frame->is_nak = 0;
+>> +                               frame->checksum_calculated = buf[i];
+>> +                               /* We don't initialize checksum_calculated in
+>> +                                * the last state in case we didn't go
+>> +                                * there because of noise
+>> +                                */
+>> +                               frame->state++;
+>> +                       }
+>> +                       break;
+>> +               case 1:
+>> +                       /*
+>> +                        * If noise corrupts a byte in the FSM sequence,
+>> +                        * we loop between state 0 and 1,
+>> +                        * until we have a valid sequence of DLE&DAT or DLE&NAK
+>> +                        */
+>> +                       if (buf[i] == PREMIER_CMD_DAT) {
+>> +                               frame->is_dat = 1;
+>> +                               frame->state++;
+>> +                       } else if (buf[i] == PREMIER_CMD_NAK) {
+>> +                               frame->is_nak = 1;
+>> +                               frame->state++;
+>> +                       } else
+>> +                               frame->state = 0;
+>> +                       break;
+>> +               case 2:
+>> +                       if (frame->is_nak)
+>> +                               frame->state = 0;
+>> +                       else if (frame->is_dat) {
+>> +                               frame->data_len = buf[i] - 4;
+>> +                               /* remove version and status bytes from count */
+>> +                               if (frame->data_len < 4)
+>> +                                       frame->state = 0;
+>> +                               /* we check for the upper limit in state 5 */
+>> +                               else
+>> +                                       frame->state++;
+>> +                       } else
+>> +                               frame->state = 0;
+>> +                       break;
+>> +               case 3:
+>> +                       /* Just do nothing for 2 rounds to bypass
+>> +                        * the 2 version bytes
+>> +                        */
+>> +                       if (frame->vi < 2 - 1)
+>> +                               frame->vi++;
+>> +                       else {
+>> +                               frame->vi = 0;
+>> +                               frame->state++;
+>> +                       }
+>> +                       break;
+>> +               case 4:
+>> +                       if (frame->si < 2 - 1)
+>> +                               frame->si++;
+>> +                       else {
+>> +                               frame->si = 0;
+>> +                               frame->state++;
+>> +                       }
+>> +                       break;
+>> +               case 5:
+>> +                       if (frame->gi < frame->data_len - 1) {
+>> +                               if (buf[i] != PREMIER_DLE ||
+>> +                                   frame->byte_stuffing) {
+>> +                                       frame->gas[frame->gj] = buf[i];
+>> +                                       frame->byte_stuffing = 0;
+>> +                                       frame->gj++;
+>> +                                       if (frame->gj >= 4)
+>> +                                               frame->state = 0;
+>> +                                       /* Don't violate array limits
+>> +                                        * if data_len corrupt
+>> +                                        */
+>> +                               } else
+>> +                                       frame->byte_stuffing = 1;
+>> +                               frame->gi++;
+>> +                       } else {
+>> +                               frame->gas[frame->gj] = buf[i];
+>> +                               frame->byte_stuffing = 0;
+>> +                               frame->gi = 0;
+>> +                               frame->gj = 0;
+>> +                               frame->state++;
+>> +                       }
+>> +                       break;
+>> +               case 6:
+>> +                       if (buf[i] == PREMIER_DLE)
+>> +                               frame->state++;
+>> +                       else
+>> +                               frame->state = 0;
+>> +                       break;
+>> +               case 7:
+>> +                       if (buf[i] == PREMIER_EOF)
+>> +                               frame->state++;
+>> +                       else
+>> +                               frame->state = 0;
+>> +                       break;
+>> +               case 8:
+>> +                       frame->checksum_received[1] = buf[i];
+>> +
+>> +                       frame->state++;
+>> +                       break;
+>> +               case 9:
+>> +                       frame->checksum_received[0] = buf[i];
+>> +
+>> +                       if (frame->checksum_calculated ==
+>> +                           get_unaligned_le16(frame->checksum_received))
+>> +                               complete(&state->frame_ready);
+>> +
+>> +                       frame->state = 0;
+>> +                       break;
+>> +               }
+>> +       }
+>> +
+>> +       return size;
+>> +}
+>> +
+>> +static const struct serdev_device_ops premier_serdev_ops = {
+>> +       .receive_buf = premier_receive_buf,
+>> +       .write_wakeup = serdev_device_write_wakeup,
+>> +};
+>> +
+>> +static int premier_probe(struct serdev_device *serdev)
+>> +{
+>> +       struct premier_data *state;
+>> +       struct iio_dev *indio_dev;
+>> +       int ret;
+>> +
+>> +       indio_dev = devm_iio_device_alloc(&serdev->dev, sizeof(*state));
+>> +       if (!indio_dev)
+>> +               return -ENOMEM;
+>> +
+>> +       state = iio_priv(indio_dev);
+>> +       serdev_device_set_drvdata(serdev, indio_dev);
+>> +       state->serdev = serdev;
+>> +       indio_dev->dev.parent = &serdev->dev;
+>> +       indio_dev->info = &premier_info;
+>> +       indio_dev->name = PREMIER_DRIVER_NAME;
+>> +       indio_dev->channels = premier_channels;
+>> +       indio_dev->num_channels = ARRAY_SIZE(premier_channels);
+>> +       indio_dev->modes = INDIO_DIRECT_MODE;
+>> +
+>> +       mutex_init(&state->lock);
+>> +       init_completion(&state->frame_ready);
+>> +
+>> +       state->vcc = devm_regulator_get(&serdev->dev, "vcc");
+>> +       if (IS_ERR(state->vcc)) {
+>> +               ret = PTR_ERR(state->vcc);
+>> +               return ret;
+>> +       }
+>> +
+>> +       serdev_device_set_client_ops(serdev, &premier_serdev_ops);
+>> +       ret = devm_serdev_device_open(&serdev->dev, serdev);
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       serdev_device_set_baudrate(serdev, 9600);
+>> +       serdev_device_set_flow_control(serdev, false);
+>> +
+>> +       ret = serdev_device_set_parity(serdev, SERDEV_PARITY_NONE);
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       if (state->vcc) {
+>> +               ret = regulator_enable(state->vcc);
+>> +               if (ret)
+>> +                       return ret;
+>> +       }
+>> +
+>> +       return devm_iio_device_register(&serdev->dev, indio_dev);
+>> +}
+>> +
+>> +static void premier_remove(struct serdev_device *serdev)
+>> +{
+>> +       struct iio_dev *indio_dev = serdev_device_get_drvdata(serdev);
+>> +       struct premier_data *state = iio_priv(indio_dev);
+>> +
+>> +       if (state->vcc)
+>> +               regulator_disable(state->vcc);
+>> +}
+>> +
+>> +static const struct of_device_id premier_of_match[] = {
+>> +       { .compatible = "dynament,premier" },
+>> +       {}
+>> +};
+>> +MODULE_DEVICE_TABLE(of, premier_of_match);
+>> +
+>> +static struct serdev_device_driver premier_driver = {
+>> +       .driver = {
+>> +               .name = PREMIER_DRIVER_NAME,
+>> +               .of_match_table = premier_of_match,
+>> +       },
+>> +       .probe = premier_probe,
+>> +       .remove = premier_remove,
+>> +};
+>> +module_serdev_device_driver(premier_driver);
+>> +
+>> +MODULE_AUTHOR("YuDong Zhang <mtwget@gmail.com>");
+>> +MODULE_DESCRIPTION("Dynament Premier series single gas sensor driver");
+>> +MODULE_LICENSE("GPL v2");
+>> --
+>> 2.24.1
+>>
