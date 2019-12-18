@@ -2,71 +2,266 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8566EC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5033C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51EE6227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:17:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E0EC21D7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:20:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576700423;
+	bh=J1ZKEzj9abziTHszBXStxH73jEWPUaWR3cjLKfdvnOc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VpLtSMyEyhqKwSdk2yeGGUEOR2Bs6lV+cu1pupuHIdQnUknkIDoqY0gPSRZEsxSt+
+	 Fze6kOisthbsKrBWg7hFRL9lslT5DYDGNp9pgtFBvrlMIoZmVL1pcqYeSR2/2zBm83
+	 ocQkobwc/O2QOTmyz6OeSaMhxSEQi4CGn7E69hbc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbfLRUR1 (ORCPT
+        id S1726998AbfLRUUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 15:17:27 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:55898 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbfLRUR1 (ORCPT
+        Wed, 18 Dec 2019 15:20:22 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35623 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbfLRUUW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 15:17:27 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id D8CFE153CC127;
-        Wed, 18 Dec 2019 12:17:25 -0800 (PST)
-Date:   Wed, 18 Dec 2019 12:17:25 -0800 (PST)
-Message-Id: <20191218.121725.838258577232002957.davem@davemloft.net>
-To:     Jose.Abreu@synopsys.com
-Cc:     netdev@vger.kernel.org, Joao.Pinto@synopsys.com,
-        andre.guedes@linux.intel.com, Richard.Ong@synopsys.com,
-        boon.leong.ong@intel.com, peppe.cavallaro@st.com,
-        alexandre.torgue@st.com, mcoquelin.stm32@gmail.com,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 0/7] net: stmmac: TSN support using TAPRIO API
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <cover.1576664870.git.Jose.Abreu@synopsys.com>
-References: <cover.1576664870.git.Jose.Abreu@synopsys.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 18 Dec 2019 12:17:26 -0800 (PST)
+        Wed, 18 Dec 2019 15:20:22 -0500
+Received: by mail-ot1-f65.google.com with SMTP id f71so4005489otf.2;
+        Wed, 18 Dec 2019 12:20:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5ftNpWYyKl69z1Op+T0ZEjpd3DQ5nYjH7jvgxCSreFA=;
+        b=NCvJ1TtoAVBZ4ej6sO6Ko2DYisotNmqXdR+CT3zEpA3/7ZQZmZgN1ukD/P1m0kDcHZ
+         SMvo6a7053+B4wdGA3nCefJKbBiHVdJirYbQq0brjsMSPaOZLaoY2eoIC7zzjwCQA3ai
+         LWfEVBzVfz29WneweUwQJqLqSopB3kePIY94liOpRzuVntuTNO6sVtBEdQNm5gQ282tQ
+         lBZa9e3pD+sQDld8TKNIIF/6uHL3krPINT4p/R2PsFKsw2Qeh9qFs+4CatUhR0d3yEx/
+         nF9wgZQQpsLju3Du7oXFtqRuuyjw0MOoyms8Ex0tNpZUxwYErTU3Z+6LQBznJMuYwYG4
+         dXJQ==
+X-Gm-Message-State: APjAAAVyZcuKaSdIi0iE1+R8CcUJbX29mNS40DQ/TLd8b/sQnYGxUp2+
+        CwcYsnYwZg4YVweB3A/9eg==
+X-Google-Smtp-Source: APXvYqxEKkkc4eUcU32G8cCC0HDWRY1ZBkEZlpsBb0kXZRCZgzaryBbWtD6Knj0ZDfA2aholr6kBuQ==
+X-Received: by 2002:a9d:7501:: with SMTP id r1mr1785228otk.196.1576700421108;
+        Wed, 18 Dec 2019 12:20:21 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id r25sm1196527otk.2.2019.12.18.12.20.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 12:20:19 -0800 (PST)
+Date:   Wed, 18 Dec 2019 14:20:18 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        ebiharaml@si-linux.co.jp
+Subject: Re: [PATCH v6 5/6] dt-bindings: display: Add idk-2121wr binding
+Message-ID: <20191218202018.GA7282@bogus>
+References: <1576590361-28244-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1576590361-28244-6-git-send-email-fabrizio.castro@bp.renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1576590361-28244-6-git-send-email-fabrizio.castro@bp.renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jose Abreu <Jose.Abreu@synopsys.com>
-Date: Wed, 18 Dec 2019 11:33:04 +0100
+On Tue, Dec 17, 2019 at 01:46:00PM +0000, Fabrizio Castro wrote:
+> Add binding for the idk-2121wr LVDS panel from Advantech.
+> 
+> Some panel-specific documentation can be found here:
+> https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model-IDK-2121WR-K2FHA2E.htm
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> 
+> ---
+> v5->v6:
+> * No change
+> 
+> v4->v5:
+> * No change
+> 
+> v3->v4:
+> * Absorbed patch "dt-bindings: display: Add bindings for LVDS
+>   bus-timings"
+> * Big restructuring after Rob's and Laurent's comments
+> 
+> v2->v3:
+> * New patch
+> ---
+>  .../display/panel/advantech,idk-2121wr.yaml        | 128 +++++++++++++++++++++
+>  1 file changed, 128 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml b/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
+> new file mode 100644
+> index 0000000..24cd38b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
+> @@ -0,0 +1,128 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/panel/advantech,idk-2121wr.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Advantech IDK-2121WR 21.5" Full-HD dual-LVDS panel
+> +
+> +maintainers:
+> +  - Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> +  - Thierry Reding <thierry.reding@gmail.com>
+> +
+> +description: |
+> +  The IDK-2121WR from Advantech is a Full-HD dual-LVDS panel.
+> +  A dual-LVDS interface is a dual-link connection with even pixels traveling
+> +  on one link, and with odd pixels traveling on the other link.
+> +
+> +  The panel expects odd pixels on the first port, and even pixels on the
+> +  second port, therefore the ports must be marked accordingly (with either
+> +  dual-lvds-odd-pixels or dual-lvds-even-pixels).
+> +
 
-> This series adds TSN support (EST and Frame Preemption) for stmmac driver.
-> 
-> 1) Adds the HW specific support for EST in GMAC5+ cores.
-> 
-> 2) Adds the HW specific support for EST in XGMAC3+ cores.
-> 
-> 3) Integrates EST HW specific support with TAPRIO scheduler API.
-> 
-> 4) Adds the Frame Preemption suppor on stmmac TAPRIO implementation.
-> 
-> 5) Adds the HW specific support for Frame Preemption in GMAC5+ cores.
-> 
-> 6) Adds the HW specific support for Frame Preemption in XGMAC3+ cores.
-> 
-> 7) Adds support for HW debug counters for Frame Preemption available in
-> GMAC5+ cores.
+Needs to reference lvds.yaml here.
 
-Series applied, thanks.
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: advantech,idk-2121wr
+> +      - {} # panel-lvds, but not listed here to avoid false select
+> +
+> +  width-mm:
+> +    const: 476
+> +
+> +  height-mm:
+> +    const: 268
+> +
+> +  data-mapping:
+> +    const: vesa-24
+> +
+> +  ports:
+> +    type: object
+> +    properties:
+> +      "#address-cells":
+> +        const: 1
+> +
+> +      "#size-cells":
+> +        const: 0
+
+No need for these 2. Can assume they are defined in common binding.
+
+> +
+> +      port@0:
+> +        type: object
+> +        description: The sink for odd pixels.
+> +        properties:
+> +          reg:
+> +            const: 0
+> +
+> +          dual-lvds-odd-pixels: true
+> +
+> +        required:
+> +          - reg
+> +          - dual-lvds-odd-pixels
+> +
+> +      port@1:
+> +        type: object
+> +        description: The sink for even pixels.
+> +        properties:
+> +          reg:
+> +            const: 1
+> +
+> +          dual-lvds-even-pixels: true
+> +
+> +        required:
+> +          - reg
+> +          - dual-lvds-even-pixels
+
+
+port@0 and port@1 both required?
+
+> +
+> +  panel-timing: true
+> +
+> +additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - width-mm
+> +  - height-mm
+> +  - data-mapping
+> +  - panel-timing
+> +  - ports
+
+No need to repeat what's required by lvds.yaml.
+
+> +
+> +examples:
+> +  - |+
+> +    panel-lvds {
+> +      compatible = "advantech,idk-2121wr", "panel-lvds";
+> +
+> +      width-mm = <476>;
+> +      height-mm = <268>;
+> +
+> +      data-mapping = "vesa-24";
+> +
+> +      panel-timing {
+> +        clock-frequency = <148500000>;
+> +        hactive = <1920>;
+> +        vactive = <1080>;
+> +        hsync-len = <44>;
+> +        hfront-porch = <88>;
+> +        hback-porch = <148>;
+> +        vfront-porch = <4>;
+> +        vback-porch = <36>;
+> +        vsync-len = <5>;
+> +      };
+> +
+> +      ports {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        port@0 {
+> +          reg = <0>;
+> +          dual-lvds-odd-pixels;
+> +          panel_in0: endpoint {
+> +            remote-endpoint = <&lvds0_out>;
+> +          };
+> +        };
+> +
+> +        port@1 {
+> +          reg = <1>;
+> +          dual-lvds-even-pixels;
+> +          panel_in1: endpoint {
+> +            remote-endpoint = <&lvds1_out>;
+> +          };
+> +        };
+> +      };
+> +    };
+> +
+> +...
+> -- 
+> 2.7.4
+> 
