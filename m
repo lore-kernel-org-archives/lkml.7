@@ -2,168 +2,396 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32CE2C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 496C7C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE7392176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 100672176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:53:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="qAiTZ+Mc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IfRJzYj/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbfLRQw2 (ORCPT
+        id S1727677AbfLRQw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 11:52:28 -0500
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:36365 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727185AbfLRQw2 (ORCPT
+        Wed, 18 Dec 2019 11:52:59 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:45767 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727192AbfLRQw7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 11:52:28 -0500
-Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
-  Eugen.Hristev@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="Eugen.Hristev@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa5.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa5.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: B3hJCgvXUuiOmBQJrZj+OXsB6UjUQJJulMiWAQ9kwRMs77edPNRfiJVy6LpoQKHnXT+0Cmy1xj
- uMzvexOaIL4rmWlrDa2BW8FuG4bZmhb4QV7rE/ZMFsKPZLNUl52g5Y+fqoPlecwWoPIdjkE64E
- sD6QVX7LnlJqjc/SBXUvApTcN25IZSP0opzebUQsjke0rQzNyUsSUKDBWpkiuJBaXV+TBIvg8O
- mfC8he5gLBOU4UP1emyGMiO43DQTo+qXMVEdpJABuPYfBgIzIU2R2kx8PZcpVa+n/RGgm0gqZ3
- Foc=
-X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
-   d="scan'208";a="59432211"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 18 Dec 2019 09:52:26 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 18 Dec 2019 09:52:25 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 18 Dec 2019 09:52:24 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=j9mBOSR1ONboEKsvP8ln/CghaNIC/4l+Wz44ELNbRQlGRuGfBWBc8bEmJFScemhOAKPR0PneRlyU8c1dhJh39bmmFVw87d8FXiZ40vcB06FWjN5pJQipDj/5B2q8K6K1ZaMrP2jcHXSFCQK4XKLJb5HZeb/5uBq6kJav9XILXPys//jD/QkAbZFDw+k1roCDu5fNnN0g1v8Ln2E4B5TjWe+XL0qyDIQCV7OrXiT5MuAXMyEyh6DoJq24sjSOVOTxJb9mKPK+XPdzkQKqJelzSvnuQHCmeNcoUbxER9aUy79XxSIK973+JXqkGhbP+KfNqP+9TTWz/b1FE0b2TPNd+Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kJR29hcIIYXyopRtRiHRTLOXdfLQWFtEqrG+/1MU+6I=;
- b=drAK7sj6mi3j5yu41J+Z3b+ZSY/wS0lAe3gwQ5zvt4IYTX1MiLg6AmHGK0q2hRN0076QuvuWoGFM7Qgd5WBtqyysBOZgKHiTM6nF8qM3npAm7XnQxQt/aRdoxUtrZZOaUMz2i8+loOplrF5wgRSA9VYwAKShp/5mSAiHazp1YA62ypOBX0TL5uBQbU1/dEREKbomt0mdRjwcetzwv34ptsJ1Oshl/ZutNJc9VE8SppB3DgskOWhFgXnMIRxWzqTMVZTlb+Q3tZOsjNoqytF8W6E2l8VMz/grP+c1lBqNwLqpPCpErH7TgwPMVkAzHjQMQzgUyE0r2M6bI6G9095XQg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+        Wed, 18 Dec 2019 11:52:59 -0500
+Received: by mail-lf1-f67.google.com with SMTP id 203so2168765lfa.12;
+        Wed, 18 Dec 2019 08:52:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kJR29hcIIYXyopRtRiHRTLOXdfLQWFtEqrG+/1MU+6I=;
- b=qAiTZ+McjCtEfYXtl8OY2tozQf5V6WoK8RmEAOLbO2TKSgJBlmNFEK4pKjaF7R7WQGYLTbrKVFEWSQ4BRAAMqcAvCyfFXrWErXjHrar7nKVjkqfkQUWCcGTxCtTe/cvFTVqHp+QGBlwB0m2iwwoA1xxm4Wx5ZkaGPn1EELxPOWM=
-Received: from DM5PR11MB1242.namprd11.prod.outlook.com (10.168.108.8) by
- DM5PR11MB1643.namprd11.prod.outlook.com (10.172.37.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.15; Wed, 18 Dec 2019 16:52:22 +0000
-Received: from DM5PR11MB1242.namprd11.prod.outlook.com
- ([fe80::9039:e0e8:9032:20c1]) by DM5PR11MB1242.namprd11.prod.outlook.com
- ([fe80::9039:e0e8:9032:20c1%12]) with mapi id 15.20.2559.012; Wed, 18 Dec
- 2019 16:52:21 +0000
-From:   <Eugen.Hristev@microchip.com>
-To:     <alexandre.belloni@bootlin.com>
-CC:     <jic23@kernel.org>, <robh+dt@kernel.org>,
-        <Nicolas.Ferre@microchip.com>, <linux-iio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
-        <a.zummo@towertech.it>, <Ludovic.Desroches@microchip.com>
-Subject: Re: [PATCH 04/10] rtc: at91rm9200: use of_platform_populate as return
- value
-Thread-Topic: [PATCH 04/10] rtc: at91rm9200: use of_platform_populate as
- return value
-Thread-Index: AQHVtb+OEQqavda3i02bVS64GBIv7afAGSQAgAACToA=
-Date:   Wed, 18 Dec 2019 16:52:21 +0000
-Message-ID: <04264cb0-61a9-aba3-82ad-e7d12fd8441e@microchip.com>
-References: <1576686157-11939-1-git-send-email-eugen.hristev@microchip.com>
- <1576686157-11939-5-git-send-email-eugen.hristev@microchip.com>
- <20191218164348.GN695889@piout.net>
-In-Reply-To: <20191218164348.GN695889@piout.net>
-Accept-Language: en-US, ro-RO
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 888525af-e4a0-41ec-6dbd-08d783daa6b4
-x-ms-traffictypediagnostic: DM5PR11MB1643:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR11MB1643148E953C7401B75BB3A9E8530@DM5PR11MB1643.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0255DF69B9
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(39860400002)(396003)(366004)(136003)(199004)(189003)(2616005)(54906003)(478600001)(2906002)(966005)(86362001)(31686004)(81156014)(8676002)(6486002)(6916009)(36756003)(107886003)(316002)(186003)(5660300002)(26005)(53546011)(8936002)(6512007)(66476007)(66556008)(64756008)(66446008)(4326008)(66946007)(71200400001)(6506007)(31696002)(81166006)(76116006)(91956017);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB1643;H:DM5PR11MB1242.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: bO40mwsv36liD/cUs1SJYB3J0JuoRwzcU2frq1edAgoqdMBLfA++roy/oyRs+dqv5XwNGE89YoO66dLc6pUprB2TZL+jWCCAaqR/apoE6nGv3DHZ6NB25EbcqVMbdMaVtaKsU23/68epjIiQUdOSPKm9YpZo27RPguzMShG+Y+vTj73DMrUGjJZd4509b3TfxdQJgROvIRkMvAowd2XKedeTAgHFU8xFwcPOtHwQ7tHG16LPFmrQfw95RJTV7/yB54KUsobY53jx9tbze+1sN4wjFDG+W3iIOzVBnLilseHw9SJ5meH0syTT8wYNB1sgg68uMgUU2DzbKSQMJ1yBFUgwKZ0bbvr1cK808EdP64kV+T6x+zNTp7eEhdXNWxPfQojSClIKfX6CfPIkWmggNM7jBmP8IkB3PAd09VQtZFVs8a8VRy+3wtxXlDCqKUzrmUi4//NNrMPhITMvYzAC0brgyeiL6cQ899Z+sX24oNI=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7D8225504AE3BB4791663D834708AA64@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WGhx42Evj4/RV51hhGVLFfKgB9JSpTyNywgz1fGDXCA=;
+        b=IfRJzYj/wfMX7ekJ7U4k3BducOFishd6U5CoOnS0L5aP41tvdhpCWpv6ie8s+pOBon
+         39lbv+fkBd4Ah6NvqKk1iTVSyGh18SMur5HTPAeaABX9GyIduwwz95MkyXu2pgvds+/H
+         lQ6jl+OdAQuCgqGfWHyBzYKUdPkMMkyqBgDVJ3RmwW8YskRc7oCpi+suuQhbS3iN9TzE
+         QFxriKDeyZL7Zic2s5jIRhqcgOuCfghjloDzqcvGkVOCZkpE62zFQ7u0J6ayPbSN+0xK
+         YHq3oZQSQFRjISygy3Fc4KQUE28DYJX2lCamZYVM6ElLiOkUcRxwIgupej2ZCiYrqN84
+         MHaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WGhx42Evj4/RV51hhGVLFfKgB9JSpTyNywgz1fGDXCA=;
+        b=Oq+/vfMGwOOZjFlfm3W0XX4gjHf2KU88N3rY0iZaOKkQ7bZuOZ9d03l24A6m6nrvrp
+         rvIQ8O74ZNnBaDwhc/MGAydsP2kjy4SBRNdqmpUvS2cudtavc5lXjoyctEOyi4Pllcs2
+         LLSMc7Tt+bvhgYGxeBNCWAQA2gkm/jWOz/Q76fhX4PgdS2n1igWKY30Vh/BzZaD4wHpH
+         dykT/UMDnFp48hLa6tNrBM4dyq/6Ak2jVzIId1rzfQcv5DJvMTV2wKuEsUr3fJAdNyhN
+         8Sz6SrHETcYEFTsEliNBMZo9vjLQwl+YXKwn3kEzT8tFm0c5eLc/KTVrw7NEiFOwDTQw
+         WeOw==
+X-Gm-Message-State: APjAAAXUYNmb/R0yfs8HP2X6VFm5HO0SRv0hj87FvXTaPhpd+JRJR4KW
+        cyX4H1K85t+T2tjf08Tz4EiwWDmJ
+X-Google-Smtp-Source: APXvYqzDZkqYzHS4OXQq5IW/1dsfFJdBACf59i9x1Q10myfVw//oowFhUBQgkVza0ir9a5OSpar1cQ==
+X-Received: by 2002:ac2:51de:: with SMTP id u30mr2347603lfm.69.1576687975388;
+        Wed, 18 Dec 2019 08:52:55 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id d25sm1438126ljj.51.2019.12.18.08.52.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Dec 2019 08:52:54 -0800 (PST)
+Subject: Re: [PATCH v4 06/19] soc: tegra: Add Tegra PMC clock registrations
+ into PMC driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
+        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, spujar@nvidia.com,
+        josephl@nvidia.com, daniel.lezcano@linaro.org,
+        mmaddireddy@nvidia.com, markz@nvidia.com,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1576613046-17159-1-git-send-email-skomatineni@nvidia.com>
+ <1576613046-17159-7-git-send-email-skomatineni@nvidia.com>
+ <87b2b266-e4a9-9a7a-2336-6ec57d7c4d1d@gmail.com>
+ <55a56c3d-3fac-cc77-46ae-acf5de77d262@gmail.com>
+ <e4588ae6-8f9a-e4cb-3fd0-aba80a3689dc@nvidia.com>
+ <c02c873f-cf56-bee9-b4e7-9caff23b1a9d@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <87a6dc02-babf-4857-fb97-dc8149a06cfa@gmail.com>
+Date:   Wed, 18 Dec 2019 19:52:53 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 888525af-e4a0-41ec-6dbd-08d783daa6b4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Dec 2019 16:52:21.7666
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9ku1Qd/oNWsLDWEDVojwilQpchgHuOPj2Lzgpsyay9QmiwEL/oXZrSRdwU6I1BekKGsht0H7HjwaF/EYkZ7gB4RTmUIOQiAMJitH5C/fhfg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1643
+In-Reply-To: <c02c873f-cf56-bee9-b4e7-9caff23b1a9d@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDE4LjEyLjIwMTkgMTg6NDMsIEFsZXhhbmRyZSBCZWxsb25pIHdyb3RlOg0KDQo+IEhp
-LA0KPiANCj4gT24gMTgvMTIvMjAxOSAxNjoyNDowMCswMDAwLCBFdWdlbi5IcmlzdGV2QG1pY3Jv
-Y2hpcC5jb20gd3JvdGU6DQo+PiBGcm9tOiBFdWdlbiBIcmlzdGV2IDxldWdlbi5ocmlzdGV2QG1p
-Y3JvY2hpcC5jb20+DQo+Pg0KPj4gVGhpcyBhbGxvd3MgdGhlIFJUQyBub2RlIHRvIGhhdmUgY2hp
-bGQgbm9kZXMgaW4gRFQuDQo+PiBUaGlzIGFsbG93cyBzdWJub2RlcyB0byBiZSBwcm9iZWQuDQo+
-Pg0KPj4gU2lnbmVkLW9mZi1ieTogRXVnZW4gSHJpc3RldiA8ZXVnZW4uaHJpc3RldkBtaWNyb2No
-aXAuY29tPg0KPj4gLS0tDQo+PiAgIGRyaXZlcnMvcnRjL3J0Yy1hdDkxcm05MjAwLmMgfCAyICst
-DQo+PiAgIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPj4N
-Cj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3J0Yy9ydGMtYXQ5MXJtOTIwMC5jIGIvZHJpdmVycy9y
-dGMvcnRjLWF0OTFybTkyMDAuYw0KPj4gaW5kZXggM2I4MzNlMC4uZjFiNWIzZCAxMDA2NDQNCj4+
-IC0tLSBhL2RyaXZlcnMvcnRjL3J0Yy1hdDkxcm05MjAwLmMNCj4+ICsrKyBiL2RyaXZlcnMvcnRj
-L3J0Yy1hdDkxcm05MjAwLmMNCj4+IEBAIC00MjEsNyArNDIxLDcgQEAgc3RhdGljIGludCBfX2lu
-aXQgYXQ5MV9ydGNfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4+ICAgICAg
-ICBhdDkxX3J0Y193cml0ZV9pZXIoQVQ5MV9SVENfU0VDRVYpOw0KPj4NCj4+ICAgICAgICBkZXZf
-aW5mbygmcGRldi0+ZGV2LCAiQVQ5MSBSZWFsIFRpbWUgQ2xvY2sgZHJpdmVyLlxuIik7DQo+PiAt
-ICAgICByZXR1cm4gMDsNCj4+ICsgICAgIHJldHVybiBvZl9wbGF0Zm9ybV9wb3B1bGF0ZShwZGV2
-LT5kZXYub2Zfbm9kZSwgTlVMTCwgTlVMTCwgJnBkZXYtPmRldik7DQo+Pg0KPiANCj4gWW91IGNh
-biBhdm9pZCB0aGUgRFQgYmluZGluZyBjaGFuZ2UgYW5kIERUIHBhcnNpbmcgYnkgdXNpbmcNCj4g
-cGxhdGZvcm1fYWRkX2RldmljZSBoZXJlLiBJIGRvbid0IHRoaW5rIHRoZXJlIGlzIGFueSBwb2lu
-dCBkZXNjcmliaW5nDQo+IHRoZSB0cmlnZ2VyIGFzIGEgY2hpbGQgbm9kZSAoYSB3YXRjaGRvZyBm
-dW5jdGlvbmFsaXR5IHdvdWxkbid0IGJlDQo+IGRlc2NyaWJlZCBmb3IgZXhhbXBsZSkuDQo+IA0K
-DQpIaSwNCg0KSXQncyBuZWVkZWQgYmVjYXVzZSB0aGUgQURDIG5lZWRzIGEgbGluayB0byB0aGUg
-dHJpZ2dlciBkZXZpY2UuIFRoaXMgaXMgDQphIGhhcmR3YXJlIGxpbmsgaW5zaWRlIHRoZSBTb0Ms
-IHNvIEkgdGhvdWdodCB0aGUgYmVzdCB3YXkgaXMgdG8gZGVzY3JpYmUgDQp0aGlzIGhhcmR3YXJl
-IGlzIGluIHRoZSBEZXZpY2UgVHJlZS4NCk90aGVyd2lzZSB0aGUgQURDIG5vZGUgaXMgdW5hd2Fy
-ZSBvZiB0aGUgUlRDIHRyaWdnZXJpbmcgcG9zc2liaWxpdHkuDQpJZiB3ZSBqdXN0IGFzc2lnbiB0
-aGUgUlRDIHRyaWdnZXIgZGV2aWNlIHRvIHRoZSBBREMgdGhyb3VnaCB0aGUgc3lzZnMsIA0KdGhl
-IEFEQyBjYW5ub3QgZGlzdGluZ3Vpc2ggYmV0d2VlbiB0aGUgUlRDIHRyaWdnZXIgYW5kIG90aGVy
-IHZhcmlvdXMgDQp0cmlnZ2VycyB3aGljaCBjYW4gYmUgYXR0YWNoZWQuDQoNCj4gLS0NCj4gQWxl
-eGFuZHJlIEJlbGxvbmksIEJvb3RsaW4NCj4gRW1iZWRkZWQgTGludXggYW5kIEtlcm5lbCBlbmdp
-bmVlcmluZw0KPiBodHRwczovL2Jvb3RsaW4uY29tDQo+IA==
+18.12.2019 18:50, Sowjanya Komatineni пишет:
+> 
+> On 12/18/19 7:46 AM, Sowjanya Komatineni wrote:
+>>
+>> On 12/18/19 12:35 AM, Dmitry Osipenko wrote:
+>>> 18.12.2019 11:30, Dmitry Osipenko пишет:
+>>>> 17.12.2019 23:03, Sowjanya Komatineni пишет:
+>>>>> Tegra PMC has clk_out_1, clk_out_2, and clk_out_3 clocks and currently
+>>>>> these PMC clocks are registered by Tegra clock driver with each
+>>>>> clock as
+>>>>> separate mux and gate clocks using clk_register_mux and
+>>>>> clk_register_gate
+>>>>> by passing PMC base address and register offsets and PMC
+>>>>> programming for
+>>>>> these clocks happens through direct PMC access by the clock driver.
+>>>>>
+>>>>> With this, when PMC is in secure mode any direct PMC access from the
+>>>>> non-secure world does not go through and these clocks will not be
+>>>>> functional.
+>>>>>
+>>>>> This patch adds these PMC clocks registration to pmc driver with
+>>>>> PMC as
+>>>>> a clock provider and registers each clock as single clock.
+>>>>>
+>>>>> clk_ops callback implementations for these clocks uses
+>>>>> tegra_pmc_readl and
+>>>>> tegra_pmc_writel which supports PMC programming in both secure mode
+>>>>> and
+>>>>> non-secure mode.
+>>>>>
+>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>> ---
+>>>>>   drivers/soc/tegra/pmc.c | 248
+>>>>> ++++++++++++++++++++++++++++++++++++++++++++++++
+>>>>>   1 file changed, 248 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+>>>>> index ea0e11a09c12..6d65194a6e71 100644
+>>>>> --- a/drivers/soc/tegra/pmc.c
+>>>>> +++ b/drivers/soc/tegra/pmc.c
+>>>>> @@ -13,6 +13,9 @@
+>>>>>     #include <linux/arm-smccc.h>
+>>>>>   #include <linux/clk.h>
+>>>>> +#include <linux/clk-provider.h>
+>>>>> +#include <linux/clkdev.h>
+>>>>> +#include <linux/clk/clk-conf.h>
+>>>>>   #include <linux/clk/tegra.h>
+>>>>>   #include <linux/debugfs.h>
+>>>>>   #include <linux/delay.h>
+>>>>> @@ -48,6 +51,7 @@
+>>>>>   #include <dt-bindings/pinctrl/pinctrl-tegra-io-pad.h>
+>>>>>   #include <dt-bindings/gpio/tegra186-gpio.h>
+>>>>>   #include <dt-bindings/gpio/tegra194-gpio.h>
+>>>>> +#include <dt-bindings/soc/tegra-pmc.h>
+>>>>>     #define PMC_CNTRL            0x0
+>>>>>   #define  PMC_CNTRL_INTR_POLARITY    BIT(17) /* inverts INTR
+>>>>> polarity */
+>>>>> @@ -100,6 +104,7 @@
+>>>>>   #define PMC_WAKE2_STATUS        0x168
+>>>>>   #define PMC_SW_WAKE2_STATUS        0x16c
+>>>>>   +#define PMC_CLK_OUT_CNTRL        0x1a8
+>>>>>   #define PMC_SENSOR_CTRL            0x1b0
+>>>>>   #define  PMC_SENSOR_CTRL_SCRATCH_WRITE    BIT(2)
+>>>>>   #define  PMC_SENSOR_CTRL_ENABLE_RST    BIT(1)
+>>>>> @@ -155,6 +160,64 @@
+>>>>>   #define  TEGRA_SMC_PMC_READ    0xaa
+>>>>>   #define  TEGRA_SMC_PMC_WRITE    0xbb
+>>>>>   +struct pmc_clk {
+>>>>> +    struct clk_hw    hw;
+>>>>> +    unsigned long    offs;
+>>>>> +    u32        mux_mask;
+>>>>> +    u32        mux_shift;
+>>>>> +    u32        gate_shift;
+>>>>> +};
+>>>>> +
+>>>>> +#define to_pmc_clk(_hw) container_of(_hw, struct pmc_clk, hw)
+>>>>> +
+>>>>> +struct pmc_clk_init_data {
+>>>>> +    char *name;
+>>>>> +    const char *const *parents;
+>>>>> +    int num_parents;
+>>>>> +    int clk_id;
+>>>>> +    u8 mux_shift;
+>>>>> +    u8 gate_shift;
+>>>>> +};
+>>>>> +
+>>>>> +static const char * const clk_out1_parents[] = { "osc", "osc_div2",
+>>>>> +    "osc_div4", "extern1",
+>>>>> +};
+>>>>> +
+>>>>> +static const char * const clk_out2_parents[] = { "osc", "osc_div2",
+>>>>> +    "osc_div4", "extern2",
+>>>>> +};
+>>>>> +
+>>>>> +static const char * const clk_out3_parents[] = { "osc", "osc_div2",
+>>>>> +    "osc_div4", "extern3",
+>>>>> +};
+>>>>> +
+>>>>> +static const struct pmc_clk_init_data tegra_pmc_clks_data[] = {
+>>>>> +    {
+>>>>> +        .name = "clk_out_1",
+>>>>> +        .parents = clk_out1_parents,
+>>>>> +        .num_parents = ARRAY_SIZE(clk_out1_parents),
+>>>>> +        .clk_id = TEGRA_PMC_CLK_OUT_1,
+>>>>> +        .mux_shift = 6,
+>>>>> +        .gate_shift = 2,
+>>>> I'd replace these with a single .shift, given that mux_shift =
+>>>> gate_shift + 4 for all clocks.
+>>>>
+>>>>> +    },
+>>>>> +    {
+>>>>> +        .name = "clk_out_2",
+>>>>> +        .parents = clk_out2_parents,
+>>>>> +        .num_parents = ARRAY_SIZE(clk_out2_parents),
+>>>>> +        .clk_id = TEGRA_PMC_CLK_OUT_2,
+>>>>> +        .mux_shift = 14,
+>>>>> +        .gate_shift = 10,
+>>>>> +    },
+>>>>> +    {
+>>>>> +        .name = "clk_out_3",
+>>>>> +        .parents = clk_out3_parents,
+>>>>> +        .num_parents = ARRAY_SIZE(clk_out3_parents),
+>>>>> +        .clk_id = TEGRA_PMC_CLK_OUT_3,
+>>>>> +        .mux_shift = 22,
+>>>>> +        .gate_shift = 18,
+>>>>> +    },
+>>>>> +};
+>>>>> +
+>>>>>   struct tegra_powergate {
+>>>>>       struct generic_pm_domain genpd;
+>>>>>       struct tegra_pmc *pmc;
+>>>>> @@ -254,6 +317,9 @@ struct tegra_pmc_soc {
+>>>>>        */
+>>>>>       const struct tegra_wake_event *wake_events;
+>>>>>       unsigned int num_wake_events;
+>>>>> +
+>>>>> +    const struct pmc_clk_init_data *pmc_clks_data;
+>>>>> +    unsigned int num_pmc_clks;
+>>>>>   };
+>>>>>     static const char * const tegra186_reset_sources[] = {
+>>>>> @@ -2163,6 +2229,173 @@ static int tegra_pmc_clk_notify_cb(struct
+>>>>> notifier_block *nb,
+>>>>>       return NOTIFY_OK;
+>>>>>   }
+>>>>>   +static void pmc_clk_fence_udelay(u32 offset)
+>>>>> +{
+>>>>> +    tegra_pmc_readl(pmc, offset);
+>>>>> +    /* pmc clk propagation delay 2 us */
+>>>>> +    udelay(2);
+>>>>> +}
+>>>>> +
+>>>>> +static u8 pmc_clk_mux_get_parent(struct clk_hw *hw)
+>>>>> +{
+>>>>> +    struct pmc_clk *clk = to_pmc_clk(hw);
+>>>>> +    u32 val;
+>>>>> +
+>>>>> +    val = tegra_pmc_readl(pmc, clk->offs) >> clk->mux_shift;
+>>>>> +    val &= clk->mux_mask;
+>>>>> +
+>>>>> +    return val;
+>>>>> +}
+>>>>> +
+>>>>> +static int pmc_clk_mux_set_parent(struct clk_hw *hw, u8 index)
+>>>>> +{
+>>>>> +    struct pmc_clk *clk = to_pmc_clk(hw);
+>>>>> +    u32 val;
+>>>>> +
+>>>>> +    val = tegra_pmc_readl(pmc, clk->offs);
+>>>>> +    val &= ~(clk->mux_mask << clk->mux_shift);
+>>>>> +    val |= index << clk->mux_shift;
+>>>>> +    tegra_pmc_writel(pmc, val, clk->offs);
+>>>>> +    pmc_clk_fence_udelay(clk->offs);
+>>>>> +
+>>>>> +    return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static int pmc_clk_is_enabled(struct clk_hw *hw)
+>>>>> +{
+>>>>> +    struct pmc_clk *clk = to_pmc_clk(hw);
+>>>>> +
+>>>>> +    return tegra_pmc_readl(pmc, clk->offs) & BIT(clk->gate_shift)
+>>>>> ? 1 : 0;
+>>>>> +}
+>>>>> +
+>>>>> +static void pmc_clk_set_state(unsigned long offs, u32 shift, int
+>>>>> state)
+>>>>> +{
+>>>>> +    u32 val;
+>>>>> +
+>>>>> +    val = tegra_pmc_readl(pmc, offs);
+>>>>> +    val = state ? (val | BIT(shift)) : (val & ~BIT(shift));
+>>>>> +    tegra_pmc_writel(pmc, val, offs);
+>>>>> +    pmc_clk_fence_udelay(offs);
+>>>>> +}
+>>>>> +
+>>>>> +static int pmc_clk_enable(struct clk_hw *hw)
+>>>>> +{
+>>>>> +    struct pmc_clk *clk = to_pmc_clk(hw);
+>>>>> +
+>>>>> +    pmc_clk_set_state(clk->offs, clk->gate_shift, 1);
+>>>>> +
+>>>>> +    return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static void pmc_clk_disable(struct clk_hw *hw)
+>>>>> +{
+>>>>> +    struct pmc_clk *clk = to_pmc_clk(hw);
+>>>>> +
+>>>>> +    pmc_clk_set_state(clk->offs, clk->gate_shift, 0);
+>>>>> +}
+>>>>> +
+>>>>> +static const struct clk_ops pmc_clk_ops = {
+>>>>> +    .get_parent = pmc_clk_mux_get_parent,
+>>>>> +    .set_parent = pmc_clk_mux_set_parent,
+>>>>> +    .determine_rate = __clk_mux_determine_rate,
+>>>>> +    .is_enabled = pmc_clk_is_enabled,
+>>>>> +    .enable = pmc_clk_enable,
+>>>>> +    .disable = pmc_clk_disable,
+>>>>> +};
+>>>>> +
+>>>>> +static struct clk *
+>>>>> +tegra_pmc_clk_out_register(const struct pmc_clk_init_data *data,
+>>>>> +               unsigned long offset)
+>>>>> +{
+>>>>> +    struct clk_init_data init;
+>>>>> +    struct pmc_clk *pmc_clk;
+>>>>> +
+>>>>> +    pmc_clk = kzalloc(sizeof(*pmc_clk), GFP_KERNEL);
+>>>>> +    if (!pmc_clk)
+>>>>> +        return ERR_PTR(-ENOMEM);
+>>>>> +
+>>>>> +    init.name = data->name;
+>>>>> +    init.ops = &pmc_clk_ops;
+>>>>> +    init.parent_names = data->parents;
+>>>>> +    init.num_parents = data->num_parents;
+>>>>> +    init.flags = CLK_SET_RATE_NO_REPARENT | CLK_SET_RATE_PARENT |
+>>>>> +             CLK_SET_PARENT_GATE;
+>>>>> +
+>>>>> +    pmc_clk->hw.init = &init;
+>>>>> +    pmc_clk->offs = offset;
+>>>>> +    pmc_clk->mux_mask = 3;
+>>>> If mux_mask is a constant value, perhaps will be better to replace the
+>>>> variable with a literal?
+>>>>
+>>>> #define PMC_CLK_OUT_MUX_MASK    GENMASK(1, 0)
+>>> Maybe even:
+>>>
+>>> #define PMC_CLK_OUT_MUX_MASK(c)    GENMASK(c->shift + 1, c->shift)
+>>>
+>>>>> +    pmc_clk->mux_shift = data->mux_shift;
+>>>>> +    pmc_clk->gate_shift = data->gate_shift;
+>>>>> +
+>>>>> +    return clk_register(NULL, &pmc_clk->hw);
+>>>>> +}
+>>>>> +
+>>>>> +static void tegra_pmc_clock_register(struct tegra_pmc *pmc,
+>>>>> +                     struct device_node *np)
+>>>>> +{
+>>>>> +    struct clk *clk;
+>>>>> +    struct clk_onecell_data *clk_data;
+>>>>> +    unsigned int num_clks;
+>>>>> +    int i, err = -ENOMEM;
+>>>>> +
+>>>>> +    num_clks = pmc->soc->num_pmc_clks;
+>>>>> +
+>>>>> +    if (!num_clks)
+>>>>> +        return;
+>>>>> +
+>>>>> +    clk_data = kmalloc(sizeof(*clk_data), GFP_KERNEL);
+>>>>> +    if (!clk_data)
+>>>>> +        goto err_clk;
+>>>> What about devm_kmalloc, devm_kcalloc?
+>>>>
+>>>>> +    clk_data->clks = kcalloc(TEGRA_PMC_CLK_MAX,
+>>>>> sizeof(*clk_data->clks),
+>>>>> +                 GFP_KERNEL);
+>>>>> +    if (!clk_data->clks)
+>>>>> +        goto free_clkdata;
+>>>>> +
+>>>>> +    clk_data->clk_num = TEGRA_PMC_CLK_MAX;
+>>>>> +
+>>>>> +    for (i = 0; i < TEGRA_PMC_CLK_MAX; i++)
+>>>>> +        clk_data->clks[i] = ERR_PTR(-ENOENT);
+>>>>> +
+>>>>> +    for (i = 0; i < pmc->soc->num_pmc_clks; i++) {
+>>>>> +        const struct pmc_clk_init_data *data;
+>>>>> +
+>>>>> +        data = pmc->soc->pmc_clks_data + i;
+>>>>> +
+>>>>> +        clk = tegra_pmc_clk_out_register(data,
+>>>>> PMC_CLK_OUT_CNTRL);> +        if (IS_ERR(clk)) {
+>>>>> +            dev_err(pmc->dev,
+>>>>> +                "unable to register %s\n", data->name);
+>>>>> +            err = PTR_ERR(clk);
+>>>> Error codes in a message could be useful.
+>>
+>> Added error code at end of clock register along with WARN message to
+>> have it common to show warning with error code for all errors
+>> including kmalloc and kcalloc.
+>>
+> Sure, With devm_kmalloc and devm_kcalloc, will move error code along
+> with message and do return right at point of errors.
+
+There is no need to warn about memory allocations because there will be
+warning anyway, unless __GFP_NOWARN is used.
