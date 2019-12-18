@@ -2,131 +2,149 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B3FDC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7951C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40BC824650
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:37:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aRf4sMeW"
+	by mail.kernel.org (Postfix) with ESMTP id A47EE24650
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:37:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbfLRLho (ORCPT
+        id S1726947AbfLRLhz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 06:37:44 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:37541 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726701AbfLRLhn (ORCPT
+        Wed, 18 Dec 2019 06:37:55 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:28160 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726551AbfLRLhz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 06:37:43 -0500
-Received: by mail-qk1-f194.google.com with SMTP id 21so1271881qky.4
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 03:37:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S+M8i39/jB6Cqau0xv7tzu7ie7N03vkjz45ADcmxSd0=;
-        b=aRf4sMeWzpadW5YJrmob5NdYi06W4xs5sug9fKJBjCXVsXaWQTyeKCMHdYNRW4gUir
-         o2k89xJ7NsawicDftFZF0m4Ydmc7VvW+wymYJJFcE2SA+28K7kUDG+s8NjIwJv8cA0PV
-         RA3WKgbFfPQGjv62mEKfn16vDFaNdFOjC5VzPQh82/dIAsYQSupfL/Z437nK6PumzOPF
-         +h+x6ROL/EONo82GvI6fAxLNWsZb0cEEmfUi3Kg1+v5RoNJbszmIjfgQUTQBMvmPpRU5
-         mZ1Opk9FCvaWvglpbvXKaK4Qh6GF5guLxxq3DCKPIsFn5/BA0HwFiBtolnHtqM0xEge4
-         h2uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S+M8i39/jB6Cqau0xv7tzu7ie7N03vkjz45ADcmxSd0=;
-        b=plv1N/GK8SDVi/WxIy/2JsAQRCd20I+0i4ho8INCBijiYjPtoJO8UU7SWicoSA6u/y
-         NfUNr0xUbxy4hG8lYyv31w+R3OYpQQcwX8K79xEqDL1+lLILu75hj00+m+mOOI4L0B17
-         xkZtpbC1/ubMxh4jX4iu40fF6rQBxo+i+gMw9gPia5ZaK3sr6El+SteagxJ88QFsR0qG
-         mkEplcBz9T7UuAa9FvS8QsydcrUhX7vZrdNDgPxTV0NwMD7w0UngQjq45xO29ZGPU4q8
-         bdiuWjnuYnguSWlTN6zuUChsrBcIRqsPt4hZDLWG/UOBVx5asMdBqiB0WEiW/5VgT4Oo
-         S6Ig==
-X-Gm-Message-State: APjAAAWP8qCP+6JWLvU0KqopHeGrqDtOeugyP9FzRO+XWHmz8rYezS/K
-        37m5oPVrYpCoOrOS+wDrnO2FHbXb9FbWjPScOsFD1Q==
-X-Google-Smtp-Source: APXvYqyKK+FDzDrpsx/z+doLr55we/uUU5vCPbMr4o16ebJXWlTeSoCgL+oyXSSiJUasHPhtkAICWMChBnTXKRzBoGQ=
-X-Received: by 2002:a05:620a:1136:: with SMTP id p22mr1987714qkk.8.1576669062422;
- Wed, 18 Dec 2019 03:37:42 -0800 (PST)
+        Wed, 18 Dec 2019 06:37:55 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBIBbXnD062289;
+        Wed, 18 Dec 2019 06:37:35 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wye06cpfn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 Dec 2019 06:37:34 -0500
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xBIBbWmj062239;
+        Wed, 18 Dec 2019 06:37:32 -0500
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wye06cp6y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 Dec 2019 06:37:32 -0500
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xBIBZ9aF005603;
+        Wed, 18 Dec 2019 11:37:08 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma03dal.us.ibm.com with ESMTP id 2wvqc6x6g0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 Dec 2019 11:37:08 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBIBb7A747448394
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Dec 2019 11:37:07 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B010BAC062;
+        Wed, 18 Dec 2019 11:37:07 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 40DFAAC05B;
+        Wed, 18 Dec 2019 11:37:04 +0000 (GMT)
+Received: from [9.199.40.202] (unknown [9.199.40.202])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed, 18 Dec 2019 11:37:03 +0000 (GMT)
+Subject: Re: [PATCH v2 2/3] mm/mmu_gather: Invalidate TLB correctly on batch
+ allocation failure and flush
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Paul Mackerras <paulus@ozlabs.org>
+Cc:     akpm@linux-foundation.org, npiggin@gmail.com, mpe@ellerman.id.au,
+        will@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-arch@vger.kernel.org
+References: <20191218053530.73053-1-aneesh.kumar@linux.ibm.com>
+ <20191218053530.73053-2-aneesh.kumar@linux.ibm.com>
+ <20191218091733.GO2844@hirez.programming.kicks-ass.net>
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Message-ID: <0f0bea3b-b7b5-fa8c-f75c-396cf78c47b4@linux.ibm.com>
+Date:   Wed, 18 Dec 2019 17:07:02 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20191208232734.225161-1-Jason@zx2c4.com> <CACT4Y+bsJVmgbD-WogwU=LfWiPN1JgjBrwx4s8Y14hDd7vqqhQ@mail.gmail.com>
- <CAHmME9o0AparjaaOSoZD14RAW8_AJTfKfcx3Y2ndDAPFNC-MeQ@mail.gmail.com>
-In-Reply-To: <CAHmME9o0AparjaaOSoZD14RAW8_AJTfKfcx3Y2ndDAPFNC-MeQ@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 18 Dec 2019 12:37:30 +0100
-Message-ID: <CACT4Y+Zssd6OZ2-U4kjw18mNthQyzPWZV_gkH3uATnSv1SVDfA@mail.gmail.com>
-Subject: Re: [PATCH net-next v2] net: WireGuard secure network tunnel
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191218091733.GO2844@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-18_03:2019-12-17,2019-12-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
+ bulkscore=0 spamscore=0 clxscore=1011 priorityscore=1501 suspectscore=2
+ mlxlogscore=999 phishscore=0 adultscore=0 malwarescore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-1912180097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 11:57 AM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
->
-> Hi Dmitry,
->
-> On Wed, Dec 18, 2019 at 11:13 AM Dmitry Vyukov <dvyukov@google.com> wrote:
-> > Does it really do "verbose debug log"? I only see it is used for
-> > self-tests and debug checks:
->
-> Yes, it does, via net_dbg and co. People with the Linux "dynamic
-> debugging" feature turned also get the log by twiddling with some file
-> at runtime.
->
-> > In different contexts one may enable different sets of these.
-> > In particular in fuzzing context one absolutely wants additional debug
-> > checks, but not self tests and definitely no verbose logging. CI and
-> > various manual scenarios will require different sets as well.
-> > If this does verbose logging, we won't get debug checks as well during
-> > fuzzing, which is unfortunate.
-> > Can make sense splitting CONFIG_WIREGUARD_DEBUG into 2 or 3 separate
-> > configs (that's what I see frequently). Unfortunately there is no
-> > standard conventions for anything of this, so CIs will never find your
-> > boot tests and fuzzing won't find the additional checks...
->
-> I agree that it might make sense to split this up at some point, but
-> for now I think it might be a bit overkill. Both the self-tests and
-> debug tests are *very* light at the moment. Down the road if these
-> become heavier, I think it'd probably be a good idea, but for the time
-> being it'd mostly be more complexity for nothing.
->
-> Another more interesting point, though, you wrote
-> > and definitely no verbose logging.
->
-> Actually with WireGuard, I think that's not the case. The WireGuard
-> logging has been written with DoS in mind. You /should/ be able to
-> safely run it on a production system exposed to the wild Internet, and
-> while there will be some additional things in your dmesg, an attacker
-> isn't supposed to be able to totally flood it without ratelimiting or
-> inject malicious strings into it (such as ANSI escape sequence). In
-> other words, I consider the logging to be fair game attack surface. If
-> your fuzzer manages to craft some nasty sequence of packets that
-> tricks some rate limiting logic and lets you litter all over dmesg
-> totally unbounded, I'd consider that a real security bug worth
-> stressing out about. So from the perspective of letting your fuzzers
-> loose on WireGuard, I'd actually like to see this option kept on.
+On 12/18/19 2:47 PM, Peter Zijlstra wrote:
+> On Wed, Dec 18, 2019 at 11:05:29AM +0530, Aneesh Kumar K.V wrote:
+>> From: Peter Zijlstra <peterz@infradead.org>
+>>
+>> Architectures for which we have hardware walkers of Linux page table should
+>> flush TLB on mmu gather batch allocation failures and batch flush. Some
+>> architectures like POWER supports multiple translation modes (hash and radix)
+> 
+> nohash, hash and radix in fact :-)
+> 
+>> and in the case of POWER only radix translation mode needs the above TLBI.
+> 
+>> This is because for hash translation mode kernel wants to avoid this extra
+>> flush since there are no hardware walkers of linux page table. With radix
+>> translation, the hardware also walks linux page table and with that, kernel
+>> needs to make sure to TLB invalidate page walk cache before page table pages are
+>> freed.
+>>
+>> More details in
+>> commit: d86564a2f085 ("mm/tlb, x86/mm: Support invalidating TLB caches for RCU_TABLE_FREE")
+>>
+>> Fixes: a46cc7a90fd8 ("powerpc/mm/radix: Improve TLB/PWC flushes")
+>> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org
+>> Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+>> ---
+> 
+>> diff --git a/arch/powerpc/include/asm/tlb.h b/arch/powerpc/include/asm/tlb.h
+>> index b2c0be93929d..7f3a8b902325 100644
+>> --- a/arch/powerpc/include/asm/tlb.h
+>> +++ b/arch/powerpc/include/asm/tlb.h
+>> @@ -26,6 +26,17 @@
+>>   
+>>   #define tlb_flush tlb_flush
+>>   extern void tlb_flush(struct mmu_gather *tlb);
+>> +/*
+>> + * book3s:
+>> + * Hash does not use the linux page-tables, so we can avoid
+>> + * the TLB invalidate for page-table freeing, Radix otoh does use the
+>> + * page-tables and needs the TLBI.
+>> + *
+>> + * nohash:
+>> + * We still do TLB invalidate in the __pte_free_tlb routine before we
+>> + * add the page table pages to mmu gather table batch.
+> 
+> I'm a little confused though; if nohash is a software TLB fill, why do
+> you need a TLBI for tables?
+> 
 
-This is the case even with CONFIG_WIREGUARD_DEBUG turned on, right? Or without?
+nohash (AKA book3e) has different mmu modes. I don't follow all the 
+details w.r.t book3e. Paul or Michael might be able to explain the need 
+for table flush with book3e.
 
-Well, it may be able to trigger unbounded printing, but that won't be
-detected as a bug and won't be reported. To be reported it needs to
-fall into a set of predefined bug cases (e.g. "BUG:" or "WARNING:" on
-console). Unless of course it triggers total stall/hang. But I'm
-afraid it will just dirty dmesg, make reading crashes harder and slow
-down everything without benefit. O(1) output per test is generally not
-OK in heavy stressing scenario, even if it's overall bounded and rate
-limited.
+Documentation/powerpc/cpu-faimilies.rst shows different hardware assist 
+TLB fill support.
+
+What I wanted to convey with the above comment way we handle only radix 
+translation mode with tlb_needs_table_invalidate() check. Other 
+translations (hash,  different variants of book3e) are all good because 
+of the reason outlined above.
+
+-aneesh
