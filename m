@@ -2,175 +2,238 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E023C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A304C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F49F227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E76EE2072B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:01:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XsznmG3F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbfLRIAL (ORCPT
+        id S1726716AbfLRIBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 03:00:11 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:30607 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbfLRIAL (ORCPT
+        Wed, 18 Dec 2019 03:01:46 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52339 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725799AbfLRIBq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 03:00:11 -0500
-Received: from [10.28.39.99] (10.28.39.99) by mail-sz.amlogic.com (10.28.11.5)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 18 Dec
- 2019 16:00:21 +0800
-Subject: Re: [PATCH v4 1/6] dt-bindings: clock: meson: add A1 PLL clock
- controller bindings
-To:     Maxime Ripard <maxime@cerno.tech>
-CC:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Rob Herring <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20191206074052.15557-1-jian.hu@amlogic.com>
- <20191206074052.15557-2-jian.hu@amlogic.com>
- <20191213103856.qo7vlnuk4ajz3vq5@gilmour.lan>
-From:   Jian Hu <jian.hu@amlogic.com>
-Message-ID: <ba16b846-1d5f-3d1e-e8e2-420687d11e8a@amlogic.com>
-Date:   Wed, 18 Dec 2019 16:00:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Wed, 18 Dec 2019 03:01:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576656105;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=747rUkg9Dly/LazrJwSRheOUZoAEJ/QrzeTCf97iYBM=;
+        b=XsznmG3FObfuzZzCyWnyqBqw0rqLmG1049PcYt9evf3qt00DzKplDYVWF5AC9kAKkSTG6t
+        rbStEdJP1W63LMTeLUBFgD6teJoA1xi4qj8r72YAcnlcpYnLblmgawXLXAtp9kK+kpepEc
+        su9Oc2J6Nd9PaktzHXGnfdzBNoGsXYs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-247-dBcpm1faOR6YSMUEzhqYqA-1; Wed, 18 Dec 2019 03:01:41 -0500
+X-MC-Unique: dBcpm1faOR6YSMUEzhqYqA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 278381800D42;
+        Wed, 18 Dec 2019 08:01:40 +0000 (UTC)
+Received: from firesoul.localdomain (ovpn-200-28.brq.redhat.com [10.40.200.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5D0055C1B0;
+        Wed, 18 Dec 2019 08:01:37 +0000 (UTC)
+Received: from [192.168.42.3] (localhost [IPv6:::1])
+        by firesoul.localdomain (Postfix) with ESMTP id 0A20D30736C73;
+        Wed, 18 Dec 2019 09:01:36 +0100 (CET)
+Subject: [net-next v4 PATCH] page_pool: handle page recycle for NUMA_NO_NODE
+ condition
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     Jesper Dangaard Brouer <brouer@redhat.com>, lirongqing@baidu.com,
+        linyunsheng@huawei.com,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Saeed Mahameed <saeedm@mellanox.com>, mhocko@kernel.org,
+        peterz@infradead.org, linux-kernel@vger.kernel.org
+Date:   Wed, 18 Dec 2019 09:01:35 +0100
+Message-ID: <157665609556.170047.13435503155369210509.stgit@firesoul>
+In-Reply-To: <20191218084437.6db92d32@carbon>
+References: <20191218084437.6db92d32@carbon>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-In-Reply-To: <20191213103856.qo7vlnuk4ajz3vq5@gilmour.lan>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.28.39.99]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime
+The check in pool_page_reusable (page_to_nid(page) == pool->p.nid) is
+not valid if page_pool was configured with pool->p.nid = NUMA_NO_NODE.
 
-Thanks for your review
+The goal of the NUMA changes in commit d5394610b1ba ("page_pool: Don't
+recycle non-reusable pages"), were to have RX-pages that belongs to the
+same NUMA node as the CPU processing RX-packet during softirq/NAPI. As
+illustrated by the performance measurements.
 
-On 2019/12/13 18:38, Maxime Ripard wrote:
-> Hi,
-> 
-> On Fri, Dec 06, 2019 at 03:40:47PM +0800, Jian Hu wrote:
->> Add the documentation to support Amlogic A1 PLL clock driver,
->> and add A1 PLL clock controller bindings.
->>
->> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
->> ---
->>   .../bindings/clock/amlogic,a1-pll-clkc.yaml   | 59 +++++++++++++++++++
->>   include/dt-bindings/clock/a1-pll-clkc.h       | 16 +++++
->>   2 files changed, 75 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
->>   create mode 100644 include/dt-bindings/clock/a1-pll-clkc.h
->>
->> diff --git a/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
->> new file mode 100644
->> index 000000000000..7feeef5abf1b
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
->> @@ -0,0 +1,59 @@
->> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
->> +/*
->> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
->> + */
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/clock/amlogic,a1-pll-clkc.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: Amlogic Meson A/C serials PLL Clock Control Unit Device Tree Bindings
->> +
->> +maintainers:
->> +  - Neil Armstrong <narmstrong@baylibre.com>
->> +  - Jerome Brunet <jbrunet@baylibre.com>
->> +  - Jian Hu <jian.hu@jian.hu.com>
->> +
->> +properties:
->> +  compatible:
->> +    - enum:
->> +        - amlogic,a1-pll-clkc
-> 
-> I'm not sure this works, compatible shouldn't contain a list.
-> 
-I refered to 
-Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ccu.yaml.
+This patch moves the NAPI checks out of fast-path, and at the same time
+solves the NUMA_NO_NODE issue.
 
-I have used 'dt-doc-validate' tools to check, it will report something 
-wrong below.
+First realize that alloc_pages_node() with pool->p.nid = NUMA_NO_NODE
+will lookup current CPU nid (Numa ID) via numa_mem_id(), which is used
+as the the preferred nid.  It is only in rare situations, where
+e.g. NUMA zone runs dry, that page gets doesn't get allocated from
+preferred nid.  The page_pool API allows drivers to control the nid
+themselves via controlling pool->p.nid.
 
-properties:compatible: [{'enum': ['amlogic,a1-pll-clkc']}] is not of 
-type 'object', 'boolean'
+This patch moves the NAPI check to when alloc cache is refilled, via
+dequeuing/consuming pages from the ptr_ring. Thus, we can allow placing
+pages from remote NUMA into the ptr_ring, as the dequeue/consume step
+will check the NUMA node. All current drivers using page_pool will
+alloc/refill RX-ring from same CPU running softirq/NAPI process.
 
-Refer to
-https://github.com/robherring/dt-schema/blob/master/example-schema.yaml
+Drivers that control the nid explicitly, also use page_pool_update_nid
+when changing nid runtime.  To speed up transision to new nid the alloc
+cache is now flushed on nid changes.  This force pages to come from
+ptr_ring, which does the appropate nid check.
 
-I will change it like this:
+For the NUMA_NO_NODE case, when a NIC IRQ is moved to another NUMA
+node, then ptr_ring will be emptied in 65 (PP_ALLOC_CACHE_REFILL+1)
+chunks per allocation and allocation fall-through to the real
+page-allocator with the new nid derived from numa_mem_id(). We accept
+that transitioning the alloc cache doesn't happen immediately.
 
-properties:
-   compatible:
-     oneOf:
-       - enum:
-          - amlogic,a1-pll-clkc
+Fixes: d5394610b1ba ("page_pool: Don't recycle non-reusable pages")
+Reported-by: Li RongQing <lirongqing@baidu.com>
+Reported-by: Yunsheng Lin <linyunsheng@huawei.com>
+Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
+---
+ net/core/page_pool.c |   82 ++++++++++++++++++++++++++++++++++++++------------
+ 1 file changed, 63 insertions(+), 19 deletions(-)
 
-And It has been passed by 'dt-doc-validate' tools.
+diff --git a/net/core/page_pool.c b/net/core/page_pool.c
+index a6aefe989043..bd4f8b2c46b6 100644
+--- a/net/core/page_pool.c
++++ b/net/core/page_pool.c
+@@ -96,10 +96,61 @@ struct page_pool *page_pool_create(const struct page_pool_params *params)
+ }
+ EXPORT_SYMBOL(page_pool_create);
+ 
++static void __page_pool_return_page(struct page_pool *pool, struct page *page);
++
++noinline
++static struct page *page_pool_refill_alloc_cache(struct page_pool *pool,
++						 bool refill)
++{
++	struct ptr_ring *r = &pool->ring;
++	struct page *first_page, *page;
++	int i, curr_nid;
++
++	/* Quicker fallback, avoid locks when ring is empty */
++	if (__ptr_ring_empty(r))
++		return NULL;
++
++	/* Softirq guarantee CPU and thus NUMA node is stable. This,
++	 * assumes CPU refilling driver RX-ring will also run RX-NAPI.
++	 */
++	curr_nid = numa_mem_id();
++
++	/* Slower-path: Get pages from locked ring queue */
++	spin_lock(&r->consumer_lock);
++	first_page = __ptr_ring_consume(r);
++
++	/* Fallback to page-allocator if NUMA node doesn't match */
++	if (first_page && unlikely(!(page_to_nid(first_page) == curr_nid))) {
++		__page_pool_return_page(pool, first_page);
++		first_page = NULL;
++	}
++
++	if (unlikely(!refill))
++		goto out;
++
++	/* Refill alloc array, but only if NUMA node match */
++	for (i = 0; i < PP_ALLOC_CACHE_REFILL; i++) {
++		page = __ptr_ring_consume(r);
++		if (unlikely(!page))
++			break;
++
++		if (likely(page_to_nid(page) == curr_nid)) {
++			pool->alloc.cache[pool->alloc.count++] = page;
++		} else {
++			/* Release page to page-allocator, assume
++			 * refcnt == 1 invariant of cached pages
++			 */
++			__page_pool_return_page(pool, page);
++		}
++	}
++out:
++	spin_unlock(&r->consumer_lock);
++	return first_page;
++}
++
+ /* fast path */
+ static struct page *__page_pool_get_cached(struct page_pool *pool)
+ {
+-	struct ptr_ring *r = &pool->ring;
+ 	bool refill = false;
+ 	struct page *page;
+ 
+@@ -113,20 +164,7 @@ static struct page *__page_pool_get_cached(struct page_pool *pool)
+ 		refill = true;
+ 	}
+ 
+-	/* Quicker fallback, avoid locks when ring is empty */
+-	if (__ptr_ring_empty(r))
+-		return NULL;
+-
+-	/* Slow-path: Get page from locked ring queue,
+-	 * refill alloc array if requested.
+-	 */
+-	spin_lock(&r->consumer_lock);
+-	page = __ptr_ring_consume(r);
+-	if (refill)
+-		pool->alloc.count = __ptr_ring_consume_batched(r,
+-							pool->alloc.cache,
+-							PP_ALLOC_CACHE_REFILL);
+-	spin_unlock(&r->consumer_lock);
++	page = page_pool_refill_alloc_cache(pool, refill);
+ 	return page;
+ }
+ 
+@@ -311,13 +349,10 @@ static bool __page_pool_recycle_direct(struct page *page,
+ 
+ /* page is NOT reusable when:
+  * 1) allocated when system is under some pressure. (page_is_pfmemalloc)
+- * 2) belongs to a different NUMA node than pool->p.nid.
+- *
+- * To update pool->p.nid users must call page_pool_update_nid.
+  */
+ static bool pool_page_reusable(struct page_pool *pool, struct page *page)
+ {
+-	return !page_is_pfmemalloc(page) && page_to_nid(page) == pool->p.nid;
++	return !page_is_pfmemalloc(page);
+ }
+ 
+ void __page_pool_put_page(struct page_pool *pool, struct page *page,
+@@ -484,7 +519,16 @@ EXPORT_SYMBOL(page_pool_destroy);
+ /* Caller must provide appropriate safe context, e.g. NAPI. */
+ void page_pool_update_nid(struct page_pool *pool, int new_nid)
+ {
++	struct page *page;
++
++	WARN_ON(!in_serving_softirq());
+ 	trace_page_pool_update_nid(pool, new_nid);
+ 	pool->p.nid = new_nid;
++
++	/* Flush pool alloc cache, as refill will check NUMA node */
++	while (pool->alloc.count) {
++		page = pool->alloc.cache[--pool->alloc.count];
++		__page_pool_return_page(pool, page);
++	}
+ }
+ EXPORT_SYMBOL(page_pool_update_nid);
 
-Is it right?
 
-> You can write this like:
-> compatible:
->    const: amlogic,a1-pll-clkc
-> 
->> +  "#clock-cells":
->> +    const: 1
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +clocks:
->> +  minItems: 2
->> +  maxItems: 2
-> 
-> This is redundant, it will be added automatically by the tools ...
-If I remove the minItems, it will pass by dt-doc-validate.
-
-Would please tell how to use dt-schema to generate automatically it?
-
-> 
->> +  items:
->> +   - description: Input xtal_fixpll
->> +   - description: Input xtal_hifipll
-> 
-> ... When you have a list of items :)
-> 
->> +
->> +clock-names:
->> +  minItems: 2
->> +  maxItems: 2
->> +  items:
->> +     - const: xtal_fixpll
->> +     - const: xtal_hifipll
-> 
-> Same story here
-OK, I will change it when I find the right way.
-> 
-> Maxime
-> 
