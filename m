@@ -2,112 +2,146 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54AF1C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F62BC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 238F2218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:44:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BA1F218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:44:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LFjv0Qxp"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="RD81bRQP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbfLRJoY (ORCPT
+        id S1726752AbfLRJo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 18 Dec 2019 04:44:27 -0500
+Received: from mail-eopbgr20069.outbound.protection.outlook.com ([40.107.2.69]:41892
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725785AbfLRJoY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 18 Dec 2019 04:44:24 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41104 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbfLRJoY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 04:44:24 -0500
-Received: by mail-pf1-f193.google.com with SMTP id w62so904342pfw.8
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 01:44:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=6h0m2YWX8yYd6d187upTdSatGcan2CL4xPYwJto0+vg=;
-        b=LFjv0QxpqHiCP73+CLsrR4H4P8N3R6mUA39Ea4DhHZpiwA6jsof3eIm7pDB5BT42Gp
-         zPNSw+VBxbfLTxFLGHqNU9akb3miT1JPhUEQPMTlV/Rc/cTjR7+JlijlzcX/gXrfqZ0F
-         kh0VXs/JR18l1mjpfv14bZ91jAjE4Cy683ODYo5bcUQ5+u4HVT/bVK9gj/ku84dLqbqv
-         QSEitrjAtzIbFxC6IMDQhsXa/t8BlUoHN4H30gnT9P7PXdNzYpOA4zQsu1XC2Sz/ZxXC
-         qD8ZsSN8Y/YkN1vU2FpE5EG3ce7Pq0sJBZy0tEos1cVObDdrkIFdijPzq1KQvaSnWQBx
-         1OlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=6h0m2YWX8yYd6d187upTdSatGcan2CL4xPYwJto0+vg=;
-        b=ED/giPlse621xkLF4nIL3ixaT5mxcsqK9cobMEhCL70On2pEvefEwUDIruoT0Xv01h
-         fXYHmk6NSh4NV7+4AyxnA9aeIvIXXq+Xl63NLTIGrgHR5HX+fERueM2OjI3/Ik69hfXy
-         2D0SclaynKmzUav03jUOSA4/ST4QxgLXV8jm/o/HpElPXIYysZiadk53Y50ung0o9xak
-         Ug9oMzUROlp0J+3+NbMQtW6BjYB9TtR4nNl+B1kVSD3fqxKTG8r+lOQ4+R4IBm38LbuQ
-         /NQxqRWuw1WzG1XMMUif+DqHe8kC2IyDq1pe0uNvchrwHjQ4ZT0kt9wl85DyuE/N2d0A
-         oanw==
-X-Gm-Message-State: APjAAAXvXffycucVblFyN8po28LDG6Cn/AhpeB8acdueQhU8ma5TTBnB
-        NMLGFYBwuXdsN7VTbg7hyL8=
-X-Google-Smtp-Source: APXvYqyrfPJWnV816t5c/xqoJjuJRAzraLeyLgyB/zGjVJUwk6p3yAYhNfX7MTSVl7ydZ4S6NVDbtA==
-X-Received: by 2002:a63:f844:: with SMTP id v4mr1929895pgj.71.1576662263590;
-        Wed, 18 Dec 2019 01:44:23 -0800 (PST)
-Received: from oslab.tsinghua.edu.cn ([166.111.139.172])
-        by smtp.gmail.com with ESMTPSA id i127sm2538436pfe.54.2019.12.18.01.44.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 01:44:23 -0800 (PST)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] uio: fix a sleep-in-atomic-context bug in uio_dmem_genirq_irqcontrol()
-Date:   Wed, 18 Dec 2019 17:44:05 +0800
-Message-Id: <20191218094405.6009-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.1
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=daZCnpoudQyZasiFZDJwDXDA2XBO0Mg9xsr+c47H08J2NG1xmkhwZBD5wfZYFUnm8kUQLoSV645ieQ/9i/QAjbS3wADoZSN5tEXsyLcKLSpZbvNr3h8sX+Z5iIBJpy9n8qVzJOwJScMw6UCutp8Svd2Pl+arHX/LlMHYGNtRKFXTtn6q6ScGXXpAWBfyEH6WpgEN1adNHmbQKmu0h5nUbHN6/UXRDjkCRsp5wxD57t4kbPbpCmSoGizczPpFfLlJ3rsuIhS+qypg0J+gLOmrp/yXR1sOrz4cUOACr7qtF5MRW1/YbMKOkqBLqbgrBKp9dtlnMsTetKlpW5oG3Ag+EA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VQ8kdml7Uspcnw3Wt1yu6k0bD+zhn0ITPEzX/NhMTN8=;
+ b=gJ0W49XbpnB1vhUtCrbAWAHansSHTFb6oPwyr3HFsjSJWYew4bIeIbSglBbuPTmeo+AwImieAvf8YpxwrNB8F19ne4dMoyOzv2c1iFMgTlLXSBCgz+gfMuoLA0sfH775eCEQaxtH1UO1mZhwAGU1Wy5+SSOhstVwXHhw2gpnWG5fwjJmzhLSrMurK1BNhKwc8AIMlyJHQESyCWBC7hC5jSumv81FU4q+7fnQalsZ3yQPrDwwG/oS0iuWMRm3l833wYPzOpsKPGejGlRyjysmRPEOdgwJW3IsfhSvqS1pC7up/9xqqnccg23qtbmgdryG61qhwvzvJ5DA/OV+alxdBA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VQ8kdml7Uspcnw3Wt1yu6k0bD+zhn0ITPEzX/NhMTN8=;
+ b=RD81bRQPUe3Tg/hZ5EQfMpjGGTLd7rC3JYy07K8CiVCV80p2oDp5KlRZA/Gcyn+ssuLsnDR+eVf6Y05qw5EKcLkFuAfXqoqAsuA789lG6n1aBZK9SA52sCexuqTLtgHKRqF62TyiKU/U+oZYWEywveIYj1qcgTH0MV3kLa1/P1U=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB5795.eurprd04.prod.outlook.com (20.178.118.144) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.18; Wed, 18 Dec 2019 09:44:20 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::505:87e7:6b49:3d29]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::505:87e7:6b49:3d29%7]) with mapi id 15.20.2559.012; Wed, 18 Dec 2019
+ 09:44:20 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     "sboyd@kernel.org" <sboyd@kernel.org>
+CC:     "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH] clk: mux: check mux value after set
+Thread-Topic: [PATCH] clk: mux: check mux value after set
+Thread-Index: AQHVtYe4wU7+6XXnBEmMewbXqrixpw==
+Date:   Wed, 18 Dec 2019 09:44:20 +0000
+Message-ID: <1576662086-10569-1-git-send-email-peng.fan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK0PR01CA0052.apcprd01.prod.exchangelabs.com
+ (2603:1096:203:a6::16) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 52b8d3fe-b786-4c8d-479b-08d7839edb26
+x-ms-traffictypediagnostic: AM0PR04MB5795:|AM0PR04MB5795:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB5795D6834985F0858B301D5E88530@AM0PR04MB5795.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 0255DF69B9
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(376002)(396003)(346002)(136003)(189003)(199004)(4326008)(44832011)(6506007)(71200400001)(8676002)(81166006)(81156014)(2906002)(8936002)(52116002)(36756003)(6486002)(26005)(54906003)(6512007)(66446008)(86362001)(64756008)(6916009)(66946007)(5660300002)(478600001)(316002)(2616005)(66556008)(66476007)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5795;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Rabg83IjPT1KBsobf+dSc+ogqUazn7X/WPIyVaI4NkID1G2Q6llpJLrFWwNFhcIj6g+vBgevenr93FokoCCPsdfJR36oZSEnQa7OLrpDPuwmG/yQui/IaMW5v3GNKH+dELVhYNmCS36XNkmGxe0GHMZM2+DbPpKKILVa0N2nxhpCanUYk7XJqIjg6XX+q4S2An/gWpOM5m9yrgiC2rUlQoBDyyc7uFmgaj03kI0d9ZjyRAS70LDafL0uJPXsJd6zhMmb9rSTbxVqmJqpI/yE97Kagly0A0pgpMf+XvFR/g/a+GfWNO7DeeiJkG1ygAbDwlfduJm2uvG0qK84s3zAsnFFnrVhyzbZKYpYPRKxqXUc38lH6iMdEBv0f1/HdPa4TUnIKtpuDm8nkYRyA8sldftpmgfg8VgNhXH6tkSjZKhxxvUouYxI0beoJ9x4lhr0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 52b8d3fe-b786-4c8d-479b-08d7839edb26
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Dec 2019 09:44:20.4702
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Z6mRNZsHtFxUFq2NKABguOPvr9s+E74n/kKs4J/YOvUBsw0h8A7JxLaJdGH1aD+GgogNiflmIq1KIS4YqcscZA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5795
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver may sleep while holding a spinlock.
-The function call path (from bottom to top) in Linux 4.19 is:
+From: Peng Fan <peng.fan@nxp.com>
 
-kernel/irq/manage.c, 523:
-	synchronize_irq in disable_irq
-drivers/uio/uio_dmem_genirq.c, 140: 
-	disable_irq in uio_dmem_genirq_irqcontrol
-drivers/uio/uio_dmem_genirq.c, 134: 
-	_raw_spin_lock_irqsave in uio_dmem_genirq_irqcontrol
+check mux value after set to see whether it failed or not.
 
-synchronize_irq() can sleep at runtime.
+To some platforms, it might failed to set the mux value because
+of the hardware not allow the change, let's catch such case and report,
+then it will be easy for us the catch issue.
 
-To fix this bug, disable_irq() is called without holding the spinlock.
-
-This bug is found by a static analysis tool STCheck written by myself.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
- drivers/uio/uio_dmem_genirq.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/clk/clk-mux.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/uio/uio_dmem_genirq.c b/drivers/uio/uio_dmem_genirq.c
-index 81c88f7bbbcb..f6ab3f28c838 100644
---- a/drivers/uio/uio_dmem_genirq.c
-+++ b/drivers/uio/uio_dmem_genirq.c
-@@ -132,11 +132,13 @@ static int uio_dmem_genirq_irqcontrol(struct uio_info *dev_info, s32 irq_on)
- 	if (irq_on) {
- 		if (test_and_clear_bit(0, &priv->flags))
- 			enable_irq(dev_info->irq);
-+		spin_unlock_irqrestore(&priv->lock, flags);
- 	} else {
--		if (!test_and_set_bit(0, &priv->flags))
-+		if (!test_and_set_bit(0, &priv->flags)) {
-+			spin_unlock_irqrestore(&priv->lock, flags);
- 			disable_irq(dev_info->irq);
-+		}
- 	}
--	spin_unlock_irqrestore(&priv->lock, flags);
- 
- 	return 0;
+diff --git a/drivers/clk/clk-mux.c b/drivers/clk/clk-mux.c
+index 570b6e5b603b..3e78ec65bffb 100644
+--- a/drivers/clk/clk-mux.c
++++ b/drivers/clk/clk-mux.c
+@@ -101,6 +101,7 @@ static int clk_mux_set_parent(struct clk_hw *hw, u8 ind=
+ex)
+ 	u32 val =3D clk_mux_index_to_val(mux->table, mux->flags, index);
+ 	unsigned long flags =3D 0;
+ 	u32 reg;
++	int ret =3D 0;
+=20
+ 	if (mux->lock)
+ 		spin_lock_irqsave(mux->lock, flags);
+@@ -117,12 +118,15 @@ static int clk_mux_set_parent(struct clk_hw *hw, u8 i=
+ndex)
+ 	reg |=3D val;
+ 	clk_mux_writel(mux, reg);
+=20
++	if (clk_mux_get_parent(hw) !=3D index)
++		ret =3D -EPERM;
++
+ 	if (mux->lock)
+ 		spin_unlock_irqrestore(mux->lock, flags);
+ 	else
+ 		__release(mux->lock);
+=20
+-	return 0;
++	return ret;
  }
--- 
-2.17.1
+=20
+ static int clk_mux_determine_rate(struct clk_hw *hw,
+--=20
+2.16.4
 
