@@ -2,74 +2,235 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC6AC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 386B0C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93AFB2146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:19:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B5C6218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:20:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="nT0CjEqd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbfLRPTq (ORCPT
+        id S1727264AbfLRPUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 10:19:46 -0500
-Received: from mga14.intel.com ([192.55.52.115]:3786 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726921AbfLRPTq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 10:19:46 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 07:19:47 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
-   d="scan'208";a="212949490"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga008.fm.intel.com with ESMTP; 18 Dec 2019 07:19:44 -0800
-Date:   Wed, 18 Dec 2019 07:19:44 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com, puiterwijk@redhat.com
-Subject: Re: [PATCH v24 08/24] x86/sgx: Enumerate and track EPC sections
-Message-ID: <20191218151944.GA25201@linux.intel.com>
-References: <20191129231326.18076-1-jarkko.sakkinen@linux.intel.com>
- <20191129231326.18076-9-jarkko.sakkinen@linux.intel.com>
- <20191218091856.GA24886@zn.tnic>
+        Wed, 18 Dec 2019 10:20:08 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:3856 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726921AbfLRPUH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 10:20:07 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBIFISIS017156;
+        Wed, 18 Dec 2019 16:19:48 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=WneSex7HLvk1knfWmC+iWo4b9iXA1aE+DZZb+Ph0YE0=;
+ b=nT0CjEqdbNCGAEn8ad4RksgAUyfA4q5u1qVfyaiaiXV9YAkDPApm47cmN8PUcWYpBm1q
+ BWx03o7gK2FmI3+EChRlvi70Ru79DJ0pC4LcIsPRC+mLP1qFHl7DamP0vYxAJPZGmlxh
+ M7y8vhoZ2QYT04uUbKyO0OMoasjPP6CdO5f/ESlebwgjAszJNvHFhIm/lANHzilnj83W
+ R93vTVwKKxBeflkxarvyBuwcQe3KP5gD9g8x0RD2wdV6/bZhODqMaYh3onmq6M1/HgC0
+ 5IvTstSQBVlMWFuilPsYv/xfW3m1+w8Gs1mVUlxliu6azrck1/SbHzpNEZ0fdvGjzOQo Cw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2wvpd1n0dd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 Dec 2019 16:19:48 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 22D8C100038;
+        Wed, 18 Dec 2019 16:19:44 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0E9792B220D;
+        Wed, 18 Dec 2019 16:19:44 +0100 (CET)
+Received: from lmecxl0923.lme.st.com (10.75.127.49) by SFHDAG6NODE1.st.com
+ (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Dec
+ 2019 16:19:42 +0100
+Subject: Re: [PATCH V2] mmc: mmci: add threaded irq to abort DPSM of
+ non-functional state
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <20191211133934.16932-1-ludovic.Barre@st.com>
+ <CAPDyKFpoqEXO1JvjF=0hX97PiwP=2c1eWORsacb8QvZM=1Tvjw@mail.gmail.com>
+From:   Ludovic BARRE <ludovic.barre@st.com>
+Message-ID: <7019a4b8-e7a4-0e3a-4c42-0d46c80e5126@st.com>
+Date:   Wed, 18 Dec 2019 16:19:42 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191218091856.GA24886@zn.tnic>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAPDyKFpoqEXO1JvjF=0hX97PiwP=2c1eWORsacb8QvZM=1Tvjw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG8NODE1.st.com (10.75.127.22) To SFHDAG6NODE1.st.com
+ (10.75.127.16)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-18_04:2019-12-17,2019-12-18 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 10:18:56AM +0100, Borislav Petkov wrote:
-> On Sat, Nov 30, 2019 at 01:13:10AM +0200, Jarkko Sakkinen wrote:
-> > +static bool __init sgx_alloc_epc_section(u64 addr, u64 size,
-> > +					 unsigned long index,
-> > +					 struct sgx_epc_section *section)
-> > +{
-> > +	unsigned long nr_pages = size >> PAGE_SHIFT;
+hi ulf
+
+Le 12/18/19 à 3:01 PM, Ulf Hansson a écrit :
+> On Wed, 11 Dec 2019 at 14:40, Ludovic Barre <ludovic.Barre@st.com> wrote:
+>>
+>> From: Ludovic Barre <ludovic.barre@st.com>
+>>
+>> If datatimeout occurs on R1B request, the Data Path State Machine stays
+>> in busy and is non-functional. Only a reset aborts the DPSM.
+>>
+>> Like a reset must be outside of critical section, this patch adds
+>> threaded irq function to release state machine. In this case,
+>> the mmc_request_done is called at the end of threaded irq and
+>> skipped into irq handler.
+>>
+>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 > 
-> I'm assuming here that size which gets communicated through CPUID -
-> which is an interesting way to communicate SGX settings in itself :-) - is
-> in multiples of 4K? SDM doesn't say...
+> Applied for next, thanks!
+> 
+> I took the liberty of doing some minor updates (changelog/comment),
+> please have a look and let me know if there is something you want me
+> to change.
+> 
 
-Yes, EPC pages are architecturally defined to be 4k sized and aligned.
+I read the modifications (changelog and comment function),
+and it's ok for me.
 
-  36.5 Enclave Page Cache
+thanks
+Ludo
 
-  The EPC is divided into EPC pages. An EPC page is 4KB in size and always
-  aligned on a 4KB boundary.
+> And again, apologize for the delays!
+> 
+> Kind regards
+> Uffe
+> 
+> 
+>> ---
+>> change V2:
+>>   -check IRQ_WAKE_THREAD only in mmci_cmd_irq error part,
+>>    to avoid this test in mmci_request_end.
+>>
+>> ---
+>>   drivers/mmc/host/mmci.c | 46 +++++++++++++++++++++++++++++++++++------
+>>   drivers/mmc/host/mmci.h |  1 +
+>>   2 files changed, 41 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+>> index 40e72c30ea84..2b91757e3e84 100644
+>> --- a/drivers/mmc/host/mmci.c
+>> +++ b/drivers/mmc/host/mmci.c
+>> @@ -1321,6 +1321,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+>>          } else if (host->variant->busy_timeout && busy_resp &&
+>>                     status & MCI_DATATIMEOUT) {
+>>                  cmd->error = -ETIMEDOUT;
+>> +               host->irq_action = IRQ_WAKE_THREAD;
+>>          } else {
+>>                  cmd->resp[0] = readl(base + MMCIRESPONSE0);
+>>                  cmd->resp[1] = readl(base + MMCIRESPONSE1);
+>> @@ -1339,7 +1340,10 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+>>                                  return;
+>>                          }
+>>                  }
+>> -               mmci_request_end(host, host->mrq);
+>> +
+>> +               if (host->irq_action != IRQ_WAKE_THREAD)
+>> +                       mmci_request_end(host, host->mrq);
+>> +
+>>          } else if (sbc) {
+>>                  mmci_start_command(host, host->mrq->cmd, 0);
+>>          } else if (!host->variant->datactrl_first &&
+>> @@ -1532,9 +1536,9 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
+>>   {
+>>          struct mmci_host *host = dev_id;
+>>          u32 status;
+>> -       int ret = 0;
+>>
+>>          spin_lock(&host->lock);
+>> +       host->irq_action = IRQ_HANDLED;
+>>
+>>          do {
+>>                  status = readl(host->base + MMCISTATUS);
+>> @@ -1574,12 +1578,41 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
+>>                  if (host->variant->busy_detect_flag)
+>>                          status &= ~host->variant->busy_detect_flag;
+>>
+>> -               ret = 1;
+>>          } while (status);
+>>
+>>          spin_unlock(&host->lock);
+>>
+>> -       return IRQ_RETVAL(ret);
+>> +       return host->irq_action;
+>> +}
+>> +
+>> +/*
+>> + * mmci_irq_threaded is call if the mmci host need to release state machines
+>> + * before to terminate the request.
+>> + * If datatimeout occurs on R1B request, the Data Path State Machine stays
+>> + * in busy and is non-functional. Only a reset can to abort the DPSM.
+>> + */
+>> +static irqreturn_t mmci_irq_threaded(int irq, void *dev_id)
+>> +{
+>> +       struct mmci_host *host = dev_id;
+>> +       unsigned long flags;
+>> +
+>> +       if (host->rst) {
+>> +               reset_control_assert(host->rst);
+>> +               udelay(2);
+>> +               reset_control_deassert(host->rst);
+>> +       }
+>> +
+>> +       spin_lock_irqsave(&host->lock, flags);
+>> +       writel(host->clk_reg, host->base + MMCICLOCK);
+>> +       writel(host->pwr_reg, host->base + MMCIPOWER);
+>> +       writel(MCI_IRQENABLE | host->variant->start_err,
+>> +              host->base + MMCIMASK0);
+>> +
+>> +       host->irq_action = IRQ_HANDLED;
+>> +       mmci_request_end(host, host->mrq);
+>> +       spin_unlock_irqrestore(&host->lock, flags);
+>> +
+>> +       return host->irq_action;
+>>   }
+>>
+>>   static void mmci_request(struct mmc_host *mmc, struct mmc_request *mrq)
+>> @@ -2071,8 +2104,9 @@ static int mmci_probe(struct amba_device *dev,
+>>                          goto clk_disable;
+>>          }
+>>
+>> -       ret = devm_request_irq(&dev->dev, dev->irq[0], mmci_irq, IRQF_SHARED,
+>> -                       DRIVER_NAME " (cmd)", host);
+>> +       ret = devm_request_threaded_irq(&dev->dev, dev->irq[0], mmci_irq,
+>> +                                       mmci_irq_threaded, IRQF_SHARED,
+>> +                                       DRIVER_NAME " (cmd)", host);
+>>          if (ret)
+>>                  goto clk_disable;
+>>
+>> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+>> index 158e1231aa23..5e63c0596364 100644
+>> --- a/drivers/mmc/host/mmci.h
+>> +++ b/drivers/mmc/host/mmci.h
+>> @@ -412,6 +412,7 @@ struct mmci_host {
+>>
+>>          struct timer_list       timer;
+>>          unsigned int            oldstat;
+>> +       u32                     irq_action;
+>>
+>>          /* pio stuff */
+>>          struct sg_mapping_iter  sg_miter;
+>> --
+>> 2.17.1
+>>
