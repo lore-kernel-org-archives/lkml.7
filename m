@@ -2,135 +2,79 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0252FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B3B9C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9612218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:45:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576662324;
-	bh=yjpVLC4A7osjSygYkynwhfhusafXLmcMzWtuofm45AI=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=vQEQKo9vmKBmEQw1zKUCwBxuZwaIhEBXuLuV4HZEu+BCWFPOn4APuYzcv3HtDdMgM
-	 5D2bXNW18+hwYQ4cMc1Yv8QOrT1lTtYYf3bcSAqmCi1D9q+EQjYoA7SP8KeH8v188M
-	 plDbYBfxItnQ1quVQW5kG5EeUFLrX0MWO2dEavI8=
+	by mail.kernel.org (Postfix) with ESMTP id DC6F121D7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:46:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbfLRJpX (ORCPT
+        id S1726742AbfLRJqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 04:45:23 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:56745 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725930AbfLRJpX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 04:45:23 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1ihVtN-0004U6-2R; Wed, 18 Dec 2019 10:45:17 +0100
-To:     Joakim Zhang <qiangqing.zhang@nxp.com>
-Subject: Re: [PATCH 1/3] dt-bindings/irq: add binding for NXP INTMUX  interrupt multiplexer
-X-PHP-Originating-Script: 0:main.inc
+        Wed, 18 Dec 2019 04:46:09 -0500
+Received: from mx2.suse.de ([195.135.220.15]:44020 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725799AbfLRJqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 04:46:09 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 78232ADCB;
+        Wed, 18 Dec 2019 09:46:07 +0000 (UTC)
+From:   Andreas Schwab <schwab@suse.de>
+To:     David Abdurachmanov <david.abdurachmanov@gmail.com>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        David Abdurachmanov <david.abdurachmanov@sifive.com>,
+        Kees Cook <keescook@chromium.org>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        Vincent Chen <vincent.chen@sifive.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Bin Meng <bmeng.cn@gmail.com>, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] riscv: reject invalid syscalls below -1
+References: <20191218084757.904971-1-david.abdurachmanov@sifive.com>
+X-Yow:  Here I am in the POSTERIOR OLFACTORY LOBULE but I don't see CARL SAGAN
+ anywhere!!
+Date:   Wed, 18 Dec 2019 10:46:06 +0100
+In-Reply-To: <20191218084757.904971-1-david.abdurachmanov@sifive.com> (David
+        Abdurachmanov's message of "Wed, 18 Dec 2019 10:47:56 +0200")
+Message-ID: <mvmo8w63r1d.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 18 Dec 2019 09:45:16 +0000
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     <tglx@linutronix.de>, <jason@lakedaemon.net>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <shawnguo@kernel.org>,
-        <s.hauer@pengutronix.de>, <shengjiu.wang@nxp.com>,
-        <kernel@pengutronix.de>, <festevam@gmail.com>, <linux-imx@nxp.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <fugang.duan@nxp.com>,
-        <aisheng.dong@nxp.com>
-In-Reply-To: <1576653615-27954-2-git-send-email-qiangqing.zhang@nxp.com>
-References: <1576653615-27954-1-git-send-email-qiangqing.zhang@nxp.com>
- <1576653615-27954-2-git-send-email-qiangqing.zhang@nxp.com>
-Message-ID: <254925e345493019c3e1e558b37e46f2@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: qiangqing.zhang@nxp.com, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, shengjiu.wang@nxp.com, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, fugang.duan@nxp.com, aisheng.dong@nxp.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-18 07:20, Joakim Zhang wrote:
-> This patch adds the DT bindings for the NXP INTMUX interrupt 
-> multiplexer
-> found in the i.MX8 family SoCs.
->
-> Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
-> ---
->  .../interrupt-controller/fsl,intmux.txt       | 34 
-> +++++++++++++++++++
->  1 file changed, 34 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/interrupt-controller/fsl,intmux.txt
->
-> diff --git
-> 
-> a/Documentation/devicetree/bindings/interrupt-controller/fsl,intmux.txt
-> 
-> b/Documentation/devicetree/bindings/interrupt-controller/fsl,intmux.txt
-> new file mode 100644
-> index 000000000000..be3c6848f36c
-> --- /dev/null
-> +++ 
-> b/Documentation/devicetree/bindings/interrupt-controller/fsl,intmux.txt
-> @@ -0,0 +1,34 @@
-> +Freescale INTMUX interrupt multiplexer
-> +
-> +Required properties:
-> +
-> +- compatible: Should be:
-> +	- "fsl,imx-intmux"
-> +- reg: Physical base address and size of registers.
-> +- interrupts: Should contain the parent interrupt lines (up to 8) 
-> used to
-> +  multiplex the input interrupts.
-> +- clocks: Should contain one clock for entry in clock-names.
-> +- clock-names:
-> +   - "ipg": main logic clock
-> +- interrupt-controller: Identifies the node as an interrupt 
-> controller.
-> +- #interrupt-cells: Specifies the number of cells needed to encode 
-> an
-> +  interrupt source. The value must be 1.
-> +
-> +Optional properties:
-> +
-> +- fsl,intmux_chans: The number of channels used for interrupt 
-> source. The
-> +  Maximum value is 8.
-> +
-> +Example:
-> +
-> +	intmux@37400000 {
-> +		compatible = "fsl,imx-intmux";
-> +		reg = <0x37400000 0x1000>;
-> +		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&clk IMX8QM_CM40_IPG_CLK>;
-> +		clock-names = "ipg";
-> +		interrupt-controller;
-> +		#interrupt-cells = <1>;
-> +		fsl,intmux_chans = <1>;
-> +	};
-> +
+On Dez 18 2019, David Abdurachmanov wrote:
 
-What I don't understand is how the interrupt descriptor can indicate
-which channel it is multiplexed on. The driver doesn't makes this
-clear either, and I strongly suspect that it was never tested with
-more than a single channel...
+> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+> index a1349ca64669..e163b7b64c86 100644
+> --- a/arch/riscv/kernel/entry.S
+> +++ b/arch/riscv/kernel/entry.S
+> @@ -246,6 +246,7 @@ check_syscall_nr:
+>  	 */
+>  	li t1, -1
+>  	beq a7, t1, ret_from_syscall_rejected
+> +	blt a7, t1, 1f
 
-Thanks,
+How about using bgeu instead in the preceding check?
 
-         M.
+	/*
+	 * Syscall number held in a7.
+	 * If syscall number is above allowed value, redirect to ni_syscall.
+	 */
+	bge a7, t0, 1f
+
+Andreas.
+
 -- 
-Jazz is not dead. It just smells funny...
+Andreas Schwab, SUSE Labs, schwab@suse.de
+GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+"And now for something completely different."
