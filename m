@@ -2,167 +2,184 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B3AC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C85B5C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69AE921582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:31:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BAB821582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:35:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="aADuHTHV"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VH+6fBo/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbfLRXbg (ORCPT
+        id S1726652AbfLRXfm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 18:31:36 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:36744 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726561AbfLRXbg (ORCPT
+        Wed, 18 Dec 2019 18:35:42 -0500
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:42170 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbfLRXfm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 18:31:36 -0500
-Received: by mail-oi1-f196.google.com with SMTP id c16so2144542oic.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 15:31:35 -0800 (PST)
+        Wed, 18 Dec 2019 18:35:42 -0500
+Received: by mail-yb1-f194.google.com with SMTP id z10so1496519ybr.9
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 15:35:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=fUytKbh3fxwQeY78Sh0bP3Ypu5vGalHc1spY/K/2hYw=;
-        b=aADuHTHVDgDJIjYoRrFQtvCtQgjeTd6MHEuYXKaMBoChVpakmW017w1NLtNmg/nZ4l
-         H5v1X8hB8CMByDOWpfXPWHofB+iJSW9nDapGGfjLokjZE5hOW31GOpyjEraT6a1DZeal
-         W8GRIKnqG1PnBIys7m7zgJ0N6urSMEDsbWhgefJGgzaKP2bVaW181BgoAPKVD3VlNpRh
-         V/S9GeauYsL1CSHx6ZScqAWAPCiRrRdVqfD8wGeoepbfxNi3EZSoK8QPz2hpkJEffPiC
-         FMAz8yU4Zkloy5zq2XEwBj4Ht0LLW3Wc8GNqBQuwiFisiPGIeWod2EcIsTsENymsc+97
-         NtoQ==
+        bh=+wWAEvjdhihSGHkV+1yOnTGUKSIjjppKQd/dJmsVVjs=;
+        b=VH+6fBo/lDW8MRM/Csre5tRebK/BtDPju6jsZb5c93hYRPEKn1Msj6jHRsbMvBFEOJ
+         dM1boMHPgKJf5BMx78yeSWIaWjTwOHB7LSQIAWnR/WPBOX2ugvf/mglpZlAHxN28w7pQ
+         HshfiA4sjwCz/iqdz/XJw6Z4IcQx6RL2Rj3dm00B9T0iHogdtwUB9rerZ6q0qgtu9C3i
+         vc1Ty0/phBaorIc24JMasAECsILemIkDEpf4BhgNTTjOmV8FU6WYgz2+x3xR9QvF1ZVH
+         lbnGfzjqfORTUg+ljzAAEkAGTmEJV/qZedOO8FkbNXZrZGv6/c5Kq0c5BbaJoeYdZjRV
+         dvxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=fUytKbh3fxwQeY78Sh0bP3Ypu5vGalHc1spY/K/2hYw=;
-        b=ArCqc7yMmjZ2lvdedFktBWAILdOEnIcdVzS+pBTanzXHIVT/t/KqArBACb7MrgMc9M
-         fiLD7tH5MuJ3WKlK9/8r3RTupXVe1ZvKQTfaqGRTaRBpdpMzEHH/1qkBKxFJMi6UrZCV
-         l6U31rS4I+yJgQQ1cFUip/52hvuEvQgn3JrkCIWzdJze9idFTPRXkA+z2aTUHxa2XFSn
-         TQVPt5EZhi292hTE4egTx8KFSDLuCjEqgB9AWroezmim82302kLBuGp/q69wWPNhnCKA
-         TtfPioxz3113X65ayb8pSbnOdt7rZihiOJhoIHCx5+/hZaHNbwXSuq06o3HUu3IkUAx3
-         BGAg==
-X-Gm-Message-State: APjAAAWttNu5l3CsDjjnOS6Xbh7pfdv+7CGjtwa9S9IKyUMQYqRmswtV
-        1G5i40QjIVMOfdk5PN9HHB472NcfKnDSGgis/DWgbg==
-X-Google-Smtp-Source: APXvYqzEXrvpAjwiv2G/9Vv+SQnMlU3rni98xmIEIgWEgRhXsiBl5svGAoocWfD5bq9Vmw3xbgHM/CcuxdesXarEq8Q=
-X-Received: by 2002:aca:4850:: with SMTP id v77mr1569292oia.70.1576711894829;
- Wed, 18 Dec 2019 15:31:34 -0800 (PST)
+        bh=+wWAEvjdhihSGHkV+1yOnTGUKSIjjppKQd/dJmsVVjs=;
+        b=pBwparRbV47TcgWjcsYVaN65prrHRjKj/HPpic9yh/wjmDbnp1yrm/xvmLuHs356AP
+         L0cesbNOifhczkx7tvsadaKcOUFEmSjYJArFxofo1r9A3n1arkJlMF1kTf4cPz9Ho/+5
+         b3We8AKbO8YZsdPKtMMYHz4Ufixx894Hq+znxyqHGP2FThGCRZge4cdMORxWGmhD+axs
+         iLVJrxbdCS265f9nmQv3P9wRstkmnBcdP0EY48u3fTqyUFx4k7p+VJleJLn6sySq1DWu
+         NDig87Ivsh+nnzwVcIVcTuduAjIvbmtileT+HknboHchxy0iFpC5RGlSjutoehBorKRN
+         BpsQ==
+X-Gm-Message-State: APjAAAU7f+z+q/5IRSOArRWOrTdvVGzXUAtAaPJ93P5CwZ69QVN6UuPg
+        Y+PKApX/Ndx0xpD4drGmbT7JPnO5U/lTaV1/EhD2fg==
+X-Google-Smtp-Source: APXvYqzc67hxY4HpYRbedQjlpsEL9vQPoY2m2y6N+X9XNT9xxSf1XmZ2uJxO3VT1zIKbaVOjDqU9HS/5+hDDnGYZP/I=
+X-Received: by 2002:a25:8502:: with SMTP id w2mr4128894ybk.428.1576712140372;
+ Wed, 18 Dec 2019 15:35:40 -0800 (PST)
 MIME-Version: 1.0
-References: <20191211231758.22263-1-jsnitsel@redhat.com> <20191211235455.24424-1-jsnitsel@redhat.com>
- <5aef0fbe28ed23b963c53d61445b0bac6f108642.camel@linux.intel.com>
- <CAPcyv4h60z889bfbiwvVhsj6MxmOPiPY8ZuPB_skxkZx-N+OGw@mail.gmail.com>
- <20191217020022.knh7uxt4pn77wk5m@cantor> <CAPcyv4iepQup4bwMuWzq6r5gdx83hgYckUWFF7yF=rszjz3dtQ@mail.gmail.com>
- <5d0763334def7d7ae1e7cf931ef9b14184dce238.camel@linux.intel.com>
- <20191217171844.huqlj5csr262zkkk@cantor> <37f4ed0d6145dbe1e8724a5d05d0da82b593bf9c.camel@linux.intel.com>
-In-Reply-To: <37f4ed0d6145dbe1e8724a5d05d0da82b593bf9c.camel@linux.intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 18 Dec 2019 15:31:23 -0800
-Message-ID: <CAPcyv4h8sK+geVvBb1534V9CgdvOnkpPeStV3B8Q1Qdve3is0A@mail.gmail.com>
-Subject: Re: [PATCH v2] tpm_tis: reserve chip for duration of tpm_tis_core_init
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Jerry Snitselaar <jsnitsel@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christian Bundy <christianbundy@fraction.io>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        stable <stable@vger.kernel.org>, linux-integrity@vger.kernel.org
+References: <20191128125100.14291-1-patrick.rudolph@9elements.com>
+ <20191128125100.14291-2-patrick.rudolph@9elements.com> <CAODwPW8Koy1BvKGJU6PKexYx+PNE+WY7+m69gcxT689vBy+AoQ@mail.gmail.com>
+ <CAOxpaSXUgNXaZ40ScZKZQ+iDEQ=vqPytLgicBx==hxp5uL_+dA@mail.gmail.com>
+ <CAL_quvScPUuocogrghzH_vNb2uxyBupBKYikG0Bwf4OcfSRWsQ@mail.gmail.com>
+ <5df87d6e.1c69fb81.f0643.a6b6@mx.google.com> <CAL_quvS_3o7UNmqP+QDCcHosw8JkQ03Kx5NjgUxFhO5FO=_-Mg@mail.gmail.com>
+ <20191218094729.GC22923@kuha.fi.intel.com>
+In-Reply-To: <20191218094729.GC22923@kuha.fi.intel.com>
+From:   Mat King <mathewk@google.com>
+Date:   Wed, 18 Dec 2019 16:35:29 -0700
+Message-ID: <CAL_quvSKHwOTeatoju=nTmhyf6iTRGD3zY1Nxv=DcJrzQNV3sg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] firmware: google: Expose CBMEM over sysfs
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Julius Werner <jwerner@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Samuel Holland <samuel@sholland.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 3:07 PM Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
+On Wed, Dec 18, 2019 at 2:47 AM Heikki Krogerus
+<heikki.krogerus@linux.intel.com> wrote:
 >
-> On Tue, 2019-12-17 at 10:18 -0700, Jerry Snitselaar wrote:
-> > On Tue Dec 17 19, Jarkko Sakkinen wrote:
-> > > On Mon, 2019-12-16 at 18:14 -0800, Dan Williams wrote:
-> > > > On Mon, Dec 16, 2019 at 6:00 PM Jerry Snitselaar <jsnitsel@redhat.com> wrote:
-> > > > > On Mon Dec 16 19, Dan Williams wrote:
-> > > > > > On Mon, Dec 16, 2019 at 4:59 PM Jarkko Sakkinen
-> > > > > > <jarkko.sakkinen@linux.intel.com> wrote:
-> > > > > > > On Wed, 2019-12-11 at 16:54 -0700, Jerry Snitselaar wrote:
-> > > > > > > > Instead of repeatedly calling tpm_chip_start/tpm_chip_stop when
-> > > > > > > > issuing commands to the tpm during initialization, just reserve the
-> > > > > > > > chip after wait_startup, and release it when we are ready to call
-> > > > > > > > tpm_chip_register.
-> > > > > > > >
-> > > > > > > > Cc: Christian Bundy <christianbundy@fraction.io>
-> > > > > > > > Cc: Dan Williams <dan.j.williams@intel.com>
-> > > > > > > > Cc: Peter Huewe <peterhuewe@gmx.de>
-> > > > > > > > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > > > > > > Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> > > > > > > > Cc: Stefan Berger <stefanb@linux.vnet.ibm.com>
-> > > > > > > > Cc: stable@vger.kernel.org
-> > > > > > > > Cc: linux-integrity@vger.kernel.org
-> > > > > > > > Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of tpm_transmit()")
-> > > > > > > > Fixes: 5b359c7c4372 ("tpm_tis_core: Turn on the TPM before probing IRQ's")
-> > > > > > > > Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
-> > > > > > >
-> > > > > > > I pushed to my master with minor tweaks and added my tags.
-> > > > > > >
-> > > > > > > Please check before I put it to linux-next.
-> > > > > >
-> > > > > > I don't see it yet here:
-> > > > > >
-> > > > > > http://git.infradead.org/users/jjs/linux-tpmdd.git/shortlog/refs/heads/master
-> > > > > >
-> > > > > > However, I wanted to make sure you captured that this does *not* fix
-> > > > > > the interrupt issue. I.e. make sure you remove the "Fixes:
-> > > > > > 5b359c7c4372 ("tpm_tis_core: Turn on the TPM before probing IRQ's")"
-> > > > > > tag.
-> > > > > >
-> > > > > > With that said, are you going to include the revert of:
-> > > > > >
-> > > > > > 1ea32c83c699 tpm_tis_core: Set TPM_CHIP_FLAG_IRQ before probing for interrupts
+> On Tue, Dec 17, 2019 at 01:16:33PM -0700, Mat King wrote:
+> > On Tue, Dec 17, 2019 at 12:02 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> > >
+> > > Quoting Mat King (2019-12-13 13:31:46)
+> > > > On Mon, Dec 9, 2019 at 11:57 PM Julius Werner <jwerner@chromium.org> wrote:
+> > > > > > +static int cbmem_probe(struct coreboot_device *cdev)
+> > > > > > +{
+> > > > > > +       struct device *dev = &cdev->dev;
+> > > > > > +       struct cb_priv *priv;
+> > > > > > +       int err;
+> > > > > > +
+> > > > > > +       priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+> > > > > > +       if (!priv)
+> > > > > > +               return -ENOMEM;
+> > > > > > +
+> > > > > > +       memcpy(&priv->entry, &cdev->cbmem_entry, sizeof(priv->entry));
+> > > > > > +
+> > > > > > +       priv->remap = memremap(priv->entry.address,
+> > > > > > +                              priv->entry.entry_size, MEMREMAP_WB);
 > > > > >
-> > > > > Dan, with the above reverted do you still get the screaming interrupt?
+> > > > > We've just been discussing some problems with CBMEM areas and memory
+> > > > > mapping types in Chrome OS. CBMEM is not guaranteed to be page-aligned
+> > > > > (at least not the "small" entries), but the kernel can only assign
+> > > > > memory attributes for a page at a time (and refuses to map the same
+> > > > > area twice with two different memory types, for good reason). So if
+> > > > > CBMEM entries sharing a page are mapped as writeback by one driver but
+> > > > > uncached by the other, things break.
+> > > > >
+> > > > > There are some CBMEM entries that need to be mapped uncached (e.g. the
+> > > > > ACPI UCSI table, which isn't even handled by anything using this CBMEM
+> > > > > code) and others for which it would make more sense (e.g. the memory
+> > > > > console, where firmware may add more lines at runtime), but I don't
+> > > > > think there are any regions that really *need* to be writeback. None
+> > > > > of the stuff accessing these areas should access them often enough
+> > > > > that caching matters, and I think it's generally more common to map
+> > > > > firmware memory areas as uncached anyway. So how about we standardize
+> > > > > on mapping it all uncached to avoid any attribute clashes? (That would
+> > > > > mean changing the existing VPD and memconsole drivers to use
+> > > > > ioremap(), too.)
 > > > >
-> > > > Yes, the screaming interrupt goes away, although it is replaced by
-> > > > these messages when the driver starts:
-> > > >
-> > > > [    3.725131] tpm_tis IFX0740:00: 2.0 TPM (device-id 0x1B, rev-id 16)
-> > > > [    3.725358] tpm tpm0: tpm_try_transmit: send(): error -5
-> > > > [    3.725359] tpm tpm0: [Firmware Bug]: TPM interrupt not working,
-> > > > polling instead
-> > > >
-> > > > If the choice is "error message + polled-mode" vs "pinning a cpu with
-> > > > interrupts" I'd accept the former, but wanted Jarkko with his
-> > > > maintainer hat to weigh in.
-> > > >
-> > > > Is there a simple sanity check I can run to see if the TPM is still
-> > > > operational in this state?
+> > > > I don't think that uncached would work here either because the acpi
+> > > > driver will have already mapped some of these regions as write-back
+> > > > before this driver is loaded so the mapping will fail.
 > > >
-> > > What about T490S?
-> > >
-> > > /Jarkko
-> > >
+> > > Presumably the ucsi driver is drivers/usb/typec/ucsi/ucsi_acpi.c? Is
+> > > that right? And on ACPI based systems is this I/O memory or just some
+> > > carved out memory region that is used to communicate something to the
+> > > ACPI firmware? From looking at the ucsi driver it seems like it should
+> > > be mapped with memremap() instead of ioremap() given that it's not
+> > > actual I/O memory that has any sort of memory barrier or access width
+> > > constraints. It looks more like some sort of memory region that is being
+> > > copied into and out of while triggering some DSM. Can it at least be
+> > > memremap()ed with MEMREMAP_WT?
 > >
-> > Hi Jarkko, I'm waiting to hear back from the t490s user, but I imagine
-> > it still has the problem as well.
-> >
-> > Christian, were you able to try this patch and verify it still
-> > resolves the issue you were having with the kernel failing to get the
-> > timeouts and durations from the tpm?
+> > Yes this is the ucsi_acpi.c driver that has caused this issue to come
+> > up. It does just use a region of memory carved in the BIOS out for the
+> > purpose of this device. The kernel can write to this memory and call a
+> > _DSM to push data to an EC or call the _DSM to pull from the EC into
+> > this memory region. See
+> > https://www.intel.com/content/dam/www/public/us/en/documents/white-papers/bios-implementation-of-ucsi.pdf
+> > . The driver is very explicit about using uncached memory and I
+> > suspect that is why memremap() was not used, but I am not sure why
+> > uncahed memory is needed. The only consumers of this memory are the
+> > driver itself and the ACPI asl code in the _DSM which as far as I know
+> > is being exectued by the kernel directly. Are there any other reasons
+> > to use uncached memory when dealing with ACPI asl code?
 >
-> Including those reverts would be a bogus change at this point.
+> The reason why I did not use memremap() was because I was convinced
+> that there will soon be physical devices such as PD controllers that
+> supply the interface, and with those the memory resource given to the
+> driver would be real bus memory. But that was already years ago,
+> and there still are no such devices that I know of, so if you guys
+> want to change the driver so that it uses memremap() instead of
+> ioremap(), I'm not going to be against it. But just be warned: We can
+> not guarantee that there isn't going to be IO side effects in every
+> case.
 
-I'm failing to see how you arrived at that conclusion.
+I am a little confused how this hypothetical PD controller would look
+with regards to the ACPI table. Would it still have an OperationRegion
+for the MMIO address of the controllers mailbox? Would the _CRS point
+to the MMIO of the mailbox directly or would it still use physical
+memory? If it is pointing to the MMIO mailbox is the _DSM essentially
+a noop?
 
-> The fix that I already applied obviously fixes an issue even if
-> it does not fix all the issues.
+>
+> But why is the UCSI ACPI mailbox a problem for you guys? Why do you
+> have the UCSI ACPI device object in your ACPI tables in the first
+> place?
 
-These patches take a usable system and make it unusable:
+The problem is that with our UCSI implementation in coreboot the 48
+byte mailbox sometimes is in the same page as memory that gets
+memremap()ed as write-back before the ucsi driver is loaded and when
+it is loaded the ioremap fails.
 
-1ea32c83c699 tpm_tis_core: Set TPM_CHIP_FLAG_IRQ before probing for interrupts
-5b359c7c4372 tpm_tis_core: Turn on the TPM before probing IRQ's
+>
+>
+> thanks,
 
-...they need to be reverted, or the regression needs to be fixed, but
-asserting that you fixed something else unrelated does not help.
+>
+> --
+> heikki
