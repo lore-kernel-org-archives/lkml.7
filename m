@@ -2,135 +2,303 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBA6C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A9BC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FE53218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:30:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9949A218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:30:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="j0mOYvSp"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Ku8zmEjG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbfLROad (ORCPT
+        id S1727226AbfLROat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 09:30:33 -0500
-Received: from mout.web.de ([212.227.15.3]:49913 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726921AbfLROad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 09:30:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1576679422;
-        bh=dW9ELnC9zxDtaU4OEuSlVjglUugRcBe15kK3SY4VLws=;
-        h=X-UI-Sender-Class:Cc:References:Subject:From:To:Date:In-Reply-To;
-        b=j0mOYvSpd11QONhR3s12w2blto5/SqKiXab8hzrmlJECGURH0UGJwtbhc7vz75yns
-         EbbZDs/SpT650+hyTxtG2njOkeW88GVGB0eW/qBURF3j57w5U53BofrlZV8J5eRVgW
-         euBZp0+gcv8qjizswYYAYEFdGoEjhOs4bgXdVJ+Q=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.48.44.150]) by smtp.web.de (mrweb002
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MhUQ6-1iL5NE1XJy-00MeCB; Wed, 18
- Dec 2019 15:30:22 +0100
-Cc:     linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Lendacky <thomas.lendacky@amd.com>
-References: <20191218140102.11579-1-baijiaju1990@gmail.com>
-Subject: Re: [PATCH] net: amd: xgbe: fix possible sleep-in-atomic-context bugs
- in xgbe_powerdown()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
- +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
- mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
- lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
- YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
- GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
- rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
- 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
- jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
- BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
- cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
- Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
- g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
- OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
- CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
- LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
- sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
- kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
- i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
- g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
- q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
- NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
- nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
- 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
- 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
- wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
- riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
- DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
- fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
- 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
- xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
- qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
- Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
- Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
- +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
- hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
- /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
- tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
- qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
- Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
- x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
- pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>, netdev@vger.kernel.org
-Message-ID: <acf52984-cbb8-578f-015a-07a071439bcc@web.de>
-Date:   Wed, 18 Dec 2019 15:30:13 +0100
+        Wed, 18 Dec 2019 09:30:49 -0500
+Received: from mail-eopbgr700082.outbound.protection.outlook.com ([40.107.70.82]:4256
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727110AbfLROat (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 09:30:49 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AMH/3Efe7QtTq7TX/tRwf59G5+hN0ml78w/xyENmb/It9TFD3r2w7EfZuzAxO+9Q35soXM1by8mx47yc/YeZlF6J8zwWSwM+3kDJKo0/1J2fs2wWMlUUq6IrXbyXXz5YxRrmSE1kQHj/nlYjrO78McY8vpiw5tbBMYWVI5GZrpKz0aoVM7ChA5Xmo3sm29+e4JcmodsL9qsdMnLLjFhAMxIFekxBg5oF2pOmjzpGqTdBWWYfmGVclUcrKyBI4AXtJ0weo5CxZ8EjW5qsZyGJ5SAaD1mAkI8bck/FfSfbR4/NLuQSqH9gBGTqAk5sNlc1/wFoOs8vaedTTE77KNEpeQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5bN7SS52CbiAsBIyD0ougq45UTzC2KJeveAEHmLGURc=;
+ b=IB/vQCxlYhC1wMKRpdHx5S2O/SFuJArYUmzXc/UXznaEDnc2JrDVL/bx7HBjPtX3S8dA9DAjGdNQH8tJPmc3mNJD8kArrwAwlWh313uypZ/4fMsoSP8jSv5dsbqxc+S8Yu+p1SBsvBxLpHSACZGJ2npSjlY1aX4lHYU9vdPIetnoe2u6mXVSz1MWQ0TdYBRmMJGiRjY2y8GOvbCYwvKFUWCPnTzldIkSz34NA6VnSJvvV3VrDLTOLLyBwfB92qdvm+28I9wUpox5gLoMtcMMCKt0rGJ77hDdvld7Lj7CvdcHDxskA/R1Gohm9sGsF8yLGkMIlOsFwqOy3oFEPq0How==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5bN7SS52CbiAsBIyD0ougq45UTzC2KJeveAEHmLGURc=;
+ b=Ku8zmEjGdMpkQSCByn0GtH7sWk7kjhiRJ0C5Fl4zd/0UAi6zCL9zYD1VufCkdjBesXdgi7xoZwV2dzauNTvKT8aNr5hoJWCcqjl7G48gqb9DqqUOS/Z5rfeL1B4sEKc/UYIRHleLvqyqQWvJ6+RsH9zqFRdWNvWcPNsXV5KCixI=
+Received: from CY4PR22CA0089.namprd22.prod.outlook.com (2603:10b6:903:ad::27)
+ by BN7PR02MB4082.namprd02.prod.outlook.com (2603:10b6:406:ef::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2559.14; Wed, 18 Dec
+ 2019 14:30:43 +0000
+Received: from CY1NAM02FT021.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:903:ad:cafe::a2) by CY4PR22CA0089.outlook.office365.com
+ (2603:10b6:903:ad::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2559.14 via Frontend
+ Transport; Wed, 18 Dec 2019 14:30:42 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT021.mail.protection.outlook.com (10.152.75.187) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2559.14
+ via Frontend Transport; Wed, 18 Dec 2019 14:30:42 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1ihaLa-0001H0-2E; Wed, 18 Dec 2019 06:30:42 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1ihaLU-0007d9-Ha; Wed, 18 Dec 2019 06:30:36 -0800
+Received: from xsj-pvapsmtp01 (maildrop.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xBIEUVRN021544;
+        Wed, 18 Dec 2019 06:30:31 -0800
+Received: from [172.30.17.107]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1ihaLO-0007XX-Sm; Wed, 18 Dec 2019 06:30:31 -0800
+Subject: Re: [PATCH v2] ARM: dts: zynq: enablement of coresight topology
+To:     Michal Simek <michal.simek@xilinx.com>,
+        linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com
+Cc:     Zumeng Chen <zumeng.chen@windriver.com>,
+        Quanyang Wang <quanyang.wang@windriver.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <882627bc1ecd622355fb72b742b4e3c013d0b1ca.1576161496.git.michal.simek@xilinx.com>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <91cd571f-6c41-55bd-87d8-8925dc0a0ae4@xilinx.com>
+Date:   Wed, 18 Dec 2019 15:30:28 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20191218140102.11579-1-baijiaju1990@gmail.com>
+In-Reply-To: <882627bc1ecd622355fb72b742b4e3c013d0b1ca.1576161496.git.michal.simek@xilinx.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Provags-ID: V03:K1:ImmAxBS4k2Nlt5946E0XowytD+OraFYvEr2LpQNvvrasfr8vhBW
- dXn3xW22XN2mwmeHQn0S76cCq63WiSOfXQ8IqGO09Oxe507bLKR0+SG01pXFdfWNJuLXjno
- RkkjjbMCOcVPVwUppvsj6hGS1FYOf/SEcxJmy8xXVIbVH+YgoXPj6L3GlsyrOM3UDZmXiym
- Ul68CeOqRMtrd4WNx6Ahg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:6fZCSlwdtro=:PtNsbRKXt25ThJXQjNLR/9
- JUiJYbKP5+bPn6AL4dl5SNSpN7WRcWcJI1oQx7BHfYjGimOUrOvaWclX3zyCEtPXIrEW3ygHy
- JK7DsSwp7u9bwBwvv8SghA6l/qbN8CLwatuH/pNCaw29//s2cJZTYMjbzdVPi22BHatc8X+cF
- SrqpLDazCvBvlp+OOoqU9ThYXz1xnAD+MO4zNyUVwhiEcp4GgnD6In205Dyfa+MQ3kKB1R/cN
- oDDg7MtbWR3LlIcvdR8/0+HwNRCR4skOHJFUIcO9+nxVc4VrG55Ps2T/0TabR9uQyZZSzoAH/
- k8U/YFpbNgN3/MXJjozHsp/YfywRug7gTfuDfDE5hwhEV5lz2v4QmsHK6Bd15/Hdy+kXpheAB
- yUfWxOiPhp6rDQre6xklykFj6FG3XmenK7yWM7z3XDU8NAQLUC/fN0r2S8FZ0d5Ns9aVQp0PA
- 1udl2yjg4Gf2Q8St2ptG7/XzTpH9+yGe+OQsvtjb4hYHahKgy6pFCoGH2vU8RuwqJWhKYF5jz
- OHdcG5Bhwy7vUBZQD9fdMX0+iwYuQi00wsliHE5WY+a6DVB0mTOKj1mLPhi0xqoe6DbQx3uHM
- JavPsRbIeKWQTtxHOJ3ksdwqZ1+JRyBpqJzYifalpg3J0Z9AKiu3OXA17ubxm5MPFjijnn/yf
- eizlkgMNQaBS0ve1vL21Pqbt82WHjJijSpZBnOBTPyXFJZ0pWOf9dov9T3sVjTU3viz2PL9Xw
- i1GZ5n+5Cqb394L/fRa2Pp07KsLydIXiqaPa8kyRr2Rm7I72WcmCrmcIooBVd6S4wSDAB8770
- is8Hgn8PEUjYtYEePXUSnO+U1xtm0VuqoCVLNBiJabaziWjcRXol0dEFn/4n/tC1k5HHEXznP
- iBlrsm0PlIpQoPvboXyt3gFQP7hWRMMjetw1CaMx/Ag2LTik1aRvCNCl2ndZmXoafyUv/w+ZB
- 2KsTfeu+AsqCZQJrkp7VZcHD9rhIPKIpyBK5QT2vsQZzwxdQgUgJykQyLSX+ZtDmNiVzG2N56
- gc7Bjuj19y5fu2VPRapKHWFMMavMdbqcXCH5EJij4hVTZbD6PtTKAkAEDhSXwKvIWDI71gW5l
- 3TTQjg1MjwK0EbF9+9/BdQFjJDGDu7o2e5plZdNUrpT5kzkPFRdRaTYAHiaIeXMVmnFCzFP5q
- 4s7cAY9gs4nksNk9IEYKMvBFyLhaOgJ49dxyPYlcDZyrm8xWwcjnxB3qx3XwXEjV1/lHG4MhA
- w4m3GyjZsd/Q7OFqTzDAP8RlQr2B1khfovsuxJvpcQudoJasrtVxdZhRL1ow=
+Content-Transfer-Encoding: 7bit
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(189003)(199004)(186003)(5660300002)(26005)(8936002)(4326008)(36756003)(2906002)(31696002)(2616005)(498600001)(81156014)(8676002)(81166006)(426003)(9786002)(6636002)(70586007)(70206006)(336012)(54906003)(31686004)(44832011)(356004)(6666004);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR02MB4082;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f34ca03c-523c-48b2-fac5-08d783c6dcd0
+X-MS-TrafficTypeDiagnostic: BN7PR02MB4082:
+X-LD-Processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+X-Microsoft-Antispam-PRVS: <BN7PR02MB4082BF11C6C33181CB9171C9C6530@BN7PR02MB4082.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 0255DF69B9
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: OdC4tgkJtXeC5u4Jt4ymfkvd8xrk0buPwS1zNKSHHSTofN74OL42FdyPeWrPaPLswYs8zLRrwPY6zuGw6ie2ymoBgtjhac1nMKZFEPqL0s48ftbEwbkmfXbDtaPMNy189MumGwCYn2nLJJQihGCBPmQqRO/0tKMkE34Gpcjrc9P9kHMsQeQHmEedHpycrAMi0CtBFT+jy1lx5u7+1XV32p7LVnSu/xHZ/DphHGKFeQHFOYSX1wPo9PkRcIF+djTG1HAXS32DO+jdSCjjl0kt0f5vJXYrTO8GKcSBexHvnI82WWNJTxfLjOhXMEVrLqVabk1CtO5UU827ry+OscA6jTm6K68YdWYBLj/F/C/lrcFxsiPKuk3LCb9NozZZlmqTndG237MnD3frz55Wd7MlXk2cMexQE506a7PPtalJCkSZEF54ZiHEYK/404bK8UuW
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Dec 2019 14:30:42.5469
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f34ca03c-523c-48b2-fac5-08d783c6dcd0
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR02MB4082
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> The function call path (from bottom to top) in Linux 4.19 is:
+On 12. 12. 19 15:38, Michal Simek wrote:
+> From: Zumeng Chen <zumeng.chen@windriver.com>
+> 
+> This patch is to build the coresight topology structure of zynq-7000
+> series according to the docs of coresight and userguide of zynq-7000.
+> 
+> Signed-off-by: Zumeng Chen <zumeng.chen@windriver.com>
+> Signed-off-by: Quanyang Wang <quanyang.wang@windriver.com>
+> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> ---
+> 
+> Changes in v2:
+> - Remove slava-mode from replicator in-ports
+> - Remove ITM completely
+> 
+>  arch/arm/boot/dts/zynq-7000.dtsi | 135 +++++++++++++++++++++++++++++++
+>  1 file changed, 135 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+> index ca6425ad794c..db3899b07992 100644
+> --- a/arch/arm/boot/dts/zynq-7000.dtsi
+> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
+> @@ -59,6 +59,39 @@ regulator_vccpint: fixedregulator {
+>  		regulator-always-on;
+>  	};
+>  
+> +	replicator {
+> +		compatible = "arm,coresight-static-replicator";
+> +		clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
+> +		clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
+> +
+> +		out-ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			/* replicator output ports */
+> +			port@0 {
+> +				reg = <0>;
+> +				replicator_out_port0: endpoint {
+> +					remote-endpoint = <&tpiu_in_port>;
+> +				};
+> +			};
+> +			port@1 {
+> +				reg = <1>;
+> +				replicator_out_port1: endpoint {
+> +					remote-endpoint = <&etb_in_port>;
+> +				};
+> +			};
+> +		};
+> +		in-ports {
+> +			/* replicator input port */
+> +			port {
+> +				replicator_in_port0: endpoint {
+> +					remote-endpoint = <&funnel_out_port>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+>  	amba: amba {
+>  		compatible = "simple-bus";
+>  		#address-cells = <1>;
+> @@ -365,5 +398,107 @@ watchdog0: watchdog@f8005000 {
+>  			reg = <0xf8005000 0x1000>;
+>  			timeout-sec = <10>;
+>  		};
+> +
+> +		etb@f8801000 {
+> +			compatible = "arm,coresight-etb10", "arm,primecell";
+> +			reg = <0xf8801000 0x1000>;
+> +			clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
+> +			clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
+> +			in-ports {
+> +				port {
+> +					etb_in_port: endpoint {
+> +						remote-endpoint = <&replicator_out_port1>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		tpiu@f8803000 {
+> +			compatible = "arm,coresight-tpiu", "arm,primecell";
+> +			reg = <0xf8803000 0x1000>;
+> +			clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
+> +			clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
+> +			in-ports {
+> +				port {
+> +					tpiu_in_port: endpoint {
+> +						remote-endpoint = <&replicator_out_port0>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		funnel@f8804000 {
+> +			compatible = "arm,coresight-static-funnel", "arm,primecell";
+> +			reg = <0xf8804000 0x1000>;
+> +			clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
+> +			clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
+> +
+> +			/* funnel output ports */
+> +			out-ports {
+> +				port {
+> +					funnel_out_port: endpoint {
+> +						remote-endpoint =
+> +							<&replicator_in_port0>;
+> +					};
+> +				};
+> +			};
+> +
+> +			in-ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				/* funnel input ports */
+> +				port@0 {
+> +					reg = <0>;
+> +					funnel0_in_port0: endpoint {
+> +						remote-endpoint = <&ptm0_out_port>;
+> +					};
+> +				};
+> +
+> +				port@1 {
+> +					reg = <1>;
+> +					funnel0_in_port1: endpoint {
+> +						remote-endpoint = <&ptm1_out_port>;
+> +					};
+> +				};
+> +
+> +				port@2 {
+> +					reg = <2>;
+> +					funnel0_in_port2: endpoint {
+> +					};
+> +				};
+> +				/* The other input ports are not connect to anything */
+> +			};
+> +		};
+> +
+> +		ptm@f889c000 {
+> +			compatible = "arm,coresight-etm3x", "arm,primecell";
+> +			reg = <0xf889c000 0x1000>;
+> +			clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
+> +			clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
+> +			cpu = <&cpu0>;
+> +			out-ports {
+> +				port {
+> +					ptm0_out_port: endpoint {
+> +						remote-endpoint = <&funnel0_in_port0>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		ptm@f889d000 {
+> +			compatible = "arm,coresight-etm3x", "arm,primecell";
+> +			reg = <0xf889d000 0x1000>;
+> +			clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
+> +			clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
+> +			cpu = <&cpu1>;
+> +			out-ports {
+> +				port {
+> +					ptm1_out_port: endpoint {
+> +						remote-endpoint = <&funnel0_in_port1>;
+> +					};
+> +				};
+> +			};
+> +		};
+>  	};
+>  };
+> 
 
-Does this Linux version need more adjustments than the current
-development version?
+Applied to zynq/dt.
 
-
-> These bugs are found by a static analysis tool STCheck written
-> by myself.
-
-Would you like to point any more background information out
-for this software?
-
-Regards,
-Markus
+Thanks,
+Michal
