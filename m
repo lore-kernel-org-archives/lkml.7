@@ -2,191 +2,120 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7977C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB04C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2C132072B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 814B2227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:02:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="JzmkTD4g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbfLRMAa (ORCPT
+        id S1726921AbfLRMC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 07:00:30 -0500
-Received: from foss.arm.com ([217.140.110.172]:43810 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726591AbfLRMAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 07:00:30 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A0F2230E;
-        Wed, 18 Dec 2019 04:00:29 -0800 (PST)
-Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5C62A3F6CF;
-        Wed, 18 Dec 2019 04:00:28 -0800 (PST)
-Subject: Re: [PATCH v2 7/7] arm64: nofpsmid: Handle TIF_FOREIGN_FPSTATE flag
- cleanly
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        will@kernel.org, mark.rutland@arm.com, dave.martin@arm.com,
-        catalin.marinas@arm.com, ard.biesheuvel@linaro.org,
-        christoffer.dall@arm.com, Marc Zyngier <marc.zyngier@arm.com>
-References: <20191217183402.2259904-1-suzuki.poulose@arm.com>
- <20191217183402.2259904-8-suzuki.poulose@arm.com>
- <94c0bdd9f26c3262ff8a885d13a64d22@www.loen.fr>
- <9e491901-b589-b486-1cad-1bd92a35da95@arm.com>
- <3b30d44c34bc265ce4122396077a1670@www.loen.fr>
-From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
-Message-ID: <d5e27bf5-3cc9-c8bd-5699-71658983054e@arm.com>
-Date:   Wed, 18 Dec 2019 12:00:27 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 18 Dec 2019 07:02:27 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:52260 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726551AbfLRMC1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 07:02:27 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576670546; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=B4/RlwWd+D6Up8aRuxBevuGNVTwp4B7x7EDttVNYIiA=; b=JzmkTD4gJHSur/m0zYaxnSqfCHiu13B1y00q04C1xuTJNO6Kwy6jbQqBxJOvn2SmFqqcAZ9J
+ wLT0s1CLr8PkBiQT+1AaI5SI9XMG489N/T7PvjwY5GcvgnCDuiHuGi/9N1055XSuAdvIsmv4
+ QMw8KvUxTRIApx+6lA0UdSfCt50=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5dfa1551.7fd173ba7420-smtp-out-n02;
+ Wed, 18 Dec 2019 12:02:25 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 76B02C4479F; Wed, 18 Dec 2019 12:02:24 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2EA18C43383;
+        Wed, 18 Dec 2019 12:02:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2EA18C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Jia-Ju Bai <baijiaju1990@gmail.com>
+Cc:     ath9k-devel@qca.qualcomm.com, davem@davemloft.net,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ath9k: fix possible sleep-in-atomic-context bugs in hif_usb_send_regout()
+References: <20191218114533.9268-1-baijiaju1990@gmail.com>
+Date:   Wed, 18 Dec 2019 14:02:19 +0200
+In-Reply-To: <20191218114533.9268-1-baijiaju1990@gmail.com> (Jia-Ju Bai's
+        message of "Wed, 18 Dec 2019 19:45:33 +0800")
+Message-ID: <87h81xc050.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <3b30d44c34bc265ce4122396077a1670@www.loen.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/12/2019 11:56, Marc Zyngier wrote:
-> On 2019-12-18 11:42, Suzuki Kuruppassery Poulose wrote:
->> Hi Marc,
->>
->> On 17/12/2019 19:05, Marc Zyngier wrote:
->>> Hi Suzuki,
->>> On 2019-12-17 18:34, Suzuki K Poulose wrote:
->>>> We detect the absence of FP/SIMD after an incapable CPU is brought up,
->>>> and by then we have kernel threads running already with
->>>> TIF_FOREIGN_FPSTATE set
->>>> which could be set for early userspace applications (e.g, modprobe 
->>>> triggered
->>>> from initramfs) and init. This could cause the applications to loop
->>>> forever in
->>>> do_nofity_resume() as we never clear the TIF flag, once we now know 
->>>> that
->>>> we don't support FP.
->>>>
->>>> Fix this by making sure that we clear the TIF_FOREIGN_FPSTATE flag
->>>> for tasks which may have them set, as we would have done in the normal
->>>> case, but avoiding touching the hardware state (since we don't 
->>>> support any).
->>>>
->>>> Also to make sure we handle the cases seemlessly we categorise the
->>>> helper functions to two :
->>>>  1) Helpers for common core code, which calls into take appropriate
->>>>     actions without knowing the current FPSIMD state of the CPU/task.
->>>>
->>>>     e.g fpsimd_restore_current_state(), fpsimd_flush_task_state(),
->>>>         fpsimd_save_and_flush_cpu_state().
->>>>
->>>>     We bail out early for these functions, taking any appropriate 
->>>> actions
->>>>     (e.g, clearing the TIF flag) where necessary to hide the handling
->>>>     from core code.
->>>>
->>>>  2) Helpers used when the presence of FP/SIMD is apparent.
->>>>     i.e, save/restore the FP/SIMD register state, modify the CPU/task
->>>>     FP/SIMD state.
->>>>     e.g,
->>>>
->>>>     fpsimd_save(), task_fpsimd_load() - save/restore task FP/SIMD 
->>>> registers
->>>>
->>>>     fpsimd_bind_task_to_cpu()  \
->>>>                                 - Update the "state" metadata for 
->>>> CPU/task.
->>>>     fpsimd_bind_state_to_cpu() /
->>>>
->>>>     fpsimd_update_current_state() - Update the fp/simd state for the 
->>>> current
->>>>                                     task from memory.
->>>>
->>>>     These must not be called in the absence of FP/SIMD. Put in a 
->>>> WARNING
->>>>     to make sure they are not invoked in the absence of FP/SIMD.
->>>>
->>>> KVM also uses the TIF_FOREIGN_FPSTATE flag to manage the FP/SIMD state
->>>> on the CPU. However, without FP/SIMD support we trap all accesses and
->>>> inject undefined instruction. Thus we should never "load" guest state.
->>>> Add a sanity check to make sure this is valid.
->>> Yes, but no, see below.
->>>
->>>>
->>>> Fixes: 82e0191a1aa11abf ("arm64: Support systems without FP/ASIMD")
->>>> Cc: Will Deacon <will@kernel.org>
->>>> Cc: Mark Rutland <mark.rutland@arm.com>
->>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
->>>> Cc: Marc Zyngier <marc.zyngier@arm.com>
->>> No idea who that guy is. It's a fake! ;-)
->>
->> Sorry about that, will fix it.
->>
->>>
->>>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->>>> ---
->>>>  arch/arm64/kernel/fpsimd.c  | 31 +++++++++++++++++++++++++++----
->>>>  arch/arm64/kvm/hyp/switch.c |  9 +++++++++
->>>>  2 files changed, 36 insertions(+), 4 deletions(-)
->>>>
->>> [...]
->>>
->>>> diff --git a/arch/arm64/kvm/hyp/switch.c b/arch/arm64/kvm/hyp/switch.c
->>>> index 72fbbd86eb5e..9696ebb5c13a 100644
->>>> --- a/arch/arm64/kvm/hyp/switch.c
->>>> +++ b/arch/arm64/kvm/hyp/switch.c
->>>> @@ -28,10 +28,19 @@
->>>>  /* Check whether the FP regs were dirtied while in the host-side run
->>>> loop: */
->>>>  static bool __hyp_text update_fp_enabled(struct kvm_vcpu *vcpu)
->>>>  {
->>>> +    /*
->>>> +     * When the system doesn't support FP/SIMD, we cannot rely on
->>>> +     * the state of _TIF_FOREIGN_FPSTATE. However, we will never
->>>> +     * set the KVM_ARM64_FP_ENABLED, as the FP/SIMD accesses always
->>>> +     * inject an abort into the guest. Thus we always trap the
->>>> +     * accesses.
->>>> +     */
->>>>      if (vcpu->arch.host_thread_info->flags & _TIF_FOREIGN_FPSTATE)
->>>>          vcpu->arch.flags &= ~(KVM_ARM64_FP_ENABLED |
->>>>                        KVM_ARM64_FP_HOST);
->>>>
->>>> +    WARN_ON(!system_supports_fpsimd() &&
->>>> +        (vcpu->arch.flags & KVM_ARM64_FP_ENABLED));
->>> Careful, this will panic the host if it happens on a !VHE host
->>> (calling non-inline stuff from a __hyp_text function is usually
->>> not a good idea).
->>
->> Ouch! Sorry about that WARN_ON()! I could drop the warning and
->> make this :
->>
->> if (!system_supports_fpsimd() ||
->>     (vcpu->arch.host_thread_info->flags & _TIF_FOREIGN_FPSTATE))
->>     vcpu->arch.flags &= ~(KVM_ARM64_FP_ENABLED |
->>                   KVM_ARM64_FP_HOST);
->>
->> to make sure we never say fp is enabled.
->>
->> What do you think ?
-> 
-> Sure, that would work. I can't really see how KVM_ARM64_FP_ENABLED
+Jia-Ju Bai <baijiaju1990@gmail.com> writes:
 
-Thanks I have fixed this locally now.
+> The driver may sleep while holding a spinlock.
+> The function call path (from bottom to top) in Linux 4.19 is:
+>
+> drivers/net/wireless/ath/ath9k/hif_usb.c, 108: 
+> 	usb_alloc_urb(GFP_KERNEL) in hif_usb_send_regout
+> drivers/net/wireless/ath/ath9k/hif_usb.c, 470: 
+> 	hif_usb_send_regout in hif_usb_send
+> drivers/net/wireless/ath/ath9k/htc_hst.c, 34: 
+> 	(FUNC_PTR)hif_usb_send in htc_issue_send
+> drivers/net/wireless/ath/ath9k/htc_hst.c, 295: 
+> 	htc_issue_send in htc_send
+> drivers/net/wireless/ath/ath9k/htc_drv_beacon.c, 250: 
+> 	htc_send in ath9k_htc_send_beacon
+> drivers/net/wireless/ath/ath9k/htc_drv_beacon.c, 207: 
+> 	spin_lock_bh in ath9k_htc_send_beacon
+>
+> drivers/net/wireless/ath/ath9k/hif_usb.c, 112: 
+> 	kzalloc(GFP_KERNEL) in hif_usb_send_regout
+> drivers/net/wireless/ath/ath9k/hif_usb.c, 470: 
+> 	hif_usb_send_regout in hif_usb_send
+> drivers/net/wireless/ath/ath9k/htc_hst.c, 34: 
+> 	(FUNC_PTR)hif_usb_send in htc_issue_send
+> drivers/net/wireless/ath/ath9k/htc_hst.c, 295: 
+> 	htc_issue_send in htc_send
+> drivers/net/wireless/ath/ath9k/htc_drv_beacon.c, 250: 
+> 	htc_send in ath9k_htc_send_beacon
+> drivers/net/wireless/ath/ath9k/htc_drv_beacon.c, 207: 
+> 	spin_lock_bh in ath9k_htc_send_beacon
+>
+> drivers/net/wireless/ath/ath9k/hif_usb.c, 127: 
+> 	usb_submit_urb(GFP_KERNEL) in hif_usb_send_regout
+> drivers/net/wireless/ath/ath9k/hif_usb.c, 470: 
+> 	hif_usb_send_regout in hif_usb_send
+> drivers/net/wireless/ath/ath9k/htc_hst.c, 34: 
+> 	(FUNC_PTR)hif_usb_send in htc_issue_send
+> drivers/net/wireless/ath/ath9k/htc_hst.c, 295: 
+> 	htc_issue_send in htc_send
+> drivers/net/wireless/ath/ath9k/htc_drv_beacon.c, 250: 
+> 	htc_send in ath9k_htc_send_beacon
+> drivers/net/wireless/ath/ath9k/htc_drv_beacon.c, 207: 
+> 	spin_lock_bh in ath9k_htc_send_beacon
+>
+> (FUNC_PTR) means a function pointer is called.
+>
+> To fix these bugs, GFP_KERNEL is replaced with GFP_ATOMIC.
+>
+> These bugs are found by a static analysis tool STCheck written by myself.
+>
+> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-> would get set though. But it probably doesn't matter (WTF is going
+Can someone else verify this and provide Reviewed-by?
 
-Right. That cannot be set to begin with, as the first access to FP/SIMD
-injects an abort back to the guest, which is why I added a WARN() to
-begin with.
-
-Just wanted to be extra safe.
-
-> to run KVM with such broken HW?), and better safe than sorry.
-
-Right, with no COMPAT KVM support it is really hard to get this far.
-
-Cheers
-Suzuki
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
