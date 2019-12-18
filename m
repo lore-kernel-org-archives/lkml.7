@@ -2,170 +2,80 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C15D2C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 05:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98067C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 05:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 988CF2176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 05:53:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 666D821582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 05:57:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dpmgfpz2"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="XRJUCRbB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbfLRFxh (ORCPT
+        id S1726492AbfLRF51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 00:53:37 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52702 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726497AbfLRFxh (ORCPT
+        Wed, 18 Dec 2019 00:57:27 -0500
+Received: from mail-m972.mail.163.com ([123.126.97.2]:35158 "EHLO
+        mail-m972.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbfLRF51 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 00:53:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576648416;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GWocaOhvv7iz+Y/q3X9mGWyFBvKPi09TUVpc/LIJHfQ=;
-        b=dpmgfpz2bBlccPiIug7w7vgwLudqfoLEgqUyFwdFeKO0iVXv+iihrr4GDlYr7sePhXawHa
-        xSgHp+YXIJlR7HNt70jy9crSPNhHWM2CTaEHbAiI+QlOIXSk+lvJ2jAp9dNx1taTQr2w+I
-        FMHxq1+m0KwoQFdrsr9YeDMSqQ0UF94=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-352-c8U9DMXXOUOp4b8hEnHBtg-1; Wed, 18 Dec 2019 00:53:32 -0500
-X-MC-Unique: c8U9DMXXOUOp4b8hEnHBtg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4D09510054E3;
-        Wed, 18 Dec 2019 05:53:31 +0000 (UTC)
-Received: from [10.72.12.155] (ovpn-12-155.pek2.redhat.com [10.72.12.155])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 26C1C1001902;
-        Wed, 18 Dec 2019 05:53:20 +0000 (UTC)
-Subject: Re: [PATCH 1/1] drivers/vhost : Removes unnecessary 'else' in
- vhost_copy_from_user
-To:     Leonardo Bras <leonardo@linux.ibm.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191212211539.34578-1-leonardo@linux.ibm.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <86408a73-1acf-562b-75c0-08ca2728ed36@redhat.com>
-Date:   Wed, 18 Dec 2019 13:53:15 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20191212211539.34578-1-leonardo@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+        Wed, 18 Dec 2019 00:57:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=BulQTA6G1N4TWHEAvp
+        OsyuqFrzbeQQmLPGWhFy4BohA=; b=XRJUCRbB0X3DC2/ZWr5mhVoutDzXnQaiEt
+        WgrdPoK52rCc6FT37BGdo8Hhrvn2tMTeTA0OnEvtoK44npKsg7WF10/hfhZQLKBG
+        CzR4vDrxolydO3b0qEmiKwWiYHEOoW0U4F+dPnzZ3csAD9CqAV4qYCXI1CvXqGqy
+        /IL6HA/1g=
+Received: from localhost.localdomain (unknown [218.106.182.184])
+        by smtp2 (Coremail) with SMTP id GtxpCgBnMzqbv_ldmP0WAA--.443S3;
+        Wed, 18 Dec 2019 13:57:01 +0800 (CST)
+From:   Xidong Wang <wangxidong_97@163.com>
+To:     Xidong Wang <wangxidong_97@163.com>,
+        Marc Dietrich <marvin24@gmx.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     ac100@lists.launchpad.net, linux-tegra@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] staging: nvec: check return value
+Date:   Wed, 18 Dec 2019 13:56:38 +0800
+Message-Id: <1576648598-12257-1-git-send-email-wangxidong_97@163.com>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: GtxpCgBnMzqbv_ldmP0WAA--.443S3
+X-Coremail-Antispam: 1Uf129KBjvdXoWrtryxWw1DXw4Uuw4DJr4Utwb_yoW3ZFX_Cw
+        savw1xZrZrArn7Ar4qywn8ArW29rWfWrs2qr4qg392vayUur4Sv3yDXr1DC3yUW3yxGrW3
+        uFyqkr4ayr13ujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUjFAp7UUUUU==
+X-Originating-IP: [218.106.182.184]
+X-CM-SenderInfo: pzdqw5xlgr0wrbzxqiywtou0bp/1tbi8A2P81uoWGCDAwAAsK
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In nvec_kbd_probe(), the return value of devm_input_allocate_device()
+should be checked before it is used.
 
-On 2019/12/13 =E4=B8=8A=E5=8D=885:15, Leonardo Bras wrote:
-> There is no need for this else statement, given that if block will retu=
-rn.
-> This change is not supposed to change the output binary.
->
-> It reduces identation level on most lines in this function, and also
-> fixes an split string on vq_err().
->
-> Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
-> ---
->   drivers/vhost/vhost.c | 50 +++++++++++++++++++++---------------------=
--
->   1 file changed, 24 insertions(+), 26 deletions(-)
->
-> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-> index f44340b41494..b23d1b74c32f 100644
-> --- a/drivers/vhost/vhost.c
-> +++ b/drivers/vhost/vhost.c
-> @@ -824,34 +824,32 @@ static int vhost_copy_from_user(struct vhost_virt=
-queue *vq, void *to,
->  =20
->   	if (!vq->iotlb)
->   		return __copy_from_user(to, from, size);
-> -	else {
-> -		/* This function should be called after iotlb
-> -		 * prefetch, which means we're sure that vq
-> -		 * could be access through iotlb. So -EAGAIN should
-> -		 * not happen in this case.
-> -		 */
-> -		void __user *uaddr =3D vhost_vq_meta_fetch(vq,
-> -				     (u64)(uintptr_t)from, size,
-> -				     VHOST_ADDR_DESC);
-> -		struct iov_iter f;
->  =20
-> -		if (uaddr)
-> -			return __copy_from_user(to, uaddr, size);
-> +	/* This function should be called after iotlb
-> +	 * prefetch, which means we're sure that vq
-> +	 * could be access through iotlb. So -EAGAIN should
-> +	 * not happen in this case.
-> +	 */
-> +	void __user *uaddr =3D vhost_vq_meta_fetch(vq,
-> +			     (u64)(uintptr_t)from, size,
-> +			     VHOST_ADDR_DESC);
-> +	struct iov_iter f;
+Signed-off-by: Xidong Wang <wangxidong_97@163.com>
+---
+ drivers/staging/nvec/nvec_kbd.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-
-I think this will lead at least warnings from compiler.
-
-Generally, I would not bother to make changes like this especially=20
-consider it will bring troubles when trying to backporting fixes to=20
-downstream in the future.
-
-There're some more interesting things: e.g current metadata IOTLB=20
-performance is bad for dynamic mapping since it will be reset each time=20
-a new updating is coming.
-
-We can optimize this by only reset the metadata IOTLB when the updating=20
-is for metdata.
-
-Want to try this?
-
-Thanks
-
-
->  =20
-> -		ret =3D translate_desc(vq, (u64)(uintptr_t)from, size, vq->iotlb_iov=
-,
-> -				     ARRAY_SIZE(vq->iotlb_iov),
-> -				     VHOST_ACCESS_RO);
-> -		if (ret < 0) {
-> -			vq_err(vq, "IOTLB translation failure: uaddr "
-> -			       "%p size 0x%llx\n", from,
-> -			       (unsigned long long) size);
-> -			goto out;
-> -		}
-> -		iov_iter_init(&f, READ, vq->iotlb_iov, ret, size);
-> -		ret =3D copy_from_iter(to, size, &f);
-> -		if (ret =3D=3D size)
-> -			ret =3D 0;
-> -	}
-> +	if (uaddr)
-> +		return __copy_from_user(to, uaddr, size);
-> +
-> +	ret =3D translate_desc(vq, (u64)(uintptr_t)from, size, vq->iotlb_iov,
-> +			     ARRAY_SIZE(vq->iotlb_iov),
-> +			     VHOST_ACCESS_RO);
-> +	if (ret < 0) {
-> +		vq_err(vq, "IOTLB translation failure: uaddr %p size 0x%llx\n",
-> +		       from, (unsigned long long)size);
-> +		goto out;
-> +	}
-> +	iov_iter_init(&f, READ, vq->iotlb_iov, ret, size);
-> +	ret =3D copy_from_iter(to, size, &f);
-> +	if (ret =3D=3D size)
-> +		ret =3D 0;
->  =20
->   out:
->   	return ret;
+diff --git a/drivers/staging/nvec/nvec_kbd.c b/drivers/staging/nvec/nvec_kbd.c
+index 01dbb66..386d619 100644
+--- a/drivers/staging/nvec/nvec_kbd.c
++++ b/drivers/staging/nvec/nvec_kbd.c
+@@ -123,6 +123,8 @@ static int nvec_kbd_probe(struct platform_device *pdev)
+ 		keycodes[j++] = extcode_tab_us102[i];
+ 
+ 	idev = devm_input_allocate_device(&pdev->dev);
++	if (!idev)
++		return -ENOMEM;
+ 	idev->name = "nvec keyboard";
+ 	idev->phys = "nvec";
+ 	idev->evbit[0] = BIT_MASK(EV_KEY) | BIT_MASK(EV_REP) | BIT_MASK(EV_LED);
+-- 
+2.7.4
 
