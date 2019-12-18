@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C47DC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8439FC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5371A206D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:51:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5837121D7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:51:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EaPlsDQb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qmW/1GT7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbfLRAve (ORCPT
+        id S1726858AbfLRAvk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 19:51:34 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35794 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726622AbfLRAvb (ORCPT
+        Tue, 17 Dec 2019 19:51:40 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38727 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726797AbfLRAve (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 19:51:31 -0500
-Received: by mail-pf1-f196.google.com with SMTP id b19so217613pfo.2;
-        Tue, 17 Dec 2019 16:51:31 -0800 (PST)
+        Tue, 17 Dec 2019 19:51:34 -0500
+Received: by mail-pf1-f194.google.com with SMTP id x185so210465pfc.5;
+        Tue, 17 Dec 2019 16:51:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=JLVhcc9VMHoyHLdT46bTemZl3YozDpYDY3B3T/6/MFI=;
-        b=EaPlsDQbiHPB5yqbOe203la7fBcV4w3x4L2rbh+pgliBiiX7bDksYdVvhVVUsKgVTJ
-         AH0uqqOX9GMu6dGNS+YKsPdPnX/mpgPKYUsFa9T1t2x39BwOfRMVU27mmABfoyea3Uph
-         iMMD4msoQ4sJjvPwWS19yMelLDoWN52xVA1xBh8hR2cLbnVaKHbSH5JWud0+eJJBaovw
-         rAG3bZY1bRoLAS+Ow9UN6G3ltgFOptIG071t9bhgxLuByvrdwhpGK9uTksy4MNxxzpFI
-         VfsUhQuTQjHtDbwLUmJ3CucuQoQnNFSehutZCEoy+GvSDAgcrKLo6SAapjm4a/tMypk+
-         K2aw==
+        bh=lIjsvF9IAOKO/y9eAPFaGirPoWCV8dxZZXU9yHmkvfQ=;
+        b=qmW/1GT7rwoMEFROf0tuZO/TNcV775jnRSkCS+it7yLw59eK7Y1L43a+g6+fLSWG9b
+         SWv1c8DzoiqPdynrpgYLWmcUPh6EUkPbVBmWbnp4VvVkeXaTRdvypbgwk+TG/V6NBR2h
+         b4jZ3BoJGQh2iGNuM5aBYvvPV8DSFCcFgL2XpTuONZn5Q8QQ9CzoCnC0uUhNrdRtSPua
+         VAnHhXdl4U1HGS9EnUOW64gVihWaQUfx3RNom3BE9YmDhompVgHI7F1M+2VKKbiQOZdg
+         SITxEV5bTN1gKcRlL4xJids5KsCKftXxWUeVjCLpWp9uPjVsUmPi+QNMip5j5b1Jbnx3
+         OtdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=JLVhcc9VMHoyHLdT46bTemZl3YozDpYDY3B3T/6/MFI=;
-        b=MAqV7yFCPCUAS5s3p2CIghBR37UkesUQzG+gHqpZzoruWBCQ6alfdKRUAOqlZSlBiI
-         GW6vtBn5lPWXNlxBESDdCBMEgKMUo2AsHVRJToYGw0K1kkf1kXFMhv6h9ulEPEsDGv1P
-         I83QcO9MdxhhLtDDOI265rOKoNDLZZFe98I0lhrWlfZAGO/B1TY2E9crWC0Ayhs1O5H4
-         W/Rh7j8rAr/RHlQk+5gjJnuPbubtcgy3dqRUIisroEHhYOfyqXfN/Cb0aKOR0z9uQ0Jf
-         xOjl/IXw5JcECOyRJBrtUcrTNfhDYsC5Na6/zMOX8ObY5BuoGe9VJbQpV9AQPMJ+2S1b
-         qA1g==
-X-Gm-Message-State: APjAAAWHP/E1R0L6/8rMJFJDtXBnKT1msqVTL3EQR0C95T9ih7osrBgw
-        hgvfHxTC046wiFGyelCndhk=
-X-Google-Smtp-Source: APXvYqyATA/5yWth8lWCDMpRJD/Y+3wdK5BSIpgNiPRXFyJA8BQkLrCvtySl4Te39OD/Fks73zKBOA==
-X-Received: by 2002:aa7:98d0:: with SMTP id e16mr663203pfm.77.1576630290713;
-        Tue, 17 Dec 2019 16:51:30 -0800 (PST)
+        bh=lIjsvF9IAOKO/y9eAPFaGirPoWCV8dxZZXU9yHmkvfQ=;
+        b=UsZi+e9/vZhtfYUPmfPFqOwx44ixKn1AOgRQgpHyB0E9CrZf9Q8BRZlu5jHV7XKmzy
+         L8Rf2W3yfHiFC2DpY7X3oM/1X576I/vdvRynnzFHN8dQKSABg9dw7uGdajtEDFRHxn/J
+         ieEUZHr4FD4HjoyGITkEy4gKm224gg4BwbupdQRihfgcKIRe3RdqJPWASQ2yyxjePG5G
+         ICLS+0DALA9TDUjEV97r/EWbMaq6Nz9J+UYBfhCzVDsvokNQEW9LdhbCGFeezdB1AQPb
+         XkXKFMcH/DDKrrCrM5YmY8smQa6weVwyXAGKVocwobpXjExhlMxB6Dz2EUN2JbBXCUP+
+         fSYg==
+X-Gm-Message-State: APjAAAUsBtzsfJN67l+Y79SDAmQrN9DvV1fUM+N3Hpix33rUM+WySvcF
+        3N/rbDpJtguBXKY4CWI085A=
+X-Google-Smtp-Source: APXvYqwKGOZaAQfUtUBJtD/vxKXoV8SgggpyDu6VySrj1IUnPf+QUgUexIcyJuZXBY/qUmNXPbGJ2w==
+X-Received: by 2002:a63:5b0a:: with SMTP id p10mr871386pgb.228.1576630293350;
+        Tue, 17 Dec 2019 16:51:33 -0800 (PST)
 Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 81sm274819pfx.30.2019.12.17.16.51.29
+        by smtp.gmail.com with ESMTPSA id 81sm274819pfx.30.2019.12.17.16.51.32
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 17 Dec 2019 16:51:30 -0800 (PST)
+        Tue, 17 Dec 2019 16:51:33 -0800 (PST)
 From:   Doug Berger <opendmb@gmail.com>
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>
-Subject: [PATCH net-next v2 5/8] net: bcmgenet: Utilize bcmgenet_set_features() during resume/open
-Date:   Tue, 17 Dec 2019 16:51:12 -0800
-Message-Id: <1576630275-17591-6-git-send-email-opendmb@gmail.com>
+Subject: [PATCH net-next v2 8/8] net: bcmgenet: Add software counters to track reallocations
+Date:   Tue, 17 Dec 2019 16:51:15 -0800
+Message-Id: <1576630275-17591-9-git-send-email-opendmb@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1576630275-17591-1-git-send-email-opendmb@gmail.com>
 References: <1576630275-17591-1-git-send-email-opendmb@gmail.com>
@@ -72,42 +72,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During driver resume and open, the HW may have lost its context/state,
-utilize bcmgenet_set_features() to make sure we do restore the correct
-set of features that were previously configured.
+When inserting the TSB, keep track of how many times we had to do
+it and if there was a failure in doing so, this helps profile the
+driver for possibly incorrect headroom settings.
 
 Signed-off-by: Doug Berger <opendmb@gmail.com>
 Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/net/ethernet/broadcom/genet/bcmgenet.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c | 6 ++++++
+ drivers/net/ethernet/broadcom/genet/bcmgenet.h | 2 ++
+ 2 files changed, 8 insertions(+)
 
 diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index 811713e3d230..0e57effd5b19 100644
+index e2bca19bf10b..3ee7917e3fc0 100644
 --- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
 +++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -2884,6 +2884,11 @@ static int bcmgenet_open(struct net_device *dev)
+@@ -861,6 +861,9 @@ static const struct bcmgenet_stats bcmgenet_gstrings_stats[] = {
+ 	STAT_GENET_SOFT_MIB("alloc_rx_buff_failed", mib.alloc_rx_buff_failed),
+ 	STAT_GENET_SOFT_MIB("rx_dma_failed", mib.rx_dma_failed),
+ 	STAT_GENET_SOFT_MIB("tx_dma_failed", mib.tx_dma_failed),
++	STAT_GENET_SOFT_MIB("tx_realloc_tsb", mib.tx_realloc_tsb),
++	STAT_GENET_SOFT_MIB("tx_realloc_tsb_failed",
++			    mib.tx_realloc_tsb_failed),
+ 	/* Per TX queues */
+ 	STAT_GENET_Q(0),
+ 	STAT_GENET_Q(1),
+@@ -1487,6 +1490,7 @@ static void bcmgenet_tx_reclaim_all(struct net_device *dev)
+ static struct sk_buff *bcmgenet_put_tx_csum(struct net_device *dev,
+ 					    struct sk_buff *skb)
+ {
++	struct bcmgenet_priv *priv = netdev_priv(dev);
+ 	struct status_64 *status = NULL;
+ 	struct sk_buff *new_skb;
+ 	u16 offset;
+@@ -1501,11 +1505,13 @@ static struct sk_buff *bcmgenet_put_tx_csum(struct net_device *dev,
+ 		new_skb = skb_realloc_headroom(skb, sizeof(*status));
+ 		if (!new_skb) {
+ 			dev_kfree_skb_any(skb);
++			priv->mib.tx_realloc_tsb_failed++;
+ 			dev->stats.tx_dropped++;
+ 			return NULL;
+ 		}
+ 		dev_consume_skb_any(skb);
+ 		skb = new_skb;
++		priv->mib.tx_realloc_tsb++;
+ 	}
  
- 	init_umac(priv);
+ 	skb_push(skb, sizeof(*status));
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.h b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
+index d33c0d093f82..61a6fe9f4cec 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.h
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
+@@ -144,6 +144,8 @@ struct bcmgenet_mib_counters {
+ 	u32	alloc_rx_buff_failed;
+ 	u32	rx_dma_failed;
+ 	u32	tx_dma_failed;
++	u32	tx_realloc_tsb;
++	u32	tx_realloc_tsb_failed;
+ };
  
-+	/* Apply features again in case we changed them while interface was
-+	 * down
-+	 */
-+	bcmgenet_set_features(dev, dev->features);
-+
- 	bcmgenet_set_hw_addr(priv, dev->dev_addr);
- 
- 	if (priv->internal_phy) {
-@@ -3687,6 +3692,9 @@ static int bcmgenet_resume(struct device *d)
- 	genphy_config_aneg(dev->phydev);
- 	bcmgenet_mii_config(priv->dev, false);
- 
-+	/* Restore enabled features */
-+	bcmgenet_set_features(dev, dev->features);
-+
- 	bcmgenet_set_hw_addr(priv, dev->dev_addr);
- 
- 	if (priv->internal_phy) {
+ #define UMAC_HD_BKP_CTRL		0x004
 -- 
 2.7.4
 
