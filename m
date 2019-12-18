@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBDCC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B096C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DBA82467E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:28:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D2442467E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:28:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576682881;
-	bh=0dD+Vv151FfLfgaBTQgl7bPziumhNsMCdpgVCj+k8pI=;
+	s=default; t=1576682883;
+	bh=CDSNPdcnj1yrbqrYFentaJgRdtEWkjMEMrqDj3pv+AA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
 	 References:List-ID:From;
-	b=xaoCvHWTEj9lWKE6Zfse3zYSKl2KqND3awL+9a8gB/bue9Rra84XsoRWPLfA0QN+T
-	 A6Rv8kqpqg12yKS+V36Qama89QMK2HzzGw/nPsbz+8HqzlsfiiHCd2DBIjEJ8SJgmJ
-	 FXEIHIZSeytuKJcVnu2CUifKaTQGxfFbb9BbMsdI=
+	b=Lx5Vo1C6FSfSb/v6vPp/27NBHM0Wcrnr98Es+2j8eNuc8jvLCNA/nuGKZhjKHWv+I
+	 AQjRtwUmu8XSsVF2gGwne3VX2lkU/IPMOsh2JcMYOG5x+8ScLe24fUveCMj7oWPddC
+	 BjAO0+Skukpjkh1YvBrLPxEOpTHKC3aBCFxkvHhk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbfLRP16 (ORCPT
+        id S1727380AbfLRP2C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 10:27:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60012 "EHLO mail.kernel.org"
+        Wed, 18 Dec 2019 10:28:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727297AbfLRP16 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 10:27:58 -0500
+        id S1727330AbfLRP17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 10:27:59 -0500
 Received: from tzanussi-mobl.hsd1.il.comcast.net (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76AF424679;
-        Wed, 18 Dec 2019 15:27:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDC0D24676;
+        Wed, 18 Dec 2019 15:27:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576682877;
-        bh=0dD+Vv151FfLfgaBTQgl7bPziumhNsMCdpgVCj+k8pI=;
+        s=default; t=1576682878;
+        bh=CDSNPdcnj1yrbqrYFentaJgRdtEWkjMEMrqDj3pv+AA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=K1ZuvonHyxPoA9FbcPFTLlPeuQJ0wLNkdBcOEFVc12S93AM+7fGt1lTrcQh5hOV0j
-         cUBI8eIxm5hDDNT3ISwmBIbuf7wXt9QPLvuhlGI5q1QABZvKaM8qPkn+cD8ReFshae
-         0+1MOdGVW+mHsUPmObAOkbeZWUjyrt7I0NSqdwoU=
+        b=rNcGJ44YOII4KPp+ApkGNNrY0IOfQ/A6JcYVnwOGysejZaImz/oqQtE64FXsX7KnH
+         qzRtXlP0ZZ0Qqgrun3wyoPUqyNzTc/hZgl9FDLf+3KjjgoBO8uN8w3elGyMBr9oiV9
+         tUd5vzvr2jpiHQWdqZVdA/xmDyPxZhNEPmZ3wLeM=
 From:   Tom Zanussi <zanussi@kernel.org>
 To:     rostedt@goodmis.org
 Cc:     artem.bityutskiy@linux.intel.com, mhiramat@kernel.org,
         linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: [PATCH 5/7] tracing: Add generate_synth_event() and related functions
-Date:   Wed, 18 Dec 2019 09:27:41 -0600
-Message-Id: <7968762ed65ff937391978f1c804d186cdfa88f7.1576679206.git.zanussi@kernel.org>
+Subject: [PATCH 6/7] tracing: Add synth event generation test module
+Date:   Wed, 18 Dec 2019 09:27:42 -0600
+Message-Id: <474bd36bbec97f0b42a3f40f985f5275502290c9.1576679206.git.zanussi@kernel.org>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <cover.1576679206.git.zanussi@kernel.org>
 References: <cover.1576679206.git.zanussi@kernel.org>
@@ -58,461 +58,390 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an exported function named generate_synth_event(), allowing
-modules or other kernel code to generate synthetic events.
-
-Also added are several functions that allow the same functionality to
-be broken out in a piecewise fashion, which are useful in situations
-where generating an event from a full array of values would be
-cumbersome.  Those functions are generate_synth_event_start/end() and
-add_(next)_synth_val().
+Add a test module that checks the basic functionality of the in-kernel
+synthetic event generation API by creating and generating synthetic
+events from a module.
 
 Signed-off-by: Tom Zanussi <zanussi@kernel.org>
 ---
- include/linux/trace_events.h     |  20 +++
- kernel/trace/trace_events_hist.c | 370 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 390 insertions(+)
+ kernel/trace/Kconfig                |  13 ++
+ kernel/trace/Makefile               |   1 +
+ kernel/trace/synth_event_gen_test.c | 330 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 344 insertions(+)
+ create mode 100644 kernel/trace/synth_event_gen_test.c
 
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index 8b385778b2db..8a413b9cff40 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -365,6 +365,18 @@ struct synth_field_desc {
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index 29a9c5058b62..0597d60158b4 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -775,6 +775,19 @@ config PREEMPTIRQ_DELAY_TEST
  
- struct synth_event;
+ 	  If unsure, say N
  
-+struct synth_gen_state {
-+	struct trace_event_buffer fbuffer;
-+	struct synth_trace_event *entry;
-+	struct ring_buffer *buffer;
-+	struct synth_event *event;
-+	unsigned int cur_field;
-+	unsigned int n_u64;
-+	bool enabled;
-+	bool add_next;
-+	bool add_name;
++config SYNTH_EVENT_GEN_TEST
++	tristate "Test module for in-kernel synthetic event generation"
++	depends on HIST_TRIGGERS
++	help
++          This option creates a test module to check the base
++          functionality of in-kernel synthetic event definition and
++          generation.
++
++          To test, insert the module, and then check the trace buffer
++	  for the generated sample events.
++
++	  If unsure, say N.
++
+ config TRACE_EVAL_MAP_FILE
+        bool "Show eval mappings for trace events"
+        depends on TRACING
+diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+index 0e63db62225f..99de699c6062 100644
+--- a/kernel/trace/Makefile
++++ b/kernel/trace/Makefile
+@@ -44,6 +44,7 @@ obj-$(CONFIG_TRACING) += trace_stat.o
+ obj-$(CONFIG_TRACING) += trace_printk.o
+ obj-$(CONFIG_TRACING_MAP) += tracing_map.o
+ obj-$(CONFIG_PREEMPTIRQ_DELAY_TEST) += preemptirq_delay_test.o
++obj-$(CONFIG_SYNTH_EVENT_GEN_TEST) += synth_event_gen_test.o
+ obj-$(CONFIG_CONTEXT_SWITCH_TRACER) += trace_sched_switch.o
+ obj-$(CONFIG_FUNCTION_TRACER) += trace_functions.o
+ obj-$(CONFIG_PREEMPTIRQ_TRACEPOINTS) += trace_preemptirq.o
+diff --git a/kernel/trace/synth_event_gen_test.c b/kernel/trace/synth_event_gen_test.c
+new file mode 100644
+index 000000000000..f6a008cad489
+--- /dev/null
++++ b/kernel/trace/synth_event_gen_test.c
+@@ -0,0 +1,330 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Test module for in-kernel sythetic event creation and generation.
++ *
++ * Copyright (C) 2019 Tom Zanussi <zanussi@kernel.org>
++ */
++
++#include <linux/module.h>
++#include <linux/trace_events.h>
++#include "trace.h"
++
++/*
++ * This module is a simple test of basic functionality for in-kernel
++ * synthetic event creation and generation, the first test using
++ * create_synth_event() with a static field array and a version that
++ * builds the same thing dynamically using create_empty_synth_event(),
++ * add_synth_field(s), and finalize_synth_event().
++ *
++ * To test, select CONFIG_SYNTH_EVENT_GEN_TEST and build the module.
++ * Then:
++ *
++ * # insmod kernel/trace/synth_event_gen_test.ko
++ * # cat /sys/kernel/debug/tracing/trace
++ *
++ * You should see two events in the trace buffer - "synthtest" and
++ * "dyn_synthtest".
++ *
++ * To remove the events, remove the module:
++ *
++ * # rmmod synth_event_gen_test
++ *
++ */
++
++static struct synth_field_desc synthtest_fields[] = {
++	{ .type = "pid_t",		.name = "next_pid_field" },
++	{ .type = "char[16]",		.name = "next_comm_field" },
++	{ .type = "u64",		.name = "ts_ns" },
++	{ .type = "u64",		.name = "ts_ms" },
++	{ .type = "unsigned int",	.name = "cpu" },
++	{ .type = "char[64]",		.name = "my_string_field" },
++	{ .type = "int",		.name = "my_int_field" },
 +};
 +
- extern int create_synth_event(const char *name,
- 			      struct synth_field_desc *fields,
- 			      unsigned int n_fields,
-@@ -380,6 +392,14 @@ extern int add_synth_fields(struct synth_event *event,
- 			    struct synth_field_desc *fields,
- 			    unsigned int n_fields);
- extern int finalize_synth_event(struct synth_event *event);
-+extern int generate_synth_event(struct trace_event_file *file, u64 *vals,
-+				unsigned int n_vals);
-+extern int generate_synth_event_start(struct trace_event_file *file,
-+				      struct synth_gen_state *gen_state);
-+extern int add_next_synth_val(u64 val, struct synth_gen_state *gen_state);
-+extern int add_synth_val(const char *field_name, u64 val,
-+			 struct synth_gen_state *gen_state);
-+extern int generate_synth_event_end(struct synth_gen_state *gen_state);
- 
- /*
-  * Event file flags:
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 4b8d7a4bac2d..426c385f941f 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -393,6 +393,7 @@ struct synth_field {
- 	char *type;
- 	char *name;
- 	size_t size;
-+	unsigned int offset;
- 	bool is_signed;
- 	bool is_string;
- };
-@@ -662,6 +663,8 @@ static int synth_event_define_fields(struct trace_event_call *call)
- 		if (ret)
- 			break;
- 
-+		event->fields[i]->offset = n_u64;
++static struct trace_event_file *synthtest_event_file;
++static struct trace_event_file *dyn_synthtest_event_file;
 +
- 		if (event->fields[i]->is_string) {
- 			offset += STR_VAR_LEN_MAX;
- 			n_u64 += STR_VAR_LEN_MAX / sizeof(u64);
-@@ -1269,6 +1272,90 @@ struct hist_var_data {
- 	struct hist_trigger_data *hist_data;
- };
- 
-+/**
-+ * generate_synth_event - Generate a synthetic event
-+ * @file: The trace_event_file representing the synthetic event
-+ * @vals: Array of values
-+ * @n_vals: The number of values in vals
-+ *
-+ * Generate a synthetic event using the values passed in as 'vals'.
-+ *
-+ * The 'vals' array is just an array of 'n_vals' u64.  The number of
-+ * vals must match the number of field in the synthetic event, and
-+ * must be in the same order as the synthetic event fields.
-+ *
-+ * All vals should be cast to u64, and string vals are just pointers
-+ * to strings, cast to u64.  Strings will be copied into space
-+ * reserved in the event for the string, using these pointers.
-+ *
-+ * Return: 0 on success, err otherwise.
-+ */
-+int generate_synth_event(struct trace_event_file *file, u64 *vals,
-+			 unsigned int n_vals)
++static int __init test_synth_event(void)
 +{
-+	struct trace_event_buffer fbuffer;
-+	struct synth_trace_event *entry;
-+	struct ring_buffer *buffer;
-+	struct synth_event *event;
-+	unsigned int i, n_u64;
-+	int fields_size = 0;
-+	int ret = 0;
++	u64 vals[7];
++	int ret;
 +
-+	/*
-+	 * Normal event generation doesn't get called at all unless
-+	 * the ENABLED bit is set (which attaches the probe thus
-+	 * allowing this code to be called, etc).  Because this is
-+	 * called directly by the user, we don't have that but we
-+	 * still need to honor not logging when disabled.
-+	 */
-+	if (!(file->flags & EVENT_FILE_FL_ENABLED))
-+		return 0;
-+
-+	event = file->event_call->data;
-+
-+	if (n_vals != event->n_fields)
-+		return -EINVAL;
-+
-+	if (trace_trigger_soft_disabled(file))
-+		return -EINVAL;
-+
-+	fields_size = event->n_u64 * sizeof(u64);
-+
-+	/*
-+	 * Avoid ring buffer recursion detection, as this event
-+	 * is being performed within another event.
-+	 */
-+	buffer = file->tr->trace_buffer.buffer;
-+	ring_buffer_nest_start(buffer);
-+
-+	entry = trace_event_buffer_reserve(&fbuffer, file,
-+					   sizeof(*entry) + fields_size);
-+	if (!entry) {
-+		ret = -EINVAL;
++	/* Create the synthtest synthetic event with the fields above */
++	ret = create_synth_event("synthtest", synthtest_fields,
++				 ARRAY_SIZE(synthtest_fields), THIS_MODULE);
++	if (ret)
 +		goto out;
++
++	/*
++	 * Now get the synthtest event file.  We need to prevent the
++	 * instance and event from disappearing from underneath us,
++	 * which get_event_file() does (though in this case we're
++	 * using the top-level instance which never goes away).
++	 */
++	synthtest_event_file = get_event_file(NULL, "synthetic", "synthtest");
++	if (IS_ERR(synthtest_event_file)) {
++		ret = PTR_ERR(synthtest_event_file);
++		goto delete;
 +	}
 +
-+	for (i = 0, n_u64 = 0; i < event->n_fields; i++) {
-+		if (event->fields[i]->is_string) {
-+			char *str_val = (char *)(long)vals[i];
-+			char *str_field = (char *)&entry->fields[n_u64];
-+
-+			strscpy(str_field, str_val, STR_VAR_LEN_MAX);
-+			n_u64 += STR_VAR_LEN_MAX / sizeof(u64);
-+		} else {
-+			entry->fields[n_u64] = vals[i];
-+			n_u64++;
-+		}
++	/* Enable the event or you won't see anything */
++	ret = trace_array_set_clr_event(synthtest_event_file->tr,
++					"synthetic", "synthtest", true);
++	if (ret) {
++		put_event_file(synthtest_event_file);
++		goto delete;
 +	}
 +
-+	trace_event_buffer_commit(&fbuffer);
-+out:
-+	ring_buffer_nest_end(buffer);
++	/* Create some bogus values just for testing */
++
++	vals[0] = 777;			/* next_pid_field */
++	vals[1] = (u64)"tiddlywinks";	/* next_comm_field */
++	vals[2] = 1000000;		/* ts_ns */
++	vals[3] = 1000;			/* ts_ms */
++	vals[4] = smp_processor_id();	/* cpu */
++	vals[5] = (u64)"thneed";	/* my_string_field */
++	vals[6] = 398;			/* my_int_field */
++
++	/* Now generate the event */
++	ret = generate_synth_event(synthtest_event_file, vals,
++				   ARRAY_SIZE(vals));
++ out:
++	return ret;
++ delete:
++	ret = delete_synth_event("synthtest");
++
++	goto out;
++}
++
++static int __init test_dynamic_synth_event(void)
++{
++	struct synth_event *se = NULL;
++	u64 vals[7];
++	int ret;
++
++	/* Create the empty synthtest synthetic event */
++	se = create_empty_synth_event("dyn_synthtest", THIS_MODULE);
++	if (IS_ERR(se)) {
++		ret = PTR_ERR(se);
++		goto free;
++	}
++
++	/* Use add_synth_fields to add the first 4 synthtest fields */
++	ret = add_synth_fields(se, synthtest_fields, 4);
++	if (ret)
++		goto out;
++
++	/* Use add_synth_field to add the rest of the fields */
++
++	ret = add_synth_field(se, "unsigned int", "cpu");
++	if (ret)
++		goto free;
++
++	ret = add_synth_field(se, "char[64]", "my_string_field");
++	if (ret)
++		goto free;
++
++	ret = add_synth_field(se, "int", "my_int_field");
++	if (ret)
++		goto free;
++
++	/* All fields have been added, close and register the synth event */
++	ret = finalize_synth_event(se);
++	if (ret)
++		goto free;
++
++	/*
++	 * Now get the dyn_synthtest event file.  We need to prevent
++	 * the instance and event from disappearing from underneath
++	 * us, which get_event_file() does (though in this case we're
++	 * using the top-level instance which never goes away).
++	 */
++	dyn_synthtest_event_file = get_event_file(NULL, "synthetic",
++						  "dyn_synthtest");
++	if (IS_ERR(dyn_synthtest_event_file)) {
++		ret = PTR_ERR(dyn_synthtest_event_file);
++		goto delete;
++	}
++
++	/* Enable the event or you won't see anything */
++	ret = trace_array_set_clr_event(dyn_synthtest_event_file->tr,
++					"synthetic", "dyn_synthtest", true);
++	if (ret) {
++		put_event_file(dyn_synthtest_event_file);
++		goto delete;
++	}
++
++	/* Create some bogus values just for testing */
++
++	vals[0] = 777;			/* next_pid_field */
++	vals[1] = (u64)"tiddlywinks";	/* next_comm_field */
++	vals[2] = 1000000;		/* ts_ns */
++	vals[3] = 1000;			/* ts_ms */
++	vals[4] = smp_processor_id();	/* cpu */
++	vals[5] = (u64)"thneed_2.0";	/* my_string_field */
++	vals[6] = 399;			/* my_int_field */
++
++	/* Now generate the event */
++	ret = generate_synth_event(dyn_synthtest_event_file, vals,
++				   ARRAY_SIZE(vals));
++ out:
++	return ret;
++ free: /* If not finalized, just free */
++	free_synth_event(se);
++	goto out;
++ delete: /* Event was finalized, delete */
++	delete_synth_event("dyn_synthtest");
++	goto out;
++}
++
++static int __init test_add_next_synth_val(void)
++{
++	struct synth_gen_state gen_state;
++	int ret;
++
++	ret = generate_synth_event_start(synthtest_event_file, &gen_state);
++	if (ret)
++		return ret;
++
++	/* Add some bogus values just for testing */
++
++	/* next_pid_field */
++	ret = add_next_synth_val(777, &gen_state);
++	if (ret)
++		goto out;
++
++	/* next_comm_field */
++	ret = add_next_synth_val((u64)"slinky", &gen_state);
++	if (ret)
++		goto out;
++
++	/* ts_ns */
++	ret = add_next_synth_val(1000000, &gen_state);
++	if (ret)
++		goto out;
++
++	/* ts_ms */
++	ret = add_next_synth_val(1000, &gen_state);
++	if (ret)
++		goto out;
++
++	/* cpu */
++	ret = add_next_synth_val(smp_processor_id(), &gen_state);
++	if (ret)
++		goto out;
++
++	/* my_string_field */
++	ret = add_next_synth_val((u64)"thneed_2.01", &gen_state);
++	if (ret)
++		goto out;
++
++	/* my_int_field */
++	ret = add_next_synth_val(395, &gen_state);
++ out:
++	/* Now generate or at least finalize the event */
++	ret = generate_synth_event_end(&gen_state);
 +
 +	return ret;
 +}
-+EXPORT_SYMBOL_GPL(generate_synth_event);
 +
- /**
-  * finalize_synth_event - Finalize and register a new synth event
-  * @event: A pointer to the synth_event struct representing the new event
-@@ -1299,6 +1386,289 @@ int finalize_synth_event(struct synth_event *event)
- }
- EXPORT_SYMBOL_GPL(finalize_synth_event);
- 
-+/**
-+ * generate_synth_event_start - Start piecewise synthetic event generation
-+ * @file: The trace_event_file representing the synthetic event
-+ * @gen_state: A pointer to object tracking the piecewise generation state
-+ *
-+ * Start the generation of a synthetic event field-by-field rather
-+ * than all at once.
-+ *
-+ * This function 'opens' an event generation, which means space is
-+ * reserved for the event in the trace buffer, after which the event's
-+ * individual field values can be set through either
-+ * add_next_synth_val() or add_synth_val().
-+ *
-+ * A pointer to a gen_state object is passed in, which will keep track
-+ * of the current event generation state until the event generation is
-+ * closed (and the event finally generated) using
-+ * generate_synth_event_end().
-+ *
-+ * Note that generate_synth_event_end() must be called after all
-+ * values have been added for each event generation, regardless of
-+ * whether adding all field values succeeded or not.
-+ *
-+ * Note also that for a given event generation, all fields must be
-+ * added using either add_next_synth_val() or add_synth_val() but not
-+ * both together or interleaved.
-+ *
-+ * Return: 0 on success, err otherwise.
-+ */
-+int generate_synth_event_start(struct trace_event_file *file,
-+			       struct synth_gen_state *gen_state)
++static int __init test_add_synth_val(void)
 +{
-+	struct synth_trace_event *entry;
-+	int fields_size = 0;
-+	int ret = 0;
++	struct synth_gen_state gen_state;
++	int ret;
 +
-+	if (!gen_state) {
-+		ret = -EINVAL;
++	ret = generate_synth_event_start(synthtest_event_file, &gen_state);
++	if (ret)
++		return ret;
++
++	/* Add some bogus values just for testing */
++
++	ret = add_synth_val("next_pid_field", 777, &gen_state);
++	if (ret)
 +		goto out;
-+	}
 +
-+	memset(gen_state, '\0', sizeof(*gen_state));
-+
-+	/*
-+	 * Normal event generation doesn't get called at all unless
-+	 * the ENABLED bit is set (which attaches the probe thus
-+	 * allowing this code to be called, etc).  Because this is
-+	 * called directly by the user, we don't have that but we
-+	 * still need to honor not logging when disabled.  For the the
-+	 * iterated gen case, we save the enabed state upon start and
-+	 * just ignore the following data calls.
-+	 */
-+	if (!(file->flags & EVENT_FILE_FL_ENABLED)) {
-+		gen_state->enabled = false;
++	ret = add_synth_val("next_comm_field", (u64)"silly putty", &gen_state);
++	if (ret)
 +		goto out;
-+	}
 +
-+	gen_state->enabled = true;
-+
-+	gen_state->event = file->event_call->data;
-+
-+	if (trace_trigger_soft_disabled(file)) {
-+		ret = -EINVAL;
++	ret = add_synth_val("ts_ns", 1000000, &gen_state);
++	if (ret)
 +		goto out;
-+	}
 +
-+	fields_size = gen_state->event->n_u64 * sizeof(u64);
-+
-+	/*
-+	 * Avoid ring buffer recursion detection, as this event
-+	 * is being performed within another event.
-+	 */
-+	gen_state->buffer = file->tr->trace_buffer.buffer;
-+	ring_buffer_nest_start(gen_state->buffer);
-+
-+	entry = trace_event_buffer_reserve(&gen_state->fbuffer, file,
-+					   sizeof(*entry) + fields_size);
-+	if (!entry) {
-+		ret = -EINVAL;
++	ret = add_synth_val("ts_ms", 1000, &gen_state);
++	if (ret)
 +		goto out;
-+	}
 +
-+	gen_state->entry = entry;
-+out:
++	ret = add_synth_val("cpu", smp_processor_id(), &gen_state);
++	if (ret)
++		goto out;
++
++	ret = add_synth_val("my_string_field", (u64)"thneed_9", &gen_state);
++	if (ret)
++		goto out;
++
++	ret = add_synth_val("my_int_field", 3999, &gen_state);
++ out:
++	/* Now generate or at least finalize the event */
++	ret = generate_synth_event_end(&gen_state);
++
 +	return ret;
 +}
-+EXPORT_SYMBOL_GPL(generate_synth_event_start);
 +
-+static int save_synth_val(struct synth_field *field, u64 val,
-+			  struct synth_gen_state *gen_state)
++static int __init synth_event_gen_test_init(void)
 +{
-+	struct synth_trace_event *entry = gen_state->entry;
++	int ret;
 +
-+	if (field->is_string) {
-+		char *str_val = (char *)(long)val;
-+		char *str_field;
++	ret = test_synth_event();
++	if (ret)
++		return ret;
 +
-+		if (!str_val)
-+			return -EINVAL;
-+
-+		str_field = (char *)&entry->fields[field->offset];
-+		strscpy(str_field, str_val, STR_VAR_LEN_MAX);
-+	} else
-+		entry->fields[field->offset] = val;
-+
-+	return 0;
-+}
-+
-+/**
-+ * add_next_synth_val - Add the next field's value to an open synth generation
-+ * @val: The value to set the next field to
-+ * @gen_state: A pointer to object tracking the piecewise generation state
-+ *
-+ * Set the value of the next field in an event that's been opened by
-+ * generate_synth_event_start().
-+ *
-+ * The val param should be the value cast to u64.  If the value points
-+ * to a string, the val param should be a char * cast to u64.
-+ *
-+ * This function assumes all the fields in an event are to be set one
-+ * after another - successive calls to this function are made, one for
-+ * each field, in the order of the fields in the event, until all
-+ * fields have been set.  If you'd rather set each field individually
-+ * without regard to ordering, add_synth_val() can be used instead.
-+ *
-+ * Note however that add_next_synth_val() and add_synth_val() can't be
-+ * intermixed for a given event generation - one or the other but not
-+ * both can be used at the same time.
-+ *
-+ * Note also that generate_synth_event_end() must be called after all
-+ * values have been added for each event generation, regardless of
-+ * whether adding all field values succeeded or not.
-+ *
-+ * Return: 0 on success, err otherwise.
-+ */
-+int add_next_synth_val(u64 val, struct synth_gen_state *gen_state)
-+{
-+	struct synth_field *field;
-+	struct synth_event *event;
-+	int ret = 0;
-+
-+	if (!gen_state) {
-+		ret = -EINVAL;
++	ret = test_dynamic_synth_event();
++	if (ret) {
++		WARN_ON(trace_array_set_clr_event(synthtest_event_file->tr,
++						  "synthetic",
++						  "synthtest", false));
++		put_event_file(synthtest_event_file);
++		WARN_ON(delete_synth_event("synthtest"));
 +		goto out;
 +	}
 +
-+	/* can't mix add_next_synth_val() with add_synth_val() */
-+	if (gen_state->add_name) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+	gen_state->add_next = true;
++	ret = test_add_next_synth_val();
++	WARN_ON(ret);
 +
-+	if (!gen_state->enabled)
-+		goto out;
-+
-+	event = gen_state->event;
-+
-+	if (gen_state->cur_field >= event->n_fields) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	field = event->fields[gen_state->cur_field++];
-+	ret = save_synth_val(field, val, gen_state);
++	ret = test_add_synth_val();
++	WARN_ON(ret);
 + out:
 +	return ret;
 +}
-+EXPORT_SYMBOL_GPL(add_next_synth_val);
 +
-+static struct synth_field *find_synth_field(struct synth_event *event,
-+					    const char *field_name)
++static void __exit synth_event_gen_test_exit(void)
 +{
-+	struct synth_field *field = NULL;
-+	unsigned int i;
++	/* Disable the event or you can't remove it */
++	WARN_ON(trace_array_set_clr_event(dyn_synthtest_event_file->tr,
++					  "synthetic",
++					  "dyn_synthtest", false));
 +
-+	for (i = 0; i < event->n_fields; i++) {
-+		field = event->fields[i];
-+		if (strcmp(field->name, field_name) == 0)
-+			return field;
-+	}
++	/* Now give the file and instance back */
++	put_event_file(dyn_synthtest_event_file);
 +
-+	return NULL;
++	/* Now unregister and free the synthetic event */
++	WARN_ON(delete_synth_event("dyn_synthtest"));
++
++	/* Disable the event or you can't remove it */
++	WARN_ON(trace_array_set_clr_event(synthtest_event_file->tr,
++					  "synthetic",
++					  "synthtest", false));
++
++	/* Now give the file and instance back */
++	put_event_file(synthtest_event_file);
++
++	/* Now unregister and free the synthetic event */
++	WARN_ON(delete_synth_event("synthtest"));
 +}
 +
-+/**
-+ * add_synth_val - Add a named field's value to an open synth generation
-+ * @field_name: The name of the synthetic event field value to set
-+ * @val: The value to set the next field to
-+ * @gen_state: A pointer to object tracking the piecewise generation state
-+ *
-+ * Set the value of the named field in an event that's been opened by
-+ * generate_synth_event_start().
-+ *
-+ * The val param should be the value cast to u64.  If the value points
-+ * to a string, the val param should be a char * cast to u64.
-+ *
-+ * This function looks up the field name, and if found, sets the field
-+ * to the specified value.  This lookup makes this function more
-+ * expensive than add_next_synth_val(), so use that or the
-+ * none-piecewise generate_synth_event() instead if efficiency is more
-+ * important.
-+ *
-+ * Note however that add_next_synth_val() and add_synth_val() can't be
-+ * intermixed for a given event generation - one or the other but not
-+ * both can be used at the same time.
-+ *
-+ * Note also that generate_synth_event_end() must be called after all
-+ * values have been added for each event generation, regardless of
-+ * whether adding all field values succeeded or not.
-+ *
-+ * Return: 0 on success, err otherwise.
-+ */
-+int add_synth_val(const char *field_name, u64 val,
-+		  struct synth_gen_state *gen_state)
-+{
-+	struct synth_trace_event *entry;
-+	struct synth_event *event;
-+	struct synth_field *field;
-+	int ret = 0;
++module_init(synth_event_gen_test_init)
++module_exit(synth_event_gen_test_exit)
 +
-+	if (!gen_state) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	/* can't mix add_next_synth_val() with add_synth_val() */
-+	if (gen_state->add_next) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+	gen_state->add_name = true;
-+
-+	if (!gen_state->enabled)
-+		goto out;
-+
-+	event = gen_state->event;
-+	entry = gen_state->entry;
-+
-+	field = find_synth_field(event, field_name);
-+	if (!field) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	ret = save_synth_val(field, val, gen_state);
-+ out:
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(add_synth_val);
-+
-+/**
-+ * generate_synth_event_end - End piecewise synthetic event generation
-+ * @gen_state: A pointer to object tracking the piecewise generation state
-+ *
-+ * End the generation of a synthetic event opened by
-+ * generate_synth_event_start().
-+ *
-+ * This function 'closes' an event generation, which basically means
-+ * that it commits the reserved event and cleans up other loose ends.
-+ *
-+ * A pointer to a gen_state object is passed in, which will keep track
-+ * of the current event generation state opened with
-+ * generate_synth_event_start().
-+ *
-+ * Note that this function must be called after all values have been
-+ * added for each event generation, regardless of whether adding all
-+ * field values succeeded or not.
-+ *
-+ * Return: 0 on success, err otherwise.
-+ */
-+int generate_synth_event_end(struct synth_gen_state *gen_state)
-+{
-+	if (!gen_state)
-+		return -EINVAL;
-+
-+	trace_event_buffer_commit(&gen_state->fbuffer);
-+
-+	ring_buffer_nest_end(gen_state->buffer);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(generate_synth_event_end);
-+
- static int update_fields(struct synth_event *event, struct synth_field *field)
- {
- 	struct synth_field **old_fields;
++MODULE_AUTHOR("Tom Zanussi");
++MODULE_DESCRIPTION("synthetic event generation test");
++MODULE_LICENSE("GPL v2");
 -- 
 2.14.1
 
