@@ -2,106 +2,116 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C223DC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF1FC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 911FC24650
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:04:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53E682176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:05:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="oNB3FkYU"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="C/cUhQKq";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FZKeQSNI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbfLRHEP (ORCPT
+        id S1726666AbfLRHFt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 02:04:15 -0500
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:34230 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725797AbfLRHEP (ORCPT
+        Wed, 18 Dec 2019 02:05:49 -0500
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:53023 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725881AbfLRHFt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 02:04:15 -0500
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBI71A3a029583;
-        Tue, 17 Dec 2019 23:04:12 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type; s=pfpt0818;
- bh=UZcnCwq10j0m/Je2ObzEn/jzRkw3tFD03EzMMVd90kY=;
- b=oNB3FkYU6UFk2BbZIlzIFPRlb7hS0SOAZz3YIeonFMpyMwy+VzoJME8H7yzUtAJIe0p3
- ELYr1mpPucVMM3+4MZNnBZkcqTqlB66XbodqS2Amt/2rhavt1lVa9/HZnK4emnJ2bVWP
- 80KClpDX05wvybw/NkIx6V61kjCuxJsLucbocvZotwTl5MjQPWbfr35dT5Z7ZEP/dGWM
- fFKkNEcsctusOvsMOw2T/FsrvabKEc86ggKyFPVA3pCFnDax4ANcDj0K5EGqz+qjnv2X
- uIAQBAPC3Z/Xq+uvQqZd1TZ5z0jIb3PB+q6qGfV7MK2WPi2hDFaLYNfJqc6mX34duCjk RQ== 
-Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2wxn0wnjy7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 17 Dec 2019 23:04:12 -0800
-Received: from SC-EXCH03.marvell.com (10.93.176.83) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 17 Dec
- 2019 23:04:10 -0800
-Received: from maili.marvell.com (10.93.176.43) by SC-EXCH03.marvell.com
- (10.93.176.83) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 17 Dec 2019 23:04:10 -0800
-Received: from dc5-eodlnx05.marvell.com (dc5-eodlnx05.marvell.com [10.69.113.147])
-        by maili.marvell.com (Postfix) with ESMTP id 4CDA33F703F;
-        Tue, 17 Dec 2019 23:04:10 -0800 (PST)
-From:   Bhaskar Upadhaya <bupadhaya@marvell.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-        <linux-edac@vger.kernel.org>, <lenb@kernel.org>,
-        <rafael@kernel.org>
-CC:     <gkulkarni@marvell.com>, <rrichter@marvell.com>,
-        <bhaskar.upadhaya.linux@gmail.com>,
-        Bhaskar Upadhaya <bupadhaya@marvell.com>
-Subject: [RFC PATCH] apei/ghes: fix ghes_poll_func by registering in non-deferrable mode
-Date:   Tue, 17 Dec 2019 23:03:38 -0800
-Message-ID: <1576652618-27017-1-git-send-email-bupadhaya@marvell.com>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 18 Dec 2019 02:05:49 -0500
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id 8E47222254;
+        Wed, 18 Dec 2019 02:05:47 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Wed, 18 Dec 2019 02:05:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=IXbhvHhEiOcanqsvUj4NZqgbgNp
+        bD1LGN3GihPvyCVQ=; b=C/cUhQKq0NO773ahmOBJgfDtxr2P7Y7/r8wG7AwIajc
+        XNeOYl6Lmi7cU1PTgZnq8Vo0ACElBq8eZJLnpvXnf5vU302rSjVEUIA2g1k/MJWH
+        NoyI2KmHvvGVjs1G5V7vItZ5apwx74rDBN21oXRhY3jf8AH29khp/fBHCNH0SsRr
+        ock2uSf4HOjBd+Pixq+Ry/USAJWYXW4RZ1sBq3iWphabnxjmLXK0RWZOMX93pUeP
+        RFEz9ckQhtEHE3Ii0Kvw7vHR+22Z/rA/71JEvStpDnzwB1gQUODwOUTpOjf/lYvn
+        NL9aOkivVYsRoH4g9jVrHTJOjrEegtD0FYAOfJqwpkw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=IXbhvH
+        hEiOcanqsvUj4NZqgbgNpbD1LGN3GihPvyCVQ=; b=FZKeQSNIppdbLc+D+CO0aY
+        Z18JxJg0yhDoPO2AWFD4ZzxeiwKQ30TNEzn/kuEiioRvjbuL3UY7wigXzyrTa6Vb
+        Ri/7uuDv8S/kKpcZlJg+KPXllnT9LGu8FLV9GDX8GtCk7G/q3+rrsiw0CSxB9CpX
+        9u4UY7qEiSDD5HKz95hto4K+AxMtYppF/MSjV8iJhDT4XwPq1nJK+oO0CniR70r5
+        c6qzqBTy1Vt6FrhBd0cstCowL6Ird2gOMQRTsFmJGlEXLbEUYAULmdF12UNO1E35
+        hxYxsOELkrY8hDDxJ+tAGLt82W8dfZNECvSe5ZFRpEcJRw71Xo8woDW/DJCGnytw
+        ==
+X-ME-Sender: <xms:ys_5XWUfim4uPCzEVbtpnkE8HwyJaLtavtAhNvfISNDVUL1O8ycd4Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddtkedguddthecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghg
+    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledrud
+    dtjeenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhmnecu
+    vehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:ys_5XTiaWOy1jL0tAqKbiEb7dATiQR0Dj_KRsEVNFxEC0p2MJoozqQ>
+    <xmx:ys_5Xav_lNamCXA0WKfxJnfZcasorRYKdnFZ2P4RFhoU5CQiNq9Vzw>
+    <xmx:ys_5XbxHSuSQyU_XKY0oNNklt2Tnh6867kEy2lMojza_8cpKB-DpHg>
+    <xmx:y8_5XRAB3MI8Jhry_P9VeKT7YhUtbW09h7XTdulEEsoIbK2aqYfhsg>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 6BA8A8005A;
+        Wed, 18 Dec 2019 02:05:46 -0500 (EST)
+Date:   Wed, 18 Dec 2019 08:05:44 +0100
+From:   Greg KH <greg@kroah.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Engraf <david.engraf@sysgo.com>
+Subject: Re: linux-next: manual merge of the tty tree with the tty.current
+ tree
+Message-ID: <20191218070544.GA1303688@kroah.com>
+References: <20191218114942.59cc0446@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-18_01:2019-12-17,2019-12-18 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191218114942.59cc0446@canb.auug.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently Linux register ghes_poll_func with TIMER_DEFERRABLE flag,
-because of which it is serviced when the CPU eventually wakes up with a
-subsequent non-deferrable timer and not at the configured polling interval.
+On Wed, Dec 18, 2019 at 11:49:42AM +1100, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Today's linux-next merge of the tty tree got a conflict in:
+> 
+>   drivers/tty/serial/atmel_serial.c
+> 
+> between commit:
+> 
+>   cb47b9f8630a ("tty/serial: atmel: fix out of range clock divider handling")
+> 
+> from the tty.current tree and commit:
+> 
+>   751d0017334d ("tty/serial: atmel: fix out of range clock divider handling")
+> 
+> from the tty tree.
+> 
+> These are 2 version of the same change, I guess.
+> 
+> I fixed it up (I just used the tty tree version) and can carry the fix
+> as necessary. This is now fixed as far as linux-next is concerned, but
+> any non trivial conflicts should be mentioned to your upstream maintainer
+> when your tree is submitted for merging.  You may also want to consider
+> cooperating with the maintainer of the conflicting tree to minimise any
+> particularly complex conflicts.
+> 
 
-For polling mode, the polling interval configured by firmware should not
-be exceeded as per ACPI_6_3 spec[refer Table 18-394], So Timer need to
-be configured in non-deferrable mode by removing TIMER_DEFERRABLE flag.
-With NO_HZ enabled and timer callback being configured in non-deferrable
-mode, timer callback will get called exactly after polling interval.
+Oops, thanks for noticing that, I'll go revert th eone in the tty-next
+branch as that should not be there, the one in tty-linus is correct.
 
-Impact of removing TIMER_DEFFERABLE flag
-- With NO_HZ enabled, additional timer ticks and unnecessary wakeups of
- the cpu happens exactly after polling interval.
+thanks,
 
-- If polling interval is too small than polling function will be called
- too frequently which may stall the cpu.
-
-Signed-off-by: Bhaskar Upadhaya <bupadhaya@marvell.com>
----
- drivers/acpi/apei/ghes.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index 777f6f7122b4..c8f9230f69fb 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -1181,7 +1181,7 @@ static int ghes_probe(struct platform_device *ghes_dev)
- 
- 	switch (generic->notify.type) {
- 	case ACPI_HEST_NOTIFY_POLLED:
--		timer_setup(&ghes->timer, ghes_poll_func, TIMER_DEFERRABLE);
-+		timer_setup(&ghes->timer, ghes_poll_func, 0);
- 		ghes_add_timer(ghes);
- 		break;
- 	case ACPI_HEST_NOTIFY_EXTERNAL:
--- 
-2.17.1
-
+greg k-h
