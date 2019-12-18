@@ -2,122 +2,93 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D8EC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E547CC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B38252176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:43:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE254227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:43:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576680200;
-	bh=iO+tOjqXZhOe4UTZKagiax9WLTYHh3JX3Ykh8qcBQNw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=d25Zvb8xf+2nb8wGPy47MVGG8fHpKExpCHmRAJhcm1rWYFQ5Qfuf95A/e3SBgzDMn
-	 tBkOBngZPn8fL31HUFqW3e5JDmbHwfXFaVeblDp9wX2cVXqz8grdDPBS7RS868eFwb
-	 AQ4eUBfUbaEVP5VWIGMr5ZY9+NlTcUbayl9zvP0I=
+	s=default; t=1576680223;
+	bh=CuTb0MX0sW9yiWcrQdFWrdsntNgxyfLlInaqr/9JUhU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=UZti3zBqDfSsgmAUmlFPcnre3jcMLckjn177J4Z04b4L9ZQcMRhSYR6JWsXerl3Pk
+	 6k+bWR9FvlHzgdGo81EEoLc3+jw9swRq1Y6+1iqO5Fxh/IO4UHoU1H8xlEcDTj915O
+	 jN+zzgyr9dE6hcEB0LkLZ33mc904acFCzvUrsG7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbfLROnT (ORCPT
+        id S1727210AbfLROnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 09:43:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43904 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726856AbfLROnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 09:43:19 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13E2721582;
-        Wed, 18 Dec 2019 14:43:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576680198;
-        bh=iO+tOjqXZhOe4UTZKagiax9WLTYHh3JX3Ykh8qcBQNw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cNIE+m65yGEXDIT8q1cCn6jCzz+YbLIi6jcXwozIVcrH4rjlTlTkzfQuLgEvPj5Mx
-         tUJg4m3NqoDIm1arP2yEPR0bI2gfMCcN4xPRjzYU4x1rDwcNCfyV7mYfGgqiRaNq+Z
-         9W7bn8XgTFtaD8dRKDtcpHfAdjF6DUYiwhpBsHWo=
-Date:   Wed, 18 Dec 2019 15:43:16 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     linux-usb@vger.kernel.org,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Lukas Wunner <lukas@wunner.de>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Mario.Limonciello@dell.com,
-        Anthony Wong <anthony.wong@canonical.com>,
-        Oliver Neukum <oneukum@suse.com>,
-        Christian Kellner <ckellner@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Wed, 18 Dec 2019 09:43:42 -0500
+Received: from conuserg-07.nifty.com ([210.131.2.74]:43580 "EHLO
+        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727024AbfLROnm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 09:43:42 -0500
+Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
+        by conuserg-07.nifty.com with ESMTP id xBIEhFfM023662;
+        Wed, 18 Dec 2019 23:43:16 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com xBIEhFfM023662
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1576680196;
+        bh=tUmVeYvMx8QakjR2/czhCZu5i/UP6xrlWBeyhJE2fFc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=fD5yEZMsKLZIXrWal+2upTacvoV2jbxZpXLrlY1kHU/JtGOe7CASd0oMxasMqMZVt
+         gdDydsDyKEOUbXVGDw1E2Jg20GeY22h2A/7ZytrijmkFDVjSUP2MGX430Fd9nBR6XK
+         4a8xBlv3iFg/WrBAIAR7V7J3fC4eKcnFyUVEynZfcaTN1wMAaE11BK2suV1mIgKRZF
+         uloUt0UJGuhlPMiiUMYWU87578YmiLiTOFfOk9u7RiqJ79EKYohjDFky5koE7b00j3
+         EFd9IQA1Q4t3N2hv70KT+PRpz0b857Y3/tYH8CGAviYtmntDId+87m5phel9TLa68E
+         AHWIjwe/Xz/sw==
+X-Nifty-SrcIP: [126.93.102.113]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>
+Cc:     Paul Gortmaker <paul.gortmaker@windriver.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/9] thunderbolt: Add support for USB4
-Message-ID: <20191218144316.GA321016@kroah.com>
-References: <20191217123345.31850-1-mika.westerberg@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191217123345.31850-1-mika.westerberg@linux.intel.com>
+Subject: [PATCH] drivers/component: remove modular code
+Date:   Wed, 18 Dec 2019 23:43:07 +0900
+Message-Id: <20191218144307.19243-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 03:33:36PM +0300, Mika Westerberg wrote:
-> Hi all,
-> 
-> USB4 is the public specification of Thunderbolt 3 protocol and can be
-> downloaded here:
-> 
->   https://www.usb.org/sites/default/files/USB4%20Specification_1.zip
-> 
-> USB4 is about tunneling different protocols over a single cable (in the
-> same way as Thunderbolt). The current USB4 spec supports PCIe, Display Port
-> and USB 3.x, and also software based protocols such as networking between
-> domains (hosts).
-> 
-> So far PCs have been using firmware based Connection Manager (FW CM, ICM)
-> and Apple systems have been using software based one (SW CM, ECM). A
-> Connection Manager is the entity that handles creation of different tunnel
-> types through the USB4 (and Thunderbolt) fabric. With USB4 the plan is to
-> have software based Connection Manager everywhere but some early systems
-> will come with firmware based connection manager.
-> 
-> Current Linux Thunderbolt driver supports both "modes" and can detect which
-> one to use dynamically.
-> 
-> This series extends the Linux Thunderbolt driver to support USB4 compliant
-> hosts and devices (this applies to both firmware and software based
-> connection managers). USB4 Features enabled by this series include:
-> 
->   - PCIe tunneling
->   - Display Port tunneling
->   - USB 3.x tunneling
->   - P2P networking (implemented in drivers/net/thunderbolt.c)
->   - Host and device NVM firmware upgrade
-> 
-> Power management support is still work in progress. It will be submitted
-> later on once properly tested.
-> 
-> The previous versions of the series can be seen here:
-> 
->   v1: https://lore.kernel.org/linux-usb/20191023112154.64235-1-mika.westerberg@linux.intel.com/
->   RFC: https://lore.kernel.org/lkml/20191001113830.13028-1-mika.westerberg@linux.intel.com/
-> 
-> Changes from v1:
-> 
->   * Rebased on top of v5.5-rc2.
->   * Add a new patch to populate PG field in hotplug ack packet.
->   * Rename the networking driver Kconfig symbol to CONFIG_USB4_NET to
->     follow the driver itself (CONFIG_USB4).
+drivers/base/Makefile always adds component.o to obj-y, like this:
 
-At a quick glance, this looks nice and sane, good job.  I've taken all
-of these into my tree, let's see if 0-day has any problems with it :)
+  obj-y                   := component.o core.o bus.o dd.o syscore.o \
 
-thanks,
+Hence it is never compiled as a module. Remove useless modular code.
 
-greg k-h
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
+
+ drivers/base/component.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/drivers/base/component.c b/drivers/base/component.c
+index 532a3a5d8f63..3a09036e772a 100644
+--- a/drivers/base/component.c
++++ b/drivers/base/component.c
+@@ -11,7 +11,6 @@
+ #include <linux/device.h>
+ #include <linux/kref.h>
+ #include <linux/list.h>
+-#include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/slab.h>
+ #include <linux/debugfs.h>
+@@ -775,5 +774,3 @@ void component_del(struct device *dev, const struct component_ops *ops)
+ 	kfree(component);
+ }
+ EXPORT_SYMBOL_GPL(component_del);
+-
+-MODULE_LICENSE("GPL v2");
+-- 
+2.17.1
+
