@@ -2,105 +2,74 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D437C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC6AC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 303FA24676
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:19:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d5oAz/Hn"
+	by mail.kernel.org (Postfix) with ESMTP id 93AFB2146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:19:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727171AbfLRPTZ (ORCPT
+        id S1727198AbfLRPTq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 10:19:25 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:29857 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726913AbfLRPTY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 10:19:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576682364;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=AvN+er9tSk1nvAa51RyHfekLOaMRSKqcu33jfkq9kqU=;
-        b=d5oAz/HnfqFMWm9tKs7hFDw3TC88MkZ0YeKCEFRGBs69MwVHHmbpGZR72vov4U2L+4fryS
-        iqA1bGH16FqJ6tTzMDFsGlL235wEELP5GM/34iWCQLy1tCbDZWQyfpFQXMshgYHf+ZHadm
-        Q9d5+adzGY0r3WuDKuvp5WzE+XUOpbg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-217-riyu79fQPeK--2ikhdPqxg-1; Wed, 18 Dec 2019 10:19:18 -0500
-X-MC-Unique: riyu79fQPeK--2ikhdPqxg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5B18E8C3DD4;
-        Wed, 18 Dec 2019 15:19:16 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 235705DDAA;
-        Wed, 18 Dec 2019 15:19:08 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed, 18 Dec 2019 16:19:12 +0100 (CET)
-Date:   Wed, 18 Dec 2019 16:19:04 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Jan Kratochvil <jan.kratochvil@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Pedro Alves <palves@redhat.com>, Peter Anvin <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v2 0/4] x86: fix get_nr_restart_syscall()
-Message-ID: <20191218151904.GA3127@redhat.com>
-References: <20191126110659.GA14042@redhat.com>
- <20191203141239.GA30688@redhat.com>
+        Wed, 18 Dec 2019 10:19:46 -0500
+Received: from mga14.intel.com ([192.55.52.115]:3786 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726921AbfLRPTq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 10:19:46 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 07:19:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
+   d="scan'208";a="212949490"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga008.fm.intel.com with ESMTP; 18 Dec 2019 07:19:44 -0800
+Date:   Wed, 18 Dec 2019 07:19:44 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com, puiterwijk@redhat.com
+Subject: Re: [PATCH v24 08/24] x86/sgx: Enumerate and track EPC sections
+Message-ID: <20191218151944.GA25201@linux.intel.com>
+References: <20191129231326.18076-1-jarkko.sakkinen@linux.intel.com>
+ <20191129231326.18076-9-jarkko.sakkinen@linux.intel.com>
+ <20191218091856.GA24886@zn.tnic>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191203141239.GA30688@redhat.com>
+In-Reply-To: <20191218091856.GA24886@zn.tnic>
 User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy, Linus, do you have any objections?
+On Wed, Dec 18, 2019 at 10:18:56AM +0100, Borislav Petkov wrote:
+> On Sat, Nov 30, 2019 at 01:13:10AM +0200, Jarkko Sakkinen wrote:
+> > +static bool __init sgx_alloc_epc_section(u64 addr, u64 size,
+> > +					 unsigned long index,
+> > +					 struct sgx_epc_section *section)
+> > +{
+> > +	unsigned long nr_pages = size >> PAGE_SHIFT;
+> 
+> I'm assuming here that size which gets communicated through CPUID -
+> which is an interesting way to communicate SGX settings in itself :-) - is
+> in multiples of 4K? SDM doesn't say...
 
-On 12/03, Oleg Nesterov wrote:
->
-> This version follows the latest recommendation from Linus,
-> arch_set_restart_data() just saves ti->status in restart->arch_data.
->
-> Andy, I can add another patch or change 4/4 to save the syscall number
-> instead, I am fine either way.
->
-> However, personally I dislike restart->arch_data, imo 3/4 is all we need.
->
-> I agree, set_restart_fn() is better than the ugly ERESTART_RESTARTBLOCK
-> check in syscall_return_slowpath() added by v1. But to me the x86-only
-> arch_data field in restart_block is much worse than the sticky TS_ flag.
->
-> To remind, there is another reason for the "transient" 3/4, 4/4 is not
-> easily backportable.
->
-> Oleg.
-> ---
->  arch/x86/include/asm/processor.h   |  9 ---------
->  arch/x86/include/asm/thread_info.h | 15 ++++++++++++++-
->  arch/x86/kernel/signal.c           | 24 +-----------------------
->  fs/select.c                        | 10 ++++------
->  include/linux/restart_block.h      |  1 +
->  include/linux/thread_info.h        | 12 ++++++++++++
->  kernel/futex.c                     |  3 +--
->  kernel/time/alarmtimer.c           |  2 +-
->  kernel/time/hrtimer.c              |  2 +-
->  kernel/time/posix-cpu-timers.c     |  2 +-
->  10 files changed, 36 insertions(+), 44 deletions(-)
+Yes, EPC pages are architecturally defined to be 4k sized and aligned.
 
+  36.5 Enclave Page Cache
+
+  The EPC is divided into EPC pages. An EPC page is 4KB in size and always
+  aligned on a 4KB boundary.
