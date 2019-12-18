@@ -2,128 +2,117 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1CE6C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDE1C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B472E21582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:23:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E96E8218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:23:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bLfkBhvM"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="sO8+RfNM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727191AbfLROXb (ORCPT
+        id S1727215AbfLROXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 09:23:31 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:32846 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726856AbfLROXb (ORCPT
+        Wed, 18 Dec 2019 09:23:54 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:1049 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726998AbfLROXx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 09:23:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576679010;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=F8DAOnka08/eWgaxUayF0MAJKUEDXSpMRv4M3rbs3l4=;
-        b=bLfkBhvMsuS8sApzu+Uq6c4Fc5fTkD6blD4nYKcSyK0x0yjT0gZabv9mG3rAUOAmgUnpMo
-        Uc0kQ8IwjehoTEgpNvoM31VlbKHIyZuXhpTx9FFUSHlDS+PzN85ZFXOajWpZ7gNJZcrnh6
-        P5r7bS//q26ZyuCoM6vRKkIvFReeOC8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-261-8mOqFvCoPRulkvAwBskqVg-1; Wed, 18 Dec 2019 09:23:28 -0500
-X-MC-Unique: 8mOqFvCoPRulkvAwBskqVg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9E34B102312A;
-        Wed, 18 Dec 2019 14:23:26 +0000 (UTC)
-Received: from krava (unknown [10.43.17.106])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0833F6888E;
-        Wed, 18 Dec 2019 14:23:23 +0000 (UTC)
-Date:   Wed, 18 Dec 2019 15:23:21 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH 07/12] perf hists browser: Allow passing an initial hotkey
-Message-ID: <20191218142321.GB15571@krava>
-References: <20191217144828.2460-1-acme@kernel.org>
- <20191217144828.2460-8-acme@kernel.org>
- <20191218080818.GD19062@krava>
- <20191218140831.GC13395@kernel.org>
+        Wed, 18 Dec 2019 09:23:53 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBIEMRju009267;
+        Wed, 18 Dec 2019 15:23:40 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=CqqtdBSOQzQqY2X0T5pw83xNGBYfoG1Y6eQNNcwZcOs=;
+ b=sO8+RfNMnFy+X6hhI9GL6hnltJcNCoANQTxOee2pWtP2t9XSI6aMsUr+18FYUeyt5bCT
+ rQYgeOsAnIRPdHlagkpf3ZjL4lsFu79+2jVdeX58pd6nMhoXOiPoO2/vqhtBYM2tu4h6
+ 9SHIOLyEQIK64dOpBRuuPSiWQJqvhTqRHVcTrzbGe0Nudli8a01BQTryfnLvlBZn1mLa
+ z7J6OK67HdEkDfHkru6qSaztT8KaN3XSWaiLiEQQetNIrhd1eLYG4DqPMO+/Exni8Ggx
+ GaE44x0p/Z/M8Svt1rFcfJ/3BxVguwLOLXzWcRGcyk2Rg/AJ3oP0cJ55Rd7rpioRbV5O WQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2wvnremuku-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 Dec 2019 15:23:40 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2435D100038;
+        Wed, 18 Dec 2019 15:23:39 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0ADDA210D29;
+        Wed, 18 Dec 2019 15:23:39 +0100 (CET)
+Received: from lmecxl0912.lme.st.com (10.75.127.51) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 18 Dec
+ 2019 15:23:38 +0100
+Subject: Re: [PATCH 0/6] Convert STM32 dma to json-schema
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>, <vkoul@kernel.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <mcoquelin.stm32@gmail.com>
+CC:     <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20191217092201.20022-1-benjamin.gaignard@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <925ed27e-25a4-7382-af52-fda1688ac789@st.com>
+Date:   Wed, 18 Dec 2019 15:23:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191218140831.GC13395@kernel.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <20191217092201.20022-1-benjamin.gaignard@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG5NODE2.st.com (10.75.127.14) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-18_04:2019-12-17,2019-12-18 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 11:08:31AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Wed, Dec 18, 2019 at 09:08:18AM +0100, Jiri Olsa escreveu:
-> > On Tue, Dec 17, 2019 at 11:48:23AM -0300, Arnaldo Carvalho de Melo wrote:
-> > 
-> > SNIP
-> > 
-> > > diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-> > > index 6dfdd8d5a743..3b7af5a8d101 100644
-> > > --- a/tools/perf/ui/browsers/hists.c
-> > > +++ b/tools/perf/ui/browsers/hists.c
-> > > @@ -673,9 +673,8 @@ static int hist_browser__title(struct hist_browser *browser, char *bf, size_t si
-> > >  }
-> > >  
-> > >  int hist_browser__run(struct hist_browser *browser, const char *help,
-> > > -		      bool warn_lost_event)
-> > > +		      bool warn_lost_event, int key)
-> > >  {
-> > > -	int key;
-> > >  	char title[160];
-> > >  	struct hist_browser_timer *hbt = browser->hbt;
-> > >  	int delay_secs = hbt ? hbt->refresh : 0;
-> > > @@ -688,9 +687,12 @@ int hist_browser__run(struct hist_browser *browser, const char *help,
-> > >  	if (ui_browser__show(&browser->b, title, "%s", help) < 0)
-> > >  		return -1;
-> > >  
-> > > +	if (key)
-> > > +		goto do_hotkey;
-> > > +
-> > >  	while (1) {
-> > >  		key = ui_browser__run(&browser->b, delay_secs);
-> > > -
-> > > +do_hotkey:
-> > 
-> > or we could switch the 'swtich' and ui_browser__run, and get rid of the goto, like:
-> > 
-> > 	while (1) {
-> >   		switch (key) {
-> > 		...
-> > 		}
-> > 
-> > 		key = ui_browser__run(&browser->b, delay_secs);
-> > 	}
+Hi Benjamin,
+
+On 12/17/19 10:21 AM, Benjamin Gaignard wrote:
+> This series convert STM32 dma, mdma and dmamux bindings to json-schema.
+> Yaml bindings use dma-controller and dma-router schemas where nodes names
+> are verified which lead to fix stm32f746, stm32f743 and stm32mp157 device
+> tree files.
 > 
-> I think those are equivalent and having the test like I did is more
-> clear, i.e. "has this key been provided" instead of going to the switch
-> just to hit the default case for the zero in key and call
-> ui_browser__run().
+> Benjamin Gaignard (6):
+>    dt-bindings: dma: Convert stm32 DMA bindings to json-schema
+>    dt-bindings: dma: Convert stm32 MDMA bindings to json-schema
+>    dt-bindings: dma: Convert stm32 DMAMUX bindings to json-schema
+>    ARM: dts: stm32: fix dma controller node name on stm32f746
+>    ARM: dts: stm32: fix dma controller node name on stm32f743
+>    ARM: dts: stm32: fix dma controller node name on stm32mp157c
+> 
+>   .../devicetree/bindings/dma/st,stm32-dma.yaml      | 102 ++++++++++++++++++++
+>   .../devicetree/bindings/dma/st,stm32-dmamux.yaml   |  52 ++++++++++
+>   .../devicetree/bindings/dma/st,stm32-mdma.yaml     | 105 +++++++++++++++++++++
+>   .../devicetree/bindings/dma/stm32-dma.txt          |  83 ----------------
+>   .../devicetree/bindings/dma/stm32-dmamux.txt       |  84 -----------------
+>   .../devicetree/bindings/dma/stm32-mdma.txt         |  94 ------------------
+>   arch/arm/boot/dts/stm32f746.dtsi                   |   4 +-
+>   arch/arm/boot/dts/stm32h743.dtsi                   |   6 +-
+>   arch/arm/boot/dts/stm32mp157c.dtsi                 |   6 +-
+>   9 files changed, 267 insertions(+), 269 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/dma/st,stm32-dma.yaml
+>   create mode 100644 Documentation/devicetree/bindings/dma/st,stm32-dmamux.yaml
+>   create mode 100644 Documentation/devicetree/bindings/dma/st,stm32-mdma.yaml
+>   delete mode 100644 Documentation/devicetree/bindings/dma/stm32-dma.txt
+>   delete mode 100644 Documentation/devicetree/bindings/dma/stm32-dmamux.txt
+>   delete mode 100644 Documentation/devicetree/bindings/dma/stm32-mdma.txt
+> 
 
-sure, I just don't like goto other than for error handling,
-looks too hacky to me ;-) but of course it's your call
+For  DT patches, please rebase your patches on stm32-next. Major updates 
+have been done for STM DT diversity.
 
-jirka
+Thanks in advance.
 
+Alex
