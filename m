@@ -4,184 +4,243 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D84C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 172ACC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5248E21D7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E126B24650
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:41:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfLRIk6 (ORCPT
+        id S1726757AbfLRIlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 03:40:58 -0500
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:54153 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726682AbfLRIk6 (ORCPT
+        Wed, 18 Dec 2019 03:41:12 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:57240 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbfLRIlL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 03:40:58 -0500
-X-Originating-IP: 109.190.253.16
-Received: from aptenodytes (unknown [109.190.253.16])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 58A6B1BF203;
-        Wed, 18 Dec 2019 08:40:49 +0000 (UTC)
-Date:   Wed, 18 Dec 2019 09:40:47 +0100
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     mchehab@kernel.org, mripard@kernel.org, hverkuil@xs4all.nl,
-        gregkh@linuxfoundation.org, wens@csie.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/2] media: cedrus: Fix decoding for some HEVC videos
-Message-ID: <20191218084047.GA2900@aptenodytes>
-References: <20191213161516.54688-1-jernej.skrabec@siol.net>
- <20191213161516.54688-2-jernej.skrabec@siol.net>
+        Wed, 18 Dec 2019 03:41:11 -0500
+Received: from [10.28.39.99] (10.28.39.99) by mail-sz.amlogic.com (10.28.11.5)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 18 Dec
+ 2019 16:37:50 +0800
+Subject: Re: [PATCH v4 2/6] clk: meson: add support for A1 PLL clock ops
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+CC:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Chandle Zou <chandle.zou@amlogic.com>,
+        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20191206074052.15557-1-jian.hu@amlogic.com>
+ <20191206074052.15557-3-jian.hu@amlogic.com>
+ <1j8snhluhg.fsf@starbuckisacylon.baylibre.com>
+ <741284be-2ae8-1102-22bc-c510e822c883@amlogic.com>
+ <1jk16vb8qm.fsf@starbuckisacylon.baylibre.com>
+From:   Jian Hu <jian.hu@amlogic.com>
+Message-ID: <0bc6176f-c0b8-5c31-4c6b-d3686eefe56e@amlogic.com>
+Date:   Wed, 18 Dec 2019 16:37:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Kj7319i9nmIyA2yE"
-Content-Disposition: inline
-In-Reply-To: <20191213161516.54688-2-jernej.skrabec@siol.net>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <1jk16vb8qm.fsf@starbuckisacylon.baylibre.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.28.39.99]
+X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
+ (10.28.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---Kj7319i9nmIyA2yE
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On 2019/12/17 17:29, Jerome Brunet wrote:
+> 
+> On Tue 17 Dec 2019 at 09:41, Jian Hu <jian.hu@amlogic.com> wrote:
+> 
+>> On 2019/12/12 18:16, Jerome Brunet wrote:
+>>>
+>>> On Fri 06 Dec 2019 at 08:40, Jian Hu <jian.hu@amlogic.com> wrote:
+>>>
+>>>> The A1 PLL design is different with previous SoCs. The PLL
+>>>> internal analog modules Power-on sequence is different
+>>>> with previous, and thus requires a strict register sequence to
+>>>> enable the PLL.
+>>>>
+>>>> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+>>>> ---
+>>>>    drivers/clk/meson/clk-pll.c | 21 +++++++++++++++++++++
+>>>>    drivers/clk/meson/clk-pll.h |  1 +
+>>>>    drivers/clk/meson/parm.h    |  1 +
+>>>>    3 files changed, 23 insertions(+)
+>>>>
+>>>> diff --git a/drivers/clk/meson/clk-pll.c b/drivers/clk/meson/clk-pll.c
+>>>> index ddb1e5634739..4aff31a51589 100644
+>>>> --- a/drivers/clk/meson/clk-pll.c
+>>>> +++ b/drivers/clk/meson/clk-pll.c
+>>>> @@ -318,6 +318,23 @@ static int meson_clk_pll_enable(struct clk_hw *hw)
+>>>>    	struct clk_regmap *clk = to_clk_regmap(hw);
+>>>>    	struct meson_clk_pll_data *pll = meson_clk_pll_data(clk);
+>>>>    +	/*
+>>>> +	 * The A1 design is different with previous SoCs.The PLL
+>>>> +	 * internal analog modules Power-on sequence is different with
+>>>> +	 * previous, and thus requires a strict register sequence to
+>>>> +	 * enable the PLL.
+>>>
+>>> The code does something more, not completly different. This comment is
+>>> not aligned with what the code does
+>> ok, I will correct the comment.
+>>>
+>>>> +	 */
+>>>> +	if (MESON_PARM_APPLICABLE(&pll->current_en)) {
+>>>> +		/* Enable the pll */
+>>>> +		meson_parm_write(clk->map, &pll->en, 1);
+>>>> +		udelay(10);
+>>>> +		/* Enable the pll self-adaption module current */
+>>>> +		meson_parm_write(clk->map, &pll->current_en, 1);
+>>>> +		udelay(40);
+>>>> +		meson_parm_write(clk->map, &pll->rst, 1);
+>>>> +		meson_parm_write(clk->map, &pll->rst, 0);
+>>>
+>>> Here you enable the PLL and self adaptation module then reset the PLL.
+>>> However:
+>>> #1 when you enter this function, the PLL should already by in reset
+>>> and disabled
+>>> #2 the code after that will reset the PLL again
+>> For A1 PLLs, There is no reset bit, It will not reset the PLL.
+>> And in V2, you mentioned PARM 'rst' can be used for one toggling, And 'rst'
+>> is used for BIT(6) in CTRL2.
+>>
+> 
+> oh my ! What is it then ? Why do you need to toggle it ? What does is do ?
+> 
+The PLL enable flow:
+      step1: enable the PLL
+      step2: enable the self adaptation module
+      step3: reset the lock detect module, let the lock detect module 
+            work，And then the PLL will work.
 
-On Fri 13 Dec 19, 17:15, Jernej Skrabec wrote:
-> It seems that for some HEVC videos at least one bitstream parsing
-> trigger must be called in order to be decoded correctly. There is no
-> explanation why this helps, but it was observed that several videos
-> with this fix are now decoded correctly and there is no regression with
-> others.
->=20
-> Without this fix, those same videos totally crash HEVC decoder (other
-> decoder engines are unaffected). After decoding those problematic
-> videos, HEVC decoder always returns only green image (all zeros).
-> Only complete HW reset helps.
->=20
-> This fix is similar to that for H264.
-
-Thanks for the fix, interesting that the same issue shows up on HEVC!
-I suspect that Allwinner folks never really tested the engine without
-using it for bitstream parsing.
-
-Acked-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-
-Cheers,
-
-Paul
-
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> ---
->  .../staging/media/sunxi/cedrus/cedrus_h265.c  | 25 ++++++++++++++++---
->  .../staging/media/sunxi/cedrus/cedrus_regs.h  |  1 +
->  2 files changed, 23 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h265.c b/drivers/s=
-taging/media/sunxi/cedrus/cedrus_h265.c
-> index 109d3289418c..5a207f1e137c 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
-> @@ -7,6 +7,7 @@
->   * Copyright (C) 2018 Bootlin
->   */
-> =20
-> +#include <linux/delay.h>
->  #include <linux/types.h>
-> =20
->  #include <media/videobuf2-dma-contig.h>
-> @@ -283,6 +284,23 @@ static void cedrus_h265_write_scaling_list(struct ce=
-drus_ctx *ctx,
->  		}
->  }
-> =20
-> +static void cedrus_h265_skip_bits(struct cedrus_dev *dev, int num)
-> +{
-> +	int count =3D 0;
-> +
-> +	while (count < num) {
-> +		int tmp =3D min(num - count, 32);
-> +
-> +		cedrus_write(dev, VE_DEC_H265_TRIGGER,
-> +			     VE_DEC_H265_TRIGGER_FLUSH_BITS |
-> +			     VE_DEC_H265_TRIGGER_TYPE_N_BITS(tmp));
-> +		while (cedrus_read(dev, VE_DEC_H265_STATUS) & VE_DEC_H265_STATUS_VLD_B=
-USY)
-> +			udelay(1);
-> +
-> +		count +=3D tmp;
-> +	}
-> +}
-> +
->  static void cedrus_h265_setup(struct cedrus_ctx *ctx,
->  			      struct cedrus_run *run)
->  {
-> @@ -347,10 +365,9 @@ static void cedrus_h265_setup(struct cedrus_ctx *ctx,
-> =20
->  	/* Source offset and length in bits. */
-> =20
-> -	reg =3D slice_params->data_bit_offset;
-> -	cedrus_write(dev, VE_DEC_H265_BITS_OFFSET, reg);
-> +	cedrus_write(dev, VE_DEC_H265_BITS_OFFSET, 0);
-> =20
-> -	reg =3D slice_params->bit_size - slice_params->data_bit_offset;
-> +	reg =3D slice_params->bit_size;
->  	cedrus_write(dev, VE_DEC_H265_BITS_LEN, reg);
-> =20
->  	/* Source beginning and end addresses. */
-> @@ -385,6 +402,8 @@ static void cedrus_h265_setup(struct cedrus_ctx *ctx,
->  	/* Initialize bitstream access. */
->  	cedrus_write(dev, VE_DEC_H265_TRIGGER, VE_DEC_H265_TRIGGER_INIT_SWDEC);
-> =20
-> +	cedrus_h265_skip_bits(dev, slice_params->data_bit_offset);
-> +
->  	/* Bitstream parameters. */
-> =20
->  	reg =3D VE_DEC_H265_DEC_NAL_HDR_NAL_UNIT_TYPE(slice_params->nal_unit_ty=
-pe) |
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h b/drivers/s=
-taging/media/sunxi/cedrus/cedrus_regs.h
-> index 0d9449fe2b28..df1cceef8d93 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-> @@ -424,6 +424,7 @@
-> =20
->  #define VE_DEC_H265_TRIGGER			(VE_ENGINE_DEC_H265 + 0x34)
-> =20
-> +#define VE_DEC_H265_TRIGGER_TYPE_N_BITS(x)	(((x) & 0x3f) << 8)
->  #define VE_DEC_H265_TRIGGER_STCD_VC1		(0x02 << 4)
->  #define VE_DEC_H265_TRIGGER_STCD_AVS		(0x01 << 4)
->  #define VE_DEC_H265_TRIGGER_STCD_HEVC		(0x00 << 4)
-> --=20
-> 2.24.0
->=20
-
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
---Kj7319i9nmIyA2yE
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl355g8ACgkQ3cLmz3+f
-v9F0uwf/R/7HIpAkOCE+eajb2oib3qb5ln2OZ7fCjMlLQDlRZ1bcsz1oTGipGarM
-dYR0EkPQBmnMNeNb6ETU2fUcchrvZPSaaC5LcU/qhFVEFH/gL7B4bkzOihBnGtSQ
-MABZstZZMDLgq6zos5bfzUrCYgFJ3J2xeLupendqeQoHOoOssMrAsjoXsZ6pmeQg
-q6u6PXxv/SEb/PB32iNyq1ryvaTMs4dvQzF0LB0Ds5nKStG7zzbcj3lCNT/azRdR
-8xk9AXbf9jpdfb0zeqOkC92jODe8hytbX7FCQmZpZiKNaNbde9XV2+wG83hJuHW5
-090NQ6+4oit/hO9RMuSSDq6fR2P4+g==
-=plwW
------END PGP SIGNATURE-----
-
---Kj7319i9nmIyA2yE--
+Toggle the bit 6 in CTRL2 can reset the lock detect module.
+>> Quote V2 the HIFI PLL init_regs definition：
+>>
+>>
+>> +static const struct reg_sequence a1_hifi_init_regs[] = {
+>> +	{ .reg = ANACTRL_HIFIPLL_CTRL1, .def = 0x01800000 },
+>> +	{ .reg = ANACTRL_HIFIPLL_CTRL2, .def = 0x00001100 },
+>> +	{ .reg = ANACTRL_HIFIPLL_CTRL3, .def = 0x100a1100 },
+>> +	{ .reg = ANACTRL_HIFIPLL_CTRL4, .def = 0x00302000 },
+>> +	{ .reg = ANACTRL_HIFIPLL_CTRL0, .def = 0x01f18440 },
+>> +	{ .reg = ANACTRL_HIFIPLL_CTRL0, .def = 0x11f18440, .delay_us = 10 },
+>> +	{ .reg = ANACTRL_HIFIPLL_CTRL0, .def = 0x15f18440, .delay_us = 40 },
+>> +	{ .reg = ANACTRL_HIFIPLL_CTRL2, .def = 0x00001140 },
+>> +	{ .reg = ANACTRL_HIFIPLL_CTRL2, .def = 0x00001100 },
+>> +};
+>>
+>> So maybe another new PARM should be defined to avoid the ambiguity.
+>> What do you think about it?
+> 
+> This is not the point of my comment Jian !
+> 
+> I'm assuming here that you have tested your v4 before sending and that
+> it work (hopefully)
+> 
+Yes, it works wells. I have tested the drivers before sending every 
+patchset version.
+> The fact is that with this code, when disabled the bit behind rst
+> (whatever it is) is set. So when you get to enable the bit is already set.
+> The code you sent does the same as the snip I gave you in the reply.
+> 
+> Now, if your PLL is THAT different, maybe it would be best if you could
+> clearly explain how it works, what bit should be set and why. Then we
+> will be able to figure out how the driver has to be restructured.
+> 
+the same as 'The PLL enable flow' above
+>>
+>>>
+>>> So if what you submited works, inserting the following should accomplish
+>>> the same thing:
+>>>
+>>> ---8<---
+>>> diff --git a/drivers/clk/meson/clk-pll.c b/drivers/clk/meson/clk-pll.c
+>>> index 489092dde3a6..9b38df0a7682 100644
+>>> --- a/drivers/clk/meson/clk-pll.c
+>>> +++ b/drivers/clk/meson/clk-pll.c
+>>> @@ -330,6 +330,13 @@ static int meson_clk_pll_enable(struct clk_hw *hw)
+>>>           /* Enable the pll */
+>>>           meson_parm_write(clk->map, &pll->en, 1);
+>>>
+>>> +       if (MESON_PARM_APPLICABLE(&pll->current_en)) {
+>>> +               udelay(10);
+>>> +               /* Enable the pll self-adaption module current */
+>>> +               meson_parm_write(clk->map, &pll->current_en, 1);
+>>> +               udelay(40);
+>>> +       }
+>>> +
+>>>           /* Take the pll out reset */
+>>>           meson_parm_write(clk->map, &pll->rst, 0);
+>>> --->8---
+>>>
+>>>
+>>>
+>>>
+>>>> +	}
+>>>> +
+>>>>    	/* do nothing if the PLL is already enabled */
+>>>>    	if (clk_hw_is_enabled(hw))
+>>>>    		return 0;
+>>>
+>>> In any case, nothing should be done on the clock before this check
+>>> otherwise you might just break the clock
+>>>
+>> OK, I will put the enabled check ahead.
+>>>> @@ -347,6 +364,10 @@ static void meson_clk_pll_disable(struct clk_hw *hw)
+>>>>      	/* Disable the pll */
+>>>>    	meson_parm_write(clk->map, &pll->en, 0);
+>>>> +
+>>>> +	/* Disable PLL internal self-adaption module current */
+>>>> +	if (MESON_PARM_APPLICABLE(&pll->current_en))
+>>>> +		meson_parm_write(clk->map, &pll->current_en, 0);
+>>>>    }
+>>>>      static int meson_clk_pll_set_rate(struct clk_hw *hw, unsigned long
+>>>> rate,
+>>>> diff --git a/drivers/clk/meson/clk-pll.h b/drivers/clk/meson/clk-pll.h
+>>>> index 367efd0f6410..30f039242a65 100644
+>>>> --- a/drivers/clk/meson/clk-pll.h
+>>>> +++ b/drivers/clk/meson/clk-pll.h
+>>>> @@ -36,6 +36,7 @@ struct meson_clk_pll_data {
+>>>>    	struct parm frac;
+>>>>    	struct parm l;
+>>>>    	struct parm rst;
+>>>> +	struct parm current_en;
+>>>>    	const struct reg_sequence *init_regs;
+>>>>    	unsigned int init_count;
+>>>>    	const struct pll_params_table *table;
+>>>> diff --git a/drivers/clk/meson/parm.h b/drivers/clk/meson/parm.h
+>>>> index 3c9ef1b505ce..c53fb26577e3 100644
+>>>> --- a/drivers/clk/meson/parm.h
+>>>> +++ b/drivers/clk/meson/parm.h
+>>>> @@ -20,6 +20,7 @@
+>>>>    	(((reg) & CLRPMASK(width, shift)) | ((val) << (shift)))
+>>>>      #define MESON_PARM_APPLICABLE(p)		(!!((p)->width))
+>>>> +#define MESON_PARM_CURRENT(p)			(!!((p)->width))
+>>>
+>>> Why do we need that ?
+>> OK, I will remove it ,and use 'MESON_PARM_APPLICABLE' instead
+>>>
+>>>>      struct parm {
+>>>>    	u16	reg_off;
+>>>
+>>> .
+>>>
+> 
+> .
+> 
