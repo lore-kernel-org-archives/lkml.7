@@ -6,31 +6,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB3B8C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A44C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 984232176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:49:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C06D421D7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:49:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbfLRUto (ORCPT
+        id S1727686AbfLRUtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 15:49:44 -0500
-Received: from mail.windriver.com ([147.11.1.11]:47832 "EHLO
+        Wed, 18 Dec 2019 15:49:25 -0500
+Received: from mail.windriver.com ([147.11.1.11]:47858 "EHLO
         mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727495AbfLRUtc (ORCPT
+        with ESMTP id S1727608AbfLRUtX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 15:49:32 -0500
+        Wed, 18 Dec 2019 15:49:23 -0500
 Received: from yow-cube1.wrs.com (yow-cube1.wrs.com [128.224.56.98])
-        by mail.windriver.com (8.15.2/8.15.2) with ESMTP id xBIKn0ie000214;
-        Wed, 18 Dec 2019 12:49:14 -0800 (PST)
+        by mail.windriver.com (8.15.2/8.15.2) with ESMTP id xBIKn0ii000214;
+        Wed, 18 Dec 2019 12:49:17 -0800 (PST)
 From:   Paul Gortmaker <paul.gortmaker@windriver.com>
 To:     Lee Jones <lee.jones@linaro.org>
 Cc:     linux-kernel@vger.kernel.org,
         Paul Gortmaker <paul.gortmaker@windriver.com>,
-        Milo Kim <milo.kim@ti.com>
-Subject: [PATCH 12/18] mfd: lp8788: Make it explicitly non-modular
-Date:   Wed, 18 Dec 2019 15:48:51 -0500
-Message-Id: <1576702137-25905-13-git-send-email-paul.gortmaker@windriver.com>
+        Tony Lindgren <tony@atomide.com>,
+        Keshava Munegowda <keshava_mgowda@ti.com>,
+        Roger Quadros <rogerq@ti.com>, linux-omap@vger.kernel.org
+Subject: [PATCH 16/18] mfd: omap-usb-host: Make it explicitly non-modular
+Date:   Wed, 18 Dec 2019 15:48:55 -0500
+Message-Id: <1576702137-25905-17-git-send-email-paul.gortmaker@windriver.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1576702137-25905-1-git-send-email-paul.gortmaker@windriver.com>
 References: <1576702137-25905-1-git-send-email-paul.gortmaker@windriver.com>
@@ -41,8 +43,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The Kconfig currently controlling compilation of this code is:
 
-drivers/mfd/Kconfig:config MFD_LP8788
-drivers/mfd/Kconfig:    bool "TI LP8788 Power Management Unit Driver"
+drivers/mfd/Kconfig:config MFD_OMAP_USB_HOST
+drivers/mfd/Kconfig:    bool "TI OMAP USBHS core and TLL driver"
 
 ...meaning that it currently is not being built as a module by anyone.
 
@@ -61,69 +63,98 @@ Also note that MODULE_DEVICE_TABLE is a no-op for non-modular code.
 We also delete the MODULE_LICENSE tag etc. since all that information
 is already contained at the top of the file in the comments.
 
-Cc: Milo Kim <milo.kim@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>
 Cc: Lee Jones <lee.jones@linaro.org>
+Cc: Keshava Munegowda <keshava_mgowda@ti.com>
+Cc: Roger Quadros <rogerq@ti.com>
+Cc: linux-omap@vger.kernel.org
 Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
 ---
- drivers/mfd/lp8788.c | 24 ++----------------------
- 1 file changed, 2 insertions(+), 22 deletions(-)
+ drivers/mfd/omap-usb-host.c | 47 +++++----------------------------------------
+ 1 file changed, 5 insertions(+), 42 deletions(-)
 
-diff --git a/drivers/mfd/lp8788.c b/drivers/mfd/lp8788.c
-index 768d556b3fe9..b218855e4162 100644
---- a/drivers/mfd/lp8788.c
-+++ b/drivers/mfd/lp8788.c
-@@ -11,7 +11,7 @@
- #include <linux/i2c.h>
- #include <linux/mfd/core.h>
- #include <linux/mfd/lp8788.h>
+diff --git a/drivers/mfd/omap-usb-host.c b/drivers/mfd/omap-usb-host.c
+index 4798d9f3f9d5..118756d7be19 100644
+--- a/drivers/mfd/omap-usb-host.c
++++ b/drivers/mfd/omap-usb-host.c
+@@ -7,7 +7,7 @@
+  * Author: Roger Quadros <rogerq@ti.com>
+  */
+ #include <linux/kernel.h>
 -#include <linux/module.h>
 +#include <linux/init.h>
+ #include <linux/types.h>
  #include <linux/slab.h>
- 
- #define MAX_LP8788_REGISTERS		0xA2
-@@ -199,27 +199,17 @@ static int lp8788_probe(struct i2c_client *cl, const struct i2c_device_id *id)
- 			       ARRAY_SIZE(lp8788_devs), NULL, 0, NULL);
+ #include <linux/delay.h>
+@@ -803,28 +803,6 @@ static int usbhs_omap_probe(struct platform_device *pdev)
+ 	return ret;
  }
  
--static int lp8788_remove(struct i2c_client *cl)
+-static int usbhs_omap_remove_child(struct device *dev, void *data)
 -{
--	struct lp8788 *lp = i2c_get_clientdata(cl);
--
--	mfd_remove_devices(lp->dev);
--	lp8788_irq_exit(lp);
+-	dev_info(dev, "unregistering\n");
+-	platform_device_unregister(to_platform_device(dev));
 -	return 0;
 -}
 -
- static const struct i2c_device_id lp8788_ids[] = {
- 	{"lp8788", 0},
+-/**
+- * usbhs_omap_remove - shutdown processing for UHH & TLL HCDs
+- * @pdev: USB Host Controller being removed
+- *
+- * Reverses the effect of usbhs_omap_probe().
+- */
+-static int usbhs_omap_remove(struct platform_device *pdev)
+-{
+-	pm_runtime_disable(&pdev->dev);
+-
+-	/* remove children */
+-	device_for_each_child(&pdev->dev, NULL, usbhs_omap_remove_child);
+-	return 0;
+-}
+-
+ static const struct dev_pm_ops usbhsomap_dev_pm_ops = {
+ 	.runtime_suspend	= usbhs_runtime_suspend,
+ 	.runtime_resume		= usbhs_runtime_resume,
+@@ -835,25 +813,16 @@ static const struct of_device_id usbhs_omap_dt_ids[] = {
  	{ }
  };
--MODULE_DEVICE_TABLE(i2c, lp8788_ids);
  
- static struct i2c_driver lp8788_driver = {
+-MODULE_DEVICE_TABLE(of, usbhs_omap_dt_ids);
+-
+-
+ static struct platform_driver usbhs_omap_driver = {
  	.driver = {
- 		.name = "lp8788",
-+		.suppress_bind_attrs = true,
+-		.name		= (char *)usbhs_driver_name,
+-		.pm		= &usbhsomap_dev_pm_ops,
+-		.of_match_table = usbhs_omap_dt_ids,
++		.name			= (char *)usbhs_driver_name,
++		.pm			= &usbhsomap_dev_pm_ops,
++		.of_match_table		= usbhs_omap_dt_ids,
++		.suppress_bind_attr	= true,
  	},
- 	.probe = lp8788_probe,
--	.remove = lp8788_remove,
- 	.id_table = lp8788_ids,
+ 	.probe		= usbhs_omap_probe,
+-	.remove		= usbhs_omap_remove,
  };
  
-@@ -228,13 +218,3 @@ static int __init lp8788_init(void)
- 	return i2c_add_driver(&lp8788_driver);
- }
- subsys_initcall(lp8788_init);
+-MODULE_AUTHOR("Keshava Munegowda <keshava_mgowda@ti.com>");
+-MODULE_AUTHOR("Roger Quadros <rogerq@ti.com>");
+-MODULE_ALIAS("platform:" USBHS_DRIVER_NAME);
+-MODULE_LICENSE("GPL v2");
+-MODULE_DESCRIPTION("usb host common core driver for omap EHCI and OHCI");
 -
--static void __exit lp8788_exit(void)
+ static int omap_usbhs_drvinit(void)
+ {
+ 	return platform_driver_register(&usbhs_omap_driver);
+@@ -867,9 +836,3 @@ static int omap_usbhs_drvinit(void)
+  * usb tll driver
+  */
+ fs_initcall_sync(omap_usbhs_drvinit);
+-
+-static void omap_usbhs_drvexit(void)
 -{
--	i2c_del_driver(&lp8788_driver);
+-	platform_driver_unregister(&usbhs_omap_driver);
 -}
--module_exit(lp8788_exit);
--
--MODULE_DESCRIPTION("TI LP8788 MFD Driver");
--MODULE_AUTHOR("Milo Kim");
--MODULE_LICENSE("GPL");
+-module_exit(omap_usbhs_drvexit);
 -- 
 2.7.4
 
