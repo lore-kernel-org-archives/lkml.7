@@ -2,149 +2,66 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BB2C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 864E0C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61F83218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:18:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="U1KaHe1Q"
+	by mail.kernel.org (Postfix) with ESMTP id 633002176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:19:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbfLRNS0 (ORCPT
+        id S1727071AbfLRNTH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 08:18:26 -0500
-Received: from alln-iport-2.cisco.com ([173.37.142.89]:29827 "EHLO
-        alln-iport-2.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbfLRNS0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 08:18:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=cisco.com; i=@cisco.com; l=2837; q=dns/txt; s=iport;
-  t=1576675105; x=1577884705;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=l/YYN2m/bA6a9KbNW0ZsecGB6ZPVLjJbxnAmtzZv7H4=;
-  b=U1KaHe1QGJlAM/mcZA3zMf4g/YkusM/TBb328v5Bgi3rvooVTNve8WdV
-   +GqMZxOz3AYxeOL9Stzh0Gg1s6KKgL39RgITp9FEZUhyiVeTbHX5/ZOPl
-   oqL/8J1bTEyQSAzprqVVpWa8SfoamEywVcwhtQd0nc1B6y7u4UtkREKRY
-   w=;
-X-IronPort-AV: E=Sophos;i="5.69,329,1571702400"; 
-   d="scan'208";a="395169984"
-Received: from rcdn-core-7.cisco.com ([173.37.93.143])
-  by alln-iport-2.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 18 Dec 2019 13:11:19 +0000
-Received: from sjc-ads-7483.cisco.com (sjc-ads-7483.cisco.com [10.30.221.19])
-        by rcdn-core-7.cisco.com (8.15.2/8.15.2) with ESMTP id xBIDBIOd012762;
-        Wed, 18 Dec 2019 13:11:19 GMT
-Received: by sjc-ads-7483.cisco.com (Postfix, from userid 838444)
-        id D36CA141D; Wed, 18 Dec 2019 05:11:18 -0800 (PST)
-From:   Aviraj CJ <acj@cisco.com>
-To:     peppe.cavallaro@st.com, alexandre.torgue@st.com,
-        gregkh@linuxfoundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, xe-linux-external@cisco.com,
-        acj@cisco.com
-Subject: [PATCH stable v4.9 2/2] net: stmmac: don't stop NAPI processing when dropping a packet
-Date:   Wed, 18 Dec 2019 05:10:10 -0800
-Message-Id: <20191218131009.10968-2-acj@cisco.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20191218131009.10968-1-acj@cisco.com>
-References: <20191218131009.10968-1-acj@cisco.com>
+        Wed, 18 Dec 2019 08:19:07 -0500
+Received: from mga05.intel.com ([192.55.52.43]:36888 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726749AbfLRNTH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 08:19:07 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 05:19:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,329,1571727600"; 
+   d="scan'208";a="266886586"
+Received: from unknown (HELO localhost) ([10.239.159.128])
+  by FMSMGA003.fm.intel.com with ESMTP; 18 Dec 2019 05:19:05 -0800
+Date:   Wed, 18 Dec 2019 21:20:14 +0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
+        jmattson@google.com, yu.c.zhang@linux.intel.com,
+        yu-cheng.yu@intel.com
+Subject: Re: [PATCH v8 4/7] KVM: VMX: Load CET states on vmentry/vmexit
+Message-ID: <20191218132014.GA7926@local-michael-cet-test>
+References: <20191101085222.27997-1-weijiang.yang@intel.com>
+ <20191101085222.27997-5-weijiang.yang@intel.com>
+ <20191210212305.GM15758@linux.intel.com>
+ <20191211015423.GC12845@local-michael-cet-test>
+ <20191211163510.GF5044@linux.intel.com>
+ <20191212010423.GB17570@local-michael-cet-test.sh.intel.com>
+ <20191218003005.GO11771@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Auto-Response-Suppress: DR, OOF, AutoReply
-X-Outbound-SMTP-Client: 10.30.221.19, sjc-ads-7483.cisco.com
-X-Outbound-Node: rcdn-core-7.cisco.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191218003005.GO11771@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-upstream 07b3975352374c3f5ebb4a42ef0b253fe370542d commit
-
-Currently, if we drop a packet, we exit from NAPI loop before the budget
-is consumed. In some situations this will make the RX processing stall
-e.g. when flood pinging the system with oversized packets, as the
-errorneous packets are not dropped efficiently.
-
-If we drop a packet, we should just continue to the next one as long as
-the budget allows.
-
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
-[acj: backport v4.9 -stable
--adjust context]
-Signed-off-by: Aviraj CJ <acj@cisco.com>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index f1844367ca5b..5ac48a594951 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -2499,8 +2499,7 @@ static inline void stmmac_rx_refill(struct stmmac_priv *priv)
-  */
- static int stmmac_rx(struct stmmac_priv *priv, int limit)
- {
--	unsigned int entry = priv->cur_rx;
--	unsigned int next_entry;
-+	unsigned int next_entry = priv->cur_rx;
- 	unsigned int count = 0;
- 	int coe = priv->hw->rx_csum;
- 
-@@ -2516,10 +2515,12 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit)
- 		priv->hw->desc->display_ring(rx_head, DMA_RX_SIZE, true);
- 	}
- 	while (count < limit) {
--		int status;
-+		int entry, status;
- 		struct dma_desc *p;
- 		struct dma_desc *np;
- 
-+		entry = next_entry;
-+
- 		if (priv->extend_desc)
- 			p = (struct dma_desc *)(priv->dma_erx + entry);
- 		else
-@@ -2584,7 +2585,7 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit)
- 				       priv->dev->name, frame_len,
- 				       priv->dma_buf_sz);
- 				priv->dev->stats.rx_length_errors++;
--				break;
-+				continue;
- 			}
- 
- 			/* ACS is set; GMAC core strips PAD/FCS for IEEE 802.3
-@@ -2615,7 +2616,7 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit)
- 						dev_warn(priv->device,
- 							 "packet dropped\n");
- 					priv->dev->stats.rx_dropped++;
--					break;
-+					continue;
- 				}
- 
- 				dma_sync_single_for_cpu(priv->device,
-@@ -2638,7 +2639,7 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit)
- 					pr_err("%s: Inconsistent Rx chain\n",
- 					       priv->dev->name);
- 					priv->dev->stats.rx_dropped++;
--					break;
-+					continue;
- 				}
- 				prefetch(skb->data - NET_IP_ALIGN);
- 				priv->rx_skbuff[entry] = NULL;
-@@ -2672,7 +2673,6 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit)
- 			priv->dev->stats.rx_packets++;
- 			priv->dev->stats.rx_bytes += frame_len;
- 		}
--		entry = next_entry;
- 	}
- 
- 	stmmac_rx_refill(priv);
--- 
-2.19.1
-
+On Tue, Dec 17, 2019 at 04:30:05PM -0800, Sean Christopherson wrote:
+> On Thu, Dec 12, 2019 at 09:04:24AM +0800, Yang Weijiang wrote:
+> > On Wed, Dec 11, 2019 at 08:35:10AM -0800, Sean Christopherson wrote:
+> > > Have you tested SMM at all?  The interaction between CR0 and CR4 may be
+> > > problematic for em_rsm() and/or rsm_enter_protected_mode().
+> > >
+> > Not yet, what's an easy way to test code in SMM mode?
+> 
+> IIRC, SeaBIOS does SMM stuff by default.
+Thanks Sean. I'll check this part.
