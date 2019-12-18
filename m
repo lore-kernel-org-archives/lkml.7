@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58139C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B6BC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3049C21D7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:49:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0629C2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:49:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727731AbfLRUtd (ORCPT
+        id S1727740AbfLRUtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 15:49:33 -0500
-Received: from mail.windriver.com ([147.11.1.11]:47887 "EHLO
+        Wed, 18 Dec 2019 15:49:36 -0500
+Received: from mail.windriver.com ([147.11.1.11]:47879 "EHLO
         mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726623AbfLRUtb (ORCPT
+        with ESMTP id S1727608AbfLRUta (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 15:49:31 -0500
+        Wed, 18 Dec 2019 15:49:30 -0500
 Received: from yow-cube1.wrs.com (yow-cube1.wrs.com [128.224.56.98])
-        by mail.windriver.com (8.15.2/8.15.2) with ESMTP id xBIKn0iV000214;
-        Wed, 18 Dec 2019 12:49:08 -0800 (PST)
+        by mail.windriver.com (8.15.2/8.15.2) with ESMTP id xBIKn0ij000214;
+        Wed, 18 Dec 2019 12:49:18 -0800 (PST)
 From:   Paul Gortmaker <paul.gortmaker@windriver.com>
 To:     Lee Jones <lee.jones@linaro.org>
 Cc:     linux-kernel@vger.kernel.org,
         Paul Gortmaker <paul.gortmaker@windriver.com>,
-        Daniel Ribeiro <drwyrm@gmail.com>,
-        Harald Welte <laforge@openezx.org>
-Subject: [PATCH 03/18] mfd: ezx-pcap: Make it explicitly non-modular
-Date:   Wed, 18 Dec 2019 15:48:42 -0500
-Message-Id: <1576702137-25905-4-git-send-email-paul.gortmaker@windriver.com>
+        Tony Lindgren <tony@atomide.com>,
+        Graeme Gregory <gg@slimlogic.co.uk>, linux-omap@vger.kernel.org
+Subject: [PATCH 17/18] mfd: palmas: Make it explicitly non-modular
+Date:   Wed, 18 Dec 2019 15:48:56 -0500
+Message-Id: <1576702137-25905-18-git-send-email-paul.gortmaker@windriver.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1576702137-25905-1-git-send-email-paul.gortmaker@windriver.com>
 References: <1576702137-25905-1-git-send-email-paul.gortmaker@windriver.com>
@@ -42,8 +42,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The Kconfig currently controlling compilation of this code is:
 
-drivers/mfd/Kconfig:config EZX_PCAP
-drivers/mfd/Kconfig:    bool "Motorola EZXPCAP Support"
+drivers/mfd/Kconfig:config MFD_PALMAS
+drivers/mfd/Kconfig:    bool "TI Palmas series chips"
 
 ...meaning that it currently is not being built as a module by anyone.
 
@@ -57,90 +57,102 @@ code for non-modular drivers.
 Since module_init was not in use by this code, the init ordering
 remains unchanged with this commit.
 
+We delete the include of module.h as well as an unused instance of
+moduleparam.h include as well.
+
+Also note that MODULE_DEVICE_TABLE is a no-op for non-modular code.
+
 We also delete the MODULE_LICENSE tag etc. since all that information
 is already contained at the top of the file in the comments.
 
+Cc: Tony Lindgren <tony@atomide.com>
 Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Daniel Ribeiro <drwyrm@gmail.com>
-Cc: Harald Welte <laforge@openezx.org>
+Cc: Graeme Gregory <gg@slimlogic.co.uk>
+Cc: linux-omap@vger.kernel.org
 Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
 ---
- drivers/mfd/ezx-pcap.c | 42 +++---------------------------------------
- 1 file changed, 3 insertions(+), 39 deletions(-)
+ drivers/mfd/palmas.c | 36 +-----------------------------------
+ 1 file changed, 1 insertion(+), 35 deletions(-)
 
-diff --git a/drivers/mfd/ezx-pcap.c b/drivers/mfd/ezx-pcap.c
-index 70fa18b04ad2..954a27985b2f 100644
---- a/drivers/mfd/ezx-pcap.c
-+++ b/drivers/mfd/ezx-pcap.c
-@@ -6,7 +6,7 @@
-  * Copyright (C) 2009 Daniel Ribeiro <drwyrm@gmail.com>
+diff --git a/drivers/mfd/palmas.c b/drivers/mfd/palmas.c
+index f5b3fa973b13..0e96c5cd02c6 100644
+--- a/drivers/mfd/palmas.c
++++ b/drivers/mfd/palmas.c
+@@ -7,8 +7,6 @@
+  * Author: Graeme Gregory <gg@slimlogic.co.uk>
   */
  
 -#include <linux/module.h>
-+#include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/platform_device.h>
- #include <linux/interrupt.h>
-@@ -392,30 +392,6 @@ static int pcap_add_subdev(struct pcap_chip *pcap,
+-#include <linux/moduleparam.h>
+ #include <linux/init.h>
+ #include <linux/slab.h>
+ #include <linux/i2c.h>
+@@ -500,7 +498,6 @@ static const struct of_device_id of_palmas_match_tbl[] = {
+ 	},
+ 	{ },
+ };
+-MODULE_DEVICE_TABLE(of, of_palmas_match_tbl);
+ 
+ static int palmas_i2c_probe(struct i2c_client *i2c,
+ 			    const struct i2c_device_id *id)
+@@ -700,26 +697,6 @@ static int palmas_i2c_probe(struct i2c_client *i2c,
  	return ret;
  }
  
--static int ezx_pcap_remove(struct spi_device *spi)
+-static int palmas_i2c_remove(struct i2c_client *i2c)
 -{
--	struct pcap_chip *pcap = spi_get_drvdata(spi);
--	unsigned long flags;
+-	struct palmas *palmas = i2c_get_clientdata(i2c);
 -	int i;
 -
--	/* remove all registered subdevs */
--	device_for_each_child(&spi->dev, NULL, pcap_remove_subdev);
+-	regmap_del_irq_chip(palmas->irq, palmas->irq_data);
 -
--	/* cleanup ADC */
--	spin_lock_irqsave(&pcap->adc_lock, flags);
--	for (i = 0; i < PCAP_ADC_MAXQ; i++)
--		kfree(pcap->adc_queue[i]);
--	spin_unlock_irqrestore(&pcap->adc_lock, flags);
+-	for (i = 1; i < PALMAS_NUM_CLIENTS; i++) {
+-		if (palmas->i2c_clients[i])
+-			i2c_unregister_device(palmas->i2c_clients[i]);
+-	}
 -
--	/* cleanup irqchip */
--	for (i = pcap->irq_base; i < (pcap->irq_base + PCAP_NIRQS); i++)
--		irq_set_chip_and_handler(i, NULL, NULL);
--
--	destroy_workqueue(pcap->workqueue);
+-	if (palmas == palmas_dev) {
+-		pm_power_off = NULL;
+-		palmas_dev = NULL;
+-	}
 -
 -	return 0;
 -}
 -
- static int ezx_pcap_probe(struct spi_device *spi)
- {
- 	struct pcap_platform_data *pdata = dev_get_platdata(&spi->dev);
-@@ -513,9 +489,9 @@ static int ezx_pcap_probe(struct spi_device *spi)
+ static const struct i2c_device_id palmas_i2c_id[] = {
+ 	{ "palmas", },
+ 	{ "twl6035", },
+@@ -727,15 +704,14 @@ static const struct i2c_device_id palmas_i2c_id[] = {
+ 	{ "tps65913", },
+ 	{ /* end */ }
+ };
+-MODULE_DEVICE_TABLE(i2c, palmas_i2c_id);
  
- static struct spi_driver ezxpcap_driver = {
- 	.probe	= ezx_pcap_probe,
--	.remove = ezx_pcap_remove,
+ static struct i2c_driver palmas_i2c_driver = {
  	.driver = {
--		.name	= "ezx-pcap",
-+		.name			= "ezx-pcap",
-+		.suppress_bind_attrs	= true,
+ 		   .name = "palmas",
+ 		   .of_match_table = of_palmas_match_tbl,
++		   .suppress_bind_attrs = true,
  	},
+ 	.probe = palmas_i2c_probe,
+-	.remove = palmas_i2c_remove,
+ 	.id_table = palmas_i2c_id,
  };
  
-@@ -523,16 +499,4 @@ static int __init ezx_pcap_init(void)
- {
- 	return spi_register_driver(&ezxpcap_driver);
+@@ -745,13 +721,3 @@ static int __init palmas_i2c_init(void)
  }
+ /* init early so consumer devices can complete system boot */
+ subsys_initcall(palmas_i2c_init);
 -
--static void __exit ezx_pcap_exit(void)
+-static void __exit palmas_i2c_exit(void)
 -{
--	spi_unregister_driver(&ezxpcap_driver);
+-	i2c_del_driver(&palmas_i2c_driver);
 -}
+-module_exit(palmas_i2c_exit);
 -
- subsys_initcall(ezx_pcap_init);
--module_exit(ezx_pcap_exit);
--
+-MODULE_AUTHOR("Graeme Gregory <gg@slimlogic.co.uk>");
+-MODULE_DESCRIPTION("Palmas chip family multi-function driver");
 -MODULE_LICENSE("GPL");
--MODULE_AUTHOR("Daniel Ribeiro / Harald Welte");
--MODULE_DESCRIPTION("Motorola PCAP2 ASIC Driver");
--MODULE_ALIAS("spi:ezx-pcap");
 -- 
 2.7.4
 
