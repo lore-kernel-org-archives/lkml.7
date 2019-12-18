@@ -2,101 +2,103 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C18C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6ED9C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46D812146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:40:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8655E20717
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:40:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727578AbfLRQkA (ORCPT
+        id S1727592AbfLRQkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 11:40:00 -0500
-Received: from mga07.intel.com ([134.134.136.100]:30982 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727124AbfLRQkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 11:40:00 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 08:39:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
-   d="scan'208";a="205898318"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga007.jf.intel.com with ESMTP; 18 Dec 2019 08:39:59 -0800
-Date:   Wed, 18 Dec 2019 08:39:59 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     James Hogan <jhogan@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>
-Subject: Re: [PATCH v4 19/19] KVM: selftests: Add test for
- KVM_SET_USER_MEMORY_REGION
-Message-ID: <20191218163958.GC25201@linux.intel.com>
-References: <20191217204041.10815-1-sean.j.christopherson@intel.com>
- <20191217204041.10815-20-sean.j.christopherson@intel.com>
- <f962fafb-3956-746f-d077-3dbcefaae7c8@de.ibm.com>
+        Wed, 18 Dec 2019 11:40:10 -0500
+Received: from mout.kundenserver.de ([212.227.17.24]:40215 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727124AbfLRQkJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 11:40:09 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MRTIx-1iMu9G3WSb-00NRZ9; Wed, 18 Dec 2019 17:39:55 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     "Darrick J . Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org
+Cc:     y2038@lists.linaro.org, Arnd Bergmann <arnd@arndb.de>,
+        Brian Foster <bfoster@redhat.com>,
+        Eric Sandeen <sandeen@sandeen.net>,
+        Allison Collins <allison.henderson@oracle.com>,
+        Nick Bowler <nbowler@draconx.ca>, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] xfs: rename compat_time_t to old_time32_t
+Date:   Wed, 18 Dec 2019 17:39:28 +0100
+Message-Id: <20191218163954.296726-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f962fafb-3956-746f-d077-3dbcefaae7c8@de.ibm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:E9mF7OYDn9JyQwrHLT+pY4Y1q8BDrhiycRQ3Ygb25o5lMFAbgML
+ r8VIN8pCIoF2EG1eS0sqGdFs16ROCCbwJCM4eSC/EYLBG0P6ZOPrM+WDns2LZkHEOt6dKVZ
+ KigR86K6jd1IXB9Is8ld5PoRU9RZXPkHIF0Ikm07i5N+v7aolUwAq5o8tcWHEe2Aa88Ttmy
+ llvpZ3Q1tHfVjtUL7sAfw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:7cATP4CSdSk=:f9D6xz2FFGd7zqBrEqzNNr
+ 25DzUk6VbJWMouHADDk631BIoq1VL5PSh7hi6MN7wfep+gWhhjEucBFmXuR2bO/5OCMvY4mta
+ vqgKF5AmsMkxvawUCqaQx9jqlJYt+V0c40DieoYHeHf9vAficZdjykAMQi1lEz7IsTNnfqKFC
+ /TMI42qGT8keVFBCOH12cYI6rMio/a0LVhxBntLzfQbCqgPdqzc2+v0ZyE/PZ7kHc204eXCmH
+ bVIMh9B04C8NF1hVACl+DoJt9N2f0tWqd7CqzDkzS+BMWZVzCzr09i4m55OonYvDPGoegMKBm
+ ZS7rWzAqtE1AITyw5o6qk/cphSQaBc/7tQzq7UnsXkgCCo9kZsno4XJdeh5+hnkIlX2Ob4wJX
+ RajGiL1S3Kv35a3gUDWFM8zdebH4mahgIsiZGUIkOKeiBHfbiL1G9VyGq0QSTbRnSHM5x+SQi
+ mHVSlXEaCQ39FQVNDnBpUJRRlssjqUHB9ShEY3V8+j19mYM0hnRGqAShlC+fo3QJXfDe4CGlM
+ TfhaUyhamZXOXWxHWrFajja0AaRBC3L0vLcbJE4hS5kn1BGLng2eLIdq3gLwR457YQKuZh04O
+ D7x6Wbf7HocsfpQu2rOdNz9uV3KHehT/U7FnUHY7FcNNXKARfZgRf8GOHj/zc6teMnBwp1k9o
+ Ngk6ivNWG315zPJL7eah7wniA6dIDSAQXeXMgf6p5/QOWfpB5l+vV6k/lp8gpQ6mLSXyIKiAS
+ B0NPEgoYzzGoK1y+rI4p/pShuZcq0fMxeraEw/VyuYarTKmEP3YlNUnzzkYY2A37KPWbwOTBW
+ v4KERGsd9uBcow2SO2fhq7ww64iL5AdyKwz7i1X0lQhBkxO8+1QRZjn7l5nQyxZFmQpH3fTxd
+ fVGYeDs4N4d/GOxBRhYQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 12:39:43PM +0100, Christian Borntraeger wrote:
-> 
-> On 17.12.19 21:40, Sean Christopherson wrote:
-> > Add a KVM selftest to test moving the base gfn of a userspace memory
-> > region.  The test is primarily targeted at x86 to verify its memslot
-> > metadata is correctly updated, but also provides basic functionality
-> > coverage on other architectures.
-> > +static void *vcpu_worker(void *data)
-> > +{
-> > +	struct kvm_vm *vm = data;
-> > +	struct kvm_run *run;
-> > +	struct ucall uc;
-> > +	uint64_t cmd;
-> > +
-> > +	/*
-> > +	 * Loop until the guest is done.  Re-enter the guest on all MMIO exits,
-> > +	 * which will occur if the guest attempts to access a memslot while it
-> > +	 * is being moved.
-> > +	 */
-> > +	run = vcpu_state(vm, VCPU_ID);
-> > +	do {
-> > +		vcpu_run(vm, VCPU_ID);
-> > +	} while (run->exit_reason == KVM_EXIT_MMIO);
-> > +
-> > +	TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
-> > +		    "Unexpected exit reason = %d", run->exit_reason);
-> 
-> 
-> This will also not work for s390. Maybe just make this test x86 specific for now?
+The compat_time_t type has been removed everywhere else,
+as most users rely on old_time32_t for both native and
+compat mode handling of 32-bit time_t.
 
-Doh, that's obvious in hindsight.  I think the basic premise is also
-broken on arm64 as it returns -EFAULT on is_error_noslot_pfn(pfn).  So
-yeah, x86 only for now :-(
+Remove the last one in xfs.
+
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ fs/xfs/xfs_ioctl32.c | 2 +-
+ fs/xfs/xfs_ioctl32.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fs/xfs/xfs_ioctl32.c b/fs/xfs/xfs_ioctl32.c
+index c4c4f09113d3..a49bd80b2c3b 100644
+--- a/fs/xfs/xfs_ioctl32.c
++++ b/fs/xfs/xfs_ioctl32.c
+@@ -107,7 +107,7 @@ xfs_ioctl32_bstime_copyin(
+ 	xfs_bstime_t		*bstime,
+ 	compat_xfs_bstime_t	__user *bstime32)
+ {
+-	compat_time_t		sec32;	/* tv_sec differs on 64 vs. 32 */
++	old_time32_t		sec32;	/* tv_sec differs on 64 vs. 32 */
+ 
+ 	if (get_user(sec32,		&bstime32->tv_sec)	||
+ 	    get_user(bstime->tv_nsec,	&bstime32->tv_nsec))
+diff --git a/fs/xfs/xfs_ioctl32.h b/fs/xfs/xfs_ioctl32.h
+index 8c7743cd490e..053de7d894cd 100644
+--- a/fs/xfs/xfs_ioctl32.h
++++ b/fs/xfs/xfs_ioctl32.h
+@@ -32,7 +32,7 @@
+ #endif
+ 
+ typedef struct compat_xfs_bstime {
+-	compat_time_t	tv_sec;		/* seconds		*/
++	old_time32_t	tv_sec;		/* seconds		*/
+ 	__s32		tv_nsec;	/* and nanoseconds	*/
+ } compat_xfs_bstime_t;
+ 
+-- 
+2.20.0
+
