@@ -6,266 +6,208 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64471C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79CA8C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36E4F21D7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D3D921D7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:05:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576706442;
-	bh=BHrAQFIGbbIvTg9mW+NwpWTBkboWudvsPo35DCHjyKU=;
+	s=default; t=1576706741;
+	bh=ldIzJgBmbf09kDl0vrUqWSLyL7mzcltk5SFmZPKF54E=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ncUoSs8FbaIX9E4AQF4pDqdHUs1CHE25/HbpOXgvJDoSJnw6AbGoOEE0L2zBnZKu1
-	 iRaN1Cfv4xG2W0MU2tQ7rZFLmajUxe0PNB20UiwxkdRCLucRwZeSM8yftm9QSMgWk3
-	 Db6xcFK21N3eVSsnrWboYD4AdaoycU8JIb+cFJoM=
+	b=H2CK4W3MjPaUjhRBtdJumSPHxBl0dN9YwV/5HGdr1JBUlM5leLLg64lbKSQ45T28p
+	 xQxa2oAj3rHv78caCn0Jr7Lc/PBJIxrPB+h2yDY7Lzsl5De1I0lMiKIDNC3jcu5BCT
+	 Hi2hvQQ0llz0qE4OVRgQtjX1lyWZcM3u0rkWqh3c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbfLRWAl (ORCPT
+        id S1726620AbfLRWFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 17:00:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44214 "EHLO mail.kernel.org"
+        Wed, 18 Dec 2019 17:05:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726598AbfLRWAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 17:00:40 -0500
+        id S1726387AbfLRWFk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 17:05:40 -0500
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C43E2146E;
-        Wed, 18 Dec 2019 22:00:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5566C2146E;
+        Wed, 18 Dec 2019 22:05:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576706439;
-        bh=BHrAQFIGbbIvTg9mW+NwpWTBkboWudvsPo35DCHjyKU=;
+        s=default; t=1576706738;
+        bh=ldIzJgBmbf09kDl0vrUqWSLyL7mzcltk5SFmZPKF54E=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aUiiz0YBKuuTNqGtZUBFxpAtyAvA7wMfZV6DH+GQ/h96SUDYnp49gpjr195CweqU8
-         jR/OTEUynai/TzIMVUvyBnqfuvp4CYlm2PzeJtATAsKDvbY8YeAkhkMIJxjWsgpe+z
-         YWT6uZAFFiGY72eQYemkOy+F2LVxbpBfyKJMQbGE=
-Date:   Wed, 18 Dec 2019 23:00:37 +0100
+        b=eOnk/XK8zgnLRfjYtOHmhQ/VwAVQIkke9ZdYJLxpJxkKL79BUX6niRpkwxPbPm0sp
+         18Zc9XZckw3Xd3IRAuxzrleh//uw6VnVMWod/iNv75MYZU9CbqjjMLZGsHINh/ZuF7
+         Zc+uVEpSp15eckLnUnrn0VV5AtNqFWCS5vGaMQOo=
+Date:   Wed, 18 Dec 2019 23:05:36 +0100
 From:   Maxime Ripard <mripard@kernel.org>
-To:     Vasily Khoruzhick <anarsoul@gmail.com>
-Cc:     Yangtao Li <tiny.windzz@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 2/7] dt-bindings: thermal: add YAML schema for
- sun8i-thermal driver bindings
-Message-ID: <20191218220037.4g6pzdvrhroaj4qu@gilmour.lan>
-References: <20191218042121.1471954-1-anarsoul@gmail.com>
- <20191218042121.1471954-3-anarsoul@gmail.com>
+        michael@amarulasolutions.com, Icenowy Zheng <icenowy@aosc.io>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-amarula@amarulasolutions.com
+Subject: Re: [PATCH v13 4/7] drm/sun4i: dsi: Handle bus clock via
+ regmap_mmio_attach_clk
+Message-ID: <20191218220536.vwww45yctm5ye3vg@gilmour.lan>
+References: <20191218191017.2895-1-jagan@amarulasolutions.com>
+ <20191218191017.2895-5-jagan@amarulasolutions.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="nfb3broi25z4qfbb"
+        protocol="application/pgp-signature"; boundary="ofkqbekjy7qwdomr"
 Content-Disposition: inline
-In-Reply-To: <20191218042121.1471954-3-anarsoul@gmail.com>
+In-Reply-To: <20191218191017.2895-5-jagan@amarulasolutions.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---nfb3broi25z4qfbb
+--ofkqbekjy7qwdomr
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-Hi,
-
-On Tue, Dec 17, 2019 at 08:21:16PM -0800, Vasily Khoruzhick wrote:
-> From: Yangtao Li <tiny.windzz@gmail.com>
+On Thu, Dec 19, 2019 at 12:40:14AM +0530, Jagan Teki wrote:
+> regmap has special API to enable the controller bus clock while
+> initializing register space, and current driver is using
+> devm_regmap_init_mmio_clk which require to specify bus
+> clk_id argument as "bus"
 >
-> sun8i-thermal driver supports thermal sensor in wide range of Allwinner
-> SoCs. Add YAML schema for its bindings.
+> But, the usage of clocks are varies between different Allwinner
+> DSI controllers. Clocking in A33 would need bus and mod clocks
+> where as A64 would need only bus clock.
 >
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> Since A64 support only single bus clock, it is optional to
+> specify the clock-names on the controller device tree node.
+> So using NULL on clk_id would get the attached clock.
+>
+> To support clk_id as "bus" and "NULL" during clock enablement
+> between controllers, this patch add generic code to handle
+> the bus clock using regmap_mmio_attach_clk with associated
+> regmap APIs.
+>
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 > ---
->  .../thermal/allwinner,sun8i-a83t-ths.yaml     | 146 ++++++++++++++++++
->  1 file changed, 146 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
+> Changes for v13:
+> - update the changes since has_mod_clk is dropped in previous patch
 >
-> diff --git a/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
-> new file mode 100644
-> index 000000000000..8768c2450633
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
-> @@ -0,0 +1,146 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/thermal/allwinner,sun8i-a83t-ths.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 45 +++++++++++++++++++++-----
+>  1 file changed, 37 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> index 68b88a3dc4c5..de8955fbeb00 100644
+> --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> @@ -1081,6 +1081,7 @@ static const struct component_ops sun6i_dsi_ops = {
+>  static int sun6i_dsi_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> +	const char *bus_clk_name = NULL;
+>  	struct sun6i_dsi *dsi;
+>  	struct resource *res;
+>  	void __iomem *base;
+> @@ -1094,6 +1095,10 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
+>  	dsi->host.ops = &sun6i_dsi_host_ops;
+>  	dsi->host.dev = dev;
+>
+> +	if (of_device_is_compatible(dev->of_node,
+> +				    "allwinner,sun6i-a31-mipi-dsi"))
+> +		bus_clk_name = "bus";
 > +
-> +title: Allwinner SUN8I Thermal Controller Device Tree Bindings
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	base = devm_ioremap_resource(dev, res);
+>  	if (IS_ERR(base)) {
+> @@ -1107,25 +1112,36 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
+>  		return PTR_ERR(dsi->regulator);
+>  	}
+>
+> -	dsi->regs = devm_regmap_init_mmio_clk(dev, "bus", base,
+> -					      &sun6i_dsi_regmap_config);
+> -	if (IS_ERR(dsi->regs)) {
+> -		dev_err(dev, "Couldn't create the DSI encoder regmap\n");
+> -		return PTR_ERR(dsi->regs);
+> -	}
+> -
+>  	dsi->reset = devm_reset_control_get_shared(dev, NULL);
+>  	if (IS_ERR(dsi->reset)) {
+>  		dev_err(dev, "Couldn't get our reset line\n");
+>  		return PTR_ERR(dsi->reset);
+>  	}
+>
+> +	dsi->regs = devm_regmap_init_mmio(dev, base, &sun6i_dsi_regmap_config);
+> +	if (IS_ERR(dsi->regs)) {
+> +		dev_err(dev, "Couldn't init regmap\n");
+> +		return PTR_ERR(dsi->regs);
+> +	}
 > +
-> +maintainers:
-> +  - Yangtao Li <tiny.windzz@gmail.com>
+> +	dsi->bus_clk = devm_clk_get(dev, bus_clk_name);
+> +	if (IS_ERR(dsi->bus_clk)) {
+> +		dev_err(dev, "Couldn't get the DSI bus clock\n");
+> +		ret = PTR_ERR(dsi->bus_clk);
+> +		goto err_regmap;
+> +	} else {
+> +		ret = regmap_mmio_attach_clk(dsi->regs, dsi->bus_clk);
+> +		if (ret)
+> +			goto err_bus_clk;
+> +	}
 > +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - allwinner,sun8i-a83t-ths
-> +      - allwinner,sun8i-h3-ths
-> +      - allwinner,sun8i-r40-ths
-> +      - allwinner,sun50i-a64-ths
-> +      - allwinner,sun50i-h5-ths
-> +      - allwinner,sun50i-h6-ths
+>  	if (of_device_is_compatible(dev->of_node,
+>  				    "allwinner,sun6i-a31-mipi-dsi")) {
+>  		dsi->mod_clk = devm_clk_get(dev, "mod");
+>  		if (IS_ERR(dsi->mod_clk)) {
+>  			dev_err(dev, "Couldn't get the DSI mod clock\n");
+> -			return PTR_ERR(dsi->mod_clk);
+> +			ret = PTR_ERR(dsi->mod_clk);
+> +			goto err_attach_clk;
+>  		}
+>  	}
+>
+> @@ -1164,6 +1180,14 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
+>  	pm_runtime_disable(dev);
+>  err_unprotect_clk:
+>  	clk_rate_exclusive_put(dsi->mod_clk);
+> +err_attach_clk:
+> +	if (!IS_ERR(dsi->bus_clk))
+> +		regmap_mmio_detach_clk(dsi->regs);
+> +err_bus_clk:
+> +	if (!IS_ERR(dsi->bus_clk))
+> +		clk_put(dsi->bus_clk);
+
+You still have an unbalanced clk_get / clk_put here
+
+> +err_regmap:
+> +	regmap_exit(dsi->regs);
+
+That's not needed.
+
+>  	return ret;
+>  }
+>
+> @@ -1177,6 +1201,11 @@ static int sun6i_dsi_remove(struct platform_device *pdev)
+>  	pm_runtime_disable(dev);
+>  	clk_rate_exclusive_put(dsi->mod_clk);
+>
+> +	if (!IS_ERR(dsi->bus_clk))
+> +		regmap_mmio_detach_clk(dsi->regs);
 > +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  nvmem-cells:
-> +    maxItems: 1
-> +    description: Calibration data for thermal sensors
-> +
-> +  nvmem-cell-names:
-> +    const: calibration
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: allwinner,sun50i-h6-ths
-> +
-> +    then:
-> +      properties:
-> +        clocks:
-> +          minItems: 1
-> +          maxItems: 1
+> +	regmap_exit(dsi->regs);
 
-When minItems and maxItems are equal, you can only set one, the other
-will be filled automatically.
+Same thing here.
 
-> +
-> +        clock-names:
-> +          minItems: 1
-> +          maxItems: 1
-> +          items:
-> +            - const: bus
-
-And this can even be just
-
-clock-names:
-  const: bus
-
-> +
-> +    else:
-> +      properties:
-> +        clocks:
-> +          minItems: 1
-> +          maxItems: 2
-> +
-> +        clock-names:
-> +          minItems: 1
-> +          maxItems: 2
-> +          items:
-> +            - const: bus
-> +            - const: mod
-
-I'm not sure why you need the minItems set to 1 here though?
-
-it's always 2 for the !H6 case, right?
-
-if so, then we should even do something like:
-
-properties:
-  ...
-
-  # This is needed because we will need to check both the H6 and !H6
-  # case, and it must validate. So we make sure we match against the
-  # union of both cases.
-  clocks:
-    minItems: 1
-    maxItems: 2
-    items:
-      - description: Bus Clock
-      - description: Module Clock
-
-  # Same story here
-  clock-names:
-    minItems: 1
-    maxItems: 2
-    items:
-      - const: bus
-      - const: mod
-
-allOf:
-  - if:
-    properties:
-      compatible:
-        contains:
-	  const: allwinner,sun50i-h6-ths
-
-    # Here we validate in the H6 case we only have one clock
-    then:
-      properties:
-        clocks:
-	  maxItems: 1
-
-        clock-names:
-	  maxItems: 1
-
-    # and here that in the other case we have two clocks, the names
-    # being validated by the schema above
-    else:
-      properties:
-        clocks:
-	  maxItems: 2
-
-        clock-names:
-	  maxItems: 2
-
-# And now we can set this since all our properties will have been
-# expressed in the upper level schema
-additionalProperties: false
-
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: allwinner,sun8i-h3-ths
-> +
-> +    then:
-> +      properties:
-> +        "#thermal-sensor-cells":
-> +          const: 0
-> +
-> +    else:
-> +      properties:
-> +        "#thermal-sensor-cells":
-> +          const: 1
-
-Same thing here, you should have an enum accepting both values in the
-upper schema, the condition here only making further checks. Also, in
-the case where #thermal-sensor-cells is one, then you need to document
-what that argument is.
-
-Thanks!
 Maxime
 
---nfb3broi25z4qfbb
+--ofkqbekjy7qwdomr
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfqhhQAKCRDj7w1vZxhR
-xWvSAQCi6mjrJCTS8SWPU7PcgNEc6pA17UBJm2Xk4XKoLO7m6wD9EPOHRneAtdBr
-BtJRS/RwZk8fGlXI46Xa48uRjngLqw4=
-=F0Nc
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfqisAAKCRDj7w1vZxhR
+xSXxAQCpUpNnByJdW1d0yIMljpB+8oLISPdwuzQZMmFL+tHsgAD/UXHCqx+a6257
+dO+MJ8jT2PYpOkhHNmnh8i7BPwe2tAE=
+=454c
 -----END PGP SIGNATURE-----
 
---nfb3broi25z4qfbb--
+--ofkqbekjy7qwdomr--
