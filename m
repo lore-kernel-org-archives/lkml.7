@@ -2,178 +2,236 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AFF1C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0A9C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2222C21582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:46:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8747E2082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:47:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="lmgUTdU5"
+	dkim=pass (2048-bit key) header.d=generalsoftwareinc-com.20150623.gappssmtp.com header.i=@generalsoftwareinc-com.20150623.gappssmtp.com header.b="jMN5+QfJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727569AbfLRTqJ (ORCPT
+        id S1727529AbfLRTri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 14:46:09 -0500
-Received: from mail-dm6nam11on2076.outbound.protection.outlook.com ([40.107.223.76]:1696
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726698AbfLRTqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 14:46:06 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fbJtVF1C4OXtdMwfaVl2uqE9aMCW/XR7YS4gW3aRdEFqYr7qMGLnB9HLzeAeicpCHSCKf4SWJtjSdFuWoXzQ9bMXpbLWRlvQY4C92rvbFYp6zY57r4csmjvGFOQWGSjoE81Typr2qoI9jEUhz9o4YaZPVGuaILyDhrE8p8aIf9N38MwHBpIsUlzlRwkDd5xDr0dS1Y0DhfQBbVCt89J4MavFbUUwcNbElCHvp9ud8FwdMhQG3rsltWRYZbFtlsysKeAN8blQMYCd4pJXygx/qSMid+jTmeyW7pCHu8IOgqTbCAlU2Ro29ZLvZdgDyFFW8yyZIedmzeceS5bvmJROkQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kYWCpeUyyOK1booI6/Nbb8ENUnfh4Mf4FAOsEZa8rEc=;
- b=GHn4x7KjE2Z+/KYBGTy5U2txdXTGm/kfVw1h3DmwJ6AJHQYZaFsUygaS4SinJZMcIfbidTRsYmaJGcp89wvmYDp83xSWkqwamN7OgfJBYKk6zZsIZxWZxqrGoIwRk+NmPSUxoxsNaxF3iZqK+YojEIRPYR8GOpMXJH5MCb03nZKYq9t9a+gCugOjlLc9YXLEoURziv8Y5VZatUeIreRlwrthUpjvpBCAtYO2/Qows70Nd8tftAeyhOMySoJodx4hDqiXe260CQDA/vdg3sHoFeOqMfUTbIBaY9EURh1lQMzNZlucZ3G651oVSErEQF+cgJyL5J6+3miPUJ56gO5LxQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Wed, 18 Dec 2019 14:47:38 -0500
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:34526 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727031AbfLRTri (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 14:47:38 -0500
+Received: by mail-ua1-f65.google.com with SMTP id 1so1100844uao.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 11:47:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kYWCpeUyyOK1booI6/Nbb8ENUnfh4Mf4FAOsEZa8rEc=;
- b=lmgUTdU5uiIKtzG53Rt0381dPt/V8EZbD42jerKYQajhJRVNbkOi+pYYxJGFz1XiYx+m14r92aj8etxK2MKfG9NY0a3MbRfzi/5lqIOj4qA4zw8b0247xYi7CA/DUtCQcHd6YRbJbyfG9d9LR8R7iyFwBWAGYxIDkgabiy9g2gY=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Thomas.Lendacky@amd.com; 
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.71.154) by
- DM6PR12MB2876.namprd12.prod.outlook.com (20.179.71.85) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.14; Wed, 18 Dec 2019 19:46:02 +0000
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::a0cd:463:f444:c270]) by DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::a0cd:463:f444:c270%7]) with mapi id 15.20.2538.019; Wed, 18 Dec 2019
- 19:46:02 +0000
-From:   Tom Lendacky <thomas.lendacky@amd.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Brijesh Singh <brijesh.singh@amd.com>
-Subject: [PATCH v1 2/2] KVM: SVM: Implement reserved bit callback to set MMIO SPTE mask
-Date:   Wed, 18 Dec 2019 13:45:47 -0600
-Message-Id: <519cd0f0f2ff7fa0e097967546506c07e2e56dda.1576698347.git.thomas.lendacky@amd.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1576698347.git.thomas.lendacky@amd.com>
-References: <cover.1576698347.git.thomas.lendacky@amd.com>
-Content-Type: text/plain
-X-ClientProxiedBy: DM6PR21CA0007.namprd21.prod.outlook.com
- (2603:10b6:5:174::17) To DM6PR12MB3163.namprd12.prod.outlook.com
- (2603:10b6:5:15e::26)
+        d=generalsoftwareinc-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1xpdtNHXlWaPkYmK/vLojLeBKA/LKyDWWwoVGPQ3/EE=;
+        b=jMN5+QfJA2AF+eAz/SwDkZ6MSSY0s5Uym9VhV0H8pZ06xIMymQIvv7nk9+thDX/KpZ
+         Bne3A6R1BH3oVZEvQ6Vg/PU2Qbxrbi46Bzvu+hgZFtCFE00gAWFrygw8eTgsT5iEhs54
+         FI3/yrf1Zwl9On+XYXugNchMH117ypSlXan35TmwEsM6TOhEUhkuK/HvJgUB5Aezr12U
+         dnXSTpwPl49aDYQOupB3zocpuP3tElipJV5eyLOYAMlVITFe7sAlZVDSvtY1rsszQVwy
+         NwZ9sGkI2CsGVQBIKpDNiivPjn99BkKr1u8x3BHdacg097x9m0O5ea+Kf0ZV0Cy5oUJx
+         yxYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1xpdtNHXlWaPkYmK/vLojLeBKA/LKyDWWwoVGPQ3/EE=;
+        b=i523a1/ZzDyRfO9QAidMFBkbeoOvWnZwe92taawFVxVb3CcssykItUgfqeU2KR6Hl+
+         fjtFVDEJ7Cf1b7cFP6dMC6p+9rvrZ4WpFYoiSiVnMKeglnIf5wlwxjSqAwYg7vltADuM
+         Mk+6p5ErW5CNTd6fCT/RYqn2i/bSKqkQmXawCnfxxcXsNHp9nG91+8qTlJSKxrONYejO
+         xlIqomJmPN5v7m30ICDacM/Bro4QYyhapJn4Uq8rHLK+WkgCLkR4/quxaqAJNCqj66rb
+         qzNoeRXIB2ZRwbq3VNGK/E+lkxg3nObFszZjWVzvFPQe+xX38cqea/iVhpk8WsPVKPUe
+         nTvw==
+X-Gm-Message-State: APjAAAXvZku6Vn6ekNfW0CJzEqpCFeUaMWtBfuYqol0Gfw4SJuA9LxuA
+        0+S862Am3glRclL48YO3vuFHcg==
+X-Google-Smtp-Source: APXvYqw1r0qjZ3K5moY1NH9aOjeyCLJbM40mDJmw59uVlavetZaMEPkdAtaQAk5bO9a8y3z81Xe8cg==
+X-Received: by 2002:ab0:69c7:: with SMTP id u7mr2587946uaq.111.1576698456781;
+        Wed, 18 Dec 2019 11:47:36 -0800 (PST)
+Received: from frank-laptop ([172.97.41.74])
+        by smtp.gmail.com with ESMTPSA id t36sm819219uat.10.2019.12.18.11.47.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 11:47:36 -0800 (PST)
+Date:   Wed, 18 Dec 2019 14:47:35 -0500
+From:   "Frank A. Cancio Bello" <frank@generalsoftwareinc.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        joel@joelfernandes.org, nachukannan@gmail.com,
+        saiprakash.ranjan@outlook.com
+Subject: Re: [PATCH] docs: ftrace: Specifies when buffers get clear
+Message-ID: <20191218194735.nfgkps35r25emy33@frank-laptop>
+References: <20191216042756.qnho3v2upqg4wm7o@frank-laptop>
+ <20191216095251.4bee634e@gandalf.local.home>
 MIME-Version: 1.0
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 620533ef-a3a2-4acb-e519-08d783f2e996
-X-MS-TrafficTypeDiagnostic: DM6PR12MB2876:|DM6PR12MB2876:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB2876B8483234A5B7A97DC90CEC530@DM6PR12MB2876.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
-X-Forefront-PRVS: 0255DF69B9
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(376002)(346002)(39860400002)(366004)(189003)(199004)(478600001)(5660300002)(81156014)(66946007)(81166006)(6486002)(6512007)(186003)(52116002)(54906003)(36756003)(86362001)(6666004)(4326008)(8676002)(66476007)(8936002)(66556008)(2616005)(6506007)(2906002)(26005)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2876;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: acAWswFqSm27kKf7rWEvmMYlm31I1PwhOm1Ud6WCdyLS4gEnSyEavQ8dJSCvHfuyR1z6bd41WUSkh9rbIdVlFFU5Ht+2eafnwCOS6Su3zPKtZmjofQbh/nZylTWfhOMxKhAFj9FmPgKJmlzyiKgYf6Yt+AL+QjcYKzUqV/UW8iOXSxxwT7V6dXJmxRObPeHcBzKhhCvV3l3VsL0QISF8VDVk8VK/YO+lgcIKMK21MskeZvAzZ7fg72MG73bpecnU5b2iYRqKEkkSm1vlltIf5S2XSFMmcEa72Sss9986/y6neQMpKN2tmVB+NLOhaozugKVsf7p/h6X+5BOKFTrPCi9Ai70EAqrvl26C4pCLcWjxsu+6yZXsJCH78dWqXZccgXajkJp5xft/RanPpskZ8uV8Uv1SD8pRVdmIPDFHN9NndQ6Nq9SC8ZVOBI9BOSa8
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 620533ef-a3a2-4acb-e519-08d783f2e996
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Dec 2019 19:46:02.2707
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +jN0Y2hrl2R8JdffeKJJSLC5gkwR+c0E3l7OObjpS/eDJR321rGdt+mIRyxdPEHYkFFEHNiMZP3IpYqVDN4/sA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2876
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191216095251.4bee634e@gandalf.local.home>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Register a reserved bit(s) mask callback that will check if memory
-encryption is supported/enabled:
-  If enabled, then the physical address width is reduced and the first
-  bit after the last valid reduced physical address bit will always be
-  reserved.
+On Mon, Dec 16, 2019 at 09:52:51AM -0500, Steven Rostedt wrote:
+> On Sun, 15 Dec 2019 23:27:56 -0500
+> "Frank A. Cancio Bello" <frank@generalsoftwareinc.com> wrote:
+> 
+> > Clarify in a few places where the ring buffer and the "snapshot"
+> > buffer are cleared as a side effect of an operation.
+> > 
+> > This will avoid users lost of tracing data because of these so far
+> > undocumented behavior.
+> > 
+> > Signed-off-by: Frank A. Cancio Bello <frank@generalsoftwareinc.com>
+> > ---
+> >  Documentation/trace/ftrace.rst | 10 ++++++++--
+> >  1 file changed, 8 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+> > index d2b5657ed33e..5cc65314e16d 100644
+> > --- a/Documentation/trace/ftrace.rst
+> > +++ b/Documentation/trace/ftrace.rst
+> > @@ -95,7 +95,8 @@ of ftrace. Here is a list of some of the key files:
+> >    current_tracer:
+> >  
+> >  	This is used to set or display the current tracer
+> > -	that is configured.
+> > +	that is configured. Changing the current tracer clears
+> > +        the ring buffer content as well as the "snapshot" buffer.
+> >  
+> >    available_tracers:
+> >  
+> > @@ -126,7 +127,9 @@ of ftrace. Here is a list of some of the key files:
+> >  	This file holds the output of the trace in a human
+> >  	readable format (described below). Note, tracing is temporarily
+> >  	disabled when the file is open for reading. Once all readers
+> > -	are closed, tracing is re-enabled.
+> > +	are closed, tracing is re-enabled. Opening this file for
+> > +        writing with the O_TRUNC flag clears the ring buffer content
+> > +        as well as the "snapshot" buffer.
+> 
+> Writing O_TRUNC into trace does not touch the snapshot buffer. I just
+> tested to make sure (because that's not the behavior I remember making):
+>
 
-  If disabled, then the physical address width is not reduced, so bit 51
-  can be used, unless the physical address width is 52. In this case,
-  return zero for the mask.
+You are right. I should test it before email you. Sorry about that.
+I miss read tracing_reset_all_online_cpus() when in reality it was
+tracing_reset_online_cpus(), this kind of things happens to me when I
+read kernel source code more than 12 hours per day to try to catchup ;)
 
-Fixes: 28a1f3ac1d0c ("kvm: x86: Set highest physical address bits in non-present/reserved SPTEs")
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
----
- arch/x86/kvm/svm.c | 42 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+vim-linux-coding-style does not include .rst files, so this patch has
+the spacing wrong too, I fixed it in the v2 that I sent you too.
 
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 122d4ce3b1ab..a769aab45841 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -7242,6 +7242,46 @@ static bool svm_apic_init_signal_blocked(struct kvm_vcpu *vcpu)
- 		   (svm->vmcb->control.intercept & (1ULL << INTERCEPT_INIT));
- }
- 
-+static u64 svm_get_reserved_mask(void)
-+{
-+	u64 mask, msr;
-+
-+	/* The default mask, used when memory encryption is not enabled */
-+	mask = 1ull << 51;
-+
-+	/* No support for memory encryption, use the default */
-+	if (cpuid_eax(0x80000000) < 0x8000001f)
-+		return mask;
-+
-+	/*
-+	 * Check for memory encryption support. If memory encryption support
-+	 * is enabled:
-+	 *   The physical addressing width is reduced. The first bit above the
-+	 *   new physical addressing limit will always be reserved.
-+	 */
-+	rdmsrl(MSR_K8_SYSCFG, msr);
-+	if (msr & MSR_K8_SYSCFG_MEM_ENCRYPT) {
-+		/*
-+		 * x86_phys_bits has been adjusted as part of the memory
-+		 * encryption support.
-+		 */
-+		mask = 1ull << boot_cpu_data.x86_phys_bits;
-+
-+		return mask;
-+	}
-+
-+	/*
-+	 * If memory encryption support is disabled:
-+	 *   The physical addressing width is not reduced, so the default mask
-+	 *   will always be reserved unless the physical addressing width is 52,
-+	 *   in which case there are no reserved bits, so return an empty mask.
-+	 */
-+	if (IS_ENABLED(CONFIG_X86_64) && boot_cpu_data.x86_phys_bits == 52)
-+		mask = 0;
-+
-+	return mask;
-+}
-+
- static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
- 	.cpu_has_kvm_support = has_svm,
- 	.disabled_by_bios = is_disabled,
-@@ -7379,6 +7419,8 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
- 	.need_emulation_on_page_fault = svm_need_emulation_on_page_fault,
- 
- 	.apic_init_signal_blocked = svm_apic_init_signal_blocked,
-+
-+	.get_reserved_mask = svm_get_reserved_mask,
- };
- 
- static int __init svm_init(void)
--- 
-2.17.1
+>  # cd /sys/kernel/tracing
+>  # echo 1 > events/sched/enable
+>  # echo 1 > snapshot
+>  # head -15 snapshot  
+> # tracer: nop
+> #
+> # entries-in-buffer/entries-written: 3563/3563   #P:8
+> #
+> #                              _-----=> irqs-off
+> #                             / _----=> need-resched
+> #                            | / _---=> hardirq/softirq
+> #                            || / _--=> preempt-depth
+> #                            ||| /     delay
+> #           TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
+> #              | |       |   ||||       |         |
+>             bash-20130 [007] d.h. 243924.135391: sched_stat_runtime: comm=bash pid=20130 runtime=584815 [ns] vruntime=116509213 [ns]
+>             bash-20130 [007] d... 243924.135853: sched_waking: comm=kworker/u16:2 pid=20112 prio=120 target_cpu=002
+>             bash-20130 [007] d... 243924.135859: sched_wake_idle_without_ipi: cpu=2
+>             bash-20130 [007] d... 243924.135861: sched_wakeup: comm=kworker/u16:2 pid=20112 prio=120 target_cpu=002
+>  # echo 0 > tracing_on
+>  # head -15 trace
+> # tracer: nop
+> #
+> # entries-in-buffer/entries-written: 1697/1697   #P:8
+> #
+> #                              _-----=> irqs-off
+> #                             / _----=> need-resched
+> #                            | / _---=> hardirq/softirq
+> #                            || / _--=> preempt-depth
+> #                            ||| /     delay
+> #           TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
+> #              | |       |   ||||       |         |
+>             sshd-20125 [005] d... 244126.123095: sched_stat_runtime: comm=sshd pid=20125 runtime=101555 [ns] vruntime=153686839 [ns]
+>             sshd-20125 [005] d... 244126.123100: sched_switch: prev_comm=sshd prev_pid=20125 prev_prio=120 prev_state=S ==> next_comm=swapper/5 next_pid=0 next_prio=120
+>             bash-20130 [007] d... 244126.123173: sched_waking: comm=kworker/u16:3 pid=20190 prio=120 target_cpu=006
+>             bash-20130 [007] d... 244126.123177: sched_wake_idle_without_ipi: cpu=6
+>  # echo > trace
+>  # head -15 trace
+> # tracer: nop
+> #
+> # entries-in-buffer/entries-written: 0/0   #P:8
+> #
+> #                              _-----=> irqs-off
+> #                             / _----=> need-resched
+> #                            | / _---=> hardirq/softirq
+> #                            || / _--=> preempt-depth
+> #                            ||| /     delay
+> #           TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
+> #              | |       |   ||||       |         |
+>  # head -15 snapshot
+>  # tracer: nop
+> #
+> # entries-in-buffer/entries-written: 3563/3563   #P:8
+> #
+> #                              _-----=> irqs-off
+> #                             / _----=> need-resched
+> #                            | / _---=> hardirq/softirq
+> #                            || / _--=> preempt-depth
+> #                            ||| /     delay
+> #           TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
+> #              | |       |   ||||       |         |
+>             bash-20130 [007] d.h. 243924.135391: sched_stat_runtime: comm=bash pid=20130 runtime=584815 [ns] vruntime=116509213 [ns]
+>             bash-20130 [007] d... 243924.135853: sched_waking: comm=kworker/u16:2 pid=20112 prio=120 target_cpu=002
+>             bash-20130 [007] d... 243924.135859: sched_wake_idle_without_ipi: cpu=2
+>             bash-20130 [007] d... 243924.135861: sched_wakeup: comm=kworker/u16:2 pid=20112 prio=120 target_cpu=002
+> 
+> >  
+> >    trace_pipe:
+> >  
+> > @@ -490,6 +493,9 @@ of ftrace. Here is a list of some of the key files:
+> >  
+> >  	  # echo global > trace_clock
+> >  
+> > +        Setting a clock clears the ring buffer content as well as the
+> > +        "snapshot" buffer.
+> > +
+> 
+> Yeah, this is true, because the sorting algorithm relies on the trace
+> clocks matching in the buffers. If this becomes an issue, I'm sure we
+> could change it.
+> 
 
+Besides, if the new clock is not in nanoseconds or "a clock at
+all" (e.g. it is a counter) changing the clock it would produce an
+inaccurate interpretation of the snapshot if we don't store the clock
+that was used to fill the buffer that is in the snapshot. So, I think
+that it is OK to reset the snapshot in this case. I just wanted to
+document this behavior.
+
+Thanks a lot for your quick response and sorry for my delay. I'm still
+playing with email filters to properly accommodate the email flow of the
+lists.
+
+I want to congratulate you for such a nice piece of code you wrote:
+ftrace. Being an Outreachy intern (mentors and co-interns CCed in this
+email) and be able to learn so much from your code is a great
+opportunity!
+
+thanks
+frank a.
+
+
+> -- Steve
+> 
+> >    trace_marker:
+> >  
+> >  	This is a very useful file for synchronizing user space
+> 
