@@ -2,127 +2,112 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DD2C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3932FC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66F6921582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:29:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 076AF21582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:29:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="M0503mgO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbfLRJ3K (ORCPT
+        id S1726802AbfLRJ3S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 04:29:10 -0500
-Received: from mga07.intel.com ([134.134.136.100]:4248 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725799AbfLRJ3K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 04:29:10 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 01:29:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,329,1571727600"; 
-   d="scan'208";a="417169457"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 18 Dec 2019 01:29:08 -0800
-Received: from [10.125.252.219] (abudanko-mobl.ccr.corp.intel.com [10.125.252.219])
-        by linux.intel.com (Postfix) with ESMTP id 325CF5803E4;
-        Wed, 18 Dec 2019 01:28:58 -0800 (PST)
-Subject: [PATCH v4 6/9] powerpc/perf: open access for CAP_SYS_PERFMON
- privileged process
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
-        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "james.bottomley@hansenpartnership.com" 
-        <james.bottomley@hansenpartnership.com>,
-        Serge Hallyn <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Robert Richter <rric@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>,
+        Wed, 18 Dec 2019 04:29:18 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:54430 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbfLRJ3R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 04:29:17 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBI9SFbt030551;
+        Wed, 18 Dec 2019 03:28:15 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576661295;
+        bh=iGk7YRT+kPnqstyHZEl2eYWpUaNqZx8s0Pjx38SCwGo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=M0503mgOmC+63+lhfjTAtturSJzFirhFDnzpQjn4VuFPV9r/pRlTAzS2AQKuysbEV
+         WVUzj8nTNILNsZJmzW7LJf62u6tY3T9krMHZ3Yvak26fJ83EO0ajFVxVX1ua68asny
+         47Zc1haxMdZHMJ7LD5Xf6xJyf90PZ9aXphTaOfSE=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBI9SFxW120738
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 18 Dec 2019 03:28:15 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 18
+ Dec 2019 03:28:15 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 18 Dec 2019 03:28:15 -0600
+Received: from [10.24.69.35] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBI9S8be074543;
+        Wed, 18 Dec 2019 03:28:12 -0600
+Subject: Re: [PATCH 1/3] clocksource: davinci: work around a clocksource
+ problem on dm365 SoC
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org, oprofile-list@lists.sf.net
-References: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <b6b4cfb7-82c5-85f6-0588-43046ace8419@linux.intel.com>
-Date:   Wed, 18 Dec 2019 12:28:58 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        David Lechner <david@lechnology.com>,
+        Kevin Hilman <khilman@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20191213162453.15691-1-brgl@bgdev.pl>
+ <20191213162453.15691-2-brgl@bgdev.pl>
+From:   Sekhar Nori <nsekhar@ti.com>
+Message-ID: <51eb10e9-245e-7b3e-51ff-578e06e0759b@ti.com>
+Date:   Wed, 18 Dec 2019 14:58:07 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191213162453.15691-2-brgl@bgdev.pl>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Bart,
 
-Open access to monitoring for CAP_SYS_PERFMON privileged processes.
-For backward compatibility reasons access to the monitoring remains open
-for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage for secure
-monitoring is discouraged with respect to CAP_SYS_PERFMON capability.
+On 13/12/19 9:54 PM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> The DM365 platform has a strange quirk (only present when using ancient
+> u-boot - mainline u-boot v2013.01 and later works fine) where if we
+> enable the second half of the timer in periodic mode before we do its
+> initialization - the time won't start flowing and we can't boot.
+> 
+> When using more recent u-boot, we can enable the timer, then reinitialize
+> it and all works fine.
+> 
+> I've been unable to figure out why that is, but a workaround for this
+> is straightforward - just cache the enable bits for tim34.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- arch/powerpc/perf/imc-pmu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Timer Global Control Register (TGCR) has bits to reset both halves of
+timer. Does placing both halves in reset, waiting a bit (say 10ms) and
+then taking them out of reset help solve the this problem?
 
-diff --git a/arch/powerpc/perf/imc-pmu.c b/arch/powerpc/perf/imc-pmu.c
-index cb50a9e1fd2d..e837717492e4 100644
---- a/arch/powerpc/perf/imc-pmu.c
-+++ b/arch/powerpc/perf/imc-pmu.c
-@@ -898,7 +898,7 @@ static int thread_imc_event_init(struct perf_event *event)
- 	if (event->attr.type != event->pmu->type)
- 		return -ENOENT;
- 
--	if (!capable(CAP_SYS_ADMIN))
-+	if (!perfmon_capable())
- 		return -EACCES;
- 
- 	/* Sampling not supported */
-@@ -1307,7 +1307,7 @@ static int trace_imc_event_init(struct perf_event *event)
- 	if (event->attr.type != event->pmu->type)
- 		return -ENOENT;
- 
--	if (!capable(CAP_SYS_ADMIN))
-+	if (!perfmon_capable())
- 		return -EACCES;
- 
- 	/* Return if this is a couting event */
--- 
-2.20.1
+Also, there are LPSCs controlling the timers. As an experiment, can you
+see if using LPSC_STATE_SWRSTDISABLE instead of LPSC_STATE_DISABLE in
+davinci_lpsc_clk_disable() and then doing a clk_disable() + clk_enable()
+on timer can get the timer out of this bad state.
 
+We need some way for Linux to start on a clean state after bootloader is
+done. And trying to reset the timer before use seems to be a better way
+to accomplish it.
 
+I assume the original code was just lucky in not hitting this case?
+
+Thanks,
+Sekhar
