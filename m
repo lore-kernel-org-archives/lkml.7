@@ -2,119 +2,304 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A72C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA94EC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09C152176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98460218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:59:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576677481;
-	bh=XU5P7x/5pKgjmGBxIdcXRo/INXEPgGfyRfRFOzDyU3k=;
+	s=default; t=1576677585;
+	bh=FST65Wnobie68zsvBhM5BcxFg6GloxfeGmipkvEMpz8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zZXDFYHlvgU7puQqp2bZS/Gc1Nt+eg/uRh8le1ADxzz8a7zPEd4BmfsxuUnjJ1aOC
-	 88nux9AEZ8A2VuUhoCiY4+Dwjsqeeql7lhpRaXCU8sBqJIAMbTgvFUVrH9ZFKpMuoQ
-	 PdYVes3hgjdWGXERpL+cfGYHJ23+RE6sXj0OHXMs=
+	b=z4+H0/HbQKqdpyDylXns2XcZGElPssEEBukhI9cG+7U6EG0zd8fMqGgA88nXLyqyK
+	 paoKlKoZxRZcTCaXa6+ithKdrU0ZYn/zmOVB134MrGHIOCcRzW8AIrWIte34+vVhGe
+	 00B/6npkrAw/NK39EVk6aWbYizkGe3sQWaI9+TBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbfLRN57 (ORCPT
+        id S1727007AbfLRN7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 08:57:59 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39011 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726856AbfLRN57 (ORCPT
+        Wed, 18 Dec 2019 08:59:44 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37120 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726856AbfLRN7n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 08:57:59 -0500
-Received: by mail-wm1-f66.google.com with SMTP id 20so1883484wmj.4
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 05:57:58 -0800 (PST)
+        Wed, 18 Dec 2019 08:59:43 -0500
+Received: by mail-wm1-f68.google.com with SMTP id f129so2013048wmf.2;
+        Wed, 18 Dec 2019 05:59:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pCsuWU4HWowCBBiSnSWMn5G6gwMjvZ2EZc/rIekVAJM=;
-        b=hrSoTXs+zBqmdGjqZRPkRGiKMLYftNQG8aKgaHR+rtvkjU3jy22P9e6croup5zJ3zS
-         FZrpgYYYmVmIHMpq5CpUsbNGz3Xjiqm3cbPLyzmOcDerS6FcYNv8UNYs4hIHd/hNVnh6
-         8NPschMM19LAsHoi9Sbr9uIq8Ej+7F7ARWQnQEUWcnkGReaT7Q798HcTtV39f5G4fpaw
-         6QmRke/mySd4+Uvr7YguRLBCp1sC8lZ2Ey2n4FUleez9VmRj3WpoAgJqPpc/SC1/MEe8
-         1xhBFKwBQxsXr2UQni26kxHvtDfcEYyFH95jr04ulWdQjIfUB9oIdlGS/pQ2bX/s7olp
-         0RZw==
-X-Gm-Message-State: APjAAAXcQptL0iDP8gbB5aUm849vo6nZ2MaZ0rKJ0c2HVnv5v0+Y65m5
-        0ber1OXCtN11RPXRzTuFR3mqtZn3
-X-Google-Smtp-Source: APXvYqw3ofxfP1JoJp+brrKHwVfq8aEOnoOXYziPzSeicR3YmkDvybmUbu5EXKRypu0PMwfcYr0j8Q==
-X-Received: by 2002:a7b:c934:: with SMTP id h20mr3398387wml.103.1576677477413;
-        Wed, 18 Dec 2019 05:57:57 -0800 (PST)
+        bh=DLdS4T/X93QrqPp17QzXFA1P0tQfzgLBklE4Y5cAWXQ=;
+        b=RCyg4OBhLd2wKtKQ+byUR9xRO9pOexQfql6a+oG5Ke9ImCXloOJlz4yVD4OFRJUUYS
+         6DcIk1VAzqbWL7Aitbw2du+lbKxqT5huojxElkjhtlzElEb08R/he1KNUvMUJHcrChv/
+         f3dQo5VRei+Zw4RVO9CwWaUoaxALbjfecvlrpJm4zjUmveMfqDvWiiCUsD0Qd5mvs7Jm
+         Xk+RRbCCZsmenjVeKsJwMD8Z18whyfiqlwiCiTujZDFQnG3p5dw5QeW3t+DT7HI4sxFB
+         iHrLzvSqhdnCTqqZ5U/yT46lWUeRg7el3v7HUYqvhkqqX2M7xXpmGB35lHPGjE5FHZWZ
+         2e4w==
+X-Gm-Message-State: APjAAAVGD5oBE1d+qqQa1XZHQiM2w9TDmLMdNdIq/hJcxVrRjKkTJpcD
+        8neLygI+7fw3BPmUYrOR/Z5dj7Wk
+X-Google-Smtp-Source: APXvYqzWtnVWqFme+SHm/fioBemDQinGKelcwDu/JyE2ntyAefx1Y47wmAQhkfExQfufETN7d0Aaow==
+X-Received: by 2002:a1c:e909:: with SMTP id q9mr3640945wmc.30.1576677580744;
+        Wed, 18 Dec 2019 05:59:40 -0800 (PST)
 Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id z3sm2572944wrs.94.2019.12.18.05.57.55
+        by smtp.gmail.com with ESMTPSA id q8sm2503626wmq.3.2019.12.18.05.59.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 05:57:56 -0800 (PST)
-Date:   Wed, 18 Dec 2019 14:57:55 +0100
+        Wed, 18 Dec 2019 05:59:40 -0800 (PST)
+Date:   Wed, 18 Dec 2019 14:59:39 +0100
 From:   Michal Hocko <mhocko@kernel.org>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Tejun Heo <tj@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: Re: [RFC] workqueue: dexpose worker
-Message-ID: <20191218135755.GC28111@dhcp22.suse.cz>
-References: <20191218035945.16180-1-hdanton@sina.com>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
+        linux-ia64@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH] ia64: add support for folded p4d page tables
+Message-ID: <20191218135939.GD28111@dhcp22.suse.cz>
+References: <20191218093820.17967-1-rppt@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191218035945.16180-1-hdanton@sina.com>
+In-Reply-To: <20191218093820.17967-1-rppt@kernel.org>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-You probably wanted to Cc maintainers.
-
-On Wed 18-12-19 11:59:45, Hillf Danton wrote:
+On Wed 18-12-19 11:38:20, Mike Rapoport wrote:
+> From: Mike Rapoport <rppt@linux.ibm.com>
 > 
-> It does not make much sense to expose worker, workqueue's internal
-> object, to outsiders, and whatever field inside worker as well.
-> Nor does worker pool rather than workqueue and work.
+> Implement primitives necessary for the 4th level folding, add walks of p4d
+> level where appropriate, remove usage of __ARCH_USE_5LEVEL_HACK and replace
+> 5level-fixup.h with pgtable-nop4d.h
 
-But I have to say that this doesn't really make much sense to me.
-What is the problem you are trying to solve?
+Why do we need that? I thought that IA64 is essentially a dead
+architecture. Is this fixing something?
 
-current_is_executing is a really ambiguous name without any relation to
-WQ. Also this seems like a pointless code churn to me. Anyway for
-maintainers to judge.
-
-> 
-> Signed-off-by: Hillf Danton <hdanton@sina.com>
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 > ---
+>  arch/ia64/include/asm/pgalloc.h |  4 ++--
+>  arch/ia64/include/asm/pgtable.h | 17 ++++++++---------
+>  arch/ia64/mm/fault.c            |  7 ++++++-
+>  arch/ia64/mm/hugetlbpage.c      | 18 ++++++++++++------
+>  arch/ia64/mm/init.c             | 28 ++++++++++++++++++++++++----
+>  5 files changed, 52 insertions(+), 22 deletions(-)
 > 
-> --- a/kernel/workqueue_internal.h
-> +++ b/kernel/workqueue_internal.h
-> @@ -69,6 +69,13 @@ static inline struct worker *current_wq_
->  	return NULL;
+> diff --git a/arch/ia64/include/asm/pgalloc.h b/arch/ia64/include/asm/pgalloc.h
+> index f4c491044882..2a3050345099 100644
+> --- a/arch/ia64/include/asm/pgalloc.h
+> +++ b/arch/ia64/include/asm/pgalloc.h
+> @@ -36,9 +36,9 @@ static inline void pgd_free(struct mm_struct *mm, pgd_t *pgd)
+>  
+>  #if CONFIG_PGTABLE_LEVELS == 4
+>  static inline void
+> -pgd_populate(struct mm_struct *mm, pgd_t * pgd_entry, pud_t * pud)
+> +p4d_populate(struct mm_struct *mm, p4d_t * p4d_entry, pud_t * pud)
+>  {
+> -	pgd_val(*pgd_entry) = __pa(pud);
+> +	p4d_val(*p4d_entry) = __pa(pud);
 >  }
 >  
-> +static inline bool current_is_executing(work_func_t func)
-> +{
-> +	struct worker *worker = current_wq_worker();
-> +
-> +	return worker && worker->current_func == func;
-> +}
-> +
+>  static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long addr)
+> diff --git a/arch/ia64/include/asm/pgtable.h b/arch/ia64/include/asm/pgtable.h
+> index d602e7c622db..c87f789bc914 100644
+> --- a/arch/ia64/include/asm/pgtable.h
+> +++ b/arch/ia64/include/asm/pgtable.h
+> @@ -283,12 +283,12 @@ extern unsigned long VMALLOC_END;
+>  #define pud_page(pud)			virt_to_page((pud_val(pud) + PAGE_OFFSET))
+>  
+>  #if CONFIG_PGTABLE_LEVELS == 4
+> -#define pgd_none(pgd)			(!pgd_val(pgd))
+> -#define pgd_bad(pgd)			(!ia64_phys_addr_valid(pgd_val(pgd)))
+> -#define pgd_present(pgd)		(pgd_val(pgd) != 0UL)
+> -#define pgd_clear(pgdp)			(pgd_val(*(pgdp)) = 0UL)
+> -#define pgd_page_vaddr(pgd)		((unsigned long) __va(pgd_val(pgd) & _PFN_MASK))
+> -#define pgd_page(pgd)			virt_to_page((pgd_val(pgd) + PAGE_OFFSET))
+> +#define p4d_none(p4d)			(!p4d_val(p4d))
+> +#define p4d_bad(p4d)			(!ia64_phys_addr_valid(p4d_val(p4d)))
+> +#define p4d_present(p4d)		(p4d_val(p4d) != 0UL)
+> +#define p4d_clear(p4dp)			(p4d_val(*(p4dp)) = 0UL)
+> +#define p4d_page_vaddr(p4d)		((unsigned long) __va(p4d_val(p4d) & _PFN_MASK))
+> +#define p4d_page(p4d)			virt_to_page((p4d_val(p4d) + PAGE_OFFSET))
+>  #endif
+>  
 >  /*
->   * Scheduler hooks for concurrency managed workqueue.  Only to be used from
->   * sched/ and workqueue.c.
-> --- a/kernel/async.c
-> +++ b/kernel/async.c
-> @@ -327,8 +327,6 @@ EXPORT_SYMBOL_GPL(async_synchronize_cook
->   */
->  bool current_is_async(void)
+> @@ -388,7 +388,7 @@ pgd_offset (const struct mm_struct *mm, unsigned long address)
+>  #if CONFIG_PGTABLE_LEVELS == 4
+>  /* Find an entry in the second-level page table.. */
+>  #define pud_offset(dir,addr) \
+> -	((pud_t *) pgd_page_vaddr(*(dir)) + (((addr) >> PUD_SHIFT) & (PTRS_PER_PUD - 1)))
+> +	((pud_t *) p4d_page_vaddr(*(dir)) + (((addr) >> PUD_SHIFT) & (PTRS_PER_PUD - 1)))
+>  #endif
+>  
+>  /* Find an entry in the third-level page table.. */
+> @@ -582,10 +582,9 @@ extern struct page *zero_page_memmap_ptr;
+>  
+>  
+>  #if CONFIG_PGTABLE_LEVELS == 3
+> -#define __ARCH_USE_5LEVEL_HACK
+>  #include <asm-generic/pgtable-nopud.h>
+>  #endif
+> -#include <asm-generic/5level-fixup.h>
+> +#include <asm-generic/pgtable-nop4d.h>
+>  #include <asm-generic/pgtable.h>
+>  
+>  #endif /* _ASM_IA64_PGTABLE_H */
+> diff --git a/arch/ia64/mm/fault.c b/arch/ia64/mm/fault.c
+> index c2f299fe9e04..ec994135cb74 100644
+> --- a/arch/ia64/mm/fault.c
+> +++ b/arch/ia64/mm/fault.c
+> @@ -29,6 +29,7 @@ static int
+>  mapped_kernel_page_is_present (unsigned long address)
 >  {
-> -	struct worker *worker = current_wq_worker();
-> -
-> -	return worker && worker->current_func == async_run_entry_fn;
-> +	return current_is_executing(async_run_entry_fn);
->  }
->  EXPORT_SYMBOL_GPL(current_is_async);
+>  	pgd_t *pgd;
+> +	p4d_t *p4d;
+>  	pud_t *pud;
+>  	pmd_t *pmd;
+>  	pte_t *ptep, pte;
+> @@ -37,7 +38,11 @@ mapped_kernel_page_is_present (unsigned long address)
+>  	if (pgd_none(*pgd) || pgd_bad(*pgd))
+>  		return 0;
+>  
+> -	pud = pud_offset(pgd, address);
+> +	p4d = p4d_offset(pgd, address);
+> +	if (p4d_none(*p4d) || p4d_bad(*p4d))
+> +		return 0;
+> +
+> +	pud = pud_offset(p4d, address);
+>  	if (pud_none(*pud) || pud_bad(*pud))
+>  		return 0;
+>  
+> diff --git a/arch/ia64/mm/hugetlbpage.c b/arch/ia64/mm/hugetlbpage.c
+> index d16e419fd712..32352a73df0c 100644
+> --- a/arch/ia64/mm/hugetlbpage.c
+> +++ b/arch/ia64/mm/hugetlbpage.c
+> @@ -30,12 +30,14 @@ huge_pte_alloc(struct mm_struct *mm, unsigned long addr, unsigned long sz)
+>  {
+>  	unsigned long taddr = htlbpage_to_page(addr);
+>  	pgd_t *pgd;
+> +	p4d_t *p4d;
+>  	pud_t *pud;
+>  	pmd_t *pmd;
+>  	pte_t *pte = NULL;
+>  
+>  	pgd = pgd_offset(mm, taddr);
+> -	pud = pud_alloc(mm, pgd, taddr);
+> +	p4d = p4d_offset(pgd, taddr);
+> +	pud = pud_alloc(mm, p4d, taddr);
+>  	if (pud) {
+>  		pmd = pmd_alloc(mm, pud, taddr);
+>  		if (pmd)
+> @@ -49,17 +51,21 @@ huge_pte_offset (struct mm_struct *mm, unsigned long addr, unsigned long sz)
+>  {
+>  	unsigned long taddr = htlbpage_to_page(addr);
+>  	pgd_t *pgd;
+> +	p4d_t *p4d;
+>  	pud_t *pud;
+>  	pmd_t *pmd;
+>  	pte_t *pte = NULL;
+>  
+>  	pgd = pgd_offset(mm, taddr);
+>  	if (pgd_present(*pgd)) {
+> -		pud = pud_offset(pgd, taddr);
+> -		if (pud_present(*pud)) {
+> -			pmd = pmd_offset(pud, taddr);
+> -			if (pmd_present(*pmd))
+> -				pte = pte_offset_map(pmd, taddr);
+> +		p4d = p4d_offset(pgd, addr);
+> +		if (p4d_present(*p4d)) {
+> +			pud = pud_offset(p4d, taddr);
+> +			if (pud_present(*pud)) {
+> +				pmd = pmd_offset(pud, taddr);
+> +				if (pmd_present(*pmd))
+> +					pte = pte_offset_map(pmd, taddr);
+> +			}
+>  		}
+>  	}
+>  
+> diff --git a/arch/ia64/mm/init.c b/arch/ia64/mm/init.c
+> index 58fd67068bac..bcdc78e97e6e 100644
+> --- a/arch/ia64/mm/init.c
+> +++ b/arch/ia64/mm/init.c
+> @@ -208,6 +208,7 @@ static struct page * __init
+>  put_kernel_page (struct page *page, unsigned long address, pgprot_t pgprot)
+>  {
+>  	pgd_t *pgd;
+> +	p4d_t *p4d;
+>  	pud_t *pud;
+>  	pmd_t *pmd;
+>  	pte_t *pte;
+> @@ -215,7 +216,10 @@ put_kernel_page (struct page *page, unsigned long address, pgprot_t pgprot)
+>  	pgd = pgd_offset_k(address);		/* note: this is NOT pgd_offset()! */
+>  
+>  	{
+> -		pud = pud_alloc(&init_mm, pgd, address);
+> +		p4d = p4d_alloc(&init_mm, pgd, address);
+> +		if (!p4d)
+> +			goto out;
+> +		pud = pud_alloc(&init_mm, p4d, address);
+>  		if (!pud)
+>  			goto out;
+>  		pmd = pmd_alloc(&init_mm, pud, address);
+> @@ -382,6 +386,7 @@ int vmemmap_find_next_valid_pfn(int node, int i)
+>  
+>  	do {
+>  		pgd_t *pgd;
+> +		p4d_t *p4d;
+>  		pud_t *pud;
+>  		pmd_t *pmd;
+>  		pte_t *pte;
+> @@ -392,7 +397,13 @@ int vmemmap_find_next_valid_pfn(int node, int i)
+>  			continue;
+>  		}
+>  
+> -		pud = pud_offset(pgd, end_address);
+> +		p4d = p4d_offset(pgd, end_address);
+> +		if (p4d_none(*p4d)) {
+> +			end_address += P4D_SIZE;
+> +			continue;
+> +		}
+> +
+> +		pud = pud_offset(p4d, end_address);
+>  		if (pud_none(*pud)) {
+>  			end_address += PUD_SIZE;
+>  			continue;
+> @@ -430,6 +441,7 @@ int __init create_mem_map_page_table(u64 start, u64 end, void *arg)
+>  	struct page *map_start, *map_end;
+>  	int node;
+>  	pgd_t *pgd;
+> +	p4d_t *p4d;
+>  	pud_t *pud;
+>  	pmd_t *pmd;
+>  	pte_t *pte;
+> @@ -444,12 +456,20 @@ int __init create_mem_map_page_table(u64 start, u64 end, void *arg)
+>  	for (address = start_page; address < end_page; address += PAGE_SIZE) {
+>  		pgd = pgd_offset_k(address);
+>  		if (pgd_none(*pgd)) {
+> +			p4d = memblock_alloc_node(PAGE_SIZE, PAGE_SIZE, node);
+> +			if (!p4d)
+> +				goto err_alloc;
+> +			pgd_populate(&init_mm, pgd, p4d);
+> +		}
+> +		p4d = p4d_offset(pgd, address);
+> +
+> +		if (p4d_none(*p4d)) {
+>  			pud = memblock_alloc_node(PAGE_SIZE, PAGE_SIZE, node);
+>  			if (!pud)
+>  				goto err_alloc;
+> -			pgd_populate(&init_mm, pgd, pud);
+> +			p4d_populate(&init_mm, p4d, pud);
+>  		}
+> -		pud = pud_offset(pgd, address);
+> +		pud = pud_offset(p4d, address);
+>  
+>  		if (pud_none(*pud)) {
+>  			pmd = memblock_alloc_node(PAGE_SIZE, PAGE_SIZE, node);
+> -- 
+> 2.24.0
 > 
 
 -- 
