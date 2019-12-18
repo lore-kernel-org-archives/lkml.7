@@ -2,90 +2,115 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0964C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E94C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE7B5218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:36:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576679776;
-	bh=FpUdA1QKWT2FMoEcuoACKH1w02F3qC9LrxYVeOcepE0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ylIPCAwPhKdsUxfLPP80iQTiEymgzuNH6E0zU+3EsfjqJuYUByESgoKSwVKP8geyB
-	 IO9WOy/eHJYXIav49uvwsZNdZg8GI9mXgLdtHHYG3GZ2mFr6MalmyP71HHDRaZrGB8
-	 EmYRR/m0l12OYhgnHZbBdbhMk5drKZRtoP41JaNc=
+	by mail.kernel.org (Postfix) with ESMTP id 8925721582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:37:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727274AbfLROgP (ORCPT
+        id S1727165AbfLROha convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 09:36:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41970 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727108AbfLROgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 09:36:15 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE05021582;
-        Wed, 18 Dec 2019 14:36:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576679774;
-        bh=FpUdA1QKWT2FMoEcuoACKH1w02F3qC9LrxYVeOcepE0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Z5JFSoDvpzTAXEgxhZ7iNHCLZuS4ul/I/bJ9fRGugJEaqGuSVh++cYgwa1TfAVnbv
-         vH3NhLDpEGPmGVktvsZcR0DZsrZIb8gKL4o2X/eFyY9ICzUcbTBUhiliW/X6jogrLa
-         puk47+4oaztkf/u+YpulP7S+2dY2IMw+V4FiFy1Y=
-Date:   Wed, 18 Dec 2019 15:36:12 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Mario.Limonciello@dell.com" <Mario.Limonciello@dell.com>,
-        Anthony Wong <anthony.wong@canonical.com>,
-        Oliver Neukum <oneukum@suse.com>,
-        Christian Kellner <ckellner@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/9] thunderbolt: Add initial support for USB4
-Message-ID: <20191218143612.GB262880@kroah.com>
-References: <20191217123345.31850-1-mika.westerberg@linux.intel.com>
- <20191217123345.31850-5-mika.westerberg@linux.intel.com>
- <PSXP216MB043843D1E5E4A65780272FB480530@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        Wed, 18 Dec 2019 09:37:30 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2205 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726921AbfLROha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 09:37:30 -0500
+Received: from lhreml709-cah.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 6751A2B9EB2AF1B35A2E;
+        Wed, 18 Dec 2019 14:37:28 +0000 (GMT)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ lhreml709-cah.china.huawei.com (10.201.108.32) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 18 Dec 2019 14:37:27 +0000
+Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Wed, 18 Dec
+ 2019 14:37:27 +0000
+Date:   Wed, 18 Dec 2019 14:37:25 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Brice Goglin <brice.goglin@gmail.com>
+CC:     <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>,
+        Keith Busch <keith.busch@intel.com>, <jglisse@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>, <linuxarm@huawei.com>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tao Xu <tao3.xu@intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH V6 7/7] docs: mm: numaperf.rst Add brief description for
+ access class 1.
+Message-ID: <20191218143725.00002f6f@Huawei.com>
+In-Reply-To: <4cf4e790-cacb-b250-bf28-5ba540eb0dc7@gmail.com>
+References: <20191216153809.105463-1-Jonathan.Cameron@huawei.com>
+        <20191216153809.105463-8-Jonathan.Cameron@huawei.com>
+        <4cf4e790-cacb-b250-bf28-5ba540eb0dc7@gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PSXP216MB043843D1E5E4A65780272FB480530@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.202.226.57]
+X-ClientProxiedBy: lhreml706-chm.china.huawei.com (10.201.108.55) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 09:34:45AM +0000, Nicholas Johnson wrote:
-> On Tue, Dec 17, 2019 at 03:33:40PM +0300, Mika Westerberg wrote:
-> > USB4 is the public specification based on Thunderbolt 3 protocol. There
-> > are some differences in register layouts and flows. In addition to PCIe
-> > and DP tunneling, USB4 supports tunneling of USB 3.x. USB4 is also
-> > backward compatible with Thunderbolt 3 (and older generations but the
-> > spec only talks about 3rd generation). USB4 compliant devices can be
-> > identified by checking USB4 version field in router configuration space.
-> > 
-> > This patch adds initial support for USB4 compliant hosts and devices
-> > which enables following features provided by the existing functionality
-> > in the driver:
-> > 
-> >   - PCIe tunneling
-> >   - Display Port tunneling
-> Nitpick: DisplayPort is a single word.
+On Wed, 18 Dec 2019 12:34:34 +0100
+Brice Goglin <brice.goglin@gmail.com> wrote:
 
-Please learn to trim replies, it was a pain to read this message :(
+> Le 16/12/2019 à 16:38, Jonathan Cameron a écrit :
+> > Try to make minimal changes to the document which already describes
+> > access class 0 in a generic fashion (including IO initiatiors that
+> > are not CPUs).
+> >
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > ---
+> >  Documentation/admin-guide/mm/numaperf.rst | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> >
+> > diff --git a/Documentation/admin-guide/mm/numaperf.rst b/Documentation/admin-guide/mm/numaperf.rst
+> > index a80c3c37226e..327c0d72692d 100644
+> > --- a/Documentation/admin-guide/mm/numaperf.rst
+> > +++ b/Documentation/admin-guide/mm/numaperf.rst
+> > @@ -56,6 +56,11 @@ nodes' access characteristics share the same performance relative to other
+> >  linked initiator nodes. Each target within an initiator's access class,
+> >  though, do not necessarily perform the same as each other.
+> >  
+> > +The access class "1" is used to allow differentiation between initiators
+> > +that are CPUs and hence suitable for generic task scheduling, and
+> > +IO initiators such as GPUs and CPUs.  Unlike access class 0, only
+> > +nodes containing CPUs are considered.
+> > +
+> >  ================
+> >  NUMA Performance
+> >  ================
+> > @@ -88,6 +93,9 @@ The latency attributes are provided in nanoseconds.
+> >  The values reported here correspond to the rated latency and bandwidth
+> >  for the platform.
+> >  
+> > +Access class 0, takes the same form, but only includes values for CPU to
+> > +memory activity.  
+> 
+> 
+> Shouldn't this be "class 1" here?
+> 
+Good point.
+
+Jonathan
+
+> Both hunks look contradictory to me.
+> 
+> Brice
+> 
+> 
+
 
