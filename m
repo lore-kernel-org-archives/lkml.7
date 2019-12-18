@@ -2,138 +2,96 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD811C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A70DCC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FFE8218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:26:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A33A218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:26:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L0cuGq4Q"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="0MiYbdrQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727138AbfLRO0Y (ORCPT
+        id S1727192AbfLRO02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 09:26:24 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:33147 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726856AbfLRO0X (ORCPT
+        Wed, 18 Dec 2019 09:26:28 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:16668 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726856AbfLRO01 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 09:26:23 -0500
-Received: by mail-il1-f193.google.com with SMTP id v15so1867585iln.0;
-        Wed, 18 Dec 2019 06:26:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4wlPxPww6z6FnBuvqZdCSnOZoPUkGvAxji1Q0RJ5rgw=;
-        b=L0cuGq4QdVQcuoKxwq/ZrEBaI8Thl/hcoH7fDKC3QcY0Juvw2tJN2qHL5oKs0QHHcL
-         2li37AzFZsgrZEUfXRii2ybgHnL8Ulq4t0RYml6blxSFluTt3R9W5HIQXmrj2IA2iNGR
-         k9yMdQSCyoGkwwPRnNTAEpgfUAOBYZqQITBpE8LBGhRXKCawZVA8n/psJzgryfZw0FET
-         VwWV0ZCutOK2r10WBfLanx87B9iCzzgzYxegj2+a1ocFZO3VKbYw6B5HMXXJiO55g0E+
-         W3mLZgm1h3bllOmAkL+UQ+A+gedihUVqRLXmDLAlh94gZQbdnkGT8IgHhyBC6TotqY6P
-         TG5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4wlPxPww6z6FnBuvqZdCSnOZoPUkGvAxji1Q0RJ5rgw=;
-        b=GcrgC6cQhI6GtPlv624PhgvlRFwXW7LcXc1qSQq1XWEOgEFfyRheNk2Bj6xypaVyi6
-         7qFC0nXblE1J2m/0U9i09wvkXsTQzjmMA2Q/69Rgxj5hahNB7VqeTZ8TykbFtaFRlmmF
-         Fscc54wVexaqHtgW8WBdNoc+b1oWDHLivnmCgeNl1/WLCmUncET3LSgSjcvvQfbh5Nui
-         RpCK071vQnL3o5becwT2PKpPVADZAuCsWxPpleiwg+U2nCk+YpO63n9Gv8syEwOVqTEW
-         3Q4jNC3AlDQZb+v8wi7DCVJfps6QPBB/zxfWQ79PU75ejcqPNFr30KA7NALhpvjYUZmc
-         iXgw==
-X-Gm-Message-State: APjAAAU5DxMA3x8ZAFCm93UgddfMfLCI+v87rmV576/prJbWmhen/Ips
-        VfhJHgN0QI4OCkzJhK1HjN6hf3cVoP6ENfEbQk4=
-X-Google-Smtp-Source: APXvYqx2Zh9m2SuSjEBkL7Y//MOgmcWkxInemOTWZeFNxJHgDtxwj7VI23wyzRqlUIJwndOxhAYoWLlg+PDjCfNjA1c=
-X-Received: by 2002:a92:910b:: with SMTP id t11mr2101801ild.195.1576679182953;
- Wed, 18 Dec 2019 06:26:22 -0800 (PST)
+        Wed, 18 Dec 2019 09:26:27 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBIEOMfW015469;
+        Wed, 18 Dec 2019 15:26:15 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=w4HnMszGdzKynqPVMRC5qZxWn0UBjfQfixyAUj2Vbxw=;
+ b=0MiYbdrQcmoCziaitsKGOXGZ4rzbtB85PBP93V11bXTgdMBcrKGUNTKZuK3lA/RgSXys
+ hx4oDI3WkBdJhCjDB08H/V+wXy/ZyWpEoRPEW+D0TNhzJWihKXCl3L9pZllLT3KQgbpo
+ gS2L5dQf+IdZfG60sRRzy99aB/U5OZZrDLMr52JhKPSdfNCfKWADQ+7Rs1ZlziTojgJ+
+ i4Z6xIvnwvAmPMEso2osaD9tFLa/V5ZUkHEUqPmohr3I16h5qV5LRGJmpAHp/l4eljSv
+ cyDAeU+3VO9/LwGyp+jq0na/Y+uXpbWTo1rcQyRrXWRzhjY68M+Ehab3W/H3hhiiWHA1 CQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2wvp374vcg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 Dec 2019 15:26:15 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3982910003B;
+        Wed, 18 Dec 2019 15:26:15 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2691F2BEAF1;
+        Wed, 18 Dec 2019 15:26:15 +0100 (CET)
+Received: from localhost (10.75.127.48) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 18 Dec 2019 15:26:14
+ +0100
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <gregkh@linuxfoundation.org>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <khilman@baylibre.com>
+CC:     <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH] dt-bindings: usb: amlogic,meson-g12a-usb-ctrl: fix clock names
+Date:   Wed, 18 Dec 2019 15:26:13 +0100
+Message-ID: <20191218142613.13683-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-References: <20191217143834.19797-1-huntbag@linux.vnet.ibm.com> <CAJZ5v0jmMwRGDY70EV3sqpw7uJ4R+VomoWtJ9rWzNTVuV3AUxQ@mail.gmail.com>
-In-Reply-To: <CAJZ5v0jmMwRGDY70EV3sqpw7uJ4R+VomoWtJ9rWzNTVuV3AUxQ@mail.gmail.com>
-From:   "Oliver O'Halloran" <oohall@gmail.com>
-Date:   Thu, 19 Dec 2019 01:26:11 +1100
-Message-ID: <CAOSf1CF9F1iViKCCoJXOPmkbj+kLXnJJz5b5B7xLgrLpCZoB3w@mail.gmail.com>
-Subject: Re: [RFC] cpuidle : Add debugfs support for cpuidle core
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Abhishek Goel <huntbag@linux.vnet.ibm.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG8NODE1.st.com (10.75.127.22) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-18_04:2019-12-17,2019-12-18 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 3:51 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Tue, Dec 17, 2019 at 3:42 PM Abhishek Goel
-> <huntbag@linux.vnet.ibm.com> wrote:
-> >
-> > Up until now, we did not have a way to tune cpuidle attribute like
-> > residency in kernel. This patch adds support for debugfs in cpuidle core.
-> > Thereby providing support for tuning cpuidle attributes like residency in
-> > kernel at runtime.
->
-> This is not a good idea in my view, for a couple of reasons.
->
-> First off, if the target residency of an idle state is changed, it
-> effectively becomes a different one and all of the statistics
-> regarding it become outdated at that point.  Synchronizing that would
-> be a pain.
->
-> Next, governors may get confused if idle state parameters are changed
-> on the fly.  In particular, the statistics collected by the teo
-> governor depend on the target residencies of idle states, so if one of
-> them changes, the governor needs to be reloaded.
->
-> Next, idle states are expected to be ordered by the target residency
-> (and by the exit latency), so their parameters cannot be allowed to
-> change freely anyway.
->
-> Finally, the idle state parameters are expected to reflect the
-> properties of the hardware, which wouldn't hold any more if they were
-> allowed to change at any time.
+dwc2 bindings require clock-names to be "otg".
+Fix the example in amlogic,meson-g12a-usb-ctrl to follow this requirement.
 
-Certainly does sound like a headache.
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+ Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > For example: Tuning residency at runtime can be used to quantify governors
-> > decision making as governor uses residency as one of the parameter to
-> > take decision about the state that needs to be entered while idling.
->
-> IMO it would be better to introduce a testing cpuidle driver with an
-> artificial set of idle states (or even such that the set of idle
-> states to be used by it can be defined by the user e.g. via module
-> parameters) for this purpose.
+diff --git a/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml b/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
+index 4efb77b653ab..267fce165994 100644
+--- a/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
++++ b/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
+@@ -107,7 +107,7 @@ examples:
+               reg = <0xff400000 0x40000>;
+               interrupts = <31>;
+               clocks = <&clkc_usb1>;
+-              clock-names = "ddr";
++              clock-names = "otg";
+               phys = <&usb2_phy1>;
+               dr_mode = "peripheral";
+               g-rx-fifo-size = <192>;
+-- 
+2.15.0
 
-The motivation for this patch isn't really a desire to test / tune the
-governor. It's intended to allow working around a performance problem
-caused by using high-latency idle states on some interrupt heavy GPU
-workload. The interrupts occur around ~30ms apart which is long enough
-for the governor to put the CPU into the deeper states and over the
-course of long job the additional wakeup latency adds up. The initial
-fix someone came up with was cooking the residency values so the
-high-latency states had a residency of +50ms to prevent the govenor
-from using them. However, that fix is supposed to go into a bit of
-firmware I maintain and I'm not terribly happy with the idea. I'm
-fairly sure that ~30ms value is workload dependent and personally I
-don't think firmware should be making up numbers to trick specific
-kernel versions into doing specific things.
-
-My impression is the right solution is to have the GPU driver set a PM
-QoS constraint on the CPUs receiving interrupts while a job is
-on-going. However, interrupt latency sensitivity isn't something
-that's unique to GPUs so I'm wondering it it makes sense to have the
-governor factor in interrupt traffic when deciding what state to use.
-Is that something that's been tried before?
-
-Oliver
