@@ -2,106 +2,115 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E6FC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A041EC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:06:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81A232465E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:06:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FB322176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:06:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576699586;
-	bh=3L7/LCfX70ZSfZYg6b0sMUdpnBzhD9sC4HrRn/l6Crk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PI7/ZHkc7Svyjl4rm/8ljIsrPfaQ5OdHxOofoZUDCJDIyjhssPLxYrDF5QZoK32sD
-	 /ISkmL5gJgxY1Pag97HUt6zFrNLHd2cj1ZveaGWUvZAHk9J0uz+R8dZHJh2k/yRaUY
-	 lMx7fDF42pfDo8/Y4qYp9iTwCSPGqTStsG76z2s8=
+	s=default; t=1576699597;
+	bh=OXKaT/XTd+57ftkZUvEGJQpN2GK06XAWK17DxN7c1zU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=FqWM14egEIzc2eyfEahxC2oEOcwONk2WEUeYTjgkiKgwTgqO7aGQ5Hth0dLBmOTzB
+	 F6LzyreO3df0U/bFfVduI0TkFC7a1atD8TEqytMT3tXk5MDMQK8+mHakENmJJx3+DG
+	 YsGQLuoyB4McZlHRGnBlPJF0l1eQqkor3YhyklXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727690AbfLRUGZ (ORCPT
+        id S1727705AbfLRUGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 15:06:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46598 "EHLO mail.kernel.org"
+        Wed, 18 Dec 2019 15:06:36 -0500
+Received: from foss.arm.com ([217.140.110.172]:59524 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727541AbfLRUGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 15:06:25 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0ECE32176D;
-        Wed, 18 Dec 2019 20:06:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576699584;
-        bh=3L7/LCfX70ZSfZYg6b0sMUdpnBzhD9sC4HrRn/l6Crk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ElTrCCrf8flkRWXdFBw/HZ6zcBHW6CscH87FWYXx73+kOHysnrNbwPfPiL7whHLnM
-         +b5r2sp+BLgYV8hnGxvWARgg7Us5H6vZoCTfPt05+UEZxMv2EZu31iY4gZbqR5E74k
-         8gR1zQX7fwl2oj7c1sR8BvWkoaTrcgzQj7veIsK8=
-Date:   Wed, 18 Dec 2019 21:06:21 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     USB list <linux-usb@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Felipe Balbi <balbi@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>
-Subject: Re: [PATCH v3 1/1] usb: gadget: add raw-gadget interface
-Message-ID: <20191218200621.GA913802@kroah.com>
-References: <cover.1576087039.git.andreyknvl@google.com>
- <f45a20db3e5b01002ae8c91b3a8ea58e38b7bb65.1576087039.git.andreyknvl@google.com>
- <20191218132328.GA121143@kroah.com>
- <CAAeHK+zXegV1GmSKD8Y3-hTbKUQceWdfo+GJPxSSzYr0zQTYKw@mail.gmail.com>
- <20191218181921.GA882018@kroah.com>
- <CAAeHK+zqzXBwdBnfPjN+tY4y3dZ2Fb_FR0es5_-ynOZyhrL6uQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAeHK+zqzXBwdBnfPjN+tY4y3dZ2Fb_FR0es5_-ynOZyhrL6uQ@mail.gmail.com>
+        id S1727541AbfLRUGg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 15:06:36 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9665A31B;
+        Wed, 18 Dec 2019 12:06:35 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1112B3F67D;
+        Wed, 18 Dec 2019 12:06:34 -0800 (PST)
+Date:   Wed, 18 Dec 2019 20:06:33 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Chen-Yu Tsai <wens@csie.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>
+Subject: Applied "regulator: axp20x: Fix AXP22x ELDO2 regulator enable bitmask" to the regulator tree
+In-Reply-To: <20191218044720.21990-1-wens@kernel.org>
+Message-Id: <applied-20191218044720.21990-1-wens@kernel.org>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 08:22:47PM +0100, Andrey Konovalov wrote:
-> > > > > +static void gadget_unbind(struct usb_gadget *gadget)
-> > > > > +{
-> > > > > +     struct raw_dev *dev = get_gadget_data(gadget);
-> > > > > +     unsigned long flags;
-> > > > > +
-> > > > > +     spin_lock_irqsave(&dev->lock, flags);
-> > > > > +     set_gadget_data(gadget, NULL);
-> > > > > +     spin_unlock_irqrestore(&dev->lock, flags);
-> > > > > +     /* Matches kref_get() in gadget_bind(). */
-> > > > > +     kref_put(&dev->count, dev_free);
-> > > >
-> > > > What protects the kref from being called 'put' twice on the same
-> > > > pointer at the same time?  There should be some lock somewhere, right?
-> > >
-> > > Hm, kref_put() does refcount_dec_and_test(), which in turns calls
-> > > atomic_dec_and_test(), so this is protected against concurrent puts
-> > > (which is the whole idea of kref?), and no locking is needed. Unless I
-> > > misunderstand something.
-> >
-> > It's late, but there should be some lock somewhere to prevent a race
-> > around this type of thing.  That's why we have kref_put_mutex() and
-> > kref_put_lock().
-> >
-> > Odds are you are fine here, but just something to be aware of...
-> 
-> Ah, I see. So AFAIU kref_put_lock/mutex() are meant to be used in
-> cases when there might be a concurrent user that doesn't have the
-> reference counter incremented, but holds the lock? We don't do this
-> kind of stuff here.
+The patch
 
-Ok, as long as there is a lock somewhere preventing this type of thing
-from happening.  Last time I looked at this, it took me and 2 grad
-students an hour with a whiteboard to work it all out.  Which is why the
-lock variants are there now :)
+   regulator: axp20x: Fix AXP22x ELDO2 regulator enable bitmask
 
-thanks,
+has been applied to the regulator tree at
 
-greg k-h
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.5
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From f40ddaa059fdfb472e3aeb733c6220d8e0633a47 Mon Sep 17 00:00:00 2001
+From: Chen-Yu Tsai <wens@csie.org>
+Date: Wed, 18 Dec 2019 12:47:20 +0800
+Subject: [PATCH] regulator: axp20x: Fix AXP22x ELDO2 regulator enable bitmask
+
+A copy-paste error was introduced when bitmasks were converted to
+macros, incorrectly setting the enable bitmask for ELDO2 to the one
+for ELDO1 for the AXP22x units.
+
+Fix it by using the correct macro.
+
+On affected boards, ELDO1 and/or ELDO2 are used to power the camera,
+which is currently unsupported.
+
+Fixes: db4a555f7c4c ("regulator: axp20x: use defines for masks")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Link: https://lore.kernel.org/r/20191218044720.21990-1-wens@kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/regulator/axp20x-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
+index 989506bd90b1..fe369cba34fb 100644
+--- a/drivers/regulator/axp20x-regulator.c
++++ b/drivers/regulator/axp20x-regulator.c
+@@ -605,7 +605,7 @@ static const struct regulator_desc axp22x_regulators[] = {
+ 		 AXP22X_PWR_OUT_CTRL2, AXP22X_PWR_OUT_ELDO1_MASK),
+ 	AXP_DESC(AXP22X, ELDO2, "eldo2", "eldoin", 700, 3300, 100,
+ 		 AXP22X_ELDO2_V_OUT, AXP22X_ELDO2_V_OUT_MASK,
+-		 AXP22X_PWR_OUT_CTRL2, AXP22X_PWR_OUT_ELDO1_MASK),
++		 AXP22X_PWR_OUT_CTRL2, AXP22X_PWR_OUT_ELDO2_MASK),
+ 	AXP_DESC(AXP22X, ELDO3, "eldo3", "eldoin", 700, 3300, 100,
+ 		 AXP22X_ELDO3_V_OUT, AXP22X_ELDO3_V_OUT_MASK,
+ 		 AXP22X_PWR_OUT_CTRL2, AXP22X_PWR_OUT_ELDO3_MASK),
+-- 
+2.20.1
+
