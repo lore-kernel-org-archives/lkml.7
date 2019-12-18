@@ -2,116 +2,109 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA695C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDFDC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCDF32176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:53:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1B1B24686
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:57:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="PImSGWa9"
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="vbw6a+MH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbfLRKxU (ORCPT
+        id S1726825AbfLRK54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 05:53:20 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:23346 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725828AbfLRKxU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 05:53:20 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBIAgTQb021020;
-        Wed, 18 Dec 2019 11:53:00 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=WltQl+Nrsz8fgtBLEjjq7GsetJKHtSnm0grD1Qcbr9Y=;
- b=PImSGWa9eBzHSdxhKgcdjhReUg9+BmUiNMAmwZuGTRHVfIqMSR5chg+152B+leibrTKg
- v7nFMfenJhyBu1eydlGEY+6TG4lCSvA7RIXy0eMNQYHNXEi31KIe7j3YcoTThxiy9baG
- aeG59XpksS9bmDjAVsN75SH5sAENi2dT5Q6luydI3RsvoSFyNv0hJQXIj17NKWdFS0KS
- 7G+jS4G+xSbQI8f7D844N1As5coVNhIxPXSkd0A2vJYCTnKcRJ4Vx5j8xzEw5QzbPvV8
- SldnwEbaiF403JoErbqRbKkANsJ+iExkjRfLrXmymY7FJtkDq1ID+uh3rePR31sCMOXq Cg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2wvnrekyw1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Dec 2019 11:53:00 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2777D10002A;
-        Wed, 18 Dec 2019 11:52:54 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 087AB2A8BF8;
-        Wed, 18 Dec 2019 11:52:54 +0100 (CET)
-Received: from SFHDAG5NODE1.st.com (10.75.127.13) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 18 Dec
- 2019 11:52:53 +0100
-Received: from SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6]) by
- SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6%20]) with mapi id
- 15.00.1473.003; Wed, 18 Dec 2019 11:52:53 +0100
-From:   Hugues FRUCHET <hugues.fruchet@st.com>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>
-CC:     "vkoul@kernel.org" <vkoul@kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] media: stm32-dcmi: Use dma_request_chan() instead
- dma_request_slave_channel()
-Thread-Topic: [PATCH] media: stm32-dcmi: Use dma_request_chan() instead
- dma_request_slave_channel()
-Thread-Index: AQHVtMaOm1nAskP+t06Lg3ivGfEhOKe/qEeA
-Date:   Wed, 18 Dec 2019 10:52:53 +0000
-Message-ID: <84946ffd-8e90-7b6a-6667-a10e27d31655@st.com>
-References: <20191217104135.23554-1-peter.ujfalusi@ti.com>
-In-Reply-To: <20191217104135.23554-1-peter.ujfalusi@ti.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.48]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <8055C0FD5DE0F440A5AA37D71102D704@st.com>
-Content-Transfer-Encoding: base64
+        Wed, 18 Dec 2019 05:57:56 -0500
+Received: from frisell.zx2c4.com ([192.95.5.64]:40833 "EHLO frisell.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726595AbfLRK5z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 05:57:55 -0500
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 55c136cb;
+        Wed, 18 Dec 2019 10:01:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=55Ej4v0lM3p/I0FACRIUrnfxHIU=; b=vbw6a+
+        MHY4MrDHXtOaa/wts2jO4Jb7oi1uKXpI4vrR6Ae91EPhptQMbj+8ZZ8muRDF9j7D
+        mYV3IXZCk+jAfe3hvXAWgZQTVQQIZ6zGksZgxMvnCRSX3xEI+jEuNquVKEAEhQiu
+        BLFUlgnliYBoMn+WzSZQlKfBoo0HM60WoFHLceIFVTVT/LyFhA7NiN2uOKt4Dts1
+        1l6acGOyDDQUdjI8TglIeUAPuvXgevkzuqNpe9fumQmOdrGajoZGb8F/E54BMRHC
+        BJqr3bgX9wQd4mLFT5cVANQNVzAuMhze+jVyCSz4EtFd70n80WyvHAq4OcyxH9X6
+        rewiFeDTthHEFI2w==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id b0294151 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Wed, 18 Dec 2019 10:01:18 +0000 (UTC)
+Received: by mail-ot1-f53.google.com with SMTP id x3so1998460oto.11;
+        Wed, 18 Dec 2019 02:57:52 -0800 (PST)
+X-Gm-Message-State: APjAAAVrn1qy7wtIpeIqtNwi3i7tsYFCPy8YacM8Vxn6xt9ZEyihjJtv
+        9VhgAz7NpYvpjTU9k6Z00KGeJXJVI27LZL8e1S4=
+X-Google-Smtp-Source: APXvYqxjqV48MW8pEkonJsHCBJB6dAMkCc+h3CShRUdg0tgBsfi81aou/VOZAKMexDuvEJyDMIJCnr2JWKqhoiSCJ4c=
+X-Received: by 2002:a9d:674f:: with SMTP id w15mr2002550otm.243.1576666671241;
+ Wed, 18 Dec 2019 02:57:51 -0800 (PST)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-18_02:2019-12-17,2019-12-18 signatures=0
+References: <20191208232734.225161-1-Jason@zx2c4.com> <CACT4Y+bsJVmgbD-WogwU=LfWiPN1JgjBrwx4s8Y14hDd7vqqhQ@mail.gmail.com>
+In-Reply-To: <CACT4Y+bsJVmgbD-WogwU=LfWiPN1JgjBrwx4s8Y14hDd7vqqhQ@mail.gmail.com>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Wed, 18 Dec 2019 11:57:39 +0100
+X-Gmail-Original-Message-ID: <CAHmME9o0AparjaaOSoZD14RAW8_AJTfKfcx3Y2ndDAPFNC-MeQ@mail.gmail.com>
+Message-ID: <CAHmME9o0AparjaaOSoZD14RAW8_AJTfKfcx3Y2ndDAPFNC-MeQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v2] net: WireGuard secure network tunnel
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhhbmtzIGZvciBwYXRjaGluZyBQZXRlciwNCg0KTm8gcmVncmVzc2lvbiBvYnNlcnZlZCBvbiBt
-eSBzaWRlLg0KDQpBY2tlZC1ieTogSHVndWVzIEZydWNoZXQgPGh1Z3Vlcy5mcnVjaGV0QHN0LmNv
-bT4NCg0KQmVzdCByZWdhcmRzLA0KSHVndWVzLg0KDQpPbiAxMi8xNy8xOSAxMTo0MSBBTSwgUGV0
-ZXIgVWpmYWx1c2kgd3JvdGU6DQo+IGRtYV9yZXF1ZXN0X3NsYXZlX2NoYW5uZWwoKSBpcyBhIHdy
-YXBwZXIgb24gdG9wIG9mIGRtYV9yZXF1ZXN0X2NoYW4oKQ0KPiBlYXRpbmcgdXAgdGhlIGVycm9y
-IGNvZGUuDQo+IA0KPiBCeSB1c2luZyBkbWFfcmVxdWVzdF9jaGFuKCkgZGlyZWN0bHkgdGhlIGRy
-aXZlciBjYW4gc3VwcG9ydCBkZWZlcnJlZA0KPiBwcm9iaW5nIGFnYWluc3QgRE1BLg0KPiANCj4g
-U2lnbmVkLW9mZi1ieTogUGV0ZXIgVWpmYWx1c2kgPHBldGVyLnVqZmFsdXNpQHRpLmNvbT4NCj4g
-LS0tDQo+ICAgZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9zdG0zMi9zdG0zMi1kY21pLmMgfCA2ICsr
-Ky0tLQ0KPiAgIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0p
-DQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9zdG0zMi9zdG0zMi1k
-Y21pLmMgYi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL3N0bTMyL3N0bTMyLWRjbWkuYw0KPiBpbmRl
-eCA5MzkyZTM0MDlmYmEuLjU1MzUxODcyYjBjNyAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9tZWRp
-YS9wbGF0Zm9ybS9zdG0zMi9zdG0zMi1kY21pLmMNCj4gKysrIGIvZHJpdmVycy9tZWRpYS9wbGF0
-Zm9ybS9zdG0zMi9zdG0zMi1kY21pLmMNCj4gQEAgLTE5MTAsMTAgKzE5MTAsMTAgQEAgc3RhdGlj
-IGludCBkY21pX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICAgCQlyZXR1
-cm4gUFRSX0VSUihtY2xrKTsNCj4gICAJfQ0KPiAgIA0KPiAtCWNoYW4gPSBkbWFfcmVxdWVzdF9z
-bGF2ZV9jaGFubmVsKCZwZGV2LT5kZXYsICJ0eCIpOw0KPiAtCWlmICghY2hhbikgew0KPiArCWNo
-YW4gPSBkbWFfcmVxdWVzdF9jaGFuKCZwZGV2LT5kZXYsICJ0eCIpOw0KPiArCWlmIChJU19FUlIo
-Y2hhbikpIHsNCj4gICAJCWRldl9pbmZvKCZwZGV2LT5kZXYsICJVbmFibGUgdG8gcmVxdWVzdCBE
-TUEgY2hhbm5lbCwgZGVmZXIgcHJvYmluZ1xuIik7DQo+IC0JCXJldHVybiAtRVBST0JFX0RFRkVS
-Ow0KPiArCQlyZXR1cm4gUFRSX0VSUihjaGFuKTsNCj4gICAJfQ0KPiAgIA0KPiAgIAlzcGluX2xv
-Y2tfaW5pdCgmZGNtaS0+aXJxbG9jayk7DQo+IA==
+Hi Dmitry,
+
+On Wed, Dec 18, 2019 at 11:13 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+> Does it really do "verbose debug log"? I only see it is used for
+> self-tests and debug checks:
+
+Yes, it does, via net_dbg and co. People with the Linux "dynamic
+debugging" feature turned also get the log by twiddling with some file
+at runtime.
+
+> In different contexts one may enable different sets of these.
+> In particular in fuzzing context one absolutely wants additional debug
+> checks, but not self tests and definitely no verbose logging. CI and
+> various manual scenarios will require different sets as well.
+> If this does verbose logging, we won't get debug checks as well during
+> fuzzing, which is unfortunate.
+> Can make sense splitting CONFIG_WIREGUARD_DEBUG into 2 or 3 separate
+> configs (that's what I see frequently). Unfortunately there is no
+> standard conventions for anything of this, so CIs will never find your
+> boot tests and fuzzing won't find the additional checks...
+
+I agree that it might make sense to split this up at some point, but
+for now I think it might be a bit overkill. Both the self-tests and
+debug tests are *very* light at the moment. Down the road if these
+become heavier, I think it'd probably be a good idea, but for the time
+being it'd mostly be more complexity for nothing.
+
+Another more interesting point, though, you wrote
+> and definitely no verbose logging.
+
+Actually with WireGuard, I think that's not the case. The WireGuard
+logging has been written with DoS in mind. You /should/ be able to
+safely run it on a production system exposed to the wild Internet, and
+while there will be some additional things in your dmesg, an attacker
+isn't supposed to be able to totally flood it without ratelimiting or
+inject malicious strings into it (such as ANSI escape sequence). In
+other words, I consider the logging to be fair game attack surface. If
+your fuzzer manages to craft some nasty sequence of packets that
+tricks some rate limiting logic and lets you litter all over dmesg
+totally unbounded, I'd consider that a real security bug worth
+stressing out about. So from the perspective of letting your fuzzers
+loose on WireGuard, I'd actually like to see this option kept on.
+
+Jason
