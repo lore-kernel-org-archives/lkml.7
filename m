@@ -2,543 +2,305 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE58EC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 06:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB1BC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 06:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A711720717
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 06:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C0B921D7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 06:23:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e/RAhWAY"
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="PfZYClxe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfLRGXI (ORCPT
+        id S1726692AbfLRGXU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 01:23:08 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34085 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbfLRGXI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 01:23:08 -0500
-Received: by mail-pl1-f195.google.com with SMTP id x17so518298pln.1;
-        Tue, 17 Dec 2019 22:23:07 -0800 (PST)
+        Wed, 18 Dec 2019 01:23:20 -0500
+Received: from mail-dm6nam12on2065.outbound.protection.outlook.com ([40.107.243.65]:20496
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725799AbfLRGXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 01:23:19 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Zcvgc+3Je49z+91Yb67ytrBPSQw3ia4hPHqWAQHJWpv93bR6O8LEN0o/70hru73ikGHpuFpy8+327Q0n2QEgiI7QnwPfCdZjDeFJsNEFyHaAWAByz/j2fn7+CkXCARibmbbul21ijbrLBpgIkVIae5MCScJIOkGroeIPy2PsvyQKpUts4ZkXFxudnyjGTJ7mB1LhoB2UKQwcRT1KYUlWhPeKjeY9LliT4IyusZ+9x0C1azXvj7jMnDYrIG9pu9D2GpAXdHJfIpwPDfHMUJBorNXoMynSsxMRTeBN4Ra0aOU+HMcxGcSwv3mdohomC63sihR2Q5EWmwyHr/BAL+EE0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JVFMYCjfmirfAAcyRjXfNs/7E+qJAMSbXMmCNKCrdIE=;
+ b=dNGqpZSUa5aGGqVkElF6FqYETbarxTgtqgCv4BeMvNzLaVii6C7OTi6X6KUZIPvX6UwkyGPotsBU9i39zhVkKfDY9jJ2X1+EI+vN9Eakwpl5wDhsIj/1kdSacZcDrIIXXO3+I4RkCxrQJEQ/6dd1JJjT8wQ1QDLWehh6flGpYNZzwHodZPqk7pJsmpfBIvbfjCudTYoiu7f9cXyrYL5hDWHncUsP5eTIF2L8WoFkFIYIKO6/tGuycPjgJJAHfGhj4PhcTdILQ1ivdYZdQ5ANwFgh5meBkuFSHo+lg7868474mkip+GVkkhOftFQ2cHuM4QFuUsfmW3i8zImkLMWsZg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synaptics.com; dmarc=pass action=none
+ header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding;
-        bh=czM9B54wbNNqsSMPd76X6Q4/9vENfHsjae3vBx7yvfM=;
-        b=e/RAhWAYeMKmghcnw+xRD0sBUptlAyTAthj/+cZhBZZgtH3kdFwnfPog+otDCFjEXA
-         NSMxokX22jgq9IJ/MRKvTyiJ11f9OPG+jn9dnQYCAOeNdO6MTULrJnH89aaEAXnPmpKf
-         YkJkSbtlCD5fB4WrgOSnk4lr58io9TG6LdE6FKC3RURnaqx2xOvqzQaN19ml9iQVaOZv
-         QS+IzFtE04VWgw8+syvL/DXCYYYr5CR+Ug56wghF/7DaKzAcAoWri1cp4VJv98pGZMii
-         mi7bAfoCdyDYCHBaUEN5xORxfypZayBDWGSqrx4q8Xs3yxg9G+yrBiiAmYRr4EU5OGxG
-         GBow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=czM9B54wbNNqsSMPd76X6Q4/9vENfHsjae3vBx7yvfM=;
-        b=MLTfh+p6FaR/sK+QPo4LbCcHlWzTms53gaPB5WlNqp1iuyhwcT/dkeSH0xZepEisAm
-         8NYb0R+3MozYZ4MTahS1XPTa4+rSzw1yIlrcovHz1MhnHJYze7sZssJ5FVEsXP7VeF48
-         RRd4r7pem3hp4Rdfk+wpZIvu7cA95xWkbANFKDNyKm0oya9TYJKw+Y74AGgeEeD2KePo
-         PYNAUqpCSH3BceK+D0sBt05jwvGey5MS0Va1IXAG4ggjOSvgIGgPEn0gbxrZROXlxiT0
-         yDTzG5RqkfpJzW6Na3Ics5pwgezL9tHngxogrwuZWlkXnlRm5HKRubgIPfcKgWAJnFUN
-         ptEw==
-X-Gm-Message-State: APjAAAWlZ08O52qPAzlzueFqn+iXhGCzPk7S82OpNgJzgT8xdUgLrLru
-        5YnURKkff/tZQALQtn9Yt4+HT5WA
-X-Google-Smtp-Source: APXvYqy5z4iJdiRZwEh6Y7WsIEtt02YePVqxXH4pwK5SrONjbGjqrDLOo5mVbv2ZunjRZaJYnVL0Dw==
-X-Received: by 2002:a17:902:724a:: with SMTP id c10mr924954pll.39.1576650186381;
-        Tue, 17 Dec 2019 22:23:06 -0800 (PST)
-Received: from [0.0.0.0] ([103.103.128.212])
-        by smtp.gmail.com with ESMTPSA id e10sm1346783pfm.3.2019.12.17.22.23.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Dec 2019 22:23:05 -0800 (PST)
-Subject: Re: [PATCH v2 1/2] iio: chemical: add support for Dynament Premier
- series single gas sensor
-To:     Matt Ranostay <matt.ranostay@konsulko.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Tomasz Duszynski <tduszyns@gmail.com>, mike.looijmans@topic.nl,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <3a17c9e1-f916-0cde-3296-70066dccb2b3@gmail.com>
- <FA803BE2-2715-4F63-8F5B-3A57F700AB1B@konsulko.com>
-From:   YuDong Zhang <mtwget@gmail.com>
-Message-ID: <489ccd68-bb73-44c9-77b9-530b35b09999@gmail.com>
-Date:   Wed, 18 Dec 2019 14:22:55 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+ d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JVFMYCjfmirfAAcyRjXfNs/7E+qJAMSbXMmCNKCrdIE=;
+ b=PfZYClxec+8lrMTWucTTMSrgDpIpG0hZ9xUx4byB6un/yy7Io3CcqJuQXf58hgHn4mo8N7CV/xzevpsgjdcwIFl9bQOa0OYHZFsh1uQyycMPW4no9MEA1TgoYoEQQN2olgBDBKaSyL71GeJrIw3WViiZuKhM02JlSfNwqS16dEU=
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com (20.179.93.213) by
+ BYAPR03MB3909.namprd03.prod.outlook.com (20.177.124.32) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.17; Wed, 18 Dec 2019 06:21:36 +0000
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::708d:91cc:79a7:9b9a]) by BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::708d:91cc:79a7:9b9a%6]) with mapi id 15.20.2538.019; Wed, 18 Dec 2019
+ 06:21:36 +0000
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "mhiramat@kernel.org" <mhiramat@kernel.org>,
+        "naveen.n.rao@linux.vnet.ibm.com" <naveen.n.rao@linux.vnet.ibm.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "corbet@lwn.net" <corbet@lwn.net>
+CC:     "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v6] arm64: implement KPROBES_ON_FTRACE
+Thread-Topic: [PATCH v6] arm64: implement KPROBES_ON_FTRACE
+Thread-Index: AQHVtWtmR90OKS0v9Um1jpVbBvlnOA==
+Date:   Wed, 18 Dec 2019 06:21:35 +0000
+Message-ID: <20191218140622.57bbaca5@xhacker.debian>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [124.74.246.114]
+x-clientproxiedby: TYAPR01CA0175.jpnprd01.prod.outlook.com
+ (2603:1096:404:ba::19) To BYAPR03MB4773.namprd03.prod.outlook.com
+ (2603:10b6:a03:139::21)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e548014c-2484-46e1-c8a5-08d783828897
+x-ms-traffictypediagnostic: BYAPR03MB3909:
+x-microsoft-antispam-prvs: <BYAPR03MB390940BAFAA59720EB2E62F0ED530@BYAPR03MB3909.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0255DF69B9
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(396003)(346002)(136003)(39860400002)(366004)(189003)(199004)(54534003)(52116002)(5660300002)(26005)(7416002)(86362001)(186003)(66946007)(64756008)(66476007)(316002)(81156014)(66556008)(4326008)(6506007)(81166006)(66446008)(71200400001)(6486002)(1076003)(2906002)(6512007)(8936002)(110136005)(54906003)(478600001)(9686003)(8676002)(39210200001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB3909;H:BYAPR03MB4773.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: synaptics.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 0WLHUq2BTkx5vHX5LtOg5gt59+kRKt2CGibUe5bYtwXIeXK5aQ5H8CRRoqLXN8AuuboRZwUN8LDy/iapZOrzEjZDTq1NQvEfff09/vVnEDNSzy/GXFj/v711pEC10hg/AW+UuudNuuRMGo0GLTLMryPwhe5VinmQwqnYvoYebT1j4LqEI2jBbpjQ9I8Zu+Mr7uPRr2mUN3CtSh4Xn0h/ymqAelI+cWX00UUcFFAFVzpU80jrLsc9tj0UFe1JE6uAl0WfJFCGaxb6eG7FVJXpPJSGoaA/i9IC+jVtzEQAteVHan2iXFuoBJFLlT8TEEZ5k6rApL9suZJIrCq45Vejt6M8LuhJUu/U3AvPN7ll2MRWlOBMihOw6rqBZMXGBMUVlMmIkxecBlGdU9XFaK+XAGWQOTYhh+HHrntm/DVhwalm854o4CibZOqTZVwqeW2zvXHysmYQ3cJ3p9tqiBXpaqDP88nJhW9wglASO3GQrwX+hJts/+gAZYLHNwNJXxhQ1OjA3P5LP6um0kVvRdU3Eg==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <5D0886A77B09D14889EAFB84B771BDAB@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <FA803BE2-2715-4F63-8F5B-3A57F700AB1B@konsulko.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e548014c-2484-46e1-c8a5-08d783828897
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Dec 2019 06:21:35.9049
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7iIHKjh20d3VH1qJYYae01V1bkW19TQ097TACcYqrXh4zfhrKz/dPHFwHf78+yJWPV3dpGzZ8dACHxmenx6msQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB3909
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+KPROBES_ON_FTRACE avoids much of the overhead with regular kprobes as it
+eliminates the need for a trap, as well as the need to emulate or
+single-step instructions.
 
-在 2019/12/18 13:17, Matt Ranostay 写道:
->
->> On Dec 17, 2019, at 17:52, ruantu <mtwget@gmail.com> wrote:
->>
->> ﻿On Tue, Dec 17, 2019 at 2:24 AM YuDong Zhang <mtwget@gmail.com> wrote:
->>>> Add support for Dynament Premier series single gas sensor.
->>>>
->>> Just looking the Dynament site and I assume this is for the OEM-1
->>> Development kit? If so you probably should
->>> note that in the documentation because the sensors themselves are
->>> likely to be used in other end products (and not
->>> always the dev kit)
->>>
->>> Also bit of silly question this is an UART device so why not do
->>> processing in userspace? :)
->>>
->>> - Matt
->> This is a driver implemented according to the <Dynamization Sensor Communications protocol>. I think the protocol is standard. This is the idea that emerged after the iio subsystem used serial_bus.
-> Well egg on my face since only got recently back on this mailing list.... looks good over all but the floating point to fixed point stuff maybe has some comments. Also I am on holiday till the New Year but please CC on future changes!
+Tested on berlin arm64 platform.
 
-premier_float_to_int_clamped is implemented by referring to sps30_float_to_int_clamped in sps30.c
+~ # mount -t debugfs debugfs /sys/kernel/debug/
+~ # cd /sys/kernel/debug/
+/sys/kernel/debug # echo 'p _do_fork' > tracing/kprobe_events
 
->>>> Signed-off-by: YuDong Zhang <mtwget@gmail.com>
->>>> ---
->>>>   MAINTAINERS                    |   5 +
->>>>   drivers/iio/chemical/Kconfig   |  10 +
->>>>   drivers/iio/chemical/Makefile  |   1 +
->>>>   drivers/iio/chemical/premier.c | 366 +++++++++++++++++++++++++++++++++
->>>>   4 files changed, 382 insertions(+)
->>>>   create mode 100644 drivers/iio/chemical/premier.c
->>>>
->>>> diff --git a/MAINTAINERS b/MAINTAINERS
->>>> index a049abccaa26..ae228ac7adc9 100644
->>>> --- a/MAINTAINERS
->>>> +++ b/MAINTAINERS
->>>> @@ -5792,6 +5792,11 @@ S:       Maintained
->>>>   F:     drivers/media/usb/dvb-usb-v2/dvb_usb*
->>>>   F:     drivers/media/usb/dvb-usb-v2/usb_urb.c
->>>>
->>>> +DYNAMENT PREMIER SERIES SINGLE GAS SENSOR DRIVER
->>>> +M:     YuDong Zhang <mtwget@gmail.com>
->>>> +S:     Maintained
->>>> +F:     drivers/iio/chemical/premier.c
->>>> +
->>>>   DYNAMIC DEBUG
->>>>   M:     Jason Baron <jbaron@akamai.com>
->>>>   S:     Maintained
->>>> diff --git a/drivers/iio/chemical/Kconfig b/drivers/iio/chemical/Kconfig
->>>> index fa4586037bb8..93c0c108245b 100644
->>>> --- a/drivers/iio/chemical/Kconfig
->>>> +++ b/drivers/iio/chemical/Kconfig
->>>> @@ -62,6 +62,16 @@ config IAQCORE
->>>>            iAQ-Core Continuous/Pulsed VOC (Volatile Organic Compounds)
->>>>            sensors
->>>>
->>>> +config PREMIER
->>>> +       tristate "Dynament Premier series sensor"
->>>> +       depends on SERIAL_DEV_BUS
->>>> +       help
->>>> +         Say Y here to build support for the Dynament Premier
->>>> +         series sensor.
->>>> +
->>>> +         To compile this driver as a module, choose M here: the module will
->>>> +         be called premier.
->>>> +
->>>>   config PMS7003
->>>>          tristate "Plantower PMS7003 particulate matter sensor"
->>>>          depends on SERIAL_DEV_BUS
->>>> diff --git a/drivers/iio/chemical/Makefile b/drivers/iio/chemical/Makefile
->>>> index f97270bc4034..c8e779d7cf4a 100644
->>>> --- a/drivers/iio/chemical/Makefile
->>>> +++ b/drivers/iio/chemical/Makefile
->>>> @@ -10,6 +10,7 @@ obj-$(CONFIG_BME680_I2C) += bme680_i2c.o
->>>>   obj-$(CONFIG_BME680_SPI) += bme680_spi.o
->>>>   obj-$(CONFIG_CCS811)           += ccs811.o
->>>>   obj-$(CONFIG_IAQCORE)          += ams-iaq-core.o
->>>> +obj-$(CONFIG_PREMIER)          += premier.o
->>>>   obj-$(CONFIG_PMS7003) += pms7003.o
->>>>   obj-$(CONFIG_SENSIRION_SGP30)  += sgp30.o
->>>>   obj-$(CONFIG_SPS30) += sps30.o
->>>> diff --git a/drivers/iio/chemical/premier.c b/drivers/iio/chemical/premier.c
->>>> new file mode 100644
->>>> index 000000000000..a226dd9d78cb
->>>> --- /dev/null
->>>> +++ b/drivers/iio/chemical/premier.c
->>>> @@ -0,0 +1,366 @@
->>>> +// SPDX-License-Identifier: GPL-2.0
->>>> +/*
->>>> + * Dynament Premier series single gas sensor driver
->>>> + *
->>>> + * Copyright (c) YuDong Zhang <mtwget@gmail.com>
->>>> + */
->>>> +
->>>> +#include <asm/unaligned.h>
->>>> +#include <linux/completion.h>
->>>> +#include <linux/device.h>
->>>> +#include <linux/errno.h>
->>>> +#include <linux/iio/iio.h>
->>>> +#include <linux/jiffies.h>
->>>> +#include <linux/kernel.h>
->>>> +#include <linux/mod_devicetable.h>
->>>> +#include <linux/module.h>
->>>> +#include <linux/mutex.h>
->>>> +#include <linux/of.h>
->>>> +#include <linux/regulator/consumer.h>
->>>> +#include <linux/serdev.h>
->>>> +
->>>> +#define PREMIER_DRIVER_NAME "dynament-premier"
->>>> +
->>>> +#define PREMIER_DLE (0x10)
->>>> +#define PREMIER_CMD_RD (0x13)
->>>> +#define PREMIER_CMD_NAK (0x19)
->>>> +#define PREMIER_CMD_DAT (0x1a)
->>>> +#define PREMIER_EOF (0x1f)
->>>> +
->>>> +#define PREMIER_TIMEOUT msecs_to_jiffies(6000)
->>>> +
->>>> +/*
->>>> + * commands have following format:
->>>> + *
->>>> + * +-----+-----+---------+-----+-----+-----------+-----------+
->>>> + * | DLE | CMD | PAYLOAD | DLE | EOF | CKSUM MSB | CKSUM LSB |
->>>> + * +-----+-----+---------+-----+-----+-----------+-----------+
->>>> + */
->>>> +static const u8 premier_cmd_read_live_data_simple[] = { 0x10, 0x13, 0x06, 0x10,
->>>> +                                                       0x1F, 0x00, 0x58 };
->>>> +
->>>> +struct premier_frame {
->>>> +       u8 state;
->>>> +       u8 is_dat;
->>>> +       u8 is_nak;
->>>> +       u8 data_len;
->>>> +       u8 vi, si, gi, gj;
->>>> +       u8 gas[4];
->>>> +       u8 byte_stuffing;
->>>> +       u8 checksum_received[2];
->>>> +       u16 checksum_calculated;
->>>> +};
->>>> +
->>>> +struct premier_data {
->>>> +       struct serdev_device *serdev;
->>>> +       struct premier_frame frame;
->>>> +       struct completion frame_ready;
->>>> +       struct mutex lock; /* must be held whenever state gets touched */
->>>> +       struct regulator *vcc;
->>>> +};
->>>> +
->>>> +static int premier_do_cmd_read_live_data(struct premier_data *state)
->>>> +{
->>>> +       int ret;
->>>> +
->>>> +       ret = serdev_device_write(state->serdev,
->>>> +                                 premier_cmd_read_live_data_simple,
->>>> +                                 sizeof(premier_cmd_read_live_data_simple),
->>>> +                                 PREMIER_TIMEOUT);
->>>> +       if (ret < sizeof(premier_cmd_read_live_data_simple))
->>>> +               return ret < 0 ? ret : -EIO;
->>>> +
->>>> +       ret = wait_for_completion_interruptible_timeout(&state->frame_ready,
->>>> +                                                       PREMIER_TIMEOUT);
->>>> +
->>>> +       if (!ret)
->>>> +               ret = -ETIMEDOUT;
->>>> +
->>>> +       return ret < 0 ? ret : 0;
->>>> +}
->>>> +
->>>> +static s32 premier_float_to_int_clamped(const u8 *fp)
->>>> +{
->>>> +       int val = get_unaligned_le32(fp);
->>>> +       int mantissa = val & GENMASK(22, 0);
->>>> +       /* this is fine since passed float is always non-negative */
->>>> +       int exp = val >> 23;
->>>> +       int fraction, shift;
->>>> +
->>>> +       /* special case 0 */
->>>> +       if (!exp && !mantissa)
->>>> +               return 0;
->>>> +
->>>> +       exp -= 127;
->>>> +       if (exp < 0) {
->>>> +               /* return values ranging from 1 to 99 */
->>>> +               return ((((1 << 23) + mantissa) * 100) >> 23) >> (-exp);
->>>> +       }
->>>> +
->>>> +       /* return values ranging from 100 to int_max */
->>>> +       shift = 23 - exp;
->>>> +       val = (1 << exp) + (mantissa >> shift);
->>>> +
->>>> +       fraction = mantissa & GENMASK(shift - 1, 0);
->>>> +
->>>> +       return val * 100 + ((fraction * 100) >> shift);
->>>> +}
->>>> +
->>>> +static int premier_read_raw(struct iio_dev *indio_dev,
->>>> +                           struct iio_chan_spec const *chan, int *val,
->>>> +                           int *val2, long mask)
->>>> +{
->>>> +       struct premier_data *state = iio_priv(indio_dev);
->>>> +       struct premier_frame *frame = &state->frame;
->>>> +       int ret;
->>>> +       s32 val_tmp;
->>>> +
->>>> +       switch (mask) {
->>>> +       case IIO_CHAN_INFO_PROCESSED:
->>>> +
->>>> +               mutex_lock(&state->lock);
->>>> +               ret = premier_do_cmd_read_live_data(state);
->>>> +               if (ret) {
->>>> +                       mutex_unlock(&state->lock);
->>>> +                       return ret;
->>>> +               }
->>>> +               val_tmp = premier_float_to_int_clamped(frame->gas);
->>>> +               mutex_unlock(&state->lock);
->>>> +
->>>> +               *val = val_tmp / 100;
->>>> +               *val2 = (val_tmp % 100) * 10000;
->>>> +               return IIO_VAL_INT_PLUS_MICRO;
->>>> +       default:
->>>> +               return -EINVAL;
->>>> +       }
->>>> +
->>>> +       return -EINVAL;
->>>> +}
->>>> +
->>>> +static const struct iio_info premier_info = {
->>>> +       .read_raw = premier_read_raw,
->>>> +};
->>>> +
->>>> +static const struct iio_chan_spec premier_channels[] = {
->>>> +       {
->>>> +               .type = IIO_MASSCONCENTRATION,
->>>> +               .channel = 1,
->>>> +               .channel2 = IIO_MOD_CO2,
->>>> +               .scan_index = -1,
->>>> +               .info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED),
->>>> +               .modified = 1,
->>>> +       },
->>>> +       IIO_CHAN_SOFT_TIMESTAMP(0),
->>>> +};
->>>> +
->>>> +static int premier_receive_buf(struct serdev_device *serdev,
->>>> +                              const unsigned char *buf, size_t size)
->>>> +{
->>>> +       struct iio_dev *indio_dev = serdev_device_get_drvdata(serdev);
->>>> +       struct premier_data *state = iio_priv(indio_dev);
->>>> +       struct premier_frame *frame = &state->frame;
->>>> +       int i;
->>>> +
->>>> +       for (i = 0; i < size; i++) {
->>>> +               if (frame->state > 0 && frame->state <= 7)
->>>> +                       frame->checksum_calculated += buf[i];
->>>> +
->>>> +               switch (frame->state) {
->>>> +               case 0:
->>>> +                       if (buf[i] == PREMIER_DLE) {
->>>> +                               frame->is_dat = 0;
->>>> +                               frame->is_nak = 0;
->>>> +                               frame->checksum_calculated = buf[i];
->>>> +                               /* We don't initialize checksum_calculated in
->>>> +                                * the last state in case we didn't go
->>>> +                                * there because of noise
->>>> +                                */
->>>> +                               frame->state++;
->>>> +                       }
->>>> +                       break;
->>>> +               case 1:
->>>> +                       /*
->>>> +                        * If noise corrupts a byte in the FSM sequence,
->>>> +                        * we loop between state 0 and 1,
->>>> +                        * until we have a valid sequence of DLE&DAT or DLE&NAK
->>>> +                        */
->>>> +                       if (buf[i] == PREMIER_CMD_DAT) {
->>>> +                               frame->is_dat = 1;
->>>> +                               frame->state++;
->>>> +                       } else if (buf[i] == PREMIER_CMD_NAK) {
->>>> +                               frame->is_nak = 1;
->>>> +                               frame->state++;
->>>> +                       } else
->>>> +                               frame->state = 0;
->>>> +                       break;
->>>> +               case 2:
->>>> +                       if (frame->is_nak)
->>>> +                               frame->state = 0;
->>>> +                       else if (frame->is_dat) {
->>>> +                               frame->data_len = buf[i] - 4;
->>>> +                               /* remove version and status bytes from count */
->>>> +                               if (frame->data_len < 4)
->>>> +                                       frame->state = 0;
->>>> +                               /* we check for the upper limit in state 5 */
->>>> +                               else
->>>> +                                       frame->state++;
->>>> +                       } else
->>>> +                               frame->state = 0;
->>>> +                       break;
->>>> +               case 3:
->>>> +                       /* Just do nothing for 2 rounds to bypass
->>>> +                        * the 2 version bytes
->>>> +                        */
->>>> +                       if (frame->vi < 2 - 1)
->>>> +                               frame->vi++;
->>>> +                       else {
->>>> +                               frame->vi = 0;
->>>> +                               frame->state++;
->>>> +                       }
->>>> +                       break;
->>>> +               case 4:
->>>> +                       if (frame->si < 2 - 1)
->>>> +                               frame->si++;
->>>> +                       else {
->>>> +                               frame->si = 0;
->>>> +                               frame->state++;
->>>> +                       }
->>>> +                       break;
->>>> +               case 5:
->>>> +                       if (frame->gi < frame->data_len - 1) {
->>>> +                               if (buf[i] != PREMIER_DLE ||
->>>> +                                   frame->byte_stuffing) {
->>>> +                                       frame->gas[frame->gj] = buf[i];
->>>> +                                       frame->byte_stuffing = 0;
->>>> +                                       frame->gj++;
->>>> +                                       if (frame->gj >= 4)
->>>> +                                               frame->state = 0;
->>>> +                                       /* Don't violate array limits
->>>> +                                        * if data_len corrupt
->>>> +                                        */
->>>> +                               } else
->>>> +                                       frame->byte_stuffing = 1;
->>>> +                               frame->gi++;
->>>> +                       } else {
->>>> +                               frame->gas[frame->gj] = buf[i];
->>>> +                               frame->byte_stuffing = 0;
->>>> +                               frame->gi = 0;
->>>> +                               frame->gj = 0;
->>>> +                               frame->state++;
->>>> +                       }
->>>> +                       break;
->>>> +               case 6:
->>>> +                       if (buf[i] == PREMIER_DLE)
->>>> +                               frame->state++;
->>>> +                       else
->>>> +                               frame->state = 0;
->>>> +                       break;
->>>> +               case 7:
->>>> +                       if (buf[i] == PREMIER_EOF)
->>>> +                               frame->state++;
->>>> +                       else
->>>> +                               frame->state = 0;
->>>> +                       break;
->>>> +               case 8:
->>>> +                       frame->checksum_received[1] = buf[i];
->>>> +
->>>> +                       frame->state++;
->>>> +                       break;
->>>> +               case 9:
->>>> +                       frame->checksum_received[0] = buf[i];
->>>> +
->>>> +                       if (frame->checksum_calculated ==
->>>> +                           get_unaligned_le16(frame->checksum_received))
->>>> +                               complete(&state->frame_ready);
->>>> +
->>>> +                       frame->state = 0;
->>>> +                       break;
->>>> +               }
->>>> +       }
->>>> +
->>>> +       return size;
->>>> +}
->>>> +
->>>> +static const struct serdev_device_ops premier_serdev_ops = {
->>>> +       .receive_buf = premier_receive_buf,
->>>> +       .write_wakeup = serdev_device_write_wakeup,
->>>> +};
->>>> +
->>>> +static int premier_probe(struct serdev_device *serdev)
->>>> +{
->>>> +       struct premier_data *state;
->>>> +       struct iio_dev *indio_dev;
->>>> +       int ret;
->>>> +
->>>> +       indio_dev = devm_iio_device_alloc(&serdev->dev, sizeof(*state));
->>>> +       if (!indio_dev)
->>>> +               return -ENOMEM;
->>>> +
->>>> +       state = iio_priv(indio_dev);
->>>> +       serdev_device_set_drvdata(serdev, indio_dev);
->>>> +       state->serdev = serdev;
->>>> +       indio_dev->dev.parent = &serdev->dev;
->>>> +       indio_dev->info = &premier_info;
->>>> +       indio_dev->name = PREMIER_DRIVER_NAME;
->>>> +       indio_dev->channels = premier_channels;
->>>> +       indio_dev->num_channels = ARRAY_SIZE(premier_channels);
->>>> +       indio_dev->modes = INDIO_DIRECT_MODE;
->>>> +
->>>> +       mutex_init(&state->lock);
->>>> +       init_completion(&state->frame_ready);
->>>> +
->>>> +       state->vcc = devm_regulator_get(&serdev->dev, "vcc");
->>>> +       if (IS_ERR(state->vcc)) {
->>>> +               ret = PTR_ERR(state->vcc);
->>>> +               return ret;
->>>> +       }
->>>> +
->>>> +       serdev_device_set_client_ops(serdev, &premier_serdev_ops);
->>>> +       ret = devm_serdev_device_open(&serdev->dev, serdev);
->>>> +       if (ret)
->>>> +               return ret;
->>>> +
->>>> +       serdev_device_set_baudrate(serdev, 9600);
->>>> +       serdev_device_set_flow_control(serdev, false);
->>>> +
->>>> +       ret = serdev_device_set_parity(serdev, SERDEV_PARITY_NONE);
->>>> +       if (ret)
->>>> +               return ret;
->>>> +
->>>> +       if (state->vcc) {
->>>> +               ret = regulator_enable(state->vcc);
->>>> +               if (ret)
->>>> +                       return ret;
->>>> +       }
->>>> +
->>>> +       return devm_iio_device_register(&serdev->dev, indio_dev);
->>>> +}
->>>> +
->>>> +static void premier_remove(struct serdev_device *serdev)
->>>> +{
->>>> +       struct iio_dev *indio_dev = serdev_device_get_drvdata(serdev);
->>>> +       struct premier_data *state = iio_priv(indio_dev);
->>>> +
->>>> +       if (state->vcc)
->>>> +               regulator_disable(state->vcc);
->>>> +}
->>>> +
->>>> +static const struct of_device_id premier_of_match[] = {
->>>> +       { .compatible = "dynament,premier" },
->>>> +       {}
->>>> +};
->>>> +MODULE_DEVICE_TABLE(of, premier_of_match);
->>>> +
->>>> +static struct serdev_device_driver premier_driver = {
->>>> +       .driver = {
->>>> +               .name = PREMIER_DRIVER_NAME,
->>>> +               .of_match_table = premier_of_match,
->>>> +       },
->>>> +       .probe = premier_probe,
->>>> +       .remove = premier_remove,
->>>> +};
->>>> +module_serdev_device_driver(premier_driver);
->>>> +
->>>> +MODULE_AUTHOR("YuDong Zhang <mtwget@gmail.com>");
->>>> +MODULE_DESCRIPTION("Dynament Premier series single gas sensor driver");
->>>> +MODULE_LICENSE("GPL v2");
->>>> --
->>>> 2.24.1
->>>>
+before the patch:
+
+/sys/kernel/debug # cat kprobes/list
+ffffff801009fe28  k  _do_fork+0x0    [DISABLED]
+
+after the patch:
+
+/sys/kernel/debug # cat kprobes/list
+ffffff801009ff54  k  _do_fork+0x4    [DISABLED][FTRACE]
+
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Reviewed-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+---
+KPROBES_ON_FTRACE avoids much of the overhead with regular kprobes as it
+eliminates the need for a trap, as well as the need to emulate or
+single-step instructions.
+
+Changes since v5:
+  - rebase v5.5-rc1
+  - collect Acked-by and Reviewed-by tags
+
+Changes since v4:
+  - correct reg->pc: probed on foo, then pre_handler see foo+0x4, while
+    post_handler see foo+0x8
+
+Changes since v3:
+  - move kprobe_lookup_name() and arch_kprobe_on_func_entry to ftrace.c sin=
+ce
+    we only want to choose the ftrace entry for KPROBES_ON_FTRACE.
+  - only choose ftrace entry if (addr && !offset)
+
+Changes since v2:
+  - remove patch1, make it a single cleanup patch
+  - remove "This patch" in the change log
+  - implement arm64's kprobe_lookup_name() and arch_kprobe_on_func_entry in=
+stead
+    of patching the common kprobes code
+
+Changes since v1:
+  - make the kprobes/x86: use instruction_pointer and instruction_pointer_s=
+et
+    as patch1
+  - add Masami's ACK to patch1
+  - add some description about KPROBES_ON_FTRACE and why we need it on
+    arm64
+  - correct the log before the patch
+  - remove the consolidation patch, make it as TODO
+  - only adjust kprobe's addr when KPROBE_FLAG_FTRACE is set
+  - if KPROBES_ON_FTRACE, ftrace_call_adjust() the kprobe's addr before
+    calling ftrace_location()
+  - update the kprobes-on-ftrace/arch-support.txt in doc
+ .../debug/kprobes-on-ftrace/arch-support.txt  |  2 +-
+ arch/arm64/Kconfig                            |  1 +
+ arch/arm64/kernel/probes/Makefile             |  1 +
+ arch/arm64/kernel/probes/ftrace.c             | 83 +++++++++++++++++++
+ 4 files changed, 86 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/kernel/probes/ftrace.c
+
+diff --git a/Documentation/features/debug/kprobes-on-ftrace/arch-support.tx=
+t b/Documentation/features/debug/kprobes-on-ftrace/arch-support.txt
+index 4fae0464ddff..f9dd9dd91e0c 100644
+--- a/Documentation/features/debug/kprobes-on-ftrace/arch-support.txt
++++ b/Documentation/features/debug/kprobes-on-ftrace/arch-support.txt
+@@ -9,7 +9,7 @@
+     |       alpha: | TODO |
+     |         arc: | TODO |
+     |         arm: | TODO |
+-    |       arm64: | TODO |
++    |       arm64: |  ok  |
+     |         c6x: | TODO |
+     |        csky: | TODO |
+     |       h8300: | TODO |
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index b1b4476ddb83..92b9882889ac 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -166,6 +166,7 @@ config ARM64
+ 	select HAVE_STACKPROTECTOR
+ 	select HAVE_SYSCALL_TRACEPOINTS
+ 	select HAVE_KPROBES
++	select HAVE_KPROBES_ON_FTRACE
+ 	select HAVE_KRETPROBES
+ 	select HAVE_GENERIC_VDSO
+ 	select IOMMU_DMA if IOMMU_SUPPORT
+diff --git a/arch/arm64/kernel/probes/Makefile b/arch/arm64/kernel/probes/M=
+akefile
+index 8e4be92e25b1..4020cfc66564 100644
+--- a/arch/arm64/kernel/probes/Makefile
++++ b/arch/arm64/kernel/probes/Makefile
+@@ -4,3 +4,4 @@ obj-$(CONFIG_KPROBES)		+=3D kprobes.o decode-insn.o	\
+ 				   simulate-insn.o
+ obj-$(CONFIG_UPROBES)		+=3D uprobes.o decode-insn.o	\
+ 				   simulate-insn.o
++obj-$(CONFIG_KPROBES_ON_FTRACE)	+=3D ftrace.o
+diff --git a/arch/arm64/kernel/probes/ftrace.c b/arch/arm64/kernel/probes/f=
+trace.c
+new file mode 100644
+index 000000000000..9f80905f02fa
+--- /dev/null
++++ b/arch/arm64/kernel/probes/ftrace.c
+@@ -0,0 +1,83 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Dynamic Ftrace based Kprobes Optimization
++ *
++ * Copyright (C) Hitachi Ltd., 2012
++ * Copyright (C) 2019 Jisheng Zhang <jszhang@kernel.org>
++ *		      Synaptics Incorporated
++ */
++
++#include <linux/kprobes.h>
++
++/* Ftrace callback handler for kprobes -- called under preepmt disabed */
++void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
++			   struct ftrace_ops *ops, struct pt_regs *regs)
++{
++	struct kprobe *p;
++	struct kprobe_ctlblk *kcb;
++
++	/* Preempt is disabled by ftrace */
++	p =3D get_kprobe((kprobe_opcode_t *)ip);
++	if (unlikely(!p) || kprobe_disabled(p))
++		return;
++
++	kcb =3D get_kprobe_ctlblk();
++	if (kprobe_running()) {
++		kprobes_inc_nmissed_count(p);
++	} else {
++		unsigned long orig_ip =3D instruction_pointer(regs);
++
++		instruction_pointer_set(regs, ip);
++		__this_cpu_write(current_kprobe, p);
++		kcb->kprobe_status =3D KPROBE_HIT_ACTIVE;
++		if (!p->pre_handler || !p->pre_handler(p, regs)) {
++			/*
++			 * Emulate singlestep (and also recover regs->pc)
++			 * as if there is a nop
++			 */
++			instruction_pointer_set(regs,
++				(unsigned long)p->addr + MCOUNT_INSN_SIZE);
++			if (unlikely(p->post_handler)) {
++				kcb->kprobe_status =3D KPROBE_HIT_SSDONE;
++				p->post_handler(p, regs, 0);
++			}
++			instruction_pointer_set(regs, orig_ip);
++		}
++		/*
++		 * If pre_handler returns !0, it changes regs->pc. We have to
++		 * skip emulating post_handler.
++		 */
++		__this_cpu_write(current_kprobe, NULL);
++	}
++}
++NOKPROBE_SYMBOL(kprobe_ftrace_handler);
++
++kprobe_opcode_t *kprobe_lookup_name(const char *name, unsigned int offset)
++{
++	unsigned long addr =3D kallsyms_lookup_name(name);
++
++	if (addr && !offset) {
++		unsigned long faddr;
++		/*
++		 * with -fpatchable-function-entry=3D2, the first 4 bytes is the
++		 * LR saver, then the actual call insn. So ftrace location is
++		 * always on the first 4 bytes offset.
++		 */
++		faddr =3D ftrace_location_range(addr,
++					      addr + AARCH64_INSN_SIZE);
++		if (faddr)
++			return (kprobe_opcode_t *)faddr;
++	}
++	return (kprobe_opcode_t *)addr;
++}
++
++bool arch_kprobe_on_func_entry(unsigned long offset)
++{
++	return offset <=3D AARCH64_INSN_SIZE;
++}
++
++int arch_prepare_kprobe_ftrace(struct kprobe *p)
++{
++	p->ainsn.api.insn =3D NULL;
++	return 0;
++}
+--=20
+2.24.1
+
