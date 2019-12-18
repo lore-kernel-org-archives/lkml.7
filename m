@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 155B8C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF76C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE2532146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE7AE2146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:57:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbfLRVzu (ORCPT
+        id S1727071AbfLRV5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 16:55:50 -0500
-Received: from mga02.intel.com ([134.134.136.20]:54840 "EHLO mga02.intel.com"
+        Wed, 18 Dec 2019 16:57:00 -0500
+Received: from mga01.intel.com ([192.55.52.88]:56974 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726879AbfLRVzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 16:55:44 -0500
+        id S1727002AbfLRVzu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 16:55:50 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 13:55:40 -0800
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 13:55:49 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
-   d="scan'208";a="222108088"
+   d="scan'208";a="222108161"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga001.fm.intel.com with ESMTP; 18 Dec 2019 13:55:40 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 18 Dec 2019 13:55:48 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
         Paul Mackerras <paulus@ozlabs.org>,
@@ -48,9 +48,9 @@ Cc:     James Morse <james.morse@arm.com>,
         linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
         kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Greg Kurz <groug@kaod.org>
-Subject: [PATCH v2 18/45] KVM: PPC: Drop kvm_arch_vcpu_free()
-Date:   Wed, 18 Dec 2019 13:55:03 -0800
-Message-Id: <20191218215530.2280-19-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 36/45] KVM: PPC: BookE: Setup vcpu during kvmppc_core_vcpu_create()
+Date:   Wed, 18 Dec 2019 13:55:21 -0800
+Message-Id: <20191218215530.2280-37-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191218215530.2280-1-sean.j.christopherson@intel.com>
 References: <20191218215530.2280-1-sean.j.christopherson@intel.com>
@@ -61,50 +61,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the superfluous kvm_arch_vcpu_free() as it is no longer called
-from commmon KVM code.  Note, kvm_arch_vcpu_destroy() *is* called from
-common code, i.e. choosing which function to whack is not completely
-arbitrary.
+Fold setup() into create() now that the two are called back-to-back by
+common KVM code.  This paves the way for removing kvm_arch_vcpu_setup().
+Note, BookE directly implements kvm_arch_vcpu_setup() and PPC's common
+kvm_arch_vcpu_create() is responsible for its own cleanup, thus the only
+cleanup required when directly invoking kvmppc_core_vcpu_setup() is to
+call .vcpu_free(), which is the BookE specific portion of PPC's
+kvm_arch_vcpu_destroy() by way of kvmppc_core_vcpu_free().
+
+No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/powerpc/kvm/powerpc.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ arch/powerpc/kvm/booke.c | 60 ++++++++++++++++++++++------------------
+ 1 file changed, 33 insertions(+), 27 deletions(-)
 
-diff --git a/arch/powerpc/kvm/powerpc.c b/arch/powerpc/kvm/powerpc.c
-index 173f57e0a1b5..a2ba708f5cec 100644
---- a/arch/powerpc/kvm/powerpc.c
-+++ b/arch/powerpc/kvm/powerpc.c
-@@ -475,7 +475,7 @@ void kvm_arch_destroy_vm(struct kvm *kvm)
- #endif
- 
- 	kvm_for_each_vcpu(i, vcpu, kvm)
--		kvm_arch_vcpu_free(vcpu);
-+		kvm_arch_vcpu_destroy(vcpu);
- 
- 	mutex_lock(&kvm->lock);
- 	for (i = 0; i < atomic_read(&kvm->online_vcpus); i++)
-@@ -752,7 +752,7 @@ void kvm_arch_vcpu_postcreate(struct kvm_vcpu *vcpu)
- {
+diff --git a/arch/powerpc/kvm/booke.c b/arch/powerpc/kvm/booke.c
+index dd7440e50c7a..b1b5073a22b1 100644
+--- a/arch/powerpc/kvm/booke.c
++++ b/arch/powerpc/kvm/booke.c
+@@ -1377,34 +1377,9 @@ static void kvmppc_set_tsr(struct kvm_vcpu *vcpu, u32 new_tsr)
+ 	update_timer_ints(vcpu);
  }
  
--void kvm_arch_vcpu_free(struct kvm_vcpu *vcpu)
-+void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
+-/* Initial guest state: 16MB mapping 0 -> 0, PC = 0, MSR = 0, R1 = 16MB */
+ int kvm_arch_vcpu_setup(struct kvm_vcpu *vcpu)
  {
- 	/* Make sure we're not using the vcpu anymore */
- 	hrtimer_cancel(&vcpu->arch.dec_timer);
-@@ -781,11 +781,6 @@ void kvm_arch_vcpu_free(struct kvm_vcpu *vcpu)
- 	kmem_cache_free(kvm_vcpu_cache, vcpu);
- }
- 
--void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
--{
--	kvm_arch_vcpu_free(vcpu);
--}
+-	int i;
+-	int r;
 -
- int kvm_cpu_has_pending_timer(struct kvm_vcpu *vcpu)
+-	vcpu->arch.regs.nip = 0;
+-	vcpu->arch.shared->pir = vcpu->vcpu_id;
+-	kvmppc_set_gpr(vcpu, 1, (16<<20) - 8); /* -8 for the callee-save LR slot */
+-	kvmppc_set_msr(vcpu, 0);
+-
+-#ifndef CONFIG_KVM_BOOKE_HV
+-	vcpu->arch.shadow_msr = MSR_USER | MSR_IS | MSR_DS;
+-	vcpu->arch.shadow_pid = 1;
+-	vcpu->arch.shared->msr = 0;
+-#endif
+-
+-	/* Eye-catching numbers so we know if the guest takes an interrupt
+-	 * before it's programmed its own IVPR/IVORs. */
+-	vcpu->arch.ivpr = 0x55550000;
+-	for (i = 0; i < BOOKE_IRQPRIO_MAX; i++)
+-		vcpu->arch.ivor[i] = 0x7700 | i * 4;
+-
+-	kvmppc_init_timing_stats(vcpu);
+-
+-	r = kvmppc_core_vcpu_setup(vcpu);
+-	kvmppc_sanity_check(vcpu);
+-	return r;
++	return 0;
+ }
+ 
+ int kvmppc_subarch_vcpu_init(struct kvm_vcpu *vcpu)
+@@ -2116,7 +2091,38 @@ int kvmppc_core_init_vm(struct kvm *kvm)
+ 
+ int kvmppc_core_vcpu_create(struct kvm_vcpu *vcpu)
  {
- 	return kvmppc_core_pending_dec(vcpu);
+-	return kvm->arch.kvm_ops->vcpu_create(vcpu);
++	int i;
++	int r;
++
++	r = kvm->arch.kvm_ops->vcpu_create(vcpu);
++	if (r)
++		return r;
++
++	/* Initial guest state: 16MB mapping 0 -> 0, PC = 0, MSR = 0, R1 = 16MB */
++	vcpu->arch.regs.nip = 0;
++	vcpu->arch.shared->pir = vcpu->vcpu_id;
++	kvmppc_set_gpr(vcpu, 1, (16<<20) - 8); /* -8 for the callee-save LR slot */
++	kvmppc_set_msr(vcpu, 0);
++
++#ifndef CONFIG_KVM_BOOKE_HV
++	vcpu->arch.shadow_msr = MSR_USER | MSR_IS | MSR_DS;
++	vcpu->arch.shadow_pid = 1;
++	vcpu->arch.shared->msr = 0;
++#endif
++
++	/* Eye-catching numbers so we know if the guest takes an interrupt
++	 * before it's programmed its own IVPR/IVORs. */
++	vcpu->arch.ivpr = 0x55550000;
++	for (i = 0; i < BOOKE_IRQPRIO_MAX; i++)
++		vcpu->arch.ivor[i] = 0x7700 | i * 4;
++
++	kvmppc_init_timing_stats(vcpu);
++
++	r = kvmppc_core_vcpu_setup(vcpu);
++	if (r)
++		vcpu->kvm->arch.kvm_ops->vcpu_free(vcpu);
++	kvmppc_sanity_check(vcpu);
++	return r;
+ }
+ 
+ void kvmppc_core_vcpu_free(struct kvm_vcpu *vcpu)
 -- 
 2.24.1
 
