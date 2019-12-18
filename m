@@ -2,80 +2,112 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8691CC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B937C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52CBF21D7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:01:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DFE5218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:05:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cEjAIefo"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ENhSLeiv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbfLRJBo (ORCPT
+        id S1726710AbfLRJFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 04:01:44 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:34734 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbfLRJBo (ORCPT
+        Wed, 18 Dec 2019 04:05:16 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:32225 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726090AbfLRJFQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 04:01:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=t9//2RqMFCl0kVnQJETmKMopzrjo3RCGeRkT7almLNk=; b=cEjAIefo00+LZGzxc9G92MeGD
-        /zw7RWEJqTZ6iKP1NsqYFTn/YCaU86ieVZypvpzSRQ31hLIK35Cn131sWUl44or7N+QUSgNBg8py6
-        P04oRIA2Bw4yOol9yYQtdFW5k1aeogAlwU7HIuftzS3fog2rsMt+AKP7WyAON6seOpgKIMSxMt9VM
-        rId7rHci0daivY3k911WQ1FM5FE9gMVEPsh9VfQuKrA+fdMnvD3T2Lij4X1O/o+cPRwYKwwMtnL71
-        BvN2lCH/7kETpQkyJXIgphrfyF3spc17K4nlir8F+gmmxlsW4RY1yFc/ndOdE6yeO4L76JF7HbtjE
-        I3QDGBDKw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ihVD6-0007aW-B6; Wed, 18 Dec 2019 09:01:36 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E6738300F29;
-        Wed, 18 Dec 2019 10:00:10 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6010B2B2CECE0; Wed, 18 Dec 2019 10:01:33 +0100 (CET)
-Date:   Wed, 18 Dec 2019 10:01:33 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc:     akpm@linux-foundation.org, npiggin@gmail.com, mpe@ellerman.id.au,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [RFC PATCH 1/2] mm/mmu_gather: Invalidate TLB correctly on batch
- allocation failure and flush
-Message-ID: <20191218090133.GM2844@hirez.programming.kicks-ass.net>
-References: <20191217071713.93399-1-aneesh.kumar@linux.ibm.com>
- <20191217090914.GX2844@hirez.programming.kicks-ass.net>
- <3d250b04-a78d-20a7-d41e-50e48e08d1cb@linux.ibm.com>
- <20191217123544.GI2827@hirez.programming.kicks-ass.net>
- <874kxymclu.fsf@linux.ibm.com>
+        Wed, 18 Dec 2019 04:05:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576659914;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=65O9mx01ZtHFGH2j1kSt63wBb4bZymABO1dN1DN+xc8=;
+        b=ENhSLeiveEuRH0+WfrmgC0YKnQfVXwuBgw4/axa4apgbOv7DRsz1uWjQhJJ8Q7Q6nw++yy
+        BZLC7pgGQYoN9NO60BYeES/2KizxUEoj8ze5XED9sV4YUGarJQTwibjoSnskpufh3kOjwX
+        /OvsG4wjmKxb046ZKutUzhUIz1zVmIc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-400-MR1msglmPXS9FxlTnXvPNQ-1; Wed, 18 Dec 2019 04:05:11 -0500
+X-MC-Unique: MR1msglmPXS9FxlTnXvPNQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8E1BA1005512;
+        Wed, 18 Dec 2019 09:05:09 +0000 (UTC)
+Received: from krava (ovpn-204-177.brq.redhat.com [10.40.204.177])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1B94C6137F;
+        Wed, 18 Dec 2019 09:05:06 +0000 (UTC)
+Date:   Wed, 18 Dec 2019 10:05:04 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH 12/12] perf maps: Set maps pointer in the kmap area for
+ kernel maps
+Message-ID: <20191218090504.GE19062@krava>
+References: <20191217144828.2460-1-acme@kernel.org>
+ <20191217144828.2460-13-acme@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <874kxymclu.fsf@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191217144828.2460-13-acme@kernel.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 10:52:53AM +0530, Aneesh Kumar K.V wrote:
-> Upstream ppc64 is broken after the commit: a46cc7a90fd8
-> ("powerpc/mm/radix: Improve TLB/PWC flushes").
-> 
-> Also the patches are not adding any extra TLBI on either radix or hash.
-> 
-> Considering we need to backport this to stable and other distributions,
-> how about we do this early patches in your series before the Kconfig rename?
-> This should enable stable to pick them up with less dependencies. 
+On Tue, Dec 17, 2019 at 11:48:28AM -0300, Arnaldo Carvalho de Melo wrote:
 
-OK I suppose. Will you send a new series?
+SNIP
+
+> +	machine->vmlinux_map = map__new2(0, kernel, &machine->kmaps);
+>  	if (machine->vmlinux_map == NULL)
+>  		return -1;
+>  
+> @@ -1098,7 +1097,6 @@ __machine__create_kernel_maps(struct machine *machine, struct dso *kernel)
+>  	if (!kmap)
+>  		return -1;
+>  
+> -	kmap->kmaps = &machine->kmaps;
+>  	maps__insert(&machine->kmaps, map);
+>  
+>  	return 0;
+> diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+> index fdd5bddb3075..a2cdfe62df94 100644
+> --- a/tools/perf/util/map.c
+> +++ b/tools/perf/util/map.c
+> @@ -223,7 +223,7 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
+>   * they are loaded) and for vmlinux, where only after we load all the
+>   * symbols we'll know where it starts and ends.
+>   */
+> -struct map *map__new2(u64 start, struct dso *dso)
+> +struct map *map__new2(u64 start, struct dso *dso, struct maps *kmaps)
+>  {
+>  	struct map *map = calloc(1, (sizeof(*map) +
+>  				     (dso->kernel ? sizeof(struct kmap) : 0)));
+> @@ -232,6 +232,19 @@ struct map *map__new2(u64 start, struct dso *dso)
+>  		 * ->end will be filled after we load all the symbols
+>  		 */
+>  		map__init(map, start, 0, 0, dso);
+
+we are passing NULL for kmaps in some cases,
+should we check it in here and warn?
+
+		if (!WARN_ON_ONCE(!kmaps, "too bad..") && dso->kernel)
+			
+
+jirka
+
