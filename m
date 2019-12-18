@@ -2,95 +2,103 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC060C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B901BC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E8BE24680
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:18:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99195206E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:21:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726749AbfLRLRu (ORCPT
+        id S1726920AbfLRLVD convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 06:17:50 -0500
-Received: from foss.arm.com ([217.140.110.172]:42336 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726545AbfLRLRu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 06:17:50 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A12D330E;
-        Wed, 18 Dec 2019 03:17:47 -0800 (PST)
-Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id F10D43F6CF;
-        Wed, 18 Dec 2019 03:17:46 -0800 (PST)
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        Cristian Marussi <cristian.marussi@arm.com>
-Subject: [PATCH v2 00/11] firmware: arm_scmi: Add support for multiple device per protocol
-Date:   Wed, 18 Dec 2019 11:17:31 +0000
-Message-Id: <20191218111742.29731-1-sudeep.holla@arm.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 18 Dec 2019 06:21:03 -0500
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:47269 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726676AbfLRLVC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 06:21:02 -0500
+Received: from [37.162.94.155] (port=27596 helo=[192.168.43.3])
+        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1ihXNz-00B31J-Q6; Wed, 18 Dec 2019 12:20:59 +0100
+Subject: Re: [PATCH 06/10] mfd: Add core driver for AD242x A2B transceivers
+To:     Daniel Mack <daniel@zonque.org>, Lee Jones <lee.jones@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        broonie@kernel.org, lars@metafoo.de, pascal.huerst@gmail.com
+References: <20191209183511.3576038-1-daniel@zonque.org>
+ <20191209183511.3576038-8-daniel@zonque.org> <20191217133952.GJ18955@dell>
+ <ce6e0b19-ec40-c17b-cee6-05eca52d5df3@zonque.org>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <e288a6e1-a967-d7cd-72fc-d190819953e3@lucaceresoli.net>
+Date:   Wed, 18 Dec 2019 12:20:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <ce6e0b19-ec40-c17b-cee6-05eca52d5df3@zonque.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8BIT
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently only one scmi device is created for each protocol enumerated.
-However, there is requirement to make use of some procotols by multiple
-kernel subsystems/frameworks. One such example is SCMI PERFORMANCE
-protocol which can be used by both cpufreq and devfreq drivers.
-Similarly, SENSOR protocol may be used by either hwmon or iio subsystems,
-and POWER protocol may be used by genpd and regulator drivers.
+Hi Daniel,
 
-This series adds support for multiple device per protocol using scmi device
-name if one is available. It also updates existing drivers to add
-scmi device names to driver id tables.
+On 17/12/19 20:24, Daniel Mack wrote:
+>>> +++ b/drivers/mfd/ad242x-bus.c
+>>> @@ -0,0 +1,42 @@
+>>> +// SPDX-License-Identifier: GPL-2.0-only
+>>> +
+>>> +#include <linux/i2c.h>
+>>> +#include <linux/init.h>
+>>> +#include <linux/mfd/ad242x.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/of.h>
+>>> +
+>>> +static int ad242x_bus_i2c_probe(struct i2c_client *i2c,
+>>> +                const struct i2c_device_id *id)
+>>> +{
+>>> +    dev_set_drvdata(&i2c->dev, i2c);
+>>> +    i2c_set_clientdata(i2c, &i2c->dev);
+>>
+>> Please explain to me what you think is happening here.
+>>
+>>> +    return 0;
+>>> +}
+>>
+>> What does this driver do?  Seems kinda pointless?
+> 
+> As explained in the commit log, these devices expose two addresses on
+> the i2c bus, and each of which exists for a distinct purpose. The
+> primary one is used to access registers on the master node itself, the
+> second one is proxying traffic to remote nodes.
+> 
+> Now, the question is how to support that, and the approach chosen here
+> is to have a dummy driver sitting on the 2nd address, and to reach out
+> to it via a DT phandle from the master node. I don't like that much
+> either, but I'm not aware of a cleaner way to bind two addresses with
+> one driver. If there is any, I'd be happy to change that.
 
-Regards,
-Sudeep
-
-v1[1]->v2:
-	- Dropped all the changes that mixes up the device specific init
-	  with the protocol
-	- Used idr_replace to skip protocol initialisation as suggested
-	- Added collected reviewed/acked-by
-	- Reworded hwmon changes to reflect that hwmon/iio drivers will
-	  be mutually exclusive and hwmon needs to be removed if IIO
-	  support is added
-
-[1] https://lore.kernel.org/lkml/20191210145345.11616-1-sudeep.holla@arm.com/
-
-Sudeep Holla (11):
-  firmware: arm_scmi: Add support for multiple device per protocol
-  firmware: arm_scmi: Skip scmi mbox channel setup for addtional devices
-  firmware: arm_scmi: Add names to scmi devices created
-  firmware: arm_scmi: Add versions and identifier attributes using dev_groups
-  firmware: arm_scmi: Match scmi device by both name and protocol id
-  firmware: arm_scmi: Stash version in protocol init functions
-  firmware: arm_scmi: Skip protocol initialisation for additional devices
-  clk: scmi: Match scmi device by both name and protocol id
-  cpufreq: scmi: Match scmi device by both name and protocol id
-  hwmon: (scmi-hwmon) Match scmi device by both name and protocol id
-  reset: reset-scmi: Match scmi device by both name and protocol id
-
- drivers/clk/clk-scmi.c                     |  2 +-
- drivers/cpufreq/scmi-cpufreq.c             |  2 +-
- drivers/firmware/arm_scmi/bus.c            | 29 ++++++-
- drivers/firmware/arm_scmi/clock.c          |  2 +
- drivers/firmware/arm_scmi/driver.c         | 92 +++++++++++++++++++++-
- drivers/firmware/arm_scmi/perf.c           |  2 +
- drivers/firmware/arm_scmi/power.c          |  2 +
- drivers/firmware/arm_scmi/reset.c          |  2 +
- drivers/firmware/arm_scmi/scmi_pm_domain.c |  2 +-
- drivers/firmware/arm_scmi/sensors.c        |  2 +
- drivers/hwmon/scmi-hwmon.c                 |  2 +-
- drivers/reset/reset-scmi.c                 |  2 +-
- include/linux/scmi_protocol.h              |  5 +-
- 13 files changed, 134 insertions(+), 12 deletions(-)
+Have a look at i2c_new_dummy_device(), perhaps it is what you need here.
 
 -- 
-2.17.1
+Luca
 
