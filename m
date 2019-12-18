@@ -2,166 +2,92 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB08C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 430D1C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:30:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3762521582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B07A2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:30:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="0DgA0W9l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbfLRM27 (ORCPT
+        id S1726959AbfLRMaD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 07:28:59 -0500
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:7306 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727099AbfLRM2z (ORCPT
+        Wed, 18 Dec 2019 07:30:03 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:36570 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbfLRMaD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 07:28:55 -0500
-Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
-  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="Claudiu.Beznea@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa5.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa5.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: Yh7OB4GjYSP0h78YQ+nAuZPs38phPaHQu/QDYlv6W9aeuBv8n6/ueh6m8CtLg4dxHaFRy9Tpuv
- 4ncYmHz6s6OLIxi2pxtrhxJqWZ0WEOFwP71Z0kX9lPShUSuU65JnU20wbHr/uMUJL03AOq98Zo
- WJgjv+1S4N4Bv6UnpAjsOPavNrtIhjKVYTj3guT0+VrQBO061qXL+uo3ySPthD9nWvXcivBSQ9
- dzLM54KkVQA/phSWX9qIh4sftL84X1sW5p2p21W/ev0hK2Cxaay7fEED3Sbei3/6q0xRdf3SxS
- oy4=
-X-IronPort-AV: E=Sophos;i="5.69,329,1571727600"; 
-   d="scan'208";a="59399403"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 18 Dec 2019 05:28:55 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 18 Dec 2019 05:28:53 -0700
-Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.85.251) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Wed, 18 Dec 2019 05:28:50 -0700
-From:   Claudiu Beznea <claudiu.beznea@microchip.com>
-To:     <boris.brezillon@bootlin.com>, <airlied@linux.ie>,
-        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <lee.jones@linaro.org>, <sam@ravnborg.org>
-CC:     <peda@axentia.se>, <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Sandeep Sheriker Mallikarjun 
-        <sandeepsheriker.mallikarjun@microchip.com>
-Subject: [PATCH v3 6/6] Revert "drm: atmel-hlcdc: enable sys_clk during initalization."
-Date:   Wed, 18 Dec 2019 14:28:29 +0200
-Message-ID: <1576672109-22707-7-git-send-email-claudiu.beznea@microchip.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576672109-22707-1-git-send-email-claudiu.beznea@microchip.com>
-References: <1576672109-22707-1-git-send-email-claudiu.beznea@microchip.com>
+        Wed, 18 Dec 2019 07:30:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=WsfnNd7m2nvvl03QBT9ECyml/bzyuRqjZFKsto4Vzsg=; b=0DgA0W9llHe5C9DFdwetb4wNv
+        1C43E4j/YR7Ex8bi/XiWUwLPzzczrdH3iBq5Pg6NyJAIpYePKI+chlpY6UFcW7Givfi6B5VptscDP
+        N+0kXd9lM2tLT5HHPpor8skjygrw3ztPgFJh0N/8tSj7FbsvGdYHe1ZDiyl8+rQiG6rVzOykB71IX
+        AObFVoToGixx7PdzxtzEWhJ/8s93CH3EOMVqdXnZ142uutwz7zFiEzunGR6JHxPqceRlDAVgwZnIf
+        NwuH/Jsve3rOH/VLsrWW0kyqAvppzYNSJVZuT8Ghmpfl4B4X8rCbrXM14v4LELNPivzpt5pz9sCGA
+        bnhx5ETOA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ihYSF-0003IU-82; Wed, 18 Dec 2019 12:29:27 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 46B16300F29;
+        Wed, 18 Dec 2019 13:27:59 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4CC6529DFB923; Wed, 18 Dec 2019 13:29:22 +0100 (CET)
+Date:   Wed, 18 Dec 2019 13:29:22 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Jens Axboe <axboe@kernel.dk>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        Long Li <longli@microsoft.com>, Ingo Molnar <mingo@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        John Garry <john.garry@huawei.com>,
+        Hannes Reinecke <hare@suse.com>
+Subject: Re: [RFC PATCH 2/3] softirq: implement interrupt flood detection
+Message-ID: <20191218122922.GR2871@hirez.programming.kicks-ass.net>
+References: <20191218071942.22336-1-ming.lei@redhat.com>
+ <20191218071942.22336-3-ming.lei@redhat.com>
+ <20191218104941.GR2844@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191218104941.GR2844@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit d2c755e66617620b729041c625a6396c81d1231c
-("drm: atmel-hlcdc: enable sys_clk during initalization."). With
-commit "drm: atmel-hlcdc: enable clock before configuring timing engine"
-there is no need for this patch. Code is also simpler.
+On Wed, Dec 18, 2019 at 11:49:41AM +0100, Peter Zijlstra wrote:
+> 
+> _If_ you want to do something like this, do it like the below. That only
+> adds a few instruction to irq_exit() and only touches a cacheline that's
+> already touched.
+> 
+> It computes both the avg duration and the avg inter-arrival-time of
+> hardirqs. Things get critical when:
+> 
+> 	inter-arrival-avg < 2*duration-avg
+> 
+> or something like that.
 
-Cc: Sandeep Sheriker Mallikarjun <sandeepsheriker.mallikarjun@microchip.com>
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
+Better yet, try something like:
 
-Hi Sam,
+bool cpu_irq_heavy(int cpu)
+{
+	return cpu_util_irq(cpu_rq(cpu)) >= arch_scale_cpu_capacity(cpu);
+}
 
-I still kept this as a patch as I didn't got any answer from you at my
-last email up to this moment.
-
-If you think it is better to squash this one with patch 2/6 in this seris
-let me know.
-
-Thank you,
-Claudiu Beznea
-
- drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c | 19 +------------------
- 1 file changed, 1 insertion(+), 18 deletions(-)
-
-diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
-index 8dc917a1270b..112aa5066cee 100644
---- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
-+++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
-@@ -721,18 +721,10 @@ static int atmel_hlcdc_dc_load(struct drm_device *dev)
- 	dc->hlcdc = dev_get_drvdata(dev->dev->parent);
- 	dev->dev_private = dc;
- 
--	if (dc->desc->fixed_clksrc) {
--		ret = clk_prepare_enable(dc->hlcdc->sys_clk);
--		if (ret) {
--			dev_err(dev->dev, "failed to enable sys_clk\n");
--			goto err_destroy_wq;
--		}
--	}
--
- 	ret = clk_prepare_enable(dc->hlcdc->periph_clk);
- 	if (ret) {
- 		dev_err(dev->dev, "failed to enable periph_clk\n");
--		goto err_sys_clk_disable;
-+		goto err_destroy_wq;
- 	}
- 
- 	pm_runtime_enable(dev->dev);
-@@ -768,9 +760,6 @@ static int atmel_hlcdc_dc_load(struct drm_device *dev)
- err_periph_clk_disable:
- 	pm_runtime_disable(dev->dev);
- 	clk_disable_unprepare(dc->hlcdc->periph_clk);
--err_sys_clk_disable:
--	if (dc->desc->fixed_clksrc)
--		clk_disable_unprepare(dc->hlcdc->sys_clk);
- 
- err_destroy_wq:
- 	destroy_workqueue(dc->wq);
-@@ -795,8 +784,6 @@ static void atmel_hlcdc_dc_unload(struct drm_device *dev)
- 
- 	pm_runtime_disable(dev->dev);
- 	clk_disable_unprepare(dc->hlcdc->periph_clk);
--	if (dc->desc->fixed_clksrc)
--		clk_disable_unprepare(dc->hlcdc->sys_clk);
- 	destroy_workqueue(dc->wq);
- }
- 
-@@ -910,8 +897,6 @@ static int atmel_hlcdc_dc_drm_suspend(struct device *dev)
- 	regmap_read(regmap, ATMEL_HLCDC_IMR, &dc->suspend.imr);
- 	regmap_write(regmap, ATMEL_HLCDC_IDR, dc->suspend.imr);
- 	clk_disable_unprepare(dc->hlcdc->periph_clk);
--	if (dc->desc->fixed_clksrc)
--		clk_disable_unprepare(dc->hlcdc->sys_clk);
- 
- 	return 0;
- }
-@@ -921,8 +906,6 @@ static int atmel_hlcdc_dc_drm_resume(struct device *dev)
- 	struct drm_device *drm_dev = dev_get_drvdata(dev);
- 	struct atmel_hlcdc_dc *dc = drm_dev->dev_private;
- 
--	if (dc->desc->fixed_clksrc)
--		clk_prepare_enable(dc->hlcdc->sys_clk);
- 	clk_prepare_enable(dc->hlcdc->periph_clk);
- 	regmap_write(dc->hlcdc->regmap, ATMEL_HLCDC_IER, dc->suspend.imr);
- 
--- 
-2.7.4
 
