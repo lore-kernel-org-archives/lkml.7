@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC443C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6828C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 900B8206B7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABAAD206B7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:18:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbfLRHSJ (ORCPT
+        id S1726718AbfLRHSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 02:18:09 -0500
+        Wed, 18 Dec 2019 02:18:12 -0500
 Received: from mga14.intel.com ([192.55.52.115]:20002 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725882AbfLRHSJ (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        id S1725955AbfLRHSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 18 Dec 2019 02:18:09 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 18:29:46 -0800
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 20:11:49 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,327,1571727600"; 
-   d="scan'208";a="212570134"
-Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.239.196.84]) ([10.239.196.84])
-  by fmsmga007.fm.intel.com with ESMTP; 17 Dec 2019 18:29:43 -0800
-Subject: Re: [PATCH v3 1/3] perf report: Change sort order by a specified
- event in group
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20191212123337.23600-1-yao.jin@linux.intel.com>
- <20191216073113.GB18240@krava>
- <fcedac74-7fb4-1c3b-67a3-9af24c256f40@linux.intel.com>
- <20191217090600.GA24766@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <e0b69c6b-40b9-5d7f-dcc9-39fc4ef52700@linux.intel.com>
-Date:   Wed, 18 Dec 2019 10:29:42 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+X-IronPort-AV: E=Sophos;i="5.69,328,1571727600"; 
+   d="scan'208";a="227730233"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga002.jf.intel.com with ESMTP; 17 Dec 2019 20:11:47 -0800
+Cc:     baolu.lu@linux.intel.com, "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>, Yi Liu <yi.l.liu@intel.com>,
+        Eric Auger <eric.auger@redhat.com>
+Subject: Re: [PATCH v8 08/10] iommu/vt-d: Add custom allocator for IOASID
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>
+References: <1576524252-79116-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1576524252-79116-9-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <9c9c818c-ccb1-544d-2041-cf7017c4d898@linux.intel.com>
+Date:   Wed, 18 Dec 2019 12:10:55 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <20191217090600.GA24766@krava>
+In-Reply-To: <1576524252-79116-9-git-send-email-jacob.jun.pan@linux.intel.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -54,84 +54,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
+On 12/17/19 3:24 AM, Jacob Pan wrote:
+> When VT-d driver runs in the guest, PASID allocation must be
+> performed via virtual command interface. This patch registers a
+> custom IOASID allocator which takes precedence over the default
+> XArray based allocator. The resulting IOASID allocation will always
+> come from the host. This ensures that PASID namespace is system-
+> wide.
+> 
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> Signed-off-by: Liu, Yi L <yi.l.liu@intel.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>   drivers/iommu/intel-iommu.c | 75 +++++++++++++++++++++++++++++++++++++++++++++
+>   include/linux/intel-iommu.h |  2 ++
+>   2 files changed, 77 insertions(+)
+> 
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index e90102c7540d..b0c0bb6f740e 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -1700,6 +1700,9 @@ static void free_dmar_iommu(struct intel_iommu *iommu)
+>   		if (ecap_prs(iommu->ecap))
+>   			intel_svm_finish_prq(iommu);
+>   	}
+> +	if (ecap_vcs(iommu->ecap) && vccap_pasid(iommu->vccap))
+> +		ioasid_unregister_allocator(&iommu->pasid_allocator);
+> +
+>   #endif
+>   }
+>   
+> @@ -3181,6 +3184,75 @@ static int copy_translation_tables(struct intel_iommu *iommu)
+>   	return ret;
+>   }
+>   
+> +#ifdef CONFIG_INTEL_IOMMU_SVM
+> +static ioasid_t intel_ioasid_alloc(ioasid_t min, ioasid_t max, void *data)
+> +{
+> +	struct intel_iommu *iommu = data;
+> +	ioasid_t ioasid;
+> +
 
-On 12/17/2019 5:06 PM, Jiri Olsa wrote:
-> On Tue, Dec 17, 2019 at 09:47:01AM +0800, Jin, Yao wrote:
->>
->>
->> On 12/16/2019 3:31 PM, Jiri Olsa wrote:
->>> On Thu, Dec 12, 2019 at 08:33:35PM +0800, Jin Yao wrote:
->>>
->>> SNIP
->>>
->>>>
->>>> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
->>>> ---
->>>>    tools/perf/Documentation/perf-report.txt |   4 +
->>>>    tools/perf/builtin-report.c              |  10 +++
->>>>    tools/perf/ui/hist.c                     | 108 +++++++++++++++++++----
->>>>    tools/perf/util/symbol_conf.h            |   1 +
->>>>    4 files changed, 108 insertions(+), 15 deletions(-)
->>>>
->>>> diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
->>>> index 8dbe2119686a..9ade613ef020 100644
->>>> --- a/tools/perf/Documentation/perf-report.txt
->>>> +++ b/tools/perf/Documentation/perf-report.txt
->>>> @@ -371,6 +371,10 @@ OPTIONS
->>>>    	Show event group information together. It forces group output also
->>>>    	if there are no groups defined in data file.
->>>> +--group-sort-idx::
->>>> +	Sort the output by the event at the index n in group. If n is invalid,
->>>> +	sort by the first event. WARNING: This should be used with --group.
->>>
->>> --group in record or report?
->>>
->>
->> This --group is in perf-report. So even if it's not created with -e '{}' in
->> perf-record, it still supports to show event information together.
->>
->>> you can also create groups with -e '{}', not just --group option
->>>
->>> I wonder you could check early on 'evlist->nr_groups' and fail
->>> if there's no group defined if the option is enabled
->>>
->>
->> Maybe we don't need to check that because it supports the case of no group
->> defined.
->>
->> For example,
->> perf record -e cycles,instructions
->> perf report --group --group-sort-idx 1 --stdio
-> 
-> hum, --group will force evlist->nr_groups == 1, right?
-> 
-> so we could warn/fail on (group-sort-idx && !evlist->nr_groups)
-> 
+Check !iommu just like the free api?
+
+> +	/*
+> +	 * VT-d virtual command interface always uses the full 20 bit
+> +	 * PASID range. Host can partition guest PASID range based on
+> +	 * policies but it is out of guest's control.
+> +	 */
+> +	if (min < PASID_MIN || max > intel_pasid_max_id)
+> +		return INVALID_IOASID;
+> +
+> +	if (vcmd_alloc_pasid(iommu, &ioasid))
+> +		return INVALID_IOASID;
+> +
+> +	return ioasid;
+> +}
+> +
+> +static void intel_ioasid_free(ioasid_t ioasid, void *data)
+> +{
+> +	struct intel_iommu *iommu = data;
+> +
+> +	if (!iommu)
+> +		return;
+> +	/*
+> +	 * Sanity check the ioasid owner is done at upper layer, e.g. VFIO
+> +	 * We can only free the PASID when all the devices are unbound.
+> +	 */
+> +	if (ioasid_find(NULL, ioasid, NULL)) {
+> +		pr_alert("Cannot free active IOASID %d\n", ioasid);
+> +		return;
+> +	}
+> +	vcmd_free_pasid(iommu, ioasid);
+> +}
+> +
+> +static void register_pasid_allocator(struct intel_iommu *iommu)
+> +{
+> +	if (!intel_iommu_sm) {
+
+Use sm_supported(iommu) instead.
+
+> +		pr_warn("VT-d scalable mode not enabled\n");
+> +		return;
+> +	}
+> +
+> +	/*
+> +	 * Register a custom PASID allocator if we are running in a guest,
+> +	 * guest PASID must be obtained via virtual command interface.
+> +	 * There can be multiple vIOMMUs in each guest but only one allocator
+> +	 * is active. All vIOMMU allocators will eventually be calling the same
+> +	 * host allocator.
+> +	 */
+> +	if (ecap_vcs(iommu->ecap) && vccap_pasid(iommu->vccap)) {
+> +		pr_info("Register custom PASID allocator\n");
+> +		iommu->pasid_allocator.alloc = intel_ioasid_alloc;
+> +		iommu->pasid_allocator.free = intel_ioasid_free;
+> +		iommu->pasid_allocator.pdata = (void *)iommu;
+> +		if (!ioasid_register_allocator(&iommu->pasid_allocator)) {
+> +			pr_warn("Custom PASID allocator failed, scalable mode disabled\n");
+> +			/*
+> +			 * Disable scalable mode on this IOMMU if there
+> +			 * is no custom allocator. Mixing SM capable vIOMMU
+> +			 * and non-SM vIOMMU are not supported.
+> +			 */
+> +			intel_iommu_sm = 0;
+> +		}
+> +	}
+> +}
+> +#endif
+> +
+>   static int __init init_dmars(void)
+>   {
+>   	struct dmar_drhd_unit *drhd;
+> @@ -3298,6 +3370,9 @@ static int __init init_dmars(void)
+>   	 */
+>   	for_each_active_iommu(iommu, drhd) {
+>   		iommu_flush_write_buffer(iommu);
+> +#ifdef CONFIG_INTEL_IOMMU_SVM
+> +		register_pasid_allocator(iommu);
+> +#endif
+>   		iommu_set_root_entry(iommu);
+>   		iommu->flush.flush_context(iommu, 0, 0, 0, DMA_CCMD_GLOBAL_INVL);
+>   		iommu->flush.flush_iotlb(iommu, 0, 0, 0, DMA_TLB_GLOBAL_FLUSH);
+> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+> index 1e11560b0e59..8c30b23bd838 100644
+> --- a/include/linux/intel-iommu.h
+> +++ b/include/linux/intel-iommu.h
+> @@ -19,6 +19,7 @@
+>   #include <linux/iommu.h>
+>   #include <linux/io-64-nonatomic-lo-hi.h>
+>   #include <linux/dmar.h>
+> +#include <linux/ioasid.h>
+>   
+>   #include <asm/cacheflush.h>
+>   #include <asm/iommu.h>
+> @@ -557,6 +558,7 @@ struct intel_iommu {
+>   #ifdef CONFIG_INTEL_IOMMU_SVM
+>   	struct page_req_dsc *prq;
+>   	unsigned char prq_name[16];    /* Name for PRQ interrupt */
+> +	struct ioasid_allocator_ops pasid_allocator; /* Custom allocator for PASIDs */
+>   #endif
+>   	struct q_inval  *qi;            /* Queued invalidation info */
+>   	u32 *iommu_state; /* Store iommu states between suspend and resume.*/
 > 
 
-Yes, we can. I have added this checking in v4.
-
-> SNIP
-> 
->>
->> Thanks. Can we say something as following?
->>
->> --group-sort-idx::
->> 	Sort the output by the event at the index n in group. If n is invalid, sort
->> by the first event. It can support multiple groups with different amount of
->> events. WARNING: This should be used with perf report --group.
-> 
-> if the events are already grouped you dont need --group ;-) how about:
-> 
-> 	This should be used on grouped events.
-> 
-
-OK, yes, that's better. I just post v4 which includes this update.
-
-Thanks
-Jin Yao
-
-> thanks,
-> jirka
-> 
+Best regards,
+baolu
