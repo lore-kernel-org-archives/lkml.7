@@ -2,229 +2,64 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B27E0C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F87C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 856EA24672
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:36:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576683387;
-	bh=aLd//447zZj2sNH2oKTUQk0DiOpFmUsnYfC+qQq2DHE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iCvn1GT91XvH+1QFUsLdwq6vEIlmLAq+ihEPn3FdJgMdTkUMlGRgOAt06Axvyo9c7
-	 K6n33e0PJyCYffB1tNog+Znl8FCPSsk2vu3CRJTCCCZM6T5teT1qb9LkOe32UO4Peo
-	 vHWlfWEIfZIAKsvl/b03+XajSCCYYaySMZXbGWJA=
+	by mail.kernel.org (Postfix) with ESMTP id C1B982465E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:38:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727241AbfLRPg0 (ORCPT
+        id S1727141AbfLRPid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 10:36:26 -0500
-Received: from conuserg-12.nifty.com ([210.131.2.79]:51856 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726984AbfLRPg0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 10:36:26 -0500
-Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id xBIFYQjU027260;
-        Thu, 19 Dec 2019 00:34:27 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com xBIFYQjU027260
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1576683268;
-        bh=nW7i6JukRHFe3PcDkfjmOEE2/tltKikdJpXFBt0kjIo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gZ2sSRa2vjNArYeZoa9wlOt3KiXnHxEwzOrKYMm8Fzd8qnEfMi9LE0F6f0UQXfMWy
-         +1MAEGg/q/NYi0mVi3OL8Qi1CLHpzFu4HlKuKIA3ayO4EXRzwfVzQy2jxg7T1VMRhS
-         r9aP8pjqolHJjQqtjYuWBh+UQETYrhBL8a5V9brA9LnOAsOuT3DRKHMfp5ZZZZt1qB
-         FkA0drXjGZKp8Q+NAec9N8cBzH9fJS2UTM7qp3ANi/XZLPj+p3ODM/ogxP/XZT6H8w
-         TAimIcH+eZ9DOlV8S3hFRrZjK3b8zewT2sk2HZ/pjRgJmk/fYs64sJsEhmQpKoeFzd
-         eqMJb0M2yHs7w==
-X-Nifty-SrcIP: [126.93.102.113]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH 2/2] kbuild: rename header-test- to no-header-test in usr/include/Makefile
-Date:   Thu, 19 Dec 2019 00:34:22 +0900
-Message-Id: <20191218153422.14557-2-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191218153422.14557-1-masahiroy@kernel.org>
-References: <20191218153422.14557-1-masahiroy@kernel.org>
+        Wed, 18 Dec 2019 10:38:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36054 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726913AbfLRPid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 10:38:33 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEC9624650;
+        Wed, 18 Dec 2019 15:38:31 +0000 (UTC)
+Date:   Wed, 18 Dec 2019 10:38:30 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Sasha Levin <sashal@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Will Deacon <will@kernel.org>,
+        "kernelci.org bot" <bot@kernelci.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH AUTOSEL 4.19 031/219] arm64: preempt: Fix big-endian
+ when checking preempt count in assembly
+Message-ID: <20191218103830.3f396a6f@gandalf.local.home>
+In-Reply-To: <20191216094523.GA9938@willie-the-truck>
+References: <20191122054911.1750-1-sashal@kernel.org>
+        <20191122054911.1750-24-sashal@kernel.org>
+        <20191214021403.GA1357@home.goodmis.org>
+        <20191216094523.GA9938@willie-the-truck>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit d2a99dbdade4 ("kbuild: update compile-test header list for
-v5.5-rc1"), this does not depend on any CONFIG option.
+On Mon, 16 Dec 2019 09:45:24 +0000
+Will Deacon <will@kernel.org> wrote:
 
-no-header-test is clearer.
+> Yup, without 396244692232 this commit makes no sense. That's why I didn't CC
+> stable or add a Fixes tag :(
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+Yes, please have stable revert this change.
 
- usr/include/Makefile | 106 +++++++++++++++++++++----------------------
- 1 file changed, 53 insertions(+), 53 deletions(-)
+Thanks!
 
-diff --git a/usr/include/Makefile b/usr/include/Makefile
-index e90f5f7903bb..a339ef325aa5 100644
---- a/usr/include/Makefile
-+++ b/usr/include/Makefile
-@@ -16,80 +16,80 @@ override c_flags = $(UAPI_CFLAGS) -Wp,-MD,$(depfile) -I$(objtree)/usr/include
- # Please consider to fix the header first.
- #
- # Sorted alphabetically.
--header-test- += asm/shmbuf.h
--header-test- += asm/signal.h
--header-test- += asm/ucontext.h
--header-test- += drm/vmwgfx_drm.h
--header-test- += linux/am437x-vpfe.h
--header-test- += linux/android/binder.h
--header-test- += linux/android/binderfs.h
--header-test- += linux/coda.h
--header-test- += linux/elfcore.h
--header-test- += linux/errqueue.h
--header-test- += linux/fsmap.h
--header-test- += linux/hdlc/ioctl.h
--header-test- += linux/ivtv.h
--header-test- += linux/kexec.h
--header-test- += linux/matroxfb.h
--header-test- += linux/nfc.h
--header-test- += linux/omap3isp.h
--header-test- += linux/omapfb.h
--header-test- += linux/patchkey.h
--header-test- += linux/phonet.h
--header-test- += linux/reiserfs_xattr.h
--header-test- += linux/sctp.h
--header-test- += linux/signal.h
--header-test- += linux/sysctl.h
--header-test- += linux/usb/audio.h
--header-test- += linux/v4l2-mediabus.h
--header-test- += linux/v4l2-subdev.h
--header-test- += linux/videodev2.h
--header-test- += linux/vm_sockets.h
--header-test- += sound/asequencer.h
--header-test- += sound/asoc.h
--header-test- += sound/asound.h
--header-test- += sound/compress_offload.h
--header-test- += sound/emu10k1.h
--header-test- += sound/sfnt_info.h
--header-test- += xen/evtchn.h
--header-test- += xen/gntdev.h
--header-test- += xen/privcmd.h
-+no-header-test += asm/shmbuf.h
-+no-header-test += asm/signal.h
-+no-header-test += asm/ucontext.h
-+no-header-test += drm/vmwgfx_drm.h
-+no-header-test += linux/am437x-vpfe.h
-+no-header-test += linux/android/binder.h
-+no-header-test += linux/android/binderfs.h
-+no-header-test += linux/coda.h
-+no-header-test += linux/elfcore.h
-+no-header-test += linux/errqueue.h
-+no-header-test += linux/fsmap.h
-+no-header-test += linux/hdlc/ioctl.h
-+no-header-test += linux/ivtv.h
-+no-header-test += linux/kexec.h
-+no-header-test += linux/matroxfb.h
-+no-header-test += linux/nfc.h
-+no-header-test += linux/omap3isp.h
-+no-header-test += linux/omapfb.h
-+no-header-test += linux/patchkey.h
-+no-header-test += linux/phonet.h
-+no-header-test += linux/reiserfs_xattr.h
-+no-header-test += linux/sctp.h
-+no-header-test += linux/signal.h
-+no-header-test += linux/sysctl.h
-+no-header-test += linux/usb/audio.h
-+no-header-test += linux/v4l2-mediabus.h
-+no-header-test += linux/v4l2-subdev.h
-+no-header-test += linux/videodev2.h
-+no-header-test += linux/vm_sockets.h
-+no-header-test += sound/asequencer.h
-+no-header-test += sound/asoc.h
-+no-header-test += sound/asound.h
-+no-header-test += sound/compress_offload.h
-+no-header-test += sound/emu10k1.h
-+no-header-test += sound/sfnt_info.h
-+no-header-test += xen/evtchn.h
-+no-header-test += xen/gntdev.h
-+no-header-test += xen/privcmd.h
- 
- # More headers are broken in some architectures
- 
- ifeq ($(SRCARCH),arc)
--header-test- += linux/bpf_perf_event.h
-+no-header-test += linux/bpf_perf_event.h
- endif
- 
- ifeq ($(SRCARCH),ia64)
--header-test- += asm/setup.h
--header-test- += asm/sigcontext.h
--header-test- += asm/perfmon.h
--header-test- += asm/perfmon_default_smpl.h
--header-test- += linux/if_bonding.h
-+no-header-test += asm/setup.h
-+no-header-test += asm/sigcontext.h
-+no-header-test += asm/perfmon.h
-+no-header-test += asm/perfmon_default_smpl.h
-+no-header-test += linux/if_bonding.h
- endif
- 
- ifeq ($(SRCARCH),mips)
--header-test- += asm/stat.h
-+no-header-test += asm/stat.h
- endif
- 
- ifeq ($(SRCARCH),powerpc)
--header-test- += asm/stat.h
--header-test- += linux/bpf_perf_event.h
-+no-header-test += asm/stat.h
-+no-header-test += linux/bpf_perf_event.h
- endif
- 
- ifeq ($(SRCARCH),riscv)
--header-test- += linux/bpf_perf_event.h
-+no-header-test += linux/bpf_perf_event.h
- endif
- 
- ifeq ($(SRCARCH),sparc)
--header-test- += asm/stat.h
--header-test- += asm/uctx.h
--header-test- += asm/fbio.h
-+no-header-test += asm/stat.h
-+no-header-test += asm/uctx.h
-+no-header-test += asm/fbio.h
- endif
- 
- # asm-generic/*.h is used by asm/*.h, and should not be included directly
--header-test- += asm-generic/%
-+no-header-test += asm-generic/%
- 
- extra-y := $(patsubst $(obj)/%.h,%.hdrtest, $(shell find $(obj) -name '*.h' 2>/dev/null))
- 
-@@ -97,7 +97,7 @@ extra-y := $(patsubst $(obj)/%.h,%.hdrtest, $(shell find $(obj) -name '*.h' 2>/d
- quiet_cmd_hdrtest = HDRTEST $<
-       cmd_hdrtest = \
- 		$(CC) $(c_flags) -S -o /dev/null -x c /dev/null \
--			$(if $(filter-out $(header-test-), $*.h), -include $< -include $<); \
-+			$(if $(filter-out $(no-header-test), $*.h), -include $< -include $<); \
- 		$(PERL) $(srctree)/scripts/headers_check.pl $(obj) $(SRCARCH) $<; \
- 		touch $@
- 
--- 
-2.17.1
-
+-- Steve
