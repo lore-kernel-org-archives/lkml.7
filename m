@@ -2,70 +2,87 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 207D2C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6018C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5F9120684
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:47:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E6FA20684
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:48:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="qn5PFyKE"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="iWhjT4BT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727297AbfLRPqn (ORCPT
+        id S1727193AbfLRPsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 10:46:43 -0500
-Received: from mail-wm1-f47.google.com ([209.85.128.47]:50548 "EHLO
-        mail-wm1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726996AbfLRPqn (ORCPT
+        Wed, 18 Dec 2019 10:48:30 -0500
+Received: from mta-p7.oit.umn.edu ([134.84.196.207]:50394 "EHLO
+        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726987AbfLRPsa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 10:46:43 -0500
-Received: by mail-wm1-f47.google.com with SMTP id a5so2343725wmb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 07:46:41 -0800 (PST)
+        Wed, 18 Dec 2019 10:48:30 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 47dKDF1GzMz9vYy2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 15:48:29 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p7.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id uEFjGA3ibnSQ for <linux-kernel@vger.kernel.org>;
+        Wed, 18 Dec 2019 09:48:29 -0600 (CST)
+Received: from mail-yw1-f70.google.com (mail-yw1-f70.google.com [209.85.161.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id 47dKDF0BPYz9vYxq
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 09:48:29 -0600 (CST)
+Received: by mail-yw1-f70.google.com with SMTP id z7so1547207ywd.21
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 07:48:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        d=umn.edu; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=MYOvH0H7ibv1Fa6fIrfwGLVBI8jr1NdK0W3XvJiQ49I=;
-        b=qn5PFyKE3DoNYy2lkj45emUmQkf0FvtM3hIZDbyNAv6BIrMS9+Q5a7ZjD+eDdyGgK9
-         mT6spRojz3xx/PkGBBbORTygEn1qyDpK+cPZx6tIQSa1v1i0UGrUPKV6iEKlgJF33woI
-         IFw6VwqFrprWCXoY+k4c+SlRsefk4DsvzbFVTi0C7Z0dftniGS8/Ng4y3c4uLXgW/C2d
-         WtwKQcCGci9AlmTR1A9jMn2mGeUY3r+CnLAtvOZsn4huMJeVVpArVJZF5nSCbur9dXWH
-         J2V0ywVyLcLjKi3kGUN52iSvmEqwgq1zIV9UKhIHJj6zEJ6L+ntOZersakaqSO2G2TMR
-         jEIg==
+        bh=24iL5/uUkW8WBrQ+DwpF6Dwk7XjHT1zZjAzHIUDTH/4=;
+        b=iWhjT4BTr9LLloEH90ZsH1TvIWOH57cw1MQgcHeDYwOIDfS2k/tzc3ep0QbbE1E1/0
+         a3PXogSZAAdSAYBtNaacCxr8oPsRDVX+7p89iaFIspNqEjFU01luRm2avI+bUsbf7pLB
+         J56L1XiP+cBb4qlGzneNwYGeEZzMf+HMwzFyi7L2CWEivK6Gwj4BFQ4zBCLEh21Mp5al
+         vQzZhSPGrvFmZOEMIyuNUrLoziYSjQkHZDONVva7a++X+SwD4hLw08bg/Euyl05egjHd
+         OCHNKwDx4YXZFTyzOlftoV5C9+zmCh1YY/5g6EVOimzmScpjd+hmeezAjXmOXZfZhjnn
+         SsJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=MYOvH0H7ibv1Fa6fIrfwGLVBI8jr1NdK0W3XvJiQ49I=;
-        b=ub4HLLqf+F6PYPEdAln6QyLkv+VlIyuNqptJNk/8Fjn2HCmQ+H0sqT1vCy3x2NuVOZ
-         S/8pf0JQwL3p9fav6oAk3zOx2N+sLE6pCByjKOAi67TNOSN2p7y6fNfrB71RDBms619+
-         bUP48xjd0leVFoTHXLj1cKF7o4UomUYCVKQ3oq3tvOdmRYI5p4CHNjBad6hfDgR96rQR
-         5I19j3pllg38fCL4Sf/i1I+Xh31KaWqhwljAE9b8l+hlM3uSFlWVD5IBMIQB07d5YBb0
-         URH+k5uE3GVM4dt7erLg80IpBb637rnAwxk022mbigBkCDT0a5Na09aHDdIHdzljVBVY
-         AGOA==
-X-Gm-Message-State: APjAAAU1vhYTqWnEX8Yn4ZfG8dJxyijuRGt8zSbCaK5S/+ZJxwTxP1jW
-        65Jf6ntMNNGQ+3R455CfPd5bHw==
-X-Google-Smtp-Source: APXvYqynj1gVzQckDYJahebhiIXEraU4mydUqgfPMFSx/RvYApGRfUTi0R6a4jGnTRdhXKN439p/7A==
-X-Received: by 2002:a1c:4c10:: with SMTP id z16mr4253923wmf.136.1576684000195;
-        Wed, 18 Dec 2019 07:46:40 -0800 (PST)
-Received: from bender.baylibre.local (lfbn-nic-1-505-157.w90-116.abo.wanadoo.fr. [90.116.92.157])
-        by smtp.gmail.com with ESMTPSA id x1sm2891492wru.50.2019.12.18.07.46.38
+        bh=24iL5/uUkW8WBrQ+DwpF6Dwk7XjHT1zZjAzHIUDTH/4=;
+        b=IKZ7N3cLy/7z+hDA2ewcas0+0PeBWDI3mQwzYSngv10sxfzxwJQXuJx3FnGaAazofU
+         cqUZuuL1ZrOdgo+syvvlc7dSOcly4sB12WlCuE9I2chLs20/h7f2ohaSmvTIOpc7a8BB
+         /bcHUWvF1OBVf48UxNFUj72p5W1ylauRzI6vzAkTya0bccsuhFeB8qsiRIgQ+H610WM5
+         WjBlI36Emlp7vwM+Vzs4hMUwKRrq1ybt5qd718G4zoGjNGDkm6ekHLKtRXmBC8YrWIms
+         QNP6vm8KyFCGUf6hgwrgRB+mHwXGlZ/Ph3uKXykzrNqJytQcSlmrk4In63gszEsytnld
+         5Ndw==
+X-Gm-Message-State: APjAAAW2bh8h1Os2lJpyVmqlnJdHyQP9ZiNLPknA7d72dzXfM3FexWFI
+        Z5ZYd1ZagaL+3yKW2nIV2lizCH0Q9LZXqzHplflTho9jKPWQ7qT37cyms/GJhrWah2zU35A2m1A
+        dsD9gx1aThwhm9T8Gz1Jh4hEqYumX
+X-Received: by 2002:a25:df15:: with SMTP id w21mr2537598ybg.7.1576684108468;
+        Wed, 18 Dec 2019 07:48:28 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyUs2lA5D65kMHLl6/mRZQTuLTuD4Ghfd2R8mcUBxkI5G82Qt7wVJf30S63EhVsq0vzQPq5Yw==
+X-Received: by 2002:a25:df15:: with SMTP id w21mr2537588ybg.7.1576684108258;
+        Wed, 18 Dec 2019 07:48:28 -0800 (PST)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id j4sm1050738ywd.103.2019.12.18.07.48.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 07:46:39 -0800 (PST)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com,
-        jonas@kwiboo.se, jernej.skrabec@siol.net,
-        boris.brezillon@collabora.com
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 00/10] drm/bridge: dw-hdmi: implement bus-format negotiation and YUV420 support
-Date:   Wed, 18 Dec 2019 16:46:27 +0100
-Message-Id: <20191218154637.17509-1-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
+        Wed, 18 Dec 2019 07:48:27 -0800 (PST)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] tpm/ppi: remove impossible assertion in tpm_eval_dsm
+Date:   Wed, 18 Dec 2019 09:48:25 -0600
+Message-Id: <20191218154825.11634-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,58 +90,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset is based on Boris's v4 "drm: Add support for bus-format negotiation" at [1]
-patchset to implement full bus-format negotiation for DW-HDMI, including YUV420 support and
-10/12/16bit YUV444, YUV422 and RGB. The Color Space Converter support is already implemented.
+In tpm_eval_dsm, BUG_ON on ppi_handle is used as an assertion.
+However, if ppi_handle is NULL, the kernel crashes. The patch
+removes the unnecessary check.
 
-And the counterpart implementation in the Amlogic Meson VPU dw-hdmi glue :
-- basic bus-format negotiation to select YUV444 bus-format as DW-HDMI input
-- YUV420 support when HDMI2.0 YUV420 modeset
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+---
+v1: replaced the recovery code to completely eliminate the check,
+as suggested by Jason Gunthorpe.
+---
+ drivers/char/tpm/tpm_ppi.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-This is a follow-up from the previous attempts :
-- "drm/meson: Add support for HDMI2.0 YUV420 4k60" at [2]
-- "drm/meson: Add support for HDMI2.0 4k60" at [3]
-
-Changes since RFC v2 at [5]:
-- Added fixes from Jonas, who tested and integrated it for Rockchip SoCs
-- Added support for 10/12/16bit tmds clock calculation
-- Added support for max_bcp connector property
-- Adapted to Boris's v4 patchset
-- Fixed typos reported by boris
-
-Changes since RFC v1 at [4]:
-- Rewrote negociation using the v2 patchset, including full DW-HDMI fmt negociation
-
-[1] https://patchwork.freedesktop.org/patch/msgid/20191203141515.3597631-1-boris.brezillon@collabora.com
-[2] https://patchwork.freedesktop.org/patch/msgid/20190520133753.23871-1-narmstrong@baylibre.com
-[3] https://patchwork.freedesktop.org/patch/msgid/1549022873-40549-1-git-send-email-narmstrong@baylibre.com
-[4] https://patchwork.freedesktop.org/patch/msgid/20190820084109.24616-1-narmstrong@baylibre.com
-[5] https://patchwork.freedesktop.org/patch/msgid/ 20190827081425.15011-1-narmstrong@baylibre.com
-
-Jonas Karlman (2):
-  drm/bridge: dw-hdmi: set mtmdsclock for deep color
-  drm/bridge: dw-hdmi: add max bpc connector property
-
-Neil Armstrong (8):
-  drm/bridge: synopsys: dw-hdmi: add bus format negociation
-  drm/bridge: synopsys: dw-hdmi: allow ycbcr420 modes for >= 0x200a
-  drm/meson: venc: make drm_display_mode const
-  drm/meson: meson_dw_hdmi: add bridge and switch to drm_bridge_funcs
-  drm/meson: dw-hdmi: stop enforcing input_bus_format
-  drm/meson: venc: add support for YUV420 setup
-  drm/meson: vclk: add support for YUV420 setup
-  drm/meson: Add YUV420 output support
-
- drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 299 +++++++++++++++++++++-
- drivers/gpu/drm/meson/meson_dw_hdmi.c     | 193 +++++++++++---
- drivers/gpu/drm/meson/meson_vclk.c        |  93 +++++--
- drivers/gpu/drm/meson/meson_vclk.h        |   7 +-
- drivers/gpu/drm/meson/meson_venc.c        |  10 +-
- drivers/gpu/drm/meson/meson_venc.h        |   4 +-
- drivers/gpu/drm/meson/meson_venc_cvbs.c   |   3 +-
- include/drm/bridge/dw_hdmi.h              |   1 +
- 8 files changed, 538 insertions(+), 72 deletions(-)
-
+diff --git a/drivers/char/tpm/tpm_ppi.c b/drivers/char/tpm/tpm_ppi.c
+index b2dab941cb7f..603f7806f9af 100644
+--- a/drivers/char/tpm/tpm_ppi.c
++++ b/drivers/char/tpm/tpm_ppi.c
+@@ -42,7 +42,6 @@ static inline union acpi_object *
+ tpm_eval_dsm(acpi_handle ppi_handle, int func, acpi_object_type type,
+ 	     union acpi_object *argv4, u64 rev)
+ {
+-	BUG_ON(!ppi_handle);
+ 	return acpi_evaluate_dsm_typed(ppi_handle, &tpm_ppi_guid,
+ 				       rev, func, argv4, type);
+ }
 -- 
-2.22.0
+2.20.1
 
