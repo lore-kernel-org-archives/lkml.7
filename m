@@ -2,79 +2,117 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF98C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 03:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52FE4C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 03:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEF6021775
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 03:11:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2850B2146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 03:24:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NX4eemyM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbfLRDLC (ORCPT
+        id S1726591AbfLRDPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 22:11:02 -0500
-Received: from mail-il1-f197.google.com ([209.85.166.197]:44146 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726454AbfLRDLC (ORCPT
+        Tue, 17 Dec 2019 22:15:25 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:32842 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726387AbfLRDPY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 22:11:02 -0500
-Received: by mail-il1-f197.google.com with SMTP id h87so638973ild.11
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 19:11:02 -0800 (PST)
+        Tue, 17 Dec 2019 22:15:24 -0500
+Received: by mail-ot1-f65.google.com with SMTP id b18so577592otp.0;
+        Tue, 17 Dec 2019 19:15:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=czNP6LwPZnpp64axcSIR+6sFO5rvWfMnhX184ZSQgOY=;
+        b=NX4eemyM8mAIvGccXgJOrjssc0/1t+Q47838F7o5vo5qOo8eoUEJNI2YtJ9QcH28pe
+         /aPyYnBUJ9qK0Yn/P/BxOt+Dnzskdp/fuvsZ/3GeJAQvYlN1MYkgWU36MKlCsZLTOiLF
+         pcidCJPdcIFRf5F5hFwLZcDOXpf5vGaYep+6ATNK6EWU7n4xIC6gF5dTNSgFlceFzyMB
+         Z1Fzk6wD1R9+7itQJOdoL2tvcnEKHLz97VPE6A796DhVtYQBq6d+KHUPDyiv7b8OoXvM
+         mfVPHchnnVQOlK1Ktgn4VUajokn/DmfRaWyWuYv+ERC5e60dRwlz/PmwaRaC95LOuqDP
+         B9Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=B/UHccQy2GUPLjKClLjPB9mKSYRSTTFVhiFG9ktmLyQ=;
-        b=AP7r5CujG0ibTQfzBD3gfQlfBycQRkfB6XMnFDdSwOF5Mdoftgb81kps6KbdgywzuQ
-         sUDxl2BjN+vh1OC/NzqrzOP+VeUh5lzi/axYtNFTT/tTJom44k/OIMcs9BzkyHEcScp7
-         qdvwZ/GtLkH+6BAqrYbba6/gXK8wewP9vjr1XWWCA9M2EJ7YMyLUvm4AAtSHDrXPfSMe
-         a4nXCWQzomhDvdER5eQelfv4voluedqdjbCDfnCXlXtgkGMgup9mlupajgK7XhiPBcE2
-         RCgEeVNNC2RRTrxnQ1QQ1jtJ9mTM4O0RSkj9EsQYAzzTjEXA7MqG03lqrSWKtG9YwBjR
-         zTbQ==
-X-Gm-Message-State: APjAAAVbLAiGw/0YiFgd5HS1P3h6RDcxH95pMa+HrR0SE0ppzlkIUJkK
-        lhXopNeg/ve94GRIPVObyyH5+JwjO6nuTsqigg1TIjjU8aKk
-X-Google-Smtp-Source: APXvYqyMCK4p3QJRNreOaLBgYJejAM1cYoWdGoPJ26FTPuaQyelg3Sjap478JDrBsEezCSHSp7yUtmv244NHO0fzr3UX5/+ddebT
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=czNP6LwPZnpp64axcSIR+6sFO5rvWfMnhX184ZSQgOY=;
+        b=ZSJRQnMiVcRzhpJLb+K3d3mg7wyZPF7JeRlWfz5lxOaq6KwI37lJW3vIqfsw1Ym7i6
+         a8j+ZfuUYex1IbZB1FeLzFY+1Ujju1ZscmYxIdm0+9C7XYJZFK4jVENRXEjpKY9vMvBZ
+         AjWtY+VSCEkTpHZE7xXAs5eO/em294d0O2gbT3QW08PVSqLDFVVXhmJGU2idr7cosCMB
+         BGityXpsyxajC9NeVecR9N29/gi0bBUJSW8DUV23XI0IKSV920di3mA2dqR+7DRBP2En
+         6W6n4TR/N8GD2GxStjjUe/Uyu1nIfbfpTwkZe8+rsSZHubHNnjWwOuITCEzfiXmgBlfH
+         AXlg==
+X-Gm-Message-State: APjAAAVfOmAwjlwriSGz8dCZue5kKwCSYcbn7WIL5aE3mWbwLVh+rFuN
+        6GOuBO4+0NcMecUjkOAsjX0=
+X-Google-Smtp-Source: APXvYqyjZg14MMTZxNXAFWEQjCxTro4b1w9dEs+q6ykIi0/tc95bdTMR202p1m2A/ouVDuIGc6d5fQ==
+X-Received: by 2002:a05:6830:16c6:: with SMTP id l6mr141094otr.186.1576638923829;
+        Tue, 17 Dec 2019 19:15:23 -0800 (PST)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id 97sm318300otx.29.2019.12.17.19.15.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 19:15:23 -0800 (PST)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Jan Kara <jack@suse.com>
+Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] ext2: Adjust indentation in ext2_fill_super
+Date:   Tue, 17 Dec 2019 20:15:19 -0700
+Message-Id: <20191218031519.15450-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-X-Received: by 2002:a02:cdcb:: with SMTP id m11mr361306jap.125.1576638661887;
- Tue, 17 Dec 2019 19:11:01 -0800 (PST)
-Date:   Tue, 17 Dec 2019 19:11:01 -0800
-In-Reply-To: <000000000000b6b450059870d703@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000618d6a0599f1cb49@google.com>
-Subject: Re: KASAN: global-out-of-bounds Read in precalculate_color
-From:   syzbot <syzbot+02d9172bf4c43104cd70@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, ericvh@gmail.com, hverkuil-cisco@xs4all.nl,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        lucho@ionkov.net, mchehab@kernel.org, netdev@vger.kernel.org,
-        rminnich@sandia.gov, syzkaller-bugs@googlegroups.com,
-        v9fs-developer@lists.sourceforge.net, viro@zeniv.linux.org.uk,
-        vivek.kasireddy@intel.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+Clang warns:
 
-commit 7594bf37ae9ffc434da425120c576909eb33b0bc
-Author: Al Viro <viro@zeniv.linux.org.uk>
-Date:   Mon Jul 17 02:53:08 2017 +0000
+../fs/ext2/super.c:1076:3: warning: misleading indentation; statement is
+not part of the previous 'if' [-Wmisleading-indentation]
+        sbi->s_groups_count = ((le32_to_cpu(es->s_blocks_count) -
+        ^
+../fs/ext2/super.c:1074:2: note: previous statement is here
+        if (EXT2_BLOCKS_PER_GROUP(sb) == 0)
+        ^
+1 warning generated.
 
-     9p: untangle ->poll() mess
+This warning occurs because there is a space before the tab on this
+line. Remove it so that the indentation is consistent with the Linux
+kernel coding style and clang no longer warns.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15e323a6e00000
-start commit:   d7688697 Merge tag 'for-linus' of git://git.kernel.org/pub..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13e323a6e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=121b4285bac421fe
-dashboard link: https://syzkaller.appspot.com/bug?extid=02d9172bf4c43104cd70
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=119c517ae00000
+Fixes: 41f04d852e35 ("[PATCH] ext2: fix mounts at 16T")
+Link: https://github.com/ClangBuiltLinux/linux/issues/826
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ fs/ext2/super.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Reported-by: syzbot+02d9172bf4c43104cd70@syzkaller.appspotmail.com
-Fixes: 7594bf37ae9f ("9p: untangle ->poll() mess")
+diff --git a/fs/ext2/super.c b/fs/ext2/super.c
+index 8643f98e9578..4a4ab683250d 100644
+--- a/fs/ext2/super.c
++++ b/fs/ext2/super.c
+@@ -1073,9 +1073,9 @@ static int ext2_fill_super(struct super_block *sb, void *data, int silent)
+ 
+ 	if (EXT2_BLOCKS_PER_GROUP(sb) == 0)
+ 		goto cantfind_ext2;
+- 	sbi->s_groups_count = ((le32_to_cpu(es->s_blocks_count) -
+- 				le32_to_cpu(es->s_first_data_block) - 1)
+- 					/ EXT2_BLOCKS_PER_GROUP(sb)) + 1;
++	sbi->s_groups_count = ((le32_to_cpu(es->s_blocks_count) -
++				le32_to_cpu(es->s_first_data_block) - 1)
++					/ EXT2_BLOCKS_PER_GROUP(sb)) + 1;
+ 	db_count = (sbi->s_groups_count + EXT2_DESC_PER_BLOCK(sb) - 1) /
+ 		   EXT2_DESC_PER_BLOCK(sb);
+ 	sbi->s_group_desc = kmalloc_array (db_count,
+-- 
+2.24.1
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
