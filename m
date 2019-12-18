@@ -2,104 +2,102 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4993C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD55C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9CC02176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 122B02176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:26:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QmCIip7N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbfLRVYm (ORCPT
+        id S1726617AbfLRV0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 16:24:42 -0500
-Received: from mga09.intel.com ([134.134.136.24]:22136 "EHLO mga09.intel.com"
+        Wed, 18 Dec 2019 16:26:03 -0500
+Received: from ozlabs.org ([203.11.71.1]:43423 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725990AbfLRVYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 16:24:42 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 13:24:41 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
-   d="scan'208";a="248028647"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga002.fm.intel.com with ESMTP; 18 Dec 2019 13:24:41 -0800
-Date:   Wed, 18 Dec 2019 13:24:41 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Weijiang Yang <weijiang.yang@intel.com>
-Subject: Re: [RFC PATCH] KVM: x86: Disallow KVM_SET_CPUID{2} if the vCPU is
- in guest mode
-Message-ID: <20191218212441.GG25201@linux.intel.com>
-References: <20191218174255.30773-1-sean.j.christopherson@intel.com>
- <CALMp9eR-ssCUT_6oZntZ=-5SEN7Y8q-HnraKW=WDHuAn9gYZfQ@mail.gmail.com>
- <20191218201002.GE25201@linux.intel.com>
- <CALMp9eRthVZGXFV_18Mg07BdU30J5O+TLC-GLp6M6+4VA6m=-A@mail.gmail.com>
+        id S1725991AbfLRV0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 16:26:02 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47dSjg0BpLz9sNH;
+        Thu, 19 Dec 2019 08:25:59 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1576704360;
+        bh=GOIYpn/ab2CPptA+x9ffjyx71HgDPJ19mxjxlTi0ve0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=QmCIip7N4XCFSbPlYwcVfH2oeIkgRfC0YzNBDiZfV9Le/3Gv6UY5pf/6BZy+c4SHr
+         SeoKEe6DrLw7YvFW14V+t4tdgbDj7wDoSFdOXlTLHg5/zdNFXptoYc8rfJmg55mWqC
+         0hzoAHViS5smBRKKdqODV/qGzFM9C31JVs6LtAG+QoHsR+SQFq48huKXg0ot+MCc2U
+         nJtZwN40WWITcOJvTf3MypMnjdPXchJgaG1vK6PcMUkSfAR5r4LDeiy+aguXdSKAO5
+         On377RpngMcnn/RUuDRMITlAp3GWoj+uOI7BTOYJUZhj4VdbtXnLAnaXlE28vr1Cfl
+         IJZcwBWDlsMwg==
+Date:   Thu, 19 Dec 2019 08:25:57 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Guchun Chen <guchun.chen@amd.com>
+Subject: linux-next: Fixes tag needs some work in the amdgpu tree
+Message-ID: <20191219082557.16092126@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALMp9eRthVZGXFV_18Mg07BdU30J5O+TLC-GLp6M6+4VA6m=-A@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: multipart/signed; boundary="Sig_/Ktdcr=UUjQSm5MpHlWZXq4U";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 12:57:41PM -0800, Jim Mattson wrote:
-> On Wed, Dec 18, 2019 at 12:10 PM Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> >
-> > On Wed, Dec 18, 2019 at 11:38:43AM -0800, Jim Mattson wrote:
-> > > On Wed, Dec 18, 2019 at 9:42 AM Sean Christopherson
-> > > <sean.j.christopherson@intel.com> wrote:
-> > > >
-> > > > Reject KVM_SET_CPUID{2} with -EBUSY if the vCPU is in guest mode (L2) to
-> > > > avoid complications and potentially undesirable KVM behavior.  Allowing
-> > > > userspace to change a guest's capabilities while L2 is active would at
-> > > > best result in unexpected behavior in the guest (L1 or L2), and at worst
-> > > > induce bad KVM behavior by breaking fundamental assumptions regarding
-> > > > transitions between L0, L1 and L2.
-> > >
-> > > This seems a bit contrived. As long as we're breaking the ABI, can we
-> > > disallow changes to CPUID once the vCPU has been powered on?
-> >
-> > I can at least concoct scenarios where changing CPUID after KVM_RUN
-> > provides value, e.g. effectively creating a new VM/vCPU without destroying
-> > the kernel's underlying data structures and without putting the file
-> > descriptors, for performance (especially if KVM avoids its hardware on/off
-> > paths) or sandboxing (process has access to a VM fd, but not /dev/kvm).
-> >
-> > A truly contrived, but technically architecturally accurate, scenario would
-> > be modeling SGX interaction with the machine check architecutre.  Per the
-> > SDM, #MCs or clearing bits in IA32_MCi_CTL disable SGX, which is reflected
-> > in CPUID:
-> >
-> >   Any machine check exception (#MC) that occurs after Intel SGX is first
-> >   enables causes Intel SGX to be disabled, (CPUID.SGX_Leaf.0:EAX[SGX1] == 0)
-> >   It cannot be enabled until after the next reset.
-> >
-> >   Any act of clearing bits from '1 to '0 in any of the IA32_MCi_CTL register
-> >   may disable Intel SGX (set CPUID.SGX_Leaf.0:EAX[SGX1] to 0) until the next
-> >   reset.
-> >
-> > I doubt a userspace VMM would actively model that behavior, but it's at
-> > least theoretically possible.  Yes, it would technically be possible for
-> > SGX to be disabled while L2 is active, but I don't think it's unreasonable
-> > to require userspace to first force the vCPU out of L2.
-> 
-> IIt's perfectly reasonable for a machine check to be handled by L2, in
-> which case, it would be rather onerous to require userspace to force
-> the vCPU out of L2 to clear CPUID.SGX_Leaf.0:EAX[SGX1].
+--Sig_/Ktdcr=UUjQSm5MpHlWZXq4U
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Hrm.  I just had to go and think of SGX...  I guess it's probably best to
-suck it up and have CET update the right bitmaps.
+Hi all,
+
+In commit
+
+  caa01659028a ("drm/amdgpu: move umc offset to one new header file for Arc=
+turus")
+
+Fixes tag
+
+  Fixes: 9686563c4c42 drm/amdgpu: Added RAS UMC error query support for Arc=
+turus
+
+has these problem(s):
+
+  - Target SHA1 does not exist
+
+Did you mean
+
+Fixes: 4cf781c24c3b ("drm/amdgpu: Added RAS UMC error query support for Arc=
+turus")
+
+Also, please keep all the tags together at the end of the commit message.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Ktdcr=UUjQSm5MpHlWZXq4U
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl36mWUACgkQAVBC80lX
+0GzVfAf9H6WAfaQX5WeWp/V4bwhmV0z802JF5zuaL9K47JbPzesPP6GpA3TvtQ0O
+ZlKNUH2DORyI0hr6WIuTmpn1SsY8EFnrKPDuyOMD6ZT9h2Ya5WmCU2dY8lQc/KXs
+sD0haB5YE+qd9k9Pf9fVHkATNKLghrbYgp2utZd7+n9G97B++FbSRXZ40pJNOz1y
+YT+YN9xkook9P82dNOaTi+3Q2Su7LfcifcLB01oy59xyMh5QnWBTT9Jn5+AcVw6s
+rfd1x0PBo2nsMth5E6IBXZu4FBSfmjArxjzKENN8/Ou5PDKC7qzA2nFFAR9L0Vki
+vWeDvtt/lP+0d1jjN2pVlmUUH7XJYQ==
+=DKII
+-----END PGP SIGNATURE-----
+
+--Sig_/Ktdcr=UUjQSm5MpHlWZXq4U--
