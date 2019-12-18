@@ -2,138 +2,152 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C0DC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31525C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7610721582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:40:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E94C521582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:40:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CqB4PQ9b"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="Vc7kMCOV";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="jLIN4egS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbfLRNkX (ORCPT
+        id S1727063AbfLRNk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 08:40:23 -0500
-Received: from mail-vk1-f195.google.com ([209.85.221.195]:32784 "EHLO
-        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726774AbfLRNkX (ORCPT
+        Wed, 18 Dec 2019 08:40:59 -0500
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:62482 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726749AbfLRNk6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 08:40:23 -0500
-Received: by mail-vk1-f195.google.com with SMTP id i78so642875vke.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 05:40:23 -0800 (PST)
+        Wed, 18 Dec 2019 08:40:58 -0500
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBIDZFox004395;
+        Wed, 18 Dec 2019 05:40:42 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=lz7wXeCaSuMx+4efNzilGpGg+dyyBxPqgYi+kf1r71I=;
+ b=Vc7kMCOVOjLw76SvTZHxJgPem/pVyLkn7Wfo6AJ+3LWVAqTPyE8mn8qK8yp3ua1cL54M
+ 4TzPxjZ84aZ92ARywLxB2ig5cDp8bzVJsI93tUMlY0izMDIr267U2g1UQyRd8wN40Ui/
+ x+R7A28GBPu/tmXN7Hl7xrMdPNVA7/8D7tz+AF2opk593ZB+Z/05ZH6wk6+tmB78atGI
+ wNESp4i4vz5Q3VC9nxrVYWViXIoPbnlESXYI3TRIXCb6KqKihWcFNbmYISysM/JUSNC0
+ t1YqjVRxjqtTWE5fMa1RLwD3gjUuRx+ZrW1MDUk230VnaOXCGaL9M1u8vXMpWvIw+rU/ Vg== 
+Received: from sc-exch04.marvell.com ([199.233.58.184])
+        by mx0a-0016f401.pphosted.com with ESMTP id 2wxneaxpm7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 18 Dec 2019 05:40:42 -0800
+Received: from SC-EXCH03.marvell.com (10.93.176.83) by SC-EXCH04.marvell.com
+ (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 18 Dec
+ 2019 05:40:41 -0800
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.109)
+ by SC-EXCH03.marvell.com (10.93.176.83) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Wed, 18 Dec 2019 05:40:41 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Vv52L9+JeAeJhShmXgJkDvqWI5La+ocw4rGiUb4axgAoDA4sc6YPMxpuMAzRrTyfCGsI82zmo/UaMlos2oTrOpRFeWhqQfSjw5EvjzIiMm5pxSmeHpmpHAflkULqVzGfC+YSVBUQbTGbKyARm2ZpAnS4NKJB75IaKki70oFOYQgS03S3Ec1clPEAQZaN7x/HN8tXo78iX6TMdpcvhpWUGrViK7eFxA/SbxGjVkzOf2pqJVyUD+m06qotsRQPLDamNIILDS2xzbraMY007WGEMmN1XnKD0sAMT7wg4PmavQXg5Zkt3KoFy3Oo/RqNfFgvy/wvNtwwMp6nsGa8r2uYPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lz7wXeCaSuMx+4efNzilGpGg+dyyBxPqgYi+kf1r71I=;
+ b=DDyM/8GS9mU/w5gnumwo5YacVj4lRp4vIjoXi9/phI4L7u24qoVguZdYWsgsDF7Nk/8LVIrF10brpMUVcQilNuGeYCcAoVqvOQJoKbBhYS5miRWNPZMU+vjgKIGfh3C9PQJMf5cMcmqNTJsijVX3OMNOWJkWvM9KeIDVr6wLON3qwnvhGasFFcQiBR4pu/6ez/TUvq9FPJeNPFau3WnIK+dEn2qCQ0qIOK/siJZgRZMkLbDYXV4m7KMmyuFuAlZd1K6LB++oC7/ZFLpA+RDmE9nu9PZ9sAHJSAz9efALZEu7C86KAun7tbQ8KoUCXttQ+7gUYNyiTUMsdOzrgvMCIQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aA+0ZiE1F9CfUA5UmwpQRbHMZnZG6IHai1OCgcpKS2E=;
-        b=CqB4PQ9bdXL0xkWjPTFOba/rEMuq85dzEGpPOEds7N7QBocl12Jk0e5uvmJYLwHAqM
-         DrczYhAFQlysINL5D7mfEqDY7VgtnkauNm76VbGzMkKkpQoVIlstHEA8IrmfLzUl6dZi
-         EWf/7CSdWqd544LY/k/Vkkl3ZTRHCvauki+2V8cxxeiluLB2x888e1169uYBm7lDSrN+
-         bJotvoSPbKgJVL6wFxAbHf2T2eEdEAX0FilzCFqu7SXnAF2+fhKZh+CfbnfCBpDyeC1n
-         X7p1X+5IutSi/eC8H112TTaDAHvdCK4RIMouBORG9ax2i3weqWbRAKmIH00By5zgE+Ls
-         jVoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aA+0ZiE1F9CfUA5UmwpQRbHMZnZG6IHai1OCgcpKS2E=;
-        b=Cy26355cnmpNdTske8v5D+989SQ0fxPvonNvCU71gNjXhZ8Q0F5ALXXX67MykP4NQb
-         DSR0xa4Yq6M6zLfJ11UFb/9VmhmdsrXdhFPNEEueeAwcvgA0z8L94bM0HfTEp7Q7Rprg
-         W9AYu6CC83Wxj18yxS0uSii8G9KOvdcOZq6Amx6+U2RaPwgG17AsZNl0s6K3XjE0L/Pf
-         EYO8Gdqvg9jZ7K/EMegYlHxAzkp/skxoF7NJ1XFjOUS2yhakP+blO2wsksxZnUi5VaGG
-         XReB7likdgMuVM0X1m01WNJegWhv8iaLb8bKSyuPplnCci+b9stBs6O4hvPVay0K2qsh
-         3kVQ==
-X-Gm-Message-State: APjAAAXHjyhLWgmf+bRma3u69qTI6K6FEk7endDhDNe5lVK8AtLIvnhz
-        TB9hhnjxjPs9gWHHq8uD1XXBGV9GYAlt89DhQ9K1Fw==
-X-Google-Smtp-Source: APXvYqyo4d9QhAj/DLghd2pgv8DMRocWvvsqMOMPEuai2T3hwUuMm7rMXGGG6cQXwtD3l0HTLK3lTF+83bNcLDiFwbM=
-X-Received: by 2002:ac5:c844:: with SMTP id g4mr1764918vkm.25.1576676422383;
- Wed, 18 Dec 2019 05:40:22 -0800 (PST)
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lz7wXeCaSuMx+4efNzilGpGg+dyyBxPqgYi+kf1r71I=;
+ b=jLIN4egSnHtqpPbPjDapwfO04YrtMHeGB+B02NBQDtThZED7vwX250RQD0up4/yGqHq7iHViLhIgQmlO+TKbNGODAqxdN9RmS2b8GBCKmprTO2+pdlt0mJRAkUubzCRZ7ULi1hrcWPqkNljiZNynpFlkordBRAEI3/sO9KfWb34=
+Received: from BYAPR18MB2630.namprd18.prod.outlook.com (20.179.92.161) by
+ BYAPR18MB2565.namprd18.prod.outlook.com (20.179.92.217) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2559.14; Wed, 18 Dec 2019 13:40:39 +0000
+Received: from BYAPR18MB2630.namprd18.prod.outlook.com
+ ([fe80::d5c3:4c58:1bf3:46fc]) by BYAPR18MB2630.namprd18.prod.outlook.com
+ ([fe80::d5c3:4c58:1bf3:46fc%5]) with mapi id 15.20.2559.012; Wed, 18 Dec 2019
+ 13:40:39 +0000
+From:   Igor Russkikh <irusskikh@marvell.com>
+To:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "sd@queasysnail.net" <sd@queasysnail.net>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "allan.nielsen@microchip.com" <allan.nielsen@microchip.com>,
+        "camelia.groza@nxp.com" <camelia.groza@nxp.com>,
+        "Simon.Edelhaus@aquantia.com" <Simon.Edelhaus@aquantia.com>,
+        Dmitry Bogdanov <dbogdanov@marvell.com>,
+        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
+        Igor Russkikh <Igor.Russkikh@aquantia.com>
+Subject: Re: [EXT] [PATCH net-next v3 05/15] net: macsec: hardware offloading
+ infrastructure
+Thread-Topic: [EXT] [PATCH net-next v3 05/15] net: macsec: hardware offloading
+ infrastructure
+Thread-Index: AQG0FHNA1O9KaxSfL8ZHV6wV77yymQFvulN/AgkMaZM=
+Date:   Wed, 18 Dec 2019 13:40:39 +0000
+Message-ID: <BYAPR18MB2630684FD194F179E718E198B7530@BYAPR18MB2630.namprd18.prod.outlook.com>
+References: <20191213154844.635389-1-antoine.tenart@bootlin.com>
+ <20191213154844.635389-6-antoine.tenart@bootlin.com>
+In-Reply-To: <20191213154844.635389-6-antoine.tenart@bootlin.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [95.79.108.179]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2d506415-43ba-4a1a-e934-08d783bfdebd
+x-ms-traffictypediagnostic: BYAPR18MB2565:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR18MB2565ED83AEC6C7331E068170B7530@BYAPR18MB2565.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0255DF69B9
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(396003)(376002)(346002)(39860400002)(199004)(189003)(33656002)(110136005)(52536014)(81166006)(8676002)(81156014)(4326008)(9686003)(7696005)(71200400001)(54906003)(66476007)(4744005)(478600001)(316002)(76116006)(66556008)(66446008)(64756008)(5660300002)(66946007)(26005)(86362001)(2906002)(7416002)(186003)(55016002)(8936002)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR18MB2565;H:BYAPR18MB2630.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: bjIoAMQJaHkeKfQzukcPP3S2wAMiRig55Y5xpK/hR+UheFgZRrfIT18CgFk5kB3bPR9Xa2LfhUlpDVopaURa+j0pnJkulzykVLxo/cMa/u+47jS20WAL52bKisnP9OKLBVF1/to9ntwP7ToF7LTjGEvowFF9zL0Nl55gpVkPTLy5ZdLqYnHFEDr4BsF0x+Nwuabb/E4szurgblXZEk/i3XNm2NrlkeIzxc7/ohl01V9eysXTmU0TmYSMm1e65COrxfySFn+e3u63Mc+TMQqgZmTmO7bE7mv049lVeIZTVxL4R+7vMJQwbsMoJiPgMQ0OAaki05rwTMxbI71iZKpqW6WJapFlZ+/XFeoXaiIxptvZuwxwc6AfNUTYy0QFMNmtU4n0t6TW5Hy7ZxPXPqSMWKOSSReIKbcoqov5ZD/6kHYltl/pxR1ByE63/XN124oS
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20191204085447.27491-1-linux@rasmusvillemoes.dk> <CAPDyKFqyU1nyVUsuAPC8ZDCm88JOq45aywDM7AqR9vfr0k90jw@mail.gmail.com>
-In-Reply-To: <CAPDyKFqyU1nyVUsuAPC8ZDCm88JOq45aywDM7AqR9vfr0k90jw@mail.gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 18 Dec 2019 14:39:46 +0100
-Message-ID: <CAPDyKFq4fGTek1Y0rgbdrBsvVjUFAVPh=7VLrb-yDFZOh6RuSw@mail.gmail.com>
-Subject: Re: [PATCH] mmc: sdhci-of-esdhc: Revert "mmc: sdhci-of-esdhc: add
- erratum A-009204 support"
-To:     Yinbo Zhu <yinbo.zhu@nxp.com>, Yangbo Lu <yangbo.lu@nxp.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2d506415-43ba-4a1a-e934-08d783bfdebd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Dec 2019 13:40:39.4215
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: C0U66tnp+jDX+/pBdngc5kDUtZ8oR0KQ+2b5U3RXyWNLqhpKeugdujE0eoLNB1tNoCWbYybyK9cHwCeBX1AGcA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR18MB2565
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-18_03:2019-12-17,2019-12-18 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yinbo, Yangbo
-
-On Tue, 10 Dec 2019 at 10:51, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
-> On Wed, 4 Dec 2019 at 09:54, Rasmus Villemoes <linux@rasmusvillemoes.dk> wrote:
-> >
-> > This reverts commit 5dd195522562542bc6ebe6e7bd47890d8b7ca93c.
-> >
-> > First, the fix seems to be plain wrong, since the erratum suggests
-> > waiting 5ms before setting setting SYSCTL[RSTD], but this msleep()
-> > happens after the call of sdhci_reset() which is where that bit gets
-> > set (if SDHCI_RESET_DATA is in mask).
-> >
-> > Second, walking the whole device tree to figure out if some node has a
-> > "fsl,p2020-esdhc" compatible string is hugely expensive - about 70 to
-> > 100 us on our mpc8309 board. Walking the device tree is done under a
-> > raw_spin_lock, so this is obviously really bad on an -rt system, and a
-> > waste of time on all.
-> >
-> > In fact, since esdhc_reset() seems to get called around 100 times per
-> > second, that mpc8309 now spends 0.8% of its time determining that
-> > it is not a p2020. Whether those 100 calls/s are normal or due to some
-> > other bug or misconfiguration, regularly hitting a 100 us
-> > non-preemptible window is unacceptable.
-> >
-> > Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
->
-> Applied for fixes and by adding a stable tag, thanks!
-
-Just wanted to highlight, that $subject patch has been applied for
-fixes, which means we need a new fix the errata A-009204.
-
-Rasmus kind of already hinted on how this could be fixed in a better
-way, hope this helps.
-
-Kind regards
-Uffe
-
-> > ---
-> >
-> > The errata sheet for mpc8309 also mentions A-009204, so I'm not at all
-> > opposed to having a fix for that. But it needs to be done properly
-> > without causing a huge performance or latency impact. We should
-> > probably just add a bit to struct sdhci_esdhc which gets initialized
-> > in esdhc_init.
-> >
-> >  drivers/mmc/host/sdhci-of-esdhc.c | 3 ---
-> >  1 file changed, 3 deletions(-)
-> >
-> > diff --git a/drivers/mmc/host/sdhci-of-esdhc.c b/drivers/mmc/host/sdhci-of-esdhc.c
-> > index 5cca3fa4610b..7f87a90bf56a 100644
-> > --- a/drivers/mmc/host/sdhci-of-esdhc.c
-> > +++ b/drivers/mmc/host/sdhci-of-esdhc.c
-> > @@ -764,9 +764,6 @@ static void esdhc_reset(struct sdhci_host *host, u8 mask)
-> >         sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
-> >         sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
-> >
-> > -       if (of_find_compatible_node(NULL, NULL, "fsl,p2020-esdhc"))
-> > -               mdelay(5);
-> > -
-> >         if (mask & SDHCI_RESET_ALL) {
-> >                 val = sdhci_readl(host, ESDHC_TBCTL);
-> >                 val &= ~ESDHC_TB_EN;
-> > --
-> > 2.23.0
-> >
+SGkgQW50b2luZSwNCg0KPiBAQCAtMjkyMiw3ICszMzAwLDI3IEBAIHN0YXRpYyBpbnQgbWFjc2Vj
+X2NoYW5nZWxpbmsoc3RydWN0IG5ldF9kZXZpY2UNCj4gKmRldiwgc3RydWN0IG5sYXR0ciAqdGJb
+XSwNCj4gIAkgICAgZGF0YVtJRkxBX01BQ1NFQ19QT1JUXSkNCj4gIAkJcmV0dXJuIC1FSU5WQUw7
+DQo+ICANCj4gLQlyZXR1cm4gbWFjc2VjX2NoYW5nZWxpbmtfY29tbW9uKGRldiwgZGF0YSk7DQo+
+ICsJLyogSWYgaC93IG9mZmxvYWRpbmcgaXMgYXZhaWxhYmxlLCBwcm9wYWdhdGUgdG8gdGhlIGRl
+dmljZSAqLw0KPiArCWlmIChtYWNzZWNfaXNfb2ZmbG9hZGVkKG1hY3NlYykpIHsNCj4gKwkJY29u
+c3Qgc3RydWN0IG1hY3NlY19vcHMgKm9wczsNCj4gKwkJc3RydWN0IG1hY3NlY19jb250ZXh0IGN0
+eDsNCj4gKwkJaW50IHJldDsNCj4gKw0KPiArCQlvcHMgPSBtYWNzZWNfZ2V0X29wcyhuZXRkZXZf
+cHJpdihkZXYpLCAmY3R4KTsNCj4gKwkJaWYgKCFvcHMpDQo+ICsJCQlyZXR1cm4gLUVPUE5PVFNV
+UFA7DQo+ICsNCj4gKwkJY3R4LnNlY3kgPSAmbWFjc2VjLT5zZWN5Ow0KPiArCQlyZXQgPSBtYWNz
+ZWNfb2ZmbG9hZChvcHMtPm1kb191cGRfc2VjeSwgJmN0eCk7DQo+ICsJCWlmIChyZXQpDQo+ICsJ
+CQlyZXR1cm4gcmV0Ow0KPiArCX0NCj4gKw0KPiArCXJldCA9IG1hY3NlY19jaGFuZ2VsaW5rX2Nv
+bW1vbihkZXYsIGRhdGEpOw0KDQpJbiBvdXIgbWFjIGRyaXZlciB2ZXJpZmljYXRpb24gd2Ugc2Vl
+IHRoYXQgcHJvcGFnYXRpbmcgdXBkX3NlY3kgdG8gZGV2aWNlIGJlZm9yZSBkb2luZw0KbWFjc2Vj
+X2NoYW5nZWxpbmtfY29tbW9uIGlzIGFjdHVhbGx5IHVzZWxlc3MsIHNpbmNlIGluIHRoaXMgY2Fz
+ZSB1bmRlcmx5aW5nIGRldmljZQ0KY2FuJ3QgZmV0Y2ggYW55IG9mIHRoZSB1cGRhdGVkIHBhcmFt
+ZXRlcnMgZnJvbSB0aGUgbWFjc2VjIHN0cnVjdHVyZXMuDQoNCklzbid0IGl0IGxvZ2ljYWwgZmly
+c3QgZG9pbmcgYG1hY3NlY19jaGFuZ2VsaW5rX2NvbW1vbmAgYW5kIHRoZW4gcHJvcGFnYXRlIHRo
+ZSBldmVudD8NCg0KLS0gDQoNClJlZ2FyZHMsDQogIElnb3INCg==
