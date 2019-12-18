@@ -2,284 +2,255 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D105C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B740C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A76720717
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:29:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576657788;
-	bh=Fzfpbt9JX0wNm8rRu7tHK7Up5oc+JJ5GXixsDBHZ1zQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wvXDVYHDA8TA99rU74m7A9MgS+lC/yRM5Q5Q4Ses8K9uuJo2aWs3XJMp4PB9yg99S
-	 26Tj5RpKipUfHD6SaapuruqF3ed8lgwsnrdpemf8Tb7/mUspOMhJKIzxVyEM803P2C
-	 dRb+FQ6ks0kpRPtpPJSOGdtRAMkwf8GedQp6Jv+0=
+	by mail.kernel.org (Postfix) with ESMTP id 4570E227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:29:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o7kY1tEg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfLRI3r (ORCPT
+        id S1726734AbfLRI3z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 03:29:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54606 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725535AbfLRI3q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 03:29:46 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B892320717;
-        Wed, 18 Dec 2019 08:29:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576657785;
-        bh=Fzfpbt9JX0wNm8rRu7tHK7Up5oc+JJ5GXixsDBHZ1zQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=foEnAQQZ+BJBpd72yJ5tjGMOweQY+brT9HxBOqitTbUu9AyFBY6WxL9AHpLBc6S6E
-         o9cbcUQ0tCx+n5GBDzgd5NKYiOsVjiMEjXIc3ac5VojTyjnCG9zgcCaAdJwarT5dNm
-         XK9dhjqT8fA2CVsfkgeyiC+hdivEiByv0v3gi2ro=
-Date:   Wed, 18 Dec 2019 09:29:43 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "Bao D. Nguyen" <nguyenb@codeaurora.org>
-Cc:     ulf.hansson@linaro.org, robh+dt@kernel.org,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        asutoshd@codeaurora.org, cang@codeaurora.org,
-        "Bao D. Nguyen" <nguyenb@quicinc.com>
-Subject: Re: [<PATCH v1> 9/9] mmc: sd: Fix trivial SD card issues
-Message-ID: <20191218082943.GB1554871@kroah.com>
-References: <cover.1576540906.git.nguyenb@codeaurora.org>
- <25f3b41fb4950cad5cf075b245d0ac4010cd1aac.1576540908.git.nguyenb@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <25f3b41fb4950cad5cf075b245d0ac4010cd1aac.1576540908.git.nguyenb@codeaurora.org>
+        Wed, 18 Dec 2019 03:29:55 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44994 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725535AbfLRI3y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 03:29:54 -0500
+Received: by mail-pl1-f195.google.com with SMTP id az3so640467plb.11;
+        Wed, 18 Dec 2019 00:29:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=lH+Y2/G2UYGZoYI1w1l9sZIcWDOhpO7sY4AaAk4DvGs=;
+        b=o7kY1tEg3TuY2CQm+hzoVYruwmEVjVhw/kydXeQdNcx3BNdCSrLPxDIxJfu/K/i/6B
+         v2kSwTR0jBHaWuZLjpHz+tG48mS8Yn9642UGR6uckmMCT5nnSTOk/d8FZT6XXke0PnKP
+         9UXjlfQbaYUa7dzjh4T2ZB7ROYAdTlgvjnaGev3UFNIdGZyzi9EaDtli2vGti+Uv7dHr
+         8WawEkmFXZShA77txCyOGBYhV2fbw0MQGFIZ39IgpZdodCtNDU/c5k1c70MXSx6ocP5W
+         JIZkY+3kSnU/WMLxNCoPRiDdG1P7NRPteDfQomZ+pkCuFBMh77pNDNm5kuu44//3Ivly
+         1Oew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=lH+Y2/G2UYGZoYI1w1l9sZIcWDOhpO7sY4AaAk4DvGs=;
+        b=C21Qgv0Or0yBEUIjOZsy4Zmwdx1SqPQEtj5Vw4emBohF7N+y8xHLJvbZLvUp/my5uW
+         JMLG7u5/KqxUoNYTzXj0b7hTG0dyN7BvvTGO68UkO2ZFwp87FDDXP2u8U3Xk3XyDTdfi
+         GiQbz8aHkgh54cOAe7IDu30n56GQha/NlTZt+dm8F3oIdWOmt8GBvaeouFfR/hbyonBt
+         xEXsXdpYyPfeMV29Qm/41SpgtEG8wQ0LafrUJV50UfDMgyi21m2y601VKfI21btVXZc2
+         zmtrZ+Oogpimv/Kr0jU2noguR3FTX8RfJz8sx8b5ruqW/QyzdnQCmhREhyM5FrdbLVoH
+         Ns7A==
+X-Gm-Message-State: APjAAAU+mr2gsc/LHV3IyRHRzYlHs61u9Qv0UUM4SngnpL5t8py3P8Sk
+        cR0Wvc1OHJBUdZENqKXmWFM=
+X-Google-Smtp-Source: APXvYqzOY74pb7vDbFevgf7i/InEm6jtKJrnNqCX3ArrEd0fnIRm7smgN1WkuH/SDdN87wscnymxsA==
+X-Received: by 2002:a17:902:904c:: with SMTP id w12mr1318418plz.133.1576657793845;
+        Wed, 18 Dec 2019 00:29:53 -0800 (PST)
+Received: from oslab.tsinghua.edu.cn ([166.111.139.172])
+        by smtp.gmail.com with ESMTPSA id b98sm1656919pjc.16.2019.12.18.00.29.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 00:29:53 -0800 (PST)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     jikos@kernel.org, benjamin.tissoires@redhat.com
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH] hid: hid-lg4ff: fix possible sleep-in-atomic-context bug
+Date:   Wed, 18 Dec 2019 16:29:20 +0800
+Message-Id: <20191218082920.3095-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 06:50:42PM -0800, Bao D. Nguyen wrote:
-> From: "Bao D. Nguyen" <nguyenb@quicinc.com>
-> 
-> Fix various trivial SD card issues.
+The driver may sleep while holding a read lock.
+The function call path (from bottom to top) in Linux 4.19 is:
 
-There are a number of real bugfixes in here, please split these out and
-put them at the beginning of the series so that they can be backported
-to the stable kernel tree.  Specifics below:
+drivers/hid/hid-core.c, 1459: 
+	hid_alloc_report_buf(GFP_KERNEL) in __hid_request
+./include/linux/hid.h, 1051: 
+	__hid_request in hid_hw_request
+drivers/hid/hid-lg4ff.c, 538: 
+	hid_hw_request in lg4ff_set_autocenter_default
+drivers/hid/hid-lg4ff.c, 497: 
+	_raw_spin_lock_irqsave in lg4ff_set_autocenter_default
 
-> 
-> Signed-off-by: Bao D. Nguyen <nguyenb@codeaurora.org>
-> ---
->  drivers/mmc/core/block.c |  4 ++--
->  drivers/mmc/core/bus.c   | 13 +++++++++++++
->  drivers/mmc/core/core.c  | 13 ++++++++-----
->  drivers/mmc/core/sd.c    |  9 ++++++---
->  4 files changed, 29 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
-> index 95b41c0..200882d 100644
-> --- a/drivers/mmc/core/block.c
-> +++ b/drivers/mmc/core/block.c
-> @@ -653,13 +653,13 @@ static int mmc_blk_ioctl_cmd(struct mmc_blk_data *md,
->  	struct request *req;
->  
->  	idata = mmc_blk_ioctl_copy_from_user(ic_ptr);
-> -	if (IS_ERR(idata))
-> +	if (IS_ERR_OR_NULL(idata))
+drivers/hid/hid-core.c, 1459: 
+	hid_alloc_report_buf(GFP_KERNEL) in __hid_request
+./include/linux/hid.h, 1051: 
+	__hid_request in hid_hw_request
+drivers/hid/hid-lg4ff.c, 585: 
+	hid_hw_request in lg4ff_set_autocenter_ffex
+drivers/hid/hid-lg4ff.c, 576: 
+	_raw_spin_lock_irqsave in lg4ff_set_autocenter_ffex
 
-How can this function ever return NULL?
+drivers/hid/hid-core.c, 1459: 
+	hid_alloc_report_buf(GFP_KERNEL) in __hid_request
+./include/linux/hid.h, 1051: 
+	__hid_request in hid_hw_request
+drivers/hid/hid-lg4ff.c, 1116: 
+	hid_hw_request in lg4ff_set_leds
+drivers/hid/hid-lg4ff.c, 1108: 
+	_raw_spin_lock_irqsave in lg4ff_set_leds
 
->  		return PTR_ERR(idata);
+drivers/hid/hid-core.c, 1459: 
+	hid_alloc_report_buf(GFP_KERNEL) in __hid_request
+./include/linux/hid.h, 1051: 
+	__hid_request in hid_hw_request
+drivers/hid/hid-lg4ff.c, 465: 
+	hid_hw_request in lg4ff_play
+drivers/hid/hid-lg4ff.c, 441: 
+	_raw_spin_lock_irqsave in lg4ff_play
 
-If NULL was returned, are you sure you can return 0 here?  That implies
-that all went well, when obviously it did not.
+drivers/hid/hid-core.c, 1459: 
+	hid_alloc_report_buf(GFP_KERNEL) in __hid_request
+./include/linux/hid.h, 1051: 
+	__hid_request in hid_hw_request
+drivers/hid/hid-lg4ff.c, 664: 
+	hid_hw_request in lg4ff_set_range_dfp
+drivers/hid/hid-lg4ff.c, 648: 
+	_raw_spin_lock_irqsave in lg4ff_set_range_dfp
 
-But again, I do not see how mmc_blk_ioctl_copy_from_user() can return
-NULL, do you?
+drivers/hid/hid-core.c, 1459: 
+	hid_alloc_report_buf(GFP_KERNEL) in __hid_request
+./include/linux/hid.h, 1051: 
+	__hid_request in hid_hw_request
+drivers/hid/hid-lg4ff.c, 620: 
+	hid_hw_request in lg4ff_set_range_g25
+drivers/hid/hid-lg4ff.c, 611: 
+	_raw_spin_lock_irqsave in lg4ff_set_range_g25
 
->  	/* This will be NULL on non-RPMB ioctl():s */
->  	idata->rpmb = rpmb;
->  
->  	card = md->queue.card;
-> -	if (IS_ERR(card)) {
-> +	if (IS_ERR_OR_NULL(card)) {
+hid_alloc_report_buf(GFP_KERNEL) can sleep at runtime.
 
-How can card be NULL?
+To fix these bugs, hid_hw_request() is called without holding the
+spinlock.
 
->  		err = PTR_ERR(card);
+These bugs are found by a static analysis tool STCheck written by myself.
 
-Again, returning "success" is ok?  Are you sure?
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+ drivers/hid/hid-lg4ff.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
->  		goto cmd_done;
->  	}
-> diff --git a/drivers/mmc/core/bus.c b/drivers/mmc/core/bus.c
-> index 74de3f2..fb17d21 100644
-> --- a/drivers/mmc/core/bus.c
-> +++ b/drivers/mmc/core/bus.c
-> @@ -131,6 +131,16 @@ static void mmc_bus_shutdown(struct device *dev)
->  	struct mmc_host *host = card->host;
->  	int ret;
->  
-> +	if (!drv) {
-> +		pr_debug("%s: %s: drv is NULL\n", dev_name(dev), __func__);
+diff --git a/drivers/hid/hid-lg4ff.c b/drivers/hid/hid-lg4ff.c
+index 5e6a0cef2a06..047a19da3aed 100644
+--- a/drivers/hid/hid-lg4ff.c
++++ b/drivers/hid/hid-lg4ff.c
+@@ -443,8 +443,8 @@ static int lg4ff_play(struct input_dev *dev, void *data, struct ff_effect *effec
+ 			value[5] = 0x00;
+ 			value[6] = 0x00;
+ 
+-			hid_hw_request(hid, entry->report, HID_REQ_SET_REPORT);
+ 			spin_unlock_irqrestore(&entry->report_lock, flags);
++			hid_hw_request(hid, entry->report, HID_REQ_SET_REPORT);
+ 			return 0;
+ 		}
+ 
+@@ -456,8 +456,8 @@ static int lg4ff_play(struct input_dev *dev, void *data, struct ff_effect *effec
+ 		value[5] = 0x00;
+ 		value[6] = 0x00;
+ 
+-		hid_hw_request(hid, entry->report, HID_REQ_SET_REPORT);
+ 		spin_unlock_irqrestore(&entry->report_lock, flags);
++		hid_hw_request(hid, entry->report, HID_REQ_SET_REPORT);
+ 		break;
+ 	}
+ 	return 0;
+@@ -498,8 +498,8 @@ static void lg4ff_set_autocenter_default(struct input_dev *dev, u16 magnitude)
+ 		value[5] = 0x00;
+ 		value[6] = 0x00;
+ 
+-		hid_hw_request(hid, entry->report, HID_REQ_SET_REPORT);
+ 		spin_unlock_irqrestore(&entry->report_lock, flags);
++		hid_hw_request(hid, entry->report, HID_REQ_SET_REPORT);
+ 		return;
+ 	}
+ 
+@@ -529,7 +529,9 @@ static void lg4ff_set_autocenter_default(struct input_dev *dev, u16 magnitude)
+ 	value[5] = 0x00;
+ 	value[6] = 0x00;
+ 
++	spin_unlock_irqrestore(&entry->report_lock, flags);
+ 	hid_hw_request(hid, entry->report, HID_REQ_SET_REPORT);
++	spin_lock_irqsave(&entry->report_lock, flags);
+ 
+ 	/* Activate Auto-Center */
+ 	value[0] = 0x14;
+@@ -540,8 +542,8 @@ static void lg4ff_set_autocenter_default(struct input_dev *dev, u16 magnitude)
+ 	value[5] = 0x00;
+ 	value[6] = 0x00;
+ 
+-	hid_hw_request(hid, entry->report, HID_REQ_SET_REPORT);
+ 	spin_unlock_irqrestore(&entry->report_lock, flags);
++	hid_hw_request(hid, entry->report, HID_REQ_SET_REPORT);
+ }
+ 
+ /* Sends autocentering command compatible with Formula Force EX */
+@@ -576,8 +578,8 @@ static void lg4ff_set_autocenter_ffex(struct input_dev *dev, u16 magnitude)
+ 	value[5] = 0x00;
+ 	value[6] = 0x00;
+ 
+-	hid_hw_request(hid, entry->report, HID_REQ_SET_REPORT);
+ 	spin_unlock_irqrestore(&entry->report_lock, flags);
++	hid_hw_request(hid, entry->report, HID_REQ_SET_REPORT);
+ }
+ 
+ /* Sends command to set range compatible with G25/G27/Driving Force GT */
+@@ -611,8 +613,8 @@ static void lg4ff_set_range_g25(struct hid_device *hid, u16 range)
+ 	value[5] = 0x00;
+ 	value[6] = 0x00;
+ 
+-	hid_hw_request(hid, entry->report, HID_REQ_SET_REPORT);
+ 	spin_unlock_irqrestore(&entry->report_lock, flags);
++	hid_hw_request(hid, entry->report, HID_REQ_SET_REPORT);
+ }
+ 
+ /* Sends commands to set range compatible with Driving Force Pro wheel */
+@@ -655,7 +657,9 @@ static void lg4ff_set_range_dfp(struct hid_device *hid, u16 range)
+ 		value[1] = 0x02;
+ 		full_range = 200;
+ 	}
++	spin_unlock_irqrestore(&entry->report_lock, flags);
+ 	hid_hw_request(hid, entry->report, HID_REQ_SET_REPORT);
++	spin_lock_irqsave(&entry->report_lock, flags);
+ 
+ 	/* Prepare "fine" limit command */
+ 	value[0] = 0x81;
+@@ -667,8 +671,8 @@ static void lg4ff_set_range_dfp(struct hid_device *hid, u16 range)
+ 	value[6] = 0x00;
+ 
+ 	if (range == 200 || range == 900) {	/* Do not apply any fine limit */
+-		hid_hw_request(hid, entry->report, HID_REQ_SET_REPORT);
+ 		spin_unlock_irqrestore(&entry->report_lock, flags);
++		hid_hw_request(hid, entry->report, HID_REQ_SET_REPORT);
+ 		return;
+ 	}
+ 
+@@ -682,8 +686,8 @@ static void lg4ff_set_range_dfp(struct hid_device *hid, u16 range)
+ 	value[5] = (start_right & 0xe) << 4 | (start_left & 0xe);
+ 	value[6] = 0xff;
+ 
+-	hid_hw_request(hid, entry->report, HID_REQ_SET_REPORT);
+ 	spin_unlock_irqrestore(&entry->report_lock, flags);
++	hid_hw_request(hid, entry->report, HID_REQ_SET_REPORT);
+ }
+ 
+ static const struct lg4ff_compat_mode_switch *lg4ff_get_mode_switch_command(const u16 real_product_id, const u16 target_product_id)
+@@ -1107,8 +1111,8 @@ static void lg4ff_set_leds(struct hid_device *hid, u8 leds)
+ 	value[4] = 0x00;
+ 	value[5] = 0x00;
+ 	value[6] = 0x00;
+-	hid_hw_request(hid, entry->report, HID_REQ_SET_REPORT);
+ 	spin_unlock_irqrestore(&entry->report_lock, flags);
++	hid_hw_request(hid, entry->report, HID_REQ_SET_REPORT);
+ }
+ 
+ static void lg4ff_led_set_brightness(struct led_classdev *led_cdev,
+-- 
+2.17.1
 
-How can this ever happen?
-
-And never use pr_* calls in a driver, you have a valid device, use
-dev_dbg() and friends.
-
-> +		return;
-> +	}
-> +
-> +	if (!card) {
-> +		pr_debug("%s: %s: card is NULL\n", dev_name(dev), __func__);
-
-Same here, how can this ever happen?
-
-> +		return;
-> +	}
-> +
->  	if (dev->driver && drv->shutdown)
->  		drv->shutdown(card);
->  
-> @@ -247,12 +257,15 @@ void mmc_unregister_driver(struct mmc_driver *drv)
->  static void mmc_release_card(struct device *dev)
->  {
->  	struct mmc_card *card = mmc_dev_to_card(dev);
-> +	struct mmc_host *host = card->host;
->  
->  	sdio_free_common_cis(card);
->  
->  	kfree(card->info);
->  
->  	kfree(card);
-> +	if (host)
-> +		host->card = NULL;
-
-Why are you setting this to null?  Does this solve some race condition
-that you are then catching in the shutdown callback?  If so, this should
-be broken out as a separate bugfix and put earlier in the series as that
-should go to all stable kernels, right?
-
->  }
->  
->  /*
-> diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
-> index 38b0cec..13d496e 100644
-> --- a/drivers/mmc/core/core.c
-> +++ b/drivers/mmc/core/core.c
-> @@ -399,7 +399,7 @@ void mmc_wait_for_req_done(struct mmc_host *host, struct mmc_request *mrq)
->  	struct mmc_command *cmd;
->  
->  	while (1) {
-> -		wait_for_completion(&mrq->completion);
-> +		wait_for_completion_io(&mrq->completion);
-
-Why this change?  That seems like a big one.  Why is this not a separate
-patch?
-
->  
->  		cmd = mrq->cmd;
->  
-> @@ -666,6 +666,10 @@ void mmc_set_data_timeout(struct mmc_data *data, const struct mmc_card *card)
->  {
->  	unsigned int mult;
->  
-> +	if (!card) {
-> +		WARN_ON(1);
-
-And you just crashed systems that run with panic-on-warn :(
-
-How can this ever happen?  If it is a real issue, catch it, log it, and
-then move on, don't splat the kernel log with a full traceback and
-reboot machines :(
-
-> +		return;
-> +	}
->  	/*
->  	 * SDIO cards only define an upper 1 s limit on access.
->  	 */
-> @@ -2341,17 +2345,16 @@ void mmc_rescan(struct work_struct *work)
->  
->  void mmc_start_host(struct mmc_host *host)
->  {
-> +	mmc_claim_host(host);
-
-What?  This is a totally separate change, plaese break this out and
-describe what you are fixing here.  Again, should be a bugfix for
-earlier in the series.
-
->  	host->f_init = max(freqs[0], host->f_min);
->  	host->rescan_disable = 0;
->  	host->ios.power_mode = MMC_POWER_UNDEFINED;
->  
-> -	if (!(host->caps2 & MMC_CAP2_NO_PRESCAN_POWERUP)) {
-> -		mmc_claim_host(host);
-> +	if (!(host->caps2 & MMC_CAP2_NO_PRESCAN_POWERUP))
->  		mmc_power_up(host, host->ocr_avail);
-> -		mmc_release_host(host);
-> -	}
->  
->  	mmc_gpiod_request_cd_irq(host);
-> +	mmc_release_host(host);
-
-And are you sure the reference counting is correct here?  Before this
-patch, you dropped the reference above, now you are matching it.  Either
-this is wrong, or the original code is wrong.  Either way, you need to
-describe it much better please.
-
->  	_mmc_detect_change(host, 0, false);
->  }
->  
-> diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
-> index 5938caf..e163f0e 100644
-> --- a/drivers/mmc/core/sd.c
-> +++ b/drivers/mmc/core/sd.c
-> @@ -989,6 +989,7 @@ static int mmc_sd_init_card(struct mmc_host *host, u32 ocr,
->  		err = mmc_send_relative_addr(host, &card->rca);
->  		if (err)
->  			goto free_card;
-> +		host->card = card;
-
-Why?
-
->  	}
->  
->  	if (!oldcard) {
-> @@ -1090,13 +1091,13 @@ static int mmc_sd_init_card(struct mmc_host *host, u32 ocr,
->  		goto free_card;
->  	}
->  done:
-> -	host->card = card;
->  	return 0;
->  
->  free_card:
-> -	if (!oldcard)
-> +	if (!oldcard) {
-> +		host->card = NULL;
-
-Again, why?
-
->  		mmc_remove_card(card);
-> -
-> +	}
->  	return err;
->  }
->  
-> @@ -1106,7 +1107,9 @@ static int mmc_sd_init_card(struct mmc_host *host, u32 ocr,
->  static void mmc_sd_remove(struct mmc_host *host)
->  {
->  	mmc_remove_card(host->card);
-> +	mmc_claim_host(host);
->  	host->card = NULL;
-> +	mmc_release_host(host);
-
-Huh?  What is this "fixing"?
-
-Again, please break all of these out into logical bugfixes and describe
-what you are doing.
-
-thanks,
-
-greg k-h
