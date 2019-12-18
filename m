@@ -2,56 +2,57 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC089C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1571C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90CB5218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:10:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 776A824672
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:10:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="S86ZB6KZ"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="RmE2gZ71"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbfLRTK3 (ORCPT
+        id S1727595AbfLRTKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 14:10:29 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43283 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727437AbfLRTK3 (ORCPT
+        Wed, 18 Dec 2019 14:10:33 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45796 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727185AbfLRTKc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 14:10:29 -0500
-Received: by mail-pl1-f193.google.com with SMTP id p27so1385202pli.10
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 11:10:28 -0800 (PST)
+        Wed, 18 Dec 2019 14:10:32 -0500
+Received: by mail-pf1-f195.google.com with SMTP id 2so1717840pfg.12
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 11:10:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EuBd5H0Egt+eDY+fK/iuV4fphB2qstxtMKk6PdK6o5A=;
-        b=S86ZB6KZWjzBWNer4WPm2X1LwRziSTHVHOQAcHfs+JFNZIdFhkw7JLb807hllDCYEy
-         Hu6MigRzR6kEQQW6ZcMElMamn2hUOuhvHGRSY3E3rVhsd/AdBI32u9lqJJRK1y71MuQp
-         ncwlCQBEFnBNd45zE4nJPZMklK8i2yW5fNy4s=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=GQQ92FUtanEcYYn+9KkWeYqFv+lp7/wX47LWysjUtZE=;
+        b=RmE2gZ711YJ3jV6D/Xe3LdJ+879T62hzeyhwrPEbAVro1rkJu0IAjI+GGcgojyiSnw
+         vmBmNTLU48iHuXr87ug/JIBwPKDWafenagKj3VCdDYei66CNSPw2HyRrHaW6M2F94WpR
+         blGsk97djl/6woo2URnQmNx0/UNZ9V1N3f/Wk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EuBd5H0Egt+eDY+fK/iuV4fphB2qstxtMKk6PdK6o5A=;
-        b=N+oSw9Gh+vqzxi/eCc9Orozce/z6Z/zRNSYZVv4UAvJBI5vn50YxGWRM2tqFF6M/w9
-         0lQBClqJ8sIRAk+E79m05Fwq9n7SPBwoOPQvKMriZuoRzUgUaG5iMeyoXPG3Xo4S6q9G
-         6bSKzi3udvEJxMf1aH7Yxgg00u/tPtgKANQ6zu4642KEwNsSw7gwsHa8VQQ0y9u9Z28i
-         AYnq3yhn8CIeYsxdHKUsTaOZN4sSh5ypODyw7G4Dc7JDQq/6lTeUm2wCW127UgLEvwdC
-         aNJ5hKARS3iCgHAQOgwNmr1Ezu6egazQIr934bUsmmAYz5TS735wtDph1oeWc8WA6SKS
-         o4UA==
-X-Gm-Message-State: APjAAAU1j+ugyP3yhtM9Ax3C/bbDoN9nwmfXJ9A5tZ+OUkpEsX4nh8Db
-        AOcpJR+QQft+tlVLF0kajL/4mw==
-X-Google-Smtp-Source: APXvYqwU8uLra6sgkg2kZFnCJdBPd9PVO3B5cEcqJKnQ6ikq51O0B+PtJzugqG3VZX2O+nw+6dGAJQ==
-X-Received: by 2002:a17:90a:e389:: with SMTP id b9mr4642793pjz.7.1576696227877;
-        Wed, 18 Dec 2019 11:10:27 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=GQQ92FUtanEcYYn+9KkWeYqFv+lp7/wX47LWysjUtZE=;
+        b=Qh0mq9f42ijlITjFkXwpGHgDs5qrBZwa1L1UEVPSJwxQq5rapXSynG/WTb82eKnlH5
+         xBmRib+Y1c2q8E0cYzmWiiBxDXpCFENzQAtGoZ5hehITrCpqcgWwmFyv58KIJCmJYf0k
+         jg4vAWXl9FOW9QW2YgxW0jd6/dmk3IYlCGwecnsmg0w2Ln0DSprFCCZfZCOrVTjPZ8BW
+         U4KEWsDD+RSXBVrAHDkIVonn+HByYAIu3DlOS9ouQWOWd3L3wamP2udKMkeD6eYnNt93
+         7le7NA7+60IFNWh0w+xQz92Wf87DbsKAuA2wuUUQfoQ/0Ntubu0HkcDhKPAAYXuMipzO
+         ZqYg==
+X-Gm-Message-State: APjAAAX8+JNc6x6ONajV/3s33InCkwG1PWcuzLfwLq77lOUTn2E47vxc
+        4Wh7pwYUwNcTdMJvLJkyjn+69g==
+X-Google-Smtp-Source: APXvYqx4GpE06gpJavtzwj55u700h4fjo6q/SRfo8aht7sWch009CZmQ3GDsdwVeTo8wFLR1hxnMHg==
+X-Received: by 2002:a63:e80d:: with SMTP id s13mr4849217pgh.134.1576696232170;
+        Wed, 18 Dec 2019 11:10:32 -0800 (PST)
 Received: from localhost.localdomain ([2405:201:c809:c7d5:78ea:e014:edb4:e862])
-        by smtp.gmail.com with ESMTPSA id q7sm3745855pjd.3.2019.12.18.11.10.23
+        by smtp.gmail.com with ESMTPSA id q7sm3745855pjd.3.2019.12.18.11.10.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 11:10:27 -0800 (PST)
+        Wed, 18 Dec 2019 11:10:31 -0800 (PST)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         David Airlie <airlied@linux.ie>,
@@ -64,10 +65,12 @@ Cc:     michael@amarulasolutions.com, Icenowy Zheng <icenowy@aosc.io>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, linux-amarula@amarulasolutions.com,
         Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v13 0/7] drm/sun4i: Allwinner A64 MIPI-DSI support
-Date:   Thu, 19 Dec 2019 00:40:10 +0530
-Message-Id: <20191218191017.2895-1-jagan@amarulasolutions.com>
+Subject: [PATCH v13 1/7] dt-bindings: sun6i-dsi: Document A64 MIPI-DSI controller
+Date:   Thu, 19 Dec 2019 00:40:11 +0530
+Message-Id: <20191218191017.2895-2-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
+In-Reply-To: <20191218191017.2895-1-jagan@amarulasolutions.com>
+References: <20191218191017.2895-1-jagan@amarulasolutions.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,93 +78,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is v13 version for Allwinner A64 MIPI-DSI support
-and here is the previous version set[1]
+The MIPI DSI controller in Allwinner A64 is similar to A33.
 
+But unlike A33, A64 doesn't have DSI_SCLK gating so it is valid
+to have separate compatible for A64 on the same driver.
+
+DSI_SCLK uses mod clock-names on dt-bindings, so the same
+is not required for A64.
+
+On that note
+- A64 require minimum of 1 clock like the bus clock
+- A33 require minimum of 2 clocks like both bus, mod clocks
+
+So, update dt-bindings so-that it can document both A33,
+A64 bindings requirements.
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
 Changes for v13:
-- update dt-bindings for A64
-- drop has_mod_clk variant
-- use regmap bus clock properly
-Changes for v12:
-- use enum insted of oneOf+const
-- handle bus clock using regmap attach clk
-- tested on A64, A33 boards.
-Changes for v11:
-- fix dt-bindings for dphy
-- fix dt-bindings for dsi controller
-- add bus clock handling code
-- tested on A64, A33 boards.
-Changes for v10:
-- updated dt-bindings as per .yaml format
-- rebased on drm-misc/for-linux-next
-Changes for v9:
-- moved dsi fixes in separate series on top of A33
-- rebase on linux-next
-Changes for v8:
-- rebased on drm-misc change along with linux-next
-- reworked video start delay patch
-- tested on 4 different dsi panels
-- reworked commit messages
-Changes for v7:
-- moved vcc-dsi binding to required filed.
-- drop quotes on fallback dphy bindings.
-- drop min_rate clock pll-mipi patches.
-- introduce dclk divider computation as like A64 BSP.
-- add A64 DSI quark patches.
-- fixed A64 DSI pipeline.
-- add proper commit messages.
-- collect Merlijn Wajer Tested-by credits.
-Changes for v6:
-- dropped unneeded changes, patches
-- fixed all burst mode patches as per previous version comments
-- rebase on master
-- update proper commit message
-- dropped unneeded comments
-- order the patches that make review easy
-Changes for v5:
-- collect Rob, Acked-by
-- droped "Fix VBP size calculation" patch
-- updated vblk timing calculation.
-- droped techstar, bananapi dsi panel drivers which may require
-  bridge or other setup. it's under discussion.
-Changes for v4:
-- droppoed untested CCU_FEATURE_FIXED_POSTDIV check code in
-  nkm min, max rate patches
-- create two patches for "Add Allwinner A64 MIPI DSI support"
-  one for has_mod_clk quirk and other one for A64 support
-- use existing driver code construct for hblk computation
-- dropped "Increase hfp packet overhead" patch [2], though BSP added
-  this but we have no issues as of now.
-  (no issues on panel side w/o this change)
-- create separate function for vblk computation 
-- enable vcc-dsi regulator in dsi_runtime_resume
-- collect Rob, Acked-by
-- update MAINTAINERS file for panel drivers
-- cleanup commit messages
-- fixed checkpatch warnings/errors
+- Add if statement for A64 with single clock
 
-[1] https://patchwork.freedesktop.org/series/70361/
+ .../display/allwinner,sun6i-a31-mipi-dsi.yaml | 33 +++++++++++++++++--
+ 1 file changed, 31 insertions(+), 2 deletions(-)
 
-Any inputs?
-Jagan.
-
-Jagan Teki (7):
-  dt-bindings: sun6i-dsi: Document A64 MIPI-DSI controller
-  dt-bindings: sun6i-dsi: Add A64 DPHY compatible (w/ A31 fallback)
-  drm/sun4i: dsi: Get the mod clock for A31
-  drm/sun4i: dsi: Handle bus clock via regmap_mmio_attach_clk
-  drm/sun4i: dsi: Add Allwinner A64 MIPI DSI support
-  arm64: dts: allwinner: a64: Add MIPI DSI pipeline
-  [DO NOT MERGE] arm64: dts: allwinner: bananapi-m64: Enable Bananapi S070WV20-CT16 DSI
-    panel
-
- .../display/allwinner,sun6i-a31-mipi-dsi.yaml | 33 ++++++++++-
- .../phy/allwinner,sun6i-a31-mipi-dphy.yaml    |  6 +-
- .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 31 +++++++++++
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 37 +++++++++++++
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c        | 55 +++++++++++++++----
- 5 files changed, 148 insertions(+), 14 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml b/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
+index dafc0980c4fa..d41ecb5e7f7c 100644
+--- a/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
++++ b/Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml
+@@ -15,7 +15,9 @@ properties:
+   "#size-cells": true
+ 
+   compatible:
+-    const: allwinner,sun6i-a31-mipi-dsi
++    enum:
++      - allwinner,sun6i-a31-mipi-dsi
++      - allwinner,sun50i-a64-mipi-dsi
+ 
+   reg:
+     maxItems: 1
+@@ -24,6 +26,8 @@ properties:
+     maxItems: 1
+ 
+   clocks:
++    minItems: 1
++    maxItems: 2
+     items:
+       - description: Bus Clock
+       - description: Module Clock
+@@ -63,13 +67,38 @@ required:
+   - reg
+   - interrupts
+   - clocks
+-  - clock-names
+   - phys
+   - phy-names
+   - resets
+   - vcc-dsi-supply
+   - port
+ 
++allOf:
++  - if:
++      properties:
++         compatible:
++           contains:
++             const: allwinner,sun6i-a31-mipi-dsi
++
++    then:
++        properties:
++          clocks:
++            minItems: 2
++
++        required:
++          - clock-names
++
++  - if:
++      properties:
++         compatible:
++           contains:
++             const: allwinner,sun50i-a64-mipi-dsi
++
++    then:
++        properties:
++          clocks:
++            minItems: 1
++
+ additionalProperties: false
+ 
+ examples:
 -- 
 2.18.0.321.gffc6fa0e3
 
