@@ -2,111 +2,88 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCF4C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C6CC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BC3B21582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:55:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B76AF24650
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:00:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="qodjHLIO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbfLROzb (ORCPT
+        id S1727257AbfLRPAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 09:55:31 -0500
-Received: from foss.arm.com ([217.140.110.172]:49046 "EHLO foss.arm.com"
+        Wed, 18 Dec 2019 10:00:07 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:59822 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727384AbfLROzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 09:55:31 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9A0F430E;
-        Wed, 18 Dec 2019 06:55:30 -0800 (PST)
-Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D48613F719;
-        Wed, 18 Dec 2019 06:55:28 -0800 (PST)
-Date:   Wed, 18 Dec 2019 14:55:26 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Jolly Shah <jolly.shah@xilinx.com>
-Cc:     ard.biesheuvel@linaro.org, mingo@kernel.org,
-        gregkh@linuxfoundation.org, matt@codeblueprint.co.uk,
-        hkallweit1@gmail.com, keescook@chromium.org,
-        dmitry.torokhov@gmail.com, michal.simek@xilinx.com,
-        rajanv@xilinx.com, Sudeep Holla <sudeep.holla@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Rajan Vaja <rajan.vaja@xilinx.com>
-Subject: Re: [PATCH 1/5] firmware: xilinx: Adds new eemi call for reg access
-Message-ID: <20191218145526.GB12525@bogus>
-References: <1575502159-11327-1-git-send-email-jolly.shah@xilinx.com>
- <1575502159-11327-2-git-send-email-jolly.shah@xilinx.com>
+        id S1727189AbfLRPAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 10:00:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=f44HdFAV8jybth2ZGlrp2hEZQWpq0Dc4ywyfBLAszj4=; b=qodjHLIOjJUGem2f4qg51/s7Pf
+        XjP1b+NCalVACpUltTaqVVWbKGlumPJs0bfHSiN/nm5rsvvvj+lPG5573a4MXP+LcmP3XyqtuNsO0
+        9DhNDx2fLVCoiaJnWgDZ5KdMBGlHKA2N0+4MZ5ZaQoe8AqIpcbNJ0PcNvXYcIRxsL1jU=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1ihanr-0004A0-HM; Wed, 18 Dec 2019 15:59:55 +0100
+Date:   Wed, 18 Dec 2019 15:59:55 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Peng Fan <peng.fan@nxp.com>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
+        "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "mripard@kernel.org" <mripard@kernel.org>,
+        "wens@csie.org" <wens@csie.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 1/2] pinctrl: mvebu: armada-37xx: use use platform api
+Message-ID: <20191218145955.GE26938@lunn.ch>
+References: <1576672860-14420-1-git-send-email-peng.fan@nxp.com>
+ <CAOMZO5DeA24EUjr-E=V=tGNaZ7UkOEi+F5-kEBqEB288DSNSoA@mail.gmail.com>
+ <AM0PR04MB4481B3EAB2DDC42A137E8AAB88530@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <CAOMZO5BK0Pa6Aw6n7Tf+C6+Fg15WNbEUOzKCQTaWqTUu6yoPjA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1575502159-11327-2-git-send-email-jolly.shah@xilinx.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAOMZO5BK0Pa6Aw6n7Tf+C6+Fg15WNbEUOzKCQTaWqTUu6yoPjA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 03:29:15PM -0800, Jolly Shah wrote:
-> From: Rajan Vaja <rajan.vaja@xilinx.com>
+On Wed, Dec 18, 2019 at 09:57:57AM -0300, Fabio Estevam wrote:
+> Hi Peng,
 > 
-> This patch adds new EEMI call which is used for CSU/PMU register
-> access from linux.
+> On Wed, Dec 18, 2019 at 9:53 AM Peng Fan <peng.fan@nxp.com> wrote:
 > 
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
-> Signed-off-by: Jolly Shah <jolly.shah@xilinx.com>
-> ---
->  drivers/firmware/xilinx/zynqmp.c     | 183 +++++++++++++++++++++++++++++++++++
->  include/linux/firmware/xlnx-zynqmp.h |   9 ++
->  2 files changed, 192 insertions(+)
-> 
-> diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-> index fd3d837..56431ad 100644
-> --- a/drivers/firmware/xilinx/zynqmp.c
-> +++ b/drivers/firmware/xilinx/zynqmp.c
-> @@ -24,6 +24,8 @@
->  #include <linux/firmware/xlnx-zynqmp.h>
->  #include "zynqmp-debug.h"
->  
-> +static unsigned long register_address;
-> +
->  static const struct zynqmp_eemi_ops *eemi_ops_tbl;
->  
->  static const struct mfd_cell firmware_devs[] = {
-> @@ -664,6 +666,26 @@ static int zynqmp_pm_set_requirement(const u32 node, const u32 capabilities,
->  				   qos, ack, NULL);
->  }
->  
-> +/**
-> + * zynqmp_pm_config_reg_access - PM Config API for Config register access
-> + * @register_access_id:	ID of the requested REGISTER_ACCESS
-> + * @address:		Address of the register to be accessed
-> + * @mask:		Mask to be written to the register
-> + * @value:		Value to be written to the register
-> + * @out:		Returned output value
-> + *
-> + * This function calls REGISTER_ACCESS to configure CSU/PMU registers.
-> + *
-> + * Return:	Returns status, either success or error+reason
-> + */
-> +
-> +static int zynqmp_pm_config_reg_access(u32 register_access_id, u32 address,
-> +				       u32 mask, u32 value, u32 *out)
-> +{
-> +	return zynqmp_pm_invoke_fn(PM_REGISTER_ACCESS, register_access_id,
-> +				   address, mask, value, out);
-> +}
-> +
+> > Please see:
+> > https://lkml.org/lkml/2019/12/4/64
 
-If you have this API, can you remove all other APIs and implement them
-using these ? This kills the EEMI abstraction.
+  +                       dev_err(dev, "Couldn't determine irq count: %pe\n",
+  +                               ERR_PTR(nr_irq_parent));
 
-NACK for this and any attempts to provide direct reas/write access to
-the PM config space. EEMI should have better abstraction than this.
 
---
-Regards,
-Sudeep
+> Still think it makes things more complicated than simply returning the
+> error code directly.
+
+Hi Fabio
+
+Look closer. This is not about returning an error, it is about
+printing an error.
+
+I think the API could better. A %ie formatter would make a lot of
+sense, so avoiding the ERR_PTR().
+
+       Andrew
