@@ -2,214 +2,244 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E67C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D92BDC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0442A227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:17:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BmypH3rQ"
+	by mail.kernel.org (Postfix) with ESMTP id B0C3924672
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:17:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbfLRJRI (ORCPT
+        id S1726873AbfLRJRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 04:17:08 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:7998 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726757AbfLRJRH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 04:17:07 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5df9ee890000>; Wed, 18 Dec 2019 01:16:57 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 18 Dec 2019 01:17:06 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 18 Dec 2019 01:17:06 -0800
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Dec
- 2019 09:17:05 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 18 Dec 2019 09:17:05 +0000
-Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.64.167]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5df9ee8e0004>; Wed, 18 Dec 2019 01:17:05 -0800
-From:   Nagarjuna Kristam <nkristam@nvidia.com>
-To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <mark.rutland@arm.com>, <robh+dt@kernel.org>, <kishon@ti.com>
-CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [Patch V2 04/18] phy: tegra: xusb: Add usb-phy support
-Date:   Wed, 18 Dec 2019 14:46:17 +0530
-Message-ID: <1576660591-10383-5-git-send-email-nkristam@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576660591-10383-1-git-send-email-nkristam@nvidia.com>
-References: <1576660591-10383-1-git-send-email-nkristam@nvidia.com>
-X-NVConfidentiality: public
+        Wed, 18 Dec 2019 04:17:11 -0500
+Received: from mga18.intel.com ([134.134.136.126]:60669 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725955AbfLRJRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 04:17:10 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 01:17:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,328,1571727600"; 
+   d="scan'208";a="205782211"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP; 18 Dec 2019 01:17:08 -0800
+Received: from [10.125.252.219] (abudanko-mobl.ccr.corp.intel.com [10.125.252.219])
+        by linux.intel.com (Postfix) with ESMTP id 0400D5802C9;
+        Wed, 18 Dec 2019 01:16:59 -0800 (PST)
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: [PATCH v4 0/7] Introduce CAP_SYS_PERFMON to secure system performance
+ monitoring and observability
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "james.bottomley@hansenpartnership.com" 
+        <james.bottomley@hansenpartnership.com>,
+        Serge Hallyn <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Robert Richter <rric@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org, oprofile-list@lists.sf.net
+Organization: Intel Corp.
+Message-ID: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
+Date:   Wed, 18 Dec 2019 12:16:58 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576660617; bh=c1fS/HfesAEgOY1XyJ1A0jPa5GIhTsNLoVnJZg0VmlE=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=BmypH3rQGlfVhKv9fFxEtFlAdXiO2ZD05YtMSF5cygLr9lyrd6der5gf9r3p7mNnA
-         GhwXdefEVnATnnSrb5stNlxur9njpaBmp5IqkOSw3OZg59Vhcg55mk8vATg/V8yQsG
-         9p2uES2xSKa7MJONrBbmEg72aiKhSs1vLw0k+4xa72LX4FbIso7KjEbvxfVySOfMjV
-         kbU5SVuB2d8AHky9XQvKOuZdzvUHUrHu1AxKAZu2MVHw3Aay19BjOM9LXwdUGusWGX
-         ufUEN7ZkcUZ4O6B+zJtUJBW3qCAV1g0crlp7RVRoeJbkd43GirABEiS9s3tF0WjvLz
-         cYKJLGIEaoVww==
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For USB 2 ports that has usb-role-switch enabled, add usb-phy for
-corresponding USB 2 phy. USB role changes from role switch are then
-updated to corresponding host and device mode drivers via usb-phy notifier
-block.
 
-Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
----
-V2:
- - Added dev_set_drvdata for port->dev.
----
- drivers/phy/tegra/xusb.c | 71 ++++++++++++++++++++++++++++++++++++++++++++++++
- drivers/phy/tegra/xusb.h |  2 ++
- 2 files changed, 73 insertions(+)
+Currently access to perf_events, i915_perf and other performance monitoring and
+observability subsystems of the kernel is open for a privileged process [1] with
+CAP_SYS_ADMIN capability enabled in the process effective set [2].
 
-diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
-index dc00b42..5bde8f1 100644
---- a/drivers/phy/tegra/xusb.c
-+++ b/drivers/phy/tegra/xusb.c
-@@ -533,6 +533,8 @@ static int tegra_xusb_port_init(struct tegra_xusb_port *port,
- 	if (err < 0)
- 		goto unregister;
- 
-+	dev_set_drvdata(&port->dev, port);
-+
- 	return 0;
- 
- unregister:
-@@ -545,6 +547,8 @@ static void tegra_xusb_port_unregister(struct tegra_xusb_port *port)
- 	if (!IS_ERR_OR_NULL(port->usb_role_sw)) {
- 		of_platform_depopulate(&port->dev);
- 		usb_role_switch_unregister(port->usb_role_sw);
-+		cancel_work_sync(&port->usb_phy_work);
-+		usb_remove_phy(&port->usb_phy);
- 	}
- 	device_unregister(&port->dev);
- }
-@@ -556,16 +560,59 @@ static const char *const modes[] = {
- 	[USB_DR_MODE_OTG] = "otg",
- };
- 
-+static void tegra_xusb_usb_phy_work(struct work_struct *work)
-+{
-+	struct tegra_xusb_port *port = container_of(work,
-+				struct tegra_xusb_port, usb_phy_work);
-+	enum usb_role role = usb_role_switch_get_role(port->usb_role_sw);
-+
-+	dev_dbg(&port->dev, "%s calling notifier for role %d\n", __func__,
-+		role);
-+
-+	atomic_notifier_call_chain(&port->usb_phy.notifier, role,
-+				   &port->usb_phy);
-+}
-+
- static int tegra_xusb_role_sw_set(struct device *dev, enum usb_role role)
- {
-+	struct tegra_xusb_port *port = dev_get_drvdata(dev);
-+
- 	dev_dbg(dev, "%s calling notifier for role is %d\n", __func__, role);
- 
-+	schedule_work(&port->usb_phy_work);
-+
-+	return 0;
-+}
-+
-+static int tegra_xusb_set_peripheral(struct usb_otg *otg,
-+					struct usb_gadget *gadget)
-+{
-+	struct tegra_xusb_port *port = container_of(otg->usb_phy,
-+					struct tegra_xusb_port, usb_phy);
-+
-+	if (gadget != NULL)
-+		schedule_work(&port->usb_phy_work);
-+
-+	return 0;
-+}
-+
-+static int tegra_xusb_set_host(struct usb_otg *otg, struct usb_bus *host)
-+{
-+	struct tegra_xusb_port *port = container_of(otg->usb_phy,
-+					struct tegra_xusb_port, usb_phy);
-+
-+	if (host != NULL)
-+		schedule_work(&port->usb_phy_work);
-+
- 	return 0;
- }
- 
-+
- static int tegra_xusb_setup_usb_role_switch(struct tegra_xusb_port *port)
- {
- 	int err = 0;
-+	struct tegra_xusb_lane *lane = tegra_xusb_find_lane(port->padctl,
-+							"usb2", port->index);
- 	struct usb_role_switch_desc role_sx_desc = {
- 					.set = tegra_xusb_role_sw_set,
- 					.fwnode = dev_fwnode(&port->dev),
-@@ -578,6 +625,30 @@ static int tegra_xusb_setup_usb_role_switch(struct tegra_xusb_port *port)
- 		if (err != EPROBE_DEFER)
- 			dev_err(&port->dev, "Failed to register USB role SW: %d",
- 				err);
-+		return err;
-+	}
-+
-+	INIT_WORK(&port->usb_phy_work, tegra_xusb_usb_phy_work);
-+
-+	port->usb_phy.otg = devm_kzalloc(&port->dev,
-+					 sizeof(struct usb_otg), GFP_KERNEL);
-+	if (!port->usb_phy.otg)
-+		return -ENOMEM;
-+
-+	/*
-+	 * Assign phy dev to usb-phy dev. Host/device drivers can use phy
-+	 * reference to retrieve usb-phy details.
-+	 */
-+	port->usb_phy.dev = &lane->pad->lanes[port->index]->dev;
-+	port->usb_phy.dev->driver = port->padctl->dev->driver;
-+	port->usb_phy.otg->usb_phy = &port->usb_phy;
-+	port->usb_phy.otg->set_peripheral = tegra_xusb_set_peripheral;
-+	port->usb_phy.otg->set_host = tegra_xusb_set_host;
-+
-+	err = usb_add_phy_dev(&port->usb_phy);
-+	if (err < 0) {
-+		dev_err(&port->dev, "Failed to add usbphy: %d\n", err);
-+		return err;
- 	}
- 
- 	/* populate connector entry */
-diff --git a/drivers/phy/tegra/xusb.h b/drivers/phy/tegra/xusb.h
-index 9f27899..2345657 100644
---- a/drivers/phy/tegra/xusb.h
-+++ b/drivers/phy/tegra/xusb.h
-@@ -268,6 +268,8 @@ struct tegra_xusb_port {
- 	struct device dev;
- 
- 	struct usb_role_switch *usb_role_sw;
-+	struct work_struct usb_phy_work;
-+	struct usb_phy usb_phy;
- 
- 	const struct tegra_xusb_port_ops *ops;
- };
+This patch set introduces CAP_SYS_PERFMON capability devoted to secure system
+performance monitoring and observability operations so that CAP_SYS_PERFMON would
+assist CAP_SYS_ADMIN capability in its governing role for perf_events, i915_perf
+and other performance monitoring and observability subsystems of the kernel.
+
+CAP_SYS_PERFMON intends to meet the demand to secure system performance monitoring
+and observability operations in security sensitive, restricted, production
+environments (e.g. HPC clusters, cloud and virtual compute environments) where root
+or CAP_SYS_ADMIN credentials are not available to mass users of a system because
+of security considerations.
+
+CAP_SYS_PERFMON intends to harden system security and integrity during system
+performance monitoring and observability operations by decreasing attack surface
+that is available to CAP_SYS_ADMIN privileged processes [2].
+
+CAP_SYS_PERFMON intends to take over CAP_SYS_ADMIN credentials related to system
+performance monitoring and observability operations and balance amount of
+CAP_SYS_ADMIN credentials following the recommendations in the capabilities man
+page [2] for CAP_SYS_ADMIN: "Note: this capability is overloaded; see Notes to
+kernel developers, below."
+
+For backward compatibility reasons access to system performance monitoring and
+observability subsystems of the kernel remains open for CAP_SYS_ADMIN privileged
+processes but CAP_SYS_ADMIN capability usage for secure system performance
+monitoring and observability operations is discouraged with respect to the
+introduced CAP_SYS_PERFMON capability.
+
+The patch set is for tip perf/core repository:
+git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip perf/core
+sha1: ceb9e77324fa661b1001a0ae66f061b5fcb4e4e6
+
+---
+Changes in v4:
+- converted perfmon_capable() into an inline function
+- made perf_events kprobes, uprobes, hw breakpoints and namespaces data available
+  to CAP_SYS_PERFMON privileged processes
+- applied perfmon_capable() to drivers/perf and drivers/oprofile
+- extended __cmd_ftrace() with support of CAP_SYS_PERFMON
+Changes in v3:
+- implemented perfmon_capable() macros aggregating required capabilities checks
+Changes in v2:
+- made perf_events trace points available to CAP_SYS_PERFMON privileged processes
+- made perf_event_paranoid_check() treat CAP_SYS_PERFMON equally to CAP_SYS_ADMIN
+- applied CAP_SYS_PERFMON to i915_perf, bpf_trace, powerpc and parisc system
+  performance monitoring and observability related subsystems
+
+---
+Alexey Budankov (9):
+  capabilities: introduce CAP_SYS_PERFMON to kernel and user space
+  perf/core: open access for CAP_SYS_PERFMON privileged process
+  perf tool: extend Perf tool with CAP_SYS_PERFMON capability support
+  drm/i915/perf: open access for CAP_SYS_PERFMON privileged process
+  trace/bpf_trace: open access for CAP_SYS_PERFMON privileged process
+  powerpc/perf: open access for CAP_SYS_PERFMON privileged process
+  parisc/perf: open access for CAP_SYS_PERFMON privileged process
+  drivers/perf: open access for CAP_SYS_PERFMON privileged process
+  drivers/oprofile: open access for CAP_SYS_PERFMON privileged process
+
+ arch/parisc/kernel/perf.c           |  2 +-
+ arch/powerpc/perf/imc-pmu.c         |  4 ++--
+ drivers/gpu/drm/i915/i915_perf.c    | 13 ++++++-------
+ drivers/oprofile/event_buffer.c     |  2 +-
+ drivers/perf/arm_spe_pmu.c          |  4 ++--
+ include/linux/capability.h          |  4 ++++
+ include/linux/perf_event.h          |  6 +++---
+ include/uapi/linux/capability.h     |  8 +++++++-
+ kernel/events/core.c                |  6 +++---
+ kernel/trace/bpf_trace.c            |  2 +-
+ security/selinux/include/classmap.h |  4 ++--
+ tools/perf/builtin-ftrace.c         |  5 +++--
+ tools/perf/design.txt               |  3 ++-
+ tools/perf/util/cap.h               |  4 ++++
+ tools/perf/util/evsel.c             | 10 +++++-----
+ tools/perf/util/util.c              |  1 +
+ 16 files changed, 47 insertions(+), 31 deletions(-)
+
+---
+Testing and validation (Intel Skylake, 8 cores, Fedora 29, 5.4.0-rc8+, x86_64):
+
+libcap library [3], [4] and Perf tool can be used to apply CAP_SYS_PERFMON 
+capability for secure system performance monitoring and observability beyond the
+scope permitted by the system wide perf_event_paranoid kernel setting [5] and
+below are the steps for evaluation:
+
+  - patch, build and boot the kernel
+  - patch, build Perf tool e.g. to /home/user/perf
+  ...
+  # git clone git://git.kernel.org/pub/scm/libs/libcap/libcap.git libcap
+  # pushd libcap
+  # patch libcap/include/uapi/linux/capabilities.h with [PATCH 1]
+  # make
+  # pushd progs
+  # ./setcap "cap_sys_perfmon,cap_sys_ptrace,cap_syslog=ep" /home/user/perf
+  # ./setcap -v "cap_sys_perfmon,cap_sys_ptrace,cap_syslog=ep" /home/user/perf
+  /home/user/perf: OK
+  # ./getcap /home/user/perf
+  /home/user/perf = cap_sys_ptrace,cap_syslog,cap_sys_perfmon+ep
+  # echo 2 > /proc/sys/kernel/perf_event_paranoid
+  # cat /proc/sys/kernel/perf_event_paranoid 
+  2
+  ...
+  $ /home/user/perf top
+    ... works as expected ...
+  $ cat /proc/`pidof perf`/status
+  Name:	perf
+  Umask:	0002
+  State:	S (sleeping)
+  Tgid:	2958
+  Ngid:	0
+  Pid:	2958
+  PPid:	9847
+  TracerPid:	0
+  Uid:	500	500	500	500
+  Gid:	500	500	500	500
+  FDSize:	256
+  ...
+  CapInh:	0000000000000000
+  CapPrm:	0000004400080000
+  CapEff:	0000004400080000 => 01000100 00000000 00001000 00000000 00000000
+                                     cap_sys_perfmon,cap_sys_ptrace,cap_syslog
+  CapBnd:	0000007fffffffff
+  CapAmb:	0000000000000000
+  NoNewPrivs:	0
+  Seccomp:	0
+  Speculation_Store_Bypass:	thread vulnerable
+  Cpus_allowed:	ff
+  Cpus_allowed_list:	0-7
+  ...
+
+Usage of cap_sys_perfmon effectively avoids unused credentials excess:
+
+- with cap_sys_admin:
+  CapEff:	0000007fffffffff => 01111111 11111111 11111111 11111111 11111111
+
+- with cap_sys_perfmon:
+  CapEff:	0000004400080000 => 01000100 00000000 00001000 00000000 00000000
+                                    38   34               19
+                           sys_perfmon   syslog           sys_ptrace
+
+---
+
+[1] https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
+[2] http://man7.org/linux/man-pages/man7/capabilities.7.html
+[3] http://man7.org/linux/man-pages/man8/setcap.8.html
+[4] https://git.kernel.org/pub/scm/libs/libcap/libcap.git
+[5] http://man7.org/linux/man-pages/man2/perf_event_open.2.html
+[6] https://sites.google.com/site/fullycapable/, posix_1003.1e-990310.pdf
+
 -- 
-2.7.4
+2.20.1
 
