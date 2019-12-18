@@ -2,95 +2,147 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D66CC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0643BC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1026A206D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:51:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nAKkVnO2"
+	by mail.kernel.org (Postfix) with ESMTP id C807E24682
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:51:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576673512;
+	bh=OGeWCNrFfD3XbU8HvErvic6TR8LSAkME11zKooJQHIo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aAUTDIc/eQfb7Dw9Cu37eMgy+vNk15oouEHuLux+BZsSj2sWKF9lHN5uTdnrCfw/F
+	 GX+Zpjv96lPo5RX5uVU1vRxkSJnuYnZZbGWKK0DZqC5SZ/1CDgvesnWwzfr+dN4hH4
+	 2flXVNWtEaHEegaKySgBGxlvsMjMbojsyiCN2q+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbfLRMvp (ORCPT
+        id S1726967AbfLRMvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 07:51:45 -0500
-Received: from mail-pl1-f180.google.com ([209.85.214.180]:46299 "EHLO
-        mail-pl1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726707AbfLRMvo (ORCPT
+        Wed, 18 Dec 2019 07:51:51 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37096 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726707AbfLRMvv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 07:51:44 -0500
-Received: by mail-pl1-f180.google.com with SMTP id y8so925056pll.13
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 04:51:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-transfer-encoding:content-language;
-        bh=FMyD/MSNBBcC50DW1kZoGY+MZ7/XSIpSWlAzw7z2Gug=;
-        b=nAKkVnO2bx3KrwBfj56Elor9wqVHO6jodhd/FOFJKacDC7l0XAoQrxBs9MfazgF/AV
-         EKEigUJZi/3afJMLyRehUQ06HTvgKYwi5p1l7WVzxbNzetGkY1IpZirTYWxc1goN4Eat
-         KGeGTFnuQEINBdTdDGTjAwwofiHqPjfEtgs6VSqL/OKZ5xtZtCRKRAVQTN7F73dhKlxP
-         cPNO3GBbsxtlp5BxgTtRo1QOoqLv1PhXvz53+TQWGdRlQ2x+qE8B6uKNfWOsWVqJr3Sf
-         wuD97upmUsnAUkGvtufIMP3E5znuJhi8L5L/bePaqCTp41DN5UxQRI3XJD/BtCB13lb5
-         IAgQ==
+        Wed, 18 Dec 2019 07:51:51 -0500
+Received: by mail-lj1-f195.google.com with SMTP id u17so2007224lja.4
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 04:51:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-transfer-encoding:content-language;
-        bh=FMyD/MSNBBcC50DW1kZoGY+MZ7/XSIpSWlAzw7z2Gug=;
-        b=ab6uLSc0pLvDaRcLcaUkCs8wduAbSBRKtyVI4NH+NyK/v7jVizCV281sC2peEapAc9
-         7huVfxE+Kp9cGNxzg4eXGZP0qC8xsuqcv37eq2Qbfkk/4E2gtUej0YYGex+9yv1nyHbM
-         HltpmEV6OfjyY0FV43X7rDX7dgwtNMXcA2HN5gjgjAuKlGrvDYdSDzyy1GTnzgOpN7r1
-         nBeKZ+UJmVPs76oVgh7fBj9UrmFgT/pEQWC2VNwRpEJ8lOfjlY36R7T6K3O9I3ccj9QB
-         8DYm+CU/SpK712RaUmGKN90fFX/prIPg3K5IRfIxhrz2dLUP/qTfMDcKDYuIm7yDN1lU
-         dbZg==
-X-Gm-Message-State: APjAAAWqvaVaXF6OuP0igX573XbaI4x1EnV2cLP5w/AbcMgBha5MZFem
-        ntBnw1mfvvXMCNRQtgRwbL4+9vo/cwn1bA==
-X-Google-Smtp-Source: APXvYqxSw2W89Z1ed38sk+l/HZwuj1/iISIxcDi+mToLA+B8DJ8+lORbUmCuM7OZ4G31ALZIWr8a/w==
-X-Received: by 2002:a17:902:8649:: with SMTP id y9mr2607392plt.67.1576673503966;
-        Wed, 18 Dec 2019 04:51:43 -0800 (PST)
-Received: from ?IPv6:2402:f000:1:1501:200:5efe:166.111.139.103? ([2402:f000:1:1501:200:5efe:a66f:8b67])
-        by smtp.gmail.com with ESMTPSA id z13sm2920796pjz.15.2019.12.18.04.51.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 18 Dec 2019 04:51:43 -0800 (PST)
-To:     arnaud.pouliquen@st.com, lgirdwood@gmail.com, broonie@kernel.org,
-        perex@perex.cz, tiwai@suse.com
-Cc:     alsa-devel@alsa-project.org, LKML <linux-kernel@vger.kernel.org>
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [BUG] ALSA: soc: sti: a possible sleep-in-atomic-context bug in
- uni_player_ctl_iec958_put()
-Message-ID: <739176c9-d889-0093-129c-25ff9c57b63b@gmail.com>
-Date:   Wed, 18 Dec 2019 20:51:42 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=irtOki5drNY4QwDIOruEdgQSE/oxagWMtPYoIr3h9ZQ=;
+        b=WYAiXmnk2FxuW3mUWBCo6KyP7jc5mOY+g6u0B23lR3rB932TsoM3N56lesOdA8jky8
+         Ycvu06UlVYQHD+tvT3Fwt8p577EaZaixP29fWRR/u3ju9cj2+TX3WBTkV0UrI2SHbACa
+         ypMaWZc7zvuot44fOKx5tX2ocqCjoKh34zrApaVq6LvewTc16tkAbG5+ztT7RUrw4IFt
+         U/0iUn7eqmmfeffwt22qOvFh9ddJZ8IYQtHeCgQuuFh4V4NUQ6cPNyBXvaaGNXVBObZG
+         Ohm5sqKsswDXsLF7/DjwuSboktuPkqROQOolvqBlTCRHFG5gkdXZLBIapqj9C1YoeztM
+         pVrw==
+X-Gm-Message-State: APjAAAVDbSGaqeQ7uc4sqA3wQrTn/vuBw7VeQTv9Gq545EmwD15BE2OP
+        obZyr0z/9ag5r88kgLnlm/8=
+X-Google-Smtp-Source: APXvYqy07x1FsKiDMiFWfQad7z/SsOw5OTyMCzOmEhY1SojsA04+3MKgjmQWrwGL6UlJkqY+CHtlcQ==
+X-Received: by 2002:a2e:8916:: with SMTP id d22mr1621368lji.19.1576673509062;
+        Wed, 18 Dec 2019 04:51:49 -0800 (PST)
+Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
+        by smtp.gmail.com with ESMTPSA id m15sm1137451ljg.4.2019.12.18.04.51.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 04:51:47 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1ihYno-0000vP-G1; Wed, 18 Dec 2019 13:51:44 +0100
+Date:   Wed, 18 Dec 2019 13:51:44 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>,
+        kbuild test robot <lkp@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
+        Jiri Slaby <jslaby@suse.com>
+Subject: Re: [PATCH] serdev: fix builds with CONFIG_SERIAL_DEV_BUS=m
+Message-ID: <20191218125144.GL22665@localhost>
+References: <201912181000.82Z7czbN%lkp@intel.com>
+ <20191218083842.14882-1-u.kleine-koenig@pengutronix.de>
+ <20191218090606.GJ22665@localhost>
+ <20191218092958.tu6n452zwbpkreks@pengutronix.de>
+ <20191218093806.GK22665@localhost>
+ <20191218103931.kgytwzt6cc75iuud@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+In-Reply-To: <20191218103931.kgytwzt6cc75iuud@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver may sleep while holding a spinlock.
-The function call path (from bottom to top) in Linux 4.19 is:
+On Wed, Dec 18, 2019 at 11:39:31AM +0100, Uwe Kleine-K�nig wrote:
+> Hello Johan,
+> 
+> On Wed, Dec 18, 2019 at 10:38:06AM +0100, Johan Hovold wrote:
+> > On Wed, Dec 18, 2019 at 10:29:58AM +0100, Uwe Kleine-K�nig wrote:
+> > > On Wed, Dec 18, 2019 at 10:06:06AM +0100, Johan Hovold wrote:
+> > > > On Wed, Dec 18, 2019 at 09:38:42AM +0100, Uwe Kleine-K�nig wrote:
+> > > > > Commit 54edb425346a ("serdev: simplify Makefile") broke builds with
+> > > > > serdev configured as module. I don't understand it completely yet, but
+> > > > > it seems that
+> > > > > 
+> > > > > 	obj-$(CONFIG_SERIAL_DEV_BUS) += serdev/
+> > > > > 
+> > > > > in drivers/tty/Makefile with CONFIG_SERIAL_DEV_BUS=m doesn't result in
+> > > > > code that is added using obj-y in drivers/tty/serdev/Makefile being
+> > > > > compiled. So instead of dropping $(CONFIG_SERIAL_DEV_BUS) in serdev's
+> > > > > Makefile, drop it in drivers/tty/Makefile.
+> > > > 
+> > > > Why not simply revert the offending patch? There are some dependencies
+> > > > here related to how the tty layer is built. If you're still not certain
+> > > > on why things broke, I suggest just reverting for now.
+> > > 
+> > > I see that it is not easy to define what obj-y should do in a Makefile
+> > > that is included via obj-m. Now it is the other way round and that
+> > > should be safe. This construct is used in several places, so I'd say the
+> > > patch is fine unless you have more concrete concerns.
+> > 
+> > No, and I don't have time to look into this right now.
+> > 
+> > It's more about the general principle that a patch should do one thing;
+> 
+> IMHO it does one thing: It does what 54edb425346a intended to do in the
+> right way.
 
-sound/soc/sti/uniperif_player.c, 229:
-     mutex_lock in uni_player_set_channel_status
-sound/soc/sti/uniperif_player.c, 608:
-     uni_player_set_channel_status in uni_player_ctl_iec958_put
-sound/soc/sti/uniperif_player.c, 603:
-     _raw_spin_lock_irqsave in uni_player_ctl_iec958_put
+No, your original patch was just broken. The commit message only claimed
+that
 
-mutex_lock() can sleep at runtime.
+	drivers/tty/Makefile has:
+        	obj-$(CONFIG_SERIAL_DEV_BUS)    += serdev/
 
-I am not sure how to properly fix this possible bug, so I only report it.
+	so in drivers/tty/serdev/Makefile CONFIG_SERIAL_DEV_BUS is
+	always =y.
 
-This bug is found by a static analysis tool STCheck written by myself.
+which is clearly false since it can be =m (as the build-bot reported).
 
+You now suggest to change:
 
-Best wishes,
-Jia-Ju Bai
+	obj-$(CONFIG_SERIAL_DEV_BUS)   += serdev/
+	+obj-y                          += serdev/
+
+in drivers/tty/Makefile so that make always recurse into serdev, even
+when serdev is not enabled, which likewise makes no sense. And in any
+case that chunk is not fixing your original patch, but introducing a
+different slight regression.
+
+> But I don't feel strong here. If you prefer to revert, that's ok, too.
+
+Yes, I think reverting is the right thing to do here.
+
+> Not sure I will find the motivation then, to reimplement the
+> cleanup, though.
+
+That's ok, I don't think that "cleanup" is something we want, and either
+way it needs to be reviewed separately.
+
+Johan
