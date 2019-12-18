@@ -2,139 +2,337 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D411C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16291C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53E0E2176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:06:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D390A2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:10:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HHST6eSF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbfLRXGw (ORCPT
+        id S1726648AbfLRXKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 18:06:52 -0500
-Received: from mga06.intel.com ([134.134.136.31]:27557 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726518AbfLRXGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 18:06:52 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 15:06:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
-   d="scan'208";a="240952181"
-Received: from jtreacy-mobl1.ger.corp.intel.com ([10.251.82.127])
-  by fmsmga004.fm.intel.com with ESMTP; 18 Dec 2019 15:06:47 -0800
-Message-ID: <37f4ed0d6145dbe1e8724a5d05d0da82b593bf9c.camel@linux.intel.com>
-Subject: Re: [PATCH v2] tpm_tis: reserve chip for duration of
- tpm_tis_core_init
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Jerry Snitselaar <jsnitsel@redhat.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christian Bundy <christianbundy@fraction.io>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        stable <stable@vger.kernel.org>, linux-integrity@vger.kernel.org
-Date:   Thu, 19 Dec 2019 01:06:40 +0200
-In-Reply-To: <20191217171844.huqlj5csr262zkkk@cantor>
-References: <20191211231758.22263-1-jsnitsel@redhat.com>
-         <20191211235455.24424-1-jsnitsel@redhat.com>
-         <5aef0fbe28ed23b963c53d61445b0bac6f108642.camel@linux.intel.com>
-         <CAPcyv4h60z889bfbiwvVhsj6MxmOPiPY8ZuPB_skxkZx-N+OGw@mail.gmail.com>
-         <20191217020022.knh7uxt4pn77wk5m@cantor>
-         <CAPcyv4iepQup4bwMuWzq6r5gdx83hgYckUWFF7yF=rszjz3dtQ@mail.gmail.com>
-         <5d0763334def7d7ae1e7cf931ef9b14184dce238.camel@linux.intel.com>
-         <20191217171844.huqlj5csr262zkkk@cantor>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-2 
+        Wed, 18 Dec 2019 18:10:15 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35489 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726569AbfLRXKO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 18:10:14 -0500
+Received: by mail-pl1-f196.google.com with SMTP id g6so1662563plt.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 15:10:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5wo5a3gyvtZg51VOl2FizZxvjHDIQV32ANp9Dp8itFM=;
+        b=HHST6eSFpyt6SFrjsvedVfrbb0ndL5NBoM4dKIocVUVLRltOvueqD+KVuKGAP6pm3S
+         vh4mMiHJOYVsPHmKtKb6cmdSQYbEI+Lg3f7Fbb3yqul68M3F5FHDtqDENNdOe8TyTNN0
+         JIo0oPyBxVsYN9MKIwjlUC3J8BEyyPC/MiXAQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5wo5a3gyvtZg51VOl2FizZxvjHDIQV32ANp9Dp8itFM=;
+        b=JhYTCOlrZAT9B6LWHPhuJKknoOeiuSwEGNd1Usdd73yam9FsB8K58YAdoN4qchaTNZ
+         8ETY+27JPcDHCOUL5EiDKLkjAP8ezwRlrHNa+ewJKY0xnelywWRrn8vVCjxFHjdrbRYx
+         2pt/SDE35dLoi8b0hrWIj68Rp0iHdUwPOqLDUNkn7hHnRpm9abqBS10KRR8pjB3/fXYj
+         /EMddb5v3VY9hXwIJMcSkcj/qPOHWv/pvwwCG4VFf8NmKLcRYAjXQllwc/AIK+m6VsR2
+         LFGZvWzP39py3u7lpKDYlCgtgHt+9NCZRlTRY9NpHcdJqC0rEcVBHYMgoY8LqFclC/Bw
+         xY5A==
+X-Gm-Message-State: APjAAAUp9Jx0bkmEqAdmC0/7rwhe9jbfOEL0E2DBOyqlbue9d5zsTVNQ
+        rGJyBKjxosSjhfYg0tQSuri0vA==
+X-Google-Smtp-Source: APXvYqxaws/OL/TcP2+xFiPOV6NnQxTekqCaQA7fb/76Mo6J2/4LSjgbdr4PnaE9SzJ99marbe41Wg==
+X-Received: by 2002:a17:90b:46cf:: with SMTP id jx15mr5999684pjb.2.1576710613416;
+        Wed, 18 Dec 2019 15:10:13 -0800 (PST)
+Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:172e:4646:c089:ce59])
+        by smtp.gmail.com with ESMTPSA id x4sm4900746pff.143.2019.12.18.15.10.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 15:10:12 -0800 (PST)
+From:   Prashant Malani <pmalani@chromium.org>
+To:     enric.balletbo@collabora.com, groeck@chromium.org,
+        bleung@chromium.org, lee.jones@linaro.org
+Cc:     linux-kernel@vger.kernel.org, Jon Flatley <jflat@chromium.org>,
+        Prashant Malani <pmalani@chromium.org>
+Subject: [PATCH v2] platform: chrome: Add cros-ec-pd-notify driver
+Date:   Wed, 18 Dec 2019 15:07:02 -0800
+Message-Id: <20191218230701.59166-1-pmalani@chromium.org>
+X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-12-17 at 10:18 -0700, Jerry Snitselaar wrote:
-> On Tue Dec 17 19, Jarkko Sakkinen wrote:
-> > On Mon, 2019-12-16 at 18:14 -0800, Dan Williams wrote:
-> > > On Mon, Dec 16, 2019 at 6:00 PM Jerry Snitselaar <jsnitsel@redhat.com> wrote:
-> > > > On Mon Dec 16 19, Dan Williams wrote:
-> > > > > On Mon, Dec 16, 2019 at 4:59 PM Jarkko Sakkinen
-> > > > > <jarkko.sakkinen@linux.intel.com> wrote:
-> > > > > > On Wed, 2019-12-11 at 16:54 -0700, Jerry Snitselaar wrote:
-> > > > > > > Instead of repeatedly calling tpm_chip_start/tpm_chip_stop when
-> > > > > > > issuing commands to the tpm during initialization, just reserve the
-> > > > > > > chip after wait_startup, and release it when we are ready to call
-> > > > > > > tpm_chip_register.
-> > > > > > > 
-> > > > > > > Cc: Christian Bundy <christianbundy@fraction.io>
-> > > > > > > Cc: Dan Williams <dan.j.williams@intel.com>
-> > > > > > > Cc: Peter Huewe <peterhuewe@gmx.de>
-> > > > > > > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > > > > > Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> > > > > > > Cc: Stefan Berger <stefanb@linux.vnet.ibm.com>
-> > > > > > > Cc: stable@vger.kernel.org
-> > > > > > > Cc: linux-integrity@vger.kernel.org
-> > > > > > > Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of tpm_transmit()")
-> > > > > > > Fixes: 5b359c7c4372 ("tpm_tis_core: Turn on the TPM before probing IRQ's")
-> > > > > > > Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
-> > > > > > 
-> > > > > > I pushed to my master with minor tweaks and added my tags.
-> > > > > > 
-> > > > > > Please check before I put it to linux-next.
-> > > > > 
-> > > > > I don't see it yet here:
-> > > > > 
-> > > > > http://git.infradead.org/users/jjs/linux-tpmdd.git/shortlog/refs/heads/master
-> > > > > 
-> > > > > However, I wanted to make sure you captured that this does *not* fix
-> > > > > the interrupt issue. I.e. make sure you remove the "Fixes:
-> > > > > 5b359c7c4372 ("tpm_tis_core: Turn on the TPM before probing IRQ's")"
-> > > > > tag.
-> > > > > 
-> > > > > With that said, are you going to include the revert of:
-> > > > > 
-> > > > > 1ea32c83c699 tpm_tis_core: Set TPM_CHIP_FLAG_IRQ before probing for interrupts
-> > > > 
-> > > > Dan, with the above reverted do you still get the screaming interrupt?
-> > > 
-> > > Yes, the screaming interrupt goes away, although it is replaced by
-> > > these messages when the driver starts:
-> > > 
-> > > [    3.725131] tpm_tis IFX0740:00: 2.0 TPM (device-id 0x1B, rev-id 16)
-> > > [    3.725358] tpm tpm0: tpm_try_transmit: send(): error -5
-> > > [    3.725359] tpm tpm0: [Firmware Bug]: TPM interrupt not working,
-> > > polling instead
-> > > 
-> > > If the choice is "error message + polled-mode" vs "pinning a cpu with
-> > > interrupts" I'd accept the former, but wanted Jarkko with his
-> > > maintainer hat to weigh in.
-> > > 
-> > > Is there a simple sanity check I can run to see if the TPM is still
-> > > operational in this state?
-> > 
-> > What about T490S?
-> > 
-> > /Jarkko
-> > 
-> 
-> Hi Jarkko, I'm waiting to hear back from the t490s user, but I imagine
-> it still has the problem as well.
-> 
-> Christian, were you able to try this patch and verify it still
-> resolves the issue you were having with the kernel failing to get the
-> timeouts and durations from the tpm?
+From: Jon Flatley <jflat@chromium.org>
 
-Including those reverts would be a bogus change at this point.
+ChromiumOS uses ACPI device with HID "GOOG0003" for power delivery
+related events. The existing cros-usbpd-charger driver relies on these
+events without ever actually receiving them on ACPI platforms. This is
+because in the ChromeOS kernel trees, the GOOG0003 device is owned by an
+ACPI driver that offers firmware updates to USB-C chargers.
 
-The fix that I already applied obviously fixes an issue even if
-it does not fix all the issues.
+Introduce a new platform driver under cros-ec, the ChromeOS embedded
+controller, that handles these PD events and dispatches them
+appropriately over a notifier chain to all drivers that use them.
 
-/Jarkko
+On non-ACPI platforms, the driver gets instantiated for ECs which
+support the EC_FEATURE_USB_PD feature bit, and on such platforms, the
+notification events will get delivered using the MKBP event handling
+mechanism.
+
+Signed-off-by: Jon Flatley <jflat@chromium.org>
+Signed-off-by: Prashant Malani <pmalani@chromium.org>
+---
+
+Changes in v2 (pmalani@chromium.org):
+- Removed dependency on DT entry; instead, we will instantiate the
+  driver on detecting EC_FEATURE_USB_PD for non-ACPI platforms.
+- Modified the cros-ec-pd-notify device to be an mfd_cell under
+  usbpdcharger for non-ACPI platforms. Altered the platform_probe() call
+  to derive the cros EC structs appropriately.
+- Replaced "usbpd_notify" with "pd_notify" in functions and structures.
+- Addressed comments from upstream maintainer.
+
+ drivers/mfd/cros_ec_dev.c                     |   3 +
+ drivers/platform/chrome/Kconfig               |   9 ++
+ drivers/platform/chrome/Makefile              |   1 +
+ drivers/platform/chrome/cros_ec_pd_notify.c   | 151 ++++++++++++++++++
+ .../linux/platform_data/cros_ec_pd_notify.h   |  17 ++
+ 5 files changed, 181 insertions(+)
+ create mode 100644 drivers/platform/chrome/cros_ec_pd_notify.c
+ create mode 100644 include/linux/platform_data/cros_ec_pd_notify.h
+
+diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+index c4b977a5dd966..cc6a6788cd5c2 100644
+--- a/drivers/mfd/cros_ec_dev.c
++++ b/drivers/mfd/cros_ec_dev.c
+@@ -85,6 +85,9 @@ static const struct mfd_cell cros_ec_sensorhub_cells[] = {
+ static const struct mfd_cell cros_usbpd_charger_cells[] = {
+ 	{ .name = "cros-usbpd-charger", },
+ 	{ .name = "cros-usbpd-logger", },
++#ifndef CONFIG_ACPI
++	{ .name = "cros-ec-pd-notify", },
++#endif
+ };
+ 
+ static const struct cros_feature_to_cells cros_subdevices[] = {
+diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
+index 5f57282a28da0..972c129b7b7ba 100644
+--- a/drivers/platform/chrome/Kconfig
++++ b/drivers/platform/chrome/Kconfig
+@@ -131,6 +131,15 @@ config CROS_EC_LPC
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called cros_ec_lpcs.
+ 
++config CROS_EC_PD_NOTIFY
++	tristate "ChromeOS Type-C power delivery event notifier"
++	depends on CROS_EC
++	help
++	  If you say Y here, you get support for Type-C PD event notifications
++	  from the ChromeOS EC. On ACPI platorms this driver will bind to the
++	  GOOG0003 ACPI device, and on non-ACPI platforms this driver will get
++	  initialized on ECs which support the feature EC_FEATURE_USB_PD.
++
+ config CROS_EC_PROTO
+ 	bool
+ 	help
+diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
+index aacd5920d8a18..6070baa8320ca 100644
+--- a/drivers/platform/chrome/Makefile
++++ b/drivers/platform/chrome/Makefile
+@@ -22,5 +22,6 @@ obj-$(CONFIG_CROS_EC_DEBUGFS)		+= cros_ec_debugfs.o
+ obj-$(CONFIG_CROS_EC_SENSORHUB)		+= cros_ec_sensorhub.o
+ obj-$(CONFIG_CROS_EC_SYSFS)		+= cros_ec_sysfs.o
+ obj-$(CONFIG_CROS_USBPD_LOGGER)		+= cros_usbpd_logger.o
++obj-$(CONFIG_CROS_EC_PD_NOTIFY)		+= cros_ec_pd_notify.o
+ 
+ obj-$(CONFIG_WILCO_EC)			+= wilco_ec/
+diff --git a/drivers/platform/chrome/cros_ec_pd_notify.c b/drivers/platform/chrome/cros_ec_pd_notify.c
+new file mode 100644
+index 0000000000000..b1d98a171cff5
+--- /dev/null
++++ b/drivers/platform/chrome/cros_ec_pd_notify.c
+@@ -0,0 +1,151 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright 2019 Google LLC
++ *
++ * This driver serves as the receiver of cros_ec PD host events.
++ */
++
++#include <linux/acpi.h>
++#include <linux/module.h>
++#include <linux/mfd/cros_ec.h>
++#include <linux/platform_data/cros_ec_commands.h>
++#include <linux/platform_data/cros_ec_pd_notify.h>
++#include <linux/platform_data/cros_ec_proto.h>
++#include <linux/platform_device.h>
++
++#define DRV_NAME "cros-ec-pd-notify"
++#define ACPI_DRV_NAME "GOOG0003"
++
++static BLOCKING_NOTIFIER_HEAD(cros_ec_pd_notifier_list);
++
++/**
++ * cros_ec_pd_register_notify - Register a notifier callback for PD events.
++ * @nb: Notifier block pointer to register
++ *
++ * On ACPI platforms this corresponds to host events on the ECPD
++ * "GOOG0003" ACPI device. On non-ACPI platforms this will filter mkbp events
++ * for USB PD events.
++ *
++ * Return: 0 on success or negative error code.
++ */
++int cros_ec_pd_register_notify(struct notifier_block *nb)
++{
++	return blocking_notifier_chain_register(
++			&cros_ec_pd_notifier_list, nb);
++}
++EXPORT_SYMBOL_GPL(cros_ec_pd_register_notify);
++
++
++/**
++ * cros_ec_pd_unregister_notify - Unregister notifier callback for PD events.
++ * @nb: Notifier block pointer to unregister
++ *
++ * Unregister a notifier callback that was previously registered with
++ * cros_ec_pd_register_notify().
++ */
++void cros_ec_pd_unregister_notify(struct notifier_block *nb)
++{
++	blocking_notifier_chain_unregister(&cros_ec_pd_notifier_list, nb);
++}
++EXPORT_SYMBOL_GPL(cros_ec_pd_unregister_notify);
++
++#ifdef CONFIG_ACPI
++
++static int cros_ec_pd_notify_add_acpi(struct acpi_device *adev)
++{
++	return 0;
++}
++
++static void cros_ec_pd_notify_acpi(struct acpi_device *adev, u32 event)
++{
++	blocking_notifier_call_chain(&cros_ec_pd_notifier_list, event, NULL);
++}
++
++static const struct acpi_device_id cros_ec_pd_acpi_device_ids[] = {
++	{ ACPI_DRV_NAME, 0 },
++	{ }
++};
++MODULE_DEVICE_TABLE(acpi, cros_ec_pd_acpi_device_ids);
++
++static struct acpi_driver cros_ec_pd_notify_driver = {
++	.name = DRV_NAME,
++	.class = DRV_NAME,
++	.ids = cros_ec_pd_acpi_device_ids,
++	.ops = {
++		.add = cros_ec_pd_notify_add_acpi,
++		.notify = cros_ec_pd_notify_acpi,
++	},
++};
++module_acpi_driver(cros_ec_pd_notify_driver);
++
++#else /* CONFIG_ACPI */
++
++static int cros_ec_pd_notify_plat(struct notifier_block *nb,
++		unsigned long queued_during_suspend, void *data)
++{
++	struct cros_ec_device *ec_dev = (struct cros_ec_device *)data;
++	u32 host_event = cros_ec_get_host_event(ec_dev);
++
++	if (!host_event)
++		return NOTIFY_BAD;
++
++	if (host_event & EC_HOST_EVENT_MASK(EC_HOST_EVENT_PD_MCU)) {
++		blocking_notifier_call_chain(&cros_ec_pd_notifier_list,
++				host_event, NULL);
++		return NOTIFY_OK;
++	}
++	return NOTIFY_DONE;
++}
++
++static int cros_ec_pd_notify_probe_plat(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct cros_ec_dev *ecdev = dev_get_drvdata(dev->parent);
++	struct notifier_block *nb;
++	int ret;
++
++	nb = devm_kzalloc(dev, sizeof(*nb), GFP_KERNEL);
++	if (!nb)
++		return -ENOMEM;
++
++	nb->notifier_call = cros_ec_pd_notify_plat;
++	dev_set_drvdata(dev, nb);
++
++	ret = blocking_notifier_chain_register(&ecdev->ec_dev->event_notifier,
++						nb);
++	if (ret < 0) {
++		dev_err(dev, "Failed to register notifier\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static int cros_ec_pd_notify_remove_plat(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct cros_ec_dev *ecdev = dev_get_drvdata(dev->parent);
++	struct notifier_block *nb =
++		(struct notifier_block *)dev_get_drvdata(dev);
++
++	blocking_notifier_chain_unregister(&ecdev->ec_dev->event_notifier,
++			nb);
++
++	return 0;
++}
++
++static struct platform_driver cros_ec_pd_notify_driver = {
++	.driver = {
++		.name = DRV_NAME,
++	},
++	.probe = cros_ec_pd_notify_probe_plat,
++	.remove = cros_ec_pd_notify_remove_plat,
++};
++module_platform_driver(cros_ec_pd_notify_driver);
++
++#endif /* CONFIG_ACPI */
++
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("ChromeOS power delivery notifier device");
++MODULE_AUTHOR("Jon Flatley <jflat@chromium.org>");
++MODULE_ALIAS("platform:" DRV_NAME);
+diff --git a/include/linux/platform_data/cros_ec_pd_notify.h b/include/linux/platform_data/cros_ec_pd_notify.h
+new file mode 100644
+index 0000000000000..907be5a130d60
+--- /dev/null
++++ b/include/linux/platform_data/cros_ec_pd_notify.h
+@@ -0,0 +1,17 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * ChromeOS EC Power Delivery Notifier Driver
++ *
++ * Copyright 2019 Google LLC
++ */
++
++#ifndef __LINUX_PLATFORM_DATA_CROS_EC_PD_NOTIFY_H
++#define __LINUX_PLATFORM_DATA_CROS_EC_PD_NOTIFY_H
++
++#include <linux/notifier.h>
++
++int cros_ec_pd_register_notify(struct notifier_block *nb);
++
++void cros_ec_pd_unregister_notify(struct notifier_block *nb);
++
++#endif  /* __LINUX_PLATFORM_DATA_CROS_EC_PD_NOTIFY_H */
+-- 
+2.24.1.735.g03f4e72817-goog
 
