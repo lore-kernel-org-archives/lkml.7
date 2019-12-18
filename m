@@ -2,118 +2,93 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 448CAC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FABC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24A88227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:31:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAD9221582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:33:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="glWgZXMu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfLRJbT (ORCPT
+        id S1726734AbfLRJda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 04:31:19 -0500
-Received: from mga06.intel.com ([134.134.136.31]:41254 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725785AbfLRJbS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 04:31:18 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 01:31:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,329,1571727600"; 
-   d="scan'208";a="218091630"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 18 Dec 2019 01:31:17 -0800
-Received: from [10.125.252.219] (abudanko-mobl.ccr.corp.intel.com [10.125.252.219])
-        by linux.intel.com (Postfix) with ESMTP id 33127580458;
-        Wed, 18 Dec 2019 01:31:09 -0800 (PST)
-Subject: [PATCH v4 9/9] drivers/oprofile: open access for CAP_SYS_PERFMON
- privileged process
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
-        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "james.bottomley@hansenpartnership.com" 
-        <james.bottomley@hansenpartnership.com>,
-        Serge Hallyn <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Robert Richter <rric@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org, oprofile-list@lists.sf.net
-References: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <70eb48f8-34ae-8aa3-ca64-d433b75ea2ae@linux.intel.com>
-Date:   Wed, 18 Dec 2019 12:31:08 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Wed, 18 Dec 2019 04:33:30 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:54361 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726090AbfLRJda (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 04:33:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576661609;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qsh+TUwUNo3uTkaxetxWkBaEjq+A0KvMa22sY3nKCA8=;
+        b=glWgZXMuwSh60BVqGCsshMe3An+Q64vuhUtE9uCv8u0GqjDB30bFr0r5jITK0LQCb7GJ59
+        NY5Ajv3mjkvk9gUTQujL5dqQ01nDgn4faxJCwdYF6I8mx2gvaOxm3OoNWu6fPQIaeFaY2T
+        mGmmspukeY2L63yIsdn7jYmWnR2+m8k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-362-4V5vpK9RNzS5YVVtG3JIuA-1; Wed, 18 Dec 2019 04:33:25 -0500
+X-MC-Unique: 4V5vpK9RNzS5YVVtG3JIuA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 36E44802CB0;
+        Wed, 18 Dec 2019 09:33:24 +0000 (UTC)
+Received: from [10.40.205.28] (ovpn-205-28.brq.redhat.com [10.40.205.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4DA8668869;
+        Wed, 18 Dec 2019 09:33:22 +0000 (UTC)
+Subject: Re: [PATCH v7 01/13] exfat: add in-memory and on-disk structures and
+ headers
+To:     =?UTF-8?B?7KCE64Ko7J6sL1MvVyBQbGF0Zm9ybSBMYWIoVkQpL1N0YWZmIEVuZ2luZWVy?=
+         =?UTF-8?B?L+yCvOyEseyghOyekA==?= <namjae.jeon@samsung.com>,
+        "'Enrico Weigelt, metux IT consult'" <lkml@metux.net>
+References: <20191213055028.5574-2-namjae.jeon@samsung.com>
+ <CGME20191216135033epcas5p3f2ec096506b1a48535ce0796fef23b9e@epcas5p3.samsung.com>
+ <088a50ad-dc67-4ff6-624d-a1ac2008b420@web.de>
+ <002401d5b46d$543f7ee0$fcbe7ca0$@samsung.com>
+ <c6698d0c-d909-c9dc-5608-0b986d63a471@metux.net>
+ <000701d5b537$5b196f80$114c4e80$@samsung.com>
+Cc:     linux-kernel@vger.kernel.org, 'Christoph Hellwig' <hch@lst.de>,
+        'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>,
+        'Sungjong Seo' <sj1557.seo@samsung.com>,
+        =?UTF-8?Q?'Valdis_Kl=c4=93tnieks'?= <valdis.kletnieks@vt.edu>,
+        linux-fsdevel@vger.kernel.org
+From:   Maurizio Lombardi <mlombard@redhat.com>
+Message-ID: <c0d9eed8-4cb6-54a5-95a0-a18aec8b70ee@redhat.com>
+Date:   Wed, 18 Dec 2019 10:33:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.0
 MIME-Version: 1.0
-In-Reply-To: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
+In-Reply-To: <000701d5b537$5b196f80$114c4e80$@samsung.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
-Open access to monitoring for CAP_SYS_PERFMON privileged processes.
-For backward compatibility reasons access to the monitoring remains open
-for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage for secure
-monitoring is discouraged with respect to CAP_SYS_PERFMON capability.
+Dne 18.12.2019 v 01:09 =EC=A0=84=EB=82=A8=EC=9E=AC/S/W Platform Lab(VD)/S=
+taff Engineer/=EC=82=BC=EC=84=B1=EC=A0=84=EC=9E=90 napsal(a):
+> Well, I think that there is currently no proper mkfs(format), fsck(repa=
+ir) tool for linux-exfat.
+> I am working on it and will announce it here as soon as possible.
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- drivers/oprofile/event_buffer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Are you aware that on Debian and Fedora/RHEL distros a package named exfa=
+t-utils is available?
+It provides an mkfs and fsck implementation for exfat filesystems.
 
-diff --git a/drivers/oprofile/event_buffer.c b/drivers/oprofile/event_buffer.c
-index 12ea4a4ad607..6c9edc8bbc95 100644
---- a/drivers/oprofile/event_buffer.c
-+++ b/drivers/oprofile/event_buffer.c
-@@ -113,7 +113,7 @@ static int event_buffer_open(struct inode *inode, struct file *file)
- {
- 	int err = -EPERM;
- 
--	if (!capable(CAP_SYS_ADMIN))
-+	if (!perfmon_capable())
- 		return -EPERM;
- 
- 	if (test_and_set_bit_lock(0, &buffer_opened))
--- 
-2.20.1
+You can find the source code here: https://github.com/relan/exfat
 
+Maurizio
 
