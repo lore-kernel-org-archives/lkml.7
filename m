@@ -2,176 +2,184 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 351EBC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7951C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07DEF24689
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2CFF206D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:51:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fbCiSFtY"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mTE1+RmV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbfLRAvw (ORCPT
+        id S1726912AbfLRAv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 19:51:52 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:52486 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726719AbfLRAva (ORCPT
+        Tue, 17 Dec 2019 19:51:57 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:38730 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726719AbfLRAvy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 19:51:30 -0500
-Received: by mail-pj1-f67.google.com with SMTP id w23so49622pjd.2;
-        Tue, 17 Dec 2019 16:51:30 -0800 (PST)
+        Tue, 17 Dec 2019 19:51:54 -0500
+Received: by mail-il1-f195.google.com with SMTP id f5so188131ilq.5
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 16:51:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=fCTHj12G+M+oIsAQ6yhmQ7Qk1y5dZl1KYqTEl/6R+Sg=;
-        b=fbCiSFtYCJPgHlYavsvnPaltQBQgJTA9YysJkipxGAfk28wj2x0d8RyhUSLmyCnaZ1
-         0FntiolGQfXEuZDm23fgBpWJgpGsI7m8FktGskLAydxokxGpUzQLiiambFxMg0e7Vm/F
-         nCowGQnme040klIdyNTAF7ZqA35lpKxNkM9oOSePe4GBOdVCut+gBUSMxSxiinhqPch5
-         sNBE2tR7/UxhBE0AwRNZYbIA5X0/vT8ycRVST0K5h6eFdFWCN7cBZiqhOz5OZhKDchBd
-         S/GY23ofMg7X4/l3hwoGyiIJ0Fp0RFwyPdVOWELLF3II370l5l+OkoEULCII8n+kOeO+
-         A4fg==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/FqIFbxNZ4ErowQaQntfHCdnij1EjI9liJnlLkiqWQc=;
+        b=mTE1+RmVS47pn7wwx1YUwxOkfF6sMrc/6gDreEAiPH52c208VuOmECL0FxLsJiOeSj
+         xd6GbfHO5uLaojmq7ftwHPw2eJ7dBFFX2kd4qTD4vF6V9bgGaznbDPFQJ6EcBm3DRuBu
+         Sf9wkS0+HVSXl95nXlUBbglpe3Om87S4go9Tg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=fCTHj12G+M+oIsAQ6yhmQ7Qk1y5dZl1KYqTEl/6R+Sg=;
-        b=s0QTwqw+w/8MUZxW8UZp03+NrQZ9F/bil1XHQs4pnpBjkoLXFb6UpGdagHoVHW/vbm
-         T5h61YDRd3HZLgmbGYFRGBJlIgu8uwpnwJUh6JSFeQ6Xyf1zeoOhHYS/63D+Fjxt75z+
-         oCNOC2YNgP/JwWX2SRoVUPfR9RGQdUe8z0LFrYKv7rbFouT7h7JWP61hMls4LrGc2gmH
-         U46eSIukUoOvf5R1RvYalqWEcAmuYr+tmpuRRC0w9vdbD9PYsa+yB2xJHA/5OuN9AycE
-         savcu7nZs7t4Y85l57NIZiRPAlpz5ffCj4D5NsXKxxX7G7zvKQeL/w0gVs7DR3jpzy81
-         lHDA==
-X-Gm-Message-State: APjAAAUjGL3UXYV4Dv5ZIUk7WlMzYxz3H0Sw4B6r0OD1YE1KlpMBmbjt
-        LywsqwE9ckGf0bZ8j0ex8n0=
-X-Google-Smtp-Source: APXvYqw7R14iRN1uZzAFinjzZOh3+ZENUAziYtOFEU3tIDRlliY37rT8j8adIwONHbUeFzO9ynQl9g==
-X-Received: by 2002:a17:90a:6:: with SMTP id 6mr193048pja.71.1576630289852;
-        Tue, 17 Dec 2019 16:51:29 -0800 (PST)
-Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 81sm274819pfx.30.2019.12.17.16.51.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 17 Dec 2019 16:51:29 -0800 (PST)
-From:   Doug Berger <opendmb@gmail.com>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>
-Subject: [PATCH net-next v2 4/8] net: bcmgenet: Refactor bcmgenet_set_features()
-Date:   Tue, 17 Dec 2019 16:51:11 -0800
-Message-Id: <1576630275-17591-5-git-send-email-opendmb@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576630275-17591-1-git-send-email-opendmb@gmail.com>
-References: <1576630275-17591-1-git-send-email-opendmb@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/FqIFbxNZ4ErowQaQntfHCdnij1EjI9liJnlLkiqWQc=;
+        b=nMbkBhBvSI3dPhhW+V07rBVtcHYE+K2jzjwrN07W1B8vJYbl3+lHElKm13dCNsVgz9
+         AddKt87s7F5Nua+0oJNK8jmJPPoLqDGyMRZSjGGk073fcQB/GMOycgJ19J+Y9aDTPvVs
+         Xn3GcAqB+mgkNs7OGFW54HFVEm98n5pkQf34JoFtsKGtYlLejOn3B25QXlE7Tacl4lln
+         qa4tfpmRnfSXZ66DgN6HXJ94CAuPPHU9wuYoEdmsQFT+cuqzHdTEXyRXEnwmnCz7XLXQ
+         nvc9P/1t2EQgwuDEVGhxRzzmqgDbRIw+WVHsMkVryNLI5pCuzzV3hoJD8fft+pyz/eNQ
+         /yMA==
+X-Gm-Message-State: APjAAAVkawcrIPDrwGts4ngfJCiDOrOnsLlrsG2QMwFC1ghBfgXuFI0R
+        Bf8lAoHCkDnUBFPu9gwUrdBTLqc4RcY=
+X-Google-Smtp-Source: APXvYqzRCPfm6J2ml81UwG+/SVU7NwfZnu0W0lLG1wflOtO9ZuFJ8HRMQcW0GzLiyOyjgHDu5IZd+g==
+X-Received: by 2002:a92:9a56:: with SMTP id t83mr243868ili.200.1576630313190;
+        Tue, 17 Dec 2019 16:51:53 -0800 (PST)
+Received: from mail-io1-f45.google.com (mail-io1-f45.google.com. [209.85.166.45])
+        by smtp.gmail.com with ESMTPSA id e85sm122441ilk.78.2019.12.17.16.51.52
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Dec 2019 16:51:52 -0800 (PST)
+Received: by mail-io1-f45.google.com with SMTP id v3so155244ioj.5
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 16:51:52 -0800 (PST)
+X-Received: by 2002:a02:ba93:: with SMTP id g19mr919432jao.90.1576630311502;
+ Tue, 17 Dec 2019 16:51:51 -0800 (PST)
+MIME-Version: 1.0
+References: <20191022190120.25772-1-jeffrey.l.hugo@gmail.com>
+In-Reply-To: <20191022190120.25772-1-jeffrey.l.hugo@gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 17 Dec 2019 16:51:39 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=V7HvXPkdjq_WeX+gN3s_Lc2zvX2rapcXNNBeKq2W_rtQ@mail.gmail.com>
+Message-ID: <CAD=FV=V7HvXPkdjq_WeX+gN3s_Lc2zvX2rapcXNNBeKq2W_rtQ@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/bridge: ti-sn65dsi86: Decouple DP output lanes
+ from DSI input lanes
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for unconditionally enabling TX and RX checksum
-offloads, refactor bcmgenet_set_features() a bit such that
-__netdev_update_features() during register_netdev() can make sure
-that features are correctly programmed during network device
-registration.
+Hi,
 
-Since we can now be called during register_netdev() with clocks
-gated, we need to temporarily turn them on/off in order to have a
-successful register programming.
+On Tue, Oct 22, 2019 at 12:01 PM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
+>
+> Based on work by Bjorn Andersson <bjorn.andersson@linaro.org>
+>
+> The bridge can be configured to use 1, 2, or 4 DP lanes.  This
+> configuration is independent of the input DSI lanes.  Right now, the
+> driver assumes that there is 1:1 mapping of input lanes to output lanes
+> which is not correct and does not work for manu devices such as the
+> Lenovo Miix 630 and Lenovo Yoga C630 laptops.
+>
+> The bridge can also be configured to use one of a number of data rates on
+> the DP lanes.  Currently any of the supported rates is considered valid,
+> however the configured rate must also be supported by the connected panel,
+> and not all rates are supported or even valid for any particular panel.
+>
+> Luckily, we can determine what we need at runtime by reading the DPCD from
+> the attached panel.  DPCD will tell us the maximum number of supported
+> lanes, and the supported data rates.
+>
+> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> ---
+>
+> Bjorn, I think this should address the issue you pointed out concerning
+> the data rate glitch I missed in your origional work.  Would you kindly
+> give this a test and let me know if it appears to address all of the
+> issues you were working around?
+>
+> v2:
+> -Use DPCD instead of DT to address the issue of some panels not
+> supporting all the rates
+>
+>  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 97 ++++++++++++++++++++++++++-
+>  1 file changed, 94 insertions(+), 3 deletions(-)
 
-We also move the CRC forward setting read into
-bcmgenet_set_features() since priv->crc_fwd_en matters while
-turning on RX checksum offload, that way we are guaranteed they
-are in sync in case we ever add support for NETIF_F_RXFCS at some
-point in the future.
+Overall I'm suggesting moving over to my series and I've taken the
+best stuff from your patch and put it atop my series.  Please yell if
+you disagree.  You can find the cover letter for my v2 at:
 
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/net/ethernet/broadcom/genet/bcmgenet.c | 38 +++++++++++++-------------
- 1 file changed, 19 insertions(+), 19 deletions(-)
+https://lore.kernel.org/r/20191218004741.102067-1-dianders@chromium.org
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index 13cbe5828adb..811713e3d230 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -508,8 +508,8 @@ static int bcmgenet_set_link_ksettings(struct net_device *dev,
- 	return phy_ethtool_ksettings_set(dev->phydev, cmd);
- }
- 
--static int bcmgenet_set_rx_csum(struct net_device *dev,
--				netdev_features_t wanted)
-+static void bcmgenet_set_rx_csum(struct net_device *dev,
-+				 netdev_features_t wanted)
- {
- 	struct bcmgenet_priv *priv = netdev_priv(dev);
- 	u32 rbuf_chk_ctrl;
-@@ -535,12 +535,10 @@ static int bcmgenet_set_rx_csum(struct net_device *dev,
- 		rbuf_chk_ctrl &= ~RBUF_SKIP_FCS;
- 
- 	bcmgenet_rbuf_writel(priv, rbuf_chk_ctrl, RBUF_CHK_CTRL);
--
--	return 0;
- }
- 
--static int bcmgenet_set_tx_csum(struct net_device *dev,
--				netdev_features_t wanted)
-+static void bcmgenet_set_tx_csum(struct net_device *dev,
-+				 netdev_features_t wanted)
- {
- 	struct bcmgenet_priv *priv = netdev_priv(dev);
- 	bool desc_64b_en;
-@@ -563,21 +561,27 @@ static int bcmgenet_set_tx_csum(struct net_device *dev,
- 
- 	bcmgenet_tbuf_ctrl_set(priv, tbuf_ctrl);
- 	bcmgenet_rbuf_writel(priv, rbuf_ctrl, RBUF_CTRL);
--
--	return 0;
- }
- 
- static int bcmgenet_set_features(struct net_device *dev,
- 				 netdev_features_t features)
- {
--	netdev_features_t changed = features ^ dev->features;
--	netdev_features_t wanted = dev->wanted_features;
--	int ret = 0;
-+	struct bcmgenet_priv *priv = netdev_priv(dev);
-+	u32 reg;
-+	int ret;
-+
-+	ret = clk_prepare_enable(priv->clk);
-+	if (ret)
-+		return ret;
-+
-+	/* Make sure we reflect the value of CRC_CMD_FWD */
-+	reg = bcmgenet_umac_readl(priv, UMAC_CMD);
-+	priv->crc_fwd_en = !!(reg & CMD_CRC_FWD);
- 
--	if (changed & NETIF_F_HW_CSUM)
--		ret = bcmgenet_set_tx_csum(dev, wanted);
--	if (changed & (NETIF_F_RXCSUM))
--		ret = bcmgenet_set_rx_csum(dev, wanted);
-+	bcmgenet_set_tx_csum(dev, features);
-+	bcmgenet_set_rx_csum(dev, features);
-+
-+	clk_disable_unprepare(priv->clk);
- 
- 	return ret;
- }
-@@ -2880,10 +2884,6 @@ static int bcmgenet_open(struct net_device *dev)
- 
- 	init_umac(priv);
- 
--	/* Make sure we reflect the value of CRC_CMD_FWD */
--	reg = bcmgenet_umac_readl(priv, UMAC_CMD);
--	priv->crc_fwd_en = !!(reg & CMD_CRC_FWD);
--
- 	bcmgenet_set_hw_addr(priv, dev->dev_addr);
- 
- 	if (priv->internal_phy) {
--- 
-2.7.4
+A few misc comments below in any case.
 
+
+> @@ -444,10 +447,91 @@ static void ti_sn_bridge_set_dsi_dp_rate(struct ti_sn_bridge *pdata)
+>         regmap_write(pdata->regmap, SN_DSIA_CLK_FREQ_REG, val);
+>
+>         /* set DP data rate */
+> -       dp_rate_mhz = ((bit_rate_mhz / pdata->dsi->lanes) * DP_CLK_FUDGE_NUM) /
+> +       dp_rate_mhz = ((bit_rate_mhz / pdata->dp_lanes) * DP_CLK_FUDGE_NUM) /
+>                                                         DP_CLK_FUDGE_DEN;
+
+One note is that "bit_rate_mhz" is still calculated using the MIPI
+pixel format, which is wrong.  It happens that (at the moment) we have
+24 bits per pixel for both cases, though.
+
+
+> +       /* read the panel capabilities to determine valid supported rates */
+> +       val = drm_dp_dpcd_readb(&pdata->aux, DP_MAX_LINK_RATE, &dpcd_val);
+> +       if (!val) {
+> +               DRM_ERROR("Reading max link rate from DPCD failed\n");
+> +               return;
+> +       }
+> +
+> +       if (dpcd_val) {
+
+I think your patch is assuming that the only case you want to use the
+table is if dpcd_val is 0.  This doesn't appear to be the case.  In
+Table 4-24 of the spec it states that you can have a non-zero value
+here and still provide a table.  That might be useful if you want to
+be backward compatible with an eDP 1.3 source but also provide an
+optimized rate for a eDP 1.4 source.
+
+We should be checking the eDP revision first and always using the
+table if it's eDP 1.4.
+
+
+> +               /* cap to the max rate supported by the bridge */
+> +               if (dpcd_val > 0x14)
+> +                       dpcd_val = 0x14;
+> +
+> +               switch (dpcd_val) {
+> +               case 0x14:
+
+There are constants.  Like DP_LINK_BW_5_4
+
+
+> @@ -505,7 +589,14 @@ static void ti_sn_bridge_enable(struct drm_bridge *bridge)
+>                            CHA_DSI_LANES_MASK, val);
+>
+>         /* DP lane config */
+> -       val = DP_NUM_LANES(pdata->dsi->lanes - 1);
+> +       ret = drm_dp_dpcd_readb(&pdata->aux, DP_MAX_LANE_COUNT, (u8 *)&val);
+
+This is an iffy cast.  The function is only guaranteed to set the
+first byte of val which could be the most or least significant byte.
+Other bytes will remain as-is.
