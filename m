@@ -2,91 +2,94 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE98C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B26EC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFBAE2176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:33:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E226E218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:35:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576683327;
+	bh=VWAET7kJ6luBa8nqDGJmKGq80Hk71VIjKcZkcyhBUxw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=QkrYz8GOXjwwDwiMYt86oDAem1u36/BLnH0aZ9VVx+FfH024L2mpH1OO/13pvrUd1
+	 QK4M5wSPwKvff/B1vX+18ShcDsSueHS/eku9tjQ/CjnNS2cziZ64XoGWY58AMB7/2y
+	 /DyO0rzu839XtjlMdtoneZDWt52XafAt7vptOoPw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727313AbfLRPdR (ORCPT
+        id S1727130AbfLRPf0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 10:33:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34102 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726723AbfLRPdR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 10:33:17 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C5AD206CB;
-        Wed, 18 Dec 2019 15:33:15 +0000 (UTC)
-Date:   Wed, 18 Dec 2019 10:33:14 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'Tom Zanussi' <zanussi@kernel.org>,
-        Sven Schnelle <svens@stackframe.org>,
-        "linux-trace-devel@vger.kernel.org" 
-        <linux-trace-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: ftrace histogram sorting broken on BE architecures
-Message-ID: <20191218103314.4125cd2a@gandalf.local.home>
-In-Reply-To: <b4f7cbd8653e4e8eba5405b533c13469@AcuMS.aculab.com>
-References: <20191211123316.GD12147@stackframe.org>
-        <20191211103557.7bed6928@gandalf.local.home>
-        <20191211110959.2baeb70f@gandalf.local.home>
-        <1576178241.3309.2.camel@kernel.org>
-        <4805b40c3e1547f8a26eeac6932f6499@AcuMS.aculab.com>
-        <20191216110539.2b268d86@gandalf.local.home>
-        <548eb8ae4b8742e4bf122af98b208925@AcuMS.aculab.com>
-        <20191216132922.1bf6d5cd@gandalf.local.home>
-        <b4f7cbd8653e4e8eba5405b533c13469@AcuMS.aculab.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 18 Dec 2019 10:35:26 -0500
+Received: from conuserg-12.nifty.com ([210.131.2.79]:50784 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726921AbfLRPfZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 10:35:25 -0500
+Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id xBIFYQjT027260;
+        Thu, 19 Dec 2019 00:34:27 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com xBIFYQjT027260
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1576683267;
+        bh=vr+kfw+UdhSf2hUfOR0RaGQx/oD7qidfiBWZc/GiY68=;
+        h=From:To:Cc:Subject:Date:From;
+        b=tXl4szyoWcZKl0uD0jpCwfnubNbnCCUMflulOTsL+7Jb58kjwPt+KnWsIu3EYNgnO
+         dNyXt+Gq9iT4WcdC4yMcvmBIl+UKbq4gPWy/dumFo1MRwP2GnO7iIcSulcdMR8uYTi
+         PwUzwylO07qX1qJ6MCF+G833WanqKOmA/Ue1RkFq7yQJ7Py061s59IaH3+ChK7l3+U
+         4U7036+McnvaCAfHtArAvWngkaMNwkA3rCF2Hfip9nZKW2Y9g6rz+i5Zi0ugzQb4nb
+         xObewx8Opxy/vQAYrSlGZ1RdU8YzzQZWAM0yMJcz1H78XjpiMM2S7ezYsF5WZiHCi+
+         dlGDgG7t/WAzw==
+X-Nifty-SrcIP: [126.93.102.113]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] kbuild: detect missing include guard for exported headers
+Date:   Thu, 19 Dec 2019 00:34:21 +0900
+Message-Id: <20191218153422.14557-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Dec 2019 10:05:57 +0000
-David Laight <David.Laight@ACULAB.COM> wrote:
+Adding an include guard to every header file is good practice in case
+it is included multiple times.
 
-> From: Steven Rostedt
-> > Sent: 16 December 2019 18:29
-> > On Mon, 16 Dec 2019 17:06:50 +0000
-> > David Laight <David.Laight@ACULAB.COM> wrote:
-> >   
-> > > > Where original_val_a could be a byte, short, int, long or long long.  
-> > >
-> > > I'd sort of guessed that, but then the pointer type passed to tracing_map_cmp_##type()
-> > > will always be 'u64 *' (since the field the address is taken of must be that type).
-> > > Then the (u64 *) casts are no longer needed.
-> > >
-> > > Possibly you can just pass the u64 values to:
-> > > tracing_map_cmp_##type(type a, type b)
-> > > {
-> > > 	return a > b ? 1 : a < b ? -1 : 0;
-> > > }
-> > >
-> > > The high bit masking and sign extension is then implicit in the call.  
-> > 
-> > But these are used to pass into a compare function that takes compare
-> > functions that are something other than numbers. They can be pointers
-> > to strings.  
-> 
-> In that case I think I'd embed the u64 inside a structure and pass the structure
-> address to the compare function.
-> 
+Exported headers are compile-tested for the comprehensive sanity checks.
+Let's include the same header twice. If an include guard is missing,
+the header will fail to build due to redefinition of something.
 
-It's something we can clean up later. As this is going to be marked for
-stable, and the code still works, I would like to keep the change as
-simple as possible.
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+---
 
-Thanks!
+ usr/include/Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
--- Steve
+diff --git a/usr/include/Makefile b/usr/include/Makefile
+index 84598469e6ff..e90f5f7903bb 100644
+--- a/usr/include/Makefile
++++ b/usr/include/Makefile
+@@ -93,10 +93,11 @@ header-test- += asm-generic/%
+ 
+ extra-y := $(patsubst $(obj)/%.h,%.hdrtest, $(shell find $(obj) -name '*.h' 2>/dev/null))
+ 
++# Include the header to detect missing include guard.
+ quiet_cmd_hdrtest = HDRTEST $<
+       cmd_hdrtest = \
+ 		$(CC) $(c_flags) -S -o /dev/null -x c /dev/null \
+-			$(if $(filter-out $(header-test-), $*.h), -include $<); \
++			$(if $(filter-out $(header-test-), $*.h), -include $< -include $<); \
+ 		$(PERL) $(srctree)/scripts/headers_check.pl $(obj) $(SRCARCH) $<; \
+ 		touch $@
+ 
+-- 
+2.17.1
+
