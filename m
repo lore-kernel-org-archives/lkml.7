@@ -2,147 +2,149 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB114C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B71C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98CAF24676
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:40:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35C90227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:40:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="jXODHwTr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbfLRUkq (ORCPT
+        id S1727881AbfLRUkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 15:40:46 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:34627 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727732AbfLRUkS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 15:40:18 -0500
-Received: by mail-qt1-f196.google.com with SMTP id 5so3068408qtz.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 12:40:17 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qJEYKRpdvOZyP9yUq3qQQyurrO0vRRGI/xgoq8mO4Fo=;
-        b=ijsN4WZ9sVFl9IbjDk1hZEUUwy+rjDGjG+eG1WO0EXjoyAuOliax2H5S2GBOtY4z4e
-         oYpiVYJ1M/aHCfL24SmustjIdi7R+d+3IZ7cI4CvPC+Pzo8nx75HRmxTyrq1YX8RLjCQ
-         PoQqgtqb1Cq4Sd/eDWgHk72PGjnGECXWZgb5QJNU0/eRlylqkx8L3MVNZzxtcRFDoyuZ
-         5t+PZIJUASFRLKzxOuF75SFMBGb8ROjs9+RBBQJcFngQ2CytX8C5FoYD+n3HYUMOgctO
-         jBkzlCitrA8qEr2Bs13kE5VcmcrT9Jvo4p8zvFU7dKygAwmUtEFD3OBDXZsHrWy75Nuu
-         71ew==
-X-Gm-Message-State: APjAAAW4RnM2aQIvrTdm64b1kXXohJNd6ocBP7E+Ysfq1XZ54U2UoSIV
-        VatOq1rKIK9gYGdWIxrembE=
-X-Google-Smtp-Source: APXvYqyK/njr9tZKbcw1O6rUQcrgICPrWxDEUAroRavC5z7X+KWN/b8cGRAL9bNyggM6rTUPi0Y3bw==
-X-Received: by 2002:ac8:2a06:: with SMTP id k6mr4058455qtk.145.1576701617485;
-        Wed, 18 Dec 2019 12:40:17 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id t7sm993347qkm.136.2019.12.18.12.40.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 12:40:16 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH 17/24] arch/setup: Drop dummy_con initialization
-Date:   Wed, 18 Dec 2019 15:39:55 -0500
-Message-Id: <20191218204002.30512-18-nivedita@alum.mit.edu>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191218204002.30512-1-nivedita@alum.mit.edu>
-References: <20191218204002.30512-1-nivedita@alum.mit.edu>
+        Wed, 18 Dec 2019 15:40:55 -0500
+Received: from mail-dm6nam11on2087.outbound.protection.outlook.com ([40.107.223.87]:49088
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727722AbfLRUkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 15:40:53 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Q7DPzU5TqXF15Y81Z4isJwo90N9MOpxOvmi1Rgr9zJBu4tiw/hpG6ikpGmJtZSnH7abl5FuZ3/dTlUni3OTXGu9k5yIy8DtqaDqPkc9xhboE50pj5JWVaPRo9LiZiQUgMURA5IcOaH68a6tCqr1qIstSpBTaTgOSS3KxBZMpuoAbsfCWhYev8YFx78ZDlcNgnerOlxh13+76CiSKgrLdMiobLlisKIexubuCCLmseUphANOYtpAPwDiK8NtiuSDGlhqM0X7tBz5WTVW+tsk5a2MdFgzr3j8T+thcuy54cbCLYmxAkIzHF/zoev0AZbyqetMpLzDqJH3C0+R9PS34kw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vDljiyG+zsio7lawlntEr2WiAGxlOrPQkptR1d3zu14=;
+ b=It0YkypB/KQsPi0ZKPCHMTWDUD7+Y9dwdQKD/HP0fYBxpi/eEH14/ekAkk092EZyGMnqyZFflJjfh5HX8x0k80HweUAa3wpJ/Xkbz5an8o+oA2pVhfu5cpli8WPVaPt0iPJpB5j5qUt1lR/ZwLKbcCQif9P9Iw48LBRVoCIliaZBPglwb6vFfyowLPmWJFwnceWnRcGfoBCEqCF/EYORpLp6nC6plSSyT2hU+lKNoHfm2ypemeLASmgoeGpn6fdOKkMz2K299rWme7s7UjloQjSUw6hAV8xRUlTDnBm6/NbeMWE655bo+sSnUnzQZaYtVGxrthJDQk/Clis0vXGq/w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
+ dkim=pass header.d=silabs.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vDljiyG+zsio7lawlntEr2WiAGxlOrPQkptR1d3zu14=;
+ b=jXODHwTrZKD/d7nAp5pLrztCPq1P0YTHG2nWBmhzuvnpE91OmMqKS1t1GkU0qjKrlIft6lDKPSOTvoeyZzPrpl1mAM3rxlyydk4sJZxzE2S9ThMThbtpLzhgLabPSh4SxzdhF+mi7GoaaKReKESdm7lgX9utEjjlOqvOFi0DUOg=
+Received: from SN6PR11MB3312.namprd11.prod.outlook.com (52.135.113.78) by
+ SN6PR11MB2576.namprd11.prod.outlook.com (52.135.93.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2559.13; Wed, 18 Dec 2019 20:40:51 +0000
+Received: from SN6PR11MB3312.namprd11.prod.outlook.com
+ ([fe80::ada0:e35e:7c5e:58d]) by SN6PR11MB3312.namprd11.prod.outlook.com
+ ([fe80::ada0:e35e:7c5e:58d%5]) with mapi id 15.20.2538.019; Wed, 18 Dec 2019
+ 20:40:50 +0000
+From:   Brant Merryman <Brant.Merryman@silabs.com>
+To:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Brant Merryman <Brant.Merryman@silabs.com>,
+        Richard Hendricks <Richard.Hendricks@silabs.com>
+Subject: [PATCH] Proper RTS control when buffers fill
+Thread-Topic: [PATCH] Proper RTS control when buffers fill
+Thread-Index: AQHVteNtIKJnOYRoCk2oBIRSFXPZ0A==
+Date:   Wed, 18 Dec 2019 20:40:48 +0000
+Message-ID: <4C7B31CD-2DD2-4824-AE67-9280199703BE@silabs.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Brant.Merryman@silabs.com; 
+x-originating-ip: [207.207.39.84]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 57d467c1-7506-4acd-2052-08d783fa9176
+x-ms-traffictypediagnostic: SN6PR11MB2576:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SN6PR11MB257614BE9F7666073955C518E5530@SN6PR11MB2576.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:901;
+x-forefront-prvs: 0255DF69B9
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39850400004)(366004)(346002)(136003)(376002)(199004)(189003)(478600001)(81156014)(26005)(5660300002)(107886003)(76116006)(81166006)(2906002)(8676002)(186003)(66476007)(64756008)(36756003)(4326008)(316002)(66946007)(66446008)(66556008)(6506007)(86362001)(8936002)(6486002)(6512007)(2616005)(110136005)(54906003)(71200400001)(33656002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR11MB2576;H:SN6PR11MB3312.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: silabs.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 7dPhjSPHbYuG1OlmD823ULDI9vf+xUYG11QFFm6au8ZsYOQuNpD0P9W6LNQ6Zls33aPf4uB4sGFqe00qWIZkgffG7NaREi934ReGFMueqRra8ibzoVVaIp0D19PNDfwytSybwq/rSkiskRczxFlVlDabaghbbTrtAl5CILAjCDS7mD8234qgQeDBcGzAwb4eYrBRpgSq3JggrmR0FfPsM3sB1DP8RuKUtMjNhTBD/vm+v4yEwtl5/TKIFvuxvbnAkBNzu+fdb6T58GOZAtvBeCGDPY3VEiEfOFn7Y+mNgOJA5XM3dYAupK6w6k4bia+dwAOl7vTc+rBLTWAO699pHQoYyLnDDKyCjSxwDo/kcHFLDCbW56hw/HjC9x0wkl5KqDTw7Wwqpd+UYdYnDcp1xMhTPqLlqMKcXxpHfPPmbKRAMI7gE3KXGU/z7trE7lER
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <633E45CD50DD5B4D9AA2CB359EB2FF23@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: silabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 57d467c1-7506-4acd-2052-08d783fa9176
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Dec 2019 20:40:49.5208
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: XFhfI2OgbcQdwnNfLVg2t4RoPS0iuO8M0lHQ2GRl4zq+NaYe9AiZDTzABLhnj16zpox9qw2mRBStgPvol4p4jQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB2576
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-con_init in tty/vt.c will now set conswitchp to dummy_con if it's unset.
-Drop it from arch setup code.
+CP210x hardware disables auto-RTS but leaves auto-CTS when
+in hardware flow control mode and UART on cp210x hardware
+is disabled. This allows data to flow out, but new data
+will not come into the port. When re-opening the port, if
+auto-CTS is enabled on the cp210x, then auto-RTS must be
+re-enabled in the driver.
 
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Signed-off-by: Brant Merryman <brant.merryman@silabs.com>
 ---
- arch/powerpc/kernel/setup-common.c    | 3 ---
- arch/powerpc/platforms/cell/setup.c   | 3 ---
- arch/powerpc/platforms/maple/setup.c  | 3 ---
- arch/powerpc/platforms/pasemi/setup.c | 4 ----
- arch/powerpc/platforms/ps3/setup.c    | 4 ----
- 5 files changed, 17 deletions(-)
+ drivers/usb/serial/cp210x.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/arch/powerpc/kernel/setup-common.c b/arch/powerpc/kernel/setup-common.c
-index 488f1eecc0de..7f8c890360fe 100644
---- a/arch/powerpc/kernel/setup-common.c
-+++ b/arch/powerpc/kernel/setup-common.c
-@@ -949,9 +949,6 @@ void __init setup_arch(char **cmdline_p)
- 
- 	early_memtest(min_low_pfn << PAGE_SHIFT, max_low_pfn << PAGE_SHIFT);
- 
--	if (IS_ENABLED(CONFIG_DUMMY_CONSOLE))
--		conswitchp = &dummy_con;
--
- 	if (ppc_md.setup_arch)
- 		ppc_md.setup_arch();
- 
-diff --git a/arch/powerpc/platforms/cell/setup.c b/arch/powerpc/platforms/cell/setup.c
-index 9680d766f20e..855eedb8d7d7 100644
---- a/arch/powerpc/platforms/cell/setup.c
-+++ b/arch/powerpc/platforms/cell/setup.c
-@@ -240,9 +240,6 @@ static void __init cell_setup_arch(void)
- 	init_pci_config_tokens();
- 
- 	cbe_pervasive_init();
--#ifdef CONFIG_DUMMY_CONSOLE
--	conswitchp = &dummy_con;
--#endif
- 
- 	mmio_nvram_init();
- }
-diff --git a/arch/powerpc/platforms/maple/setup.c b/arch/powerpc/platforms/maple/setup.c
-index 9cd6f3e1000b..47f73103ef74 100644
---- a/arch/powerpc/platforms/maple/setup.c
-+++ b/arch/powerpc/platforms/maple/setup.c
-@@ -183,9 +183,6 @@ static void __init maple_setup_arch(void)
- 	/* Lookup PCI hosts */
-        	maple_pci_init();
- 
--#ifdef CONFIG_DUMMY_CONSOLE
--	conswitchp = &dummy_con;
--#endif
- 	maple_use_rtas_reboot_and_halt_if_present();
- 
- 	printk(KERN_DEBUG "Using native/NAP idle loop\n");
-diff --git a/arch/powerpc/platforms/pasemi/setup.c b/arch/powerpc/platforms/pasemi/setup.c
-index 05a52f10c2f0..b612474f8f8e 100644
---- a/arch/powerpc/platforms/pasemi/setup.c
-+++ b/arch/powerpc/platforms/pasemi/setup.c
-@@ -147,10 +147,6 @@ static void __init pas_setup_arch(void)
- 	/* Lookup PCI hosts */
- 	pas_pci_init();
- 
--#ifdef CONFIG_DUMMY_CONSOLE
--	conswitchp = &dummy_con;
--#endif
--
- 	/* Remap SDC register for doing reset */
- 	/* XXXOJN This should maybe come out of the device tree */
- 	reset_reg = ioremap(0xfc101100, 4);
-diff --git a/arch/powerpc/platforms/ps3/setup.c b/arch/powerpc/platforms/ps3/setup.c
-index 8108b9b9b9ea..b29368931c56 100644
---- a/arch/powerpc/platforms/ps3/setup.c
-+++ b/arch/powerpc/platforms/ps3/setup.c
-@@ -200,10 +200,6 @@ static void __init ps3_setup_arch(void)
- 	smp_init_ps3();
- #endif
- 
--#ifdef CONFIG_DUMMY_CONSOLE
--	conswitchp = &dummy_con;
--#endif
--
- 	prealloc_ps3fb_videomemory();
- 	prealloc_ps3flash_bounce_buffer();
- 
--- 
-2.24.1
-
+diff --git a/drivers/usb/serial/cp210x.c b/drivers/usb/serial/cp210x.c
+index bcceb4ad8be0..74c9f3822bd2 100644
+--- a/drivers/usb/serial/cp210x.c
++++ b/drivers/usb/serial/cp210x.c
+@@ -917,6 +917,7 @@ static void cp210x_get_termios_port(struct usb_serial_p=
+ort *port,
+ 	u32 baud;
+ 	u16 bits;
+ 	u32 ctl_hs;
++	u32 flow_repl;
+=20
+ 	cp210x_read_u32_reg(port, CP210X_GET_BAUDRATE, &baud);
+=20
+@@ -1015,8 +1016,24 @@ static void cp210x_get_termios_port(struct usb_seria=
+l_port *port,
+ 	cp210x_read_reg_block(port, CP210X_GET_FLOW, &flow_ctl,
+ 			sizeof(flow_ctl));
+ 	ctl_hs =3D le32_to_cpu(flow_ctl.ulControlHandshake);
++	flow_repl =3D le32_to_cpu(flow_ctl.ulFlowReplace);
+ 	if (ctl_hs & CP210X_SERIAL_CTS_HANDSHAKE) {
+ 		dev_dbg(dev, "%s - flow control =3D CRTSCTS\n", __func__);
++		/*
++		 * CP210x hardware disables auto-RTS but leaves auto-CTS when
++		 * in hardware flow control mode and UART on cp210x hardware
++		 * is disabled. This allows data to flow out, but new data
++		 * will not come into the port. When re-opening the port, if
++		 * auto-CTS is enabled on the cp210x, then auto-RTS must be
++		 * re-enabled in the driver.
++		 */
++		flow_repl &=3D ~CP210X_SERIAL_RTS_MASK;
++		flow_repl |=3D CP210X_SERIAL_RTS_SHIFT(CP210X_SERIAL_RTS_FLOW_CTL);
++
++		flow_ctl.ulControlHandshake =3D cpu_to_le32(ctl_hs);
++		flow_ctl.ulFlowReplace =3D cpu_to_le32(flow_repl);
++		cp210x_write_reg_block(port, CP210X_SET_FLOW, &flow_ctl, sizeof(flow_ctl=
+));
++
+ 		cflag |=3D CRTSCTS;
+ 	} else {
+ 		dev_dbg(dev, "%s - flow control =3D NONE\n", __func__);
+-- =
