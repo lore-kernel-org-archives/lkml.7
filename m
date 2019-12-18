@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0415C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C4FC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C33B24650
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:57:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91A1E21D7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:57:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727563AbfLRV5T (ORCPT
+        id S1727549AbfLRV5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 16:57:19 -0500
-Received: from mga02.intel.com ([134.134.136.20]:54847 "EHLO mga02.intel.com"
+        Wed, 18 Dec 2019 16:57:18 -0500
+Received: from mga01.intel.com ([192.55.52.88]:56969 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726948AbfLRVzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726971AbfLRVzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 18 Dec 2019 16:55:47 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 13:55:44 -0800
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 13:55:47 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
-   d="scan'208";a="222108120"
+   d="scan'208";a="222108144"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga001.fm.intel.com with ESMTP; 18 Dec 2019 13:55:44 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 18 Dec 2019 13:55:46 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
         Paul Mackerras <paulus@ozlabs.org>,
@@ -48,9 +48,9 @@ Cc:     James Morse <james.morse@arm.com>,
         linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
         kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Greg Kurz <groug@kaod.org>
-Subject: [PATCH v2 26/45] KVM: s390: Invoke kvm_vcpu_init() before allocating sie_page
-Date:   Wed, 18 Dec 2019 13:55:11 -0800
-Message-Id: <20191218215530.2280-27-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 32/45] KVM: Move initialization of preempt notifier to kvm_vcpu_init()
+Date:   Wed, 18 Dec 2019 13:55:17 -0800
+Message-Id: <20191218215530.2280-33-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191218215530.2280-1-sean.j.christopherson@intel.com>
 References: <20191218215530.2280-1-sean.j.christopherson@intel.com>
@@ -61,71 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that s390's implementation of kvm_arch_vcpu_init() is empty, move
-the call to kvm_vcpu_init() above the allocation of the sie_page.  This
-paves the way for moving vcpu allocation and initialization into common
-KVM code without any associated functional change.
+Initialize the preempt notifier immediately in kvm_vcpu_init() to pave
+the way for removing kvm_arch_vcpu_setup(), i.e. to allow arch specific
+code to call vcpu_load() during kvm_arch_vcpu_create().
 
+Back when preemption support was added, the location of the call to init
+the preempt notifier was perfectly sane.  The overall vCPU creation flow
+featured a single arch specific hook and the preempt notifer was used
+immediately after its initialization (by vcpu_load()).  E.g.:
+
+        vcpu = kvm_arch_ops->vcpu_create(kvm, n);
+        if (IS_ERR(vcpu))
+                return PTR_ERR(vcpu);
+
+        preempt_notifier_init(&vcpu->preempt_notifier, &kvm_preempt_ops);
+
+        vcpu_load(vcpu);
+        r = kvm_mmu_setup(vcpu);
+        vcpu_put(vcpu);
+        if (r < 0)
+                goto free_vcpu;
+
+Today, the call to preempt_notifier_init() is sandwiched between two
+arch specific calls, kvm_arch_vcpu_create() and kvm_arch_vcpu_setup(),
+which needlessly forces x86 (and possibly others?) to split its vCPU
+creation flow.  Init the preempt notifier prior to any arch specific
+call so that each arch can independently decide how best to organize
+its creation flow.
+
+Acked-by: Christoffer Dall <christoffer.dall@arm.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/s390/kvm/kvm-s390.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ virt/kvm/kvm_main.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index 0049b621e56a..1f8ba074cbd6 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -3027,10 +3027,16 @@ struct kvm_vcpu *kvm_arch_vcpu_create(struct kvm *kvm,
- 	if (!vcpu)
- 		goto out;
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index fd8168b8c0e4..876cf3dd2c97 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -348,6 +348,7 @@ static int kvm_vcpu_init(struct kvm_vcpu *vcpu, struct kvm *kvm, unsigned id)
+ 	kvm_vcpu_set_dy_eligible(vcpu, false);
+ 	vcpu->preempted = false;
+ 	vcpu->ready = false;
++	preempt_notifier_init(&vcpu->preempt_notifier, &kvm_preempt_ops);
  
-+	rc = kvm_vcpu_init(vcpu, kvm, id);
-+	if (rc)
-+		goto out_free_cpu;
-+
-+	rc = -ENOMEM;
-+
- 	BUILD_BUG_ON(sizeof(struct sie_page) != 4096);
- 	sie_page = (struct sie_page *) get_zeroed_page(GFP_KERNEL);
- 	if (!sie_page)
--		goto out_free_cpu;
-+		goto out_uninit_vcpu;
+ 	r = kvm_arch_vcpu_init(vcpu);
+ 	if (r < 0)
+@@ -2752,8 +2753,6 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, u32 id)
+ 	if (r)
+ 		goto vcpu_uninit;
  
- 	vcpu->arch.sie_block = &sie_page->sie_block;
- 	vcpu->arch.sie_block->itdba = (unsigned long) &sie_page->itdb;
-@@ -3046,10 +3052,6 @@ struct kvm_vcpu *kvm_arch_vcpu_create(struct kvm *kvm,
- 		vcpu->arch.sie_block->gd |= GISA_FORMAT1;
- 	seqcount_init(&vcpu->arch.cputm_seqcount);
- 
--	rc = kvm_vcpu_init(vcpu, kvm, id);
--	if (rc)
--		goto out_free_sie_block;
+-	preempt_notifier_init(&vcpu->preempt_notifier, &kvm_preempt_ops);
 -
- 	vcpu->arch.pfault_token = KVM_S390_PFAULT_TOKEN_INVALID;
- 	kvm_clear_async_pf_completion_queue(vcpu);
- 	vcpu->run->kvm_valid_regs = KVM_SYNC_PREFIX |
-@@ -3078,7 +3080,7 @@ struct kvm_vcpu *kvm_arch_vcpu_create(struct kvm *kvm,
- 	if (kvm_is_ucontrol(vcpu->kvm)) {
- 		rc = __kvm_ucontrol_vcpu_init(vcpu);
- 		if (rc)
--			goto out_uninit_vcpu;
-+			goto out_free_sie_block;
- 	}
- 
- 	VM_EVENT(kvm, 3, "create cpu %d at 0x%pK, sie block at 0x%pK", id, vcpu,
-@@ -3086,10 +3088,10 @@ struct kvm_vcpu *kvm_arch_vcpu_create(struct kvm *kvm,
- 	trace_kvm_s390_create_vcpu(id, vcpu, vcpu->arch.sie_block);
- 
- 	return vcpu;
--out_uninit_vcpu:
--	kvm_vcpu_uninit(vcpu);
- out_free_sie_block:
- 	free_page((unsigned long)(vcpu->arch.sie_block));
-+out_uninit_vcpu:
-+	kvm_vcpu_uninit(vcpu);
- out_free_cpu:
- 	kmem_cache_free(kvm_vcpu_cache, vcpu);
- out:
+ 	r = kvm_arch_vcpu_setup(vcpu);
+ 	if (r)
+ 		goto vcpu_destroy;
 -- 
 2.24.1
 
