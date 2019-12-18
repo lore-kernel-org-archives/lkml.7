@@ -2,95 +2,137 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9183C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2D0C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:20:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCCCC2064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:19:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GIpbN7R+"
+	by mail.kernel.org (Postfix) with ESMTP id DEA6C24650
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:20:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576689610;
+	bh=Twthh6oiLzjK3cYfUtysgtu3StupeYxcAS0PCyDazg4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rejqBaNJzOh/ow0Djk8U+VABddYuYVPEzRvvkCV44UU7Nkvpt4o9HqaNcjLePYrWa
+	 aC4JQ5sNI31VqvmInStX+OCfnzdAC1cvWhlwswxsjewpqODPma36Rn41jGLPoB67+B
+	 yxyoTpsusk/VikoiYgASHP13Hzn2TmQtppbFCnrk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbfLRRTi (ORCPT
+        id S1727185AbfLRRUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 12:19:38 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41983 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726939AbfLRRTi (ORCPT
+        Wed, 18 Dec 2019 12:20:10 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:33656 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726939AbfLRRUJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 12:19:38 -0500
-Received: by mail-pg1-f195.google.com with SMTP id x8so1606724pgk.8
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 09:19:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=H/hEuD7eWbjzcqhNaznrQpD/OcKDfv3itQBijN/o1Lk=;
-        b=GIpbN7R+81t4ErlQljsRQyxaVLa3w4wV27QCc4PnyQ6ibdiyiThB89Y0zWclSKBVUS
-         XaaBZwZozPK6vPEfUN58I4aqyrTEIIa9E7o9tUA37SXHSV8KfifXtFSzTrYyBktzxKym
-         dUqZtg4Kna/7O0NK1DSDq3X3cgP5cC5M/raxE=
+        Wed, 18 Dec 2019 12:20:09 -0500
+Received: by mail-ot1-f66.google.com with SMTP id b18so3378841otp.0;
+        Wed, 18 Dec 2019 09:20:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=H/hEuD7eWbjzcqhNaznrQpD/OcKDfv3itQBijN/o1Lk=;
-        b=NuCTeTs+qcJymo9/h4vxBly3eaPKglzCkf2aD97ALLlwbn6wDz4XQOEyGKiHqg/15R
-         aUwNpS64gfrXt5DGRlOrnzxXV0g64gj/0xwkMmeTYwqzvRpGlx8jfaIbi+LH8Qt2aPUs
-         k1wt50kVzpfrmkGSfR1PisiTFbMGhRb0BqFlq1UO1bttAS2Gd3qDwY4/wOEmx/tKY2ix
-         VepRwQbESu44u8spBh2oCSWdzkQ3nA54mLoSe23T61GvBXVgTO5q2pK42/2v79+i+KUG
-         DqMOJJAhdfByGmjt53rabokn9eJXpntJeavQIiRSGydVL1C8HDB3kUzAOSQAdi5LBLkK
-         9q0A==
-X-Gm-Message-State: APjAAAUtvMVqDDt8Hc3vkknQt9DAesRIEcu2LoszeP6a0PWyTwpBGvCU
-        Tz+83SH/0uxc5ehg5mOkv1PR0w==
-X-Google-Smtp-Source: APXvYqy1bwshCedLsN4foC5mYKqDnmIuppMB2bZZ9cqKw0d6z0v+8dti5oLQMl7Ij9J3/zU55OwI4Q==
-X-Received: by 2002:a63:551a:: with SMTP id j26mr4215527pgb.370.1576689577665;
-        Wed, 18 Dec 2019 09:19:37 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b15sm3883901pft.58.2019.12.18.09.19.36
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=39Bl4Z57fFv4D5CXbdgD7WFD7KvEvFFwFUvRcMq+Wno=;
+        b=iPgZH2YLQ72soVFp2pFW5hXVjaxWD4Y8v00/+hqY3koviNjRmz6pvZd28puEhNm9Dd
+         qbLlbszn3bDEOuoPk6zGvFD7Nrjxiugk33gx4zbQbxOhuxQl9YFoNuVP+Jj8lednmtrK
+         a9AFqdaKRM90uPptW1d+THSB0o49cGGvBlAPY3zGLm2pIpNFTfx1UPrrEeSC95pJK2a0
+         +IxWVqZmcwuMSHmfYE+89YG06BI62qwC3crzJdjlWIFxe3YKDFOUcfFWqtUuWr9I2oH/
+         5jJtiAe+Y/iylXS7leJSFUKQ5Z7+vdvks99kVphz0C+gBqHz6adsOmJde+vwIM49PZX0
+         uWgQ==
+X-Gm-Message-State: APjAAAX7UDC14gNBRM+/p3S6ASok+OULGJzOyLJSpkbXXwBF5lE3NiWx
+        g2eU8m5/cghkZT2TBUHPyQ==
+X-Google-Smtp-Source: APXvYqw8k2Mc71+My1ybl/LT2IgZ9SoRthFTb2hdFnXkuJYxr9KNIOclSyO+MnX8BF+Tt3VVUtL5nA==
+X-Received: by 2002:a05:6830:155a:: with SMTP id l26mr3795396otp.339.1576689608725;
+        Wed, 18 Dec 2019 09:20:08 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id j26sm1000719otq.18.2019.12.18.09.20.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 09:19:36 -0800 (PST)
-Date:   Wed, 18 Dec 2019 09:19:35 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     linux-kernel@vger.kernel.org, ath11k@lists.infradead.org
-Subject: [PATCH] ath11k: Use sizeof_field() instead of FIELD_SIZEOF()
-Message-ID: <201912180919.2A471217@keescook>
+        Wed, 18 Dec 2019 09:20:08 -0800 (PST)
+Date:   Wed, 18 Dec 2019 11:20:07 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Dan Robertson <dan@dlrobertson.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v6 1/2] dt-bindings: iio: accel: bma400: add bindings
+Message-ID: <20191218172007.GB18325@bogus>
+References: <20191211010308.1525-1-dan@dlrobertson.com>
+ <20191211010308.1525-2-dan@dlrobertson.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20191211010308.1525-2-dan@dlrobertson.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The FIELD_SIZEOF() macro was redundant, and is being removed from the
-kernel. Since commit c593642c8be0 ("treewide: Use sizeof_field() macro")
-this is one of the last users of the old macro, so replace it.
+On Wed, Dec 11, 2019 at 01:03:07AM +0000, Dan Robertson wrote:
+> Add devicetree binding for the Bosch BMA400 3-axes ultra-low power
+> accelerometer sensor.
+> 
+> Signed-off-by: Dan Robertson <dan@dlrobertson.com>
+> ---
+>  .../bindings/iio/accel/bosch,bma400.yaml      | 39 +++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/accel/bosch,bma400.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/accel/bosch,bma400.yaml b/Documentation/devicetree/bindings/iio/accel/bosch,bma400.yaml
+> new file mode 100644
+> index 000000000000..03b7ad345523
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/accel/bosch,bma400.yaml
+> @@ -0,0 +1,39 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/net/wireless/ath/ath11k/wmi.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Dual license new bindings please:
 
-diff --git a/drivers/net/wireless/ath/ath11k/wmi.h b/drivers/net/wireless/ath/ath11k/wmi.h
-index 4a518d406bc5..fd7cb07a9940 100644
---- a/drivers/net/wireless/ath/ath11k/wmi.h
-+++ b/drivers/net/wireless/ath/ath11k/wmi.h
-@@ -44,7 +44,7 @@ struct wmi_tlv {
- 
- #define WMI_TLV_LEN	GENMASK(15, 0)
- #define WMI_TLV_TAG	GENMASK(31, 16)
--#define TLV_HDR_SIZE	FIELD_SIZEOF(struct wmi_tlv, header)
-+#define TLV_HDR_SIZE	sizeof_field(struct wmi_tlv, header)
- 
- #define WMI_CMD_HDR_CMD_ID      GENMASK(23, 0)
- #define WMI_MAX_MEM_REQS        32
--- 
-2.17.1
+(GPL-2.0-only OR BSD-2-Clause)
 
-
--- 
-Kees Cook
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/accel/bosch,bma400.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Bosch BMA400 triaxial acceleration sensor
+> +
+> +maintainers:
+> +  - Dan Robertson <dan@dlrobertson.com>
+> +
+> +description: |
+> +  Acceleration and temerature iio sensors with an i2c interface
+> +
+> +  Specifications about the sensor can be found at:
+> +    https://ae-bst.resource.bosch.com/media/_tech/media/datasheets/BST-BMA400-DS000.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - bosch,bma400
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +      accelerometer@14 {
+> +        compatible = "bosch,bma400";
+> +        reg = <0x14>;
+> +      };
+> +    };
+> 
+> 
