@@ -2,170 +2,88 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA22DC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB248C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F52C24650
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:50:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6D3221582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:50:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576691401;
-	bh=uwODpL6SAukagBqpiSemt5xKMF2jsWTt5e7jTdbGkgI=;
+	s=default; t=1576691435;
+	bh=zdbUHt5x8PH/epSF7/R3TjGuK6ls0Cr8YzTB4vubwYc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LPgWWRvoMY/8qwacYaeLj4eFflbyrPSo7rU4czPg9465JqRw4dfgXsJlMNxNYRiHB
-	 ZSQwsnvIEklsyn5O4VrFukt49j5aBkCPLhhIZf+Q3JGsotKVg2uL7b/XXjoCYNqocn
-	 nrGQUv72R+QQQJ9AKbtG7IKWY39NaUkdvN8+5wTA=
+	b=k0o71T3vt0VThsdqvoiI+ETwnzl372k17yuah06uH6M7nYiHOips2FBu3TPRfu8tk
+	 H2+HepxeO0zLEOK7bCMUSWVl2dNhJJvTbZrCH8aM51p5NZ4t21koAUcRbxDYR1QB1k
+	 n4zm4Eibg7gTHgJ0T9tSVXR70DPiwT5B65tNuYWk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbfLRRuA (ORCPT
+        id S1727216AbfLRRuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 12:50:00 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:43258 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726939AbfLRRuA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 12:50:00 -0500
-Received: by mail-qv1-f65.google.com with SMTP id p2so1080764qvo.10;
-        Wed, 18 Dec 2019 09:49:59 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Bkxxp1rgGZsMi0NBLL8JuXUKKC5LRx/hd2DVjblWzgc=;
-        b=TU0XVaEpIs/GjxeH1dF86z3PeNTSPSZyAJNbGnaH8tQEp8VPZiITQBJEHXuHXrnQF1
-         EOhqNTbzproyoqByhpcaZ8NNVUJ8+/ZonlD+eKCMERxprFMFccW0yw0+LdcUrNv2L1Gz
-         Ec+JR1kRNafHPIOSTMMvy8KBW9fUe699+e341DU2WWZm7rMbiFX+g2r/Fkw+X5Gf/4yp
-         UHPcLciMR9nZK097xVQhweG/s+L8ih7AZzYgdJT5NYESsSir3bU2+QbURpH4YzsVsCOz
-         SPoIApuBNOk5jatwCbUGcTBs40uPMKEB6GXA/NWg6OkBJWBVrvo16RZh9vQqMw6t0y/b
-         w2EQ==
-X-Gm-Message-State: APjAAAVutKaBiMDcLhvYpSbPRuI5utRn77eBH9HXKtRYCzpljzA7queN
-        fikcGEsHB04UrKDDvUv+Cyg=
-X-Google-Smtp-Source: APXvYqzZkCIlw8mS4PB6shog2RyDWP/FSX8GmuWCRnfXI97kScRmVOVM8J/Jpy0gNQztjLQYF1rl/Q==
-X-Received: by 2002:a05:6214:190e:: with SMTP id er14mr3622997qvb.28.1576691399151;
-        Wed, 18 Dec 2019 09:49:59 -0800 (PST)
-Received: from dennisz-mbp.dhcp.thefacebook.com ([2620:10d:c091:480::8849])
-        by smtp.gmail.com with ESMTPSA id 3sm937429qte.59.2019.12.18.09.49.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 09:49:58 -0800 (PST)
-Date:   Wed, 18 Dec 2019 11:49:55 -0600
-From:   Dennis Zhou <dennis@kernel.org>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        io-uring@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dennis Zhou <dennis@kernel.org>,
-        Christoph Lameter <cl@linux.com>
-Subject: Re: [PATCH 1/2] pcpu_ref: add percpu_ref_tryget_many()
-Message-ID: <20191218174955.GA14991@dennisz-mbp.dhcp.thefacebook.com>
-References: <cover.1576621553.git.asml.silence@gmail.com>
- <c430d1a603f9ffe01661fc1b3bad6e3101a8b855.1576621553.git.asml.silence@gmail.com>
- <fe13d615-0fae-23e3-f133-49b727973d14@kernel.dk>
- <20191218162642.GC2914998@devbig004.ftw2.facebook.com>
+        Wed, 18 Dec 2019 12:50:35 -0500
+Received: from foss.arm.com ([217.140.110.172]:55570 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726960AbfLRRue (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 12:50:34 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1309B1FB;
+        Wed, 18 Dec 2019 09:50:34 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 856C13F67D;
+        Wed, 18 Dec 2019 09:50:33 -0800 (PST)
+Date:   Wed, 18 Dec 2019 17:50:31 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 2/4] ASoC: meson: axg-fifo: add fifo depth to the
+ bindings documentation
+Message-ID: <20191218175031.GM3219@sirena.org.uk>
+References: <20191218172420.1199117-1-jbrunet@baylibre.com>
+ <20191218172420.1199117-3-jbrunet@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="KSyhVCl2eeZHT0Rn"
 Content-Disposition: inline
-In-Reply-To: <20191218162642.GC2914998@devbig004.ftw2.facebook.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191218172420.1199117-3-jbrunet@baylibre.com>
+X-Cookie: Power is poison.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 08:26:42AM -0800, Tejun Heo wrote:
-> (cc'ing Dennis and Christoph and quoting whole body)
-> 
-> Pavel, can you please cc percpu maintainers on related changes?
-> 
-> The patch looks fine to me.  Please feel free to add my acked-by.
-> 
-> On Tue, Dec 17, 2019 at 04:42:59PM -0700, Jens Axboe wrote:
-> > CC Tejun on this one. Looks fine to me, and matches the put path.
-> > 
-> > 
-> > On 12/17/19 3:28 PM, Pavel Begunkov wrote:
-> > > Add percpu_ref_tryget_many(), which works the same way as
-> > > percpu_ref_tryget(), but grabs specified number of refs.
-> > > 
-> > > Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-> > > ---
-> > >  include/linux/percpu-refcount.h | 24 ++++++++++++++++++++----
-> > >  1 file changed, 20 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/include/linux/percpu-refcount.h b/include/linux/percpu-refcount.h
-> > > index 390031e816dc..19079b62ce31 100644
-> > > --- a/include/linux/percpu-refcount.h
-> > > +++ b/include/linux/percpu-refcount.h
-> > > @@ -210,15 +210,17 @@ static inline void percpu_ref_get(struct percpu_ref *ref)
-> > >  }
-> > >  
-> > >  /**
-> > > - * percpu_ref_tryget - try to increment a percpu refcount
-> > > + * percpu_ref_tryget_many - try to increment a percpu refcount
-> > >   * @ref: percpu_ref to try-get
-> > > + * @nr: number of references to get
-> > >   *
-> > >   * Increment a percpu refcount unless its count already reached zero.
-> > >   * Returns %true on success; %false on failure.
 
-Minor nit: would be nice to change this so the two don't have identical
-comments. (eg: Increment a percpu refcount by @nr unless...)
-> > >   *
-> > >   * This function is safe to call as long as @ref is between init and exit.
-> > >   */
-> > > -static inline bool percpu_ref_tryget(struct percpu_ref *ref)
-> > > +static inline bool percpu_ref_tryget_many(struct percpu_ref *ref,
-> > > +					  unsigned long nr)
-> > >  {
-> > >  	unsigned long __percpu *percpu_count;
-> > >  	bool ret;
-> > > @@ -226,10 +228,10 @@ static inline bool percpu_ref_tryget(struct percpu_ref *ref)
-> > >  	rcu_read_lock();
-> > >  
-> > >  	if (__ref_is_percpu(ref, &percpu_count)) {
-> > > -		this_cpu_inc(*percpu_count);
-> > > +		this_cpu_add(*percpu_count, nr);
-> > >  		ret = true;
-> > >  	} else {
-> > > -		ret = atomic_long_inc_not_zero(&ref->count);
-> > > +		ret = atomic_long_add_unless(&ref->count, nr, 0);
-> > >  	}
-> > >  
-> > >  	rcu_read_unlock();
-> > > @@ -237,6 +239,20 @@ static inline bool percpu_ref_tryget(struct percpu_ref *ref)
-> > >  	return ret;
-> > >  }
-> > >  
-> > > +/**
-> > > + * percpu_ref_tryget - try to increment a percpu refcount
-> > > + * @ref: percpu_ref to try-get
-> > > + *
-> > > + * Increment a percpu refcount unless its count already reached zero.
-> > > + * Returns %true on success; %false on failure.
-> > > + *
-> > > + * This function is safe to call as long as @ref is between init and exit.
-> > > + */
-> > > +static inline bool percpu_ref_tryget(struct percpu_ref *ref)
-> > > +{
-> > > +	return percpu_ref_tryget_many(ref, 1);
-> > > +}
-> > > +
-> > >  /**
-> > >   * percpu_ref_tryget_live - try to increment a live percpu refcount
-> > >   * @ref: percpu_ref to try-get
-> > > 
-> > 
-> > 
-> > -- 
-> > Jens Axboe
-> > 
-> 
-> -- 
-> tejun
+--KSyhVCl2eeZHT0Rn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Acked-by: Dennis Zhou <dennis@kernel.org>
+On Wed, Dec 18, 2019 at 06:24:18PM +0100, Jerome Brunet wrote:
 
-Thanks,
-Dennis
+> Add a new property with the depth of the fifo in bytes. This is useful
+> since some instance of the fifo, even on the same SoC, may have different
+> depth. The depth is useful is set some parameters of the fifo.
+
+Can't we figure this out from the compatible strings?  They look SoC
+specific (which is good).  That means we don't need to add new
+properties for each quirk that separates the variants.
+
+--KSyhVCl2eeZHT0Rn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl36ZucACgkQJNaLcl1U
+h9DwRAf/XO9oHDzn1VThOJNKz5nrgTjAgtf51hmSYc2qC4bFBEPQmKXHTQJwgxhC
+7Q+4EV0qC+zkHdnDBl9RM5HgwVFirK2Bq106WvVMJizoEWf0D5B2C8vp8vMhCOXA
+yquL9sijTzs79Z2+/wM05/OaaQ+nrKBZpBv6IOGYYkgZ+z4x7Jp8HQ9EhPW25EsU
+am8nea9rtuvWkEDskXQ541gQw38hPicim+pS37hD/BzhTstwLpU7LqnyyFq6O+OE
+ZtatzXOFXvOohYrOK4yGFUnT74rg6wE6shFbq3E4NNwnRtwh9TCCpUjS43JrNOZT
+DJ6vG/tnjzlofd9ok9LwVvNZ2d4xQg==
+=9adF
+-----END PGP SIGNATURE-----
+
+--KSyhVCl2eeZHT0Rn--
