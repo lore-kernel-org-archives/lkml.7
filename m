@@ -2,38 +2,38 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5637CC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73435C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 277CD20717
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:44:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 451CD20717
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:44:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="GbISrtFc"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="fPjvMO4I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727538AbfLRQom (ORCPT
+        id S1727565AbfLRQon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 11:44:42 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:45124 "EHLO
+        Wed, 18 Dec 2019 11:44:43 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:45142 "EHLO
         linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726955AbfLRQol (ORCPT
+        with ESMTP id S1727215AbfLRQol (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 18 Dec 2019 11:44:41 -0500
 Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id CAE152008713;
-        Wed, 18 Dec 2019 08:44:39 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CAE152008713
+        by linux.microsoft.com (Postfix) with ESMTPSA id 3149C20B479A;
+        Wed, 18 Dec 2019 08:44:40 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3149C20B479A
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1576687479;
-        bh=a7xuBf5Ive82IP27XtSElh0HyfR+06ON7XFvftGE0Wc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=GbISrtFcZTdmutO/nY95S0wpsX1WmzMUNz9/YnYqFPAbjtRYExPALZudQsVOhLJoC
-         MI/Zb169RO5tKVTqAgUJzr2e/in2T55u4v/3JKIR8nMQKb5ZRFFNAHgHcPpFggb2c7
-         Uhwj2XWlBvhPBGzkILYNQla1dTqnY6Y0UrZct2Ro=
+        s=default; t=1576687480;
+        bh=7oX3VjVjQ+qxdF/mzYJ1sOnrnFWgeNPXNB/HYkY5A+o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fPjvMO4IVlR7+CgLSY1M2HhFQ1ROTpZvGRHi1qfqL8CzE0hqNupbB0pZ43rnxJnFk
+         B+WFd2WNyWdimKHuAxoySIwa0nuEevouCXPicgntJA5AO7C4sdwCw68OMk6r0/CfkT
+         PFUjkatRILjXDgqzqL4uGX/1f4inXsDHEE59c9yU=
 From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 To:     zohar@linux.ibm.com, James.Bottomley@HansenPartnership.com,
         linux-integrity@vger.kernel.org
@@ -41,95 +41,99 @@ Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
         mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
         sashal@kernel.org, jamorris@linux.microsoft.com,
         linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-Subject: [PATCH v5 0/2] IMA: Deferred measurement of keys
-Date:   Wed, 18 Dec 2019 08:44:32 -0800
-Message-Id: <20191218164434.2877-1-nramas@linux.microsoft.com>
+Subject: [PATCH v5 2/2] IMA: Call workqueue functions to measure queued keys
+Date:   Wed, 18 Dec 2019 08:44:34 -0800
+Message-Id: <20191218164434.2877-3-nramas@linux.microsoft.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191218164434.2877-1-nramas@linux.microsoft.com>
+References: <20191218164434.2877-1-nramas@linux.microsoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset extends the previous version[1] by adding support for
-deferred processing of keys.
+Measuring keys requires a custom IMA policy to be loaded.
+Keys should be queued for measurement if a custom IMA policy
+is not yet loaded. Keys queued for measurement, if any, should be
+processed when a custom IMA policy is loaded.
 
-With the patchset referenced above, the IMA subsystem supports
-measuring asymmetric keys when the key is created or updated.
-But keys created or updated before a custom IMA policy is loaded
-are currently not measured. This includes keys added to, for instance,
-.builtin_trusted_keys which happens early in the boot process.
+This patch updates the IMA hook function ima_post_key_create_or_update()
+to queue the key if a custom IMA policy has not yet been loaded.
+And, ima_update_policy() function, which is called when
+a custom IMA policy is loaded, is updated to process queued keys.
 
-This change adds support for queuing keys created or updated before
-a custom IMA policy is loaded. The queued keys are processed when
-a custom policy is loaded. Keys created or updated after a custom policy
-is loaded are measured immediately (not queued).
+Sample "key" measurement rule in the IMA policy:
 
-If the kernel is built with both CONFIG_IMA and
-CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE enabled then the IMA policy
-must be applied as a custom policy. Not providing a custom policy
-in the above configuration would result in asymmeteric keys being queued
-until a custom policy is loaded. This is by design.
+measure func=KEY_CHECK uid=0 keyrings=.ima|.builtin_trusted_keys template=ima-buf
 
-[1] https://lore.kernel.org/linux-integrity/20191211164707.4698-1-nramas@linux.microsoft.com/
+If the kernel is built with one or more built-in trusted certificates,
+IMA measurement should list all the keys imported from those certificates.
 
-Testing performed:
+Display "key" measurement in the IMA measurement list:
 
-  * Booted the kernel with this change.
-  * Added .builtin_trusted_keys in "keyrings=" option in
-    the IMA policy and verified the keys added to this
-    keyring are measured.
-  * Specified only func=KEY_CHECK and not "keyrings=" option,
-    and verified the keys added to builtin_trusted_keys keyring
-    are processed.
-  * Added keys at runtime and verified they are measured
-    if the IMA policy permitted.
-      => For example, added keys to .ima keyring and verified.
+cat /sys/kernel/security/ima/ascii_runtime_measurements
 
-Changelog:
+10 faf3...e702 ima-buf sha256:27c915b8ddb9fae7214cf0a8a7043cc3eeeaa7539bcb136f8427067b5f6c3b7b .builtin_trusted_keys 308202863082...4aee
 
-  v5
+Verify "key" measurement data for a key added to ".builtin_trusted_keys" keyring:
 
-  => Removed temp keys list in ima_process_queued_keys()
+cat /sys/kernel/security/integrity/ima/ascii_runtime_measurements | grep -m 1 "\.builtin_trusted_keys" | cut -d' ' -f 6 | xxd -r -p |tee btk-cert.der | sha256sum | cut -d' ' -f 1
 
-  v4
+The output of the above command should match the template hash
+of the first "key" measurement entry in the IMA measurement list for
+the key added to ".builtin_trusted_keys" keyring.
 
-  => Check and set ima_process_keys flag with mutex held.
+The file namely "btk-cert.der" generated by the above command
+should be a valid x509 certificate (in DER format) and should match
+the one that was used to import the key to the ".builtin_trusted_keys" keyring.
+The certificate file can be verified using openssl tool.
 
-  v3
+Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+---
+ security/integrity/ima/ima_asymmetric_keys.c | 8 ++++++++
+ security/integrity/ima/ima_policy.c          | 3 +++
+ 2 files changed, 11 insertions(+)
 
-  => Defined ima_process_keys flag to be static.
-  => Set ima_process_keys with ima_keys_mutex held.
-  => Added a comment in ima_process_queued_keys() function
-     to state the use of temporary list for keys.
-
-  v2
-
-  => Rebased the changes to v5.5-rc1
-  => Updated function names, variable names, and code comments
-     to be less verbose.
-
-  v1
-
-  => Code cleanup
-
-  v0
-
-  => Based changes on v5.4-rc8
-  => The following patchsets should be applied in that order
-     https://lore.kernel.org/linux-integrity/1572492694-6520-1-git-send-email-zohar@linux.ibm.com
-     https://lore.kernel.org/linux-integrity/20191204224131.3384-1-nramas@linux.microsoft.com/
-  => Added functions to queue and dequeue keys, and process
-     the queued keys when custom IMA policies are applied.
-
-Lakshmi Ramasubramanian (2):
-  IMA: Define workqueue for early boot key measurements
-  IMA: Call workqueue functions to measure queued keys
-
- security/integrity/ima/ima.h                 |  15 +++
- security/integrity/ima/ima_asymmetric_keys.c | 123 +++++++++++++++++++
- security/integrity/ima/ima_policy.c          |   3 +
- 3 files changed, 141 insertions(+)
-
+diff --git a/security/integrity/ima/ima_asymmetric_keys.c b/security/integrity/ima/ima_asymmetric_keys.c
+index d520a67180d8..4124f10ff0c2 100644
+--- a/security/integrity/ima/ima_asymmetric_keys.c
++++ b/security/integrity/ima/ima_asymmetric_keys.c
+@@ -145,6 +145,8 @@ void ima_post_key_create_or_update(struct key *keyring, struct key *key,
+ 				   const void *payload, size_t payload_len,
+ 				   unsigned long flags, bool create)
+ {
++	bool queued = false;
++
+ 	/* Only asymmetric keys are handled by this hook. */
+ 	if (key->type != &key_type_asymmetric)
+ 		return;
+@@ -152,6 +154,12 @@ void ima_post_key_create_or_update(struct key *keyring, struct key *key,
+ 	if (!payload || (payload_len == 0))
+ 		return;
+ 
++	if (!ima_process_keys)
++		queued = ima_queue_key(keyring, payload, payload_len);
++
++	if (queued)
++		return;
++
+ 	/*
+ 	 * keyring->description points to the name of the keyring
+ 	 * (such as ".builtin_trusted_keys", ".ima", etc.) to
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index a4dde9d575b2..04b9c6c555de 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -807,6 +807,9 @@ void ima_update_policy(void)
+ 		kfree(arch_policy_entry);
+ 	}
+ 	ima_update_policy_flag();
++
++	/* Custom IMA policy has been loaded */
++	ima_process_queued_keys();
+ }
+ 
+ /* Keep the enumeration in sync with the policy_tokens! */
 -- 
 2.17.1
 
