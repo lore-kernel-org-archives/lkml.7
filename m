@@ -2,151 +2,80 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C84C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:07:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE95C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E39FD24683
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:07:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71906218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:07:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbfLRPHR (ORCPT
+        id S1727175AbfLRPHz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 10:07:17 -0500
-Received: from foss.arm.com ([217.140.110.172]:49376 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726723AbfLRPHQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 10:07:16 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B723C30E;
-        Wed, 18 Dec 2019 07:07:15 -0800 (PST)
-Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4B46D3F719;
-        Wed, 18 Dec 2019 07:07:14 -0800 (PST)
-Date:   Wed, 18 Dec 2019 15:07:11 +0000
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH] pcie: Add quirk for the Arm Neoverse N1SDP platform
-Message-ID: <20191218150711.41bdf9a4@donnerap.cambridge.arm.com>
-In-Reply-To: <20191213150031.GA229369@google.com>
-References: <9ad40b55-0d31-a7b7-9f99-ea281fd4ad7d@arm.com>
-        <20191213150031.GA229369@google.com>
-Organization: ARM
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+        Wed, 18 Dec 2019 10:07:55 -0500
+Received: from wbironout2.netvigator.com ([210.87.247.20]:35648 "EHLO
+        wbironout2.netvigator.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727063AbfLRPHz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 10:07:55 -0500
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0CPAQBFP/pd/5YXxstlGgEBAQEBAQEBA?=
+ =?us-ascii?q?QMBAQEBEQEBAQICAQEBAYF8giKBQSASKpMMghGPHYRvhyMJAQEBDi0CAQGDLYE?=
+ =?us-ascii?q?TAoIZJDgTAhABAQQBAQECAQUEbYRrWIVeAQEBAQMnEz8QCw0BBgEDCRoLDwVJE?=
+ =?us-ascii?q?4YZBq0BgXQzGgKKMYE2jBgUBj+BQYQkPogLgiwEl1OIFo8gCoI1lgcnDYI2h3m?=
+ =?us-ascii?q?ELgMBi2AtqGssgWkigViBBYMnUBiNV44bNDOBKI14AQE?=
+X-IronPort-AV: E=Sophos;i="5.69,329,1571673600"; 
+   d="scan'208";a="167853902"
+X-MGA-submission: =?us-ascii?q?MDEOhlv2hz4iPFKrijO6XP+V6oJP6RMvFlKCZk?=
+ =?us-ascii?q?z08k6tR7oEJvdXcfT2bwT35qTLnJp/ImhWtwkkEE+cbb/uyXCHyxwmb8?=
+ =?us-ascii?q?iYpgjySSJFpTkt+tb/AawKH3kvS7Saym0wQ6m2M9w1pHGNWrgIUIQoKV?=
+ =?us-ascii?q?NI?=
+Received: from unknown (HELO ybironoah04.netvigator.com) ([203.198.23.150])
+  by wbironout2v2.netvigator.com with ESMTP; 18 Dec 2019 23:07:50 +0800
+Received: from unknown (HELO rhel76) ([42.200.157.25])
+  by ybironoah04.netvigator.com with ESMTP/TLS/AES128-GCM-SHA256; 18 Dec 2019 23:07:50 +0800
+Date:   Wed, 18 Dec 2019 23:07:37 +0800
+From:   "Chan Shu Tak, ALex" <alexchan@task.com.hk>
+To:     David Miller <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] llc2: Remove the condition operator in
+ llc_stat_ev_rx_null_dsap_xid_c and llc_stat_ev_rx_null_dsap_test_c.
+Message-ID: <20191218150737.GA5800@rhel76>
+References: <1576340820-4929-1-git-send-email-alexchan@task.com.hk>
+ <1576555237-4037-1-git-send-email-alexchan@task.com.hk>
+ <20191217.221846.1864258542284733289.davem@davemloft.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191217.221846.1864258542284733289.davem@davemloft.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Dec 2019 15:07:07 -0600
-Bjorn Helgaas <helgaas@kernel.org> wrote:
-
-Hi Bjorn,
-
-> On Thu, Dec 12, 2019 at 11:05:31AM +0000, Andre Przywara wrote:
-> > On 11/12/2019 20:17, Bjorn Helgaas wrote:  
-> > > On Wed, Dec 11, 2019 at 11:00:49AM +0000, Andre Przywara wrote:  
-> > >> On Tue, 10 Dec 2019 08:41:15 -0600
-> > >> Bjorn Helgaas <helgaas@kernel.org> wrote:  
-> > >>> On Mon, Dec 09, 2019 at 04:06:38PM +0000, Andre Przywara wrote:  
-> > >>>> From: Deepak Pandey <Deepak.Pandey@arm.com>
-> > >>>>
-> > >>>> The Arm N1SDP SoC suffers from some PCIe integration issues, most
-> > >>>> prominently config space accesses to not existing BDFs being answered
-> > >>>> with a bus abort, resulting in an SError.    
-> > >>>
-> > >>> Can we tease this apart a little more?  Linux doesn't program all the
-> > >>> bits that control error signaling, so even on hardware that works
-> > >>> perfectly, much of this behavior is determined by what firmware did.
-> > >>> I wonder if Linux could be more careful about this.
-> > >>>
-> > >>> "Bus abort" is not a term used in PCIe.  
-> > >>
-> > >> Yes, sorry, that was my sloppy term, also aiming more at the CPU
-> > >> side of the bus, between the cores and the RC.
-> > >>  
-> > >>>  IIUC, a config read to a
-> > >>> device that doesn't exist should terminate with an Unsupported Request
-> > >>> completion, e.g., see the implementation note in PCIe r5.0 sec 2.3.1.  
-> > >>
-> > >> Yes, that's what Lorenzo mentioned as well.
-> > >>  
-> > >>> The UR should be an uncorrectable non-fatal error (Table 6-5), and
-> > >>> Figures 6-2 and 6-3 show how it should be handled and when it should
-> > >>> be signaled as a system error.  In case you don't have a copy of the
-> > >>> spec, I extracted those two figures and put them at [1].  
-> > >>
-> > >> Thanks for that.
-> > >> So in the last few months we tossed several ideas around how to
-> > >> work-around this without kernel intervention, all of them turned out
-> > >> to be not working. There are indeed registers in the RC that
-> > >> influence error reporting to the CPU side, but even if we could
-> > >> suppress (or catch) the SError, we can't recover and fixup the read
-> > >> transaction to the CPU. Even Lorenzo gave up on this ;-) As far as I
-> > >> understood this, there are gates missing which are supposed to
-> > >> translate this specific UR into a valid "all-1s" response.  
-> > > 
-> > > But the commit log says firmware scanned the bus (catching the
-> > > SErrors).  Shouldn't Linux be able to catch them the same way?  
-> > 
-> > Not really. The scanning is done by the SCP management processor,
-> > which is a Cortex-M class core on the same bus. So it's a simple,
-> > single core running very early after power-on, when the actual AP
-> > cores are still off. The SError handler is set to just increase a
-> > value, then to return. This value is then checked before and after a
-> > config space access for a given BDF:
-> > https://git.linaro.org/landing-teams/working/arm/n1sdp-pcie-quirk.git/tree/scp
-> > 
-> > On the AP cores that run Linux later on this is quite different: The
-> > SError is asynchronous, imprecise (inexact) and has no syndrome
-> > information. That means we can't attribute this anymore to the
-> > faulting instruction, we don't even know if it happened due to this
-> > config space access. The CPU might have executed later instructions
-> > already, so the state is broken at this point. SError basically
-> > means: the system is screwed up.  Because this is quite common for
-> > SErrors, we don't even allow to register SError handlers in arm64
-> > Linux.
-> > 
-> > So even if we could somehow handle this is in Linux, it would be a
-> > much greater and intrusive hack, so I'd rather stick with this
-> > version.  
+On Tue, Dec 17, 2019 at 10:18:46PM -0800, David Miller wrote:
+> From: "Chan Shu Tak, Alex" <alexchan@task.com.hk>
+> Date: Tue, 17 Dec 2019 12:00:36 +0800
 > 
-> The problem is that from a PCIe point of view, UR is something we
-> should be able to tolerate.  It happens during enumeration and also
-> during hotplug.  It definitely does not mean "the system is screwed up
-> and must be rebooted."
+> > @@ -32,7 +32,7 @@ static int llc_stat_ev_rx_null_dsap_xid_c(struct sk_buff *skb)
+> >  	return LLC_PDU_IS_CMD(pdu) &&			/* command PDU */
+> >  	       LLC_PDU_TYPE_IS_U(pdu) &&		/* U type PDU */
+> >  	       LLC_U_PDU_CMD(pdu) == LLC_1_PDU_CMD_XID &&
+> > -	       !pdu->dsap ? 1 : 0;			/* NULL DSAP value */
+> > +	       !pdu->dsap;				/* NULL DSAP value */
+> 
+> This isn't a v2 of your patch, it's a patch against v1 of your patch.
+> 
+> Please do this properly, thank you.
 
-I agree, I am also wondering why an (ARM) SError was considered an appropriate answer in the first place. Maybe it's due to some confusion between the ARM architecture term "SError" and the PCI #SERR signal?
+Thanks for your comments and patience and sorry for the troubles that I caused.
 
-> To go back to Figure 6-3, I'm getting the impression that the "System
-> Error" shown at the top is *not* the "SError" you're referring to.  If
-> they were the same, the Root Control enable bits should gate it, but
-> according to your lspci, those enable bits are cleared, yet you still
-> take SErrors.
+I will revise my patch and try again.
 
-Yes, "System Error" in PCI lingo is definitely something different and unrelated to the ARM architecture SError.
-I also checked the (legacy) PCI command register, the PCIe baseline error handling and AER, all of them seem to not propagate the SERR signal. So I reckon it's something which does this on the root complex integration level, outside of generic PCIe. So far I also couldn't find a masking bit in the RC data sheet as well.
- 
-> SError is asynchronous and imprecise.  Is there no way to do the
-> config access in a way that makes it precise, by adding some kind of
-> sync?  There's no reason we can't single-thread config accesses and
-> maybe even MMIO/IO port accesses as well if necessary.
+In this case, should I start anew or continue on this thread? 
 
-There is, on this core, but it becomes even more dodgy: While you can *block* delivery of an SError (by setting PSTATE.A), you couldn't clear it so far. ARMv8.2 introduced the "esb" instruction, which allows us to actually consume the SError, so clearing the A bit afterwards would continue operation as normal. This particular core supports v8.2, but the Rockchip SoC does not. So it would not help in the general case, also has that bitter taste of possibly masking an unrelated SError.
+Thanks again for your time.
 
-So I managed to hack some proof of concept up where I can indeed fence in the SError around the config space access, within the kernel, so I can *almost* certainly say whether this readl/readw triggered this. But that would require aarch64 specific code (even instructions that require an ARMv8.2 compatible core) in the PCI driver, and so is probably more ugly than the existing solution. Plus we would need to iron out the remaining uncertainty, not sure that's actually possible.
-
-Cheers,
-Andre.
