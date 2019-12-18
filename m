@@ -2,98 +2,81 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 187F0C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 02:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5161CC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 03:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFCB0206D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 02:59:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ZNbUAdYj"
+	by mail.kernel.org (Postfix) with ESMTP id 1ACCD206EE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 03:00:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576638015;
+	bh=zCZ5t+A+aocu4tNsjCXIjMwGeoHEPiR86NvFEH3f7uI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=P+UQStCqzLcW3Z5Cc/415hV9kA4r9oRcPZ7cdxF/FaOiWQ03cCNL9hT+xB2nWm3wO
+	 OnU10QpMU7cUIsGIlYtTuWsNHhxazNhCdtHAwuCaNt2bYNf6xRmb+huCssZAddUp61
+	 ECrZEJhPWsyLUWITot1krM3+YHklbfm5/wLJe/Rw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbfLRC7o (ORCPT
+        id S1726634AbfLRDAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 21:59:44 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:57032 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbfLRC7o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 21:59:44 -0500
-Received: from [10.137.112.111] (unknown [131.107.147.111])
-        by linux.microsoft.com (Postfix) with ESMTPSA id D0DA320106B3;
-        Tue, 17 Dec 2019 18:59:43 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D0DA320106B3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1576637984;
-        bh=Z44wdEIcJtKPFcY3vbh8wsiIFch8YhhPxMzvPWXXNjY=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=ZNbUAdYjtY9qgyFgDaZsasSYZuLl6ChuL25ub8ag3UA0ZP3DGCH3CTxI88c8qErM0
-         3g+fTf/eUCEmvAVROLyBjsIaZUfq7GobLfEXufnuCp1YAUtn0udiejKb7LVDOyVF/8
-         xU1XvBAUKei+HlozOahrn1Jm5w44Up1xq1lHJGZc=
-Subject: Re: [PATCH v4 2/2] IMA: Call workqueue functions to measure queued
- keys
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        zohar@linux.ibm.com, linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
-        sashal@kernel.org, jamorris@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-References: <20191213171827.28657-1-nramas@linux.microsoft.com>
- <20191213171827.28657-3-nramas@linux.microsoft.com>
- <1576257955.8504.20.camel@HansenPartnership.com>
- <39624b97-245c-ed05-27c5-588787aacc00@linux.microsoft.com>
- <1576423353.3343.3.camel@HansenPartnership.com>
- <1568ff14-316f-f2c4-84d4-7ca4c0a1936a@linux.microsoft.com>
- <1576479187.3784.1.camel@HansenPartnership.com>
- <8844a360-6d1e-1435-db7c-fd7739487168@linux.microsoft.com>
- <1576531022.3365.6.camel@HansenPartnership.com>
- <35a6c241-9a46-2657-51d1-0c04d32a9fae@linux.microsoft.com>
- <f25b7299-1530-2e43-cdf4-2208c82fc768@linux.microsoft.com>
- <152580f3-2a1f-fa33-cc25-f25747a470a5@linux.microsoft.com>
- <1576634499.14900.10.camel@HansenPartnership.com>
- <edda07dc-c615-58f1-5689-4692c3fb3315@linux.microsoft.com>
-Message-ID: <95606a84-ea7d-dda2-5ced-7418fe802ecf@linux.microsoft.com>
-Date:   Tue, 17 Dec 2019 19:00:10 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Tue, 17 Dec 2019 22:00:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57860 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726496AbfLRDAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 22:00:13 -0500
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05444206EE;
+        Wed, 18 Dec 2019 03:00:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576638013;
+        bh=zCZ5t+A+aocu4tNsjCXIjMwGeoHEPiR86NvFEH3f7uI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ca3h/s4dHRpbtNRoFK2S672Ef1JN6NuTSom6NafaK84YWYGXO3tsq/f6yiucGqvwz
+         uabPkqa+Jowd5F/VvKTi9673opu/DWf/KWmKESOBTv5DDV6kA32cGlqijKkeYdXfX5
+         jehZWom2KUEwVgGZ2YnICTr9msMgdFJ+9t6hBhd8=
+Received: by mail-wr1-f52.google.com with SMTP id d16so595171wre.10;
+        Tue, 17 Dec 2019 19:00:12 -0800 (PST)
+X-Gm-Message-State: APjAAAXAhQ1IyTTEEnrWxZsCKL4nd59kee6tUry/QZp7SjhRzxx5BjDm
+        vnzxX7mQxTW3aWhUfAvKLhyqOSicQgb/zotJRTk=
+X-Google-Smtp-Source: APXvYqzelVsGJ9gxnjciMwKGywJpn+VuRE2Ym7JXEeVEcs84fhq09inSTSV5A9/1auSZBt+yemX78dkx3SoTqfFbqQk=
+X-Received: by 2002:adf:ef4e:: with SMTP id c14mr1261417wrp.142.1576638011575;
+ Tue, 17 Dec 2019 19:00:11 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <edda07dc-c615-58f1-5689-4692c3fb3315@linux.microsoft.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20191217152541.2167080-1-ben.dooks@codethink.co.uk>
+In-Reply-To: <20191217152541.2167080-1-ben.dooks@codethink.co.uk>
+From:   Chen-Yu Tsai <wens@kernel.org>
+Date:   Wed, 18 Dec 2019 11:00:00 +0800
+X-Gmail-Original-Message-ID: <CAGb2v67ADBH+JtsA9d4Rc84uMjvPXPB4JG2DdVaU+m3C4CGu7g@mail.gmail.com>
+Message-ID: <CAGb2v67ADBH+JtsA9d4Rc84uMjvPXPB4JG2DdVaU+m3C4CGu7g@mail.gmail.com>
+Subject: Re: [PATCH] Input: axp20x-pek - make device attributes static
+To:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/17/2019 6:44 PM, Lakshmi Ramasubramanian wrote:
+On Tue, Dec 17, 2019 at 11:25 PM Ben Dooks (Codethink)
+<ben.dooks@codethink.co.uk> wrote:
+>
+> The two device attrbitues are not declared outside this file
+> so make them static to avoid the following warnings:
+>
+> drivers/input/misc/axp20x-pek.c:194:1: warning: symbol 'dev_attr_startup' was not declared. Should it be static?
+> drivers/input/misc/axp20x-pek.c:195:1: warning: symbol 'dev_attr_shutdown' was not declared. Should it be static?
+>
+> Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
+> ---
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Cc: Chen-Yu Tsai <wens@csie.org>
+> Cc: linux-input@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
 
->>
->> The direct implication of the comment and the lock dance with the
->> temporary list and the processed flag is that stuff can be added to the
->> ima_keys list after you drop the mutex.  Your explanation in the prior
->> couple of emails says that nothing can be added because the
->> ima_process_keys flag setting prevents it.  If the latter is true, you
->> can simply drop the lock after setting the flag and rely on ima_keys
->> not changing to run it through process_buffer_measurement without
->> needing any of the intermediate list or the processed flag.  If the
->> latter isn't true then any key added to ima_keys after the mutex is
->> dropped is never processed.
->>
->> James
-
-One more scenario needs to be taken care - that still doesn't require a 
-temp list, but will need a local flag.
-
-Say, two threads race to call ima_process_queued_keys().
-Both find ima_process_keys flag is false.
-They now race to take to the lock.
-Only the 1st one setting the flag to true should process queued keys.
-
-  -lakshmi
-
+Acked-by: Chen-Yu Tsai <wens@csie.org>
