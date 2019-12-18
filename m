@@ -2,63 +2,117 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF81EC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 06:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4723FC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 06:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D17F2176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 06:56:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FD4C2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 06:56:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbfLRG4Q (ORCPT
+        id S1726723AbfLRG4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 01:56:16 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:47558 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbfLRG4Q (ORCPT
+        Wed, 18 Dec 2019 01:56:21 -0500
+Received: from mo-csw1514.securemx.jp ([210.130.202.153]:35770 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726591AbfLRG4R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 01:56:16 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 2447315036C0C;
-        Tue, 17 Dec 2019 22:56:15 -0800 (PST)
-Date:   Tue, 17 Dec 2019 22:56:14 -0800 (PST)
-Message-Id: <20191217.225614.1797207200536618024.davem@davemloft.net>
-To:     Jose.Abreu@synopsys.com
-Cc:     netdev@vger.kernel.org, Joao.Pinto@synopsys.com,
-        jakub.kicinski@netronome.com, peppe.cavallaro@st.com,
-        alexandre.torgue@st.com, mcoquelin.stm32@gmail.com,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net v2 6/8] net: stmmac: RX buffer size must be 16 byte
- aligned
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <8d7b87265a2727a28896203f5569d7039c2c34c8.1576581853.git.Jose.Abreu@synopsys.com>
-References: <cover.1576581853.git.Jose.Abreu@synopsys.com>
-        <cover.1576581853.git.Jose.Abreu@synopsys.com>
-        <8d7b87265a2727a28896203f5569d7039c2c34c8.1576581853.git.Jose.Abreu@synopsys.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 17 Dec 2019 22:56:15 -0800 (PST)
+        Wed, 18 Dec 2019 01:56:17 -0500
+Received: by mo-csw.securemx.jp (mx-mo-csw1514) id xBI6u3N8003361; Wed, 18 Dec 2019 15:56:03 +0900
+X-Iguazu-Qid: 34tKCtS7NXirWj8SRu
+X-Iguazu-QSIG: v=2; s=0; t=1576652163; q=34tKCtS7NXirWj8SRu; m=KvLJg+ndWRx7gv1wyosUGxci+yrAV9a0iwKugus5RSg=
+Received: from imx2.toshiba.co.jp (imx2.toshiba.co.jp [106.186.93.51])
+        by relay.securemx.jp (mx-mr1513) id xBI6u2g7017814;
+        Wed, 18 Dec 2019 15:56:02 +0900
+Received: from enc01.localdomain ([106.186.93.100])
+        by imx2.toshiba.co.jp  with ESMTP id xBI6u2cg024477;
+        Wed, 18 Dec 2019 15:56:02 +0900 (JST)
+Received: from hop001.toshiba.co.jp ([133.199.164.63])
+        by enc01.localdomain  with ESMTP id xBI6u1uQ000537;
+        Wed, 18 Dec 2019 15:56:01 +0900
+From:   Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+To:     linux-serial@vger.kernel.org
+Cc:     Punit Agrawal <punit1.agrawal@toshiba.co.jp>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        nobuhiro1.iwamatsu@toshiba.co.jp, shrirang.bagul@canonical.com,
+        stable@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] serdev: Don't claim unsupported serial devices
+Date:   Wed, 18 Dec 2019 15:56:46 +0900
+X-TSB-HOP: ON
+Message-Id: <20191218065646.817493-1-punit1.agrawal@toshiba.co.jp>
+X-Mailer: git-send-email 2.24.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jose Abreu <Jose.Abreu@synopsys.com>
-Date: Tue, 17 Dec 2019 12:42:36 +0100
+Serdev sub-system claims all serial devices that are not already
+enumerated. As a result, no device node is created for serial port on
+certain boards such as the Apollo Lake based UP2. This has the
+unintended consequence of not being able to raise the login prompt via
+serial connection.
 
-> We need to align the RX buffer size to at least 16 byte so that IP
-> doesn't mis-behave. This is required by HW.
- ...
->  
-> -#define	STMMAC_ALIGN(x)		__ALIGN_KERNEL(x, SMP_CACHE_BYTES)
-> +#define	STMMAC_ALIGN(x)		ALIGN_DOWN(ALIGN_DOWN(x, SMP_CACHE_BYTES), 16)
+Introduce a blacklist to reject devices that should not be treated as
+a serdev device. Add the Intel HS UART peripheral ids to the blacklist
+to bring back serial port on SoCs carrying them.
 
-You need to align up, not down.
+Cc: stable@vger.kernel.org
+Signed-off-by: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Johan Hovold <johan@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>
+---
+
+Hi,
+
+The patch has been updated based on feedback recieved on the RFC[0].
+
+Please consider merging if there are no objections.
+
+Thanks,
+Punit
+
+[0] https://www.spinics.net/lists/linux-serial/msg36646.html
+
+ drivers/tty/serdev/core.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
+index 226adeec2aed..0d64fb7d4f36 100644
+--- a/drivers/tty/serdev/core.c
++++ b/drivers/tty/serdev/core.c
+@@ -663,6 +663,12 @@ static acpi_status acpi_serdev_register_device(struct serdev_controller *ctrl,
+ 	return AE_OK;
+ }
+ 
++static const struct acpi_device_id serdev_blacklist_devices[] = {
++	{"INT3511", 0},
++	{"INT3512", 0},
++	{ },
++};
++
+ static acpi_status acpi_serdev_add_device(acpi_handle handle, u32 level,
+ 					  void *data, void **return_value)
+ {
+@@ -675,6 +681,10 @@ static acpi_status acpi_serdev_add_device(acpi_handle handle, u32 level,
+ 	if (acpi_device_enumerated(adev))
+ 		return AE_OK;
+ 
++	/* Skip if black listed */
++	if (!acpi_match_device_ids(adev, serdev_blacklist_devices))
++		return AE_OK;
++
+ 	if (acpi_serdev_check_resources(ctrl, adev))
+ 		return AE_OK;
+ 
+-- 
+2.24.0
+
