@@ -2,123 +2,201 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D34C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C2AC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A21FA2465E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:38:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFDD5227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:38:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G5QCuHck"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="OKdsVNx3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbfLRSiI (ORCPT
+        id S1727495AbfLRSiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 13:38:08 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:33013 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727189AbfLRSiH (ORCPT
+        Wed, 18 Dec 2019 13:38:17 -0500
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:24035 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727121AbfLRSiQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 13:38:07 -0500
-Received: by mail-il1-f196.google.com with SMTP id v15so2580702iln.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 10:38:06 -0800 (PST)
+        Wed, 18 Dec 2019 13:38:16 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=If9n9LWtZGwO9cBtHXPSqWrRQWL2H+dGPsSdvZ1Ke3s=;
-        b=G5QCuHckZR+UYBlSuoqYvD3YazGZK1yBYvycKFSY3URC8LIyhCbIuej/Kaaffiq5L4
-         92606OJK+TKfXSAfkh0FiaB3G5jt9UGQshpfDs2q+I944lz3SEdLnkj/Ub0mvoEu5dOO
-         J/Rd18YDRIPIOTc4M8TImCc1kMLL8HN3M2P7g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=If9n9LWtZGwO9cBtHXPSqWrRQWL2H+dGPsSdvZ1Ke3s=;
-        b=opzym95+Or8vJauaGhZizvfMw7yVstaj/rEUZ1bsFHPmYw9q11PgUYgzr6T3eBYpEm
-         LPYrlfdeI+7HwuqedOtWhD1dZI4MCR6nMgsW5A4ZOuS0h0jc3f6De1AQKfW09ghHn8dv
-         VNPNxOV2ETks4EWZaOaezEDkUDtIg/ZxY0fuoHtwEZJA7a9cdaH4FMgZqZ48AiHIa7XW
-         jg8sbkYEDDaCY9FKE2w7d1atHiofxsZb5iHqhZ0VrpKg6mQvgFs5uMchn5LgK9Fp1CI4
-         EnzgdvQSrvHebAtp/XW7Ckmh44ogx7rbP99XpW6vPFEmVhMyZdfKON4k0GEFwtImCEh2
-         At3Q==
-X-Gm-Message-State: APjAAAU4VIFqSLxHVHvQ42EQs2EsXzJqnCP4HH0t68RuBZY7+r2CeqaG
-        8haIxob1KvWvfqwydZjFS4U/HLFimIk=
-X-Google-Smtp-Source: APXvYqwgxafXVF6wtSr4+OMJBbRCjn1p7BDfYcy4o4SyLJ9ua4B9yZDt6SukKhIt02pbNTmtQKLzLQ==
-X-Received: by 2002:a92:860a:: with SMTP id g10mr3128674ild.280.1576694286336;
-        Wed, 18 Dec 2019 10:38:06 -0800 (PST)
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com. [209.85.166.44])
-        by smtp.gmail.com with ESMTPSA id x2sm907611ilk.76.2019.12.18.10.38.05
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Dec 2019 10:38:05 -0800 (PST)
-Received: by mail-io1-f44.google.com with SMTP id v3so3046452ioj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 10:38:05 -0800 (PST)
-X-Received: by 2002:a6b:b941:: with SMTP id j62mr2902869iof.168.1576694284957;
- Wed, 18 Dec 2019 10:38:04 -0800 (PST)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1576694296; x=1608230296;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=X93izDi+OFRUN5FGBE4eNUsCd4hh4S1nRuspQbSs7oM=;
+  b=OKdsVNx3zdZWil7k1b98Aq9kGSQGo20rOFlb6+k6CRHNOIOEOFeL4uRt
+   M4U7T3RltcNIZwEKpeBGfcfr0wu9AqjJ2H/xH83gDXrVhtuqf1AGRTLw7
+   z4JsHDwRssnfcidIZPyOQSvuE+AtWSFx12UbxOYig2D0AIjCHhZIeYOgC
+   s=;
+IronPort-SDR: 64Fli9yuvExMGfRbUT1MKQQKAOTlqf1lk4tXWix7mjCiBKTTHMF3rmwQoOzo7MOUrxg7clLZ7v
+ p+iJj47921wA==
+X-IronPort-AV: E=Sophos;i="5.69,330,1571702400"; 
+   d="scan'208";a="5909115"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-2225282c.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 18 Dec 2019 18:38:04 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2c-2225282c.us-west-2.amazon.com (Postfix) with ESMTPS id EE2D3A1E49;
+        Wed, 18 Dec 2019 18:38:02 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 18 Dec 2019 18:38:02 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.109) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 18 Dec 2019 18:37:57 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <jgross@suse.com>, <axboe@kernel.dk>, <konrad.wilk@oracle.com>,
+        <roger.pau@citrix.com>
+CC:     SeongJae Park <sjpark@amazon.de>, <pdurrant@amazon.com>,
+        <sjpark@amazon.com>, <sj38.park@gmail.com>,
+        <xen-devel@lists.xenproject.org>, <linux-block@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v13 4/5] xen/blkback: Remove unnecessary static variable name prefixes
+Date:   Wed, 18 Dec 2019 19:37:17 +0100
+Message-ID: <20191218183718.31719-5-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191218183718.31719-1-sjpark@amazon.com>
+References: <20191218183718.31719-1-sjpark@amazon.com>
 MIME-Version: 1.0
-References: <1576474742-23409-1-git-send-email-sanm@codeaurora.org>
- <1576474742-23409-2-git-send-email-sanm@codeaurora.org> <CAD=FV=U48gdGHMbQ22M_59t6va2n41Zh1CDTqMJYpLCwiD35Mg@mail.gmail.com>
- <6d8c979f-daa3-3b40-f29c-cca5a2f8f1c8@codeaurora.org>
-In-Reply-To: <6d8c979f-daa3-3b40-f29c-cca5a2f8f1c8@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 18 Dec 2019 10:37:53 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=UER4zt=z3XWEzNt5v2oe8V=z6Hb-Wm-2BzuWtuHmYg-A@mail.gmail.com>
-Message-ID: <CAD=FV=UER4zt=z3XWEzNt5v2oe8V=z6Hb-Wm-2BzuWtuHmYg-A@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: usb: qcom,dwc3: Convert USB DWC3 bindings
-To:     "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-usb@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Manu Gautam <mgautam@codeaurora.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.43.160.109]
+X-ClientProxiedBy: EX13D10UWB003.ant.amazon.com (10.43.161.106) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: SeongJae Park <sjpark@amazon.de>
 
-On Wed, Dec 18, 2019 at 4:41 AM Sandeep Maheswaram (Temp)
-<sanm@codeaurora.org> wrote:
-> +  assigned-clock-rates:
-> +    description:
-> +      Should be 19.2MHz (19200000) for MOCK_UTMI_CLK
-> +      >=125MHz (125000000) for MASTER_CLK in SS mode
-> +      >=60MHz (60000000) for MASTER_CLK in HS mode
-> +    maxItems: 2
->
-> You can still express some limits here even if we don't go all out
-> with the "oneOf".  AKA I think this is better:
->
-> assigned-clock-rates:
->   items:
->     - const: 19200000
->     - minimum: 60000000
->       description: >= 60 MHz in HS mode, >= 125 MHz in SS mode
->
-> Facing error when i add as above.
-> properties:assigned-clock-rates: {'items': [{'const': 19200000}, {'minimum': 60000000}]} is not valid under any of the given schemas
-> Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/usb/qcom,dwc3.example.dts' failed
+A few of static variables in blkback have 'xen_blkif_' prefix, though it
+is unnecessary for static variables.  This commit removes such prefixes.
 
-I couldn't figure it out either.  ...but at least this seemed to work
-and is slightly better than what you have:
+Reviewed-by: Roger Pau Monné <roger.pau@citrix.com>
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
+---
+ drivers/block/xen-blkback/blkback.c | 37 +++++++++++++----------------
+ 1 file changed, 17 insertions(+), 20 deletions(-)
 
-  assigned-clock-rates:
-    items:
-      - description: Must be 19.2MHz (19200000)
-      - description: Must be >= 60 MHz in HS mode, >= 125 MHz in SS mode
+diff --git a/drivers/block/xen-blkback/blkback.c b/drivers/block/xen-blkback/blkback.c
+index 79f677aeb5cc..fbd67f8e4e4e 100644
+--- a/drivers/block/xen-blkback/blkback.c
++++ b/drivers/block/xen-blkback/blkback.c
+@@ -62,8 +62,8 @@
+  * IO workloads.
+  */
+ 
+-static int xen_blkif_max_buffer_pages = 1024;
+-module_param_named(max_buffer_pages, xen_blkif_max_buffer_pages, int, 0644);
++static int max_buffer_pages = 1024;
++module_param_named(max_buffer_pages, max_buffer_pages, int, 0644);
+ MODULE_PARM_DESC(max_buffer_pages,
+ "Maximum number of free pages to keep in each block backend buffer");
+ 
+@@ -78,8 +78,8 @@ MODULE_PARM_DESC(max_buffer_pages,
+  * algorithm.
+  */
+ 
+-static int xen_blkif_max_pgrants = 1056;
+-module_param_named(max_persistent_grants, xen_blkif_max_pgrants, int, 0644);
++static int max_pgrants = 1056;
++module_param_named(max_persistent_grants, max_pgrants, int, 0644);
+ MODULE_PARM_DESC(max_persistent_grants,
+                  "Maximum number of grants to map persistently");
+ 
+@@ -88,8 +88,8 @@ MODULE_PARM_DESC(max_persistent_grants,
+  * use. The time is in seconds, 0 means indefinitely long.
+  */
+ 
+-static unsigned int xen_blkif_pgrant_timeout = 60;
+-module_param_named(persistent_grant_unused_seconds, xen_blkif_pgrant_timeout,
++static unsigned int pgrant_timeout = 60;
++module_param_named(persistent_grant_unused_seconds, pgrant_timeout,
+ 		   uint, 0644);
+ MODULE_PARM_DESC(persistent_grant_unused_seconds,
+ 		 "Time in seconds an unused persistent grant is allowed to "
+@@ -137,9 +137,8 @@ module_param(log_stats, int, 0644);
+ 
+ static inline bool persistent_gnt_timeout(struct persistent_gnt *persistent_gnt)
+ {
+-	return xen_blkif_pgrant_timeout &&
+-	       (jiffies - persistent_gnt->last_used >=
+-		HZ * xen_blkif_pgrant_timeout);
++	return pgrant_timeout && (jiffies - persistent_gnt->last_used >=
++			HZ * pgrant_timeout);
+ }
+ 
+ static inline int get_free_page(struct xen_blkif_ring *ring, struct page **page)
+@@ -234,7 +233,7 @@ static int add_persistent_gnt(struct xen_blkif_ring *ring,
+ 	struct persistent_gnt *this;
+ 	struct xen_blkif *blkif = ring->blkif;
+ 
+-	if (ring->persistent_gnt_c >= xen_blkif_max_pgrants) {
++	if (ring->persistent_gnt_c >= max_pgrants) {
+ 		if (!blkif->vbd.overflow_max_grants)
+ 			blkif->vbd.overflow_max_grants = 1;
+ 		return -EBUSY;
+@@ -397,14 +396,13 @@ static void purge_persistent_gnt(struct xen_blkif_ring *ring)
+ 		goto out;
+ 	}
+ 
+-	if (ring->persistent_gnt_c < xen_blkif_max_pgrants ||
+-	    (ring->persistent_gnt_c == xen_blkif_max_pgrants &&
++	if (ring->persistent_gnt_c < max_pgrants ||
++	    (ring->persistent_gnt_c == max_pgrants &&
+ 	    !ring->blkif->vbd.overflow_max_grants)) {
+ 		num_clean = 0;
+ 	} else {
+-		num_clean = (xen_blkif_max_pgrants / 100) * LRU_PERCENT_CLEAN;
+-		num_clean = ring->persistent_gnt_c - xen_blkif_max_pgrants +
+-			    num_clean;
++		num_clean = (max_pgrants / 100) * LRU_PERCENT_CLEAN;
++		num_clean = ring->persistent_gnt_c - max_pgrants + num_clean;
+ 		num_clean = min(ring->persistent_gnt_c, num_clean);
+ 		pr_debug("Going to purge at least %u persistent grants\n",
+ 			 num_clean);
+@@ -599,8 +597,7 @@ static void print_stats(struct xen_blkif_ring *ring)
+ 		 current->comm, ring->st_oo_req,
+ 		 ring->st_rd_req, ring->st_wr_req,
+ 		 ring->st_f_req, ring->st_ds_req,
+-		 ring->persistent_gnt_c,
+-		 xen_blkif_max_pgrants);
++		 ring->persistent_gnt_c, max_pgrants);
+ 	ring->st_print = jiffies + msecs_to_jiffies(10 * 1000);
+ 	ring->st_rd_req = 0;
+ 	ring->st_wr_req = 0;
+@@ -660,7 +657,7 @@ int xen_blkif_schedule(void *arg)
+ 		if (time_before(jiffies, blkif->buffer_squeeze_end))
+ 			shrink_free_pagepool(ring, 0);
+ 		else
+-			shrink_free_pagepool(ring, xen_blkif_max_buffer_pages);
++			shrink_free_pagepool(ring, max_buffer_pages);
+ 
+ 		if (log_stats && time_after(jiffies, ring->st_print))
+ 			print_stats(ring);
+@@ -887,7 +884,7 @@ static int xen_blkbk_map(struct xen_blkif_ring *ring,
+ 			continue;
+ 		}
+ 		if (use_persistent_gnts &&
+-		    ring->persistent_gnt_c < xen_blkif_max_pgrants) {
++		    ring->persistent_gnt_c < max_pgrants) {
+ 			/*
+ 			 * We are using persistent grants, the grant is
+ 			 * not mapped but we might have room for it.
+@@ -914,7 +911,7 @@ static int xen_blkbk_map(struct xen_blkif_ring *ring,
+ 			pages[seg_idx]->persistent_gnt = persistent_gnt;
+ 			pr_debug("grant %u added to the tree of persistent grants, using %u/%u\n",
+ 				 persistent_gnt->gnt, ring->persistent_gnt_c,
+-				 xen_blkif_max_pgrants);
++				 max_pgrants);
+ 			goto next;
+ 		}
+ 		if (use_persistent_gnts && !blkif->vbd.overflow_max_grants) {
+-- 
+2.17.1
 
-So I'd say go with that.
-
-
--Doug
