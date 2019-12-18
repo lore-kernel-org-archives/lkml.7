@@ -2,123 +2,109 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBDBDC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42CDAC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD93424672
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:13:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="NfyaHaGP"
+	by mail.kernel.org (Postfix) with ESMTP id 18DC82176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:17:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576675025;
+	bh=WXxfk0jPYGSGiUdU+fiC21+RW+v+2OecpzqxZNu56Kc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tiKtK/SXxSgK69piXTFfwfaCL2lB7k/46ZdBXMv7r2xatZn5RV9wBF959JpDlP/OP
+	 ZfYsVoLybvBlk3xbscMIeupo4wpLJGhyh83KgS19FD7Hkzm19l6szR/u+ht8mI1gwZ
+	 Uw0cKnKrJRcxSdKpCVfPngU4SIr6LjBEKjOOb5+w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbfLRNN4 (ORCPT
+        id S1726932AbfLRNRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 08:13:56 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:37659 "EHLO ozlabs.org"
+        Wed, 18 Dec 2019 08:17:03 -0500
+Received: from foss.arm.com ([217.140.110.172]:45986 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726723AbfLRNNz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 08:13:55 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47dFnp3pW4z9sS9;
-        Thu, 19 Dec 2019 00:13:50 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1576674832;
-        bh=jvXS9QaYUnBeyhFeR7eMtCXv8w7JTHZthgsAYwtfgoU=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=NfyaHaGP9zOdUM8yUYmFTOJTQD8ZA4DPbTcZZfO1UsuG6p8s+uA+Qusa3Hw+AT2Y9
-         7nSZ7Q3zUruXevd2KInEdVnRTL6p7RPT1HDKV0lROjcLdmPUgDeSzQ9K5e9kutklPz
-         NWkb15XZfl65oFmLC/jUpXMUna1cULqg/HdAY66dorouQmPnFogtr6HMCCDWcIAzEi
-         RQW2yMfBhh5rMUasuFU+asmqljUaNKu16YQO4P0MOXhXNOrXQE7u/m3U4uOtN52dkD
-         7f5qwiIESOiBBCieQ1eRi7gvF+y3fGob3KPFjn4L7eltOM7GCIGiWhkVxexhYclLfq
-         8u2PXuWC8/Glw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Paul Mackerras <paulus@ozlabs.org>
-Cc:     akpm@linux-foundation.org, npiggin@gmail.com, will@kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-arch@vger.kernel.org,
-        Scott Wood <oss@buserror.net>
-Subject: Re: [PATCH v2 2/3] mm/mmu_gather: Invalidate TLB correctly on batch allocation failure and flush
-In-Reply-To: <0f0bea3b-b7b5-fa8c-f75c-396cf78c47b4@linux.ibm.com>
-References: <20191218053530.73053-1-aneesh.kumar@linux.ibm.com> <20191218053530.73053-2-aneesh.kumar@linux.ibm.com> <20191218091733.GO2844@hirez.programming.kicks-ass.net> <0f0bea3b-b7b5-fa8c-f75c-396cf78c47b4@linux.ibm.com>
-Date:   Thu, 19 Dec 2019 00:13:48 +1100
-Message-ID: <87v9qdn5df.fsf@mpe.ellerman.id.au>
+        id S1726710AbfLRNRD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 08:17:03 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7F51430E;
+        Wed, 18 Dec 2019 05:17:02 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C7F223F718;
+        Wed, 18 Dec 2019 05:17:01 -0800 (PST)
+Date:   Wed, 18 Dec 2019 13:17:00 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "corbet@lwn.net" <corbet@lwn.net>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "noralf@tronnes.org" <noralf@tronnes.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
+        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>
+Subject: Re: Applied "regulator: bd71828: Basic support for ROHM bd71828 PMIC
+ regulators" to the regulator tree
+Message-ID: <20191218131700.GB42175@sirena.org.uk>
+References: <applied-5b1c4a22c7945e97ff2a7924abfeb3239043f8eb.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+ <de7424126e285d9bbd21a70945415d78203c2ba7.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ZoaI/ZTpAVc4A5k6"
+Content-Disposition: inline
+In-Reply-To: <de7424126e285d9bbd21a70945415d78203c2ba7.camel@fi.rohmeurope.com>
+X-Cookie: In the next world, you're on your own.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com> writes:
-> On 12/18/19 2:47 PM, Peter Zijlstra wrote:
->> On Wed, Dec 18, 2019 at 11:05:29AM +0530, Aneesh Kumar K.V wrote:
->>> From: Peter Zijlstra <peterz@infradead.org>
->>>
->>> Architectures for which we have hardware walkers of Linux page table should
->>> flush TLB on mmu gather batch allocation failures and batch flush. Some
->>> architectures like POWER supports multiple translation modes (hash and radix)
->> 
->> nohash, hash and radix in fact :-)
->> 
->>> and in the case of POWER only radix translation mode needs the above TLBI.
->> 
->>> This is because for hash translation mode kernel wants to avoid this extra
->>> flush since there are no hardware walkers of linux page table. With radix
->>> translation, the hardware also walks linux page table and with that, kernel
->>> needs to make sure to TLB invalidate page walk cache before page table pages are
->>> freed.
->>>
->>> More details in
->>> commit: d86564a2f085 ("mm/tlb, x86/mm: Support invalidating TLB caches for RCU_TABLE_FREE")
->>>
->>> Fixes: a46cc7a90fd8 ("powerpc/mm/radix: Improve TLB/PWC flushes")
->>> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org
->>> Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
->>> ---
->> 
->>> diff --git a/arch/powerpc/include/asm/tlb.h b/arch/powerpc/include/asm/tlb.h
->>> index b2c0be93929d..7f3a8b902325 100644
->>> --- a/arch/powerpc/include/asm/tlb.h
->>> +++ b/arch/powerpc/include/asm/tlb.h
->>> @@ -26,6 +26,17 @@
->>>   
->>>   #define tlb_flush tlb_flush
->>>   extern void tlb_flush(struct mmu_gather *tlb);
->>> +/*
->>> + * book3s:
->>> + * Hash does not use the linux page-tables, so we can avoid
->>> + * the TLB invalidate for page-table freeing, Radix otoh does use the
->>> + * page-tables and needs the TLBI.
->>> + *
->>> + * nohash:
->>> + * We still do TLB invalidate in the __pte_free_tlb routine before we
->>> + * add the page table pages to mmu gather table batch.
->> 
->> I'm a little confused though; if nohash is a software TLB fill, why do
->> you need a TLBI for tables?
->> 
->
-> nohash (AKA book3e) has different mmu modes. I don't follow all the 
-> details w.r.t book3e. Paul or Michael might be able to explain the need 
-> for table flush with book3e.
 
-Some of the Book3E CPUs have a partial hardware table walker. The IBM one (A2)
-did, before we ripped that support out. And the Freescale (NXP) e6500
-does, see eg:
+--ZoaI/ZTpAVc4A5k6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-  28efc35fe68d ("powerpc/e6500: TLB miss handler with hardware tablewalk support")
+On Wed, Dec 18, 2019 at 08:06:04AM +0000, Vaittinen, Matti wrote:
 
-They only support walking one level IIRC, ie. you can create a TLB entry
-that points to a PTE page, and the hardware will dereference that to get
-a PTE and load that into the TLB.
+> I think you missed the [PATCH v6 08/15] regulator: bd718x7: Split
+> driver to common and bd718x7 specific parts
 
-cheers
+I didn't miss it, it was queued but it doesn't apply.
+
+--ZoaI/ZTpAVc4A5k6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl36JssACgkQJNaLcl1U
+h9CIwwf/XGxw7qI5+W4mZUmXbHBLRi2mSDCtLaIN9ZXkq0cxNLHz+arkHxlXRnGH
+TgXToL545RFyVMoMsNJ9mgx6N/K6dKycIoz6e2R2KMshQXgG1vsR00SqpzOmWSTD
+vuLsweAjda+fSnq8LOxaYCjSyCuC7+kg1OyRToeYUanBAEHL0nnNPc0LaodC2mmz
+5oIVqN5KtXLuc9yHBuHn9E6DQpyFFdDwGxscWVVuNKXGbh1YezDw44dIZtb/ZMK5
+piw8gK+P9piymdh1rSw0W2dgHojmNgaZWGa1qhbf/9JmaWwc1Wu4q0NZ/dED0JJj
+6xQL1PTl40C8GA7Hfd20UUQ/YMu5MQ==
+=1AaP
+-----END PGP SIGNATURE-----
+
+--ZoaI/ZTpAVc4A5k6--
