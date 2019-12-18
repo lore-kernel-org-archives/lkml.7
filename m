@@ -2,145 +2,147 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 807F4C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 642DFC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 601FA227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:16:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 389E520717
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:16:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PiRGIeV0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbfLRJQO (ORCPT
+        id S1726726AbfLRJQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 04:16:14 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8145 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725799AbfLRJQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 04:16:14 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id C970B752B66CF392781B;
-        Wed, 18 Dec 2019 17:16:11 +0800 (CST)
-Received: from [127.0.0.1] (10.184.52.56) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Wed, 18 Dec 2019
- 17:16:04 +0800
-Subject: Re: [PATCH v2] PCI: Add quirk for HiSilicon NP 5896 devices
-To:     <bjorn@helgaas.com>
-CC:     Bjorn Helgaas <helgaas@kernel.org>, <andrew.murray@arm.com>,
-        <linux-pci@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        <wangkefeng.wang@huawei.com>, <huawei.libin@huawei.com>,
-        <guohanjun@huawei.com>
-References: <20191206181051.GA121021@google.com>
- <6ebfcfc7-f9f0-bee0-172c-89c93530d94b@huawei.com>
- <CABhMZUX8spN93es+qtZWtMSUi3M+c99649ect4ZAkcrPLqfO=g@mail.gmail.com>
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Message-ID: <5ec52f21-8fd6-86f0-88ad-e316a274024d@huawei.com>
-Date:   Wed, 18 Dec 2019 17:16:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.6.0
+        Wed, 18 Dec 2019 04:16:52 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:7957 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbfLRJQw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 04:16:52 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5df9ee790000>; Wed, 18 Dec 2019 01:16:41 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 18 Dec 2019 01:16:50 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 18 Dec 2019 01:16:50 -0800
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Dec
+ 2019 09:16:50 +0000
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Dec
+ 2019 09:16:50 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 18 Dec 2019 09:16:49 +0000
+Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.64.167]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5df9ee7e0001>; Wed, 18 Dec 2019 01:16:49 -0800
+From:   Nagarjuna Kristam <nkristam@nvidia.com>
+To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <mark.rutland@arm.com>, <robh+dt@kernel.org>, <kishon@ti.com>
+CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Nagarjuna Kristam" <nkristam@nvidia.com>
+Subject: [Patch V2 00/18] Tegra XUSB OTG support
+Date:   Wed, 18 Dec 2019 14:46:13 +0530
+Message-ID: <1576660591-10383-1-git-send-email-nkristam@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-In-Reply-To: <CABhMZUX8spN93es+qtZWtMSUi3M+c99649ect4ZAkcrPLqfO=g@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.184.52.56]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1576660601; bh=GAnpkDa8+C6kSVdl8u+FhFXJGwVJnbN0tZE24YWzkCs=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=PiRGIeV0nwrQ8DXtQqkchaRNJXDDISpfenvOw5LLi4gffmdQpkkKZnxwmvgzuHb/t
+         33i0vlzCIdhyOsFxWrJYEatVLx+BsJ4LYBd/5Z7roKbxyeTin2YAQ8H/UYzz0aE4gg
+         7R6+7ax151rdX0FI/QPp7An5XgRlELRGLyl+lgygqgTk4mDkgG5JtBM/z24uVawVfQ
+         gXAc2oDYRkbogwtEGP6dlGOloSGLGc+f7jHAesDDOVEFTss5lPPKcuKtNDkGHdQ+2r
+         M+VUqqskOVBINhoXQPoLv4T0w5ZQlkP9d4GGfTC79cKNWoVSpG7vWRwCrqiX7HDthP
+         U/mCPYOKS4bNg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch series adds OTG support on XUSB hardware used in Tegra210 and
+Tegra186 SoCs.
 
+This patchset is composed with :
+ - dt bindings of XUSB Pad Controller
+ - dt bindings for XUSB device Driver
+ - Tegra PHY driver for usb-role-switch and usb-phy
+ - Tegra XUSB host mode driver to support OTG mode
+ - Tegra XUSB device mode driver to use usb-phy and multi device mode
+ - dts for XUSB pad controller
+ - dts for xudc
 
-On 2019/12/11 12:10, Bjorn Helgaas wrote:
-> On Tue, Dec 10, 2019 at 9:28 PM Xiongfeng Wang
-> <wangxiongfeng2@huawei.com> wrote:
->>
->>
->>
->> On 2019/12/7 2:10, Bjorn Helgaas wrote:
->>> On Fri, Dec 06, 2019 at 03:01:45PM +0800, Xiongfeng Wang wrote:
->>>> HiSilicon PCI Network Processor 5896 devices misreport the class type as
->>>> 'NOT_DEFINED', but it is actually a network device. Also the size of
->>>> BAR3 is reported as 265T, but this BAR is actually unused.
->>>> This patch modify the class type to 'CLASS_NETWORK' and disable the
->>>> unused BAR3.
->>>
->>> "NOT_DEFINED" is not the value in the Class Code register.  The commit
->>> message should include the actual value.
->>
->> The actual value is 0, I will update the commit message.
->>
->>>
->>>> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
->>>> ---
->>>>  drivers/pci/quirks.c    | 29 +++++++++++++++++++++++++++++
->>>>  include/linux/pci_ids.h |  1 +
->>>>  2 files changed, 30 insertions(+)
->>>>
->>>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->>>> index 4937a08..b9adebb 100644
->>>> --- a/drivers/pci/quirks.c
->>>> +++ b/drivers/pci/quirks.c
->>>> @@ -5431,3 +5431,32 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
->>>>  DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
->>>>                            PCI_CLASS_DISPLAY_VGA, 8,
->>>>                            quirk_reset_lenovo_thinkpad_p50_nvgpu);
->>>> +
->>>> +static void quirk_hisi_fixup_np_class(struct pci_dev *pdev)
->>>> +{
->>>> +    u32 class = pdev->class;
->>>> +
->>>> +    pdev->class = PCI_BASE_CLASS_NETWORK << 8;
->>>> +    pci_info(pdev, "PCI class overriden (%#08x -> %#08x)\n",
->>>> +             class, pdev->class);
->>>> +}
->>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HISI_5896,
->>>> +                    quirk_hisi_fixup_np_class);
->>>> +
->>>> +/*
->>>> + * HiSilicon NP 5896 devices BAR3 size is reported as 256T and causes problem
->>>> + * when assigning the resources. But this BAR is actually unused by the driver,
->>>> + * so let's disable it.
->>>
->>> The question is not whether the BAR is used by the driver; the
->>> question is whether the device responds to accesses to the region
->>> described by the BAR when PCI_COMMAND_MEMORY is turned on.
->>
->> I asked the hardware engineer. He said I can not write an address into that BAR.
-> 
-> If the BAR is not writable, I think sizing should fail, so I suspect
-> some of the bits are actually writable.
+Tegra Pad controller driver register for role switch updates for
+OTG/peripheral capable USB ports and adds usb-phy for that corresponding
+USB ports.
 
-Sorry for the delayed response. It's not so convenient for me to get to the hardware guys.
-BAR0 BAR1 BAR2 are 32-bit and can be used to access the registers and memory within
-5896 devices. These three BARs can meet the need for most scenario.
-BAR3 is 64-bit and can be used to access all the registers and memory within 5896 devices.
-(BAR3 is writable. Sorry for the non-confirmed information before.)
-But BAR3 is not used by the driver and the size is very large（larger than 100G, still didn't
-get the precise size）.
-So I think maybe we can disable this BAR for now, otherwise the unassigned resource will cause
-'pci_enable_device()' returning failure.
+Host and Device mode drivers gets usb-phy from USB2's phy and registers
+notifier for role changes to perform corresponding role tasks.
 
-Thanks,
-Xiongfeng
+Tests done:
+ - device mode support using micro-B USB cable connection between ubuntu
+   host and DUT on micro-B port
+ - host mode support by connecting pen-drive to micro USB port on DUT
+   using micro-B OTG cable.
+ - toggling between these 2 modes by hot plugging corresponding cables.
 
-> 
-> What do you see in dmesg when this device is enumerated?  Can you
-> instrument the code in __pci_read_base() and see what we read/write to
-> that BAR?
-> 
-> Per spec, if the BAR is not implemented, it should be read-only zero.
-> But obviously the whole reason for the quirk is that the device
-> doesn't comply with the spec.
+DUT: Jetson-tx1, Jetson tx2.
 
+V2:
+ - Updated usb-role-switch documentation for Padctl driver.
+ - Update XUDC bindings doc as suggested by Rob.
+ - Used standard error codes for error return.
+ - Added of_platform_depopulate during error and driver removal.
+ - Updated error variable during phy initialization in XUDC driver.
+ - Updated Tegra210 soc dtb file as per changes to binding doc.
 
+Nagarjuna Kristam (18):
+  dt-bindings: phy: tegra-xusb: Add usb-role-switch
+  dt-bindings: usb: Add NVIDIA Tegra XUSB device mode controller binding
+  phy: tegra: xusb: Add usb-role-switch support
+  phy: tegra: xusb: Add usb-phy support
+  phy: tegra: xusb: Add support to get companion USB 3 port
+  phy: tegra: xusb: Add set_mode support for USB 2 phy on Tegra210
+  phy: tegra: xusb: Add set_mode support for utmi phy on Tegra186
+  usb: xhci-tegra: Add OTG support
+  usb: gadget: tegra-xudc: Remove usb-role-switch support
+  usb: gadget: tegra-xudc: Add usb-phy support
+  usb: gadget: tegra-xudc: use phy_set_mode to set/unset device mode
+  usb: gadget: tegra-xudc: support multiple device modes
+  arm64: tegra: update OTG port entries for jetson-tx1
+  arm64: tegra: update OTG port entries for jetson-tx2
+  arm64: tegra: Add xudc node for Tegra210
+  arm64: tegra: Enable xudc on Jetson TX1
+  arm64: tegra: Add xudc node for Tegra186
+  arm64: tegra: Enable xudc node on Jetson TX2
 
+ .../bindings/phy/nvidia,tegra124-xusb-padctl.txt   |   6 +
+ .../devicetree/bindings/usb/nvidia,tegra-xudc.yaml | 190 ++++++++++++++
+ arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts |  23 +-
+ arch/arm64/boot/dts/nvidia/tegra186.dtsi           |  19 ++
+ arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi     |  34 ++-
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi           |  19 ++
+ drivers/phy/tegra/Kconfig                          |   1 +
+ drivers/phy/tegra/xusb-tegra186.c                  | 109 ++++++--
+ drivers/phy/tegra/xusb-tegra210.c                  | 126 ++++++++--
+ drivers/phy/tegra/xusb.c                           | 134 ++++++++++
+ drivers/phy/tegra/xusb.h                           |   5 +
+ drivers/usb/gadget/udc/tegra-xudc.c                | 276 ++++++++++++++-------
+ drivers/usb/host/xhci-tegra.c                      | 225 ++++++++++++++++-
+ include/linux/phy/tegra/xusb.h                     |   2 +
+ 14 files changed, 1031 insertions(+), 138 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.yaml
 
-> 
-> Bjorn
-> 
-> .
-> 
+-- 
+2.7.4
 
