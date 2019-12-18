@@ -6,49 +6,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DEEEC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5EC7C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3549E21D7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8460221D7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:45:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbfLRVpY (ORCPT
+        id S1726918AbfLRVpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 16:45:24 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:35803 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726801AbfLRVpV (ORCPT
+        Wed, 18 Dec 2019 16:45:25 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:33643 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726777AbfLRVpY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 16:45:21 -0500
-Received: by mail-qv1-f67.google.com with SMTP id u10so1308129qvi.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 13:45:20 -0800 (PST)
+        Wed, 18 Dec 2019 16:45:24 -0500
+Received: by mail-qt1-f193.google.com with SMTP id d5so3231324qto.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 13:45:23 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=dfoBv1/fajBVFYCXkRzHX94CB9r4wEDcgyCOURmAgAg=;
-        b=emliEjp3SzuS1NR8F6BvurcWoQLy3T6gYl/N/iTGeTjJWc8c06kAD4TBVINjLyJiAm
-         2PKKyNsO4PZInhUdB8TNX0gAt3tNHQmRIoElDJ0TrQ945i4ZmYk6tBeNa9EGGEXBcrSk
-         R6okU2qB4R0fdyXTk7aVEeDt/vUfKxJtNEB/+AzFhgcb0OQMrYiCMM+ghPfEgx9Hx0aL
-         rYcHYEb6G805MY8L5bkS6/H67n2d5C77B4wnYEI8CncGkh8wQF+wNHhDB0FaizHRPSXb
-         bfGEtnvSw39l6B+oBIVmES68oheEebTeCmimXXCqIKzwKkRma4vFJZS6NE+D1NvtpXEs
-         uPlQ==
-X-Gm-Message-State: APjAAAU7+eORJ4Yf/s6iKntagpP4WWKY54UrLp81u0WcawrAj2D1gDfh
-        25hWyc1aNUzu2liyEQPJKiE=
-X-Google-Smtp-Source: APXvYqyJcgV0YzfwIJWEoPzEWKHM/Q8SNW5jLeaK/pkZxk08wlg0hw8p4nfU1ul4ALKejsYqz8VKSA==
-X-Received: by 2002:a05:6214:7cc:: with SMTP id bb12mr4424854qvb.207.1576705519918;
-        Wed, 18 Dec 2019 13:45:19 -0800 (PST)
+        bh=D9pT2S8k/algrgf4ExBtGqGPejHqjkU67Sg1NKhWPfA=;
+        b=C9LTwtb8ICVt3jFPjRB63z0JTmq5jCFBlc8nt/CGw3cMz7Z9QOWSNCA9wtlYu9XSUY
+         Pbggtd/owU1N28N2Pi8xceFFNGsR+NII/av95+8tW+Kbx7MS6kIWN34rPP/0Pr65qAnw
+         9vN0tvrZ7Ikp5M336DWmLcN9FjluwLdImw1wJMT6wlUMh9bI4lNNdLRnidF27v8wIRVm
+         tbQ6U+Zg7Wrgog7mJLjGHSlNZGTo4aMIjNrBNRTxjnb7UZ6iG9j6nasOqlA9mcjbJvTT
+         0K3CLMPPThDkT/hmADKkaCkTnaP+r4FDMgjNci7zGASuo8a4pzELL3t8W85IzKM4p54u
+         3rcw==
+X-Gm-Message-State: APjAAAX8WVsBkuIjiXh0MoJB1TRP+y7So2707SYqw+6uvOG/V7q+J500
+        /Nx1sYfaDoEDhv6PgdIqCEM=
+X-Google-Smtp-Source: APXvYqxgM9DLUoP4ysfbHmTDmTMxLtRgelR3zOIU1ZoMj0aWbBmkxr5is/UTyQ8Ycb++OmklUh0flA==
+X-Received: by 2002:ac8:3526:: with SMTP id y35mr4043668qtb.97.1576705523447;
+        Wed, 18 Dec 2019 13:45:23 -0800 (PST)
 Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id u4sm1059851qkh.59.2019.12.18.13.45.19
+        by smtp.gmail.com with ESMTPSA id u4sm1059851qkh.59.2019.12.18.13.45.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 13:45:19 -0800 (PST)
+        Wed, 18 Dec 2019 13:45:22 -0800 (PST)
 From:   Arvind Sankar <nivedita@alum.mit.edu>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH v2 15/24] arch/openrisc/setup: Drop dummy_con initialization
-Date:   Wed, 18 Dec 2019 16:44:57 -0500
-Message-Id: <20191218214506.49252-16-nivedita@alum.mit.edu>
+Subject: [PATCH v2 19/24] arch/s390/setup: Drop dummy_con initialization
+Date:   Wed, 18 Dec 2019 16:45:01 -0500
+Message-Id: <20191218214506.49252-20-nivedita@alum.mit.edu>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191218214506.49252-1-nivedita@alum.mit.edu>
 References: <20191218211231.GA918900@kroah.com>
@@ -65,25 +65,22 @@ Drop it from arch setup code.
 
 Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 ---
- arch/openrisc/kernel/setup.c | 5 -----
- 1 file changed, 5 deletions(-)
+ arch/s390/kernel/setup.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/arch/openrisc/kernel/setup.c b/arch/openrisc/kernel/setup.c
-index d668f5be3a99..c0a774b51e45 100644
---- a/arch/openrisc/kernel/setup.c
-+++ b/arch/openrisc/kernel/setup.c
-@@ -308,11 +308,6 @@ void __init setup_arch(char **cmdline_p)
- 	/* paging_init() sets up the MMU and marks all pages as reserved */
- 	paging_init();
- 
--#if defined(CONFIG_VT) && defined(CONFIG_DUMMY_CONSOLE)
--	if (!conswitchp)
+diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
+index 9cbf490fd162..703cfbca2d25 100644
+--- a/arch/s390/kernel/setup.c
++++ b/arch/s390/kernel/setup.c
+@@ -241,8 +241,6 @@ static void __init conmode_default(void)
+ 		SET_CONSOLE_SCLP;
+ #endif
+ 	}
+-	if (IS_ENABLED(CONFIG_VT) && IS_ENABLED(CONFIG_DUMMY_CONSOLE))
 -		conswitchp = &dummy_con;
--#endif
--
- 	*cmdline_p = boot_command_line;
+ }
  
- 	printk(KERN_INFO "OpenRISC Linux -- http://openrisc.io\n");
+ #ifdef CONFIG_CRASH_DUMP
 -- 
 2.24.1
 
