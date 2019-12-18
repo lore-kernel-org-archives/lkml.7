@@ -2,136 +2,115 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D1B4C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB55C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A992218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:35:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34B3D2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:36:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="aESodwS4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727086AbfLRSfg (ORCPT
+        id S1727184AbfLRSgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 13:35:36 -0500
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:59258 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726944AbfLRSfg (ORCPT
+        Wed, 18 Dec 2019 13:36:01 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39741 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726944AbfLRSgB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 13:35:36 -0500
-Received: from Internal Mail-Server by MTLPINE1 (envelope-from lsun@mellanox.com)
-        with ESMTPS (AES256-SHA encrypted); 18 Dec 2019 20:35:31 +0200
-Received: from bu-lab53.mtbu.labs.mlnx (bu-lab53.mtbu.labs.mlnx [10.15.8.107])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id xBIIZUI4016428;
-        Wed, 18 Dec 2019 20:35:31 +0200
-Received: from bu-lab53.mtbu.labs.mlnx (localhost [127.0.0.1])
-        by bu-lab53.mtbu.labs.mlnx (8.14.7/8.14.7) with ESMTP id xBIIZU24163581;
-        Wed, 18 Dec 2019 13:35:30 -0500
-Received: (from lsun@localhost)
-        by bu-lab53.mtbu.labs.mlnx (8.14.7/8.14.7/Submit) id xBIIZSQ0163580;
-        Wed, 18 Dec 2019 13:35:28 -0500
-From:   Liming Sun <lsun@mellanox.com>
-To:     Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Vadim Pasternak <vadimp@mellanox.com>,
-        David Woods <dwoods@mellanox.com>
-Cc:     Liming Sun <lsun@mellanox.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4] platform/mellanox: fix the mlx-bootctl sysfs
-Date:   Wed, 18 Dec 2019 13:35:27 -0500
-Message-Id: <1576694127-163542-1-git-send-email-lsun@mellanox.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <94727fab054309cd98c876748fd27b130ce5031f.1575918870.git.lsun@mellanox.com>
-References: <94727fab054309cd98c876748fd27b130ce5031f.1575918870.git.lsun@mellanox.com>
+        Wed, 18 Dec 2019 13:36:01 -0500
+Received: by mail-io1-f65.google.com with SMTP id c16so1600880ioh.6
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 10:36:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=Y7UoDfvvX2HqTW7Xsj5rsSRAq8b3uYZqG56P5onidP8=;
+        b=aESodwS4Rc8tgxbsUNWdVvZj7N0f6pNQQfDInXOarA1skszJDOqcijgq0JfRmHfmLZ
+         i4B8gNJEOvXG32i5flt6av4OrGroKvPVjm+LFM/Ln0cwoYfeWdboAEQR/WN/VEuU6LFQ
+         pB55l3DA+Mx7xq7NkySXXjONmGnfK9hnZxpxrbq6xVCpZR8Rsxlq5Tgm51DKfiGhnK8w
+         nnMOvkbRqSo8ZsyD4xmlCUIwKi79zVe+7LimiOykoE5w2JvMgZuIswMyEF359qHGmPjT
+         m4T0Hp/pXJRrADfZZYNjshs2GgnVdzXJQaMjULFSlobhttUE5hej2qK500fI7vH6jEtO
+         hepQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=Y7UoDfvvX2HqTW7Xsj5rsSRAq8b3uYZqG56P5onidP8=;
+        b=FxDb/9jILoI8C0aDJ7Yy7qHUSmECC2MOWT7SHEakI7fDiQXiDvoxGUEPPZHrHGpIPb
+         nebIXs/Pogy3DiN4Ian9jJ6TtQ9HGylX2WIUY+h2DRhlY7dCZ76euICxdtpbtF2+2ANY
+         3CJlhH0uSty1ZUrSIJdhievlV6OSns129ke7924NpQ6YctUHfDnqcVY9yfPGRNDjkvGM
+         ic8EK4oqsSYZ2p8AV5K9AMiDuaKEJGUDIqh9h1p3iCiby9uvq24uqaqY6E5RbAL+Lh0H
+         8GHVnTpabjC1SKLys/AGg67f4EYYvXg7juPOU6pZw41EQDO1RXDvV8FZGgv5Czfq8EZf
+         auOg==
+X-Gm-Message-State: APjAAAURGhkx1XhjyI23jjzdDc1jfAaOXrjEuAM2lIPvwwWNErI3eM0i
+        ju0aGg3uRXo8xzDWDlJNPPSj0uh6XhM=
+X-Google-Smtp-Source: APXvYqyh2Fla+hdRA8p6ZfU6BLMMzNOAxGNOF0009rv3oAyLIaxDtI1aVjabeCotDr9EHgSv1iQMxQ==
+X-Received: by 2002:a5e:8345:: with SMTP id y5mr2645645iom.122.1576694160882;
+        Wed, 18 Dec 2019 10:36:00 -0800 (PST)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id w21sm623330ioc.34.2019.12.18.10.36.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 10:36:00 -0800 (PST)
+Date:   Wed, 18 Dec 2019 10:35:59 -0800 (PST)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Olof Johansson <olof@lixom.net>
+cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        jason@lakedaemon.net, maz@kernel.org, damien.lemoal@wdc.com,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH] riscv: change CSR M/S defines to use "X" for prefix
+In-Reply-To: <20191218170603.58256-1-olof@lixom.net>
+Message-ID: <alpine.DEB.2.21.9999.1912181030090.14542@viisi.sifive.com>
+References: <20191218170603.58256-1-olof@lixom.net>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a follow-up commit for the sysfs attributes to change
-from DRIVER_ATTR to DEVICE_ATTR according to some initial comments.
-In such case, it's better to point the sysfs path to the device
-itself instead of the driver. The ABI document is also updated.
+On Wed, 18 Dec 2019, Olof Johansson wrote:
 
-Fixes: 79e29cb8fbc5 ("platform/mellanox: Add bootctl driver for Mellanox BlueField Soc")
-Signed-off-by: Liming Sun <lsun@mellanox.com>
----
-v3->v4:
-    Fixes for comments from Andy
-    - Simplify the change with ATTRIBUTE_GROUPS();
-v2->v3:
-    Fixes for comments from Andy
-    - Convert to use dev_groups;
-v1->v2:
-    Fixes for comments from Andy
-    - Added the Fixes tag;
-v1: Initial version.
----
- Documentation/ABI/testing/sysfs-platform-mellanox-bootctl | 10 +++++-----
- drivers/platform/mellanox/mlxbf-bootctl.c                 |  2 +-
- 2 files changed, 6 insertions(+), 6 deletions(-)
+> Commit a4c3733d32a7 ("riscv: abstract out CSR names for supervisor vs
+> machine mode") introduced new non-S/M-specific defines for some of the
+> CSRs and fields that differ for when you run the kernel in machine or
+> supervisor mode.
+> 
+> One of those was "IRQ_TIMER" (instead of IRQ_S_TIMER/IRQ_M_MTIMER),
+> which was generic enough to cause conflicts with other defines in
+> drivers. Since it was in csr.h, it ended up getting pulled in through
+> fairly generic include files, etc.
+> 
+> I looked at just renaming those, but for consistency I chose to rename all
+> M/S symbols to using 'X' instead of 'S'/'M' in the identifiers instead,
+> which gives them all less generic names.
 
-diff --git a/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl b/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
-index c65a805..401d202 100644
---- a/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
-+++ b/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
-@@ -1,4 +1,4 @@
--What:		/sys/bus/platform/devices/MLNXBF04:00/driver/lifecycle_state
-+What:		/sys/bus/platform/devices/MLNXBF04:00/lifecycle_state
- Date:		Oct 2019
- KernelVersion:	5.5
- Contact:	"Liming Sun <lsun@mellanox.com>"
-@@ -10,7 +10,7 @@ Description:
- 		  GA Non-Secured - Non-Secure chip and not able to change state
- 		  RMA - Return Merchandise Authorization
- 
--What:		/sys/bus/platform/devices/MLNXBF04:00/driver/post_reset_wdog
-+What:		/sys/bus/platform/devices/MLNXBF04:00/post_reset_wdog
- Date:		Oct 2019
- KernelVersion:	5.5
- Contact:	"Liming Sun <lsun@mellanox.com>"
-@@ -19,7 +19,7 @@ Description:
- 		to reboot the chip and recover it to the old state if the new
- 		boot partition fails.
- 
--What:		/sys/bus/platform/devices/MLNXBF04:00/driver/reset_action
-+What:		/sys/bus/platform/devices/MLNXBF04:00/reset_action
- Date:		Oct 2019
- KernelVersion:	5.5
- Contact:	"Liming Sun <lsun@mellanox.com>"
-@@ -30,7 +30,7 @@ Description:
- 		  emmc - boot from the onchip eMMC
- 		  emmc_legacy - boot from the onchip eMMC in legacy (slow) mode
- 
--What:		/sys/bus/platform/devices/MLNXBF04:00/driver/second_reset_action
-+What:		/sys/bus/platform/devices/MLNXBF04:00/second_reset_action
- Date:		Oct 2019
- KernelVersion:	5.5
- Contact:	"Liming Sun <lsun@mellanox.com>"
-@@ -44,7 +44,7 @@ Description:
- 		  swap_emmc - swap the primary / secondary boot partition
- 		  none - cancel the action
- 
--What:		/sys/bus/platform/devices/MLNXBF04:00/driver/secure_boot_fuse_state
-+What:		/sys/bus/platform/devices/MLNXBF04:00/secure_boot_fuse_state
- Date:		Oct 2019
- KernelVersion:	5.5
- Contact:	"Liming Sun <lsun@mellanox.com>"
-diff --git a/drivers/platform/mellanox/mlxbf-bootctl.c b/drivers/platform/mellanox/mlxbf-bootctl.c
-index 61753b6..5d21c6a 100644
---- a/drivers/platform/mellanox/mlxbf-bootctl.c
-+++ b/drivers/platform/mellanox/mlxbf-bootctl.c
-@@ -309,7 +309,7 @@ static int mlxbf_bootctl_probe(struct platform_device *pdev)
- 	.probe = mlxbf_bootctl_probe,
- 	.driver = {
- 		.name = "mlxbf-bootctl",
--		.groups = mlxbf_bootctl_groups,
-+		.dev_groups = mlxbf_bootctl_groups,
- 		.acpi_match_table = mlxbf_bootctl_acpi_ids,
- 	}
- };
--- 
-1.8.3.1
+This is what Christoph did originally.  I asked him to rename them to the 
+generic versions to align with how we discuss these internally:
 
+https://lore.kernel.org/linux-riscv/alpine.DEB.2.21.9999.1910181647110.21875@viisi.sifive.com/
+
+I'd propose that we just start by prefixing the IRQ_TIMER macros with 
+something like "RV_".  By prefixing the macros with a namespace 
+identifier, that seems to solve the namespace problem more directly than 
+sprinkling Xs around.  Then if it looks like there are other symbols that 
+start conflicting, we can do the same in a larger patch for the other 
+CSRs.
+
+Of course we could also do the same to all CSRs up front.  Do you have a 
+sense of what the current conflict situation is like with those?  The only 
+one I'm aware of is with Mobiveil and predated this patch; it was fixed in 
+the last merge window as far as I know.
+
+
+
+- Paul
