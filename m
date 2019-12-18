@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72853C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD11DC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B6A524650
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:24:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B40392176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:24:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qHnYjRUr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PY1qWRdU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727469AbfLRNY2 (ORCPT
+        id S1727397AbfLRNYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 08:24:28 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:47059 "EHLO
+        Wed, 18 Dec 2019 08:24:16 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40849 "EHLO
         mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727436AbfLRNYW (ORCPT
+        with ESMTP id S1727145AbfLRNYO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 08:24:22 -0500
-Received: by mail-lj1-f196.google.com with SMTP id z17so2100501ljk.13
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 05:24:20 -0800 (PST)
+        Wed, 18 Dec 2019 08:24:14 -0500
+Received: by mail-lj1-f196.google.com with SMTP id u1so2121070ljk.7
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 05:24:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=T1y8MMPNkqcrm20up1WtHiDJ34NUPmK2DHqDsNPyhC4=;
-        b=qHnYjRUr2kDnl4xnxqXW3c21wjpGNnB91rtb+EcQmHh8wnofif2OHCxdT8Oz3oiPXG
-         61FqRJ2spHW0DGxfPX8u1qUewKY+RIiE/Qg2LJCVfbIlrRiMCtf+fuHdy86nMER+Rbfw
-         ZZKNvYG2RV6O6RBVofJ9/IUk+LK3so1FmzGIbGk5aZzzLnaggVjLQeiHedYMdSweEFhR
-         3PEO8GMfN5N/oseNwDcAWuuoYjZRFfWNOQws4HpiIPja4jXbZe56JAWY9yUgTVaPNpOx
-         je+yiBJYQuDIkPO3aE9Qhvex14Vjuaou0IgfG9THt8VGw9oibSYN16+8uEp6ULl0Pi2q
-         BFLQ==
+        bh=unqIuIpnL0SKav+KaURk+5yuOec5tbAyPzTEx5H0hC0=;
+        b=PY1qWRdU8/IJtzEkH9dEi7ciUkruMXnneayBeR6VHlIyzfG52/l5OqxiD4bMqdQZv6
+         m4st955NgxkUXzg2lkGxJ72Vt7u32kCnSsm6BePQJJ0YoA86+12iDAh+4/EyNogR+BTV
+         pO6XNfGRqjhHYWo4/k/CeYJeH08ak7JFxyVJORvfhgaFJ4oEnLRTdWUf+Zn7wT69Giyf
+         VBSF6LV3kg0roqFJDDhLvZiw4vt7PnlixzXZHfvOt+KOQP7fH2S+P3EnCnMCvEJKEHEj
+         FherkDEjnsiGsSp6gvPHczQRbAWocD6qCShi7x4ITOtVF/cj1H5j59w0z4H0PultmYCh
+         +ixw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=T1y8MMPNkqcrm20up1WtHiDJ34NUPmK2DHqDsNPyhC4=;
-        b=uJHeg1/AVumcf/flO5Q6lYrNdrPK8gC4CZOZAv7prSaSAFEynRFjgGjwfBE6lkaBfl
-         y2MHnmUJMJm6i8TYBEPZOS/aJ8TDBUw+9Tr3bdTuk4FavHCsEjNWR2g+S+gYoA3r2OVA
-         XE/0SrNwR0kyFe2plRdkycXJE3/rnfctJ45+I46LbuzPVGqTWRq3LmJQ4IOX/w7WwHY+
-         saahRSIfyox8ECm7WLslk4FwOGe9EazgIw5MT0mvMlN/5xVw8ogggJo3IZBSn7PAuN2r
-         vnbOFphqebrItB2F6vYL0X9NTyNGjmamTBfi/mRcSsoKKJOdVg7wQVyIrh5rktECaE5t
-         50Xw==
-X-Gm-Message-State: APjAAAUR+DbcvWabOEnM2JNckGa4Kld5tc+eZ5oTlp94FTdRCrE9Rgfn
-        3RI0S2PxGZCUzgR/POylUNPLwg==
-X-Google-Smtp-Source: APXvYqwEjNXwmw70T0IukUvIytwwfZaEHCzUUEdlTExg7iCwklRZFcGZ6aFzDYIxKJfB99kzV0cE6Q==
-X-Received: by 2002:a2e:556:: with SMTP id 83mr1798786ljf.127.1576675459509;
-        Wed, 18 Dec 2019 05:24:19 -0800 (PST)
+        bh=unqIuIpnL0SKav+KaURk+5yuOec5tbAyPzTEx5H0hC0=;
+        b=adx5Q6ORaR1C6CcnRplmmVreW/YfxFge4OYnRXqg0JaMtMR4bThICBrY9A5MIrmZ+U
+         MCjF9fcO/jxHMyXKpgYVKYTJgQYKO1fjolanILBtCpudoZrK5AvvVYyy2+lC7k7ZOy20
+         VTKDeJOmKvotMJgnOR0+A1I5iyjZnH/eMtRyhe2D+B4LfMk+iAbgxiJVv2aUyZqyl2I8
+         aHXTmGHHcFTYb9ct9Sx597mWUaEq6nuOwqfHWmTlps/Dq3AdVS6JDkDo2+hQoTSNloef
+         BriXkRVjZdagX3sI2jCfalYR3JAu9F5zJmkgM7iYNBPFzA1AoM1me7nJTETxHEk8sqxJ
+         3lBw==
+X-Gm-Message-State: APjAAAV8smJA84GBN1EQfm9YwHgNOyCeLbTzTbyozUFe7kCmYdltLPF9
+        SXnGMx/tCvvMJLiA4VNeQ6xq0g==
+X-Google-Smtp-Source: APXvYqyCKS0JXJzqWtstsL6t6OlHNUXPgonafhakg0IOrxL8NfSw9XxJ1gwqYOmdWfTSNu7A4t1mdw==
+X-Received: by 2002:a2e:9a01:: with SMTP id o1mr1645018lji.247.1576675451419;
+        Wed, 18 Dec 2019 05:24:11 -0800 (PST)
 Received: from localhost.localdomain ([37.157.136.193])
-        by smtp.gmail.com with ESMTPSA id z7sm1440667lfa.81.2019.12.18.05.24.18
+        by smtp.gmail.com with ESMTPSA id z7sm1440667lfa.81.2019.12.18.05.24.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 05:24:19 -0800 (PST)
+        Wed, 18 Dec 2019 05:24:10 -0800 (PST)
 From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
 To:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-media@vger.kernel.org, devicetree@vger.kernel.org
 Cc:     Vikash Garodia <vgarodia@codeaurora.org>, dikshita@codeaurora.org,
         Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH v2 12/12] dt-bindings: media: venus: delete old binding document
-Date:   Wed, 18 Dec 2019 15:22:51 +0200
-Message-Id: <20191218132251.24161-13-stanimir.varbanov@linaro.org>
+Subject: [PATCH v2 08/12] dt-bindings: media: venus: Convert sdm845 to DT schema
+Date:   Wed, 18 Dec 2019 15:22:47 +0200
+Message-Id: <20191218132251.24161-9-stanimir.varbanov@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191218132251.24161-1-stanimir.varbanov@linaro.org>
 References: <20191218132251.24161-1-stanimir.varbanov@linaro.org>
@@ -71,141 +71,171 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After transitioning to YAML DT schema we don't need this old-style
-document.
+Convert qcom,sdm845-venus Venus binding to DT schema.
 
 Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 ---
- .../devicetree/bindings/media/qcom,venus.txt  | 120 ------------------
- 1 file changed, 120 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/media/qcom,venus.txt
+ .../bindings/media/qcom,venus-sdm845.yaml     | 151 ++++++++++++++++++
+ 1 file changed, 151 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/qcom,venus-sdm845.yaml
 
-diff --git a/Documentation/devicetree/bindings/media/qcom,venus.txt b/Documentation/devicetree/bindings/media/qcom,venus.txt
-deleted file mode 100644
-index b602c4c025e7..000000000000
---- a/Documentation/devicetree/bindings/media/qcom,venus.txt
-+++ /dev/null
-@@ -1,120 +0,0 @@
--* Qualcomm Venus video encoder/decoder accelerators
--
--- compatible:
--	Usage: required
--	Value type: <stringlist>
--	Definition: Value should contain one of:
--		- "qcom,msm8916-venus"
--		- "qcom,msm8996-venus"
--		- "qcom,sdm845-venus"
--- reg:
--	Usage: required
--	Value type: <prop-encoded-array>
--	Definition: Register base address and length of the register map.
--- interrupts:
--	Usage: required
--	Value type: <prop-encoded-array>
--	Definition: Should contain interrupt line number.
--- clocks:
--	Usage: required
--	Value type: <prop-encoded-array>
--	Definition: A List of phandle and clock specifier pairs as listed
--		    in clock-names property.
--- clock-names:
--	Usage: required for msm8916
--	Value type: <stringlist>
--	Definition: Should contain the following entries:
--		- "core"	Core video accelerator clock
--		- "iface"	Video accelerator AHB clock
--		- "bus"		Video accelerator AXI clock
--- clock-names:
--	Usage: required for msm8996
--	Value type: <stringlist>
--	Definition: Should contain the following entries:
--		- "core"	Core video accelerator clock
--		- "iface"	Video accelerator AHB clock
--		- "bus"		Video accelerator AXI clock
--		- "mbus"	Video MAXI clock
--- power-domains:
--	Usage: required
--	Value type: <prop-encoded-array>
--	Definition: A phandle and power domain specifier pairs to the
--		    power domain which is responsible for collapsing
--		    and restoring power to the peripheral.
--- iommus:
--	Usage: required
--	Value type: <prop-encoded-array>
--	Definition: A list of phandle and IOMMU specifier pairs.
--- memory-region:
--	Usage: required
--	Value type: <phandle>
--	Definition: reference to the reserved-memory for the firmware
--		    memory region.
--
--* Subnodes
--The Venus video-codec node must contain two subnodes representing
--video-decoder and video-encoder, and one optional firmware subnode.
--Firmware subnode is needed when the platform does not have TrustZone.
--
--Every of video-encoder or video-decoder subnode should have:
--
--- compatible:
--	Usage: required
--	Value type: <stringlist>
--	Definition: Value should contain "venus-decoder" or "venus-encoder"
--- clocks:
--	Usage: required for msm8996
--	Value type: <prop-encoded-array>
--	Definition: A List of phandle and clock specifier pairs as listed
--		    in clock-names property.
--- clock-names:
--	Usage: required for msm8996
--	Value type: <stringlist>
--	Definition: Should contain the following entries:
--		- "core"	Subcore video accelerator clock
--
--- power-domains:
--	Usage: required for msm8996
--	Value type: <prop-encoded-array>
--	Definition: A phandle and power domain specifier pairs to the
--		    power domain which is responsible for collapsing
--		    and restoring power to the subcore.
--
--The firmware subnode must have:
--
--- iommus:
--	Usage: required
--	Value type: <prop-encoded-array>
--	Definition: A list of phandle and IOMMU specifier pairs.
--
--* An Example
--	video-codec@1d00000 {
--		compatible = "qcom,msm8916-venus";
--		reg = <0x01d00000 0xff000>;
--		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&gcc GCC_VENUS0_VCODEC0_CLK>,
--			 <&gcc GCC_VENUS0_AHB_CLK>,
--			 <&gcc GCC_VENUS0_AXI_CLK>;
--		clock-names = "core", "iface", "bus";
--		power-domains = <&gcc VENUS_GDSC>;
--		iommus = <&apps_iommu 5>;
--		memory-region = <&venus_mem>;
--
--		video-decoder {
--			compatible = "venus-decoder";
--			clocks = <&mmcc VIDEO_SUBCORE0_CLK>;
--			clock-names = "core";
--			power-domains = <&mmcc VENUS_CORE0_GDSC>;
--		};
--
--		video-encoder {
--			compatible = "venus-encoder";
--			clocks = <&mmcc VIDEO_SUBCORE1_CLK>;
--			clock-names = "core";
--			power-domains = <&mmcc VENUS_CORE1_GDSC>;
--		};
--
--		video-firmware {
--			iommus = <&apps_iommu 0x10b2 0x0>;
--		};
--	};
+diff --git a/Documentation/devicetree/bindings/media/qcom,venus-sdm845.yaml b/Documentation/devicetree/bindings/media/qcom,venus-sdm845.yaml
+new file mode 100644
+index 000000000000..4136a0d979d5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/qcom,venus-sdm845.yaml
+@@ -0,0 +1,151 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/media/qcom,venus-sdm845.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Qualcomm Venus video encode and decode accelerators
++
++maintainers:
++  - Stanimir Varbanov <stanimir.varbanov@linaro.org>
++
++description: |
++  The Venus IP is a video encode and decode accelerator present
++  on Qualcomm platforms
++
++properties:
++  compatible:
++    enum:
++      - qcom,sdm845-venus
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  power-domains:
++    minItems: 1
++    maxItems: 1
++
++  clocks:
++    maxItems: 3
++
++  clock-names:
++    maxItems: 3
++    items:
++      - const: core
++      - const: iface
++      - const: bus
++
++  iommus:
++    minItems: 1
++    maxItems: 20
++
++  memory-region:
++    maxItems: 1
++
++  video-core0:
++    type: object
++
++    properties:
++      compatible:
++        const: "venus-decoder"
++
++      clocks:
++        maxItems: 2
++
++      clock-names:
++        maxItems: 2
++        items:
++          - const: core
++          - const: bus
++
++      power-domains:
++        minItems: 1
++        maxItems: 1
++
++    required:
++      - compatible
++
++  video-core1:
++    type: object
++
++    properties:
++      compatible:
++        const: "venus-encoder"
++
++      clocks:
++        maxItems: 2
++
++      clock-names:
++        maxItems: 2
++        items:
++          - const: core
++          - const: bus
++
++      power-domains:
++        minItems: 1
++        maxItems: 1
++
++    required:
++      - compatible
++
++  video-firmware:
++    type: object
++
++    description: |
++      Firmware subnode is needed when the platform does not
++      have TrustZone.
++
++    properties:
++      iommus:
++        minItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - power-domains
++  - clocks
++  - clock-names
++  - iommus
++  - memory-region
++  - video-core0
++  - video-core1
++
++examples:
++  - |
++        #include <dt-bindings/interrupt-controller/arm-gic.h>
++        #include <dt-bindings/clock/qcom,videocc-sdm845.h>
++
++        video-codec@aa00000 {
++                compatible = "qcom,sdm845-venus";
++                reg = <0 0x0aa00000 0 0xff000>;
++                interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
++                clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
++                         <&videocc VIDEO_CC_VENUS_AHB_CLK>,
++                         <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>;
++                clock-names = "core", "iface", "bus";
++                power-domains = <&videocc VENUS_GDSC>;
++                iommus = <&apps_smmu 0x10a0 0x8>,
++                         <&apps_smmu 0x10b0 0x0>;
++                memory-region = <&venus_mem>;
++
++                video-core0 {
++                        compatible = "venus-decoder";
++                        clocks = <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
++                                 <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
++                        clock-names = "core", "bus";
++                        power-domains = <&videocc VCODEC0_GDSC>;
++                };
++
++                video-core1 {
++                        compatible = "venus-encoder";
++                        clocks = <&videocc VIDEO_CC_VCODEC1_CORE_CLK>,
++                                 <&videocc VIDEO_CC_VCODEC1_AXI_CLK>;
++                        clock-names = "core", "bus";
++                        power-domains = <&videocc VCODEC1_GDSC>;
++                };
++        };
 -- 
 2.17.1
 
