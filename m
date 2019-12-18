@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C019FC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A823DC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:24:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A045F24680
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:24:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89A6024650
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:24:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727730AbfLRQYl (ORCPT
+        id S1727740AbfLRQYp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 11:24:41 -0500
-Received: from foss.arm.com ([217.140.110.172]:52002 "EHLO foss.arm.com"
+        Wed, 18 Dec 2019 11:24:45 -0500
+Received: from foss.arm.com ([217.140.110.172]:52038 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726980AbfLRQYj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 11:24:39 -0500
+        id S1726980AbfLRQYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 11:24:42 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C973E12FC;
-        Wed, 18 Dec 2019 08:24:38 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1C28E1396;
+        Wed, 18 Dec 2019 08:24:42 -0800 (PST)
 Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.56])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CF92C3F719;
-        Wed, 18 Dec 2019 08:24:35 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0B4883F719;
+        Wed, 18 Dec 2019 08:24:38 -0800 (PST)
 From:   Steven Price <steven.price@arm.com>
 To:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
 Cc:     Steven Price <steven.price@arm.com>,
@@ -43,12 +43,13 @@ Cc:     Steven Price <steven.price@arm.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Mark Rutland <Mark.Rutland@arm.com>,
         "Liang, Kan" <kan.liang@linux.intel.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org
-Subject: [PATCH v17 05/23] mips: mm: Add p?d_leaf() definitions
-Date:   Wed, 18 Dec 2019 16:23:44 +0000
-Message-Id: <20191218162402.45610-6-steven.price@arm.com>
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, kvm-ppc@vger.kernel.org
+Subject: [PATCH v17 06/23] powerpc: mm: Add p?d_leaf() definitions
+Date:   Wed, 18 Dec 2019 16:23:45 +0000
+Message-Id: <20191218162402.45610-7-steven.price@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191218162402.45610-1-steven.price@arm.com>
 References: <20191218162402.45610-1-steven.price@arm.com>
@@ -64,36 +65,45 @@ those of user space. For this it needs to know when it has reached a
 'leaf' entry in the page tables. This information is provided by the
 p?d_leaf() functions/macros.
 
-If _PAGE_HUGE is defined we can simply look for it. When not defined we
-can be confident that there are no leaf pages in existence and fall back
-on the generic implementation (added in a later patch) which returns 0.
+For powerpc p?d_is_leaf() functions already exist. Export them using the
+new p?d_leaf() name.
 
-CC: Ralf Baechle <ralf@linux-mips.org>
-CC: Paul Burton <paul.burton@mips.com>
-CC: James Hogan <jhogan@kernel.org>
-CC: linux-mips@vger.kernel.org
+CC: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+CC: Paul Mackerras <paulus@samba.org>
+CC: Michael Ellerman <mpe@ellerman.id.au>
+CC: linuxppc-dev@lists.ozlabs.org
+CC: kvm-ppc@vger.kernel.org
 Signed-off-by: Steven Price <steven.price@arm.com>
-Acked-by: Paul Burton <paul.burton@mips.com>
 ---
- arch/mips/include/asm/pgtable.h | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/powerpc/include/asm/book3s/64/pgtable.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/mips/include/asm/pgtable.h b/arch/mips/include/asm/pgtable.h
-index 91b89aab1787..aef5378f909c 100644
---- a/arch/mips/include/asm/pgtable.h
-+++ b/arch/mips/include/asm/pgtable.h
-@@ -639,6 +639,11 @@ static inline pmd_t pmdp_huge_get_and_clear(struct mm_struct *mm,
+diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
+index b01624e5c467..201a69e6a355 100644
+--- a/arch/powerpc/include/asm/book3s/64/pgtable.h
++++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
+@@ -1355,18 +1355,21 @@ static inline bool is_pte_rw_upgrade(unsigned long old_val, unsigned long new_va
+  * Like pmd_huge() and pmd_large(), but works regardless of config options
+  */
+ #define pmd_is_leaf pmd_is_leaf
++#define pmd_leaf pmd_is_leaf
+ static inline bool pmd_is_leaf(pmd_t pmd)
+ {
+ 	return !!(pmd_raw(pmd) & cpu_to_be64(_PAGE_PTE));
+ }
  
- #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+ #define pud_is_leaf pud_is_leaf
++#define pud_leaf pud_is_leaf
+ static inline bool pud_is_leaf(pud_t pud)
+ {
+ 	return !!(pud_raw(pud) & cpu_to_be64(_PAGE_PTE));
+ }
  
-+#ifdef _PAGE_HUGE
-+#define pmd_leaf(pmd)	((pmd_val(pmd) & _PAGE_HUGE) != 0)
-+#define pud_leaf(pud)	((pud_val(pud) & _PAGE_HUGE) != 0)
-+#endif
-+
- #define gup_fast_permitted(start, end)	(!cpu_has_dc_aliases)
- 
- #include <asm-generic/pgtable.h>
+ #define pgd_is_leaf pgd_is_leaf
++#define pgd_leaf pgd_is_leaf
+ static inline bool pgd_is_leaf(pgd_t pgd)
+ {
+ 	return !!(pgd_raw(pgd) & cpu_to_be64(_PAGE_PTE));
 -- 
 2.20.1
 
