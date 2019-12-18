@@ -4,65 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80870C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4ABCC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5641124650
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:24:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AFCA2465E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:24:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J38NAh8c"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uHc+lthr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727441AbfLRNYV (ORCPT
+        id S1727456AbfLRNYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 08:24:21 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39843 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727398AbfLRNYS (ORCPT
+        Wed, 18 Dec 2019 08:24:24 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37350 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727417AbfLRNYT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 08:24:18 -0500
-Received: by mail-lj1-f193.google.com with SMTP id l2so2123948lja.6
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 05:24:16 -0800 (PST)
+        Wed, 18 Dec 2019 08:24:19 -0500
+Received: by mail-lj1-f195.google.com with SMTP id u17so2126052lja.4
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 05:24:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=BGNJV+T/A2yMDmvoIRAZ3Ql5cKw3jiqTHheiep1uASM=;
-        b=J38NAh8cLjcopCFZceQKVt6FktIHUfe2ZgUof7WZnrMfuI60kCOnjz3yElmRclfKZG
-         vZgYh6wiz+yZ9ftGZJ7D8xag4F0Al6nVr7ypbuG2BvMkAZhayhLv2wozZDTY2CLXN+FR
-         xLduJlNN93xj8AlmVAc+xMaPFNtnSUBmNHX3Rv1+ah+QFSfe42AG41hV8leAWSoBpbQf
-         1ZWhDgy412o8AOIDXNlQkpHsLa9CgvIM9YVjTieApipdS0+fimKwzfyNS6vn6hgCaJHx
-         AwXXjctUO7QuMh91fgZYWsSgsvju4nD+ReOdZ9iNjaud/vuVzchkpuDY9sz6dh4HveeR
-         eMBw==
+        bh=sRlbBOojW7v2VRLaDWPeR8d17hgWrl9wNZOspFmUuFU=;
+        b=uHc+lthrXnMaFPsJZUtTjTk7JbzmnIRVKIq5hRLMJXUwM8249UZ6vrg2//+LI0OA43
+         JopK3irKcBtCHJ9tfTVEyVvhdCDPWqZR4HVXis5Qr+w0a8QSsaKzm9J1U2bfZxjuWsYF
+         4LGBx7uQJr3rEH19OqoH/J/8EqhcXY4iaX8Cs+CoL+gDy1QcGipKP+537M5s2+EhKEtN
+         Ap7pwTAH2mKuVK0fZob6J626ttwghPIhF2cmxlDq+FVM27c2Nkf2pqPI17mKGCZjNV3X
+         gX6GIhV7dB1+gdnNDBA+MhHeTnNTYz1Dm6T3sy/cw6bnhROfGrKAtTeGjE6jlbRiHvDT
+         RjRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=BGNJV+T/A2yMDmvoIRAZ3Ql5cKw3jiqTHheiep1uASM=;
-        b=fmeER6C9Ic/HVfcubJdQyqJqwS1+BBFBFGIJQ81ZS12ziQFSEn7JWePRjaY2Hfr2QA
-         Wb4RrENA3BXoYqfEkvaiCKMeSso3rWKtKgxjqvGcYaYHXpzv0C54J8Pa+JgwCW7UEPh2
-         Hfvfxpw2AbldVuksv4entw6zLdK4ZA0xLajJ2Nudu3/kVftwqz/x8CefYffrKsplUtNy
-         YM8gFuQ5vRqMAAsBuSrwLfyrJk032bu1Ls8Zw9DrNZJlaXRmUBKRYcBeusRwqGjbnZ65
-         LK0HtwUXvSeVKEwjgYmItw83s3uYMIHXi17JHx7AtmbWdHOWefwToyQLcunMwrwr/Vun
-         7i1Q==
-X-Gm-Message-State: APjAAAXL51R8of0eF6mGGb1dmGArC6Chbj+xwu1jSuaXqIn7L09QBIZl
-        aBJpXkW0CPnFB1G8IxCli2h9Xw==
-X-Google-Smtp-Source: APXvYqxR8dG8Oow0sqsrHTiVn8+zDqVkI5iMEQZEi+GKC5GveHHgpoiuRnrlzyVJDyn3ZZvzzQihUw==
-X-Received: by 2002:a2e:800b:: with SMTP id j11mr1613563ljg.126.1576675455853;
-        Wed, 18 Dec 2019 05:24:15 -0800 (PST)
+        bh=sRlbBOojW7v2VRLaDWPeR8d17hgWrl9wNZOspFmUuFU=;
+        b=cTSX+j3gSn6HcIbeKWxonSM9WvnV8Cl5AdJpq1fPDm3+4O584yGEOX942/HhdAUj80
+         zwFIxFcwEFLErWSg/4qI40wiReMoIp7DIfypi4+mplTir0JF6UQhRJCos3Oew4L8ZVM+
+         SV0eAG8eFEGy9kSDSzr0idOSevvpbEXTmweag8igtnCgciX7OIduXqX/kFkwrtp1Wg1j
+         y9I8/bP8JvwMtLcdc7DAYqbZlrF8XaM4dix8xEKXlVfa718+8eapbvQF5bCVCgrzcpoD
+         qOTR7DJNgfAnmdolumupWVblwjEIABrZU2cD1NlYZ2rTtx3P+LlqNlA88JNZQuU8NwSD
+         2ZUw==
+X-Gm-Message-State: APjAAAV526zOJF6lM92JmUVyn50jUl5V2/niuu+CzRehOAkRRY1r9jvR
+        ZJ25PfuY2M56fKjJK2KZBpo9RQ==
+X-Google-Smtp-Source: APXvYqzecFt0moBmPL8ikUZivK+jtqmVvDhxKvoCDMXGy57D05+r6CFrgDnsaCce7deFS1237+ltOQ==
+X-Received: by 2002:a2e:8698:: with SMTP id l24mr1794175lji.94.1576675457674;
+        Wed, 18 Dec 2019 05:24:17 -0800 (PST)
 Received: from localhost.localdomain ([37.157.136.193])
-        by smtp.gmail.com with ESMTPSA id z7sm1440667lfa.81.2019.12.18.05.24.14
+        by smtp.gmail.com with ESMTPSA id z7sm1440667lfa.81.2019.12.18.05.24.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 05:24:15 -0800 (PST)
+        Wed, 18 Dec 2019 05:24:17 -0800 (PST)
 From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
 To:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-media@vger.kernel.org, devicetree@vger.kernel.org
 Cc:     Vikash Garodia <vgarodia@codeaurora.org>, dikshita@codeaurora.org,
         Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH v2 10/12] venus: core: add sdm845-v2 DT compatible and resource struct
-Date:   Wed, 18 Dec 2019 15:22:49 +0200
-Message-Id: <20191218132251.24161-11-stanimir.varbanov@linaro.org>
+Subject: [PATCH v2 11/12] arm64: dts: sdm845: follow venus-sdm845v2 DT binding
+Date:   Wed, 18 Dec 2019 15:22:50 +0200
+Message-Id: <20191218132251.24161-12-stanimir.varbanov@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191218132251.24161-1-stanimir.varbanov@linaro.org>
 References: <20191218132251.24161-1-stanimir.varbanov@linaro.org>
@@ -71,57 +71,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to use dynamic video codec assignment add a new sdm845-v2
-DT compatible and new venus_resource structure to cover the binding
-where all pmdomains and clocks are under the venus_core control.
+Move all pmdomain and clock resources to Venus DT node. And make
+possible to support dynamic core assignment on v4.
 
 Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 ---
- drivers/media/platform/qcom/venus/core.c | 27 ++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 25 +++++++++++++------------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
-index a20ab00a8068..c7525d951e92 100644
---- a/drivers/media/platform/qcom/venus/core.c
-+++ b/drivers/media/platform/qcom/venus/core.c
-@@ -495,10 +495,37 @@ static const struct venus_resources sdm845_res = {
- 	.fwname = "qcom/venus-5.2/venus.mdt",
- };
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index ddb1f23c936f..c5784951d408 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -2568,32 +2568,33 @@
+ 		};
  
-+static const struct venus_resources sdm845_res_v2 = {
-+	.freq_tbl = sdm845_freq_table,
-+	.freq_tbl_size = ARRAY_SIZE(sdm845_freq_table),
-+	.bw_tbl_enc = sdm845_bw_table_enc,
-+	.bw_tbl_enc_size = ARRAY_SIZE(sdm845_bw_table_enc),
-+	.bw_tbl_dec = sdm845_bw_table_dec,
-+	.bw_tbl_dec_size = ARRAY_SIZE(sdm845_bw_table_dec),
-+	.codec_freq_data = sdm845_codec_freq_data,
-+	.codec_freq_data_size = ARRAY_SIZE(sdm845_codec_freq_data),
-+	.clks = {"core", "iface", "bus" },
-+	.clks_num = 3,
-+	.vcodec0_clks = { "vcodec0_core", "vcodec0_bus" },
-+	.vcodec1_clks = { "vcodec1_core", "vcodec1_bus" },
-+	.vcodec_clks_num = 2,
-+	.vcodec_pmdomains = { "venus", "vcodec0", "vcodec1" },
-+	.vcodec_pmdomains_num = 3,
-+	.vcodec_num = 2,
-+	.max_load = 3110400,	/* 4096x2160@90 */
-+	.hfi_version = HFI_VERSION_4XX,
-+	.vmem_id = VIDC_RESOURCE_NONE,
-+	.vmem_size = 0,
-+	.vmem_addr = 0,
-+	.dma_mask = 0xe0000000 - 1,
-+	.fwname = "qcom/venus-5.2/venus.mdt",
-+};
-+
- static const struct of_device_id venus_dt_match[] = {
- 	{ .compatible = "qcom,msm8916-venus", .data = &msm8916_res, },
- 	{ .compatible = "qcom,msm8996-venus", .data = &msm8996_res, },
- 	{ .compatible = "qcom,sdm845-venus", .data = &sdm845_res, },
-+	{ .compatible = "qcom,sdm845-venus-v2", .data = &sdm845_res_v2, },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, venus_dt_match);
+ 		video-codec@aa00000 {
+-			compatible = "qcom,sdm845-venus";
++			compatible = "qcom,sdm845-venus-v2";
+ 			reg = <0 0x0aa00000 0 0xff000>;
+ 			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+-			power-domains = <&videocc VENUS_GDSC>;
++			power-domains = <&videocc VENUS_GDSC>,
++					<&videocc VCODEC0_GDSC>,
++					<&videocc VCODEC1_GDSC>;
++			power-domain-names = "venus", "vcodec0", "vcodec1";
+ 			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
+ 				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
+-				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>;
+-			clock-names = "core", "iface", "bus";
++				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
++				 <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
++				 <&videocc VIDEO_CC_VCODEC0_AXI_CLK>,
++				 <&videocc VIDEO_CC_VCODEC1_CORE_CLK>,
++				 <&videocc VIDEO_CC_VCODEC1_AXI_CLK>;
++			clock-names = "core", "iface", "bus",
++				      "vcodec0_core", "vcodec0_bus",
++				      "vcodec1_core", "vcodec1_bus";
+ 			iommus = <&apps_smmu 0x10a0 0x8>,
+ 				 <&apps_smmu 0x10b0 0x0>;
+ 			memory-region = <&venus_mem>;
+ 
+ 			video-core0 {
+ 				compatible = "venus-decoder";
+-				clocks = <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
+-					 <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
+-				clock-names = "core", "bus";
+-				power-domains = <&videocc VCODEC0_GDSC>;
+ 			};
+ 
+ 			video-core1 {
+ 				compatible = "venus-encoder";
+-				clocks = <&videocc VIDEO_CC_VCODEC1_CORE_CLK>,
+-					 <&videocc VIDEO_CC_VCODEC1_AXI_CLK>;
+-				clock-names = "core", "bus";
+-				power-domains = <&videocc VCODEC1_GDSC>;
+ 			};
+ 		};
+ 
 -- 
 2.17.1
 
