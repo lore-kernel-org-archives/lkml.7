@@ -2,200 +2,229 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4832FC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10562C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:02:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D6B52072B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:02:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W8z2T1d4"
+	by mail.kernel.org (Postfix) with ESMTP id DEAC42072B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:02:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbfLRICR (ORCPT
+        id S1726863AbfLRICc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 03:02:17 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45824 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbfLRICQ (ORCPT
+        Wed, 18 Dec 2019 03:02:32 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:51775 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbfLRIC2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 03:02:16 -0500
-Received: by mail-pg1-f193.google.com with SMTP id b9so819287pgk.12;
-        Wed, 18 Dec 2019 00:02:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=n363ckt80OC6w9Gla54BO6ui4m8bnWsgDlZFAMHXc0w=;
-        b=W8z2T1d4GwL9jbI1cnNLj+IrMd2q4U8J/2ceDn65wufGtPxsRdVevPpduhlbWU8OEE
-         5wUPDM1BrG8A7XUWiQmsK/K05J0xdxoy+UMW69kxI7hnJ0AuqeEQHAHuKH/TMUsPKMpG
-         4dTxKOkSkmXZfyGFnsD7ueGXnmJKJnhCRxovFhOE4IF4etzugDd3AqLj2CZLfGuXIZaT
-         7jkgEj4YY1EkTsxCgjtR05eaqQ1Z+byhoyCCroX5A5FSJFsqULP6CD+6i23MDiQmT7zS
-         HQP9k/gBZ31czJthgHWlNAcsqhMF3uEAbQOpL2d0GblKnTuHmHX/8wr5PbUcZ3jiQ90b
-         l4ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=n363ckt80OC6w9Gla54BO6ui4m8bnWsgDlZFAMHXc0w=;
-        b=sz4LBoxF0azXwRg+cRjwzp1SI8orFgwTyyF/DW6NCuB+eN3zvczEPc925qjli8MXvL
-         c7xk2hSIDvNvmVmZ6BUShhZi8eqsAMj4NrHLl39BVPN/WU/xdV7kgw/aoRxI9tRaPpkm
-         oU5J6Pfr6ah0jai6zMlFFkqI3Srz67nBk1sm6zPgYlbsEFXmG0ejd56sJ5JzMoRk/jHY
-         uZy7FCW1/LtO5UUaxiHzNcEbgCsjo2NsuK4Q2d33b1SbF81c6iGpan3hmKQVb/b7Mn8G
-         fqOxwip545PfukL4lMS/51HlltkXSBPEVyU3tI77dPBx9UHAY4d6OHiMESmDRTGlV8YG
-         ZjOw==
-X-Gm-Message-State: APjAAAXX4/ENRfbUlw7ZddBcM+emir5umnpblZUePMqH8F+7ahx6a8jS
-        z5yO43err0DpUMVUsmGPLoTHVTtoiRS+fw==
-X-Google-Smtp-Source: APXvYqyepGVLKB4Cj/YWyjabdX/jvjgmd4g6+3rv+6HhyWk73LFUKohNcDCVUebsKWUUzgJzorptrA==
-X-Received: by 2002:a62:3141:: with SMTP id x62mr1634189pfx.214.1576656135864;
-        Wed, 18 Dec 2019 00:02:15 -0800 (PST)
-Received: from oslab.tsinghua.edu.cn ([166.111.139.172])
-        by smtp.gmail.com with ESMTPSA id 11sm1886442pfz.25.2019.12.18.00.02.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 00:02:15 -0800 (PST)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     bonbons@linux-vserver.org, jikos@kernel.org,
-        benjamin.tissoires@redhat.com
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] hid: hid-picolcd: fix possible sleep-in-atomic-context bug
-Date:   Wed, 18 Dec 2019 16:02:01 +0800
-Message-Id: <20191218080201.2508-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 18 Dec 2019 03:02:28 -0500
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1ihUHj-0004ej-JI; Wed, 18 Dec 2019 09:02:19 +0100
+Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1ihUHg-0000Zn-Ds; Wed, 18 Dec 2019 09:02:16 +0100
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>, Chris Snook <chris.snook@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        James Hogan <jhogan@kernel.org>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vivien Didelot <vivien.didelot@gmail.com>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, Russell King <linux@armlinux.org.uk>
+Subject: [PATCH v7 1/4] dt-bindings: net: dsa: qca,ar9331 switch documentation
+Date:   Wed, 18 Dec 2019 09:02:12 +0100
+Message-Id: <20191218080215.2151-2-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191218080215.2151-1-o.rempel@pengutronix.de>
+References: <20191218080215.2151-1-o.rempel@pengutronix.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver may sleep while holding a read lock.
-The function call path (from bottom to top) in Linux 4.19 is:
+Atheros AR9331 has built-in 5 port switch. The switch can be configured
+to use all 5 or 4 ports. One of built-in PHYs can be used by first built-in
+ethernet controller or to be used directly by the switch over second ethernet
+controller.
 
-drivers/hid/hid-core.c, 1459: 
-	hid_alloc_report_buf(GFP_KERNEL) in __hid_request
-./include/linux/hid.h, 1051: 
-	__hid_request in hid_hw_request
-drivers/hid/hid-picolcd_leds.c, 56:
-	hid_hw_request in picolcd_leds_set
-drivers/hid/hid-picolcd_leds.c, 53:
-	_raw_spin_lock_irqsave in picolcd_leds_set
-
-drivers/hid/hid-core.c, 1459: 
-	hid_alloc_report_buf(GFP_KERNEL) in __hid_request
-./include/linux/hid.h, 1051: 
-	__hid_request in hid_hw_request
-drivers/hid/hid-picolcd_lcd.c, 49: 
-	hid_hw_request in picolcd_set_contrast
-drivers/hid/hid-picolcd_lcd.c, 46: 
-	_raw_spin_lock_irqsave in picolcd_set_contrast
-
-drivers/hid/hid-core.c, 1459: 
-	hid_alloc_report_buf(GFP_KERNEL) in __hid_request
-./include/linux/hid.h, 1051: 
-	__hid_request in hid_hw_request
-drivers/hid/hid-picolcd_core.c, 245: 
-	hid_hw_request in picolcd_reset
-drivers/hid/hid-picolcd_core.c, 235: 
-	_raw_spin_lock_irqsave in picolcd_reset
-
-drivers/hid/hid-core.c, 1459: 
-	hid_alloc_report_buf(GFP_KERNEL) in __hid_request
-./include/linux/hid.h, 1051: 
-	__hid_request in hid_hw_request
-drivers/hid/hid-picolcd_core.c, 111: 
-	hid_hw_request in picolcd_send_and_wait
-drivers/hid/hid-picolcd_core.c, 100: 
-	_raw_spin_lock_irqsave in picolcd_send_and_wait
-
-hid_alloc_report_buf(GFP_KERNEL) can sleep at runtime.
-
-To fix these bugs, hid_hw_request() is called without holding the
-spinlock.
-
-These bugs are found by a static analysis tool STCheck written by myself.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
- drivers/hid/hid-picolcd_core.c | 4 ++--
- drivers/hid/hid-picolcd_lcd.c  | 6 ++++--
- drivers/hid/hid-picolcd_leds.c | 6 ++++--
- 3 files changed, 10 insertions(+), 6 deletions(-)
+ .../devicetree/bindings/net/dsa/ar9331.txt    | 148 ++++++++++++++++++
+ 1 file changed, 148 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/dsa/ar9331.txt
 
-diff --git a/drivers/hid/hid-picolcd_core.c b/drivers/hid/hid-picolcd_core.c
-index 1b5c63241af0..55d1892daa15 100644
---- a/drivers/hid/hid-picolcd_core.c
-+++ b/drivers/hid/hid-picolcd_core.c
-@@ -99,8 +99,8 @@ struct picolcd_pending *picolcd_send_and_wait(struct hid_device *hdev,
- 		work = NULL;
- 	} else {
- 		data->pending = work;
--		hid_hw_request(data->hdev, report, HID_REQ_SET_REPORT);
- 		spin_unlock_irqrestore(&data->lock, flags);
-+		hid_hw_request(data->hdev, report, HID_REQ_SET_REPORT);
- 		wait_for_completion_interruptible_timeout(&work->ready, HZ*2);
- 		spin_lock_irqsave(&data->lock, flags);
- 		data->pending = NULL;
-@@ -233,8 +233,8 @@ int picolcd_reset(struct hid_device *hdev)
- 		spin_unlock_irqrestore(&data->lock, flags);
- 		return -ENODEV;
- 	}
--	hid_hw_request(hdev, report, HID_REQ_SET_REPORT);
- 	spin_unlock_irqrestore(&data->lock, flags);
-+	hid_hw_request(hdev, report, HID_REQ_SET_REPORT);
- 
- 	error = picolcd_check_version(hdev);
- 	if (error)
-diff --git a/drivers/hid/hid-picolcd_lcd.c b/drivers/hid/hid-picolcd_lcd.c
-index 0c4b76de8ae5..1fd291674ffe 100644
---- a/drivers/hid/hid-picolcd_lcd.c
-+++ b/drivers/hid/hid-picolcd_lcd.c
-@@ -26,6 +26,7 @@ static int picolcd_get_contrast(struct lcd_device *ldev)
- static int picolcd_set_contrast(struct lcd_device *ldev, int contrast)
- {
- 	struct picolcd_data *data = lcd_get_data(ldev);
-+	int status;
- 	struct hid_report *report = picolcd_out_report(REPORT_CONTRAST, data->hdev);
- 	unsigned long flags;
- 
-@@ -35,9 +36,10 @@ static int picolcd_set_contrast(struct lcd_device *ldev, int contrast)
- 	data->lcd_contrast = contrast & 0x0ff;
- 	spin_lock_irqsave(&data->lock, flags);
- 	hid_set_field(report->field[0], 0, data->lcd_contrast);
--	if (!(data->status & PICOLCD_FAILED))
--		hid_hw_request(data->hdev, report, HID_REQ_SET_REPORT);
-+	status = data->status;
- 	spin_unlock_irqrestore(&data->lock, flags);
-+	if (!(status & PICOLCD_FAILED))
-+		hid_hw_request(data->hdev, report, HID_REQ_SET_REPORT);
- 	return 0;
- }
- 
-diff --git a/drivers/hid/hid-picolcd_leds.c b/drivers/hid/hid-picolcd_leds.c
-index 6b505a753511..6652aa6b98dd 100644
---- a/drivers/hid/hid-picolcd_leds.c
-+++ b/drivers/hid/hid-picolcd_leds.c
-@@ -32,6 +32,7 @@
- void picolcd_leds_set(struct picolcd_data *data)
- {
- 	struct hid_report *report;
-+	int status;
- 	unsigned long flags;
- 
- 	if (!data->led[0])
-@@ -42,9 +43,10 @@ void picolcd_leds_set(struct picolcd_data *data)
- 
- 	spin_lock_irqsave(&data->lock, flags);
- 	hid_set_field(report->field[0], 0, data->led_state);
--	if (!(data->status & PICOLCD_FAILED))
--		hid_hw_request(data->hdev, report, HID_REQ_SET_REPORT);
-+	status = data->status;
- 	spin_unlock_irqrestore(&data->lock, flags);
-+	if (!(status & PICOLCD_FAILED))
-+		hid_hw_request(data->hdev, report, HID_REQ_SET_REPORT);
- }
- 
- static void picolcd_led_set_brightness(struct led_classdev *led_cdev,
+diff --git a/Documentation/devicetree/bindings/net/dsa/ar9331.txt b/Documentation/devicetree/bindings/net/dsa/ar9331.txt
+new file mode 100644
+index 000000000000..3d7b346c029a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/dsa/ar9331.txt
+@@ -0,0 +1,148 @@
++Atheros AR9331 built-in switch
++=============================
++
++It is a switch built-in to Atheros AR9331 WiSoC and addressable over internal
++MDIO bus. All PHYs are built-in as well.
++
++Required properties:
++
++ - compatible: should be: "qca,ar9331-switch" 
++ - reg: Address on the MII bus for the switch.
++ - resets : Must contain an entry for each entry in reset-names.
++ - reset-names : Must include the following entries: "switch"
++ - interrupt-parent: Phandle to the parent interrupt controller
++ - interrupts: IRQ line for the switch
++ - interrupt-controller: Indicates the switch is itself an interrupt
++   controller. This is used for the PHY interrupts.
++ - #interrupt-cells: must be 1
++ - mdio: Container of PHY and devices on the switches MDIO bus.
++
++See Documentation/devicetree/bindings/net/dsa/dsa.txt for a list of additional
++required and optional properties.
++Examples:
++
++eth0: ethernet@19000000 {
++	compatible = "qca,ar9330-eth";
++	reg = <0x19000000 0x200>;
++	interrupts = <4>;
++
++	resets = <&rst 9>, <&rst 22>;
++	reset-names = "mac", "mdio";
++	clocks = <&pll ATH79_CLK_AHB>, <&pll ATH79_CLK_AHB>;
++	clock-names = "eth", "mdio";
++
++	phy-mode = "mii";
++	phy-handle = <&phy_port4>;
++};
++
++eth1: ethernet@1a000000 {
++	compatible = "qca,ar9330-eth";
++	reg = <0x1a000000 0x200>;
++	interrupts = <5>;
++	resets = <&rst 13>, <&rst 23>;
++	reset-names = "mac", "mdio";
++	clocks = <&pll ATH79_CLK_AHB>, <&pll ATH79_CLK_AHB>;
++	clock-names = "eth", "mdio";
++
++	phy-mode = "gmii";
++
++	fixed-link {
++		speed = <1000>;
++		full-duplex;
++	};
++
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		switch10: switch@10 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			compatible = "qca,ar9331-switch";
++			reg = <0x10>;
++			resets = <&rst 8>;
++			reset-names = "switch";
++
++			interrupt-parent = <&miscintc>;
++			interrupts = <12>;
++
++			interrupt-controller;
++			#interrupt-cells = <1>;
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				switch_port0: port@0 {
++					reg = <0x0>;
++					label = "cpu";
++					ethernet = <&eth1>;
++
++					phy-mode = "gmii";
++
++					fixed-link {
++						speed = <1000>;
++						full-duplex;
++					};
++				};
++
++				switch_port1: port@1 {
++					reg = <0x1>;
++					phy-handle = <&phy_port0>;
++					phy-mode = "internal";
++				};
++
++				switch_port2: port@2 {
++					reg = <0x2>;
++					phy-handle = <&phy_port1>;
++					phy-mode = "internal";
++				};
++
++				switch_port3: port@3 {
++					reg = <0x3>;
++					phy-handle = <&phy_port2>;
++					phy-mode = "internal";
++				};
++
++				switch_port4: port@4 {
++					reg = <0x4>;
++					phy-handle = <&phy_port3>;
++					phy-mode = "internal";
++				};
++			};
++
++			mdio {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				interrupt-parent = <&switch10>;
++
++				phy_port0: phy@0 {
++					reg = <0x0>;
++					interrupts = <0>;
++				};
++
++				phy_port1: phy@1 {
++					reg = <0x1>;
++					interrupts = <0>;
++				};
++
++				phy_port2: phy@2 {
++					reg = <0x2>;
++					interrupts = <0>;
++				};
++
++				phy_port3: phy@3 {
++					reg = <0x3>;
++					interrupts = <0>;
++				};
++
++				phy_port4: phy@4 {
++					reg = <0x4>;
++					interrupts = <0>;
++				};
++			};
++		};
++	};
++};
 -- 
-2.17.1
+2.24.0
 
