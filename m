@@ -2,129 +2,144 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 439FFC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F9BFC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2561E2465E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:34:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C064206D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:34:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="0D+UJnz5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbfLRLei (ORCPT
+        id S1726911AbfLRLen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 06:34:38 -0500
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:44355 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726141AbfLRLei (ORCPT
+        Wed, 18 Dec 2019 06:34:43 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35723 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726856AbfLRLem (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 06:34:38 -0500
-X-IronPort-AV: E=Sophos;i="5.69,329,1571695200"; 
-   d="scan'208";a="420838954"
-Received: from nat-inria-bordeaux-52-gw-01-bso.bordeaux.inria.fr (HELO [10.204.4.154]) ([194.199.1.52])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/AES128-SHA; 18 Dec 2019 12:34:34 +0100
-Subject: Re: [PATCH V6 7/7] docs: mm: numaperf.rst Add brief description for
- access class 1.
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-mm@kvack.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, x86@kernel.org
-Cc:     Keith Busch <keith.busch@intel.com>, jglisse@redhat.com,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>, linuxarm@huawei.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tao Xu <tao3.xu@intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-References: <20191216153809.105463-1-Jonathan.Cameron@huawei.com>
- <20191216153809.105463-8-Jonathan.Cameron@huawei.com>
-From:   Brice Goglin <brice.goglin@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=brice.goglin@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <4cf4e790-cacb-b250-bf28-5ba540eb0dc7@gmail.com>
-Date:   Wed, 18 Dec 2019 12:34:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 18 Dec 2019 06:34:42 -0500
+Received: by mail-wm1-f67.google.com with SMTP id p17so1521617wmb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 03:34:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wFs75/j1aHZclp/5rGoLDMPNAtBzpcDUR0+/l6BDakU=;
+        b=0D+UJnz54bq4psEWyqYpeLuw9y16/0BtCxkEj55CVqdlSjPSSwHstqN09GEMpaIUm0
+         qmlwCpr9igNmzRnz7CkenNqg70Yhm5IwP9OuaKELADjRBcZgIPrf9Z7ge9p8hssqLhbN
+         lajJjhy05U80q0d0eC1EB+WFDDoUE/elOTzZKHSq4toFcFqsDwHxEfaq8jtwa6WBNevP
+         3SmNIgiJEGwY+eRHL5DQwT3pBq25A6U+E9ie/6g0L7iSOO+4caFBlq6/YTB2cLuA8Sqw
+         dMNxOHsqcDzp0zKFh7mazvPFkFVFA2XCRyfUo9DYWStzwpLwqtKzjQrbmt/GbXTncPOo
+         AP4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wFs75/j1aHZclp/5rGoLDMPNAtBzpcDUR0+/l6BDakU=;
+        b=NnIhYnnXb1PCoAoQQyBFVVsCMx5fmoQE9l3zWNxSX0+AdygRy8v1yz/ncaSa4BJcSM
+         kxtn2RO6QFOs98TpEhrwKbqWb9OIkdlHQSzO6XdJJRm/BUkf4qCftv4XOPeVuSaUmjGB
+         uLq5WgpaiTyngxDmr4PfGNT5eUmNlz2VaJVjhnitCiWCVoPvuNoZJlNwYlR9V5nq1UmE
+         rxvaerUNJS0gQW0/QuFeGgwlU7MQCDp7jOzzn4PDFqKFgjZrBeBrYNxu4efu5vGSi5t0
+         sX/BRI8ygIoCJsOTA2jwjLaKWBzavf+4ZCjROjBYpSKbKXiKrGY6jdLHOyuVjpTKQEAj
+         fX6A==
+X-Gm-Message-State: APjAAAVgowZbh9IesegK1cmIUI8NIhtxprnQDPQB3nt31HunulEWJbtk
+        9Dj+7FIsRASm5GAiw+XTuI6fI9luqmo=
+X-Google-Smtp-Source: APXvYqyCjnkcjG7bxZqA9N58tKBlxXdKuUOWJVrBrebNtLJJISHUZ4xcnBkc1JJxrzWLDogESw5xxg==
+X-Received: by 2002:a7b:c318:: with SMTP id k24mr2843500wmj.54.1576668879688;
+        Wed, 18 Dec 2019 03:34:39 -0800 (PST)
+Received: from netronome.com ([2001:982:756:703:d63d:7eff:fe99:ac9d])
+        by smtp.gmail.com with ESMTPSA id y20sm2074955wmi.25.2019.12.18.03.34.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 03:34:38 -0800 (PST)
+Date:   Wed, 18 Dec 2019 12:34:38 +0100
+From:   Simon Horman <simon.horman@netronome.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Jose Abreu <joabreu@synopsys.com>, netdev@vger.kernel.org,
+        Maxime Ripard <mripard@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH] dt-bindings: Add missing 'properties' keyword enclosing
+ 'snps,tso'
+Message-ID: <20191218113437.GC22367@netronome.com>
+References: <20191217163946.25052-1-robh@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20191216153809.105463-8-Jonathan.Cameron@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191217163946.25052-1-robh@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 16/12/2019 à 16:38, Jonathan Cameron a écrit :
-> Try to make minimal changes to the document which already describes
-> access class 0 in a generic fashion (including IO initiatiors that
-> are not CPUs).
->
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
->  Documentation/admin-guide/mm/numaperf.rst | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/Documentation/admin-guide/mm/numaperf.rst b/Documentation/admin-guide/mm/numaperf.rst
-> index a80c3c37226e..327c0d72692d 100644
-> --- a/Documentation/admin-guide/mm/numaperf.rst
-> +++ b/Documentation/admin-guide/mm/numaperf.rst
-> @@ -56,6 +56,11 @@ nodes' access characteristics share the same performance relative to other
->  linked initiator nodes. Each target within an initiator's access class,
->  though, do not necessarily perform the same as each other.
->  
-> +The access class "1" is used to allow differentiation between initiators
-> +that are CPUs and hence suitable for generic task scheduling, and
-> +IO initiators such as GPUs and CPUs.  Unlike access class 0, only
-> +nodes containing CPUs are considered.
-> +
->  ================
->  NUMA Performance
->  ================
-> @@ -88,6 +93,9 @@ The latency attributes are provided in nanoseconds.
->  The values reported here correspond to the rated latency and bandwidth
->  for the platform.
->  
-> +Access class 0, takes the same form, but only includes values for CPU to
-> +memory activity.
+On Tue, Dec 17, 2019 at 10:39:46AM -0600, Rob Herring wrote:
+> DT property definitions must be under a 'properties' keyword. This was
+> missing for 'snps,tso' in an if/then clause. A meta-schema fix will
+> catch future errors like this.
+> 
+> Fixes: 7db3545aef5f ("dt-bindings: net: stmmac: Convert the binding to a schemas")
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
+Reviewed-by: Simon Horman <simon.horman@netronome.com>
 
-Shouldn't this be "class 1" here?
+We still seem to be some distance from having all DT match the schema.
 
-Both hunks look contradictory to me.
-
-Brice
-
+$ ARCH=arm make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/net/snps,dwmac.yaml
+.../linux/arch/arm/boot/dts/artpec6-devboard.dt.yaml: ethernet@f8010000: interrupt-names:1: 'eth_wake_irq' was expected
+.../linux/arch/arm/boot/dts/meson6-atv1200.dt.yaml: ethernet@c9410000: 'phy-mode' is a required property
+.../linux/arch/arm/boot/dts/meson8-minix-neo-x8.dt.yaml: ethernet@c9410000: 'phy-mode' is a required property
+.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_nand.dt.yaml: ethernet@ff800000: reset-names: Additional items are not allowed ('stmmaceth-ocp' was unexpected)
+.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_nand.dt.yaml: ethernet@ff800000: reset-names: ['stmmaceth', 'stmmaceth-ocp'] is too long
+.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_nand.dt.yaml: ethernet@ff800000: resets: [[4, 32], [4, 40]] is too long
+.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_nand.dt.yaml: ethernet@ff802000: reset-names: Additional items are not allowed ('stmmaceth-ocp' was unexpected)
+.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_nand.dt.yaml: ethernet@ff802000: reset-names: ['stmmaceth', 'stmmaceth-ocp'] is too long
+.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_nand.dt.yaml: ethernet@ff802000: resets: [[4, 33], [4, 41]] is too long
+.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_nand.dt.yaml: ethernet@ff804000: reset-names: Additional items are not allowed ('stmmaceth-ocp' was unexpected)
+.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_nand.dt.yaml: ethernet@ff804000: reset-names: ['stmmaceth', 'stmmaceth-ocp'] is too long
+.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_nand.dt.yaml: ethernet@ff804000: resets: [[4, 34], [4, 42]] is too long
+.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_qspi.dt.yaml: ethernet@ff800000: reset-names: Additional items are not allowed ('stmmaceth-ocp' was unexpected)
+.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_qspi.dt.yaml: ethernet@ff800000: reset-names: ['stmmaceth', 'stmmaceth-ocp'] is too long
+.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_qspi.dt.yaml: ethernet@ff800000: resets: [[4, 32], [4, 40]] is too long
+.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_qspi.dt.yaml: ethernet@ff802000: reset-names: Additional items are not allowed ('stmmaceth-ocp' was unexpected)
+.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_qspi.dt.yaml: ethernet@ff802000: reset-names: ['stmmaceth', 'stmmaceth-ocp'] is too long
+.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_qspi.dt.yaml: ethernet@ff802000: resets: [[4, 33], [4, 41]] is too long
+.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_qspi.dt.yaml: ethernet@ff804000: reset-names: Additional items are not allowed ('stmmaceth-ocp' was unexpected)
+.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_qspi.dt.yaml: ethernet@ff804000: reset-names: ['stmmaceth', 'stmmaceth-ocp'] is too long
+.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_qspi.dt.yaml: ethernet@ff804000: resets: [[4, 34], [4, 42]] is too long
+.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc.dt.yaml: ethernet@ff800000: reset-names: Additional items are not allowed ('stmmaceth-ocp' was unexpected)
+.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc.dt.yaml: ethernet@ff800000: reset-names: ['stmmaceth', 'stmmaceth-ocp'] is too long
+.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc.dt.yaml: ethernet@ff800000: resets: [[4, 32], [4, 40]] is too long
+.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc.dt.yaml: ethernet@ff802000: reset-names: Additional items are not allowed ('stmmaceth-ocp' was unexpected)
+.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc.dt.yaml: ethernet@ff802000: reset-names: ['stmmaceth', 'stmmaceth-ocp'] is too long
+.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc.dt.yaml: ethernet@ff802000: resets: [[4, 33], [4, 41]] is too long
+.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc.dt.yaml: ethernet@ff804000: reset-names: Additional items are not allowed ('stmmaceth-ocp' was unexpected)
+.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc.dt.yaml: ethernet@ff804000: reset-names: ['stmmaceth', 'stmmaceth-ocp'] is too long
+.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc.dt.yaml: ethernet@ff804000: resets: [[4, 34], [4, 42]] is too long
+.../linux/arch/arm/boot/dts/spear1310-evb.dt.yaml: eth@e2000000: $nodename:0: 'eth@e2000000' does not match '^ethernet(@.*)?$'
+.../linux/arch/arm/boot/dts/spear1310-evb.dt.yaml: eth@e2000000: compatible: None of ['st,spear600-gmac'] are valid under the given schema
+.../linux/arch/arm/boot/dts/spear1310-evb.dt.yaml: eth@5c400000: $nodename:0: 'eth@5c400000' does not match '^ethernet(@.*)?$'
+.../linux/arch/arm/boot/dts/spear1310-evb.dt.yaml: eth@5c400000: compatible: None of ['st,spear600-gmac'] are valid under the given schema
+.../linux/arch/arm/boot/dts/spear1310-evb.dt.yaml: eth@5c500000: $nodename:0: 'eth@5c500000' does not match '^ethernet(@.*)?$'
+.../linux/arch/arm/boot/dts/spear1310-evb.dt.yaml: eth@5c500000: compatible: None of ['st,spear600-gmac'] are valid under the given schema
+.../linux/arch/arm/boot/dts/spear1310-evb.dt.yaml: eth@5c600000: $nodename:0: 'eth@5c600000' does not match '^ethernet(@.*)?$'
+.../linux/arch/arm/boot/dts/spear1310-evb.dt.yaml: eth@5c600000: compatible: None of ['st,spear600-gmac'] are valid under the given schema
+.../linux/arch/arm/boot/dts/spear1310-evb.dt.yaml: eth@5c700000: $nodename:0: 'eth@5c700000' does not match '^ethernet(@.*)?$'
+.../linux/arch/arm/boot/dts/spear1310-evb.dt.yaml: eth@5c700000: compatible: None of ['st,spear600-gmac'] are valid under the given schema
+.../linux/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dt.yaml: ethernet@ff702000: snps,reset-delays-us: [[10000, 10000, 10000]] is too short
+.../linux/arch/arm/boot/dts/spear1340-evb.dt.yaml: eth@e2000000: $nodename:0: 'eth@e2000000' does not match '^ethernet(@.*)?$'
+.../linux/arch/arm/boot/dts/spear1340-evb.dt.yaml: eth@e2000000: compatible: None of ['st,spear600-gmac'] are valid under the given schema
+.../linux/arch/arm/boot/dts/stih410-b2260.dt.yaml: dwmac@9630000: $nodename:0: 'dwmac@9630000' does not match '^ethernet(@.*)?$'
+.../linux/arch/arm/boot/dts/stih410-b2260.dt.yaml: dwmac@9630000: snps,reset-delays-us: [[0, 10000, 1000000]] is too short
+.../linux/arch/arm/boot/dts/stih407-b2120.dt.yaml: dwmac@9630000: $nodename:0: 'dwmac@9630000' does not match '^ethernet(@.*)?$'
+.../linux/arch/arm/boot/dts/stih418-b2199.dt.yaml: dwmac@9630000: $nodename:0: 'dwmac@9630000' does not match '^ethernet(@.*)?$'
+.../linux/arch/arm/boot/dts/stih410-b2120.dt.yaml: dwmac@9630000: $nodename:0: 'dwmac@9630000' does not match '^ethernet(@.*)?$'
 
