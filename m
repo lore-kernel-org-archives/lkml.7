@@ -2,387 +2,200 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA2D0C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D7CFC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8801421582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5747A21582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:31:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NjwniCJp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbfLRHbe (ORCPT
+        id S1726770AbfLRHbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 02:31:34 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:61988 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726754AbfLRHbe (ORCPT
+        Wed, 18 Dec 2019 02:31:38 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:41609 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726633AbfLRHbf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 02:31:34 -0500
-Received: from [10.28.39.99] (10.28.39.99) by mail-sz.amlogic.com (10.28.11.5)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 18 Dec
- 2019 15:20:49 +0800
-Subject: Re: [PATCH v4 6/6] clk: meson: a1: add support for Amlogic A1
- Peripheral clock driver
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-CC:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20191206074052.15557-1-jian.hu@amlogic.com>
- <20191206074052.15557-7-jian.hu@amlogic.com>
- <1j36dplsec.fsf@starbuckisacylon.baylibre.com>
-From:   Jian Hu <jian.hu@amlogic.com>
-Message-ID: <fc5ab1b2-d4ee-0ebd-4788-4f0ae6d375bf@amlogic.com>
-Date:   Wed, 18 Dec 2019 15:20:48 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Wed, 18 Dec 2019 02:31:35 -0500
+Received: by mail-lf1-f68.google.com with SMTP id m30so913292lfp.8;
+        Tue, 17 Dec 2019 23:31:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=SDB6QssLTyHajG3CTt3mKWtiYD8jcB4KCZajJQzXQig=;
+        b=NjwniCJpwE+fkx+1587obPXfKmwAT4ePtmIaFhIGIg4U/kKJyrH47U46wlijsAQmJ1
+         vHawollDRRDsXZe5XX2nPT+vqkHtZlOsal7QyWW2KpSqP0EDMxwzGMWLVF378QtVZV2q
+         xyXvNzLwUGqQpiUE5XJTROIQLseAQXd5kkSN5PvVazlOGEcn6F1wAbQgRs/ijZCqomQr
+         f2bYwewwlfq7cq3QI9vpv7fsB9+W+QEv6yxwSF4Cu4IiM6ScM9qdLpARAEpYFcVZzA1O
+         QqeF8lyYqP1Tz9L8ptS8SOHRneNgKbZ1pmxbaNp/TpV/FMYqR5/PpRx6OqmYS9hyRO8Z
+         0D8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SDB6QssLTyHajG3CTt3mKWtiYD8jcB4KCZajJQzXQig=;
+        b=JFESIgffKc60Vkxigwaxw3ixtke2bjABx0+HJNqZSTSezIbPmfuYYFsLRDV71ooUGy
+         vLZvqo1PQz1yuZ4BcLljlBjeoqB7sbUk3CD0RuIJO8V4Wyoy7itfn5Q3beWB7DPB6Ggm
+         UYKWt/zARTh6M7TFDQipWvR8Wrg2dFuEnNodxaxBh4HHxmfXDEYJPSAM66Lh1FjoBgzs
+         63KD+5N+q+NaeYtjiMVnzB8m9QPCmMyXocOnyX1xiYYH0eMq7aJAC8RzK+OwTi4sf1Sa
+         Krb3fosSQjhamJQU7RUDS3teUtQZODnlLByGjPlLqVGaIi1Wpp7YlWabQoKH9Wv9n1BX
+         3Pdw==
+X-Gm-Message-State: APjAAAUxwqnmSarXzuDjd9JS5zBzivZa1VOJg305IusaHxgc2zyEFJB9
+        rSHyEB8P+Bd7HixTITBouO1jNvjP
+X-Google-Smtp-Source: APXvYqzWyqKFiAYbpX42p0RBXnQ26wuPKncIPWmtogXJ19bJ/DFQcY1bcRgypFH0hxLi4Jye9TMtgQ==
+X-Received: by 2002:a19:c205:: with SMTP id l5mr765590lfc.159.1576654292447;
+        Tue, 17 Dec 2019 23:31:32 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id l28sm600151lfk.21.2019.12.17.23.31.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Dec 2019 23:31:31 -0800 (PST)
+Subject: Re: [PATCH v4 13/19] ASoC: tegra: Add fallback implementation for
+ audio mclk
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
+        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, spujar@nvidia.com,
+        josephl@nvidia.com, daniel.lezcano@linaro.org,
+        mmaddireddy@nvidia.com, markz@nvidia.com,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1576613046-17159-1-git-send-email-skomatineni@nvidia.com>
+ <1576613046-17159-14-git-send-email-skomatineni@nvidia.com>
+ <e2f96102-33fa-cbe5-f488-666b7b7ffb06@gmail.com>
+ <7e49fef8-112c-1694-9316-7a23db8a01a4@gmail.com>
+ <66a28f8a-82e8-5b12-464c-4c91441d1511@nvidia.com>
+ <fb36edbf-08c9-aa7e-a7fd-6ee15261a525@gmail.com>
+Message-ID: <de4d2693-3d5c-d154-22eb-2e41ddc12974@gmail.com>
+Date:   Wed, 18 Dec 2019 10:31:30 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <1j36dplsec.fsf@starbuckisacylon.baylibre.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+In-Reply-To: <fb36edbf-08c9-aa7e-a7fd-6ee15261a525@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.28.39.99]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/12/12 19:01, Jerome Brunet wrote:
-> 
-> On Fri 06 Dec 2019 at 08:40, Jian Hu <jian.hu@amlogic.com> wrote:
-> 
->> Add Amlogic Meson A1 peripheral clock driver, it depends
->> on the A1 PLL driver.
+18.12.2019 10:22, Dmitry Osipenko пишет:
+> 18.12.2019 10:14, Sowjanya Komatineni пишет:
 >>
->> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
->> ---
->>   drivers/clk/meson/Kconfig  |   10 +
->>   drivers/clk/meson/Makefile |    1 +
->>   drivers/clk/meson/a1.c     | 2246 ++++++++++++++++++++++++++++++++++++
->>   drivers/clk/meson/a1.h     |  120 ++
->>   4 files changed, 2377 insertions(+)
->>   create mode 100644 drivers/clk/meson/a1.c
->>   create mode 100644 drivers/clk/meson/a1.h
+>> On 12/17/19 11:01 PM, Dmitry Osipenko wrote:
+>>> 18.12.2019 09:59, Dmitry Osipenko пишет:
+>>>> 17.12.2019 23:04, Sowjanya Komatineni пишет:
+>>>>> mclk is from clk_out_1 which is part of Tegra PMC block and pmc clocks
+>>>>> are moved to Tegra PMC driver with pmc as clock provider and using pmc
+>>>>> clock ids.
+>>>>>
+>>>>> New device tree uses clk_out_1 from pmc clock provider.
+>>>>>
+>>>>> So, this patch adds implementation for mclk fallback to extern1 when
+>>>>> retrieving mclk returns -ENOENT to be backward compatible of new device
+>>>>> tree with older kernels.
+>>>>>
+>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>> ---
+>>>>>   sound/soc/tegra/tegra_asoc_utils.c | 11 ++++++++++-
+>>>>>   1 file changed, 10 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/sound/soc/tegra/tegra_asoc_utils.c
+>>>>> b/sound/soc/tegra/tegra_asoc_utils.c
+>>>>> index fe9ca8acd0fb..1b88c6043082 100644
+>>>>> --- a/sound/soc/tegra/tegra_asoc_utils.c
+>>>>> +++ b/sound/soc/tegra/tegra_asoc_utils.c
+>>>>> @@ -191,7 +191,16 @@ int tegra_asoc_utils_init(struct
+>>>>> tegra_asoc_utils_data *data,
+>>>>>       data->clk_cdev1 = devm_clk_get(dev, "mclk");
+>>>>>       if (IS_ERR(data->clk_cdev1)) {
+>>>>>           dev_err(data->dev, "Can't retrieve clk cdev1\n");
+>>>>> -        return PTR_ERR(data->clk_cdev1);
+>>>>> +        if (PTR_ERR(data->clk_cdev1) != -ENOENT)
+>>>>> +            return PTR_ERR(data->clk_cdev1);
+>>>>> +        /* Fall back to extern1 */
+>>>>> +        data->clk_cdev1 = devm_clk_get(dev, "extern1");
+>>>>> +        if (IS_ERR(data->clk_cdev1)) {
+>>>>> +            dev_err(data->dev, "Can't retrieve clk extern1\n");
+>>>>> +            return PTR_ERR(data->clk_cdev1);
+>>>>> +        }
+>>>>> +
+>>>>> +        dev_err(data->dev, "Falling back to extern1\n");
+>>>>>       }
+>>>>>         /*
+>>>>>
+>>>> [    1.769091] ------------[ cut here ]------------
+>>>> [    1.769249] WARNING: CPU: 2 PID: 1 at drivers/clk/clk.c:954
+>>>> clk_core_disable+0xa5/0x1d4
+>>>> [    1.769330] clk_out_1 already disabled
+>>>> [    1.769459] Modules linked in:
+>>>> [    1.769541] CPU: 2 PID: 1 Comm: swapper/0 Not tainted
+>>>> 5.5.0-rc1-next-20191213-00167-g6b9fbcdac8f3-dirty #266
+>>>> [    1.769676] Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
+>>>> [    1.769775] [<c010e4bd>] (unwind_backtrace) from [<c010a0fd>]
+>>>> (show_stack+0x11/0x14)
+>>>> [    1.769918] [<c010a0fd>] (show_stack) from [<c09a37b1>]
+>>>> (dump_stack+0x85/0x94)
+>>>> [    1.770061] [<c09a37b1>] (dump_stack) from [<c011f3d1>]
+>>>> (__warn+0xc1/0xc4)
+>>>> [    1.770144] [<c011f3d1>] (__warn) from [<c011f691>]
+>>>> (warn_slowpath_fmt+0x61/0x78)
+>>>> [    1.770285] [<c011f691>] (warn_slowpath_fmt) from [<c04a0e7d>]
+>>>> (clk_core_disable+0xa5/0x1d4)
+>>>> [    1.770427] [<c04a0e7d>] (clk_core_disable) from [<c04a0fc3>]
+>>>> (clk_core_disable_lock+0x17/0x20)
+>>>> [    1.770516] [<c04a0fc3>] (clk_core_disable_lock) from [<c07792bb>]
+>>>> (tegra_asoc_utils_set_rate+0x53/0x208)
+>>>> [    1.770662] [<c07792bb>] (tegra_asoc_utils_set_rate) from
+>>>> [<c077b8c5>] (tegra_rt5640_probe+0xd5/0x128)
+>>>> [    1.770808] [<c077b8c5>] (tegra_rt5640_probe) from [<c0555eb7>]
+>>>> (platform_drv_probe+0x33/0x68)
+>>>> [    1.770958] [<c0555eb7>] (platform_drv_probe) from [<c055471d>]
+>>>> (really_probe+0x14d/0x240)
+>>>> [    1.771099] [<c055471d>] (really_probe) from [<c055493f>]
+>>>> (driver_probe_device+0x43/0x11c)
+>>>> [    1.771187] [<c055493f>] (driver_probe_device) from [<c0554b25>]
+>>>> (device_driver_attach+0x3d/0x40)
+>>>> [    1.771328] [<c0554b25>] (device_driver_attach) from [<c0554b5f>]
+>>>> (__driver_attach+0x37/0x78)
+>>>> [    1.771469] [<c0554b5f>] (__driver_attach) from [<c05532fb>]
+>>>> (bus_for_each_dev+0x43/0x6c)
+>>>> [    1.771609] [<c05532fb>] (bus_for_each_dev) from [<c0553e0f>]
+>>>> (bus_add_driver+0xe3/0x148)
+>>>> [    1.771692] [<c0553e0f>] (bus_add_driver) from [<c055531d>]
+>>>> (driver_register+0x39/0xa0)
+>>>> [    1.771833] [<c055531d>] (driver_register) from [<c0102c2f>]
+>>>> (do_one_initcall+0x43/0x1bc)
+>>>> [    1.771979] [<c0102c2f>] (do_one_initcall) from [<c1000ce5>]
+>>>> (kernel_init_freeable+0x121/0x194)
+>>>> [    1.772129] [<c1000ce5>] (kernel_init_freeable) from [<c09b40e9>]
+>>>> (kernel_init+0xd/0xd0)
+>>>> [    1.772215] [<c09b40e9>] (kernel_init) from [<c01010bd>]
+>>>> (ret_from_fork+0x11/0x34)
+>>>> [    1.772349] Exception stack(0xde907fb0 to 0xde907ff8)
+>>>>
+>>> Although, that's probably related to the "ASoC: tegra: Add initial
+>>> parent configuration for audio mclk".
+>>>
+>> Actually I see these warnings of already unprepared and already disabled
+>> for pll_a, pll_a_out0, and clk_out_1 even without this whole patch
+>> series as well.
 >>
->> diff --git a/drivers/clk/meson/Kconfig b/drivers/clk/meson/Kconfig
->> index 14e7936ae18e..d6b2b51316b7 100644
->> --- a/drivers/clk/meson/Kconfig
->> +++ b/drivers/clk/meson/Kconfig
->> @@ -103,6 +103,16 @@ config COMMON_CLK_A1_PLL
->>   	  Support for the PLL clock controller on Amlogic A113L device,
->>   	  aka a1. Say Y if you want PLL to work.
->>   
->> +config COMMON_CLK_A1
->> +	bool
->> +	depends on ARCH_MESON
->> +	select COMMON_CLK_MESON_EE_CLKC
->> +	select COMMON_CLK_MESON_DUALDIV
->> +	select COMMON_CLK_MESON_REGMAP
->> +	help
->> +	  Support for the Peripheral clock controller on Amlogic A113L device,
->> +	  aka a1. Say Y if you want Peripherals to work.
->> +
->>   config COMMON_CLK_G12A
->>   	bool
->>   	depends on ARCH_MESON
->> diff --git a/drivers/clk/meson/Makefile b/drivers/clk/meson/Makefile
->> index 71d3b8e6fb8a..0f3890030118 100644
->> --- a/drivers/clk/meson/Makefile
->> +++ b/drivers/clk/meson/Makefile
->> @@ -17,6 +17,7 @@ obj-$(CONFIG_COMMON_CLK_MESON_VID_PLL_DIV) += vid-pll-div.o
->>   obj-$(CONFIG_COMMON_CLK_AXG) += axg.o axg-aoclk.o
->>   obj-$(CONFIG_COMMON_CLK_AXG_AUDIO) += axg-audio.o
->>   obj-$(CONFIG_COMMON_CLK_A1_PLL) += a1-pll.o
->> +obj-$(CONFIG_COMMON_CLK_A1) += a1.o
->>   obj-$(CONFIG_COMMON_CLK_GXBB) += gxbb.o gxbb-aoclk.o
->>   obj-$(CONFIG_COMMON_CLK_G12A) += g12a.o g12a-aoclk.o
->>   obj-$(CONFIG_COMMON_CLK_MESON8B) += meson8b.o
->> diff --git a/drivers/clk/meson/a1.c b/drivers/clk/meson/a1.c
->> new file mode 100644
->> index 000000000000..76fa5a9e74a5
->> --- /dev/null
->> +++ b/drivers/clk/meson/a1.c
->> @@ -0,0 +1,2246 @@
->> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->> +/*
->> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
->> + * Author: Jian Hu <jian.hu@amlogic.com>
->> + */
->> +
->> +#include <linux/clk-provider.h>
->> +#include <linux/of_device.h>
->> +#include <linux/platform_device.h>
->> +#include "a1.h"
->> +#include "clk-dualdiv.h"
->> +#include "meson-eeclk.h"
->> +
->> +/* PLLs clock in gates, its parent is xtal */
->> +static struct clk_regmap a1_xtal_clktree = {
->> +	.data = &(struct clk_regmap_gate_data){
->> +		.offset = SYS_OSCIN_CTRL,
->> +		.bit_idx = 0,
->> +	},
->> +	.hw.init = &(struct clk_init_data) {
->> +		.name = "xtal_clktree",
->> +		.ops = &clk_regmap_gate_ro_ops,
->> +		.parent_data = &(const struct clk_parent_data) {
->> +			.fw_name = "xtal",
->> +		},
->> +		.num_parents = 1,
->> +	},
->> +};
->> +
->> +static struct clk_regmap a1_xtal_fixpll = {
->> +	.data = &(struct clk_regmap_gate_data){
->> +		.offset = SYS_OSCIN_CTRL,
->> +		.bit_idx = 1,
->> +	},
->> +	.hw.init = &(struct clk_init_data) {
->> +		.name = "xtal_fixpll",
->> +		.ops = &clk_regmap_gate_ro_ops,
->> +		.parent_data = &(const struct clk_parent_data) {
->> +			.fw_name = "xtal",
->> +		},
->> +		.num_parents = 1,
->> +	},
->> +};
->> +
->> +static struct clk_regmap a1_xtal_usb_phy = {
->> +	.data = &(struct clk_regmap_gate_data){
->> +		.offset = SYS_OSCIN_CTRL,
->> +		.bit_idx = 2,
->> +	},
->> +	.hw.init = &(struct clk_init_data) {
->> +		.name = "xtal_usb_phy",
->> +		.ops = &clk_regmap_gate_ops,
->> +		.parent_data = &(const struct clk_parent_data) {
->> +			.fw_name = "xtal",
->> +		},
->> +		.num_parents = 1,
->> +	},
->> +};
->> +
->> +static struct clk_regmap a1_xtal_usb_ctrl = {
->> +	.data = &(struct clk_regmap_gate_data){
->> +		.offset = SYS_OSCIN_CTRL,
->> +		.bit_idx = 3,
->> +	},
->> +	.hw.init = &(struct clk_init_data) {
->> +		.name = "xtal_usb_ctrl",
->> +		.ops = &clk_regmap_gate_ops,
->> +		.parent_data = &(const struct clk_parent_data) {
->> +			.fw_name = "xtal",
->> +		},
->> +		.num_parents = 1,
->> +	},
->> +};
->> +
->> +static struct clk_regmap a1_xtal_hifipll = {
->> +	.data = &(struct clk_regmap_gate_data){
->> +		.offset = SYS_OSCIN_CTRL,
->> +		.bit_idx = 4,
->> +	},
->> +	.hw.init = &(struct clk_init_data) {
->> +		.name = "xtal_hifipll",
->> +		.ops = &clk_regmap_gate_ops,
->> +		.parent_data = &(const struct clk_parent_data) {
->> +			.fw_name = "xtal",
->> +		},
->> +		.num_parents = 1,
->> +	},
->> +};
->> +
->> +static struct clk_regmap a1_xtal_syspll = {
->> +	.data = &(struct clk_regmap_gate_data){
->> +		.offset = SYS_OSCIN_CTRL,
->> +		.bit_idx = 5,
->> +	},
->> +	.hw.init = &(struct clk_init_data) {
->> +		.name = "xtal_syspll",
->> +		.ops = &clk_regmap_gate_ops,
->> +		.parent_data = &(const struct clk_parent_data) {
->> +			.fw_name = "xtal",
->> +		},
->> +		.num_parents = 1,
->> +	},
->> +};
->> +
->> +static struct clk_regmap a1_xtal_dds = {
->> +	.data = &(struct clk_regmap_gate_data){
->> +		.offset = SYS_OSCIN_CTRL,
->> +		.bit_idx = 6,
->> +	},
->> +	.hw.init = &(struct clk_init_data) {
->> +		.name = "xtal_dds",
->> +		.ops = &clk_regmap_gate_ops,
->> +		.parent_data = &(const struct clk_parent_data) {
->> +			.fw_name = "xtal",
->> +		},
->> +		.num_parents = 1,
->> +	},
->> +};
->> +
->> +static const struct clk_parent_data sys_clk_parents[] = {
->> +	{ .fw_name = "xtal" },
->> +	{ .fw_name = "fclk_div2"},
->> +	{ .fw_name = "fclk_div3"},
->> +	{ .fw_name = "fclk_div5"},
->> +};
->> +
->> +static struct clk_regmap a1_sys_b_sel = {
->> +	.data = &(struct clk_regmap_mux_data){
->> +		.offset = SYS_CLK_CTRL0,
->> +		.mask = 0x7,
->> +		.shift = 26,
->> +	},
->> +	.hw.init = &(struct clk_init_data){
->> +		.name = "sys_b_sel",
->> +		.ops = &clk_regmap_mux_ro_ops,
->> +		.parent_data = sys_clk_parents,
->> +		.num_parents = ARRAY_SIZE(sys_clk_parents),
->> +	},
->> +};
->> +
->> +static struct clk_regmap a1_sys_b_div = {
->> +	.data = &(struct clk_regmap_div_data){
->> +		.offset = SYS_CLK_CTRL0,
->> +		.shift = 16,
->> +		.width = 10,
->> +	},
->> +	.hw.init = &(struct clk_init_data){
->> +		.name = "sys_b_div",
->> +		.ops = &clk_regmap_divider_ops,
->> +		.parent_hws = (const struct clk_hw *[]) {
->> +			&a1_sys_b_sel.hw
->> +		},
->> +		.num_parents = 1,
->> +		.flags = CLK_SET_RATE_PARENT,
->> +	},
->> +};
->> +
->> +static struct clk_regmap a1_sys_b = {
->> +	.data = &(struct clk_regmap_gate_data){
->> +		.offset = SYS_CLK_CTRL0,
->> +		.bit_idx = 29,
->> +	},
->> +	.hw.init = &(struct clk_init_data) {
->> +		.name = "sys_b",
->> +		.ops = &clk_regmap_gate_ops,
->> +		.parent_hws = (const struct clk_hw *[]) {
->> +			&a1_sys_b_div.hw
->> +		},
->> +		.num_parents = 1,
->> +		/*
->> +		 * This clock is used by APB bus which setted in Romcode
->> +		 * and is required by the platform to operate correctly.
->> +		 * Until the following condition are met, we need this clock to
->> +		 * be marked as critical:
->> +		 * a) Mark the clock used by a firmware resource, if possible
->> +		 * b) CCF has a clock hand-off mechanism to make the sure the
->> +		 *    clock stays on until the proper driver comes along
->> +		 */
->> +		.flags = CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
->> +	},
->> +};
->> +
->> +static struct clk_regmap a1_sys_a_sel = {
->> +	.data = &(struct clk_regmap_mux_data){
->> +		.offset = SYS_CLK_CTRL0,
->> +		.mask = 0x7,
->> +		.shift = 10,
->> +	},
->> +	.hw.init = &(struct clk_init_data){
->> +		.name = "sys_a_sel",
->> +		.ops = &clk_regmap_mux_ro_ops,
->> +		.parent_data = sys_clk_parents,
->> +		.num_parents = ARRAY_SIZE(sys_clk_parents),
->> +	},
->> +};
->> +
->> +static struct clk_regmap a1_sys_a_div = {
->> +	.data = &(struct clk_regmap_div_data){
->> +		.offset = SYS_CLK_CTRL0,
->> +		.shift = 0,
->> +		.width = 10,
->> +	},
->> +	.hw.init = &(struct clk_init_data){
->> +		.name = "sys_a_div",
->> +		.ops = &clk_regmap_divider_ops,
->> +		.parent_hws = (const struct clk_hw *[]) {
->> +			&a1_sys_a_sel.hw
->> +		},
->> +		.num_parents = 1,
->> +		.flags = CLK_SET_RATE_PARENT,
->> +	},
->> +};
->> +
->> +static struct clk_regmap a1_sys_a = {
->> +	.data = &(struct clk_regmap_gate_data){
->> +		.offset = SYS_CLK_CTRL0,
->> +		.bit_idx = 13,
->> +	},
->> +	.hw.init = &(struct clk_init_data) {
->> +		.name = "sys_a",
->> +		.ops = &clk_regmap_gate_ops,
->> +		.parent_hws = (const struct clk_hw *[]) {
->> +			&a1_sys_a_div.hw
->> +		},
->> +		.num_parents = 1,
->> +		/*
->> +		 * This clock is used by APB bus which setted in Romcode
->> +		 * and is required by the platform to operate correctly.
+>> I think its from tegra_asoc_utils_set_rate() doing clk_disable_unprepare
+>> and these clocks are already unprepared and disabled so its just warning
+>> from clk_core_unprepare and clk_core_disable.
 > 
-> #1 It weird that both sys_a and sys_b are critical, Only the leaf needs
->   to be critical which, AFAICT, is a1_sys_clk.
-> 
-> #2 Like on the other controller: What the clock is needed for needs is
->   needed for for each critical clock, but the explanation below needs to
->   appear only once and can be refered to afterward.
-> 
-OK, I will remove the flag CLK_IS_CRITICAL for a1_sys_a and a1_sys_b.
-And add it for a1_sys_clk.
->> +		 * Until the following condition are met, we need this clock to
->> +		 * be marked as critical:
->> +		 * a) Mark the clock used by a firmware resource, if possible
->> +		 * b) CCF has a clock hand-off mechanism to make the sure the
->> +		 *    clock stays on until the proper driver comes along
->> +		 */
->> +		.flags = CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
->> +	},
->> +};
->> +
->> +static struct clk_regmap a1_sys_clk = {
->> +	.data = &(struct clk_regmap_mux_data){
->> +		.offset = SYS_CLK_CTRL0,
->> +		.mask = 0x1,
->> +		.shift = 31,
->> +	},
->> +	.hw.init = &(struct clk_init_data){
->> +		.name = "sys_clk",
->> +		.ops = &clk_regmap_mux_ro_ops,
->> +		.parent_hws = (const struct clk_hw *[]) {
->> +			&a1_sys_a.hw, &a1_sys_b.hw,
->> +		},
->> +		.num_parents = 2,
->> +		.flags = CLK_SET_RATE_PARENT,
->> +	},
->> +};
->> +
-[...]
-> .
-> 
+> Doesn't happen for me without this series.
+
+But sound works with both old/new device-trees.
