@@ -2,122 +2,94 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0744C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:00:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1654CC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:02:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 731A92465E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:00:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="GeUt53t1"
+	by mail.kernel.org (Postfix) with ESMTP id E0EC52176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:02:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576688540;
+	bh=we2zMDAHiAzaJJ7ie3iIZyPD57spjJwHDGeCFx7sl+4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UavmaVhGuQ9Ihmij/103cANIvMfSqCyk01Sn9ukV+UafTFnjdAUACYo1vcjPPc+0A
+	 rV4izco8v8aXzQgaMOSHKVjG0UCWQ4rzF51YUsmpJgTjgsqFW8+hx0ZnKUr/BSiwsp
+	 SN7+bpMwvOBkT1Hxao/Db2n81DZ0zSBlwm5PB2Cc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727672AbfLRRAW (ORCPT
+        id S1727650AbfLRRCT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 12:00:22 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:45810 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727624AbfLRRAV (ORCPT
+        Wed, 18 Dec 2019 12:02:19 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:42888 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727368AbfLRRCS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 12:00:21 -0500
-Received: by mail-qk1-f193.google.com with SMTP id x1so2115578qkl.12
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 09:00:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WeqKDFdUfnO84ii4lXKLuvBndynJP0TEKYsVVVEnPp8=;
-        b=GeUt53t1wbtNOn+ZhJvgbA3cY/cve2xq3FHu81BHiUMPSHVYqvTDRYtILsdcz+b063
-         Y07trchcQ03ZhzFyjU5R380xAlvDqA3qsN8Bg5fpFMvYMGUWPJq0ktP0WTUvWU9UK3oE
-         mAgYGqED+FtOgZv0u7Kj+7rqULyZILk5yJoQ5YUoSnX04lRmb/3VZByGv+Kv/RsHLBXu
-         z4vgpIUWgqhLLqD5CgriLAZjPPONJ41fcSV8OcF+c+8reRKP7+UR97d4WmtSzOFaQ03V
-         Wjy2yvPXm2DsJK829IVoqSXuTZYK6PHqdWnrXIqyQcSlRAsZNRP1+0vf+t7m31SLGc6L
-         wqng==
+        Wed, 18 Dec 2019 12:02:18 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 66so3270275otd.9;
+        Wed, 18 Dec 2019 09:02:18 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WeqKDFdUfnO84ii4lXKLuvBndynJP0TEKYsVVVEnPp8=;
-        b=TZfQ80s/KfBA61jiDHHdACh6l9SkOu6oI1hhRDMbvD0lDBkNF4fwmmkpgke1mSg9x4
-         YPibwulHdSLLgR7bhdA4x37eXH5LMlpbsjDC3k0jA53DUFKYtJe8fn/ZzwVUVIlwmgSu
-         +JTD/xtbVeLN7ExAHylWxCVPAISssW+bMsHoPaM8acvqmrkH+XG0wDabsdHQiWzj4O0K
-         DskXdSw/55JGXbDBBcpZuAavG0DDuP/1slP22LmNExdbNaGDZ5Bz+gXRDvv/66tPVmHf
-         1kHE8coOTFiOlYkcuPQxI8iRUrPYbIokXifHreFr5sk8MQa7KnDwYJW+UKEXVZSz+CnB
-         5rsg==
-X-Gm-Message-State: APjAAAU0uUq5CbDwzQmlCDKCy2DSRiHqwiXoXLKMyw5hLCeNT53tFK4f
-        OJS91hQ1P2gEnw2S5XMfMZK07Q==
-X-Google-Smtp-Source: APXvYqw5jDmu9ZkUqf6ud+pAbFz2CZOEk72YgKgv7/B7c2Mmq+Jz7H0KXBY9oMmm07H3UETri8EpwQ==
-X-Received: by 2002:a05:620a:1592:: with SMTP id d18mr3588970qkk.80.1576688420639;
-        Wed, 18 Dec 2019 09:00:20 -0800 (PST)
-Received: from ovpn-126-98.rdu2.redhat.com ([71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id s27sm799362qkm.97.2019.12.18.09.00.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 18 Dec 2019 09:00:20 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     bhelgaas@google.com
-Cc:     jamessewart@arista.com, logang@deltatee.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH -next] pci: fix a -Wtype-limits compilation warning
-Date:   Wed, 18 Dec 2019 12:00:04 -0500
-Message-Id: <20191218170004.5297-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JaI7AY/5dEsE+PzKKfws1NegVl++uA5oApSBgLNQCls=;
+        b=OPOC6z/S5Kay/I2CleJEl2T6qdDSFYINzJ1M8U814F9vbpbVUGE0uQmQOqyMBFpS/T
+         xHHerFD0RuMjwJaYNH1nYGktEHbHn5lkSyttcq2t+HbRVHoFF9VcG8rII+KlOFw3WHvY
+         ugl9PZ0vA74Qmn4TMX2SyWvwmYwdKRAAS+7U5ZZib4Hfvx9K2xd3QIhqKFxLqXiZx0MQ
+         xvcadG7kFoGxZXN1vAh7VFGuFsCbN1oXn9TzCzjbgxwJXyP0s59aL9SdeYayHt/fl6Yr
+         9isDKD13k/Pem4ql2Y7ra33gQzMeUvsuhE0fihPSb/D3seDB0mtfleGaJ3q2ByEPflhH
+         ryOg==
+X-Gm-Message-State: APjAAAWlFA5NucoR2DGMQCbOZy0JgSqfWCB9ugRgqC4gvUgKIVGzaKqw
+        55MTrcOJiy6GligHShSZpA==
+X-Google-Smtp-Source: APXvYqzOiFGi11lFLhBbyJQ2UV01N4xUjbtoI1m67WTwLSZq6goK5Ks+0SR2sX/w079C4Hu9mqDTmw==
+X-Received: by 2002:a9d:7c8f:: with SMTP id q15mr3730626otn.341.1576688537723;
+        Wed, 18 Dec 2019 09:02:17 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id r13sm963542oic.52.2019.12.18.09.02.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 09:02:17 -0800 (PST)
+Date:   Wed, 18 Dec 2019 11:02:16 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     matthias.bgg@kernel.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, ck.hu@mediatek.com,
+        p.zabel@pengutronix.de, airlied@linux.ie, mturquette@baylibre.com,
+        sboyd@kernel.org, ulrich.hecht+renesas@gmail.com,
+        laurent.pinchart@ideasonboard.com, enric.balletbo@collabora.com,
+        sean.wang@mediatek.com, sean.wang@kernel.org,
+        rdunlap@infradead.org, wens@csie.org, hsinyi@chromium.org,
+        frank-w@public-files.de, drinkcat@chromium.org,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, mbrugger@suse.com,
+        matthias.bgg@kernel.org
+Subject: Re: [resend PATCH v6 02/12] dt-bindings: mediatek: Add compatible
+ for mt7623
+Message-ID: <20191218170216.GA18152@bogus>
+References: <20191207224740.24536-1-matthias.bgg@kernel.org>
+ <20191207224740.24536-3-matthias.bgg@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191207224740.24536-3-matthias.bgg@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit a7d06153eea2 ("PCI: Fix pci_add_dma_alias() bitmask size")
-introduced a compilation warning and a potential infinite loop because
-it is no longer possible to be self-terminated as u8 is always less than
-256,
+On Sat,  7 Dec 2019 23:47:30 +0100, matthias.bgg@kernel.org wrote:
+> From: Matthias Brugger <mbrugger@suse.com>
+> 
+> MediaTek mt7623 uses the mt2701 binings as fallback.
+> Document this in the binding description.
+> 
+> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
+> ---
+>  .../devicetree/bindings/display/mediatek/mediatek,disp.txt      | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
 
-In file included from ./include/linux/kernel.h:12,
-                 from ./include/asm-generic/bug.h:19,
-                 from ./arch/x86/include/asm/bug.h:83,
-                 from ./include/linux/bug.h:5,
-                 from ./include/linux/jump_label.h:250,
-                 from ./arch/x86/include/asm/string_64.h:6,
-                 from ./arch/x86/include/asm/string.h:5,
-                 from ./include/linux/string.h:20,
-                 from ./include/linux/uuid.h:12,
-                 from ./include/linux/mod_devicetable.h:13,
-                 from ./include/linux/pci.h:27,
-                 from drivers/pci/search.c:11:
-drivers/pci/search.c: In function 'pci_for_each_dma_alias':
-./include/linux/bitops.h:30:13: warning: comparison is always true due
-to limited range of data type [-Wtype-limits]
-       (bit) < (size);     \
-             ^
-drivers/pci/search.c:46:3: note: in expansion of macro 'for_each_set_bit'
-   for_each_set_bit(devfn, pdev->dma_alias_mask, MAX_NR_DEVFNS) {
-
-Fixed it by using u16 for "devfn" in this occasion.
-
-Fixes: a7d06153eea2 ("PCI: Fix pci_add_dma_alias() bitmask size")
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- drivers/pci/search.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pci/search.c b/drivers/pci/search.c
-index 9e4dfae47252..42bc44d0e681 100644
---- a/drivers/pci/search.c
-+++ b/drivers/pci/search.c
-@@ -41,7 +41,7 @@ int pci_for_each_dma_alias(struct pci_dev *pdev,
- 	 * DMA, iterate over that too.
- 	 */
- 	if (unlikely(pdev->dma_alias_mask)) {
--		u8 devfn;
-+		u16 devfn;
- 
- 		for_each_set_bit(devfn, pdev->dma_alias_mask, MAX_NR_DEVFNS) {
- 			ret = fn(pdev, PCI_DEVID(pdev->bus->number, devfn),
--- 
-2.21.0 (Apple Git-122.2)
-
+Acked-by: Rob Herring <robh@kernel.org>
