@@ -2,107 +2,91 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA30C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D0FDC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DF8424650
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:22:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E00E24650
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:23:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727421AbfLRQWY (ORCPT
+        id S1727433AbfLRQXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 11:22:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55844 "EHLO mail.kernel.org"
+        Wed, 18 Dec 2019 11:23:51 -0500
+Received: from mga03.intel.com ([134.134.136.65]:15079 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727021AbfLRQWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 11:22:23 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC2CC20717;
-        Wed, 18 Dec 2019 16:22:21 +0000 (UTC)
-Date:   Wed, 18 Dec 2019 11:22:19 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNl?= =?UTF-8?B?bg==?= 
-        <toke@redhat.com>, Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>
-Subject: Re: [RFC] btf: Some structs are doubled because of struct
- ring_buffer
-Message-ID: <20191218112219.309d1031@gandalf.local.home>
-In-Reply-To: <20191218161401.GC15571@krava>
-References: <20191213153553.GE20583@krava>
-        <20191213112438.773dff35@gandalf.local.home>
-        <20191213165155.vimm27wo7brkh3yu@ast-mbp.dhcp.thefacebook.com>
-        <20191213121118.236f55b8@gandalf.local.home>
-        <20191213180223.GE2844@hirez.programming.kicks-ass.net>
-        <20191213132941.6fa2d1bd@gandalf.local.home>
-        <20191213184621.GG2844@hirez.programming.kicks-ass.net>
-        <20191213140349.5a42a8af@gandalf.local.home>
-        <20191213140531.116b3200@gandalf.local.home>
-        <20191214113510.GB12440@krava>
-        <20191218161401.GC15571@krava>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726985AbfLRQXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 11:23:50 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 08:23:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
+   d="scan'208";a="415881663"
+Received: from dshoemak-mobl.amr.corp.intel.com (HELO [10.251.3.243]) ([10.251.3.243])
+  by fmsmga005.fm.intel.com with ESMTP; 18 Dec 2019 08:23:47 -0800
+Subject: Re: [alsa-devel] [PATCH 10/10] ASoC: Add codec component for AD242x
+ nodes
+To:     Daniel Mack <daniel@zonque.org>, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Cc:     lars@metafoo.de, sboyd@kernel.org, mturquette@baylibre.com,
+        robh+dt@kernel.org, broonie@kernel.org, pascal.huerst@gmail.com,
+        lee.jones@linaro.org
+References: <20191209183511.3576038-1-daniel@zonque.org>
+ <20191209183511.3576038-12-daniel@zonque.org>
+ <0565e5cd-9a6e-db65-0632-0bc1aa1d79db@linux.intel.com>
+ <35e7e6e7-7c70-785c-bdf3-79089134699e@zonque.org>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <ff0e2420-a2c6-17e7-2761-f6544e2c0cb7@linux.intel.com>
+Date:   Wed, 18 Dec 2019 09:32:40 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <35e7e6e7-7c70-785c-bdf3-79089134699e@zonque.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Dec 2019 17:14:01 +0100
-Jiri Olsa <jolsa@redhat.com> wrote:
 
-> On Sat, Dec 14, 2019 at 12:35:10PM +0100, Jiri Olsa wrote:
-> > On Fri, Dec 13, 2019 at 02:05:31PM -0500, Steven Rostedt wrote:
-> > 
-> > SNIP
-> >   
-> > >  	struct trace_array *tr = filp->private_data;
-> > > -	struct ring_buffer *buffer = tr->trace_buffer.buffer;
-> > > +	struct trace_buffer *buffer = tr->trace_buffer.buffer;
-> > >  	unsigned long val;
-> > >  	int ret;
-> > >  
-> > > diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-> > > index 63bf60f79398..308fcd673102 100644
-> > > --- a/kernel/trace/trace.h
-> > > +++ b/kernel/trace/trace.h
-> > > @@ -178,7 +178,7 @@ struct trace_option_dentry;
-> > >  
-> > >  struct trace_buffer {
-> > >  	struct trace_array		*tr;
-> > > -	struct ring_buffer		*buffer;
-> > > +	struct trace_buffer		*buffer;  
-> > 
-> > perf change is fine, but 'trace_buffer' won't work because
-> > we already have 'struct trace_buffer' defined in here
-> > 
-> > maybe we could change this name to trace_buffer_array?  
+
+On 12/18/19 3:49 AM, Daniel Mack wrote:
+> Hi,
 > 
-> ..like in patch below? it's independent of your previous changes
+> On 12/17/19 8:28 PM, Pierre-Louis Bossart wrote:
+>> On 12/9/19 12:35 PM, Daniel Mack wrote:
 > 
->
+>>> +    if (!ad242x_node_is_master(priv->node) &&
+>>> +       ((format & SND_SOC_DAIFMT_MASTER_MASK) !=
+>>> SND_SOC_DAIFMT_CBM_CFM)) {
+>>> +        dev_err(component->dev, "slave node must be clock master\n");
+>>> +        return -EINVAL;
+>>> +    }
+>>
+>> It was my understanding that the master node provides the clock to the
+>> bus, so not sure how it could be a clock slave, and conversely how a
+>> slave node could provide a clock to the bus?
+> 
+> The slave nodes receive the A2B clock from the master node and then
+> produce digital audio output that is sent to other components such as
+> codecs. Hence, in ASoC terms, they are the clock master.
+> 
+> Likewise, as the master node is receiving its clock from other
+> components, it has to be a clock slave in the audio network.
+> 
+> Does that make sense?
 
-Actually, I would prefer to call it either trace_array_buffer, or just
-array_buffer.
+Your slave node acts as a bridge then, but it seems you don't model the 
+bus-facing interface, which has to follow the master clock. Or do you?
 
--- Steve
+Likewise the master has an 'SOC-facing' interface and a bus-facing 
+interface. it *could* be master on both if ASRC was supported. The point 
+is that the bus-facing interface is not clock slave.
