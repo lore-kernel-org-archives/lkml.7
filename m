@@ -2,123 +2,143 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D8FCC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 04:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B83D4C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 04:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 247642146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 04:12:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576642327;
-	bh=ZAbF2S9rwhQ5Np9UIx7sP+iPWCIl9l61NUz0CIKnVHI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=M0Yu3CeveceTqAfiVY6bzNzC0FT2yjEpkgk07PJCLtERezIMR1vYIZ/2LkC1fNZYG
-	 53/YZ672NYIIJ9Zme0XSb304YUYfJHEn+FmQtwIBDx/eTymObYS1SonHEG0vyA/2UN
-	 ztUkPD2D1CZaWfJFhZE/NoJpZL/10XyC0FVXhLaQ=
+	by mail.kernel.org (Postfix) with ESMTP id 8D9E924676
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 04:21:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SvfIVgN9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbfLREMG (ORCPT
+        id S1726591AbfLREV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 23:12:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48974 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726454AbfLREMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 23:12:06 -0500
-Received: from localhost (unknown [106.51.106.0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4812206EE;
-        Wed, 18 Dec 2019 04:12:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576642324;
-        bh=ZAbF2S9rwhQ5Np9UIx7sP+iPWCIl9l61NUz0CIKnVHI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Y5PInxWYOG2Jj3uTvebbGJxeyCLoCi0XgpHGUvbshl6aIuXKTTvZDgzXd8AOcakIC
-         NEGIc1JBjYtr6CJJsod3f2IJFWaClrrQoMeaTFt00m4/NRhCRyfyeh+MWMv7YpsnLJ
-         I3JPsdTwz2q18iIkxNREgsVlAWYFhyzGywURMhSM=
-Date:   Wed, 18 Dec 2019 09:42:00 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     cang@codeaurora.org
-Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, asutoshd@codeaurora.org,
-        nguyenb@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, Mark Salyzyn <salyzyn@google.com>,
-        Andy Gross <agross@kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 2/7] scsi: ufs-qcom: Add reset control support for
- host controller
-Message-ID: <20191218041200.GP2536@vkoul-mobl>
-References: <20191216190415.GL2536@vkoul-mobl>
- <CAOCk7NpAp+DHBp-owyKGgJFLRajfSQR6ff1XMmAj6A4nM3VnMQ@mail.gmail.com>
- <091562cbe7d88ca1c30638bc10197074@codeaurora.org>
- <20191217041342.GM2536@vkoul-mobl>
- <763d7b30593b31646f3c198c2be99671@codeaurora.org>
- <20191217092433.GN2536@vkoul-mobl>
- <fc8952a0eee5c010fe14e5f107d89e64@codeaurora.org>
- <20191217150852.GO2536@vkoul-mobl>
- <CAOCk7Np691Hau1FdJqWs1UY6jvEvYfzA6NnG9U--ZcRsuV5=Zw@mail.gmail.com>
- <75f7065d08f450c6cbb2b2662658ecaa@codeaurora.org>
+        Tue, 17 Dec 2019 23:21:28 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:37524 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726387AbfLREV2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 23:21:28 -0500
+Received: by mail-pl1-f196.google.com with SMTP id c23so379170plz.4;
+        Tue, 17 Dec 2019 20:21:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vc6z5DPJPT9ALawH8QND33wnUvYXhhLWLJZgfzSJFrg=;
+        b=SvfIVgN9NeClfQeCI10AFnpQYUl3FnazSMMz1/rl4JjHEw1fMvsx7Et0DMnAzpNOsy
+         ujn71aA22qgCZ1mfshtnAz0bjoMYajnVM+QJ3g4NiU4um38MsIIwHbTywSPbzQbbgdpw
+         LS83zmnW4qqEsyBHhq+aVSPtqHMdWcne1APVgn+bIE4YOIK/GGyIHjbcVkp5M4kY7xRU
+         mfklRjIH6HBmQ7FAXh956dRpj888AbABKesyOYYo0+7LQawFW+DP5frm3t90+LOCk63f
+         1w+cwWJxqTmdcFDFgq1GTeXQABJuWVnGlPbWC8s+3gk0GH1ieX/t+xCfM00RNfXiWGKZ
+         ZrWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vc6z5DPJPT9ALawH8QND33wnUvYXhhLWLJZgfzSJFrg=;
+        b=UiJLuinol98FxRsrO3vcynuqMgScg732E4hojuVueB5KWrkpt5LdhRwqcIA3BaS2na
+         CYSNWpeTwY47O9+Fje3FjY/RpNsa1LRwjwzO7lBHjpEbfrzQ9Z1rxjLwP2suqIflzm+x
+         6JhTVwX9JAUQVfgZINveDl5GtyIRTsj/OF8d7kHl3SeM/Pl4y3Kv2Yi279phGTNYmjqR
+         fialPYMuHj1ZcEAKODZqjvBK3JTKe2RIkZ4fao3XwGVCnuRu2RAmMMJ6DoEqguqEgpzj
+         9TPvArhyhQw6DU8ichBVHDB0IYpJv+ZP48T8QvTKaIUZ3IkrJlCVlhRlVlJ+ORd6+1lB
+         tq7g==
+X-Gm-Message-State: APjAAAXsZZFwUOkgHXEbHpTpuYHWoFvX7Y8ETADY7nIdSwnIL+gCfxh9
+        2NsvMcjInP59niW04z3USRc=
+X-Google-Smtp-Source: APXvYqwTR3pgu+o0enOy3at0duZYlX8shhM1VsQw1/kknsBLvwDGktqgYi8h9dEeJbUeLAYMVJCFFQ==
+X-Received: by 2002:a17:90a:8001:: with SMTP id b1mr286774pjn.39.1576642887310;
+        Tue, 17 Dec 2019 20:21:27 -0800 (PST)
+Received: from anarsoul-thinkpad.lan (216-71-213-236.dyn.novuscom.net. [216.71.213.236])
+        by smtp.gmail.com with ESMTPSA id g17sm775380pfb.180.2019.12.17.20.21.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 20:21:26 -0800 (PST)
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+To:     Yangtao Li <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        =?UTF-8?q?Ond=C5=99ej=20Jirman?= <megous@megous.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Vasily Khoruzhick <anarsoul@gmail.com>
+Subject: [PATCH v7 0/7] add thermal sensor driver for A64, A83T, H3, H5, H6, R40
+Date:   Tue, 17 Dec 2019 20:21:14 -0800
+Message-Id: <20191218042121.1471954-1-anarsoul@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <75f7065d08f450c6cbb2b2662658ecaa@codeaurora.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18-12-19, 02:44, cang@codeaurora.org wrote:
- 
-> Hi Vinod and Jeffrey,
-> 
-> Let me summary here, now the 1000000us timeout works for both 845 and 8998.
-> However, 8150 still fails.
-> 
-> > > The bigger question is why is the reset causing the timeout to be
-> > > increased for sdm845 and not to work in case of sm8150! (Vinod)
-> 
-> I would not say this patch increases the timeout. With this patch,
-> the PCS polling timeout, per my profiling, the PCS ready usually needs
-> less than 5000us, which is the actual time needed for PCS bit to be ready.
-> 
-> The reason why 1000us worked for you is because, w/o the patch, UFS PHY
-> registers are retained from pre-kernel stage (bootloader i.e.), the PCS
-> ready
-> bit was set to 1 in pre-kernel stage, so when kernel driver reads it, it
-> returns
-> 1, not even to be polled at all. It may seem "faster", but not the right
-> thing to do, because kernel stage may need different PHY settings than
-> pre-kernel stage, keeping the settings configured in pre-kernel stage is not
-> always right, so this patch is needed. And increasing 1000us to 1000000us
-> is the right thing to do, but not a hack.
-> 
-> As reg for the phy initialization timeout on 8150, I found there is
-> something
-> wrong with its settings in /drivers/phy/qualcomm/phy-qcom-qmp.c
-> 
-> static const struct qmp_phy_init_tbl sm8150_ufsphy_serdes_tbl[] = {
-> 	QMP_PHY_INIT_CFG(QPHY_POWER_DOWN_CONTROL, 0x01),
-> 	QMP_PHY_INIT_CFG(QSERDES_V4_COM_SYSCLK_EN_SEL, 0xd9),
-> 
-> "QMP_PHY_INIT_CFG(QPHY_POWER_DOWN_CONTROL, 0x01)" should NOT appear in the
-> serdes
-> table! I haven't check who made this change, but please have a try after
-> remove
-> this line from sm8150_ufsphy_serdes_tbl.
+This patchset adds driver for thermal sensor in A64, A83T, H3, H5,
+H6 and R40 SoCs.
 
-That is me :) Looks like I made an error while porting from downstream. I
-did a quick check to remove this and it doesn't work yet, let me recheck
-the settings again ...
+v7:
+	- [vasily] Address Maxime's comments for dt-schema
+	- [vasily] Move common part of H3 and H5 dts into sunxi-h3-h5.dtsi
+	- [vasily] Add Maxime's a-b to the driver patch 
 
-Thanks for your help!
+v6:
+	- [ondrej, vasily] Squash all driver related changes into a
+			   single patch
+	- [ondrej] Rename calib -> calibration
+	- [ondrej] Fix thermal zone registration check
+	- [ondrej] Lower rate of sensor data interrupts to 4/sec/sensor
+	- [ondrej] Rework scale/offset values, H6 calibration
+	- [ondrej] Explicitly set mod clock to 24 MHz
+	- [ondrej] Set undocumented bits in CTRL0 for H6
+	- [ondrej] Add support for A83T
+	- [ondrej] Add dts changes for A83T, H3, H5, H6
+	- [vasily] Add dts changes for A64
+	- [vasily] Address Maxime's comments for YAML scheme
+	- [vasily] Make .calc_temp callback mandatory
+	- [vasily] Set .max_register in regmap config, so regs can be
+		   inspected using debugfs
+
+
+Ondrej Jirman (4):
+  ARM: dts: sun8i-a83t: Add thermal sensor and thermal zones
+  ARM: dts: sun8i-h3: Add thermal sensor and thermal zones
+  arm64: dts: allwinner: h5: Add thermal sensor and thermal zones
+  arm64: dts: allwinner: h6: Add thermal sensor and thermal zones
+
+Vasily Khoruzhick (1):
+  arm64: dts: allwinner: a64: Add thermal sensors and thermal zones
+
+Yangtao Li (2):
+  thermal: sun8i: add thermal driver for H6/H5/H3/A64/A83T/R40
+  dt-bindings: thermal: add YAML schema for sun8i-thermal driver
+    bindings
+
+ .../thermal/allwinner,sun8i-a83t-ths.yaml     | 146 ++++
+ MAINTAINERS                                   |   7 +
+ arch/arm/boot/dts/sun8i-a83t.dtsi             |  36 +
+ arch/arm/boot/dts/sun8i-h3.dtsi               |  20 +
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi            |   6 +
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  42 ++
+ arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  |  26 +
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  33 +
+ drivers/thermal/Kconfig                       |  14 +
+ drivers/thermal/Makefile                      |   1 +
+ drivers/thermal/sun8i_thermal.c               | 639 ++++++++++++++++++
+ 11 files changed, 970 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
+ create mode 100644 drivers/thermal/sun8i_thermal.c
 
 -- 
-~Vinod
+2.24.1
+
