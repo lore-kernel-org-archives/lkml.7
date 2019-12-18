@@ -4,108 +4,102 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C02C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 438A7C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E80CD218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A7282176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:58:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727669AbfLRQ47 (ORCPT
+        id S1727555AbfLRQ6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 11:56:59 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:58214 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727594AbfLRQ45 (ORCPT
+        Wed, 18 Dec 2019 11:58:35 -0500
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:33851 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727217AbfLRQ6e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 11:56:57 -0500
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1ihcd3-0006oB-7y; Wed, 18 Dec 2019 17:56:53 +0100
-Date:   Wed, 18 Dec 2019 17:56:53 +0100
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH RT] userfaultfd: Use a seqlock instead of seqcount
-Message-ID: <20191218165653.eu4il2xxmc2rpllq@linutronix.de>
+        Wed, 18 Dec 2019 11:58:34 -0500
+X-Originating-IP: 90.65.102.129
+Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id A3939C000E;
+        Wed, 18 Dec 2019 16:58:31 +0000 (UTC)
+Date:   Wed, 18 Dec 2019 17:58:31 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Eugen.Hristev@microchip.com
+Cc:     jic23@kernel.org, robh+dt@kernel.org, Nicolas.Ferre@microchip.com,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rtc@vger.kernel.org, a.zummo@towertech.it,
+        Ludovic.Desroches@microchip.com
+Subject: Re: [PATCH 04/10] rtc: at91rm9200: use of_platform_populate as
+ return value
+Message-ID: <20191218165831.GO695889@piout.net>
+References: <1576686157-11939-1-git-send-email-eugen.hristev@microchip.com>
+ <1576686157-11939-5-git-send-email-eugen.hristev@microchip.com>
+ <20191218164348.GN695889@piout.net>
+ <04264cb0-61a9-aba3-82ad-e7d12fd8441e@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <04264cb0-61a9-aba3-82ad-e7d12fd8441e@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On RT write_seqcount_begin() disables preemption which leads to warning
-in add_wait_queue() while the spinlock_t is acquired.
-The waitqueue can't be converted to swait_queue because
-userfaultfd_wake_function() is used as a custom wake function.
+On 18/12/2019 16:52:21+0000, Eugen.Hristev@microchip.com wrote:
+> 
+> 
+> On 18.12.2019 18:43, Alexandre Belloni wrote:
+> 
+> > Hi,
+> > 
+> > On 18/12/2019 16:24:00+0000, Eugen.Hristev@microchip.com wrote:
+> >> From: Eugen Hristev <eugen.hristev@microchip.com>
+> >>
+> >> This allows the RTC node to have child nodes in DT.
+> >> This allows subnodes to be probed.
+> >>
+> >> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+> >> ---
+> >>   drivers/rtc/rtc-at91rm9200.c | 2 +-
+> >>   1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/rtc/rtc-at91rm9200.c b/drivers/rtc/rtc-at91rm9200.c
+> >> index 3b833e0..f1b5b3d 100644
+> >> --- a/drivers/rtc/rtc-at91rm9200.c
+> >> +++ b/drivers/rtc/rtc-at91rm9200.c
+> >> @@ -421,7 +421,7 @@ static int __init at91_rtc_probe(struct platform_device *pdev)
+> >>        at91_rtc_write_ier(AT91_RTC_SECEV);
+> >>
+> >>        dev_info(&pdev->dev, "AT91 Real Time Clock driver.\n");
+> >> -     return 0;
+> >> +     return of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
+> >>
+> > 
+> > You can avoid the DT binding change and DT parsing by using
+> > platform_add_device here. I don't think there is any point describing
+> > the trigger as a child node (a watchdog functionality wouldn't be
+> > described for example).
+> > 
+> 
+> Hi,
+> 
+> It's needed because the ADC needs a link to the trigger device. This is 
+> a hardware link inside the SoC, so I thought the best way is to describe 
+> this hardware is in the Device Tree.
+> Otherwise the ADC node is unaware of the RTC triggering possibility.
+> If we just assign the RTC trigger device to the ADC through the sysfs, 
+> the ADC cannot distinguish between the RTC trigger and other various 
+> triggers which can be attached.
+> 
 
-Use seqlock instead seqcount to avoid the preempt_disable() section
-during add_wait_queue().
+I'm not sure this links is required but I will let Jonathan review. Even
+if it is needed, you can still use the rtc node to describe that link.
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- fs/userfaultfd.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-index f9fd18670e22d..92871bee05b39 100644
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -61,7 +61,7 @@ struct userfaultfd_ctx {
- 	/* waitqueue head for events */
- 	wait_queue_head_t event_wqh;
- 	/* a refile sequence protected by fault_pending_wqh lock */
--	struct seqcount refile_seq;
-+	seqlock_t refile_seq;
- 	/* pseudo fd refcounting */
- 	refcount_t refcount;
- 	/* userfaultfd syscall flags */
-@@ -1063,7 +1063,7 @@ static ssize_t userfaultfd_ctx_read(struct userfaultfd_ctx *ctx, int no_wait,
- 			 * waitqueue could become empty if this is the
- 			 * only userfault.
- 			 */
--			write_seqcount_begin(&ctx->refile_seq);
-+			write_seqlock(&ctx->refile_seq);
- 
- 			/*
- 			 * The fault_pending_wqh.lock prevents the uwq
-@@ -1089,7 +1089,7 @@ static ssize_t userfaultfd_ctx_read(struct userfaultfd_ctx *ctx, int no_wait,
- 			list_del(&uwq->wq.entry);
- 			add_wait_queue(&ctx->fault_wqh, &uwq->wq);
- 
--			write_seqcount_end(&ctx->refile_seq);
-+			write_sequnlock(&ctx->refile_seq);
- 
- 			/* careful to always initialize msg if ret == 0 */
- 			*msg = uwq->msg;
-@@ -1262,11 +1262,11 @@ static __always_inline void wake_userfault(struct userfaultfd_ctx *ctx,
- 	 * sure we've userfaults to wake.
- 	 */
- 	do {
--		seq = read_seqcount_begin(&ctx->refile_seq);
-+		seq = read_seqbegin(&ctx->refile_seq);
- 		need_wakeup = waitqueue_active(&ctx->fault_pending_wqh) ||
- 			waitqueue_active(&ctx->fault_wqh);
- 		cond_resched();
--	} while (read_seqcount_retry(&ctx->refile_seq, seq));
-+	} while (read_seqretry(&ctx->refile_seq, seq));
- 	if (need_wakeup)
- 		__wake_userfault(ctx, range);
- }
-@@ -1935,7 +1935,7 @@ static void init_once_userfaultfd_ctx(void *mem)
- 	init_waitqueue_head(&ctx->fault_wqh);
- 	init_waitqueue_head(&ctx->event_wqh);
- 	init_waitqueue_head(&ctx->fd_wqh);
--	seqcount_init(&ctx->refile_seq);
-+	seqlock_init(&ctx->refile_seq);
- }
- 
- SYSCALL_DEFINE1(userfaultfd, int, flags)
 -- 
-2.24.0
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
