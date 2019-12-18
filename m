@@ -6,49 +6,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA02C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B9EC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:41:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCFBF227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D24D4218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:41:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727684AbfLRUkL (ORCPT
+        id S1727665AbfLRUkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 15:40:11 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:41485 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727561AbfLRUkI (ORCPT
+        Wed, 18 Dec 2019 15:40:10 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:39659 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727543AbfLRUkG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 15:40:08 -0500
-Received: by mail-qk1-f196.google.com with SMTP id x129so2724631qke.8
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 12:40:07 -0800 (PST)
+        Wed, 18 Dec 2019 15:40:06 -0500
+Received: by mail-qt1-f196.google.com with SMTP id e5so3055948qtm.6
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 12:40:05 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=UeBf/VpWa9gYAtz/T4azpaJTgSpTj/SRdru/GVfph8M=;
-        b=ffmDaB1WxFDQhrD9RgrJ5SGEdFstWHbOgkzqT/9QlDEa8T8IIxXHqU6EMN9jLjHAkQ
-         wzQJzD8ou5NpRGr4AxD/XtA4RH70Jj7Sd86XttxSWYFn7WE5UeOzeZcNfKb5hBFF8sxj
-         GUOp7ePs6+7+QUzcbl3rX/SiEpakuRAk0TCds8b5denfNGDWMr065rHRxM/xavJjgZtW
-         /cQitAbZHKUeqUsL13+2gSyzSZYGu5qKDybYs6rH537yiCVjV4MkyPrjOZdDK++R866o
-         SIzQx0OIRjytJneFmCtMgAvpOr7BHCu6vCmehSRoVQlXUmhKqbAJE8tN6/bkOrem7K5a
-         iAgw==
-X-Gm-Message-State: APjAAAVFLTMXPVK9cfjMkYDwa8jB4AfV9eCDTFsKRSpdhmkl0fnbynMh
-        KnwkOgkhEcuL0R2LJuoZclc=
-X-Google-Smtp-Source: APXvYqxlRhAJeqNvOCKU2HnhknDW5KZ+4QH3x4voIdCcxpJODUuH1cH/Ekj4aSD6a0136mN71xdtJg==
-X-Received: by 2002:a05:620a:955:: with SMTP id w21mr4676476qkw.122.1576701607100;
-        Wed, 18 Dec 2019 12:40:07 -0800 (PST)
+        bh=xuC0KnENGlHSh4OuNtX5fMwiXIkT6SBdyZ81CX+59Kg=;
+        b=MXmFL7uqVsnOIzXbdpVsLnz4t8Ed18k7qAiFMRuzJb8WqCUdM6Ulp3sX7xmrblR8aD
+         Bx7NfcXWMQrVBRAb0r3H1DbJt5eKNx4nGThBNq2xkoegjYVQ/7w3Ko4GuIiwrMzVHlee
+         jZG9a1WlBKXEO+WjKp7/f0prjPNAicQsPkPJTRImvArmjatX4+8ZAt5SpaX3NLsfQSIG
+         xx8gq6MO2f28xtI7vOJ4vqqslH3yz7JoKD+cdeI2FHq7GO3J6Kb+AO0XJspiZO0kNE/x
+         WNpgKnRBlLijqHRSGoFYbKa/JNgg72k85WOTEQKwcynsijOrczLZpYO8b2W+6s/wtCN9
+         vLfw==
+X-Gm-Message-State: APjAAAW/FfV44sLONXR18pRldtxfr8ragwUtLbwUEu3ZIW2r74tIqpo3
+        Udl0DAs/7t9zQng0iy7evY8=
+X-Google-Smtp-Source: APXvYqyauJueZCK5IwnG4crXFSgetR+R06CV0pByYUl+l/bjpphLDYXDZ69L0JMnIG6W9yp2y5apkg==
+X-Received: by 2002:ac8:195d:: with SMTP id g29mr4000603qtk.65.1576701605403;
+        Wed, 18 Dec 2019 12:40:05 -0800 (PST)
 Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id t7sm993347qkm.136.2019.12.18.12.40.06
+        by smtp.gmail.com with ESMTPSA id t7sm993347qkm.136.2019.12.18.12.40.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 12:40:06 -0800 (PST)
+        Wed, 18 Dec 2019 12:40:04 -0800 (PST)
 From:   Arvind Sankar <nivedita@alum.mit.edu>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH 04/24] arch/setup: Drop dummy_con initialization
-Date:   Wed, 18 Dec 2019 15:39:42 -0500
-Message-Id: <20191218204002.30512-5-nivedita@alum.mit.edu>
+Subject: [PATCH 02/24] vt: Initialize conswitchp to dummy_con if unset
+Date:   Wed, 18 Dec 2019 15:39:40 -0500
+Message-Id: <20191218204002.30512-3-nivedita@alum.mit.edu>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191218204002.30512-1-nivedita@alum.mit.edu>
 References: <20191218204002.30512-1-nivedita@alum.mit.edu>
@@ -59,29 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-con_init in tty/vt.c will now set conswitchp to dummy_con if it's unset.
-Drop it from arch setup code.
+If the arch setup code hasn't initialized conswitchp yet, set it to
+dummy_con in con_init. This will allow us to drop the dummy_con
+initialization that's done in almost every architecture.
 
 Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 ---
- arch/arc/kernel/setup.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/tty/vt/vt.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arc/kernel/setup.c b/arch/arc/kernel/setup.c
-index 7ee89dc61f6e..e1c647490f00 100644
---- a/arch/arc/kernel/setup.c
-+++ b/arch/arc/kernel/setup.c
-@@ -572,10 +572,6 @@ void __init setup_arch(char **cmdline_p)
- 	 */
- 	root_mountflags &= ~MS_RDONLY;
+diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+index 34aa39d1aed9..2456afaf1c61 100644
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -3326,8 +3326,9 @@ static int __init con_init(void)
  
--#if defined(CONFIG_VT) && defined(CONFIG_DUMMY_CONSOLE)
--	conswitchp = &dummy_con;
--#endif
--
- 	arc_unwind_init();
- }
+ 	console_lock();
  
+-	if (conswitchp)
+-		display_desc = conswitchp->con_startup();
++	if (!conswitchp)
++		conswitchp = &dummy_con;
++	display_desc = conswitchp->con_startup();
+ 	if (!display_desc) {
+ 		fg_console = 0;
+ 		console_unlock();
 -- 
 2.24.1
 
