@@ -5,46 +5,46 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C83EC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 187CEC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8E8A2072B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB5A72072B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:06:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CCo3V7qd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Klj4xpCx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbfLRMGX (ORCPT
+        id S1726945AbfLRMGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 07:06:23 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28038 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726141AbfLRMGX (ORCPT
+        Wed, 18 Dec 2019 07:06:40 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33709 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726141AbfLRMGj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 07:06:23 -0500
+        Wed, 18 Dec 2019 07:06:39 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576670782;
+        s=mimecast20190719; t=1576670797;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=8bYpaneRS/2dYKmkb+lp75kycRQCiY1/yvqcTbEHEvg=;
-        b=CCo3V7qdc0NyDg7VR4kbWj+OiHVRD8zXazMTZ18P7lzhJ7GjiHkYRD2bErXojUQPd4x8lO
-        ZhmGUffkiIrHBg26uE/4TSp8xauHQknk+UK9iN5lBz0B0d7b9q1MODQHeqUL2xyhKHoK/r
-        xc/rd5i8+mNESfMR8m9h8HqDNf3s/1o=
+        bh=rUOhGyNf9nubim0QfykJb6NflAwxocUY1D7/GYKJMvY=;
+        b=Klj4xpCxjujfQpak110HAy51IgYSFaNHn4EzwBy1UgL3RATSo+MpBgEGHbR9YkxGcTezS7
+        gTNc9UYzESd2k+nP95tH9v+0LNV+zuSRsqAb2t8lTW2v4d/x64e9pPqg9XIVLlQ1QMsLqr
+        MIShJC+IqHEod8fTkO9lZ0lSLaccdUY=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-393-c8fpQGI4MQWv4rRGoAh44A-1; Wed, 18 Dec 2019 07:06:17 -0500
-X-MC-Unique: c8fpQGI4MQWv4rRGoAh44A-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-309-kbUBPd9CN8C6VsWsn6xWyQ-1; Wed, 18 Dec 2019 07:06:33 -0500
+X-MC-Unique: kbUBPd9CN8C6VsWsn6xWyQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 11CCC10054E3;
-        Wed, 18 Dec 2019 12:06:16 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 60A8E800EBF;
+        Wed, 18 Dec 2019 12:06:32 +0000 (UTC)
 Received: from [10.36.117.171] (ovpn-117-171.ams2.redhat.com [10.36.117.171])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7ED5D7D8E1;
-        Wed, 18 Dec 2019 12:06:14 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 05F411001902;
+        Wed, 18 Dec 2019 12:06:30 +0000 (UTC)
 Subject: Re: [PATCH v1] mm/memory_hotplug: Don't free usage map when removing
  a re-added early section
 From:   David Hildenbrand <david@redhat.com>
@@ -101,8 +101,8 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
  FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
 Organization: Red Hat GmbH
-Message-ID: <e971ccfa-84b2-14bc-44e7-ec2c9a29888e@redhat.com>
-Date:   Wed, 18 Dec 2019 13:06:13 +0100
+Message-ID: <5941dbfe-599d-cac5-30b5-b9e98c90ed36@redhat.com>
+Date:   Wed, 18 Dec 2019 13:06:30 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
@@ -110,7 +110,7 @@ In-Reply-To: <51586a9d-6461-bae2-c3e4-fce5f19bd786@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -215,7 +215,7 @@ Ah, just realized that we cannot do that.
 
 ms->section_mem_map = sparse_encode_mem_map(NULL, section_nr)
 
-already clears the early flag, so inlining that change would break it.
+already clears the early flag, so inlining that condition would break it.
 
 -- 
 Thanks,
