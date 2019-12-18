@@ -2,106 +2,92 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8207CC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5776CC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56CD92176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27D9C2146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:15:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="wIdnbQAC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BZV0qpJA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbfLRONE (ORCPT
+        id S1727046AbfLROPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 09:13:04 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:38978 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727050AbfLROND (ORCPT
+        Wed, 18 Dec 2019 09:15:35 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:37380 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726922AbfLROPe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 09:13:03 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBIE2OSk010271;
-        Wed, 18 Dec 2019 15:12:58 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=4pNlw7ywOUe0A9gsSO2NNL8Rt3wyL8H883y7Btdw/SQ=;
- b=wIdnbQACrXyoXNWT9zPx3Kd07hV/WL2pgrzANcPE07Cs48HWzXxQC60gJod8hBHiLHaD
- z1N3QNgvURql7ZQtkcyKRG+Qmqc80NVTUmAHtIpkr30nJ/El0Ojsj8QsyACikcH//pSO
- lbdO1ka9J1aS+dKOXDdB+b2hKcsPdWZM3Ij0F2piXkq2+wOzNFEtoJQJF5ebQ0MJRPhq
- ewXcvkN8V3coRIiDKM9mvx2LxIFFZM/JyWoS2BRk7bPY7IaVs8AMgRM8Wnj205FeRWBJ
- 8yZ50dsjY1EvdJzftRXMEvCXZ6tO24Nl0iPHejtYCrr3bCdUnDV5UjJuGxQ26CFenpOR Vw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2wvqgpvgh3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Dec 2019 15:12:58 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7C23E100038;
-        Wed, 18 Dec 2019 15:12:56 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 732D22BEAC2;
-        Wed, 18 Dec 2019 15:12:56 +0100 (CET)
-Received: from localhost (10.75.127.44) by SFHDAG3NODE1.st.com (10.75.127.7)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Dec 2019 15:12:56
- +0100
-From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <arnaud.pouliquen@st.com>
-Subject: [PATCH] component: fix debugfs.
-Date:   Wed, 18 Dec 2019 15:12:07 +0100
-Message-ID: <20191218141207.23156-1-arnaud.pouliquen@st.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 18 Dec 2019 09:15:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=2nES9kOBc4cV/fZ0o+JoYgqv77t/8xkE/A+hcyPMYUI=; b=BZV0qpJAM9mgU5zTXeGH9+luw
+        0ncgwa+JZofxcOi8owdKKmIwwyoltYlTATau/3PhXu5TTvRQzRGwV7tsHHqHEBeB4pVx4Si4lvZOH
+        a4l6FgaINOZzxU9Yy4D8V0rzda3zW81VpI5T0WPLbSA9CSSrh8ycdYYsibY54cfVViEJ+RFrggPY/
+        mC9cxGiOs2DDtkRS+AlOaMPh44g/Ij9LksYx78+GAvSQAiMC0x7MeoyWMDrJ8Pe2yWUMFl1Fk2oeC
+        jdhSLaImANWgAhXbmEhsyoRPmql01B27AZr546QZPlZq8R7kom+CWd8NMaH12KuIjzi9UVhaupsxh
+        eNqPA6S5Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iha6T-0004bj-Jp; Wed, 18 Dec 2019 14:15:05 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9BC8F30038D;
+        Wed, 18 Dec 2019 15:13:38 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8933E2B276121; Wed, 18 Dec 2019 15:15:01 +0100 (CET)
+Date:   Wed, 18 Dec 2019 15:15:01 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Paul Mackerras <paulus@ozlabs.org>, akpm@linux-foundation.org,
+        npiggin@gmail.com, will@kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-arch@vger.kernel.org, Scott Wood <oss@buserror.net>
+Subject: Re: [PATCH v2 2/3] mm/mmu_gather: Invalidate TLB correctly on batch
+ allocation failure and flush
+Message-ID: <20191218141501.GT2844@hirez.programming.kicks-ass.net>
+References: <20191218053530.73053-1-aneesh.kumar@linux.ibm.com>
+ <20191218053530.73053-2-aneesh.kumar@linux.ibm.com>
+ <20191218091733.GO2844@hirez.programming.kicks-ass.net>
+ <0f0bea3b-b7b5-fa8c-f75c-396cf78c47b4@linux.ibm.com>
+ <87v9qdn5df.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-18_03:2019-12-17,2019-12-18 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87v9qdn5df.fsf@mpe.ellerman.id.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In component_devices_show function, the data field
-of the component_match_array structure can not match with the
-device structure type. As mentioned in component_match_add_release
-description, data field type is undefined. This can result to an
-unexpected print or can generate an overflow.
-Seems no generic way to get the component name, so this patch
-prints the component device name only if registered.
+On Thu, Dec 19, 2019 at 12:13:48AM +1100, Michael Ellerman wrote:
 
-Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
----
- drivers/base/component.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+> >> I'm a little confused though; if nohash is a software TLB fill, why do
+> >> you need a TLBI for tables?
+> >> 
+> >
+> > nohash (AKA book3e) has different mmu modes. I don't follow all the 
+> > details w.r.t book3e. Paul or Michael might be able to explain the need 
+> > for table flush with book3e.
+> 
+> Some of the Book3E CPUs have a partial hardware table walker. The IBM one (A2)
+> did, before we ripped that support out. And the Freescale (NXP) e6500
+> does, see eg:
+> 
+>   28efc35fe68d ("powerpc/e6500: TLB miss handler with hardware tablewalk support")
+> 
+> They only support walking one level IIRC, ie. you can create a TLB entry
+> that points to a PTE page, and the hardware will dereference that to get
+> a PTE and load that into the TLB.
 
-diff --git a/drivers/base/component.c b/drivers/base/component.c
-index 532a3a5d8f63..3ce4f75a6610 100644
---- a/drivers/base/component.c
-+++ b/drivers/base/component.c
-@@ -102,11 +102,13 @@ static int component_devices_show(struct seq_file *s, void *data)
- 	seq_printf(s, "%-40s %20s\n", "device name", "status");
- 	seq_puts(s, "-------------------------------------------------------------\n");
- 	for (i = 0; i < match->num; i++) {
--		struct device *d = (struct device *)match->compare[i].data;
-+		struct component *comp = match->compare[i].component;
- 
--		seq_printf(s, "%-40s %20s\n", dev_name(d),
--			   match->compare[i].component ?
--			   "registered" : "not registered");
-+		if (comp)
-+			seq_printf(s, "%-40s %20s\n", dev_name(comp->dev),
-+				   "registered");
-+		else
-+			seq_printf(s, "%61s\n", "not registered");
- 	}
- 	mutex_unlock(&component_mutex);
- 
--- 
-2.17.1
-
+Shiny!, all the embedded goodness. Thanks for the info.
