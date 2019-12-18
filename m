@@ -2,73 +2,76 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA7C5C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 03:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD1CC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 03:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C39662072B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 03:50:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12E0724683
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 03:51:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfLRDu5 (ORCPT
+        id S1726681AbfLRDvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 22:50:57 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:55368 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726402AbfLRDu5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 22:50:57 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ihQMR-0002Ac-Gi; Wed, 18 Dec 2019 03:50:55 +0000
-Date:   Wed, 18 Dec 2019 03:50:55 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] vfs: Adjust indentation in remap_verify_area
-Message-ID: <20191218035055.GG4203@ZenIV.linux.org.uk>
-References: <20191218032351.5920-1-natechancellor@gmail.com>
+        Tue, 17 Dec 2019 22:51:00 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8139 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726633AbfLRDu6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 22:50:58 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B4B02BBA8E82425B4BFD;
+        Wed, 18 Dec 2019 11:50:56 +0800 (CST)
+Received: from huawei.com (10.175.127.16) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Wed, 18 Dec 2019
+ 11:50:26 +0800
+From:   Pan Zhang <zhangpan26@huawei.com>
+To:     <zhangpan26@huawei.com>, <hushiyuan@huawei.com>,
+        <alexander.deucher@amd.com>, <christian.koenig@amd.com>,
+        <David1.Zhou@amd.com>, <airlied@linux.ie>, <daniel@ffwll.ch>
+CC:     <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 3/3] gpu: drm: dead code elimination
+Date:   Wed, 18 Dec 2019 11:50:08 +0800
+Message-ID: <1576641008-14880-1-git-send-email-zhangpan26@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191218032351.5920-1-natechancellor@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
+X-Originating-IP: [10.175.127.16]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 08:23:51PM -0700, Nathan Chancellor wrote:
-> Clang warns:
-> 
-> ../fs/read_write.c:1760:3: warning: misleading indentation; statement is
-> not part of the previous 'if' [-Wmisleading-indentation]
->          if (unlikely((loff_t) (pos + len) < 0))
->          ^
-> ../fs/read_write.c:1757:2: note: previous statement is here
->         if (unlikely(pos < 0 || len < 0))
->         ^
-> 1 warning generated.
-> 
-> This warning occurs because there is a space after the tab on this line.
-> Remove it so that the indentation is consistent with the Linux kernel
-> coding style and clang no longer warns.
-> 
-> Fixes: 04b38d601239 ("vfs: pull btrfs clone API to vfs layer")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/828
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+this set adds support for removal of gpu drm dead code.
 
-Egads...  This commit message is way, way over the top.
+patch3 is similar with patch 1:
+`num` is a data of u8 type and ATOM_MAX_HW_I2C_READ == 255,
 
-1) the warning is more obscure than the problem it points to.
+so there is a impossible condition '(num > 255) => (0-255 > 255)'.
 
-2) simple "statement accidentally indented one column too deep"
-would do just fine
+Signed-off-by: Pan Zhang <zhangpan26@huawei.com>
+---
+ drivers/gpu/drm/radeon/atombios_i2c.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-3) crediting the tool is generally a good idea, but in situation
-when the quality of warning is that low you'd be better paraphrasing
-it and mentioning the tool that has pointed it out.  No need to quote
-the verbiage.
+diff --git a/drivers/gpu/drm/radeon/atombios_i2c.c b/drivers/gpu/drm/radeon/atombios_i2c.c
+index a570ce4..ab4d210 100644
+--- a/drivers/gpu/drm/radeon/atombios_i2c.c
++++ b/drivers/gpu/drm/radeon/atombios_i2c.c
+@@ -68,11 +68,6 @@ static int radeon_process_i2c_ch(struct radeon_i2c_chan *chan,
+ 			memcpy(&out, &buf[1], num);
+ 		args.lpI2CDataOut = cpu_to_le16(out);
+ 	} else {
+-		if (num > ATOM_MAX_HW_I2C_READ) {
+-			DRM_ERROR("hw i2c: tried to read too many bytes (%d vs 255)\n", num);
+-			r = -EINVAL;
+-			goto done;
+-		}
+ 		args.ucRegIndex = 0;
+ 		args.lpI2CDataOut = 0;
+ 	}
+-- 
+2.7.4
+
