@@ -2,112 +2,108 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F71C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 903B8C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A919E206D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6063B218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:24:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lewxxgxX"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="cCeosH2h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbfLRKYf (ORCPT
+        id S1726891AbfLRKYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 05:24:35 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:11867 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbfLRKYe (ORCPT
+        Wed, 18 Dec 2019 05:24:54 -0500
+Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:37424 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726701AbfLRKYw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 05:24:34 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5df9fe580000>; Wed, 18 Dec 2019 02:24:24 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 18 Dec 2019 02:24:33 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 18 Dec 2019 02:24:33 -0800
-Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Dec
- 2019 10:24:31 +0000
-Subject: Re: [PATCH 5.4 00/37] 5.4.5-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20191217200721.741054904@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <778e872e-0eb4-a888-f0a3-e6ba79eba569@nvidia.com>
-Date:   Wed, 18 Dec 2019 10:24:29 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20191217200721.741054904@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576664664; bh=+J/ofyHsE7zqCdia3Wl+xU/ioZS6XBxc853hbFruZFY=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=lewxxgxXFS6wrZpQHOWLfiXTaAg5BppRU6ybsiI8dILVbeoux3AA5YQ9kem5BC3RZ
-         gts3YmGYG8ffV9cXbFAsaljJHP6Yo5zGGfb6WlGGFbWYoAVM8bm3lN3X019t8eOPsN
-         +yeljxuAzn1jx7iaWpngHzegGsQlqe5xZ/TbamIsunil2/OfRdx+roSsgy1uORd6Z0
-         JLbTEgxerVJJ/ES4nWwvWRdklgLx4d6LVqLhm35gQcQ5eysIrvqrkssgdWasyzSxJG
-         JG+dsSRC3ZwvyzH7TheOZSo2iFaV+Vmib6Mi9gtQtJpGzLYGuyxHY8JA8UxIGjgqhC
-         32wAvKw3BGqzQ==
+        Wed, 18 Dec 2019 05:24:52 -0500
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 49A79C0D6B;
+        Wed, 18 Dec 2019 10:24:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1576664691; bh=veMgZV+L88MP2+NDYHlOUNPQ+DcuCryOxZrBeX5GTZQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=cCeosH2hAAuqc21s5yQbK6PoC7n2tHYD6gR2iv6ld7RpEyxKC9oKW9/o+y0qCswn1
+         pml1I0Qaf278BcCs0G9VwujMiJ/tlEeKlixJuCG+X+9ksRIR0lQxLgbMLyWOkHh9CS
+         VkyESB+65Cg/+zo636HV6ENBSvKpxn+sQdVHNDuBta/d7uth19BHRnimJgIUJKfnVM
+         LCGuBXsUgbmBOM+OyRU8YdPPKAzwWP70atrsBivDFsyDGm5Mq6nmF0/ArrODaYTSyt
+         Llp1Q4cXsfY6ELfsWnv4ba9HiE9smHaMDNlW2FxLURDcgReo7WohUk2L0L3L/SHnsd
+         fna3QKvjIeLJQ==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 183D8A0066;
+        Wed, 18 Dec 2019 10:24:49 +0000 (UTC)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v3 0/3] net: stmmac: Improvements for -next
+Date:   Wed, 18 Dec 2019 11:24:42 +0100
+Message-Id: <cover.1576664538.git.Jose.Abreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Misc improvements for stmmac.
 
-On 17/12/2019 20:09, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.5 release.
-> There are 37 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 19 Dec 2019 20:06:21 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.5-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
-> -------------
+1) Adds more information regarding HW Caps in the DebugFS file.
 
+2) Allows interrupts to be independently enabled or disabled so that we don't
+have to schedule both TX and RX NAPIs.
 
-All tests are passing for Tegra ...
+3) Stops using a magic number in coalesce timer re-arm.
 
-Test results for stable-v5.4:
-    13 builds:	13 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    38 tests:	38 pass, 0 fail
+---
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Jose Abreu <joabreu@synopsys.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: Chen-Yu Tsai <wens@csie.org>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-kernel@vger.kernel.org
+---
 
-Linux version:	5.4.5-rc1-g3400efb6b47c
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
+Jose Abreu (3):
+  net: stmmac: Print more information in DebugFS DMA Capabilities file
+  net: stmmac: Let TX and RX interrupts be independently
+    enabled/disabled
+  net: stmmac: Always use TX coalesce timer value when rescheduling
 
-Cheers
-Jon
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c  | 24 +++++-
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.h   | 11 ++-
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_lib.c   | 47 ++++++++++--
+ drivers/net/ethernet/stmicro/stmmac/dwmac_dma.h    |  6 +-
+ drivers/net/ethernet/stmicro/stmmac/dwmac_lib.c    | 22 +++++-
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     |  2 +
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c | 24 +++++-
+ drivers/net/ethernet/stmicro/stmmac/hwif.h         |  6 +-
+ drivers/net/ethernet/stmicro/stmmac/stmmac.h       |  1 +
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  | 88 ++++++++++++++++------
+ 10 files changed, 180 insertions(+), 51 deletions(-)
 
 -- 
-nvpublic
+2.7.4
+
