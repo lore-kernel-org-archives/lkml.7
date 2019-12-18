@@ -2,674 +2,191 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8370BC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE97C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:09:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DFB02176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:06:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="bDbpAPNP"
+	by mail.kernel.org (Postfix) with ESMTP id 71C44227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:09:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576688942;
+	bh=GompXIE0cj3C+W+UlkGCwEj92r91EaYr2dP2rHkr9c8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zKrK/XEOZh9gKcuK3IfMbywEMAy67N4t4zhqlZ8VRx1sdaU15Gpm0LnUl0xQ8r1bB
+	 lrbfra7uM5ZxgXENB24XVBOjp3IJkaLCV+3QqldN7eaUwOdXFu0O9xJoUh2RlcNWe/
+	 zTNlsqvQTj/eHnP2f25pbte4ej9QhicpSOcOWNNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727682AbfLRRGM (ORCPT
+        id S1727495AbfLRRJB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 12:06:12 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:38050 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727328AbfLRRGL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 12:06:11 -0500
-Received: by mail-pj1-f66.google.com with SMTP id l35so1156587pje.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 09:06:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=4D6xuio+8u/6zPJ5seXNY5WbWGZMLzm5IXxIXeVLCBA=;
-        b=bDbpAPNPhOhk1utSmAYIqOje9X38LYR4etf/f/BtalxCt1BXjplGCjRT5GjfabXr+g
-         fY5PYgzxHut7IHJ4Yx3r+IIfSHSKIvtD4ivk7YGPbtgM67AWq2O/21uFI+cQ10cypumU
-         wHackUorg6k5m+abIDlpIUs6bXMQbGJhul+Q8IrvKUui1FMrlq3bXbziPGnSG4kedPZQ
-         Jfb/2Xznsae87jznlRHC0KuQZZMkltau4zmM70m3Z+5cgH2uNan1/5eeiFXWkmCJmQKL
-         nO0VJ0OzhDj0kyvrp8wG83YH4XORbPvLM4kOY3ynFw1EaJxHh7zK+Z6lMYIDZGaF36fs
-         MsHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=4D6xuio+8u/6zPJ5seXNY5WbWGZMLzm5IXxIXeVLCBA=;
-        b=FS32XKXvH8JcIpCIjyroP0rc0wJzNSi7oKWMSLDvEMGTL+uCNTFkwNg3Do307lpxF/
-         Njjd6bQQsVkYHdK7a/cKEZa8Zy3gXgZFSAbLoiQcDGQk+GMlIY9pbfNx4pMI5aRZDILJ
-         EsmQNcF793OAIUQhw0CChaLKg+GK5StrzCnml5icJplJ8I/4LKQzyPHvI6z4faNHFRbJ
-         X+O4wkOP8PhdahngInsWJxqNcTLy/1JNNXJ1Mom9YhMW5grlcrTxkfHihitJAgRt9PuQ
-         CKmV1W6ayjOWIvY0DAWq+kksbFjkZCYH6oYxTHo7vTSfTsDK7G38azpEzTk66PiekyyW
-         0G/w==
-X-Gm-Message-State: APjAAAV/s6tbgCXQEbhnKL2Zq+xOx12x8ekIsUBRQbZnZjXNDgkLIBb9
-        iTxRDv6/Uo8GAyDGLqARaBaKuQ==
-X-Google-Smtp-Source: APXvYqx1Rnt9M4yfYki9+VRva+seFipPgGP3qYByiqy7051L4eFOGSA3004k/l1MzyUrVXEOzkvGxQ==
-X-Received: by 2002:a17:902:82c3:: with SMTP id u3mr3723233plz.73.1576688770320;
-        Wed, 18 Dec 2019 09:06:10 -0800 (PST)
-Received: from rip.lixom.net (99-152-116-91.lightspeed.sntcca.sbcglobal.net. [99.152.116.91])
-        by smtp.gmail.com with ESMTPSA id v29sm3844699pgl.88.2019.12.18.09.06.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 18 Dec 2019 09:06:09 -0800 (PST)
-From:   Olof Johansson <olof@lixom.net>
-To:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        jason@lakedaemon.net, maz@kernel.org, damien.lemoal@wdc.com,
-        Olof Johansson <olof@lixom.net>, Christoph Hellwig <hch@lst.de>
-Subject: [PATCH] riscv: change CSR M/S defines to use "X" for prefix
-Date:   Wed, 18 Dec 2019 09:06:03 -0800
-Message-Id: <20191218170603.58256-1-olof@lixom.net>
-X-Mailer: git-send-email 2.11.0
+        Wed, 18 Dec 2019 12:09:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56192 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727025AbfLRRJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 12:09:01 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1918A2146E;
+        Wed, 18 Dec 2019 17:08:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576688940;
+        bh=GompXIE0cj3C+W+UlkGCwEj92r91EaYr2dP2rHkr9c8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vmhOjpb5TK6fnKKJkIbI2aggZpflRmoh/VhNnR9embcLisFrdcQTB8TNbDbeEvnez
+         aKv/3WEjO4KqAlKTXTOVYrzdBgRff3EwDZiYkJj2uo4BXtyGc1SFZTyQADrw0aCDaQ
+         4RBNbhFdri4gXdPEcr5gnQCt5rr2S+5phhvfM+og=
+Date:   Wed, 18 Dec 2019 17:08:55 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     syzbot <syzbot+82defefbbd8527e1c2cb@syzkaller.appspotmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        hdanton@sina.com, akpm@linux-foundation.org
+Subject: Re: WARNING: refcount bug in cdev_get
+Message-ID: <20191218170854.GC18440@willie-the-truck>
+References: <000000000000bf410005909463ff@google.com>
+ <20191204115055.GA24783@willie-the-truck>
+ <20191204123148.GA3626092@kroah.com>
+ <20191210114444.GA17673@willie-the-truck>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191210114444.GA17673@willie-the-truck>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit a4c3733d32a7 ("riscv: abstract out CSR names for supervisor vs
-machine mode") introduced new non-S/M-specific defines for some of the
-CSRs and fields that differ for when you run the kernel in machine or
-supervisor mode.
+Hi all,
 
-One of those was "IRQ_TIMER" (instead of IRQ_S_TIMER/IRQ_M_MTIMER),
-which was generic enough to cause conflicts with other defines in
-drivers. Since it was in csr.h, it ended up getting pulled in through
-fairly generic include files, etc.
+On Tue, Dec 10, 2019 at 11:44:45AM +0000, Will Deacon wrote:
+> On Wed, Dec 04, 2019 at 01:31:48PM +0100, Greg KH wrote:
+> > But I thought we had a lock in play here, so why would changing this
+> > actually fix anything?
+> 
+> I don't think the lock is always used. For example, look at chrdev_open(),
+> which appears in the backtrace; the locked code is:
+> 
+> 	spin_lock(&cdev_lock);
+> 	p = inode->i_cdev;
+> 	if (!p) {
+> 		struct kobject *kobj;
+> 		int idx;
+> 		spin_unlock(&cdev_lock);
+> 		kobj = kobj_lookup(cdev_map, inode->i_rdev, &idx);
+> 		if (!kobj)
+> 			return -ENXIO;
+> 		new = container_of(kobj, struct cdev, kobj);
+> 		spin_lock(&cdev_lock);
+> 		/* Check i_cdev again in case somebody beat us to it while
+> 		   we dropped the lock. */
+> 		p = inode->i_cdev;
+> 		if (!p) {
+> 			inode->i_cdev = p = new;
+> 			list_add(&inode->i_devices, &p->list);
+> 			new = NULL;
+> 		} else if (!cdev_get(p))
+> 			ret = -ENXIO;
+> 	} else if (!cdev_get(p))
+> 		ret = -ENXIO;
+> 	spin_unlock(&cdev_lock);
+> 	cdev_put(new);
+> 
+> So the idea is that multiple threads serialise on the 'cdev_lock' and then
+> check 'inode->i_cdev' to figure out if the device has already been probed,
+> taking a reference to it if it's available or probing it via kobj_lookup()
+> otherwise. I think that's backwards with respect to things like cdev_put(),
+> where the refcount is dropped *before* 'inode->i_cdev' is cleared to NULL.
+> In which case, if a concurrent call to cdev_put() can drop the refcount
+> to zero without 'cdev_lock' held, then you could get a use-after-free on
+> this path thanks to a dangling pointer in 'inode->i_cdev'..
+> 
+> Looking slightly ahead in this same function, there are error paths which
+> appear to do exactly that:
+> 
+> 	fops = fops_get(p->ops);
+> 	if (!fops)
+> 		goto out_cdev_put;
+> 
+> 	replace_fops(filp, fops);
+> 	if (filp->f_op->open) {
+> 		ret = filp->f_op->open(inode, filp);
+> 		if (ret)
+> 			goto out_cdev_put;
+> 	}
+> 
+> 	return 0;
+> 
+>  out_cdev_put:
+> 	cdev_put(p);
+> 	return ret;
+> 
+> In which case the thread which installed 'inode->i_cdev' earlier on can
+> now drop its refcount to zero without the lock held if, for example, the
+> filp->f_op->open() call fails.
+> 
+> But note, this is purely based on code inspection -- the C reproducer from
+> syzkaller doesn't work for me, so I've not been able to test any fixes either.
+> It's also worth noting that cdev_put() is called from __fput(), but I think the
+> reference counting on the file means we're ok there.
+> 
+> > This code hasn't changed in 15+ years, what suddenly changed that causes
+> > problems here?
+> 
+> I suppose one thing to consider is that the refcount code is relatively new,
+> so it could be that the actual use-after-free is extremely rare, but we're
+> now seeing that it's at least potentially an issue.
+> 
+> Thoughts?
 
-I looked at just renaming those, but for consistency I chose to rename all
-M/S symbols to using 'X' instead of 'S'/'M' in the identifiers instead,
-which gives them all less generic names.
+FWIW, I added some mdelay()s to make this race more likely, and I can now
+trigger it reasonably reliably. See below.
 
-This is pretty churny, and I'm sure there'll be opinions on naming, but
-I figured I'd do the busywork of fixing it up instead of just pointing
-out the conflicts.
+Will
 
-Fixes: a4c3733d32a7 ("riscv: abstract out CSR names for supervisor vs machine mode")
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Olof Johansson <olof@lixom.net>
----
- arch/riscv/include/asm/csr.h      | 70 +++++++++++++++++++--------------------
- arch/riscv/include/asm/irqflags.h | 12 +++----
- arch/riscv/include/asm/ptrace.h   |  2 +-
- arch/riscv/kernel/entry.S         | 32 +++++++++---------
- arch/riscv/kernel/fpu.S           |  8 ++---
- arch/riscv/kernel/head.S          | 14 ++++----
- arch/riscv/kernel/irq.c           |  6 ++--
- arch/riscv/kernel/process.c       |  4 +--
- arch/riscv/kernel/smp.c           |  2 +-
- arch/riscv/kernel/traps.c         |  6 ++--
- arch/riscv/lib/uaccess.S          | 12 +++----
- arch/riscv/mm/fault.c             |  2 +-
- drivers/clocksource/timer-riscv.c |  8 ++---
- drivers/irqchip/irq-sifive-plic.c |  6 ++--
- 14 files changed, 92 insertions(+), 92 deletions(-)
+--->8
 
-diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.h
-index 0a62d2d684552..21b323c25c94a 100644
---- a/arch/riscv/include/asm/csr.h
-+++ b/arch/riscv/include/asm/csr.h
-@@ -103,45 +103,45 @@
- #define CSR_MHARTID		0xf14
- 
- #ifdef CONFIG_RISCV_M_MODE
--# define CSR_STATUS	CSR_MSTATUS
--# define CSR_IE		CSR_MIE
--# define CSR_TVEC	CSR_MTVEC
--# define CSR_SCRATCH	CSR_MSCRATCH
--# define CSR_EPC	CSR_MEPC
--# define CSR_CAUSE	CSR_MCAUSE
--# define CSR_TVAL	CSR_MTVAL
--# define CSR_IP		CSR_MIP
--
--# define SR_IE		SR_MIE
--# define SR_PIE		SR_MPIE
--# define SR_PP		SR_MPP
--
--# define IRQ_SOFT	IRQ_M_SOFT
--# define IRQ_TIMER	IRQ_M_TIMER
--# define IRQ_EXT	IRQ_M_EXT
-+# define CSR_XSTATUS	CSR_MSTATUS
-+# define CSR_XIE	CSR_MIE
-+# define CSR_XTVEC	CSR_MTVEC
-+# define CSR_XSCRATCH	CSR_MSCRATCH
-+# define CSR_XEPC	CSR_MEPC
-+# define CSR_XCAUSE	CSR_MCAUSE
-+# define CSR_XTVAL	CSR_MTVAL
-+# define CSR_XIP	CSR_MIP
-+
-+# define SR_XIE		SR_MIE
-+# define SR_XPIE	SR_MPIE
-+# define SR_XPP		SR_MPP
-+
-+# define IRQ_X_SOFT	IRQ_M_SOFT
-+# define IRQ_X_TIMER	IRQ_M_TIMER
-+# define IRQ_X_EXT	IRQ_M_EXT
- #else /* CONFIG_RISCV_M_MODE */
--# define CSR_STATUS	CSR_SSTATUS
--# define CSR_IE		CSR_SIE
--# define CSR_TVEC	CSR_STVEC
--# define CSR_SCRATCH	CSR_SSCRATCH
--# define CSR_EPC	CSR_SEPC
--# define CSR_CAUSE	CSR_SCAUSE
--# define CSR_TVAL	CSR_STVAL
--# define CSR_IP		CSR_SIP
--
--# define SR_IE		SR_SIE
--# define SR_PIE		SR_SPIE
--# define SR_PP		SR_SPP
--
--# define IRQ_SOFT	IRQ_S_SOFT
--# define IRQ_TIMER	IRQ_S_TIMER
--# define IRQ_EXT	IRQ_S_EXT
-+# define CSR_XSTATUS	CSR_SSTATUS
-+# define CSR_XIE	CSR_SIE
-+# define CSR_XTVEC	CSR_STVEC
-+# define CSR_XSCRATCH	CSR_SSCRATCH
-+# define CSR_XEPC	CSR_SEPC
-+# define CSR_XCAUSE	CSR_SCAUSE
-+# define CSR_XTVAL	CSR_STVAL
-+# define CSR_XIP	CSR_SIP
-+
-+# define SR_XIE		SR_SIE
-+# define SR_XPIE	SR_SPIE
-+# define SR_XPP		SR_SPP
-+
-+# define IRQ_X_SOFT	IRQ_S_SOFT
-+# define IRQ_X_TIMER	IRQ_S_TIMER
-+# define IRQ_X_EXT	IRQ_S_EXT
- #endif /* CONFIG_RISCV_M_MODE */
- 
- /* IE/IP (Supervisor/Machine Interrupt Enable/Pending) flags */
--#define IE_SIE		(_AC(0x1, UL) << IRQ_SOFT)
--#define IE_TIE		(_AC(0x1, UL) << IRQ_TIMER)
--#define IE_EIE		(_AC(0x1, UL) << IRQ_EXT)
-+#define IE_SIE		(_AC(0x1, UL) << IRQ_X_SOFT)
-+#define IE_TIE		(_AC(0x1, UL) << IRQ_X_TIMER)
-+#define IE_EIE		(_AC(0x1, UL) << IRQ_X_EXT)
- 
- #ifndef __ASSEMBLY__
- 
-diff --git a/arch/riscv/include/asm/irqflags.h b/arch/riscv/include/asm/irqflags.h
-index 08d4d6a5b7e95..ba2828a37d724 100644
---- a/arch/riscv/include/asm/irqflags.h
-+++ b/arch/riscv/include/asm/irqflags.h
-@@ -13,31 +13,31 @@
- /* read interrupt enabled status */
- static inline unsigned long arch_local_save_flags(void)
- {
--	return csr_read(CSR_STATUS);
-+	return csr_read(CSR_XSTATUS);
- }
- 
- /* unconditionally enable interrupts */
- static inline void arch_local_irq_enable(void)
- {
--	csr_set(CSR_STATUS, SR_IE);
-+	csr_set(CSR_XSTATUS, SR_XIE);
- }
- 
- /* unconditionally disable interrupts */
- static inline void arch_local_irq_disable(void)
- {
--	csr_clear(CSR_STATUS, SR_IE);
-+	csr_clear(CSR_XSTATUS, SR_XIE);
- }
- 
- /* get status and disable interrupts */
- static inline unsigned long arch_local_irq_save(void)
- {
--	return csr_read_clear(CSR_STATUS, SR_IE);
-+	return csr_read_clear(CSR_XSTATUS, SR_XIE);
- }
- 
- /* test flags */
- static inline int arch_irqs_disabled_flags(unsigned long flags)
- {
--	return !(flags & SR_IE);
-+	return !(flags & SR_XIE);
- }
- 
- /* test hardware interrupt enable bit */
-@@ -49,7 +49,7 @@ static inline int arch_irqs_disabled(void)
- /* set interrupt enabled status */
- static inline void arch_local_irq_restore(unsigned long flags)
- {
--	csr_set(CSR_STATUS, flags & SR_IE);
-+	csr_set(CSR_XSTATUS, flags & SR_XIE);
- }
- 
- #endif /* _ASM_RISCV_IRQFLAGS_H */
-diff --git a/arch/riscv/include/asm/ptrace.h b/arch/riscv/include/asm/ptrace.h
-index ee49f80c95337..507ed43bc4b8a 100644
---- a/arch/riscv/include/asm/ptrace.h
-+++ b/arch/riscv/include/asm/ptrace.h
-@@ -58,7 +58,7 @@ struct pt_regs {
- #define REG_FMT "%08lx"
- #endif
- 
--#define user_mode(regs) (((regs)->status & SR_PP) == 0)
-+#define user_mode(regs) (((regs)->status & SR_XPP) == 0)
- 
- 
- /* Helpers for working with the instruction pointer */
-diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
-index dd61bb247ce75..309cbf057c4e7 100644
---- a/arch/riscv/kernel/entry.S
-+++ b/arch/riscv/kernel/entry.S
-@@ -29,11 +29,11 @@
- 	 * the kernel thread pointer.  If we came from the kernel, the scratch
- 	 * register will contain 0, and we should continue on the current TP.
- 	 */
--	csrrw tp, CSR_SCRATCH, tp
-+	csrrw tp, CSR_XSCRATCH, tp
- 	bnez tp, _save_context
- 
- _restore_kernel_tpsp:
--	csrr tp, CSR_SCRATCH
-+	csrr tp, CSR_XSCRATCH
- 	REG_S sp, TASK_TI_KERNEL_SP(tp)
- _save_context:
- 	REG_S sp, TASK_TI_USER_SP(tp)
-@@ -79,11 +79,11 @@ _save_context:
- 	li t0, SR_SUM | SR_FS
- 
- 	REG_L s0, TASK_TI_USER_SP(tp)
--	csrrc s1, CSR_STATUS, t0
--	csrr s2, CSR_EPC
--	csrr s3, CSR_TVAL
--	csrr s4, CSR_CAUSE
--	csrr s5, CSR_SCRATCH
-+	csrrc s1, CSR_XSTATUS, t0
-+	csrr s2, CSR_XEPC
-+	csrr s3, CSR_XTVAL
-+	csrr s4, CSR_XCAUSE
-+	csrr s5, CSR_XSCRATCH
- 	REG_S s0, PT_SP(sp)
- 	REG_S s1, PT_STATUS(sp)
- 	REG_S s2, PT_EPC(sp)
-@@ -118,8 +118,8 @@ _save_context:
- 	REG_L  a2, PT_EPC(sp)
- 	REG_SC x0, a2, PT_EPC(sp)
- 
--	csrw CSR_STATUS, a0
--	csrw CSR_EPC, a2
-+	csrw CSR_XSTATUS, a0
-+	csrw CSR_XEPC, a2
- 
- 	REG_L x1,  PT_RA(sp)
- 	REG_L x3,  PT_GP(sp)
-@@ -166,7 +166,7 @@ ENTRY(handle_exception)
- 	 * Set the scratch register to 0, so that if a recursive exception
- 	 * occurs, the exception vector knows it came from the kernel
- 	 */
--	csrw CSR_SCRATCH, x0
-+	csrw CSR_XSCRATCH, x0
- 
- 	/* Load the global pointer */
- .option push
-@@ -187,11 +187,11 @@ ENTRY(handle_exception)
- 1:
- 	/*
- 	 * Exceptions run with interrupts enabled or disabled depending on the
--	 * state of SR_PIE in m/sstatus.
-+	 * state of SR_XPIE in m/sstatus.
- 	 */
--	andi t0, s1, SR_PIE
-+	andi t0, s1, SR_XPIE
- 	beqz t0, 1f
--	csrs CSR_STATUS, SR_IE
-+	csrs CSR_XSTATUS, SR_XIE
- 
- 1:
- 	/* Handle syscalls */
-@@ -270,7 +270,7 @@ ret_from_syscall_rejected:
- 
- ret_from_exception:
- 	REG_L s0, PT_STATUS(sp)
--	csrc CSR_STATUS, SR_IE
-+	csrc CSR_XSTATUS, SR_XIE
- #ifdef CONFIG_RISCV_M_MODE
- 	/* the MPP value is too large to be used as an immediate arg for addi */
- 	li t0, SR_MPP
-@@ -294,7 +294,7 @@ resume_userspace:
- 	 * Save TP into the scratch register , so we can find the kernel data
- 	 * structures again.
- 	 */
--	csrw CSR_SCRATCH, tp
-+	csrw CSR_XSCRATCH, tp
- 
- restore_all:
- 	RESTORE_ALL
-@@ -322,7 +322,7 @@ work_pending:
- 	bnez s1, work_resched
- work_notifysig:
- 	/* Handle pending signals and notify-resume requests */
--	csrs CSR_STATUS, SR_IE /* Enable interrupts for do_notify_resume() */
-+	csrs CSR_XSTATUS, SR_XIE /* Enable interrupts for do_notify_resume() */
- 	move a0, sp /* pt_regs */
- 	move a1, s0 /* current_thread_info->flags */
- 	tail do_notify_resume
-diff --git a/arch/riscv/kernel/fpu.S b/arch/riscv/kernel/fpu.S
-index dd2205473de78..1dade31f45647 100644
---- a/arch/riscv/kernel/fpu.S
-+++ b/arch/riscv/kernel/fpu.S
-@@ -23,7 +23,7 @@ ENTRY(__fstate_save)
- 	li  a2,  TASK_THREAD_F0
- 	add a0, a0, a2
- 	li t1, SR_FS
--	csrs CSR_STATUS, t1
-+	csrs CSR_XSTATUS, t1
- 	frcsr t0
- 	fsd f0,  TASK_THREAD_F0_F0(a0)
- 	fsd f1,  TASK_THREAD_F1_F0(a0)
-@@ -58,7 +58,7 @@ ENTRY(__fstate_save)
- 	fsd f30, TASK_THREAD_F30_F0(a0)
- 	fsd f31, TASK_THREAD_F31_F0(a0)
- 	sw t0, TASK_THREAD_FCSR_F0(a0)
--	csrc CSR_STATUS, t1
-+	csrc CSR_XSTATUS, t1
- 	ret
- ENDPROC(__fstate_save)
- 
-@@ -67,7 +67,7 @@ ENTRY(__fstate_restore)
- 	add a0, a0, a2
- 	li t1, SR_FS
- 	lw t0, TASK_THREAD_FCSR_F0(a0)
--	csrs CSR_STATUS, t1
-+	csrs CSR_XSTATUS, t1
- 	fld f0,  TASK_THREAD_F0_F0(a0)
- 	fld f1,  TASK_THREAD_F1_F0(a0)
- 	fld f2,  TASK_THREAD_F2_F0(a0)
-@@ -101,6 +101,6 @@ ENTRY(__fstate_restore)
- 	fld f30, TASK_THREAD_F30_F0(a0)
- 	fld f31, TASK_THREAD_F31_F0(a0)
- 	fscsr t0
--	csrc CSR_STATUS, t1
-+	csrc CSR_XSTATUS, t1
- 	ret
- ENDPROC(__fstate_restore)
-diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-index 84a6f0a4b120b..71efbba25ed59 100644
---- a/arch/riscv/kernel/head.S
-+++ b/arch/riscv/kernel/head.S
-@@ -48,8 +48,8 @@ ENTRY(_start)
- .global _start_kernel
- _start_kernel:
- 	/* Mask all interrupts */
--	csrw CSR_IE, zero
--	csrw CSR_IP, zero
-+	csrw CSR_XIE, zero
-+	csrw CSR_XIP, zero
- 
- #ifdef CONFIG_RISCV_M_MODE
- 	/* flush the instruction cache */
-@@ -76,7 +76,7 @@ _start_kernel:
- 	 * floating point in kernel space
- 	 */
- 	li t0, SR_FS
--	csrc CSR_STATUS, t0
-+	csrc CSR_XSTATUS, t0
- 
- #ifdef CONFIG_SMP
- 	li t0, CONFIG_NR_CPUS
-@@ -134,7 +134,7 @@ relocate:
- 	/* Point stvec to virtual address of intruction after satp write */
- 	la a2, 1f
- 	add a2, a2, a1
--	csrw CSR_TVEC, a2
-+	csrw CSR_XTVEC, a2
- 
- 	/* Compute satp for kernel page tables, but don't load it yet */
- 	srl a2, a0, PAGE_SHIFT
-@@ -156,7 +156,7 @@ relocate:
- 1:
- 	/* Set trap vector to spin forever to help debug */
- 	la a0, .Lsecondary_park
--	csrw CSR_TVEC, a0
-+	csrw CSR_XTVEC, a0
- 
- 	/* Reload the global pointer */
- .option push
-@@ -180,7 +180,7 @@ relocate:
- #ifdef CONFIG_SMP
- 	/* Set trap vector to spin forever to help debug */
- 	la a3, .Lsecondary_park
--	csrw CSR_TVEC, a3
-+	csrw CSR_XTVEC, a3
- 
- 	slli a3, a0, LGREG
- 	la a1, __cpu_up_stack_pointer
-@@ -254,7 +254,7 @@ ENTRY(reset_regs)
- 	bnez	t0, .Lreset_regs_done
- 
- 	li	t1, SR_FS
--	csrs	CSR_STATUS, t1
-+	csrs	CSR_XSTATUS, t1
- 	fmv.s.x	f0, zero
- 	fmv.s.x	f1, zero
- 	fmv.s.x	f2, zero
-diff --git a/arch/riscv/kernel/irq.c b/arch/riscv/kernel/irq.c
-index 3f07a91d5afb4..cfbec2adb33a0 100644
---- a/arch/riscv/kernel/irq.c
-+++ b/arch/riscv/kernel/irq.c
-@@ -23,11 +23,11 @@ asmlinkage __visible void __irq_entry do_IRQ(struct pt_regs *regs)
- 
- 	irq_enter();
- 	switch (regs->cause & ~CAUSE_IRQ_FLAG) {
--	case IRQ_TIMER:
-+	case IRQ_X_TIMER:
- 		riscv_timer_interrupt();
- 		break;
- #ifdef CONFIG_SMP
--	case IRQ_SOFT:
-+	case IRQ_X_SOFT:
- 		/*
- 		 * We only use software interrupts to pass IPIs, so if a non-SMP
- 		 * system gets one, then we don't know what to do.
-@@ -35,7 +35,7 @@ asmlinkage __visible void __irq_entry do_IRQ(struct pt_regs *regs)
- 		riscv_software_interrupt();
- 		break;
- #endif
--	case IRQ_EXT:
-+	case IRQ_X_EXT:
- 		handle_arch_irq(regs);
- 		break;
- 	default:
-diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
-index 95a3031e5c7c9..7d3ddb18863a8 100644
---- a/arch/riscv/kernel/process.c
-+++ b/arch/riscv/kernel/process.c
-@@ -65,7 +65,7 @@ void show_regs(struct pt_regs *regs)
- void start_thread(struct pt_regs *regs, unsigned long pc,
- 	unsigned long sp)
- {
--	regs->status = SR_PIE;
-+	regs->status = SR_XPIE;
- 	if (has_fpu) {
- 		regs->status |= SR_FS_INITIAL;
- 		/*
-@@ -111,7 +111,7 @@ int copy_thread(unsigned long clone_flags, unsigned long usp,
- 		memset(childregs, 0, sizeof(struct pt_regs));
- 		childregs->gp = gp;
- 		/* Supervisor/Machine, irqs on: */
--		childregs->status = SR_PP | SR_PIE;
-+		childregs->status = SR_XPP | SR_XPIE;
- 
- 		p->thread.ra = (unsigned long)ret_from_kernel_thread;
- 		p->thread.s[0] = usp; /* fn */
-diff --git a/arch/riscv/kernel/smp.c b/arch/riscv/kernel/smp.c
-index eb878abcaaf81..1c95cfeea9f13 100644
---- a/arch/riscv/kernel/smp.c
-+++ b/arch/riscv/kernel/smp.c
-@@ -116,7 +116,7 @@ static void send_ipi_single(int cpu, enum ipi_message_type op)
- static inline void clear_ipi(void)
- {
- 	if (IS_ENABLED(CONFIG_RISCV_SBI))
--		csr_clear(CSR_IP, IE_SIE);
-+		csr_clear(CSR_XIP, IE_SIE);
- 	else
- 		clint_clear_ipi(cpuid_to_hartid_map(smp_processor_id()));
- }
-diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
-index f4cad5163bf2c..d8d7c4dbb0afd 100644
---- a/arch/riscv/kernel/traps.c
-+++ b/arch/riscv/kernel/traps.c
-@@ -153,9 +153,9 @@ void __init trap_init(void)
- 	 * Set sup0 scratch register to 0, indicating to exception vector
- 	 * that we are presently executing in the kernel
- 	 */
--	csr_write(CSR_SCRATCH, 0);
-+	csr_write(CSR_XSCRATCH, 0);
- 	/* Set the exception vector address */
--	csr_write(CSR_TVEC, &handle_exception);
-+	csr_write(CSR_XTVEC, &handle_exception);
- 	/* Enable all interrupts */
--	csr_write(CSR_IE, -1);
-+	csr_write(CSR_XIE, -1);
- }
-diff --git a/arch/riscv/lib/uaccess.S b/arch/riscv/lib/uaccess.S
-index fecd65657a6fc..f47a2ea4dc898 100644
---- a/arch/riscv/lib/uaccess.S
-+++ b/arch/riscv/lib/uaccess.S
-@@ -18,7 +18,7 @@ ENTRY(__asm_copy_from_user)
- 
- 	/* Enable access to user memory */
- 	li t6, SR_SUM
--	csrs CSR_STATUS, t6
-+	csrs CSR_XSTATUS, t6
- 
- 	add a3, a1, a2
- 	/* Use word-oriented copy only if low-order bits match */
-@@ -47,7 +47,7 @@ ENTRY(__asm_copy_from_user)
- 
- 3:
- 	/* Disable access to user memory */
--	csrc CSR_STATUS, t6
-+	csrc CSR_XSTATUS, t6
- 	li a0, 0
- 	ret
- 4: /* Edge case: unalignment */
-@@ -72,7 +72,7 @@ ENTRY(__clear_user)
- 
- 	/* Enable access to user memory */
- 	li t6, SR_SUM
--	csrs CSR_STATUS, t6
-+	csrs CSR_XSTATUS, t6
- 
- 	add a3, a0, a1
- 	addi t0, a0, SZREG-1
-@@ -94,7 +94,7 @@ ENTRY(__clear_user)
- 
- 3:
- 	/* Disable access to user memory */
--	csrc CSR_STATUS, t6
-+	csrc CSR_XSTATUS, t6
- 	li a0, 0
- 	ret
- 4: /* Edge case: unalignment */
-@@ -114,11 +114,11 @@ ENDPROC(__clear_user)
- 	/* Fixup code for __copy_user(10) and __clear_user(11) */
- 10:
- 	/* Disable access to user memory */
--	csrs CSR_STATUS, t6
-+	csrs CSR_XSTATUS, t6
- 	mv a0, a2
- 	ret
- 11:
--	csrs CSR_STATUS, t6
-+	csrs CSR_XSTATUS, t6
- 	mv a0, a1
- 	ret
- 	.previous
-diff --git a/arch/riscv/mm/fault.c b/arch/riscv/mm/fault.c
-index cf7248e07f439..ede89cdfb153f 100644
---- a/arch/riscv/mm/fault.c
-+++ b/arch/riscv/mm/fault.c
-@@ -53,7 +53,7 @@ asmlinkage void do_page_fault(struct pt_regs *regs)
- 		goto vmalloc_fault;
- 
- 	/* Enable interrupts if they were enabled in the parent context. */
--	if (likely(regs->status & SR_PIE))
-+	if (likely(regs->status & SR_XPIE))
- 		local_irq_enable();
- 
- 	/*
-diff --git a/drivers/clocksource/timer-riscv.c b/drivers/clocksource/timer-riscv.c
-index 4e54856ce2a5f..16ed3749eee12 100644
---- a/drivers/clocksource/timer-riscv.c
-+++ b/drivers/clocksource/timer-riscv.c
-@@ -31,7 +31,7 @@ static inline void mmio_set_timer(u64 val)
- static int riscv_clock_next_event(unsigned long delta,
- 		struct clock_event_device *ce)
- {
--	csr_set(CSR_IE, IE_TIE);
-+	csr_set(CSR_XIE, IE_TIE);
- 	if (IS_ENABLED(CONFIG_RISCV_SBI))
- 		sbi_set_timer(get_cycles64() + delta);
- 	else
-@@ -76,13 +76,13 @@ static int riscv_timer_starting_cpu(unsigned int cpu)
- 	ce->cpumask = cpumask_of(cpu);
- 	clockevents_config_and_register(ce, riscv_timebase, 100, 0x7fffffff);
- 
--	csr_set(CSR_IE, IE_TIE);
-+	csr_set(CSR_XIE, IE_TIE);
- 	return 0;
- }
- 
- static int riscv_timer_dying_cpu(unsigned int cpu)
- {
--	csr_clear(CSR_IE, IE_TIE);
-+	csr_clear(CSR_XIE, IE_TIE);
- 	return 0;
- }
- 
-@@ -91,7 +91,7 @@ void riscv_timer_interrupt(void)
- {
- 	struct clock_event_device *evdev = this_cpu_ptr(&riscv_clock_event);
- 
--	csr_clear(CSR_IE, IE_TIE);
-+	csr_clear(CSR_XIE, IE_TIE);
- 	evdev->event_handler(evdev);
- }
- 
-diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-index 8df547d2d9353..d75c12edd1b8c 100644
---- a/drivers/irqchip/irq-sifive-plic.c
-+++ b/drivers/irqchip/irq-sifive-plic.c
-@@ -181,7 +181,7 @@ static void plic_handle_irq(struct pt_regs *regs)
- 
- 	WARN_ON_ONCE(!handler->present);
- 
--	csr_clear(CSR_IE, IE_EIE);
-+	csr_clear(CSR_XIE, IE_EIE);
- 	while ((hwirq = readl(claim))) {
- 		int irq = irq_find_mapping(plic_irqdomain, hwirq);
- 
-@@ -191,7 +191,7 @@ static void plic_handle_irq(struct pt_regs *regs)
- 		else
- 			generic_handle_irq(irq);
- 	}
--	csr_set(CSR_IE, IE_EIE);
-+	csr_set(CSR_XIE, IE_EIE);
- }
- 
- /*
-@@ -256,7 +256,7 @@ static int __init plic_init(struct device_node *node,
- 		 * Skip contexts other than external interrupts for our
- 		 * privilege level.
- 		 */
--		if (parent.args[0] != IRQ_EXT)
-+		if (parent.args[0] != IRQ_X_EXT)
- 			continue;
- 
- 		hartid = plic_find_hart_id(parent.np);
--- 
-2.11.0
-
+[   89.512353] ------------[ cut here ]------------
+[   89.513350] refcount_t: addition on 0; use-after-free.
+[   89.513977] WARNING: CPU: 2 PID: 6385 at lib/refcount.c:25 refcount_warn_saturate+0x6d/0xf0
+[   89.514943] Modules linked in:
+[   89.515307] CPU: 2 PID: 6385 Comm: repro Not tainted 5.5.0-rc2+ #22
+[   89.516039] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+[   89.517047] RIP: 0010:refcount_warn_saturate+0x6d/0xf0
+[   89.517647] Code: 05 55 9a 15 01 01 e8 9d aa c8 ff 0f 0b c3 80 3d 45 9a 15 01 00 75 ce 48 c7 c7 00 9c 62 b3 c6 08
+[   89.519749] RSP: 0018:ffffb524c1b9bc70 EFLAGS: 00010282
+[   89.520353] RAX: 0000000000000000 RBX: ffff9e9da1f71390 RCX: 0000000000000000
+[   89.521184] RDX: ffff9e9dbbd27618 RSI: ffff9e9dbbd18798 RDI: ffff9e9dbbd18798
+[   89.522020] RBP: 0000000000000000 R08: 000000000000095f R09: 0000000000000039
+[   89.522854] R10: 0000000000000000 R11: ffffb524c1b9bb20 R12: ffff9e9da1e8c700
+[   89.523689] R13: ffffffffb25ee8b0 R14: 0000000000000000 R15: ffff9e9da1e8c700
+[   89.524512] FS:  00007f3b87d26700(0000) GS:ffff9e9dbbd00000(0000) knlGS:0000000000000000
+[   89.525439] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   89.526105] CR2: 00007fc16909c000 CR3: 000000012df9c000 CR4: 00000000000006e0
+[   89.526937] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   89.527759] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   89.528587] Call Trace:
+[   89.528889]  kobject_get+0x5c/0x60
+[   89.529290]  cdev_get+0x2b/0x60
+[   89.529656]  chrdev_open+0x55/0x220
+[   89.530060]  ? cdev_put.part.3+0x20/0x20
+[   89.530515]  do_dentry_open+0x13a/0x390
+[   89.530961]  path_openat+0x2c8/0x1470
+[   89.531383]  do_filp_open+0x93/0x100
+[   89.531797]  ? selinux_file_ioctl+0x17f/0x220
+[   89.532297]  do_sys_open+0x186/0x220
+[   89.532708]  do_syscall_64+0x48/0x150
+[   89.533129]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[   89.533704] RIP: 0033:0x7f3b87efcd0e
+[   89.534115] Code: 89 54 24 08 e8 a3 f4 ff ff 8b 74 24 0c 48 8b 3c 24 41 89 c0 44 8b 54 24 08 b8 01 01 00 00 89 f4
+[   89.536227] RSP: 002b:00007f3b87d259f0 EFLAGS: 00000293 ORIG_RAX: 0000000000000101
+[   89.537085] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f3b87efcd0e
+[   89.537891] RDX: 0000000000000000 RSI: 00007f3b87d25a80 RDI: 00000000ffffff9c
+[   89.538693] RBP: 00007f3b87d25e90 R08: 0000000000000000 R09: 0000000000000000
+[   89.539493] R10: 0000000000000000 R11: 0000000000000293 R12: 00007ffe188f504e
+[   89.540291] R13: 00007ffe188f504f R14: 00007f3b87d26700 R15: 0000000000000000
+[   89.541090] ---[ end trace 24f53ca58db8180a ]---
