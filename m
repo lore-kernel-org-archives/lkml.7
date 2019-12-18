@@ -2,132 +2,135 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 003E2C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF53C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBC1320717
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:18:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3F892465E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:19:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dNN3hJSQ"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Fk43jeqA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbfLRJS2 (ORCPT
+        id S1726825AbfLRJTH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 04:18:28 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:19120 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726842AbfLRJRL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 04:17:11 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5df9ee8d0000>; Wed, 18 Dec 2019 01:17:01 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 18 Dec 2019 01:17:10 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 18 Dec 2019 01:17:10 -0800
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Dec
- 2019 09:17:10 +0000
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Dec
- 2019 09:17:10 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 18 Dec 2019 09:17:09 +0000
-Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.64.167]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5df9ee920000>; Wed, 18 Dec 2019 01:17:09 -0800
-From:   Nagarjuna Kristam <nkristam@nvidia.com>
-To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <mark.rutland@arm.com>, <robh+dt@kernel.org>, <kishon@ti.com>
-CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Nagarjuna Kristam" <nkristam@nvidia.com>
-Subject: [Patch V2 05/18] phy: tegra: xusb: Add support to get companion USB 3 port
-Date:   Wed, 18 Dec 2019 14:46:18 +0530
-Message-ID: <1576660591-10383-6-git-send-email-nkristam@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576660591-10383-1-git-send-email-nkristam@nvidia.com>
-References: <1576660591-10383-1-git-send-email-nkristam@nvidia.com>
-X-NVConfidentiality: public
+        Wed, 18 Dec 2019 04:19:07 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:59382 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726551AbfLRJTH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 04:19:07 -0500
+Received: from zn.tnic (p200300EC2F0B8B0019D63FEBF10F193B.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:8b00:19d6:3feb:f10f:193b])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A73691EC01AD;
+        Wed, 18 Dec 2019 10:19:05 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1576660745;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=PhrSdgcZwoPWDd5jU9umv1jFxMc9F4x5Z412X3Mg6pc=;
+        b=Fk43jeqA8gwd5wYwY2mkCGqqN5MMH3lErnH4PGyybkqjtNrLsvJRczDjvqWnc6tcZKnV3E
+        0sKXn6MTArug6yqQ8bv+MHvq9CM3DpvXuOPxEnNygpnkqU/6AW0zMdsDTk6Dud6V0OIOy0
+        qREtqb+Z8/GPXpf+MVu1sGmLgqUnAuA=
+Date:   Wed, 18 Dec 2019 10:18:56 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, sean.j.christopherson@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
+        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
+        puiterwijk@redhat.com
+Subject: Re: [PATCH v24 08/24] x86/sgx: Enumerate and track EPC sections
+Message-ID: <20191218091856.GA24886@zn.tnic>
+References: <20191129231326.18076-1-jarkko.sakkinen@linux.intel.com>
+ <20191129231326.18076-9-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576660621; bh=RXPO69Y2JGFUoofmuP9dolCBdU3ItrnS7wncxYo5Sks=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=dNN3hJSQ2mErR/a7etROcC/9D3PfkQHa+p4VgUOD54Z4krMxkaBidahQZ+9A0nrES
-         rSksPcpzOKSb1b0gfewOecbt+tWAcd4XCU08iUazOzjCotRIfyGjutz/Jpy6LVPN23
-         ANVQHK3NmpLHlfIDSstAWHGnr/A6YNSQE+9vY+LrGdMDVR1hmrYtMwWyf365AtGw0O
-         yYxTqpUqMmr6LrH2nX7P+uoj4yQF2tuKmt1+4ckGiMa531hyprQqsDEBMscf0d4zIs
-         vW8irLnSNM7qe+5i3Yv/mi56XGVoKEpLI86C378e3vBkuwL/vsbFpx2Ogl7rjXIcW7
-         z0p99dreUGk8g==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191129231326.18076-9-jarkko.sakkinen@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra XUSB host, device mode driver requires the USB 3 companion port
-number for corresponding USB 2 port. Add API to retrieve the same.
+On Sat, Nov 30, 2019 at 01:13:10AM +0200, Jarkko Sakkinen wrote:
+> +static bool __init sgx_alloc_epc_section(u64 addr, u64 size,
+> +					 unsigned long index,
+> +					 struct sgx_epc_section *section)
+> +{
+> +	unsigned long nr_pages = size >> PAGE_SHIFT;
 
-Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
----
-V2:
- - Added -ENODEV as return instead of -1, to sync other errors.
----
- drivers/phy/tegra/xusb.c       | 21 +++++++++++++++++++++
- include/linux/phy/tegra/xusb.h |  2 ++
- 2 files changed, 23 insertions(+)
+I'm assuming here that size which gets communicated through CPUID -
+which is an interesting way to communicate SGX settings in itself :-) - is
+in multiples of 4K? SDM doesn't say...
 
-diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
-index 5bde8f1..e75cd71 100644
---- a/drivers/phy/tegra/xusb.c
-+++ b/drivers/phy/tegra/xusb.c
-@@ -1256,6 +1256,27 @@ int tegra_phy_xusb_utmi_port_reset(struct phy *phy)
- }
- EXPORT_SYMBOL_GPL(tegra_phy_xusb_utmi_port_reset);
- 
-+int tegra_xusb_padctl_get_usb3_companion(struct tegra_xusb_padctl *padctl,
-+				    unsigned int port)
-+{
-+	struct tegra_xusb_usb2_port *usb2 = tegra_xusb_find_usb2_port(padctl,
-+								      port);
-+	struct tegra_xusb_usb3_port *usb3;
-+	int i;
-+
-+	if (!usb2)
-+		return -EINVAL;
-+
-+	for (i = 0; i < padctl->soc->ports.usb3.count; i++) {
-+		usb3 = tegra_xusb_find_usb3_port(padctl, i);
-+		if (usb3 && usb3->port == usb2->base.index)
-+			return usb3->base.index;
-+	}
-+
-+	return -ENODEV;
-+}
-+EXPORT_SYMBOL_GPL(tegra_xusb_padctl_get_usb3_companion);
-+
- MODULE_AUTHOR("Thierry Reding <treding@nvidia.com>");
- MODULE_DESCRIPTION("Tegra XUSB Pad Controller driver");
- MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/phy/tegra/xusb.h b/include/linux/phy/tegra/xusb.h
-index 1235865..71d9569 100644
---- a/include/linux/phy/tegra/xusb.h
-+++ b/include/linux/phy/tegra/xusb.h
-@@ -21,4 +21,6 @@ int tegra_xusb_padctl_usb3_set_lfps_detect(struct tegra_xusb_padctl *padctl,
- int tegra_xusb_padctl_set_vbus_override(struct tegra_xusb_padctl *padctl,
- 					bool val);
- int tegra_phy_xusb_utmi_port_reset(struct phy *phy);
-+int tegra_xusb_padctl_get_usb3_companion(struct tegra_xusb_padctl *padctl,
-+					 unsigned int port);
- #endif /* PHY_TEGRA_XUSB_H */
+And last time I asked:
+
+"This size comes from CPUID but it might be prudent to sanity-check it
+nevertheless, before doing the memremap()."
+
+but it was left uncommented.
+
+> +/**
+> + * A section metric is concatenated in a way that @low bits 12-31 define the
+> + * bits 12-31 of the metric and @high bits 0-19 define the bits 32-51 of the
+> + * metric.
+> + */
+> +static inline u64 __init sgx_calc_section_metric(u64 low, u64 high)
+> +{
+> +	return (low & GENMASK_ULL(31, 12)) +
+> +	       ((high & GENMASK_ULL(19, 0)) << 32);
+> +}
+> +
+> +static bool __init sgx_page_cache_init(void)
+> +{
+> +	u32 eax, ebx, ecx, edx, type;
+> +	u64 pa, size;
+> +	int i;
+> +
+> +	BUILD_BUG_ON(SGX_MAX_EPC_SECTIONS > (SGX_EPC_SECTION_MASK + 1));
+> +
+> +	for (i = 0; i < (SGX_MAX_EPC_SECTIONS + 1); i++) {
+
+Those brackets are still here from the last time. You said:
+
+"For nothing :-)
+
+I'll change it as:
+
+  for (i = 0; i <= SGX_MAX_EPC_SECTIONS; i++) {"
+
+but probably forgot...
+
+and looking at my review comments here:
+
+https://lkml.kernel.org/r/20191005092627.GA25699@zn.tnic
+
+and your reply:
+
+https://lkml.kernel.org/r/20191007115850.GA20830@linux.intel.com
+
+you clearly missed addressing some so I'm going to stop reviewing here.
+
+Please have a look at those review comments again and check whether the
+apply - and then do them - or they don't and they pls explain why they
+don't.
+
+And do that for the rest of the patchset, please, before you send it
+again.
+
+Thx.
+
 -- 
-2.7.4
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
