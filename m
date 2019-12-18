@@ -2,107 +2,120 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAB0C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 01:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C12A5C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 01:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 923352146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 01:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9707D2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 01:15:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HKqQzMNV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="klfD6iko"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbfLRBGS (ORCPT
+        id S1726539AbfLRBPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 20:06:18 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52147 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbfLRBGS (ORCPT
+        Tue, 17 Dec 2019 20:15:55 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40816 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbfLRBPz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 20:06:18 -0500
-Received: by mail-wm1-f67.google.com with SMTP id d73so92751wmd.1
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 17:06:16 -0800 (PST)
+        Tue, 17 Dec 2019 20:15:55 -0500
+Received: by mail-ot1-f67.google.com with SMTP id i15so263739oto.7;
+        Tue, 17 Dec 2019 17:15:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=CIZH5Iz8Q+UcB5hqDpoZoMcl1+hdqO5hVl6PqRkR26c=;
-        b=HKqQzMNVF3crjW88H263YTfhX7QmsQrjBxpoyIV5+9h921uzDgiR25TNJL/tQgwCMS
-         H0c/rKXUMN6B4ieH9uDuSTngC5Q+wOXXk9dOtKbBV6Otye/DGFmAjFgwA2llcITQvHyW
-         tcJ8d2EyXJr+6CMtLUfuLSpy5Jj0NfsxruKLZk17uhHHmPZJDLEvGGeyBJIl/lE2/g3d
-         9UeM418rafRFktzw51VrL1siu8D+U6EI3jVgtWngtXYKzjYiXsB55tCWZ+W6/eP3fuSq
-         UpS7FJ/AhTKFCVQGIw9Syf+Scm4wTd+NojwfReD8b0tqCgk9MBa85tyeybOMcD2tuqH4
-         Mabg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=d+ndbyvc/xD98taLiNNXwi7PgRFqCDT7vLcEGC7qSs0=;
+        b=klfD6ikoFcBcQTz83KNWoTyZ3DWEyEpYlYh420dAZkyObXgJYGu+A7bbLmBULVM/fr
+         VOhKZJHI63y5oNRdCC81ooP6oIfGBAKtQGngys2D4isGSmUHJTQ50RYpWkbkZaKIy0Y3
+         hBYpNUSesVnLVTCu1LR6I+2o6trC05hzbujAGHz7dxMMliEtiJcxSVCSRyj9d4NqhFjt
+         o6NT2CtbLtj0o+ufN4mXKcBHhVYvNO4nqimaTBVsR+FzN4IDWlXYfJf1a09VxbgRAHlN
+         OODXoNk+puIAM66JXIZ+Z9m0A9U96BRQUftCHn5EBVycPDFNw0XfetdlBfFuLXSEATEM
+         ArZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=CIZH5Iz8Q+UcB5hqDpoZoMcl1+hdqO5hVl6PqRkR26c=;
-        b=MOu9CDILLsqWRAiQuB/yO/N0siDMWOZOxtXPuFmQrO0HBH3xOV3xnsSSGhVJpl2v2X
-         qhZDjRCyET1z//rTraQECIZh7St6WH6meuPVe+jSgowlGe+R67PgVKCO9t6mJcgzygdK
-         3R0CfRx3fLhcKALDPtaeX+bfF9hAgQ+cv2zadGo8Se9k2aQO+mZhPvINQIMavo2dC213
-         HUJAthnisj8czWcWLGgRwpBpHnhZ0HCWkU0eS0inepnqUseJeUWdxPFnciMlafA/hGUL
-         03sYzWWikdLCakU41TI3ZUJEga3CzNy+ju8/cTXBbFWE0JaFYk83dm/LYyFTLUadpYA6
-         JZuQ==
-X-Gm-Message-State: APjAAAXMNTlkOkDW6miEh8Gi8BIf0YDhMA1os6Evi4dr4cRW09lHGKso
-        3EKtyKi+G4s27nFdBnDdGzY=
-X-Google-Smtp-Source: APXvYqyMl9k8MKXlxMm7wNyv/DWdhtcTNOXrTcixs3yJtvQhzXGKregw5hmJy2az5JqhZ9wteU3glA==
-X-Received: by 2002:a1c:a543:: with SMTP id o64mr235510wme.73.1576631175947;
-        Tue, 17 Dec 2019 17:06:15 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id v14sm647455wrm.28.2019.12.17.17.06.13
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=d+ndbyvc/xD98taLiNNXwi7PgRFqCDT7vLcEGC7qSs0=;
+        b=QAHf1aYsC7kWaaA2aUicA2twbn0ukQnT50ChrCRDItvGsszx5MdbxgiPbWPdCk1i1t
+         yhLVmAb0q52crfZJYsyEFkuHhIYq4rZwGH2PGhoZKeRoEnuzZVOAoOLeNZl5HPQ4V9pC
+         jIgzCIqH6qCzn83mOsCix0hKwxJt/KYi2xCoqFrONpgDhssDMJBVp+40rUr6eR0TYQkG
+         aUKqtIgf1GXv4vB3KjHbVeVxEgzjr8UbNNMw8AMy5jmrJP9DatHnKoOJfiaxOeDC5zD6
+         MqX3WV79GBBMDHpitpRxairICJOE4NGuoJeN496Paq4BBdnBbDxAv/mB8bxD+UTDXeN6
+         WpUQ==
+X-Gm-Message-State: APjAAAVO29EfS/tFyAMwsOqicaPskI/Yc9dTJyks5ZPD4mgGH/er2DAp
+        XdDKPMNvS6GoiqBuEP3X1eE=
+X-Google-Smtp-Source: APXvYqxrNwmRwujD+Yy4djLv6WsgbcLhkN1LpMKWV/Q29CvujkUrnsk3sIX6i+0NCjpzzGU0irxPHw==
+X-Received: by 2002:a05:6830:1e84:: with SMTP id n4mr115298otr.267.1576631754206;
+        Tue, 17 Dec 2019 17:15:54 -0800 (PST)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id w12sm186001otk.75.2019.12.17.17.15.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 17:06:15 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-mtd@lists.infradead.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        bcm-kernel-feedback-list@broadcom.com (open list:BROADCOM STB NAND
-        FLASH DRIVER), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] mtd: nand: brcmnand: Set appropriate DMA mask
-Date:   Tue, 17 Dec 2019 16:56:35 -0800
-Message-Id: <20191218005635.31636-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 17 Dec 2019 17:15:53 -0800 (PST)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] hostap: Adjust indentation in prism2_hostapd_add_sta
+Date:   Tue, 17 Dec 2019 18:15:46 -0700
+Message-Id: <20191218011545.40557-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-NAND controllers >= 7.0 with FLASH_DMA support physical addresses up to
-40-bit, set an appropriate DMA mask for that purpose.
+Clang warns:
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+../drivers/net/wireless/intersil/hostap/hostap_ap.c:2511:3: warning:
+misleading indentation; statement is not part of the previous 'if'
+[-Wmisleading-indentation]
+        if (sta->tx_supp_rates & WLAN_RATE_5M5)
+        ^
+../drivers/net/wireless/intersil/hostap/hostap_ap.c:2509:2: note:
+previous statement is here
+        if (sta->tx_supp_rates & WLAN_RATE_2M)
+        ^
+1 warning generated.
+
+This warning occurs because there is a space before the tab on this
+line. Remove it so that the indentation is consistent with the Linux
+kernel coding style and clang no longer warns.
+
+Fixes: ff1d2767d5a4 ("Add HostAP wireless driver.")
+Link: https://github.com/ClangBuiltLinux/linux/issues/813
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 ---
- drivers/mtd/nand/raw/brcmnand/brcmnand.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-index 1a66b1cd51c0..44518dada75b 100644
---- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-+++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-@@ -2635,6 +2635,16 @@ int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
- 		/* initialize the dma version */
- 		brcmnand_flash_dma_revision_init(ctrl);
- 
-+		ret = -EIO;
-+		if (ctrl->nand_version >= 0x0700)
-+			ret = dma_set_mask_and_coherent(&pdev->dev,
-+							DMA_BIT_MASK(40));
-+		if (ret)
-+			ret = dma_set_mask_and_coherent(&pdev->dev,
-+							DMA_BIT_MASK(32));
-+		if (ret)
-+			goto err;
-+
- 		/* linked-list and stop on error */
- 		flash_dma_writel(ctrl, FLASH_DMA_MODE, FLASH_DMA_MODE_MASK);
- 		flash_dma_writel(ctrl, FLASH_DMA_ERROR_STATUS, 0);
+Sorry for sending a patch for an "Obselete" driver (especially one as
+trivial as this) but it is still a warning from clang and shows up on
+all{yes,mod}config.
+
+ drivers/net/wireless/intersil/hostap/hostap_ap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/intersil/hostap/hostap_ap.c b/drivers/net/wireless/intersil/hostap/hostap_ap.c
+index 0094b1d2b577..3ec46f48cfde 100644
+--- a/drivers/net/wireless/intersil/hostap/hostap_ap.c
++++ b/drivers/net/wireless/intersil/hostap/hostap_ap.c
+@@ -2508,7 +2508,7 @@ static int prism2_hostapd_add_sta(struct ap_data *ap,
+ 		sta->supported_rates[0] = 2;
+ 	if (sta->tx_supp_rates & WLAN_RATE_2M)
+ 		sta->supported_rates[1] = 4;
+- 	if (sta->tx_supp_rates & WLAN_RATE_5M5)
++	if (sta->tx_supp_rates & WLAN_RATE_5M5)
+ 		sta->supported_rates[2] = 11;
+ 	if (sta->tx_supp_rates & WLAN_RATE_11M)
+ 		sta->supported_rates[3] = 22;
 -- 
-2.17.1
+2.24.1
 
