@@ -2,184 +2,188 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C85B5C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9C9C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BAB821582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:35:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VH+6fBo/"
+	by mail.kernel.org (Postfix) with ESMTP id 2D0D7218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:37:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576712238;
+	bh=jIvRuYBcsCvQ3FlfNytLmshHGsax22p/7HTctybx81A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aK5Z7Y2eoEUrMLeJCWFPRvolNf/NMCqcdj3YdLm9oV1WJfUqzyXR38A7H97CGlIrA
+	 JrPKXHqMsOgUsV2KSSPsQyQGzO9x3CIxfWfHUY5vbGhmOAdO2EG2DuCCnNhbmAaL/p
+	 2TahAB7o2X+thqWI7NY9f4j4I3kdHeG+rjbw/1ls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfLRXfm (ORCPT
+        id S1726701AbfLRXhR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 18:35:42 -0500
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:42170 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbfLRXfm (ORCPT
+        Wed, 18 Dec 2019 18:37:17 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:36505 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbfLRXhR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 18:35:42 -0500
-Received: by mail-yb1-f194.google.com with SMTP id z10so1496519ybr.9
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 15:35:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+wWAEvjdhihSGHkV+1yOnTGUKSIjjppKQd/dJmsVVjs=;
-        b=VH+6fBo/lDW8MRM/Csre5tRebK/BtDPju6jsZb5c93hYRPEKn1Msj6jHRsbMvBFEOJ
-         dM1boMHPgKJf5BMx78yeSWIaWjTwOHB7LSQIAWnR/WPBOX2ugvf/mglpZlAHxN28w7pQ
-         HshfiA4sjwCz/iqdz/XJw6Z4IcQx6RL2Rj3dm00B9T0iHogdtwUB9rerZ6q0qgtu9C3i
-         vc1Ty0/phBaorIc24JMasAECsILemIkDEpf4BhgNTTjOmV8FU6WYgz2+x3xR9QvF1ZVH
-         lbnGfzjqfORTUg+ljzAAEkAGTmEJV/qZedOO8FkbNXZrZGv6/c5Kq0c5BbaJoeYdZjRV
-         dvxA==
+        Wed, 18 Dec 2019 18:37:17 -0500
+Received: by mail-ot1-f65.google.com with SMTP id w1so4607351otg.3;
+        Wed, 18 Dec 2019 15:37:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+wWAEvjdhihSGHkV+1yOnTGUKSIjjppKQd/dJmsVVjs=;
-        b=pBwparRbV47TcgWjcsYVaN65prrHRjKj/HPpic9yh/wjmDbnp1yrm/xvmLuHs356AP
-         L0cesbNOifhczkx7tvsadaKcOUFEmSjYJArFxofo1r9A3n1arkJlMF1kTf4cPz9Ho/+5
-         b3We8AKbO8YZsdPKtMMYHz4Ufixx894Hq+znxyqHGP2FThGCRZge4cdMORxWGmhD+axs
-         iLVJrxbdCS265f9nmQv3P9wRstkmnBcdP0EY48u3fTqyUFx4k7p+VJleJLn6sySq1DWu
-         NDig87Ivsh+nnzwVcIVcTuduAjIvbmtileT+HknboHchxy0iFpC5RGlSjutoehBorKRN
-         BpsQ==
-X-Gm-Message-State: APjAAAU7f+z+q/5IRSOArRWOrTdvVGzXUAtAaPJ93P5CwZ69QVN6UuPg
-        Y+PKApX/Ndx0xpD4drGmbT7JPnO5U/lTaV1/EhD2fg==
-X-Google-Smtp-Source: APXvYqzc67hxY4HpYRbedQjlpsEL9vQPoY2m2y6N+X9XNT9xxSf1XmZ2uJxO3VT1zIKbaVOjDqU9HS/5+hDDnGYZP/I=
-X-Received: by 2002:a25:8502:: with SMTP id w2mr4128894ybk.428.1576712140372;
- Wed, 18 Dec 2019 15:35:40 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rVq3FctMUlxxbFCAv4Hq3F1IucA62kHuaSw0yCHlOq8=;
+        b=beH6OFUWr5JKlMtvSveZhc4RtA5nbTOiRLI19KLI8OXc7pE5AdYZK1D+eNZ3/LUV5c
+         nMLWAx+I7VSTSn4ycvSFbqCuTfP95CwiC2FZhd2i8EfYpIHSz+bhzW/tCJaec3qGvvsI
+         ++XTzSgYa5teSPCfd0Snf0wVBw2k2+S3a4VhWJMXgbzhsu1kiLUnxEP6N6EEpA29iess
+         OKPeJVpM2C4p9v0+CQBnY0WaM7ZcSSQcivKQllDFJbkQVbIvWYz6XAsZ2UCglkAGnM/l
+         ggWoikGUEVjfBRjIa+oyokyA+zZcQhKpU9bCxKjqwYDJrKGj5T+BxSm76t0OXeTYFlhG
+         mrzg==
+X-Gm-Message-State: APjAAAUEYegaIh3iDUR6LCxmvTU/isEeOkh2xZAGI3L+FhmfAhtArURa
+        aDWM2Sngm2SOb4Kdpz9GWA==
+X-Google-Smtp-Source: APXvYqyPh+4IInW14BHCfGHQzEnJR270O8hYZIX77r6+KeTYekhQCeI3drPFmDyVwEvselhJDCNYTg==
+X-Received: by 2002:a9d:2482:: with SMTP id z2mr5197001ota.279.1576712236059;
+        Wed, 18 Dec 2019 15:37:16 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id c12sm1358241oic.27.2019.12.18.15.37.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 15:37:15 -0800 (PST)
+Date:   Wed, 18 Dec 2019 17:37:14 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rrichter@marvell.com>,
+        linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Stephen Boyd <swboyd@chromium.org>,
+        Evan Green <evgreen@chromium.org>, tsoni@codeaurora.org,
+        psodagud@codeaurora.org
+Subject: Re: [PATCH 1/2] dt-bindings: edac: Add DT bindings for Kryo EDAC
+Message-ID: <20191218233714.GA30302@bogus>
+References: <cover.1575529553.git.saiprakash.ranjan@codeaurora.org>
+ <0101016ed57a3259-eee09e9e-e99a-40f1-ab1c-63e58a42615c-000000@us-west-2.amazonses.com>
 MIME-Version: 1.0
-References: <20191128125100.14291-1-patrick.rudolph@9elements.com>
- <20191128125100.14291-2-patrick.rudolph@9elements.com> <CAODwPW8Koy1BvKGJU6PKexYx+PNE+WY7+m69gcxT689vBy+AoQ@mail.gmail.com>
- <CAOxpaSXUgNXaZ40ScZKZQ+iDEQ=vqPytLgicBx==hxp5uL_+dA@mail.gmail.com>
- <CAL_quvScPUuocogrghzH_vNb2uxyBupBKYikG0Bwf4OcfSRWsQ@mail.gmail.com>
- <5df87d6e.1c69fb81.f0643.a6b6@mx.google.com> <CAL_quvS_3o7UNmqP+QDCcHosw8JkQ03Kx5NjgUxFhO5FO=_-Mg@mail.gmail.com>
- <20191218094729.GC22923@kuha.fi.intel.com>
-In-Reply-To: <20191218094729.GC22923@kuha.fi.intel.com>
-From:   Mat King <mathewk@google.com>
-Date:   Wed, 18 Dec 2019 16:35:29 -0700
-Message-ID: <CAL_quvSKHwOTeatoju=nTmhyf6iTRGD3zY1Nxv=DcJrzQNV3sg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] firmware: google: Expose CBMEM over sysfs
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Julius Werner <jwerner@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Samuel Holland <samuel@sholland.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0101016ed57a3259-eee09e9e-e99a-40f1-ab1c-63e58a42615c-000000@us-west-2.amazonses.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 2:47 AM Heikki Krogerus
-<heikki.krogerus@linux.intel.com> wrote:
->
-> On Tue, Dec 17, 2019 at 01:16:33PM -0700, Mat King wrote:
-> > On Tue, Dec 17, 2019 at 12:02 AM Stephen Boyd <swboyd@chromium.org> wrote:
-> > >
-> > > Quoting Mat King (2019-12-13 13:31:46)
-> > > > On Mon, Dec 9, 2019 at 11:57 PM Julius Werner <jwerner@chromium.org> wrote:
-> > > > > > +static int cbmem_probe(struct coreboot_device *cdev)
-> > > > > > +{
-> > > > > > +       struct device *dev = &cdev->dev;
-> > > > > > +       struct cb_priv *priv;
-> > > > > > +       int err;
-> > > > > > +
-> > > > > > +       priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-> > > > > > +       if (!priv)
-> > > > > > +               return -ENOMEM;
-> > > > > > +
-> > > > > > +       memcpy(&priv->entry, &cdev->cbmem_entry, sizeof(priv->entry));
-> > > > > > +
-> > > > > > +       priv->remap = memremap(priv->entry.address,
-> > > > > > +                              priv->entry.entry_size, MEMREMAP_WB);
-> > > > >
-> > > > > We've just been discussing some problems with CBMEM areas and memory
-> > > > > mapping types in Chrome OS. CBMEM is not guaranteed to be page-aligned
-> > > > > (at least not the "small" entries), but the kernel can only assign
-> > > > > memory attributes for a page at a time (and refuses to map the same
-> > > > > area twice with two different memory types, for good reason). So if
-> > > > > CBMEM entries sharing a page are mapped as writeback by one driver but
-> > > > > uncached by the other, things break.
-> > > > >
-> > > > > There are some CBMEM entries that need to be mapped uncached (e.g. the
-> > > > > ACPI UCSI table, which isn't even handled by anything using this CBMEM
-> > > > > code) and others for which it would make more sense (e.g. the memory
-> > > > > console, where firmware may add more lines at runtime), but I don't
-> > > > > think there are any regions that really *need* to be writeback. None
-> > > > > of the stuff accessing these areas should access them often enough
-> > > > > that caching matters, and I think it's generally more common to map
-> > > > > firmware memory areas as uncached anyway. So how about we standardize
-> > > > > on mapping it all uncached to avoid any attribute clashes? (That would
-> > > > > mean changing the existing VPD and memconsole drivers to use
-> > > > > ioremap(), too.)
-> > > >
-> > > > I don't think that uncached would work here either because the acpi
-> > > > driver will have already mapped some of these regions as write-back
-> > > > before this driver is loaded so the mapping will fail.
-> > >
-> > > Presumably the ucsi driver is drivers/usb/typec/ucsi/ucsi_acpi.c? Is
-> > > that right? And on ACPI based systems is this I/O memory or just some
-> > > carved out memory region that is used to communicate something to the
-> > > ACPI firmware? From looking at the ucsi driver it seems like it should
-> > > be mapped with memremap() instead of ioremap() given that it's not
-> > > actual I/O memory that has any sort of memory barrier or access width
-> > > constraints. It looks more like some sort of memory region that is being
-> > > copied into and out of while triggering some DSM. Can it at least be
-> > > memremap()ed with MEMREMAP_WT?
-> >
-> > Yes this is the ucsi_acpi.c driver that has caused this issue to come
-> > up. It does just use a region of memory carved in the BIOS out for the
-> > purpose of this device. The kernel can write to this memory and call a
-> > _DSM to push data to an EC or call the _DSM to pull from the EC into
-> > this memory region. See
-> > https://www.intel.com/content/dam/www/public/us/en/documents/white-papers/bios-implementation-of-ucsi.pdf
-> > . The driver is very explicit about using uncached memory and I
-> > suspect that is why memremap() was not used, but I am not sure why
-> > uncahed memory is needed. The only consumers of this memory are the
-> > driver itself and the ACPI asl code in the _DSM which as far as I know
-> > is being exectued by the kernel directly. Are there any other reasons
-> > to use uncached memory when dealing with ACPI asl code?
->
-> The reason why I did not use memremap() was because I was convinced
-> that there will soon be physical devices such as PD controllers that
-> supply the interface, and with those the memory resource given to the
-> driver would be real bus memory. But that was already years ago,
-> and there still are no such devices that I know of, so if you guys
-> want to change the driver so that it uses memremap() instead of
-> ioremap(), I'm not going to be against it. But just be warned: We can
-> not guarantee that there isn't going to be IO side effects in every
-> case.
+On Thu, Dec 05, 2019 at 09:53:05AM +0000, Sai Prakash Ranjan wrote:
+> This adds DT bindings for Kryo EDAC implemented with RAS
+> extensions on KRYO{3,4}XX CPU cores for reporting of cache
+> errors.
+> 
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> ---
+>  .../bindings/edac/qcom-kryo-edac.yaml         | 67 +++++++++++++++++++
+>  1 file changed, 67 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/edac/qcom-kryo-edac.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/edac/qcom-kryo-edac.yaml b/Documentation/devicetree/bindings/edac/qcom-kryo-edac.yaml
+> new file mode 100644
+> index 000000000000..1a39429a73b4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/edac/qcom-kryo-edac.yaml
+> @@ -0,0 +1,67 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/edac/qcom-kryo-edac.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Kryo Error Detection and Correction(EDAC)
+> +
+> +maintainers:
+> +  - Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> +
+> +description: |
+> +  Kryo EDAC is defined to describe on-chip error detection and correction
+> +  for the Kryo CPU cores which implement RAS extensions. It will report
+> +  all Single Bit Errors and Double Bit Errors found in L1/L2 caches in
+> +  in two registers ERXSTATUS_EL1 and ERXMISC0_EL1. L3-SCU cache errors
+> +  are reported in ERR1STATUS and ERR1MISC0 registers.
+> +    ERXSTATUS_EL1 - Selected Error Record Primary Status Register, EL1
+> +    ERXMISC0_EL1 - Selected Error Record Miscellaneous Register 0, EL1
+> +    ERR1STATUS - Error Record Primary Status Register
+> +    ERR1MISC0 - Error Record Miscellaneous Register 0
+> +  Current implementation of Kryo ECC(Error Correcting Code) mechanism is
+> +  based on interrupts.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,kryo-edac
+> +
+> +  interrupts:
+> +    minItems: 1
+> +    maxItems: 4
+> +    items:
+> +      - description: l1-l2 cache faultirq interrupt
+> +      - description: l1-l2 cache errirq interrupt
+> +      - description: l3-scu cache errirq interrupt
+> +      - description: l3-scu cache faultirq interrupt
+> +
+> +  interrupt-names:
+> +    minItems: 1
+> +    maxItems: 4
 
-I am a little confused how this hypothetical PD controller would look
-with regards to the ACPI table. Would it still have an OperationRegion
-for the MMIO address of the controllers mailbox? Would the _CRS point
-to the MMIO of the mailbox directly or would it still use physical
-memory? If it is pointing to the MMIO mailbox is the _DSM essentially
-a noop?
+You are saying only these combinations are valid:
 
->
-> But why is the UCSI ACPI mailbox a problem for you guys? Why do you
-> have the UCSI ACPI device object in your ACPI tables in the first
-> place?
+l1-l2-faultirq
 
-The problem is that with our UCSI implementation in coreboot the 48
-byte mailbox sometimes is in the same page as memory that gets
-memremap()ed as write-back before the ucsi driver is loaded and when
-it is loaded the ioremap fails.
+l1-l2-faultirq
+l1-l2-errirq
 
->
->
-> thanks,
+l1-l2-faultirq
+l1-l2-errirq
+l3-scu-errirq
 
->
-> --
-> heikki
+l1-l2-faultirq
+l1-l2-errirq
+l3-scu-errirq
+l3-scu-faultirq
+
+Is that your intent?
+
+> +    items:
+> +      - const: l1-l2-faultirq
+> +      - const: l1-l2-errirq
+> +      - const: l3-scu-errirq
+> +      - const: l3-scu-faultirq
+> +
+> +required:
+> +  - compatible
+> +  - interrupts
+> +  - interrupt-names
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    kryo_edac {
+> +      compatible = "qcom,kryo-edac";
+> +      interrupts = <GIC_PPI 6 IRQ_TYPE_LEVEL_HIGH>,
+> +                   <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>,
+> +                   <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>,
+> +                   <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
+> +      interrupt-names = "l1-l2-faultirq",
+> +                        "l1-l2-errirq",
+> +                        "l3-scu-errirq",
+> +                        "l3-scu-faultirq";
+> +    };
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+> 
