@@ -2,118 +2,100 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B59DCC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9220C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94403218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:20:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FB4A2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:24:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfLRWU0 (ORCPT
+        id S1726594AbfLRWYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 17:20:26 -0500
-Received: from imap2.colo.codethink.co.uk ([78.40.148.184]:43988 "EHLO
-        imap2.colo.codethink.co.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726463AbfLRWU0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 17:20:26 -0500
-Received: from [167.98.27.226] (helo=xylophone)
-        by imap2.colo.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
-        id 1ihhg1-0004b8-9k; Wed, 18 Dec 2019 22:20:17 +0000
-Message-ID: <50aa62939858f36007d84b97ad02626f32d0c477.camel@codethink.co.uk>
-Subject: Re: [PATCH v2 23/27] compat_ioctl: move HDIO ioctl handling into
- drivers/ide
-From:   Ben Hutchings <ben.hutchings@codethink.co.uk>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>
-Date:   Wed, 18 Dec 2019 22:20:16 +0000
-In-Reply-To: <CAK8P3a28Qn22Cx-bVhY5rjZVuhRXE2Jb0rezCozAhC0DZqxcUg@mail.gmail.com>
-References: <20191217221708.3730997-1-arnd@arndb.de>
-         <20191217221708.3730997-24-arnd@arndb.de>
-         <a75a7d44ebd9ff65499445dd6b087c92345af2e4.camel@codethink.co.uk>
-         <CAK8P3a28Qn22Cx-bVhY5rjZVuhRXE2Jb0rezCozAhC0DZqxcUg@mail.gmail.com>
-Organization: Codethink Ltd.
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Wed, 18 Dec 2019 17:24:22 -0500
+Received: from mga06.intel.com ([134.134.136.31]:25121 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726387AbfLRWYW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 17:24:22 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 14:24:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
+   d="scan'208";a="213054124"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga008.fm.intel.com with ESMTP; 18 Dec 2019 14:24:20 -0800
+Date:   Wed, 18 Dec 2019 14:24:20 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>
+Subject: Re: [PATCH RFC 04/15] KVM: Implement ring-based dirty memory tracking
+Message-ID: <20191218222420.GH25201@linux.intel.com>
+References: <affd9d84-1b84-0c25-c431-a075c58c33dc@redhat.com>
+ <20191210155259.GD3352@xz-x1>
+ <3e6cb5ec-66c0-00ab-b75e-ad2beb1d216d@redhat.com>
+ <20191215172124.GA83861@xz-x1>
+ <f117d46a-7528-ce32-8e46-4f3f35937079@redhat.com>
+ <20191216185454.GG83861@xz-x1>
+ <815923d9-2d48-2915-4acb-97eb90996403@redhat.com>
+ <20191217162405.GD7258@xz-x1>
+ <c01d0732-2172-2573-8251-842e94da4cfc@redhat.com>
+ <20191218215857.GE26669@xz-x1>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191218215857.GE26669@xz-x1>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-12-18 at 23:17 +0100, Arnd Bergmann wrote:
-> On Wed, Dec 18, 2019 at 10:11 PM Ben Hutchings
-> <ben.hutchings@codethink.co.uk> wrote:
-> > On Tue, 2019-12-17 at 23:17 +0100, Arnd Bergmann wrote:
-> > > Most of the HDIO ioctls are only used by the obsolete drivers/ide
-> > > subsystem, these can be handled by changing ide_cmd_ioctl() to be aware
-> > > of compat mode and doing the correct transformations in place and using
-> > > it as both native and compat handlers for all drivers.
-> > > 
-> > > The SCSI drivers implementing the same commands are already doing
-> > > this in the drivers, so the compat_blkdev_driver_ioctl() function
-> > > is no longer needed now.
-> > > 
-> > > The BLKSECTSET and HDIO_GETGEO_BIG ioctls are not implemented
-> > > in any driver any more and no longer need any conversion.
-> > [...]
+On Wed, Dec 18, 2019 at 04:58:57PM -0500, Peter Xu wrote:
+> On Tue, Dec 17, 2019 at 05:28:54PM +0100, Paolo Bonzini wrote:
+> > On 17/12/19 17:24, Peter Xu wrote:
+> > >> No, please pass it all the way down to the [&] functions but not to
+> > >> kvm_write_guest_page.  Those should keep using vcpu->kvm.
+> > > Actually I even wanted to refactor these helpers.  I mean, we have two
+> > > sets of helpers now, kvm_[vcpu]_{read|write}*(), so one set is per-vm,
+> > > the other set is per-vcpu.  IIUC the only difference of these two are
+> > > whether we should consider ((vcpu)->arch.hflags & HF_SMM_MASK) or we
+> > > just write to address space zero always.
 > > 
-> > I noticed that HDIO_DRIVE_TASKFILE, handled by ide_taskfile_ioctl() in
-> > drivers/ide/ide-taskfile.c, never had compat handling before.  After
-> > this patch it does, but its argument isn't passed through compat_ptr().
-> > Again, doesn't really matter because IDE isn't a thing on s390.
+> > Right.
+> > 
+> > > Could we unify them into a
+> > > single set of helper (I'll just drop the *_vcpu_* helpers because it's
+> > > longer when write) but we always pass in vcpu* as the first parameter?
+> > > Then we add another parameter "vcpu_smm" to show whether we want to
+> > > consider the HF_SMM_MASK flag.
+> > 
+> > You'd have to check through all KVM implementations whether you always
+> > have the vCPU.  Also non-x86 doesn't have address spaces, and by the
+> > time you add ", true" or ", false" it's longer than the "_vcpu_" you
+> > have removed.  So, not a good idea in my opinion. :D
 > 
-> I checked again, and I think it's worse than that: ide_taskfile_ioctl()
-> takes an ide_task_request_t argument, which is not compatible
-> at all (it has two long members). I suspect what happened here
-> is that I confused it with ide_cmd_ioctl(), which takes a 'struct
-> ide_taskfile' argument that /is/ compatible.
+> Well, now I've changed my mind. :) (considering that we still have
+> many places that will not have vcpu*...)
 > 
-> I don't think there is a point in adding a handler now: most
-> users of drivers/ide are 32-bit only, and nobody complained
-> so far, but I would add this change if you agree:
+> I can simply add that "vcpu_smm" parameter to kvm_vcpu_write_*()
+> without removing the kvm_write_*() helpers.  Then I'll be able to
+> convert most of the kvm_write_*() (or its family) callers to
+> kvm_vcpu_write*(..., vcpu_smm=false) calls where proper.
+> 
+> Would that be good?
 
-Looks good to me.
+I've lost track of the problem you're trying to solve, but if you do
+something like "vcpu_smm=false", explicitly pass an address space ID
+instead of hardcoding x86 specific SMM crud, e.g.
 
-Ben.
-
-> diff --git a/drivers/ide/ide-ioctls.c b/drivers/ide/ide-ioctls.c
-> index f6497c817493..83afee3983fe 100644
-> --- a/drivers/ide/ide-ioctls.c
-> +++ b/drivers/ide/ide-ioctls.c
-> @@ -270,6 +270,9 @@ int generic_ide_ioctl(ide_drive_t *drive, struct
-> block_device *bdev,
->         case HDIO_DRIVE_TASKFILE:
->                 if (!capable(CAP_SYS_ADMIN) || !capable(CAP_SYS_RAWIO))
->                         return -EACCES;
-> +               /* missing compat handler for HDIO_DRIVE_TASKFILE */
-> +               if (in_compat_syscall())
-> +                       return -ENOTTY;
->                 if (drive->media == ide_disk)
->                         return ide_taskfile_ioctl(drive, arg);
->                 return -ENOMSG;
-> 
-> 
-> 
->          Arnd
-> 
--- 
-Ben Hutchings, Software Developer                         Codethink Ltd
-https://www.codethink.co.uk/                 Dale House, 35 Dale Street
-                                     Manchester, M1 2HF, United Kingdom
-
+	kvm_vcpu_write*(..., as_id=0);
