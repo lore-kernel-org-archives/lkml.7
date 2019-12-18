@@ -6,167 +6,192 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0D9C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06FB0C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E51A5218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:19:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6AF824672
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:20:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576693168;
-	bh=W1YWBiNPG9jNM5SC4jK0qOOMJ4yVd5QREeChUcP7gUM=;
+	s=default; t=1576693230;
+	bh=r+Yhc2kGvqoCkOh2cwX+RFHO1GplnASB7rzCH+PXBKY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=H9jCD6rlermfcz7BiLF7YhelKELpm3yiLoLF1/DBlYMCDl4iyjl+4qVRN2hGh2dv4
-	 kZRJWZDBPwEbWfgXJedCsrjP2jHVLk3jy6cPX3+sCPtwn1QrwWkEmPG9oDez6L78uh
-	 789VL29bBbTW4t26t2LaFIPSXH/QBtTNJu13eWi8=
+	b=HQrTTZfV4cPCwJM9SrrK9N23gBjzw+P1QU/DV5Hvjse3J1f8gupqcpKqMLJ+SJjcL
+	 DwJp3zvRmJp46BXoAFg98R+6G7meUCuGNj3EEh1DqIPj08DBvuiRdsqTQ4l862xiqc
+	 jbsvlFUOX9ZRcAAAaAHVEGaTtmuBcKpvDiV87Kdg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727205AbfLRST1 (ORCPT
+        id S1727393AbfLRSU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 13:19:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37900 "EHLO mail.kernel.org"
+        Wed, 18 Dec 2019 13:20:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726960AbfLRST0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 13:19:26 -0500
+        id S1726939AbfLRSU3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 13:20:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAF3121582;
-        Wed, 18 Dec 2019 18:19:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48DD821D7D;
+        Wed, 18 Dec 2019 18:20:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576693165;
-        bh=W1YWBiNPG9jNM5SC4jK0qOOMJ4yVd5QREeChUcP7gUM=;
+        s=default; t=1576693228;
+        bh=r+Yhc2kGvqoCkOh2cwX+RFHO1GplnASB7rzCH+PXBKY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jg0sVF1DOJgtcVcgvECKp5Bby4K4KZq4fXFM0Ugp4ExeyeYtY6K0RG/r/GnDwgUkk
-         gO+8zzfaR7cioH3OBXAYcEA8NHAEc0a2CSWAOQkg16aVQ6eFeVbGssN8z5f1+TWHxk
-         IR9KaDFiaTIv5J8KF8v8fqzX1KGFXUSWv/zl7iuE=
-Date:   Wed, 18 Dec 2019 19:19:21 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     USB list <linux-usb@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Felipe Balbi <balbi@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>
-Subject: Re: [PATCH v3 1/1] usb: gadget: add raw-gadget interface
-Message-ID: <20191218181921.GA882018@kroah.com>
-References: <cover.1576087039.git.andreyknvl@google.com>
- <f45a20db3e5b01002ae8c91b3a8ea58e38b7bb65.1576087039.git.andreyknvl@google.com>
- <20191218132328.GA121143@kroah.com>
- <CAAeHK+zXegV1GmSKD8Y3-hTbKUQceWdfo+GJPxSSzYr0zQTYKw@mail.gmail.com>
+        b=v+14dStLOWlHFtGyqAuh62m2tf9bE5cAU/G+xt9brE51Id+NKRDy/A0BHvO97yYhF
+         XJFeyfuhv60cHnhwCQT3MQflw+TEdbhhxiyNYykUbxUByW3bYrqr2rfCXyFOhpau0v
+         AVkUKTw3kxCtPm08A18oObB6r1AsQa+F/9AH1xhU=
+Date:   Wed, 18 Dec 2019 19:20:26 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     syzbot <syzbot+82defefbbd8527e1c2cb@syzkaller.appspotmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        hdanton@sina.com, akpm@linux-foundation.org
+Subject: Re: WARNING: refcount bug in cdev_get
+Message-ID: <20191218182026.GB882018@kroah.com>
+References: <000000000000bf410005909463ff@google.com>
+ <20191204115055.GA24783@willie-the-truck>
+ <20191204123148.GA3626092@kroah.com>
+ <20191210114444.GA17673@willie-the-truck>
+ <20191218170854.GC18440@willie-the-truck>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAAeHK+zXegV1GmSKD8Y3-hTbKUQceWdfo+GJPxSSzYr0zQTYKw@mail.gmail.com>
+In-Reply-To: <20191218170854.GC18440@willie-the-truck>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 06:28:19PM +0100, Andrey Konovalov wrote:
-> On Wed, Dec 18, 2019 at 2:23 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Wed, Dec 11, 2019 at 07:02:41PM +0100, Andrey Konovalov wrote:
-> > > USB Raw Gadget is a kernel module that provides a userspace interface for
-> > > the USB Gadget subsystem. Essentially it allows to emulate USB devices
-> > > from userspace. Enabled with CONFIG_USB_RAW_GADGET. Raw Gadget is
-> > > currently a strictly debugging feature and shouldn't be used in
-> > > production.
-> > >
-> > > Raw Gadget is similar to GadgetFS, but provides a more low-level and
-> > > direct access to the USB Gadget layer for the userspace. The key
-> > > differences are:
-> > >
-> > > 1. Every USB request is passed to the userspace to get a response, while
-> > >    GadgetFS responds to some USB requests internally based on the provided
-> > >    descriptors. However note, that the UDC driver might respond to some
-> > >    requests on its own and never forward them to the Gadget layer.
-> > >
-> > > 2. GadgetFS performs some sanity checks on the provided USB descriptors,
-> > >    while Raw Gadget allows you to provide arbitrary data as responses to
-> > >    USB requests.
-> > >
-> > > 3. Raw Gadget provides a way to select a UDC device/driver to bind to,
-> > >    while GadgetFS currently binds to the first available UDC.
-> > >
-> > > 4. Raw Gadget uses predictable endpoint names (handles) across different
-> > >    UDCs (as long as UDCs have enough endpoints of each required transfer
-> > >    type).
-> > >
-> > > 5. Raw Gadget has ioctl-based interface instead of a filesystem-based one.
-> >
-> > Looks good to me, only minor comments below.
+On Wed, Dec 18, 2019 at 05:08:55PM +0000, Will Deacon wrote:
+> Hi all,
 > 
-> Great, thanks!
+> On Tue, Dec 10, 2019 at 11:44:45AM +0000, Will Deacon wrote:
+> > On Wed, Dec 04, 2019 at 01:31:48PM +0100, Greg KH wrote:
+> > > But I thought we had a lock in play here, so why would changing this
+> > > actually fix anything?
+> > 
+> > I don't think the lock is always used. For example, look at chrdev_open(),
+> > which appears in the backtrace; the locked code is:
+> > 
+> > 	spin_lock(&cdev_lock);
+> > 	p = inode->i_cdev;
+> > 	if (!p) {
+> > 		struct kobject *kobj;
+> > 		int idx;
+> > 		spin_unlock(&cdev_lock);
+> > 		kobj = kobj_lookup(cdev_map, inode->i_rdev, &idx);
+> > 		if (!kobj)
+> > 			return -ENXIO;
+> > 		new = container_of(kobj, struct cdev, kobj);
+> > 		spin_lock(&cdev_lock);
+> > 		/* Check i_cdev again in case somebody beat us to it while
+> > 		   we dropped the lock. */
+> > 		p = inode->i_cdev;
+> > 		if (!p) {
+> > 			inode->i_cdev = p = new;
+> > 			list_add(&inode->i_devices, &p->list);
+> > 			new = NULL;
+> > 		} else if (!cdev_get(p))
+> > 			ret = -ENXIO;
+> > 	} else if (!cdev_get(p))
+> > 		ret = -ENXIO;
+> > 	spin_unlock(&cdev_lock);
+> > 	cdev_put(new);
+> > 
+> > So the idea is that multiple threads serialise on the 'cdev_lock' and then
+> > check 'inode->i_cdev' to figure out if the device has already been probed,
+> > taking a reference to it if it's available or probing it via kobj_lookup()
+> > otherwise. I think that's backwards with respect to things like cdev_put(),
+> > where the refcount is dropped *before* 'inode->i_cdev' is cleared to NULL.
+> > In which case, if a concurrent call to cdev_put() can drop the refcount
+> > to zero without 'cdev_lock' held, then you could get a use-after-free on
+> > this path thanks to a dangling pointer in 'inode->i_cdev'..
+> > 
+> > Looking slightly ahead in this same function, there are error paths which
+> > appear to do exactly that:
+> > 
+> > 	fops = fops_get(p->ops);
+> > 	if (!fops)
+> > 		goto out_cdev_put;
+> > 
+> > 	replace_fops(filp, fops);
+> > 	if (filp->f_op->open) {
+> > 		ret = filp->f_op->open(inode, filp);
+> > 		if (ret)
+> > 			goto out_cdev_put;
+> > 	}
+> > 
+> > 	return 0;
+> > 
+> >  out_cdev_put:
+> > 	cdev_put(p);
+> > 	return ret;
+> > 
+> > In which case the thread which installed 'inode->i_cdev' earlier on can
+> > now drop its refcount to zero without the lock held if, for example, the
+> > filp->f_op->open() call fails.
+> > 
+> > But note, this is purely based on code inspection -- the C reproducer from
+> > syzkaller doesn't work for me, so I've not been able to test any fixes either.
+> > It's also worth noting that cdev_put() is called from __fput(), but I think the
+> > reference counting on the file means we're ok there.
+> > 
+> > > This code hasn't changed in 15+ years, what suddenly changed that causes
+> > > problems here?
+> > 
+> > I suppose one thing to consider is that the refcount code is relatively new,
+> > so it could be that the actual use-after-free is extremely rare, but we're
+> > now seeing that it's at least potentially an issue.
+> > 
+> > Thoughts?
 > 
-> About reworking the logging to use dev_err/dbg(): can I pass the
-> global miscdevice struct into those macros? Or should I pass a pointer
-> to this struct into all of the functions that print log messages? The
-> latter seems unnecessarily complex, unless there's a reason to do
-> that.
-
-Ah, you are right, you only have one misc device here.  No, that's not
-good, but you can use it for some messages (your ioctl errors), but
-ideally you will have a struct device somewhere for each of the
-"instances" you create, right?  That is what you should use for that.
-
-> > > +struct raw_dev {
-> > > +     struct kref                     count;
-> > > +     spinlock_t                      lock;
-> > > +
-> > > +     const char                      *udc_name;
-> > > +     struct usb_gadget_driver        driver;
-> >
-> > A dev embeds a driver?
-> >
-> > Not a pointer?
-> >
-> > But you have a kref, so the reference count of this object is there,
-> > right?
+> FWIW, I added some mdelay()s to make this race more likely, and I can now
+> trigger it reasonably reliably. See below.
 > 
-> I didn't get this comment, could you elaborate? I can make it a
-> pointer, but for each raw_dev we have a unique usb_gadget_driver
-> instance, so embedding it as is is simpler.
-
-Ok, that's fine.  But it feels odd creating a driver dynamically to me,
-but it should work (as you show.)  It doesn't give you something to use
-for the dev_* messages directly, ah, but you do have something:
-
-> > > +
-> > > +     /* Protected by lock: */
-> > > +     enum dev_state                  state;
-> > > +     bool                            gadget_registered;
-> > > +     struct usb_gadget               *gadget;
-
-There, use that pointer for your dev_* messages, and you should be fine.
-
-> > > +static void gadget_unbind(struct usb_gadget *gadget)
-> > > +{
-> > > +     struct raw_dev *dev = get_gadget_data(gadget);
-> > > +     unsigned long flags;
-> > > +
-> > > +     spin_lock_irqsave(&dev->lock, flags);
-> > > +     set_gadget_data(gadget, NULL);
-> > > +     spin_unlock_irqrestore(&dev->lock, flags);
-> > > +     /* Matches kref_get() in gadget_bind(). */
-> > > +     kref_put(&dev->count, dev_free);
-> >
-> > What protects the kref from being called 'put' twice on the same
-> > pointer at the same time?  There should be some lock somewhere, right?
+> Will
 > 
-> Hm, kref_put() does refcount_dec_and_test(), which in turns calls
-> atomic_dec_and_test(), so this is protected against concurrent puts
-> (which is the whole idea of kref?), and no locking is needed. Unless I
-> misunderstand something.
+> --->8
+> 
+> [   89.512353] ------------[ cut here ]------------
+> [   89.513350] refcount_t: addition on 0; use-after-free.
+> [   89.513977] WARNING: CPU: 2 PID: 6385 at lib/refcount.c:25 refcount_warn_saturate+0x6d/0xf0
+> [   89.514943] Modules linked in:
+> [   89.515307] CPU: 2 PID: 6385 Comm: repro Not tainted 5.5.0-rc2+ #22
+> [   89.516039] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+> [   89.517047] RIP: 0010:refcount_warn_saturate+0x6d/0xf0
+> [   89.517647] Code: 05 55 9a 15 01 01 e8 9d aa c8 ff 0f 0b c3 80 3d 45 9a 15 01 00 75 ce 48 c7 c7 00 9c 62 b3 c6 08
+> [   89.519749] RSP: 0018:ffffb524c1b9bc70 EFLAGS: 00010282
+> [   89.520353] RAX: 0000000000000000 RBX: ffff9e9da1f71390 RCX: 0000000000000000
+> [   89.521184] RDX: ffff9e9dbbd27618 RSI: ffff9e9dbbd18798 RDI: ffff9e9dbbd18798
+> [   89.522020] RBP: 0000000000000000 R08: 000000000000095f R09: 0000000000000039
+> [   89.522854] R10: 0000000000000000 R11: ffffb524c1b9bb20 R12: ffff9e9da1e8c700
+> [   89.523689] R13: ffffffffb25ee8b0 R14: 0000000000000000 R15: ffff9e9da1e8c700
+> [   89.524512] FS:  00007f3b87d26700(0000) GS:ffff9e9dbbd00000(0000) knlGS:0000000000000000
+> [   89.525439] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   89.526105] CR2: 00007fc16909c000 CR3: 000000012df9c000 CR4: 00000000000006e0
+> [   89.526937] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [   89.527759] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [   89.528587] Call Trace:
+> [   89.528889]  kobject_get+0x5c/0x60
+> [   89.529290]  cdev_get+0x2b/0x60
+> [   89.529656]  chrdev_open+0x55/0x220
+> [   89.530060]  ? cdev_put.part.3+0x20/0x20
+> [   89.530515]  do_dentry_open+0x13a/0x390
+> [   89.530961]  path_openat+0x2c8/0x1470
+> [   89.531383]  do_filp_open+0x93/0x100
+> [   89.531797]  ? selinux_file_ioctl+0x17f/0x220
+> [   89.532297]  do_sys_open+0x186/0x220
+> [   89.532708]  do_syscall_64+0x48/0x150
+> [   89.533129]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> [   89.533704] RIP: 0033:0x7f3b87efcd0e
+> [   89.534115] Code: 89 54 24 08 e8 a3 f4 ff ff 8b 74 24 0c 48 8b 3c 24 41 89 c0 44 8b 54 24 08 b8 01 01 00 00 89 f4
+> [   89.536227] RSP: 002b:00007f3b87d259f0 EFLAGS: 00000293 ORIG_RAX: 0000000000000101
+> [   89.537085] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f3b87efcd0e
+> [   89.537891] RDX: 0000000000000000 RSI: 00007f3b87d25a80 RDI: 00000000ffffff9c
+> [   89.538693] RBP: 00007f3b87d25e90 R08: 0000000000000000 R09: 0000000000000000
+> [   89.539493] R10: 0000000000000000 R11: 0000000000000293 R12: 00007ffe188f504e
+> [   89.540291] R13: 00007ffe188f504f R14: 00007f3b87d26700 R15: 0000000000000000
+> [   89.541090] ---[ end trace 24f53ca58db8180a ]---
 
-It's late, but there should be some lock somewhere to prevent a race
-around this type of thing.  That's why we have kref_put_mutex() and
-kref_put_lock().
+No hint as to _where_ you put the mdelay()?  :)
 
-Odds are you are fine here, but just something to be aware of...
 
-thanks,
-
-greg k-h
