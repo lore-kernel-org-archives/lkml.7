@@ -2,112 +2,63 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AFFAC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40DB8C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FE482176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:14:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gz0/vgpt"
+	by mail.kernel.org (Postfix) with ESMTP id 0B4B22176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:16:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbfLRXOZ (ORCPT
+        id S1726690AbfLRXQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 18:14:25 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40772 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbfLRXOZ (ORCPT
+        Wed, 18 Dec 2019 18:16:01 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:57624 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbfLRXQB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 18:14:25 -0500
-Received: by mail-pg1-f195.google.com with SMTP id k25so2065509pgt.7
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 15:14:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=19giDa73iAamoP9E5FulQ50cC/oQrQn2ADANTzOxjg8=;
-        b=gz0/vgptUI3f4mZVJzy6ehJxc5tNsKuhTlS+lpxtyN986J0B/FFinrTSrnnhAVzeWL
-         RxaB4+bdLSoGVsrLx0mpqfUBxydHs5P2AsHgOGINoZb2aO3IgdD+8rLxGJuAoTMpYZqK
-         HelXeVMszK6a+HYLlw34i0YeKfwtycBSpsOI5QFqHWZyyhPioMTibzpVK1o/9w1Jh1EY
-         +FkQTg6jz+ha9v6rASGq2nOyifRjpPWsDECVAVrnwjs2kBXCUbnkV9rl/jja0Ue6qhA2
-         4zZ1R9p3+rcn24vCAaRuIpwQsztFDz1fQZJS7J6FVDXcOaI5A1gNLv5suU1k4PyI2uJ4
-         wnQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=19giDa73iAamoP9E5FulQ50cC/oQrQn2ADANTzOxjg8=;
-        b=RiZDdAzqCoeP8rJl3eN1dGeS+RU1EiHGJw5A0BSpjBezh0fvb+Ya2TcvcZkllx+EW2
-         DpEhQdSIjFwCxaUQq7UVpXCvo1T45rgx6U/BSUI/zPGx5pGEjsG8vJTiyWL7YcAXOCbN
-         xwsY6XCOO0bqLBYDJO+Cyi3iNjNPeusavP5PkwpjavLc0PEIibbBWkWYayGZp/UKD88c
-         yVf9tb9GdFj3FXOy2zXpHjKMXTL0tUCrS+gT4Vi4X3zZWc5XBx5vfL23h+AZUuhWccrg
-         oYuPm3fw14U69kbKSQk46ObGWWhSFe9DL+3WyqP0hViDDl3cn8KKHhm4unnMicizx6AO
-         8tiw==
-X-Gm-Message-State: APjAAAUzfQ8w3x/1bfGD9VxHwfjVJBDJVJgLqboo3CXRs938iUxaFjT6
-        nl+pMDOeysx51j9Fwg911+/sccxv
-X-Google-Smtp-Source: APXvYqzL/hkws4Q866hOxvAOFOM6BJTPtxuM/KkzXFYIfH7tSXbcZAtTZtj7h3s2hcuxZlM4MpCyvA==
-X-Received: by 2002:a62:1883:: with SMTP id 125mr5810192pfy.166.1576710864113;
-        Wed, 18 Dec 2019 15:14:24 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id p23sm4553251pgh.83.2019.12.18.15.14.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 18 Dec 2019 15:14:23 -0800 (PST)
-Date:   Wed, 18 Dec 2019 15:14:22 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] init: Fix crash observed if there is no initial console
-Message-ID: <20191218231422.GA23984@roeck-us.net>
-References: <20191218230149.23299-1-linux@roeck-us.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191218230149.23299-1-linux@roeck-us.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Wed, 18 Dec 2019 18:16:01 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 780EB153FF934;
+        Wed, 18 Dec 2019 15:16:00 -0800 (PST)
+Date:   Wed, 18 Dec 2019 15:15:59 -0800 (PST)
+Message-Id: <20191218.151559.778932260429804628.davem@davemloft.net>
+To:     Jose.Abreu@synopsys.com
+Cc:     netdev@vger.kernel.org, Joao.Pinto@synopsys.com,
+        peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        mcoquelin.stm32@gmail.com,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] net: stmmac: tc: Fix TAPRIO division operation
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <b8ffd4685fac31a39ef5ba91485e685b21ead753.1576709577.git.Jose.Abreu@synopsys.com>
+References: <b8ffd4685fac31a39ef5ba91485e685b21ead753.1576709577.git.Jose.Abreu@synopsys.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 18 Dec 2019 15:16:00 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 03:01:49PM -0800, Guenter Roeck wrote:
-> Systems with no initial console crash in f_dupfd(). This happens because
-> console_on_rootfs() was changed to call filp_open(). Its return value
-> (a file pointer) is checked against NULL, but returns an ERR_PTR after
-> errors. This ERR_PTR is then passed as file parameter to f_dupfd(),
-> which experiences a severe case of indigestion.
+From: Jose Abreu <Jose.Abreu@synopsys.com>
+Date: Wed, 18 Dec 2019 23:55:01 +0100
+
+> For ARCHs that don't support 64 bits division we need to use the
+> helpers.
 > 
-
-I should have pulled upstream before sending this. Sorry for the noise.
-
-Guenter
-
-> Cc: Dominik Brodowski <linux@dominikbrodowski.net>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Fixes: 8243186f0cc7 ("fs: remove ksys_dup()"),
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> Fixes: b60189e0392f ("net: stmmac: Integrate EST with TAPRIO scheduler API")
+> Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+> 
 > ---
->  init/main.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/init/main.c b/init/main.c
-> index ec3a1463ac69..1ecfd43ed464 100644
-> --- a/init/main.c
-> +++ b/init/main.c
-> @@ -1163,7 +1163,7 @@ void console_on_rootfs(void)
->  
->  	/* Open /dev/console in kernelspace, this should never fail */
->  	file = filp_open("/dev/console", O_RDWR, 0);
-> -	if (!file)
-> +	if (IS_ERR(file))
->  		goto err_out;
->  
->  	/* create stdin/stdout/stderr, this should never fail */
-> -- 
-> 2.17.1
-> 
+> Completely untested as my setup is offline due to power-outrage. Carefull
+> review needed.
+
+It looks correct to me and should fix the build, so applied, thanks.
