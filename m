@@ -2,98 +2,120 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02950C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:35:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24105C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C85C42176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:35:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDCF72176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:36:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="VlUfPehA"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gcUlYSvE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbfLRWf4 (ORCPT
+        id S1726882AbfLRWgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 17:35:56 -0500
-Received: from mout.web.de ([212.227.17.12]:56707 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726559AbfLRWfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 17:35:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1576708538;
-        bh=lAAhQWrqTZ+3NKkBxKoTqGxYRguwM1a4ntZ/kHINjrI=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=VlUfPehAqq8T8OZtJhiT4IfKDhZs/FRv88U4/8Ak1XXguF7FO55R1wdAyA9C0sM3a
-         qVH+1Krj7CYIRNz1Ovqq7RZW7xX7FRsqXsFlpyYHDmsrm1EE94/WDdXDp0llPGomRW
-         P4SowPHzAYyDfdBcBSi+QTpOjoTaAP5oethXARTg=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from localhost.localdomain ([89.204.137.218]) by smtp.web.de
- (mrweb103 [213.165.67.124]) with ESMTPSA (Nemesis) id
- 0MXHXF-1iEL5L0ITd-00WDAM; Wed, 18 Dec 2019 23:35:38 +0100
-From:   Soeren Moch <smoch@web.de>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     Soeren Moch <smoch@web.de>, Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/2] arm64: dts: rockchip: RockPro64: enable wifi/bt
-Date:   Wed, 18 Dec 2019 23:35:21 +0100
-Message-Id: <20191218223523.30154-1-smoch@web.de>
-X-Mailer: git-send-email 2.17.1
+        Wed, 18 Dec 2019 17:36:10 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:45513 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726771AbfLRWgD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 17:36:03 -0500
+Received: by mail-pl1-f195.google.com with SMTP id b22so1607024pls.12
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 14:36:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=mydBqKv+d6SpAVkQY6i0eU5oOuSS/A7UC42Xzyq9TQ4=;
+        b=gcUlYSvEZPV/3S4bjdwO/pxZ9DP28l2E5G5DdHMt+gWwBXLsXkw/yCyicrKYtJ6gvV
+         5J/hHixTsbTiA+0pi8suV/4T0p6SWo8qVb7yBYg3v/1jcnyjJ8qS3jKmHLUHqEv+9kNR
+         EBgcnVSnvaSfZClAr3cmHU4zoaw2Q2c5aR6Ho=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=mydBqKv+d6SpAVkQY6i0eU5oOuSS/A7UC42Xzyq9TQ4=;
+        b=eovfbOZNrGUKg1L+ITqvXkKCZyrjt+VOfAPfwh6fyy0eeMLEiiDIg79isN+m6GbMDk
+         s/TpqkFhStl9+FlsYcjcfivzWowRg1Hn10FgXepJwtVK8fDFOviYffp4PMJiOHe+mgTd
+         jgQWFAJjTPbjjDeNa92ucj2LK6HDIp8KFFIqiR2dN2oJssyqdkCbzAn5aD2CipJ5vATy
+         hFyB1gEwxercZBpAn1q35n7sEU0ofsUUcugSUXY7OMdiKVy1F9LAB8+2t84hMdwJL6Z5
+         85YGBY0HHUDTHlp+raFo4gL3eFCM3D0O7tiWEfC4AWiqA+aDQpWnTgiZi4HpneO79HTv
+         UxBw==
+X-Gm-Message-State: APjAAAW59KR+weTYlksMjhgW4wkFEf0FJPTmZ/+IJ6/7AJG/kS+hLQRP
+        vDDNt/X95FJrjWXX2a+d3glZDQ==
+X-Google-Smtp-Source: APXvYqytYmEANX8XvabXMuuaru+HmPQyXLQG10CIvV/yFjJRgYu/bO+Hw0bEQJUY8SgUc+JnXpm0FQ==
+X-Received: by 2002:a17:90a:1f8e:: with SMTP id x14mr5818571pja.29.1576708562330;
+        Wed, 18 Dec 2019 14:36:02 -0800 (PST)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id i9sm4709919pfk.24.2019.12.18.14.36.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 14:36:01 -0800 (PST)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Cc:     robdclark@chromium.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, seanpaul@chromium.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Douglas Anderson <dianders@chromium.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Jonas Karlman <jonas@kwiboo.se>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Subject: [PATCH v3 4/9] drm/bridge: ti-sn65dsi86: Config number of DP lanes Mo' Betta
+Date:   Wed, 18 Dec 2019 14:35:25 -0800
+Message-Id: <20191218143416.v3.4.If3e2d0493e7b6e8b510ea90d8724ff760379b3ba@changeid>
+X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+In-Reply-To: <20191218223530.253106-1-dianders@chromium.org>
+References: <20191218223530.253106-1-dianders@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:PHp7e4svlTVsNYUIoz5ytrInhryaO+C+w+4Ft0e59pR0Jme4QXr
- 3yIy3GV1HnbboENPQnvjdkXooUWdaGzGjexy5+6K+6HcVN6zNTowZz86HfxgrPMsJjoXKqz
- /ImAgfNVCaVILB9S9abOX8UOUrAVYTm9FwwTnuObKuN6K9ILaw5M0VRXa1g0Zp24Xyrl4Dg
- KrbSf0VdhqY0P61GutUhw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:NVLy28qVaF8=:P4MJd+g3YR1SVho5Tak2vc
- y6flSHZpnmzbvhLi1FYsOxb5GXrPGQuvPXbxGEJtZdMln5c70msn/iKqFPwqW2oRBWoB08Gg9
- lRVw+qABI/ZwYJybhcNU4FVZBi64oi/xATFzcPb/YRI8dhif8N0PKRgDaBgpeHz9gznK9XGrR
- sJvkavqqZZX4H7P0CXCjQgAP6qrgvD5kF/QgQrkaCL7LV31nUPEHSzNPw6fb0eMb81GVL5Edh
- Gz5duMyxY27+I0Pyi1xVMe+wEmFx4KHGM344LnOdLv7UWPa0/Tk5FdUQCoVpB9c7NMpVAvimY
- bMxxgnrRVyJBKjm4q0S4InSCKheAB9SOuwdfhGl0PRQ6joBU+oEGl0TIl3B2HnTQF+JVbWbje
- T8cCE4cKGA++c2Tt6+G8OYVTauTciOY42KdmqpmUOimUQ7r5fl3m+vS2NdplDd0iOJbknlKwS
- PIJUp66rgXO87v8Ykn7kFU26NU6ICSBkDykKoL+YBnpm8l42tpyhVj4RDCTIsLLL1X5DyKAG3
- gr0y1jE05SqGaRg+bmslLGn2GZ+aUX8wnmmDXleWBih0bZBiN1iZ/OQ9DueWm8FSFG4DjI45Z
- NNwbIiywAOnaqTW2QTOVnyVEC63US/LXOrdWktTccFLG0M7pocjYWfhlJn5z4YvETsJp3WSyI
- crwvuZh83KkxxGvllps8Gc+QQfCgLMpFZaSmMHffb4C8GLCWUE4VzvUyWz0jZ48VPiokSXl5/
- wpBFslguFInnm3FwyPscoXn6e/twVbdOpq7qBABYa2talB1thl4tRdOXeqHfRYZRZwTJhBK8s
- y9rDcGE0EbeIPNuTvIFJf78yPs3id+07qGXRjEO/rUYHHxRaUdYESg0GC6J6apt6ebceoyp/B
- KhzfDREN2otRpzZXwbkfdap4B1ASRd8gNvWxwY8FQBID7V81fuRtuKtb36nkONzLEoMpWXxHI
- mMlUiqynVE1PA/v+7wn8DFUQ+IMT6GB85CDC6+q28Iqm+2NZUwZe0jAqht08FhDzE9/tYzPsb
- wZzUH9UVHpN54Yux212XDjL71tYIp/vIRg5T21lzJFgIQV2JWr7o6aHZvKr2cdXwffcJhJG4U
- kxtxNLO3easZRCo4HD0yXkD9FUTCKizAakSLHm5CUtD8J1ZqSANHUL0X1B0PkyXJkbHK9s4SX
- ++FsCGkRLqS/NlzanPzfi0b3gDSQzSkR3BW3M+IqjExsRXRo7V/M3gQgyg2s4nntALHlHod+4
- DkoFRNEilrwbc21FFOhAcmDjPk8ufmWiP/FmU9w==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enhance devicetree of the RockPro64 arm64/rockchip board to use an
-AP6359SA based wifi/bt combo module.
+The driver used to say that the value to program into bridge register
+0x93 was dp_lanes - 1.  Looking at the datasheet for the bridge, this
+is wrong.  The data sheet says:
+* 1 = 1 lane
+* 2 = 2 lanes
+* 3 = 4 lanes
 
-Patches 1-7 of version 2 of this patch series (to add support for the
-BCM4359 chipset with SDIO interface to the brcmfmac wireless network
-driver) are already picked up for wireless-drivers-next. So this
-version 3 only contains the patches 8-9 from v2.
+A more proper way to express this encoding is min(dp_lanes, 3).
 
+At the moment this change has zero effect because we've hardcoded the
+number of DP lanes to 4.  ...and (4 - 1) == min(4, 3).  How fortunate!
+...but soon we'll stop hardcoding the number of lanes.
 
-Soeren Moch (2):
-  arm64: dts: rockchip: RockPro64: enable wifi module at sdio0
-  arm64: dts: rockchip: RockPro64: hook up bluetooth at uart0
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Tested-by: Rob Clark <robdclark@gmail.com>
+Reviewed-by: Rob Clark <robdclark@gmail.com>
+---
 
- .../boot/dts/rockchip/rk3399-rockpro64.dts    | 50 ++++++++++++++++---
- 1 file changed, 42 insertions(+), 8 deletions(-)
+Changes in v3: None
+Changes in v2: None
 
-=2D--
-Cc: Heiko Stuebner <heiko@sntech.de>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-rockchip@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-=2D-
-2.17.1
+ drivers/gpu/drm/bridge/ti-sn65dsi86.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+index ab644baaf90c..d55d19759796 100644
+--- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
++++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+@@ -523,7 +523,7 @@ static void ti_sn_bridge_enable(struct drm_bridge *bridge)
+ 			   CHA_DSI_LANES_MASK, val);
+ 
+ 	/* DP lane config */
+-	val = DP_NUM_LANES(pdata->dp_lanes - 1);
++	val = DP_NUM_LANES(min(pdata->dp_lanes, 3));
+ 	regmap_update_bits(pdata->regmap, SN_SSC_CONFIG_REG, DP_NUM_LANES_MASK,
+ 			   val);
+ 
+-- 
+2.24.1.735.g03f4e72817-goog
 
