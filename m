@@ -2,108 +2,113 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9FEC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 989D4C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 758A4206D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:59:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="US4SiMhX"
+	by mail.kernel.org (Postfix) with ESMTP id 73CD72146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:02:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727289AbfLRP7t (ORCPT
+        id S1727226AbfLRQCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 10:59:49 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36411 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726987AbfLRP7t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 10:59:49 -0500
-Received: by mail-pg1-f193.google.com with SMTP id k3so1510088pgc.3;
-        Wed, 18 Dec 2019 07:59:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vcRsV+GyYVCdqNxO9/KlH1EXlf/d0/mBnssyXPuxyRY=;
-        b=US4SiMhXMeTy11uj01hBaMlSQs315XYCGkgVIeQHLMGX6H/U+w6mIGFBva/i/Quvqy
-         CFkbsQ0Gur0z8MfkRtYB55qJLnfEuZitL+YauR8voLDv2KA8G6FjZGkcnQ89XLPnh5m2
-         wdcmvpim/2HDb4QzKEHrWItXams2UmKmP9f2DlEljR/+U+3Q30rqqCMLkSmj5atbtK99
-         KNnmzKeEtwDa4/vUPHrp1/zsNwLHtOGVIRNLENwIwu5K37II8F9KQ3T0ptBsfGeUezDT
-         uE1JD7N08KgTD38uyJGYPhBvgduj5q1UIpGAeoMAoN+iMTN7MtQhNzO6Yo2gLUHO7au3
-         8Iqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vcRsV+GyYVCdqNxO9/KlH1EXlf/d0/mBnssyXPuxyRY=;
-        b=U02SW62bBuo7Nu6Q11hefOSOEbBO3MBdaSU076vgYCBd43WqLfIg1FpTlSK3BGy13/
-         11It0btvLglhrlTmKI5wTmOgXlV9cGN1JEL0XGzosA+TXA+ld5n2KIIfc6iba33wrDhS
-         6p7wLxojyzx4spw66kxBu8ScAHTWcpARO5f8gNgYFlEMNFg5iJs4pFggK5Zv6I7oZH33
-         52wqvO+Qmk0KTujcl4pN1Mvmbrht7Jk3sCv68Abal+gOp4FYImjnUegUpBrgbDb39bff
-         1FBtqFe84Qx4fZYxfEkg4n2TJDdSgODCCZcWO3PMaRiOacGsyx3YnAFyUYejErPdQzwc
-         CnzA==
-X-Gm-Message-State: APjAAAXoQKP/NARH+YdMXEU0eaHfM5yzFVZDrxBvzEfwyGViEHODf1Ny
-        +c0NC58y4S65BRTJgYqNZVY=
-X-Google-Smtp-Source: APXvYqzcIk58RSqNhgs226XfFCNdym1HtwnkDO3OOMdo09IDJZgZOiWUbYKCdDNdcomWrmsRyHnizw==
-X-Received: by 2002:a65:66ce:: with SMTP id c14mr3976919pgw.262.1576684788637;
-        Wed, 18 Dec 2019 07:59:48 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id p16sm3873989pgi.50.2019.12.18.07.59.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 18 Dec 2019 07:59:47 -0800 (PST)
-Date:   Wed, 18 Dec 2019 07:59:46 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Henry Lin <henryl@nvidia.com>, stable@vger.kernel.org
-Subject: Re: [PATCH] usb: xhci: Fix build warning seen with CONFIG_PM=n
-Message-ID: <20191218155946.GA331@roeck-us.net>
-References: <20191218011911.6907-1-linux@roeck-us.net>
- <20191218142932.GA237894@kroah.com>
- <04cef5f6-2bc2-b056-d2c4-e79ba5498225@linux.intel.com>
+        Wed, 18 Dec 2019 11:02:30 -0500
+Received: from mga02.intel.com ([134.134.136.20]:30328 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727021AbfLRQCa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 11:02:30 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 08:02:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
+   d="scan'208";a="217895963"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga006.jf.intel.com with ESMTP; 18 Dec 2019 08:02:28 -0800
+Date:   Wed, 18 Dec 2019 08:02:28 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Yang Weijiang <weijiang.yang@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, jmattson@google.com,
+        yu.c.zhang@linux.intel.com, yu-cheng.yu@intel.com
+Subject: Re: [PATCH v8 3/7] KVM: VMX: Pass through CET related MSRs
+Message-ID: <20191218160228.GB25201@linux.intel.com>
+References: <20191101085222.27997-1-weijiang.yang@intel.com>
+ <20191101085222.27997-4-weijiang.yang@intel.com>
+ <20191210211821.GL15758@linux.intel.com>
+ <20191216021816.GA10764@local-michael-cet-test>
+ <20191218003455.GP11771@linux.intel.com>
+ <20191218135513.GB7926@local-michael-cet-test>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <04cef5f6-2bc2-b056-d2c4-e79ba5498225@linux.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191218135513.GB7926@local-michael-cet-test>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 05:38:06PM +0200, Mathias Nyman wrote:
-> On 18.12.2019 16.29, Greg Kroah-Hartman wrote:
-> > On Tue, Dec 17, 2019 at 05:19:11PM -0800, Guenter Roeck wrote:
-> > > The following build warning is seen if CONFIG_PM is disabled.
-> > > 
-> > > drivers/usb/host/xhci-pci.c:498:13: warning:
-> > > 	unused function 'xhci_pci_shutdown'
-> > > 
-> > > Fixes: f2c710f7dca8 ("usb: xhci: only set D3hot for pci device")
-> > > Cc: Henry Lin <henryl@nvidia.com>
-> > > Cc: stable@vger.kernel.org	# all stable releases with 2f23dc86c3f8
-
-Somehow I messed up the commit sha here. It is f2c710f7dca8, obviously.
-2f23dc86c3f8 is the sha from v4.19.y. Sorry for that.
-
-Guenter
-
-> > > Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> > > ---
-> > >   drivers/usb/host/xhci-pci.c | 2 +-
-> > >   1 file changed, 1 insertion(+), 1 deletion(-)
+On Wed, Dec 18, 2019 at 09:55:13PM +0800, Yang Weijiang wrote:
+> On Tue, Dec 17, 2019 at 04:34:55PM -0800, Sean Christopherson wrote:
+> > On Mon, Dec 16, 2019 at 10:18:16AM +0800, Yang Weijiang wrote:
+> > > On Tue, Dec 10, 2019 at 01:18:21PM -0800, Sean Christopherson wrote:
+> > > > On Fri, Nov 01, 2019 at 04:52:18PM +0800, Yang Weijiang wrote:
+> > > > > CET MSRs pass through Guest directly to enhance performance.
+> > > > > CET runtime control settings are stored in MSR_IA32_{U,S}_CET,
+> > > > > Shadow Stack Pointer(SSP) are stored in MSR_IA32_PL{0,1,2,3}_SSP,
+> > > > > SSP table base address is stored in MSR_IA32_INT_SSP_TAB,
+> > > > > these MSRs are defined in kernel and re-used here.
+> > > > > 
+> > >  > +
+> > > > >  static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
+> > > > >  {
+> > > > >  	struct vcpu_vmx *vmx = to_vmx(vcpu);
+> > > > > @@ -7025,6 +7087,9 @@ static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
+> > > > >  	if (boot_cpu_has(X86_FEATURE_INTEL_PT) &&
+> > > > >  			guest_cpuid_has(vcpu, X86_FEATURE_INTEL_PT))
+> > > > >  		update_intel_pt_cfg(vcpu);
+> > > > > +
+> > > > > +	if (!is_guest_mode(vcpu))
+> > > > > +		vmx_pass_cet_msrs(vcpu);
+> > > > 
+> > > > Hmm, this looks insufficent, e.g. deliberately toggling CET from on->off
+> > > > while in guest mode would put KVM in a weird state as the msr bitmap for
+> > > > L1 would still allow L1 to access the CET MSRs.
+> > > >
+> > > Hi, Sean,
+> > > I don't get you, there's guest mode check before access CET msrs, it'll
+> > > fail if it's in guest mode.
 > > 
-> > Nice catch.
+> > KVM can exit to userspae while L2 is active.  If userspace then did a
+> > KVM_SET_CPUID2, e.g. instead of KVM_RUN, vmx_cpuid_update() would skip
+> > vmx_pass_cet_msrs() and KVM would never update L1's MSR bitmaps.
+> >
+> Thanks, it makes sense to me. Given current implementation, how about
+> removing above check and adding it in CET CPUID
+> enumeration for L2 so that no CET msrs passed through to L2 when
+> is_guest_mode() is true?
+
+But you still need to update L1's MSR bitmaps.  That can obviously be done
+all at once, but it's annoying and IMO unnecessarily complex.
+
+> > > > Allowing KVM_SET_CPUID{2} while running a nested guest seems bogus, can we
+> > > > kill that path entirely with -EINVAL?
+> > > >
+> > > Do you mean don't expose CET cpuids to L2 guest?
 > > 
-> > Mathias, I can queue this up now if you give me an ack.
-> 
-> Yes, please
-> 
-> Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-> 
+> > I mean completely disallow KVM_SET_CPUID and KVM_SET_CPUID2 if
+> > is_guest_mode() is true.  My question is mostly directed at Paolo and
+> > anyone else that has an opinion on whether we can massage the ABI to
+> > retroactively change KVM_SET_CPUID{2} behavior.
+>
+> This sounds like something deserving an individual patch after get
+> agreement in community. I'll put it aside right now.
+
+Normally I would agree, but I think in this case it would significantly
+reduce the complexity and implementation cost of CET support.  I'll send a
+patch to kickstart the conversation, it's a tiny change in terms of code.
