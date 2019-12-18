@@ -2,109 +2,284 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 138B0C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D43C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1BB524672
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:38:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D58BA24676
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:38:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576661893;
-	bh=0Ldgvl4opymzm7pXWle7Y2wTRncjgNXqnTNvUx/E7Jg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=b0lDkFbyc9ZX5fKv56ry3kz+rkqp9Fi8lO4Zl19C5tiWQDdfo0PkT5ewdoAxEWbbz
-	 EksUlUswxBN7M7jZH4SAFQ4VCKpG/6Ef3fHL7RkmHV5EiijXvQyE6Y6KelAyXwzPYE
-	 3TVa/sNc4aIFKoG8KAV5vc6CPp12+otlOgCsuXz4=
+	s=default; t=1576661909;
+	bh=sbYtOwQOAWEAv0CRXiQQd8SUjXUmGnVnvNnhC+x092M=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=AvU2QXIAqgi0rnncAH7X9EoHmfDZqFLLuGpNg7yRikvJpAmGqxmxFgAUhUk/3sZbp
+	 xjfhKS/U/TSJSThkyqoWedsag8B6g11RoEcfRSgqbq5OdVCrAQ2kVCBu9WltuBJVbE
+	 rm4o4OCjLYUGeBH4k0uY04lg1NjrmRpEywnivRvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbfLRJiM (ORCPT
+        id S1726855AbfLRJi2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 04:38:12 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36562 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbfLRJiM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 04:38:12 -0500
-Received: by mail-lj1-f194.google.com with SMTP id r19so1364467ljg.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 01:38:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=TD7GCCzHnuv34lsEKYa577HynVSCGDyOMnXkogsY5Oc=;
-        b=Uw+l+6NlC0N+kfazsi/epqsmcY1ZaM6fqaQtDQEkEIUVZbCOhN4euo0CNHezNkAgL9
-         1eESiOq0thTCSwwawuP27h5pijOAej6vqGxXDSlJ3fTSI0K5ORWr5g7zv6GxBGH8l8Bh
-         YnXNYI3yeZpHTkkOze/Pd8YI8gWNlZ2U7Dsl9jLKFEdSCD/L8Rt1RIsSCRfAZTcz44yy
-         NJktrV2aOnVp5CoaPkmaVL/lbbZDHle2WVzyPBgrBk/0w9uy8NeRN6SYs8DQvvJMuaW/
-         kDoX7kHPLCySZlaFiz/tP00XTe0qJLpcU/LEcqWQcrVsB9x7j3fPBAL7cSkb/TTJkCMv
-         f3ZQ==
-X-Gm-Message-State: APjAAAUvo3JZN5aZc+KoMYqSkK6B1oM/LkWlSCQlMfoivXpBgY9DnvzZ
-        esXTOAdwyDywWJcY9YOFcGPO45a7
-X-Google-Smtp-Source: APXvYqykmj3bw8wckfQ0SWS8anYz3CKnkJ41kV8QHJWUqgHmnfJZLRZQAVQ0473+AVWYt51mfgk8qw==
-X-Received: by 2002:a2e:8152:: with SMTP id t18mr1027347ljg.255.1576661890486;
-        Wed, 18 Dec 2019 01:38:10 -0800 (PST)
-Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id i2sm804801lfl.20.2019.12.18.01.38.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 01:38:09 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1ihVmQ-00034b-9i; Wed, 18 Dec 2019 10:38:06 +0100
-Date:   Wed, 18 Dec 2019 10:38:06 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Rob Herring <robh@kernel.org>,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH] serdev: fix builds with CONFIG_SERIAL_DEV_BUS=m
-Message-ID: <20191218093806.GK22665@localhost>
-References: <201912181000.82Z7czbN%lkp@intel.com>
- <20191218083842.14882-1-u.kleine-koenig@pengutronix.de>
- <20191218090606.GJ22665@localhost>
- <20191218092958.tu6n452zwbpkreks@pengutronix.de>
+        Wed, 18 Dec 2019 04:38:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52318 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726090AbfLRJi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 04:38:28 -0500
+Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 375D7218AC;
+        Wed, 18 Dec 2019 09:38:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576661907;
+        bh=sbYtOwQOAWEAv0CRXiQQd8SUjXUmGnVnvNnhC+x092M=;
+        h=From:To:Cc:Subject:Date:From;
+        b=B6X4rI9SL3zqz8Bv3jQJzmaqR72IjzH1y+RdQPoqBFqmjVTsq0ILjlOB2YRe82Eyc
+         l7foVh/jnEDM5UhaOkWU4HZBvfLygQi96WwYjSZ0ZfZCKIz9rP+LSNmrLZTCLp2qfv
+         hgmzNxG6hW5+cGMyB1Sco0jHi4z+Fuh6ig3JLmtQ=
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>
+Cc:     linux-ia64@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH] ia64: add support for folded p4d page tables
+Date:   Wed, 18 Dec 2019 11:38:20 +0200
+Message-Id: <20191218093820.17967-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191218092958.tu6n452zwbpkreks@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 10:29:58AM +0100, Uwe Kleine-König wrote:
-> On Wed, Dec 18, 2019 at 10:06:06AM +0100, Johan Hovold wrote:
-> > On Wed, Dec 18, 2019 at 09:38:42AM +0100, Uwe Kleine-König wrote:
-> > > Commit 54edb425346a ("serdev: simplify Makefile") broke builds with
-> > > serdev configured as module. I don't understand it completely yet, but
-> > > it seems that
-> > > 
-> > > 	obj-$(CONFIG_SERIAL_DEV_BUS) += serdev/
-> > > 
-> > > in drivers/tty/Makefile with CONFIG_SERIAL_DEV_BUS=m doesn't result in
-> > > code that is added using obj-y in drivers/tty/serdev/Makefile being
-> > > compiled. So instead of dropping $(CONFIG_SERIAL_DEV_BUS) in serdev's
-> > > Makefile, drop it in drivers/tty/Makefile.
-> > 
-> > Why not simply revert the offending patch? There are some dependencies
-> > here related to how the tty layer is built. If you're still not certain
-> > on why things broke, I suggest just reverting for now.
-> 
-> I see that it is not easy to define what obj-y should do in a Makefile
-> that is included via obj-m. Now it is the other way round and that
-> should be safe. This construct is used in several places, so I'd say the
-> patch is fine unless you have more concrete concerns.
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-No, and I don't have time to look into this right now.
+Implement primitives necessary for the 4th level folding, add walks of p4d
+level where appropriate, remove usage of __ARCH_USE_5LEVEL_HACK and replace
+5level-fixup.h with pgtable-nop4d.h
 
-It's more about the general principle that a patch should do one thing;
-in this case unbreak the build. If you want to do cleanups as well, you
-do that separately (and argue for why its needed).
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+---
+ arch/ia64/include/asm/pgalloc.h |  4 ++--
+ arch/ia64/include/asm/pgtable.h | 17 ++++++++---------
+ arch/ia64/mm/fault.c            |  7 ++++++-
+ arch/ia64/mm/hugetlbpage.c      | 18 ++++++++++++------
+ arch/ia64/mm/init.c             | 28 ++++++++++++++++++++++++----
+ 5 files changed, 52 insertions(+), 22 deletions(-)
 
-Johan
+diff --git a/arch/ia64/include/asm/pgalloc.h b/arch/ia64/include/asm/pgalloc.h
+index f4c491044882..2a3050345099 100644
+--- a/arch/ia64/include/asm/pgalloc.h
++++ b/arch/ia64/include/asm/pgalloc.h
+@@ -36,9 +36,9 @@ static inline void pgd_free(struct mm_struct *mm, pgd_t *pgd)
+ 
+ #if CONFIG_PGTABLE_LEVELS == 4
+ static inline void
+-pgd_populate(struct mm_struct *mm, pgd_t * pgd_entry, pud_t * pud)
++p4d_populate(struct mm_struct *mm, p4d_t * p4d_entry, pud_t * pud)
+ {
+-	pgd_val(*pgd_entry) = __pa(pud);
++	p4d_val(*p4d_entry) = __pa(pud);
+ }
+ 
+ static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long addr)
+diff --git a/arch/ia64/include/asm/pgtable.h b/arch/ia64/include/asm/pgtable.h
+index d602e7c622db..c87f789bc914 100644
+--- a/arch/ia64/include/asm/pgtable.h
++++ b/arch/ia64/include/asm/pgtable.h
+@@ -283,12 +283,12 @@ extern unsigned long VMALLOC_END;
+ #define pud_page(pud)			virt_to_page((pud_val(pud) + PAGE_OFFSET))
+ 
+ #if CONFIG_PGTABLE_LEVELS == 4
+-#define pgd_none(pgd)			(!pgd_val(pgd))
+-#define pgd_bad(pgd)			(!ia64_phys_addr_valid(pgd_val(pgd)))
+-#define pgd_present(pgd)		(pgd_val(pgd) != 0UL)
+-#define pgd_clear(pgdp)			(pgd_val(*(pgdp)) = 0UL)
+-#define pgd_page_vaddr(pgd)		((unsigned long) __va(pgd_val(pgd) & _PFN_MASK))
+-#define pgd_page(pgd)			virt_to_page((pgd_val(pgd) + PAGE_OFFSET))
++#define p4d_none(p4d)			(!p4d_val(p4d))
++#define p4d_bad(p4d)			(!ia64_phys_addr_valid(p4d_val(p4d)))
++#define p4d_present(p4d)		(p4d_val(p4d) != 0UL)
++#define p4d_clear(p4dp)			(p4d_val(*(p4dp)) = 0UL)
++#define p4d_page_vaddr(p4d)		((unsigned long) __va(p4d_val(p4d) & _PFN_MASK))
++#define p4d_page(p4d)			virt_to_page((p4d_val(p4d) + PAGE_OFFSET))
+ #endif
+ 
+ /*
+@@ -388,7 +388,7 @@ pgd_offset (const struct mm_struct *mm, unsigned long address)
+ #if CONFIG_PGTABLE_LEVELS == 4
+ /* Find an entry in the second-level page table.. */
+ #define pud_offset(dir,addr) \
+-	((pud_t *) pgd_page_vaddr(*(dir)) + (((addr) >> PUD_SHIFT) & (PTRS_PER_PUD - 1)))
++	((pud_t *) p4d_page_vaddr(*(dir)) + (((addr) >> PUD_SHIFT) & (PTRS_PER_PUD - 1)))
+ #endif
+ 
+ /* Find an entry in the third-level page table.. */
+@@ -582,10 +582,9 @@ extern struct page *zero_page_memmap_ptr;
+ 
+ 
+ #if CONFIG_PGTABLE_LEVELS == 3
+-#define __ARCH_USE_5LEVEL_HACK
+ #include <asm-generic/pgtable-nopud.h>
+ #endif
+-#include <asm-generic/5level-fixup.h>
++#include <asm-generic/pgtable-nop4d.h>
+ #include <asm-generic/pgtable.h>
+ 
+ #endif /* _ASM_IA64_PGTABLE_H */
+diff --git a/arch/ia64/mm/fault.c b/arch/ia64/mm/fault.c
+index c2f299fe9e04..ec994135cb74 100644
+--- a/arch/ia64/mm/fault.c
++++ b/arch/ia64/mm/fault.c
+@@ -29,6 +29,7 @@ static int
+ mapped_kernel_page_is_present (unsigned long address)
+ {
+ 	pgd_t *pgd;
++	p4d_t *p4d;
+ 	pud_t *pud;
+ 	pmd_t *pmd;
+ 	pte_t *ptep, pte;
+@@ -37,7 +38,11 @@ mapped_kernel_page_is_present (unsigned long address)
+ 	if (pgd_none(*pgd) || pgd_bad(*pgd))
+ 		return 0;
+ 
+-	pud = pud_offset(pgd, address);
++	p4d = p4d_offset(pgd, address);
++	if (p4d_none(*p4d) || p4d_bad(*p4d))
++		return 0;
++
++	pud = pud_offset(p4d, address);
+ 	if (pud_none(*pud) || pud_bad(*pud))
+ 		return 0;
+ 
+diff --git a/arch/ia64/mm/hugetlbpage.c b/arch/ia64/mm/hugetlbpage.c
+index d16e419fd712..32352a73df0c 100644
+--- a/arch/ia64/mm/hugetlbpage.c
++++ b/arch/ia64/mm/hugetlbpage.c
+@@ -30,12 +30,14 @@ huge_pte_alloc(struct mm_struct *mm, unsigned long addr, unsigned long sz)
+ {
+ 	unsigned long taddr = htlbpage_to_page(addr);
+ 	pgd_t *pgd;
++	p4d_t *p4d;
+ 	pud_t *pud;
+ 	pmd_t *pmd;
+ 	pte_t *pte = NULL;
+ 
+ 	pgd = pgd_offset(mm, taddr);
+-	pud = pud_alloc(mm, pgd, taddr);
++	p4d = p4d_offset(pgd, taddr);
++	pud = pud_alloc(mm, p4d, taddr);
+ 	if (pud) {
+ 		pmd = pmd_alloc(mm, pud, taddr);
+ 		if (pmd)
+@@ -49,17 +51,21 @@ huge_pte_offset (struct mm_struct *mm, unsigned long addr, unsigned long sz)
+ {
+ 	unsigned long taddr = htlbpage_to_page(addr);
+ 	pgd_t *pgd;
++	p4d_t *p4d;
+ 	pud_t *pud;
+ 	pmd_t *pmd;
+ 	pte_t *pte = NULL;
+ 
+ 	pgd = pgd_offset(mm, taddr);
+ 	if (pgd_present(*pgd)) {
+-		pud = pud_offset(pgd, taddr);
+-		if (pud_present(*pud)) {
+-			pmd = pmd_offset(pud, taddr);
+-			if (pmd_present(*pmd))
+-				pte = pte_offset_map(pmd, taddr);
++		p4d = p4d_offset(pgd, addr);
++		if (p4d_present(*p4d)) {
++			pud = pud_offset(p4d, taddr);
++			if (pud_present(*pud)) {
++				pmd = pmd_offset(pud, taddr);
++				if (pmd_present(*pmd))
++					pte = pte_offset_map(pmd, taddr);
++			}
+ 		}
+ 	}
+ 
+diff --git a/arch/ia64/mm/init.c b/arch/ia64/mm/init.c
+index 58fd67068bac..bcdc78e97e6e 100644
+--- a/arch/ia64/mm/init.c
++++ b/arch/ia64/mm/init.c
+@@ -208,6 +208,7 @@ static struct page * __init
+ put_kernel_page (struct page *page, unsigned long address, pgprot_t pgprot)
+ {
+ 	pgd_t *pgd;
++	p4d_t *p4d;
+ 	pud_t *pud;
+ 	pmd_t *pmd;
+ 	pte_t *pte;
+@@ -215,7 +216,10 @@ put_kernel_page (struct page *page, unsigned long address, pgprot_t pgprot)
+ 	pgd = pgd_offset_k(address);		/* note: this is NOT pgd_offset()! */
+ 
+ 	{
+-		pud = pud_alloc(&init_mm, pgd, address);
++		p4d = p4d_alloc(&init_mm, pgd, address);
++		if (!p4d)
++			goto out;
++		pud = pud_alloc(&init_mm, p4d, address);
+ 		if (!pud)
+ 			goto out;
+ 		pmd = pmd_alloc(&init_mm, pud, address);
+@@ -382,6 +386,7 @@ int vmemmap_find_next_valid_pfn(int node, int i)
+ 
+ 	do {
+ 		pgd_t *pgd;
++		p4d_t *p4d;
+ 		pud_t *pud;
+ 		pmd_t *pmd;
+ 		pte_t *pte;
+@@ -392,7 +397,13 @@ int vmemmap_find_next_valid_pfn(int node, int i)
+ 			continue;
+ 		}
+ 
+-		pud = pud_offset(pgd, end_address);
++		p4d = p4d_offset(pgd, end_address);
++		if (p4d_none(*p4d)) {
++			end_address += P4D_SIZE;
++			continue;
++		}
++
++		pud = pud_offset(p4d, end_address);
+ 		if (pud_none(*pud)) {
+ 			end_address += PUD_SIZE;
+ 			continue;
+@@ -430,6 +441,7 @@ int __init create_mem_map_page_table(u64 start, u64 end, void *arg)
+ 	struct page *map_start, *map_end;
+ 	int node;
+ 	pgd_t *pgd;
++	p4d_t *p4d;
+ 	pud_t *pud;
+ 	pmd_t *pmd;
+ 	pte_t *pte;
+@@ -444,12 +456,20 @@ int __init create_mem_map_page_table(u64 start, u64 end, void *arg)
+ 	for (address = start_page; address < end_page; address += PAGE_SIZE) {
+ 		pgd = pgd_offset_k(address);
+ 		if (pgd_none(*pgd)) {
++			p4d = memblock_alloc_node(PAGE_SIZE, PAGE_SIZE, node);
++			if (!p4d)
++				goto err_alloc;
++			pgd_populate(&init_mm, pgd, p4d);
++		}
++		p4d = p4d_offset(pgd, address);
++
++		if (p4d_none(*p4d)) {
+ 			pud = memblock_alloc_node(PAGE_SIZE, PAGE_SIZE, node);
+ 			if (!pud)
+ 				goto err_alloc;
+-			pgd_populate(&init_mm, pgd, pud);
++			p4d_populate(&init_mm, p4d, pud);
+ 		}
+-		pud = pud_offset(pgd, address);
++		pud = pud_offset(p4d, address);
+ 
+ 		if (pud_none(*pud)) {
+ 			pmd = memblock_alloc_node(PAGE_SIZE, PAGE_SIZE, node);
+-- 
+2.24.0
+
