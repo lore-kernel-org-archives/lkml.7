@@ -2,160 +2,152 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C412C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E078EC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E17F921582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CF6321582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:09:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IHzJ0A0S"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="oDT0ivPp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbfLRAIF (ORCPT
+        id S1726591AbfLRAJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 19:08:05 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41522 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725940AbfLRAIF (ORCPT
+        Tue, 17 Dec 2019 19:09:08 -0500
+Received: from mailout1.samsung.com ([203.254.224.24]:30210 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726072AbfLRAJI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 19:08:05 -0500
-Received: by mail-pg1-f196.google.com with SMTP id x8so201836pgk.8
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 16:08:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=da4hM4UJKgmO9iz3pXI2WshcEvtAp8fX82/geQVC7e0=;
-        b=IHzJ0A0SVCJT2wgdRYnqM2827VaTp+bAXqjahUxWIakErH8H4u3BP8b0EC2opmBBP/
-         zLgd/VEbimeoyZc9352qbSIanJqf1ICFPxO03lC2eDAprzihhwmC/rgNiFc/JIXuVZ/n
-         jLkjlNMeGdOonrQIV5NUsTbwCMGflwi+FBnOY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=da4hM4UJKgmO9iz3pXI2WshcEvtAp8fX82/geQVC7e0=;
-        b=qpAkKr5OcDXwyyIRdwHCSA4dHXfi43JaJZ7R/tS2yceqcuUoqYeWH2ha2plfpjYckC
-         zO1IUWPaKLwgYSJWtM2lDCFFZVwCyb5owXs/4KRRgNqOP2uTD63hTvHRsTpzRCgzpf+e
-         lkLXTe8BjPl+diQcXc2+TGdWIzHQrJmcRSiknU8H9ki/mhS6t5hmCH2EUn5qSxbD1jJW
-         VTgQXZXDssekvbUiftnKB5IPFvdaiLanAu85t0AEeuQxvW0kPUtQiqyFTq7wbgP+ZgsS
-         yPGMPEhMtfGHPWYZXVgzTJfCHlG9iqlwMolVmQ8Qj++kQyNT5aAGTujOLohrW1uzpRSu
-         w/Fw==
-X-Gm-Message-State: APjAAAXMlSFylXQ25heaJvnabkJsn9Ud4WvW3an67S/EDhoJEkCNMhCn
-        zUzyqbWfs/Xjh/HwPiko8+M4/g==
-X-Google-Smtp-Source: APXvYqz8C5J4J9eWBQPXjg7+Paw02BtPeFdFGP5+iOGrZw/IMiECgcViQ8/ErKBABJ5diMLnc2/CaA==
-X-Received: by 2002:aa7:98d0:: with SMTP id e16mr457396pfm.77.1576627684350;
-        Tue, 17 Dec 2019 16:08:04 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t11sm77450pjf.30.2019.12.17.16.08.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 16:08:03 -0800 (PST)
-Date:   Tue, 17 Dec 2019 16:08:02 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Elena Petrova <lenaptr@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        kernel-hardening@lists.openwall.com
-Subject: Re: [PATCH v2 1/3] ubsan: Add trap instrumentation option
-Message-ID: <201912171607.73EE8133@keescook>
-References: <20191121181519.28637-1-keescook@chromium.org>
- <20191121181519.28637-2-keescook@chromium.org>
- <20191216102655.GA11082@willie-the-truck>
+        Tue, 17 Dec 2019 19:09:08 -0500
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20191218000905epoutp01b818f5a5442e3026a6e22ffc08333041~hTpTGQ2Ld1037310373epoutp01Z
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 00:09:05 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20191218000905epoutp01b818f5a5442e3026a6e22ffc08333041~hTpTGQ2Ld1037310373epoutp01Z
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1576627745;
+        bh=ZN9xUok03wojfck5X29qiSCp6pV0bXbuVMqbinHqCFw=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=oDT0ivPpbDExZir+X6rmdg7ndbCtIbH7saBg4Z64/lhNVpvV3A/8gtdROrqf+JF4n
+         oocimbnGnSAhLaZMIr3KZmpbNrK8gVaps+Podv3Igfbr1AIocMF0igcrMXEMiKmbCP
+         Pk2Gj5EG8s1oo1l0AHQ8qezd1NN2KFrJ1tiP5h3c=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20191218000905epcas1p351524d8a92065fe9994033b3551333c5~hTpSzMG3y2959629596epcas1p3h;
+        Wed, 18 Dec 2019 00:09:05 +0000 (GMT)
+Received: from epsmges1p2.samsung.com (unknown [182.195.40.162]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 47cwNJ1pKpzMqYkf; Wed, 18 Dec
+        2019 00:09:04 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        C3.7C.48498.F1E69FD5; Wed, 18 Dec 2019 09:09:03 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20191218000903epcas1p4dac913df29b69ad4bb7b10ab7c5f3ed9~hTpRSNClN0750607506epcas1p4S;
+        Wed, 18 Dec 2019 00:09:03 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191218000903epsmtrp2dbf53d8f6e910a02fcb199bbe380db8a~hTpRRfGPK2559725597epsmtrp2N;
+        Wed, 18 Dec 2019 00:09:03 +0000 (GMT)
+X-AuditID: b6c32a36-a3dff7000001bd72-cb-5df96e1f3fca
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        0D.12.06569.F1E69FD5; Wed, 18 Dec 2019 09:09:03 +0900 (KST)
+Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20191218000903epsmtip1c8cbf3f94ca6a37a6cadfe3048133823~hTpRHGy3F1844618446epsmtip1T;
+        Wed, 18 Dec 2019 00:09:03 +0000 (GMT)
+From:   =?UTF-8?Q?=EC=A0=84=EB=82=A8=EC=9E=AC/S/W_Platform_Lab=28VD=29/Staff_E?=
+         =?UTF-8?Q?ngineer/=EC=82=BC=EC=84=B1=EC=A0=84=EC=9E=90?= 
+        <namjae.jeon@samsung.com>
+To:     "'Enrico Weigelt, metux IT consult'" <lkml@metux.net>
+Cc:     <linux-kernel@vger.kernel.org>, "'Christoph Hellwig'" <hch@lst.de>,
+        "'Greg Kroah-Hartman'" <gregkh@linuxfoundation.org>,
+        "'Sungjong Seo'" <sj1557.seo@samsung.com>,
+        =?UTF-8?Q?'Valdis_Kl=C4=93tnieks'?= <valdis.kletnieks@vt.edu>,
+        <linux-fsdevel@vger.kernel.org>
+In-Reply-To: <c6698d0c-d909-c9dc-5608-0b986d63a471@metux.net>
+Subject: RE: [PATCH v7 01/13] exfat: add in-memory and on-disk structures
+ and headers
+Date:   Wed, 18 Dec 2019 09:09:03 +0900
+Message-ID: <000701d5b537$5b196f80$114c4e80$@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191216102655.GA11082@willie-the-truck>
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQFm2LC/h6nQOwj4JCuWUtKX9oQxIwE+vU/YAbPr/rABlbE1VAIBAPMfqGhx/ZA=
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SbUhTYRTu3b27u1qL61p2MMp1oaBktrm2buX6IIlRK6x+BNmwm95U2he7
+        W6T90IxsipWRFNoH2SjQPpy5/Kr1sSlmQmplOcR+REmfakmZBNXmXeS/5znvc85zznkPiclq
+        iQQyz+rkHFbWTBOxeFNwqVKZaJ00qRp/KpmjnnqCqb3eIWLu+btw5nnbBYLxe5oljO93u5h5
+        NjqGr5cYHly8ITHcDRURhoqxL4ThpK8OGcZvLzQEmj8T6cRuc2oux2ZzDgVnzbJl51lz9PSW
+        nZkbM7U6lVqpXsWspBVW1sLp6TRjunJTnjncC604yJpd4VA6y/P08rWpDpvLySlybbxTT3P2
+        bLNdrbIn86yFd1lzkrNsltVqlSpFG1buNec2hI4Q9gB5qLjyjKQIeSRlKIYEagUM33siLkOx
+        pIxqQXBq4FaUfEPQG3wTJT/CpLUK/UvxTj6UCA9+BD8G6nGBfEAQvNkoihCCuoqgcvQFHkmR
+        U6vgcWMrFsEYVS6CmpdxERxD6aG7uHhKM4faBadKO6YwTi2Gjj/DYQuSlIZz71clRcJSKg66
+        qt7iQpkkuFbzCRM6UsDku2viiFxObYMT7XMFiRzOl5ZgkXaAmiCgpaE/OkEadF5qj+I58LHT
+        F11GAoyP+IlIHaAOw9cH0fJuBO8n9ALWQKjeO2WFUUuhvm25EF4Erb8uIsF2Nox8LxcLVaTg
+        LpEJksVw8llQJOD5UHZ8TFKB6Oppc1VPm6t62gDV/80uI7wOxXN23pLD8Wp7yvS/vo2mznSZ
+        rgVdeWoMIIpE9CypasakSSZmD/L5lgACEqPl0hbFhEkmzWbzCziHLdPhMnN8AGnDWz+NJczN
+        soWP3urMVGtTNBoNs0K3UqfV0POk5M8+k4zKYZ3cAY6zc45/eSIyJqEI3ZG/WKeYaQn6ffs3
+        GTVXxre+aXVPZLjdSyoKjfnipJ7QZ08edF0ddSVl7H0UJHoponeHN44Xq+wZjnML2poKywsy
+        zm5ucIeae74XjOxpN4aGLr16HT+o6wuNDJiODx1h1mzobnLG9A9+KrVsVyuTC33eworEY/sS
+        g7dm1Xg/0Dify6qXYQ6e/QtSr4/YvAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprKIsWRmVeSWpSXmKPExsWy7bCSnK583s9YgzvTJCyaF69ns1i5+iiT
+        xZ69J1ksLu+aw2axd/F2dost/46wWlx6/4HFgd1j/9w17B67bzaweUz48JbNo2/LKkaPz5vk
+        PA5tf8MWwBbFZZOSmpNZllqkb5fAlXHp3CGmgqvsFbc2rGJuYOxg62Lk5JAQMJHY8PMAexcj
+        F4eQwG5GiVnf3jBDJKQljp04A2RzANnCEocPF0PUPGeUmLp3GjOIwyawmFGirecOE0iDiICl
+        xInNO8ESzAITmCQ2TepkhmiZxSRx8N5PsLGcArYSp5uaWEBsYYFQiRWHH4HdwSKgKnH0/zN2
+        kHW8QJP2zdQGCfMKCEqcnPkErJxZQFui92ErI4y9bOFrqEsVJH4+XcYK0ioi4CfRe0QUokRE
+        YnZnG/MERuFZSCbNQjJpFpJJs5C0LGBkWcUomVpQnJueW2xYYJSXWq5XnJhbXJqXrpecn7uJ
+        ERxZWlo7GE+ciD/EKMDBqMTDe+Pvj1gh1sSy4srcQ4wSHMxKIrw7FL7HCvGmJFZWpRblxxeV
+        5qQWH2KU5mBREueVzz8WKSSQnliSmp2aWpBaBJNl4uCUamBUeGFxaEdB0bOWb4UfWkVXHkpn
+        mFXlav3PZOc7ma+ieusLZuVMnGxtsObc/wPvrhyJ/3Tl2AWHBwEWqewH/qx8v/PMhLlH63aH
+        /JpWfG2W1skHXuZfalO6QvzUd3z5bSWiOalRjlPU5cDmQ8/7pef5u+zkuPkib76yhwPvCV62
+        v6u/fXLMKJbpUmIpzkg01GIuKk4EAMle7fqoAgAA
+X-CMS-MailID: 20191218000903epcas1p4dac913df29b69ad4bb7b10ab7c5f3ed9
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191216135033epcas5p3f2ec096506b1a48535ce0796fef23b9e
+References: <20191213055028.5574-2-namjae.jeon@samsung.com>
+        <CGME20191216135033epcas5p3f2ec096506b1a48535ce0796fef23b9e@epcas5p3.samsung.com>
+        <088a50ad-dc67-4ff6-624d-a1ac2008b420@web.de>
+        <002401d5b46d$543f7ee0$fcbe7ca0$@samsung.com>
+        <c6698d0c-d909-c9dc-5608-0b986d63a471@metux.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 10:26:56AM +0000, Will Deacon wrote:
-> Hi Kees,
-> 
-> On Thu, Nov 21, 2019 at 10:15:17AM -0800, Kees Cook wrote:
-> > The Undefined Behavior Sanitizer can operate in two modes: warning
-> > reporting mode via lib/ubsan.c handler calls, or trap mode, which uses
-> > __builtin_trap() as the handler. Using lib/ubsan.c means the kernel
-> > image is about 5% larger (due to all the debugging text and reporting
-> > structures to capture details about the warning conditions). Using the
-> > trap mode, the image size changes are much smaller, though at the loss
-> > of the "warning only" mode.
-> > 
-> > In order to give greater flexibility to system builders that want
-> > minimal changes to image size and are prepared to deal with kernel code
-> > being aborted and potentially destabilizing the system, this introduces
-> > CONFIG_UBSAN_TRAP. The resulting image sizes comparison:
-> > 
-> >    text    data     bss       dec       hex     filename
-> > 19533663   6183037  18554956  44271656  2a38828 vmlinux.stock
-> > 19991849   7618513  18874448  46484810  2c54d4a vmlinux.ubsan
-> > 19712181   6284181  18366540  44362902  2a4ec96 vmlinux.ubsan-trap
-> > 
-> > CONFIG_UBSAN=y:      image +4.8% (text +2.3%, data +18.9%)
-> > CONFIG_UBSAN_TRAP=y: image +0.2% (text +0.9%, data +1.6%)
-> > 
-> > Additionally adjusts the CONFIG_UBSAN Kconfig help for clarity and
-> > removes the mention of non-existing boot param "ubsan_handle".
-> > 
-> > Suggested-by: Elena Petrova <lenaptr@google.com>
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  lib/Kconfig.ubsan      | 22 ++++++++++++++++++----
-> >  lib/Makefile           |  2 ++
-> >  scripts/Makefile.ubsan |  9 +++++++--
-> >  3 files changed, 27 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
-> > index 0e04fcb3ab3d..9deb655838b0 100644
-> > --- a/lib/Kconfig.ubsan
-> > +++ b/lib/Kconfig.ubsan
-> > @@ -5,11 +5,25 @@ config ARCH_HAS_UBSAN_SANITIZE_ALL
-> >  config UBSAN
-> >  	bool "Undefined behaviour sanity checker"
-> >  	help
-> > -	  This option enables undefined behaviour sanity checker
-> > +	  This option enables the Undefined Behaviour sanity checker.
-> >  	  Compile-time instrumentation is used to detect various undefined
-> > -	  behaviours in runtime. Various types of checks may be enabled
-> > -	  via boot parameter ubsan_handle
-> > -	  (see: Documentation/dev-tools/ubsan.rst).
-> > +	  behaviours at runtime. For more details, see:
-> > +	  Documentation/dev-tools/ubsan.rst
-> > +
-> > +config UBSAN_TRAP
-> > +	bool "On Sanitizer warnings, abort the running kernel code"
-> > +	depends on UBSAN
-> > +	depends on $(cc-option, -fsanitize-undefined-trap-on-error)
-> > +	help
-> > +	  Building kernels with Sanitizer features enabled tends to grow
-> > +	  the kernel size by around 5%, due to adding all the debugging
-> > +	  text on failure paths. To avoid this, Sanitizer instrumentation
-> > +	  can just issue a trap. This reduces the kernel size overhead but
-> > +	  turns all warnings (including potentially harmless conditions)
-> > +	  into full exceptions that abort the running kernel code
-> > +	  (regardless of context, locks held, etc), which may destabilize
-> > +	  the system. For some system builders this is an acceptable
-> > +	  trade-off.
-> 
-> Slight nit, but I wonder if it would make sense to move all this under a
-> 'menuconfig UBSAN' entry, so the dependencies can be dropped? Then you could
-> have all of the suboptions default to on and basically choose which
-> individual compiler options to disable based on your own preferences.
+> By the way: do you think the driver is already stable enough for
+> production use ?
+Yes, I think it's stable enough. Our exfat has been in our products for yea=
+rs
+and many issues have been fixed.
+If you find any issue, Let me know it.
 
-Sure; I can do that. I'll respin the series.
+> Are there any limitations we have to consider ?
+Well, I think that there is currently no proper mkfs(format), fsck(repair) =
+tool for linux-exfat.
+I am working on it and will announce it here as soon as possible.
 
--- 
-Kees Cook
+> I just have a client, who wants to use it in a semi-embedded (telemetry)
+> device, for recording to an external USB drive.
+>=20
+>=20
+> --mtx
+>=20
+>=20
+> --
+> ---
+> Hinweis: unverschl=C3=BCsselte=20E-Mails=20k=C3=B6nnen=20leicht=20abgeh=
+=C3=B6rt=20und=20manipuliert=0D=0A>=20werden=20=21=20F=C3=BCr=20eine=20vert=
+rauliche=20Kommunikation=20senden=20Sie=20bitte=20ihren=0D=0A>=20GPG/PGP-Sc=
+hl=C3=BCssel=20zu.=0D=0A>=20---=0D=0A>=20Enrico=20Weigelt,=20metux=20IT=20c=
+onsult=0D=0A>=20Free=20software=20and=20Linux=20embedded=20engineering=20in=
+fo=40metux.net=20--=20+49-151-=0D=0A>=2027565287=0D=0A=0D=0A
