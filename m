@@ -2,366 +2,418 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A4FC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B1B2C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC31227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:10:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C46DD2146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:10:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Ad8Ln8uf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727181AbfLROKV (ORCPT
+        id S1727186AbfLROKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 09:10:21 -0500
-Received: from mx2.suse.de ([195.135.220.15]:38380 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727027AbfLROKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 09:10:20 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id ED888AC2F;
-        Wed, 18 Dec 2019 14:10:15 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id ED2BF1E0B2D; Wed, 18 Dec 2019 15:10:12 +0100 (CET)
-Date:   Wed, 18 Dec 2019 15:10:12 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     Andreas Gruenbacher <agruenba@redhat.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
-        Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Richard Weinberger <richard@nod.at>,
-        Artem Bityutskiy <dedekind1@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        ceph-devel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-mtd@lists.infradead.org, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH v3] fs: Fix page_mkwrite off-by-one errors
-Message-ID: <20191218141012.GD19387@quack2.suse.cz>
-References: <20191218130935.32402-1-agruenba@redhat.com>
+        Wed, 18 Dec 2019 09:10:55 -0500
+Received: from mail-eopbgr690055.outbound.protection.outlook.com ([40.107.69.55]:57511
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726932AbfLROKy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 09:10:54 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=S5FvwJNzhJMBnoJpkCr+GQdtkOlNIhW/0/bNLWjvK1znL219TLptZbjwWdEA1ZqPBEmHM16p0lAMF+3jAlytPvxCJCe/2eJmZAomhhjNj3t2fIBTkTHKMGyKdzIpQWQmGScek05s+X4iTSksFG0O4s9YNpUOrCcFYmxXZEk6b9D76ObA5FmWtW8OX3nkLvAXYcC0V+GHwjlAhM5fWIBrs+aCuDQ/3htp87qDqojOAhdPaUWW7vc9ZhBU5uSi27uLYeQbbQ6c6ebsozJGGSBqm24ViKM14QMTKMvKDXmsZC/IwqBRCRXLffX2kzp/eXO9WuxXN6QhLvJnScH63GSQzA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2m1GkQ6l83oa4AHAUzpa405HZ8aodvD6CgU+sHV3Kj8=;
+ b=ZzKH3lNXta/dooQU6kuxeYyjcVeTXeRZF9ECkMaN+EmgJDUy6Y2EhaIv1ykcATS6o/Yz7G+pbbx7/6JIi3vv/EITnxcag1j7+hSWuEAVqKMU/anS74RwSn8MGEdouLOXeiK02Qz+JGKOzryzWeUSwjbiiq60GSqduNJkR+TlIFAB9IN2wqTIWG7rcSEa47QmQ/VQcWKOc5q1gXXpxOCQoAvAEJINeaPAB3gANTjfeQ92OglrhagTMrINtG7YmwYgqPpO7VUBdgH6INN8bXDKNCN6owGfSjL+gXHQ6j1Nzkz8ZaYKG8DUxfORWeAKeDdfrxDcxYXJV5AE5YWP2vlLTw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=linaro.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2m1GkQ6l83oa4AHAUzpa405HZ8aodvD6CgU+sHV3Kj8=;
+ b=Ad8Ln8ufVErImAeYtnHF9UwquQ60eZox2RpviZegsH2AxpZDNgIvfOQ41z/8qLSRJ78j5BHOfgywwFAbdVtWd6Q+uJs9MPmBtvCHnSws16mhLdK4dhfyoBSm/YwPqkpGFQ6YJWUdCEeP6Q6p8s65401TZH8hnhCYDiJ/pfwp/R4=
+Received: from SN4PR0501CA0138.namprd05.prod.outlook.com
+ (2603:10b6:803:2c::16) by BY5PR02MB6962.namprd02.prod.outlook.com
+ (2603:10b6:a03:235::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2538.18; Wed, 18 Dec
+ 2019 14:10:47 +0000
+Received: from BL2NAM02FT011.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:803:2c:cafe::ab) by SN4PR0501CA0138.outlook.office365.com
+ (2603:10b6:803:2c::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2559.12 via Frontend
+ Transport; Wed, 18 Dec 2019 14:10:47 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; linaro.org; dkim=none (message not signed)
+ header.d=none;linaro.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ BL2NAM02FT011.mail.protection.outlook.com (10.152.77.5) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2559.14
+ via Frontend Transport; Wed, 18 Dec 2019 14:10:46 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1iha2H-0001BK-RZ; Wed, 18 Dec 2019 06:10:45 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1iha2C-0002zy-Bk; Wed, 18 Dec 2019 06:10:40 -0800
+Received: from xsj-pvapsmtp01 (xsj-pvapsmtp01.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xBIEAbfm009478;
+        Wed, 18 Dec 2019 06:10:37 -0800
+Received: from [172.30.17.107]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1iha28-0002xY-DK; Wed, 18 Dec 2019 06:10:36 -0800
+Subject: Re: [PATCH 1/5] firmware: xilinx: Adds new eemi call for reg access
+To:     Jolly Shah <jolly.shah@xilinx.com>, ard.biesheuvel@linaro.org,
+        mingo@kernel.org, gregkh@linuxfoundation.org,
+        matt@codeblueprint.co.uk, sudeep.holla@arm.com,
+        hkallweit1@gmail.com, keescook@chromium.org,
+        dmitry.torokhov@gmail.com, michal.simek@xilinx.com
+Cc:     rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>
+References: <1575502159-11327-1-git-send-email-jolly.shah@xilinx.com>
+ <1575502159-11327-2-git-send-email-jolly.shah@xilinx.com>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <a75310be-da16-8b8e-90a8-3a15ef8b735d@xilinx.com>
+Date:   Wed, 18 Dec 2019 15:10:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191218130935.32402-1-agruenba@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1575502159-11327-2-git-send-email-jolly.shah@xilinx.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(396003)(376002)(136003)(199004)(189003)(81156014)(81166006)(8676002)(26005)(31696002)(36756003)(2616005)(70586007)(6666004)(186003)(70206006)(4326008)(44832011)(2906002)(336012)(478600001)(31686004)(356004)(5660300002)(8936002)(9786002)(107886003)(316002)(426003)(7416002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR02MB6962;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: fd044c5b-294d-4b1b-226f-08d783c4140c
+X-MS-TrafficTypeDiagnostic: BY5PR02MB6962:
+X-Microsoft-Antispam-PRVS: <BY5PR02MB6962892E5052D01C312F4951C6530@BY5PR02MB6962.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:478;
+X-Forefront-PRVS: 0255DF69B9
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 83VQ3cA/qsAinJbFi11+FbDgSU+Yr7GdXksEFud9PHVhKn/wRhbYuRG7IREU5ZTV+wp96J+2Ayz3htVk+z562wOfMFOGceihzwSbW7+n3aTxrCowZmmI0RWg6CJQ8hy8GUMml0SxnHOPw9qJJi7JcnGG26w1x3eFQs/yV8kXzw8msMDob400xSd7sBBQXwa4TRCXn073Kj4xSz1TwrnpHZxo2rmiUXXtZxNglDRR744DSMVQiH5OLmK3D9JniKQCyo5ulE2jztW7EGCharF/7OI1msi20cuGuzbgVEA7UM7l9pE68zCsI0mv8YxrZM1iaMHLsqEgAINyR0HWmMsi+5IWqBbjQgrGtI1WXjEk7caxv6M75sTnJa3KNt5mAO9GVeFC0oUafX0ZMKtJRj8eebKp1ceh9mqV5eximMZRw8DCTqyAHiUD7xXve1z3R0YDLYRha8ChRpSO/7N845uLOmh3/Rvy/EVFBsPPB2HyjUPqKdj8bHrnASmTMQVIs6EA
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Dec 2019 14:10:46.6580
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: fd044c5b-294d-4b1b-226f-08d783c4140c
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB6962
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 18-12-19 14:09:35, Andreas Gruenbacher wrote:
-> Hi Darrick,
+On 05. 12. 19 0:29, Jolly Shah wrote:
+> From: Rajan Vaja <rajan.vaja@xilinx.com>
 > 
-> can this fix go in via the xfs tree?
+> This patch adds new EEMI call which is used for CSU/PMU register
+> access from linux.
 > 
-> Thanks,
-> Andreas
-> 
-> --
-> 
-> The check in block_page_mkwrite that is meant to determine whether an
-> offset is within the inode size is off by one.  This bug has been copied
-> into iomap_page_mkwrite and several filesystems (ubifs, ext4, f2fs,
-> ceph).
-> 
-> Fix that by introducing a new page_mkwrite_check_truncate helper that
-> checks for truncate and computes the bytes in the page up to EOF.  Use
-> the helper in the above mentioned filesystems.
-> 
-> In addition, use the new helper in btrfs as well.
-> 
-> Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-> Acked-by: David Sterba <dsterba@suse.com> (btrfs part)
-> Acked-by: Richard Weinberger <richard@nod.at> (ubifs part)
-
-The patch looks good to me (didn't really check btrfs). I'd just note that
-page_mkwrite_check_truncate() doesn't seem that small to be worth
-inlining... Other than that feel free to add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
-
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+> Signed-off-by: Jolly Shah <jolly.shah@xilinx.com>
 > ---
->  fs/btrfs/inode.c        | 15 ++++-----------
->  fs/buffer.c             | 16 +++-------------
->  fs/ceph/addr.c          |  2 +-
->  fs/ext4/inode.c         | 14 ++++----------
->  fs/f2fs/file.c          | 19 +++++++------------
->  fs/iomap/buffered-io.c  | 18 +++++-------------
->  fs/ubifs/file.c         |  3 +--
->  include/linux/pagemap.h | 28 ++++++++++++++++++++++++++++
->  8 files changed, 53 insertions(+), 62 deletions(-)
+>  drivers/firmware/xilinx/zynqmp.c     | 183 +++++++++++++++++++++++++++++++++++
+>  include/linux/firmware/xlnx-zynqmp.h |   9 ++
+>  2 files changed, 192 insertions(+)
 > 
-> diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-> index 56032c518b26..86c6fcd8139d 100644
-> --- a/fs/btrfs/inode.c
-> +++ b/fs/btrfs/inode.c
-> @@ -9016,13 +9016,11 @@ vm_fault_t btrfs_page_mkwrite(struct vm_fault *vmf)
->  	ret = VM_FAULT_NOPAGE; /* make the VM retry the fault */
->  again:
->  	lock_page(page);
-> -	size = i_size_read(inode);
+> diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
+> index fd3d837..56431ad 100644
+> --- a/drivers/firmware/xilinx/zynqmp.c
+> +++ b/drivers/firmware/xilinx/zynqmp.c
+> @@ -24,6 +24,8 @@
+>  #include <linux/firmware/xlnx-zynqmp.h>
+>  #include "zynqmp-debug.h"
 >  
-> -	if ((page->mapping != inode->i_mapping) ||
-> -	    (page_start >= size)) {
-> -		/* page got truncated out from underneath us */
-> +	ret2 = page_mkwrite_check_truncate(page, inode);
-> +	if (ret2 < 0)
->  		goto out_unlock;
-> -	}
-> +	zero_start = ret2;
->  	wait_on_page_writeback(page);
+> +static unsigned long register_address;
+> +
+>  static const struct zynqmp_eemi_ops *eemi_ops_tbl;
 >  
->  	lock_extent_bits(io_tree, page_start, page_end, &cached_state);
-> @@ -9043,6 +9041,7 @@ vm_fault_t btrfs_page_mkwrite(struct vm_fault *vmf)
->  		goto again;
->  	}
->  
-> +	size = i_size_read(inode);
->  	if (page->index == ((size - 1) >> PAGE_SHIFT)) {
->  		reserved_space = round_up(size - page_start,
->  					  fs_info->sectorsize);
-> @@ -9075,12 +9074,6 @@ vm_fault_t btrfs_page_mkwrite(struct vm_fault *vmf)
->  	}
->  	ret2 = 0;
->  
-> -	/* page is wholly or partially inside EOF */
-> -	if (page_start + PAGE_SIZE > size)
-> -		zero_start = offset_in_page(size);
-> -	else
-> -		zero_start = PAGE_SIZE;
-> -
->  	if (zero_start != PAGE_SIZE) {
->  		kaddr = kmap(page);
->  		memset(kaddr + zero_start, 0, PAGE_SIZE - zero_start);
-> diff --git a/fs/buffer.c b/fs/buffer.c
-> index d8c7242426bb..53aabde57ca7 100644
-> --- a/fs/buffer.c
-> +++ b/fs/buffer.c
-> @@ -2499,23 +2499,13 @@ int block_page_mkwrite(struct vm_area_struct *vma, struct vm_fault *vmf,
->  	struct page *page = vmf->page;
->  	struct inode *inode = file_inode(vma->vm_file);
->  	unsigned long end;
-> -	loff_t size;
->  	int ret;
->  
->  	lock_page(page);
-> -	size = i_size_read(inode);
-> -	if ((page->mapping != inode->i_mapping) ||
-> -	    (page_offset(page) > size)) {
-> -		/* We overload EFAULT to mean page got truncated */
-> -		ret = -EFAULT;
-> +	ret = page_mkwrite_check_truncate(page, inode);
-> +	if (ret < 0)
->  		goto out_unlock;
-> -	}
-> -
-> -	/* page is wholly or partially inside EOF */
-> -	if (((page->index + 1) << PAGE_SHIFT) > size)
-> -		end = size & ~PAGE_MASK;
-> -	else
-> -		end = PAGE_SIZE;
-> +	end = ret;
->  
->  	ret = __block_write_begin(page, 0, end, get_block);
->  	if (!ret)
-> diff --git a/fs/ceph/addr.c b/fs/ceph/addr.c
-> index 7ab616601141..ef958aa4adb4 100644
-> --- a/fs/ceph/addr.c
-> +++ b/fs/ceph/addr.c
-> @@ -1575,7 +1575,7 @@ static vm_fault_t ceph_page_mkwrite(struct vm_fault *vmf)
->  	do {
->  		lock_page(page);
->  
-> -		if ((off > size) || (page->mapping != inode->i_mapping)) {
-> +		if (page_mkwrite_check_truncate(page, inode) < 0) {
->  			unlock_page(page);
->  			ret = VM_FAULT_NOPAGE;
->  			break;
-> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> index 28f28de0c1b6..51ab1d2cac80 100644
-> --- a/fs/ext4/inode.c
-> +++ b/fs/ext4/inode.c
-> @@ -5871,7 +5871,6 @@ vm_fault_t ext4_page_mkwrite(struct vm_fault *vmf)
->  {
->  	struct vm_area_struct *vma = vmf->vma;
->  	struct page *page = vmf->page;
-> -	loff_t size;
->  	unsigned long len;
->  	int err;
->  	vm_fault_t ret;
-> @@ -5907,18 +5906,13 @@ vm_fault_t ext4_page_mkwrite(struct vm_fault *vmf)
->  	}
->  
->  	lock_page(page);
-> -	size = i_size_read(inode);
-> -	/* Page got truncated from under us? */
-> -	if (page->mapping != mapping || page_offset(page) > size) {
-> +	err = page_mkwrite_check_truncate(page, inode);
-> +	if (err < 0) {
->  		unlock_page(page);
-> -		ret = VM_FAULT_NOPAGE;
-> -		goto out;
-> +		goto out_ret;
->  	}
-> +	len = err;
->  
-> -	if (page->index == size >> PAGE_SHIFT)
-> -		len = size & ~PAGE_MASK;
-> -	else
-> -		len = PAGE_SIZE;
->  	/*
->  	 * Return if we have all the buffers mapped. This avoids the need to do
->  	 * journal_start/journal_stop which can block and take a long time
-> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> index 85af112e868d..0e77b2e6f873 100644
-> --- a/fs/f2fs/file.c
-> +++ b/fs/f2fs/file.c
-> @@ -51,7 +51,7 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
->  	struct inode *inode = file_inode(vmf->vma->vm_file);
->  	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
->  	struct dnode_of_data dn = { .node_changed = false };
-> -	int err;
-> +	int offset, err;
->  
->  	if (unlikely(f2fs_cp_error(sbi))) {
->  		err = -EIO;
-> @@ -70,13 +70,14 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
->  	file_update_time(vmf->vma->vm_file);
->  	down_read(&F2FS_I(inode)->i_mmap_sem);
->  	lock_page(page);
-> -	if (unlikely(page->mapping != inode->i_mapping ||
-> -			page_offset(page) > i_size_read(inode) ||
-> -			!PageUptodate(page))) {
-> +	err = -EFAULT;
-> +	if (likely(PageUptodate(page)))
-> +		err = page_mkwrite_check_truncate(page, inode);
-> +	if (unlikely(err < 0)) {
->  		unlock_page(page);
-> -		err = -EFAULT;
->  		goto out_sem;
->  	}
-> +	offset = err;
->  
->  	/* block allocation */
->  	__do_map_lock(sbi, F2FS_GET_BLOCK_PRE_AIO, true);
-> @@ -101,14 +102,8 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
->  	if (PageMappedToDisk(page))
->  		goto out_sem;
->  
-> -	/* page is wholly or partially inside EOF */
-> -	if (((loff_t)(page->index + 1) << PAGE_SHIFT) >
-> -						i_size_read(inode)) {
-> -		loff_t offset;
-> -
-> -		offset = i_size_read(inode) & ~PAGE_MASK;
-> +	if (offset != PAGE_SIZE)
->  		zero_user_segment(page, offset, PAGE_SIZE);
-> -	}
->  	set_page_dirty(page);
->  	if (!PageUptodate(page))
->  		SetPageUptodate(page);
-> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-> index d33c7bc5ee92..1aaf157fd6e9 100644
-> --- a/fs/iomap/buffered-io.c
-> +++ b/fs/iomap/buffered-io.c
-> @@ -1062,24 +1062,16 @@ vm_fault_t iomap_page_mkwrite(struct vm_fault *vmf, const struct iomap_ops *ops)
->  	struct page *page = vmf->page;
->  	struct inode *inode = file_inode(vmf->vma->vm_file);
->  	unsigned long length;
-> -	loff_t offset, size;
-> +	loff_t offset;
->  	ssize_t ret;
->  
->  	lock_page(page);
-> -	size = i_size_read(inode);
-> -	offset = page_offset(page);
-> -	if (page->mapping != inode->i_mapping || offset > size) {
-> -		/* We overload EFAULT to mean page got truncated */
-> -		ret = -EFAULT;
-> +	ret = page_mkwrite_check_truncate(page, inode);
-> +	if (ret < 0)
->  		goto out_unlock;
-> -	}
-> -
-> -	/* page is wholly or partially inside EOF */
-> -	if (offset > size - PAGE_SIZE)
-> -		length = offset_in_page(size);
-> -	else
-> -		length = PAGE_SIZE;
-> +	length = ret;
->  
-> +	offset = page_offset(page);
->  	while (length > 0) {
->  		ret = iomap_apply(inode, offset, length,
->  				IOMAP_WRITE | IOMAP_FAULT, ops, page,
-> diff --git a/fs/ubifs/file.c b/fs/ubifs/file.c
-> index cd52585c8f4f..91f7a1f2db0d 100644
-> --- a/fs/ubifs/file.c
-> +++ b/fs/ubifs/file.c
-> @@ -1563,8 +1563,7 @@ static vm_fault_t ubifs_vm_page_mkwrite(struct vm_fault *vmf)
->  	}
->  
->  	lock_page(page);
-> -	if (unlikely(page->mapping != inode->i_mapping ||
-> -		     page_offset(page) > i_size_read(inode))) {
-> +	if (unlikely(page_mkwrite_check_truncate(page, inode) < 0)) {
->  		/* Page got truncated out from underneath us */
->  		goto sigbus;
->  	}
-> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-> index 37a4d9e32cd3..ccb14b6a16b5 100644
-> --- a/include/linux/pagemap.h
-> +++ b/include/linux/pagemap.h
-> @@ -636,4 +636,32 @@ static inline unsigned long dir_pages(struct inode *inode)
->  			       PAGE_SHIFT;
+>  static const struct mfd_cell firmware_devs[] = {
+> @@ -664,6 +666,26 @@ static int zynqmp_pm_set_requirement(const u32 node, const u32 capabilities,
+>  				   qos, ack, NULL);
 >  }
 >  
 > +/**
-> + * page_mkwrite_check_truncate - check if page was truncated
-> + * @page: the page to check
-> + * @inode: the inode to check the page against
+> + * zynqmp_pm_config_reg_access - PM Config API for Config register access
+> + * @register_access_id:	ID of the requested REGISTER_ACCESS
+> + * @address:		Address of the register to be accessed
+> + * @mask:		Mask to be written to the register
+> + * @value:		Value to be written to the register
+> + * @out:		Returned output value
 > + *
-> + * Returns the number of bytes in the page up to EOF,
-> + * or -EFAULT if the page was truncated.
+> + * This function calls REGISTER_ACCESS to configure CSU/PMU registers.
+> + *
+> + * Return:	Returns status, either success or error+reason
 > + */
-> +static inline int page_mkwrite_check_truncate(struct page *page,
-> +					      struct inode *inode)
+> +
+> +static int zynqmp_pm_config_reg_access(u32 register_access_id, u32 address,
+> +				       u32 mask, u32 value, u32 *out)
 > +{
-> +	loff_t size = i_size_read(inode);
-> +	pgoff_t index = size >> PAGE_SHIFT;
-> +	int offset = offset_in_page(size);
-> +
-> +	if (page->mapping != inode->i_mapping)
-> +		return -EFAULT;
-> +
-> +	/* page is wholly inside EOF */
-> +	if (page->index < index)
-> +		return PAGE_SIZE;
-> +	/* page is wholly past EOF */
-> +	if (page->index > index || !offset)
-> +		return -EFAULT;
-> +	/* page is partially inside EOF */
-> +	return offset;
+> +	return zynqmp_pm_invoke_fn(PM_REGISTER_ACCESS, register_access_id,
+> +				   address, mask, value, out);
 > +}
 > +
->  #endif /* _LINUX_PAGEMAP_H */
-> -- 
-> 2.20.1
+>  static const struct zynqmp_eemi_ops eemi_ops = {
+>  	.get_api_version = zynqmp_pm_get_api_version,
+>  	.get_chipid = zynqmp_pm_get_chipid,
+> @@ -687,6 +709,7 @@ static const struct zynqmp_eemi_ops eemi_ops = {
+>  	.set_requirement = zynqmp_pm_set_requirement,
+>  	.fpga_load = zynqmp_pm_fpga_load,
+>  	.fpga_get_status = zynqmp_pm_fpga_get_status,
+> +	.register_access = zynqmp_pm_config_reg_access,
+>  };
+>  
+>  /**
+> @@ -704,6 +727,160 @@ const struct zynqmp_eemi_ops *zynqmp_pm_get_eemi_ops(void)
+>  }
+>  EXPORT_SYMBOL_GPL(zynqmp_pm_get_eemi_ops);
+>  
+> +/**
+> + * config_reg_store - Write config_reg sysfs attribute
+> + * @kobj:	Kobject structure
+> + * @attr:	Kobject attribute structure
+> + * @buf:	User entered health_status attribute string
+> + * @count:	Buffer size
+> + *
+> + * User-space interface for setting the config register.
+> + *
+> + * To write any CSU/PMU register
+> + * echo <address> <mask> <values> > /sys/firmware/zynqmp/config_reg
+> + * Usage:
+> + * echo 0x345AB234 0xFFFFFFFF 0x1234ABCD > /sys/firmware/zynqmp/config_reg
+> + *
+> + * To Read any CSU/PMU register, write address to the variable like below
+> + * echo <address> > /sys/firmware/zynqmp/config_reg
+> + *
+> + * Return:	count argument if request succeeds, the corresponding error
+> + *		code otherwise
+> + */
+> +static ssize_t config_reg_store(struct kobject *kobj,
+> +				struct kobj_attribute *attr,
+> +				const char *buf, size_t count)
+> +{
+> +	char *kern_buff, *inbuf, *tok;
+> +	unsigned long address, value, mask;
+> +	int ret;
+> +
+> +	kern_buff = kzalloc(count, GFP_KERNEL);
+> +	if (!kern_buff)
+> +		return -ENOMEM;
+> +
+> +	ret = strlcpy(kern_buff, buf, count);
+> +	if (ret < 0) {
+> +		ret = -EFAULT;
+> +		goto err;
+> +	}
+
+Greg: What's the recommended way how to parse parameters via sysfs?
+I see that kstrndup is used for cloning buffer instead of kzalloc
+followed by strchr and sscanf.
+
+
+> +
+> +	inbuf = kern_buff;
+> +
+> +	/* Read the addess */
+
+typo here.
+
+> +	tok = strsep(&inbuf, " ");
+> +	if (!tok) {
+> +		ret = -EFAULT;
+> +		goto err;
+> +	}
+> +	ret = kstrtol(tok, 16, &address);
+> +	if (ret) {
+> +		ret = -EFAULT;
+> +		goto err;
+> +	}
+> +	/* Read the write value */
+> +	tok = strsep(&inbuf, " ");
+> +	/*
+> +	 * If parameter provided is only address, then its a read operation.
+> +	 * Store the address in a global variable and retrieve whenever
+> +	 * required.
+> +	 */
+> +	if (!tok) {
+> +		register_address = address;
+> +		goto err;
+> +	}
+> +	register_address = address;
+> +
+> +	ret = kstrtol(tok, 16, &mask);
+> +	if (ret) {
+> +		ret = -EFAULT;
+> +		goto err;
+> +	}
+> +	tok = strsep(&inbuf, " ");
+> +	if (!tok) {
+> +		ret = -EFAULT;
+> +		goto err;
+> +	}
+> +	ret = kstrtol(tok, 16, &value);
+> +	if (!tok) {
+> +		ret = -EFAULT;
+> +		goto err;
+> +	}
+> +	ret = zynqmp_pm_config_reg_access(CONFIG_REG_WRITE, address,
+> +					  mask, value, NULL);
+> +	if (ret)
+> +		pr_err("unable to write value to %lx\n", value);
+> +err:
+> +	kfree(kern_buff);
+> +	if (ret)
+> +		return ret;
+> +	return count;
+> +}
+> +
+> +/**
+> + * config_reg_show - Read config_reg sysfs attribute
+> + * @kobj:	Kobject structure
+> + * @attr:	Kobject attribute structure
+> + * @buf:	User entered health_status attribute string
+> + *
+> + * User-space interface for getting the config register.
+> + *
+> + * To Read any CSU/PMU register, write address to the variable like below
+> + * echo <address> > /sys/firmware/zynqmp/config_reg
+> + *
+> + * Then Read the address using below command
+> + * cat /sys/firmware/zynqmp/config_reg
+> + *
+> + * Return: number of chars written to buf.
+> + */
+> +static ssize_t config_reg_show(struct kobject *kobj,
+> +			       struct kobj_attribute *attr,
+> +			       char *buf)
+> +{
+> +	int ret;
+> +	u32 ret_payload[PAYLOAD_ARG_CNT];
+> +
+> +	ret = zynqmp_pm_config_reg_access(CONFIG_REG_READ, register_address,
+> +					  0, 0, ret_payload);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return sprintf(buf, "0x%x\n", ret_payload[1]);
+> +}
+> +
+> +static struct kobj_attribute zynqmp_attr_config_reg =
+> +					__ATTR_RW(config_reg);
+
+
+use DEVICE_ATTR_RW() instead
+
+> +
+> +static struct attribute *attrs[] = {
+> +	&zynqmp_attr_config_reg.attr,
+> +	NULL,
+> +};
+
+> +
+> +static const struct attribute_group attr_group = {
+> +	.attrs = attrs,
+> +	NULL,
+> +};
+
+ATTRIBUTE_GROUPS instead.
+
+> +
+> +static int zynqmp_pm_sysfs_init(void)
+> +{
+> +	struct kobject *zynqmp_kobj;
+> +	int ret;
+> +
+> +	zynqmp_kobj = kobject_create_and_add("zynqmp", firmware_kobj);
+> +	if (!zynqmp_kobj) {
+> +		pr_err("zynqmp: Firmware kobj add failed.\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	ret = sysfs_create_group(zynqmp_kobj, &attr_group);
+> +	if (ret) {
+> +		pr_err("%s() sysfs creation fail with error %d\n",
+> +		       __func__, ret);
+
+if you fail here you should free kobject_put(zynqmp_kobj);
+
+
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  static int zynqmp_firmware_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> @@ -748,6 +925,12 @@ static int zynqmp_firmware_probe(struct platform_device *pdev)
+>  	/* Assign eemi_ops_table */
+>  	eemi_ops_tbl = &eemi_ops;
+>  
+> +	ret = zynqmp_pm_sysfs_init();
+> +	if (ret) {
+> +		pr_err("%s() sysfs init fail with error %d\n", __func__, ret);
+> +		return ret;
+> +	}
+> +
+>  	zynqmp_pm_api_debugfs_init();
+>  
+>  	ret = mfd_add_devices(&pdev->dev, PLATFORM_DEVID_NONE, firmware_devs,
+> diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
+> index df366f1..55561d0 100644
+> --- a/include/linux/firmware/xlnx-zynqmp.h
+> +++ b/include/linux/firmware/xlnx-zynqmp.h
+> @@ -77,6 +77,8 @@ enum pm_api_id {
+>  	PM_CLOCK_GETRATE,
+>  	PM_CLOCK_SETPARENT,
+>  	PM_CLOCK_GETPARENT,
+> +	/* PM_REGISTER_ACCESS API */
+> +	PM_REGISTER_ACCESS = 52,
+>  };
+>  
+>  /* PMU-FW return status codes */
+> @@ -261,6 +263,11 @@ enum tap_delay_type {
+>  	PM_TAPDELAY_OUTPUT,
+>  };
+>  
+> +enum pm_register_access_id {
+> +	CONFIG_REG_WRITE,
+> +	CONFIG_REG_READ,
+> +};
+> +
+>  /**
+>   * struct zynqmp_pm_query_data - PM query data
+>   * @qid:	query ID
+> @@ -305,6 +312,8 @@ struct zynqmp_eemi_ops {
+>  			       const u32 capabilities,
+>  			       const u32 qos,
+>  			       const enum zynqmp_pm_request_ack ack);
+> +	int (*register_access)(u32 register_access_id, u32 address,
+> +			       u32 mask, u32 value, u32 *out);
+>  };
+>  
+>  int zynqmp_pm_invoke_fn(u32 pm_api_id, u32 arg0, u32 arg1,
 > 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+
