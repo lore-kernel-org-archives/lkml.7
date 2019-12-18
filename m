@@ -2,137 +2,119 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F60C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9223C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB4602146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:34:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A60782146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:35:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbfLRNe7 (ORCPT
+        id S1727166AbfLRNfg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 08:34:59 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57254 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726710AbfLRNe5 (ORCPT
+        Wed, 18 Dec 2019 08:35:36 -0500
+Received: from imap2.colo.codethink.co.uk ([78.40.148.184]:43398 "EHLO
+        imap2.colo.codethink.co.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726735AbfLRNfg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 08:34:57 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBIDXW9S137589
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 08:34:55 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wykb7c9dx-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 08:34:55 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 18 Dec 2019 13:34:53 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 18 Dec 2019 13:34:50 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBIDYnFY57409696
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Dec 2019 13:34:50 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DDC7652054;
-        Wed, 18 Dec 2019 13:34:49 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.206.168])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 980A152050;
-        Wed, 18 Dec 2019 13:34:48 +0000 (GMT)
-Subject: Re: [PATCH] integrity: Expose data structures required for
- include/linux/integrity.h
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Florent Revest <revest@chromium.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        linux-integrity@vger.kernel.org
-Cc:     jmorris@namei.org, serge@hallyn.com, revest@google.com,
-        allison@lohutok.net, armijn@tjaldur.nl, bauerman@linux.ibm.com,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, kpsingh@chromium.org
-Date:   Wed, 18 Dec 2019 08:34:47 -0500
-In-Reply-To: <2ae5127d76cbf78140fb2d6108c9ec70c7d8ae5d.camel@chromium.org>
-References: <20191217134748.198011-1-revest@chromium.org>
-         <e9e366d3-6c5d-743b-ffde-6b95b85884a2@schaufler-ca.com>
-         <1576624105.4579.379.camel@linux.ibm.com>
-         <2ae5127d76cbf78140fb2d6108c9ec70c7d8ae5d.camel@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Wed, 18 Dec 2019 08:35:36 -0500
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap2.colo.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
+        id 1ihZU8-0004Uz-Ll; Wed, 18 Dec 2019 13:35:28 +0000
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.3)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1ihZU6-00Awcg-Pc; Wed, 18 Dec 2019 13:35:26 +0000
+From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+To:     ben.dooks@codethink.co.uk
+Cc:     Eric Auger <eric.auger@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Allison Randal <allison@lohutok.net>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] vfio: platform: fix __iomem in vfio_platform_amdxgbe.c
+Date:   Wed, 18 Dec 2019 13:35:25 +0000
+Message-Id: <20191218133525.2608583-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.24.0
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19121813-0020-0000-0000-0000039983FD
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19121813-0021-0000-0000-000021F0A6CD
-Message-Id: <1576676087.4579.396.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-18_03:2019-12-17,2019-12-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- mlxscore=0 adultscore=0 mlxlogscore=946 phishscore=0 malwarescore=0
- bulkscore=0 priorityscore=1501 impostorscore=0 lowpriorityscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912180112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-12-18 at 12:03 +0100, Florent Revest wrote:
-> On Tue, 2019-12-17 at 18:08 -0500, Mimi Zohar wrote:
-> > On Tue, 2019-12-17 at 08:25 -0800, Casey Schaufler wrote:
-> > > On 12/17/2019 5:47 AM, Florent Revest wrote:
-> > > > From: Florent Revest <revest@google.com>
-> > > > 
-> > > > include/linux/integrity.h exposes the prototype of
-> > > > integrity_inode_get().
-> > > > However, it relies on struct integrity_iint_cache which is
-> > > > currently
-> > > > defined in an internal header, security/integrity/integrity.h.
-> > > > 
-> > > > To allow the rest of the kernel to use integrity_inode_get,
-> > > 
-> > > Why do you want to do this?
-> > 
-> > ditto
-> 
-> My team works on KRSI (eBPF MAC policies presented at LSS by KP Singh).
-> https://lkml.org/lkml/2019/9/10/393 We identified file hashes gathered
-> from the integrity subsystem as an interesting field that we could
-> potentially someday expose to eBPF programs through helpers.
-> 
-> One of the reason behind writing KRSI is to replace a custom kernel
-> auditing module that currently needs to redefine those structures to
-> access them. I imagine other kernel modules could benefit from a file
-> hash API too.
-> 
-> This is the least intrusive patch I could come up with that allows us
-> to lookup a hash from an inode. I was surprised to find that
-> integrity_inode_get was exposed but not the structures it returns.
-> 
-> If the community is interested in a different file hash API, I'd be
-> happy to iterate on this patch based on your feedback.
+The ioaddr should have __iomem marker on it, so add that to fix
+the following sparse warnings:
 
-There's a major difference between returning just the file hash and
-making the integrity_iint_cache structure public.  Peter Moody's
-original code queried the cache[1].  Why do you need access to the
-structure itself?
+drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:33:44: warning: incorrect type in argument 2 (different address spaces)
+drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:33:44:    expected void volatile [noderef] <asn:2> *addr
+drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:33:44:    got void *
+drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:34:33: warning: incorrect type in argument 1 (different address spaces)
+drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:34:33:    expected void const volatile [noderef] <asn:2> *addr
+drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:34:33:    got void *
+drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:44:44: warning: incorrect type in argument 2 (different address spaces)
+drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:44:44:    expected void volatile [noderef] <asn:2> *addr
+drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:44:44:    got void *
+drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:45:33: warning: incorrect type in argument 2 (different address spaces)
+drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:45:33:    expected void volatile [noderef] <asn:2> *addr
+drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:45:33:    got void *
+drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:69:41: warning: incorrect type in argument 1 (different address spaces)
+drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:69:41:    expected void *ioaddr
+drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:69:41:    got void [noderef] <asn:2> *ioaddr
+drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:71:30: warning: incorrect type in argument 1 (different address spaces)
+drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:71:30:    expected void *ioaddr
+drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:71:30:    got void [noderef] <asn:2> *ioaddr
+drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:76:49: warning: incorrect type in argument 1 (different address spaces)
+drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:76:49:    expected void *ioaddr
+drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:76:49:    got void [noderef] <asn:2> *ioaddr
+drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:85:37: warning: incorrect type in argument 1 (different address spaces)
+drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:85:37:    expected void *ioaddr
+drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:85:37:    got void [noderef] <asn:2> *ioaddr
+drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:87:30: warning: incorrect type in argument 1 (different address spaces)
+drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:87:30:    expected void *ioaddr
+drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:87:30:    got void [noderef] <asn:2> *ioaddr
+drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:90:30: warning: incorrect type in argument 1 (different address spaces)
+drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:90:30:    expected void *ioaddr
+drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:90:30:    got void [noderef] <asn:2> *ioaddr
+drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:93:30: warning: incorrect type in argument 1 (different address spaces)
+drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:93:30:    expected void *ioaddr
+drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:93:30:    got void [noderef] <asn:2> *ioaddr
 
-FYI, if/when we get to IMA namespacing, the cache structure will
-change.
+Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
+---
+Cc: Eric Auger <eric.auger@redhat.com>
+Cc: Alex Williamson <alex.williamson@redhat.com>
+Cc: Cornelia Huck <cohuck@redhat.com>
+Cc: Allison Randal <allison@lohutok.net>
+Cc: kvm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/vfio/platform/reset/vfio_platform_amdxgbe.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Mimi
-
-[1] ima: add the ability to query ima for the hash of a given file.
-
-> 
-> > > >  this patch
-> > > > moves the definition of the necessary structures from a private
-> > > > header
-> > > > to a global kernel header.
-> 
+diff --git a/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c b/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
+index 2d2babe21b2f..ecfc908de30f 100644
+--- a/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
++++ b/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
+@@ -24,7 +24,7 @@
+ #define MDIO_AN_INT		0x8002
+ #define MDIO_AN_INTMASK		0x8001
+ 
+-static unsigned int xmdio_read(void *ioaddr, unsigned int mmd,
++static unsigned int xmdio_read(void __iomem *ioaddr, unsigned int mmd,
+ 			       unsigned int reg)
+ {
+ 	unsigned int mmd_address, value;
+@@ -35,7 +35,7 @@ static unsigned int xmdio_read(void *ioaddr, unsigned int mmd,
+ 	return value;
+ }
+ 
+-static void xmdio_write(void *ioaddr, unsigned int mmd,
++static void xmdio_write(void __iomem *ioaddr, unsigned int mmd,
+ 			unsigned int reg, unsigned int value)
+ {
+ 	unsigned int mmd_address;
+-- 
+2.24.0
 
