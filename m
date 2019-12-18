@@ -2,182 +2,200 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D4FC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4832FC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CF362072B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:02:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D6B52072B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:02:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ojh4dsnk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W8z2T1d4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbfLRIB7 (ORCPT
+        id S1726758AbfLRICR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 03:01:59 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:47055 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbfLRIB6 (ORCPT
+        Wed, 18 Dec 2019 03:02:17 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45824 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbfLRICQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 03:01:58 -0500
-Received: by mail-lf1-f68.google.com with SMTP id f15so954605lfl.13
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 00:01:57 -0800 (PST)
+        Wed, 18 Dec 2019 03:02:16 -0500
+Received: by mail-pg1-f193.google.com with SMTP id b9so819287pgk.12;
+        Wed, 18 Dec 2019 00:02:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=MBjT2DfCl1YQDiFc2LHryWAga8NQEb+p9ojRnPoDK+A=;
-        b=ojh4dsnkUSEJW1/tr7ggIumiK/gSPSZ3M2/p6Lo0Zltk7mPp1ZGrxjplf3FTut0h+O
-         6ZaUu9lJaU69yTHpIejSaxexV8b3TyyiHR019uzi7tRqYu+adajeeDoe95L/VJVuAhxW
-         WBQmdeQ89HK2Ny45znibASAEk6z6quAtXN4BAPIbCCxLP0hTRkKQ3lQsrkexSnijqH7v
-         rrz5ROHQaXdtr1mb7UcE4JyJvjrVK62eG8ulNbFNnhcBjpFzTIqlULFBd37WDfY1qW2f
-         SDzk3ypKSvbLsszxXQv1Je52MSIakS2b+JmCRMJ01nGTmOUFXkdi8xBcQOcGY2i8D+f9
-         O2KQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=n363ckt80OC6w9Gla54BO6ui4m8bnWsgDlZFAMHXc0w=;
+        b=W8z2T1d4GwL9jbI1cnNLj+IrMd2q4U8J/2ceDn65wufGtPxsRdVevPpduhlbWU8OEE
+         5wUPDM1BrG8A7XUWiQmsK/K05J0xdxoy+UMW69kxI7hnJ0AuqeEQHAHuKH/TMUsPKMpG
+         4dTxKOkSkmXZfyGFnsD7ueGXnmJKJnhCRxovFhOE4IF4etzugDd3AqLj2CZLfGuXIZaT
+         7jkgEj4YY1EkTsxCgjtR05eaqQ1Z+byhoyCCroX5A5FSJFsqULP6CD+6i23MDiQmT7zS
+         HQP9k/gBZ31czJthgHWlNAcsqhMF3uEAbQOpL2d0GblKnTuHmHX/8wr5PbUcZ3jiQ90b
+         l4ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=MBjT2DfCl1YQDiFc2LHryWAga8NQEb+p9ojRnPoDK+A=;
-        b=na/QtXWnMgeMdkWltDzmCsxrT7CAWA4luMMtLJXV8vca1S9XnXJf8lQIn52YBxjyoT
-         zuCw0nLzQfumUOAttHcm0+wEB9/UlU7SDuucGU0qmK1y7gUCCJYpsIY7znAqapr4GF7v
-         G5+Xl8apFBn4t2B92Thh0na6LowTXb/ndOanQ/Y1CABLsAypq4+VZ1oZRYLb3/oK3D2N
-         z1otI6AeToKI334r91HwRIaBxe5G8ag2iPj2NHh+Gu+XQ/4khZ6Ln76yz4g4OeTc6Eoj
-         cDwkmLGajhyW5tuCQbk8uBC0+1FSHoU1QbCj27szXDMIv2al2pu3gCQDl591004Gqq+i
-         lwHA==
-X-Gm-Message-State: APjAAAWa9nnbGKDYW+HdAMBQ5eTc1ghjIzmcby/APONlRdsgutg/CHc2
-        zu6zZMpzBesu1/mpFqLz56OJIAVuIVxeWQK0Eo2e2g==
-X-Google-Smtp-Source: APXvYqwhjyTY4pumh/uxn4r02qF7rkOSKr25PxtSobVUM8Djxc8jYxNEfBFVGlQGi4pXtTUsUkmRVndCTBVVcTWHJbU=
-X-Received: by 2002:a19:784:: with SMTP id 126mr843014lfh.191.1576656116500;
- Wed, 18 Dec 2019 00:01:56 -0800 (PST)
-MIME-Version: 1.0
-References: <20191217200903.179327435@linuxfoundation.org>
-In-Reply-To: <20191217200903.179327435@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 18 Dec 2019 13:31:44 +0530
-Message-ID: <CA+G9fYuFq9VySZFw1mfZEofkaaDS8z8B3a=rzTFT_knwep59-w@mail.gmail.com>
-Subject: Re: [PATCH 5.3 00/25] 5.3.18-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=n363ckt80OC6w9Gla54BO6ui4m8bnWsgDlZFAMHXc0w=;
+        b=sz4LBoxF0azXwRg+cRjwzp1SI8orFgwTyyF/DW6NCuB+eN3zvczEPc925qjli8MXvL
+         c7xk2hSIDvNvmVmZ6BUShhZi8eqsAMj4NrHLl39BVPN/WU/xdV7kgw/aoRxI9tRaPpkm
+         oU5J6Pfr6ah0jai6zMlFFkqI3Srz67nBk1sm6zPgYlbsEFXmG0ejd56sJ5JzMoRk/jHY
+         uZy7FCW1/LtO5UUaxiHzNcEbgCsjo2NsuK4Q2d33b1SbF81c6iGpan3hmKQVb/b7Mn8G
+         fqOxwip545PfukL4lMS/51HlltkXSBPEVyU3tI77dPBx9UHAY4d6OHiMESmDRTGlV8YG
+         ZjOw==
+X-Gm-Message-State: APjAAAXX4/ENRfbUlw7ZddBcM+emir5umnpblZUePMqH8F+7ahx6a8jS
+        z5yO43err0DpUMVUsmGPLoTHVTtoiRS+fw==
+X-Google-Smtp-Source: APXvYqyepGVLKB4Cj/YWyjabdX/jvjgmd4g6+3rv+6HhyWk73LFUKohNcDCVUebsKWUUzgJzorptrA==
+X-Received: by 2002:a62:3141:: with SMTP id x62mr1634189pfx.214.1576656135864;
+        Wed, 18 Dec 2019 00:02:15 -0800 (PST)
+Received: from oslab.tsinghua.edu.cn ([166.111.139.172])
+        by smtp.gmail.com with ESMTPSA id 11sm1886442pfz.25.2019.12.18.00.02.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 00:02:15 -0800 (PST)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     bonbons@linux-vserver.org, jikos@kernel.org,
+        benjamin.tissoires@redhat.com
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH] hid: hid-picolcd: fix possible sleep-in-atomic-context bug
+Date:   Wed, 18 Dec 2019 16:02:01 +0800
+Message-Id: <20191218080201.2508-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Dec 2019 at 01:46, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.3.18 release.
-> There are 25 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Note, this is the LAST 5.3.y kernel to be released, after this one, it
-> will be end-of-life.  You should have moved to the 5.4.y series already
-> by now.
->
-> Responses should be made by Thu, 19 Dec 2019 20:08:42 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.3.18-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.3.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+The driver may sleep while holding a read lock.
+The function call path (from bottom to top) in Linux 4.19 is:
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+drivers/hid/hid-core.c, 1459: 
+	hid_alloc_report_buf(GFP_KERNEL) in __hid_request
+./include/linux/hid.h, 1051: 
+	__hid_request in hid_hw_request
+drivers/hid/hid-picolcd_leds.c, 56:
+	hid_hw_request in picolcd_leds_set
+drivers/hid/hid-picolcd_leds.c, 53:
+	_raw_spin_lock_irqsave in picolcd_leds_set
 
-Summary
-------------------------------------------------------------------------
+drivers/hid/hid-core.c, 1459: 
+	hid_alloc_report_buf(GFP_KERNEL) in __hid_request
+./include/linux/hid.h, 1051: 
+	__hid_request in hid_hw_request
+drivers/hid/hid-picolcd_lcd.c, 49: 
+	hid_hw_request in picolcd_set_contrast
+drivers/hid/hid-picolcd_lcd.c, 46: 
+	_raw_spin_lock_irqsave in picolcd_set_contrast
 
-kernel: 5.3.18-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.3.y
-git commit: 0763039c48446b647d8619afe0624d6e5c62e4c0
-git describe: v5.3.16-216-g0763039c4844
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.3-oe/bui=
-ld/v5.3.16-216-g0763039c4844
+drivers/hid/hid-core.c, 1459: 
+	hid_alloc_report_buf(GFP_KERNEL) in __hid_request
+./include/linux/hid.h, 1051: 
+	__hid_request in hid_hw_request
+drivers/hid/hid-picolcd_core.c, 245: 
+	hid_hw_request in picolcd_reset
+drivers/hid/hid-picolcd_core.c, 235: 
+	_raw_spin_lock_irqsave in picolcd_reset
 
+drivers/hid/hid-core.c, 1459: 
+	hid_alloc_report_buf(GFP_KERNEL) in __hid_request
+./include/linux/hid.h, 1051: 
+	__hid_request in hid_hw_request
+drivers/hid/hid-picolcd_core.c, 111: 
+	hid_hw_request in picolcd_send_and_wait
+drivers/hid/hid-picolcd_core.c, 100: 
+	_raw_spin_lock_irqsave in picolcd_send_and_wait
 
-No regressions (compared to build v5.3.16)
+hid_alloc_report_buf(GFP_KERNEL) can sleep at runtime.
 
+To fix these bugs, hid_hw_request() is called without holding the
+spinlock.
 
-No fixes (compared to build v5.3.16)
+These bugs are found by a static analysis tool STCheck written by myself.
 
-Ran 21111 total tests in the following environments and test suites.
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+ drivers/hid/hid-picolcd_core.c | 4 ++--
+ drivers/hid/hid-picolcd_lcd.c  | 6 ++++--
+ drivers/hid/hid-picolcd_leds.c | 6 ++++--
+ 3 files changed, 10 insertions(+), 6 deletions(-)
 
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
+diff --git a/drivers/hid/hid-picolcd_core.c b/drivers/hid/hid-picolcd_core.c
+index 1b5c63241af0..55d1892daa15 100644
+--- a/drivers/hid/hid-picolcd_core.c
++++ b/drivers/hid/hid-picolcd_core.c
+@@ -99,8 +99,8 @@ struct picolcd_pending *picolcd_send_and_wait(struct hid_device *hdev,
+ 		work = NULL;
+ 	} else {
+ 		data->pending = work;
+-		hid_hw_request(data->hdev, report, HID_REQ_SET_REPORT);
+ 		spin_unlock_irqrestore(&data->lock, flags);
++		hid_hw_request(data->hdev, report, HID_REQ_SET_REPORT);
+ 		wait_for_completion_interruptible_timeout(&work->ready, HZ*2);
+ 		spin_lock_irqsave(&data->lock, flags);
+ 		data->pending = NULL;
+@@ -233,8 +233,8 @@ int picolcd_reset(struct hid_device *hdev)
+ 		spin_unlock_irqrestore(&data->lock, flags);
+ 		return -ENODEV;
+ 	}
+-	hid_hw_request(hdev, report, HID_REQ_SET_REPORT);
+ 	spin_unlock_irqrestore(&data->lock, flags);
++	hid_hw_request(hdev, report, HID_REQ_SET_REPORT);
+ 
+ 	error = picolcd_check_version(hdev);
+ 	if (error)
+diff --git a/drivers/hid/hid-picolcd_lcd.c b/drivers/hid/hid-picolcd_lcd.c
+index 0c4b76de8ae5..1fd291674ffe 100644
+--- a/drivers/hid/hid-picolcd_lcd.c
++++ b/drivers/hid/hid-picolcd_lcd.c
+@@ -26,6 +26,7 @@ static int picolcd_get_contrast(struct lcd_device *ldev)
+ static int picolcd_set_contrast(struct lcd_device *ldev, int contrast)
+ {
+ 	struct picolcd_data *data = lcd_get_data(ldev);
++	int status;
+ 	struct hid_report *report = picolcd_out_report(REPORT_CONTRAST, data->hdev);
+ 	unsigned long flags;
+ 
+@@ -35,9 +36,10 @@ static int picolcd_set_contrast(struct lcd_device *ldev, int contrast)
+ 	data->lcd_contrast = contrast & 0x0ff;
+ 	spin_lock_irqsave(&data->lock, flags);
+ 	hid_set_field(report->field[0], 0, data->lcd_contrast);
+-	if (!(data->status & PICOLCD_FAILED))
+-		hid_hw_request(data->hdev, report, HID_REQ_SET_REPORT);
++	status = data->status;
+ 	spin_unlock_irqrestore(&data->lock, flags);
++	if (!(status & PICOLCD_FAILED))
++		hid_hw_request(data->hdev, report, HID_REQ_SET_REPORT);
+ 	return 0;
+ }
+ 
+diff --git a/drivers/hid/hid-picolcd_leds.c b/drivers/hid/hid-picolcd_leds.c
+index 6b505a753511..6652aa6b98dd 100644
+--- a/drivers/hid/hid-picolcd_leds.c
++++ b/drivers/hid/hid-picolcd_leds.c
+@@ -32,6 +32,7 @@
+ void picolcd_leds_set(struct picolcd_data *data)
+ {
+ 	struct hid_report *report;
++	int status;
+ 	unsigned long flags;
+ 
+ 	if (!data->led[0])
+@@ -42,9 +43,10 @@ void picolcd_leds_set(struct picolcd_data *data)
+ 
+ 	spin_lock_irqsave(&data->lock, flags);
+ 	hid_set_field(report->field[0], 0, data->led_state);
+-	if (!(data->status & PICOLCD_FAILED))
+-		hid_hw_request(data->hdev, report, HID_REQ_SET_REPORT);
++	status = data->status;
+ 	spin_unlock_irqrestore(&data->lock, flags);
++	if (!(status & PICOLCD_FAILED))
++		hid_hw_request(data->hdev, report, HID_REQ_SET_REPORT);
+ }
+ 
+ static void picolcd_led_set_brightness(struct led_classdev *led_cdev,
+-- 
+2.17.1
 
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* ssuite
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
