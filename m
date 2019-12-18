@@ -2,119 +2,129 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A1D6C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA73C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CBC924650
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:48:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rCSqdHkH"
+	by mail.kernel.org (Postfix) with ESMTP id 33A6D2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:49:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576680540;
+	bh=1LKAjLQiNaDsS+MXflzt2GCAh1AK1xsfyPvTPUC/MDs=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=qP5GXur4UWMDHKu3ZTCm5QmqG5adWbZwdplFiuNFIKH99VQwsSkqSBr+VYN8ty4cz
+	 WI8Xh/cB34ZbPl7KTpTfX8iOVR70aecRqLtdHo8Vo1VKyZ/qGPdOE1QCR8/DX0LZel
+	 dcDR/cwMImQI8C1OOJspLUbnXR/0OC2aIu1w5Oe0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbfLROst (ORCPT
+        id S1727324AbfLROs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 09:48:49 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:41145 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726856AbfLROst (ORCPT
+        Wed, 18 Dec 2019 09:48:59 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:44000 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726856AbfLROs6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 09:48:49 -0500
-Received: by mail-qv1-f65.google.com with SMTP id x1so829972qvr.8;
-        Wed, 18 Dec 2019 06:48:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=03LZZ1Q88h/Vi7kuW4/G+tMxZypv0uuxA868U5NI5Kg=;
-        b=rCSqdHkHdw7MyQM6V2wX4E41GW4G2/vwDR0auAmquMnDYrF6mEkBvcgOCXd6CzirIS
-         nevXw2d3ZwNWgS/vRbR65z56h7yfn6oqBPnz2Q9+qeS05WA8y6nNnnSc+CT1klQNHRp7
-         3u8v6YHI03PicsQ3UgXl6DHgn8VOldhF8JVNLDXHwQ4Z0Lj8W5hKj/w60g/jBA+Thgwj
-         0+dVqmYcBodrOPSc2Way2rzaDjH7P8VG6udeYL01JNOC1wxCjtcUHwfCDBRZk1Bzi2gG
-         SZHrg8FmdrWwaug1s28phPtgapdy3eSLtOMgGTCr7SeUrtwgRroMWSXg0HPgjXi356S/
-         cI3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=03LZZ1Q88h/Vi7kuW4/G+tMxZypv0uuxA868U5NI5Kg=;
-        b=FRwCZMW9J1mtB89PzntwwCbGVeCYn4K0Pq6G3e9C4GtRaVTENlaUzwQcFK37Qg4xxI
-         Pia+SHxuApCz2cQn/ja3kTjQ5eDOYt4Dn2CeHyCQ9N34sSLsTX0v4rhM7PzggdxujLAw
-         qiVuuog/hA1QoZkUIsuh+F+eMLok8PiKRLWWo4jvb3UzsVqptKQ8ueZzTQMT0VFeAqNg
-         XMLmaGm1Dc0zoAG/dQQ/rkqLUvug2SQTsQDnlNIyj5rijvWdTgt6bt5VeYA/p/1+KjgL
-         zkWNpG5fGtJ7WZfSo/w+C5DMbveX84UWN1zcDE+7Xh/d1BuQUwhbvTv4OV+8QHvJYxrs
-         03yQ==
-X-Gm-Message-State: APjAAAVtkFMMq79KEVvfF9t0hQunAGd3BukJOQe2bYRwn9lzflazdJOF
-        6YG/3wITXvVxqrOo7X6lzCCsKu60OCtoMrkFGIwTUw7YFEg=
-X-Google-Smtp-Source: APXvYqyedeACk3XMykTt78aYIgOyHUys2yyKMAdabZPSCX7yCyBFKjkFUrlGmDMEkRU5DIovnwOh4ZgaqOg9FwEf3jI=
-X-Received: by 2002:ad4:46e4:: with SMTP id h4mr2690617qvw.181.1576680528099;
- Wed, 18 Dec 2019 06:48:48 -0800 (PST)
+        Wed, 18 Dec 2019 09:48:58 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1ihadC-0002xn-Ku; Wed, 18 Dec 2019 15:48:54 +0100
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Subject: Re: [PATCH v2 22/36] irqchip/gic-v4.1: Advertise support v4.1 to KVM
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-References: <056501d5b437$91f1c6c0$b5d55440$@gmail.com> <dea30ea3f0fc31e40b311c4d110c26cf40658dca.camel@hammerspace.com>
- <05ea01d5b440$bd9d58d0$38d80a70$@gmail.com> <2d94fa3e9632c638f9e47999fd8e26cb3b34b4dc.camel@hammerspace.com>
- <CALbTx=H_49MroKwuwyThirwtiJE5686cyCZwKth-yVSRx0srug@mail.gmail.com>
-In-Reply-To: <CALbTx=H_49MroKwuwyThirwtiJE5686cyCZwKth-yVSRx0srug@mail.gmail.com>
-From:   Robert Milkowski <rmilkowski@gmail.com>
-Date:   Wed, 18 Dec 2019 14:48:37 +0000
-Message-ID: <CALbTx=HUA6PdBufwmyYaN3J1pETUzRk=5HM7BKCDv8+PM2Qm9Q@mail.gmail.com>
-Subject: Re: [PATCH] NFSv4: nfs4_do_fsinfo() should not do implicit lease renewals
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 18 Dec 2019 14:48:54 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Jayachandran C <jnair@marvell.com>,
+        Robert Richter <rrichter@marvell.com>
+In-Reply-To: <14462a79-fc0b-b8e5-115a-dfb505351acb@huawei.com>
+References: <20191027144234.8395-1-maz@kernel.org>
+ <20191027144234.8395-23-maz@kernel.org>
+ <14462a79-fc0b-b8e5-115a-dfb505351acb@huawei.com>
+Message-ID: <c9f8f2590662cfe9e28e90cf8f79e708@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, tglx@linutronix.de, jason@lakedaemon.net, lorenzo.pieralisi@arm.com, andrew.murray@arm.com, jnair@marvell.com, rrichter@marvell.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Dec 2019 at 18:12, Robert Milkowski <rmilkowski@gmail.com> wrote:
+On 2019-11-01 12:55, Zenghui Yu wrote:
+> Hi Marc,
 >
-> On Mon, 16 Dec 2019 at 18:58, Trond Myklebust <trondmy@hammerspace.com> wrote:
-> >
-> > It would be better to move the initialisation of clp->cl_last_renewal
-> > into nfs4_init_clientid() and nfs41_init_clientid() (after the calls to
-> > nfs4_proc_setclientid_confirm() and nfs4_proc_create_session()
-> > respectively).
-> >
+> On 2019/10/27 22:42, Marc Zyngier wrote:
+>> Tell KVM that we support v4.1. Nothing uses this information so far.
+>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+>> ---
+>>   drivers/irqchip/irq-gic-v3-its.c       | 9 ++++++++-
+>>   drivers/irqchip/irq-gic-v3.c           | 1 +
+>>   include/linux/irqchip/arm-gic-common.h | 2 ++
+>>   3 files changed, 11 insertions(+), 1 deletion(-)
+>> diff --git a/drivers/irqchip/irq-gic-v3-its.c 
+>> b/drivers/irqchip/irq-gic-v3-its.c
+>> index df259e202482..6483f8051b3e 100644
+>> --- a/drivers/irqchip/irq-gic-v3-its.c
+>> +++ b/drivers/irqchip/irq-gic-v3-its.c
+>> @@ -4580,6 +4580,7 @@ int __init its_init(struct fwnode_handle 
+>> *handle, struct rdists *rdists,
+>>   	struct device_node *of_node;
+>>   	struct its_node *its;
+>>   	bool has_v4 = false;
+>> +	bool has_v4_1 = false;
+>>   	int err;
+>>
+>>   	gic_rdists = rdists;
+>> @@ -4600,8 +4601,14 @@ int __init its_init(struct fwnode_handle 
+>> *handle, struct rdists *rdists,
+>>   	if (err)
+>>   		return err;
+>>   -	list_for_each_entry(its, &its_nodes, entry)
+>> +	list_for_each_entry(its, &its_nodes, entry) {
+>>   		has_v4 |= is_v4(its);
+>> +		has_v4_1 |= is_v4_1(its);
+>> +	}
+>> +
+>> +	/* Don't bother with inconsistent systems */
+>> +	if (WARN_ON(!has_v4_1 && rdists->has_rvpeid))
+>> +		rdists->has_rvpeid = false;
+>>
+>>   	if (has_v4 & rdists->has_vlpis) {
+>>   		if (its_init_vpe_domain() ||
+>> diff --git a/drivers/irqchip/irq-gic-v3.c 
+>> b/drivers/irqchip/irq-gic-v3.c
+>> index f0d33ac64a99..94dddfb21076 100644
+>> --- a/drivers/irqchip/irq-gic-v3.c
+>> +++ b/drivers/irqchip/irq-gic-v3.c
+>> @@ -1758,6 +1758,7 @@ static void __init 
+>> gic_of_setup_kvm_info(struct device_node *node)
+>>   		gic_v3_kvm_info.vcpu = r;
+>>
+>>   	gic_v3_kvm_info.has_v4 = gic_data.rdists.has_vlpis;
+>> +	gic_v3_kvm_info.has_v4_1 = gic_data.rdists.has_rvpeid;
 >
-> This could be done but this is potentially a separate change, as in
-> nfs4_do_fsinfo() we still need to
-> make sure we do not implicitly renew lease for v4.0, so I think the
-> patch needs to be modified as:
+> Also set gic_v3_kvm_info.has_v4_1 in gic_acpi_setup_kvm_info().
 
-I took a look at the client initialization and the
-nfs4_init_clientid() already calls nfs4_setup_state_renewal(),
-which in turn calls nfs4_proc_get_lease_time(), however that might
-return with an error in which case it won't set the cl_last_renewal,
-the code is:
+Indeed. Now fixed.
 
-static int nfs4_setup_state_renewal(struct nfs_client *clp)
-...
-        status = nfs4_proc_get_lease_time(clp, &fsinfo);
-        if (status == 0) {
-                nfs4_set_lease_period(clp, fsinfo.lease_time * HZ, now);
-...
+Thanks,
 
-In my environment with nfsv4+krb the nfs4_proc_get_lease_time()
-returns with -10016 (NFS4ERR_WRONGSEC) during initial mount (which
-after a quick scan of the rfc seems that might be ok initially).
-Also for v4.1 do_renew_lease() is called by nfs41_sequence_process()
-multiple times during mount before we even reach nfs4_do_fsinfo() so
-for 4.1+ it never gets cl_last_renewal==0, at least not under this
-circumstances.
-
-There might be other cases where nfs4_do_fsinfo() will get
-clp->cl_last_renewal=0 for nfsv4.0, and since the nfs4_do_fsinfo()
-already initializes the cl_last_renewal record, plus as Chuck pointed
-out in case of v4.1+
-it is expected to implicitly renew the lease anyway, I would rather
-focus on fixing only the reported issue here for now, which is the
-incorrect implicit renewal in fsinfo for v4.0, and leave improvements
-to client initialization for another day.
-
-I will send an updated patch shortly which doesn't impact v4.1+.
+         M.
+-- 
+Jazz is not dead. It just smells funny...
