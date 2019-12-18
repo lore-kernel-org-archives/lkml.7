@@ -2,588 +2,323 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC8F9C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C13C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E9D221582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:21:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="YyX8Z4tB"
+	by mail.kernel.org (Postfix) with ESMTP id 292E721582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:21:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbfLROVn (ORCPT
+        id S1727162AbfLROVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 09:21:43 -0500
-Received: from mail-eopbgr770070.outbound.protection.outlook.com ([40.107.77.70]:25828
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726856AbfLROVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 09:21:43 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FGynBtaglmXiR0SmnTNqhtvhywMOUx8KtFFPYWpNlYjUUgFcj5E5VWY/NQN+rSsxauRUV9nkcDXftZmSverdXjq9AYJfnH+AuRM5BykDB4Qr7aSYaRRn16AgIpvhlBDS4H7dea1aERyFLzdj9fHj10eDxJW9Ga5cY49KiWXmuzcRciNcdjlPVHx4UilsKe78hUlGh04pehlC2qFXZcgk0FJBZmYPGV4wmgZSf0cXakO1Kn1xRqt02+JphP0vQBDp6t/sLIqSas5iWe6QQaWUyc6NSdibVBQqtlJGh1LNQzGk2BVFWg9xhYL0vZ1yDo0sOPRKFerYkBuRj1X+tTI6ug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=H/DrY5NsrUOuQuInZ3PHsUkBLib1t0okN8L9elfEEOE=;
- b=kdjLfK/cAiryr+81V5591YaCoxKcTbnu801SX3IPt9/Fd0G0e6sRv2QlGN66MfloLlPFOlWxQiHd6x6BGAww07EiWsL3d9cMEjK91UrdZS7ytcQYGvvclFI7E8ONiNGgjk2EzH+d00C49tZwbfRjI8d7fXNJ0dcXIO1irp0u2FJUFHRG5zURE8Fc3N9yfMDDUZNOvDTG4H114rdN+aURgKpXEPfYCsGRbz6a122DB8pckOCTb1ukINJb1dB8iIrzbLcdT9eMqETQ9PGPc6xTleNNnLkSqL9ozhxrx6Z+lXffGJA3DIgszI6kBaCHTUMEfEv0m2MBrrW5GLyzzXZECA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=H/DrY5NsrUOuQuInZ3PHsUkBLib1t0okN8L9elfEEOE=;
- b=YyX8Z4tBHAIs6AkFC7vFqfcs/PMsndOzjayHY8O/oOa+Ss+7YrQRLCfqBaTOeOzJyIsQ2Psgh5Sku32vFH3EVqOz9uFgYt/m1muBwWaK6D+us8ZZMiIFzIBKh7wMn6bUQRSUyov96oT20lqjtYF81aTE4j9E1xwVVILCw8Zdpos=
-Received: from DM6PR03CA0013.namprd03.prod.outlook.com (2603:10b6:5:40::26) by
- BYAPR02MB5381.namprd02.prod.outlook.com (2603:10b6:a03:a1::23) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.18; Wed, 18 Dec 2019 14:21:39 +0000
-Received: from SN1NAM02FT036.eop-nam02.prod.protection.outlook.com
- (2603:10b6:5:40:cafe::e5) by DM6PR03CA0013.outlook.office365.com
- (2603:10b6:5:40::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2559.14 via Frontend
- Transport; Wed, 18 Dec 2019 14:21:38 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT036.mail.protection.outlook.com (10.152.72.149) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2559.14
- via Frontend Transport; Wed, 18 Dec 2019 14:21:38 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1ihaCn-0001Cz-MT; Wed, 18 Dec 2019 06:21:37 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1ihaCi-0005dw-6e; Wed, 18 Dec 2019 06:21:32 -0800
-Received: from [172.30.17.107]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1ihaCa-0005cA-N9; Wed, 18 Dec 2019 06:21:25 -0800
-Subject: Re: [PATCH 2/5] firmware: xilinx: Add sysfs interface
-To:     Jolly Shah <jolly.shah@xilinx.com>, ard.biesheuvel@linaro.org,
-        mingo@kernel.org, gregkh@linuxfoundation.org,
-        matt@codeblueprint.co.uk, sudeep.holla@arm.com,
-        hkallweit1@gmail.com, keescook@chromium.org,
-        dmitry.torokhov@gmail.com, michal.simek@xilinx.com
-Cc:     rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>
-References: <1575502159-11327-1-git-send-email-jolly.shah@xilinx.com>
- <1575502159-11327-3-git-send-email-jolly.shah@xilinx.com>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <58d7578d-b937-99cc-b8c2-7bb31303378d@xilinx.com>
-Date:   Wed, 18 Dec 2019 15:21:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 18 Dec 2019 09:21:50 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9784 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726856AbfLROVt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 09:21:49 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBIEJiGE143828
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 09:21:47 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wyncx91qu-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 09:21:47 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Wed, 18 Dec 2019 14:21:45 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 18 Dec 2019 14:21:43 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBIEKxCe48759240
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Dec 2019 14:20:59 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A07E55204F;
+        Wed, 18 Dec 2019 14:21:42 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.207.105])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id DBE435204E;
+        Wed, 18 Dec 2019 14:21:41 +0000 (GMT)
+Date:   Wed, 18 Dec 2019 16:21:40 +0200
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Mike Rapoport <rppt@kernel.org>, Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ia64: add support for folded p4d page tables
+References: <20191218093820.17967-1-rppt@kernel.org>
+ <20191218135939.GD28111@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <1575502159-11327-3-git-send-email-jolly.shah@xilinx.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(396003)(376002)(346002)(189003)(199004)(8936002)(44832011)(316002)(26005)(336012)(36756003)(81156014)(426003)(30864003)(31696002)(478600001)(4326008)(81166006)(2616005)(9786002)(31686004)(2906002)(356004)(6666004)(7416002)(107886003)(186003)(5660300002)(70586007)(70206006)(8676002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB5381;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ed68aaae-cdfc-42cd-5f81-08d783c59844
-X-MS-TrafficTypeDiagnostic: BYAPR02MB5381:
-X-Microsoft-Antispam-PRVS: <BYAPR02MB538169262D5667FCDEE96E74C6530@BYAPR02MB5381.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:449;
-X-Forefront-PRVS: 0255DF69B9
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ZKSYyJLnZ3J8I3ErWfkZ3eJsyoOglPHo8/jw3ZaJ5rfFl53XDeauycd5j24xggaV4x8T++yykDjPyYvHf0bL37HKxuQ+XhL3psPGGNWKxhH1shE4bllBSwnXiAxVTfiYeJT+xkN+XeX5YURZtfachCom/ibpoaBAJy2rrRfWMOdWdVyvjxFHsEonNADZRkbUgLujANCmYbk5WAi+DA5uoubNJ+EUbrNQ3cciV1Or3YkeY3+QqNnK/4IszsNwuIYdL0+cJ4hA4de3Kae7nFMm7mIyG/VmftPxnCF6NisLQroyryVbX5E0RB+HujCX2Fsh/1pCOLwkiDfxmYy6kB49w6kbbs89jbe3cZ2wN00PZ8/SUEmAYvz4APOyOv8IKBXkcQF5YHIFpUNAXsCYDzxgW8xX+i09WJ0XRYLNPovDyceKNpE3zhvBFz7+hVyApCqjUx/75Sir7F+Zt2NrBXBRYXQPHYEiOEKOk8LrIUClsVV4KHRUC1GUCj6CUrkPA2We
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Dec 2019 14:21:38.0776
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ed68aaae-cdfc-42cd-5f81-08d783c59844
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5381
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191218135939.GD28111@dhcp22.suse.cz>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19121814-0020-0000-0000-00000399887C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19121814-0021-0000-0000-000021F0AB9E
+Message-Id: <20191218142139.GA1454@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-18_04:2019-12-17,2019-12-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=2
+ impostorscore=0 mlxlogscore=999 spamscore=0 mlxscore=0 lowpriorityscore=0
+ malwarescore=0 clxscore=1015 bulkscore=0 adultscore=0 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912180118
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05. 12. 19 0:29, Jolly Shah wrote:
-> From: Rajan Vaja <rajan.vaja@xilinx.com>
+On Wed, Dec 18, 2019 at 02:59:39PM +0100, Michal Hocko wrote:
+> On Wed 18-12-19 11:38:20, Mike Rapoport wrote:
+> > From: Mike Rapoport <rppt@linux.ibm.com>
+> > 
+> > Implement primitives necessary for the 4th level folding, add walks of p4d
+> > level where appropriate, remove usage of __ARCH_USE_5LEVEL_HACK and replace
+> > 5level-fixup.h with pgtable-nop4d.h
 > 
-> Add Firmware-ggs sysfs interface which provides read/write
-> interface to global storage registers.
+> Why do we need that? I thought that IA64 is essentially a dead
+> architecture. Is this fixing something?
+
+This is a part of a generic cleanup of page table manipulations. The goal
+is to remove __ARCH_USE_5LEVEL_HACK, asm-generic/5level-fixup.h,
+asm-generic/pgtable-nop4d-hack.h and the related code from the kernel.
+ 
+> > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> > ---
+> >  arch/ia64/include/asm/pgalloc.h |  4 ++--
+> >  arch/ia64/include/asm/pgtable.h | 17 ++++++++---------
+> >  arch/ia64/mm/fault.c            |  7 ++++++-
+> >  arch/ia64/mm/hugetlbpage.c      | 18 ++++++++++++------
+> >  arch/ia64/mm/init.c             | 28 ++++++++++++++++++++++++----
+> >  5 files changed, 52 insertions(+), 22 deletions(-)
+> > 
+> > diff --git a/arch/ia64/include/asm/pgalloc.h b/arch/ia64/include/asm/pgalloc.h
+> > index f4c491044882..2a3050345099 100644
+> > --- a/arch/ia64/include/asm/pgalloc.h
+> > +++ b/arch/ia64/include/asm/pgalloc.h
+> > @@ -36,9 +36,9 @@ static inline void pgd_free(struct mm_struct *mm, pgd_t *pgd)
+> >  
+> >  #if CONFIG_PGTABLE_LEVELS == 4
+> >  static inline void
+> > -pgd_populate(struct mm_struct *mm, pgd_t * pgd_entry, pud_t * pud)
+> > +p4d_populate(struct mm_struct *mm, p4d_t * p4d_entry, pud_t * pud)
+> >  {
+> > -	pgd_val(*pgd_entry) = __pa(pud);
+> > +	p4d_val(*p4d_entry) = __pa(pud);
+> >  }
+> >  
+> >  static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long addr)
+> > diff --git a/arch/ia64/include/asm/pgtable.h b/arch/ia64/include/asm/pgtable.h
+> > index d602e7c622db..c87f789bc914 100644
+> > --- a/arch/ia64/include/asm/pgtable.h
+> > +++ b/arch/ia64/include/asm/pgtable.h
+> > @@ -283,12 +283,12 @@ extern unsigned long VMALLOC_END;
+> >  #define pud_page(pud)			virt_to_page((pud_val(pud) + PAGE_OFFSET))
+> >  
+> >  #if CONFIG_PGTABLE_LEVELS == 4
+> > -#define pgd_none(pgd)			(!pgd_val(pgd))
+> > -#define pgd_bad(pgd)			(!ia64_phys_addr_valid(pgd_val(pgd)))
+> > -#define pgd_present(pgd)		(pgd_val(pgd) != 0UL)
+> > -#define pgd_clear(pgdp)			(pgd_val(*(pgdp)) = 0UL)
+> > -#define pgd_page_vaddr(pgd)		((unsigned long) __va(pgd_val(pgd) & _PFN_MASK))
+> > -#define pgd_page(pgd)			virt_to_page((pgd_val(pgd) + PAGE_OFFSET))
+> > +#define p4d_none(p4d)			(!p4d_val(p4d))
+> > +#define p4d_bad(p4d)			(!ia64_phys_addr_valid(p4d_val(p4d)))
+> > +#define p4d_present(p4d)		(p4d_val(p4d) != 0UL)
+> > +#define p4d_clear(p4dp)			(p4d_val(*(p4dp)) = 0UL)
+> > +#define p4d_page_vaddr(p4d)		((unsigned long) __va(p4d_val(p4d) & _PFN_MASK))
+> > +#define p4d_page(p4d)			virt_to_page((p4d_val(p4d) + PAGE_OFFSET))
+> >  #endif
+> >  
+> >  /*
+> > @@ -388,7 +388,7 @@ pgd_offset (const struct mm_struct *mm, unsigned long address)
+> >  #if CONFIG_PGTABLE_LEVELS == 4
+> >  /* Find an entry in the second-level page table.. */
+> >  #define pud_offset(dir,addr) \
+> > -	((pud_t *) pgd_page_vaddr(*(dir)) + (((addr) >> PUD_SHIFT) & (PTRS_PER_PUD - 1)))
+> > +	((pud_t *) p4d_page_vaddr(*(dir)) + (((addr) >> PUD_SHIFT) & (PTRS_PER_PUD - 1)))
+> >  #endif
+> >  
+> >  /* Find an entry in the third-level page table.. */
+> > @@ -582,10 +582,9 @@ extern struct page *zero_page_memmap_ptr;
+> >  
+> >  
+> >  #if CONFIG_PGTABLE_LEVELS == 3
+> > -#define __ARCH_USE_5LEVEL_HACK
+> >  #include <asm-generic/pgtable-nopud.h>
+> >  #endif
+> > -#include <asm-generic/5level-fixup.h>
+> > +#include <asm-generic/pgtable-nop4d.h>
+> >  #include <asm-generic/pgtable.h>
+> >  
+> >  #endif /* _ASM_IA64_PGTABLE_H */
+> > diff --git a/arch/ia64/mm/fault.c b/arch/ia64/mm/fault.c
+> > index c2f299fe9e04..ec994135cb74 100644
+> > --- a/arch/ia64/mm/fault.c
+> > +++ b/arch/ia64/mm/fault.c
+> > @@ -29,6 +29,7 @@ static int
+> >  mapped_kernel_page_is_present (unsigned long address)
+> >  {
+> >  	pgd_t *pgd;
+> > +	p4d_t *p4d;
+> >  	pud_t *pud;
+> >  	pmd_t *pmd;
+> >  	pte_t *ptep, pte;
+> > @@ -37,7 +38,11 @@ mapped_kernel_page_is_present (unsigned long address)
+> >  	if (pgd_none(*pgd) || pgd_bad(*pgd))
+> >  		return 0;
+> >  
+> > -	pud = pud_offset(pgd, address);
+> > +	p4d = p4d_offset(pgd, address);
+> > +	if (p4d_none(*p4d) || p4d_bad(*p4d))
+> > +		return 0;
+> > +
+> > +	pud = pud_offset(p4d, address);
+> >  	if (pud_none(*pud) || pud_bad(*pud))
+> >  		return 0;
+> >  
+> > diff --git a/arch/ia64/mm/hugetlbpage.c b/arch/ia64/mm/hugetlbpage.c
+> > index d16e419fd712..32352a73df0c 100644
+> > --- a/arch/ia64/mm/hugetlbpage.c
+> > +++ b/arch/ia64/mm/hugetlbpage.c
+> > @@ -30,12 +30,14 @@ huge_pte_alloc(struct mm_struct *mm, unsigned long addr, unsigned long sz)
+> >  {
+> >  	unsigned long taddr = htlbpage_to_page(addr);
+> >  	pgd_t *pgd;
+> > +	p4d_t *p4d;
+> >  	pud_t *pud;
+> >  	pmd_t *pmd;
+> >  	pte_t *pte = NULL;
+> >  
+> >  	pgd = pgd_offset(mm, taddr);
+> > -	pud = pud_alloc(mm, pgd, taddr);
+> > +	p4d = p4d_offset(pgd, taddr);
+> > +	pud = pud_alloc(mm, p4d, taddr);
+> >  	if (pud) {
+> >  		pmd = pmd_alloc(mm, pud, taddr);
+> >  		if (pmd)
+> > @@ -49,17 +51,21 @@ huge_pte_offset (struct mm_struct *mm, unsigned long addr, unsigned long sz)
+> >  {
+> >  	unsigned long taddr = htlbpage_to_page(addr);
+> >  	pgd_t *pgd;
+> > +	p4d_t *p4d;
+> >  	pud_t *pud;
+> >  	pmd_t *pmd;
+> >  	pte_t *pte = NULL;
+> >  
+> >  	pgd = pgd_offset(mm, taddr);
+> >  	if (pgd_present(*pgd)) {
+> > -		pud = pud_offset(pgd, taddr);
+> > -		if (pud_present(*pud)) {
+> > -			pmd = pmd_offset(pud, taddr);
+> > -			if (pmd_present(*pmd))
+> > -				pte = pte_offset_map(pmd, taddr);
+> > +		p4d = p4d_offset(pgd, addr);
+> > +		if (p4d_present(*p4d)) {
+> > +			pud = pud_offset(p4d, taddr);
+> > +			if (pud_present(*pud)) {
+> > +				pmd = pmd_offset(pud, taddr);
+> > +				if (pmd_present(*pmd))
+> > +					pte = pte_offset_map(pmd, taddr);
+> > +			}
+> >  		}
+> >  	}
+> >  
+> > diff --git a/arch/ia64/mm/init.c b/arch/ia64/mm/init.c
+> > index 58fd67068bac..bcdc78e97e6e 100644
+> > --- a/arch/ia64/mm/init.c
+> > +++ b/arch/ia64/mm/init.c
+> > @@ -208,6 +208,7 @@ static struct page * __init
+> >  put_kernel_page (struct page *page, unsigned long address, pgprot_t pgprot)
+> >  {
+> >  	pgd_t *pgd;
+> > +	p4d_t *p4d;
+> >  	pud_t *pud;
+> >  	pmd_t *pmd;
+> >  	pte_t *pte;
+> > @@ -215,7 +216,10 @@ put_kernel_page (struct page *page, unsigned long address, pgprot_t pgprot)
+> >  	pgd = pgd_offset_k(address);		/* note: this is NOT pgd_offset()! */
+> >  
+> >  	{
+> > -		pud = pud_alloc(&init_mm, pgd, address);
+> > +		p4d = p4d_alloc(&init_mm, pgd, address);
+> > +		if (!p4d)
+> > +			goto out;
+> > +		pud = pud_alloc(&init_mm, p4d, address);
+> >  		if (!pud)
+> >  			goto out;
+> >  		pmd = pmd_alloc(&init_mm, pud, address);
+> > @@ -382,6 +386,7 @@ int vmemmap_find_next_valid_pfn(int node, int i)
+> >  
+> >  	do {
+> >  		pgd_t *pgd;
+> > +		p4d_t *p4d;
+> >  		pud_t *pud;
+> >  		pmd_t *pmd;
+> >  		pte_t *pte;
+> > @@ -392,7 +397,13 @@ int vmemmap_find_next_valid_pfn(int node, int i)
+> >  			continue;
+> >  		}
+> >  
+> > -		pud = pud_offset(pgd, end_address);
+> > +		p4d = p4d_offset(pgd, end_address);
+> > +		if (p4d_none(*p4d)) {
+> > +			end_address += P4D_SIZE;
+> > +			continue;
+> > +		}
+> > +
+> > +		pud = pud_offset(p4d, end_address);
+> >  		if (pud_none(*pud)) {
+> >  			end_address += PUD_SIZE;
+> >  			continue;
+> > @@ -430,6 +441,7 @@ int __init create_mem_map_page_table(u64 start, u64 end, void *arg)
+> >  	struct page *map_start, *map_end;
+> >  	int node;
+> >  	pgd_t *pgd;
+> > +	p4d_t *p4d;
+> >  	pud_t *pud;
+> >  	pmd_t *pmd;
+> >  	pte_t *pte;
+> > @@ -444,12 +456,20 @@ int __init create_mem_map_page_table(u64 start, u64 end, void *arg)
+> >  	for (address = start_page; address < end_page; address += PAGE_SIZE) {
+> >  		pgd = pgd_offset_k(address);
+> >  		if (pgd_none(*pgd)) {
+> > +			p4d = memblock_alloc_node(PAGE_SIZE, PAGE_SIZE, node);
+> > +			if (!p4d)
+> > +				goto err_alloc;
+> > +			pgd_populate(&init_mm, pgd, p4d);
+> > +		}
+> > +		p4d = p4d_offset(pgd, address);
+> > +
+> > +		if (p4d_none(*p4d)) {
+> >  			pud = memblock_alloc_node(PAGE_SIZE, PAGE_SIZE, node);
+> >  			if (!pud)
+> >  				goto err_alloc;
+> > -			pgd_populate(&init_mm, pgd, pud);
+> > +			p4d_populate(&init_mm, p4d, pud);
+> >  		}
+> > -		pud = pud_offset(pgd, address);
+> > +		pud = pud_offset(p4d, address);
+> >  
+> >  		if (pud_none(*pud)) {
+> >  			pmd = memblock_alloc_node(PAGE_SIZE, PAGE_SIZE, node);
+> > -- 
+> > 2.24.0
+> > 
 > 
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
-> Signed-off-by: Jolly Shah <jolly.shah@xilinx.com>
-> ---
->  Documentation/ABI/stable/sysfs-firmware-zynqmp |  50 +++++
->  drivers/firmware/xilinx/Makefile               |   2 +-
->  drivers/firmware/xilinx/zynqmp-ggs.c           | 289 +++++++++++++++++++++++++
->  drivers/firmware/xilinx/zynqmp.c               |  12 +
->  include/linux/firmware/xlnx-zynqmp.h           |  10 +
->  5 files changed, 362 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/ABI/stable/sysfs-firmware-zynqmp
->  create mode 100644 drivers/firmware/xilinx/zynqmp-ggs.c
-> 
-> diff --git a/Documentation/ABI/stable/sysfs-firmware-zynqmp b/Documentation/ABI/stable/sysfs-firmware-zynqmp
-> new file mode 100644
-> index 0000000..0a75812
-> --- /dev/null
-> +++ b/Documentation/ABI/stable/sysfs-firmware-zynqmp
-> @@ -0,0 +1,50 @@
-> +What:		/sys/firmware/zynqmp/ggs*
-> +Date:		January 2018
-> +KernelVersion:	4.15.0
+> -- 
+> Michal Hocko
+> SUSE Labs
 
-looks old.
-
-> +Contact:	"Jolly Shah" <jollys@xilinx.com>
-> +Description:
-> +		Read/Write PMU global general storage register value,
-> +		GLOBAL_GEN_STORAGE{0:3}.
-> +		Global general storage register that can be used
-> +		by system to pass information between masters.
-> +
-> +		The register is reset during system or power-on
-> +		resets. Three registers are used by the FSBL and
-> +		other Xilinx software products: GLOBAL_GEN_STORAGE{4:6}.
-> +
-> +		Usage:
-> +		# cat /sys/firmware/zynqmp/ggs0
-> +		# echo <mask> <value> > /sys/firmware/zynqmp/ggs0
-> +
-> +		Example:
-> +		# cat /sys/firmware/zynqmp/ggs0
-> +		# echo 0xFFFFFFFF 0x1234ABCD > /sys/firmware/zynqmp/ggs0
-> +
-> +Users:		Xilinx
-> +
-> +What:		/sys/firmware/zynqmp/pggs*
-> +Date:		January 2018
-> +KernelVersion:	4.15.0
-
-ditto.
-
-> +Contact:	"Jolly Shah" <jollys@xilinx.com>
-> +Description:
-> +		Read/Write PMU persistent global general storage register
-> +		value, PERS_GLOB_GEN_STORAGE{0:3}.
-> +		Persistent global general storage register that
-> +		can be used by system to pass information between
-> +		masters.
-> +
-> +		This register is only reset by the power-on reset
-> +		and maintains its value through a system reset.
-> +		Four registers are used by the FSBL and other Xilinx
-> +		software products: PERS_GLOB_GEN_STORAGE{4:7}.
-> +		Register is reset only by a POR reset.
-> +
-> +		Usage:
-> +		# cat /sys/firmware/zynqmp/pggs0
-> +		# echo <mask> <value> > /sys/firmware/zynqmp/pggs0
-> +
-> +		Example:
-> +		# cat /sys/firmware/zynqmp/pggs0
-> +		# echo 0xFFFFFFFF 0x1234ABCD > /sys/firmware/zynqmp/pggs0
-> +
-> +Users:		Xilinx
-> diff --git a/drivers/firmware/xilinx/Makefile b/drivers/firmware/xilinx/Makefile
-> index 875a537..1e8643c 100644
-> --- a/drivers/firmware/xilinx/Makefile
-> +++ b/drivers/firmware/xilinx/Makefile
-> @@ -1,5 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0
->  # Makefile for Xilinx firmwares
->  
-> -obj-$(CONFIG_ZYNQMP_FIRMWARE) += zynqmp.o
-> +obj-$(CONFIG_ZYNQMP_FIRMWARE) += zynqmp.o zynqmp-ggs.o
->  obj-$(CONFIG_ZYNQMP_FIRMWARE_DEBUG) += zynqmp-debug.o
-> diff --git a/drivers/firmware/xilinx/zynqmp-ggs.c b/drivers/firmware/xilinx/zynqmp-ggs.c
-> new file mode 100644
-> index 0000000..42179ad
-> --- /dev/null
-> +++ b/drivers/firmware/xilinx/zynqmp-ggs.c
-> @@ -0,0 +1,289 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Xilinx Zynq MPSoC Firmware layer
-> + *
-> + *  Copyright (C) 2014-2018 Xilinx, Inc.
-> + *
-> + *  Jolly Shah <jollys@xilinx.com>
-> + *  Rajan Vaja <rajanv@xilinx.com>
-> + */
-> +
-> +#include <linux/compiler.h>
-> +#include <linux/of.h>
-> +#include <linux/init.h>
-> +#include <linux/module.h>
-> +#include <linux/uaccess.h>
-> +#include <linux/slab.h>
-> +#include <linux/firmware/xlnx-zynqmp.h>
-> +
-> +static ssize_t read_register(char *buf, u32 ioctl_id, u32 reg)
-> +{
-> +	int ret;
-> +	u32 ret_payload[PAYLOAD_ARG_CNT];
-> +	const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
-> +
-> +	if (!eemi_ops->ioctl)
-> +		return -EFAULT;
-> +
-> +	ret = eemi_ops->ioctl(0, ioctl_id, reg, 0, ret_payload);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return sprintf(buf, "0x%x\n", ret_payload[1]);
-> +}
-> +
-> +static ssize_t write_register(const char *buf, size_t count, u32 read_ioctl,
-> +			      u32 write_ioctl, u32 reg)
-> +{
-> +	char *kern_buff, *inbuf, *tok;
-> +	long mask, value;
-> +	int ret;
-> +	u32 ret_payload[PAYLOAD_ARG_CNT];
-> +	const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
-> +
-> +	if (!eemi_ops->ioctl)
-> +		return -EFAULT;
-> +
-> +	kern_buff = kzalloc(count, GFP_KERNEL);
-> +	if (!kern_buff)
-> +		return -ENOMEM;
-> +
-> +	ret = strlcpy(kern_buff, buf, count);
-> +	if (ret < 0) {
-> +		ret = -EFAULT;
-> +		goto err;
-> +	}
-> +
-> +	inbuf = kern_buff;
-> +
-> +	/* Read the write mask */
-> +	tok = strsep(&inbuf, " ");
-> +	if (!tok) {
-> +		ret = -EFAULT;
-> +		goto err;
-> +	}
-> +
-> +	ret = kstrtol(tok, 16, &mask);
-> +	if (ret) {
-> +		ret = -EFAULT;
-> +		goto err;
-> +	}
-> +
-> +	/* Read the write value */
-> +	tok = strsep(&inbuf, " ");
-> +	if (!tok) {
-> +		ret = -EFAULT;
-> +		goto err;
-> +	}
-> +
-> +	ret = kstrtol(tok, 16, &value);
-> +	if (ret) {
-> +		ret = -EFAULT;
-> +		goto err;
-> +	}
-> +
-> +	ret = eemi_ops->ioctl(0, read_ioctl, reg, 0, ret_payload);
-> +	if (ret) {
-> +		ret = -EFAULT;
-> +		goto err;
-> +	}
-> +	ret_payload[1] &= ~mask;
-> +	value &= mask;
-> +	value |= ret_payload[1];
-> +
-> +	ret = eemi_ops->ioctl(0, write_ioctl, reg, value, NULL);
-> +	if (ret)
-> +		ret = -EFAULT;
-> +
-> +err:
-> +	kfree(kern_buff);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return count;
-> +}
-> +
-> +/**
-> + * ggs_show - Show global general storage (ggs) sysfs attribute
-> + * @kobj: Kobject structure
-> + * @attr: Kobject attribute structure
-> + * @buf: Requested available shutdown_scope attributes string
-> + * @reg: Register number
-> + *
-> + * Return:Number of bytes printed into the buffer.
-> + *
-> + * Helper function for viewing a ggs register value.
-> + *
-> + * User-space interface for viewing the content of the ggs0 register.
-> + * cat /sys/firmware/zynqmp/ggs0
-> + */
-> +static ssize_t ggs_show(struct kobject *kobj,
-> +			struct kobj_attribute *attr,
-> +			char *buf,
-> +			u32 reg)
-> +{
-> +	return read_register(buf, IOCTL_READ_GGS, reg);
-> +}
-> +
-> +/**
-> + * ggs_store - Store global general storage (ggs) sysfs attribute
-> + * @kobj: Kobject structure
-> + * @attr: Kobject attribute structure
-> + * @buf: User entered shutdown_scope attribute string
-> + * @count: Size of buf
-> + * @reg: Register number
-> + *
-> + * Return: count argument if request succeeds, the corresponding
-> + * error code otherwise
-> + *
-> + * Helper function for storing a ggs register value.
-> + *
-> + * For example, the user-space interface for storing a value to the
-> + * ggs0 register:
-> + * echo 0xFFFFFFFF 0x1234ABCD > /sys/firmware/zynqmp/ggs0
-> + */
-> +static ssize_t ggs_store(struct kobject *kobj,
-> +			 struct kobj_attribute *attr,
-> +			 const char *buf,
-> +			 size_t count,
-> +			 u32 reg)
-> +{
-> +	if (!kobj || !attr || !buf || !count || reg >= GSS_NUM_REGS)
-> +		return -EINVAL;
-> +
-> +	return write_register(buf, count, IOCTL_READ_GGS, IOCTL_WRITE_GGS, reg);
-> +}
-> +
-> +/* GGS register show functions */
-> +#define GGS0_SHOW(N)						\
-> +	ssize_t ggs##N##_show(struct kobject *kobj,		\
-> +				struct kobj_attribute *attr,	\
-> +				char *buf)			\
-> +	{							\
-> +		return ggs_show(kobj, attr, buf, N);		\
-> +	}
-> +
-> +static GGS0_SHOW(0);
-> +static GGS0_SHOW(1);
-> +static GGS0_SHOW(2);
-> +static GGS0_SHOW(3);
-> +
-> +/* GGS register store function */
-> +#define GGS0_STORE(N)						\
-> +	ssize_t ggs##N##_store(struct kobject *kobj,		\
-> +				struct kobj_attribute *attr,	\
-> +				const char *buf,		\
-> +				size_t count)			\
-> +	{							\
-> +		return ggs_store(kobj, attr, buf, count, N);	\
-> +	}
-> +
-> +static GGS0_STORE(0);
-> +static GGS0_STORE(1);
-> +static GGS0_STORE(2);
-> +static GGS0_STORE(3);
-> +
-> +/**
-> + * pggs_show - Show persistent global general storage (pggs) sysfs attribute
-> + * @kobj: Kobject structure
-> + * @attr: Kobject attribute structure
-> + * @buf: Requested available shutdown_scope attributes string
-> + * @reg: Register number
-> + *
-> + * Return:Number of bytes printed into the buffer.
-> + *
-> + * Helper function for viewing a pggs register value.
-> + */
-> +static ssize_t pggs_show(struct kobject *kobj,
-> +			 struct kobj_attribute *attr,
-> +			 char *buf,
-> +			 u32 reg)
-> +{
-> +	return read_register(buf, IOCTL_READ_PGGS, reg);
-> +}
-> +
-> +/**
-> + * pggs_store - Store persistent global general storage (pggs) sysfs attribute
-> + * @kobj: Kobject structure
-> + * @attr: Kobject attribute structure
-> + * @buf: User entered shutdown_scope attribute string
-> + * @count: Size of buf
-> + * @reg: Register number
-> + *
-> + * Return: count argument if request succeeds, the corresponding
-> + * error code otherwise
-> + *
-> + * Helper function for storing a pggs register value.
-> + */
-> +static ssize_t pggs_store(struct kobject *kobj,
-> +			  struct kobj_attribute *attr,
-> +			  const char *buf,
-> +			  size_t count,
-> +			  u32 reg)
-> +{
-> +	return write_register(buf, count, IOCTL_READ_PGGS,
-> +			      IOCTL_WRITE_PGGS, reg);
-> +}
-> +
-> +#define PGGS0_SHOW(N)						\
-> +	ssize_t pggs##N##_show(struct kobject *kobj,		\
-> +				struct kobj_attribute *attr,	\
-> +				char *buf)			\
-> +	{							\
-> +		return pggs_show(kobj, attr, buf, N);		\
-> +	}
-> +
-> +#define PGGS0_STORE(N)						\
-> +	ssize_t pggs##N##_store(struct kobject *kobj,		\
-> +				   struct kobj_attribute *attr,	\
-> +				   const char *buf,		\
-> +				   size_t count)		\
-> +	{							\
-> +		return pggs_store(kobj, attr, buf, count, N);	\
-> +	}
-> +
-> +/* PGGS register show functions */
-> +static PGGS0_SHOW(0);
-> +static PGGS0_SHOW(1);
-> +static PGGS0_SHOW(2);
-> +static PGGS0_SHOW(3);
-> +
-> +/* PGGS register store functions */
-> +static PGGS0_STORE(0);
-> +static PGGS0_STORE(1);
-> +static PGGS0_STORE(2);
-> +static PGGS0_STORE(3);
-> +
-> +/* GGS register attributes */
-> +static struct kobj_attribute zynqmp_attr_ggs0 = __ATTR_RW(ggs0);
-> +static struct kobj_attribute zynqmp_attr_ggs1 = __ATTR_RW(ggs1);
-> +static struct kobj_attribute zynqmp_attr_ggs2 = __ATTR_RW(ggs2);
-> +static struct kobj_attribute zynqmp_attr_ggs3 = __ATTR_RW(ggs3);
-> +
-> +/* PGGS register attributes */
-> +static struct kobj_attribute zynqmp_attr_pggs0 = __ATTR_RW(pggs0);
-> +static struct kobj_attribute zynqmp_attr_pggs1 = __ATTR_RW(pggs1);
-> +static struct kobj_attribute zynqmp_attr_pggs2 = __ATTR_RW(pggs2);
-> +static struct kobj_attribute zynqmp_attr_pggs3 = __ATTR_RW(pggs3);
-> +
-> +static struct attribute *attrs[] = {
-> +	&zynqmp_attr_ggs0.attr,
-> +	&zynqmp_attr_ggs1.attr,
-> +	&zynqmp_attr_ggs2.attr,
-> +	&zynqmp_attr_ggs3.attr,
-> +	&zynqmp_attr_pggs0.attr,
-> +	&zynqmp_attr_pggs1.attr,
-> +	&zynqmp_attr_pggs2.attr,
-> +	&zynqmp_attr_pggs3.attr,
-> +	NULL,
-> +};
-> +
-> +static const struct attribute_group attr_group = {
-> +	.attrs = attrs,
-> +	NULL,
-> +};
-
-the same as was in 1/5
-
-> +
-> +int zynqmp_pm_ggs_init(struct kobject *parent_kobj)
-> +{
-> +	return sysfs_create_group(parent_kobj, &attr_group);
-> +}
-> diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-> index 56431ad..9836174 100644
-> --- a/drivers/firmware/xilinx/zynqmp.c
-> +++ b/drivers/firmware/xilinx/zynqmp.c
-> @@ -475,6 +475,10 @@ static inline int zynqmp_is_valid_ioctl(u32 ioctl_id)
->  	case IOCTL_GET_PLL_FRAC_MODE:
->  	case IOCTL_SET_PLL_FRAC_DATA:
->  	case IOCTL_GET_PLL_FRAC_DATA:
-> +	case IOCTL_WRITE_GGS:
-> +	case IOCTL_READ_GGS:
-> +	case IOCTL_WRITE_PGGS:
-> +	case IOCTL_READ_PGGS:
->  		return 1;
->  	default:
->  		return 0;
-> @@ -876,8 +880,16 @@ static int zynqmp_pm_sysfs_init(void)
->  	if (ret) {
->  		pr_err("%s() sysfs creation fail with error %d\n",
->  		       __func__, ret);
-> +		goto err;
->  	}
->  
-> +	ret = zynqmp_pm_ggs_init(zynqmp_kobj);
-> +	if (ret) {
-> +		pr_err("%s() GGS init fail with error %d\n",
-> +		       __func__, ret);
-> +		goto err;
-> +	}
-> +err:
->  	return ret;
->  }
->  
-> diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-> index 55561d0..bf6e9db 100644
-> --- a/include/linux/firmware/xlnx-zynqmp.h
-> +++ b/include/linux/firmware/xlnx-zynqmp.h
-> @@ -13,6 +13,8 @@
->  #ifndef __FIRMWARE_ZYNQMP_H__
->  #define __FIRMWARE_ZYNQMP_H__
->  
-> +#include <linux/device.h>
-> +
->  #define ZYNQMP_PM_VERSION_MAJOR	1
->  #define ZYNQMP_PM_VERSION_MINOR	0
->  
-> @@ -42,6 +44,8 @@
->  
->  #define ZYNQMP_PM_MAX_QOS		100U
->  
-> +#define GSS_NUM_REGS	(4)
-> +
->  /* Node capabilities */
->  #define	ZYNQMP_PM_CAPABILITY_ACCESS	0x1U
->  #define	ZYNQMP_PM_CAPABILITY_CONTEXT	0x2U
-> @@ -98,6 +102,10 @@ enum pm_ioctl_id {
->  	IOCTL_GET_PLL_FRAC_MODE,
->  	IOCTL_SET_PLL_FRAC_DATA,
->  	IOCTL_GET_PLL_FRAC_DATA,
-> +	IOCTL_WRITE_GGS,
-> +	IOCTL_READ_GGS,
-> +	IOCTL_WRITE_PGGS,
-> +	IOCTL_READ_PGGS,
->  };
->  
->  enum pm_query_id {
-> @@ -319,6 +327,8 @@ struct zynqmp_eemi_ops {
->  int zynqmp_pm_invoke_fn(u32 pm_api_id, u32 arg0, u32 arg1,
->  			u32 arg2, u32 arg3, u32 *ret_payload);
->  
-> +int zynqmp_pm_ggs_init(struct kobject *parent_kobj);
-> +
->  #if IS_REACHABLE(CONFIG_ARCH_ZYNQMP)
->  const struct zynqmp_eemi_ops *zynqmp_pm_get_eemi_ops(void);
->  #else
-> 
-
-M
+-- 
+Sincerely yours,
+Mike.
 
