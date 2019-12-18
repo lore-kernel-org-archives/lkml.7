@@ -7,157 +7,118 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E357C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBDBDC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30261218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:13:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD93424672
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:13:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QS5rfGtp"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="NfyaHaGP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbfLRNNM (ORCPT
+        id S1727007AbfLRNN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 08:13:12 -0500
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:32975 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726749AbfLRNNM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 08:13:12 -0500
-Received: by mail-ua1-f68.google.com with SMTP id a12so612746uan.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 05:13:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Rbi/0HS4TN9MANgwRP5JBMfuN16L4USYE1XV5828ilU=;
-        b=QS5rfGtpIAE7RMx4aEDqVVyni4Jt33kyj74vqBpxxDEy0qJ56cgdREeAgUckhQjgkU
-         w2pHwQ+VJsSFKxOXu3H1nUPRTeSauBTCiaaCJpi0kxfXaAXYMcY19wusHwhhkWTANvKB
-         K2hLxeJt7edjP6ojGxL3drL3zHxTx/nj44PO6MDTu2sloOIEMl9+BydQeSXduSWfQ9Ij
-         MRhq+RRVYg3oMw1kzq4YUIP1uNcLjW+kw/oYAie8bgtuMjjlnIayML/P1IWM8Va5/VBD
-         lPjezShzglR8RFzkQjF53Z0J7932VOQkcC7WXcxV4j94etq+KVIxDGbwifBsHOjYpjI3
-         yAqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Rbi/0HS4TN9MANgwRP5JBMfuN16L4USYE1XV5828ilU=;
-        b=Q/9KWsG10WtG0eQ3TxfxFj5EID4vImn5TzhRRdLoYf+656qMbVZVVwqUKetLqBwyMx
-         rIpLfPiifnBXlD8E9dCA4hQXXnfj21JnvWmVwOhgLHF+DFHAWU3T8opcKvLHEi4bgASd
-         KQ2OWPiobB4qD46P2/kALvWvE5cBkhmDspS5p2EL4EBy3Q894P3B2bm76o0VC7B15oDl
-         CtI1uP3bCCGAc73Fpj15rV9htj+POLOioXzFtdq/TwPWRSNbsGDjjZ3TmvDAoXLTU58A
-         ugF2/jXxZLvJP6DN6t1xJmalY77X8zjDro+ZNXKgEv3na4h0M33SJJcDop+LTtI/Za1R
-         N4SQ==
-X-Gm-Message-State: APjAAAWCflJ4QmmNfCNQwVz9FYD70ssA129dfrmoTHFRLQGuCaLhZniQ
-        D+0tHJPBUCbn8G5+R63EasjIcoB2HG2SqIcHAEUWqA==
-X-Google-Smtp-Source: APXvYqyR53PC7G7Sq2/BZL7+v9/D5h4WFmyLKQAuV03T6MvOhfFYh9bqmrFmZaB8B7BPsOHxDL9DdD5N3aor9uIcIao=
-X-Received: by 2002:ab0:e16:: with SMTP id g22mr1208910uak.129.1576674790843;
- Wed, 18 Dec 2019 05:13:10 -0800 (PST)
+        Wed, 18 Dec 2019 08:13:56 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:37659 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726723AbfLRNNz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 08:13:55 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47dFnp3pW4z9sS9;
+        Thu, 19 Dec 2019 00:13:50 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1576674832;
+        bh=jvXS9QaYUnBeyhFeR7eMtCXv8w7JTHZthgsAYwtfgoU=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=NfyaHaGP9zOdUM8yUYmFTOJTQD8ZA4DPbTcZZfO1UsuG6p8s+uA+Qusa3Hw+AT2Y9
+         7nSZ7Q3zUruXevd2KInEdVnRTL6p7RPT1HDKV0lROjcLdmPUgDeSzQ9K5e9kutklPz
+         NWkb15XZfl65oFmLC/jUpXMUna1cULqg/HdAY66dorouQmPnFogtr6HMCCDWcIAzEi
+         RQW2yMfBhh5rMUasuFU+asmqljUaNKu16YQO4P0MOXhXNOrXQE7u/m3U4uOtN52dkD
+         7f5qwiIESOiBBCieQ1eRi7gvF+y3fGob3KPFjn4L7eltOM7GCIGiWhkVxexhYclLfq
+         8u2PXuWC8/Glw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Paul Mackerras <paulus@ozlabs.org>
+Cc:     akpm@linux-foundation.org, npiggin@gmail.com, will@kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-arch@vger.kernel.org,
+        Scott Wood <oss@buserror.net>
+Subject: Re: [PATCH v2 2/3] mm/mmu_gather: Invalidate TLB correctly on batch allocation failure and flush
+In-Reply-To: <0f0bea3b-b7b5-fa8c-f75c-396cf78c47b4@linux.ibm.com>
+References: <20191218053530.73053-1-aneesh.kumar@linux.ibm.com> <20191218053530.73053-2-aneesh.kumar@linux.ibm.com> <20191218091733.GO2844@hirez.programming.kicks-ass.net> <0f0bea3b-b7b5-fa8c-f75c-396cf78c47b4@linux.ibm.com>
+Date:   Thu, 19 Dec 2019 00:13:48 +1100
+Message-ID: <87v9qdn5df.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-References: <cover.1576540906.git.nguyenb@codeaurora.org> <68b936a67e67cd25597915cbd76b73ed046d1ce4.1576540908.git.nguyenb@codeaurora.org>
- <20191218083448.GE1554871@kroah.com> <CAPDyKFr2t3w1wXY+DD27vHF23mSjnUwCh7iZyuQ=ua=s+KvyVA@mail.gmail.com>
- <20191218120454.GA15400@kroah.com>
-In-Reply-To: <20191218120454.GA15400@kroah.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 18 Dec 2019 14:12:34 +0100
-Message-ID: <CAPDyKFo929cnz9GS23B2vdDdd1RpJpYFeRwXaMFcTCEMxjS-5g@mail.gmail.com>
-Subject: Re: [<PATCH v1> 7/9] mmc: core: Skip frequency retries for SDCC slots
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Bao D. Nguyen" <nguyenb@codeaurora.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Asutosh Das <asutoshd@codeaurora.org>, cang@codeaurora.org,
-        Sujith Reddy Thumma <sthumma@codeaurora.org>,
-        Subhash Jadavani <subhashj@codeaurora.org>,
-        Xiaonian Wang <xiaonian@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Dec 2019 at 13:04, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+"Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com> writes:
+> On 12/18/19 2:47 PM, Peter Zijlstra wrote:
+>> On Wed, Dec 18, 2019 at 11:05:29AM +0530, Aneesh Kumar K.V wrote:
+>>> From: Peter Zijlstra <peterz@infradead.org>
+>>>
+>>> Architectures for which we have hardware walkers of Linux page table should
+>>> flush TLB on mmu gather batch allocation failures and batch flush. Some
+>>> architectures like POWER supports multiple translation modes (hash and radix)
+>> 
+>> nohash, hash and radix in fact :-)
+>> 
+>>> and in the case of POWER only radix translation mode needs the above TLBI.
+>> 
+>>> This is because for hash translation mode kernel wants to avoid this extra
+>>> flush since there are no hardware walkers of linux page table. With radix
+>>> translation, the hardware also walks linux page table and with that, kernel
+>>> needs to make sure to TLB invalidate page walk cache before page table pages are
+>>> freed.
+>>>
+>>> More details in
+>>> commit: d86564a2f085 ("mm/tlb, x86/mm: Support invalidating TLB caches for RCU_TABLE_FREE")
+>>>
+>>> Fixes: a46cc7a90fd8 ("powerpc/mm/radix: Improve TLB/PWC flushes")
+>>> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org
+>>> Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+>>> ---
+>> 
+>>> diff --git a/arch/powerpc/include/asm/tlb.h b/arch/powerpc/include/asm/tlb.h
+>>> index b2c0be93929d..7f3a8b902325 100644
+>>> --- a/arch/powerpc/include/asm/tlb.h
+>>> +++ b/arch/powerpc/include/asm/tlb.h
+>>> @@ -26,6 +26,17 @@
+>>>   
+>>>   #define tlb_flush tlb_flush
+>>>   extern void tlb_flush(struct mmu_gather *tlb);
+>>> +/*
+>>> + * book3s:
+>>> + * Hash does not use the linux page-tables, so we can avoid
+>>> + * the TLB invalidate for page-table freeing, Radix otoh does use the
+>>> + * page-tables and needs the TLBI.
+>>> + *
+>>> + * nohash:
+>>> + * We still do TLB invalidate in the __pte_free_tlb routine before we
+>>> + * add the page table pages to mmu gather table batch.
+>> 
+>> I'm a little confused though; if nohash is a software TLB fill, why do
+>> you need a TLBI for tables?
+>> 
 >
-> On Wed, Dec 18, 2019 at 12:48:20PM +0100, Ulf Hansson wrote:
-> > On Wed, 18 Dec 2019 at 09:34, Greg KH <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > On Mon, Dec 16, 2019 at 06:50:40PM -0800, Bao D. Nguyen wrote:
-> > > > From: Sujith Reddy Thumma <sthumma@codeaurora.org>
-> > > >
-> > > > Qualcomm SDCC controller supports minimum SD clock frequency
-> > > > which is required for card initialization. This information is
-> > > > exported through platform data for each SDCC controller. There is
-> > > > no need of retrying higher frequencies than the minimum supported
-> > > > by controller for Qualcomm chipsets which inturn add delay in
-> > > > detection process if there is no card during suspend/resume cycles.
-> > > > Hence, skip multiple frequency retries.
-> > > >
-> > > > Signed-off-by: Sujith Reddy Thumma <sthumma@codeaurora.org>
-> > > > Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
-> > > > Signed-off-by: Xiaonian Wang <xiaonian@codeaurora.org>
-> > > > Signed-off-by: Bao D. Nguyen <nguyenb@codeaurora.org>
-> > > > ---
-> > > >  drivers/mmc/core/core.c | 9 +--------
-> > > >  1 file changed, 1 insertion(+), 8 deletions(-)
-> > > >
-> > > > diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
-> > > > index 1e37f78..38b0cec 100644
-> > > > --- a/drivers/mmc/core/core.c
-> > > > +++ b/drivers/mmc/core/core.c
-> > > > @@ -2281,7 +2281,6 @@ void mmc_rescan(struct work_struct *work)
-> > > >  {
-> > > >       struct mmc_host *host =
-> > > >               container_of(work, struct mmc_host, detect.work);
-> > > > -     int i;
-> > > >
-> > > >       if (host->rescan_disable)
-> > > >               return;
-> > > > @@ -2332,13 +2331,7 @@ void mmc_rescan(struct work_struct *work)
-> > > >               mmc_release_host(host);
-> > > >               goto out;
-> > > >       }
-> > > > -
-> > > > -     for (i = 0; i < ARRAY_SIZE(freqs); i++) {
-> > > > -             if (!mmc_rescan_try_freq(host, max(freqs[i], host->f_min)))
-> > > > -                     break;
-> > > > -             if (freqs[i] <= host->f_min)
-> > > > -                     break;
-> > > > -     }
-> > > > +     mmc_rescan_try_freq(host, host->f_min);
-> > >
-> > > What about for non-qualcomm controllers?  Did this just break their
-> > > functionality?
-> >
-> > Yes it does, obviously.
-> >
-> > Greg, thanks for providing some valuable feedback for Bao for a couple
-> > of the patches in this series.
-> >
-> > I have also browsed through the series, but stopped providing feedback
-> > after patch1, when I realized that these are all just downstream
-> > vendor specific hacks.
->
-> That's all kernel drivers are, vendor-specific quirks/hacks around
-> broken hardware :)
->
-> Splitting this out into logical fixes, like some of these are here, is
-> great.  But breaking non-qualcomm hardware like this patch would do, is
-> obviously not ok.
->
-> > Sure, I guess most of the patches can be reworked as upstreamable
-> > solutions,
->
-> They have to be upstreamable, you don't want these in random vendor
-> trees as they go no where and atrophy and break users.  We want them in
-> our main tree for everyone to use for the obvious reason that they are
-> needed to get real hardware working.
+> nohash (AKA book3e) has different mmu modes. I don't follow all the 
+> details w.r.t book3e. Paul or Michael might be able to explain the need 
+> for table flush with book3e.
 
-I fully agree and I am willing to help!
+Some of the Book3E CPUs have a partial hardware table walker. The IBM one (A2)
+did, before we ripped that support out. And the Freescale (NXP) e6500
+does, see eg:
 
-Just didn't want to waste my time reviewing all at once in great
-detail - if it turns out that the submitter don't care to re-spin, as
-that has happened before (not by Bao).
+  28efc35fe68d ("powerpc/e6500: TLB miss handler with hardware tablewalk support")
 
-Kind regards
-Uffe
+They only support walking one level IIRC, ie. you can create a TLB entry
+that points to a PTE page, and the hardware will dereference that to get
+a PTE and load that into the TLB.
+
+cheers
