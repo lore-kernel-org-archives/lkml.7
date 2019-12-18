@@ -2,197 +2,347 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CEDDC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:24:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8563C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16728218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:24:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B2AB218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:25:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="qWnNhXn8"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="xBns3Jrx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727264AbfLROYn (ORCPT
+        id S1727265AbfLROZI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 09:24:43 -0500
-Received: from mail-dm6nam10on2080.outbound.protection.outlook.com ([40.107.93.80]:9920
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727108AbfLROYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 09:24:43 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DhbfH0toYIhneTdD0SqijUi6A/y7CkEkHxxYoEGX3jXl8A4tO/dnxZ2Mt7ZVBAt5VtDmnRf9BcukMVCTmQH+4YxBVSgyYnS8g1r2r1BckUtKbC8STYJR/LlyS8tvA/pctQlVEdHnmYTygQuNhj8lkWufwk6aVDDh64spk8POC8EqtSkny/0sBF1n6xegMV6BQ3s73MJBkGQ7KTLZyo7beQ1YPrcV6gzRhuLfamjP2fzSrrrcw8rsQEARVu70xRN0X4yzmO8wKwjFqzL9lzI73LwOwU3styz0bc54rTttVDfdxuy1W+uRJewQyIi4C0/7wpnQGRrFzdpkb0lYGKR5EA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0d9JgYY2PyaS5Ep1XQ+Eh/5BESJNn5J44iwGC0accXI=;
- b=lsDFmmb+5Vmac2186PSm3LMbkCAI/cnHKF0ibBLH3RnEFO6c46/YcsvyjzuSPGd7NHbC1paYrkG18zhyoRlNKpzY0VHcA7+R0hbU1KzAwQBm5KIFCmCV1naEM3oW25r1RBEj7GcbF5kA3J89UzWNaA0FluX0o8UEmBSpkxJTJOH/GGN898eDaqQWPpVBUo+Fasp7LVmwV/uDOPH3FV2d7N36KT8rF6qxJUA34x/osspwVk9sToxg89bXWw5H+t6KDDi/G10jxrwZ+shmqdiaPj3yCkouUecAtFykbEJnp35iAvPad2GnKATp4F2ahJ2E9eZ/ueGwZPAmuIhaXqspMA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0d9JgYY2PyaS5Ep1XQ+Eh/5BESJNn5J44iwGC0accXI=;
- b=qWnNhXn85jtKF2DR646gFZHrmeUdgPwz31vLq+zljN335IQJg2dFVCzPZRDTxRoQrJAyHFC1sHZxsDLH0HwLUHp2Y4xPM83zwXvUMwzeW+fF0gu4+YmnRGWXJAMRZdSQFz74V8IiDuuC8CCIOkRG/OmJe+p9zS1psoJoiDFHQ2A=
-Received: from DM6PR14CA0061.namprd14.prod.outlook.com (2603:10b6:5:18f::38)
- by CY4PR02MB3191.namprd02.prod.outlook.com (2603:10b6:910:7c::36) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2538.19; Wed, 18 Dec
- 2019 14:24:39 +0000
-Received: from CY1NAM02FT041.eop-nam02.prod.protection.outlook.com
- (2603:10b6:5:18f:cafe::86) by DM6PR14CA0061.outlook.office365.com
- (2603:10b6:5:18f::38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2559.14 via Frontend
- Transport; Wed, 18 Dec 2019 14:24:39 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT041.mail.protection.outlook.com (10.152.74.156) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2559.14
- via Frontend Transport; Wed, 18 Dec 2019 14:24:38 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1ihaFi-0001Da-7G; Wed, 18 Dec 2019 06:24:38 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1ihaFc-0005xI-Nm; Wed, 18 Dec 2019 06:24:32 -0800
-Received: from [172.30.17.107]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1ihaFZ-0005w9-Hf; Wed, 18 Dec 2019 06:24:29 -0800
-Subject: Re: [PATCH 3/5] firmware: xilinx: Add system shutdown API interface
-To:     Jolly Shah <jolly.shah@xilinx.com>, ard.biesheuvel@linaro.org,
-        mingo@kernel.org, gregkh@linuxfoundation.org,
-        matt@codeblueprint.co.uk, sudeep.holla@arm.com,
-        hkallweit1@gmail.com, keescook@chromium.org,
-        dmitry.torokhov@gmail.com, michal.simek@xilinx.com
-Cc:     rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>
-References: <1575502159-11327-1-git-send-email-jolly.shah@xilinx.com>
- <1575502159-11327-4-git-send-email-jolly.shah@xilinx.com>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <2270666b-5fd7-950f-9943-39f1ce2f2065@xilinx.com>
-Date:   Wed, 18 Dec 2019 15:24:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 18 Dec 2019 09:25:08 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:41232 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727035AbfLROZI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 09:25:08 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBIEOC0R003764;
+        Wed, 18 Dec 2019 15:25:01 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=KTCzOHykC73RWxKWR21ZpT9NrGcSEJvdlnUUNGMFyOE=;
+ b=xBns3JrxeXz14AfH/zTb0Y6TN/WHQPCOcscUcYjLqS7J6NQQI25CHIMzRUdXm13YwLOI
+ ho9cYFI8xqqP1eh7FJfBe64CSI0Lo68StyUGluIkAuLqlUNzYbvtLnipdjo2OYiRFRFU
+ mSZMQIbQW+KFg2SLL2tpBSz7AuctCtl1dbCNY7dJTVnETte9APPcDDU5KtqnN6l3J9lb
+ YiXN8bb4Mm2+v2VH+RG12o4DrJolxYNTSjzHz00wb588kHyn4vnVxk56kQyPD4dwcjPm
+ CX3lKvC27skDAsRWjFCilCef+9jD9vH2wF75iwIgJ3fntPCb9IZ1vtXSNGJjEicQZBeS gQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2wvqgpvj0y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 Dec 2019 15:25:01 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 96E7F100038;
+        Wed, 18 Dec 2019 15:24:57 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 86A962BE242;
+        Wed, 18 Dec 2019 15:24:57 +0100 (CET)
+Received: from localhost (10.75.127.48) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 18 Dec 2019 15:24:56
+ +0100
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <gregkh@linuxfoundation.org>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>
+CC:     <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH] dt-bindings: usb: Convert DWC2 bindings to json-schema
+Date:   Wed, 18 Dec 2019 15:24:55 +0100
+Message-ID: <20191218142455.13542-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-In-Reply-To: <1575502159-11327-4-git-send-email-jolly.shah@xilinx.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(199004)(189003)(426003)(5660300002)(31696002)(44832011)(7416002)(2906002)(336012)(4326008)(8676002)(31686004)(36756003)(2616005)(6666004)(81166006)(356004)(498600001)(9786002)(26005)(8936002)(70206006)(81156014)(70586007)(186003)(107886003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR02MB3191;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: d3162b1e-093b-4b59-290d-08d783c603ea
-X-MS-TrafficTypeDiagnostic: CY4PR02MB3191:
-X-Microsoft-Antispam-PRVS: <CY4PR02MB3191BE6CD93E61ACC85CF493C6530@CY4PR02MB3191.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:758;
-X-Forefront-PRVS: 0255DF69B9
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: qkKYPTJp+VSk081g8bYYBs9nGLqeKNDRjMmxOLirLDUoIkdREgI0u0LxDlEr2DCkQb5ucQswcnNBjJ4bqE/5Ba+pOfPfgsb/zEAhsPbkQHzUEIlY4Rr056jEvErE1hCsuAqE0V1l0A8VDNM3EoBoMavN+CgBELWxTIasdOmLaLgWMp5hFXMcjrqXQtElfOhLRVDmK/xyPSoWNxhT3YnPbbYGWtDkr49gep0YCgYSPQddeHMwc1N55UAlQ1CsIigFHr94fIO1fQqM9Im+TGIt4feWd6hqZe01U6Sr/hn+L5c2tjsCo4kZefx0v8VApStxMFrr4JMcoh+pRKm/K2mPJyHbyhoDXQkdGCj1h/lgWvlCCvJqfrodbg1Ag9ltp/97zyyO83suL0FhqdVCIJn+gYHR3vD4w5J6t62WtRhdGlahnb7F1M6HRv7PDfB4PZJ0ezMYdQ2HsA8nWag1AAA2eaDh5WkocDVZoC4wcI8syTRK3ILElMKf+t01Vd9K2Ihx
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Dec 2019 14:24:38.6944
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d3162b1e-093b-4b59-290d-08d783c603ea
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR02MB3191
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG4NODE3.st.com (10.75.127.12) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-18_04:2019-12-17,2019-12-18 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05. 12. 19 0:29, Jolly Shah wrote:
-> From: Rajan Vaja <rajan.vaja@xilinx.com>
-> 
-> Add system shutdown API interface which asks firmware to
-> perform system shutdown/restart.
-> 
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
-> Signed-off-by: Jolly Shah <jolly.shah@xilinx.com>
-> ---
->  drivers/firmware/xilinx/zynqmp.c     | 14 ++++++++++++++
->  include/linux/firmware/xlnx-zynqmp.h |  4 +++-
->  2 files changed, 17 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-> index 9836174..8dcf5a4 100644
-> --- a/drivers/firmware/xilinx/zynqmp.c
-> +++ b/drivers/firmware/xilinx/zynqmp.c
-> @@ -690,6 +690,19 @@ static int zynqmp_pm_config_reg_access(u32 register_access_id, u32 address,
->  				   address, mask, value, out);
->  }
->  
-> +/**
-> + * zynqmp_pm_system_shutdown - PM call to request a system shutdown or restart
-> + * @type:	Shutdown or restart? 0 for shutdown, 1 for restart
-> + * @subtype:	Specifies which system should be restarted or shut down
-> + *
-> + * Return:	Returns status, either success or error+reason
-> + */
-> +static int zynqmp_pm_system_shutdown(const u32 type, const u32 subtype)
-> +{
-> +	return zynqmp_pm_invoke_fn(PM_SYSTEM_SHUTDOWN, type, subtype,
-> +				   0, 0, NULL);
-> +}
-> +
->  static const struct zynqmp_eemi_ops eemi_ops = {
->  	.get_api_version = zynqmp_pm_get_api_version,
->  	.get_chipid = zynqmp_pm_get_chipid,
-> @@ -714,6 +727,7 @@ static const struct zynqmp_eemi_ops eemi_ops = {
->  	.fpga_load = zynqmp_pm_fpga_load,
->  	.fpga_get_status = zynqmp_pm_fpga_get_status,
->  	.register_access = zynqmp_pm_config_reg_access,
-> +	.system_shutdown = zynqmp_pm_system_shutdown,
->  };
->  
->  /**
-> diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-> index bf6e9db..b96ea5d 100644
-> --- a/include/linux/firmware/xlnx-zynqmp.h
-> +++ b/include/linux/firmware/xlnx-zynqmp.h
-> @@ -61,7 +61,8 @@
->  
->  enum pm_api_id {
->  	PM_GET_API_VERSION = 1,
-> -	PM_REQUEST_NODE = 13,
-> +	PM_SYSTEM_SHUTDOWN = 12,
-> +	PM_REQUEST_NODE,
->  	PM_RELEASE_NODE,
->  	PM_SET_REQUIREMENT,
->  	PM_RESET_ASSERT = 17,
-> @@ -322,6 +323,7 @@ struct zynqmp_eemi_ops {
->  			       const enum zynqmp_pm_request_ack ack);
->  	int (*register_access)(u32 register_access_id, u32 address,
->  			       u32 mask, u32 value, u32 *out);
-> +	int (*system_shutdown)(const u32 type, const u32 subtype);
->  };
->  
->  int zynqmp_pm_invoke_fn(u32 pm_api_id, u32 arg0, u32 arg1,
-> 
+Convert DWC2 bindings to DT schema format using json-schema.
+DWC2 is widely use but a couple of compatibles and properties
+(vusb_d-supply,vusb_a-supply) were missing in dwc2.txt, the
+patch add them.
 
-This looks good to me.
-Acked-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+Notes:
+ I have put Greg Kroah-Hartman has maintainer of this file
+ because it was the first entry when calling get_maintainers.pl
+ on dwc2.txt. All my apologies if that is an incorrect guess,
+ raise your hands if you know who should be the maintainer(s)
+ for this file.
 
-Thanks,
-Michal
+ Documentation/devicetree/bindings/usb/dwc2.txt  |  64 ---------
+ Documentation/devicetree/bindings/usb/dwc2.yaml | 178 ++++++++++++++++++++++++
+ 2 files changed, 178 insertions(+), 64 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/usb/dwc2.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/dwc2.yaml
+
+diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+deleted file mode 100644
+index aafff3a6904d..000000000000
+--- a/Documentation/devicetree/bindings/usb/dwc2.txt
++++ /dev/null
+@@ -1,64 +0,0 @@
+-Platform DesignWare HS OTG USB 2.0 controller
+------------------------------------------------------
+-
+-Required properties:
+-- compatible : One of:
+-  - brcm,bcm2835-usb: The DWC2 USB controller instance in the BCM2835 SoC.
+-  - hisilicon,hi6220-usb: The DWC2 USB controller instance in the hi6220 SoC.
+-  - rockchip,rk3066-usb: The DWC2 USB controller instance in the rk3066 Soc;
+-  - "rockchip,px30-usb", "rockchip,rk3066-usb", "snps,dwc2": for px30 Soc;
+-  - "rockchip,rk3188-usb", "rockchip,rk3066-usb", "snps,dwc2": for rk3188 Soc;
+-  - "rockchip,rk3288-usb", "rockchip,rk3066-usb", "snps,dwc2": for rk3288 Soc;
+-  - "lantiq,arx100-usb": The DWC2 USB controller instance in Lantiq ARX SoCs;
+-  - "lantiq,xrx200-usb": The DWC2 USB controller instance in Lantiq XRX SoCs;
+-  - "amlogic,meson8-usb": The DWC2 USB controller instance in Amlogic Meson8 SoCs;
+-  - "amlogic,meson8b-usb": The DWC2 USB controller instance in Amlogic Meson8b SoCs;
+-  - "amlogic,meson-gxbb-usb": The DWC2 USB controller instance in Amlogic S905 SoCs;
+-  - "amlogic,meson-g12a-usb": The DWC2 USB controller instance in Amlogic G12A SoCs;
+-  - "amcc,dwc-otg": The DWC2 USB controller instance in AMCC Canyonlands 460EX SoCs;
+-  - snps,dwc2: A generic DWC2 USB controller with default parameters.
+-  - "st,stm32f4x9-fsotg": The DWC2 USB FS/HS controller instance in STM32F4x9 SoCs
+-  configured in FS mode;
+-  - "st,stm32f4x9-hsotg": The DWC2 USB HS controller instance in STM32F4x9 SoCs
+-  configured in HS mode;
+-  - "st,stm32f7-hsotg": The DWC2 USB HS controller instance in STM32F7 SoCs
+-    configured in HS mode;
+-- reg : Should contain 1 register range (address and length)
+-- interrupts : Should contain 1 interrupt
+-- clocks: clock provider specifier
+-- clock-names: shall be "otg"
+-Refer to clk/clock-bindings.txt for generic clock consumer properties
+-
+-Optional properties:
+-- phys: phy provider specifier
+-- phy-names: shall be "usb2-phy"
+-- vbus-supply: reference to the VBUS regulator. Depending on the current mode
+-  this is enabled (in "host" mode") or disabled (in "peripheral" mode). The
+-  regulator is updated if the controller is configured in "otg" mode and the
+-  status changes between "host" and "peripheral".
+-Refer to phy/phy-bindings.txt for generic phy consumer properties
+-- dr_mode: shall be one of "host", "peripheral" and "otg"
+-  Refer to usb/generic.txt
+-- g-rx-fifo-size: size of rx fifo size in gadget mode.
+-- g-np-tx-fifo-size: size of non-periodic tx fifo size in gadget mode.
+-- g-tx-fifo-size: size of periodic tx fifo per endpoint (except ep0) in gadget mode.
+-- snps,need-phy-for-wake: If present indicates that the phy needs to be left
+-                          on for remote wakeup during suspend.
+-- snps,reset-phy-on-wake: If present indicates that we need to reset the PHY when
+-                          we detect a wakeup.  This is due to a hardware errata.
+-
+-Deprecated properties:
+-- g-use-dma: gadget DMA mode is automatically detected
+-
+-Example:
+-
+-        usb@101c0000 {
+-                compatible = "ralink,rt3050-usb, snps,dwc2";
+-                reg = <0x101c0000 40000>;
+-                interrupts = <18>;
+-		clocks = <&usb_otg_ahb_clk>;
+-		clock-names = "otg";
+-		phys = <&usbphy>;
+-		phy-names = "usb2-phy";
+-		snps,need-phy-for-wake;
+-        };
+diff --git a/Documentation/devicetree/bindings/usb/dwc2.yaml b/Documentation/devicetree/bindings/usb/dwc2.yaml
+new file mode 100644
+index 000000000000..2c11626e3bc3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/dwc2.yaml
+@@ -0,0 +1,178 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/usb/dwc2.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: DesignWare HS OTG USB 2.0 controller Bindings
++
++maintainers:
++  - Greg Kroah-Hartman <gregkh@linuxfoundation.org>
++
++properties:
++  compatible:
++    oneOf:
++      - const: brcm,bcm2835-usb
++        description: The DWC2 USB controller instance in the BCM2835 SoC
++      - const: hisilicon,hi6220-usb
++        description: The DWC2 USB controller instance in the hi6220 SoC
++      - items:
++          - const: rockchip,rk3066-usb
++          - const: snps,dwc2
++        description: The DWC2 USB controller instance in the rk3066 Soc
++      - items:
++          - const: rockchip,px30-usb
++          - const: rockchip,rk3066-usb
++          - const: snps,dwc2
++        description: The DWC2 USB controller instance in the px30 Soc
++      - items:
++          - const: rockchip,rk3036-usb
++          - const: rockchip,rk3066-usb
++          - const: snps,dwc2
++        description: The DWC2 USB controller instance in the rk3036 Soc
++      - items:
++          - const: rockchip,rv1108-usb
++          - const: rockchip,rk3066-usb
++          - const: snps,dwc2
++        description: The DWC2 USB controller instance in the rv1108 Soc
++      - items:
++          - const: rockchip,rk3188-usb
++          - const: rockchip,rk3066-usb
++          - const: snps,dwc2
++        description: The DWC2 USB controller instance in the rk3188 Soc
++      - items:
++          - const: rockchip,rk3228-usb
++          - const: rockchip,rk3066-usb
++          - const: snps,dwc2
++        description: The DWC2 USB controller instance in the rk3228 Soc
++      - items:
++          - const: rockchip,rk3288-usb
++          - const: rockchip,rk3066-usb
++          - const: snps,dwc2
++        description: The DWC2 USB controller instance in the rk3288 Soc
++      - const: lantiq,arx100-usb
++        description: The DWC2 USB controller instance in Lantiq ARX SoCs
++      - const: lantiq,xrx200-usb
++        description: The DWC2 USB controller instance in Lantiq XRX SoCs
++      - items:
++          - const: amlogic,meson8-usb
++          - const: snps,dwc2
++        description: The DWC2 USB controller instance in Amlogic Meson8 SoCs
++      - items:
++          - const: amlogic,meson8b-usb
++          - const: snps,dwc2
++        description: The DWC2 USB controller instance in Amlogic Meson8b SoCs
++      - const: amlogic,meson-gxbb-usb
++        description: The DWC2 USB controller instance in Amlogic S905 SoCs
++      - items:
++          - const: amlogic,meson-g12a-usb
++          - const: snps,dwc2
++        description: The DWC2 USB controller instance in Amlogic G12A SoCs
++      - const: amcc,dwc-otg
++        description: The DWC2 USB controller instance in AMCC Canyonlands 460EX SoCs
++      - const: snps,dwc2
++        description: generic DWC2 USB controller with default parameters
++      - const: st,stm32f4x9-fsotg
++        description: The DWC2 USB FS/HS controller instance in STM32F4x9 SoCs configured in FS mode
++      - const: st,stm32f4x9-hsotg
++        description: The DWC2 USB HS controller instance in STM32F4x9 SoCs configured in HS mode
++      - const: st,stm32f7-hsotg
++        description: The DWC2 USB HS controller instance in STM32F7 SoCs configured in HS mode
++      - items:
++          - const: samsung,s3c6400-hsotg
++          - const: snps,dwc2
++        minItems: 1
++        description: The DWC2 USB controller instance in the exynos3250 Soc
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: otg
++
++  resets:
++    items:
++     - description: common reset
++     - description: ecc reset
++    minItems: 1
++
++  reset-names:
++    items:
++     - const: dwc2
++     - const: dwc2-ecc
++    minItems: 1
++
++  phys:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description: phy provider specifier
++    maxItems: 1
++
++  phy-names:
++    const: usb2-phy
++
++  vbus-supply:
++    description: reference to the VBUS regulator. Depending on the current mode
++      this is enabled (in "host" mode") or disabled (in "peripheral" mode). The
++      regulator is updated if the controller is configured in "otg" mode and the
++      status changes between "host" and "peripheral".
++
++  vusb_d-supply:
++    description: phandle to voltage regulator of digital section,
++
++  vusb_a-supply:
++    description: phandle to voltage regulator of analog section.
++
++  dr_mode:
++    enum: [host, peripheral, otg]
++
++  g-rx-fifo-size:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: size of rx fifo size in gadget mode.
++
++  g-np-tx-fifo-size:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: size of non-periodic tx fifo size in gadget mode.
++
++  g-tx-fifo-size:
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    description: size of periodic tx fifo per endpoint (except ep0) in gadget mode.
++
++  snps,need-phy-for-wake:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: If present indicates that the phy needs to be left on for remote wakeup during suspend.
++
++  snps,reset-phy-on-wake:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: If present indicates that we need to reset the PHY when we detect a wakeup.
++                 This is due to a hardware errata.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++      usb@101c0000 {
++        compatible = "ralink,rt3050-usb, snps,dwc2";
++        reg = <0x101c0000 40000>;
++        interrupts = <18>;
++        clocks = <&usb_otg_ahb_clk>;
++        clock-names = "otg";
++        phys = <&usbphy>;
++        phy-names = "usb2-phy";
++        snps,need-phy-for-wake;
++      };
++
++...
+-- 
+2.15.0
 
