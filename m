@@ -2,154 +2,99 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFB6C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6621C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A24312064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:55:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0C002064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:58:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H6WYaA92"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="sjS0HqG9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727398AbfLRRzH (ORCPT
+        id S1727286AbfLRR65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 12:55:07 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:34878 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727130AbfLRRzH (ORCPT
+        Wed, 18 Dec 2019 12:58:57 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:37276 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727110AbfLRR64 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 12:55:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576691706;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Jk7ns5MTns/445e01ST4cOo/+htaVN+sTnQQIw3LJPg=;
-        b=H6WYaA92PJcHO1ofrnAEutVLTgTdc1wa3LgGxQG4ZoLQrPCwPyFjTc1WqMtmfOn3NAaAfb
-        jwufnZ4YSbEoPTz5NO4kJ59vnnI+WC3nPd5jv907ECeZlFbL34hd65WSPCCEuJNKxo/hxQ
-        /pyAqBJKbWt/lEQWzmeoAJPjcc4utgo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-410-eR5x0ZNEMt23AIjS31ooFg-1; Wed, 18 Dec 2019 12:55:02 -0500
-X-MC-Unique: eR5x0ZNEMt23AIjS31ooFg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 18 Dec 2019 12:58:56 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576691935; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=3C6L4b2dA8aEQpFcyQGCt4S6TCBt8DWzO/OHKf/+d/Q=;
+ b=sjS0HqG9ljt91DXxDWPuhJvCKcG8+ewseIy2bBGLz7Cw0vZxjK/+tqsLO9NibEMA9auj8yXq
+ Z9RINFuXO7MBurF0g9cq0bZOi2DKrZLk+3fJS0H2dh4XtxRforeIUV+NrrOGGShyIkpnr5N1
+ jEtnfB/mO1rqCloLkH128Xl2uls=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5dfa68d9.7f828cb120d8-smtp-out-n02;
+ Wed, 18 Dec 2019 17:58:49 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 79F77C447A0; Wed, 18 Dec 2019 17:58:47 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AB6A4DB60;
-        Wed, 18 Dec 2019 17:55:00 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-52.rdu2.redhat.com [10.10.120.52])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 06EF126DEE;
-        Wed, 18 Dec 2019 17:54:58 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 2/2] rxrpc: Don't take call->user_mutex in
- rxrpc_new_incoming_call()
-From:   David Howells <dhowells@redhat.com>
-To:     linux-afs@lists.infradead.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>, dhowells@redhat.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 18 Dec 2019 17:54:58 +0000
-Message-ID: <157669169826.21991.16708899415880562587.stgit@warthog.procyon.org.uk>
-In-Reply-To: <157669169065.21991.15207045893761573624.stgit@warthog.procyon.org.uk>
-References: <157669169065.21991.15207045893761573624.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
-MIME-Version: 1.0
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 00DB5C433CB;
+        Wed, 18 Dec 2019 17:58:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 00DB5C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
 Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Subject: Re: [PATCH 1/7] ath9k: fix storage endpoint lookup
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20191210114426.4713-2-johan@kernel.org>
+References: <20191210114426.4713-2-johan@kernel.org>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     QCA ath9k Development <ath9k-devel@qca.qualcomm.com>,
+        Arend van Spriel <arend@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Jes Sorensen <Jes.Sorensen@redhat.com>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Siva Rebbagondla <siva8118@gmail.com>,
+        Daniel Drake <dsd@gentoo.org>,
+        Ulrich Kunitz <kune@deine-taler.de>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Johan Hovold <johan@kernel.org>,
+        stable <stable@vger.kernel.org>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20191218175847.79F77C447A0@smtp.codeaurora.org>
+Date:   Wed, 18 Dec 2019 17:58:47 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Standard kernel mutexes cannot be used in any way from interrupt or softirq
-context, so the user_mutex which manages access to a call cannot be a mutex
-since on a new call the mutex must start off locked and be unlocked within
-the softirq handler to prevent userspace interfering with a call we're
-setting up.
+Johan Hovold <johan@kernel.org> wrote:
 
-Commit a0855d24fc22d49cdc25664fb224caee16998683 ("locking/mutex: Complain
-upon mutex API misuse in IRQ contexts") causes big warnings to be splashed
-in dmesg for each a new call that comes in from the server.  Whilst it
-*seems* like it should be okay, since the accept path uses trylock, there
-are issues with PI boosting and marking the wrong task as the owner.
+> Make sure to use the current alternate setting when verifying the
+> storage interface descriptors to avoid submitting an URB to an invalid
+> endpoint.
+> 
+> Failing to do so could cause the driver to misbehave or trigger a WARN()
+> in usb_submit_urb() that kernels with panic_on_warn set would choke on.
+> 
+> Fixes: 36bcce430657 ("ath9k_htc: Handle storage devices")
+> Cc: stable <stable@vger.kernel.org>     # 2.6.39
+> Signed-off-by: Johan Hovold <johan@kernel.org>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 
-Fix this by not taking the mutex in the softirq path at all.  It's not
-obvious that there should be any need for it as the state is set before the
-first notification is generated for the new call.
+Patch applied to ath-next branch of ath.git, thanks.
 
-There's also no particular reason why the link-assessing ping should be
-triggered inside the mutex.  It's not actually transmitted there anyway,
-but rather it has to be deferred to a workqueue.
+0ef332951e85 ath9k: fix storage endpoint lookup
 
-Further, I don't think that there's any particular reason that the socket
-notification needs to be done from within rx->incoming_lock, so the amount
-of time that lock is held can be shortened too and the ping prepared before
-the new call notification is sent.
+-- 
+https://patchwork.kernel.org/patch/11282013/
 
-Fixes: 540b1c48c37a ("rxrpc: Fix deadlock between call creation and sendmsg/recvmsg")
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Peter Zijlstra <peterz@infradead.org>
-cc: Ingo Molnar <mingo@redhat.com>
-cc: Will Deacon <will@kernel.org>
-cc: Davidlohr Bueso <dave@stgolabs.net>
----
-
- net/rxrpc/call_accept.c |   20 +++-----------------
- 1 file changed, 3 insertions(+), 17 deletions(-)
-
-diff --git a/net/rxrpc/call_accept.c b/net/rxrpc/call_accept.c
-index 3685b1732f65..44fa22b020ef 100644
---- a/net/rxrpc/call_accept.c
-+++ b/net/rxrpc/call_accept.c
-@@ -381,18 +381,6 @@ struct rxrpc_call *rxrpc_new_incoming_call(struct rxrpc_local *local,
- 	trace_rxrpc_receive(call, rxrpc_receive_incoming,
- 			    sp->hdr.serial, sp->hdr.seq);
- 
--	/* Lock the call to prevent rxrpc_kernel_send/recv_data() and
--	 * sendmsg()/recvmsg() inconveniently stealing the mutex once the
--	 * notification is generated.
--	 *
--	 * The BUG should never happen because the kernel should be well
--	 * behaved enough not to access the call before the first notification
--	 * event and userspace is prevented from doing so until the state is
--	 * appropriate.
--	 */
--	if (!mutex_trylock(&call->user_mutex))
--		BUG();
--
- 	/* Make the call live. */
- 	rxrpc_incoming_call(rx, call, skb);
- 	conn = call->conn;
-@@ -433,6 +421,9 @@ struct rxrpc_call *rxrpc_new_incoming_call(struct rxrpc_local *local,
- 		BUG();
- 	}
- 	spin_unlock(&conn->state_lock);
-+	spin_unlock(&rx->incoming_lock);
-+
-+	rxrpc_send_ping(call, skb);
- 
- 	if (call->state == RXRPC_CALL_SERVER_ACCEPTING)
- 		rxrpc_notify_socket(call);
-@@ -444,11 +435,6 @@ struct rxrpc_call *rxrpc_new_incoming_call(struct rxrpc_local *local,
- 	 */
- 	rxrpc_put_call(call, rxrpc_call_put);
- 
--	spin_unlock(&rx->incoming_lock);
--
--	rxrpc_send_ping(call, skb);
--	mutex_unlock(&call->user_mutex);
--
- 	_leave(" = %p{%d}", call, call->debug_id);
- 	return call;
- 
-
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
