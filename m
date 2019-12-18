@@ -2,99 +2,87 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA14EC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B941C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC80B2146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:37:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gMiz6Nra"
+	by mail.kernel.org (Postfix) with ESMTP id 2D1C32146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:38:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbfLRMhV (ORCPT
+        id S1726863AbfLRMiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 07:37:21 -0500
-Received: from mail-pj1-f52.google.com ([209.85.216.52]:55007 "EHLO
-        mail-pj1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbfLRMhV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 07:37:21 -0500
-Received: by mail-pj1-f52.google.com with SMTP id ep17so817528pjb.4;
-        Wed, 18 Dec 2019 04:37:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-transfer-encoding:content-language;
-        bh=SDfBkN3VJf5jvQD3fKgAU+xo/Y2l5f5r8EL8+ID85KA=;
-        b=gMiz6Nraeacz1pgHx0sxX6cGe+A7DVbn1+tUGN1ReWgzlEZQVWWz1fPBXsaQdg6WX5
-         AI4NGJA4oIJEhh8sXOlWxXjpJeQiacSdCVMsTvw7k79WrNrfZdyvF01ekd/99pIuNSk7
-         l6DFFgcQCfjaGV7ovXfpdi4oOaLE6fGAwLXmAtAecubjMYQ2LGma8xFNtzcIVQHxymR0
-         AZbswJYHVYVsGIcV8bNKpboO0lYKI/jZ7xguig4cSQTVtnJoSmKj2JCBK4wUmVTTmPsm
-         SBrwtimlBVItCSWQDudgNrEGMagz41l1pFQehSZjTbXZA/IXsi0vtdMZIRdcbku3ivJl
-         gRew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-transfer-encoding:content-language;
-        bh=SDfBkN3VJf5jvQD3fKgAU+xo/Y2l5f5r8EL8+ID85KA=;
-        b=H1HNSn1ffMAHGfu0S7MYoAtfUK0wTLR5xZOlYYZVeL+XAhOMiAdi7rCC5wAiplx6LH
-         Ohpz/Zp+AG7cfFeD3Zm2t/oskFEiRZ8zcdW7DSkAVjHY+94An3+kaAUY1Gg4F3f3auuN
-         hmFgAfXItNHIbpWug+MaxeCCsHe2Xu7ocdyxUTRbSNH6U/CS7f+4Fv/81eZgMWi+o/0W
-         gdINfDBVD2+vrWT2AwH8O6sLpRpt2zLLneNNI0BgqtGEWkHriCzoKFQawmF2qYxTkejF
-         i5lVlqJXdlEE9WiaruGEtWUGFzMUAiRL7E4pUPv2dCGizXiRQqBLlSbdQ9w/lM5f4wiU
-         YXQA==
-X-Gm-Message-State: APjAAAWZWYuB7TwVfafyhuSGd0GDFqzqWeZIt0Qe1mQm0NnoIq9z7K0X
-        qkVByfwGbultYI0fjXbSmgSaWHmsrRr57g==
-X-Google-Smtp-Source: APXvYqwKHlr/DWW77+DCtxg0yDJBmtZIIAMafU7Trkih5YEuKsYAAz8HhqBoS+Zjq3bON0Kb2FCR5w==
-X-Received: by 2002:a17:902:a70c:: with SMTP id w12mr2529732plq.124.1576672640391;
-        Wed, 18 Dec 2019 04:37:20 -0800 (PST)
-Received: from ?IPv6:2402:f000:1:1501:200:5efe:166.111.139.103? ([2402:f000:1:1501:200:5efe:a66f:8b67])
-        by smtp.gmail.com with ESMTPSA id x4sm3236162pfx.68.2019.12.18.04.37.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 18 Dec 2019 04:37:19 -0800 (PST)
-To:     marcel@holtmann.org, johan.hedberg@gmail.com
-Cc:     linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [BUG] net: bluetooth: a possible sleep-in-atomic-context bug in
- disconnect_all_peers()
-Message-ID: <b1e7cccf-6e5e-aae8-09fc-6caafedc4a65@gmail.com>
-Date:   Wed, 18 Dec 2019 20:37:19 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Wed, 18 Dec 2019 07:38:55 -0500
+Received: from smtpbgau1.qq.com ([54.206.16.166]:57286 "EHLO smtpbgau1.qq.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725930AbfLRMiy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 07:38:54 -0500
+X-QQ-mid: bizesmtp18t1576672707tkm6wuep
+Received: from localhost.localdomain.info (unknown [103.37.140.45])
+        by esmtp6.qq.com (ESMTP) with 
+        id ; Wed, 18 Dec 2019 20:38:21 +0800 (CST)
+X-QQ-SSF: 01100000006000D0TI10B00A0000000
+X-QQ-FEAT: Uv7+hkXTRUPTnewJwjVVe9q0+dzPz+kAsJz0zP085EP3kykW/ZI9YlbIzv3RP
+        +0kXzLCjHY1K/6SVrD3ReXiB9nbesUq/QRjlVmKcJl7KyvMWk9SQIQBRTsZ+lPd/f92wB5W
+        dfNumnIt9kQAQce4P/wG7Tp/9CbAqynrYn76jOF9H6NP9Ddo6kp4xtmDL1zjYnvrPhPAlCr
+        oV4xPeCJu0s5nysVgszTcS39owEtrQVvO3FYM6K0L2SpphfKsD/GiZCo366zBxG4HYRYDyh
+        R5GG+L2fSr1lBC+nmS/5jcmnJdmJgbtjT6nj4RvY9CH5i+
+X-QQ-GoodBg: 0
+From:   Wang Long <w@laoqinren.net>
+To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de
+Cc:     linux-kernel@vger.kernel.org, Wang Long <w@laoqinren.net>
+Subject: [PATCH] sched/psi: create /proc/pressure and /proc/pressure/{io|memory|cpu} only when psi enabled
+Date:   Wed, 18 Dec 2019 20:38:18 +0800
+Message-Id: <1576672698-32504-1-git-send-email-w@laoqinren.net>
+X-Mailer: git-send-email 1.8.3.1
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:laoqinren.net:qybgforeign:qybgforeign6
+X-QQ-Bgrelay: 1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kernel module may sleep while holding a spinlock.
-The function call path (from bottom to top) in Linux 4.19 is:
+when CONFIG_PSI_DEFAULT_DISABLED set to N or the command line set psi=0,
+I think we should not create /proc/pressure and
+/proc/pressure/{io|memory|cpu}.
 
-net/bluetooth/l2cap_core.c, 840:
-     mutex_lock in l2cap_get_ident
-net/bluetooth/l2cap_core.c, 1402:
-     l2cap_get_ident in l2cap_send_disconn_req
-net/bluetooth/l2cap_core.c, 736:
-     l2cap_send_disconn_req in l2cap_chan_close
-net/bluetooth/6lowpan.c, 1053:
-     l2cap_chan_close in disconnect_all_peers
-net/bluetooth/6lowpan.c, 1051:
-     spin_lock in disconnect_all_peers
+In the future, user maybe determine whether the psi feature is enabled by
+checking the existence of the /proc/pressure dir or
+/proc/pressure/{io|memory|cpu} files.
 
-mutex_lock() can sleep at runtime.
+Signed-off-by: Wang Long <w@laoqinren.net>
+---
+ kernel/sched/psi.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-I am not sure how to properly fix this possible bug, so I only report it.
+diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+index 517e371..f12ade2 100644
+--- a/kernel/sched/psi.c
++++ b/kernel/sched/psi.c
+@@ -1279,10 +1279,12 @@ static int psi_fop_release(struct inode *inode, struct file *file)
+ 
+ static int __init psi_proc_init(void)
+ {
+-	proc_mkdir("pressure", NULL);
+-	proc_create("pressure/io", 0, NULL, &psi_io_fops);
+-	proc_create("pressure/memory", 0, NULL, &psi_memory_fops);
+-	proc_create("pressure/cpu", 0, NULL, &psi_cpu_fops);
++	if (psi_enable) {
++		proc_mkdir("pressure", NULL);
++		proc_create("pressure/io", 0, NULL, &psi_io_fops);
++		proc_create("pressure/memory", 0, NULL, &psi_memory_fops);
++		proc_create("pressure/cpu", 0, NULL, &psi_cpu_fops);
++	}
+ 	return 0;
+ }
+ module_init(psi_proc_init);
+-- 
+1.8.3.1
 
-This bug is found by a static analysis tool STCheck written by myself.
 
 
-Best wishes,
-Jia-Ju Bai
