@@ -2,185 +2,120 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 675AAC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC5DC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F2212082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:54:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 810262082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:55:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="kINv+vSp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbfLRSyq (ORCPT
+        id S1727216AbfLRSzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 13:54:46 -0500
-Received: from foss.arm.com ([217.140.110.172]:57448 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726699AbfLRSyp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 13:54:45 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 27D821FB;
-        Wed, 18 Dec 2019 10:54:45 -0800 (PST)
-Received: from [192.168.42.50] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 83DD83F67D;
-        Wed, 18 Dec 2019 10:54:43 -0800 (PST)
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Subject: Re: [PATCH] sched, fair: Allow a small degree of load imbalance
- between SD_NUMA domains
-To:     Mel Gorman <mgorman@techsingularity.net>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, pauld@redhat.com,
-        srikar@linux.vnet.ibm.com, quentin.perret@arm.com,
-        dietmar.eggemann@arm.com, Morten.Rasmussen@arm.com,
-        hdanton@sina.com, parth@linux.ibm.com, riel@surriel.com,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20191218154402.GF3178@techsingularity.net>
-Message-ID: <7f913d8b-609b-9aa7-019f-84c1d828b401@arm.com>
-Date:   Wed, 18 Dec 2019 18:54:31 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191218154402.GF3178@techsingularity.net>
-Content-Type: text/plain; charset=iso-8859-15
+        Wed, 18 Dec 2019 13:55:08 -0500
+Received: from mail-mw2nam10on2061.outbound.protection.outlook.com ([40.107.94.61]:6032
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726699AbfLRSzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 13:55:07 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Zn0bjfsAGoH/GhWoOUlawZ1kR2S+3n6LVlWTaqHdykz0Nbx6CeEdwpk5tAtAXS0DLGsrTKuQYWblXIStDMfx3P9PHeTSQ7QTXUDl67MVAnM1A1H+8O5cPMrTQTm8WZa0LLfuZPORNrQ0qIaRdYU+WUpYomG43yfdz+haEx864faDPfbDdLG652HHh3zV4JvjffJN1Q+LVDsiZ35t4QIh/LxmFbzzSfrSVKX8+T8Sk0jVi0AQe7EIIr4VjpYDLLEeRDMy+QbcYAjf5nTWsaih+ENPAGn7yvCpem2KlT7us7+3eKt8EAlkT3BOeueT1dxqvIbaHXDcnUR/wKKuephapA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VcLECkgkjf7cB/I+ofnXtZcouX6EuE1gzGSTJmRR5JE=;
+ b=Ed7T2ck2/740jdmA8iCvN5o8LkinIGitK4C+vma0aj2uDRJnCrsd+391JPzL1mVOs8XNNluHib9f5Bt7tKlMx6z5jItZbc5YScB1bk1sOTm7yaRP6IgFWU8RM3E8KneSNBjw/HVBNZigG6p0DBgLQZYagVrfa5GImR97wgFJZ0PMbhVRdvjvPze19OLF1+XzhK0nNHt9eNAmNM0wmaN8QKrRac4pCEN28fQrKYPkYazRZKQG7WnUk516MUuApIcl5xSthDF7aDQt0FA1jqsrX3+kkrS/5/zFZZZ0SaQaNf/2ioZslXjFzwjKhgMObaepa+uMBOafO19bnw8d3k4ogA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
+ dkim=pass header.d=silabs.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VcLECkgkjf7cB/I+ofnXtZcouX6EuE1gzGSTJmRR5JE=;
+ b=kINv+vSpgWD64A+VNb0LIY1v7h8FbHHfuI9ln7u/GUEzDV8qKEiJOizBS1nW5gQkiudwTj22bk6+isCmNDVrlln54gTSVGGAsi7RlnaQIDbIONOhQAMfwbx5jHvkEerSAAvfYcZc11heW7A7Mqd1JJYk/Xfp4Zo37rscHT7rIYw=
+Received: from SN6PR11MB3312.namprd11.prod.outlook.com (52.135.113.78) by
+ SN6PR11MB2861.namprd11.prod.outlook.com (52.135.96.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.20; Wed, 18 Dec 2019 18:55:05 +0000
+Received: from SN6PR11MB3312.namprd11.prod.outlook.com
+ ([fe80::ada0:e35e:7c5e:58d]) by SN6PR11MB3312.namprd11.prod.outlook.com
+ ([fe80::ada0:e35e:7c5e:58d%5]) with mapi id 15.20.2538.019; Wed, 18 Dec 2019
+ 18:55:04 +0000
+From:   Brant Merryman <Brant.Merryman@silabs.com>
+To:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Brant Merryman <Brant.Merryman@silabs.com>,
+        Richard Hendricks <Richard.Hendricks@silabs.com>
+Subject: [PATCH] USB: serial: cp210x: Enables usb generic functions for
+  throttle/unthrottle to prevent USB data loss.
+Thread-Topic: [PATCH] USB: serial: cp210x: Enables usb generic functions for
+  throttle/unthrottle to prevent USB data loss.
+Thread-Index: AQHVtdSo6upqSA09J0e+8oJWtcPRUQ==
+Date:   Wed, 18 Dec 2019 18:55:04 +0000
+Message-ID: <D6486D05-4E0F-4CDF-B178-C386A9075032@silabs.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Brant.Merryman@silabs.com; 
+x-originating-ip: [207.207.39.84]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a1af8aaf-682d-4d4d-890a-08d783ebcb55
+x-ms-traffictypediagnostic: SN6PR11MB2861:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SN6PR11MB28617108825E9CA2C408F8A6E5530@SN6PR11MB2861.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1388;
+x-forefront-prvs: 0255DF69B9
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(346002)(39850400004)(396003)(136003)(199004)(189003)(33656002)(64756008)(66556008)(66446008)(6512007)(81166006)(81156014)(4744005)(107886003)(76116006)(2616005)(316002)(6506007)(54906003)(8676002)(478600001)(2906002)(26005)(71200400001)(5660300002)(4326008)(66476007)(86362001)(110136005)(36756003)(6486002)(66946007)(186003)(8936002)(41533002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR11MB2861;H:SN6PR11MB3312.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: silabs.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: VKO9U2Vn1s6OfNKzleXlK810Tv2A5+dOfqyzUaIvsSI9D6srtqIbH9uHQE9tLU4WSCKfp3hpFE37VvOlzGEK5YnkglbTgY9OW3B3Biuia5ukaJAAcLMmms1iojwEA41orkEMBY46Qj0D/pE6gYiKnuLABDbKuBZy6PI3jI1fvVISSFBfvdNYn2EoSbVWhfJj2GFQpugzbRBP8iXIu+yQcFErFWz81m3ytOpO09saAcszedgTj75o2MNmR/Yk15H/43HETuR1XdDFyqrRyLEIWiRgiw8XbMKeQAyCDbX+x7+MgT03W1nGHc7GH/C4yWsyqD/an/6wMMDyEGrC4DfmfZ/8r1inhj3e0Z5AMH9c31OgYqyFcmk/gsmAJlsVdV61zDC1PyewH/wSsI5g599B6OuyA8Gx4jfCxvh8L8+AxlLDRcSjQG4Q8RySfjbx+uJUJhJnsob4iCg9mC9nSNR/bEZ7oh+2p3pAAIjIzDQS1Qx73hW9ONvyggfz3A8OCJWl
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <370361CCC0F6A74A949155A1893A6B80@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: silabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a1af8aaf-682d-4d4d-890a-08d783ebcb55
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Dec 2019 18:55:04.7298
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xK7LU5iLR20y7eObX4p0WjQV1MEP0nHEErpVJl2QkDsn5qc2QHwKvrB/QzWuFnKxtWjksyIAKbvFdCjYhjGqXw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB2861
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mel,
+USB: serial: cp210x: Enables usb generic functions for
+ throttle/unthrottle to prevent USB data loss.
 
-On 18/12/2019 15:44, Mel Gorman wrote:
-> The CPU load balancer balances between different domains to spread load
-> and strives to have equal balance everywhere. Communicating tasks can
-> migrate so they are topologically close to each other but these decisions
-> are independent. On a lightly loaded NUMA machine, two communicating tasks
-> pulled together at wakeup time can be pushed apart by the load balancer.
-> In isolation, the load balancer decision is fine but it ignores the tasks
-> data locality and the wakeup/LB paths continually conflict. NUMA balancing
-> is also a factor but it also simply conflicts with the load balancer.
-> 
-> This patch allows a degree of imbalance to exist between NUMA domains
-> based on the imbalance_pct defined by the scheduler domain to take into
-> account that data locality is also important. This slight imbalance is
-> allowed until the scheduler domain reaches almost 50% utilisation at which
-> point other factors like HT utilisation and memory bandwidth come into
-> play. While not commented upon in the code, the cutoff is important for
-> memory-bound parallelised non-communicating workloads that do not fully
-> utilise the entire machine. This is not necessarily the best universal
-> cut-off point but it appeared appropriate for a variety of workloads
-> and machines.
-> 
-> The most obvious impact is on netperf TCP_STREAM -- two simple
-> communicating tasks with some softirq offloaded depending on the
-> transmission rate.
-> 
-
-<snip>
-
-> In general, the patch simply seeks to avoid unnecessarily cross-node
-> migrations when a machine is lightly loaded but shows benefits for other
-> workloads. While tests are still running, so far it seems to benefit
-> light-utilisation smaller workloads on large machines and does not appear
-> to do any harm to larger or parallelised workloads.
-> 
-
-Thanks for the detailed testing, I haven't digested it entirely yet but I
-appreciate the effort.
-
-> @@ -8690,6 +8686,38 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
->  		env->migration_type = migrate_task;
->  		env->imbalance = max_t(long, 0, (local->idle_cpus -
->  						 busiest->idle_cpus) >> 1);
-> +
-> +out_spare:
-> +		/*
-> +		 * Whether balancing the number of running tasks or the number
-> +		 * of idle CPUs, consider allowing some degree of imbalance if
-> +		 * migrating between NUMA domains.
-> +		 */
-> +		if (env->sd->flags & SD_NUMA) {
-> +			unsigned int imbalance_adj, imbalance_max;
-> +
-> +			/*
-> +			 * imbalance_adj is the allowable degree of imbalance
-> +			 * to exist between two NUMA domains. It's calculated
-> +			 * relative to imbalance_pct with a minimum of two
-> +			 * tasks or idle CPUs.
-> +			 */
-> +			imbalance_adj = (busiest->group_weight *
-> +				(env->sd->imbalance_pct - 100) / 100) >> 1;
-
-IIRC imbalance_pct for NUMA domains uses the default 125, so I read this as
-"allow an imbalance of 1 task per 8 CPU in the source group" (just making
-sure I follow).
-
-> +			imbalance_adj = max(imbalance_adj, 2U);
-> +
-> +			/*
-> +			 * Ignore imbalance unless busiest sd is close to 50%
-> +			 * utilisation. At that point balancing for memory
-> +			 * bandwidth and potentially avoiding unnecessary use
-> +			 * of HT siblings is as relevant as memory locality.
-> +			 */
-> +			imbalance_max = (busiest->group_weight >> 1) - imbalance_adj;
-> +			if (env->imbalance <= imbalance_adj &&
-> +			    busiest->sum_nr_running < imbalance_max) {
-
-The code does "unless busiest group has half as many runnable tasks (or more)
-as it has CPUs (modulo the adj thing)", is that what you mean by "unless
-busiest sd is close to 50% utilisation" in the comment? It's somewhat
-different IMO.
-
-> +				env->imbalance = 0;
-> +			}
-> +		}
->  		return;
->  	}
->  
-> 
-
-I'm quite sure you have reasons to have written it that way, but I was
-hoping we could squash it down to something like:
+Signed-off-by: Brant Merryman <brant.merryman@silabs.com>
 ---
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 08a233e97a01..f05d09a8452e 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -8680,16 +8680,27 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
- 			env->migration_type = migrate_task;
- 			lsub_positive(&nr_diff, local->sum_nr_running);
- 			env->imbalance = nr_diff >> 1;
--			return;
-+		} else {
-+
-+			/*
-+			 * If there is no overload, we just want to even the number of
-+			 * idle cpus.
-+			 */
-+			env->migration_type = migrate_task;
-+			env->imbalance = max_t(long, 0, (local->idle_cpus -
-+							 busiest->idle_cpus) >> 1);
- 		}
- 
- 		/*
--		 * If there is no overload, we just want to even the number of
--		 * idle cpus.
-+		 * Allow for a small imbalance between NUMA groups; don't do any
-+		 * of it if there is at least half as many tasks / busy CPUs as
-+		 * there are available CPUs in the busiest group
- 		 */
--		env->migration_type = migrate_task;
--		env->imbalance = max_t(long, 0, (local->idle_cpus -
--						 busiest->idle_cpus) >> 1);
-+		if (env->sd->flags & SD_NUMA &&
-+		    (busiest->sum_nr_running < busiest->group_weight >> 1) &&
-+		    (env->imbalance < busiest->group_weight * (env->sd->imbalance_pct - 100) / 100))
-+				env->imbalance = 0;
-+
- 		return;
- 	}
- 
+ drivers/usb/serial/cp210x.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/usb/serial/cp210x.c b/drivers/usb/serial/cp210x.c
+index f5143eedbc48..bcceb4ad8be0 100644
+--- a/drivers/usb/serial/cp210x.c
++++ b/drivers/usb/serial/cp210x.c
+@@ -272,6 +272,8 @@ static struct usb_serial_driver cp210x_device =3D {
+ 	.break_ctl		=3D cp210x_break_ctl,
+ 	.set_termios		=3D cp210x_set_termios,
+ 	.tx_empty		=3D cp210x_tx_empty,
++	.throttle		=3D usb_serial_generic_throttle,
++	.unthrottle		=3D usb_serial_generic_unthrottle,
+ 	.tiocmget		=3D cp210x_tiocmget,
+ 	.tiocmset		=3D cp210x_tiocmset,
+ 	.attach			=3D cp210x_attach,
+--=20
