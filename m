@@ -1,130 +1,68 @@
 Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: **
-X-Spam-Status: No, score=2.4 required=3.0 tests=CHARSET_FARAWAY_HEADER,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD29FC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12756C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:57:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DE1C206D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:56:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7B662146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:57:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbfLRA4s (ORCPT
+        id S1726725AbfLRA5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 19:56:48 -0500
-Received: from www262.sakura.ne.jp ([202.181.97.72]:61358 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726205AbfLRA4r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 19:56:47 -0500
-Received: from fsav104.sakura.ne.jp (fsav104.sakura.ne.jp [27.133.134.231])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id xBI0txmv079214;
-        Wed, 18 Dec 2019 09:55:59 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav104.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav104.sakura.ne.jp);
- Wed, 18 Dec 2019 09:55:59 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav104.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id xBI0tx9E079208;
-        Wed, 18 Dec 2019 09:55:59 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: (from i-love@localhost)
-        by www262.sakura.ne.jp (8.15.2/8.15.2/Submit) id xBI0txro079201;
-        Wed, 18 Dec 2019 09:55:59 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Message-Id: <201912180055.xBI0txro079201@www262.sakura.ne.jp>
-X-Authentication-Warning: www262.sakura.ne.jp: i-love set sender to penguin-kernel@i-love.sakura.ne.jp using -f
-Subject: Re: BUG: unable to handle kernel NULL pointer dereference in
- =?ISO-2022-JP?B?bWVtX3NlcmlhbF9vdXQ=?=
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        syzbot <syzbot+f4f1e871965064ae689e@syzkaller.appspotmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        asierra@xes-inc.com, ext-kimmo.rautkoski@vaisala.com,
-        Jiri Slaby <jslaby@suse.com>,
-        kai heng feng <kai.heng.feng@canonical.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-serial <linux-serial@vger.kernel.org>,
-        mika.westerberg@linux.intel.com, o.barta89@gmail.com,
-        paulburton@kernel.org, sr@denx.de,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        yegorslists@googlemail.com
-MIME-Version: 1.0
-Date:   Wed, 18 Dec 2019 09:55:59 +0900
-References: <20191213093357.GB2135612@kroah.com> <CACT4Y+beoeY9XwbQX7nDY_5EPMQwK+j3JZ9E-k6vhiZudEA1LA@mail.gmail.com>
-In-Reply-To: <CACT4Y+beoeY9XwbQX7nDY_5EPMQwK+j3JZ9E-k6vhiZudEA1LA@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-2022-JP"
-Content-Transfer-Encoding: 7bit
+        Tue, 17 Dec 2019 19:57:18 -0500
+Received: from mx.socionext.com ([202.248.49.38]:11515 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726143AbfLRA5R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 19:57:17 -0500
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 18 Dec 2019 09:57:15 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id DFF06603AB;
+        Wed, 18 Dec 2019 09:57:15 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Wed, 18 Dec 2019 09:58:00 +0900
+Received: from plum.e01.socionext.com (unknown [10.213.132.32])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 360311A0006;
+        Wed, 18 Dec 2019 09:57:15 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH 0/2] dmaengine: Add UniPhier XDMAC driver
+Date:   Wed, 18 Dec 2019 09:56:58 +0900
+Message-Id: <1576630620-1977-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hmm, this is a surprising bug. syzbot provided a C reproducer, but the definition
-of "struct serial_struct" used in that reproducer is wrong. As a result, syzbot was
-reporting crash caused by passing wrong arguments. ;-)
+Add support for UniPhier external DMA controller (XDMAC), that is implemented
+in Pro4, Pro5, PXs2, LD11, LD20 and PXs3 SoCs.
 
-close_delay field used in the C reproducer is sizeof(unsigned int) bytes rather than
-sizeof(unsigned short) bytes, thus fields after close_delay field are incorrectly
-interpreted.
+Kunihiko Hayashi (2):
+  dt-bindings: dmaengine: Add UniPhier external DMA controller bindings
+  dmaengine: uniphier-xdmac: Add UniPhier external DMA controller driver
 
-----------------------------------------
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <sys/ioctl.h>
-#include <linux/serial.h>
+ .../devicetree/bindings/dma/uniphier-xdmac.txt     |  86 +++
+ drivers/dma/Kconfig                                |  11 +
+ drivers/dma/Makefile                               |   1 +
+ drivers/dma/uniphier-xdmac.c                       | 620 +++++++++++++++++++++
+ 4 files changed, 718 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/uniphier-xdmac.txt
+ create mode 100644 drivers/dma/uniphier-xdmac.c
 
-struct bad_serial_struct {
-        int     type;
-        int     line;
-        unsigned int    port;
-        int     irq;
-        int     flags;
-        int     xmit_fifo_size;
-        int     custom_divisor;
-        int     baud_base;
-        unsigned int    close_delay; /* Correct type is "unsigned short". */
-        char    io_type;
-        char    reserved_char[1];
-        int     hub6;
-        unsigned short  closing_wait;
-        unsigned short  closing_wait2;
-        unsigned char   *iomem_base;
-        unsigned short  iomem_reg_shift;
-        unsigned int    port_high;
-        unsigned long   iomap_base;
-};
+-- 
+2.7.4
 
-int main(int argc, char *argv[])
-{
-        struct bad_serial_struct ss = { };
-        int fd = open("/dev/ttyS3", O_RDONLY);
-        ss.type = 0xa;
-        ss.line = 0x400000;
-        ss.port = 0x100;
-        ss.irq = 0;
-        ss.flags = 0x400000;
-        ss.xmit_fifo_size = 0;
-        ss.custom_divisor = 0;
-        ss.baud_base = 0x80000;
-        ss.close_delay = 0x200ff;
-        ss.io_type = 0;
-        ss.reserved_char[0] = 0x41;
-        ss.hub6 = 3;
-        ss.closing_wait = 0;
-        ss.closing_wait2 = 0x7c5;
-        ss.iomem_base = NULL;
-        ss.iomem_reg_shift = 0;
-        ss.port_high = 0;
-        ss.iomap_base = 0;
-        ioctl(fd, TIOCSSERIAL, &ss);
-        return 0;
-}
-----------------------------------------
