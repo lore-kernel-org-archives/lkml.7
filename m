@@ -2,104 +2,229 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D7BFC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2309C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01EB62064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:59:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HUVPJd9Q"
+	by mail.kernel.org (Postfix) with ESMTP id A39F720716
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:02:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576692175;
+	bh=07XNdCootq4GnW1ge3r31OFh8HoBIKH3/HdxwaHdyG8=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=LwuDHW+rvW5A7JaJ1w7B7bJy5oHCd0hrxdcupjfmwCG/mFWBpfjjky+RIJcsAGUu1
+	 /69nAlTX5av0x9vnGQPFVoA7cNGDFMyNjAD50yGa5zXrY7Zyui3phHOQbEG2BFWi3a
+	 ye88+p3rsV+Hx7ufFa5abdiAjQSfJ4h1m7sxT86A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727380AbfLRR7y (ORCPT
+        id S1727192AbfLRSCy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 12:59:54 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:43484 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726939AbfLRR7y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 12:59:54 -0500
-Received: by mail-pl1-f194.google.com with SMTP id p27so1298415pli.10;
-        Wed, 18 Dec 2019 09:59:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YqZeMQZTEcUUCzzL1OhPW2qHvSBKC8GWokh+0MirbcQ=;
-        b=HUVPJd9Q/xHyIh4YH3n0sQIBzAwgTRy1Kq8PES0Z1JoVfeGnyOMeEPRQpcq3jpfMqT
-         LZR6AQVW5RRLZImHjNBm0JJOSfyrIsfyCbG+sq6q3WmFZHvF2D+BZcpZJwiO3N2WbX43
-         kZ1YcGGsOvsDwwUUw244Duaz8z65aHWhMrnWMe2iu245bfIoYUqHhmtL1YF8to96Zcyl
-         3h7Fg5Hj4AfVrNaz1oDwyd1q+B2KG4EGzT7eMNXtjJNUjghqvHvOJ27iQgDsVekITPmz
-         LIXFy9XF+6CQCsfwmQHHwfsI2NbbhYcmNBPMfv+qhIF62x+07/sMqk4ODdox50EVQDvB
-         Vw/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YqZeMQZTEcUUCzzL1OhPW2qHvSBKC8GWokh+0MirbcQ=;
-        b=Ax/E2bI3qLIQdY4HT87O9ilL2afEw28x5YhrTG8I8P9lv934cS0+iU/Z5RnMl87Kws
-         AMLOX1Ro5NLt+BhgtP9118gV3N4QDjE6ND+LIjrZNMCVWMCwVs5WAV8lv6W9xlAend3b
-         DSUONzKXbU0ABeO+5GiMBEvD91kErf9g8ympKoer86opZeQlTJPa6FKKLnDmv/Aa4Hfm
-         c+1tkOvCLi4lK5bnz1x/EcEkOcLZM9jTfCLbvV7PFjHFIQr1QJ+pDJFm1phbTbSy/883
-         R5MY7edwqwM/TokcVReZQYDbJR12EGgjrkurOpzmeEVh0+2ZuxpXsI4bQqWZCKvKrdk7
-         DROg==
-X-Gm-Message-State: APjAAAXr8z/Wiw/j/+HEkc1yJwpYPsHCGX1uHCZxcbRYnz/Bhk5FHS0F
-        fdsm5a809ZN38jzXf/CP4ouKS8EX9wObnoqbplg=
-X-Google-Smtp-Source: APXvYqwS3MKiBp0OHcgTppeczhbj0nDd+RGE4RAfER1ebVTGKhuVrzyOpOFPkEpSjYliru0d70jxYBQA7jJJrpSGndQ=
-X-Received: by 2002:a17:902:6901:: with SMTP id j1mr4311950plk.18.1576691993059;
- Wed, 18 Dec 2019 09:59:53 -0800 (PST)
+        Wed, 18 Dec 2019 13:02:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60060 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726960AbfLRSCy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 13:02:54 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E54CC206D7;
+        Wed, 18 Dec 2019 18:02:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576692172;
+        bh=07XNdCootq4GnW1ge3r31OFh8HoBIKH3/HdxwaHdyG8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=PjtJWEBotV6ekO/wg+qADifJi52DCTU2EyU68e/Lle4i94NDxxjHTTWzPITuwFg23
+         f3t5FPB1nh/8Mv7mDpmyy3jdw9LaYYlojBTTfXEyPVChf9H59+gYfOea/R8GYcI1Ls
+         vF+JPZ5xFCxRDKx/mVlIJnqWv7UqWuSRCIPAsVys=
+Date:   Wed, 18 Dec 2019 19:02:50 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 5.3.18
+Message-ID: <20191218180250.GA865731@kroah.com>
 MIME-Version: 1.0
-References: <94727fab054309cd98c876748fd27b130ce5031f.1575918870.git.lsun@mellanox.com>
- <1576682676-31957-1-git-send-email-lsun@mellanox.com>
-In-Reply-To: <1576682676-31957-1-git-send-email-lsun@mellanox.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 18 Dec 2019 19:59:43 +0200
-Message-ID: <CAHp75VfYwxviATZnmYcgzkKKGw47ki=BZQYw4xRmUrfNqsiBww@mail.gmail.com>
-Subject: Re: [PATCH v3] platform/mellanox: fix the mlx-bootctl sysfs
-To:     Liming Sun <lsun@mellanox.com>
-Cc:     Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Vadim Pasternak <vadimp@mellanox.com>,
-        David Woods <dwoods@mellanox.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="RnlQjJ0d97Da+TV1"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 5:25 PM Liming Sun <lsun@mellanox.com> wrote:
->
-> This is a follow-up commit for the sysfs attributes to change
-> from DRIVER_ATTR to DEVICE_ATTR according to some initial comments.
-> In such case, it's better to point the sysfs path to the device
-> itself instead of the driver. The ABI document is also updated.
->
-> Fixes: 79e29cb8fbc5 ("platform/mellanox: Add bootctl driver for Mellanox BlueField Soc")
-> Signed-off-by: Liming Sun <lsun@mellanox.com>
 
-...
+--RnlQjJ0d97Da+TV1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> -ATTRIBUTE_GROUPS(mlxbf_bootctl);
+I'm announcing the release of the 5.3.18 kernel.
 
-What's wrong with above macro?
+Note, this is the LAST 5.3.y kernel release.  It is now end-of-life.
+Please move to 5.4.y now.
 
-> +static const struct attribute_group mlxbf_bootctl_group = {
-> +       .attrs  = mlxbf_bootctl_attrs,
-> +};
+All users of the 5.3 kernel series must upgrade.
 
-...
+The updated 5.3.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
+x-5.3.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Ds=
+ummary
 
-> +static const struct attribute_group *mlxbf_bootctl_dev_groups[] = {
-> +       &mlxbf_bootctl_group,
-> +       NULL
-> +};
+thanks,
 
--- 
-With Best Regards,
-Andy Shevchenko
+greg k-h
+
+------------
+
+ Makefile                                                 |    2=20
+ drivers/infiniband/core/addr.c                           |    7=20
+ drivers/infiniband/sw/rxe/rxe_net.c                      |    8=20
+ drivers/net/ethernet/cavium/thunder/thunder_bgx.c        |    2=20
+ drivers/net/ethernet/mellanox/mlx5/core/en.h             |    2=20
+ drivers/net/ethernet/mellanox/mlx5/core/en/port_buffer.c |   27 +++
+ drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun.c      |    8=20
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c        |   31 +--
+ drivers/net/ethernet/mellanox/mlx5/core/en_stats.c       |    2=20
+ drivers/net/ethernet/mellanox/mlx5/core/en_tx.c          |    2=20
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c        |    4=20
+ drivers/net/ethernet/ti/cpsw.c                           |    2=20
+ drivers/net/geneve.c                                     |    4=20
+ drivers/net/vxlan.c                                      |    8=20
+ include/linux/netdevice.h                                |    5=20
+ include/linux/skbuff.h                                   |    5=20
+ include/linux/time.h                                     |   13 +
+ include/net/ip.h                                         |    5=20
+ include/net/ipv6.h                                       |    2=20
+ include/net/ipv6_stubs.h                                 |    6=20
+ include/net/page_pool.h                                  |   52 +-----
+ include/net/tcp.h                                        |   27 ++-
+ include/net/xdp_priv.h                                   |    4=20
+ include/trace/events/xdp.h                               |   19 --
+ net/bridge/br_device.c                                   |    6=20
+ net/core/dev.c                                           |    3=20
+ net/core/flow_dissector.c                                |    5=20
+ net/core/lwt_bpf.c                                       |    4=20
+ net/core/page_pool.c                                     |  122 +++++++++-=
+-----
+ net/core/skbuff.c                                        |   10 -
+ net/core/xdp.c                                           |  117 +++++-----=
+----
+ net/dccp/ipv6.c                                          |    6=20
+ net/hsr/hsr_device.c                                     |    9 -
+ net/ipv4/devinet.c                                       |    5=20
+ net/ipv4/gre_demux.c                                     |    2=20
+ net/ipv4/ip_output.c                                     |   13 -
+ net/ipv4/tcp_output.c                                    |    5=20
+ net/ipv6/addrconf_core.c                                 |   11 -
+ net/ipv6/af_inet6.c                                      |    4=20
+ net/ipv6/datagram.c                                      |    2=20
+ net/ipv6/inet6_connection_sock.c                         |    4=20
+ net/ipv6/ip6_output.c                                    |    8=20
+ net/ipv6/raw.c                                           |    2=20
+ net/ipv6/syncookies.c                                    |    2=20
+ net/ipv6/tcp_ipv6.c                                      |    4=20
+ net/l2tp/l2tp_ip6.c                                      |    2=20
+ net/mpls/af_mpls.c                                       |    7=20
+ net/openvswitch/actions.c                                |    6=20
+ net/openvswitch/conntrack.c                              |   11 +
+ net/sched/act_mpls.c                                     |    7=20
+ net/sched/sch_mq.c                                       |    1=20
+ net/sched/sch_mqprio.c                                   |    3=20
+ net/sctp/ipv6.c                                          |    4=20
+ net/tipc/core.c                                          |   29 +--
+ net/tipc/udp_media.c                                     |    9 -
+ net/tls/tls_device.c                                     |    8=20
+ net/tls/tls_main.c                                       |    4=20
+ net/tls/tls_sw.c                                         |    8=20
+ tools/testing/selftests/net/tls.c                        |    8=20
+ 59 files changed, 369 insertions(+), 329 deletions(-)
+
+Aaron Conole (1):
+      openvswitch: support asymmetric conntrack
+
+Alexander Lobakin (1):
+      net: dsa: fix flow dissection on Tx path
+
+Cong Wang (1):
+      gre: refetch erspan header from skb->data after pskb_may_pull()
+
+Dust Li (1):
+      net: sched: fix dump qlen for sch_mq/sch_mqprio with NOLOCK subqueues
+
+Eran Ben Elisha (1):
+      net/mlx5e: Fix TXQ indices to be sequential
+
+Eric Dumazet (2):
+      inet: protect against too small mtu values.
+      tcp: md5: fix potential overestimation of TCP option space
+
+Greg Kroah-Hartman (1):
+      Linux 5.3.18
+
+Grygorii Strashko (1):
+      net: ethernet: ti: cpsw: fix extra rx interrupt
+
+Guillaume Nault (3):
+      tcp: fix rejected syncookies due to stale timestamps
+      tcp: tighten acceptance of ACKs not matching a child socket
+      tcp: Protect accesses to .ts_recent_stamp with {READ,WRITE}_ONCE()
+
+Huy Nguyen (1):
+      net/mlx5e: Query global pause state before setting prio2buffer
+
+Jonathan Lemon (2):
+      page_pool: do not release pool until inflight =3D=3D 0.
+      xdp: obtain the mem_id mutex before trying to remove an entry.
+
+Martin Varghese (2):
+      Fixed updating of ethertype in function skb_mpls_pop
+      net: Fixed updating of ethertype in skb_mpls_push()
+
+Mian Yousaf Kaukab (1):
+      net: thunderx: start phy before starting autonegotiation
+
+Nikolay Aleksandrov (1):
+      net: bridge: deny dev_set_mac_address() when unregistering
+
+Sabrina Dubroca (2):
+      net: ipv6: add net argument to ip6_dst_lookup_flow
+      net: ipv6_stub: use ip6_dst_lookup_flow instead of ip6_dst_lookup
+
+Taehee Yoo (2):
+      tipc: fix ordering of tipc module init and exit routine
+      hsr: fix a NULL pointer dereference in hsr_dev_xmit()
+
+Valentin Vidic (1):
+      net/tls: Fix return values to avoid ENOTSUPP
+
+Vladyslav Tarasiuk (1):
+      mqprio: Fix out-of-bounds access in mqprio_dump
+
+
+--RnlQjJ0d97Da+TV1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAl36accACgkQONu9yGCS
+aT6vkhAAqQajWGyP8bYG01LqCPxFGLGdQp0hAzNRr3UavBaJzQhZuMdMltCStaM8
+ngxIBi3uj7XU8Pq9g4V0+Ut+hCnK6rh4FbCpdk62WkYWZbplPki1ERfRuLoDbucg
+rbDfdsLp+nsImxVHpqn2dIZ34Omv3zrZ09V/v0MtggwJAGFdfIb6NWG7Wf6ucHHr
+1M2OdrsYxL2kOnA96ynUIJeI7QP8jjcwFUTFLjG3qMILysvR5wdkYcycc2ryiDB5
+r0vb+65VnyOGSZWKNHSIz4RlvNpu12o/cl5tY95/wPJ/HzqwsAYIGCYsfoYjGZmb
+BFFCfzC8gNa6sqJ9B6ii/TuVzAb7rVdCxYVwDYjJg7i2QaGlV5G6OvPQapbz6eYv
+fTNY7e6fPrfO88QsxpibY3Tn1EERQM/ik+EEAvUvX8fYJby27ok+gv9inMJDcly8
+D1FI1jk5JNhaJByvnZVpUAwZY8dEgtUbYJT5mIlkpniJvHsfxzz9mPEXSRsytzZW
+XIpzNZhXUH1Z5ikQJ2ZZmPUD24SKEvAT9ilKvwCobFm2V0Y05ZyFdCpXqAMrPxuC
+pa3io1WkQqp7uuOpIJCjWgYEoWUYDaD46wxaxYCvZD7XTB1g4JHQArp9a9U+6kiO
+bE34ashqpiXwkglBvf0RE5ZgBvnixFbx72evPnJP3FsLumuxkJI=
+=4Vce
+-----END PGP SIGNATURE-----
+
+--RnlQjJ0d97Da+TV1--
