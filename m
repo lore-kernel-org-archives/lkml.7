@@ -2,119 +2,73 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F68EC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7BFC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 802C920717
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78AE3227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:09:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576660180;
+	bh=7p1OzltEZEmB0CiHFlkfl9O1s0FHcf0C4bMyS+2zgBc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DAMvQxFGkSyttcobK3F2Q/iPF7WIjZqnF+AgCOXpnYLA9ZusWHKT/VIHjy98U6XIq
+	 x0yMG61JDw+EbYWEfRou1KjQ+Liew41hKJFLyjW4PRFLOEST/kxBoMVuWN0MNajuyL
+	 06rwEBX8DWaNCToW4yz0BtjfeF0pZ8dXJL9gyrto=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbfLRJJT (ORCPT
+        id S1726749AbfLRJJj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 04:09:19 -0500
-Received: from mo-csw1116.securemx.jp ([210.130.202.158]:47962 "EHLO
-        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbfLRJJT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 04:09:19 -0500
-Received: by mo-csw.securemx.jp (mx-mo-csw1116) id xBI990ER002408; Wed, 18 Dec 2019 18:09:01 +0900
-X-Iguazu-Qid: 2wGrCZT71n3leK8dLF
-X-Iguazu-QSIG: v=2; s=0; t=1576660140; q=2wGrCZT71n3leK8dLF; m=rfco90UILSOimrXwMALgZjlVnrVDPA16sFrMM/sRqFE=
-Received: from imx2.toshiba.co.jp (imx2.toshiba.co.jp [106.186.93.51])
-        by relay.securemx.jp (mx-mr1110) id xBI98x1j006356;
-        Wed, 18 Dec 2019 18:08:59 +0900
-Received: from enc01.localdomain ([106.186.93.100])
-        by imx2.toshiba.co.jp  with ESMTP id xBI98xjd009356;
-        Wed, 18 Dec 2019 18:08:59 +0900 (JST)
-Received: from hop001.toshiba.co.jp ([133.199.164.63])
-        by enc01.localdomain  with ESMTP id xBI98wb0028044;
-        Wed, 18 Dec 2019 18:08:58 +0900
-From:   Punit Agrawal <punit1.agrawal@toshiba.co.jp>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        <linux-serial@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        <shrirang.bagul@canonical.com>, <stable@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH] serdev: Don't claim unsupported serial devices
-References: <20191218065646.817493-1-punit1.agrawal@toshiba.co.jp>
-        <20191218085648.GI22665@localhost>
-Date:   Wed, 18 Dec 2019 18:09:46 +0900
-In-Reply-To: <20191218085648.GI22665@localhost> (Johan Hovold's message of
-        "Wed, 18 Dec 2019 09:56:48 +0100")
-X-TSB-HOP: ON
-Message-ID: <87o8w6ngo5.fsf@kokedama.swc.toshiba.co.jp>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 18 Dec 2019 04:09:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33976 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725785AbfLRJJj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 04:09:39 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5759A20717;
+        Wed, 18 Dec 2019 09:09:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576660178;
+        bh=7p1OzltEZEmB0CiHFlkfl9O1s0FHcf0C4bMyS+2zgBc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=T3Qmls+3oGDEQhywVUrCCKEOeKinH1e2EimPPT29RqOwaajYXguON53TGXGlPXSUF
+         equvOmN5ftMPc58DJZYz9M9yEOb1xIy3td/nuNDreNLt3m/+GitQdVmkk/n5lDij27
+         0yd/eZmYEAgbU9w2vkczNbZfoK+ONs7npCr65h+U=
+Date:   Wed, 18 Dec 2019 09:09:32 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Chen Zhou <chenzhou10@huawei.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, catalin.marinas@arm.com,
+        james.morse@arm.com, dyoung@redhat.com, bhsharma@redhat.com,
+        horms@verge.net.au, guohanjun@huawei.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kexec@lists.infradead.org
+Subject: Re: [PATCH v6 0/4] support reserving crashkernel above 4G on arm64
+ kdump
+Message-ID: <20191218090932.GA14061@willie-the-truck>
+References: <20190830071200.56169-1-chenzhou10@huawei.com>
+ <2a97b296-59e7-0a26-84fa-e2ddcd7987b6@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2a97b296-59e7-0a26-84fa-e2ddcd7987b6@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Johan,
+On Wed, Dec 18, 2019 at 10:07:59AM +0800, Chen Zhou wrote:
+> Friendly ping...
 
-Johan Hovold <johan@kernel.org> writes:
+You broke the build:
 
-> On Wed, Dec 18, 2019 at 03:56:46PM +0900, Punit Agrawal wrote:
->> Serdev sub-system claims all serial devices that are not already
->> enumerated. As a result, no device node is created for serial port on
->> certain boards such as the Apollo Lake based UP2. This has the
->> unintended consequence of not being able to raise the login prompt via
->> serial connection.
->> 
->> Introduce a blacklist to reject devices that should not be treated as
->> a serdev device. Add the Intel HS UART peripheral ids to the blacklist
->> to bring back serial port on SoCs carrying them.
->> 
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
->> Cc: Rob Herring <robh@kernel.org>
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: Johan Hovold <johan@kernel.org>
->> Cc: Hans de Goede <hdegoede@redhat.com>
->> ---
->> 
->> Hi,
->> 
->> The patch has been updated based on feedback recieved on the RFC[0].
->> 
->> Please consider merging if there are no objections.
->
-> Rafael, I vaguely remember you arguing for a white list when we
-> discussed this at some conference. Do you have any objections to the
-> blacklist approach taken here?
->
->> [0] https://www.spinics.net/lists/linux-serial/msg36646.html
->> 
->>  drivers/tty/serdev/core.c | 10 ++++++++++
->>  1 file changed, 10 insertions(+)
->> 
->> diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
->> index 226adeec2aed..0d64fb7d4f36 100644
->> --- a/drivers/tty/serdev/core.c
->> +++ b/drivers/tty/serdev/core.c
->> @@ -663,6 +663,12 @@ static acpi_status acpi_serdev_register_device(struct serdev_controller *ctrl,
->>  	return AE_OK;
->>  }
->>  
->> +static const struct acpi_device_id serdev_blacklist_devices[] = {
->> +	{"INT3511", 0},
->> +	{"INT3512", 0},
->
-> Nit: Would you mind adding a space after { and before }?
+https://lore.kernel.org/lkml/201909010744.CDe940pv%lkp@intel.com
+https://lore.kernel.org/lkml/201909010704.4m9y2sg7%lkp@intel.com
 
-Sure - no problem. I'll include it in the next posting.
+So I doubt anybody will seriously look at this.
 
-Thanks for having a look.
-
->
->> +	{ },
->> +};
->
-> Johan
+Will
