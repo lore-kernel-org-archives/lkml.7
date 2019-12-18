@@ -2,169 +2,225 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F57C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E45C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9F7824650
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:26:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576686409;
-	bh=QbtZFtRFjFDTBy0FLbhWKGnNnjImjripdHtpw6HjXMk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YHRA2ANqU9EoMR+QkieExI15K01cDOvP6yS/1U5AGyk7D73EEoEgj1/3Grx0yxkYg
-	 CmvI4JHCQIKueESLIe4O1fZ8wLzqyyCbxeNHb4BOKUwbrwTpzyVL1s0oKRmIJsu60b
-	 +bASfgpTNLXohHWalvujnfRs9sG9qUxbqC/GV8Zg=
+	by mail.kernel.org (Postfix) with ESMTP id B475C227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:29:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mRjbZ5kq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727701AbfLRQ0r (ORCPT
+        id S1727437AbfLRQ3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 11:26:47 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:40033 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbfLRQ0r (ORCPT
+        Wed, 18 Dec 2019 11:29:17 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:39996 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726931AbfLRQ3R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 11:26:47 -0500
-Received: by mail-qt1-f194.google.com with SMTP id e6so2400356qtq.7;
-        Wed, 18 Dec 2019 08:26:46 -0800 (PST)
+        Wed, 18 Dec 2019 11:29:17 -0500
+Received: by mail-lj1-f194.google.com with SMTP id u1so2829414ljk.7;
+        Wed, 18 Dec 2019 08:29:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=loY/F+PAdaWyk5QCXx7slim0qkoGLO/F2UzLLFuV/S8=;
-        b=jXpPL8O9lWnvDry1VId6njC4m+oHuFJmeOW4oEfScQEjZypo8J2BUnWkPSij3TllBd
-         Hf4muyihJp/ZulUzJMbLRocwxopbhvEJli/je6KS/9cAY6KEUU1kXO/4PUO+wY8EO0YH
-         3sNpqd9FBUr+po2/k1H2JW7I7yuAaGuW1IDF1G6ZgdByHMsT3K/qawXp4VABdNJp1VwU
-         a+wFJyJTiYlfkydETqytgdO6fPP0TDBFBbYmeT1H3PanXgW3zImUgrfcS4bfJsJM4Bg7
-         WVmzb49VcHmSHKpJ/Afi8VLv0j3+gMJoCAz46hOlzlxa/tc0ZVIa1d4xze1siNR79Qu+
-         M3kg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WQicZqKEkT2OZmLOJnAO4CaO5tjlYphliKW/thglAIk=;
+        b=mRjbZ5kqRb+nZFf1VYRVS1SFpeF3hbzu+2gaBs5D6Y2M+gnXwgTING/FvsX+tThtKq
+         5rTMofkjV/E5e/MZ2j3tDncSitqVr6ADrqGh3gW0MIH6jXgQ7BbwX+CUCcHOI3+6Xcxi
+         97QSlFdsUcmdVBFG1VE+oMSIiDWaFff3Mir25eMJE4x2iY0h8l53ivzAeDTGe8640P+2
+         Sl5cDTP9ce5q8uGCXLt+wsXeyEBpIxz/NCwIA2BAaKGk4H6rKTGGnyi4+UycA47MIvyI
+         FI2sw8osMwmsURvQ6ZK9B/QWQeAcUh9Dk7MGjlCBuplDJk02So++mPvc1teFE8iUjS1L
+         bqkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=loY/F+PAdaWyk5QCXx7slim0qkoGLO/F2UzLLFuV/S8=;
-        b=aoj7qfRyDI8jYAtxB2+5+5QNdokvjPVboVkX5w6eFNhf3epYD/djw/bWHnboLx7Mre
-         ZOWDDOD+P2KKhOtTIEBkt0gFlgSA9iyYh6Cr9dEnQIGgazs7irSHuTREwFW0Yx0m7oqX
-         Rhsew9WPr48irYxh7synxo55kE12Fa/MjTuocRe6Flpfu4hf/ehdpwp9rviloNdzpjYF
-         YyCuBNQDxcZzBkmzPJe7nVlpSfjHsPM/YyYaQJiOsndsKigOyCrxjRHRYdClNsOzqUua
-         OJhpG29V4k/Aiswc5TkdXK3Jg6Vr5ekdN3T+V8coS1xjNBavwaR+DAylsiAWCPWZaMz5
-         i9qg==
-X-Gm-Message-State: APjAAAV6i4ZCLTpoCurYq4FLTlwyMsqArCDs4Ol5SKB23clvKwuFn5Yd
-        Pe8AvjpTBmWAE8A7/waTLUg=
-X-Google-Smtp-Source: APXvYqyjBizT31CWo1zN1rt+wYHF7zdJBllA2wPgCG/GWexECdwT+Ndql0PFOHi0omJZn22lrS22SQ==
-X-Received: by 2002:ac8:508:: with SMTP id u8mr2982792qtg.128.1576686406046;
-        Wed, 18 Dec 2019 08:26:46 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::2:27e])
-        by smtp.gmail.com with ESMTPSA id d25sm866478qtq.11.2019.12.18.08.26.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 18 Dec 2019 08:26:45 -0800 (PST)
-Date:   Wed, 18 Dec 2019 08:26:42 -0800
-From:   Tejun Heo <tj@kernel.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Dennis Zhou <dennis@kernel.org>,
-        Christoph Lameter <cl@linux.com>
-Subject: Re: [PATCH 1/2] pcpu_ref: add percpu_ref_tryget_many()
-Message-ID: <20191218162642.GC2914998@devbig004.ftw2.facebook.com>
-References: <cover.1576621553.git.asml.silence@gmail.com>
- <c430d1a603f9ffe01661fc1b3bad6e3101a8b855.1576621553.git.asml.silence@gmail.com>
- <fe13d615-0fae-23e3-f133-49b727973d14@kernel.dk>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WQicZqKEkT2OZmLOJnAO4CaO5tjlYphliKW/thglAIk=;
+        b=TSzxmyUj/M9xm7SqTYOv5lmXhgRMQYSe/rAMnzu/p9iqRgA8zByB5PSiFl1eLrfgTP
+         5KQpwYcfnE1qx0p9azkRS5W5San5EHSI33BpMFty3FQVnKTYRezAKWAxuor8hYnMfSWh
+         UBcVwPGba6gSf69IgJ0dH/MsrCBBPiXd9R8uRPXiVwjNeX7U0NnjZ51pkERXDPjxpE5b
+         V1M0xpyJXe0veylyUv9rdIAQiEo/TvDIiNE0/ZnsPXVgkKkcvzmiKWD10lIJ4RVUDaD2
+         SMVZBaaQYkwF4YKrwJ1W1Esx16oJ3k5ulF8a16Y+r3FfVplT8jsE+5tcOQ8ME4Gkapai
+         7HJg==
+X-Gm-Message-State: APjAAAXLYo8Y6QXKl18TQn69jubDhK3qvXHaFKrVZyu0P0d5UCYxzlUt
+        wkekC/WCYPRzVGwnjqjiwOxCmeEy
+X-Google-Smtp-Source: APXvYqyLt6czXw6YDKW6MkhVKWnt1H6Ng7jVNikMA9C5Un3Gx3rBOieGP7JmsHrw3Bj3sbIKfp167A==
+X-Received: by 2002:a2e:9ad8:: with SMTP id p24mr2437609ljj.148.1576686553416;
+        Wed, 18 Dec 2019 08:29:13 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id u16sm1426742ljo.22.2019.12.18.08.29.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Dec 2019 08:29:12 -0800 (PST)
+Subject: Re: [PATCH v4 13/19] ASoC: tegra: Add fallback implementation for
+ audio mclk
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
+        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, spujar@nvidia.com,
+        josephl@nvidia.com, daniel.lezcano@linaro.org,
+        mmaddireddy@nvidia.com, markz@nvidia.com,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1576613046-17159-1-git-send-email-skomatineni@nvidia.com>
+ <1576613046-17159-14-git-send-email-skomatineni@nvidia.com>
+ <e2f96102-33fa-cbe5-f488-666b7b7ffb06@gmail.com>
+ <7e49fef8-112c-1694-9316-7a23db8a01a4@gmail.com>
+ <66a28f8a-82e8-5b12-464c-4c91441d1511@nvidia.com>
+ <fb36edbf-08c9-aa7e-a7fd-6ee15261a525@gmail.com>
+ <de4d2693-3d5c-d154-22eb-2e41ddc12974@gmail.com>
+ <1499a012-f5e1-3c76-6750-5858765a0532@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <13074e67-2807-d494-b8b4-b2e3b529117a@gmail.com>
+Date:   Wed, 18 Dec 2019 19:29:11 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fe13d615-0fae-23e3-f133-49b727973d14@kernel.dk>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <1499a012-f5e1-3c76-6750-5858765a0532@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(cc'ing Dennis and Christoph and quoting whole body)
+18.12.2019 18:43, Sowjanya Komatineni пишет:
+> 
+> On 12/17/19 11:31 PM, Dmitry Osipenko wrote:
+>> 18.12.2019 10:22, Dmitry Osipenko пишет:
+>>> 18.12.2019 10:14, Sowjanya Komatineni пишет:
+>>>> On 12/17/19 11:01 PM, Dmitry Osipenko wrote:
+>>>>> 18.12.2019 09:59, Dmitry Osipenko пишет:
+>>>>>> 17.12.2019 23:04, Sowjanya Komatineni пишет:
+>>>>>>> mclk is from clk_out_1 which is part of Tegra PMC block and pmc
+>>>>>>> clocks
+>>>>>>> are moved to Tegra PMC driver with pmc as clock provider and
+>>>>>>> using pmc
+>>>>>>> clock ids.
+>>>>>>>
+>>>>>>> New device tree uses clk_out_1 from pmc clock provider.
+>>>>>>>
+>>>>>>> So, this patch adds implementation for mclk fallback to extern1 when
+>>>>>>> retrieving mclk returns -ENOENT to be backward compatible of new
+>>>>>>> device
+>>>>>>> tree with older kernels.
+>>>>>>>
+>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>>>> ---
+>>>>>>>    sound/soc/tegra/tegra_asoc_utils.c | 11 ++++++++++-
+>>>>>>>    1 file changed, 10 insertions(+), 1 deletion(-)
+>>>>>>>
+>>>>>>> diff --git a/sound/soc/tegra/tegra_asoc_utils.c
+>>>>>>> b/sound/soc/tegra/tegra_asoc_utils.c
+>>>>>>> index fe9ca8acd0fb..1b88c6043082 100644
+>>>>>>> --- a/sound/soc/tegra/tegra_asoc_utils.c
+>>>>>>> +++ b/sound/soc/tegra/tegra_asoc_utils.c
+>>>>>>> @@ -191,7 +191,16 @@ int tegra_asoc_utils_init(struct
+>>>>>>> tegra_asoc_utils_data *data,
+>>>>>>>        data->clk_cdev1 = devm_clk_get(dev, "mclk");
+>>>>>>>        if (IS_ERR(data->clk_cdev1)) {
+>>>>>>>            dev_err(data->dev, "Can't retrieve clk cdev1\n");
+>>>>>>> -        return PTR_ERR(data->clk_cdev1);
+>>>>>>> +        if (PTR_ERR(data->clk_cdev1) != -ENOENT)
+>>>>>>> +            return PTR_ERR(data->clk_cdev1);
+>>>>>>> +        /* Fall back to extern1 */
+>>>>>>> +        data->clk_cdev1 = devm_clk_get(dev, "extern1");
+>>>>>>> +        if (IS_ERR(data->clk_cdev1)) {
+>>>>>>> +            dev_err(data->dev, "Can't retrieve clk extern1\n");
+>>>>>>> +            return PTR_ERR(data->clk_cdev1);
+>>>>>>> +        }
+>>>>>>> +
+>>>>>>> +        dev_err(data->dev, "Falling back to extern1\n");
+>>>>>>>        }
+>>>>>>>          /*
+>>>>>>>
+>>>>>> [    1.769091] ------------[ cut here ]------------
+>>>>>> [    1.769249] WARNING: CPU: 2 PID: 1 at drivers/clk/clk.c:954
+>>>>>> clk_core_disable+0xa5/0x1d4
+>>>>>> [    1.769330] clk_out_1 already disabled
+>>>>>> [    1.769459] Modules linked in:
+>>>>>> [    1.769541] CPU: 2 PID: 1 Comm: swapper/0 Not tainted
+>>>>>> 5.5.0-rc1-next-20191213-00167-g6b9fbcdac8f3-dirty #266
+>>>>>> [    1.769676] Hardware name: NVIDIA Tegra SoC (Flattened Device
+>>>>>> Tree)
+>>>>>> [    1.769775] [<c010e4bd>] (unwind_backtrace) from [<c010a0fd>]
+>>>>>> (show_stack+0x11/0x14)
+>>>>>> [    1.769918] [<c010a0fd>] (show_stack) from [<c09a37b1>]
+>>>>>> (dump_stack+0x85/0x94)
+>>>>>> [    1.770061] [<c09a37b1>] (dump_stack) from [<c011f3d1>]
+>>>>>> (__warn+0xc1/0xc4)
+>>>>>> [    1.770144] [<c011f3d1>] (__warn) from [<c011f691>]
+>>>>>> (warn_slowpath_fmt+0x61/0x78)
+>>>>>> [    1.770285] [<c011f691>] (warn_slowpath_fmt) from [<c04a0e7d>]
+>>>>>> (clk_core_disable+0xa5/0x1d4)
+>>>>>> [    1.770427] [<c04a0e7d>] (clk_core_disable) from [<c04a0fc3>]
+>>>>>> (clk_core_disable_lock+0x17/0x20)
+>>>>>> [    1.770516] [<c04a0fc3>] (clk_core_disable_lock) from [<c07792bb>]
+>>>>>> (tegra_asoc_utils_set_rate+0x53/0x208)
+>>>>>> [    1.770662] [<c07792bb>] (tegra_asoc_utils_set_rate) from
+>>>>>> [<c077b8c5>] (tegra_rt5640_probe+0xd5/0x128)
+>>>>>> [    1.770808] [<c077b8c5>] (tegra_rt5640_probe) from [<c0555eb7>]
+>>>>>> (platform_drv_probe+0x33/0x68)
+>>>>>> [    1.770958] [<c0555eb7>] (platform_drv_probe) from [<c055471d>]
+>>>>>> (really_probe+0x14d/0x240)
+>>>>>> [    1.771099] [<c055471d>] (really_probe) from [<c055493f>]
+>>>>>> (driver_probe_device+0x43/0x11c)
+>>>>>> [    1.771187] [<c055493f>] (driver_probe_device) from [<c0554b25>]
+>>>>>> (device_driver_attach+0x3d/0x40)
+>>>>>> [    1.771328] [<c0554b25>] (device_driver_attach) from [<c0554b5f>]
+>>>>>> (__driver_attach+0x37/0x78)
+>>>>>> [    1.771469] [<c0554b5f>] (__driver_attach) from [<c05532fb>]
+>>>>>> (bus_for_each_dev+0x43/0x6c)
+>>>>>> [    1.771609] [<c05532fb>] (bus_for_each_dev) from [<c0553e0f>]
+>>>>>> (bus_add_driver+0xe3/0x148)
+>>>>>> [    1.771692] [<c0553e0f>] (bus_add_driver) from [<c055531d>]
+>>>>>> (driver_register+0x39/0xa0)
+>>>>>> [    1.771833] [<c055531d>] (driver_register) from [<c0102c2f>]
+>>>>>> (do_one_initcall+0x43/0x1bc)
+>>>>>> [    1.771979] [<c0102c2f>] (do_one_initcall) from [<c1000ce5>]
+>>>>>> (kernel_init_freeable+0x121/0x194)
+>>>>>> [    1.772129] [<c1000ce5>] (kernel_init_freeable) from [<c09b40e9>]
+>>>>>> (kernel_init+0xd/0xd0)
+>>>>>> [    1.772215] [<c09b40e9>] (kernel_init) from [<c01010bd>]
+>>>>>> (ret_from_fork+0x11/0x34)
+>>>>>> [    1.772349] Exception stack(0xde907fb0 to 0xde907ff8)
+>>>>>>
+>>>>> Although, that's probably related to the "ASoC: tegra: Add initial
+>>>>> parent configuration for audio mclk".
+>>>>>
+>>>> Actually I see these warnings of already unprepared and already
+>>>> disabled
+>>>> for pll_a, pll_a_out0, and clk_out_1 even without this whole patch
+>>>> series as well.
+>>>>
+>>>> I think its from tegra_asoc_utils_set_rate() doing
+>>>> clk_disable_unprepare
+>>>> and these clocks are already unprepared and disabled so its just
+>>>> warning
+>>>> from clk_core_unprepare and clk_core_disable.
+>>> Doesn't happen for me without this series.
+> 
+> I looked at wrong log, right earlier clock driver keeps them enabled so
+> asoc_utils_set_rate() disables the clock fine but now enabling audio
+> clock should be done in asoc_utils_init() to let the
+> clk_disable_unprepare from asoc_utils_set_rate not to show this warning.
+> 
+> But actually we don't need to have clock enabled in asoc_utils_init
+> prior to invoking asoc_utils_set_rate from utils_init and its just warns
+> during sound driver probe because clock is already in disabled state. At
+> same time it doesn't harm to have it kept enabled in utils_init. So will
+> keep it enabled in asoc_utils_init to prevent this warning to show up.
+> 
+>> But sound works with both old/new device-trees.
 
-Pavel, can you please cc percpu maintainers on related changes?
-
-The patch looks fine to me.  Please feel free to add my acked-by.
-
-On Tue, Dec 17, 2019 at 04:42:59PM -0700, Jens Axboe wrote:
-> CC Tejun on this one. Looks fine to me, and matches the put path.
-> 
-> 
-> On 12/17/19 3:28 PM, Pavel Begunkov wrote:
-> > Add percpu_ref_tryget_many(), which works the same way as
-> > percpu_ref_tryget(), but grabs specified number of refs.
-> > 
-> > Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-> > ---
-> >  include/linux/percpu-refcount.h | 24 ++++++++++++++++++++----
-> >  1 file changed, 20 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/include/linux/percpu-refcount.h b/include/linux/percpu-refcount.h
-> > index 390031e816dc..19079b62ce31 100644
-> > --- a/include/linux/percpu-refcount.h
-> > +++ b/include/linux/percpu-refcount.h
-> > @@ -210,15 +210,17 @@ static inline void percpu_ref_get(struct percpu_ref *ref)
-> >  }
-> >  
-> >  /**
-> > - * percpu_ref_tryget - try to increment a percpu refcount
-> > + * percpu_ref_tryget_many - try to increment a percpu refcount
-> >   * @ref: percpu_ref to try-get
-> > + * @nr: number of references to get
-> >   *
-> >   * Increment a percpu refcount unless its count already reached zero.
-> >   * Returns %true on success; %false on failure.
-> >   *
-> >   * This function is safe to call as long as @ref is between init and exit.
-> >   */
-> > -static inline bool percpu_ref_tryget(struct percpu_ref *ref)
-> > +static inline bool percpu_ref_tryget_many(struct percpu_ref *ref,
-> > +					  unsigned long nr)
-> >  {
-> >  	unsigned long __percpu *percpu_count;
-> >  	bool ret;
-> > @@ -226,10 +228,10 @@ static inline bool percpu_ref_tryget(struct percpu_ref *ref)
-> >  	rcu_read_lock();
-> >  
-> >  	if (__ref_is_percpu(ref, &percpu_count)) {
-> > -		this_cpu_inc(*percpu_count);
-> > +		this_cpu_add(*percpu_count, nr);
-> >  		ret = true;
-> >  	} else {
-> > -		ret = atomic_long_inc_not_zero(&ref->count);
-> > +		ret = atomic_long_add_unless(&ref->count, nr, 0);
-> >  	}
-> >  
-> >  	rcu_read_unlock();
-> > @@ -237,6 +239,20 @@ static inline bool percpu_ref_tryget(struct percpu_ref *ref)
-> >  	return ret;
-> >  }
-> >  
-> > +/**
-> > + * percpu_ref_tryget - try to increment a percpu refcount
-> > + * @ref: percpu_ref to try-get
-> > + *
-> > + * Increment a percpu refcount unless its count already reached zero.
-> > + * Returns %true on success; %false on failure.
-> > + *
-> > + * This function is safe to call as long as @ref is between init and exit.
-> > + */
-> > +static inline bool percpu_ref_tryget(struct percpu_ref *ref)
-> > +{
-> > +	return percpu_ref_tryget_many(ref, 1);
-> > +}
-> > +
-> >  /**
-> >   * percpu_ref_tryget_live - try to increment a live percpu refcount
-> >   * @ref: percpu_ref to try-get
-> > 
-> 
-> 
-> -- 
-> Jens Axboe
-> 
-
--- 
-tejun
+The rule of thumb: don't enable anything when it shouldn't be enabled.
+If clocks are disabled at the time of drivers probe, then drivers
+shouldn't disable the clocks.
