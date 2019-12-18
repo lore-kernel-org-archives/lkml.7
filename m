@@ -2,108 +2,369 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D3AC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E50C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 535A9218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:37:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qrvDDwtE"
+	by mail.kernel.org (Postfix) with ESMTP id 0825324650
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:37:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576661879;
+	bh=nCXCKDDoSamGpgoq3jT6RNA6dS1EovruR1AiTxY8nFM=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=BMSetPZopCu/3IftvFYpHJrC4RMOjWkFxrnDNXNDqwoqzlgjcdgMSxvyzydjij/Lq
+	 F0Gs+lV1lun6wYhzQfWOb+/Wm73THCj5ifYKXw5EhHKD+QGCXfCQMhy8KT7j0/Jqfu
+	 RsZWWyCihJubyJfFrlRl73MS5Av+kkgw3IrMlNhI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbfLRJhu (ORCPT
+        id S1726801AbfLRJh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 04:37:50 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36663 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbfLRJhu (ORCPT
+        Wed, 18 Dec 2019 04:37:58 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:35075 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725785AbfLRJh5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 04:37:50 -0500
-Received: by mail-ot1-f67.google.com with SMTP id w1so1741810otg.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 01:37:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Weh7WHhOC7a6++OVNVp5cWmhOd8ECBuniYjUEt6yKpU=;
-        b=qrvDDwtEt6pPN5KcAMu3lKDyybEJyQJmmAqHj8Z4gf5LfbjkM7Car3C7o8CZMjJ9Hn
-         z2rRP/qytcGEPlwfO3EHvOgsVAIi6sEgs11FDobBwEHHDQva79rkUUEost/KPA/cy0FZ
-         XCTnpSn8MHJGOwd63yebfwBoCKFDBb93drn8PhpuxqbEk+YyX8796R1fulVkPN8JulhP
-         //QH5UzUqte4HpefU9jLsGeC0gbpyp1M7xQQuPsL8GFJ4cFSJWFVsOpfq0d/lUFKqZf6
-         Xpf5wYwOGMVbL81Gq2UBGtxg7rj4xbIRxTz1VS3fj2N5pH9Hlbk9y0WuYOh28/o2PjZe
-         XX0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Weh7WHhOC7a6++OVNVp5cWmhOd8ECBuniYjUEt6yKpU=;
-        b=mbVbEy0wWYkxtJChV2e5rQjXZ4tAbv/7La48+mvh0qKHqJR9SB+cWxC6hh8y2MP+d3
-         8FMu/ybMgGFur6jvVBiN4fadg5NGyZwKlFXbzSNy5sD8sXF1vdvp86lkWsESQntpxbDE
-         rDuNt83ON2imw873rSQlD++LRUN0WRAecsuAhLdXbxjckw3Z9tCup2XBnlAKftUNBEt0
-         mWKdAFEJiUc7PbhnfsjIUmNDY/8RHTsUwqVa2EjCRADBGzAi2TbxrDJU52I5emLJfyTL
-         7wJvDI6fa0tpD8/hX3Dyqvri+HrLWWKipjwAJ7cWiXrlQrnP7BzcA9YeGNe3LW5hGUnE
-         45WA==
-X-Gm-Message-State: APjAAAX6w7+z3xG/QPsTX/+n6wUseOubUihQzShXKXVsl9fKESi8X+KB
-        dYmJZN96G+UzQ5Y2OXSpFMnR2P1xtNovQLfQ0ljs3Msr
-X-Google-Smtp-Source: APXvYqwpIZeEQArmJJlsRBJXNXZctfsZZCxc7KPNSnmOIIwBlbNt+9GpPKaZ/AWjIlCPofTt1eIUcixaL6amWExH6OI=
-X-Received: by 2002:a9d:6a8f:: with SMTP id l15mr1617342otq.59.1576661869171;
- Wed, 18 Dec 2019 01:37:49 -0800 (PST)
+        Wed, 18 Dec 2019 04:37:57 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1ihVm7-0004Bw-I2; Wed, 18 Dec 2019 10:37:47 +0100
+To:     Joakim Zhang <qiangqing.zhang@nxp.com>
+Subject: Re: [PATCH 2/3] drivers/irqchip: add NXP INTMUX interrupt  multiplexer support
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-References: <20191216084207.19482-1-oshpigelman@habana.ai>
-In-Reply-To: <20191216084207.19482-1-oshpigelman@habana.ai>
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-Date:   Wed, 18 Dec 2019 11:37:22 +0200
-Message-ID: <CAFCwf13GyEop7rWZ1i8E3=EXgtN6w3WJbB40KdsiG15ViMv-gQ@mail.gmail.com>
-Subject: Re: [PATCH] habanalabs: use the user CB size as a default job size
-To:     Omer Shpigelman <oshpigelman@habana.ai>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 18 Dec 2019 09:37:47 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     <tglx@linutronix.de>, <jason@lakedaemon.net>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <shawnguo@kernel.org>,
+        <s.hauer@pengutronix.de>, <shengjiu.wang@nxp.com>,
+        <kernel@pengutronix.de>, <festevam@gmail.com>, <linux-imx@nxp.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <fugang.duan@nxp.com>,
+        <aisheng.dong@nxp.com>
+In-Reply-To: <1576653615-27954-3-git-send-email-qiangqing.zhang@nxp.com>
+References: <1576653615-27954-1-git-send-email-qiangqing.zhang@nxp.com>
+ <1576653615-27954-3-git-send-email-qiangqing.zhang@nxp.com>
+Message-ID: <b0288de8faab127a096d1e78113ec4cb@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: qiangqing.zhang@nxp.com, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, shengjiu.wang@nxp.com, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, fugang.duan@nxp.com, aisheng.dong@nxp.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 10:42 AM Omer Shpigelman <oshpigelman@habana.ai> wrote:
+On 2019-12-18 07:20, Joakim Zhang wrote:
+> From: Shengjiu Wang <shengjiu.wang@nxp.com>
 >
-> When no patched command buffer (CB) is created, use the user CB size as
-> the job size.
+> The intmux module is used to output internal interrupt in subsystem
+> to system with 32-to-8 configuration. It has several multiplex
+> channels depends on system.
 >
-> Signed-off-by: Omer Shpigelman <oshpigelman@habana.ai>
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
 > ---
->  drivers/misc/habanalabs/command_submission.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
+>  drivers/irqchip/irq-imx-intmux.c | 220 
+> +++++++++++++++++++++++++++++++
+>  1 file changed, 220 insertions(+)
+>  create mode 100644 drivers/irqchip/irq-imx-intmux.c
 >
-> diff --git a/drivers/misc/habanalabs/command_submission.c b/drivers/misc/habanalabs/command_submission.c
-> index 8850f475a413..41e95513c591 100644
-> --- a/drivers/misc/habanalabs/command_submission.c
-> +++ b/drivers/misc/habanalabs/command_submission.c
-> @@ -129,6 +129,8 @@ static int cs_parser(struct hl_fpriv *hpriv, struct hl_cs_job *job)
->                 spin_unlock(&job->user_cb->lock);
->                 hl_cb_put(job->user_cb);
->                 job->user_cb = NULL;
-> +       } else if (!rc) {
-> +               job->job_cb_size = job->user_cb_size;
->         }
->
->         return rc;
-> @@ -585,10 +587,6 @@ static int _hl_cs_ioctl(struct hl_fpriv *hpriv, void __user *chunks,
->                 job->cs = cs;
->                 job->user_cb = cb;
->                 job->user_cb_size = chunk->cb_size;
-> -               if (is_kernel_allocated_cb)
-> -                       job->job_cb_size = cb->size;
-> -               else
-> -                       job->job_cb_size = chunk->cb_size;
->                 job->hw_queue_id = chunk->queue_index;
->
->                 cs->jobs_in_queue_cnt[job->hw_queue_id]++;
-> --
-> 2.17.1
->
+> diff --git a/drivers/irqchip/irq-imx-intmux.c
+> b/drivers/irqchip/irq-imx-intmux.c
+> new file mode 100644
+> index 000000000000..fa24b968f30b
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-imx-intmux.c
+> @@ -0,0 +1,220 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright 2017 NXP
+> +
+> +#include <linux/clk.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/spinlock.h>
+> +
+> +#define CHANCSR(n)	(0x0 + 0x40 * n)
+> +#define CHANVEC(n)	(0x4 + 0x40 * n)
 
-This patch is:
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+These two macros are unused.
+
+> +#define CHANIER(n)	(0x10 + (0x40 * n))
+> +#define CHANIPR(n)	(0x20 + (0x40 * n))
+> +
+> +struct intmux_irqchip_data {
+> +	int chanidx;
+> +	int irq;
+> +	struct irq_domain *domain;
+> +	unsigned int irqstat;
+
+It would make things a bit readable if you aligned the various fields:
+
+struct intmux_irqchip_data {
+         int                  chanidx;
+         int                  irq;
+         struct irq_domain    *domain;
+[...]
+};
+
+> +};
+> +
+> +struct intmux_data {
+> +	spinlock_t lock;
+> +	struct platform_device *pdev;
+> +	void __iomem *regs;
+> +	struct clk *ipg_clk;
+> +	int channum;
+> +	struct intmux_irqchip_data irqchip_data[];
+> +};
+> +
+> +static void imx_intmux_irq_mask(struct irq_data *d)
+> +{
+> +	struct intmux_irqchip_data *irqchip_data = d->chip_data;
+> +	u32 idx = irqchip_data->chanidx;
+> +	struct intmux_data *intmux_data = container_of(irqchip_data,
+> +				struct intmux_data, irqchip_data[idx]);
+> +	void __iomem *reg;
+> +	u32 val;
+> +
+> +	spin_lock(&intmux_data->lock);
+
+This is racy. you could take an interrupt while executing 
+disable_irq(),
+which calls this. In turn, the interrupt handler will try to acquire 
+this
+lock -> deadlock.
+
+Please turn this into its _irqsave version.
+
+> +	reg = intmux_data->regs + CHANIER(idx);
+> +	val = readl_relaxed(reg);
+> +	/* disable the interrupt source of this channel */
+> +	val &= ~(1 << d->hwirq);
+
+         val &= ~BIT(d->hwirq);
+
+> +	writel_relaxed(val, reg);
+> +	spin_unlock(&intmux_data->lock);
+> +}
+> +
+> +static void imx_intmux_irq_unmask(struct irq_data *d)
+> +{
+> +	struct intmux_irqchip_data *irqchip_data = d->chip_data;
+> +	u32 idx = irqchip_data->chanidx;
+> +	struct intmux_data *intmux_data = container_of(irqchip_data,
+> +				struct intmux_data, irqchip_data[idx]);
+> +	void __iomem *reg;
+> +	u32 val;
+> +
+> +	spin_lock(&intmux_data->lock);
+> +	reg = intmux_data->regs + CHANIER(idx);
+> +	val = readl_relaxed(reg);
+> +	/* enable the interrupt source of this channel */
+> +	val |= 1 << d->hwirq;
+> +	writel_relaxed(val, reg);
+> +	spin_unlock(&intmux_data->lock);
+> +}
+> +
+> +static struct irq_chip imx_intmux_irq_chip = {
+> +	.name		= "intmux",
+> +	.irq_mask	= imx_intmux_irq_mask,
+> +	.irq_unmask	= imx_intmux_irq_unmask,
+> +};
+> +
+> +static int imx_intmux_irq_map(struct irq_domain *h, unsigned int 
+> irq,
+> +			      irq_hw_number_t hwirq)
+> +{
+> +	irq_set_status_flags(irq, IRQ_LEVEL);
+> +	irq_set_chip_data(irq, h->host_data);
+> +	irq_set_chip_and_handler(irq, &imx_intmux_irq_chip, 
+> handle_level_irq);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct irq_domain_ops imx_intmux_domain_ops = {
+> +	.map		= imx_intmux_irq_map,
+> +	.xlate		= irq_domain_xlate_onecell,
+> +};
+> +
+> +static void imx_intmux_update_irqstat(struct intmux_irqchip_data
+> *irqchip_data)
+> +{
+> +	int i = irqchip_data->chanidx;
+> +	struct intmux_data *intmux_data = container_of(irqchip_data,
+> +				struct intmux_data, irqchip_data[i]);
+> +
+> +	/* read the interrupt source pending status of this channel */
+> +	irqchip_data->irqstat = readl_relaxed(intmux_data->regs + 
+> CHANIPR(i));
+
+Why does it need to be stored into the data structure, instead of
+sinply being returned by the function?
+
+> +}
+> +
+> +static void imx_intmux_irq_handler(struct irq_desc *desc)
+> +{
+> +	struct intmux_irqchip_data *irqchip_data = 
+> irq_desc_get_handler_data(desc);
+> +	int pos, virq;
+> +
+> +	chained_irq_enter(irq_desc_get_chip(desc), desc);
+> +
+> +	imx_intmux_update_irqstat(irqchip_data);
+> +
+> +	for_each_set_bit(pos, (unsigned long *)&irqchip_data->irqstat, 32) 
+> {
+
+This is broken on big-endian. Never cast a smaller type into unsigned 
+long
+if you're going to use any of the bit iterators.
+
+> +		virq = irq_find_mapping(irqchip_data->domain, pos);
+> +		if (virq)
+> +			generic_handle_irq(virq);
+> +	}
+> +
+> +	chained_irq_exit(irq_desc_get_chip(desc), desc);
+> +}
+> +
+> +static int imx_intmux_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	struct intmux_data *intmux_data;
+> +	int channum;
+> +	int i, ret;
+> +
+> +	ret = of_property_read_u32(np, "fsl,intmux_chans", &channum);
+> +	if (ret)
+> +		channum = 1;
+> +
+> +	intmux_data = devm_kzalloc(&pdev->dev, sizeof(*intmux_data) +
+> +				   channum * sizeof(intmux_data->irqchip_data[0]),
+> +				   GFP_KERNEL);
+> +	if (!intmux_data)
+> +		return -ENOMEM;
+> +
+> +	intmux_data->regs = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(intmux_data->regs)) {
+> +		dev_err(&pdev->dev, "failed to initialize reg\n");
+> +		return PTR_ERR(intmux_data->regs);
+> +	}
+> +
+> +	intmux_data->ipg_clk = devm_clk_get(&pdev->dev, "ipg");
+> +	if (IS_ERR(intmux_data->ipg_clk)) {
+> +		ret = PTR_ERR(intmux_data->ipg_clk);
+> +		dev_err(&pdev->dev, "failed to get ipg clk: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	intmux_data->channum = channum;
+> +	intmux_data->pdev = pdev;
+
+What is the point of keeping track of this? The only instance where you
+go from MUX to device is just below, and you already have the device
+at hand.
+
+> +	spin_lock_init(&intmux_data->lock);
+> +
+> +	ret = clk_prepare_enable(intmux_data->ipg_clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to enable ipg clk: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	for (i = 0; i < channum; i++) {
+> +		intmux_data->irqchip_data[i].chanidx = i;
+> +		intmux_data->irqchip_data[i].irq = platform_get_irq(pdev, i);
+> +		if (intmux_data->irqchip_data[i].irq <= 0) {
+> +			dev_err(&pdev->dev, "failed to get irq\n");
+> +			return -ENODEV;
+> +		}
+> +
+> +		intmux_data->irqchip_data[i].domain = irq_domain_add_linear(
+> +						np,
+> +						32,
+> +						&imx_intmux_domain_ops,
+> +						&intmux_data->irqchip_data[i]);
+
+Please indent this in a readable manner. If you need an intermediate 
+variable,
+so be it. Or have a long line if you want, but don't write things like 
+this.
+
+> +		if (!intmux_data->irqchip_data[i].domain) {
+> +			dev_err(&intmux_data->pdev->dev,
+> +				"failed to create IRQ domain\n");
+> +			return -ENOMEM;
+> +		}
+> +
+> +		irq_set_chained_handler_and_data(intmux_data->irqchip_data[i].irq,
+> +						 imx_intmux_irq_handler,
+> +						 &intmux_data->irqchip_data[i]);
+
+Shouldn't you initialize the HW to some sane state here? Like having
+having all interrupts masked?
+
+> +	}
+> +
+> +	platform_set_drvdata(pdev, intmux_data);
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx_intmux_remove(struct platform_device *pdev)
+> +{
+> +	struct intmux_data *intmux_data = platform_get_drvdata(pdev);
+> +	int i;
+> +
+> +	for (i = 0; i < intmux_data->channum; i++) {
+> +		irq_set_chained_handler_and_data(intmux_data->irqchip_data[i].irq,
+> +						 NULL, NULL);
+
+Same thing here. Shouldn't you make sure that no interrupt can fire 
+anymore?
+
+> +
+> +		irq_domain_remove(intmux_data->irqchip_data[i].domain);
+> +	}
+> +
+> +	platform_set_drvdata(pdev, NULL);
+> +	clk_disable_unprepare(intmux_data->ipg_clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id imx_intmux_id[] = {
+> +	{ .compatible = "fsl,imx-intmux", },
+> +	{ /* sentinel */ },
+> +};
+> +
+> +static struct platform_driver imx_intmux_driver = {
+> +	.driver = {
+> +		.name = "imx-intmux",
+> +		.of_match_table = imx_intmux_id,
+> +	},
+> +	.probe = imx_intmux_probe,
+> +	.remove = imx_intmux_remove,
+> +};
+> +builtin_platform_driver(imx_intmux_driver);
+
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
