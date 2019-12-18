@@ -2,151 +2,116 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9088CC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 06:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6879C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 06:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5998920717
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 06:31:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCF43218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 06:32:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="YHW6uvi5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R9jQoqse"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfLRGbl (ORCPT
+        id S1726707AbfLRGcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 01:31:41 -0500
-Received: from mail-dm6nam11on2068.outbound.protection.outlook.com ([40.107.223.68]:5792
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725881AbfLRGbl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 01:31:41 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iJo8Xv14UVhi7ASwT6AgVNScETf49rbnzs3s5ctZbyZyccAOCiL5uHgbJjr3IL82bL+E0A57jTY1YAjAwfrZT+vhrq95WZfHvI554FNJEZA2cMyT+nEQuWQRwx2OpxGwP9D/FSod0sUa5YVDVIf0Xm2O8XD/34Qt9feA95d/VvoOLUpKArmm6q5jfWP/LQdXE+lsw3hfpxnBeZp0xpr3Ob052n3bXlfl46nerhz0DRdvFtqCaW/TVzXvcSu8YA0eNNohSXkEFx13JXr/LhBazTxtTRD+TEUxeQl8yBbbs5ljgVEINMcLQapnwjzHK1AYZo71PODojOnFAhPRr5Wv2g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=apHv+0GPRsLdUmX9eggFiu9bWaN5GuejZLELOFj/y7A=;
- b=kqIfCxLhyBplu/JHUAB3PuLGovhOJ0dTbtJlf5CkJDDzE7qLDqmKOhk8BrDURI121w30PT0F/lrPrGW4LLIQn4aZHyd2LXWSrT+NL1DOozgyAu4WNbTYu/uEUw/+Ikqo6xVv15ePKUqfXOKbimHZsLXMRcv+D2EnW4VNsYApRbocEnB3SJ4nZpK/EL3Lubdf6XUJPKWXUbIUhIxS6nmWutKlSArpwBCw+g2zizzegTondwJp3KZUAttD8GNtP+6KPLZIq2mtjnidoaFJbhHv5Ppz+hM5/HIK1gP2FmmArRdECOQIHE11eCnpD6CtpfgowwDbGp6F5/nwmYigujuH1w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Wed, 18 Dec 2019 01:32:02 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:53664 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbfLRGcC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 01:32:02 -0500
+Received: by mail-pj1-f68.google.com with SMTP id n96so402533pjc.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 22:32:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=apHv+0GPRsLdUmX9eggFiu9bWaN5GuejZLELOFj/y7A=;
- b=YHW6uvi5bMWqGcWA3uV4s1NWxO/clxxhV/mpUQyk662bm3zqPSBckoOEy/3QnCrBOxk1nEsaxroRY6mn0KwmvqkRny7D1tNUsM0Kujw2rhee/DHhSJwudIhoT+WmFDE5thZHa/fUMLbLkvAv0eH77NAfMZZbBSBEcM0HqV/46TQ=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Vishnuvardhanrao.Ravulapati@amd.com; 
-Received: from DM6PR12MB3868.namprd12.prod.outlook.com (10.255.173.213) by
- DM6PR12MB3706.namprd12.prod.outlook.com (10.255.174.219) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.14; Wed, 18 Dec 2019 06:31:37 +0000
-Received: from DM6PR12MB3868.namprd12.prod.outlook.com
- ([fe80::cd29:4d84:9dbf:c632]) by DM6PR12MB3868.namprd12.prod.outlook.com
- ([fe80::cd29:4d84:9dbf:c632%7]) with mapi id 15.20.2538.019; Wed, 18 Dec 2019
- 06:31:37 +0000
-Subject: Re: [PATCH v14 7/7] ASoC: amd MMAP_INTERLEAVED Support
-To:     Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>
-Cc:     Alexander.Deucher@amd.com, djkurtz@google.com,
-        pierre-louis.bossart@linux.intel.com,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "Tabian, Reza" <Reza.Tabian@amd.com>
-References: <1575553053-18344-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
- <1575553053-18344-8-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
-From:   vishnu <vravulap@amd.com>
-Message-ID: <3688990f-0ac3-08bf-20b8-93a4ab17441e@amd.com>
-Date:   Wed, 18 Dec 2019 11:59:56 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
-In-Reply-To: <1575553053-18344-8-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA1PR0101CA0021.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:21::31) To DM6PR12MB3868.namprd12.prod.outlook.com
- (2603:10b6:5:1c8::21)
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=oEVE507JdfKug+x814O3ZP8pBC3owXqUqbJxxCBNBvo=;
+        b=R9jQoqseeYK48O/sdtRMi8vavijIpzlbU7qFX1dMNArz5MkqCSMv5RU+LSR9NsjjW7
+         l2457GFxJiGjJa4DwPEeW04D4cv5FOgbrnhf8Y+PI/V7xFwXh5tLChAPlrPrPGVbqdu1
+         3tvIEmL7kkn8hivOsaZFmNy3n0jw4MSbYMHepmHAUxVhWYt1YqTHgbeasw8fd04Si7WY
+         27HyDqVMXVuriIMZG7fy5PvnJABJDCEdib28SsvekU+iSTBE0mxqXr5w1kaqIFSYl+T4
+         mGk3Kw3czfbbumrHiVxYhLRQSCl1iFQrrlMA52voavpzrtLpvl3qHDqcJ7QH9dJQfrPL
+         gufQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oEVE507JdfKug+x814O3ZP8pBC3owXqUqbJxxCBNBvo=;
+        b=BaXEOOUrR1KihsTKwNGf3GdtpESm6dud0Rb490YNbUlh7KP+9XjUoS3WLUaaaeXpH2
+         W1PYx0GUl97IuXTvPAvxSeLKpMbaCR8h4MAb2BQKilLlHucGntkgeu280zBCGzL+WfHc
+         4QUcWZQMn6y6rjOTNRxbAXin5uH4R3UeFGk75GcBuaTjCY8VBzQsVJLSn7lFvF5zr4nZ
+         sw5kEHeeYk1blf0FTJmliG3WhqO/K6/6YqESdQQrMLX2hRN+vC9VYJ/Z5tS/wvrs+LA8
+         Cs1/GRa7iTC07OT2UfYBc2UGZZ6ECtaWypeRbaY7oqKW3aqPCZrdrqPIGrxNWdGZfUBK
+         qI+w==
+X-Gm-Message-State: APjAAAWuAscJJ543DRJ1Iwkg6Y+FhE3NBmpzdONYvGqZnEjREb4cuXa6
+        dr7SFX5RxEXREb+gt3cyv8LDiQ==
+X-Google-Smtp-Source: APXvYqyWK8BUSpd73OSUhdZscPaP5aEVoYA4pdHgRb/W77IJSvAhof2kqD/T+bYLU3CLQybiJ6P84A==
+X-Received: by 2002:a17:90a:ac0f:: with SMTP id o15mr830043pjq.133.1576650721351;
+        Tue, 17 Dec 2019 22:32:01 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id k23sm1234264pgg.7.2019.12.17.22.32.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 22:32:00 -0800 (PST)
+Date:   Tue, 17 Dec 2019 22:31:58 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, andy.gross@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] clk: qcom: smd: Add missing bimc clock
+Message-ID: <20191218063158.GD3755841@builder>
+References: <20191217165409.4919-1-jeffrey.l.hugo@gmail.com>
 MIME-Version: 1.0
-X-Originating-IP: [165.204.159.251]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 64aa55aa-6f76-4ace-a441-08d78383eee8
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3706:|DM6PR12MB3706:|DM6PR12MB3706:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB37060B16BB701138CDBA9003E7530@DM6PR12MB3706.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 0255DF69B9
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(136003)(376002)(39860400002)(346002)(189003)(199004)(6862004)(6486002)(8936002)(2906002)(66476007)(316002)(2616005)(66556008)(81166006)(81156014)(52116002)(8676002)(5660300002)(66946007)(37006003)(36756003)(6512007)(4326008)(478600001)(31686004)(186003)(54906003)(26005)(6506007)(31696002)(6666004)(7416002)(53546011)(6636002)(43062003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3706;H:DM6PR12MB3868.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Ug2t8DUNy0Rz4myfZpnIm8/iIKwgaCk6LkfHgvtwmNRLHJsMm/MlPfV6Krdz2vKK81PaW5lJzsPvhQuwsyOvilNyOSNdIChvqCC6ut2NB/b5T5AyRbUhaFya+jOZW/7BsPqFpzl2Vc1UI5jJJyuP4vMnvDWUO7aGqXyFrE07k1RByxlcwnk3PmxH38RG9cuR6QTL5CnVacG87ZzY/KXCe4r1cXhlbIQb/so3RjE2owbxsBQZH9a1GlvzhY16SyzVZsyLQxEq90Ntg7ShnuXf50P5ho0JfyUhzwk39lkiZZQs8lc+MnDbVs/SM0y+qAgd3l6MIU5hYcvEo4DcHjXtxlb/pKzJV3nck53ELUtgOml1G69Mhe5GabSrppinJKJZwhMuelDOCISYh61xn8gMXFWl4kBaYjlKGiqUvTjECZJtxpUSFQEkvSV4Vq4NNM25QViZ7+Mg/qaC8BcuJDir5UuBfuKAgO2bXQEDGGm8deg7RSNZpbYNejJ/TYs+6To+
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 64aa55aa-6f76-4ace-a441-08d78383eee8
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Dec 2019 06:31:37.1301
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XyNWhT2QSKC+fyEHsLFKXaFF56uP6HvZeOTTDnVXtS396Uy8z7Y0HfP4Zf30/VA/ul+2xjjINKgPQ9DfMCcyrA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3706
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191217165409.4919-1-jeffrey.l.hugo@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+On Tue 17 Dec 08:54 PST 2019, Jeffrey Hugo wrote:
 
-Patches have been reviewed by Dan and pierre-louis.bossart@linux.intel.com
-
-Please can you upstream these please.
-
-Regards,
-Vishnu
-
-On 05/12/19 7:07 PM, Ravulapati Vishnu vardhan rao wrote:
-> ACP-I2S device support MMAP_INTERLEAVED.
-> Added support for the same.
+> It turns out booting the modem is dependent on a bimc vote from Linux on
+> msm8998.  To make the modem happy, add the bimc clock to rely on the
+> default vote from rpmcc.  Once we have interconnect support, bimc should
+> be controlled properly.
 > 
-> Signed-off-by: Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>
+> Fixes: 6131dc81211c ("clk: qcom: smd: Add support for MSM8998 rpm clocks")
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 > ---
->   sound/soc/amd/raven/acp3x-pcm-dma.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
+>  drivers/clk/qcom/clk-smd-rpm.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/sound/soc/amd/raven/acp3x-pcm-dma.c b/sound/soc/amd/raven/acp3x-pcm-dma.c
-> index 916f0d8..28a3081 100644
-> --- a/sound/soc/amd/raven/acp3x-pcm-dma.c
-> +++ b/sound/soc/amd/raven/acp3x-pcm-dma.c
-> @@ -22,6 +22,7 @@ static const struct snd_pcm_hardware acp3x_pcm_hardware_playback = {
->   	.info = SNDRV_PCM_INFO_INTERLEAVED |
->   		SNDRV_PCM_INFO_BLOCK_TRANSFER |
->   		SNDRV_PCM_INFO_BATCH |
-> +		SNDRV_PCM_INFO_MMAP | SNDRV_PCM_INFO_MMAP_VALID |
->   		SNDRV_PCM_INFO_PAUSE | SNDRV_PCM_INFO_RESUME,
->   	.formats = SNDRV_PCM_FMTBIT_S16_LE |  SNDRV_PCM_FMTBIT_S8 |
->   		   SNDRV_PCM_FMTBIT_U8 | SNDRV_PCM_FMTBIT_S24_LE |
-> @@ -42,7 +43,8 @@ static const struct snd_pcm_hardware acp3x_pcm_hardware_capture = {
->   	.info = SNDRV_PCM_INFO_INTERLEAVED |
->   		SNDRV_PCM_INFO_BLOCK_TRANSFER |
->   		SNDRV_PCM_INFO_BATCH |
-> -	    SNDRV_PCM_INFO_PAUSE | SNDRV_PCM_INFO_RESUME,
-> +		SNDRV_PCM_INFO_MMAP | SNDRV_PCM_INFO_MMAP_VALID |
-> +		SNDRV_PCM_INFO_PAUSE | SNDRV_PCM_INFO_RESUME,
->   	.formats = SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S8 |
->   		   SNDRV_PCM_FMTBIT_U8 | SNDRV_PCM_FMTBIT_S24_LE |
->   		   SNDRV_PCM_FMTBIT_S32_LE,
+> diff --git a/drivers/clk/qcom/clk-smd-rpm.c b/drivers/clk/qcom/clk-smd-rpm.c
+> index 930fa4a4c52a..e5c3db11bf26 100644
+> --- a/drivers/clk/qcom/clk-smd-rpm.c
+> +++ b/drivers/clk/qcom/clk-smd-rpm.c
+> @@ -648,6 +648,7 @@ static const struct rpm_smd_clk_desc rpm_clk_qcs404 = {
+>  };
+>  
+>  /* msm8998 */
+> +DEFINE_CLK_SMD_RPM(msm8998, bimc_clk, bimc_a_clk, QCOM_SMD_RPM_MEM_CLK, 0);
+>  DEFINE_CLK_SMD_RPM(msm8998, pcnoc_clk, pcnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 0);
+>  DEFINE_CLK_SMD_RPM(msm8998, snoc_clk, snoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 1);
+>  DEFINE_CLK_SMD_RPM(msm8998, cnoc_clk, cnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 2);
+> @@ -671,6 +672,8 @@ DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8998, rf_clk2_pin, rf_clk2_a_pin, 5);
+>  DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, rf_clk3, rf_clk3_a, 6);
+>  DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8998, rf_clk3_pin, rf_clk3_a_pin, 6);
+>  static struct clk_smd_rpm *msm8998_clks[] = {
+> +	[RPM_SMD_BIMC_CLK] = &msm8998_bimc_clk,
+> +	[RPM_SMD_BIMC_A_CLK] = &msm8998_bimc_a_clk,
+>  	[RPM_SMD_PCNOC_CLK] = &msm8998_pcnoc_clk,
+>  	[RPM_SMD_PCNOC_A_CLK] = &msm8998_pcnoc_a_clk,
+>  	[RPM_SMD_SNOC_CLK] = &msm8998_snoc_clk,
+> -- 
+> 2.17.1
 > 
