@@ -2,103 +2,79 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 273F8C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 03:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF98C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 03:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1FF82146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 03:10:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qwwbu5sj"
+	by mail.kernel.org (Postfix) with ESMTP id EEF6021775
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 03:11:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbfLRDKX (ORCPT
+        id S1726656AbfLRDLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 22:10:23 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33553 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726492AbfLRDKX (ORCPT
+        Tue, 17 Dec 2019 22:11:02 -0500
+Received: from mail-il1-f197.google.com ([209.85.166.197]:44146 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726454AbfLRDLC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 22:10:23 -0500
-Received: by mail-pf1-f193.google.com with SMTP id z16so397641pfk.0;
-        Tue, 17 Dec 2019 19:10:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=LBIJn2SIZiHMOC6lsPrhyQmx9/2pEAlUVfbj1V0vjFE=;
-        b=Qwwbu5sj4BzO7U3jn3USIMtRwYHavd9JDZjw0Nb48usgD/8tBvg+4hFL+ILtaj3jEo
-         ejORVvFlZtBjNjwnegzV0uRhh/rmS+OkCxrwOGmk2dMkHpQ1UyqJzp0sU+xNbTT4ttV4
-         SEolmKSh5fSMzfgCGuhfmbNHFcZarhTPCexBWNAD2t2oFUyzWXuIqa+hC5gDQkc6SpUw
-         xMoocQ9/b6ZLPGeqZgmUwSfWhi07BsmXaTOsMAx13bvkWoZBPbZSRB5B1WZn0+DCD0B+
-         SKj7lCmWvR5c4DdaJdYuPpNAmutNfQdCpUSryK7FP9inxE8YN7k31+6cccGdTugaK+QX
-         oc0g==
+        Tue, 17 Dec 2019 22:11:02 -0500
+Received: by mail-il1-f197.google.com with SMTP id h87so638973ild.11
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 19:11:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=LBIJn2SIZiHMOC6lsPrhyQmx9/2pEAlUVfbj1V0vjFE=;
-        b=WEUieMnPp15/gLUNdxjSh6hDVm2XCVL7uf5AtLoHOhOiZRzR5QSBF+XApAkTMM+pwT
-         6Py4gnZ5UVT8In0aZSpnYSkV3mOtlV1VNJOCYBexXlD01seFT1rxfNuJNEa0siDK26cG
-         w/mM115jCC3wUUBqNgGV3US+0YegvpHz1lrq8kpkhKW32UPaQJTjoCmb3yChDQy5Hnbe
-         HxcGm7qe+Un789xe2W18PLljmopv49Vv/bb6ZGuCS2hKHC7Jzqu12x3Y6Ybj4k9rBHMy
-         iONjUeROKa8jNJCFEArJORFGYrHgc2n8UI4PJ61ofAEgth8NOlECaILgeLyMK8qGzWI9
-         q0uw==
-X-Gm-Message-State: APjAAAUvmsl0KAQ9rkYF18eMkxgaYnG2ZBz7AlEbZyId8paFdSX11SOa
-        sWeJ2eToJI8lU/2DQlCAIY4=
-X-Google-Smtp-Source: APXvYqz2GChr1K+TwAaGIzAlqerx7xix7fmcXiIYcRXvukmY3DBUQ91mdZ6oKRvfmPNkEAwESf6mSg==
-X-Received: by 2002:a63:dc0d:: with SMTP id s13mr254770pgg.129.1576638622465;
-        Tue, 17 Dec 2019 19:10:22 -0800 (PST)
-Received: from localhost ([2a00:79e1:abc:f604:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id v29sm459617pgl.88.2019.12.17.19.10.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 19:10:21 -0800 (PST)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Wed, 18 Dec 2019 12:10:19 +0900
-To:     Andrey Zhizhikin <andrey.z@gmail.com>
-Cc:     ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        sergey.senozhatsky@gmail.com, pmladek@suse.com,
-        wangkefeng.wang@huawei.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>
-Subject: Re: [PATCH] tools lib api fs: fix gcc9 compilation error
-Message-ID: <20191218031019.GB419@tigerII.localdomain>
-References: <20191211080109.18765-1-andrey.zhizhikin@leica-geosystems.com>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=B/UHccQy2GUPLjKClLjPB9mKSYRSTTFVhiFG9ktmLyQ=;
+        b=AP7r5CujG0ibTQfzBD3gfQlfBycQRkfB6XMnFDdSwOF5Mdoftgb81kps6KbdgywzuQ
+         sUDxl2BjN+vh1OC/NzqrzOP+VeUh5lzi/axYtNFTT/tTJom44k/OIMcs9BzkyHEcScp7
+         qdvwZ/GtLkH+6BAqrYbba6/gXK8wewP9vjr1XWWCA9M2EJ7YMyLUvm4AAtSHDrXPfSMe
+         a4nXCWQzomhDvdER5eQelfv4voluedqdjbCDfnCXlXtgkGMgup9mlupajgK7XhiPBcE2
+         RCgEeVNNC2RRTrxnQ1QQ1jtJ9mTM4O0RSkj9EsQYAzzTjEXA7MqG03lqrSWKtG9YwBjR
+         zTbQ==
+X-Gm-Message-State: APjAAAVbLAiGw/0YiFgd5HS1P3h6RDcxH95pMa+HrR0SE0ppzlkIUJkK
+        lhXopNeg/ve94GRIPVObyyH5+JwjO6nuTsqigg1TIjjU8aKk
+X-Google-Smtp-Source: APXvYqyMCK4p3QJRNreOaLBgYJejAM1cYoWdGoPJ26FTPuaQyelg3Sjap478JDrBsEezCSHSp7yUtmv244NHO0fzr3UX5/+ddebT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211080109.18765-1-andrey.zhizhikin@leica-geosystems.com>
+X-Received: by 2002:a02:cdcb:: with SMTP id m11mr361306jap.125.1576638661887;
+ Tue, 17 Dec 2019 19:11:01 -0800 (PST)
+Date:   Tue, 17 Dec 2019 19:11:01 -0800
+In-Reply-To: <000000000000b6b450059870d703@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000618d6a0599f1cb49@google.com>
+Subject: Re: KASAN: global-out-of-bounds Read in precalculate_color
+From:   syzbot <syzbot+02d9172bf4c43104cd70@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, ericvh@gmail.com, hverkuil-cisco@xs4all.nl,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        lucho@ionkov.net, mchehab@kernel.org, netdev@vger.kernel.org,
+        rminnich@sandia.gov, syzkaller-bugs@googlegroups.com,
+        v9fs-developer@lists.sourceforge.net, viro@zeniv.linux.org.uk,
+        vivek.kasireddy@intel.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (19/12/11 08:01), Andrey Zhizhikin wrote:
-[..]
-> @@ -210,6 +210,7 @@ static bool fs__env_override(struct fs *fs)
->  	size_t name_len = strlen(fs->name);
->  	/* name + "_PATH" + '\0' */
->  	char upper_name[name_len + 5 + 1];
-> +
->  	memcpy(upper_name, fs->name, name_len);
->  	mem_toupper(upper_name, name_len);
->  	strcpy(&upper_name[name_len], "_PATH");
-> @@ -219,7 +220,8 @@ static bool fs__env_override(struct fs *fs)
->  		return false;
->  
->  	fs->found = true;
-> -	strncpy(fs->path, override_path, sizeof(fs->path));
-> +	strncpy(fs->path, override_path, sizeof(fs->path) - 1);
-> +	fs->path[sizeof(fs->path) - 1] = '\0';
+syzbot has bisected this bug to:
 
-I think the trend these days is to prefer stracpy/strscpy over
-strcpy/strlcpy/strncpy.
+commit 7594bf37ae9ffc434da425120c576909eb33b0bc
+Author: Al Viro <viro@zeniv.linux.org.uk>
+Date:   Mon Jul 17 02:53:08 2017 +0000
 
-	-ss
+     9p: untangle ->poll() mess
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15e323a6e00000
+start commit:   d7688697 Merge tag 'for-linus' of git://git.kernel.org/pub..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=13e323a6e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=121b4285bac421fe
+dashboard link: https://syzkaller.appspot.com/bug?extid=02d9172bf4c43104cd70
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=119c517ae00000
+
+Reported-by: syzbot+02d9172bf4c43104cd70@syzkaller.appspotmail.com
+Fixes: 7594bf37ae9f ("9p: untangle ->poll() mess")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
