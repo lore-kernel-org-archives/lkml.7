@@ -2,291 +2,283 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58380C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C266C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 131D2218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:56:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="XgvqzVOj"
+	by mail.kernel.org (Postfix) with ESMTP id 45E71218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:57:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576699029;
+	bh=hsGVSDmHbY1DWWyuMtif+daCJjB+w7HogNzj7wAMcaA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=LY4zdf9EjkqKj5rGqdtz4rreg79zCUYXWHAkzCxf3fgdCOQN78p+dNIUV8Me2V6QF
+	 lrbMW4q5a20tjDo5y5Q1moBzzwnZeLYItdGqRAHyIu59e6h+obiKMdPQld3keBk/uS
+	 AbPRyGWssSFjZY3bBnPp0xfONu850CevBuPvS6xY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbfLRT4p (ORCPT
+        id S1727587AbfLRT5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 14:56:45 -0500
-Received: from USAT19PA24.eemsg.mail.mil ([214.24.22.198]:53470 "EHLO
-        USAT19PA24.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbfLRT4o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 14:56:44 -0500
-X-EEMSG-check-017: 62262950|USAT19PA24_ESA_OUT05.csd.disa.mil
-X-IronPort-AV: E=Sophos;i="5.69,330,1571702400"; 
-   d="scan'208";a="62262950"
-Received: from emsm-gh1-uea11.ncsc.mil ([214.29.60.3])
-  by USAT19PA24.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 18 Dec 2019 19:56:40 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
-  s=tycho.nsa.gov; t=1576699000; x=1608235000;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=H6V9sbb/F66JVqn0cl8Cnf1wVZ9VtFVXnUCF/07m3aI=;
-  b=XgvqzVOjYKrJ0dCrRbxk/3A8SiUqqV3bLxotr42KIodA8QP1ff/9S++j
-   m1/AanhIb0Wgav45u7QcRqJbE7u/ZWmt4qtFj+n9KcaeaJWmEU7/V15/0
-   kree7Wv8L/9t6GUEALo/KnFw/zrNUmadQwVyumxCRf3CfEHWRVlZpj+I5
-   ir0DUcHBIl0mZ1Dl985iyDwccDFxexKdueJlb+6Nr3yTBUd3v4W+s7VIi
-   K6SjAbgxTtQAAANsKSc81QMGgSFdMrJKEHX3wgnmqaUU2AzwgrYJHOngC
-   zovb6AAV/uYz6onnR7ms+cd1Qf/Ax9y5ULmBDpCi/PYR68hrlbFu6P3P/
-   w==;
-X-IronPort-AV: E=Sophos;i="5.69,330,1571702400"; 
-   d="scan'208";a="36934795"
-IronPort-PHdr: =?us-ascii?q?9a23=3AKQmHzhTxelP3vH6itYhlOXLUPdpsv+yvbD5Q0Y?=
- =?us-ascii?q?Iujvd0So/mwa6+ZBKEt8tkgFKBZ4jH8fUM07OQ7/m7HzZYsN3Y6i5KWacPfi?=
- =?us-ascii?q?dNsd8RkQ0kDZzNImzAB9muURYHGt9fXkRu5XCxPBsdMs//Y1rPvi/6tmZKSV?=
- =?us-ascii?q?3wOgVvO+v6BJPZgdip2OCu4Z3TZBhDiCagbb9oIxi6sAvcutMIjYd+Lqs9xQ?=
- =?us-ascii?q?bFrmVJdu9L2W5mOFWfkgrm6Myt5pBj6SNQu/wg985ET6r3erkzQKJbAjo7LW?=
- =?us-ascii?q?07/dXnuhbfQwSB4HscSXgWnQFTAwfZ9hH6X4z+vTX8u+FgxSSVJ8z2TbQzWT?=
- =?us-ascii?q?S/86dmTQLjhSkbOzIl9mzcl9d9h7xHrh2/uxN/wpbUYICLO/p4YqPdZs4RSW?=
- =?us-ascii?q?5YUspMSyBNHoawYo0BAOobOeZTspfzqV0AoxCjAQWgHf3jxztNinLwwKY00f?=
- =?us-ascii?q?kuERve0QI9AdwOvnTaotb7OqgcXu+6zrXHwzrYYvNK2zrw8pTEfgwvrPyOW7?=
- =?us-ascii?q?97bMrfyVMoFwPAllietJDlMC2N1uQNrWeb6fdrW/+qi2E9rwFxpiagx8cxgY?=
- =?us-ascii?q?TOnYIa10vE+D5lwIc1OdK4SEl7bcSiEJtLrS6WLYR2QsQ8Q2xxvisx17MIuZ?=
- =?us-ascii?q?m+fCcQyZQnwQbSa/mdfIiO4B/vTuGRIS13hH9jZbmxhA6y/FC9xuDzWcS4yl?=
- =?us-ascii?q?ZHojdfntXSuX0ByQbf5tWBR/Bg5EmuwyyP2BrW6uxcJEA0krfUJIA5z74rk5?=
- =?us-ascii?q?oTrVzDHijrmEXqlKOWdlsr+uyv6+n/frXpvIWcN45pigHlKKgum8q/Aeo/Mg?=
- =?us-ascii?q?gVQWeU5f6w1KHj/ELlQLVKiec6kq/Fv5DBOcsXvKu5Aw5R0oo76ha/CSmp0M?=
- =?us-ascii?q?gAkHUaI19IdwiLgoj0N13UPvz1Aumzj06xnDtzwvDJJLzhApHDLnjZl7fheK?=
- =?us-ascii?q?5w61VBxwoo1t1f+5JVBa0BIPL0QEPxssfYAQUjPwy7xObnFs1x1pkCVmKXHq?=
- =?us-ascii?q?+ZLKTSvEeS6eIrPeaNa5EauTbnJ/c++v7hkGU2mVkefamuw5sac3S4HvVgI0?=
- =?us-ascii?q?WEbnvgmNYBEWEWvgUgSOzmkkGNUTlWZ3yqRaIz+ik7CJ66DYfEXo2tmKKO3D?=
- =?us-ascii?q?ulEZ1MZ2FLEVGMEXHmd4WeQfgDdTydLdV8nTAeUrihUYAh3wm0tADm07pnMv?=
- =?us-ascii?q?bU+ioAuJ35yNd14vPcmAox9TNqFcSd1X+CT2VukmMPXT8207h1oVZhxVebza?=
- =?us-ascii?q?h4n/tYGMRW5/NIVAc6OpncwvdgC9/sRw3Bfs2GSEq8Ttq6BjExS8o7w8USbE?=
- =?us-ascii?q?ZlB9WikhfD0jKoA7APkbyLBYY48qTd33jyOsZ9z2zJ2bIlj1knRMtPKGKnir?=
- =?us-ascii?q?R+9wjVG47GjUGZm7y2eqQb2S7H7H2DwnaWvEFETA5wVr3IXXIYZkvRq9T2/F?=
- =?us-ascii?q?jCQ6WqCbs9MgtB1c+CKq1UZd3vllhGQPbjONLDY2O+gWuwBBCIxq+SY4ruYW?=
- =?us-ascii?q?kSwCLdCE0cmQAJ4XmGLRQ+Bjumo2/GFjxuEk/gY1nt8elxr3O3VFE0zwCUb0?=
- =?us-ascii?q?1gzLe1+xgVheCCRPMXxL4LpCAhqzBsFlanw93WE8aApxZmfKhEe9w9+0tH2H?=
- =?us-ascii?q?natwNjJJygKb5thloEfwRwpUPu2A19Cp9cnsgysHMq0A1yJLqD31xfcTOY3Y?=
- =?us-ascii?q?v9Or7JJWno+hCgdarW1kvC39aM4KgP8/Q4q1TlvAGmDEYi9G9n09ZN2XuG+p?=
- =?us-ascii?q?rKFBYSUY72Uksv7xh1vazaYi0g54PPznBsKrO7sjrZ1N0zHuclzQygf9hHOq?=
- =?us-ascii?q?OeCADyC9EaB9SpKOEynlipdgwLMftM+64wO8OpaeGG2KuxM+Zmhj6mjHlI7J?=
- =?us-ascii?q?pn3UKR7yB8UPLH344Zw/GE2QuKTzX8g02kss/pgoBIfyodHm2jySj4A45RY6?=
- =?us-ascii?q?lycpgLCGq1I8243NN+h4XzVH5e7F6sHUkG2NOveRWMdVz9xg1Q1UUPoXC9hS?=
- =?us-ascii?q?S4yDl0mSkzrqWDxCzO3/jidB0fN25QWmZil1jsLpavgtAaRkeoawwplRuj5U?=
- =?us-ascii?q?rg26dbo6F/JXHJQUhUZyj2M31iUqyou7qAZs5P74kosT9WUOSnel2aTKTyox?=
- =?us-ascii?q?4E3CPiBWdewyo7dz6ysJXjgxN6kH6dLGp0rHfBd8BwxBPf5NjGSfFMwDUJXj?=
- =?us-ascii?q?V3iT7RBlWnJdap59CUm43fveC5UmKrTodTfjXzzYOcqCu74nVnARilkPCpmd?=
- =?us-ascii?q?3rCxI60TLn19luTyrIqgvzb5Lx2KSgNOJrZFVnBFj568BiAIFxjpMwhI0M2X?=
- =?us-ascii?q?gdnpia4WAIkXztPtRbwq/+d2YCRT4RzN7I7gjl3FNsLmiQy43lTHqR2NduZ9?=
- =?us-ascii?q?6/YmkOwCIy89hKCLuI7LxDhSZ1uEC4rQPNbvVmnTcS1+Eu6HgEjOENogYtyT?=
- =?us-ascii?q?+dAr8KF0lCISPsjwiI78y5rKhPZmavdryw1FFkkt26FrGNvBxTWHbjdZc+By?=
- =?us-ascii?q?N/8sJ/MFfU2n3p9o7kYMXQbc4UthCMiRjAjPNYKJYwlvoMmCpmNnjxvXwjy+?=
- =?us-ascii?q?4nkxNu2Yu2s5SAK2Vo5Ki5GAJXNiXpZ8MP/THglbhRntyM0ICpH5VuADMLUY?=
- =?us-ascii?q?DnTfKvFzISuvDnOBiUHDIgrXebHKLVHRWD50d+s3LPD5erOmmWJHkd0NVtXw?=
- =?us-ascii?q?OSJFdfgA8KRzg1hJ05GRqvxMP7cUd1/Cwe5ln9qhFU0OJnKwH/UnvDpAevcj?=
- =?us-ascii?q?o7UpyfIwRZ7w5Y4UfaLNKR7vhpEyFD/p2hrReNKmyYZwRJC2EEQUiEB1HlPr?=
- =?us-ascii?q?mz6tjM6emYBuyiL/TQZbWCs/BRV/CNxZi3yItp4y6MNtmTPnllF/A73FBMXX?=
- =?us-ascii?q?V5G8XZhjUPTSMXmjnOb8GFvhe8/DN4rsSl/PTsQgLv6pOFC6FOPtV35xC2na?=
- =?us-ascii?q?CDOvaThClnNzlYzY8DxXjPyLgcx1MdlyFudyOqEbQFtC7NUafQlrVQDx4BZC?=
- =?us-ascii?q?N5LNFI4L4k3glRJc7bjcv41rxigf4zDVdFVUfsms6uZcwNLGG9ME3ICFyXO7?=
- =?us-ascii?q?SBID3B29v3br+kSb1MkOVUsAW9uSqUE0/nMTWOjD3pVxGpMeFRkCGbJhteuI?=
- =?us-ascii?q?e8chdiE2TsUczpYAWhMNBrlT023aE0hnTSOG4ALzh8aV9Nrr6X7S9Cn/V/AX?=
- =?us-ascii?q?dB7mdhLemFnSaU9O3YKpcQsft2DSV4jeNa4HImy7RL6CFIXuB6mCzXrtR2uV?=
- =?us-ascii?q?GpjvGPyiZ7UBpJsjtLgIOLvUJkOarH8plMQ3nE8AgJ7WqKDRQFutVkBcP1u6?=
- =?us-ascii?q?BUy9jPkrn+KDZE89LI48QcA9LYJ96AMHokKRDpAiLbDBMZTT63MmHSn1ddkP?=
- =?us-ascii?q?aU9n2aqpg6q4Xsl4EUSrBBSlw1F/UaCkt+EdwMO5h7RC8rkbmejMQQ/3qxsA?=
- =?us-ascii?q?HRRNlGvpDATv+SBfTvKDCEjbhLfhcIwq33LZ4VNoLl30xvcUd6nIvUFErKR9?=
- =?us-ascii?q?xNoTNubhUyoEpT9HhyVGoz21jqagm1+n8cCea0ngIqigt5eekt8Dbs41EqJl?=
- =?us-ascii?q?vFvScwi1c+lsn4gTCLcT7xMKexUZhTCyrzqkcxL5f7TBhuYA2skkxrKi3ES6?=
- =?us-ascii?q?hSj7R+b2BrjhHTuZ9VFf5bV61EbwcaxeuLaPUwzVRctiKnyFdc5eTbDZtilQ?=
- =?us-ascii?q?0qcYOjrn9bxQJjY8A6JbbKKKpK0FdQnKSOsTGs1uwrxw8ePUkN+nuIeCEUoE?=
- =?us-ascii?q?wIKqUmJy2w8+xt7wyChyVMeGwVW/olrPJr+VgwO+CBzyL7z75DMVq9N+KFL6?=
- =?us-ascii?q?yHpWfPiNCHQkgz1kMUkElF5aJ60cA5c0qbT0ov1qeeFwwVNcreLgFYd9Fd9G?=
- =?us-ascii?q?DdfSuVr+XNzox6P5+nGuDrU+COrqAUjVygHAozGIQM9MsBFIG20E7ENcfnMK?=
- =?us-ascii?q?IFyRI16QTvJVWFCulJeR2SnDcfuc6/1p533ZJBKTwGH2V9Pju45qzNqg8pnv?=
- =?us-ascii?q?WDRtE2bWkeXoceMXI2QsK6kTZDv3tcFDm3zv4ZyA+a4j/4pyTQCiT8btV7ZP?=
- =?us-ascii?q?eMeRxgEcy59ish86WtjV7X847eJ33hNdh4vd/O6OcaqIycBPNPV7V9tF3cm4?=
- =?us-ascii?q?ZATXywT2HPCcK1J4T3a4Q0adz0C3C6UkGwij4sV8f+IsytLqaRjQH1XoZbrp?=
- =?us-ascii?q?Ob3Cs4OM+jGTERBQ1wq/sA5K1ifw0DZYQ0YRryuwQ5Lay/Lx+S0s+yTGa1NT?=
- =?us-ascii?q?tWU/5fwP2+Z7xWySosc+C7xGI6QZEgyum76E0NS48QjhHY2/mjY5JTUSzyGn?=
- =?us-ascii?q?xGZwXPvjA1l2lnNuY82Ocw2g7HvkcGPD+WbuBpb3ZEv94kD1OIPXp2EnY4R0?=
- =?us-ascii?q?ObjYfb5Q6sx6oS/yxTn9ZV1e1KrmHyvpveYDK3RKymspHVsys7bdg6uK19K5?=
- =?us-ascii?q?fjIsWcuJPYgDPfUMqYjgrQeSq3B/dL0vJNLCteQ/5W0TUsPcEWtJsH41c9X8?=
- =?us-ascii?q?E9IKJnDKgqu6DsaDx4ACpUxigcAcfI5DEej/306brYkgyMap1qZAQJrJhYkP?=
- =?us-ascii?q?McVSBsay8TraPlUJ/ZwSvMY3INKQMf6kxn7Rgen4tweajp7cLtQZtLg2pfqP?=
- =?us-ascii?q?d5eijGDJ9l8x38UG7AxRDZTvqm28mu2QRb1rq419gdVxlXE0VRx+9K0EAvLe?=
- =?us-ascii?q?czY+MSt4jL9DmJdl7+tUrpye27NB9Qz9HZcxvzC4+P/T7+Wysdv3sVRpJLwV?=
- =?us-ascii?q?nbFJIPg0x4bromoBNHJ4XwPg605TsjwY1yWb2xVdyqwVsjhXIHQTq6VdtHF+?=
- =?us-ascii?q?xi9lnQXXctN5Ksr5PsINNWS29M+ZuQrX9dkUNwI2i4z4ZRL4dG5TtaGHAFuz?=
- =?us-ascii?q?KRptq9T4td2NF3J54KPtp7/Xz6HekMbIKWr2c3tbup1H7H+hg9tku3wHO4HK?=
- =?us-ascii?q?ruC6pw+2AOFwRhHHiXsE4xCOow9XmaplnWrnh38v1dC7zJil9+9nI1NJ1IBD?=
- =?us-ascii?q?9M1HbtD1lpVnRAqO5aLaXZb4QISfQ0ZTesNgY4GPpg1FaA5kF1m3i/ZDZ94E?=
- =?us-ascii?q?8SwynAW0ERXCIWj633kCZW/tmuJDsHULpTZDArZmHCMQ3N3WhyvR1fYkxuE7?=
- =?us-ascii?q?0dBttf/rgdld9R5sfqREKoJDsAVRokNw5+2OcJ0QYJskyddDubBw20afHKth?=
- =?us-ascii?q?BmVceYqtWkKuzw5htBh5n8sOEgsa4EQjfuzQ+kRN3F6YX7qsGNs0+DZY/4Ou?=
- =?us-ascii?q?unbHnZRSLQix2qnrclF9/B+C2FdEJgJoN1xDIEaJzlGGiDaQ9LPa0WD0pSUa?=
- =?us-ascii?q?Rrb5NNpeUMI4dGcaME4udIAQidRwinTI6qq+NcL037Qz3bIiTH9faw98ab0r?=
- =?us-ascii?q?3ZTaDMa8WHwHCPF712OpM85TTyELDs+YZE/wz93fI7sgtfQELFexqcsNDoIA?=
- =?us-ascii?q?9DsMyrbEikpIA1GTrQDL95in+rzUZFIY5faCSx/YVQ85hZ4Wv+Te9imhz4uf?=
- =?us-ascii?q?Zf5pF/4ok+/r5txN3xLq6UIvNf5wsvOB+eCx92vq8sC2hjSnoZNvULKfz5fq?=
- =?us-ascii?q?kDi83q7eftGPpExgeS/rliddbfJ0zH0vK6AzWYRA0MyBwNshYGPwCc0LiDgK?=
- =?us-ascii?q?YyRsG787uqknkx6kSze0ZVhItm4p2Jr+/R/r7a?=
-X-IPAS-Result: =?us-ascii?q?A2BjAgB2g/pd/wHyM5BkHAEBAQEBBwEBEQEEBAEBgXyBd?=
- =?us-ascii?q?oEYVSASKoQEiQOGWgaBEiWJapFFCQEBAQEBAQEBASsMAQGEQAKCPTgTAhABA?=
- =?us-ascii?q?QEEAQEBAQEFAwEBbIU3DII7KQGCegEFDhUVLRQQCxgCAiYCAlcGAQwGAgEBg?=
- =?us-ascii?q?l8/AYJSJQ+uDYEyhA0BAYFAgzqBQYEOKIlPgmN5gQeBOAwDgl0+gmQDhHKCX?=
- =?us-ascii?q?gSPeocURpc1gj+CQ4RujlwGG4JDdYcEkBItjiGBRocLlA4igVgrCAIYCCEPg?=
- =?us-ascii?q?ycJFjEYDY0eFxWIT4UIAVQjAzABjywBAQ?=
-Received: from tarius.tycho.ncsc.mil (HELO tarius.infosec.tycho.ncsc.mil) ([144.51.242.1])
-  by emsm-gh1-uea11.NCSC.MIL with ESMTP; 18 Dec 2019 19:56:39 +0000
-Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
-        by tarius.infosec.tycho.ncsc.mil (8.14.7/8.14.4) with ESMTP id xBIJtrkd126229;
-        Wed, 18 Dec 2019 14:55:54 -0500
-Subject: Re: [PATCH v4 1/9] capabilities: introduce CAP_SYS_PERFMON to kernel
- and user space
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
-        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "james.bottomley@hansenpartnership.com" 
-        <james.bottomley@hansenpartnership.com>,
-        Serge Hallyn <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Robert Richter <rric@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org, oprofile-list@lists.sf.net
-References: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
- <e0cb2b8d-e964-bc23-bf80-58d7ac4ed6f1@linux.intel.com>
-From:   Stephen Smalley <sds@tycho.nsa.gov>
-Message-ID: <c10d7785-1e75-4503-3560-99ab9f845a11@tycho.nsa.gov>
-Date:   Wed, 18 Dec 2019 14:56:33 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 18 Dec 2019 14:57:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44294 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726698AbfLRT5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 14:57:08 -0500
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A98A72467B;
+        Wed, 18 Dec 2019 19:57:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576699026;
+        bh=hsGVSDmHbY1DWWyuMtif+daCJjB+w7HogNzj7wAMcaA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=dLJofwbIWgFEPo3+S8hv7quxnIE+fomk9D9qPZ8ldXM1SNHmGCRh/4O/1hh4/lrG5
+         62OUVSjet62RZ9+lOQFRmoVIVl7c1/fghP6vPTaCrmAW8fRQFTWr2ZdaflfC14Er0B
+         NTV5/18Aa/Ct/IQpn0fEz+3SVNt2f6KqwXeaLZ/0=
+Received: by mail-qv1-f49.google.com with SMTP id m14so1258476qvl.3;
+        Wed, 18 Dec 2019 11:57:06 -0800 (PST)
+X-Gm-Message-State: APjAAAXfJh2SehtoMvf6+br5Qmm74MUYtEOKmeVKKSaNIQAxHJ2jw1Pq
+        iHa5ZAaMSYeN6vfCaXwpUdYgNLVGPiimJvr24w==
+X-Google-Smtp-Source: APXvYqwlJ8PQxngE9bLOMO3xzC/6f1AKYXW3BjatdURrIOtmKFXm8/TbP1aRYGP/3EMq0xkMKSSwIjW5vHD2z4TRgFE=
+X-Received: by 2002:a0c:f68f:: with SMTP id p15mr4018358qvn.79.1576699025700;
+ Wed, 18 Dec 2019 11:57:05 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <e0cb2b8d-e964-bc23-bf80-58d7ac4ed6f1@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191212014233.32799-1-john.stultz@linaro.org>
+ <20191212014233.32799-8-john.stultz@linaro.org> <20191218163738.GA12358@bogus>
+ <CALAqxLU=KPJoPKHP14BWcLYJdBoK8DC5+7hRtqCvE2-HZHWxZA@mail.gmail.com>
+In-Reply-To: <CALAqxLU=KPJoPKHP14BWcLYJdBoK8DC5+7hRtqCvE2-HZHWxZA@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 18 Dec 2019 13:56:53 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+9uSMfpQZxmfJX4Y4R_xwkK413SqNZ3x6XpKpMvWA56Q@mail.gmail.com>
+Message-ID: <CAL_Jsq+9uSMfpQZxmfJX4Y4R_xwkK413SqNZ3x6XpKpMvWA56Q@mail.gmail.com>
+Subject: Re: [PATCH v7 7/8] dt-bindings: misc: Add bindings for HiSilicon usb
+ hub and data role switch functionality on HiKey960
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        ShuFan Lee <shufan_lee@richtek.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jun Li <lijun.kernel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Guillaume Gardet <Guillaume.Gardet@arm.com>,
+        Jack Pham <jackp@codeaurora.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/18/19 4:24 AM, Alexey Budankov wrote:
-> 
-> Introduce CAP_SYS_PERFMON capability devoted to secure system performance
-> monitoring and observability operations so that CAP_SYS_PERFMON would
-> assist CAP_SYS_ADMIN capability in its governing role for perf_events,
-> i915_perf and other subsystems of the kernel.
-> 
-> CAP_SYS_PERFMON intends to harden system security and integrity during
-> system performance monitoring and observability operations by decreasing
-> attack surface that is available to CAP_SYS_ADMIN privileged processes.
-> 
-> CAP_SYS_PERFMON intends to take over CAP_SYS_ADMIN credentials related
-> to system performance monitoring and observability operations and balance
-> amount of CAP_SYS_ADMIN credentials in accordance with the recommendations
-> provided in the man page for CAP_SYS_ADMIN [1]: "Note: this capability
-> is overloaded; see Notes to kernel developers, below."
-> 
-> [1] http://man7.org/linux/man-pages/man7/capabilities.7.html
-> 
-> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+On Wed, Dec 18, 2019 at 11:21 AM John Stultz <john.stultz@linaro.org> wrote:
+>
+> On Wed, Dec 18, 2019 at 8:37 AM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Thu, Dec 12, 2019 at 01:42:32AM +0000, John Stultz wrote:
+> > > From: Yu Chen <chenyu56@huawei.com>
+> > >
+> > > This patch adds binding documentation to support usb hub and usb
+> > > data role switch of Hisilicon HiKey960 Board.
+> > >
+> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > CC: ShuFan Lee <shufan_lee@richtek.com>
+> > > Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > > Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> > > Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > > Cc: Yu Chen <chenyu56@huawei.com>
+> > > Cc: Felipe Balbi <balbi@kernel.org>
+> > > Cc: Hans de Goede <hdegoede@redhat.com>
+> > > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > > Cc: Jun Li <lijun.kernel@gmail.com>
+> > > Cc: Valentin Schneider <valentin.schneider@arm.com>
+> > > Cc: Guillaume Gardet <Guillaume.Gardet@arm.com>
+> > > Cc: Jack Pham <jackp@codeaurora.org>
+> > > Cc: linux-usb@vger.kernel.org
+> > > Cc: devicetree@vger.kernel.org
+> > > Signed-off-by: Yu Chen <chenyu56@huawei.com>
+> > > Signed-off-by: John Stultz <john.stultz@linaro.org>
+> > > ---
+> > > v3: Reworked as usb-role-switch intermediary
+> > >
+> > > v7: Switched over to YAML dt binding description
+> > > ---
+> > >  .../bindings/misc/hisilicon-hikey-usb.yaml    | 85 +++++++++++++++++++
+> > >  1 file changed, 85 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.yaml b/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.yaml
+> > > new file mode 100644
+> > > index 000000000000..1fc3b198ef73
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.yaml
+> > > @@ -0,0 +1,85 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > > +# Copyright 2019 Linaro Ltd.
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: "http://devicetree.org/schemas/misc/hisilicon-hikey-usb.yaml#"
+> > > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> > > +
+> > > +title: HiKey960 onboard USB GPIO Hub
+> > > +
+> > > +maintainers:
+> > > +  - John Stultz <john.stultz@linaro.org>
+> > > +
+> > > +description: |
+> > > +  Supports the onboard HiKey960 USB GPIO hub, which acts as a
+> > > +  role-switch intermediary to detect the state of the USB-C
+> > > +  port, to switch the hub into dual-role USB-C or host mode,
+> > > +  which enables the onboard USB-A host ports.
+> >
+> > Honestly I'm torn between whatever works for you because this is pretty
+> > "special" dev board design and it should more accurately match the
+> > hardware design. I think we can do the later and it doesn't really need
+> > anything new.
+> >
+> > > +
+> > > +  Schematics about the hub can be found here:
+> > > +    https://github.com/96boards/documentation/raw/master/consumer/hikey/hikey960/hardware-docs/HiKey960_Schematics.pdf
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    items:
+> > > +      - const: hisilicon,gpio_hubv1
+> >
+> > As a whole this is HiSilicon specific, but really it is not. It's really
+> > just a hub, a mux, and connectors for which we have bindings for. I
+> > think you need to model the actual hub in DT. We have 2 ways already to
+> > describe hubs in DT: a I2C device or USB device.
+> >
+> > AIUI, the board looks something like this:
+> >
+> > ctrl -> mux --> hub -> type-a connector
+> >             +-> type-c connector
+> >
+> > If the hub I2C is not used, then you could do something like this:
+> >
+> > ctrl {
+> >     mux-controls = <&usb_gpio_mux>;
+> >     connector@0 {
+> >         // type C connector binding
+> >     };
+> >     hub@1 {
+> >         // USB device binding
+> >     };
+> > };
+>
+> I can't say I totally grok all this, but I'll go digging to try to
+> better understand it.
+> I don't believe there is any I2C involved here, so I'll try the
+> approach you outline above.
 
-Acked-by: Stephen Smalley <sds@tycho.nsa.gov>
+Well, it is there in the schematics.
 
-Note for selinux developers: we will need to update the 
-selinux-testsuite tests for perf_event when/if this change lands upstream.
+> > Or if I2C is used and the hub is under the I2C controller:
+> >
+> > ctrl {
+> >     port@0 {
+> >         mux-controls = <&usb_gpio_mux>;
+> >         endpoint@0 { // mux state 0
+> >                 remote-endpoint = <&usb_c_connector_port>;
+> >         };
+> >         endpoint@1 { // mux state 1
+> >                 remote-endpoint = <&usb_hub_port>;
+> >         };
+> > };
+> >
+> > The only new bindings you really need are adding 'mux-controls' to the
+> > USB host controller and the hub binding (we already have a few).
+> >
+> > If the USB2 and USB3 signals come from 2 different host controller
+> > nodes, then I think it will need to look like the 2nd case regardless
+> > of I2C. (It's strange that USB3 was not routed to Type-C connector. Can
+> > you do USB2 on Type-C and USB3 on hub simultaneously? You need USB2 to
+> > enumerate, right?)
+>
+> Yea, it is strange, and I unfortunately don't know why only USB2 was
+> exported to the type-c connector.
+> And to my knowledge, you cannot use both the type-c and hub simultaneously.
+>
+>
+> > > +
+> > > +  typec-vbus-gpios:
+> > > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > > +    description: phandle to the typec-vbus gpio
+> >
+> > This should be modeled as a GPIO regulator, and belongs as part of a
+> > connector node. See bindings/connector/usb-connector.txt.
+> >
+> > > +
+> > > +  otg-switch-gpios:
+> > > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > > +    description: phandle to the otg-switch gpio
+> >
+> > This would be the gpio-mux binding instead.
+> >
+> > > +
+> > > +  hub-vdd33-en-gpios:
+> > > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > > +    description: phandle to the hub 3.3v power enablement gpio
+> >
+> > This should be modeled as a GPIO regulator.
+> >
+> > What about the reset line on the hub?
+>
+> Unknown. I don't have any details on that.
 
-> ---
->   include/linux/capability.h          | 4 ++++
->   include/uapi/linux/capability.h     | 8 +++++++-
->   security/selinux/include/classmap.h | 4 ++--
->   3 files changed, 13 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/capability.h b/include/linux/capability.h
-> index ecce0f43c73a..883c879baa4b 100644
-> --- a/include/linux/capability.h
-> +++ b/include/linux/capability.h
-> @@ -251,6 +251,10 @@ extern bool privileged_wrt_inode_uidgid(struct user_namespace *ns, const struct
->   extern bool capable_wrt_inode_uidgid(const struct inode *inode, int cap);
->   extern bool file_ns_capable(const struct file *file, struct user_namespace *ns, int cap);
->   extern bool ptracer_capable(struct task_struct *tsk, struct user_namespace *ns);
-> +static inline bool perfmon_capable(void)
-> +{
-> +	return capable(CAP_SYS_PERFMON) || capable(CAP_SYS_ADMIN);
-> +}
->   
->   /* audit system wants to get cap info from files as well */
->   extern int get_vfs_caps_from_disk(const struct dentry *dentry, struct cpu_vfs_cap_data *cpu_caps);
-> diff --git a/include/uapi/linux/capability.h b/include/uapi/linux/capability.h
-> index 240fdb9a60f6..98e03cc76c7c 100644
-> --- a/include/uapi/linux/capability.h
-> +++ b/include/uapi/linux/capability.h
-> @@ -366,8 +366,14 @@ struct vfs_ns_cap_data {
->   
->   #define CAP_AUDIT_READ		37
->   
-> +/*
-> + * Allow system performance and observability privileged operations
-> + * using perf_events, i915_perf and other kernel subsystems
-> + */
-> +
-> +#define CAP_SYS_PERFMON		38
->   
-> -#define CAP_LAST_CAP         CAP_AUDIT_READ
-> +#define CAP_LAST_CAP         CAP_SYS_PERFMON
->   
->   #define cap_valid(x) ((x) >= 0 && (x) <= CAP_LAST_CAP)
->   
-> diff --git a/security/selinux/include/classmap.h b/security/selinux/include/classmap.h
-> index 7db24855e12d..bae602c623b0 100644
-> --- a/security/selinux/include/classmap.h
-> +++ b/security/selinux/include/classmap.h
-> @@ -27,9 +27,9 @@
->   	    "audit_control", "setfcap"
->   
->   #define COMMON_CAP2_PERMS  "mac_override", "mac_admin", "syslog", \
-> -		"wake_alarm", "block_suspend", "audit_read"
-> +		"wake_alarm", "block_suspend", "audit_read", "sys_perfmon"
->   
-> -#if CAP_LAST_CAP > CAP_AUDIT_READ
-> +#if CAP_LAST_CAP > CAP_SYS_PERFMON
->   #error New capability defined, please update COMMON_CAP2_PERMS.
->   #endif
->   
-> 
+You might just be getting lucky that it is pulled to the right state.
 
+
+> > > +  usb-role-switch:
+> > > +    $ref: /schemas/types.yaml#/definitions/flag
+> > > +    description: Support role switch.
+> >
+> > This normally is a controller property. Role switch is foreign to the
+> > hub, so doesn't really belong there for sure.
+>
+> So this part was critical to being able to get role switch
+> notification from the connector and to properly switch modes without
+> adding extra notifier gunk from the previous patch that folks didn't
+> like.
+>
+> Trying to understand further,  your suggestion here is to re-model the
+> binding, as gpio regulators and gpio muxes, and use a usb-connector
+> node to describe them,  but I'm missing how I connect that to the
+> driver implementation I have?
+
+Good question, but that shouldn't really dictate your binding design.
+
+> Is the idea to extend the rt1711h and
+> dwc3 drivers further to support the mux/hub bit (this part is fairly
+> foggy to me), completely removing the need for the misc driver?
+
+I imagine that you need some driver to determine the state of the mux.
+Perhaps a usb-mux driver which is instantiated by the host controller
+driver when it sees a mux-controls property. Sorry, haven't looked at
+the driver side of this at all.
+
+> I did take an attempt at something similar with an earlier iteration
+> of the patch set, where I was trying to move the vbus-gpio as a
+> gpio-regulator to be controlled by the rt1711h/tpcm core, but that
+> approach didn't work properly and Hans suggested I just go back to the
+> approach submitted here:
+>   https://lkml.org/lkml/2019/10/22/42
+
+I don't see why that would matter. If you need to sense the Vbus
+state, then you do need a GPIO typically. But for an enable line, it's
+just another level of abstraction.
+
+Rob
