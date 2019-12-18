@@ -2,92 +2,141 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 620E2C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9232AC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3995B2176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:47:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68DC62176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:47:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fQMdv/vh"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JZ97l2tU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727181AbfLROrn (ORCPT
+        id S1727274AbfLROry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 09:47:43 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33431 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726921AbfLROrm (ORCPT
+        Wed, 18 Dec 2019 09:47:54 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:44882 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727186AbfLROry (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 09:47:42 -0500
-Received: by mail-pg1-f195.google.com with SMTP id 6so1417723pgk.0;
-        Wed, 18 Dec 2019 06:47:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=guFwf+wCa12JSxYCT/+nf881wz06mcBiWToUaJNXU+I=;
-        b=fQMdv/vhVoW4o4bNtXzhG4yJUPXzUyaCEdzXdPxDo8S1IHbrFubu1HtXnUstlkNwjN
-         sAsNoFaemGt9CFgffOHZLOhCP5ihIJzIXIB7y73SVcDTTpWeoNPyC1F1eys+lLkqSeYy
-         gKrXjN/t5Al7GahcB8pusfDRaMAAP4nLlxEoXieWtFVaj+Y2TaFpicX7e5Y0MPaQ0v8C
-         V3EVlxom5lkK02ZIKKMky/TES8fuyrfKj37ewYlMKeQg7sjZEhr72nO3ERheRY4lZY1q
-         36taH3Hqjb9bDk7dNv2QHE4bBDXAfmw3kX5xUAO4GaFeNV2XLnksTwJegKDK5+A4Tq9D
-         ii3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=guFwf+wCa12JSxYCT/+nf881wz06mcBiWToUaJNXU+I=;
-        b=KTDt6FNoDbCiM1BRM28lQY8YNilDe6zbzpI+QvhlnVTW0NFBWDMDnSHSSlyoEkSZ/2
-         KX3cuCEgj1D6aM3ab3AL8F8OAGNu4D4ZKCySNBc2/ROFkFJ2/ixfY6KbSmbxJz5e9KUx
-         +PcWZxc8P1KRZFNZJjWfzorxAH0jRzpabsETyvDYyVNTBfMwCg6v+6ahP6V3AubFcawg
-         gY9ywFcso0/jBTgO3+3yIJ/WUE9UQpkPRSfMqmIyNELsynDojjsw2mSraZugHnG9XmsA
-         FJxP79D4Xs8BVzmQqMpXYf/BoDsURw3IcpdRZAZSrhSppgq2quAmtkjPQtBgHmb7o4gV
-         iuqw==
-X-Gm-Message-State: APjAAAW6aGK8T5ZAnb/IvYAvMXFUw1Rz88VCGAb92h+3UJ7dwk7gAEnN
-        VpybCc5ZuFppDuQ1FOl/imY=
-X-Google-Smtp-Source: APXvYqyM9FqA1ARCYVXS0NxiH0ecdtuCZqFkvEMg+feJh4WBiJZ4U68zBxyrj7d6NSrqilRo+FzblQ==
-X-Received: by 2002:a63:504f:: with SMTP id q15mr3486434pgl.8.1576680462221;
-        Wed, 18 Dec 2019 06:47:42 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id w38sm3731258pgk.45.2019.12.18.06.47.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 18 Dec 2019 06:47:40 -0800 (PST)
-Date:   Wed, 18 Dec 2019 06:47:39 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.3 00/25] 5.3.18-stable review
-Message-ID: <20191218144739.GA19358@roeck-us.net>
-References: <20191217200903.179327435@linuxfoundation.org>
+        Wed, 18 Dec 2019 09:47:54 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBIElnw9091999;
+        Wed, 18 Dec 2019 08:47:49 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576680469;
+        bh=9QQbSS0rFH46BR10NFC7Q609jmka/ilJ1AcUNksp8Fo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=JZ97l2tUebr0TbqM/WnjQMc9swjxz6W/Tn97oPc6EhnSznVXHMtgIbLg5uHlpmuY1
+         NiMeHguJuWE/AhB+3KImvys8cEkiA6AwOJa9vxdBP3YvIsgHw6aSFZ3u0cwNo6a/em
+         Z42TZ5RhDeLiubGLZNdxY2hMlQ/R8P8hbNBj7pcg=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBIEln1I019031
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 18 Dec 2019 08:47:49 -0600
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 18
+ Dec 2019 08:47:48 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 18 Dec 2019 08:47:48 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBIElmKj014309;
+        Wed, 18 Dec 2019 08:47:48 -0600
+Subject: Re: [PATCH v17 00/19] Multicolor Framework
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20191114133023.32185-1-dmurphy@ti.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <efdfcf1f-50b2-314f-3d46-93369229109a@ti.com>
+Date:   Wed, 18 Dec 2019 08:45:21 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191217200903.179327435@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191114133023.32185-1-dmurphy@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 09:15:59PM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.3.18 release.
-> There are 25 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Note, this is the LAST 5.3.y kernel to be released, after this one, it
-> will be end-of-life.  You should have moved to the 5.4.y series already
-> by now.
-> 
-Build results:
-	total: 158 pass: 158 fail: 0
-Qemu test results:
-	total: 384 pass: 384 fail: 0
+Hello
 
-Guenter
+Bump for application to leds-next
+
+Dan
+
+On 11/14/19 7:30 AM, Dan Murphy wrote:
+> Hello
+>
+> Simple fix in the multicolor code where the extended registration call was not
+> called in the devm_* function
+>
+> Thanks Martin F. for finding this issue.
+>
+> Hopefully this will be pulled in for the 5.5 merge window.
+>
+> Dan
+>
+> Dan Murphy (19):
+>    dt: bindings: Add multicolor class dt bindings documention
+>    dt-bindings: leds: Add multicolor ID to the color ID list
+>    leds: Add multicolor ID to the color ID list
+>    leds: multicolor: Introduce a multicolor class definition
+>    dt: bindings: lp50xx: Introduce the lp50xx family of RGB drivers
+>    leds: lp50xx: Add the LP50XX family of the RGB LED driver
+>    dt: bindings: lp55xx: Be consistent in the document with LED acronym
+>    dt: bindings: lp55xx: Update binding for Multicolor Framework
+>    ARM: dts: n900: Add reg property to the LP5523 channel node
+>    ARM: dts: imx6dl-yapp4: Add reg property to the lp5562 channel node
+>    ARM: dts: ste-href: Add reg property to the LP5521 channel nodes
+>    leds: lp55xx: Convert LED class registration to devm_*
+>    leds: lp55xx: Add multicolor framework support to lp55xx
+>    leds: lp5523: Update the lp5523 code to add multicolor brightness
+>      function
+>    leds: lp5521: Add multicolor framework multicolor brightness support
+>    leds: lp55xx: Fix checkpatch file permissions issues
+>    leds: lp5523: Fix checkpatch issues in the code
+>    dt: bindings: Update lp55xx binding to recommended LED naming
+>    leds: lp55xx-common: Remove extern from lp55xx-common header
+>
+>   .../ABI/testing/sysfs-class-led-multicolor    |  36 +
+>   .../bindings/leds/leds-class-multicolor.txt   |  98 +++
+>   .../devicetree/bindings/leds/leds-lp50xx.txt  | 148 ++++
+>   .../devicetree/bindings/leds/leds-lp55xx.txt  | 163 +++-
+>   Documentation/leds/index.rst                  |   1 +
+>   Documentation/leds/leds-class-multicolor.rst  | 100 +++
+>   arch/arm/boot/dts/imx6dl-yapp4-common.dtsi    |  14 +-
+>   arch/arm/boot/dts/omap3-n900.dts              |  29 +-
+>   arch/arm/boot/dts/ste-href.dtsi               |  22 +-
+>   drivers/leds/Kconfig                          |  22 +
+>   drivers/leds/Makefile                         |   2 +
+>   drivers/leds/led-class-multicolor.c           | 272 ++++++
+>   drivers/leds/led-core.c                       |   1 +
+>   drivers/leds/leds-lp50xx.c                    | 799 ++++++++++++++++++
+>   drivers/leds/leds-lp5521.c                    |  43 +-
+>   drivers/leds/leds-lp5523.c                    |  62 +-
+>   drivers/leds/leds-lp5562.c                    |  22 +-
+>   drivers/leds/leds-lp55xx-common.c             | 235 ++++--
+>   drivers/leds/leds-lp55xx-common.h             |  36 +-
+>   drivers/leds/leds-lp8501.c                    |  23 +-
+>   include/dt-bindings/leds/common.h             |   3 +-
+>   include/linux/led-class-multicolor.h          | 139 +++
+>   include/linux/platform_data/leds-lp55xx.h     |   8 +
+>   23 files changed, 2106 insertions(+), 172 deletions(-)
+>   create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
+>   create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
+>   create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.txt
+>   create mode 100644 Documentation/leds/leds-class-multicolor.rst
+>   create mode 100644 drivers/leds/led-class-multicolor.c
+>   create mode 100644 drivers/leds/leds-lp50xx.c
+>   create mode 100644 include/linux/led-class-multicolor.h
+>
