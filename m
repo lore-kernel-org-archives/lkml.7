@@ -2,242 +2,96 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EDF8C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3FDC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3417E2146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:53:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TQMCOlkN"
+	by mail.kernel.org (Postfix) with ESMTP id 7DF372146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:54:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727344AbfLRPxp (ORCPT
+        id S1727346AbfLRPy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 10:53:45 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:35828 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727215AbfLRPxo (ORCPT
+        Wed, 18 Dec 2019 10:54:57 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:58036 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726985AbfLRPy5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 10:53:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576684422;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=unt15VBAcaHjgr4U8q0O2ZKzQ4PmSaIhSP/h0Yo0Lsg=;
-        b=TQMCOlkNMZNgWF4tuPlLRzYc5/1QRPvXzNb0FxdF7fWKUyYMr8apRDZ7xICttgBfWjyVfK
-        ylhEO0EdXxlh+yMAw0G5vmocAPGE+L0BULNIH5jAXzHZ/pv8uI/oV8SGcFFNrMA5fF5w+H
-        jNY3gHIwlY3IQE2uECOIdneXne03GZ8=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-42-AyToU93VPCeqAyfjtCxVGw-1; Wed, 18 Dec 2019 10:53:41 -0500
-X-MC-Unique: AyToU93VPCeqAyfjtCxVGw-1
-Received: by mail-qk1-f198.google.com with SMTP id w64so1616189qka.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 07:53:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=unt15VBAcaHjgr4U8q0O2ZKzQ4PmSaIhSP/h0Yo0Lsg=;
-        b=hjjSBBr9eSMh0owsSFXAEBNqWFducdzqvkXzYtCsFLKJFoTeD1oJIRgOP1qvfELEyL
-         TcHqigw7Vc3CKN/7ZHYfgwmvv1VMowFVAea6IYJnZnRRGlmbldOsv9/Funu+2212kU6u
-         hw5U4BmFaXAxyzQWY3LtO3/pI11vysJJdWc7WO3A65rRUxGp35Do/Zm7wwFDM/QTawgf
-         a9DQNGfYP/ixqqsO4aFsRxIVKCkgP4TtvlbT4aunlcM2EFgkaewNybWcSHkbZkedR4O7
-         6o5OMWyAqtSGzzOhKF/AHa2AkbiVwGou3P/NGaGB//xn5FgvBmMh8ykfvaht80CkQEdA
-         5S4g==
-X-Gm-Message-State: APjAAAVj6t05xdp6UgFRa12VrvVwK5BetlPHLuCnJ4IwMLT8WwHAw9mA
-        TpX7c8ZcS54BAVADElRFip5H3V07UinHmwDceYT98GxoeWScWxaMYkLBrWNBN60hGtm68JV4YO+
-        vThxb63aACgeTqKh/6ywaKQD6P9ZTPCNYRs5GeW4B
-X-Received: by 2002:aed:20e5:: with SMTP id 92mr2769389qtb.294.1576684420709;
-        Wed, 18 Dec 2019 07:53:40 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxhdfn+DJmWSW1rtNfJv+v3JLGnbmcOBsRFVV57rECIvs8fgi+lo+5a3GjmoMIWei9Wj75Fqi5V2OS/6ZuECd8=
-X-Received: by 2002:aed:20e5:: with SMTP id 92mr2769372qtb.294.1576684420468;
- Wed, 18 Dec 2019 07:53:40 -0800 (PST)
+        Wed, 18 Dec 2019 10:54:57 -0500
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1ihbez-0005Xb-Pq; Wed, 18 Dec 2019 16:54:49 +0100
+Date:   Wed, 18 Dec 2019 16:54:49 +0100
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Rik van Riel <riel@surriel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v2 3/3] x86/fpu/xstate: Invalidate fpregs when
+ __fpu_restore_sig() fails
+Message-ID: <20191218155449.sk4gjabtynh67jqb@linutronix.de>
+References: <20191212210855.19260-1-yu-cheng.yu@intel.com>
+ <20191212210855.19260-4-yu-cheng.yu@intel.com>
 MIME-Version: 1.0
-References: <20191217225021.GA34258@dtor-ws>
-In-Reply-To: <20191217225021.GA34258@dtor-ws>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Wed, 18 Dec 2019 16:53:29 +0100
-Message-ID: <CAO-hwJJ5JDi9z_nBjo1vLtCMG1XWLn_E_SV+57t3=qAowkmxNQ@mail.gmail.com>
-Subject: Re: [PATCH] HID: hiddev: fix mess in hiddev_open()
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Linux USB Mailing List <linux-usb@vger.kernel.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191212210855.19260-4-yu-cheng.yu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 11:50 PM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> The open method of hiddev handler fails to bring the device out of
-> autosuspend state as was promised in 0361a28d3f9a, as it actually has 2
-> blocks that try to start the transport (call hid_hw_open()) with both
-> being guarded by the "open" counter, so the 2nd block is never executed as
-> the first block increments the counter so it is never at 0 when we check
-> it for the second block.
->
-> Additionally hiddev_open() was leaving counter incremented on errors,
-> causing the device to never be reopened properly if there was ever an
-> error.
->
-> Let's fix all of this by factoring out code that creates client structure
-> and powers up the device into a separate function that is being called
-> from usbhid_open() with the "existancelock" being held.
->
-> Fixes: 0361a28d3f9a ("HID: autosuspend support for USB HID")
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
+On 2019-12-12 13:08:55 [-0800], Yu-cheng Yu wrote:
+> In __fpu_restore_sig(),'init_fpstate.xsave' and part of 'fpu->state.xsave'
+> are restored separately to xregs.  However, as stated in __cpu_invalidate_
+> fpregs_state(),
+> 
+>   Any code that clobbers the FPU registers or updates the in-memory
+>   FPU state for a task MUST let the rest of the kernel know that the
+>   FPU registers are no longer valid for this task.
+> 
+> and this code violates that rule.  Should the restoration fail, the other
+> task's context is corrupted.
+> 
+> This problem does not occur very often because copy_*_to_xregs() succeeds
+> most of the time.  
 
-Thanks!
+why "most of the time"? It should always succeed. We talk here about
+__fpu__restore_sig() correct? Using init_fpstate as part of restore
+process isn't the "default" case. If the restore _here_ fails then it
+fails.
 
-Applied to for-5.5/upstream-fixes
+>                    It occurs, for instance, in copy_user_to_fpregs_
+> zeroing() when the first half of the restoration succeeds and the other
+> half fails.  This can be triggered by running glibc tests, where a non-
+> present user stack page causes the XRSTOR to fail.
 
-Cheers,
-Benjamin
+So if copy_user_to_fpregs_zeroing() fails then we go to the slowpath.
+Then we load the FPU register with copy_kernel_to_xregs_err().
+In the end they are either enabled (fpregs_mark_activate()) or cleared
+if it failed (fpu__clear()). Don't see here a problem.
 
->  drivers/hid/usbhid/hiddev.c | 97 ++++++++++++++++---------------------
->  1 file changed, 42 insertions(+), 55 deletions(-)
->
-> diff --git a/drivers/hid/usbhid/hiddev.c b/drivers/hid/usbhid/hiddev.c
-> index 1f9bc4483465..c879b214a479 100644
-> --- a/drivers/hid/usbhid/hiddev.c
-> +++ b/drivers/hid/usbhid/hiddev.c
-> @@ -241,12 +241,51 @@ static int hiddev_release(struct inode * inode, struct file * file)
->         return 0;
->  }
->
-> +static int __hiddev_open(struct hiddev *hiddev, struct file *file)
-> +{
-> +       struct hiddev_list *list;
-> +       int error;
-> +
-> +       lockdep_assert_held(&hiddev->existancelock);
-> +
-> +       list = vzalloc(sizeof(*list));
-> +       if (!list)
-> +               return -ENOMEM;
-> +
-> +       mutex_init(&list->thread_lock);
-> +       list->hiddev = hiddev;
-> +
-> +       if (!hiddev->open++) {
-> +               error = hid_hw_power(hiddev->hid, PM_HINT_FULLON);
-> +               if (error < 0)
-> +                       goto err_drop_count;
-> +
-> +               error = hid_hw_open(hiddev->hid);
-> +               if (error < 0)
-> +                       goto err_normal_power;
-> +       }
-> +
-> +       spin_lock_irq(&hiddev->list_lock);
-> +       list_add_tail(&list->node, &hiddev->list);
-> +       spin_unlock_irq(&hiddev->list_lock);
-> +
-> +       file->private_data = list;
-> +
-> +       return 0;
-> +
-> +err_normal_power:
-> +       hid_hw_power(hiddev->hid, PM_HINT_NORMAL);
-> +err_drop_count:
-> +       hiddev->open--;
-> +       vfree(list);
-> +       return error;
-> +}
-> +
->  /*
->   * open file op
->   */
->  static int hiddev_open(struct inode *inode, struct file *file)
->  {
-> -       struct hiddev_list *list;
->         struct usb_interface *intf;
->         struct hid_device *hid;
->         struct hiddev *hiddev;
-> @@ -255,66 +294,14 @@ static int hiddev_open(struct inode *inode, struct file *file)
->         intf = usbhid_find_interface(iminor(inode));
->         if (!intf)
->                 return -ENODEV;
-> +
->         hid = usb_get_intfdata(intf);
->         hiddev = hid->hiddev;
->
-> -       if (!(list = vzalloc(sizeof(struct hiddev_list))))
-> -               return -ENOMEM;
-> -       mutex_init(&list->thread_lock);
-> -       list->hiddev = hiddev;
-> -       file->private_data = list;
-> -
-> -       /*
-> -        * no need for locking because the USB major number
-> -        * is shared which usbcore guards against disconnect
-> -        */
-> -       if (list->hiddev->exist) {
-> -               if (!list->hiddev->open++) {
-> -                       res = hid_hw_open(hiddev->hid);
-> -                       if (res < 0)
-> -                               goto bail;
-> -               }
-> -       } else {
-> -               res = -ENODEV;
-> -               goto bail;
-> -       }
-> -
-> -       spin_lock_irq(&list->hiddev->list_lock);
-> -       list_add_tail(&list->node, &hiddev->list);
-> -       spin_unlock_irq(&list->hiddev->list_lock);
-> -
->         mutex_lock(&hiddev->existancelock);
-> -       /*
-> -        * recheck exist with existance lock held to
-> -        * avoid opening a disconnected device
-> -        */
-> -       if (!list->hiddev->exist) {
-> -               res = -ENODEV;
-> -               goto bail_unlock;
-> -       }
-> -       if (!list->hiddev->open++)
-> -               if (list->hiddev->exist) {
-> -                       struct hid_device *hid = hiddev->hid;
-> -                       res = hid_hw_power(hid, PM_HINT_FULLON);
-> -                       if (res < 0)
-> -                               goto bail_unlock;
-> -                       res = hid_hw_open(hid);
-> -                       if (res < 0)
-> -                               goto bail_normal_power;
-> -               }
-> -       mutex_unlock(&hiddev->existancelock);
-> -       return 0;
-> -bail_normal_power:
-> -       hid_hw_power(hid, PM_HINT_NORMAL);
-> -bail_unlock:
-> +       res = hiddev->exist ? __hiddev_open(hiddev, file) : -ENODEV;
->         mutex_unlock(&hiddev->existancelock);
->
-> -       spin_lock_irq(&list->hiddev->list_lock);
-> -       list_del(&list->node);
-> -       spin_unlock_irq(&list->hiddev->list_lock);
-> -bail:
-> -       file->private_data = NULL;
-> -       vfree(list);
->         return res;
->  }
->
-> --
-> 2.24.1.735.g03f4e72817-goog
->
->
-> --
-> Dmitry
->
+Can you tell me which glibc test? I would like to reproduce this.
 
+> The introduction of supervisor xstates and CET, while not contributing to
+> the problem, makes it more detectable.  After init_fpstate and the Shadow
+> Stack pointer have been restored to xregs, the XRSTOR from user stack
+> fails and fpu_fpregs_owner_ctx is not updated.  The task currently owning
+> fpregs then uses the corrupted Shadow Stack pointer and triggers a control-
+> protection fault.
+
+So I don't need new HW with supervisor and CET? A plain KVM box with
+SSE2 and so should be enough?
+
+Sebastian
