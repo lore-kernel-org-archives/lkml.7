@@ -2,101 +2,95 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD2DC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 994A7C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75D4020716
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:49:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E8FE20717
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:51:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TucDaIm+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbfLRJtm (ORCPT
+        id S1726676AbfLRJvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 04:49:42 -0500
-Received: from mail.bugwerft.de ([46.23.86.59]:46468 "EHLO mail.bugwerft.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726360AbfLRJtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 04:49:41 -0500
-Received: from [10.10.222.226] (unknown [194.162.236.226])
-        by mail.bugwerft.de (Postfix) with ESMTPSA id 056A6281DF4;
-        Wed, 18 Dec 2019 09:43:13 +0000 (UTC)
-Subject: Re: [alsa-devel] [PATCH 10/10] ASoC: Add codec component for AD242x
- nodes
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org
-Cc:     lars@metafoo.de, sboyd@kernel.org, mturquette@baylibre.com,
-        robh+dt@kernel.org, broonie@kernel.org, pascal.huerst@gmail.com,
-        lee.jones@linaro.org
-References: <20191209183511.3576038-1-daniel@zonque.org>
- <20191209183511.3576038-12-daniel@zonque.org>
- <0565e5cd-9a6e-db65-0632-0bc1aa1d79db@linux.intel.com>
-From:   Daniel Mack <daniel@zonque.org>
-Message-ID: <35e7e6e7-7c70-785c-bdf3-79089134699e@zonque.org>
-Date:   Wed, 18 Dec 2019 10:49:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 18 Dec 2019 04:51:37 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:35050 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbfLRJvh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 04:51:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=CCYsTiKmLFf9CmOEzk5lgJx0OEGqguLyDzTVud+iGeA=; b=TucDaIm+ISUWU5BpkawY63Sb3
+        SJ9SWk9Pu7f2dafCRqmUyN1UDC0w4kLQTiN7ACWPV22SKSosG2JeNzQElk7s4wDWElgtDN43Pu3Xs
+        rgKJEYCbDoYbJObPK03ZeFF0p1VjonN6AyqIxvArc3Uh6MaYeiUzmHTRev4x8o1yRMSdDNe5l7PXU
+        iT9AlSg8sP/UTe+q5TnbqfZ6ZBgMaKbcJ2XmfRB5wfEKx3+h7keMutdUIEhY7YAF9rQEq19Rk2W10
+        m2UIYcY37jmJT4elzwPg/t0rAFoteeDnVyns2y1aCLzL+ZhYyumgETnqOsEuTTloMoiggMq44kzI3
+        +YKxUJ5nQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ihVyx-0001FP-98; Wed, 18 Dec 2019 09:51:03 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 36B023007F2;
+        Wed, 18 Dec 2019 10:49:38 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1966B2B3E30FC; Wed, 18 Dec 2019 10:51:01 +0100 (CET)
+Date:   Wed, 18 Dec 2019 10:51:01 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Jens Axboe <axboe@kernel.dk>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        Long Li <longli@microsoft.com>, Ingo Molnar <mingo@redhat.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        John Garry <john.garry@huawei.com>,
+        Hannes Reinecke <hare@suse.com>
+Subject: Re: [RFC PATCH 1/3] sched/core: add API for exporting runqueue clock
+Message-ID: <20191218095101.GQ2844@hirez.programming.kicks-ass.net>
+References: <20191218071942.22336-1-ming.lei@redhat.com>
+ <20191218071942.22336-2-ming.lei@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <0565e5cd-9a6e-db65-0632-0bc1aa1d79db@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191218071942.22336-2-ming.lei@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Dec 18, 2019 at 03:19:40PM +0800, Ming Lei wrote:
+> Scheduler runqueue maintains its own software clock that is periodically
+> synchronised with hardware. Export this clock so that it can be used
+> by interrupt flood detection for saving the cost of reading from hardware.
 
-On 12/17/19 8:28 PM, Pierre-Louis Bossart wrote:
-> On 12/9/19 12:35 PM, Daniel Mack wrote:
+But you don't have much, if any, guarantees the thing gets updated.
 
->> +    if (!ad242x_node_is_master(priv->node) &&
->> +       ((format & SND_SOC_DAIFMT_MASTER_MASK) !=
->> SND_SOC_DAIFMT_CBM_CFM)) {
->> +        dev_err(component->dev, "slave node must be clock master\n");
->> +        return -EINVAL;
->> +    }
-> 
-> It was my understanding that the master node provides the clock to the
-> bus, so not sure how it could be a clock slave, and conversely how a
-> slave node could provide a clock to the bus?
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 90e4b00ace89..03e2e3c36067 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -219,6 +219,11 @@ void update_rq_clock(struct rq *rq)
+>  	update_rq_clock_task(rq, delta);
+>  }
+>  
+> +u64 sched_local_rq_clock(void)
+> +{
+> +	return this_rq()->clock;
+> +}
+> +EXPORT_SYMBOL_GPL(sched_local_rq_clock);
 
-The slave nodes receive the A2B clock from the master node and then
-produce digital audio output that is sent to other components such as
-codecs. Hence, in ASoC terms, they are the clock master.
+Also, more NAK, you're exporting a variant of __rq_clock_broken().
 
-Likewise, as the master node is receiving its clock from other
-components, it has to be a clock slave in the audio network.
-
-Does that make sense?
-
->> +    switch (params_format(params)) {
->> +    case SNDRV_PCM_FORMAT_S16_LE:
->> +        if (priv->node->tdm_slot_size != 16)
->> +            return -EINVAL;
->> +        break;
->> +    case SNDRV_PCM_FORMAT_S32_LE:
->> +        if (priv->node->tdm_slot_size != 32)
->> +            return -EINVAL;
->> +        break;
->> +    default:
->> +        return -EINVAL;
->> +    }
-> 
-> how does this work for PDM data?
-> 
-> is the PDM data packed into a regular TDM slot?
-
-Yes. But I admit this needs some more testing. We're still working on
-the hardware that uses this. I'll revisit this.
-
-And I'll also add a lot more comments all over the place, as also
-requested by Lee.
-
-
-Thanks,
-Daniel
+(which, now that I git-grep for it, has become unused, good!)
