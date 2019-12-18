@@ -2,106 +2,164 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D7FC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED9D8C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 871232146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA2272146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:43:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ghmpKaSb"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="TqLBvSxO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbfLRMn3 (ORCPT
+        id S1726955AbfLRMn6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 07:43:29 -0500
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:63581 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbfLRMn2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 07:43:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1576673008; x=1608209008;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   in-reply-to:content-transfer-encoding;
-  bh=xHFo6mvkYQfQbv/gkkkxzHborqm3JkMeR8OIVG6UBXk=;
-  b=ghmpKaSbziZQuKiQDMq+MtWv3r0GxFuk8Hb10CyPlgJbHq3191pt9myG
-   188zmtDyp2TiwxfamAIP59Y6XftR/f5zCYsNtO9k0w7FOr1Gu7NQM+iTn
-   uxPrlZpWk/SOenc+MIZ9wx5whmzCohMfkq4kzGHCCOrRIdQOWo9pDP6YU
-   A=;
-IronPort-SDR: nHmGLueb0tT74FASDEbqGU0v4H6T3ZMOFwQejVqZ7VBgH8XZxt8zIkWugLKdBymWO4lkWAwvUt
- cLAUIMuq3n2A==
-X-IronPort-AV: E=Sophos;i="5.69,329,1571702400"; 
-   d="scan'208";a="15616175"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-55156cd4.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 18 Dec 2019 12:43:17 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-55156cd4.us-west-2.amazon.com (Postfix) with ESMTPS id B218EA1D18;
-        Wed, 18 Dec 2019 12:43:16 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 18 Dec 2019 12:43:16 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.90) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 18 Dec 2019 12:43:10 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     =?UTF-8?q?J=C3=BCrgen=20Gro=C3=9F?= <jgross@suse.com>
-CC:     SeongJae Park <sjpark@amazon.com>, <axboe@kernel.dk>,
-        <konrad.wilk@oracle.com>, <roger.pau@citrix.com>,
-        <linux-block@vger.kernel.org>, <pdurrant@amazon.com>,
-        SeongJae Park <sjpark@amazon.de>,
-        <linux-kernel@vger.kernel.org>, <sj38.park@gmail.com>,
-        <xen-devel@lists.xenproject.org>
-Subject: Re: Re: [Xen-devel] [PATCH v12 2/5] xenbus/backend: Protect xenbus callback with lock
-Date:   Wed, 18 Dec 2019 13:42:44 +0100
-Message-ID: <20191218124244.8840-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 18 Dec 2019 07:43:58 -0500
+Received: from mail-eopbgr30044.outbound.protection.outlook.com ([40.107.3.44]:5796
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725930AbfLRMn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 07:43:58 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UGe/2rzd7woiJY+bSydVu8ZVaUrph5EuLsvaUhF3/z738znFziHBghYIFn0AcrK/AgBEe8KRM2PJYLl1rUxKqp89Vwu9CYCu16OwT6n++hpfZi5IXp6KWlogBM3tyi/8y4up1VP9SJsL7unmNBonW+LKbsp7ZenzuL19Nxc7SiBz2N0gyDk2WCpG98q7zD5Guw99qV4Glv5SXxbZDWuvZFMobOKduxq8Xh9HOe/y92o4vWYqgGjsaiqS3Hw4jerXQhCV/LIurw1rQX/IrlkmGkZKNbUm4k3+Uk8TkbTb4JerpJ5RA25POsGsxD7Mm8hrPrt+xSv38Gr9/O9cCdDmJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Zssb56up1R/q7ZqlqzZltOvkUEbo+1At4Et7FtWROWc=;
+ b=ZJ39VXNfFSobej6oDtNgFp0SJz0+Mfg2lQ2Ze2hTNFbDAME1JZZkgs/awG3oPygdrjhFjF1PKstuu2Ld8olFMFx1Y+SjjPalvbWD5OdGxF48wxWP42KVLJqJ+qkUSUOGXY7WeH8NQvblSIJFSbpBDNe9T/33cqO4vwtPxkk6TrmRItF6S7XOlVHfSOlyr4Rw2cd0U8OEMDRBD51+m0fxd+231CsN9wSsvFfpm6LpEQVvx5ns176WMnqAS9FHDKrsLDPxUZ9cRvfuzHNkdujaf0IYsOmtHJdrIZqCxdJ/iKpUYl7fYMm2G3Ea0lxtMFPy10y1aNmvsi2A7fZMuDT/Jw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Zssb56up1R/q7ZqlqzZltOvkUEbo+1At4Et7FtWROWc=;
+ b=TqLBvSxOovSV26r20M3B/fgu70MCFLrtB4+H5pXg+vZR864CDF/wPrfupJMcByR+b8ypeiMe6yF98V5VcFlovvInvHisroVs3zFXlPT2F1taKt1rGbpP2/KJBulKETr7oq1pWf/pL70Vp3oA68ZZJajQKY/vK5b213PUEOo3FYA=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB4722.eurprd04.prod.outlook.com (20.176.215.92) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.18; Wed, 18 Dec 2019 12:43:53 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::505:87e7:6b49:3d29]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::505:87e7:6b49:3d29%7]) with mapi id 15.20.2559.012; Wed, 18 Dec 2019
+ 12:43:53 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
+        "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "mripard@kernel.org" <mripard@kernel.org>,
+        "wens@csie.org" <wens@csie.org>
+CC:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH 1/2] pinctrl: mvebu: armada-37xx: use use platform api
+Thread-Topic: [PATCH 1/2] pinctrl: mvebu: armada-37xx: use use platform api
+Thread-Index: AQHVtaDOy35Q6KpKLESPO8UEr8sdHw==
+Date:   Wed, 18 Dec 2019 12:43:53 +0000
+Message-ID: <1576672860-14420-1-git-send-email-peng.fan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK2PR06CA0007.apcprd06.prod.outlook.com
+ (2603:1096:202:2e::19) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 5cfbedf3-6676-48e9-6ac9-08d783b7f066
+x-ms-traffictypediagnostic: AM0PR04MB4722:|AM0PR04MB4722:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB47229E82078D44E9E632F9FC88530@AM0PR04MB4722.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3968;
+x-forefront-prvs: 0255DF69B9
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(376002)(136003)(346002)(396003)(189003)(199004)(6506007)(110136005)(54906003)(5660300002)(66946007)(66446008)(71200400001)(2906002)(26005)(316002)(7416002)(4326008)(52116002)(81166006)(8936002)(44832011)(8676002)(81156014)(478600001)(66556008)(6486002)(36756003)(6512007)(2616005)(86362001)(66476007)(186003)(64756008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4722;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 2zt38CnXp6UZQjLEFBDj/kyNU7gw1do5wuTm/kLdJ5dFUtRk7nEy4ONOuW/RQ376rOQRmDlelQ0emDoPF/RJxYGYhmsYaul6SxYmR+0iEMFYxp4sxWf82WGFSb9liB6LbVzdfWTLobh0YAGCpzGkj8GZhrIB1WV8mZ/B3yMCnqpFTN4iS9VZQj+nb5xvFx03gaXU3V1IsE+Fi6j/FHy1uEkCUSTiE5J/XfWFEcSFl1atOnjOLbdAqKBY8bML9WzJ1ewbNO3fOoKUgS2u8DM41AXVFraBncOYnHgViV5yKhR3aCC30bBNwjVmNMjED89OW2jNVnlAho9nliJlcby/f4duIfdyu5+gG+Wq/n2TeqCpWyIz/n6gI4eCVfW21O9hB1kI8ypIoLpgTm2nixex554FSAIx+KcNRI0kZKs7pWJBrJBSn6DzUXi1A4ESACv3
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <af02058a-fa76-5eb5-5c2b-60555273bac2@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.43.160.90]
-X-ClientProxiedBy: EX13D01UWA003.ant.amazon.com (10.43.160.107) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5cfbedf3-6676-48e9-6ac9-08d783b7f066
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Dec 2019 12:43:53.3511
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Gr7MxKJ4SsFNJJXERNRLVXv06YjaPYmwMbHk2Q/bpSOCFxSFd8CnBduuH3DibSHSfuaLpukmY+2yaNduwwIZLg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4722
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Dec 2019 13:27:37 +0100 "Jürgen Groß" <jgross@suse.com> wrote:
+From: Peng Fan <peng.fan@nxp.com>
 
-> On 18.12.19 11:42, SeongJae Park wrote:
-> > From: SeongJae Park <sjpark@amazon.de>
-> > 
-> > 'reclaim_memory' callback can race with a driver code as this callback
-> > will be called from any memory pressure detected context.  To deal with
-> > the case, this commit adds a spinlock in the 'xenbus_device'.  Whenever
-> > 'reclaim_memory' callback is called, the lock of the device which passed
-> > to the callback as its argument is locked.  Thus, drivers registering
-> > their 'reclaim_memory' callback should protect the data that might race
-> > with the callback with the lock by themselves.
-> 
-> Any reason you don't take the lock around the .probe() and .remove()
-> calls of the backend (xenbus_dev_probe() and xenbus_dev_remove())? This
-> would eliminate the need to do that in each backend instead.
+platform_irq_count() and platform_get_irq() is the more generic
+way (independent of device trees) to determine the count of available
+interrupts. So use this instead.
 
-First of all, I would like to keep the critical section as small as possible.
-With my small test, I could see slightly increasing memory pressure as the
-critical section becomes wider.  Also, some drivers might share the data their
-'reclaim_memory' callback touches with other functions.  I think only the
-driver owners can know what data is shared and what is the minimum critical
-section to protect it.
+As platform_irq_count() might return an error code (which
+of_irq_count doesn't) some additional handling is necessary.
 
-If you think differently or I am missing something, please let me know.
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
+ drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/=
+mvebu/pinctrl-armada-37xx.c
+index aa9dcde0f069..cc66a6429a06 100644
+--- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
++++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+@@ -15,7 +15,6 @@
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/of_device.h>
+-#include <linux/of_irq.h>
+ #include <linux/pinctrl/pinconf-generic.h>
+ #include <linux/pinctrl/pinconf.h>
+ #include <linux/pinctrl/pinctrl.h>
+@@ -739,7 +738,14 @@ static int armada_37xx_irqchip_register(struct platfor=
+m_device *pdev,
+ 		return ret;
+ 	}
+=20
+-	nr_irq_parent =3D of_irq_count(np);
++	nr_irq_parent =3D platform_irq_count(pdev);
++	if (nr_irq_parent < 0) {
++		if (nr_irq_parent !=3D -EPROBE_DEFER)
++			dev_err(dev, "Couldn't determine irq count: %pe\n",
++				ERR_PTR(nr_irq_parent));
++		return nr_irq_parent;
++	}
++
+ 	spin_lock_init(&info->irq_lock);
+=20
+ 	if (!nr_irq_parent) {
+@@ -776,7 +782,7 @@ static int armada_37xx_irqchip_register(struct platform=
+_device *pdev,
+ 	if (!girq->parents)
+ 		return -ENOMEM;
+ 	for (i =3D 0; i < nr_irq_parent; i++) {
+-		int irq =3D irq_of_parse_and_map(np, i);
++		int irq =3D platform_get_irq(pdev, i);
+=20
+ 		if (irq < 0)
+ 			continue;
+--=20
+2.16.4
 
-Thanks,
-SeongJae Park
-
-> 
-> 
-> Juergen
