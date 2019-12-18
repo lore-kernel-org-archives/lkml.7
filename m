@@ -2,117 +2,70 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C1D8C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 01:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B63C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 01:40:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E80F21835
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 01:36:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o5sn19xY"
+	by mail.kernel.org (Postfix) with ESMTP id 7D35D206D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 01:40:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbfLRBgo (ORCPT
+        id S1726569AbfLRBk3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 20:36:44 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:43028 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfLRBgo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 20:36:44 -0500
-Received: by mail-oi1-f196.google.com with SMTP id x14so255068oic.10;
-        Tue, 17 Dec 2019 17:36:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7We/VEpgPiMO8619gdnlWocsaTJDXOtjnUr1/nSx8fc=;
-        b=o5sn19xYpsolLUaVkAhovodFsZ6cH479qBZHqe8Sd4qEQq8R7uKRLI8d1Y3ujEPwuC
-         QSYoAYPqDfS9uR+QpH0vvw47Vc335cPD0qXi97g5xHuyl6QAHyTilCPG0qnAHoEbPknx
-         VyzS6XGPd//b2SovmNEcNj9dyOW4VV8tlcO0HYfwCqxZm6mq+9EJCFYeit4plT/V+K8Z
-         ogf14LiwD1lKm4sS9Mb2TcpL3GGKIi2fdCney7o4q4lHN+g+tzWM9ZaC1LPhbUFFNqB5
-         jWb7CWBbRBC9TnvbZhgAVJlzBSue2D2Heim/a35fVllyjiz1y+3WxGY94m36N/neI5AU
-         EvzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7We/VEpgPiMO8619gdnlWocsaTJDXOtjnUr1/nSx8fc=;
-        b=End1jk61cNSLn8/Jn1I0Mf0JdBUP0mkKog4QOi78ktPWCx2gebCHqrPZvJfz/YSLXq
-         FVOZzaDFXfYB2cue23xfm8Ep+4WXI02A1c9hKzjYCwQdIcDLknE3rMhr52726wF12QOY
-         +p5h0y/f8F5f9J67JupRkY4eoPox7J84vcSLZFdjo64xvJPi1xodu9iDeoDcnfoXn5Pt
-         716/VBMQQU+PyJvW1fMF9v9fI890T5MyyhVI1B5vyHsMcT4pzM1t9riQjdBmnv11NwRu
-         JXIXAmmrHnQcrNeObhoYWWZr+b6Zq5BVUrI2VOiQM8cj40WeqEPJZoQuzxLPlQFax9jo
-         bEng==
-X-Gm-Message-State: APjAAAVG2YK4xxKUseP8cstsdvVi0Mp9+s1sq46j3TeKhQ93YlP8HYIJ
-        v4t6UKkq5c8WXI6rxpnfVVI=
-X-Google-Smtp-Source: APXvYqxfBKcwX8aeW0HewfvN2cqmu2c2ajYXbN+QgfEowi0MlYsJjMGfXm1hIlLrOKU+SJzHeeobjQ==
-X-Received: by 2002:aca:1c09:: with SMTP id c9mr60123oic.85.1576633002813;
-        Tue, 17 Dec 2019 17:36:42 -0800 (PST)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id 15sm253487oix.46.2019.12.17.17.36.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 17:36:42 -0800 (PST)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] phy: qualcomm: Adjust indentation in read_poll_timeout
-Date:   Tue, 17 Dec 2019 18:36:37 -0700
-Message-Id: <20191218013637.29123-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        Tue, 17 Dec 2019 20:40:29 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:45774 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726463AbfLRBk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 20:40:29 -0500
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 77B0739E976E5CD87DCA;
+        Wed, 18 Dec 2019 09:40:26 +0800 (CST)
+Received: from [127.0.0.1] (10.67.103.228) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Wed, 18 Dec 2019
+ 09:40:18 +0800
+Subject: Re: [PATCH] net: hisilicon: Fix a BUG trigered by wrong bytes_compl
+To:     David Miller <davem@davemloft.net>
+References: <1576308182-121147-1-git-send-email-xiaojiangfeng@huawei.com>
+ <20191217.134228.92517242104749153.davem@davemloft.net>
+CC:     <yisen.zhuang@huawei.com>, <salil.mehta@huawei.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <leeyou.li@huawei.com>, <nixiaoming@huawei.com>
+From:   Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Message-ID: <161c304b-46bd-0340-e0e3-3fb8b5a7cd5e@huawei.com>
+Date:   Wed, 18 Dec 2019 09:40:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191217.134228.92517242104749153.davem@davemloft.net>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.103.228]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang warns:
 
-../drivers/phy/qualcomm/phy-qcom-apq8064-sata.c:83:4: warning:
-misleading indentation; statement is not part of the previous 'if'
-[-Wmisleading-indentation]
-                 usleep_range(DELAY_INTERVAL_US, DELAY_INTERVAL_US + 50);
-                 ^
-../drivers/phy/qualcomm/phy-qcom-apq8064-sata.c:80:3: note: previous
-statement is here
-                if (readl_relaxed(addr) & mask)
-                ^
-1 warning generated.
 
-This warning occurs because there is a space after the tab on this line.
-Remove it so that the indentation is consistent with the Linux kernel
-coding style and clang no longer warns.
-
-Fixes: 1de990d8a169 ("phy: qcom: Add driver for QCOM APQ8064 SATA PHY")
-Link: https://github.com/ClangBuiltLinux/linux/issues/816
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- drivers/phy/qualcomm/phy-qcom-apq8064-sata.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/phy/qualcomm/phy-qcom-apq8064-sata.c b/drivers/phy/qualcomm/phy-qcom-apq8064-sata.c
-index 42bc5150dd92..febe0aef68d4 100644
---- a/drivers/phy/qualcomm/phy-qcom-apq8064-sata.c
-+++ b/drivers/phy/qualcomm/phy-qcom-apq8064-sata.c
-@@ -80,7 +80,7 @@ static int read_poll_timeout(void __iomem *addr, u32 mask)
- 		if (readl_relaxed(addr) & mask)
- 			return 0;
- 
--		 usleep_range(DELAY_INTERVAL_US, DELAY_INTERVAL_US + 50);
-+		usleep_range(DELAY_INTERVAL_US, DELAY_INTERVAL_US + 50);
- 	} while (!time_after(jiffies, timeout));
- 
- 	return (readl_relaxed(addr) & mask) ? 0 : -ETIMEDOUT;
--- 
-2.24.1
+On 2019/12/18 5:42, David Miller wrote:
+> From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+> Date: Sat, 14 Dec 2019 15:23:02 +0800
+> 
+>> In addition, I adjusted the position of "count++;"
+>> to make the code more readable.
+> 
+> This is an unrelated cleanup and should not be done in the same change
+> as your bug fix, submit this if you like for net-next after net has next
+> been merged into net-next.
+> 
+>>
+>> Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+> 
+> You need to provide an appropriate Fixes: tag.
+> 
+> .
+I will provide an appropriate Fixes: tag in v2, thanks for your guidance.
 
