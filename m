@@ -2,147 +2,85 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32141C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 022D2C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:45:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0904120717
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:45:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="A35IEB1y"
+	by mail.kernel.org (Postfix) with ESMTP id C9AB320717
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:45:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727642AbfLRQpW (ORCPT
+        id S1727558AbfLRQpu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 11:45:22 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:49562 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbfLRQpW (ORCPT
+        Wed, 18 Dec 2019 11:45:50 -0500
+Received: from mout.kundenserver.de ([212.227.126.131]:40151 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727192AbfLRQpu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 11:45:22 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id EB8F4B23;
-        Wed, 18 Dec 2019 17:45:18 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1576687519;
-        bh=+rFvCnuyUfb8hn/2XZmZLZuDfYK/voDNcYHQJdgf3yo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=A35IEB1ygboMBB/qlL2uNePkuGFQ3N2Ol1/sq+9Ye27fbe00Z+lobVWfVsuQw+4yA
-         2eCvy2kbQziA7sMhNtEAPjihV482e1Pp1wzD3DOyb24Fr98pwCDKz1iXpadmaXMNK9
-         hezArnfMZbhhW3gb4DsosTPOajWDiq46uvHOGztU=
-Date:   Wed, 18 Dec 2019 18:45:07 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andreyknvl@google.com, Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>, stable@vger.kernel.org
-Subject: Re: [PATCH] media: uvc: Avoid cyclic entity chains due to malformed
- USB descriptors
-Message-ID: <20191218164507.GB17876@pendragon.ideasonboard.com>
-References: <20191002112753.21630-1-will@kernel.org>
- <20191002130913.GA5262@pendragon.ideasonboard.com>
- <20191002131928.yp5r4tyvtvwvuoba@willie-the-truck>
- <20191002185604.GF5262@pendragon.ideasonboard.com>
- <20191007162709.3vrtbcpoymmnqikl@willie-the-truck>
+        Wed, 18 Dec 2019 11:45:50 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1N3bnP-1hhqcJ2ccd-010bkI; Wed, 18 Dec 2019 17:45:32 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-sh@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] y2038: sh: remove timeval/timespec usage from headers
+Date:   Wed, 18 Dec 2019 17:45:11 +0100
+Message-Id: <20191218164527.542823-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191007162709.3vrtbcpoymmnqikl@willie-the-truck>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:DMQ5Nstz2iNQ6VhbEOPaGqLSp/BDXB+L9DaoDSta8r7mGWTx02S
+ 2d41/T0uymdNKG4hRkAwkDdKuOBvucXRcqSZOtR4jIu2kcUqo9JGMjJluVVq+kOGnWEaSoc
+ 8so6L6HO3bN1p7SJKhWIlIWXRYaeXMPqI6sZUxGIIdiK6MCN7M7/e+ODxRKz6SQV/UZPRGV
+ jOukBrIMaAGCYLshwkvXQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:0OdFC6eI7iI=:qSLeRvQMk2UrLmt0GS/QaR
+ uMLiejva+UUVVQ+nVTJlgrprgYL3i2op9LSNd1rZl422yeDqrO+TIxXgqRU9Gf2b1nUOp9UVI
+ FFfgR9Az0FzzKh/8Qt2FhOua9jIf9v4fwQvoaRn3VV9rbssiYrUZZ6rbxsd3Mfse7ybv8CbDn
+ MXcZrrK1vG2/oxMr310BU5pIZt+Rq1XIAazKgUwX4ul6W2JFoHC4CxsqD/QwOnkH20HgJ23Bc
+ 6Djmh5pDTgqpu8NTqh5Y79IyHqw714dy6NJYKW+WA2vtro5jds+CA6fKlq+EULK5UO86cz1gP
+ uokZhOt8zuda6gdYMmSLpmcrhrIkDpdD9SWWroOdOsafgqma1z7uaFUwAVwoscuEjXqzg2et9
+ XkQQPRfQ8HfKGHYmPRpI0tGEBCBC7X4pGppX9ij7kwl5NyRcq4XHrpOSnfTW2P049z9F4oTcN
+ DhCBgHDPuoPksNywDGGMfBX9XtkXt8tKlq8qeLJdMX3P5Orvh3fKt0gjAYkhFrc9Rth9dwQ+B
+ L+attDwvtQsgryxWBi5NstpsRI7Ds7Enspy2igEPicq3yj2ytqW2WwzMXEycZ7vSwsU3uNoJA
+ 6ZL9IbxUHXbgVAwsKsUBYr9Al/KT2R4Tdw6jh4jJiU9/m97NpJnBvFbjCMWRJVyO+JornQkR9
+ G9Ahw3MYYK2qrEPwQOv+/iRBRcbkNp7nFLvz3M7ljthhSYQBasJSBM3YfXLtoABMoPlO3Qtb1
+ mKAVwxYYz/a+TMd35h6MqHd005NEDP3gs4jqNBOgzODOCV02UEY0Yh3ddjnlP05IS5pfAoizz
+ Z6IXwS8PJvxCOAkLj7XNzlpnu2Sindq08PgjDXDDhXh1g7mpRGgNVVCM45jsdmFoC71tXvtgx
+ 7rwwN6hGNO9MeSi97SNQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will,
+This header file escaped my earlier cleanups for removing
+the in-kernel usage of timeval and timespec structs.
 
-On Mon, Oct 07, 2019 at 05:27:10PM +0100, Will Deacon wrote:
-> On Wed, Oct 02, 2019 at 09:56:04PM +0300, Laurent Pinchart wrote:
-> > On Wed, Oct 02, 2019 at 02:19:29PM +0100, Will Deacon wrote:
-> > > > uvc_scan_chain_forward() is then called (from uvc_scan_chain()), and
-> > > > iterates over all entities connected to the entity being scanned.
-> > > > 
-> > > > 	while (1) {
-> > > > 		forward = uvc_entity_by_reference(chain->dev, entity->id,
-> > > > 			forward);
-> > > 
-> > > Yes.
-> > > 
-> > > > At this point forward may be equal to entity, if entity references
-> > > > itself.
-> > > 
-> > > Correct -- that's indicative of a malformed entity which we want to reject,
-> > > right?
-> > 
-> > Right. We can reject the whole chain in that case. There's one case
-> > where we still want to succeed though, which is handled by
-> > uvc_scan_fallback().
-> > 
-> > Looking at the code, uvc_scan_device() does
-> > 
-> >                 if (uvc_scan_chain(chain, term) < 0) {
-> >                         kfree(chain);
-> >                         continue;
-> >                 }
-> > 
-> > It seems that's missing removal of all entities that would have been
-> > successfully added to the chain. This prevents, I think,
-> > uvc_scan_fallback() from working properly in some cases.
-> 
-> I started trying to hack something up here, but I'm actually not sure
-> there's anything to do!
-> 
-> I agree that 'uvc_scan_chain()' can fail after adding entities to the
-> chain, however, 'uvc_scan_fallback()' allocates a new chain and calls
-> only 'uvc_scan_chain_entity()' to add entities to it. This doesn't fail
-> on pre-existing 'list_head' structures, so the dangling pointers shouldn't
-> pose a problem there. My patch only adds the checks to
-> 'uvc_scan_chain_forward()' and 'uvc_scan_chain_backward()', neither of
-> which are invoked on the fallback path.
-> 
-> The fallback also seems like a best-effort thing, since it isn't even
-> invoked if we managed to initialise *any* chains successfully.
-> 
-> Does that make sense, or did you have another failure case in mind?
+Replace them with the corresponding __kernel_old_* types.
 
-No, I think you're right. It may still be good to remove the entities
-from the chain before freeing it to avoid dangling pointers, but that's
-not handled properly anywhere in the driver anyway, so your patch
-doesn't introduce any issue.
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/sh/include/uapi/asm/sockios.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> > > > 		if (forward == NULL)
-> > > > 			break;
-> > > > 		if (forward == prev)
-> > > > 			continue;
-> > > > 		if (forward->chain.next || forward->chain.prev) {
-> > > > 			uvc_trace(UVC_TRACE_DESCR, "Found reference to "
-> > > > 				"entity %d already in chain.\n", forward->id);
-> > > > 			return -EINVAL;
-> > > > 		}
-> > > > 
-> > > > But then this check should trigger, as forward == entity and entity is
-> > > > in the chain's list of entities.
-> > > 
-> > > Right, but this code is added by my patch, no? In mainline, the code only
-> > > has the first two checks, which both end up comparing against NULL the first
-> > > time around:
-> > > 
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/media/usb/uvc/uvc_driver.c#n1489
-> > > 
-> > > Or are you referring to somewhere else?
-> > 
-> > Oops. This is embarassing... :-) You're of course right. The second hunk
-> > seems fine too, even if I would have preferred centralising the check in
-> > a single place. That should be possible, but it would involve
-> > refactoring that isn't worth it at the moment.
-> 
-> Agreed, thanks.
-
+diff --git a/arch/sh/include/uapi/asm/sockios.h b/arch/sh/include/uapi/asm/sockios.h
+index ef18a668456d..3da561453260 100644
+--- a/arch/sh/include/uapi/asm/sockios.h
++++ b/arch/sh/include/uapi/asm/sockios.h
+@@ -10,7 +10,7 @@
+ #define SIOCSPGRP	_IOW('s', 8, pid_t)
+ #define SIOCGPGRP	_IOR('s', 9, pid_t)
+ 
+-#define SIOCGSTAMP_OLD	_IOR('s', 100, struct timeval) /* Get stamp (timeval) */
+-#define SIOCGSTAMPNS_OLD _IOR('s', 101, struct timespec) /* Get stamp (timespec) */
++#define SIOCGSTAMP_OLD	_IOR('s', 100, struct __kernel_old_timeval) /* Get stamp (timeval) */
++#define SIOCGSTAMPNS_OLD _IOR('s', 101, struct __kernel_old_timespec) /* Get stamp (timespec) */
+ 
+ #endif /* __ASM_SH_SOCKIOS_H */
 -- 
-Regards,
+2.20.0
 
-Laurent Pinchart
