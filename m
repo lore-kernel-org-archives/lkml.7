@@ -2,63 +2,72 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40DB8C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D97C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B4B22176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0B4D2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:16:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfLRXQB (ORCPT
+        id S1726716AbfLRXQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 18:16:01 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:57624 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfLRXQB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 18:16:01 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 780EB153FF934;
-        Wed, 18 Dec 2019 15:16:00 -0800 (PST)
-Date:   Wed, 18 Dec 2019 15:15:59 -0800 (PST)
-Message-Id: <20191218.151559.778932260429804628.davem@davemloft.net>
-To:     Jose.Abreu@synopsys.com
-Cc:     netdev@vger.kernel.org, Joao.Pinto@synopsys.com,
-        peppe.cavallaro@st.com, alexandre.torgue@st.com,
-        mcoquelin.stm32@gmail.com,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] net: stmmac: tc: Fix TAPRIO division operation
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <b8ffd4685fac31a39ef5ba91485e685b21ead753.1576709577.git.Jose.Abreu@synopsys.com>
-References: <b8ffd4685fac31a39ef5ba91485e685b21ead753.1576709577.git.Jose.Abreu@synopsys.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Wed, 18 Dec 2019 18:16:31 -0500
+Received: from mga14.intel.com ([192.55.52.115]:40402 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726518AbfLRXQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 18:16:30 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 15:16:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
+   d="scan'208";a="228051246"
+Received: from jtreacy-mobl1.ger.corp.intel.com ([10.251.82.127])
+  by orsmga002.jf.intel.com with ESMTP; 18 Dec 2019 15:16:25 -0800
+Message-ID: <b31c7eca8be9922f47a176f5a6ec5de030b713a5.camel@linux.intel.com>
+Subject: Re: [PATCH v2] tpm_tis: reserve chip for duration of
+ tpm_tis_core_init
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Jerry Snitselaar <jsnitsel@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christian Bundy <christianbundy@fraction.io>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        stable <stable@vger.kernel.org>, linux-integrity@vger.kernel.org
+In-Reply-To: <20191217172612.5hxyt7w3wtbrkypm@cantor>
+References: <20191211231758.22263-1-jsnitsel@redhat.com>
+         <20191211235455.24424-1-jsnitsel@redhat.com>
+         <5aef0fbe28ed23b963c53d61445b0bac6f108642.camel@linux.intel.com>
+         <CAPcyv4h60z889bfbiwvVhsj6MxmOPiPY8ZuPB_skxkZx-N+OGw@mail.gmail.com>
+         <20191217020022.knh7uxt4pn77wk5m@cantor>
+         <CAPcyv4iepQup4bwMuWzq6r5gdx83hgYckUWFF7yF=rszjz3dtQ@mail.gmail.com>
+         <5d0763334def7d7ae1e7cf931ef9b14184dce238.camel@linux.intel.com>
+         <20191217171844.huqlj5csr262zkkk@cantor>
+         <20191217172612.5hxyt7w3wtbrkypm@cantor>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160
+ Espoo
+Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Date:   Thu, 19 Dec 2019 01:09:52 +0200
+User-Agent: Evolution 3.34.1-2 
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 18 Dec 2019 15:16:00 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jose Abreu <Jose.Abreu@synopsys.com>
-Date: Wed, 18 Dec 2019 23:55:01 +0100
+On Tue, 2019-12-17 at 10:26 -0700, Jerry Snitselaar wrote:
+> It appears he is out of the office until January, so I doubt I will hear
+> anything back until then.
 
-> For ARCHs that don't support 64 bits division we need to use the
-> helpers.
-> 
-> Fixes: b60189e0392f ("net: stmmac: Integrate EST with TAPRIO scheduler API")
-> Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
-> 
-> ---
-> Completely untested as my setup is offline due to power-outrage. Carefull
-> review needed.
+Unless we have access to a platform to sanely validate a fix
+before that, we will have to wait until January then.
 
-It looks correct to me and should fix the build, so applied, thanks.
+/Jarkko
+
