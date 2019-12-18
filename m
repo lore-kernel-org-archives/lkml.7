@@ -2,150 +2,113 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A12AC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C18BCC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D73921582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:42:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9878A218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:42:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c1hKH9YC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vSSU4VP4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbfLRNmF (ORCPT
+        id S1727126AbfLRNmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 08:42:05 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47219 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726912AbfLRNmE (ORCPT
+        Wed, 18 Dec 2019 08:42:13 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52510 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726912AbfLRNmN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 08:42:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576676523;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OdHalUnD/LlSuJgEwaYsX1mkBoQV0c3hJtbxl/WylGs=;
-        b=c1hKH9YCLLP7r2DhL5l+AqismnKsD4ZXCK8PuOSTbET1V1BrSNq/Z760hk3M0R2+wgFe6/
-        Tfc4+oA326Wyy7Q7P6njKwHZA7eF9riapcLPkm3X2Z4bWiey6/fvwZATZY98kGssO3vUnZ
-        mpEaxzj7XEE1lscUFFjaTwweJfUBwQ8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-362-0Nj8KE41MFywJg36bkXfQw-1; Wed, 18 Dec 2019 08:42:01 -0500
-X-MC-Unique: 0Nj8KE41MFywJg36bkXfQw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EEACF88127E;
-        Wed, 18 Dec 2019 13:41:59 +0000 (UTC)
-Received: from [10.36.116.117] (ovpn-116-117.ams2.redhat.com [10.36.116.117])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C52C15C1B0;
-        Wed, 18 Dec 2019 13:41:55 +0000 (UTC)
-Subject: Re: [PATCH] vfio: platform: fix __iomem in vfio_platform_amdxgbe.c
-To:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Allison Randal <allison@lohutok.net>, kvm@vger.kernel.org,
+        Wed, 18 Dec 2019 08:42:13 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p9so1890464wmc.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 05:42:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=d4mZXGCvD+6EnbswTu7ksRYdm4UYDrB4ruC6F1AgNC8=;
+        b=vSSU4VP4UooPjqt2LRy/or7Vt22ojWOll9hfB0oO9Yqo5lrx5x4OyxENz29e4lG5xP
+         UjrKNruwA59k3B7ckYCAd4uCMOmSz4WX75DkvPcftr40JhiLaR72BkNZ3v1bOzCnYjfH
+         YE6JWzHOrYZ3iMIj6Fo0O2HDBRix8VbFfgr9kAxNLeZgpI3rZ1AFgsFYvb6ldyV5Y6XA
+         cnHmc8LMP47OlrgjHj8AZsBI3t8mi2eOVAbNuDXTn//RisePxjzez7wLCXn7svuQO5rV
+         0Q6cKXOJ6OfuaUGsztmLfdEGIwaLIF8q12EOZbswX3wqzqA4Z6YzcYHKI40vvr4Ocuiy
+         HQ8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=d4mZXGCvD+6EnbswTu7ksRYdm4UYDrB4ruC6F1AgNC8=;
+        b=d9GTYHcirJaEJjCYSD6V2hwafLKgLyXU4kpB1hyT5UtG3ffzuZl7xNtaW9z09xJYwr
+         kCL8OG8V2Ybha14Ns/uIYdL1+zBeGs6knP7VXCX4+ct2klMPjdBkMo2pNuKnqLZUxQhW
+         tu77LV8TBPvAXKCi4t/IO/B/1/y/MMQOTS9rjEf9ryWxuCNXhWAsGSa4rPdwgHMkJgFJ
+         nMwvIr+cmUPwraDTxzeucu2LMAQZbj1UeDvbB37sK0CWnmCziRE3ZmYCaaLa3oLaxyFn
+         QYKn6T7XXgru9pzELD7cvtz3T/XJvXUKs15CDbZGapHL32yiedcvE3yGx+T0kLjfJAQ1
+         V13w==
+X-Gm-Message-State: APjAAAVZAQySuSi4BseoYNAvOxx6TwlVCIxGkLw6WD1QmAzRykGMjXWO
+        g4Y7yPcfVdEqrx0dhfx5JSs=
+X-Google-Smtp-Source: APXvYqx00MAdrTJa0b/IcwkLqVUMHW/YwCHT1c0x+FeTNgKpQh9jqa/Uvj/6SYnkwv03WobwQ56A3g==
+X-Received: by 2002:a05:600c:22c8:: with SMTP id 8mr3210705wmg.178.1576676531417;
+        Wed, 18 Dec 2019 05:42:11 -0800 (PST)
+Received: from localhost (pD9E518ED.dip0.t-ipconnect.de. [217.229.24.237])
+        by smtp.gmail.com with ESMTPSA id t5sm2577688wrr.35.2019.12.18.05.42.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 05:42:10 -0800 (PST)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org,
+        virtualization@lists.linux-foundation.org,
         linux-kernel@vger.kernel.org
-References: <20191218133525.2608583-1-ben.dooks@codethink.co.uk>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <29859d29-dd51-1b27-8606-0e2eb1f6578c@redhat.com>
-Date:   Wed, 18 Dec 2019 14:41:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+Subject: [PATCH v3 0/5] iommu: Implement generic_iommu_put_resv_regions()
+Date:   Wed, 18 Dec 2019 14:42:00 +0100
+Message-Id: <20191218134205.1271740-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20191218133525.2608583-1-ben.dooks@codethink.co.uk>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ben,
+From: Thierry Reding <treding@nvidia.com>
 
-On 12/18/19 2:35 PM, Ben Dooks (Codethink) wrote:
-> The ioaddr should have __iomem marker on it, so add that to fix
-> the following sparse warnings:
-> 
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:33:44: warning: incorrect type in argument 2 (different address spaces)
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:33:44:    expected void volatile [noderef] <asn:2> *addr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:33:44:    got void *
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:34:33: warning: incorrect type in argument 1 (different address spaces)
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:34:33:    expected void const volatile [noderef] <asn:2> *addr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:34:33:    got void *
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:44:44: warning: incorrect type in argument 2 (different address spaces)
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:44:44:    expected void volatile [noderef] <asn:2> *addr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:44:44:    got void *
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:45:33: warning: incorrect type in argument 2 (different address spaces)
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:45:33:    expected void volatile [noderef] <asn:2> *addr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:45:33:    got void *
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:69:41: warning: incorrect type in argument 1 (different address spaces)
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:69:41:    expected void *ioaddr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:69:41:    got void [noderef] <asn:2> *ioaddr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:71:30: warning: incorrect type in argument 1 (different address spaces)
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:71:30:    expected void *ioaddr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:71:30:    got void [noderef] <asn:2> *ioaddr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:76:49: warning: incorrect type in argument 1 (different address spaces)
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:76:49:    expected void *ioaddr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:76:49:    got void [noderef] <asn:2> *ioaddr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:85:37: warning: incorrect type in argument 1 (different address spaces)
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:85:37:    expected void *ioaddr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:85:37:    got void [noderef] <asn:2> *ioaddr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:87:30: warning: incorrect type in argument 1 (different address spaces)
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:87:30:    expected void *ioaddr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:87:30:    got void [noderef] <asn:2> *ioaddr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:90:30: warning: incorrect type in argument 1 (different address spaces)
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:90:30:    expected void *ioaddr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:90:30:    got void [noderef] <asn:2> *ioaddr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:93:30: warning: incorrect type in argument 1 (different address spaces)
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:93:30:    expected void *ioaddr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:93:30:    got void [noderef] <asn:2> *ioaddr
-> 
-> Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
-> ---
-> Cc: Eric Auger <eric.auger@redhat.com>
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Cc: Cornelia Huck <cohuck@redhat.com>
-> Cc: Allison Randal <allison@lohutok.net>
-> Cc: kvm@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  drivers/vfio/platform/reset/vfio_platform_amdxgbe.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c b/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
-> index 2d2babe21b2f..ecfc908de30f 100644
-> --- a/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
-> +++ b/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
-> @@ -24,7 +24,7 @@
->  #define MDIO_AN_INT		0x8002
->  #define MDIO_AN_INTMASK		0x8001
->  
-> -static unsigned int xmdio_read(void *ioaddr, unsigned int mmd,
-> +static unsigned int xmdio_read(void __iomem *ioaddr, unsigned int mmd,
->  			       unsigned int reg)
->  {
->  	unsigned int mmd_address, value;
-> @@ -35,7 +35,7 @@ static unsigned int xmdio_read(void *ioaddr, unsigned int mmd,
->  	return value;
->  }
->  
-> -static void xmdio_write(void *ioaddr, unsigned int mmd,
-> +static void xmdio_write(void __iomem *ioaddr, unsigned int mmd,
->  			unsigned int reg, unsigned int value)
->  {
->  	unsigned int mmd_address;
-> 
-Acked-by: Eric Auger <eric.auger@redhat.com>
+Most IOMMU drivers only need to free the memory allocated for each
+reserved region. Instead of open-coding the loop to do this in each
+driver, extract the code into a common function that can be used by
+all these drivers.
 
-Thanks
+Changes in v3:
+- add Reviewed-by from Jean-Philippe Brucker on virtio patch
+- add Acked-by from Will Deacon on ARM SMMU patch
+- rename to generic_iommu_put_resv_regions()
 
-Eric
+Changes in v2:
+- change subject prefix to "iommu: virtio: " for virtio-iommu.c driver
+
+Thierry
+
+Thierry Reding (5):
+  iommu: Implement generic_iommu_put_resv_regions()
+  iommu: arm: Use generic_iommu_put_resv_regions()
+  iommu: amd: Use generic_iommu_put_resv_regions()
+  iommu: intel: Use generic_iommu_put_resv_regions()
+  iommu: virtio: Use generic_iommu_put_resv_regions()
+
+ drivers/iommu/amd_iommu.c    | 11 +----------
+ drivers/iommu/arm-smmu-v3.c  | 11 +----------
+ drivers/iommu/arm-smmu.c     | 11 +----------
+ drivers/iommu/intel-iommu.c  | 11 +----------
+ drivers/iommu/iommu.c        | 19 +++++++++++++++++++
+ drivers/iommu/virtio-iommu.c | 14 +++-----------
+ include/linux/iommu.h        |  2 ++
+ 7 files changed, 28 insertions(+), 51 deletions(-)
+
+-- 
+2.24.1
 
