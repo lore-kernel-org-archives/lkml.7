@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B21C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C47DC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88081206D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5371A206D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:51:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ih9cGawQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EaPlsDQb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbfLRAvf (ORCPT
+        id S1726808AbfLRAve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 19:51:35 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42688 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726776AbfLRAvd (ORCPT
+        Tue, 17 Dec 2019 19:51:34 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35794 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726622AbfLRAvb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 19:51:33 -0500
-Received: by mail-pf1-f195.google.com with SMTP id 4so199201pfz.9;
-        Tue, 17 Dec 2019 16:51:32 -0800 (PST)
+        Tue, 17 Dec 2019 19:51:31 -0500
+Received: by mail-pf1-f196.google.com with SMTP id b19so217613pfo.2;
+        Tue, 17 Dec 2019 16:51:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=0fF3Pwrvb1XjAJmZpEQzz7NN6h0Qr1+USwjWNMBgsq4=;
-        b=ih9cGawQB+5mXsRHPaE/Cnw6u9n+P13I4GrkYcSwFyTIrtVvAQWm7ify7SoNs9ROJ1
-         Kzb9XCQEx75vYSrrrEVQFS5FSMrYtNakG26XANZLJIiyJo4GpuoGiLo5GCXxLJ4HkQQu
-         mPdYedFxQHdPBwV4BKmIRkJMhuMXDrzoRQiUigtteIon8L20xlnoCtMyLK4QKHUnZ1pO
-         CVTE+8UED6KxBQ/a+Gzpltnm2okhX5Xzk2EjR0ZyInxqKf+VnK2aVUCjTb1jOmiVnBlF
-         qNLu5GZr4qt87/uS/bl/Xri2FkwBUuJcMb6TA2nyCIiH7yl51P+9XbrgUXxc1jHu+Sqk
-         /G/Q==
+        bh=JLVhcc9VMHoyHLdT46bTemZl3YozDpYDY3B3T/6/MFI=;
+        b=EaPlsDQbiHPB5yqbOe203la7fBcV4w3x4L2rbh+pgliBiiX7bDksYdVvhVVUsKgVTJ
+         AH0uqqOX9GMu6dGNS+YKsPdPnX/mpgPKYUsFa9T1t2x39BwOfRMVU27mmABfoyea3Uph
+         iMMD4msoQ4sJjvPwWS19yMelLDoWN52xVA1xBh8hR2cLbnVaKHbSH5JWud0+eJJBaovw
+         rAG3bZY1bRoLAS+Ow9UN6G3ltgFOptIG071t9bhgxLuByvrdwhpGK9uTksy4MNxxzpFI
+         VfsUhQuTQjHtDbwLUmJ3CucuQoQnNFSehutZCEoy+GvSDAgcrKLo6SAapjm4a/tMypk+
+         K2aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=0fF3Pwrvb1XjAJmZpEQzz7NN6h0Qr1+USwjWNMBgsq4=;
-        b=h3sU7q1CTCj5nqt80QbRm8hYjW7B2mFsyxpyx1yqGct2jFaoWFuCLgS+hH34YYAeGK
-         US0G3ZRitf98Y/xYy4P6kBVd+7dQmyUWxJ+cVwHP1aB5LiJG0mKWtlEXHbzLEt5utNu0
-         9nE2DP16Hp6VOLEMmHSTBCjLwuW8DvQbU7Wkh4ES/R3atKblPohm1qGhXTp7dXqpDMdx
-         RGPXKy9xYm6DEZHFPskYJTxyQ/Bh/MAkBhNLGnR+hHpAOv6+RmbMgmDXdKd7oFcfWDWk
-         LJvnTQK9mdF8rpDkjHUThZKTByLLf/94njIXSbfaMDI244uozsJI3CoJUn2kjoB8rW1o
-         wN4w==
-X-Gm-Message-State: APjAAAW1n3aW2ecwJmiP0urZLwAXrTznpmVLJLH/Lyv7t+RngrCHWqHF
-        PM4UFiS/pbIW28yZ7KFI5IqF1/qT
-X-Google-Smtp-Source: APXvYqxRbslnVaiEfFed8OBAvigKprORjy+4ApV7ny1p4NETQVzemdSZRgcIfZAAVlsesJtp7f986g==
-X-Received: by 2002:a62:6342:: with SMTP id x63mr672963pfb.103.1576630292413;
-        Tue, 17 Dec 2019 16:51:32 -0800 (PST)
+        bh=JLVhcc9VMHoyHLdT46bTemZl3YozDpYDY3B3T/6/MFI=;
+        b=MAqV7yFCPCUAS5s3p2CIghBR37UkesUQzG+gHqpZzoruWBCQ6alfdKRUAOqlZSlBiI
+         GW6vtBn5lPWXNlxBESDdCBMEgKMUo2AsHVRJToYGw0K1kkf1kXFMhv6h9ulEPEsDGv1P
+         I83QcO9MdxhhLtDDOI265rOKoNDLZZFe98I0lhrWlfZAGO/B1TY2E9crWC0Ayhs1O5H4
+         W/Rh7j8rAr/RHlQk+5gjJnuPbubtcgy3dqRUIisroEHhYOfyqXfN/Cb0aKOR0z9uQ0Jf
+         xOjl/IXw5JcECOyRJBrtUcrTNfhDYsC5Na6/zMOX8ObY5BuoGe9VJbQpV9AQPMJ+2S1b
+         qA1g==
+X-Gm-Message-State: APjAAAWHP/E1R0L6/8rMJFJDtXBnKT1msqVTL3EQR0C95T9ih7osrBgw
+        hgvfHxTC046wiFGyelCndhk=
+X-Google-Smtp-Source: APXvYqyATA/5yWth8lWCDMpRJD/Y+3wdK5BSIpgNiPRXFyJA8BQkLrCvtySl4Te39OD/Fks73zKBOA==
+X-Received: by 2002:aa7:98d0:: with SMTP id e16mr663203pfm.77.1576630290713;
+        Tue, 17 Dec 2019 16:51:30 -0800 (PST)
 Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 81sm274819pfx.30.2019.12.17.16.51.31
+        by smtp.gmail.com with ESMTPSA id 81sm274819pfx.30.2019.12.17.16.51.29
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 17 Dec 2019 16:51:32 -0800 (PST)
+        Tue, 17 Dec 2019 16:51:30 -0800 (PST)
 From:   Doug Berger <opendmb@gmail.com>
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>
-Subject: [PATCH net-next v2 7/8] net: bcmgenet: Be drop monitor friendly while re-allocating headroom
-Date:   Tue, 17 Dec 2019 16:51:14 -0800
-Message-Id: <1576630275-17591-8-git-send-email-opendmb@gmail.com>
+Subject: [PATCH net-next v2 5/8] net: bcmgenet: Utilize bcmgenet_set_features() during resume/open
+Date:   Tue, 17 Dec 2019 16:51:12 -0800
+Message-Id: <1576630275-17591-6-git-send-email-opendmb@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1576630275-17591-1-git-send-email-opendmb@gmail.com>
 References: <1576630275-17591-1-git-send-email-opendmb@gmail.com>
@@ -72,34 +72,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During bcmgenet_put_tx_csum() make sure we differentiate a SKB
-headroom re-allocation failure from the normal swap and replace
-path.
+During driver resume and open, the HW may have lost its context/state,
+utilize bcmgenet_set_features() to make sure we do restore the correct
+set of features that were previously configured.
 
 Signed-off-by: Doug Berger <opendmb@gmail.com>
 Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/net/ethernet/broadcom/genet/bcmgenet.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index 13e9154db253..e2bca19bf10b 100644
+index 811713e3d230..0e57effd5b19 100644
 --- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
 +++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -1499,11 +1499,12 @@ static struct sk_buff *bcmgenet_put_tx_csum(struct net_device *dev,
- 		 * enough headroom for us to insert 64B status block.
- 		 */
- 		new_skb = skb_realloc_headroom(skb, sizeof(*status));
--		dev_kfree_skb(skb);
- 		if (!new_skb) {
-+			dev_kfree_skb_any(skb);
- 			dev->stats.tx_dropped++;
- 			return NULL;
- 		}
-+		dev_consume_skb_any(skb);
- 		skb = new_skb;
- 	}
+@@ -2884,6 +2884,11 @@ static int bcmgenet_open(struct net_device *dev)
  
+ 	init_umac(priv);
+ 
++	/* Apply features again in case we changed them while interface was
++	 * down
++	 */
++	bcmgenet_set_features(dev, dev->features);
++
+ 	bcmgenet_set_hw_addr(priv, dev->dev_addr);
+ 
+ 	if (priv->internal_phy) {
+@@ -3687,6 +3692,9 @@ static int bcmgenet_resume(struct device *d)
+ 	genphy_config_aneg(dev->phydev);
+ 	bcmgenet_mii_config(priv->dev, false);
+ 
++	/* Restore enabled features */
++	bcmgenet_set_features(dev, dev->features);
++
+ 	bcmgenet_set_hw_addr(priv, dev->dev_addr);
+ 
+ 	if (priv->internal_phy) {
 -- 
 2.7.4
 
