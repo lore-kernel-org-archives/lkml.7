@@ -2,87 +2,106 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B941C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D7FC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D1C32146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:38:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 871232146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:43:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ghmpKaSb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbfLRMiz (ORCPT
+        id S1726912AbfLRMn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 07:38:55 -0500
-Received: from smtpbgau1.qq.com ([54.206.16.166]:57286 "EHLO smtpbgau1.qq.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725930AbfLRMiy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 07:38:54 -0500
-X-QQ-mid: bizesmtp18t1576672707tkm6wuep
-Received: from localhost.localdomain.info (unknown [103.37.140.45])
-        by esmtp6.qq.com (ESMTP) with 
-        id ; Wed, 18 Dec 2019 20:38:21 +0800 (CST)
-X-QQ-SSF: 01100000006000D0TI10B00A0000000
-X-QQ-FEAT: Uv7+hkXTRUPTnewJwjVVe9q0+dzPz+kAsJz0zP085EP3kykW/ZI9YlbIzv3RP
-        +0kXzLCjHY1K/6SVrD3ReXiB9nbesUq/QRjlVmKcJl7KyvMWk9SQIQBRTsZ+lPd/f92wB5W
-        dfNumnIt9kQAQce4P/wG7Tp/9CbAqynrYn76jOF9H6NP9Ddo6kp4xtmDL1zjYnvrPhPAlCr
-        oV4xPeCJu0s5nysVgszTcS39owEtrQVvO3FYM6K0L2SpphfKsD/GiZCo366zBxG4HYRYDyh
-        R5GG+L2fSr1lBC+nmS/5jcmnJdmJgbtjT6nj4RvY9CH5i+
-X-QQ-GoodBg: 0
-From:   Wang Long <w@laoqinren.net>
-To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de
-Cc:     linux-kernel@vger.kernel.org, Wang Long <w@laoqinren.net>
-Subject: [PATCH] sched/psi: create /proc/pressure and /proc/pressure/{io|memory|cpu} only when psi enabled
-Date:   Wed, 18 Dec 2019 20:38:18 +0800
-Message-Id: <1576672698-32504-1-git-send-email-w@laoqinren.net>
-X-Mailer: git-send-email 1.8.3.1
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:laoqinren.net:qybgforeign:qybgforeign6
-X-QQ-Bgrelay: 1
+        Wed, 18 Dec 2019 07:43:29 -0500
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:63581 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbfLRMn2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 07:43:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1576673008; x=1608209008;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   in-reply-to:content-transfer-encoding;
+  bh=xHFo6mvkYQfQbv/gkkkxzHborqm3JkMeR8OIVG6UBXk=;
+  b=ghmpKaSbziZQuKiQDMq+MtWv3r0GxFuk8Hb10CyPlgJbHq3191pt9myG
+   188zmtDyp2TiwxfamAIP59Y6XftR/f5zCYsNtO9k0w7FOr1Gu7NQM+iTn
+   uxPrlZpWk/SOenc+MIZ9wx5whmzCohMfkq4kzGHCCOrRIdQOWo9pDP6YU
+   A=;
+IronPort-SDR: nHmGLueb0tT74FASDEbqGU0v4H6T3ZMOFwQejVqZ7VBgH8XZxt8zIkWugLKdBymWO4lkWAwvUt
+ cLAUIMuq3n2A==
+X-IronPort-AV: E=Sophos;i="5.69,329,1571702400"; 
+   d="scan'208";a="15616175"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-55156cd4.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 18 Dec 2019 12:43:17 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-55156cd4.us-west-2.amazon.com (Postfix) with ESMTPS id B218EA1D18;
+        Wed, 18 Dec 2019 12:43:16 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 18 Dec 2019 12:43:16 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.90) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 18 Dec 2019 12:43:10 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     =?UTF-8?q?J=C3=BCrgen=20Gro=C3=9F?= <jgross@suse.com>
+CC:     SeongJae Park <sjpark@amazon.com>, <axboe@kernel.dk>,
+        <konrad.wilk@oracle.com>, <roger.pau@citrix.com>,
+        <linux-block@vger.kernel.org>, <pdurrant@amazon.com>,
+        SeongJae Park <sjpark@amazon.de>,
+        <linux-kernel@vger.kernel.org>, <sj38.park@gmail.com>,
+        <xen-devel@lists.xenproject.org>
+Subject: Re: Re: [Xen-devel] [PATCH v12 2/5] xenbus/backend: Protect xenbus callback with lock
+Date:   Wed, 18 Dec 2019 13:42:44 +0100
+Message-ID: <20191218124244.8840-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+In-Reply-To: <af02058a-fa76-5eb5-5c2b-60555273bac2@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.43.160.90]
+X-ClientProxiedBy: EX13D01UWA003.ant.amazon.com (10.43.160.107) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-when CONFIG_PSI_DEFAULT_DISABLED set to N or the command line set psi=0,
-I think we should not create /proc/pressure and
-/proc/pressure/{io|memory|cpu}.
+On Wed, 18 Dec 2019 13:27:37 +0100 "Jürgen Groß" <jgross@suse.com> wrote:
 
-In the future, user maybe determine whether the psi feature is enabled by
-checking the existence of the /proc/pressure dir or
-/proc/pressure/{io|memory|cpu} files.
+> On 18.12.19 11:42, SeongJae Park wrote:
+> > From: SeongJae Park <sjpark@amazon.de>
+> > 
+> > 'reclaim_memory' callback can race with a driver code as this callback
+> > will be called from any memory pressure detected context.  To deal with
+> > the case, this commit adds a spinlock in the 'xenbus_device'.  Whenever
+> > 'reclaim_memory' callback is called, the lock of the device which passed
+> > to the callback as its argument is locked.  Thus, drivers registering
+> > their 'reclaim_memory' callback should protect the data that might race
+> > with the callback with the lock by themselves.
+> 
+> Any reason you don't take the lock around the .probe() and .remove()
+> calls of the backend (xenbus_dev_probe() and xenbus_dev_remove())? This
+> would eliminate the need to do that in each backend instead.
 
-Signed-off-by: Wang Long <w@laoqinren.net>
----
- kernel/sched/psi.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+First of all, I would like to keep the critical section as small as possible.
+With my small test, I could see slightly increasing memory pressure as the
+critical section becomes wider.  Also, some drivers might share the data their
+'reclaim_memory' callback touches with other functions.  I think only the
+driver owners can know what data is shared and what is the minimum critical
+section to protect it.
 
-diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-index 517e371..f12ade2 100644
---- a/kernel/sched/psi.c
-+++ b/kernel/sched/psi.c
-@@ -1279,10 +1279,12 @@ static int psi_fop_release(struct inode *inode, struct file *file)
- 
- static int __init psi_proc_init(void)
- {
--	proc_mkdir("pressure", NULL);
--	proc_create("pressure/io", 0, NULL, &psi_io_fops);
--	proc_create("pressure/memory", 0, NULL, &psi_memory_fops);
--	proc_create("pressure/cpu", 0, NULL, &psi_cpu_fops);
-+	if (psi_enable) {
-+		proc_mkdir("pressure", NULL);
-+		proc_create("pressure/io", 0, NULL, &psi_io_fops);
-+		proc_create("pressure/memory", 0, NULL, &psi_memory_fops);
-+		proc_create("pressure/cpu", 0, NULL, &psi_cpu_fops);
-+	}
- 	return 0;
- }
- module_init(psi_proc_init);
--- 
-1.8.3.1
+If you think differently or I am missing something, please let me know.
 
 
+Thanks,
+SeongJae Park
 
+> 
+> 
+> Juergen
