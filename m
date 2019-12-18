@@ -2,99 +2,93 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6621C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A41AFC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0C002064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:58:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="sjS0HqG9"
+	by mail.kernel.org (Postfix) with ESMTP id 7B5C5206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:59:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727286AbfLRR65 (ORCPT
+        id S1727313AbfLRR7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 12:58:57 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:37276 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727110AbfLRR64 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 12:58:56 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576691935; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=3C6L4b2dA8aEQpFcyQGCt4S6TCBt8DWzO/OHKf/+d/Q=;
- b=sjS0HqG9ljt91DXxDWPuhJvCKcG8+ewseIy2bBGLz7Cw0vZxjK/+tqsLO9NibEMA9auj8yXq
- Z9RINFuXO7MBurF0g9cq0bZOi2DKrZLk+3fJS0H2dh4XtxRforeIUV+NrrOGGShyIkpnr5N1
- jEtnfB/mO1rqCloLkH128Xl2uls=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5dfa68d9.7f828cb120d8-smtp-out-n02;
- Wed, 18 Dec 2019 17:58:49 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 79F77C447A0; Wed, 18 Dec 2019 17:58:47 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        Wed, 18 Dec 2019 12:59:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59364 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726939AbfLRR7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 12:59:44 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 00DB5C433CB;
-        Wed, 18 Dec 2019 17:58:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 00DB5C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DFF62064B;
+        Wed, 18 Dec 2019 17:59:43 +0000 (UTC)
+Date:   Wed, 18 Dec 2019 12:59:41 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Sudip Mukherjee" <sudipm.mukherjee@gmail.com>
+Subject: Re: ftrace trace_raw_pipe format
+Message-ID: <20191218125941.3845add7@gandalf.local.home>
+In-Reply-To: <3df0aa9c69ec4d2086b96eb032a1a0df@AcuMS.aculab.com>
+References: <e8f9744ddffc4527b222ce72d41c61a1@AcuMS.aculab.com>
+        <20191217173403.61f4e2d8@gandalf.local.home>
+        <3df0aa9c69ec4d2086b96eb032a1a0df@AcuMS.aculab.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 1/7] ath9k: fix storage endpoint lookup
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20191210114426.4713-2-johan@kernel.org>
-References: <20191210114426.4713-2-johan@kernel.org>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     QCA ath9k Development <ath9k-devel@qca.qualcomm.com>,
-        Arend van Spriel <arend@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Jes Sorensen <Jes.Sorensen@redhat.com>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Siva Rebbagondla <siva8118@gmail.com>,
-        Daniel Drake <dsd@gentoo.org>,
-        Ulrich Kunitz <kune@deine-taler.de>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Johan Hovold <johan@kernel.org>,
-        stable <stable@vger.kernel.org>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20191218175847.79F77C447A0@smtp.codeaurora.org>
-Date:   Wed, 18 Dec 2019 17:58:47 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Johan Hovold <johan@kernel.org> wrote:
+On Wed, 18 Dec 2019 17:28:13 +0000
+David Laight <David.Laight@ACULAB.COM> wrote:
 
-> Make sure to use the current alternate setting when verifying the
-> storage interface descriptors to avoid submitting an URB to an invalid
-> endpoint.
+> From: Steven Rostedt
+> > Sent: 17 December 2019 22:34
+> >  
+> > > I'm trying to 'grok' the trace_raw_pipe data that ftrace generates.
+> > > I've some 3rd party code that post-processes it, but doesn't like wrapped traces
+> > > because (I think) the traces from different cpus start at different times.
+> > >
+> > > I can't seem to find any documentation at all...  
+> ...
+> > You may want to use libtraceevent (which will, hopefully, soon
+> > be in debian!). Attached is a simple program that reads the data using
+> > it and prints out the format.  
 > 
-> Failing to do so could cause the driver to misbehave or trigger a WARN()
-> in usb_submit_urb() that kernels with panic_on_warn set would choke on.
+> The problem is that I don't want to print the trace, I want to fix
+> some trace files so that another program doesn't barf at them.
+
+It's not just for printing. It allows you to read the buffers and do
+whatever you want with the data. Look at the kbuffer code. It's the way
+to get the raw event data with the time stamps attached to them. The
+kbuffer part (see kbuffer.h) processes the meta data in the
+trace-pipe-raw file, and hands you the raw data that's there.
+
+The libtraceevent is mainly to parse the format files of the events, to
+know how to read the data (see the my_sched_switch() code of the second
+version of my sample program). As the format files describe the binary
+layout of the raw event data. Yes, this program prints the data, but it
+could be easily modified to convert the data into a different format.
+
 > 
-> Fixes: 36bcce430657 ("ath9k_htc: Handle storage devices")
-> Cc: stable <stable@vger.kernel.org>     # 2.6.39
-> Signed-off-by: Johan Hovold <johan@kernel.org>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+> I guess I can try to reverse engineer the library code.
 
-Patch applied to ath-next branch of ath.git, thanks.
+You shouldn't have to reverse engineer the code. If it's not what you
+need, let me know exactly what you want, and we can add to it. The
+reason I created libtraceevent, is to get rid of all the duplicate code
+that's out there toady.
 
-0ef332951e85 ath9k: fix storage endpoint lookup
+> 
+> It would also be nice if there was a way that some standard program
+> (like cat) could read out the trace files without blocking at the end
+> when the trace is inactive.
+> 
 
--- 
-https://patchwork.kernel.org/patch/11282013/
+It shouldn't be hard to add a trace option to the kernel, to do that.
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+-- Steve
