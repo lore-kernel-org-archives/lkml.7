@@ -2,130 +2,78 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D535C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DFCC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BAC12072B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8CE82072B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:03:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbfLRICz (ORCPT
+        id S1726707AbfLRIDx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 03:02:55 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:55967 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726774AbfLRIC2 (ORCPT
+        Wed, 18 Dec 2019 03:03:53 -0500
+Received: from isilmar-4.linta.de ([136.243.71.142]:33136 "EHLO
+        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725535AbfLRIDx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 03:02:28 -0500
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1ihUHj-0004ei-JI; Wed, 18 Dec 2019 09:02:19 +0100
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1ihUHg-0000Ze-C8; Wed, 18 Dec 2019 09:02:16 +0100
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>, Chris Snook <chris.snook@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        James Hogan <jhogan@kernel.org>,
-        Jay Cliburn <jcliburn@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vivien Didelot <vivien.didelot@gmail.com>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, Russell King <linux@armlinux.org.uk>
-Subject: [PATCH v7 0/4] add dsa switch support for ar9331
-Date:   Wed, 18 Dec 2019 09:02:11 +0100
-Message-Id: <20191218080215.2151-1-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.24.0
+        Wed, 18 Dec 2019 03:03:53 -0500
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
+        by isilmar-4.linta.de (Postfix) with ESMTPSA id C1D6C200AC8;
+        Wed, 18 Dec 2019 08:03:51 +0000 (UTC)
+Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
+        id 935BD20BAC; Wed, 18 Dec 2019 09:03:47 +0100 (CET)
+Date:   Wed, 18 Dec 2019 09:03:47 +0100
+From:   Dominik Brodowski <linux@dominikbrodowski.net>
+To:     youling 257 <youling257@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rafael Wysocki <rafael@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/5] init: unify opening /dev/console as
+ stdin/stdout/stderr
+Message-ID: <20191218080347.GA324400@light.dominikbrodowski.net>
+References: <20191212181422.31033-1-linux@dominikbrodowski.net>
+ <20191217051751.7998-1-youling257@gmail.com>
+ <20191217064254.GB3247@light.dominikbrodowski.net>
+ <CAOzgRdZR0bO14fyOk5jLBUkWwgsf7fx41JMQr-Hr6nss1KSmLw@mail.gmail.com>
+ <CAHk-=whN00UTq76bDT-WXm72VhttLv8tcchqEkcUoGXt38XXRg@mail.gmail.com>
+ <CAOzgRda=q0mBeBx_i8N0VT_a_ud8EVcf9hVC5Y_Oz2sdAdGGLg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOzgRda=q0mBeBx_i8N0VT_a_ud8EVcf9hVC5Y_Oz2sdAdGGLg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-changes v6:
-- remove ag71xx changes from this patch set. It needs more work.
-- ar9331: fix register definition and add ASCII art switch documentation.
+On Wed, Dec 18, 2019 at 12:10:08PM +0800, youling 257 wrote:
+> only Revert "fs: remove ksys_dup()", not see the warning
+> "/system/bin/sh: No controlling tty: open /dev/tty: No such device or
+> address."
+> 
+> yes, "fs: remove ksys_dup()" caused my system/bin/sh problem.
+> 
+> but test "early init: fix error handling when opening /dev/console",
+> still can see "/system/bin/sh: No controlling tty" warning, it not
+> solve my problem.
 
-changes v6:
-- rebase against net-next
+FWIW, I see a similar (seemingly harmless) warning both _before_ and
+after my patches, so I am not sure that this is a real regression.
 
-changes v5:
-- remote support for port5. The effort of using this port is
-  questionable. Currently, it is better to not use it at all, then
-  adding buggy support.
-- remove port enable call back. There is nothing what we actually need
-  to enable.
-- rebase it against v5.5-rc1 
-
-changes v4:
-- ag71xx: ag71xx_mac_validate fix always false comparison (&& -> ||)
-- tag_ar9331: use skb_pull_rcsum() instead of skb_pull().
-- tag_ar9331: drop skb_set_mac_header()
-
-changes v3:
-- ag71xx: ag71xx_mac_config: ignore MLO_AN_INBAND mode. It is not
-  supported by HW and SW.
-- ag71xx: ag71xx_mac_validate: return all supported bits on
-  PHY_INTERFACE_MODE_NA
-
-changes v2:
-- move Atheros AR9331 TAG format to separate patch
-- use netdev_warn_once in the tag driver to reduce potential message spam
-- typo fixes
-- reorder tag driver alphabetically 
-- configure switch to maximal frame size
-- use mdiobus_read/write
-- fail if mdio sub node is not found
-- add comment for post reset state
-- remove deprecated comment about device id
-- remove phy-handle option for node with fixed-link
-- ag71xx: set 1G support only for GMII mode
-
-This patch series provides dsa switch support for Atheros ar9331 WiSoC.
-As side effect ag71xx needed to be ported to phylink to make the switch
-driver (as well phylink based) work properly.
-
-Oleksij Rempel (4):
-  dt-bindings: net: dsa: qca,ar9331 switch documentation
-  MIPS: ath79: ar9331: add ar9331-switch node
-  net: dsa: add support for Atheros AR9331 TAG format
-  net: dsa: add support for Atheros AR9331 built-in switch
-
- .../devicetree/bindings/net/dsa/ar9331.txt    | 148 +++
- arch/mips/boot/dts/qca/ar9331.dtsi            | 119 ++-
- arch/mips/boot/dts/qca/ar9331_dpt_module.dts  |  13 +
- drivers/net/dsa/Kconfig                       |   2 +
- drivers/net/dsa/Makefile                      |   1 +
- drivers/net/dsa/qca/Kconfig                   |  11 +
- drivers/net/dsa/qca/Makefile                  |   2 +
- drivers/net/dsa/qca/ar9331.c                  | 855 ++++++++++++++++++
- include/net/dsa.h                             |   2 +
- net/dsa/Kconfig                               |   6 +
- net/dsa/Makefile                              |   1 +
- net/dsa/tag_ar9331.c                          |  96 ++
- 12 files changed, 1255 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/net/dsa/ar9331.txt
- create mode 100644 drivers/net/dsa/qca/Kconfig
- create mode 100644 drivers/net/dsa/qca/Makefile
- create mode 100644 drivers/net/dsa/qca/ar9331.c
- create mode 100644 net/dsa/tag_ar9331.c
-
--- 
-2.24.0
-
+Thanks,
+	Dominik
