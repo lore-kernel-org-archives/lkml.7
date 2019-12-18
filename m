@@ -2,207 +2,169 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2875EC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F57C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E96E8227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:26:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="XQagWMFp"
+	by mail.kernel.org (Postfix) with ESMTP id E9F7824650
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:26:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576686409;
+	bh=QbtZFtRFjFDTBy0FLbhWKGnNnjImjripdHtpw6HjXMk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YHRA2ANqU9EoMR+QkieExI15K01cDOvP6yS/1U5AGyk7D73EEoEgj1/3Grx0yxkYg
+	 CmvI4JHCQIKueESLIe4O1fZ8wLzqyyCbxeNHb4BOKUwbrwTpzyVL1s0oKRmIJsu60b
+	 +bASfgpTNLXohHWalvujnfRs9sG9qUxbqC/GV8Zg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727517AbfLRQYG (ORCPT
+        id S1727701AbfLRQ0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 11:24:06 -0500
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:27743 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727381AbfLRQYF (ORCPT
+        Wed, 18 Dec 2019 11:26:47 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:40033 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726980AbfLRQ0r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 11:24:05 -0500
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
-  Eugen.Hristev@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="Eugen.Hristev@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: fKogZKkZGN2LeBqOmQklDURmD7Nxas8Ukg8RhT5qU/m1hl5ZFOKV0Ne14RXtFjWhBA8VG9UMvy
- hFF3xvBf84db/EdmKkFDNw3R4lFrPWSBEn71/7npuBuQBl7QM4EzaYqvtSL8yZzP1IBNWgh9wQ
- /rs5tLXxYJuBXdoNCVG7xfSEFRmUIGM+3ykk7ITu4rjFosDFwp2e+ue8q1DAV3Y4mw0mFrunWu
- /zsmYYAgLmjY/2b2LvVkCnDxB5/T9cCdVpmL0ejjHs8lVlwqOfnwX3Cni3DwGPiCRcTeMtVw0c
- 1eg=
-X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
-   d="scan'208";a="58200035"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 18 Dec 2019 09:24:04 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 18 Dec 2019 09:24:02 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Wed, 18 Dec 2019 09:24:06 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PyRe8T409vT+nswIuZTXL1AtevXCETMoSkMNIzAicpKLwF+lcpU9skLCAyc+Z53B9ZYQNbQ/6maDGf0Pph2xyPLh1ls60tHlBPkypS+dGa7kmVTZeKlYvxPp4Gqc27w5F8A2D7IrONvWwhAhoK0mq/RCrx6/6/cvoNKj03GuTYa1bftrqt743XgADzE6oOe8tkW4SPYUxsI7zvVvjVXp7ptK6/PEMKwiSoSBnVSU4bk6hJoPt6h1FBfcgW0pn9YfjDL18dB3bN5+tD8sw+nv22A0lzpCH2xfnCt31SP2mjw/RpiR5iF0hSKW5qW1hJIry5YXn9tmZmzHx2r2Kp9VpQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FVVpupUKHMcVEMlJDeBxmxYOFsVo4OQlonFFmWJl410=;
- b=GOYY9bTiq46CWWe+q5EQJlIHDUDqSr8y3WB9+mnfY62r1xRx/OR/iCSha9pv9gcEVGn5zRl5vwEsunSPLNwD28Ge9fEOknMhwLFZgP6WLNQAq6V4uTLqYy5x9G/wF1lnF3W0OL8lqwYhwbO8JUQ97abLBUhxlnFljOTMmLgp7XW3RcaqDBWjnS07vV2VfhKEmlDa8I1iC4Lpug/lLhPnyNhIFBrtJucadtUebks7lIZYCQk8A6QL4FBEt4lGs/qkN+jv+3/154H7qtnO1VzFYsF6aoo5fli9X+bdWEocJ94DjDBtdUpMvwdFowzoQxPa/Cnwn/QiSe6tNKFOlEqObA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+        Wed, 18 Dec 2019 11:26:47 -0500
+Received: by mail-qt1-f194.google.com with SMTP id e6so2400356qtq.7;
+        Wed, 18 Dec 2019 08:26:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FVVpupUKHMcVEMlJDeBxmxYOFsVo4OQlonFFmWJl410=;
- b=XQagWMFpAAihScx4mlA7IjN0qPPUVRHt3Mo15mJ2BsnBEOb8zWaOOkJjOsqopCt2G5f0gQ2h1ElzWp8QkP4garTR5MLs0WR04zsgwwwavJZ6hKp5lvgxLm3YQrY9pqQG2iYidOOKx8wCHWkVIWjMUQZYAS71srjaRx9YurItpd8=
-Received: from DM5PR11MB1242.namprd11.prod.outlook.com (10.168.108.8) by
- DM5PR11MB1769.namprd11.prod.outlook.com (10.175.87.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.19; Wed, 18 Dec 2019 16:24:01 +0000
-Received: from DM5PR11MB1242.namprd11.prod.outlook.com
- ([fe80::9039:e0e8:9032:20c1]) by DM5PR11MB1242.namprd11.prod.outlook.com
- ([fe80::9039:e0e8:9032:20c1%12]) with mapi id 15.20.2559.012; Wed, 18 Dec
- 2019 16:24:01 +0000
-From:   <Eugen.Hristev@microchip.com>
-To:     <jic23@kernel.org>, <robh+dt@kernel.org>,
-        <alexandre.belloni@bootlin.com>
-CC:     <Nicolas.Ferre@microchip.com>, <linux-iio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
-        <a.zummo@towertech.it>, <Ludovic.Desroches@microchip.com>,
-        <Eugen.Hristev@microchip.com>
-Subject: [PATCH 03/10] dt-bindings: iio: trigger: at91-rtc-trigger: add
- bindings
-Thread-Topic: [PATCH 03/10] dt-bindings: iio: trigger: at91-rtc-trigger: add
- bindings
-Thread-Index: AQHVtb+NaJqoAh7pvkOjOkr/UgCULg==
-Date:   Wed, 18 Dec 2019 16:23:59 +0000
-Message-ID: <1576686157-11939-4-git-send-email-eugen.hristev@microchip.com>
-References: <1576686157-11939-1-git-send-email-eugen.hristev@microchip.com>
-In-Reply-To: <1576686157-11939-1-git-send-email-eugen.hristev@microchip.com>
-Accept-Language: en-US, ro-RO
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 05dbfc0d-742c-4a2c-3c75-08d783d6b0e1
-x-ms-traffictypediagnostic: DM5PR11MB1769:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR11MB1769FCC29B12D03C406740AFE8530@DM5PR11MB1769.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 0255DF69B9
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(39860400002)(136003)(346002)(376002)(199004)(189003)(66476007)(66946007)(66446008)(76116006)(91956017)(2616005)(64756008)(66556008)(86362001)(966005)(186003)(316002)(110136005)(8676002)(54906003)(8936002)(71200400001)(81166006)(478600001)(2906002)(6512007)(26005)(81156014)(36756003)(4326008)(6506007)(5660300002)(6486002)(107886003)(562404015);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB1769;H:DM5PR11MB1242.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: BrukAJWux2FigqaecMF4sE8v/wrwsDRO36zajMIItx/8QsifCNPsdU4UoeivuvIEAhjrrN9hR24p61pv+OIYG5Ke5UhAwHmS/j+fMKOFqynGsVAMqYSTeHVTluJjiNgDNNPhExlmlKCdOYbYFg9vL1UBCGtZAYwNnDVVnqp+Q50DMY7vlf1+rB6nLjzpi/bAZiObwMvJO9ibm/1fuEX2EB9tdVz5vFbM1NXPlr3w12Q3bL1B49+HsvW8HAyvNpN5Z14Q+gpvVEIAS0N8DrvqdgxMzspe9uTxDXku6iCnrRz5MPukhHNWVABtcw2KDZ2sWcUnbzv4UysFoHzKqF8juJQAz/4JTcBPpAKJ8CL5EvAtpmxgbNxrDFDvJsC5ZtLerzKp1PHHPvgI8c/uVQSnepUsfzIMDyOvRytvuPmu4Ce6PuOtHzRkCcjFlhbcaDIssvyM4ooTQ2Dwn2IQkF+YJuHj9/SsVIh61aNKgZkPAXswhlYKftG4Qx7lnaDLJLDSkMfI/xS2rTNTSnYOF0H8dQ==
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=loY/F+PAdaWyk5QCXx7slim0qkoGLO/F2UzLLFuV/S8=;
+        b=jXpPL8O9lWnvDry1VId6njC4m+oHuFJmeOW4oEfScQEjZypo8J2BUnWkPSij3TllBd
+         Hf4muyihJp/ZulUzJMbLRocwxopbhvEJli/je6KS/9cAY6KEUU1kXO/4PUO+wY8EO0YH
+         3sNpqd9FBUr+po2/k1H2JW7I7yuAaGuW1IDF1G6ZgdByHMsT3K/qawXp4VABdNJp1VwU
+         a+wFJyJTiYlfkydETqytgdO6fPP0TDBFBbYmeT1H3PanXgW3zImUgrfcS4bfJsJM4Bg7
+         WVmzb49VcHmSHKpJ/Afi8VLv0j3+gMJoCAz46hOlzlxa/tc0ZVIa1d4xze1siNR79Qu+
+         M3kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=loY/F+PAdaWyk5QCXx7slim0qkoGLO/F2UzLLFuV/S8=;
+        b=aoj7qfRyDI8jYAtxB2+5+5QNdokvjPVboVkX5w6eFNhf3epYD/djw/bWHnboLx7Mre
+         ZOWDDOD+P2KKhOtTIEBkt0gFlgSA9iyYh6Cr9dEnQIGgazs7irSHuTREwFW0Yx0m7oqX
+         Rhsew9WPr48irYxh7synxo55kE12Fa/MjTuocRe6Flpfu4hf/ehdpwp9rviloNdzpjYF
+         YyCuBNQDxcZzBkmzPJe7nVlpSfjHsPM/YyYaQJiOsndsKigOyCrxjRHRYdClNsOzqUua
+         OJhpG29V4k/Aiswc5TkdXK3Jg6Vr5ekdN3T+V8coS1xjNBavwaR+DAylsiAWCPWZaMz5
+         i9qg==
+X-Gm-Message-State: APjAAAV6i4ZCLTpoCurYq4FLTlwyMsqArCDs4Ol5SKB23clvKwuFn5Yd
+        Pe8AvjpTBmWAE8A7/waTLUg=
+X-Google-Smtp-Source: APXvYqyjBizT31CWo1zN1rt+wYHF7zdJBllA2wPgCG/GWexECdwT+Ndql0PFOHi0omJZn22lrS22SQ==
+X-Received: by 2002:ac8:508:: with SMTP id u8mr2982792qtg.128.1576686406046;
+        Wed, 18 Dec 2019 08:26:46 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::2:27e])
+        by smtp.gmail.com with ESMTPSA id d25sm866478qtq.11.2019.12.18.08.26.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 18 Dec 2019 08:26:45 -0800 (PST)
+Date:   Wed, 18 Dec 2019 08:26:42 -0800
+From:   Tejun Heo <tj@kernel.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Dennis Zhou <dennis@kernel.org>,
+        Christoph Lameter <cl@linux.com>
+Subject: Re: [PATCH 1/2] pcpu_ref: add percpu_ref_tryget_many()
+Message-ID: <20191218162642.GC2914998@devbig004.ftw2.facebook.com>
+References: <cover.1576621553.git.asml.silence@gmail.com>
+ <c430d1a603f9ffe01661fc1b3bad6e3101a8b855.1576621553.git.asml.silence@gmail.com>
+ <fe13d615-0fae-23e3-f133-49b727973d14@kernel.dk>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 05dbfc0d-742c-4a2c-3c75-08d783d6b0e1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Dec 2019 16:23:59.8381
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qGxd2A/B9HsdDBDrb864ZQOq8Jha3kmxqpwwy7e6qkth4N5Iel+ywdCai6BNXoeoJsIhjmx/kV9j37G6vG3tWB4wGyyvPJKxOMDicc6Dxik=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1769
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fe13d615-0fae-23e3-f133-49b727973d14@kernel.dk>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
+(cc'ing Dennis and Christoph and quoting whole body)
 
-Add bindings for AT91 RTC ADC Trigger hardware node.
+Pavel, can you please cc percpu maintainers on related changes?
 
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
----
- .../bindings/iio/trigger/at91-rtc-trigger.yaml     | 44 ++++++++++++++++++=
-++++
- 1 file changed, 44 insertions(+)
- create mode 040000 Documentation/devicetree/bindings/iio/trigger
- create mode 100644 Documentation/devicetree/bindings/iio/trigger/at91-rtc-=
-trigger.yaml
+The patch looks fine to me.  Please feel free to add my acked-by.
 
-diff --git a/Documentation/devicetree/bindings/iio/trigger/at91-rtc-trigger=
-.yaml b/Documentation/devicetree/bindings/iio/trigger/at91-rtc-trigger.yaml
-new file mode 100644
-index 0000000..c8c5886
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/trigger/at91-rtc-trigger.yaml
-@@ -0,0 +1,44 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright 2019 Eugen Hristev <eugen.hristev@gmail.com>
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/bindings/iio/trigger/microchip,rtc-adc=
--trigger.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Microchip AT91 RTC ADC Trigger (Real Time Clock to Analog to Digita=
-l Converter)
-+
-+maintainers:
-+  - Eugen Hristev <eugen.hristev@microchip.com>
-+
-+description: |
-+  Bindings for the Microchip AT91 RTC ADC Trigger.
-+  The Real Time Clock block inside AT91 SoCs can be connected with a direc=
-t
-+  hardware line to the ADC. This line can be raised at a specific time
-+  interval in order to trigger the ADC to perform conversions.
-+  Datasheet can be found here: http://ww1.microchip.com/downloads/en/devic=
-edoc/ds60001476b.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - microchip,rtc-adc-trigger
-+
-+  reg:
-+    description: |
-+      Register map address (start address, size).
-+    maxItems: 2
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    {
-+      #address_cells =3D <1>;
-+      #size-cells =3D <1>;
-+
-+      rtc_adc_trigger: rtc-adc-trigger {
-+        reg =3D <0x0 0x10>;
-+        compatible =3D "microchip,rtc-adc-trigger";
-+      };
-+    };
---=20
-2.7.4
+On Tue, Dec 17, 2019 at 04:42:59PM -0700, Jens Axboe wrote:
+> CC Tejun on this one. Looks fine to me, and matches the put path.
+> 
+> 
+> On 12/17/19 3:28 PM, Pavel Begunkov wrote:
+> > Add percpu_ref_tryget_many(), which works the same way as
+> > percpu_ref_tryget(), but grabs specified number of refs.
+> > 
+> > Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+> > ---
+> >  include/linux/percpu-refcount.h | 24 ++++++++++++++++++++----
+> >  1 file changed, 20 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/include/linux/percpu-refcount.h b/include/linux/percpu-refcount.h
+> > index 390031e816dc..19079b62ce31 100644
+> > --- a/include/linux/percpu-refcount.h
+> > +++ b/include/linux/percpu-refcount.h
+> > @@ -210,15 +210,17 @@ static inline void percpu_ref_get(struct percpu_ref *ref)
+> >  }
+> >  
+> >  /**
+> > - * percpu_ref_tryget - try to increment a percpu refcount
+> > + * percpu_ref_tryget_many - try to increment a percpu refcount
+> >   * @ref: percpu_ref to try-get
+> > + * @nr: number of references to get
+> >   *
+> >   * Increment a percpu refcount unless its count already reached zero.
+> >   * Returns %true on success; %false on failure.
+> >   *
+> >   * This function is safe to call as long as @ref is between init and exit.
+> >   */
+> > -static inline bool percpu_ref_tryget(struct percpu_ref *ref)
+> > +static inline bool percpu_ref_tryget_many(struct percpu_ref *ref,
+> > +					  unsigned long nr)
+> >  {
+> >  	unsigned long __percpu *percpu_count;
+> >  	bool ret;
+> > @@ -226,10 +228,10 @@ static inline bool percpu_ref_tryget(struct percpu_ref *ref)
+> >  	rcu_read_lock();
+> >  
+> >  	if (__ref_is_percpu(ref, &percpu_count)) {
+> > -		this_cpu_inc(*percpu_count);
+> > +		this_cpu_add(*percpu_count, nr);
+> >  		ret = true;
+> >  	} else {
+> > -		ret = atomic_long_inc_not_zero(&ref->count);
+> > +		ret = atomic_long_add_unless(&ref->count, nr, 0);
+> >  	}
+> >  
+> >  	rcu_read_unlock();
+> > @@ -237,6 +239,20 @@ static inline bool percpu_ref_tryget(struct percpu_ref *ref)
+> >  	return ret;
+> >  }
+> >  
+> > +/**
+> > + * percpu_ref_tryget - try to increment a percpu refcount
+> > + * @ref: percpu_ref to try-get
+> > + *
+> > + * Increment a percpu refcount unless its count already reached zero.
+> > + * Returns %true on success; %false on failure.
+> > + *
+> > + * This function is safe to call as long as @ref is between init and exit.
+> > + */
+> > +static inline bool percpu_ref_tryget(struct percpu_ref *ref)
+> > +{
+> > +	return percpu_ref_tryget_many(ref, 1);
+> > +}
+> > +
+> >  /**
+> >   * percpu_ref_tryget_live - try to increment a live percpu refcount
+> >   * @ref: percpu_ref to try-get
+> > 
+> 
+> 
+> -- 
+> Jens Axboe
+> 
+
+-- 
+tejun
