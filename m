@@ -2,114 +2,126 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5506EC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE17EC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35B3F227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 919282146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:34:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="jgCkmWKs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbfLRNdO (ORCPT
+        id S1726987AbfLRNez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 08:33:14 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:58044 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726735AbfLRNdN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 08:33:13 -0500
-X-AuditID: c0a8fbf4-199ff70000001fa6-7b-5dfa2a97b167
-Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 01.2F.08102.79A2AFD5; Wed, 18 Dec 2019 14:33:11 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
- 14.03.0439.000; Wed, 18 Dec 2019 14:33:05 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "broonie@kernel.org" <broonie@kernel.org>
-CC:     "corbet@lwn.net" <corbet@lwn.net>,
-        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        Wed, 18 Dec 2019 08:34:55 -0500
+Received: from mail-eopbgr680076.outbound.protection.outlook.com ([40.107.68.76]:23364
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726710AbfLRNez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 08:34:55 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aZS5k9QUFGUYnNuxA498he9d+DWpP5QGfkQkeS626lguheHMpDsaDEqrlp3ezuj1t4/3sWVnuA9wOlOmEr5b3r5mySI02rRUph63amMPAA88PPVDBUDPeqG7ZaSufE1V6iSCVCokMd97KzNTkLTwOVzpiqC/2HYa1/2tZIXthB8mgM72pBZJn4RoFgUynaR5pZIgaYh/6pTOyLVRhDZ1UTa9GusqigGUco4OUHYBxjwJB6IhnwZ6I5QxbZsSRvv31r6copK3V7UteAI3rmItUJ4Xv1Laj/6l13Zvabn1PGrFxMh8B1dgTNs/oF9vtocTZgWfQc0ZoSBoXlZPnWQA8A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WRCkxkSeAlEZ+IpDcwbYjkqEqMjcZs4FSpuv3vinLGo=;
+ b=CsM8C7OPcFmUeSs+I9IEHvWwqeo0zAOuhGtCZh2WstUr4f8Gj8kUGDH2FDb+gN7OSYwQSBzXl+4YWF2csmkboxVudviTZhbsmLmaYmju+QoiH9BTsNw2o7vLEvZrJB4hIKnHrZ2p0YJV1fpIV1Rc5QbXopgFCF4Oovydzo2p82LRkfyLdc/lr+9rcqNRMUFGoYs1UCnIs8jh25eqXUwz3GekB8D8jCGbesoXgi3conH5QWrWit/X/86qXr8tupYiQSkevBGDhmmfGptqQdD931qIDdiFPTyIEiMaXr9GKBSJWq2PD9gYRyamY3mWcT9bPJyf+HClab8+2wI+qa2L+Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WRCkxkSeAlEZ+IpDcwbYjkqEqMjcZs4FSpuv3vinLGo=;
+ b=jgCkmWKsueg0QZAg0o2NnjglaG2WZH1EvxEAT+n453TorK7QwHhlcyzSS3WrEj6YqF4XIlwUftmm4a5V0HNlZwVqJ0I0aq8asKzSDh2Ay7FpFwuPe9qxEhVpYdxuy7GDuGyoybva8TX40vJ6QkAu/oFoFZRbzXeYl7D5UjLrQCI=
+Received: from CH2PR02MB7000.namprd02.prod.outlook.com (20.180.9.216) by
+ CH2PR02MB6421.namprd02.prod.outlook.com (52.132.231.17) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2559.14; Wed, 18 Dec 2019 13:34:51 +0000
+Received: from CH2PR02MB7000.namprd02.prod.outlook.com
+ ([fe80::969:436f:b4b8:4899]) by CH2PR02MB7000.namprd02.prod.outlook.com
+ ([fe80::969:436f:b4b8:4899%7]) with mapi id 15.20.2559.012; Wed, 18 Dec 2019
+ 13:34:51 +0000
+From:   Radhey Shyam Pandey <radheys@xilinx.com>
+To:     David Miller <davem@davemloft.net>
+CC:     Michal Simek <michals@xilinx.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "noralf@tronnes.org" <noralf@tronnes.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "pavel@ucw.cz" <pavel@ucw.cz>
-Subject: Re: Applied "regulator: bd71828: Basic support for ROHM bd71828
- PMIC regulators" to the regulator tree
-Thread-Topic: Applied "regulator: bd71828: Basic support for ROHM bd71828
- PMIC regulators" to the regulator tree
-Thread-Index: AQHVtNcCPO+Kt0OMfE2l+CzrBWADfqe/eY8AgABW2wCAAAR/gA==
-Date:   Wed, 18 Dec 2019 13:33:05 +0000
-Message-ID: <60906cc2c51c726a8d7f4fbfd31deb72489ceb04.camel@fi.rohmeurope.com>
-References: <applied-5b1c4a22c7945e97ff2a7924abfeb3239043f8eb.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
-         <de7424126e285d9bbd21a70945415d78203c2ba7.camel@fi.rohmeurope.com>
-         <20191218131700.GB42175@sirena.org.uk>
-In-Reply-To: <20191218131700.GB42175@sirena.org.uk>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
+        git <git@xilinx.com>
+Subject: RE: [PATCH net-next 1/3] net: emaclite: Fix coding style
+Thread-Topic: [PATCH net-next 1/3] net: emaclite: Fix coding style
+Thread-Index: AQHVtAmigeW+a78/0E2rrUrIsSbtOqe+4eCAgAEC3CA=
+Date:   Wed, 18 Dec 2019 13:34:50 +0000
+Message-ID: <CH2PR02MB700048BB28C0D3625B1B7AC3C7530@CH2PR02MB7000.namprd02.prod.outlook.com>
+References: <1576498090-1277-1-git-send-email-radhey.shyam.pandey@xilinx.com>
+        <1576498090-1277-2-git-send-email-radhey.shyam.pandey@xilinx.com>
+ <20191217.135729.173497629676380262.davem@davemloft.net>
+In-Reply-To: <20191217.135729.173497629676380262.davem@davemloft.net>
+Accept-Language: en-US
+Content-Language: en-US
 X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
 X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4D3FA5736842F04EAD470EBE9F8DE766@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=radheys@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 5ee4ea42-c942-418d-7b2e-08d783bf0f11
+x-ms-traffictypediagnostic: CH2PR02MB6421:|CH2PR02MB6421:
+x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR02MB6421ACB0AD05743D835575F9C7530@CH2PR02MB6421.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:499;
+x-forefront-prvs: 0255DF69B9
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(136003)(366004)(396003)(39860400002)(13464003)(51914003)(199004)(189003)(9686003)(86362001)(26005)(64756008)(66446008)(52536014)(7696005)(5660300002)(478600001)(55016002)(4326008)(33656002)(107886003)(316002)(71200400001)(186003)(66946007)(66556008)(66476007)(76116006)(6506007)(53546011)(4744005)(81156014)(54906003)(81166006)(8936002)(8676002)(6916009)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6421;H:CH2PR02MB7000.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: G+9CqJBmxIkJSG+FXytzM7ZGM0ix62KuGib+yt+5O7dqIQDG6+fqVolg+fm2JJm8cC+HJvrxKAIdPt3p9EfO9dZe4ZTKub2tMUfN9b/nyPdZhokbKb/fCk2PcHnFPXhBVTXDXQHV5xrdxxKyn5kNSoHlFYwX1gR3c06yAM5dHZA9+ZlHXgV9MYdgW5zNDAnnkBVZvs9+g7jl92yatTGZ0dDlSkFQwe6bfiBEMTtQ9HjCUVKELjvL+Sqo0mu2fQEVnMMZ4hq3vfIpv6EuEyIuL2QwUy/0kZSITqa3WCScotz0Ac+tte7XSP9zRrkXpnZ7t5998G146OIj+T8uZOvY5nRkxs5wxNvRzr6qXVBYPKyC62im9Da04iPeGK8XQglu7munNMUWlbUVHPb1kzpOsvNJNX1Kcu2qvEF/LBDW/4JFQICFECs3SuLQbfsXPxiKEAQJKWm3KwBYVd0hv2EEWinmxeAylTCTFWFwxPn8JJ/zjylqezSZs78nf0313TggsVF0RmoW7oYHM92CGuKleQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Tf0wTZxjH895d7w7wtrMivHa6uEs2h0bU6ZI3hhi2ZPGWmc3MbFm2VDzH
-        jevsD7iWRbYsYRomBcYAIcTG1smvNVitVtGNYGwqOtepS7UC4pQ0NEwIgYyhUBDcXW8Kf73P
-        83yf7/N5/nheGte3UQbaZHWIslUwc2QqEfTOBtY3rp0xbhwZfBG1RO5Q6NBYG4Xm6q5SaNId
-        JlBDLE6iePAQQMe6b+pQ5R/ndOhgs59E9zpOE2jg0RWAHkfLMVT/5GcM/VP1QIeOf99CoLPH
-        ngB0u/MoiTpGTwF09USURK29EQwdbb1GoPEJJ4Yi4XdQQ3iMQvfDV0h0MNKHo7KL3RSa7zlD
-        oOqb23NX8T6PD/CzM3WAH+8ro3iP7xv+V9d9ig+0O0n+r54ukr/k9lF8c/VhHf/4ei3BDx33
-        E/xvfRcwvtGTwHh/VTfgvSemKP7fwMs72U/TcvYKjq92mQqsG7btSZNuPP0RK6yh909PnwSl
-        YJKqACk0ZLfAvuAEWQFSaT17B8ByTwOlJdcAbJw+qSQ0TbI5sOJu0pDOrocNM81JA85G02BT
-        9DCuCsvYIvjD2TCuNcmwf26Y0OK34W3PIKHOIdhXYfvpHLXMsO/DA74I0FgDALo7R3WqkMJu
-        hv1tdUkYYFdBZ+kYpsY4mwkDQ1M6bWsWtnT9iWvxcjg8OP9/nYMXE7EkC2ezoL9zg2bNhaNn
-        xnEtfgXWV8YobYel8PcjcaIGZLgWEVwLbtcit2uR27XI/RPQtQNoEUzmAsEhbsqWxeJs2SZZ
-        lOdzmyUAtLub/AU8Db0bAhgNQmAFjXHLGU5KGPUv7LXll0iCXcqTi82iPQQgjXPpzL1yRWPy
-        hZKvRdn2THqJJrhMZk2s1qhnVdY+USwU5WfqSprmIFP/+oxRv1QWC8T9X5jMjgUZo1PU4amG
-        dLtozRdlodgh5an3kWdXDkSVlijch6qdsRcKFqWqWcNgHV0z7G7C6W53axOuJ6w2q2jIZJjX
-        lFZWbZWKrc9BIyCTBtwy5nKWoi5RPt/zOSMKAlMQdFYS4RAWJEMpyPe7gh+sTv8sr3Br9se2
-        +IG5pqH6T8zBjJKp2iMfTmz7aF124u9dlaa7CL25h/zSd+FyRny7rac/ZfNq83vznt27nVtb
-        Z3fs3HGeJApiFqvzEmGAiY7eN7xEyfm3Ho70DnRFT50rGm3bOBi6Vb2yrIozr4gYvVsk7yN7
-        0Xffrsl9wBF2Sdi0Fpftwn8xKXZtOQQAAA==
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5ee4ea42-c942-418d-7b2e-08d783bf0f11
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Dec 2019 13:34:50.9995
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Y+GUkKY3XIDiQhuQf2+bOwLy5eercbmZ/M2Z1qfDdhxbirgNuzzWdPMzz4cNyJaFfAH7UHbfYL1VDCQzE61Gig==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6421
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiBXZWQsIDIwMTktMTItMTggYXQgMTM6MTcgKzAwMDAsIE1hcmsgQnJvd24gd3JvdGU6DQo+
-IE9uIFdlZCwgRGVjIDE4LCAyMDE5IGF0IDA4OjA2OjA0QU0gKzAwMDAsIFZhaXR0aW5lbiwgTWF0
-dGkgd3JvdGU6DQo+IA0KPiA+IEkgdGhpbmsgeW91IG1pc3NlZCB0aGUgW1BBVENIIHY2IDA4LzE1
-XSByZWd1bGF0b3I6IGJkNzE4eDc6IFNwbGl0DQo+ID4gZHJpdmVyIHRvIGNvbW1vbiBhbmQgYmQ3
-MTh4NyBzcGVjaWZpYyBwYXJ0cw0KPiANCj4gSSBkaWRuJ3QgbWlzcyBpdCwgaXQgd2FzIHF1ZXVl
-ZCBidXQgaXQgZG9lc24ndCBhcHBseS4NCg0KQWxscmlnaHQuIEkgdGhvdWdodCB5b3UgbWlzc2Vk
-IGl0IGFzIHlvdSBhcGxpZWQgdGhlIDkvMTUgYWxyZWFkeS4gSQ0KdGhpbmsgSSBoYWQgdGhlIHY2
-IHdyaXR0ZW4gb24gdG9wIG9mIGxpbnV4IHRhZyB2NS41LXJjMS4NCg0KQW55d2F5cywgSSdsbCBj
-bG9uZSB0aGUgcmVndWxhdG9yIHRyZWUgYW5kIHJlYmFzZSB0aGlzIHBhdGNoIG9uIHRvcCBvZg0K
-Zm9yLTUuNiBoZWFkLiAoSXQnbGwgbWVhbiB0aGVzZSBwYXRjaGVzIGNvbWUgaW4gd3Jvbmcgb3Jk
-ZXIgYXMgdGhlDQphbHJlYWR5IGFwcGxpZWQgMDkgZGVwZW5kcyBvbiBub3QteWV0LWFwcGxpZWQg
-MDggLSBidXQgYXMgd2UgZG9uJ3QgaGF2ZQ0KdGhlIGNvbmZpZyBmb3IgQkQ3MTgyOCBpbi10cmVl
-IHlldCB0aGlzIHdvbid0IG1hdHRlciwgcmlnaHQ/KQ0KDQpUaGFua3MgZm9yIHRha2luZyB0aGlz
-Lg0KDQpCciwNCglNYXR0aQ0K
+> -----Original Message-----
+> From: David Miller <davem@davemloft.net>
+> Sent: Wednesday, December 18, 2019 3:27 AM
+> To: Radhey Shyam Pandey <radheys@xilinx.com>
+> Cc: Michal Simek <michals@xilinx.com>; netdev@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; linux-kernel@vger.kernel.org; git
+> <git@xilinx.com>
+> Subject: Re: [PATCH net-next 1/3] net: emaclite: Fix coding style
+>=20
+> From: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+> Date: Mon, 16 Dec 2019 17:38:08 +0530
+>=20
+> > -	spinlock_t reset_lock;
+> > +	spinlock_t reset_lock; /* lock used for synchronization */
+>=20
+> If you're just going to put the comment there to shut up the warnings,
+> I'm not applying your patches.
+>=20
+> You have to write a thoughtful comment which explains what this lock
+> actually protects.
+Thanks for the review. Sure, will fix reset_lock comment
+and also its kernel-doc description in v2.
+
