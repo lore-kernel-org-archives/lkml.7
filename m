@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BE6C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC560C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B5AC2146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:58:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7E1824679
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:58:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727631AbfLRV6W (ORCPT
+        id S1726891AbfLRVzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 16:58:22 -0500
-Received: from mga02.intel.com ([134.134.136.20]:54847 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726882AbfLRVzp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 18 Dec 2019 16:55:45 -0500
+Received: from mga02.intel.com ([134.134.136.20]:54826 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726754AbfLRVzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 16:55:39 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 13:55:41 -0800
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 13:55:38 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
-   d="scan'208";a="222108093"
+   d="scan'208";a="222108060"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga001.fm.intel.com with ESMTP; 18 Dec 2019 13:55:40 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 18 Dec 2019 13:55:37 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
         Paul Mackerras <paulus@ozlabs.org>,
@@ -48,9 +48,9 @@ Cc:     James Morse <james.morse@arm.com>,
         linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
         kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Greg Kurz <groug@kaod.org>
-Subject: [PATCH v2 19/45] KVM: arm: Drop kvm_arch_vcpu_free()
-Date:   Wed, 18 Dec 2019 13:55:04 -0800
-Message-Id: <20191218215530.2280-20-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 13/45] KVM: PPC: Book3S PR: Allocate book3s and shadow vcpu after common init
+Date:   Wed, 18 Dec 2019 13:54:58 -0800
+Message-Id: <20191218215530.2280-14-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191218215530.2280-1-sean.j.christopherson@intel.com>
 References: <20191218215530.2280-1-sean.j.christopherson@intel.com>
@@ -61,51 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the superfluous kvm_arch_vcpu_free() as it is no longer called
-from commmon KVM code.  Note, kvm_arch_vcpu_destroy() *is* called from
-common code, i.e. choosing which function to whack is not completely
-arbitrary.
+Call kvm_vcpu_init() in kvmppc_core_vcpu_create_pr() prior to allocating
+the book3s and shadow_vcpu objects in preparation of moving said call to
+common PPC code.  Although kvm_vcpu_init() has an arch callback, the
+callback is empty for Book3S PR, i.e. barring unseen black magic, moving
+the allocation has no real functional impact.
 
-Acked-by: Christoffer Dall <christoffer.dall@arm.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- virt/kvm/arm/arm.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ arch/powerpc/kvm/book3s_pr.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
-index 12e0280291ce..25b5e4c9b8db 100644
---- a/virt/kvm/arm/arm.c
-+++ b/virt/kvm/arm/arm.c
-@@ -194,7 +194,7 @@ void kvm_arch_destroy_vm(struct kvm *kvm)
- 
- 	for (i = 0; i < KVM_MAX_VCPUS; ++i) {
- 		if (kvm->vcpus[i]) {
--			kvm_arch_vcpu_free(kvm->vcpus[i]);
-+			kvm_arch_vcpu_destroy(kvm->vcpus[i]);
- 			kvm->vcpus[i] = NULL;
- 		}
- 	}
-@@ -321,7 +321,7 @@ void kvm_arch_vcpu_postcreate(struct kvm_vcpu *vcpu)
+diff --git a/arch/powerpc/kvm/book3s_pr.c b/arch/powerpc/kvm/book3s_pr.c
+index 0d7c8a7bcb7b..10c65d412e81 100644
+--- a/arch/powerpc/kvm/book3s_pr.c
++++ b/arch/powerpc/kvm/book3s_pr.c
+@@ -1748,12 +1748,18 @@ static int kvmppc_core_vcpu_create_pr(struct kvm *kvm, struct kvm_vcpu *vcpu,
+ 				      unsigned int id)
  {
- }
+ 	struct kvmppc_vcpu_book3s *vcpu_book3s;
+-	int err = -ENOMEM;
+ 	unsigned long p;
++	int err;
++
++	err = kvm_vcpu_init(vcpu, kvm, id);
++	if (err)
++		return err;
++
++	err = -ENOMEM;
  
--void kvm_arch_vcpu_free(struct kvm_vcpu *vcpu)
-+void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
- {
- 	if (vcpu->arch.has_run_once && unlikely(!irqchip_in_kernel(vcpu->kvm)))
- 		static_branch_dec(&userspace_irqchip_in_use);
-@@ -333,11 +333,6 @@ void kvm_arch_vcpu_free(struct kvm_vcpu *vcpu)
- 	kmem_cache_free(kvm_vcpu_cache, vcpu);
- }
+ 	vcpu_book3s = vzalloc(sizeof(struct kvmppc_vcpu_book3s));
+ 	if (!vcpu_book3s)
+-		goto out;
++		goto uninit_vcpu;
+ 	vcpu->arch.book3s = vcpu_book3s;
  
--void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
--{
--	kvm_arch_vcpu_free(vcpu);
--}
+ #ifdef CONFIG_KVM_BOOK3S_32_HANDLER
+@@ -1763,14 +1769,9 @@ static int kvmppc_core_vcpu_create_pr(struct kvm *kvm, struct kvm_vcpu *vcpu,
+ 		goto free_vcpu3s;
+ #endif
+ 
+-	err = kvm_vcpu_init(vcpu, kvm, id);
+-	if (err)
+-		goto free_shadow_vcpu;
 -
- int kvm_cpu_has_pending_timer(struct kvm_vcpu *vcpu)
- {
- 	return kvm_timer_is_pending(vcpu);
+-	err = -ENOMEM;
+ 	p = __get_free_page(GFP_KERNEL|__GFP_ZERO);
+ 	if (!p)
+-		goto uninit_vcpu;
++		goto free_shadow_vcpu;
+ 	vcpu->arch.shared = (void *)p;
+ #ifdef CONFIG_PPC_BOOK3S_64
+ 	/* Always start the shared struct in native endian mode */
+@@ -1807,15 +1808,14 @@ static int kvmppc_core_vcpu_create_pr(struct kvm *kvm, struct kvm_vcpu *vcpu,
+ 
+ free_shared_page:
+ 	free_page((unsigned long)vcpu->arch.shared);
+-uninit_vcpu:
+-	kvm_vcpu_uninit(vcpu);
+ free_shadow_vcpu:
+ #ifdef CONFIG_KVM_BOOK3S_32_HANDLER
+ 	kfree(vcpu->arch.shadow_vcpu);
+ free_vcpu3s:
+ #endif
+ 	vfree(vcpu_book3s);
+-out:
++uninit_vcpu:
++	kvm_vcpu_uninit(vcpu);
+ 	return err;
+ }
+ 
 -- 
 2.24.1
 
