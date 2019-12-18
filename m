@@ -2,338 +2,478 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB64C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47AD6C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:08:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 331212176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:05:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AC1821D7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:08:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576667331;
+	bh=tUaeqcN6CkS43pagf5qs7h+ZistztqDqO0wjuHQPfEA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=tc1KgMdjigz+5p4axeICy2qygiJeNiJZn63eZ6l0+bx+dpXwdFF0djaO6huoVrERt
+	 SjQ13tDd4stW1ilV5AYbXtGBiUZ1BSx+hO435n+0Ps52E0o1Lo8x6cLov+sjH6Ycxd
+	 fKK2hEFy72+YkUtlMWOCvM7jY3S8F3IQPmSU0sFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbfLRLFi (ORCPT
+        id S1726795AbfLRLIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 06:05:38 -0500
-Received: from foss.arm.com ([217.140.110.172]:41998 "EHLO foss.arm.com"
+        Wed, 18 Dec 2019 06:08:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726141AbfLRLFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 06:05:38 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B7A9630E;
-        Wed, 18 Dec 2019 03:05:36 -0800 (PST)
-Received: from [10.1.196.56] (e112269-lin.cambridge.arm.com [10.1.196.56])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B6C053F6CF;
-        Wed, 18 Dec 2019 03:05:35 -0800 (PST)
-Subject: Re: [PATCH v2] arm64: cpufeature: Export matrix and other features to
- userspace
-To:     Will Deacon <will@kernel.org>
-Cc:     julien@xen.org, Catalin Marinas <catalin.marinas@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20191216113337.13882-1-steven.price@arm.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <3fb4b181-76f3-4bad-c645-888b69bab758@arm.com>
-Date:   Wed, 18 Dec 2019 11:05:34 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        id S1726551AbfLRLIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 06:08:49 -0500
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC99821D7D;
+        Wed, 18 Dec 2019 11:08:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576667328;
+        bh=tUaeqcN6CkS43pagf5qs7h+ZistztqDqO0wjuHQPfEA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=lrImmIoFd+NrnZ9DpifGyXM3GIbpnVAIKNC9vRU6KiPqFVthAzltRKmAJsvo414SP
+         cBL2TiGnNpr9Wkasn5LXyDGweB2zVBfTvv1CxMTkIj3rdo4ijmOuUCrS1DIXXyG+ge
+         BThU+akJfCGPMGwHz4RBaNs0V1NNo6KBjkeYyH9g=
+Received: by mail-lj1-f175.google.com with SMTP id z17so1632180ljk.13;
+        Wed, 18 Dec 2019 03:08:47 -0800 (PST)
+X-Gm-Message-State: APjAAAXnEikjIOWIoqdbSDK2YUwqR9+ltm9DavhvXaCx8P4TTHiq9D3d
+        e6YihBbuvk+UYQPnQgjMjFNoQNpOSS3QQoCpSxk=
+X-Google-Smtp-Source: APXvYqzzwkok4ysLB1UQSv2NrLCMMmJMEEkUWjEi1zn1zHAKMRYnIIpHYHZgMKhx1IkyluFOt6OFdYUDfYSvwOE37r8=
+X-Received: by 2002:a05:651c:106f:: with SMTP id y15mr1330269ljm.63.1576667326015;
+ Wed, 18 Dec 2019 03:08:46 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191216113337.13882-1-steven.price@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190919142236.4071-1-a.swigon@samsung.com> <CGME20190919142329eucas1p2e53992eab9ec6b404f716f955b3c228e@eucas1p2.samsung.com>
+ <20190919142236.4071-10-a.swigon@samsung.com> <35053bad-3f08-190a-0ffa-9aacd16da272@samsung.com>
+ <95ac6056bc6c790b1de7e975f44faa320fd9876f.camel@samsung.com>
+ <CAGTfZH1wVKBQAantrpqPP7+penwxeJud=gjH=5vVmKbzTGE=cQ@mail.gmail.com> <c3c161af17023a90e0fd7a0f925dbdad8b928ff4.camel@samsung.com>
+In-Reply-To: <c3c161af17023a90e0fd7a0f925dbdad8b928ff4.camel@samsung.com>
+From:   Chanwoo Choi <chanwoo@kernel.org>
+Date:   Wed, 18 Dec 2019 20:08:09 +0900
+X-Gmail-Original-Message-ID: <CAGTfZH1SbN2FkQ9SuaT3zONhvmdRGz0MVD3oqHjyuYDXsfkjfg@mail.gmail.com>
+Message-ID: <CAGTfZH1SbN2FkQ9SuaT3zONhvmdRGz0MVD3oqHjyuYDXsfkjfg@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 09/11] devfreq: exynos-bus: Add interconnect
+ functionality to exynos-bus
+To:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>
+Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>, inki.dae@samsung.com,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will,
+Hi,
 
-It was pointed out to me that this patch conflicts with Anshuman's
-patch[1] adding the BFloat16 support. I'd like your opinion on the best
-way of handling this.
+If possible, I'd like to apply these patches to v5.6-rc1.
+It is very useful feature to support the QoS for user device using memory b=
+us.
 
-I originally extended the scope of Julien's original patch based on your
-comment[2] on his patch:
+2019=EB=85=84 12=EC=9B=94 18=EC=9D=BC (=EC=88=98) =EC=98=A4=ED=9B=84 7:48, =
+Artur =C5=9Awigo=C5=84 <a.swigon@samsung.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=
+=EC=84=B1:
+>
+> On Wed, 2019-12-18 at 19:39 +0900, Chanwoo Choi wrote:
+> > Hi,
+> >
+> > 2019=EB=85=84 12=EC=9B=94 18=EC=9D=BC (=EC=88=98) =EC=98=A4=ED=9B=84 7:=
+19, Artur =C5=9Awigo=C5=84 <a.swigon@samsung.com>=EB=8B=98=EC=9D=B4 =EC=9E=
+=91=EC=84=B1:
+> > >
+> > > Hi,
+> > >
+> > > Thank you for the review.
+> > >
+> > > On Mon, 2019-12-16 at 09:44 +0900, Chanwoo Choi wrote:
+> > > > Hi,
+> > > >
+> > > > On 9/19/19 11:22 PM, Artur =C5=9Awigo=C5=84 wrote:
+> > > > > From: Artur =C5=9Awigo=C5=84 <a.swigon@partner.samsung.com>
+> > > > >
+> > > > > This patch adds interconnect functionality to the exynos-bus devf=
+req
+> > > > > driver.
+> > > > >
+> > > > > The SoC topology is a graph (or, more specifically, a tree) and m=
+ost of
+> > > > > its edges are taken from the devfreq parent-child hierarchy (cf.
+> > > > > Documentation/devicetree/bindings/devfreq/exynos-bus.txt). Due to
+> > > > > unspecified relative probing order, -EPROBE_DEFER may be propagat=
+ed to
+> > > > > guarantee that a child is probed before its parent.
+> > > > >
+> > > > > Each bus is now an interconnect provider and an interconnect node=
+ as well
+> > > > > (cf. Documentation/interconnect/interconnect.rst), i.e. every bus=
+ registers
+> > > > > itself as a node. Node IDs are not hardcoded but rather assigned =
+at
+> > > > > runtime, in probing order (subject to the above-mentioned excepti=
+on
+> > > > > regarding relative order). This approach allows for using this dr=
+iver with
+> > > > > various Exynos SoCs.
+> > > > >
+> > > > > Frequencies requested via the interconnect API for a given node a=
+re
+> > > > > propagated to devfreq using dev_pm_qos_update_request(). Please n=
+ote that
+> > > > > it is not an error when CONFIG_INTERCONNECT is 'n', in which case=
+ all
+> > > > > interconnect API functions are no-op.
+> > > > >
+> > > > > Signed-off-by: Artur =C5=9Awigo=C5=84 <a.swigon@partner.samsung.c=
+om>
+> > > > > ---
+> > > > >  drivers/devfreq/exynos-bus.c | 153 +++++++++++++++++++++++++++++=
+++++++
+> > > > >  1 file changed, 153 insertions(+)
+> > > > >
+> > > > > diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exyno=
+s-bus.c
+> > > > > index 8d44810cac69..e0232202720d 100644
+> > > > > --- a/drivers/devfreq/exynos-bus.c
+> > > > > +++ b/drivers/devfreq/exynos-bus.c
+> > > > > @@ -14,14 +14,19 @@
+> > > > >  #include <linux/devfreq-event.h>
+> > > > >  #include <linux/device.h>
+> > > > >  #include <linux/export.h>
+> > > > > +#include <linux/idr.h>
+> > > > > +#include <linux/interconnect-provider.h>
+> > > > >  #include <linux/module.h>
+> > > > >  #include <linux/of.h>
+> > > > >  #include <linux/pm_opp.h>
+> > > > > +#include <linux/pm_qos.h>
+> > > > >  #include <linux/platform_device.h>
+> > > > >  #include <linux/regulator/consumer.h>
+> > > > >
+> > > > >  #define DEFAULT_SATURATION_RATIO   40
+> > > > >
+> > > > > +#define icc_units_to_khz(x) ((x) / 8)
+> > > >
+> > > > icc_units_to_khz() -> kpbs_to_khz()
+> > >
+> > > OK
+> > >
+> > > > > +
+> > > > >  struct exynos_bus {
+> > > > >     struct device *dev;
+> > > > >
+> > > > > @@ -35,6 +40,12 @@ struct exynos_bus {
+> > > > >     struct opp_table *opp_table;
+> > > > >     struct clk *clk;
+> > > > >     unsigned int ratio;
+> > > > > +
+> > > > > +   /* One provider per bus, one node per provider */
+> > > > > +   struct icc_provider provider;
+> > > > > +   struct icc_node *node;
+> > > > > +
+> > > > > +   struct dev_pm_qos_request qos_req;
+> > > > >  };
+> > > > >
+> > > > >  /*
+> > > > > @@ -59,6 +70,13 @@ exynos_bus_ops_edev(enable_edev);
+> > > > >  exynos_bus_ops_edev(disable_edev);
+> > > > >  exynos_bus_ops_edev(set_event);
+> > > > >
+> > > > > +static int exynos_bus_next_id(void)
+> > > > > +{
+> > > > > +   static DEFINE_IDA(exynos_bus_icc_ida);
+> > > > > +
+> > > > > +   return ida_alloc(&exynos_bus_icc_ida, GFP_KERNEL);
+> > > > > +}
+> > > > > +
+> > > > >  static int exynos_bus_get_event(struct exynos_bus *bus,
+> > > > >                             struct devfreq_event_data *edata)
+> > > > >  {
+> > > > > @@ -171,6 +189,38 @@ static void exynos_bus_passive_exit(struct d=
+evice *dev)
+> > > > >     clk_disable_unprepare(bus->clk);
+> > > > >  }
+> > > > >
+> > > > > +static int exynos_bus_icc_set(struct icc_node *src, struct icc_n=
+ode *dst)
+> > > > > +{
+> > > > > +   struct exynos_bus *src_bus =3D src->data, *dst_bus =3D dst->d=
+ata;
+> > > > > +   s32 src_freq =3D icc_units_to_khz(src->avg_bw);
+> > > > > +   s32 dst_freq =3D icc_units_to_khz(dst->avg_bw);
+> > > > > +
+> > > > > +   dev_pm_qos_update_request(&src_bus->qos_req, src_freq);
+> > > >
+> > > > Have to check the return value.
+> > > > If return error, show the waring with dev_warn.
+> > >
+> > > OK, I will change it to:
+> > >
+> > > ret =3D dev_pm_qos_update_request(&src_bus->qos_req, src_freq);
+> > > if (ret < 0) {
+> > >         dev_warn(src_bus->dev, "failed to update PM QoS request");
+> > >         return ret;
+> >
+> > If you return right after, better to use dev_err.
+> > If you use dev_warn, just show the warning message without return.
+>
+> OK, I will use dev_err().
+>
+> > > }
+> > >
+> > > > > +   dev_pm_qos_update_request(&dst_bus->qos_req, dst_freq);
+> > > >
+> > > > ditto.
+> > >
+> > > OK (same as above).
+> >
+> > ditto.
+> >
+> > >
+> > > > > +
+> > > > > +   return 0;
+> > > > > +}
+> > > > > +
+> > > > > +static int exynos_bus_icc_aggregate(struct icc_node *node, u32 t=
+ag, u32 avg_bw,
+> > > > > +                               u32 peak_bw, u32 *agg_avg, u32 *a=
+gg_peak)
+> > > > > +{
+> > > > > +   *agg_avg +=3D avg_bw;
+> > > > > +   *agg_peak =3D max(*agg_peak, peak_bw);
+> > > > > +
+> > > > > +   return 0;
+> > > > > +}
+> > > > > +
+> > > > > +static struct icc_node *exynos_bus_icc_xlate(struct of_phandle_a=
+rgs *spec,
+> > > > > +                                        void *data)
+> > > > > +{
+> > > > > +   struct exynos_bus *bus =3D data;
+> > > > > +
+> > > > > +   if (spec->np !=3D bus->dev->of_node)
+> > > > > +           return ERR_PTR(-EINVAL);
+> > > > > +
+> > > > > +   return bus->node;
+> > > > > +}
+> > > > > +
+> > > > >  static int exynos_bus_parent_parse_of(struct device_node *np,
+> > > > >                                     struct exynos_bus *bus)
+> > > > >  {
+> > > > > @@ -366,6 +416,101 @@ static int exynos_bus_profile_init_passive(=
+struct exynos_bus *bus,
+> > > > >     return 0;
+> > > > >  }
+> > > > >
+> > > > > +static int exynos_bus_icc_connect(struct exynos_bus *bus)
+> > > > > +{
+> > > > > +   struct device_node *np =3D bus->dev->of_node;
+> > > > > +   struct devfreq *parent_devfreq;
+> > > > > +   struct icc_node *parent_node =3D NULL;
+> > > > > +   struct of_phandle_args args;
+> > > > > +   int ret =3D 0;
+> > > > > +
+> > > > > +   parent_devfreq =3D devfreq_get_devfreq_by_phandle(bus->dev, 0=
+);
+> > > > > +   if (!IS_ERR(parent_devfreq)) {
+> > > > > +           struct exynos_bus *parent_bus;
+> > > > > +
+> > > > > +           parent_bus =3D dev_get_drvdata(parent_devfreq->dev.pa=
+rent);
+> > > > > +           parent_node =3D parent_bus->node;
+> > > > > +   } else {
+> > > > > +           /* Look for parent in DT */
+> > > > > +           int num =3D of_count_phandle_with_args(np, "parent",
+> > > > > +                                                "#interconnect-c=
+ells");
+> > > > > +           if (num !=3D 1)
+> > > > > +                   goto out; /* 'parent' is optional */
+> > > > > +
+> > > > > +           ret =3D of_parse_phandle_with_args(np, "parent",
+> > > > > +                                            "#interconnect-cells=
+",
+> > > > > +                                            0, &args);
+> > > >
+> > > >
+> > > > Actually, I agree your approach. I think that it is very useful
+> > > > and necessary to guarantee the PM QoS requirements between devices.
+> > > >
+> > > > But,
+> > > > As I already commented, I'm not sure that the "parent" property
+> > > > is proper for only this driver. If possible, you better to get
+> > > > the parent phandle through other way like OF graph.
+> > > >
+> > > > If you suggest the standard way to make the tree between
+> > > > the exynos-bus, I'll agree.
+> > >
+> > > As I commented in the answer to patch 08, I will use the
+> > > 'exynos,interconnect-parent-node' property for bus_display,
+> > > bus_leftbus and bus_dmc.
+> >
+> > OK.
+> >
+> > >
+> > > > Also, for interconnect path, you have to add the connection
+> > > > between 'bus_display' and 'bus_leftbus' regardless
+> > > > of the existing 'devfreq' property.
+> > > > - bus_display - bus_leftbus - bus_dmc
+> > > >
+> > > > > +           if (ret < 0)
+> > > > > +                   goto out;
+> > > > > +
+> > > > > +           of_node_put(args.np);
+> > > > > +
+> > > > > +           parent_node =3D of_icc_get_from_provider(&args);
+> > > > > +           if (IS_ERR(parent_node)) {
+> > > > > +                   /* May be -EPROBE_DEFER */
+> > > > > +                   ret =3D PTR_ERR(parent_node);
+> > > > > +                   goto out;
+> > > > > +           }
+> > > > > +   }
+> > > > > +
+> > > > > +   ret =3D icc_link_create(bus->node, parent_node->id);
+> > > > > +
+> > > > > +out:
+> > > > > +   return ret;
+> > > > > +}
+> > > > > +
+> > > > > +static int exynos_bus_icc_init(struct exynos_bus *bus)
+> > > > > +{
+> > > > > +   struct device *dev =3D bus->dev;
+> > > > > +   struct icc_provider *provider =3D &bus->provider;
+> > > > > +   struct icc_node *node;
+> > > > > +   int id, ret;
+> > > > > +
+> > > > > +   /* Initialize the interconnect provider */
+> > > > > +   provider->set =3D exynos_bus_icc_set;
+> > > > > +   provider->aggregate =3D exynos_bus_icc_aggregate;
+> > > > > +   provider->xlate =3D exynos_bus_icc_xlate;
+> > > > > +   provider->dev =3D dev;
+> > > > > +   provider->data =3D bus;
+> > > > > +
+> > > > > +   ret =3D icc_provider_add(provider);
+> > > > > +   if (ret < 0)
+> > > > > +           goto out;
+> > > >
+> > > > Return error without goto because there is no any requirement
+> > > > to free the resource before.
+> > >
+> > > OK.
+> > >
+> > > > > +
+> > > > > +   ret =3D id =3D exynos_bus_next_id();
+> > > > > +   if (ret < 0)
+> > > > > +           goto err_node;
+> > > > > +
+> > > > > +   node =3D icc_node_create(id);
+> > > > > +   if (IS_ERR(node)) {
+> > > > > +           ret =3D PTR_ERR(node);
+> > > > > +           goto err_node;
+> > > > > +   }
+> > > > > +
+> > > > > +   bus->node =3D node;
+> > > > > +   node->name =3D dev->of_node->name;
+> > > > > +   node->data =3D bus;
+> > > > > +   icc_node_add(node, provider);
+> > > > > +
+> > > > > +   ret =3D exynos_bus_icc_connect(bus);
+> > > > > +   if (ret < 0)
+> > > > > +           goto err_connect;
+> > > > > +
+> > > > > +   ret =3D dev_pm_qos_add_request(bus->devfreq->dev.parent, &bus=
+->qos_req,
+> > > >
+> > > > Check whether this line is over 80 char.
+> > >
+> > > It looks like 77 columns to me.
+> > >
+> > > >
+> > > > > +                                DEV_PM_QOS_MIN_FREQUENCY, 0);
+> > > >
+> > > >       Check the return value.
+> > >
+> > > OK.
+> > >
+> > > >
+> > > > > +
+> > > > > +out:
+> > > >
+> > > > Remove this goto due to not necessary.
+> > > >
+> > > > > +   return ret;
+> > > >
+> > > >       return 0;
+> > >
+> > > OK.
+> > >
+> > > Please also note that this function as well as exynos_bus_icc_connect=
+()
+> > > will
+> > > slightly change in v3 due to the changes regarding DT properties.
+> > >
+> > > >
+> > > > > +
+> > > > > +err_connect:
+> > > > > +   icc_node_del(node);
+> > > > > +   icc_node_destroy(id);
+> > > > > +err_node:
+> > > > > +   icc_provider_del(provider);
+> > > > > +
+> > > > > +   return ret;
+> > > > > +}
+> > > > > +
+> > > > >  static int exynos_bus_probe(struct platform_device *pdev)
+> > > > >  {
+> > > > >     struct device *dev =3D &pdev->dev;
+> > > > > @@ -415,6 +560,14 @@ static int exynos_bus_probe(struct platform_=
+device *pdev)
+> > > > >     if (ret < 0)
+> > > > >             goto err;
+> > > > >
+> > > > > +   /*
+> > > > > +    * Initialize interconnect provider. A return value of -ENOTS=
+UPP means
+> > > > > +    * that CONFIG_INTERCONNECT is disabled.
+> > > > > +    */
+> > > > > +   ret =3D exynos_bus_icc_init(bus);
+> > > > > +   if (ret < 0 && ret !=3D -ENOTSUPP)
+> > > > > +           goto err;
+> > > >
+> > > > Print error message.
+> > > >       dev_err(dev, "failed to initialize the interconnect provider"=
+);
+> > >
+> > > OK.
+> > >
+> > > >
+> > > > > +
+> > > > >     max_state =3D bus->devfreq->profile->max_state;
+> > > > >     min_freq =3D (bus->devfreq->profile->freq_table[0] / 1000);
+> > > > >     max_freq =3D (bus->devfreq->profile->freq_table[max_state - 1=
+] / 1000);
+> > > > >
+>
+> --
+> Artur =C5=9Awigo=C5=84
+> Samsung R&D Institute Poland
+> Samsung Electronics
+>
+>
 
-  So we probably want a patch bringing all of this up to speed, rather
-  than randomly advertising some features and not others.
 
-So which outcome do you prefer:
-
- * Splitting up the features into multiple patches, i.e. Anshuman's
-BF16, followed by a version of Julien's Matrix, followed by the
-remaining features SPECRES/DGH.
-
- * A single patch adding everything in one go (i.e. this patch).
-
- * Something else I haven't thought of.
-
-Thanks,
-
-Steve
-
-[1]
-https://lore.kernel.org/linux-arm-kernel/1576145232-8311-1-git-send-email-anshuman.khandual@arm.com/
-[2]
-http://lists.infradead.org/pipermail/linux-arm-kernel/2019-October/690350.html
-
-On 16/12/2019 11:33, Steven Price wrote:
-> Export the features introduced as part of ARMv8.6 exposed in the
-> ID_AA64ISAR1_EL1 and ID_AA64ZFR0_EL1 registers. This introduces the
-> Matrix features (ARMv8.2-I8MM, ARMv8.2-F64MM and ARMv8.2-F32MM) along
-> with BFloat16 (Armv8.2-BF16), speculation invalidation (SPECRES) and
-> Data Gathering Hint (ARMv8.0-DGH).
-> 
-> Signed-off-by: Julien Grall <julien.grall@arm.com>
-> [Added other features in those registers]
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
-> This is a v2 of Julien's patch[1] extended to export all the new
-> features contained within the ID_AA64ISAR1_EL1 and ID_AA64ZFR0_EL1
-> registers.
-> 
-> [1] https://lore.kernel.org/linux-arm-kernel/20191025171056.30641-1-julien.grall@arm.com/
-> 
->  Documentation/arm64/cpu-feature-registers.rst | 16 ++++++++++
->  Documentation/arm64/elf_hwcaps.rst            | 31 +++++++++++++++++++
->  arch/arm64/include/asm/hwcap.h                |  8 +++++
->  arch/arm64/include/asm/sysreg.h               | 12 +++++++
->  arch/arm64/include/uapi/asm/hwcap.h           |  8 +++++
->  arch/arm64/kernel/cpufeature.c                | 20 ++++++++++++
->  arch/arm64/kernel/cpuinfo.c                   |  8 +++++
->  7 files changed, 103 insertions(+)
-> 
-> diff --git a/Documentation/arm64/cpu-feature-registers.rst b/Documentation/arm64/cpu-feature-registers.rst
-> index b6e44884e3ad..5382981533f8 100644
-> --- a/Documentation/arm64/cpu-feature-registers.rst
-> +++ b/Documentation/arm64/cpu-feature-registers.rst
-> @@ -200,6 +200,14 @@ infrastructure:
->       +------------------------------+---------+---------+
->       | Name                         |  bits   | visible |
->       +------------------------------+---------+---------+
-> +     | I8MM                         | [55-52] |    y    |
-> +     +------------------------------+---------+---------+
-> +     | DGH                          | [51-48] |    y    |
-> +     +------------------------------+---------+---------+
-> +     | BF16                         | [47-44] |    y    |
-> +     +------------------------------+---------+---------+
-> +     | SPECRES                      | [43-40] |    y    |
-> +     +------------------------------+---------+---------+
->       | SB                           | [39-36] |    y    |
->       +------------------------------+---------+---------+
->       | FRINTTS                      | [35-32] |    y    |
-> @@ -234,10 +242,18 @@ infrastructure:
->       +------------------------------+---------+---------+
->       | Name                         |  bits   | visible |
->       +------------------------------+---------+---------+
-> +     | F64MM                        | [59-56] |    y    |
-> +     +------------------------------+---------+---------+
-> +     | F32MM                        | [55-52] |    y    |
-> +     +------------------------------+---------+---------+
-> +     | I8MM                         | [47-44] |    y    |
-> +     +------------------------------+---------+---------+
->       | SM4                          | [43-40] |    y    |
->       +------------------------------+---------+---------+
->       | SHA3                         | [35-32] |    y    |
->       +------------------------------+---------+---------+
-> +     | BF16                         | [23-20] |    y    |
-> +     +------------------------------+---------+---------+
->       | BitPerm                      | [19-16] |    y    |
->       +------------------------------+---------+---------+
->       | AES                          | [7-4]   |    y    |
-> diff --git a/Documentation/arm64/elf_hwcaps.rst b/Documentation/arm64/elf_hwcaps.rst
-> index 7fa3d215ae6a..183ba86ad46e 100644
-> --- a/Documentation/arm64/elf_hwcaps.rst
-> +++ b/Documentation/arm64/elf_hwcaps.rst
-> @@ -204,6 +204,37 @@ HWCAP2_FRINT
->  
->      Functionality implied by ID_AA64ISAR1_EL1.FRINTTS == 0b0001.
->  
-> +HWCAP2_SVEI8MM
-> +
-> +    Functionality implied by ID_AA64ZFR0_EL1.I8MM == 0b0001.
-> +
-> +HWCAP2_SVEF32MM
-> +
-> +    Functionality implied by ID_AA64ZFR0_EL1.F32MM == 0b0001.
-> +
-> +HWCAP2_SVEF64MM
-> +
-> +    Functionality implied by ID_AA64ZFR0_EL1.F64MM == 0b0001.
-> +
-> +HWCAP2_SVEBF16
-> +
-> +    Functionality implied by ID_AA64ZFR0_EL1.BF16 == 0b0001.
-> +
-> +HWCAP2_I8MM
-> +
-> +    Functionality implied by ID_AA64ISAR1_EL1.I8MM == 0b0001.
-> +
-> +HWCAP2_BF16
-> +
-> +    Functionality implied by ID_AA64ISAR1_EL1.BF16 == 0b0001.
-> +
-> +HWCAP2_DGH
-> +
-> +    Functionality implied by ID_AA64ISAR1_EL1.DGH == 0b0001.
-> +
-> +HWCAP2_SPECRES
-> +
-> +    Functionality implied by ID_AA64ISAR1_EL1.SPECRES == 0b0001.
->  
->  4. Unused AT_HWCAP bits
->  -----------------------
-> diff --git a/arch/arm64/include/asm/hwcap.h b/arch/arm64/include/asm/hwcap.h
-> index 3d2f2472a36c..ac7180b2c20b 100644
-> --- a/arch/arm64/include/asm/hwcap.h
-> +++ b/arch/arm64/include/asm/hwcap.h
-> @@ -86,6 +86,14 @@
->  #define KERNEL_HWCAP_SVESM4		__khwcap2_feature(SVESM4)
->  #define KERNEL_HWCAP_FLAGM2		__khwcap2_feature(FLAGM2)
->  #define KERNEL_HWCAP_FRINT		__khwcap2_feature(FRINT)
-> +#define KERNEL_HWCAP_SVEI8MM		__khwcap2_feature(SVEI8MM)
-> +#define KERNEL_HWCAP_SVEF32MM		__khwcap2_feature(SVEF32MM)
-> +#define KERNEL_HWCAP_SVEF64MM		__khwcap2_feature(SVEF64MM)
-> +#define KERNEL_HWCAP_SVEBF16		__khwcap2_feature(SVEBF16)
-> +#define KERNEL_HWCAP_I8MM		__khwcap2_feature(I8MM)
-> +#define KERNEL_HWCAP_DGH		__khwcap2_feature(DGH)
-> +#define KERNEL_HWCAP_BF16		__khwcap2_feature(BF16)
-> +#define KERNEL_HWCAP_SPECRES		__khwcap2_feature(SPECRES)
->  
->  /*
->   * This yields a mask that user programs can use to figure out what
-> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-> index 6e919fafb43d..f56c4a02a127 100644
-> --- a/arch/arm64/include/asm/sysreg.h
-> +++ b/arch/arm64/include/asm/sysreg.h
-> @@ -553,6 +553,10 @@
->  #define ID_AA64ISAR0_AES_SHIFT		4
->  
->  /* id_aa64isar1 */
-> +#define ID_AA64ISAR1_I8MM_SHIFT		52
-> +#define ID_AA64ISAR1_DGH_SHIFT		48
-> +#define ID_AA64ISAR1_BF16_SHIFT		44
-> +#define ID_AA64ISAR1_SPECRES_SHIFT	40
->  #define ID_AA64ISAR1_SB_SHIFT		36
->  #define ID_AA64ISAR1_FRINTTS_SHIFT	32
->  #define ID_AA64ISAR1_GPI_SHIFT		28
-> @@ -605,12 +609,20 @@
->  #define ID_AA64PFR1_SSBS_PSTATE_INSNS	2
->  
->  /* id_aa64zfr0 */
-> +#define ID_AA64ZFR0_F64MM_SHIFT		56
-> +#define ID_AA64ZFR0_F32MM_SHIFT		52
-> +#define ID_AA64ZFR0_I8MM_SHIFT		44
->  #define ID_AA64ZFR0_SM4_SHIFT		40
->  #define ID_AA64ZFR0_SHA3_SHIFT		32
-> +#define ID_AA64ZFR0_BF16_SHIFT		20
->  #define ID_AA64ZFR0_BITPERM_SHIFT	16
->  #define ID_AA64ZFR0_AES_SHIFT		4
->  #define ID_AA64ZFR0_SVEVER_SHIFT	0
->  
-> +#define ID_AA64ZFR0_F64MM		0x1
-> +#define ID_AA64ZFR0_F32MM		0x1
-> +#define ID_AA64ZFR0_I8MM		0x1
-> +#define ID_AA64ZFR0_BF16		0x1
->  #define ID_AA64ZFR0_SM4			0x1
->  #define ID_AA64ZFR0_SHA3		0x1
->  #define ID_AA64ZFR0_BITPERM		0x1
-> diff --git a/arch/arm64/include/uapi/asm/hwcap.h b/arch/arm64/include/uapi/asm/hwcap.h
-> index a1e72886b30c..8f3f1b66f7b2 100644
-> --- a/arch/arm64/include/uapi/asm/hwcap.h
-> +++ b/arch/arm64/include/uapi/asm/hwcap.h
-> @@ -65,5 +65,13 @@
->  #define HWCAP2_SVESM4		(1 << 6)
->  #define HWCAP2_FLAGM2		(1 << 7)
->  #define HWCAP2_FRINT		(1 << 8)
-> +#define HWCAP2_SVEI8MM		(1 << 9)
-> +#define HWCAP2_SVEF32MM		(1 << 10)
-> +#define HWCAP2_SVEF64MM		(1 << 11)
-> +#define HWCAP2_SVEBF16		(1 << 12)
-> +#define HWCAP2_I8MM		(1 << 13)
-> +#define HWCAP2_BF16		(1 << 14)
-> +#define HWCAP2_DGH		(1 << 15)
-> +#define HWCAP2_SPECRES		(1 << 16)
->  
->  #endif /* _UAPI__ASM_HWCAP_H */
-> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-> index 04cf64e9f0c9..bf9e9e09da0d 100644
-> --- a/arch/arm64/kernel/cpufeature.c
-> +++ b/arch/arm64/kernel/cpufeature.c
-> @@ -135,6 +135,10 @@ static const struct arm64_ftr_bits ftr_id_aa64isar0[] = {
->  };
->  
->  static const struct arm64_ftr_bits ftr_id_aa64isar1[] = {
-> +	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR1_I8MM_SHIFT, 4, 0),
-> +	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR1_DGH_SHIFT, 4, 0),
-> +	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR1_BF16_SHIFT, 4, 0),
-> +	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR1_SPECRES_SHIFT, 4, 0),
->  	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR1_SB_SHIFT, 4, 0),
->  	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR1_FRINTTS_SHIFT, 4, 0),
->  	ARM64_FTR_BITS(FTR_VISIBLE_IF_IS_ENABLED(CONFIG_ARM64_PTR_AUTH),
-> @@ -176,10 +180,18 @@ static const struct arm64_ftr_bits ftr_id_aa64pfr1[] = {
->  };
->  
->  static const struct arm64_ftr_bits ftr_id_aa64zfr0[] = {
-> +	ARM64_FTR_BITS(FTR_VISIBLE_IF_IS_ENABLED(CONFIG_ARM64_SVE),
-> +		       FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ZFR0_F64MM_SHIFT, 4, 0),
-> +	ARM64_FTR_BITS(FTR_VISIBLE_IF_IS_ENABLED(CONFIG_ARM64_SVE),
-> +		       FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ZFR0_F32MM_SHIFT, 4, 0),
-> +	ARM64_FTR_BITS(FTR_VISIBLE_IF_IS_ENABLED(CONFIG_ARM64_SVE),
-> +		       FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ZFR0_I8MM_SHIFT, 4, 0),
->  	ARM64_FTR_BITS(FTR_VISIBLE_IF_IS_ENABLED(CONFIG_ARM64_SVE),
->  		       FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ZFR0_SM4_SHIFT, 4, 0),
->  	ARM64_FTR_BITS(FTR_VISIBLE_IF_IS_ENABLED(CONFIG_ARM64_SVE),
->  		       FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ZFR0_SHA3_SHIFT, 4, 0),
-> +	ARM64_FTR_BITS(FTR_VISIBLE_IF_IS_ENABLED(CONFIG_ARM64_SVE),
-> +		       FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ZFR0_BF16_SHIFT, 4, 0),
->  	ARM64_FTR_BITS(FTR_VISIBLE_IF_IS_ENABLED(CONFIG_ARM64_SVE),
->  		       FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ZFR0_BITPERM_SHIFT, 4, 0),
->  	ARM64_FTR_BITS(FTR_VISIBLE_IF_IS_ENABLED(CONFIG_ARM64_SVE),
-> @@ -1651,6 +1663,10 @@ static const struct arm64_cpu_capabilities arm64_elf_hwcaps[] = {
->  	HWCAP_CAP(SYS_ID_AA64ISAR1_EL1, ID_AA64ISAR1_LRCPC_SHIFT, FTR_UNSIGNED, 2, CAP_HWCAP, KERNEL_HWCAP_ILRCPC),
->  	HWCAP_CAP(SYS_ID_AA64ISAR1_EL1, ID_AA64ISAR1_FRINTTS_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, KERNEL_HWCAP_FRINT),
->  	HWCAP_CAP(SYS_ID_AA64ISAR1_EL1, ID_AA64ISAR1_SB_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, KERNEL_HWCAP_SB),
-> +	HWCAP_CAP(SYS_ID_AA64ISAR1_EL1, ID_AA64ISAR1_SPECRES_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, KERNEL_HWCAP_SPECRES),
-> +	HWCAP_CAP(SYS_ID_AA64ISAR1_EL1, ID_AA64ISAR1_BF16_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, KERNEL_HWCAP_BF16),
-> +	HWCAP_CAP(SYS_ID_AA64ISAR1_EL1, ID_AA64ISAR1_DGH_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, KERNEL_HWCAP_DGH),
-> +	HWCAP_CAP(SYS_ID_AA64ISAR1_EL1, ID_AA64ISAR1_I8MM_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, KERNEL_HWCAP_I8MM),
->  	HWCAP_CAP(SYS_ID_AA64MMFR2_EL1, ID_AA64MMFR2_AT_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, KERNEL_HWCAP_USCAT),
->  #ifdef CONFIG_ARM64_SVE
->  	HWCAP_CAP(SYS_ID_AA64PFR0_EL1, ID_AA64PFR0_SVE_SHIFT, FTR_UNSIGNED, ID_AA64PFR0_SVE, CAP_HWCAP, KERNEL_HWCAP_SVE),
-> @@ -1658,8 +1674,12 @@ static const struct arm64_cpu_capabilities arm64_elf_hwcaps[] = {
->  	HWCAP_CAP(SYS_ID_AA64ZFR0_EL1, ID_AA64ZFR0_AES_SHIFT, FTR_UNSIGNED, ID_AA64ZFR0_AES, CAP_HWCAP, KERNEL_HWCAP_SVEAES),
->  	HWCAP_CAP(SYS_ID_AA64ZFR0_EL1, ID_AA64ZFR0_AES_SHIFT, FTR_UNSIGNED, ID_AA64ZFR0_AES_PMULL, CAP_HWCAP, KERNEL_HWCAP_SVEPMULL),
->  	HWCAP_CAP(SYS_ID_AA64ZFR0_EL1, ID_AA64ZFR0_BITPERM_SHIFT, FTR_UNSIGNED, ID_AA64ZFR0_BITPERM, CAP_HWCAP, KERNEL_HWCAP_SVEBITPERM),
-> +	HWCAP_CAP(SYS_ID_AA64ZFR0_EL1, ID_AA64ZFR0_BF16_SHIFT, FTR_UNSIGNED, ID_AA64ZFR0_BF16, CAP_HWCAP, KERNEL_HWCAP_SVEBF16),
->  	HWCAP_CAP(SYS_ID_AA64ZFR0_EL1, ID_AA64ZFR0_SHA3_SHIFT, FTR_UNSIGNED, ID_AA64ZFR0_SHA3, CAP_HWCAP, KERNEL_HWCAP_SVESHA3),
->  	HWCAP_CAP(SYS_ID_AA64ZFR0_EL1, ID_AA64ZFR0_SM4_SHIFT, FTR_UNSIGNED, ID_AA64ZFR0_SM4, CAP_HWCAP, KERNEL_HWCAP_SVESM4),
-> +	HWCAP_CAP(SYS_ID_AA64ZFR0_EL1, ID_AA64ZFR0_I8MM_SHIFT, FTR_UNSIGNED, ID_AA64ZFR0_I8MM, CAP_HWCAP, KERNEL_HWCAP_SVEI8MM),
-> +	HWCAP_CAP(SYS_ID_AA64ZFR0_EL1, ID_AA64ZFR0_F32MM_SHIFT, FTR_UNSIGNED, ID_AA64ZFR0_F32MM, CAP_HWCAP, KERNEL_HWCAP_SVEF32MM),
-> +	HWCAP_CAP(SYS_ID_AA64ZFR0_EL1, ID_AA64ZFR0_F64MM_SHIFT, FTR_UNSIGNED, ID_AA64ZFR0_F64MM, CAP_HWCAP, KERNEL_HWCAP_SVEF64MM),
->  #endif
->  	HWCAP_CAP(SYS_ID_AA64PFR1_EL1, ID_AA64PFR1_SSBS_SHIFT, FTR_UNSIGNED, ID_AA64PFR1_SSBS_PSTATE_INSNS, CAP_HWCAP, KERNEL_HWCAP_SSBS),
->  #ifdef CONFIG_ARM64_PTR_AUTH
-> diff --git a/arch/arm64/kernel/cpuinfo.c b/arch/arm64/kernel/cpuinfo.c
-> index 56bba746da1c..1eaf4dc0c5a0 100644
-> --- a/arch/arm64/kernel/cpuinfo.c
-> +++ b/arch/arm64/kernel/cpuinfo.c
-> @@ -84,6 +84,14 @@ static const char *const hwcap_str[] = {
->  	"svesm4",
->  	"flagm2",
->  	"frint",
-> +	"svei8mm",
-> +	"svef32mm",
-> +	"svef64mm",
-> +	"svebf16",
-> +	"i8mm",
-> +	"bf16",
-> +	"dgh",
-> +	"specres",
->  	NULL
->  };
->  
-> 
-
+--=20
+Best Regards,
+Chanwoo Choi
