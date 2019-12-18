@@ -2,109 +2,115 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 525B2C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7190C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 265DE24676
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:09:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="PNyhx+AO"
+	by mail.kernel.org (Postfix) with ESMTP id 96A942146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:10:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576678217;
+	bh=bqFxvcA5nYFPBxWYiV3cm1kgw1k9zAK8P0QPb332ED0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rI/WWHaOxXlCzmb+qhKkjh1waL4PHrJHDWcXlr9qklvOUSm2E2PZlz6DbpaRXG6Eg
+	 bV9wn2UcT9+rHV7UcU17UAPqihoQ8pN8x7Cmltzr9ZW9yZJ/7dTQbZEWMyxiKI7RC3
+	 k48c+VrmAneZzXegfYbVauoiSlvlJ5ZP5Pg71/6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbfLROJ4 (ORCPT
+        id S1727130AbfLROKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 09:09:56 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40034 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726984AbfLROJz (ORCPT
+        Wed, 18 Dec 2019 09:10:16 -0500
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:43634 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727034AbfLROKQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 09:09:55 -0500
-Received: by mail-wr1-f66.google.com with SMTP id c14so2444562wrn.7
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 06:09:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=dxjsGjatY6ZbcTCcZP76IfB6Z3ogOgfOc4zopQ9KHZw=;
-        b=PNyhx+AOrNKPg3eDV8ybExNCbharLbfTnb/QPJsivs4Drc+dFrkWLrZiSpJzm/dOol
-         5cwzbkNc0l3rz6AIjkIRe7L/lvDQUdnn4yZCYUv6VZJkKbn7U9Nyh7g83AWJylEcGA3W
-         d4ZLDHApZ7hFNqnvcOOIs2oZSjbuNQKWIlnAw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=dxjsGjatY6ZbcTCcZP76IfB6Z3ogOgfOc4zopQ9KHZw=;
-        b=MnJUWM5j5OMlpELELzPxXh1+1FCAlYDwRAETdnp1/xpFYtr2fOWjYW6LVLWdQxOxgq
-         Iqn3zVL6xbcyyqkGIKb/RRSJcNzEPyMsKrI3g+TSzOx+SqqJnGBuBYa6Oz5xRgARWF9V
-         20a7VrNrPNk1kzwsTZwq9XUpFXPPtQ69D/uCqkiX9kI5vG721W1OlNCzjnkP0bOA4OQs
-         6z50ruFvYlg/HgB81Qm98QWew0moVFMICX6EZAZMDVMSTl0NJ14qj3ltpfdhXg29ZEQD
-         riuvEfZ0gT10SDqytsiY6hHZTsDVvz3OjZZ6Mn3P+693uhidUKNvE8vj46FjF7BXZRVa
-         mlQA==
-X-Gm-Message-State: APjAAAU78eX7ntCSxnlljQzbhYT/gpVBSEdBCMC714NA6o2gJ+nPdCf3
-        pl8jINHvM3JtyTuMlsbRzcam/Q==
-X-Google-Smtp-Source: APXvYqxbgaqnKp6+tHcSJR0Hg+KDMISaNFHSKVH0qfn81gYVnqcpO9RInQXrM6+/f4otf0uySVZMdA==
-X-Received: by 2002:adf:b591:: with SMTP id c17mr3068382wre.108.1576678193639;
-        Wed, 18 Dec 2019 06:09:53 -0800 (PST)
-Received: from localhost ([2a01:4b00:8432:8a00:63de:dd93:20be:f460])
-        by smtp.gmail.com with ESMTPSA id o194sm2641065wme.45.2019.12.18.06.09.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 06:09:53 -0800 (PST)
-Date:   Wed, 18 Dec 2019 14:09:52 +0000
-From:   Chris Down <chris@chrisdown.name>
-To:     Hui Zhu <teawaterz@linux.alibaba.com>
-Cc:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
-        akpm@linux-foundation.org, guro@fb.com, shakeelb@google.com,
-        yang.shi@linux.alibaba.com, tj@kernel.org, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH] mm: vmscan: memcg: Add global shrink priority
-Message-ID: <20191218140952.GA255739@chrisdown.name>
-References: <1576662179-16861-1-git-send-email-teawaterz@linux.alibaba.com>
+        Wed, 18 Dec 2019 09:10:16 -0500
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id xBIE9xc1002895;
+        Wed, 18 Dec 2019 23:10:00 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com xBIE9xc1002895
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1576678200;
+        bh=sK0Y524wx5hTvDQvfkikiU6FvAcdXV1HieXZce1m0oY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=CSWsiFWl4hNytsEwVdoam4tV0utXMKiNzfUBJQ+/TJxh/aZLGebehNEK3fZb3xvfn
+         Xj98jOMxDT/HhqiJAAZ+1N3/RT0OjqCmOw8kcSV2pafhlhGH8af/RCI0CHLtBbg8yI
+         oy+gjIxYzdvTXy9PA4KBR1tOoCRASBSaBhXtYXlDjNEbJdEp6jh25v396vO/YXeZ2F
+         ViupeXq1tg/p/NBxrsLD9EE6ketgS2yywrktuMT7xzLCtzDyn3aYchnOUfk2opZ4Ui
+         rp6fGIOcLTZVeqzYuVbT2vdRwOp0CogA6ia5qsXhwXsHdZlMVi8VtiZTrT8gNqEVJA
+         2ammzjWoVjrHA==
+X-Nifty-SrcIP: [209.85.222.45]
+Received: by mail-ua1-f45.google.com with SMTP id d6so663895uam.11;
+        Wed, 18 Dec 2019 06:09:59 -0800 (PST)
+X-Gm-Message-State: APjAAAWZzvlUrstMxLDKAN9LB80hR3Gf6APAA1/n50gt8yDJ3vMEy28E
+        dJ8O4oA9QiSTDGzIsFTU2wqAJy/Pb191sa2q81w=
+X-Google-Smtp-Source: APXvYqxj/VVIXI6U17IvS2b1hvsjfikDP+/ho6hEvii+xPz6k15U/LpW0YHSFxyWudL1l727MKUmI6SeuX7p8+rBGCw=
+X-Received: by 2002:ab0:3487:: with SMTP id c7mr1453419uar.25.1576678198490;
+ Wed, 18 Dec 2019 06:09:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <1576662179-16861-1-git-send-email-teawaterz@linux.alibaba.com>
+References: <cover.1576599202.git.tommyhebb@gmail.com>
+In-Reply-To: <cover.1576599202.git.tommyhebb@gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 18 Dec 2019 23:09:22 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQgG45XRfQEKBJFt-knZ0L7se5eMH6Kvo-3L_gW6wcA1g@mail.gmail.com>
+Message-ID: <CAK7LNAQgG45XRfQEKBJFt-knZ0L7se5eMH6Kvo-3L_gW6wcA1g@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] kconfig: rework symbol help text
+To:     Thomas Hebb <tommyhebb@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "open list:SIFIVE DRIVERS" <linux-riscv@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hui,
-
-In general cgroup v1 is in maintenance mode -- that is, excepting specific 
-bugfixes, we don't plan to add new features.
-
-Hui Zhu writes:
->Currently, memcg has some config to limit memory usage and config
->the shrink behavior.
->In the memory-constrained environment, put different priority tasks
->into different cgroups with different memory limits to protect the
->performance of the high priority tasks.  Because the global memory
->shrink will affect the performance of all tasks.  The memory limit
->cgroup can make shrink happen inside the cgroup.  Then it can decrease
->the memory shrink of the high priority task to protect its performance.
+On Wed, Dec 18, 2019 at 1:15 AM Thomas Hebb <tommyhebb@gmail.com> wrote:
 >
->But the memory footprint of the task is not static.  It will change as
->the working pressure changes.  And the version changes will affect it too.
->Then set the appropriate memory limit to decrease the global memory shrink
->is a difficult job and lead to wasted memory or performance loss sometimes.
+> This series fixes several issues with help text generated by Kconfig,
+> mainly affecting symbols that are defined in multiple places. Although
+> results of these patches are somewhat visible for the symbols in Linux,
+> what prompted me to write the series was working on U-Boot, which also
+> uses Kconfig and makes very heavy use of multiple definitions (e.g. for
+> overriding defaults). I have provided Linux examples where I could find
+> them, but the example for the biggest patch (the first one) is taken
+> from U-Boot because it was more illustrative than anything I could find
+> in Linux.
 >
->This commit adds global shrink priority to memcg to try to handle this
->problem.
+> Changes in v2:
+> - Added explicit U-Boot version in commit message + other rewordings
+> - Made the new "Depends on:" line print actual dependencies instead of
+>   visibility to avoid an intra-series regression, and noted that in the
+>   commit message.
+> - Get rid of redundant "with prompt" and "without prompt" notes in
+>   definition text, but continue to ensure that definitions with prompts
+>   are printed before ones without.
+> - Fixed checkpatch issues
+> - Omit already-merged patch "kconfig: don't crash on NULL expressions in
+>   expr_eq()"
+>
+> Thomas Hebb (3):
+>   kconfig: list all definitions of a symbol in help text
+>   kconfig: distinguish between dependencies and visibility in help text
+>   kconfig: fix nesting of symbol help text
 
-I have significant concerns with exposing scan priority to userspace. This is 
-an incredibly difficult metric for users to reason about since it's a reclaim 
-implementation feature and would add to an already confusing and fragmented API 
-in v1.
+All applied to linux-kbuild. Thanks.
 
-Have you considered using memory protection (memory.low, memory.min) for this 
-instead? It sounds like it can achieve the results you want, in that it allows 
-you to direct and prioritise reclaim in a way that allows for ballparking (ie. 
-it is compatible with applications with variable memory footprints).
 
-Thanks,
+>  scripts/kconfig/expr.c |  3 +-
+>  scripts/kconfig/expr.h |  1 +
+>  scripts/kconfig/menu.c | 82 +++++++++++++++++++++++++-----------------
+>  3 files changed, 52 insertions(+), 34 deletions(-)
+>
+> --
+> 2.24.1
+>
 
-Chris
+
+-- 
+Best Regards
+Masahiro Yamada
