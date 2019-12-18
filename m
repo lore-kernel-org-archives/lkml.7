@@ -2,82 +2,145 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4AA2C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 807F4C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:16:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6E7320717
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:15:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="f2iQ9azv"
+	by mail.kernel.org (Postfix) with ESMTP id 601FA227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:16:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbfLRJPM (ORCPT
+        id S1726699AbfLRJQO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 04:15:12 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:34636 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbfLRJPM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 04:15:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=yy7XJzKs/UVClyYTN6M5/1lRHUyMKVCwSsAA8ZPCmDQ=; b=f2iQ9azv80SPhY1T31gNmGIth
-        IRmUrC2nCGebnp8jCvPy6rwls9g/I+lCe9ysconaUXAjoLM5a7hO1Zwp35Zz9HlKCRktBLUDc+2ck
-        rvgcEcrnipKOUkHFAylmYW1CeD45Qd20DK0oRrkaRXq8bt/lCqNXnq3TIvyYPUlG3DMZAO1eq0tuA
-        MPlzwIyak2WIrkPE00kXSKlQkuM8ydEarSWrGm0Ks2LqQKBHi2Rz99vIDlwGNU0upOm4ge1Cbgnkv
-        /O6ixuJxILbPjSXh+gVGt7H3MaqptdS7QzbEZt8FBfep+a3zcpw17WrRDF3sS1RWk/2c6w50A1MsK
-        DTyfUYK/g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ihVQ2-0000jH-56; Wed, 18 Dec 2019 09:14:58 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CD9163007F2;
-        Wed, 18 Dec 2019 10:13:31 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id CB8072B3E30F5; Wed, 18 Dec 2019 10:14:54 +0100 (CET)
-Date:   Wed, 18 Dec 2019 10:14:54 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc:     akpm@linux-foundation.org, npiggin@gmail.com, mpe@ellerman.id.au,
-        will@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-arch@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] powerpc/mmu_gather: Enable RCU_TABLE_FREE even
- for !SMP case
-Message-ID: <20191218091454.GN2844@hirez.programming.kicks-ass.net>
-References: <20191218053530.73053-1-aneesh.kumar@linux.ibm.com>
+        Wed, 18 Dec 2019 04:16:14 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8145 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725799AbfLRJQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 04:16:14 -0500
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id C970B752B66CF392781B;
+        Wed, 18 Dec 2019 17:16:11 +0800 (CST)
+Received: from [127.0.0.1] (10.184.52.56) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Wed, 18 Dec 2019
+ 17:16:04 +0800
+Subject: Re: [PATCH v2] PCI: Add quirk for HiSilicon NP 5896 devices
+To:     <bjorn@helgaas.com>
+CC:     Bjorn Helgaas <helgaas@kernel.org>, <andrew.murray@arm.com>,
+        <linux-pci@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        <wangkefeng.wang@huawei.com>, <huawei.libin@huawei.com>,
+        <guohanjun@huawei.com>
+References: <20191206181051.GA121021@google.com>
+ <6ebfcfc7-f9f0-bee0-172c-89c93530d94b@huawei.com>
+ <CABhMZUX8spN93es+qtZWtMSUi3M+c99649ect4ZAkcrPLqfO=g@mail.gmail.com>
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Message-ID: <5ec52f21-8fd6-86f0-88ad-e316a274024d@huawei.com>
+Date:   Wed, 18 Dec 2019 17:16:03 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191218053530.73053-1-aneesh.kumar@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CABhMZUX8spN93es+qtZWtMSUi3M+c99649ect4ZAkcrPLqfO=g@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.184.52.56]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-I'm going to assume you'll take these 3 patches through the powerpc tree
-for convenience, a few small nits, but otherwise ACK on the lot.
 
-On Wed, Dec 18, 2019 at 11:05:28AM +0530, Aneesh Kumar K.V wrote:
-> A follow up patch is going to make sure we correctly invalidate page walk cache
-> before we free page table pages. In order to keep things simple enable
-> RCU_TABLE_FREE even for !SMP so that we don't have to fixup the !SMP case
-> differently in the followup patch
+On 2019/12/11 12:10, Bjorn Helgaas wrote:
+> On Tue, Dec 10, 2019 at 9:28 PM Xiongfeng Wang
+> <wangxiongfeng2@huawei.com> wrote:
+>>
+>>
+>>
+>> On 2019/12/7 2:10, Bjorn Helgaas wrote:
+>>> On Fri, Dec 06, 2019 at 03:01:45PM +0800, Xiongfeng Wang wrote:
+>>>> HiSilicon PCI Network Processor 5896 devices misreport the class type as
+>>>> 'NOT_DEFINED', but it is actually a network device. Also the size of
+>>>> BAR3 is reported as 265T, but this BAR is actually unused.
+>>>> This patch modify the class type to 'CLASS_NETWORK' and disable the
+>>>> unused BAR3.
+>>>
+>>> "NOT_DEFINED" is not the value in the Class Code register.  The commit
+>>> message should include the actual value.
+>>
+>> The actual value is 0, I will update the commit message.
+>>
+>>>
+>>>> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+>>>> ---
+>>>>  drivers/pci/quirks.c    | 29 +++++++++++++++++++++++++++++
+>>>>  include/linux/pci_ids.h |  1 +
+>>>>  2 files changed, 30 insertions(+)
+>>>>
+>>>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+>>>> index 4937a08..b9adebb 100644
+>>>> --- a/drivers/pci/quirks.c
+>>>> +++ b/drivers/pci/quirks.c
+>>>> @@ -5431,3 +5431,32 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
+>>>>  DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
+>>>>                            PCI_CLASS_DISPLAY_VGA, 8,
+>>>>                            quirk_reset_lenovo_thinkpad_p50_nvgpu);
+>>>> +
+>>>> +static void quirk_hisi_fixup_np_class(struct pci_dev *pdev)
+>>>> +{
+>>>> +    u32 class = pdev->class;
+>>>> +
+>>>> +    pdev->class = PCI_BASE_CLASS_NETWORK << 8;
+>>>> +    pci_info(pdev, "PCI class overriden (%#08x -> %#08x)\n",
+>>>> +             class, pdev->class);
+>>>> +}
+>>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HISI_5896,
+>>>> +                    quirk_hisi_fixup_np_class);
+>>>> +
+>>>> +/*
+>>>> + * HiSilicon NP 5896 devices BAR3 size is reported as 256T and causes problem
+>>>> + * when assigning the resources. But this BAR is actually unused by the driver,
+>>>> + * so let's disable it.
+>>>
+>>> The question is not whether the BAR is used by the driver; the
+>>> question is whether the device responds to accesses to the region
+>>> described by the BAR when PCI_COMMAND_MEMORY is turned on.
+>>
+>> I asked the hardware engineer. He said I can not write an address into that BAR.
+> 
+> If the BAR is not writable, I think sizing should fail, so I suspect
+> some of the bits are actually writable.
 
-Perhaps more clearly state that !SMP is broken for Radix/PWC. The above
-sorta implies it is, but it's not spelled out in any detail.
+Sorry for the delayed response. It's not so convenient for me to get to the hardware guys.
+BAR0 BAR1 BAR2 are 32-bit and can be used to access the registers and memory within
+5896 devices. These three BARs can meet the need for most scenario.
+BAR3 is 64-bit and can be used to access all the registers and memory within 5896 devices.
+(BAR3 is writable. Sorry for the non-confirmed information before.)
+But BAR3 is not used by the driver and the size is very large（larger than 100G, still didn't
+get the precise size）.
+So I think maybe we can disable this BAR for now, otherwise the unassigned resource will cause
+'pci_enable_device()' returning failure.
 
-> Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Thanks,
+Xiongfeng
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> 
+> What do you see in dmesg when this device is enumerated?  Can you
+> instrument the code in __pci_read_base() and see what we read/write to
+> that BAR?
+> 
+> Per spec, if the BAR is not implemented, it should be read-only zero.
+> But obviously the whole reason for the quirk is that the device
+> doesn't comply with the spec.
+
+
+
+
+> 
+> Bjorn
+> 
+> .
+> 
+
