@@ -2,93 +2,72 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEE8C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0AAC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0119924691
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:17:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B73E2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:21:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576657294;
+	bh=6mM0BijGEYoRur7oz2no9UlWZYwRVBky5TH7mMCeIxQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pnwmL6AToSFH0jq0l0TcgqvSRNdJ39KYtwsJcDM33LnX2DanxfmroZ2Dlqv2aloH1
+	 zPckCGk7MWPfcBHbzfwW7eBvnjKPkCFHNDemT+64iDhD0m1rmm8NNdPHYQhteKzCIw
+	 LKiPYvhMlBdRkra0EQ5E2JwxJG+tYqllEYsZzQlU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbfLRIRJ (ORCPT
+        id S1726622AbfLRIVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 03:17:09 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7711 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725535AbfLRIRI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 03:17:08 -0500
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 420504A90767678B9FA2;
-        Wed, 18 Dec 2019 16:17:06 +0800 (CST)
-Received: from huawei.com (10.175.101.78) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Wed, 18 Dec 2019
- 16:16:58 +0800
-From:   Yang Yingliang <yangyingliang@huawei.com>
-To:     <axboe@kernel.dk>
-CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <yangyingliang@huawei.com>
-Subject: [PATCH] block: fix memleak when __blk_rq_map_user_iov() is failed
-Date:   Wed, 18 Dec 2019 16:44:04 +0800
-Message-ID: <1576658644-88101-1-git-send-email-yangyingliang@huawei.com>
-X-Mailer: git-send-email 1.8.3
+        Wed, 18 Dec 2019 03:21:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52934 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725785AbfLRIVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 03:21:33 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07F7F218AC;
+        Wed, 18 Dec 2019 08:21:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576657292;
+        bh=6mM0BijGEYoRur7oz2no9UlWZYwRVBky5TH7mMCeIxQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Tcp4LQtfB+4tdXiG79mBYrBNTTf1346q5a9PS+pIgmKhKxCdQZO1otq9Tl29xMDW6
+         cA1HQLzQsqx+PGh+2yh3mVTzShwelGn9omQW1BnPlv3NcMWOmYSryy+4zlBbzyRxJS
+         TVwiw2nQQus4kuJEKuRmF7hqM+YDD/xmAPz8MQuc=
+Date:   Wed, 18 Dec 2019 09:21:30 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Bao D. Nguyen" <nguyenb@codeaurora.org>
+Cc:     ulf.hansson@linaro.org, robh+dt@kernel.org,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        asutoshd@codeaurora.org, cang@codeaurora.org
+Subject: Re: [<PATCH v1> 0/9] SD card bug fixes
+Message-ID: <20191218082130.GA1554871@kroah.com>
+References: <cover.1576540906.git.nguyenb@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.101.78]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1576540906.git.nguyenb@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When I doing fuzzy test, get the memleak report:
+On Mon, Dec 16, 2019 at 06:50:33PM -0800, Bao D. Nguyen wrote:
+> These patches include SD card genernal bug fixes.
+> 
+> Bao D. Nguyen (2):
+>   mmc: core: Add a cap to use long discard size
+>   mmc: sd: Fix trivial SD card issues
 
-BUG: memory leak
-unreferenced object 0xffff88837af80000 (size 4096):
-  comm "memleak", pid 3557, jiffies 4294817681 (age 112.499s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    20 00 00 00 10 01 00 00 00 00 00 00 01 00 00 00   ...............
-  backtrace:
-    [<000000001c894df8>] bio_alloc_bioset+0x393/0x590
-    [<000000008b139a3c>] bio_copy_user_iov+0x300/0xcd0
-    [<00000000a998bd8c>] blk_rq_map_user_iov+0x2f1/0x5f0
-    [<000000005ceb7f05>] blk_rq_map_user+0xf2/0x160
-    [<000000006454da92>] sg_common_write.isra.21+0x1094/0x1870
-    [<00000000064bb208>] sg_write.part.25+0x5d9/0x950
-    [<000000004fc670f6>] sg_write+0x5f/0x8c
-    [<00000000b0d05c7b>] __vfs_write+0x7c/0x100
-    [<000000008e177714>] vfs_write+0x1c3/0x500
-    [<0000000087d23f34>] ksys_write+0xf9/0x200
-    [<000000002c8dbc9d>] do_syscall_64+0x9f/0x4f0
-    [<00000000678d8e9a>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+<snip>
 
-If __blk_rq_map_user_iov() is failed in blk_rq_map_user_iov(),
-the bio(s) which is allocated before this failing will leak. The
-refcount of the bio(s) is init to 1 and increased to 2 by calling
-bio_get(), but __blk_rq_unmap_user() only decrease it to 1, so
-the bio cannot be freed. Fix it by calling blk_rq_unmap_user().
+Odd use of "<" and ">" in your subject lines, how did git create such a
+thing?
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
----
- block/blk-map.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+thanks,
 
-diff --git a/block/blk-map.c b/block/blk-map.c
-index 3a62e471d81b..b0790268ed9d 100644
---- a/block/blk-map.c
-+++ b/block/blk-map.c
-@@ -151,7 +151,7 @@ int blk_rq_map_user_iov(struct request_queue *q, struct request *rq,
- 	return 0;
- 
- unmap_rq:
--	__blk_rq_unmap_user(bio);
-+	blk_rq_unmap_user(bio);
- fail:
- 	rq->bio = NULL;
- 	return ret;
--- 
-2.17.1
-
+greg k-h
