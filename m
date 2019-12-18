@@ -2,129 +2,275 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F6AC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 04:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C39C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 04:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2C1A2146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 04:01:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2480621582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 04:01:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="cfj+plni"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ei0RVZCO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbfLREBT (ORCPT
+        id S1726622AbfLREBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 23:01:19 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35298 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbfLREBT (ORCPT
+        Tue, 17 Dec 2019 23:01:34 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:34071 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbfLREBd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 23:01:19 -0500
-Received: by mail-wm1-f67.google.com with SMTP id p17so343422wmb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 20:01:18 -0800 (PST)
+        Tue, 17 Dec 2019 23:01:33 -0500
+Received: by mail-ed1-f65.google.com with SMTP id l8so502868edw.1;
+        Tue, 17 Dec 2019 20:01:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fvdPlfimj6OGtq993uBEH4HDXjgpDehuAkgs24MT6mk=;
-        b=cfj+plniTQLIAyRxe47ndjyUvVeRa/IxIB8Mt5PLoJXGK7UIN41nnUaB01hoT40Hgi
-         MUnbrBOHR6khmDdC4UHAZn/92St+b/mOb+uCNrOB3V/qhKcx2DP/BjxB+716LHq0wS+W
-         hSDCpRef2eFLd+prsDVNKPwH55vxNXrD8pilYnLJlBqPbfG0afcRQ7tBDkgSpTv6ZZOm
-         ojAJt9h+C+/Xh2k10LfXKGyGzojYJSs+7jrB6KGxIf3MpBsNiZ7ic9OEWt96tNokgyY/
-         Z/VaBmkXTfwqXxhaL03fXunnnRuFxGbRahNjsrwYdezNFhdmLw1g59jY4DR3c/zIIzPC
-         Qj6A==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7K9fR3T2CjXTNX5C0iKVLp4+bTfW+5mmChHE8m8tcG0=;
+        b=Ei0RVZCO1/qfsvpXPtJf7m0xq3E/RfnlDNnT6U174dsoMdvNZpeRURpvbwRumUwWR7
+         oSezxVGy37dAVyt3YDIVELLP/eh7LrwMVKJ9qThBRqgY5Rt4JW6bTAfs5VRVGXKVGFfS
+         hzh9Ed5Cp6TyPYTR2IXENHwzD6B9wJBTG4EC8UIi+eHbXaIPlC8pK5WnD/wVJzLcfSYj
+         TLGMyYfnLA25YSqNGdGR+IfaA7zt+a/afn0BncN6nDwgC1RNM+Gk463lTmAIAmxuuaGM
+         r7MgOSBuBHYpaSgvb6Et3syE+aHePQD7ZgVtaCmVm4DweZnVhFOPdhzqNChqfh6kIQ3p
+         Xx2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fvdPlfimj6OGtq993uBEH4HDXjgpDehuAkgs24MT6mk=;
-        b=Cm9aD5uMrt9g9stSlQ/05569QbSDEc0pTWlAh0fdHMsVL9HyNgD/MY4SD7fMEoRVeF
-         +THMyzH5wRSkN36O/Rmy1wPOZZGqyw0KJ2iyrDa0v30NxbHoiL7KDSaQ+vF0+NNM5X4w
-         fXzmkyopKOrA3OpOwSS3UTxgW9ntnlH8JaOF/xyiUx2Jj85w4GEcCyBgFIYvIUXbE5W0
-         ApNQgz8/qPi3fohanDHu6eu+BYbaMYCBlR978paY/ZqRKSSLpRSFhmkCQYqF558y4OHU
-         HthnQyJqe/v0yhVKkEIIkvk3TBhSPB6A0rjjuKbwfxC1lEjqPletHqwmdWa0LLG4dZTB
-         /Hsg==
-X-Gm-Message-State: APjAAAUR484jmtAx6L0ynQ13O/pLNpvmA2j2UPBl2BoEqWP9mw0d4dW2
-        evs4KcorO1tgcztZIaZ4Uc/U6cASaOQ=
-X-Google-Smtp-Source: APXvYqy7s4sbdhuS0pHTU7euxKWmXyOMby7qOb/d/6Sm92wXWIHdT+zGtXXtLAaJP0x1yenu4+qzPw==
-X-Received: by 2002:a7b:c450:: with SMTP id l16mr415254wmi.31.1576641677626;
-        Tue, 17 Dec 2019 20:01:17 -0800 (PST)
-Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id r15sm976023wmh.21.2019.12.17.20.01.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 20:01:17 -0800 (PST)
-From:   Dmitry Safonov <dima@arista.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Dmitry Safonov <dima@arista.com>,
-        kbuild test robot <lkp@intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH-tty-testing] tty/serial/8250: Add has_sysrq to plat_serial8250_port
-Date:   Wed, 18 Dec 2019 04:01:11 +0000
-Message-Id: <20191218040111.346846-1-dima@arista.com>
-X-Mailer: git-send-email 2.24.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7K9fR3T2CjXTNX5C0iKVLp4+bTfW+5mmChHE8m8tcG0=;
+        b=XG0KBvJd7Ej9xIzAjG1FKl3c7tnFTU3/q5JwAmnchBerw2yywWMyvz42qUi+xyOW/C
+         js4aC+VTCTAQyO2esZ5/YdfbQ9btoDj4DO3S5Aq0hqyhK+onAeo2mogKNbZ9cIepcjaw
+         xYrJuP+QOacCMM4uLupOdwoH11vkEX8dcbnGvFzyWD8vme8gCxkLzggIqEq26+NYF9AE
+         hDB4Jf9MZnqyvTdHxevb7XQWnQHG04vwURmSIe4f9Yro+dgEJf8+H1ivHBrjiQQLB1eu
+         u7UYrpF/++HDxkX3S0s/WpEy8iSOSwryg6YEgBE6J/SBlPE2zdP8NdV0SQxZ0JvyuCZO
+         IBZQ==
+X-Gm-Message-State: APjAAAXxqIngTZ2jsA/xFuhNgV0WYWhh7DJI9Y2KwJzB2a5IvVd3nzMW
+        fKom5Nd5QH5byryo797iHmkl0+MyofGtboDAht4=
+X-Google-Smtp-Source: APXvYqwrk7Cu5fSW87YoFn5BgAhH5qZom2ZJM9xmu67U8udCHsB4l6lGHevljZuOKRtMXEQDrgZGI/TnUKIcB9zezUA=
+X-Received: by 2002:aa7:d415:: with SMTP id z21mr1255088edq.264.1576641691587;
+ Tue, 17 Dec 2019 20:01:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191218004741.102067-1-dianders@chromium.org> <20191217164702.v2.9.Ib59207b66db377380d13748752d6fce5596462c5@changeid>
+In-Reply-To: <20191217164702.v2.9.Ib59207b66db377380d13748752d6fce5596462c5@changeid>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Tue, 17 Dec 2019 20:01:24 -0800
+Message-ID: <CAF6AEGs5CKNhKh_ZLUqWh8_2GxiDiuaTC2P-yzHqz+Dvhbp-VQ@mail.gmail.com>
+Subject: Re: [PATCH v2 9/9] drm/bridge: ti-sn65dsi86: Avoid invalid rates
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In contrast to 8250/8250_of, legacy_serial on powerpc does fill
-(struct plat_serial8250_port). The reason is likely that it's done on
-device_initcall(), not on probe. So, 8250_core is not yet probed.
+On Tue, Dec 17, 2019 at 4:48 PM Douglas Anderson <dianders@chromium.org> wrote:
+>
+> Based on work by Bjorn Andersson <bjorn.andersson@linaro.org>,
+> Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, and
+> Rob Clark <robdclark@chromium.org>.
+>
+> Let's read the SUPPORTED_LINK_RATES and/or MAX_LINK_RATE (depending on
+> the eDP version of the sink) to figure out what eDP rates are
+> supported and pick the ideal one.
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+>
+> Changes in v2:
+> - Patch ("Avoid invalid rates") replaces ("Skip non-standard DP rates")
+>
+>  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 118 ++++++++++++++++++++------
+>  1 file changed, 93 insertions(+), 25 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> index e1b817ccd9c7..da5ddf6be92b 100644
+> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> @@ -475,39 +475,103 @@ static int ti_sn_bridge_calc_min_dp_rate_idx(struct ti_sn_bridge *pdata)
+>         return i;
+>  }
+>
+> -static int ti_sn_bridge_get_max_dp_rate_idx(struct ti_sn_bridge *pdata)
+> +static void ti_sn_bridge_read_valid_rates(struct ti_sn_bridge *pdata,
+> +                                         bool rate_valid[])
+>  {
+> -       u8 data;
+> +       u8 dpcd_val;
+> +       int rate_times_200khz;
+>         int ret;
+> +       int i;
+>
+> -       ret = drm_dp_dpcd_readb(&pdata->aux, DP_MAX_LINK_RATE, &data);
+> +       ret = drm_dp_dpcd_readb(&pdata->aux, DP_EDP_DPCD_REV, &dpcd_val);
+> +       if (ret != 1) {
+> +               DRM_DEV_ERROR(pdata->dev,
+> +                             "Can't read eDP rev (%d), assuming 1.1\n", ret);
+> +               dpcd_val = DP_EDP_11;
+> +       }
+> +
+> +       if (dpcd_val >= DP_EDP_14) {
+> +               /* eDP 1.4 devices must provide a custom table */
+> +               __le16 sink_rates[DP_MAX_SUPPORTED_RATES];
+> +
+> +               ret = drm_dp_dpcd_read(&pdata->aux, DP_SUPPORTED_LINK_RATES,
+> +                                      sink_rates, sizeof(sink_rates));
+> +
+> +               if (ret != sizeof(sink_rates)) {
+> +                       DRM_DEV_ERROR(pdata->dev,
+> +                               "Can't read supported rate table (%d)\n", ret);
+> +
+> +                       /* By zeroing we'll fall back to DP_MAX_LINK_RATE. */
+> +                       memset(sink_rates, 0, sizeof(sink_rates));
+> +               }
+> +
+> +               for (i = 0; i < ARRAY_SIZE(sink_rates); i++) {
+> +                       rate_times_200khz = le16_to_cpu(sink_rates[i]);
+> +
+> +                       if (!rate_times_200khz)
+> +                               break;
+> +
+> +                       switch (rate_times_200khz) {
+> +                       case 27000:
 
-Propagate value from platform_device on 8250 probe - in case powepc
-legacy driver it's initialized on initcall, in case 8250_of it will be
-initialized later on of_platform_serial_setup().
+maybe a bit bike-sheddy, but I kinda prefer to use traditional normal
+units, ie. just multiply the returned value by 200 and adjust the
+switch case values.  At least then they match the values in the lut
+(other than khz vs mhz), which makes this whole logic a bit more
+obvious... and at that point, maybe just loop over the lut table?
 
-Fixes: ea2683bf546c ("tty/serial: Migrate 8250_fsl to use has_sysrq").
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linuxppc-dev@lists.ozlabs.org
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Dmitry Safonov <dima@arista.com>
----
- It's probably better to squash this into the 8250_fsl patch.
- I've added Fixes tag in case the branch won't be rebased.
- Tested powerpc build manually with ppc64 cross-compiler.
+BR,
+-R
 
- drivers/tty/serial/8250/8250_core.c | 1 +
- include/linux/serial_8250.h         | 1 +
- 2 files changed, 2 insertions(+)
-
-diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
-index e682390ce0de..0894a22fd702 100644
---- a/drivers/tty/serial/8250/8250_core.c
-+++ b/drivers/tty/serial/8250/8250_core.c
-@@ -816,6 +816,7 @@ static int serial8250_probe(struct platform_device *dev)
- 		uart.port.flags		= p->flags;
- 		uart.port.mapbase	= p->mapbase;
- 		uart.port.hub6		= p->hub6;
-+		uart.port.has_sysrq	= p->has_sysrq;
- 		uart.port.private_data	= p->private_data;
- 		uart.port.type		= p->type;
- 		uart.port.serial_in	= p->serial_in;
-diff --git a/include/linux/serial_8250.h b/include/linux/serial_8250.h
-index bb2bc99388ca..6a8e8c48c882 100644
---- a/include/linux/serial_8250.h
-+++ b/include/linux/serial_8250.h
-@@ -25,6 +25,7 @@ struct plat_serial8250_port {
- 	unsigned char	regshift;	/* register shift */
- 	unsigned char	iotype;		/* UPIO_* */
- 	unsigned char	hub6;
-+	unsigned char	has_sysrq;	/* supports magic SysRq */
- 	upf_t		flags;		/* UPF_* flags */
- 	unsigned int	type;		/* If UPF_FIXED_TYPE */
- 	unsigned int	(*serial_in)(struct uart_port *, int);
--- 
-2.24.1
-
+> +                               rate_valid[7] = 1;
+> +                               break;
+> +                       case 21600:
+> +                               rate_valid[6] = 1;
+> +                               break;
+> +                       case 16200:
+> +                               rate_valid[5] = 1;
+> +                               break;
+> +                       case 13500:
+> +                               rate_valid[4] = 1;
+> +                               break;
+> +                       case 12150:
+> +                               rate_valid[3] = 1;
+> +                               break;
+> +                       case 10800:
+> +                               rate_valid[2] = 1;
+> +                               break;
+> +                       case 8100:
+> +                               rate_valid[1] = 1;
+> +                               break;
+> +                       default:
+> +                               /* unsupported */
+> +                               break;
+> +                       }
+> +               }
+> +
+> +               for (i = 0; i < ARRAY_SIZE(ti_sn_bridge_dp_rate_lut); i++) {
+> +                       if (rate_valid[i])
+> +                               return;
+> +               }
+> +               DRM_DEV_ERROR(pdata->dev,
+> +                             "No matching eDP rates in table; falling back\n");
+> +       }
+> +
+> +       /* On older versions best we can do is use DP_MAX_LINK_RATE */
+> +       ret = drm_dp_dpcd_readb(&pdata->aux, DP_MAX_LINK_RATE, &dpcd_val);
+>         if (ret != 1) {
+>                 DRM_DEV_ERROR(pdata->dev,
+>                               "Can't read max rate (%d); assuming 5.4 GHz\n",
+>                               ret);
+> -               return ARRAY_SIZE(ti_sn_bridge_dp_rate_lut) - 1;
+> +               dpcd_val = DP_LINK_BW_5_4;
+>         }
+>
+> -       /*
+> -        * Return an index into ti_sn_bridge_dp_rate_lut.  Just hardcode
+> -        * these indicies since it's not like the register spec is ever going
+> -        * to change and a loop would just be more complicated.  Apparently
+> -        * the DP sink can only return these few rates as supported even
+> -        * though the bridge allows some rates in between.
+> -        */
+> -       switch (data) {
+> -       case DP_LINK_BW_1_62:
+> -               return 1;
+> -       case DP_LINK_BW_2_7:
+> -               return 4;
+> +       switch (dpcd_val) {
+> +       default:
+> +               DRM_DEV_ERROR(pdata->dev,
+> +                             "Unexpected max rate (%#x); assuming 5.4 GHz\n",
+> +                             (int)dpcd_val);
+> +               /* fall through */
+>         case DP_LINK_BW_5_4:
+> -               return 7;
+> +               rate_valid[7] = 1;
+> +               /* fall through */
+> +       case DP_LINK_BW_2_7:
+> +               rate_valid[4] = 1;
+> +               /* fall through */
+> +       case DP_LINK_BW_1_62:
+> +               rate_valid[1] = 1;
+> +               break;
+>         }
+> -
+> -       DRM_DEV_ERROR(pdata->dev,
+> -                     "Unexpected max data rate (%#x); assuming 5.4 GHz\n",
+> -                     (int)data);
+> -       return ARRAY_SIZE(ti_sn_bridge_dp_rate_lut) - 1;
+>  }
+>
+>  static void ti_sn_bridge_set_video_timings(struct ti_sn_bridge *pdata)
+> @@ -609,9 +673,9 @@ static int ti_sn_link_training(struct ti_sn_bridge *pdata, int dp_rate_idx,
+>  static void ti_sn_bridge_enable(struct drm_bridge *bridge)
+>  {
+>         struct ti_sn_bridge *pdata = bridge_to_ti_sn_bridge(bridge);
+> +       bool rate_valid[ARRAY_SIZE(ti_sn_bridge_dp_rate_lut)];
+>         const char *last_err_str = "No supported DP rate";
+>         int dp_rate_idx;
+> -       int max_dp_rate_idx;
+>         unsigned int val;
+>         int ret = -EINVAL;
+>
+> @@ -655,11 +719,15 @@ static void ti_sn_bridge_enable(struct drm_bridge *bridge)
+>         regmap_update_bits(pdata->regmap, SN_SSC_CONFIG_REG, DP_NUM_LANES_MASK,
+>                            val);
+>
+> +       ti_sn_bridge_read_valid_rates(pdata, rate_valid);
+> +
+>         /* Train until we run out of rates */
+> -       max_dp_rate_idx = ti_sn_bridge_get_max_dp_rate_idx(pdata);
+>         for (dp_rate_idx = ti_sn_bridge_calc_min_dp_rate_idx(pdata);
+> -            dp_rate_idx <= max_dp_rate_idx;
+> +            dp_rate_idx < ARRAY_SIZE(ti_sn_bridge_dp_rate_lut);
+>              dp_rate_idx++) {
+> +               if (!rate_valid[dp_rate_idx])
+> +                       continue;
+> +
+>                 ret = ti_sn_link_training(pdata, dp_rate_idx, &last_err_str);
+>                 if (!ret)
+>                         break;
+> --
+> 2.24.1.735.g03f4e72817-goog
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
