@@ -2,87 +2,73 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6357CC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F03DDC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3026A2072B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:06:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DWUCpOts"
+	by mail.kernel.org (Postfix) with ESMTP id CAC0A2072B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:07:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbfLRQG4 (ORCPT
+        id S1727619AbfLRQHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 11:06:56 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50584 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727345AbfLRQGy (ORCPT
+        Wed, 18 Dec 2019 11:07:16 -0500
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:19917 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727345AbfLRQHQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 11:06:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576685212;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=bYD9qM4G12ACsN8N52oMjoJYQ17/So3FWT5iFWswF8E=;
-        b=DWUCpOtsqc9bJ8aEu6wXuH6oFAAjS85SitXCGvGc3K/l5WzWtSJwf+5418zPrkQ0FtuuJi
-        qC3IhNCW1pp/eRaO3yezVCgKGymTU2ZhiZhe/pN0ilSMWSiK2fkftYj3jNcyS2tqF5Lkls
-        SH50txSbmcYPhXYnRY/bJS8UGcyaqOw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-424-MCe3Gu6ROiu6e5Okftj-Ag-1; Wed, 18 Dec 2019 11:06:49 -0500
-X-MC-Unique: MCe3Gu6ROiu6e5Okftj-Ag-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 892D919523BD;
-        Wed, 18 Dec 2019 16:06:47 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 168D626DE0;
-        Wed, 18 Dec 2019 16:06:45 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed, 18 Dec 2019 17:06:43 +0100 (CET)
-Date:   Wed, 18 Dec 2019 17:06:41 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Brian Gerst <brgerst@gmail.com>
-Cc:     Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Ingo Molnar <mingo@redhat.com>, Peter Anvin <hpa@zytor.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: Q: does force_iret() make any sense today?
-Message-ID: <20191218160641.GA29716@redhat.com>
-References: <20191218153107.GA3489@redhat.com>
- <CAMzpN2gOA=ysOCidCUmxZ6cev5HuKXPdBA_mni5SR01=ii-+KQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMzpN2gOA=ysOCidCUmxZ6cev5HuKXPdBA_mni5SR01=ii-+KQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+        Wed, 18 Dec 2019 11:07:16 -0500
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 18 Dec 2019 21:36:17 +0530
+Received: from gokulsri-linux.qualcomm.com ([10.201.2.207])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 18 Dec 2019 21:35:48 +0530
+Received: by gokulsri-linux.qualcomm.com (Postfix, from userid 432570)
+        id 063913C4F; Wed, 18 Dec 2019 21:35:46 +0530 (IST)
+From:   Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
+To:     gokulsri@codeaurora.org, sboyd@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, david.brown@linaro.org,
+        devicetree@vger.kernel.org, jassisinghbrar@gmail.com,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        mark.rutland@arm.com, mturquette@baylibre.com, ohad@wizery.com,
+        robh+dt@kernel.org, sricharan@codeaurora.org,
+        nprakash@codeaurora.org
+Subject: [PATCH V4 04/10] remoteproc: qcom: Add ssr subdevice identifier
+Date:   Wed, 18 Dec 2019 21:35:40 +0530
+Message-Id: <1576685146-17135-5-git-send-email-gokulsri@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1576685146-17135-1-git-send-email-gokulsri@codeaurora.org>
+References: <1576685146-17135-1-git-send-email-gokulsri@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/18, Brian Gerst wrote:
->
-> On Wed, Dec 18, 2019 at 10:31 AM Oleg Nesterov <oleg@redhat.com> wrote:
-> >
-> > I do not pretend I understand the arch/x86/entry/ code, but it seems that
-> > asm does all the necessary checks and the "extra" TIF_NOTIFY_RESUME simply
-> > has no effect except tracehook_notify_resume() will be called for no reason?
->
-> It's a relic of a time before the more robust checks for
-> SYSRET/SYSEXIT were added.  The idea was to divert the syscall return
-> flow off the fast path.  Even if no exit work was done, the slow path
-> always returned with IRET.  But with all the entry rework that has
-> been done it is no longer needed and can be removed.
+Add name for ssr subdevice on IPQ8074 SoC.
 
-Thanks, this was my understanding. Will you make a patch?
+Signed-off-by: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
+Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+Signed-off-by: Nikhil Prakash V <nprakash@codeaurora.org>
+---
+changes since v1: none
+---
+ drivers/remoteproc/qcom_q6v5_wcss.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Oleg.
+diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qcom_q6v5_wcss.c
+index da0ce97..70f7f41 100644
+--- a/drivers/remoteproc/qcom_q6v5_wcss.c
++++ b/drivers/remoteproc/qcom_q6v5_wcss.c
+@@ -1166,6 +1166,7 @@ static int q6v5_wcss_remove(struct platform_device *pdev)
+ 	.crash_reason_smem = WCSS_CRASH_REASON,
+ 	.aon_reset_required = true,
+ 	.wcss_q6_reset_required = true,
++	.ssr_name = "q6wcss",
+ 	.ops = &q6v5_wcss_ipq8074_ops,
+ 	.requires_force_stop = true,
+ 	.need_mem_protection = true,
+-- 
+1.9.1
 
