@@ -2,66 +2,89 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33CE8C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6694FC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10CF024672
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D40B2465E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:05:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XGCMW5r3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727197AbfLRTFC (ORCPT
+        id S1727476AbfLRTFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 14:05:02 -0500
-Received: from [167.172.186.51] ([167.172.186.51]:48988 "EHLO shell.v3.sk"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726831AbfLRTFB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 14:05:01 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 29463DFB12;
-        Wed, 18 Dec 2019 19:05:02 +0000 (UTC)
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id s628JH_vN0ia; Wed, 18 Dec 2019 19:05:01 +0000 (UTC)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 59FACDFB68;
-        Wed, 18 Dec 2019 19:05:01 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at zimbra.v3.sk
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id yDVppP1zEJfC; Wed, 18 Dec 2019 19:05:01 +0000 (UTC)
-Received: from furthur.lan (unknown [109.183.109.54])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id CAF01DD70C;
-        Wed, 18 Dec 2019 19:05:00 +0000 (UTC)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Olof Johansson <olof@lixom.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, soc@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] Unbreak parent selection on MMP2 timer mux 
-Date:   Wed, 18 Dec 2019 20:04:52 +0100
-Message-Id: <20191218190454.420358-1-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.23.0
+        Wed, 18 Dec 2019 14:05:16 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:53334 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727451AbfLRTFQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 14:05:16 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576695915; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=BjpzurhMhS3nVjCNC6B/Q+JIxPeQXE2CiRAt+BcpBCY=;
+ b=XGCMW5r3Sjed+EvQQAg0yqSPevgasW0DlVgbdzk4+16HllcP/LymqT8iAH8FvqOwKqTR3aCr
+ 02XLmWpOAGzwTVLr6tBlCAWkKlAV6zN1Uhhjxn8P9pXMhHxFTHA13jmTlZGoB7CBqHhdo5vC
+ 0dKis5mw3LnY5V+RpKePS35qu+Y=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5dfa7869.7f0461220a78-smtp-out-n03;
+ Wed, 18 Dec 2019 19:05:13 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 005CFC4479F; Wed, 18 Dec 2019 19:05:12 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id AFE48C447A5;
+        Wed, 18 Dec 2019 19:05:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AFE48C447A5
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] mwifiex: delete unused mwifiex_get_intf_num()
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20191210003911.28066-1-briannorris@chromium.org>
+References: <20191210003911.28066-1-briannorris@chromium.org>
+To:     Brian Norris <briannorris@chromium.org>
+Cc:     linux-wireless@vger.kernel.org, <linux-kernel@vger.kernel.org>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Sharvari Harisangam <sharvari@marvell.com>,
+        Brian Norris <briannorris@chromium.org>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20191218190513.005CFC4479F@smtp.codeaurora.org>
+Date:   Wed, 18 Dec 2019 19:05:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Brian Norris <briannorris@chromium.org> wrote:
 
-Patches chained to this message fix timer mux parent determination on
-MMP2.
+> Commit 7afb94da3cd8 ("mwifiex: update set_mac_address logic") fixed the
+> only user of this function, partly because the author seems to have
+> noticed that, as written, it's on the borderline between highly
+> misleading and buggy.
+> 
+> Anyway, no sense in keeping dead code around: let's drop it.
+> 
+> Fixes: 7afb94da3cd8 ("mwifiex: update set_mac_address logic")
+> Signed-off-by: Brian Norris <briannorris@chromium.org>
 
-They need to go together -- I'm hoping that they'll get acks from CLK
-maintainers and make it in via the SoC tree.
+Patch applied to wireless-drivers-next.git, thanks.
 
-Thanks,
-Lubo
+1c9f329b084b mwifiex: delete unused mwifiex_get_intf_num()
 
+-- 
+https://patchwork.kernel.org/patch/11281155/
 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
