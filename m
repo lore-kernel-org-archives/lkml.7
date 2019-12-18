@@ -2,72 +2,112 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52101C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D96D9C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D1BB2176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A92112176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:51:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vx3Y1O6S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbfLRAuq (ORCPT
+        id S1726616AbfLRAv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 19:50:46 -0500
-Received: from mga04.intel.com ([192.55.52.120]:28939 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726072AbfLRAup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 19:50:45 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 16:50:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,327,1571727600"; 
-   d="scan'208";a="212750409"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga008.fm.intel.com with ESMTP; 17 Dec 2019 16:50:43 -0800
-Date:   Wed, 18 Dec 2019 08:50:42 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: remove dead code totalram_pages_set()
-Message-ID: <20191218005042.GB23703@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20191217064401.18047-1-richardw.yang@linux.intel.com>
- <8456A27B-5F32-4BED-B826-27B17E87AA81@lca.pw>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8456A27B-5F32-4BED-B826-27B17E87AA81@lca.pw>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Tue, 17 Dec 2019 19:51:27 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38052 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726072AbfLRAv1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 19:51:27 -0500
+Received: by mail-pg1-f195.google.com with SMTP id a33so263475pgm.5;
+        Tue, 17 Dec 2019 16:51:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=ABUqdUxFYplY8BOM3XuA0Fxd42dzU9oSNOiYz1wYZWw=;
+        b=Vx3Y1O6ScfLrpSWCK/33PwA3zlcJ/DSmCtNdk/rmt2/WpGRMag8BAyub98wTfHFGXu
+         zj0YsO1gZYyVtgUs/A9v6sZmUqaELNkSeoFfbhGEpAk7WzXN8RwFq5kBxmbS/hQ0IO4X
+         JPWbaWim2Fg7ac6/wWGNSYB7rv8cgOV1YOWZTHSKtFNlHW8UL0H04USkll402+AmzIeM
+         KGlQ+GDAHucv81ZSzdJIulIEe70E61vXYLZ79DsHMNG/c00vgWdXahjsXZf/x3zJ/UQ+
+         xjBQWK7ic3K/aabtFlwQWrrNy0wdepk5GHhCl8EGSvKy28Rp2G0BID+dztXLvHN6yYic
+         3qcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ABUqdUxFYplY8BOM3XuA0Fxd42dzU9oSNOiYz1wYZWw=;
+        b=Ol/Sf5eXPG4q0V3n3AU0ksp/0gynzLMbZLBA0j2sFQ9QELF5+V/+yszBsdBDSRfRws
+         5lDJ91mnsbip1XyxW2M2iRP3XzYmfqUiy5+oW/ZmRGRCFLm6eehJxQ9WpAd2hX8ZcmSc
+         emwwzNlXpBfvThLOZ05ZOupuYl2qDZrkciolBAxSuozRVImc+WRRFpTo3ekNmsRb90Fa
+         YDA6hzcv38g+sZy99+Knb3OZOdT1Al8TIa2R96BNhI3eu17Z2ZajFWNWZEKAhl0cUeJu
+         SR4Z/7i1mVPgoti1jwEJtls1+cV0UhQeGKGrIW+TZJsnv2CwtaDn0O2bH+cFDvxVxCYG
+         wOog==
+X-Gm-Message-State: APjAAAVUOluj7z9+tg2UXvXJy0ZTK+dxVBOckDkj1ldiV0YiODecQ6fX
+        7ZzD1pAeS42JYtnYZHv6hC4=
+X-Google-Smtp-Source: APXvYqxmIdnASO50yRj1nIyrySbT6BD8ZMksmKjKuo+BwantJGO+PFuePHgW2CcNE/ZBpq4w3KnbtA==
+X-Received: by 2002:aa7:8d4d:: with SMTP id s13mr730354pfe.18.1576630286445;
+        Tue, 17 Dec 2019 16:51:26 -0800 (PST)
+Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 81sm274819pfx.30.2019.12.17.16.51.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 17 Dec 2019 16:51:25 -0800 (PST)
+From:   Doug Berger <opendmb@gmail.com>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>
+Subject: [PATCH net-next v2 0/8] net: bcmgenet: Turn on offloads by default
+Date:   Tue, 17 Dec 2019 16:51:07 -0800
+Message-Id: <1576630275-17591-1-git-send-email-opendmb@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 07:48:09AM -0500, Qian Cai wrote:
->
->
->> On Dec 17, 2019, at 1:44 AM, Wei Yang <richardw.yang@linux.intel.com> wrote:
->> 
->> No one use totalram_pages_set(), just remote it.
->
->It is unlikely that this is unintentional, but can you figure out which commit removed the last caller just in case?
+This commit stack is based on Florian's commit 4e8aedfe78c7 ("net: 
+systemport: Turn on offloads by default") and enables the offloads for
+the bcmgenet driver by default.
 
-Took a look into the history. This function is introduced in 
+The first commit adds support for the HIGHDMA feature to the driver.
 
-commit 'ca79b0c211af' (mm: convert totalram_pages and totalhigh_pages
-variables to atomic)
+The second converts the Tx checksum implementation to use the generic
+hardware logic rather than the deprecated IP centric methods.
 
-Even in this commit, no one use this function.
+The third modifies the Rx checksum implementation to use the hardware
+offload to compute the complete checksum rather than filtering out bad
+packets detected by the hardware's IP centric implementation. This may
+increase processing load by passing bad packets to the network stack,
+but it provides for more flexible handling of packets by the network
+stack without requiring software computation of the checksum.
 
-Will include this in next version.
+The remaining commits mirror the extensions Florian made to the sysport
+driver to retain symmetry with that driver and to make the benefits of
+the hardware offloads more ubiquitous.
+
+Doug Berger (8):
+  net: bcmgenet: enable NETIF_F_HIGHDMA flag
+  net: bcmgenet: enable NETIF_F_HW_CSUM feature
+  net: bcmgenet: use CHECKSUM_COMPLETE for NETIF_F_RXCSUM
+  net: bcmgenet: Refactor bcmgenet_set_features()
+  net: bcmgenet: Utilize bcmgenet_set_features() during resume/open
+  net: bcmgenet: Turn on offloads by default
+  net: bcmgenet: Be drop monitor friendly while re-allocating headroom
+  net: bcmgenet: Add software counters to track reallocations
+
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c | 113 ++++++++++++++-----------
+ drivers/net/ethernet/broadcom/genet/bcmgenet.h |   4 +-
+ 2 files changed, 67 insertions(+), 50 deletions(-)
 
 -- 
-Wei Yang
-Help you, Help me
+
+Changes in v2:
+  - Added "Reviewed-by" where given
+  - Removed no longer used private structure member dma_rx_chk_bit
+  - Used __force casting to remove sparse warnings
+
+2.7.4
+
