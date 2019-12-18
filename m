@@ -6,34 +6,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F45C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4BE7C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE6952176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:49:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92B422176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:49:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727700AbfLRUt0 (ORCPT
+        id S1727718AbfLRUt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 15:49:26 -0500
-Received: from mail.windriver.com ([147.11.1.11]:47819 "EHLO
+        Wed, 18 Dec 2019 15:49:29 -0500
+Received: from mail.windriver.com ([147.11.1.11]:47864 "EHLO
         mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbfLRUtW (ORCPT
+        with ESMTP id S1727664AbfLRUt2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 15:49:22 -0500
+        Wed, 18 Dec 2019 15:49:28 -0500
 Received: from yow-cube1.wrs.com (yow-cube1.wrs.com [128.224.56.98])
-        by mail.windriver.com (8.15.2/8.15.2) with ESMTP id xBIKn0iT000214;
-        Wed, 18 Dec 2019 12:49:07 -0800 (PST)
+        by mail.windriver.com (8.15.2/8.15.2) with ESMTP id xBIKn0ih000214;
+        Wed, 18 Dec 2019 12:49:16 -0800 (PST)
 From:   Paul Gortmaker <paul.gortmaker@windriver.com>
 To:     Lee Jones <lee.jones@linaro.org>
 Cc:     linux-kernel@vger.kernel.org,
         Paul Gortmaker <paul.gortmaker@windriver.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH 01/18] mfd: stmpe-spi: Make it explicitly non-modular
-Date:   Wed, 18 Dec 2019 15:48:40 -0500
-Message-Id: <1576702137-25905-2-git-send-email-paul.gortmaker@windriver.com>
+        Tony Lindgren <tony@atomide.com>,
+        Keshava Munegowda <keshava_mgowda@ti.com>,
+        Roger Quadros <rogerq@ti.com>, linux-omap@vger.kernel.org
+Subject: [PATCH 15/18] mfd: omap-usb-tll: Make it explicitly non-modular
+Date:   Wed, 18 Dec 2019 15:48:54 -0500
+Message-Id: <1576702137-25905-16-git-send-email-paul.gortmaker@windriver.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1576702137-25905-1-git-send-email-paul.gortmaker@windriver.com>
 References: <1576702137-25905-1-git-send-email-paul.gortmaker@windriver.com>
@@ -42,10 +41,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/mfd/Kconfig:config STMPE_SPI
-drivers/mfd/Kconfig:    bool "STMicroelectronics STMPE SPI Interface"
-
 The Kconfig currently controlling compilation of this code is:
+
+drivers/mfd/Kconfig:config MFD_OMAP_USB_HOST
+drivers/mfd/Kconfig:    bool "TI OMAP USBHS core and TLL driver"
 
 ...meaning that it currently is not being built as a module by anyone.
 
@@ -64,85 +63,101 @@ Also note that MODULE_DEVICE_TABLE is a no-op for non-modular code.
 We also delete the MODULE_LICENSE tag etc. since all that information
 is already contained at the top of the file in the comments.
 
+Cc: Tony Lindgren <tony@atomide.com>
 Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Viresh Kumar <vireshk@kernel.org>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: Keshava Munegowda <keshava_mgowda@ti.com>
+Cc: Roger Quadros <rogerq@ti.com>
+Cc: linux-omap@vger.kernel.org
 Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
 ---
- drivers/mfd/stmpe-spi.c | 23 ++---------------------
- 1 file changed, 2 insertions(+), 21 deletions(-)
+ drivers/mfd/omap-usb-tll.c | 47 ++++------------------------------------------
+ 1 file changed, 4 insertions(+), 43 deletions(-)
 
-diff --git a/drivers/mfd/stmpe-spi.c b/drivers/mfd/stmpe-spi.c
-index 7351734f7593..3f6471e7301a 100644
---- a/drivers/mfd/stmpe-spi.c
-+++ b/drivers/mfd/stmpe-spi.c
-@@ -10,7 +10,7 @@
- #include <linux/spi/spi.h>
- #include <linux/interrupt.h>
+diff --git a/drivers/mfd/omap-usb-tll.c b/drivers/mfd/omap-usb-tll.c
+index 265f5e350e1c..77c8d98a6731 100644
+--- a/drivers/mfd/omap-usb-tll.c
++++ b/drivers/mfd/omap-usb-tll.c
+@@ -7,7 +7,7 @@
+  * Author: Roger Quadros <rogerq@ti.com>
+  */
  #include <linux/kernel.h>
 -#include <linux/module.h>
 +#include <linux/init.h>
- #include <linux/of.h>
  #include <linux/types.h>
- #include "stmpe.h"
-@@ -102,13 +102,6 @@ stmpe_spi_probe(struct spi_device *spi)
- 	return stmpe_probe(&spi_ci, id->driver_data);
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
+@@ -269,46 +269,18 @@ static int usbtll_omap_probe(struct platform_device *pdev)
+ 	return 0;
  }
  
--static int stmpe_spi_remove(struct spi_device *spi)
+-/**
+- * usbtll_omap_remove - shutdown processing for UHH & TLL HCDs
+- * @pdev: USB Host Controller being removed
+- *
+- * Reverses the effect of usbtll_omap_probe().
+- */
+-static int usbtll_omap_remove(struct platform_device *pdev)
 -{
--	struct stmpe *stmpe = spi_get_drvdata(spi);
+-	struct usbtll_omap *tll = platform_get_drvdata(pdev);
+-	int i;
 -
--	return stmpe_remove(stmpe);
+-	spin_lock(&tll_lock);
+-	tll_dev = NULL;
+-	spin_unlock(&tll_lock);
+-
+-	for (i = 0; i < tll->nch; i++) {
+-		if (!IS_ERR(tll->ch_clk[i])) {
+-			clk_unprepare(tll->ch_clk[i]);
+-			clk_put(tll->ch_clk[i]);
+-		}
+-	}
+-
+-	pm_runtime_disable(&pdev->dev);
+-	return 0;
 -}
 -
- static const struct of_device_id stmpe_spi_of_match[] = {
- 	{ .compatible = "st,stmpe610", },
- 	{ .compatible = "st,stmpe801", },
-@@ -118,7 +111,6 @@ static const struct of_device_id stmpe_spi_of_match[] = {
- 	{ .compatible = "st,stmpe2403", },
- 	{ /* sentinel */ },
- };
--MODULE_DEVICE_TABLE(of, stmpe_spi_of_match);
- 
- static const struct spi_device_id stmpe_spi_id[] = {
- 	{ "stmpe610", STMPE610 },
-@@ -129,18 +121,17 @@ static const struct spi_device_id stmpe_spi_id[] = {
- 	{ "stmpe2403", STMPE2403 },
+ static const struct of_device_id usbtll_omap_dt_ids[] = {
+ 	{ .compatible = "ti,usbhs-tll" },
  	{ }
  };
--MODULE_DEVICE_TABLE(spi, stmpe_id);
  
- static struct spi_driver stmpe_spi_driver = {
+-MODULE_DEVICE_TABLE(of, usbtll_omap_dt_ids);
+-
+ static struct platform_driver usbtll_omap_driver = {
  	.driver = {
- 		.name	= "stmpe-spi",
- 		.of_match_table = of_match_ptr(stmpe_spi_of_match),
-+		.suppress_bind_attrs = true,
- #ifdef CONFIG_PM
- 		.pm	= &stmpe_dev_pm_ops,
- #endif
+-		.name		= (char *)usbtll_driver_name,
+-		.of_match_table = usbtll_omap_dt_ids,
++		.name			= (char *)usbtll_driver_name,
++		.of_match_table		= usbtll_omap_dt_ids,
++		.suppress_bind_attrs	= true,
  	},
- 	.probe		= stmpe_spi_probe,
--	.remove		= stmpe_spi_remove,
- 	.id_table	= stmpe_spi_id,
+ 	.probe		= usbtll_omap_probe,
+-	.remove		= usbtll_omap_remove,
  };
  
-@@ -149,13 +140,3 @@ static int __init stmpe_init(void)
- 	return spi_register_driver(&stmpe_spi_driver);
+ int omap_tll_init(struct usbhs_omap_platform_data *pdata)
+@@ -446,11 +418,6 @@ int omap_tll_disable(struct usbhs_omap_platform_data *pdata)
  }
- subsys_initcall(stmpe_init);
--
--static void __exit stmpe_exit(void)
--{
--	spi_unregister_driver(&stmpe_spi_driver);
--}
--module_exit(stmpe_exit);
--
+ EXPORT_SYMBOL_GPL(omap_tll_disable);
+ 
+-MODULE_AUTHOR("Keshava Munegowda <keshava_mgowda@ti.com>");
+-MODULE_AUTHOR("Roger Quadros <rogerq@ti.com>");
 -MODULE_LICENSE("GPL v2");
--MODULE_DESCRIPTION("STMPE MFD SPI Interface Driver");
--MODULE_AUTHOR("Viresh Kumar <vireshk@kernel.org>");
+-MODULE_DESCRIPTION("usb tll driver for TI OMAP EHCI and OHCI controllers");
+-
+ static int __init omap_usbtll_drvinit(void)
+ {
+ 	return platform_driver_register(&usbtll_omap_driver);
+@@ -462,9 +429,3 @@ static int __init omap_usbtll_drvinit(void)
+  * the usbhs core driver probe function is called.
+  */
+ fs_initcall(omap_usbtll_drvinit);
+-
+-static void __exit omap_usbtll_drvexit(void)
+-{
+-	platform_driver_unregister(&usbtll_omap_driver);
+-}
+-module_exit(omap_usbtll_drvexit);
 -- 
 2.7.4
 
