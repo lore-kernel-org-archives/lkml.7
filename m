@@ -2,240 +2,133 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2008C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3020FC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 609DB218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:10:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="k6mS+Bu1"
+	by mail.kernel.org (Postfix) with ESMTP id 05AE02176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:11:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576674679;
+	bh=oZdCyNONAKRKWGjs0LlBD8SiI+NQI35PFHF0b0+LRjY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iblQaxFrU1DgX9h3BU/FIcb3YsPWSfEWpMHwoaDtkYISndAlhXWCRnsFmzcvnURPP
+	 rlIIsMVGVigcHwDokZQakXGA0XLNurtxHDDNXpZW3QkFSVkalNiHCeL78CyutxQPWy
+	 Or5omo4lZLFefDFqxLm1lfUGLEyZ6pzn4UDiIAkw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbfLRNKU (ORCPT
+        id S1727029AbfLRNLS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 08:10:20 -0500
-Received: from rcdn-iport-9.cisco.com ([173.37.86.80]:45182 "EHLO
-        rcdn-iport-9.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbfLRNKU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 08:10:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=cisco.com; i=@cisco.com; l=7048; q=dns/txt; s=iport;
-  t=1576674619; x=1577884219;
-  h=from:to:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=V4xmCH2W65CuvTemSyJC+V7F+s2/tndy7rKO/DG0Qtc=;
-  b=k6mS+Bu1dcReicx2wK2GT8VAPCI5nHgRrx5X5F0qmtufPfeP5sXnng9H
-   UgMI4NC+/zyAGh3s/rdF2YbDyrBRCzaNDgcDhlzLUa5wYgqttyHfiLg52
-   onBefKgBfmyI/FRK+OHM+CAu6SrQhbNepKdzqxHHvkPtWXU+7z0XAyifw
-   8=;
-X-IronPort-AV: E=Sophos;i="5.69,329,1571702400"; 
-   d="scan'208";a="598697311"
-Received: from rcdn-core-3.cisco.com ([173.37.93.154])
-  by rcdn-iport-9.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 18 Dec 2019 13:10:19 +0000
-Received: from sjc-ads-7483.cisco.com (sjc-ads-7483.cisco.com [10.30.221.19])
-        by rcdn-core-3.cisco.com (8.15.2/8.15.2) with ESMTP id xBIDAIpu019601;
-        Wed, 18 Dec 2019 13:10:18 GMT
-Received: by sjc-ads-7483.cisco.com (Postfix, from userid 838444)
-        id 95C50141D; Wed, 18 Dec 2019 05:10:18 -0800 (PST)
-From:   Aviraj CJ <acj@cisco.com>
-To:     peppe.cavallaro@st.com, alexandre.torgue@st.com,
-        gregkh@linuxfoundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, xe-linux-external@cisco.com,
-        acj@cisco.com
-Subject: [PATCH stable v4.9 1/2] net: stmmac: use correct DMA buffer size in the RX descriptor
-Date:   Wed, 18 Dec 2019 05:10:08 -0800
-Message-Id: <20191218131009.10968-1-acj@cisco.com>
-X-Mailer: git-send-email 2.19.1
+        Wed, 18 Dec 2019 08:11:18 -0500
+Received: from foss.arm.com ([217.140.110.172]:45812 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726545AbfLRNLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 08:11:17 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AF3C930E;
+        Wed, 18 Dec 2019 05:11:16 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2C9673F718;
+        Wed, 18 Dec 2019 05:11:16 -0800 (PST)
+Date:   Wed, 18 Dec 2019 13:11:14 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Siddharth Kapoor <ksiddharth@google.com>, lee.jones@linaro.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: Kernel panic on Google Pixel devices due to regulator patch
+Message-ID: <20191218131114.GD3219@sirena.org.uk>
+References: <CAJRo92+eD9F6Q60yVY2PfwaPWO_8Dts8QwH7mhpJaem7SpLihg@mail.gmail.com>
+ <20191218113458.GA3219@sirena.org.uk>
+ <20191218122157.GA17086@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Auto-Response-Suppress: DR, OOF, AutoReply
-X-Outbound-SMTP-Client: 10.30.221.19, sjc-ads-7483.cisco.com
-X-Outbound-Node: rcdn-core-3.cisco.com
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="GyRA7555PLgSTuth"
+Content-Disposition: inline
+In-Reply-To: <20191218122157.GA17086@kroah.com>
+X-Cookie: Power is poison.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-upstream 583e6361414903c5206258a30e5bd88cb03c0254 commit
 
-We always program the maximum DMA buffer size into the receive descriptor,
-although the allocated size may be less. E.g. with the default MTU size
-we allocate only 1536 bytes. If somebody sends us a bigger frame, then
-memory may get corrupted.
+--GyRA7555PLgSTuth
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Program DMA using exact buffer sizes.
+On Wed, Dec 18, 2019 at 01:21:57PM +0100, Greg KH wrote:
+> On Wed, Dec 18, 2019 at 11:34:58AM +0000, Mark Brown wrote:
+> > On Tue, Dec 17, 2019 at 11:51:55PM +0800, Siddharth Kapoor wrote:
 
-Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[acj: backport to v4.9 -stable :
-- adjust context
-- skipped the section modifying non-existent functions in dwxgmac2_descs.c and
-hwif.h ]
-Signed-off-by: Aviraj CJ <acj@cisco.com>
----
- drivers/net/ethernet/stmicro/stmmac/common.h  |  2 +-
- .../net/ethernet/stmicro/stmmac/descs_com.h   | 23 ++++++++++++-------
- .../ethernet/stmicro/stmmac/dwmac4_descs.c    |  2 +-
- .../net/ethernet/stmicro/stmmac/enh_desc.c    | 10 +++++---
- .../net/ethernet/stmicro/stmmac/norm_desc.c   | 10 +++++---
- .../net/ethernet/stmicro/stmmac/stmmac_main.c |  6 ++---
- 6 files changed, 34 insertions(+), 19 deletions(-)
+> > > I would like to share a concern with the regulator patch which is part of
+> > > 4.9.196 LTS kernel.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
-index 6d2de4e01f6d..e11920d12774 100644
---- a/drivers/net/ethernet/stmicro/stmmac/common.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-@@ -354,7 +354,7 @@ struct dma_features {
- struct stmmac_desc_ops {
- 	/* DMA RX descriptor ring initialization */
- 	void (*init_rx_desc) (struct dma_desc *p, int disable_rx_ic, int mode,
--			      int end);
-+			      int end, int bfsize);
- 	/* DMA TX descriptor ring initialization */
- 	void (*init_tx_desc) (struct dma_desc *p, int mode, int end);
- 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/descs_com.h b/drivers/net/ethernet/stmicro/stmmac/descs_com.h
-index 1d181e205d6e..f9cbba2d2cc0 100644
---- a/drivers/net/ethernet/stmicro/stmmac/descs_com.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/descs_com.h
-@@ -33,11 +33,14 @@
- /* Specific functions used for Ring mode */
- 
- /* Enhanced descriptors */
--static inline void ehn_desc_rx_set_on_ring(struct dma_desc *p, int end)
-+static inline void ehn_desc_rx_set_on_ring(struct dma_desc *p, int end,
-+					   int bfsize)
- {
--	p->des1 |= cpu_to_le32(((BUF_SIZE_8KiB - 1)
--			<< ERDES1_BUFFER2_SIZE_SHIFT)
--		   & ERDES1_BUFFER2_SIZE_MASK);
-+	if (bfsize == BUF_SIZE_16KiB)
-+		p->des1 |= cpu_to_le32((BUF_SIZE_8KiB
-+				<< ERDES1_BUFFER2_SIZE_SHIFT)
-+                & ERDES1_BUFFER2_SIZE_MASK);
-+
- 
- 	if (end)
- 		p->des1 |= cpu_to_le32(ERDES1_END_RING);
-@@ -63,11 +66,15 @@ static inline void enh_set_tx_desc_len_on_ring(struct dma_desc *p, int len)
- }
- 
- /* Normal descriptors */
--static inline void ndesc_rx_set_on_ring(struct dma_desc *p, int end)
-+static inline void ndesc_rx_set_on_ring(struct dma_desc *p, int end, int bfsize)
- {
--	p->des1 |= cpu_to_le32(((BUF_SIZE_2KiB - 1)
--				<< RDES1_BUFFER2_SIZE_SHIFT)
--		    & RDES1_BUFFER2_SIZE_MASK);
-+	if (bfsize >= BUF_SIZE_2KiB) {
-+		int bfsize2;
-+
-+		bfsize2 = min(bfsize - BUF_SIZE_2KiB + 1, BUF_SIZE_2KiB - 1);
-+		p->des1 |= cpu_to_le32((bfsize2 << RDES1_BUFFER2_SIZE_SHIFT)
-+			    & RDES1_BUFFER2_SIZE_MASK);
-+	}
- 
- 	if (end)
- 		p->des1 |= cpu_to_le32(RDES1_END_RING);
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.c
-index 3f5056858535..a90b02926e4d 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.c
-@@ -289,7 +289,7 @@ static int dwmac4_wrback_get_rx_timestamp_status(void *desc, u32 ats)
- }
- 
- static void dwmac4_rd_init_rx_desc(struct dma_desc *p, int disable_rx_ic,
--				   int mode, int end)
-+				   int mode, int end, int bfsize)
- {
- 	p->des3 = cpu_to_le32(RDES3_OWN | RDES3_BUFFER1_VALID_ADDR);
- 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/enh_desc.c b/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
-index 77dc5842bd0b..47f4fe50c848 100644
---- a/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
-@@ -269,15 +269,19 @@ static int enh_desc_get_rx_status(void *data, struct stmmac_extra_stats *x,
- }
- 
- static void enh_desc_init_rx_desc(struct dma_desc *p, int disable_rx_ic,
--				  int mode, int end)
-+				  int mode, int end, int bfsize)
- {
-+	int bfsize1;
-+
- 	p->des0 |= cpu_to_le32(RDES0_OWN);
--	p->des1 |= cpu_to_le32((BUF_SIZE_8KiB - 1) & ERDES1_BUFFER1_SIZE_MASK);
-+
-+	bfsize1 = min(bfsize, BUF_SIZE_8KiB);
-+	p->des1 |= cpu_to_le32(bfsize1 & ERDES1_BUFFER1_SIZE_MASK);
- 
- 	if (mode == STMMAC_CHAIN_MODE)
- 		ehn_desc_rx_set_on_chain(p);
- 	else
--		ehn_desc_rx_set_on_ring(p, end);
-+		ehn_desc_rx_set_on_ring(p, end, bfsize);
- 
- 	if (disable_rx_ic)
- 		p->des1 |= cpu_to_le32(ERDES1_DISABLE_IC);
-diff --git a/drivers/net/ethernet/stmicro/stmmac/norm_desc.c b/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
-index 01f8f2e94c0f..5a06a5a1f6ea 100644
---- a/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
-@@ -137,15 +137,19 @@ static int ndesc_get_rx_status(void *data, struct stmmac_extra_stats *x,
- }
- 
- static void ndesc_init_rx_desc(struct dma_desc *p, int disable_rx_ic, int mode,
--			       int end)
-+			       int end, int bfsize)
- {
-+	int bfsize1;
-+
- 	p->des0 |= cpu_to_le32(RDES0_OWN);
--	p->des1 |= cpu_to_le32((BUF_SIZE_2KiB - 1) & RDES1_BUFFER1_SIZE_MASK);
-+
-+	bfsize1 = min(bfsize, BUF_SIZE_2KiB - 1);
-+	p->des1 |= cpu_to_le32(bfsize1 & RDES1_BUFFER1_SIZE_MASK);
- 
- 	if (mode == STMMAC_CHAIN_MODE)
- 		ndesc_rx_set_on_chain(p, end);
- 	else
--		ndesc_rx_set_on_ring(p, end);
-+		ndesc_rx_set_on_ring(p, end, bfsize);
- 
- 	if (disable_rx_ic)
- 		p->des1 |= cpu_to_le32(RDES1_DISABLE_IC);
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 2c04a0739fd6..f1844367ca5b 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -956,11 +956,11 @@ static void stmmac_clear_descriptors(struct stmmac_priv *priv)
- 		if (priv->extend_desc)
- 			priv->hw->desc->init_rx_desc(&priv->dma_erx[i].basic,
- 						     priv->use_riwt, priv->mode,
--						     (i == DMA_RX_SIZE - 1));
-+						     (i == DMA_RX_SIZE - 1), priv->dma_buf_sz);
- 		else
- 			priv->hw->desc->init_rx_desc(&priv->dma_rx[i],
- 						     priv->use_riwt, priv->mode,
--						     (i == DMA_RX_SIZE - 1));
-+						     (i == DMA_RX_SIZE - 1), priv->dma_buf_sz);
- 	for (i = 0; i < DMA_TX_SIZE; i++)
- 		if (priv->extend_desc)
- 			priv->hw->desc->init_tx_desc(&priv->dma_etx[i].basic,
-@@ -2479,7 +2479,7 @@ static inline void stmmac_rx_refill(struct stmmac_priv *priv)
- 		wmb();
- 
- 		if (unlikely(priv->synopsys_id >= DWMAC_CORE_4_00))
--			priv->hw->desc->init_rx_desc(p, priv->use_riwt, 0, 0);
-+			priv->hw->desc->init_rx_desc(p, priv->use_riwt, 0, 0, priv->dma_buf_sz);
- 		else
- 			priv->hw->desc->set_rx_owner(p);
- 
--- 
-2.19.1
+> > That's an *extremely* old kernel.
 
+> It is, but it's the latest stable kernel (well close to), and your patch
+> was tagged by you to be backported to here, so if there's a problem with
+> a stable branch, I want to know about it as I don't want to see
+> regressions happen in it.
+
+I don't track what's in older stable kernels, it wanted to go back at
+least one kernel revision but the issue has been around since forever.
+
+> > I've got nothing to do with the stable kernels so there's nothing I can
+> > do here, sorry.
+
+> Should I revert it everywhere?  This patch reads as it should be fixing
+> problems, not causing them :)
+
+The main targets were whatever Debian and Ubuntu are shipping (and to a
+lesser extent SuSE or RHEL but they don't use stable directly), it's
+less relevant to anything that only gets used on embedded stuff.  It's
+right on the knife edge of what I'd backport but since that's way less
+enthusiastic than stable is in general these days.
+
+> > Possibly your GPU supplies need to be flagged as always on, possibly
+> > your GPU driver is forgetting to enable some supplies it needs, or
+> > possibly there's a missing always-on constraint on one of the regulators
+> > depending on how the driver expects this to work (if it's a proprietary
+> > driver it shouldn't be using the regulator API itself).  I'm quite
+> > surprised you've not seen any issue before given that the supplies would
+> > still be being disabled earlier.
+
+> Timing "luck" is probably something we shouldn't be messing with in
+> stable kernels.  How about I revert this for the 4.14 and older releases
+> and let new devices deal with the timing issues when they are brought up
+> on new hardware?
+
+To be clear this is more a straight up bug in their stuff than the sort
+of thing you'd normally think of as a race condition, we're talking
+about moving the timing by 30 seconds here.  The case that we saw
+already was just a clear and obvious bug that was made more visible (the
+driver was using the wrong name for a supply so lookups were always
+failing but some sequence of events meant it didn't produce big runtime
+failures).
+
+If you don't want to be messing with timing luck then you probably want
+to be having a look at what Sasha's bot is doing, it's picking up a lot
+of things that are *well* into this sort of territory (and the bad
+interactions with out of tree code territory).  I personally would not
+be using stable these days if I wasn't prepared to be digging into
+something like this.
+
+--GyRA7555PLgSTuth
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl36JXEACgkQJNaLcl1U
+h9CT7Qf/TVaKu0vixHRm1UczK13aXCUS+DKM5tAHD67zj5F/xnkStUva72YMYqga
+/W+110vzthWMX/aGDLxJbUXHrn+tNsRFxJ0TWRUOdErmN0g57XkCES6EDlFHHEDv
+msLG2dbwXF4dtluv5sGkMlt30eoE6AX04L3FqTgpK0snX6X/4zo8CDRRyKbmKglR
+2KNt52rPwXnN5q6Prik/XSfql09LVBjdjRBCnIhAT16Blx2Rf+xLjriiwASswx5I
+VeRGU4//lFfDxJkuim8uVrPCgJzwwtc9lqaHc9qVXGBsHV5y6S3B4HCCDkNSbu/d
+5m9kJle/UAQda5a5XxAlAVHtiydtuA==
+=ZrHN
+-----END PGP SIGNATURE-----
+
+--GyRA7555PLgSTuth--
