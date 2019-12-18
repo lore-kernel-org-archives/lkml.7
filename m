@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42285C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBDCC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E54A2467F
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:27:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DBA82467E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:28:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576682879;
-	bh=Atjyd0VhLOfncfVpnTToXRLQMij7shELi5mE142B0vA=;
+	s=default; t=1576682881;
+	bh=0dD+Vv151FfLfgaBTQgl7bPziumhNsMCdpgVCj+k8pI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
 	 References:List-ID:From;
-	b=MGsijV81L3Lw5dJNqouocKCniwfpD7in1VkF6oJS645zq7Zbgr3/a6Esn168W3zu7
-	 FD9SSF3HxW2aT48WWHDCEDocVnNj7t/Vp42ElVmczat0rQl9gON/jUbR/PzmrjT7FP
-	 LJljFHY0YgnaBA6PXsHBaD7uW2NpZfM2pHUFEbRA=
+	b=xaoCvHWTEj9lWKE6Zfse3zYSKl2KqND3awL+9a8gB/bue9Rra84XsoRWPLfA0QN+T
+	 A6Rv8kqpqg12yKS+V36Qama89QMK2HzzGw/nPsbz+8HqzlsfiiHCd2DBIjEJ8SJgmJ
+	 FXEIHIZSeytuKJcVnu2CUifKaTQGxfFbb9BbMsdI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727324AbfLRP16 (ORCPT
+        id S1727347AbfLRP16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 18 Dec 2019 10:27:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59896 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:60012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726723AbfLRP1y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 10:27:54 -0500
+        id S1727297AbfLRP16 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 10:27:58 -0500
 Received: from tzanussi-mobl.hsd1.il.comcast.net (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 581D5218AC;
-        Wed, 18 Dec 2019 15:27:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76AF424679;
+        Wed, 18 Dec 2019 15:27:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576682872;
-        bh=Atjyd0VhLOfncfVpnTToXRLQMij7shELi5mE142B0vA=;
+        s=default; t=1576682877;
+        bh=0dD+Vv151FfLfgaBTQgl7bPziumhNsMCdpgVCj+k8pI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=S+WpfUcsQ6sto4b0+RxDhBs3uo0dCj1iEEvin93GOr6xhw6z53ZMtOfmKFRtwga+S
-         2jBfAkzK50SviX2bkQJ9SyjlR6DM7h622xNE/SGUcBXGnn077wGcOfpL0NJJlorVVZ
-         W/z6UebJJyTffYDFXOmyPUBJU/nztaTYeqmO0jzA=
+        b=K1ZuvonHyxPoA9FbcPFTLlPeuQJ0wLNkdBcOEFVc12S93AM+7fGt1lTrcQh5hOV0j
+         cUBI8eIxm5hDDNT3ISwmBIbuf7wXt9QPLvuhlGI5q1QABZvKaM8qPkn+cD8ReFshae
+         0+1MOdGVW+mHsUPmObAOkbeZWUjyrt7I0NSqdwoU=
 From:   Tom Zanussi <zanussi@kernel.org>
 To:     rostedt@goodmis.org
 Cc:     artem.bityutskiy@linux.intel.com, mhiramat@kernel.org,
         linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: [PATCH 2/7] tracing: Add get/put_event_file()
-Date:   Wed, 18 Dec 2019 09:27:38 -0600
-Message-Id: <8ee01da8f9a1aa7bbec4ea9492a464e43d31f70c.1576679206.git.zanussi@kernel.org>
+Subject: [PATCH 5/7] tracing: Add generate_synth_event() and related functions
+Date:   Wed, 18 Dec 2019 09:27:41 -0600
+Message-Id: <7968762ed65ff937391978f1c804d186cdfa88f7.1576679206.git.zanussi@kernel.org>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <cover.1576679206.git.zanussi@kernel.org>
 References: <cover.1576679206.git.zanussi@kernel.org>
@@ -58,187 +58,461 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a function to get an event file and prevent it from going away on
-module or instance removal.
+Add an exported function named generate_synth_event(), allowing
+modules or other kernel code to generate synthetic events.
 
-get_event_file() will find an event file in a given instance (if
-instance is NULL, it assumes the top trace array) and return it,
-pinning the instance's trace array as well as the event's module, if
-applicable, so they won't go away while in use.
-
-put_event_file() does the matching release.
-
-Also included are _nolock() versions, which can be used if event_mutex
-is already held.
+Also added are several functions that allow the same functionality to
+be broken out in a piecewise fashion, which are useful in situations
+where generating an event from a full array of values would be
+cumbersome.  Those functions are generate_synth_event_start/end() and
+add_(next)_synth_val().
 
 Signed-off-by: Tom Zanussi <zanussi@kernel.org>
 ---
- include/linux/trace_events.h |  10 ++++
- kernel/trace/trace_events.c  | 130 +++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 140 insertions(+)
+ include/linux/trace_events.h     |  20 +++
+ kernel/trace/trace_events_hist.c | 370 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 390 insertions(+)
 
 diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index 4c6e15605766..cf982c7d6636 100644
+index 8b385778b2db..8a413b9cff40 100644
 --- a/include/linux/trace_events.h
 +++ b/include/linux/trace_events.h
-@@ -348,6 +348,16 @@ enum {
- 	EVENT_FILE_FL_WAS_ENABLED_BIT,
- };
+@@ -365,6 +365,18 @@ struct synth_field_desc {
  
-+extern struct trace_event_file *get_event_file(const char *instance,
-+					       const char *system,
-+					       const char *event);
-+extern struct trace_event_file *get_event_file_nolock(const char *instance,
-+						      const char *system,
-+						      const char *event);
+ struct synth_event;
+ 
++struct synth_gen_state {
++	struct trace_event_buffer fbuffer;
++	struct synth_trace_event *entry;
++	struct ring_buffer *buffer;
++	struct synth_event *event;
++	unsigned int cur_field;
++	unsigned int n_u64;
++	bool enabled;
++	bool add_next;
++	bool add_name;
++};
 +
-+extern void put_event_file(struct trace_event_file *file);
-+extern void put_event_file_nolock(struct trace_event_file *file);
-+
+ extern int create_synth_event(const char *name,
+ 			      struct synth_field_desc *fields,
+ 			      unsigned int n_fields,
+@@ -380,6 +392,14 @@ extern int add_synth_fields(struct synth_event *event,
+ 			    struct synth_field_desc *fields,
+ 			    unsigned int n_fields);
+ extern int finalize_synth_event(struct synth_event *event);
++extern int generate_synth_event(struct trace_event_file *file, u64 *vals,
++				unsigned int n_vals);
++extern int generate_synth_event_start(struct trace_event_file *file,
++				      struct synth_gen_state *gen_state);
++extern int add_next_synth_val(u64 val, struct synth_gen_state *gen_state);
++extern int add_synth_val(const char *field_name, u64 val,
++			 struct synth_gen_state *gen_state);
++extern int generate_synth_event_end(struct synth_gen_state *gen_state);
+ 
  /*
   * Event file flags:
-  *  ENABLED	  - The event is enabled
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index c6de3cebc127..2ee417d003eb 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -2535,6 +2535,136 @@ find_event_file(struct trace_array *tr, const char *system, const char *event)
- 	return file;
- }
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 4b8d7a4bac2d..426c385f941f 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -393,6 +393,7 @@ struct synth_field {
+ 	char *type;
+ 	char *name;
+ 	size_t size;
++	unsigned int offset;
+ 	bool is_signed;
+ 	bool is_string;
+ };
+@@ -662,6 +663,8 @@ static int synth_event_define_fields(struct trace_event_call *call)
+ 		if (ret)
+ 			break;
  
-+static struct trace_event_file *__get_event_file(const char *instance,
-+						 const char *system,
-+						 const char *event,
-+						 bool lock)
++		event->fields[i]->offset = n_u64;
++
+ 		if (event->fields[i]->is_string) {
+ 			offset += STR_VAR_LEN_MAX;
+ 			n_u64 += STR_VAR_LEN_MAX / sizeof(u64);
+@@ -1269,6 +1272,90 @@ struct hist_var_data {
+ 	struct hist_trigger_data *hist_data;
+ };
+ 
++/**
++ * generate_synth_event - Generate a synthetic event
++ * @file: The trace_event_file representing the synthetic event
++ * @vals: Array of values
++ * @n_vals: The number of values in vals
++ *
++ * Generate a synthetic event using the values passed in as 'vals'.
++ *
++ * The 'vals' array is just an array of 'n_vals' u64.  The number of
++ * vals must match the number of field in the synthetic event, and
++ * must be in the same order as the synthetic event fields.
++ *
++ * All vals should be cast to u64, and string vals are just pointers
++ * to strings, cast to u64.  Strings will be copied into space
++ * reserved in the event for the string, using these pointers.
++ *
++ * Return: 0 on success, err otherwise.
++ */
++int generate_synth_event(struct trace_event_file *file, u64 *vals,
++			 unsigned int n_vals)
 +{
-+	struct trace_array *tr = top_trace_array();
-+	struct trace_event_file *file = NULL;
-+	int ret = -EINVAL;
++	struct trace_event_buffer fbuffer;
++	struct synth_trace_event *entry;
++	struct ring_buffer *buffer;
++	struct synth_event *event;
++	unsigned int i, n_u64;
++	int fields_size = 0;
++	int ret = 0;
 +
-+	if (instance) {
-+		tr = trace_array_find(instance);
-+		if (!tr)
-+			return ERR_PTR(ret);
-+	}
++	/*
++	 * Normal event generation doesn't get called at all unless
++	 * the ENABLED bit is set (which attaches the probe thus
++	 * allowing this code to be called, etc).  Because this is
++	 * called directly by the user, we don't have that but we
++	 * still need to honor not logging when disabled.
++	 */
++	if (!(file->flags & EVENT_FILE_FL_ENABLED))
++		return 0;
 +
-+	ret = trace_array_get(tr);
-+	if (ret)
-+		return ERR_PTR(ret);
++	event = file->event_call->data;
 +
-+	if (lock)
-+		mutex_lock(&event_mutex);
++	if (n_vals != event->n_fields)
++		return -EINVAL;
 +
-+	file = find_event_file(tr, system, event);
-+	if (!file) {
-+		trace_array_put(tr);
++	if (trace_trigger_soft_disabled(file))
++		return -EINVAL;
++
++	fields_size = event->n_u64 * sizeof(u64);
++
++	/*
++	 * Avoid ring buffer recursion detection, as this event
++	 * is being performed within another event.
++	 */
++	buffer = file->tr->trace_buffer.buffer;
++	ring_buffer_nest_start(buffer);
++
++	entry = trace_event_buffer_reserve(&fbuffer, file,
++					   sizeof(*entry) + fields_size);
++	if (!entry) {
 +		ret = -EINVAL;
 +		goto out;
 +	}
 +
-+	/* Don't let event modules unload while in use */
-+	ret = try_module_get(file->event_call->mod);
-+	if (!ret) {
-+		trace_array_put(tr);
-+		ret = -EBUSY;
++	for (i = 0, n_u64 = 0; i < event->n_fields; i++) {
++		if (event->fields[i]->is_string) {
++			char *str_val = (char *)(long)vals[i];
++			char *str_field = (char *)&entry->fields[n_u64];
++
++			strscpy(str_field, str_val, STR_VAR_LEN_MAX);
++			n_u64 += STR_VAR_LEN_MAX / sizeof(u64);
++		} else {
++			entry->fields[n_u64] = vals[i];
++			n_u64++;
++		}
++	}
++
++	trace_event_buffer_commit(&fbuffer);
++out:
++	ring_buffer_nest_end(buffer);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(generate_synth_event);
++
+ /**
+  * finalize_synth_event - Finalize and register a new synth event
+  * @event: A pointer to the synth_event struct representing the new event
+@@ -1299,6 +1386,289 @@ int finalize_synth_event(struct synth_event *event)
+ }
+ EXPORT_SYMBOL_GPL(finalize_synth_event);
+ 
++/**
++ * generate_synth_event_start - Start piecewise synthetic event generation
++ * @file: The trace_event_file representing the synthetic event
++ * @gen_state: A pointer to object tracking the piecewise generation state
++ *
++ * Start the generation of a synthetic event field-by-field rather
++ * than all at once.
++ *
++ * This function 'opens' an event generation, which means space is
++ * reserved for the event in the trace buffer, after which the event's
++ * individual field values can be set through either
++ * add_next_synth_val() or add_synth_val().
++ *
++ * A pointer to a gen_state object is passed in, which will keep track
++ * of the current event generation state until the event generation is
++ * closed (and the event finally generated) using
++ * generate_synth_event_end().
++ *
++ * Note that generate_synth_event_end() must be called after all
++ * values have been added for each event generation, regardless of
++ * whether adding all field values succeeded or not.
++ *
++ * Note also that for a given event generation, all fields must be
++ * added using either add_next_synth_val() or add_synth_val() but not
++ * both together or interleaved.
++ *
++ * Return: 0 on success, err otherwise.
++ */
++int generate_synth_event_start(struct trace_event_file *file,
++			       struct synth_gen_state *gen_state)
++{
++	struct synth_trace_event *entry;
++	int fields_size = 0;
++	int ret = 0;
++
++	if (!gen_state) {
++		ret = -EINVAL;
 +		goto out;
 +	}
 +
-+	ret = 0;
++	memset(gen_state, '\0', sizeof(*gen_state));
++
++	/*
++	 * Normal event generation doesn't get called at all unless
++	 * the ENABLED bit is set (which attaches the probe thus
++	 * allowing this code to be called, etc).  Because this is
++	 * called directly by the user, we don't have that but we
++	 * still need to honor not logging when disabled.  For the the
++	 * iterated gen case, we save the enabed state upon start and
++	 * just ignore the following data calls.
++	 */
++	if (!(file->flags & EVENT_FILE_FL_ENABLED)) {
++		gen_state->enabled = false;
++		goto out;
++	}
++
++	gen_state->enabled = true;
++
++	gen_state->event = file->event_call->data;
++
++	if (trace_trigger_soft_disabled(file)) {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	fields_size = gen_state->event->n_u64 * sizeof(u64);
++
++	/*
++	 * Avoid ring buffer recursion detection, as this event
++	 * is being performed within another event.
++	 */
++	gen_state->buffer = file->tr->trace_buffer.buffer;
++	ring_buffer_nest_start(gen_state->buffer);
++
++	entry = trace_event_buffer_reserve(&gen_state->fbuffer, file,
++					   sizeof(*entry) + fields_size);
++	if (!entry) {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	gen_state->entry = entry;
++out:
++	return ret;
++}
++EXPORT_SYMBOL_GPL(generate_synth_event_start);
++
++static int save_synth_val(struct synth_field *field, u64 val,
++			  struct synth_gen_state *gen_state)
++{
++	struct synth_trace_event *entry = gen_state->entry;
++
++	if (field->is_string) {
++		char *str_val = (char *)(long)val;
++		char *str_field;
++
++		if (!str_val)
++			return -EINVAL;
++
++		str_field = (char *)&entry->fields[field->offset];
++		strscpy(str_field, str_val, STR_VAR_LEN_MAX);
++	} else
++		entry->fields[field->offset] = val;
++
++	return 0;
++}
++
++/**
++ * add_next_synth_val - Add the next field's value to an open synth generation
++ * @val: The value to set the next field to
++ * @gen_state: A pointer to object tracking the piecewise generation state
++ *
++ * Set the value of the next field in an event that's been opened by
++ * generate_synth_event_start().
++ *
++ * The val param should be the value cast to u64.  If the value points
++ * to a string, the val param should be a char * cast to u64.
++ *
++ * This function assumes all the fields in an event are to be set one
++ * after another - successive calls to this function are made, one for
++ * each field, in the order of the fields in the event, until all
++ * fields have been set.  If you'd rather set each field individually
++ * without regard to ordering, add_synth_val() can be used instead.
++ *
++ * Note however that add_next_synth_val() and add_synth_val() can't be
++ * intermixed for a given event generation - one or the other but not
++ * both can be used at the same time.
++ *
++ * Note also that generate_synth_event_end() must be called after all
++ * values have been added for each event generation, regardless of
++ * whether adding all field values succeeded or not.
++ *
++ * Return: 0 on success, err otherwise.
++ */
++int add_next_synth_val(u64 val, struct synth_gen_state *gen_state)
++{
++	struct synth_field *field;
++	struct synth_event *event;
++	int ret = 0;
++
++	if (!gen_state) {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	/* can't mix add_next_synth_val() with add_synth_val() */
++	if (gen_state->add_name) {
++		ret = -EINVAL;
++		goto out;
++	}
++	gen_state->add_next = true;
++
++	if (!gen_state->enabled)
++		goto out;
++
++	event = gen_state->event;
++
++	if (gen_state->cur_field >= event->n_fields) {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	field = event->fields[gen_state->cur_field++];
++	ret = save_synth_val(field, val, gen_state);
 + out:
-+	if (lock)
-+		mutex_unlock(&event_mutex);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(add_next_synth_val);
 +
-+	if (ret)
-+		file = ERR_PTR(ret);
++static struct synth_field *find_synth_field(struct synth_event *event,
++					    const char *field_name)
++{
++	struct synth_field *field = NULL;
++	unsigned int i;
 +
-+	return file;
++	for (i = 0; i < event->n_fields; i++) {
++		field = event->fields[i];
++		if (strcmp(field->name, field_name) == 0)
++			return field;
++	}
++
++	return NULL;
 +}
 +
 +/**
-+ * get_event_file - Find and return a trace event file
-+ * @instance: The name of the trace instance containing the event
-+ * @system: The name of the system containing the event
-+ * @event: The name of the event
++ * add_synth_val - Add a named field's value to an open synth generation
++ * @field_name: The name of the synthetic event field value to set
++ * @val: The value to set the next field to
++ * @gen_state: A pointer to object tracking the piecewise generation state
 + *
-+ * Return a trace event file given the trace instance name, trace
-+ * system, and trace event name.  If the instance name is NULL, it
-+ * refers to the top-level trace array.
++ * Set the value of the named field in an event that's been opened by
++ * generate_synth_event_start().
 + *
-+ * This function will look it up and return it if found, after calling
-+ * trace_array_get() to prevent the instance from going away, and
-+ * increment the event's module refcount to prevent it from being
-+ * removed.
++ * The val param should be the value cast to u64.  If the value points
++ * to a string, the val param should be a char * cast to u64.
 + *
-+ * To release the file, call put_event_file(), which will call
-+ * trace_array_put() and decrement the event's module refcount.
++ * This function looks up the field name, and if found, sets the field
++ * to the specified value.  This lookup makes this function more
++ * expensive than add_next_synth_val(), so use that or the
++ * none-piecewise generate_synth_event() instead if efficiency is more
++ * important.
 + *
-+ * Return: The trace event on success, ERR_PTR otherwise.
++ * Note however that add_next_synth_val() and add_synth_val() can't be
++ * intermixed for a given event generation - one or the other but not
++ * both can be used at the same time.
++ *
++ * Note also that generate_synth_event_end() must be called after all
++ * values have been added for each event generation, regardless of
++ * whether adding all field values succeeded or not.
++ *
++ * Return: 0 on success, err otherwise.
 + */
-+struct trace_event_file *get_event_file(const char *instance,
-+					const char *system,
-+					const char *event)
++int add_synth_val(const char *field_name, u64 val,
++		  struct synth_gen_state *gen_state)
 +{
-+	return __get_event_file(instance, system, event, true);
++	struct synth_trace_event *entry;
++	struct synth_event *event;
++	struct synth_field *field;
++	int ret = 0;
++
++	if (!gen_state) {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	/* can't mix add_next_synth_val() with add_synth_val() */
++	if (gen_state->add_next) {
++		ret = -EINVAL;
++		goto out;
++	}
++	gen_state->add_name = true;
++
++	if (!gen_state->enabled)
++		goto out;
++
++	event = gen_state->event;
++	entry = gen_state->entry;
++
++	field = find_synth_field(event, field_name);
++	if (!field) {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	ret = save_synth_val(field, val, gen_state);
++ out:
++	return ret;
 +}
-+EXPORT_SYMBOL_GPL(get_event_file);
++EXPORT_SYMBOL_GPL(add_synth_val);
 +
 +/**
-+ * get_event_file_nolock - non-locking version of get_event_file
++ * generate_synth_event_end - End piecewise synthetic event generation
++ * @gen_state: A pointer to object tracking the piecewise generation state
 + *
-+ * Same as get_event_file() but doesn't take event_mutex.  See
-+ * get_event_file() for details.
-+ */
-+struct trace_event_file *get_event_file_nolock(const char *instance,
-+					       const char *system,
-+					       const char *event)
-+{
-+	return __get_event_file(instance, system, event, false);
-+}
-+EXPORT_SYMBOL_GPL(get_event_file_nolock);
-+
-+/**
-+ * put_event_file - Release a file from get_event_file()
-+ * @file: The trace event file
++ * End the generation of a synthetic event opened by
++ * generate_synth_event_start().
 + *
-+ * If a file was retrieved using get_event_file(), this should be
-+ * called when it's no longer needed.  It will cancel the previous
-+ * trace_array_get() called by that function, and decrement the
-+ * event's module refcount.
-+ */
-+void __put_event_file(struct trace_event_file *file, bool lock)
-+{
-+	trace_array_put(file->tr);
-+
-+	if (lock)
-+		mutex_lock(&event_mutex);
-+
-+	module_put(file->event_call->mod);
-+
-+	if (lock)
-+		mutex_unlock(&event_mutex);
-+}
-+
-+void put_event_file(struct trace_event_file *file)
-+{
-+	return __put_event_file(file, true);
-+}
-+EXPORT_SYMBOL_GPL(put_event_file);
-+
-+/**
-+ * put_event_file_nolock - non-locking version of put_event_file
++ * This function 'closes' an event generation, which basically means
++ * that it commits the reserved event and cleans up other loose ends.
 + *
-+ * Same as put_event_file() but doesn't take event_mutex.  See
-+ * put_event_file() for details.
++ * A pointer to a gen_state object is passed in, which will keep track
++ * of the current event generation state opened with
++ * generate_synth_event_start().
++ *
++ * Note that this function must be called after all values have been
++ * added for each event generation, regardless of whether adding all
++ * field values succeeded or not.
++ *
++ * Return: 0 on success, err otherwise.
 + */
-+void put_event_file_nolock(struct trace_event_file *file)
++int generate_synth_event_end(struct synth_gen_state *gen_state)
 +{
-+	return __put_event_file(file, false);
-+}
-+EXPORT_SYMBOL_GPL(put_event_file_nolock);
++	if (!gen_state)
++		return -EINVAL;
 +
- #ifdef CONFIG_DYNAMIC_FTRACE
- 
- /* Avoid typos */
++	trace_event_buffer_commit(&gen_state->fbuffer);
++
++	ring_buffer_nest_end(gen_state->buffer);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(generate_synth_event_end);
++
+ static int update_fields(struct synth_event *event, struct synth_field *field)
+ {
+ 	struct synth_field **old_fields;
 -- 
 2.14.1
 
