@@ -6,49 +6,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE0A8C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0152C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A912A2465E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFFDA2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:45:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbfLRVp2 (ORCPT
+        id S1727031AbfLRVph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 16:45:28 -0500
-Received: from mail-qt1-f170.google.com ([209.85.160.170]:34029 "EHLO
-        mail-qt1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726920AbfLRVpZ (ORCPT
+        Wed, 18 Dec 2019 16:45:37 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:35941 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726935AbfLRVp2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 16:45:25 -0500
-Received: by mail-qt1-f170.google.com with SMTP id 5so3222909qtz.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 13:45:25 -0800 (PST)
+        Wed, 18 Dec 2019 16:45:28 -0500
+Received: by mail-qv1-f67.google.com with SMTP id m14so1386314qvl.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 13:45:27 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=KgXggyBkLko/7fucrNtd/eA0bpwPzuBhzGiPiW5MoEI=;
-        b=jKiliinfOtCj5bpt1GUcZghTWrkH0UInoNQagEC2TfIJTXVxeWaU1UkYho1EeACnnn
-         2KU/rlq0L2bc3yHVwm6aiLYTt9LusItbmdxgOmqv8xzyrbmt48hTn3wjRRG0wtIWvgUg
-         0JFANUHFx+0jCVJZFaRAN24sxakLzwUlZx7JDMAkXm53WzLrwb8cxj5x7l1g4i9X+TBT
-         EXZBCqbb+5xp2r9eL1LmRyg4JX7NhxM5fTAO2nXO8xdhAsrn9edPThKxt9UFTgmMadQK
-         0StfhxghghGFIByYKwy/xLdBt89B28Om6zxphjKdEIT2cjJAtR42xKjwGV//nIT1W9Yc
-         8nGg==
-X-Gm-Message-State: APjAAAVwkB1SXrVU7AlAl9YJBwlqXt1DB8P6AiTe43LonYe2F6nzabr3
-        JzAIqoaKSmCPtel2yNRGoPE=
-X-Google-Smtp-Source: APXvYqy6wLofP2dUo1+No7parVCNDg4VrfCVmbkY5VmaWgcpefgtWXdpj4VuWLR0FQysetJowrHqYg==
-X-Received: by 2002:ac8:64a:: with SMTP id e10mr4208634qth.292.1576705524903;
-        Wed, 18 Dec 2019 13:45:24 -0800 (PST)
+        bh=waxKuIHxOhP/uUMeh5H5HFDUl/+Vy4TJ7vfzF1KKkIs=;
+        b=FqITdHWqbt8Jzd4SOo18Ld/0rdAdWVZZpcteZrXWGZ98xgASSnflpXB/ZOo6J1MJGN
+         x+jPloYVP9fHUBEegKQ7LLhlXzVhM+b2CJRe7xb4yZtIQr9mzzWwDseeW9fG1a7HtMzt
+         Hm0xCcu2aRgKMzj/cAU0F8bvFzwPLcyHPU3CSnh0AwJF1s1GqPGJtPLGfeWLgi/H6k/u
+         G6jIO7XiijfiBg31HqCzbK1NHsF/ykc8/KcVW4mdm0/hND6pwzuELFlU8rVt2L5qUt9P
+         p4WmfrezhGer0fGyKEe1PT6d836HeicX4exQLQxQGeW5U0cl1zoeCixePX4K1urEiw04
+         6ngw==
+X-Gm-Message-State: APjAAAXRdNtoV0S0NP9jDtlpWdQPU27ahKf8vKQsvdshIV17QET4tD8a
+        45smhdRQaGjClVrbbrLxqvk=
+X-Google-Smtp-Source: APXvYqzMxa8kH4PYCcP5so3uciAKTWjxwAyedl2+Ynob8BNenAiWlSexCNe2nB2KKGn1fK6S2cnOhw==
+X-Received: by 2002:a0c:e8c7:: with SMTP id m7mr4602352qvo.128.1576705527382;
+        Wed, 18 Dec 2019 13:45:27 -0800 (PST)
 Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id u4sm1059851qkh.59.2019.12.18.13.45.24
+        by smtp.gmail.com with ESMTPSA id u4sm1059851qkh.59.2019.12.18.13.45.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 13:45:24 -0800 (PST)
+        Wed, 18 Dec 2019 13:45:26 -0800 (PST)
 From:   Arvind Sankar <nivedita@alum.mit.edu>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH v2 21/24] arch/sparc/setup: Drop dummy_con initialization
-Date:   Wed, 18 Dec 2019 16:45:03 -0500
-Message-Id: <20191218214506.49252-22-nivedita@alum.mit.edu>
+Subject: [PATCH v2 24/24] arch/xtensa/setup: Drop dummy_con initialization
+Date:   Wed, 18 Dec 2019 16:45:06 -0500
+Message-Id: <20191218214506.49252-25-nivedita@alum.mit.edu>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191218214506.49252-1-nivedita@alum.mit.edu>
 References: <20191218211231.GA918900@kroah.com>
@@ -65,40 +65,22 @@ Drop it from arch setup code.
 
 Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 ---
- arch/sparc/kernel/setup_32.c | 4 ----
- arch/sparc/kernel/setup_64.c | 4 ----
- 2 files changed, 8 deletions(-)
+ arch/xtensa/kernel/setup.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/arch/sparc/kernel/setup_32.c b/arch/sparc/kernel/setup_32.c
-index afe1592a6d08..5d1bcfce05d8 100644
---- a/arch/sparc/kernel/setup_32.c
-+++ b/arch/sparc/kernel/setup_32.c
-@@ -332,10 +332,6 @@ void __init setup_arch(char **cmdline_p)
- 		break;
- 	}
- 
--#ifdef CONFIG_DUMMY_CONSOLE
+diff --git a/arch/xtensa/kernel/setup.c b/arch/xtensa/kernel/setup.c
+index 0f93b67c7a5a..adead45debe8 100644
+--- a/arch/xtensa/kernel/setup.c
++++ b/arch/xtensa/kernel/setup.c
+@@ -405,8 +405,6 @@ void __init setup_arch(char **cmdline_p)
+ #ifdef CONFIG_VT
+ # if defined(CONFIG_VGA_CONSOLE)
+ 	conswitchp = &vga_con;
+-# elif defined(CONFIG_DUMMY_CONSOLE)
 -	conswitchp = &dummy_con;
--#endif
--
- 	idprom_init();
- 	load_mmu();
- 
-diff --git a/arch/sparc/kernel/setup_64.c b/arch/sparc/kernel/setup_64.c
-index fd2182a5c32d..75e3992203b6 100644
---- a/arch/sparc/kernel/setup_64.c
-+++ b/arch/sparc/kernel/setup_64.c
-@@ -653,10 +653,6 @@ void __init setup_arch(char **cmdline_p)
- 	else
- 		pr_info("ARCH: SUN4U\n");
- 
--#ifdef CONFIG_DUMMY_CONSOLE
--	conswitchp = &dummy_con;
--#endif
--
- 	idprom_init();
- 
- 	if (!root_flags)
+ # endif
+ #endif
+ }
 -- 
 2.24.1
 
