@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E72E6C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E76C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF9BD2146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44F582146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:56:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727498AbfLRV4a (ORCPT
+        id S1727255AbfLRVz5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 16:56:30 -0500
-Received: from mga04.intel.com ([192.55.52.120]:16969 "EHLO mga04.intel.com"
+        Wed, 18 Dec 2019 16:55:57 -0500
+Received: from mga01.intel.com ([192.55.52.88]:56974 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727317AbfLRV4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 16:56:04 -0500
+        id S1727039AbfLRVzt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 16:55:49 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 13:55:51 -0800
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 13:55:48 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
-   d="scan'208";a="222108187"
+   d="scan'208";a="222108155"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga001.fm.intel.com with ESMTP; 18 Dec 2019 13:55:51 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 18 Dec 2019 13:55:48 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
         Paul Mackerras <paulus@ozlabs.org>,
@@ -48,9 +48,9 @@ Cc:     James Morse <james.morse@arm.com>,
         linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
         kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Greg Kurz <groug@kaod.org>
-Subject: [PATCH v2 42/45] KVM: arm64: Free sve_state via arm specific hook
-Date:   Wed, 18 Dec 2019 13:55:27 -0800
-Message-Id: <20191218215530.2280-43-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 35/45] KVM: s390: Manually invoke vcpu setup during kvm_arch_vcpu_create()
+Date:   Wed, 18 Dec 2019 13:55:20 -0800
+Message-Id: <20191218215530.2280-36-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191218215530.2280-1-sean.j.christopherson@intel.com>
 References: <20191218215530.2280-1-sean.j.christopherson@intel.com>
@@ -61,72 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an arm specific hook to free the arm64-only sve_state.  Doing so
-eliminates the last functional code from kvm_arch_vcpu_uninit() across
-all architectures and paves the way for removing kvm_arch_vcpu_init()
-and kvm_arch_vcpu_uninit() entirely.
+Rename kvm_arch_vcpu_setup() to kvm_s390_vcpu_setup() and manually call
+the new function during kvm_arch_vcpu_create().  Define an empty
+kvm_arch_vcpu_setup() as it's still required for compilation.  This
+is effectively a nop as kvm_arch_vcpu_create() and kvm_arch_vcpu_setup()
+are called back-to-back by common KVM code.  Obsoleting
+kvm_arch_vcpu_setup() paves the way for its removal.
+
+Note, gmap_remove() is now called if setup fails, as s390 was previously
+freeing it via kvm_arch_vcpu_destroy(), which is called by common KVM
+code if kvm_arch_vcpu_setup() fails.
+
+No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/arm/include/asm/kvm_host.h   | 1 +
- arch/arm64/include/asm/kvm_host.h | 1 +
- arch/arm64/kvm/reset.c            | 5 +++++
- virt/kvm/arm/arm.c                | 2 ++
- 4 files changed, 9 insertions(+)
+ arch/s390/kvm/kvm-s390.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/arch/arm/include/asm/kvm_host.h b/arch/arm/include/asm/kvm_host.h
-index 556cd818eccf..de81dd897a30 100644
---- a/arch/arm/include/asm/kvm_host.h
-+++ b/arch/arm/include/asm/kvm_host.h
-@@ -366,6 +366,7 @@ static inline void kvm_arch_sync_events(struct kvm *kvm) {}
- static inline void kvm_arch_vcpu_uninit(struct kvm_vcpu *vcpu) {}
- static inline void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu) {}
- static inline void kvm_arch_vcpu_block_finish(struct kvm_vcpu *vcpu) {}
-+static inline void kvm_arm_vcpu_destroy(struct kvm_vcpu *vcpu) {}
- 
- static inline void kvm_arm_init_debug(void) {}
- static inline void kvm_arm_setup_debug(struct kvm_vcpu *vcpu) {}
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index b36dae9ee5f9..b1de2b147729 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -53,6 +53,7 @@ int kvm_arm_init_sve(void);
- 
- int __attribute_const__ kvm_target_cpu(void);
- int kvm_reset_vcpu(struct kvm_vcpu *vcpu);
-+void kvm_arm_vcpu_destroy(struct kvm_vcpu *vcpu);
- void kvm_arch_vcpu_uninit(struct kvm_vcpu *vcpu);
- int kvm_arch_vm_ioctl_check_extension(struct kvm *kvm, long ext);
- void __extended_idmap_trampoline(phys_addr_t boot_pgd, phys_addr_t idmap_start);
-diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
-index f4a8ae918827..ff3512a0ca97 100644
---- a/arch/arm64/kvm/reset.c
-+++ b/arch/arm64/kvm/reset.c
-@@ -205,6 +205,11 @@ bool kvm_arm_vcpu_is_finalized(struct kvm_vcpu *vcpu)
+diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+index 2ed76584ebd9..5cd92c9fc050 100644
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -2932,6 +2932,11 @@ static void kvm_s390_vcpu_setup_model(struct kvm_vcpu *vcpu)
  }
  
- void kvm_arch_vcpu_uninit(struct kvm_vcpu *vcpu)
+ int kvm_arch_vcpu_setup(struct kvm_vcpu *vcpu)
 +{
-+
++	return 0;
 +}
 +
-+void kvm_arm_vcpu_destroy(struct kvm_vcpu *vcpu)
++static int kvm_s390_vcpu_setup(struct kvm_vcpu *vcpu)
  {
- 	kfree(vcpu->arch.sve_state);
- }
-diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
-index 1d87c194a6d3..f6c641136501 100644
---- a/virt/kvm/arm/arm.c
-+++ b/virt/kvm/arm/arm.c
-@@ -326,6 +326,8 @@ void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
- 	kvm_mmu_free_memory_caches(vcpu);
- 	kvm_timer_vcpu_terminate(vcpu);
- 	kvm_pmu_vcpu_destroy(vcpu);
-+
-+	kvm_arm_vcpu_destroy(vcpu);
- }
+ 	int rc = 0;
  
- int kvm_cpu_has_pending_timer(struct kvm_vcpu *vcpu)
+@@ -3070,8 +3075,14 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
+ 		 vcpu->arch.sie_block);
+ 	trace_kvm_s390_create_vcpu(id, vcpu, vcpu->arch.sie_block);
+ 
++	rc = kvm_s390_vcpu_setup(vcpu);
++	if (rc)
++		goto out_ucontrol_uninit;
+ 	return 0;
+ 
++out_ucontrol_uninit:
++	if (kvm_is_ucontrol(vcpu->kvm))
++		gmap_remove(vcpu->arch.gmap);
+ out_free_sie_block:
+ 	free_page((unsigned long)(vcpu->arch.sie_block));
+ 	return rc;
 -- 
 2.24.1
 
