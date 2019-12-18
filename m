@@ -2,188 +2,133 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9C9C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D70AAC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D0D7218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:37:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576712238;
-	bh=jIvRuYBcsCvQ3FlfNytLmshHGsax22p/7HTctybx81A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aK5Z7Y2eoEUrMLeJCWFPRvolNf/NMCqcdj3YdLm9oV1WJfUqzyXR38A7H97CGlIrA
-	 JrPKXHqMsOgUsV2KSSPsQyQGzO9x3CIxfWfHUY5vbGhmOAdO2EG2DuCCnNhbmAaL/p
-	 2TahAB7o2X+thqWI7NY9f4j4I3kdHeG+rjbw/1ls=
+	by mail.kernel.org (Postfix) with ESMTP id A7FB2218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:37:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OhupPePt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbfLRXhR (ORCPT
+        id S1726719AbfLRXhd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 18:37:17 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:36505 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbfLRXhR (ORCPT
+        Wed, 18 Dec 2019 18:37:33 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:55363 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726463AbfLRXhc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 18:37:17 -0500
-Received: by mail-ot1-f65.google.com with SMTP id w1so4607351otg.3;
-        Wed, 18 Dec 2019 15:37:16 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rVq3FctMUlxxbFCAv4Hq3F1IucA62kHuaSw0yCHlOq8=;
-        b=beH6OFUWr5JKlMtvSveZhc4RtA5nbTOiRLI19KLI8OXc7pE5AdYZK1D+eNZ3/LUV5c
-         nMLWAx+I7VSTSn4ycvSFbqCuTfP95CwiC2FZhd2i8EfYpIHSz+bhzW/tCJaec3qGvvsI
-         ++XTzSgYa5teSPCfd0Snf0wVBw2k2+S3a4VhWJMXgbzhsu1kiLUnxEP6N6EEpA29iess
-         OKPeJVpM2C4p9v0+CQBnY0WaM7ZcSSQcivKQllDFJbkQVbIvWYz6XAsZ2UCglkAGnM/l
-         ggWoikGUEVjfBRjIa+oyokyA+zZcQhKpU9bCxKjqwYDJrKGj5T+BxSm76t0OXeTYFlhG
-         mrzg==
-X-Gm-Message-State: APjAAAUEYegaIh3iDUR6LCxmvTU/isEeOkh2xZAGI3L+FhmfAhtArURa
-        aDWM2Sngm2SOb4Kdpz9GWA==
-X-Google-Smtp-Source: APXvYqyPh+4IInW14BHCfGHQzEnJR270O8hYZIX77r6+KeTYekhQCeI3drPFmDyVwEvselhJDCNYTg==
-X-Received: by 2002:a9d:2482:: with SMTP id z2mr5197001ota.279.1576712236059;
-        Wed, 18 Dec 2019 15:37:16 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c12sm1358241oic.27.2019.12.18.15.37.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 15:37:15 -0800 (PST)
-Date:   Wed, 18 Dec 2019 17:37:14 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rrichter@marvell.com>,
-        linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>, tsoni@codeaurora.org,
-        psodagud@codeaurora.org
-Subject: Re: [PATCH 1/2] dt-bindings: edac: Add DT bindings for Kryo EDAC
-Message-ID: <20191218233714.GA30302@bogus>
-References: <cover.1575529553.git.saiprakash.ranjan@codeaurora.org>
- <0101016ed57a3259-eee09e9e-e99a-40f1-ab1c-63e58a42615c-000000@us-west-2.amazonses.com>
+        Wed, 18 Dec 2019 18:37:32 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576712251; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=aOyF/9vjrq0zND57ZRP80ePOcz7ZOQqlqlcaCLPEKJg=; b=OhupPePtM0XEI8aPk2Ao9p6OqWi3D23U93p+EoVfRA6T1D7WZ/LHtMTzOhTDH5LaqnS00q6J
+ O1fYmLnrkEBYVJ0QmZBWL5yt0GyXVsWsZjQ9BD59yDuXGS2nPffcp4UhrRRG7V1tIAbzxwp0
+ Z7Arqu91/porkNRHcPYbOvh9EL4=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5dfab839.7f34256a3f10-smtp-out-n02;
+ Wed, 18 Dec 2019 23:37:29 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 726A6C447AA; Wed, 18 Dec 2019 23:37:29 +0000 (UTC)
+Received: from [10.46.161.159] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: asutoshd)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 016A9C4479C;
+        Wed, 18 Dec 2019 23:37:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 016A9C4479C
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
+Subject: Re: [PATCH v1 2/2] scsi: ufs: disable interrupt during clock-gating
+To:     Stanley Chu <stanley.chu@mediatek.com>
+Cc:     linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
+        avri.altman@wdc.com, alim.akhtar@samsung.com,
+        pedrom.sousa@synopsys.com, jejb@linux.ibm.com,
+        matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        beanhuo@micron.com, kuohong.wang@mediatek.com,
+        peter.wang@mediatek.com, chun-hung.wu@mediatek.com,
+        andy.teng@mediatek.com
+References: <1575721321-8071-1-git-send-email-stanley.chu@mediatek.com>
+ <1575721321-8071-3-git-send-email-stanley.chu@mediatek.com>
+ <a36d111e-ef7f-9f9b-6f6a-692a9980103a@codeaurora.org>
+ <1576641171.13056.16.camel@mtkswgap22>
+From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
+Message-ID: <7756630e-adf2-47e9-4815-ba2306a9dd16@codeaurora.org>
+Date:   Wed, 18 Dec 2019 15:37:26 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0101016ed57a3259-eee09e9e-e99a-40f1-ab1c-63e58a42615c-000000@us-west-2.amazonses.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1576641171.13056.16.camel@mtkswgap22>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 05, 2019 at 09:53:05AM +0000, Sai Prakash Ranjan wrote:
-> This adds DT bindings for Kryo EDAC implemented with RAS
-> extensions on KRYO{3,4}XX CPU cores for reporting of cache
-> errors.
+On 12/17/2019 7:52 PM, Stanley Chu wrote:
+> Hi Asutosh,
 > 
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> ---
->  .../bindings/edac/qcom-kryo-edac.yaml         | 67 +++++++++++++++++++
->  1 file changed, 67 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/edac/qcom-kryo-edac.yaml
+> On Tue, 2019-12-17 at 15:25 -0800, Asutosh Das (asd) wrote:
+>>>
+>>
+>> Hi,
+>> Does this save significant power? I see that gate/ungate of clocks
+>> happen far too frequently than suspend/resume.
+>>
+>> Have you considered how much latency this would add to the
+>> gating/ungating path?
+>>
+>> -asd
+>>
 > 
-> diff --git a/Documentation/devicetree/bindings/edac/qcom-kryo-edac.yaml b/Documentation/devicetree/bindings/edac/qcom-kryo-edac.yaml
-> new file mode 100644
-> index 000000000000..1a39429a73b4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/edac/qcom-kryo-edac.yaml
-> @@ -0,0 +1,67 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/edac/qcom-kryo-edac.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Kryo Error Detection and Correction(EDAC)
-> +
-> +maintainers:
-> +  - Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> +
-> +description: |
-> +  Kryo EDAC is defined to describe on-chip error detection and correction
-> +  for the Kryo CPU cores which implement RAS extensions. It will report
-> +  all Single Bit Errors and Double Bit Errors found in L1/L2 caches in
-> +  in two registers ERXSTATUS_EL1 and ERXMISC0_EL1. L3-SCU cache errors
-> +  are reported in ERR1STATUS and ERR1MISC0 registers.
-> +    ERXSTATUS_EL1 - Selected Error Record Primary Status Register, EL1
-> +    ERXMISC0_EL1 - Selected Error Record Miscellaneous Register 0, EL1
-> +    ERR1STATUS - Error Record Primary Status Register
-> +    ERR1MISC0 - Error Record Miscellaneous Register 0
-> +  Current implementation of Kryo ECC(Error Correcting Code) mechanism is
-> +  based on interrupts.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,kryo-edac
-> +
-> +  interrupts:
-> +    minItems: 1
-> +    maxItems: 4
-> +    items:
-> +      - description: l1-l2 cache faultirq interrupt
-> +      - description: l1-l2 cache errirq interrupt
-> +      - description: l3-scu cache errirq interrupt
-> +      - description: l3-scu cache faultirq interrupt
-> +
-> +  interrupt-names:
-> +    minItems: 1
-> +    maxItems: 4
-
-You are saying only these combinations are valid:
-
-l1-l2-faultirq
-
-l1-l2-faultirq
-l1-l2-errirq
-
-l1-l2-faultirq
-l1-l2-errirq
-l3-scu-errirq
-
-l1-l2-faultirq
-l1-l2-errirq
-l3-scu-errirq
-l3-scu-faultirq
-
-Is that your intent?
-
-> +    items:
-> +      - const: l1-l2-faultirq
-> +      - const: l1-l2-errirq
-> +      - const: l3-scu-errirq
-> +      - const: l3-scu-faultirq
-> +
-> +required:
-> +  - compatible
-> +  - interrupts
-> +  - interrupt-names
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    kryo_edac {
-> +      compatible = "qcom,kryo-edac";
-> +      interrupts = <GIC_PPI 6 IRQ_TYPE_LEVEL_HIGH>,
-> +                   <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>,
-> +                   <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>,
-> +                   <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-> +      interrupt-names = "l1-l2-faultirq",
-> +                        "l1-l2-errirq",
-> +                        "l3-scu-errirq",
-> +                        "l3-scu-faultirq";
-> +    };
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
+> Yes, we have measured 200 times clk-gating/clk-ungating and latency data
+> is showed as below,
 > 
+> For clk-gating with interrupt disabling toggled,
+> 
+> 	Average latency of each clk-gating: 55.117 us
+> 	Average latency of irq-disabling during clk-gating: 4.2 us
+> 
+> For clk-ungating with interrupt enabling toggled,
+> 	Average latency of each clk-ungating: 118.324 us
+> 	Average latency of irq-enabling during clk-ungating: 2.9 us
+> 
+> The evaluation here is based on below Can's patch therefore the
+> interrupt control (enable_irq/disable_irq) latency is much shorter than
+> before (request_irq/free_irq).
+> 
+> scsi: ufs: Do not free irq in suspend
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/scsi/ufs/ufshcd.c?id=8709c1f68536e256668812788af5b2bb027f49c3
+> 
+> BTW, the main purpose of this patch is aimed to protect ufshcd register
+> from accessing while host clocks are disabled to fix potential system
+> hang issue. The possible scenario is mentioned in commit message of
+> patch "scsi: ufs: disable irq before disabling clocks" in the same
+> series.
+> 
+> Thanks
+> Stanley
+> 
+
+Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+
+Thanks for the data.
+It'd be interesting to know more on the - misrouted interrupt recovery 
+feature though.
+
+-
+Thanks
+Asutosh
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+Linux Foundation Collaborative Project
