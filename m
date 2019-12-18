@@ -2,225 +2,191 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C63D1C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA8EC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DE232146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:44:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="qxnt133Q"
+	by mail.kernel.org (Postfix) with ESMTP id A6DB32146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:44:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727483AbfLRQol (ORCPT
+        id S1727598AbfLRQou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 11:44:41 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:45132 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727121AbfLRQok (ORCPT
+        Wed, 18 Dec 2019 11:44:50 -0500
+Received: from mout.kundenserver.de ([212.227.126.133]:35725 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727215AbfLRQos (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 11:44:40 -0500
-Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 0896F20B4798;
-        Wed, 18 Dec 2019 08:44:40 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0896F20B4798
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1576687480;
-        bh=26/PqYgoXKGyL3G1FiobmwvKJvqO4GWGXSQQ44RkqkY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qxnt133QZObIjJBWdsEPf9UNgrphzL8WUz3MPAnTFnJXNXbTzeAWB+8QRuYaNV6I1
-         XuU1trlz0jvjyfIYWq80CXph/u89KuLFKLXEgtdljvQiCmWpj7kYJaG+ePybgFQoSL
-         W1mhr92SJnpKLvGRc9Odz2DTBZVQBbWKp++IXglk=
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-To:     zohar@linux.ibm.com, James.Bottomley@HansenPartnership.com,
-        linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
-        sashal@kernel.org, jamorris@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-Subject: [PATCH v5 1/2] IMA: Define workqueue for early boot "key" measurements
-Date:   Wed, 18 Dec 2019 08:44:33 -0800
-Message-Id: <20191218164434.2877-2-nramas@linux.microsoft.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191218164434.2877-1-nramas@linux.microsoft.com>
-References: <20191218164434.2877-1-nramas@linux.microsoft.com>
+        Wed, 18 Dec 2019 11:44:48 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MGgRW-1iTsus1Nac-00Dsp6; Wed, 18 Dec 2019 17:44:20 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     "Darrick J . Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org
+Cc:     y2038@lists.linaro.org, Arnd Bergmann <arnd@arndb.de>,
+        Brian Foster <bfoster@redhat.com>,
+        Carlos Maiolino <cmaiolino@redhat.com>,
+        Pavel Reichl <preichl@redhat.com>,
+        Eric Sandeen <sandeen@sandeen.net>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Dave Chinner <dchinner@redhat.com>,
+        Allison Collins <allison.henderson@oracle.com>,
+        Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org
+Subject: [PATCH 3/3] xfs: quota: move to time64_t interfaces
+Date:   Wed, 18 Dec 2019 17:44:05 +0100
+Message-Id: <20191218164418.463467-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20191218163954.296726-1-arnd@arndb.de>
+References: <20191218163954.296726-1-arnd@arndb.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:FUskByiXnCTH70Q8n4XCuCHT4CPOpZnVwrXf6WYJO0e75Nr0PkI
+ /3qYAc9i1Gb0z3DV7SD6P0CowGHqfFUAgc1InUWAjgphQascqxFczuBbwL/GN7Z76TUNqnK
+ yv7bOtCBDc+pBvCXVUXOZ3Ig3NsqRZn6fRK7lkW3QFrj4Wuf8Xf2gp1UrycHD7XJ5MQsQ8C
+ StzNKoNY4xo73FADLxmUA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:CJHPKKZvaj8=:951edUD5nPzOwVPTUhUzTo
+ Na8wsKech0H1SPSyDKfyESXK+qPEGA6OnlRj0aHs5dOX3SoOLrUqx8HzJQ6aglzju7+HIncJT
+ yBRJgnGP7JRUgHk2tksC0ucChGYjSUJqsPkbFrDlXo18m5COvHH9u6mVbSBVCGpgjLHGZyyDE
+ rLcVEiz+OWpFFSFXQdTlNYAm4gFYn2Mj0fvk/s/82K7He1tfA+JlL4WJNq4Vpnzy+ZcYDZpCv
+ 9eSZ+gmFRGhWXeTc+6RUVeJ5cDSk0K2DPSb8KSnCW5GvqSucWZWSz6CDKEOPtsVI89k8AW8h1
+ Hy2WhVUpuaKGbWcqUs3OAmBtHqNnSOP5BMsE9u4E553ADYtzFgzRnQM4MCWcR/L+R59lgStGg
+ JI0F0C29gdeTnrGRKWpaj7Gv9tW5LeQPGRSlqOovqnJbSOSRV6ZwAs/cQSmn4E9r/78ZYOrff
+ Yu7ooH71Xb18C0F9KF/kJrZPVeapR4OnXCVRzZgdDoFeynb62+5TpICCNl+ISo/A6S5so2vs7
+ WKXoR7fWfHUlPqNryVYikAVwLrIRNDKZ44vVwuAjDCfIpZZye+rw+0wjMrnI93MpAOmoy2P+/
+ V0dH7JFrIWu6rVPhdMDLrKV/UasnYN7sLDmdw+Vexi7CTbS5s9gRZpeazWHLC6RlYcrmdiv0o
+ 1zAHJrJqaVlGfqldsCksKwh0i6OnEaoBfWSnZeP1OCljlz3gbm2Cce2PIsXD1uSFkeq3beX7R
+ /zx/jI4DDP1d4MUr/kiojBi0h4qOzEE+psQzHOLYVBypfxwAkD+pVLiqehJ/gvmM44bhzkObA
+ QcyKcWjd71X3+kXy7nZYqn2DsoSfhSD93OWyCbRmau7YIpcm4+8h7VKgty1JAxfMFAa1778bp
+ 1gxy1cBGfoEw15O0qs9w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Measuring keys requires a custom IMA policy to be loaded.
-Keys created or updated before a custom IMA policy is loaded should
-be queued and the keys should be processed after a custom policy
-is loaded.
+As a preparation for removing the 32-bit time_t type and
+all associated interfaces, change xfs to use time64_t and
+ktime_get_real_seconds() for the quota housekeeping.
 
-This patch defines workqueue for queuing keys when a custom IMA policy
-has not yet been loaded.
+This avoids one difference between 32-bit and 64-bit kernels,
+raising the theoretical limit for the quota grace period
+to year 2106 on 32-bit instead of year 2038.
 
-A flag namely ima_process_keys is used to check if the key should be
-queued or should be processed immediately.
+Note that common user space tools using the XFS quotactl
+interface instead of the generic one still use the y2038
+dates.
 
-Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+To fix quotas properly, both the on-disk format and user
+space still need to be changed.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- security/integrity/ima/ima.h                 |  15 +++
- security/integrity/ima/ima_asymmetric_keys.c | 115 +++++++++++++++++++
- 2 files changed, 130 insertions(+)
+ fs/xfs/xfs_dquot.c       | 6 +++---
+ fs/xfs/xfs_qm.h          | 6 +++---
+ fs/xfs/xfs_quotaops.c    | 6 +++---
+ fs/xfs/xfs_trans_dquot.c | 8 +++++---
+ 4 files changed, 14 insertions(+), 12 deletions(-)
 
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index f06238e41a7c..97f8a4078483 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -205,6 +205,21 @@ extern const char *const func_tokens[];
- 
- struct modsig;
- 
-+#ifdef CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE
-+/*
-+ * To track keys that need to be measured.
-+ */
-+struct ima_key_entry {
-+	struct list_head list;
-+	void *payload;
-+	size_t payload_len;
-+	char *keyring_name;
-+};
-+void ima_process_queued_keys(void);
-+#else
-+static inline void ima_process_queued_keys(void) {}
-+#endif /* CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE */
-+
- /* LIM API function definitions */
- int ima_get_action(struct inode *inode, const struct cred *cred, u32 secid,
- 		   int mask, enum ima_hooks func, int *pcr,
-diff --git a/security/integrity/ima/ima_asymmetric_keys.c b/security/integrity/ima/ima_asymmetric_keys.c
-index fea2e7dd3b09..d520a67180d8 100644
---- a/security/integrity/ima/ima_asymmetric_keys.c
-+++ b/security/integrity/ima/ima_asymmetric_keys.c
-@@ -14,6 +14,121 @@
- #include <keys/asymmetric-type.h>
- #include "ima.h"
- 
-+/*
-+ * Flag to indicate whether a key can be processed
-+ * right away or should be queued for processing later.
-+ */
-+static bool ima_process_keys;
-+
-+/*
-+ * To synchronize access to the list of keys that need to be measured
-+ */
-+static DEFINE_MUTEX(ima_keys_mutex);
-+static LIST_HEAD(ima_keys);
-+
-+static void ima_free_key_entry(struct ima_key_entry *entry)
-+{
-+	if (entry) {
-+		kfree(entry->payload);
-+		kfree(entry->keyring_name);
-+		kfree(entry);
-+	}
-+}
-+
-+static struct ima_key_entry *ima_alloc_key_entry(
-+	struct key *keyring,
-+	const void *payload, size_t payload_len)
-+{
-+	int rc = 0;
-+	struct ima_key_entry *entry;
-+
-+	entry = kzalloc(sizeof(*entry), GFP_KERNEL);
-+	if (entry) {
-+		entry->payload = kmemdup(payload, payload_len, GFP_KERNEL);
-+		entry->keyring_name = kstrdup(keyring->description,
-+					      GFP_KERNEL);
-+		entry->payload_len = payload_len;
-+	}
-+
-+	if ((entry == NULL) || (entry->payload == NULL) ||
-+	    (entry->keyring_name == NULL)) {
-+		rc = -ENOMEM;
-+		goto out;
-+	}
-+
-+	INIT_LIST_HEAD(&entry->list);
-+
-+out:
-+	if (rc) {
-+		ima_free_key_entry(entry);
-+		entry = NULL;
-+	}
-+
-+	return entry;
-+}
-+
-+bool ima_queue_key(struct key *keyring, const void *payload,
-+		   size_t payload_len)
-+{
-+	bool queued = false;
-+	struct ima_key_entry *entry;
-+
-+	entry = ima_alloc_key_entry(keyring, payload, payload_len);
-+	if (!entry)
-+		return false;
-+
-+	mutex_lock(&ima_keys_mutex);
-+	if (!ima_process_keys) {
-+		list_add_tail(&entry->list, &ima_keys);
-+		queued = true;
-+	}
-+	mutex_unlock(&ima_keys_mutex);
-+
-+	if (!queued)
-+		ima_free_key_entry(entry);
-+
-+	return queued;
-+}
-+
-+/*
-+ * ima_process_queued_keys() - process keys queued for measurement
-+ *
-+ * This function sets ima_process_keys to true and processes queued keys.
-+ * From here on keys will be processed right away (not queued).
-+ */
-+void ima_process_queued_keys(void)
-+{
-+	struct ima_key_entry *entry, *tmp;
-+	bool process = false;
-+
-+	if (ima_process_keys)
-+		return;
-+
-+	/*
-+	 * Since ima_process_keys is set to true, any new key will be
-+	 * processed immediately and not be queued to ima_keys list.
-+	 * First one setting the ima_process_keys flag to true will
-+	 * process the queued keys.
-+	 */
-+	mutex_lock(&ima_keys_mutex);
-+	if (!ima_process_keys) {
-+		ima_process_keys = true;
-+		process = true;
-+	}
-+	mutex_unlock(&ima_keys_mutex);
-+
-+	if (!process)
-+		return;
-+
-+	list_for_each_entry_safe(entry, tmp, &ima_keys, list) {
-+		process_buffer_measurement(entry->payload, entry->payload_len,
-+					   entry->keyring_name, KEY_CHECK, 0,
-+					   entry->keyring_name);
-+		list_del(&entry->list);
-+		ima_free_key_entry(entry);
-+	}
-+}
-+
- /**
-  * ima_post_key_create_or_update - measure asymmetric keys
-  * @keyring: keyring to which the key is linked to
+diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
+index 2bff21ca9d78..9cfd3209f52b 100644
+--- a/fs/xfs/xfs_dquot.c
++++ b/fs/xfs/xfs_dquot.c
+@@ -137,7 +137,7 @@ xfs_qm_adjust_dqtimers(
+ 		    (d->d_blk_hardlimit &&
+ 		     (be64_to_cpu(d->d_bcount) >
+ 		      be64_to_cpu(d->d_blk_hardlimit)))) {
+-			d->d_btimer = cpu_to_be32(get_seconds() +
++			d->d_btimer = cpu_to_be32(ktime_get_real_seconds() +
+ 					mp->m_quotainfo->qi_btimelimit);
+ 		} else {
+ 			d->d_bwarns = 0;
+@@ -160,7 +160,7 @@ xfs_qm_adjust_dqtimers(
+ 		    (d->d_ino_hardlimit &&
+ 		     (be64_to_cpu(d->d_icount) >
+ 		      be64_to_cpu(d->d_ino_hardlimit)))) {
+-			d->d_itimer = cpu_to_be32(get_seconds() +
++			d->d_itimer = cpu_to_be32(ktime_get_real_seconds() +
+ 					mp->m_quotainfo->qi_itimelimit);
+ 		} else {
+ 			d->d_iwarns = 0;
+@@ -183,7 +183,7 @@ xfs_qm_adjust_dqtimers(
+ 		    (d->d_rtb_hardlimit &&
+ 		     (be64_to_cpu(d->d_rtbcount) >
+ 		      be64_to_cpu(d->d_rtb_hardlimit)))) {
+-			d->d_rtbtimer = cpu_to_be32(get_seconds() +
++			d->d_rtbtimer = cpu_to_be32(ktime_get_real_seconds() +
+ 					mp->m_quotainfo->qi_rtbtimelimit);
+ 		} else {
+ 			d->d_rtbwarns = 0;
+diff --git a/fs/xfs/xfs_qm.h b/fs/xfs/xfs_qm.h
+index 7823af39008b..4e57edca8bce 100644
+--- a/fs/xfs/xfs_qm.h
++++ b/fs/xfs/xfs_qm.h
+@@ -64,9 +64,9 @@ struct xfs_quotainfo {
+ 	struct xfs_inode	*qi_pquotaip;	/* project quota inode */
+ 	struct list_lru	 qi_lru;
+ 	int		 qi_dquots;
+-	time_t		 qi_btimelimit;	 /* limit for blks timer */
+-	time_t		 qi_itimelimit;	 /* limit for inodes timer */
+-	time_t		 qi_rtbtimelimit;/* limit for rt blks timer */
++	time64_t	 qi_btimelimit;	 /* limit for blks timer */
++	time64_t	 qi_itimelimit;	 /* limit for inodes timer */
++	time64_t	 qi_rtbtimelimit;/* limit for rt blks timer */
+ 	xfs_qwarncnt_t	 qi_bwarnlimit;	 /* limit for blks warnings */
+ 	xfs_qwarncnt_t	 qi_iwarnlimit;	 /* limit for inodes warnings */
+ 	xfs_qwarncnt_t	 qi_rtbwarnlimit;/* limit for rt blks warnings */
+diff --git a/fs/xfs/xfs_quotaops.c b/fs/xfs/xfs_quotaops.c
+index c7de17deeae6..38669e827206 100644
+--- a/fs/xfs/xfs_quotaops.c
++++ b/fs/xfs/xfs_quotaops.c
+@@ -37,9 +37,9 @@ xfs_qm_fill_state(
+ 	tstate->flags |= QCI_SYSFILE;
+ 	tstate->blocks = ip->i_d.di_nblocks;
+ 	tstate->nextents = ip->i_d.di_nextents;
+-	tstate->spc_timelimit = q->qi_btimelimit;
+-	tstate->ino_timelimit = q->qi_itimelimit;
+-	tstate->rt_spc_timelimit = q->qi_rtbtimelimit;
++	tstate->spc_timelimit = (u32)q->qi_btimelimit;
++	tstate->ino_timelimit = (u32)q->qi_itimelimit;
++	tstate->rt_spc_timelimit = (u32)q->qi_rtbtimelimit;
+ 	tstate->spc_warnlimit = q->qi_bwarnlimit;
+ 	tstate->ino_warnlimit = q->qi_iwarnlimit;
+ 	tstate->rt_spc_warnlimit = q->qi_rtbwarnlimit;
+diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
+index a6fe2d8dc40f..d1b9869bc5fa 100644
+--- a/fs/xfs/xfs_trans_dquot.c
++++ b/fs/xfs/xfs_trans_dquot.c
+@@ -580,7 +580,7 @@ xfs_trans_dqresv(
+ {
+ 	xfs_qcnt_t		hardlimit;
+ 	xfs_qcnt_t		softlimit;
+-	time_t			timer;
++	time64_t		timer;
+ 	xfs_qwarncnt_t		warns;
+ 	xfs_qwarncnt_t		warnlimit;
+ 	xfs_qcnt_t		total_count;
+@@ -635,7 +635,8 @@ xfs_trans_dqresv(
+ 				goto error_return;
+ 			}
+ 			if (softlimit && total_count > softlimit) {
+-				if ((timer != 0 && get_seconds() > timer) ||
++				if ((timer != 0 &&
++				     ktime_get_real_seconds() > timer) ||
+ 				    (warns != 0 && warns >= warnlimit)) {
+ 					xfs_quota_warn(mp, dqp,
+ 						       QUOTA_NL_BSOFTLONGWARN);
+@@ -662,7 +663,8 @@ xfs_trans_dqresv(
+ 				goto error_return;
+ 			}
+ 			if (softlimit && total_count > softlimit) {
+-				if  ((timer != 0 && get_seconds() > timer) ||
++				if  ((timer != 0 &&
++				      ktime_get_real_seconds() > timer) ||
+ 				     (warns != 0 && warns >= warnlimit)) {
+ 					xfs_quota_warn(mp, dqp,
+ 						       QUOTA_NL_ISOFTLONGWARN);
 -- 
-2.17.1
+2.20.0
 
