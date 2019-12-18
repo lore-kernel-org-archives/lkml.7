@@ -2,95 +2,101 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC91C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD2DC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:49:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D1A3227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75D4020716
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:49:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbfLRJtM (ORCPT
+        id S1726847AbfLRJtm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 04:49:12 -0500
-Received: from sauhun.de ([88.99.104.3]:35354 "EHLO pokefinder.org"
+        Wed, 18 Dec 2019 04:49:42 -0500
+Received: from mail.bugwerft.de ([46.23.86.59]:46468 "EHLO mail.bugwerft.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726526AbfLRJtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 04:49:12 -0500
-Received: from localhost (p54B33260.dip0.t-ipconnect.de [84.179.50.96])
-        by pokefinder.org (Postfix) with ESMTPSA id BFD992C2D9A;
-        Wed, 18 Dec 2019 10:49:09 +0100 (CET)
-Date:   Wed, 18 Dec 2019 10:49:09 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Yangtao Li <tiny.windzz@gmail.com>
-Cc:     manuel.lauss@gmail.com, ulf.hansson@linaro.org,
-        khilman@baylibre.com, chaotian.jing@mediatek.com,
-        matthias.bgg@gmail.com, nico@fluxnic.net, adrian.hunter@intel.com,
-        agross@kernel.org, bjorn.andersson@linaro.org, ben-linux@fluff.org,
-        jh80.chung@samsung.com, vireshk@kernel.org, mripard@kernel.org,
-        wens@csie.org, wsa+renesas@sang-engineering.com,
-        gregkh@linuxfoundation.org, kstewart@linuxfoundation.org,
-        yamada.masahiro@socionext.com, tglx@linutronix.de,
-        allison@lohutok.net, yoshihiro.shimoda.uh@renesas.com,
-        geert+renesas@glider.be, linus.walleij@linaro.org,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 06/13] mmc: sh_mmcif: convert to
- devm_platform_ioremap_resource
-Message-ID: <20191218094909.GB1054@ninjato>
-References: <20191215175120.3290-1-tiny.windzz@gmail.com>
- <20191215175120.3290-6-tiny.windzz@gmail.com>
+        id S1726360AbfLRJtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 04:49:41 -0500
+Received: from [10.10.222.226] (unknown [194.162.236.226])
+        by mail.bugwerft.de (Postfix) with ESMTPSA id 056A6281DF4;
+        Wed, 18 Dec 2019 09:43:13 +0000 (UTC)
+Subject: Re: [alsa-devel] [PATCH 10/10] ASoC: Add codec component for AD242x
+ nodes
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Cc:     lars@metafoo.de, sboyd@kernel.org, mturquette@baylibre.com,
+        robh+dt@kernel.org, broonie@kernel.org, pascal.huerst@gmail.com,
+        lee.jones@linaro.org
+References: <20191209183511.3576038-1-daniel@zonque.org>
+ <20191209183511.3576038-12-daniel@zonque.org>
+ <0565e5cd-9a6e-db65-0632-0bc1aa1d79db@linux.intel.com>
+From:   Daniel Mack <daniel@zonque.org>
+Message-ID: <35e7e6e7-7c70-785c-bdf3-79089134699e@zonque.org>
+Date:   Wed, 18 Dec 2019 10:49:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rS8CxjVDS/+yyDmU"
-Content-Disposition: inline
-In-Reply-To: <20191215175120.3290-6-tiny.windzz@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <0565e5cd-9a6e-db65-0632-0bc1aa1d79db@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---rS8CxjVDS/+yyDmU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 12/17/19 8:28 PM, Pierre-Louis Bossart wrote:
+> On 12/9/19 12:35 PM, Daniel Mack wrote:
 
-On Sun, Dec 15, 2019 at 05:51:13PM +0000, Yangtao Li wrote:
-> Use devm_platform_ioremap_resource() to simplify code.
->=20
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+>> +    if (!ad242x_node_is_master(priv->node) &&
+>> +       ((format & SND_SOC_DAIFMT_MASTER_MASK) !=
+>> SND_SOC_DAIFMT_CBM_CFM)) {
+>> +        dev_err(component->dev, "slave node must be clock master\n");
+>> +        return -EINVAL;
+>> +    }
+> 
+> It was my understanding that the master node provides the clock to the
+> bus, so not sure how it could be a clock slave, and conversely how a
+> slave node could provide a clock to the bus?
 
-Tested on a Lager board (R-Car H2), MMCIF gets recognized and the eMMC
-is detected.
+The slave nodes receive the A2B clock from the master node and then
+produce digital audio output that is sent to other components such as
+codecs. Hence, in ASoC terms, they are the clock master.
 
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Likewise, as the master node is receiving its clock from other
+components, it has to be a clock slave in the audio network.
+
+Does that make sense?
+
+>> +    switch (params_format(params)) {
+>> +    case SNDRV_PCM_FORMAT_S16_LE:
+>> +        if (priv->node->tdm_slot_size != 16)
+>> +            return -EINVAL;
+>> +        break;
+>> +    case SNDRV_PCM_FORMAT_S32_LE:
+>> +        if (priv->node->tdm_slot_size != 32)
+>> +            return -EINVAL;
+>> +        break;
+>> +    default:
+>> +        return -EINVAL;
+>> +    }
+> 
+> how does this work for PDM data?
+> 
+> is the PDM data packed into a regular TDM slot?
+
+Yes. But I admit this needs some more testing. We're still working on
+the hardware that uses this. I'll revisit this.
+
+And I'll also add a lot more comments all over the place, as also
+requested by Lee.
 
 
---rS8CxjVDS/+yyDmU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl359hQACgkQFA3kzBSg
-KbaiBQ/+JDGkJA7UaNpOTGoVuiePH3IUpTMrJxM1MmEK8YzOLg2VtaawBlH85BhM
-Ak/0IRYbspIV/cTS9KHqGuVTGzy7CBUZk0YzF+gVRKtzNc5YZarfxzJgcwdFprzw
-MARgKLO3726eNMwbR4F9qguUj9bJkwC3ANzmp6/qxlQr1R+LhXOGfFMo8I3nZVIR
-aVT4n9eYo/eNZhEZJIMJ+7BAW3v0rIXbBxHaJ2iCimRdFiOt5UnHHI+4NdRk2vQo
-HKqrKedwVBZ6xj+Ufmu1jaRaUoD9hdFUIshiiNZ5dKqEf5OTUyWsXKqUynXCZ0wi
-Dgjf6WRASYSG0CjGhMvyMS8LfWmWOy5u3jcTLvKDQeMhmGePZMchbQ4JlauUy+Vg
-t7uETcZRJzwhHZvGsv4oThYe2ucZsPWSt+rGrvabPY93cfxm+PZhcSAy6bYf08U3
-UjO3rGBaw2Ne563bPvPAduYx3gZ1hyF+mLk+SXeN7mnOdn0N/HK4BHmTeiS3RsuT
-4Y5QmLH1ytXo/o3yy8BRUzb+gBoOqoYoaspnz44rYeo03iQyzpssJ3+DInP/Rb3o
-Jz87kXD5TunphiWkHSSGeAcE5DMy/PJvz9m2VbrnDVwJkta7IZR57ypXXEhXWrnk
-gqke2OekVI1rCUiL8w6bo3jHVGbKM4hCczuiOFKwbbRNKtbADtc=
-=Qzgh
------END PGP SIGNATURE-----
-
---rS8CxjVDS/+yyDmU--
+Thanks,
+Daniel
