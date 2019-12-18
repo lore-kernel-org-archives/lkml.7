@@ -2,479 +2,374 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72719C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B75BBC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BA40227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:48:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81F4A21582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:50:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="X82LBPWz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="piuwGUcw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbfLRKsg (ORCPT
+        id S1726752AbfLRKuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 05:48:36 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:55853 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726141AbfLRKsf (ORCPT
+        Wed, 18 Dec 2019 05:50:15 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:35686 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726674AbfLRKuP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 05:48:35 -0500
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20191218104832euoutp011c8fa9526ead54ffdd9bbd22eceb389f~hcXnetQB12478424784euoutp010
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 10:48:32 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20191218104832euoutp011c8fa9526ead54ffdd9bbd22eceb389f~hcXnetQB12478424784euoutp010
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1576666112;
-        bh=V23I87IP9W3FOEDeKEQDrstnF+dxDxFw8ePbIb+Djlk=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=X82LBPWzdebiwERxx9mmKyjHfCldftL7mUKic3lLALhOKBBUxLhArpLeRhkHvagZ6
-         yeajfmKfLrDKJKjAY+nrm8wHOEAnzlP7z0mtFEelItAKP9yLm+fOV22IozCvJngdzN
-         NsPBmzfbl+wYK72fmcpzBNBR0JIXmPhaLO61pzZ0=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20191218104832eucas1p1b43e0be03190e68bb1a65d416ecea640~hcXnGqwoO3274832748eucas1p1Y;
-        Wed, 18 Dec 2019 10:48:32 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 56.D9.60679.0040AFD5; Wed, 18
-        Dec 2019 10:48:32 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191218104831eucas1p2fdf3fad04bf0604068e780a234f8cb38~hcXmqyPYX1525415254eucas1p2Q;
-        Wed, 18 Dec 2019 10:48:31 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191218104831eusmtrp16e9db9ffda73d6f83066cd33e3bf4665~hcXmp845R1078710787eusmtrp1b;
-        Wed, 18 Dec 2019 10:48:31 +0000 (GMT)
-X-AuditID: cbfec7f4-0e5ff7000001ed07-03-5dfa0400d452
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id CB.A1.07950.FF30AFD5; Wed, 18
-        Dec 2019 10:48:31 +0000 (GMT)
-Received: from AMDC3555 (unknown [106.120.51.67]) by eusmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20191218104830eusmtip12a2a8a41bee3bfe0c56cec3c6bc2f016~hcXlt1aMS0087600876eusmtip1r;
-        Wed, 18 Dec 2019 10:48:30 +0000 (GMT)
-Message-ID: <c3c161af17023a90e0fd7a0f925dbdad8b928ff4.camel@samsung.com>
-Subject: Re: [RFC PATCH v2 09/11] devfreq: exynos-bus: Add interconnect
- functionality to exynos-bus
-From:   Artur =?UTF-8?Q?=C5=9Awigo=C5=84?= <a.swigon@samsung.com>
-To:     Chanwoo Choi <chanwoo@kernel.org>
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>, inki.dae@samsung.com,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        georgi.djakov@linaro.org,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 18 Dec 2019 11:48:30 +0100
-In-Reply-To: <CAGTfZH1wVKBQAantrpqPP7+penwxeJud=gjH=5vVmKbzTGE=cQ@mail.gmail.com>
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRju27nsbDQ5bpYvJpWLfhTlpdJOVJZRcCgCg/4USZ3ypJLXnbzk
-        jzKtsHnXTFtaEaZLE3VNm0MjdSnkHS+ZGhKRkmlpXsiVkdtR7N/zPc/7PM/7wkdhym7ChQoJ
-        v8prwrlQNSnHa5oXOnauwa0BnpbbKqYqv4JgsgZ6ceb97BjBPLZ0EEzv3A+Syas3kEz2SCbO
-        dHZWShn9x2mCMXzuJ5gecwHJzKRZEJPf+VrClFs+Spmhm3qSyc/5Sh6mWUPpXZId7q8j2ZGU
-        Fgn7sugGW/XdJGHTjaWInTFs9JeelR8I5ENDYniNh+8FefBEahMReT8grnKqjkxA5X5aJKOA
-        3gONXVVSLZJTSlqP4Fv1PCE+ZhF0pmmXlRkE1hIzuWLJmJpGNqykSxB8MF0Xh0YR5NYX2ocU
-        NAsJ8+MSG1bRPBSUv8JsmKQPQfvQvJ13ordC5c9mex1GZxGgr/lrT8WXhGnzJzuW0adgru+X
-        VGzeAZPv0nEtopYKHGHRpLLRGL0JkqofYrYcoBekMJNilNhmgD4Ko+0y0aqC8RbjcowrtOak
-        4iIW4EvtCCF6ExAYii2YKOyHppZuwpaD0dugwuwh0n7QljiIi/EOMDDpKK7gANk1eZhIKyD5
-        jlKEajA/cBCNAIll/cvZLBiTCvBM5KZbPUX33ym61dYnCCtFzny0EBbEC7vC+Vh3gQsTosOD
-        3C9FhBnQ0kdr/dsya0LmPxcbEU0h9VqF55qFACXBxQjXwhoRUJjaSTGUvEQpArlr8bwm4rwm
-        OpQXGtEGClc7K3Y//RqgpIO4q/wVno/kNSuqhJK5JCBdoiY0F1QTLhPP4xu8Dlq7tMRIideN
-        ihCfEO7RXFnUaPU5t6hhU/6JIznDPlihVXZscXiB5IZUsf5b1uteHL+V+sb0NrbPqbL2jKFo
-        82/vxbh1rhti2ArBmePGjHH7LjcU97T5WovvtBt7pzLkz4pOd/d43PPeO9irP+mXlFqjxoVg
-        zms7phG4f3zIkxhkAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrFIsWRmVeSWpSXmKPExsVy+t/xu7r/mX/FGiw5ZmCxccZ6VouJN66w
-        WFz/8pzVYv6Rc6wWV76+Z7OYvncTm8Wk+xNYLM6f38BuseLuR1aLTY+vsVpc3jWHzeJz7xFG
-        ixnn9zFZrD1yl93iduMKNosZk1+yOQh4bFrVyeZx59oeNo/73ceZPDYvqffY+G4Hk0ffllWM
-        Hp83yQWwR+nZFOWXlqQqZOQXl9gqRRtaGOkZWlroGZlY6hkam8daGZkq6dvZpKTmZJalFunb
-        JehlvOk5zFowLbZiw4c9bA2Max27GDk5JARMJPo/fGTsYuTiEBJYyiixZeVBNoiEhMTH9TdY
-        IWxhiT/Xutggip4wSizfNp0RJMEr4CHR8O0VE4gtLJAqMWftdmYQm03AXuLs7W9gcREBVYkN
-        n46xgjQzC0xklTi8/xHYBhagxMddD8EGcQoESny9+oMdxBYS+MMkMWmNIIjNLKAp0br9NzvE
-        FToSb0/1sXQxcgAtFpT4u0MYokReonnrbOYJjIKzkHTMQqiahaRqASPzKkaR1NLi3PTcYiO9
-        4sTc4tK8dL3k/NxNjMB43Xbs55YdjF3vgg8xCnAwKvHw3vj7I1aINbGsuDL3EKMEB7OSCO/t
-        jp+xQrwpiZVVqUX58UWlOanFhxhNgd6ZyCwlmpwPTCV5JfGGpobmFpaG5sbmxmYWSuK8HQIH
-        Y4QE0hNLUrNTUwtSi2D6mDg4pRoYN/7ut11/blPi3MP2nZZM6R1M5XacBxq05T9JSv6dX6O7
-        a6601A+byGcdvVe8O1Ol7sk+VLqSELThTFvod7eMex1zluqvaGL3fbVf69S+j1kpyZ9PRyy/
-        elTObpPktp2WM+bwn81q2nh62oQ/sxZEb/0kGnb+55+zARu3yyYv1Swqzy5PNT+VrcRSnJFo
-        qMVcVJwIANH1SwDtAgAA
-X-CMS-MailID: 20191218104831eucas1p2fdf3fad04bf0604068e780a234f8cb38
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190919142329eucas1p2e53992eab9ec6b404f716f955b3c228e
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190919142329eucas1p2e53992eab9ec6b404f716f955b3c228e
-References: <20190919142236.4071-1-a.swigon@samsung.com>
-        <CGME20190919142329eucas1p2e53992eab9ec6b404f716f955b3c228e@eucas1p2.samsung.com>
-        <20190919142236.4071-10-a.swigon@samsung.com>
-        <35053bad-3f08-190a-0ffa-9aacd16da272@samsung.com>
-        <95ac6056bc6c790b1de7e975f44faa320fd9876f.camel@samsung.com>
-        <CAGTfZH1wVKBQAantrpqPP7+penwxeJud=gjH=5vVmKbzTGE=cQ@mail.gmail.com>
+        Wed, 18 Dec 2019 05:50:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=gl2YWU6oIrYSQOsjiLJa7c1hRrKrWb24T2D+xEGxKqo=; b=piuwGUcwoPfhIIy2ROdCk1XcN
+        m6N+ERda6x0EEe9ejtY/tLfrsA1taFdxo14DW0uNKYpxF9ASI6cFg4DeJNPbCbUrOhAL4wO+j5zME
+        ibHfMFAKXZ5lIdhbCVyaJDanbm4u1nmYEJMn7eH8F5RBKWV2qZ/uIT+Vdu9d7xEjNkvwxIw4iHX6L
+        R0BCZsj0g2ZbMAC021ZeVi+an4bVGAnXQt0eWGJA63j+YPS9OWF96k1Y3hqc7iVEFM0vtNkkFKgzx
+        /qGPOe6JaxYHgRJ/HDlvesThD2lNBW+sURytUmZcWxistrlRiQPr2kaY7/6DtmQDtkHGyoZzIJJe1
+        FW4mnQ4xw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ihWtl-00023K-Gy; Wed, 18 Dec 2019 10:49:45 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0F579300F29;
+        Wed, 18 Dec 2019 11:48:18 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E563129DFB922; Wed, 18 Dec 2019 11:49:41 +0100 (CET)
+Date:   Wed, 18 Dec 2019 11:49:41 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Jens Axboe <axboe@kernel.dk>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        Long Li <longli@microsoft.com>, Ingo Molnar <mingo@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        John Garry <john.garry@huawei.com>,
+        Hannes Reinecke <hare@suse.com>
+Subject: Re: [RFC PATCH 2/3] softirq: implement interrupt flood detection
+Message-ID: <20191218104941.GR2844@hirez.programming.kicks-ass.net>
+References: <20191218071942.22336-1-ming.lei@redhat.com>
+ <20191218071942.22336-3-ming.lei@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191218071942.22336-3-ming.lei@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-12-18 at 19:39 +0900, Chanwoo Choi wrote:
-> Hi,
-> 
-> 2019년 12월 18일 (수) 오후 7:19, Artur Świgoń <a.swigon@samsung.com>님이 작성:
-> > 
-> > Hi,
-> > 
-> > Thank you for the review.
-> > 
-> > On Mon, 2019-12-16 at 09:44 +0900, Chanwoo Choi wrote:
-> > > Hi,
-> > > 
-> > > On 9/19/19 11:22 PM, Artur Świgoń wrote:
-> > > > From: Artur Świgoń <a.swigon@partner.samsung.com>
-> > > > 
-> > > > This patch adds interconnect functionality to the exynos-bus devfreq
-> > > > driver.
-> > > > 
-> > > > The SoC topology is a graph (or, more specifically, a tree) and most of
-> > > > its edges are taken from the devfreq parent-child hierarchy (cf.
-> > > > Documentation/devicetree/bindings/devfreq/exynos-bus.txt). Due to
-> > > > unspecified relative probing order, -EPROBE_DEFER may be propagated to
-> > > > guarantee that a child is probed before its parent.
-> > > > 
-> > > > Each bus is now an interconnect provider and an interconnect node as well
-> > > > (cf. Documentation/interconnect/interconnect.rst), i.e. every bus registers
-> > > > itself as a node. Node IDs are not hardcoded but rather assigned at
-> > > > runtime, in probing order (subject to the above-mentioned exception
-> > > > regarding relative order). This approach allows for using this driver with
-> > > > various Exynos SoCs.
-> > > > 
-> > > > Frequencies requested via the interconnect API for a given node are
-> > > > propagated to devfreq using dev_pm_qos_update_request(). Please note that
-> > > > it is not an error when CONFIG_INTERCONNECT is 'n', in which case all
-> > > > interconnect API functions are no-op.
-> > > > 
-> > > > Signed-off-by: Artur Świgoń <a.swigon@partner.samsung.com>
-> > > > ---
-> > > >  drivers/devfreq/exynos-bus.c | 153 +++++++++++++++++++++++++++++++++++
-> > > >  1 file changed, 153 insertions(+)
-> > > > 
-> > > > diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
-> > > > index 8d44810cac69..e0232202720d 100644
-> > > > --- a/drivers/devfreq/exynos-bus.c
-> > > > +++ b/drivers/devfreq/exynos-bus.c
-> > > > @@ -14,14 +14,19 @@
-> > > >  #include <linux/devfreq-event.h>
-> > > >  #include <linux/device.h>
-> > > >  #include <linux/export.h>
-> > > > +#include <linux/idr.h>
-> > > > +#include <linux/interconnect-provider.h>
-> > > >  #include <linux/module.h>
-> > > >  #include <linux/of.h>
-> > > >  #include <linux/pm_opp.h>
-> > > > +#include <linux/pm_qos.h>
-> > > >  #include <linux/platform_device.h>
-> > > >  #include <linux/regulator/consumer.h>
-> > > > 
-> > > >  #define DEFAULT_SATURATION_RATIO   40
-> > > > 
-> > > > +#define icc_units_to_khz(x) ((x) / 8)
-> > > 
-> > > icc_units_to_khz() -> kpbs_to_khz()
-> > 
-> > OK
-> > 
-> > > > +
-> > > >  struct exynos_bus {
-> > > >     struct device *dev;
-> > > > 
-> > > > @@ -35,6 +40,12 @@ struct exynos_bus {
-> > > >     struct opp_table *opp_table;
-> > > >     struct clk *clk;
-> > > >     unsigned int ratio;
-> > > > +
-> > > > +   /* One provider per bus, one node per provider */
-> > > > +   struct icc_provider provider;
-> > > > +   struct icc_node *node;
-> > > > +
-> > > > +   struct dev_pm_qos_request qos_req;
-> > > >  };
-> > > > 
-> > > >  /*
-> > > > @@ -59,6 +70,13 @@ exynos_bus_ops_edev(enable_edev);
-> > > >  exynos_bus_ops_edev(disable_edev);
-> > > >  exynos_bus_ops_edev(set_event);
-> > > > 
-> > > > +static int exynos_bus_next_id(void)
-> > > > +{
-> > > > +   static DEFINE_IDA(exynos_bus_icc_ida);
-> > > > +
-> > > > +   return ida_alloc(&exynos_bus_icc_ida, GFP_KERNEL);
-> > > > +}
-> > > > +
-> > > >  static int exynos_bus_get_event(struct exynos_bus *bus,
-> > > >                             struct devfreq_event_data *edata)
-> > > >  {
-> > > > @@ -171,6 +189,38 @@ static void exynos_bus_passive_exit(struct device *dev)
-> > > >     clk_disable_unprepare(bus->clk);
-> > > >  }
-> > > > 
-> > > > +static int exynos_bus_icc_set(struct icc_node *src, struct icc_node *dst)
-> > > > +{
-> > > > +   struct exynos_bus *src_bus = src->data, *dst_bus = dst->data;
-> > > > +   s32 src_freq = icc_units_to_khz(src->avg_bw);
-> > > > +   s32 dst_freq = icc_units_to_khz(dst->avg_bw);
-> > > > +
-> > > > +   dev_pm_qos_update_request(&src_bus->qos_req, src_freq);
-> > > 
-> > > Have to check the return value.
-> > > If return error, show the waring with dev_warn.
-> > 
-> > OK, I will change it to:
-> > 
-> > ret = dev_pm_qos_update_request(&src_bus->qos_req, src_freq);
-> > if (ret < 0) {
-> >         dev_warn(src_bus->dev, "failed to update PM QoS request");
-> >         return ret;
-> 
-> If you return right after, better to use dev_err.
-> If you use dev_warn, just show the warning message without return.
+On Wed, Dec 18, 2019 at 03:19:41PM +0800, Ming Lei wrote:
 
-OK, I will use dev_err().
+> diff --git a/kernel/softirq.c b/kernel/softirq.c
+> index 0427a86743a4..f6e434ac4183 100644
+> --- a/kernel/softirq.c
+> +++ b/kernel/softirq.c
+> @@ -25,6 +25,8 @@
+>  #include <linux/smpboot.h>
+>  #include <linux/tick.h>
+>  #include <linux/irq.h>
+> +#include <linux/sched.h>
+> +#include <linux/sched/clock.h>
+>  
+>  #define CREATE_TRACE_POINTS
+>  #include <trace/events/irq.h>
+> @@ -52,6 +54,26 @@ DEFINE_PER_CPU_ALIGNED(irq_cpustat_t, irq_stat);
+>  EXPORT_PER_CPU_SYMBOL(irq_stat);
+>  #endif
+>  
+> +#define IRQ_INTERVAL_STAGE1_WEIGHT_BITS		ilog2(512)
+> +#define IRQ_INTERVAL_STAGE2_WEIGHT_BITS		ilog2(128)
 
-> > }
-> > 
-> > > > +   dev_pm_qos_update_request(&dst_bus->qos_req, dst_freq);
-> > > 
-> > > ditto.
-> > 
-> > OK (same as above).
-> 
-> ditto.
-> 
-> > 
-> > > > +
-> > > > +   return 0;
-> > > > +}
-> > > > +
-> > > > +static int exynos_bus_icc_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
-> > > > +                               u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
-> > > > +{
-> > > > +   *agg_avg += avg_bw;
-> > > > +   *agg_peak = max(*agg_peak, peak_bw);
-> > > > +
-> > > > +   return 0;
-> > > > +}
-> > > > +
-> > > > +static struct icc_node *exynos_bus_icc_xlate(struct of_phandle_args *spec,
-> > > > +                                        void *data)
-> > > > +{
-> > > > +   struct exynos_bus *bus = data;
-> > > > +
-> > > > +   if (spec->np != bus->dev->of_node)
-> > > > +           return ERR_PTR(-EINVAL);
-> > > > +
-> > > > +   return bus->node;
-> > > > +}
-> > > > +
-> > > >  static int exynos_bus_parent_parse_of(struct device_node *np,
-> > > >                                     struct exynos_bus *bus)
-> > > >  {
-> > > > @@ -366,6 +416,101 @@ static int exynos_bus_profile_init_passive(struct exynos_bus *bus,
-> > > >     return 0;
-> > > >  }
-> > > > 
-> > > > +static int exynos_bus_icc_connect(struct exynos_bus *bus)
-> > > > +{
-> > > > +   struct device_node *np = bus->dev->of_node;
-> > > > +   struct devfreq *parent_devfreq;
-> > > > +   struct icc_node *parent_node = NULL;
-> > > > +   struct of_phandle_args args;
-> > > > +   int ret = 0;
-> > > > +
-> > > > +   parent_devfreq = devfreq_get_devfreq_by_phandle(bus->dev, 0);
-> > > > +   if (!IS_ERR(parent_devfreq)) {
-> > > > +           struct exynos_bus *parent_bus;
-> > > > +
-> > > > +           parent_bus = dev_get_drvdata(parent_devfreq->dev.parent);
-> > > > +           parent_node = parent_bus->node;
-> > > > +   } else {
-> > > > +           /* Look for parent in DT */
-> > > > +           int num = of_count_phandle_with_args(np, "parent",
-> > > > +                                                "#interconnect-cells");
-> > > > +           if (num != 1)
-> > > > +                   goto out; /* 'parent' is optional */
-> > > > +
-> > > > +           ret = of_parse_phandle_with_args(np, "parent",
-> > > > +                                            "#interconnect-cells",
-> > > > +                                            0, &args);
-> > > 
-> > > 
-> > > Actually, I agree your approach. I think that it is very useful
-> > > and necessary to guarantee the PM QoS requirements between devices.
-> > > 
-> > > But,
-> > > As I already commented, I'm not sure that the "parent" property
-> > > is proper for only this driver. If possible, you better to get
-> > > the parent phandle through other way like OF graph.
-> > > 
-> > > If you suggest the standard way to make the tree between
-> > > the exynos-bus, I'll agree.
-> > 
-> > As I commented in the answer to patch 08, I will use the
-> > 'exynos,interconnect-parent-node' property for bus_display,
-> > bus_leftbus and bus_dmc.
-> 
-> OK.
-> 
-> > 
-> > > Also, for interconnect path, you have to add the connection
-> > > between 'bus_display' and 'bus_leftbus' regardless
-> > > of the existing 'devfreq' property.
-> > > - bus_display - bus_leftbus - bus_dmc
-> > > 
-> > > > +           if (ret < 0)
-> > > > +                   goto out;
-> > > > +
-> > > > +           of_node_put(args.np);
-> > > > +
-> > > > +           parent_node = of_icc_get_from_provider(&args);
-> > > > +           if (IS_ERR(parent_node)) {
-> > > > +                   /* May be -EPROBE_DEFER */
-> > > > +                   ret = PTR_ERR(parent_node);
-> > > > +                   goto out;
-> > > > +           }
-> > > > +   }
-> > > > +
-> > > > +   ret = icc_link_create(bus->node, parent_node->id);
-> > > > +
-> > > > +out:
-> > > > +   return ret;
-> > > > +}
-> > > > +
-> > > > +static int exynos_bus_icc_init(struct exynos_bus *bus)
-> > > > +{
-> > > > +   struct device *dev = bus->dev;
-> > > > +   struct icc_provider *provider = &bus->provider;
-> > > > +   struct icc_node *node;
-> > > > +   int id, ret;
-> > > > +
-> > > > +   /* Initialize the interconnect provider */
-> > > > +   provider->set = exynos_bus_icc_set;
-> > > > +   provider->aggregate = exynos_bus_icc_aggregate;
-> > > > +   provider->xlate = exynos_bus_icc_xlate;
-> > > > +   provider->dev = dev;
-> > > > +   provider->data = bus;
-> > > > +
-> > > > +   ret = icc_provider_add(provider);
-> > > > +   if (ret < 0)
-> > > > +           goto out;
-> > > 
-> > > Return error without goto because there is no any requirement
-> > > to free the resource before.
-> > 
-> > OK.
-> > 
-> > > > +
-> > > > +   ret = id = exynos_bus_next_id();
-> > > > +   if (ret < 0)
-> > > > +           goto err_node;
-> > > > +
-> > > > +   node = icc_node_create(id);
-> > > > +   if (IS_ERR(node)) {
-> > > > +           ret = PTR_ERR(node);
-> > > > +           goto err_node;
-> > > > +   }
-> > > > +
-> > > > +   bus->node = node;
-> > > > +   node->name = dev->of_node->name;
-> > > > +   node->data = bus;
-> > > > +   icc_node_add(node, provider);
-> > > > +
-> > > > +   ret = exynos_bus_icc_connect(bus);
-> > > > +   if (ret < 0)
-> > > > +           goto err_connect;
-> > > > +
-> > > > +   ret = dev_pm_qos_add_request(bus->devfreq->dev.parent, &bus->qos_req,
-> > > 
-> > > Check whether this line is over 80 char.
-> > 
-> > It looks like 77 columns to me.
-> > 
-> > > 
-> > > > +                                DEV_PM_QOS_MIN_FREQUENCY, 0);
-> > > 
-> > >       Check the return value.
-> > 
-> > OK.
-> > 
-> > > 
-> > > > +
-> > > > +out:
-> > > 
-> > > Remove this goto due to not necessary.
-> > > 
-> > > > +   return ret;
-> > > 
-> > >       return 0;
-> > 
-> > OK.
-> > 
-> > Please also note that this function as well as exynos_bus_icc_connect()
-> > will
-> > slightly change in v3 due to the changes regarding DT properties.
-> > 
-> > > 
-> > > > +
-> > > > +err_connect:
-> > > > +   icc_node_del(node);
-> > > > +   icc_node_destroy(id);
-> > > > +err_node:
-> > > > +   icc_provider_del(provider);
-> > > > +
-> > > > +   return ret;
-> > > > +}
-> > > > +
-> > > >  static int exynos_bus_probe(struct platform_device *pdev)
-> > > >  {
-> > > >     struct device *dev = &pdev->dev;
-> > > > @@ -415,6 +560,14 @@ static int exynos_bus_probe(struct platform_device *pdev)
-> > > >     if (ret < 0)
-> > > >             goto err;
-> > > > 
-> > > > +   /*
-> > > > +    * Initialize interconnect provider. A return value of -ENOTSUPP means
-> > > > +    * that CONFIG_INTERCONNECT is disabled.
-> > > > +    */
-> > > > +   ret = exynos_bus_icc_init(bus);
-> > > > +   if (ret < 0 && ret != -ENOTSUPP)
-> > > > +           goto err;
-> > > 
-> > > Print error message.
-> > >       dev_err(dev, "failed to initialize the interconnect provider");
-> > 
-> > OK.
-> > 
-> > > 
-> > > > +
-> > > >     max_state = bus->devfreq->profile->max_state;
-> > > >     min_freq = (bus->devfreq->profile->freq_table[0] / 1000);
-> > > >     max_freq = (bus->devfreq->profile->freq_table[max_state - 1] / 1000);
-> > > > 
+That must be the most difficult way of writing 9 and 7 resp.
 
--- 
-Artur Świgoń
-Samsung R&D Institute Poland
-Samsung Electronics
+> +#define IRQ_INTERVAL_THRESHOLD_UNIT_NS	1000
+> +
+> +#define IRQ_INTERVAL_MIN_THRESHOLD_NS	IRQ_INTERVAL_THRESHOLD_UNIT_NS
+> +#define IRQ_INTERVAL_MAX_MIN_THRESHOLD_TIME_NS  4000000000
+
+(seriously a name with MAX_MIN in it ?!?)
+
+That's unreadable, we have (4*NSEC_PER_SEC) for that (if I counted the
+0s correctly)
+
+These are all a bunch of magic value, any justification for them? Will
+they always work?
+
+> +
+> +struct irq_interval {
+> +	u64                     clock;
+> +	int			avg;
+> +	int			std_threshold:31;
+
+I know of a standard deviation, but what is a standard threshold?
+
+> +	int			stage:1;
+
+signed single bit.. there's people that object to that. They figure just
+a sign bit isn't much useful.
+
+> +
+> +	u64			stage_start_clock;
+> +	unsigned		stage1_time;
+> +	unsigned		stage2_time;
+> +};
+> +DEFINE_PER_CPU(struct irq_interval, avg_irq_interval);
+> +
+>  static struct softirq_action softirq_vec[NR_SOFTIRQS] __cacheline_aligned_in_smp;
+>  
+>  DEFINE_PER_CPU(struct task_struct *, ksoftirqd);
+> @@ -339,6 +361,140 @@ asmlinkage __visible void do_softirq(void)
+>  	local_irq_restore(flags);
+>  }
+>  
+> +static inline void irq_interval_update_avg(struct irq_interval *inter,
+> +		u64 now, int weight_bits)
+> +{
+> +	inter->avg = inter->avg - ((inter->avg) >> weight_bits) +
+> +		((now - inter->clock) >> weight_bits);
+
+Did you perhaps want to write something like:
+
+	s64 sample = now - inter->clock;
+
+	inter->avg += (sample - inter->avg) >> weight_bits;
+
+Which is a recognisable form.
+
+It also shows the obvious overflow when sample is large (interrupts
+didn't happen for a while). You'll want to clamp @sample to some max.
+
+> +	if (unlikely(inter->avg < 0))
+> +		inter->avg = 0;
+
+And since inter->avg must never be <0, wth are you using a signed
+bitfield? This generates shit code. Use an on-stack temporary if
+anything:
+
+	int avg = inter->avg;
+
+	avg += (sample - avg) >> bits;
+	if (avg < 0)
+		avg = 0;
+
+	inter->avg = avg;
+
+and presto! no signed bitfields required.
+
+> +}
+> +
+> +/*
+> + * Keep the ratio of stage2 time to stage1 time between 1/2 and 1/8. If
+> + * it is out of the range, adjust .std_threshold for maintaining the ratio.
+
+it is either @std_threshold or @irq_interval::std_threshold
+
+> + */
+> +static inline void irq_interval_update_threshold(struct irq_interval *inter)
+> +{
+> +	if (inter->stage2_time * 2 > inter->stage1_time)
+> +		inter->std_threshold -= IRQ_INTERVAL_THRESHOLD_UNIT_NS;
+> +	if (inter->stage2_time * 8 < inter->stage1_time)
+> +		inter->std_threshold += IRQ_INTERVAL_THRESHOLD_UNIT_NS;
+
+I suppose that will eventually converge.
+
+> +	if (inter->std_threshold <= 0)
+> +		inter->std_threshold = IRQ_INTERVAL_THRESHOLD_UNIT_NS;
+
+I think you'll find you actually meant to write:
+
+	if (inter->std_threshold < IRQ_INTERVAL_THRESHOLD_UNIT_NS)
 
 
+> +	if (inter->std_threshold >= 32 * IRQ_INTERVAL_THRESHOLD_UNIT_NS)
+> +		inter->std_threshold = 32 * IRQ_INTERVAL_THRESHOLD_UNIT_NS;
+
+We actually have a macro for this:
+
+	inter->std_threshold = clamp(inter->std_threshold,
+				     IRQ_INTERVAL_THRESHOLD_UNIT_NS,
+				     32 * IRQ_INTERVAL_THRESHOLD_UNIT_NS);
+
+> +}
+> +
+> +/*
+> + * If we stay at stage1 for too long with minimized threshold and low enough
+> + * interrupt average interval, there may have risk to lock up CPU.
+
+It's not locked up...
+
+> + */
+> +static bool irq_interval_cpu_lockup_risk(struct irq_interval *inter, u64 now)
+> +{
+> +	if (inter->avg > inter->std_threshold)
+> +		return false;
+> +
+> +	if (inter->std_threshold != IRQ_INTERVAL_MIN_THRESHOLD_NS)
+> +		return false;
+> +
+> +	if (now - inter->stage_start_clock <=
+> +			IRQ_INTERVAL_MAX_MIN_THRESHOLD_TIME_NS)
+> +		return false;
+> +	return true;
+> +}
+> +
+> +/*
+> + * Update average interrupt interval with the Exponential Weighted Moving
+> + * Average(EWMA), and implement two-stage interrupt flood detection.
+> + *
+> + * Use scheduler's runqueue software clock at default for figuring
+> + * interrupt interval for saving cost. When the interval becomes zero,
+> + * it is reasonable to conclude scheduler's activity on this CPU has been
+> + * stopped because of interrupt flood. Then switch to the 2nd stage
+> + * detection in which clock is read from hardware, and the detection
+> + * result can be more reliable.
+> + */
+> +static void irq_interval_update(void)
+> +{
+> +	struct irq_interval *inter = raw_cpu_ptr(&avg_irq_interval);
+
+raw_cpu_ptr is wrong, this wants to be this_cpu_ptr()
+
+> +	u64 now;
+> +
+> +	if (likely(!inter->stage)) {
+> +		now = sched_local_rq_clock();
+> +		irq_interval_update_avg(inter, now,
+> +				IRQ_INTERVAL_STAGE1_WEIGHT_BITS);
+> +
+> +		if (unlikely(inter->avg < inter->std_threshold / 2 ||
+> +				irq_interval_cpu_lockup_risk(inter, now))) {
+> +			inter->stage = 1;
+> +			now = sched_clock_cpu(smp_processor_id());
+> +			inter->stage1_time = now - inter->stage_start_clock;
+> +			inter->stage_start_clock = now;
+> +
+> +			/*
+> +			 * reset as the mean of the min and the max value of
+> +			 * stage2's threshold
+> +			 */
+> +			inter->avg = inter->std_threshold +
+> +				(inter->std_threshold >> 2);
+> +		}
+> +	} else {
+> +		now = sched_clock_cpu(smp_processor_id());
+> +
+> +		irq_interval_update_avg(inter, now,
+> +				IRQ_INTERVAL_STAGE2_WEIGHT_BITS);
+> +
+> +		if (inter->avg > inter->std_threshold * 2) {
+> +			inter->stage = 0;
+> +			inter->stage2_time = now - inter->stage_start_clock;
+> +			inter->stage_start_clock = now;
+> +
+> +			irq_interval_update_threshold(inter);
+> +		}
+> +	}
+> +}
+
+AFAICT the only reason for much of this complexity is so that you can
+use this sched_local_rq_clock() thing, right? Once that reaches a
+threshold, you go use the more accurate sched_clock_cpu() and once that
+tickles the threshold you call it golden and raise hell.
+
+So pray tell, why did you not integrate this with IRQ_TIME_ACCOUNTING ?
+That already takes a timestamp and does most of what you need.
+
+> @@ -356,6 +512,7 @@ void irq_enter(void)
+>  	}
+>  
+>  	__irq_enter();
+> +	irq_interval_update();
+>  }
+
+Arggh.. you're going to make every single interrupt take at least 2
+extra cache misses for this gunk?!?
+
+And it lumps all interrupts on a single heap, and doesn't do any of the
+otherwise useful things we've been wanting to have IRQ timings for :/
+
+
+_If_ you want to do something like this, do it like the below. That only
+adds a few instruction to irq_exit() and only touches a cacheline that's
+already touched.
+
+It computes both the avg duration and the avg inter-arrival-time of
+hardirqs. Things get critical when:
+
+	inter-arrival-avg < 2*duration-avg
+
+or something like that.
+
+---
+diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
+index d43318a489f2..6f5ef70b5a1d 100644
+--- a/kernel/sched/cputime.c
++++ b/kernel/sched/cputime.c
+@@ -50,7 +50,7 @@ static void irqtime_account_delta(struct irqtime *irqtime, u64 delta,
+ void irqtime_account_irq(struct task_struct *curr)
+ {
+ 	struct irqtime *irqtime = this_cpu_ptr(&cpu_irqtime);
+-	s64 delta;
++	s64 delta, iat;
+ 	int cpu;
+ 
+ 	if (!sched_clock_irqtime)
+@@ -58,7 +58,6 @@ void irqtime_account_irq(struct task_struct *curr)
+ 
+ 	cpu = smp_processor_id();
+ 	delta = sched_clock_cpu(cpu) - irqtime->irq_start_time;
+-	irqtime->irq_start_time += delta;
+ 
+ 	/*
+ 	 * We do not account for softirq time from ksoftirqd here.
+@@ -66,10 +65,21 @@ void irqtime_account_irq(struct task_struct *curr)
+ 	 * in that case, so as not to confuse scheduler with a special task
+ 	 * that do not consume any time, but still wants to run.
+ 	 */
+-	if (hardirq_count())
++	if (hardirq_count()) {
+ 		irqtime_account_delta(irqtime, delta, CPUTIME_IRQ);
+-	else if (in_serving_softirq() && curr != this_cpu_ksoftirqd())
++
++		/* this is irq_exit(), delta is the duration of the hardirq */
++		irqtime->duration_avg += (delta - irqtime->duration_avg) >> 7;
++
++		/* compute the inter arrival time using the previous arrival_time */
++		iat = irqtime->irq_start_time - irqtime->irq_arrival_time;
++		irqtime->irq_arrival_time += iat;
++		irqtime->irq_inter_arrival_avg += (iat - irqtime->inter_arrival_avg) >> 7;
++
++	} else if (in_serving_softirq() && curr != this_cpu_ksoftirqd())
+ 		irqtime_account_delta(irqtime, delta, CPUTIME_SOFTIRQ);
++
++	irqtime->irq_start_time += delta;
+ }
+ EXPORT_SYMBOL_GPL(irqtime_account_irq);
+ 
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 280a3c735935..cab07e5a6c11 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -2236,6 +2236,9 @@ struct irqtime {
+ 	u64			total;
+ 	u64			tick_delta;
+ 	u64			irq_start_time;
++	u64			irq_duration_avg;
++	u64			irq_arrival_time;
++	u64			irq_inter_arrival_avg;
+ 	struct u64_stats_sync	sync;
+ };
+ 
