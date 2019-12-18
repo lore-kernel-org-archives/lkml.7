@@ -2,93 +2,143 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 591A4C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A61B7C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CF1E218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:18:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576707523;
-	bh=JwmPhzG+jGYkiZWWWWZn0k1KbLunjn4uHL4xBRBoHeM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Vk6m1ksmIc9wbt46h7m1bq5UDeVQKPmZeqPjRNtR8YRfRjtOdWhvGOVe5E/RGcQ8M
-	 tDh9w2vGI+nYgE2VM1imZcD0y6eLdzIEx9LTHG8762ZcoZMD6eNCWTnFW5/G6UNQ1E
-	 eBGXHRLIBP/DV3d15Keti+UPEajaRBYB7SE8l8SQ=
+	by mail.kernel.org (Postfix) with ESMTP id 76243218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:18:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ScM+7x8q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbfLRWSm (ORCPT
+        id S1726817AbfLRWSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 17:18:42 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:43255 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbfLRWSj (ORCPT
+        Wed, 18 Dec 2019 17:18:50 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:8926 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726594AbfLRWSr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 17:18:39 -0500
-Received: by mail-oi1-f195.google.com with SMTP id x14so2026621oic.10;
-        Wed, 18 Dec 2019 14:18:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=/4DCBGTzV25UqwiiGbHriQAr3E9Rn3IXXhGkvh3a7hY=;
-        b=BREEZcCPj36BE8OL53AQ3mt3dRIZkN/CTNHC+FjFicSGOusz39qUsKLKrNHWZ98UHa
-         sMAxcoMbWDN5vQApNbkN4OxhLhdFozrJ/y8LTFc072XePZHeCuB4Gxc9/0V0YzXF0ejA
-         eH/UehlU8HR7v+8xcgV0qbdBnwLgTxDKGMlx9L3TewCBgKl4oDizA8xA/6SqywXSILMV
-         I1AFUOPJlRhGIOFpc0Csso+sAh4AiWoTnls0toG5L2NQQDtOVtvAFQoT5YvWeW2wJHT9
-         jpULjMV0CbZGHYLSx0fWIT9ljkVXI5BuUZFLzSNanTvbLcXfmrP4MjcLxTAgshlua4rA
-         DV9w==
-X-Gm-Message-State: APjAAAU39tVsW9QaB7k0Bb2WK5ElDAvu2focxUvBWDDqAzrkz7TWg9PM
-        nVy3ZrwROwyH63yE0nX+5Q==
-X-Google-Smtp-Source: APXvYqxn0yvz4TRVwtiUKNKpafKpf6Hjnbe2ieMd81LDvcEqkQUy8kwzMvieUr8SBs9uriNVboNWpw==
-X-Received: by 2002:aca:f305:: with SMTP id r5mr1618542oih.174.1576707518439;
-        Wed, 18 Dec 2019 14:18:38 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id v25sm413787ote.61.2019.12.18.14.18.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 14:18:37 -0800 (PST)
-Date:   Wed, 18 Dec 2019 16:18:36 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
-        mark.rutland@arm.com, paul@crapouillou.net,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com, 2374286503@qq.com
-Subject: Re: [PATCH v3 1/2] dt-bindings: I2C: Add X1000 bindings.
-Message-ID: <20191218221836.GA24317@bogus>
-References: <1576570450-122556-1-git-send-email-zhouyanjie@wanyeetech.com>
- <1576570450-122556-3-git-send-email-zhouyanjie@wanyeetech.com>
+        Wed, 18 Dec 2019 17:18:47 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dfaa5ba0000>; Wed, 18 Dec 2019 14:18:34 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 18 Dec 2019 14:18:44 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 18 Dec 2019 14:18:44 -0800
+Received: from [10.2.165.11] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Dec
+ 2019 22:18:43 +0000
+Subject: Re: [PATCH v11 01/25] mm/gup: factor out duplicate code from four
+ routines
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+References: <20191216222537.491123-1-jhubbard@nvidia.com>
+ <20191216222537.491123-2-jhubbard@nvidia.com>
+ <20191218155211.emcegdp5uqgorfwe@box>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <5719efc4-e560-b3d9-8d1f-3ae289bed289@nvidia.com>
+Date:   Wed, 18 Dec 2019 14:15:53 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1576570450-122556-3-git-send-email-zhouyanjie@wanyeetech.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191218155211.emcegdp5uqgorfwe@box>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1576707514; bh=A0thRHEqnXg6dZZRQ3XItHq709pByy7GtW01Hq1OCoc=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=ScM+7x8q8mWlcIQciYsHkNMCacR+c0EXHDYwd9LQIuUPf7aoJ2FVBW026iU1SWAnl
+         ltogqGk6aIee+Km4SQR7f32cksncAyW4lNLn2TYKFrtJdbIHsrOldxBh5IaPhHdDqE
+         sdIpDxyyx+Jf8CyjrZWs/sYEpgdFVpjkjtWEpt4nJp1e7SjqwB5Cu2GqZfKBuKVEar
+         BRhkAV/MDLjwytEs34akliPwG7VvslpNx0c0XwWMRq9z3Nwumj3m+z4SVir8YPvZEf
+         vV7cvsqLQ3VGt46WIl4RoFGnV1Qa4B1dL2lodfVBrgXk2TIEVopJfv3Sggeyd8NtB5
+         Kn8oXib8wW5/w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Dec 2019 16:14:09 +0800, =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= wrote:
-> Add the I2C bindings for the X1000 Soc from Ingenic.
+On 12/18/19 7:52 AM, Kirill A. Shutemov wrote:
+> On Mon, Dec 16, 2019 at 02:25:13PM -0800, John Hubbard wrote:
+>> +static void put_compound_head(struct page *page, int refs)
+>> +{
+>> +	/* Do a get_page() first, in case refs == page->_refcount */
+>> +	get_page(page);
+>> +	page_ref_sub(page, refs);
+>> +	put_page(page);
+>> +}
 > 
-> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-> ---
+> It's not terribly efficient. Maybe something like:
 > 
-> Notes:
->     v1->v2:
->     No change.
->     
->     v2->v3:
->     No change.
+> 	VM_BUG_ON_PAGE(page_ref_count(page) < ref, page);
+> 	if (refs > 2)
+> 		page_ref_sub(page, refs - 1);
+> 	put_page(page);
 > 
->  Documentation/devicetree/bindings/i2c/i2c-jz4780.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
+> ?
 
-Acked-by: Rob Herring <robh@kernel.org>
+OK, but how about this instead? I don't see the need for a "2", as that
+is a magic number that requires explanation. Whereas "1" is not a magic
+number--here it means: either there are "many" (>1) refs, or not.
+
+And the routine won't be called with refs less than about 32 (2MB huge
+page, 64KB base page == 32 subpages) anyway.
+
+	VM_BUG_ON_PAGE(page_ref_count(page) < refs, page);
+	/*
+	 * Calling put_page() for each ref is unnecessarily slow. Only the last
+	 * ref needs a put_page().
+	 */
+	if (refs > 1)
+		page_ref_sub(page, refs - 1);
+	put_page(page);
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
+  
