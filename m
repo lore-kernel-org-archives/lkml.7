@@ -2,285 +2,87 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6660FC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B43C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A80A21D7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:06:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576699605;
-	bh=VionLeziLSqSkOhBktGW5qfeNHkf3vY+NSxtF/mKhAs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=vJxZrtNuEDx5fgY9mXk3L4K75DI3prxPS1/yGc2Et17wWEmeRbfZT3Z9yNe6p1nLO
-	 Hx1N4eBOBoF3osKBoR0FvVb6BN8EgAa6HL46Sq/OsElie+y7ddV7Izta/K0KHIMDTi
-	 DeSlpYGjoRPvhavrUu+Hw/PfxHaXhCQPj9Td3IDM=
+	by mail.kernel.org (Postfix) with ESMTP id 5BF262176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:08:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Puif9Gyp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727732AbfLRUGo (ORCPT
+        id S1726960AbfLRUIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 15:06:44 -0500
-Received: from foss.arm.com ([217.140.110.172]:59542 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726831AbfLRUGn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 15:06:43 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E419D1FB;
-        Wed, 18 Dec 2019 12:06:42 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5FE5D3F67D;
-        Wed, 18 Dec 2019 12:06:42 -0800 (PST)
-Date:   Wed, 18 Dec 2019 20:06:40 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     alexandre.torgue@st.com, Amelie Delaunay <amelie.delaunay@st.com>,
-        broonie@kernel.org, devicetree@vger.kernel.org,
-        Erwan Leray <erwan.leray@st.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Mark Brown <broonie@kernel.org>, mark.rutland@arm.com,
-        robh+dt@kernel.org
-Subject: Applied "dt-bindings: spi: Convert stm32 spi bindings to json-schema" to the spi tree
-In-Reply-To: <20191217090715.13334-1-benjamin.gaignard@st.com>
-Message-Id: <applied-20191217090715.13334-1-benjamin.gaignard@st.com>
-X-Patchwork-Hint: ignore
+        Wed, 18 Dec 2019 15:08:43 -0500
+Received: from mail-qk1-f170.google.com ([209.85.222.170]:46772 "EHLO
+        mail-qk1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727526AbfLRUIl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 15:08:41 -0500
+Received: by mail-qk1-f170.google.com with SMTP id r14so2623537qke.13
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 12:08:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=sDlAeGFSmuOPJIdaVCheDUB1XAlsdHi/FffbCc95Ra8=;
+        b=Puif9GypwrQtjbsQK8ssX/sTE88A9hLgknoNK9bE2Tr3hQlrLqrGonXSit8dxhiPQy
+         URHSTVlBP20bJxzr+YVFUC1Ycyacu41JPPT9WmywVkKdSB9ILrBRNdKDnlzCRV8w3ijJ
+         nyRwXgmrn7QDRn4rswxRfAYV/RiztD/ZUTMXy/wCH9K5ieT4Dyc/4vOnaeEZamC5gfQN
+         ibQzgWJhdNc3LIaSx89aTtQNcJ9pxUvEiLWlACd7/J4jQtyUEBBfK822o6ldxaK9flrP
+         wxSRIL6fx77pYLPEdw/fw+d5/JeBTeZvoJS7PFlYtmRQp0JewIRh2yAw9xO/ZEJ6Ugz4
+         Qu5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=sDlAeGFSmuOPJIdaVCheDUB1XAlsdHi/FffbCc95Ra8=;
+        b=iyU7CsWtR8BhdIc/SH3wINhXm9goMQlVaff021FsAdZtgZYipb04ZLovXuVCMMxqAJ
+         Uk7L++zfT+KDwrbKdwYkO/53iLeLWoSCudJLekpaa35TqVx4WRVugBJRH+9A8YSK38Ip
+         e8BROUUjvNBFrRMvkkSALR7pdbv0g9M1x95DHX6zIErhrTei3MXuqs0V+2BtcRbqJU+K
+         pMI3WNSbAPpgDzI6lHjRPO84uYYShGz45uu1Y18++GICGRNp3twNKf6BVv8nLLA43aWH
+         0dIVpiNZD7pxbM6ZeJ0LShTw8OOWk8bEcvHO0cyWGEMFlc+EllpaxVUMBvN7u6JdAtJ0
+         3Taw==
+X-Gm-Message-State: APjAAAUy0rKvc8qvI75xjy0O73a0RsyzbKysY5P6e45ZmcC6uoko0iH1
+        d+QpeKAs6kmNrtcHDl6UXNfaAg==
+X-Google-Smtp-Source: APXvYqyKGvtJzZQjZX/PbPQ1vKT7+1e2hb7ObNbF58CYF8zFLGDBSnVcsJf5O2Hyg9ssOO21uOYolg==
+X-Received: by 2002:a37:9bc2:: with SMTP id d185mr4481421qke.422.1576699720623;
+        Wed, 18 Dec 2019 12:08:40 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id 17sm1089576qtz.85.2019.12.18.12.08.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Dec 2019 12:08:40 -0800 (PST)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH -next] pci: fix a -Wtype-limits compilation warning
+Date:   Wed, 18 Dec 2019 15:08:38 -0500
+Message-Id: <935EF32D-2D9C-46AD-A266-77A259DAE91F@lca.pw>
+References: <20191218182412.GA115305@google.com>
+Cc:     jamessewart@arista.com, logang@deltatee.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20191218182412.GA115305@google.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
 
-   dt-bindings: spi: Convert stm32 spi bindings to json-schema
 
-has been applied to the spi tree at
+> On Dec 18, 2019, at 1:24 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> 
+> Ugh, that is pretty subtle!  Would you mind if we used "unsigned int"
+> instead of "u16"?  "u16" makes it look like just a mistake -- somebody
+> is likely to come along and say devfn only needs "u8" and try to
+> change it back.  The same might happen with "unsigned int", but at
+> least it doesn't look like it was chosen specifically to fit a devfn.
+> 
+> Provisional patch below.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.6
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From ef32b63bf13e531479a3b1ef6eb2daaf4fcf787a Mon Sep 17 00:00:00 2001
-From: Benjamin Gaignard <benjamin.gaignard@st.com>
-Date: Tue, 17 Dec 2019 10:07:15 +0100
-Subject: [PATCH] dt-bindings: spi: Convert stm32 spi bindings to json-schema
-
-Convert the STM32 spi binding to DT schema format using json-schema
-
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-CC: Erwan Leray <erwan.leray@st.com>
-CC: Fabrice Gasnier <fabrice.gasnier@st.com>
-CC: Amelie Delaunay <amelie.delaunay@st.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Link: https://lore.kernel.org/r/20191217090715.13334-1-benjamin.gaignard@st.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../devicetree/bindings/spi/spi-stm32.txt     |  62 -----------
- .../devicetree/bindings/spi/st,stm32-spi.yaml | 105 ++++++++++++++++++
- 2 files changed, 105 insertions(+), 62 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/spi/spi-stm32.txt
- create mode 100644 Documentation/devicetree/bindings/spi/st,stm32-spi.yaml
-
-diff --git a/Documentation/devicetree/bindings/spi/spi-stm32.txt b/Documentation/devicetree/bindings/spi/spi-stm32.txt
-deleted file mode 100644
-index d82755c63eaf..000000000000
---- a/Documentation/devicetree/bindings/spi/spi-stm32.txt
-+++ /dev/null
-@@ -1,62 +0,0 @@
--STMicroelectronics STM32 SPI Controller
--
--The STM32 SPI controller is used to communicate with external devices using
--the Serial Peripheral Interface. It supports full-duplex, half-duplex and
--simplex synchronous serial communication with external devices. It supports
--from 4 to 32-bit data size. Although it can be configured as master or slave,
--only master is supported by the driver.
--
--Required properties:
--- compatible: Should be one of:
--  "st,stm32h7-spi"
--  "st,stm32f4-spi"
--- reg: Offset and length of the device's register set.
--- interrupts: Must contain the interrupt id.
--- clocks: Must contain an entry for spiclk (which feeds the internal clock
--	  generator).
--- #address-cells:  Number of cells required to define a chip select address.
--- #size-cells: Should be zero.
--
--Optional properties:
--- resets: Must contain the phandle to the reset controller.
--- A pinctrl state named "default" may be defined to set pins in mode of
--  operation for SPI transfer.
--- dmas: DMA specifiers for tx and rx dma. DMA fifo mode must be used. See the
--  STM32 DMA bindings, Documentation/devicetree/bindings/dma/stm32-dma.txt.
--- dma-names: DMA request names should include "tx" and "rx" if present.
--- cs-gpios: list of GPIO chip selects. See the SPI bus bindings,
--  Documentation/devicetree/bindings/spi/spi-bus.txt
--
--
--Child nodes represent devices on the SPI bus
--  See ../spi/spi-bus.txt
--
--Optional properties:
--- st,spi-midi-ns: Only for STM32H7, (Master Inter-Data Idleness) minimum time
--		  delay in nanoseconds inserted between two consecutive data
--		  frames.
--
--
--Example:
--	spi2: spi@40003800 {
--		#address-cells = <1>;
--		#size-cells = <0>;
--		compatible = "st,stm32h7-spi";
--		reg = <0x40003800 0x400>;
--		interrupts = <36>;
--		clocks = <&rcc SPI2_CK>;
--		resets = <&rcc 1166>;
--		dmas = <&dmamux1 0 39 0x400 0x01>,
--		       <&dmamux1 1 40 0x400 0x01>;
--		dma-names = "rx", "tx";
--		pinctrl-0 = <&spi2_pins_b>;
--		pinctrl-names = "default";
--		cs-gpios = <&gpioa 11 0>;
--
--		aardvark@0 {
--			compatible = "totalphase,aardvark";
--			reg = <0>;
--			spi-max-frequency = <4000000>;
--			st,spi-midi-ns = <4000>;
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml b/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml
-new file mode 100644
-index 000000000000..f0d979664f07
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/st,stm32-spi.yaml
-@@ -0,0 +1,105 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spi/st,stm32-spi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: STMicroelectronics STM32 SPI Controller bindings
-+
-+description: |
-+  The STM32 SPI controller is used to communicate with external devices using
-+  the Serial Peripheral Interface. It supports full-duplex, half-duplex and
-+  simplex synchronous serial communication with external devices. It supports
-+  from 4 to 32-bit data size.
-+
-+maintainers:
-+  - Erwan Leray <erwan.leray@st.com>
-+  - Fabrice Gasnier <fabrice.gasnier@st.com>
-+
-+allOf:
-+  - $ref: "spi-controller.yaml#"
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: st,stm32f4-spi
-+
-+    then:
-+      properties:
-+        st,spi-midi-ns: false
-+
-+properties:
-+  compatible:
-+    enum:
-+      - st,stm32f4-spi
-+      - st,stm32h7-spi
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  dmas:
-+    description: |
-+      DMA specifiers for tx and rx dma. DMA fifo mode must be used. See
-+      the STM32 DMA bindings Documentation/devicetree/bindings/dma/stm32-dma.txt.
-+    items:
-+      - description: rx DMA channel
-+      - description: tx DMA channel
-+
-+  dma-names:
-+    items:
-+      - const: rx
-+      - const: tx
-+
-+patternProperties:
-+  "^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}@[0-9a-f]+$":
-+    type: object
-+    # SPI slave nodes must be children of the SPI master node and can
-+    # contain the following properties.
-+    properties:
-+      st,spi-midi-ns:
-+        description: |
-+          Only for STM32H7, (Master Inter-Data Idleness) minimum time
-+          delay in nanoseconds inserted between two consecutive data frames.
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - interrupts
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/stm32mp1-clks.h>
-+    #include <dt-bindings/reset/stm32mp1-resets.h>
-+    spi@4000b000 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      compatible = "st,stm32h7-spi";
-+      reg = <0x4000b000 0x400>;
-+      interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-+      clocks = <&rcc SPI2_K>;
-+      resets = <&rcc SPI2_R>;
-+      dmas = <&dmamux1 0 39 0x400 0x05>,
-+             <&dmamux1 1 40 0x400 0x05>;
-+      dma-names = "rx", "tx";
-+      cs-gpios = <&gpioa 11 0>;
-+
-+      aardvark@0 {
-+        compatible = "totalphase,aardvark";
-+        reg = <0>;
-+        spi-max-frequency = <4000000>;
-+        st,spi-midi-ns = <4000>;
-+      };
-+    };
-+
-+...
--- 
-2.20.1
-
+Looks good to me.
