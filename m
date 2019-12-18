@@ -2,144 +2,116 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F9BFC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 184E3C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C064206D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:34:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="0D+UJnz5"
+	by mail.kernel.org (Postfix) with ESMTP id DBDD721D7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:35:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576668903;
+	bh=Dm3zn768gCLW8wO9R/AxC8XHo6YjMA0hrPLZqkfEmq0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tiKbW4L1RZsh9+Q3uS/su1AdN/91HUWSthu2pjELetDn2ii66iP50F6giV/wgMx1Y
+	 UUvQRHZ/FLfc+KxcRTLc7EqWP7PGvQKHQ6IgbWE9QxnwyKxJ50jmXnVmeoSuuy4JKu
+	 oZvs9+8nuTV+8u1NEzPAHM5ZqiZatRZ/81nbiV4I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbfLRLen (ORCPT
+        id S1726930AbfLRLfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 06:34:43 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35723 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726856AbfLRLem (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 06:34:42 -0500
-Received: by mail-wm1-f67.google.com with SMTP id p17so1521617wmb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 03:34:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wFs75/j1aHZclp/5rGoLDMPNAtBzpcDUR0+/l6BDakU=;
-        b=0D+UJnz54bq4psEWyqYpeLuw9y16/0BtCxkEj55CVqdlSjPSSwHstqN09GEMpaIUm0
-         qmlwCpr9igNmzRnz7CkenNqg70Yhm5IwP9OuaKELADjRBcZgIPrf9Z7ge9p8hssqLhbN
-         lajJjhy05U80q0d0eC1EB+WFDDoUE/elOTzZKHSq4toFcFqsDwHxEfaq8jtwa6WBNevP
-         3SmNIgiJEGwY+eRHL5DQwT3pBq25A6U+E9ie/6g0L7iSOO+4caFBlq6/YTB2cLuA8Sqw
-         dMNxOHsqcDzp0zKFh7mazvPFkFVFA2XCRyfUo9DYWStzwpLwqtKzjQrbmt/GbXTncPOo
-         AP4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wFs75/j1aHZclp/5rGoLDMPNAtBzpcDUR0+/l6BDakU=;
-        b=NnIhYnnXb1PCoAoQQyBFVVsCMx5fmoQE9l3zWNxSX0+AdygRy8v1yz/ncaSa4BJcSM
-         kxtn2RO6QFOs98TpEhrwKbqWb9OIkdlHQSzO6XdJJRm/BUkf4qCftv4XOPeVuSaUmjGB
-         uLq5WgpaiTyngxDmr4PfGNT5eUmNlz2VaJVjhnitCiWCVoPvuNoZJlNwYlR9V5nq1UmE
-         rxvaerUNJS0gQW0/QuFeGgwlU7MQCDp7jOzzn4PDFqKFgjZrBeBrYNxu4efu5vGSi5t0
-         sX/BRI8ygIoCJsOTA2jwjLaKWBzavf+4ZCjROjBYpSKbKXiKrGY6jdLHOyuVjpTKQEAj
-         fX6A==
-X-Gm-Message-State: APjAAAVgowZbh9IesegK1cmIUI8NIhtxprnQDPQB3nt31HunulEWJbtk
-        9Dj+7FIsRASm5GAiw+XTuI6fI9luqmo=
-X-Google-Smtp-Source: APXvYqyCjnkcjG7bxZqA9N58tKBlxXdKuUOWJVrBrebNtLJJISHUZ4xcnBkc1JJxrzWLDogESw5xxg==
-X-Received: by 2002:a7b:c318:: with SMTP id k24mr2843500wmj.54.1576668879688;
-        Wed, 18 Dec 2019 03:34:39 -0800 (PST)
-Received: from netronome.com ([2001:982:756:703:d63d:7eff:fe99:ac9d])
-        by smtp.gmail.com with ESMTPSA id y20sm2074955wmi.25.2019.12.18.03.34.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 03:34:38 -0800 (PST)
-Date:   Wed, 18 Dec 2019 12:34:38 +0100
-From:   Simon Horman <simon.horman@netronome.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Jose Abreu <joabreu@synopsys.com>, netdev@vger.kernel.org,
-        Maxime Ripard <mripard@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH] dt-bindings: Add missing 'properties' keyword enclosing
- 'snps,tso'
-Message-ID: <20191218113437.GC22367@netronome.com>
-References: <20191217163946.25052-1-robh@kernel.org>
+        Wed, 18 Dec 2019 06:35:02 -0500
+Received: from foss.arm.com ([217.140.110.172]:42990 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726029AbfLRLfB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 06:35:01 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EC51E30E;
+        Wed, 18 Dec 2019 03:35:00 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6A8303F6CF;
+        Wed, 18 Dec 2019 03:35:00 -0800 (PST)
+Date:   Wed, 18 Dec 2019 11:34:58 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Siddharth Kapoor <ksiddharth@google.com>
+Cc:     lee.jones@linaro.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, gregkh@linuxfoundation.org
+Subject: Re: Kernel panic on Google Pixel devices due to regulator patch
+Message-ID: <20191218113458.GA3219@sirena.org.uk>
+References: <CAJRo92+eD9F6Q60yVY2PfwaPWO_8Dts8QwH7mhpJaem7SpLihg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ZPt4rx8FFjLCG7dd"
 Content-Disposition: inline
-In-Reply-To: <20191217163946.25052-1-robh@kernel.org>
+In-Reply-To: <CAJRo92+eD9F6Q60yVY2PfwaPWO_8Dts8QwH7mhpJaem7SpLihg@mail.gmail.com>
+X-Cookie: Power is poison.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 10:39:46AM -0600, Rob Herring wrote:
-> DT property definitions must be under a 'properties' keyword. This was
-> missing for 'snps,tso' in an if/then clause. A meta-schema fix will
-> catch future errors like this.
-> 
-> Fixes: 7db3545aef5f ("dt-bindings: net: stmmac: Convert the binding to a schemas")
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Signed-off-by: Rob Herring <robh@kernel.org>
 
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
+--ZPt4rx8FFjLCG7dd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-We still seem to be some distance from having all DT match the schema.
+On Tue, Dec 17, 2019 at 11:51:55PM +0800, Siddharth Kapoor wrote:
 
-$ ARCH=arm make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/net/snps,dwmac.yaml
-.../linux/arch/arm/boot/dts/artpec6-devboard.dt.yaml: ethernet@f8010000: interrupt-names:1: 'eth_wake_irq' was expected
-.../linux/arch/arm/boot/dts/meson6-atv1200.dt.yaml: ethernet@c9410000: 'phy-mode' is a required property
-.../linux/arch/arm/boot/dts/meson8-minix-neo-x8.dt.yaml: ethernet@c9410000: 'phy-mode' is a required property
-.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_nand.dt.yaml: ethernet@ff800000: reset-names: Additional items are not allowed ('stmmaceth-ocp' was unexpected)
-.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_nand.dt.yaml: ethernet@ff800000: reset-names: ['stmmaceth', 'stmmaceth-ocp'] is too long
-.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_nand.dt.yaml: ethernet@ff800000: resets: [[4, 32], [4, 40]] is too long
-.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_nand.dt.yaml: ethernet@ff802000: reset-names: Additional items are not allowed ('stmmaceth-ocp' was unexpected)
-.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_nand.dt.yaml: ethernet@ff802000: reset-names: ['stmmaceth', 'stmmaceth-ocp'] is too long
-.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_nand.dt.yaml: ethernet@ff802000: resets: [[4, 33], [4, 41]] is too long
-.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_nand.dt.yaml: ethernet@ff804000: reset-names: Additional items are not allowed ('stmmaceth-ocp' was unexpected)
-.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_nand.dt.yaml: ethernet@ff804000: reset-names: ['stmmaceth', 'stmmaceth-ocp'] is too long
-.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_nand.dt.yaml: ethernet@ff804000: resets: [[4, 34], [4, 42]] is too long
-.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_qspi.dt.yaml: ethernet@ff800000: reset-names: Additional items are not allowed ('stmmaceth-ocp' was unexpected)
-.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_qspi.dt.yaml: ethernet@ff800000: reset-names: ['stmmaceth', 'stmmaceth-ocp'] is too long
-.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_qspi.dt.yaml: ethernet@ff800000: resets: [[4, 32], [4, 40]] is too long
-.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_qspi.dt.yaml: ethernet@ff802000: reset-names: Additional items are not allowed ('stmmaceth-ocp' was unexpected)
-.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_qspi.dt.yaml: ethernet@ff802000: reset-names: ['stmmaceth', 'stmmaceth-ocp'] is too long
-.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_qspi.dt.yaml: ethernet@ff802000: resets: [[4, 33], [4, 41]] is too long
-.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_qspi.dt.yaml: ethernet@ff804000: reset-names: Additional items are not allowed ('stmmaceth-ocp' was unexpected)
-.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_qspi.dt.yaml: ethernet@ff804000: reset-names: ['stmmaceth', 'stmmaceth-ocp'] is too long
-.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_qspi.dt.yaml: ethernet@ff804000: resets: [[4, 34], [4, 42]] is too long
-.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc.dt.yaml: ethernet@ff800000: reset-names: Additional items are not allowed ('stmmaceth-ocp' was unexpected)
-.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc.dt.yaml: ethernet@ff800000: reset-names: ['stmmaceth', 'stmmaceth-ocp'] is too long
-.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc.dt.yaml: ethernet@ff800000: resets: [[4, 32], [4, 40]] is too long
-.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc.dt.yaml: ethernet@ff802000: reset-names: Additional items are not allowed ('stmmaceth-ocp' was unexpected)
-.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc.dt.yaml: ethernet@ff802000: reset-names: ['stmmaceth', 'stmmaceth-ocp'] is too long
-.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc.dt.yaml: ethernet@ff802000: resets: [[4, 33], [4, 41]] is too long
-.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc.dt.yaml: ethernet@ff804000: reset-names: Additional items are not allowed ('stmmaceth-ocp' was unexpected)
-.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc.dt.yaml: ethernet@ff804000: reset-names: ['stmmaceth', 'stmmaceth-ocp'] is too long
-.../linux/arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc.dt.yaml: ethernet@ff804000: resets: [[4, 34], [4, 42]] is too long
-.../linux/arch/arm/boot/dts/spear1310-evb.dt.yaml: eth@e2000000: $nodename:0: 'eth@e2000000' does not match '^ethernet(@.*)?$'
-.../linux/arch/arm/boot/dts/spear1310-evb.dt.yaml: eth@e2000000: compatible: None of ['st,spear600-gmac'] are valid under the given schema
-.../linux/arch/arm/boot/dts/spear1310-evb.dt.yaml: eth@5c400000: $nodename:0: 'eth@5c400000' does not match '^ethernet(@.*)?$'
-.../linux/arch/arm/boot/dts/spear1310-evb.dt.yaml: eth@5c400000: compatible: None of ['st,spear600-gmac'] are valid under the given schema
-.../linux/arch/arm/boot/dts/spear1310-evb.dt.yaml: eth@5c500000: $nodename:0: 'eth@5c500000' does not match '^ethernet(@.*)?$'
-.../linux/arch/arm/boot/dts/spear1310-evb.dt.yaml: eth@5c500000: compatible: None of ['st,spear600-gmac'] are valid under the given schema
-.../linux/arch/arm/boot/dts/spear1310-evb.dt.yaml: eth@5c600000: $nodename:0: 'eth@5c600000' does not match '^ethernet(@.*)?$'
-.../linux/arch/arm/boot/dts/spear1310-evb.dt.yaml: eth@5c600000: compatible: None of ['st,spear600-gmac'] are valid under the given schema
-.../linux/arch/arm/boot/dts/spear1310-evb.dt.yaml: eth@5c700000: $nodename:0: 'eth@5c700000' does not match '^ethernet(@.*)?$'
-.../linux/arch/arm/boot/dts/spear1310-evb.dt.yaml: eth@5c700000: compatible: None of ['st,spear600-gmac'] are valid under the given schema
-.../linux/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dt.yaml: ethernet@ff702000: snps,reset-delays-us: [[10000, 10000, 10000]] is too short
-.../linux/arch/arm/boot/dts/spear1340-evb.dt.yaml: eth@e2000000: $nodename:0: 'eth@e2000000' does not match '^ethernet(@.*)?$'
-.../linux/arch/arm/boot/dts/spear1340-evb.dt.yaml: eth@e2000000: compatible: None of ['st,spear600-gmac'] are valid under the given schema
-.../linux/arch/arm/boot/dts/stih410-b2260.dt.yaml: dwmac@9630000: $nodename:0: 'dwmac@9630000' does not match '^ethernet(@.*)?$'
-.../linux/arch/arm/boot/dts/stih410-b2260.dt.yaml: dwmac@9630000: snps,reset-delays-us: [[0, 10000, 1000000]] is too short
-.../linux/arch/arm/boot/dts/stih407-b2120.dt.yaml: dwmac@9630000: $nodename:0: 'dwmac@9630000' does not match '^ethernet(@.*)?$'
-.../linux/arch/arm/boot/dts/stih418-b2199.dt.yaml: dwmac@9630000: $nodename:0: 'dwmac@9630000' does not match '^ethernet(@.*)?$'
-.../linux/arch/arm/boot/dts/stih410-b2120.dt.yaml: dwmac@9630000: $nodename:0: 'dwmac@9630000' does not match '^ethernet(@.*)?$'
+> I would like to share a concern with the regulator patch which is part of
+> 4.9.196 LTS kernel.
 
+That's an *extremely* old kernel.
+
+> https://lore.kernel.org/lkml/20190904124250.25844-1-broonie@kernel.org/
+
+That's the patch "[PATCH] regulator: Defer init completion for a while
+after late_initcall" which defers disabling of idle regulators for a
+while.
+
+Please include human readable descriptions of things like commits and
+issues being discussed in e-mail in your mails, this makes them much
+easier for humans to read especially when they have no internet access.
+I do frequently catch up on my mail on flights or while otherwise
+travelling so this is even more pressing for me than just being about
+making things a bit easier to read.
+
+> We have reverted the patch in Pixel kernels and would like you to look in=
+to
+> this and consider reverting it upstream as well.
+
+I've got nothing to do with the stable kernels so there's nothing I can
+do here, sorry.  However if this is triggering anything it's almost
+certainly some kind of timing issue (this code isn't new, it's just
+being run a bit later) and is only currently working through luck so I
+do strongly recommend trying to figure out the actual problem since it's
+liable to come back and bite you later - we did find one buggy driver in
+mainline as a result of this change, it's possible you've got another
+one. =20
+
+Possibly your GPU supplies need to be flagged as always on, possibly
+your GPU driver is forgetting to enable some supplies it needs, or
+possibly there's a missing always-on constraint on one of the regulators
+depending on how the driver expects this to work (if it's a proprietary
+driver it shouldn't be using the regulator API itself).  I'm quite
+surprised you've not seen any issue before given that the supplies would
+still be being disabled earlier.
+
+--ZPt4rx8FFjLCG7dd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl36DrsACgkQJNaLcl1U
+h9AGKwf+OZSKCw53a+rwTPUrG52C/vtaOOk0D2VRDUbWhPCqqWaxRi0gm9l48XLR
+pksY4mNcf858gPLUA7CoOrOjia2b/HlSNyourAGO0D1fhUNz6Eaw35fIvAkbeoXn
+W6OiNHTWypmt6UN1pLP5g46eLZV8VTfYRnHkJiqCVsskrNo4Fk9uPlaZlfRwi/Sd
+DwMoQ4Ai2mMDvJcAWu4btXt9rU54FKDltJOrzFoN6U5DR00nbQw3yD1+ZozX6lFk
+wxXSGNGvqvEcPSi+Ub6x6j6VHEQFJXPQ3Gdm5QN29Pbh7WMd5Cx7QhfIwanHB1Iy
+p4w5Cvux9SobwfkelqtedR2a3ZVtNw==
+=dvpQ
+-----END PGP SIGNATURE-----
+
+--ZPt4rx8FFjLCG7dd--
