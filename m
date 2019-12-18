@@ -2,88 +2,193 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E35E3C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E67CFC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE27424650
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5D732064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:54:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CjPuGy12"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bxtG3SUi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727553AbfLRRyQ (ORCPT
+        id S1727256AbfLRRy6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 12:54:16 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:29907 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727186AbfLRRyP (ORCPT
+        Wed, 18 Dec 2019 12:54:58 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24926 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727034AbfLRRy6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 12:54:15 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576691654; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=ajjyd3Yo3+ZsBvu259j63q3wagxykCtDZbUspQRGj2g=;
- b=CjPuGy12TRb62D4vOFBrIepypoNFr3D+s3NJSrJulAf66QZaA3BFmQvTWKnpKxxvbEqf+wR9
- bpF7wqdfvo871ff0XZazzNy5a7yS8k0FB/u/GTlOzmTr8CoMpCxteZ04aCKkP3aGbKhiMhLh
- 0iyEo/bDF7mKa+7cuQ1IzIbKyhU=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5dfa67c4.7f3ccedcf688-smtp-out-n01;
- Wed, 18 Dec 2019 17:54:12 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CA98AC43383; Wed, 18 Dec 2019 17:54:11 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 18 Dec 2019 12:54:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576691697;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=x/mlg4GGa2aCtPbSlBatjfyqFvuYzfdyE66T7sANnY0=;
+        b=bxtG3SUi71oMqF3J0YApbtu0tH2bo+ZRuiVeqPS1oepo1EwgFetObL1MxLyUGfrs11ebVp
+        h1abA5PF/Hs/tai2aH9ZnnzGAI15x1+BWTZkgk4vszDboTTXw//Ikb2x1LHgRfd4DtjRtz
+        woNk9evu/wqev7AglJkpeRbDi4hG5wI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-361-cGKh1adtPNKbKudn6dcr4A-1; Wed, 18 Dec 2019 12:54:54 -0500
+X-MC-Unique: cGKh1adtPNKbKudn6dcr4A-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 14D29C433CB;
-        Wed, 18 Dec 2019 17:54:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 14D29C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0D69D18557C2;
+        Wed, 18 Dec 2019 17:54:53 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-52.rdu2.redhat.com [10.10.120.52])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 793127C82A;
+        Wed, 18 Dec 2019 17:54:51 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+ Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+ Kingdom.
+ Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH 1/2] rxrpc: Unlock new call in rxrpc_new_incoming_call()
+ rather than the caller
+From:   David Howells <dhowells@redhat.com>
+To:     linux-afs@lists.infradead.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>, dhowells@redhat.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 18 Dec 2019 17:54:50 +0000
+Message-ID: <157669169065.21991.15207045893761573624.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] ath11k: fix missing free of skb on error return path
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20191212194251.108343-1-colin.king@canonical.com>
-References: <20191212194251.108343-1-colin.king@canonical.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Pradeep Kumar Chitrapu <pradeepc@codeaurora.org>,
-        Ganesh Sesetti <gseset@codeaurora.org>,
-        Karthikeyan Periyasamy <periyasa@codeaurora.org>,
-        John Crispin <john@phrozen.org>, ath11k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20191218175411.CA98AC43383@smtp.codeaurora.org>
-Date:   Wed, 18 Dec 2019 17:54:11 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Colin King <colin.king@canonical.com> wrote:
+Move the unlock and the ping transmission for a new incoming call into
+rxrpc_new_incoming_call() rather than doing it in the caller.  This makes
+it clearer to see what's going on.
 
-> The error handling when the call to ath11k_hal_srng_get_entrysize fails
-> leaks skb, fix this by returning via the err_free return path that will
-> ensure the skb is free'd.
-> 
-> Addresses-Coverity: ("Resource leak")
-> Fixes: d5c65159f289 ("ath11k: driver for Qualcomm IEEE 802.11ax devices")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Peter Zijlstra <peterz@infradead.org>
+cc: Ingo Molnar <mingo@redhat.com>
+cc: Will Deacon <will@kernel.org>
+cc: Davidlohr Bueso <dave@stgolabs.net>
+---
 
-Patch applied to ath-next branch of ath.git, thanks.
+ net/rxrpc/call_accept.c |   36 ++++++++++++++++++++++++++++--------
+ net/rxrpc/input.c       |   18 ------------------
+ 2 files changed, 28 insertions(+), 26 deletions(-)
 
-4358bcb54bb9 ath11k: fix missing free of skb on error return path
+diff --git a/net/rxrpc/call_accept.c b/net/rxrpc/call_accept.c
+index 135bf5cd8dd5..3685b1732f65 100644
+--- a/net/rxrpc/call_accept.c
++++ b/net/rxrpc/call_accept.c
+@@ -239,6 +239,22 @@ void rxrpc_discard_prealloc(struct rxrpc_sock *rx)
+ 	kfree(b);
+ }
+ 
++/*
++ * Ping the other end to fill our RTT cache and to retrieve the rwind
++ * and MTU parameters.
++ */
++static void rxrpc_send_ping(struct rxrpc_call *call, struct sk_buff *skb)
++{
++	struct rxrpc_skb_priv *sp = rxrpc_skb(skb);
++	ktime_t now = skb->tstamp;
++
++	if (call->peer->rtt_usage < 3 ||
++	    ktime_before(ktime_add_ms(call->peer->rtt_last_req, 1000), now))
++		rxrpc_propose_ACK(call, RXRPC_ACK_PING, sp->hdr.serial,
++				  true, true,
++				  rxrpc_propose_ack_ping_for_params);
++}
++
+ /*
+  * Allocate a new incoming call from the prealloc pool, along with a connection
+  * and a peer as necessary.
+@@ -346,9 +362,7 @@ struct rxrpc_call *rxrpc_new_incoming_call(struct rxrpc_local *local,
+ 				  sp->hdr.seq, RX_INVALID_OPERATION, ESHUTDOWN);
+ 		skb->mark = RXRPC_SKB_MARK_REJECT_ABORT;
+ 		skb->priority = RX_INVALID_OPERATION;
+-		_leave(" = NULL [close]");
+-		call = NULL;
+-		goto out;
++		goto no_call;
+ 	}
+ 
+ 	/* The peer, connection and call may all have sprung into existence due
+@@ -361,9 +375,7 @@ struct rxrpc_call *rxrpc_new_incoming_call(struct rxrpc_local *local,
+ 	call = rxrpc_alloc_incoming_call(rx, local, peer, conn, skb);
+ 	if (!call) {
+ 		skb->mark = RXRPC_SKB_MARK_REJECT_BUSY;
+-		_leave(" = NULL [busy]");
+-		call = NULL;
+-		goto out;
++		goto no_call;
+ 	}
+ 
+ 	trace_rxrpc_receive(call, rxrpc_receive_incoming,
+@@ -432,10 +444,18 @@ struct rxrpc_call *rxrpc_new_incoming_call(struct rxrpc_local *local,
+ 	 */
+ 	rxrpc_put_call(call, rxrpc_call_put);
+ 
+-	_leave(" = %p{%d}", call, call->debug_id);
+-out:
+ 	spin_unlock(&rx->incoming_lock);
++
++	rxrpc_send_ping(call, skb);
++	mutex_unlock(&call->user_mutex);
++
++	_leave(" = %p{%d}", call, call->debug_id);
+ 	return call;
++
++no_call:
++	spin_unlock(&rx->incoming_lock);
++	_leave(" = NULL [%u]", skb->mark);
++	return NULL;
+ }
+ 
+ /*
+diff --git a/net/rxrpc/input.c b/net/rxrpc/input.c
+index 157be1ff8697..86bd133b4fa0 100644
+--- a/net/rxrpc/input.c
++++ b/net/rxrpc/input.c
+@@ -192,22 +192,6 @@ static void rxrpc_congestion_management(struct rxrpc_call *call,
+ 	goto out_no_clear_ca;
+ }
+ 
+-/*
+- * Ping the other end to fill our RTT cache and to retrieve the rwind
+- * and MTU parameters.
+- */
+-static void rxrpc_send_ping(struct rxrpc_call *call, struct sk_buff *skb)
+-{
+-	struct rxrpc_skb_priv *sp = rxrpc_skb(skb);
+-	ktime_t now = skb->tstamp;
+-
+-	if (call->peer->rtt_usage < 3 ||
+-	    ktime_before(ktime_add_ms(call->peer->rtt_last_req, 1000), now))
+-		rxrpc_propose_ACK(call, RXRPC_ACK_PING, sp->hdr.serial,
+-				  true, true,
+-				  rxrpc_propose_ack_ping_for_params);
+-}
+-
+ /*
+  * Apply a hard ACK by advancing the Tx window.
+  */
+@@ -1396,8 +1380,6 @@ int rxrpc_input_packet(struct sock *udp_sk, struct sk_buff *skb)
+ 		call = rxrpc_new_incoming_call(local, rx, skb);
+ 		if (!call)
+ 			goto reject_packet;
+-		rxrpc_send_ping(call, skb);
+-		mutex_unlock(&call->user_mutex);
+ 	}
+ 
+ 	/* Process a call packet; this either discards or passes on the ref
 
--- 
-https://patchwork.kernel.org/patch/11289341/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
