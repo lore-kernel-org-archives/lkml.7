@@ -2,28 +2,28 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD7AC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E83BAC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8022021582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4D5524650
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:28:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfLRM2g (ORCPT
+        id S1727014AbfLRM2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 07:28:36 -0500
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:7267 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfLRM2g (ORCPT
+        Wed, 18 Dec 2019 07:28:39 -0500
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:6265 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfLRM2j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 07:28:36 -0500
-Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
+        Wed, 18 Dec 2019 07:28:39 -0500
+Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
   Claudiu.Beznea@microchip.com designates 198.175.253.82 as
   permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
   envelope-from="Claudiu.Beznea@microchip.com";
   x-sender="Claudiu.Beznea@microchip.com";
   x-conformance=spf_only; x-record-type="v=spf1";
@@ -31,30 +31,30 @@ Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
   a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
   include:servers.mcsv.net include:mktomail.com
   include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa5.microchip.iphmx.com: no sender
+Received-SPF: None (esa2.microchip.iphmx.com: no sender
   authenticity information available from domain of
   postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
   envelope-from="Claudiu.Beznea@microchip.com";
   x-sender="postmaster@email.microchip.com";
   x-conformance=spf_only
-Authentication-Results: esa5.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: mMhpzqDKffyOcoquQvlWs/uTrosHiQ7bIT/IryT2UMqI7ma5vJ2NJeK8pNZJ9N7JIXOfpvRzkV
- 8+SsrubPp0iJsBWeYWFx1AdrDba0+//DCb2x0sLZ+rQQnB0SC4BKWeOD1Vp9Yx/2OVIk/McC9o
- 4SLOMnDu6mXyqyTaIHO+fNpedRk8tJfdgYybV09Oru3BJvMvMAa3VzCHMmvwASCP65f2q5GDO+
- ILx+QKs+VqE6+FP5SBoNPOTv4a8DnakSnsXDy3BdI93M0vMRmMhJbH0D6g5SDdxuLcdTV1zvUF
- EYc=
+Authentication-Results: esa2.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: iwa+LFGDEj2VHhKMiirVOph9liCldbkNPs3a2DdYrgytvFbPh4YLPT4L/u0zdSYqk+PC4UnATC
+ 9Jqe9z/vk7PxLqEC75pzXK9Okax4Hm1487vaK7W60DqwadiKzTAfFcGQLrN6geXR8B47CRsxgh
+ 9EAu9fR5WLOeChwzIMIITWd1fY/92Y/P5ZRUGUeiQ32vb8xbFslFq6/aNQ0wR8vpGf6jprH3b5
+ WkSSyD6uJ289KBf0fkGN038itl4DaDqPGKNtmThBMjsRdNwuYZRPT8TQW2F3UooKmKheP2GJFI
+ 0WU=
 X-IronPort-AV: E=Sophos;i="5.69,329,1571727600"; 
-   d="scan'208";a="59399379"
+   d="scan'208";a="60203831"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 18 Dec 2019 05:28:36 -0700
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 18 Dec 2019 05:28:37 -0700
 Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 18 Dec 2019 05:28:34 -0700
+ 15.1.1713.5; Wed, 18 Dec 2019 05:28:37 -0700
 Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.85.251) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Wed, 18 Dec 2019 05:28:31 -0700
+ 15.1.1713.5 via Frontend Transport; Wed, 18 Dec 2019 05:28:34 -0700
 From:   Claudiu Beznea <claudiu.beznea@microchip.com>
 To:     <boris.brezillon@bootlin.com>, <airlied@linux.ie>,
         <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
@@ -63,10 +63,12 @@ CC:     <peda@axentia.se>, <dri-devel@lists.freedesktop.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>,
         Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH v3 0/6] fixes for atmel-hlcdc
-Date:   Wed, 18 Dec 2019 14:28:23 +0200
-Message-ID: <1576672109-22707-1-git-send-email-claudiu.beznea@microchip.com>
+Subject: [PATCH v3 1/6] drm: atmel-hlcdc: use double rate for pixel clock only if supported
+Date:   Wed, 18 Dec 2019 14:28:24 +0200
+Message-ID: <1576672109-22707-2-git-send-email-claudiu.beznea@microchip.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1576672109-22707-1-git-send-email-claudiu.beznea@microchip.com>
+References: <1576672109-22707-1-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,42 +76,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Doubled system clock should be used as pixel cock source only if this
+is supported. This is emphasized by the value of
+atmel_hlcdc_crtc::dc::desc::fixed_clksrc.
 
-I have few fixes for atmel-hlcdc driver in this series as well
-as two reverts.
-Revert "drm: atmel-hlcdc: enable sys_clk during initalization." is
-due to the fix in in patch 2/5.
+Fixes: a6eca2abdd42 ("drm: atmel-hlcdc: add config option for clock selection")
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+---
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Thank you,
-Claudiu Beznea
-
-Changes in v3:
-- changes dev_err() message in patch 4/6
-- collect Acked-by tags
-
-Changes in v2:
-- introduce patch 3/6
-- use dev_err() inpatch 4/6
-- introduce patch 5/6 instead of reverting commit f6f7ad323461
-  ("drm/atmel-hlcdc: allow selecting a higher pixel-clock than requested")
-
-Claudiu Beznea (5):
-  drm: atmel-hlcdc: use double rate for pixel clock only if supported
-  drm: atmel-hlcdc: enable clock before configuring timing engine
-  mfd: atmel-hlcdc: add struct device member to struct
-    atmel_hlcdc_regmap
-  mfd: atmel-hlcdc: return in case of error
-  Revert "drm: atmel-hlcdc: enable sys_clk during initalization."
-
-Peter Rosin (1):
-  drm: atmel-hlcdc: prefer a lower pixel-clock than requested
-
- drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c | 18 ++++++++++++------
- drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c   | 19 +------------------
- drivers/mfd/atmel-hlcdc.c                      | 18 ++++++++++++++----
- 3 files changed, 27 insertions(+), 28 deletions(-)
-
+diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
+index f2e73e6d46b8..5040ed8d0871 100644
+--- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
++++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
+@@ -95,14 +95,14 @@ static void atmel_hlcdc_crtc_mode_set_nofb(struct drm_crtc *c)
+ 		     (adj->crtc_hdisplay - 1) |
+ 		     ((adj->crtc_vdisplay - 1) << 16));
+ 
++	prate = clk_get_rate(crtc->dc->hlcdc->sys_clk);
++	mode_rate = adj->crtc_clock * 1000;
+ 	if (!crtc->dc->desc->fixed_clksrc) {
++		prate *= 2;
+ 		cfg |= ATMEL_HLCDC_CLKSEL;
+ 		mask |= ATMEL_HLCDC_CLKSEL;
+ 	}
+ 
+-	prate = 2 * clk_get_rate(crtc->dc->hlcdc->sys_clk);
+-	mode_rate = adj->crtc_clock * 1000;
+-
+ 	div = DIV_ROUND_UP(prate, mode_rate);
+ 	if (div < 2) {
+ 		div = 2;
 -- 
 2.7.4
 
