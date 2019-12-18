@@ -2,215 +2,108 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A770C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D3AC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D8512176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:36:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 535A9218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:37:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qrvDDwtE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbfLRJgO convert rfc822-to-8bit (ORCPT
+        id S1726742AbfLRJhu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 04:36:14 -0500
-Received: from mail-oln040092255068.outbound.protection.outlook.com ([40.92.255.68]:26688
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726090AbfLRJgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 04:36:13 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ilpfBghk9650ROWbO8D48D+Bzr7D0Q22+NVMTJ9mRpTrx4hIcLBop/Qbfm+4sKEHstO/z90F0qFqW7oCaxF81E1G1jDfWG6OTCTe/Bh342vewTDyer7vmvTp3yd2zOMhFeNZ98BdM81BuoSvdggl6U/AdpeVNpm+K38E3YdoAAedIe7IdncLyU0v8/wBRz3GipplTs4HwD+KdNJVYj5191jZR0E0Du5ubk5vUaN6Py1TysJJk9b4wqDtTrF5SX8pBh/eHxWbYu2mfbv74DqPA/70fqY0vmRqOEgrfBgYd0KgBvW7ERkmPSJLh/fC4X2u2wPmY3TezInYg8PGf9FD/A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VGedn1v8RCKgHsEg/9B69Hll19Wpn8TOtlrsaYnFUxQ=;
- b=MPQymLuhKULR69KlhAOg5UeMwG79kNQcdT+m3RLxdmz4yaadqWcWsp9fB7essnfMO/FWSHkWQajBWe4BR7Ifbse9OswdxhG8an194iiv0o1LGOk2cl9LM+SBhkD8XjZlnK8lwoVR9NsVPpB2DBs3aE9i35PuBJZuF5+KR6K5Ps2xjqaA+PyjLIDC3hYa0a9aYdvv8sy/GXxnMcEyc06OmWWOuajaQnOLyjEdjzsbLiQNH2ujTt6WwRHwwPLbZ2pEBpUBS5WiEh8hQr0xuK544Y6AT5zIS627II5k3pDmIYBzGCwBBCR1sMVbBig5hGp/Yw5quW0cvQ/LobWbzc9cPQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from SG2APC01FT010.eop-APC01.prod.protection.outlook.com
- (10.152.250.51) by SG2APC01HT214.eop-APC01.prod.protection.outlook.com
- (10.152.251.11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2538.15; Wed, 18 Dec
- 2019 09:36:05 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.250.52) by
- SG2APC01FT010.mail.protection.outlook.com (10.152.250.134) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.14 via Frontend Transport; Wed, 18 Dec 2019 09:36:04 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::20ad:6646:5bcd:63c9]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::20ad:6646:5bcd:63c9%11]) with mapi id 15.20.2559.012; Wed, 18 Dec
- 2019 09:36:04 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Mario.Limonciello@dell.com" <Mario.Limonciello@dell.com>,
-        Anthony Wong <anthony.wong@canonical.com>,
-        Oliver Neukum <oneukum@suse.com>,
-        Christian Kellner <ckellner@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 5/9] thunderbolt: Update Kconfig entries to USB4
-Thread-Topic: [PATCH v2 5/9] thunderbolt: Update Kconfig entries to USB4
-Thread-Index: AQHVtNZA7k3sXAlOX0WwGXJsNFERRKe/o2qA
-Date:   Wed, 18 Dec 2019 09:36:04 +0000
-Message-ID: <PSXP216MB0438CF99CF5C87385663A25B80530@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-References: <20191217123345.31850-1-mika.westerberg@linux.intel.com>
- <20191217123345.31850-6-mika.westerberg@linux.intel.com>
-In-Reply-To: <20191217123345.31850-6-mika.westerberg@linux.intel.com>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SYBPR01CA0128.ausprd01.prod.outlook.com
- (2603:10c6:10:5::20) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- (2603:1096:300:d::20)
-x-incomingtopheadermarker: OriginalChecksum:188C4DDE8B2B99DCE55ECA2471A8F5A8213B4451E1E8800F7A2AE1E71DCE4E30;UpperCasedChecksum:65FC7CB551DB0D82338878CCB0EA1894D144D958189CB9A1BAA908469D40025C;SizeAsReceived:8161;Count:49
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [JmZp1DqWmqDuI2Y3FxIZLM6mlHsujUfRYrUJ5uEHUmPNCfBjmiEgbNgoeUIXDNqy+1UvN3MFYpU=]
-x-microsoft-original-message-id: <20191218093555.GB3499@nicholas-dell-linux>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 49
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: 28032fbc-4c3d-477b-98d8-08d7839db3ae
-x-ms-traffictypediagnostic: SG2APC01HT214:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 133/wZWwLDobAkphglu3CvkU+nUHEIS8LmxQDqR6QFSqWqt5SuElHyaBLinpGXjiPZRVAkwb3PmZ2Fh6p/RS8ieZZJ4//fexFOqqRpnZy/uxK1IH3L+tMAGDPCrbEdDP/lpgbCNadHq8ny88bf77UOhWgrchHWkJTcolrdErJsZV3cMBJngv/M08C/OnHbd1
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <0924D40A96BFDA49ACC80FF01ED844E6@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        Wed, 18 Dec 2019 04:37:50 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:36663 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbfLRJhu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 04:37:50 -0500
+Received: by mail-ot1-f67.google.com with SMTP id w1so1741810otg.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 01:37:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Weh7WHhOC7a6++OVNVp5cWmhOd8ECBuniYjUEt6yKpU=;
+        b=qrvDDwtEt6pPN5KcAMu3lKDyybEJyQJmmAqHj8Z4gf5LfbjkM7Car3C7o8CZMjJ9Hn
+         z2rRP/qytcGEPlwfO3EHvOgsVAIi6sEgs11FDobBwEHHDQva79rkUUEost/KPA/cy0FZ
+         XCTnpSn8MHJGOwd63yebfwBoCKFDBb93drn8PhpuxqbEk+YyX8796R1fulVkPN8JulhP
+         //QH5UzUqte4HpefU9jLsGeC0gbpyp1M7xQQuPsL8GFJ4cFSJWFVsOpfq0d/lUFKqZf6
+         Xpf5wYwOGMVbL81Gq2UBGtxg7rj4xbIRxTz1VS3fj2N5pH9Hlbk9y0WuYOh28/o2PjZe
+         XX0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Weh7WHhOC7a6++OVNVp5cWmhOd8ECBuniYjUEt6yKpU=;
+        b=mbVbEy0wWYkxtJChV2e5rQjXZ4tAbv/7La48+mvh0qKHqJR9SB+cWxC6hh8y2MP+d3
+         8FMu/ybMgGFur6jvVBiN4fadg5NGyZwKlFXbzSNy5sD8sXF1vdvp86lkWsESQntpxbDE
+         rDuNt83ON2imw873rSQlD++LRUN0WRAecsuAhLdXbxjckw3Z9tCup2XBnlAKftUNBEt0
+         mWKdAFEJiUc7PbhnfsjIUmNDY/8RHTsUwqVa2EjCRADBGzAi2TbxrDJU52I5emLJfyTL
+         7wJvDI6fa0tpD8/hX3Dyqvri+HrLWWKipjwAJ7cWiXrlQrnP7BzcA9YeGNe3LW5hGUnE
+         45WA==
+X-Gm-Message-State: APjAAAX6w7+z3xG/QPsTX/+n6wUseOubUihQzShXKXVsl9fKESi8X+KB
+        dYmJZN96G+UzQ5Y2OXSpFMnR2P1xtNovQLfQ0ljs3Msr
+X-Google-Smtp-Source: APXvYqwpIZeEQArmJJlsRBJXNXZctfsZZCxc7KPNSnmOIIwBlbNt+9GpPKaZ/AWjIlCPofTt1eIUcixaL6amWExH6OI=
+X-Received: by 2002:a9d:6a8f:: with SMTP id l15mr1617342otq.59.1576661869171;
+ Wed, 18 Dec 2019 01:37:49 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 28032fbc-4c3d-477b-98d8-08d7839db3ae
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Dec 2019 09:36:04.8030
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2APC01HT214
+References: <20191216084207.19482-1-oshpigelman@habana.ai>
+In-Reply-To: <20191216084207.19482-1-oshpigelman@habana.ai>
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+Date:   Wed, 18 Dec 2019 11:37:22 +0200
+Message-ID: <CAFCwf13GyEop7rWZ1i8E3=EXgtN6w3WJbB40KdsiG15ViMv-gQ@mail.gmail.com>
+Subject: Re: [PATCH] habanalabs: use the user CB size as a default job size
+To:     Omer Shpigelman <oshpigelman@habana.ai>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 03:33:41PM +0300, Mika Westerberg wrote:
-> Since the driver now supports USB4 which is the standard going forward,
-> update the Kconfig entry to mention this and rename the entry from
-> CONFIG_THUNDERBOLT to CONFIG_USB4 instead to help people to find the
-> correct option if they want to enable USB4.
-> 
-> Also do the same for Thunderbolt network driver.
-> 
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Cc: David S. Miller <davem@davemloft.net>
+On Mon, Dec 16, 2019 at 10:42 AM Omer Shpigelman <oshpigelman@habana.ai> wrote:
+>
+> When no patched command buffer (CB) is created, use the user CB size as
+> the job size.
+>
+> Signed-off-by: Omer Shpigelman <oshpigelman@habana.ai>
 > ---
->  drivers/Makefile             |  2 +-
->  drivers/net/Kconfig          | 10 +++++-----
->  drivers/net/Makefile         |  2 +-
->  drivers/thunderbolt/Kconfig  | 11 ++++++-----
->  drivers/thunderbolt/Makefile |  2 +-
->  5 files changed, 14 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/Makefile b/drivers/Makefile
-> index aaef17cc6512..31cf17dee252 100644
-> --- a/drivers/Makefile
-> +++ b/drivers/Makefile
-> @@ -171,7 +171,7 @@ obj-$(CONFIG_POWERCAP)		+= powercap/
->  obj-$(CONFIG_MCB)		+= mcb/
->  obj-$(CONFIG_PERF_EVENTS)	+= perf/
->  obj-$(CONFIG_RAS)		+= ras/
-> -obj-$(CONFIG_THUNDERBOLT)	+= thunderbolt/
-> +obj-$(CONFIG_USB4)		+= thunderbolt/
->  obj-$(CONFIG_CORESIGHT)		+= hwtracing/coresight/
->  obj-y				+= hwtracing/intel_th/
->  obj-$(CONFIG_STM)		+= hwtracing/stm/
-> diff --git a/drivers/net/Kconfig b/drivers/net/Kconfig
-> index d02f12a5254e..d1c84d47779d 100644
-> --- a/drivers/net/Kconfig
-> +++ b/drivers/net/Kconfig
-> @@ -489,12 +489,12 @@ config FUJITSU_ES
->  	  This driver provides support for Extended Socket network device
->  	  on Extended Partitioning of FUJITSU PRIMEQUEST 2000 E2 series.
->  
-> -config THUNDERBOLT_NET
-> -	tristate "Networking over Thunderbolt cable"
-> -	depends on THUNDERBOLT && INET
-> +config USB4_NET
-> +	tristate "Networking over USB4 and Thunderbolt cables"
-> +	depends on USB4 && INET
->  	help
-> -	  Select this if you want to create network between two
-> -	  computers over a Thunderbolt cable. The driver supports Apple
-> +	  Select this if you want to create network between two computers
-> +	  over a USB4 and Thunderbolt cables. The driver supports Apple
-Nitpick: Perhaps should be "over USB4 and Thunderbolt cables".
+>  drivers/misc/habanalabs/command_submission.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/misc/habanalabs/command_submission.c b/drivers/misc/habanalabs/command_submission.c
+> index 8850f475a413..41e95513c591 100644
+> --- a/drivers/misc/habanalabs/command_submission.c
+> +++ b/drivers/misc/habanalabs/command_submission.c
+> @@ -129,6 +129,8 @@ static int cs_parser(struct hl_fpriv *hpriv, struct hl_cs_job *job)
+>                 spin_unlock(&job->user_cb->lock);
+>                 hl_cb_put(job->user_cb);
+>                 job->user_cb = NULL;
+> +       } else if (!rc) {
+> +               job->job_cb_size = job->user_cb_size;
+>         }
+>
+>         return rc;
+> @@ -585,10 +587,6 @@ static int _hl_cs_ioctl(struct hl_fpriv *hpriv, void __user *chunks,
+>                 job->cs = cs;
+>                 job->user_cb = cb;
+>                 job->user_cb_size = chunk->cb_size;
+> -               if (is_kernel_allocated_cb)
+> -                       job->job_cb_size = cb->size;
+> -               else
+> -                       job->job_cb_size = chunk->cb_size;
+>                 job->hw_queue_id = chunk->queue_index;
+>
+>                 cs->jobs_in_queue_cnt[job->hw_queue_id]++;
+> --
+> 2.17.1
+>
 
->  	  ThunderboltIP protocol and allows communication with any host
->  	  supporting the same protocol including Windows and macOS.
->  
-> diff --git a/drivers/net/Makefile b/drivers/net/Makefile
-> index 0d3ba056cda3..29e83e9f545e 100644
-> --- a/drivers/net/Makefile
-> +++ b/drivers/net/Makefile
-> @@ -76,6 +76,6 @@ obj-$(CONFIG_NTB_NETDEV) += ntb_netdev.o
->  obj-$(CONFIG_FUJITSU_ES) += fjes/
->  
->  thunderbolt-net-y += thunderbolt.o
-> -obj-$(CONFIG_THUNDERBOLT_NET) += thunderbolt-net.o
-> +obj-$(CONFIG_USB4_NET) += thunderbolt-net.o
->  obj-$(CONFIG_NETDEVSIM) += netdevsim/
->  obj-$(CONFIG_NET_FAILOVER) += net_failover.o
-> diff --git a/drivers/thunderbolt/Kconfig b/drivers/thunderbolt/Kconfig
-> index fd9adca898ff..1eb757e8df3b 100644
-> --- a/drivers/thunderbolt/Kconfig
-> +++ b/drivers/thunderbolt/Kconfig
-> @@ -1,6 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -menuconfig THUNDERBOLT
-> -	tristate "Thunderbolt support"
-> +menuconfig USB4
-> +	tristate "Unified support for USB4 and Thunderbolt"
->  	depends on PCI
->  	depends on X86 || COMPILE_TEST
->  	select APPLE_PROPERTIES if EFI_STUB && X86
-> @@ -9,9 +9,10 @@ menuconfig THUNDERBOLT
->  	select CRYPTO_HASH
->  	select NVMEM
->  	help
-> -	  Thunderbolt Controller driver. This driver is required if you
-> -	  want to hotplug Thunderbolt devices on Apple hardware or on PCs
-> -	  with Intel Falcon Ridge or newer.
-> +	  USB4 and Thunderbolt driver. USB4 is the public speficiation
-> +	  based on Thunderbolt 3 protocol. This driver is required if
-> +	  you want to hotplug Thunderbolt and USB4 compliant devices on
-> +	  Apple hardware or on PCs with Intel Falcon Ridge or newer.
->  
->  	  To compile this driver a module, choose M here. The module will be
->  	  called thunderbolt.
-> diff --git a/drivers/thunderbolt/Makefile b/drivers/thunderbolt/Makefile
-> index c0b2fd73dfbd..102e9529ee66 100644
-> --- a/drivers/thunderbolt/Makefile
-> +++ b/drivers/thunderbolt/Makefile
-> @@ -1,4 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -obj-${CONFIG_THUNDERBOLT} := thunderbolt.o
-> +obj-${CONFIG_USB4} := thunderbolt.o
->  thunderbolt-objs := nhi.o nhi_ops.o ctl.o tb.o switch.o cap.o path.o tunnel.o eeprom.o
->  thunderbolt-objs += domain.o dma_port.o icm.o property.o xdomain.o lc.o usb4.o
-> -- 
-> 2.24.0
-> 
-
-Kind regards,
-Nicholas
+This patch is:
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
