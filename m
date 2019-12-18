@@ -2,182 +2,141 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5AAC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64354C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28A2F21582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:50:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36232218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:51:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576709511;
+	bh=VugnyC9kUw6cqU9Buk7K2FknobPPVSwC/MJFw5+D2zo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=mJOf6zRAyuSHPJwzUIEnw3U9HVnOadCFamfguCqQKUecdaSwoiy+n5EQcz3U9xzJz
+	 It0lzuAtxRfMwwCsqI/fw8wMuO8MNC+upGlDpua9UoAFVc2Irjt+v4RJyrHJxAvXX0
+	 qOBpmTmG1n3HX+O9CYYgabf1PtRH4EMcvFK8KgTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbfLRWu3 (ORCPT
+        id S1726641AbfLRWvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 17:50:29 -0500
-Received: from outbound-smtp33.blacknight.com ([81.17.249.66]:40567 "EHLO
-        outbound-smtp33.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726387AbfLRWu3 (ORCPT
+        Wed, 18 Dec 2019 17:51:50 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:38885 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbfLRWvt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 17:50:29 -0500
-Received: from mail.blacknight.com (unknown [81.17.254.16])
-        by outbound-smtp33.blacknight.com (Postfix) with ESMTPS id 5D904D0B02
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 22:50:26 +0000 (GMT)
-Received: (qmail 26881 invoked from network); 18 Dec 2019 22:50:26 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 18 Dec 2019 22:50:26 -0000
-Date:   Wed, 18 Dec 2019 22:50:23 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, pauld@redhat.com,
-        srikar@linux.vnet.ibm.com, quentin.perret@arm.com,
-        dietmar.eggemann@arm.com, Morten.Rasmussen@arm.com,
-        hdanton@sina.com, parth@linux.ibm.com, riel@surriel.com,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] sched, fair: Allow a small degree of load imbalance
- between SD_NUMA domains
-Message-ID: <20191218225023.GG3178@techsingularity.net>
-References: <20191218154402.GF3178@techsingularity.net>
- <8f049805-3e97-09bb-2d32-0718be1dec9b@arm.com>
+        Wed, 18 Dec 2019 17:51:49 -0500
+Received: by mail-lf1-f66.google.com with SMTP id r14so2894875lfm.5
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 14:51:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0opJ0B65Q5BiWbXOfLeRpbLzFdNkXbzXfsShY/S8STo=;
+        b=DUkxLRvmbaiH3+fF8+61ttVLfREI0A+NWtWnJOtLUOSriU6hVGAfH7iqm4AZPXQqzt
+         7aO270kl1hKuJ5aO8Gokb2xsJxP0eGToFjcV4DL7BdieT8cYuox6b9GzA72q3+lVU+Px
+         napMS5WIEyhf5c/+6313JTnavgdEB2AaJj+cI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0opJ0B65Q5BiWbXOfLeRpbLzFdNkXbzXfsShY/S8STo=;
+        b=f9PiElNUy9YqF7GTP78mjrnlSmZqsErTnTzggFPdd1NNvHBGSNVeJABLnEhXdvjItC
+         j7gGB3byplWsGfJGHcxXYcaKC86RKWKfybY/QFrTP8VWqexC1SsZZUOn40RyjXuGHetn
+         m2ppfl/2S2pHat5VBGZZm0sdIzTqDYdQOIjgAUs/nofs1/NeeHZ1mhTt8D/6hAeH97ct
+         BqrJVSNv1flSxsiG4ei8Wzb0TSTxdHgnJMF+JHODE8pLOrM1Es4Io6pY33I5LZ2nNh4D
+         4eRDTU3s5oX/CoKB+5AUfHtSN/hvJVfna+Nk7KhgXB8Twp6T6YK3DiZlmUnFUSqREWc0
+         +ZEw==
+X-Gm-Message-State: APjAAAUQaEp3D8qq3l5iFJhFAfYtdeYAVI28RGWGNzQdlUCxKQxljNyk
+        fIRcH/V/3Xp2EOaZsTYsNS21GwCZlOc=
+X-Google-Smtp-Source: APXvYqwBgTSdnkEp7viJTtpKdhtuapT0bSjLSFWj6R7jIVwUOjVH2+o2S9ZZktmVbJoseVAA6pFj/A==
+X-Received: by 2002:a19:ae04:: with SMTP id f4mr3375937lfc.64.1576709506714;
+        Wed, 18 Dec 2019 14:51:46 -0800 (PST)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
+        by smtp.gmail.com with ESMTPSA id n13sm1846252lji.91.2019.12.18.14.51.44
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Dec 2019 14:51:45 -0800 (PST)
+Received: by mail-lf1-f49.google.com with SMTP id m30so2889455lfp.8
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 14:51:44 -0800 (PST)
+X-Received: by 2002:ac2:465e:: with SMTP id s30mr3406731lfo.134.1576709503936;
+ Wed, 18 Dec 2019 14:51:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <8f049805-3e97-09bb-2d32-0718be1dec9b@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <157558502272.10278.8718685637610645781.stgit@warthog.procyon.org.uk>
+ <20191206135604.GB2734@twin.jikos.cz> <CAHk-=wiN_pWbcRaw5L-J2EFUyCn49Due0McwETKwmFFPp88K8Q@mail.gmail.com>
+ <CAHk-=wjvO1V912ya=1rdXwrm1OBTi6GqnqryH_E8OR69cZuVOg@mail.gmail.com>
+ <CAHk-=wizsHmCwUAyQKdU7hBPXHYQn-fOtJKBqMs-79br2pWxeQ@mail.gmail.com>
+ <CAHk-=wjeG0q1vgzu4iJhW5juPkTsjTYmiqiMUYAebWW+0bam6w@mail.gmail.com> <b2ae78da-1c29-8ef7-d0bb-376c52af37c3@yandex-team.ru>
+In-Reply-To: <b2ae78da-1c29-8ef7-d0bb-376c52af37c3@yandex-team.ru>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 18 Dec 2019 14:51:27 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgTisLQ9k-hsQeyrT5qBS0xuQPYsueFWNT3RxbkkVmbjw@mail.gmail.com>
+Message-ID: <CAHk-=wgTisLQ9k-hsQeyrT5qBS0xuQPYsueFWNT3RxbkkVmbjw@mail.gmail.com>
+Subject: Re: [PATCH 0/2] pipe: Fixes [ver #2]
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Akemi Yagi <toracat@elrepo.org>, DJ Delorie <dj@redhat.com>
+Cc:     David Sterba <dsterba@suse.cz>,
+        David Howells <dhowells@redhat.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 06:50:52PM +0000, Valentin Schneider wrote:
-> > In general, the patch simply seeks to avoid unnecessarily cross-node
-> > migrations when a machine is lightly loaded but shows benefits for other
-> > workloads. While tests are still running, so far it seems to benefit
-> > light-utilisation smaller workloads on large machines and does not appear
-> > to do any harm to larger or parallelised workloads.
-> > 
-> 
-> Thanks for the detailed testing, I haven't digested it entirely yet but I
-> appreciate the effort.
-> 
+On Thu, Dec 12, 2019 at 2:18 AM Konstantin Khlebnikov
+<khlebnikov@yandex-team.ru> wrote:
+>
+> commit f467a6a66419 pipe: fix and clarify pipe read wakeup logic
+> killed "wake writer when buffer becomes half empty" part added by
+> commit cefa80ced57a ("pipe: Increase the writer-wakeup threshold to reduce context-switch count").
+>
+> I suppose that was unintentional. Jobserver juggles with few bytes and
+> should never reach half/full buffer thresholds.
 
-No problem, this is one of those patches that it's best to test a bunch
-of loads and machines. I haven't presented it all because the changelog
-would be beyond ridiculous.
+It wasn'tunintentional - the rest of the cleanups should mean that we
+never wake things up unnecessarily - we now only wake up if it _used_
+to be 100% full, and we only do it once per read.
 
-> > @@ -8690,6 +8686,38 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
-> >  		env->migration_type = migrate_task;
-> >  		env->imbalance = max_t(long, 0, (local->idle_cpus -
-> >  						 busiest->idle_cpus) >> 1);
-> > +
-> > +out_spare:
-> > +		/*
-> > +		 * Whether balancing the number of running tasks or the number
-> > +		 * of idle CPUs, consider allowing some degree of imbalance if
-> > +		 * migrating between NUMA domains.
-> > +		 */
-> > +		if (env->sd->flags & SD_NUMA) {
-> > +			unsigned int imbalance_adj, imbalance_max;
-> > +
-> > +			/*
-> > +			 * imbalance_adj is the allowable degree of imbalance
-> > +			 * to exist between two NUMA domains. It's calculated
-> > +			 * relative to imbalance_pct with a minimum of two
-> > +			 * tasks or idle CPUs.
-> > +			 */
-> > +			imbalance_adj = (busiest->group_weight *
-> > +				(env->sd->imbalance_pct - 100) / 100) >> 1;
-> 
-> IIRC imbalance_pct for NUMA domains uses the default 125, so I read this as
-> "allow an imbalance of 1 task per 8 CPU in the source group" (just making
-> sure I follow).
-> 
+And it did it without the watermark, which I was worried about might
+break something that "knew" the size of the pipe.
 
-That is how it works out in most cases. As imbalance_pct can be anything
-in theory, I didn't specify what it usually breaks down to. The >> 1 is
-to go "half way" similar to how imbalance itself is calculated.
+But performance testing would be good. Both for the "no unnecessary
+wakeups" case, but also for the thundering herd issue.
 
-> > +			imbalance_adj = max(imbalance_adj, 2U);
-> > +
-> > +			/*
-> > +			 * Ignore imbalance unless busiest sd is close to 50%
-> > +			 * utilisation. At that point balancing for memory
-> > +			 * bandwidth and potentially avoiding unnecessary use
-> > +			 * of HT siblings is as relevant as memory locality.
-> > +			 */
-> > +			imbalance_max = (busiest->group_weight >> 1) - imbalance_adj;
-> > +			if (env->imbalance <= imbalance_adj &&
-> > +			    busiest->sum_nr_running < imbalance_max) {
-> 
-> The code does "unless busiest group has half as many runnable tasks (or more)
-> as it has CPUs (modulo the adj thing)", is that what you mean by "unless
-> busiest sd is close to 50% utilisation" in the comment? It's somewhat
-> different IMO.
-> 
+To answer Josh's email in this same thread:
 
-Crap, yes. At the time of writing, I was thinking in terms of running
-tasks that were fully active hence the misleading comment.
+On Wed, Dec 18, 2019 at 12:59 PM Josh Triplett <josh@joshtriplett.org> wrote:
+>
+> Debian and Ubuntu have make 4.2.1-1.2, which includes "[SV 51159] Use a
+> non-blocking read with pselect to avoid hangs." and various other fixes.
+> https://metadata.ftp-master.debian.org/changelogs/main/m/make-dfsg/make-dfsg_4.2.1-1.2_changelog
+> So, both Debian and Ubuntu should be fine with the pipe improvements.
+> (I'm testing that now.)
+>
+> Is the version of your non-thundering-herd pipe wakeup patch attached to
+> https://lore.kernel.org/lkml/CAHk-=wicgTacrHUJmSBbW9MYAdMPdrXzULPNqQ3G7+HkLeNf1Q@mail.gmail.com/
+> still the best version to test performance with?
 
-> > +				env->imbalance = 0;
-> > +			}
-> > +		}
-> >  		return;
-> >  	}
-> >  
-> > 
-> I'm quite sure you have reasons to have written it that way, but I was
-> hoping we could squash it down to something like:
+That's my latest version, but you'll have to tweak it a tiny bit
+because of d1c6a2aa02af ("pipe: simplify signal handling in
+pipe_read() and add comments") which I did after that patch.
 
-I wrote it that way to make it clear exactly what has changed, the
-thinking behind the checks and to avoid 80-col limits to make review
-easier overall. It's a force of habit and I'm happy to reformat it as
-you suggest except....
+The easiest way to resolve it is likely to revert that d1c6a2aa02af,
+then apply the non-thundering-herd patch and then apply d1c6a2aa02af
+again by hand - it's fairly straightforward (and you can return
+-ERESTARTSYS directly if wait_event_interruptible_exclusive() fails,
+because of all the same reasons why it coul dhappen without the
+thundering-herd patch.
 
-> ---
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 08a233e97a01..f05d09a8452e 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -8680,16 +8680,27 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
->  			env->migration_type = migrate_task;
->  			lsub_positive(&nr_diff, local->sum_nr_running);
->  			env->imbalance = nr_diff >> 1;
-> -			return;
-> +		} else {
-> +
-> +			/*
-> +			 * If there is no overload, we just want to even the number of
-> +			 * idle cpus.
-> +			 */
-> +			env->migration_type = migrate_task;
-> +			env->imbalance = max_t(long, 0, (local->idle_cpus -
-> +							 busiest->idle_cpus) >> 1);
->  		}
->  
->  		/*
-> -		 * If there is no overload, we just want to even the number of
-> -		 * idle cpus.
-> +		 * Allow for a small imbalance between NUMA groups; don't do any
-> +		 * of it if there is at least half as many tasks / busy CPUs as
-> +		 * there are available CPUs in the busiest group
->  		 */
-> -		env->migration_type = migrate_task;
-> -		env->imbalance = max_t(long, 0, (local->idle_cpus -
-> -						 busiest->idle_cpus) >> 1);
-> +		if (env->sd->flags & SD_NUMA &&
-> +		    (busiest->sum_nr_running < busiest->group_weight >> 1) &&
+I can look at re-creating that patch if  you find it to be too annoying.
 
-This last line is not exactly equivalent to what I wrote. It would need
-to be
-
-	(busiest->sum_nr_running < (busiest->group_weight >> 1) - imbalance_adj) &&
-
-I can test as you suggest to see if it's roughly equivalent in terms of
-performance. The intent was to have a cutoff just before we reached 50%
-running tasks / busy CPUs.
-
--- 
-Mel Gorman
-SUSE Labs
+               Linus
