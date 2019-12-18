@@ -2,138 +2,201 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3558C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 05:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D700C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 05:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A046D2082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 05:31:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="e2KRehgq"
+	by mail.kernel.org (Postfix) with ESMTP id 336B02082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 05:36:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbfLRFba (ORCPT
+        id S1726591AbfLRFgS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 00:31:30 -0500
-Received: from mail-bn8nam11on2047.outbound.protection.outlook.com ([40.107.236.47]:6265
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725797AbfLRFba (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 00:31:30 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=J6z273NeJGzwTJURyJ14swecRoUxEll85/mjg1sxzUrmE5aq0hojDoCZ9ZZnFNviIMbLNawM7iOxygPCjK3tsdV8lFiz14aTzhLEiJhhleaAmL9F8nw98NKELkzDLMQFT203VlkradhQNbWlryF7SQDqNpEd/MGyf9yLRJ/TflpX2780/IxKbVNf6sYwKRlXkr2yLEw3hfNYfD+1Vyji2ACX876ZDmNYzVJr3joSTF5c0MarukjNCSEfZ+mf8rvMzE3hdJd0+oano+tUGDXx9y691m3TCGQQh1H4BxJVVMgIGTcoXkWWEIdCTCa3HKIWPd/gkzIkUUlK/AbBGvxq6w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QpalgQktecBMBU5cgbYalCI7X0kvEE2yeUTplt/MfvA=;
- b=FrD4JGEP1ShcoygtaTU11OobEymIEuPC1M3OpjmqBs64OSZfpm0C76m2eqEdl2YsnQHvFP6WkEhtlmwzdUQj3MJHvPblbrzlqCRjuiW7IEKDFfxbjpuQGTQJGcSZTry3dI2ZUQy5us1ffNjLI9waz5ETfsKjF4FNczhVIOD6Amei4xuiF+vJsdUnB7pCChq2Vg5l9adPaEMYbTu8lcuA2qHQSu+iPI4uB/dL6oEGMVFaWwazISFI8o1lcIWq6/0S8Opymq0pOpkoiFPv+3r8G4Qtig/qK+jLPGZl0HVvQa86wGtXpE/CSMIcmjSpN6SAS91ks4tivFjCQo4cRknnpQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synaptics.com; dmarc=pass action=none
- header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QpalgQktecBMBU5cgbYalCI7X0kvEE2yeUTplt/MfvA=;
- b=e2KRehgqDxhH5fQpU0FyLXGAEs/u1IFrO0ykiNtptpoqIysQ8lb22te9Kcmr6rskdxAyfeoNiWWc0R3ffQVPqokwG95qVL0qjb93+yL8jACtnl+6gPKHGwTFGPifHBtlXtfP5P+6KorkTP6iaL5tZI6rk6qjShtQoE8s3EkNm+I=
-Received: from BYAPR03MB4773.namprd03.prod.outlook.com (20.179.93.213) by
- BYAPR03MB3783.namprd03.prod.outlook.com (20.176.253.216) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.17; Wed, 18 Dec 2019 05:31:26 +0000
-Received: from BYAPR03MB4773.namprd03.prod.outlook.com
- ([fe80::708d:91cc:79a7:9b9a]) by BYAPR03MB4773.namprd03.prod.outlook.com
- ([fe80::708d:91cc:79a7:9b9a%6]) with mapi id 15.20.2538.019; Wed, 18 Dec 2019
- 05:31:25 +0000
-From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-To:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@kernel.org" <mingo@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] watchdog: Remove soft_lockup_hrtimer_cnt and related code
-Thread-Topic: [PATCH v2] watchdog: Remove soft_lockup_hrtimer_cnt and related
- code
-Thread-Index: AQHVtWRj/flJZpZGKkW+cjf3i9EWlg==
-Date:   Wed, 18 Dec 2019 05:31:25 +0000
-Message-ID: <20191218131720.4146aea2@xhacker.debian>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [124.74.246.114]
-x-clientproxiedby: TYAPR01CA0011.jpnprd01.prod.outlook.com (2603:1096:404::23)
- To BYAPR03MB4773.namprd03.prod.outlook.com (2603:10b6:a03:139::21)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 92955a9a-3620-4a49-8785-08d7837b862b
-x-ms-traffictypediagnostic: BYAPR03MB3783:
-x-microsoft-antispam-prvs: <BYAPR03MB37837A3AE6C1F7657C608C43ED530@BYAPR03MB3783.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:81;
-x-forefront-prvs: 0255DF69B9
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(396003)(136003)(366004)(39860400002)(189003)(199004)(1076003)(2906002)(8676002)(478600001)(5660300002)(186003)(81166006)(86362001)(4326008)(6486002)(8936002)(81156014)(316002)(110136005)(66946007)(9686003)(64756008)(66446008)(66476007)(26005)(66556008)(6512007)(52116002)(6506007)(71200400001)(39210200001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB3783;H:BYAPR03MB4773.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: synaptics.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: gZ44qJio9jAaO7UHUIDC4Mt3WaQgCHRFv9Wf0ztOT3K0q64FGARXPLjk9Ud0bc9HWBw0ergHkYqcrAgT6ZfW5IWOp3jHdnGUdSL5O4qdNNcQt/kuw57fuovpKWgI4Vkxipugg+QCZYPwXW9fzAL4scmvvhcWOcPebnn363KPgsD0eudyQ/n2mWr01bC1OL0khQyEnrrLAOwGg3cNpVRvgYHpsZKlUKiZcJXglD4mmwwOSwGgeNc+BXw0eGQZPqZwJNQyO0H/je5lmqXbHwxZYSP3EwmlfLDTEMgLgCODq2Sdt+320DmmEHJgg6SjBKWQtRSHrQ7EhqPos8hu38y/MAW0TGXAPjH6LC6JdgalYgulGwQ0X5Iva/aiysa7wQg0WcM2PmrfQ6MZLDNHynoC3W+7egwGnOx5DccG6drgE4i4xZN0vjEQHBoAaUg5KIpWElhZOc1TnIgK8scZbbIzX7BJuSk/Y3Ib5/q4sIFRcky5Bev0hAxu78mP+sXn4RtM
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <D1E9C66EBD380A4392434456BB9A8326@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 18 Dec 2019 00:36:18 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:26514 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725797AbfLRFgR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 00:36:17 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBI5XrdR096067;
+        Wed, 18 Dec 2019 00:35:58 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wyaue6apf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 Dec 2019 00:35:58 -0500
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xBI5ZM6J127690;
+        Wed, 18 Dec 2019 00:35:58 -0500
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wyaue6ap7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 Dec 2019 00:35:58 -0500
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xBI5Ykp1028792;
+        Wed, 18 Dec 2019 05:35:57 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma04dal.us.ibm.com with ESMTP id 2wvqc6ueby-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 Dec 2019 05:35:57 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBI5ZuGY35455372
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Dec 2019 05:35:56 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 103DDC6057;
+        Wed, 18 Dec 2019 05:35:56 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5A4C1C605B;
+        Wed, 18 Dec 2019 05:35:52 +0000 (GMT)
+Received: from skywalker.ibmuc.com (unknown [9.199.35.117])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed, 18 Dec 2019 05:35:51 +0000 (GMT)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     akpm@linux-foundation.org, npiggin@gmail.com, mpe@ellerman.id.au,
+        peterz@infradead.org, will@kernel.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-arch@vger.kernel.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Subject: [PATCH v2 1/3] powerpc/mmu_gather: Enable RCU_TABLE_FREE even for !SMP case
+Date:   Wed, 18 Dec 2019 11:05:28 +0530
+Message-Id: <20191218053530.73053-1-aneesh.kumar@linux.ibm.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 92955a9a-3620-4a49-8785-08d7837b862b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Dec 2019 05:31:25.4878
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: JmgR/bSYb7l1RwqmZHjhSYYu3ZPkvTWcKe6R6fbfQtm6/iiBRm31Ocuo1ihxD5mxbLkdT9/uktgbEtysR2qf6g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB3783
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-18_01:2019-12-17,2019-12-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ lowpriorityscore=0 clxscore=1015 mlxlogscore=999 mlxscore=0 suspectscore=2
+ spamscore=0 bulkscore=0 adultscore=0 malwarescore=0 impostorscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912180043
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After commit 9cf57731b63e ("watchdog/softlockup: Replace "watchdog/%u"
-threads with cpu_stop_work"), the percpu soft_lockup_hrtimer_cnt is
-not used any more, so remove it and related code.
+A follow up patch is going to make sure we correctly invalidate page walk cache
+before we free page table pages. In order to keep things simple enable
+RCU_TABLE_FREE even for !SMP so that we don't have to fixup the !SMP case
+differently in the followup patch
 
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 ---
-Since v1
- - rebase on v5.5-rc1
+ arch/powerpc/Kconfig                         | 2 +-
+ arch/powerpc/include/asm/book3s/32/pgalloc.h | 8 --------
+ arch/powerpc/include/asm/book3s/64/pgalloc.h | 2 --
+ arch/powerpc/include/asm/nohash/pgalloc.h    | 8 --------
+ arch/powerpc/mm/book3s64/pgtable.c           | 7 -------
+ 5 files changed, 1 insertion(+), 26 deletions(-)
 
- kernel/watchdog.c | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/kernel/watchdog.c b/kernel/watchdog.c
-index f41334ef0971..0621301ae8cf 100644
---- a/kernel/watchdog.c
-+++ b/kernel/watchdog.c
-@@ -173,7 +173,6 @@ static DEFINE_PER_CPU(struct hrtimer, watchdog_hrtimer)=
-;
- static DEFINE_PER_CPU(bool, softlockup_touch_sync);
- static DEFINE_PER_CPU(bool, soft_watchdog_warn);
- static DEFINE_PER_CPU(unsigned long, hrtimer_interrupts);
--static DEFINE_PER_CPU(unsigned long, soft_lockup_hrtimer_cnt);
- static DEFINE_PER_CPU(struct task_struct *, softlockup_task_ptr_saved);
- static DEFINE_PER_CPU(unsigned long, hrtimer_interrupts_saved);
- static unsigned long soft_lockup_nmi_warn;
-@@ -350,8 +349,6 @@ static DEFINE_PER_CPU(struct cpu_stop_work, softlockup_=
-stop_work);
-  */
- static int softlockup_fn(void *data)
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 1ec34e16ed65..04240205f38c 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -222,7 +222,7 @@ config PPC
+ 	select HAVE_HARDLOCKUP_DETECTOR_PERF	if PERF_EVENTS && HAVE_PERF_EVENTS_NMI && !HAVE_HARDLOCKUP_DETECTOR_ARCH
+ 	select HAVE_PERF_REGS
+ 	select HAVE_PERF_USER_STACK_DUMP
+-	select HAVE_RCU_TABLE_FREE		if SMP
++	select HAVE_RCU_TABLE_FREE
+ 	select HAVE_RCU_TABLE_NO_INVALIDATE	if HAVE_RCU_TABLE_FREE
+ 	select HAVE_MMU_GATHER_PAGE_SIZE
+ 	select HAVE_REGS_AND_STACK_ACCESS_API
+diff --git a/arch/powerpc/include/asm/book3s/32/pgalloc.h b/arch/powerpc/include/asm/book3s/32/pgalloc.h
+index 998317702630..dc5c039eb28e 100644
+--- a/arch/powerpc/include/asm/book3s/32/pgalloc.h
++++ b/arch/powerpc/include/asm/book3s/32/pgalloc.h
+@@ -49,7 +49,6 @@ static inline void pgtable_free(void *table, unsigned index_size)
+ 
+ #define get_hugepd_cache_index(x)  (x)
+ 
+-#ifdef CONFIG_SMP
+ static inline void pgtable_free_tlb(struct mmu_gather *tlb,
+ 				    void *table, int shift)
  {
--	__this_cpu_write(soft_lockup_hrtimer_cnt,
--			 __this_cpu_read(hrtimer_interrupts));
- 	__touch_watchdog();
- 	complete(this_cpu_ptr(&softlockup_completion));
-=20
---=20
-2.24.1
+@@ -66,13 +65,6 @@ static inline void __tlb_remove_table(void *_table)
+ 
+ 	pgtable_free(table, shift);
+ }
+-#else
+-static inline void pgtable_free_tlb(struct mmu_gather *tlb,
+-				    void *table, int shift)
+-{
+-	pgtable_free(table, shift);
+-}
+-#endif
+ 
+ static inline void __pte_free_tlb(struct mmu_gather *tlb, pgtable_t table,
+ 				  unsigned long address)
+diff --git a/arch/powerpc/include/asm/book3s/64/pgalloc.h b/arch/powerpc/include/asm/book3s/64/pgalloc.h
+index f6968c811026..a41e91bd0580 100644
+--- a/arch/powerpc/include/asm/book3s/64/pgalloc.h
++++ b/arch/powerpc/include/asm/book3s/64/pgalloc.h
+@@ -19,9 +19,7 @@ extern struct vmemmap_backing *vmemmap_list;
+ extern pmd_t *pmd_fragment_alloc(struct mm_struct *, unsigned long);
+ extern void pmd_fragment_free(unsigned long *);
+ extern void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int shift);
+-#ifdef CONFIG_SMP
+ extern void __tlb_remove_table(void *_table);
+-#endif
+ void pte_frag_destroy(void *pte_frag);
+ 
+ static inline pgd_t *radix__pgd_alloc(struct mm_struct *mm)
+diff --git a/arch/powerpc/include/asm/nohash/pgalloc.h b/arch/powerpc/include/asm/nohash/pgalloc.h
+index 332b13b4ecdb..29c43665a753 100644
+--- a/arch/powerpc/include/asm/nohash/pgalloc.h
++++ b/arch/powerpc/include/asm/nohash/pgalloc.h
+@@ -46,7 +46,6 @@ static inline void pgtable_free(void *table, int shift)
+ 
+ #define get_hugepd_cache_index(x)	(x)
+ 
+-#ifdef CONFIG_SMP
+ static inline void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int shift)
+ {
+ 	unsigned long pgf = (unsigned long)table;
+@@ -64,13 +63,6 @@ static inline void __tlb_remove_table(void *_table)
+ 	pgtable_free(table, shift);
+ }
+ 
+-#else
+-static inline void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int shift)
+-{
+-	pgtable_free(table, shift);
+-}
+-#endif
+-
+ static inline void __pte_free_tlb(struct mmu_gather *tlb, pgtable_t table,
+ 				  unsigned long address)
+ {
+diff --git a/arch/powerpc/mm/book3s64/pgtable.c b/arch/powerpc/mm/book3s64/pgtable.c
+index 75483b40fcb1..2bf7e1b4fd82 100644
+--- a/arch/powerpc/mm/book3s64/pgtable.c
++++ b/arch/powerpc/mm/book3s64/pgtable.c
+@@ -378,7 +378,6 @@ static inline void pgtable_free(void *table, int index)
+ 	}
+ }
+ 
+-#ifdef CONFIG_SMP
+ void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int index)
+ {
+ 	unsigned long pgf = (unsigned long)table;
+@@ -395,12 +394,6 @@ void __tlb_remove_table(void *_table)
+ 
+ 	return pgtable_free(table, index);
+ }
+-#else
+-void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int index)
+-{
+-	return pgtable_free(table, index);
+-}
+-#endif
+ 
+ #ifdef CONFIG_PROC_FS
+ atomic_long_t direct_pages_count[MMU_PAGE_COUNT];
+-- 
+2.23.0
 
