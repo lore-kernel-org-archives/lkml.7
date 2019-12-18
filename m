@@ -2,237 +2,121 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13CC0C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 02:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D4CC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 02:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1AF9218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 02:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FEC821582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 02:30:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QmFXaXis"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="urk9zjAY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbfLRC2F (ORCPT
+        id S1726591AbfLRCa3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 21:28:05 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46174 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726382AbfLRC2F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 21:28:05 -0500
-Received: by mail-ot1-f67.google.com with SMTP id c22so410883otj.13
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 18:28:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XsKFomZBuwrGJLUSeibm23zlCqGEUyhwrl7aVRMeaYU=;
-        b=QmFXaXismDZnkuWHWZ4GphEMufMQbmlMH1PhovHCviJQRUo/4Qr9/oSfqMvC0PEFBC
-         g3x9OXchG4TJjUK1pWOSWhoUL5Ia3hD/rYyNepja+Sz0+d53TLvEg7RPlrfK7IMxaRSD
-         ULZ43tbCZ2qAe+4590k56tV9FIQGpttddbkb2beezCTB0RXF9gTG5+caTjwlrwvT0g1E
-         yOdDJgOOTQou7Ite9ER5vx7UPdbH3XhLMMSLHdCE5wk6ZAuAV4blg7Q7C1q+7KmwtZBd
-         PkfJthDo0ByNwfc+2K/Vj2ewcGkI9THHaliRbkPjJY3Tk8u3noUNuOc8pSP/BPW2iDyC
-         /pHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XsKFomZBuwrGJLUSeibm23zlCqGEUyhwrl7aVRMeaYU=;
-        b=GJxPAUDrQsHCm0P/uC3FTXjaZsuDKyCnfung6Cwg0aRInpA2c3kpCsoaaPPANCmCPT
-         /e3h467fFONkQ39DtF86dWlNgjt7677C2Nzv/JfShLOODCES7uLtDcOW15/ZHe4Bq6ej
-         iEw23nhh4hxDPmCygu7HlrWNNvgCiVd+BsLRLeTaC0CJjlphN3XLZTZjsriRPFBM6eBb
-         sqvnhrswyafO7LVY8fd9SJA7oEa+fcK/KGWV3blImzXErxOlipmSdhVuvn92ScpPJ0C8
-         mRvPIedKahZc0JEoxTHpyxqwVWWmR48xI9mGbYvoiAwAXvWMqk2kQe0KHUlyEsbdSTop
-         ImIA==
-X-Gm-Message-State: APjAAAWhIpFleR7LKdp7Ypku3uO6L3M74ojpw3gbVjP9N0MERUMj6RPE
-        8qzEqLi6hBJwKxtd1sGT87pSZWuN
-X-Google-Smtp-Source: APXvYqzWW6/Qc/mqFu+lt1LWQpXcDcZR4s99BF9VFKHJa32a3nY9wO9N3hAdg9joLuXedsavqt9JfQ==
-X-Received: by 2002:a05:6830:158:: with SMTP id j24mr477110otp.316.1576636083890;
-        Tue, 17 Dec 2019 18:28:03 -0800 (PST)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id e6sm274277otl.12.2019.12.17.18.28.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 18:28:03 -0800 (PST)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-Cc:     linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] tty: synclink: Adjust indentation and style in several functions
-Date:   Tue, 17 Dec 2019 19:27:58 -0700
-Message-Id: <20191218022758.53697-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        Tue, 17 Dec 2019 21:30:29 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:50823 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726387AbfLRCa2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 21:30:28 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47czWQ3VJpz9sR4;
+        Wed, 18 Dec 2019 13:30:26 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1576636226;
+        bh=rydmAAENH6ARfN+ThawgMJv/69AuxxIutVShBoiIVNc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=urk9zjAYSIcGBvDNJNlbxUB1/JlNW4cnY45vYuTIN38gZv7dz/8RLIz9SkAFll3Mj
+         wwIOeTiMQusAIpzjgsQJlvK/b9ofnDQrnVzLshc0i7DW/UTuIzCBWzk3iHI+ph2o0Z
+         twxeQ7FBiZGZ7dwzj/8Cz1K8rF6jvxT0UZE0aEp3FPxCQi+ohEsgH/xNKhedGIhx1y
+         WGSIN40UizASeZ0e7YZ6DlBJC+uTwXLZY4awtIfS1+XoiNyGOsJeGj1JOkAmeao0pZ
+         BtPatoDHhpFdhqlybAY6rVtT+x6EeUU9SwWAkKt4rhpFcUbRE5UlxQM0HbV6/vxmVN
+         aq/CNMAZ3DRYw==
+Date:   Wed, 18 Dec 2019 13:30:25 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: linux-next: manual merge of the akpm-current tree with the
+ generic-ioremap tree
+Message-ID: <20191218133025.15356802@canb.auug.org.au>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/ryle1Bp7qSqGgl/eJzoKFm9";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang warns:
+--Sig_/ryle1Bp7qSqGgl/eJzoKFm9
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-../drivers/tty/synclink.c:1167:3: warning: misleading indentation;
-statement is not part of the previous 'if' [-Wmisleading-indentation]
-        if ( (status & RXSTATUS_ABORT_RECEIVED) &&
-        ^
-../drivers/tty/synclink.c:1163:2: note: previous statement is here
-        if ( debug_level >= DEBUG_LEVEL_ISR )
-        ^
-../drivers/tty/synclink.c:1973:3: warning: misleading indentation;
-statement is not part of the previous 'if' [-Wmisleading-indentation]
-        if (I_BRKINT(info->port.tty) || I_PARMRK(info->port.tty))
-        ^
-../drivers/tty/synclink.c:1971:2: note: previous statement is here
-        if (I_INPCK(info->port.tty))
-        ^
-../drivers/tty/synclink.c:3229:3: warning: misleading indentation;
-statement is not part of the previous 'else' [-Wmisleading-indentation]
-        usc_set_serial_signals(info);
-        ^
-../drivers/tty/synclink.c:3227:2: note: previous statement is here
-        else
-        ^
-../drivers/tty/synclink.c:4918:4: warning: misleading indentation;
-statement is not part of the previous 'else' [-Wmisleading-indentation]
-                if ( info->params.clock_speed )
-                ^
-../drivers/tty/synclink.c:4901:3: note: previous statement is here
-                else
-                ^
-4 warnings generated.
+Hi all,
 
-The indentation on these lines is not at all consistent, tabs and spaces
-are mixed together. Convert to just using tabs to be consistent with the
-Linux kernel coding style and eliminate these warnings from clang.
+Today's linux-next merge of the akpm-current tree got a conflict in:
 
-Additionally, clean up some of lines touched by the indentation shift to
-eliminate checkpatch warnings and leave this code in a better condition
-than when it was left.
+  arch/hexagon/include/asm/io.h
 
--:10: ERROR: trailing whitespace
--:10: ERROR: that open brace { should be on the previous line
--:10: ERROR: space prohibited after that open parenthesis '('
--:14: ERROR: space prohibited before that close parenthesis ')'
--:82: ERROR: trailing whitespace
--:87: WARNING: Block comments use a trailing */ on a separate line
--:88: ERROR: that open brace { should be on the previous line
--:88: ERROR: space prohibited after that open parenthesis '('
--:88: ERROR: space prohibited before that close parenthesis ')'
--:99: ERROR: else should follow close brace '}'
+between commit:
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/821
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- drivers/tty/synclink.c | 55 ++++++++++++++++++++----------------------
- 1 file changed, 26 insertions(+), 29 deletions(-)
+  1188dd7d3fbd ("remove ioremap_nocache and devm_ioremap_nocache")
 
-diff --git a/drivers/tty/synclink.c b/drivers/tty/synclink.c
-index 61dc6b4a43d0..586810defb21 100644
---- a/drivers/tty/synclink.c
-+++ b/drivers/tty/synclink.c
-@@ -1164,21 +1164,20 @@ static void mgsl_isr_receive_status( struct mgsl_struct *info )
- 		printk("%s(%d):mgsl_isr_receive_status status=%04X\n",
- 			__FILE__,__LINE__,status);
- 			
-- 	if ( (status & RXSTATUS_ABORT_RECEIVED) && 
-+	if ((status & RXSTATUS_ABORT_RECEIVED) &&
- 		info->loopmode_insert_requested &&
-- 		usc_loopmode_active(info) )
-- 	{
-+		usc_loopmode_active(info)) {
- 		++info->icount.rxabort;
--	 	info->loopmode_insert_requested = false;
-- 
-- 		/* clear CMR:13 to start echoing RxD to TxD */
-+		info->loopmode_insert_requested = false;
-+
-+		/* clear CMR:13 to start echoing RxD to TxD */
- 		info->cmr_value &= ~BIT13;
-- 		usc_OutReg(info, CMR, info->cmr_value);
-- 
-+		usc_OutReg(info, CMR, info->cmr_value);
-+
- 		/* disable received abort irq (no longer required) */
--	 	usc_OutReg(info, RICR,
-- 			(usc_InReg(info, RICR) & ~RXSTATUS_ABORT_RECEIVED));
-- 	}
-+		usc_OutReg(info, RICR,
-+			(usc_InReg(info, RICR) & ~RXSTATUS_ABORT_RECEIVED));
-+	}
- 
- 	if (status & (RXSTATUS_EXITED_HUNT | RXSTATUS_IDLE_RECEIVED)) {
- 		if (status & RXSTATUS_EXITED_HUNT)
-@@ -1970,8 +1969,8 @@ static void mgsl_change_params(struct mgsl_struct *info)
- 	info->read_status_mask = RXSTATUS_OVERRUN;
- 	if (I_INPCK(info->port.tty))
- 		info->read_status_mask |= RXSTATUS_PARITY_ERROR | RXSTATUS_FRAMING_ERROR;
-- 	if (I_BRKINT(info->port.tty) || I_PARMRK(info->port.tty))
-- 		info->read_status_mask |= RXSTATUS_BREAK_RECEIVED;
-+	if (I_BRKINT(info->port.tty) || I_PARMRK(info->port.tty))
-+		info->read_status_mask |= RXSTATUS_BREAK_RECEIVED;
- 	
- 	if (I_IGNPAR(info->port.tty))
- 		info->ignore_status_mask |= RXSTATUS_PARITY_ERROR | RXSTATUS_FRAMING_ERROR;
-@@ -3211,7 +3210,7 @@ static int carrier_raised(struct tty_port *port)
- 	struct mgsl_struct *info = container_of(port, struct mgsl_struct, port);
- 	
- 	spin_lock_irqsave(&info->irq_spinlock, flags);
-- 	usc_get_serial_signals(info);
-+	usc_get_serial_signals(info);
- 	spin_unlock_irqrestore(&info->irq_spinlock, flags);
- 	return (info->serial_signals & SerialSignal_DCD) ? 1 : 0;
- }
-@@ -3226,7 +3225,7 @@ static void dtr_rts(struct tty_port *port, int on)
- 		info->serial_signals |= SerialSignal_RTS | SerialSignal_DTR;
- 	else
- 		info->serial_signals &= ~(SerialSignal_RTS | SerialSignal_DTR);
-- 	usc_set_serial_signals(info);
-+	usc_set_serial_signals(info);
- 	spin_unlock_irqrestore(&info->irq_spinlock,flags);
- }
- 
-@@ -4907,24 +4906,22 @@ static void usc_set_sdlc_mode( struct mgsl_struct *info )
- 		/*  of rounding up and then subtracting 1 we just don't subtract */
- 		/*  the one in this case. */
- 
-- 		/*--------------------------------------------------
-- 		 * ejz: for DPLL mode, application should use the
-- 		 * same clock speed as the partner system, even 
-- 		 * though clocking is derived from the input RxData.
-- 		 * In case the user uses a 0 for the clock speed,
-- 		 * default to 0xffffffff and don't try to divide by
-- 		 * zero
-- 		 *--------------------------------------------------*/
-- 		if ( info->params.clock_speed )
-- 		{
-+		/*
-+		 * ejz: for DPLL mode, application should use the
-+		 * same clock speed as the partner system, even
-+		 * though clocking is derived from the input RxData.
-+		 * In case the user uses a 0 for the clock speed,
-+		 * default to 0xffffffff and don't try to divide by
-+		 * zero
-+		 */
-+		if (info->params.clock_speed) {
- 			Tc = (u16)((XtalSpeed/DpllDivisor)/info->params.clock_speed);
- 			if ( !((((XtalSpeed/DpllDivisor) % info->params.clock_speed) * 2)
- 			       / info->params.clock_speed) )
- 				Tc--;
-- 		}
-- 		else
-- 			Tc = -1;
-- 				  
-+		} else {
-+			Tc = -1;
-+		}
- 
- 		/* Write 16-bit Time Constant for BRG1 */
- 		usc_OutReg( info, TC1R, Tc );
--- 
-2.24.1
+from the generic-ioremap tree and commit:
 
+  a632c00ae02c ("hexagon: define ioremap_uc")
+
+from the akpm-current tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/hexagon/include/asm/io.h
+index f42d9973e7d6,b0dbc3473172..000000000000
+--- a/arch/hexagon/include/asm/io.h
++++ b/arch/hexagon/include/asm/io.h
+@@@ -172,7 -172,10 +172,8 @@@ static inline void writel(u32 data, vol
+  #define writel_relaxed __raw_writel
+ =20
+  void __iomem *ioremap(unsigned long phys_addr, unsigned long size);
+ -#define ioremap_nocache ioremap
++ #define ioremap_uc(X, Y) ioremap((X), (Y))
+ =20
+ -
+  #define __raw_writel writel
+ =20
+  static inline void memcpy_fromio(void *dst, const volatile void __iomem *=
+src,
+
+--Sig_/ryle1Bp7qSqGgl/eJzoKFm9
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl35j0EACgkQAVBC80lX
+0GxilAf/UX1SpeeXym4B3nQWzTuWDv0Aiw58h9iRb91x7Fz6NBFfIJmmRAVNWKw5
+GMwhqaHGnZmdUyYe5YVYHlUkG5R1HsEe2awFBkT4j7TNGmDp1mVZ0pyLmKpTRXNd
+LdrXr6kWxsbyJ07uQQH/Mr6oChOcIenabSUx/Cb8bwY+0JhR/c3EN2cYMf6iWzwv
+zTwN5481v1RNQ31pb388e0l0cXj3MWL7uanhld4w8pmHy4/58vRAjTpYIodZfwVw
+nXfb5+FkYCZ4S/oV6UJ1QIJuO12rRdAqJVhKGEt0zeCBsQlGgTmk5zUxg+yi4PEg
+T+qgtY1H7axVDUpWME9UqcARj3zEuw==
+=I8B4
+-----END PGP SIGNATURE-----
+
+--Sig_/ryle1Bp7qSqGgl/eJzoKFm9--
