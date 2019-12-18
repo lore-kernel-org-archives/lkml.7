@@ -2,211 +2,191 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C7AC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7977C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC2B92072B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2C132072B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:00:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbfLRL7m (ORCPT
+        id S1726967AbfLRMAa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 06:59:42 -0500
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:51494 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726591AbfLRL7j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 06:59:39 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0TlHBU8U_1576670372;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TlHBU8U_1576670372)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 18 Dec 2019 19:59:33 +0800
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Harry Wei <harryxiyou@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] docs/zh_CN: translate kernel enforcement statement
-Date:   Wed, 18 Dec 2019 19:59:26 +0800
-Message-Id: <1576670367-153661-1-git-send-email-alex.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 18 Dec 2019 07:00:30 -0500
+Received: from foss.arm.com ([217.140.110.172]:43810 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726591AbfLRMAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 07:00:30 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A0F2230E;
+        Wed, 18 Dec 2019 04:00:29 -0800 (PST)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5C62A3F6CF;
+        Wed, 18 Dec 2019 04:00:28 -0800 (PST)
+Subject: Re: [PATCH v2 7/7] arm64: nofpsmid: Handle TIF_FOREIGN_FPSTATE flag
+ cleanly
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, mark.rutland@arm.com, dave.martin@arm.com,
+        catalin.marinas@arm.com, ard.biesheuvel@linaro.org,
+        christoffer.dall@arm.com, Marc Zyngier <marc.zyngier@arm.com>
+References: <20191217183402.2259904-1-suzuki.poulose@arm.com>
+ <20191217183402.2259904-8-suzuki.poulose@arm.com>
+ <94c0bdd9f26c3262ff8a885d13a64d22@www.loen.fr>
+ <9e491901-b589-b486-1cad-1bd92a35da95@arm.com>
+ <3b30d44c34bc265ce4122396077a1670@www.loen.fr>
+From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
+Message-ID: <d5e27bf5-3cc9-c8bd-5699-71658983054e@arm.com>
+Date:   Wed, 18 Dec 2019 12:00:27 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <3b30d44c34bc265ce4122396077a1670@www.loen.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now we have the Chinese version of this statemment.
+On 18/12/2019 11:56, Marc Zyngier wrote:
+> On 2019-12-18 11:42, Suzuki Kuruppassery Poulose wrote:
+>> Hi Marc,
+>>
+>> On 17/12/2019 19:05, Marc Zyngier wrote:
+>>> Hi Suzuki,
+>>> On 2019-12-17 18:34, Suzuki K Poulose wrote:
+>>>> We detect the absence of FP/SIMD after an incapable CPU is brought up,
+>>>> and by then we have kernel threads running already with
+>>>> TIF_FOREIGN_FPSTATE set
+>>>> which could be set for early userspace applications (e.g, modprobe 
+>>>> triggered
+>>>> from initramfs) and init. This could cause the applications to loop
+>>>> forever in
+>>>> do_nofity_resume() as we never clear the TIF flag, once we now know 
+>>>> that
+>>>> we don't support FP.
+>>>>
+>>>> Fix this by making sure that we clear the TIF_FOREIGN_FPSTATE flag
+>>>> for tasks which may have them set, as we would have done in the normal
+>>>> case, but avoiding touching the hardware state (since we don't 
+>>>> support any).
+>>>>
+>>>> Also to make sure we handle the cases seemlessly we categorise the
+>>>> helper functions to two :
+>>>>  1) Helpers for common core code, which calls into take appropriate
+>>>>     actions without knowing the current FPSIMD state of the CPU/task.
+>>>>
+>>>>     e.g fpsimd_restore_current_state(), fpsimd_flush_task_state(),
+>>>>         fpsimd_save_and_flush_cpu_state().
+>>>>
+>>>>     We bail out early for these functions, taking any appropriate 
+>>>> actions
+>>>>     (e.g, clearing the TIF flag) where necessary to hide the handling
+>>>>     from core code.
+>>>>
+>>>>  2) Helpers used when the presence of FP/SIMD is apparent.
+>>>>     i.e, save/restore the FP/SIMD register state, modify the CPU/task
+>>>>     FP/SIMD state.
+>>>>     e.g,
+>>>>
+>>>>     fpsimd_save(), task_fpsimd_load() - save/restore task FP/SIMD 
+>>>> registers
+>>>>
+>>>>     fpsimd_bind_task_to_cpu()  \
+>>>>                                 - Update the "state" metadata for 
+>>>> CPU/task.
+>>>>     fpsimd_bind_state_to_cpu() /
+>>>>
+>>>>     fpsimd_update_current_state() - Update the fp/simd state for the 
+>>>> current
+>>>>                                     task from memory.
+>>>>
+>>>>     These must not be called in the absence of FP/SIMD. Put in a 
+>>>> WARNING
+>>>>     to make sure they are not invoked in the absence of FP/SIMD.
+>>>>
+>>>> KVM also uses the TIF_FOREIGN_FPSTATE flag to manage the FP/SIMD state
+>>>> on the CPU. However, without FP/SIMD support we trap all accesses and
+>>>> inject undefined instruction. Thus we should never "load" guest state.
+>>>> Add a sanity check to make sure this is valid.
+>>> Yes, but no, see below.
+>>>
+>>>>
+>>>> Fixes: 82e0191a1aa11abf ("arm64: Support systems without FP/ASIMD")
+>>>> Cc: Will Deacon <will@kernel.org>
+>>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>>>> Cc: Marc Zyngier <marc.zyngier@arm.com>
+>>> No idea who that guy is. It's a fake! ;-)
+>>
+>> Sorry about that, will fix it.
+>>
+>>>
+>>>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+>>>> ---
+>>>>  arch/arm64/kernel/fpsimd.c  | 31 +++++++++++++++++++++++++++----
+>>>>  arch/arm64/kvm/hyp/switch.c |  9 +++++++++
+>>>>  2 files changed, 36 insertions(+), 4 deletions(-)
+>>>>
+>>> [...]
+>>>
+>>>> diff --git a/arch/arm64/kvm/hyp/switch.c b/arch/arm64/kvm/hyp/switch.c
+>>>> index 72fbbd86eb5e..9696ebb5c13a 100644
+>>>> --- a/arch/arm64/kvm/hyp/switch.c
+>>>> +++ b/arch/arm64/kvm/hyp/switch.c
+>>>> @@ -28,10 +28,19 @@
+>>>>  /* Check whether the FP regs were dirtied while in the host-side run
+>>>> loop: */
+>>>>  static bool __hyp_text update_fp_enabled(struct kvm_vcpu *vcpu)
+>>>>  {
+>>>> +    /*
+>>>> +     * When the system doesn't support FP/SIMD, we cannot rely on
+>>>> +     * the state of _TIF_FOREIGN_FPSTATE. However, we will never
+>>>> +     * set the KVM_ARM64_FP_ENABLED, as the FP/SIMD accesses always
+>>>> +     * inject an abort into the guest. Thus we always trap the
+>>>> +     * accesses.
+>>>> +     */
+>>>>      if (vcpu->arch.host_thread_info->flags & _TIF_FOREIGN_FPSTATE)
+>>>>          vcpu->arch.flags &= ~(KVM_ARM64_FP_ENABLED |
+>>>>                        KVM_ARM64_FP_HOST);
+>>>>
+>>>> +    WARN_ON(!system_supports_fpsimd() &&
+>>>> +        (vcpu->arch.flags & KVM_ARM64_FP_ENABLED));
+>>> Careful, this will panic the host if it happens on a !VHE host
+>>> (calling non-inline stuff from a __hyp_text function is usually
+>>> not a good idea).
+>>
+>> Ouch! Sorry about that WARN_ON()! I could drop the warning and
+>> make this :
+>>
+>> if (!system_supports_fpsimd() ||
+>>     (vcpu->arch.host_thread_info->flags & _TIF_FOREIGN_FPSTATE))
+>>     vcpu->arch.flags &= ~(KVM_ARM64_FP_ENABLED |
+>>                   KVM_ARM64_FP_HOST);
+>>
+>> to make sure we never say fp is enabled.
+>>
+>> What do you think ?
+> 
+> Sure, that would work. I can't really see how KVM_ARM64_FP_ENABLED
 
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Harry Wei <harryxiyou@gmail.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- .../zh_CN/process/kernel-enforcement-statement.rst | 146 +++++++++++++++++++++
- 1 file changed, 146 insertions(+)
- create mode 100644 Documentation/translations/zh_CN/process/kernel-enforcement-statement.rst
+Thanks I have fixed this locally now.
 
-diff --git a/Documentation/translations/zh_CN/process/kernel-enforcement-statement.rst b/Documentation/translations/zh_CN/process/kernel-enforcement-statement.rst
-new file mode 100644
-index 000000000000..4c71229bf2d8
---- /dev/null
-+++ b/Documentation/translations/zh_CN/process/kernel-enforcement-statement.rst
-@@ -0,0 +1,146 @@
-+﻿.. _cn_process_statement_kernel:
-+
-+Linux 内核执行声明
-+------------------
-+
-+作为Linux内核的开发人员，我们对如何使用我们的软件以及如何实施软件许可证有着
-+浓厚的兴趣。遵守GPL-2.0的互惠共享义务对我们软件和社区的长期可持续性至关重要。
-+
-+虽然有权强制执行对我们社区的贡献中的单独版权权益，但我们有共同的利益，即确保
-+个人强制执行行动的方式有利于我们的社区，不会对我们软件生态系统的健康和增长
-+产生意外的负面影响。为了阻止无益的执法行动，我们同意代表我们自己和我们版权
-+利益的任何继承人对Linux内核用户作出以下符合我们开发社区最大利益的承诺:
-+
-+    尽管有GPL-2.0的终止条款，我们同意，采用以下GPL-3.0条款作为我们许可证下的
-+    附加许可，作为任何对许可证下权利的非防御性主张，这符合我们开发社区的最佳
-+    利益。
-+
-+        但是，如果您停止所有违反本许可证的行为，则您从特定版权持有人处获得的
-+        许可证将被恢复：（a）暂时恢复，除非版权持有人明确并最终终止您的许可证；
-+        以及（b）永久恢复, 如果版权持有人未能在你终止违反后60天内以合理方式
-+        通知您违反本许可证的行为，则永久恢复您的许可证。
-+
-+        此外，如果版权所有者以某种合理的方式通知您违反了本许可，这是您第一次
-+        从该版权所有者处收到违反本许可的通知（对于任何作品），并且您在收到通知
-+        后的30天内纠正违规行为。则您从特定版权所有者处获得的许可将永久恢复.
-+
-+我们提供这些保证的目的是鼓励更多地使用该软件。我们希望公司和个人使用、修改和
-+分发此软件。我们希望以公开和透明的方式与用户合作，以消除我们对法规遵从性或强制
-+执行的任何不确定性，这些不确定性可能会限制我们软件的采用。我们将法律行动视为
-+最后手段，只有在其他社区努力未能解决这一问题时才采取行动。
-+
-+最后，一旦一个不合规问题得到解决，我们希望用户会感到欢迎，加入我们为之努力的
-+这个项目。共同努力，我们会更强大。
-+
-+除了下面提到的以外，我们只为自己说话，而不是为今天、过去或将来可能为之工作的
-+任何公司说话。
-+
-+  - Laura Abbott
-+  - Bjorn Andersson (Linaro)
-+  - Andrea Arcangeli
-+  - Neil Armstrong
-+  - Jens Axboe
-+  - Pablo Neira Ayuso
-+  - Khalid Aziz
-+  - Ralf Baechle
-+  - Felipe Balbi
-+  - Arnd Bergmann
-+  - Ard Biesheuvel
-+  - Tim Bird
-+  - Paolo Bonzini
-+  - Christian Borntraeger
-+  - Mark Brown (Linaro)
-+  - Paul Burton
-+  - Javier Martinez Canillas
-+  - Rob Clark
-+  - Kees Cook (Google)
-+  - Jonathan Corbet
-+  - Dennis Dalessandro
-+  - Vivien Didelot (Savoir-faire Linux)
-+  - Hans de Goede
-+  - Mel Gorman (SUSE)
-+  - Sven Eckelmann
-+  - Alex Elder (Linaro)
-+  - Fabio Estevam
-+  - Larry Finger
-+  - Bhumika Goyal
-+  - Andy Gross
-+  - Juergen Gross
-+  - Shawn Guo
-+  - Ulf Hansson
-+  - Stephen Hemminger (Microsoft)
-+  - Tejun Heo
-+  - Rob Herring
-+  - Masami Hiramatsu
-+  - Michal Hocko
-+  - Simon Horman
-+  - Johan Hovold (Hovold Consulting AB)
-+  - Christophe JAILLET
-+  - Olof Johansson
-+  - Lee Jones (Linaro)
-+  - Heiner Kallweit
-+  - Srinivas Kandagatla
-+  - Jan Kara
-+  - Shuah Khan (Samsung)
-+  - David Kershner
-+  - Jaegeuk Kim
-+  - Namhyung Kim
-+  - Colin Ian King
-+  - Jeff Kirsher
-+  - Greg Kroah-Hartman (Linux Foundation)
-+  - Christian König
-+  - Vinod Koul
-+  - Krzysztof Kozlowski
-+  - Viresh Kumar
-+  - Aneesh Kumar K.V
-+  - Julia Lawall
-+  - Doug Ledford
-+  - Chuck Lever (Oracle)
-+  - Daniel Lezcano
-+  - Shaohua Li
-+  - Xin Long
-+  - Tony Luck
-+  - Catalin Marinas (Arm Ltd)
-+  - Mike Marshall
-+  - Chris Mason
-+  - Paul E. McKenney
-+  - Arnaldo Carvalho de Melo
-+  - David S. Miller
-+  - Ingo Molnar
-+  - Kuninori Morimoto
-+  - Trond Myklebust
-+  - Martin K. Petersen (Oracle)
-+  - Borislav Petkov
-+  - Jiri Pirko
-+  - Josh Poimboeuf
-+  - Sebastian Reichel (Collabora)
-+  - Guenter Roeck
-+  - Joerg Roedel
-+  - Leon Romanovsky
-+  - Steven Rostedt (VMware)
-+  - Frank Rowand
-+  - Ivan Safonov
-+  - Anna Schumaker
-+  - Jes Sorensen
-+  - K.Y. Srinivasan
-+  - David Sterba (SUSE)
-+  - Heiko Stuebner
-+  - Jiri Kosina (SUSE)
-+  - Willy Tarreau
-+  - Dmitry Torokhov
-+  - Linus Torvalds
-+  - Thierry Reding
-+  - Rik van Riel
-+  - Luis R. Rodriguez
-+  - Geert Uytterhoeven (Glider bvba)
-+  - Eduardo Valentin (Amazon.com)
-+  - Daniel Vetter
-+  - Linus Walleij
-+  - Richard Weinberger
-+  - Dan Williams
-+  - Rafael J. Wysocki
-+  - Arvind Yadav
-+  - Masahiro Yamada
-+  - Wei Yongjun
-+  - Lv Zheng
-+  - Marc Zyngier (Arm Ltd)
--- 
-1.8.3.1
+> would get set though. But it probably doesn't matter (WTF is going
 
+Right. That cannot be set to begin with, as the first access to FP/SIMD
+injects an abort back to the guest, which is why I added a WARN() to
+begin with.
+
+Just wanted to be extra safe.
+
+> to run KVM with such broken HW?), and better safe than sorry.
+
+Right, with no COMPAT KVM support it is really hard to get this far.
+
+Cheers
+Suzuki
