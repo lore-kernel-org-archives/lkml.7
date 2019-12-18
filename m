@@ -6,50 +6,60 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B8BC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 04:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E297C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 04:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0B2D20715
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 04:05:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F02B20715
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 04:05:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfLREFQ (ORCPT
+        id S1726707AbfLREFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 23:05:16 -0500
-Received: from ozlabs.org ([203.11.71.1]:52603 "EHLO ozlabs.org"
+        Tue, 17 Dec 2019 23:05:23 -0500
+Received: from ozlabs.org ([203.11.71.1]:57527 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726616AbfLREFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 23:05:14 -0500
+        id S1726454AbfLREFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 23:05:12 -0500
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 47d1ck6pJpz9sR0; Wed, 18 Dec 2019 15:05:10 +1100 (AEDT)
+        id 47d1cj4B0Fz9sRc; Wed, 18 Dec 2019 15:05:09 +1100 (AEDT)
 X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: 0601546f23fb70d84b807e73cfe8e789d054c98d
-In-Reply-To: <56648921986a6b3e7315b1fbbf4684f21bd2dea8.1576310997.git.christophe.leroy@c-s.fr>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
+X-powerpc-patch-commit: 8fabc623238e68b3ac63c0dd1657bf86c1fa33af
+In-Reply-To: <20191204123524.22919-1-rppt@kernel.org>
+To:     Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] powerpc/8xx: fix bogus __init on mmu_mapin_ram_chunk()
-Message-Id: <47d1ck6pJpz9sR0@ozlabs.org>
-Date:   Wed, 18 Dec 2019 15:05:10 +1100 (AEDT)
+Cc:     linux-arch@vger.kernel.org,
+        Darren Stevens <darren@stevens-zone.net>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>,
+        Paul Mackerras <paulus@samba.org>,
+        mad skateman <madskateman@gmail.com>,
+        Christian Zigotzky <chzigotzky@xenosoft.de>,
+        linuxppc-dev@lists.ozlabs.org, Christoph Hellwig <hch@lst.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: Re: [PATCH] powerpc: ensure that swiotlb buffer is allocated from low memory
+Message-Id: <47d1cj4B0Fz9sRc@ozlabs.org>
+Date:   Wed, 18 Dec 2019 15:05:09 +1100 (AEDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-12-14 at 08:10:29 UTC, Christophe Leroy wrote:
-> Remove __init qualifier for mmu_mapin_ram_chunk() as it is called by
-> mmu_mark_initmem_nx() and mmu_mark_rodata_ro() which are not __init
-> functions.
+On Wed, 2019-12-04 at 12:35:24 UTC, Mike Rapoport wrote:
+> From: Mike Rapoport <rppt@linux.ibm.com>
 > 
-> At the same time, mark it static as it is only used in this file.
+> Some powerpc platforms (e.g. 85xx) limit DMA-able memory way below 4G. If a
+> system has more physical memory than this limit, the swiotlb buffer is not
+> addressable because it is allocated from memblock using top-down mode.
 > 
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Fixes: a2227a277743 ("powerpc/32: Don't populate page tables for block mapped pages except on the 8xx")
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> Force memblock to bottom-up mode before calling swiotlb_init() to ensure
+> that the swiotlb buffer is DMA-able.
+> 
+> Link: https://lkml.kernel.org/r/F1EBB706-73DF-430E-9020-C214EC8ED5DA@xenosoft.de
+> Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 
 Applied to powerpc fixes, thanks.
 
-https://git.kernel.org/powerpc/c/0601546f23fb70d84b807e73cfe8e789d054c98d
+https://git.kernel.org/powerpc/c/8fabc623238e68b3ac63c0dd1657bf86c1fa33af
 
 cheers
