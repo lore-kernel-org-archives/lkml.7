@@ -2,94 +2,104 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1296AC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4993C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D06272146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:19:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576703947;
-	bh=tNuO5VIlpdVijPzbEAZ1AVFcDnTW/8xm/i11h4kishI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F6ZbB6nQg02sXGsHVSxQ6Hh0kxhz6aW6rqtyGt01EaFVXpRTHQNxxomIHLQ19FfBP
-	 X9fWw+KClgh3E4mO5mcWe8qc9GgFn3mV+i19kqEEfYqWEoIiolSTVHyS7zlrkhdzVY
-	 t+U6TwYpaeg+eKkt6UTRNpgoKsRMMsAWDvIfZboc=
+	by mail.kernel.org (Postfix) with ESMTP id A9CC02176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:24:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbfLRVTH (ORCPT
+        id S1726561AbfLRVYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 16:19:07 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46693 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726559AbfLRVTG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 16:19:06 -0500
-Received: by mail-ot1-f68.google.com with SMTP id c22so4149023otj.13;
-        Wed, 18 Dec 2019 13:19:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=e6i3yUht6VZmzoNOaX8eJ66QZuEfJp5v9+9UU4ybVpg=;
-        b=BPiuavSXWe2kkeIpA4Bc5/BUB8/HWp4zgbdZeJ6ffG45ttU+s13h1uuN1CzL6eCXqm
-         2cvPxG9WYeHjs538jQqoCKlVRowPfOxPLi/FwWYX17voSYOer0+LwHZbzeFMHx9j9dIn
-         cKLUmsA7RwE5eaohUG8uxMkfZIpDE9RS3hghUa0wvK1+l2oo33Knha5HhTpMKJZoRDlr
-         xJzuVGu1z2eoZeYZ+i40BSqeGRypZ6UtNosbeD+ZN0SfVcPVqtuSTkVJWw9/AY3CfL14
-         74d9F/vuw2/RvDRnc52w8iCRJA71oBzwRdRlf+P+WRFh7j7SYTMLtT3cmOIgVFEOhuF1
-         aLfg==
-X-Gm-Message-State: APjAAAU7RO2nqtdgyo7BmaKWgKGtEwwA8zLNGIj8l4XfOIk8eVDHjJX0
-        H4Rnftsuk03YEgRhoJVJ5A==
-X-Google-Smtp-Source: APXvYqzcLzQJCSqsqQnYBN6UNLLQYWI1bzp7P0CM3jCsgq3QyEd+dWVqTYn65T8XaPEUnMSXxRmxFQ==
-X-Received: by 2002:a05:6830:22ee:: with SMTP id t14mr4677757otc.236.1576703945628;
-        Wed, 18 Dec 2019 13:19:05 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id z21sm1231040oto.52.2019.12.18.13.19.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 13:19:04 -0800 (PST)
-Date:   Wed, 18 Dec 2019 15:19:04 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     skomatineni@nvidia.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, digetx@gmail.com, mperttunen@nvidia.com,
-        gregkh@linuxfoundation.org, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        spujar@nvidia.com, josephl@nvidia.com, daniel.lezcano@linaro.org,
-        mmaddireddy@nvidia.com, markz@nvidia.com,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 01/19] dt-bindings: clock: tegra: Change CLK_M_DIV to
- OSC_DIV clocks
-Message-ID: <20191218211904.GA5303@bogus>
-References: <1576613046-17159-1-git-send-email-skomatineni@nvidia.com>
- <1576613046-17159-2-git-send-email-skomatineni@nvidia.com>
+        Wed, 18 Dec 2019 16:24:42 -0500
+Received: from mga09.intel.com ([134.134.136.24]:22136 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725990AbfLRVYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 16:24:42 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 13:24:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
+   d="scan'208";a="248028647"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga002.fm.intel.com with ESMTP; 18 Dec 2019 13:24:41 -0800
+Date:   Wed, 18 Dec 2019 13:24:41 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jim Mattson <jmattson@google.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Weijiang Yang <weijiang.yang@intel.com>
+Subject: Re: [RFC PATCH] KVM: x86: Disallow KVM_SET_CPUID{2} if the vCPU is
+ in guest mode
+Message-ID: <20191218212441.GG25201@linux.intel.com>
+References: <20191218174255.30773-1-sean.j.christopherson@intel.com>
+ <CALMp9eR-ssCUT_6oZntZ=-5SEN7Y8q-HnraKW=WDHuAn9gYZfQ@mail.gmail.com>
+ <20191218201002.GE25201@linux.intel.com>
+ <CALMp9eRthVZGXFV_18Mg07BdU30J5O+TLC-GLp6M6+4VA6m=-A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1576613046-17159-2-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CALMp9eRthVZGXFV_18Mg07BdU30J5O+TLC-GLp6M6+4VA6m=-A@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Dec 2019 12:03:48 -0800, Sowjanya Komatineni wrote:
-> Tegra has no CLK_M_DIV2 and CLK_M_DIV4 clocks and instead it has
-> OSC_DIV2 and OSC_DIV4 clocks from OSC pads.
+On Wed, Dec 18, 2019 at 12:57:41PM -0800, Jim Mattson wrote:
+> On Wed, Dec 18, 2019 at 12:10 PM Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
+> >
+> > On Wed, Dec 18, 2019 at 11:38:43AM -0800, Jim Mattson wrote:
+> > > On Wed, Dec 18, 2019 at 9:42 AM Sean Christopherson
+> > > <sean.j.christopherson@intel.com> wrote:
+> > > >
+> > > > Reject KVM_SET_CPUID{2} with -EBUSY if the vCPU is in guest mode (L2) to
+> > > > avoid complications and potentially undesirable KVM behavior.  Allowing
+> > > > userspace to change a guest's capabilities while L2 is active would at
+> > > > best result in unexpected behavior in the guest (L1 or L2), and at worst
+> > > > induce bad KVM behavior by breaking fundamental assumptions regarding
+> > > > transitions between L0, L1 and L2.
+> > >
+> > > This seems a bit contrived. As long as we're breaking the ABI, can we
+> > > disallow changes to CPUID once the vCPU has been powered on?
+> >
+> > I can at least concoct scenarios where changing CPUID after KVM_RUN
+> > provides value, e.g. effectively creating a new VM/vCPU without destroying
+> > the kernel's underlying data structures and without putting the file
+> > descriptors, for performance (especially if KVM avoids its hardware on/off
+> > paths) or sandboxing (process has access to a VM fd, but not /dev/kvm).
+> >
+> > A truly contrived, but technically architecturally accurate, scenario would
+> > be modeling SGX interaction with the machine check architecutre.  Per the
+> > SDM, #MCs or clearing bits in IA32_MCi_CTL disable SGX, which is reflected
+> > in CPUID:
+> >
+> >   Any machine check exception (#MC) that occurs after Intel SGX is first
+> >   enables causes Intel SGX to be disabled, (CPUID.SGX_Leaf.0:EAX[SGX1] == 0)
+> >   It cannot be enabled until after the next reset.
+> >
+> >   Any act of clearing bits from '1 to '0 in any of the IA32_MCi_CTL register
+> >   may disable Intel SGX (set CPUID.SGX_Leaf.0:EAX[SGX1] to 0) until the next
+> >   reset.
+> >
+> > I doubt a userspace VMM would actively model that behavior, but it's at
+> > least theoretically possible.  Yes, it would technically be possible for
+> > SGX to be disabled while L2 is active, but I don't think it's unreasonable
+> > to require userspace to first force the vCPU out of L2.
 > 
-> This patch changes CLK_M_DIV2 and CLK_M_DIV4 clock ids to OSC_DIV2
-> and OSC_DIV4 clock ids for Tegra30 through Tegra210.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  include/dt-bindings/clock/tegra114-car.h        | 4 ++--
->  include/dt-bindings/clock/tegra124-car-common.h | 4 ++--
->  include/dt-bindings/clock/tegra210-car.h        | 4 ++--
->  include/dt-bindings/clock/tegra30-car.h         | 4 ++--
->  4 files changed, 8 insertions(+), 8 deletions(-)
-> 
+> IIt's perfectly reasonable for a machine check to be handled by L2, in
+> which case, it would be rather onerous to require userspace to force
+> the vCPU out of L2 to clear CPUID.SGX_Leaf.0:EAX[SGX1].
 
-Acked-by: Rob Herring <robh@kernel.org>
+Hrm.  I just had to go and think of SGX...  I guess it's probably best to
+suck it up and have CET update the right bitmaps.
