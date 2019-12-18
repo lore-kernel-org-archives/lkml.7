@@ -2,122 +2,77 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19FF0C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 224F9C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:46:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1EDD227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:46:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECDED227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:46:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IgKYAiNK"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="CObDVqos"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbfLRMqP (ORCPT
+        id S1726996AbfLRMqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 18 Dec 2019 07:46:15 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43299 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726710AbfLRMqO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 07:46:14 -0500
-Received: by mail-pf1-f193.google.com with SMTP id x6so71650pfo.10
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 04:46:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yluChybCoEtCO6LswLntX+4auTP4ivgdcSe24D3NLf0=;
-        b=IgKYAiNKTGUEIuh3ZBy1pxqBWb8WrUSdt5oJ4eV/8ICtTRsKT899NMQE+gVJfQ8A5L
-         JCRC79cO0mpCgr7dnRnI8RhkbwodS2TPRpZh0Ajhh7rRG7d6YowIDs1DzxIdl1LjEC73
-         2+GAqsjfRkISNglNa0dgKCofJSunyEEuf3sY4AoCdwQn2BY7zFG7YhBwC92xHnWHNbvL
-         qhNeXi3/C1RLuf2oqE5+4mKWaeXNhg9lKXFbNptS7eFpmyYWeRnenQWCcrBn6cQUkT2g
-         i+i+yuNosiSD8am6g976jYNQ37XbBzja9SKyDYoZmrgewtTU4cmwRowsV7zqTeIRU/uG
-         oMWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yluChybCoEtCO6LswLntX+4auTP4ivgdcSe24D3NLf0=;
-        b=CLkEEi/4IV0+P4kYfmpI7uZJnPMqysqg3kNydcEOu3OgAl7WHnn58HbhxgrHzFqyMu
-         DH+nWJb5QtFssMybz8DMbrz49WNowH3zqydLJX5Js/zyB3TMzrWiRV1218xTNHGD5ZGF
-         v+ONA89/s3wNrexes3EUvTEmUNnmN28aWLZo6JKDn4VVJQo1PirKtyVy8g95iUPitVfb
-         XFNF/WqNInhYJBWp4qZAx3vUqQqK5s3jItOwKsYYZejeqTUht/IRtpYc74uFBfPeZT3E
-         9YtpXuBDe+IuvOVG4uY2GJgfko48x3gbuRTCXpwe2JbPb1DYtyWpbTA1VUUtVI5SiiGW
-         ixmw==
-X-Gm-Message-State: APjAAAW1zaMNhPbsm3VMOZDvrGQNwsoylujiadcybrFgOUanHqikMf5y
-        FeBrFbrslskP3M1wAMTsInxumxgEO7UO7TmBSgCKyg==
-X-Google-Smtp-Source: APXvYqxkhNJRqzXYC42cGmDXz7PIECqCbtXde3JI6sc7pAAm62yrqdnrGPZDmc7/dNRQGKy/SxMONAF/P8dJwp/qrSc=
-X-Received: by 2002:a65:678f:: with SMTP id e15mr2900742pgr.130.1576673173313;
- Wed, 18 Dec 2019 04:46:13 -0800 (PST)
+Received: from mail.skyhub.de ([5.9.137.197]:38718 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726743AbfLRMqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 07:46:15 -0500
+Received: from zn.tnic (p200300EC2F0B8B004C237F05E7CC242C.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:8b00:4c23:7f05:e7cc:242c])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DA5171EC09F1;
+        Wed, 18 Dec 2019 13:46:09 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1576673170;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=yXwLnW+PoY25pshD8Wq5cZaWHHz1WD1asE9i3LHbFgo=;
+        b=CObDVqosp5y7Z8sELy68i2YofwvsnqQOrexIoHXuwx4iBrrN1Ec2LK/g2G2LFmAiahNTHg
+        KIiIEFVVTQ/7/vwqbtJd3690sOFs622Qt+IGBBhv3TTl1kj/mGgkbqwxQazwVNQmuphqqd
+        SBLhof85IDWs90nsRlzcY4JsHr0Bl6I=
+Date:   Wed, 18 Dec 2019 13:46:04 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Thomas Garnier <thgarnie@chromium.org>
+Cc:     kernel-hardening@lists.openwall.com, kristen@linux.intel.com,
+        keescook@chromium.org, Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 01/11] x86/crypto: Adapt assembly for PIE support
+Message-ID: <20191218124604.GE24886@zn.tnic>
+References: <20191205000957.112719-1-thgarnie@chromium.org>
+ <20191205000957.112719-2-thgarnie@chromium.org>
 MIME-Version: 1.0
-References: <20191108154838.21487-1-will@kernel.org> <20191108155503.GB15731@pendragon.ideasonboard.com>
- <20191216121651.GA12947@willie-the-truck> <CAAeHK+xdVmEFtK78bWd2Odn0uBynqnt5UT9jZJFvqGL=_9NU2w@mail.gmail.com>
- <20191218114137.GA15505@willie-the-truck> <20191218122324.GB17086@kroah.com>
-In-Reply-To: <20191218122324.GB17086@kroah.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Wed, 18 Dec 2019 13:46:00 +0100
-Message-ID: <CAAeHK+xyv-x6ejwcqNAn=5eKoBYPkJsN=SgJLHJ1ey=6v+YyyA@mail.gmail.com>
-Subject: Re: [PATCH RESEND RESEND] media: uvc: Avoid cyclic entity chains due
- to malformed USB descriptors
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Will Deacon <will@kernel.org>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-media@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191205000957.112719-2-thgarnie@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 1:23 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Wed, Dec 18, 2019 at 11:41:38AM +0000, Will Deacon wrote:
-> > On Mon, Dec 16, 2019 at 02:17:52PM +0100, Andrey Konovalov wrote:
-> > > On Mon, Dec 16, 2019 at 1:16 PM Will Deacon <will@kernel.org> wrote:
-> > > > On Fri, Nov 08, 2019 at 05:55:03PM +0200, Laurent Pinchart wrote:
-> > > > > Thank you for the patch.
-> > > > >
-> > > > > I'm sorry for the delay, and will have to ask you to be a bit more
-> > > > > patient I'm afraid. I will leave tomorrow for a week without computer
-> > > > > access and will only be able to go through my backlog when I will be
-> > > > > back on the 17th.
-> > > >
-> > > > Gentle reminder on this, now you've been back a month ;)
-> > >
-> > > I think we now have a reproducer for this issue that syzbot just reported:
-> > >
-> > > https://syzkaller.appspot.com/bug?extid=0a5c96772a9b26f2a876
-> > >
-> > > You can try you patch on it :)
-> >
-> > Oh wow, I *really* like the raw USB gadget thingy you have to reproduce
-> > these! I also really like that this patch fixes the issue. Logs below.
+On Wed, Dec 04, 2019 at 04:09:38PM -0800, Thomas Garnier wrote:
+> Change the assembly code to use only relative references of symbols for the
+> kernel to be PIE compatible.
+> 
+> Position Independent Executable (PIE) support will allow to extend the
+> KASLR randomization range below 0xffffffff80000000.
 
-Thanks! An easier way to test the patch would be to issue a syz test
-command, but I'm glad you managed to set up raw gadget manually and it
-worked for you.
+FFS, how many times do we have to talk about this auto-sprinkled
+sentence?!
 
->
-> Ok, that's a good poke for me to go review that raw gadget code to see
-> if it can be merged upstream :)
+https://lkml.kernel.org/r/20190805163202.GD18785@zn.tnic
 
-Looking forward to it! =)
+-- 
+Regards/Gruss,
+    Boris.
 
->
-> > Laurent -- can we please merge this now?
->
-> Yes, that would be good to have, as this obviously fixes a problem, and
-> I can take it off of my "patches to track" list....
->
-> thanks,
->
-> greg k-h
+https://people.kernel.org/tglx/notes-about-netiquette
