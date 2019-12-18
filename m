@@ -2,122 +2,84 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8868DC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4557C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5650621D7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:35:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576665309;
-	bh=InLIC5wnYFQUlY2vdlncOvZyGEgx+3dlq1B0ax8mV58=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xcfnP+UnnIV4az/nLCEDcH042IjMu14d8gbXOeEbsJ5MraxJZncj5v8vYJ7p3jLjX
-	 ECJ3YKYn2Aq6qZct8bwv4q0OeJD1wUtOmaJMpYul1cmmji4Uk6nt1rNkNZWx9dpzNx
-	 ITCKZlutHU7DEio+UAuhkd8NnHLWUUUqXzV7OGO0=
+	by mail.kernel.org (Postfix) with ESMTP id BFEED227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:35:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbfLRKfI (ORCPT
+        id S1726856AbfLRKf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 05:35:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41672 "EHLO mail.kernel.org"
+        Wed, 18 Dec 2019 05:35:29 -0500
+Received: from mx2.suse.de ([195.135.220.15]:36810 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725785AbfLRKfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 05:35:08 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3894C218AC;
-        Wed, 18 Dec 2019 10:35:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576665307;
-        bh=InLIC5wnYFQUlY2vdlncOvZyGEgx+3dlq1B0ax8mV58=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RnuZHUl2OrLt+yKpn9nIh3wwmEddSGzlKWqc1qQQRkfnROQSVfzbRKViVL2j3ia2e
-         3PWMNQ9sUJRemWmeprajZ1lMxEG+g9HWBeQFK3a7Krhk2Y7n7x+Zdqkq076B94RUZj
-         QtwM5QK1MpfXpULva2PsYj9ZGb2qxVvKeqm1w3Ek=
-Date:   Wed, 18 Dec 2019 10:35:01 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, dja@axtens.net,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: READ_ONCE() + STACKPROTECTOR_STRONG == :/ (was Re: [GIT PULL]
- Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops))
-Message-ID: <20191218103501.GA15021@willie-the-truck>
-References: <875zimp0ay.fsf@mpe.ellerman.id.au>
- <20191212080105.GV2844@hirez.programming.kicks-ass.net>
- <20191212100756.GA11317@willie-the-truck>
- <20191212104610.GW2827@hirez.programming.kicks-ass.net>
- <CAHk-=wjUBsH0BYDBv=q36482G-U7c=9bC89L_BViSciTfb8fhA@mail.gmail.com>
- <20191212180634.GA19020@willie-the-truck>
- <CAHk-=whRxB0adkz+V7SQC8Ac_rr_YfaPY8M2mFDfJP2FFBNz8A@mail.gmail.com>
- <20191212193401.GB19020@willie-the-truck>
- <CAHk-=wiMuHmWzQ7-CRQB6o+SHtA-u-Rp6VZwPcqDbjAaug80rQ@mail.gmail.com>
- <fb4bba85-1f83-435e-b84e-ee29770d7090@de.ibm.com>
+        id S1725785AbfLRKf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 05:35:29 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 5FF2BAD05;
+        Wed, 18 Dec 2019 10:35:27 +0000 (UTC)
+From:   Andreas Schwab <schwab@suse.de>
+To:     David Abdurachmanov <david.abdurachmanov@gmail.com>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        David Abdurachmanov <david.abdurachmanov@sifive.com>,
+        Kees Cook <keescook@chromium.org>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        Vincent Chen <vincent.chen@sifive.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Bin Meng <bmeng.cn@gmail.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel\@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] riscv: reject invalid syscalls below -1
+References: <20191218084757.904971-1-david.abdurachmanov@sifive.com>
+        <mvmo8w63r1d.fsf@suse.de>
+        <CAEn-LTojXuAbY31nReCsbE=7Q9PkuKexAttTc+35ZFn7SLG-_w@mail.gmail.com>
+X-Yow:  I was in EXCRUCIATING PAIN until I started reading JACK AND JILL
+ Magazine!!
+Date:   Wed, 18 Dec 2019 11:35:26 +0100
+In-Reply-To: <CAEn-LTojXuAbY31nReCsbE=7Q9PkuKexAttTc+35ZFn7SLG-_w@mail.gmail.com>
+        (David Abdurachmanov's message of "Wed, 18 Dec 2019 12:06:57 +0200")
+Message-ID: <mvmk16t53bl.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fb4bba85-1f83-435e-b84e-ee29770d7090@de.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 11:22:05AM +0100, Christian Borntraeger wrote:
-> On 12.12.19 21:49, Linus Torvalds wrote:
-> > On Thu, Dec 12, 2019 at 11:34 AM Will Deacon <will@kernel.org> wrote:
-> >>
-> >> The root of my concern in all of this, and what started me looking at it in
-> >> the first place, is the interaction with 'typeof()'. Inheriting 'volatile'
-> >> for a pointer means that local variables in macros declared using typeof()
-> >> suddenly start generating *hideous* code, particularly when pointless stack
-> >> spills get stackprotector all excited.
-> > 
-> > Yeah, removing volatile can be a bit annoying.
-> > 
-> > For the particular case of the bitops, though, it's not an issue.
-> > Since you know the type there, you can just cast it.
-> > 
-> > And if we had the rule that READ_ONCE() was an arithmetic type, you could do
-> > 
-> >     typeof(0+(*p)) __var;
-> > 
-> > since you might as well get the integer promotion anyway (on the
-> > non-volatile result).
-> > 
-> > But that doesn't work with structures or unions, of course.
-> 
-> We do have a READ_ONCE on the following union in s390 code.
-> 
-> union ipte_control {
->         unsigned long val;
->         struct {
->                 unsigned long k  : 1;
->                 unsigned long kh : 31;
->                 unsigned long kg : 32;
->         }; 
-> };
-> 
-> 
-> In fact this one was the original failure case why we change ACCESS_ONCE.
-> 
-> see arch/s390/kvm/gaccess.c
+On Dez 18 2019, David Abdurachmanov wrote:
 
-Thanks. I think we should be ok just using the 'val' field instead of the
-whole union but, then again, when bitfields are involved who knows what the
-compiler might do. I thought we usually shied away from using them to mirror
-hardware structures like this?
+> On Wed, Dec 18, 2019 at 11:46 AM Andreas Schwab <schwab@suse.de> wrote:
+>>
+>> On Dez 18 2019, David Abdurachmanov wrote:
+>>
+>> > diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+>> > index a1349ca64669..e163b7b64c86 100644
+>> > --- a/arch/riscv/kernel/entry.S
+>> > +++ b/arch/riscv/kernel/entry.S
+>> > @@ -246,6 +246,7 @@ check_syscall_nr:
+>> >        */
+>> >       li t1, -1
+>> >       beq a7, t1, ret_from_syscall_rejected
+>> > +     blt a7, t1, 1f
+>>
+>> How about using bgeu instead in the preceding check?
+>
+> The syscall number could be -1 if tracer rejected it.
 
-Will
+So check for -1 first, then for out-of-range?
+
+Andreas.
+
+-- 
+Andreas Schwab, SUSE Labs, schwab@suse.de
+GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+"And now for something completely different."
