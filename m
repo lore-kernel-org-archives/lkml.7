@@ -4,114 +4,145 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 117CDC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 545B9C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB915227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:17:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 284012176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:18:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576678637;
-	bh=CbTM/XWLgQMskf8QEYlrwd6uyfR0NyMnsxmItpMtX70=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=vjjvSf5/mEyaEPiqWqIWkdFzkvd9Uj5STvZ9qztOPyXXKzv2RBmebxd6ziFqJ+uWb
-	 FImP+wLMdwcGr/UI0ujwTkpJf9O9CWG4ilQPjESaU7RGf3QmEPoOHkjUfRwKcerMEa
-	 sOMPrZGalJbHTUWy4PP96lqa2QZVOMcg04zWN4dw=
+	s=default; t=1576678710;
+	bh=whI8DBA9SGsVnqnn2M3j6v6bt3I/MFibIh165SHkZ3Q=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=2BoJvd5bn9DKejZiA93Y/8EmKHTEMBJZcjfEMszEl4RwDBQAc21Ngi0NZ2O2/14j7
+	 94tShj3qqbysOL+uIGGaidvWkoTjtbFliQIirLBdQ56vWgUCOcP46mSMmfhEGuTdMc
+	 bI36N55FOK+q9EJ/BA9dzQp5wAbumHOYGi8sgW3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727173AbfLRORR (ORCPT
+        id S1727126AbfLROS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 09:17:17 -0500
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:17557 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726932AbfLRORQ (ORCPT
+        Wed, 18 Dec 2019 09:18:29 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:58302 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726856AbfLROS2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 09:17:16 -0500
-X-Greylist: delayed 95084 seconds by postgrey-1.27 at vger.kernel.org; Wed, 18 Dec 2019 09:17:15 EST
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id xBIEGjfI021877;
-        Wed, 18 Dec 2019 23:16:45 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com xBIEGjfI021877
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1576678606;
-        bh=qmHvB4juxMPU3zIuVI2Brd26weLsZ6/2g5Iqv2+p7W0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=PlMB2e7Pe4segIaQQANKREfkxM4abkGhBdOT9ubs8R2TAUALxN2Dd2c2kWGllC8YU
-         MJs6+wUTYcQGGc3suk0E1jrf+uEoDLbiHLN26mW9SHtAL0/KMSXvdvfZw6bFChsfLk
-         dFgvfGp9lOhvuZ/BmmZWAKENRX/qh0+Id4EHKXCppJoQ4hbYpKEpa3slfLdnqTigpI
-         aUtLAx0BmzGvMpn6gIPLPKfjibEq0xDmEa/PjWSLDmXEeCEQci7jci/YGBk/mZEso7
-         vCajyN8Ij6WBMF9HFdKZo6DxG9ADiG5y5mT09r8F/Jb6T9YITyTsJQmQuXU9yqio/+
-         s6WyCTNcrK4Ew==
-X-Nifty-SrcIP: [209.85.217.53]
-Received: by mail-vs1-f53.google.com with SMTP id u14so1474134vsu.3;
-        Wed, 18 Dec 2019 06:16:45 -0800 (PST)
-X-Gm-Message-State: APjAAAWBwFtBwiez2OLd2S7Xb6D3g+UfTejFCa2xjHrV8d+u22ekKQEk
-        sCrXLIs8hWepwZcQBmxh6Nj7+gCq6XBjMaHwakE=
-X-Google-Smtp-Source: APXvYqxMRyzTjfqlEpXcNMIZydJI68nPt3I8yfvImlkDJE7pX8UDC+Xba8CQeMVSUXXDVjStScD7bmst/DsXb6G7tx8=
-X-Received: by 2002:a05:6102:3102:: with SMTP id e2mr1515570vsh.179.1576678604346;
- Wed, 18 Dec 2019 06:16:44 -0800 (PST)
+        Wed, 18 Dec 2019 09:18:28 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iha9g-0002Dh-1A; Wed, 18 Dec 2019 15:18:24 +0100
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Subject: Re: [PATCH v2 19/36] irqchip/gic-v4.1: Add VPE INVALL callback
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-References: <20191217115151.12465-1-masahiroy@kernel.org>
-In-Reply-To: <20191217115151.12465-1-masahiroy@kernel.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 18 Dec 2019 23:16:08 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQj3Hsv7Nbd3qVj-ie2z+DsPmBseh4tS9hfk+6mg4PpYw@mail.gmail.com>
-Message-ID: <CAK7LNAQj3Hsv7Nbd3qVj-ie2z+DsPmBseh4tS9hfk+6mg4PpYw@mail.gmail.com>
-Subject: Re: [PATCH] kconfig: remove ---help--- from documentation
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Ulf Magnusson <ulfalizer@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 18 Dec 2019 14:18:23 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Jayachandran C <jnair@marvell.com>,
+        Robert Richter <rrichter@marvell.com>
+In-Reply-To: <28e29c2d-a35a-6a67-c65d-7ab61d33b21b@huawei.com>
+References: <20191027144234.8395-1-maz@kernel.org>
+ <20191027144234.8395-20-maz@kernel.org>
+ <28e29c2d-a35a-6a67-c65d-7ab61d33b21b@huawei.com>
+Message-ID: <54ec5b97e909e4da85064c66fb2a1348@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, tglx@linutronix.de, jason@lakedaemon.net, lorenzo.pieralisi@arm.com, andrew.murray@arm.com, jnair@marvell.com, rrichter@marvell.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 8:52 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> Commit 84af7a6194e4 ("checkpatch: kconfig: prefer 'help' over
-> '---help---'"), scripts/checkpatch.pl warns the use of ---help---.
->
-> This still exists, but new code should avoid using it.
-> Let's stop advertising it in documentation.
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
+[Old email, doing some v3 cleanup]
 
-Applied to linux-kbuild.
+On 2019-11-01 11:51, Zenghui Yu wrote:
+> Hi Marc,
+>
+> On 2019/10/27 22:42, Marc Zyngier wrote:
+>> GICv4.1 redistributors have a VPE-aware INVALL register. Progress!
+>> We can now emulate a guest-requested INVALL without emiting a
+>> VINVALL command.
+>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+>
+> Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
+>
+>> ---
+>>   drivers/irqchip/irq-gic-v3-its.c   | 14 ++++++++++++++
+>>   include/linux/irqchip/arm-gic-v3.h |  3 +++
+>>   2 files changed, 17 insertions(+)
+>> diff --git a/drivers/irqchip/irq-gic-v3-its.c 
+>> b/drivers/irqchip/irq-gic-v3-its.c
+>> index f7effd453729..10bd156aa042 100644
+>> --- a/drivers/irqchip/irq-gic-v3-its.c
+>> +++ b/drivers/irqchip/irq-gic-v3-its.c
+>> @@ -3511,6 +3511,19 @@ static void its_vpe_4_1_deschedule(struct 
+>> its_vpe *vpe,
+>>   	}
+>>   }
+>>   +static void its_vpe_4_1_invall(struct its_vpe *vpe)
+>> +{
+>> +	void __iomem *rdbase;
+>> +	u64 val;
+>> +
+>> +	val  = GICR_INVLPIR_V;
+>> +	val |= FIELD_PREP(GICR_INVLPIR_VPEID, vpe->vpe_id);
+>
+> Can we use GICR_INVALL_V/VPEID instead, and ...
+>
+>> +
+>> +	/* Target the redistributor this vPE is currently known on */
+>> +	rdbase = per_cpu_ptr(gic_rdists->rdist, vpe->col_idx)->rd_base;
+>> +	gic_write_lpir(val, rdbase + GICR_INVALLR);
+>> +}
+>> +
+>>   static int its_vpe_4_1_set_vcpu_affinity(struct irq_data *d, void 
+>> *vcpu_info)
+>>   {
+>>   	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
+>> @@ -3526,6 +3539,7 @@ static int 
+>> its_vpe_4_1_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
+>>   		return 0;
+>>
+>>   	case INVALL_VPE:
+>> +		its_vpe_4_1_invall(vpe);
+>>   		return 0;
+>>
+>>   	default:
+>> diff --git a/include/linux/irqchip/arm-gic-v3.h 
+>> b/include/linux/irqchip/arm-gic-v3.h
+>> index 6fd89d77b2b2..b69f60792554 100644
+>> --- a/include/linux/irqchip/arm-gic-v3.h
+>> +++ b/include/linux/irqchip/arm-gic-v3.h
+>> @@ -247,6 +247,9 @@
+>>   #define GICR_TYPER_COMMON_LPI_AFF	GENMASK_ULL(25, 24)
+>>   #define GICR_TYPER_AFFINITY		GENMASK_ULL(63, 32)
+>>   +#define GICR_INVLPIR_VPEID		GENMASK_ULL(47, 32)
+>> +#define GICR_INVLPIR_V			GENMASK_ULL(63, 63)
+>> +
+>
+> ... define them here:
+>
+> #define GICR_INVALL_VPEID		GICR_INVLPIR_VPEID
+> #define GICR_INVALL_V			GICR_INVLPIR_V
 
->
->  Documentation/kbuild/kconfig-language.rst | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
->
-> diff --git a/Documentation/kbuild/kconfig-language.rst b/Documentation/kbuild/kconfig-language.rst
-> index 74bef19f69f0..231e6a64957f 100644
-> --- a/Documentation/kbuild/kconfig-language.rst
-> +++ b/Documentation/kbuild/kconfig-language.rst
-> @@ -196,14 +196,11 @@ applicable everywhere (see syntax).
->    or equal to the first symbol and smaller than or equal to the second
->    symbol.
->
-> -- help text: "help" or "---help---"
-> +- help text: "help"
->
->    This defines a help text. The end of the help text is determined by
->    the indentation level, this means it ends at the first line which has
->    a smaller indentation than the first line of the help text.
-> -  "---help---" and "help" do not differ in behaviour, "---help---" is
-> -  used to help visually separate configuration logic from help within
-> -  the file as an aid to developers.
->
->  - misc options: "option" <symbol>[=<value>]
->
-> --
-> 2.17.1
->
+Yes, that's a sensible things to do. I'll squash that in my rebased 
+series.
 
+Thanks,
 
+         M.
 -- 
-Best Regards
-Masahiro Yamada
+Jazz is not dead. It just smells funny...
