@@ -2,269 +2,279 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A52C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F7DC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F2542146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:37:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="L4CJqu4i"
+	by mail.kernel.org (Postfix) with ESMTP id 1EC612146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:37:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576687062;
+	bh=8xxCNkUAzdSt8PiRdIANE3nzYQlFBne3CgEGOdfz7aQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=huZHXsUWWkt/wcTP5JfQucJyAPtafvwlLSz5WuNl9AFVfeIZNK1C2SScP4DnByDhZ
+	 TGWTaE3bw53/0MWAKC4Amf0Kfeq9THdTi+kvM7YkBNqI5oRmLVs3jhFY8+rRkBQRll
+	 FFbiDgh8Sffz9Enm9bJbC5ONtC+f0le3fGtGcoVg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbfLRQhR (ORCPT
+        id S1727571AbfLRQhl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 11:37:17 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37567 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727185AbfLRQhQ (ORCPT
+        Wed, 18 Dec 2019 11:37:41 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:45952 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727185AbfLRQhl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 11:37:16 -0500
-Received: by mail-wr1-f68.google.com with SMTP id w15so3014056wru.4
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 08:37:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=QydrVO/rNZd63JheuO9lqD6sfCU1B2E4W4CkJuCYMB0=;
-        b=L4CJqu4iC/Cdb84U5mDKCTKM4RacewHvLUzKH8AMMNXL1sivqGoA3ZG5FnTGPf896f
-         lviLXF3BBmD65/gay0C6dNTG5VzbdQ6/bGqDtgLcQBkfVZrRmG4qxj+xDo9YiLtOe7N6
-         cm45zzKN5AWA0VzRgE4lroBimCSnmMcrgPaJw=
+        Wed, 18 Dec 2019 11:37:41 -0500
+Received: by mail-oi1-f193.google.com with SMTP id v10so1304558oiv.12;
+        Wed, 18 Dec 2019 08:37:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-transfer-encoding:content-language;
-        bh=QydrVO/rNZd63JheuO9lqD6sfCU1B2E4W4CkJuCYMB0=;
-        b=ZPjTRuntD3xSPkYJ+x7M8zmLzHwUjtqo/G6+7X+qwgI60qOxHqipg2lrr+45sxB2KF
-         xHUgPhw0Lifvkco6o3fONO1+vSpUCagxUt+2z/T6SrZBRQHS93NZrLghgWQGThiqFLTE
-         Elp3R3CwZfQ6iu8hHrBTwv1Zy48prrt0upUT+EOp8EEYAJ7qHhAOqCXSdUuIBtVpRfwW
-         7OZ13JdnmF0ALbDerRBycyOyD0jaz9ih6Oaepqhsw9WFhjv7h/V239vh8LYkjHkiZYQq
-         otWuwTZwVPv+7q/O4POVyk8i/KzrtgXww3xedECCXQO6fi16ghclaqhgb6XEz9aqBITV
-         SBbA==
-X-Gm-Message-State: APjAAAWZDCL+1bBY+2lZwYVlefC1RJFwMTgTMa1bG9eCzhelqP9nzL8U
-        OXNKZcVopgdDEPfzW1/3Gtrugg==
-X-Google-Smtp-Source: APXvYqxSvZ3lKWdFwwu7l/PNa+A2cXnj/cTcXUqK5MFusm/tEkRwm/aMhvrVyvRlqLLsHOIo/Lg/Wg==
-X-Received: by 2002:a5d:494f:: with SMTP id r15mr3995530wrs.143.1576687033389;
-        Wed, 18 Dec 2019 08:37:13 -0800 (PST)
-Received: from [10.28.17.247] ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id w8sm7025763wmd.2.2019.12.18.08.37.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Dec 2019 08:37:12 -0800 (PST)
-Subject: Re: [PATCH 1/2] include: trace: Add SCMI header with trace events
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     lukasz.luba@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, mingo@redhat.com, rostedt@goodmis.org
-References: <20191216161650.21844-1-lukasz.luba@arm.com>
- <20191216161650.21844-1-lukasz.luba@arm.com> <20191218120900.GA28599@bogus>
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=james.quinlan@broadcom.com; prefer-encrypt=mutual; keydata=
- mQENBFOXa3ABCADHz9QNP8upEMOGzf0RJ1lhBRnacq5Gz9fcbmcxK2y4PXtT1JR2WJWT3roY
- oHUXKL42zA74Iv6ODOjvO/VcvmJTllbz5zhuj5hDHBTNdSdspHWJMS3VdRtB5YQ4+4SNfi4O
- +ucstwf5U8HHLtsFes1udLWgujK4CD2mHBpR1tIc7dXP7jsCcxvkwA/jMN8D8w80kE1RY1eM
- 3Chfft2oJOMK54n8f9x+iWdDsXV2e5vk0TLAJPB8ErGbAWj+HF+SQ/QdI6hdn/KbEQgJyZCV
- t8mB2uDfjvp14PIY02OSu9vgEWVYMMPoNLazromChJBtflewbp/Uim7BWYvcYRCPwx7VABEB
- AAG0KEppbSBRdWlubGFuIDxqYW1lcy5xdWlubGFuQGJyb2FkY29tLmNvbT6JATgEEwECACIF
- AlazUjUCGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJENnFxA/a7tJZiMwH/RHLgTPx
- BzrlFPQbEDfh05FXthTM0r1wC8AwHGmXhaxMT352Ju4jqCPvhF4YbczqEmuSFqOHZ6hQhBah
- L/O4QYRtBUCYhGg/cQ5WzklE48A2iNEoSsA8rP6Cy4wzXKrO0yPHQPyDtQ/o/Fa6T6r2EBAT
- mVtQBizeiDkUKDgfYU+o0iTW+205myQ9tTe3R0BJmq+F6dYdusKHRn9QXkm5oUC/tea3bq6N
- jnExBVz8LFaZRxe5uVs5Hwa+ZZqqsj3xJ6CmPQIktjcX8cHUSdrd/B7BC/kBwhhUeKT5HfQl
- KNk75rbMY8vJy8emev72Tyi3zq3tNy7DZvZoAmX5NGua8625AQ0EU5drcAEIAKmzln4+BvCz
- CfrbQqCd/EUhmVesujmNO2lTUFL20Wv1Kq27ZFXPaWfe9+lxg9R+p1Ry4ChRk7xZ34r56t0i
- lGZKH2CIETGChBedfOoDTcgt7K9lMlIxl9QIVEt5yxaqUExN38TIeEayBdeZSbPtmWzGQGl1
- kaUHY8l8GWSVB6mJrJaEnfpxt8xTbHdCbPzRM2nf5w76IFFvIP6ojnW06fWYTSYisPuidZs/
- 7r1s8GpucrveKXNpzw3li9ChzI90zTBpMl3jWtqOQE5Nn0UHpPvN2SiAJ/Gm18LRP8TCTmOU
- bpLN2UoJhUGdscyYen+ECxVEZXsQCyASJvGzcWHjQL8AEQEAAYkBHwQYAQIACQUCU5drcAIb
- DAAKCRDZxcQP2u7SWUnTCAC8GirJT3daWnIgc23Qw0caHxP9dHLNKf4Fo1bxss5n6JoZgQWt
- kvqWRBBGqHTBbVBrScH5jI7kYRXaP37Q6J4bOxi68L/NC9qY7y41M6O+EaRZ4xYR5PjXY7yu
- eEeLGk0U8L6lgOtCH53lhk0i4E5BRKvg71T0UvmJPpSmtYUo/JH0sCinJADCQx+C961yPerJ
- xOO2mNvMpvXjMSqeWzYmZ9uhvRGVfo5O9i4MdFXpSm/3a3i/bZLaxPt3tjxJu+aPKHHadKcr
- 8EmSDiRrCGBbnhED/fvI/titv3qxtMBLAY++03FOh6XC93NjsRC3yCogAY7iIuWoWBmisCQ6 Kcyg
-Message-ID: <7b59a2f1-0786-d24f-a653-76a60c15a8ae@broadcom.com>
-Date:   Wed, 18 Dec 2019 11:37:10 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=potQJchvmkXdyjD8+YEbMuOtyx2Cyf8SplihkzOTltg=;
+        b=lUkD6SulvgBo0F8+PeOoo3Oe57ZQEagEKAKHgYq8mqtqxg09p1rVlgfZz+62gdInC7
+         xe68d6ahuSli/D+UnQkWMuCYmSnJT6/9lMxPWDiYapDu73Nsma+WUnaXB0zpRAb6vjMR
+         CyRKC6V1fmObWZzAtz4G18RQAAli51UfXx1Sexpo5X93x3VUldmXsojUYBZ35eqV0Vsr
+         9nUymwQPHKuGII+yqM50LDnVxjzd+9WPyd3Fo/hQGtImWnn7kyRGAMPv5TUCfjQjCdO/
+         eNFSkJBz/+JIvfhDsoWp5PACG18VHUmsrUb89oPcf4wPzEdc5+ESmAt28Akubb7+tko3
+         yKAg==
+X-Gm-Message-State: APjAAAViD1hiOObEZAtF9aEgYsNNXt2MhvZ82s3lYe5gP0/KRy5E1VbO
+        NvIez2xMvs/MKLo4zD+Dsw==
+X-Google-Smtp-Source: APXvYqzZOHq9Lp+vs+GL43uPxqZ8cytoIKEEyfyzpRoxn+Fxpe72rj241gvyIDghUD3LuIy2xaZBrQ==
+X-Received: by 2002:aca:ec4d:: with SMTP id k74mr857882oih.64.1576687059959;
+        Wed, 18 Dec 2019 08:37:39 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id o101sm950158ota.69.2019.12.18.08.37.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 08:37:39 -0800 (PST)
+Date:   Wed, 18 Dec 2019 10:37:38 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        ShuFan Lee <shufan_lee@richtek.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jun Li <lijun.kernel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Guillaume Gardet <Guillaume.Gardet@arm.com>,
+        Jack Pham <jackp@codeaurora.org>, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v7 7/8] dt-bindings: misc: Add bindings for HiSilicon usb
+ hub and data role switch functionality on HiKey960
+Message-ID: <20191218163738.GA12358@bogus>
+References: <20191212014233.32799-1-john.stultz@linaro.org>
+ <20191212014233.32799-8-john.stultz@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20191218120900.GA28599@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191212014233.32799-8-john.stultz@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Dec 12, 2019 at 01:42:32AM +0000, John Stultz wrote:
+> From: Yu Chen <chenyu56@huawei.com>
+> 
+> This patch adds binding documentation to support usb hub and usb
+> data role switch of Hisilicon HiKey960 Board.
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> CC: ShuFan Lee <shufan_lee@richtek.com>
+> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Cc: Yu Chen <chenyu56@huawei.com>
+> Cc: Felipe Balbi <balbi@kernel.org>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Cc: Jun Li <lijun.kernel@gmail.com>
+> Cc: Valentin Schneider <valentin.schneider@arm.com>
+> Cc: Guillaume Gardet <Guillaume.Gardet@arm.com>
+> Cc: Jack Pham <jackp@codeaurora.org>
+> Cc: linux-usb@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> ---
+> v3: Reworked as usb-role-switch intermediary
+> 
+> v7: Switched over to YAML dt binding description
+> ---
+>  .../bindings/misc/hisilicon-hikey-usb.yaml    | 85 +++++++++++++++++++
+>  1 file changed, 85 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.yaml b/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.yaml
+> new file mode 100644
+> index 000000000000..1fc3b198ef73
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.yaml
+> @@ -0,0 +1,85 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019 Linaro Ltd.
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/misc/hisilicon-hikey-usb.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: HiKey960 onboard USB GPIO Hub
+> +
+> +maintainers:
+> +  - John Stultz <john.stultz@linaro.org>
+> +
+> +description: |
+> +  Supports the onboard HiKey960 USB GPIO hub, which acts as a
+> +  role-switch intermediary to detect the state of the USB-C
+> +  port, to switch the hub into dual-role USB-C or host mode,
+> +  which enables the onboard USB-A host ports.
 
+Honestly I'm torn between whatever works for you because this is pretty 
+"special" dev board design and it should more accurately match the 
+hardware design. I think we can do the later and it doesn't really need 
+anything new.
 
-On 12/18/19 7:09 AM, Sudeep Holla wrote:
-> On Mon, Dec 16, 2019 at 05:15:54PM -0500, Jim Quinlan wrote:
->> From: Lukasz Luba <lukasz.luba@arm.com>
->>
->> +
->> +TRACE_EVENT(scmi_xfer_begin,
->> +	TP_PROTO(u8 id, u8 protocol_id, u16 seq, bool poll),
->> +	TP_ARGS(id, protocol_id, seq, poll),
->> +
->> +	TP_STRUCT__entry(
->> +		__field(u8, id)
->> +		__field(u8, protocol_id)
->> +		__field(u16, seq)
->> +		__field(bool, poll)
->> +	),
->> +
->> +	TP_fast_assign(
->> +		__entry->id =3D id;
->> +		__entry->protocol_id =3D protocol_id;
->> +		__entry->seq =3D seq;
->> +		__entry->poll =3D poll;
->> +	),
->> +
->> +	TP_printk("id=3D%u protocol_id=3D%u seq=3D%u poll=3D%u", __entry->id=
-,
->> +		__entry->protocol_id, __entry->seq, __entry->poll)
->> +);
->> +
->> +TRACE_EVENT(scmi_xfer_end,
->> +	TP_PROTO(u8 id, u8 protocol_id, u16 seq, u32 status),
->> +	TP_ARGS(id, protocol_id, seq, status),
->> +
->> +	TP_STRUCT__entry(
->> +		__field(u8, id)
->> +		__field(u8, protocol_id)
->> +		__field(u16, seq)
->> +		__field(u32, status)
->> +	),
->> +
->> +	TP_fast_assign(
->> +		__entry->id =3D id;
->> +		__entry->protocol_id =3D protocol_id;
->> +		__entry->seq =3D seq;
->> +		__entry->status =3D status;
->> +	),
->> +
->> +	TP_printk("id=3D%u protocol_id=3D%u seq=3D%u status=3D%u", __entry->=
-id,
->> +		__entry->protocol_id, __entry->seq, __entry->status)
->> +);
->>
->> Hello,
->>
->> When there are multiple messages in the mbox queue, I've found it
->> a chore matching up the 'begin' event with the 'end' event for each
->> SCMI msg.  The id (command) may not be unique, the proto_id may not be=
+> +
+> +  Schematics about the hub can be found here:
+> +    https://github.com/96boards/documentation/raw/master/consumer/hikey/hikey960/hardware-docs/HiKey960_Schematics.pdf
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: hisilicon,gpio_hubv1
 
->> unique, and the seq may not be unique.
-> I agree on id and proto_id part easily and the seq may not be unique
-> if and only if the previous command has completed.
->
->> The combination of the three may not be unique.
-> Not 100% sure on that. I remember one of the issue you reported where O=
-S
-> times out and platform may still be processing it. That's one of the
-> case where seq id may get re-assigned, but now that's fixed and the
-> scenario may not happen. I am trying to understand why you think it
-> is not unique ?
-If I submit a series of five clk_enable() calls via SCMI, and they are al=
-l
-executed sequentially, they will most likely have the same seq-proto-cmd =
-value
--- do you agree?=C2=A0 Now typically one can match the begin tracepoint w=
-ith the
-end because they come in pairs.=C2=A0 But when you are using four protoco=
-ls and=C2=A0
-the mbox queue has more than one, it is difficult to eyeball the trace ou=
-tput
-and have a good idea of what is going on.=C2=A0 If one uses a post
-processing script, that's another story.
->
->> Would it make sense to assign a monotonically increasing ID to each
->> msg so that one can easily match the two events for each msg?
-> I am not sure if we need to maintain a tracker/counter just for trace
-> purposes.
-I was just suggesting this for consideration -- if you deem it not helpfu=
-l,
-or cannot demonstrate its usefulness, by all means do not add it.
-I have an alternative method for logging SCMI events that I prefer
-(see below as to why).
->
->> This id could be the result of an atomic increment and
->> could be stored in the xfer structure.  Of course, it would be one of
->> the values printed out in the events.
->>
->> Also, would you consider a third event, right after the
->> scmi_fetch_response() invocation in scmi_rx_callback()?  I've found
->> this to be insightful in situations where we were debugging a timeout.=
+As a whole this is HiSilicon specific, but really it is not. It's really 
+just a hub, a mux, and connectors for which we have bindings for. I 
+think you need to model the actual hub in DT. We have 2 ways already to 
+describe hubs in DT: a I2C device or USB device. 
 
->>
->> I'm fine if you elect not to do the above; I just wanted to post
->> this for your consideration.
->>
-> I am interested in the scenario we can make use of this and also help
-> in testing it if we add this. I am not against it but I don't see the
-> need for it.
-I have a test driver that forks four threads, each of which indirectly
-creates SCMI messages of different protocols (sensor, clk, perf, brcm).=C2=
-=A0 In other
-words, a stress test for the SCMI infrastructure and platform response.=C2=
-=A0 I
-suspect you have a similar test configuration?=C2=A0 I set this up so=C2=A0=
- we can reproduce
-some problems w/o having to run the entire middleware stack.
+AIUI, the board looks something like this:
 
-At any rate,=C2=A0 I've tested V2, and although I get a lot of
+ctrl -> mux --> hub -> type-a connector
+            +-> type-c connector
 
-=2E.. scmi_xfer_begin: transfer_id=3D48379 msg_id=3D7 protocol_id=3D128 s=
-eq=3D0 poll=3D0
-=2E.. scmi_rx_done: transfer_id=3D48379 msg_id=3D7 protocol_id=3D128 seq=3D=
-0 msg_type=3D0
-=2E.. scmi_xfer_end: transfer_id=3D48380 msg_id=3D8 protocol_id=3D128 seq=
-=3D0 status=3D0
-=2E.. scmi_xfer_begin: transfer_id=3D48381 msg_id=3D7 protocol_id=3D128 s=
-eq=3D0 poll=3D0
-=2E.. scmi_rx_done: transfer_id=3D48381 msg_id=3D7 protocol_id=3D128 seq=3D=
-0 msg_type=3D0
-=2E.. scmi_xfer_end: transfer_id=3D48381 msg_id=3D7 protocol_id=3D128 seq=
-=3D0 status=3D0
-=2E.. scmi_xfer_begin: transfer_id=3D48382 msg_id=3D8 protocol_id=3D128 s=
-eq=3D0 poll=3D0
-=2E.. scmi_rx_done: transfer_id=3D48382 msg_id=3D8 protocol_id=3D128 seq=3D=
-0 msg_type=3D0
-=2E.. scmi_xfer_end: transfer_id=3D48382 msg_id=3D8 protocol_id=3D128 seq=
-=3D0 status=3D0
-=2E.. scmi_xfer_begin: transfer_id=3D48383 msg_id=3D7 protocol_id=3D128 s=
-eq=3D0 poll=3D0
+If the hub I2C is not used, then you could do something like this:
 
+ctrl {
+    mux-controls = <&usb_gpio_mux>;
+    connector@0 {
+	// type C connector binding
+    };
+    hub@1 {
+	// USB device binding
+    };
+};
 
-I also see a stretch of over 100 (contiguous) of these
+Or if I2C is used and the hub is under the I2C controller:
 
-=2E.. scmi_rx_done: transfer_id=3D48321 msg_id=3D7 protocol_id=3D128 seq=3D=
-0 msg_type=3D0
-=2E.. scmi_rx_done: transfer_id=3D48322 msg_id=3D8 protocol_id=3D128 seq=3D=
-0 msg_type=3D0
-=2E.. scmi_rx_done: transfer_id=3D48323 msg_id=3D7 protocol_id=3D128 seq=3D=
-0 msg_type=3D0
-=2E.. scmi_rx_done: transfer_id=3D48324 msg_id=3D8 protocol_id=3D128 seq=3D=
-0 msg_type=3D0
+ctrl {
+    port@0 {
+        mux-controls = <&usb_gpio_mux>;
+        endpoint@0 { // mux state 0
+		remote-endpoint = <&usb_c_connector_port>;
+	};
+        endpoint@1 { // mux state 1
+		remote-endpoint = <&usb_hub_port>;
+	};
+};
 
-which I cannot explain -- perhaps ftrace doesn't work well in interrupt c=
-ontext?
-Note also that we use interrupts issued from the platform for both channe=
-ls.
+The only new bindings you really need are adding 'mux-controls' to the 
+USB host controller and the hub binding (we already have a few).
 
-Regards,
-Jim
+If the USB2 and USB3 signals come from 2 different host controller 
+nodes, then I think it will need to look like the 2nd case regardless 
+of I2C. (It's strange that USB3 was not routed to Type-C connector. Can 
+you do USB2 on Type-C and USB3 on hub simultaneously? You need USB2 to 
+enumerate, right?)
 
+> +
+> +  typec-vbus-gpios:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: phandle to the typec-vbus gpio
 
->
-> --
-> Regards,
-> Sudeep
->
+This should be modeled as a GPIO regulator, and belongs as part of a 
+connector node. See bindings/connector/usb-connector.txt.
 
+> +
+> +  otg-switch-gpios:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: phandle to the otg-switch gpio
 
+This would be the gpio-mux binding instead.
+
+> +
+> +  hub-vdd33-en-gpios:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: phandle to the hub 3.3v power enablement gpio
+
+This should be modeled as a GPIO regulator. 
+
+What about the reset line on the hub?
+
+> +
+> +  usb-role-switch:
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +    description: Support role switch.
+
+This normally is a controller property. Role switch is foreign to the 
+hub, so doesn't really belong there for sure.
+
+> +
+> +  port:
+> +    description: |
+> +      any connector to the data bus of this controller should be modelled
+> +      using the OF graph bindings specified, if the "usb-role-switch"
+> +      property is used. Note for this driver, two ports are supported,
+> +      the first being the endpoint that will be notified by this driver,
+> +      and the second being the endpoint that notifies this driver of a
+> +      role switch.
+> +
+> +
+> +required:
+> +  - compatible
+> +  - typec-vbus-gpios
+> +  - otg-switch-gpios
+> +  - hub-vdd33-en-gpios
+> +  - usb-role-switch
+> +  - port
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    hisi_hikey_usb: hisi_hikey_usb {
+> +        compatible = "hisilicon,gpio_hubv1";
+> +        typec-vbus-gpios = <&gpio25 2 GPIO_ACTIVE_HIGH>;
+> +        otg-switch-gpios = <&gpio25 6 GPIO_ACTIVE_HIGH>;
+> +        hub-vdd33-en-gpios = <&gpio5 6 GPIO_ACTIVE_HIGH>;
+> +        usb-role-switch;
+> +
+> +        port {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            hikey_usb_ep0: endpoint@0 {
+> +                reg = <0>;
+> +                remote-endpoint = <&dwc3_role_switch>;
+> +            };
+> +            hikey_usb_ep1: endpoint@1 {
+> +                reg = <1>;
+> +                remote-endpoint = <&rt1711h_ep>;
+> +            };
+> +        };
+> +    };
+> -- 
+> 2.17.1
+> 
