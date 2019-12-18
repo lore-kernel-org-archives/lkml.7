@@ -6,31 +6,34 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB16C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F45C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:49:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAF702176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE6952176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:49:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727634AbfLRUtW (ORCPT
+        id S1727700AbfLRUt0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 15:49:22 -0500
-Received: from mail.windriver.com ([147.11.1.11]:47846 "EHLO
+        Wed, 18 Dec 2019 15:49:26 -0500
+Received: from mail.windriver.com ([147.11.1.11]:47819 "EHLO
         mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727608AbfLRUtU (ORCPT
+        with ESMTP id S1726463AbfLRUtW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 15:49:20 -0500
+        Wed, 18 Dec 2019 15:49:22 -0500
 Received: from yow-cube1.wrs.com (yow-cube1.wrs.com [128.224.56.98])
-        by mail.windriver.com (8.15.2/8.15.2) with ESMTP id xBIKn0if000214;
-        Wed, 18 Dec 2019 12:49:15 -0800 (PST)
+        by mail.windriver.com (8.15.2/8.15.2) with ESMTP id xBIKn0iT000214;
+        Wed, 18 Dec 2019 12:49:07 -0800 (PST)
 From:   Paul Gortmaker <paul.gortmaker@windriver.com>
 To:     Lee Jones <lee.jones@linaro.org>
 Cc:     linux-kernel@vger.kernel.org,
         Paul Gortmaker <paul.gortmaker@windriver.com>,
-        Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org
-Subject: [PATCH 13/18] mfd: menelaus: Make it explicitly non-modular
-Date:   Wed, 18 Dec 2019 15:48:52 -0500
-Message-Id: <1576702137-25905-14-git-send-email-paul.gortmaker@windriver.com>
+        Viresh Kumar <vireshk@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: [PATCH 01/18] mfd: stmpe-spi: Make it explicitly non-modular
+Date:   Wed, 18 Dec 2019 15:48:40 -0500
+Message-Id: <1576702137-25905-2-git-send-email-paul.gortmaker@windriver.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1576702137-25905-1-git-send-email-paul.gortmaker@windriver.com>
 References: <1576702137-25905-1-git-send-email-paul.gortmaker@windriver.com>
@@ -39,10 +42,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Kconfig currently controlling compilation of this code is:
+drivers/mfd/Kconfig:config STMPE_SPI
+drivers/mfd/Kconfig:    bool "STMicroelectronics STMPE SPI Interface"
 
-drivers/mfd/Kconfig:config MENELAUS
-drivers/mfd/Kconfig:    bool "TI TWL92330/Menelaus PM chip"
+The Kconfig currently controlling compilation of this code is:
 
 ...meaning that it currently is not being built as a module by anyone.
 
@@ -53,73 +56,93 @@ We explicitly disallow a driver unbind, since that doesn't have a
 sensible use case anyway, and it allows us to drop the ".remove"
 code for non-modular drivers.
 
-Since module_i2c_driver() uses the same init level priority as
-builtin_i2c_driver() the init ordering remains unchanged with
-this commit.
+Since module_init was not in use by this code, the init ordering
+remains unchanged with this commit.
 
 Also note that MODULE_DEVICE_TABLE is a no-op for non-modular code.
 
 We also delete the MODULE_LICENSE tag etc. since all that information
 is already contained at the top of the file in the comments.
 
-Cc: Tony Lindgren <tony@atomide.com>
 Cc: Lee Jones <lee.jones@linaro.org>
-Cc: linux-omap@vger.kernel.org
+Cc: Viresh Kumar <vireshk@kernel.org>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: linux-stm32@st-md-mailman.stormreply.com
 Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
 ---
- drivers/mfd/menelaus.c | 24 ++++--------------------
- 1 file changed, 4 insertions(+), 20 deletions(-)
+ drivers/mfd/stmpe-spi.c | 23 ++---------------------
+ 1 file changed, 2 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/mfd/menelaus.c b/drivers/mfd/menelaus.c
-index b64d3315a5e1..65a268d11aaa 100644
---- a/drivers/mfd/menelaus.c
-+++ b/drivers/mfd/menelaus.c
-@@ -18,7 +18,7 @@
-  * Copyright (C) 2005, 2006 Nokia Corporation
-  */
- 
+diff --git a/drivers/mfd/stmpe-spi.c b/drivers/mfd/stmpe-spi.c
+index 7351734f7593..3f6471e7301a 100644
+--- a/drivers/mfd/stmpe-spi.c
++++ b/drivers/mfd/stmpe-spi.c
+@@ -10,7 +10,7 @@
+ #include <linux/spi/spi.h>
+ #include <linux/interrupt.h>
+ #include <linux/kernel.h>
 -#include <linux/module.h>
 +#include <linux/init.h>
- #include <linux/i2c.h>
- #include <linux/interrupt.h>
- #include <linux/sched.h>
-@@ -1222,33 +1222,17 @@ static int menelaus_probe(struct i2c_client *client,
- 	return err;
+ #include <linux/of.h>
+ #include <linux/types.h>
+ #include "stmpe.h"
+@@ -102,13 +102,6 @@ stmpe_spi_probe(struct spi_device *spi)
+ 	return stmpe_probe(&spi_ci, id->driver_data);
  }
  
--static int menelaus_remove(struct i2c_client *client)
+-static int stmpe_spi_remove(struct spi_device *spi)
 -{
--	struct menelaus_chip	*menelaus = i2c_get_clientdata(client);
+-	struct stmpe *stmpe = spi_get_drvdata(spi);
 -
--	free_irq(client->irq, menelaus);
--	flush_work(&menelaus->work);
--	the_menelaus = NULL;
--	return 0;
+-	return stmpe_remove(stmpe);
 -}
 -
- static const struct i2c_device_id menelaus_id[] = {
- 	{ "menelaus", 0 },
+ static const struct of_device_id stmpe_spi_of_match[] = {
+ 	{ .compatible = "st,stmpe610", },
+ 	{ .compatible = "st,stmpe801", },
+@@ -118,7 +111,6 @@ static const struct of_device_id stmpe_spi_of_match[] = {
+ 	{ .compatible = "st,stmpe2403", },
+ 	{ /* sentinel */ },
+ };
+-MODULE_DEVICE_TABLE(of, stmpe_spi_of_match);
+ 
+ static const struct spi_device_id stmpe_spi_id[] = {
+ 	{ "stmpe610", STMPE610 },
+@@ -129,18 +121,17 @@ static const struct spi_device_id stmpe_spi_id[] = {
+ 	{ "stmpe2403", STMPE2403 },
  	{ }
  };
--MODULE_DEVICE_TABLE(i2c, menelaus_id);
+-MODULE_DEVICE_TABLE(spi, stmpe_id);
  
- static struct i2c_driver menelaus_i2c_driver = {
+ static struct spi_driver stmpe_spi_driver = {
  	.driver = {
--		.name		= DRIVER_NAME,
-+		.name			= DRIVER_NAME,
-+		.suppress_bind_attrs	= true,
+ 		.name	= "stmpe-spi",
+ 		.of_match_table = of_match_ptr(stmpe_spi_of_match),
++		.suppress_bind_attrs = true,
+ #ifdef CONFIG_PM
+ 		.pm	= &stmpe_dev_pm_ops,
+ #endif
  	},
- 	.probe		= menelaus_probe,
--	.remove		= menelaus_remove,
- 	.id_table	= menelaus_id,
+ 	.probe		= stmpe_spi_probe,
+-	.remove		= stmpe_spi_remove,
+ 	.id_table	= stmpe_spi_id,
  };
+ 
+@@ -149,13 +140,3 @@ static int __init stmpe_init(void)
+ 	return spi_register_driver(&stmpe_spi_driver);
+ }
+ subsys_initcall(stmpe_init);
 -
--module_i2c_driver(menelaus_i2c_driver);
+-static void __exit stmpe_exit(void)
+-{
+-	spi_unregister_driver(&stmpe_spi_driver);
+-}
+-module_exit(stmpe_exit);
 -
--MODULE_AUTHOR("Texas Instruments, Inc. (and others)");
--MODULE_DESCRIPTION("I2C interface for Menelaus.");
--MODULE_LICENSE("GPL");
-+builtin_i2c_driver(menelaus_i2c_driver);
+-MODULE_LICENSE("GPL v2");
+-MODULE_DESCRIPTION("STMPE MFD SPI Interface Driver");
+-MODULE_AUTHOR("Viresh Kumar <vireshk@kernel.org>");
 -- 
 2.7.4
 
