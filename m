@@ -2,169 +2,75 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E11C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 999C9C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 448C42072B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:05:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g8Yj0+uE"
+	by mail.kernel.org (Postfix) with ESMTP id 764722176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:07:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbfLRKFt (ORCPT
+        id S1726725AbfLRKHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 05:05:49 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:50935 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726090AbfLRKFs (ORCPT
+        Wed, 18 Dec 2019 05:07:25 -0500
+Received: from imap2.colo.codethink.co.uk ([78.40.148.184]:59988 "EHLO
+        imap2.colo.codethink.co.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725955AbfLRKHZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 05:05:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576663548;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FSkrFpm1DW1Y7i6HiHHtFhN9Nhr2jT7JhuCbqt9yG0o=;
-        b=g8Yj0+uEEmRR5aW9Zik9kE1+k6Jgd3pbGkMPyhdGyvcrNGWcFW2UoUHoG/lmVLKzLMWc04
-        edP5FD+CB3xfAMidednqvbNHRCp1b9TBMhWAnHzSx481uGSumnmPfxcWZC/ont55NSxGGO
-        3dE15K94+Dk7xf6unY2i1BjanAXpM4o=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-57-aPVHxaVxN1aI41xOxt8FrA-1; Wed, 18 Dec 2019 05:05:43 -0500
-X-MC-Unique: aPVHxaVxN1aI41xOxt8FrA-1
-Received: by mail-wm1-f72.google.com with SMTP id z2so342922wmf.5
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 02:05:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FSkrFpm1DW1Y7i6HiHHtFhN9Nhr2jT7JhuCbqt9yG0o=;
-        b=PAztRDfL0QwthrvpNuOY+MrAfplkbwjI0rwoGyFQlW+uNoVfz8YvBQVWOAQ/2Lpf/a
-         Bq0ctLaYKDWX1PLzTwzsk7OCoaPDorhrK9FF5Hyj9Fgt2McAT7t3YcHFdVd8e4kuMIMD
-         WzkOr0CEecN1AhY4uC02u8++DL/ZHep3LW4zLBEoH1nnt3WtAwScH5zziS1z9jOe6Vnc
-         vhAeRcDSKsypmcSmmdN94AHXtHD7/adTfvQPixI57RWPII92kKCNIccDML+bw9QiEHir
-         AnH+lJOCiuQ5gQuQMxhrZIg46bgHsW1uMDpgCZhw/J3ZXF/orWuumb5hElc9PnzsUvV4
-         LLUg==
-X-Gm-Message-State: APjAAAUuejQGxFCBFjd/H/jg3C2LKKaF9TeUWMTm0+PMYkGUO5nPW8y4
-        S+kGn1L/BT0GLz7mxyBYCjqpnf6GGlOlRuCF6yHs5fjzkPBuD4tv3Amr9NZ7RInjNYolH86hHgj
-        gKw2GGPLkVpPzVDCBeaocUNBH
-X-Received: by 2002:adf:f54d:: with SMTP id j13mr499111wrp.19.1576663542553;
-        Wed, 18 Dec 2019 02:05:42 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxX6RhlxdEWJs66pu6RNx9WXgk/AjvVABJfgEXDOjUWKh9KkobAdo1xitp5e/cWXJ63qptzmA==
-X-Received: by 2002:adf:f54d:: with SMTP id j13mr499080wrp.19.1576663542320;
-        Wed, 18 Dec 2019 02:05:42 -0800 (PST)
-Received: from shalem.localdomain (2001-1c00-0c0c-fe00-7e79-4dac-39d0-9c14.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:7e79:4dac:39d0:9c14])
-        by smtp.gmail.com with ESMTPSA id 5sm2130892wrh.5.2019.12.18.02.05.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Dec 2019 02:05:41 -0800 (PST)
-Subject: Re: [PATCH] serdev: Don't claim unsupported serial devices
-To:     Punit Agrawal <punit1.agrawal@toshiba.co.jp>,
-        linux-serial@vger.kernel.org
-Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        nobuhiro1.iwamatsu@toshiba.co.jp, shrirang.bagul@canonical.com,
-        stable@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>
-References: <20191218065646.817493-1-punit1.agrawal@toshiba.co.jp>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <096046b6-324a-8496-8599-ed7e5ffc6e3c@redhat.com>
-Date:   Wed, 18 Dec 2019 11:05:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 18 Dec 2019 05:07:25 -0500
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap2.colo.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
+        id 1ihWEk-0006kc-2K; Wed, 18 Dec 2019 10:07:22 +0000
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.3)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1ihWEj-00A9fX-IV; Wed, 18 Dec 2019 10:07:21 +0000
+From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+To:     ben.dooks@codethink.co.uk
+Cc:     Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/chrome: cros-ec: make init_lock static
+Date:   Wed, 18 Dec 2019 10:07:20 +0000
+Message-Id: <20191218100720.2420401-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <20191218065646.817493-1-punit1.agrawal@toshiba.co.jp>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The init_lock is not declared or used outside of cros_ec_ishtp.c
+so make it static to avoid the following warning:
 
-On 18-12-2019 07:56, Punit Agrawal wrote:
-> Serdev sub-system claims all serial devices that are not already
-> enumerated. As a result, no device node is created for serial port on
-> certain boards such as the Apollo Lake based UP2. This has the
-> unintended consequence of not being able to raise the login prompt via
-> serial connection.
-> 
-> Introduce a blacklist to reject devices that should not be treated as
-> a serdev device. Add the Intel HS UART peripheral ids to the blacklist
-> to bring back serial port on SoCs carrying them.
-> 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Johan Hovold <johan@kernel.org>
-> Cc: Hans de Goede <hdegoede@redhat.com>
+drivers/platform/chrome/cros_ec_ishtp.c:79:1: warning: symbol 'init_lock' was not declared. Should it be static?
 
-Thank you for addressing this long standing issue.
+Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
+---
+Cc: Benson Leung <bleung@chromium.org>
+Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: Guenter Roeck <groeck@chromium.org>
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/platform/chrome/cros_ec_ishtp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The basic approach here looks good to me, once the minor
-comments from other reviewers are addressed you can add my:
-
-Acked-by: Hans de Goede <hdegoede@redhat.com>
-
-to the next version.
-
-Regards,
-
-Hans
-
-
-
-> ---
-> 
-> Hi,
-> 
-> The patch has been updated based on feedback recieved on the RFC[0].
-> 
-> Please consider merging if there are no objections.
-> 
-> Thanks,
-> Punit
-> 
-> [0] https://www.spinics.net/lists/linux-serial/msg36646.html
-> 
->   drivers/tty/serdev/core.c | 10 ++++++++++
->   1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
-> index 226adeec2aed..0d64fb7d4f36 100644
-> --- a/drivers/tty/serdev/core.c
-> +++ b/drivers/tty/serdev/core.c
-> @@ -663,6 +663,12 @@ static acpi_status acpi_serdev_register_device(struct serdev_controller *ctrl,
->   	return AE_OK;
->   }
->   
-> +static const struct acpi_device_id serdev_blacklist_devices[] = {
-> +	{"INT3511", 0},
-> +	{"INT3512", 0},
-> +	{ },
-> +};
-> +
->   static acpi_status acpi_serdev_add_device(acpi_handle handle, u32 level,
->   					  void *data, void **return_value)
->   {
-> @@ -675,6 +681,10 @@ static acpi_status acpi_serdev_add_device(acpi_handle handle, u32 level,
->   	if (acpi_device_enumerated(adev))
->   		return AE_OK;
->   
-> +	/* Skip if black listed */
-> +	if (!acpi_match_device_ids(adev, serdev_blacklist_devices))
-> +		return AE_OK;
-> +
->   	if (acpi_serdev_check_resources(ctrl, adev))
->   		return AE_OK;
->   
-> 
+diff --git a/drivers/platform/chrome/cros_ec_ishtp.c b/drivers/platform/chrome/cros_ec_ishtp.c
+index e5996821d08b..5f8e76f3022a 100644
+--- a/drivers/platform/chrome/cros_ec_ishtp.c
++++ b/drivers/platform/chrome/cros_ec_ishtp.c
+@@ -76,7 +76,7 @@ struct cros_ish_in_msg {
+  *
+  * The writers are .reset() and .probe() function.
+  */
+-DECLARE_RWSEM(init_lock);
++static DECLARE_RWSEM(init_lock);
+ 
+ /**
+  * struct response_info - Encapsulate firmware response related
+-- 
+2.24.0
 
