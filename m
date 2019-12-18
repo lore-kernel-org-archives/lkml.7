@@ -2,222 +2,106 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFEFFC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85AA6C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC1952146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:54:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56E7C206D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:54:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ehbk3QqU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbfLRAyb convert rfc822-to-8bit (ORCPT
+        id S1726582AbfLRAy6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 19:54:31 -0500
-Received: from mail-oln040092255076.outbound.protection.outlook.com ([40.92.255.76]:20804
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725940AbfLRAyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 19:54:31 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=R/9EcKx4H3uGIf3cRLij4BXKuAcrl7VvprkHfBeCEb8k28dlbYE7LoMxM1mFQiqUcEXd61inesy5EmllOKIyowuyiqd0x8180G0Rte56ast43v/3Yjb/kWJuz33Tv5cG1T45wdWzlgCG5xNBNN5d+3Ra+HOTu74hFvsPotsuAdAX1Jj3Rp0eZ16VZiK1BkvCwXEUsI/yCxF6zjuIDI/uJYsgJcJlohZSDtaxiXmU8P3gDUnpSphf308B9nNnsqYDkY887kBprDJsOj/fiFLS5SQJjGgkArpcDZYUtky6UweFn2IWUk2bDWWCr9zMNI3nFvF1tcINrcGnZEuTbW8LSQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j4GNSnYSXrLt5tmKHC1uoGa3lrkchQjIEmP3ezPAiDY=;
- b=M+yWsEj8XIeUzQ8kfzHsDWAhGuCMX3HOG+RkxLbj/+dRhruNn3h4ZGlAmsw/HrMMXymfaPW4eq/YrycAs7wvmXKsbLiA+Bp9K0LMN+W13pEhAlB9x9OXjtQPCeynoIslv0gHoMl0gFl5UTQuLfAxYq1wq3mlPsLnWgooAjfdTXKQpGP0yHMGfjpjPHJMEYuGrF3xBKTgW8nTcBfvzo1JLbCGA12qSGGZVZYvCsh0JkeC34aJmxQ68mKsxg1YGUNTZZbdPlhOAsCMQdJBce6qnGYCNIs6rEdD48M9BcRDEi9pbNy3oSQr3IM/RyWM+cpS6vDUtNaouR8UNGMSmFnXGA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from HK2APC01FT024.eop-APC01.prod.protection.outlook.com
- (10.152.248.57) by HK2APC01HT081.eop-APC01.prod.protection.outlook.com
- (10.152.249.103) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2559.14; Wed, 18 Dec
- 2019 00:54:25 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.248.59) by
- HK2APC01FT024.mail.protection.outlook.com (10.152.248.147) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.14 via Frontend Transport; Wed, 18 Dec 2019 00:54:25 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::20ad:6646:5bcd:63c9]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::20ad:6646:5bcd:63c9%11]) with mapi id 15.20.2559.012; Wed, 18 Dec
- 2019 00:54:25 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Logan Gunthorpe <logang@deltatee.com>
-Subject: Re: [PATCH v12 0/4] PCI: Patch series to improve Thunderbolt
- enumeration
-Thread-Topic: [PATCH v12 0/4] PCI: Patch series to improve Thunderbolt
- enumeration
-Thread-Index: AQHVrpB+5sK/XGeQw0yttw28ATWBvae+e8EAgACidQA=
-Date:   Wed, 18 Dec 2019 00:54:25 +0000
-Message-ID: <PSXP216MB043840E2DE9B81AC8797F63A80530@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-References: <PSXP216MB043892C04178AB333F7AF08C80580@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
- <20191217151248.GA165530@google.com>
-In-Reply-To: <20191217151248.GA165530@google.com>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SYBPR01CA0212.ausprd01.prod.outlook.com
- (2603:10c6:10:16::32) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- (2603:1096:300:d::20)
-x-incomingtopheadermarker: OriginalChecksum:0103C68B7F466E5D81778545F90EC545737357BD511B6FF8A4AAA33DF3C67C61;UpperCasedChecksum:849F45C591BDD9E4928D99B1FFEF4523566D3CFF53E75C5D891F6B48310BCF47;SizeAsReceived:7720;Count:49
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [7nh6eMByoR5qNMW7hY1cjIaamaWpdvZEaMAnU1Rcbdp0Kk+fCl7bwuB2yc6FZ4tgDyDlXYvqHIk=]
-x-microsoft-original-message-id: <20191218005416.GA1608@nicholas-dell-linux>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 49
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: 16d5551a-7281-4382-0aeb-08d78354d36f
-x-ms-traffictypediagnostic: HK2APC01HT081:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: XCKE3wxgSnFbfdULOI7Xu3WizwApEa0y+nQgyaa3W5g7DKKtC6/ZGpzi5mHVTWET2b5bF0n0CiArxNssnXADMAIQRLuesVi2l/9/nzvZ9CvyG+RzIhOjKMFdQn0qyT0xA+DWWkdI78tZn/oNruEMfhk2lcizmja4gBycVYbJ1r9RPRGTE3VTg9Oz6Fvjjk0H
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <66CD41A32A2343429139866934B382AA@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        Tue, 17 Dec 2019 19:54:58 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:39026 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725940AbfLRAy6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 19:54:58 -0500
+Received: by mail-il1-f196.google.com with SMTP id x5so190180ila.6
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 16:54:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4cKjTtuJ6Cl3BPkbORmbBVCSJ2Mx93CiWQ5Web+aZoo=;
+        b=Ehbk3QqUh5bTHL9JWhwrStjM1T3/LkM1Kqv+zwWwwk6M/oBy9gNn8PJ2yhBeubKtqw
+         eA4bTbmTus7J2LmfuinU86pawGesMIrNtGwKCU1jkvSXjjAkSBccuRyP6ktvcVlBET3y
+         RsGdJaHIJjTrGFAjMBY6t7gqFXFQbI1WCoBrY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4cKjTtuJ6Cl3BPkbORmbBVCSJ2Mx93CiWQ5Web+aZoo=;
+        b=W8n41Rx9+1HO4xbg/Eyqsb8nttBquitA6McabAyQbmkkYGECjxm1RQLvkY9Pn9R7P5
+         yytsdQi8Aekf695OVV0taPh0cbstDDRlMYMNR9wDeU7UgBp8MhjumifRy/HKCmci8BbL
+         kZQ9hAbBfL+PEGFHKwAi7p+E0uQs13KNXHAY3935h8L3x77aBlsbVRsde3151ElUbUA5
+         mGlndnZxIIAU9Ca1sLuodvW2LnBLHIJfYX7i0KwTJ9SDTifpzluEx3ZWPBuoMOezZ0mV
+         tmNi2PHLSPtZQZgXrM56kHHZ/ImdulYyRBuRWUPbEFTFpGt0IP11gJQAyPpM2f9b9CS2
+         ALCQ==
+X-Gm-Message-State: APjAAAUtR+8ds5CLIZMlmE2VQi2TnodezCMfvhUsU+p/srh1mTL5WKrI
+        GL3DenyhzdaXx1BZP9+A1JtFzW6po98=
+X-Google-Smtp-Source: APXvYqyx6VQ6j16qfhldQru8X/t0kIHiTlTbXg8o6iSRRUlz4YUldSOIse9hmZAYwEQ+RQa6455EHA==
+X-Received: by 2002:a92:51:: with SMTP id 78mr617812ila.121.1576630496640;
+        Tue, 17 Dec 2019 16:54:56 -0800 (PST)
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com. [209.85.166.173])
+        by smtp.gmail.com with ESMTPSA id x62sm121876ill.86.2019.12.17.16.54.55
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Dec 2019 16:54:55 -0800 (PST)
+Received: by mail-il1-f173.google.com with SMTP id a6so176807ili.9
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 16:54:55 -0800 (PST)
+X-Received: by 2002:a92:cc90:: with SMTP id x16mr224285ilo.269.1576630494768;
+ Tue, 17 Dec 2019 16:54:54 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 16d5551a-7281-4382-0aeb-08d78354d36f
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Dec 2019 00:54:25.0373
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK2APC01HT081
+References: <20191213154448.9.I1791f91dd22894da04f86699a7507d101d4385bc@changeid>
+ <20191215200632.1019065-1-robdclark@gmail.com>
+In-Reply-To: <20191215200632.1019065-1-robdclark@gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 17 Dec 2019 16:54:42 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=U7PXe7n3Q+k6ZWvkUeCRA8Esdyc6C39078=N_7D+BCXA@mail.gmail.com>
+Message-ID: <CAD=FV=U7PXe7n3Q+k6ZWvkUeCRA8Esdyc6C39078=N_7D+BCXA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] fixup! drm/bridge: ti-sn65dsi86: Skip non-standard DP rates
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        David Airlie <airlied@linux.ie>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 09:12:48AM -0600, Bjorn Helgaas wrote:
-> On Mon, Dec 09, 2019 at 12:59:29PM +0000, Nicholas Johnson wrote:
-> > Hi all,
-> > 
-> > Since last time:
-> > 	Reverse Christmas tree for a couple of variables
-> > 
-> > 	Changed while to whilst (sounds more formal, and so that 
-> > 	grepping for "while" only brings up code)
-> > 
-> > 	Made sure they still apply to latest Linux v5.5-rc1
-> > 
-> > Kind regards,
-> > Nicholas
-> > 
-> > Nicholas Johnson (4):
-> >   PCI: Consider alignment of hot-added bridges when distributing
-> >     available resources
-> >   PCI: In extend_bridge_window() change available to new_size
-> >   PCI: Change extend_bridge_window() to set resource size directly
-> >   PCI: Allow extend_bridge_window() to shrink resource if necessary
-> 
-> I have tentatively applied these to pci/resource for v5.6, but I need
-> some kind of high-level description for why we want these changes.
-I could not find these in linux-next (whereas it was almost immediate 
-last time), so this must be why.
+Hi,
 
-> 
-> The commit logs describe what the code does, and that's good, but we
-> really need a little more of the *why* and what the user-visible
-> benefit is.  I know some of this was in earlier postings, but it seems
-> to have gotten lost along the way.
-Is this explanation going into the commit notes, or is this just to get 
-it past reviewers, Greg K-H and Linus Torvalds?
+On Sun, Dec 15, 2019 at 12:06 PM Rob Clark <robdclark@gmail.com> wrote:
+>
+> From: Rob Clark <robdclark@chromium.org>
+>
+> ---
+> Note however, the panel I have on the yoga c630 is not eDP 1.4+, so I
+> cannot test that path.  But I think it looks correct.
+>
+>  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 110 +++++++++++++++++++++-----
+>  1 file changed, 89 insertions(+), 21 deletions(-)
 
-Here is an attempt:
+I ended up basing patch #9 in my v2 series slightly more on Jeffrey's
+patch.  Hopefully it looks OK.
 
-Although Thunderbolt 3 does not need special treatment like Cardbus, it 
-does require the kernel to be up to date with PCI hotplug and capable of 
-assigning resources when native enumeration mode is used (as opposed to 
-BIOS-assisted mode). Operating systems have neglected this over the 
-years, as PCI hotplug is not widely used.
+I don't have any eDP 1.4 panels either, so hopefully it's all good there...
 
-Thunderbolt has a structure where each downstream facing port is a PCI 
-hotplug bridge. Peripheral devices may have a second Thunderbolt port 
-for daisy chaining more devices, much like Firewire did.
-
-In this example, the controller is at bus 03, and this controller has 
-two ports. Bus 05 is the NHI (Native Host Interface) and Bus 39 is the 
-USB controller. Bus 07 is a Thunderbolt dock, as is Bus 0d, daisy 
-chained after the first dock. The hotplug bridges are 04.01, 04.04, 
-07.04, 0d.04, and depending on the implementation, 1c.4 under the host 
-controller.
-
-+-1c.4-[03-6c]----00.0-[04-6c]--+-00.0-[05]----00.0
-|                               +-01.0-[06-38]----00.0-[07-38]--+-00.0-[08]----00.0
-|                               |                               +-01.0-[09]----00.0
-|                               |                               +-02.0-[0a]--
-|                               |                               +-03.0-[0b]--
-|                               |                               \-04.0-[0c-38]----00.0-[0d-38]--+-00.0-[0e]----00.0
-|                               |                                                               +-01.0-[0f]----00.0
-|                               |                                                               +-02.0-[10]--
-|                               |                                                               +-03.0-[11]--
-|                               |                                                               \-04.0-[12-38]--
-|                               +-02.0-[39]----00.0
-|                               \-04.0-[3a-6c]--
-
-The host controller implementation appears differently in new Intel Ice 
-Lake systems, with the Thunderbolt controllers integrated into the CPU, 
-with the Thunderbolt ports appearing as chipset root ports.
-
-Ice Lake with 2/4 Thunderbolt 3 ports implemented (0d.0 is the USB 
-controller and 0d.2 is NHI #0):
-
--[0000:00]-+-00.0
-           +-02.0
-           +-04.0
-           +-07.0-[01-2b]--
-           +-07.1-[2c-56]--
-           +-0d.0
-           +-0d.2
-
-Thunderbolt is unusual in that we have nested hotplug bridges. Mika 
-Westerberg <mika.westerberg@linux.intel.com> has done most of the work 
-required to assign all unused resources (busn and mem) from the parent 
-bridge window to the downstream hotplug bridge, allowing for more 
-Thunderbolt devices to be daisy-chained. However, in 
-drivers/pci/setup-bus.c in pci_bus_distribute_available_resources(), I 
-noticed problems with hot-adding Thunderbolt devices containing PCI 
-devices with resource alignment above the minimum 1M. Furthermore, I 
-found it more reliable to cease the use of additional size resource 
-lists, which are considered "optional" when allocating. The operation of 
-pci_bus_distribute_available_resources() is only as guaranteed as the 
-resource assignment. None of this would work with resources assigned by 
-the kernel parameters 
-pci=hpmmiosize=nn[KMG],hpmmiosize=nn[KMG],hpmmioprefsize=nn[KMG] - it 
-would only work if the resources under the root port were assigned by 
-firmware.
-
-I have solved the alignment problem with patch 1/4 in 
-pci_bus_distribute_available_resources() and the remaining issues with 
-patches 2-4 by changing extend_bridge_window() which is now named 
-adjust_bridge_window(). You can find the link to the bug report filed by 
-Mika Westerberg in patch 1/4 commit log.
-
-To sum up, although this could be applicable to any hypothetical 
-application with nested PCI hotplug bridges, the intended end user 
-facing case is Thunderbolt 3 with native enumeration mode. My changes:
-- Allow for hot-adding PCI devices with >1M alignment of BARs
-- Offer improved resilience and reliability due to removal of add_size
-- Allow this to work with resources assigned with the kernel parameters
-  pci=hpmmiosize=nn[KMG],hpmmiosize=nn[KMG],hpmmioprefsize=nn[KMG] as 
-  opposed to only firmware-allocated resources.
-
-
-
-Please let me know if this is not adequate for the required purposes.
-
-Thanks!
-
-Kind regards,
-Nicholas Johnson
-
-> 
-> Bjorn
+-Doug
