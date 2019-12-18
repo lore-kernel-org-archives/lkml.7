@@ -2,132 +2,351 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 866B2C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B12DEC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CB2A22314
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:55:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576713345;
-	bh=zzopRiTPMCxiWVybiJHDiNfTH61sV+ErSnPbGBAT7ZY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VSoRl5FnaA7luLXCjAJXYjQKjDTy2Wnl0ReUlUk59n1XwMC07LMZb0VWVUjYzwjRy
-	 FIca+/r/f5ZnQzkPhXAteOsi0OsjMTYGT+lZRIyEn0E5fJ+poSxwvK877UXiI3zJ+N
-	 /YIhKPF6Ul4vCDkd4L6Kf7289zddIfl1e5QtLRRs=
+	by mail.kernel.org (Postfix) with ESMTP id 785D821582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:55:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="kA5mq4Jz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbfLRXzo (ORCPT
+        id S1726828AbfLRXzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 18:55:44 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39424 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726700AbfLRXzo (ORCPT
+        Wed, 18 Dec 2019 18:55:55 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:34092 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726599AbfLRXzy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 18:55:44 -0500
-Received: by mail-ot1-f66.google.com with SMTP id 77so4645667oty.6;
-        Wed, 18 Dec 2019 15:55:43 -0800 (PST)
+        Wed, 18 Dec 2019 18:55:54 -0500
+Received: by mail-io1-f66.google.com with SMTP id z193so3893593iof.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 15:55:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sargun.me; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=iTAiv8quXKS4hPnW6sSgwcFpK7vvhhF/AJU45qhXQyk=;
+        b=kA5mq4Jzu7LvrOWSfHqMNLnfMmBatbn6jDLXcpyUOA1zmQO+F4Usx9rEKXucy0d66c
+         Mcgw7Y4l9dj3C1WmfEdP3Q/lzu49oA1+RZpSDHui3ZYgXRsPx2HwbsVmneeiye2i5Ncu
+         dQdsqU+yTn2zOdCdvgZcQjRxAURgYoY2pIMmc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GJ9qxY4LI6XeQxc2KHrHxexDGoJoWaVGO4ER5mSWmaI=;
-        b=jqU3qgYc6A4EaSO33f1iE3TTE80uLlsj09Veh04zlEGM1E44mLRnNm+W6UfRkCv86x
-         jBV2+TCSsgM0UAnq4mvKTPGX4UIxpvDPiR1RLkBag0s2uLf5Opbwn+NLz3dU6QzQvdQe
-         uCKJZW9YJ0lVlwmY05dhw4jJ9EGnAZ7UJ+4VybhDp/UJeRTmqFLbFLFPOGDINtA7V7bi
-         O5Ac+k2mN2Dy73L4ylUExArMJjIloGEkWWP+JFk794veOVEmBvDNZ6JNAqbU5QsMm2qe
-         HXZIF3MHQ9oJKmDusIC810AfsfXK9wAiTStKsdlrvnICwsxBb6OnD0D4JY7kku9k4mhs
-         SPTw==
-X-Gm-Message-State: APjAAAX9X7LekhLwmGQRPkMXEXRVC/AR4mFS27UIby9tqlAGhV1RnEm7
-        bUYlwFeFY+cdOBCyiZm/NP/oRKNvmA==
-X-Google-Smtp-Source: APXvYqyKXJqhNqKyRPGAs2JVV5SiXMGR8LphNu4Udo9MvYFaBLQ15ECTHXk1NIpRYcegBFFN+UOE9A==
-X-Received: by 2002:a9d:7cd9:: with SMTP id r25mr5163459otn.326.1576713343017;
-        Wed, 18 Dec 2019 15:55:43 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id r205sm1387626oih.54.2019.12.18.15.55.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 15:55:42 -0800 (PST)
-Date:   Wed, 18 Dec 2019 17:55:41 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     shubhrajyoti.datta@gmail.com
-Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
-        arnd@arndb.de, michal.simek@xilinx.com,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: misc: Add dt bindings for traffic
- generator
-Message-ID: <20191218235541.GA31319@bogus>
-References: <8b3a446fc60cdd7d085203ce00c3f6bfba642437.1575871828.git.shubhrajyoti.datta@xilinx.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=iTAiv8quXKS4hPnW6sSgwcFpK7vvhhF/AJU45qhXQyk=;
+        b=Thl5j8zoR9DQFmCSygKWA6GAA6mPYGjbpR+SGCrQ0YCQx7KMeiQYEuKF+Y856K3TQo
+         BlK5DYj22c4JLagLFNEDT5TKHTgBA9rBtCok8rTRD4LPNosmngPuldlLRK/xtELAUVV2
+         mDDtsY6EPVnkUtfbF9fHOl+IXTg0KrYe3H8j834/NI6V342N86HFldtlCiilmrZPB7IA
+         ScTQhg5dVeM85imAFrERleEmAIbFmmUhlUDT8LJQZ+jw8XCqbJ/p1i50nFoaD9dzO1hI
+         uTIivvqa9kdUYk0xrqDNNASC7JT4/XQdOdYjvkKZcGCmqFqZ+5X3icO/ZfNDKAyOJWsw
+         YCcQ==
+X-Gm-Message-State: APjAAAXcRmW4IPeIwwUyJF77rlocXtKfsfNDzHIDhLCD/6MiRPVkQCjD
+        UtpdByoPOEGf0YkMdfnWEe3AozIlHFNiqQ==
+X-Google-Smtp-Source: APXvYqyWtVRd9TMXfXith93Pu6yTQeuPGhen310X+v5/AsuM6xA9q7qEGEHa7wFriy7cQ+YnqDaZ2g==
+X-Received: by 2002:a5e:d602:: with SMTP id w2mr3598937iom.94.1576713351956;
+        Wed, 18 Dec 2019 15:55:51 -0800 (PST)
+Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
+        by smtp.gmail.com with ESMTPSA id g79sm1162957ilf.10.2019.12.18.15.55.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 18 Dec 2019 15:55:51 -0800 (PST)
+Date:   Wed, 18 Dec 2019 23:55:50 +0000
+From:   Sargun Dhillon <sargun@sargun.me>
+To:     linux-kernel@vger.kernel.org,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Cc:     tycho@tycho.ws, jannh@google.com, cyphar@cyphar.com,
+        christian.brauner@ubuntu.com, oleg@redhat.com, luto@amacapital.net,
+        viro@zeniv.linux.org.uk, gpascutto@mozilla.com,
+        ealvarez@mozilla.com, fweimer@redhat.com, jld@mozilla.com,
+        arnd@arndb.de
+Subject: [PATCH v4 5/5] test: Add test for pidfd getfd
+Message-ID: <20191218235547.GA17298@ircssh-2.c.rugged-nimbus-611.internal>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8b3a446fc60cdd7d085203ce00c3f6bfba642437.1575871828.git.shubhrajyoti.datta@xilinx.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 11:41:26AM +0530, shubhrajyoti.datta@gmail.com wrote:
-> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-> 
-> Add dt bindings for xilinx traffic generator IP.
-> 
-> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-> ---
->  .../bindings/misc/xlnx,axi-traffic-gen.txt         | 25 ++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/xlnx,axi-traffic-gen.txt
+This adds four tests:
+  * Fetch FD, and then compare via kcmp
+  * Read data from FD to make sure it works
+  * Make sure getfd can be blocked by blocking ptrace_may_access
+  * Making sure fetching bad FDs fails
 
-Please convert to a DT schema.
+Signed-off-by: Sargun Dhillon <sargun@sargun.me>
+---
+ tools/testing/selftests/pidfd/.gitignore      |   1 +
+ tools/testing/selftests/pidfd/Makefile        |   2 +-
+ .../selftests/pidfd/pidfd_getfd_test.c        | 231 ++++++++++++++++++
+ 3 files changed, 233 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/pidfd/pidfd_getfd_test.c
 
-> 
-> diff --git a/Documentation/devicetree/bindings/misc/xlnx,axi-traffic-gen.txt b/Documentation/devicetree/bindings/misc/xlnx,axi-traffic-gen.txt
-> new file mode 100644
-> index 0000000..6edb8f6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/misc/xlnx,axi-traffic-gen.txt
-> @@ -0,0 +1,25 @@
-> +* Xilinx AXI Traffic generator IP
-> +
-> +Required properties:
-> +- compatible: "xlnx,axi-traffic-gen"
-> +- interrupts: Should contain AXI Traffic Generator interrupts.
+diff --git a/tools/testing/selftests/pidfd/.gitignore b/tools/testing/selftests/pidfd/.gitignore
+index 8d069490e17b..3a779c084d96 100644
+--- a/tools/testing/selftests/pidfd/.gitignore
++++ b/tools/testing/selftests/pidfd/.gitignore
+@@ -2,3 +2,4 @@ pidfd_open_test
+ pidfd_poll_test
+ pidfd_test
+ pidfd_wait
++pidfd_getfd_test
+diff --git a/tools/testing/selftests/pidfd/Makefile b/tools/testing/selftests/pidfd/Makefile
+index 43db1b98e845..75a545861375 100644
+--- a/tools/testing/selftests/pidfd/Makefile
++++ b/tools/testing/selftests/pidfd/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ CFLAGS += -g -I../../../../usr/include/ -pthread
+ 
+-TEST_GEN_PROGS := pidfd_test pidfd_fdinfo_test pidfd_open_test pidfd_poll_test pidfd_wait
++TEST_GEN_PROGS := pidfd_test pidfd_fdinfo_test pidfd_open_test pidfd_poll_test pidfd_wait pidfd_getfd_test
+ 
+ include ../lib.mk
+ 
+diff --git a/tools/testing/selftests/pidfd/pidfd_getfd_test.c b/tools/testing/selftests/pidfd/pidfd_getfd_test.c
+new file mode 100644
+index 000000000000..25c11a030afc
+--- /dev/null
++++ b/tools/testing/selftests/pidfd/pidfd_getfd_test.c
+@@ -0,0 +1,231 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#define _GNU_SOURCE
++#include <errno.h>
++#include <fcntl.h>
++#include <inttypes.h>
++#include <limits.h>
++#include <linux/types.h>
++#include <linux/wait.h>
++#include <sched.h>
++#include <signal.h>
++#include <stdbool.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <syscall.h>
++#include <sys/prctl.h>
++#include <sys/wait.h>
++#include <unistd.h>
++#include <sys/socket.h>
++#include <linux/pidfd.h>
++#include <linux/kcmp.h>
++#include <linux/capability.h>
++
++#include "pidfd.h"
++#include "../kselftest.h"
++
++#define WELL_KNOWN_CHILD_FD	100
++#define UNKNOWN_FD		111
++#define SECRET_MESSAGE		"secret"
++
++static int kcmp(pid_t pid1, pid_t pid2, int type, unsigned long idx1,
++		unsigned long idx2)
++{
++	return syscall(SYS_kcmp, pid1, pid2, type, idx1, idx2);
++}
++
++static int child(bool disable_ptrace, int sk)
++{
++	char buf[1024];
++	int ret, fd;
++
++	ret = prctl(PR_SET_PDEATHSIG, SIGKILL);
++	if (ret)
++		ksft_exit_fail_msg("%s: Child could not set DEATHSIG\n",
++				   strerror(errno));
++
++	fd = syscall(SYS_memfd_create, "test", 0);
++	if (fd < 0)
++		ksft_exit_fail_msg("%s: Child could not create memfd\n",
++				   strerror(errno));
++
++	ret = write(fd, SECRET_MESSAGE, sizeof(SECRET_MESSAGE));
++	if (ret < 0)
++		ksft_exit_fail_msg("%s: Child could not write secret message\n",
++				   strerror(errno));
++
++	ret = dup2(fd, WELL_KNOWN_CHILD_FD);
++	if (ret < 0)
++		ksft_exit_fail_msg("%s: Could not dup fd into well-known FD\n",
++				   strerror(errno));
++
++	ret = close(fd);
++	if (ret < 0)
++		ksft_exit_fail_msg("%s: Child could close old fd\n",
++				   strerror(errno));
++
++	if (disable_ptrace) {
++		ret = prctl(PR_SET_DUMPABLE, 0);
++		if (ret < 0)
++			ksft_exit_fail_msg("%s: Child failed to disable ptrace\n",
++					   strerror(errno));
++	}
++	ret = send(sk, "L", 1, 0);
++	if (ret < 0)
++		ksft_exit_fail_msg("%s: Child failed to send launched message\n",
++				   strerror(errno));
++	if (ret == 0)
++		ksft_exit_fail_msg("Failed to send launch message; other side is closed\n");
++
++	close(sk);
++	pause();
++
++	return EXIT_SUCCESS;
++}
++
++static int start_child(bool disable_ptrace, pid_t *childpid)
++{
++	int pidfd, ret, sk_pair[2];
++	char buf[1];
++
++	if (socketpair(PF_LOCAL, SOCK_SEQPACKET, 0, sk_pair) < 0)
++		ksft_exit_fail_msg("%s: failed to create socketpair\n",
++				   strerror(errno));
++	*childpid = fork();
++	if (*childpid < 0)
++		ksft_exit_fail_msg("%s: failed to fork a child process\n",
++				   strerror(errno));
++
++	if (*childpid == 0)
++		exit(child(disable_ptrace, sk_pair[1]));
++
++	close(sk_pair[1]);
++
++	pidfd = sys_pidfd_open(*childpid, 0);
++	if (pidfd < 0)
++		ksft_exit_fail_msg("%s: failed to pidfd_open\n",
++				   strerror(errno));
++
++	ret = recv(sk_pair[0], &buf, 1, 0);
++	if (ret < 0)
++		ksft_exit_fail_msg("%s: failed read from launch socket\n",
++				   strerror(errno));
++	if (ret == 0)
++		ksft_exit_fail_msg("Failed to read from launch socket, child failed\n");
++
++	return pidfd;
++}
++
++static void test_kcmp_and_fetch_fd(void)
++{
++	char buf[sizeof(SECRET_MESSAGE)];
++	int fd, pidfd, ret;
++	pid_t child_pid;
++
++	pidfd = start_child(false, &child_pid);
++
++	fd = ioctl(pidfd, PIDFD_IOCTL_GETFD, WELL_KNOWN_CHILD_FD);
++	if (fd < 0)
++		ksft_exit_fail_msg("%s: getfd failed\n", strerror(errno));
++
++	ret = kcmp(getpid(), child_pid, KCMP_FILE, fd, WELL_KNOWN_CHILD_FD);
++	if (ret != 0)
++		ksft_exit_fail_msg("Our FD not equal to child FD\n");
++
++	ksft_test_result_pass("kcmp\n");
++
++	ret = lseek(fd, 0, SEEK_SET);
++	if (ret < 0)
++		ksft_exit_fail_msg("%s: seek failed\n", strerror(errno));
++	if (ret != 0)
++		ksft_exit_fail_msg("%d: unexpected seek position\n", ret);
++
++	ret = read(fd, buf, sizeof(buf));
++	if (ret < 0)
++		ksft_exit_fail_msg("%s: failed to read secret message\n",
++				   strerror(errno));
++
++	if (strncmp(SECRET_MESSAGE, buf, sizeof(buf)) != 0)
++		ksft_exit_fail_msg("%s: Secret message not correct\n", buf);
++
++	ret = sys_pidfd_send_signal(pidfd, SIGKILL, NULL, 0);
++	close(pidfd);
++	if (ret < 0)
++		ksft_exit_fail_msg("%s: failed to send kill to child\n",
++				   strerror(errno));
++
++	ksft_test_result_pass("fetch_and_read\n");
++}
++
++static void test_no_ptrace(void)
++{
++	int fd, pidfd, ret, uid;
++	pid_t child_pid;
++
++	/* turn into nobody if we're root, to avoid CAP_SYS_PTRACE */
++	uid = getuid();
++	if (uid == 0)
++		seteuid(USHRT_MAX);
++
++	pidfd = start_child(true, &child_pid);
++
++	fd = ioctl(pidfd, PIDFD_IOCTL_GETFD, WELL_KNOWN_CHILD_FD);
++	if (fd != -1)
++		ksft_exit_fail_msg("%s: getfd succeeded when ptrace blocked\n",
++				   strerror(errno));
++	if (errno != EPERM)
++		ksft_exit_fail_msg("%s: getfd did not get EPERM\n",
++				   strerror(errno));
++
++	ret = sys_pidfd_send_signal(pidfd, SIGKILL, NULL, 0);
++	close(pidfd);
++	if (ret < 0)
++		ksft_exit_fail_msg("%s: failed to send kill to child\n",
++				   strerror(errno));
++
++	if (uid == 0)
++		seteuid(0);
++
++	ksft_test_result_pass("no_ptrace\n");
++}
++
++static void test_unknown_fd(void)
++{
++	int fd, pidfd, ret;
++	pid_t child_pid;
++
++	pidfd = start_child(false, &child_pid);
++
++	fd = ioctl(pidfd, PIDFD_IOCTL_GETFD, UNKNOWN_FD);
++	if (fd != -1)
++		ksft_exit_fail_msg("%s: getfd succeeded when fetching unknown FD\n",
++				   strerror(errno));
++	if (errno != EBADF)
++		ksft_exit_fail_msg("%s: getfd did not get EBADF\n",
++				   strerror(errno));
++
++	ret = sys_pidfd_send_signal(pidfd, SIGKILL, NULL, 0);
++	close(pidfd);
++	if (ret < 0)
++		ksft_exit_fail_msg("%s: failed to send kill to child\n",
++				   strerror(errno));
++
++	ksft_test_result_pass("unknown_fd\n");
++}
++
++int main(int argc, char **argv)
++{
++	char buf[sizeof(SECRET_MESSAGE)];
++	int ret, status, fd, pidfd;
++	pid_t child_pid;
++
++	ksft_print_header();
++	ksft_set_plan(4);
++
++	test_kcmp_and_fetch_fd();
++	test_unknown_fd();
++	test_no_ptrace();
++
++	return ksft_exit_pass();
++}
+-- 
+2.20.1
 
-How many and what are they.
-
-> +- interrupt-parent: Must be core interrupt controller.
-
-Drop this. It could be in a parent node.
-
-> +- reg: Should contain AXI Traffic Generator registers location and length.
-> +- interrupt-names: Should contain both the intr names of device - error
-> +		   and completion.
-
-Needs exact strings.
-
-> +- xlnx,device-id: Device instance Id.
-> +
-> +Optional properties:
-> +- clocks: Input clock specifier. Refer to common clock bindings.
-> +
-> +Example:
-> +++++++++
-> +axi_traffic_gen_1: axi-traffic-gen@76000000 {
-> +	compatible = "xlnx,axi-traffic-gen-1.0", "xlnx,axi-traffic-gen";
-
-Doesn't match the above. I'd drop the 2nd string.
-
-> +	clocks = <&clkc 15>;
-> +	interrupts = <0 2 2 2>;
-> +	interrupt-parent = <&axi_intc_1>;
-> +	interrupt-names = "err-out", "irq-out";
-> +	reg = <0x76000000 0x800000>;
-> +	xlnx,device-id = <0x0>;
-> +} ;
-> -- 
-> 2.1.1
-> 
