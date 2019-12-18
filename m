@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1721AC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 03:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C12C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 03:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E74832072B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 03:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17B7C2146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 03:50:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbfLRDuP (ORCPT
+        id S1726618AbfLRDua (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 22:50:15 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:47068 "EHLO huawei.com"
+        Tue, 17 Dec 2019 22:50:30 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7706 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726402AbfLRDuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 22:50:15 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 568B0C2EA5E7B3D2AF41;
-        Wed, 18 Dec 2019 11:50:12 +0800 (CST)
-Received: from huawei.com (10.175.127.16) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Wed, 18 Dec 2019
- 11:50:05 +0800
+        id S1726561AbfLRDua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 22:50:30 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id DBD97CB89925F0697028;
+        Wed, 18 Dec 2019 11:50:28 +0800 (CST)
+Received: from huawei.com (10.175.127.16) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Wed, 18 Dec 2019
+ 11:50:18 +0800
 From:   Pan Zhang <zhangpan26@huawei.com>
 To:     <zhangpan26@huawei.com>, <hushiyuan@huawei.com>,
         <alexander.deucher@amd.com>, <christian.koenig@amd.com>,
         <David1.Zhou@amd.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <sam@ravnborg.org>
+        <ray.huang@amd.com>, <irmoy.das@amd.com>, <sam@ravnborg.org>
 CC:     <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH 1/3] gpu: drm: dead code elimination
-Date:   Wed, 18 Dec 2019 11:49:48 +0800
-Message-ID: <1576640988-14639-1-git-send-email-zhangpan26@huawei.com>
+Subject: [PATCH 2/3] gpu: drm: dead code elimination
+Date:   Wed, 18 Dec 2019 11:50:00 +0800
+Message-ID: <1576641000-14772-1-git-send-email-zhangpan26@huawei.com>
 X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -47,32 +47,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 this set adds support for removal of gpu drm dead code.
 
-patch1:
-`num` is a data of u8 type and ATOM_MAX_HW_I2C_READ == 255, 
+patch2:
+`num_entries` is a data of unsigned type(compilers always treat as unsigned int) and SIZE_MAX == ~0,
 
-so there is a impossible condition '(num > 255) => (0-255 > 255)'.
+so there is a impossible condition:
+'(num_entries > ((~0) - 56) / 72) => (max(0-u32) > 256204778801521549)'.
 
 Signed-off-by: Pan Zhang <zhangpan26@huawei.com>
 ---
- drivers/gpu/drm/amd/amdgpu/atombios_i2c.c | 5 -----
- 1 file changed, 5 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/atombios_i2c.c b/drivers/gpu/drm/amd/amdgpu/atombios_i2c.c
-index 980c363..b4cc7c5 100644
---- a/drivers/gpu/drm/amd/amdgpu/atombios_i2c.c
-+++ b/drivers/gpu/drm/amd/amdgpu/atombios_i2c.c
-@@ -76,11 +76,6 @@ static int amdgpu_atombios_i2c_process_i2c_ch(struct amdgpu_i2c_chan *chan,
- 		}
- 		args.lpI2CDataOut = cpu_to_le16(out);
- 	} else {
--		if (num > ATOM_MAX_HW_I2C_READ) {
--			DRM_ERROR("hw i2c: tried to read too many bytes (%d vs 255)\n", num);
--			r = -EINVAL;
--			goto done;
--		}
- 		args.ucRegIndex = 0;
- 		args.lpI2CDataOut = 0;
- 	}
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
+index 85b0515..10a7f30 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
+@@ -71,10 +71,6 @@ int amdgpu_bo_list_create(struct amdgpu_device *adev, struct drm_file *filp,
+ 	unsigned i;
+ 	int r;
+ 
+-	if (num_entries > (SIZE_MAX - sizeof(struct amdgpu_bo_list))
+-				/ sizeof(struct amdgpu_bo_list_entry))
+-		return -EINVAL;
+-
+ 	size = sizeof(struct amdgpu_bo_list);
+ 	size += num_entries * sizeof(struct amdgpu_bo_list_entry);
+ 	list = kvmalloc(size, GFP_KERNEL);
 -- 
 2.7.4
 
