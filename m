@@ -2,253 +2,429 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A4C1C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C04DC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B1202146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 240E92146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:17:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bPZjeT/S"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="hTdiT8eF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbfLROQB (ORCPT
+        id S1727089AbfLRORG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 09:16:01 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:34744 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726856AbfLROQA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 09:16:00 -0500
-Received: by mail-qv1-f65.google.com with SMTP id o18so801504qvf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 06:16:00 -0800 (PST)
+        Wed, 18 Dec 2019 09:17:06 -0500
+Received: from mail-eopbgr770040.outbound.protection.outlook.com ([40.107.77.40]:32789
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726921AbfLRORF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 09:17:05 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZY4OITuZk+IXEUhpFNnXYKzZI/eVpxljsJERIpLvRumlEWtrPwZs78OpzeT38bPhbwt8cRLnXpPAy8rScYCqj4RmcwLHb60tGR4+c9yvg0mjnSB17g8A5aw7LFBmh1ZR/uIGBubZUSO322L6hUirhxaE9zn8nerS2Y6ex+5GpIx/fK3mhzSNiSLNJ14rjzgw8L8W6cqlI/2PUQdNSTTEkUeHcPdEFWGSgNgpXtddo8TW9/jYKEJGDmnKNpMTIi/3Z6A/fjuBTXD9zUQLNl12lcc3m/miI1Q7eRHp8eP3NRMDgvaf4a/GNDy08pRcmYPL2WowV7Xho96xlqOhn9/Clw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EMBmGi4LAVqz/aqVHy78Gl6OXVQxOSRVUkrMiiFA3ec=;
+ b=e9OmUS9ftYm4w7Pgo6wADUnTHYYDlbWZ5ezZ2lvSx354k4LgrFrSZ6EF30FbPB04GgYtL3MItl6xFu5OP0GgkKRhKEHujqvgQU+ET7Db2OJDS74F1yChvTT0jqo6NV9+Fev8Ns0kc7gJ0NoVdcZJfJeObUeAPjB7RQtdKgGAp59CA/t94mGzqYMCLTwBk3VVVP8mlB30nzCGjsjwUwZE9j72wc3fg8sBRpEorvPByVcP6dFVFMK0z/tu3By3hfwQP5AdnAOYQEyD4u18wKgz2FmcaMXCVV6h4wEBQ2EMIzN1TweiRQTwrdjmURwIAxcQybrcjEpvXLePVcUOC9N7rA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=linaro.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8t0dYHbivI7jIsrUuwVR27YLo8SMDodvslI109VrSWw=;
-        b=bPZjeT/Si7zg5n8LSw6mREj4nzn0v7zeb5tdVcOzQtqRartmQMSoetrcwoG527RlpB
-         x/P49/9oUDO+xaylBL73qhgY7Eo4VxrgkR4MpotFdowIyoyvecXHwsbgH/5g8MDbZiYB
-         xI19FvGg9z8g7v0ocgc2aE/7omDR9+QBUODdPe51yxkMEhhbn/51JOi/fwFmNbG89PPs
-         0zoGXzm9CURMmf/O8SS6JM0NrV/atcrCuhgEI8IugNDesiOXRwbA0FZpOMMm53nSuUYW
-         w7YTzur2VsWPnzwPmi7p8/OgXuyux+BR58rMlgdMuxLl9Yg6j7RCirnLHTsiX3FSBkOs
-         mPSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8t0dYHbivI7jIsrUuwVR27YLo8SMDodvslI109VrSWw=;
-        b=elJ8UfN/mqRPpXFP8yoYvBLARH6WL5PBKO4e9eNaGwfSqgiWJKMcXh4MluSNVXPVQH
-         MW0mD13F+H9yiBOfKnQ3lEtuDARZ36H2lPzRxZTM6wO465y1Fh29Bp5zrDKNBfAHKLW3
-         EECu13X+Zs7LMRRNpOa5HDIIuj1F/sAStbOpeNPbjEBJ9gmmsl+tdv2EoJWHSXgeLHCH
-         WIIrHO4+x03t4rATXEOm5EuEhX82uQoEg0vdfM4gDNuPTw1Sc5SLjVWu/gwKfODOOQDI
-         wpm38bMOTZEig9eR7kOuprU5NYdsayzRuDqNJaxsbaxT/AkuGv4juqRPd+0SkE+FbiYO
-         m9LA==
-X-Gm-Message-State: APjAAAVZ/MdeZ4NFuOIsQlC+L1uV8uIFS6WxWKObtadjPMZKeDR4I+OU
-        jg+8oHSvRHidqlNmv8ejcQ32L9JH6Ae2kBoI/MbDnw==
-X-Google-Smtp-Source: APXvYqzvk28iWQCKgmrIf4BKVBzeHMF9fdGUqLg7DWJbS0kK/W/xmlvpj1CJNYgXqzikduJeeNQCkKabtCzgdBdnD5w=
-X-Received: by 2002:ad4:4810:: with SMTP id g16mr2402347qvy.22.1576678558999;
- Wed, 18 Dec 2019 06:15:58 -0800 (PST)
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EMBmGi4LAVqz/aqVHy78Gl6OXVQxOSRVUkrMiiFA3ec=;
+ b=hTdiT8eFuxpGNqw2PCt94++v4vaeV0f+UpsTVoAKgafPQuBTMpF0sl0FEC/hmI/Hzsoi0dvWHV3fLCZ2eQpaueuTfDaphmcgjSZxFurzUO9Rc9D2KSL/aMxVgWkdpUOTsz4gt/GTswIdUbdYjDJThCMnfdrhSUUFLQpyVl3imqA=
+Received: from DM6PR17CA0019.namprd17.prod.outlook.com (2603:10b6:5:1b3::32)
+ by MWHPR02MB2190.namprd02.prod.outlook.com (2603:10b6:300:68::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2559.14; Wed, 18 Dec
+ 2019 14:16:57 +0000
+Received: from CY1NAM02FT047.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:5:1b3:cafe::b3) by DM6PR17CA0019.outlook.office365.com
+ (2603:10b6:5:1b3::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2538.18 via Frontend
+ Transport; Wed, 18 Dec 2019 14:16:57 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; linaro.org; dkim=none (message not signed)
+ header.d=none;linaro.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT047.mail.protection.outlook.com (10.152.74.177) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2559.14
+ via Frontend Transport; Wed, 18 Dec 2019 14:16:57 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1iha8G-0001CC-Q7; Wed, 18 Dec 2019 06:16:56 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1iha8B-0004A9-AC; Wed, 18 Dec 2019 06:16:51 -0800
+Received: from xsj-pvapsmtp01 (mailman.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xBIEGf5b011010;
+        Wed, 18 Dec 2019 06:16:41 -0800
+Received: from [172.30.17.107]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1iha80-000497-Ur; Wed, 18 Dec 2019 06:16:41 -0800
+Subject: Re: [PATCH 1/5] firmware: xilinx: Adds new eemi call for reg access
+To:     Michal Simek <michal.simek@xilinx.com>,
+        Jolly Shah <jolly.shah@xilinx.com>, ard.biesheuvel@linaro.org,
+        mingo@kernel.org, gregkh@linuxfoundation.org,
+        matt@codeblueprint.co.uk, sudeep.holla@arm.com,
+        hkallweit1@gmail.com, keescook@chromium.org,
+        dmitry.torokhov@gmail.com
+Cc:     rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>
+References: <1575502159-11327-1-git-send-email-jolly.shah@xilinx.com>
+ <1575502159-11327-2-git-send-email-jolly.shah@xilinx.com>
+ <a75310be-da16-8b8e-90a8-3a15ef8b735d@xilinx.com>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <123fd714-f395-1b1f-7781-a07dc4cf223c@xilinx.com>
+Date:   Wed, 18 Dec 2019 15:16:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <00000000000021cc1a0599f66f55@google.com> <CACT4Y+Y0FXiGgsMt=k9d73bkQvW-NqyUoS=w6KXQ=28_ROz1YA@mail.gmail.com>
- <87o8w5u47c.fsf@dja-thinkpad.axtens.net>
-In-Reply-To: <87o8w5u47c.fsf@dja-thinkpad.axtens.net>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 18 Dec 2019 15:15:47 +0100
-Message-ID: <CACT4Y+ZaT37yoxU7iXUF73iszxNSW_8QVys7NxRnXZZ-pa9Lgg@mail.gmail.com>
-Subject: Re: BUG: soft lockup in sock_setsockopt
-To:     Daniel Axtens <dja@axtens.net>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     syzbot <syzbot+e7e13ce5d4ca294ca90a@syzkaller.appspotmail.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, namit@vmware.com,
-        Peter Zijlstra <peterz@infradead.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <a75310be-da16-8b8e-90a8-3a15ef8b735d@xilinx.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(376002)(136003)(396003)(199004)(189003)(316002)(70206006)(9786002)(107886003)(426003)(70586007)(356004)(8676002)(8936002)(26005)(2616005)(336012)(2906002)(81156014)(81166006)(5660300002)(31696002)(478600001)(186003)(31686004)(7416002)(6666004)(4326008)(110136005)(44832011)(36756003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR02MB2190;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: ff4a597f-1fe8-4953-45b5-08d783c4f0ea
+X-MS-TrafficTypeDiagnostic: MWHPR02MB2190:
+X-Microsoft-Antispam-PRVS: <MWHPR02MB21908F43513E887CD3718B80C6530@MWHPR02MB2190.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
+X-Forefront-PRVS: 0255DF69B9
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: jpMHw1gizO2NwvJgvJSNo9X1yypVX3cIZgWPEfUue+Qrfcu1lnLHGpa6X344Dk8yyG9Eq9Wy1Z7JwNM1nOUSE1ra06FZSNomlOpeWFyy8vddbGDzC+9iVuqn0VFgYjF7gWlfeWLAseDKvLGfIV/6Ll83M1Pynez9Nv5UsaMZTHUk+1h6YrnbDcSe3oe6BF4E+SU5y+3f3D1fpBXMjnjf9LR1wnwZ2LYUYGuHeTwO+9jiMOqzo7m6FYJ+2CgVNvcGBxrhee1InKdeYsaUhYSohRnes3fIelOwE386xrIXaVNJQoPlhzPhXEYXBrnL/4gUtLYkyLyjBSp3/a4i0lt22A3Fw3tbKRa6YJcYUXBABUElPeQy3fW9s6UiFhcXfsHxx8ZlReSm56DzPBbXmUmxheBixUx51sUSkOdAYJBxPaEMtQ4j0YhHaqzHS/8JRfOy9VrkHEWr1J5HwHkpOOQopY0hTAyWsbATMtGUC79uYaos2jzCy/NwCvai+y6RpjVh
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Dec 2019 14:16:57.2786
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ff4a597f-1fe8-4953-45b5-08d783c4f0ea
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR02MB2190
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 2:57 PM Daniel Axtens <dja@axtens.net> wrote:
->
-> Dmitry Vyukov <dvyukov@google.com> writes:
->
-> > On Wed, Dec 18, 2019 at 9:43 AM syzbot
-> > <syzbot+e7e13ce5d4ca294ca90a@syzkaller.appspotmail.com> wrote:
-> >>
-> >> Hello,
-> >>
-> >> syzbot found the following crash on:
-> >>
-> >> HEAD commit:    9065e063 Merge branch 'x86-urgent-for-linus' of git://git...
-> >> git tree:       upstream
-> >> console output: https://syzkaller.appspot.com/x/log.txt?x=17185e99e00000
-> >> kernel config:  https://syzkaller.appspot.com/x/.config?x=dcf10bf83926432a
-> >> dashboard link: https://syzkaller.appspot.com/bug?extid=e7e13ce5d4ca294ca90a
-> >> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >>
-> >> Unfortunately, I don't have any reproducer for this crash yet.
-> >>
-> >> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> >> Reported-by: syzbot+e7e13ce5d4ca294ca90a@syzkaller.appspotmail.com
-> >
-> > +Daniel, kasan-dev,
-> >
-> > This looks like another stall caused by KASAN+vmalloc. Now it has
-> > reached upstream and this instance uses Apparmor rather than Smack.
->
-> weird. It looks like the hang happens while waiting for a tlb range
-> flush - in particular CPU#0 hangs while waiting for CPU#1 to finish. I
-> don't know what was running on CPU#1 122s ago, but it's currently
-> SRCU. I see the SRCU code does smp_lock_irq_... but I don't know how
-> interrupts would be disabled for that long. (Unless the IPI just gets
-> dropped on the floor if it the CPU currently has IRQs off, but surely
-> we'd have picked that up somewhere else first?)
->
-> The whole code is deep magic to me. Am I accidentally violating any
-> restrictions on what can be called when?
+On 18. 12. 19 15:10, Michal Simek wrote:
+> On 05. 12. 19 0:29, Jolly Shah wrote:
+>> From: Rajan Vaja <rajan.vaja@xilinx.com>
+>>
+>> This patch adds new EEMI call which is used for CSU/PMU register
+>> access from linux.
+>>
+>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+>> Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+>> Signed-off-by: Jolly Shah <jolly.shah@xilinx.com>
+>> ---
+>>  drivers/firmware/xilinx/zynqmp.c     | 183 +++++++++++++++++++++++++++++++++++
+>>  include/linux/firmware/xlnx-zynqmp.h |   9 ++
+>>  2 files changed, 192 insertions(+)
+>>
+>> diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
+>> index fd3d837..56431ad 100644
+>> --- a/drivers/firmware/xilinx/zynqmp.c
+>> +++ b/drivers/firmware/xilinx/zynqmp.c
+>> @@ -24,6 +24,8 @@
+>>  #include <linux/firmware/xlnx-zynqmp.h>
+>>  #include "zynqmp-debug.h"
+>>  
+>> +static unsigned long register_address;
+>> +
+>>  static const struct zynqmp_eemi_ops *eemi_ops_tbl;
+>>  
+>>  static const struct mfd_cell firmware_devs[] = {
+>> @@ -664,6 +666,26 @@ static int zynqmp_pm_set_requirement(const u32 node, const u32 capabilities,
+>>  				   qos, ack, NULL);
+>>  }
+>>  
+>> +/**
+>> + * zynqmp_pm_config_reg_access - PM Config API for Config register access
+>> + * @register_access_id:	ID of the requested REGISTER_ACCESS
+>> + * @address:		Address of the register to be accessed
+>> + * @mask:		Mask to be written to the register
+>> + * @value:		Value to be written to the register
+>> + * @out:		Returned output value
+>> + *
+>> + * This function calls REGISTER_ACCESS to configure CSU/PMU registers.
+>> + *
+>> + * Return:	Returns status, either success or error+reason
+>> + */
+>> +
+>> +static int zynqmp_pm_config_reg_access(u32 register_access_id, u32 address,
+>> +				       u32 mask, u32 value, u32 *out)
+>> +{
+>> +	return zynqmp_pm_invoke_fn(PM_REGISTER_ACCESS, register_access_id,
+>> +				   address, mask, value, out);
+>> +}
+>> +
+>>  static const struct zynqmp_eemi_ops eemi_ops = {
+>>  	.get_api_version = zynqmp_pm_get_api_version,
+>>  	.get_chipid = zynqmp_pm_get_chipid,
+>> @@ -687,6 +709,7 @@ static const struct zynqmp_eemi_ops eemi_ops = {
+>>  	.set_requirement = zynqmp_pm_set_requirement,
+>>  	.fpga_load = zynqmp_pm_fpga_load,
+>>  	.fpga_get_status = zynqmp_pm_fpga_get_status,
+>> +	.register_access = zynqmp_pm_config_reg_access,
+>>  };
+>>  
+>>  /**
+>> @@ -704,6 +727,160 @@ const struct zynqmp_eemi_ops *zynqmp_pm_get_eemi_ops(void)
+>>  }
+>>  EXPORT_SYMBOL_GPL(zynqmp_pm_get_eemi_ops);
+>>  
+>> +/**
+>> + * config_reg_store - Write config_reg sysfs attribute
+>> + * @kobj:	Kobject structure
+>> + * @attr:	Kobject attribute structure
+>> + * @buf:	User entered health_status attribute string
+>> + * @count:	Buffer size
+>> + *
+>> + * User-space interface for setting the config register.
+>> + *
+>> + * To write any CSU/PMU register
+>> + * echo <address> <mask> <values> > /sys/firmware/zynqmp/config_reg
+>> + * Usage:
+>> + * echo 0x345AB234 0xFFFFFFFF 0x1234ABCD > /sys/firmware/zynqmp/config_reg
+>> + *
+>> + * To Read any CSU/PMU register, write address to the variable like below
+>> + * echo <address> > /sys/firmware/zynqmp/config_reg
+>> + *
+>> + * Return:	count argument if request succeeds, the corresponding error
+>> + *		code otherwise
+>> + */
+>> +static ssize_t config_reg_store(struct kobject *kobj,
+>> +				struct kobj_attribute *attr,
+>> +				const char *buf, size_t count)
+>> +{
+>> +	char *kern_buff, *inbuf, *tok;
+>> +	unsigned long address, value, mask;
+>> +	int ret;
+>> +
+>> +	kern_buff = kzalloc(count, GFP_KERNEL);
+>> +	if (!kern_buff)
+>> +		return -ENOMEM;
+>> +
+>> +	ret = strlcpy(kern_buff, buf, count);
+>> +	if (ret < 0) {
+>> +		ret = -EFAULT;
+>> +		goto err;
+>> +	}
+> 
+> Greg: What's the recommended way how to parse parameters via sysfs?
+> I see that kstrndup is used for cloning buffer instead of kzalloc
+> followed by strchr and sscanf.
+> 
+> 
+>> +
+>> +	inbuf = kern_buff;
+>> +
+>> +	/* Read the addess */
+> 
+> typo here.
+> 
+>> +	tok = strsep(&inbuf, " ");
+>> +	if (!tok) {
+>> +		ret = -EFAULT;
+>> +		goto err;
+>> +	}
+>> +	ret = kstrtol(tok, 16, &address);
+>> +	if (ret) {
+>> +		ret = -EFAULT;
+>> +		goto err;
+>> +	}
+>> +	/* Read the write value */
+>> +	tok = strsep(&inbuf, " ");
+>> +	/*
+>> +	 * If parameter provided is only address, then its a read operation.
+>> +	 * Store the address in a global variable and retrieve whenever
+>> +	 * required.
+>> +	 */
+>> +	if (!tok) {
+>> +		register_address = address;
+>> +		goto err;
+>> +	}
+>> +	register_address = address;
+>> +
+>> +	ret = kstrtol(tok, 16, &mask);
+>> +	if (ret) {
+>> +		ret = -EFAULT;
+>> +		goto err;
+>> +	}
+>> +	tok = strsep(&inbuf, " ");
+>> +	if (!tok) {
+>> +		ret = -EFAULT;
+>> +		goto err;
+>> +	}
+>> +	ret = kstrtol(tok, 16, &value);
+>> +	if (!tok) {
+>> +		ret = -EFAULT;
+>> +		goto err;
+>> +	}
+>> +	ret = zynqmp_pm_config_reg_access(CONFIG_REG_WRITE, address,
+>> +					  mask, value, NULL);
+>> +	if (ret)
+>> +		pr_err("unable to write value to %lx\n", value);
+>> +err:
+>> +	kfree(kern_buff);
+>> +	if (ret)
+>> +		return ret;
+>> +	return count;
+>> +}
+>> +
+>> +/**
+>> + * config_reg_show - Read config_reg sysfs attribute
+>> + * @kobj:	Kobject structure
+>> + * @attr:	Kobject attribute structure
+>> + * @buf:	User entered health_status attribute string
+>> + *
+>> + * User-space interface for getting the config register.
+>> + *
+>> + * To Read any CSU/PMU register, write address to the variable like below
+>> + * echo <address> > /sys/firmware/zynqmp/config_reg
+>> + *
+>> + * Then Read the address using below command
+>> + * cat /sys/firmware/zynqmp/config_reg
+>> + *
+>> + * Return: number of chars written to buf.
+>> + */
+>> +static ssize_t config_reg_show(struct kobject *kobj,
+>> +			       struct kobj_attribute *attr,
+>> +			       char *buf)
+>> +{
+>> +	int ret;
+>> +	u32 ret_payload[PAYLOAD_ARG_CNT];
+>> +
+>> +	ret = zynqmp_pm_config_reg_access(CONFIG_REG_READ, register_address,
+>> +					  0, 0, ret_payload);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	return sprintf(buf, "0x%x\n", ret_payload[1]);
+>> +}
+>> +
+>> +static struct kobj_attribute zynqmp_attr_config_reg =
+>> +					__ATTR_RW(config_reg);
+> 
+> 
+> use DEVICE_ATTR_RW() instead
+> 
+>> +
+>> +static struct attribute *attrs[] = {
+>> +	&zynqmp_attr_config_reg.attr,
+>> +	NULL,
+>> +};
+> 
+>> +
+>> +static const struct attribute_group attr_group = {
+>> +	.attrs = attrs,
+>> +	NULL,
+>> +};
+> 
+> ATTRIBUTE_GROUPS instead.
+> 
+>> +
+>> +static int zynqmp_pm_sysfs_init(void)
+>> +{
+>> +	struct kobject *zynqmp_kobj;
+>> +	int ret;
+>> +
+>> +	zynqmp_kobj = kobject_create_and_add("zynqmp", firmware_kobj);
+>> +	if (!zynqmp_kobj) {
+>> +		pr_err("zynqmp: Firmware kobj add failed.\n");
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	ret = sysfs_create_group(zynqmp_kobj, &attr_group);
+>> +	if (ret) {
+>> +		pr_err("%s() sysfs creation fail with error %d\n",
+>> +		       __func__, ret);
+> 
+> if you fail here you should free kobject_put(zynqmp_kobj);
+> 
+> 
+>> +	}
+>> +
+>> +	return ret;
+>> +}
+>> +
+>>  static int zynqmp_firmware_probe(struct platform_device *pdev)
+>>  {
+>>  	struct device *dev = &pdev->dev;
+>> @@ -748,6 +925,12 @@ static int zynqmp_firmware_probe(struct platform_device *pdev)
+>>  	/* Assign eemi_ops_table */
+>>  	eemi_ops_tbl = &eemi_ops;
+>>  
+>> +	ret = zynqmp_pm_sysfs_init();
+>> +	if (ret) {
+>> +		pr_err("%s() sysfs init fail with error %d\n", __func__, ret);
+>> +		return ret;
+>> +	}
+>> +
+>>  	zynqmp_pm_api_debugfs_init();
+>>  
+>>  	ret = mfd_add_devices(&pdev->dev, PLATFORM_DEVID_NONE, firmware_devs,
+>> diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
+>> index df366f1..55561d0 100644
+>> --- a/include/linux/firmware/xlnx-zynqmp.h
+>> +++ b/include/linux/firmware/xlnx-zynqmp.h
+>> @@ -77,6 +77,8 @@ enum pm_api_id {
+>>  	PM_CLOCK_GETRATE,
+>>  	PM_CLOCK_SETPARENT,
+>>  	PM_CLOCK_GETPARENT,
+>> +	/* PM_REGISTER_ACCESS API */
+>> +	PM_REGISTER_ACCESS = 52,
+>>  };
+>>  
+>>  /* PMU-FW return status codes */
+>> @@ -261,6 +263,11 @@ enum tap_delay_type {
+>>  	PM_TAPDELAY_OUTPUT,
+>>  };
+>>  
+>> +enum pm_register_access_id {
+>> +	CONFIG_REG_WRITE,
+>> +	CONFIG_REG_READ,
+>> +};
+>> +
+>>  /**
+>>   * struct zynqmp_pm_query_data - PM query data
+>>   * @qid:	query ID
+>> @@ -305,6 +312,8 @@ struct zynqmp_eemi_ops {
+>>  			       const u32 capabilities,
+>>  			       const u32 qos,
+>>  			       const enum zynqmp_pm_request_ack ack);
+>> +	int (*register_access)(u32 register_access_id, u32 address,
+>> +			       u32 mask, u32 value, u32 *out);
+>>  };
+>>  
+>>  int zynqmp_pm_invoke_fn(u32 pm_api_id, u32 arg0, u32 arg1,
+>>
+> 
 
-Maybe bpf_int_jit_compile stack is in srcu reader critical section and
-try_check_zero waits forever for it to leave, while
-bpf_int_jit_compile tries to send IPI which does not reach
-try_check_zero CPU?
+One more thing. I am missing sysfs description for these entries.
+You are creating this file in 2/5 but files introduced here are not
+cover there.
 
-Should this:
-    if (--trycount + !srcu_get_delay(ssp) <= 0)
-      return false;
-in try_check_zero break eventually? What is even the type of that
-expression? That's playing with fire in C :)
+Thanks,
+Michal
 
-Can if jump across 0 because  both trycount and srcu_get_delay change
-at the same iteration? And then if it's unsigned type in the end, it
-does not become -1, but instead 0xffffffff which is not <=0?....
-
-
-> >> watchdog: BUG: soft lockup - CPU#0 stuck for 122s! [syz-executor.3:9634]
-> >> Modules linked in:
-> >> irq event stamp: 35786
-> >> hardirqs last  enabled at (35785): [<ffffffff81006983>]
-> >> trace_hardirqs_on_thunk+0x1a/0x1c arch/x86/entry/thunk_64.S:41
-> >> hardirqs last disabled at (35786): [<ffffffff8100699f>]
-> >> trace_hardirqs_off_thunk+0x1a/0x1c arch/x86/entry/thunk_64.S:42
-> >> softirqs last  enabled at (5788): [<ffffffff880006cd>]
-> >> __do_softirq+0x6cd/0x98c kernel/softirq.c:319
-> >> softirqs last disabled at (5707): [<ffffffff81478ceb>] invoke_softirq
-> >> kernel/softirq.c:373 [inline]
-> >> softirqs last disabled at (5707): [<ffffffff81478ceb>] irq_exit+0x19b/0x1e0
-> >> kernel/softirq.c:413
-> >> CPU: 0 PID: 9634 Comm: syz-executor.3 Not tainted 5.5.0-rc2-syzkaller #0
-> >> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> >> Google 01/01/2011
-> >> RIP: 0010:__read_once_size include/linux/compiler.h:199 [inline]
-> >> RIP: 0010:csd_lock_wait kernel/smp.c:109 [inline]
-> >> RIP: 0010:smp_call_function_single+0x188/0x480 kernel/smp.c:311
-> >> Code: 00 e8 6c 23 0b 00 48 8b 4c 24 08 48 8b 54 24 10 48 8d 74 24 40 8b 7c
-> >> 24 1c e8 c4 f9 ff ff 41 89 c5 eb 07 e8 4a 23 0b 00 f3 90 <44> 8b 64 24 58
-> >> 31 ff 41 83 e4 01 44 89 e6 e8 b5 24 0b 00 45 85 e4
-> >> RSP: 0018:ffffc90004d3f480 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
-> >> RAX: 0000000000040000 RBX: 1ffff920009a7e94 RCX: ffffc90010442000
-> >> RDX: 0000000000040000 RSI: ffffffff816a0856 RDI: 0000000000000005
-> >> RBP: ffffc90004d3f550 R08: ffff88809e5161c0 R09: ffffed1015d27059
-> >> R10: ffffed1015d27058 R11: ffff8880ae9382c7 R12: 0000000000000001
-> >> R13: 0000000000000000 R14: 0000000000000001 R15: 0000000000000000
-> >> FS:  00007f19610d6700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-> >> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> >> CR2: 00007fe53bcc09c0 CR3: 000000008ffc6000 CR4: 00000000001426f0
-> >> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> >> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> >> Call Trace:
-> >>   smp_call_function_many+0x7ba/0x940 kernel/smp.c:451
-> >>   smp_call_function+0x42/0x90 kernel/smp.c:509
-> >>   on_each_cpu+0x2f/0x1f0 kernel/smp.c:616
-> >>   flush_tlb_kernel_range+0x19b/0x250 arch/x86/mm/tlb.c:839
-> >>   kasan_release_vmalloc+0xb4/0xc0 mm/kasan/common.c:976
-> >>   __purge_vmap_area_lazy+0xca5/0x1ef0 mm/vmalloc.c:1313
-> >>   _vm_unmap_aliases mm/vmalloc.c:1730 [inline]
-> >>   _vm_unmap_aliases+0x396/0x480 mm/vmalloc.c:1695
-> >>   vm_unmap_aliases+0x19/0x20 mm/vmalloc.c:1753
-> >>   change_page_attr_set_clr+0x22e/0x840 arch/x86/mm/pageattr.c:1709
-> >>   change_page_attr_clear arch/x86/mm/pageattr.c:1766 [inline]
-> >>   set_memory_ro+0x7b/0xa0 arch/x86/mm/pageattr.c:1899
-> >>   bpf_jit_binary_lock_ro include/linux/filter.h:790 [inline]
-> >>   bpf_int_jit_compile+0xebd/0x12ce arch/x86/net/bpf_jit_comp.c:1659
-> >>   bpf_prog_select_runtime+0x4b9/0x850 kernel/bpf/core.c:1801
-> >>   bpf_migrate_filter net/core/filter.c:1275 [inline]
-> >>   bpf_prepare_filter net/core/filter.c:1323 [inline]
-> >>   bpf_prepare_filter+0x977/0xd60 net/core/filter.c:1289
-> >>   __get_filter+0x212/0x2c0 net/core/filter.c:1492
-> >>   sk_attach_filter+0x1e/0xa0 net/core/filter.c:1507
-> >>   sock_setsockopt+0x1f44/0x22b0 net/core/sock.c:999
-> >>   __sys_setsockopt+0x440/0x4c0 net/socket.c:2113
-> >>   __do_sys_setsockopt net/socket.c:2133 [inline]
-> >>   __se_sys_setsockopt net/socket.c:2130 [inline]
-> >>   __x64_sys_setsockopt+0xbe/0x150 net/socket.c:2130
-> >>   do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-> >>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> >> RIP: 0033:0x45a919
-> >> Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7
-> >> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
-> >> ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> >> RSP: 002b:00007f19610d5c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000036
-> >> RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 000000000045a919
-> >> RDX: 000000000000001a RSI: 0000000000000001 RDI: 000000000000000c
-> >> RBP: 000000000075c070 R08: 0000000000000010 R09: 0000000000000000
-> >> R10: 0000000020000480 R11: 0000000000000246 R12: 00007f19610d66d4
-> >> R13: 00000000004c9e34 R14: 00000000004e1f78 R15: 00000000ffffffff
-> >> Sending NMI from CPU 0 to CPUs 1:
-> >> NMI backtrace for cpu 1
-> >> CPU: 1 PID: 3231 Comm: kworker/1:3 Not tainted 5.5.0-rc2-syzkaller #0
-> >> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> >> Google 01/01/2011
-> >> Workqueue: rcu_gp process_srcu
-> >> RIP: 0010:delay_tsc+0x33/0xc0 arch/x86/lib/delay.c:68
-> >> Code: bf 01 00 00 00 41 55 41 54 53 e8 58 95 8b f9 e8 63 b4 cd fb 41 89 c5
-> >> 0f 01 f9 66 90 48 c1 e2 20 48 09 c2 49 89 d4 eb 16 f3 90 <bf> 01 00 00 00
-> >> e8 33 95 8b f9 e8 3e b4 cd fb 44 39 e8 75 36 0f 01
-> >> RSP: 0018:ffffc9000898fbb0 EFLAGS: 00000286
-> >> RAX: 0000000080000000 RBX: 000000c937e7f04b RCX: 0000000000000000
-> >> RDX: 0000000000000001 RSI: ffffffff8392f013 RDI: 0000000000000001
-> >> RBP: ffffc9000898fbd0 R08: ffff88809e1e2200 R09: 0000000000000040
-> >> R10: 0000000000000040 R11: ffffffff89a4f487 R12: 000000c937e7c4ab
-> >> R13: 0000000000000001 R14: 0000000000002ced R15: 0000000000000047
-> >> FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-> >> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> >> CR2: 00007fbb9d9c6000 CR3: 0000000094911000 CR4: 00000000001426e0
-> >> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> >> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> >> Call Trace:
-> >>   __delay arch/x86/lib/delay.c:161 [inline]
-> >>   __const_udelay+0x59/0x80 arch/x86/lib/delay.c:175
-> >>   try_check_zero+0x201/0x330 kernel/rcu/srcutree.c:705
-> >>   srcu_advance_state kernel/rcu/srcutree.c:1142 [inline]
-> >>   process_srcu+0x329/0xe10 kernel/rcu/srcutree.c:1237
-> >>   process_one_work+0x9af/0x1740 kernel/workqueue.c:2264
-> >>   worker_thread+0x98/0xe40 kernel/workqueue.c:2410
-> >>   kthread+0x361/0x430 kernel/kthread.c:255
-> >>   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> >>
-> >>
-> >> ---
-> >> This bug is generated by a bot. It may contain errors.
-> >> See https://goo.gl/tpsmEJ for more information about syzbot.
-> >> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> >>
-> >> syzbot will keep track of this bug report. See:
-> >> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> >>
-> >> --
-> >> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> >> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> >> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/00000000000021cc1a0599f66f55%40google.com.
->
-> --
-> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/87o8w5u47c.fsf%40dja-thinkpad.axtens.net.
