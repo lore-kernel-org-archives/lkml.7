@@ -2,136 +2,260 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77044C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC69C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47CD1218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62192218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:33:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bVktt/ZG"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FnE9othv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727138AbfLROda (ORCPT
+        id S1727171AbfLROd4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 09:33:30 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43266 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726856AbfLROda (ORCPT
+        Wed, 18 Dec 2019 09:33:56 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:43325 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727034AbfLROd4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 09:33:30 -0500
-Received: by mail-pl1-f193.google.com with SMTP id p27so1047182pli.10;
-        Wed, 18 Dec 2019 06:33:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=S7VuXH2/a6Sp4J23Z7HyebUXkj6FvY8kwo3J39MAX3U=;
-        b=bVktt/ZGMTEU4Plk/R1hGLU3ycvr9tXipByRQqViuESYblINVHxn5eBupumCDQJ1SS
-         o/bFwX7U5jUm6wYQCBfcMLvOQiPVnQi5P6MVxKYxSf4672ZZAX6Y9J1z9t9XXHw6f5hV
-         Xe8guEMu3ISJv5vXnXfCydpYQ0iqOTwr5RufJ7XWuWfqrImhFtbzJto1ndzfwQzRfqgu
-         lIMG6R68O4Ipaqt8gY8qHmEIBxwHqktyJ1Ya/NuLbTAi5P7l2q5XNV3gBAeg/xQ55KG9
-         i2BgexLG4WfBO7ua7CJe52mmCnqmqrzAW/G/XRr22DvlwaRGvPCI4lGpevJfm9DaFQI+
-         C7eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=S7VuXH2/a6Sp4J23Z7HyebUXkj6FvY8kwo3J39MAX3U=;
-        b=UpwSuzX9cLVo2KFODP4JJyNi9rTdjxIJviBaQ337TUyqgM9/9BV+lZLKsOdf7+qgfY
-         57VytyntDL/4Mtk1eooU/yxYYq7KtdLN3VbZ2iFXWNOpx1yk/TwpCTHiZAXozmGTfa/c
-         Uaz06QPrk5Jo0epqUAmdv7omA66RGKe6uaNwuB2uZ4QKDUwVGjVsc0cYIJ9scZOJ0weC
-         N4Q2OYbD44GcdZI751EDPhPy8hn3cAP0PdlT2YmTqKikcu0FsgcEbjtywSIJnTbLaUfD
-         25E1/70zQzIjo7PPfFij+ARz6pbrYDtm3zz3quaXwT4F4lHOZzkj6vhOn20imj1kACcN
-         15Nw==
-X-Gm-Message-State: APjAAAViNfNj0GaxnBuch3aFNxKSjRYQyQ4CNYR4FlADKscjoIsAO3qB
-        UnM6qetRmYC39xzGNmD9HJc=
-X-Google-Smtp-Source: APXvYqztBgzoAs1ZfcOvHZsCTT447fzwCtV+/kcyavj5LTE6+7P+iXnqZOyqq8h18Ok308rSyjw/kQ==
-X-Received: by 2002:a17:902:6948:: with SMTP id k8mr2962890plt.223.1576679608939;
-        Wed, 18 Dec 2019 06:33:28 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id 68sm3516621pge.14.2019.12.18.06.33.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 06:33:28 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id ED4F840352; Wed, 18 Dec 2019 11:33:25 -0300 (-03)
-Date:   Wed, 18 Dec 2019 11:33:25 -0300
-To:     Andrey Zhizhikin <andrey.z@gmail.com>
-Cc:     ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        sergey.senozhatsky@gmail.com, pmladek@suse.com,
-        wangkefeng.wang@huawei.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>
-Subject: Re: [PATCH] tools lib api fs: fix gcc9 compilation error
-Message-ID: <20191218143325.GE13395@kernel.org>
-References: <20191211080109.18765-1-andrey.zhizhikin@leica-geosystems.com>
+        Wed, 18 Dec 2019 09:33:56 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576679635; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=iqtwOlCiJqGy4B1VCNqpNj5v+p2wn063PEVEdzNJ318=; b=FnE9othvPqgbiYSRO1ekLJ+XaAFZ6OaV05F2IQoszX+y/1xCWul3hLLS8UOn/2TTZMXVKx8c
+ zIvpWC8bWEo3GgBcVYauh0Qh++fciIXoGVdRGJYOWjGGecUzUev3QJBQp/qkQNkW2aAjjwkU
+ wJtugA3A6BASFTm1G2KLLJ3jeh0=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5dfa38cb.7f9b82697068-smtp-out-n02;
+ Wed, 18 Dec 2019 14:33:47 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1459AC4479F; Wed, 18 Dec 2019 14:33:47 +0000 (UTC)
+Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1B1ADC433CB;
+        Wed, 18 Dec 2019 14:33:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1B1ADC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org
+Cc:     mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, swboyd@chromium.org, dianders@chromium.org,
+        Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH] arm64: dts: qcom: sc7180: Enable multiple nodes
+Date:   Wed, 18 Dec 2019 20:03:32 +0530
+Message-Id: <20191218143332.29107-1-sibis@codeaurora.org>
+X-Mailer: git-send-email 2.22.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211080109.18765-1-andrey.zhizhikin@leica-geosystems.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Dec 11, 2019 at 08:01:09AM +0000, Andrey Zhizhikin escreveu:
-> GCC9 introduced string hardening mechanisms, which exhibits the error
-> during fs api compilation:
-> 
-> error: '__builtin_strncpy' specified bound 4096 equals destination size
-> [-Werror=stringop-truncation]
-> 
-> This comes when the length of copy passed to strncpy is is equal to
-> destination size, which could potentially lead to buffer overflow.
-> 
-> There is a need to mitigate this potential issue by limiting the size of
-> destination by 1 and explicitly terminate the destination with NULL.
+Add scm, smem, smp2p, aoss-qmp, aoss-cc and pdc-global device nodes
+to SC7180 SoCs.
 
-Thanks, applied and collected the reviewed-by and acked-by provided,
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+---
 
-- Arnaldo
+Depends on https://patchwork.kernel.org/patch/11289689/
+
+I'll probably need to re-spin the patch once Rob decides on how to name
+the reserved-memory nodes.
+
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 126 +++++++++++++++++++++++++++
+ 1 file changed, 126 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 8903f9afe62f6..4e3f092093925 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -9,7 +9,10 @@
+ #include <dt-bindings/clock/qcom,rpmh.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/phy/phy-qcom-qusb2.h>
++#include <dt-bindings/power/qcom-aoss-qmp.h>
+ #include <dt-bindings/power/qcom-rpmpd.h>
++#include <dt-bindings/reset/qcom,sdm845-aoss.h>
++#include <dt-bindings/reset/qcom,sdm845-pdc.h>
+ #include <dt-bindings/soc/qcom,rpmh-rsc.h>
  
-> Signed-off-by: Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
-> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> ---
->  tools/lib/api/fs/fs.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/lib/api/fs/fs.c b/tools/lib/api/fs/fs.c
-> index 11b3885e833e..027b18f7ed8c 100644
-> --- a/tools/lib/api/fs/fs.c
-> +++ b/tools/lib/api/fs/fs.c
-> @@ -210,6 +210,7 @@ static bool fs__env_override(struct fs *fs)
->  	size_t name_len = strlen(fs->name);
->  	/* name + "_PATH" + '\0' */
->  	char upper_name[name_len + 5 + 1];
-> +
->  	memcpy(upper_name, fs->name, name_len);
->  	mem_toupper(upper_name, name_len);
->  	strcpy(&upper_name[name_len], "_PATH");
-> @@ -219,7 +220,8 @@ static bool fs__env_override(struct fs *fs)
->  		return false;
->  
->  	fs->found = true;
-> -	strncpy(fs->path, override_path, sizeof(fs->path));
-> +	strncpy(fs->path, override_path, sizeof(fs->path) - 1);
-> +	fs->path[sizeof(fs->path) - 1] = '\0';
->  	return true;
->  }
->  
-> -- 
-> 2.17.1
-
+ / {
+@@ -65,6 +68,10 @@
+ 		aop_cmd_db_mem: memory@80820000 {
+ 			reg = <0x0 0x80820000 0x0 0x20000>;
+ 			compatible = "qcom,cmd-db";
++		};
++
++		smem_mem: memory@80900000 {
++			reg = <0x0 0x80900000 0x0 0x200000>;
+ 			no-map;
+ 		};
+ 	};
+@@ -192,6 +199,92 @@
+ 		interrupts = <GIC_PPI 5 IRQ_TYPE_LEVEL_HIGH>;
+ 	};
+ 
++	firmware {
++		scm {
++			compatible = "qcom,scm-sc7180", "qcom,scm";
++		};
++	};
++
++	tcsr_mutex: hwlock {
++		compatible = "qcom,tcsr-mutex";
++		syscon = <&tcsr_mutex_regs 0 0x1000>;
++		#hwlock-cells = <1>;
++	};
++
++	smem {
++		compatible = "qcom,smem";
++		memory-region = <&smem_mem>;
++		hwlocks = <&tcsr_mutex 3>;
++	};
++
++	smp2p-cdsp {
++		compatible = "qcom,smp2p";
++		qcom,smem = <94>, <432>;
++
++		interrupts = <GIC_SPI 576 IRQ_TYPE_EDGE_RISING>;
++
++		mboxes = <&apss_shared 6>;
++
++		qcom,local-pid = <0>;
++		qcom,remote-pid = <5>;
++
++		cdsp_smp2p_out: master-kernel {
++			qcom,entry-name = "master-kernel";
++			#qcom,smem-state-cells = <1>;
++		};
++
++		cdsp_smp2p_in: slave-kernel {
++			qcom,entry-name = "slave-kernel";
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++	};
++
++	smp2p-lpass {
++		compatible = "qcom,smp2p";
++		qcom,smem = <443>, <429>;
++
++		interrupts = <GIC_SPI 158 IRQ_TYPE_EDGE_RISING>;
++
++		mboxes = <&apss_shared 10>;
++
++		qcom,local-pid = <0>;
++		qcom,remote-pid = <2>;
++
++		adsp_smp2p_out: master-kernel {
++			qcom,entry-name = "master-kernel";
++			#qcom,smem-state-cells = <1>;
++		};
++
++		adsp_smp2p_in: slave-kernel {
++			qcom,entry-name = "slave-kernel";
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++	};
++
++	smp2p-mpss {
++		compatible = "qcom,smp2p";
++		qcom,smem = <435>, <428>;
++		interrupts = <GIC_SPI 451 IRQ_TYPE_EDGE_RISING>;
++		mboxes = <&apss_shared 14>;
++		qcom,local-pid = <0>;
++		qcom,remote-pid = <1>;
++
++		modem_smp2p_out: master-kernel {
++			qcom,entry-name = "master-kernel";
++			#qcom,smem-state-cells = <1>;
++		};
++
++		modem_smp2p_in: slave-kernel {
++			qcom,entry-name = "slave-kernel";
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++	};
++
+ 	psci {
+ 		compatible = "arm,psci-1.0";
+ 		method = "smc";
+@@ -643,6 +736,11 @@
+ 			};
+ 		};
+ 
++		tcsr_mutex_regs: syscon@1f40000 {
++			compatible = "syscon";
++			reg = <0 0x01f40000 0 0x40000>;
++		};
++
+ 		tlmm: pinctrl@3500000 {
+ 			compatible = "qcom,sc7180-pinctrl";
+ 			reg = <0 0x03500000 0 0x300000>,
+@@ -1052,6 +1150,12 @@
+ 			interrupt-controller;
+ 		};
+ 
++		pdc_reset: reset-controller@b2e0000 {
++			compatible = "qcom,sc7180-pdc-global", "qcom,sdm845-pdc-global";
++			reg = <0 0x0b2e0000 0 0x20000>;
++			#reset-cells = <1>;
++		};
++
+ 		tsens0: thermal-sensor@c263000 {
+ 			compatible = "qcom,sc7180-tsens","qcom,tsens-v2";
+ 			reg = <0 0x0c263000 0 0x1ff>, /* TM */
+@@ -1072,6 +1176,22 @@
+ 			#thermal-sensor-cells = <1>;
+ 		};
+ 
++		aoss_reset: reset-controller@c2a0000 {
++			compatible = "qcom,sc7180-aoss-cc", "qcom,sdm845-aoss-cc";
++			reg = <0 0x0c2a0000 0 0x31000>;
++			#reset-cells = <1>;
++		};
++
++		aoss_qmp: qmp@c300000 {
++			compatible = "qcom,sc7180-aoss-qmp";
++			reg = <0 0x0c300000 0 0x100000>;
++			interrupts = <GIC_SPI 389 IRQ_TYPE_EDGE_RISING>;
++			mboxes = <&apss_shared 0>;
++
++			#clock-cells = <0>;
++			#power-domain-cells = <1>;
++		};
++
+ 		spmi_bus: spmi@c440000 {
+ 			compatible = "qcom,spmi-pmic-arb";
+ 			reg = <0 0x0c440000 0 0x1100>,
+@@ -1199,6 +1319,12 @@
+ 			};
+ 		};
+ 
++		apss_shared: mailbox@17c00000 {
++			compatible = "qcom,sc7180-apss-shared";
++			reg = <0 0x17c00000 0 0x10000>;
++			#mbox-cells = <1>;
++		};
++
+ 		watchdog@17c10000 {
+ 			compatible = "qcom,apss-wdt-sc7180", "qcom,kpss-wdt";
+ 			reg = <0 0x17c10000 0 0x1000>;
 -- 
-
-- Arnaldo
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
