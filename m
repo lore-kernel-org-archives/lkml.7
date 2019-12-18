@@ -2,100 +2,109 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D98FC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D563EC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CBA12146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:11:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5D0B2465E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:15:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727552AbfLRPL5 (ORCPT
+        id S1727185AbfLRPPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 10:11:57 -0500
-Received: from mx2.suse.de ([195.135.220.15]:51290 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727021AbfLRPLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 10:11:55 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id A01B4AD45;
-        Wed, 18 Dec 2019 15:11:53 +0000 (UTC)
-Subject: Re: [Xen-devel] [PATCH v12 2/5] xenbus/backend: Protect xenbus
- callback with lock
-To:     SeongJae Park <sjpark@amazon.com>
-Cc:     axboe@kernel.dk, sj38.park@gmail.com, konrad.wilk@oracle.com,
-        pdurrant@amazon.com, SeongJae Park <sjpark@amazon.de>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        xen-devel@lists.xenproject.org, roger.pau@citrix.com
-References: <20191218144025.24277-1-sjpark@amazon.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <7edb266e-3185-5adc-1121-1b61feaf5a34@suse.com>
-Date:   Wed, 18 Dec 2019 16:11:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Wed, 18 Dec 2019 10:15:11 -0500
+Received: from mail-il1-f197.google.com ([209.85.166.197]:35253 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726996AbfLRPPL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 10:15:11 -0500
+Received: by mail-il1-f197.google.com with SMTP id t15so2008833ilh.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 07:15:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=jSdukNVKN1rb2lDU57Ar/9GWwm2qqaJhHtnd5Wdgw+4=;
+        b=ljax6Oebx9o9hYv9M/92bPvOtFXQPcNnvaIb97y1yx2yz2Wcvq9uvli/SFMGo5GGIa
+         p4aLj9CPLUCaH54KY6hNjRXa200XUFndHN6py8x5vBzCfKLG2jed0cXcPzzTeEQy3CpS
+         YVCxbWLlNt/Sx+3uraxzRyermKd4IbtsnkUxi01DTVC+x1pmU8lJog5OGAlb14RTJcWl
+         usZTVXfF0HE3Kfg05xYPfVjTFcD9Ttd3vQ+f6aq1NpCoc/QIwxBWUurenFg9IhqkNUBM
+         dFxaKoHA7pKhCsbAUr/kw2oii4hpfbOVIon3OtYF9fpQ9izO2kg2aDhYcfYMuAnxn6QW
+         WucA==
+X-Gm-Message-State: APjAAAXICQPesvO4OlLYs5t5C1ZctMaB+KnOgg2tK8xegFPUOxFpnhU+
+        epXbWL2IUEtGodf60IIriTMi68/2E6ZUSfgMej2hmT+kLO7B
+X-Google-Smtp-Source: APXvYqzX8BiTDcFwWOoADIUa/C/W1aNUeW4q5RhSf7rp5KnkYx2nF+BA95bYW/QdzsdpbaLu0DFYyyFA+RBPWauGFLBsYsRahBlT
 MIME-Version: 1.0
-In-Reply-To: <20191218144025.24277-1-sjpark@amazon.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a92:4616:: with SMTP id t22mr2292795ila.186.1576682109244;
+ Wed, 18 Dec 2019 07:15:09 -0800 (PST)
+Date:   Wed, 18 Dec 2019 07:15:09 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000000b9e820599fbe9a7@google.com>
+Subject: KASAN: use-after-free Read in hidinput_hid_event
+From:   syzbot <syzbot+c961cb836a707f66e2f8@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, benjamin.tissoires@redhat.com,
+        jikos@kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        rydberg@bitmath.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18.12.19 15:40, SeongJae Park wrote:
-> On Wed, 18 Dec 2019 14:30:44 +0100 "Jürgen Groß" <jgross@suse.com> wrote:
-> 
->> On 18.12.19 13:42, SeongJae Park wrote:
->>> On Wed, 18 Dec 2019 13:27:37 +0100 "Jürgen Groß" <jgross@suse.com> wrote:
->>>
->>>> On 18.12.19 11:42, SeongJae Park wrote:
->>>>> From: SeongJae Park <sjpark@amazon.de>
->>>>>
->>>>> 'reclaim_memory' callback can race with a driver code as this callback
->>>>> will be called from any memory pressure detected context.  To deal with
->>>>> the case, this commit adds a spinlock in the 'xenbus_device'.  Whenever
->>>>> 'reclaim_memory' callback is called, the lock of the device which passed
->>>>> to the callback as its argument is locked.  Thus, drivers registering
->>>>> their 'reclaim_memory' callback should protect the data that might race
->>>>> with the callback with the lock by themselves.
->>>>
->>>> Any reason you don't take the lock around the .probe() and .remove()
->>>> calls of the backend (xenbus_dev_probe() and xenbus_dev_remove())? This
->>>> would eliminate the need to do that in each backend instead.
->>>
->>> First of all, I would like to keep the critical section as small as possible.
->>> With my small test, I could see slightly increasing memory pressure as the
->>> critical section becomes wider.  Also, some drivers might share the data their
->>> 'reclaim_memory' callback touches with other functions.  I think only the
->>> driver owners can know what data is shared and what is the minimum critical
->>> section to protect it.
->>
->> But this kind of serialization can still be added on top.
-> 
-> I'm still worrying about the unnecessarily large critical section, but it might
-> be small enough to be ignored.  If no others have strong objection, I will take
-> the lock around the '->probe()' and '->remove()'.
+Hello,
 
-The lock is per device, so contention is possible only for the
-reclaim case. In case probe or remove are running reclaim will have
-nothing to free (in probe case nothing is allocated yet, in remove
-case everything should be freed anyway). So the larger critical section
-is no problem at all IMO.
+syzbot found the following crash on:
 
->> And with the trylock in the reclaim path I believe you can even avoid
->> the irq variants of the spinlock. But I might be wrong, so you should
->> try that with lockdep enabled. If it is working there is no harm done
->> when making the critical section larger, as memory allocations will
->> work as before.
-> 
-> Yes, you're right.  I will try test with lockdep.
+HEAD commit:    d533c992 usb: core: kcov: collect coverage from usb comple..
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=100798b9e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=743b91162e9f9496
+dashboard link: https://syzkaller.appspot.com/bug?extid=c961cb836a707f66e2f8
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15519951e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=166f72fee00000
 
-Thanks,
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+c961cb836a707f66e2f8@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in test_bit  
+include/asm-generic/bitops/instrumented-non-atomic.h:110 [inline]
+BUG: KASAN: use-after-free in hidinput_hid_event+0x1111/0x15d3  
+drivers/hid/hid-input.c:1381
+Read of size 8 at addr ffff8881cfb19738 by task swapper/0/0
+
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.5.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  <IRQ>
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xef/0x16e lib/dump_stack.c:118
+  print_address_description.constprop.0+0x16/0x200 mm/kasan/report.c:374
+  __kasan_report.cold+0x37/0x7f mm/kasan/report.c:506
+  kasan_report+0xe/0x20 mm/kasan/common.c:639
+  check_memory_region_inline mm/kasan/generic.c:185 [inline]
+  check_memory_region+0x152/0x1c0 mm/kasan/generic.c:192
+  test_bit include/asm-generic/bitops/instrumented-non-atomic.h:110 [inline]
+  hidinput_hid_event+0x1111/0x15d3 drivers/hid/hid-input.c:1381
+  hid_process_event+0x4a0/0x580 drivers/hid/hid-core.c:1506
+  hid_input_field drivers/hid/hid-core.c:1550 [inline]
+  hid_report_raw_event+0xabb/0xed0 drivers/hid/hid-core.c:1757
+  hid_input_report+0x315/0x3f0 drivers/hid/hid-core.c:1824
+  hid_irq_in+0x50e/0x690 drivers/hid/usbhid/hid-core.c:284
+  __usb_hcd_giveback
 
 
-Juergen
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
