@@ -2,120 +2,148 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB04C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E893C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 814B2227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:02:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09B672072B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:03:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="JzmkTD4g"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Pz6zak2k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbfLRMC1 (ORCPT
+        id S1726960AbfLRMDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 07:02:27 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:52260 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726551AbfLRMC1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 07:02:27 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576670546; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=B4/RlwWd+D6Up8aRuxBevuGNVTwp4B7x7EDttVNYIiA=; b=JzmkTD4gJHSur/m0zYaxnSqfCHiu13B1y00q04C1xuTJNO6Kwy6jbQqBxJOvn2SmFqqcAZ9J
- wLT0s1CLr8PkBiQT+1AaI5SI9XMG489N/T7PvjwY5GcvgnCDuiHuGi/9N1055XSuAdvIsmv4
- QMw8KvUxTRIApx+6lA0UdSfCt50=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5dfa1551.7fd173ba7420-smtp-out-n02;
- Wed, 18 Dec 2019 12:02:25 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 76B02C4479F; Wed, 18 Dec 2019 12:02:24 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2EA18C43383;
-        Wed, 18 Dec 2019 12:02:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2EA18C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc:     ath9k-devel@qca.qualcomm.com, davem@davemloft.net,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ath9k: fix possible sleep-in-atomic-context bugs in hif_usb_send_regout()
-References: <20191218114533.9268-1-baijiaju1990@gmail.com>
-Date:   Wed, 18 Dec 2019 14:02:19 +0200
-In-Reply-To: <20191218114533.9268-1-baijiaju1990@gmail.com> (Jia-Ju Bai's
-        message of "Wed, 18 Dec 2019 19:45:33 +0800")
-Message-ID: <87h81xc050.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Wed, 18 Dec 2019 07:03:32 -0500
+Received: from mail-eopbgr10067.outbound.protection.outlook.com ([40.107.1.67]:64995
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726710AbfLRMDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 07:03:32 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IneQ+aeGNYyx/SDRxdf6NVUrj4afFCGBOlhu8AN1HXSWq3zx+MsE8aIocieN/7WvQBRk5pMoq72ooNK79xNad5x8l7/pRLY0SthM1A4IjL+hNOn57gbXN0ydJapW7+QpyyTBjIvkE3S6SBAAI9+srdKI9Frw3BMLgrdf5p1KhYBFM11Tl5qv6cdPDYA7cR/KSD2KG6msV966qOpJpwjoiTi15C2G/lCGCMjIX+mV5515cKvSVuiKXIyLfe8RJGUDFTbjQZdwW8EaQC2oRUC/RvlftoOYM9V2UNTOdOz07n3jcxM2bG5nb2dqkexgJYXVcS0Fe9HLdMu200NMWSst9A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PPejmARIY3bXlVxJaiO/1bWA33kWUWy9eLsu/vlv0oE=;
+ b=FED9F13C9ksRMtjinOAFBTNrtvRHSahglhozvC8COlaASx70dwSoIs8p49rZ9dYsYjZrzCpdTl4Pe65jQ4ang/4oJv4Chvhxnx6E+rIUZNRUzVTE1ZwfqCx4kT+P3tiPwWVoEQDfUoiCVxGoXltupcE7jP3afO5DGp+pKQ+ZOwINGQroH+dItojyw3keJD3/s4tFRIRLuEb9iFMWCX+WHqV58yV42YVT2SJ7wlpSGOkvq8gwwgMFa5YPpvNv+dNjn4i0gzddCKqv73U7K+ilUN3NXen9FAoYmZ1dEgVDZ6rXw7biTa1vfR/PGtKIxCkRZ3WN6MKDYE/DvQ412mQI4g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PPejmARIY3bXlVxJaiO/1bWA33kWUWy9eLsu/vlv0oE=;
+ b=Pz6zak2kAX5hJUxCcKj0adTn2o4Gl4utw5Oe31Dks9PlZ5CpqINBqgvXYzbE0TsNDbXNubddB5+aurPOBvPQGOWYe/mW5tAqb05HM43YmnKAkVWETluV5NBwboxdVT7pqKBIQbGyQyfYMX7q0DBYIwkKS9Epgem0RhnpbotJhJw=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB6148.eurprd04.prod.outlook.com (20.179.33.208) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.15; Wed, 18 Dec 2019 12:03:25 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::505:87e7:6b49:3d29]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::505:87e7:6b49:3d29%7]) with mapi id 15.20.2559.012; Wed, 18 Dec 2019
+ 12:03:25 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>
+CC:     dl-linux-imx <linux-imx@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alice Guo <alice.guo@nxp.com>, Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH] arm: dts: imx7ulp: fix reg of cpu node
+Thread-Topic: [PATCH] arm: dts: imx7ulp: fix reg of cpu node
+Thread-Index: AQHVtZsmfGvwTi+ciE+LrR2fcO2bIg==
+Date:   Wed, 18 Dec 2019 12:03:25 +0000
+Message-ID: <1576670430-14226-1-git-send-email-peng.fan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK2PR03CA0055.apcprd03.prod.outlook.com
+ (2603:1096:202:17::25) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d7d7c33a-99b6-48a9-d40c-08d783b2492c
+x-ms-traffictypediagnostic: AM0PR04MB6148:|AM0PR04MB6148:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB6148675D241CAD0A655EA44988530@AM0PR04MB6148.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 0255DF69B9
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(396003)(346002)(376002)(366004)(199004)(189003)(6512007)(4744005)(316002)(71200400001)(6486002)(26005)(110136005)(5660300002)(2906002)(54906003)(6506007)(81166006)(186003)(4326008)(64756008)(66946007)(86362001)(66476007)(66556008)(44832011)(36756003)(8676002)(81156014)(52116002)(478600001)(2616005)(8936002)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6148;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:3;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: hWZhBeIhaQ3eTmXljcb2R6SX6G7kxxWQqegYs6SBg/SGKv+Ec5CYxEHzGPqSgSnjBMcB4dGVdTDlE+2poQHIhkiAJNkUsUNI3Ox42am5Up9Rla4symPL1Pj03Su5stsMUVR0DOcMH0BpYyIg4pqtyzyJfTIez32/JttXEPfpcrjA8ap9oaixD5gc477sncPcnHQCFe7HzXjPY9bDOYLDE0TFJKYehIdc0v8RP0i4Q3dbQ3927TtbGMF4XnR570tBezE09ByInIVgagQsmUO4CVeMi0o7x2qHwAsBQ8rRbGwCPdSIAmIdm+wj8yI/sajqmMZbv+FvZHEiFZJ0ftc0mtVcbDzXnUZibmRCv5bfHOBNP4JHAdJDUxAf0x9Y+pdwbg9Kyit47bMnyro4iDPIOv2SLZITRUv83vjywJGofkHpFQ5kTWnjI6pM0+drdO+k
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d7d7c33a-99b6-48a9-d40c-08d783b2492c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Dec 2019 12:03:25.4794
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: sLqCyxjb/6KwjXB4hCQmJEfgm4K0VuPP1bGSH81UhaZGUl+M7Lcfvt9umsrSqoiF/+sUzm2EMXUdu09NsSZYKg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6148
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jia-Ju Bai <baijiaju1990@gmail.com> writes:
+From: Peng Fan <peng.fan@nxp.com>
 
-> The driver may sleep while holding a spinlock.
-> The function call path (from bottom to top) in Linux 4.19 is:
->
-> drivers/net/wireless/ath/ath9k/hif_usb.c, 108: 
-> 	usb_alloc_urb(GFP_KERNEL) in hif_usb_send_regout
-> drivers/net/wireless/ath/ath9k/hif_usb.c, 470: 
-> 	hif_usb_send_regout in hif_usb_send
-> drivers/net/wireless/ath/ath9k/htc_hst.c, 34: 
-> 	(FUNC_PTR)hif_usb_send in htc_issue_send
-> drivers/net/wireless/ath/ath9k/htc_hst.c, 295: 
-> 	htc_issue_send in htc_send
-> drivers/net/wireless/ath/ath9k/htc_drv_beacon.c, 250: 
-> 	htc_send in ath9k_htc_send_beacon
-> drivers/net/wireless/ath/ath9k/htc_drv_beacon.c, 207: 
-> 	spin_lock_bh in ath9k_htc_send_beacon
->
-> drivers/net/wireless/ath/ath9k/hif_usb.c, 112: 
-> 	kzalloc(GFP_KERNEL) in hif_usb_send_regout
-> drivers/net/wireless/ath/ath9k/hif_usb.c, 470: 
-> 	hif_usb_send_regout in hif_usb_send
-> drivers/net/wireless/ath/ath9k/htc_hst.c, 34: 
-> 	(FUNC_PTR)hif_usb_send in htc_issue_send
-> drivers/net/wireless/ath/ath9k/htc_hst.c, 295: 
-> 	htc_issue_send in htc_send
-> drivers/net/wireless/ath/ath9k/htc_drv_beacon.c, 250: 
-> 	htc_send in ath9k_htc_send_beacon
-> drivers/net/wireless/ath/ath9k/htc_drv_beacon.c, 207: 
-> 	spin_lock_bh in ath9k_htc_send_beacon
->
-> drivers/net/wireless/ath/ath9k/hif_usb.c, 127: 
-> 	usb_submit_urb(GFP_KERNEL) in hif_usb_send_regout
-> drivers/net/wireless/ath/ath9k/hif_usb.c, 470: 
-> 	hif_usb_send_regout in hif_usb_send
-> drivers/net/wireless/ath/ath9k/htc_hst.c, 34: 
-> 	(FUNC_PTR)hif_usb_send in htc_issue_send
-> drivers/net/wireless/ath/ath9k/htc_hst.c, 295: 
-> 	htc_issue_send in htc_send
-> drivers/net/wireless/ath/ath9k/htc_drv_beacon.c, 250: 
-> 	htc_send in ath9k_htc_send_beacon
-> drivers/net/wireless/ath/ath9k/htc_drv_beacon.c, 207: 
-> 	spin_lock_bh in ath9k_htc_send_beacon
->
-> (FUNC_PTR) means a function pointer is called.
->
-> To fix these bugs, GFP_KERNEL is replaced with GFP_ATOMIC.
->
-> These bugs are found by a static analysis tool STCheck written by myself.
->
-> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+According to arm cpus binding doc,
+"
+      On 32-bit ARM v7 or later systems this property is
+        required and matches the CPU MPIDR[23:0] register
+        bits.
 
-Can someone else verify this and provide Reviewed-by?
+        Bits [23:0] in the reg cell must be set to
+        bits [23:0] in MPIDR.
 
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+        All other bits in the reg cell must be set to 0.
+"
+
+In i.MX7ULP, the MPIDR[23:0] is 0xf00, not 0, so fix it.
+Otherwise there will be warning:
+"DT missing boot CPU MPIDR[23:0], fall back to default cpu_logical_map"
+
+Fixes: 20434dc92c05 ("ARM: dts: imx: add common imx7ulp dtsi support")
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
+ arch/arm/boot/dts/imx7ulp.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dts=
+i
+index d37a1927c88e..aa9e50178d6b 100644
+--- a/arch/arm/boot/dts/imx7ulp.dtsi
++++ b/arch/arm/boot/dts/imx7ulp.dtsi
+@@ -40,7 +40,7 @@
+ 		cpu0: cpu@0 {
+ 			compatible =3D "arm,cortex-a7";
+ 			device_type =3D "cpu";
+-			reg =3D <0>;
++			reg =3D <0xf00>;
+ 		};
+ 	};
+=20
+--=20
+2.16.4
+
