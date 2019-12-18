@@ -2,331 +2,132 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D883C43603
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 866B2C3F68F
 	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2548D21582
+	by mail.kernel.org (Postfix) with ESMTP id 5CB2A22314
 	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 23:55:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="0eEjh/Od"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576713345;
+	bh=zzopRiTPMCxiWVybiJHDiNfTH61sV+ErSnPbGBAT7ZY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VSoRl5FnaA7luLXCjAJXYjQKjDTy2Wnl0ReUlUk59n1XwMC07LMZb0VWVUjYzwjRy
+	 FIca+/r/f5ZnQzkPhXAteOsi0OsjMTYGT+lZRIyEn0E5fJ+poSxwvK877UXiI3zJ+N
+	 /YIhKPF6Ul4vCDkd4L6Kf7289zddIfl1e5QtLRRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbfLRXzo (ORCPT
+        id S1726797AbfLRXzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 18 Dec 2019 18:55:44 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:45971 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726680AbfLRXzo (ORCPT
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39424 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726700AbfLRXzo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 18 Dec 2019 18:55:44 -0500
-Received: by mail-il1-f194.google.com with SMTP id p8so3225756iln.12
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 15:55:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sargun.me; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=bsnkXvaQ10kV4zp6dMk/ZIEKA3y1WpZ3zC9oUJDDtdc=;
-        b=0eEjh/OdXeIgj1aM+Oh0HGrXT18ou7SPtI0uu6STMMXHzd+/P0jiJg6aZXHKPs9WF2
-         Lf7dzYsADi2eixaE/+87i6jd70S4iS40f14z2dq8omFw2tq79VSEXHZ5MaCzZRtDPz4q
-         j2ZcBoOsXVy2jKuDlDWkNM5ivXZOtHQ2tr9LQ=
+Received: by mail-ot1-f66.google.com with SMTP id 77so4645667oty.6;
+        Wed, 18 Dec 2019 15:55:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=bsnkXvaQ10kV4zp6dMk/ZIEKA3y1WpZ3zC9oUJDDtdc=;
-        b=UxsMtZf3BoLCoZPJmffS6aELQ1EDpCIm5BVH3FCrEf7S53QRv5jEnMar1au+CDCudW
-         xW/8+vmUJIFzjCr+KovUeBx07rUs6j/r2A8vAKBXEmIiBBO0BeArtcIwgCxvJvdyl66f
-         OBGMF2ymew6AEXAWfSCOq/Ld/WWcgk+dHuALq6nZdlQYLFW+N/gLaEpPfrAWGxiPlcWr
-         ByZ0GtwgmqhqhL6WIXybucjzB0S4q8+vNCIplqkmVqwI2kSTALqhyr1am8/CfulBtKWZ
-         cGgoYiQ5o+gv+qw5w7ERVt5BN3qJDRPoUBYqZlY65mHmYY4pNe3NYnxzwEWQ2VTX4A7o
-         Rixg==
-X-Gm-Message-State: APjAAAUkOo9Mm2HqQDYU1KxV1UNeND8DK1D5rpYHLxxn1shaVm7KQ09s
-        sOyu5AmZkxyMsktw4x08K4vrbBYn+Eqh4A==
-X-Google-Smtp-Source: APXvYqyLi/IAbJ3dTC0X8anY2lW59DQH0iawE3xmYPpzw17E1PpQfk+e44xl8dYr9z7EhMAjT8y5vw==
-X-Received: by 2002:a92:ab0b:: with SMTP id v11mr4147786ilh.159.1576713342545;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GJ9qxY4LI6XeQxc2KHrHxexDGoJoWaVGO4ER5mSWmaI=;
+        b=jqU3qgYc6A4EaSO33f1iE3TTE80uLlsj09Veh04zlEGM1E44mLRnNm+W6UfRkCv86x
+         jBV2+TCSsgM0UAnq4mvKTPGX4UIxpvDPiR1RLkBag0s2uLf5Opbwn+NLz3dU6QzQvdQe
+         uCKJZW9YJ0lVlwmY05dhw4jJ9EGnAZ7UJ+4VybhDp/UJeRTmqFLbFLFPOGDINtA7V7bi
+         O5Ac+k2mN2Dy73L4ylUExArMJjIloGEkWWP+JFk794veOVEmBvDNZ6JNAqbU5QsMm2qe
+         HXZIF3MHQ9oJKmDusIC810AfsfXK9wAiTStKsdlrvnICwsxBb6OnD0D4JY7kku9k4mhs
+         SPTw==
+X-Gm-Message-State: APjAAAX9X7LekhLwmGQRPkMXEXRVC/AR4mFS27UIby9tqlAGhV1RnEm7
+        bUYlwFeFY+cdOBCyiZm/NP/oRKNvmA==
+X-Google-Smtp-Source: APXvYqyKXJqhNqKyRPGAs2JVV5SiXMGR8LphNu4Udo9MvYFaBLQ15ECTHXk1NIpRYcegBFFN+UOE9A==
+X-Received: by 2002:a9d:7cd9:: with SMTP id r25mr5163459otn.326.1576713343017;
+        Wed, 18 Dec 2019 15:55:43 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id r205sm1387626oih.54.2019.12.18.15.55.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 18 Dec 2019 15:55:42 -0800 (PST)
-Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
-        by smtp.gmail.com with ESMTPSA id p5sm1135927ilg.69.2019.12.18.15.55.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 18 Dec 2019 15:55:41 -0800 (PST)
-Date:   Wed, 18 Dec 2019 23:55:40 +0000
-From:   Sargun Dhillon <sargun@sargun.me>
-To:     linux-kernel@vger.kernel.org,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Cc:     tycho@tycho.ws, jannh@google.com, cyphar@cyphar.com,
-        christian.brauner@ubuntu.com, oleg@redhat.com, luto@amacapital.net,
-        viro@zeniv.linux.org.uk, gpascutto@mozilla.com,
-        ealvarez@mozilla.com, fweimer@redhat.com, jld@mozilla.com,
-        arnd@arndb.de
-Subject: [PATCH v4 4/5] samples: Add example of using pidfd getfd in
- conjunction with user trap
-Message-ID: <20191218235538.GA17292@ircssh-2.c.rugged-nimbus-611.internal>
+Date:   Wed, 18 Dec 2019 17:55:41 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     shubhrajyoti.datta@gmail.com
+Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
+        arnd@arndb.de, michal.simek@xilinx.com,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: misc: Add dt bindings for traffic
+ generator
+Message-ID: <20191218235541.GA31319@bogus>
+References: <8b3a446fc60cdd7d085203ce00c3f6bfba642437.1575871828.git.shubhrajyoti.datta@xilinx.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <8b3a446fc60cdd7d085203ce00c3f6bfba642437.1575871828.git.shubhrajyoti.datta@xilinx.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This sample adds the usage of SECCOMP_RET_USER_NOTIF together with pidfd
-GETFD ioctl. It shows trapping a syscall, and handling it by extracting
-the FD into the parent process without stopping the child process.
-Although, in this example, there's no explicit policy separation in
-the two processes, it can be generalized into the example of a transparent
-proxy.
+On Mon, Dec 09, 2019 at 11:41:26AM +0530, shubhrajyoti.datta@gmail.com wrote:
+> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> 
+> Add dt bindings for xilinx traffic generator IP.
+> 
+> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> ---
+>  .../bindings/misc/xlnx,axi-traffic-gen.txt         | 25 ++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/xlnx,axi-traffic-gen.txt
 
-Signed-off-by: Sargun Dhillon <sargun@sargun.me>
----
- samples/seccomp/.gitignore        |   1 +
- samples/seccomp/Makefile          |   9 +-
- samples/seccomp/user-trap-pidfd.c | 185 ++++++++++++++++++++++++++++++
- 3 files changed, 194 insertions(+), 1 deletion(-)
- create mode 100644 samples/seccomp/user-trap-pidfd.c
+Please convert to a DT schema.
 
-diff --git a/samples/seccomp/.gitignore b/samples/seccomp/.gitignore
-index d1e2e817d556..f37e3692a1dd 100644
---- a/samples/seccomp/.gitignore
-+++ b/samples/seccomp/.gitignore
-@@ -2,3 +2,4 @@ bpf-direct
- bpf-fancy
- dropper
- user-trap
-+user-trap-pidfd
-diff --git a/samples/seccomp/Makefile b/samples/seccomp/Makefile
-index 82b7347318d1..c3880869cadc 100644
---- a/samples/seccomp/Makefile
-+++ b/samples/seccomp/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- ifndef CROSS_COMPILE
--hostprogs-y := bpf-fancy dropper bpf-direct user-trap
-+hostprogs-y := bpf-fancy dropper bpf-direct user-trap user-trap-pidfd
- 
- HOSTCFLAGS_bpf-fancy.o += -I$(objtree)/usr/include
- HOSTCFLAGS_bpf-fancy.o += -idirafter $(objtree)/include
-@@ -24,6 +24,11 @@ HOSTCFLAGS_user-trap.o += -I$(objtree)/usr/include
- HOSTCFLAGS_user-trap.o += -idirafter $(objtree)/include
- user-trap-objs := user-trap.o user-trap-helper.o
- 
-+HOSTCFLAGS_user-trap-pidfd.o += -I$(objtree)/usr/include
-+HOSTCFLAGS_user-trap-pidfd.o += -idirafter $(objtree)/include
-+user-trap-pidfd-objs := user-trap-pidfd.o user-trap-helper.o
-+
-+
- # Try to match the kernel target.
- ifndef CONFIG_64BIT
- 
-@@ -39,10 +44,12 @@ HOSTCFLAGS_dropper.o += $(MFLAG)
- HOSTCFLAGS_bpf-helper.o += $(MFLAG)
- HOSTCFLAGS_bpf-fancy.o += $(MFLAG)
- HOSTCFLAGS_user-trap.o += $(MFLAG)
-+HOSTCFLAGS_user-trap-pidfd.o += $(MFLAG)
- HOSTLDLIBS_bpf-direct += $(MFLAG)
- HOSTLDLIBS_bpf-fancy += $(MFLAG)
- HOSTLDLIBS_dropper += $(MFLAG)
- HOSTLDLIBS_user-trap += $(MFLAG)
-+HOSTLDLIBS_user-trap-pidfd += $(MFLAG)
- endif
- always := $(hostprogs-y)
- endif
-diff --git a/samples/seccomp/user-trap-pidfd.c b/samples/seccomp/user-trap-pidfd.c
-new file mode 100644
-index 000000000000..bd5730347a81
---- /dev/null
-+++ b/samples/seccomp/user-trap-pidfd.c
-@@ -0,0 +1,185 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/seccomp.h>
-+#include <linux/prctl.h>
-+#include <linux/pidfd.h>
-+#include <sys/socket.h>
-+#include <sys/prctl.h>
-+#include <sys/types.h>
-+#include <sys/wait.h>
-+#include <sys/ioctl.h>
-+#include <assert.h>
-+#include <errno.h>
-+#include <stdio.h>
-+#include <string.h>
-+#include <stdlib.h>
-+#include <netinet/in.h>
-+#include "user-trap-helper.h"
-+
-+#define CHILD_PORT_TRY_BIND		80
-+#define CHILD_PORT_ACTUAL_BIND	4998
-+
-+static int tracee(void)
-+{
-+	struct sockaddr_in addr = {
-+		.sin_family	= AF_INET,
-+		.sin_port	= htons(CHILD_PORT_TRY_BIND),
-+		.sin_addr	= {
-+			.s_addr	= htonl(INADDR_ANY)
-+		}
-+	};
-+	socklen_t addrlen = sizeof(addr);
-+	int sock, ret = 1;
-+
-+	sock = socket(AF_INET, SOCK_STREAM, 0);
-+	if (sock == -1) {
-+		perror("socket");
-+		goto out;
-+	}
-+
-+
-+	if (bind(sock, (struct sockaddr *) &addr, sizeof(addr))) {
-+		perror("bind");
-+		goto out;
-+	}
-+
-+	printf("Child successfully performed bind operation\n");
-+	if (getsockname(sock, (struct sockaddr *) &addr, &addrlen)) {
-+		perror("getsockname");
-+		goto out;
-+	}
-+
-+
-+	printf("Socket bound to port %d\n", ntohs(addr.sin_port));
-+	assert(ntohs(addr.sin_port) == CHILD_PORT_ACTUAL_BIND);
-+
-+	ret = 0;
-+out:
-+	return ret;
-+}
-+
-+static int handle_req(int listener, int pidfd)
-+{
-+	struct sockaddr_in addr = {
-+		.sin_family	= AF_INET,
-+		.sin_port	= htons(CHILD_PORT_ACTUAL_BIND),
-+		.sin_addr	= {
-+			.s_addr	= htonl(INADDR_LOOPBACK)
-+		}
-+	};
-+	struct seccomp_notif_sizes sizes;
-+	struct seccomp_notif_resp *resp;
-+	struct seccomp_notif *req;
-+	int fd, ret = 1;
-+
-+	if (seccomp(SECCOMP_GET_NOTIF_SIZES, 0, &sizes) < 0) {
-+		perror("seccomp(GET_NOTIF_SIZES)");
-+		goto out;
-+	}
-+	req = malloc(sizes.seccomp_notif);
-+	if (!req)
-+		goto out;
-+	memset(req, 0, sizeof(*req));
-+
-+	resp = malloc(sizes.seccomp_notif_resp);
-+	if (!resp)
-+		goto out_free_req;
-+	memset(resp, 0, sizeof(*resp));
-+
-+	if (ioctl(listener, SECCOMP_IOCTL_NOTIF_RECV, req)) {
-+		perror("ioctl recv");
-+		goto out;
-+	}
-+	printf("Child tried to call bind with fd: %lld\n", req->data.args[0]);
-+	fd = ioctl(pidfd, PIDFD_IOCTL_GETFD, req->data.args[0]);
-+	if (fd == -1) {
-+		perror("ioctl pidfd");
-+		goto out_free_resp;
-+	}
-+	if (bind(fd, (struct sockaddr *) &addr, sizeof(addr))) {
-+		perror("bind");
-+		goto out_free_resp;
-+	}
-+
-+	resp->id = req->id;
-+	resp->error = 0;
-+	resp->val = 0;
-+	if (ioctl(listener, SECCOMP_IOCTL_NOTIF_SEND, resp) < 0) {
-+		perror("ioctl send");
-+		goto out_free_resp;
-+	}
-+
-+	ret = 0;
-+out_free_resp:
-+	free(resp);
-+out_free_req:
-+	free(req);
-+out:
-+	return ret;
-+}
-+
-+static int pidfd_open(pid_t pid, unsigned int flags)
-+{
-+	errno = 0;
-+	return syscall(__NR_pidfd_open, pid, flags);
-+}
-+
-+int main(void)
-+{
-+	int pidfd, listener, sk_pair[2], ret = 1;
-+	pid_t pid;
-+
-+	if (socketpair(PF_LOCAL, SOCK_SEQPACKET, 0, sk_pair) < 0) {
-+		perror("socketpair");
-+		goto out;
-+	}
-+
-+	pid = fork();
-+	if (pid < 0) {
-+		perror("fork");
-+		goto close_pair;
-+	}
-+
-+	if (pid == 0) {
-+		if (prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0)) {
-+			perror("prctl(NO_NEW_PRIVS)");
-+			exit(1);
-+		}
-+		listener = user_trap_syscall(__NR_bind,
-+					     SECCOMP_FILTER_FLAG_NEW_LISTENER);
-+		if (listener < 0) {
-+			perror("seccomp");
-+			exit(1);
-+		}
-+		if (send_fd(sk_pair[1], listener) < 0)
-+			exit(1);
-+		close(listener);
-+		exit(tracee());
-+	}
-+
-+	pidfd = pidfd_open(pid, 0);
-+	if (pidfd < 0) {
-+		perror("pidfd_open");
-+		goto kill_child;
-+	}
-+
-+	listener = recv_fd(sk_pair[0]);
-+	if (listener < 0)
-+		goto kill_child;
-+
-+	if (handle_req(listener, pidfd))
-+		goto kill_child;
-+
-+	/* Wait for child to finish */
-+	waitpid(pid, NULL, 0);
-+
-+	ret = 0;
-+	goto close_pair;
-+
-+kill_child:
-+	kill(pid, SIGKILL);
-+close_pair:
-+	close(sk_pair[0]);
-+	close(sk_pair[1]);
-+out:
-+	return ret;
-+}
--- 
-2.20.1
+> 
+> diff --git a/Documentation/devicetree/bindings/misc/xlnx,axi-traffic-gen.txt b/Documentation/devicetree/bindings/misc/xlnx,axi-traffic-gen.txt
+> new file mode 100644
+> index 0000000..6edb8f6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/misc/xlnx,axi-traffic-gen.txt
+> @@ -0,0 +1,25 @@
+> +* Xilinx AXI Traffic generator IP
+> +
+> +Required properties:
+> +- compatible: "xlnx,axi-traffic-gen"
+> +- interrupts: Should contain AXI Traffic Generator interrupts.
 
+How many and what are they.
+
+> +- interrupt-parent: Must be core interrupt controller.
+
+Drop this. It could be in a parent node.
+
+> +- reg: Should contain AXI Traffic Generator registers location and length.
+> +- interrupt-names: Should contain both the intr names of device - error
+> +		   and completion.
+
+Needs exact strings.
+
+> +- xlnx,device-id: Device instance Id.
+> +
+> +Optional properties:
+> +- clocks: Input clock specifier. Refer to common clock bindings.
+> +
+> +Example:
+> +++++++++
+> +axi_traffic_gen_1: axi-traffic-gen@76000000 {
+> +	compatible = "xlnx,axi-traffic-gen-1.0", "xlnx,axi-traffic-gen";
+
+Doesn't match the above. I'd drop the 2nd string.
+
+> +	clocks = <&clkc 15>;
+> +	interrupts = <0 2 2 2>;
+> +	interrupt-parent = <&axi_intc_1>;
+> +	interrupt-names = "err-out", "irq-out";
+> +	reg = <0x76000000 0x800000>;
+> +	xlnx,device-id = <0x0>;
+> +} ;
+> -- 
+> 2.1.1
+> 
