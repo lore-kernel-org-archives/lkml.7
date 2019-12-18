@@ -2,118 +2,135 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41AF5C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3789C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:17:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15B9E20717
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:17:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AE95227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:17:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="srjXb+Cx"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="X0CHUqkw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbfLRJRo (ORCPT
+        id S1727124AbfLRJRs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 04:17:44 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:39224 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbfLRJRn (ORCPT
+        Wed, 18 Dec 2019 04:17:48 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:19188 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727099AbfLRJRp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 04:17:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=AX3VdH7EqYVEvpigBaq6scqvol8UFlytVvrQaxwhRTM=; b=srjXb+CxYdYqaxGRqX3nMXE1M
-        C2geSj7fwM5u2GA7fxI8FP+v4268VeXJPYvxhOKrvoC+VQ5QGooB9BQOFVFxLuX071vWav1PtDVzO
-        fb5ZlSZyDtar5TL2grgkuSySdQ7Vp1cuMjjznT76n3MgUxQpH8HrZXAK1u9YEpV3HTRTzCuOuvFpK
-        Y9eOUQYo5HRQ+0VX1ZjCZa1O0E4z/+Yx+y6VENLuQr3iXjesZ7aRm+/aNfnIBONymnuLEt8NWzxlW
-        E7pR6nPKjZxW3QEyuUVbciHYYmpEjW4J2bKvHFh4lp84cz6Kgd/gGtAVoqvXPfiBn0HMxU9MXVngI
-        5dNo8hNvA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ihVSa-0004jh-5F; Wed, 18 Dec 2019 09:17:36 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 830B4306062;
-        Wed, 18 Dec 2019 10:16:10 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DE2FC2B3E30F6; Wed, 18 Dec 2019 10:17:33 +0100 (CET)
-Date:   Wed, 18 Dec 2019 10:17:33 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc:     akpm@linux-foundation.org, npiggin@gmail.com, mpe@ellerman.id.au,
-        will@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-arch@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] mm/mmu_gather: Invalidate TLB correctly on batch
- allocation failure and flush
-Message-ID: <20191218091733.GO2844@hirez.programming.kicks-ass.net>
-References: <20191218053530.73053-1-aneesh.kumar@linux.ibm.com>
- <20191218053530.73053-2-aneesh.kumar@linux.ibm.com>
+        Wed, 18 Dec 2019 04:17:45 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5df9eeae0000>; Wed, 18 Dec 2019 01:17:34 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 18 Dec 2019 01:17:44 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 18 Dec 2019 01:17:44 -0800
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Dec
+ 2019 09:17:43 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 18 Dec 2019 09:17:43 +0000
+Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.64.167]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5df9eeb30004>; Wed, 18 Dec 2019 01:17:42 -0800
+From:   Nagarjuna Kristam <nkristam@nvidia.com>
+To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <mark.rutland@arm.com>, <robh+dt@kernel.org>, <kishon@ti.com>
+CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Nagarjuna Kristam <nkristam@nvidia.com>
+Subject: [Patch V2 13/18] arm64: tegra: update OTG port entries for jetson-tx1
+Date:   Wed, 18 Dec 2019 14:46:26 +0530
+Message-ID: <1576660591-10383-14-git-send-email-nkristam@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1576660591-10383-1-git-send-email-nkristam@nvidia.com>
+References: <1576660591-10383-1-git-send-email-nkristam@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191218053530.73053-2-aneesh.kumar@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1576660654; bh=r6dLijaGQSTeyELW+i73uRPzAvO9Y8ClHFN1zye9h8A=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=X0CHUqkw+De1Z3qZp2feEgqYD5qZnfQPtsHs6W+lcIADDE5CbxAn/Xjcs73ZlM3cT
+         9BCwvRLmkVm1B8bshrlVQNts4FE0YumxOtsvJkHsBxzhZCHKIDaAyWxZVwYSsoj7mk
+         b4oua6Pbqx2zIsNAlO4M/7G7s9mAisG9/eVJjxn3XN0D2ZKtDyIJRfKPbTWHSWxQc2
+         VDFYGpnnZGaZz1aST0nDrDZncmnkFQUGCQJ99wuTUh53gG4UzKYgQ47D2uylg/quhp
+         oD1uGcML4Xx0stSnwiAb9capVsDuV9I1sy5yJaSEjp7fRTnEjw/aI0MmpbePBEJ4qE
+         ms8+4eBvZ8YRw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 11:05:29AM +0530, Aneesh Kumar K.V wrote:
-> From: Peter Zijlstra <peterz@infradead.org>
-> 
-> Architectures for which we have hardware walkers of Linux page table should
-> flush TLB on mmu gather batch allocation failures and batch flush. Some
-> architectures like POWER supports multiple translation modes (hash and radix)
+Populate OTG vbus regulator. Add usb-role-switch entry to USB 2-0 port
+and corresponding connector details.
 
-nohash, hash and radix in fact :-)
+Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+---
+V2:
+ - No changes in this version
+---
+ arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi | 24 +++++++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
 
-> and in the case of POWER only radix translation mode needs the above TLBI.
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+index b009507..18c0610 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+@@ -1336,7 +1336,6 @@
+ 		       <&{/padctl@7009f000/pads/pcie/lanes/pcie-5}>;
+ 		phy-names = "usb2-0", "usb2-1", "usb2-2", "usb2-3", "usb3-0",
+ 			    "usb3-1";
+-
+ 		dvddio-pex-supply = <&vdd_pex_1v05>;
+ 		hvddio-pex-supply = <&vdd_1v8>;
+ 		avdd-usb-supply = <&vdd_3v3_sys>;
+@@ -1440,7 +1439,19 @@
+ 		ports {
+ 			usb2-0 {
+ 				status = "okay";
++				vbus-supply = <&vdd_usb_vbus_otg>;
+ 				mode = "otg";
++
++				usb-role-switch;
++				connector {
++					compatible = "usb-b-connector",
++						     "gpio-usb-b-connector";
++					label = "micro-USB";
++					type = "micro";
++					vbus-gpio = <&gpio TEGRA_GPIO(Z, 0)
++						     GPIO_ACTIVE_LOW>;
++					id-gpio = <&pmic 0 0>;
++				};
+ 			};
+ 
+ 			usb2-1 {
+@@ -1606,6 +1617,17 @@
+ 			vin-supply = <&vdd_5v0_sys>;
+ 		};
+ 
++		vdd_usb_vbus_otg: regulator@11 {
++			compatible = "regulator-fixed";
++			reg = <9>;
++			regulator-name = "USB_VBUS_EN0";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++			gpio = <&gpio TEGRA_GPIO(CC, 4) GPIO_ACTIVE_HIGH>;
++			enable-active-high;
++			vin-supply = <&vdd_5v0_sys>;
++		};
++
+ 		vdd_hdmi: regulator@10 {
+ 			compatible = "regulator-fixed";
+ 			reg = <10>;
+-- 
+2.7.4
 
-> This is because for hash translation mode kernel wants to avoid this extra
-> flush since there are no hardware walkers of linux page table. With radix
-> translation, the hardware also walks linux page table and with that, kernel
-> needs to make sure to TLB invalidate page walk cache before page table pages are
-> freed.
-> 
-> More details in
-> commit: d86564a2f085 ("mm/tlb, x86/mm: Support invalidating TLB caches for RCU_TABLE_FREE")
-> 
-> Fixes: a46cc7a90fd8 ("powerpc/mm/radix: Improve TLB/PWC flushes")
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org
-> Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-> ---
-
-> diff --git a/arch/powerpc/include/asm/tlb.h b/arch/powerpc/include/asm/tlb.h
-> index b2c0be93929d..7f3a8b902325 100644
-> --- a/arch/powerpc/include/asm/tlb.h
-> +++ b/arch/powerpc/include/asm/tlb.h
-> @@ -26,6 +26,17 @@
->  
->  #define tlb_flush tlb_flush
->  extern void tlb_flush(struct mmu_gather *tlb);
-> +/*
-> + * book3s:
-> + * Hash does not use the linux page-tables, so we can avoid
-> + * the TLB invalidate for page-table freeing, Radix otoh does use the
-> + * page-tables and needs the TLBI.
-> + *
-> + * nohash:
-> + * We still do TLB invalidate in the __pte_free_tlb routine before we
-> + * add the page table pages to mmu gather table batch.
-
-I'm a little confused though; if nohash is a software TLB fill, why do
-you need a TLBI for tables?
-
-> + */
-> +#define tlb_needs_table_invalidate()	radix_enabled()
->  
->  /* Get the generic bits... */
->  #include <asm-generic/tlb.h>
