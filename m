@@ -2,90 +2,153 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB81C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E69FDC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85C1E227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:46:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576669588;
-	bh=AsC2IgWPzLMS684v1+6jrfz69eVm0rBJI831T+JRfWw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hQA81+8Th3yXEZp5FfDzYwBq6uy++sz0JUazrKa9nu2cy2WpQKtTMkvLGCtNirk09
-	 OO8fx+pX8CzAbKjFrNKQho88VQmOUGSh7BUHwCtOsEYlBtoBd5MyWBmhsM28R7G6Ic
-	 +Xg+bklQMUiV86aw5KEN0NaWUrqUHd2bdiMeOHwc=
+	by mail.kernel.org (Postfix) with ESMTP id B609C2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:46:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZqdU5bMs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbfLRLq1 (ORCPT
+        id S1726939AbfLRLqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 06:46:27 -0500
-Received: from foss.arm.com ([217.140.110.172]:43340 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725930AbfLRLq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 06:46:27 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F0DC430E;
-        Wed, 18 Dec 2019 03:46:26 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4AE713F6CF;
-        Wed, 18 Dec 2019 03:46:26 -0800 (PST)
-Date:   Wed, 18 Dec 2019 11:46:24 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     robh@kernel.org, lee.jones@linaro.org, linus.walleij@linaro.org,
-        vinod.koul@linaro.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        spapothi@codeaurora.org, bgoswami@codeaurora.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v5 03/11] ASoC: wcd934x: add support to wcd9340/wcd9341
- codec
-Message-ID: <20191218114624.GB3219@sirena.org.uk>
-References: <20191217121642.28534-1-srinivas.kandagatla@linaro.org>
- <20191217121642.28534-4-srinivas.kandagatla@linaro.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="uQr8t48UFsdbeI+V"
-Content-Disposition: inline
-In-Reply-To: <20191217121642.28534-4-srinivas.kandagatla@linaro.org>
-X-Cookie: Power is poison.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 18 Dec 2019 06:46:53 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:40048 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbfLRLqx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 06:46:53 -0500
+Received: by mail-pj1-f67.google.com with SMTP id bg7so262124pjb.5;
+        Wed, 18 Dec 2019 03:46:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=8Rm3PGAG4ZjJjxffgjZO01XuGdZ5Se+lxRoTd65jV/I=;
+        b=ZqdU5bMscFQvm8p09tXvtNABGBJq3yux1pRvAaSqHYWoBHsvLzpx40uJaQXuXESBMy
+         uFXxFSZYelsqKFR9u97FntWyBuRrNZSiUzu5UUXshbqPHsStjihAGvW+ajqEG1EbOfPo
+         CduQ2IZkIVxIZeAaHojbbW/tuxGxmxAllFCZKTj9CAH1CuO8lkcQszADJvRwU7fQhyzU
+         zhkiN/jm65g1GHgd/qp5N+glagyd4JzNwME+ofMcnZvqiltufXLulTwnVoZM4j6hTuWe
+         D2NNi9Gtqt/tAooIXZqAb9wUAVNgMtXyikiC/W49ZmSFYqVsituX+OOu/u1AAbxR5XtM
+         O3rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=8Rm3PGAG4ZjJjxffgjZO01XuGdZ5Se+lxRoTd65jV/I=;
+        b=T/kq+1VwOU6ilo7BaSX9S8t5v4WVpkKCYB6rpGzfrqhmaHpM+QvAM4T52KLDA8x/Kn
+         ECp3W8vi643Lyxr4A2LOnrUtKGiq1w+e1pz4prMZKRfDqTmtOAXh9V+3IzRIhJlCBlFI
+         ovQWu+Ig1TPVqjVs1Q7/KHQ20nF5WPJvibodvfjTGqSyxj/0XjF2EZu06ZyCmtnlGTx+
+         ZmhqkDRp3bbr1UCV07ZK2hhO+1CF2jbVxytb5eCAAmsC0yWuadAYn8hRx9EXgOhyrJoo
+         qsWBzY7MlvHdScvrKb2B1SPEQDpUX1s8J7DSUCxN3z0yCQqSliWlCPqDIxN3opwp8kJy
+         Hzpw==
+X-Gm-Message-State: APjAAAXP+xh6xULQY3yg+9pqglGZuKsTeKKQnUt4Gjpme3pFA/UFmmt4
+        a3xtIWq4A+8suFB22TCqEig=
+X-Google-Smtp-Source: APXvYqwRkgvw8jDHziQzj693orxCe6AxRD4tkkS6Jhb3GveNfnhdDXtHvoza5yByb4hW1lEpWrgvUA==
+X-Received: by 2002:a17:902:bd93:: with SMTP id q19mr52436pls.134.1576669612673;
+        Wed, 18 Dec 2019 03:46:52 -0800 (PST)
+Received: from oslab.tsinghua.edu.cn ([166.111.139.172])
+        by smtp.gmail.com with ESMTPSA id a10sm2913237pgm.81.2019.12.18.03.46.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 03:46:52 -0800 (PST)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     ath9k-devel@qca.qualcomm.com, kvalo@codeaurora.org,
+        davem@davemloft.net
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH] ath9k: fix possible sleep-in-atomic-context bugs in hif_usb_send_regout()
+Date:   Wed, 18 Dec 2019 19:45:33 +0800
+Message-Id: <20191218114533.9268-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The driver may sleep while holding a spinlock.
+The function call path (from bottom to top) in Linux 4.19 is:
 
---uQr8t48UFsdbeI+V
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+drivers/net/wireless/ath/ath9k/hif_usb.c, 108: 
+	usb_alloc_urb(GFP_KERNEL) in hif_usb_send_regout
+drivers/net/wireless/ath/ath9k/hif_usb.c, 470: 
+	hif_usb_send_regout in hif_usb_send
+drivers/net/wireless/ath/ath9k/htc_hst.c, 34: 
+	(FUNC_PTR)hif_usb_send in htc_issue_send
+drivers/net/wireless/ath/ath9k/htc_hst.c, 295: 
+	htc_issue_send in htc_send
+drivers/net/wireless/ath/ath9k/htc_drv_beacon.c, 250: 
+	htc_send in ath9k_htc_send_beacon
+drivers/net/wireless/ath/ath9k/htc_drv_beacon.c, 207: 
+	spin_lock_bh in ath9k_htc_send_beacon
 
-On Tue, Dec 17, 2019 at 12:16:34PM +0000, Srinivas Kandagatla wrote:
+drivers/net/wireless/ath/ath9k/hif_usb.c, 112: 
+	kzalloc(GFP_KERNEL) in hif_usb_send_regout
+drivers/net/wireless/ath/ath9k/hif_usb.c, 470: 
+	hif_usb_send_regout in hif_usb_send
+drivers/net/wireless/ath/ath9k/htc_hst.c, 34: 
+	(FUNC_PTR)hif_usb_send in htc_issue_send
+drivers/net/wireless/ath/ath9k/htc_hst.c, 295: 
+	htc_issue_send in htc_send
+drivers/net/wireless/ath/ath9k/htc_drv_beacon.c, 250: 
+	htc_send in ath9k_htc_send_beacon
+drivers/net/wireless/ath/ath9k/htc_drv_beacon.c, 207: 
+	spin_lock_bh in ath9k_htc_send_beacon
 
-> +config SND_SOC_WCD934X
-> +	tristate "WCD9340/WCD9341 Codec"
-> +	depends on SLIMBUS
-> +	select REGMAP_SLIMBUS
-> +	select REGMAP_IRQ
-> +	help
+drivers/net/wireless/ath/ath9k/hif_usb.c, 127: 
+	usb_submit_urb(GFP_KERNEL) in hif_usb_send_regout
+drivers/net/wireless/ath/ath9k/hif_usb.c, 470: 
+	hif_usb_send_regout in hif_usb_send
+drivers/net/wireless/ath/ath9k/htc_hst.c, 34: 
+	(FUNC_PTR)hif_usb_send in htc_issue_send
+drivers/net/wireless/ath/ath9k/htc_hst.c, 295: 
+	htc_issue_send in htc_send
+drivers/net/wireless/ath/ath9k/htc_drv_beacon.c, 250: 
+	htc_send in ath9k_htc_send_beacon
+drivers/net/wireless/ath/ath9k/htc_drv_beacon.c, 207: 
+	spin_lock_bh in ath9k_htc_send_beacon
 
-Why does this not depend on the MFD change?
+(FUNC_PTR) means a function pointer is called.
 
---uQr8t48UFsdbeI+V
-Content-Type: application/pgp-signature; name="signature.asc"
+To fix these bugs, GFP_KERNEL is replaced with GFP_ATOMIC.
 
------BEGIN PGP SIGNATURE-----
+These bugs are found by a static analysis tool STCheck written by myself.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl36EY8ACgkQJNaLcl1U
-h9CJewf/UNyw0O0xrJ7lqLqOtpx2X0NT8thQQh2NcyNp4m8qbmYDJ15qmTMAM+yj
-mP+3wP/Qf8hD8sTAidpOg9krTC5rCGi8k7lHizePkZEkmxilFp6IEr4xPSFimHhR
-bp2p/9XvAgJcXlsDTaRRknBtErDfSIfcNmPjC9Lz0Q9jAlQKMjPVj9K7Wm4o96zQ
-L/Cz3jQOHeNSRCBQKjkMDUSesDQIzZUAAEShRq82RT+dxa8K531f8AoFQKf+D2KZ
-3EmrYGye3MJgMTZ+8elie/8uBaRKqhCei3zZecF05lN43KThV/U5aEGY/p/RW6O4
-xnnuzr+hkC5Hu7jMR8DbzcNHfEuS+g==
-=vos4
------END PGP SIGNATURE-----
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+ drivers/net/wireless/ath/ath9k/hif_usb.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---uQr8t48UFsdbeI+V--
+diff --git a/drivers/net/wireless/ath/ath9k/hif_usb.c b/drivers/net/wireless/ath/ath9k/hif_usb.c
+index fb649d85b8fc..37231fde102d 100644
+--- a/drivers/net/wireless/ath/ath9k/hif_usb.c
++++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
+@@ -105,11 +105,11 @@ static int hif_usb_send_regout(struct hif_device_usb *hif_dev,
+ 	struct cmd_buf *cmd;
+ 	int ret = 0;
+ 
+-	urb = usb_alloc_urb(0, GFP_KERNEL);
++	urb = usb_alloc_urb(0, GFP_ATOMIC);
+ 	if (urb == NULL)
+ 		return -ENOMEM;
+ 
+-	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
++	cmd = kzalloc(sizeof(*cmd), GFP_ATOMIC);
+ 	if (cmd == NULL) {
+ 		usb_free_urb(urb);
+ 		return -ENOMEM;
+@@ -124,7 +124,7 @@ static int hif_usb_send_regout(struct hif_device_usb *hif_dev,
+ 			 hif_usb_regout_cb, cmd, 1);
+ 
+ 	usb_anchor_urb(urb, &hif_dev->regout_submitted);
+-	ret = usb_submit_urb(urb, GFP_KERNEL);
++	ret = usb_submit_urb(urb, GFP_ATOMIC);
+ 	if (ret) {
+ 		usb_unanchor_urb(urb);
+ 		kfree(cmd);
+-- 
+2.17.1
+
