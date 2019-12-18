@@ -2,95 +2,134 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 994A7C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 616B7C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:52:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E8FE20717
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:51:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38C4721D7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:52:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TucDaIm+"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="plZKOqYp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbfLRJvh (ORCPT
+        id S1726743AbfLRJwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 04:51:37 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:35050 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbfLRJvh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 04:51:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=CCYsTiKmLFf9CmOEzk5lgJx0OEGqguLyDzTVud+iGeA=; b=TucDaIm+ISUWU5BpkawY63Sb3
-        SJ9SWk9Pu7f2dafCRqmUyN1UDC0w4kLQTiN7ACWPV22SKSosG2JeNzQElk7s4wDWElgtDN43Pu3Xs
-        rgKJEYCbDoYbJObPK03ZeFF0p1VjonN6AyqIxvArc3Uh6MaYeiUzmHTRev4x8o1yRMSdDNe5l7PXU
-        iT9AlSg8sP/UTe+q5TnbqfZ6ZBgMaKbcJ2XmfRB5wfEKx3+h7keMutdUIEhY7YAF9rQEq19Rk2W10
-        m2UIYcY37jmJT4elzwPg/t0rAFoteeDnVyns2y1aCLzL+ZhYyumgETnqOsEuTTloMoiggMq44kzI3
-        +YKxUJ5nQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ihVyx-0001FP-98; Wed, 18 Dec 2019 09:51:03 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 36B023007F2;
-        Wed, 18 Dec 2019 10:49:38 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1966B2B3E30FC; Wed, 18 Dec 2019 10:51:01 +0100 (CET)
-Date:   Wed, 18 Dec 2019 10:51:01 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Jens Axboe <axboe@kernel.dk>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        Long Li <longli@microsoft.com>, Ingo Molnar <mingo@redhat.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        John Garry <john.garry@huawei.com>,
-        Hannes Reinecke <hare@suse.com>
-Subject: Re: [RFC PATCH 1/3] sched/core: add API for exporting runqueue clock
-Message-ID: <20191218095101.GQ2844@hirez.programming.kicks-ass.net>
-References: <20191218071942.22336-1-ming.lei@redhat.com>
- <20191218071942.22336-2-ming.lei@redhat.com>
+        Wed, 18 Dec 2019 04:52:20 -0500
+Received: from mail-eopbgr700063.outbound.protection.outlook.com ([40.107.70.63]:56288
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725828AbfLRJwT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 04:52:19 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GcelOqhcZvTbrxMrFQ/NMUVlJIKPvqOu+2QkuroMV4+ph0RAdoWaB3EQ3f+0aPiV/GD+QZrNkdk/9+9s+tCXKJSOrnIHH0TpgN2EQJc9yfUeDz722PGdovCFX9tORJH7A/oEn8+3mSDGO46+C4oABoWcv5iy0i2yTeFjZ2++tG2nYcp76Ko38fPAff5N5lN3eGFoef5+/FIs/YB2eBYlTzRS9n05A61GtOEB2Uf4DmTakpx3zECh69Lw+74iu0dg4ss0Pgd8IR6IcBwrdexmD1UpqgFc1U3Pk3LtBdfoG2tWULQv3XMXZMzzMrFZgM98vCZ/ifa6vOnm5sqGbrJXCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Q5OfwsjUGiaZ43qy+V2Ire2surpTTxyM9cCsVRGLMaE=;
+ b=Pu0BcLdaMGIWewVvdeOVh9qauVJ2Pm+8jTf85/VO19oENAb6OYsquBJWFRVXydKiXZSaIOXKYSCniZNrNfrd0/65LWgxATWky9gqLOjSbQEs4x8M+oRqAfER6WoXQTR+MLsj9qOM339k95dL0wKESga5kmKW4Bp8R/l005LlcVA9CEy/VEYA+UPbyiNw7gzDdeDBZ5QfxVngFP0YkgZpcmpxxpYGBQ53PO4M51KuSsRM7rMXQ74tAr+4XDnf+U/Jv7dOk38mW/o+DzkMbEEaL4WRlvegd+xko7k8piqWXUCFD/BsPtq3v6tH4omWrY+KUbtTtqpKlVIc6gqaVwYj1w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Q5OfwsjUGiaZ43qy+V2Ire2surpTTxyM9cCsVRGLMaE=;
+ b=plZKOqYphPATVKuDCDaFgBzFen/bq7a7uUB9eDlZ+FkrNk+MA3Oc72YciipMqR+QsHrLXvNFHS8bne0okm9PhNH0WNL7JcdG+xkoYDo3Sc2UmWCErehNV7Mr9a/uOqZQXQKsAzgnRxShIi/Uq9LxTQUyWmfxxbAanljOK+46wTk=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Christian.Koenig@amd.com; 
+Received: from DM5PR12MB1705.namprd12.prod.outlook.com (10.175.88.22) by
+ DM5PR12MB1545.namprd12.prod.outlook.com (10.172.35.151) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.18; Wed, 18 Dec 2019 09:52:16 +0000
+Received: from DM5PR12MB1705.namprd12.prod.outlook.com
+ ([fe80::80df:f8b:e547:df84]) by DM5PR12MB1705.namprd12.prod.outlook.com
+ ([fe80::80df:f8b:e547:df84%12]) with mapi id 15.20.2538.019; Wed, 18 Dec 2019
+ 09:52:16 +0000
+Subject: Re: [PATCH 2/3] gpu: drm: dead code elimination
+To:     Pan Zhang <zhangpan26@huawei.com>, hushiyuan@huawei.com,
+        alexander.deucher@amd.com, David1.Zhou@amd.com, airlied@linux.ie,
+        daniel@ffwll.ch, ray.huang@amd.com, irmoy.das@amd.com,
+        sam@ravnborg.org
+Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+References: <1576641000-14772-1-git-send-email-zhangpan26@huawei.com>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+Message-ID: <435afef9-a62d-2f96-b21a-3686b8143f53@amd.com>
+Date:   Wed, 18 Dec 2019 10:52:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+In-Reply-To: <1576641000-14772-1-git-send-email-zhangpan26@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-ClientProxiedBy: AM0PR07CA0024.eurprd07.prod.outlook.com
+ (2603:10a6:208:ac::37) To DM5PR12MB1705.namprd12.prod.outlook.com
+ (2603:10b6:3:10c::22)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191218071942.22336-2-ming.lei@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 13f7849d-4c8b-42ed-22a5-08d7839ff6ae
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1545:|DM5PR12MB1545:|DM5PR12MB1545:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM5PR12MB1545E23BC42221CD1E730BBC83530@DM5PR12MB1545.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
+X-Forefront-PRVS: 0255DF69B9
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(396003)(376002)(366004)(39860400002)(189003)(199004)(6486002)(31696002)(66946007)(86362001)(6666004)(2616005)(478600001)(5660300002)(66476007)(186003)(66556008)(316002)(8936002)(81156014)(81166006)(8676002)(4326008)(2906002)(6506007)(31686004)(6512007)(52116002)(36756003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1545;H:DM5PR12MB1705.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: yw4HteKu7ELLWxS0APEpghXOC42iVk/xx5sOu+FAc36XpSMBAVki4ShgrNJYonewGPby3Atf1K9ZUtAWdU0YWq3AR+Tmw1d9qBMCrNSZqRu34wBz8vH5Hz1prNKrfgt9d8RoFcZ5PpHQ8JU+4n6ORCo34jDGI52kvhIvPCX17T4mytPD2QBMyfgzzfhvYTNQhMOiLWtps/pef4in0PFCmU7OhliSaleJShVXqFW6DZalZQPsN22zdZ2Nga9nD66fSi4JdzXQDt6siFYmE6vu+HAWbEgBZeufEUypR+K0qkFnve77SwiSnDXj0GTWUUlww/bVNEvAmz8/CCmQuH/4UeRKKj/lyoqz9+xxJWYDeRBrgzrObh9FoOFQT8cO+1dX0YHVXN+PZ+uYTNFFTpUNeQTOA0bhinjy8sBujGT8Cj/JAedN5unmo0H4ttZpOJjL
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 13f7849d-4c8b-42ed-22a5-08d7839ff6ae
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Dec 2019 09:52:16.0329
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bZL6+kpCufD5DtfZ7bYmyyuu2cv7RBE99UEwNjBlvsFGhgw6qzfF36EflyFM/yAg
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1545
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 03:19:40PM +0800, Ming Lei wrote:
-> Scheduler runqueue maintains its own software clock that is periodically
-> synchronised with hardware. Export this clock so that it can be used
-> by interrupt flood detection for saving the cost of reading from hardware.
+Am 18.12.19 um 04:50 schrieb Pan Zhang:
+> this set adds support for removal of gpu drm dead code.
+>
+> patch2:
+> `num_entries` is a data of unsigned type(compilers always treat as unsigned int) and SIZE_MAX == ~0,
+>
+> so there is a impossible condition:
+> '(num_entries > ((~0) - 56) / 72) => (max(0-u32) > 256204778801521549)'.
 
-But you don't have much, if any, guarantees the thing gets updated.
+NAK, that calculation is not correct on 32-bit systems.
 
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 90e4b00ace89..03e2e3c36067 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -219,6 +219,11 @@ void update_rq_clock(struct rq *rq)
->  	update_rq_clock_task(rq, delta);
->  }
->  
-> +u64 sched_local_rq_clock(void)
-> +{
-> +	return this_rq()->clock;
-> +}
-> +EXPORT_SYMBOL_GPL(sched_local_rq_clock);
+Christian.
 
-Also, more NAK, you're exporting a variant of __rq_clock_broken().
+>
+> Signed-off-by: Pan Zhang <zhangpan26@huawei.com>
+> ---
+>   drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c | 4 ----
+>   1 file changed, 4 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
+> index 85b0515..10a7f30 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
+> @@ -71,10 +71,6 @@ int amdgpu_bo_list_create(struct amdgpu_device *adev, struct drm_file *filp,
+>   	unsigned i;
+>   	int r;
+>   
+> -	if (num_entries > (SIZE_MAX - sizeof(struct amdgpu_bo_list))
+> -				/ sizeof(struct amdgpu_bo_list_entry))
+> -		return -EINVAL;
+> -
+>   	size = sizeof(struct amdgpu_bo_list);
+>   	size += num_entries * sizeof(struct amdgpu_bo_list_entry);
+>   	list = kvmalloc(size, GFP_KERNEL);
 
-(which, now that I git-grep for it, has become unused, good!)
