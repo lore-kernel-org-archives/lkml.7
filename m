@@ -2,115 +2,97 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 397CAC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6810AC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 061A92465E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:13:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31983218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:15:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576707194;
-	bh=6YRzJke/nlj6uW1EEasrBWO6/27rQ0U1rP5syHvvVLM=;
+	s=default; t=1576707340;
+	bh=q1V4jbstOdAx/HjSMz9N8HBN9c7aKtTF1mUOrQAR+BI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qJcDrROOMPBeUFwP1tUzOWm/Dk3mPvLWr8crCvLQUTvovmQf8Y52PV0Sc0NToknyr
-	 8CQZdZlRWJ8tOADhC0WW7nT5/6oJA6OYpkoIC8ujOstQUAOhgzKBzjpImQcgiKDeCd
-	 AvLJjCFZRZUXDOg3cH6monhOo7WCn8hCQVOiqzOs=
+	b=rpgHf5gQIjM1tPq7s+qHg8FINPhTdvC3aS4vz9iTYUBDAZCf8Gr9VOYjQxB6Y/ZfF
+	 dw62/FTHYu/DT0PjduDHr9QzFXsQupRHDvzIoqYIH93TDOCUYqKpxUcvgxX1KsrmgE
+	 QlI8ykdyz0YhZeCNTYAU5Rqwl3encD58pHxb3h2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbfLRWNN (ORCPT
+        id S1726616AbfLRWPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 17:13:13 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38252 "EHLO
+        Wed, 18 Dec 2019 17:15:39 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35020 "EHLO
         mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbfLRWNN (ORCPT
+        with ESMTP id S1726387AbfLRWPj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 17:13:13 -0500
-Received: by mail-ot1-f67.google.com with SMTP id h20so4365493otn.5;
-        Wed, 18 Dec 2019 14:13:12 -0800 (PST)
+        Wed, 18 Dec 2019 17:15:39 -0500
+Received: by mail-ot1-f67.google.com with SMTP id f71so4386529otf.2;
+        Wed, 18 Dec 2019 14:15:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rI3WWPDTG8f4hp6ciK/onj/YhaLhgFmrBxyBXIrJLuc=;
-        b=J2cFl4okTSADjJI2f3fYWHEIhDzjWT64hCA7tvWtj81TCd1/MWkluUwvbY4Oma82Me
-         ydCdmABqX+lh00AJbmpUWDbnCGcyEOgBOjDQAEei1uzRiekrGHAUMrmTyk00zzbbtKtr
-         M+78rdhelVmHDt+ij77O9b6JwUbN2WFiXpkDQ06vWTtcyM/rrjVNee01fKSz3Z8B29gR
-         e7Zx0MstkGesUvtTHdMEB0jfUgWaYv64GvURYBPoRnzi4Dq6MAlvjWU33MKa7pn4qi9y
-         DwTSMIEdwuvNMOP+/S2ET47MQ/BIEPCpfF/7c0V0iNmEUPiSCL9+h/M80+nWNC6i8xyd
-         bluA==
-X-Gm-Message-State: APjAAAU1EoVQTfsB7fQlCujZwDVNEPErH30T71uo5WXOC6PKFbx05XtP
-        NAbR955Dnwqs4jpBcDf7Jg==
-X-Google-Smtp-Source: APXvYqy3Y+DNZas+7C5PREmO+AePBLrmSYGx16wpsRSDrJLuqkNjf2exWPC5RAnKUh8l8Gs4LohMJA==
-X-Received: by 2002:a9d:6b06:: with SMTP id g6mr5045060otp.93.1576707191756;
-        Wed, 18 Dec 2019 14:13:11 -0800 (PST)
+        bh=E8QNYLhSSLLibIm1kZjDoiOQpQC1DNZLoqpFwXuZW3A=;
+        b=FTviATobmXf4EtyhQKPxjN1tMMWN28qLln4we3aNOWflqBINEsljAbjdwEqSappXyW
+         QXMHyfX/IEGI+tjgacNE1nVqjE2LT6GdUMvsDzVEZlvj0013R4Vh4278Bj8TLIAgJ3AF
+         vKqfcMAHSj/KHUXFjmsZcU0P2Moqhp6eu5o6s0lbbnw4CVKk91JR7J4DFcUjzppcYMkd
+         Rtf8MQphpN3e1fCJ1O66G0RopFVv+43MQR5aeCSQfGdhSjcFZVHpy4dxWYaqR+chfuov
+         V9y5Pp3a88+HbK9Iy25yawIE7zTbalJuQw1E2fmK7b7X0IRCdgMj59Pghau7ufQNrzb4
+         zs4w==
+X-Gm-Message-State: APjAAAX5l+Oau+0EmkID3FykVtW+Zo1tde/LMj5hDVjoPiyhZyXaFRpQ
+        km6h14ShCHuLwN4nomOSow==
+X-Google-Smtp-Source: APXvYqxbsuqp+Q5pltR9/cjYWkBjYlpqcAOa2oySxbaVfYzkDPTaEZs731kr8mefYacuVUAq7T78Yg==
+X-Received: by 2002:a9d:6396:: with SMTP id w22mr5120271otk.364.1576707338086;
+        Wed, 18 Dec 2019 14:15:38 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y6sm1279823oti.44.2019.12.18.14.13.10
+        by smtp.gmail.com with ESMTPSA id w8sm1270084ote.80.2019.12.18.14.15.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 14:13:11 -0800 (PST)
-Date:   Wed, 18 Dec 2019 16:13:10 -0600
+        Wed, 18 Dec 2019 14:15:37 -0800 (PST)
+Date:   Wed, 18 Dec 2019 16:15:36 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
         Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-usb@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Manu Gautam <mgautam@codeaurora.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: usb: qcom,dwc3: Convert USB DWC3
- bindings
-Message-ID: <20191218221310.GA4624@bogus>
-References: <1576474742-23409-1-git-send-email-sanm@codeaurora.org>
- <1576474742-23409-2-git-send-email-sanm@codeaurora.org>
- <CAD=FV=U48gdGHMbQ22M_59t6va2n41Zh1CDTqMJYpLCwiD35Mg@mail.gmail.com>
- <6d8c979f-daa3-3b40-f29c-cca5a2f8f1c8@codeaurora.org>
- <CAD=FV=UER4zt=z3XWEzNt5v2oe8V=z6Hb-Wm-2BzuWtuHmYg-A@mail.gmail.com>
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Akash Gajjar <akash@openedev.com>, Tom Cubie <tom@radxa.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-amarula@amarulasolutions.com,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: arm: rockchip: Add Rock Pi N10
+ binding
+Message-ID: <20191218221536.GA20127@bogus>
+References: <20191216174711.17856-1-jagan@amarulasolutions.com>
+ <20191216174711.17856-2-jagan@amarulasolutions.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAD=FV=UER4zt=z3XWEzNt5v2oe8V=z6Hb-Wm-2BzuWtuHmYg-A@mail.gmail.com>
+In-Reply-To: <20191216174711.17856-2-jagan@amarulasolutions.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 10:37:53AM -0800, Doug Anderson wrote:
-> Hi,
+On Mon, 16 Dec 2019 23:17:08 +0530, Jagan Teki wrote:
+> Rock Pi N10 is a Rockchip RK3399Pro based SBC, which has
+> - VMARC RK3399Pro SOM (as per SMARC standard) from Vamrs.
+> - Compatible carrier board from Radxa.
 > 
-> On Wed, Dec 18, 2019 at 4:41 AM Sandeep Maheswaram (Temp)
-> <sanm@codeaurora.org> wrote:
-> > +  assigned-clock-rates:
-> > +    description:
-> > +      Should be 19.2MHz (19200000) for MOCK_UTMI_CLK
-> > +      >=125MHz (125000000) for MASTER_CLK in SS mode
-> > +      >=60MHz (60000000) for MASTER_CLK in HS mode
-> > +    maxItems: 2
-> >
-> > You can still express some limits here even if we don't go all out
-> > with the "oneOf".  AKA I think this is better:
-> >
-> > assigned-clock-rates:
-> >   items:
-> >     - const: 19200000
-> >     - minimum: 60000000
-> >       description: >= 60 MHz in HS mode, >= 125 MHz in SS mode
-> >
-> > Facing error when i add as above.
-> > properties:assigned-clock-rates: {'items': [{'const': 19200000}, {'minimum': 60000000}]} is not valid under any of the given schemas
-> > Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/usb/qcom,dwc3.example.dts' failed
+> VMARC RK3399Pro SOM need to mount on top of dalang carrier
+> board for making Rock PI N10 SBC.
+> 
+> Add dt-bindings for it.
+> 
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> ---
+> Changes for v3:
+> - Move som binding on board side
+> 
+>  Documentation/devicetree/bindings/arm/rockchip.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
 
-Update dtschema and you should get a better error message now.
-
-I believe the problem is we require both minimum and maximum to be 
-specified or none. Maybe we should relax that, but OTOH I doubt 4GHz is 
-valid.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
