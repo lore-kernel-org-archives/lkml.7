@@ -2,161 +2,118 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD63FC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5084AC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99B8824672
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:24:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="uzc0bar1"
+	by mail.kernel.org (Postfix) with ESMTP id 27615227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:24:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576686270;
+	bh=Q4e5j7/4SLJOPMSxB0NtqZ2Ns2coqYzN2mxr/D2rKHM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LQmRPuGeYeSWzjU1/uXOQS2xsZYmWh/IEtB72AGkC8qEBhObTH5LtpIsX3auG6X5p
+	 neh7Yv3VUhUFzrKQTvzE4nvBGHCbCtwXXtIVqvMf9GK9/BAh0mDYuj80HCfqPq2ErB
+	 zotoJG6zjyDmidaiRRQhQkTF4L33DY5XjZ0xkG1Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbfLRQYX (ORCPT
+        id S1727671AbfLRQY3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 11:24:23 -0500
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:27760 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727577AbfLRQYM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 11:24:12 -0500
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
-  Eugen.Hristev@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="Eugen.Hristev@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: bf1H/xFMqKgXahp31c/tqJTXlbFQMSYHPhVaCTR8lMFEVk6ZzRD/DmfN0ALSD08X96EUJ94J3D
- 6coHAHi46/HczHjSark5kIa60a+lySkeoNcP0JaZDJQFXYnVNOx29Ev4THBrQGdZjapDjTdIS9
- 3Ey64sXJDJDHNUwFtPZ17rduDRM/FJXNiWX8j6F2w3OTuv03S+a77kBLOFgEN9gfB0INqTSKcv
- XuOp/leJJlHgnvWW3tNJ6l0BgDAFHr5SjeEGKK0sMmeR4sDPV81CHVyo17p5gugO/62Vvogy+M
- IO4=
-X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
-   d="scan'208";a="58200070"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 18 Dec 2019 09:24:11 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 18 Dec 2019 09:24:08 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 18 Dec 2019 09:24:08 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UjqbQJ5bhPrCZgsKks3OTmO2HmMqJLnJ7XHMcORDAb971Nfn1bbF/jI0qtODIDSUfThKotWuHAHyJrNDLfmGSTLimgUDMqTUWpavEoyneVBvRVUkffPf+moeBrGY4CwVs1KP0gu+XWj5rmV8oJCbOdZ7FHcu2g1cw3sMQ5K8eDcRCXzDAIz3Xr0QZLr4Ua00yPTT8U8W6ZFXfE6yDxQBgyAPyNgMtdPDLEfhJD81xV7s3uDIaBfT2U4pmTykRfLSGMCqklW1JrOUT7mBIPyU+4GItSFG8K4AwiqdhgwCVklW1Kl6wlB1Nn5bDkmYmhe3UzlR8CD7ihCqhmHBxY1T8Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tP5UvQD1MTEBjelpPd3B3IN7q5WR77UDFIA46K2YJt4=;
- b=W5+QYH4iwdK1I5EnevLpMSBh0oq3h+hlnKXwfF5S+93SnVUeZON/OjW19sXXjPyFc3xq5+GzK0ipKtEhKdHo65CBKk5Jxpl7Wq1dwtAo7xaf++kjBoYdXAYIplx76dffuBxXPV+kzCXcR8NuH0FF//UAUngo9Wpu2LLwec/bXia1OnUICPrV9XTjbT0qPPRFtiTEhIDgGTFE45Fsx9xcUYIGutgFxV05hOMFlwnsqRmqc1o4lKq8zMLYD4DJKJ5awOWDOnEaoYREutD1TrDTwTAM2lbJ+qlhZpkyItvjiRwv9nChQ21bdazhUz/Qr2hpcimD/PDD73BsfUO+aqA+FA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tP5UvQD1MTEBjelpPd3B3IN7q5WR77UDFIA46K2YJt4=;
- b=uzc0bar1kIiZZ4sfbl85qzHvShLhNWvFGvnJ5BuZQ+kGkm0oqu/V7hfqi6yrlfzsoH/fDqZQrChi35sdTTkIpE75UrW7y/xIjnAvCLiQ2KuK9j8aM6swj8vkEuitHyu6VQxpeUGcpGGcdZxgarpvkHmgkdo/PxC7t41FTyYPdbM=
-Received: from DM5PR11MB1242.namprd11.prod.outlook.com (10.168.108.8) by
- DM5PR11MB1913.namprd11.prod.outlook.com (10.175.87.148) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.14; Wed, 18 Dec 2019 16:24:05 +0000
-Received: from DM5PR11MB1242.namprd11.prod.outlook.com
- ([fe80::9039:e0e8:9032:20c1]) by DM5PR11MB1242.namprd11.prod.outlook.com
- ([fe80::9039:e0e8:9032:20c1%12]) with mapi id 15.20.2559.012; Wed, 18 Dec
- 2019 16:24:05 +0000
-From:   <Eugen.Hristev@microchip.com>
-To:     <jic23@kernel.org>, <robh+dt@kernel.org>,
-        <alexandre.belloni@bootlin.com>
-CC:     <Nicolas.Ferre@microchip.com>, <linux-iio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
-        <a.zummo@towertech.it>, <Ludovic.Desroches@microchip.com>,
-        <Eugen.Hristev@microchip.com>
-Subject: [PATCH 10/10] ARM: dts: at91: sama5d2_xplained: enable
- rtc_adc_trigger
-Thread-Topic: [PATCH 10/10] ARM: dts: at91: sama5d2_xplained: enable
- rtc_adc_trigger
-Thread-Index: AQHVtb+QPhJ2pL0iFUaSi+H+uVoRXA==
-Date:   Wed, 18 Dec 2019 16:24:03 +0000
-Message-ID: <1576686157-11939-11-git-send-email-eugen.hristev@microchip.com>
-References: <1576686157-11939-1-git-send-email-eugen.hristev@microchip.com>
-In-Reply-To: <1576686157-11939-1-git-send-email-eugen.hristev@microchip.com>
-Accept-Language: en-US, ro-RO
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d24aa346-f9db-44dd-63eb-08d783d6b3a3
-x-ms-traffictypediagnostic: DM5PR11MB1913:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR11MB19131E4EFDAFDE18415BA94FE8530@DM5PR11MB1913.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:626;
-x-forefront-prvs: 0255DF69B9
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39860400002)(346002)(376002)(136003)(396003)(199004)(189003)(4744005)(2616005)(66556008)(316002)(107886003)(8676002)(71200400001)(8936002)(66476007)(26005)(6506007)(2906002)(64756008)(66446008)(66946007)(81156014)(76116006)(81166006)(5660300002)(478600001)(36756003)(54906003)(186003)(4326008)(86362001)(6512007)(110136005)(91956017)(6486002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB1913;H:DM5PR11MB1242.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: eVp+s0zvuU3EAgjepAKGnY5P/yQvUVPIRH3MGIwKVEo0kP9qbLQRsgEaMuBV3FmqIJ+k25QPLKSqXFvRqe/GE7WSidN4Kq2X7CWSpQqwrx+8/n5MM59u5Rp3Djb0RiF+TbhaqTOXtY80qvveSFx3ErgqDyxL2zhC8eFCQtQ68adVvfQafW49AFHCQ3r0T0o4gsWhfQlqRNuCH8nJCTONYIx0vp7tvP2jdHpODHlTKkTVs0p/SvXbQk2ni7X1LSUeeHQXV3iMgGnGwI6RgyQBT+BB+tfo4wxqH3qpmc9fbQtLciNzTfwB6/RQdVXivsEFsAkc2aA5KCUfZKd6uQkUo2Jl1yZ5eRmbtOlGqFXjC3CO/RxlhbRulc5jx14keDpeqpcWhqXd4tTCkvbgIhCFtqJtPGkvVBKRMGblqbAs7BEQhDdiraZDPZi1gwlIlHgY
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 18 Dec 2019 11:24:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57508 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727640AbfLRQY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 11:24:27 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1B90227BF;
+        Wed, 18 Dec 2019 16:24:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576686266;
+        bh=Q4e5j7/4SLJOPMSxB0NtqZ2Ns2coqYzN2mxr/D2rKHM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NfbBJ5mVaBqNsDOFvJFJkcmF3fQO8TrBQspcO7Db7utJfSe19fPU5IRiGdvVpveEk
+         xkcb5e3vuftjSycAgRkp0JKOt/wqbA9GRoTxKCeSa/drLrd7CeJpvrenGvjQgDbfLj
+         vi8UnC5pD+mNa7zBxmLob/dNS8kWJ2lFkx0g2nz8=
+Date:   Wed, 18 Dec 2019 17:24:24 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Siddharth Kapoor <ksiddharth@google.com>, lee.jones@linaro.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: Kernel panic on Google Pixel devices due to regulator patch
+Message-ID: <20191218162424.GA482612@kroah.com>
+References: <CAJRo92+eD9F6Q60yVY2PfwaPWO_8Dts8QwH7mhpJaem7SpLihg@mail.gmail.com>
+ <20191218113458.GA3219@sirena.org.uk>
+ <20191218122157.GA17086@kroah.com>
+ <20191218131114.GD3219@sirena.org.uk>
+ <20191218142219.GB234539@kroah.com>
+ <20191218161806.GF3219@sirena.org.uk>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: d24aa346-f9db-44dd-63eb-08d783d6b3a3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Dec 2019 16:24:03.8902
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Hot+cqMGsu1fuiD/NY2uOYGx8Rf1m9uh9Sx5vHJFeC/mLsYvg2+HiEy2wAKpeWtU/+tyoBkj06FKxXvp95pJISFCnRFlH7HDws8gFY2318k=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1913
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191218161806.GF3219@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
+On Wed, Dec 18, 2019 at 04:18:06PM +0000, Mark Brown wrote:
+> On Wed, Dec 18, 2019 at 03:22:19PM +0100, Greg KH wrote:
+> > On Wed, Dec 18, 2019 at 01:11:14PM +0000, Mark Brown wrote:
+> > > On Wed, Dec 18, 2019 at 01:21:57PM +0100, Greg KH wrote:
+> 
+> > > > It is, but it's the latest stable kernel (well close to), and your patch
+> > > > was tagged by you to be backported to here, so if there's a problem with
+> > > > a stable branch, I want to know about it as I don't want to see
+> > > > regressions happen in it.
+> 
+> > > I don't track what's in older stable kernels, it wanted to go back at
+> > > least one kernel revision but the issue has been around since forever.
+> 
+> > Ok, you can always mark patches that way if you want to :)
+> 
+> That's what a tag to stable with no particular revision attached to it
+> is isn't it?
 
-Enable the rtc_adc_trigger node.
+No, that means "drag it as far back as Greg can easily do it" :)
 
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
----
- arch/arm/boot/dts/at91-sama5d2_xplained.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+> > > If you don't want to be messing with timing luck then you probably want
+> > > to be having a look at what Sasha's bot is doing, it's picking up a lot
+> > > of things that are *well* into this sort of territory (and the bad
+> > > interactions with out of tree code territory).  I personally would not
+> > > be using stable these days if I wasn't prepared to be digging into
+> > > something like this.
+> 
+> > I watch what his bot is doing, and we have tons of testing happening as
+> > well, which is reflected by the fact that THIS WAS CAUGHT HERE.  This is
+> 
+> You don't have anywhere near the level of testing that you'd need to
+> cover what the bot is trying to pull in, the subsystem and driver
+> coverage is extremely thin relative to the enthusiasm with which things
+> are being picked up.  All the pushback I see in review is on me for 
+> being conservative about what gets pulled into stable and worrying about
+> interactions with out of tree code.
+> 
+> > a sign that things are working, it's just that some SoC trees are slower
+> > than mainline by a few months, and that's fine.  It's worlds better than
+> > the SoC trees that are no where close to mainline, and as such, totally
+> > insecure :)
+> 
+> What you appear to have caught here is an interaction with some
+> unreviewed vendor code - how much of that is going on in the vendor
+> trees you're not testing?  If we want to encourage people to pull in
+> stable we should be paying attention to that sort of stuff.
 
-diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dt=
-s/at91-sama5d2_xplained.dts
-index 9d0a7fb..606ca70 100644
---- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-@@ -645,3 +645,7 @@
- 		};
- 	};
- };
-+
-+&rtc_adc_trigger {
-+	status =3D "okay";
-+};
---=20
-2.7.4
+I get weekly merge reports from all of the major SoC vendors when they
+pull these releases into their tree and run through their full suite of
+tests.  So I am paying attention to this type of thing.
+
+What I need to figure out here is what is going wrong and why the SoC's
+testing did not catch this.  That's going to take a bit longer...
+
+thanks,
+
+greg k-h
