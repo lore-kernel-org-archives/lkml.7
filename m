@@ -2,121 +2,119 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 109A1C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF776C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB5CE20717
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:24:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8B5E2146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:24:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576689840;
-	bh=iSotwcM39g8Aoreppw+b8NDvXaapTbWuaiKi3T5pHmA=;
+	s=default; t=1576689856;
+	bh=J9mVnpcPRlh0mvJgCzhidZ1PLmoyNm+FA0e8Ks3E2p4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EZUbLaHgmdSXgpR+IzbM85+6nB6aELckoRI5jp7M5VXh869UmjhCtbbqUJTbxQbTr
-	 EnRCaZ7CvtRplWWzEw1fswxSJq7+GezXgo+FB+ofU82UQ03Dm0NFp/S4p7NFwL1se2
-	 Qc+4d3m1kPgXifVaevdW5g/KsorYEKD8PqPH972M=
+	b=xwRCuIasilUXhi5+1v1RxDxKPfEwRTyEYwC3iowQxLKeHUw/vUsEPlm8291w94x51
+	 jBIHs7nnXpMBwegjY6GroEHYniIwukLDGHRLsBxOESZmsXhb6f+JQ6z9B2mHJIZOyb
+	 S0m3T5Bmmk0TiUT6fhUuH5qteN+ww2Wo5T/aZLDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727289AbfLRRYA (ORCPT
+        id S1727391AbfLRRYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 12:24:00 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:33838 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727193AbfLRRX7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 12:23:59 -0500
-Received: by mail-lf1-f67.google.com with SMTP id l18so2289986lfc.1;
-        Wed, 18 Dec 2019 09:23:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=5YLh+jNfVM6LWeMoJMu0ZClJUPg52a33rYtudsvVwjU=;
-        b=P5r5q7vKzoxV+yMSLMoYym22i4iMeFUxtaN8efSrF3k6DoZ8IclhnxZSEZVextw7Rk
-         eokBSrTSW8sWJ74NTdK2QMpkCwlp8fQxsZaKE+aXb2W+TJXXw5lwiZ47lTkcm6/bdxrA
-         ztQBvOpoJAYFbUoj/9PMiCfIAKM6ogkp+OdMN7K89X+NmoBFpacCOlYGP8lewYqz6ND1
-         RztBZiLYmKYrdrDFpjILXH1S/jteCrw2tXKvqEVBMCTE6k8HUHpxQOWYhCI97oGkIIRv
-         Wm1mC5dbB99JQQCeJe6HdB063q/TXu4P3sjXAJJB79BoUlMZwPBE1pLv7oPNktYRFkzB
-         DJUw==
-X-Gm-Message-State: APjAAAXXAWVS5UNSMU1nLOCo8XRBkJxJ5vdWZQBl9yIWMYrJfCv0TdZV
-        2Ue/MlkaLhmy+muWlhtQUnc=
-X-Google-Smtp-Source: APXvYqwkbT/1LtvkNxZq6jxP6RFQVOyOY3QtX/S6r+C3fBddKq/hgi1WUOonvolKS35U0uhsjeiQFg==
-X-Received: by 2002:a19:8456:: with SMTP id g83mr2538970lfd.0.1576689837150;
-        Wed, 18 Dec 2019 09:23:57 -0800 (PST)
-Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id r2sm1454722lfn.13.2019.12.18.09.23.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 09:23:56 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1ihd3B-0006mq-EF; Wed, 18 Dec 2019 18:23:53 +0100
-Date:   Wed, 18 Dec 2019 18:23:53 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Rob Herring <robh@kernel.org>,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        kbuild test robot <lkp@intel.com>,
-        linux-kbuild@vger.kernel.org
-Subject: kbuild obj-m directory descend (was: Re: [PATCH] serdev: fix builds
- with CONFIG_SERIAL_DEV_BUS=m)
-Message-ID: <20191218172353.GO22665@localhost>
-References: <201912181000.82Z7czbN%lkp@intel.com>
- <20191218083842.14882-1-u.kleine-koenig@pengutronix.de>
+        Wed, 18 Dec 2019 12:24:16 -0500
+Received: from foss.arm.com ([217.140.110.172]:54788 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727193AbfLRRYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 12:24:15 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2610231B;
+        Wed, 18 Dec 2019 09:24:14 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 984363F67D;
+        Wed, 18 Dec 2019 09:24:13 -0800 (PST)
+Date:   Wed, 18 Dec 2019 17:24:12 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "corbet@lwn.net" <corbet@lwn.net>,
+        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "noralf@tronnes.org" <noralf@tronnes.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
+        "pavel@ucw.cz" <pavel@ucw.cz>
+Subject: Re: Applied "regulator: bd71828: Basic support for ROHM bd71828 PMIC
+ regulators" to the regulator tree
+Message-ID: <20191218172412.GK3219@sirena.org.uk>
+References: <applied-5b1c4a22c7945e97ff2a7924abfeb3239043f8eb.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+ <de7424126e285d9bbd21a70945415d78203c2ba7.camel@fi.rohmeurope.com>
+ <20191218131700.GB42175@sirena.org.uk>
+ <b72cd22df0bbbb159cda08e556037f1ccf490b3d.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="vk/v8fjDPiDepTtA"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191218083842.14882-1-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <b72cd22df0bbbb159cda08e556037f1ccf490b3d.camel@fi.rohmeurope.com>
+X-Cookie: Power is poison.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 09:38:42AM +0100, Uwe Kleine-König wrote:
-> Commit 54edb425346a ("serdev: simplify Makefile") broke builds with
-> serdev configured as module. I don't understand it completely yet, but
-> it seems that
-> 
-> 	obj-$(CONFIG_SERIAL_DEV_BUS) += serdev/
-> 
-> in drivers/tty/Makefile with CONFIG_SERIAL_DEV_BUS=m doesn't result in
-> code that is added using obj-y in drivers/tty/serdev/Makefile being
-> compiled. So instead of dropping $(CONFIG_SERIAL_DEV_BUS) in serdev's
-> Makefile, drop it in drivers/tty/Makefile.
 
-I was just looking into this when you commented on this off-list.
+--vk/v8fjDPiDepTtA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The offending patch is broken since it effectively makes
-CONFIG_SERIAL_DEV_BUS bool (built-in or disabled), but for some reason
-those symbols do not end up in vmlinux (despite being compiled) when you
-add a built-in object goal under a directory that was entered using
-obj-m.
+On Wed, Dec 18, 2019 at 02:01:27PM +0000, Vaittinen, Matti wrote:
+> On Wed, 2019-12-18 at 13:17 +0000, Mark Brown wrote:
+> > On Wed, Dec 18, 2019 at 08:06:04AM +0000, Vaittinen, Matti wrote:
 
-That seems like a bug to me and contradicts the kbuild documentation
-(3.6):
+> > > I think you missed the [PATCH v6 08/15] regulator: bd718x7: Split
+> > > driver to common and bd718x7 specific parts
 
-	Example:
+> > I didn't miss it, it was queued but it doesn't apply.
 
-	#fs/Makefile
-	obj-$(CONFIG_EXT2_FS) += ext2/
+> Right. The rohm-generic.h is changed by
+> [PATCH v6 04/15] mfd: rohm PMICs - use platform_device_id to match MFD
+> sub-devices
 
-	If CONFIG_EXT2_FS is set to either ‘y’ (built-in) or ‘m’
-	(modular) the corresponding obj- variable will be set, and
-	kbuild will descend down in the ext2 directory. Kbuild only uses
-	this information to decide that it needs to visit the directory,
-	it is the Makefile in the subdirectory that specifies what is
-	modular and what is built-in.
+Ugh, right.  I guess that'll have to go in with the MFD changes then.
 
-I tried adding other targets to obj-y directly and they are also are not
-included, seemingly since the directory was entered using obj-m.
+--vk/v8fjDPiDepTtA
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Masahiro or Michal, can you shed some light?
+-----BEGIN PGP SIGNATURE-----
 
-Johan
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl36YLsACgkQJNaLcl1U
+h9BkDAf/XSz4D3T25M0yYqmY2TIMQ+uimSMMMoiwsyS2ivd9XZXc66Y8aQJ68D4k
+phnZsmDtIQL/WPGbI85z8igy1eup0r7RABEbUJsRFELudd9udrnrWBLBVKFdb5BF
+3WoB7YBfUOaIm22ktVjVLyawXe/hvxqaAvpiWdRM80GBqGufRnf3fcT/Auv15ImJ
++q5BE6k24FErC519kY8ZFw8B4fszmqCCK6UfOTVyFNvOlLMYcUFGs3BDbgWNxpSF
+fOhGp47IZj2RPA85Ut6fGeYuL/dpVa6VaPYPxpkwnDflZeIlY1U/hKpqAd4y+MTv
+aEKbFYlOE0P6HfjnUDEyZIs0eIORJQ==
+=fXt1
+-----END PGP SIGNATURE-----
+
+--vk/v8fjDPiDepTtA--
