@@ -2,96 +2,91 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BBBC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D794C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 975A821D7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:41:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 673112072B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:41:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tb9iZILu"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="QOHQ0tG6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbfLRKlU (ORCPT
+        id S1726824AbfLRKl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 05:41:20 -0500
-Received: from mail-lj1-f179.google.com ([209.85.208.179]:43490 "EHLO
-        mail-lj1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbfLRKlU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 05:41:20 -0500
-Received: by mail-lj1-f179.google.com with SMTP id a13so1550912ljm.10;
-        Wed, 18 Dec 2019 02:41:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=RFlrnbafUoOgoYreP9Bk4IUKE+yM7F9agS4DNHCp3HE=;
-        b=Tb9iZILusjmJ+e8Xj8MMGFG4Qz27MiWpYhWKE6kab+K6EY2nLVgDoTXrMRod8Rj4GG
-         Ba9JNIJR4dmXwq/tfH4AVH0Q/naiQzaohNIqFVUxEhvCl+wdY98cddlQSJVOJAMKXYPv
-         QTMFlCFlvbLavgxaA8sGzNw5jTiqutV3uiMZ98GxPZWcdI+yaPbpCrZn2YiM5rDAzoMX
-         VrptnnC7aXX1tUxxLKMEL4S/FhtLXsK3VDlwKXvLuUMj+UsGznpdbYR+GptDzYdb2sv8
-         YVDxUwzrFWUe9n/kXKTd9lTqErmU+dQcYc7qky+zoDurFsq9tyHbMxND/jopOuAjBWeu
-         OwOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RFlrnbafUoOgoYreP9Bk4IUKE+yM7F9agS4DNHCp3HE=;
-        b=eK3AM1Ff36odLEsfmRNBqNp1Yaq/0wMH1tXqq+GzBWUnU5EfPZ2T8vtboZMYRN9QzU
-         ICr8IK6+g8kndbOUA3RmP9SIN+Aj7TdLeIuMcUmWTWr76zjnJn4Pd9oa0FVcINjdpyY1
-         kKakXd7vVa5BtONuRPxy1dhK+GdJFpeuU0MmPhauQkvC9ZPwhEj/ogdd44j5AM76YsMT
-         WgESmMOFL0SFSnRAfgSvEBD5VTUztOSWWFhIQO88DAUpqyACXbfbPR1UpY548Nd24l74
-         2XvpH+ZZ9I3ohNS8n0v15dBl22+g3XYzeEENEm89+I8cKFPCGHuxiU9uqTxDleCk2RI2
-         Qf+w==
-X-Gm-Message-State: APjAAAUc4kY0lUVjYnkrwC+WsJ6zGGWVmVx5S+ksPqEtv0BMdscXk0qt
-        Tv8/VJp519sMsjJBKwIxj7WJSInSams=
-X-Google-Smtp-Source: APXvYqzayPELPRKJAZ6ALuxcdIEdWN23CQtjaI65AzAvNQxJwW9Ng/YaWDimDn5iRZPw0/hnBFKv7w==
-X-Received: by 2002:a2e:a37c:: with SMTP id i28mr1249073ljn.118.1576665677442;
-        Wed, 18 Dec 2019 02:41:17 -0800 (PST)
-Received: from [172.31.190.83] ([86.57.146.226])
-        by smtp.gmail.com with ESMTPSA id d11sm931887lfj.3.2019.12.18.02.41.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 18 Dec 2019 02:41:15 -0800 (PST)
-Subject: Re: [PATCH 2/2] io_uring: batch getting pcpu references
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        Wed, 18 Dec 2019 05:41:26 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:49540 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725785AbfLRKl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 05:41:26 -0500
+Received: from zn.tnic (p200300EC2F0B8B0090A9FF3C00C5134F.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:8b00:90a9:ff3c:c5:134f])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CC5331EC05B5;
+        Wed, 18 Dec 2019 11:41:20 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1576665681;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=1QAly7HDvvdmf9snQkP9kjqwjPVc7Q2c/hdbLj1rJ0Y=;
+        b=QOHQ0tG60MXWER7t66WOkqlmYh0Djyxyo4ooKQa0gBPJfJuv7EhLYP48Q6OHeBwOOaFWcD
+        BQnJQ7TGFt8nirMRB3Aw1Xnt2xHFGdKKTKm7uRjL5pwt9L5djWT4Lh9/slfJwwVifEoudh
+        bKEY9LfjBkYAZwI9B4uCJVzrE6CMCtI=
+Date:   Wed, 18 Dec 2019 11:41:13 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Omar Sandoval <osandov@osandov.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
         linux-kernel@vger.kernel.org
-References: <cover.1576621553.git.asml.silence@gmail.com>
- <b72c5ec7f6d9a9881948de6cb88d30cc5e0354e9.1576621553.git.asml.silence@gmail.com>
- <6ae04c15-e410-5ecc-660a-389fbb03d8ea@kernel.dk>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Message-ID: <660821b5-5b7b-aa76-0990-a37f1bdc17b4@gmail.com>
-Date:   Wed, 18 Dec 2019 13:41:14 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+Subject: Re: [PATCH] x86: define arch_crash_save_vmcoreinfo() if
+ CONFIG_CRASH_CORE=y
+Message-ID: <20191218104113.GB24886@zn.tnic>
+References: <9e9eb78c157d26d80f8781f8ce0e088fd12120b4.1575309711.git.osandov@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <6ae04c15-e410-5ecc-660a-389fbb03d8ea@kernel.dk>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <9e9eb78c157d26d80f8781f8ce0e088fd12120b4.1575309711.git.osandov@fb.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/18/2019 3:02 AM, Jens Axboe wrote:
-> On 12/17/19 3:28 PM, Pavel Begunkov wrote:
->> percpu_ref_tryget() has its own overhead. Instead getting a reference
->> for each request, grab a bunch once per io_submit_sqes().
->>
->> basic benchmark with submit and wait 128 non-linked nops showed ~5%
->> performance gain. (7044 KIOPS vs 7423)
+On Mon, Dec 02, 2019 at 10:02:29AM -0800, Omar Sandoval wrote:
+> From: Omar Sandoval <osandov@fb.com>
 > 
-> Confirmed about 5% here as well, doing polled IO to a fast device.
-> That's a huge gain!
-> 
-Great that you got it for a real drive!
-As mentioned, after we are done with this one, I have an idea how to
-optimise it even further, which would work for small QD as well.
+> kernel/crash_core.c calls arch_crash_save_vmcoreinfo() to get
+> arch-specific bits for vmcoreinfo. If it is not defined, then it has a
+> no-op fallback. kernel/crash_core.c is gated behind CONFIG_CRASH_CORE.
+> However, x86 defines arch_crash_save_vmcoreinfo() in
+> arch/x86/kernel/machine_kexec_*.c, which is gated behind
+> CONFIG_KEXEC_CORE. So, a kernel with CONFIG_CRASH_CORE=y and
+> CONFIG_KEXEC_CORE=n
+
+How does that even happen?
+
+Symbol: KEXEC_CORE [=y]
+Type  : bool
+  Defined at arch/Kconfig:17
+  Selects: CRASH_CORE [=y]
+  Selected by [y]:
+  - KEXEC [=y]
+  - KEXEC_FILE [=y] && X86_64 [=y] && CRYPTO [=y]=y && CRYPTO_SHA256 [=y]=y
+
+In order to do crash dumps, you need to select KEXEC, which selects
+KEXEC_CORE, which selects CRASH_CORE...
+
+Or are you talking about the PROC_KCORE use angle where it selects
+CRASH_CORE and the crash_save_vmcoreinfo_init() initcall is then
+supposed to save arch-specific crash info?
+
+Thx.
 
 -- 
-Pavel Begunkov
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
