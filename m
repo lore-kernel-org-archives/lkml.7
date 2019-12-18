@@ -2,104 +2,177 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF65EC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 06:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3165AC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 06:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FC1E2176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 06:58:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576652319;
-	bh=TTP4MSYPV9HdMlNGNkq5o649dYotCJRLzBCBA7CTh4I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RlmuUiO/EbFNyR5MpTMux71qYRo3RjlFewftRNKuP0aySnCqFyhR0ka4Vv737udwW
-	 N3yj8I1of9pj3Q7XDYs21waHaBvFYLbG7rPvZvK/6IUaLdc9vew5iqEmuRtluVswJ5
-	 /vRbzwy6d4j9pcdGv6L40V2VF47HaapHWouvj+uo=
+	by mail.kernel.org (Postfix) with ESMTP id 073A92176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 06:59:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rDsZ6ehi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbfLRG6i (ORCPT
+        id S1726683AbfLRG7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 01:58:38 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36320 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbfLRG6i (ORCPT
+        Wed, 18 Dec 2019 01:59:49 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45112 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725797AbfLRG7s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 01:58:38 -0500
-Received: by mail-wm1-f65.google.com with SMTP id p17so630382wma.1
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 22:58:37 -0800 (PST)
+        Wed, 18 Dec 2019 01:59:48 -0500
+Received: by mail-lj1-f193.google.com with SMTP id j26so845719ljc.12;
+        Tue, 17 Dec 2019 22:59:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nD6NYo7+E7+s9UJGfhj8VxQoIuDfE8VeJc6SVPDBZ6Y=;
-        b=VXP53WLV06g/bblATWXCQWNvKrkUxKacX6ujU3Q1lTUbQkE6ERJqINv8Sx/5jcMr3O
-         lz+yeFlKa3AnJK+dVTBkJc+REKkXCt5CjYXyemMyaDPdvFgVObPoh2d0tsjCm+UcNgWh
-         p2VDAL1hUMlVrfm4FsVZ/qBxum+kkMLbGaP2zL3TXlvmQuT6CVyaKj1U655xSbs7VP7W
-         yFHceYQkcMYoxLEAc6B8ssrh1snUaOFL7xVTCLNRrUrjM9GXfq3Df+Krrm3HYm9+vatR
-         xTx0MjCJe92gYJGr6oZcXa3gvADAAENyRZ3r4vpDt2tKO8b3IXSYK3OJk0DSLzkHKyiF
-         IQdQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CmCrYGkB4ZFug6o70e5mM5AN8jxFdIYj78bBkf6cS9E=;
+        b=rDsZ6ehiV/VaCkyEJyidCLuuzIViJSA3fU06nnxchbnNcHLsWg6FC2rbu2cp4g2nCZ
+         GjdMQHKvGXBnvWiXKj1hKGsMMqGjHMiA0HMp0rzkxDuYMtBvcDt1quK0DzEdDnzPgmIZ
+         dH08cWPlt89V0876fScd0Mm8G4m9KL5O8CeLvfn8TwxwEFQ8KYz+SEguLitgvhJapHUf
+         HdME4jEDXQTOIG4X/x3HXBQwNhgg4iqZ0NBINB68g/dotSJdBVK81dNQ2aRPL/0irAGc
+         5ESQPo37s3ez1Td2wk7GcTHZcfP/xofmgHS8DKphXoH4JIvU0Oo7SOvncl2+IOLJ2kj7
+         9M/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nD6NYo7+E7+s9UJGfhj8VxQoIuDfE8VeJc6SVPDBZ6Y=;
-        b=RcJp/82K+KC21//h3M6+P3RAFGCQiIFtlg/BopZEwC0dd0GAuN9lNPU3Rf5rIvoIVT
-         YT3fvMwYHeV1q0BLLyQD4qnCd6ozbR4MhjEh9wPSdBwmQ4FN7ex1fjwRCtiChA9lSCBn
-         n43FIf85iR1nuSA7y3pXAo1hxgBtbqxfYUgu4sUg0EQ/q31LghqfSHpKVhv7vBBrjkMd
-         5eYtdqxT3Cw+LJ6HSz56FZnw/nLmr3uzg2sH2JqlBnQbQT99iTfGhAUIXcra/dWUPvFW
-         zOMQzMtrD0c+a8ErtZRokQEpjIRVy7ngnwxG7rpoVu/gXiXJ0GibW7N/XfK1+A+wdSdJ
-         l4Xw==
-X-Gm-Message-State: APjAAAV2JFThAHJEKV9yfpcMbCOigjgaJVR/pI6MzmTah8NaI2jj7/Kg
-        2RIY8G2ERCuUojPJesekA0c=
-X-Google-Smtp-Source: APXvYqwFtsf7ojOXfagMC9OwAZSEivKbIVph0va9XTBjGiMzu5oXQQ6zB+wvC+6+OLJ4umCdIgU6+g==
-X-Received: by 2002:a1c:a745:: with SMTP id q66mr1168277wme.167.1576652316510;
-        Tue, 17 Dec 2019 22:58:36 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id d16sm1574638wrg.27.2019.12.17.22.58.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 22:58:35 -0800 (PST)
-Date:   Wed, 18 Dec 2019 07:58:33 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@infradead.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [GIT PULL] perf fixes
-Message-ID: <20191218065833.GA35113@gmail.com>
-References: <20191217113425.GA78787@gmail.com>
- <CAHk-=wgO0KzB-j8_1GAwkM68nLiWNsK6s1FBXKqKj_62VtDMMQ@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CmCrYGkB4ZFug6o70e5mM5AN8jxFdIYj78bBkf6cS9E=;
+        b=meIIYNZ2kUX2OzNAYmpI6d2qfZCu0Gl+PJnW8Fb3nmx1YfwL0jIvYOsPy8DdK0+/wl
+         kdyjNz1uz0sKftW6IT/ry35W2svXq+f0rHMT16l/XKDZzXPWE4IJH2V7Kxr3vL9DxvHJ
+         XPEXsOUYpB/cnfrSMZuLqHbZENy4t/OCgNz7qxAqY4RZnPmeiqj8Ln1MsXY0z1+HWL4q
+         PMTq8hkPDhtyzPmBnkATLGEFOLTqY87GxoeG2b97/83NwsRlOXvTyyg4JHagDBF19/hK
+         L88895plqb3NTyvdrW+71O0CKH87odrJ8LQqA5hiEFnLFNKf437k3D9IHthApWJHX0qX
+         QISA==
+X-Gm-Message-State: APjAAAW0/wfA4TK3vasSm0QeebkslNCjJpL6QliayddcfBliknjp/r0v
+        jLXe8IYQtIJ9y7+uGUjWOQoj8zlD
+X-Google-Smtp-Source: APXvYqzT48RPafMiESaVyT/lGCGTlQ1gd/eTB1+JM+yWuja4CpotaFHQ4sjej153gQh/Yj/H0wT0Dw==
+X-Received: by 2002:a2e:978d:: with SMTP id y13mr558306lji.103.1576652384997;
+        Tue, 17 Dec 2019 22:59:44 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id p4sm517158lji.107.2019.12.17.22.59.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Dec 2019 22:59:44 -0800 (PST)
+Subject: Re: [PATCH v4 13/19] ASoC: tegra: Add fallback implementation for
+ audio mclk
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
+        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, spujar@nvidia.com,
+        josephl@nvidia.com, daniel.lezcano@linaro.org,
+        mmaddireddy@nvidia.com, markz@nvidia.com,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1576613046-17159-1-git-send-email-skomatineni@nvidia.com>
+ <1576613046-17159-14-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <e2f96102-33fa-cbe5-f488-666b7b7ffb06@gmail.com>
+Date:   Wed, 18 Dec 2019 09:59:43 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgO0KzB-j8_1GAwkM68nLiWNsK6s1FBXKqKj_62VtDMMQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1576613046-17159-14-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-* Linus Torvalds <torvalds@linux-foundation.org> wrote:
-
-> On Tue, Dec 17, 2019 at 3:34 AM Ingo Molnar <mingo@kernel.org> wrote:
-> >
-> > Note that the large CPU count related fixes go beyond regression fixes -
-> > but the IPI-flood symptoms are severe enough that I think justifies their
-> > inclusion. If it's too much we'll redo the branch.
+17.12.2019 23:04, Sowjanya Komatineni пишет:
+> mclk is from clk_out_1 which is part of Tegra PMC block and pmc clocks
+> are moved to Tegra PMC driver with pmc as clock provider and using pmc
+> clock ids.
 > 
-> I'm much less sensitive to the perf _tooling_ changes than I am to 
-> actual kernel code changes.
+> New device tree uses clk_out_1 from pmc clock provider.
 > 
-> Of course, if you start having a history of breaking things during the 
-> rc kernels, that may change, but at least for now, I tend to look at 
-> diffstats and go "oh, this is perf tooling", and not worry too much 
-> about it...
+> So, this patch adds implementation for mclk fallback to extern1 when
+> retrieving mclk returns -ENOENT to be backward compatible of new device
+> tree with older kernels.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  sound/soc/tegra/tegra_asoc_utils.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/sound/soc/tegra/tegra_asoc_utils.c b/sound/soc/tegra/tegra_asoc_utils.c
+> index fe9ca8acd0fb..1b88c6043082 100644
+> --- a/sound/soc/tegra/tegra_asoc_utils.c
+> +++ b/sound/soc/tegra/tegra_asoc_utils.c
+> @@ -191,7 +191,16 @@ int tegra_asoc_utils_init(struct tegra_asoc_utils_data *data,
+>  	data->clk_cdev1 = devm_clk_get(dev, "mclk");
+>  	if (IS_ERR(data->clk_cdev1)) {
+>  		dev_err(data->dev, "Can't retrieve clk cdev1\n");
+> -		return PTR_ERR(data->clk_cdev1);
+> +		if (PTR_ERR(data->clk_cdev1) != -ENOENT)
+> +			return PTR_ERR(data->clk_cdev1);
+> +		/* Fall back to extern1 */
+> +		data->clk_cdev1 = devm_clk_get(dev, "extern1");
+> +		if (IS_ERR(data->clk_cdev1)) {
+> +			dev_err(data->dev, "Can't retrieve clk extern1\n");
+> +			return PTR_ERR(data->clk_cdev1);
+> +		}
+> +
+> +		dev_err(data->dev, "Falling back to extern1\n");
+>  	}
+>  
+>  	/*
+> 
 
-Thanks for pulling these in any case!
+[    1.769091] ------------[ cut here ]------------
+[    1.769249] WARNING: CPU: 2 PID: 1 at drivers/clk/clk.c:954
+clk_core_disable+0xa5/0x1d4
+[    1.769330] clk_out_1 already disabled
+[    1.769459] Modules linked in:
+[    1.769541] CPU: 2 PID: 1 Comm: swapper/0 Not tainted
+5.5.0-rc1-next-20191213-00167-g6b9fbcdac8f3-dirty #266
+[    1.769676] Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
+[    1.769775] [<c010e4bd>] (unwind_backtrace) from [<c010a0fd>]
+(show_stack+0x11/0x14)
+[    1.769918] [<c010a0fd>] (show_stack) from [<c09a37b1>]
+(dump_stack+0x85/0x94)
+[    1.770061] [<c09a37b1>] (dump_stack) from [<c011f3d1>]
+(__warn+0xc1/0xc4)
+[    1.770144] [<c011f3d1>] (__warn) from [<c011f691>]
+(warn_slowpath_fmt+0x61/0x78)
+[    1.770285] [<c011f691>] (warn_slowpath_fmt) from [<c04a0e7d>]
+(clk_core_disable+0xa5/0x1d4)
+[    1.770427] [<c04a0e7d>] (clk_core_disable) from [<c04a0fc3>]
+(clk_core_disable_lock+0x17/0x20)
+[    1.770516] [<c04a0fc3>] (clk_core_disable_lock) from [<c07792bb>]
+(tegra_asoc_utils_set_rate+0x53/0x208)
+[    1.770662] [<c07792bb>] (tegra_asoc_utils_set_rate) from
+[<c077b8c5>] (tegra_rt5640_probe+0xd5/0x128)
+[    1.770808] [<c077b8c5>] (tegra_rt5640_probe) from [<c0555eb7>]
+(platform_drv_probe+0x33/0x68)
+[    1.770958] [<c0555eb7>] (platform_drv_probe) from [<c055471d>]
+(really_probe+0x14d/0x240)
+[    1.771099] [<c055471d>] (really_probe) from [<c055493f>]
+(driver_probe_device+0x43/0x11c)
+[    1.771187] [<c055493f>] (driver_probe_device) from [<c0554b25>]
+(device_driver_attach+0x3d/0x40)
+[    1.771328] [<c0554b25>] (device_driver_attach) from [<c0554b5f>]
+(__driver_attach+0x37/0x78)
+[    1.771469] [<c0554b5f>] (__driver_attach) from [<c05532fb>]
+(bus_for_each_dev+0x43/0x6c)
+[    1.771609] [<c05532fb>] (bus_for_each_dev) from [<c0553e0f>]
+(bus_add_driver+0xe3/0x148)
+[    1.771692] [<c0553e0f>] (bus_add_driver) from [<c055531d>]
+(driver_register+0x39/0xa0)
+[    1.771833] [<c055531d>] (driver_register) from [<c0102c2f>]
+(do_one_initcall+0x43/0x1bc)
+[    1.771979] [<c0102c2f>] (do_one_initcall) from [<c1000ce5>]
+(kernel_init_freeable+0x121/0x194)
+[    1.772129] [<c1000ce5>] (kernel_init_freeable) from [<c09b40e9>]
+(kernel_init+0xd/0xd0)
+[    1.772215] [<c09b40e9>] (kernel_init) from [<c01010bd>]
+(ret_from_fork+0x11/0x34)
+[    1.772349] Exception stack(0xde907fb0 to 0xde907ff8)
 
-	Ingo
