@@ -5,59 +5,59 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6DF7C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BB2C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A0D32176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:18:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61F83218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:18:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="gdGEJD2Z"
+	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="U1KaHe1Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbfLRNSV (ORCPT
+        id S1727052AbfLRNS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 08:18:21 -0500
-Received: from alln-iport-6.cisco.com ([173.37.142.93]:21984 "EHLO
-        alln-iport-6.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbfLRNSV (ORCPT
+        Wed, 18 Dec 2019 08:18:26 -0500
+Received: from alln-iport-2.cisco.com ([173.37.142.89]:29827 "EHLO
+        alln-iport-2.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbfLRNS0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 08:18:21 -0500
+        Wed, 18 Dec 2019 08:18:26 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=cisco.com; i=@cisco.com; l=3076; q=dns/txt; s=iport;
-  t=1576675100; x=1577884700;
+  d=cisco.com; i=@cisco.com; l=2837; q=dns/txt; s=iport;
+  t=1576675105; x=1577884705;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=7dNGHeyUqKpYVYMYA64XXX88dWHaHKbDO5x/yR/XAMg=;
-  b=gdGEJD2ZV3yCKAsxbKN/3FhMkhVwab9869ojuEDt01HKE8aZ8TcafRqN
-   Lmc+byLaLzeqyNPtUmkUXlI252KVNZgNNtCX6B73Oq8Zz5K4WsJOJDV5X
-   I1bRn/8cNRKUx96vfb7lZ56AAgowoeTS0IBcFHb7jDNYdtjIZ6XKemGQa
-   s=;
+  bh=l/YYN2m/bA6a9KbNW0ZsecGB6ZPVLjJbxnAmtzZv7H4=;
+  b=U1KaHe1QGJlAM/mcZA3zMf4g/YkusM/TBb328v5Bgi3rvooVTNve8WdV
+   +GqMZxOz3AYxeOL9Stzh0Gg1s6KKgL39RgITp9FEZUhyiVeTbHX5/ZOPl
+   oqL/8J1bTEyQSAzprqVVpWa8SfoamEywVcwhtQd0nc1B6y7u4UtkREKRY
+   w=;
 X-IronPort-AV: E=Sophos;i="5.69,329,1571702400"; 
-   d="scan'208";a="403697379"
-Received: from rcdn-core-2.cisco.com ([173.37.93.153])
-  by alln-iport-6.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 18 Dec 2019 13:18:20 +0000
+   d="scan'208";a="395169984"
+Received: from rcdn-core-7.cisco.com ([173.37.93.143])
+  by alln-iport-2.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 18 Dec 2019 13:11:19 +0000
 Received: from sjc-ads-7483.cisco.com (sjc-ads-7483.cisco.com [10.30.221.19])
-        by rcdn-core-2.cisco.com (8.15.2/8.15.2) with ESMTP id xBIDIJVw018095;
-        Wed, 18 Dec 2019 13:18:20 GMT
+        by rcdn-core-7.cisco.com (8.15.2/8.15.2) with ESMTP id xBIDBIOd012762;
+        Wed, 18 Dec 2019 13:11:19 GMT
 Received: by sjc-ads-7483.cisco.com (Postfix, from userid 838444)
-        id AF47A159D; Wed, 18 Dec 2019 05:18:19 -0800 (PST)
+        id D36CA141D; Wed, 18 Dec 2019 05:11:18 -0800 (PST)
 From:   Aviraj CJ <acj@cisco.com>
 To:     peppe.cavallaro@st.com, alexandre.torgue@st.com,
         gregkh@linuxfoundation.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, xe-linux-external@cisco.com,
         acj@cisco.com
-Subject: [PATCH stable v4.14 2/2] net: stmmac: don't stop NAPI processing when dropping a packet
-Date:   Wed, 18 Dec 2019 05:17:21 -0800
-Message-Id: <20191218131720.12270-2-acj@cisco.com>
+Subject: [PATCH stable v4.9 2/2] net: stmmac: don't stop NAPI processing when dropping a packet
+Date:   Wed, 18 Dec 2019 05:10:10 -0800
+Message-Id: <20191218131009.10968-2-acj@cisco.com>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20191218131720.12270-1-acj@cisco.com>
-References: <20191218131720.12270-1-acj@cisco.com>
+In-Reply-To: <20191218131009.10968-1-acj@cisco.com>
+References: <20191218131009.10968-1-acj@cisco.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Auto-Response-Suppress: DR, OOF, AutoReply
 X-Outbound-SMTP-Client: 10.30.221.19, sjc-ads-7483.cisco.com
-X-Outbound-Node: rcdn-core-2.cisco.com
+X-Outbound-Node: rcdn-core-7.cisco.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -73,32 +73,30 @@ errorneous packets are not dropped efficiently.
 If we drop a packet, we should just continue to the next one as long as
 the budget allows.
 
-Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
-[acj: backport v4.14 -stable
-- adjust context]
+[acj: backport v4.9 -stable
+-adjust context]
 Signed-off-by: Aviraj CJ <acj@cisco.com>
 ---
  drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 14 +++++++-------
  1 file changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index da5b5fc99c04..e6d16c48ffef 100644
+index f1844367ca5b..5ac48a594951 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -3323,9 +3323,8 @@ static inline void stmmac_rx_refill(struct stmmac_priv *priv, u32 queue)
- static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
+@@ -2499,8 +2499,7 @@ static inline void stmmac_rx_refill(struct stmmac_priv *priv)
+  */
+ static int stmmac_rx(struct stmmac_priv *priv, int limit)
  {
- 	struct stmmac_rx_queue *rx_q = &priv->rx_queue[queue];
--	unsigned int entry = rx_q->cur_rx;
- 	int coe = priv->hw->rx_csum;
+-	unsigned int entry = priv->cur_rx;
 -	unsigned int next_entry;
-+	unsigned int next_entry = rx_q->cur_rx;
++	unsigned int next_entry = priv->cur_rx;
  	unsigned int count = 0;
+ 	int coe = priv->hw->rx_csum;
  
- 	if (netif_msg_rx_status(priv)) {
-@@ -3340,10 +3339,12 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
+@@ -2516,10 +2515,12 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit)
  		priv->hw->desc->display_ring(rx_head, DMA_RX_SIZE, true);
  	}
  	while (count < limit) {
@@ -110,18 +108,18 @@ index da5b5fc99c04..e6d16c48ffef 100644
 +		entry = next_entry;
 +
  		if (priv->extend_desc)
- 			p = (struct dma_desc *)(rx_q->dma_erx + entry);
+ 			p = (struct dma_desc *)(priv->dma_erx + entry);
  		else
-@@ -3410,7 +3411,7 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
- 						   "len %d larger than size (%d)\n",
- 						   frame_len, priv->dma_buf_sz);
+@@ -2584,7 +2585,7 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit)
+ 				       priv->dev->name, frame_len,
+ 				       priv->dma_buf_sz);
  				priv->dev->stats.rx_length_errors++;
 -				break;
 +				continue;
  			}
  
  			/* ACS is set; GMAC core strips PAD/FCS for IEEE 802.3
-@@ -3446,7 +3447,7 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
+@@ -2615,7 +2616,7 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit)
  						dev_warn(priv->device,
  							 "packet dropped\n");
  					priv->dev->stats.rx_dropped++;
@@ -130,23 +128,23 @@ index da5b5fc99c04..e6d16c48ffef 100644
  				}
  
  				dma_sync_single_for_cpu(priv->device,
-@@ -3471,7 +3472,7 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
- 							   "%s: Inconsistent Rx chain\n",
- 							   priv->dev->name);
+@@ -2638,7 +2639,7 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit)
+ 					pr_err("%s: Inconsistent Rx chain\n",
+ 					       priv->dev->name);
  					priv->dev->stats.rx_dropped++;
 -					break;
 +					continue;
  				}
  				prefetch(skb->data - NET_IP_ALIGN);
- 				rx_q->rx_skbuff[entry] = NULL;
-@@ -3506,7 +3507,6 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
+ 				priv->rx_skbuff[entry] = NULL;
+@@ -2672,7 +2673,6 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit)
  			priv->dev->stats.rx_packets++;
  			priv->dev->stats.rx_bytes += frame_len;
  		}
 -		entry = next_entry;
  	}
  
- 	stmmac_rx_refill(priv, queue);
+ 	stmmac_rx_refill(priv);
 -- 
 2.19.1
 
