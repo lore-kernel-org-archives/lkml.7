@@ -2,76 +2,99 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1460C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA14EC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACEE2218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:31:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC80B2146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:37:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gMiz6Nra"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbfLRMbb (ORCPT
+        id S1726932AbfLRMhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 07:31:31 -0500
-Received: from imap2.colo.codethink.co.uk ([78.40.148.184]:40550 "EHLO
-        imap2.colo.codethink.co.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726029AbfLRMbb (ORCPT
+        Wed, 18 Dec 2019 07:37:21 -0500
+Received: from mail-pj1-f52.google.com ([209.85.216.52]:55007 "EHLO
+        mail-pj1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbfLRMhV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 07:31:31 -0500
-Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
-        by imap2.colo.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
-        id 1ihYU4-0002im-NY; Wed, 18 Dec 2019 12:31:20 +0000
-Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.3)
-        (envelope-from <ben@rainbowdash.codethink.co.uk>)
-        id 1ihYU4-00Apur-7O; Wed, 18 Dec 2019 12:31:20 +0000
-From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
-To:     ben.dooks@codethink.co.uk
-Cc:     Kirti Wankhede <kwankhede@nvidia.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
+        Wed, 18 Dec 2019 07:37:21 -0500
+Received: by mail-pj1-f52.google.com with SMTP id ep17so817528pjb.4;
+        Wed, 18 Dec 2019 04:37:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-transfer-encoding:content-language;
+        bh=SDfBkN3VJf5jvQD3fKgAU+xo/Y2l5f5r8EL8+ID85KA=;
+        b=gMiz6Nraeacz1pgHx0sxX6cGe+A7DVbn1+tUGN1ReWgzlEZQVWWz1fPBXsaQdg6WX5
+         AI4NGJA4oIJEhh8sXOlWxXjpJeQiacSdCVMsTvw7k79WrNrfZdyvF01ekd/99pIuNSk7
+         l6DFFgcQCfjaGV7ovXfpdi4oOaLE6fGAwLXmAtAecubjMYQ2LGma8xFNtzcIVQHxymR0
+         AZbswJYHVYVsGIcV8bNKpboO0lYKI/jZ7xguig4cSQTVtnJoSmKj2JCBK4wUmVTTmPsm
+         SBrwtimlBVItCSWQDudgNrEGMagz41l1pFQehSZjTbXZA/IXsi0vtdMZIRdcbku3ivJl
+         gRew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-transfer-encoding:content-language;
+        bh=SDfBkN3VJf5jvQD3fKgAU+xo/Y2l5f5r8EL8+ID85KA=;
+        b=H1HNSn1ffMAHGfu0S7MYoAtfUK0wTLR5xZOlYYZVeL+XAhOMiAdi7rCC5wAiplx6LH
+         Ohpz/Zp+AG7cfFeD3Zm2t/oskFEiRZ8zcdW7DSkAVjHY+94An3+kaAUY1Gg4F3f3auuN
+         hmFgAfXItNHIbpWug+MaxeCCsHe2Xu7ocdyxUTRbSNH6U/CS7f+4Fv/81eZgMWi+o/0W
+         gdINfDBVD2+vrWT2AwH8O6sLpRpt2zLLneNNI0BgqtGEWkHriCzoKFQawmF2qYxTkejF
+         i5lVlqJXdlEE9WiaruGEtWUGFzMUAiRL7E4pUPv2dCGizXiRQqBLlSbdQ9w/lM5f4wiU
+         YXQA==
+X-Gm-Message-State: APjAAAWZWYuB7TwVfafyhuSGd0GDFqzqWeZIt0Qe1mQm0NnoIq9z7K0X
+        qkVByfwGbultYI0fjXbSmgSaWHmsrRr57g==
+X-Google-Smtp-Source: APXvYqwKHlr/DWW77+DCtxg0yDJBmtZIIAMafU7Trkih5YEuKsYAAz8HhqBoS+Zjq3bON0Kb2FCR5w==
+X-Received: by 2002:a17:902:a70c:: with SMTP id w12mr2529732plq.124.1576672640391;
+        Wed, 18 Dec 2019 04:37:20 -0800 (PST)
+Received: from ?IPv6:2402:f000:1:1501:200:5efe:166.111.139.103? ([2402:f000:1:1501:200:5efe:a66f:8b67])
+        by smtp.gmail.com with ESMTPSA id x4sm3236162pfx.68.2019.12.18.04.37.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 18 Dec 2019 04:37:19 -0800 (PST)
+To:     marcel@holtmann.org, johan.hedberg@gmail.com
+Cc:     linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] vfio/mdev: make create attribute static
-Date:   Wed, 18 Dec 2019 12:31:19 +0000
-Message-Id: <20191218123119.2582802-1-ben.dooks@codethink.co.uk>
-X-Mailer: git-send-email 2.24.0
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [BUG] net: bluetooth: a possible sleep-in-atomic-context bug in
+ disconnect_all_peers()
+Message-ID: <b1e7cccf-6e5e-aae8-09fc-6caafedc4a65@gmail.com>
+Date:   Wed, 18 Dec 2019 20:37:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The create attribute is not exported, so make it
-static to avoid the following sparse warning:
+The kernel module may sleep while holding a spinlock.
+The function call path (from bottom to top) in Linux 4.19 is:
 
-drivers/vfio/mdev/mdev_sysfs.c:77:1: warning: symbol 'mdev_type_attr_create' was not declared. Should it be static?
+net/bluetooth/l2cap_core.c, 840:
+     mutex_lock in l2cap_get_ident
+net/bluetooth/l2cap_core.c, 1402:
+     l2cap_get_ident in l2cap_send_disconn_req
+net/bluetooth/l2cap_core.c, 736:
+     l2cap_send_disconn_req in l2cap_chan_close
+net/bluetooth/6lowpan.c, 1053:
+     l2cap_chan_close in disconnect_all_peers
+net/bluetooth/6lowpan.c, 1051:
+     spin_lock in disconnect_all_peers
 
-Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
----
-Cc: Kirti Wankhede <kwankhede@nvidia.com>
-Cc: Alex Williamson <alex.williamson@redhat.com>
-Cc: Cornelia Huck <cohuck@redhat.com>
-Cc: kvm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/vfio/mdev/mdev_sysfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+mutex_lock() can sleep at runtime.
 
-diff --git a/drivers/vfio/mdev/mdev_sysfs.c b/drivers/vfio/mdev/mdev_sysfs.c
-index 7570c7602ab4..8ad14e5c02bf 100644
---- a/drivers/vfio/mdev/mdev_sysfs.c
-+++ b/drivers/vfio/mdev/mdev_sysfs.c
-@@ -74,7 +74,7 @@ static ssize_t create_store(struct kobject *kobj, struct device *dev,
- 	return count;
- }
- 
--MDEV_TYPE_ATTR_WO(create);
-+static MDEV_TYPE_ATTR_WO(create);
- 
- static void mdev_type_release(struct kobject *kobj)
- {
--- 
-2.24.0
+I am not sure how to properly fix this possible bug, so I only report it.
 
+This bug is found by a static analysis tool STCheck written by myself.
+
+
+Best wishes,
+Jia-Ju Bai
