@@ -2,151 +2,82 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0270EC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B895C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2F1C2146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:00:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S26wzDsg"
+	by mail.kernel.org (Postfix) with ESMTP id F0E4E20684
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:04:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576681498;
+	bh=/Xwy0EYDAWm9IUmqarXi6RASHE7DRX2pjkg+940R3xc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=O03O5P/jo133nB3cxS8CpR7QnjLz0f8EXROe3CGDOUH1fnZL/9fyPTZEd0DsqqkV4
+	 PEDf9O49X9KHq2PUvtJjIHUgvBvQkOSnhngRdUUC7KVvnh9iRmQEMCWTZsiiUAirYD
+	 pN9O7h1t5wLl8ggRh8vE+ZGo6nWr/Er26VcSViiU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727297AbfLRPAm (ORCPT
+        id S1727226AbfLRPE5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 10:00:42 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46237 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727053AbfLRPAm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 10:00:42 -0500
-Received: by mail-ot1-f65.google.com with SMTP id c22so2810243otj.13;
-        Wed, 18 Dec 2019 07:00:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HtxhUMN0ZQ8RDApQN2b90A3AKYwJoeoLbjxI6U7n3LM=;
-        b=S26wzDsgIT6If/pLHMjQbFvuoL8a2c+7whRkzzuaMT7O1Bg4Ozb7T6HcT1TFUt9xOK
-         yrVPq74llOs6bHAh55cfM0DXnYcCbVUfNVpErX7BtxJFZOj5JCisXQ3NpWJZsLgvtIyY
-         WJT2vNl3xdtofo//eMp5HapB8dhChUD+QYxT89/MPg7bjZuqEB9H6MPH98koS1Q8koy3
-         L2usl2AgD/GTOOwyxWbRPILq36fasCSdSY+sEP0mLOlB5NwCyD3DEth0A9b1dlCFwxdc
-         48q8q5uzf4yyD21h1dCJkfnKhDOVuuC5rRAn2vI+GEgApcrXBrQtCDd2MA3+cl4pQPNq
-         jqhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HtxhUMN0ZQ8RDApQN2b90A3AKYwJoeoLbjxI6U7n3LM=;
-        b=Qh50vR1/G4VUY3trTbnqiKKfz8zDMSlBkzDf/OC+x9bJjP+hrGAkLneLqn1WE3JP7C
-         3P4uykX4gxi/qPH5SJo2lJsBolVz3XCQgyDl8DYHTZFiwbsGi0HEqYldc8+YwKAszll/
-         tJW3YlGWy5ucIulu+n2hncb/1UXFhLmsi74b+DL2bf3QwDFsDxWA/xaQoZ2Fg5/97Sap
-         HxqpcugcZI9ACxUP/yD83I5A8/TF5TDZX3bG1VFEq8RbYK7dr7fYbU0fvxxA1NHiT1rb
-         Gw+TthKEODc88IrutYPe6fSxpvyEIXVIeb8q5bTOUU0frPR3qL4he3l3xBOhyDZ7lSky
-         WB9g==
-X-Gm-Message-State: APjAAAXeDWHQ/D9uZmg+6RJ97Nwxfvmn6Jvbq51XxEuJo/848oYUOEqI
-        PPOs3FE10sH3SHC9CwWeVwfE6mrd4zA4BOG203U=
-X-Google-Smtp-Source: APXvYqzdY8+v0Ziio2jx9QkXTvj2SCIvGetVam7OHR7M+H/DPPu/O5WKDGQr2Gpc/zwOq2jDj/5+svUpvzcY1ctI8TE=
-X-Received: by 2002:a05:6830:2141:: with SMTP id r1mr2946729otd.39.1576681241302;
- Wed, 18 Dec 2019 07:00:41 -0800 (PST)
+        Wed, 18 Dec 2019 10:04:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51318 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727114AbfLRPE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 10:04:56 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79E8820684;
+        Wed, 18 Dec 2019 15:04:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576681496;
+        bh=/Xwy0EYDAWm9IUmqarXi6RASHE7DRX2pjkg+940R3xc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TjnG36vCL53/t2504//iSgiNAM2/Nb8XGdqdkMkqNuLbwx0OAbgmdvZwdVXhj5B0y
+         vNhc3zZjTbwHJZFlgrL4vdbLoSBKNy2CmrhB/0ecaApmQg2RnmRwWyYPEubtpUK3y8
+         7JDRqjgC1xASB3MQ27ehzPSYiHnGPa+1EJU+BN0k=
+Date:   Wed, 18 Dec 2019 16:03:46 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     =?iso-8859-1?B?Suly9G1l?= Pouiller <Jerome.Pouiller@silabs.com>
+Cc:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: Re: [PATCH v2 00/55] Improve wfx driver
+Message-ID: <20191218150346.GA431628@kroah.com>
+References: <20191217161318.31402-1-Jerome.Pouiller@silabs.com>
 MIME-Version: 1.0
-References: <000000000000a6f2030598bbe38c@google.com> <0000000000000e32950599ac5a96@google.com>
- <20191216150017.GA27202@linux.fritz.box> <CAJ8uoz3nCxcmnPonNunYhswskidn=PnN8=4_jXW4B=Xu4k_DoQ@mail.gmail.com>
- <CAJ8uoz312gDBGpqOJiKqrXn456sy6u+Gnvcvv_+0=EimasRoUw@mail.gmail.com>
- <20191217154031.GI5624@arrakis.emea.arm.com> <CAJ8uoz3yDK8sEE05cKA8siBi-Dc0wtbe1-zYgbz_-pd5t69j8w@mail.gmail.com>
- <20191217223808.GA14982@mbp>
-In-Reply-To: <20191217223808.GA14982@mbp>
-From:   Magnus Karlsson <magnus.karlsson@gmail.com>
-Date:   Wed, 18 Dec 2019 16:00:30 +0100
-Message-ID: <CAJ8uoz358oXf7HGjOdVLO6vXLJqKN8LNV=d1HRQ=ZA=jTtOV2A@mail.gmail.com>
-Subject: Re: WARNING in wp_page_copy
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        kirill.shutemov@linux.intel.com, justin.he@arm.com,
-        linux-mm@kvack.org,
-        syzbot <syzbot+9301f2f33873407d5b33@syzkaller.appspotmail.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        bpf <bpf@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>, hawk@kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        linux-kernel@vger.kernel.org,
-        "Karlsson, Magnus" <magnus.karlsson@intel.com>,
-        Network Development <netdev@vger.kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        syzkaller-bugs@googlegroups.com, Yonghong Song <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191217161318.31402-1-Jerome.Pouiller@silabs.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 11:38 PM Catalin Marinas
-<catalin.marinas@arm.com> wrote:
->
-> On Tue, Dec 17, 2019 at 04:57:34PM +0100, Magnus Karlsson wrote:
-> > On Tue, Dec 17, 2019 at 4:40 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > > On Tue, Dec 17, 2019 at 02:27:22PM +0100, Magnus Karlsson wrote:
-> > > > On Mon, Dec 16, 2019 at 4:10 PM Magnus Karlsson
-> > > > <magnus.karlsson@gmail.com> wrote:
-> > > > > On Mon, Dec 16, 2019 at 4:00 PM Daniel Borkmann <daniel@iogearbox.net> wrote:
-> > > > > > On Sat, Dec 14, 2019 at 08:20:07AM -0800, syzbot wrote:
-> > > > > > > syzbot has found a reproducer for the following crash on:
-> > > > > > >
-> > > > > > > HEAD commit:    1d1997db Revert "nfp: abm: fix memory leak in nfp_abm_u32_..
-> > > > > > > git tree:       net-next
-> > > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=1029f851e00000
-> > > > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=cef1fd5032faee91
-> > > > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=9301f2f33873407d5b33
-> > > > > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=119d9fb1e00000
-> > > > > > >
-> > > > > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > > > > > Reported-by: syzbot+9301f2f33873407d5b33@syzkaller.appspotmail.com
-> > > > > >
-> > > > > > Bjorn / Magnus, given xsk below, PTAL, thanks!
-> > > > >
-> > > > > Thanks. I will take a look at it right away.
-> > > > >
-> > > > > /Magnus
-> > > >
-> > > > After looking through the syzcaller report, I have the following
-> > > > hypothesis that would dearly need some comments from MM-savy people
-> > > > out there. Syzcaller creates, using mmap, a memory area that is
-> > >
-> > > I guess that's not an anonymous mmap() since we don't seem to have a
-> > > struct page for src in cow_user_page() (the WARN_ON_ONCE path). Do you
-> > > have more information on the mmap() call?
-> >
-> > I have this from the syzcaller logs:
-> >
-> > mmap(&(0x7f0000001000/0x2000)=nil, 0x2000, 0xfffffe, 0x12, r8, 0x0)
-> > getsockopt$XDP_MMAP_OFFSETS(r8, 0x11b, 0x7, &(0x7f0000001300),
-> > &(0x7f0000000100)=0x60)
-> >
-> > The full log can be found at:
-> > https://syzkaller.appspot.com/x/repro.syz?x=119d9fb1e00000
->
-> Thanks. Prior to mmap, we have:
->
-> r8 = socket$xdp(0x2c, 0x3, 0x0)
->
-> So basically we have an mmap() on a socket descriptor with a subsequent
-> copy_to_user() writing this range. We do we even end up doing CoW on
-> such mapping? Maybe the socket code should also implement the .fault()
-> file op. It needs more digging.
+On Tue, Dec 17, 2019 at 04:14:26PM +0000, Jérôme Pouiller wrote:
+> From: Jérôme Pouiller <jerome.pouiller@silabs.com>
+> 
+> Hello all,
+> 
+> This pull request continue to clean up the wfx driver. It can be more or
+> less divided in four parts:
+>   - 0001 to 0009 fix some issues (should be included in 5.5?)
+>   - 0010 to 0028 mostly contains cosmetics changes
 
-I am trying to reproduce it with syzkaller, but so far no luck on my
-machine. Will keep you posted.
+I took the first 10 to staging-linus to get into 5.5-final.
 
-/Magnus
+>   - 0029 to 0043 re-work power save (in station mode) and QoS
+>   - 0044 to 0054 re-work the scan process
 
-> --
-> Catalin
+all the rest of these I've queued up "normally" in staging-next.
+
+And thanks for fixing up the mime issue, these applied with no problems
+at all.
+
+greg k-h
