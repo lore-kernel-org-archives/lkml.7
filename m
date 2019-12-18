@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2FFCC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE59C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D4D724650
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:25:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C016824679
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:25:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbfLRQZ3 (ORCPT
+        id S1727905AbfLRQZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 11:25:29 -0500
-Received: from foss.arm.com ([217.140.110.172]:52518 "EHLO foss.arm.com"
+        Wed, 18 Dec 2019 11:25:34 -0500
+Received: from foss.arm.com ([217.140.110.172]:52586 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727875AbfLRQZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 11:25:25 -0500
+        id S1727875AbfLRQZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 11:25:30 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0954331B;
-        Wed, 18 Dec 2019 08:25:25 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 89E8D1396;
+        Wed, 18 Dec 2019 08:25:30 -0800 (PST)
 Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.56])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7CCFE3F719;
-        Wed, 18 Dec 2019 08:25:22 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 010BC3F719;
+        Wed, 18 Dec 2019 08:25:27 -0800 (PST)
 From:   Steven Price <steven.price@arm.com>
 To:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
 Cc:     Steven Price <steven.price@arm.com>,
@@ -43,9 +43,9 @@ Cc:     Steven Price <steven.price@arm.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Mark Rutland <Mark.Rutland@arm.com>,
         "Liang, Kan" <kan.liang@linux.intel.com>
-Subject: [PATCH v17 21/23] arm64: mm: Convert mm/dump.c to use walk_page_range()
-Date:   Wed, 18 Dec 2019 16:24:00 +0000
-Message-Id: <20191218162402.45610-22-steven.price@arm.com>
+Subject: [PATCH v17 23/23] mm: ptdump: Reduce level numbers by 1 in note_page()
+Date:   Wed, 18 Dec 2019 16:24:02 +0000
+Message-Id: <20191218162402.45610-24-steven.price@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191218162402.45610-1-steven.price@arm.com>
 References: <20191218162402.45610-1-steven.price@arm.com>
@@ -56,339 +56,207 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now walk_page_range() can walk kernel page tables, we can switch the
-arm64 ptdump code over to using it, simplifying the code.
+Rather than having to increment the 'depth' number by 1 in
+ptdump_hole(), let's change the meaning of 'level' in note_page() since
+that makes the code simplier.
+
+Note that for x86, the level numbers were previously increased by 1 in
+commit 45dcd2091363 ("x86/mm/dump_pagetables: Fix printout of p4d level")
+and the comment "Bit 7 has a different meaning" was not updated, so this
+change also makes the code match the comment again.
 
 Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Steven Price <steven.price@arm.com>
 ---
- arch/arm64/Kconfig                 |   1 +
- arch/arm64/Kconfig.debug           |  19 +----
- arch/arm64/include/asm/ptdump.h    |   8 +-
- arch/arm64/mm/Makefile             |   4 +-
- arch/arm64/mm/dump.c               | 117 ++++++++++-------------------
- arch/arm64/mm/mmu.c                |   4 +-
- arch/arm64/mm/ptdump_debugfs.c     |   2 +-
- drivers/firmware/efi/arm-runtime.c |   2 +-
- 8 files changed, 50 insertions(+), 107 deletions(-)
+ arch/arm64/mm/dump.c          |  6 +++---
+ arch/x86/mm/dump_pagetables.c | 19 ++++++++++---------
+ include/linux/ptdump.h        |  1 +
+ mm/ptdump.c                   | 16 ++++++++--------
+ 4 files changed, 22 insertions(+), 20 deletions(-)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index b1b4476ddb83..43aa1de727f4 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -103,6 +103,7 @@ config ARM64
- 	select GENERIC_IRQ_SHOW
- 	select GENERIC_IRQ_SHOW_LEVEL
- 	select GENERIC_PCI_IOMAP
-+	select GENERIC_PTDUMP
- 	select GENERIC_SCHED_CLOCK
- 	select GENERIC_SMP_IDLE_THREAD
- 	select GENERIC_STRNCPY_FROM_USER
-diff --git a/arch/arm64/Kconfig.debug b/arch/arm64/Kconfig.debug
-index cf09010d825f..1c906d932d6b 100644
---- a/arch/arm64/Kconfig.debug
-+++ b/arch/arm64/Kconfig.debug
-@@ -1,22 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0-only
- 
--config ARM64_PTDUMP_CORE
--	def_bool n
--
--config ARM64_PTDUMP_DEBUGFS
--	bool "Export kernel pagetable layout to userspace via debugfs"
--	depends on DEBUG_KERNEL
--	select ARM64_PTDUMP_CORE
--	select DEBUG_FS
--        help
--	  Say Y here if you want to show the kernel pagetable layout in a
--	  debugfs file. This information is only useful for kernel developers
--	  who are working in architecture specific areas of the kernel.
--	  It is probably not a good idea to enable this feature in a production
--	  kernel.
--
--	  If in doubt, say N.
--
- config PID_IN_CONTEXTIDR
- 	bool "Write the current PID to the CONTEXTIDR register"
- 	help
-@@ -42,7 +25,7 @@ config ARM64_RANDOMIZE_TEXT_OFFSET
- 
- config DEBUG_WX
- 	bool "Warn on W+X mappings at boot"
--	select ARM64_PTDUMP_CORE
-+	select PTDUMP_CORE
- 	---help---
- 	  Generate a warning if any W+X mappings are found at boot.
- 
-diff --git a/arch/arm64/include/asm/ptdump.h b/arch/arm64/include/asm/ptdump.h
-index 0b8e7269ec82..38187f74e089 100644
---- a/arch/arm64/include/asm/ptdump.h
-+++ b/arch/arm64/include/asm/ptdump.h
-@@ -5,7 +5,7 @@
- #ifndef __ASM_PTDUMP_H
- #define __ASM_PTDUMP_H
- 
--#ifdef CONFIG_ARM64_PTDUMP_CORE
-+#ifdef CONFIG_PTDUMP_CORE
- 
- #include <linux/mm_types.h>
- #include <linux/seq_file.h>
-@@ -21,15 +21,15 @@ struct ptdump_info {
- 	unsigned long			base_addr;
- };
- 
--void ptdump_walk_pgd(struct seq_file *s, struct ptdump_info *info);
--#ifdef CONFIG_ARM64_PTDUMP_DEBUGFS
-+void ptdump_walk(struct seq_file *s, struct ptdump_info *info);
-+#ifdef CONFIG_PTDUMP_DEBUGFS
- void ptdump_debugfs_register(struct ptdump_info *info, const char *name);
- #else
- static inline void ptdump_debugfs_register(struct ptdump_info *info,
- 					   const char *name) { }
- #endif
- void ptdump_check_wx(void);
--#endif /* CONFIG_ARM64_PTDUMP_CORE */
-+#endif /* CONFIG_PTDUMP_CORE */
- 
- #ifdef CONFIG_DEBUG_WX
- #define debug_checkwx()	ptdump_check_wx()
-diff --git a/arch/arm64/mm/Makefile b/arch/arm64/mm/Makefile
-index 849c1df3d214..d91030f0ffee 100644
---- a/arch/arm64/mm/Makefile
-+++ b/arch/arm64/mm/Makefile
-@@ -4,8 +4,8 @@ obj-y				:= dma-mapping.o extable.o fault.o init.o \
- 				   ioremap.o mmap.o pgd.o mmu.o \
- 				   context.o proc.o pageattr.o
- obj-$(CONFIG_HUGETLB_PAGE)	+= hugetlbpage.o
--obj-$(CONFIG_ARM64_PTDUMP_CORE)	+= dump.o
--obj-$(CONFIG_ARM64_PTDUMP_DEBUGFS)	+= ptdump_debugfs.o
-+obj-$(CONFIG_PTDUMP_CORE)	+= dump.o
-+obj-$(CONFIG_PTDUMP_DEBUGFS)	+= ptdump_debugfs.o
- obj-$(CONFIG_NUMA)		+= numa.o
- obj-$(CONFIG_DEBUG_VIRTUAL)	+= physaddr.o
- KASAN_SANITIZE_physaddr.o	+= n
 diff --git a/arch/arm64/mm/dump.c b/arch/arm64/mm/dump.c
-index 0a920b538a89..f8c3ef7903ed 100644
+index e5b6691c5bfc..ef4b3ca1e058 100644
 --- a/arch/arm64/mm/dump.c
 +++ b/arch/arm64/mm/dump.c
-@@ -15,6 +15,7 @@
- #include <linux/io.h>
- #include <linux/init.h>
- #include <linux/mm.h>
-+#include <linux/ptdump.h>
- #include <linux/sched.h>
- #include <linux/seq_file.h>
+@@ -176,8 +176,7 @@ struct pg_level {
+ };
  
-@@ -75,10 +76,11 @@ static struct addr_marker address_markers[] = {
-  * dumps out a description of the range.
-  */
- struct pg_state {
-+	struct ptdump_state ptdump;
- 	struct seq_file *seq;
- 	const struct addr_marker *marker;
- 	unsigned long start_address;
--	unsigned level;
-+	int level;
- 	u64 current_prot;
- 	bool check_wx;
- 	unsigned long wx_pages;
-@@ -179,6 +181,10 @@ static struct pg_level pg_level[] = {
+ static struct pg_level pg_level[] = {
+-	{
+-	}, { /* pgd */
++	{ /* pgd */
  		.name	= "PGD",
  		.bits	= pte_bits,
  		.num	= ARRAY_SIZE(pte_bits),
-+	}, { /* p4d */
-+		.name	= "P4D",
-+		.bits	= pte_bits,
-+		.num	= ARRAY_SIZE(pte_bits),
- 	}, { /* pud */
- 		.name	= (CONFIG_PGTABLE_LEVELS > 3) ? "PUD" : "PGD",
- 		.bits	= pte_bits,
-@@ -241,11 +247,15 @@ static void note_prot_wx(struct pg_state *st, unsigned long addr)
- 	st->wx_pages += (addr - st->start_address) / PAGE_SIZE;
- }
+@@ -257,7 +256,7 @@ static void note_page(struct ptdump_state *pt_st, unsigned long addr, int level,
+ 	if (level >= 0)
+ 		prot = val & pg_level[level].mask;
  
--static void note_page(struct pg_state *st, unsigned long addr, unsigned level,
--				u64 val)
-+static void note_page(struct ptdump_state *pt_st, unsigned long addr, int level,
-+		      unsigned long val)
- {
-+	struct pg_state *st = container_of(pt_st, struct pg_state, ptdump);
- 	static const char units[] = "KMGTPE";
--	u64 prot = val & pg_level[level].mask;
-+	u64 prot = 0;
-+
-+	if (level >= 0)
-+		prot = val & pg_level[level].mask;
- 
- 	if (!st->level) {
+-	if (!st->level) {
++	if (st->level == -1) {
  		st->level = level;
-@@ -293,85 +303,27 @@ static void note_page(struct pg_state *st, unsigned long addr, unsigned level,
- 
- }
- 
--static void walk_pte(struct pg_state *st, pmd_t *pmdp, unsigned long start,
--		     unsigned long end)
--{
--	unsigned long addr = start;
--	pte_t *ptep = pte_offset_kernel(pmdp, start);
--
--	do {
--		note_page(st, addr, 4, READ_ONCE(pte_val(*ptep)));
--	} while (ptep++, addr += PAGE_SIZE, addr != end);
--}
--
--static void walk_pmd(struct pg_state *st, pud_t *pudp, unsigned long start,
--		     unsigned long end)
--{
--	unsigned long next, addr = start;
--	pmd_t *pmdp = pmd_offset(pudp, start);
--
--	do {
--		pmd_t pmd = READ_ONCE(*pmdp);
--		next = pmd_addr_end(addr, end);
--
--		if (pmd_none(pmd) || pmd_sect(pmd)) {
--			note_page(st, addr, 3, pmd_val(pmd));
--		} else {
--			BUG_ON(pmd_bad(pmd));
--			walk_pte(st, pmdp, addr, next);
--		}
--	} while (pmdp++, addr = next, addr != end);
--}
--
--static void walk_pud(struct pg_state *st, pgd_t *pgdp, unsigned long start,
--		     unsigned long end)
-+void ptdump_walk(struct seq_file *s, struct ptdump_info *info)
- {
--	unsigned long next, addr = start;
--	pud_t *pudp = pud_offset(pgdp, start);
--
--	do {
--		pud_t pud = READ_ONCE(*pudp);
--		next = pud_addr_end(addr, end);
--
--		if (pud_none(pud) || pud_sect(pud)) {
--			note_page(st, addr, 2, pud_val(pud));
--		} else {
--			BUG_ON(pud_bad(pud));
--			walk_pmd(st, pudp, addr, next);
--		}
--	} while (pudp++, addr = next, addr != end);
--}
-+	unsigned long end = ~0UL;
-+	struct pg_state st;
- 
--static void walk_pgd(struct pg_state *st, struct mm_struct *mm,
--		     unsigned long start)
--{
--	unsigned long end = (start < TASK_SIZE_64) ? TASK_SIZE_64 : 0;
--	unsigned long next, addr = start;
--	pgd_t *pgdp = pgd_offset(mm, start);
--
--	do {
--		pgd_t pgd = READ_ONCE(*pgdp);
--		next = pgd_addr_end(addr, end);
--
--		if (pgd_none(pgd)) {
--			note_page(st, addr, 1, pgd_val(pgd));
--		} else {
--			BUG_ON(pgd_bad(pgd));
--			walk_pud(st, pgdp, addr, next);
--		}
--	} while (pgdp++, addr = next, addr != end);
--}
-+	if (info->base_addr < TASK_SIZE_64)
-+		end = TASK_SIZE_64;
- 
--void ptdump_walk_pgd(struct seq_file *m, struct ptdump_info *info)
--{
--	struct pg_state st = {
--		.seq = m,
-+	st = (struct pg_state){
-+		.seq = s,
- 		.marker = info->markers,
-+		.ptdump = {
-+			.note_page = note_page,
-+			.range = (struct ptdump_range[]){
-+				{info->base_addr, end},
-+				{0, 0}
-+			}
-+		}
- 	};
- 
--	walk_pgd(&st, info->mm, info->base_addr);
--
--	note_page(&st, 0, 0, 0);
-+	ptdump_walk_pgd(&st.ptdump, info->mm);
- }
- 
- static void ptdump_initialize(void)
-@@ -399,10 +351,17 @@ void ptdump_check_wx(void)
+ 		st->current_prot = prot;
+ 		st->start_address = addr;
+@@ -351,6 +350,7 @@ void ptdump_check_wx(void)
+ 			{ 0, NULL},
  			{ -1, NULL},
  		},
++		.level = -1,
  		.check_wx = true,
-+		.ptdump = {
-+			.note_page = note_page,
-+			.range = (struct ptdump_range[]) {
-+				{PAGE_OFFSET, ~0UL},
-+				{0, 0}
-+			}
-+		}
- 	};
- 
--	walk_pgd(&st, &init_mm, PAGE_OFFSET);
--	note_page(&st, 0, 0, 0);
-+	ptdump_walk_pgd(&st.ptdump, &init_mm);
-+
- 	if (st.wx_pages || st.uxn_pages)
- 		pr_warn("Checked W+X mappings: FAILED, %lu W+X pages found, %lu non-UXN pages found\n",
- 			st.wx_pages, st.uxn_pages);
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index 5a3b15a14a7f..36e8f4f74433 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -943,13 +943,13 @@ int __init arch_ioremap_pud_supported(void)
- 	 * SW table walks can't handle removal of intermediate entries.
- 	 */
- 	return IS_ENABLED(CONFIG_ARM64_4K_PAGES) &&
--	       !IS_ENABLED(CONFIG_ARM64_PTDUMP_DEBUGFS);
-+	       !IS_ENABLED(CONFIG_PTDUMP_DEBUGFS);
- }
- 
- int __init arch_ioremap_pmd_supported(void)
+ 		.ptdump = {
+ 			.note_page = note_page,
+diff --git a/arch/x86/mm/dump_pagetables.c b/arch/x86/mm/dump_pagetables.c
+index a0b8ffc927bb..411f6a758998 100644
+--- a/arch/x86/mm/dump_pagetables.c
++++ b/arch/x86/mm/dump_pagetables.c
+@@ -180,7 +180,7 @@ static struct addr_marker address_markers[] = {
+ static void printk_prot(struct seq_file *m, pgprotval_t pr, int level, bool dmsg)
  {
- 	/* See arch_ioremap_pud_supported() */
--	return !IS_ENABLED(CONFIG_ARM64_PTDUMP_DEBUGFS);
-+	return !IS_ENABLED(CONFIG_PTDUMP_DEBUGFS);
- }
+ 	static const char * const level_name[] =
+-		{ "cr3", "pgd", "p4d", "pud", "pmd", "pte" };
++		{ "pgd", "p4d", "pud", "pmd", "pte" };
  
- int pud_set_huge(pud_t *pudp, phys_addr_t phys, pgprot_t prot)
-diff --git a/arch/arm64/mm/ptdump_debugfs.c b/arch/arm64/mm/ptdump_debugfs.c
-index 064163f25592..1f2eae3e988b 100644
---- a/arch/arm64/mm/ptdump_debugfs.c
-+++ b/arch/arm64/mm/ptdump_debugfs.c
-@@ -7,7 +7,7 @@
- static int ptdump_show(struct seq_file *m, void *v)
+ 	if (!(pr & _PAGE_PRESENT)) {
+ 		/* Not present */
+@@ -204,12 +204,12 @@ static void printk_prot(struct seq_file *m, pgprotval_t pr, int level, bool dmsg
+ 			pt_dump_cont_printf(m, dmsg, "    ");
+ 
+ 		/* Bit 7 has a different meaning on level 3 vs 4 */
+-		if (level <= 4 && pr & _PAGE_PSE)
++		if (level <= 3 && pr & _PAGE_PSE)
+ 			pt_dump_cont_printf(m, dmsg, "PSE ");
+ 		else
+ 			pt_dump_cont_printf(m, dmsg, "    ");
+-		if ((level == 5 && pr & _PAGE_PAT) ||
+-		    ((level == 4 || level == 3) && pr & _PAGE_PAT_LARGE))
++		if ((level == 4 && pr & _PAGE_PAT) ||
++		    ((level == 3 || level == 2) && pr & _PAGE_PAT_LARGE))
+ 			pt_dump_cont_printf(m, dmsg, "PAT ");
+ 		else
+ 			pt_dump_cont_printf(m, dmsg, "    ");
+@@ -271,15 +271,15 @@ static void note_page(struct ptdump_state *pt_st, unsigned long addr, int level,
+ 
+ 	new_prot = val & PTE_FLAGS_MASK;
+ 
+-	if (level > 1) {
+-		new_eff = effective_prot(st->prot_levels[level - 2],
++	if (level > 0) {
++		new_eff = effective_prot(st->prot_levels[level - 1],
+ 					 new_prot);
+ 	} else {
+ 		new_eff = new_prot;
+ 	}
+ 
+-	if (level > 0)
+-		st->prot_levels[level - 1] = new_eff;
++	if (level >= 0)
++		st->prot_levels[level] = new_eff;
+ 
+ 	/*
+ 	 * If we have a "break" in the series, we need to flush the state that
+@@ -289,7 +289,7 @@ static void note_page(struct ptdump_state *pt_st, unsigned long addr, int level,
+ 	cur = st->current_prot;
+ 	eff = st->effective_prot;
+ 
+-	if (!st->level) {
++	if (st->level == -1) {
+ 		/* First entry */
+ 		st->current_prot = new_prot;
+ 		st->effective_prot = new_eff;
+@@ -380,6 +380,7 @@ static void ptdump_walk_pgd_level_core(struct seq_file *m, pgd_t *pgd,
+ 			.note_page	= note_page,
+ 			.range		= ptdump_ranges
+ 		},
++		.level = -1,
+ 		.to_dmesg	= dmesg,
+ 		.check_wx	= checkwx,
+ 		.seq		= m
+diff --git a/include/linux/ptdump.h b/include/linux/ptdump.h
+index a0fb8dd2be97..b28f3f2acf90 100644
+--- a/include/linux/ptdump.h
++++ b/include/linux/ptdump.h
+@@ -11,6 +11,7 @@ struct ptdump_range {
+ };
+ 
+ struct ptdump_state {
++	/* level is 0:PGD to 4:PTE, or -1 if unknown */
+ 	void (*note_page)(struct ptdump_state *st, unsigned long addr,
+ 			  int level, unsigned long val);
+ 	const struct ptdump_range *range;
+diff --git a/mm/ptdump.c b/mm/ptdump.c
+index 868638b8e404..ad18a9839d6f 100644
+--- a/mm/ptdump.c
++++ b/mm/ptdump.c
+@@ -17,7 +17,7 @@ static inline int note_kasan_page_table(struct mm_walk *walk,
  {
- 	struct ptdump_info *info = m->private;
--	ptdump_walk_pgd(m, info);
-+	ptdump_walk(m, info);
+ 	struct ptdump_state *st = walk->private;
+ 
+-	st->note_page(st, addr, 5, pte_val(kasan_early_shadow_pte[0]));
++	st->note_page(st, addr, 4, pte_val(kasan_early_shadow_pte[0]));
+ 
+ 	walk->action = ACTION_CONTINUE;
+ 
+@@ -37,7 +37,7 @@ static int ptdump_pgd_entry(pgd_t *pgd, unsigned long addr,
+ #endif
+ 
+ 	if (pgd_leaf(val))
+-		st->note_page(st, addr, 1, pgd_val(val));
++		st->note_page(st, addr, 0, pgd_val(val));
+ 
  	return 0;
  }
- DEFINE_SHOW_ATTRIBUTE(ptdump);
-diff --git a/drivers/firmware/efi/arm-runtime.c b/drivers/firmware/efi/arm-runtime.c
-index 899b803842bb..9dda2602c862 100644
---- a/drivers/firmware/efi/arm-runtime.c
-+++ b/drivers/firmware/efi/arm-runtime.c
-@@ -27,7 +27,7 @@
+@@ -54,7 +54,7 @@ static int ptdump_p4d_entry(p4d_t *p4d, unsigned long addr,
+ #endif
  
- extern u64 efi_system_table;
+ 	if (p4d_leaf(val))
+-		st->note_page(st, addr, 2, p4d_val(val));
++		st->note_page(st, addr, 1, p4d_val(val));
  
--#ifdef CONFIG_ARM64_PTDUMP_DEBUGFS
-+#if defined(CONFIG_PTDUMP_DEBUGFS) && defined(CONFIG_ARM64)
- #include <asm/ptdump.h>
+ 	return 0;
+ }
+@@ -71,7 +71,7 @@ static int ptdump_pud_entry(pud_t *pud, unsigned long addr,
+ #endif
  
- static struct ptdump_info efi_ptdump_info = {
+ 	if (pud_leaf(val))
+-		st->note_page(st, addr, 3, pud_val(val));
++		st->note_page(st, addr, 2, pud_val(val));
+ 
+ 	return 0;
+ }
+@@ -88,7 +88,7 @@ static int ptdump_pmd_entry(pmd_t *pmd, unsigned long addr,
+ #endif
+ 
+ 	if (pmd_leaf(val))
+-		st->note_page(st, addr, 4, pmd_val(val));
++		st->note_page(st, addr, 3, pmd_val(val));
+ 
+ 	return 0;
+ }
+@@ -98,7 +98,7 @@ static int ptdump_pte_entry(pte_t *pte, unsigned long addr,
+ {
+ 	struct ptdump_state *st = walk->private;
+ 
+-	st->note_page(st, addr, 5, pte_val(READ_ONCE(*pte)));
++	st->note_page(st, addr, 4, pte_val(READ_ONCE(*pte)));
+ 
+ 	return 0;
+ }
+@@ -108,7 +108,7 @@ static int ptdump_hole(unsigned long addr, unsigned long next,
+ {
+ 	struct ptdump_state *st = walk->private;
+ 
+-	st->note_page(st, addr, depth + 1, 0);
++	st->note_page(st, addr, depth, 0);
+ 
+ 	return 0;
+ }
+@@ -135,5 +135,5 @@ void ptdump_walk_pgd(struct ptdump_state *st, struct mm_struct *mm)
+ 	up_read(&mm->mmap_sem);
+ 
+ 	/* Flush out the last page */
+-	st->note_page(st, 0, 0, 0);
++	st->note_page(st, 0, -1, 0);
+ }
 -- 
 2.20.1
 
