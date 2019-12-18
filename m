@@ -2,205 +2,106 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB807C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE875C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:17:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 910AB24672
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:13:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mmfco3fv"
+	by mail.kernel.org (Postfix) with ESMTP id AC9EA2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:17:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbfLRKM7 (ORCPT
+        id S1726705AbfLRKQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 05:12:59 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:35081 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726551AbfLRKM7 (ORCPT
+        Wed, 18 Dec 2019 05:16:59 -0500
+Received: from imap2.colo.codethink.co.uk ([78.40.148.184]:60630 "EHLO
+        imap2.colo.codethink.co.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726545AbfLRKQ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 05:12:59 -0500
-Received: by mail-qt1-f195.google.com with SMTP id e12so1534140qto.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 02:12:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ws9LGLaoc3+Hm+PZ5CI8rYmVt90u1n7ZUCQR2tNutFk=;
-        b=Mmfco3fvj38HtPlrRpC6OWceno0UGchQsnFEUuj30sDWL7f5S1cWZNjicm9tNKOHDx
-         0UCCd7rSVPIJlXhYG1FLDxnCjs6n1pLE5x9irdfNa+OaYxE9X5x2EgzTFJOr4wkm6HCi
-         fxEstdYMF/Nn+3ocy++q8Zq9njFEKgTpbnFR6RdlEjc/uPDLTu0XOe7cnwSLk1c0tTvJ
-         GXjYqkqJ0zYrzx93fdlCHqsZZ4NCyFgNkh9bCK05CEtqJwrdGllS1QcTrOvUVAJCJuCz
-         JJtNlHyGTSPG2ksEmpvfoB4ee1AP0MHnT3wL9x/C/9phcxvsjXv0J6f8yIS/qQq4CGyG
-         uQ3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ws9LGLaoc3+Hm+PZ5CI8rYmVt90u1n7ZUCQR2tNutFk=;
-        b=oM6ypybkiu+5f+ngQkcR7W74buX3EcPcplPjntq7Fs/bQteeovH/oaV4XPhsxNa+xm
-         0JFrPm0rTcioNSsHLwQHZ/+tsvqrKv48sFwZ0QcIQsioAOu9XF+IE7H97svY2O3g2Y6k
-         x6Vls8bJmfzy7QoDfjxj1RTr/JQxH1tVfV1l1ZzosyT8GR5A/8doq+X5U7VHNd/FuGfU
-         rmbSJoYSXsDh0ZOjR792QuDjtCHh/4+2eikDu2iEJxKxWGQqDO1KhtlvHBIHVBd841sX
-         hpHSbiHihNtZwQ9bI4xRI8BjXh4y/E3amOySZKiO75oZqv7DtbuTO1LlGZJ8L1T0P5WO
-         E7qw==
-X-Gm-Message-State: APjAAAWZo7f5BEzZqgDPmi/Q4WXkkMsuGV1bUr6NqoV/5C1NKO5oDueP
-        68ukbwEtS6vFANLRdtlcxxHfVgC8DmLmiXCkz5Qn18rd7P0=
-X-Google-Smtp-Source: APXvYqypdYEsGrKFOy8FIj3tJ3oEE00rNcAYDvs1HpbdD3RFNsMIqLxEt1d2URPTxJCc/7+w+KwLHGiDud0X4uFJ5q0=
-X-Received: by 2002:ac8:24c1:: with SMTP id t1mr1375386qtt.257.1576663977714;
- Wed, 18 Dec 2019 02:12:57 -0800 (PST)
+        Wed, 18 Dec 2019 05:16:59 -0500
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap2.colo.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
+        id 1ihWO0-00073q-Sq; Wed, 18 Dec 2019 10:16:56 +0000
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.3)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1ihWO0-00AFWW-Cp; Wed, 18 Dec 2019 10:16:56 +0000
+From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+To:     ben.dooks@codethink.co.uk
+Cc:     Jesper Nilsson <jesper.nilsson@axis.com>,
+        Lars Persson <lars.persson@axis.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@axis.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] pinctrl: artpec6: fix __iomem on reg in set
+Date:   Wed, 18 Dec 2019 10:16:02 +0000
+Message-Id: <20191218101602.2442868-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <20191208232734.225161-1-Jason@zx2c4.com>
-In-Reply-To: <20191208232734.225161-1-Jason@zx2c4.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 18 Dec 2019 11:12:46 +0100
-Message-ID: <CACT4Y+bsJVmgbD-WogwU=LfWiPN1JgjBrwx4s8Y14hDd7vqqhQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v2] net: WireGuard secure network tunnel
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 9, 2019 at 12:28 AM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
->
-> WireGuard is a layer 3 secure networking tunnel made specifically for
-> the kernel, that aims to be much simpler and easier to audit than IPsec.
-> Extensive documentation and description of the protocol and
-> considerations, along with formal proofs of the cryptography, are
-> available at:
->
->   * https://www.wireguard.com/
->   * https://www.wireguard.com/papers/wireguard.pdf
->
-> This commit implements WireGuard as a simple network device driver,
-> accessible in the usual RTNL way used by virtual network drivers. It
-> makes use of the udp_tunnel APIs, GRO, GSO, NAPI, and the usual set of
-> networking subsystem APIs. It has a somewhat novel multicore queueing
-> system designed for maximum throughput and minimal latency of encryption
-> operations, but it is implemented modestly using workqueues and NAPI.
-> Configuration is done via generic Netlink, and following a review from
-> the Netlink maintainer a year ago, several high profile userspace tools
-> have already implemented the API.
->
-> This commit also comes with several different tests, both in-kernel
-> tests and out-of-kernel tests based on network namespaces, taking profit
-> of the fact that sockets used by WireGuard intentionally stay in the
-> namespace the WireGuard interface was originally created, exactly like
-> the semantics of userspace tun devices. See wireguard.com/netns/ for
-> pictures and examples.
->
-> The source code is fairly short, but rather than combining everything
-> into a single file, WireGuard is developed as cleanly separable files,
-> making auditing and comprehension easier. Things are laid out as
-> follows:
->
->   * noise.[ch], cookie.[ch], messages.h: These implement the bulk of the
->     cryptographic aspects of the protocol, and are mostly data-only in
->     nature, taking in buffers of bytes and spitting out buffers of
->     bytes. They also handle reference counting for their various shared
->     pieces of data, like keys and key lists.
->
->   * ratelimiter.[ch]: Used as an integral part of cookie.[ch] for
->     ratelimiting certain types of cryptographic operations in accordance
->     with particular WireGuard semantics.
->
->   * allowedips.[ch], peerlookup.[ch]: The main lookup structures of
->     WireGuard, the former being trie-like with particular semantics, an
->     integral part of the design of the protocol, and the latter just
->     being nice helper functions around the various hashtables we use.
->
->   * device.[ch]: Implementation of functions for the netdevice and for
->     rtnl, responsible for maintaining the life of a given interface and
->     wiring it up to the rest of WireGuard.
->
->   * peer.[ch]: Each interface has a list of peers, with helper functions
->     available here for creation, destruction, and reference counting.
->
->   * socket.[ch]: Implementation of functions related to udp_socket and
->     the general set of kernel socket APIs, for sending and receiving
->     ciphertext UDP packets, and taking care of WireGuard-specific sticky
->     socket routing semantics for the automatic roaming.
->
->   * netlink.[ch]: Userspace API entry point for configuring WireGuard
->     peers and devices. The API has been implemented by several userspace
->     tools and network management utility, and the WireGuard project
->     distributes the basic wg(8) tool.
->
->   * queueing.[ch]: Shared function on the rx and tx path for handling
->     the various queues used in the multicore algorithms.
->
->   * send.c: Handles encrypting outgoing packets in parallel on
->     multiple cores, before sending them in order on a single core, via
->     workqueues and ring buffers. Also handles sending handshake and cookie
->     messages as part of the protocol, in parallel.
->
->   * receive.c: Handles decrypting incoming packets in parallel on
->     multiple cores, before passing them off in order to be ingested via
->     the rest of the networking subsystem with GRO via the typical NAPI
->     poll function. Also handles receiving handshake and cookie messages
->     as part of the protocol, in parallel.
->
->   * timers.[ch]: Uses the timer wheel to implement protocol particular
->     event timeouts, and gives a set of very simple event-driven entry
->     point functions for callers.
->
->   * main.c, version.h: Initialization and deinitialization of the module.
->
->   * selftest/*.h: Runtime unit tests for some of the most security
->     sensitive functions.
->
->   * tools/testing/selftests/wireguard/netns.sh: Aforementioned testing
->     script using network namespaces.
->
-> This commit aims to be as self-contained as possible, implementing
-> WireGuard as a standalone module not needing much special handling or
-> coordination from the network subsystem. I expect for future
-> optimizations to the network stack to positively improve WireGuard, and
-> vice-versa, but for the time being, this exists as intentionally
-> standalone.
->
-> We introduce a menu option for CONFIG_WIREGUARD, as well as providing a
-> verbose debug log and self-tests via CONFIG_WIREGUARD_DEBUG.
+The artpec6_pconf_set should have marked reg as __iomem,
+ which ends up making sparse complain about address
+space conversions. Add the __iomem to silence the
+following warnings:
 
-Hi Jason, Dave,
+drivers/pinctrl/pinctrl-artpec6.c:814:13: warning: incorrect type in assignment (different address spaces)
+drivers/pinctrl/pinctrl-artpec6.c:814:13:    expected unsigned int *reg
+drivers/pinctrl/pinctrl-artpec6.c:814:13:    got void [noderef] <asn:2> *
+drivers/pinctrl/pinctrl-artpec6.c:825:34: warning: incorrect type in argument 1 (different address spaces)
+drivers/pinctrl/pinctrl-artpec6.c:825:34:    expected void const volatile [noderef] <asn:2> *addr
+drivers/pinctrl/pinctrl-artpec6.c:825:34:    got unsigned int *reg
+drivers/pinctrl/pinctrl-artpec6.c:827:25: warning: incorrect type in argument 2 (different address spaces)
+drivers/pinctrl/pinctrl-artpec6.c:827:25:    expected void volatile [noderef] <asn:2> *addr
+drivers/pinctrl/pinctrl-artpec6.c:827:25:    got unsigned int *reg
+drivers/pinctrl/pinctrl-artpec6.c:837:34: warning: incorrect type in argument 1 (different address spaces)
+drivers/pinctrl/pinctrl-artpec6.c:837:34:    expected void const volatile [noderef] <asn:2> *addr
+drivers/pinctrl/pinctrl-artpec6.c:837:34:    got unsigned int *reg
+drivers/pinctrl/pinctrl-artpec6.c:840:25: warning: incorrect type in argument 2 (different address spaces)
+drivers/pinctrl/pinctrl-artpec6.c:840:25:    expected void volatile [noderef] <asn:2> *addr
+drivers/pinctrl/pinctrl-artpec6.c:840:25:    got unsigned int *reg
+drivers/pinctrl/pinctrl-artpec6.c:850:34: warning: incorrect type in argument 1 (different address spaces)
+drivers/pinctrl/pinctrl-artpec6.c:850:34:    expected void const volatile [noderef] <asn:2> *addr
+drivers/pinctrl/pinctrl-artpec6.c:850:34:    got unsigned int *reg
+drivers/pinctrl/pinctrl-artpec6.c:853:25: warning: incorrect type in argument 2 (different address spaces)
+drivers/pinctrl/pinctrl-artpec6.c:853:25:    expected void volatile [noderef] <asn:2> *addr
+drivers/pinctrl/pinctrl-artpec6.c:853:25:    got unsigned int *reg
+drivers/pinctrl/pinctrl-artpec6.c:864:34: warning: incorrect type in argument 1 (different address spaces)
+drivers/pinctrl/pinctrl-artpec6.c:864:34:    expected void const volatile [noderef] <asn:2> *addr
+drivers/pinctrl/pinctrl-artpec6.c:864:34:    got unsigned int *reg
+drivers/pinctrl/pinctrl-artpec6.c:867:25: warning: incorrect type in argument 2 (different address spaces)
+drivers/pinctrl/pinctrl-artpec6.c:867:25:    expected void volatile [noderef] <asn:2> *addr
+drivers/pinctrl/pinctrl-artpec6.c:867:25:    got unsigned int *reg
 
-Some late feedback on CONFIG_WIREGUARD_DEBUG.
+Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
+---
+Cc: Jesper Nilsson <jesper.nilsson@axis.com>
+Cc: Lars Persson <lars.persson@axis.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-arm-kernel@axis.com
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/pinctrl/pinctrl-artpec6.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Does it really do "verbose debug log"? I only see it is used for
-self-tests and debug checks:
+diff --git a/drivers/pinctrl/pinctrl-artpec6.c b/drivers/pinctrl/pinctrl-artpec6.c
+index 986e04ac6b5b..439a997b6bdb 100644
+--- a/drivers/pinctrl/pinctrl-artpec6.c
++++ b/drivers/pinctrl/pinctrl-artpec6.c
+@@ -798,7 +798,7 @@ static int artpec6_pconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+ 	enum pin_config_param param;
+ 	unsigned int arg;
+ 	unsigned int regval;
+-	unsigned int *reg;
++	unsigned int __iomem *reg;
+ 	int i;
+ 
+ 	/* Check for valid pin */
+-- 
+2.24.0
 
-linux$ grep DEBUG drivers/net/wireguard/*.c
-drivers/net/wireguard/allowedips.c: WARN_ON(IS_ENABLED(DEBUG) && *len >= 128);
-drivers/net/wireguard/allowedips.c: WARN_ON(IS_ENABLED(DEBUG) && len
->= 128);                      \
-drivers/net/wireguard/main.c:#ifdef DEBUG
-drivers/net/wireguard/noise.c: WARN_ON(IS_ENABLED(DEBUG) &&
-
-There are 3 different things:
- - boot self-tests
- - additional debug checks
- - verbose logging
-
-In different contexts one may enable different sets of these.
-In particular in fuzzing context one absolutely wants additional debug
-checks, but not self tests and definitely no verbose logging. CI and
-various manual scenarios will require different sets as well.
-If this does verbose logging, we won't get debug checks as well during
-fuzzing, which is unfortunate.
-Can make sense splitting CONFIG_WIREGUARD_DEBUG into 2 or 3 separate
-configs (that's what I see frequently). Unfortunately there is no
-standard conventions for anything of this, so CIs will never find your
-boot tests and fuzzing won't find the additional checks...
