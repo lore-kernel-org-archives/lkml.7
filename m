@@ -2,114 +2,165 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B0A2C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:54:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F7E0C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CF87218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:54:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A5392176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:56:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FtT2G1x8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G5yC8bKm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727467AbfLRQyT (ORCPT
+        id S1727513AbfLRQ4e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 11:54:19 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37663 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727217AbfLRQyS (ORCPT
+        Wed, 18 Dec 2019 11:56:34 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44497 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727334AbfLRQ4d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 11:54:18 -0500
-Received: by mail-wr1-f67.google.com with SMTP id w15so3073700wru.4;
-        Wed, 18 Dec 2019 08:54:17 -0800 (PST)
+        Wed, 18 Dec 2019 11:56:33 -0500
+Received: by mail-wr1-f66.google.com with SMTP id q10so3052051wrm.11
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 08:56:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=EP911nSLn2Vvgh6u3IlrfunDIUtinbfht576MeZl9vU=;
-        b=FtT2G1x8vmq1aKeLKcwZ5GBfDHbyrFavKKLhVNJSLjA/Vy3lRtlVd5934szOsrXvNg
-         M2Xhp0XSR0aQUZmsjZZuH+php++4yCfNvadeV9zhrU9BeYEu0d0Qcuxo2fk6JfHnwQNm
-         xEOOgsRk0NgpiVTuL47wlHJE2w1qZUvIBG/9BnxW3PSqN++a/VUOA2Zcb+2cFu5fOOUq
-         ttokrTaIDWxZgT79HXyyhts2bJdkQorLu5Fvcf1gVgqh0Z2jaYu4rqBG8VCd4t28Tg/H
-         Qzs+NRkJEgpv5zy96hZMtgoKsh2OIBdEdVFLXqhEY6mmBpKXDU81a6F7mKVe//mHyXM2
-         5QlQ==
+        d=chromium.org; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=qbVTsR54H6AMQsB5QLZrbdwDN4kpS+HACD311JISl7w=;
+        b=G5yC8bKma8+W7VtY4hg6xyyFd3mz0mCVxUsDitnVTyxu4+nXkGRN8CcA13briD5Fro
+         DgS8gSIIjVh3ocDahCyGpBSYEf/YYQXWG+fxvRl38YFxBbIewwkogD8gzprUdfGtVO1s
+         CjWDu4DeiDdYCGyHVW/CNI2JB4im1puSz4rAM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=EP911nSLn2Vvgh6u3IlrfunDIUtinbfht576MeZl9vU=;
-        b=hWcnFcN2uZHDzdT8etDq9ZbTTMJKb9B0pKg12hdldedndPQhAD8fxkHP+8IB8cfEMw
-         7fmHXc64q1vgvuMxjrYHStj6cYc7lE5lQmmGDYCNBzziWBZvilr0Q4QBs8JuKsS02Fvw
-         qvHBVSZtTqGX+5FyAL7j+0xL5tK4UBZgtL7mZqQfxXJNVfI+DWziCqlWe3w0J6PSLKxa
-         Mg50Gbj4k9eqKShrG1EEp6BmUcfL5seCMHVojQ3wKoDFBOc1D0DFwwln6d9faiccPuXX
-         uMFtIWNAA2+O4gX4+kKL3vm5ynqEc8nJQjnCm+8Xay8J5BuTDvHe0zm07JSn8W716Dt2
-         hWSg==
-X-Gm-Message-State: APjAAAWnHuOc7MigQVo/DX8ahA0ms2WsTohbJYk1aoX41hEk5aXh0h8Y
-        X7CZBqoNmlYSvQmLz2GgvmjAWXFQ
-X-Google-Smtp-Source: APXvYqwqthIIeClNPYTweeerQmwMsf4UH7HXj0fEs3V0m5z5QScsmpyr+r082e5y7lVS0NNF1Cf4gQ==
-X-Received: by 2002:adf:fbc9:: with SMTP id d9mr4097279wrs.20.1576688056522;
-        Wed, 18 Dec 2019 08:54:16 -0800 (PST)
-Received: from localhost.localdomain ([109.126.149.134])
-        by smtp.gmail.com with ESMTPSA id b17sm3152856wrp.49.2019.12.18.08.54.14
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=qbVTsR54H6AMQsB5QLZrbdwDN4kpS+HACD311JISl7w=;
+        b=HpGElY2fPPIkHRiCQWVhvtPUo3+cd5RjQjMSSMohlDY1ultoG1kwC7DncpqHBA6LfP
+         Fym54I12jr1T5klPGjvFcYixT7QonnREXC89lyMG1tS9dCBx0utaMXuYmTpvmaWZQGHU
+         +6vviA1FIY5W2oyOTH426XQgvvOn+46yxOEBO9VnSLrSi+DoBNerkGUzpCjW9c9+noaf
+         SKWStjbA9SoczigA4Ug9xNorkgmpZiSR8ejOk1huRilEhCDd2WQaSYGn+U8IGMm1SuSq
+         NHnHclSKR5mxG7tth7JPNEQughsJ4fvrddimfRLtW9NYjMg38aMNDUKqn54xkZX+6MLd
+         KqeQ==
+X-Gm-Message-State: APjAAAWwS8Vc+pJbDUs371Sn5cZo76BcQdd64k7+E9pGopJ+UVpWefOl
+        hnAJ79BQyvu9yDG8lMFjHapyBg==
+X-Google-Smtp-Source: APXvYqy5xx6yDW4obLgxNVFChNHjAfYmmMhvCzmCKywobZ5xBBVjS7ZeoAytl4J+w+NgwcEstGBX8w==
+X-Received: by 2002:adf:fd87:: with SMTP id d7mr3985830wrr.226.1576688191510;
+        Wed, 18 Dec 2019 08:56:31 -0800 (PST)
+Received: from ?IPv6:2620:0:105f:304:c29:4454:35de:5c04? ([2620:0:105f:304:c29:4454:35de:5c04])
+        by smtp.gmail.com with ESMTPSA id q68sm3556726wme.14.2019.12.18.08.56.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 08:54:16 -0800 (PST)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5] io_uring: don't wait when under-submitting
-Date:   Wed, 18 Dec 2019 19:53:45 +0300
-Message-Id: <28aad565ed6c3a3a03975377aa62035b1b0a4d97.1576687827.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1576687827.git.asml.silence@gmail.com>
-References: <cover.1576687827.git.asml.silence@gmail.com>
+        Wed, 18 Dec 2019 08:56:30 -0800 (PST)
+Message-ID: <63f057fb98351324c8fc6210c42f3cbd76e85a68.camel@chromium.org>
+Subject: Re: [PATCH] integrity: Expose data structures required for
+ include/linux/integrity.h
+From:   Florent Revest <revest@chromium.org>
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-integrity@vger.kernel.org, Matthew Garrett <mjg59@google.com>
+Cc:     jmorris@namei.org, serge@hallyn.com, revest@google.com,
+        allison@lohutok.net, armijn@tjaldur.nl, bauerman@linux.ibm.com,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, kpsingh@chromium.org
+Date:   Wed, 18 Dec 2019 17:56:29 +0100
+In-Reply-To: <1576679307.4579.401.camel@linux.ibm.com>
+References: <20191217134748.198011-1-revest@chromium.org>
+         <e9e366d3-6c5d-743b-ffde-6b95b85884a2@schaufler-ca.com>
+         <1576624105.4579.379.camel@linux.ibm.com>
+         <2ae5127d76cbf78140fb2d6108c9ec70c7d8ae5d.camel@chromium.org>
+         <1576676087.4579.396.camel@linux.ibm.com>
+         <1576679307.4579.401.camel@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no reliable way to submit and wait in a single syscall, as
-io_submit_sqes() may under-consume sqes (in case of an early error).
-Then it will wait for not-yet-submitted requests, deadlocking the user
-in most cases.
+On Wed, 2019-12-18 at 09:28 -0500, Mimi Zohar wrote:
+> [Cc'ing Matthew]
+> 
+> On Wed, 2019-12-18 at 08:34 -0500, Mimi Zohar wrote:
+> > On Wed, 2019-12-18 at 12:03 +0100, Florent Revest wrote:
+> > > On Tue, 2019-12-17 at 18:08 -0500, Mimi Zohar wrote:
+> > > > On Tue, 2019-12-17 at 08:25 -0800, Casey Schaufler wrote:
+> > > > > On 12/17/2019 5:47 AM, Florent Revest wrote:
+> > > > > > From: Florent Revest <revest@google.com>
+> > > > > > 
+> > > > > > include/linux/integrity.h exposes the prototype of
+> > > > > > integrity_inode_get().
+> > > > > > However, it relies on struct integrity_iint_cache which is
+> > > > > > currently
+> > > > > > defined in an internal header,
+> > > > > > security/integrity/integrity.h.
+> > > > > > 
+> > > > > > To allow the rest of the kernel to use integrity_inode_get,
+> > > > > 
+> > > > > Why do you want to do this?
+> > > > 
+> > > > ditto
+> > > 
+> > > My team works on KRSI (eBPF MAC policies presented at LSS by KP
+> > > Singh).
+> > > https://lkml.org/lkml/2019/9/10/393 We identified file hashes
+> > > gathered
+> > > from the integrity subsystem as an interesting field that we
+> > > could
+> > > potentially someday expose to eBPF programs through helpers.
+> > > 
+> > > One of the reason behind writing KRSI is to replace a custom
+> > > kernel
+> > > auditing module that currently needs to redefine those structures
+> > > to
+> > > access them. I imagine other kernel modules could benefit from a
+> > > file
+> > > hash API too.
+> > > 
+> > > This is the least intrusive patch I could come up with that
+> > > allows us
+> > > to lookup a hash from an inode. I was surprised to find that
+> > > integrity_inode_get was exposed but not the structures it
+> > > returns.
+> > > 
+> > > If the community is interested in a different file hash API, I'd
+> > > be
+> > > happy to iterate on this patch based on your feedback.
+> > 
+> > There's a major difference between returning just the file hash and
+> > making the integrity_iint_cache structure public. 
 
-Don't wait/poll if can't submit all sqes
+Certainly!
+I am new to this subsystem so I just wanted to get the discussion
+started. I am happy to make a more specific function.
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
+> > Peter Moody's original code queried the cache[1].  Why do you need
+> > access to the structure itself?
+> > FYI, if/when we get to IMA namespacing, the cache structure will
+> > change.
+> > 
+> > [1] ima: add the ability to query ima for the hash of a given file.
+> 
+> If you're using Peter's patch, or something similar, I'd appreciate
+> your taking the time to upstream it.
 
-v5: as the v1, but doesn't return -EAGAIN
+Thank you for pointing me to Peter's patch! No one in my team was aware
+of his work on this. Ugh!
+It appears that Peter left the company while trying to upstream his
+patch and the situation just got stuck there for 4+ years now.
 
- fs/io_uring.c | 4 ++++
- 1 file changed, 4 insertions(+)
+If you are still positive about the idea of a ima_file_hash function, I
+will take his v6 patch (this is the latest I could find on the
+sourceforce archives of linux-ima-devel), rebase it, take your comments
+into account and send a new version by the end of the week.
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index fd85f9d3a8e1..eca025f38614 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -5133,6 +5133,9 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int, fd, u32, to_submit,
- 		submitted = io_submit_sqes(ctx, to_submit, f.file, fd,
- 					   &cur_mm, false);
- 		mutex_unlock(&ctx->uring_lock);
-+
-+		if (submitted != to_submit)
-+			goto out;
- 	}
- 	if (flags & IORING_ENTER_GETEVENTS) {
- 		unsigned nr_events = 0;
-@@ -5146,6 +5149,7 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int, fd, u32, to_submit,
- 		}
- 	}
- 
-+out:
- 	percpu_ref_put(&ctx->refs);
- out_fput:
- 	fdput(f);
--- 
-2.24.0
+> Mimi
+> 
+> > > > > >  this patch
+> > > > > > moves the definition of the necessary structures from a
+> > > > > > private
+> > > > > > header
+> > > > > > to a global kernel header.
 
