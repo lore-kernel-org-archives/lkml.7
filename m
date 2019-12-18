@@ -2,86 +2,80 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10DC9C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F26B6C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC5002176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:51:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576677095;
-	bh=cOh4++xHQIRkDylmr8HwpBOGh6gMnbkUYWlw9NMr8E0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=2E8dRCFE1X9zLcDlzTo+VWclSut1j0b7gEPVsO4WYM/aEhERvk7ng2yYkSPamT7DO
-	 61hRLdaaYmnTQlJ1uJoX0CGW5vLGjVBF4GXxnyPSrL207PYsMBk7JwsbTS4RbarkfN
-	 rfU7w2Dt54c8IOuP8hNcoEkhHxRtCCdTuYB4T1uM=
+	by mail.kernel.org (Postfix) with ESMTP id D05BB2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:52:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbfLRNvf (ORCPT
+        id S1727007AbfLRNwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 08:51:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55018 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726788AbfLRNve (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 08:51:34 -0500
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17DCD2176D;
-        Wed, 18 Dec 2019 13:51:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576677094;
-        bh=cOh4++xHQIRkDylmr8HwpBOGh6gMnbkUYWlw9NMr8E0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=sYlf50RBdxx+pxhSWD1BvpEtIlsX6urQns7zaXMIv3xLbyRx/IUEycr6XUfkLBDm4
-         SVwTO4PrmoTQUsHzfP/OJpnBQ9oJIh2WhbD72TraHAH624bbR7zGO8cSE/9520FlyZ
-         kGmI83RXUewk7jjQ9e3/Dnp75wuEkhhHDW9E36HM=
-Received: by mail-qk1-f175.google.com with SMTP id z76so1954400qka.2;
-        Wed, 18 Dec 2019 05:51:34 -0800 (PST)
-X-Gm-Message-State: APjAAAUlYPIPBWO8Su5tJtjjs1p4EI9Pn3E24KlwNITO/YP0X3J1fyJL
-        C/7fGMUiQ7x1gV1mlPEZlooBoDwooif1BrSt/A==
-X-Google-Smtp-Source: APXvYqxDR0S+4hI0M7nPfeX5e/U3cc3EvKNt/XOsy1604pvTEaKL7PVpAXykun6zLbhBXsK60cLuDkBNDJumnGDNeao=
-X-Received: by 2002:a05:620a:135b:: with SMTP id c27mr2361206qkl.119.1576677093238;
- Wed, 18 Dec 2019 05:51:33 -0800 (PST)
+        Wed, 18 Dec 2019 08:52:35 -0500
+Received: from imap2.colo.codethink.co.uk ([78.40.148.184]:44162 "EHLO
+        imap2.colo.codethink.co.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726788AbfLRNwe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 08:52:34 -0500
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap2.colo.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
+        id 1ihZke-0004yC-68; Wed, 18 Dec 2019 13:52:32 +0000
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.3)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1ihZkd-00Ax2A-Ts; Wed, 18 Dec 2019 13:52:31 +0000
+From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+To:     ben.dooks@codethink.co.uk
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] soc: renesas: rcar-rst: fix __iomem on configure call
+Date:   Wed, 18 Dec 2019 13:52:30 +0000
+Message-Id: <20191218135230.2610161-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <20191218114625.28438-1-frank-w@public-files.de> <CAK7LNARWYE4-4Qp-YfTrrt1YCZ68b28FDoE45cDJkZTqUyXNUw@mail.gmail.com>
-In-Reply-To: <CAK7LNARWYE4-4Qp-YfTrrt1YCZ68b28FDoE45cDJkZTqUyXNUw@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 18 Dec 2019 07:51:21 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+we-0c25Hn+eGDTsyTDwKEvs9LWV9QtLX1+8V3DmtFtg@mail.gmail.com>
-Message-ID: <CAL_Jsq+we-0c25Hn+eGDTsyTDwKEvs9LWV9QtLX1+8V3DmtFtg@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: Add DTC_CPP_FLAGS
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Frank Wunderlich <frank-w@public-files.de>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        DTML <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 7:37 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> (+CC: DT maintainers)
->
-> On Wed, Dec 18, 2019 at 8:55 PM Frank Wunderlich
-> <frank-w@public-files.de> wrote:
-> >
-> > With this Patch we are able to change cpp-preprocessor options
-> > (e.g. -D...) for using conditions (#ifdef) in devicetree files
-> > and dynamically add include searchpaths
->
-> I think this is questionable
-> since DT is supposed to describe hardware.
-> Does it depends on #ifdef or some external defines?
+The configure call back takes a register pointer, so should
+have been marked with __iomem. Add this to silence the
+following sparse warnings:
 
-NAK. #ifdefs and complex macros in particular are features we don't
-want in dts files.
+rivers/soc/renesas/rcar-rst.c:33:22: warning: incorrect type in initializer (incompatible argument 1 (different address spaces))
+drivers/soc/renesas/rcar-rst.c:33:22:    expected int ( *configure )( ... )
+drivers/soc/renesas/rcar-rst.c:33:22:    got int ( * )( ... )
+drivers/soc/renesas/rcar-rst.c:97:40: warning: incorrect type in argument 1 (different address spaces)
+drivers/soc/renesas/rcar-rst.c:97:40:    expected void *base
+drivers/soc/renesas/rcar-rst.c:97:40:    got void [noderef] <asn:2> *[assigned] base
 
-Rob
+Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
+---
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/soc/renesas/rcar-rst.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/soc/renesas/rcar-rst.c b/drivers/soc/renesas/rcar-rst.c
+index 14d05a070dd3..794d0a2659fe 100644
+--- a/drivers/soc/renesas/rcar-rst.c
++++ b/drivers/soc/renesas/rcar-rst.c
+@@ -21,7 +21,7 @@ static int rcar_rst_enable_wdt_reset(void __iomem *base)
+ 
+ struct rst_config {
+ 	unsigned int modemr;		/* Mode Monitoring Register Offset */
+-	int (*configure)(void *base);	/* Platform specific configuration */
++	int (*configure)(void __iomem *base);	/* Platform specific configuration */
+ };
+ 
+ static const struct rst_config rcar_rst_gen1 __initconst = {
+-- 
+2.24.0
+
