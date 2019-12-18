@@ -7,77 +7,75 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E28C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 947A3C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 224E92176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:01:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C4F52176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:01:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d+j2Q3gM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xypjkYDv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727192AbfLROBr (ORCPT
+        id S1727210AbfLROBv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 09:01:47 -0500
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:44767 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726963AbfLROBr (ORCPT
+        Wed, 18 Dec 2019 09:01:51 -0500
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:37524 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726963AbfLROBv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 09:01:47 -0500
-Received: by mail-ua1-f66.google.com with SMTP id d6so652519uam.11
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 06:01:46 -0800 (PST)
+        Wed, 18 Dec 2019 09:01:51 -0500
+Received: by mail-ua1-f65.google.com with SMTP id f9so667880ual.4
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 06:01:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=c0JG9FsmPpOoD5GBiRIPhJrj1c4tEf6Dk1qUflCL1l8=;
-        b=d+j2Q3gMVEtDTZjx1PNLgfsbE6Px+yOzGhY1xmsvXfcSM6QKcgkr2gXBoMNBcDMz7w
-         OzsoFt6Gp647NxbZU7y0+wMgrGuU5fLA08daq08/VS5L/KwKS6a32BFmscI3WhomjQ4A
-         RzUZJwp0kUOAMobVS6mQZNG/dAk1Z9UOVOGlXul7tP2u9saMls+iXSfeIM251sRQUffl
-         EgN0ErbWqJ4YFlfl/2Sub+Bmtcs/U0DbGMV030EHMNqetRXno8uTGZpxRvSMb3voA10m
-         3Mnn8YvCisimpKMIaZe9I57gTUQ2ZKwomfL2oSKfVTi2r3G9oa5KAsIzYdM1JA5uR9rT
-         +MZw==
+         :cc:content-transfer-encoding;
+        bh=ub3jDkVXoFjawCXWgcdphIOh69+aHGNxuUvMvCWN74E=;
+        b=xypjkYDvpBu+0YnibowNJfb6SWTtMnGzkvUnAAg94mM8QXUAoL0rKHH/OV3JheG3SQ
+         f1zv3evsczX2rPEsrbMQzzC+kHCeNmVKbv1j1ahYLMIN58eKz5MulRphevE9Sh73la4Q
+         vPjI7X3Fx545jz98jIrV8LwVoLR6B/S4+5keQd5w0I8Wb47bqgUkR+0uAXwxiVT95va3
+         ME6Td/64WN44pOwthaQIqRU9R8/LpB/TTXasUlRXcjb3kGyu0dRZx2cGlbooZTmiA2iq
+         k7GLW93JSceSvsyUeEsleLrv8xTHVCkJ+bF/ss/GTVR7n9PgwWE/TrkYyilul39MXiNP
+         WR9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=c0JG9FsmPpOoD5GBiRIPhJrj1c4tEf6Dk1qUflCL1l8=;
-        b=VtSXM6prm1btpF6TWroNArz3k+ufoY7YypUtxW7r0mtwghOzOee1TChiRnEKnqPCju
-         ga7hROFTLNJkzk/qLoNES/pIIXFmfg8hNIzG1CfL3iDhIdZ9SvgOXoQf0Rsp+v+TE+zb
-         aKW9fw3FctJTNyU12RR2FQWJHKM6FCnZ8ePRuGcl6RdhWWdg5Gqhzsw6fogy1Bwxy07H
-         gyY+xOt4sOJ7j6ZFet1ngkwhzUosEzW+Pb1pWEv6c7gOZU/TUZt2KXXdkxn6VeiKFqw7
-         lkwjTJp2mJTkPU3CAjUuWEwcOpG40V6yPNpLZB98lyeG4eLEPDAJ8yXZn9OJw8OdtVjf
-         quKQ==
-X-Gm-Message-State: APjAAAUiOL/k00WzUSp7ACLBaysydgHti+G+k7SakyjzV71hS+Cl9FGs
-        ytDhKVkfQGKLJATVB5HSIXRyyHKM+RB9R3ApdpMBnA==
-X-Google-Smtp-Source: APXvYqz9r2dN0C3+Bqwu22rtfMOoZJ3AuiEMR41kI//837m0N3aIJdrC3qBt5RrNMLJKSN7EjFvCzPXStXBx/AV2eUQ=
-X-Received: by 2002:ab0:2759:: with SMTP id c25mr1395424uap.104.1576677705884;
- Wed, 18 Dec 2019 06:01:45 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ub3jDkVXoFjawCXWgcdphIOh69+aHGNxuUvMvCWN74E=;
+        b=I+I0oKUV++niTwO6y7lXyJPZibCfv/LMTvCFS8plY2crycvjIxKuIn431WmI2M8K7x
+         g/VMJlhNpMSOUPZOa8WUVMJZ3w9KOCo6JolKSBQn7Qq6zaCWaCGsq1D3zShuWP4fg9Xt
+         Qpsb8deMsm4P5eA9jbUjYXxz0BH0YNgO7rZuwUGkiVYEubmc9wmQsITclkO/2X14rVFf
+         VOh6QFQymz2Ow4wqfkmcPXPLVoYIqWrz96WMq/2wO0lr8rx0LmPTng+xsPojvBeB0cpP
+         BQD24k9sZHrkqCAxirgUjLycfPZVydF2iSQAQl3tO7h3BX8Ru9jnI9pnGG7a8coNA4+6
+         +YLQ==
+X-Gm-Message-State: APjAAAXs7lGznI3BEtNAdg0GkVHE2gN48fxKiMMqF70+N5aKYz70mC2a
+        RfkrB3qS17GhclSnDeXj2+KRQN8avhW0INKZcP9vVw==
+X-Google-Smtp-Source: APXvYqyj8G0AzGnjKiPT8tWVw/h9C4RPKPz3QS7UIAnULGOVbVM57bTgtOXxLbu86sz2tuJ2mLBx0B3eASeWlXQ4bzo=
+X-Received: by 2002:ab0:e16:: with SMTP id g22mr1385696uak.129.1576677709856;
+ Wed, 18 Dec 2019 06:01:49 -0800 (PST)
 MIME-Version: 1.0
-References: <20191206075408.18355-1-hslester96@gmail.com>
-In-Reply-To: <20191206075408.18355-1-hslester96@gmail.com>
+References: <3f12c2deaae9e77a5e7ab8415db7751a27bc3b98.1575916477.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <3f12c2deaae9e77a5e7ab8415db7751a27bc3b98.1575916477.git.mirq-linux@rere.qmqm.pl>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 18 Dec 2019 15:01:09 +0100
-Message-ID: <CAPDyKFqsNpgGiDEH42Mo_fJ3jGjSO+y3tP45DpJA7vH-696yYg@mail.gmail.com>
-Subject: Re: [PATCH] mmc: cavium: Add missed pci_release_regions
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Jan Glauber <jglauber@cavium.com>,
-        David Daney <david.daney@cavium.com>,
-        "Steven J . Hill" <Steven.Hill@cavium.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+Date:   Wed, 18 Dec 2019 15:01:13 +0100
+Message-ID: <CAPDyKFo3fqYUe43Hcs4pERuO6hAG9myBFDpqjsvb8heiKr274g@mail.gmail.com>
+Subject: Re: [PATCH] mmc: sdhci-s3c: remove unused ext_cd_gpio field
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Ben Dooks <ben-linux@fluff.org>,
+        Jaehoon Chung <jh80.chung@samsung.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 6 Dec 2019 at 08:54, Chuhong Yuan <hslester96@gmail.com> wrote:
+On Mon, 9 Dec 2019 at 19:37, Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmq=
+m.pl> wrote:
 >
-> The driver forgets to call pci_release_regions() in probe failure
-> and remove.
-> Add the missed calls to fix it.
->
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> Signed-off-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
 
 Applied for next, thanks!
 
@@ -86,60 +84,30 @@ Uffe
 
 
 > ---
->  drivers/mmc/host/cavium-thunderx.c | 16 +++++++++++-----
->  1 file changed, 11 insertions(+), 5 deletions(-)
+>  drivers/mmc/host/sdhci-s3c.c | 2 --
+>  1 file changed, 2 deletions(-)
 >
-> diff --git a/drivers/mmc/host/cavium-thunderx.c b/drivers/mmc/host/cavium-thunderx.c
-> index eee08d81b242..76013bbbcff3 100644
-> --- a/drivers/mmc/host/cavium-thunderx.c
-> +++ b/drivers/mmc/host/cavium-thunderx.c
-> @@ -76,8 +76,10 @@ static int thunder_mmc_probe(struct pci_dev *pdev,
->                 return ret;
+> diff --git a/drivers/mmc/host/sdhci-s3c.c b/drivers/mmc/host/sdhci-s3c.c
+> index 51e096f27388..8b15945dd499 100644
+> --- a/drivers/mmc/host/sdhci-s3c.c
+> +++ b/drivers/mmc/host/sdhci-s3c.c
+> @@ -117,7 +117,6 @@ struct sdhci_s3c {
+>         struct s3c_sdhci_platdata *pdata;
+>         int                     cur_clk;
+>         int                     ext_cd_irq;
+> -       int                     ext_cd_gpio;
 >
->         host->base = pcim_iomap(pdev, 0, pci_resource_len(pdev, 0));
-> -       if (!host->base)
-> -               return -EINVAL;
-> +       if (!host->base) {
-> +               ret = -EINVAL;
-> +               goto error;
-> +       }
->
->         /* On ThunderX these are identical */
->         host->dma_base = host->base;
-> @@ -86,12 +88,14 @@ static int thunder_mmc_probe(struct pci_dev *pdev,
->         host->reg_off_dma = 0x160;
->
->         host->clk = devm_clk_get(dev, NULL);
-> -       if (IS_ERR(host->clk))
-> -               return PTR_ERR(host->clk);
-> +       if (IS_ERR(host->clk)) {
-> +               ret = PTR_ERR(host->clk);
-> +               goto error;
-> +       }
->
->         ret = clk_prepare_enable(host->clk);
->         if (ret)
-> -               return ret;
-> +               goto error;
->         host->sys_freq = clk_get_rate(host->clk);
->
->         spin_lock_init(&host->irq_handler_lock);
-> @@ -157,6 +161,7 @@ static int thunder_mmc_probe(struct pci_dev *pdev,
->                 }
+>         struct clk              *clk_io;
+>         struct clk              *clk_bus[MAX_BUS_CLK];
+> @@ -512,7 +511,6 @@ static int sdhci_s3c_probe(struct platform_device *pd=
+ev)
+>                         goto err_pdata_io_clk;
+>         } else {
+>                 memcpy(pdata, pdev->dev.platform_data, sizeof(*pdata));
+> -               sc->ext_cd_gpio =3D -1; /* invalid gpio number */
 >         }
->         clk_disable_unprepare(host->clk);
-> +       pci_release_regions(pdev);
->         return ret;
->  }
 >
-> @@ -175,6 +180,7 @@ static void thunder_mmc_remove(struct pci_dev *pdev)
->         writeq(dma_cfg, host->dma_base + MIO_EMM_DMA_CFG(host));
->
->         clk_disable_unprepare(host->clk);
-> +       pci_release_regions(pdev);
->  }
->
->  static const struct pci_device_id thunder_mmc_id_table[] = {
+>         drv_data =3D sdhci_s3c_get_driver_data(pdev);
 > --
-> 2.24.0
+> 2.20.1
 >
