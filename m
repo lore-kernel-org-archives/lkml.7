@@ -2,219 +2,163 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EFF7C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C011C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 673362146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:16:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576703765;
-	bh=JAhpmKdY0BCS7MWOvYPyHGXWF3fuQ13HP/Op0t3lcI8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ntQi2fw3lXhKe6g6iewYDxG8IUQMl45lYds1fjRvmNKZCUfYKAKMi720pMmgxib+9
-	 X+qN1ioraTho3UOnwXQd72LzPW6vTpxrrIMBBLFqmLqXuw3oN9vY3JXl0vrZ0MmbTe
-	 iDz2skT4tK+6cA7AwPRvW/zgnZWKTW0UIGxiiBTc=
+	by mail.kernel.org (Postfix) with ESMTP id 5DEAE2146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:18:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="nZ5eTSMj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbfLRVQE (ORCPT
+        id S1726546AbfLRVSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 16:16:04 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38848 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbfLRVQE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 16:16:04 -0500
-Received: by mail-ot1-f67.google.com with SMTP id h20so4180664otn.5;
-        Wed, 18 Dec 2019 13:16:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VfRpHq+kS/2gCphHVcGTyf5xHe3uvLTiFdpuwlwHK/I=;
-        b=aVfK+sdGJEctKueujyLknlYnApVTuFuUYb+5WkaodXSoACDUjBnMk0BdJrbLwtWS7J
-         ttd2IzZe3LFfPskRc0K5/ylhXJD5vNWNoVvDcTI6RM+pCsl7AOtNeQvCMeI41c1oEz57
-         6s1YbvyFcymLEoVSeHRq8Cfb9WgU5Y9YtCJt//37DqL9Ffvd69k0Xx7R10+e1tC9atZy
-         ng7enARzIcgWeWl4HGVOHB8ZHaIRj04gs4et5gUlfGnS1ZgBhOVvKuwLMvPoeUJhWRvH
-         ohj6+LBiIzPoEhUkpTpFNcZe9lAqQroHB1cTk301kDobeIjW5q0+e1FRbyQb+GFg+rlA
-         S9kQ==
-X-Gm-Message-State: APjAAAVMfwb0I7VVOb0dxlhNO6U7RWQ0COsW7M0I5lc9cDlbaH68egxf
-        OoyUk2gS71nuKi1M0zVp7g==
-X-Google-Smtp-Source: APXvYqxbO7jTCnsX1zsL+WZp6+wZtSheMGnt7JACGcjSdKYJsIBRWBi5EqsXahLBqZf8vvk48VBQaA==
-X-Received: by 2002:a9d:784b:: with SMTP id c11mr4658325otm.246.1576703762925;
-        Wed, 18 Dec 2019 13:16:02 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q5sm1216343oia.21.2019.12.18.13.16.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 13:16:02 -0800 (PST)
-Date:   Wed, 18 Dec 2019 15:16:01 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, linux-mips@vger.kernel.org
-Subject: Re: [PATCH v4 1/8] dt-bindings: add img,pvrsgx.yaml for Imagination
- GPUs
-Message-ID: <20191218211601.GA11411@bogus>
-References: <cover.1576605726.git.hns@goldelico.com>
- <aedc895985d966cf709d153d5b0bed07f59bdcfd.1576605726.git.hns@goldelico.com>
+        Wed, 18 Dec 2019 16:18:12 -0500
+Received: from mail-co1nam11on2071.outbound.protection.outlook.com ([40.107.220.71]:6073
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725985AbfLRVSL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 16:18:11 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PDUqSCvkX6XsoGVn0h+OAOznQIdoTZzsSVYPXAZkfOAM5Bd6WnD0NoznHej6PttdgRHiXDZgr5xkV4T5s9yNnnCG1TuaapH6R5VfWHHh/W1llYvIv+PNvLPi9k/BLFGCJGeSNNRAIAOsufrE5Ztop7Br5Wk+9mRiaZWJOvcJ4Afc55A/C9z5V1mtc8vJ8RFDOr/RhkrfXIj2YwM5pUo8DAlwdM31U7GqciX7PfbQCJCupfRnHb3SezcGTh3g1XIXnHGkfWNmqWhgxUiA5dbG53g9/8LcqiRgTAqKU5XCwJr5WQxLeAW5YWwQjTtLJDp9CYjUmXVQ+fnYfzK1xlYtGw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eHdkPZIw1g7KHGUzc7ykjDer9z79ueCzfXl8S7FO1Rg=;
+ b=ivR+yWIxrLYPN+Qv6T++gIKgqZRv0dqdiQmr67Zmo1/uT9+mTqKEsVGlRoFB1+dK4UBPB0G5WKbyPMLoCLmhclGPH/xIWblVkfMwoD6dcgwRRgZS5nCVBjwISDp33GcwTFFvOi8EF6tq1KqXkJEcFW+oL7P2EAdaN1ct3sp4Xqvi/W74MZwSoTD31R5Ve4Fn2o5zpRDxWtg1D8yhpaaZrKt+yIl2mBh7pN1VT5hNuUZiKcYb8ylKSmacBp8yzhYZjK9ZuJuDTbhjXeScimhK7l4Fr4Wuo2oqBEo0FlM89atrMjafCQsIzO8d7JYjbkofag3fFB95GZA1FB9Kt6cWvA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eHdkPZIw1g7KHGUzc7ykjDer9z79ueCzfXl8S7FO1Rg=;
+ b=nZ5eTSMj42RHzMwCsq/K3bJA6S7ArEBXSDdcxDg8FQAnVX9Z5BgvLFWVniC1YSVa63vUkqg06VjAXZqZvG+ICOQE40G5Jrdfx13EdN734OjX3cEkrqqWh36+v//fKI9gcz5u93FIujExWKtMNc3dshRktzND7W4Tj2275Wn2Hwc=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Thomas.Lendacky@amd.com; 
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.71.154) by
+ DM6PR12MB2940.namprd12.prod.outlook.com (20.179.71.211) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.16; Wed, 18 Dec 2019 21:18:08 +0000
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::a0cd:463:f444:c270]) by DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::a0cd:463:f444:c270%7]) with mapi id 15.20.2538.019; Wed, 18 Dec 2019
+ 21:18:08 +0000
+Subject: Re: [PATCH v1 1/2] KVM: x86/mmu: Allow for overriding MMIO SPTE mask
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Brijesh Singh <brijesh.singh@amd.com>
+References: <cover.1576698347.git.thomas.lendacky@amd.com>
+ <10fdb77c9b6795f68137cf4315571ab791ab6feb.1576698347.git.thomas.lendacky@amd.com>
+ <f0bc54c8-cea2-e574-6191-5c34d1b504c9@amd.com>
+ <20191218202702.GF25201@linux.intel.com>
+From:   Tom Lendacky <thomas.lendacky@amd.com>
+Message-ID: <9ffc1936-dbdc-52c8-bbd4-24c773728452@amd.com>
+Date:   Wed, 18 Dec 2019 15:18:06 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+In-Reply-To: <20191218202702.GF25201@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DM5PR07CA0083.namprd07.prod.outlook.com
+ (2603:10b6:4:ad::48) To DM6PR12MB3163.namprd12.prod.outlook.com
+ (2603:10b6:5:15e::26)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aedc895985d966cf709d153d5b0bed07f59bdcfd.1576605726.git.hns@goldelico.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 17425309-12ba-43e2-83f0-08d783ffc746
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2940:|DM6PR12MB2940:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB2940FA09E32048846132B664EC530@DM6PR12MB2940.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 0255DF69B9
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(346002)(39860400002)(376002)(136003)(199004)(189003)(5660300002)(2616005)(31686004)(66556008)(26005)(86362001)(2906002)(4326008)(66476007)(8676002)(36756003)(81156014)(6486002)(478600001)(6512007)(52116002)(6916009)(54906003)(316002)(81166006)(6506007)(53546011)(31696002)(8936002)(66946007)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2940;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 6fP222E/Wt6SxZv1ga95Xle/2j3J43uVyTIdbV6GvVHSGwixvf2Ep5cInmXuJciL4B3+th1TugDHXz4efMQCrlODej6dTp5l6IHu7b71lBBcc2kXZPOafoSRVFQxyaViHLH/LJ0dGibgHTkhtqjGaxF8hQ5olE3HjMEVSu1Xftuh2ecVwWwZs8mukHVT13r3oUQCCgDdUKjBEFBhHFuGlMLsigLUlk9zyWNGb137eHTsqGuVxPkdtqlYfbpq9sJcDz0BXGjy1Zm90wM5IitlyUgzqSyaCebfv/LYYv8eZ6HAhJIsGQDUk7X7U3pMLBA1z+aktoeVq6ElAN5QNyMv0+EUL+JqXHDY80J+yhrvHsfWdENLPhxjBBJyiAMTjccILTXL7tZZuDjhs2T7qNMCgVbgfCNR4S3s2DsEtVkYYHrnVMuPZ1GcJPzTBNBFywjB
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 17425309-12ba-43e2-83f0-08d783ffc746
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Dec 2019 21:18:08.3898
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nVguMUYWMY3QYG+13Ufx2rsU++bPo9mIAgmzhkI73eHIqyU79G77E4PQQxOQzYokdTf2auTO8uXht3dZy7Jyog==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2940
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 07:01:59PM +0100, H. Nikolaus Schaller wrote:
-> The Imagination PVR/SGX GPU is part of several SoC from
-> multiple vendors, e.g. TI OMAP, Ingenic JZ4780, Intel Poulsbo
-> and others.
+On 12/18/19 2:27 PM, Sean Christopherson wrote:
+> On Wed, Dec 18, 2019 at 01:51:23PM -0600, Tom Lendacky wrote:
+>> On 12/18/19 1:45 PM, Tom Lendacky wrote:
+>>> The KVM MMIO support uses bit 51 as the reserved bit to cause nested page
+>>> faults when a guest performs MMIO. The AMD memory encryption support uses
+>>> CPUID functions to define the encryption bit position. Given this, KVM
+>>> can't assume that bit 51 will be safe all the time.
+>>>
+>>> Add a callback to return a reserved bit(s) mask that can be used for the
+>>> MMIO pagetable entries. The callback is not responsible for setting the
+>>> present bit.
+>>>
+>>> If a callback is registered:
+>>>   - any non-zero mask returned is updated with the present bit and used
+>>>     as the MMIO SPTE mask.
+>>>   - a zero mask returned results in a mask with only bit 51 set (i.e. no
+>>>     present bit) as the MMIO SPTE mask, similar to the way 52-bit physical
+>>>     addressing is handled.
+>>>
+>>> If no callback is registered, the current method of setting the MMIO SPTE
+>>> mask is used.
+>>>
+>>> Fixes: 28a1f3ac1d0c ("kvm: x86: Set highest physical address bits in non-present/reserved SPTEs")
+>>> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+>>> ---
+>>>  arch/x86/include/asm/kvm_host.h |  4 ++-
+>>>  arch/x86/kvm/mmu/mmu.c          | 54 +++++++++++++++++++++------------
+>>>  arch/x86/kvm/x86.c              |  2 +-
+>>>  3 files changed, 38 insertions(+), 22 deletions(-)
+>>
+>> This patch has some extra churn because kvm_x86_ops isn't set yet when the
+>> call to kvm_set_mmio_spte_mask() is made. If it's not a problem to move
+>> setting kvm_x86_ops just a bit earlier in kvm_arch_init(), some of the
+>> churn can be avoided.
 > 
-> With this binding, we describe how the SGX processor is
-> interfaced to the SoC (registers, interrupt etc.).
+> As a completely different alternative, what about handling this purely
+> within SVM code by overriding the masks during svm_hardware_setup(),
+> similar to how VMX handles EPT's custom masks, e.g.:
 > 
-> In most cases, Clock, Reset and power management is handled
-> by a parent node or elsewhere.
-> 
-> Tested by make dt_binding_check dtbs_check
+> 	/*
+> 	 * Override the MMIO masks if memory encryption support is enabled:
+> 	 *   The physical addressing width is reduced. The first bit above the
+> 	 *   new physical addressing limit will always be reserved.
+> 	 */
+> 	if (cpuid_eax(0x80000000) >= 0x8000001f) {
+> 		rdmsrl(MSR_K8_SYSCFG, msr);
+> 		if (msr & MSR_K8_SYSCFG_MEM_ENCRYPT) {
+> 			mask = BIT_ULL(boot_cpu_data.x86_phys_bits) | BIT_ULL(0);
+> 			kvm_mmu_set_mmio_spte_mask(mask, mask,
+> 						   ACC_WRITE_MASK | ACC_USER_MASK);
+> 		}
+> 	}
 
-I'm surprised that worked... (Not for long if it did).
+Works for me if no one has objections to doing it that way (and will
+actually make going into stable much easier).
 
-> 
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> ---
->  .../devicetree/bindings/gpu/img,pvrsgx.yaml   | 80 +++++++++++++++++++
->  1 file changed, 80 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
-> new file mode 100644
-> index 000000000000..44799774e34d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
-> @@ -0,0 +1,80 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpu/img,pvrsgx.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Imagination PVR/SGX GPU
-> +
-> +maintainers:
-> +  - H. Nikolaus Schaller <hns@goldelico.com>
-> +
-> +description: |+
-> +  This binding describes the Imagination SGX5 series of 3D accelerators which
-> +  are found in several different SoC like TI OMAP, Sitara, Ingenic JZ4780,
-> +  Allwinner A83, and Intel Poulsbo and CedarView and more.
-> +
-> +  For an almost complete list see: https://en.wikipedia.org/wiki/PowerVR#Implementations
-> +  
-> +  Only the Imagination SGX530, SGX540 and SGX544 GPUs are currently covered by
-> +  this binding but the extension of the pattern is straightforward.
-> +  
-> +  The SGX node is usually a child node of some DT node belonging to the SoC
-> +  which handles clocks, reset and general address space mapping of the SGX
-> +  register area.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +    # Example: BeagleBoard A/B/C, OpenPandora 600MHz
-> +      - ti,omap3-sgx530-121, img,sgx530-121, img,sgx530
+Thanks,
+Tom
 
-Didn't I comment before this is not valid. You are defining the 
-compatible string is: 'ti,omap3-sgx530-121, img,sgx530-121, img,sgx530'
-
-You need:
-
-compatible:
-  oneOf:
-    - description: BeagleBoard A/B/C, OpenPandora 600MHz
-      items:
-        - const: ti,omap3-sgx530-121
-        - const: img,sgx530-121
-        - const: img,sgx530
-
-And so on for each of the rest.
-
-> +    # Example: BeagleBoard XM, GTA04, OpenPandora 1GHz
-> +      - ti,omap3-sgx530-125, img,sgx530-125, img,sgx530
-> +    # Example: BeagleBone Black
-> +      - ti,am3352-sgx530-125, img,sgx530-125, img,sgx530
-
-These 2 could be combined using 'enum' for the first item. Basically, 
-you can group ones where the last 2 strings are the same.
-
-> +    # Example: Pandaboard, Pandaboard ES
-> +      - ti,omap4-sgx540-120, img,sgx540-120, img,sgx540
-> +      - ti,omap4-sgx544-112, img,sgx544-112, img,sgx544
-> +    # Example: OMAP5 UEVM, Pyra Handheld
-> +      - ti,omap5-sgx544-116, img,sgx544-116, img,sgx544
-> +      - ti,dra7-sgx544-116, img,sgx544-116, img,sgx544
-> +    # Example: CI20
-> +      - ingenic,jz4780-sgx540-120, img,sgx540-120, img,sgx540
-> +    # the following entries are not validated with real hardware
-
-What am I supposed to do with that? You're just defining some strings. 
-If you're not sure they are okay, then don't define them.
-
-> +    # more TI SoC
-> +      - ti,am3517-sgx530-125, img,sgx530-125, img,sgx530
-> +      - ti,am4-sgx530-125, img,sgx530-125, img,sgx530
-> +      - ti,ti81xx-sgx530-125, img,sgx530-125, img,sgx530
-> +    # Example: Banana-Pi-M3 (Allwinner A83T)
-> +      - allwinner,sun8i-a83t-sgx544-116, img,sgx544-116, img,sgx544
-> +    # Example: Atom Z5xx
-> +      - intel,poulsbo-gma500-sgx535, img,sgx535-116, img,sgx535
-> +    # Example: Atom Z24xx
-> +      - intel,medfield-gma-sgx540, img,sgx540-116, img,sgx540
-> +    # Example: Atom N2600, D2500
-> +      - intel,cedarview-gma3600-sgx545, img,sgx545-116, img,sgx545
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |+
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    gpu@fe00 {
-> +      compatible = "ti,omap-omap5-sgx544-116", "img,sgx544-116", "img,sgx544", "img,sgx5";
-
-Doesn't match the schema.
-
-> +      reg = <0xfe00 0x200>;
-> +      interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
-> +    };
-> +
-> +...
-> -- 
-> 2.23.0
 > 
