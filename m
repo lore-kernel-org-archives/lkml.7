@@ -2,89 +2,121 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 695DEC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:23:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CD1C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 488C42465E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:23:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 484BE24650
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:29:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HgEJY8wc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbfLRHX1 (ORCPT
+        id S1726699AbfLRH3W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 02:23:27 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:36212 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726754AbfLRHXZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 02:23:25 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 43B7D200184;
-        Wed, 18 Dec 2019 08:23:23 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0B597200A42;
-        Wed, 18 Dec 2019 08:23:16 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E8A6F402DF;
-        Wed, 18 Dec 2019 15:23:05 +0800 (SGT)
-From:   Joakim Zhang <qiangqing.zhang@nxp.com>
-To:     tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, shengjiu.wang@nxp.com
-Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, fugang.duan@nxp.com,
-        aisheng.dong@nxp.com, Joakim Zhang <qiangqing.zhang@nxp.com>
-Subject: [PATCH 3/3] drivers/irqchip: enable INTMUX interrupt controller driver
-Date:   Wed, 18 Dec 2019 15:20:15 +0800
-Message-Id: <1576653615-27954-4-git-send-email-qiangqing.zhang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576653615-27954-1-git-send-email-qiangqing.zhang@nxp.com>
-References: <1576653615-27954-1-git-send-email-qiangqing.zhang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 18 Dec 2019 02:29:22 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25041 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725955AbfLRH3W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 02:29:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576654161;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=W+koJecItxUpWBbkClvTnIgMsQAjFCgBgLdaip1sKlY=;
+        b=HgEJY8wcMK3XBEFLet34nsAXKtuAIo/zIG1uAXZ/TBIsjQz0+FKq+xkK/kJuQGa23P8Bxm
+        G12T/MccDar4TfUZ68LUXXo9kWfpGX3UUM/VvEWL/n80utkD3uHYwvAQK6MP2fAE+qSNCc
+        8+Z7UeLyhNuvAUlxMxpM8Qe8SPJWbEY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-237-KeCKVkgNOpu5eoSnYBoDdg-1; Wed, 18 Dec 2019 02:29:18 -0500
+X-MC-Unique: KeCKVkgNOpu5eoSnYBoDdg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6C21B800EC0;
+        Wed, 18 Dec 2019 07:29:15 +0000 (UTC)
+Received: from krava (ovpn-204-177.brq.redhat.com [10.40.204.177])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6DCF71001B00;
+        Wed, 18 Dec 2019 07:29:11 +0000 (UTC)
+Date:   Wed, 18 Dec 2019 08:29:08 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Andrey Zhizhikin <andrey.z@gmail.com>
+Cc:     ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
+        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
+        sergey.senozhatsky@gmail.com, pmladek@suse.com,
+        wangkefeng.wang@huawei.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>
+Subject: Re: [PATCH] tools lib api fs: fix gcc9 compilation error
+Message-ID: <20191218072908.GA19062@krava>
+References: <20191211080109.18765-1-andrey.zhizhikin@leica-geosystems.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211080109.18765-1-andrey.zhizhikin@leica-geosystems.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable INTMUX interrupt controller driver for i.MX platforms.
+On Wed, Dec 11, 2019 at 08:01:09AM +0000, Andrey Zhizhikin wrote:
+> GCC9 introduced string hardening mechanisms, which exhibits the error
+> during fs api compilation:
+> 
+> error: '__builtin_strncpy' specified bound 4096 equals destination size
+> [-Werror=stringop-truncation]
+> 
+> This comes when the length of copy passed to strncpy is is equal to
+> destination size, which could potentially lead to buffer overflow.
+> 
+> There is a need to mitigate this potential issue by limiting the size of
+> destination by 1 and explicitly terminate the destination with NULL.
+> 
+> Signed-off-by: Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
+> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
 
-Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
----
- drivers/irqchip/Kconfig  | 6 ++++++
- drivers/irqchip/Makefile | 1 +
- 2 files changed, 7 insertions(+)
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index ba152954324b..7e2b1e9d0b45 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -457,6 +457,12 @@ config IMX_IRQSTEER
- 	help
- 	  Support for the i.MX IRQSTEER interrupt multiplexer/remapper.
- 
-+config IMX_INTMUX
-+	def_bool y if ARCH_MXC
-+	select IRQ_DOMAIN
-+	help
-+	  Support for the i.MX INTMUX interrupt multiplexer.
-+
- config LS1X_IRQ
- 	bool "Loongson-1 Interrupt Controller"
- 	depends on MACH_LOONGSON32
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index e806dda690ea..af976a79d1fb 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -100,6 +100,7 @@ obj-$(CONFIG_CSKY_MPINTC)		+= irq-csky-mpintc.o
- obj-$(CONFIG_CSKY_APB_INTC)		+= irq-csky-apb-intc.o
- obj-$(CONFIG_SIFIVE_PLIC)		+= irq-sifive-plic.o
- obj-$(CONFIG_IMX_IRQSTEER)		+= irq-imx-irqsteer.o
-+obj-$(CONFIG_IMX_INTMUX)		+= irq-imx-intmux.o
- obj-$(CONFIG_MADERA_IRQ)		+= irq-madera.o
- obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
- obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
--- 
-2.17.1
+thanks,
+jirka
+
+> ---
+>  tools/lib/api/fs/fs.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/lib/api/fs/fs.c b/tools/lib/api/fs/fs.c
+> index 11b3885e833e..027b18f7ed8c 100644
+> --- a/tools/lib/api/fs/fs.c
+> +++ b/tools/lib/api/fs/fs.c
+> @@ -210,6 +210,7 @@ static bool fs__env_override(struct fs *fs)
+>  	size_t name_len = strlen(fs->name);
+>  	/* name + "_PATH" + '\0' */
+>  	char upper_name[name_len + 5 + 1];
+> +
+>  	memcpy(upper_name, fs->name, name_len);
+>  	mem_toupper(upper_name, name_len);
+>  	strcpy(&upper_name[name_len], "_PATH");
+> @@ -219,7 +220,8 @@ static bool fs__env_override(struct fs *fs)
+>  		return false;
+>  
+>  	fs->found = true;
+> -	strncpy(fs->path, override_path, sizeof(fs->path));
+> +	strncpy(fs->path, override_path, sizeof(fs->path) - 1);
+> +	fs->path[sizeof(fs->path) - 1] = '\0';
+>  	return true;
+>  }
+>  
+> -- 
+> 2.17.1
+> 
 
