@@ -2,109 +2,131 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDFDC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50110C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:01:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1B1B24686
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2043D2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:01:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="vbw6a+MH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PVuXNYDR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbfLRK54 (ORCPT
+        id S1726710AbfLRLB6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 05:57:56 -0500
-Received: from frisell.zx2c4.com ([192.95.5.64]:40833 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726595AbfLRK5z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 05:57:55 -0500
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 55c136cb;
-        Wed, 18 Dec 2019 10:01:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=55Ej4v0lM3p/I0FACRIUrnfxHIU=; b=vbw6a+
-        MHY4MrDHXtOaa/wts2jO4Jb7oi1uKXpI4vrR6Ae91EPhptQMbj+8ZZ8muRDF9j7D
-        mYV3IXZCk+jAfe3hvXAWgZQTVQQIZ6zGksZgxMvnCRSX3xEI+jEuNquVKEAEhQiu
-        BLFUlgnliYBoMn+WzSZQlKfBoo0HM60WoFHLceIFVTVT/LyFhA7NiN2uOKt4Dts1
-        1l6acGOyDDQUdjI8TglIeUAPuvXgevkzuqNpe9fumQmOdrGajoZGb8F/E54BMRHC
-        BJqr3bgX9wQd4mLFT5cVANQNVzAuMhze+jVyCSz4EtFd70n80WyvHAq4OcyxH9X6
-        rewiFeDTthHEFI2w==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id b0294151 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Wed, 18 Dec 2019 10:01:18 +0000 (UTC)
-Received: by mail-ot1-f53.google.com with SMTP id x3so1998460oto.11;
-        Wed, 18 Dec 2019 02:57:52 -0800 (PST)
-X-Gm-Message-State: APjAAAVrn1qy7wtIpeIqtNwi3i7tsYFCPy8YacM8Vxn6xt9ZEyihjJtv
-        9VhgAz7NpYvpjTU9k6Z00KGeJXJVI27LZL8e1S4=
-X-Google-Smtp-Source: APXvYqxjqV48MW8pEkonJsHCBJB6dAMkCc+h3CShRUdg0tgBsfi81aou/VOZAKMexDuvEJyDMIJCnr2JWKqhoiSCJ4c=
-X-Received: by 2002:a9d:674f:: with SMTP id w15mr2002550otm.243.1576666671241;
- Wed, 18 Dec 2019 02:57:51 -0800 (PST)
+        Wed, 18 Dec 2019 06:01:58 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:43287 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbfLRLB5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 06:01:57 -0500
+Received: by mail-ed1-f65.google.com with SMTP id dc19so1279944edb.10;
+        Wed, 18 Dec 2019 03:01:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jOvy+Wb152d0zqbPj1ADcU3RyJlqbcpQxfTLATNTuZQ=;
+        b=PVuXNYDR30Vl0OmPK1uSJ8/tPsKevwn7uSPY4MGZ/nxyH/Oi9o8xAnX+VGgjx1AICE
+         5aEyvWakA/ZsPGdeagJcN8I8oDlmJtuiIfkwl3blosCbdenj7/Fd8To9TQNpXKZWp+5S
+         RaA69AoMh7LiR3p6N5I6Q/DeOTk1opqaNdljEXK+LoDryFw6tdufAWouMwJa1HX+vfrh
+         cuc7LU6miJEuGhbzGzoPn644sI0wjVwZXI7VqsUFWCjQ/+F32hdIR+hIpqhiXKXDsEr7
+         cGWMZ6Lt0r6HG1O+6y9ODp459cgFAKRpR9G3SGb8FIXyZ9TLccF+8UcL03AKqM1Gy3lo
+         LgCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jOvy+Wb152d0zqbPj1ADcU3RyJlqbcpQxfTLATNTuZQ=;
+        b=OHjEiAuxrtC0pHkKPFb5ADKORJKPiu+9H9ECRqxSI/Ew+CE2AANBn5QTkGaCxPUO8M
+         eP97/HDZcSlSJRYXjq+IgJ33UU89AYgniXUWwb4LeTaZ2a+Hj8M/mR7nLOZ1Scv/pq7t
+         t0DlssTwqMtYnK4QmizHonvK/wLL9u7xhtgFf4F/GePagLj7c57FBmIMgNghTZhcAzCX
+         puG8mgw5xTYuhp7W4HpvL6WUFYamqZv/hJINl8cxyJt4D0ybe8xTaBSZMv01zfbWYSyE
+         YDSAtbk/jfmXQxM668gf3EiM6SG4ikn0u+2l0cR++BDskQZfgRL+lSBQHXZoCGh9dLwU
+         wR+A==
+X-Gm-Message-State: APjAAAWKFVV16PawgCiR9ElLdwN5NaaB/NuVbagjTTqL+u2phnoUO/gw
+        E0Ui+ao1mZEpP2ee+x2A5l4b4WWVFaa8RNcOLVA=
+X-Google-Smtp-Source: APXvYqwjFGNoZwWaGD+ER9s2eFutTysDIRNxst+Rt1z3axVUFONKvQSxEEiVuQXpNKTc+8p03XpM24TZxlpMY/WZM24=
+X-Received: by 2002:a50:9e01:: with SMTP id z1mr1572715ede.232.1576666916178;
+ Wed, 18 Dec 2019 03:01:56 -0800 (PST)
 MIME-Version: 1.0
-References: <20191208232734.225161-1-Jason@zx2c4.com> <CACT4Y+bsJVmgbD-WogwU=LfWiPN1JgjBrwx4s8Y14hDd7vqqhQ@mail.gmail.com>
-In-Reply-To: <CACT4Y+bsJVmgbD-WogwU=LfWiPN1JgjBrwx4s8Y14hDd7vqqhQ@mail.gmail.com>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Wed, 18 Dec 2019 11:57:39 +0100
-X-Gmail-Original-Message-ID: <CAHmME9o0AparjaaOSoZD14RAW8_AJTfKfcx3Y2ndDAPFNC-MeQ@mail.gmail.com>
-Message-ID: <CAHmME9o0AparjaaOSoZD14RAW8_AJTfKfcx3Y2ndDAPFNC-MeQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v2] net: WireGuard secure network tunnel
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>
+References: <1540378203-1655-1-git-send-email-shubhrajyoti.datta@gmail.com> <20181024105854.GU30658@n2100.armlinux.org.uk>
+In-Reply-To: <20181024105854.GU30658@n2100.armlinux.org.uk>
+From:   Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
+Date:   Wed, 18 Dec 2019 16:31:44 +0530
+Message-ID: <CAKfKVtFLssjC3j3yHvQ98TNGSf=DRdMO+YdUyMn0o91+Jn10Zw@mail.gmail.com>
+Subject: Re: [PATCH] i2c: cadence: Implement timeout
+To:     Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc:     linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
-
-On Wed, Dec 18, 2019 at 11:13 AM Dmitry Vyukov <dvyukov@google.com> wrote:
-> Does it really do "verbose debug log"? I only see it is used for
-> self-tests and debug checks:
-
-Yes, it does, via net_dbg and co. People with the Linux "dynamic
-debugging" feature turned also get the log by twiddling with some file
-at runtime.
-
-> In different contexts one may enable different sets of these.
-> In particular in fuzzing context one absolutely wants additional debug
-> checks, but not self tests and definitely no verbose logging. CI and
-> various manual scenarios will require different sets as well.
-> If this does verbose logging, we won't get debug checks as well during
-> fuzzing, which is unfortunate.
-> Can make sense splitting CONFIG_WIREGUARD_DEBUG into 2 or 3 separate
-> configs (that's what I see frequently). Unfortunately there is no
-> standard conventions for anything of this, so CIs will never find your
-> boot tests and fuzzing won't find the additional checks...
-
-I agree that it might make sense to split this up at some point, but
-for now I think it might be a bit overkill. Both the self-tests and
-debug tests are *very* light at the moment. Down the road if these
-become heavier, I think it'd probably be a good idea, but for the time
-being it'd mostly be more complexity for nothing.
-
-Another more interesting point, though, you wrote
-> and definitely no verbose logging.
-
-Actually with WireGuard, I think that's not the case. The WireGuard
-logging has been written with DoS in mind. You /should/ be able to
-safely run it on a production system exposed to the wild Internet, and
-while there will be some additional things in your dmesg, an attacker
-isn't supposed to be able to totally flood it without ratelimiting or
-inject malicious strings into it (such as ANSI escape sequence). In
-other words, I consider the logging to be fair game attack surface. If
-your fuzzer manages to craft some nasty sequence of packets that
-tricks some rate limiting logic and lets you litter all over dmesg
-totally unbounded, I'd consider that a real security bug worth
-stressing out about. So from the perspective of letting your fuzzers
-loose on WireGuard, I'd actually like to see this option kept on.
-
-Jason
+On Wed, Oct 24, 2018 at 4:29 PM Russell King - ARM Linux
+<linux@armlinux.org.uk> wrote:
+>
+> On Wed, Oct 24, 2018 at 04:20:03PM +0530, shubhrajyoti.datta@gmail.com wrote:
+> > From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> >
+> > In some cases we are waiting in a loop. Replace the infinite wait with
+> > the  timeout.
+> >
+> > Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> > ---
+> >  drivers/i2c/busses/i2c-cadence.c | 30 ++++++++++++++++++++++++++----
+> >  1 file changed, 26 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/i2c/busses/i2c-cadence.c b/drivers/i2c/busses/i2c-cadence.c
+> > index b136057..9c38278 100644
+> > --- a/drivers/i2c/busses/i2c-cadence.c
+> > +++ b/drivers/i2c/busses/i2c-cadence.c
+> > @@ -209,6 +209,7 @@ static irqreturn_t cdns_i2c_isr(int irq, void *ptr)
+> >       struct cdns_i2c *id = ptr;
+> >       /* Signal completion only after everything is updated */
+> >       int done_flag = 0;
+> > +     unsigned int timeout;
+> >       irqreturn_t status = IRQ_NONE;
+> >
+> >       isr_status = cdns_i2c_readreg(CDNS_I2C_ISR_OFFSET);
+> > @@ -235,6 +236,7 @@ static irqreturn_t cdns_i2c_isr(int irq, void *ptr)
+> >           ((isr_status & CDNS_I2C_IXR_COMP) ||
+> >            (isr_status & CDNS_I2C_IXR_DATA))) {
+> >               /* Read data if receive data valid is set */
+> > +             timeout = 1000;
+> >               while (cdns_i2c_readreg(CDNS_I2C_SR_OFFSET) &
+> >                      CDNS_I2C_SR_RXDV) {
+> >                       /*
+> > @@ -253,6 +255,16 @@ static irqreturn_t cdns_i2c_isr(int irq, void *ptr)
+> >
+> >                       if (cdns_is_holdquirk(id, hold_quirk))
+> >                               break;
+> > +                     timeout--;
+> > +                     if (timeout)
+> > +                             mdelay(1);
+> > +                     else
+> > +                             break;
+> > +             }
+> > +             if (!timeout) {
+> > +                     id->err_status = -ETIMEDOUT;
+> > +                     complete(&id->xfer_done);
+> > +                     return IRQ_HANDLED;
+>
+> Good kernel programming principle: Always check for the success
+> condition when exiting due to timeout rather than the fact that we
+> timed out.
+>
+> Also, is this _really_ a loop that needs a timeout condition?  Looking
+> at the original code, it looks like the purpose of the loop is to read
+> more than one byte, and you are introducing a 1ms delay between the
+> read of each byte.
+Thanks for the review.
+I agree will skip this patch.
