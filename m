@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F52EC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:10:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF69BC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6524D24650
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:10:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 948D924650
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:11:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="qaT1g3Qm"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="XvGX60Sy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727666AbfLRTKz (ORCPT
+        id S1727675AbfLRTLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 14:10:55 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:50579 "EHLO
+        Wed, 18 Dec 2019 14:11:00 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:33438 "EHLO
         mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727377AbfLRTKy (ORCPT
+        with ESMTP id S1727377AbfLRTK7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 14:10:54 -0500
-Received: by mail-pj1-f65.google.com with SMTP id r67so1315691pjb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 11:10:54 -0800 (PST)
+        Wed, 18 Dec 2019 14:10:59 -0500
+Received: by mail-pj1-f65.google.com with SMTP id u63so1572751pjb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 11:10:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Y5rz72YPbxV0B26OX0MAGWfHxZgDOqp0oOHgAxqpqbs=;
-        b=qaT1g3QmNSjlk34e0bfdy9ok+w4z7oyVUgr/NLUWpn0Oeeg4030IT0FUAPHxkGLpW2
-         nm5uqYdeYz0gdfZQX7XhcduE2jn0as8ipVFztZ+l9wYNbFSw+xeZctKwIMzniClzk8y9
-         /E3IE7wjWrfw9HxDHrayx0rahNLm4pOONqFW0=
+        bh=mkXpYcbeC0bnNO0q+6BYbbUdKRmj3eZu6k2PkyZZ+20=;
+        b=XvGX60SydjoCIbJWbVf8oedrCs9uWiw2QPKF01BpC0G8IdFG7CMi3ix7ix2+K6CePR
+         AlGHHxNcOxj8lgJf+aN+Y3gwpMR50dJThtKwZ4AuNpVxnIaaFfGV0oPsD+A8h23OHdV/
+         qJcvS0JORLN0odGKH6Cuijn+Wa4kn3knxxn58=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Y5rz72YPbxV0B26OX0MAGWfHxZgDOqp0oOHgAxqpqbs=;
-        b=A/TsWW6QMlcwbw+ZUXNe4SVhsrjxOGwg9MPc0kOr9+BDbqm+cXbBOyrdi+DQ/raxR+
-         cJ+ATB8WwmHHOCcX3QXXwDABIF0XWSBQJwdtgsI4bTl/S7v2RGtyfnQw8W+a5zmW9caV
-         zNH9MERFHn+WLsLx7F+NW8mtYq02p9w6rUQ2WqkarzB/KoohMcsx8/jhhlt5QSi40Jfw
-         YD1SlPkto3wZYz0tPeJMa5zyp3LqOwJnmRbfXojUNwzpRz/KQ0bA8OrsRouhhjFmF14I
-         RRLKVi8iMScpMwCG5PUrqVD8zymQ2uEdpaWqWXtkSHOzGhm3AbdzZCVhDteEWB53/RA9
-         TGWA==
-X-Gm-Message-State: APjAAAWtwRw7SgdKlE0OjQ+bI0iemL6oPPXr1JCNMjkPZ+5W/2kavlhy
-        7EPzc8mR0xs85sv+WWBh7mzqKA==
-X-Google-Smtp-Source: APXvYqzccrxMy1V4bhDCzwLVd/gItseX9VcdLFb7kIF0/DVHj/GS9ICbTrMaOY4u6QU+QI9+PyR5Mg==
-X-Received: by 2002:a17:90a:cb08:: with SMTP id z8mr3892894pjt.86.1576696253896;
-        Wed, 18 Dec 2019 11:10:53 -0800 (PST)
+        bh=mkXpYcbeC0bnNO0q+6BYbbUdKRmj3eZu6k2PkyZZ+20=;
+        b=QD2UjaIK+n2CPgytZXdj2FnED6DMnOlc5A7wZcP03Sd+Td9hVZC1Zy9azOxYKZUmI0
+         JfZC9ORgfQ8M0zyKpvLdwHyngmLlsn2euIa1Iau36ZYUTwrY/5BrKuHooYAZcXL9feuf
+         VSY3imCZoWf2IFVKl4GJRqiz1FWNvT6zUk3J4epXL5n5eWJLzGerAoKkFpErYm80G7uy
+         zZB03FnlTa7mlwtr4Q0rCqlVcixgRPIYGxv7nmr/kMpIhWy17sIF3+heuuF3j8lT2LoW
+         sXjo1xhF6oQ3my2cW+q7AzPJMbGfRP24xDKXOr+6Vs8YC+heJsfqlP60vKb/GFKDMKbl
+         FDvA==
+X-Gm-Message-State: APjAAAUHgImjsoDslBpZ6gE5Ka9eRvOwzb/8+cMnuk7FProfbmPyEnOd
+        4XcEFCQW7uKJS35LVXJ74fsxVQ==
+X-Google-Smtp-Source: APXvYqw3H7X1Ns8xx8UVOV2+PPAop8j4bBEeC7tvOStWErKhSESbS4Ue5fhisHGU2h9XRQElGFCMsg==
+X-Received: by 2002:a17:902:8501:: with SMTP id bj1mr4678564plb.84.1576696258260;
+        Wed, 18 Dec 2019 11:10:58 -0800 (PST)
 Received: from localhost.localdomain ([2405:201:c809:c7d5:78ea:e014:edb4:e862])
-        by smtp.gmail.com with ESMTPSA id q7sm3745855pjd.3.2019.12.18.11.10.49
+        by smtp.gmail.com with ESMTPSA id q7sm3745855pjd.3.2019.12.18.11.10.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 11:10:53 -0800 (PST)
+        Wed, 18 Dec 2019 11:10:57 -0800 (PST)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         David Airlie <airlied@linux.ie>,
@@ -65,9 +65,9 @@ Cc:     michael@amarulasolutions.com, Icenowy Zheng <icenowy@aosc.io>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, linux-amarula@amarulasolutions.com,
         Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v13 6/7] arm64: dts: allwinner: a64: Add MIPI DSI pipeline
-Date:   Thu, 19 Dec 2019 00:40:16 +0530
-Message-Id: <20191218191017.2895-7-jagan@amarulasolutions.com>
+Subject: [DO NOT MERGE] [PATCH v13 7/7] arm64: dts: allwinner: bananapi-m64: Enable Bananapi S070WV20-CT16 DSI panel
+Date:   Thu, 19 Dec 2019 00:40:17 +0530
+Message-Id: <20191218191017.2895-8-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 In-Reply-To: <20191218191017.2895-1-jagan@amarulasolutions.com>
 References: <20191218191017.2895-1-jagan@amarulasolutions.com>
@@ -78,78 +78,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add MIPI DSI pipeline for Allwinner A64.
+This patch add support for Bananapi S070WV20-CT16 DSI panel to
+BPI-M64 board.
 
-- dsi node, with A64 compatible since it doesn't support
-  DSI_SCLK gating unlike A33
-- dphy node, with A64 compatible with A33 fallback since
-  DPHY on A64 and A33 is similar
-- finally, attach the dsi_in to tcon0 for complete MIPI DSI
+DSI panel connected via board DSI port with,
+- DLDO1 as VCC-DSI supply
+- DCDC1 as VDD supply
+- PD7 gpio for lcd enable pin
+- PD6 gpio for lcd reset pin
+- PD5 gpio for backlight enable pin
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-Tested-by: Merlijn Wajer <merlijn@wizzup.org>
 ---
-Changes for v13:
-- none 
+ .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 31 +++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 37 +++++++++++++++++++
- 1 file changed, 37 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 27e48234f1c2..1db8378f59a4 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -382,6 +382,12 @@
- 					#address-cells = <1>;
- 					#size-cells = <0>;
- 					reg = <1>;
-+
-+					tcon0_out_dsi: endpoint@1 {
-+						reg = <1>;
-+						remote-endpoint = <&dsi_in_tcon0>;
-+						allwinner,tcon-channel = <1>;
-+					};
- 				};
- 			};
- 		};
-@@ -1014,6 +1020,37 @@
- 			status = "disabled";
- 		};
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+index 208373efee49..6beaecdd802a 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+@@ -45,6 +45,7 @@
+ #include "sun50i-a64.dtsi"
  
-+		dsi: dsi@1ca0000 {
-+			compatible = "allwinner,sun50i-a64-mipi-dsi";
-+			reg = <0x01ca0000 0x1000>;
-+			interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_MIPI_DSI>;
-+			resets = <&ccu RST_BUS_MIPI_DSI>;
-+			phys = <&dphy>;
-+			phy-names = "dphy";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/pwm/pwm.h>
+ 
+ / {
+ 	model = "BananaPi-M64";
+@@ -56,6 +57,14 @@
+ 		serial1 = &uart1;
+ 	};
+ 
++	backlight: backlight {
++		compatible = "pwm-backlight";
++		pwms = <&r_pwm 0 50000 PWM_POLARITY_INVERTED>;
++		brightness-levels = <1 2 4 8 16 32 64 128 255>;
++		default-brightness-level = <2>;
++		enable-gpios = <&pio 3 5 GPIO_ACTIVE_HIGH>; /* LCD-BL-EN: PD5 */
++	};
 +
-+			port {
-+				dsi_in_tcon0: endpoint {
-+					remote-endpoint = <&tcon0_out_dsi>;
-+				};
-+			};
-+		};
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
+@@ -116,6 +125,24 @@
+ 	status = "okay";
+ };
+ 
++&dphy {
++	status = "okay";
++};
 +
-+		dphy: d-phy@1ca1000 {
-+			compatible = "allwinner,sun50i-a64-mipi-dphy",
-+				     "allwinner,sun6i-a31-mipi-dphy";
-+			reg = <0x01ca1000 0x1000>;
-+			clocks = <&ccu CLK_BUS_MIPI_DSI>,
-+				 <&ccu CLK_DSI_DPHY>;
-+			clock-names = "bus", "mod";
-+			resets = <&ccu RST_BUS_MIPI_DSI>;
-+			status = "disabled";
-+			#phy-cells = <0>;
-+		};
++&dsi {
++	vcc-dsi-supply = <&reg_dldo1>;		/* VCC3V3-DSI */
++	status = "okay";
 +
- 		hdmi: hdmi@1ee0000 {
- 			compatible = "allwinner,sun50i-a64-dw-hdmi",
- 				     "allwinner,sun8i-a83t-dw-hdmi";
++	panel@0 {
++		compatible = "bananapi,s070wv20-ct16-icn6211";
++		reg = <0>;
++		enable-gpios = <&pio 3 7 GPIO_ACTIVE_HIGH>; /* LCD-PWR-EN: PD7 */
++		reset-gpios = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* LCD-RST: PD6 */
++		vdd-supply = <&reg_dcdc1>;
++		backlight = <&backlight>;
++	};
++};
++
+ &ehci0 {
+ 	status = "okay";
+ };
+@@ -206,6 +233,10 @@
+ 	status = "okay";
+ };
+ 
++&r_pwm {
++	status = "okay";
++};
++
+ &r_rsb {
+ 	status = "okay";
+ 
 -- 
 2.18.0.321.gffc6fa0e3
 
