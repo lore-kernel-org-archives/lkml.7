@@ -2,120 +2,111 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C8A1C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCF4C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E80B12146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:55:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576680918;
-	bh=n98hOVY3W1+doP2Y64cpir9ZDD9d0Uzxyah/w/rw99A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nr4rzHlZiiiFzKuc+scN2YDIZbBYY7i331+kkuLPWo9cjwwR4qvWCbQp/fRNqQrzX
-	 28S4WqRUODXuU27aLqBMqF50MkPiMlGUx5RgR9yu/EV4YwGKG6UhMYdDlBB0DRwqWx
-	 UK3vJLuo/TZHCQFxS4+aLwoao8N4xrdSr9TBCjg4=
+	by mail.kernel.org (Postfix) with ESMTP id 7BC3B21582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:55:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727351AbfLROzQ (ORCPT
+        id S1727406AbfLROzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 09:55:16 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:37396 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727053AbfLROzP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 09:55:15 -0500
-Received: by mail-ot1-f65.google.com with SMTP id k14so2819279otn.4;
-        Wed, 18 Dec 2019 06:55:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=UZaMSipfOS8p2xxnsUP8G9QetOP6spFrcqBy10Sn310=;
-        b=p5bltue4U9UT4STVw/OdT4GY6MCbN4YX5zuIJYzmDauLp/fVuBl0GSI96bFB3Wi1yi
-         qOOS1tXNAG5K/AJM/wqQjQtlYSnGS43IZh1t/P5G4D8MmelMGKu6fynjvq/9jcCw8DMf
-         KGUCA0FhLox3OUE2Ok90Bi3PBg/ThWtK3JZFf1y6upMKzsFR8mgNhKNaJxUYuZUzvrol
-         feMAh0hWnSSBczviXuyRaAB0Y9E0/MytKZaH0vdv0tIf/o7O+AMnppckjDY3lPCdsy4O
-         b5VdAfXAqpl1RDTXRWwNpY/ZJeIDaJZiI3bdltEZD4qSiaAx7Y7o09LLq7mwYV5yblVX
-         53zA==
-X-Gm-Message-State: APjAAAVOOiZWIUY7S2Ebb20hmLWCtDtXh1dWAz5ew/rI9oslXBvJ0wR9
-        GMcLXl9lwFh7kXybCmo+rw==
-X-Google-Smtp-Source: APXvYqwu878UtVJu5MM+hlktxMA9MsbfECa0BDggwXlBafc5Pa+W9zRVbUhWbFNvitgQEcfV/gZP7Q==
-X-Received: by 2002:a9d:7592:: with SMTP id s18mr3197591otk.130.1576680914382;
-        Wed, 18 Dec 2019 06:55:14 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id x19sm769754otk.42.2019.12.18.06.55.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 06:55:13 -0800 (PST)
-Date:   Wed, 18 Dec 2019 08:55:13 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
-        mripard@kernel.org, shawnguo@kernel.org, mark.rutland@arm.com,
-        alexandre.belloni@bootlin.com, ralf@linux-mips.org,
-        heiko@sntech.de, icenowy@aosc.io, ak@linux.intel.com,
-        laurent.pinchart@ideasonboard.com, krzk@kernel.org,
-        geert+renesas@glider.be, paul@crapouillou.net,
-        prasannatsmkumar@gmail.com, keescook@chromium.org,
-        ebiederm@xmission.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com, 772753199@qq.com
-Subject: Re: [PATCH v8 3/4] dt-bindings: MIPS: Add Ingenic XBurst based
- boards.
-Message-ID: <20191218145513.GA12219@bogus>
-References: <1575979363-25956-1-git-send-email-zhouyanjie@wanyeetech.com>
- <1575979363-25956-4-git-send-email-zhouyanjie@wanyeetech.com>
+        Wed, 18 Dec 2019 09:55:31 -0500
+Received: from foss.arm.com ([217.140.110.172]:49046 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727384AbfLROzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 09:55:31 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9A0F430E;
+        Wed, 18 Dec 2019 06:55:30 -0800 (PST)
+Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D48613F719;
+        Wed, 18 Dec 2019 06:55:28 -0800 (PST)
+Date:   Wed, 18 Dec 2019 14:55:26 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Jolly Shah <jolly.shah@xilinx.com>
+Cc:     ard.biesheuvel@linaro.org, mingo@kernel.org,
+        gregkh@linuxfoundation.org, matt@codeblueprint.co.uk,
+        hkallweit1@gmail.com, keescook@chromium.org,
+        dmitry.torokhov@gmail.com, michal.simek@xilinx.com,
+        rajanv@xilinx.com, Sudeep Holla <sudeep.holla@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Rajan Vaja <rajan.vaja@xilinx.com>
+Subject: Re: [PATCH 1/5] firmware: xilinx: Adds new eemi call for reg access
+Message-ID: <20191218145526.GB12525@bogus>
+References: <1575502159-11327-1-git-send-email-jolly.shah@xilinx.com>
+ <1575502159-11327-2-git-send-email-jolly.shah@xilinx.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1575979363-25956-4-git-send-email-zhouyanjie@wanyeetech.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1575502159-11327-2-git-send-email-jolly.shah@xilinx.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Dec 2019 20:02:42 +0800, =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?=          wrote:
-> Add Ingenic XBurst based boards, prepare for later dts.
+On Wed, Dec 04, 2019 at 03:29:15PM -0800, Jolly Shah wrote:
+> From: Rajan Vaja <rajan.vaja@xilinx.com>
 > 
-> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+> This patch adds new EEMI call which is used for CSU/PMU register
+> access from linux.
+> 
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+> Signed-off-by: Jolly Shah <jolly.shah@xilinx.com>
 > ---
+>  drivers/firmware/xilinx/zynqmp.c     | 183 +++++++++++++++++++++++++++++++++++
+>  include/linux/firmware/xlnx-zynqmp.h |   9 ++
+>  2 files changed, 192 insertions(+)
 > 
-> Notes:
->     v1->v2:
->     No change.
->     
->     v2->v3:
->     No change.
->     
->     v3->v4:
->     Adjust the description to make it more reasonable.
->     
->     v4->v5:
->     Adjust item naming to prevent conflicts with
->     subsequent "CU Geo" boards.
->     
->     v5->v6:
->     No change.
->     
->     v6->v7:
->     Change my Signed-off-by from "Zhou Yanjie <zhouyanjie@zoho.com>"
->     to "周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>" because
->     the old mailbox is in an unstable state.
->     
->     v7->v8:
->     No change.
-> 
->  .../devicetree/bindings/mips/ingenic/devices.yaml  | 35 ++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mips/ingenic/devices.yaml
-> 
+> diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
+> index fd3d837..56431ad 100644
+> --- a/drivers/firmware/xilinx/zynqmp.c
+> +++ b/drivers/firmware/xilinx/zynqmp.c
+> @@ -24,6 +24,8 @@
+>  #include <linux/firmware/xlnx-zynqmp.h>
+>  #include "zynqmp-debug.h"
+>  
+> +static unsigned long register_address;
+> +
+>  static const struct zynqmp_eemi_ops *eemi_ops_tbl;
+>  
+>  static const struct mfd_cell firmware_devs[] = {
+> @@ -664,6 +666,26 @@ static int zynqmp_pm_set_requirement(const u32 node, const u32 capabilities,
+>  				   qos, ack, NULL);
+>  }
+>  
+> +/**
+> + * zynqmp_pm_config_reg_access - PM Config API for Config register access
+> + * @register_access_id:	ID of the requested REGISTER_ACCESS
+> + * @address:		Address of the register to be accessed
+> + * @mask:		Mask to be written to the register
+> + * @value:		Value to be written to the register
+> + * @out:		Returned output value
+> + *
+> + * This function calls REGISTER_ACCESS to configure CSU/PMU registers.
+> + *
+> + * Return:	Returns status, either success or error+reason
+> + */
+> +
+> +static int zynqmp_pm_config_reg_access(u32 register_access_id, u32 address,
+> +				       u32 mask, u32 value, u32 *out)
+> +{
+> +	return zynqmp_pm_invoke_fn(PM_REGISTER_ACCESS, register_access_id,
+> +				   address, mask, value, out);
+> +}
+> +
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+If you have this API, can you remove all other APIs and implement them
+using these ? This kills the EEMI abstraction.
+
+NACK for this and any attempts to provide direct reas/write access to
+the PM config space. EEMI should have better abstraction than this.
+
+--
+Regards,
+Sudeep
