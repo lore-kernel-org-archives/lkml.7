@@ -2,72 +2,135 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0AAC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF36C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:21:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B73E2176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:21:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576657294;
-	bh=6mM0BijGEYoRur7oz2no9UlWZYwRVBky5TH7mMCeIxQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pnwmL6AToSFH0jq0l0TcgqvSRNdJ39KYtwsJcDM33LnX2DanxfmroZ2Dlqv2aloH1
-	 zPckCGk7MWPfcBHbzfwW7eBvnjKPkCFHNDemT+64iDhD0m1rmm8NNdPHYQhteKzCIw
-	 LKiPYvhMlBdRkra0EQ5E2JwxJG+tYqllEYsZzQlU=
+	by mail.kernel.org (Postfix) with ESMTP id 6E35F2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 08:21:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbfLRIVd (ORCPT
+        id S1726715AbfLRIVo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 03:21:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52934 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725785AbfLRIVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 03:21:33 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07F7F218AC;
-        Wed, 18 Dec 2019 08:21:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576657292;
-        bh=6mM0BijGEYoRur7oz2no9UlWZYwRVBky5TH7mMCeIxQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Tcp4LQtfB+4tdXiG79mBYrBNTTf1346q5a9PS+pIgmKhKxCdQZO1otq9Tl29xMDW6
-         cA1HQLzQsqx+PGh+2yh3mVTzShwelGn9omQW1BnPlv3NcMWOmYSryy+4zlBbzyRxJS
-         TVwiw2nQQus4kuJEKuRmF7hqM+YDD/xmAPz8MQuc=
-Date:   Wed, 18 Dec 2019 09:21:30 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "Bao D. Nguyen" <nguyenb@codeaurora.org>
-Cc:     ulf.hansson@linaro.org, robh+dt@kernel.org,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        asutoshd@codeaurora.org, cang@codeaurora.org
-Subject: Re: [<PATCH v1> 0/9] SD card bug fixes
-Message-ID: <20191218082130.GA1554871@kroah.com>
-References: <cover.1576540906.git.nguyenb@codeaurora.org>
+        Wed, 18 Dec 2019 03:21:44 -0500
+Received: from mo-csw1115.securemx.jp ([210.130.202.157]:51392 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726638AbfLRIVo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 03:21:44 -0500
+Received: by mo-csw.securemx.jp (mx-mo-csw1115) id xBI8LT9L030770; Wed, 18 Dec 2019 17:21:29 +0900
+X-Iguazu-Qid: 2wGrCZT71n0I4PWvZJ
+X-Iguazu-QSIG: v=2; s=0; t=1576657289; q=2wGrCZT71n0I4PWvZJ; m=+8h1qAjsTLGXPM1968VgWfNcrs/nspPGKBlrzzdL4tU=
+Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
+        by relay.securemx.jp (mx-mr1112) id xBI8LR5w017160;
+        Wed, 18 Dec 2019 17:21:28 +0900
+Received: from enc02.toshiba.co.jp ([61.202.160.51])
+        by imx12.toshiba.co.jp  with ESMTP id xBI8LRd5008097;
+        Wed, 18 Dec 2019 17:21:27 +0900 (JST)
+Received: from hop101.toshiba.co.jp ([133.199.85.107])
+        by enc02.toshiba.co.jp  with ESMTP id xBI8LQ0A008269;
+        Wed, 18 Dec 2019 17:21:26 +0900
+From:   Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-serial@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, nobuhiro1.iwamatsu@toshiba.co.jp,
+        shrirang.bagul@canonical.com, stable@vger.kernel.org,
+        Rob Herring <robh@kernel.org>, Johan Hovold <johan@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH] serdev: Don't claim unsupported serial devices
+References: <20191218065646.817493-1-punit1.agrawal@toshiba.co.jp>
+        <20191218081022.GA1553073@kroah.com>
+Date:   Wed, 18 Dec 2019 17:22:17 +0900
+In-Reply-To: <20191218081022.GA1553073@kroah.com> (Greg Kroah-Hartman's
+        message of "Wed, 18 Dec 2019 09:10:22 +0100")
+X-TSB-HOP: ON
+Message-ID: <87tv5yniva.fsf@kokedama.swc.toshiba.co.jp>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1576540906.git.nguyenb@codeaurora.org>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 06:50:33PM -0800, Bao D. Nguyen wrote:
-> These patches include SD card genernal bug fixes.
-> 
-> Bao D. Nguyen (2):
->   mmc: core: Add a cap to use long discard size
->   mmc: sd: Fix trivial SD card issues
+Hi Greg,
 
-<snip>
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
 
-Odd use of "<" and ">" in your subject lines, how did git create such a
-thing?
+> On Wed, Dec 18, 2019 at 03:56:46PM +0900, Punit Agrawal wrote:
+>> Serdev sub-system claims all serial devices that are not already
+>> enumerated.
+>
+> All ACPI serial devices, right?  Surely not all other types of serial
+> devices in the system.
 
-thanks,
+That's right - I'll tighten the wording in the commit log and the patch
+below to be ACPI specific.
 
-greg k-h
+>
+> And what do you mean by "not already enumerated"?
+
+This is referring to check using "acpi_device_enumerated()" when walking
+ACPI devices. But the intention was to convey uninitialised serial
+devices exposed via ACPI.
+
+I'll update this as well.
+
+Thanks for the review.
+
+Punit
+
+>
+>> As a result, no device node is created for serial port on
+>> certain boards such as the Apollo Lake based UP2. This has the
+>> unintended consequence of not being able to raise the login prompt via
+>> serial connection.
+>> 
+>> Introduce a blacklist to reject devices that should not be treated as
+>
+> "reject ACPI serial devices"
+>
+>> a serdev device. Add the Intel HS UART peripheral ids to the blacklist
+>> to bring back serial port on SoCs carrying them.
+>> 
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+>> Cc: Rob Herring <robh@kernel.org>
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Cc: Johan Hovold <johan@kernel.org>
+>> Cc: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>> 
+>> Hi,
+>> 
+>> The patch has been updated based on feedback recieved on the RFC[0].
+>> 
+>> Please consider merging if there are no objections.
+>> 
+>> Thanks,
+>> Punit
+>> 
+>> [0] https://www.spinics.net/lists/linux-serial/msg36646.html
+>> 
+>>  drivers/tty/serdev/core.c | 10 ++++++++++
+>>  1 file changed, 10 insertions(+)
+>> 
+>> diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
+>> index 226adeec2aed..0d64fb7d4f36 100644
+>> --- a/drivers/tty/serdev/core.c
+>> +++ b/drivers/tty/serdev/core.c
+>> @@ -663,6 +663,12 @@ static acpi_status acpi_serdev_register_device(struct serdev_controller *ctrl,
+>>  	return AE_OK;
+>>  }
+>>  
+>> +static const struct acpi_device_id serdev_blacklist_devices[] = {
+>
+> s/serdev_blacklist_devices/serdev_blacklist/acpi_devices/  ?
+>
+> This is an acpi-specific thing, not a generic tty thing.
+>
+> thanks,
+>
+> greg k-h
