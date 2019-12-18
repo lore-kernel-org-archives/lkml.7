@@ -2,284 +2,768 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D43C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DADDC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D58BA24676
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:38:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576661909;
-	bh=sbYtOwQOAWEAv0CRXiQQd8SUjXUmGnVnvNnhC+x092M=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=AvU2QXIAqgi0rnncAH7X9EoHmfDZqFLLuGpNg7yRikvJpAmGqxmxFgAUhUk/3sZbp
-	 xjfhKS/U/TSJSThkyqoWedsag8B6g11RoEcfRSgqbq5OdVCrAQ2kVCBu9WltuBJVbE
-	 rm4o4OCjLYUGeBH4k0uY04lg1NjrmRpEywnivRvg=
+	by mail.kernel.org (Postfix) with ESMTP id 2FEDB218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:38:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbfLRJi2 (ORCPT
+        id S1726880AbfLRJid convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 04:38:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52318 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726090AbfLRJi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 04:38:28 -0500
-Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 375D7218AC;
-        Wed, 18 Dec 2019 09:38:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576661907;
-        bh=sbYtOwQOAWEAv0CRXiQQd8SUjXUmGnVnvNnhC+x092M=;
-        h=From:To:Cc:Subject:Date:From;
-        b=B6X4rI9SL3zqz8Bv3jQJzmaqR72IjzH1y+RdQPoqBFqmjVTsq0ILjlOB2YRe82Eyc
-         l7foVh/jnEDM5UhaOkWU4HZBvfLygQi96WwYjSZ0ZfZCKIz9rP+LSNmrLZTCLp2qfv
-         hgmzNxG6hW5+cGMyB1Sco0jHi4z+Fuh6ig3JLmtQ=
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>
-Cc:     linux-ia64@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH] ia64: add support for folded p4d page tables
-Date:   Wed, 18 Dec 2019 11:38:20 +0200
-Message-Id: <20191218093820.17967-1-rppt@kernel.org>
-X-Mailer: git-send-email 2.24.0
+        Wed, 18 Dec 2019 04:38:33 -0500
+Received: from mail-oln040092254064.outbound.protection.outlook.com ([40.92.254.64]:25195
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725785AbfLRJic (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 04:38:32 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GcKFJ303N6ab5IKlnRz9+rEqeq1BoTX5j6SSM16Ygwfo/GXK5b01/aDWZFUbaqm5u5tgjLVYlepJel1Jq1kvci3uS9/fiiDqWbd6zUom1GdLGWrf/m2w3SvdyXXJojp2FF418BhfQXEB8Kh0L9WZES+9JfLEJWvd3ZGExbO0U+EotqgBv12Goig7StAUD1W6yLsKBOxfF3/YaebwRYiY7GmGvsoYPpICyN1iQZN4QiSlS+OthGGXRnqfDuBfmYO8iBpTWxdnHBGODeDRY1cY/ADDpg5aT0OtwtNtCtCtdDv6zNXDzGUnIZBksHcZ/+HG233OoB3b0/xb8XF0vUIAqA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IgJb+NsdCo5HCG2CcDdWmPFhM1ZqQtnbbA1WFy1teB4=;
+ b=NvgfJ63ziOmOfZZU/HmXt5Ll9uvoL2xolZAsXAOi+p5lUgPh0KouXS+y2dIh+JIXEnfS+wafKGy4cBoHjBWDAOvKG7r1NeHnGTeEOEPqP3ZMJyw1WwvqVyqoe8xt7HYnTyyQnCl9wIxpQ6czlNNNNNW4VQo/oQHURSCbSAIG55IRulx8epPMKuDmqdXObWdJvDNgfAqxu4yA61D1vfxWPFV6M5/h1oI75F6IdhxdeqctFzMgasPRKrlWDkk6d99pda4ArXABQEfZ0Xvqj9IhhDrIBtd8//y1FpvIminh5TRD48HzQVLl6YxtZoxS+0N+V9B/nA7pp2pguuS4TkL17Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from SG2APC01FT010.eop-APC01.prod.protection.outlook.com
+ (10.152.250.52) by SG2APC01HT185.eop-APC01.prod.protection.outlook.com
+ (10.152.251.234) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2538.15; Wed, 18 Dec
+ 2019 09:38:21 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.250.52) by
+ SG2APC01FT010.mail.protection.outlook.com (10.152.250.134) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2559.14 via Frontend Transport; Wed, 18 Dec 2019 09:38:21 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::20ad:6646:5bcd:63c9]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::20ad:6646:5bcd:63c9%11]) with mapi id 15.20.2559.012; Wed, 18 Dec
+ 2019 09:38:21 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Rajmohan Mani <rajmohan.mani@intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Mario.Limonciello@dell.com" <Mario.Limonciello@dell.com>,
+        Anthony Wong <anthony.wong@canonical.com>,
+        Oliver Neukum <oneukum@suse.com>,
+        Christian Kellner <ckellner@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 7/9] thunderbolt: Add support for Time Management Unit
+Thread-Topic: [PATCH v2 7/9] thunderbolt: Add support for Time Management Unit
+Thread-Index: AQHVtNZFQY5A6hbf9EuKz5HGrfBctqe/pAyA
+Date:   Wed, 18 Dec 2019 09:38:21 +0000
+Message-ID: <PSXP216MB0438D5F1AF46C217C71E5C4180530@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+References: <20191217123345.31850-1-mika.westerberg@linux.intel.com>
+ <20191217123345.31850-8-mika.westerberg@linux.intel.com>
+In-Reply-To: <20191217123345.31850-8-mika.westerberg@linux.intel.com>
+Accept-Language: en-AU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SYBPR01CA0098.ausprd01.prod.outlook.com
+ (2603:10c6:10:1::14) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:d::20)
+x-incomingtopheadermarker: OriginalChecksum:9A4B31AFA5167F9712976C422FF00AD4ECE2BB0E49637E1C4D35BBBCE134E781;UpperCasedChecksum:B2C44AF73D5B8F65D33122C02134C258E7D05BD19085C1C9DE0D1C9BE9686A84;SizeAsReceived:8158;Count:49
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [yZAyGGzRALBQdqTXzhSqn2PVs31tKTmNgALeBG1R0Zh2DNoUUq7u6vPbCyBweC3q]
+x-microsoft-original-message-id: <20191218093811.GC3499@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 49
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 05bb9513-6dec-4710-6eef-08d7839e04c1
+x-ms-traffictypediagnostic: SG2APC01HT185:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: DL5Qn9SzhZD3M59JJeSxSSvF4SAvKbAr4LL2s6sTDINtAY9Xzg8G7BX7BQ3NU4HKlRPXL4NbQRZ8suSiglr/QRTrbAhbykyK1m7g100EkhEmOpQat6ZYaxt13Y6T1CQbi7N3z0TqExYCcz4M7JjrBvqRf+IPMtKNWJ6rVZLb1tWsR0A1zE2b6OEHGG+Vq7pG
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <7489E18DC1EE7A438838893287FE9B79@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 05bb9513-6dec-4710-6eef-08d7839e04c1
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Dec 2019 09:38:21.0188
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2APC01HT185
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+On Tue, Dec 17, 2019 at 03:33:43PM +0300, Mika Westerberg wrote:
+> From: Rajmohan Mani <rajmohan.mani@intel.com>
+> 
+> Time Management Unit (TMU) is included in each USB4 router. It is used
+> to synchronize time across the USB4 fabric. By default when USB4 router
+> is plugged to the domain, its TMU is turned off. This differs from
+> Thunderbolt (1, 2 and 3) devices whose TMU is by default configured to
+> bi-directional HiFi mode. Since time synchronization is needed for
+> proper Display Port tunneling this means we need to configure the TMU on
+Nitpick: DisplayPort is a single word.
 
-Implement primitives necessary for the 4th level folding, add walks of p4d
-level where appropriate, remove usage of __ARCH_USE_5LEVEL_HACK and replace
-5level-fixup.h with pgtable-nop4d.h
+> USB4 compliant devices.
+> 
+> The USB4 spec allows some flexibility on how the TMU can be configured.
+> This makes it possible to enable link power management states (CLx) in
+> certain topologies, where for example DP tunneling is not used. TMU can
+> also be re-configured dynamicaly depending on types of tunnels created
+> over the USB4 fabric.
+> 
+> In this patch we simply configure the TMU to be in bi-directional HiFi
+> mode. This way we can tunnel any kind of traffic without need to perform
+> complex steps to re-configure the domain dynamically. We can add more
+> fine-grained TMU configuration later on when we start enabling CLx
+> states.
+> 
+> Signed-off-by: Rajmohan Mani <rajmohan.mani@intel.com>
+> Co-developed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+>  drivers/thunderbolt/Makefile  |   2 +-
+>  drivers/thunderbolt/switch.c  |   4 +
+>  drivers/thunderbolt/tb.c      |  28 +++
+>  drivers/thunderbolt/tb.h      |  47 +++++
+>  drivers/thunderbolt/tb_regs.h |  20 ++
+>  drivers/thunderbolt/tmu.c     | 383 ++++++++++++++++++++++++++++++++++
+>  6 files changed, 483 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/thunderbolt/tmu.c
+> 
+> diff --git a/drivers/thunderbolt/Makefile b/drivers/thunderbolt/Makefile
+> index 102e9529ee66..eae28dd45250 100644
+> --- a/drivers/thunderbolt/Makefile
+> +++ b/drivers/thunderbolt/Makefile
+> @@ -1,4 +1,4 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  obj-${CONFIG_USB4} := thunderbolt.o
+>  thunderbolt-objs := nhi.o nhi_ops.o ctl.o tb.o switch.o cap.o path.o tunnel.o eeprom.o
+> -thunderbolt-objs += domain.o dma_port.o icm.o property.o xdomain.o lc.o usb4.o
+> +thunderbolt-objs += domain.o dma_port.o icm.o property.o xdomain.o lc.o tmu.o usb4.o
+> diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
+> index c1d5cd7e0631..82f45780dc81 100644
+> --- a/drivers/thunderbolt/switch.c
+> +++ b/drivers/thunderbolt/switch.c
+> @@ -2338,6 +2338,10 @@ int tb_switch_add(struct tb_switch *sw)
+>  		ret = tb_switch_update_link_attributes(sw);
+>  		if (ret)
+>  			return ret;
+> +
+> +		ret = tb_switch_tmu_init(sw);
+> +		if (ret)
+> +			return ret;
+>  	}
+>  
+>  	ret = device_add(&sw->dev);
+> diff --git a/drivers/thunderbolt/tb.c b/drivers/thunderbolt/tb.c
+> index 6b99dcd1790c..e446624dd3e7 100644
+> --- a/drivers/thunderbolt/tb.c
+> +++ b/drivers/thunderbolt/tb.c
+> @@ -158,6 +158,25 @@ static void tb_scan_xdomain(struct tb_port *port)
+>  	}
+>  }
+>  
+> +static int tb_enable_tmu(struct tb_switch *sw)
+> +{
+> +	int ret;
+> +
+> +	/* If it is already enabled in correct mode, don't touch it */
+> +	if (tb_switch_tmu_is_enabled(sw))
+> +		return 0;
+> +
+> +	ret = tb_switch_tmu_disable(sw);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = tb_switch_tmu_post_time(sw);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return tb_switch_tmu_enable(sw);
+> +}
+> +
+>  static void tb_scan_port(struct tb_port *port);
+>  
+>  /**
+> @@ -257,6 +276,9 @@ static void tb_scan_port(struct tb_port *port)
+>  	if (tb_switch_lane_bonding_enable(sw))
+>  		tb_sw_warn(sw, "failed to enable lane bonding\n");
+>  
+> +	if (tb_enable_tmu(sw))
+> +		tb_sw_warn(sw, "failed to enable TMU\n");
+> +
+>  	tb_scan_switch(sw);
+>  }
+>  
+> @@ -709,6 +731,7 @@ static void tb_handle_hotplug(struct work_struct *work)
+>  			tb_sw_set_unplugged(port->remote->sw);
+>  			tb_free_invalid_tunnels(tb);
+>  			tb_remove_dp_resources(port->remote->sw);
+> +			tb_switch_tmu_disable(port->remote->sw);
+>  			tb_switch_lane_bonding_disable(port->remote->sw);
+>  			tb_switch_remove(port->remote->sw);
+>  			port->remote = NULL;
+> @@ -855,6 +878,8 @@ static int tb_start(struct tb *tb)
+>  		return ret;
+>  	}
+>  
+> +	/* Enable TMU if it is off */
+> +	tb_switch_tmu_enable(tb->root_switch);
+>  	/* Full scan to discover devices added before the driver was loaded. */
+>  	tb_scan_switch(tb->root_switch);
+>  	/* Find out tunnels created by the boot firmware */
+> @@ -886,6 +911,9 @@ static void tb_restore_children(struct tb_switch *sw)
+>  {
+>  	struct tb_port *port;
+>  
+> +	if (tb_enable_tmu(sw))
+> +		tb_sw_warn(sw, "failed to restore TMU configuration\n");
+> +
+>  	tb_switch_for_each_port(sw, port) {
+>  		if (!tb_port_has_remote(port))
+>  			continue;
+> diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
+> index 28dd0e0b1579..63ffb3cbdefe 100644
+> --- a/drivers/thunderbolt/tb.h
+> +++ b/drivers/thunderbolt/tb.h
+> @@ -46,6 +46,38 @@ struct tb_switch_nvm {
+>  #define TB_SWITCH_MAX_DEPTH		6
+>  #define USB4_SWITCH_MAX_DEPTH		5
+>  
+> +/**
+> + * enum tb_switch_tmu_rate - TMU refresh rate
+> + * @TB_SWITCH_TMU_RATE_OFF: %0 (Disable Time Sync handshake)
+> + * @TB_SWITCH_TMU_RATE_HIFI: %16 us time interval between successive
+> + *			     transmission of the Delay Request TSNOS
+> + *			     (Time Sync Notification Ordered Set) on a Link
+> + * @TB_SWITCH_TMU_RATE_NORMAL: %1 ms time interval between successive
+> + *			       transmission of the Delay Request TSNOS on
+> + *			       a Link
+> + */
+> +enum tb_switch_tmu_rate {
+> +	TB_SWITCH_TMU_RATE_OFF = 0,
+> +	TB_SWITCH_TMU_RATE_HIFI = 16,
+> +	TB_SWITCH_TMU_RATE_NORMAL = 1000,
+> +};
+> +
+> +/**
+> + * struct tb_switch_tmu - Structure holding switch TMU configuration
+> + * @cap: Offset to the TMU capability (%0 if not found)
+> + * @has_ucap: Does the switch support uni-directional mode
+> + * @rate: TMU refresh rate related to upstream switch. In case of root
+> + *	  switch this holds the domain rate.
+> + * @unidirectional: Is the TMU in uni-directional or bi-directional mode
+> + *		    related to upstream switch. Don't case for root switch.
+> + */
+> +struct tb_switch_tmu {
+> +	int cap;
+> +	bool has_ucap;
+> +	enum tb_switch_tmu_rate rate;
+> +	bool unidirectional;
+> +};
+> +
+>  /**
+>   * struct tb_switch - a thunderbolt switch
+>   * @dev: Device for the switch
+> @@ -55,6 +87,7 @@ struct tb_switch_nvm {
+>   *	      mailbox this will hold the pointer to that (%NULL
+>   *	      otherwise). If set it also means the switch has
+>   *	      upgradeable NVM.
+> + * @tmu: The switch TMU configuration
+>   * @tb: Pointer to the domain the switch belongs to
+>   * @uid: Unique ID of the switch
+>   * @uuid: UUID of the switch (or %NULL if not supported)
+> @@ -93,6 +126,7 @@ struct tb_switch {
+>  	struct tb_regs_switch_header config;
+>  	struct tb_port *ports;
+>  	struct tb_dma_port *dma_port;
+> +	struct tb_switch_tmu tmu;
+>  	struct tb *tb;
+>  	u64 uid;
+>  	uuid_t *uuid;
+> @@ -129,6 +163,7 @@ struct tb_switch {
+>   * @remote: Remote port (%NULL if not connected)
+>   * @xdomain: Remote host (%NULL if not connected)
+>   * @cap_phy: Offset, zero if not found
+> + * @cap_tmu: Offset of the adapter specific TMU capability (%0 if not present)
+>   * @cap_adap: Offset of the adapter specific capability (%0 if not present)
+>   * @cap_usb4: Offset to the USB4 port capability (%0 if not present)
+>   * @port: Port number on switch
+> @@ -147,6 +182,7 @@ struct tb_port {
+>  	struct tb_port *remote;
+>  	struct tb_xdomain *xdomain;
+>  	int cap_phy;
+> +	int cap_tmu;
+>  	int cap_adap;
+>  	int cap_usb4;
+>  	u8 port;
+> @@ -672,6 +708,17 @@ bool tb_switch_query_dp_resource(struct tb_switch *sw, struct tb_port *in);
+>  int tb_switch_alloc_dp_resource(struct tb_switch *sw, struct tb_port *in);
+>  void tb_switch_dealloc_dp_resource(struct tb_switch *sw, struct tb_port *in);
+>  
+> +int tb_switch_tmu_init(struct tb_switch *sw);
+> +int tb_switch_tmu_post_time(struct tb_switch *sw);
+> +int tb_switch_tmu_disable(struct tb_switch *sw);
+> +int tb_switch_tmu_enable(struct tb_switch *sw);
+> +
+> +static inline bool tb_switch_tmu_is_enabled(const struct tb_switch *sw)
+> +{
+> +	return sw->tmu.rate == TB_SWITCH_TMU_RATE_HIFI &&
+> +	       !sw->tmu.unidirectional;
+> +}
+> +
+>  int tb_wait_for_port(struct tb_port *port, bool wait_if_unplugged);
+>  int tb_port_add_nfc_credits(struct tb_port *port, int credits);
+>  int tb_port_set_initial_credits(struct tb_port *port, u32 credits);
+> diff --git a/drivers/thunderbolt/tb_regs.h b/drivers/thunderbolt/tb_regs.h
+> index 47f73f992412..ec1a5d1f7c94 100644
+> --- a/drivers/thunderbolt/tb_regs.h
+> +++ b/drivers/thunderbolt/tb_regs.h
+> @@ -26,6 +26,7 @@
+>  #define TB_MAX_CONFIG_RW_LENGTH 60
+>  
+>  enum tb_switch_cap {
+> +	TB_SWITCH_CAP_TMU		= 0x03,
+>  	TB_SWITCH_CAP_VSE		= 0x05,
+>  };
+>  
+> @@ -195,6 +196,21 @@ struct tb_regs_switch_header {
+>  #define ROUTER_CS_26_ONS			BIT(30)
+>  #define ROUTER_CS_26_OV				BIT(31)
+>  
+> +/* Router TMU configuration */
+> +#define TMU_RTR_CS_0				0x00
+> +#define TMU_RTR_CS_0_TD				BIT(27)
+> +#define TMU_RTR_CS_0_UCAP			BIT(30)
+> +#define TMU_RTR_CS_1				0x01
+> +#define TMU_RTR_CS_1_LOCAL_TIME_NS_MASK		GENMASK(31, 16)
+> +#define TMU_RTR_CS_1_LOCAL_TIME_NS_SHIFT	16
+> +#define TMU_RTR_CS_2				0x02
+> +#define TMU_RTR_CS_3				0x03
+> +#define TMU_RTR_CS_3_LOCAL_TIME_NS_MASK		GENMASK(15, 0)
+> +#define TMU_RTR_CS_3_TS_PACKET_INTERVAL_MASK	GENMASK(31, 16)
+> +#define TMU_RTR_CS_3_TS_PACKET_INTERVAL_SHIFT	16
+> +#define TMU_RTR_CS_22				0x16
+> +#define TMU_RTR_CS_24				0x18
+> +
+>  enum tb_port_type {
+>  	TB_TYPE_INACTIVE	= 0x000000,
+>  	TB_TYPE_PORT		= 0x000001,
+> @@ -248,6 +264,10 @@ struct tb_regs_port_header {
+>  #define ADP_CS_5_LCA_MASK			GENMASK(28, 22)
+>  #define ADP_CS_5_LCA_SHIFT			22
+>  
+> +/* TMU adapter registers */
+> +#define TMU_ADP_CS_3				0x03
+> +#define TMU_ADP_CS_3_UDM			BIT(29)
+> +
+>  /* Lane adapter registers */
+>  #define LANE_ADP_CS_0				0x00
+>  #define LANE_ADP_CS_0_SUPPORTED_WIDTH_MASK	GENMASK(25, 20)
+> diff --git a/drivers/thunderbolt/tmu.c b/drivers/thunderbolt/tmu.c
+> new file mode 100644
+> index 000000000000..039c42a06000
+> --- /dev/null
+> +++ b/drivers/thunderbolt/tmu.c
+> @@ -0,0 +1,383 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Thunderbolt Time Management Unit (TMU) support
+> + *
+> + * Copyright (C) 2019, Intel Corporation
+> + * Authors: Mika Westerberg <mika.westerberg@linux.intel.com>
+> + *	    Rajmohan Mani <rajmohan.mani@intel.com>
+> + */
+> +
+> +#include <linux/delay.h>
+> +
+> +#include "tb.h"
+> +
+> +static const char *tb_switch_tmu_mode_name(const struct tb_switch *sw)
+> +{
+> +	bool root_switch = !tb_route(sw);
+> +
+> +	switch (sw->tmu.rate) {
+> +	case TB_SWITCH_TMU_RATE_OFF:
+> +		return "off";
+> +
+> +	case TB_SWITCH_TMU_RATE_HIFI:
+> +		/* Root switch does not have upstream directionality */
+> +		if (root_switch)
+> +			return "HiFi";
+> +		if (sw->tmu.unidirectional)
+> +			return "uni-directional, HiFi";
+> +		return "bi-directional, HiFi";
+> +
+> +	case TB_SWITCH_TMU_RATE_NORMAL:
+> +		if (root_switch)
+> +			return "normal";
+> +		return "uni-directional, normal";
+> +
+> +	default:
+> +		return "unknown";
+> +	}
+> +}
+> +
+> +static bool tb_switch_tmu_ucap_supported(struct tb_switch *sw)
+> +{
+> +	int ret;
+> +	u32 val;
+> +
+> +	ret = tb_sw_read(sw, &val, TB_CFG_SWITCH,
+> +			 sw->tmu.cap + TMU_RTR_CS_0, 1);
+> +	if (ret)
+> +		return false;
+> +
+> +	return !!(val & TMU_RTR_CS_0_UCAP);
+> +}
+> +
+> +static int tb_switch_tmu_rate_read(struct tb_switch *sw)
+> +{
+> +	int ret;
+> +	u32 val;
+> +
+> +	ret = tb_sw_read(sw, &val, TB_CFG_SWITCH,
+> +			 sw->tmu.cap + TMU_RTR_CS_3, 1);
+> +	if (ret)
+> +		return ret;
+> +
+> +	val >>= TMU_RTR_CS_3_TS_PACKET_INTERVAL_SHIFT;
+> +	return val;
+> +}
+> +
+> +static int tb_switch_tmu_rate_write(struct tb_switch *sw, int rate)
+> +{
+> +	int ret;
+> +	u32 val;
+> +
+> +	ret = tb_sw_read(sw, &val, TB_CFG_SWITCH,
+> +			 sw->tmu.cap + TMU_RTR_CS_3, 1);
+> +	if (ret)
+> +		return ret;
+> +
+> +	val &= ~TMU_RTR_CS_3_TS_PACKET_INTERVAL_MASK;
+> +	val |= rate << TMU_RTR_CS_3_TS_PACKET_INTERVAL_SHIFT;
+> +
+> +	return tb_sw_write(sw, &val, TB_CFG_SWITCH,
+> +			   sw->tmu.cap + TMU_RTR_CS_3, 1);
+> +}
+> +
+> +static int tb_port_tmu_write(struct tb_port *port, u8 offset, u32 mask,
+> +			     u32 value)
+> +{
+> +	u32 data;
+> +	int ret;
+> +
+> +	ret = tb_port_read(port, &data, TB_CFG_PORT, port->cap_tmu + offset, 1);
+> +	if (ret)
+> +		return ret;
+> +
+> +	data &= ~mask;
+> +	data |= value;
+> +
+> +	return tb_port_write(port, &data, TB_CFG_PORT,
+> +			     port->cap_tmu + offset, 1);
+> +}
+> +
+> +static int tb_port_tmu_set_unidirectional(struct tb_port *port,
+> +					  bool unidirectional)
+> +{
+> +	u32 val;
+> +
+> +	if (!port->sw->tmu.has_ucap)
+> +		return 0;
+> +
+> +	val = unidirectional ? TMU_ADP_CS_3_UDM : 0;
+> +	return tb_port_tmu_write(port, TMU_ADP_CS_3, TMU_ADP_CS_3_UDM, val);
+> +}
+> +
+> +static inline int tb_port_tmu_unidirectional_disable(struct tb_port *port)
+> +{
+> +	return tb_port_tmu_set_unidirectional(port, false);
+> +}
+> +
+> +static bool tb_port_tmu_is_unidirectional(struct tb_port *port)
+> +{
+> +	int ret;
+> +	u32 val;
+> +
+> +	ret = tb_port_read(port, &val, TB_CFG_PORT,
+> +			   port->cap_tmu + TMU_ADP_CS_3, 1);
+> +	if (ret)
+> +		return false;
+> +
+> +	return val & TMU_ADP_CS_3_UDM;
+> +}
+> +
+> +static int tb_switch_tmu_set_time_disruption(struct tb_switch *sw, bool set)
+> +{
+> +	int ret;
+> +	u32 val;
+> +
+> +	ret = tb_sw_read(sw, &val, TB_CFG_SWITCH,
+> +			 sw->tmu.cap + TMU_RTR_CS_0, 1);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (set)
+> +		val |= TMU_RTR_CS_0_TD;
+> +	else
+> +		val &= ~TMU_RTR_CS_0_TD;
+> +
+> +	return tb_sw_write(sw, &val, TB_CFG_SWITCH,
+> +			   sw->tmu.cap + TMU_RTR_CS_0, 1);
+> +}
+> +
+> +/**
+> + * tb_switch_tmu_init() - Initialize switch TMU structures
+> + * @sw: Switch to initialized
+> + *
+> + * This function must be called before other TMU related functions to
+> + * makes the internal structures are filled in correctly. Does not
+> + * change any hardware configuration.
+> + */
+> +int tb_switch_tmu_init(struct tb_switch *sw)
+> +{
+> +	struct tb_port *port;
+> +	int ret;
+> +
+> +	if (tb_switch_is_icm(sw))
+> +		return 0;
+> +
+> +	ret = tb_switch_find_cap(sw, TB_SWITCH_CAP_TMU);
+> +	if (ret > 0)
+> +		sw->tmu.cap = ret;
+> +
+> +	tb_switch_for_each_port(sw, port) {
+> +		int cap;
+> +
+> +		cap = tb_port_find_cap(port, TB_PORT_CAP_TIME1);
+> +		if (cap > 0)
+> +			port->cap_tmu = cap;
+> +	}
+> +
+> +	ret = tb_switch_tmu_rate_read(sw);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	sw->tmu.rate = ret;
+> +
+> +	sw->tmu.has_ucap = tb_switch_tmu_ucap_supported(sw);
+> +	if (sw->tmu.has_ucap) {
+> +		tb_sw_dbg(sw, "TMU: supports uni-directional mode\n");
+> +
+> +		if (tb_route(sw)) {
+> +			struct tb_port *up = tb_upstream_port(sw);
+> +
+> +			sw->tmu.unidirectional =
+> +				tb_port_tmu_is_unidirectional(up);
+> +		}
+> +	} else {
+> +		sw->tmu.unidirectional = false;
+> +	}
+> +
+> +	tb_sw_dbg(sw, "TMU: current mode: %s\n", tb_switch_tmu_mode_name(sw));
+> +	return 0;
+> +}
+> +
+> +/**
+> + * tb_switch_tmu_post_time() - Update switch local time
+> + * @sw: Switch whose time to update
+> + *
+> + * Updates switch local time using time posting procedure.
+> + */
+> +int tb_switch_tmu_post_time(struct tb_switch *sw)
+> +{
+> +	unsigned int  post_local_time_offset, post_time_offset;
+> +	struct tb_switch *root_switch = sw->tb->root_switch;
+> +	u64 hi, mid, lo, local_time, post_time;
+> +	int i, ret, retries = 100;
+> +	u32 gm_local_time[3];
+> +
+> +	if (!tb_route(sw))
+> +		return 0;
+> +
+> +	if (!tb_switch_is_usb4(sw))
+> +		return 0;
+> +
+> +	/* Need to be able to read the grand master time */
+> +	if (!root_switch->tmu.cap)
+> +		return 0;
+> +
+> +	ret = tb_sw_read(root_switch, gm_local_time, TB_CFG_SWITCH,
+> +			 root_switch->tmu.cap + TMU_RTR_CS_1,
+> +			 ARRAY_SIZE(gm_local_time));
+> +	if (ret)
+> +		return ret;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(gm_local_time); i++)
+> +		tb_sw_dbg(root_switch, "local_time[%d]=0x%08x\n", i,
+> +			  gm_local_time[i]);
+> +
+> +	/* Convert to nanoseconds (drop fractional part) */
+> +	hi = gm_local_time[2] & TMU_RTR_CS_3_LOCAL_TIME_NS_MASK;
+> +	mid = gm_local_time[1];
+> +	lo = (gm_local_time[0] & TMU_RTR_CS_1_LOCAL_TIME_NS_MASK) >>
+> +		TMU_RTR_CS_1_LOCAL_TIME_NS_SHIFT;
+> +	local_time = hi << 48 | mid << 16 | lo;
+> +
+> +	/* Tell the switch that time sync is disrupted for a while */
+> +	ret = tb_switch_tmu_set_time_disruption(sw, true);
+> +	if (ret)
+> +		return ret;
+> +
+> +	post_local_time_offset = sw->tmu.cap + TMU_RTR_CS_22;
+> +	post_time_offset = sw->tmu.cap + TMU_RTR_CS_24;
+> +
+> +	/*
+> +	 * Write the Grandmaster time to the Post Local Time registers
+> +	 * of the new switch.
+> +	 */
+> +	ret = tb_sw_write(sw, &local_time, TB_CFG_SWITCH,
+> +			  post_local_time_offset, 2);
+> +	if (ret)
+> +		goto out;
+> +
+> +	/*
+> +	 * Have the new switch update its local time (by writing 1 to
+> +	 * the post_time registers) and wait for the completion of the
+> +	 * same (post_time register becomes 0). This means the time has
+> +	 * been converged properly.
+> +	 */
+> +	post_time = 1;
+> +
+> +	ret = tb_sw_write(sw, &post_time, TB_CFG_SWITCH, post_time_offset, 2);
+> +	if (ret)
+> +		goto out;
+> +
+> +	do {
+> +		usleep_range(5, 10);
+> +		ret = tb_sw_read(sw, &post_time, TB_CFG_SWITCH,
+> +				 post_time_offset, 2);
+> +		if (ret)
+> +			goto out;
+> +	} while (--retries && post_time);
+> +
+> +	if (!retries) {
+> +		ret = -ETIMEDOUT;
+> +		goto out;
+> +	}
+> +
+> +	tb_sw_dbg(sw, "TMU: updated local time to %#llx\n", local_time);
+> +
+> +out:
+> +	tb_switch_tmu_set_time_disruption(sw, false);
+> +	return ret;
+> +}
+> +
+> +/**
+> + * tb_switch_tmu_disable() - Disable TMU of a switch
+> + * @sw: Switch whose TMU to disable
+> + *
+> + * Turns off TMU of @sw if it is enabled. If not enabled does nothing.
+> + */
+> +int tb_switch_tmu_disable(struct tb_switch *sw)
+> +{
+> +	int ret;
+> +
+> +	if (!tb_switch_is_usb4(sw))
+> +		return 0;
+> +
+> +	/* Already disabled? */
+> +	if (sw->tmu.rate == TB_SWITCH_TMU_RATE_OFF)
+> +		return 0;
+> +
+> +	if (sw->tmu.unidirectional) {
+> +		struct tb_switch *parent = tb_switch_parent(sw);
+> +		struct tb_port *up, *down;
+> +
+> +		up = tb_upstream_port(sw);
+> +		down = tb_port_at(tb_route(sw), parent);
+> +
+> +		/* The switch may be unplugged so ignore any errors */
+> +		tb_port_tmu_unidirectional_disable(up);
+> +		ret = tb_port_tmu_unidirectional_disable(down);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	tb_switch_tmu_rate_write(sw, TB_SWITCH_TMU_RATE_OFF);
+> +
+> +	sw->tmu.unidirectional = false;
+> +	sw->tmu.rate = TB_SWITCH_TMU_RATE_OFF;
+> +
+> +	tb_sw_dbg(sw, "TMU: disabled\n");
+> +	return 0;
+> +}
+> +
+> +/**
+> + * tb_switch_tmu_enable() - Enable TMU on a switch
+> + * @sw: Switch whose TMU to enable
+> + *
+> + * Enables TMU of a switch to be in bi-directional, HiFi mode. In this mode
+> + * all tunneling should work.
+> + */
+> +int tb_switch_tmu_enable(struct tb_switch *sw)
+> +{
+> +	int ret;
+> +
+> +	if (!tb_switch_is_usb4(sw))
+> +		return 0;
+> +
+> +	if (tb_switch_tmu_is_enabled(sw))
+> +		return 0;
+> +
+> +	ret = tb_switch_tmu_set_time_disruption(sw, true);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Change mode to bi-directional */
+> +	if (tb_route(sw) && sw->tmu.unidirectional) {
+> +		struct tb_switch *parent = tb_switch_parent(sw);
+> +		struct tb_port *up, *down;
+> +
+> +		up = tb_upstream_port(sw);
+> +		down = tb_port_at(tb_route(sw), parent);
+> +
+> +		ret = tb_port_tmu_unidirectional_disable(down);
+> +		if (ret)
+> +			return ret;
+> +
+> +		ret = tb_switch_tmu_rate_write(sw, TB_SWITCH_TMU_RATE_HIFI);
+> +		if (ret)
+> +			return ret;
+> +
+> +		ret = tb_port_tmu_unidirectional_disable(up);
+> +		if (ret)
+> +			return ret;
+> +	} else {
+> +		ret = tb_switch_tmu_rate_write(sw, TB_SWITCH_TMU_RATE_HIFI);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	sw->tmu.unidirectional = false;
+> +	sw->tmu.rate = TB_SWITCH_TMU_RATE_HIFI;
+> +	tb_sw_dbg(sw, "TMU: mode set to: %s\n", tb_switch_tmu_mode_name(sw));
+> +
+> +	return tb_switch_tmu_set_time_disruption(sw, false);
+> +}
+> -- 
+> 2.24.0
+> 
 
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
- arch/ia64/include/asm/pgalloc.h |  4 ++--
- arch/ia64/include/asm/pgtable.h | 17 ++++++++---------
- arch/ia64/mm/fault.c            |  7 ++++++-
- arch/ia64/mm/hugetlbpage.c      | 18 ++++++++++++------
- arch/ia64/mm/init.c             | 28 ++++++++++++++++++++++++----
- 5 files changed, 52 insertions(+), 22 deletions(-)
-
-diff --git a/arch/ia64/include/asm/pgalloc.h b/arch/ia64/include/asm/pgalloc.h
-index f4c491044882..2a3050345099 100644
---- a/arch/ia64/include/asm/pgalloc.h
-+++ b/arch/ia64/include/asm/pgalloc.h
-@@ -36,9 +36,9 @@ static inline void pgd_free(struct mm_struct *mm, pgd_t *pgd)
- 
- #if CONFIG_PGTABLE_LEVELS == 4
- static inline void
--pgd_populate(struct mm_struct *mm, pgd_t * pgd_entry, pud_t * pud)
-+p4d_populate(struct mm_struct *mm, p4d_t * p4d_entry, pud_t * pud)
- {
--	pgd_val(*pgd_entry) = __pa(pud);
-+	p4d_val(*p4d_entry) = __pa(pud);
- }
- 
- static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long addr)
-diff --git a/arch/ia64/include/asm/pgtable.h b/arch/ia64/include/asm/pgtable.h
-index d602e7c622db..c87f789bc914 100644
---- a/arch/ia64/include/asm/pgtable.h
-+++ b/arch/ia64/include/asm/pgtable.h
-@@ -283,12 +283,12 @@ extern unsigned long VMALLOC_END;
- #define pud_page(pud)			virt_to_page((pud_val(pud) + PAGE_OFFSET))
- 
- #if CONFIG_PGTABLE_LEVELS == 4
--#define pgd_none(pgd)			(!pgd_val(pgd))
--#define pgd_bad(pgd)			(!ia64_phys_addr_valid(pgd_val(pgd)))
--#define pgd_present(pgd)		(pgd_val(pgd) != 0UL)
--#define pgd_clear(pgdp)			(pgd_val(*(pgdp)) = 0UL)
--#define pgd_page_vaddr(pgd)		((unsigned long) __va(pgd_val(pgd) & _PFN_MASK))
--#define pgd_page(pgd)			virt_to_page((pgd_val(pgd) + PAGE_OFFSET))
-+#define p4d_none(p4d)			(!p4d_val(p4d))
-+#define p4d_bad(p4d)			(!ia64_phys_addr_valid(p4d_val(p4d)))
-+#define p4d_present(p4d)		(p4d_val(p4d) != 0UL)
-+#define p4d_clear(p4dp)			(p4d_val(*(p4dp)) = 0UL)
-+#define p4d_page_vaddr(p4d)		((unsigned long) __va(p4d_val(p4d) & _PFN_MASK))
-+#define p4d_page(p4d)			virt_to_page((p4d_val(p4d) + PAGE_OFFSET))
- #endif
- 
- /*
-@@ -388,7 +388,7 @@ pgd_offset (const struct mm_struct *mm, unsigned long address)
- #if CONFIG_PGTABLE_LEVELS == 4
- /* Find an entry in the second-level page table.. */
- #define pud_offset(dir,addr) \
--	((pud_t *) pgd_page_vaddr(*(dir)) + (((addr) >> PUD_SHIFT) & (PTRS_PER_PUD - 1)))
-+	((pud_t *) p4d_page_vaddr(*(dir)) + (((addr) >> PUD_SHIFT) & (PTRS_PER_PUD - 1)))
- #endif
- 
- /* Find an entry in the third-level page table.. */
-@@ -582,10 +582,9 @@ extern struct page *zero_page_memmap_ptr;
- 
- 
- #if CONFIG_PGTABLE_LEVELS == 3
--#define __ARCH_USE_5LEVEL_HACK
- #include <asm-generic/pgtable-nopud.h>
- #endif
--#include <asm-generic/5level-fixup.h>
-+#include <asm-generic/pgtable-nop4d.h>
- #include <asm-generic/pgtable.h>
- 
- #endif /* _ASM_IA64_PGTABLE_H */
-diff --git a/arch/ia64/mm/fault.c b/arch/ia64/mm/fault.c
-index c2f299fe9e04..ec994135cb74 100644
---- a/arch/ia64/mm/fault.c
-+++ b/arch/ia64/mm/fault.c
-@@ -29,6 +29,7 @@ static int
- mapped_kernel_page_is_present (unsigned long address)
- {
- 	pgd_t *pgd;
-+	p4d_t *p4d;
- 	pud_t *pud;
- 	pmd_t *pmd;
- 	pte_t *ptep, pte;
-@@ -37,7 +38,11 @@ mapped_kernel_page_is_present (unsigned long address)
- 	if (pgd_none(*pgd) || pgd_bad(*pgd))
- 		return 0;
- 
--	pud = pud_offset(pgd, address);
-+	p4d = p4d_offset(pgd, address);
-+	if (p4d_none(*p4d) || p4d_bad(*p4d))
-+		return 0;
-+
-+	pud = pud_offset(p4d, address);
- 	if (pud_none(*pud) || pud_bad(*pud))
- 		return 0;
- 
-diff --git a/arch/ia64/mm/hugetlbpage.c b/arch/ia64/mm/hugetlbpage.c
-index d16e419fd712..32352a73df0c 100644
---- a/arch/ia64/mm/hugetlbpage.c
-+++ b/arch/ia64/mm/hugetlbpage.c
-@@ -30,12 +30,14 @@ huge_pte_alloc(struct mm_struct *mm, unsigned long addr, unsigned long sz)
- {
- 	unsigned long taddr = htlbpage_to_page(addr);
- 	pgd_t *pgd;
-+	p4d_t *p4d;
- 	pud_t *pud;
- 	pmd_t *pmd;
- 	pte_t *pte = NULL;
- 
- 	pgd = pgd_offset(mm, taddr);
--	pud = pud_alloc(mm, pgd, taddr);
-+	p4d = p4d_offset(pgd, taddr);
-+	pud = pud_alloc(mm, p4d, taddr);
- 	if (pud) {
- 		pmd = pmd_alloc(mm, pud, taddr);
- 		if (pmd)
-@@ -49,17 +51,21 @@ huge_pte_offset (struct mm_struct *mm, unsigned long addr, unsigned long sz)
- {
- 	unsigned long taddr = htlbpage_to_page(addr);
- 	pgd_t *pgd;
-+	p4d_t *p4d;
- 	pud_t *pud;
- 	pmd_t *pmd;
- 	pte_t *pte = NULL;
- 
- 	pgd = pgd_offset(mm, taddr);
- 	if (pgd_present(*pgd)) {
--		pud = pud_offset(pgd, taddr);
--		if (pud_present(*pud)) {
--			pmd = pmd_offset(pud, taddr);
--			if (pmd_present(*pmd))
--				pte = pte_offset_map(pmd, taddr);
-+		p4d = p4d_offset(pgd, addr);
-+		if (p4d_present(*p4d)) {
-+			pud = pud_offset(p4d, taddr);
-+			if (pud_present(*pud)) {
-+				pmd = pmd_offset(pud, taddr);
-+				if (pmd_present(*pmd))
-+					pte = pte_offset_map(pmd, taddr);
-+			}
- 		}
- 	}
- 
-diff --git a/arch/ia64/mm/init.c b/arch/ia64/mm/init.c
-index 58fd67068bac..bcdc78e97e6e 100644
---- a/arch/ia64/mm/init.c
-+++ b/arch/ia64/mm/init.c
-@@ -208,6 +208,7 @@ static struct page * __init
- put_kernel_page (struct page *page, unsigned long address, pgprot_t pgprot)
- {
- 	pgd_t *pgd;
-+	p4d_t *p4d;
- 	pud_t *pud;
- 	pmd_t *pmd;
- 	pte_t *pte;
-@@ -215,7 +216,10 @@ put_kernel_page (struct page *page, unsigned long address, pgprot_t pgprot)
- 	pgd = pgd_offset_k(address);		/* note: this is NOT pgd_offset()! */
- 
- 	{
--		pud = pud_alloc(&init_mm, pgd, address);
-+		p4d = p4d_alloc(&init_mm, pgd, address);
-+		if (!p4d)
-+			goto out;
-+		pud = pud_alloc(&init_mm, p4d, address);
- 		if (!pud)
- 			goto out;
- 		pmd = pmd_alloc(&init_mm, pud, address);
-@@ -382,6 +386,7 @@ int vmemmap_find_next_valid_pfn(int node, int i)
- 
- 	do {
- 		pgd_t *pgd;
-+		p4d_t *p4d;
- 		pud_t *pud;
- 		pmd_t *pmd;
- 		pte_t *pte;
-@@ -392,7 +397,13 @@ int vmemmap_find_next_valid_pfn(int node, int i)
- 			continue;
- 		}
- 
--		pud = pud_offset(pgd, end_address);
-+		p4d = p4d_offset(pgd, end_address);
-+		if (p4d_none(*p4d)) {
-+			end_address += P4D_SIZE;
-+			continue;
-+		}
-+
-+		pud = pud_offset(p4d, end_address);
- 		if (pud_none(*pud)) {
- 			end_address += PUD_SIZE;
- 			continue;
-@@ -430,6 +441,7 @@ int __init create_mem_map_page_table(u64 start, u64 end, void *arg)
- 	struct page *map_start, *map_end;
- 	int node;
- 	pgd_t *pgd;
-+	p4d_t *p4d;
- 	pud_t *pud;
- 	pmd_t *pmd;
- 	pte_t *pte;
-@@ -444,12 +456,20 @@ int __init create_mem_map_page_table(u64 start, u64 end, void *arg)
- 	for (address = start_page; address < end_page; address += PAGE_SIZE) {
- 		pgd = pgd_offset_k(address);
- 		if (pgd_none(*pgd)) {
-+			p4d = memblock_alloc_node(PAGE_SIZE, PAGE_SIZE, node);
-+			if (!p4d)
-+				goto err_alloc;
-+			pgd_populate(&init_mm, pgd, p4d);
-+		}
-+		p4d = p4d_offset(pgd, address);
-+
-+		if (p4d_none(*p4d)) {
- 			pud = memblock_alloc_node(PAGE_SIZE, PAGE_SIZE, node);
- 			if (!pud)
- 				goto err_alloc;
--			pgd_populate(&init_mm, pgd, pud);
-+			p4d_populate(&init_mm, p4d, pud);
- 		}
--		pud = pud_offset(pgd, address);
-+		pud = pud_offset(p4d, address);
- 
- 		if (pud_none(*pud)) {
- 			pmd = memblock_alloc_node(PAGE_SIZE, PAGE_SIZE, node);
--- 
-2.24.0
-
+Kind regards,
+Nicholas
