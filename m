@@ -2,124 +2,114 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 295BEC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 788BEC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F282C21582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:49:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576669760;
-	bh=D0KfWFKQnsh0M2Jg4/pnIgGfmjwpAKhCm83TzxKKh54=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=d6O2SdoqaF8fKBv2BZ9sdVyJ+CnH3Ey1XwRQ36xJbCcoylWDiNMQzNS+r88hdc4H1
-	 uVDzFCNr6FNIdPY+syquezq16G9a87O4BI3Doe44esFommgi2JXDIYhIHNNittNB2y
-	 isFoWlLxKhKDGbrSJWo7Cke2kSVnnSlGnAYpZLFQ=
+	by mail.kernel.org (Postfix) with ESMTP id 4E7A921582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:50:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="TjcPQ6hX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbfLRLtT (ORCPT
+        id S1726931AbfLRLue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 06:49:19 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:41229 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726141AbfLRLtT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 06:49:19 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1ihXpI-0007MK-JJ; Wed, 18 Dec 2019 12:49:12 +0100
-To:     Joakim Zhang <qiangqing.zhang@nxp.com>
-Subject: RE: [PATCH 1/3] dt-bindings/irq: add binding for NXP INTMUX  interrupt multiplexer
-X-PHP-Originating-Script: 0:main.inc
+        Wed, 18 Dec 2019 06:50:34 -0500
+Received: from frisell.zx2c4.com ([192.95.5.64]:57757 "EHLO frisell.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726710AbfLRLud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 06:50:33 -0500
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id e37716a2;
+        Wed, 18 Dec 2019 10:53:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=dF+343L+TdlkZkv3XYQxJv3zHkU=; b=TjcPQ6
+        hXxWKK2YLj+bHj6e8MKS1+2/s45ZVpmfXnTRAP1x36bgHNVA6rckobNs6oHmicFd
+        XiP/F98tGiMcdphyibDkPyNM3ucsuyyYPPAraTVtOwcvz84uSrcyf8PJSQIT6k51
+        yd9h0ujCeDpb2ttx5JyV6jDI/7J/HsGmHTft5s6NGqpsJ9zsoQhMjM5jKDOVVC4F
+        w7wz4KmEIYLotJ2iSrq/ZriiJaQpvN8u2Zem9eoNk6F8EcDVYoc7AyUYdzSOWJSk
+        hbbMFOpNMsQEpqrG4q0zsJV0dvE3rGRIRxflVEYNsoHn0eC30/kquA8HHym3jGdA
+        v0d1ajk3Jv+IHiFg==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 9bcc9931 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Wed, 18 Dec 2019 10:53:58 +0000 (UTC)
+Received: by mail-ot1-f47.google.com with SMTP id p8so2172391oth.10;
+        Wed, 18 Dec 2019 03:50:31 -0800 (PST)
+X-Gm-Message-State: APjAAAXvqXk7MkqOYS2B2sTTrImQkkRen5kmslxVvgR5gWWHsBJIlpoh
+        c2DJwSBgJ5iT6z/ZalZuY0ZpH5xXCngdJsS8y3I=
+X-Google-Smtp-Source: APXvYqzhY12iR5m2kOBPfSFcgyM7ph/qjcMRfYbool+Jo+GJ1pt8ESvldAOSFjtQuspfXp9ad3F2iB9gc7l+lqvEedc=
+X-Received: by 2002:a9d:4f0f:: with SMTP id d15mr2218022otl.179.1576669831047;
+ Wed, 18 Dec 2019 03:50:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Wed, 18 Dec 2019 11:49:12 +0000
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     <tglx@linutronix.de>, <jason@lakedaemon.net>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <shawnguo@kernel.org>,
-        <s.hauer@pengutronix.de>, "S.j. Wang" <shengjiu.wang@nxp.com>,
-        <kernel@pengutronix.de>, <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Andy Duan <fugang.duan@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>
-In-Reply-To: <DB7PR04MB4618957D7423FFBAECD1EC7EE6530@DB7PR04MB4618.eurprd04.prod.outlook.com>
-References: <1576653615-27954-1-git-send-email-qiangqing.zhang@nxp.com>
- <1576653615-27954-2-git-send-email-qiangqing.zhang@nxp.com>
- <254925e345493019c3e1e558b37e46f2@www.loen.fr>
- <DB7PR04MB4618048D025D094618C6F99FE6530@DB7PR04MB4618.eurprd04.prod.outlook.com>
- <DB7PR04MB4618957D7423FFBAECD1EC7EE6530@DB7PR04MB4618.eurprd04.prod.outlook.com>
-Message-ID: <796eb027cbecbdc9dbc01b417d196a44@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: qiangqing.zhang@nxp.com, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, shengjiu.wang@nxp.com, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, fugang.duan@nxp.com, aisheng.dong@nxp.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+References: <20191208232734.225161-1-Jason@zx2c4.com> <CACT4Y+bsJVmgbD-WogwU=LfWiPN1JgjBrwx4s8Y14hDd7vqqhQ@mail.gmail.com>
+ <CAHmME9o0AparjaaOSoZD14RAW8_AJTfKfcx3Y2ndDAPFNC-MeQ@mail.gmail.com> <CACT4Y+Zssd6OZ2-U4kjw18mNthQyzPWZV_gkH3uATnSv1SVDfA@mail.gmail.com>
+In-Reply-To: <CACT4Y+Zssd6OZ2-U4kjw18mNthQyzPWZV_gkH3uATnSv1SVDfA@mail.gmail.com>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Wed, 18 Dec 2019 12:50:20 +0100
+X-Gmail-Original-Message-ID: <CAHmME9oM=YHMZyg23WEzmZAof=7iv-A01VazB3ihhR99f6X1cg@mail.gmail.com>
+Message-ID: <CAHmME9oM=YHMZyg23WEzmZAof=7iv-A01VazB3ihhR99f6X1cg@mail.gmail.com>
+Subject: Re: [PATCH net-next v2] net: WireGuard secure network tunnel
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-18 11:34, Joakim Zhang wrote:
->> -----Original Message-----
->> From: Joakim Zhang <qiangqing.zhang@nxp.com>
->> Sent: 2019年12月18日 18:22
->> To: Marc Zyngier <maz@kernel.org>
->> Cc: tglx@linutronix.de; jason@lakedaemon.net; robh+dt@kernel.org;
->> mark.rutland@arm.com; shawnguo@kernel.org; s.hauer@pengutronix.de; 
->> S.j.
->> Wang <shengjiu.wang@nxp.com>; kernel@pengutronix.de;
->> festevam@gmail.com; dl-linux-imx <linux-imx@nxp.com>;
->> linux-kernel@vger.kernel.org; devicetree@vger.kernel.org;
->> linux-arm-kernel@lists.infradead.org; Andy Duan 
->> <fugang.duan@nxp.com>;
->> Aisheng Dong <aisheng.dong@nxp.com>
->> Subject: RE: [PATCH 1/3] dt-bindings/irq: add binding for NXP INTMUX 
->> interrupt
->> multiplexer
+Hi Dmitry,
 
-[...]
-
->> > What I don't understand is how the interrupt descriptor can 
->> indicate
->> > which channel it is multiplexed on. The driver doesn't makes this
->> > clear either, and I strongly suspect that it was never tested with 
->> more than a
->> single channel...
->>
->> Yes, to be frank, I tested with a signle channel, I will take this 
->> into
->> consideration. Thanks.
-> Hi Marc,
+On Wed, Dec 18, 2019 at 12:37 PM Dmitry Vyukov <dvyukov@google.com> wrote:
+> > Actually with WireGuard, I think that's not the case. The WireGuard
+> > logging has been written with DoS in mind. You /should/ be able to
+> > safely run it on a production system exposed to the wild Internet, and
+> > while there will be some additional things in your dmesg, an attacker
+> > isn't supposed to be able to totally flood it without ratelimiting or
+> > inject malicious strings into it (such as ANSI escape sequence). In
+> > other words, I consider the logging to be fair game attack surface. If
+> > your fuzzer manages to craft some nasty sequence of packets that
+> > tricks some rate limiting logic and lets you litter all over dmesg
+> > totally unbounded, I'd consider that a real security bug worth
+> > stressing out about. So from the perspective of letting your fuzzers
+> > loose on WireGuard, I'd actually like to see this option kept on.
 >
-> I tested channels from 1 to 8, and no issue found.
->
-> We register irq handler with irq_set_chained_handler_and_data(), so
-> the interrupt descriptor could find the controller's private data, 
-> and
-> channel index is one part of private data.
-> I think this can explain the interrupt descriptor how to indicate
-> which channel it is multiplexed.
+> This is the case even with CONFIG_WIREGUARD_DEBUG turned on, right? Or without?
 
-But that doesn't explain how the driver can find which channel a given
-interrupts is wired to. Nothing in your binding shows how you can 
-extract
-the channel number from the interrupt descriptor. Nothing in the driver
-even *computes* a channel number.
+Turned on.
 
-As far as I can see, you register a bunch of domains, all with the same
-OF node, so all your interrupts end-up with the same domain. Is it 
-really
-what you expect?
+> Well, it may be able to trigger unbounded printing, but that won't be
+> detected as a bug and won't be reported. To be reported it needs to
+> fall into a set of predefined bug cases (e.g. "BUG:" or "WARNING:" on
+> console). Unless of course it triggers total stall/hang.
 
-This driver looks terribly wrong.
+Bummer. Well, at least the stall case is interesting.
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+> But I'm
+> afraid it will just dirty dmesg, make reading crashes harder and slow
+> down everything without benefit.
+
+Actually the point of the logging is usually to make it more obvious
+why a crash has come about, to provide some trail about the sequence
+of events. This was especially helpful in fixing old race conditions
+where subtle packet timing caused WireGuard's timer-based state
+machine to go haywire. Is syzkaller able to backtrack from crashes to
+the packets and packet timing that caused them, in order to make a
+test case to replay the crash? Is this precise enough for race
+condition bugs? If so, then when debugging the crashes I could always
+replay it later with logging turned on, in which case it might make
+sense to split out the debug logging into CONFIG_WIREGUARD_VERBOSE_LOG
+or similar (unless the logging itself changes the timing constraints
+and I can't repro that way). If this isn't possible, then it seems
+like logging might be something we would benefit from having in the
+crash reports, right? Or am I missing some other detail of how the
+system works?
+
+Jason
