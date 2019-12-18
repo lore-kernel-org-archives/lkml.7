@@ -2,155 +2,150 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D033FC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56346C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC3A921582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:24:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3219E206CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:25:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbfLRPY2 (ORCPT
+        id S1727177AbfLRPZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 10:24:28 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:34472 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726913AbfLRPY1 (ORCPT
+        Wed, 18 Dec 2019 10:25:30 -0500
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:41911 "EHLO
+        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727001AbfLRPZ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 10:24:27 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id E696C291739
-Subject: Re: [PATCH v21 1/2] Documentation: bridge: Add documentation for
- ps8640 DT properties
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        drinkcat@chromium.org, Jitao Shi <jitao.shi@mediatek.com>,
-        Ulrich Hecht <uli@fpond.eu>, David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
-        matthias.bgg@gmail.com, Collabora Kernel ML <kernel@collabora.com>,
-        linux-arm-kernel@lists.infradead.org
-References: <20191216135834.27775-1-enric.balletbo@collabora.com>
- <20191216135834.27775-2-enric.balletbo@collabora.com>
- <20191217142821.xitumpvfg52heb4t@gilmour.lan>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <da1f3c1b-30b5-7708-9527-7f210e817a31@collabora.com>
-Date:   Wed, 18 Dec 2019 16:24:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <20191217142821.xitumpvfg52heb4t@gilmour.lan>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 18 Dec 2019 10:25:29 -0500
+Received: from Internal Mail-Server by MTLPINE1 (envelope-from lsun@mellanox.com)
+        with ESMTPS (AES256-SHA encrypted); 18 Dec 2019 17:25:23 +0200
+Received: from farm-0002.mtbu.labs.mlnx (farm-0002.mtbu.labs.mlnx [10.15.2.32])
+        by mtbu-labmailer.labs.mlnx (8.14.4/8.14.4) with ESMTP id xBIFPLBc025573;
+        Wed, 18 Dec 2019 10:25:21 -0500
+Received: (from lsun@localhost)
+        by farm-0002.mtbu.labs.mlnx (8.14.7/8.13.8/Submit) id xBIFPJx6032084;
+        Wed, 18 Dec 2019 10:25:19 -0500
+From:   Liming Sun <lsun@mellanox.com>
+To:     Andy Shevchenko <andy@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Vadim Pasternak <vadimp@mellanox.com>,
+        David Woods <dwoods@mellanox.com>
+Cc:     Liming Sun <lsun@mellanox.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] platform/mellanox: fix the mlx-bootctl sysfs
+Date:   Wed, 18 Dec 2019 10:24:36 -0500
+Message-Id: <1576682676-31957-1-git-send-email-lsun@mellanox.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <94727fab054309cd98c876748fd27b130ce5031f.1575918870.git.lsun@mellanox.com>
+References: <94727fab054309cd98c876748fd27b130ce5031f.1575918870.git.lsun@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime,
+This is a follow-up commit for the sysfs attributes to change
+from DRIVER_ATTR to DEVICE_ATTR according to some initial comments.
+In such case, it's better to point the sysfs path to the device
+itself instead of the driver. The ABI document is also updated.
 
-Thanks for your comment, just preparing another version.
+Fixes: 79e29cb8fbc5 ("platform/mellanox: Add bootctl driver for Mellanox BlueField Soc")
+Signed-off-by: Liming Sun <lsun@mellanox.com>
+---
+v2->v3:
+    Fixes for comments from Andy
+    - Convert to use dev_groups;
+v1->v2:
+    Fixes for comments from Andy
+    - Added the Fixes tag;
+v1: Initial version.
+---
+ Documentation/ABI/testing/sysfs-platform-mellanox-bootctl | 10 +++++-----
+ drivers/platform/mellanox/mlxbf-bootctl.c                 | 11 +++++++++--
+ 2 files changed, 14 insertions(+), 7 deletions(-)
 
-On 17/12/19 15:28, Maxime Ripard wrote:
-> On Mon, Dec 16, 2019 at 02:58:33PM +0100, Enric Balletbo i Serra wrote:
->> From: Jitao Shi <jitao.shi@mediatek.com>
->>
->> Add documentation for DT properties supported by
->> ps8640 DSI-eDP converter.
->>
->> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
->> Acked-by: Rob Herring <robh@kernel.org>
->> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
->> Signed-off-by: Ulrich Hecht <uli@fpond.eu>
->> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->> ---
->>
->> Changes in v21: None
->> Changes in v19: None
->> Changes in v18: None
->> Changes in v17: None
->> Changes in v16: None
->> Changes in v15: None
->> Changes in v14: None
->> Changes in v13: None
->> Changes in v12: None
->> Changes in v11: None
->>
->>  .../bindings/display/bridge/ps8640.txt        | 44 +++++++++++++++++++
->>  1 file changed, 44 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/display/bridge/ps8640.txt
->>
->> diff --git a/Documentation/devicetree/bindings/display/bridge/ps8640.txt b/Documentation/devicetree/bindings/display/bridge/ps8640.txt
->> new file mode 100644
->> index 000000000000..7b13f92f7359
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/display/bridge/ps8640.txt
->> @@ -0,0 +1,44 @@
->> +ps8640-bridge bindings
->> +
->> +Required properties:
->> +	- compatible: "parade,ps8640"
->> +	- reg: first page address of the bridge.
->> +	- sleep-gpios: OF device-tree gpio specification for PD pin.
->> +	- reset-gpios: OF device-tree gpio specification for reset pin.
->> +	- vdd12-supply: OF device-tree regulator specification for 1.2V power.
->> +	- vdd33-supply: OF device-tree regulator specification for 3.3V power.
->> +	- ports: The device node can contain video interface port nodes per
->> +		 the video-interfaces bind[1]. For port@0,set the reg = <0> as
->> +		 ps8640 dsi in and port@1,set the reg = <1> as ps8640 eDP out.
->> +
->> +Optional properties:
->> +	- mode-sel-gpios: OF device-tree gpio specification for mode-sel pin.
->> +[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
->> +
->> +Example:
->> +	edp-bridge@18 {
->> +		compatible = "parade,ps8640";
->> +		reg = <0x18>;
->> +		sleep-gpios = <&pio 116 GPIO_ACTIVE_LOW>;
->> +		reset-gpios = <&pio 115 GPIO_ACTIVE_LOW>;
->> +		mode-sel-gpios = <&pio 92 GPIO_ACTIVE_HIGH>;
->> +		vdd12-supply = <&ps8640_fixed_1v2>;
->> +		vdd33-supply = <&mt6397_vgp2_reg>;
->> +
->> +		ports {
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +			port@0 {
->> +				reg = <0>;
->> +				ps8640_in: endpoint {
->> +					remote-endpoint = <&dsi0_out>;
->> +				};
->> +			};
->> +			port@1 {
->> +				reg = <1>;
->> +				ps8640_out: endpoint {
->> +					remote-endpoint = <&panel_in>;
->> +				};
->> +			};
->> +		};
->> +	};
-> 
-> It's not really fair to ask this after the rough history of this
-> patchset apparently, but bindings should be submitted in the YAML
-> format now.
-> 
-> This wouldn't be nice to stop it from going in just because of this,
-> so can you send a subsequent patch fixing this?
-> 
+diff --git a/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl b/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
+index c65a805..401d202 100644
+--- a/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
++++ b/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
+@@ -1,4 +1,4 @@
+-What:		/sys/bus/platform/devices/MLNXBF04:00/driver/lifecycle_state
++What:		/sys/bus/platform/devices/MLNXBF04:00/lifecycle_state
+ Date:		Oct 2019
+ KernelVersion:	5.5
+ Contact:	"Liming Sun <lsun@mellanox.com>"
+@@ -10,7 +10,7 @@ Description:
+ 		  GA Non-Secured - Non-Secure chip and not able to change state
+ 		  RMA - Return Merchandise Authorization
+ 
+-What:		/sys/bus/platform/devices/MLNXBF04:00/driver/post_reset_wdog
++What:		/sys/bus/platform/devices/MLNXBF04:00/post_reset_wdog
+ Date:		Oct 2019
+ KernelVersion:	5.5
+ Contact:	"Liming Sun <lsun@mellanox.com>"
+@@ -19,7 +19,7 @@ Description:
+ 		to reboot the chip and recover it to the old state if the new
+ 		boot partition fails.
+ 
+-What:		/sys/bus/platform/devices/MLNXBF04:00/driver/reset_action
++What:		/sys/bus/platform/devices/MLNXBF04:00/reset_action
+ Date:		Oct 2019
+ KernelVersion:	5.5
+ Contact:	"Liming Sun <lsun@mellanox.com>"
+@@ -30,7 +30,7 @@ Description:
+ 		  emmc - boot from the onchip eMMC
+ 		  emmc_legacy - boot from the onchip eMMC in legacy (slow) mode
+ 
+-What:		/sys/bus/platform/devices/MLNXBF04:00/driver/second_reset_action
++What:		/sys/bus/platform/devices/MLNXBF04:00/second_reset_action
+ Date:		Oct 2019
+ KernelVersion:	5.5
+ Contact:	"Liming Sun <lsun@mellanox.com>"
+@@ -44,7 +44,7 @@ Description:
+ 		  swap_emmc - swap the primary / secondary boot partition
+ 		  none - cancel the action
+ 
+-What:		/sys/bus/platform/devices/MLNXBF04:00/driver/secure_boot_fuse_state
++What:		/sys/bus/platform/devices/MLNXBF04:00/secure_boot_fuse_state
+ Date:		Oct 2019
+ KernelVersion:	5.5
+ Contact:	"Liming Sun <lsun@mellanox.com>"
+diff --git a/drivers/platform/mellanox/mlxbf-bootctl.c b/drivers/platform/mellanox/mlxbf-bootctl.c
+index 61753b6..472dc74 100644
+--- a/drivers/platform/mellanox/mlxbf-bootctl.c
++++ b/drivers/platform/mellanox/mlxbf-bootctl.c
+@@ -259,7 +259,9 @@ static ssize_t secure_boot_fuse_state_show(struct device *dev,
+ 	NULL
+ };
+ 
+-ATTRIBUTE_GROUPS(mlxbf_bootctl);
++static const struct attribute_group mlxbf_bootctl_group = {
++	.attrs	= mlxbf_bootctl_attrs,
++};
+ 
+ static const struct acpi_device_id mlxbf_bootctl_acpi_ids[] = {
+ 	{"MLNXBF04", 0},
+@@ -305,11 +307,16 @@ static int mlxbf_bootctl_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct attribute_group *mlxbf_bootctl_dev_groups[] = {
++	&mlxbf_bootctl_group,
++	NULL
++};
++
+ static struct platform_driver mlxbf_bootctl_driver = {
+ 	.probe = mlxbf_bootctl_probe,
+ 	.driver = {
+ 		.name = "mlxbf-bootctl",
+-		.groups = mlxbf_bootctl_groups,
++		.dev_groups = mlxbf_bootctl_dev_groups,
+ 		.acpi_match_table = mlxbf_bootctl_acpi_ids,
+ 	}
+ };
+-- 
+1.8.3.1
 
-I don't mind to use YAML format for next version, in fact, I think is the best.
-
-Thanks,
- Enric
-
-
-> Thanks!
-> Maxime
-> 
