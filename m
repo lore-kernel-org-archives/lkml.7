@@ -2,113 +2,80 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 989D4C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B679CC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73CD72146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F0DD2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:03:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576684993;
+	bh=u8m+Lwq31qWhD0UzfhyK67aiuxro10wEUtknWSR8HnU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=p5OlTrMERhSJTFF0AT209AqcEtz8rD4GnFPMwDuU0Ce4jtBW0PA/S2SQ2U9TRz3K8
+	 hiCdqoOw6JGjEq1gz+diHPVeZNLY/uh6fo4/YoOTVhM3dwqO1agLICbFPaJ7SoIEE8
+	 P4x2NSJZaf4p5umcGc7TOemDymun7Nx9Px0FqTPI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbfLRQCa (ORCPT
+        id S1727377AbfLRQDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 11:02:30 -0500
-Received: from mga02.intel.com ([134.134.136.20]:30328 "EHLO mga02.intel.com"
+        Wed, 18 Dec 2019 11:03:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727021AbfLRQCa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 11:02:30 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 08:02:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
-   d="scan'208";a="217895963"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga006.jf.intel.com with ESMTP; 18 Dec 2019 08:02:28 -0800
-Date:   Wed, 18 Dec 2019 08:02:28 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, jmattson@google.com,
-        yu.c.zhang@linux.intel.com, yu-cheng.yu@intel.com
-Subject: Re: [PATCH v8 3/7] KVM: VMX: Pass through CET related MSRs
-Message-ID: <20191218160228.GB25201@linux.intel.com>
-References: <20191101085222.27997-1-weijiang.yang@intel.com>
- <20191101085222.27997-4-weijiang.yang@intel.com>
- <20191210211821.GL15758@linux.intel.com>
- <20191216021816.GA10764@local-michael-cet-test>
- <20191218003455.GP11771@linux.intel.com>
- <20191218135513.GB7926@local-michael-cet-test>
+        id S1727185AbfLRQDM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 11:03:12 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 831572146E;
+        Wed, 18 Dec 2019 16:03:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576684991;
+        bh=u8m+Lwq31qWhD0UzfhyK67aiuxro10wEUtknWSR8HnU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kUqZCG1mRrcc3nw1pAQnYsw/f6WB+r4UNW+pU21vUcKd5qoQ9DA+R9hKj3g758nrl
+         6xA4kWlY1k4caNhXJatK+tejDtvcClFuya2OlTtxIBplp6DQY5+/p430IOX2N7S05+
+         KUuFX9vu7lXNwd1vBdQWgcFQNpAYOMxdIOe9oUjA=
+Date:   Wed, 18 Dec 2019 16:03:06 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Sasha Levin <sashal@kernel.org>,
+        "kernelci.org bot" <bot@kernelci.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH AUTOSEL 4.19 031/219] arm64: preempt: Fix big-endian when
+ checking preempt count in assembly
+Message-ID: <20191218160305.GA16411@willie-the-truck>
+References: <20191122054911.1750-1-sashal@kernel.org>
+ <20191122054911.1750-24-sashal@kernel.org>
+ <20191214021403.GA1357@home.goodmis.org>
+ <20191216094523.GA9938@willie-the-truck>
+ <20191218104001.2b2773b7@gandalf.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191218135513.GB7926@local-michael-cet-test>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20191218104001.2b2773b7@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 09:55:13PM +0800, Yang Weijiang wrote:
-> On Tue, Dec 17, 2019 at 04:34:55PM -0800, Sean Christopherson wrote:
-> > On Mon, Dec 16, 2019 at 10:18:16AM +0800, Yang Weijiang wrote:
-> > > On Tue, Dec 10, 2019 at 01:18:21PM -0800, Sean Christopherson wrote:
-> > > > On Fri, Nov 01, 2019 at 04:52:18PM +0800, Yang Weijiang wrote:
-> > > > > CET MSRs pass through Guest directly to enhance performance.
-> > > > > CET runtime control settings are stored in MSR_IA32_{U,S}_CET,
-> > > > > Shadow Stack Pointer(SSP) are stored in MSR_IA32_PL{0,1,2,3}_SSP,
-> > > > > SSP table base address is stored in MSR_IA32_INT_SSP_TAB,
-> > > > > these MSRs are defined in kernel and re-used here.
-> > > > > 
-> > >  > +
-> > > > >  static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
-> > > > >  {
-> > > > >  	struct vcpu_vmx *vmx = to_vmx(vcpu);
-> > > > > @@ -7025,6 +7087,9 @@ static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
-> > > > >  	if (boot_cpu_has(X86_FEATURE_INTEL_PT) &&
-> > > > >  			guest_cpuid_has(vcpu, X86_FEATURE_INTEL_PT))
-> > > > >  		update_intel_pt_cfg(vcpu);
-> > > > > +
-> > > > > +	if (!is_guest_mode(vcpu))
-> > > > > +		vmx_pass_cet_msrs(vcpu);
-> > > > 
-> > > > Hmm, this looks insufficent, e.g. deliberately toggling CET from on->off
-> > > > while in guest mode would put KVM in a weird state as the msr bitmap for
-> > > > L1 would still allow L1 to access the CET MSRs.
-> > > >
-> > > Hi, Sean,
-> > > I don't get you, there's guest mode check before access CET msrs, it'll
-> > > fail if it's in guest mode.
-> > 
-> > KVM can exit to userspae while L2 is active.  If userspace then did a
-> > KVM_SET_CPUID2, e.g. instead of KVM_RUN, vmx_cpuid_update() would skip
-> > vmx_pass_cet_msrs() and KVM would never update L1's MSR bitmaps.
-> >
-> Thanks, it makes sense to me. Given current implementation, how about
-> removing above check and adding it in CET CPUID
-> enumeration for L2 so that no CET msrs passed through to L2 when
-> is_guest_mode() is true?
+On Wed, Dec 18, 2019 at 10:40:01AM -0500, Steven Rostedt wrote:
+> On Mon, 16 Dec 2019 09:45:24 +0000
+> Will Deacon <will@kernel.org> wrote:
+> 
+> > Yup, without 396244692232 this commit makes no sense. That's why I didn't CC
+> > stable or add a Fixes tag :(
+> 
+> I'm wondering if we should add a tag to state "not to be backported",
+> to tell auto select to ignore a patch that appears to be a fix.
 
-But you still need to update L1's MSR bitmaps.  That can obviously be done
-all at once, but it's annoying and IMO unnecessarily complex.
+I'd be in favour of that!
 
-> > > > Allowing KVM_SET_CPUID{2} while running a nested guest seems bogus, can we
-> > > > kill that path entirely with -EINVAL?
-> > > >
-> > > Do you mean don't expose CET cpuids to L2 guest?
-> > 
-> > I mean completely disallow KVM_SET_CPUID and KVM_SET_CPUID2 if
-> > is_guest_mode() is true.  My question is mostly directed at Paolo and
-> > anyone else that has an opinion on whether we can massage the ABI to
-> > retroactively change KVM_SET_CPUID{2} behavior.
->
-> This sounds like something deserving an individual patch after get
-> agreement in community. I'll put it aside right now.
-
-Normally I would agree, but I think in this case it would significantly
-reduce the complexity and implementation cost of CET support.  I'll send a
-patch to kickstart the conversation, it's a tiny change in terms of code.
+Will
