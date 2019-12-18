@@ -2,82 +2,76 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1970DC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E40C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D79B32064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 160AA218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 19:10:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZErvcHW8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="f2IvZqZN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727560AbfLRTJv (ORCPT
+        id S1727570AbfLRTKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 14:09:51 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:19552 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726831AbfLRTJv (ORCPT
+        Wed, 18 Dec 2019 14:10:13 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:33266 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726960AbfLRTKN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 14:09:51 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576696191; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=9FmfKq8lX65gFLtKmYO1d5wTTZANyQDiYN2cm9uFzg0=;
- b=ZErvcHW8FEn+KyASx0tfuRJofizYsf0Z88gC+Ccd80C66A8UI12yx9uZi4t6YmlLLEPKj+g5
- hyThWemolw4RVdvUwz7FeOzspI2s3JDNsfF9/7yzN6y2S5qI5g0yNOqqpqjORTfNfjCbYelC
- gzwM1WvLDfYGxr5WxJNpUjyHl4Q=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5dfa797d.7fd587501650-smtp-out-n03;
- Wed, 18 Dec 2019 19:09:49 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8FD16C43383; Wed, 18 Dec 2019 19:09:49 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 85FD3C433CB;
-        Wed, 18 Dec 2019 19:09:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 85FD3C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Wed, 18 Dec 2019 14:10:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=712IVLKSNni0jTo1/5v0Y+uyGFY5uc8OLjbiwsLBT0E=; b=f2IvZqZNVOEj1pJX6pSnGK2jO
+        0MFF18HSbsqJPEm1OAacBljBFhoIldtBTrPGnhEX8ErlbhTVUS+SiUhS3YOJE21PjRuzjk0dVtrvw
+        DjFP8AWS9j8fOiRr68S8TlQpHHfMdUM+l9Sr5EVilz0i9EHx1M63mdRYxbOFA1DMnGbm/ylVvk71b
+        Sl3LmUNjIapDhCPWFCJYZLlTg63CuhJmInT9ACvC4TTMlcIeTgmTNTm6WDh3QghPHFsM6Sde+aSyu
+        zFp/kqF4EgplWaN4BXIje0q93nZpXckZge3JSo2fHG/RmdXoy3aiqVmdKqZcNnfdv124BZ/HBMl0L
+        sWWz73NwQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ihei1-00089U-HS; Wed, 18 Dec 2019 19:10:09 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0122A980E35; Wed, 18 Dec 2019 20:10:06 +0100 (CET)
+Date:   Wed, 18 Dec 2019 20:10:06 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     linux-afs@lists.infradead.org, Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] rxrpc: Unlock new call in rxrpc_new_incoming_call()
+ rather than the caller
+Message-ID: <20191218191006.GF11457@worktop.programming.kicks-ass.net>
+References: <157669169065.21991.15207045893761573624.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] orinoco: avoid assertion in case of NULL pointer
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20191215195900.6109-1-pakki001@umn.edu>
-References: <20191215195900.6109-1-pakki001@umn.edu>
-To:     Aditya Pakki <pakki001@umn.edu>
-Cc:     pakki001@umn.edu, kjlu@umn.edu,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20191218190949.8FD16C43383@smtp.codeaurora.org>
-Date:   Wed, 18 Dec 2019 19:09:49 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <157669169065.21991.15207045893761573624.stgit@warthog.procyon.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Aditya Pakki <pakki001@umn.edu> wrote:
-
-> In ezusb_init, if upriv is NULL, the code crashes. However, the caller
-> in ezusb_probe can handle the error and print the failure message.
-> The patch replaces the BUG_ON call to error return.
+On Wed, Dec 18, 2019 at 05:54:50PM +0000, David Howells wrote:
+> Move the unlock and the ping transmission for a new incoming call into
+> rxrpc_new_incoming_call() rather than doing it in the caller.  This makes
+> it clearer to see what's going on.
 > 
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: Peter Zijlstra <peterz@infradead.org>
+> cc: Ingo Molnar <mingo@redhat.com>
+> cc: Will Deacon <will@kernel.org>
+> cc: Davidlohr Bueso <dave@stgolabs.net>
 
-Patch applied to wireless-drivers-next.git, thanks.
+Thanks, that looks much nicer!
 
-c705f9fc6a17 orinoco: avoid assertion in case of NULL pointer
-
--- 
-https://patchwork.kernel.org/patch/11293143/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
