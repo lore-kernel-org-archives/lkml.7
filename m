@@ -2,94 +2,82 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B26C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E2BC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7CBA218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:03:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C49D3206D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:05:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Gnla2HU3"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="hj8S/NLn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbfLRND4 (ORCPT
+        id S1726912AbfLRNFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 08:03:56 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:35372 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726921AbfLRND4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 08:03:56 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2691FB23;
-        Wed, 18 Dec 2019 14:03:54 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1576674234;
-        bh=kyFycWv/ep3sHlhQaqKtpvighq+LaycJHVfyeOlcXww=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Gnla2HU3Ub2gF4AYSAgQ+mL+s9ruk/qmL+BnCX5rSEDX5HJojek9/hdknZIEJj/j+
-         Ue5NaibnYQm7ik1aa7tVB9iubMhkhSj9s4tlNjESU005Q55iSobpRmKYS1O+cDGrZ+
-         ZoYoAc6/MJUCcQMNi90hpnIe+HePzFtU6B1T9d1g=
-Date:   Wed, 18 Dec 2019 15:03:43 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        dri-devel@lists.freedesktop.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH] drm/bridge: panel: Fix typo in drm_panel_bridge_add docs
-Message-ID: <20191218130343.GB4863@pendragon.ideasonboard.com>
-References: <20191218121223.30181-1-enric.balletbo@collabora.com>
+        Wed, 18 Dec 2019 08:05:19 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:41408 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726591AbfLRNFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 08:05:19 -0500
+Received: from zn.tnic (p200300EC2F0B8B004C237F05E7CC242C.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:8b00:4c23:7f05:e7cc:242c])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 294541EC0591;
+        Wed, 18 Dec 2019 14:05:18 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1576674318;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=epS/Q4CPQrHIq8og5sJ81MAlwOHLeJ852bCwbKG3HlE=;
+        b=hj8S/NLnZgwgxQAGDp/qAmGctiufUh18t5TnnCY6L4gAsr1LBBIlVd0tGYHE7kW+3qUYsv
+        0t8Y64bxA6pVY1QqbyejtVI21mw8HyIP6JUfyAzl95KSKemN7hvqOgw+cHm3+3zi+EdPmO
+        qLcZwlLs4e9bhyrOiqnpSXlwNHOTsfE=
+Date:   Wed, 18 Dec 2019 14:05:10 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     John Garry <john.garry@huawei.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] EDAC/mc: Fix use-after-free and memleaks during device
+ removal
+Message-ID: <20191218130510.GF24886@zn.tnic>
+References: <20191218062129.7400-1-rrichter@marvell.com>
+ <0c7da2d7-1cab-f518-2309-f740d7ef36fa@huawei.com>
+ <20191218125456.kkqfuq7crshwwc7q@rric.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191218121223.30181-1-enric.balletbo@collabora.com>
+In-Reply-To: <20191218125456.kkqfuq7crshwwc7q@rric.localdomain>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Enric,
+On Wed, Dec 18, 2019 at 12:55:04PM +0000, Robert Richter wrote:
+> I leave that to the maintainer as he is editing the SOB chain anyway.
+> The patch would be sent to the stable list already which may cause
+> confusion.
 
-Thank you for the patch.
+I haven't looked at it yet but I'd prefer if this patch went the normal
+way and landed in stable only eventually so that it gets some testing by
+people in linux-next first.
 
-On Wed, Dec 18, 2019 at 01:12:23PM +0100, Enric Balletbo i Serra wrote:
-> Fix the 'manged' typo with 'managed' in the drm_panel_bridge_add
-> kernel-doc documentation.
-> 
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+It is not a trivial patch and we did break EDAC with recent rework so
+I'd prefer if we take it slowly here and do more extensive testing
+before we expose it to the world.
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
-> 
->  drivers/gpu/drm/bridge/panel.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/panel.c b/drivers/gpu/drm/bridge/panel.c
-> index f4e293e7cf64..fcda954bbfec 100644
-> --- a/drivers/gpu/drm/bridge/panel.c
-> +++ b/drivers/gpu/drm/bridge/panel.c
-> @@ -151,7 +151,7 @@ static const struct drm_bridge_funcs panel_bridge_bridge_funcs = {
->   * known type. Calling this function with a panel whose connector type is
->   * DRM_MODE_CONNECTOR_Unknown will return NULL.
->   *
-> - * See devm_drm_panel_bridge_add() for an automatically manged version of this
-> + * See devm_drm_panel_bridge_add() for an automatically managed version of this
->   * function.
->   */
->  struct drm_bridge *drm_panel_bridge_add(struct drm_panel *panel)
+Also, how does this patch play with your cleanup? I'm guessing this
+patch goes first and then the cleanup...
 
 -- 
-Regards,
+Regards/Gruss,
+    Boris.
 
-Laurent Pinchart
+https://people.kernel.org/tglx/notes-about-netiquette
