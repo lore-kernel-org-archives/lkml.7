@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95611C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A39C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 688502146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DB462146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:59:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727264AbfLRV7m (ORCPT
+        id S1727404AbfLRV7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 16:59:42 -0500
-Received: from mga02.intel.com ([134.134.136.20]:54823 "EHLO mga02.intel.com"
+        Wed, 18 Dec 2019 16:59:51 -0500
+Received: from mga02.intel.com ([134.134.136.20]:54825 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726698AbfLRVzf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 16:55:35 -0500
+        id S1726666AbfLRVze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 16:55:34 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 13:55:34 -0800
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 13:55:33 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
-   d="scan'208";a="222108030"
+   d="scan'208";a="222108017"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga001.fm.intel.com with ESMTP; 18 Dec 2019 13:55:34 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 18 Dec 2019 13:55:33 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
         Paul Mackerras <paulus@ozlabs.org>,
@@ -48,9 +48,9 @@ Cc:     James Morse <james.morse@arm.com>,
         linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
         kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Greg Kurz <groug@kaod.org>
-Subject: [PATCH v2 06/45] KVM: SVM: Use direct vcpu pointer during vCPU create/free
-Date:   Wed, 18 Dec 2019 13:54:51 -0800
-Message-Id: <20191218215530.2280-7-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 03/45] KVM: x86: Free wbinvd_dirty_mask if vCPU creation fails
+Date:   Wed, 18 Dec 2019 13:54:48 -0800
+Message-Id: <20191218215530.2280-4-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191218215530.2280-1-sean.j.christopherson@intel.com>
 References: <20191218215530.2280-1-sean.j.christopherson@intel.com>
@@ -61,99 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Capture the vcpu pointer in a local varaible and replace '&svm->vcpu'
-references with a direct reference to the pointer in anticipation of
-moving bits of the code to common x86 and passing the vcpu pointer into
-svm_create_vcpu(), i.e. eliminate unnecessary noise from future patches.
+Free the vCPU's wbinvd_dirty_mask if vCPU creation fails after
+kvm_arch_vcpu_init(), e.g. when installing the vCPU's file descriptor.
+Do the freeing by calling kvm_arch_vcpu_free() instead of open coding
+the freeing.  This adds a likely superfluous, but ultimately harmless,
+call to kvmclock_reset(), which only clears vcpu->arch.pv_time_enabled.
+Using kvm_arch_vcpu_free() allows for additional cleanup in the future.
 
+Fixes: f5f48ee15c2ee ("KVM: VMX: Execute WBINVD to keep data consistency with assigned devices")
+Cc: stable@vger.kernel.org
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/svm.c | 30 ++++++++++++++++--------------
- 1 file changed, 16 insertions(+), 14 deletions(-)
+ arch/x86/kvm/x86.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 8f1b715dfde8..1afa10cf365f 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -2146,6 +2146,7 @@ static int avic_init_vcpu(struct vcpu_svm *svm)
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 8bb2fb1705ff..82d41257d2a3 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -9162,7 +9162,7 @@ void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
+ 	kvm_mmu_unload(vcpu);
+ 	vcpu_put(vcpu);
  
- static struct kvm_vcpu *svm_create_vcpu(struct kvm *kvm, unsigned int id)
- {
-+	struct kvm_vcpu *vcpu;
- 	struct vcpu_svm *svm;
- 	struct page *page;
- 	struct page *msrpm_pages;
-@@ -2161,24 +2162,25 @@ static struct kvm_vcpu *svm_create_vcpu(struct kvm *kvm, unsigned int id)
- 		err = -ENOMEM;
- 		goto out;
- 	}
-+	vcpu = &svm->vcpu;
- 
--	svm->vcpu.arch.user_fpu = kmem_cache_zalloc(x86_fpu_cache,
--						     GFP_KERNEL_ACCOUNT);
--	if (!svm->vcpu.arch.user_fpu) {
-+	vcpu->arch.user_fpu = kmem_cache_zalloc(x86_fpu_cache,
-+						GFP_KERNEL_ACCOUNT);
-+	if (!vcpu->arch.user_fpu) {
- 		printk(KERN_ERR "kvm: failed to allocate kvm userspace's fpu\n");
- 		err = -ENOMEM;
- 		goto free_partial_svm;
- 	}
- 
--	svm->vcpu.arch.guest_fpu = kmem_cache_zalloc(x86_fpu_cache,
--						     GFP_KERNEL_ACCOUNT);
--	if (!svm->vcpu.arch.guest_fpu) {
-+	vcpu->arch.guest_fpu = kmem_cache_zalloc(x86_fpu_cache,
-+						 GFP_KERNEL_ACCOUNT);
-+	if (!vcpu->arch.guest_fpu) {
- 		printk(KERN_ERR "kvm: failed to allocate vcpu's fpu\n");
- 		err = -ENOMEM;
- 		goto free_user_fpu;
- 	}
- 
--	err = kvm_vcpu_init(&svm->vcpu, kvm, id);
-+	err = kvm_vcpu_init(vcpu, kvm, id);
- 	if (err)
- 		goto free_svm;
- 
-@@ -2222,9 +2224,9 @@ static struct kvm_vcpu *svm_create_vcpu(struct kvm *kvm, unsigned int id)
- 	svm->asid_generation = 0;
- 	init_vmcb(svm);
- 
--	svm_init_osvw(&svm->vcpu);
-+	svm_init_osvw(vcpu);
- 
--	return &svm->vcpu;
-+	return vcpu;
- 
- free_page4:
- 	__free_page(hsave_page);
-@@ -2235,11 +2237,11 @@ static struct kvm_vcpu *svm_create_vcpu(struct kvm *kvm, unsigned int id)
- free_page1:
- 	__free_page(page);
- uninit:
--	kvm_vcpu_uninit(&svm->vcpu);
-+	kvm_vcpu_uninit(vcpu);
- free_svm:
--	kmem_cache_free(x86_fpu_cache, svm->vcpu.arch.guest_fpu);
-+	kmem_cache_free(x86_fpu_cache, vcpu->arch.guest_fpu);
- free_user_fpu:
--	kmem_cache_free(x86_fpu_cache, svm->vcpu.arch.user_fpu);
-+	kmem_cache_free(x86_fpu_cache, vcpu->arch.user_fpu);
- free_partial_svm:
- 	kmem_cache_free(kvm_vcpu_cache, svm);
- out:
-@@ -2270,8 +2272,8 @@ static void svm_free_vcpu(struct kvm_vcpu *vcpu)
- 	__free_page(virt_to_page(svm->nested.hsave));
- 	__free_pages(virt_to_page(svm->nested.msrpm), MSRPM_ALLOC_ORDER);
- 	kvm_vcpu_uninit(vcpu);
--	kmem_cache_free(x86_fpu_cache, svm->vcpu.arch.user_fpu);
--	kmem_cache_free(x86_fpu_cache, svm->vcpu.arch.guest_fpu);
-+	kmem_cache_free(x86_fpu_cache, vcpu->arch.user_fpu);
-+	kmem_cache_free(x86_fpu_cache, vcpu->arch.guest_fpu);
- 	kmem_cache_free(kvm_vcpu_cache, svm);
+-	kvm_x86_ops->vcpu_free(vcpu);
++	kvm_arch_vcpu_free(vcpu);
  }
  
+ void kvm_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
 -- 
 2.24.1
 
