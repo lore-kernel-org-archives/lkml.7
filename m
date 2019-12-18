@@ -2,135 +2,84 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF53C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B4DC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3F892465E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA87420717
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:19:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Fk43jeqA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OvGwwzXG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbfLRJTH (ORCPT
+        id S1726876AbfLRJTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 04:19:07 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:59382 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726551AbfLRJTH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 04:19:07 -0500
-Received: from zn.tnic (p200300EC2F0B8B0019D63FEBF10F193B.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:8b00:19d6:3feb:f10f:193b])
+        Wed, 18 Dec 2019 04:19:14 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:39334 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726680AbfLRJTO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 04:19:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=QZGedylInCJfPCSf+kcRbP2/TdXT8x3ydBMR01xASqw=; b=OvGwwzXGyysGvPaaFYdQ0Dbfy
+        raigUNsjkQYZ8tEmisXy2dBiU0NbvOG4c+s5sDXMgIy77YCnBMMaaJ7niNp1onJd1/Jmr51xOhWSh
+        hTTlK4y+ZJqbdDUV2Wrcdqdo4376uXvgpixZXZZ0nKOJ6Os7x550zA8zk9yGlVoictxEWgyah5dxr
+        norSBBfveOHywfnvsoPOfmbLaxPbX9ZpKrJt9E2FkmxRFuIagQsO0XEw+uiJQJ04CC5FNfPJduvLy
+        FFiUk7IpB0vvMDOEErkRLu4NGZnr2+0yJRXodJEoPPR+bj8iuydqZvD9h7U56dR3JYgdWqunm4h24
+        o3FYgNDWA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ihVU4-0004tc-BE; Wed, 18 Dec 2019 09:19:08 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A73691EC01AD;
-        Wed, 18 Dec 2019 10:19:05 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1576660745;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=PhrSdgcZwoPWDd5jU9umv1jFxMc9F4x5Z412X3Mg6pc=;
-        b=Fk43jeqA8gwd5wYwY2mkCGqqN5MMH3lErnH4PGyybkqjtNrLsvJRczDjvqWnc6tcZKnV3E
-        0sKXn6MTArug6yqQ8bv+MHvq9CM3DpvXuOPxEnNygpnkqU/6AW0zMdsDTk6Dud6V0OIOy0
-        qREtqb+Z8/GPXpf+MVu1sGmLgqUnAuA=
-Date:   Wed, 18 Dec 2019 10:18:56 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, sean.j.christopherson@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
-        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
-        puiterwijk@redhat.com
-Subject: Re: [PATCH v24 08/24] x86/sgx: Enumerate and track EPC sections
-Message-ID: <20191218091856.GA24886@zn.tnic>
-References: <20191129231326.18076-1-jarkko.sakkinen@linux.intel.com>
- <20191129231326.18076-9-jarkko.sakkinen@linux.intel.com>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C1B7A304C1B;
+        Wed, 18 Dec 2019 10:17:43 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C901D2B3E30F8; Wed, 18 Dec 2019 10:19:06 +0100 (CET)
+Date:   Wed, 18 Dec 2019 10:19:06 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc:     akpm@linux-foundation.org, npiggin@gmail.com, mpe@ellerman.id.au,
+        will@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-arch@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] asm-generic/tlb: Avoid potential double flush
+Message-ID: <20191218091906.GP2844@hirez.programming.kicks-ass.net>
+References: <20191218053530.73053-1-aneesh.kumar@linux.ibm.com>
+ <20191218053530.73053-3-aneesh.kumar@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191129231326.18076-9-jarkko.sakkinen@linux.intel.com>
+In-Reply-To: <20191218053530.73053-3-aneesh.kumar@linux.ibm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 30, 2019 at 01:13:10AM +0200, Jarkko Sakkinen wrote:
-> +static bool __init sgx_alloc_epc_section(u64 addr, u64 size,
-> +					 unsigned long index,
-> +					 struct sgx_epc_section *section)
-> +{
-> +	unsigned long nr_pages = size >> PAGE_SHIFT;
+On Wed, Dec 18, 2019 at 11:05:30AM +0530, Aneesh Kumar K.V wrote:
 
-I'm assuming here that size which gets communicated through CPUID -
-which is an interesting way to communicate SGX settings in itself :-) - is
-in multiples of 4K? SDM doesn't say...
+> --- a/include/asm-generic/tlb.h
+> +++ b/include/asm-generic/tlb.h
+> @@ -402,7 +402,12 @@ tlb_update_vma_flags(struct mmu_gather *tlb, struct vm_area_struct *vma) { }
+>  
+>  static inline void tlb_flush_mmu_tlbonly(struct mmu_gather *tlb)
+>  {
+> -	if (!tlb->end)
+> +	/*
+> +	 * Anything calling __tlb_adjust_range() also sets at least one of
+> +	 * these bits.
+> +	 */
+> +	if (!(tlb->freed_tables || tlb->cleared_ptes || tlb->cleared_pmds ||
+> +	      tlb->cleared_puds || tlb->cleared_p4ds))
+>  		return;
 
-And last time I asked:
-
-"This size comes from CPUID but it might be prudent to sanity-check it
-nevertheless, before doing the memremap()."
-
-but it was left uncommented.
-
-> +/**
-> + * A section metric is concatenated in a way that @low bits 12-31 define the
-> + * bits 12-31 of the metric and @high bits 0-19 define the bits 32-51 of the
-> + * metric.
-> + */
-> +static inline u64 __init sgx_calc_section_metric(u64 low, u64 high)
-> +{
-> +	return (low & GENMASK_ULL(31, 12)) +
-> +	       ((high & GENMASK_ULL(19, 0)) << 32);
-> +}
-> +
-> +static bool __init sgx_page_cache_init(void)
-> +{
-> +	u32 eax, ebx, ecx, edx, type;
-> +	u64 pa, size;
-> +	int i;
-> +
-> +	BUILD_BUG_ON(SGX_MAX_EPC_SECTIONS > (SGX_EPC_SECTION_MASK + 1));
-> +
-> +	for (i = 0; i < (SGX_MAX_EPC_SECTIONS + 1); i++) {
-
-Those brackets are still here from the last time. You said:
-
-"For nothing :-)
-
-I'll change it as:
-
-  for (i = 0; i <= SGX_MAX_EPC_SECTIONS; i++) {"
-
-but probably forgot...
-
-and looking at my review comments here:
-
-https://lkml.kernel.org/r/20191005092627.GA25699@zn.tnic
-
-and your reply:
-
-https://lkml.kernel.org/r/20191007115850.GA20830@linux.intel.com
-
-you clearly missed addressing some so I'm going to stop reviewing here.
-
-Please have a look at those review comments again and check whether the
-apply - and then do them - or they don't and they pls explain why they
-don't.
-
-And do that for the rest of the patchset, please, before you send it
-again.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+FWIW I looked at the GCC generated assembly output for this (x86_64) and
+it did a single load and mask as expected.
