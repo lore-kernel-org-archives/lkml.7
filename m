@@ -2,105 +2,124 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 268E6C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F3D3C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02A992176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEED52176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:54:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="XK1rBebk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbfLRNyH (ORCPT
+        id S1727114AbfLRNyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 08:54:07 -0500
-Received: from mga11.intel.com ([192.55.52.93]:5017 "EHLO mga11.intel.com"
+        Wed, 18 Dec 2019 08:54:11 -0500
+Received: from mout.gmx.net ([212.227.17.22]:47233 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726856AbfLRNyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 08:54:07 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 05:54:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,329,1571727600"; 
-   d="scan'208";a="390195126"
-Received: from unknown (HELO localhost) ([10.239.159.128])
-  by orsmga005.jf.intel.com with ESMTP; 18 Dec 2019 05:54:04 -0800
-Date:   Wed, 18 Dec 2019 21:55:13 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
-        jmattson@google.com, yu.c.zhang@linux.intel.com,
-        yu-cheng.yu@intel.com
-Subject: Re: [PATCH v8 3/7] KVM: VMX: Pass through CET related MSRs
-Message-ID: <20191218135513.GB7926@local-michael-cet-test>
-References: <20191101085222.27997-1-weijiang.yang@intel.com>
- <20191101085222.27997-4-weijiang.yang@intel.com>
- <20191210211821.GL15758@linux.intel.com>
- <20191216021816.GA10764@local-michael-cet-test>
- <20191218003455.GP11771@linux.intel.com>
+        id S1726998AbfLRNyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 08:54:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1576677243;
+        bh=ZhcDDcNfsfafFdvs1JQcGHU/hpgdybDLx7pCjlP+xVM=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=XK1rBebkH++Y1QL+eER5du3AZsBxW6t/Gmc0yw30HIR8Ck6ty8siCmjRLlOq9VY1S
+         f8rK3dtAYf2lALCFwZTzrT19Ta+gh/R3TXxQVzHJ4y4/aR7iCZsrdSjHMZwbjGYCxn
+         thnuBI7n/Zcm9BWdNvE8KzRYSOm8dLYgdLfUnFVU=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [185.76.99.135] ([185.76.99.135]) by web-mail.gmx.net
+ (3c-app-gmx-bap62.server.lan [172.19.172.132]) (via HTTP); Wed, 18 Dec 2019
+ 14:54:03 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191218003455.GP11771@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Message-ID: <trinity-d7a098bf-51a2-4579-93c9-963826ed2895-1576677243636@3c-app-gmx-bap62>
+From:   "Frank Wunderlich" <frank-w@public-files.de>
+To:     "Masahiro Yamada" <masahiroy@kernel.org>
+Cc:     "Linux Kbuild mailing list" <linux-kbuild@vger.kernel.org>,
+        "Michal Marek" <michal.lkml@markovi.net>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Frank Rowand" <frowand.list@gmail.com>,
+        DTML <devicetree@vger.kernel.org>
+Subject: Aw: Re: [PATCH] kbuild: Add DTC_CPP_FLAGS
+Content-Type: text/plain; charset=UTF-8
+Date:   Wed, 18 Dec 2019 14:54:03 +0100
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <CAK7LNARWYE4-4Qp-YfTrrt1YCZ68b28FDoE45cDJkZTqUyXNUw@mail.gmail.com>
+References: <20191218114625.28438-1-frank-w@public-files.de>
+ <CAK7LNARWYE4-4Qp-YfTrrt1YCZ68b28FDoE45cDJkZTqUyXNUw@mail.gmail.com>
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:IPEYO5erNR3VIgkP26Ywy22WTWQkOf9vN8fjbS56GYJQF0o6de1mtWEGI8IjV1m+jU8TF
+ 3k76khgIJtZ6dmgLTKOuR3djzyaqRsERlxXcPq/ov0DxOQv0xSq740gNPqZBhdffYA5EuukAokko
+ 9boOvproSK4KWQ/MY5/YNELjGh8WGFILYQtgAJM0rnQZPujUhB89vhNWl6xIf3e33yDAHa+YantC
+ ntLllE7GdbDVNceTMN+7KG3qbfzvb9AMflXfOijv8HQoWnCZ1eD6HMRKRIbR6Sononw2Qimr1P0u
+ d4=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:s4mPEd+k28k=:K9yIMO1inLEXGbGxzMcLZt
+ kxi2OI5xu/PLSRGCYa8rgEvelPZvFG7ScNxj59El6atgpkLps4J0J7OpDTmk0DqTMQu4ILPw5
+ RcKuYnhTiRK8D/TZ1ooLUXG/OFLEsEPy2Cent4kgR3+zNwGQwVlC4cxkpyiRemeJcfln89kP7
+ wo/BTXQ8x5XxKFY7NhHxIubfgXowzLfpfkJnZYJSBBR3Ny35Axt9/yl0gh6CGxNP9WocpO7pC
+ 9+q2fUe9mYfJiLX8+yVD9wG+iyZfEw7kgf/+E9jMpT7gcwaOtKt4qz2PiME2k6wMoT6cpuLcq
+ wODlqkagwlWUt7eq0XpfmUp6fVKUPjN2DYh6TyILnRD8pOH6MGdCOvw26bftMKK9QyYD2NWxZ
+ MNs3FwOddJjd1ql/0Y/oE9lyRW2MEqML3jGaoJmShuNw7JNjVd+qDi5J1+lMEIA8Lf0CMWMRp
+ LIpz6NYKTkMle2hSM7CDpeuSvK3T5Wob+ixDutg8V7vlFNjhW8MUX5PFbIUi2iZmKwR6QGH+v
+ BhCVRYf7TOVz30C7SSYQ4NMz/clRBkLC/n5el1BDLAzq+bUQ2gEXqPs+zpXd+XNIDUrUfvNOT
+ 9o5putGwzFXN9OY/WF4BwtO3LVSBI13XxV7O1Tloc0gIinlyVefrutQpB/mx4/ECohe/UbI8l
+ Igq3b96srX3rzn9vSNoKrXOFnbBu9pbrQJBINL6aOB7Ao8qBBPV9hs4sDC33HQpgHlKw=
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 04:34:55PM -0800, Sean Christopherson wrote:
-> On Mon, Dec 16, 2019 at 10:18:16AM +0800, Yang Weijiang wrote:
-> > On Tue, Dec 10, 2019 at 01:18:21PM -0800, Sean Christopherson wrote:
-> > > On Fri, Nov 01, 2019 at 04:52:18PM +0800, Yang Weijiang wrote:
-> > > > CET MSRs pass through Guest directly to enhance performance.
-> > > > CET runtime control settings are stored in MSR_IA32_{U,S}_CET,
-> > > > Shadow Stack Pointer(SSP) are stored in MSR_IA32_PL{0,1,2,3}_SSP,
-> > > > SSP table base address is stored in MSR_IA32_INT_SSP_TAB,
-> > > > these MSRs are defined in kernel and re-used here.
-> > > > 
-> >  > +
-> > > >  static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
-> > > >  {
-> > > >  	struct vcpu_vmx *vmx = to_vmx(vcpu);
-> > > > @@ -7025,6 +7087,9 @@ static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
-> > > >  	if (boot_cpu_has(X86_FEATURE_INTEL_PT) &&
-> > > >  			guest_cpuid_has(vcpu, X86_FEATURE_INTEL_PT))
-> > > >  		update_intel_pt_cfg(vcpu);
-> > > > +
-> > > > +	if (!is_guest_mode(vcpu))
-> > > > +		vmx_pass_cet_msrs(vcpu);
-> > > 
-> > > Hmm, this looks insufficent, e.g. deliberately toggling CET from on->off
-> > > while in guest mode would put KVM in a weird state as the msr bitmap for
-> > > L1 would still allow L1 to access the CET MSRs.
-> > >
-> > Hi, Sean,
-> > I don't get you, there's guest mode check before access CET msrs, it'll
-> > fail if it's in guest mode.
-> 
-> KVM can exit to userspae while L2 is active.  If userspace then did a
-> KVM_SET_CPUID2, e.g. instead of KVM_RUN, vmx_cpuid_update() would skip
-> vmx_pass_cet_msrs() and KVM would never update L1's MSR bitmaps.
->
-Thanks, it makes sense to me. Given current implementation, how about
-removing above check and adding it in CET CPUID
-enumeration for L2 so that no CET msrs passed through to L2 when
-is_guest_mode() is true?
+Hi,
 
-> > > Allowing KVM_SET_CPUID{2} while running a nested guest seems bogus, can we
-> > > kill that path entirely with -EINVAL?
-> > >
-> > Do you mean don't expose CET cpuids to L2 guest?
-> 
-> I mean completely disallow KVM_SET_CPUID and KVM_SET_CPUID2 if
-> is_guest_mode() is true.  My question is mostly directed at Paolo and
-> anyone else that has an opinion on whether we can massage the ABI to
-> retroactively change KVM_SET_CPUID{2} behavior.
-This sounds like something deserving an individual patch after get
-agreement in community. I'll put it aside right now.
+thank you for your answer... i waited for this argument ;) so here an exam=
+ple (don't wanted to add in patch itself):
+
+i have 2 different Bananapi-r64 boards with different switch-chips (v0.x r=
+tl8367,v1.x xmt7531). for 1 of the switches (mt7531) there are 2 drivers (=
+phy-driver + dsa driver) available and so i have 3 different configs in DT=
+S.
+
+Imho dtsi should contain only config for 1 chip, but the board has only 1 =
+dts. Till now i have copied the whole dts twice, so i have 3 independent d=
+ts. if i Patch any other in one like for bluetooth, wifi, which is same on=
+ each board i have to do it on all 3 dts files.
+
+so i tried to make the switch-part conditionally, include the right dtsi f=
+or switch to 1 bpi-r64 dts based on -D param passed to the build-chain.
+
+#ifdef __SWITCH_RTL8367__
+       #include "rtl8367.dtsi"
+#endif
+#ifdef __SWITCH_MT7531_DSA__
+       #include "mt7531.dtsi"
+#endif
+
+imho i can/should not include a dtsi to a dtsi and no dts to dts, so i can=
+not have a small dts (with the switch-config) including the whole r64 boar=
+d. Am i right?
+
+and this change should be less interferring than other ideas i'm thinking =
+about.
+
+Another example: I had tried adding the include/generated/autoconf.h to dt=
+si (same reason) which needs a change in scripts/dtc/include-prefixes/ (ad=
+d symlink) or an odd include in the dtsi (#include "../../../../../include=
+/generated/autoconf.h"). Both ways not nice...
+
+regards Frank
+
+
+> Gesendet: Mittwoch, 18. Dezember 2019 um 14:31 Uhr
+> Von: "Masahiro Yamada" <masahiroy@kernel.org>
+> I think this is questionable
+> since DT is supposed to describe hardware.
+> Does it depends on #ifdef or some external defines?
+>
+> If you want to add variations,
+> you can add a new DTS which includes other DTS(I) files.
 
