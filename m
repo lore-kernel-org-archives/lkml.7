@@ -2,109 +2,162 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD72C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E357C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4D392176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:13:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576674781;
-	bh=dFNR4Z1HB0x5D3aBxML9H4BzTZ4z7QedbnTWRrY29YI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jivUIcb0MO6wvGVsqomz2X+z8qMRdldyxmZ2tA4LY9yT8yKqK4K8cACX046WHwE8+
-	 vuk1OTBuk2JIRnGTbqP6NuTcUd94ykyg/3eyHVrZIP+HFNWK01NgZ8K0F58xODZLmf
-	 bBrHZClhfv1zMxJs8Zpihz/u6PUuXPcQ5XmwWI68=
+	by mail.kernel.org (Postfix) with ESMTP id 30261218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:13:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QS5rfGtp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbfLRNNA (ORCPT
+        id S1727071AbfLRNNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 08:13:00 -0500
-Received: from foss.arm.com ([217.140.110.172]:45860 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726545AbfLRNNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 08:13:00 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1C74730E;
-        Wed, 18 Dec 2019 05:12:59 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 67D5A3F718;
-        Wed, 18 Dec 2019 05:12:58 -0800 (PST)
-Date:   Wed, 18 Dec 2019 13:12:57 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v6 08/15] regulator: bd718x7: Split driver to common and
- bd718x7 specific parts
-Message-ID: <20191218131256.GA42175@sirena.org.uk>
-References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
- <fea73fd89f0db81fac30eba3b523c2232c401eae.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+        Wed, 18 Dec 2019 08:13:12 -0500
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:32975 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726749AbfLRNNM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 08:13:12 -0500
+Received: by mail-ua1-f68.google.com with SMTP id a12so612746uan.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 05:13:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Rbi/0HS4TN9MANgwRP5JBMfuN16L4USYE1XV5828ilU=;
+        b=QS5rfGtpIAE7RMx4aEDqVVyni4Jt33kyj74vqBpxxDEy0qJ56cgdREeAgUckhQjgkU
+         w2pHwQ+VJsSFKxOXu3H1nUPRTeSauBTCiaaCJpi0kxfXaAXYMcY19wusHwhhkWTANvKB
+         K2hLxeJt7edjP6ojGxL3drL3zHxTx/nj44PO6MDTu2sloOIEMl9+BydQeSXduSWfQ9Ij
+         MRhq+RRVYg3oMw1kzq4YUIP1uNcLjW+kw/oYAie8bgtuMjjlnIayML/P1IWM8Va5/VBD
+         lPjezShzglR8RFzkQjF53Z0J7932VOQkcC7WXcxV4j94etq+KVIxDGbwifBsHOjYpjI3
+         yAqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Rbi/0HS4TN9MANgwRP5JBMfuN16L4USYE1XV5828ilU=;
+        b=Q/9KWsG10WtG0eQ3TxfxFj5EID4vImn5TzhRRdLoYf+656qMbVZVVwqUKetLqBwyMx
+         rIpLfPiifnBXlD8E9dCA4hQXXnfj21JnvWmVwOhgLHF+DFHAWU3T8opcKvLHEi4bgASd
+         KQ2OWPiobB4qD46P2/kALvWvE5cBkhmDspS5p2EL4EBy3Q894P3B2bm76o0VC7B15oDl
+         CtI1uP3bCCGAc73Fpj15rV9htj+POLOioXzFtdq/TwPWRSNbsGDjjZ3TmvDAoXLTU58A
+         ugF2/jXxZLvJP6DN6t1xJmalY77X8zjDro+ZNXKgEv3na4h0M33SJJcDop+LTtI/Za1R
+         N4SQ==
+X-Gm-Message-State: APjAAAWCflJ4QmmNfCNQwVz9FYD70ssA129dfrmoTHFRLQGuCaLhZniQ
+        D+0tHJPBUCbn8G5+R63EasjIcoB2HG2SqIcHAEUWqA==
+X-Google-Smtp-Source: APXvYqyR53PC7G7Sq2/BZL7+v9/D5h4WFmyLKQAuV03T6MvOhfFYh9bqmrFmZaB8B7BPsOHxDL9DdD5N3aor9uIcIao=
+X-Received: by 2002:ab0:e16:: with SMTP id g22mr1208910uak.129.1576674790843;
+ Wed, 18 Dec 2019 05:13:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jI8keyz6grp/JLjh"
-Content-Disposition: inline
-In-Reply-To: <fea73fd89f0db81fac30eba3b523c2232c401eae.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
-X-Cookie: In the next world, you're on your own.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1576540906.git.nguyenb@codeaurora.org> <68b936a67e67cd25597915cbd76b73ed046d1ce4.1576540908.git.nguyenb@codeaurora.org>
+ <20191218083448.GE1554871@kroah.com> <CAPDyKFr2t3w1wXY+DD27vHF23mSjnUwCh7iZyuQ=ua=s+KvyVA@mail.gmail.com>
+ <20191218120454.GA15400@kroah.com>
+In-Reply-To: <20191218120454.GA15400@kroah.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 18 Dec 2019 14:12:34 +0100
+Message-ID: <CAPDyKFo929cnz9GS23B2vdDdd1RpJpYFeRwXaMFcTCEMxjS-5g@mail.gmail.com>
+Subject: Re: [<PATCH v1> 7/9] mmc: core: Skip frequency retries for SDCC slots
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Bao D. Nguyen" <nguyenb@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Asutosh Das <asutoshd@codeaurora.org>, cang@codeaurora.org,
+        Sujith Reddy Thumma <sthumma@codeaurora.org>,
+        Subhash Jadavani <subhashj@codeaurora.org>,
+        Xiaonian Wang <xiaonian@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 18 Dec 2019 at 13:04, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Wed, Dec 18, 2019 at 12:48:20PM +0100, Ulf Hansson wrote:
+> > On Wed, 18 Dec 2019 at 09:34, Greg KH <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Mon, Dec 16, 2019 at 06:50:40PM -0800, Bao D. Nguyen wrote:
+> > > > From: Sujith Reddy Thumma <sthumma@codeaurora.org>
+> > > >
+> > > > Qualcomm SDCC controller supports minimum SD clock frequency
+> > > > which is required for card initialization. This information is
+> > > > exported through platform data for each SDCC controller. There is
+> > > > no need of retrying higher frequencies than the minimum supported
+> > > > by controller for Qualcomm chipsets which inturn add delay in
+> > > > detection process if there is no card during suspend/resume cycles.
+> > > > Hence, skip multiple frequency retries.
+> > > >
+> > > > Signed-off-by: Sujith Reddy Thumma <sthumma@codeaurora.org>
+> > > > Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
+> > > > Signed-off-by: Xiaonian Wang <xiaonian@codeaurora.org>
+> > > > Signed-off-by: Bao D. Nguyen <nguyenb@codeaurora.org>
+> > > > ---
+> > > >  drivers/mmc/core/core.c | 9 +--------
+> > > >  1 file changed, 1 insertion(+), 8 deletions(-)
+> > > >
+> > > > diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
+> > > > index 1e37f78..38b0cec 100644
+> > > > --- a/drivers/mmc/core/core.c
+> > > > +++ b/drivers/mmc/core/core.c
+> > > > @@ -2281,7 +2281,6 @@ void mmc_rescan(struct work_struct *work)
+> > > >  {
+> > > >       struct mmc_host *host =
+> > > >               container_of(work, struct mmc_host, detect.work);
+> > > > -     int i;
+> > > >
+> > > >       if (host->rescan_disable)
+> > > >               return;
+> > > > @@ -2332,13 +2331,7 @@ void mmc_rescan(struct work_struct *work)
+> > > >               mmc_release_host(host);
+> > > >               goto out;
+> > > >       }
+> > > > -
+> > > > -     for (i = 0; i < ARRAY_SIZE(freqs); i++) {
+> > > > -             if (!mmc_rescan_try_freq(host, max(freqs[i], host->f_min)))
+> > > > -                     break;
+> > > > -             if (freqs[i] <= host->f_min)
+> > > > -                     break;
+> > > > -     }
+> > > > +     mmc_rescan_try_freq(host, host->f_min);
+> > >
+> > > What about for non-qualcomm controllers?  Did this just break their
+> > > functionality?
+> >
+> > Yes it does, obviously.
+> >
+> > Greg, thanks for providing some valuable feedback for Bao for a couple
+> > of the patches in this series.
+> >
+> > I have also browsed through the series, but stopped providing feedback
+> > after patch1, when I realized that these are all just downstream
+> > vendor specific hacks.
+>
+> That's all kernel drivers are, vendor-specific quirks/hacks around
+> broken hardware :)
+>
+> Splitting this out into logical fixes, like some of these are here, is
+> great.  But breaking non-qualcomm hardware like this patch would do, is
+> obviously not ok.
+>
+> > Sure, I guess most of the patches can be reworked as upstreamable
+> > solutions,
+>
+> They have to be upstreamable, you don't want these in random vendor
+> trees as they go no where and atrophy and break users.  We want them in
+> our main tree for everyone to use for the obvious reason that they are
+> needed to get real hardware working.
 
---jI8keyz6grp/JLjh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I fully agree and I am willing to help!
 
-On Wed, Dec 11, 2019 at 11:44:51AM +0200, Matti Vaittinen wrote:
-> Few ROHM PMICs allow setting the voltage states for different system states
-> like RUN, IDLE, SUSPEND and LPSR. States are then changed via SoC specific
-> mechanisms. bd718x7 driver implemented device-tree parsing functions for
-> these state specific voltages. The parsing functions can be re-used by
-> other ROHM chip drivers like bd71828. Split the generic functions from
-> bd718x7-regulator.c to rohm-regulator.c and export them for other modules
-> to use.
+Just didn't want to waste my time reviewing all at once in great
+detail - if it turns out that the submitter don't care to re-spin, as
+that has happened before (not by Bao).
 
-This doesn't apply against current code, please check and resend.
-
---jI8keyz6grp/JLjh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl36JdgACgkQJNaLcl1U
-h9DRzAf9GnOeN9QrXV/Jr5D4kRT68S0BysPHNoXDglBc5m5saw2Xi10Wt8Yov3+b
-1tdcVFQmjj41vcRZ8FHNma019NBth1CezUFjN9EagATCMFH2tFculjHcLFSywRhY
-EBL4+OttxR37zIS7rtqWbk6U8GUNrTjJKbZeELPODuIkSxCJGSrm5TwMvmVnyCie
-8jKr9a/7f4USdEz//uVvAbK0lAhwujG781fF+ymXz8hjJw+2NyZ9QYtpxqO53x/m
-Z6ImWi10KNA4p3nHHs6dcJcaotd6wYv7zB5B5bWSP5E8L9Csl/AzVfZNkHwMFK20
-Nswu4+WMO8olZX88qcj/ZsccB6glKg==
-=KLXG
------END PGP SIGNATURE-----
-
---jI8keyz6grp/JLjh--
+Kind regards
+Uffe
