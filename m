@@ -2,95 +2,74 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C9F7C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FBB7C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EF00206D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:06:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B4892072B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:07:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BsQ8f7yJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727189AbfLRSGK (ORCPT
+        id S1727289AbfLRSHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 13:06:10 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:51967 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726996AbfLRSGK (ORCPT
+        Wed, 18 Dec 2019 13:07:13 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:29300 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726939AbfLRSHN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 13:06:10 -0500
-Received: from mail-qt1-f181.google.com ([209.85.160.181]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1Mq1GE-1huoIk2XDO-00nBlt; Wed, 18 Dec 2019 19:06:08 +0100
-Received: by mail-qt1-f181.google.com with SMTP id k40so2658117qtk.8;
-        Wed, 18 Dec 2019 10:06:08 -0800 (PST)
-X-Gm-Message-State: APjAAAUFD0JorfJqBh5u76jj/TweoNhBaYeDOzndejgno5MH2kV2uS01
-        NXDwWT2pAOEtm1Y0d82nNpG0ff4aOPxFRWlA55c=
-X-Google-Smtp-Source: APXvYqyYS9ehZnjGWLB8XrURveaG+pt+BsFv+SY3GhVRpWl0t13xyAzO2FScp4sAFWkSHHgRNiwiVCQ68tX0q6ep7IU=
-X-Received: by 2002:ac8:6153:: with SMTP id d19mr3349805qtm.18.1576692367377;
- Wed, 18 Dec 2019 10:06:07 -0800 (PST)
+        Wed, 18 Dec 2019 13:07:13 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576692432; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=ZzjwHNlWTGUeG4psCAxuvjSpl0hRuojeLLO2C+3lNAg=; b=BsQ8f7yJwQFOSYSpp8+Ih8wNIw6V8Djox3ruwxm6ZRTcbhxFnSUjWzXTjMx9DRY8iYHeZ01d
+ G5/pYUK+hkUeMMk74UiS5WfTvaUowwzIIeqLg3pdMfO2T3y2pC7ox39cPlwYass63isJ7Kgi
+ K34FZEni6FFfenHPSUEYgomlpN8=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5dfa6acc.7feb408605e0-smtp-out-n03;
+ Wed, 18 Dec 2019 18:07:08 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 67D8BC433A2; Wed, 18 Dec 2019 18:07:08 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0BDA4C433CB;
+        Wed, 18 Dec 2019 18:07:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0BDA4C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, ath11k@lists.infradead.org
+Subject: Re: [PATCH] ath11k: Use sizeof_field() instead of FIELD_SIZEOF()
+References: <201912180919.2A471217@keescook>
+Date:   Wed, 18 Dec 2019 20:07:05 +0200
+In-Reply-To: <201912180919.2A471217@keescook> (Kees Cook's message of "Wed, 18
+        Dec 2019 09:19:35 -0800")
+Message-ID: <87d0cl8q46.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-References: <20191213141046.1770441-1-arnd@arndb.de> <CAK8P3a11e1OsP+KR5rYPyYo_nMz=y2_fqb6ZCmaQ_RUFcoEkrQ@mail.gmail.com>
- <20191218172458.GA24295@fieldses.org>
-In-Reply-To: <20191218172458.GA24295@fieldses.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 18 Dec 2019 19:05:51 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2GaLE8cEp_Dp+zonH7sTJ8F7B67S70kASzwctxevQ62w@mail.gmail.com>
-Message-ID: <CAK8P3a2GaLE8cEp_Dp+zonH7sTJ8F7B67S70kASzwctxevQ62w@mail.gmail.com>
-Subject: Re: [PATCH v2 00/12] nfsd: avoid 32-bit time_t
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:Zv/9qxUKHkA+/d/3d9NHEturuf/+kfw1g0Xt0aguMkFTFbNK1rV
- qKSE57jkcKdcD0/+01vMxbdVtaf1FHWFwVWHmzJJd+XU8Ag7AEHLF9vtuRjL0iIz7Qos28z
- f9KaqHM4YIKOWdhGJ1yg8/gzGASw/chXFVKA8u9F1Df9ANVmHszuz4uuuw49NgBLFXnxdHT
- UdkgS+BobnsYZwP9Rjktg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:zJaZYROf3ZA=:0m3KEzIv9mG/TBk17SGmLe
- 6xS8taJuHoAeKaqbnU5VZZz8AN6k2bC0EF3w/WhkM/Agf1M+fN+7vtrn3KoBIMY4AhsGknssk
- 97XNHY+yWgGP4YDvEzGLHeLPR5j7Jljs+QGSBNyZOmMtscswjcBm0A0Z0x5codT25DCRR8Vwz
- yJ4GUBFVQ2d8iDxBpptFOtos/2TS6H7e0p6qe7t/tum9KAJW7HdPHV4Yxi8nF54/eW9NgugLQ
- i1sYOApn8Eg5CNtsbdoLfrEn2Y28ku6EOPfMyOv5C6ZPH82wyRgAGOPVNlKkl0Uc7UtcsEwWX
- ySyVdzuUZeyDZgup6bZdTgiPlxJyMtudvKSPAWYNho+1JZ4d9mq9uwrrUo0P7U7xfcogY2nhl
- nynCBC0Gmp7qhQtM2Ui6iOfQupnk2iI0BHT6wtl9Do2lVn3X6JmDou2AP25G2V2AjcABa5Kn9
- H+DQBQnqYjQ6Dz0YtJOicMSQezJLKi39mCB4VxuDf46Rcjuau5iyrlj2EhPZGSOHgYq5zruKJ
- ObgdMoKcB+CsHnVtIv2srj55S3gtzlBDUcugBMBL5SwyNPZKpUwKN5PEOae1RhaOojjbFNa4v
- 9rG3tp9i42RSh755bLCa8ASzPjvHXIBd9RuLUdR67H3S9eabAUdb+WoKOjtBOQSVPAreEdI0f
- kX1lKKXZQ+Lha5uK6wCWnxaVb7gAj5xTbGDNFsgnfHDVZivM7NJ4dFgAmvkeHV45xmGcfnHuo
- YYt5X5f62UFM2Llxl3WXEjeD2MbromYcBhKqtPLREvddhZQ+xtwHV/zyjHiu5FvQ0GqfjAwSP
- 7jZLfQELpVQXkHRU/PNRMftQHgT1DuKbYJ5o1UkvujjnwJsPpZ2gFgTIJ1kxCKUBiAkNHrRNB
- sfv2q1eJg2o6Vo0s+Ezw==
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 6:25 PM J. Bruce Fields <bfields@fieldses.org> wrote:
-> On Wed, Dec 18, 2019 at 06:21:06PM +0100, Arnd Bergmann wrote:
-> > On Fri, Dec 13, 2019 at 3:12 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > git://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git y2038-nfsd-v2
-> >
-> > in my y2038 branch now, so it should be part of linux-next from the coming
-> > snapshot. My plan is to send a linux-5.6 pull request to the nfsd
-> > maintainers for
-> > this branch unless we find bugs in linux-next or I get more review comments.
+Kees Cook <keescook@chromium.org> writes:
+
+> The FIELD_SIZEOF() macro was redundant, and is being removed from the
+> kernel. Since commit c593642c8be0 ("treewide: Use sizeof_field() macro")
+> this is one of the last users of the old macro, so replace it.
 >
-> Sorry for the silence.  The patches look fine to me, so I took them from
-> your git branch and applied them to my local tree (after fixing up some
-> minor conflicts with the copy patches) and then saw some
-> delegation-related test failures, which I haven't had the chance to
-> investigate yet.  Hopefully before the end of the week.
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Ok, I've taken the nfsd changes out of my y2038 branch again then, to
-make sure we don't get these regressions in linux-next.
+Please also Cc linux-wireless so that the patchwork sees this.
 
-Thanks for taking care of the patches. I will not be in the office from
-Friday to the end of the year, so probably won't be able to respin the
-series quickly once you find the bug(s), but I should be able to reply
-to emails about this.
-
-      Arnd
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
