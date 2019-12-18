@@ -2,79 +2,107 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E90C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA30C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4B362176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:21:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DF8424650
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:22:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727386AbfLRQVC (ORCPT
+        id S1727421AbfLRQWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 11:21:02 -0500
-Received: from mail-il1-f199.google.com ([209.85.166.199]:36721 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727121AbfLRQVB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 11:21:01 -0500
-Received: by mail-il1-f199.google.com with SMTP id t2so2176768ilp.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 08:21:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=IuaTqXhxelJhKDHw5O7rzxkzTsdD5izns8/dKhJuhOU=;
-        b=czhQQrLjVvznvrp+ndFDF2S8lZ+ny6rZmfATsZuDf5qKysPo6iK/9OvVUcIG8Z1j16
-         TfxAZjEfc5yV9WFoPiqIWsf7rRCkaqQr4/IoL9wRJD2qE40kDfOgUqLxqwqumCCwTKOR
-         /Jk8qvzeexLOLzZ0xhuF/oQAxRUgO3DWmOTdwBFABsL8EK3QiwMge0RNJswhei4KXg5S
-         kreumvfG5BIxk8FIU0Q+9s9nzLtTFKJu5GfXqsWcitkqCgplMY4bGQoG5byAficHGfEM
-         N8LKTviVqCyedtIc8vMeEQoCiBZW2REncGN9wvFp4ZY8cWJwwmJXMibu3bVVL30wj2Uj
-         25tA==
-X-Gm-Message-State: APjAAAUBWsc9v0CORXeqXeF5uWJGONgbr0BJTo9T1c2my4WB3Is4CNg/
-        LW99FC+/DO/09jBGyy+PtWrr4hYGjVkZRZEhDb3chs6h9nqV
-X-Google-Smtp-Source: APXvYqxlpQuOxZYicynxx6hVRSGFToWAMtcNMVHatrpxa6mopdSMqi85r6C8n0BH/LoOoq7aqqMM4kgR3L2zKnho69XDz0uvKC9k
+        Wed, 18 Dec 2019 11:22:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55844 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727021AbfLRQWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 11:22:23 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC2CC20717;
+        Wed, 18 Dec 2019 16:22:21 +0000 (UTC)
+Date:   Wed, 18 Dec 2019 11:22:19 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNl?= =?UTF-8?B?bg==?= 
+        <toke@redhat.com>, Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>
+Subject: Re: [RFC] btf: Some structs are doubled because of struct
+ ring_buffer
+Message-ID: <20191218112219.309d1031@gandalf.local.home>
+In-Reply-To: <20191218161401.GC15571@krava>
+References: <20191213153553.GE20583@krava>
+        <20191213112438.773dff35@gandalf.local.home>
+        <20191213165155.vimm27wo7brkh3yu@ast-mbp.dhcp.thefacebook.com>
+        <20191213121118.236f55b8@gandalf.local.home>
+        <20191213180223.GE2844@hirez.programming.kicks-ass.net>
+        <20191213132941.6fa2d1bd@gandalf.local.home>
+        <20191213184621.GG2844@hirez.programming.kicks-ass.net>
+        <20191213140349.5a42a8af@gandalf.local.home>
+        <20191213140531.116b3200@gandalf.local.home>
+        <20191214113510.GB12440@krava>
+        <20191218161401.GC15571@krava>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-Received: by 2002:a92:8dc3:: with SMTP id w64mr2462439ill.68.1576686061030;
- Wed, 18 Dec 2019 08:21:01 -0800 (PST)
-Date:   Wed, 18 Dec 2019 08:21:01 -0800
-In-Reply-To: <0000000000002df264056a35b16b@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000009716290599fcd496@google.com>
-Subject: Re: kernel BUG at fs/buffer.c:LINE!
-From:   syzbot <syzbot+cfed5b56649bddf80d6e@syzkaller.appspotmail.com>
-To:     axboe@kernel.dk, bvanassche@acm.org, jaegeuk@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On Wed, 18 Dec 2019 17:14:01 +0100
+Jiri Olsa <jolsa@redhat.com> wrote:
 
-commit 5db470e229e22b7eda6e23b5566e532c96fb5bc3
-Author: Jaegeuk Kim <jaegeuk@kernel.org>
-Date:   Thu Jan 10 03:17:14 2019 +0000
+> On Sat, Dec 14, 2019 at 12:35:10PM +0100, Jiri Olsa wrote:
+> > On Fri, Dec 13, 2019 at 02:05:31PM -0500, Steven Rostedt wrote:
+> > 
+> > SNIP
+> >   
+> > >  	struct trace_array *tr = filp->private_data;
+> > > -	struct ring_buffer *buffer = tr->trace_buffer.buffer;
+> > > +	struct trace_buffer *buffer = tr->trace_buffer.buffer;
+> > >  	unsigned long val;
+> > >  	int ret;
+> > >  
+> > > diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+> > > index 63bf60f79398..308fcd673102 100644
+> > > --- a/kernel/trace/trace.h
+> > > +++ b/kernel/trace/trace.h
+> > > @@ -178,7 +178,7 @@ struct trace_option_dentry;
+> > >  
+> > >  struct trace_buffer {
+> > >  	struct trace_array		*tr;
+> > > -	struct ring_buffer		*buffer;
+> > > +	struct trace_buffer		*buffer;  
+> > 
+> > perf change is fine, but 'trace_buffer' won't work because
+> > we already have 'struct trace_buffer' defined in here
+> > 
+> > maybe we could change this name to trace_buffer_array?  
+> 
+> ..like in patch below? it's independent of your previous changes
+> 
+>
 
-     loop: drop caches if offset or block_size are changed
+Actually, I would prefer to call it either trace_array_buffer, or just
+array_buffer.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13f3ca8ee00000
-start commit:   2187f215 Merge tag 'for-5.5-rc2-tag' of git://git.kernel.o..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=100bca8ee00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=17f3ca8ee00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=dcf10bf83926432a
-dashboard link: https://syzkaller.appspot.com/bug?extid=cfed5b56649bddf80d6e
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1171ba8ee00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=107440aee00000
-
-Reported-by: syzbot+cfed5b56649bddf80d6e@syzkaller.appspotmail.com
-Fixes: 5db470e229e2 ("loop: drop caches if offset or block_size are  
-changed")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+-- Steve
