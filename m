@@ -2,153 +2,142 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E69FDC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3143AC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B609C2176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 039BF21582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:48:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZqdU5bMs"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LsfhdNno"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbfLRLqx (ORCPT
+        id S1726788AbfLRLs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 06:46:53 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:40048 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725930AbfLRLqx (ORCPT
+        Wed, 18 Dec 2019 06:48:58 -0500
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:34143 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726141AbfLRLs5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 06:46:53 -0500
-Received: by mail-pj1-f67.google.com with SMTP id bg7so262124pjb.5;
-        Wed, 18 Dec 2019 03:46:53 -0800 (PST)
+        Wed, 18 Dec 2019 06:48:57 -0500
+Received: by mail-vs1-f65.google.com with SMTP id g15so1201121vsf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 03:48:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=8Rm3PGAG4ZjJjxffgjZO01XuGdZ5Se+lxRoTd65jV/I=;
-        b=ZqdU5bMscFQvm8p09tXvtNABGBJq3yux1pRvAaSqHYWoBHsvLzpx40uJaQXuXESBMy
-         uFXxFSZYelsqKFR9u97FntWyBuRrNZSiUzu5UUXshbqPHsStjihAGvW+ajqEG1EbOfPo
-         CduQ2IZkIVxIZeAaHojbbW/tuxGxmxAllFCZKTj9CAH1CuO8lkcQszADJvRwU7fQhyzU
-         zhkiN/jm65g1GHgd/qp5N+glagyd4JzNwME+ofMcnZvqiltufXLulTwnVoZM4j6hTuWe
-         D2NNi9Gtqt/tAooIXZqAb9wUAVNgMtXyikiC/W49ZmSFYqVsituX+OOu/u1AAbxR5XtM
-         O3rw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=p1mHuB8yUnmQS9SpnJEkcOHQjoqYysF0srh4TVk8yKQ=;
+        b=LsfhdNnomA+RaZ39fgqS0Kqnx6OFiMGTmVA4ehQ0EOYu8i0rslntCqfKIY7CrpQqo8
+         HqGKZ1twIJXoKgwNOtSQJq1HL1yu4BwTpMsQc55gl3AbreV4pTzxmBuiwrc6crVj2+0z
+         ekCAL5nmr9Q3SRYlkRy4hL77GC8q8UgK1+aGc9oZTPjAS/4mNfVZBEMLtrG+JrLNJcTW
+         N2H/Yxt/tPlj9glYmnASKFo7T/V7ImuuBvRQLFQWGIrVPE47ZguZPpZLYNeaOkg1bdId
+         BXorMRB6S8WwnyywnTkuYyms4ak0SvxJnzsNyXLThU/1f7lZjqW1a1CEq1i5Eg8XS+8t
+         uv6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=8Rm3PGAG4ZjJjxffgjZO01XuGdZ5Se+lxRoTd65jV/I=;
-        b=T/kq+1VwOU6ilo7BaSX9S8t5v4WVpkKCYB6rpGzfrqhmaHpM+QvAM4T52KLDA8x/Kn
-         ECp3W8vi643Lyxr4A2LOnrUtKGiq1w+e1pz4prMZKRfDqTmtOAXh9V+3IzRIhJlCBlFI
-         ovQWu+Ig1TPVqjVs1Q7/KHQ20nF5WPJvibodvfjTGqSyxj/0XjF2EZu06ZyCmtnlGTx+
-         ZmhqkDRp3bbr1UCV07ZK2hhO+1CF2jbVxytb5eCAAmsC0yWuadAYn8hRx9EXgOhyrJoo
-         qsWBzY7MlvHdScvrKb2B1SPEQDpUX1s8J7DSUCxN3z0yCQqSliWlCPqDIxN3opwp8kJy
-         Hzpw==
-X-Gm-Message-State: APjAAAXP+xh6xULQY3yg+9pqglGZuKsTeKKQnUt4Gjpme3pFA/UFmmt4
-        a3xtIWq4A+8suFB22TCqEig=
-X-Google-Smtp-Source: APXvYqwRkgvw8jDHziQzj693orxCe6AxRD4tkkS6Jhb3GveNfnhdDXtHvoza5yByb4hW1lEpWrgvUA==
-X-Received: by 2002:a17:902:bd93:: with SMTP id q19mr52436pls.134.1576669612673;
-        Wed, 18 Dec 2019 03:46:52 -0800 (PST)
-Received: from oslab.tsinghua.edu.cn ([166.111.139.172])
-        by smtp.gmail.com with ESMTPSA id a10sm2913237pgm.81.2019.12.18.03.46.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 03:46:52 -0800 (PST)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     ath9k-devel@qca.qualcomm.com, kvalo@codeaurora.org,
-        davem@davemloft.net
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] ath9k: fix possible sleep-in-atomic-context bugs in hif_usb_send_regout()
-Date:   Wed, 18 Dec 2019 19:45:33 +0800
-Message-Id: <20191218114533.9268-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=p1mHuB8yUnmQS9SpnJEkcOHQjoqYysF0srh4TVk8yKQ=;
+        b=hRnl2Va3bC1+KAjl1JKQ3wF2xf6rd+DgGYVrEd14/78gbgEkLDwWoLPdaHsVYbISla
+         LRgEloY+L2n8j1UFzIVpVPcW9cfoF9ki7dcu+RP8Y+vyBkitI/Y6clY2G/68tl16V7XW
+         rWIncYetgts056sNeZThBWA27dadK6fd6xYsIpn6Kc8nigrJKetqZFs9U+UxcF2oTPW/
+         QVidicwPUzp0uNvgecK73HWfSldSqI7ls1p7H6IZprBlekxunugdwQ/aDVgmaepoWnLU
+         zyC+OV7MlvWtizqyobmllOol1OdnVOAPQtStVDVpMpT356B4ui4yvmQYcugVbnuQEyXK
+         scUw==
+X-Gm-Message-State: APjAAAWr+ommPZ8qDT1ZR7/KBlAr7MhMqxcWFRu7p35CH7pnUtBswkeo
+        OrNLDfbqFQOZdUEaIh38AugZTm0vAZd2UmgXw/1FQlCD
+X-Google-Smtp-Source: APXvYqyH0GBNeyTrGXQVb1OsOS5eB50xXlLvgb2rhAYmaBmDtlHg3pf7emYk+wUfgtEKJoE+sCeQkyONMe1gbqIh4w4=
+X-Received: by 2002:a67:b649:: with SMTP id e9mr1082793vsm.34.1576669736873;
+ Wed, 18 Dec 2019 03:48:56 -0800 (PST)
+MIME-Version: 1.0
+References: <cover.1576540906.git.nguyenb@codeaurora.org> <68b936a67e67cd25597915cbd76b73ed046d1ce4.1576540908.git.nguyenb@codeaurora.org>
+ <20191218083448.GE1554871@kroah.com>
+In-Reply-To: <20191218083448.GE1554871@kroah.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 18 Dec 2019 12:48:20 +0100
+Message-ID: <CAPDyKFr2t3w1wXY+DD27vHF23mSjnUwCh7iZyuQ=ua=s+KvyVA@mail.gmail.com>
+Subject: Re: [<PATCH v1> 7/9] mmc: core: Skip frequency retries for SDCC slots
+To:     "Bao D. Nguyen" <nguyenb@codeaurora.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Asutosh Das <asutoshd@codeaurora.org>, cang@codeaurora.org,
+        Sujith Reddy Thumma <sthumma@codeaurora.org>,
+        Subhash Jadavani <subhashj@codeaurora.org>,
+        Xiaonian Wang <xiaonian@codeaurora.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver may sleep while holding a spinlock.
-The function call path (from bottom to top) in Linux 4.19 is:
+On Wed, 18 Dec 2019 at 09:34, Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Mon, Dec 16, 2019 at 06:50:40PM -0800, Bao D. Nguyen wrote:
+> > From: Sujith Reddy Thumma <sthumma@codeaurora.org>
+> >
+> > Qualcomm SDCC controller supports minimum SD clock frequency
+> > which is required for card initialization. This information is
+> > exported through platform data for each SDCC controller. There is
+> > no need of retrying higher frequencies than the minimum supported
+> > by controller for Qualcomm chipsets which inturn add delay in
+> > detection process if there is no card during suspend/resume cycles.
+> > Hence, skip multiple frequency retries.
+> >
+> > Signed-off-by: Sujith Reddy Thumma <sthumma@codeaurora.org>
+> > Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
+> > Signed-off-by: Xiaonian Wang <xiaonian@codeaurora.org>
+> > Signed-off-by: Bao D. Nguyen <nguyenb@codeaurora.org>
+> > ---
+> >  drivers/mmc/core/core.c | 9 +--------
+> >  1 file changed, 1 insertion(+), 8 deletions(-)
+> >
+> > diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
+> > index 1e37f78..38b0cec 100644
+> > --- a/drivers/mmc/core/core.c
+> > +++ b/drivers/mmc/core/core.c
+> > @@ -2281,7 +2281,6 @@ void mmc_rescan(struct work_struct *work)
+> >  {
+> >       struct mmc_host *host =
+> >               container_of(work, struct mmc_host, detect.work);
+> > -     int i;
+> >
+> >       if (host->rescan_disable)
+> >               return;
+> > @@ -2332,13 +2331,7 @@ void mmc_rescan(struct work_struct *work)
+> >               mmc_release_host(host);
+> >               goto out;
+> >       }
+> > -
+> > -     for (i = 0; i < ARRAY_SIZE(freqs); i++) {
+> > -             if (!mmc_rescan_try_freq(host, max(freqs[i], host->f_min)))
+> > -                     break;
+> > -             if (freqs[i] <= host->f_min)
+> > -                     break;
+> > -     }
+> > +     mmc_rescan_try_freq(host, host->f_min);
+>
+> What about for non-qualcomm controllers?  Did this just break their
+> functionality?
 
-drivers/net/wireless/ath/ath9k/hif_usb.c, 108: 
-	usb_alloc_urb(GFP_KERNEL) in hif_usb_send_regout
-drivers/net/wireless/ath/ath9k/hif_usb.c, 470: 
-	hif_usb_send_regout in hif_usb_send
-drivers/net/wireless/ath/ath9k/htc_hst.c, 34: 
-	(FUNC_PTR)hif_usb_send in htc_issue_send
-drivers/net/wireless/ath/ath9k/htc_hst.c, 295: 
-	htc_issue_send in htc_send
-drivers/net/wireless/ath/ath9k/htc_drv_beacon.c, 250: 
-	htc_send in ath9k_htc_send_beacon
-drivers/net/wireless/ath/ath9k/htc_drv_beacon.c, 207: 
-	spin_lock_bh in ath9k_htc_send_beacon
+Yes it does, obviously.
 
-drivers/net/wireless/ath/ath9k/hif_usb.c, 112: 
-	kzalloc(GFP_KERNEL) in hif_usb_send_regout
-drivers/net/wireless/ath/ath9k/hif_usb.c, 470: 
-	hif_usb_send_regout in hif_usb_send
-drivers/net/wireless/ath/ath9k/htc_hst.c, 34: 
-	(FUNC_PTR)hif_usb_send in htc_issue_send
-drivers/net/wireless/ath/ath9k/htc_hst.c, 295: 
-	htc_issue_send in htc_send
-drivers/net/wireless/ath/ath9k/htc_drv_beacon.c, 250: 
-	htc_send in ath9k_htc_send_beacon
-drivers/net/wireless/ath/ath9k/htc_drv_beacon.c, 207: 
-	spin_lock_bh in ath9k_htc_send_beacon
+Greg, thanks for providing some valuable feedback for Bao for a couple
+of the patches in this series.
 
-drivers/net/wireless/ath/ath9k/hif_usb.c, 127: 
-	usb_submit_urb(GFP_KERNEL) in hif_usb_send_regout
-drivers/net/wireless/ath/ath9k/hif_usb.c, 470: 
-	hif_usb_send_regout in hif_usb_send
-drivers/net/wireless/ath/ath9k/htc_hst.c, 34: 
-	(FUNC_PTR)hif_usb_send in htc_issue_send
-drivers/net/wireless/ath/ath9k/htc_hst.c, 295: 
-	htc_issue_send in htc_send
-drivers/net/wireless/ath/ath9k/htc_drv_beacon.c, 250: 
-	htc_send in ath9k_htc_send_beacon
-drivers/net/wireless/ath/ath9k/htc_drv_beacon.c, 207: 
-	spin_lock_bh in ath9k_htc_send_beacon
+I have also browsed through the series, but stopped providing feedback
+after patch1, when I realized that these are all just downstream
+vendor specific hacks.
 
-(FUNC_PTR) means a function pointer is called.
+Sure, I guess most of the patches can be reworked as upstreamable
+solutions, but rather than looking at them all at once, please post
+them separately. Additionally, in general I would appreciate more
+details in the changelogs to fully understand the problems your are
+solving.
 
-To fix these bugs, GFP_KERNEL is replaced with GFP_ATOMIC.
-
-These bugs are found by a static analysis tool STCheck written by myself.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
----
- drivers/net/wireless/ath/ath9k/hif_usb.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/wireless/ath/ath9k/hif_usb.c b/drivers/net/wireless/ath/ath9k/hif_usb.c
-index fb649d85b8fc..37231fde102d 100644
---- a/drivers/net/wireless/ath/ath9k/hif_usb.c
-+++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
-@@ -105,11 +105,11 @@ static int hif_usb_send_regout(struct hif_device_usb *hif_dev,
- 	struct cmd_buf *cmd;
- 	int ret = 0;
- 
--	urb = usb_alloc_urb(0, GFP_KERNEL);
-+	urb = usb_alloc_urb(0, GFP_ATOMIC);
- 	if (urb == NULL)
- 		return -ENOMEM;
- 
--	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
-+	cmd = kzalloc(sizeof(*cmd), GFP_ATOMIC);
- 	if (cmd == NULL) {
- 		usb_free_urb(urb);
- 		return -ENOMEM;
-@@ -124,7 +124,7 @@ static int hif_usb_send_regout(struct hif_device_usb *hif_dev,
- 			 hif_usb_regout_cb, cmd, 1);
- 
- 	usb_anchor_urb(urb, &hif_dev->regout_submitted);
--	ret = usb_submit_urb(urb, GFP_KERNEL);
-+	ret = usb_submit_urb(urb, GFP_ATOMIC);
- 	if (ret) {
- 		usb_unanchor_urb(urb);
- 		kfree(cmd);
--- 
-2.17.1
-
+Kind regards
+Uffe
