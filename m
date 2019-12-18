@@ -2,106 +2,72 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16453C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52101C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D735A206E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:49:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="tyBSIIzk"
+	by mail.kernel.org (Postfix) with ESMTP id 2D1BB2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:50:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbfLRAtt (ORCPT
+        id S1726536AbfLRAuq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 19:49:49 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:59215 "EHLO ozlabs.org"
+        Tue, 17 Dec 2019 19:50:46 -0500
+Received: from mga04.intel.com ([192.55.52.120]:28939 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725940AbfLRAts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 19:49:48 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47cxHF2Ymjz9sRk;
-        Wed, 18 Dec 2019 11:49:44 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1576630185;
-        bh=Q0utsYCz4hrK7U5iqG0PY9eBxGrO0dwqQiJb4phghSI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=tyBSIIzkxo20BqNNpFo1gfgFFuHw5z61pFX45P7p3h53WNVpF+xC7H8+RYNpCfHyv
-         bx/uiOosHVnjq3CS4cR6G+/LBJPZLiptTppMfoMm02yk3rLbWISikKNJp22jusfW6k
-         S69cJL/zZd6PZZwGAcHVYnr8DhUzi+Ny0iiwCmZEIrMsUk9EMsceWexN+fwhZvU1OT
-         U9tx1PJYqWgkhypCcZZmZS9tG9+q2YkjEtTtCj7YTtWIBoB8mkN+sUyzbfz6HGqizg
-         EHewAyV/GIJFJ7ReByyJzA9UgGmnw0CRc48psJPSGXHwZIGJhOQflB5FkXdz0pdNmf
-         waRkje89kCpig==
-Date:   Wed, 18 Dec 2019 11:49:42 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Engraf <david.engraf@sysgo.com>
-Subject: linux-next: manual merge of the tty tree with the tty.current tree
-Message-ID: <20191218114942.59cc0446@canb.auug.org.au>
+        id S1726072AbfLRAup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 19:50:45 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 16:50:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,327,1571727600"; 
+   d="scan'208";a="212750409"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga008.fm.intel.com with ESMTP; 17 Dec 2019 16:50:43 -0800
+Date:   Wed, 18 Dec 2019 08:50:42 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: remove dead code totalram_pages_set()
+Message-ID: <20191218005042.GB23703@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20191217064401.18047-1-richardw.yang@linux.intel.com>
+ <8456A27B-5F32-4BED-B826-27B17E87AA81@lca.pw>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/qeb/88b9jni87uD9xaZg1UD";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8456A27B-5F32-4BED-B826-27B17E87AA81@lca.pw>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/qeb/88b9jni87uD9xaZg1UD
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Dec 17, 2019 at 07:48:09AM -0500, Qian Cai wrote:
+>
+>
+>> On Dec 17, 2019, at 1:44 AM, Wei Yang <richardw.yang@linux.intel.com> wrote:
+>> 
+>> No one use totalram_pages_set(), just remote it.
+>
+>It is unlikely that this is unintentional, but can you figure out which commit removed the last caller just in case?
 
-Hi all,
+Took a look into the history. This function is introduced in 
 
-Today's linux-next merge of the tty tree got a conflict in:
+commit 'ca79b0c211af' (mm: convert totalram_pages and totalhigh_pages
+variables to atomic)
 
-  drivers/tty/serial/atmel_serial.c
+Even in this commit, no one use this function.
 
-between commit:
+Will include this in next version.
 
-  cb47b9f8630a ("tty/serial: atmel: fix out of range clock divider handling=
-")
-
-from the tty.current tree and commit:
-
-  751d0017334d ("tty/serial: atmel: fix out of range clock divider handling=
-")
-
-from the tty tree.
-
-These are 2 version of the same change, I guess.
-
-I fixed it up (I just used the tty tree version) and can carry the fix
-as necessary. This is now fixed as far as linux-next is concerned, but
-any non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/qeb/88b9jni87uD9xaZg1UD
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl35d6YACgkQAVBC80lX
-0GzlGgf+JbQbfh8T1PifCuQ7kralPhxo3xDomKwAXliPdIy5X0nh1TgxpitPOHFJ
-jT97CUyGh8mIj0xAXmhNpyOhpzquJwGbLexrZHNfJU+/p4U0nzGTWtD9rEic2I2U
-v946mD/eU6qWoxfCh5uqKEyWMgnFs9PO51M/JyTKLjzBoYonFf7x/T8dGdkQRUfV
-5oJYyV9MPlj/6OiX+iOrd+vf7luKYv+N/ajtLz2FWaKaIUrAwJppQQgsNUxHY7Ti
-AIAUyuh5qApACzGnHVIEMg0C7NcfFDAPQ+BagVYZZu/3Cah/JHR+Jeb/Yi/es89u
-9ZDce4yAgDNixVjcOmsH+puDu3+Yzg==
-=YMTU
------END PGP SIGNATURE-----
-
---Sig_/qeb/88b9jni87uD9xaZg1UD--
+-- 
+Wei Yang
+Help you, Help me
