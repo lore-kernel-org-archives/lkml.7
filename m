@@ -7,87 +7,95 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E15C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C9BC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9EC8218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:08:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0AD42465E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 15:09:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XuUNTTR+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n4CnIRpg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbfLRPI1 (ORCPT
+        id S1727173AbfLRPJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 10:08:27 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45688 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727001AbfLRPI0 (ORCPT
+        Wed, 18 Dec 2019 10:09:50 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36110 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726913AbfLRPJt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 10:08:26 -0500
-Received: by mail-pl1-f193.google.com with SMTP id b22so1087436pls.12;
-        Wed, 18 Dec 2019 07:08:26 -0800 (PST)
+        Wed, 18 Dec 2019 10:09:49 -0500
+Received: by mail-lj1-f194.google.com with SMTP id r19so2540803ljg.3;
+        Wed, 18 Dec 2019 07:09:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=O/Gc+Nk4cNpzcx2hTPtC5UA91cr7QkRAoGkZhjoba98=;
-        b=XuUNTTR+Bu2rLHcBfVuIRId9B2MzsCQF/RCiW7UGzMo8S1CCFvzCeJu/cCqXY2gF3Z
-         8uN+SlNxaMWN5XO2P0+VVEliyvh1lMqxSvorxCHzvrMpsz1rDXCAuW4N4viH6JyPaMKh
-         6bvh70wcFUEtLHugk2Os8spnDmlKoPuo1xKnpYGNAyCMduKQeI+N8qyCQ/5E21QHWR6c
-         zVagatbkJ/GTkBGRQ6/cAiUdVvgI0cEyFXJk6tMTOnWTVpOV3rz89wFb0rVBoWojwFzm
-         XZ0qlCjcE96lKKj1qv6KGNvY+siu0GRojufEjmN4Id2PeVjoqRJtJy5eXmM7uwsRdsPH
-         qw5g==
+        bh=HhJbWUsWwTIyi0nz4fJwHURTxI1Rw4XYrR+51bn6K04=;
+        b=n4CnIRpgiWYaPqhrTGDqoNhiTBR0o5Z4TZgEmVJjUqrcxs/eZ/RmRLpYvIVEjSMOuw
+         zj7m3K6IjnEBCb0Znun9ZsDmmSn1LRVTajc0FgbgZMrc6WGWZUMFHAASKtM7AI1xdD+x
+         B0nJEXFCWymrx5jxZ+vCYGBdE/nRahl8x+0BZNk01+p865de/TDTBDKa2Er4pnzvhxN5
+         4+pmsqRkwZVO5VdTu6YWuFDTYVudquuDrwZkO5oJ4rXj00ugbbpz86t8pTfa/P+Y0w4X
+         BQfClWxwjmtj/ejYcqXHblGAqzIUXUWDmAtlo7XoQtG4Mro9KTRTQm3w/ajdp+uV8l0r
+         NDrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=O/Gc+Nk4cNpzcx2hTPtC5UA91cr7QkRAoGkZhjoba98=;
-        b=CBA+X62cO83inZRgTi+TV7N2CNVxHhanTHSR0wKHLCo46N7RGqy0nLc+I8pXiPjItG
-         dgH3TvYNZKa546PctOiuXUtBlbGki2WcqVoCkx1Mx+RJvU2cs1cXV6PEZqbxGsm4qp6v
-         q9YiARwF6vOh6KMudDFkTWOMaw5GkDpin+i+eKmp80m586CScWkqJVShXn5SX/uIYPP9
-         IHMAHjv7hN1gYdB8qmFnDmOQ7JtUeYX5KMn86nrAFuzO+kyQijCRxc4iuXYKX01tLT2V
-         HVfSkUaygRhlY1IIJAFyufRDy0OtwZqQ72tIMxTUvCgcToYuXhNnYw/hUR5zzcd9abX6
-         GKlg==
-X-Gm-Message-State: APjAAAVYL4H0plj/67OIiNsE2Yp4EkiE7qW9hhWLtbeEdF1N/aBnbWO0
-        4dwvQ3rMg//sZEyLCExRLj3huwLwJyVQ8j15Aedkl+Xp
-X-Google-Smtp-Source: APXvYqyMjxN7aSTmKOU9lPUYY/iVdbF3GF6BLMviv+qeEUyw+kvAG7vn1ONmiCDgg70PSgbR6aBkdCw9x/6zJE3Gq5I=
-X-Received: by 2002:a17:902:6901:: with SMTP id j1mr3404514plk.18.1576681706038;
- Wed, 18 Dec 2019 07:08:26 -0800 (PST)
+        bh=HhJbWUsWwTIyi0nz4fJwHURTxI1Rw4XYrR+51bn6K04=;
+        b=nekby59T0NtauZtOpEYXpBaZMnkGLfTitnriXgRZ8eDMAVKmKrRYuIT5/dEgXMoN/J
+         67R3Fl/7Dt7dGXISGr9P5IrXmtXi+AlGIwJQf/UntEkUTlUF/wPvuE2C4yy/4DsTKSx1
+         pYZX8lBgBJrl4NzPwzLt67kzFfb67hlvRb4ElH7u432kDTH6w1mdr1SFaII/YughiNJz
+         6LqUW8wGXshRqcP+aadZnYMbiG0L5C41t+z19BxxgQEomwWQR7zlXMXlr1TC2Kpx2ylM
+         iLx71TLcsvoMqwRxewsMORXhRktfYanvO/KOcokkLJ5sjQO8GTkrOqNDQbRIgooUaUlm
+         TyjA==
+X-Gm-Message-State: APjAAAU9MQGjgn4/ZpQLMCAmxASQ4UeQ9hc8jp3C9ZfzdssLbVMDVpQv
+        h847/MZMXI6cN6za2tovO5NHAhxUI0GFkOnMhKY=
+X-Google-Smtp-Source: APXvYqxcQGEJtnYA9Dox6wkCmoNhgi0nQlVxmrljxdbiXh66FZxbDmoKUQbvXOU6f+M6uubdRb2209sGGo+XVq9qTo4=
+X-Received: by 2002:a2e:814e:: with SMTP id t14mr2079402ljg.149.1576681787440;
+ Wed, 18 Dec 2019 07:09:47 -0800 (PST)
 MIME-Version: 1.0
-References: <20191217190604.638467-1-hdegoede@redhat.com> <CAHp75Vf8CDwW731uD4OMzB69P-D1AN3PzCMFBGGD4fvBFccpLg@mail.gmail.com>
- <92800c93-9d03-ab26-e71f-ce40df1ad3bc@redhat.com>
-In-Reply-To: <92800c93-9d03-ab26-e71f-ce40df1ad3bc@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 18 Dec 2019 17:08:15 +0200
-Message-ID: <CAHp75Ve7wsd96yn97JihBq1QpLkKLtuhqKvcp-o8yeviCTvkwA@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: hp-wmi: Make buffer for HPWMI_FEATURE2_QUERY
- 128 bytes
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stable <stable@vger.kernel.org>
+References: <1576672860-14420-1-git-send-email-peng.fan@nxp.com>
+ <CAOMZO5DeA24EUjr-E=V=tGNaZ7UkOEi+F5-kEBqEB288DSNSoA@mail.gmail.com>
+ <AM0PR04MB4481B3EAB2DDC42A137E8AAB88530@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <CAOMZO5BK0Pa6Aw6n7Tf+C6+Fg15WNbEUOzKCQTaWqTUu6yoPjA@mail.gmail.com> <20191218145955.GE26938@lunn.ch>
+In-Reply-To: <20191218145955.GE26938@lunn.ch>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 18 Dec 2019 12:09:42 -0300
+Message-ID: <CAOMZO5BibF5A9sw=fLr3DXLf9LXYdxWy=aK7KCE3L0bt5eX+9Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] pinctrl: mvebu: armada-37xx: use use platform api
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Peng Fan <peng.fan@nxp.com>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
+        "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "mripard@kernel.org" <mripard@kernel.org>,
+        "wens@csie.org" <wens@csie.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 1:18 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> On 18-12-2019 11:17, Andy Shevchenko wrote:
-> > On Tue, Dec 17, 2019 at 9:06 PM Hans de Goede <hdegoede@redhat.com> wrote:
+Hi Andrew,
 
-> > Fixes tag?
->
-> The HPWMI_FEATURE2_QUERY call was introduced in 8a1513b4932, so I guess
-> this should have a:
->
-> Fixes: 8a1513b4932 ("hp-wmi: limit hotkey enable")
->
-> Tag, shall I send a v2 with this, or can you add it while applying the patch?
+On Wed, Dec 18, 2019 at 12:00 PM Andrew Lunn <andrew@lunn.ch> wrote:
 
-I added it.
+> Hi Fabio
+>
+> Look closer. This is not about returning an error, it is about
+> printing an error.
+>
+> I think the API could better. A %ie formatter would make a lot of
+> sense, so avoiding the ERR_PTR().
 
--- 
-With Best Regards,
-Andy Shevchenko
+Yes, I think that returning the error like:
+
+dev_err(dev, "Couldn't determine irq count: %d\n", nr_irq_parent);
+
+would make the code cleaner.
+
+Maybe just a matter of taste though ;-)
