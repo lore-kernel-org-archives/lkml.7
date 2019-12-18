@@ -2,107 +2,203 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F743C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 04:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B13C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 04:41:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62CB821D7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 04:40:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XDX7OygW"
+	by mail.kernel.org (Postfix) with ESMTP id 2DBE521D7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 04:41:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576644111;
+	bh=wl294Ay0REFLJq22BzCFSd+BucIaGMAcqr6lJjAG2Oc=;
+	h=Date:From:To:Subject:In-Reply-To:List-ID:From;
+	b=p6kiJzn+EJzl7jMti8t5NwCRqi43m3GyoO7C8WhcvLE5KUrAd8PJKzv3Qpj7Z/GdY
+	 8z2dlLRqu6LBAafzuvyuD2s1MAf5MXZTecxEzFpd+niGyt3qHvAoY5KdI5h3C89wKx
+	 ZEujorWYD0gRLInSKCeEqe/S0wNosatnBQ7BFNxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbfLREkr (ORCPT
+        id S1726641AbfLRElu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 23:40:47 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41599 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbfLREkq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 23:40:46 -0500
-Received: by mail-pf1-f196.google.com with SMTP id w62so489442pfw.8;
-        Tue, 17 Dec 2019 20:40:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=GrKfPHWlzDEJvr5AEBo/fYlRUfRELTxwLkCTPqqmL5k=;
-        b=XDX7OygWR3o/AaSRFcMaG6KBpndn7POmPbXa0ahnXYjdD1xRPgLVAHFsUVHeV4E3Pn
-         rcWCicvO3NFdRtdGEzchqV7808Mpl148Jls3F2Xte9cjATYJeh60kZ9YsiDTf9hjp8+p
-         ATm3f+mEXaYhz7gqfYxL7ybnsncdHz7WICz5Yjm2XAKPRuEK2Owqge+1/7Q6Y/ijXhbz
-         JNCNv6+z3nSI1J5sYDn4cL7fUpP05fVkQPeM40fxXy+15VByQORdRoluMEqlffXYKnG6
-         lYckpOKKMl7YZueSMsVqK1lSoLIGRL1LU6smOWAn+f+rCanWu20zfE6Kg931oxO0TEkU
-         8Dvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GrKfPHWlzDEJvr5AEBo/fYlRUfRELTxwLkCTPqqmL5k=;
-        b=dGzM8DW+xk6N3a1nxsUl2D7MMDB+goNMQ4VXCT8Oqmw3R728V6amsmkmzf67JFgXT0
-         PGW1zkZX29ToP+CvkoqxPwsHVSEo9g3Af7Ttz6CxWXJYFoi2ahvqzKGMcnO9JjBYUnSB
-         Nax5Lo2gaOMtzMZjrF0W3OgNXG4zpv4TEzoY0MCms0VoeqK2VH7D59QypKw81Mk19CWl
-         ckx7P311QAsj2k3AEEELgEESEWUp4/XS0MlzqPUQVvnRb8ANa7lZdNYzQ1TPQFU//1tG
-         12/eCH4AFKUhoMal2+hJKk9FOEeNRMc6nDoTY4BN9uPCqIRxjmM+sijxPI4+XAiL+6+3
-         57hw==
-X-Gm-Message-State: APjAAAWaP/vMBPl8GzS+KLzxlSLqTFR9lMk/F5chV7z8DcUgY1ySvBXW
-        UqI0dgimepTL4KPfMCJLT/U=
-X-Google-Smtp-Source: APXvYqyyzxV7dEGa56Cg6K8AAx/tV3UCABXTF2we4KGAO9kAqp1sqWnzMe0COs+F87LFNJAdPquDyQ==
-X-Received: by 2002:a63:1402:: with SMTP id u2mr701402pgl.224.1576644045967;
-        Tue, 17 Dec 2019 20:40:45 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:250d:e71d:5a0a:9afe])
-        by smtp.gmail.com with ESMTPSA id k60sm633881pjh.22.2019.12.17.20.40.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 20:40:45 -0800 (PST)
-Date:   Wed, 18 Dec 2019 13:40:43 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Andrey Zhizhikin <andrey.z@gmail.com>, ast@kernel.org,
-        daniel@iogearbox.net, kafai@fb.com, songliubraving@fb.com,
-        yhs@fb.com, andriin@fb.com, pmladek@suse.com,
-        wangkefeng.wang@huawei.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>
-Subject: Re: [PATCH] tools lib api fs: fix gcc9 compilation error
-Message-ID: <20191218044043.GB88635@google.com>
-References: <20191211080109.18765-1-andrey.zhizhikin@leica-geosystems.com>
- <20191218031019.GB419@tigerII.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191218031019.GB419@tigerII.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 17 Dec 2019 23:41:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33410 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726463AbfLRElu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 23:41:50 -0500
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C635520715;
+        Wed, 18 Dec 2019 04:41:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576644109;
+        bh=wl294Ay0REFLJq22BzCFSd+BucIaGMAcqr6lJjAG2Oc=;
+        h=Date:From:To:Subject:In-Reply-To:From;
+        b=O605SdXZI0wNRvhf3WeBwYfhPxFmqVe4Jon9zvyK04XX2dIbFzMnUYbNILciJIA/w
+         h7h6D97LnlU4ICaZqG9Ab49t04cquV+XHjyx3ZrClWtO6/WAF4YojicD7idB/rl8+D
+         vyArMNwR79Tk8LtjH/5ShIK9IAR9kGnIDSedu2BA=
+Date:   Tue, 17 Dec 2019 20:41:48 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     broonie@kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au
+Subject:  mmotm 2019-12-17-20-41 uploaded
+Message-ID: <20191218044148.otzgcpSL5%akpm@linux-foundation.org>
+In-Reply-To: <20191206170123.cb3ad1f76af2b48505fabb33@linux-foundation.org>
+User-Agent: s-nail v14.8.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (19/12/18 12:10), Sergey Senozhatsky wrote:
-> On (19/12/11 08:01), Andrey Zhizhikin wrote:
-> [..]
-> > @@ -210,6 +210,7 @@ static bool fs__env_override(struct fs *fs)
-> >  	size_t name_len = strlen(fs->name);
-> >  	/* name + "_PATH" + '\0' */
-> >  	char upper_name[name_len + 5 + 1];
-> > +
-> >  	memcpy(upper_name, fs->name, name_len);
-> >  	mem_toupper(upper_name, name_len);
-> >  	strcpy(&upper_name[name_len], "_PATH");
-> > @@ -219,7 +220,8 @@ static bool fs__env_override(struct fs *fs)
-> >  		return false;
-> >  
-> >  	fs->found = true;
-> > -	strncpy(fs->path, override_path, sizeof(fs->path));
-> > +	strncpy(fs->path, override_path, sizeof(fs->path) - 1);
-> > +	fs->path[sizeof(fs->path) - 1] = '\0';
-> 
-> I think the trend these days is to prefer stracpy/strscpy over
-> strcpy/strlcpy/strncpy.
+The mm-of-the-moment snapshot 2019-12-17-20-41 has been uploaded to
 
-Scratch that. This is user-space, I should pay more attention.
+   http://www.ozlabs.org/~akpm/mmotm/
 
-	-ss
+mmotm-readme.txt says
+
+README for mm-of-the-moment:
+
+http://www.ozlabs.org/~akpm/mmotm/
+
+This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+more than once a week.
+
+You will need quilt to apply these patches to the latest Linus release (5.x
+or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+http://ozlabs.org/~akpm/mmotm/series
+
+The file broken-out.tar.gz contains two datestamp files: .DATE and
+.DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
+followed by the base kernel version against which this patch series is to
+be applied.
+
+This tree is partially included in linux-next.  To see which patches are
+included in linux-next, consult the `series' file.  Only the patches
+within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
+linux-next.
+
+
+A full copy of the full kernel tree with the linux-next and mmotm patches
+already applied is available through git within an hour of the mmotm
+release.  Individual mmotm releases are tagged.  The master branch always
+points to the latest release, so it's constantly rebasing.
+
+	https://github.com/hnaz/linux-mm
+
+The directory http://www.ozlabs.org/~akpm/mmots/ (mm-of-the-second)
+contains daily snapshots of the -mm tree.  It is updated more frequently
+than mmotm, and is untested.
+
+A git copy of this tree is also available at
+
+	https://github.com/hnaz/linux-mm
+
+
+
+This mmotm tree contains the following patches against 5.5-rc2:
+(patches marked "*" will be included in linux-next)
+
+  origin.patch
+* kasan-fix-crashes-on-access-to-memory-mapped-by-vm_map_ram.patch
+* kasan-fix-crashes-on-access-to-memory-mapped-by-vm_map_ram-v2.patch
+* mm-add-apply_to_existing_pages-helper.patch
+* mm-add-apply_to_existing_pages-helper-fix.patch
+* mm-add-apply_to_existing_pages-helper-fix-fix.patch
+* mm-add-apply_to_existing_pages-helper-fix-fix-fix.patch
+* kasan-use-apply_to_existing_pages-for-releasing-vmalloc-shadow.patch
+* kasan-use-apply_to_existing_pages-for-releasing-vmalloc-shadow-fix.patch
+* kasan-dont-assume-percpu-shadow-allocations-will-succeed.patch
+* mm-vmscan-protect-shrinker-idr-replace-with-config_memcg.patch
+* lib-kconfigdebug-fix-some-messed-up-configurations.patch
+* lib-kconfigdebug-fix-some-messed-up-configurations-checkpatch-fixes.patch
+* proc-kpageflags-prevent-an-integer-overflow-in-stable_page_flags.patch
+* proc-kpageflags-do-not-use-uninitialized-struct-pages.patch
+* mm-zsmallocc-fix-the-migrated-zspage-statistics.patch
+* mm-thp-tweak-reclaim-compaction-effort-of-local-only-and-all-node-allocations.patch
+* x86-mm-split-vmalloc_sync_all.patch
+* kcov-fix-struct-layout-for-kcov_remote_arg.patch
+* memcg-account-security-cred-as-well-to-kmemcg.patch
+* mm-move_pages-return-valid-node-id-in-status-if-the-page-is-already-on-the-target-node.patch
+* fs-direct-ioc-include-fs-internalh-for-missing-prototype.patch
+* fs-nsfsc-include-headers-for-missing-declarations.patch
+* fs-namespacec-make-to_mnt_ns-static.patch
+* hexagon-define-ioremap_uc.patch
+* hexagon-parenthesize-registers-in-asm-predicates.patch
+* hexagon-work-around-compiler-crash.patch
+* fs-fix-posix_aclc-kernel-doc-warnings.patch
+* revert-ipcsem-remove-uneeded-sem_undo_list-lock-usage-in-exit_sem.patch
+* mm-oom-fix-pgtables-units-mismatch-in-killed-process-message.patch
+* mm-gup-fix-memory-leak-in-__gup_benchmark_ioctl.patch
+* mm-gup-fix-memory-leak-in-__gup_benchmark_ioctl-fix.patch
+* mm-fix-uninitialized-memmaps-on-a-partially-populated-last-section.patch
+* fs-proc-pagec-allow-inspection-of-last-section-and-fix-end-detection.patch
+* mm-initialize-memmap-of-unavailable-memory-directly.patch
+* mm-hugetlb-defer-freeing-of-huge-pages-if-in-non-task-context.patch
+* mm-memory_hotplug-dont-free-usage-map-when-removing-a-re-added-early-section.patch
+* ocfs2-call-journal-flush-to-mark-journal-as-empty-after-journal-recovery-when-mount.patch
+* init-kconfig-enable-o3-for-all-arches.patch
+* ramfs-support-o_tmpfile.patch
+  mm.patch
+* mm-avoid-slub-allocation-while-holding-list_lock.patch
+* mm-cleanup-some-useless-code.patch
+* mm-vmscan-expose-cgroup_ino-for-memcg-reclaim-tracepoints.patch
+* mm-pgmap-use-correct-alignment-when-looking-at-first-pfn-from-a-region.patch
+* mm-mmap-fix-the-adjusted-length-error.patch
+* mm-memmap_init-update-variable-name-in-memmap_init_zone.patch
+* mm-memory_hotplug-shrink-zones-when-offlining-memory.patch
+* mm-memory_hotplug-poison-memmap-in-remove_pfn_range_from_zone.patch
+* mm-memory_hotplug-we-always-have-a-zone-in-find_smallestbiggest_section_pfn.patch
+* mm-memory_hotplug-dont-check-for-all-holes-in-shrink_zone_span.patch
+* mm-memory_hotplug-drop-local-variables-in-shrink_zone_span.patch
+* mm-memory_hotplug-cleanup-__remove_pages.patch
+* mm-early_remap-use-%pa-to-print-resource_size_t-variables.patch
+* mm-oom-avoid-printk-iteration-under-rcu.patch
+* mm-oom-avoid-printk-iteration-under-rcu-fix.patch
+* mm-hugetlb-controller-for-cgroups-v2.patch
+* mm-clean-up-obsolete-check-on-space-in-page-flags.patch
+* mm-remove-dead-code-totalram_pages_set.patch
+* info-task-hung-in-generic_file_write_iter.patch
+* info-task-hung-in-generic_file_write-fix.patch
+* kernel-hung_taskc-monitor-killed-tasks.patch
+* lib-zlib-add-s390-hardware-support-for-kernel-zlib_deflate.patch
+* s390-boot-rename-heap_size-due-to-name-collision.patch
+* lib-zlib-add-s390-hardware-support-for-kernel-zlib_inflate.patch
+* s390-boot-add-dfltcc=-kernel-command-line-parameter.patch
+* lib-zlib-add-zlib_deflate_dfltcc_enabled-function.patch
+* btrfs-use-larger-zlib-buffer-for-s390-hardware-compression.patch
+* string-add-stracpy-and-stracpy_pad-mechanisms.patch
+* documentation-checkpatch-prefer-stracpy-strscpy-over-strcpy-strlcpy-strncpy.patch
+* elf-smaller-code-generation-around-auxv-vector-fill.patch
+* elf-fix-start_code-calculation.patch
+* elf-dont-copy-elf-header-around.patch
+* elf-better-codegen-around-current-mm.patch
+* elf-make-bad_addr-unlikely.patch
+* init-mainc-log-arguments-and-environment-passed-to-init.patch
+* init-mainc-remove-unnecessary-repair_env_string-in-do_initcall_level.patch
+* init-mainc-fix-quoted-value-handling-in-unknown_bootoption.patch
+* execve-warn-if-process-starts-with-executable-stack.patch
+* io-mapping-use-phys_pfn-macro-in-io_mapping_map_atomic_wc.patch
+* aio-simplify-read_events.patch
+* smp_mb__beforeafter_atomic-update-documentation.patch
+* ipc-mqueuec-remove-duplicated-code.patch
+* ipc-mqueuec-update-document-memory-barriers.patch
+* ipc-msgc-update-and-document-memory-barriers.patch
+* ipc-semc-document-and-update-memory-barriers.patch
+* ipc-consolidate-all-xxxctl_down-functions.patch
+  linux-next.patch
+  linux-next-git-rejects.patch
+* drivers-block-null_blk_mainc-fix-layout.patch
+* drivers-block-null_blk_mainc-fix-uninitialized-var-warnings.patch
+* pinctrl-fix-pxa2xxc-build-warnings.patch
+* mm-remove-__krealloc.patch
+* drivers-tty-serial-sh-scic-suppress-warning.patch
+* fix-read-buffer-overflow-in-delta-ipc.patch
+  make-sure-nobodys-leaking-resources.patch
+  releasing-resources-with-children.patch
+  mutex-subsystem-synchro-test-module.patch
+  kernel-forkc-export-kernel_thread-to-modules.patch
+  workaround-for-a-pci-restoring-bug.patch
