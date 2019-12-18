@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DCB5C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F45C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C27EC24680
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:17:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B01CB24676
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:17:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="eqPfRq6+"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="MzqXbFHE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbfLRJRO (ORCPT
+        id S1726912AbfLRJRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 04:17:14 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:19096 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725799AbfLRJRM (ORCPT
+        Wed, 18 Dec 2019 04:17:17 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:8015 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725799AbfLRJRQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 04:17:12 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5df9ee800002>; Wed, 18 Dec 2019 01:16:48 -0800
+        Wed, 18 Dec 2019 04:17:16 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5df9ee910000>; Wed, 18 Dec 2019 01:17:05 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 18 Dec 2019 01:16:58 -0800
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 18 Dec 2019 01:17:14 -0800
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 18 Dec 2019 01:16:58 -0800
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Dec
- 2019 09:16:57 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 18 Dec 2019 09:16:57 +0000
+        by hqpgpgate101.nvidia.com on Wed, 18 Dec 2019 01:17:14 -0800
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Dec
+ 2019 09:17:14 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 18 Dec 2019 09:17:14 +0000
 Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.64.167]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5df9ee860000>; Wed, 18 Dec 2019 01:16:57 -0800
+        id <B5df9ee960001>; Wed, 18 Dec 2019 01:17:13 -0800
 From:   Nagarjuna Kristam <nkristam@nvidia.com>
 To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
         <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
@@ -45,9 +45,9 @@ To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
 CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [Patch V2 02/18] dt-bindings: usb: Add NVIDIA Tegra XUSB device mode controller binding
-Date:   Wed, 18 Dec 2019 14:46:15 +0530
-Message-ID: <1576660591-10383-3-git-send-email-nkristam@nvidia.com>
+Subject: [Patch V2 06/18] phy: tegra: xusb: Add set_mode support for USB 2 phy on Tegra210
+Date:   Wed, 18 Dec 2019 14:46:19 +0530
+Message-ID: <1576660591-10383-7-git-send-email-nkristam@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1576660591-10383-1-git-send-email-nkristam@nvidia.com>
 References: <1576660591-10383-1-git-send-email-nkristam@nvidia.com>
@@ -55,239 +55,197 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576660609; bh=mYwRPWnyhCQFlyL7sjl0nFhTLWFj81eUNp9Fi6fmk/Q=;
+        t=1576660625; bh=4xacu1xswqGXFkfElxt0+/fHoPPlPgRMazpCGDHjrGI=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=eqPfRq6+Qdjp1zrIk5oGjjmtc45UqGIsqX6pQqt0MWGk3K/3a2ZhYdoGArA9lhAm8
-         ITqgv0GR5COQNx7rV9pLsICR4tVwXRINqUMz/AVJH5Xbq+8P6EP6fz3HGh64OGY8P3
-         00AgXLTk/lrIaqs4IrFZYjnjyYMufuiS4LDLmxIyfQw32lQ6bVo8PtfHApXK4irdzO
-         lejgtg+VEAQp/RRYTEWEIJXcMYwVuidjTFPNW3L3bnlO1HExbL5scJSV/sJeK2JTDo
-         kTw9IIua77AtZeyPMjh3wl9/ouVZgaAjZd0K52eiv/RUHOCCwnRN/Yn5exjoYoebS6
-         fYPJLrHoaJQXA==
+        b=MzqXbFHE2p6F4H6zUV4U/p7EQyUrYrYLckljpnORc6P6c/xfScMfPQxyQuDifixh6
+         FaaU/kg29IxzG812RN/iLqt1lLF/PtQQq+BG1xA0gW4U9fcFosoo/Fn7Fxpd4piqP0
+         7kZ+nCNyC2s87+N/OKfoqkaklRkMNgCJUN8306VaBcLGqK6mptmmbRWi5E0tlYfgP7
+         s/+EeygdHwTfIrdIrRT+xTRpO9ey9Skw7TCsW/QC/DfQlzfqovt1lSZS5NOqY69oqv
+         /PKNpaETP15Lh+Il1Dz27Cze/zlARBVcEDMKDP+SHTeRndym9t85Kus8rd9JkgrAoT
+         Lt+dTyqWZx+Sg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device-tree binding documentation for the XUSB device mode controller
-present on Tegra210 and Tegra186 SoC. This controller supports the USB 3.0
-specification.
+Add support for set_mode on USB 2 phy. This allow XUSB host/device mode
+drivers to configure the hardware to corresponding modes.
 
 Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
 ---
 V2:
- - used enum instead of oneOf and const.
- - Moved reg, reg-names, clocks, clock-names to property section from allOf.
- - Limited allOf to min and max items based on soc.
- - Updated description for power-domains.
- - Added V1 reference
+ - No changes in this version
 ---
-V1
- - This document is yaml version of [1], with difference of usb-role-switch
-   removal.
-[1] https://patchwork.kernel.org/patch/11156253/ 
----
- .../devicetree/bindings/usb/nvidia,tegra-xudc.yaml | 190 +++++++++++++++++++++
- 1 file changed, 190 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.yaml
+ drivers/phy/tegra/xusb-tegra210.c | 126 ++++++++++++++++++++++++++++++--------
+ 1 file changed, 99 insertions(+), 27 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.yaml b/Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.yaml
-new file mode 100644
-index 0000000..b84ed8e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.yaml
-@@ -0,0 +1,190 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/usb/nvidia,tegra-xudc.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+diff --git a/drivers/phy/tegra/xusb-tegra210.c b/drivers/phy/tegra/xusb-tegra210.c
+index 394913b..6610b1d7 100644
+--- a/drivers/phy/tegra/xusb-tegra210.c
++++ b/drivers/phy/tegra/xusb-tegra210.c
+@@ -236,6 +236,7 @@
+ #define XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_SHIFT 18
+ #define XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_MASK 0xf
+ #define XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_FLOATING 8
++#define XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_GROUNDED 0
+ 
+ struct tegra210_xusb_fuse_calibration {
+ 	u32 hs_curr_level[4];
+@@ -935,6 +936,98 @@ static int tegra210_usb2_phy_exit(struct phy *phy)
+ 	return tegra210_xusb_padctl_disable(lane->pad->padctl);
+ }
+ 
++static int tegra210_xusb_padctl_vbus_override(struct tegra_xusb_padctl *padctl,
++					      bool status)
++{
++	u32 value;
 +
-+title: Device tree binding for NVIDIA Tegra XUSB device mode controller (XUDC)
++	dev_dbg(padctl->dev, "%s vbus override\n", status ? "set" : "clear");
 +
-+description:
-+  The Tegra XUDC controller supports both USB 2.0 HighSpeed/FullSpeed and
-+  USB 3.0 SuperSpeed protocols.
++	value = padctl_readl(padctl, XUSB_PADCTL_USB2_VBUS_ID);
 +
-+maintainers:
-+  - Nagarjuna Kristam <nkristam@nvidia.com>
-+  - JC Kuo <jckuo@nvidia.com>
-+  - Thierry Reding <treding@nvidia.com>
++	if (status) {
++		value |= XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_VBUS_ON;
++		value &= ~(XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_MASK <<
++			   XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_SHIFT);
++		value |= XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_FLOATING <<
++			 XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_SHIFT;
++	} else {
++		value &= ~XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_VBUS_ON;
++	}
 +
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - nvidia,tegra210-xudc # For Tegra210
-+          - nvidia,tegra186-xudc # For Tegra186
++	padctl_writel(padctl, value, XUSB_PADCTL_USB2_VBUS_ID);
 +
-+  reg:
-+    minItems: 2
-+    maxItems: 3
-+    items:
-+      - description: XUSB device controller registers
-+      - description: XUSB device PCI Config registers
-+      - description: XUSB device registers.
++	return 0;
++}
 +
-+  reg-names:
-+    minItems: 2
-+    maxItems: 3
-+    items:
-+      - const: base
-+      - const: fpci
-+      - const: ipfs
++static int tegra210_xusb_padctl_id_override(struct tegra_xusb_padctl *padctl,
++					    bool status)
++{
++	u32 value;
 +
-+  interrupts:
-+    maxItems: 1
-+    description: Must contain the XUSB device interrupt.
++	dev_dbg(padctl->dev, "%s id override\n", status ? "set" : "clear");
 +
-+  clocks:
-+    minItems: 4
-+    maxItems: 5
-+    items:
-+      - description: Clock to enable core XUSB dev clock.
-+      - description: Clock to enable XUSB super speed clock.
-+      - description: Clock to enable XUSB super speed dev clock.
-+      - description: Clock to enable XUSB high speed dev clock.
-+      - description: Clock to enable XUSB full speed dev clock.
++	value = padctl_readl(padctl, XUSB_PADCTL_USB2_VBUS_ID);
 +
-+  clock-names:
-+    minItems: 4
-+    maxItems: 5
-+    items:
-+     - const: dev
-+     - const: ss
-+     - const: ss_src
-+     - const: fs_src
-+     - const: hs_src
++	if (status) {
++		if (value & XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_VBUS_ON) {
++			value &= ~XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_VBUS_ON;
++			padctl_writel(padctl, value, XUSB_PADCTL_USB2_VBUS_ID);
++			usleep_range(1000, 2000);
 +
-+  power-domains:
-+    maxItems: 2
-+    items:
-+      - description: XUSBB(device) power-domain
-+      - description: XUSBA(superspeed) power-domain
++			value = padctl_readl(padctl, XUSB_PADCTL_USB2_VBUS_ID);
++		}
 +
-+  power-domain-names:
-+    maxItems: 2
-+    items:
-+      - const: dev
-+      - const: ss
++		value &= ~(XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_MASK <<
++			   XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_SHIFT);
++		value |= XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_GROUNDED <<
++			 XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_SHIFT;
++	} else {
++		value &= ~(XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_MASK <<
++			   XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_SHIFT);
++		value |= XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_FLOATING <<
++			 XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_SHIFT;
++	}
 +
-+  nvidia,xusb-padctl:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description:
-+      phandle to the XUSB pad controller that is used to configure the USB pads
-+      used by the XUDC controller.
++	padctl_writel(padctl, value, XUSB_PADCTL_USB2_VBUS_ID);
 +
-+  phys:
-+    minItems: 1
-+    description:
-+      Must contain an entry for each entry in phy-names.
-+      See ../phy/phy-bindings.txt for details.
++	return 0;
++}
 +
-+  phy-names:
-+    minItems: 1
-+    items:
-+      - const: usb2-0
-+      - const: usb2-1
-+      - const: usb2-2
-+      - const: usb2-3
-+      - const: usb3-0
-+      - const: usb3-1
-+      - const: usb3-2
-+      - const: usb3-3
++static int tegra210_usb2_phy_set_mode(struct phy *phy, enum phy_mode mode,
++				      int submode)
++{
++	struct tegra_xusb_lane *lane = phy_get_drvdata(phy);
++	struct tegra_xusb_padctl *padctl = lane->pad->padctl;
++	struct tegra_xusb_usb2_port *port = tegra_xusb_find_usb2_port(padctl,
++								lane->index);
++	int err = 0;
 +
-+  avddio-usb-supply:
-+    description: PCIe/USB3 analog logic power supply. Must supply 1.05 V.
++	mutex_lock(&padctl->lock);
 +
-+  hvdd-usb-supply:
-+    description: USB controller power supply. Must supply 3.3 V.
++	dev_dbg(&port->base.dev, "%s: mode %d", __func__, mode);
 +
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - power-domains
-+  - power-domain-names
-+  - nvidia,xusb-padctl
-+  - phys
-+  - phy-names
++	if (mode == PHY_MODE_USB_OTG) {
++		if (submode == USB_ROLE_HOST) {
++			tegra210_xusb_padctl_id_override(padctl, true);
 +
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - nvidia,tegra210-xudc
-+    then:
-+      properties:
-+        reg:
-+          minItems: 3
-+        reg-names:
-+          minItems: 3
-+        clocks:
-+          minItems: 5
-+        clock-names:
-+          minItems: 5
-+      required:
-+        - avddio-usb-supply
-+        - hvdd-usb-supply
++			err = regulator_enable(port->supply);
++		} else if (submode == USB_ROLE_DEVICE) {
++			tegra210_xusb_padctl_vbus_override(padctl, true);
++		} else if (submode == USB_ROLE_NONE) {
++			if (regulator_is_enabled(port->supply))
++				regulator_disable(port->supply);
 +
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - nvidia,tegra186-xudc
-+    then:
-+      properties:
-+        reg:
-+          maxItems: 2
-+        reg-names:
-+          maxItems: 2
-+        clocks:
-+          maxItems: 4
-+        clock-names:
-+          maxItems: 4
++			tegra210_xusb_padctl_id_override(padctl, false);
++			tegra210_xusb_padctl_vbus_override(padctl, false);
++		}
++	}
 +
-+examples:
-+  - |
-+    #include <dt-bindings/clock/tegra210-car.h>
-+    #include <dt-bindings/gpio/tegra-gpio.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
++	mutex_unlock(&padctl->lock);
 +
-+    usb@700d0000 {
-+        compatible = "nvidia,tegra210-xudc";
-+        reg = <0x0 0x700d0000 0x0 0x8000>,
-+              <0x0 0x700d8000 0x0 0x1000>,
-+              <0x0 0x700d9000 0x0 0x1000>;
-+        reg-names = "base", "fpci", "ipfs";
++	return err;
++}
 +
-+        interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-+
-+        clocks = <&tegra_car TEGRA210_CLK_XUSB_DEV>,
-+                 <&tegra_car TEGRA210_CLK_XUSB_SS>,
-+                 <&tegra_car TEGRA210_CLK_XUSB_SSP_SRC>,
-+                 <&tegra_car TEGRA210_CLK_XUSB_FS_SRC>,
-+                 <&tegra_car TEGRA210_CLK_XUSB_HS_SRC>;
-+        clock-names = "dev", "ss", "ss_src", "fs_src", "hs_src";
-+
-+        power-domains = <&pd_xusbdev>, <&pd_xusbss>;
-+        power-domain-names = "dev", "ss";
-+
-+        nvidia,xusb-padctl = <&padctl>;
-+
-+        phys = <&micro_b>;
-+        phy-names = "usb2-0";
-+
-+        avddio-usb-supply = <&vdd_pex_1v05>;
-+        hvdd-usb-supply = <&vdd_3v3_sys>;
-+    };
+ static int tegra210_usb2_phy_power_on(struct phy *phy)
+ {
+ 	struct tegra_xusb_lane *lane = phy_get_drvdata(phy);
+@@ -1048,9 +1141,11 @@ static int tegra210_usb2_phy_power_on(struct phy *phy)
+ 	padctl_writel(padctl, value,
+ 		      XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPADX_CTL1(index));
+ 
+-	err = regulator_enable(port->supply);
+-	if (err)
+-		return err;
++	if (port->supply && port->mode == USB_DR_MODE_HOST) {
++		err = regulator_enable(port->supply);
++		if (err)
++			return err;
++	}
+ 
+ 	mutex_lock(&padctl->lock);
+ 
+@@ -1164,6 +1259,7 @@ static const struct phy_ops tegra210_usb2_phy_ops = {
+ 	.exit = tegra210_usb2_phy_exit,
+ 	.power_on = tegra210_usb2_phy_power_on,
+ 	.power_off = tegra210_usb2_phy_power_off,
++	.set_mode = tegra210_usb2_phy_set_mode,
+ 	.owner = THIS_MODULE,
+ };
+ 
+@@ -2023,30 +2119,6 @@ static const struct tegra_xusb_port_ops tegra210_usb3_port_ops = {
+ 	.map = tegra210_usb3_port_map,
+ };
+ 
+-static int tegra210_xusb_padctl_vbus_override(struct tegra_xusb_padctl *padctl,
+-					      bool status)
+-{
+-	u32 value;
+-
+-	dev_dbg(padctl->dev, "%s vbus override\n", status ? "set" : "clear");
+-
+-	value = padctl_readl(padctl, XUSB_PADCTL_USB2_VBUS_ID);
+-
+-	if (status) {
+-		value |= XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_VBUS_ON;
+-		value &= ~(XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_MASK <<
+-			   XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_SHIFT);
+-		value |= XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_FLOATING <<
+-			 XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_SHIFT;
+-	} else {
+-		value &= ~XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_VBUS_ON;
+-	}
+-
+-	padctl_writel(padctl, value, XUSB_PADCTL_USB2_VBUS_ID);
+-
+-	return 0;
+-}
+-
+ static int tegra210_utmi_port_reset(struct phy *phy)
+ {
+ 	struct tegra_xusb_padctl *padctl;
 -- 
 2.7.4
 
