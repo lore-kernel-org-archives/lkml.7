@@ -2,115 +2,146 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70926C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3EDEC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43B662465E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7504A227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:05:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m/1MFWtJ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BHBG5JnM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727324AbfLROCV (ORCPT
+        id S1727049AbfLROFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 09:02:21 -0500
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:36503 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727049AbfLROCU (ORCPT
+        Wed, 18 Dec 2019 09:05:51 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:27433 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726856AbfLROFv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 09:02:20 -0500
-Received: by mail-vs1-f66.google.com with SMTP id u14so1440743vsu.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 06:02:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4MqcWC72NUw+7l3vLDUFuLwA4CNEK5ETyQbLNfZ8gAU=;
-        b=m/1MFWtJ9qkM4vsp7ohIEThRlvk6ZbPuvXTTO+TzCFT35SkOz9gpZrTkOI4gmh73KG
-         i7RhOw4zo0NoUjZ6abErqTwSHcZpSi6gnDYP+SKhD03HNJMMG75qRDdPNmksyojGd2Rc
-         jO+udWWP5Ek9Awy7Wmk5iHj80wE4Xj280OTJZHn7JRRYjMmh0XDpjlPP9g4wtQgfDVIv
-         7Oo7kL3FqKiIUvGr/4h+J7ZniDo/TdhXH8Yu5A7iMhTJPyUEa2QRQVIYydA+4WbxsdTd
-         XSPthcfGdzYAfrDScp8bLX9GH+Y2tx+8vnm7GXHxxzdaWpjPzF2ElmQlnNqx1UiGU9Qk
-         BUBQ==
+        Wed, 18 Dec 2019 09:05:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576677949;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=hKeKFdBiRsbTRVEMHRwLpZNizEHEkznl+vD7uDZN8A0=;
+        b=BHBG5JnMZe91augEFu/Orh3AOkVYhdyxJp7Oo8JqPD4/lLbH5W6LQlCgXkz2hWVe806URa
+        yQHjZbj/id8nbtdk3HT4vFA0otQ+ftTIsBHBsR6HNMhP/ZNV5PU/sCyHqgkZKXT+wa3G5f
+        S5NLArFfBmfX0JsvMFI3aRCDfbjXybs=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-403-wsZ0yHyxPSyArG3puJUyWw-1; Wed, 18 Dec 2019 09:05:49 -0500
+X-MC-Unique: wsZ0yHyxPSyArG3puJUyWw-1
+Received: by mail-qv1-f69.google.com with SMTP id d7so1369864qvq.12
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 06:05:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4MqcWC72NUw+7l3vLDUFuLwA4CNEK5ETyQbLNfZ8gAU=;
-        b=ZP8PbBvobovd7QqC7a3q45IWDYbQwl1kwNUebIiVN9YNyJdh2aCPIoc+R63a0PMaRx
-         CiEnwWudluxQRpSUbZEwr+S+ciaqBvvCgLF4ODaqbs8d3L48itKvSNAsd6nIF4MAi07y
-         ga8N5bDFOwMa1vNXMxatODkahsIz1wxEDP3pj0pWx98HyMnK7nlbheKjpL9Kmwd8k4Cd
-         N14QGhaWwcBsRC7R7qNd2Xl6HKxaeipiVbOCHTQs8hw47VQQYUMmhTaMqyhH+9tMM8up
-         u/oACbollCB/GaTcS1mxjrk2zwKi9qejTep1AG6d6EooGfioeekaB3e+/m5qX+Sco0/c
-         lEsQ==
-X-Gm-Message-State: APjAAAXY45gHoWo/Fba/NhISB+P7acDbw+OlGI9Gmb76hCc04UkVV9en
-        asBvWoDlMBpesLXLckmZTIDYxA8xgYW9INBxlb8p7g==
-X-Google-Smtp-Source: APXvYqwbv5IQL8XJXtfep+5acQSTXE9WY6jnE1UQqvQJm139MKvuv03QqH0bG3ly4Lq7DRnIKxQW2Dt+JMtOBKR7rf4=
-X-Received: by 2002:a05:6102:5d1:: with SMTP id v17mr1386372vsf.200.1576677739978;
- Wed, 18 Dec 2019 06:02:19 -0800 (PST)
+        bh=hKeKFdBiRsbTRVEMHRwLpZNizEHEkznl+vD7uDZN8A0=;
+        b=PBA1ByEL5s1ZlH23e4dqAV2JbMvDLaQ4IZ81MDa8QW6IzbToy0ypfM5mFFal4TxYg1
+         IgnnPD28iehnOqyiA/+on2tGB3ZsyxmlUNZalszwwzN+2uzDKlvNWj/RN1myvHep06KG
+         VkHvDUBwi5/lQ7dc6VJVDe03fOcOPwYhLNdCILsT2vYrdzw2VMAcnc2W8HRGRAkzZzRI
+         AWYdUuZZ08zLD+NHGvdngpQ1gAuOwELrSWZ0PK5BW93/rQ0f5AMYXbtXCBZzh+dmDpwh
+         T765b81tmnofqmn6HGggGjdEzR37FEC3IbBWCGCoedO0+toSjn/+82OMFJeFpq53dhb2
+         blyQ==
+X-Gm-Message-State: APjAAAVZj8V6qoa3ufX3IwxtwThWcqtcwS7Ygp+3EVpjDBIHaf37CmGR
+        4hz0B00C2Szk1hEkgEeuDTfp3iiRUiyepwzczR6EdExLTh+MWz2RXdnQ6qosyA8wrUCxA9E/RUw
+        BImvLudg4iq/xnBsMEyn2YurOc4O/K5PNC6p+Oemm
+X-Received: by 2002:ae9:ef4b:: with SMTP id d72mr2603002qkg.27.1576677948192;
+        Wed, 18 Dec 2019 06:05:48 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxKvdiV0BKf8uQoqA75j4nlqoe0xziRqEhs2pVb5VXGW7tV9Z+/BlLLKm7sIxOMOgkkobh52Km32jESxnU5rbA=
+X-Received: by 2002:ae9:ef4b:: with SMTP id d72mr2602972qkg.27.1576677947946;
+ Wed, 18 Dec 2019 06:05:47 -0800 (PST)
 MIME-Version: 1.0
-References: <20191215175120.3290-1-tiny.windzz@gmail.com> <20191215175120.3290-13-tiny.windzz@gmail.com>
-In-Reply-To: <20191215175120.3290-13-tiny.windzz@gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 18 Dec 2019 15:01:43 +0100
-Message-ID: <CAPDyKFqeoefkTy7prJ=nKKh4NVdhtHfawxfsEYGyYZd6b3igrA@mail.gmail.com>
-Subject: Re: [PATCH 13/13] mmc: au1xmmc: switch to platform_get_irq
-To:     Yangtao Li <tiny.windzz@gmail.com>
-Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Manuel Lauss <manuel.lauss@gmail.com>
+References: <CAO-hwJ+5Ch02fPQ+XF=A4iEcH81V5PrCdV2qGQDZ8HxnQAoEog@mail.gmail.com>
+ <1576585687-10426-1-git-send-email-zhangpan26@huawei.com>
+In-Reply-To: <1576585687-10426-1-git-send-email-zhangpan26@huawei.com>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Wed, 18 Dec 2019 15:05:36 +0100
+Message-ID: <CAO-hwJLykG4zPquaHnJ0DL-Ce9CNre4Lpgg4naKp_EnDe7Wyzg@mail.gmail.com>
+Subject: Re: Re: [PATCH v2] drivers/hid/hid-multitouch.c: fix a possible null
+ pointer access.
+To:     Pan Zhang <zhangpan26@huawei.com>
+Cc:     hushiyuan@huawei.com, Jiri Kosina <jikos@kernel.org>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- trimmed cc list (please do that also for any future submissions).
+Hi,
 
-On Sun, 15 Dec 2019 at 18:51, Yangtao Li <tiny.windzz@gmail.com> wrote:
+On Tue, Dec 17, 2019 at 1:28 PM Pan Zhang <zhangpan26@huawei.com> wrote:
 >
-> platform_get_resource(pdev, IORESOURCE_IRQ) is not recommended for
-> requesting IRQ's resources, as they can be not ready yet. Using
-> platform_get_irq() instead is preferred for getting IRQ even if it
-> was not retrieved earlier.
+> On Tue, Dec 17, 2019 at 18:50 PM Benjamin Tissoires <benjamin.tissoires@redhat.com> wrote:
 >
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> >Can you add at the beginning of your commit message:
+> >From: Pan Zhang <zhangpan26@huawei.com>
+> >
+> >This way we have the commit author that matches the signature, which is a requirement for the kernel.
+>
+> Firstly, thanks for your reviewing very much. I would fix my signature.
+>
+> >>  drivers/hid/hid-multitouch.c | 2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/hid/hid-multitouch.c
+> >> b/drivers/hid/hid-multitouch.c index 3cfeb16..368de81 100644
+> >> --- a/drivers/hid/hid-multitouch.c
+> >> +++ b/drivers/hid/hid-multitouch.c
+> >> @@ -1019,7 +1019,7 @@ static int mt_process_slot(struct mt_device *td, struct input_dev *input,
+> >>                 tool = MT_TOOL_DIAL;
+> >>         else if (unlikely(!confidence_state)) {
+> >>                 tool = MT_TOOL_PALM;
+> >> -               if (!active &&
+> >> +               if (!active && mt
+>
+> >Ack on the principle, but this doesn't even compile. You are missing a `&&` at the end of the line.
+> >
+> >Can you send a v2 with the comments above? And we will queue the v2 for 5.5 I think.
+>
+> Sorry about that. I made a stupid mistake. This patch fixed it.
 
-Patch 1->13 applied for next, thanks!
+No worries, mistakes happen.
 
-Next time, please use a cover-letter when you send a series.
+However, can you resend the patch to the LKML in a separate thread?
+Also prefix the patch with "[PATCH v2]". It's easier for our tools to
+handle patches when they are send on their own. Because here, I would
+have to manually edit either the commit message removing the thread,
+either take the first version and edit the patch. It's not so hard for
+this kind of simple patches, but it's best to take good habits :)
 
-Kind regards
-Uffe
+Cheers,
+Benjamin
 
-
+>
+> Signed-off-by: Pan Zhang <zhangpan26@huawei.com>
 > ---
->  drivers/mmc/host/au1xmmc.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
+>  drivers/hid/hid-multitouch.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/mmc/host/au1xmmc.c b/drivers/mmc/host/au1xmmc.c
-> index bc8aeb47a7b4..8823680ca42c 100644
-> --- a/drivers/mmc/host/au1xmmc.c
-> +++ b/drivers/mmc/host/au1xmmc.c
-> @@ -984,12 +984,9 @@ static int au1xmmc_probe(struct platform_device *pdev)
->                 goto out2;
->         }
->
-> -       r = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-> -       if (!r) {
-> -               dev_err(&pdev->dev, "no IRQ defined\n");
-> +       host->irq = platform_get_irq(pdev, 0);
-> +       if (host->irq < 0)
->                 goto out3;
-> -       }
-> -       host->irq = r->start;
->
->         mmc->ops = &au1xmmc_ops;
->
+> diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
+> index 3cfeb16..368de81 100644
+> --- a/drivers/hid/hid-multitouch.c
+> +++ b/drivers/hid/hid-multitouch.c
+> @@ -1019,7 +1019,7 @@ static int mt_process_slot(struct mt_device *td, struct input_dev *input,
+>                 tool = MT_TOOL_DIAL;
+>         else if (unlikely(!confidence_state)) {
+>                 tool = MT_TOOL_PALM;
+> -               if (!active &&
+> +               if (!active && mt &&
+>                     input_mt_is_active(&mt->slots[slotnum])) {
+>                         /*
+>                          * The non-confidence was reported for
 > --
-> 2.17.1
+> 2.7.4
 >
+
