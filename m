@@ -2,129 +2,115 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F3A9C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52720C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25F962176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 269512176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:44:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="X354docB"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O/AC1H5e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbfLRHjH (ORCPT
+        id S1726676AbfLRHoo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 02:39:07 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:9692 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbfLRHjH (ORCPT
+        Wed, 18 Dec 2019 02:44:44 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27000 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726497AbfLRHon (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 02:39:07 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5df9d7780002>; Tue, 17 Dec 2019 23:38:32 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 17 Dec 2019 23:39:01 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 17 Dec 2019 23:39:01 -0800
-Received: from [10.2.165.11] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Dec
- 2019 07:39:00 +0000
-Subject: Re: [PATCH] move_pages.2: not return ENOENT if the page are already
- on the target nodes
-To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>, <cl@linux.com>,
-        <mhocko@suse.com>, <cai@lca.pw>, <akpm@linux-foundation.org>
-CC:     <linux-man@vger.kernel.org>, <linux-api@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-References: <1575596090-115377-1-git-send-email-yang.shi@linux.alibaba.com>
- <0dc96e40-5f2b-a2fe-6e5f-b6f3d5e9ebde@nvidia.com>
- <95170ea5-5b62-9168-fcd9-93b43330a1b4@linux.alibaba.com>
- <092adc11-7039-9343-7067-0e0199c9dc13@gmail.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <51dd767a-221f-882d-c7f6-45bd0c217a67@nvidia.com>
-Date:   Tue, 17 Dec 2019 23:36:09 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 18 Dec 2019 02:44:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576655082;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/7Bu8lRWW0sQ62qo/rCg256wOgb/rW5afbJ5suw1if4=;
+        b=O/AC1H5e2mSTD3p9IV9RkcRhwsyh7NhYOsujnsDRZNnOSwq3DVsNYtyqhGiO1xZY7ZEwaM
+        TY6b5PnaDjN40bmybUhOUuNU8dYeujipLHPCl15HwYZ7RYVKcjZ9LiSnJmj9OHw4B6xscE
+        inAGKvNY9g10ZKwper/JwhAjvEO/sPQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-39-o9zC6pzLPnqeaXNQwQVgjQ-1; Wed, 18 Dec 2019 02:43:58 -0500
+X-MC-Unique: o9zC6pzLPnqeaXNQwQVgjQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 218F5DBA5;
+        Wed, 18 Dec 2019 07:43:57 +0000 (UTC)
+Received: from krava (ovpn-204-177.brq.redhat.com [10.40.204.177])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A9B3560C63;
+        Wed, 18 Dec 2019 07:43:54 +0000 (UTC)
+Date:   Wed, 18 Dec 2019 08:43:51 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Jin Yao <yao.jin@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH v4 1/3] perf report: Change sort order by a specified
+ event in group
+Message-ID: <20191218074351.GB19062@krava>
+References: <20191218022443.18958-1-yao.jin@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <092adc11-7039-9343-7067-0e0199c9dc13@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576654712; bh=niungb3NWD18TtefGE0yuSB9KQjV5p6gDgvusv9+FwI=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=X354docB+XmzyyqCzg1MdSpZNg566c/6yQnQBXH5PDwsDqnxS9VZosRWzmgFPx1kK
-         pX1HnjmCJkD9oL7TKeuV09T7Yf8gE6nLdUpsLTYrpu07eV086GCwsAKjSGk+y0hWcx
-         8Ovea66u32wFR2tHgg3rr29yuH5rUCAtBe+yB3wkUs7RTh9wVWIZa/E1EjRfSZkfNB
-         hD/jkDZA4NYnmD6j5j9SzmnUsR2NFQrb3S9+Do7VSY7ADTKKcbLqdCJskovWQ9AB4V
-         BmIv8Ne1Kp5QGrKlAUBkcy4/YTMCpMvZA8K659fne+/74Kj7g1Db0JV+woSeQiywsU
-         0tSdJe7cP8yuA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191218022443.18958-1-yao.jin@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/13/19 5:55 PM, Michael Kerrisk (man-pages) wrote:
-...
->>> whoa, hold on. If I'm reading through the various error paths
->>> correctly, then this
->>> code is *never* going to return ENOENT for the whole function. It can
->>> fill in that
->>> value per-page, in the status array, but that's all. Did I get that
->>> right?
->>
->> Nice catch. Yes, you are right.
->>
->>>
->>> If so, we need to redo this part of the man page.
->>
->> Yes.
+On Wed, Dec 18, 2019 at 10:24:41AM +0800, Jin Yao wrote:
+
+SNIP
+
+> After:
 > 
-> So where are things at with this? Is an improved man-pages
-> patch on the way, or is some other action (on the API) planned?
+>   # perf report --group --stdio --group-sort-idx 3
 > 
+>   # To display the perf.data header info, please use --header/--header-only options.
+>   #
+>   #
+>   # Total Lost Samples: 0
+>   #
+>   # Samples: 12K of events 'cpu/instructions,period=2000003/, cpu/cpu-cycles,period=200003/, BR_MISP_RETIRED.ALL_BRANCHES:pp, cpu/event=0xc0,umask=1,cmask=1,
+>   # Event count (approx.): 6451235635
+>   #
+>   #                         Overhead  Command    Shared Object            Symbol
+>   # ................................  .........  .......................  ...................................
+>   #
+>       92.19%  98.68%   0.00%  93.30%  mgen       mgen                     [.] LOOP1
+>        0.00%   0.13%   0.00%   6.08%  swapper    [kernel.kallsyms]        [k] intel_idle
+>        3.12%   0.29%   0.00%   0.16%  gsd-color  libglib-2.0.so.0.5600.4  [.] 0x0000000000049515
+>        0.00%   0.00%   0.00%   0.06%  swapper    [kernel.kallsyms]        [k] hrtimer_start_range_ns
+>        1.56%   0.03%   0.00%   0.04%  gsd-color  libglib-2.0.so.0.5600.4  [.] 0x00000000000494b7
+>        0.00%   0.15%   0.00%   0.04%  perf       [kernel.kallsyms]        [k] smp_call_function_single
+>        0.00%   0.00%   0.00%   0.02%  mgen       [kernel.kallsyms]        [k] update_curr
+>        0.00%   0.00%   0.00%   0.02%  mgen       [kernel.kallsyms]        [k] apic_timer_interrupt
+>        0.00%   0.00%   0.00%   0.02%  mgen       [kernel.kallsyms]        [k] native_apic_msr_eoi_write
+>        0.00%   0.00%   0.00%   0.02%  mgen       [kernel.kallsyms]        [k] __update_load_avg_se
+>        0.00%   0.00%   0.00%   0.02%  mgen       [kernel.kallsyms]        [k] scheduler_tick
+> 
+> Now the output is sorted by the fourth event in group.
+> 
+>  v4:
+>  ---
+>  1. Update Documentation/perf-report.txt to mention
+>     '--group-sort-idx' support multiple groups with different
+>     amount of events and it should be used on grouped events.
+> 
+>  2. Update __hpp__group_sort_idx(), just return when the
+>     idx is out of limit.
+> 
+>  3. Return failure on symbol_conf.group_sort_idx && !session->evlist->nr_groups.
+>     So now we don't need to use together with --group.
 
-I was waiting to see if Yang was going to respond...anyway, I think
-we're looking at approximately this sort of change:
-
-diff --git a/man2/move_pages.2 b/man2/move_pages.2
-index 2d96468fa..1bf1053f2 100644
---- a/man2/move_pages.2
-+++ b/man2/move_pages.2
-@@ -191,12 +191,6 @@ was specified or an attempt was made to migrate pages of a kernel thread.
-  .B ENODEV
-  One of the target nodes is not online.
-  .TP
--.B ENOENT
--No pages were found that require moving.
--All pages are either already
--on the target node, not present, had an invalid address or could not be
--moved because they were mapped by multiple processes.
--.TP
-  .B EPERM
-  The caller specified
-  .B MPOL_MF_MOVE_ALL
-
-...But I'm not sure if we should change the implementation, instead, so
-that it *can* return ENOENT. That's the main question to resolve before
-creating any more patches, I think.
-
-In addition, Michal mentioned that the page states in the status array also
-need updated documentation.
-
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
 thanks,
--- 
-John Hubbard
-NVIDIA
+jirka
+
