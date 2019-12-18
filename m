@@ -2,129 +2,97 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 157BCC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5861EC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2B3921582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:30:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="I++emGpV"
+	by mail.kernel.org (Postfix) with ESMTP id 38D5521582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:31:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbfLRHab (ORCPT
+        id S1726729AbfLRHbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 02:30:31 -0500
-Received: from mout.web.de ([212.227.15.3]:42307 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725797AbfLRHab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 02:30:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1576654217;
-        bh=Wql71J+0BokgVQwl76yYBuNMq5gEjNygtvAZ7X9bDBs=;
-        h=X-UI-Sender-Class:Cc:References:Subject:To:From:Date:In-Reply-To;
-        b=I++emGpV1DGTTp0t+qyHWDQ3Icg9xvM0gnueLPM18dkWXB9jZ9hc8fomdH1iYZ88Z
-         A3YtnKuspPvmPMumiMVfmhmXFDjtVPCRia5RBX7noK0IMOtplnVE0FopllV9JVUOfZ
-         iGSKFexSsDYgrIO6ZE69Zll6c06rW/kbzcJI0M58=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([93.131.36.204]) by smtp.web.de (mrweb002
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MZDki-1iOiTk3yUm-00Ky2P; Wed, 18
- Dec 2019 08:30:17 +0100
-Cc:     linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>
-References: <20191213055028.5574-1-namjae.jeon@samsung.com>
-Subject: Re: [PATCH v7 00/13] add the latest exfat driver
-To:     Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-fsdevel@vger.kernel.org
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <3fa1e62f-89ed-1fa7-8c56-9d1ad7d63ffa@web.de>
-Date:   Wed, 18 Dec 2019 08:30:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 18 Dec 2019 02:31:03 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:10807 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725797AbfLRHbC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 02:31:02 -0500
+Received: from [10.28.39.99] (10.28.39.99) by mail-sz.amlogic.com (10.28.11.5)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 18 Dec
+ 2019 15:30:40 +0800
+Subject: Re: [PATCH 1/2] dt-bindings: clock: meson: add A1 clock controller
+ bindings
+To:     Rob Herring <robh@kernel.org>
+CC:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        <devicetree@vger.kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        <linux-amlogic@lists.infradead.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <1569411888-98116-1-git-send-email-jian.hu@amlogic.com>
+ <1569411888-98116-2-git-send-email-jian.hu@amlogic.com>
+ <CAL_JsqL8r-8J_bSaQax3cJkOUL8D7P+6_PcCqaC1k8=zS18moQ@mail.gmail.com>
+From:   Jian Hu <jian.hu@amlogic.com>
+Message-ID: <27cd846b-fee9-da50-baf5-1bf2a9fddc17@amlogic.com>
+Date:   Wed, 18 Dec 2019 15:30:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <20191213055028.5574-1-namjae.jeon@samsung.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CAL_JsqL8r-8J_bSaQax3cJkOUL8D7P+6_PcCqaC1k8=zS18moQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-X-Provags-ID: V03:K1:z44SlZerHFlBK6KRU9wM2+AilEfPQoj03L9MvbrP3giQ/SGUqm0
- sTUPQVyHaH3cNMKxKyzP0BCSZjfLTJys9ryPUVoZWcCBLpn7bawZvJlduA4x2Iipnfk/kaR
- W16rU2iyk5kpwF090ICgnhh74Ph/e7C9+NdLEpkLqt+gW+oWJigna7QTeUiEX3WVwZj+pma
- 4ZvgP9NpWixOyYknXiQUw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:GWG4t86FIX8=:9s1mJU5jdBwWJZmo6CunQE
- GSXT3wfJYrOMpZyv2VKFQveVvqQ0snw6wO8rFEfBd1pQrk+3/baoTCB3t2fBJm/ev2ur/Hq8G
- 3qyL4QGVwBHo9R/b/scChrndBfKZ6M5jtpuUFL8iougix2zHgPyWV1Nz4wMklteaXr//v3v8A
- NsOm6Fu2qbZFeF+Egnot7m3WluvYRnUTwX9EtDJskKUxLuhkhEkM8qc8w0cNF6M2wsZ2UnPdL
- A82r38p8xTEqqvP2VfxCrmaqrngO0MeKc61Ov7LgAo/Vm4CrOKIXOobGyxkML1hrqNUB3oZGT
- 0vi35XPVNtiarMHRmjpMDtG9kMOk9CTlft1UkSxHgyY7IiUW4eOeku6dI7OKeeEAflIUZbjwu
- DiQpEqA4bWj8qBeQ8YWkwpDg6KtglOztzE4JdzY5cmPnPKZrJWmQDa0rIrRNJDalvwmZ6UeLl
- jDYiMHgiDiuZPOUWhivJdRFFIo4ZzK6drDQRMwNRnlveFhq7Lu9ofZh7qXNQ4hAVvzj68J1vh
- eBG5YmVKPzyqw5aaDudlwo3P/JRDw0nBJbH7MaBamFsPDYf2RffqLIWL0lWO7yE6X+OCENgho
- mKv7UA7qOcxPh9nREJUlmEKrwoIOSqkdE9cu/LnbdQ6AsaE/OJWqn9+MM6ZJr9dZZcHAkZj3d
- 7F0vmWDK9NIVVwYT/CQSwyainXWTywbKQGurOlAuMNZSwJIcRuL4g5csUqn3q+HX3ZupDCpzL
- ltALE2knLkAIggRB4xLD0mgfl8uEjCeF1MzFXojgyyBXYvE6PW68OFJucRJF/q/kTZ/YqA+5v
- +Xmt7VUdl3BumoJ0vpS+m8ZTTrdYCEfQh7U+PiymrTHNYZeB6tLFh1HSINsW5QA1ZAQoCqHMk
- LdLajTBp4D4fY+nU8BE/skPGdISI5Cg6Zl4r+CiXVppp0n6Se7nvoIEmcxqQNijWYrGDDKTrJ
- 1adjav/tGprB7xqKR323PARv5DDOpWd1zeF42X/FPnIV3D/mJh7/tigHRgUSpEqF+4N6mqm2w
- tgDfe2lS/6Q6Wfi6hJcaWQ5sD1QYg9nCkkrqvMfw3QkkqP3yTIWMoV5oDcSgOvqyuKryW10SS
- 5CjCKytxKkwEpDqk/v/j3zYru6VmidMMCMeJ1Mq59LNyaS5jCSin0FPjBv1r1qk4omfvxqK02
- 2DbcQ1k/uN3MCwOrcd0jJZiYS4xecKU/fnZW6eRvOGK6uds9aawH40TreoupYrAVzMJ9+lWk2
- 7a0vVvQ9B9bDIjIz+5lVoonbwKinE3rNDLDbGH356Frz0j16WdgE0uYW+NW8=
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.28.39.99]
+X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
+ (10.28.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> We plan to treat this version as the future upstream for the code base
-> once merged, and all new features and bug fixes will go upstream first.
+Hi Rob
 
-Would you like to offer and integrate any test cases?
+Thanks for your review
 
-Regards,
-Markus
+On 2019/9/28 4:10, Rob Herring wrote:
+> On Wed, Sep 25, 2019 at 6:45 AM Jian Hu <jian.hu@amlogic.com> wrote:
+>>
+>> Add the documentation to support Amlogic A1 clock driver,
+>> and add A1 clock controller bindings.
+>>
+>> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+>> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+>> ---
+>>   .../devicetree/bindings/clock/amlogic,a1-clkc.yaml |  65 +++++++++++++
+>>   include/dt-bindings/clock/a1-clkc.h                | 102 +++++++++++++++++++++
+>>   2 files changed, 167 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
+>>   create mode 100644 include/dt-bindings/clock/a1-clkc.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
+>> new file mode 100644
+>> index 0000000..f012eb2
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
+>> @@ -0,0 +1,65 @@
+>> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+> 
+> (GPL-2.0-only OR BSD-2-Clause) please.
+> 
+Sorry, I missed your reply. I will change it in next version v5.
+> Rob
+> 
+> .
+> 
