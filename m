@@ -2,123 +2,83 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D370C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD26C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 108EE227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:19:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="DOq9x7S1"
+	by mail.kernel.org (Postfix) with ESMTP id 0EFF4227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 09:19:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbfLRJTR (ORCPT
+        id S1726942AbfLRJTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 04:19:17 -0500
-Received: from mail.dlink.ru ([178.170.168.18]:57768 "EHLO fd.dlink.ru"
+        Wed, 18 Dec 2019 04:19:21 -0500
+Received: from helcar.hmeau.com ([216.24.177.18]:38702 "EHLO deadmen.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726551AbfLRJTP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 04:19:15 -0500
-Received: by fd.dlink.ru (Postfix, from userid 5000)
-        id F1EC31B20120; Wed, 18 Dec 2019 12:19:10 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru F1EC31B20120
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
-        t=1576660751; bh=dacXOshgO7/LdPb/5UECyNXY1P7mbC7VYs/cQiweRR8=;
-        h=From:To:Cc:Subject:Date;
-        b=DOq9x7S1dsO5H3WvE5Cu5xnECZ5E7Lg6u/KgEDo7VD//WoXfboKcSX84oXGuMQnyL
-         0vAaLvoXqKYs//aIwhjkkTTPHWUse+WRxzpqd/elp6g+DE2AYemImG643xE9PBh085
-         TUi8fy57RN8M+/a207IEGM813GxzkggZk3q2D2uY=
-Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
-        by fd.dlink.ru (Postfix) with ESMTP id 244C61B20380;
-        Wed, 18 Dec 2019 12:18:57 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 244C61B20380
-Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTP id 5BD631B20367;
-        Wed, 18 Dec 2019 12:18:55 +0300 (MSK)
-Received: from localhost.localdomain (unknown [196.196.203.126])
-        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
-        Wed, 18 Dec 2019 12:18:55 +0300 (MSK)
-From:   Alexander Lobakin <alobakin@dlink.ru>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Soheil Hassas Yeganeh <soheil@google.com>,
-        Aaron Tomlin <atomlin@redhat.com>,
-        Matteo Croce <mcroce@redhat.com>,
-        Alexander Lobakin <alobakin@dlink.ru>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Edward Cree <ecree@solarflare.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH net] net: core: sysctl: fix compiler warning when only cBPF is present
-Date:   Wed, 18 Dec 2019 12:18:21 +0300
-Message-Id: <20191218091821.7080-1-alobakin@dlink.ru>
-X-Mailer: git-send-email 2.24.1
+        id S1726551AbfLRJTS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 04:19:18 -0500
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1ihVU7-0005vy-3b; Wed, 18 Dec 2019 17:19:11 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1ihVU3-00028K-0i; Wed, 18 Dec 2019 17:19:07 +0800
+Date:   Wed, 18 Dec 2019 17:19:07 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Will Deacon <will@kernel.org>
+Cc:     mst@redhat.com, jasowang@redhat.com,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, paulmck@kernel.org,
+        peterz@infradead.org, stern@rowland.harvard.edu
+Subject: Re: read_barrier_depends() usage in vhost.c
+Message-ID: <20191218091906.cmzgqnwyekak5dzv@gondor.apana.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191016233602.i2afxb5mb465laq6@willie-the-truck>
+X-Newsgroups: apana.lists.os.linux.kernel,apana.lists.os.linux.virtualization
+Organization: Core
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-proc_dointvec_minmax_bpf_restricted() has been firstly introduced
-in commit 2e4a30983b0f ("bpf: restrict access to core bpf sysctls")
-under CONFIG_HAVE_EBPF_JIT. Then, this ifdef has been removed in
-ede95a63b5e8 ("bpf: add bpf_jit_limit knob to restrict unpriv
-allocations"), because a new sysctl, bpf_jit_limit, made use of it.
-Finally, this parameter has become long instead of integer with
-fdadd04931c2 ("bpf: fix bpf_jit_limit knob for PAGE_SIZE >= 64K")
-and thus, a new proc_dolongvec_minmax_bpf_restricted() has been
-added.
-With this last change, we got back to that
-proc_dointvec_minmax_bpf_restricted() is used only under
-CONFIG_HAVE_EBPF_JIT, but the corresponding ifdef has not been
-brought back.
+Will Deacon <will@kernel.org> wrote:
+>
+>> --->8
+>> 
+>> // drivers/vhost/vhost.c
+>> static int get_indirect(struct vhost_virtqueue *vq,
+>>                       struct iovec iov[], unsigned int iov_size,
+>>                       unsigned int *out_num, unsigned int *in_num,
+>>                       struct vhost_log *log, unsigned int *log_num,
+>>                       struct vring_desc *indirect)
+>> {
+>>       [...]
+>> 
+>>       /* We will use the result as an address to read from, so most
+>>        * architectures only need a compiler barrier here. */
+>>       read_barrier_depends();
+>> 
+>> --->8
+>> 
+>> Unfortunately, although the barrier is commented (hurrah!), it's not
+>> particularly enlightening about the accesses making up the dependency
+>> chain, and I don't understand the supposed need for a compiler barrier
+>> either (read_barrier_depends() doesn't generally provide this).
+>> 
+>> Does anybody know which accesses are being ordered here? Usually you'd need
+>> a READ_ONCE()/rcu_dereference() beginning the chain, but I haven't managed
+>> to find one...
 
-So, in configurations like CONFIG_BPF_JIT=y && CONFIG_HAVE_EBPF_JIT=n
-since v4.20 we have:
+I think what it's trying to separate is using indirect->addr as a
+base and then reading from that through copy_from_iter.
 
-  CC      net/core/sysctl_net_core.o
-net/core/sysctl_net_core.c:292:1: warning: ‘proc_dointvec_minmax_bpf_restricted’ defined but not used [-Wunused-function]
-  292 | proc_dointvec_minmax_bpf_restricted(struct ctl_table *table, int write,
-      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Suppress this by guarding it with CONFIG_HAVE_EBPF_JIT again.
-
-Fixes: fdadd04931c2 ("bpf: fix bpf_jit_limit knob for PAGE_SIZE >= 64K")
-Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
----
- net/core/sysctl_net_core.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/net/core/sysctl_net_core.c b/net/core/sysctl_net_core.c
-index eb29e5adc84d..70211c9edb02 100644
---- a/net/core/sysctl_net_core.c
-+++ b/net/core/sysctl_net_core.c
-@@ -288,6 +288,7 @@ static int proc_dointvec_minmax_bpf_enable(struct ctl_table *table, int write,
- 	return ret;
- }
- 
-+#ifdef CONFIG_HAVE_EBPF_JIT
- static int
- proc_dointvec_minmax_bpf_restricted(struct ctl_table *table, int write,
- 				    void __user *buffer, size_t *lenp,
-@@ -298,6 +299,7 @@ proc_dointvec_minmax_bpf_restricted(struct ctl_table *table, int write,
- 
- 	return proc_dointvec_minmax(table, write, buffer, lenp, ppos);
- }
-+#endif /* CONFIG_HAVE_EBPF_JIT */
- 
- static int
- proc_dolongvec_minmax_bpf_restricted(struct ctl_table *table, int write,
+Cheers,
 -- 
-2.24.1
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
