@@ -2,133 +2,146 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD6BC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21FA3C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90AC32176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:25:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576675557;
-	bh=9dtjGIQ5Qoox81UNGfLHKGGtqfpxNpzDQimQEyCVQH0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Xt5MrB148XqRyqV7RuA2Ztd2VxK7nyJmceOWh/D6QlPDskseO42oIn858ShBiI+XF
-	 Q6vd8H0z2fIcnc68/NskvTxKiLKDOH0GKEybgdEbeyDEuyAJqny3o4aDxV9CegJSDd
-	 iJtVaLZc/InDgO9JAvDg3a2KWpw+WTE5oZ6Uj5oA=
+	by mail.kernel.org (Postfix) with ESMTP id EC7A32176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:26:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EuPrTdPI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbfLRNZ4 (ORCPT
+        id S1727184AbfLRN0E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 08:25:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48302 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726846AbfLRNZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 08:25:55 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F10DE2146E;
-        Wed, 18 Dec 2019 13:25:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576675555;
-        bh=9dtjGIQ5Qoox81UNGfLHKGGtqfpxNpzDQimQEyCVQH0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=pnHpjtfQ2mKvo1sD/uItIJF3vGLuPYLsazzOQ+tHdrl6ElZgP5qIhWrS0TLf7PIP+
-         lhjWsLgcVV9oOpqgjPkPZccioJhFq5yZHOqwlRaz0tUN+miH11WjT2n5e7AmPy8SHd
-         gwgVQsy4ulBglwDaRYrEyQFX8KkwYEnIAC4E2ISU=
-Date:   Wed, 18 Dec 2019 22:25:50 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Cc:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "naveen.n.rao@linux.vnet.ibm.com" <naveen.n.rao@linux.vnet.ibm.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v6] arm64: implement KPROBES_ON_FTRACE
-Message-Id: <20191218222550.51f0b681de7bbab7e49b09a9@kernel.org>
-In-Reply-To: <20191218140622.57bbaca5@xhacker.debian>
-References: <20191218140622.57bbaca5@xhacker.debian>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 18 Dec 2019 08:26:04 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46969 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726788AbfLRN0D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 08:26:03 -0500
+Received: by mail-pf1-f193.google.com with SMTP id y14so1195186pfm.13;
+        Wed, 18 Dec 2019 05:26:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=mQvM79wcujGNIpd4aeOU0khxD9KQpsb8Nw6gV8bnRSU=;
+        b=EuPrTdPICea62Y0tIErzBNfDUENFZJbz9R5n1Z9b+BF0u3hi7RSPV/M4zGidXYLwsT
+         IIdO0kgr6ZIu/TSLnt2IK3XfN9R/afZLO9oRzZTP6692QEDV9KqzI8bFG9jhmyAFwDP0
+         OY3RlUnwNxf54R1Dx8AaLmHUtup4+aVviOgIkbZOkHY+PTTlWe86LmWIsWpGNP9A+nug
+         JxHbmiN3hX+1pqtS4/1tmISISZAVEgK8mCpQY3T1bKXAi5UTk018bgwR6w9rBOW9hrSy
+         GGfdRK+kL7mf2CSYNXpKDLSal8Afbs/HjnAYTorQ72ZsLxU0wT+cd+cGwn+praAGkPcS
+         Eksw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=mQvM79wcujGNIpd4aeOU0khxD9KQpsb8Nw6gV8bnRSU=;
+        b=f330fuY7HrLDPNhCbTYV6+kxL01v7WZljDi/4dPPEd1QtqywAIfKWitatMKBZmxCWo
+         thyEdQl4jRy9GbDo2hFV+onO+mMaTqShkCZUbVtAFP3kZUZG7jt2KixsZyHCLQvueDMw
+         KmHqmTz5Bw2Yx0jQyr+/2llCYDSur8FR0ij8GIajgLzFJCBnJdw5/eFeVw6pGUhIQqZU
+         /EVFyGIwhCmb1JvBvosN/T9v10YwazGvlSKlpOmzrUkFsCbCOj/CfHACDGnOfjrFSdWk
+         aaykKDSmJGEsQnVAO/Hd6X4+KY74IZeiEoGSYq4M6LAX1FoA5Vw0bOyxvrgba7FPHGd5
+         NAxw==
+X-Gm-Message-State: APjAAAX30+EXfNzW3MARekS2wAWbK9hTyZ7hVnvqh6QYJrm5ow0F+6H3
+        ZqdhHcydmrrXOagI069xjUY=
+X-Google-Smtp-Source: APXvYqyhl40/66a/zQm3aoOEHmBZy0P5ZD0xIBuQlOp+jdCrpW269eX8KVBXPX5kKVuZcqbq9+fNTQ==
+X-Received: by 2002:aa7:949a:: with SMTP id z26mr292450pfk.98.1576675562596;
+        Wed, 18 Dec 2019 05:26:02 -0800 (PST)
+Received: from oslab.tsinghua.edu.cn ([166.111.139.172])
+        by smtp.gmail.com with ESMTPSA id l1sm3263770pgs.47.2019.12.18.05.25.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 05:26:02 -0800 (PST)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH 1/2] gpio: gpio-grgpio: fix possible sleep-in-atomic-context bugs in grgpio_remove()
+Date:   Wed, 18 Dec 2019 21:25:51 +0800
+Message-Id: <20191218132551.10537-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Dec 2019 06:21:35 +0000
-Jisheng Zhang <Jisheng.Zhang@synaptics.com> wrote:
+The driver may sleep while holding a spinlock.
+The function call path (from bottom to top) in Linux 4.19 is:
 
-> KPROBES_ON_FTRACE avoids much of the overhead with regular kprobes as it
-> eliminates the need for a trap, as well as the need to emulate or
-> single-step instructions.
-> 
-> Tested on berlin arm64 platform.
-> 
-> ~ # mount -t debugfs debugfs /sys/kernel/debug/
-> ~ # cd /sys/kernel/debug/
-> /sys/kernel/debug # echo 'p _do_fork' > tracing/kprobe_events
-> 
-> before the patch:
-> 
-> /sys/kernel/debug # cat kprobes/list
-> ffffff801009fe28  k  _do_fork+0x0    [DISABLED]
-> 
-> after the patch:
-> 
-> /sys/kernel/debug # cat kprobes/list
-> ffffff801009ff54  k  _do_fork+0x4    [DISABLED][FTRACE]
+drivers/gpio/gpiolib-sysfs.c, 796: 
+	mutex_lock in gpiochip_sysfs_unregister
+drivers/gpio/gpiolib.c, 1455: 
+	gpiochip_sysfs_unregister in gpiochip_remove
+drivers/gpio/gpio-grgpio.c, 460: 
+	gpiochip_remove in grgpio_remove
+drivers/gpio/gpio-grgpio.c, 449: 
+	_raw_spin_lock_irqsave in grgpio_remove
 
-BTW, it seems this automatically changes the offset without
-user's intention or any warnings. How would you manage if the user
-pass a new probe on _do_fork+0x4?
+kernel/irq/irqdomain.c, 243:
+	mutex_lock in irq_domain_remove
+drivers/gpio/gpio-grgpio.c, 463: 
+	irq_domain_remove in grgpio_remove
+drivers/gpio/gpio-grgpio.c, 449: 
+	_raw_spin_lock_irqsave in grgpio_remove
 
-IOW, it is still the question who really wants to probe on
-the _do_fork+"0", if kprobes modifies it automatically,
-no one can do that anymore.
-This can be happen if the user want to record LR or SP value
-at the function call for debug. If kprobe always modifies it,
-we will lose the way to do it.
+mutex_lock() can sleep at runtime.
 
-Could you remove below function at this moment?
+To fix these bugs, gpiochip_remove() and irq_domain_remove() are called
+without holding the spinlock.
 
-> +kprobe_opcode_t *kprobe_lookup_name(const char *name, unsigned int offset)
-> +{
-> +	unsigned long addr = kallsyms_lookup_name(name);
-> +
-> +	if (addr && !offset) {
-> +		unsigned long faddr;
-> +		/*
-> +		 * with -fpatchable-function-entry=2, the first 4 bytes is the
-> +		 * LR saver, then the actual call insn. So ftrace location is
-> +		 * always on the first 4 bytes offset.
-> +		 */
-> +		faddr = ftrace_location_range(addr,
-> +					      addr + AARCH64_INSN_SIZE);
-> +		if (faddr)
-> +			return (kprobe_opcode_t *)faddr;
-> +	}
-> +	return (kprobe_opcode_t *)addr;
-> +}
-> +
-> +bool arch_kprobe_on_func_entry(unsigned long offset)
-> +{
-> +	return offset <= AARCH64_INSN_SIZE;
-> +}
+These bugs are found by a static analysis tool STCheck written by myself.
 
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+ drivers/gpio/gpio-grgpio.c      | 5 ++++-
+ sound/soc/sti/uniperif_player.c | 3 ++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-Without this automatic change, we still can change the offset
-in upper layer.
-
-Thank you,
-
+diff --git a/drivers/gpio/gpio-grgpio.c b/drivers/gpio/gpio-grgpio.c
+index 08234e64993a..60a2871c5ba7 100644
+--- a/drivers/gpio/gpio-grgpio.c
++++ b/drivers/gpio/gpio-grgpio.c
+@@ -448,13 +448,16 @@ static int grgpio_remove(struct platform_device *ofdev)
+ 		}
+ 	}
+ 
++	spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
++
+ 	gpiochip_remove(&priv->gc);
+ 
+ 	if (priv->domain)
+ 		irq_domain_remove(priv->domain);
+ 
+ out:
+-	spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
++	if (ret)
++		spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
+ 
+ 	return ret;
+ }
+diff --git a/sound/soc/sti/uniperif_player.c b/sound/soc/sti/uniperif_player.c
+index 48ea915b24ba..62244e207679 100644
+--- a/sound/soc/sti/uniperif_player.c
++++ b/sound/soc/sti/uniperif_player.c
+@@ -601,13 +601,14 @@ static int uni_player_ctl_iec958_put(struct snd_kcontrol *kcontrol,
+ 	mutex_unlock(&player->ctrl_lock);
+ 
+ 	spin_lock_irqsave(&player->irq_lock, flags);
++	spin_unlock_irqrestore(&player->irq_lock, flags);
++
+ 	if (player->substream && player->substream->runtime)
+ 		uni_player_set_channel_status(player,
+ 					      player->substream->runtime);
+ 	else
+ 		uni_player_set_channel_status(player, NULL);
+ 
+-	spin_unlock_irqrestore(&player->irq_lock, flags);
+ 	return 0;
+ }
+ 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.17.1
+
