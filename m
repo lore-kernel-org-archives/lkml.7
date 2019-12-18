@@ -2,94 +2,129 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FCF3C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 574B7C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51F342064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3771E20717
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:22:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727311AbfLRRVZ (ORCPT
+        id S1727328AbfLRRWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 12:21:25 -0500
-Received: from mout.kundenserver.de ([217.72.192.73]:52361 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727241AbfLRRVY (ORCPT
+        Wed, 18 Dec 2019 12:22:13 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:35596 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727174AbfLRRWM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 12:21:24 -0500
-Received: from mail-qt1-f177.google.com ([209.85.160.177]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MAxPb-1iWsaA174T-00BPI1; Wed, 18 Dec 2019 18:21:23 +0100
-Received: by mail-qt1-f177.google.com with SMTP id k40so2543612qtk.8;
-        Wed, 18 Dec 2019 09:21:23 -0800 (PST)
-X-Gm-Message-State: APjAAAX71HKNzIizOuvrXOxQNAbB5+bBUkh+oSzj9kc+tRFYid68Jsib
-        wHtokhwhpJr8F4GkEQR8xtS5aPmXwvhH62somh8=
-X-Google-Smtp-Source: APXvYqznHDIvsOsFi4e8w9aoxbL/RPtggV4tE5pA9VKKphGs791HZuLvv9iC58VLi9vjYFWdsRYK26eOQpCPgD46U/w=
-X-Received: by 2002:ac8:3a27:: with SMTP id w36mr3096663qte.204.1576689682103;
- Wed, 18 Dec 2019 09:21:22 -0800 (PST)
-MIME-Version: 1.0
-References: <20191213141046.1770441-1-arnd@arndb.de>
-In-Reply-To: <20191213141046.1770441-1-arnd@arndb.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 18 Dec 2019 18:21:06 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a11e1OsP+KR5rYPyYo_nMz=y2_fqb6ZCmaQ_RUFcoEkrQ@mail.gmail.com>
-Message-ID: <CAK8P3a11e1OsP+KR5rYPyYo_nMz=y2_fqb6ZCmaQ_RUFcoEkrQ@mail.gmail.com>
-Subject: Re: [PATCH v2 00/12] nfsd: avoid 32-bit time_t
-To:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>
+        Wed, 18 Dec 2019 12:22:12 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 7A82628B855
+Message-ID: <980c181ad15153ee0af4ea20ac2a7265cd2b56f1.camel@collabora.com>
+Subject: Re: [PATCH v21 2/2] drm/bridge: Add I2C based driver for ps8640
+ bridge
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-kernel@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>
+Cc:     Collabora Kernel ML <kernel@collabora.com>, matthias.bgg@gmail.com,
+        drinkcat@chromium.org, hsinyi@chromium.org,
+        Jitao Shi <jitao.shi@mediatek.com>,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        Ulrich Hecht <uli@fpond.eu>,
+        linux-arm-kernel@lists.infradead.org,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        dri-devel@lists.freedesktop.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        linux-mediatek@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Date:   Wed, 18 Dec 2019 14:22:00 -0300
+In-Reply-To: <9e38774d-0028-6988-1be1-2e726c5ed4ab@collabora.com>
+References: <20191216135834.27775-1-enric.balletbo@collabora.com>
+         <20191216135834.27775-3-enric.balletbo@collabora.com>
+         <bb97505cfadae364afa14605793affe4a7d69ffa.camel@collabora.com>
+         <9e38774d-0028-6988-1be1-2e726c5ed4ab@collabora.com>
+Organization: Collabora
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:3ejHaJCvJhrUxjTvdpSmPFwCIgHxmJ1AzDZM3xjfg5cCLVAl4DI
- mPorb03spSOhSn29YE3ndn0kxRJt1NS5Z7iZMMORBByPOEj+nyGC5ZGfXmzAxxaitVIYjDN
- C1YlhuQG3sE6+/l6g0lA75uVcOhOLSZofBhJoSQEBxMGXYarW7B23okIBGcmTtboXgYYE3M
- zwKaHPF489/2/uqtNU4kw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:POvJ5XGNovA=:d0SD4nNOgoWRJtUu4T0v46
- KmXi34+a02pKGC+pi5dOhIxIizgVOqKKNrQ0rzaSROuqHhMmjIi4HzSQuUXSvXKGv0d4URStJ
- +nKmJh/YNTjdT1+6vQV28oJMnpYc3slb1u12+bESihh+L2iemGFlDv/XdOFyI3T3yrMiSlCFF
- g153WnPsrgTyioQJdh+p9KNasFAp6Y5tSfmwirlLVTEpYylr9/fYWmJpPmjYCZHQORKikbq7m
- hreEdj3HG45LSCuVfD/70vxUd/6FuDzFIJs2/+ui8sEllL0xcDLXYj+WEfG3fIPcqo7xrbzI9
- sFPm5HPJ0u4KQtenfwi1jI7kp72v9vDZUAteZxMaiGupb6oos6BQtB2KcROhmUSlFaMZG/7wv
- 6UsACTwhyFkDEz9lyZKXHXFW/WYpuFOotVFLsv/vrB/Yw9kke9+ALznhMcXxExgLrEqtVQpxx
- AghdGXMS7OQmRTc3B43jX68wkUtJ/Xv8rdSmkwVqnkJNMKBl3RwiSZZY0E8tgfZBM4cubnLBU
- I1Mem1SQWEyy0DHdl18Rx3dgk7lS8L8RAuT5GFqoqyaSJlJ/EDqbE+pZbTBEgNcnmaXl0T0zl
- avRWuqTtJkZLsXV71jPNecu5wv/or5IXXspEkasE7naO7HvJm/YzwsgnMPKL5YBGb0l1YARsY
- 7ff6WU6p+hMRaNst0ACcYXwiYJrzvU4f1vj4foHTzCxD01uTMZoMgfljkotkvlfv7AOSEWdEz
- 6giClqb5go0JU7OtIsd1SVM0d1bp3m81iqwQeP20qrOttuGJzxh8eLtNIKxmSdoxNwOV0kRCF
- J3GVSas6VLQR0iJOXqFSgb2i0DakhBnbsu6/4VJYb8sjjMkCHmrE4TgWVIgnhsHWnyM5RJofM
- JtnMYhM6zaUDFN9vbteQ==
+User-Agent: Evolution 3.34.1-2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 3:12 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> Hi Bruce, Chuck,
->
-> NFSd is one of the last areas of the kernel that is not y2038 safe
-> yet, this series addresses the remaining issues here.
->
-> I did not get any comments for the first version I posted [1], and
-> I hope this just means that everything was fine and you plan to
-> merge this soon ;-)
->
-> I uploaded a git branch to [2] for testing.
->
-> Please review and merge for linux-5.6 so we can remove the 32-bit
-> time handling from that release.
+On Wed, 2019-12-18 at 16:21 +0100, Enric Balletbo i Serra wrote:
+> Hi Ezequiel,
+> 
+> Many thanks for the review, I am just preparing the next version to send.
+> 
+[..]
+> > > +
+> > > +#define PAGE1_VSTART		0x6b
+> > > +#define PAGE2_SPI_CFG3		0x82
+> > > +#define I2C_TO_SPI_RESET	0x20
+> > > +#define PAGE2_ROMADD_BYTE1	0x8e
+> > > +#define PAGE2_ROMADD_BYTE2	0x8f
+> > > +#define PAGE2_SWSPI_WDATA	0x90
+> > > +#define PAGE2_SWSPI_RDATA	0x91
+> > > +#define PAGE2_SWSPI_LEN		0x92
+> > > +#define PAGE2_SWSPI_CTL		0x93
+> > > +#define TRIGGER_NO_READBACK	0x05
+> > > +#define TRIGGER_READBACK	0x01
+> > > +#define PAGE2_SPI_STATUS	0x9e
+> > > +#define SPI_READY		0x0c
+> > > +#define PAGE2_GPIO_L		0xa6
+> > > +#define PAGE2_GPIO_H		0xa7
+> > > +#define PS_GPIO9		BIT(1)
+> > > +#define PAGE2_IROM_CTRL		0xb0
+> > > +#define IROM_ENABLE		0xc0
+> > > +#define IROM_DISABLE		0x80
+> > > +#define PAGE2_SW_RESET		0xbc
+> > > +#define SPI_SW_RESET		BIT(7)
+> > > +#define MPU_SW_RESET		BIT(6)
+> > > +#define PAGE2_ENCTLSPI_WR	0xda
+> > > +#define PAGE2_I2C_BYPASS	0xea
+> > > +#define I2C_BYPASS_EN		0xd0
+> > > +#define PAGE2_MCS_EN		0xf3
+> > > +#define MCS_EN			BIT(0)
+> > > +#define PAGE3_SET_ADD		0xfe
+> > > +#define PAGE3_SET_VAL		0xff
+> > > +#define VDO_CTL_ADD		0x13
+> > > +#define VDO_DIS			0x18
+> > > +#define VDO_EN			0x1c
+> > > +#define PAGE4_REV_L		0xf0
+> > > +#define PAGE4_REV_H		0xf1
+> > > +#define PAGE4_CHIP_L		0xf2
+> > > +#define PAGE4_CHIP_H		0xf3
+> > > +
+> > > +#define PAGE0_DP_CNTL		0
+> > 
+> > Unused macro.
+> > 
+> > > +#define PAGE1_VDO_BDG		1
+> > > +#define PAGE2_TOP_CNTL		2
+> > > +#define PAGE3_DSI_CNTL1		3
+> > > +#define PAGE4_MIPI_PHY		4
+> > 
+> > Ditto... maybe others as well?
+> > 
+> 
+> I removed all the unused macros.
+> 
 
-I've included the update y2038 nfsd branch from
+In this case, given these PAGEX_XXX refer
+to the I2C ancillaries, maybe you can leave them.
 
-git://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git y2038-nfsd-v2
+Moreover, I'd put them in an enum, to emphasize
+their relationship.
 
-in my y2038 branch now, so it should be part of linux-next from the coming
-snapshot. My plan is to send a linux-5.6 pull request to the nfsd
-maintainers for
-this branch unless we find bugs in linux-next or I get more review comments.
+Regards,
+Ezequiel
 
-        Arnd
