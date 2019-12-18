@@ -2,114 +2,113 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 788BEC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A125AC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E7A921582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:50:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7693C206E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:53:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="TjcPQ6hX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F2eoiCRj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbfLRLue (ORCPT
+        id S1726846AbfLRLxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 06:50:34 -0500
-Received: from frisell.zx2c4.com ([192.95.5.64]:57757 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726710AbfLRLud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 06:50:33 -0500
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id e37716a2;
-        Wed, 18 Dec 2019 10:53:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=dF+343L+TdlkZkv3XYQxJv3zHkU=; b=TjcPQ6
-        hXxWKK2YLj+bHj6e8MKS1+2/s45ZVpmfXnTRAP1x36bgHNVA6rckobNs6oHmicFd
-        XiP/F98tGiMcdphyibDkPyNM3ucsuyyYPPAraTVtOwcvz84uSrcyf8PJSQIT6k51
-        yd9h0ujCeDpb2ttx5JyV6jDI/7J/HsGmHTft5s6NGqpsJ9zsoQhMjM5jKDOVVC4F
-        w7wz4KmEIYLotJ2iSrq/ZriiJaQpvN8u2Zem9eoNk6F8EcDVYoc7AyUYdzSOWJSk
-        hbbMFOpNMsQEpqrG4q0zsJV0dvE3rGRIRxflVEYNsoHn0eC30/kquA8HHym3jGdA
-        v0d1ajk3Jv+IHiFg==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 9bcc9931 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Wed, 18 Dec 2019 10:53:58 +0000 (UTC)
-Received: by mail-ot1-f47.google.com with SMTP id p8so2172391oth.10;
-        Wed, 18 Dec 2019 03:50:31 -0800 (PST)
-X-Gm-Message-State: APjAAAXvqXk7MkqOYS2B2sTTrImQkkRen5kmslxVvgR5gWWHsBJIlpoh
-        c2DJwSBgJ5iT6z/ZalZuY0ZpH5xXCngdJsS8y3I=
-X-Google-Smtp-Source: APXvYqzhY12iR5m2kOBPfSFcgyM7ph/qjcMRfYbool+Jo+GJ1pt8ESvldAOSFjtQuspfXp9ad3F2iB9gc7l+lqvEedc=
-X-Received: by 2002:a9d:4f0f:: with SMTP id d15mr2218022otl.179.1576669831047;
- Wed, 18 Dec 2019 03:50:31 -0800 (PST)
+        Wed, 18 Dec 2019 06:53:05 -0500
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:33503 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfLRLxF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 06:53:05 -0500
+Received: by mail-ua1-f65.google.com with SMTP id a12so529908uan.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 03:53:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o3mn+kJ178kZtOWDg2zTvnwyxAVrOywGSMty+AaHNEI=;
+        b=F2eoiCRjNchgbhQCkT7vV1Kmxm5nNZ6xSGL4Lj+OBYfiDioWYJMcunissFoUsV/Sir
+         +akukblcwPNcWSf4YMGr/L2j6FMFC2sA6h29CMco9Kj5h/BvpLz3G/OwxSJePOA+1CBs
+         8r+v6UuxeRfOotEIAtIpd1c0ZYEKoNDELVD2phJhJuOhX1f+xwGqveozrMSUBLKluM8t
+         8BhNKS0fQRN8ZCG4R6ku2mMnkyKEz0ijbWv01KH4t4va2Qd48f7QnB0F6p5fpn8/4BAa
+         vd/vc78cJgw0tdyX86fCsa/cy/smbPpbU48/CZg95Pc6GbLV4x26rGSADE3sR5Df8MEY
+         jR/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o3mn+kJ178kZtOWDg2zTvnwyxAVrOywGSMty+AaHNEI=;
+        b=LcfaWAYJNspB5kgluOtPJ77WJK6T3y6lXOv00gbaHCvzlIGE9Dno2gdPy4XRd+u/5W
+         nmPdkwYdLrJ59dj69aLoQouhufM9slE+uqgumyLvdPHm8g9IIL2Ve9Vxe0YgtXkZEYkM
+         K9a648zZ+o9wYL+eJt/OqWwGt+e0AJOSM4VuQaUw11rtma8B9qYSOJFrJLc0vBaBhqvg
+         f3TU9pllYn2P2k8b8I7UjE3jRA3UXb0CVbn33QoJQLTQSBfU39lkePXG3uww10rTMh0p
+         8kZOlSbr2g+EYqacCvIrAcAJu0TmGTedZnZcalCjOvoXVarjAawCBBA3r4rVtFIp5K7d
+         DfVg==
+X-Gm-Message-State: APjAAAWEkk/5oyQDcq+eRRWLl4N+jIBfHhi3Dt9+katDUadCpBxennIL
+        EjDIFcjpw6kIlT357ZlpaXaJveNMyiIucoNjTjW7di/W
+X-Google-Smtp-Source: APXvYqxAeqMZl5h12AA0LAKmFZXJfhgKleA32w3EKgAOwZARMefeWZnWf2d9TV9+5OLGFwMu86iu856ofVAW5N7gtk8=
+X-Received: by 2002:ab0:e16:: with SMTP id g22mr961195uak.129.1576669984262;
+ Wed, 18 Dec 2019 03:53:04 -0800 (PST)
 MIME-Version: 1.0
-References: <20191208232734.225161-1-Jason@zx2c4.com> <CACT4Y+bsJVmgbD-WogwU=LfWiPN1JgjBrwx4s8Y14hDd7vqqhQ@mail.gmail.com>
- <CAHmME9o0AparjaaOSoZD14RAW8_AJTfKfcx3Y2ndDAPFNC-MeQ@mail.gmail.com> <CACT4Y+Zssd6OZ2-U4kjw18mNthQyzPWZV_gkH3uATnSv1SVDfA@mail.gmail.com>
-In-Reply-To: <CACT4Y+Zssd6OZ2-U4kjw18mNthQyzPWZV_gkH3uATnSv1SVDfA@mail.gmail.com>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Wed, 18 Dec 2019 12:50:20 +0100
-X-Gmail-Original-Message-ID: <CAHmME9oM=YHMZyg23WEzmZAof=7iv-A01VazB3ihhR99f6X1cg@mail.gmail.com>
-Message-ID: <CAHmME9oM=YHMZyg23WEzmZAof=7iv-A01VazB3ihhR99f6X1cg@mail.gmail.com>
-Subject: Re: [PATCH net-next v2] net: WireGuard secure network tunnel
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>
+References: <1576552672-22737-1-git-send-email-zhangpan26@huawei.com>
+In-Reply-To: <1576552672-22737-1-git-send-email-zhangpan26@huawei.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 18 Dec 2019 12:52:28 +0100
+Message-ID: <CAPDyKFr8aVWVydT5U6mpuZr5_waH=bn6F8rjryfDJ15FDaAXUw@mail.gmail.com>
+Subject: Re: [PATCH] mmc: host: fix a possible null pointer access.
+To:     Pan Zhang <zhangpan26@huawei.com>
+Cc:     hushiyuan@huawei.com, Jaehoon Chung <jh80.chung@samsung.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
-
-On Wed, Dec 18, 2019 at 12:37 PM Dmitry Vyukov <dvyukov@google.com> wrote:
-> > Actually with WireGuard, I think that's not the case. The WireGuard
-> > logging has been written with DoS in mind. You /should/ be able to
-> > safely run it on a production system exposed to the wild Internet, and
-> > while there will be some additional things in your dmesg, an attacker
-> > isn't supposed to be able to totally flood it without ratelimiting or
-> > inject malicious strings into it (such as ANSI escape sequence). In
-> > other words, I consider the logging to be fair game attack surface. If
-> > your fuzzer manages to craft some nasty sequence of packets that
-> > tricks some rate limiting logic and lets you litter all over dmesg
-> > totally unbounded, I'd consider that a real security bug worth
-> > stressing out about. So from the perspective of letting your fuzzers
-> > loose on WireGuard, I'd actually like to see this option kept on.
+On Tue, 17 Dec 2019 at 04:18, Pan Zhang <zhangpan26@huawei.com> wrote:
 >
-> This is the case even with CONFIG_WIREGUARD_DEBUG turned on, right? Or without?
+> 3419     if (host->slot &&
+> 3420         (mmc_can_gpio_cd(host->slot->mmc) ||
+> 3421          !mmc_card_is_removable(host->slot->mmc))) {
+> 3422         ret = clk_prepare_enable(host->biu_clk);
+> 3423         if (ret)
+> 3424             return ret;
+> 3425     }
+>
+> We previously assumed 'host->slot' could be null (see line 3419).
+>
+> The following situation is similar, so add a judgement.
+>
+> Signed-off-by: Pan Zhang <zhangpan26@huawei.com>
+> ---
+>  drivers/mmc/host/dw_mmc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+> index fc9d4d0..8e27c52 100644
+> --- a/drivers/mmc/host/dw_mmc.c
+> +++ b/drivers/mmc/host/dw_mmc.c
+> @@ -3454,7 +3454,7 @@ int dw_mci_runtime_resume(struct device *dev)
+>         mci_writel(host, CTRL, SDMMC_CTRL_INT_ENABLE);
+>
+>
+> -       if (host->slot->mmc->pm_flags & MMC_PM_KEEP_POWER)
+> +       if (host->slot && (host->slot->mmc->pm_flags & MMC_PM_KEEP_POWER))
+>                 dw_mci_set_ios(host->slot->mmc, &host->slot->mmc->ios);
 
-Turned on.
+This shouldn't be a problem as the ->runtime_resume() callback can't
+be invoked, unless there is a slot.
 
-> Well, it may be able to trigger unbounded printing, but that won't be
-> detected as a bug and won't be reported. To be reported it needs to
-> fall into a set of predefined bug cases (e.g. "BUG:" or "WARNING:" on
-> console). Unless of course it triggers total stall/hang.
+>
+>         /* Force setup bus to guarantee available clock output */
+> --
+> 2.7.4
+>
 
-Bummer. Well, at least the stall case is interesting.
-
-> But I'm
-> afraid it will just dirty dmesg, make reading crashes harder and slow
-> down everything without benefit.
-
-Actually the point of the logging is usually to make it more obvious
-why a crash has come about, to provide some trail about the sequence
-of events. This was especially helpful in fixing old race conditions
-where subtle packet timing caused WireGuard's timer-based state
-machine to go haywire. Is syzkaller able to backtrack from crashes to
-the packets and packet timing that caused them, in order to make a
-test case to replay the crash? Is this precise enough for race
-condition bugs? If so, then when debugging the crashes I could always
-replay it later with logging turned on, in which case it might make
-sense to split out the debug logging into CONFIG_WIREGUARD_VERBOSE_LOG
-or similar (unless the logging itself changes the timing constraints
-and I can't repro that way). If this isn't possible, then it seems
-like logging might be something we would benefit from having in the
-crash reports, right? Or am I missing some other detail of how the
-system works?
-
-Jason
+Kind regards
+Uffe
