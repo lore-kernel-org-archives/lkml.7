@@ -2,279 +2,106 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F7DC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C027FC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EC612146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:37:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576687062;
-	bh=8xxCNkUAzdSt8PiRdIANE3nzYQlFBne3CgEGOdfz7aQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=huZHXsUWWkt/wcTP5JfQucJyAPtafvwlLSz5WuNl9AFVfeIZNK1C2SScP4DnByDhZ
-	 TGWTaE3bw53/0MWAKC4Amf0Kfeq9THdTi+kvM7YkBNqI5oRmLVs3jhFY8+rRkBQRll
-	 FFbiDgh8Sffz9Enm9bJbC5ONtC+f0le3fGtGcoVg=
+	by mail.kernel.org (Postfix) with ESMTP id 944A42146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:38:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="S2234Y6P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727571AbfLRQhl (ORCPT
+        id S1727533AbfLRQiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 11:37:41 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:45952 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727185AbfLRQhl (ORCPT
+        Wed, 18 Dec 2019 11:38:23 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:43349 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727124AbfLRQiW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 11:37:41 -0500
-Received: by mail-oi1-f193.google.com with SMTP id v10so1304558oiv.12;
-        Wed, 18 Dec 2019 08:37:40 -0800 (PST)
+        Wed, 18 Dec 2019 11:38:22 -0500
+Received: by mail-qk1-f196.google.com with SMTP id t129so2058324qke.10
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 08:38:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=sbHXKAlGtJ4WoF+Wk5BJ7Ni9B2+fY69RTFn/n1ttSO4=;
+        b=S2234Y6PzoYiAKpG5kfvgExKO7U4AEEPbmh0zbW+1C8PjTfHk/M7SihyDv5d7vq+Ru
+         NArec1JjWWgRz8TRt7gvAmwkrhVxatpifjGd6KEal21z6iBnXvuaJpa8p2rgdska4HR8
+         Vn1IWYv7095dx+9vEd1cUadyqjeeepD8aTciCzCnaWuF+oAzgmeS5QjeNn5Lmn37yzYh
+         fx8cbejQT9OMRW+IDdq/E8ZiCAOt/V/VrtYz1g2GV3t5tROmmRq6/XCUz1KiqHH2I6V6
+         egDx+E2dG2bhwjzHMvecHlewS40PCe32Ce/P5nAKGuyQaOZt6MhqmyR/N26znSJNXPBS
+         zLaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=potQJchvmkXdyjD8+YEbMuOtyx2Cyf8SplihkzOTltg=;
-        b=lUkD6SulvgBo0F8+PeOoo3Oe57ZQEagEKAKHgYq8mqtqxg09p1rVlgfZz+62gdInC7
-         xe68d6ahuSli/D+UnQkWMuCYmSnJT6/9lMxPWDiYapDu73Nsma+WUnaXB0zpRAb6vjMR
-         CyRKC6V1fmObWZzAtz4G18RQAAli51UfXx1Sexpo5X93x3VUldmXsojUYBZ35eqV0Vsr
-         9nUymwQPHKuGII+yqM50LDnVxjzd+9WPyd3Fo/hQGtImWnn7kyRGAMPv5TUCfjQjCdO/
-         eNFSkJBz/+JIvfhDsoWp5PACG18VHUmsrUb89oPcf4wPzEdc5+ESmAt28Akubb7+tko3
-         yKAg==
-X-Gm-Message-State: APjAAAViD1hiOObEZAtF9aEgYsNNXt2MhvZ82s3lYe5gP0/KRy5E1VbO
-        NvIez2xMvs/MKLo4zD+Dsw==
-X-Google-Smtp-Source: APXvYqzZOHq9Lp+vs+GL43uPxqZ8cytoIKEEyfyzpRoxn+Fxpe72rj241gvyIDghUD3LuIy2xaZBrQ==
-X-Received: by 2002:aca:ec4d:: with SMTP id k74mr857882oih.64.1576687059959;
-        Wed, 18 Dec 2019 08:37:39 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o101sm950158ota.69.2019.12.18.08.37.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 08:37:39 -0800 (PST)
-Date:   Wed, 18 Dec 2019 10:37:38 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        ShuFan Lee <shufan_lee@richtek.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Guillaume Gardet <Guillaume.Gardet@arm.com>,
-        Jack Pham <jackp@codeaurora.org>, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v7 7/8] dt-bindings: misc: Add bindings for HiSilicon usb
- hub and data role switch functionality on HiKey960
-Message-ID: <20191218163738.GA12358@bogus>
-References: <20191212014233.32799-1-john.stultz@linaro.org>
- <20191212014233.32799-8-john.stultz@linaro.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sbHXKAlGtJ4WoF+Wk5BJ7Ni9B2+fY69RTFn/n1ttSO4=;
+        b=Re3zPObak62ySgg++1+NdlpHAaFv5iJErFWjiNdYQDe62BnVgi6HMcf1fPR2Tu4hMd
+         fa1KhgieVg31BRz6eVtsdLpxZndXnhOpRupG3YYMdU+LKc3cizVlv1Axbwtw/Wj0K2Pd
+         YzlGTdp74gC1ED6buXsCILRCmpnecoyO+00hkBpyuzn8QPBgcMaUDmyC27rrmqpxrYnV
+         YZK7c359j8sYYacc5YpoDCvd8/itf6wAbxpOvgCzgeDZ9g/tCKE1AcNxycxm7r7IIyf5
+         PEmy/D3THfUei7b1zLho6LceDh2gtE6VH8YQzfHEOQMS4KR1yYqhzBgR372QvZ9BdcZh
+         6dTQ==
+X-Gm-Message-State: APjAAAXofXZQeeOi9Ah/oWFjVfXUf6cMdKWQS/rQm8UiX1ARiOZBdalB
+        SIOM7Upe+woDufWzBg/b63PZQm7UncocYQ==
+X-Google-Smtp-Source: APXvYqyi2DFONj1cNsqdqMvZd0EqSNs+bKVIC10ca2hMoPkHA/RPLR03EXtJv64Xk3ZmkgCRZBu+Tg==
+X-Received: by 2002:a37:644:: with SMTP id 65mr3542626qkg.309.1576687100662;
+        Wed, 18 Dec 2019 08:38:20 -0800 (PST)
+Received: from ?IPv6:2620:10d:c0a8:1102:ce0:3629:8daa:1271? ([2620:10d:c091:480::65a1])
+        by smtp.gmail.com with ESMTPSA id q126sm812880qkd.21.2019.12.18.08.38.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Dec 2019 08:38:19 -0800 (PST)
+Subject: Re: [PATCH] btrfs: remove BUG_ON used as assertions
+To:     Aditya Pakki <pakki001@umn.edu>
+Cc:     kjlu@umn.edu, Chris Mason <clm@fb.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191215171237.27482-1-pakki001@umn.edu>
+From:   Josef Bacik <josef@toxicpanda.com>
+Message-ID: <2f9d6549-47cf-fb71-3bff-50b51093e757@toxicpanda.com>
+Date:   Wed, 18 Dec 2019 11:38:18 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191212014233.32799-8-john.stultz@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191215171237.27482-1-pakki001@umn.edu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 01:42:32AM +0000, John Stultz wrote:
-> From: Yu Chen <chenyu56@huawei.com>
+On 12/15/19 12:12 PM, Aditya Pakki wrote:
+> alloc_extent_state_atomic() allocates extents via GFP_ATOMIC flag
+> and cannot fail. There are multiple invocations of BUG_ON on the
+> return value to check for failure. The patch replaces certain
+> invocations of BUG_ON by returning the error upstream.
 > 
-> This patch adds binding documentation to support usb hub and usb
-> data role switch of Hisilicon HiKey960 Board.
-> 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> CC: ShuFan Lee <shufan_lee@richtek.com>
-> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> Cc: Yu Chen <chenyu56@huawei.com>
-> Cc: Felipe Balbi <balbi@kernel.org>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Cc: Jun Li <lijun.kernel@gmail.com>
-> Cc: Valentin Schneider <valentin.schneider@arm.com>
-> Cc: Guillaume Gardet <Guillaume.Gardet@arm.com>
-> Cc: Jack Pham <jackp@codeaurora.org>
-> Cc: linux-usb@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Yu Chen <chenyu56@huawei.com>
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
-> v3: Reworked as usb-role-switch intermediary
-> 
-> v7: Switched over to YAML dt binding description
-> ---
->  .../bindings/misc/hisilicon-hikey-usb.yaml    | 85 +++++++++++++++++++
->  1 file changed, 85 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.yaml b/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.yaml
-> new file mode 100644
-> index 000000000000..1fc3b198ef73
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.yaml
-> @@ -0,0 +1,85 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2019 Linaro Ltd.
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/misc/hisilicon-hikey-usb.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: HiKey960 onboard USB GPIO Hub
-> +
-> +maintainers:
-> +  - John Stultz <john.stultz@linaro.org>
-> +
-> +description: |
-> +  Supports the onboard HiKey960 USB GPIO hub, which acts as a
-> +  role-switch intermediary to detect the state of the USB-C
-> +  port, to switch the hub into dual-role USB-C or host mode,
-> +  which enables the onboard USB-A host ports.
+> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
 
-Honestly I'm torn between whatever works for you because this is pretty 
-"special" dev board design and it should more accurately match the 
-hardware design. I think we can do the later and it doesn't really need 
-anything new.
+I already tried this a few months ago and gave up.  There are a few things if 
+you want to tackle something like this
 
-> +
-> +  Schematics about the hub can be found here:
-> +    https://github.com/96boards/documentation/raw/master/consumer/hikey/hikey960/hardware-docs/HiKey960_Schematics.pdf
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: hisilicon,gpio_hubv1
+1) use bpf's error injection thing to make sure you handle every path that can 
+error out.  This is the script I wrote to do just that
 
-As a whole this is HiSilicon specific, but really it is not. It's really 
-just a hub, a mux, and connectors for which we have bindings for. I 
-think you need to model the actual hub in DT. We have 2 ways already to 
-describe hubs in DT: a I2C device or USB device. 
+https://github.com/josefbacik/debug-scripts/blob/master/error-injection-stress.py
 
-AIUI, the board looks something like this:
+2) We actually can't fail here.  We would need to go back and make _all_ callers 
+of lock_extent_bits() handle the allocation error.  This is theoretically 
+possible, but a giant pain in the ass.  In general we can make allocations here 
+and we need to be able to make them.
 
-ctrl -> mux --> hub -> type-a connector
-            +-> type-c connector
+3) We should probably mark this path with __GFP_NOFAIL because again, this is 
+locking and we need locking to succeed.
 
-If the hub I2C is not used, then you could do something like this:
+Thanks,
 
-ctrl {
-    mux-controls = <&usb_gpio_mux>;
-    connector@0 {
-	// type C connector binding
-    };
-    hub@1 {
-	// USB device binding
-    };
-};
-
-Or if I2C is used and the hub is under the I2C controller:
-
-ctrl {
-    port@0 {
-        mux-controls = <&usb_gpio_mux>;
-        endpoint@0 { // mux state 0
-		remote-endpoint = <&usb_c_connector_port>;
-	};
-        endpoint@1 { // mux state 1
-		remote-endpoint = <&usb_hub_port>;
-	};
-};
-
-The only new bindings you really need are adding 'mux-controls' to the 
-USB host controller and the hub binding (we already have a few).
-
-If the USB2 and USB3 signals come from 2 different host controller 
-nodes, then I think it will need to look like the 2nd case regardless 
-of I2C. (It's strange that USB3 was not routed to Type-C connector. Can 
-you do USB2 on Type-C and USB3 on hub simultaneously? You need USB2 to 
-enumerate, right?)
-
-> +
-> +  typec-vbus-gpios:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: phandle to the typec-vbus gpio
-
-This should be modeled as a GPIO regulator, and belongs as part of a 
-connector node. See bindings/connector/usb-connector.txt.
-
-> +
-> +  otg-switch-gpios:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: phandle to the otg-switch gpio
-
-This would be the gpio-mux binding instead.
-
-> +
-> +  hub-vdd33-en-gpios:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: phandle to the hub 3.3v power enablement gpio
-
-This should be modeled as a GPIO regulator. 
-
-What about the reset line on the hub?
-
-> +
-> +  usb-role-switch:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description: Support role switch.
-
-This normally is a controller property. Role switch is foreign to the 
-hub, so doesn't really belong there for sure.
-
-> +
-> +  port:
-> +    description: |
-> +      any connector to the data bus of this controller should be modelled
-> +      using the OF graph bindings specified, if the "usb-role-switch"
-> +      property is used. Note for this driver, two ports are supported,
-> +      the first being the endpoint that will be notified by this driver,
-> +      and the second being the endpoint that notifies this driver of a
-> +      role switch.
-> +
-> +
-> +required:
-> +  - compatible
-> +  - typec-vbus-gpios
-> +  - otg-switch-gpios
-> +  - hub-vdd33-en-gpios
-> +  - usb-role-switch
-> +  - port
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    hisi_hikey_usb: hisi_hikey_usb {
-> +        compatible = "hisilicon,gpio_hubv1";
-> +        typec-vbus-gpios = <&gpio25 2 GPIO_ACTIVE_HIGH>;
-> +        otg-switch-gpios = <&gpio25 6 GPIO_ACTIVE_HIGH>;
-> +        hub-vdd33-en-gpios = <&gpio5 6 GPIO_ACTIVE_HIGH>;
-> +        usb-role-switch;
-> +
-> +        port {
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            hikey_usb_ep0: endpoint@0 {
-> +                reg = <0>;
-> +                remote-endpoint = <&dwc3_role_switch>;
-> +            };
-> +            hikey_usb_ep1: endpoint@1 {
-> +                reg = <1>;
-> +                remote-endpoint = <&rt1711h_ep>;
-> +            };
-> +        };
-> +    };
-> -- 
-> 2.17.1
-> 
+Josef
