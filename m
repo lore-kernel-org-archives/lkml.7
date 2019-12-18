@@ -2,132 +2,138 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 328DCC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:32:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C69B5C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1533220717
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:32:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B52C20717
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:32:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="HmkYReAi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727189AbfLRRcj (ORCPT
+        id S1727256AbfLRRcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 12:32:39 -0500
-Received: from imap2.colo.codethink.co.uk ([78.40.148.184]:59148 "EHLO
-        imap2.colo.codethink.co.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726939AbfLRRci (ORCPT
+        Wed, 18 Dec 2019 12:32:47 -0500
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:6637 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726939AbfLRRcr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 12:32:38 -0500
-Received: from [167.98.27.226] (helo=[10.35.5.173])
-        by imap2.colo.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
-        id 1ihdBc-0004nl-W2; Wed, 18 Dec 2019 17:32:37 +0000
-Subject: Re: [PATCH] pinctrl: artpec6: fix __iomem on reg in set
-To:     Jesper Nilsson <jesper.nilsson@axis.com>
-Cc:     Jesper Nilsson <jespern@axis.com>, Lars Persson <larper@axis.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-kernel <linux-arm-kernel@axis.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20191218101602.2442868-1-ben.dooks@codethink.co.uk>
- <20191218162616.qsxsltfsrxotzqhb@axis.com>
-From:   Ben Dooks <ben.dooks@codethink.co.uk>
-Organization: Codethink Limited.
-Message-ID: <048c9653-114b-f726-44b2-9eb1d460b5b5@codethink.co.uk>
-Date:   Wed, 18 Dec 2019 17:32:36 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 18 Dec 2019 12:32:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1576690367; x=1608226367;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   in-reply-to:content-transfer-encoding;
+  bh=FeQX76NID8dsLOSp0CkwolZX9DdPQj+OFtakt4kP7kA=;
+  b=HmkYReAiKxCtO3m+0gxfHEtz9GndC6GGIi7/6lLXskf8sa+4LyjY+chC
+   AbEAcxMlVKdXr+go0CNflSnDY6zPUOOghD01FqqhzKY+BMi7gEn6ws+De
+   9PcsoEvzeH5UPkeT9gtNWI9yBlzx7Kly9eN1fTNORniYZ384MBavhn8BW
+   s=;
+IronPort-SDR: svtqNpTkuYb1WJ3MaCtzj/m7rTHlM88SUQfhUrvm4+MNQU/nZTWWMsutjb3KahLmjnakVAmTra
+ /F+7pzDEND6g==
+X-IronPort-AV: E=Sophos;i="5.69,330,1571702400"; 
+   d="scan'208";a="9070911"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-a7fdc47a.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 18 Dec 2019 17:32:45 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-a7fdc47a.us-west-2.amazon.com (Postfix) with ESMTPS id C914FC59C5;
+        Wed, 18 Dec 2019 17:32:42 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1236.3; Wed, 18 Dec 2019 17:32:41 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.78) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 18 Dec 2019 17:32:36 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     =?UTF-8?q?J=C3=BCrgen=20Gro=C3=9F?= <jgross@suse.com>
+CC:     SeongJae Park <sjpark@amazon.com>, <axboe@kernel.dk>,
+        <linux-block@vger.kernel.org>, <konrad.wilk@oracle.com>,
+        <pdurrant@amazon.com>, SeongJae Park <sjpark@amazon.de>,
+        <linux-kernel@vger.kernel.org>, <sj38.park@gmail.com>,
+        <xen-devel@lists.xenproject.org>, <roger.pau@citrix.com>
+Subject: Re: Re: [Xen-devel] [PATCH v12 2/5] xenbus/backend: Protect xenbus callback with lock
+Date:   Wed, 18 Dec 2019 18:32:17 +0100
+Message-ID: <20191218173217.7501-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20191218162616.qsxsltfsrxotzqhb@axis.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <7edb266e-3185-5adc-1121-1b61feaf5a34@suse.com> (raw)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.43.161.78]
+X-ClientProxiedBy: EX13D33UWB002.ant.amazon.com (10.43.161.88) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/12/2019 16:26, Jesper Nilsson wrote:
-> On Wed, Dec 18, 2019 at 11:16:02AM +0100, Ben Dooks (Codethink) wrote:
->> The artpec6_pconf_set should have marked reg as __iomem,
->>   which ends up making sparse complain about address
->> space conversions. Add the __iomem to silence the
->> following warnings:
->>
->> drivers/pinctrl/pinctrl-artpec6.c:814:13: warning: incorrect type in assignment (different address spaces)
->> drivers/pinctrl/pinctrl-artpec6.c:814:13:    expected unsigned int *reg
->> drivers/pinctrl/pinctrl-artpec6.c:814:13:    got void [noderef] <asn:2> *
->> drivers/pinctrl/pinctrl-artpec6.c:825:34: warning: incorrect type in argument 1 (different address spaces)
->> drivers/pinctrl/pinctrl-artpec6.c:825:34:    expected void const volatile [noderef] <asn:2> *addr
->> drivers/pinctrl/pinctrl-artpec6.c:825:34:    got unsigned int *reg
->> drivers/pinctrl/pinctrl-artpec6.c:827:25: warning: incorrect type in argument 2 (different address spaces)
->> drivers/pinctrl/pinctrl-artpec6.c:827:25:    expected void volatile [noderef] <asn:2> *addr
->> drivers/pinctrl/pinctrl-artpec6.c:827:25:    got unsigned int *reg
->> drivers/pinctrl/pinctrl-artpec6.c:837:34: warning: incorrect type in argument 1 (different address spaces)
->> drivers/pinctrl/pinctrl-artpec6.c:837:34:    expected void const volatile [noderef] <asn:2> *addr
->> drivers/pinctrl/pinctrl-artpec6.c:837:34:    got unsigned int *reg
->> drivers/pinctrl/pinctrl-artpec6.c:840:25: warning: incorrect type in argument 2 (different address spaces)
->> drivers/pinctrl/pinctrl-artpec6.c:840:25:    expected void volatile [noderef] <asn:2> *addr
->> drivers/pinctrl/pinctrl-artpec6.c:840:25:    got unsigned int *reg
->> drivers/pinctrl/pinctrl-artpec6.c:850:34: warning: incorrect type in argument 1 (different address spaces)
->> drivers/pinctrl/pinctrl-artpec6.c:850:34:    expected void const volatile [noderef] <asn:2> *addr
->> drivers/pinctrl/pinctrl-artpec6.c:850:34:    got unsigned int *reg
->> drivers/pinctrl/pinctrl-artpec6.c:853:25: warning: incorrect type in argument 2 (different address spaces)
->> drivers/pinctrl/pinctrl-artpec6.c:853:25:    expected void volatile [noderef] <asn:2> *addr
->> drivers/pinctrl/pinctrl-artpec6.c:853:25:    got unsigned int *reg
->> drivers/pinctrl/pinctrl-artpec6.c:864:34: warning: incorrect type in argument 1 (different address spaces)
->> drivers/pinctrl/pinctrl-artpec6.c:864:34:    expected void const volatile [noderef] <asn:2> *addr
->> drivers/pinctrl/pinctrl-artpec6.c:864:34:    got unsigned int *reg
->> drivers/pinctrl/pinctrl-artpec6.c:867:25: warning: incorrect type in argument 2 (different address spaces)
->> drivers/pinctrl/pinctrl-artpec6.c:867:25:    expected void volatile [noderef] <asn:2> *addr
->> drivers/pinctrl/pinctrl-artpec6.c:867:25:    got unsigned int *reg
->>
->> Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
->> ---
-> 
-> 
-> 
-> 
->> Cc: Lars Persson <lars.persson@axis.com>
->> Cc: Linus Walleij <linus.walleij@linaro.org>
->> Cc: linux-arm-kernel@axis.com
->> Cc: linux-gpio@vger.kernel.org
->> Cc: linux-kernel@vger.kernel.org
->> ---
->>   drivers/pinctrl/pinctrl-artpec6.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/pinctrl/pinctrl-artpec6.c b/drivers/pinctrl/pinctrl-artpec6.c
->> index 986e04ac6b5b..439a997b6bdb 100644
->> --- a/drivers/pinctrl/pinctrl-artpec6.c
->> +++ b/drivers/pinctrl/pinctrl-artpec6.c
->> @@ -798,7 +798,7 @@ static int artpec6_pconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
->>   	enum pin_config_param param;
->>   	unsigned int arg;
->>   	unsigned int regval;
->> -	unsigned int *reg;
->> +	unsigned int __iomem *reg;
-> 
-> 	void __iomem *reg;
-> 
-> We're using as an argument to readl()?
+On Wed, 18 Dec 2019 16:11:51 +0100 "Jürgen Groß" <jgross@suse.com> wrote:
 
-yes, readl() shoud take an __iomem attributed pointer.
+> On 18.12.19 15:40, SeongJae Park wrote:
+> > On Wed, 18 Dec 2019 14:30:44 +0100 "Jürgen Groß" <jgross@suse.com> wrote:
+> > 
+> >> On 18.12.19 13:42, SeongJae Park wrote:
+> >>> On Wed, 18 Dec 2019 13:27:37 +0100 "Jürgen Groß" <jgross@suse.com> wrote:
+> >>>
+> >>>> On 18.12.19 11:42, SeongJae Park wrote:
+> >>>>> From: SeongJae Park <sjpark@amazon.de>
+> >>>>>
+> >>>>> 'reclaim_memory' callback can race with a driver code as this callback
+> >>>>> will be called from any memory pressure detected context.  To deal with
+> >>>>> the case, this commit adds a spinlock in the 'xenbus_device'.  Whenever
+> >>>>> 'reclaim_memory' callback is called, the lock of the device which passed
+> >>>>> to the callback as its argument is locked.  Thus, drivers registering
+> >>>>> their 'reclaim_memory' callback should protect the data that might race
+> >>>>> with the callback with the lock by themselves.
+> >>>>
+> >>>> Any reason you don't take the lock around the .probe() and .remove()
+> >>>> calls of the backend (xenbus_dev_probe() and xenbus_dev_remove())? This
+> >>>> would eliminate the need to do that in each backend instead.
+> >>>
+> >>> First of all, I would like to keep the critical section as small as possible.
+> >>> With my small test, I could see slightly increasing memory pressure as the
+> >>> critical section becomes wider.  Also, some drivers might share the data their
+> >>> 'reclaim_memory' callback touches with other functions.  I think only the
+> >>> driver owners can know what data is shared and what is the minimum critical
+> >>> section to protect it.
+> >>
+> >> But this kind of serialization can still be added on top.
+> > 
+> > I'm still worrying about the unnecessarily large critical section, but it might
+> > be small enough to be ignored.  If no others have strong objection, I will take
+> > the lock around the '->probe()' and '->remove()'.
+> 
+> The lock is per device, so contention is possible only for the
+> reclaim case. In case probe or remove are running reclaim will have
+> nothing to free (in probe case nothing is allocated yet, in remove
+> case everything should be freed anyway). So the larger critical section
+> is no problem at all IMO.
 
->>   	int i;
->>   
->>   	/* Check for valid pin */
->> -- 
->> 2.24.0
->>
+Agreed.  I think I was worried about nothing really existing now.
+
 > 
-> /^JN - Jesper Nilsson
+> >> And with the trylock in the reclaim path I believe you can even avoid
+> >> the irq variants of the spinlock. But I might be wrong, so you should
+> >> try that with lockdep enabled. If it is working there is no harm done
+> >> when making the critical section larger, as memory allocations will
+> >> work as before.
+> > 
+> > Yes, you're right.  I will try test with lockdep.
 > 
+> Thanks,
+
+Good news, lockdep says it's okay :)
+
+Will post next version soon.
 
 
--- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
+Thanks,
+SeongJae Park
 
-https://www.codethink.co.uk/privacy.html
+> 
+> 
+> Juergen
