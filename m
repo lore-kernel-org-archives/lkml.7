@@ -4,42 +4,42 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3239C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1342C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9967A227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:18:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94B1624676
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:18:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="WHhfd1Ci"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="OTHSeg9I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbfLRKSk (ORCPT
+        id S1727086AbfLRKSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 05:18:40 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:37034 "EHLO
+        Wed, 18 Dec 2019 05:18:37 -0500
+Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:37090 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726545AbfLRKRz (ORCPT
+        by vger.kernel.org with ESMTP id S1726847AbfLRKRz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 18 Dec 2019 05:17:55 -0500
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 1EBB6C0D68;
-        Wed, 18 Dec 2019 10:17:52 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 32061C0D72;
+        Wed, 18 Dec 2019 10:17:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1576664273; bh=kXQSi8uEaR0nnXI5gYaHpPekaUtZSzYB55wAuRZ7ltQ=;
+        t=1576664273; bh=2jZu/VMBhMJ+5+n5dpL26vqHKUj/tM3Pc7Ja63xVtHU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=WHhfd1Ci7me3W4vU6X3JZxqEcwcVFvjymBZiB67Q/w8ILttW2DDQm0MPpV1+MaXNb
-         An9XEhpLNa8PQROz4rnwSrsk3KWSts2R8lTOnsKUw+gOaHuEarlNs6wbvi2HJEXMlM
-         c5eSsikRZN7+0zO9IwuYcO6tbMbRJwt7PGefCAlXVW3NUQBcEQZrCZNlnA9uKiFGbY
-         DMlsddGGc+h0OFonSSGSefIO327ZRjwkdMtqowl6nIJwH8SKy44mq5LDUhJrDrhuki
-         jKZD1k7/5cclhLmACorhLJIsA8e85X/tmKnPEeW8KzI4EXxxIsAnqO48kH8P58+cNi
-         i4v7ZnEl7/Wig==
+        b=OTHSeg9IZ2dTaBEi4JBzszHBVDb6L9cKew6FslXYp8R2Gz/ftEBXRsx+dJAKBWHNY
+         iljXHztSg+euoV8wkYJIYFKng7zrOwigsaV5sOVgN2Ui1D58bpTUR36mjrfZhV3jVt
+         vkwFtrQcg7AyrwouI6h+JtalH+AtIMF8w/cyiTMgzrurJR7/m0TV5x9qDbtXixLZwL
+         pBV3r4JPz/PCpKEKrrWHV4CT31iGziA+A5CF7axhoUA3zb0wlQFw2181yMDFeZucY/
+         ecJGoLPGrKfAj1n+C0HIm+OnZQIT1LY/IW4EpCDfsA5feMQZqsp8hUUjlerh9S21DR
+         nuuLlUzLku+TA==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 80C95A0067;
+        by mailhost.synopsys.com (Postfix) with ESMTP id B1538A0094;
         Wed, 18 Dec 2019 10:17:51 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
@@ -53,9 +53,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net v3 1/9] net: stmmac: selftests: Needs to check the number of Multicast regs
-Date:   Wed, 18 Dec 2019 11:17:35 +0100
-Message-Id: <d69db25450cac262b0249ed4d02c54e4bcd93ada.1576664155.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH net v3 6/9] net: stmmac: RX buffer size must be 16 byte aligned
+Date:   Wed, 18 Dec 2019 11:17:40 +0100
+Message-Id: <5d0f9e1b87f2c0e5668d28d0bd2953b1180ec388.1576664155.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1576664155.git.Jose.Abreu@synopsys.com>
 References: <cover.1576664155.git.Jose.Abreu@synopsys.com>
@@ -66,15 +66,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When running the MC and UC filter tests we setup a multicast address
-that its expected to be blocked. If the number of available multicast
-registers is zero, driver will always pass the multicast packets which
-will fail the test.
+We need to align the RX buffer size to at least 16 byte so that IP
+doesn't mis-behave. This is required by HW.
 
-Check if available multicast addresses is enough before running the
-tests.
+Changes from v2:
+- Align UP and not DOWN (David)
 
-Fixes: 091810dbded9 ("net: stmmac: Introduce selftests support")
+Fixes: 7ac6653a085b ("stmmac: Move the STMicroelectronics driver")
 Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
 ---
@@ -88,31 +86,22 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-index f3d8b9336b8e..13227909287c 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-@@ -624,6 +624,8 @@ static int stmmac_test_mcfilt(struct stmmac_priv *priv)
- 		return -EOPNOTSUPP;
- 	if (netdev_uc_count(priv->dev) >= priv->hw->unicast_filter_entries)
- 		return -EOPNOTSUPP;
-+	if (netdev_mc_count(priv->dev) >= priv->hw->multicast_filter_bins)
-+		return -EOPNOTSUPP;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index acb14a96243e..f507a9bee15b 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -46,7 +46,7 @@
+ #include "dwxgmac2.h"
+ #include "hwif.h"
  
- 	while (--tries) {
- 		/* We only need to check the mc_addr for collisions */
-@@ -666,6 +668,8 @@ static int stmmac_test_ucfilt(struct stmmac_priv *priv)
+-#define	STMMAC_ALIGN(x)		__ALIGN_KERNEL(x, SMP_CACHE_BYTES)
++#define	STMMAC_ALIGN(x)		ALIGN(ALIGN(x, SMP_CACHE_BYTES), 16)
+ #define	TSO_MAX_BUFF_SIZE	(SZ_16K - 1)
  
- 	if (stmmac_filter_check(priv))
- 		return -EOPNOTSUPP;
-+	if (netdev_uc_count(priv->dev) >= priv->hw->unicast_filter_entries)
-+		return -EOPNOTSUPP;
- 	if (netdev_mc_count(priv->dev) >= priv->hw->multicast_filter_bins)
- 		return -EOPNOTSUPP;
- 
+ /* Module parameters */
 -- 
 2.7.4
 
