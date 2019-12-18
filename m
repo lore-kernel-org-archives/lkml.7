@@ -6,25 +6,26 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D236C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 675AAC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54DD3206D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:51:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F2212082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:54:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbfLRSvT (ORCPT
+        id S1727121AbfLRSyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 13:51:19 -0500
-Received: from foss.arm.com ([217.140.110.172]:57352 "EHLO foss.arm.com"
+        Wed, 18 Dec 2019 13:54:46 -0500
+Received: from foss.arm.com ([217.140.110.172]:57448 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727049AbfLRSvQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 13:51:16 -0500
+        id S1726699AbfLRSyp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 13:54:45 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3BB7B31B;
-        Wed, 18 Dec 2019 10:51:15 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 27D821FB;
+        Wed, 18 Dec 2019 10:54:45 -0800 (PST)
 Received: from [192.168.42.50] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9F5E23F67D;
-        Wed, 18 Dec 2019 10:51:13 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 83DD83F67D;
+        Wed, 18 Dec 2019 10:54:43 -0800 (PST)
+From:   Valentin Schneider <valentin.schneider@arm.com>
 Subject: Re: [PATCH] sched, fair: Allow a small degree of load imbalance
  between SD_NUMA domains
 To:     Mel Gorman <mgorman@techsingularity.net>,
@@ -36,9 +37,8 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         hdanton@sina.com, parth@linux.ibm.com, riel@surriel.com,
         LKML <linux-kernel@vger.kernel.org>
 References: <20191218154402.GF3178@techsingularity.net>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <8f049805-3e97-09bb-2d32-0718be1dec9b@arm.com>
-Date:   Wed, 18 Dec 2019 18:50:52 +0000
+Message-ID: <7f913d8b-609b-9aa7-019f-84c1d828b401@arm.com>
+Date:   Wed, 18 Dec 2019 18:54:31 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
@@ -142,6 +142,7 @@ different IMO.
 >  	}
 >  
 > 
+
 I'm quite sure you have reasons to have written it that way, but I was
 hoping we could squash it down to something like:
 ---
