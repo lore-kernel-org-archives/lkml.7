@@ -2,144 +2,119 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B7C4C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 01:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1231AC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 01:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6801E206D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 01:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D52C9206D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 01:42:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ecRHVN3Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbfLRBlk (ORCPT
+        id S1726634AbfLRBm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 20:41:40 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:42974 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726167AbfLRBlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 20:41:40 -0500
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 43C28616AEDBEFD90BD9;
-        Wed, 18 Dec 2019 09:41:38 +0800 (CST)
-Received: from huawei.com (10.67.189.167) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Wed, 18 Dec 2019
- 09:41:29 +0800
-From:   Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-To:     <davem@davemloft.net>, <yisen.zhuang@huawei.com>,
-        <salil.mehta@huawei.com>, <zhangfei.gao@linaro.org>,
-        <arnd@arndb.de>, <dingtianhong@huawei.com>,
-        <xiaojiangfeng@huawei.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <leeyou.li@huawei.com>, <nixiaoming@huawei.com>
-Subject: [PATCH v2] net: hisilicon: Fix a BUG trigered by wrong bytes_compl
-Date:   Wed, 18 Dec 2019 09:41:24 +0800
-Message-ID: <1576633284-18882-1-git-send-email-xiaojiangfeng@huawei.com>
-X-Mailer: git-send-email 1.8.5.6
+        Tue, 17 Dec 2019 20:42:28 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:36414 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbfLRBm2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 20:42:28 -0500
+Received: by mail-oi1-f193.google.com with SMTP id c16so283592oic.3;
+        Tue, 17 Dec 2019 17:42:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=N+bs2iNFWfw8K4kc9VbekWaGMeOdYHefRD+wtZgGsIg=;
+        b=ecRHVN3QxjPmXu/OGHNX3KkhC4Gw7arD5IGwKraGon4GcCc5a3LHIWVGmuoIxRXC1G
+         Q7acVs/R7eyN41d0RpgisRAaELzJdDyh9Wso8d+KN/HCR6OQdizosgOihcGfMHQ6IgFk
+         +81aToAfygpEbhCDsvD5489bTuS/gqQYlvMcmilDenHb0LLk4sRQzGHzCyQpHmj52lIU
+         p6vJBA/Z+FDvxGYqgYxae2uCuAzGFO8gsqcF4j812f8Gyu1jMSb1EeBGm5MJD5Gx6BUh
+         U77xiDfQ+OX2nD57HP3AcUmxxH30q/K+CyfuFutCVBbCzA9ciYFJGP2P4IeS/nl8+liC
+         HzJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=N+bs2iNFWfw8K4kc9VbekWaGMeOdYHefRD+wtZgGsIg=;
+        b=VcbfNqStKlaKlqUGfBbSWgLU6t0M3PSjLpFBqSaM9bI95rwcjrKP1WDruHslBb/tSf
+         SA2eISL84E0pAozEBdSJ0y2WuW7sk1rKmDAiR40nQtrZ6+Km0wmgXMeb8DkaIwO6/Wcg
+         UdLpYbni1mL7UIDVRd8ak/BGIYCn0508CVEdiMnrpAdRU5hB86vWyd/ohKlcv3uGWnKq
+         9t/W6HfeBWVOzxt11YHCfAKeOws1f3D7QqYPfh4U9saZEbJgoRlDzHaouthJHeEVEZ1u
+         hP0T0ccXx2RZuL9p1eoDDIc2Z6vgLJwv6EA12T/0hsQVTEtq+NetkweyIiktqtprBz2X
+         4U4Q==
+X-Gm-Message-State: APjAAAVHnq/59xJe+qZZZNKMIUU702Ogw9/EAxf/3Foo8SDbI00UJd9t
+        2aWmy3bp47kgJ55FjNFZMA9voTre
+X-Google-Smtp-Source: APXvYqwK75exxun+25KzMqZtBIlf8NvNj2yKQBQoFyGOJlSWHDS84TqIRtTVjLsMDYVJ4652keUdNA==
+X-Received: by 2002:aca:5f87:: with SMTP id t129mr115076oib.36.1576633347229;
+        Tue, 17 Dec 2019 17:42:27 -0800 (PST)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id n2sm248564oia.58.2019.12.17.17.42.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 17:42:26 -0800 (PST)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Hannes Reinecke <hare@suse.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] scsi: aic7xxx: Adjust indentation in ahc_find_syncrate
+Date:   Tue, 17 Dec 2019 18:42:20 -0700
+Message-Id: <20191218014220.52746-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.189.167]
-X-CFilter-Loop: Reflected
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When doing stress test, we get the following trace:
-kernel BUG at lib/dynamic_queue_limits.c:26!
-Internal error: Oops - BUG: 0 [#1] SMP ARM
-Modules linked in: hip04_eth
-CPU: 0 PID: 2003 Comm: tDblStackPcap0 Tainted: G           O L  4.4.197 #1
-Hardware name: Hisilicon A15
-task: c3637668 task.stack: de3bc000
-PC is at dql_completed+0x18/0x154
-LR is at hip04_tx_reclaim+0x110/0x174 [hip04_eth]
-pc : [<c041abfc>]    lr : [<bf0003a8>]    psr: 800f0313
-sp : de3bdc2c  ip : 00000000  fp : c020fb10
-r10: 00000000  r9 : c39b4224  r8 : 00000001
-r7 : 00000046  r6 : c39b4000  r5 : 0078f392  r4 : 0078f392
-r3 : 00000047  r2 : 00000000  r1 : 00000046  r0 : df5d5c80
-Flags: Nzcv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment user
-Control: 32c5387d  Table: 1e189b80  DAC: 55555555
-Process tDblStackPcap0 (pid: 2003, stack limit = 0xde3bc190)
-Stack: (0xde3bdc2c to 0xde3be000)
-[<c041abfc>] (dql_completed) from [<bf0003a8>] (hip04_tx_reclaim+0x110/0x174 [hip04_eth])
-[<bf0003a8>] (hip04_tx_reclaim [hip04_eth]) from [<bf0012c0>] (hip04_rx_poll+0x20/0x388 [hip04_eth])
-[<bf0012c0>] (hip04_rx_poll [hip04_eth]) from [<c04c8d9c>] (net_rx_action+0x120/0x374)
-[<c04c8d9c>] (net_rx_action) from [<c021eaf4>] (__do_softirq+0x218/0x318)
-[<c021eaf4>] (__do_softirq) from [<c021eea0>] (irq_exit+0x88/0xac)
-[<c021eea0>] (irq_exit) from [<c0240130>] (msa_irq_exit+0x11c/0x1d4)
-[<c0240130>] (msa_irq_exit) from [<c0267ba8>] (__handle_domain_irq+0x110/0x148)
-[<c0267ba8>] (__handle_domain_irq) from [<c0201588>] (gic_handle_irq+0xd4/0x118)
-[<c0201588>] (gic_handle_irq) from [<c0558360>] (__irq_svc+0x40/0x58)
-Exception stack(0xde3bdde0 to 0xde3bde28)
-dde0: 00000000 00008001 c3637668 00000000 00000000 a00f0213 dd3627a0 c0af6380
-de00: c086d380 a00f0213 c0a22a50 de3bde6c 00000002 de3bde30 c0558138 c055813c
-de20: 600f0213 ffffffff
-[<c0558360>] (__irq_svc) from [<c055813c>] (_raw_spin_unlock_irqrestore+0x44/0x54)
-Kernel panic - not syncing: Fatal exception in interrupt
+Clang warns:
 
-Pre-modification code:
-int hip04_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
-{
-[...]
-[1]	priv->tx_head = TX_NEXT(tx_head);
-[2]	count++;
-[3]	netdev_sent_queue(ndev, skb->len);
-[...]
-}
-An rx interrupt occurs if hip04_mac_start_xmit just executes to the line 2,
-tx_head has been updated, but corresponding 'skb->len' has not been
-added to dql_queue.
+../drivers/scsi/aic7xxx/aic7xxx_core.c:2317:5: warning: misleading
+indentation; statement is not part of the previous 'if'
+[-Wmisleading-indentation]
+                        if ((syncrate->sxfr_u2 & ST_SXFR) != 0)
+                        ^
+../drivers/scsi/aic7xxx/aic7xxx_core.c:2310:4: note: previous statement
+is here
+                        if (syncrate == &ahc_syncrates[maxsync])
+                        ^
+1 warning generated.
 
-And then
-hip04_mac_interrupt->__napi_schedule->hip04_rx_poll->hip04_tx_reclaim
+This warning occurs because there is a space amongst the tabs on this
+line. Remove it so that the indentation is consistent with the Linux
+kernel coding style and clang no longer warns.
 
-In hip04_tx_reclaim, because tx_head has been updated,
-bytes_compl will plus an additional "skb-> len"
-which has not been added to dql_queue. And then
-trigger the BUG_ON(bytes_compl > num_queued - dql->num_completed).
+This has been a problem since the beginning of git history hence no
+fixes tag.
 
-To solve the problem described above, we put
-"netdev_sent_queue(ndev, skb->len);"
-before
-"priv->tx_head = TX_NEXT(tx_head);"
-
-In addition, I adjusted the position of "count++;"
-to make the code more readable.
-
-Fixes: a41ea46a9 ("net: hisilicon: new hip04 ethernet driver")
-Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/817
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 ---
-ChangeLog v1->v2
-- Provide an appropriate Fixes: tag
----
- drivers/net/ethernet/hisilicon/hip04_eth.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/aic7xxx/aic7xxx_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
-index 3e9b6d5..085476d 100644
---- a/drivers/net/ethernet/hisilicon/hip04_eth.c
-+++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-@@ -543,9 +543,8 @@ static void hip04_start_tx_timer(struct hip04_priv *priv)
- 	skb_tx_timestamp(skb);
- 
- 	hip04_set_xmit_desc(priv, phys);
--	priv->tx_head = TX_NEXT(tx_head);
--	count++;
- 	netdev_sent_queue(ndev, skb->len);
-+	priv->tx_head = TX_NEXT(tx_head);
- 
- 	stats->tx_bytes += skb->len;
- 	stats->tx_packets++;
-@@ -553,6 +552,7 @@ static void hip04_start_tx_timer(struct hip04_priv *priv)
- 	/* Ensure tx_head update visible to tx reclaim */
- 	smp_wmb();
- 
-+	count++;
- 	/* queue is getting full, better start cleaning up now */
- 	if (count >= priv->tx_coalesce_frames) {
- 		if (napi_schedule_prep(&priv->napi)) {
+diff --git a/drivers/scsi/aic7xxx/aic7xxx_core.c b/drivers/scsi/aic7xxx/aic7xxx_core.c
+index a9d40d3b90ef..4190a025381a 100644
+--- a/drivers/scsi/aic7xxx/aic7xxx_core.c
++++ b/drivers/scsi/aic7xxx/aic7xxx_core.c
+@@ -2314,7 +2314,7 @@ ahc_find_syncrate(struct ahc_softc *ahc, u_int *period,
+ 			 * At some speeds, we only support
+ 			 * ST transfers.
+ 			 */
+-		 	if ((syncrate->sxfr_u2 & ST_SXFR) != 0)
++			if ((syncrate->sxfr_u2 & ST_SXFR) != 0)
+ 				*ppr_options &= ~MSG_EXT_PPR_DT_REQ;
+ 			break;
+ 		}
 -- 
-1.8.5.6
+2.24.1
 
