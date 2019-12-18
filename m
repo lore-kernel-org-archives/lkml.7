@@ -2,119 +2,104 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF776C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AF7C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8B5E2146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:24:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576689856;
-	bh=J9mVnpcPRlh0mvJgCzhidZ1PLmoyNm+FA0e8Ks3E2p4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xwRCuIasilUXhi5+1v1RxDxKPfEwRTyEYwC3iowQxLKeHUw/vUsEPlm8291w94x51
-	 jBIHs7nnXpMBwegjY6GroEHYniIwukLDGHRLsBxOESZmsXhb6f+JQ6z9B2mHJIZOyb
-	 S0m3T5Bmmk0TiUT6fhUuH5qteN+ww2Wo5T/aZLDI=
+	by mail.kernel.org (Postfix) with ESMTP id D9E212176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 17:24:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="WL6LQvaJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727391AbfLRRYQ (ORCPT
+        id S1727417AbfLRRY3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 12:24:16 -0500
-Received: from foss.arm.com ([217.140.110.172]:54788 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727193AbfLRRYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 12:24:15 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2610231B;
-        Wed, 18 Dec 2019 09:24:14 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 984363F67D;
-        Wed, 18 Dec 2019 09:24:13 -0800 (PST)
-Date:   Wed, 18 Dec 2019 17:24:12 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "corbet@lwn.net" <corbet@lwn.net>,
-        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "noralf@tronnes.org" <noralf@tronnes.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "pavel@ucw.cz" <pavel@ucw.cz>
-Subject: Re: Applied "regulator: bd71828: Basic support for ROHM bd71828 PMIC
- regulators" to the regulator tree
-Message-ID: <20191218172412.GK3219@sirena.org.uk>
-References: <applied-5b1c4a22c7945e97ff2a7924abfeb3239043f8eb.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
- <de7424126e285d9bbd21a70945415d78203c2ba7.camel@fi.rohmeurope.com>
- <20191218131700.GB42175@sirena.org.uk>
- <b72cd22df0bbbb159cda08e556037f1ccf490b3d.camel@fi.rohmeurope.com>
+        Wed, 18 Dec 2019 12:24:29 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37447 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727193AbfLRRY2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 12:24:28 -0500
+Received: by mail-wr1-f65.google.com with SMTP id w15so3180349wru.4
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 09:24:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gkeDNQUJ3ikeTDqUkF4Gryc9YGb0Gj5eqNCbDtkdhPw=;
+        b=WL6LQvaJ9GGlUjw9H2P/1hGp29WTQgH0SjF3vxM3PXuoSHkCPIJMZ0/moLtc9sKgF+
+         JEh6NAbPqIWRs+wngIArKVHOaQSYykBTrlkNfSRW5F8uLnOYl7JY1UB6HVoQXdY3kEMO
+         QVPbDjuu41bQvjV9npjWA3XGgU7mNTizqkPWaq8m8TTm8pEn3o7oHmiP/QDEr8b4hWy1
+         gB0B7bA0p4nRahqNbn8k7FC58AA9TFFrBbxaBSXJ4WNCY3mEi7BmrGLsi4VkqvTiLIFP
+         c/ym3SuKFZDF8BCpRPf5wTGrB/t9RvWsnyq/Mj8chxROlsIi0KDJel1ST8/iTOySbmG6
+         A/xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gkeDNQUJ3ikeTDqUkF4Gryc9YGb0Gj5eqNCbDtkdhPw=;
+        b=Z44VbfWbIFI65bz30zntXE/eQ1sfNIB2qXZdqHP3rF9WXmCRPBVt+JmC3isPfLUZMt
+         7ajDogrhr3YhP4yHCyUW+AtQBRn7n8DRxvitUHVnYff3yAoXHEulK29yLhb6G9jg6egc
+         7fuWtkcaGA3yih5Trl79TwhJHMgY4GQwbFJh9Iv7Jhc/SgPrB34aXDOkejdDN+kJHBrQ
+         R6cfZkdJvXmTCNGvrYpwPPrLzrf2v+xwPeyYg6FyNnyxr8ECccpzr0cKtHLmUldx1vgp
+         pDxjWqNq/dkA36qrqqg/fb1+i7aq2IlPfAQP2JjZcdrFWulDZ6rz39sGLeSzJrpxkfK+
+         qasg==
+X-Gm-Message-State: APjAAAXrtC+0jmPZzJeSr8tN8w0AJKriCzLYMcb7nE+N/iLPRLb5HKbE
+        GzFYKNpnymt7t/cF7+KFaWDUBg==
+X-Google-Smtp-Source: APXvYqwBahCJsSlMYv9H8BS5x9yINh/xRKEr1G8MnVvK/fUdISZ8dpu38/NOPkP1wQV26nQIfcBMEw==
+X-Received: by 2002:a5d:4f90:: with SMTP id d16mr3902176wru.395.1576689865056;
+        Wed, 18 Dec 2019 09:24:25 -0800 (PST)
+Received: from localhost.localdomain (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.googlemail.com with ESMTPSA id 4sm2883231wmg.22.2019.12.18.09.24.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 09:24:24 -0800 (PST)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: [PATCH 0/4] ASoC: meson: axg-fifo: fix depth handling
+Date:   Wed, 18 Dec 2019 18:24:16 +0100
+Message-Id: <20191218172420.1199117-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="vk/v8fjDPiDepTtA"
-Content-Disposition: inline
-In-Reply-To: <b72cd22df0bbbb159cda08e556037f1ccf490b3d.camel@fi.rohmeurope.com>
-X-Cookie: Power is poison.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patchset improves the handling the depth of the different fifos
+found in amlogic audio subsystems derived from the axg family.
 
---vk/v8fjDPiDepTtA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Initially, it was reported that, when the period is less than 8kB on sm1
+and with TODDR A, several period are coming at once. This is because the
+field related to the fifo request threshold changed on the sm1 SoC and
+also because TODDR A instance is significantly larger compared to the
+other instances.
 
-On Wed, Dec 18, 2019 at 02:01:27PM +0000, Vaittinen, Matti wrote:
-> On Wed, 2019-12-18 at 13:17 +0000, Mark Brown wrote:
-> > On Wed, Dec 18, 2019 at 08:06:04AM +0000, Vaittinen, Matti wrote:
+With this initial issue fixed, I used the opportunity to improve the
+driver and properly deal with the different fifo depth found in these
+SoCs.
 
-> > > I think you missed the [PATCH v6 08/15] regulator: bd718x7: Split
-> > > driver to common and bd718x7 specific parts
+Jerome Brunet (4):
+  ASoC: meson: axg-fifo: fix fifo threshold setup
+  ASoC: meson: axg-fifo: add fifo depth to the bindings documentation
+  ASoC: meson: axg-fifo: improve depth handling
+  ASoC: meson: axg-fifo: relax period size constraints
 
-> > I didn't miss it, it was queued but it doesn't apply.
+ .../bindings/sound/amlogic,axg-fifo.txt       |  4 ++
+ sound/soc/meson/axg-fifo.c                    | 50 ++++++++++++++++---
+ sound/soc/meson/axg-fifo.h                    |  9 ++--
+ sound/soc/meson/axg-frddr.c                   | 33 ++++++------
+ sound/soc/meson/axg-toddr.c                   | 21 ++++----
+ 5 files changed, 76 insertions(+), 41 deletions(-)
 
-> Right. The rohm-generic.h is changed by
-> [PATCH v6 04/15] mfd: rohm PMICs - use platform_device_id to match MFD
-> sub-devices
+-- 
+2.23.0
 
-Ugh, right.  I guess that'll have to go in with the MFD changes then.
-
---vk/v8fjDPiDepTtA
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl36YLsACgkQJNaLcl1U
-h9BkDAf/XSz4D3T25M0yYqmY2TIMQ+uimSMMMoiwsyS2ivd9XZXc66Y8aQJ68D4k
-phnZsmDtIQL/WPGbI85z8igy1eup0r7RABEbUJsRFELudd9udrnrWBLBVKFdb5BF
-3WoB7YBfUOaIm22ktVjVLyawXe/hvxqaAvpiWdRM80GBqGufRnf3fcT/Auv15ImJ
-+q5BE6k24FErC519kY8ZFw8B4fszmqCCK6UfOTVyFNvOlLMYcUFGs3BDbgWNxpSF
-fOhGp47IZj2RPA85Ut6fGeYuL/dpVa6VaPYPxpkwnDflZeIlY1U/hKpqAd4y+MTv
-aEKbFYlOE0P6HfjnUDEyZIs0eIORJQ==
-=fXt1
------END PGP SIGNATURE-----
-
---vk/v8fjDPiDepTtA--
