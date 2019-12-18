@@ -2,165 +2,106 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE30FC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16453C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:49:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C32F8218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D735A206E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 00:49:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="B5sjQP9C"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="tyBSIIzk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbfLRAsa (ORCPT
+        id S1726721AbfLRAtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 19:48:30 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36047 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbfLRAs1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 19:48:27 -0500
-Received: by mail-pg1-f195.google.com with SMTP id k3so264472pgc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Dec 2019 16:48:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1QlmZsfy8tqgL3gLX6tEaIAY+HsFf3RdF701Sx/e0GM=;
-        b=B5sjQP9CBzakB62HGCYDqYu6RrxnliiRXarpV3eTmTdhdpigPEIQKOR2bACIkJjNDk
-         kgf6F7F/cQY67q/39zRIzQkdGiEIzE0hppXZiX8Caj7HyeydfVdln0j3dsvo75UjhpZq
-         JP+qTYgmDz0qt/J0AWGlHOaOFiHt9NgbeEyus=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1QlmZsfy8tqgL3gLX6tEaIAY+HsFf3RdF701Sx/e0GM=;
-        b=TwXJ/puGxyClXqC8HrfuwNlSD79lbuOAZjAclbeNjIqAUYv79o9u1RpUOehvFj1uka
-         9TVPnIuQJJy5fqHoEwdT9nXpURXa8yC+R2ptsIl+Wrkz/D5KefKWhmkCeLKOk1BbUY3H
-         B294AHmbzDdwNguFk1Vp+ZE37GqsH/BP/Bm8lJOGBcN+aJHpn9Q6MHBlFm3rvt03xQHX
-         LW2aGbdHJrVUmMMdOMOJeMq8/91gSbdWtly4/bsvKAmp/2V6kA+spKdTUOJudaCtqRSw
-         Y9ScSXtDhsfTgGAb6/Wq8pNTntgXcTtnDQedWbYRNvi+wPcSOBfesWWmqe7QKwkVaT5v
-         o7qw==
-X-Gm-Message-State: APjAAAUk8Gma4kJHCUK77JXd+7OAAXOjPDWYxY3qqC2+rZXQXOy1I2MV
-        bUFU5wvm2gSDgZ5BX8q9amCtgnUKbznM+Q==
-X-Google-Smtp-Source: APXvYqzZZDsVkSyVUxjzC8BdmpNoJj6ZW7IR/vkDmkybW+uMcxIuBfj7m0V2qHCVob2lfDm7PHawgA==
-X-Received: by 2002:a63:a508:: with SMTP id n8mr291544pgf.278.1576630106620;
-        Tue, 17 Dec 2019 16:48:26 -0800 (PST)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id v72sm139885pjb.25.2019.12.17.16.48.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 16:48:26 -0800 (PST)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Cc:     robdclark@chromium.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, seanpaul@chromium.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Douglas Anderson <dianders@chromium.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Jonas Karlman <jonas@kwiboo.se>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Subject: [PATCH v2 1/9] drm/bridge: ti-sn65dsi86: Split the setting of the dp and dsi rates
-Date:   Tue, 17 Dec 2019 16:47:33 -0800
-Message-Id: <20191217164702.v2.1.Icb765d5799e9651e5249c0c27627ba33a9e411cf@changeid>
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
-In-Reply-To: <20191218004741.102067-1-dianders@chromium.org>
-References: <20191218004741.102067-1-dianders@chromium.org>
+        Tue, 17 Dec 2019 19:49:49 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:59215 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725940AbfLRAts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Dec 2019 19:49:48 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47cxHF2Ymjz9sRk;
+        Wed, 18 Dec 2019 11:49:44 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1576630185;
+        bh=Q0utsYCz4hrK7U5iqG0PY9eBxGrO0dwqQiJb4phghSI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=tyBSIIzkxo20BqNNpFo1gfgFFuHw5z61pFX45P7p3h53WNVpF+xC7H8+RYNpCfHyv
+         bx/uiOosHVnjq3CS4cR6G+/LBJPZLiptTppMfoMm02yk3rLbWISikKNJp22jusfW6k
+         S69cJL/zZd6PZZwGAcHVYnr8DhUzi+Ny0iiwCmZEIrMsUk9EMsceWexN+fwhZvU1OT
+         U9tx1PJYqWgkhypCcZZmZS9tG9+q2YkjEtTtCj7YTtWIBoB8mkN+sUyzbfz6HGqizg
+         EHewAyV/GIJFJ7ReByyJzA9UgGmnw0CRc48psJPSGXHwZIGJhOQflB5FkXdz0pdNmf
+         waRkje89kCpig==
+Date:   Wed, 18 Dec 2019 11:49:42 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Greg KH <greg@kroah.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Engraf <david.engraf@sysgo.com>
+Subject: linux-next: manual merge of the tty tree with the tty.current tree
+Message-ID: <20191218114942.59cc0446@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/qeb/88b9jni87uD9xaZg1UD";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These two things were in one function.  Split into two.  This looks
-like it's duplicating some code, but don't worry.  This is is just in
-preparation for future changes.
+--Sig_/qeb/88b9jni87uD9xaZg1UD
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This is intended to have zero functional change and will just make
-future patches easier to understand.
+Hi all,
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Tested-by: Rob Clark <robdclark@gmail.com>
-Reviewed-by: Rob Clark <robdclark@gmail.com>
----
+Today's linux-next merge of the tty tree got a conflict in:
 
-Changes in v2: None
+  drivers/tty/serial/atmel_serial.c
 
- drivers/gpu/drm/bridge/ti-sn65dsi86.c | 33 +++++++++++++++++++--------
- 1 file changed, 23 insertions(+), 10 deletions(-)
+between commit:
 
-diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-index 43abf01ebd4c..2fb9370a76e6 100644
---- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-+++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-@@ -417,6 +417,24 @@ static void ti_sn_bridge_set_refclk_freq(struct ti_sn_bridge *pdata)
- 			   REFCLK_FREQ(i));
- }
- 
-+static void ti_sn_bridge_set_dsi_rate(struct ti_sn_bridge *pdata)
-+{
-+	unsigned int bit_rate_mhz, clk_freq_mhz;
-+	unsigned int val;
-+	struct drm_display_mode *mode =
-+		&pdata->bridge.encoder->crtc->state->adjusted_mode;
-+
-+	/* set DSIA clk frequency */
-+	bit_rate_mhz = (mode->clock / 1000) *
-+			mipi_dsi_pixel_format_to_bpp(pdata->dsi->format);
-+	clk_freq_mhz = bit_rate_mhz / (pdata->dsi->lanes * 2);
-+
-+	/* for each increment in val, frequency increases by 5MHz */
-+	val = (MIN_DSI_CLK_FREQ_MHZ / 5) +
-+		(((clk_freq_mhz - MIN_DSI_CLK_FREQ_MHZ) / 5) & 0xFF);
-+	regmap_write(pdata->regmap, SN_DSIA_CLK_FREQ_REG, val);
-+}
-+
- /**
-  * LUT index corresponds to register value and
-  * LUT values corresponds to dp data rate supported
-@@ -426,22 +444,16 @@ static const unsigned int ti_sn_bridge_dp_rate_lut[] = {
- 	0, 1620, 2160, 2430, 2700, 3240, 4320, 5400
- };
- 
--static void ti_sn_bridge_set_dsi_dp_rate(struct ti_sn_bridge *pdata)
-+static void ti_sn_bridge_set_dp_rate(struct ti_sn_bridge *pdata)
- {
--	unsigned int bit_rate_mhz, clk_freq_mhz, dp_rate_mhz;
--	unsigned int val, i;
-+	unsigned int bit_rate_mhz, dp_rate_mhz;
-+	unsigned int i;
- 	struct drm_display_mode *mode =
- 		&pdata->bridge.encoder->crtc->state->adjusted_mode;
- 
- 	/* set DSIA clk frequency */
- 	bit_rate_mhz = (mode->clock / 1000) *
- 			mipi_dsi_pixel_format_to_bpp(pdata->dsi->format);
--	clk_freq_mhz = bit_rate_mhz / (pdata->dsi->lanes * 2);
--
--	/* for each increment in val, frequency increases by 5MHz */
--	val = (MIN_DSI_CLK_FREQ_MHZ / 5) +
--		(((clk_freq_mhz - MIN_DSI_CLK_FREQ_MHZ) / 5) & 0xFF);
--	regmap_write(pdata->regmap, SN_DSIA_CLK_FREQ_REG, val);
- 
- 	/* set DP data rate */
- 	dp_rate_mhz = ((bit_rate_mhz / pdata->dsi->lanes) * DP_CLK_FUDGE_NUM) /
-@@ -510,7 +522,8 @@ static void ti_sn_bridge_enable(struct drm_bridge *bridge)
- 			   val);
- 
- 	/* set dsi/dp clk frequency value */
--	ti_sn_bridge_set_dsi_dp_rate(pdata);
-+	ti_sn_bridge_set_dsi_rate(pdata);
-+	ti_sn_bridge_set_dp_rate(pdata);
- 
- 	/* enable DP PLL */
- 	regmap_write(pdata->regmap, SN_PLL_ENABLE_REG, 1);
--- 
-2.24.1.735.g03f4e72817-goog
+  cb47b9f8630a ("tty/serial: atmel: fix out of range clock divider handling=
+")
 
+from the tty.current tree and commit:
+
+  751d0017334d ("tty/serial: atmel: fix out of range clock divider handling=
+")
+
+from the tty tree.
+
+These are 2 version of the same change, I guess.
+
+I fixed it up (I just used the tty tree version) and can carry the fix
+as necessary. This is now fixed as far as linux-next is concerned, but
+any non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/qeb/88b9jni87uD9xaZg1UD
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl35d6YACgkQAVBC80lX
+0GzlGgf+JbQbfh8T1PifCuQ7kralPhxo3xDomKwAXliPdIy5X0nh1TgxpitPOHFJ
+jT97CUyGh8mIj0xAXmhNpyOhpzquJwGbLexrZHNfJU+/p4U0nzGTWtD9rEic2I2U
+v946mD/eU6qWoxfCh5uqKEyWMgnFs9PO51M/JyTKLjzBoYonFf7x/T8dGdkQRUfV
+5oJYyV9MPlj/6OiX+iOrd+vf7luKYv+N/ajtLz2FWaKaIUrAwJppQQgsNUxHY7Ti
+AIAUyuh5qApACzGnHVIEMg0C7NcfFDAPQ+BagVYZZu/3Cah/JHR+Jeb/Yi/es89u
+9ZDce4yAgDNixVjcOmsH+puDu3+Yzg==
+=YMTU
+-----END PGP SIGNATURE-----
+
+--Sig_/qeb/88b9jni87uD9xaZg1UD--
