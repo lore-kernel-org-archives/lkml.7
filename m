@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B81B7C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C62BC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90E202176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74EAC2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:49:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbfLRUtO (ORCPT
+        id S1727607AbfLRUtU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 15:49:14 -0500
-Received: from mail.windriver.com ([147.11.1.11]:47801 "EHLO
+        Wed, 18 Dec 2019 15:49:20 -0500
+Received: from mail.windriver.com ([147.11.1.11]:47827 "EHLO
         mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbfLRUtO (ORCPT
+        with ESMTP id S1727395AbfLRUtR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 15:49:14 -0500
+        Wed, 18 Dec 2019 15:49:17 -0500
 Received: from yow-cube1.wrs.com (yow-cube1.wrs.com [128.224.56.98])
-        by mail.windriver.com (8.15.2/8.15.2) with ESMTP id xBIKn0iX000214;
+        by mail.windriver.com (8.15.2/8.15.2) with ESMTP id xBIKn0iY000214;
         Wed, 18 Dec 2019 12:49:10 -0800 (PST)
 From:   Paul Gortmaker <paul.gortmaker@windriver.com>
 To:     Lee Jones <lee.jones@linaro.org>
 Cc:     linux-kernel@vger.kernel.org,
         Paul Gortmaker <paul.gortmaker@windriver.com>,
-        Rabin Vincent <rabin.vincent@stericsson.com>
-Subject: [PATCH 05/18] mfd: tc3589: Make it explicitly non-modular
-Date:   Wed, 18 Dec 2019 15:48:44 -0500
-Message-Id: <1576702137-25905-6-git-send-email-paul.gortmaker@windriver.com>
+        Ian Molton <spyro@f2s.com>
+Subject: [PATCH 06/18] mfd: tc6387xb: Make it explicitly non-modular
+Date:   Wed, 18 Dec 2019 15:48:45 -0500
+Message-Id: <1576702137-25905-7-git-send-email-paul.gortmaker@windriver.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1576702137-25905-1-git-send-email-paul.gortmaker@windriver.com>
 References: <1576702137-25905-1-git-send-email-paul.gortmaker@windriver.com>
@@ -41,8 +41,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The Kconfig currently controlling compilation of this code is:
 
-drivers/mfd/Kconfig:config MFD_TC3589X
-drivers/mfd/Kconfig:    bool "Toshiba TC35892 and variants"
+drivers/mfd/Kconfig:config MFD_TC6387XB
+drivers/mfd/Kconfig:    bool "Toshiba TC6387XB"
 
 ...meaning that it currently is not being built as a module by anyone.
 
@@ -53,89 +53,72 @@ We explicitly disallow a driver unbind, since that doesn't have a
 sensible use case anyway, and it allows us to drop the ".remove"
 code for non-modular drivers.
 
-Since module_init was not in use by this code, the init ordering
-remains unchanged with this commit.
+Since module_platform_driver() uses the same init level priority as
+builtin_platform_driver() the init ordering remains unchanged with
+this commit.
 
 We also delete the MODULE_LICENSE tag etc. since all that information
 is already contained at the top of the file in the comments.
 
 Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Rabin Vincent <rabin.vincent@stericsson.com>
+Cc: Ian Molton <spyro@f2s.com>
 Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
 ---
- drivers/mfd/tc3589x.c | 26 ++------------------------
- 1 file changed, 2 insertions(+), 24 deletions(-)
+ drivers/mfd/tc6387xb.c | 30 ++++--------------------------
+ 1 file changed, 4 insertions(+), 26 deletions(-)
 
-diff --git a/drivers/mfd/tc3589x.c b/drivers/mfd/tc3589x.c
-index 67c9995bb1aa..ccbdec1a2202 100644
---- a/drivers/mfd/tc3589x.c
-+++ b/drivers/mfd/tc3589x.c
+diff --git a/drivers/mfd/tc6387xb.c b/drivers/mfd/tc6387xb.c
+index c66a701ab21c..aa2eada4bf30 100644
+--- a/drivers/mfd/tc6387xb.c
++++ b/drivers/mfd/tc6387xb.c
 @@ -6,7 +6,7 @@
-  * Author: Rabin Vincent <rabin.vincent@stericsson.com> for ST-Ericsson
+  * This file contains TC6387XB base support.
   */
  
 -#include <linux/module.h>
 +#include <linux/init.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
- #include <linux/irqdomain.h>
-@@ -323,8 +323,6 @@ static const struct of_device_id tc3589x_match[] = {
- 	{ }
- };
- 
--MODULE_DEVICE_TABLE(of, tc3589x_match);
--
- static struct tc3589x_platform_data *
- tc3589x_of_probe(struct device *dev, enum tc3589x_version *version)
- {
-@@ -429,15 +427,6 @@ static int tc3589x_probe(struct i2c_client *i2c,
- 	return 0;
+ #include <linux/platform_device.h>
+ #include <linux/clk.h>
+ #include <linux/err.h>
+@@ -199,35 +199,13 @@ static int tc6387xb_probe(struct platform_device *dev)
+ 	return ret;
  }
  
--static int tc3589x_remove(struct i2c_client *client)
+-static int tc6387xb_remove(struct platform_device *dev)
 -{
--	struct tc3589x *tc3589x = i2c_get_clientdata(client);
+-	struct tc6387xb *tc6387xb = platform_get_drvdata(dev);
 -
--	mfd_remove_devices(tc3589x->dev);
+-	mfd_remove_devices(&dev->dev);
+-	iounmap(tc6387xb->scr);
+-	release_resource(&tc6387xb->rscr);
+-	clk_disable_unprepare(tc6387xb->clk32k);
+-	clk_put(tc6387xb->clk32k);
+-	kfree(tc6387xb);
 -
 -	return 0;
 -}
 -
- #ifdef CONFIG_PM_SLEEP
- static int tc3589x_suspend(struct device *dev)
- {
-@@ -480,16 +469,15 @@ static const struct i2c_device_id tc3589x_id[] = {
- 	{ "tc3589x", TC3589X_UNKNOWN },
- 	{ }
- };
--MODULE_DEVICE_TABLE(i2c, tc3589x_id);
- 
- static struct i2c_driver tc3589x_driver = {
+-
+ static struct platform_driver tc6387xb_platform_driver = {
  	.driver = {
- 		.name	= "tc3589x",
- 		.pm	= &tc3589x_dev_pm_ops,
- 		.of_match_table = of_match_ptr(tc3589x_match),
-+		.suppress_bind_attrs = true,
+-		.name		= "tc6387xb",
++		.name			= "tc6387xb",
++		.suppress_bind_attrs	= true,
  	},
- 	.probe		= tc3589x_probe,
--	.remove		= tc3589x_remove,
- 	.id_table	= tc3589x_id,
+ 	.probe		= tc6387xb_probe,
+-	.remove		= tc6387xb_remove,
+ 	.suspend        = tc6387xb_suspend,
+ 	.resume         = tc6387xb_resume,
  };
- 
-@@ -498,13 +486,3 @@ static int __init tc3589x_init(void)
- 	return i2c_add_driver(&tc3589x_driver);
- }
- subsys_initcall(tc3589x_init);
 -
--static void __exit tc3589x_exit(void)
--{
--	i2c_del_driver(&tc3589x_driver);
--}
--module_exit(tc3589x_exit);
+-module_platform_driver(tc6387xb_platform_driver);
 -
+-MODULE_DESCRIPTION("Toshiba TC6387XB core driver");
 -MODULE_LICENSE("GPL v2");
--MODULE_DESCRIPTION("TC3589x MFD core driver");
--MODULE_AUTHOR("Hanumath Prasad, Rabin Vincent");
+-MODULE_AUTHOR("Ian Molton");
+-MODULE_ALIAS("platform:tc6387xb");
+-
++builtin_platform_driver(tc6387xb_platform_driver);
 -- 
 2.7.4
 
