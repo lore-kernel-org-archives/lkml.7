@@ -2,30 +2,29 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62DEAC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA9E8C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ADCF2465E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9506420716
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 18:27:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbfLRS1R (ORCPT
+        id S1727536AbfLRS1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 13:27:17 -0500
-Received: from foss.arm.com ([217.140.110.172]:56592 "EHLO foss.arm.com"
+        Wed, 18 Dec 2019 13:27:20 -0500
+Received: from foss.arm.com ([217.140.110.172]:56616 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727024AbfLRS1Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 13:27:16 -0500
+        id S1727024AbfLRS1U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 13:27:20 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0B3AC1FB;
-        Wed, 18 Dec 2019 10:27:16 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4693B1FB;
+        Wed, 18 Dec 2019 10:27:19 -0800 (PST)
 Received: from e108754-lin.cambridge.arm.com (unknown [10.1.198.81])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id EA33A3F67D;
-        Wed, 18 Dec 2019 10:27:13 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4B8033F67D;
+        Wed, 18 Dec 2019 10:27:17 -0800 (PST)
 From:   Ionela Voinescu <ionela.voinescu@arm.com>
 To:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
         maz@kernel.org, suzuki.poulose@arm.com, sudeep.holla@arm.com,
@@ -33,11 +32,10 @@ To:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
 Cc:     peterz@infradead.org, mingo@redhat.com, ggherdovich@suse.cz,
         vincent.guittot@linaro.org, linux-arm-kernel@lists.infradead.org,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>
-Subject: [PATCH v2 3/6] arm64/kvm: disable access to AMU registers from kvm guests
-Date:   Wed, 18 Dec 2019 18:26:04 +0000
-Message-Id: <20191218182607.21607-4-ionela.voinescu@arm.com>
+        Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH v2 4/6] Documentation: arm64: document support for the AMU extension
+Date:   Wed, 18 Dec 2019 18:26:05 +0000
+Message-Id: <20191218182607.21607-5-ionela.voinescu@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191218182607.21607-1-ionela.voinescu@arm.com>
 References: <20191218182607.21607-1-ionela.voinescu@arm.com>
@@ -46,201 +44,189 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Access to the AMU counters should be disabled by default in kvm guests,
-as information from the counters might reveal activity in other guests
-or activity on the host.
+The activity monitors extension is an optional extension introduced
+by the ARMv8.4 CPU architecture.
 
-Therefore, disable access to AMU registers from EL0 and EL1 in kvm
-guests by:
- - Hiding the presence of the extension in the feature register
-   (SYS_ID_AA64PFR0_EL1 and SYS_ID_PFR0_EL1) on the VCPU.
- - Disabling access to the AMU registers before switching to the guest.
- - Trapping accesses and injecting an undefined instruction into the
-   guest.
+Add initial documentation for the AMUv1 extension:
+ - arm64/amu.txt: AMUv1 documentation
+ - arm64/booting.txt: system registers initialisation
+ - arm64/cpu-feature-registers.txt: visibility to userspace
 
 Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: James Morse <james.morse@arm.com>
-Cc: Julien Thierry <julien.thierry.kdev@gmail.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
 Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Will Deacon <will@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>
 ---
- arch/arm64/include/asm/kvm_arm.h |  7 ++-
- arch/arm64/kvm/hyp/switch.c      | 13 ++++-
- arch/arm64/kvm/sys_regs.c        | 95 +++++++++++++++++++++++++++++++-
- 3 files changed, 109 insertions(+), 6 deletions(-)
+ Documentation/arm64/amu.rst                   | 107 ++++++++++++++++++
+ Documentation/arm64/booting.rst               |  14 +++
+ Documentation/arm64/cpu-feature-registers.rst |   2 +
+ Documentation/arm64/index.rst                 |   1 +
+ 4 files changed, 124 insertions(+)
+ create mode 100644 Documentation/arm64/amu.rst
 
-diff --git a/arch/arm64/include/asm/kvm_arm.h b/arch/arm64/include/asm/kvm_arm.h
-index 6e5d839f42b5..dd20fb185d56 100644
---- a/arch/arm64/include/asm/kvm_arm.h
-+++ b/arch/arm64/include/asm/kvm_arm.h
-@@ -266,10 +266,11 @@
- #define CPTR_EL2_TFP_SHIFT 10
+diff --git a/Documentation/arm64/amu.rst b/Documentation/arm64/amu.rst
+new file mode 100644
+index 000000000000..62a6635522e1
+--- /dev/null
++++ b/Documentation/arm64/amu.rst
+@@ -0,0 +1,107 @@
++=======================================================
++Activity Monitors Unit (AMU) extension in AArch64 Linux
++=======================================================
++
++Author: Ionela Voinescu <ionela.voinescu@arm.com>
++
++Date: 2019-09-10
++
++This document briefly describes the provision of Activity Monitors Unit
++support in AArch64 Linux.
++
++
++Architecture overview
++---------------------
++
++The activity monitors extension is an optional extension introduced by the
++ARMv8.4 CPU architecture.
++
++The activity monitors unit, implemented in each CPU, provides performance
++counters intended for system management use. The AMU extension provides a
++system register interface to the counter registers and also supports an
++optional external memory-mapped interface.
++
++Version 1 of the Activity Monitors architecture implements a counter group
++of four fixed and architecturally defined 64-bit event counters.
++  - CPU cycle counter: increments at the frequency of the CPU.
++  - Constant counter: increments at the fixed frequency of the system
++    clock.
++  - Instructions retired: increments with every architecturally executed
++    instruction.
++  - Memory stall cycles: counts instruction dispatch stall cycles caused by
++    misses in the last level cache within the clock domain.
++
++When in WFI or WFE these counters do not increment.
++
++The Activity Monitors architecture provides space for up to 16 architected
++event counters. Future versions of the architecture may use this space to
++implement additional architected event counters.
++
++Additionally, version 1 implements a counter group of up to 16 auxiliary
++64-bit event counters.
++
++On cold reset all counters reset to 0.
++
++
++Basic support
++-------------
++
++The kernel can safely run a mix of CPUs with and without support for the
++activity monitors extension. Therefore, when CONFIG_ARM64_AMU_EXTN is
++selected we unconditionally enable the capability to allow any late CPU
++(secondary or hotplugged) to detect and use the feature.
++
++When the feature is detected on a CPU, a per-CPU variable (amu_feat) is
++set, but this does not guarantee the correct functionality of the
++counters, only the presence of the extension.
++
++Firmware (code running at higher exception levels, e.g. arm-tf) support is
++needed to:
++ - Enable access for lower exception levels (EL2 and EL1) to the AMU
++   registers.
++ - Enable the counters. If not enabled these will read as 0.
++ - Save/restore the counters before/after the CPU is being put/brought up
++   from the 'off' power state.
++
++When using kernels that have this configuration enabled but boot with
++broken firmware the user may experience panics or lockups when accessing
++the counter registers. Even if these symptoms are not observed, the
++values returned by the register reads might not correctly reflect reality.
++Most commonly, the counters will read as 0, indicating that they are not
++enabled. If proper support is not provided in firmware it's best to disable
++CONFIG_ARM64_AMU_EXTN.
++
++The fixed counters of AMUv1 are accessible though the following system
++register definitions:
++ - SYS_AMEVCNTR0_CORE_EL0
++ - SYS_AMEVCNTR0_CONST_EL0
++ - SYS_AMEVCNTR0_INST_RET_EL0
++ - SYS_AMEVCNTR0_MEM_STALL_EL0
++
++Auxiliary platform specific counters can be accessed using
++SYS_AMEVCNTR1_EL0(n), where n is a value between 0 and 15.
++
++Details can be found in: arch/arm64/include/asm/sysreg.h.
++
++
++Userspace access
++----------------
++
++Currently, access from userspace to the AMU registers is disabled due to:
++ - Security reasons: they might expose information about code executed in
++   secure mode.
++ - Purpose: AMU counters are intended for system management use.
++
++Also, the presence of the feature is not visible to userspace.
++
++
++Virtualization
++--------------
++
++Currently, access from userspace (EL0) and kernelspace (EL1) on the KVM
++guest side is disabled due to:
++ - Security reasons: they might expose information about code executed
++   by other guests or the host.
++
++Any attempt to access the AMU registers will result in an UNDEFINED
++exception being injected into the guest.
+diff --git a/Documentation/arm64/booting.rst b/Documentation/arm64/booting.rst
+index 5d78a6f5b0ae..a3f1a47b6f1c 100644
+--- a/Documentation/arm64/booting.rst
++++ b/Documentation/arm64/booting.rst
+@@ -248,6 +248,20 @@ Before jumping into the kernel, the following conditions must be met:
+     - HCR_EL2.APK (bit 40) must be initialised to 0b1
+     - HCR_EL2.API (bit 41) must be initialised to 0b1
  
- /* Hyp Coprocessor Trap Register */
--#define CPTR_EL2_TCPAC	(1 << 31)
--#define CPTR_EL2_TTA	(1 << 20)
--#define CPTR_EL2_TFP	(1 << CPTR_EL2_TFP_SHIFT)
- #define CPTR_EL2_TZ	(1 << 8)
-+#define CPTR_EL2_TFP	(1 << CPTR_EL2_TFP_SHIFT)
-+#define CPTR_EL2_TTA	(1 << 20)
-+#define CPTR_EL2_TAM	(1 << 30)
-+#define CPTR_EL2_TCPAC	(1 << 31)
- #define CPTR_EL2_RES1	0x000032ff /* known RES1 bits in CPTR_EL2 */
- #define CPTR_EL2_DEFAULT	CPTR_EL2_RES1
++  For CPUs with Activity Monitors Unit v1 (AMUv1) extension present:
++  - If EL3 is present:
++    CPTR_EL3.TAM (bit 30) must be initialised to 0b0
++    CPTR_EL2.TAM (bit 30) must be initialised to 0b0
++    AMCNTENSET0_EL0 must be initialised to 0b1111
++    AMCNTENSET1_EL0 must be initialised to a platform specific value
++    having 0b1 set for the corresponding bit for each of the auxiliary
++    counters present.
++  - If the kernel is entered at EL1:
++    AMCNTENSET0_EL0 must be initialised to 0b1111
++    AMCNTENSET1_EL0 must be initialised to a platform specific value
++    having 0b1 set for the corresponding bit for each of the auxiliary
++    counters present.
++
+ The requirements described above for CPU mode, caches, MMUs, architected
+ timers, coherency and system registers apply to all CPUs.  All CPUs must
+ enter the kernel in the same exception level.
+diff --git a/Documentation/arm64/cpu-feature-registers.rst b/Documentation/arm64/cpu-feature-registers.rst
+index b6e44884e3ad..4770ae54032b 100644
+--- a/Documentation/arm64/cpu-feature-registers.rst
++++ b/Documentation/arm64/cpu-feature-registers.rst
+@@ -150,6 +150,8 @@ infrastructure:
+      +------------------------------+---------+---------+
+      | DIT                          | [51-48] |    y    |
+      +------------------------------+---------+---------+
++     | AMU                          | [47-44] |    n    |
++     +------------------------------+---------+---------+
+      | SVE                          | [35-32] |    y    |
+      +------------------------------+---------+---------+
+      | GIC                          | [27-24] |    n    |
+diff --git a/Documentation/arm64/index.rst b/Documentation/arm64/index.rst
+index 5c0c69dc58aa..09cbb4ed2237 100644
+--- a/Documentation/arm64/index.rst
++++ b/Documentation/arm64/index.rst
+@@ -6,6 +6,7 @@ ARM64 Architecture
+     :maxdepth: 1
  
-diff --git a/arch/arm64/kvm/hyp/switch.c b/arch/arm64/kvm/hyp/switch.c
-index 72fbbd86eb5e..0bca87a2621f 100644
---- a/arch/arm64/kvm/hyp/switch.c
-+++ b/arch/arm64/kvm/hyp/switch.c
-@@ -90,6 +90,17 @@ static void activate_traps_vhe(struct kvm_vcpu *vcpu)
- 	val = read_sysreg(cpacr_el1);
- 	val |= CPACR_EL1_TTA;
- 	val &= ~CPACR_EL1_ZEN;
-+
-+	/*
-+	 * With VHE enabled, we have HCR_EL2.{E2H,TGE} = {1,1}. Note that in
-+	 * this case CPACR_EL1 has the same bit layout as CPTR_EL2, and
-+	 * CPACR_EL1 accessing instructions are redefined to access CPTR_EL2.
-+	 * Therefore use CPTR_EL2.TAM bit reference to activate AMU register
-+	 * traps.
-+	 */
-+
-+	val |= CPTR_EL2_TAM;
-+
- 	if (update_fp_enabled(vcpu)) {
- 		if (vcpu_has_sve(vcpu))
- 			val |= CPACR_EL1_ZEN;
-@@ -111,7 +122,7 @@ static void __hyp_text __activate_traps_nvhe(struct kvm_vcpu *vcpu)
- 	__activate_traps_common(vcpu);
- 
- 	val = CPTR_EL2_DEFAULT;
--	val |= CPTR_EL2_TTA | CPTR_EL2_TZ;
-+	val |= CPTR_EL2_TTA | CPTR_EL2_TZ | CPTR_EL2_TAM;
- 	if (!update_fp_enabled(vcpu)) {
- 		val |= CPTR_EL2_TFP;
- 		__activate_traps_fpsimd32(vcpu);
-diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-index 9f2165937f7d..940ab9b4c98b 100644
---- a/arch/arm64/kvm/sys_regs.c
-+++ b/arch/arm64/kvm/sys_regs.c
-@@ -1003,6 +1003,20 @@ static bool access_pmuserenr(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
- 	{ SYS_DESC(SYS_PMEVTYPERn_EL0(n)),					\
- 	  access_pmu_evtyper, reset_unknown, (PMEVTYPER0_EL0 + n), }
- 
-+static bool access_amu(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
-+			     const struct sys_reg_desc *r)
-+{
-+	kvm_inject_undefined(vcpu);
-+
-+	return false;
-+}
-+
-+/* Macro to expand the AMU counter and type registers*/
-+#define AMU_AMEVCNTR0_EL0(n) { SYS_DESC(SYS_AMEVCNTR0_EL0(n)), access_amu }
-+#define AMU_AMEVTYPE0_EL0(n) { SYS_DESC(SYS_AMEVTYPE0_EL0(n)), access_amu }
-+#define AMU_AMEVCNTR1_EL0(n) { SYS_DESC(SYS_AMEVCNTR1_EL0(n)), access_amu }
-+#define AMU_AMEVTYPE1_EL0(n) { SYS_DESC(SYS_AMEVTYPE1_EL0(n)), access_amu }
-+
- static bool trap_ptrauth(struct kvm_vcpu *vcpu,
- 			 struct sys_reg_params *p,
- 			 const struct sys_reg_desc *rd)
-@@ -1078,8 +1092,12 @@ static u64 read_id_reg(const struct kvm_vcpu *vcpu,
- 			 (u32)r->CRn, (u32)r->CRm, (u32)r->Op2);
- 	u64 val = raz ? 0 : read_sanitised_ftr_reg(id);
- 
--	if (id == SYS_ID_AA64PFR0_EL1 && !vcpu_has_sve(vcpu)) {
--		val &= ~(0xfUL << ID_AA64PFR0_SVE_SHIFT);
-+	if (id == SYS_ID_AA64PFR0_EL1) {
-+		if (!vcpu_has_sve(vcpu))
-+			val &= ~(0xfUL << ID_AA64PFR0_SVE_SHIFT);
-+		val &= ~(0xfUL << ID_AA64PFR0_AMU_SHIFT);
-+	} else if (id == SYS_ID_PFR0_EL1) {
-+		val &= ~(0xfUL << ID_PFR0_AMU_SHIFT);
- 	} else if (id == SYS_ID_AA64ISAR1_EL1 && !vcpu_has_ptrauth(vcpu)) {
- 		val &= ~((0xfUL << ID_AA64ISAR1_APA_SHIFT) |
- 			 (0xfUL << ID_AA64ISAR1_API_SHIFT) |
-@@ -1565,6 +1583,79 @@ static const struct sys_reg_desc sys_reg_descs[] = {
- 	{ SYS_DESC(SYS_TPIDR_EL0), NULL, reset_unknown, TPIDR_EL0 },
- 	{ SYS_DESC(SYS_TPIDRRO_EL0), NULL, reset_unknown, TPIDRRO_EL0 },
- 
-+	{ SYS_DESC(SYS_AMCR_EL0), access_amu },
-+	{ SYS_DESC(SYS_AMCFGR_EL0), access_amu },
-+	{ SYS_DESC(SYS_AMCGCR_EL0), access_amu },
-+	{ SYS_DESC(SYS_AMUSERENR_EL0), access_amu },
-+	{ SYS_DESC(SYS_AMCNTENCLR0_EL0), access_amu },
-+	{ SYS_DESC(SYS_AMCNTENSET0_EL0), access_amu },
-+	{ SYS_DESC(SYS_AMCNTENCLR1_EL0), access_amu },
-+	{ SYS_DESC(SYS_AMCNTENSET1_EL0), access_amu },
-+	AMU_AMEVCNTR0_EL0(0),
-+	AMU_AMEVCNTR0_EL0(1),
-+	AMU_AMEVCNTR0_EL0(2),
-+	AMU_AMEVCNTR0_EL0(3),
-+	AMU_AMEVCNTR0_EL0(4),
-+	AMU_AMEVCNTR0_EL0(5),
-+	AMU_AMEVCNTR0_EL0(6),
-+	AMU_AMEVCNTR0_EL0(7),
-+	AMU_AMEVCNTR0_EL0(8),
-+	AMU_AMEVCNTR0_EL0(9),
-+	AMU_AMEVCNTR0_EL0(10),
-+	AMU_AMEVCNTR0_EL0(11),
-+	AMU_AMEVCNTR0_EL0(12),
-+	AMU_AMEVCNTR0_EL0(13),
-+	AMU_AMEVCNTR0_EL0(14),
-+	AMU_AMEVCNTR0_EL0(15),
-+	AMU_AMEVTYPE0_EL0(0),
-+	AMU_AMEVTYPE0_EL0(1),
-+	AMU_AMEVTYPE0_EL0(2),
-+	AMU_AMEVTYPE0_EL0(3),
-+	AMU_AMEVTYPE0_EL0(4),
-+	AMU_AMEVTYPE0_EL0(5),
-+	AMU_AMEVTYPE0_EL0(6),
-+	AMU_AMEVTYPE0_EL0(7),
-+	AMU_AMEVTYPE0_EL0(8),
-+	AMU_AMEVTYPE0_EL0(9),
-+	AMU_AMEVTYPE0_EL0(10),
-+	AMU_AMEVTYPE0_EL0(11),
-+	AMU_AMEVTYPE0_EL0(12),
-+	AMU_AMEVTYPE0_EL0(13),
-+	AMU_AMEVTYPE0_EL0(14),
-+	AMU_AMEVTYPE0_EL0(15),
-+	AMU_AMEVCNTR1_EL0(0),
-+	AMU_AMEVCNTR1_EL0(1),
-+	AMU_AMEVCNTR1_EL0(2),
-+	AMU_AMEVCNTR1_EL0(3),
-+	AMU_AMEVCNTR1_EL0(4),
-+	AMU_AMEVCNTR1_EL0(5),
-+	AMU_AMEVCNTR1_EL0(6),
-+	AMU_AMEVCNTR1_EL0(7),
-+	AMU_AMEVCNTR1_EL0(8),
-+	AMU_AMEVCNTR1_EL0(9),
-+	AMU_AMEVCNTR1_EL0(10),
-+	AMU_AMEVCNTR1_EL0(11),
-+	AMU_AMEVCNTR1_EL0(12),
-+	AMU_AMEVCNTR1_EL0(13),
-+	AMU_AMEVCNTR1_EL0(14),
-+	AMU_AMEVCNTR1_EL0(15),
-+	AMU_AMEVTYPE1_EL0(0),
-+	AMU_AMEVTYPE1_EL0(1),
-+	AMU_AMEVTYPE1_EL0(2),
-+	AMU_AMEVTYPE1_EL0(3),
-+	AMU_AMEVTYPE1_EL0(4),
-+	AMU_AMEVTYPE1_EL0(5),
-+	AMU_AMEVTYPE1_EL0(6),
-+	AMU_AMEVTYPE1_EL0(7),
-+	AMU_AMEVTYPE1_EL0(8),
-+	AMU_AMEVTYPE1_EL0(9),
-+	AMU_AMEVTYPE1_EL0(10),
-+	AMU_AMEVTYPE1_EL0(11),
-+	AMU_AMEVTYPE1_EL0(12),
-+	AMU_AMEVTYPE1_EL0(13),
-+	AMU_AMEVTYPE1_EL0(14),
-+	AMU_AMEVTYPE1_EL0(15),
-+
- 	{ SYS_DESC(SYS_CNTP_TVAL_EL0), access_arch_timer },
- 	{ SYS_DESC(SYS_CNTP_CTL_EL0), access_arch_timer },
- 	{ SYS_DESC(SYS_CNTP_CVAL_EL0), access_arch_timer },
+     acpi_object_usage
++    amu
+     arm-acpi
+     booting
+     cpu-feature-registers
 -- 
 2.17.1
 
