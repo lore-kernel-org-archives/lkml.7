@@ -2,138 +2,196 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 839E4C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B1BC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 641EF20717
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:40:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D675D24672
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:40:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727610AbfLRQkR (ORCPT
+        id S1727614AbfLRQkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 11:40:17 -0500
-Received: from mout.kundenserver.de ([212.227.17.10]:44199 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727124AbfLRQkQ (ORCPT
+        Wed, 18 Dec 2019 11:40:31 -0500
+Received: from mailoutvs56.siol.net ([185.57.226.247]:50590 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726931AbfLRQkb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 11:40:16 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MUGqT-1iGuOr0t6J-00RLZB; Wed, 18 Dec 2019 17:40:06 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     "Darrick J . Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org
-Cc:     y2038@lists.linaro.org, Arnd Bergmann <arnd@arndb.de>,
-        Brian Foster <bfoster@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Allison Collins <allison.henderson@oracle.com>,
-        Jan Kara <jack@suse.cz>, Eric Sandeen <sandeen@sandeen.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] xfs: disallow broken ioctls without compat-32-bit-time
-Date:   Wed, 18 Dec 2019 17:39:29 +0100
-Message-Id: <20191218163954.296726-2-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20191218163954.296726-1-arnd@arndb.de>
-References: <20191218163954.296726-1-arnd@arndb.de>
+        Wed, 18 Dec 2019 11:40:31 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 161B1521E9F;
+        Wed, 18 Dec 2019 17:40:28 +0100 (CET)
+X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id xfVEE8OS8Kem; Wed, 18 Dec 2019 17:40:27 +0100 (CET)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 9BF6A523FB0;
+        Wed, 18 Dec 2019 17:40:27 +0100 (CET)
+Received: from jernej-laptop.localnet (cpe-86-58-102-7.static.triera.net [86.58.102.7])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id 799165236CB;
+        Wed, 18 Dec 2019 17:40:26 +0100 (CET)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     mchehab@kernel.org, mripard@kernel.org, hverkuil@xs4all.nl,
+        gregkh@linuxfoundation.org, wens@csie.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2] media: cedrus: Fix decoding for some HEVC videos
+Date:   Wed, 18 Dec 2019 17:40:25 +0100
+Message-ID: <2234008.mhVpxdDc1K@jernej-laptop>
+In-Reply-To: <20191218084047.GA2900@aptenodytes>
+References: <20191213161516.54688-1-jernej.skrabec@siol.net> <20191213161516.54688-2-jernej.skrabec@siol.net> <20191218084047.GA2900@aptenodytes>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:6ujAzFNzbSvWONOGFgSWinycKZWnfNnaCJ6HIW30mi/PzDQi6Wu
- hKOaMDeT4IWEcnmQSowIe92SThixIKCnshY2b1DvLkb9cwh/JBIhP6ELzY+IEBfeaBlBnvG
- HG/9w0pt+nFUcJUliGN/drBqfYUb9AK8V0Z8lDB4YEIiaUW8qvmH2nOUBipIWTIT+YULKl0
- DLu+k/jmWAKQFz3vpL/vw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Phie+ptjyJE=:EGVmmJtbEU0+IRu25Koo9X
- gB6r/Vk3tbNyA1FA2jcJ0DLdt6R2yBk3mg2IZZrji+Z5pUazLPh/KswFMI50Enri0I9nE+ANH
- 2j1XO9is3USpw973y3vrxgDHzE6W4afEKpdgeNymEdnk1nAWMs0wGgUV7cMdUPnzq7mHSyMpJ
- +KNVxyeARysnFu5t2x3dzxI8dl/f3SVCUI9lAtLb0O3ZsTzNvlbeT7Kbpuv1HHRhzv4jmosd0
- e9o3ImrhDWiP6UpFkFw4nwvqVFZd3IXs+fhlFENkpnc3qbZWkskLWT72/M+k8KG/rcw42UeMF
- m21DzColmhBoh0Ss6DYmHqPuP2jLEts6isFEdkVTUJzyL8360L9RjsbafGHgVqDc29mSyuarx
- kszzc7VkEvsuP/1SNOSKWb3Wa4aRTjMMocpjrtUdcjA0/uqpYL/A+OJAPwYeqhEEIPKTkkQcM
- /U4/BegYQ7scv2xY/ti20LtHp+ZvOZyJVnhAwmeQfXdsNQJnuJ1PAvQ45C7j5HShFVH4viDHn
- dtzQV9TPOLOzFj8vWBjBgTXWEJyA3z4md+oqaTnVense41w1o+rOyk9tOD57gFqtD3Y4ZQRoT
- T0DwiqDRmBZ2vNKPllydRgAM+ZBgPf2HMUEgeNd5axSPtvpsd3ixSuyVrpjQ6Lbvh/2DYwpSi
- ww5O4fRDWUP4VaQKBmtrqbl2+3f5cgjO1+raAj6AWncDatN3qQjC9DphFdTKCdLvgbOfzm+4Y
- wagisEsGvWUe4B5o3B8BXpDstc3oALZP8wCrFBRzI8y4EePxiQztwSQTHI70nGnuWGBoE9mNs
- M8C07KLky3DBhl31X5ei5Hk9Zm9VB8SHkE6GXpkM+of5Sdc2ZK2rYdMc8XF/+EGyHkwb2h8oF
- EQJjOtppA7S+gjkCJBRg==
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building a kernel that disables support for 32-bit time_t
-system calls, it also makes sense to disable the old xfs_bstat
-ioctls completely, as they truncate the timestamps to 32-bit
-values once the extended times are supported.
+Hi!
 
-Any application using these needs to be updated to use the v5
-interfaces.
+Dne sreda, 18. december 2019 ob 09:40:47 CET je Paul Kocialkowski napisal(a):
+> Hi,
+> 
+> On Fri 13 Dec 19, 17:15, Jernej Skrabec wrote:
+> > It seems that for some HEVC videos at least one bitstream parsing
+> > trigger must be called in order to be decoded correctly. There is no
+> > explanation why this helps, but it was observed that several videos
+> > with this fix are now decoded correctly and there is no regression with
+> > others.
+> > 
+> > Without this fix, those same videos totally crash HEVC decoder (other
+> > decoder engines are unaffected). After decoding those problematic
+> > videos, HEVC decoder always returns only green image (all zeros).
+> > Only complete HW reset helps.
+> > 
+> > This fix is similar to that for H264.
+> 
+> Thanks for the fix, interesting that the same issue shows up on HEVC!
+> I suspect that Allwinner folks never really tested the engine without
+> using it for bitstream parsing.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- fs/xfs/xfs_ioctl.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+That thought also crossed my mind. It's even worse with VP8. There you can't 
+have proper decoding at all without calling one specific bitstream parsing 
+function.
 
-diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index 7b35d62ede9f..d43582e933a0 100644
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -36,6 +36,7 @@
- #include "xfs_reflink.h"
- #include "xfs_ioctl.h"
- 
-+#include <linux/compat.h>
- #include <linux/mount.h>
- #include <linux/namei.h>
- 
-@@ -617,6 +618,23 @@ xfs_fsinumbers_fmt(
- 	return xfs_ibulk_advance(breq, sizeof(struct xfs_inogrp));
- }
- 
-+/* disallow y2038-unsafe ioctls with CONFIG_COMPAT_32BIT_TIME=n */
-+static bool xfs_have_compat_bstat_time32(unsigned int cmd)
-+{
-+	if (IS_ENABLED(CONFIG_COMPAT_32BIT_TIME))
-+		return true;
-+
-+	if (IS_ENABLED(CONFIG_64BIT) && !in_compat_syscall())
-+		return true;
-+
-+	if (cmd == XFS_IOC_FSBULKSTAT_SINGLE ||
-+	    cmd == XFS_IOC_FSBULKSTAT ||
-+	    cmd == XFS_IOC_SWAPEXT)
-+		return false;
-+
-+	return true;
-+}
-+
- STATIC int
- xfs_ioc_fsbulkstat(
- 	xfs_mount_t		*mp,
-@@ -637,6 +655,9 @@ xfs_ioc_fsbulkstat(
- 	if (!capable(CAP_SYS_ADMIN))
- 		return -EPERM;
- 
-+	if (!xfs_have_compat_bstat_time32(cmd))
-+		return -EINVAL;
-+
- 	if (XFS_FORCED_SHUTDOWN(mp))
- 		return -EIO;
- 
-@@ -1815,6 +1836,11 @@ xfs_ioc_swapext(
- 	struct fd	f, tmp;
- 	int		error = 0;
- 
-+	if (!xfs_have_compat_bstat_time32(XFS_IOC_SWAPEXT)) {
-+		error = -EINVAL;
-+		goto out;
-+	}
-+
- 	/* Pull information for the target fd */
- 	f = fdget((int)sxp->sx_fdtarget);
- 	if (!f.file) {
--- 
-2.20.0
+> 
+> Acked-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+
+Thanks!
+
+Best regards,
+Jernej
+
+> 
+> Cheers,
+> 
+> Paul
+> 
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > ---
+> > 
+> >  .../staging/media/sunxi/cedrus/cedrus_h265.c  | 25 ++++++++++++++++---
+> >  .../staging/media/sunxi/cedrus/cedrus_regs.h  |  1 +
+> >  2 files changed, 23 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
+> > b/drivers/staging/media/sunxi/cedrus/cedrus_h265.c index
+> > 109d3289418c..5a207f1e137c 100644
+> > --- a/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
+> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
+> > @@ -7,6 +7,7 @@
+> > 
+> >   * Copyright (C) 2018 Bootlin
+> >   */
+> > 
+> > +#include <linux/delay.h>
+> > 
+> >  #include <linux/types.h>
+> >  
+> >  #include <media/videobuf2-dma-contig.h>
+> > 
+> > @@ -283,6 +284,23 @@ static void cedrus_h265_write_scaling_list(struct
+> > cedrus_ctx *ctx,> 
+> >  		}
+> >  
+> >  }
+> > 
+> > +static void cedrus_h265_skip_bits(struct cedrus_dev *dev, int num)
+> > +{
+> > +	int count = 0;
+> > +
+> > +	while (count < num) {
+> > +		int tmp = min(num - count, 32);
+> > +
+> > +		cedrus_write(dev, VE_DEC_H265_TRIGGER,
+> > +			     VE_DEC_H265_TRIGGER_FLUSH_BITS |
+> > +			     VE_DEC_H265_TRIGGER_TYPE_N_BITS(tmp));
+> > +		while (cedrus_read(dev, VE_DEC_H265_STATUS) &
+> > VE_DEC_H265_STATUS_VLD_BUSY) +			udelay(1);
+> > +
+> > +		count += tmp;
+> > +	}
+> > +}
+> > +
+> > 
+> >  static void cedrus_h265_setup(struct cedrus_ctx *ctx,
+> >  
+> >  			      struct cedrus_run *run)
+> >  
+> >  {
+> > 
+> > @@ -347,10 +365,9 @@ static void cedrus_h265_setup(struct cedrus_ctx *ctx,
+> > 
+> >  	/* Source offset and length in bits. */
+> > 
+> > -	reg = slice_params->data_bit_offset;
+> > -	cedrus_write(dev, VE_DEC_H265_BITS_OFFSET, reg);
+> > +	cedrus_write(dev, VE_DEC_H265_BITS_OFFSET, 0);
+> > 
+> > -	reg = slice_params->bit_size - slice_params->data_bit_offset;
+> > +	reg = slice_params->bit_size;
+> > 
+> >  	cedrus_write(dev, VE_DEC_H265_BITS_LEN, reg);
+> >  	
+> >  	/* Source beginning and end addresses. */
+> > 
+> > @@ -385,6 +402,8 @@ static void cedrus_h265_setup(struct cedrus_ctx *ctx,
+> > 
+> >  	/* Initialize bitstream access. */
+> >  	cedrus_write(dev, VE_DEC_H265_TRIGGER, 
+VE_DEC_H265_TRIGGER_INIT_SWDEC);
+> > 
+> > +	cedrus_h265_skip_bits(dev, slice_params->data_bit_offset);
+> > +
+> > 
+> >  	/* Bitstream parameters. */
+> >  	
+> >  	reg = VE_DEC_H265_DEC_NAL_HDR_NAL_UNIT_TYPE(slice_params-
+>nal_unit_type)
+> >  	|
+> > 
+> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
+> > b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h index
+> > 0d9449fe2b28..df1cceef8d93 100644
+> > --- a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
+> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
+> > @@ -424,6 +424,7 @@
+> > 
+> >  #define VE_DEC_H265_TRIGGER			(VE_ENGINE_DEC_H265 + 
+0x34)
+> > 
+> > +#define VE_DEC_H265_TRIGGER_TYPE_N_BITS(x)	(((x) & 0x3f) << 8)
+> > 
+> >  #define VE_DEC_H265_TRIGGER_STCD_VC1		(0x02 << 4)
+> >  #define VE_DEC_H265_TRIGGER_STCD_AVS		(0x01 << 4)
+> >  #define VE_DEC_H265_TRIGGER_STCD_HEVC		(0x00 << 4)
+
+
+
 
