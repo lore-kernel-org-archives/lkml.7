@@ -2,172 +2,212 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05720C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8780C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFFB021582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:40:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2E6421582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 11:41:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576669306;
+	bh=aULGyUA/wGPKod6NyWxf+sPn1EYFMleyk53t/k6z6fA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ca2qtACG29lwtNEcfLZfgGq/Nm2KlTdWp6WfXP3Cwg6i/qppr+wJDrm8mHIouOBad
+	 ZsR/m4kK6G0VP4F8VO3rg0mNJiMRwom8dst0JCB1KRG9POw8XbB/uoUK3XxRaKY4Zu
+	 7UaCRqxJgAkC9FzLqLT/NJ7O6IGQtPFuy8cEcPIs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbfLRLkn (ORCPT
+        id S1726851AbfLRLlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 06:40:43 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60490 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726141AbfLRLkn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 06:40:43 -0500
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBIBbKMs167918
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 06:40:42 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wyjb527e1-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 06:40:41 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Wed, 18 Dec 2019 11:40:38 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 18 Dec 2019 11:40:31 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBIBeUUp51511492
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Dec 2019 11:40:30 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AC0784C044;
-        Wed, 18 Dec 2019 11:40:30 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0F3844C05A;
-        Wed, 18 Dec 2019 11:40:30 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.152.224.119])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 18 Dec 2019 11:40:29 +0000 (GMT)
-Subject: Re: [PATCH v4 00/19] KVM: Dynamically size memslot arrays
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>
-References: <20191217204041.10815-1-sean.j.christopherson@intel.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Wed, 18 Dec 2019 12:40:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Wed, 18 Dec 2019 06:41:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59722 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726141AbfLRLlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 06:41:45 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C51D21582;
+        Wed, 18 Dec 2019 11:41:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576669303;
+        bh=aULGyUA/wGPKod6NyWxf+sPn1EYFMleyk53t/k6z6fA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lKbb86CYHq9yNqnYdf/wU/yzfgus3CWcp9Z5PEHJvg0FJ6YkjNxOkUS4N5HzI+8jl
+         pt8pLlnFUHPPN2Q/0TR1kdJqjdBz8pp2hn2MKuCAcxwDNusgyKi5Dd8F2Ych5xCY53
+         M/f/osMm+EVWDl97J/DkuhMEfeICSsqR434ftU9o=
+Date:   Wed, 18 Dec 2019 11:41:38 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-media@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH RESEND RESEND] media: uvc: Avoid cyclic entity chains due
+ to malformed USB descriptors
+Message-ID: <20191218114137.GA15505@willie-the-truck>
+References: <20191108154838.21487-1-will@kernel.org>
+ <20191108155503.GB15731@pendragon.ideasonboard.com>
+ <20191216121651.GA12947@willie-the-truck>
+ <CAAeHK+xdVmEFtK78bWd2Odn0uBynqnt5UT9jZJFvqGL=_9NU2w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191217204041.10815-1-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19121811-0016-0000-0000-000002D623BE
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19121811-0017-0000-0000-0000333861B2
-Message-Id: <595b5ecc-d18b-3973-7041-59e58d7f1cc7@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-18_03:2019-12-17,2019-12-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- malwarescore=0 clxscore=1015 spamscore=0 mlxlogscore=999 bulkscore=0
- phishscore=0 priorityscore=1501 adultscore=0 suspectscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912180097
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAeHK+xdVmEFtK78bWd2Odn0uBynqnt5UT9jZJFvqGL=_9NU2w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Dec 16, 2019 at 02:17:52PM +0100, Andrey Konovalov wrote:
+> On Mon, Dec 16, 2019 at 1:16 PM Will Deacon <will@kernel.org> wrote:
+> > On Fri, Nov 08, 2019 at 05:55:03PM +0200, Laurent Pinchart wrote:
+> > > Thank you for the patch.
+> > >
+> > > I'm sorry for the delay, and will have to ask you to be a bit more
+> > > patient I'm afraid. I will leave tomorrow for a week without computer
+> > > access and will only be able to go through my backlog when I will be
+> > > back on the 17th.
+> >
+> > Gentle reminder on this, now you've been back a month ;)
+> 
+> I think we now have a reproducer for this issue that syzbot just reported:
+> 
+> https://syzkaller.appspot.com/bug?extid=0a5c96772a9b26f2a876
+> 
+> You can try you patch on it :)
+
+Oh wow, I *really* like the raw USB gadget thingy you have to reproduce
+these! I also really like that this patch fixes the issue. Logs below.
+
+Laurent -- can we please merge this now?
+
+Will
+
+--->8
+
+Before:
+
+bash-5.0# ./repro
+[   31.749418][   T92] usb 1-1: new high-speed USB device number 2 using dummy_hcd
+[   31.989356][   T92] usb 1-1: Using ep0 maxpacket: 8
+[   32.109448][   T92] usb 1-1: config index 0 descriptor too short (expected 51150, got 70)
+[   32.111898][   T92] usb 1-1: config 0 contains an unexpected descriptor of type 0x2, skipping
+[   32.114317][   T92] usb 1-1: config 0 has an invalid descriptor of length 0, skipping remainder of the config
+[   32.117145][   T92] usb 1-1: config 0 interface 0 altsetting 0 has 0 endpoint descriptors, different from the interface descriptor's value: 16
+[   32.120554][   T92] usb 1-1: New USB device found, idVendor=0bd3, idProduct=0755, bcdDevice=69.f1
+[   32.122875][   T92] usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+[   32.126602][   T92] usb 1-1: config 0 descriptor??
+[   32.399436][   T92] usb 1-1: string descriptor 0 read error: -71
+[   32.401266][   T92] uvcvideo: Found UVC 0.00 device <unnamed> (0bd3:0755)
+[   32.403266][   T92] ------------[ cut here ]------------
+[   32.404790][   T92] list_add double add: new=ffff888015992010, prev=ffff888015992010, next=ffff8880146c6a18.
+[   32.407819][   T92] WARNING: CPU: 2 PID: 92 at lib/list_debug.c:31 __list_add_valid+0xab/0xe0
+[   32.410214][   T92] Modules linked in:
+[   32.411071][   T92] CPU: 2 PID: 92 Comm: kworker/2:1 Not tainted 5.5.0-rc2+ #1
+[   32.412432][   T92] Workqueue: usb_hub_wq hub_event
+[   32.413364][   T92] RIP: 0010:__list_add_valid+0xab/0xe0
+[   32.414382][   T92] Code: 48 c7 c7 a0 ae fa 85 48 89 de e8 19 eb 2a ff 0f 0b 31 c0 eb cc 48 89 f2 48 89 d9 48 89 ee 48 c7 c7 20 af fa 85 e8 fe ea 2a ff <0f> 0b 31 c0 eb b1 48 89 34 24 e8 36 e8 7e ff 48 8b 34 24 e9 68 ff
+[   32.418007][   T92] RSP: 0018:ffff8880158d7008 EFLAGS: 00010286
+[   32.419127][   T92] RAX: 0000000000000000 RBX: ffff8880146c6a18 RCX: ffffffff81293978
+[   32.420589][   T92] RDX: 0000000000000000 RSI: ffffffff812990fc RDI: 0000000000000006
+[   32.421692][   T92] RBP: ffff888015992010 R08: ffff88801551de80 R09: fffffbfff11ea4b5
+[   32.422744][   T92] R10: fffffbfff11ea4b4 R11: ffffffff88f525a7 R12: dffffc0000000000
+[   32.423784][   T92] R13: ffff888015992000 R14: ffff8880146c6a20 R15: ffff8880146c6a18
+[   32.424838][   T92] FS:  0000000000000000(0000) GS:ffff888016800000(0000) knlGS:0000000000000000
+[   32.425996][   T92] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   32.426867][   T92] CR2: 0000000000478f10 CR3: 000000001327e005 CR4: 0000000000760ea0
+[   32.427935][   T92] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   32.428972][   T92] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   32.430012][   T92] PKRU: 55555554
+[   32.430473][   T92] Call Trace:
+[   32.430944][   T92]  uvc_scan_chain_forward.isra.9+0x4df/0x635
+[   32.431600][   T92]  uvc_probe.cold.19+0x1ef2/0x29bc
+[   32.432175][   T92]  ? __lock_acquire+0xeda/0x41a0
+[   32.432712][   T92]  ? mark_lock+0xbe/0x10f0
+[   32.433209][   T92]  ? pm_runtime_enable+0x2a/0x310
+[   32.433773][   T92]  ? find_held_lock+0x33/0x1c0
+[   32.434307][   T92]  ? usb_probe_interface+0x307/0x7b0
+[   32.434869][   T92]  usb_probe_interface+0x307/0x7b0
+[   32.435414][   T92]  ? usb_probe_device+0xf0/0xf0
+[   32.435938][   T92]  really_probe+0x281/0x700
+[   32.436424][   T92]  ? driver_allows_async_probing+0x150/0x150
+[   32.437065][   T92]  driver_probe_device+0x105/0x200
+[   32.437611][   T92]  __device_attach_driver+0x1b9/0x230
+[   32.438190][   T92]  bus_for_each_drv+0x156/0x1d0
+[   32.438708][   T92]  ? bus_rescan_devices+0x20/0x20
+[   32.439248][   T92]  ? lockdep_hardirqs_on+0x388/0x570
+[   32.439812][   T92]  __device_attach+0x20b/0x350
+[   32.440323][   T92]  ? device_bind_driver+0xc0/0xc0
+[   32.440870][   T92]  bus_probe_device+0x1e5/0x290
+[   32.441386][   T92]  device_add+0x1420/0x1b90
+[   32.441887][   T92]  ? wait_for_completion+0x3c0/0x3c0
+[   32.442466][   T92]  ? device_link_remove+0x150/0x150
+[   32.443037][   T92]  usb_set_configuration+0xd6f/0x1750
+[   32.443633][   T92]  generic_probe+0x95/0xcd
+[   32.444146][   T92]  usb_probe_device+0x97/0xf0
+[   32.444650][   T92]  ? usb_suspend+0x630/0x630
+[   32.445151][   T92]  really_probe+0x281/0x700
+[   32.445642][   T92]  ? driver_allows_async_probing+0x150/0x150
+[   32.446299][   T92]  driver_probe_device+0x105/0x200
+[   32.446857][   T92]  __device_attach_driver+0x1b9/0x230
+[   32.447448][   T92]  bus_for_each_drv+0x156/0x1d0
+[   32.447981][   T92]  ? bus_rescan_devices+0x20/0x20
+[   32.448523][   T92]  ? lockdep_hardirqs_on+0x388/0x570
+[   32.449095][   T92]  __device_attach+0x20b/0x350
+[   32.449612][   T92]  ? device_bind_driver+0xc0/0xc0
+[   32.450167][   T92]  bus_probe_device+0x1e5/0x290
+[   32.450686][   T92]  device_add+0x1420/0x1b90
+[   32.451164][   T92]  ? device_link_remove+0x150/0x150
+[   32.451715][   T92]  ? _raw_spin_unlock_irq+0x1f/0x30
+[   32.452267][   T92]  usb_new_device.cold.65+0x66e/0xe63
+[   32.452835][   T92]  hub_event+0x1ebd/0x3810
+[   32.453300][   T92]  ? hub_port_debounce+0x270/0x270
+[   32.453837][   T92]  ? __lock_acquire+0xeda/0x41a0
+[   32.454389][   T92]  ? find_held_lock+0x33/0x1c0
+[   32.454904][   T92]  ? process_one_work+0x8fc/0x1720
+[   32.455445][   T92]  ? mark_held_locks+0x110/0x110
+[   32.455954][   T92]  ? rcu_read_lock_sched_held+0x9c/0xd0
+[   32.456536][   T92]  ? rcu_read_lock_bh_held+0xb0/0xb0
+[   32.457093][   T92]  process_one_work+0x9f2/0x1720
+[   32.457616][   T92]  ? mark_held_locks+0x110/0x110
+[   32.458138][   T92]  ? pwq_dec_nr_in_flight+0x310/0x310
+[   32.458701][   T92]  ? do_raw_spin_lock+0x11b/0x280
+[   32.459237][   T92]  worker_thread+0x8c/0xd10
+[   32.459715][   T92]  ? process_one_work+0x1720/0x1720
+[   32.460266][   T92]  kthread+0x352/0x420
+[   32.460702][   T92]  ? kthread_create_on_node+0xe0/0xe0
+[   32.461275][   T92]  ret_from_fork+0x24/0x30
+[   32.461738][   T92] irq event stamp: 2238
+[   32.462183][   T92] hardirqs last  enabled at (2237): [<ffffffff81293b92>] console_unlock+0x8f2/0xc40
+[   32.463174][   T92] hardirqs last disabled at (2238): [<ffffffff8100468d>] trace_hardirqs_off_thunk+0x1a/0x1c
+[   32.464244][   T92] softirqs last  enabled at (1196): [<ffffffff85c00643>] __do_softirq+0x643/0x8fc
+[   32.465225][   T92] softirqs last disabled at (1187): [<ffffffff8115a035>] irq_exit+0x175/0x1a0
+[   32.466155][   T92] ---[ end trace ef28d8c60b68a46d ]---
+[   32.466781][   T92] uvcvideo: No valid video chain found.
+[   32.468076][   T92] usb 1-1: USB disconnect, device number 2
 
 
-On 17.12.19 21:40, Sean Christopherson wrote:
-> The end goal of this series is to dynamically size the memslot array so
-> that KVM allocates memory based on the number of memslots in use, as
-> opposed to unconditionally allocating memory for the maximum number of
-> memslots.  On x86, each memslot consumes 88 bytes, and so with 2 address
-> spaces of 512 memslots, each VM consumes ~90k bytes for the memslots.
-> E.g. given a VM that uses a total of 30 memslots, dynamic sizing reduces
-> the memory footprint from 90k to ~2.6k bytes.
-> 
-> The changes required to support dynamic sizing are relatively small,
-> e.g. are essentially contained in patches 17/19 and 18/19.
-> 
-> Patches 2-16 clean up the memslot code, which has gotten quite crusty,
-> especially __kvm_set_memory_region().  The clean up is likely not strictly
-> necessary to switch to dynamic sizing, but I didn't have a remotely
-> reasonable level of confidence in the correctness of the dynamic sizing
-> without first doing the clean up.
-> 
-> The only functional change in v4 is the addition of an x86-specific bug
-> fix in x86's handling of KVM_MR_MOVE.  The bug fix is not directly related
-> to dynamically allocating memslots, but it has subtle and hidden conflicts
-> with the cleanup patches, and the fix is higher priority than anything
-> else in the series, i.e. should be merged first.
-> 
-> On non-x86 architectures, v3 and v4 should be functionally equivalent,
-> the only non-x86 change in v4 is the dropping of a "const" in
-> kvm_arch_commit_memory_region().
+After:
 
-I gave this series a quick spin and it still seems to work on s390 (minus the selftest).
-
+bash-5.0# ./repro
+[   19.067221][   T92] usb 1-1: new high-speed USB device number 2 using dummy_hcd
+[   19.307154][   T92] usb 1-1: Using ep0 maxpacket: 8
+[   19.427261][   T92] usb 1-1: config index 0 descriptor too short (expected 51150, got 70)
+[   19.429709][   T92] usb 1-1: config 0 contains an unexpected descriptor of type 0x2, skipping
+[   19.432150][   T92] usb 1-1: config 0 has an invalid descriptor of length 0, skipping remainder of the config
+[   19.435003][   T92] usb 1-1: config 0 interface 0 altsetting 0 has 0 endpoint descriptors, different from the interface descriptor's value: 16
+[   19.438655][   T92] usb 1-1: New USB device found, idVendor=0bd3, idProduct=0755, bcdDevice=69.f1
+[   19.441166][   T92] usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+[   19.445163][   T92] usb 1-1: config 0 descriptor??
+[   19.717195][   T92] usb 1-1: string descriptor 0 read error: -71
+[   19.719038][   T92] uvcvideo: Found UVC 0.00 device <unnamed> (0bd3:0755)
+[   19.721087][   T92] uvcvideo: No valid video chain found.
+[   19.725262][   T92] usb 1-1: USB disconnect, device number 2
