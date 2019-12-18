@@ -2,265 +2,140 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32485C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B77DC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06526218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D97A2218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 07:00:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="A+lt93RU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbfLRHAd (ORCPT
+        id S1726719AbfLRHAu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 02:00:33 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:48539 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725797AbfLRHAd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 02:00:33 -0500
-Received: from [10.28.39.99] (10.28.39.99) by mail-sz.amlogic.com (10.28.11.5)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 18 Dec
- 2019 15:00:53 +0800
-Subject: Re: [PATCH v4 5/6] dt-bindings: clock: meson: add A1 peripheral clock
- controller bindings
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-CC:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20191206074052.15557-1-jian.hu@amlogic.com>
- <20191206074052.15557-6-jian.hu@amlogic.com>
- <1ja77xlv9c.fsf@starbuckisacylon.baylibre.com>
-From:   Jian Hu <jian.hu@amlogic.com>
-Message-ID: <1538849d-34eb-c5bc-0663-a3e4fded3bc7@amlogic.com>
-Date:   Wed, 18 Dec 2019 15:00:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Wed, 18 Dec 2019 02:00:50 -0500
+Received: from mout.web.de ([212.227.15.4]:50847 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725881AbfLRHAu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 02:00:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1576652429;
+        bh=HEVqlBMuHVQwjhLQA1qIaNrb256F6p8krZdbgoetx54=;
+        h=X-UI-Sender-Class:Subject:From:To:Cc:References:Date:In-Reply-To;
+        b=A+lt93RUoLNxaWM7AkIkUL4MiZkHPcUiIbEvea7xOffBoDlKqkDvLbY9CdCLloZHo
+         46QkwDGN7GB58aXU8Z3AxNFZgljcRpO/kJVLNeOdfM0XAUZIVF3kOqLlnJ1gHKs7lf
+         WWYbi3o+U3Qrl2eKXOsXPNg5SIPdU4g+ZenMRxgg=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([93.131.36.204]) by smtp.web.de (mrweb001
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MT8sw-1iIgPa3cvO-00S5W6; Wed, 18
+ Dec 2019 08:00:29 +0100
+Subject: Re: [v5 10/13] exfat: add nls operations
+From:   Markus Elfring <Markus.Elfring@web.de>
+To:     Namjae Jeon <namjae.jeon@samsung.com>,
+        linux-fsdevel@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Daniel Wagner <dwagner@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        linkinjeon@gmail.com
+References: <20191125000326.24561-1-namjae.jeon@samsung.com>
+ <CGME20191125000633epcas1p1bce48f6e0fdd552fe74dbdb7976d5182@epcas1p1.samsung.com>
+ <20191125000326.24561-11-namjae.jeon@samsung.com>
+ <147eac54-5846-ffe1-4b6b-ebf611d1252b@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <db6a467c-2fe8-9cf4-8447-1b7cbfd222a0@web.de>
+Date:   Wed, 18 Dec 2019 08:00:20 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <1ja77xlv9c.fsf@starbuckisacylon.baylibre.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+In-Reply-To: <147eac54-5846-ffe1-4b6b-ebf611d1252b@web.de>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.28.39.99]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:7lCiLfWBCrd+QEOxHEQ8qqirKCsCth+iCZ89RrYVGBQVKOzYPt2
+ /43DSMGStcVwEoevrv16tVP6IiLLgjzFYBYNh6djNQw/zCF3VwXIKO/jdhkwDBVkCxNrHiV
+ efcYIJTPAgQhstd4yiBM/ZweL1u+UEN2t5znoydfZy7fTMDx2y67xGyLaB+xxVhYZVmmVc5
+ Odo69TDR/BIdTMMkCV2UA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:G8px9mSQLuk=:1xHuOAYeOZjnbSktpJebpF
+ BS7ogWHJvVJnxkEzAGA0tPqJw4AYAhnvfv5U8eDDmlNwA7LxL0Fc85pi3xXdu1eLo0jMI+cCI
+ KZhzULQG4R2VtqTnR62AxF/JWjbLdVhO3H1mXDAa6V9UquTg6HF8zap9fQOjjGxYuRMg7iDBV
+ GNVF1YfEv5DmoyTNjByamgT/MIUZXCtk2vild0YK5xNeldnSWPGUZ2p2C5uS6c6vuF/fu37Dw
+ IN1zoc7/LdgzxbPKnAUXuhBqMrVmwfcxi69QCVUc2rRg3Le9g/EgYTonRQ+95/uuJL2jvXU9+
+ 3uAasT3JqYmaWveQlZiErCnkI3GqywDNfBR8EP2SHLLrRB6M7LIQJ9MxS4tu1y7E5/aoOBeld
+ 7Pj6ElSsmlYY/r6+T0EzBfmDB76nH0cnUZsgw2j9SmAsjxRq9RNrhlQazGFmg1Mcm5LWioF6y
+ /0eLp+86lt6/fsbFeTYwKqkuD8dENyX5S9Nh9SH8ugUKRp5tDvcDHYF2xLUvjjkRbHJx6taZk
+ wRxB5J70oCpftXer8eh6FRRLKYfeVj6KfU5IMfOpgknn0YTDh8jSACY6CeDtZRjc6zzYOW9vD
+ ik54vX60AVbguUq0JuL/z2XJHirtD/ZCBiLmk61wmEXzudlY/tHKoSeqXvwq8khRFAlWcgD08
+ PfTLHPVepvsxwTblOLUBW1J11bHR6KO2pY1nMvfnfdk2vbNtpHNC0qCsJhYfUlx6Xl28E3thY
+ hfWz//Konk1YkJNuGUVN03k4tK4qre17NbV1rg5RpalyxBaEg8tvARnmeqz95yiS98ItK0uJu
+ lL+G7AZClfC1pr2rAvWurjrV7U1fk8yJnDFmtH6TRzfIEdYpRG2+0D0xQxMZ3FHqmb0t8O7gM
+ FKnOpdDwJrW3WAu0Ok4I8EcLu9dXoo1q4M/Hidj8Zig7Nehtx6dpO8SjEZIpldXOcB8W8VIAb
+ tgxNVUW5ormCsO4REyr8PwUaLZE0VDPyvKFhYOYXRqEm5aIHn2aJZ6ln6eD6gxkqJiHiM8UNS
+ RvUK2hjU3OgARZEqvMUPPSPIh1jnluKEOIaa0Tlu+Oklh7D8dueTNiKA9WOG64ub76QpKYtxc
+ 6u1t+90CeCKTO1dGc0yOxeylvjY6MiqNZK/3JrwV4SczntBlHo+/VYSBzxAe4/91zOuAGl+O+
+ 1PmPZPiA9NzzhXcdlKqg1ZOnyaeoXkId/t8l4f1khLQv6weVSxWBGQ+42Qk6RXtyCCHkHy+r6
+ 9ZHFbAaLJPLFjncAI5iR9Hl48qnrH+Oz+zZLMLHuS/2C5veP1cFCGzeK1FD8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> * Can it be that a type other than =E2=80=9Cint=E2=80=9D would be more p=
+ortable
+>   for the desired data processing at these source code places?
+>
+> * How do you think about to use more meaningful identifiers for
+>   two of the shown literals?
 
+Would you like to clarify these software development concerns?
 
-On 2019/12/12 17:59, Jerome Brunet wrote:
-> 
-> On Fri 06 Dec 2019 at 08:40, Jian Hu <jian.hu@amlogic.com> wrote:
-> 
->> Add the documentation to support Amlogic A1 peripheral clock driver,
->> and add A1 peripheral clock controller bindings.
->>
->> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
->> ---
->>   .../bindings/clock/amlogic,a1-clkc.yaml       | 70 +++++++++++++
->>   include/dt-bindings/clock/a1-clkc.h           | 98 +++++++++++++++++++
->>   2 files changed, 168 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
->>   create mode 100644 include/dt-bindings/clock/a1-clkc.h
->>
->> diff --git a/Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
->> new file mode 100644
->> index 000000000000..dd3ce071834e
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
->> @@ -0,0 +1,70 @@
->> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
-> 
-> Same Here, Either take Rob's suggestion from v1 or reply to his comment.
-> 
-OK, I will change it.
->> +/*
->> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
->> + */
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/clock/amlogic,a1-clkc.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: Amlogic Meson A/C serials Peripheral Clock Control Unit Device Tree Bindings
->> +
->> +maintainers:
->> +  - Neil Armstrong <narmstrong@baylibre.com>
->> +  - Jerome Brunet <jbrunet@baylibre.com>
->> +  - Jian Hu <jian.hu@jian.hu.com>
->> +
->> +properties:
->> +  "#clock-cells":
->> +    const: 1
->> +  compatible:
->> +    - enum:
->> +        - amlogic,a1-periphs-clkc
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    minItems: 6
->> +    maxItems: 6
->> +    items:
->> +      - description: Input fixed pll div2
->> +      - description: Input fixed pll div3
->> +      - description: Input fixed pll div5
->> +      - description: Input fixed pll div7
->> +      - description: HIFI PLL
->> +      - description: Input Oscillator (usually at 24MHz)
->> +
->> +  clock-names:
->> +    minItems: 6
->> +    maxItems: 6
->> +    items:
->> +      - const: fclk_div2
->> +      - const: fclk_div3
->> +      - const: fclk_div5
->> +      - const: fclk_div7
->> +      - const: hifi_pll
->> +      - const: xtal
->> +
->> +required:
->> +  - "#clock-cells"
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +  - clock-names
->> +
->> +examples:
->> +  - |
->> +    clkc_periphs: periphs-clock-controller {
->> +        compatible = "amlogic,a1-periphs-clkc";
->> +        reg = <0 0x800 0 0x104>;
->> +        #clock-cells = <1>;
->> +        clocks = <&clkc_pll CLKID_FCLK_DIV2>,
->> +                <&clkc_pll CLKID_FCLK_DIV3>,
->> +                <&clkc_pll CLKID_FCLK_DIV5>,
->> +                <&clkc_pll CLKID_FCLK_DIV7>,
->> +                <&clkc_pll CLKID_HIFI_PLL>,
->> +                <&xtal>;
->> +        clock-names = "fclk_div2", "fclk_div3", "fclk_div5",
->> +                      "fclk_div7", "hifi_pll", "xtal";
->> +   };
->> diff --git a/include/dt-bindings/clock/a1-clkc.h b/include/dt-bindings/clock/a1-clkc.h
->> new file mode 100644
->> index 000000000000..1ba01122457c
->> --- /dev/null
->> +++ b/include/dt-bindings/clock/a1-clkc.h
->> @@ -0,0 +1,98 @@
->> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
->> +/*
->> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
->> + */
->> +
->> +#ifndef __A1_CLKC_H
->> +#define __A1_CLKC_H
->> +
->> +#define CLKID_XTAL_FIXPLL			1
->> +#define CLKID_XTAL_USB_PHY			2
->> +#define CLKID_XTAL_USB_CTRL			3
->> +#define CLKID_XTAL_HIFIPLL			4
->> +#define CLKID_XTAL_SYSPLL			5
->> +#define CLKID_XTAL_DDS				6
->> +#define CLKID_SYS_CLK				7
->> +#define CLKID_CLKTREE				8
->> +#define CLKID_RESET_CTRL			9
->> +#define CLKID_ANALOG_CTRL			10
->> +#define CLKID_PWR_CTRL				11
->> +#define CLKID_PAD_CTRL				12
->> +#define CLKID_SYS_CTRL				13
->> +#define CLKID_TEMP_SENSOR			14
->> +#define CLKID_AM2AXI_DIV			15
->> +#define CLKID_SPICC_B				16
->> +#define CLKID_SPICC_A				17
->> +#define CLKID_CLK_MSR				18
->> +#define CLKID_AUDIO				19
->> +#define CLKID_JTAG_CTRL				20
->> +#define CLKID_SARADC				21
->> +#define CLKID_PWM_EF				22
->> +#define CLKID_PWM_CD				23
->> +#define CLKID_PWM_AB				24
->> +#define CLKID_CEC				25
->> +#define CLKID_I2C_S				26
->> +#define CLKID_IR_CTRL				27
->> +#define CLKID_I2C_M_D				28
->> +#define CLKID_I2C_M_C				29
->> +#define CLKID_I2C_M_B				30
->> +#define CLKID_I2C_M_A				31
->> +#define CLKID_ACODEC				32
->> +#define CLKID_OTP				33
->> +#define CLKID_SD_EMMC_A				34
->> +#define CLKID_USB_PHY				35
->> +#define CLKID_USB_CTRL				36
->> +#define CLKID_SYS_DSPB				37
->> +#define CLKID_SYS_DSPA				38
->> +#define CLKID_DMA				39
->> +#define CLKID_IRQ_CTRL				40
->> +#define CLKID_NIC				41
->> +#define CLKID_GIC				42
->> +#define CLKID_UART_C				43
->> +#define CLKID_UART_B				44
->> +#define CLKID_UART_A				45
->> +#define CLKID_SYS_PSRAM				46
->> +#define CLKID_RSA				47
->> +#define CLKID_CORESIGHT				48
->> +#define CLKID_AM2AXI_VAD			49
->> +#define CLKID_AUDIO_VAD				50
->> +#define CLKID_AXI_DMC				51
->> +#define CLKID_AXI_PSRAM				52
->> +#define CLKID_RAMB				53
->> +#define CLKID_RAMA				54
->> +#define CLKID_AXI_SPIFC				55
->> +#define CLKID_AXI_NIC				56
->> +#define CLKID_AXI_DMA				57
->> +#define CLKID_CPU_CTRL				58
->> +#define CLKID_ROM				59
->> +#define CLKID_PROC_I2C				60
->> +#define CLKID_DSPA_SEL				61
->> +#define CLKID_DSPB_SEL				62
->> +#define CLKID_DSPA_EN_DSPA			63
->> +#define CLKID_DSPA_EN_NIC			64
->> +#define CLKID_DSPB_EN_DSPB			65
->> +#define CLKID_DSPB_EN_NIC			66
->> +#define CLKID_RTC_CLK				67
->> +#define CLKID_CECA_32K				68
->> +#define CLKID_CECB_32K				69
->> +#define CLKID_24M				70
->> +#define CLKID_12M				71
->> +#define CLKID_FCLK_DIV2_DIVN			72
->> +#define CLKID_GEN				73
->> +#define CLKID_SARADC_SEL			74
->> +#define CLKID_SARADC_CLK			75
->> +#define CLKID_PWM_A				76
->> +#define CLKID_PWM_B				77
->> +#define CLKID_PWM_C				78
->> +#define CLKID_PWM_D				79
->> +#define CLKID_PWM_E				80
->> +#define CLKID_PWM_F				81
->> +#define CLKID_SPICC				82
->> +#define CLKID_TS				83
->> +#define CLKID_SPIFC				84
->> +#define CLKID_USB_BUS				85
->> +#define CLKID_SD_EMMC				86
->> +#define CLKID_PSRAM				87
->> +#define CLKID_DMC				88
->> +
->> +#endif /* __A1_CLKC_H */
-> 
-> .
-> 
+Regards,
+Markus
