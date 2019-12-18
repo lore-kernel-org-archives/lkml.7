@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21923C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C019FC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0243D227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:24:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A045F24680
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 16:24:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727718AbfLRQYi (ORCPT
+        id S1727730AbfLRQYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 11:24:38 -0500
-Received: from foss.arm.com ([217.140.110.172]:51974 "EHLO foss.arm.com"
+        Wed, 18 Dec 2019 11:24:41 -0500
+Received: from foss.arm.com ([217.140.110.172]:52002 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727704AbfLRQYg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 11:24:36 -0500
+        id S1726980AbfLRQYj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 11:24:39 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9911211FB;
-        Wed, 18 Dec 2019 08:24:35 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C973E12FC;
+        Wed, 18 Dec 2019 08:24:38 -0800 (PST)
 Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.56])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 189C53F719;
-        Wed, 18 Dec 2019 08:24:32 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CF92C3F719;
+        Wed, 18 Dec 2019 08:24:35 -0800 (PST)
 From:   Steven Price <steven.price@arm.com>
 To:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
 Cc:     Steven Price <steven.price@arm.com>,
@@ -42,10 +42,13 @@ Cc:     Steven Price <steven.price@arm.com>,
         "H. Peter Anvin" <hpa@zytor.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Mark Rutland <Mark.Rutland@arm.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-Subject: [PATCH v17 04/23] arm64: mm: Add p?d_leaf() definitions
-Date:   Wed, 18 Dec 2019 16:23:43 +0000
-Message-Id: <20191218162402.45610-5-steven.price@arm.com>
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org
+Subject: [PATCH v17 05/23] mips: mm: Add p?d_leaf() definitions
+Date:   Wed, 18 Dec 2019 16:23:44 +0000
+Message-Id: <20191218162402.45610-6-steven.price@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191218162402.45610-1-steven.price@arm.com>
 References: <20191218162402.45610-1-steven.price@arm.com>
@@ -58,48 +61,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 walk_page_range() is going to be allowed to walk page tables other than
 those of user space. For this it needs to know when it has reached a
-'leaf' entry in the page tables. This information will be provided by the
+'leaf' entry in the page tables. This information is provided by the
 p?d_leaf() functions/macros.
 
-For arm64, we already have p?d_sect() macros which we can reuse for
-p?d_leaf().
+If _PAGE_HUGE is defined we can simply look for it. When not defined we
+can be confident that there are no leaf pages in existence and fall back
+on the generic implementation (added in a later patch) which returns 0.
 
-pud_sect() is defined as a dummy function when CONFIG_PGTABLE_LEVELS < 3
-or CONFIG_ARM64_64K_PAGES is defined. However when the kernel is
-configured this way then architecturally it isn't allowed to have a
-large page at this level, and any code using these page walking macros
-is implicitly relying on the page size/number of levels being the same as
-the kernel. So it is safe to reuse this for p?d_leaf() as it is an
-architectural restriction.
-
-CC: Catalin Marinas <catalin.marinas@arm.com>
-CC: Will Deacon <will@kernel.org>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+CC: Ralf Baechle <ralf@linux-mips.org>
+CC: Paul Burton <paul.burton@mips.com>
+CC: James Hogan <jhogan@kernel.org>
+CC: linux-mips@vger.kernel.org
 Signed-off-by: Steven Price <steven.price@arm.com>
+Acked-by: Paul Burton <paul.burton@mips.com>
 ---
- arch/arm64/include/asm/pgtable.h | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/mips/include/asm/pgtable.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index 5d15b4735a0e..40df7e16d397 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -445,6 +445,7 @@ extern pgprot_t phys_mem_access_prot(struct file *file, unsigned long pfn,
- 				 PMD_TYPE_TABLE)
- #define pmd_sect(pmd)		((pmd_val(pmd) & PMD_TYPE_MASK) == \
- 				 PMD_TYPE_SECT)
-+#define pmd_leaf(pmd)		pmd_sect(pmd)
+diff --git a/arch/mips/include/asm/pgtable.h b/arch/mips/include/asm/pgtable.h
+index 91b89aab1787..aef5378f909c 100644
+--- a/arch/mips/include/asm/pgtable.h
++++ b/arch/mips/include/asm/pgtable.h
+@@ -639,6 +639,11 @@ static inline pmd_t pmdp_huge_get_and_clear(struct mm_struct *mm,
  
- #if defined(CONFIG_ARM64_64K_PAGES) || CONFIG_PGTABLE_LEVELS < 3
- static inline bool pud_sect(pud_t pud) { return false; }
-@@ -529,6 +530,7 @@ static inline void pte_unmap(pte_t *pte) { }
- #define pud_none(pud)		(!pud_val(pud))
- #define pud_bad(pud)		(!(pud_val(pud) & PUD_TABLE_BIT))
- #define pud_present(pud)	pte_present(pud_pte(pud))
-+#define pud_leaf(pud)		pud_sect(pud)
- #define pud_valid(pud)		pte_valid(pud_pte(pud))
+ #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
  
- static inline void set_pud(pud_t *pudp, pud_t pud)
++#ifdef _PAGE_HUGE
++#define pmd_leaf(pmd)	((pmd_val(pmd) & _PAGE_HUGE) != 0)
++#define pud_leaf(pud)	((pud_val(pud) & _PAGE_HUGE) != 0)
++#endif
++
+ #define gup_fast_permitted(start, end)	(!cpu_has_dc_aliases)
+ 
+ #include <asm-generic/pgtable.h>
 -- 
 2.20.1
 
