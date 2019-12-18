@@ -2,173 +2,211 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A534DC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C50BC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7900F21582
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:22:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61A5121582
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 20:22:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TIMpJQye"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OWNiKcm1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbfLRUWv (ORCPT
+        id S1727804AbfLRUWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 15:22:51 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40097 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726454AbfLRUWD (ORCPT
+        Wed, 18 Dec 2019 15:22:54 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:43274 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727784AbfLRUWt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 15:22:03 -0500
-Received: by mail-lj1-f196.google.com with SMTP id u1so3589240ljk.7;
-        Wed, 18 Dec 2019 12:22:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=imexZFgDzWkCRbfUn+5A59UpWIAqIcg+AW4OI+O1fRc=;
-        b=TIMpJQye0ghIU07cqIGBCHU9joO+b4fNoaBaOScbkcPvKoP2nynCfJeM14cZr5usf7
-         FtgnfOziX8i8ndnKhQC2s18IGAKHF1OhywYSh/+DAgXDBoeFTPGDpMR6HqWLrETaWLmR
-         Xvd9Am1YDafhT49OqEz6XrLf5y1XsMM+VlGDmSaZeQHI65r//55i4qk+EkODQ/2yzSYk
-         1nhn9sAozV/twreFEdzjbFAyt0iKOMs4R7+DzhCFci5DRXiUfqPKNmxHNVniS0VMkR3w
-         v14SDEH0HBLk+QmdyjiYKHEBvrNkFHw2hIMpGYy7P7mGv07RzVBaFNOx+BRuQn5FGphH
-         SERQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=imexZFgDzWkCRbfUn+5A59UpWIAqIcg+AW4OI+O1fRc=;
-        b=Gn9jTVgjiq6kZF1oQ8TZIJFqLcY0fn1+xI/qnKQeTn1AwuwkSqqQ4F6IArWg750tzR
-         v7FvgXN4yNYnpeCnB4Z/3fyXM5cnGAnkpipF+j3quy+JWgpWeGsupwAmymcY53iXUP5v
-         AW9dPl1yY6qMyUVTWr8zerdZ7Yb9TArRbd+VmnkDHz3xAj24NHY7JTtbfS8mv2MkcoEN
-         gENSVEbFm70lerTnBgLv7w8CuZeuVB2McDC/J5B+f6W1Bg+hA44wJHN2Isbr7ZIRxs2O
-         0JKNrFNVHsw93aZ/0F5AHI5FPUCSfgMYrel/wSqyTT1hhrvTJPxSdTU03wOj4jTcaadO
-         ZE6w==
-X-Gm-Message-State: APjAAAVfztfEejpSbgNW8MURTaDU9+1fxhbrbAcXgRvlK03+SUKx/mXw
-        LOwnRnhw6rs92r3AhQMUk7E=
-X-Google-Smtp-Source: APXvYqwSKSW1uHgvLkGSyLaIihjHFbQY/XiYwGvAbXPZ9q8lzZffRW7lrZtSTiaIpKHK9WTyyk1tBg==
-X-Received: by 2002:a05:651c:118b:: with SMTP id w11mr3286732ljo.54.1576700520622;
-        Wed, 18 Dec 2019 12:22:00 -0800 (PST)
-Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id m15sm1766993ljg.4.2019.12.18.12.21.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 12:22:00 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Wed, 18 Dec 2019 15:22:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=SHZ8xl3re+bA4KEYO+3sCnxXO5OgGt4zMOPrCsEWg84=; b=OWNiKcm1uOH+8Mm4swI4mH+wo
+        eUo0fFFAASYMuISJBVydVTd2GRZyZ1Tg+FVkvW2A5sgQL0XchfurINfwPCBxk8GDc17tb6h3cpkXr
+        zdT+eEWqCzSRXcJRnC6n0e7aTyRcFQNF0pXi7ngMe7WSxOpNstIcPU3z/2EHyVMNFVnS7t7iaJVr3
+        Ir1moIZGuALSMEihwiVPfj7Pc/oHexs4KDSGxuWg9i0otHyXVt2Fa3YbLotn7mjXrEWbNQzFShKIx
+        u3i4ed63vYOBt5/ZVVjFdiAkbpIjOBdtQ0Q4W7XC0KptfHLHmrDPBi9hnDbn8c5/54SCN8WEEsS9U
+        SQ1ESJUDA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ihfqB-0005Ar-9M; Wed, 18 Dec 2019 20:22:39 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 60DD0980E35; Wed, 18 Dec 2019 21:22:36 +0100 (CET)
+Date:   Wed, 18 Dec 2019 21:22:36 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Giovanni Gherdovich <ggherdovich@suse.cz>
+Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@suse.de>,
+        Len Brown <lenb@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>, x86@kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
         Viresh Kumar <viresh.kumar@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 03/12] clk: tegra: cclk: Add helpers for handling PLLX rate changes
-Date:   Wed, 18 Dec 2019 23:21:33 +0300
-Message-Id: <20191218202142.11717-4-digetx@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191218202142.11717-1-digetx@gmail.com>
-References: <20191218202142.11717-1-digetx@gmail.com>
+        Juri Lelli <juri.lelli@redhat.com>,
+        Paul Turner <pjt@google.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Quentin Perret <qperret@qperret.net>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Doug Smythies <dsmythies@telus.net>
+Subject: Re: [PATCH v4 3/6] x86,sched: Add support for frequency invariance
+ on XEON_PHI_KNL/KNM
+Message-ID: <20191218202236.GJ11457@worktop.programming.kicks-ass.net>
+References: <20191113124654.18122-1-ggherdovich@suse.cz>
+ <20191113124654.18122-4-ggherdovich@suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191113124654.18122-4-ggherdovich@suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CCLK should be re-parented away from PLLX if PLLX's rate is changing.
-The PLLP parent is a common safe CPU parent for all Tegra SoCs, thus
-CCLK will be re-parented to PLLP before PLLX rate-change begins and then
-switched back to PLLX after the rate-change completion. This patch adds
-helper functions which perform CCLK re-parenting, these helpers will be
-utilized by further patches.
+On Wed, Nov 13, 2019 at 01:46:51PM +0100, Giovanni Gherdovich wrote:
+> The scheduler needs the ratio freq_curr/freq_max for frequency-invariant
+> accounting. On Xeon Phi CPUs set freq_max to the second-highest frequency
+> reported by the CPU.
+> 
+> Xeon Phi CPUs such as Knights Landing and Knights Mill typically have either
+> one or two turbo frequencies; in the former case that's 100 MHz above the base
+> frequency, in the latter case the two levels are 100 MHz and 200 MHz above
+> base frequency.
+> 
+> We set freq_max to the second-highest frequency reported by the CPU. This
+> could be the base frequency (if only one turbo level is available) or the first
+> turbo level (if two levels are available). The rationale is to compromise
+> between power efficiency or performance -- going straight to max turbo would
+> favor efficiency and blindly using base freq would favor performance.
+> 
+> For reference, this is how MSR_TURBO_RATIO_LIMIT must be parsed on a Xeon Phi
+> to get the available frequencies (taken from a comment in turbostat's sources):
+> 
+>     [0] -- Reserved
+>     [7:1] -- Base value of number of active cores of bucket 1.
+>     [15:8] -- Base value of freq ratio of bucket 1.
+>     [20:16] -- +ve delta of number of active cores of bucket 2.
+>     i.e. active cores of bucket 2 =
+>     active cores of bucket 1 + delta
+>     [23:21] -- Negative delta of freq ratio of bucket 2.
+>     i.e. freq ratio of bucket 2 =
+>     freq ratio of bucket 1 - delta
+>     [28:24]-- +ve delta of number of active cores of bucket 3.
+>     [31:29]-- -ve delta of freq ratio of bucket 3.
+>     [36:32]-- +ve delta of number of active cores of bucket 4.
+>     [39:37]-- -ve delta of freq ratio of bucket 4.
+>     [44:40]-- +ve delta of number of active cores of bucket 5.
+>     [47:45]-- -ve delta of freq ratio of bucket 5.
+>     [52:48]-- +ve delta of number of active cores of bucket 6.
+>     [55:53]-- -ve delta of freq ratio of bucket 6.
+>     [60:56]-- +ve delta of number of active cores of bucket 7.
+>     [63:61]-- -ve delta of freq ratio of bucket 7.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Does it make sense to write a complete decoder and pass a @size
+parameter just like the skx/glm case?
+
+(I've no idea on the 4 I passed in, probably wants to be something else)
+
 ---
- drivers/clk/tegra/clk-tegra-super-cclk.c | 34 ++++++++++++++++++++++++
- drivers/clk/tegra/clk.h                  |  2 ++
- 2 files changed, 36 insertions(+)
+Index: linux-2.6/arch/x86/kernel/smpboot.c
+===================================================================
+--- linux-2.6.orig/arch/x86/kernel/smpboot.c
++++ linux-2.6/arch/x86/kernel/smpboot.c
+@@ -1863,36 +1863,12 @@ static const struct x86_cpu_id has_glm_t
+ 	{}
+ };
 
-diff --git a/drivers/clk/tegra/clk-tegra-super-cclk.c b/drivers/clk/tegra/clk-tegra-super-cclk.c
-index 7bcb9e8d0860..a03119c30456 100644
---- a/drivers/clk/tegra/clk-tegra-super-cclk.c
-+++ b/drivers/clk/tegra/clk-tegra-super-cclk.c
-@@ -25,6 +25,9 @@
- 
- #define SUPER_CDIV_ENB		BIT(31)
- 
-+static struct tegra_clk_super_mux *cclk_super;
-+static bool cclk_on_pllx;
-+
- static u8 cclk_super_get_parent(struct clk_hw *hw)
+-static int get_knl_turbo_ratio(u64 *turbo_ratio)
++static bool knl_set_cpu_max_freq(u64 *ratio, u64 *turbo_ratio, int size)
  {
- 	return tegra_clk_super_ops.get_parent(hw);
-@@ -115,6 +118,9 @@ struct clk *tegra_clk_register_super_cclk(const char *name,
- 	struct clk_init_data init;
- 	u32 val;
- 
-+	if (WARN_ON(cclk_super))
-+		return ERR_PTR(-EBUSY);
++	int delta_cores, delta_fratio;
++	int cores, fratio;
++	int err, i;
+ 	u64 msr;
+-	u32 ratio, delta_ratio;
+-	int err, i, found = 0;
+-
+-	err = rdmsrl_safe(MSR_TURBO_RATIO_LIMIT, &msr);
+-	if (err)
+-		return err;
+-
+-	ratio = (msr >> 8) & 0xFF;
+-
+-	for (i = 16; i < 64; i += 8) {
+-		delta_ratio = (msr >> (i + 5)) & 0x7;
+-		if (delta_ratio) {
+-			*turbo_ratio = ratio - delta_ratio;
+-			found = 1;
+-			break;
+-		}
+-	}
+-
+-	if (!found)
+-		return 1;
+-
+-	return 0;
+-}
+-
+-static bool knl_set_cpu_max_freq(u64 *ratio, u64 *turbo_ratio)
+-{
+-	int err;
+
+ 	if (!x86_match_cpu(has_knl_turbo_ratio_limits))
+ 		return false;
+@@ -1901,15 +1877,32 @@ static bool knl_set_cpu_max_freq(u64 *ra
+ 	if (err)
+ 		return false;
+
+-	/* second highest turbo ratio */
+-	err = get_knl_turbo_ratio(turbo_ratio);
++	*ratio = (*ratio >> 8) & 0xFF; /* max P state ratio */
 +
- 	super = kzalloc(sizeof(*super), GFP_KERNEL);
- 	if (!super)
- 		return ERR_PTR(-ENOMEM);
-@@ -173,6 +179,34 @@ struct clk *tegra_clk_register_super_cclk(const char *name,
- 	clk = clk_register(NULL, &super->hw);
- 	if (IS_ERR(clk))
- 		kfree(super);
-+	else
-+		cclk_super = super;
- 
- 	return clk;
++	err = rdmsrl_safe(MSR_TURBO_RATIO_LIMIT, &msr);
+ 	if (err)
+ 		return false;
+
+-	/* max P state ratio */
+-	*ratio = (*ratio >> 8) & 0xFF;
++	cores = (msr >> 1) & 0x7F;
++	fratio = (msr >> 8) & 0xFF;
+
+-	return true;
++	i = 16;
++	do {
++		if (cores >= size) {
++			*turbo_ratio = fratio;
++			return true;
++		}
++
++		delta_cores = (msr >> i) & 0x1F;
++		delta_fratio = (msr >> (i + 5)) & 0x07;
++
++		cores += delta_cores;
++		fratio -= delta_fratio;
++
++		i += 8;
++	} while (i < 64);
++
++	return false;
  }
-+
-+int tegra_cclk_pre_pllx_rate_change(void)
-+{
-+	if (IS_ERR_OR_NULL(cclk_super))
-+		return -EINVAL;
-+
-+	if (cclk_super_get_parent(&cclk_super->hw) == PLLX_INDEX)
-+		cclk_on_pllx = true;
-+	else
-+		cclk_on_pllx = false;
-+
-+	/*
-+	 * CPU needs to be temporarily re-parented away from PLLX if PLLX
-+	 * changes its rate. PLLP is a safe parent for CPU on all Tegra SoCs.
-+	 */
-+	if (cclk_on_pllx)
-+		cclk_super_set_parent(&cclk_super->hw, PLLP_INDEX);
-+
-+	return 0;
-+}
-+
-+void tegra_cclk_post_pllx_rate_change(void)
-+{
-+	if (cclk_on_pllx)
-+		cclk_super_set_parent(&cclk_super->hw, PLLX_INDEX);
-+}
-diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
-index fa18bef914af..0afe28f4372b 100644
---- a/drivers/clk/tegra/clk.h
-+++ b/drivers/clk/tegra/clk.h
-@@ -771,6 +771,8 @@ struct clk *tegra_clk_register_super_cclk(const char *name,
- 		const char * const *parent_names, u8 num_parents,
- 		unsigned long flags, void __iomem *reg, u8 clk_super_flags,
- 		spinlock_t *lock);
-+int tegra_cclk_pre_pllx_rate_change(void);
-+void tegra_cclk_post_pllx_rate_change(void);
- 
- /**
-  * struct tegra_sdmmc_mux - switch divider with Low Jitter inputs for SDMMC
--- 
-2.24.0
+
+ static bool skx_set_cpu_max_freq(u64 *ratio, u64 *turbo_ratio, int size)
+@@ -1975,7 +1968,7 @@ static void intel_set_cpu_max_freq(void)
+ 	    skx_set_cpu_max_freq(&ratio, &turbo_ratio, 1))
+ 		goto set_value;
+
+-	if (knl_set_cpu_max_freq(&ratio, &turbo_ratio))
++	if (knl_set_cpu_max_freq(&ratio, &turbo_ratio, 4))
+ 		goto set_value;
+
+ 	if (x86_match_cpu(has_skx_turbo_ratio_limits) &&
 
