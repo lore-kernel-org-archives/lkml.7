@@ -2,215 +2,157 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EABFC2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 05:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD0AC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 05:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 347A120733
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 05:47:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IbnAbj6R"
+	by mail.kernel.org (Postfix) with ESMTP id 0AE30206EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 05:53:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfLRFrj (ORCPT
+        id S1726385AbfLRFxI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 00:47:39 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:35544 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbfLRFri (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 00:47:38 -0500
-Received: by mail-qk1-f196.google.com with SMTP id z76so986159qka.2;
-        Tue, 17 Dec 2019 21:47:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rdMMSS5mGXhXxSzn8vN5OSqGco+TdXWURJZsejhpNlU=;
-        b=IbnAbj6RtNE27gTD/82fE5rTu6luXBFeErBAampq/mDtF+82hybj1EYlIJDNleRtWb
-         Tc4xby6WNKEe1VSWAzvQ40QRBdEwkpaoip/jXm9+Y+0/Tdp34uz38tiuwZMmV3ZpCX+7
-         bO+zDh5JQqe502cQCnq8O8hMlBmXcXFxstpyjlB6KqjnSJs6eyObBs9hyl+/FL3Y1wkq
-         k9CEZwWyoAAnbiVWo5OLtx6PDUm03DNKDOhovQncKCIVwQztzjY5dDfDcORDypYn1Ciq
-         IFdm/4n/bUxaAX34UFIFDcwT7AykhHSdACqkLGLZmGzdHLujESdTVCUvUhxVm2CULKmL
-         Uzcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rdMMSS5mGXhXxSzn8vN5OSqGco+TdXWURJZsejhpNlU=;
-        b=PHAaRmQ+kvY3lUAHSGkf3gM9bzsmYyVT0MzB1ncsSksX/G8VyB5MqKVAcL6GkiiHvq
-         NHM577f6hjKmBqwRhfzwSf+k/MvOhWVVTB4nb2muvnsXvNbYUo6imjQ5t/D4ubSlkCVp
-         YdCeW2MKvfh0LSDY7cbQihkbGOngo1E83a5c2dcZeRF5TT3aQoTS/4CqkqWrItd8LqMP
-         +oxMmiuoVVP4Z0wkMdNcyLB1rBKY+GPrzUAC36GR9NVdeu8qyE3rZtvpHrp3oLWYGNWN
-         MrvGzVvC4YWrdi63SeFWn/wk1BKWJ+qRzjJrkutXrpmi9GypIsnrWLFWjPrEqxoBkrB0
-         UNBA==
-X-Gm-Message-State: APjAAAVFj+s0/i7JgNKpwMi71FR5isFGEzpbjdQzUX+rWBkYrj7Y0CBk
-        w2VeSgDWKTvdRx+n0ziozU8=
-X-Google-Smtp-Source: APXvYqxaNz0RO1lOZKINUdqFpRia863ytJsrYewYWjT74VbIG5he6WOrbsQMH4RbQA7++XwYkL1Icg==
-X-Received: by 2002:ae9:e41a:: with SMTP id q26mr790211qkc.288.1576648057742;
-        Tue, 17 Dec 2019 21:47:37 -0800 (PST)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id t198sm354933qke.6.2019.12.17.21.47.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 17 Dec 2019 21:47:37 -0800 (PST)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 751CC22223;
-        Wed, 18 Dec 2019 00:47:35 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Wed, 18 Dec 2019 00:47:35 -0500
-X-ME-Sender: <xms:dr35XX1gdcqGAIqLT51JyHjdGnzLF1l4WLjUXPweExjBpT4Ci871Yw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddtkedgkeelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepuehoqhhu
-    nhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucfkphephe
-    dvrdduheehrdduuddurdejudenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdo
-    mhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejke
-    ehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgr
-    mhgvnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:dr35XQd4G4lVVfUNeZx2swRweY951aczqjlN0OH0Ok8mYQMGgCrtzQ>
-    <xmx:dr35XeAEw3MdzyfTpxLn4CyJvUYuy7W7U_PYH1XUlribC_owMFWxJg>
-    <xmx:dr35XX93UVrpEnOnntHX8srZBT8vFtWAMQ0ErbFr4ymsIt3qA4Z23Q>
-    <xmx:d735XRpK3pJiUKvIRHERfgQkVY3faW59Xm1i2MFCfRkSRilXSIUcNFuGAOc>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 06F2B8005A;
-        Wed, 18 Dec 2019 00:47:33 -0500 (EST)
-Date:   Wed, 18 Dec 2019 13:47:32 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Wed, 18 Dec 2019 00:53:08 -0500
+Received: from foss.arm.com ([217.140.110.172]:33016 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725797AbfLRFxH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 00:53:07 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6511D1FB;
+        Tue, 17 Dec 2019 21:53:07 -0800 (PST)
+Received: from [10.163.1.79] (unknown [10.163.1.79])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3833D3F718;
+        Tue, 17 Dec 2019 21:52:50 -0800 (PST)
+Subject: Re: [PATCH] arm64: Introduce ISAR6 CPU ID register
+To:     Mark Rutland <mark.rutland@arm.com>,
+        Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
         Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        xen-devel@lists.xenproject.org,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        linux-hyperv@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC 6/6] arm64: hyperv: Enable vDSO
-Message-ID: <20191218054732.GK97412@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <20191216001922.23008-1-boqun.feng@gmail.com>
- <20191216001922.23008-7-boqun.feng@gmail.com>
- <87y2vb82lz.fsf@vitty.brq.redhat.com>
+        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu
+References: <1576145663-9909-1-git-send-email-anshuman.khandual@arm.com>
+ <20191212144633.GE46910@lakrids.cambridge.arm.com>
+ <be707b09-6469-d12f-07d5-50d574dc7284@arm.com>
+ <20191212163120.GH46910@lakrids.cambridge.arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <b815ef0b-4dee-fea1-a43a-182952035afb@arm.com>
+Date:   Wed, 18 Dec 2019 11:23:44 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87y2vb82lz.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191212163120.GH46910@lakrids.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 03:10:16PM +0100, Vitaly Kuznetsov wrote:
-> Boqun Feng <boqun.feng@gmail.com> writes:
+On 12/12/2019 10:01 PM, Mark Rutland wrote:
+> On Thu, Dec 12, 2019 at 03:22:13PM +0000, Suzuki Kuruppassery Poulose wrote:
+>> On 12/12/2019 14:46, Mark Rutland wrote:
+>>> On Thu, Dec 12, 2019 at 03:44:23PM +0530, Anshuman Khandual wrote:
+>>>> +#define ID_ISAR6_JSCVT_SHIFT		0
+>>>> +#define ID_ISAR6_DP_SHIFT		4
+>>>> +#define ID_ISAR6_FHM_SHIFT		8
+>>>> +#define ID_ISAR6_SB_SHIFT		12
+>>>> +#define ID_ISAR6_SPECRES_SHIFT		16
+>>>> +#define ID_ISAR6_BF16_SHIFT		20
+>>>> +#define ID_ISAR6_I8MM_SHIFT		24
+>>>
+>>>> @@ -399,6 +399,7 @@ static const struct __ftr_reg_entry {
+>>>>   	ARM64_FTR_REG(SYS_ID_ISAR4_EL1, ftr_generic_32bits),
+>>>>   	ARM64_FTR_REG(SYS_ID_ISAR5_EL1, ftr_id_isar5),
+>>>>   	ARM64_FTR_REG(SYS_ID_MMFR4_EL1, ftr_id_mmfr4),
+>>>
+>>>> +	ARM64_FTR_REG(SYS_ID_ISAR6_EL1, ftr_generic_32bits),
+>>>
+>>> Using ftr_generic_32bits exposes the lowest-common-denominator for all
+>>> 4-bit fields in the register, and I don't think that's the right thing
+>>> to do here, because:
+>>>
+>>> * We have no idea what ID_ISAR6 bits [31:28] may mean in future.
+>>>
+>>> * AFAICT, the instructions described by ID_ISAR6.SPECRES (from the
+>>>    ARMv8.0-PredInv extension) operate on the local PE and are not
+>>>    broadcast. To make those work as a guest expects, the host will need
+>>>    to do additional things (e.g. to preserve that illusion when a vCPU is
+>>>    migrated from one pCPU to another and back).
+>>>
+>>> Given that, think we should add an explicit ftr_id_isar6 which only
+>>> exposes the fields that we're certain are safe to expose to a guest
+>>> (i.e. without SPECRES).
+>>
+>> Agree. Thanks for pointing this out. I recommended the usage of
+>> generic_32bits table without actually looking at the feature
+>> definitions.
 > 
-> > Similar to x86, add a new vclock_mode VCLOCK_HVCLOCK, and reuse the
-> > hv_read_tsc_page() for userspace to read tsc page clocksource.
-> >
-> > Signed-off-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
-> > ---
-> >  arch/arm64/include/asm/clocksource.h       |  3 ++-
-> >  arch/arm64/include/asm/mshyperv.h          |  2 +-
-> >  arch/arm64/include/asm/vdso/gettimeofday.h | 19 +++++++++++++++++++
-> >  3 files changed, 22 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/arm64/include/asm/clocksource.h b/arch/arm64/include/asm/clocksource.h
-> > index fbe80057468c..c6acd45fe748 100644
-> > --- a/arch/arm64/include/asm/clocksource.h
-> > +++ b/arch/arm64/include/asm/clocksource.h
-> > @@ -4,7 +4,8 @@
-> >  
-> >  #define VCLOCK_NONE	0	/* No vDSO clock available.		*/
-> >  #define VCLOCK_CNTVCT	1	/* vDSO should use cntvcnt		*/
-> > -#define VCLOCK_MAX	1
-> > +#define VCLOCK_HVCLOCK	2	/* vDSO should use vread_hvclock()	*/
-> > +#define VCLOCK_MAX	2
-> >  
-> >  struct arch_clocksource_data {
-> >  	int vclock_mode;
-> > diff --git a/arch/arm64/include/asm/mshyperv.h b/arch/arm64/include/asm/mshyperv.h
-> > index 0afb00e3501d..7c85dd816dca 100644
-> > --- a/arch/arm64/include/asm/mshyperv.h
-> > +++ b/arch/arm64/include/asm/mshyperv.h
-> > @@ -90,7 +90,7 @@ extern void hv_get_vpreg_128(u32 reg, struct hv_get_vp_register_output *result);
-> >  #define hv_set_reference_tsc(val) \
-> >  		hv_set_vpreg(HV_REGISTER_REFERENCE_TSC, val)
-> >  #define hv_set_clocksource_vdso(val) \
-> > -		((val).archdata.vclock_mode = VCLOCK_NONE)
-> > +		((val).archdata.vclock_mode = VCLOCK_HVCLOCK)
-> >  
-> >  #if IS_ENABLED(CONFIG_HYPERV)
-> >  #define hv_enable_stimer0_percpu_irq(irq)	enable_percpu_irq(irq, 0)
-> > diff --git a/arch/arm64/include/asm/vdso/gettimeofday.h b/arch/arm64/include/asm/vdso/gettimeofday.h
-> > index e6e3fe0488c7..7e689b903f4d 100644
-> > --- a/arch/arm64/include/asm/vdso/gettimeofday.h
-> > +++ b/arch/arm64/include/asm/vdso/gettimeofday.h
-> > @@ -67,6 +67,20 @@ int clock_getres_fallback(clockid_t _clkid, struct __kernel_timespec *_ts)
-> >  	return ret;
-> >  }
-> >  
-> > +#ifdef CONFIG_HYPERV_TIMER
-> > +/* This will override the default hv_get_raw_timer() */
-> > +#define hv_get_raw_timer() __arch_counter_get_cntvct()
-> > +#include <clocksource/hyperv_timer.h>
-> > +
-> > +extern struct ms_hyperv_tsc_page
-> > +_hvclock_page __attribute__((visibility("hidden")));
-> > +
-> > +static u64 vread_hvclock(void)
-> > +{
-> > +	return hv_read_tsc_page(&_hvclock_page);
-> > +}
-> > +#endif
+> No worries; this is /really/ easy to miss!
 > 
-> The function is almost the same on x86 (&_hvclock_page ->
-> &hvclock_page), would it maybe make sense to move this to arch neutral
-> clocksource/hyperv_timer.h?
+> Looking again, comparing to ARM DDI 0487E.a, there are a few other
+> things we should probably sort out:
 > 
+> * ID_DFR0 fields need more thought; we should limit what we expose here.
+>   I don't think it's valid for us to expose TraceFilt, and I suspect we
 
-I'm not sure whether the underscore matters in the vDSO data symbol, so
-I follow the architectural name convention. If the leading underscore
-doesn't have special purpose I'm happy to move this to arch neutral
-header file.
+Sure, will go ahead and drop TraceFilt [28..31] from ID_DFR0 register.
 
-> > +
-> >  static __always_inline u64 __arch_get_hw_counter(s32 clock_mode)
-> >  {
-> >  	u64 res;
-> > @@ -78,6 +92,11 @@ static __always_inline u64 __arch_get_hw_counter(s32 clock_mode)
-> >  	if (clock_mode == VCLOCK_NONE)
-> >  		return __VDSO_USE_SYSCALL;
-> >  
-> > +#ifdef CONFIG_HYPERV_TIMER
-> > +	if (likely(clock_mode == VCLOCK_HVCLOCK))
-> > +		return vread_hvclock();
+>   need to add capping for debug features we currently emulate.
+
+Could you please elaborate ?
+
 > 
-> I'm not sure likely() is justified here: it'll make ALL builds which
-> enable CONFIG_HYPERV_TIMER (e.g. distro kernels) to prefer
-> VCLOCK_HVCLOCK, even if the kernel is not running on Hyper-V.
+> * ID_ISAR0[31:28] are RES0 in ARMv8, Reserved/UNK in ARMv7.
+>   We should probably ftr_id_isar0 so we can hide those bits.
+
+Sure, will do.
+
 > 
+> * ID_ISAR5[23:10] are RES0
+>   We handle this already! :)
 
-Make sense. Thanks for pointing this out! I will change it in the next
-version.
+I may be missing something here but some of these fields are already there.
 
-Regards,
-Boqun
+#define ID_ISAR5_RDM_SHIFT              24
+#define ID_ISAR5_CRC32_SHIFT            16
+#define ID_ISAR5_SHA2_SHIFT             12
+#define ID_ISAR5_SHA1_SHIFT             8
+#define ID_ISAR5_AES_SHIFT              4
+#define ID_ISAR5_SEVL_SHIFT             0
 
-> > +#endif
-> > +
-> >  	/*
-> >  	 * This isb() is required to prevent that the counter value
-> >  	 * is speculated.
+static const struct arm64_ftr_bits ftr_id_isar5[] = {
+        ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_ISAR5_RDM_SHIFT, 4, 0),
+        ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_ISAR5_CRC32_SHIFT, 4, 0),
+        ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_ISAR5_SHA2_SHIFT, 4, 0),
+        ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_ISAR5_SHA1_SHIFT, 4, 0),
+        ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_ISAR5_AES_SHIFT, 4, 0),
+        ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_ISAR5_SEVL_SHIFT, 4, 0),
+        ARM64_FTR_END,
+};
+
 > 
-> -- 
-> Vitaly
+> * ID_MMFR4.SpecSEI should be trated as higher safe.
+>   We should update ftr_id_mmfr4 to handle this and other fields.
+
+Sure but should we also export other fields as higher safe in there ?
+
+> 
+> * ID_PFR0 is missing DIT and CSV2
+>   We should probably add these (but neither RAS not AMU).
+
+Sure, will do.
+
+> 
+> * ID_PFR2 is missing
+>   We should probably add this for SSBS and CSV3.
+
+Sure but should we add corresponding ID_AA64PFR2_EL1 register as well ?
+
+> 
+> Thanks,
+> Mark.
 > 
