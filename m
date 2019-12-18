@@ -6,49 +6,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF820C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DEEEC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B89422176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3549E21D7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 21:45:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbfLRVpT (ORCPT
+        id S1726897AbfLRVpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 16:45:19 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:41227 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726695AbfLRVpN (ORCPT
+        Wed, 18 Dec 2019 16:45:24 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:35803 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726801AbfLRVpV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 16:45:13 -0500
-Received: by mail-qt1-f195.google.com with SMTP id k40so3193058qtk.8
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 13:45:13 -0800 (PST)
+        Wed, 18 Dec 2019 16:45:21 -0500
+Received: by mail-qv1-f67.google.com with SMTP id u10so1308129qvi.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 13:45:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=0dV63FGKurbHicTv4fkFntFqg9okeIkli05F9bbXIFo=;
-        b=svUUMkb9vwJjVf0TBCSPZA6aBmn9tSW4iuf96rdMaTUAuBy4uc5tRrfis4gfocQoMs
-         Uu1MCVJoJOGOAceKt3Z+gkjDwccWlBInEtmlZG7sFUGRBRyHUc77AOdq+k3thLX7/8JW
-         LhiVuNax28hJTQTWHcDHRyWvZSEhPRITxM1tgykNvk1QdYSq6Dk3FlByEnbWqqaVBiBE
-         zql2L4CHMwC6iaPAKrSVkeDcJNhgEsBDcuR60cDw0t42q68GPFb9MqYLDXP7AWUVbCj2
-         bKb2HhwFuLat2RtlZetUkcvDfv18ahOHoiwlXp/zu/m9PDfQmJskuBnPmiJ7VkqNHo9V
-         h9RQ==
-X-Gm-Message-State: APjAAAUfKobRwglK4ULK/oNWLtgN6ALYkl3PQvWkZ8HIQiWFgekP6qHc
-        x47diNsmMkZgW3pZOdzlaTE=
-X-Google-Smtp-Source: APXvYqw+P+NB9w+0f/Kdlto4kjT9cvy+QJqHxVzSdEQw5q8337Le1jdJ6sPjdMWwuUoYSaD32xb6ZQ==
-X-Received: by 2002:ac8:6053:: with SMTP id k19mr4306619qtm.348.1576705512569;
-        Wed, 18 Dec 2019 13:45:12 -0800 (PST)
+        bh=dfoBv1/fajBVFYCXkRzHX94CB9r4wEDcgyCOURmAgAg=;
+        b=emliEjp3SzuS1NR8F6BvurcWoQLy3T6gYl/N/iTGeTjJWc8c06kAD4TBVINjLyJiAm
+         2PKKyNsO4PZInhUdB8TNX0gAt3tNHQmRIoElDJ0TrQ945i4ZmYk6tBeNa9EGGEXBcrSk
+         R6okU2qB4R0fdyXTk7aVEeDt/vUfKxJtNEB/+AzFhgcb0OQMrYiCMM+ghPfEgx9Hx0aL
+         rYcHYEb6G805MY8L5bkS6/H67n2d5C77B4wnYEI8CncGkh8wQF+wNHhDB0FaizHRPSXb
+         bfGEtnvSw39l6B+oBIVmES68oheEebTeCmimXXCqIKzwKkRma4vFJZS6NE+D1NvtpXEs
+         uPlQ==
+X-Gm-Message-State: APjAAAU7+eORJ4Yf/s6iKntagpP4WWKY54UrLp81u0WcawrAj2D1gDfh
+        25hWyc1aNUzu2liyEQPJKiE=
+X-Google-Smtp-Source: APXvYqyJcgV0YzfwIJWEoPzEWKHM/Q8SNW5jLeaK/pkZxk08wlg0hw8p4nfU1ul4ALKejsYqz8VKSA==
+X-Received: by 2002:a05:6214:7cc:: with SMTP id bb12mr4424854qvb.207.1576705519918;
+        Wed, 18 Dec 2019 13:45:19 -0800 (PST)
 Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id u4sm1059851qkh.59.2019.12.18.13.45.11
+        by smtp.gmail.com with ESMTPSA id u4sm1059851qkh.59.2019.12.18.13.45.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 13:45:11 -0800 (PST)
+        Wed, 18 Dec 2019 13:45:19 -0800 (PST)
 From:   Arvind Sankar <nivedita@alum.mit.edu>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH v2 06/24] arch/arm64/setup: Drop dummy_con initialization
-Date:   Wed, 18 Dec 2019 16:44:48 -0500
-Message-Id: <20191218214506.49252-7-nivedita@alum.mit.edu>
+Subject: [PATCH v2 15/24] arch/openrisc/setup: Drop dummy_con initialization
+Date:   Wed, 18 Dec 2019 16:44:57 -0500
+Message-Id: <20191218214506.49252-16-nivedita@alum.mit.edu>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191218214506.49252-1-nivedita@alum.mit.edu>
 References: <20191218211231.GA918900@kroah.com>
@@ -65,23 +65,25 @@ Drop it from arch setup code.
 
 Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 ---
- arch/arm64/kernel/setup.c | 3 ---
- 1 file changed, 3 deletions(-)
+ arch/openrisc/kernel/setup.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-index 56f664561754..2a86676b693a 100644
---- a/arch/arm64/kernel/setup.c
-+++ b/arch/arm64/kernel/setup.c
-@@ -353,9 +353,6 @@ void __init setup_arch(char **cmdline_p)
- 	init_task.thread_info.ttbr0 = __pa_symbol(empty_zero_page);
- #endif
+diff --git a/arch/openrisc/kernel/setup.c b/arch/openrisc/kernel/setup.c
+index d668f5be3a99..c0a774b51e45 100644
+--- a/arch/openrisc/kernel/setup.c
++++ b/arch/openrisc/kernel/setup.c
+@@ -308,11 +308,6 @@ void __init setup_arch(char **cmdline_p)
+ 	/* paging_init() sets up the MMU and marks all pages as reserved */
+ 	paging_init();
  
--#ifdef CONFIG_VT
--	conswitchp = &dummy_con;
+-#if defined(CONFIG_VT) && defined(CONFIG_DUMMY_CONSOLE)
+-	if (!conswitchp)
+-		conswitchp = &dummy_con;
 -#endif
- 	if (boot_args[1] || boot_args[2] || boot_args[3]) {
- 		pr_err("WARNING: x1-x3 nonzero in violation of boot protocol:\n"
- 			"\tx1: %016llx\n\tx2: %016llx\n\tx3: %016llx\n"
+-
+ 	*cmdline_p = boot_command_line;
+ 
+ 	printk(KERN_INFO "OpenRISC Linux -- http://openrisc.io\n");
 -- 
 2.24.1
 
