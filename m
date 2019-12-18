@@ -2,92 +2,94 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D72D8C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E75CBC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB06B227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:30:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576708237;
-	bh=XjMNns/AfJ24HckxqC5o69oz0oIIXN17O0aeo+qdIJE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZiWbDJPmvMiTCVL8vmY8ax4qM/AJUPm0ysfplkzG6N67Jsc2y811t5iX7tmnEmT6h
-	 /9SiMdX4Ex13VDYCSAGKoVgmH61uw5T8f6aKQ3O1Z8FXlmeyuX+X5fe0pJtIdAmw7u
-	 +E6f1c9bYADa0XdDn/mKHQJrwMX2+l9LuSrY/lGY=
+	by mail.kernel.org (Postfix) with ESMTP id B957A2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 22:31:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="fgkh+Wd1";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Ag20xibj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbfLRWah (ORCPT
+        id S1726664AbfLRWbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 17:30:37 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46515 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbfLRWag (ORCPT
+        Wed, 18 Dec 2019 17:31:17 -0500
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:53391 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726463AbfLRWbR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 17:30:36 -0500
-Received: by mail-oi1-f195.google.com with SMTP id p67so2033819oib.13;
-        Wed, 18 Dec 2019 14:30:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=henTx4kMwKnslxCfjb7Jc5XD6OiwjKcuIcYzzOgVmwA=;
-        b=rjMqZ9JoosShjDq17xQceinYMUnG1w8mok/R0RcIBOWnY+KT9bF612WoVIdH/wqv30
-         NVn3gwB1xxwROl7dlEftut7teI/iSeXG90zbtAUenHsBWpiWoAN/Gp/lbG49EL8U2y7I
-         GvlUJegPGhqlMKhivNgIrv6lqsJ7LWa9WLehVyjjTFcAS3u1yt1i+kdhGq3+PDZSfanV
-         AL+60p94pgF4X0tyKN8Fgma/M+VibvQsKuOOEsmM2mWDRXbTbHZsbiemZjJBB8bnqUD5
-         7dr4Ei3Vsjg6lhDV2VG6QiaEgJQQomgQ1AnS0n/L/gBlYwiSXXRnQERI6FT2/ZFu2y8M
-         GFqQ==
-X-Gm-Message-State: APjAAAWD8uw8pskcAG1ljh2XmSicve305hY+16TwR3OL1Sb1k24mfTbO
-        gcpFVHLDGaXaX8raxxj6sw==
-X-Google-Smtp-Source: APXvYqxlZwKyGVa1CGInnldPg2b0i+rjBq9zRrTXBBvNP2kjFzBkxQnXqGG30D+T5zzlRjhreEKJ1g==
-X-Received: by 2002:aca:72cd:: with SMTP id p196mr1498724oic.99.1576708235818;
-        Wed, 18 Dec 2019 14:30:35 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q5sm1290507oia.21.2019.12.18.14.30.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 14:30:34 -0800 (PST)
-Date:   Wed, 18 Dec 2019 16:30:32 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Olivier Moysan <olivier.moysan@st.com>
-Cc:     jic23@kernel.org, robh+dt@kernel.org, olivier.moysan@st.com,
-        mark.rutland@arm.com, mcoquelin.stm32@gmail.com, lars@metafoo.de,
-        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de,
-        fabrice.gasnier@st.com, linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2] dt-bindings: iio: adc: convert sd modulator to
- json-schema
-Message-ID: <20191218223032.GA8641@bogus>
-References: <20191206100058.26767-1-olivier.moysan@st.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191206100058.26767-1-olivier.moysan@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 18 Dec 2019 17:31:17 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 239BD1E0B;
+        Wed, 18 Dec 2019 17:31:14 -0500 (EST)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Wed, 18 Dec 2019 17:31:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm1; bh=Lzyvf/oAweCjZ5qIV56uJI0Ozerep15
+        7X4x8VBFaL2w=; b=fgkh+Wd1faRZ80tV79SqEgiqfO47hlCbRGjvMXW/tF7jki9
+        WynI1IF7nJLBpyfFNBrs5kB/iD9B1kZ4Zct/KVqlmhAjbOmezDRIj68BgFn9cKrO
+        6zVbHOITS5uYfxQbYW64M2VcaKodkAdmf+8kBkA/mm8cEojiNaJ0rBJMWyM5iOrA
+        cQ32L48NZETL5UM0mGXuk5qtld06H6KvTLd/QRZEBWK2uUjG/fMq3afcmeP2Ih1F
+        6wwQweBoXijypJ+cC4RH5UgCYG4mCFKK+XeG8mS/OMQRoqwSejkVoevxOJ5J8BBd
+        yxNpuEGrb4n1BnHbYP8kBZFKKwJAzpuZRUsVhCg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=Lzyvf/
+        oAweCjZ5qIV56uJI0Ozerep157X4x8VBFaL2w=; b=Ag20xibjqHXMkA9a8aMYoI
+        ymKmoMLALOwuT3RPU4NmvqWfucAiAItau1LrU6oqlFu5Yx7AnxaOgXYQMK83j5BD
+        Xi1ou27OAwT6EHUZYDWbaBwW7nB4IMXpjyYFK81CtGRS9SggF7BweRFMTXZKLofv
+        kCqCYoxzUG30G17iZ0lyC3lAIjCUrYlFLS1vUlnyAANTVhmi+s5Alwy696plDaFd
+        E0C+9w7DORjvdmRgIErOl5NlfrXWfyzy0F1IucCKgW3Xu4ij9y72lfbNNZK4AuLs
+        upfQ+Wh+GcQNPNLmDWGZvMamMOwyk6GpA6Q+MIAHaYL0ghXKPB5vJHWjuphfW6rQ
+        ==
+X-ME-Sender: <xms:rqj6XfEXRl9AX1MZQR9DICsNKazBcDuTVlw-GrXsNQfmXGJubEBsiA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddtledgudehkecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehn
+    ughrvgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrg
+    hrrghmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushht
+    vghrufhiiigvpedt
+X-ME-Proxy: <xmx:rqj6Xfa4-8pcRXygko6cwYT0kJmFx7aETOpInZFh_-vM2nBcvhtrvA>
+    <xmx:rqj6XbycQMjEhwpDN8jUPmY8f2_5AiuUjH9h8oL23BayYpp2vVsdAA>
+    <xmx:rqj6XZQbpq4QZV3aBoG8HOYeycBGUTb1k2zNIIiwFumDcPWv7qe7GQ>
+    <xmx:sqj6XXWAf5MO83LJorjEsG5NKdLUN_wd55TeemMVrtKwttyCxseetw>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id CAC89E00A3; Wed, 18 Dec 2019 17:31:10 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.7-694-gd5bab98-fmstable-20191218v1
+Mime-Version: 1.0
+Message-Id: <524f6f1c-c32d-498b-b835-ae01c338a7e2@www.fastmail.com>
+In-Reply-To: <1576648806-1114-1-git-send-email-vulab@iscas.ac.cn>
+References: <1576648806-1114-1-git-send-email-vulab@iscas.ac.cn>
+Date:   Thu, 19 Dec 2019 09:02:53 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Xu Wang" <vulab@iscas.ac.cn>,
+        "Stefan M Schaeckeler" <sschaeck@cisco.com>,
+        "Borislav Petkov" <bp@alien8.de>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>, tony.luck@intel.com,
+        "James Morse" <james.morse@arm.com>, rrichter@marvell.com,
+        "Joel Stanley" <joel@jms.id.au>
+Cc:     linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] EDAC: aspeed: Remove unneeded semicolon
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 6 Dec 2019 11:00:58 +0100, Olivier Moysan wrote:
-> Convert the sigma delta modulator bindings
-> to DT schema format using json-schema.
-> 
-> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-> ---
-> Changes since v1:
-> - add additionalProperties
-> - remove unit-address in example
-> ---
->  .../iio/adc/sigma-delta-modulator.txt         | 13 -------
->  .../iio/adc/sigma-delta-modulator.yaml        | 37 +++++++++++++++++++
->  2 files changed, 37 insertions(+), 13 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.yaml
-> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+
+On Wed, 18 Dec 2019, at 16:30, Xu Wang wrote:
+> Remove unneeded semicolon reported by coccinelle.
+> 
+> Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+
+Acked-by: Andrew Jeffery <andrew@aj.id.au>
