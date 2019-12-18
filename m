@@ -2,157 +2,170 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD0AC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 05:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C15D2C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 05:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AE30206EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 05:53:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 988CF2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 05:53:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dpmgfpz2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbfLRFxI (ORCPT
+        id S1726676AbfLRFxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 00:53:08 -0500
-Received: from foss.arm.com ([217.140.110.172]:33016 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725797AbfLRFxH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 00:53:07 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6511D1FB;
-        Tue, 17 Dec 2019 21:53:07 -0800 (PST)
-Received: from [10.163.1.79] (unknown [10.163.1.79])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3833D3F718;
-        Tue, 17 Dec 2019 21:52:50 -0800 (PST)
-Subject: Re: [PATCH] arm64: Introduce ISAR6 CPU ID register
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu
-References: <1576145663-9909-1-git-send-email-anshuman.khandual@arm.com>
- <20191212144633.GE46910@lakrids.cambridge.arm.com>
- <be707b09-6469-d12f-07d5-50d574dc7284@arm.com>
- <20191212163120.GH46910@lakrids.cambridge.arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <b815ef0b-4dee-fea1-a43a-182952035afb@arm.com>
-Date:   Wed, 18 Dec 2019 11:23:44 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 18 Dec 2019 00:53:37 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52702 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726497AbfLRFxh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 00:53:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576648416;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=GWocaOhvv7iz+Y/q3X9mGWyFBvKPi09TUVpc/LIJHfQ=;
+        b=dpmgfpz2bBlccPiIug7w7vgwLudqfoLEgqUyFwdFeKO0iVXv+iihrr4GDlYr7sePhXawHa
+        xSgHp+YXIJlR7HNt70jy9crSPNhHWM2CTaEHbAiI+QlOIXSk+lvJ2jAp9dNx1taTQr2w+I
+        FMHxq1+m0KwoQFdrsr9YeDMSqQ0UF94=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-352-c8U9DMXXOUOp4b8hEnHBtg-1; Wed, 18 Dec 2019 00:53:32 -0500
+X-MC-Unique: c8U9DMXXOUOp4b8hEnHBtg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4D09510054E3;
+        Wed, 18 Dec 2019 05:53:31 +0000 (UTC)
+Received: from [10.72.12.155] (ovpn-12-155.pek2.redhat.com [10.72.12.155])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 26C1C1001902;
+        Wed, 18 Dec 2019 05:53:20 +0000 (UTC)
+Subject: Re: [PATCH 1/1] drivers/vhost : Removes unnecessary 'else' in
+ vhost_copy_from_user
+To:     Leonardo Bras <leonardo@linux.ibm.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191212211539.34578-1-leonardo@linux.ibm.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <86408a73-1acf-562b-75c0-08ca2728ed36@redhat.com>
+Date:   Wed, 18 Dec 2019 13:53:15 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191212163120.GH46910@lakrids.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191212211539.34578-1-leonardo@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/12/2019 10:01 PM, Mark Rutland wrote:
-> On Thu, Dec 12, 2019 at 03:22:13PM +0000, Suzuki Kuruppassery Poulose wrote:
->> On 12/12/2019 14:46, Mark Rutland wrote:
->>> On Thu, Dec 12, 2019 at 03:44:23PM +0530, Anshuman Khandual wrote:
->>>> +#define ID_ISAR6_JSCVT_SHIFT		0
->>>> +#define ID_ISAR6_DP_SHIFT		4
->>>> +#define ID_ISAR6_FHM_SHIFT		8
->>>> +#define ID_ISAR6_SB_SHIFT		12
->>>> +#define ID_ISAR6_SPECRES_SHIFT		16
->>>> +#define ID_ISAR6_BF16_SHIFT		20
->>>> +#define ID_ISAR6_I8MM_SHIFT		24
->>>
->>>> @@ -399,6 +399,7 @@ static const struct __ftr_reg_entry {
->>>>   	ARM64_FTR_REG(SYS_ID_ISAR4_EL1, ftr_generic_32bits),
->>>>   	ARM64_FTR_REG(SYS_ID_ISAR5_EL1, ftr_id_isar5),
->>>>   	ARM64_FTR_REG(SYS_ID_MMFR4_EL1, ftr_id_mmfr4),
->>>
->>>> +	ARM64_FTR_REG(SYS_ID_ISAR6_EL1, ftr_generic_32bits),
->>>
->>> Using ftr_generic_32bits exposes the lowest-common-denominator for all
->>> 4-bit fields in the register, and I don't think that's the right thing
->>> to do here, because:
->>>
->>> * We have no idea what ID_ISAR6 bits [31:28] may mean in future.
->>>
->>> * AFAICT, the instructions described by ID_ISAR6.SPECRES (from the
->>>    ARMv8.0-PredInv extension) operate on the local PE and are not
->>>    broadcast. To make those work as a guest expects, the host will need
->>>    to do additional things (e.g. to preserve that illusion when a vCPU is
->>>    migrated from one pCPU to another and back).
->>>
->>> Given that, think we should add an explicit ftr_id_isar6 which only
->>> exposes the fields that we're certain are safe to expose to a guest
->>> (i.e. without SPECRES).
->>
->> Agree. Thanks for pointing this out. I recommended the usage of
->> generic_32bits table without actually looking at the feature
->> definitions.
-> 
-> No worries; this is /really/ easy to miss!
-> 
-> Looking again, comparing to ARM DDI 0487E.a, there are a few other
-> things we should probably sort out:
-> 
-> * ID_DFR0 fields need more thought; we should limit what we expose here.
->   I don't think it's valid for us to expose TraceFilt, and I suspect we
 
-Sure, will go ahead and drop TraceFilt [28..31] from ID_DFR0 register.
+On 2019/12/13 =E4=B8=8A=E5=8D=885:15, Leonardo Bras wrote:
+> There is no need for this else statement, given that if block will retu=
+rn.
+> This change is not supposed to change the output binary.
+>
+> It reduces identation level on most lines in this function, and also
+> fixes an split string on vq_err().
+>
+> Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
+> ---
+>   drivers/vhost/vhost.c | 50 +++++++++++++++++++++---------------------=
+-
+>   1 file changed, 24 insertions(+), 26 deletions(-)
+>
+> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> index f44340b41494..b23d1b74c32f 100644
+> --- a/drivers/vhost/vhost.c
+> +++ b/drivers/vhost/vhost.c
+> @@ -824,34 +824,32 @@ static int vhost_copy_from_user(struct vhost_virt=
+queue *vq, void *to,
+>  =20
+>   	if (!vq->iotlb)
+>   		return __copy_from_user(to, from, size);
+> -	else {
+> -		/* This function should be called after iotlb
+> -		 * prefetch, which means we're sure that vq
+> -		 * could be access through iotlb. So -EAGAIN should
+> -		 * not happen in this case.
+> -		 */
+> -		void __user *uaddr =3D vhost_vq_meta_fetch(vq,
+> -				     (u64)(uintptr_t)from, size,
+> -				     VHOST_ADDR_DESC);
+> -		struct iov_iter f;
+>  =20
+> -		if (uaddr)
+> -			return __copy_from_user(to, uaddr, size);
+> +	/* This function should be called after iotlb
+> +	 * prefetch, which means we're sure that vq
+> +	 * could be access through iotlb. So -EAGAIN should
+> +	 * not happen in this case.
+> +	 */
+> +	void __user *uaddr =3D vhost_vq_meta_fetch(vq,
+> +			     (u64)(uintptr_t)from, size,
+> +			     VHOST_ADDR_DESC);
+> +	struct iov_iter f;
 
->   need to add capping for debug features we currently emulate.
 
-Could you please elaborate ?
+I think this will lead at least warnings from compiler.
 
-> 
-> * ID_ISAR0[31:28] are RES0 in ARMv8, Reserved/UNK in ARMv7.
->   We should probably ftr_id_isar0 so we can hide those bits.
+Generally, I would not bother to make changes like this especially=20
+consider it will bring troubles when trying to backporting fixes to=20
+downstream in the future.
 
-Sure, will do.
+There're some more interesting things: e.g current metadata IOTLB=20
+performance is bad for dynamic mapping since it will be reset each time=20
+a new updating is coming.
 
-> 
-> * ID_ISAR5[23:10] are RES0
->   We handle this already! :)
+We can optimize this by only reset the metadata IOTLB when the updating=20
+is for metdata.
 
-I may be missing something here but some of these fields are already there.
+Want to try this?
 
-#define ID_ISAR5_RDM_SHIFT              24
-#define ID_ISAR5_CRC32_SHIFT            16
-#define ID_ISAR5_SHA2_SHIFT             12
-#define ID_ISAR5_SHA1_SHIFT             8
-#define ID_ISAR5_AES_SHIFT              4
-#define ID_ISAR5_SEVL_SHIFT             0
+Thanks
 
-static const struct arm64_ftr_bits ftr_id_isar5[] = {
-        ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_ISAR5_RDM_SHIFT, 4, 0),
-        ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_ISAR5_CRC32_SHIFT, 4, 0),
-        ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_ISAR5_SHA2_SHIFT, 4, 0),
-        ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_ISAR5_SHA1_SHIFT, 4, 0),
-        ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_ISAR5_AES_SHIFT, 4, 0),
-        ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_ISAR5_SEVL_SHIFT, 4, 0),
-        ARM64_FTR_END,
-};
 
-> 
-> * ID_MMFR4.SpecSEI should be trated as higher safe.
->   We should update ftr_id_mmfr4 to handle this and other fields.
+>  =20
+> -		ret =3D translate_desc(vq, (u64)(uintptr_t)from, size, vq->iotlb_iov=
+,
+> -				     ARRAY_SIZE(vq->iotlb_iov),
+> -				     VHOST_ACCESS_RO);
+> -		if (ret < 0) {
+> -			vq_err(vq, "IOTLB translation failure: uaddr "
+> -			       "%p size 0x%llx\n", from,
+> -			       (unsigned long long) size);
+> -			goto out;
+> -		}
+> -		iov_iter_init(&f, READ, vq->iotlb_iov, ret, size);
+> -		ret =3D copy_from_iter(to, size, &f);
+> -		if (ret =3D=3D size)
+> -			ret =3D 0;
+> -	}
+> +	if (uaddr)
+> +		return __copy_from_user(to, uaddr, size);
+> +
+> +	ret =3D translate_desc(vq, (u64)(uintptr_t)from, size, vq->iotlb_iov,
+> +			     ARRAY_SIZE(vq->iotlb_iov),
+> +			     VHOST_ACCESS_RO);
+> +	if (ret < 0) {
+> +		vq_err(vq, "IOTLB translation failure: uaddr %p size 0x%llx\n",
+> +		       from, (unsigned long long)size);
+> +		goto out;
+> +	}
+> +	iov_iter_init(&f, READ, vq->iotlb_iov, ret, size);
+> +	ret =3D copy_from_iter(to, size, &f);
+> +	if (ret =3D=3D size)
+> +		ret =3D 0;
+>  =20
+>   out:
+>   	return ret;
 
-Sure but should we also export other fields as higher safe in there ?
-
-> 
-> * ID_PFR0 is missing DIT and CSV2
->   We should probably add these (but neither RAS not AMU).
-
-Sure, will do.
-
-> 
-> * ID_PFR2 is missing
->   We should probably add this for SSBS and CSV3.
-
-Sure but should we add corresponding ID_AA64PFR2_EL1 register as well ?
-
-> 
-> Thanks,
-> Mark.
-> 
