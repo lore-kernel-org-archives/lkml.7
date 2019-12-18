@@ -2,43 +2,45 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD4E9C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87AA9C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B09E3218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:33:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FA8E218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 10:33:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Oqr9YdTM"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="PffUb5PV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbfLRKdk (ORCPT
+        id S1726961AbfLRKdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 05:33:40 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:46438 "EHLO
+        Wed, 18 Dec 2019 05:33:46 -0500
+Received: from sv2-smtprelay2.synopsys.com ([149.117.73.133]:46470 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726671AbfLRKdW (ORCPT
+        by vger.kernel.org with ESMTP id S1726723AbfLRKdW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 18 Dec 2019 05:33:22 -0500
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id BF0BA40346;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id BFB254052A;
         Wed, 18 Dec 2019 10:33:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1576665201; bh=0M9mYY6dp+dohtIQdCtyeu3ar+st+lmwIwwIyzmrtEs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Oqr9YdTMq7rKi76ubUYqeeAZPBqhy9xYt+pcgaPQCjCillvkAX8cd7xDoBVbKNIiA
-         wZXIGHoXGM0um9oi7FSdwc2DzhHbNbNlGI2fWta06r9fospEE/vrMjUPZ01GFGKNiC
-         DLSN3H7FvMmlySIuSFqXTw539a/5mjdzzCrENMCE3FHojVZYb33YR0CvKOTlSc52Y6
-         62EsFBN7cxGhI36BwclRX2ZoYWlB1z7NkQHG3olyty1PttwTygNL7jBca2JWY9xKc0
-         z7TriHFtjmqZDNiWMJLUICYE73uXk1SWxqJqmHDnmMXghTp+TvsgdbGN0wBpqGSHNx
-         LGxrRd7SU0pCQ==
+        t=1576665201; bh=vuO/iRik/hGL2Vv+JKcoZy+K4zCKCj0tWBiTM++ZPfE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=PffUb5PVDywRMU9+q050nJJypTkUbmuWL+jeWOsz1iq70N7R5+/cZPEuxRN3FuuYg
+         ENz87FkhHqw0nEpBDUHEPzJXP9X497BIx/nn1/roGb9jJaZ9+B3D8nlnTtIzPkvqTy
+         Js4DZ19oRzfQB1J/4h3Dp2H3IJM1zQHsWEldoBuA/JySXWfSNDdKxKjo+AXD2Vubay
+         2MnS0BXSNnoJSnx4j2PBlVAk2vOQnoQ76jZD1i1sRJL5TgXAiWnJ6Oj/a4Rm7VbGyg
+         1xlDo2mj3LDpxWWX/1fbO+zN5zJu6cydW4VnP7hBQgtqNRrdAACR/wrKZpDNtCsB1D
+         YrptOtWkxXltg==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 68555A0066;
-        Wed, 18 Dec 2019 10:33:18 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id 91E53A0098;
+        Wed, 18 Dec 2019 10:33:19 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
 Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
@@ -52,31 +54,24 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 0/7] net: stmmac: TSN support using TAPRIO API
-Date:   Wed, 18 Dec 2019 11:33:04 +0100
-Message-Id: <cover.1576664870.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH net-next 4/7] net: stmmac: Add Frame Preemption support using TAPRIO API
+Date:   Wed, 18 Dec 2019 11:33:08 +0100
+Message-Id: <54e12f671c58f14a2d8a3a54e5d6d0f7d78f1c93.1576664870.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1576664870.git.Jose.Abreu@synopsys.com>
+References: <cover.1576664870.git.Jose.Abreu@synopsys.com>
+In-Reply-To: <cover.1576664870.git.Jose.Abreu@synopsys.com>
+References: <cover.1576664870.git.Jose.Abreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series adds TSN support (EST and Frame Preemption) for stmmac driver.
+Adds the support for Frame Preemption using TAPRIO API. This works along
+with EST feature and allows to select if preemptable traffic shall be
+sent during specific queues opening time.
 
-1) Adds the HW specific support for EST in GMAC5+ cores.
-
-2) Adds the HW specific support for EST in XGMAC3+ cores.
-
-3) Integrates EST HW specific support with TAPRIO scheduler API.
-
-4) Adds the Frame Preemption suppor on stmmac TAPRIO implementation.
-
-5) Adds the HW specific support for Frame Preemption in GMAC5+ cores.
-
-6) Adds the HW specific support for Frame Preemption in XGMAC3+ cores.
-
-7) Adds support for HW debug counters for Frame Preemption available in
-GMAC5+ cores.
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
 ---
 Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
@@ -89,32 +84,100 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
+ drivers/net/ethernet/stmicro/stmmac/common.h    |  1 +
+ drivers/net/ethernet/stmicro/stmmac/hwif.h      |  4 ++++
+ drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c | 29 ++++++++++++++++++++++++-
+ 3 files changed, 33 insertions(+), 1 deletion(-)
 
-Jose Abreu (7):
-  net: stmmac: Add basic EST support for GMAC5+
-  net: stmmac: Add basic EST support for XGMAC
-  net: stmmac: Integrate EST with TAPRIO scheduler API
-  net: stmmac: Add Frame Preemption support using TAPRIO API
-  net: stmmac: gmac5+: Add support for Frame Preemption
-  net: stmmac: xgmac3+: Add support for Frame Preemption
-  net: stmmac: mmc: Add Frame Preemption counters on GMAC5+ cores
-
- drivers/net/ethernet/stmicro/stmmac/common.h       |   5 +
- drivers/net/ethernet/stmicro/stmmac/dwmac4.h       |  12 ++
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c  |   4 +
- drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c   |   4 +
- drivers/net/ethernet/stmicro/stmmac/dwmac5.c       | 118 ++++++++++++++++++
- drivers/net/ethernet/stmicro/stmmac/dwmac5.h       |  24 ++++
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     |  25 ++++
- .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c    |  76 ++++++++++++
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c |   4 +
- drivers/net/ethernet/stmicro/stmmac/hwif.h         |  14 +++
- drivers/net/ethernet/stmicro/stmmac/mmc_core.c     |  16 +++
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |   2 +
- drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c    | 135 +++++++++++++++++++++
- include/linux/stmmac.h                             |  13 ++
- 14 files changed, 452 insertions(+)
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
+index 2f1fc93a9b1e..09c72025ed3e 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/common.h
++++ b/drivers/net/ethernet/stmicro/stmmac/common.h
+@@ -367,6 +367,7 @@ struct dma_features {
+ 	unsigned int estwid;
+ 	unsigned int estdep;
+ 	unsigned int estsel;
++	unsigned int fpesel;
+ };
+ 
+ /* GMAC TX FIFO is 8K, Rx FIFO is 16K */
+diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
+index e9355d05b3c2..c3ca3a3b2421 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
++++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
+@@ -374,6 +374,8 @@ struct stmmac_ops {
+ 	void (*set_arp_offload)(struct mac_device_info *hw, bool en, u32 addr);
+ 	int (*est_configure)(void __iomem *ioaddr, struct stmmac_est *cfg,
+ 			     unsigned int ptp_rate);
++	void (*fpe_configure)(void __iomem *ioaddr, u32 num_txq, u32 num_rxq,
++			      bool enable);
+ };
+ 
+ #define stmmac_core_init(__priv, __args...) \
+@@ -462,6 +464,8 @@ struct stmmac_ops {
+ 	stmmac_do_void_callback(__priv, mac, set_arp_offload, __args)
+ #define stmmac_est_configure(__priv, __args...) \
+ 	stmmac_do_callback(__priv, mac, est_configure, __args)
++#define stmmac_fpe_configure(__priv, __args...) \
++	stmmac_do_void_callback(__priv, mac, fpe_configure, __args)
+ 
+ /* PTP and HW Timer helpers */
+ struct stmmac_hwtimestamp {
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
+index 58d4ce094381..8ff8f9b9bb22 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
+@@ -597,6 +597,7 @@ static int tc_setup_taprio(struct stmmac_priv *priv,
+ 	u32 size, wid = priv->dma_cap.estwid, dep = priv->dma_cap.estdep;
+ 	struct plat_stmmacenet_data *plat = priv->plat;
+ 	struct timespec64 time;
++	bool fpe = false;
+ 	int i, ret = 0;
+ 
+ 	if (!priv->dma_cap.estsel)
+@@ -667,8 +668,23 @@ static int tc_setup_taprio(struct stmmac_priv *priv,
+ 			return -ERANGE;
+ 		if (gates > GENMASK(31 - wid, 0))
+ 			return -ERANGE;
+-		if (qopt->entries[i].command != TC_TAPRIO_CMD_SET_GATES)
++
++		switch (qopt->entries[i].command) {
++		case TC_TAPRIO_CMD_SET_GATES:
++			if (fpe)
++				return -EINVAL;
++			break;
++		case TC_TAPRIO_CMD_SET_AND_HOLD:
++			gates |= BIT(0);
++			fpe = true;
++			break;
++		case TC_TAPRIO_CMD_SET_AND_RELEASE:
++			gates &= ~BIT(0);
++			fpe = true;
++			break;
++		default:
+ 			return -EOPNOTSUPP;
++		}
+ 
+ 		priv->plat->est->gcl[i] = delta_ns | (gates << wid);
+ 	}
+@@ -681,6 +697,17 @@ static int tc_setup_taprio(struct stmmac_priv *priv,
+ 	priv->plat->est->ctr[0] = (u32)(qopt->cycle_time % NSEC_PER_SEC);
+ 	priv->plat->est->ctr[1] = (u32)(qopt->cycle_time / NSEC_PER_SEC);
+ 
++	if (fpe && !priv->dma_cap.fpesel)
++		return -EOPNOTSUPP;
++
++	ret = stmmac_fpe_configure(priv, priv->ioaddr,
++				   priv->plat->tx_queues_to_use,
++				   priv->plat->rx_queues_to_use, fpe);
++	if (ret && fpe) {
++		netdev_err(priv->dev, "failed to enable Frame Preemption\n");
++		return ret;
++	}
++
+ 	ret = stmmac_est_configure(priv, priv->ioaddr, priv->plat->est,
+ 				   priv->plat->clk_ptp_rate);
+ 	if (ret) {
 -- 
 2.7.4
 
