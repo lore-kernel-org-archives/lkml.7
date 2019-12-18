@@ -2,298 +2,134 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A2EC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 03:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CF2C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 03:34:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C4EC206EE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 03:31:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40CFA206EE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 03:34:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Q/QKQGsd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c8NEa/YH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbfLRDb4 (ORCPT
+        id S1726594AbfLRDeh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 22:31:56 -0500
-Received: from mailout2.samsung.com ([203.254.224.25]:42997 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726402AbfLRDbz (ORCPT
+        Tue, 17 Dec 2019 22:34:37 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33615 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726492AbfLRDeg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 22:31:55 -0500
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20191218031345epoutp02ef2a2f0e43830bf3bebb93d238cd6d64~hWKiQsTGK3176231762epoutp02G
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 03:13:45 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20191218031345epoutp02ef2a2f0e43830bf3bebb93d238cd6d64~hWKiQsTGK3176231762epoutp02G
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1576638825;
-        bh=ryabqhCNmLssM4nF4hSx9N7TUQla1FNTPF+4CXXgJsE=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Q/QKQGsdXVuSVuC46wULkUNYCh0HB643ssgy/C7NDZLQyIZh695E1+kGLRMe2941g
-         USHjCT1l0DCvIkNRgwBVpXsoShgAGA4T32XdeonPyDWTpsxlWlf5IR/+5VMM8jac4l
-         V9tm0AsXG8iHSig7lxBDzPs/G5CnuAOW3xqPvFn4=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20191218031344epcas1p1676b6effb77febaea4e5e455e7f712e8~hWKhcey4U3244132441epcas1p1b;
-        Wed, 18 Dec 2019 03:13:44 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.156]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 47d0TJ6NwfzMqYlh; Wed, 18 Dec
-        2019 03:13:40 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        CB.0E.48498.46999FD5; Wed, 18 Dec 2019 12:13:40 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191218031340epcas1p1ea6fac621b67d5ce766d82518b5c13ee~hWKdoaaEz2352023520epcas1p1M;
-        Wed, 18 Dec 2019 03:13:40 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191218031340epsmtrp2f04419844d14615d2e951e03d1c27276~hWKdniLS31830618306epsmtrp2Y;
-        Wed, 18 Dec 2019 03:13:40 +0000 (GMT)
-X-AuditID: b6c32a36-a55ff7000001bd72-e4-5df99964d540
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        EE.02.06569.46999FD5; Wed, 18 Dec 2019 12:13:40 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191218031340epsmtip144b1402acc29eaf9764477d392f916b4~hWKdWR0X_1182411824epsmtip1g;
-        Wed, 18 Dec 2019 03:13:40 +0000 (GMT)
-Subject: Re: [PATCH 2/9] PM / devfreq: Remove devfreq_get_devfreq_by_phandle
- function
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-To:     Leonard Crestez <leonard.crestez@nxp.com>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        "lukasz.luba@arm.com" <lukasz.luba@arm.com>,
-        "a.swigon@samsung.com" <a.swigon@samsung.com>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "kgene@kernel.org" <kgene@kernel.org>,
-        "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>,
-        "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>
-Organization: Samsung Electronics
-Message-ID: <304cb931-46da-d525-811d-51d932081b84@samsung.com>
-Date:   Wed, 18 Dec 2019 12:20:14 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
-MIME-Version: 1.0
-In-Reply-To: <1967cf03-d1e8-8197-c767-3c8d5f403708@samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrPJsWRmVeSWpSXmKPExsWy7bCmvm7KzJ+xBrvvm1jcn9fKaDH/yDlW
-        i/+PXrNa9D9+zWxx/vwGdouzTW/YLVbc/chqsenxNVaLy7vmsFl87j3CaPHpwX9mixnn9zFZ
-        LGxqYbdYe+Quu8XS6xeZLG43rmCzaN17hN1B0GPNvDWMHptWdbJ5bF5S77Hx3Q4mj74tqxg9
-        tl+bx+zxeZNcAHtUtk1GamJKapFCal5yfkpmXrqtkndwvHO8qZmBoa6hpYW5kkJeYm6qrZKL
-        T4CuW2YO0AdKCmWJOaVAoYDE4mIlfTubovzSklSFjPziElul1IKUnALLAr3ixNzi0rx0veT8
-        XCtDAwMjU6DChOyMhY/WsRRM1Kr4uuIYSwPjBaUuRk4OCQETic6NP5m6GLk4hAR2MEocvnua
-        BcL5xCjx+84vVgjnG6PEqh/r2WBamndch0rsZZSY9uIpG4TznlHiyLQX7CBVwgLhEs8XrGQC
-        sdkEtCT2v7gB1i0iUC8xb81kVhCbWWANm8TfD7UgNr+AosTVH48ZQWxeATuJR/P3g9ksAqoS
-        e661gc0UFQiTOLmtBapGUOLkzCcsIDangL3ElQ+bGCFmikvcejKfCcKWl9j+dg4zxNXn2CV6
-        rhl3MXIA2S4Sl9ug/heWeHV8CzuELSXx+d1eqCerJVaePAL2l4RAB6PElv0XWCESxhL7l05m
-        ApnDLKApsX6XPkRYUWLn77lQJ/BJvPvawwqxileio00IokRZ4vKDu0wQtqTE4vZOtgmMSrOQ
-        PDMLyQOzkDwwC2HZAkaWVYxiqQXFuempxYYFRsiRvYkRnLi1zHYwLjrnc4hRgINRiYfXgOFn
-        rBBrYllxZe4hRgkOZiUR3tsdQCHelMTKqtSi/Pii0pzU4kOMpsCwnsgsJZqcD8wqeSXxhqZG
-        xsbGFiaGZqaGhkrivBw/LsYKCaQnlqRmp6YWpBbB9DFxcEo1MLb0fN6yfuUhrtV9c5Z3zn4g
-        z3+wY9ee81bK248UZGxkPy714VbKpWbe3UsiOoTeHf7FfMWLv/6/zZbd3pNPiPlU/vW8V+ck
-        O+uz+rkHAVsLd3Kx7bRLji+SPWbjJ1d7b7eazJS9c46drb8WniC98GzG7jOCgav0T4a8sZ1q
-        wf5uh6zkgyOLFDmUWIozEg21mIuKEwG8gIoQ8gMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDIsWRmVeSWpSXmKPExsWy7bCSnG7KzJ+xBk/OyVncn9fKaDH/yDlW
-        i/+PXrNa9D9+zWxx/vwGdouzTW/YLVbc/chqsenxNVaLy7vmsFl87j3CaPHpwX9mixnn9zFZ
-        LGxqYbdYe+Quu8XS6xeZLG43rmCzaN17hN1B0GPNvDWMHptWdbJ5bF5S77Hx3Q4mj74tqxg9
-        tl+bx+zxeZNcAHsUl01Kak5mWWqRvl0CV8bCR+tYCiZqVXxdcYylgfGCUhcjJ4eEgIlE847r
-        rF2MXBxCArsZJRa/7WGHSEhKTLt4lLmLkQPIFpY4fLgYouYto8Tsj7cYQWqEBcIlni9YyQRi
-        swloSex/cYMNpEhEoJFR4sn0H+wgDrPABjaJPU/us4FUCQkcZ5K4/U8axOYXUJS4+uMx2CRe
-        ATuJR/P3g9ksAqoSe661gV0hKhAmsXPJYyaIGkGJkzOfsIDYnAL2Elc+bAKrZxZQl/gz7xIz
-        hC0ucevJfCYIW15i+9s5zBMYhWchaZ+FpGUWkpZZSFoWMLKsYpRMLSjOTc8tNiwwykst1ytO
-        zC0uzUvXS87P3cQIjmMtrR2MJ07EH2IU4GBU4uG98fdHrBBrYllxZe4hRgkOZiUR3tsdP2OF
-        eFMSK6tSi/Lji0pzUosPMUpzsCiJ88rnH4sUEkhPLEnNTk0tSC2CyTJxcEo1MOYIXzzE2uVs
-        uzstMtLo5aJ15heOssuqbYmedDuvt9X+5fKL/6XT97k53/syXXmxkU1b7YrVvuq9brmzAjfp
-        WTqJ+UtYaRw3bDu4X6r+lPpzD8eKU16yxpdXnN7RedL50xwfjVZ/xjM/FwtlF0wvdrO4EVU2
-        Lb+pYqGD/KdPsgcfh83aveZOsxJLcUaioRZzUXEiANOYkvffAgAA
-X-CMS-MailID: 20191218031340epcas1p1ea6fac621b67d5ce766d82518b5c13ee
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191217055105epcas1p2d2930402a559e381a7854f515a683d15
-References: <20191217055738.28445-1-cw00.choi@samsung.com>
-        <CGME20191217055105epcas1p2d2930402a559e381a7854f515a683d15@epcas1p2.samsung.com>
-        <20191217055738.28445-3-cw00.choi@samsung.com>
-        <VI1PR04MB70231FA16F12ACA3A3C01772EE500@VI1PR04MB7023.eurprd04.prod.outlook.com>
-        <1967cf03-d1e8-8197-c767-3c8d5f403708@samsung.com>
+        Tue, 17 Dec 2019 22:34:36 -0500
+Received: by mail-pf1-f194.google.com with SMTP id z16so430418pfk.0;
+        Tue, 17 Dec 2019 19:34:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=ONukCPo04MyQ0dGWDhkAJ7/bKcKlZKdzKOh3835rIc0=;
+        b=c8NEa/YH1XpKu6xJWwXlnSnGB2WmMOfYCtydSz7iHpVwl+5eVGYsy8yH638ZoSv4Hq
+         uUFfqstMcdMhs8fvd99tSUaqtn6jwayD/sCLAn/LlORkHPevuDXNBsjSx+CwtQ493F5W
+         Wmt1wUEpC8tPQjlMlNdU9RkhsB8q4RhG4a3AHOSmK5wc2dxasePWOyxWKksBQLBOA7Rj
+         lBoIij+vIpcvhJFQNcI7EEUmLgJp9R4ibhVXYaDfF7QLgq3RKdXCcOr0kV6GFFLlrS9n
+         wfWA9RoZMsKBQfJQkEmo0rLmmBiw4rZ4r1L+Bva1r/y9xiECzY6Jc55eYcBxnoMpgDfi
+         i2pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ONukCPo04MyQ0dGWDhkAJ7/bKcKlZKdzKOh3835rIc0=;
+        b=MFgAs6oZzZFhNUMu7QvkjnzsICbM6OaIgcrwRpvcljbXa5GAoJnDdWbbS4TfL93LOT
+         ObD4wr4df7OoF7ZYlcAuVNinMlV8Ciesvkk46Ca5r9XJfHw/ZRoVn55d1gTQDede25kd
+         BO1UoHyWo3P2nbFa6o3V24Pr5zPn6tuB5m+MZtESOyieZfCMa31C2vsOPj2S+Yu6A7o0
+         hCVunPzU6S9LOZQbS+MgTdVIMYRCS2DcRHsqKeSfID9XKsoXJho9i0zSpzvjW/FNhiTl
+         BCwLyP0JeksBX9N0cundOlyBiCM+YFb15oR/wmFOaSJ9OWj5z8kKx57nXyjZMSq6BaVQ
+         r3YQ==
+X-Gm-Message-State: APjAAAUhMYR66AvKZUl6VAxT3RYKXVdLEA0nBMA7G30vf4EUZwATD0cA
+        BS+ZfwNGo/PoqCUJgaumZtCUFXihSth5Hg==
+X-Google-Smtp-Source: APXvYqwMTguHHmmbQPNu/P12kClGPGCj5gkW0POPuZgnv1g9mEaXU1UpbCZ0ywj5EPJHW8UYz0xdrw==
+X-Received: by 2002:a63:b141:: with SMTP id g1mr428607pgp.168.1576640075959;
+        Tue, 17 Dec 2019 19:34:35 -0800 (PST)
+Received: from oslab.tsinghua.edu.cn ([166.111.139.172])
+        by smtp.gmail.com with ESMTPSA id b21sm634059pfp.0.2019.12.17.19.34.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 19:34:35 -0800 (PST)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     atul.gupta@chelsio.com, herbert@gondor.apana.org.au,
+        davem@davemloft.net, tglx@linutronix.de, allison@lohutok.net,
+        arjun@chelsio.com, kstewart@linuxfoundation.org,
+        edumazet@google.com
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH] crypto: chelsio: chtls: fix possible sleep-in-atomic-context bugs in abort_syn_rcv()
+Date:   Wed, 18 Dec 2019 11:34:22 +0800
+Message-Id: <20191218033422.18672-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/18/19 11:59 AM, Chanwoo Choi wrote:
-> On 12/17/19 11:33 PM, Leonard Crestez wrote:
->> On 17.12.2019 07:51, Chanwoo Choi wrote:
->>> Previously, devfreq core support 'devfreq' property in order to get
->>> the devfreq device by phandle. But, 'devfreq' property name is not proper
->>> on devicetree binding because this name doesn't mean the any h/w attribute.
->>>
->>> The devfreq core hand over the right to decide the property name
->>> for getting the devfreq device on devicetree. Each devfreq driver
->>> will decide the property name on devicetree binding and then get
->>> the devfreq device by using devfreq_get_devfreq_by_node().
->>>
->>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->>> ---
->>>   drivers/devfreq/devfreq.c    | 35 -----------------------------------
->>>   drivers/devfreq/exynos-bus.c | 14 ++++++++++++--
->>>   include/linux/devfreq.h      |  8 --------
->>>   3 files changed, 12 insertions(+), 45 deletions(-)
->>>
->>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
->>> index cb8ca81c8973..c3d3c7c802a0 100644
->>> --- a/drivers/devfreq/devfreq.c
->>> +++ b/drivers/devfreq/devfreq.c
->>> @@ -991,48 +991,13 @@ struct devfreq *devfreq_get_devfreq_by_node(struct device_node *node)
->>>   
->>>   	return ERR_PTR(-ENODEV);
->>>   }
->>> -
->>> -/*
->>> - * devfreq_get_devfreq_by_phandle - Get the devfreq device from devicetree
->>> - * @dev - instance to the given device
->>> - * @index - index into list of devfreq
->>> - *
->>> - * return the instance of devfreq device
->>> - */
->>> -struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev, int index)
->>> -{
->>> -	struct device_node *node;
->>> -	struct devfreq *devfreq;
->>> -
->>> -	if (!dev)
->>> -		return ERR_PTR(-EINVAL);
->>> -
->>> -	if (!dev->of_node)
->>> -		return ERR_PTR(-EINVAL);
->>> -
->>> -	node = of_parse_phandle(dev->of_node, "devfreq", index);
->>> -	if (!node)
->>> -		return ERR_PTR(-ENODEV);
->>> -
->>> -	devfreq = devfreq_get_devfreq_by_node(node);
->>> -	of_node_put(node);
->>> -
->>> -	return devfreq;
->>> -}
->>> -
->>>   #else
->>>   struct devfreq *devfreq_get_devfreq_by_node(struct device_node *node)
->>>   {
->>>   	return ERR_PTR(-ENODEV);
->>>   }
->>> -
->>> -struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev, int index)
->>> -{
->>> -	return ERR_PTR(-ENODEV);
->>> -}
->>>   #endif /* CONFIG_OF */
->>>   EXPORT_SYMBOL_GPL(devfreq_get_devfreq_by_node);
->>> -EXPORT_SYMBOL_GPL(devfreq_get_devfreq_by_phandle);
->>>   
->>>   /**
->>>    * devm_devfreq_remove_device() - Resource-managed devfreq_remove_device()
->>> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
->>> index 7f5917d59072..9aac2db956d5 100644
->>> --- a/drivers/devfreq/exynos-bus.c
->>> +++ b/drivers/devfreq/exynos-bus.c
->>> @@ -146,6 +146,16 @@ static int exynos_bus_get_dev_status(struct device *dev,
->>>   	return ret;
->>>   }
->>>   
->>> +static struct devfreq *get_parent_devfreq_by_node(struct device_node *np)
->>> +{
->>> +	struct device_node *node = of_parse_phandle(np, "devfreq", 0);
->>> +
->>> +	if (!node)
->>> +		return ERR_PTR(-ENODEV);
->>> +
->>> +	return devfreq_get_devfreq_by_node(node);
->>> +}
->>
->> The _by_node suffix here is confusing because it actually fetches a 
->> property of the node unlike devfreq_get_devfreq_by_node. Maybe call this 
->> get_parent_devfreq_from_node?
->>
->> Since it's a static function it could just be called get_parent_devfreq?
-> 
-> OK.
+The driver may sleep while holding a spinlock.
+The function call path (from bottom to top) in Linux 4.19 is:
 
-I'll rename as following because all functions of exynos-bus.c
-which used 'exynos_bus_' prefix.
-- exynos_bus_get_parent_devfreq()
+drivers/crypto/chelsio/chtls/chtls_cm.c, 1806: 
+	alloc_skb(GFP_KERNEL) in send_abort_rpl
+drivers/crypto/chelsio/chtls/chtls_cm.c, 1925: 
+	send_abort_rpl in abort_syn_rcv
+drivers/crypto/chelsio/chtls/chtls_cm.c, 1920: 
+	spin_lock in abort_syn_rcv
 
-> 
->>
->>> +
->>>   static void exynos_bus_exit(struct device *dev)
->>>   {
->>>   	struct exynos_bus *bus = dev_get_drvdata(dev);
->>> @@ -353,8 +363,8 @@ static int exynos_bus_profile_init_passive(struct exynos_bus *bus,
->>>   	profile->exit = exynos_bus_passive_exit;
->>>   
->>>   	/* Get the instance of parent devfreq device */
->>> -	parent_devfreq = devfreq_get_devfreq_by_phandle(dev, 0);
->>> -	if (IS_ERR(parent_devfreq))
->>> +	parent_devfreq = get_parent_devfreq_by_node(dev->of_node);
->>> +	if (IS_ERR(parent_devfreq)) {
->>>   		return -EPROBE_DEFER;
->>>   
->>>   	passive_data = devm_kzalloc(dev, sizeof(*passive_data), GFP_KERNEL);
->>> diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
->>> index e3633ae43349..3ed96426302e 100644
->>> --- a/include/linux/devfreq.h
->>> +++ b/include/linux/devfreq.h
->>> @@ -254,8 +254,6 @@ extern void devm_devfreq_unregister_notifier(struct device *dev,
->>>   				struct notifier_block *nb,
->>>   				unsigned int list);
->>>   extern struct devfreq *devfreq_get_devfreq_by_node(struct device_node *node);
->>> -extern struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev,
->>> -						int index);
->>>   
->>>   #if IS_ENABLED(CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND)
->>>   /**
->>> @@ -413,12 +411,6 @@ struct devfreq *devfreq_get_devfreq_by_node(struct device_node *node)
->>>   	return ERR_PTR(-ENODEV);
->>>   }
->>>   
->>> -static inline struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev,
->>> -							int index)
->>> -{
->>> -	return ERR_PTR(-ENODEV);
->>> -}
->>> -
->>>   static inline int devfreq_update_stats(struct devfreq *df)
->>>   {
->>>   	return -EINVAL;
->>>
->>
->>
->>
-> 
-> 
+drivers/crypto/chelsio/chtls/chtls_cm.c, 1787: 
+	alloc_skb(GFP_KERNEL) in send_defer_abort_rpl
+drivers/crypto/chelsio/chtls/chtls_cm.c, 1811: 
+	send_defer_abort_rpl in send_abort_rpl
+drivers/crypto/chelsio/chtls/chtls_cm.c, 1925: 
+    send_abort_rpl in abort_syn_rcv
+drivers/crypto/chelsio/chtls/chtls_cm.c, 1920: 
+    spin_lock in abort_syn_rcv
 
+alloc_skb(GFP_KERNEL) can sleep at runtime.
 
+To fix these possible bugs, GFP_KERNEL is replaced with GFP_ATOMIC.
+Besides, in send_defer_abort_rpl(), error handling code is added to 
+handle the failure of alloc_skb().
+
+These bugs are found by a static analysis tool STCheck written by myself.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+ drivers/crypto/chelsio/chtls/chtls_cm.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/crypto/chelsio/chtls/chtls_cm.c b/drivers/crypto/chelsio/chtls/chtls_cm.c
+index aca75237bbcf..e6e4c3ddc368 100644
+--- a/drivers/crypto/chelsio/chtls/chtls_cm.c
++++ b/drivers/crypto/chelsio/chtls/chtls_cm.c
+@@ -1805,8 +1805,11 @@ static void send_defer_abort_rpl(struct chtls_dev *cdev, struct sk_buff *skb)
+ 	struct cpl_abort_req_rss *req = cplhdr(skb);
+ 	struct sk_buff *reply_skb;
+ 
+-	reply_skb = alloc_skb(sizeof(struct cpl_abort_rpl),
+-			      GFP_KERNEL | __GFP_NOFAIL);
++	reply_skb = alloc_skb(sizeof(struct cpl_abort_rpl), GFP_ATOMIC);
++	if (!reply_skb) {
++		kfree_skb(skb);
++		return;
++	}
+ 	__skb_put(reply_skb, sizeof(struct cpl_abort_rpl));
+ 	set_abort_rpl_wr(reply_skb, GET_TID(req),
+ 			 (req->status & CPL_ABORT_NO_RST));
+@@ -1825,7 +1828,7 @@ static void send_abort_rpl(struct sock *sk, struct sk_buff *skb,
+ 	csk = rcu_dereference_sk_user_data(sk);
+ 
+ 	reply_skb = alloc_skb(sizeof(struct cpl_abort_rpl),
+-			      GFP_KERNEL);
++			      GFP_ATOMIC);
+ 
+ 	if (!reply_skb) {
+ 		req->status = (queue << 1);
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+2.17.1
+
