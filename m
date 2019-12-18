@@ -2,123 +2,115 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 119A1C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9134DC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD7662072B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:18:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576671522;
-	bh=m/h7t2Wn87r0YwVxwYo9jz2wKBuHu9QOIlom1bjjdpE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VhNLBE8Eg75uqxUikdgT+Qj/2YXwFHNAlhl3Qn9Qi28ocf0GbEx1Mq4AvegZd54dl
-	 4KNbAdkpPN+aALLeZQyLluUrsqqMf7IFNKjY0+mnfSlOKHS1+masjfDZXL5EiuB4xq
-	 jSgLxvX3RJntMeFgkEquFa4CPytucrp4tZ9iGPiY=
+	by mail.kernel.org (Postfix) with ESMTP id 6378224650
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:21:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=flawful.org header.i=@flawful.org header.b="Xg93ZJD1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbfLRMSl (ORCPT
+        id S1726881AbfLRMVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 07:18:41 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41076 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725930AbfLRMSl (ORCPT
+        Wed, 18 Dec 2019 07:21:53 -0500
+Received: from ste-pvt-msa2.bahnhof.se ([213.80.101.71]:64698 "EHLO
+        ste-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbfLRMVx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 07:18:41 -0500
-Received: by mail-wr1-f68.google.com with SMTP id c9so2050682wrw.8
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 04:18:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HdA4x4Mpp0Ob+ig4Pc6f4Csozs6EHGzpAf+wfwCPZUM=;
-        b=oKw60tibz2ozN6kXgqmUjIxiZJSkhYCSVlM16hOVIFRcF2dOG9Blm7NLiydXcTws5B
-         z2h+NoL4ngtuxa0FtUSRbmVb+w7OuEki889FzgTXbuIsrMivC0iD0K/tFsXIw2ht3rl7
-         6yD7Jb2tgnbitAI71s0TsGZ7BeNQjrgvsVBxb0DvD6VhQB08rJaCUKFs5w18yVjjEWSd
-         +HJHIkgCcOfk+G57Hnb6S7ZGpC0695zwmTpDVQq1ikbev0cBNUdKy+QEBB++eFiaKJQH
-         e0vSrSYDX+ZNOa2fFygTHeXgOgZNuN4hRYkdsBvXON5nm5MKldz3g+HnqAYyVru3nqS4
-         CqSQ==
-X-Gm-Message-State: APjAAAVuKdAD87omyhi3FKCXNT/3+1QGVmmvC5gne3FviijfHWrEkrtp
-        rFZ9IUMYlwuoTcW1hyzO8JY=
-X-Google-Smtp-Source: APXvYqwvdlQcIhXXIIukIAvOpQerf7Pd1fFtKLlBDSy+5nmuElWfeJOxSRHPfmDBZCM7c9loTD64lQ==
-X-Received: by 2002:a5d:52c4:: with SMTP id r4mr2388982wrv.368.1576671519196;
-        Wed, 18 Dec 2019 04:18:39 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id v20sm2242610wmj.32.2019.12.18.04.18.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 04:18:38 -0800 (PST)
-Date:   Wed, 18 Dec 2019 13:18:37 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     Waiman Long <longman@redhat.com>,
-        Eric B Munson <emunson@akamai.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        aneesh.kumar@linux.ibm.com, Jarod Wilson <jarod@redhat.com>
-Subject: hugetlbfs testing coverage (was: Re: [PATCH v2] mm/hugetlb: defer
- free_huge_page() to a workqueue)
-Message-ID: <20191218121837.GD21485@dhcp22.suse.cz>
-References: <20191212060650.ftqq27ftutxpc5hq@linux-p48b>
- <20191212063050.ufrpij6s6jkv7g7j@linux-p48b>
- <20191212190427.ouyohviijf5inhur@linux-p48b>
- <d6b9743c-776c-d740-73af-a600f15b910a@oracle.com>
- <79d3a7e1-384b-b759-cd84-56253fb9ed40@redhat.com>
- <20191216132658.GG30281@dhcp22.suse.cz>
- <98ac628d-f8be-270d-80bc-bf2373299caf@redhat.com>
- <21a92649-bb9f-b024-e52b-4ce9355f973b@redhat.com>
- <20191217090054.GA31063@dhcp22.suse.cz>
- <ca035fbb-752d-70ff-1be8-e2d2f90b3c0e@oracle.com>
+        Wed, 18 Dec 2019 07:21:53 -0500
+X-Greylist: delayed 339 seconds by postgrey-1.27 at vger.kernel.org; Wed, 18 Dec 2019 07:21:51 EST
+Received: from localhost (localhost [127.0.0.1])
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 003D53F4E2;
+        Wed, 18 Dec 2019 13:16:10 +0100 (CET)
+Authentication-Results: ste-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=flawful.org header.i=@flawful.org header.b=Xg93ZJD1;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Authentication-Results: ste-ftg-msa2.bahnhof.se (amavisd-new);
+        dkim=pass (1024-bit key) header.d=flawful.org
+Received: from ste-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (ste-ftg-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id S8UUBs6IQdRp; Wed, 18 Dec 2019 13:16:09 +0100 (CET)
+Received: from flawful.org (ua-84-217-220-205.bbcust.telenor.se [84.217.220.205])
+        (Authenticated sender: mb274189)
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id DD3363F3BA;
+        Wed, 18 Dec 2019 13:16:08 +0100 (CET)
+Received: by flawful.org (Postfix, from userid 1001)
+        id E3946E50; Wed, 18 Dec 2019 13:16:07 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flawful.org; s=mail;
+        t=1576671368; bh=tDgQ8Hd7X2DMLFKWDPV38ouTSnh9qudUss4S+7QTdhc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Xg93ZJD1Xo4idJjy5M2BapnXGYA2U/a5Ejjo3qQjPm/B97aFFjq/73mWy1iGtyuhN
+         NGNIe8OkbS2NvfLHbteFPSdHYcNxK/2MR+kxTunx7t89lmQfQ2NwujCZ264jx6cfRV
+         +fkGbppgVjYEqm3txWXU+N5tk+nkzxFZCJ3cKtL4=
+Date:   Wed, 18 Dec 2019 13:16:07 +0100
+From:   Niklas Cassel <nks@flawful.org>
+To:     sboyd@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org,
+        sboyd@kernel.org, bjorn.andersson@linaro.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, niklas.cassel@linaro.org
+Subject: Re: [PATCH v3 0/7] Clock changes to support cpufreq on QCS404
+Message-ID: <20191218121607.djwnxkrsgpdcf5k3@flawful.org>
+References: <20191125135910.679310-1-niklas.cassel@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ca035fbb-752d-70ff-1be8-e2d2f90b3c0e@oracle.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191125135910.679310-1-niklas.cassel@linaro.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 17-12-19 10:05:06, Mike Kravetz wrote:
-> Cc: Eric
+On Mon, Nov 25, 2019 at 02:59:02PM +0100, Niklas Cassel wrote:
+> The following clock changes are required to enable cpufreq support on
+> the QCS404.
 > 
-> On 12/17/19 1:00 AM, Michal Hocko wrote:
-> > On Mon 16-12-19 13:44:53, Waiman Long wrote:
-> >> On 12/16/19 10:38 AM, Waiman Long wrote:
-> > [...]
-> >>>> Can you extract guts of the testcase and integrate them into hugetlb
-> >>>> test suite?
-> >>
-> >> BTW, what hugetlb test suite are you talking about?
-> > 
-> > I was using tests from libhugetlbfs package in the past. There are few
-> > tests in LTP project but the libhugetlbfs coverage used to cover the
-> > largest part of the functionality.
-> > 
-> > Is there any newer home for the package than [1], Mike? Btw. would it
-> > mak sense to migrate those tests to a more common place, LTP or kernel
-> > selftests?
+> Changes since v2:
+> -Addressed Stephen Boyd's comment regarding apcs-msm8916
+> should use new way of specifying clock parents.
+> -DT binding now has "pll" as first clock, in order to
+> not break DT backwards compatibility (in case no clock-names
+> are given).
+> -Moved EPROBE_DEFER error handling to its own patch.
 > 
-> That is the latest home/release for libhugetlbfs.
+> Jorge Ramirez-Ortiz (6):
+>   dt-bindings: mailbox: qcom: Add clock-name optional property
+>   clk: qcom: gcc: limit GPLL0_AO_OUT operating frequency
+>   clk: qcom: hfpll: register as clock provider
+>   clk: qcom: hfpll: CLK_IGNORE_UNUSED
+>   clk: qcom: hfpll: use clk_parent_data to specify the parent
+>   clk: qcom: apcs-msm8916: silently error out on EPROBE_DEFER
 > 
-> The libhugetlbfs test suite is somewhat strange in that I suspect it started
-> as testing for libhugetlbfs itself.  When it was written, the thought may have
-> been that people would use libhugetlfs as the primary interface to hugetlb
-> pages.  That is not the case today.  Over time, hugetlbfs tests not associated
-> with libhugetlbfs were added.
+> Niklas Cassel (1):
+>   clk: qcom: apcs-msm8916: use clk_parent_data to specify the parent
 > 
-> If we want to migrate libhugetlbfs tests, then I think we would only want to
-> migrate the non-libhugetlbfs test cases.  Although, the libhugetlbfs specific
-> tests are useful as they 'could' point out regressions.
+>  .../mailbox/qcom,apcs-kpss-global.txt         | 24 ++++++++++++++---
+>  drivers/clk/qcom/apcs-msm8916.c               | 26 ++++++++++++++-----
+>  drivers/clk/qcom/clk-alpha-pll.c              |  8 ++++++
+>  drivers/clk/qcom/clk-alpha-pll.h              |  1 +
+>  drivers/clk/qcom/gcc-qcs404.c                 |  2 +-
+>  drivers/clk/qcom/hfpll.c                      | 21 +++++++++++++--
+>  6 files changed, 70 insertions(+), 12 deletions(-)
+> 
+> -- 
+> 2.23.0
+> 
 
-Yeah, I can second that. I remember using the suite and it pointed to
-real issues when I was touching the area in the past. So if we can get
-as many tests to be independent on the library and integrate it to some
-existing testing project - be it kernel selftest or LTP - then it would
-be really great and I assume the testing coverage of the hugetlb
-functionality would increase dramatically.
--- 
-Michal Hocko
-SUSE Labs
+Hello Stephen,
+
+I have adressed your review comments
+on the previous patch series version.
+
+Could you please have a look?
+
+If it looks good, could you please
+consider taking them via your tree?
+
+Kind regards,
+Niklas
