@@ -2,96 +2,155 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A70DCC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F24B2C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:27:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A33A218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:26:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="0MiYbdrQ"
+	by mail.kernel.org (Postfix) with ESMTP id CBCE7218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 14:27:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727192AbfLRO02 (ORCPT
+        id S1727198AbfLRO1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 09:26:28 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:16668 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726856AbfLRO01 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 09:26:27 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBIEOMfW015469;
-        Wed, 18 Dec 2019 15:26:15 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=w4HnMszGdzKynqPVMRC5qZxWn0UBjfQfixyAUj2Vbxw=;
- b=0MiYbdrQcmoCziaitsKGOXGZ4rzbtB85PBP93V11bXTgdMBcrKGUNTKZuK3lA/RgSXys
- hx4oDI3WkBdJhCjDB08H/V+wXy/ZyWpEoRPEW+D0TNhzJWihKXCl3L9pZllLT3KQgbpo
- gS2L5dQf+IdZfG60sRRzy99aB/U5OZZrDLMr52JhKPSdfNCfKWADQ+7Rs1ZlziTojgJ+
- i4Z6xIvnwvAmPMEso2osaD9tFLa/V5ZUkHEUqPmohr3I16h5qV5LRGJmpAHp/l4eljSv
- cyDAeU+3VO9/LwGyp+jq0na/Y+uXpbWTo1rcQyRrXWRzhjY68M+Ehab3W/H3hhiiWHA1 CQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2wvp374vcg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Dec 2019 15:26:15 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3982910003B;
-        Wed, 18 Dec 2019 15:26:15 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2691F2BEAF1;
-        Wed, 18 Dec 2019 15:26:15 +0100 (CET)
-Received: from localhost (10.75.127.48) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 18 Dec 2019 15:26:14
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <gregkh@linuxfoundation.org>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <khilman@baylibre.com>
-CC:     <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH] dt-bindings: usb: amlogic,meson-g12a-usb-ctrl: fix clock names
-Date:   Wed, 18 Dec 2019 15:26:13 +0100
-Message-ID: <20191218142613.13683-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG8NODE1.st.com (10.75.127.22) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-18_04:2019-12-17,2019-12-18 signatures=0
+        Wed, 18 Dec 2019 09:27:12 -0500
+Received: from mga01.intel.com ([192.55.52.88]:21667 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726856AbfLRO1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Dec 2019 09:27:12 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 06:27:12 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,329,1571727600"; 
+   d="scan'208";a="240803857"
+Received: from ahunter-desktop.fi.intel.com ([10.237.72.76])
+  by fmsmga004.fm.intel.com with ESMTP; 18 Dec 2019 06:27:09 -0800
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] perf/x86: Add perf text poke event
+Date:   Wed, 18 Dec 2019 16:26:15 +0200
+Message-Id: <20191218142618.19332-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.17.1
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dwc2 bindings require clock-names to be "otg".
-Fix the example in amlogic,meson-g12a-usb-ctrl to follow this requirement.
+Hi
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Here are patches to add a text poke event to record changes to kernel text
+(i.e. self-modifying code) in order to support tracers like Intel PT
+decoding through jump labels.
 
-diff --git a/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml b/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
-index 4efb77b653ab..267fce165994 100644
---- a/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
-+++ b/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
-@@ -107,7 +107,7 @@ examples:
-               reg = <0xff400000 0x40000>;
-               interrupts = <31>;
-               clocks = <&clkc_usb1>;
--              clock-names = "ddr";
-+              clock-names = "otg";
-               phys = <&usb2_phy1>;
-               dr_mode = "peripheral";
-               g-rx-fifo-size = <192>;
--- 
-2.15.0
+The first patch makes the kernel change and the subsequent patches are
+tools changes.
 
+The second patch adds support for updating perf tools' data cache
+with the changed bytes.
+
+The last patch is an Intel PT specific tools change.
+
+The patches are based on linux-next.
+
+
+Changes since RFC:
+
+  Dropped 'flags' from the new event.  The consensus seemed to be that text
+  pokes should emply a scheme similar to x86's INT3 method instead.
+
+  dropped tools patches already applied.
+
+
+Example:
+
+  For jump labels, the kernel needs
+	CONFIG_JUMP_LABEL=y
+  and also an easy to flip jump label is in sysctl_schedstats() which needs
+	CONFIG_SCHEDSTATS=y
+	CONFIG_PROC_SYSCTL=y
+
+  Also note the 'sudo perf record' is put into the background which, as
+  written, needs sudo credential caching (otherwise the background task
+  will stop awaiting the sudo password), hence the 'sudo echo' to start.
+
+Before:
+
+  $ sudo echo
+  $ sudo perf record -o perf.data.before --kcore -a -e intel_pt//k -m,64M &
+  [1] 1640
+  $ cat /proc/sys/kernel/sched_schedstats
+  0
+  $ sudo bash -c 'echo 1 > /proc/sys/kernel/sched_schedstats'
+  $ cat /proc/sys/kernel/sched_schedstats
+  1
+  $ sudo bash -c 'echo 0 > /proc/sys/kernel/sched_schedstats'
+  $ cat /proc/sys/kernel/sched_schedstats
+  0
+  $ sudo kill 1640
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 16.635 MB perf.data.before ]
+  $ perf script -i perf.data.before --itrace=e >/dev/null
+  Warning:
+  1946 instruction trace errors
+
+After:
+
+  $ sudo echo
+  $ sudo perf record -o perf.data.after --kcore -a -e intel_pt//k -m,64M &
+  [1] 1882
+  $ cat /proc/sys/kernel/sched_schedstats
+  0
+  $ sudo bash -c 'echo 1 > /proc/sys/kernel/sched_schedstats'
+  $ cat /proc/sys/kernel/sched_schedstats
+  1
+  $ sudo bash -c 'echo 0 > /proc/sys/kernel/sched_schedstats'
+  $ cat /proc/sys/kernel/sched_schedstats
+  0
+  $ sudo kill 1882
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 10.893 MB perf.data.after ]
+  $ perf script -i perf.data.after --itrace=e
+  $
+
+
+Adrian Hunter (3):
+      perf/x86: Add perf text poke event
+      perf tools: Add support for PERF_RECORD_TEXT_POKE
+      perf intel-pt: Add support for text poke events
+
+ arch/x86/kernel/alternative.c             | 37 ++++++++++++-
+ include/linux/perf_event.h                |  6 +++
+ include/uapi/linux/perf_event.h           | 19 ++++++-
+ kernel/events/core.c                      | 87 ++++++++++++++++++++++++++++++-
+ tools/include/uapi/linux/perf_event.h     | 19 ++++++-
+ tools/perf/arch/x86/util/intel-pt.c       |  4 ++
+ tools/perf/builtin-record.c               | 45 ++++++++++++++++
+ tools/perf/lib/include/perf/event.h       |  8 +++
+ tools/perf/util/event.c                   | 39 ++++++++++++++
+ tools/perf/util/event.h                   |  5 ++
+ tools/perf/util/evlist.h                  |  1 +
+ tools/perf/util/intel-pt.c                | 71 +++++++++++++++++++++++++
+ tools/perf/util/machine.c                 | 34 ++++++++++++
+ tools/perf/util/machine.h                 |  3 ++
+ tools/perf/util/perf_event_attr_fprintf.c |  1 +
+ tools/perf/util/record.c                  | 10 ++++
+ tools/perf/util/record.h                  |  1 +
+ tools/perf/util/session.c                 | 20 +++++++
+ tools/perf/util/tool.h                    |  3 +-
+ 19 files changed, 408 insertions(+), 5 deletions(-)
+
+
+Regards
+Adrian
