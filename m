@@ -2,103 +2,122 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCAFC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19FF0C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3659218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:44:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1EDD227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:46:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uk9ZmoqC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IgKYAiNK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbfLRMoM (ORCPT
+        id S1726942AbfLRMqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 07:44:12 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45418 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725930AbfLRMoL (ORCPT
+        Wed, 18 Dec 2019 07:46:15 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:43299 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726710AbfLRMqO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 07:44:11 -0500
-Received: by mail-lj1-f196.google.com with SMTP id j26so1955530ljc.12;
-        Wed, 18 Dec 2019 04:44:10 -0800 (PST)
+        Wed, 18 Dec 2019 07:46:14 -0500
+Received: by mail-pf1-f193.google.com with SMTP id x6so71650pfo.10
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 04:46:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=GuNJY1Eqkdr1yzpz8WFLWL68ldC+kkUguGLPAWGyiKg=;
-        b=Uk9ZmoqCJrTgBGsW7QgSAo1GJ0/FOCOTb+LmR7/Tli2IwqMf/QhDVrVRYg2WsC9EgT
-         KNW72dnQE5tUAyzvk+4Gbh/AFXqhROHqgGML3xtdEKeS2nMacSpCV6/AjKpByY8qxxND
-         SYsF9Qm4t50Lm6trf+CmkjR1ZgAdKQApUP4fcnjkFfhvJytNr7e9xlZKpp2MPCI/3GZh
-         a4Yg0rVe5zEUH7w993qA5GmD4EksreE0IWif7g1fEnaj8d/Ct9DKidnpsIrHITliOEQl
-         QNZq/G9y8pYI5k0YkKkDiaCoLU/SQqKFnhSviRdbBv8Zl5R0GRLkkRgQc+WjsrPFN1Xi
-         89IQ==
+        bh=yluChybCoEtCO6LswLntX+4auTP4ivgdcSe24D3NLf0=;
+        b=IgKYAiNKTGUEIuh3ZBy1pxqBWb8WrUSdt5oJ4eV/8ICtTRsKT899NMQE+gVJfQ8A5L
+         JCRC79cO0mpCgr7dnRnI8RhkbwodS2TPRpZh0Ajhh7rRG7d6YowIDs1DzxIdl1LjEC73
+         2+GAqsjfRkISNglNa0dgKCofJSunyEEuf3sY4AoCdwQn2BY7zFG7YhBwC92xHnWHNbvL
+         qhNeXi3/C1RLuf2oqE5+4mKWaeXNhg9lKXFbNptS7eFpmyYWeRnenQWCcrBn6cQUkT2g
+         i+i+yuNosiSD8am6g976jYNQ37XbBzja9SKyDYoZmrgewtTU4cmwRowsV7zqTeIRU/uG
+         oMWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=GuNJY1Eqkdr1yzpz8WFLWL68ldC+kkUguGLPAWGyiKg=;
-        b=tafs74cgqhoQoz+x1gyp93PulvXWx4Qn3sjS5YCfsFp/aRQfxae9k5W2r2GJWZumPY
-         swMhmVjLB3tuCRFGfmlaIJMu+jnWufMAzkKxTds28g7SaVbLEnnSyHd0EtwFc9406XRx
-         QHy2taPG+XtCEVoYq7wdAZVhcLZ9HNGFweZjdP40rNowx3Cr+USCr42Ir/tPqPy31tQg
-         6ei4IpZdz+99jJCrJV3iY3jdBTSG7JWHTK+J7Xhz2vW1j7KxonSVmMAgPcuzUxPIMBXK
-         jtMxe5NGGbEYPJCmdAd/Fc9lNwkh5Di7g9vgtw0WiBqvSocbNizoQl01sfJxHOWO7XWJ
-         U3Rw==
-X-Gm-Message-State: APjAAAWBnW7JJkd+J/na+ebhNW239N85X/ybvAYy+Dx2KXE0Y13PlRSw
-        XGTUndAJVcZip/KzN99HJIzTKxHHMgC4GrPIyJYtcOlN
-X-Google-Smtp-Source: APXvYqxLHrBjXy5iF2n5zmXApo8E8VCToPLW9VCn5+hUXoH6t4y2DqL90iI7/3WHJVVYZQeBdsPWYXGBxdQBioaBcD0=
-X-Received: by 2002:a2e:6e10:: with SMTP id j16mr1623824ljc.202.1576673049367;
- Wed, 18 Dec 2019 04:44:09 -0800 (PST)
+        bh=yluChybCoEtCO6LswLntX+4auTP4ivgdcSe24D3NLf0=;
+        b=CLkEEi/4IV0+P4kYfmpI7uZJnPMqysqg3kNydcEOu3OgAl7WHnn58HbhxgrHzFqyMu
+         DH+nWJb5QtFssMybz8DMbrz49WNowH3zqydLJX5Js/zyB3TMzrWiRV1218xTNHGD5ZGF
+         v+ONA89/s3wNrexes3EUvTEmUNnmN28aWLZo6JKDn4VVJQo1PirKtyVy8g95iUPitVfb
+         XFNF/WqNInhYJBWp4qZAx3vUqQqK5s3jItOwKsYYZejeqTUht/IRtpYc74uFBfPeZT3E
+         9YtpXuBDe+IuvOVG4uY2GJgfko48x3gbuRTCXpwe2JbPb1DYtyWpbTA1VUUtVI5SiiGW
+         ixmw==
+X-Gm-Message-State: APjAAAW1zaMNhPbsm3VMOZDvrGQNwsoylujiadcybrFgOUanHqikMf5y
+        FeBrFbrslskP3M1wAMTsInxumxgEO7UO7TmBSgCKyg==
+X-Google-Smtp-Source: APXvYqxkhNJRqzXYC42cGmDXz7PIECqCbtXde3JI6sc7pAAm62yrqdnrGPZDmc7/dNRQGKy/SxMONAF/P8dJwp/qrSc=
+X-Received: by 2002:a65:678f:: with SMTP id e15mr2900742pgr.130.1576673173313;
+ Wed, 18 Dec 2019 04:46:13 -0800 (PST)
 MIME-Version: 1.0
-References: <1576671574-14319-1-git-send-email-peng.fan@nxp.com>
-In-Reply-To: <1576671574-14319-1-git-send-email-peng.fan@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Wed, 18 Dec 2019 09:44:04 -0300
-Message-ID: <CAOMZO5DEDN7bNhqgyh-Qa41MJ2LAatfG_4=VvywCk53pK4e2vQ@mail.gmail.com>
-Subject: Re: [PATCH V2] arm: dts: imx7ulp: fix reg of cpu node
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "baruch@tkos.co.il" <baruch@tkos.co.il>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alice Guo <alice.guo@nxp.com>
+References: <20191108154838.21487-1-will@kernel.org> <20191108155503.GB15731@pendragon.ideasonboard.com>
+ <20191216121651.GA12947@willie-the-truck> <CAAeHK+xdVmEFtK78bWd2Odn0uBynqnt5UT9jZJFvqGL=_9NU2w@mail.gmail.com>
+ <20191218114137.GA15505@willie-the-truck> <20191218122324.GB17086@kroah.com>
+In-Reply-To: <20191218122324.GB17086@kroah.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Wed, 18 Dec 2019 13:46:00 +0100
+Message-ID: <CAAeHK+xyv-x6ejwcqNAn=5eKoBYPkJsN=SgJLHJ1ey=6v+YyyA@mail.gmail.com>
+Subject: Re: [PATCH RESEND RESEND] media: uvc: Avoid cyclic entity chains due
+ to malformed USB descriptors
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Will Deacon <will@kernel.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-media@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        stable <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 9:22 AM Peng Fan <peng.fan@nxp.com> wrote:
+On Wed, Dec 18, 2019 at 1:23 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> From: Peng Fan <peng.fan@nxp.com>
->
-> According to arm cpus binding doc,
-> "
->       On 32-bit ARM v7 or later systems this property is
->         required and matches the CPU MPIDR[23:0] register
->         bits.
->
->         Bits [23:0] in the reg cell must be set to
->         bits [23:0] in MPIDR.
->
->         All other bits in the reg cell must be set to 0.
-> "
->
-> In i.MX7ULP, the MPIDR[23:0] is 0xf00, not 0, so fix it.
-> Otherwise there will be warning:
-> "DT missing boot CPU MPIDR[23:0], fall back to default cpu_logical_map"
->
-> Fixes: 20434dc92c05 ("ARM: dts: imx: add common imx7ulp dtsi support")
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> On Wed, Dec 18, 2019 at 11:41:38AM +0000, Will Deacon wrote:
+> > On Mon, Dec 16, 2019 at 02:17:52PM +0100, Andrey Konovalov wrote:
+> > > On Mon, Dec 16, 2019 at 1:16 PM Will Deacon <will@kernel.org> wrote:
+> > > > On Fri, Nov 08, 2019 at 05:55:03PM +0200, Laurent Pinchart wrote:
+> > > > > Thank you for the patch.
+> > > > >
+> > > > > I'm sorry for the delay, and will have to ask you to be a bit more
+> > > > > patient I'm afraid. I will leave tomorrow for a week without computer
+> > > > > access and will only be able to go through my backlog when I will be
+> > > > > back on the 17th.
+> > > >
+> > > > Gentle reminder on this, now you've been back a month ;)
+> > >
+> > > I think we now have a reproducer for this issue that syzbot just reported:
+> > >
+> > > https://syzkaller.appspot.com/bug?extid=0a5c96772a9b26f2a876
+> > >
+> > > You can try you patch on it :)
+> >
+> > Oh wow, I *really* like the raw USB gadget thingy you have to reproduce
+> > these! I also really like that this patch fixes the issue. Logs below.
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Thanks! An easier way to test the patch would be to issue a syz test
+command, but I'm glad you managed to set up raw gadget manually and it
+worked for you.
+
+>
+> Ok, that's a good poke for me to go review that raw gadget code to see
+> if it can be merged upstream :)
+
+Looking forward to it! =)
+
+>
+> > Laurent -- can we please merge this now?
+>
+> Yes, that would be good to have, as this obviously fixes a problem, and
+> I can take it off of my "patches to track" list....
+>
+> thanks,
+>
+> greg k-h
