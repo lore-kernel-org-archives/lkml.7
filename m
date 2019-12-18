@@ -2,113 +2,379 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AEAAC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C770EC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20F40227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:06:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90E3F2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 13:09:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LmEgq8T3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YcdlH4pD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbfLRNGg (ORCPT
+        id S1726863AbfLRNJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 08:06:36 -0500
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:36507 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726591AbfLRNGe (ORCPT
+        Wed, 18 Dec 2019 08:09:54 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:39056 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726858AbfLRNJy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 08:06:34 -0500
-Received: by mail-yb1-f194.google.com with SMTP id i72so701189ybg.3;
-        Wed, 18 Dec 2019 05:06:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ZLvtTu0iHUAbQNrPMJwjkYDRQN1HEyZB81c7bvFy51I=;
-        b=LmEgq8T3GhYVnbpj2z1maAorPmuff99uKGN0ZfuimRcg6sYy3qRPp+LdZr4PRj2aRw
-         VZOO1lwkj6vpN+pJ0y4z+rcfq2yMaxfXFXAiTXwG7ZW8EIiL1Z4XLJT2p8KZcDTfqbY4
-         XH7byI1snMcp+5L4HbJBnpkzxffwk2fXKCHN8n2c6t1lSRKnH/e65HPsOt91aH3bsvg3
-         gPUf1VnQr+ExTS6QQ1xiP34m1WGhYSF0i6YHgSTxqBnMNMYw0n70WJATjSus/sCWilkd
-         jzhTtPy/ka4da7jCc4mowI0Hyc01ACDCM3LJblEAtchxEUH2qe/Xfjp70yRyl+Skvs4n
-         veGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ZLvtTu0iHUAbQNrPMJwjkYDRQN1HEyZB81c7bvFy51I=;
-        b=CoYnr160+snsxqVeVC0fu6JSx55WcLRvgd5aablUYlCyzlciI6UO6AFHwDshIQNp9j
-         4PZF1B34B3uma63waClnFKN8H2fD3szS4fLlEIAziulZVk67BlD1bViJxzAA2CuwO8Ay
-         uc3BDkC4QpAcxTCg/vd0xaqOFs6PyUYebcPWnAE8xuRLdfKQvY141p4r7hAfOKJpqaZ+
-         2Flo9VWYZp7I4YmOo5VbfjBBqBTe704saOBbCt2t63qbafJJQUOrYceURL8HlNLCSDXH
-         Bam0yj/5iNYxK6fxjX+NyxKhPNpdDsm+Ym2IikkS7LDwpoVLZyjOZW1dLnXEHCRxOBYQ
-         Kytw==
-X-Gm-Message-State: APjAAAVVAuTLHsxqk5QRRhCug7oPjrKSXYO1trlqriqNDOpsVS5EvNkF
-        yCuIKzErHjDGvzec85AohW8=
-X-Google-Smtp-Source: APXvYqye7Sy3prxUkdr/R+2wy3dwiz8/O/H9PLFNLjpaDK4B9Cnxqzzc6zJaVzkU9mHwpecbCHQApw==
-X-Received: by 2002:a25:d109:: with SMTP id i9mr1595655ybg.46.1576674392819;
-        Wed, 18 Dec 2019 05:06:32 -0800 (PST)
-Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
-        by smtp.gmail.com with ESMTPSA id r64sm909603ywg.84.2019.12.18.05.06.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 05:06:31 -0800 (PST)
-From:   Adam Ford <aford173@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Adam Ford <aford173@gmail.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org
-Subject: [PATCH V3 3/3] arm64: defconfig: Enable CRYPTO_DEV_FSL_CAAM
-Date:   Wed, 18 Dec 2019 07:06:16 -0600
-Message-Id: <20191218130616.13860-3-aford173@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191218130616.13860-1-aford173@gmail.com>
-References: <20191218130616.13860-1-aford173@gmail.com>
+        Wed, 18 Dec 2019 08:09:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576674592;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=g5Ox4SHhc2xo2sY+PCKlmfIwG02oA4188ugvQugMGko=;
+        b=YcdlH4pDb90tH1AU8byozWMg8zmiplQG8bqmvUWb1rjT4kLbsIN/pMOimhx0kkIqJ1/BGZ
+        gsAM67IymtKinjM5CaNfDbbFGRArDCRRaDZoqqHOtFMI6cn24d/MkwCgHZqln8UcN4iX8S
+        u9wZnhLIggIS4ATlmAznPf505Mct7P4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-34-RjePyPrbN4iiCFi_W_pbZA-1; Wed, 18 Dec 2019 08:09:51 -0500
+X-MC-Unique: RjePyPrbN4iiCFi_W_pbZA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DB92A10054E3;
+        Wed, 18 Dec 2019 13:09:46 +0000 (UTC)
+Received: from max.com (ovpn-204-101.brq.redhat.com [10.40.204.101])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E01D760C18;
+        Wed, 18 Dec 2019 13:09:37 +0000 (UTC)
+From:   Andreas Gruenbacher <agruenba@redhat.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
+        Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Richard Weinberger <richard@nod.at>,
+        Artem Bityutskiy <dedekind1@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        ceph-devel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-mtd@lists.infradead.org, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        Jan Kara <jack@suse.cz>
+Subject: [PATCH v3] fs: Fix page_mkwrite off-by-one errors
+Date:   Wed, 18 Dec 2019 14:09:35 +0100
+Message-Id: <20191218130935.32402-1-agruenba@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Both the i.MX8MQ and i.MX8M Mini support the CAAM driver, but it
-is currently not enabled by default.
+Hi Darrick,
 
-This patch enables this as a module.
+can this fix go in via the xfs tree?
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
+Thanks,
+Andreas
+
+--
+
+The check in block_page_mkwrite that is meant to determine whether an
+offset is within the inode size is off by one.  This bug has been copied
+into iomap_page_mkwrite and several filesystems (ubifs, ext4, f2fs,
+ceph).
+
+Fix that by introducing a new page_mkwrite_check_truncate helper that
+checks for truncate and computes the bytes in the page up to EOF.  Use
+the helper in the above mentioned filesystems.
+
+In addition, use the new helper in btrfs as well.
+
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Acked-by: David Sterba <dsterba@suse.com> (btrfs part)
+Acked-by: Richard Weinberger <richard@nod.at> (ubifs part)
 ---
-V3:  Make it a module instead of building it into the kernel.
-V2:  New to series
+ fs/btrfs/inode.c        | 15 ++++-----------
+ fs/buffer.c             | 16 +++-------------
+ fs/ceph/addr.c          |  2 +-
+ fs/ext4/inode.c         | 14 ++++----------
+ fs/f2fs/file.c          | 19 +++++++------------
+ fs/iomap/buffered-io.c  | 18 +++++-------------
+ fs/ubifs/file.c         |  3 +--
+ include/linux/pagemap.h | 28 ++++++++++++++++++++++++++++
+ 8 files changed, 53 insertions(+), 62 deletions(-)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 6a83ba2aea3e..d08a34371f74 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -845,6 +845,7 @@ CONFIG_SECURITY=y
- CONFIG_CRYPTO_ECHAINIV=y
- CONFIG_CRYPTO_ANSI_CPRNG=y
- CONFIG_CRYPTO_DEV_SUN8I_CE=m
-+CONFIG_CRYPTO_DEV_FSL_CAAM=m
- CONFIG_CRYPTO_DEV_HISI_ZIP=m
- CONFIG_CMA_SIZE_MBYTES=32
- CONFIG_PRINTK_TIME=y
--- 
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index 56032c518b26..86c6fcd8139d 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -9016,13 +9016,11 @@ vm_fault_t btrfs_page_mkwrite(struct vm_fault *vm=
+f)
+ 	ret =3D VM_FAULT_NOPAGE; /* make the VM retry the fault */
+ again:
+ 	lock_page(page);
+-	size =3D i_size_read(inode);
+=20
+-	if ((page->mapping !=3D inode->i_mapping) ||
+-	    (page_start >=3D size)) {
+-		/* page got truncated out from underneath us */
++	ret2 =3D page_mkwrite_check_truncate(page, inode);
++	if (ret2 < 0)
+ 		goto out_unlock;
+-	}
++	zero_start =3D ret2;
+ 	wait_on_page_writeback(page);
+=20
+ 	lock_extent_bits(io_tree, page_start, page_end, &cached_state);
+@@ -9043,6 +9041,7 @@ vm_fault_t btrfs_page_mkwrite(struct vm_fault *vmf)
+ 		goto again;
+ 	}
+=20
++	size =3D i_size_read(inode);
+ 	if (page->index =3D=3D ((size - 1) >> PAGE_SHIFT)) {
+ 		reserved_space =3D round_up(size - page_start,
+ 					  fs_info->sectorsize);
+@@ -9075,12 +9074,6 @@ vm_fault_t btrfs_page_mkwrite(struct vm_fault *vmf=
+)
+ 	}
+ 	ret2 =3D 0;
+=20
+-	/* page is wholly or partially inside EOF */
+-	if (page_start + PAGE_SIZE > size)
+-		zero_start =3D offset_in_page(size);
+-	else
+-		zero_start =3D PAGE_SIZE;
+-
+ 	if (zero_start !=3D PAGE_SIZE) {
+ 		kaddr =3D kmap(page);
+ 		memset(kaddr + zero_start, 0, PAGE_SIZE - zero_start);
+diff --git a/fs/buffer.c b/fs/buffer.c
+index d8c7242426bb..53aabde57ca7 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -2499,23 +2499,13 @@ int block_page_mkwrite(struct vm_area_struct *vma=
+, struct vm_fault *vmf,
+ 	struct page *page =3D vmf->page;
+ 	struct inode *inode =3D file_inode(vma->vm_file);
+ 	unsigned long end;
+-	loff_t size;
+ 	int ret;
+=20
+ 	lock_page(page);
+-	size =3D i_size_read(inode);
+-	if ((page->mapping !=3D inode->i_mapping) ||
+-	    (page_offset(page) > size)) {
+-		/* We overload EFAULT to mean page got truncated */
+-		ret =3D -EFAULT;
++	ret =3D page_mkwrite_check_truncate(page, inode);
++	if (ret < 0)
+ 		goto out_unlock;
+-	}
+-
+-	/* page is wholly or partially inside EOF */
+-	if (((page->index + 1) << PAGE_SHIFT) > size)
+-		end =3D size & ~PAGE_MASK;
+-	else
+-		end =3D PAGE_SIZE;
++	end =3D ret;
+=20
+ 	ret =3D __block_write_begin(page, 0, end, get_block);
+ 	if (!ret)
+diff --git a/fs/ceph/addr.c b/fs/ceph/addr.c
+index 7ab616601141..ef958aa4adb4 100644
+--- a/fs/ceph/addr.c
++++ b/fs/ceph/addr.c
+@@ -1575,7 +1575,7 @@ static vm_fault_t ceph_page_mkwrite(struct vm_fault=
+ *vmf)
+ 	do {
+ 		lock_page(page);
+=20
+-		if ((off > size) || (page->mapping !=3D inode->i_mapping)) {
++		if (page_mkwrite_check_truncate(page, inode) < 0) {
+ 			unlock_page(page);
+ 			ret =3D VM_FAULT_NOPAGE;
+ 			break;
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index 28f28de0c1b6..51ab1d2cac80 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -5871,7 +5871,6 @@ vm_fault_t ext4_page_mkwrite(struct vm_fault *vmf)
+ {
+ 	struct vm_area_struct *vma =3D vmf->vma;
+ 	struct page *page =3D vmf->page;
+-	loff_t size;
+ 	unsigned long len;
+ 	int err;
+ 	vm_fault_t ret;
+@@ -5907,18 +5906,13 @@ vm_fault_t ext4_page_mkwrite(struct vm_fault *vmf=
+)
+ 	}
+=20
+ 	lock_page(page);
+-	size =3D i_size_read(inode);
+-	/* Page got truncated from under us? */
+-	if (page->mapping !=3D mapping || page_offset(page) > size) {
++	err =3D page_mkwrite_check_truncate(page, inode);
++	if (err < 0) {
+ 		unlock_page(page);
+-		ret =3D VM_FAULT_NOPAGE;
+-		goto out;
++		goto out_ret;
+ 	}
++	len =3D err;
+=20
+-	if (page->index =3D=3D size >> PAGE_SHIFT)
+-		len =3D size & ~PAGE_MASK;
+-	else
+-		len =3D PAGE_SIZE;
+ 	/*
+ 	 * Return if we have all the buffers mapped. This avoids the need to do
+ 	 * journal_start/journal_stop which can block and take a long time
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 85af112e868d..0e77b2e6f873 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -51,7 +51,7 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault =
+*vmf)
+ 	struct inode *inode =3D file_inode(vmf->vma->vm_file);
+ 	struct f2fs_sb_info *sbi =3D F2FS_I_SB(inode);
+ 	struct dnode_of_data dn =3D { .node_changed =3D false };
+-	int err;
++	int offset, err;
+=20
+ 	if (unlikely(f2fs_cp_error(sbi))) {
+ 		err =3D -EIO;
+@@ -70,13 +70,14 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_faul=
+t *vmf)
+ 	file_update_time(vmf->vma->vm_file);
+ 	down_read(&F2FS_I(inode)->i_mmap_sem);
+ 	lock_page(page);
+-	if (unlikely(page->mapping !=3D inode->i_mapping ||
+-			page_offset(page) > i_size_read(inode) ||
+-			!PageUptodate(page))) {
++	err =3D -EFAULT;
++	if (likely(PageUptodate(page)))
++		err =3D page_mkwrite_check_truncate(page, inode);
++	if (unlikely(err < 0)) {
+ 		unlock_page(page);
+-		err =3D -EFAULT;
+ 		goto out_sem;
+ 	}
++	offset =3D err;
+=20
+ 	/* block allocation */
+ 	__do_map_lock(sbi, F2FS_GET_BLOCK_PRE_AIO, true);
+@@ -101,14 +102,8 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fau=
+lt *vmf)
+ 	if (PageMappedToDisk(page))
+ 		goto out_sem;
+=20
+-	/* page is wholly or partially inside EOF */
+-	if (((loff_t)(page->index + 1) << PAGE_SHIFT) >
+-						i_size_read(inode)) {
+-		loff_t offset;
+-
+-		offset =3D i_size_read(inode) & ~PAGE_MASK;
++	if (offset !=3D PAGE_SIZE)
+ 		zero_user_segment(page, offset, PAGE_SIZE);
+-	}
+ 	set_page_dirty(page);
+ 	if (!PageUptodate(page))
+ 		SetPageUptodate(page);
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index d33c7bc5ee92..1aaf157fd6e9 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -1062,24 +1062,16 @@ vm_fault_t iomap_page_mkwrite(struct vm_fault *vm=
+f, const struct iomap_ops *ops)
+ 	struct page *page =3D vmf->page;
+ 	struct inode *inode =3D file_inode(vmf->vma->vm_file);
+ 	unsigned long length;
+-	loff_t offset, size;
++	loff_t offset;
+ 	ssize_t ret;
+=20
+ 	lock_page(page);
+-	size =3D i_size_read(inode);
+-	offset =3D page_offset(page);
+-	if (page->mapping !=3D inode->i_mapping || offset > size) {
+-		/* We overload EFAULT to mean page got truncated */
+-		ret =3D -EFAULT;
++	ret =3D page_mkwrite_check_truncate(page, inode);
++	if (ret < 0)
+ 		goto out_unlock;
+-	}
+-
+-	/* page is wholly or partially inside EOF */
+-	if (offset > size - PAGE_SIZE)
+-		length =3D offset_in_page(size);
+-	else
+-		length =3D PAGE_SIZE;
++	length =3D ret;
+=20
++	offset =3D page_offset(page);
+ 	while (length > 0) {
+ 		ret =3D iomap_apply(inode, offset, length,
+ 				IOMAP_WRITE | IOMAP_FAULT, ops, page,
+diff --git a/fs/ubifs/file.c b/fs/ubifs/file.c
+index cd52585c8f4f..91f7a1f2db0d 100644
+--- a/fs/ubifs/file.c
++++ b/fs/ubifs/file.c
+@@ -1563,8 +1563,7 @@ static vm_fault_t ubifs_vm_page_mkwrite(struct vm_f=
+ault *vmf)
+ 	}
+=20
+ 	lock_page(page);
+-	if (unlikely(page->mapping !=3D inode->i_mapping ||
+-		     page_offset(page) > i_size_read(inode))) {
++	if (unlikely(page_mkwrite_check_truncate(page, inode) < 0)) {
+ 		/* Page got truncated out from underneath us */
+ 		goto sigbus;
+ 	}
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index 37a4d9e32cd3..ccb14b6a16b5 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -636,4 +636,32 @@ static inline unsigned long dir_pages(struct inode *=
+inode)
+ 			       PAGE_SHIFT;
+ }
+=20
++/**
++ * page_mkwrite_check_truncate - check if page was truncated
++ * @page: the page to check
++ * @inode: the inode to check the page against
++ *
++ * Returns the number of bytes in the page up to EOF,
++ * or -EFAULT if the page was truncated.
++ */
++static inline int page_mkwrite_check_truncate(struct page *page,
++					      struct inode *inode)
++{
++	loff_t size =3D i_size_read(inode);
++	pgoff_t index =3D size >> PAGE_SHIFT;
++	int offset =3D offset_in_page(size);
++
++	if (page->mapping !=3D inode->i_mapping)
++		return -EFAULT;
++
++	/* page is wholly inside EOF */
++	if (page->index < index)
++		return PAGE_SIZE;
++	/* page is wholly past EOF */
++	if (page->index > index || !offset)
++		return -EFAULT;
++	/* page is partially inside EOF */
++	return offset;
++}
++
+ #endif /* _LINUX_PAGEMAP_H */
+--=20
 2.20.1
 
