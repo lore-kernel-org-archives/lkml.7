@@ -2,147 +2,116 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0643BC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A83C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C807E24682
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:51:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576673512;
-	bh=OGeWCNrFfD3XbU8HvErvic6TR8LSAkME11zKooJQHIo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aAUTDIc/eQfb7Dw9Cu37eMgy+vNk15oouEHuLux+BZsSj2sWKF9lHN5uTdnrCfw/F
-	 GX+Zpjv96lPo5RX5uVU1vRxkSJnuYnZZbGWKK0DZqC5SZ/1CDgvesnWwzfr+dN4hH4
-	 2flXVNWtEaHEegaKySgBGxlvsMjMbojsyiCN2q+8=
+	by mail.kernel.org (Postfix) with ESMTP id 11204206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 12:53:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="V4cUClr1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbfLRMvv (ORCPT
+        id S1726980AbfLRMxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Dec 2019 07:51:51 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37096 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726707AbfLRMvv (ORCPT
+        Wed, 18 Dec 2019 07:53:00 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:40172 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbfLRMw7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Dec 2019 07:51:51 -0500
-Received: by mail-lj1-f195.google.com with SMTP id u17so2007224lja.4
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 04:51:49 -0800 (PST)
+        Wed, 18 Dec 2019 07:52:59 -0500
+Received: by mail-qk1-f195.google.com with SMTP id c17so1424508qkg.7
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Dec 2019 04:52:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=b+CCGksXD0vuDKfmVp0tkHiA2uWnVRsyUsg9W47Em0w=;
+        b=V4cUClr1kHNL9cE/3hnbLIPHpTlNhp+WtY4uxMwUV+5JpJW2ZkRU/U2kLhqFzz1Cb7
+         /6jIEZjMyCvlYCe4JbT1Mh6uH4++6hoygmRC5fDbvFGRZ05jI+NWTdo/u6g5O8Q6zBqL
+         FycUbuQdsTBjDLiDIwi1aSJaUvU9OUxVZaLUftubjgFli8Hxx04lNuXEjWrTYvHBgQDu
+         +CeDQJIlzU1f5VErJatobGIzIy5/kPrwvGC8+B/zoYX+60m+ukJ5fG22X5JIKmfL8WpS
+         IdI54cOJmFZ/47PZih3TuNKxgQ8S+JlYPvFqHCpBcp6oSFw7YFK2nxGgZ1NqAJH2dBpG
+         OWXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=irtOki5drNY4QwDIOruEdgQSE/oxagWMtPYoIr3h9ZQ=;
-        b=WYAiXmnk2FxuW3mUWBCo6KyP7jc5mOY+g6u0B23lR3rB932TsoM3N56lesOdA8jky8
-         Ycvu06UlVYQHD+tvT3Fwt8p577EaZaixP29fWRR/u3ju9cj2+TX3WBTkV0UrI2SHbACa
-         ypMaWZc7zvuot44fOKx5tX2ocqCjoKh34zrApaVq6LvewTc16tkAbG5+ztT7RUrw4IFt
-         U/0iUn7eqmmfeffwt22qOvFh9ddJZ8IYQtHeCgQuuFh4V4NUQ6cPNyBXvaaGNXVBObZG
-         Ohm5sqKsswDXsLF7/DjwuSboktuPkqROQOolvqBlTCRHFG5gkdXZLBIapqj9C1YoeztM
-         pVrw==
-X-Gm-Message-State: APjAAAVDbSGaqeQ7uc4sqA3wQrTn/vuBw7VeQTv9Gq545EmwD15BE2OP
-        obZyr0z/9ag5r88kgLnlm/8=
-X-Google-Smtp-Source: APXvYqy07x1FsKiDMiFWfQad7z/SsOw5OTyMCzOmEhY1SojsA04+3MKgjmQWrwGL6UlJkqY+CHtlcQ==
-X-Received: by 2002:a2e:8916:: with SMTP id d22mr1621368lji.19.1576673509062;
-        Wed, 18 Dec 2019 04:51:49 -0800 (PST)
-Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id m15sm1137451ljg.4.2019.12.18.04.51.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 04:51:47 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1ihYno-0000vP-G1; Wed, 18 Dec 2019 13:51:44 +0100
-Date:   Wed, 18 Dec 2019 13:51:44 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>,
-        kbuild test robot <lkp@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        Jiri Slaby <jslaby@suse.com>
-Subject: Re: [PATCH] serdev: fix builds with CONFIG_SERIAL_DEV_BUS=m
-Message-ID: <20191218125144.GL22665@localhost>
-References: <201912181000.82Z7czbN%lkp@intel.com>
- <20191218083842.14882-1-u.kleine-koenig@pengutronix.de>
- <20191218090606.GJ22665@localhost>
- <20191218092958.tu6n452zwbpkreks@pengutronix.de>
- <20191218093806.GK22665@localhost>
- <20191218103931.kgytwzt6cc75iuud@pengutronix.de>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=b+CCGksXD0vuDKfmVp0tkHiA2uWnVRsyUsg9W47Em0w=;
+        b=VMTPrzhXCFLodq2l39uYrzn4O4s/XxQdKO3C19dGh5nWlgscajgnAL53/IBFxzT6DM
+         HBH0HaFQYmaA+YoRs9Fttz3V4mUxap+jpGWjypMrxintu1CNEP/ZDS6kxMalqoUK98tT
+         3/5OmjhGuMNZxyVxKgugsG+3sYLwzOMg5Q8Xy2ntbPBVkOl6eOiqpldKY2FCld2T9el4
+         TrEO/6Ch0R7WR/IKoxAN4hYZKSsPaPMlPvTag+TJXZyVSva/SRjZ9rHPM/m+wSqSdZ6Z
+         h4SkIlHi2Sy5EhWF4zITDsr6IvBDCHrS27ENuMHZaruFx1QTHVel6f9Q1W5rfVzwTfIF
+         QIXA==
+X-Gm-Message-State: APjAAAXUnzxpcov2mySVqWZkHRnPhwlWneXsm+pfq8qM20+9UaIv/aFr
+        rUi6fuLiKUz4MN+Nb17PJAs1FA==
+X-Google-Smtp-Source: APXvYqwXxvLIXwbnaU0pbtUaahmQsTY4WJgvs7cvIfEp9WJEolUF/3Lr4p9rKDGIxgul5lRhDBUKSg==
+X-Received: by 2002:a05:620a:109c:: with SMTP id g28mr2275683qkk.0.1576673578884;
+        Wed, 18 Dec 2019 04:52:58 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id l49sm709602qtk.7.2019.12.18.04.52.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 18 Dec 2019 04:52:58 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1ihYoz-0006wl-U1; Wed, 18 Dec 2019 08:52:57 -0400
+Date:   Wed, 18 Dec 2019 08:52:57 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Max Hirsch <max.hirsch@gmail.com>
+Cc:     Doug Ledford <dledford@redhat.com>,
+        Parav Pandit <parav@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Steve Wise <swise@opengridcomputing.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Danit Goldberg <danitg@mellanox.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Dag Moxnes <dag.moxnes@oracle.com>,
+        Myungho Jung <mhjungk@gmail.com>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] RDMA/cma: Fix checkpatch error
+Message-ID: <20191218125257.GD17227@ziepe.ca>
+References: <20191211111628.2955-1-max.hirsch@gmail.com>
+ <20191211162654.GD6622@ziepe.ca>
+ <CADgTo880aSn++fcf_rt0+8DCE4Y=xgXtZxFx9B0nzM_M1HdWPw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191218103931.kgytwzt6cc75iuud@pengutronix.de>
+In-Reply-To: <CADgTo880aSn++fcf_rt0+8DCE4Y=xgXtZxFx9B0nzM_M1HdWPw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 11:39:31AM +0100, Uwe Kleine-König wrote:
-> Hello Johan,
-> 
-> On Wed, Dec 18, 2019 at 10:38:06AM +0100, Johan Hovold wrote:
-> > On Wed, Dec 18, 2019 at 10:29:58AM +0100, Uwe Kleine-König wrote:
-> > > On Wed, Dec 18, 2019 at 10:06:06AM +0100, Johan Hovold wrote:
-> > > > On Wed, Dec 18, 2019 at 09:38:42AM +0100, Uwe Kleine-König wrote:
-> > > > > Commit 54edb425346a ("serdev: simplify Makefile") broke builds with
-> > > > > serdev configured as module. I don't understand it completely yet, but
-> > > > > it seems that
-> > > > > 
-> > > > > 	obj-$(CONFIG_SERIAL_DEV_BUS) += serdev/
-> > > > > 
-> > > > > in drivers/tty/Makefile with CONFIG_SERIAL_DEV_BUS=m doesn't result in
-> > > > > code that is added using obj-y in drivers/tty/serdev/Makefile being
-> > > > > compiled. So instead of dropping $(CONFIG_SERIAL_DEV_BUS) in serdev's
-> > > > > Makefile, drop it in drivers/tty/Makefile.
-> > > > 
-> > > > Why not simply revert the offending patch? There are some dependencies
-> > > > here related to how the tty layer is built. If you're still not certain
-> > > > on why things broke, I suggest just reverting for now.
-> > > 
-> > > I see that it is not easy to define what obj-y should do in a Makefile
-> > > that is included via obj-m. Now it is the other way round and that
-> > > should be safe. This construct is used in several places, so I'd say the
-> > > patch is fine unless you have more concrete concerns.
-> > 
-> > No, and I don't have time to look into this right now.
-> > 
-> > It's more about the general principle that a patch should do one thing;
-> 
-> IMHO it does one thing: It does what 54edb425346a intended to do in the
-> right way.
+On Wed, Dec 11, 2019 at 08:33:10PM -0500, Max Hirsch wrote:
+> Thanks for the quick response. This is my first patch, so I want to
+> follow the correct protocol. I reran checkpatch after making the
+> changes and there were no errors or warnings in the region I changed.
 
-No, your original patch was just broken. The commit message only claimed
-that
+You are supposed to run the patch itself through checkpatch:
 
-	drivers/tty/Makefile has:
-        	obj-$(CONFIG_SERIAL_DEV_BUS)    += serdev/
+$ git format-patch HEAD^!
+0001-RDMA-cma-Fix-checkpatch-error.patch
+$ scripts/checkpatch.pl 0001-RDMA-cma-Fix-checkpatch-error.patch
+WARNING: A patch subject line should describe the change not the tool that found it
+#4: 
+Subject: [PATCH] RDMA/cma: Fix checkpatch error
 
-	so in drivers/tty/serdev/Makefile CONFIG_SERIAL_DEV_BUS is
-	always =y.
+WARNING: Possible unwrapped commit description (prefer a maximum 75 chars per line)
+#12: 
+This patch moves the assignment of ret to the previous line. The if statement then checks the value of ret assigned on the previous line. The assigned value of ret is not changed. Testing involved recompiling and loading the kernel. After the changes checkpatch does not report this the error in cma.c.
 
-which is clearly false since it can be =m (as the build-bot reported).
+total: 0 errors, 2 warnings, 9 lines checked
 
-You now suggest to change:
+NOTE: For some of the reported defects, checkpatch may be able to
+      mechanically convert to the typical style using --fix or --fix-inplace.
 
-	obj-$(CONFIG_SERIAL_DEV_BUS)   += serdev/
-	+obj-y                          += serdev/
+0001-RDMA-cma-Fix-checkpatch-error.patch has style problems, please review.
 
-in drivers/tty/Makefile so that make always recurse into serdev, even
-when serdev is not enabled, which likewise makes no sense. And in any
-case that chunk is not fixing your original patch, but introducing a
-different slight regression.
+NOTE: If any of the errors are false positives, please report
+      them to the maintainer, see CHECKPATCH in MAINTAINERS.
 
-> But I don't feel strong here. If you prefer to revert, that's ok, too.
-
-Yes, I think reverting is the right thing to do here.
-
-> Not sure I will find the motivation then, to reimplement the
-> cleanup, though.
-
-That's ok, I don't think that "cleanup" is something we want, and either
-way it needs to be reviewed separately.
-
-Johan
+Jason
