@@ -2,120 +2,106 @@ Return-Path: <SRS0=eolO=2I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C12A5C2D0CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 01:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A725C2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 01:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9707D2176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 01:15:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F99D2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Dec 2019 01:19:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="klfD6iko"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fJCOQs/G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbfLRBPz (ORCPT
+        id S1726510AbfLRBTP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Dec 2019 20:15:55 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:40816 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfLRBPz (ORCPT
+        Tue, 17 Dec 2019 20:19:15 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:36398 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726072AbfLRBTP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Dec 2019 20:15:55 -0500
-Received: by mail-ot1-f67.google.com with SMTP id i15so263739oto.7;
-        Tue, 17 Dec 2019 17:15:54 -0800 (PST)
+        Tue, 17 Dec 2019 20:19:15 -0500
+Received: by mail-pj1-f66.google.com with SMTP id n59so78299pjb.1;
+        Tue, 17 Dec 2019 17:19:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=d+ndbyvc/xD98taLiNNXwi7PgRFqCDT7vLcEGC7qSs0=;
-        b=klfD6ikoFcBcQTz83KNWoTyZ3DWEyEpYlYh420dAZkyObXgJYGu+A7bbLmBULVM/fr
-         VOhKZJHI63y5oNRdCC81ooP6oIfGBAKtQGngys2D4isGSmUHJTQ50RYpWkbkZaKIy0Y3
-         hBYpNUSesVnLVTCu1LR6I+2o6trC05hzbujAGHz7dxMMliEtiJcxSVCSRyj9d4NqhFjt
-         o6NT2CtbLtj0o+ufN4mXKcBHhVYvNO4nqimaTBVsR+FzN4IDWlXYfJf1a09VxbgRAHlN
-         OODXoNk+puIAM66JXIZ+Z9m0A9U96BRQUftCHn5EBVycPDFNw0XfetdlBfFuLXSEATEM
-         ArZw==
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=WRq9F02fSNyPBB5Kef/fJ+j1yBJctEoYq/MCWx6Ov/Y=;
+        b=fJCOQs/G2GwXu9Tw+ZPeO/cO19LFkQnaJmRBLvLvqkjS+Z9RnrD2AJVp+9Ybfc1Tqy
+         kq+2uvn3OmIbRSREWEiTm4iM0JjrALFy2ifJe5HwMoxuZamtNZYxsnmzIvCQSLrDkplW
+         8WyIvF+WGcQkwPIKERUZ7ifgz57tTDMCVfhMA4kw0hg1HiFP3Haf/6PjnL2NDyOMFWz0
+         WhY9DrgJzs2u9BJz3ShVSLCpSM6zDQf6qUCBBFp3SPn9gZjGxdx1l6UR8V4xv+1zVQAj
+         vqo+2+w9WqS2342VjOvnFBsKdz/z0juflgoC95kNuMQcQqCTcmC1VWrONbP0vKu5G7U8
+         X65A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=d+ndbyvc/xD98taLiNNXwi7PgRFqCDT7vLcEGC7qSs0=;
-        b=QAHf1aYsC7kWaaA2aUicA2twbn0ukQnT50ChrCRDItvGsszx5MdbxgiPbWPdCk1i1t
-         yhLVmAb0q52crfZJYsyEFkuHhIYq4rZwGH2PGhoZKeRoEnuzZVOAoOLeNZl5HPQ4V9pC
-         jIgzCIqH6qCzn83mOsCix0hKwxJt/KYi2xCoqFrONpgDhssDMJBVp+40rUr6eR0TYQkG
-         aUKqtIgf1GXv4vB3KjHbVeVxEgzjr8UbNNMw8AMy5jmrJP9DatHnKoOJfiaxOeDC5zD6
-         MqX3WV79GBBMDHpitpRxairICJOE4NGuoJeN496Paq4BBdnBbDxAv/mB8bxD+UTDXeN6
-         WpUQ==
-X-Gm-Message-State: APjAAAVO29EfS/tFyAMwsOqicaPskI/Yc9dTJyks5ZPD4mgGH/er2DAp
-        XdDKPMNvS6GoiqBuEP3X1eE=
-X-Google-Smtp-Source: APXvYqxrNwmRwujD+Yy4djLv6WsgbcLhkN1LpMKWV/Q29CvujkUrnsk3sIX6i+0NCjpzzGU0irxPHw==
-X-Received: by 2002:a05:6830:1e84:: with SMTP id n4mr115298otr.267.1576631754206;
-        Tue, 17 Dec 2019 17:15:54 -0800 (PST)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id w12sm186001otk.75.2019.12.17.17.15.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 17:15:53 -0800 (PST)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] hostap: Adjust indentation in prism2_hostapd_add_sta
-Date:   Tue, 17 Dec 2019 18:15:46 -0700
-Message-Id: <20191218011545.40557-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=WRq9F02fSNyPBB5Kef/fJ+j1yBJctEoYq/MCWx6Ov/Y=;
+        b=UGX7xX/mORGtFSFb/sZeyPhY6EbDW0fwBumbYUc63zTCdynhBi/Ktg2o9X0osUevPY
+         BT6nz1Aemc1VnOl2TNQe2WRzbwNiPYcgnVjdQAsHKHbjzTYk2LnJAXdNgGt51otyD2Ja
+         e7eM/hqDNg0ElQqkGVNEq/W7nqx1vZZgOSsTyZtrJmEF5qtZ9nQ97auPOi+XvHvCPLez
+         byFIBVOkp28/Z3D6Xrar7TWXTrl/Rct8T2BYqN1hFE8v2agOwt+5QtbdEPGM0rZFPLDy
+         Z3rmA9zhUY9VXPjsFhV7LE4rKKeWjyq0ElJsfcI6Vggv5S+dOTifGJPVgYKPhkpQUmnt
+         QMpg==
+X-Gm-Message-State: APjAAAXIh1DSdH/DmEGRwqJ27+nk6x8sl0qY1AkXG6+MROaggdVQALWD
+        kmnb/lrlIXPCzSc3+uBkwkY90+NB
+X-Google-Smtp-Source: APXvYqyuU+DpeC/NKkkzJGfNjsLzfVmRLBror3wABxQqoaMBHiaAt5WNoCqjaOSxZ9Ylrkz+e9Apkg==
+X-Received: by 2002:a17:902:48:: with SMTP id 66mr520374pla.182.1576631954521;
+        Tue, 17 Dec 2019 17:19:14 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id x18sm324398pfr.26.2019.12.17.17.19.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 17 Dec 2019 17:19:13 -0800 (PST)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Guenter Roeck <linux@roeck-us.net>,
+        Henry Lin <henryl@nvidia.com>, stable@vger.kernel.org
+Subject: [PATCH] usb: xhci: Fix build warning seen with CONFIG_PM=n
+Date:   Tue, 17 Dec 2019 17:19:11 -0800
+Message-Id: <20191218011911.6907-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang warns:
+The following build warning is seen if CONFIG_PM is disabled.
 
-../drivers/net/wireless/intersil/hostap/hostap_ap.c:2511:3: warning:
-misleading indentation; statement is not part of the previous 'if'
-[-Wmisleading-indentation]
-        if (sta->tx_supp_rates & WLAN_RATE_5M5)
-        ^
-../drivers/net/wireless/intersil/hostap/hostap_ap.c:2509:2: note:
-previous statement is here
-        if (sta->tx_supp_rates & WLAN_RATE_2M)
-        ^
-1 warning generated.
+drivers/usb/host/xhci-pci.c:498:13: warning:
+	unused function 'xhci_pci_shutdown'
 
-This warning occurs because there is a space before the tab on this
-line. Remove it so that the indentation is consistent with the Linux
-kernel coding style and clang no longer warns.
-
-Fixes: ff1d2767d5a4 ("Add HostAP wireless driver.")
-Link: https://github.com/ClangBuiltLinux/linux/issues/813
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Fixes: f2c710f7dca8 ("usb: xhci: only set D3hot for pci device")
+Cc: Henry Lin <henryl@nvidia.com>
+Cc: stable@vger.kernel.org	# all stable releases with 2f23dc86c3f8
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 ---
-
-Sorry for sending a patch for an "Obselete" driver (especially one as
-trivial as this) but it is still a warning from clang and shows up on
-all{yes,mod}config.
-
- drivers/net/wireless/intersil/hostap/hostap_ap.c | 2 +-
+ drivers/usb/host/xhci-pci.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/intersil/hostap/hostap_ap.c b/drivers/net/wireless/intersil/hostap/hostap_ap.c
-index 0094b1d2b577..3ec46f48cfde 100644
---- a/drivers/net/wireless/intersil/hostap/hostap_ap.c
-+++ b/drivers/net/wireless/intersil/hostap/hostap_ap.c
-@@ -2508,7 +2508,7 @@ static int prism2_hostapd_add_sta(struct ap_data *ap,
- 		sta->supported_rates[0] = 2;
- 	if (sta->tx_supp_rates & WLAN_RATE_2M)
- 		sta->supported_rates[1] = 4;
-- 	if (sta->tx_supp_rates & WLAN_RATE_5M5)
-+	if (sta->tx_supp_rates & WLAN_RATE_5M5)
- 		sta->supported_rates[2] = 11;
- 	if (sta->tx_supp_rates & WLAN_RATE_11M)
- 		sta->supported_rates[3] = 22;
+diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+index 2907fe4d78dd..4917c5b033fa 100644
+--- a/drivers/usb/host/xhci-pci.c
++++ b/drivers/usb/host/xhci-pci.c
+@@ -519,7 +519,6 @@ static int xhci_pci_resume(struct usb_hcd *hcd, bool hibernated)
+ 	retval = xhci_resume(xhci, hibernated);
+ 	return retval;
+ }
+-#endif /* CONFIG_PM */
+ 
+ static void xhci_pci_shutdown(struct usb_hcd *hcd)
+ {
+@@ -532,6 +531,7 @@ static void xhci_pci_shutdown(struct usb_hcd *hcd)
+ 	if (xhci->quirks & XHCI_SPURIOUS_WAKEUP)
+ 		pci_set_power_state(pdev, PCI_D3hot);
+ }
++#endif /* CONFIG_PM */
+ 
+ /*-------------------------------------------------------------------------*/
+ 
 -- 
-2.24.1
+2.17.1
 
